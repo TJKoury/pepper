@@ -1,7 +1,7 @@
 !$Procedure EKUCEC ( EK, update character column entry )
 
-      SUBROUTINE EKUCEC (  HANDLE,  SEGNO,  RECNO,  COLUMN, &
-                           NVALS,   CVALS,  ISNULL          )
+      subroutine ekucec (  handle,  segno,  recno,  column, &
+                           nvals,   cvals,  isnull          )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RECNO
-      CHARACTER*(*)         COLUMN
-      INTEGER               NVALS
-      CHARACTER*(*)         CVALS  ( * )
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segno
+      integer               recno
+      character*(*)         column
+      integer               nvals
+      character*(*)         cvals  ( * )
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -457,18 +457,18 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               CLASS
-      INTEGER               DTYPE
-      INTEGER               RECPTR
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               coldsc ( cdscsz )
+      integer               class
+      integer               dtype
+      integer               recptr
+      integer               segdsc ( sdscsz )
 
-      LOGICAL               ISSHAD
+      logical               isshad
 
 !
 !     Use discovery check-in.
@@ -476,94 +476,94 @@
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
 !
-      CALL ZZEKSDSC ( HANDLE, SEGNO,  SEGDSC          )
-      CALL ZZEKCDSC ( HANDLE, SEGDSC, COLUMN, COLDSC  )
+      call zzeksdsc ( handle, segno,  segdsc          )
+      call zzekcdsc ( handle, segdsc, column, coldsc  )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     This column had better be of character type.
 !
-      DTYPE  =  COLDSC(TYPIDX)
+      dtype  =  coldsc(typidx)
 
-      IF ( DTYPE .NE. CHR ) THEN
+      if ( dtype .ne. chr ) then
 
-         CALL CHKIN  ( 'EKUCEC'                                        )
-         CALL SETMSG ( 'Column # is of type #; EKUCEC only works '    // &
+         call chkin  ( 'EKUCEC'                                        )
+         call setmsg ( 'Column # is of type #; EKUCEC only works '    // &
                        'with character columns.  RECNO = #; '      // &
                        'SEGNO = #; EK = #.'                            )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  DTYPE                                     )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                          )
-         CALL CHKOUT ( 'EKUCEC'                                        )
-         RETURN
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  dtype                                     )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
+         call chkout ( 'EKUCEC'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the record pointer for the target record.
 !
-      CALL ZZEKTRDP ( HANDLE, SEGDSC(RTIDX), RECNO, RECPTR )
+      call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
 
 !
 !     Determine whether the EK is shadowed.
 !
-      CALL EKSHDW ( HANDLE, ISSHAD )
+      call ekshdw ( handle, isshad )
 
 !
 !     If the EK is shadowed, we must back up the current column entry
 !     if the entry has not already been backed up.  ZZEKRBCK will
 !     handle this task.
 !
-      IF ( ISSHAD ) THEN
-         CALL ZZEKRBCK ( 'UPDATE', HANDLE, SEGDSC, COLDSC, RECNO )
-      END IF
+      if ( isshad ) then
+         call zzekrbck ( 'UPDATE', handle, segdsc, coldsc, recno )
+      end if
 
 !
 !     Now it's time to carry out the replacement.
 !
-      CLASS  =  COLDSC ( CLSIDX )
+      class  =  coldsc ( clsidx )
 
 
-      IF ( CLASS .EQ. 3 ) THEN
+      if ( class .eq. 3 ) then
 !
 !        Class 3 columns contain scalar character data.
 !
-         CALL ZZEKUE03 ( HANDLE, SEGDSC, COLDSC, RECPTR, CVALS, ISNULL )
+         call zzekue03 ( handle, segdsc, coldsc, recptr, cvals, isnull )
 
 
-      ELSE IF ( CLASS .EQ. 6 ) THEN
+      else if ( class .eq. 6 ) then
 !
 !        Class 6 columns contain array-valued character data.
 !
-         CALL ZZEKUE06 ( HANDLE,  SEGDSC, COLDSC, &
-                         RECPTR,  NVALS,  CVALS,  ISNULL )
+         call zzekue06 ( handle,  segdsc, coldsc, &
+                         recptr,  nvals,  cvals,  isnull )
 
-      ELSE
+      else
 !
 !        This is an unsupported character column class.
 !
-         SEGNO  =  SEGDSC ( SNOIDX )
+         segno  =  segdsc ( snoidx )
 
-         CALL CHKIN  ( 'EKUCEC'                                        )
-         CALL SETMSG ( 'Class # from input column descriptor is not ' // &
+         call chkin  ( 'EKUCEC'                                        )
+         call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported character class.  COLUMN = #; '   // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
-         CALL ERRINT ( '#',  CLASS                                     )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'EKUCEC'                                        )
-         RETURN
+         call errint ( '#',  class                                     )
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'EKUCEC'                                        )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

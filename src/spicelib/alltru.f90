@@ -1,6 +1,6 @@
 !$Procedure ALLTRU ( All entries true? )
 
-      LOGICAL FUNCTION ALLTRU ( LOGCLS, N )
+      logical function alltru ( logcls, n )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               LOGCLS ( * )
-      INTEGER               N
+      logical               logcls ( * )
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -117,25 +117,25 @@
 !-&
 
 
-      INTEGER               I
+      integer               i
 
 !
 !     Just do it.
 !
 
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( .NOT. LOGCLS(I) ) THEN
+         if ( .not. logcls(i) ) then
 
-            ALLTRU = .FALSE.
-            RETURN
+            alltru = .false.
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      ALLTRU = .TRUE.
-      RETURN
+      alltru = .true.
+      return
 
 
-      END
+      end

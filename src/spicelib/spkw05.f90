@@ -1,7 +1,7 @@
 !$Procedure SPKW05 ( Write SPK segment, type 5 )
 
-      SUBROUTINE SPKW05 ( HANDLE, BODY,  CENTER, FRAME,  FIRST, LAST, &
-                          SEGID,  GM,    N,      STATES, EPOCHS      )
+      subroutine spkw05 ( handle, body,  center, frame,  first, last, &
+                          segid,  gm,    n,      states, epochs      )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      DOUBLE PRECISION      GM
-      INTEGER               N
-      DOUBLE PRECISION      STATES   ( 6, * )
-      DOUBLE PRECISION      EPOCHS   (    * )
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      double precision      gm
+      integer               n
+      double precision      states   ( 6, * )
+      double precision      epochs   (    * )
 
 ! $ Brief_I/O
 !
@@ -316,9 +316,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      INTEGER               LASTNB
+      logical               failed
+      logical               return
+      integer               lastnb
 
 !
 !     Local parameters
@@ -342,216 +342,216 @@
 !     LPRINT is the integer value of the last printable ASCII character.
 !
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
-      INTEGER               NS
-      PARAMETER           ( NS      =   5 )
+      integer               ns
+      parameter           ( ns      =   5 )
 
-      INTEGER               ND
-      PARAMETER           ( ND      =   2 )
+      integer               nd
+      parameter           ( nd      =   2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI      =   6 )
+      integer               ni
+      parameter           ( ni      =   6 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE   =   5 )
+      integer               dtype
+      parameter           ( dtype   =   5 )
 
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      DCD      ( ND     )
-      DOUBLE PRECISION      DESCR    ( NS     )
+      double precision      dcd      ( nd     )
+      double precision      descr    ( ns     )
 
-      INTEGER               I
-      INTEGER               REFCOD
-      INTEGER               VALUE
-      INTEGER               ICD      ( NI )
+      integer               i
+      integer               refcod
+      integer               value
+      integer               icd      ( ni )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKW05' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKW05' )
+      end if
 
 
-      IF ( GM .LE. 0.0D0 ) THEN
+      if ( gm .le. 0.0d0 ) then
 
-         CALL SETMSG ( 'GM = #; Non-positive gravitational parameter' )
-         CALL ERRDP  ( '#',  GM                   )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEMASS)'   )
-         CALL CHKOUT ( 'SPKW05'                   )
-         RETURN
+         call setmsg ( 'GM = #; Non-positive gravitational parameter' )
+         call errdp  ( '#',  gm                   )
+         call sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
+         call chkout ( 'SPKW05'                   )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL NAMFRM ( FRAME, REFCOD )
+      call namfrm ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'SPKW05'                                    )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'SPKW05'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the number of states and epochs is positive.
 !
-      IF ( N .LE. 0 ) THEN
+      if ( n .le. 0 ) then
 
-         CALL SETMSG ( 'The number of states and epochs is not '  // &
+         call setmsg ( 'The number of states and epochs is not '  // &
                        'positive. N = #'                           )
-         CALL ERRINT ( '#', N                                      )
-         CALL SIGERR ( 'SPICE(NUMSTATESNOTPOS)'                    )
-         CALL CHKOUT ( 'SPKW05'                                    )
-         RETURN
+         call errint ( '#', n                                      )
+         call sigerr ( 'SPICE(NUMSTATESNOTPOS)'                    )
+         call chkout ( 'SPKW05'                                    )
+         return
 
-      END IF
+      end if
 !
 !     Check the input epochs to make sure that they form a
 !     strictly increasing sequence.
 !
-      DO I = 2, N
+      do i = 2, n
 
-         IF ( EPOCHS(I) .LE. EPOCHS(I-1) ) THEN
+         if ( epochs(i) .le. epochs(i-1) ) then
 
-            CALL SETMSG ( 'Epoch # is out of order. ' )
-            CALL ERRDP  ( '#',  EPOCHS(I)             )
-            CALL SIGERR ( 'SPICE(UNORDEREDTIMES)'     )
-            CALL CHKOUT ( 'SPKW05'                    )
-            RETURN
+            call setmsg ( 'Epoch # is out of order. ' )
+            call errdp  ( '#',  epochs(i)             )
+            call sigerr ( 'SPICE(UNORDEREDTIMES)'     )
+            call chkout ( 'SPKW05'                    )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     The segment stop time should be greater then the begin time.
 !
-      IF ( FIRST .GT. LAST ) THEN
+      if ( first .gt. last ) then
 
-         CALL SETMSG ( 'The segment start time: # is greater then ' // &
+         call setmsg ( 'The segment start time: # is greater then ' // &
                        'the segment end time: #'                   )
-         CALL ERRDP  ( '#', FIRST                                  )
-         CALL ERRDP  ( '#', LAST                                   )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'SPKW05'                                    )
-         RETURN
+         call errdp  ( '#', first                                  )
+         call errdp  ( '#', last                                   )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'SPKW05'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that all the characters in the segid can be printed.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         VALUE = ICHAR( SEGID(I:I) )
+         value = ichar( segid(i:i) )
 
-         IF ( ( VALUE .LT. FPRINT ) .OR. ( VALUE .GT. LPRINT ) ) THEN
+         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains '  // &
+            call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'SPKW05'                                )
-            RETURN
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'SPKW05'                                )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Also check to see if the segment identifier is too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' // &
+         call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SPKW05'                                  )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SPKW05'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Store the start and end times to be associated
 !     with this segment.
 !
-      DCD(1) = FIRST
-      DCD(2) = LAST
+      dcd(1) = first
+      dcd(2) = last
 
 !
 !     Create the integer portion of the descriptor.
 !
-      ICD(1) = BODY
-      ICD(2) = CENTER
-      ICD(3) = REFCOD
-      ICD(4) = DTYPE
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
 
 !
 !     Pack the segment descriptor.
 !
-      CALL DAFPS ( ND, NI, DCD, ICD, DESCR )
+      call dafps ( nd, ni, dcd, icd, descr )
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW05' )
+         return
+      end if
 
 !
 !     This could hardly be simpler. Stuff the states into the segment,
 !     followed by the epochs.
 !
-      CALL DAFADA ( STATES, 6 * N )
-      CALL DAFADA ( EPOCHS,     N )
+      call dafada ( states, 6 * n )
+      call dafada ( epochs,     n )
 
 !
 !     If there are at least 100 state/epoch pairs, write a directory
 !     containing every 100'th epoch.
 !
-      I = 100
+      i = 100
 
-      DO WHILE ( I .LE. N )
-         CALL DAFADA ( EPOCHS(I), 1 )
-         I = I + 100
-      END DO
+      do while ( i .le. n )
+         call dafada ( epochs(i), 1 )
+         i = i + 100
+      end do
 
 !
 !     Store the GM of the central body, and the number of states.
 !
-      CALL DAFADA ( GM,         1 )
-      CALL DAFADA ( DBLE ( N ), 1 )
+      call dafada ( gm,         1 )
+      call dafada ( dble ( n ), 1 )
 
 !
 !     If anything went wrong, don't end the segment.
 !
-      IF ( .NOT. FAILED() ) THEN
-         CALL DAFENA
-      END IF
+      if ( .not. failed() ) then
+         call dafena
+      end if
 
-      CALL CHKOUT ( 'SPKW05' )
-      RETURN
-      END
+      call chkout ( 'SPKW05' )
+      return
+      end

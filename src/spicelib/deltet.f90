@@ -1,6 +1,6 @@
 !$Procedure DELTET ( Delta ET, ET - UTC )
 
-      SUBROUTINE DELTET ( EPOCH, EPTYPE, DELTA )
+      subroutine deltet ( epoch, eptype, delta )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION EPOCH
-      CHARACTER*(*)    EPTYPE
-      DOUBLE PRECISION DELTA
+      double precision epoch
+      character*(*)    eptype
+      double precision delta
 
 ! $ Brief_I/O
 !
@@ -213,48 +213,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NMAX
-      PARAMETER           ( NMAX = 200 )
+      integer               nmax
+      parameter           ( nmax = 200 )
 
 !
 !     Local variables
 !
-      CHARACTER*20          MISSED   ( 5 )
-      CHARACTER*4           TYPE
-      CHARACTER*1           DTYPE
+      character*20          missed   ( 5 )
+      character*4           type
+      character*1           dtype
 
-      DOUBLE PRECISION      AET
-      DOUBLE PRECISION      DLEAP  ( 2,NMAX )
-      DOUBLE PRECISION      DTA
-      DOUBLE PRECISION      EA
-      DOUBLE PRECISION      EB
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      ETTAI
-      DOUBLE PRECISION      K
-      DOUBLE PRECISION      LEAPS
-      DOUBLE PRECISION      M    ( 0:1 )
-      DOUBLE PRECISION      MA
+      double precision      aet
+      double precision      dleap  ( 2,nmax )
+      double precision      dta
+      double precision      ea
+      double precision      eb
+      double precision      et
+      double precision      ettai
+      double precision      k
+      double precision      leaps
+      double precision      m    ( 0:1 )
+      double precision      ma
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NLEAP
+      integer               i
+      integer               n
+      integer               nleap
 
-      LOGICAL               FOUND    ( 5 )
+      logical               found    ( 5 )
 
 !
 !     Saved variables
 !
-      SAVE                  MISSED
+      save                  missed
 
 !
 !     Initial values
 !
-      DATA                  MISSED   / 'DELTET/DELTA_T_A, #', &
+      data                  missed   / 'DELTET/DELTA_T_A, #', &
                                        'DELTET/K, #', &
                                        'DELTET/EB, #', &
                                        'DELTET/M, #', &
@@ -265,16 +265,16 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DELTET' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DELTET' )
+      end if
 
 !
 !     Convert the epoch type to uppercase, to simplify comparisons.
 !
-      CALL UCASE ( EPTYPE, TYPE )
+      call ucase ( eptype, type )
 
 !
 !     Extract the necessary constants from the kernel pool.
@@ -283,57 +283,57 @@
 !     DLEAP(1,i) is the number of leap seconds at DLEAP(2,i) UTC
 !     seconds past J2000.
 !
-      CALL GDPOOL ( 'DELTET/DELTA_T_A', 1, 1, N, DTA, FOUND(1) )
-      CALL GDPOOL ( 'DELTET/K',         1, 1, N, K,   FOUND(2) )
-      CALL GDPOOL ( 'DELTET/EB',        1, 1, N, EB,  FOUND(3) )
-      CALL GDPOOL ( 'DELTET/M',         1, 2, N, M,   FOUND(4) )
+      call gdpool ( 'DELTET/DELTA_T_A', 1, 1, n, dta, found(1) )
+      call gdpool ( 'DELTET/K',         1, 1, n, k,   found(2) )
+      call gdpool ( 'DELTET/EB',        1, 1, n, eb,  found(3) )
+      call gdpool ( 'DELTET/M',         1, 2, n, m,   found(4) )
 
 !
 !     Check that the number of leapseconds is not too great for our
 !     buffer size (not likely).
 !
-      CALL DTPOOL ( 'DELTET/DELTA_AT', FOUND(5), NLEAP, DTYPE )
+      call dtpool ( 'DELTET/DELTA_AT', found(5), nleap, dtype )
 
-      IF ( NLEAP .GT. (2*NMAX) ) THEN
+      if ( nleap .gt. (2*nmax) ) then
 
-         CALL SETMSG ( 'Number of leapseconds, #, is greater than ' // &
+         call setmsg ( 'Number of leapseconds, #, is greater than ' // &
                        'the number that can be buffered, #.'         )
-         CALL ERRINT ( '#',  NLEAP/2                                 )
-         CALL ERRINT ( '#',  NMAX                                    )
-         CALL SIGERR ( 'SPICE(BUFFERTOOSMALL)'                       )
-         CALL CHKOUT ( 'DELTET'                                      )
-         RETURN
+         call errint ( '#',  nleap/2                                 )
+         call errint ( '#',  nmax                                    )
+         call sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
+         call chkout ( 'DELTET'                                      )
+         return
 
-      END IF
+      end if
 
-      CALL GDPOOL ( 'DELTET/DELTA_AT',  1,            2*NMAX, &
-                     NLEAP,             DLEAP(1,1),   FOUND(5) )
+      call gdpool ( 'DELTET/DELTA_AT',  1,            2*nmax, &
+                     nleap,             dleap(1,1),   found(5) )
 
-      NLEAP = NLEAP / 2
+      nleap = nleap / 2
 
-      IF ( .NOT. (       FOUND(1) &
-                   .AND. FOUND(2) &
-                   .AND. FOUND(3) &
-                   .AND. FOUND(4) &
-                   .AND. FOUND(5) ) ) THEN
+      if ( .not. (       found(1) &
+                   .and. found(2) &
+                   .and. found(3) &
+                   .and. found(4) &
+                   .and. found(5) ) ) then
 
-         CALL SETMSG ( 'The following, needed to compute '      // &
+         call setmsg ( 'The following, needed to compute '      // &
                        'Delta ET (ET - UTC), could not be '     // &
                        'found in the kernel pool: #'               )
 
-         DO I = 1, 5
-            IF ( .NOT. FOUND(I) ) THEN
-               CALL ERRCH ( '#', MISSED(I) )
-            END IF
-         END DO
+         do i = 1, 5
+            if ( .not. found(i) ) then
+               call errch ( '#', missed(i) )
+            end if
+         end do
 
-         CALL ERRCH  ( ', #', '.' )
-         CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)' )
+         call errch  ( ', #', '.' )
+         call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
 
-         CALL CHKOUT ( 'DELTET' )
-         RETURN
+         call chkout ( 'DELTET' )
+         return
 
-      END IF
+      end if
 
 
 
@@ -347,19 +347,19 @@
 !     For epochs before the first leap second, return Delta ET at
 !     the epoch of the leap second minus one second.
 !
-      LEAPS = DLEAP(1,1) - 1
+      leaps = dleap(1,1) - 1
 
 !
 !     When counting leap seconds for UTC epochs, we can compare
 !     directly against the values in DLEAP.
 !
-      IF ( TYPE .EQ. 'UTC' ) THEN
+      if ( type .eq. 'UTC' ) then
 
-         DO I = 1, NLEAP
-            IF ( EPOCH .GE. DLEAP(2,I) ) THEN
-               LEAPS = DLEAP(1,I)
-            END IF
-         END DO
+         do i = 1, nleap
+            if ( epoch .ge. dleap(2,i) ) then
+               leaps = dleap(1,i)
+            end if
+         end do
 
 !
 !     For ET epochs, things are a little tougher. In order to compare
@@ -371,58 +371,58 @@
 !     There must be a hundred ways to do this more efficiently.
 !     For now, we'll settle for one that works.
 !
-      ELSE IF ( TYPE .EQ. 'ET' ) THEN
+      else if ( type .eq. 'ET' ) then
 
-         DO I = 1, NLEAP
-            IF ( EPOCH .GT. DLEAP(2,I) ) THEN
+         do i = 1, nleap
+            if ( epoch .gt. dleap(2,i) ) then
 
-               AET   = DNINT ( DLEAP(2,I) + DTA + DLEAP(1,I) )
+               aet   = dnint ( dleap(2,i) + dta + dleap(1,i) )
 
-               MA    = M(0) + M(1) * AET
-               EA    = MA   + EB   * SIN ( MA )
-               ETTAI =        K    * SIN ( EA )
+               ma    = m(0) + m(1) * aet
+               ea    = ma   + eb   * sin ( ma )
+               ettai =        k    * sin ( ea )
 
-               ET    = DLEAP(2,I) + DTA + DLEAP(1,I) + ETTAI
+               et    = dleap(2,i) + dta + dleap(1,i) + ettai
 
-               IF ( EPOCH .GE. ET ) THEN
-                  LEAPS = DLEAP(1,I)
-               END IF
+               if ( epoch .ge. et ) then
+                  leaps = dleap(1,i)
+               end if
 
-            END IF
-         END DO
+            end if
+         end do
 
 !
 !     Uh, those are the only choices.
 !
-      ELSE
+      else
 
-         CALL SETMSG ( 'Epoch type was #' )
-         CALL ERRCH  ( '#', TYPE )
-         CALL SIGERR ( 'SPICE(INVALIDEPOCH)' )
+         call setmsg ( 'Epoch type was #' )
+         call errch  ( '#', type )
+         call sigerr ( 'SPICE(INVALIDEPOCH)' )
 
-         CALL CHKOUT ( 'DELTET' )
-         RETURN
+         call chkout ( 'DELTET' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Add the constant offset, leap seconds, and the relativistic term
 !     (as before, computed at the nearest ET second).
 !
-      IF ( TYPE .EQ. 'ET' ) THEN
-         AET = DNINT ( EPOCH )
+      if ( type .eq. 'ET' ) then
+         aet = dnint ( epoch )
 
-      ELSE IF ( TYPE .EQ. 'UTC' ) THEN
-         AET = DNINT ( EPOCH + DTA + LEAPS )
-      END IF
+      else if ( type .eq. 'UTC' ) then
+         aet = dnint ( epoch + dta + leaps )
+      end if
 
-      MA    = M(0) + M(1) * AET
-      EA    = MA   + EB   * SIN ( MA )
-      ETTAI =        K    * SIN ( EA )
+      ma    = m(0) + m(1) * aet
+      ea    = ma   + eb   * sin ( ma )
+      ettai =        k    * sin ( ea )
 
-      DELTA = DTA + LEAPS + ETTAI
+      delta = dta + leaps + ettai
 
-      CALL CHKOUT ( 'DELTET' )
-      RETURN
-      END
+      call chkout ( 'DELTET' )
+      return
+      end

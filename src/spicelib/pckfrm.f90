@@ -1,6 +1,6 @@
 !$Procedure PCKFRM ( PCK, get reference frame class ID set )
 
-      SUBROUTINE PCKFRM ( PCKFNM, IDS )
+      subroutine pckfrm ( pckfnm, ids )
 
 ! $ Abstract
 !
@@ -21,13 +21,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         PCKFNM
-      INTEGER               IDS    ( LBCELL : * )
+      character*(*)         pckfnm
+      integer               ids    ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -316,70 +316,70 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LNSIZE)    ARCH
-      CHARACTER*(LNSIZE)    KERTYP
+      character*(lnsize)    arch
+      character*(lnsize)    kertyp
 
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DESCR  ( ND + NI/2 )
+      double precision      dc     ( nd )
+      double precision      descr  ( nd + ni/2 )
 
-      INTEGER               HANDLE
-      INTEGER               IC     ( NI )
+      integer               handle
+      integer               ic     ( ni )
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PCKFRM' )
+      call chkin ( 'PCKFRM' )
 
 !
 !     See whether GETFAT thinks we've got a PCK file.
 !
-      CALL GETFAT ( PCKFNM, ARCH, KERTYP )
+      call getfat ( pckfnm, arch, kertyp )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'PCKFRM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'PCKFRM' )
+         return
+      end if
 
-      IF ( ARCH .EQ. 'XFR' ) THEN
+      if ( arch .eq. 'XFR' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary PCK file to be readable ' &
          //            'by this routine.  If the input file is an ' &
          //            'PCK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         CALL ERRCH  ( '#',  PCKFNM                                )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                      )
-         CALL CHKOUT ( 'PCKFRM'                                    )
-         RETURN
+         call errch  ( '#',  pckfnm                                )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
+         call chkout ( 'PCKFRM'                                    )
+         return
 
-      ELSE IF ( ARCH .NE. 'DAF' ) THEN
+      else if ( arch .ne. 'DAF' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary PCK file to be readable ' &
          //            'by this routine.  Binary PCK files have ' &
          //            'DAF architecture.  If you expected the ' &
@@ -388,15 +388,15 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  PCKFNM                                )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDARCHTYPE)'                    )
-         CALL CHKOUT ( 'PCKFRM'                                    )
-         RETURN
+         call errch  ( '#',  pckfnm                                )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
+         call chkout ( 'PCKFRM'                                    )
+         return
 
-      ELSE IF ( KERTYP .NE. 'PCK' ) THEN
+      else if ( kertyp .ne. 'PCK' ) then
 
-         CALL SETMSG ( 'Input file # has file type #. The file ' &
+         call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary PCK file to be readable ' &
          //            'by this routine. If you expected the ' &
          //            'file to be a binary PCK file, the problem ' &
@@ -404,25 +404,25 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  PCKFNM                                )
-         CALL ERRCH  ( '#',  KERTYP                                )
-         CALL SIGERR ( 'SPICE(INVALIDFILETYPE)'                    )
-         CALL CHKOUT ( 'PCKFRM'                                    )
-         RETURN
+         call errch  ( '#',  pckfnm                                )
+         call errch  ( '#',  kertyp                                )
+         call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
+         call chkout ( 'PCKFRM'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Open the file for reading.
 !
-      CALL DAFOPR ( PCKFNM, HANDLE )
+      call dafopr ( pckfnm, handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'PCKFRM' )
-         RETURN
+         call chkout ( 'PCKFRM' )
+         return
 
-      END IF
+      end if
 
 !
 !     We will examine each segment descriptor in the file, and
@@ -431,36 +431,36 @@
 !
 !     Start a forward search.
 !
-      CALL DAFBFS ( HANDLE )
+      call dafbfs ( handle )
 
 !
 !     Find the next DAF array.
 !
-      CALL DAFFNA ( FOUND )
+      call daffna ( found )
 
-      DO WHILE (  FOUND  .AND.  ( .NOT. FAILED() )  )
+      do while (  found  .and.  ( .not. failed() )  )
 !
 !        Fetch and unpack the segment descriptor.
 !
-         CALL DAFGS ( DESCR )
-         CALL DAFUS ( DESCR, ND, NI, DC, IC )
+         call dafgs ( descr )
+         call dafus ( descr, nd, ni, dc, ic )
 
 !
 !        Insert the current ID code into the output set.
 !        The insertion algorithm will handle duplicates; no special
 !        action is required here.
 !
-         CALL INSRTI ( IC(1), IDS )
+         call insrti ( ic(1), ids )
 
-         CALL DAFFNA ( FOUND )
+         call daffna ( found )
 
-      END DO
+      end do
 
 !
 !     Release the file.
 !
-      CALL DAFCLS ( HANDLE )
+      call dafcls ( handle )
 
-      CALL CHKOUT ( 'PCKFRM' )
-      RETURN
-      END
+      call chkout ( 'PCKFRM' )
+      return
+      end

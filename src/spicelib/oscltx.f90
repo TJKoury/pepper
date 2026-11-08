@@ -1,6 +1,6 @@
 !$Procedure OSCLTX ( Extended osculating elements from state )
 
-      SUBROUTINE OSCLTX ( STATE, ET, MU, ELTS )
+      subroutine oscltx ( state, et, mu, elts )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'oscltx.inc'
+      include 'oscltx.inc'
 
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      MU
-      DOUBLE PRECISION      ELTS   ( *  )
+      double precision      state  ( 6 )
+      double precision      et
+      double precision      mu
+      double precision      elts   ( *  )
 
 ! $ Brief_I/O
 !
@@ -530,91 +530,91 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      EXACT
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      dpmax
+      double precision      exact
+      double precision      twopi
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      SMALL
-      PARAMETER           ( SMALL  = 1.D-10 )
+      double precision      small
+      parameter           ( small  = 1.d-10 )
 
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 2.D2 )
+      double precision      margin
+      parameter           ( margin = 2.d2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      DEC
-      DOUBLE PRECISION      E
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      ECCVEC ( 3 )
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      MUCUBR
-      DOUBLE PRECISION      NU
-      DOUBLE PRECISION      POLE   ( 3 )
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      RHAT   ( 3 )
-      DOUBLE PRECISION      RMAG
-      DOUBLE PRECISION      RPERI  ( 3 )
-      DOUBLE PRECISION      TAU
-      DOUBLE PRECISION      VEL    ( 3 )
-      DOUBLE PRECISION      VMAG
-      DOUBLE PRECISION      XMAT   ( 3, 3 )
+      double precision      a
+      double precision      b
+      double precision      c1
+      double precision      c2
+      double precision      dec
+      double precision      e
+      double precision      ecc
+      double precision      eccvec ( 3 )
+      double precision      limit
+      double precision      mucubr
+      double precision      nu
+      double precision      pole   ( 3 )
+      double precision      range
+      double precision      rhat   ( 3 )
+      double precision      rmag
+      double precision      rperi  ( 3 )
+      double precision      tau
+      double precision      vel    ( 3 )
+      double precision      vmag
+      double precision      xmat   ( 3, 3 )
 
-      LOGICAL               CMPTAU
-      LOGICAL               PASS1
+      logical               cmptau
+      logical               pass1
 
-      SAVE                  LIMIT
-      SAVE                  PASS1
+      save                  limit
+      save                  pass1
 
-      DATA                  PASS1 / .TRUE. /
-      DATA                  LIMIT / 0.D0   /
+      data                  pass1 / .true. /
+      data                  limit / 0.d0   /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'OSCLTX' )
+      call chkin ( 'OSCLTX' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         LIMIT = DPMAX() / MARGIN
-         PASS1 = .FALSE.
+         limit = dpmax() / margin
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Initialize the members of ELTS that won't be set by OSCELT. This
 !     is necessary because this routine may return early if A or TAU
 !     cannot be computed.
 !
-      CALL CLEARD ( OSCXSZ-8, ELTS(9) )
-      NU  = 0.D0
-      TAU = 0.D0
-      A   = 0.D0
+      call cleard ( oscxsz-8, elts(9) )
+      nu  = 0.d0
+      tau = 0.d0
+      a   = 0.d0
 
 !
 !     Compute osculating elements using OSCELT. Take advantage
 !     of OSCELT's error handling.
 !
-      CALL OSCELT ( STATE, ET, MU, ELTS )
+      call oscelt ( state, et, mu, elts )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'OSCLTX' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'OSCLTX' )
+         return
+      end if
 
 !
 !     Due to checks made by OSCELT, we know that MU and RMAG
@@ -645,64 +645,64 @@
 !
 !
 !
-      CALL UNORM ( STATE, RHAT, RMAG )
-      CALL VEQU  ( STATE(4),    VEL  )
+      call unorm ( state, rhat, rmag )
+      call vequ  ( state(4),    vel  )
 
-      VMAG = VNORM( VEL )
+      vmag = vnorm( vel )
 
-      ECC  = EXACT ( ELTS(2), 0.D0, SMALL )
+      ecc  = exact ( elts(2), 0.d0, small )
 
 
-      IF ( ECC .NE. 0.D0 ) THEN
+      if ( ecc .ne. 0.d0 ) then
 !                                 _   _
 !        C1 is the coefficient of r/||r|| in (1) above:
 !
-         C1 =    (1.D0/MU) * ( ( RMAG * VMAG**2 ) - MU )
+         c1 =    (1.d0/mu) * ( ( rmag * vmag**2 ) - mu )
 
 !                                 _
 !        C2 is the coefficient of v in (1) above:
 !
-         C2 =  - (1.D0/MU) * VDOT( STATE, VEL )
+         c2 =  - (1.d0/mu) * vdot( state, vel )
 
 !
 !        ECCVEC is the eccentricity vector:
 !
-         CALL VLCOM ( C1, RHAT, C2, VEL, ECCVEC )
+         call vlcom ( c1, rhat, c2, vel, eccvec )
 
 !
 !        POLE is the orbital pole unit vector.
 !
-         CALL UCRSS ( STATE, VEL, POLE )
+         call ucrss ( state, vel, pole )
 
 !
 !        Compute the transformation from the frame of the input state
 !        to the perifocal frame.
 !
-         CALL TWOVEC ( ECCVEC, 1, POLE, 3, XMAT )
+         call twovec ( eccvec, 1, pole, 3, xmat )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'OSCLTX' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'OSCLTX' )
+            return
+         end if
 
 !
 !        Transform the input position to the perifocal frame and
 !        compute its "right ascension." This is the true anomaly NU,
 !        confined to the range [0, 2*pi) radians.
 !
-         CALL MXV    ( XMAT,  STATE, RPERI     )
-         CALL RECRAD ( RPERI, RANGE, NU,   DEC )
+         call mxv    ( xmat,  state, rperi     )
+         call recrad ( rperi, range, nu,   dec )
 
-      ELSE
+      else
 !
 !        The orbit is circular or nearly so. The mean anomaly can
 !        be used as the true anomaly.
 !
-         NU = ELTS( 6 )
+         nu = elts( 6 )
 
-      END IF
+      end if
 
-      ELTS(9) = NU
+      elts(9) = nu
 
 !
 !     The semi-major axis A satisfies the relationship
@@ -744,55 +744,55 @@
 !        mu/LIMIT < r
 !
 !
-      IF ( ELTS(2) .EQ. 1.D0 ) THEN
+      if ( elts(2) .eq. 1.d0 ) then
 !
 !        This is the parabolic case.
 !
-         CALL CHKOUT ( 'OSCLTX' )
-         RETURN
+         call chkout ( 'OSCLTX' )
+         return
 
-      END IF
+      end if
 
 
-      IF ( RMAG .LE. ( MU/LIMIT ) ) THEN
+      if ( rmag .le. ( mu/limit ) ) then
 !
 !        We need RMAG > MU/LIMIT to make E computable.
 !
 !        We can't safely compute E.
 !
-         CALL CHKOUT ( 'OSCLTX' )
-         RETURN
+         call chkout ( 'OSCLTX' )
+         return
 
-      END IF
+      end if
 
 !
 !     We assume V and MU are small enough not to cause overflow.
 !
-      E = ( 0.5D0 * VMAG**2 ) - ( MU / RMAG )
+      e = ( 0.5d0 * vmag**2 ) - ( mu / rmag )
 
 
-      IF (  ABS(E)  .LT.  ( ABS(MU)/LIMIT )  ) THEN
+      if (  abs(e)  .lt.  ( abs(mu)/limit )  ) then
 !
 !        We can't safely compute A. The case of E equal to 0
 !        gets the code to this point.
 !
-         CALL CHKOUT ( 'OSCLTX' )
-         RETURN
+         call chkout ( 'OSCLTX' )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we can compute A (which is stored in ELTS(10)).
 !
-      A          = - MU / ( 2 * E )
-      ELTS( 10 ) = A
+      a          = - mu / ( 2 * e )
+      elts( 10 ) = a
 
 !
 !     If the orbit is elliptical, compute the period.
 !
-      ECC = ELTS(2)
+      ecc = elts(2)
 
-      IF ( ECC .LT. 1.D0 ) THEN
+      if ( ecc .lt. 1.d0 ) then
 !
 !        The period is given by the formula
 !
@@ -819,31 +819,31 @@
 !        Note that the case of non-positive MU has already
 !        been ruled out.
 !
-         B      = ( LIMIT / TWOPI() )**(2.D0/3.D0)
+         b      = ( limit / twopi() )**(2.d0/3.d0)
 
-         MUCUBR = MU ** (1.D0/3.D0 )
+         mucubr = mu ** (1.d0/3.d0 )
 
 
-         IF ( MU .GE. 1.D0 ) THEN
+         if ( mu .ge. 1.d0 ) then
 
-            CMPTAU =  (  A / MUCUBR  )  .LT.    B
-         ELSE
-            CMPTAU =     A              .LT.  ( B * MUCUBR )
-         END IF
+            cmptau =  (  a / mucubr  )  .lt.    b
+         else
+            cmptau =     a              .lt.  ( b * mucubr )
+         end if
 
-         IF ( CMPTAU ) THEN
+         if ( cmptau ) then
 
-            TAU = TWOPI() * ( (A/MUCUBR)**(3.D0/2.D0) )
+            tau = twopi() * ( (a/mucubr)**(3.d0/2.d0) )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Assign the remaining members of ELTS.
 !
-      ELTS( 11 ) = TAU
+      elts( 11 ) = tau
 
-      CALL CHKOUT ( 'OSCLTX' )
-      RETURN
-      END
+      call chkout ( 'OSCLTX' )
+      return
+      end

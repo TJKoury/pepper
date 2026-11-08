@@ -1,6 +1,6 @@
 !$Procedure TOSTDO ( To Standard Output)
 
-      SUBROUTINE TOSTDO ( LINE )
+      subroutine tostdo ( line )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         LINE
+      character*(*)         line
 
 ! $ Brief_I/O
 !
@@ -100,19 +100,19 @@
 !-&
 
 
-      INTEGER               STDOUT
-      LOGICAL               FIRST
-      SAVE
+      integer               stdout
+      logical               first
+      save
 
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 
-      IF ( FIRST ) THEN
-         CALL STDIO ( 'STDOUT', STDOUT )
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         call stdio ( 'STDOUT', stdout )
+         first = .false.
+      end if
 
-      CALL WRITLN ( LINE, STDOUT )
-      RETURN
+      call writln ( line, stdout )
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure VALIDC ( Validate a character set )
 
-      SUBROUTINE VALIDC ( SIZE, N, A )
+      subroutine validc ( size, n, a )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER            SIZE
-      INTEGER            N
-      CHARACTER*(*)      A      ( LBCELL:* )
+      integer            size
+      integer            n
+      character*(*)      a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -174,51 +174,51 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER            CARD
+      integer            card
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'VALIDC')
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'VALIDC')
+      end if
 
 
 !
 !     Is the set size big enough?
 !
-      IF ( N .GT. SIZE ) THEN
+      if ( n .gt. size ) then
 
-         CALL SETMSG ( 'Size of un-validated set is too small.  '     // &
+         call setmsg ( 'Size of un-validated set is too small.  '     // &
                        'Size is #, size required is #. ' )
 
-         CALL ERRINT ( '#', SIZE )
-         CALL ERRINT ( '#', N    )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'VALIDC' )
-         RETURN
-      END IF
+         call errint ( '#', size )
+         call errint ( '#', n    )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'VALIDC' )
+         return
+      end if
 
 !
 !     Just like it says above. Order the array, and remove duplicates.
 !
-      CARD = N
-      CALL RMDUPC ( CARD, A(1) )
+      card = n
+      call rmdupc ( card, a(1) )
 
 !
 !     Set the size and cardinality of the input set.
 !
-      CALL SSIZEC ( SIZE, A )
-      CALL SCARDC ( CARD, A )
+      call ssizec ( size, a )
+      call scardc ( card, a )
 
 
-      CALL CHKOUT ( 'VALIDC' )
-      RETURN
-      END
+      call chkout ( 'VALIDC' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SYPUTC ( Set the values associated with a symbol )
 
-      SUBROUTINE SYPUTC ( NAME, VALUES, N, TABSYM, TABPTR, TABVAL )
+      subroutine syputc ( name, values, n, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         VALUES     (        * )
-      INTEGER               N
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      CHARACTER*(*)         TABVAL     ( LBCELL:* )
+      character*(*)         name
+      character*(*)         values     (        * )
+      integer               n
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -194,142 +194,142 @@
 !     SPICELIB functions
 !
 
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SIZEC
-      INTEGER               SIZEI
-      INTEGER               SUMAI
+      integer               cardc
+      integer               cardi
+      integer               lstlec
+      logical               return
+      integer               sizec
+      integer               sizei
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NPTR
-      INTEGER               NVAL
+      integer               nsym
+      integer               nptr
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      INTEGER               DIMVAL
-      LOGICAL               OLDSYM
-      INTEGER               NEWSYM
-      INTEGER               NEWVAL
+      integer               locsym
+      integer               locval
+      integer               dimval
+      logical               oldsym
+      integer               newsym
+      integer               newval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYPUTC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYPUTC' )
+      end if
 
 !
 !     Check to see if the number of values is a valid quantity.
 !
-      IF ( N .LT. 1 ) THEN
-         CALL SETMSG ( 'SYPUTC: The dimension of the values array is' // &
+      if ( n .lt. 1 ) then
+         call setmsg ( 'SYPUTC: The dimension of the values array is' // &
                        'less than one.' )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)' )
-         CALL CHKOUT ( 'SYPUTC' )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(INVALIDARGUMENT)' )
+         call chkout ( 'SYPUTC' )
+         return
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NPTR = CARDI ( TABPTR )
-      NVAL = CARDC ( TABVAL )
+      nsym = cardc ( tabsym )
+      nptr = cardi ( tabptr )
+      nval = cardc ( tabval )
 
 !
 !     Where does this symbol belong? is it already in the table?
 !
-      LOCSYM = LSTLEC ( NAME, NSYM, TABSYM(1) )
-      OLDSYM = ( LOCSYM .NE. 0  .AND.  TABSYM(LOCSYM) .EQ. NAME )
+      locsym = lstlec ( name, nsym, tabsym(1) )
+      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
 
 !
 !     If the new symbol already exists, we need to know its dimension
 !     to check for overflow.
 !
-      IF ( OLDSYM ) THEN
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
-         DIMVAL = TABPTR(LOCSYM)
-         NEWSYM = 0
-      ELSE
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM ) + 1
-         DIMVAL = 0
-         NEWSYM = 1
-      END IF
+      if ( oldsym ) then
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         dimval = tabptr(locsym)
+         newsym = 0
+      else
+         locval = sumai ( tabptr(1), locsym ) + 1
+         dimval = 0
+         newsym = 1
+      end if
 
-      NEWVAL = N - DIMVAL
+      newval = n - dimval
 
 !
 !     Can we do this without overflow?
 !
-      IF ( NSYM+NEWSYM .GT. SIZEC ( TABSYM ) ) THEN
+      if ( nsym+newsym .gt. sizec ( tabsym ) ) then
 
-         CALL SETMSG ( 'SYPUTC: Addition of the new symbol # causes ' // &
+         call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the name table.' )
-         CALL ERRCH  ( '#', NAME )
-         CALL SIGERR ( 'SPICE(NAMETABLEFULL)' )
+         call errch  ( '#', name )
+         call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-      ELSE IF ( NPTR+NEWSYM .GT. SIZEI ( TABPTR ) ) THEN
+      else if ( nptr+newsym .gt. sizei ( tabptr ) ) then
 
-         CALL SETMSG ( 'SYPUTC: Addition of the new symbol # causes ' // &
+         call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the pointer table.' )
-         CALL ERRCH  ( '#', NAME )
-         CALL SIGERR ( 'SPICE(POINTERTABLEFULL)' )
+         call errch  ( '#', name )
+         call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-      ELSE IF ( NVAL+NEWVAL .GT. SIZEC ( TABVAL ) ) THEN
+      else if ( nval+newval .gt. sizec ( tabval ) ) then
 
-         CALL SETMSG ( 'SYPUTC: Addition of the new symbol # causes ' // &
+         call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the value table.' )
-         CALL ERRCH  ( '#', NAME )
-         CALL SIGERR ( 'SPICE(VALUETABLEFULL)' )
+         call errch  ( '#', name )
+         call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
 
 !
 !     Looks like we can.
 !
-      ELSE
+      else
 
 !
 !        If the symbol exists, remove the current contents and
 !        change the dimension. Otherwise add the new name and
 !        dimension to the name and pointer tables.
 !
-         IF ( DIMVAL .GT. 0 ) THEN
-            CALL REMLAC ( DIMVAL, LOCVAL, TABVAL(1), NVAL )
-            CALL SCARDC ( NVAL, TABVAL )
+         if ( dimval .gt. 0 ) then
+            call remlac ( dimval, locval, tabval(1), nval )
+            call scardc ( nval, tabval )
 
-            TABPTR(LOCSYM) = N
+            tabptr(locsym) = n
 
-         ELSE
-            CALL INSLAC ( NAME, 1, LOCSYM+1, TABSYM(1), NSYM )
-            CALL SCARDC ( NSYM, TABSYM )
+         else
+            call inslac ( name, 1, locsym+1, tabsym(1), nsym )
+            call scardc ( nsym, tabsym )
 
-            CALL INSLAI ( N,    1, LOCSYM+1, TABPTR(1), NPTR )
-            CALL SCARDI ( NPTR, TABPTR )
-         END IF
+            call inslai ( n,    1, locsym+1, tabptr(1), nptr )
+            call scardi ( nptr, tabptr )
+         end if
 
 !
 !        In either case, insert the values from the input array into
 !        the value table.
 !
-         CALL INSLAC ( VALUES, N, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDC ( NVAL, TABVAL )
+         call inslac ( values, n, locval, tabval(1), nval )
+         call scardc ( nval, tabval )
 
-      END IF
+      end if
 
 
 
-      CALL CHKOUT ( 'SYPUTC' )
-      RETURN
-      END
+      call chkout ( 'SYPUTC' )
+      return
+      end

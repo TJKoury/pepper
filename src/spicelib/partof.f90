@@ -1,6 +1,6 @@
 !$Procedure PARTOF ( Parabolic time of flight )
 
-      SUBROUTINE PARTOF ( MA, D )
+      subroutine partof ( ma, d )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MA
-      DOUBLE PRECISION      D
+      double precision      ma
+      double precision      d
 
 ! $ Brief_I/O
 !
@@ -120,23 +120,23 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      DOUBLE PRECISION      DCBRT
+      logical               return
+      double precision      dcbrt
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      TOL
-      PARAMETER           ( TOL = 1.D-13 )
+      double precision      tol
+      parameter           ( tol = 1.d-13 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      M
-      DOUBLE PRECISION      FN
-      DOUBLE PRECISION      DERIV
-      DOUBLE PRECISION      DERIV2
-      DOUBLE PRECISION      CHANGE
+      double precision      m
+      double precision      fn
+      double precision      deriv
+      double precision      deriv2
+      double precision      change
 
 
 
@@ -144,11 +144,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PARTOF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PARTOF' )
+      end if
 
 
 
@@ -158,20 +158,20 @@
 !     that it's positive (by symmetry).
 !
 
-      IF ( MA .EQ. 0.D0 ) THEN
-         D = 0.D0
-         CALL CHKOUT ( 'PARTOF' )
-         RETURN
-      ELSE
-         M = ABS ( MA )
-      END IF
+      if ( ma .eq. 0.d0 ) then
+         d = 0.d0
+         call chkout ( 'PARTOF' )
+         return
+      else
+         m = abs ( ma )
+      end if
 
 
 !
 !     We need an initial guess for the eccentric anomaly D. The function
 !     is well behaved, so just about any guess will do.
 !
-      D = DCBRT ( 3.D0 * M )
+      d = dcbrt ( 3.d0 * m )
 
 
 !
@@ -193,24 +193,24 @@
 !          f'' = 2 D
 !
 
-      CHANGE = 1.D0
+      change = 1.d0
 
-      DO WHILE ( ABS ( CHANGE ) .GT. TOL )
+      do while ( abs ( change ) .gt. tol )
 
-         FN     = D    + D**3/3.D0 - M
-         DERIV  = 1.D0 + D**2
-         DERIV2 = 2.D0 * D
+         fn     = d    + d**3/3.d0 - m
+         deriv  = 1.d0 + d**2
+         deriv2 = 2.d0 * d
 
-         CHANGE = (FN/DERIV) * ( 1.D0 + (FN*DERIV2) / (2.D0*DERIV**2) )
-         D      = D - CHANGE
+         change = (fn/deriv) * ( 1.d0 + (fn*deriv2) / (2.d0*deriv**2) )
+         d      = d - change
 
-      END DO
+      end do
 
-      IF ( MA .LT. 0.D0 ) THEN
-         D = -D
-      END IF
+      if ( ma .lt. 0.d0 ) then
+         d = -d
+      end if
 
 
-      CALL CHKOUT ( 'PARTOF' )
-      RETURN
-      END
+      call chkout ( 'PARTOF' )
+      return
+      end

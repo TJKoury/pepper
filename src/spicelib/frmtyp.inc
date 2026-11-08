@@ -73,26 +73,26 @@
 
 
 
-      INTEGER               INERTL
-      PARAMETER           ( INERTL = 1 )
+      integer               inertl
+      parameter           ( inertl = 1 )
 
-      INTEGER               PCK
-      PARAMETER           ( PCK    = INERTL + 1 )
+      integer               pck
+      parameter           ( pck    = inertl + 1 )
 
-      INTEGER               CK
-      PARAMETER           ( CK     = PCK    + 1 )
+      integer               ck
+      parameter           ( ck     = pck    + 1 )
 
-      INTEGER               TK
-      PARAMETER           ( TK     = CK     + 1 )
+      integer               tk
+      parameter           ( tk     = ck     + 1 )
 
-      INTEGER               DYN
-      PARAMETER           ( DYN    = TK     + 1 )
+      integer               dyn
+      parameter           ( dyn    = tk     + 1 )
 
-      INTEGER               SWTCH
-      PARAMETER           ( SWTCH  = DYN    + 1 )
+      integer               swtch
+      parameter           ( swtch  = dyn    + 1 )
 
-      INTEGER               ALL
-      PARAMETER           ( ALL    = -1 )
+      integer               all
+      parameter           ( all    = -1 )
 
 !
 !     End of INCLUDE file frmtyp.inc

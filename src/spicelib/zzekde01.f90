@@ -1,6 +1,6 @@
 !$Procedure      ZZEKDE01 ( EK, delete column entry, class 1 )
 
-      SUBROUTINE ZZEKDE01 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      subroutine zzekde01 ( handle, segdsc, coldsc, recptr )
 
 ! $ Abstract
 !
@@ -17,19 +17,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
 
 ! $ Brief_I/O
 !
@@ -127,33 +127,33 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               DATPTR
-      INTEGER               IDXTYP
-      INTEGER               NLINKS
-      INTEGER               P
-      INTEGER               PTRLOC
-      INTEGER               RECNO
+      integer               base
+      integer               datptr
+      integer               idxtyp
+      integer               nlinks
+      integer               p
+      integer               ptrloc
+      integer               recno
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKDE01' )
+      call chkin ( 'ZZEKDE01' )
 
 !
 !     Before trying to actually modify the file, do every error
@@ -162,12 +162,12 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKDE01' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKDE01' )
+         return
+      end if
 
 !
 !     Compute the data pointer location.  If the data pointer is
@@ -175,31 +175,31 @@
 !     the element is null, just set it to `uninitialized'.  The
 !     presence of actual data obligates us to clean up, however.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLDSC(ORDIDX)
+      ptrloc  =  recptr + dptbas + coldsc(ordidx)
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF ( DATPTR .GT. 0 ) THEN
+      if ( datptr .gt. 0 ) then
 !
 !        Determine whether the column is indexed.
 !
-         IDXTYP  =  COLDSC(IXTIDX)
+         idxtyp  =  coldsc(ixtidx)
 
 
-         IF ( IDXTYP .NE. IFALSE ) THEN
+         if ( idxtyp .ne. ifalse ) then
 !
 !           This column is indexed.  Delete the index entry
 !           for this column.
 !
-            CALL ZZEKIXDL ( HANDLE, SEGDSC, COLDSC, RECPTR )
+            call zzekixdl ( handle, segdsc, coldsc, recptr )
 
-         END  IF
+         end  if
 
 !
 !        Find the number of the page containing the column entry.
 !
-         CALL ZZEKPGPG ( INT, DATPTR, P, BASE )
+         call zzekpgpg ( int, datptr, p, base )
 
 !
 !        Get the link count for the page.  If we have more
@@ -207,68 +207,68 @@
 !        we're down to one link, this deletion will finish off the
 !        page:  we'll deallocate it.
 !
-         CALL ZZEKGLNK ( HANDLE, INT, P, NLINKS )
+         call zzekglnk ( handle, int, p, nlinks )
 
-         IF ( NLINKS .GT. 1 ) THEN
+         if ( nlinks .gt. 1 ) then
 
-            CALL ZZEKSLNK ( HANDLE, INT, P, NLINKS-1 )
+            call zzekslnk ( handle, int, p, nlinks-1 )
 
-         ELSE
+         else
 !
 !           If we removed the last item from the page, we can delete
 !           the page.  ZZEKDPS adjusts the segment's metadata
 !           to reflect the deallocation.
 !
-            CALL ZZEKDPS ( HANDLE, SEGDSC, INT, P )
+            call zzekdps ( handle, segdsc, int, p )
 
-         END IF
+         end if
 
 !
 !        Set the data pointer to indicate the item is uninitialized.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, UNINIT )
+         call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 
-      ELSE IF ( DATPTR .EQ. NULL ) THEN
+      else if ( datptr .eq. null ) then
 !
 !        Determine whether the column is indexed.
 !
-         IDXTYP  =  COLDSC(IXTIDX)
+         idxtyp  =  coldsc(ixtidx)
 
-         IF ( IDXTYP .NE. IFALSE ) THEN
+         if ( idxtyp .ne. ifalse ) then
 !
 !           This column is indexed.  Delete the index entry
 !           for this column.
 !
-            CALL ZZEKIXDL ( HANDLE, SEGDSC, COLDSC, RECPTR )
+            call zzekixdl ( handle, segdsc, coldsc, recptr )
 
-         END  IF
+         end  if
 
 !
 !        Mark the entry as `uninitialized'.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, UNINIT )
+         call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 
-      ELSE IF ( DATPTR .NE. UNINIT ) THEN
+      else if ( datptr .ne. uninit ) then
 !
 !        UNINIT was the last valid possibility.  The data pointer is
 !        corrupted.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL SETMSG ( 'Data pointer is corrupted. SEGNO = #; ' &
+         call setmsg ( 'Data pointer is corrupted. SEGNO = #; ' &
          //            'COLIDX =  #; RECNO = #; EK = #'        )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                    )
-         CALL ERRINT ( '#',  COLDSC(ORDIDX)                    )
-         CALL ERRINT ( '#',  RECNO                             )
-         CALL ERRHAN ( '#',  HANDLE                            )
-         CALL SIGERR ( 'SPICE(BUG)'                            )
-         CALL CHKOUT ( 'ZZEKDE01'                              )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                    )
+         call errint ( '#',  coldsc(ordidx)                    )
+         call errint ( '#',  recno                             )
+         call errhan ( '#',  handle                            )
+         call sigerr ( 'SPICE(BUG)'                            )
+         call chkout ( 'ZZEKDE01'                              )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZEKDE01' )
-      RETURN
-      END
+      call chkout ( 'ZZEKDE01' )
+      return
+      end

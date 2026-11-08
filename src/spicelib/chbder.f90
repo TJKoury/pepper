@@ -1,6 +1,6 @@
 !$Procedure CHBDER ( Derivatives of a Chebyshev expansion )
 
-      SUBROUTINE CHBDER ( CP, DEGP, X2S, X, NDERIV, PARTDP, DPDXS )
+      subroutine chbder ( cp, degp, x2s, x, nderiv, partdp, dpdxs )
 
 ! $ Abstract
 !
@@ -20,15 +20,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      CP     (      * )
-      INTEGER               DEGP
-      DOUBLE PRECISION      X2S    (      2 )
-      DOUBLE PRECISION      X
-      INTEGER               NDERIV
-      DOUBLE PRECISION      PARTDP ( 3, 0:* )
-      DOUBLE PRECISION      DPDXS  (    0:* )
+      double precision      cp     (      * )
+      integer               degp
+      double precision      x2s    (      2 )
+      double precision      x
+      integer               nderiv
+      double precision      partdp ( 3, 0:* )
+      double precision      dpdxs  (    0:* )
 
 ! $ Brief_I/O
 !
@@ -353,66 +353,66 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION SCALE
-      DOUBLE PRECISION S
-      DOUBLE PRECISION S2
+      double precision scale
+      double precision s
+      double precision s2
 
-      INTEGER          I
-      INTEGER          J
+      integer          i
+      integer          j
 
 !
 !     Transform X to S and initialize temporary variables.
 !
-      S     = (X-X2S(1)) / X2S(2)
-      S2    = 2.0D0 * S
-      J     = DEGP  + 1
+      s     = (x-x2s(1)) / x2s(2)
+      s2    = 2.0d0 * s
+      j     = degp  + 1
 
-      DO I = 0,NDERIV
-         PARTDP (1,I) = 0.D0
-         PARTDP (2,I) = 0.D0
-      END DO
+      do i = 0,nderiv
+         partdp (1,i) = 0.d0
+         partdp (2,i) = 0.d0
+      end do
 
 !
 !     Evaluate the polynomial ...
 !
-      DO WHILE ( J .GT. 1 )
+      do while ( j .gt. 1 )
 
-         PARTDP (3,0) = PARTDP (2,0)
-         PARTDP (2,0) = PARTDP (1,0)
-         PARTDP (1,0) = CP (J)   + ( S2*PARTDP(2,0)  - PARTDP(3,0) )
+         partdp (3,0) = partdp (2,0)
+         partdp (2,0) = partdp (1,0)
+         partdp (1,0) = cp (j)   + ( s2*partdp(2,0)  - partdp(3,0) )
 
 !
 !        ... and its derivatives using recursion.
 !
-         SCALE = 2.0D0
+         scale = 2.0d0
 
-         DO I = 1, NDERIV
+         do i = 1, nderiv
 
-            PARTDP (3,I) =   PARTDP(2,I  )
-            PARTDP (2,I) =   PARTDP(1,I  )
+            partdp (3,i) =   partdp(2,i  )
+            partdp (2,i) =   partdp(1,i  )
 
-            PARTDP (1,I) =   PARTDP(2,I-1)*SCALE &
-                           + PARTDP(2,I  )*S2 &
-                           - PARTDP(3,I  )
+            partdp (1,i) =   partdp(2,i-1)*scale &
+                           + partdp(2,i  )*s2 &
+                           - partdp(3,i  )
 
-            SCALE        =   SCALE + 2.0D0
-         END DO
+            scale        =   scale + 2.0d0
+         end do
 
-         J        = J - 1
+         j        = j - 1
 
-      END DO
+      end do
 
-      DPDXS(0) = CP(1) + ( S*PARTDP(1,0)  - PARTDP(2,0)  )
+      dpdxs(0) = cp(1) + ( s*partdp(1,0)  - partdp(2,0)  )
 
-      SCALE    = 1.0D0
+      scale    = 1.0d0
 
-      DO I = 1, NDERIV
-         DPDXS(I)  =   PARTDP(1,I-1)*SCALE &
-                     + PARTDP(1,I  )*S &
-                     - PARTDP(2,I  )
+      do i = 1, nderiv
+         dpdxs(i)  =   partdp(1,i-1)*scale &
+                     + partdp(1,i  )*s &
+                     - partdp(2,i  )
 
-         SCALE  =   SCALE + 1
-      END DO
+         scale  =   scale + 1
+      end do
 
 !
 !     Scale the k'th derivative w.r.t S by (1/X2S(2)**k) so that we have
@@ -432,12 +432,12 @@
 !           not produce identical results for the first derivative.
 !
 !
-      SCALE  = X2S(2)
+      scale  = x2s(2)
 
-      DO I = 1, NDERIV
-         DPDXS(I) = DPDXS(I) / SCALE
-         SCALE    = X2S(2)   * SCALE
-      END DO
+      do i = 1, nderiv
+         dpdxs(i) = dpdxs(i) / scale
+         scale    = x2s(2)   * scale
+      end do
 
-      RETURN
-      END
+      return
+      end

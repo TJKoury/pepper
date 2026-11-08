@@ -1,6 +1,6 @@
 !$Procedure DASACU ( DAS add comments from a logical unit )
 
-      SUBROUTINE DASACU ( COMLUN, BEGMRK, ENDMRK, INSBLN, HANDLE )
+      subroutine dasacu ( comlun, begmrk, endmrk, insbln, handle )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               COMLUN
-      CHARACTER*(*)         BEGMRK
-      CHARACTER*(*)         ENDMRK
-      LOGICAL               INSBLN
-      INTEGER               HANDLE
+      integer               comlun
+      character*(*)         begmrk
+      character*(*)         endmrk
+      logical               insbln
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -377,125 +377,125 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
 !     Set the value for the maximum length of a text line.
 !
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 255 )
+      integer               linlen
+      parameter           ( linlen = 255 )
 !
 !     Set the length of a DAS file ID word.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 !
 !     Set the length of a DAS file internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     Set the size of the comment buffer.
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 22 )
+      integer               bufsiz
+      parameter           ( bufsiz = 22 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      INTEGER               MAXPCH
-      PARAMETER           ( MAXPCH = 126 )
+      integer               maxpch
+      parameter           ( maxpch = 126 )
 
-      INTEGER               MINPCH
-      PARAMETER           ( MINPCH = 32 )
+      integer               minpch
+      parameter           ( minpch = 32 )
 !
 !     Local variables
 !
-      CHARACTER*(LINLEN)    COMBUF(BUFSIZ)
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(LINLEN)    LINE
+      character*(linlen)    combuf(bufsiz)
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
+      character*(linlen)    line
 
-      INTEGER               I
-      INTEGER               INTCHR
-      INTEGER               IOSTAT
-      INTEGER               J
-      INTEGER               LENGTH
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NUMCOM
-      INTEGER               SCRLUN
+      integer               i
+      integer               intchr
+      integer               iostat
+      integer               j
+      integer               length
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
+      integer               numcom
+      integer               scrlun
 
-      LOGICAL               EOF
-      LOGICAL               MORE
+      logical               eof
+      logical               more
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASACU' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASACU' )
+      end if
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASACU' )
-         RETURN
+         call chkout ( 'DASACU' )
+         return
 
-      END IF
+      end if
 !
 !     Get the number of comment characters, and some other stuff that
 !     we will not be using.
 !
-      CALL DASRFR ( HANDLE, IDWORD, IFNAME, &
-                            NRESVR, NRESVC, &
-                            NCOMR,  NCOMC   )
+      call dasrfr ( handle, idword, ifname, &
+                            nresvr, nresvc, &
+                            ncomr,  ncomc   )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASACU' )
-         RETURN
+         call chkout ( 'DASACU' )
+         return
 
-      END IF
+      end if
 !
 !     Get an available logical unit for the comment scratch file.
 !
-      CALL GETLUN ( SCRLUN )
+      call getlun ( scrlun )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASACU' )
-         RETURN
+         call chkout ( 'DASACU' )
+         return
 
-      END IF
+      end if
 !
 !     Attempt to open the comment scratch file.
 !
-      OPEN ( UNIT=SCRLUN, STATUS='SCRATCH', IOSTAT=IOSTAT )
+      open ( unit=scrlun, status='SCRATCH', iostat=iostat )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Attempt to open a temporary file failed.' // &
+         call setmsg ( 'Attempt to open a temporary file failed.' // &
                        ' IOSTAT = #.'                              )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(FILEOPENFAILED)'                     )
-         CALL CHKOUT ( 'DASACU'                                    )
-         RETURN
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(FILEOPENFAILED)'                     )
+         call chkout ( 'DASACU'                                    )
+         return
 
-      END IF
+      end if
 !
 !     Start looking for the begin comment marker. If the begin marker
 !     is a blank line, then the comments begin on the first line of the
@@ -503,76 +503,76 @@
 !     immediately following the line which contains the begin comments
 !     marker.
 !
-      LINE = ' '
-      EOF  = .FALSE.
-      DO WHILE ( LINE .NE. BEGMRK )
+      line = ' '
+      eof  = .false.
+      do while ( line .ne. begmrk )
 
-         CALL READLN ( COMLUN, LINE, EOF )
-         CALL LJUST  ( LINE, LINE        )
+         call readln ( comlun, line, eof )
+         call ljust  ( line, line        )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CLOSE       ( SCRLUN   )
-            CALL CHKOUT ( 'DASACU' )
-            RETURN
+            close       ( scrlun   )
+            call chkout ( 'DASACU' )
+            return
 
-         END IF
+         end if
 !
 !        If we have encountered the end of file  here, we have a
 !        problem: We did not find the begin comments marker in the
 !        text file. So, set an appropriate error message and signal
 !        the error. don't forget to close the scratch file.
 !
-         IF ( EOF ) THEN
+         if ( eof ) then
 
-            CLOSE       ( SCRLUN                                      )
-            CALL SETMSG ( 'The begin comments marker ''#'' was not'  // &
+            close       ( scrlun                                      )
+            call setmsg ( 'The begin comments marker ''#'' was not'  // &
                           ' found in the comment file ''#''.'         )
-            CALL ERRCH  ( '#', BEGMRK                                 )
-            CALL ERRFNM ( '#', COMLUN                                 )
-            CALL SIGERR ( 'SPICE(MARKERNOTFOUND)'                     )
-            CALL CHKOUT ( 'DASACU'                                    )
-            RETURN
+            call errch  ( '#', begmrk                                 )
+            call errfnm ( '#', comlun                                 )
+            call sigerr ( 'SPICE(MARKERNOTFOUND)'                     )
+            call chkout ( 'DASACU'                                    )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Begin reading in the comment lines from the comment file,
 !     placing them a buffer at a time into the temporary file.
 !     We also scan each line for non printing characters.
 !
-      LINE = ' '
-      IF ( ENDMRK .EQ. ' ' ) THEN
+      line = ' '
+      if ( endmrk .eq. ' ' ) then
 !
 !        If the end mark is blank, then we want to go until we hit the
 !        end of the comment file.
 !
-         DO WHILE ( .NOT. EOF )
+         do while ( .not. eof )
 
-            NUMCOM = 0
-            CALL READLA ( COMLUN, BUFSIZ, NUMCOM, COMBUF, EOF )
+            numcom = 0
+            call readla ( comlun, bufsiz, numcom, combuf, eof )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CLOSE       ( SCRLUN   )
-               CALL CHKOUT ( 'DASACU' )
-               RETURN
+               close       ( scrlun   )
+               call chkout ( 'DASACU' )
+               return
 
-            END IF
+            end if
 !
 !           If we got some comments, we need to scan them for non
 !           printing characters.
 !
-            IF ( NUMCOM .GT. 0 ) THEN
+            if ( numcom .gt. 0 ) then
 
-               DO I = 1, NUMCOM
+               do i = 1, numcom
 
-                  LENGTH = LASTNB ( COMBUF(I) )
+                  length = lastnb ( combuf(i) )
 !
 !                 Scan the comment line for non printing characters.
 !
-                  DO J = 1, LENGTH
+                  do j = 1, length
 !
 !                    Check to see that the characters in the buffer
 !                    are all printing ASCII characters. The bounds
@@ -580,99 +580,99 @@
 !                    MAXPCH and MINPCH, which are defined in the
 !                    $ Local Parameters section of the header.
 !
-                     INTCHR = ICHAR ( COMBUF(I)(J:J) )
-                     IF ( ( INTCHR .GT. MAXPCH ) .OR. &
-                          ( INTCHR .LT. MINPCH )      ) THEN
+                     intchr = ichar ( combuf(i)(j:j) )
+                     if ( ( intchr .gt. maxpch ) .or. &
+                          ( intchr .lt. minpch )      ) then
 
-                           CLOSE       ( SCRLUN                      )
-                           CALL SETMSG ( 'A nonprinting character'  // &
+                           close       ( scrlun                      )
+                           call setmsg ( 'A nonprinting character'  // &
                                          ' was encountered in the'  // &
                                          ' comments. Value: #'       )
-                           CALL ERRINT ( '#', INTCHR                 )
-                           CALL SIGERR ( 'SPICE(ILLEGALCHARACTER)'   )
-                           CALL CHKOUT ( 'DASACU'                    )
-                           RETURN
+                           call errint ( '#', intchr                 )
+                           call sigerr ( 'SPICE(ILLEGALCHARACTER)'   )
+                           call chkout ( 'DASACU'                    )
+                           return
 
-                     END IF
+                     end if
 
-                  END DO
+                  end do
 
-               END DO
+               end do
 !
 !              Write the comments to the temporary file.
 !
-               CALL WRITLA( NUMCOM, COMBUF, SCRLUN )
+               call writla( numcom, combuf, scrlun )
 
-            END IF
+            end if
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CLOSE       ( SCRLUN   )
-               CALL CHKOUT ( 'DASACU' )
-               RETURN
+               close       ( scrlun   )
+               call chkout ( 'DASACU' )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        The endmark is non blank, then  we want to go until we find a
 !        line in the comment file that matches the end mark that was
 !        entered.
 !
-         MORE = .TRUE.
-         DO WHILE ( MORE )
+         more = .true.
+         do while ( more )
 
-            NUMCOM = 0
-            CALL READLA ( COMLUN, BUFSIZ, NUMCOM, COMBUF, EOF )
+            numcom = 0
+            call readla ( comlun, bufsiz, numcom, combuf, eof )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CLOSE       ( SCRLUN   )
-               CALL CHKOUT ( 'DASACU' )
-               RETURN
+               close       ( scrlun   )
+               call chkout ( 'DASACU' )
+               return
 
-            END IF
+            end if
 !
 !           Look for ENDMRK in the current buffer if we got some
 !           comments.
 !
-            IF ( NUMCOM .GT. 0 ) THEN
+            if ( numcom .gt. 0 ) then
 
-               I = 1
-               DO WHILE ( MORE .AND. ( I .LE. NUMCOM ) )
+               i = 1
+               do while ( more .and. ( i .le. numcom ) )
 
-                  LINE = COMBUF(I)
-                  CALL LJUST ( LINE, LINE )
+                  line = combuf(i)
+                  call ljust ( line, line )
 
-                  IF ( LINE .EQ. ENDMRK ) THEN
+                  if ( line .eq. endmrk ) then
 
-                     MORE   = .FALSE.
-                     NUMCOM = I - 1
+                     more   = .false.
+                     numcom = i - 1
 
-                  ELSE
+                  else
 
-                     I = I + 1
+                     i = i + 1
 
-                  END IF
+                  end if
 
-               END DO
+               end do
 
-            END IF
+            end if
 !
 !           If we still have some comments, we need to scan them for
 !           non printing characters.
 !
-            IF ( NUMCOM .GT. 0 ) THEN
+            if ( numcom .gt. 0 ) then
 
-               DO I = 1, NUMCOM
+               do i = 1, numcom
 
-                  LENGTH = LASTNB ( COMBUF(I) )
+                  length = lastnb ( combuf(i) )
 !
 !                 Scan the comment line for non printinig characters.
 !
-                  DO J = 1, LENGTH
+                  do j = 1, length
 !
 !                    Check to see that the characters in the buffer
 !                    are all printing ASCII characters. The bounds
@@ -680,62 +680,62 @@
 !                    MAXPCH and MINPCH, which are defined in the
 !                    $ Local Parameters section of the header.
 !
-                     INTCHR = ICHAR ( COMBUF(I)(J:J) )
-                     IF ( ( INTCHR .GT. MAXPCH ) .OR. &
-                          ( INTCHR .LT. MINPCH )      ) THEN
+                     intchr = ichar ( combuf(i)(j:j) )
+                     if ( ( intchr .gt. maxpch ) .or. &
+                          ( intchr .lt. minpch )      ) then
 
-                           CLOSE       ( SCRLUN                      )
-                           CALL SETMSG ( 'A nonprinting character'  // &
+                           close       ( scrlun                      )
+                           call setmsg ( 'A nonprinting character'  // &
                                          ' was encountered in the'  // &
                                          ' comment buffer. Value:'  // &
                                          ' #'                        )
-                           CALL ERRINT ( '#', INTCHR                 )
-                           CALL SIGERR ( 'SPICE(ILLEGALCHARACTER)'   )
-                           CALL CHKOUT ( 'DASACU'                    )
-                           RETURN
+                           call errint ( '#', intchr                 )
+                           call sigerr ( 'SPICE(ILLEGALCHARACTER)'   )
+                           call chkout ( 'DASACU'                    )
+                           return
 
-                     END IF
+                     end if
 
-                  END DO
+                  end do
 
-               END DO
+               end do
 !
 !              Write the comments to the temporary file.
 !
-               CALL WRITLA( NUMCOM, COMBUF, SCRLUN )
+               call writla( numcom, combuf, scrlun )
 
-            END IF
+            end if
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CLOSE       ( SCRLUN   )
-               CALL CHKOUT ( 'DASACU' )
-               RETURN
+               close       ( scrlun   )
+               call chkout ( 'DASACU' )
+               return
 
-            END IF
+            end if
 !
 !           If we have encountered the end of file here, we have a
 !           problem: We did not find the end comments marker in the
 !           text file. So, set an appropriate error message and
 !           signal the error.
 !
-            IF ( MORE .AND. EOF ) THEN
+            if ( more .and. eof ) then
 
-               CLOSE       ( SCRLUN                                )
-               CALL SETMSG ( 'The end comments marker ''#'' was'  // &
+               close       ( scrlun                                )
+               call setmsg ( 'The end comments marker ''#'' was'  // &
                              ' not found in the comment file'     // &
                              ' ''#''.'                             )
-               CALL ERRCH  ( '#', ENDMRK                           )
-               CALL ERRFNM ( '#', COMLUN                           )
-               CALL SIGERR ( 'SPICE(MARKERNOTFOUND)'               )
-               CALL CHKOUT ( 'DASACU'                              )
-               RETURN
+               call errch  ( '#', endmrk                           )
+               call errfnm ( '#', comlun                           )
+               call sigerr ( 'SPICE(MARKERNOTFOUND)'               )
+               call chkout ( 'DASACU'                              )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 !
 !     If we made it to here, we have culled all of the comments out of
 !     the text file and they were all OK. So we need to add all of the
@@ -746,60 +746,60 @@
 !     comments already in the comment area, indicated by NCOMC > 0, then
 !     we insert the blank line. Otherwise, just add the comments.
 !
-      IF ( INSBLN .AND. ( NCOMC .GT. 0 ) ) THEN
+      if ( insbln .and. ( ncomc .gt. 0 ) ) then
 
-         CALL DASAC ( HANDLE, 1, ' ' )
+         call dasac ( handle, 1, ' ' )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CLOSE       ( SCRLUN   )
-            CALL CHKOUT ( 'DASACU' )
-            RETURN
+            close       ( scrlun   )
+            call chkout ( 'DASACU' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Rewind the scratch file to get ready to put the comments into the
 !     comment area.
 !
-      REWIND ( SCRLUN )
+      rewind ( scrlun )
 !
 !     Begin reading through the scratch file, placing the comment lines
 !     into the comment area of the DAS file a buffer at a time
 !
-      EOF = .FALSE.
-      DO WHILE ( .NOT. EOF )
+      eof = .false.
+      do while ( .not. eof )
 
-         NUMCOM = 0
+         numcom = 0
 !
 !        Read in a buffer of comment lines.
 !
-         CALL READLA ( SCRLUN, BUFSIZ, NUMCOM, COMBUF, EOF )
+         call readla ( scrlun, bufsiz, numcom, combuf, eof )
 !
 !        If we got some, add them to the comment area of the DAS file.
 !
-         IF ( NUMCOM .GT. 0 ) THEN
+         if ( numcom .gt. 0 ) then
 
-            CALL DASAC  ( HANDLE, NUMCOM, COMBUF )
+            call dasac  ( handle, numcom, combuf )
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CLOSE       ( SCRLUN   )
-            CALL CHKOUT ( 'DASACU' )
-            RETURN
+            close       ( scrlun   )
+            call chkout ( 'DASACU' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Close the scratch file before exiting; it's the only one we
 !     opened.
 !
-      CLOSE ( SCRLUN )
+      close ( scrlun )
 
-      CALL CHKOUT ( 'DASACU' )
-      RETURN
-      END
+      call chkout ( 'DASACU' )
+      return
+      end

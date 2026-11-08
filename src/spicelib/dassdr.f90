@@ -1,6 +1,6 @@
 !$Procedure DASSDR ( DAS, segregate data records )
 
-      SUBROUTINE DASSDR ( HANDLE )
+      subroutine dassdr ( handle )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -205,104 +205,104 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SUMAI
+      integer               sumai
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC   = 1024 )
+      integer               nwc
+      parameter           ( nwc   = 1024 )
 
-      INTEGER               NWD
-      PARAMETER           ( NWD   =  128 )
+      integer               nwd
+      parameter           ( nwd   =  128 )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI   =  256 )
+      integer               nwi
+      parameter           ( nwi   =  256 )
 
 !
 !     Data type parameters
 !
-      INTEGER               CHAR
-      PARAMETER           ( CHAR   =  1  )
+      integer               char
+      parameter           ( char   =  1  )
 
-      INTEGER               DP
-      PARAMETER           ( DP     =  2  )
+      integer               dp
+      parameter           ( dp     =  2  )
 
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
-      INTEGER               DIR
-      PARAMETER           ( DIR    =  4  )
+      integer               dir
+      parameter           ( dir    =  4  )
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      INTEGER               BWDLOC
-      PARAMETER           ( BWDLOC = 1 )
+      integer               bwdloc
+      parameter           ( bwdloc = 1 )
 
-      INTEGER               FWDLOC
-      PARAMETER           ( FWDLOC = 2 )
+      integer               fwdloc
+      parameter           ( fwdloc = 2 )
 
 !
 !     Directory address range location base
 !
-      INTEGER               RNGBAS
-      PARAMETER           ( RNGBAS  =  2  )
+      integer               rngbas
+      parameter           ( rngbas  =  2  )
 
 
 !
 !     Location of first type descriptor
 !
-      INTEGER               BEGDSC
-      PARAMETER           ( BEGDSC = 9 )
+      integer               begdsc
+      parameter           ( begdsc = 9 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NWC)       CREC
-      CHARACTER*(NWC)       SAVEC
+      character*(nwc)       crec
+      character*(nwc)       savec
 
-      DOUBLE PRECISION      DREC   ( NWD )
-      DOUBLE PRECISION      SAVED  ( NWD )
+      double precision      drec   ( nwd )
+      double precision      saved  ( nwd )
 
-      INTEGER               BASE
-      INTEGER               COUNT  ( 4 )
-      INTEGER               DEST
-      INTEGER               DRBASE
-      INTEGER               FREE
-      INTEGER               I
-      INTEGER               IREC   ( NWI    )
-      INTEGER               J
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               LOC
-      INTEGER               LREC
-      INTEGER               LTYPE
-      INTEGER               LWORD
-      INTEGER               MAXADR
-      INTEGER               MINADR
-      INTEGER               N
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               OFFSET
-      INTEGER               POS
-      INTEGER               PRVTYP
-      INTEGER               RECNO
-      INTEGER               SAVEI  ( NWI    )
-      INTEGER               SAVTYP
-      INTEGER               SCRHAN
-      INTEGER               START
-      INTEGER               TOTAL
-      INTEGER               TYPE
-      INTEGER               UNIT
+      integer               base
+      integer               count  ( 4 )
+      integer               dest
+      integer               drbase
+      integer               free
+      integer               i
+      integer               irec   ( nwi    )
+      integer               j
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               loc
+      integer               lrec
+      integer               ltype
+      integer               lword
+      integer               maxadr
+      integer               minadr
+      integer               n
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
+      integer               offset
+      integer               pos
+      integer               prvtyp
+      integer               recno
+      integer               savei  ( nwi    )
+      integer               savtyp
+      integer               scrhan
+      integer               start
+      integer               total
+      integer               type
+      integer               unit
 
-      LOGICAL               MORE
+      logical               more
 
 
 
@@ -314,17 +314,17 @@
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      INTEGER               NEXT   ( 3 )
-      SAVE                  NEXT
+      integer               next   ( 3 )
+      save                  next
 
-      INTEGER               PREV   ( 3 )
-      SAVE                  PREV
+      integer               prev   ( 3 )
+      save                  prev
 
 !
 !     Initial values
 !
-      DATA                  NEXT   /  2,   3,   1  /
-      DATA                  PREV   /  3,   1,   2  /
+      data                  next   /  2,   3,   1  /
+      data                  prev   /  3,   1,   2  /
 
 
 
@@ -332,37 +332,37 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASSDR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASSDR' )
+      end if
 
 !
 !     Before starting, make sure that this DAS file is open for
 !     writing.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
 !
 !     Get the logical unit for this file.
 !
-      CALL DASHLU ( HANDLE, UNIT )
+      call dashlu ( handle, unit )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASSDR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASSDR' )
+         return
+      end if
 
 !
 !     Write out any buffered records that belong to the file.
 !
-      CALL DASWBR ( HANDLE )
+      call daswbr ( handle )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DASSDR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DASSDR' )
+         return
+      end if
 
 !
 !     We're going to re-order the physical records in the DAS file,
@@ -385,12 +385,12 @@
 !
 !     Allocate a scratch DAS file to keep our vectors in.
 !
-      CALL DASOPS ( SCRHAN )
+      call dasops ( scrhan )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DASSDR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DASSDR' )
+         return
+      end if
 
 !
 !     Now build up our `inverse order vector'.   This array is an
@@ -405,154 +405,154 @@
 !
 !     We also must maintain a count of records of each type.
 !
-      CALL CLEARI ( 4, COUNT )
+      call cleari ( 4, count )
 
 !
 !     Get the file summary for the DAS file to be segregated.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DASSDR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DASSDR' )
+         return
+      end if
 !
 !     Find the record and word positions LREC and LWORD of the last
 !     descriptor in the file, and also find the type of the descriptor
 !     LTYPE.
 !
-      CALL MAXAI  ( LASTRC,  3,  LREC,  LOC )
-      LWORD = 0
+      call maxai  ( lastrc,  3,  lrec,  loc )
+      lword = 0
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF (       ( LASTRC(I) .EQ. LREC  ) &
-              .AND. ( LASTWD(I) .GT. LWORD )  ) THEN
+         if (       ( lastrc(i) .eq. lrec  ) &
+              .and. ( lastwd(i) .gt. lword )  ) then
 
-            LWORD = LASTWD(I)
-            LTYPE = I
+            lword = lastwd(i)
+            ltype = i
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     The first directory starts after the last comment record.
 !
-      RECNO  =  NRESVR + NCOMR + 2
+      recno  =  nresvr + ncomr + 2
 
 
-      DO WHILE (  ( RECNO .LE. LREC ) .AND. ( RECNO .GT. 0 )  )
+      do while (  ( recno .le. lrec ) .and. ( recno .gt. 0 )  )
 !
 !        Read the directory record.
 !
-         CALL DASRRI ( HANDLE, RECNO, 1, NWI, IREC )
+         call dasrri ( handle, recno, 1, nwi, irec )
 
-         IF ( FAILED () ) THEN
-             CALL CHKOUT ( 'DASSDR' )
-           RETURN
-         END IF
+         if ( failed () ) then
+             call chkout ( 'DASSDR' )
+           return
+         end if
 !
 !        Increment the directory count.
 !
-         COUNT(DIR)  =  COUNT(DIR) + 1
+         count(dir)  =  count(dir) + 1
 
 !
 !        Add the data type (`directory') and count (1) of the current
 !        record to the inverse order vector.
 !
-         CALL DASADI ( SCRHAN,  1,  DIR        )
-         CALL DASADI ( SCRHAN,  1,  COUNT(DIR) )
+         call dasadi ( scrhan,  1,  dir        )
+         call dasadi ( scrhan,  1,  count(dir) )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'DASSDR' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'DASSDR' )
+            return
+         end if
 !
 !        Set up our `finite state machine' that tells us the data
 !        types of the records described by the last read directory.
 !
-         TYPE    =  IREC ( BEGDSC )
-         PRVTYP  =  PREV ( TYPE   )
+         type    =  irec ( begdsc )
+         prvtyp  =  prev ( type   )
 
 !
 !        Now traverse the directory and update the inverse order
 !        vector based on the descriptors we find.
 !
-         MORE  =  .TRUE.
-         I     =   BEGDSC + 1
+         more  =  .true.
+         i     =   begdsc + 1
 
 
-         DO WHILE ( MORE )
+         do while ( more )
 !
 !           Obtain the count for the current descriptor.
 !
-            N  =  ABS (  IREC(I)  )
+            n  =  abs (  irec(i)  )
 
 !
 !           Update our inverse order vector to describe the positions
 !           of the N records described by the current descriptor.
 !
-            DO J  =  1, N
+            do j  =  1, n
 
-               CALL DASADI (  SCRHAN,  1,  TYPE           )
-               CALL DASADI (  SCRHAN,  1,  COUNT(TYPE)+J  )
+               call dasadi (  scrhan,  1,  type           )
+               call dasadi (  scrhan,  1,  count(type)+j  )
 
-               IF ( FAILED () ) THEN
-                  CALL CHKOUT ( 'DASSDR' )
-                  RETURN
-               END IF
+               if ( failed () ) then
+                  call chkout ( 'DASSDR' )
+                  return
+               end if
 
-            END DO
+            end do
 
 !
 !           Adjust the count of records of data type TYPE.
 !
-            COUNT(TYPE)  =  COUNT(TYPE)   +   N
+            count(type)  =  count(type)   +   n
 
 !
 !           Find the next type.
 !
-            I = I + 1
+            i = i + 1
 
-            IF (      (  I     .GT. NWI                        ) &
-                 .OR. ( (RECNO .EQ. LREC) .AND. (I .GT. LWORD) )  ) THEN
+            if (      (  i     .gt. nwi                        ) &
+                 .or. ( (recno .eq. lrec) .and. (i .gt. lword) )  ) then
 
-               MORE = .FALSE.
+               more = .false.
 
-            ELSE
+            else
 
-               IF ( IREC(I) .GT. 0 ) THEN
-                  TYPE = NEXT(TYPE)
+               if ( irec(i) .gt. 0 ) then
+                  type = next(type)
 
-               ELSE IF ( IREC(I) .LT. 0 ) THEN
-                  TYPE = PREV(TYPE)
+               else if ( irec(i) .lt. 0 ) then
+                  type = prev(type)
 
-               ELSE
-                  MORE = .FALSE.
+               else
+                  more = .false.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        The forward pointer in this directory tells us where the
 !        next directory record is.  When there are no more directory
 !        records, this pointer will be zero.
 !
-         RECNO = IREC ( FWDLOC )
+         recno = irec ( fwdloc )
 
-      END DO
+      end do
 
 !
 !     At this point, the inverse order vector is set up.  The array
@@ -560,14 +560,14 @@
 !     seen.  Set TOTAL to the total number of records that we've going
 !     to permute.
 !
-      TOTAL =  SUMAI ( COUNT, 4 )
+      total =  sumai ( count, 4 )
 
 !
 !     The next step is to build a true order vector.  Let BASE be
 !     the base address for the order vector; this address is the
 !     last logical address of the inverse order vector.
 !
-      BASE  =  2 * TOTAL
+      base  =  2 * total
 
 !
 !     We'll store the actual order vector in locations BASE + 1
@@ -583,16 +583,16 @@
 !     fashion using DASUDI.
 !
 !
-      DO I = 1, 2*TOTAL
+      do i = 1, 2*total
 
-         CALL DASADI ( SCRHAN, 1, 0 )
+         call dasadi ( scrhan, 1, 0 )
 
-      END DO
+      end do
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DASSDR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DASSDR' )
+         return
+      end if
 !
 !     We note that the way to construct the inverse of a permutation
 !     SIGMA in a single loop is suggested by the relation
@@ -613,28 +613,28 @@
 !     can ignore it.
 !
 !
-      DO I = 2, TOTAL
+      do i = 2, total
 
-         CALL DASRDI ( SCRHAN,  (2*I)-1,  (2*I)-1,  TYPE  )
-         CALL DASRDI ( SCRHAN,   2*I,      2*I,     DEST  )
+         call dasrdi ( scrhan,  (2*i)-1,  (2*i)-1,  type  )
+         call dasrdi ( scrhan,   2*i,      2*i,     dest  )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'DASSDR' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'DASSDR' )
+            return
+         end if
 !
 !        Set DEST to the destination location, measured as an offset
 !        from the last comment record, of the Ith record by adding
 !        on the count of the predecessors of the block of records of
 !        TYPE.
 !
-         DO J = 1, 3
+         do j = 1, 3
 
-            IF ( TYPE .GT. J ) THEN
-               DEST = DEST + COUNT(J)
-            END IF
+            if ( type .gt. j ) then
+               dest = dest + count(j)
+            end if
 
-         END DO
+         end do
 
 !
 !        The destination offset of each record should be incremented to
@@ -642,15 +642,15 @@
 !        need to do this for directory records; they'll already have
 !        this offset accounted for.
 !
-         IF ( TYPE .NE. DIR ) THEN
-            DEST = DEST + 1
-         END IF
+         if ( type .ne. dir ) then
+            dest = dest + 1
+         end if
 
 !
 !        The value of element DEST of the order vector is I.
 !        Write this value to location BASE + DEST.
 !
-         CALL DASUDI ( SCRHAN, BASE+DEST, BASE+DEST, I )
+         call dasudi ( scrhan, base+dest, base+dest, i )
 !
 !        We want the ith element of the order vector to give us the
 !        number of the record to move to position i (offset from the
@@ -658,14 +658,14 @@
 !        of the type array to give us the type of the record currently
 !        occupying position i.
 !
-         CALL DASUDI ( SCRHAN, BASE+I+TOTAL, BASE+I+TOTAL, TYPE )
+         call dasudi ( scrhan, base+i+total, base+i+total, type )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'DASSDR' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'DASSDR' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Ok, here's what we've got in the scratch file that's still of
@@ -687,7 +687,7 @@
 !           address BASE + TOTAL + I.
 !
 !
-      DRBASE  =  NRESVR + NCOMR + 1
+      drbase  =  nresvr + ncomr + 1
 
 !
 !     As we traverse the order vector, we flip the sign of elements
@@ -699,9 +699,9 @@
 !     singleton cycle.
 !
 !
-      START = 2
+      start = 2
 
-      DO WHILE ( START .LT. TOTAL )
+      do while ( start .lt. total )
 !
 !        Traverse the current cycle of the order vector.
 !
@@ -717,46 +717,46 @@
 !        This will allow us to avoid any untoward interactions between
 !        the buffers for different data types.
 !
-         CALL DASRDI ( SCRHAN, &
-                       BASE + TOTAL + START, &
-                       BASE + TOTAL + START, &
-                       SAVTYP                )
+         call dasrdi ( scrhan, &
+                       base + total + start, &
+                       base + total + start, &
+                       savtyp                )
 
-         CALL DASRDI ( SCRHAN,  BASE + START,  BASE + START,  OFFSET )
+         call dasrdi ( scrhan,  base + start,  base + start,  offset )
 
 !
 !        Save the record at the location DRBASE + START.
 !
-         IF ( SAVTYP .EQ. CHAR ) THEN
+         if ( savtyp .eq. char ) then
 
-            CALL DASIOC ( 'READ', UNIT, DRBASE+START, SAVEC )
+            call dasioc ( 'READ', unit, drbase+start, savec )
 
-         ELSE IF ( SAVTYP .EQ. DP ) THEN
+         else if ( savtyp .eq. dp ) then
 
-            CALL DASIOD ( 'READ', UNIT, DRBASE+START, SAVED )
+            call dasiod ( 'READ', unit, drbase+start, saved )
 
-         ELSE
+         else
 
-            CALL DASIOI ( 'READ', UNIT, DRBASE+START, SAVEI )
+            call dasioi ( 'READ', unit, drbase+start, savei )
 
-         END IF
+         end if
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'DASSDR' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'DASSDR' )
+            return
+         end if
 !
 !        Let I be the index of the record that we are going to move
 !        data into next.  I is an offset from the last comment record.
 !
-         I  =  START
+         i  =  start
 
-         DO WHILE ( OFFSET .NE. START )
+         do while ( offset .ne. start )
 !
 !           Mark the order vector element by writing its negative
 !           back to the location it came from.
 !
-            CALL DASUDI ( SCRHAN,  BASE+I,  BASE+I,  -OFFSET )
+            call dasudi ( scrhan,  base+i,  base+i,  -offset )
 !
 !           Move the record at location
 !
@@ -773,89 +773,89 @@
 !           record required to perform the move, are dependent on the
 !           data type of the record to be moved.
 !
-            CALL DASRDI ( SCRHAN, &
-                          BASE + TOTAL + OFFSET, &
-                          BASE + TOTAL + OFFSET, &
-                          TYPE                    )
+            call dasrdi ( scrhan, &
+                          base + total + offset, &
+                          base + total + offset, &
+                          type                    )
 
-            IF ( FAILED () ) THEN
-               CALL CHKOUT ( 'DASSDR' )
-               RETURN
-            END IF
+            if ( failed () ) then
+               call chkout ( 'DASSDR' )
+               return
+            end if
 !
 !           Only pick records up if we're going to put them down in
 !           a location other than their original one.
 !
-            IF ( I .NE. OFFSET ) THEN
+            if ( i .ne. offset ) then
 
-               IF ( TYPE .EQ. CHAR ) THEN
+               if ( type .eq. char ) then
 
-                  CALL DASIOC ( 'READ',  UNIT, DRBASE+OFFSET, CREC )
-                  CALL DASIOC ( 'WRITE', UNIT, DRBASE+I,      CREC )
+                  call dasioc ( 'READ',  unit, drbase+offset, crec )
+                  call dasioc ( 'WRITE', unit, drbase+i,      crec )
 
-               ELSE IF ( TYPE .EQ. DP ) THEN
+               else if ( type .eq. dp ) then
 
-                  CALL DASIOD ( 'READ',  UNIT, DRBASE+OFFSET, DREC )
-                  CALL DASIOD ( 'WRITE', UNIT, DRBASE+I,      DREC )
+                  call dasiod ( 'READ',  unit, drbase+offset, drec )
+                  call dasiod ( 'WRITE', unit, drbase+i,      drec )
 
-               ELSE
+               else
 
-                  CALL DASIOI ( 'READ',  UNIT, DRBASE+OFFSET, IREC )
-                  CALL DASIOI ( 'WRITE', UNIT, DRBASE+I,      IREC )
+                  call dasioi ( 'READ',  unit, drbase+offset, irec )
+                  call dasioi ( 'WRITE', unit, drbase+i,      irec )
 
-               END IF
+               end if
 
-               IF ( FAILED () ) THEN
-                  CALL CHKOUT ( 'DASSDR' )
-                  RETURN
-               END IF
+               if ( failed () ) then
+                  call chkout ( 'DASSDR' )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           OFFSET is the index of the next order vector element to
 !           look at.
 !
-            I  =  OFFSET
+            i  =  offset
 
-            CALL DASRDI ( SCRHAN, BASE+I,       BASE+I,       OFFSET )
-            CALL DASRDI ( SCRHAN, BASE+I+TOTAL, BASE+I+TOTAL, TYPE   )
+            call dasrdi ( scrhan, base+i,       base+i,       offset )
+            call dasrdi ( scrhan, base+i+total, base+i+total, type   )
 
-            IF ( FAILED () ) THEN
-               CALL CHKOUT ( 'DASSDR' )
-               RETURN
-            END IF
+            if ( failed () ) then
+               call chkout ( 'DASSDR' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        The last value of I is the location in the cycle that element
 !        START followed.  Therefore, the saved record corresponding
 !        to index START should be written to this location.
 !
-         IF ( SAVTYP .EQ. CHAR ) THEN
+         if ( savtyp .eq. char ) then
 
-            CALL DASIOC ( 'WRITE',  UNIT,  DRBASE+I,  SAVEC )
+            call dasioc ( 'WRITE',  unit,  drbase+i,  savec )
 
-         ELSE IF ( SAVTYP .EQ. DP ) THEN
+         else if ( savtyp .eq. dp ) then
 
-            CALL DASIOD ( 'WRITE',  UNIT,  DRBASE+I,  SAVED )
+            call dasiod ( 'WRITE',  unit,  drbase+i,  saved )
 
-         ELSE
+         else
 
-            CALL DASIOI ( 'WRITE',  UNIT,  DRBASE+I,  SAVEI )
+            call dasioi ( 'WRITE',  unit,  drbase+i,  savei )
 
-         END IF
+         end if
 !
 !        Mark the order vector element by writing its negative
 !        back to the location it came from.
 !
-         CALL DASUDI ( SCRHAN,  BASE+I,  BASE+I, -START )
+         call dasudi ( scrhan,  base+i,  base+i, -start )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'DASSDR' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'DASSDR' )
+            return
+         end if
 !
 !        Update START so that it points to the first element of a cycle
 !        of the order vector that has not yet been traversed.  This will
@@ -865,20 +865,20 @@
 !        backtrack to find an element in the next cycle.
 !
 
-         OFFSET = -1
+         offset = -1
 
-         DO WHILE ( ( OFFSET .LT. 0 ) .AND. ( START .LT. TOTAL ) )
+         do while ( ( offset .lt. 0 ) .and. ( start .lt. total ) )
 
-            START  =  START  + 1
+            start  =  start  + 1
 
-            CALL DASRDI (  SCRHAN,  BASE+START,  BASE+START,  OFFSET  )
+            call dasrdi (  scrhan,  base+start,  base+start,  offset  )
 
-            IF ( FAILED () ) THEN
-               CALL CHKOUT ( 'DASSDR' )
-               RETURN
-            END IF
+            if ( failed () ) then
+               call chkout ( 'DASSDR' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        At this point, START is the index of an element in the order
@@ -887,7 +887,7 @@
 !        in which case we're done.
 !
 
-      END DO
+      end do
 
 !
 !     At this point, the records in the DAS are organized as follows:
@@ -929,110 +929,110 @@
 !     the file summary.
 !
 !
-      RECNO  =  DRBASE + 1
+      recno  =  drbase + 1
 
-      CALL CLEARI ( NWI, IREC )
+      call cleari ( nwi, irec )
 
 !
 !     Set the logical address ranges in the directory record, for each
 !     data type.
 !
 
-      DO TYPE = 1, 3
+      do type = 1, 3
 
-         MAXADR  =  LASTLA(TYPE)
+         maxadr  =  lastla(type)
 
-         IF ( MAXADR .GT. 0 ) THEN
-            MINADR = 1
-         ELSE
-            MINADR = 0
-         END IF
+         if ( maxadr .gt. 0 ) then
+            minadr = 1
+         else
+            minadr = 0
+         end if
 
-         IREC (  RNGBAS + (2*TYPE) - 1  )  =  MINADR
-         IREC (  RNGBAS + (2*TYPE)      )  =  MAXADR
+         irec (  rngbas + (2*type) - 1  )  =  minadr
+         irec (  rngbas + (2*type)      )  =  maxadr
 
-      END DO
+      end do
 
 !
 !     Set the descriptors in the directory.  Determine which type
 !     comes first:  the order of priority is character, double
 !     precision, integer.
 !
-      POS = BEGDSC
+      pos = begdsc
 
-      DO TYPE = 1, 3
+      do type = 1, 3
 
-         IF (  LASTLA(TYPE)  .GT.  0  ) THEN
+         if (  lastla(type)  .gt.  0  ) then
 
-            IF ( POS .EQ. BEGDSC ) THEN
+            if ( pos .eq. begdsc ) then
 !
 !              This is the first type for which any data is present.
 !              We must enter a type code at position BEGDSC in the
 !              directory, and we must enter a count at position
 !              BEGDSC+1.
 !
-               IREC   ( BEGDSC       )  =  TYPE
-               IREC   ( BEGDSC + 1   )  =  COUNT(TYPE)
-               LASTRC ( TYPE )          =  RECNO
-               LASTWD ( TYPE )          =  BEGDSC + 1
-               POS                      =  POS + 2
-               PRVTYP                   =  TYPE
+               irec   ( begdsc       )  =  type
+               irec   ( begdsc + 1   )  =  count(type)
+               lastrc ( type )          =  recno
+               lastwd ( type )          =  begdsc + 1
+               pos                      =  pos + 2
+               prvtyp                   =  type
 
-            ELSE
+            else
 !
 !              Place an appropriately signed count at location POS in
 !              the directory.
 !
-               IF ( TYPE .EQ. NEXT(PRVTYP) ) THEN
-                  IREC ( POS )  =   COUNT(TYPE)
-               ELSE
-                  IREC ( POS )  =  -COUNT(TYPE)
-               END IF
+               if ( type .eq. next(prvtyp) ) then
+                  irec ( pos )  =   count(type)
+               else
+                  irec ( pos )  =  -count(type)
+               end if
 
-               LASTRC ( TYPE )  =  RECNO
-               LASTWD ( TYPE )  =  POS
-               POS              =  POS + 1
-               PRVTYP           =  TYPE
+               lastrc ( type )  =  recno
+               lastwd ( type )  =  pos
+               pos              =  pos + 1
+               prvtyp           =  type
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Since we've done away with all but the first directory, the first
 !     free record is decremented by 1 less than the directory count.
 !
-      FREE  =  FREE  -  COUNT( DIR )  +  1
+      free  =  free  -  count( dir )  +  1
 
 !
 !     Write out the new directory record.  Don't use the DAS buffered
 !     write mechanism; this could trash the file by dumping buffered
 !     records in the wrong places.
 !
-      CALL DASIOI ( 'WRITE',  UNIT,  RECNO,  IREC  )
+      call dasioi ( 'WRITE',  unit,  recno,  irec  )
 !
 !     Write out the updated file summary.
 !
-      CALL DASUFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dasufs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 !
 !     Clean up the DAS data buffers:  we don't want buffered scratch
 !     file records hanging around there.  Then get rid of the scratch
 !     file.
 !
-      CALL DASWBR ( SCRHAN )
-      CALL DASLLC ( SCRHAN )
+      call daswbr ( scrhan )
+      call dasllc ( scrhan )
 
 
-      CALL CHKOUT ( 'DASSDR' )
-      RETURN
-      END
+      call chkout ( 'DASSDR' )
+      return
+      end

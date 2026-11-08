@@ -1,6 +1,6 @@
 !$Procedure KPLFRM ( Kernel pool frame IDs )
 
-      SUBROUTINE KPLFRM ( FRMCLS, IDSET )
+      subroutine kplfrm ( frmcls, idset )
 
 ! $ Abstract
 !
@@ -23,17 +23,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'frmtyp.inc'
-      INCLUDE 'ninert.inc'
-      INCLUDE 'nninrt.inc'
+      include 'frmtyp.inc'
+      include 'ninert.inc'
+      include 'nninrt.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               FRMCLS
-      INTEGER               IDSET  ( LBCELL : * )
+      integer               frmcls
+      integer               idset  ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -395,79 +395,79 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZEI
-      LOGICAL               RETURN
+      integer               sizei
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN = 32 )
+      integer               kvnmln
+      parameter           ( kvnmln = 32 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FRNAME
-      CHARACTER*(KVNMLN)    KVBUFF ( BUFSIZ )
-      CHARACTER*(KVNMLN)    KVNAME
-      CHARACTER*(KVNMLN)    KVTEMP
-      CHARACTER*(KVNMLN)    KVCODE
-      CHARACTER*(KVNMLN)    KVCLAS
-      CHARACTER*(FRNMLN)    TMPNAM
+      character*(frnmln)    frname
+      character*(kvnmln)    kvbuff ( bufsiz )
+      character*(kvnmln)    kvname
+      character*(kvnmln)    kvtemp
+      character*(kvnmln)    kvcode
+      character*(kvnmln)    kvclas
+      character*(frnmln)    tmpnam
 
-      INTEGER               FCLASS
-      INTEGER               I
-      INTEGER               IDCODE
-      INTEGER               L
-      INTEGER               M
-      INTEGER               N
-      INTEGER               TO
-      INTEGER               TOTAL
-      INTEGER               W
+      integer               fclass
+      integer               i
+      integer               idcode
+      integer               l
+      integer               m
+      integer               n
+      integer               to
+      integer               total
+      integer               w
 
-      LOGICAL               FOUND
+      logical               found
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'KPLFRM' )
+      call chkin ( 'KPLFRM' )
 
 !
 !     The output set starts out empty.
 !
-      CALL SCARDI ( 0, IDSET )
+      call scardi ( 0, idset )
 
 !
 !     Check the input frame class.
 !
 !     This block of code must be kept in sync with frmtyp.inc.
 !
-      IF  (      ( FRMCLS .GT. SWTCH ) &
-            .OR. ( FRMCLS .EQ. 0     ) &
-            .OR. ( FRMCLS .LT. ALL   )  ) THEN
+      if  (      ( frmcls .gt. swtch ) &
+            .or. ( frmcls .eq. 0     ) &
+            .or. ( frmcls .lt. all   )  ) then
 
-         CALL SETMSG ( 'Frame class specifier FRMCLS was #; this ' &
+         call setmsg ( 'Frame class specifier FRMCLS was #; this ' &
          //            'value is not supported.'                  )
-         CALL ERRINT ( '#',  FRMCLS                               )
-         CALL SIGERR ( 'SPICE(BADFRAMECLASS)'                     )
-         CALL CHKOUT ( 'KPLFRM'                                   )
-         RETURN
+         call errint ( '#',  frmcls                               )
+         call sigerr ( 'SPICE(BADFRAMECLASS)'                     )
+         call chkout ( 'KPLFRM'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the output buffer index. The
 !     index is to be incremented prior to each
 !     write to the buffer.
 !
-      TO = 0
+      to = 0
 
 !
 !     Find all of the kernel variables having names
@@ -483,30 +483,30 @@
 !     by looking the corresponding frame ID and frame class
 !     assignments.
 !
-      KVTEMP = 'FRAME_*_NAME'
+      kvtemp = 'FRAME_*_NAME'
 
-      CALL GNPOOL ( KVTEMP, 1, BUFSIZ, N, KVBUFF, FOUND )
+      call gnpool ( kvtemp, 1, bufsiz, n, kvbuff, found )
 
-      TOTAL = 0
+      total = 0
 
-      DO WHILE ( N .GT. 0 )
+      do while ( n .gt. 0 )
 
-         TOTAL = TOTAL + N
+         total = total + n
 
 !
 !        At least one kernel variable was found by the last
 !        GNPOOL call. Each of these variables is a possible
 !        frame name. Look up each of these candidate names.
 !
-         DO I = 1, N
+         do i = 1, n
 !
 !           Attempt to fetch the right hand side value for
 !           the Ith kernel variable found on the previous
 !           GNPOOL call.
 !
-            CALL GCPOOL ( KVBUFF(I), 1, 1, M, FRNAME, FOUND )
+            call gcpool ( kvbuff(i), 1, 1, m, frname, found )
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              We found a possible frame name. Attempt to look
 !              up an ID code variable for the name. The assignment
@@ -517,16 +517,16 @@
 !              Create the kernel variable name on the left hand
 !              side of the assignment.
 !
-               KVCODE = 'FRAME_<name>'
+               kvcode = 'FRAME_<name>'
 
-               CALL REPMC ( KVCODE, '<name>', FRNAME, KVCODE )
+               call repmc ( kvcode, '<name>', frname, kvcode )
 
 !
 !              Try to fetch the ID code.
 !
-               CALL GIPOOL ( KVCODE, 1, 1, L, IDCODE, FOUND )
+               call gipool ( kvcode, 1, 1, l, idcode, found )
 
-               IF ( FOUND ) THEN
+               if ( found ) then
 !
 !                 We found an integer on the right hand side
 !                 of the assignment. We probably have a
@@ -538,14 +538,14 @@
 !                 is present in the kernel pool and maps to
 !                 the name FRNAME.
 !
-                  KVNAME = 'FRAME_<code>_NAME'
+                  kvname = 'FRAME_<code>_NAME'
 
-                  CALL REPMI ( KVNAME, '<code>', IDCODE, KVNAME )
+                  call repmi ( kvname, '<code>', idcode, kvname )
 
-                  CALL GCPOOL ( KVNAME, 1, 1, W, TMPNAM, FOUND )
+                  call gcpool ( kvname, 1, 1, w, tmpnam, found )
 
 
-                  IF ( FOUND ) THEN
+                  if ( found ) then
 !
 !                    Try to look up the frame class using a
 !                    kernel variable name of the form
@@ -555,98 +555,98 @@
 !                    Create the kernel variable name on the left
 !                    hand side of the frame class assignment.
 !
-                     KVCLAS = 'FRAME_<integer>_CLASS'
+                     kvclas = 'FRAME_<integer>_CLASS'
 
-                     CALL REPMI ( KVCLAS, '<integer>', IDCODE, KVCLAS )
+                     call repmi ( kvclas, '<integer>', idcode, kvclas )
 
 !
 !                    Look for the frame class.
 !
-                     CALL GIPOOL ( KVCLAS, 1, 1, W, FCLASS, FOUND )
+                     call gipool ( kvclas, 1, 1, w, fclass, found )
 
-                     IF ( .NOT. FOUND ) THEN
+                     if ( .not. found ) then
 !
 !                       Try to look up the frame class using a kernel
 !                       variable name of the form
 !
 !                          FRAME_<frame name>_CLASS
 !
-                        KVCLAS = 'FRAME_<name>_CLASS'
+                        kvclas = 'FRAME_<name>_CLASS'
 
-                        CALL REPMC ( KVCLAS, '<name>', FRNAME, KVCLAS )
+                        call repmc ( kvclas, '<name>', frname, kvclas )
 
-                        CALL GIPOOL ( KVCLAS, 1, 1, W, FCLASS, FOUND )
+                        call gipool ( kvclas, 1, 1, w, fclass, found )
 
-                     END IF
+                     end if
 
 !
 !                    At this point FOUND indicates whether we found
 !                    the frame class.
 !
-                     IF ( FOUND ) THEN
+                     if ( found ) then
 !
 !                       Check whether the frame class is one
 !                       we want.
 !
-                        IF (      ( FRMCLS .EQ. ALL    ) &
-                             .OR. ( FRMCLS .EQ. FCLASS )  ) THEN
+                        if (      ( frmcls .eq. all    ) &
+                             .or. ( frmcls .eq. fclass )  ) then
 !
 !                          We have a winner. Add it to the output set.
 !
 !                          First make sure the set is large enough to
 !                          hold another element.
 !
-                           IF ( TO .EQ. SIZEI(IDSET) ) THEN
+                           if ( to .eq. sizei(idset) ) then
 
-                              CALL SETMSG ( 'Frame ID set argument ' &
+                              call setmsg ( 'Frame ID set argument ' &
                               //            'IDSET has size #; required' &
                               //            ' size is at least #. Make ' &
                               //            'sure that the caller of ' &
                               //            'this routine has initial' &
                               //            'ized IDSET via SSIZEI.'   )
-                              CALL ERRINT ( '#', SIZEI(IDSET)          )
-                              CALL ERRINT ( '#', TO+1                  )
-                              CALL SIGERR ( 'SPICE(SETTOOSMALL)'       )
-                              CALL CHKOUT ( 'KPLFRM'                   )
-                              RETURN
+                              call errint ( '#', sizei(idset)          )
+                              call errint ( '#', to+1                  )
+                              call sigerr ( 'SPICE(SETTOOSMALL)'       )
+                              call chkout ( 'KPLFRM'                   )
+                              return
 
-                           END IF
+                           end if
 
-                           TO        = TO + 1
-                           IDSET(TO) = IDCODE
+                           to        = to + 1
+                           idset(to) = idcode
 
-                        END IF
+                        end if
 !
 !                       End of IF block for processing a frame having
 !                       a frame class matching the request.
 !
-                     END IF
+                     end if
 !
 !                    End of IF block for finding the frame class.
 !
-                  END IF
+                  end if
 !
 !                 End of IF block for finding the frame name.
 !
-               END IF
+               end if
 !
 !              End of IF block for finding the frame ID.
 !
-            END IF
+            end if
 !
 !           End of IF block for finding string value corresponding to
 !           the Ith kernel variable matching the name template.
 !
-         END DO
+         end do
 !
 !        End of loop for processing last batch of potential
 !        frame names.
 !
 !        Fetch next batch of potential frame names.
 !
-         CALL GNPOOL ( KVTEMP, TOTAL+1, BUFSIZ, N, KVBUFF, FOUND )
+         call gnpool ( kvtemp, total+1, bufsiz, n, kvbuff, found )
 
-      END DO
+      end do
 !
 !     At this point all kernel variables that matched the frame name
 !     keyword template have been processed. All frames of the specified
@@ -656,8 +656,8 @@
 !
 !     Turn IDSET into a set. VALIDI sorts and removes duplicates.
 !
-      CALL VALIDI ( SIZEI(IDSET), TO, IDSET )
+      call validi ( sizei(idset), to, idset )
 
-      CALL CHKOUT ( 'KPLFRM' )
-      RETURN
-      END
+      call chkout ( 'KPLFRM' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure BEINT  ( Be an Integer? )
 
-      LOGICAL FUNCTION BEINT  ( STRING )
+      logical function beint  ( string )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -148,76 +148,76 @@
 !-&
 
 
-      INTEGER               FRSTNB
-      LOGICAL               BEUNS
+      integer               frstnb
+      logical               beuns
 
-      INTEGER               I
-      INTEGER               L
+      integer               i
+      integer               l
 
 
-      CHARACTER*(1)         LETTER
+      character*(1)         letter
 
 
 !
 !     Find the first non-blank character and the length of the
 !     string.
 !
-      L  =  LEN    ( STRING )
-      I  =  FRSTNB ( STRING )
+      l  =  len    ( string )
+      i  =  frstnb ( string )
 
 !
 !     If there isn't a non-blank character, this isn't an
 !     integer.
 !
-      IF ( I .EQ. 0 ) THEN
-         BEINT  = .FALSE.
-         RETURN
-      END IF
+      if ( i .eq. 0 ) then
+         beint  = .false.
+         return
+      end if
 
 
 !
 !     Copy the first non-blank letter in the string.
 !
-      LETTER = STRING(I:I)
+      letter = string(i:i)
 
-      IF      ( I .LT. L ) THEN
+      if      ( i .lt. l ) then
 
 !
 !        The first character is not the last, so we might start with
 !        a plus or minus.  If so the rest must be an unsigned integer.
 !
-         IF (      ( LETTER .EQ. '+' ) &
-              .OR. ( LETTER .EQ. '-' ) ) THEN
+         if (      ( letter .eq. '+' ) &
+              .or. ( letter .eq. '-' ) ) then
 
-            I    = I + 1
+            i    = i + 1
 
-            IF ( STRING(I:I) .NE. ' ' ) THEN
-               BEINT = BEUNS ( STRING(I:) )
-            ELSE
-               BEINT = .FALSE.
-            END IF
+            if ( string(i:i) .ne. ' ' ) then
+               beint = beuns ( string(i:) )
+            else
+               beint = .false.
+            end if
 
-         ELSE
+         else
 
 !
 !           If the first character isn't plus (+) or minus (-)
 !           the string must be an unsigned integer if its going
 !           to be an integer.
 !
-            BEINT = BEUNS ( STRING(I:) )
+            beint = beuns ( string(i:) )
 
-         END IF
+         end if
 
-      ELSE
+      else
 
 !
 !        If the first (non-blank) character is the last one, then
 !        it must be an unsigned integer, for the string to
 !        represent an integer.
 !
-         BEINT = BEUNS ( LETTER )
+         beint = beuns ( letter )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

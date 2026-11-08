@@ -1,6 +1,6 @@
 !$Procedure CARDC ( Cardinality of a character cell )
 
-      INTEGER FUNCTION CARDC ( CELL )
+      integer function cardc ( cell )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)     CELL  ( LBCELL:* )
+      character*(*)     cell  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -157,64 +157,64 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               SIZE
+      integer               card
+      integer               size
 
 
-      IF ( RETURN() ) THEN
-         CARDC = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CARDC' )
-      END IF
+      if ( return() ) then
+         cardc = 0
+         return
+      else
+         call chkin ( 'CARDC' )
+      end if
 !
 !     Set return value, regardless of validity.
 !
-      CALL DECHAR ( CELL(0), CARD )
-      CARDC = CARD
+      call dechar ( cell(0), card )
+      cardc = card
 
 !
 !     Squeal if something is awry.
 !
 
-      CALL DECHAR ( CELL(-1), SIZE )
+      call dechar ( cell(-1), size )
 
-      IF (  SIZE .LT. 0  )  THEN
+      if (  size .lt. 0  )  then
 
-         CALL SETMSG ( 'Invalid cell size.  The size was #.')
-         CALL ERRINT ( '#', SIZE )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'CARDC' )
-         RETURN
+         call setmsg ( 'Invalid cell size.  The size was #.')
+         call errint ( '#', size )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'CARDC' )
+         return
 
-      ELSE IF ( CARD .LT. 0  ) THEN
+      else if ( card .lt. 0  ) then
 
-         CALL SETMSG ( 'Invalid cell cardinality.  The cardinality '  // &
+         call setmsg ( 'Invalid cell cardinality.  The cardinality '  // &
                        'was #.'      )
-         CALL ERRINT ( '#', CARD )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'CARDC' )
-         RETURN
+         call errint ( '#', card )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'CARDC' )
+         return
 
-      ELSE IF ( CARD .GT. SIZE ) THEN
+      else if ( card .gt. size ) then
 
-         CALL SETMSG ( 'Invalid cell cardinality; cardinality exceeds'// &
+         call setmsg ( 'Invalid cell cardinality; cardinality exceeds'// &
                        ' cell size.  The cardinality was #.  The size'// &
                        ' was #.'  )
-         CALL ERRINT ( '#', CARD )
-         CALL ERRINT ( '#', SIZE )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'CARDC' )
-         RETURN
+         call errint ( '#', card )
+         call errint ( '#', size )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'CARDC' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CARDC' )
-      RETURN
-      END
+      call chkout ( 'CARDC' )
+      return
+      end

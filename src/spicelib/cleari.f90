@@ -1,6 +1,6 @@
 !$Procedure CLEARI ( Clear an integer array )
 
-      SUBROUTINE CLEARI ( NDIM, ARRAY )
+      subroutine cleari ( ndim, array )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER   NDIM
-      INTEGER   ARRAY ( * )
+      integer   ndim
+      integer   array ( * )
 
 ! $ Brief_I/O
 !
@@ -162,13 +162,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-        ARRAY(I) = 0
-      END DO
+      do i = 1, ndim
+        array(i) = 0
+      end do
 
 
-      RETURN
-      END
+      return
+      end

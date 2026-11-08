@@ -1,9 +1,9 @@
 !$Procedure ZZDSKSBF ( DSK, manage the API segment buffer )
 
-      SUBROUTINE ZZDSKSBF ( BODYID, NSURF,  SRFLST, ET,  FIXFID, &
-                            VERTEX, RAYDIR, POINT,  XPT, HANDLE, &
-                            DLADSC, DSKDSC, DC,     IC,  FOUND, &
-                            NORMAL                              )
+      subroutine zzdsksbf ( bodyid, nsurf,  srflst, et,  fixfid, &
+                            vertex, raydir, point,  xpt, handle, &
+                            dladsc, dskdsc, dc,     ic,  found, &
+                            normal                              )
 
 ! $ Abstract
 !
@@ -26,28 +26,28 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'zzctr.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'zzctr.inc'
 
-      INTEGER               BODYID
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      ET
-      INTEGER               FIXFID
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      POINT  ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      DOUBLE PRECISION      DSKDSC ( * )
-      DOUBLE PRECISION      DC     ( * )
-      INTEGER               IC     ( * )
-      LOGICAL               FOUND
-      DOUBLE PRECISION      NORMAL ( 3 )
+      integer               bodyid
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      et
+      integer               fixfid
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      point  ( 3 )
+      double precision      xpt    ( 3 )
+      integer               handle
+      integer               dladsc ( * )
+      double precision      dskdsc ( * )
+      double precision      dc     ( * )
+      integer               ic     ( * )
+      logical               found
+      double precision      normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -191,10 +191,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -204,18 +204,18 @@
 !     Sizes of source info arrays returned by
 !     ZZDSKBUX:
 !
-      INTEGER               MAXDC
-      PARAMETER           ( MAXDC  = 1 )
+      integer               maxdc
+      parameter           ( maxdc  = 1 )
 
-      INTEGER               MAXIC
-      PARAMETER           ( MAXIC  = 1 )
+      integer               maxic
+      parameter           ( maxic  = 1 )
 
 
-      INTEGER               STSIZE
-      PARAMETER           ( STSIZE = 10000 )
+      integer               stsize
+      parameter           ( stsize = 10000 )
 
-      INTEGER               BTSIZE
-      PARAMETER           ( BTSIZE = 10 )
+      integer               btsize
+      parameter           ( btsize = 10 )
 
 !
 !     Body table variables
@@ -234,82 +234,82 @@
 !                segment table for the Ith body.
 !
 !
-      INTEGER               BTNBOD
-      INTEGER               BTBODY ( BTSIZE )
-      INTEGER               BTSEGP ( BTSIZE )
-      INTEGER               BTSTSZ ( BTSIZE )
+      integer               btnbod
+      integer               btbody ( btsize )
+      integer               btsegp ( btsize )
+      integer               btstsz ( btsize )
 
 !
 !     Segment table variables
 !
-      INTEGER               STHAN  ( STSIZE )
-      DOUBLE PRECISION      STDSCR ( DSKDSZ, STSIZE )
-      INTEGER               STDLAD ( DLADSZ, STSIZE )
-      INTEGER               STFREE
-      DOUBLE PRECISION      STOFF  ( 3,      STSIZE )
-      DOUBLE PRECISION      STCTR  ( 3,      STSIZE )
-      DOUBLE PRECISION      STRAD  ( STSIZE )
+      integer               sthan  ( stsize )
+      double precision      stdscr ( dskdsz, stsize )
+      integer               stdlad ( dladsz, stsize )
+      integer               stfree
+      double precision      stoff  ( 3,      stsize )
+      double precision      stctr  ( 3,      stsize )
+      double precision      strad  ( stsize )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LOCDC  ( MAXDC )
+      double precision      locdc  ( maxdc )
 
-      INTEGER               BIX
-      INTEGER               BSRCTR ( CTRSIZ )
-      INTEGER               J
-      INTEGER               LOCIC  ( MAXIC )
-      INTEGER               NSEG
-      INTEGER               SEGIDX
+      integer               bix
+      integer               bsrctr ( ctrsiz )
+      integer               j
+      integer               locic  ( maxic )
+      integer               nseg
+      integer               segidx
 
-      LOGICAL               FIRST
-      LOGICAL               UPDATE
+      logical               first
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE                  BSRCTR
-      SAVE                  BTBODY
-      SAVE                  BTNBOD
-      SAVE                  BTSEGP
-      SAVE                  BTSTSZ
-      SAVE                  FIRST
-      SAVE                  STCTR
-      SAVE                  STDLAD
-      SAVE                  STDSCR
-      SAVE                  STFREE
-      SAVE                  STHAN
-      SAVE                  STOFF
-      SAVE                  STRAD
+      save                  bsrctr
+      save                  btbody
+      save                  btnbod
+      save                  btsegp
+      save                  btstsz
+      save                  first
+      save                  stctr
+      save                  stdlad
+      save                  stdscr
+      save                  stfree
+      save                  sthan
+      save                  stoff
+      save                  strad
 
 !
 !     Initial values
 !
-      DATA                  BTNBOD / 0      /
-      DATA                  BTBODY / BTSIZE * 0 /
-      DATA                  BSRCTR / CTRSIZ * 0 /
-      DATA                  FIRST  / .TRUE. /
-      DATA                  STFREE / 1      /
+      data                  btnbod / 0      /
+      data                  btbody / btsize * 0 /
+      data                  bsrctr / ctrsiz * 0 /
+      data                  first  / .true. /
+      data                  stfree / 1      /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZDSKSBF'          )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZDSKSBF'          )
-      RETURN
+      call chkin  ( 'ZZDSKSBF'          )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZDSKSBF'          )
+      return
 
 
 
 
 !$Procedure ZZSBFXR ( DSK, prepare and perform unprioritized intercept )
 
-      ENTRY ZZSBFXR ( BODYID, NSURF,  SRFLST, ET, &
-                      FIXFID, VERTEX, RAYDIR, XPT, FOUND )
+      entry zzsbfxr ( bodyid, nsurf,  srflst, et, &
+                      fixfid, vertex, raydir, xpt, found )
 
 ! $ Abstract
 !
@@ -454,94 +454,94 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZSBFXR' )
+      call chkin  ( 'ZZSBFXR' )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize BSR counter.
 !
-         CALL ZZCTRUIN ( BSRCTR )
+         call zzctruin ( bsrctr )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     See whether the state of the loaded DSK set has changed
 !     since the last call.
 !
-      CALL ZZDSKCHK ( BSRCTR, UPDATE )
+      call zzdskchk ( bsrctr, update )
 
-      IF ( UPDATE ) THEN
+      if ( update ) then
 !
 !        Make sure the ZZDSKBSR subsystem has completed the segment
 !        list for the input body since the last time the BSR loaded
 !        kernel state changed.
 !
-         CALL ZZDSKBBL ( BODYID )
+         call zzdskbbl ( bodyid )
 
 !
 !        Initialize the local buffers. We restart from scratch
 !        each time the BSR loaded kernel state changes.
 !
-         CALL ZZDSKSBI ( BTSIZE, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
-      END IF
+         call zzdsksbi ( btsize, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSBFXR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSBFXR' )
+         return
+      end if
 
 !
 !     Find the index of the input body ID in the body table. If
 !     we re-initialized the tables, the index will be zero.
 !
-      BIX = ISRCHI( BODYID, BTNBOD, BTBODY )
+      bix = isrchi( bodyid, btnbod, btbody )
 
 
-      IF ( BIX .EQ. 0 ) THEN
+      if ( bix .eq. 0 ) then
 !
 !        We don't have buffered information for this body. Update
 !        the body and segment tables to store data for it.
 !
-         CALL ZZDSKSBA ( BODYID, &
-                         BTSIZE, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
+         call zzdsksba ( bodyid, &
+                         btsize, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSBFXR' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSBFXR' )
+            return
+         end if
 !
 !        The new body's position in the body table is at the end.
 !
-         BIX = BTNBOD
+         bix = btnbod
 
-      END IF
+      end if
 
 !
 !     Find the ray-surface intercept, using the buffered segment
 !     data.
 !
-      J    = BTSEGP(BIX)
-      NSEG = BTSTSZ(BIX)
+      j    = btsegp(bix)
+      nseg = btstsz(bix)
 
-      CALL ZZDSKBUX ( BODYID,     NSURF,      SRFLST, ET,  FIXFID, &
-                      NSEG,       STHAN(J),   STDLAD(1,J), STDSCR(1,J), &
-                      STOFF(1,J), STCTR(1,J), STRAD(J),    VERTEX, &
-                      RAYDIR,     XPT,        SEGIDX,      LOCDC, &
-                      LOCIC,      FOUND                               )
+      call zzdskbux ( bodyid,     nsurf,      srflst, et,  fixfid, &
+                      nseg,       sthan(j),   stdlad(1,j), stdscr(1,j), &
+                      stoff(1,j), stctr(1,j), strad(j),    vertex, &
+                      raydir,     xpt,        segidx,      locdc, &
+                      locic,      found                               )
 
-      CALL CHKOUT ( 'ZZSBFXR' )
-      RETURN
+      call chkout ( 'ZZSBFXR' )
+      return
 
 
 
@@ -549,9 +549,9 @@
 
 !$Procedure ZZSBFXRI ( DSK, unprioritized intercept with info )
 
-      ENTRY ZZSBFXRI ( BODYID, NSURF,  SRFLST, ET, &
-                       FIXFID, VERTEX, RAYDIR, XPT, HANDLE, &
-                       DLADSC, DSKDSC, DC,     IC,  FOUND  )
+      entry zzsbfxri ( bodyid, nsurf,  srflst, et, &
+                       fixfid, vertex, raydir, xpt, handle, &
+                       dladsc, dskdsc, dc,     ic,  found  )
 
 ! $ Abstract
 !
@@ -727,113 +727,113 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZSBFXRI' )
+      call chkin  ( 'ZZSBFXRI' )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize BSR counter.
 !
-         CALL ZZCTRUIN ( BSRCTR )
+         call zzctruin ( bsrctr )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     See whether the state of the loaded DSK set has changed
 !     since the last call.
 !
-      CALL ZZDSKCHK ( BSRCTR, UPDATE )
+      call zzdskchk ( bsrctr, update )
 
-      IF ( UPDATE ) THEN
+      if ( update ) then
 !
 !        Make sure the ZZDSKBSR subsystem has completed the segment
 !        list for the input body since the last time the BSR loaded
 !        kernel state changed.
 !
-         CALL ZZDSKBBL ( BODYID )
+         call zzdskbbl ( bodyid )
 
 !
 !        Initialize the local buffers. We restart from scratch
 !        each time the BSR loaded kernel state changes.
 !
-         CALL ZZDSKSBI ( BTSIZE, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
-      END IF
+         call zzdsksbi ( btsize, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSBFXRI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSBFXRI' )
+         return
+      end if
 
 !
 !     Find the index of the input body ID in the body table. If
 !     we re-initialized the tables, the index will be zero.
 !
-      BIX = ISRCHI( BODYID, BTNBOD, BTBODY )
+      bix = isrchi( bodyid, btnbod, btbody )
 
 
-      IF ( BIX .EQ. 0 ) THEN
+      if ( bix .eq. 0 ) then
 !
 !        We don't have buffered information for this body. Update
 !        the body and segment tables to store data for it.
 !
-         CALL ZZDSKSBA ( BODYID, &
-                         BTSIZE, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
+         call zzdsksba ( bodyid, &
+                         btsize, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSBFXRI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSBFXRI' )
+            return
+         end if
 !
 !        The new body's position in the body table is at the end.
 !
-         BIX = BTNBOD
+         bix = btnbod
 
-      END IF
+      end if
 
 !
 !     Find the ray-surface intercept, using the buffered segment
 !     data.
 !
-      J    = BTSEGP(BIX)
-      NSEG = BTSTSZ(BIX)
+      j    = btsegp(bix)
+      nseg = btstsz(bix)
 
-      CALL ZZDSKBUX ( BODYID,     NSURF,      SRFLST, ET,  FIXFID, &
-                      NSEG,       STHAN(J),   STDLAD(1,J), STDSCR(1,J), &
-                      STOFF(1,J), STCTR(1,J), STRAD(J),    VERTEX, &
-                      RAYDIR,     XPT,        SEGIDX,      DC, &
-                      IC,         FOUND                                )
+      call zzdskbux ( bodyid,     nsurf,      srflst, et,  fixfid, &
+                      nseg,       sthan(j),   stdlad(1,j), stdscr(1,j), &
+                      stoff(1,j), stctr(1,j), strad(j),    vertex, &
+                      raydir,     xpt,        segidx,      dc, &
+                      ic,         found                                )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSBFXRI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSBFXRI' )
+         return
+      end if
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        Adjust the segment index to make it relative to the base value
 !        1, instead of the current base J.
 !
-         SEGIDX = SEGIDX + J - 1
+         segidx = segidx + j - 1
 
-         HANDLE = STHAN( SEGIDX )
+         handle = sthan( segidx )
 
-         CALL MOVEI ( STDLAD(1,SEGIDX), DLADSZ, DLADSC )
-         CALL MOVED ( STDSCR(1,SEGIDX), DSKDSZ, DSKDSC )
+         call movei ( stdlad(1,segidx), dladsz, dladsc )
+         call moved ( stdscr(1,segidx), dskdsz, dskdsc )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZSBFXRI' )
-      RETURN
+      call chkout ( 'ZZSBFXRI' )
+      return
 
 
 
@@ -841,8 +841,8 @@
 
 !$Procedure ZZSBFNRM ( DSK, prepare and compute unprioritized normal )
 
-      ENTRY ZZSBFNRM ( BODYID, NSURF, SRFLST, ET, &
-                       FIXFID, POINT, NORMAL     )
+      entry zzsbfnrm ( bodyid, nsurf, srflst, et, &
+                       fixfid, point, normal     )
 
 ! $ Abstract
 !
@@ -982,96 +982,96 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSBFNRM' )
+      call chkin ( 'ZZSBFNRM' )
 
 !
 !     The following block of code is straight cut-and-paste from
 !     ZZSBFXR. (We need to consider packaging this code in a
 !     utility routine.)
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize BSR counter.
 !
-         CALL ZZCTRUIN ( BSRCTR )
+         call zzctruin ( bsrctr )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     See whether the state of the loaded DSK set has changed
 !     since the last call.
 !
-      CALL ZZDSKCHK ( BSRCTR, UPDATE )
+      call zzdskchk ( bsrctr, update )
 
-      IF ( UPDATE ) THEN
+      if ( update ) then
 !
 !        Make sure the ZZDSKBSR subsystem has completed the segment
 !        list for the input body since the last time the BSR loaded
 !        kernel state changed.
 !
-         CALL ZZDSKBBL ( BODYID )
+         call zzdskbbl ( bodyid )
 
 !
 !        Initialize the local buffers. We restart from scratch
 !        each time the BSR loaded kernel state changes.
 !
-         CALL ZZDSKSBI ( BTSIZE, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
-      END IF
+         call zzdsksbi ( btsize, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSBFNRM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSBFNRM' )
+         return
+      end if
 
 !
 !     Find the index of the input body ID in the body table. If
 !     we re-initialized the tables, the index will be zero.
 !
-      BIX = ISRCHI( BODYID, BTNBOD, BTBODY )
+      bix = isrchi( bodyid, btnbod, btbody )
 
-      IF ( BIX .EQ. 0 ) THEN
+      if ( bix .eq. 0 ) then
 !
 !        We don't have buffered information for this body. Update
 !        the body and segment tables to store data for it.
 !
-         CALL ZZDSKSBA ( BODYID, &
-                         BTSIZE, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
+         call zzdsksba ( bodyid, &
+                         btsize, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSBFNRM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSBFNRM' )
+            return
+         end if
 !
 !        The new body's position in the body table is at the end.
 !
-         BIX = BTNBOD
+         bix = btnbod
 
-      END IF
+      end if
 
 !
 !     Find the outward unit normal vector, using the buffered segment
 !     data.
 !
-      J    = BTSEGP(BIX)
-      NSEG = BTSTSZ(BIX)
+      j    = btsegp(bix)
+      nseg = btstsz(bix)
 
-      CALL ZZDSKBUN ( BODYID,      NSURF,      SRFLST,     ET, &
-                      FIXFID,      NSEG,       STHAN(J),   STDLAD(1,J), &
-                      STDSCR(1,J), STOFF(1,J), STCTR(1,J), STRAD(J), &
-                      POINT,       NORMAL                              )
+      call zzdskbun ( bodyid,      nsurf,      srflst,     et, &
+                      fixfid,      nseg,       sthan(j),   stdlad(1,j), &
+                      stdscr(1,j), stoff(1,j), stctr(1,j), strad(j), &
+                      point,       normal                              )
 
-      CALL CHKOUT ( 'ZZSBFNRM' )
-      RETURN
+      call chkout ( 'ZZSBFNRM' )
+      return
 
-      END
+      end
 

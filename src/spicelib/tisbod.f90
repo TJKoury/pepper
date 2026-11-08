@@ -1,6 +1,6 @@
 !$Procedure TISBOD ( Transformation, inertial state to bodyfixed )
 
-      SUBROUTINE TISBOD ( REF, BODY, ET, TSIPM )
+      subroutine tisbod ( ref, body, et, tsipm )
 
 ! $ Abstract
 !
@@ -23,16 +23,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'errhnd.inc'
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'zzctr.inc'
+      include               'errhnd.inc'
+      include               'frmtyp.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         REF
-      INTEGER               BODY
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      TSIPM   ( 6,6 )
+      character*(*)         ref
+      integer               body
+      double precision      et
+      double precision      tsipm   ( 6,6 )
 
 ! $ Brief_I/O
 !
@@ -827,160 +827,160 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VDOTG
+      double precision      twopi
+      double precision      halfpi
+      double precision      j2000
+      double precision      rpd
+      double precision      spd
+      double precision      vdotg
 
-      INTEGER               ZZBODBRY
+      integer               zzbodbry
 
-      LOGICAL               BODFND
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               bodfnd
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MAXANG
-      PARAMETER           ( MAXANG = 200 )
+      integer               maxang
+      parameter           ( maxang = 200 )
 
 !
 !     Maximum number of coefficients per phase angle polynomial.
 !
-      INTEGER               MXPHAS
-      PARAMETER           ( MXPHAS = 4 )
+      integer               mxphas
+      parameter           ( mxphas = 4 )
 
-      INTEGER               MXPOLY
-      PARAMETER           ( MXPOLY = 3 )
+      integer               mxpoly
+      parameter           ( mxpoly = 3 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 32 )
+      integer               namlen
+      parameter           ( namlen = 32 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               TIMLEN
-      PARAMETER           ( TIMLEN = 35 )
+      integer               timlen
+      parameter           ( timlen = 35 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         DTYPE
-      CHARACTER*(LMSGLN)    ERRMSG
-      CHARACTER*(FRNMLN)    FIXFRM
-      CHARACTER*(NAMLEN)    ITEM
-      CHARACTER*(NAMLEN)    ITEM2
-      CHARACTER*(TIMLEN)    TIMSTR
+      character*(1)         dtype
+      character*(lmsgln)    errmsg
+      character*(frnmln)    fixfrm
+      character*(namlen)    item
+      character*(namlen)    item2
+      character*(timlen)    timstr
 
-      DOUBLE PRECISION      AC     (    MAXANG )
-      DOUBLE PRECISION      COSTH  (    MAXANG )
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      DC     (    MAXANG )
-      DOUBLE PRECISION      DCOEF  ( 0:MXPOLY-1 )
-      DOUBLE PRECISION      DCOSTH (    MAXANG )
-      DOUBLE PRECISION      DDEC
-      DOUBLE PRECISION      DDELTA
-      DOUBLE PRECISION      DEC
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      DPHI
-      DOUBLE PRECISION      DPVAL
-      DOUBLE PRECISION      DRA
-      DOUBLE PRECISION      DSINTH (    MAXANG )
-      DOUBLE PRECISION      DTIPM  (     3,  3 )
-      DOUBLE PRECISION      DTHETA
-      DOUBLE PRECISION      DW
-      DOUBLE PRECISION      EULSTA (     6     )
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      PCKEPC
-      DOUBLE PRECISION      PHI
-      DOUBLE PRECISION      RA
-      DOUBLE PRECISION      RCOEF  ( 0:MXPOLY-1 )
-      DOUBLE PRECISION      REQ2PC (     3, 3  )
-      DOUBLE PRECISION      SINTH  (    MAXANG )
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      TC
-      DOUBLE PRECISION      TD
-      DOUBLE PRECISION      TCOEF  ( MXPHAS * MAXANG )
-      DOUBLE PRECISION      TIPM   (     3, 3  )
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      TMPEPC
-      DOUBLE PRECISION      W
-      DOUBLE PRECISION      WC     (    MAXANG )
-      DOUBLE PRECISION      WCOEF  ( 0:MXPOLY-1 )
-      DOUBLE PRECISION      XDTIPM (     3, 3  )
-      DOUBLE PRECISION      XTIPM  (     3, 3  )
+      double precision      ac     (    maxang )
+      double precision      costh  (    maxang )
+      double precision      d
+      double precision      dc     (    maxang )
+      double precision      dcoef  ( 0:mxpoly-1 )
+      double precision      dcosth (    maxang )
+      double precision      ddec
+      double precision      ddelta
+      double precision      dec
+      double precision      delta
+      double precision      dphi
+      double precision      dpval
+      double precision      dra
+      double precision      dsinth (    maxang )
+      double precision      dtipm  (     3,  3 )
+      double precision      dtheta
+      double precision      dw
+      double precision      eulsta (     6     )
+      double precision      epoch
+      double precision      pckepc
+      double precision      phi
+      double precision      ra
+      double precision      rcoef  ( 0:mxpoly-1 )
+      double precision      req2pc (     3, 3  )
+      double precision      sinth  (    maxang )
+      double precision      t
+      double precision      tc
+      double precision      td
+      double precision      tcoef  ( mxphas * maxang )
+      double precision      tipm   (     3, 3  )
+      double precision      theta
+      double precision      tmpepc
+      double precision      w
+      double precision      wc     (    maxang )
+      double precision      wcoef  ( 0:mxpoly-1 )
+      double precision      xdtipm (     3, 3  )
+      double precision      xtipm  (     3, 3  )
 
-      INTEGER               CENT
-      INTEGER               DEG
-      INTEGER               DIM
-      INTEGER               FRCODE
-      INTEGER               I
-      INTEGER               J
-      INTEGER               J2CODE
-      INTEGER               K
-      INTEGER               L
-      INTEGER               M
-      INTEGER               NA
-      INTEGER               ND
-      INTEGER               NPHASE
-      INTEGER               NPHSCO
-      INTEGER               NTHETA
-      INTEGER               NW
-      INTEGER               PCREF
-      INTEGER               REFID
-      INTEGER               REQREF
+      integer               cent
+      integer               deg
+      integer               dim
+      integer               frcode
+      integer               i
+      integer               j
+      integer               j2code
+      integer               k
+      integer               l
+      integer               m
+      integer               na
+      integer               nd
+      integer               nphase
+      integer               nphsco
+      integer               ntheta
+      integer               nw
+      integer               pcref
+      integer               refid
+      integer               reqref
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               FOUND2
+      logical               first
+      logical               found
+      logical               found2
 
 !
 !     POOL state counter.
 !
-      INTEGER               PULCTR ( CTRSIZ )
+      integer               pulctr ( ctrsiz )
 
-      LOGICAL               UPDATE
+      logical               update
 
 !
 !     ID-based hash for text PCK data. KIDLST, KIDPOL, and KIDIDS
 !     provide the index in the body PCK data arrays at which the data
 !     of the body with a given ID are stored.
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               MAXBOD
-      PARAMETER           ( MAXBOD = 157 )
+      integer               maxbod
+      parameter           ( maxbod = 157 )
 
-      INTEGER               BIDLST (             MAXBOD )
-      INTEGER               BIDPOL ( LBPOOL :    MAXBOD )
-      INTEGER               BIDIDS (             MAXBOD )
+      integer               bidlst (             maxbod )
+      integer               bidpol ( lbpool :    maxbod )
+      integer               bidids (             maxbod )
 
-      DOUBLE PRECISION      BAC    (     MAXANG, MAXBOD )
-      DOUBLE PRECISION      BDC    (     MAXANG, MAXBOD )
-      DOUBLE PRECISION      BDCOEF ( 0:MXPOLY-1, MAXBOD )
-      DOUBLE PRECISION      BPCKEP (             MAXBOD )
-      DOUBLE PRECISION      BRCOEF ( 0:MXPOLY-1, MAXBOD )
-      DOUBLE PRECISION      BTCOEF ( MXPHAS * MAXANG, MAXBOD )
-      DOUBLE PRECISION      BWC    (     MAXANG, MAXBOD )
-      DOUBLE PRECISION      BWCOEF ( 0:MXPOLY-1, MAXBOD )
+      double precision      bac    (     maxang, maxbod )
+      double precision      bdc    (     maxang, maxbod )
+      double precision      bdcoef ( 0:mxpoly-1, maxbod )
+      double precision      bpckep (             maxbod )
+      double precision      brcoef ( 0:mxpoly-1, maxbod )
+      double precision      btcoef ( mxphas * maxang, maxbod )
+      double precision      bwc    (     maxang, maxbod )
+      double precision      bwcoef ( 0:mxpoly-1, maxbod )
 
-      INTEGER               BNA    (             MAXBOD )
-      INTEGER               BND    (             MAXBOD )
-      INTEGER               BNPHAS (             MAXBOD )
-      INTEGER               BNPHCO (             MAXBOD )
-      INTEGER               BNW    (             MAXBOD )
-      INTEGER               BPCREF (             MAXBOD )
+      integer               bna    (             maxbod )
+      integer               bnd    (             maxbod )
+      integer               bnphas (             maxbod )
+      integer               bnphco (             maxbod )
+      integer               bnw    (             maxbod )
+      integer               bpcref (             maxbod )
 
-      DOUBLE PRECISION      SINTMP
-      DOUBLE PRECISION      COSTMP
+      double precision      sintmp
+      double precision      costmp
 
-      INTEGER               AT
-      INTEGER               AVAIL
+      integer               at
+      integer               avail
 
-      LOGICAL               NEW
+      logical               new
 
 !
 !     Saved variables
@@ -989,63 +989,63 @@
 !     rather than taking a chance and accidentally leaving something
 !     off the list.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA  BPCREF / MAXBOD * 0 /
-      DATA  FIRST  / .TRUE.  /
-      DATA  FOUND  / .FALSE. /
+      data  bpcref / maxbod * 0 /
+      data  first  / .true.  /
+      data  found  / .false. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'TISBOD' )
+      call chkin ( 'TISBOD' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXBOD, BIDLST, BIDPOL )
+         call zzhsiini ( maxbod, bidlst, bidpol )
 
 !
 !        Get the code for the J2000 frame.
 !
-         CALL IRFNUM ( 'J2000', J2CODE )
+         call irfnum ( 'J2000', j2code )
 
 !
 !        Set seconds per day and per century.
 !
-         D = SPD()
-         T = D  *  36525.D0
+         d = spd()
+         t = d  *  36525.d0
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
-      CALL IRFNUM  ( REF, REQREF )
+      call irfnum  ( ref, reqref )
 
 !
 !     Get state transformation matrix from high precision PCK file, if
 !     available.
 !
-      CALL PCKMAT ( BODY, ET, PCREF, TSIPM, FOUND )
+      call pckmat ( body, et, pcref, tsipm, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        The data for the frame of interest are not available in a
 !        loaded binary PCK file. This is not an error: the data may be
@@ -1054,24 +1054,24 @@
 !        Check the POOL counter. If it changed, dump all buffered
 !        constants data.
 !
-         CALL ZZPCTRCK ( PULCTR, UPDATE )
+         call zzpctrck ( pulctr, update )
 
-         IF ( UPDATE ) THEN
-            CALL ZZHSIINI ( MAXBOD, BIDLST, BIDPOL )
-         END IF
+         if ( update ) then
+            call zzhsiini ( maxbod, bidlst, bidpol )
+         end if
 
 !
 !        Check if we have data for this body in our buffers.
 !
-         CALL ZZHSICHK ( BIDLST, BIDPOL, BIDIDS, BODY, AT )
+         call zzhsichk ( bidlst, bidpol, bidids, body, at )
 
-         IF ( AT .NE. 0 ) THEN
+         if ( at .ne. 0 ) then
 !
 !           Set PCREF as it is used after the text PCK "IF".
 !
-            PCREF  = BPCREF ( AT )
+            pcref  = bpcref ( at )
 
-         ELSE
+         else
 !
 !           Conduct a non-error-signaling check for the presence of a
 !           kernel variable that is required to implement an IAU style
@@ -1080,11 +1080,11 @@
 !           error; we want to issue the error signal locally, with a
 !           better error message.
 !
-            ITEM = 'BODY#_PM'
-            CALL REPMI  ( ITEM, '#',   BODY, ITEM  )
-            CALL DTPOOL ( ITEM, FOUND, NW,   DTYPE )
+            item = 'BODY#_PM'
+            call repmi  ( item, '#',   body, item  )
+            call dtpool ( item, found, nw,   dtype )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 !
 !              Now we do have an error.
 !
@@ -1096,10 +1096,10 @@
 !              really identified by a PCK frame class ID code, though
 !              most of the documentation just calls it a body ID code.
 !
-               CALL CCIFRM ( PCK, BODY,  FRCODE, FIXFRM, CENT, FOUND )
-               CALL ETCAL  ( ET,  TIMSTR )
+               call ccifrm ( pck, body,  frcode, fixfrm, cent, found )
+               call etcal  ( et,  timstr )
 
-               ERRMSG = 'PCK data required to compute the orientation ' &
+               errmsg = 'PCK data required to compute the orientation ' &
             //       'of the # # for epoch # TDB were not found. ' &
             //       'If these data were to be provided by a binary ' &
             //       'PCK file, then it is possible that the PCK ' &
@@ -1114,42 +1114,42 @@
 !
 !              Fill in the variable data in the error message.
 !
-               IF ( FOUND ) THEN
+               if ( found ) then
 !
 !                 The frame system knows the name of the body-fixed
 !                 frame.
 !
-                  CALL SETMSG ( ERRMSG                  )
-                  CALL ERRCH  ( '#', 'body-fixed frame' )
-                  CALL ERRCH  ( '#', FIXFRM             )
-                  CALL ERRCH  ( '#', TIMSTR             )
+                  call setmsg ( errmsg                  )
+                  call errch  ( '#', 'body-fixed frame' )
+                  call errch  ( '#', fixfrm             )
+                  call errch  ( '#', timstr             )
 
-               ELSE
+               else
 !
 !                 The frame system doesn't know the name of the
 !                 body-fixed frame, most likely due to a missing
 !                 frame kernel.
 !
-                  CALL SUFFIX ( '#', 1, ERRMSG                      )
-                  CALL SETMSG ( ERRMSG                              )
-                  CALL ERRCH  ( '#', &
+                  call suffix ( '#', 1, errmsg                      )
+                  call setmsg ( errmsg                              )
+                  call errch  ( '#', &
                              'body-fixed frame associated with ' &
                //            'the ID code'                       )
-                  CALL ERRINT ( '#', BODY                           )
-                  CALL ERRCH  ( '#', TIMSTR                         )
-                  CALL ERRCH  ( '#', &
+                  call errint ( '#', body                           )
+                  call errch  ( '#', timstr                         )
+                  call errch  ( '#', &
                              'Also, a frame kernel defining the ' &
                //            'body-fixed frame associated with ' &
                //            'body # may need to be loaded.'     )
-                  CALL ERRINT ( '#', BODY                           )
+                  call errint ( '#', body                           )
 
-               END IF
+               end if
 
-               CALL SIGERR ( 'SPICE(FRAMEDATANOTFOUND)' )
-               CALL CHKOUT ( 'TISBOD'                   )
-               RETURN
+               call sigerr ( 'SPICE(FRAMEDATANOTFOUND)' )
+               call chkout ( 'TISBOD'                   )
+               return
 
-            END IF
+            end if
 
 !
 !           Find the body code used to label the reference frame and
@@ -1161,7 +1161,7 @@
 !           any other bodies, (the Sun or asteroids, for example) the
 !           body's own code is used as the label.
 !
-            REFID = ZZBODBRY ( BODY )
+            refid = zzbodbry ( body )
 
 !
 !           Look up the epoch of the constants. The epoch is specified
@@ -1170,169 +1170,169 @@
 !           Look for both forms of the JED epoch kernel variable. At
 !           most one is allowed to be present.
 !
-            ITEM   =  'BODY#_CONSTANTS_JED_EPOCH'
-            CALL REPMI ( ITEM, '#', REFID, ITEM )
+            item   =  'BODY#_CONSTANTS_JED_EPOCH'
+            call repmi ( item, '#', refid, item )
 
-            ITEM2  =  'BODY#_CONSTS_JED_EPOCH'
-            CALL REPMI ( ITEM2, '#', REFID, ITEM2 )
+            item2  =  'BODY#_CONSTS_JED_EPOCH'
+            call repmi ( item2, '#', refid, item2 )
 
-            CALL GDPOOL ( ITEM, 1, 1, DIM, PCKEPC, FOUND )
+            call gdpool ( item, 1, 1, dim, pckepc, found )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               CALL GDPOOL ( ITEM2, 1, 1, DIM, PCKEPC, FOUND2 )
+               call gdpool ( item2, 1, 1, dim, pckepc, found2 )
 
-               IF ( .NOT. FOUND2 ) THEN
-                  PCKEPC = J2000()
-               END IF
+               if ( .not. found2 ) then
+                  pckepc = j2000()
+               end if
 
-            ELSE
+            else
 !
 !              Check for presence of both forms of the variable names.
 !
-               CALL DTPOOL ( ITEM2, FOUND2, DIM, DTYPE )
+               call dtpool ( item2, found2, dim, dtype )
 
-               IF ( FOUND2 ) THEN
+               if ( found2 ) then
 
-                  CALL SETMSG ( 'Both kernel variables # and # are ' &
+                  call setmsg ( 'Both kernel variables # and # are ' &
                   //            'present in the kernel pool. At most ' &
                   //            'one form of the kernel variable name ' &
                   //            'may be present.'           )
-                  CALL ERRCH  ( '#', ITEM                   )
-                  CALL ERRCH  ( '#', ITEM2                  )
-                  CALL SIGERR ( 'SPICE(COMPETINGEPOCHSPEC)' )
-                  CALL CHKOUT ( 'TISBOD'                    )
-                  RETURN
+                  call errch  ( '#', item                   )
+                  call errch  ( '#', item2                  )
+                  call sigerr ( 'SPICE(COMPETINGEPOCHSPEC)' )
+                  call chkout ( 'TISBOD'                    )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Look up the reference frame of the constants. The reference
 !           frame is specified by a code recognized by CHGIRF. The
 !           default frame is J2000, symbolized by the code J2CODE.
 !
-            ITEM   =  'BODY#_CONSTANTS_REF_FRAME'
-            CALL REPMI ( ITEM, '#', REFID, ITEM )
+            item   =  'BODY#_CONSTANTS_REF_FRAME'
+            call repmi ( item, '#', refid, item )
 
-            ITEM2  =  'BODY#_CONSTS_REF_FRAME'
-            CALL REPMI ( ITEM2, '#', REFID, ITEM2 )
+            item2  =  'BODY#_CONSTS_REF_FRAME'
+            call repmi ( item2, '#', refid, item2 )
 
-            CALL REPMI  ( ITEM, '#', REFID, ITEM              )
-            CALL GIPOOL ( ITEM,  1,  1,     DIM, PCREF, FOUND )
+            call repmi  ( item, '#', refid, item              )
+            call gipool ( item,  1,  1,     dim, pcref, found )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               CALL GIPOOL ( ITEM2, 1, 1, DIM, PCREF, FOUND )
+               call gipool ( item2, 1, 1, dim, pcref, found )
 
-               IF ( .NOT. FOUND ) THEN
-                  PCREF  =  J2CODE
-               END IF
+               if ( .not. found ) then
+                  pcref  =  j2code
+               end if
 
-            ELSE
+            else
 !
 !              Check for presence of both forms of the variable names.
 !
-               CALL DTPOOL ( ITEM2, FOUND, DIM, DTYPE )
+               call dtpool ( item2, found, dim, dtype )
 
-               IF ( FOUND ) THEN
+               if ( found ) then
 
-                  CALL SETMSG ( 'Both kernel variables # and # are ' &
+                  call setmsg ( 'Both kernel variables # and # are ' &
                   //            'present in the kernel pool. At most ' &
                   //            'one form of the kernel variable name ' &
                   //            'may be present.'           )
-                  CALL ERRCH  ( '#', ITEM                   )
-                  CALL ERRCH  ( '#', ITEM2                  )
-                  CALL SIGERR ( 'SPICE(COMPETINGFRAMESPEC)' )
-                  CALL CHKOUT ( 'TISBOD'                    )
-                  RETURN
+                  call errch  ( '#', item                   )
+                  call errch  ( '#', item2                  )
+                  call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
+                  call chkout ( 'TISBOD'                    )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Whatever the body, it has quadratic time polynomials for
 !           the RA and Dec of the pole, and for the rotation of the
 !           Prime Meridian.
 !
-            ITEM = 'POLE_RA'
-            CALL CLEARD (             MXPOLY,     RCOEF )
-            CALL BODVCD ( BODY, ITEM, MXPOLY, NA, RCOEF )
+            item = 'POLE_RA'
+            call cleard (             mxpoly,     rcoef )
+            call bodvcd ( body, item, mxpoly, na, rcoef )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'TISBOD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'TISBOD' )
+               return
+            end if
 
-            ITEM = 'POLE_DEC'
-            CALL CLEARD (             MXPOLY,     DCOEF )
-            CALL BODVCD ( BODY, ITEM, MXPOLY, ND, DCOEF )
+            item = 'POLE_DEC'
+            call cleard (             mxpoly,     dcoef )
+            call bodvcd ( body, item, mxpoly, nd, dcoef )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'TISBOD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'TISBOD' )
+               return
+            end if
 
-            ITEM = 'PM'
-            CALL CLEARD (             MXPOLY,     WCOEF )
-            CALL BODVCD ( BODY, ITEM, MXPOLY, NW, WCOEF )
+            item = 'PM'
+            call cleard (             mxpoly,     wcoef )
+            call bodvcd ( body, item, mxpoly, nw, wcoef )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'TISBOD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'TISBOD' )
+               return
+            end if
 
 !
 !           Whether or not the body is a satellite, there may be
 !           additional nutation and libration (THETA) terms.
 !
-            NTHETA = 0
-            NPHASE = 0
-            NPHSCO = 0
-            NA     = 0
-            ND     = 0
-            NW     = 0
+            ntheta = 0
+            nphase = 0
+            nphsco = 0
+            na     = 0
+            nd     = 0
+            nw     = 0
 
-            ITEM = 'NUT_PREC_ANGLES'
+            item = 'NUT_PREC_ANGLES'
 
-            IF ( BODFND ( REFID, ITEM ) ) THEN
+            if ( bodfnd ( refid, item ) ) then
 
 !              Find out whether the maximum phase angle degree
 !              has been explicitly set.
 !
-               ITEM2 = 'MAX_PHASE_DEGREE'
+               item2 = 'MAX_PHASE_DEGREE'
 
-               IF ( BODFND(REFID, ITEM2) ) THEN
+               if ( bodfnd(refid, item2) ) then
 
-                  CALL BODVCD ( REFID, ITEM2, 1, DIM, DPVAL )
+                  call bodvcd ( refid, item2, 1, dim, dpval )
 
-                  DEG = NINT( DPVAL )
+                  deg = nint( dpval )
 
-                  IF ( ( DEG .LT. 1 ) .OR. ( DEG .GT. MXPHAS-1 ) ) THEN
+                  if ( ( deg .lt. 1 ) .or. ( deg .gt. mxphas-1 ) ) then
 
-                     CALL SETMSG ( 'Maximum phase angle degree for ' &
+                     call setmsg ( 'Maximum phase angle degree for ' &
                      //            'body # must be in the range 1:# ' &
                      //            'but was #.'                      )
-                     CALL ERRINT ( '#', REFID                        )
-                     CALL ERRINT ( '#', MXPHAS-1                     )
-                     CALL ERRINT ( '#', DEG                          )
-                     CALL SIGERR ( 'SPICE(DEGREEOUTOFRANGE)'         )
-                     CALL CHKOUT ( 'TISBOD'                          )
-                     RETURN
+                     call errint ( '#', refid                        )
+                     call errint ( '#', mxphas-1                     )
+                     call errint ( '#', deg                          )
+                     call sigerr ( 'SPICE(DEGREEOUTOFRANGE)'         )
+                     call chkout ( 'TISBOD'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  NPHSCO = DEG + 1
+                  nphsco = deg + 1
 
-               ELSE
+               else
 !
 !                 The default degree is 1, yielding two coefficients.
 !
-                  NPHSCO = 2
+                  nphsco = 2
 
-               END IF
+               end if
 !
 !              There is something a bit obscure going on below. BODVCD
 !              loads the array TCOEF in the following order
@@ -1344,134 +1344,134 @@
 !              loaded, but we will need the actual limit on the second
 !              dimension. That is --- NTHETA / NPHSCO.
 !
-               CALL BODVCD ( REFID, ITEM, MAXANG*MXPHAS, NTHETA, TCOEF )
+               call bodvcd ( refid, item, maxang*mxphas, ntheta, tcoef )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'TISBOD' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'TISBOD' )
+                  return
+               end if
 
 !
 !              NPHSCO is at least 1; this division is safe.
 !
-               NPHASE = NTHETA / NPHSCO
+               nphase = ntheta / nphsco
 
-            END IF
+            end if
 
 !
 !           Look up the right ascension nutations in the precession of
 !           the pole. NA is the number of Ascension coefficients. AC
 !           are the Ascension coefficients.
 !
-            ITEM = 'NUT_PREC_RA'
+            item = 'NUT_PREC_RA'
 
-            IF ( BODFND ( BODY, ITEM ) ) THEN
+            if ( bodfnd ( body, item ) ) then
 
-               CALL BODVCD ( BODY, ITEM, MAXANG, NA, AC )
+               call bodvcd ( body, item, maxang, na, ac )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'TISBOD' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'TISBOD' )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           Look up the declination nutations in the precession of the
 !           pole. ND is the number of Declination coefficients. DC are
 !           the Declination coefficients.
 !
-            ITEM = 'NUT_PREC_DEC'
+            item = 'NUT_PREC_DEC'
 
-            IF ( BODFND ( BODY, ITEM ) ) THEN
+            if ( bodfnd ( body, item ) ) then
 
-               CALL BODVCD ( BODY, ITEM, MAXANG, ND, DC )
+               call bodvcd ( body, item, maxang, nd, dc )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'TISBOD' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'TISBOD' )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           Finally look up the prime meridian nutations. NW is the
 !           number of coefficients. WC is the array of coefficients.
 !
-            ITEM = 'NUT_PREC_PM'
+            item = 'NUT_PREC_PM'
 
-            IF ( BODFND ( BODY, ITEM ) ) THEN
+            if ( bodfnd ( body, item ) ) then
 
-               CALL BODVCD ( BODY, ITEM, MAXANG, NW, WC )
+               call bodvcd ( body, item, maxang, nw, wc )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'TISBOD' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'TISBOD' )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           The number of coefficients returned had better not be
 !           bigger than the number of angles we are going to compute.
 !           If it is we simply signal an error and bag it, for sure.
 !
-            IF ( MAX( NA, ND, NW ) .GT. NPHASE ) THEN
-               CALL SETMSG ( 'Insufficient number of nutation/' &
+            if ( max( na, nd, nw ) .gt. nphase ) then
+               call setmsg ( 'Insufficient number of nutation/' &
                //            'precession angles for body * at time #. ' &
                //            'Number of angles is #; number required ' &
                //            'is #.'                )
-               CALL ERRINT ( '*', BODY              )
-               CALL ERRDP  ( '#', ET                )
-               CALL ERRINT ( '#', NPHASE            )
-               CALL ERRINT ( '#', MAX( NA, ND, NW ) )
-               CALL SIGERR ( 'SPICE(INSUFFICIENTANGLES)' )
-               CALL CHKOUT ( 'TISBOD' )
-               RETURN
-            END IF
+               call errint ( '*', body              )
+               call errdp  ( '#', et                )
+               call errint ( '#', nphase            )
+               call errint ( '#', max( na, nd, nw ) )
+               call sigerr ( 'SPICE(INSUFFICIENTANGLES)' )
+               call chkout ( 'TISBOD' )
+               return
+            end if
 
 !
 !           We succeeded to fetch all data for this body. Save it in
 !           the buffers. First check if there is room. If not, dump the
 !           buffers to make room.
 !
-            CALL ZZHSIAVL( BIDPOL, AVAIL )
-            IF ( AVAIL .LE. 0 ) THEN
-               CALL ZZHSIINI ( MAXBOD, BIDLST, BIDPOL )
-            END IF
+            call zzhsiavl( bidpol, avail )
+            if ( avail .le. 0 ) then
+               call zzhsiini ( maxbod, bidlst, bidpol )
+            end if
 
 !
 !           Add this body to the hash and save its data in the buffers.
 !
-            CALL ZZHSIADD ( BIDLST, BIDPOL, BIDIDS, BODY, AT, NEW )
+            call zzhsiadd ( bidlst, bidpol, bidids, body, at, new )
 
-            BPCKEP ( AT ) = PCKEPC
-            BPCREF ( AT ) = PCREF
-            BNPHAS ( AT ) = NPHASE
-            BNPHCO ( AT ) = NPHSCO
-            BNA    ( AT ) = NA
-            BND    ( AT ) = ND
-            BNW    ( AT ) = NW
+            bpckep ( at ) = pckepc
+            bpcref ( at ) = pcref
+            bnphas ( at ) = nphase
+            bnphco ( at ) = nphsco
+            bna    ( at ) = na
+            bnd    ( at ) = nd
+            bnw    ( at ) = nw
 
-            CALL MOVED( RCOEF( 0 ), MXPOLY,        BRCOEF( 0, AT ) )
-            CALL MOVED( DCOEF( 0 ), MXPOLY,        BDCOEF( 0, AT ) )
-            CALL MOVED( WCOEF( 0 ), MXPOLY,        BWCOEF( 0, AT ) )
-            CALL MOVED( TCOEF( 1 ), MAXANG*NPHSCO, BTCOEF( 1, AT ) )
-            CALL MOVED( AC   ( 1 ), MAXANG,        BAC   ( 1, AT ) )
-            CALL MOVED( DC   ( 1 ), MAXANG,        BDC   ( 1, AT ) )
-            CALL MOVED( WC   ( 1 ), MAXANG,        BWC   ( 1, AT ) )
+            call moved( rcoef( 0 ), mxpoly,        brcoef( 0, at ) )
+            call moved( dcoef( 0 ), mxpoly,        bdcoef( 0, at ) )
+            call moved( wcoef( 0 ), mxpoly,        bwcoef( 0, at ) )
+            call moved( tcoef( 1 ), maxang*nphsco, btcoef( 1, at ) )
+            call moved( ac   ( 1 ), maxang,        bac   ( 1, at ) )
+            call moved( dc   ( 1 ), maxang,        bdc   ( 1, at ) )
+            call moved( wc   ( 1 ), maxang,        bwc   ( 1, at ) )
 
-         END IF
+         end if
 
 !
 !        The reference epoch in the PCK is given as JED. Convert to
 !        ephemeris seconds past J2000. Then convert the input ET to
 !        seconds past the reference epoch.
 !
-         TMPEPC  =  SPD() * ( BPCKEP(AT) - J2000() )
-         EPOCH   =  ET    -   TMPEPC
-         TD      =  EPOCH / D
-         TC      =  EPOCH / T
+         tmpepc  =  spd() * ( bpckep(at) - j2000() )
+         epoch   =  et    -   tmpepc
+         td      =  epoch / d
+         tc      =  epoch / t
 
 !
 !        Evaluate the time polynomials and their derivatives w.r.t.
@@ -1479,127 +1479,127 @@
 !
 !        Evaluate the time polynomials at EPOCH.
 !
-         RA  = BRCOEF(0,AT) + TC * ( BRCOEF(1,AT) + TC * BRCOEF(2,AT) )
-         DEC = BDCOEF(0,AT) + TC * ( BDCOEF(1,AT) + TC * BDCOEF(2,AT) )
-         W   = BWCOEF(0,AT) + TD * ( BWCOEF(1,AT) + TD * BWCOEF(2,AT) )
+         ra  = brcoef(0,at) + tc * ( brcoef(1,at) + tc * brcoef(2,at) )
+         dec = bdcoef(0,at) + tc * ( bdcoef(1,at) + tc * bdcoef(2,at) )
+         w   = bwcoef(0,at) + td * ( bwcoef(1,at) + td * bwcoef(2,at) )
 
-         DRA  = ( BRCOEF(1,AT)  + 2.0D0*TC*BRCOEF(2,AT) ) / T
-         DDEC = ( BDCOEF(1,AT)  + 2.0D0*TC*BDCOEF(2,AT) ) / T
-         DW   = ( BWCOEF(1,AT)  + 2.0D0*TD*BWCOEF(2,AT) ) / D
+         dra  = ( brcoef(1,at)  + 2.0d0*tc*brcoef(2,at) ) / t
+         ddec = ( bdcoef(1,at)  + 2.0d0*tc*bdcoef(2,at) ) / t
+         dw   = ( bwcoef(1,at)  + 2.0d0*td*bwcoef(2,at) ) / d
 
 !
 !        Compute the nutations and librations (and their derivatives)
 !        as appropriate.
 !
-         DO I = 1, BNPHAS(AT)
+         do i = 1, bnphas(at)
 
-            IF ( BNPHCO(AT) .EQ. 2 ) THEN
+            if ( bnphco(at) .eq. 2 ) then
 !
 !              This case is so common that we'll deal with it
 !              separately. We'll avoid unnecessary arithmetic
 !              operations.
 !
-               K = 1 + 2*(I-1)
-               M = 1 + K
+               k = 1 + 2*(i-1)
+               m = 1 + k
 
-               THETA  = ( BTCOEF(K,AT) + TC * BTCOEF(M,AT) ) * RPD()
-               DTHETA = ( BTCOEF(M,AT) / T ) * RPD()
+               theta  = ( btcoef(k,at) + tc * btcoef(m,at) ) * rpd()
+               dtheta = ( btcoef(m,at) / t ) * rpd()
 
-            ELSE
+            else
 !
 !              THETA and DTHETA have higher-order terms; there are
 !              BNPHCO(AT) coefficients for each angle.
 !
-               THETA = 0.D0
+               theta = 0.d0
 
-               DO J = 1, BNPHCO(AT)
+               do j = 1, bnphco(at)
 !
 !                 K is the start index for the coefficients of the
 !                 Ith angle.
 !
-                  K     = J + BNPHCO(AT)*(I-1)
+                  k     = j + bnphco(at)*(i-1)
 
-                  THETA = THETA  + ( TC**(J-1) * BTCOEF(K,AT) )
+                  theta = theta  + ( tc**(j-1) * btcoef(k,at) )
 
-               END DO
+               end do
 
-               THETA  = THETA * RPD()
+               theta  = theta * rpd()
 
-               K = 1 + BNPHCO(AT)*(I-1)
-               M = 1 + K
+               k = 1 + bnphco(at)*(i-1)
+               m = 1 + k
 
-               DTHETA = BTCOEF(M,AT) / T
+               dtheta = btcoef(m,at) / t
 
-               DO J = 3, BNPHCO(AT)
+               do j = 3, bnphco(at)
 
-                  K      = J + BNPHCO(AT)*(I-1)
-                  L      = J - 1
+                  k      = j + bnphco(at)*(i-1)
+                  l      = j - 1
 !
 !                 Differentiate with respect to EPOCH the Jth
 !                 term of the expression for the Ith angle; add
 !                 the result to the current sum.
 !
-                  DTHETA = DTHETA + &
-                           ( L * TC**(L-1) * BTCOEF(K,AT) ) / T**(L-1)
-               END DO
+                  dtheta = dtheta + &
+                           ( l * tc**(l-1) * btcoef(k,at) ) / t**(l-1)
+               end do
 
-               DTHETA = DTHETA * RPD()
+               dtheta = dtheta * rpd()
 
-            END IF
+            end if
 
-            SINTMP    =  SIN ( THETA )
-            COSTMP    =  COS ( THETA )
+            sintmp    =  sin ( theta )
+            costmp    =  cos ( theta )
 
-            SINTH(I)  =  SINTMP
-            COSTH(I)  =  COSTMP
-            DSINTH(I) =  COSTMP * DTHETA
-            DCOSTH(I) = -SINTMP * DTHETA
+            sinth(i)  =  sintmp
+            costh(i)  =  costmp
+            dsinth(i) =  costmp * dtheta
+            dcosth(i) = -sintmp * dtheta
 
-         END DO
+         end do
 
 !
 !        Adjust RA, DEC, W and their derivatives by the librations
 !        and nutations.
 !
-         RA  = RA    + VDOTG ( BAC(1,AT), SINTH,  BNA(AT) )
-         DEC = DEC   + VDOTG ( BDC(1,AT), COSTH,  BND(AT) )
-         W   = W     + VDOTG ( BWC(1,AT), SINTH,  BNW(AT) )
+         ra  = ra    + vdotg ( bac(1,at), sinth,  bna(at) )
+         dec = dec   + vdotg ( bdc(1,at), costh,  bnd(at) )
+         w   = w     + vdotg ( bwc(1,at), sinth,  bnw(at) )
 
-         DRA  = DRA  + VDOTG ( BAC(1,AT), DSINTH, BNA(AT) )
-         DDEC = DDEC + VDOTG ( BDC(1,AT), DCOSTH, BND(AT) )
-         DW   = DW   + VDOTG ( BWC(1,AT), DSINTH, BNW(AT) )
+         dra  = dra  + vdotg ( bac(1,at), dsinth, bna(at) )
+         ddec = ddec + vdotg ( bdc(1,at), dcosth, bnd(at) )
+         dw   = dw   + vdotg ( bwc(1,at), dsinth, bnw(at) )
 
 !
 !        Convert from degrees to radians
 !
-         RA      = RA   * RPD()
-         DEC     = DEC  * RPD()
-         W       = W    * RPD()
+         ra      = ra   * rpd()
+         dec     = dec  * rpd()
+         w       = w    * rpd()
 
-         DRA     = DRA  * RPD()
-         DDEC    = DDEC * RPD()
-         DW      = DW   * RPD()
+         dra     = dra  * rpd()
+         ddec    = ddec * rpd()
+         dw      = dw   * rpd()
 !
 !        Convert to Euler angles.
 !
-         W       = MOD ( W,  TWOPI() )
-         PHI     = RA + HALFPI()
-         DELTA   = HALFPI() - DEC
+         w       = mod ( w,  twopi() )
+         phi     = ra + halfpi()
+         delta   = halfpi() - dec
 
-         DPHI    =   DRA
-         DDELTA  = - DDEC
+         dphi    =   dra
+         ddelta  = - ddec
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TISBOD' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TISBOD' )
+            return
+         end if
 
 !
 !        Pack the Euler angles and their derivatives into
 !        a state vector.
 !
-         CALL VPACK ( W,  DELTA,  PHI,  EULSTA    )
-         CALL VPACK ( DW, DDELTA, DPHI, EULSTA(4) )
+         call vpack ( w,  delta,  phi,  eulsta    )
+         call vpack ( dw, ddelta, dphi, eulsta(4) )
 
 !
 !        Find the state transformation defined by the Euler angle
@@ -1615,9 +1615,9 @@
 !           |       :      |
 !            -            -
 !
-         CALL EUL2XF ( EULSTA, 3, 1, 3, TSIPM )
+         call eul2xf ( eulsta, 3, 1, 3, tsipm )
 
-      END IF
+      end if
 
 !
 !     At this point the base frame PCREF has been determined.
@@ -1626,17 +1626,17 @@
 !     PCK data, adjust the transformation matrix TSIPM to map from the
 !     requested frame to the body-fixed frame.
 !
-      IF ( REQREF .NE. PCREF ) THEN
+      if ( reqref .ne. pcref ) then
 !
 !        Next get the position transformation from the user specified
 !        inertial frame to the native PCK inertial frame.
 !
-         CALL IRFROT ( REQREF, PCREF, REQ2PC )
+         call irfrot ( reqref, pcref, req2pc )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TISBOD' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TISBOD' )
+            return
+         end if
 
 !
 !        Since we're applying an inertial transformation to TSIPM,
@@ -1645,44 +1645,44 @@
 !
 !        Extract the upper and lower left blocks of TSIPM.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            DO J = 1, 3
+            do j = 1, 3
 
-               TIPM (I,J) =  TSIPM( I,   J )
-               DTIPM(I,J) =  TSIPM( I+3, J )
+               tipm (i,j) =  tsipm( i,   j )
+               dtipm(i,j) =  tsipm( i+3, j )
 
-            END DO
+            end do
 
-         END DO
+         end do
 
 !
 !        Rotate the blocks. Note this is a right multiplication.
 !
-         CALL MXM ( TIPM,  REQ2PC, XTIPM  )
-         CALL MXM ( DTIPM, REQ2PC, XDTIPM )
+         call mxm ( tipm,  req2pc, xtipm  )
+         call mxm ( dtipm, req2pc, xdtipm )
 
 !
 !        Replace the non-zero blocks of TSIPM. This gives us the
 !        transformation from the requested frame to the
 !        bodyfixed frame.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            DO J = 1, 3
+            do j = 1, 3
 
-               TSIPM( I,   J   ) = XTIPM (I,J)
-               TSIPM( I+3, J+3 ) = XTIPM (I,J)
-               TSIPM( I+3, J   ) = XDTIPM(I,J)
+               tsipm( i,   j   ) = xtipm (i,j)
+               tsipm( i+3, j+3 ) = xtipm (i,j)
+               tsipm( i+3, j   ) = xdtipm(i,j)
 
-            END DO
+            end do
 
-         END DO
+         end do
 
-      END IF
+      end if
 !
 !     That's all folks. Check out and get out.
 !
-      CALL CHKOUT ( 'TISBOD' )
-      RETURN
-      END
+      call chkout ( 'TISBOD' )
+      return
+      end

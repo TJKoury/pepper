@@ -1,6 +1,6 @@
 !$Procedure WNDIFD ( Difference two DP windows )
 
-      SUBROUTINE WNDIFD ( A, B, C )
+      subroutine wndifd ( a, b, c )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      A        ( LBCELL:* )
-      DOUBLE PRECISION      B        ( LBCELL:* )
-      DOUBLE PRECISION      C        ( LBCELL:* )
+      double precision      a        ( lbcell:* )
+      double precision      b        ( lbcell:* )
+      double precision      c        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -157,115 +157,115 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
-      LOGICAL               RETURN
+      integer               cardd
+      integer               sized
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               ACARD
-      INTEGER               BCARD
-      INTEGER               CSIZE
+      integer               acard
+      integer               bcard
+      integer               csize
 
-      INTEGER               APB
-      INTEGER               APE
-      INTEGER               BPB
-      INTEGER               BPE
-      INTEGER               PUT
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      L
-      INTEGER               NEEDED
+      integer               apb
+      integer               ape
+      integer               bpb
+      integer               bpe
+      integer               put
+      double precision      f
+      double precision      l
+      integer               needed
 
-      INTEGER               OVER
+      integer               over
 
-      LOGICAL               KEEP
-      LOGICAL               UNRSLV
+      logical               keep
+      logical               unrslv
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'WNDIFD' )
+      call chkin ( 'WNDIFD' )
 
 !
 !     Find the cardinality of the input windows, and the allowed size
 !     of the output window. Also, save the size of the second window.
 !
-      ACARD = CARDD ( A )
-      BCARD = CARDD ( B )
-      CSIZE = SIZED ( C )
-      OVER  = 0
+      acard = cardd ( a )
+      bcard = cardd ( b )
+      csize = sized ( c )
+      over  = 0
 
 !
 !     Empty out the output window.
 !
-      CALL SSIZED ( CSIZE, C )
+      call ssized ( csize, c )
 
 !
 !     Let's handle the pathological cases first.
 !
-      IF ( BCARD .EQ. 0 ) THEN
-         CALL COPYD ( A, C )
-         CALL CHKOUT ( 'WNDIFD' )
-         RETURN
-      ELSE IF ( ACARD .EQ. 0 ) THEN
-         CALL CHKOUT ( 'WNDIFD' )
-         RETURN
-      END IF
+      if ( bcard .eq. 0 ) then
+         call copyd ( a, c )
+         call chkout ( 'WNDIFD' )
+         return
+      else if ( acard .eq. 0 ) then
+         call chkout ( 'WNDIFD' )
+         return
+      end if
 
 !
 !     Now get pointers to the first intervals of A and B.
 !
-      APB = 1
-      APE = 2
-      BPB = 1
-      BPE = 2
-      PUT = 1
+      apb = 1
+      ape = 2
+      bpb = 1
+      bpe = 2
+      put = 1
 !
 !     As long as the end pointer for A is less than the cardinality
 !     of A we need to examine intervals and decide how much of
 !     them to keep in C.
 !
-      DO WHILE ( APE .LE. ACARD )
+      do while ( ape .le. acard )
 !
 !        We will work with the interval [F,L] which starts out
 !        as the next interval of A.  We modify it below as required
 !        when subtracting out intervals of B.
 !
-         F      = A(APB)
-         L      = A(APE)
+         f      = a(apb)
+         l      = a(ape)
 !
 !        Right now we have not resolved whether to keep the interval
 !        [F,L], but until we know better we assume it is a keeper.
 !
-         UNRSLV =  BPE .LE. BCARD
-         KEEP   = .TRUE.
+         unrslv =  bpe .le. bcard
+         keep   = .true.
 
-         DO WHILE ( UNRSLV )
+         do while ( unrslv )
 
-            IF ( L .LT. B(BPB) ) THEN
+            if ( l .lt. b(bpb) ) then
 !
 !              The interval [F,L] is before the next interval of B, we
 !              have resolved what to do with this one.   It is a
 !              keeper.
 !
-               UNRSLV = .FALSE.
+               unrslv = .false.
 
-            ELSE IF ( F .GT. B(BPE) ) THEN
+            else if ( f .gt. b(bpe) ) then
 !
 !              [F,L] is after the end of the current interval in B,
 !              we need to look at the next interval of B
 !
-               BPB    = BPB + 2
-               BPE    = BPE + 2
-               UNRSLV = BPE .LE. BCARD
+               bpb    = bpb + 2
+               bpe    = bpe + 2
+               unrslv = bpe .le. bcard
 
-            ELSE
+            else
 !
 !              There is some overlap between the current interval
 !              of B and the current interval of A. There are
@@ -316,124 +316,124 @@
 !                 keep all of what's left because all other intervals
 !                 of B are to the right of [F,L]
 !
-               IF (       B(BPB) .LE. F &
-                    .AND. L      .LE. B(BPE) ) THEN
+               if (       b(bpb) .le. f &
+                    .and. l      .le. b(bpe) ) then
 !
 !                 Case 1 above
 !
-                  KEEP   = .FALSE.
-                  UNRSLV = .FALSE.
+                  keep   = .false.
+                  unrslv = .false.
 
-               ELSE IF ( B(BPB) .LE. F ) THEN
+               else if ( b(bpb) .le. f ) then
 !
 !                 Case 2 above
 !
-                  F      = B(BPE)
-                  BPB    = BPB+2
-                  BPE    = BPE+2
-                  UNRSLV = BPE .LE. BCARD
+                  f      = b(bpe)
+                  bpb    = bpb+2
+                  bpe    = bpe+2
+                  unrslv = bpe .le. bcard
 
-               ELSE IF (      F      .LE. B(BPB) &
-                        .AND. L      .GE. B(BPE) &
-                        .AND. B(BPB) .LT. B(BPE) ) THEN
+               else if (      f      .le. b(bpb) &
+                        .and. l      .ge. b(bpe) &
+                        .and. b(bpb) .lt. b(bpe) ) then
 !
 !                 Case 3 above (non-singleton interval of B).
 !
 
-                  IF ( PUT .LT. CSIZE ) THEN
-                     C(PUT)   = F
-                     C(PUT+1) = B(BPB)
+                  if ( put .lt. csize ) then
+                     c(put)   = f
+                     c(put+1) = b(bpb)
 
-                     CALL SCARDD ( PUT+1, C )
+                     call scardd ( put+1, c )
 
-                     PUT      = PUT + 2
-                  ELSE
-                     OVER = OVER + 2
-                  END IF
+                     put      = put + 2
+                  else
+                     over = over + 2
+                  end if
 
-                  F      = B(BPE)
+                  f      = b(bpe)
 !
 !                 If the interval from B contained L, we will not
 !                 want to be keeping the singleton [F,L].
 !
-                  IF ( F .EQ. L ) THEN
-                     KEEP   = .FALSE.
-                     UNRSLV = .FALSE.
-                  END IF
+                  if ( f .eq. l ) then
+                     keep   = .false.
+                     unrslv = .false.
+                  end if
 
-                  BPB    = BPB + 2
-                  BPE    = BPE + 2
-                  UNRSLV = UNRSLV .AND. BPE .LE. BCARD
+                  bpb    = bpb + 2
+                  bpe    = bpe + 2
+                  unrslv = unrslv .and. bpe .le. bcard
 
-               ELSE IF (      F      .LE. B(BPB) &
-                        .AND. L      .GE. B(BPE) &
-                        .AND. B(BPB) .EQ. B(BPE) ) THEN
+               else if (      f      .le. b(bpb) &
+                        .and. l      .ge. b(bpe) &
+                        .and. b(bpb) .eq. b(bpe) ) then
 !
 !                 Case 3 above (singleton interval of B).
 !
-                  BPB    = BPB + 2
-                  BPE    = BPE + 2
-                  UNRSLV = BPE .LE. BCARD
+                  bpb    = bpb + 2
+                  bpe    = bpe + 2
+                  unrslv = bpe .le. bcard
 
-               ELSE
+               else
 !
 !                 Case 4 above
 !
-                  L      =  B(BPB)
-                  UNRSLV = .FALSE.
+                  l      =  b(bpb)
+                  unrslv = .false.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        If there is anything to keep in C, put it there.
 !
-         IF ( KEEP ) THEN
+         if ( keep ) then
 !
 !           Make sure there is sufficient room to do the putting.
 !
-            IF ( PUT .LT. CSIZE ) THEN
-               C(PUT)   = F
-               C(PUT+1) = L
-               CALL SCARDD ( PUT+1, C )
-               PUT      = PUT + 2
-            ELSE
-               OVER = OVER + 2
-            END IF
+            if ( put .lt. csize ) then
+               c(put)   = f
+               c(put+1) = l
+               call scardd ( put+1, c )
+               put      = put + 2
+            else
+               over = over + 2
+            end if
 
-         END IF
+         end if
 !
 !        Move the pointers in A to the next interval.
 !
-         APB = APB + 2
-         APE = APE + 2
+         apb = apb + 2
+         ape = ape + 2
 
-      END DO
+      end do
 
 !
 !     We've examined all of the intervals of A and B, but if we
 !     didn't actually store all of the difference, signal an error.
 !
-      IF ( OVER .GT. 0 ) THEN
+      if ( over .gt. 0 ) then
 
-         NEEDED = OVER + CSIZE
+         needed = over + csize
 
-         CALL SETMSG ( 'The output window did not have ' &
+         call setmsg ( 'The output window did not have ' &
          //            'sufficient room to contain the result of ' &
          //            'the window difference.  It has room for ' &
          //            '# endpoints, but # were needed to ' &
          //            'describe the difference. ' )
 
-         CALL ERRINT ( '#', CSIZE  )
-         CALL ERRINT ( '#', NEEDED )
-         CALL SIGERR ( 'SPICE(WINDOWEXCESS)'  )
+         call errint ( '#', csize  )
+         call errint ( '#', needed )
+         call sigerr ( 'SPICE(WINDOWEXCESS)'  )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'WNDIFD' )
+      call chkout ( 'WNDIFD' )
 
-      RETURN
-      END
+      return
+      end

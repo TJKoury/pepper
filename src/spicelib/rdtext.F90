@@ -1,6 +1,6 @@
 !$Procedure RDTEXT ( Read a line from a text file )
 
-      SUBROUTINE RDTEXT ( FILE, LINE, EOF )
+      subroutine rdtext ( file, line, eof )
 
 ! $ Abstract
 !
@@ -17,24 +17,24 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)       FILE
-      CHARACTER*(*)       LINE
-      LOGICAL             EOF
+      character*(*)       file
+      character*(*)       line
+      logical             eof
 
-      INTEGER             MAXLEN
+      integer             maxlen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER         ( MAXLEN = 128 )
+      parameter         ( maxlen = 128 )
 #else
-      PARAMETER         ( MAXLEN = 255 )
+      parameter         ( maxlen = 255 )
 #endif
 
-      INTEGER             MAXOPN
+      integer             maxopn
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER         ( MAXOPN =  20 )
+      parameter         ( maxopn =  20 )
 #else
-      PARAMETER         ( MAXOPN =  96 )
+      parameter         ( maxopn =  96 )
 #endif
 
 ! $ Brief_I/O
@@ -511,51 +511,51 @@
 !
 !     SPICELIB functions
 !
-      INTEGER             ISRCHI
-      LOGICAL             RETURN
+      integer             isrchi
+      logical             return
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXLEN)  LSTFIL
-      INTEGER             UNITS   ( MAXOPN )
-      INTEGER             LSTUNT
-      INTEGER             UNIT
+      character*(maxlen)  lstfil
+      integer             units   ( maxopn )
+      integer             lstunt
+      integer             unit
 
-      INTEGER             N
-      INTEGER             NUMBER
-      INTEGER             INDEX
-      INTEGER             IOSTAT
-      INTEGER             I
+      integer             n
+      integer             number
+      integer             index
+      integer             iostat
+      integer             i
 
-      LOGICAL             SAME
+      logical             same
 
 !
 !     Save the names of the files, their associated logical units, and
 !     the number of files opened.
 !
-      SAVE                UNITS
-      SAVE                N
-      SAVE                LSTFIL
-      SAVE                LSTUNT
-      SAVE                INDEX
+      save                units
+      save                n
+      save                lstfil
+      save                lstunt
+      save                index
 
 !
 !     Initial values
 !
-      DATA                N          /  0  /
-      DATA                LSTFIL     / ' ' /
+      data                n          /  0  /
+      data                lstfil     / ' ' /
 
 
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDTEXT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'RDTEXT' )
+      end if
 
 !
 !     We will keep track of which files are open by storing the unit
@@ -572,9 +572,9 @@
 !
 !     Are we reading the same file?
 !
-      SAME = ( LSTFIL .EQ. FILE )  .AND. ( LSTFIL .NE. ' ' )
+      same = ( lstfil .eq. file )  .and. ( lstfil .ne. ' ' )
 
-      IF ( .NOT. SAME ) THEN
+      if ( .not. same ) then
 
 !
 !        We still might have the same file. For example these three
@@ -590,42 +590,42 @@
 !        In other words, the user may have entered a different file
 !        specification for the same file.
 !
-         NUMBER = 0
+         number = 0
 
-         INQUIRE (  FILE    =  FILE, &
-                    NUMBER  =  NUMBER, &
-                    IOSTAT  =  IOSTAT  )
+         inquire (  file    =  file, &
+                    number  =  number, &
+                    iostat  =  iostat  )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 !
 !           This is weird.  How can an INQUIRE statement fail,
 !           if the syntax is correct?  But just in case...
 !
-            CALL SETMSG ( 'INQUIRE error.  File = #, IOSTAT = #.' )
-            CALL ERRCH  ( '#', FILE                               )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(INQUIREFAILED)'                  )
-            CALL CHKOUT ( 'RDTEXT'                                )
-            RETURN
+            call setmsg ( 'INQUIRE error.  File = #, IOSTAT = #.' )
+            call errch  ( '#', file                               )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(INQUIREFAILED)'                  )
+            call chkout ( 'RDTEXT'                                )
+            return
 
-         END IF
+         end if
 
-         INDEX = ISRCHI ( NUMBER, N, UNITS )
+         index = isrchi ( number, n, units )
 
-         IF ( INDEX .EQ. 0 ) THEN
+         if ( index .eq. 0 ) then
 !
 !           Well, we will treat it as a new file then.  We will
 !           need a free logical unit. But only if we don't
 !           have too many files open already.
 !
-            IF ( N .EQ. MAXOPN ) THEN
-               CALL SETMSG ( 'Too many files open already.' )
-               CALL SIGERR ( 'SPICE(TOOMANYFILESOPEN)'      )
-               CALL CHKOUT ( 'RDTEXT' )
-               RETURN
-            ELSE
-               CALL GETLUN ( UNIT )
-            END IF
+            if ( n .eq. maxopn ) then
+               call setmsg ( 'Too many files open already.' )
+               call sigerr ( 'SPICE(TOOMANYFILESOPEN)'      )
+               call chkout ( 'RDTEXT' )
+               return
+            else
+               call getlun ( unit )
+            end if
 
 !
 !           Okay, we have a unit. Open the file, and hope nothing
@@ -633,18 +633,18 @@
 !           helpful where allowed. (Standard disclaimer.)
 !
 
-            OPEN ( FILE            = FILE, &
-                   UNIT            = UNIT, &
-                   STATUS          = 'OLD', &
-                   IOSTAT          = IOSTAT )
+            open ( file            = file, &
+                   unit            = unit, &
+                   status          = 'OLD', &
+                   iostat          = iostat )
 
-            IF ( IOSTAT .NE. 0 ) THEN
-               CALL SETMSG ( 'Could not open #.'     )
-               CALL ERRCH  ( '#', FILE               )
-               CALL SIGERR ( 'SPICE(FILEOPENFAILED)' )
-               CALL CHKOUT ( 'RDTEXT' )
-               RETURN
-            END IF
+            if ( iostat .ne. 0 ) then
+               call setmsg ( 'Could not open #.'     )
+               call errch  ( '#', file               )
+               call sigerr ( 'SPICE(FILEOPENFAILED)' )
+               call chkout ( 'RDTEXT' )
+               return
+            end if
 
 !
 !           Whew! We're ready to read from this file. Save
@@ -654,16 +654,16 @@
 !               - The logical unit connected to this file.
 !               - The index of the file within the UNITS array.
 !
-            N         = N + 1
-            UNITS(N)  = UNIT
-            INDEX     = N
+            n         = n + 1
+            units(n)  = unit
+            index     = n
 
-         END IF
+         end if
 
-         LSTFIL = FILE
-         LSTUNT = UNITS(INDEX)
+         lstfil = file
+         lstunt = units(index)
 
-      END IF
+      end if
 
 
 
@@ -672,7 +672,7 @@
 !
 !     This is the easy part. Read the next line from the file.
 !
-      READ (LSTUNT,FMT='(A)',IOSTAT=IOSTAT) LINE
+      read (lstunt,fmt='(A)',iostat=iostat) line
 
 !
 !     Well, what happened? An end-of-file condition is indicated by
@@ -681,51 +681,51 @@
 !     Repack the UNITS array, so that subsequent calls will not try to
 !     read from the file without reopening it.
 !
-      EOF = ( IOSTAT .LT. 0 )
+      eof = ( iostat .lt. 0 )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CLOSE ( UNITS(INDEX) )
+         close ( units(index) )
 
-         DO I = INDEX+1, N
-            UNITS(I-1)  = UNITS(I)
-         END DO
+         do i = index+1, n
+            units(i-1)  = units(i)
+         end do
 
-         N = N - 1
+         n = n - 1
 
 !
 !        Fill LINE with blanks.
 !
-         LINE = ' '
+         line = ' '
 
 !
 !        LSTFIL is no longer valid
 !
-         LSTFIL = ' '
+         lstfil = ' '
 
 !
 !        If this is just the end of the file, don't report an error.
 !        (All files have to end sometime.)
 !
-         IF ( .NOT. EOF ) THEN
-            CALL SETMSG ( 'Could not read from #.' )
-            CALL ERRCH  ( '#', FILE                )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'  )
-            CALL CHKOUT ( 'RDTEXT' )
-            RETURN
-         END IF
+         if ( .not. eof ) then
+            call setmsg ( 'Could not read from #.' )
+            call errch  ( '#', file                )
+            call sigerr ( 'SPICE(FILEREADFAILED)'  )
+            call chkout ( 'RDTEXT' )
+            return
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'RDTEXT' )
-      RETURN
+      call chkout ( 'RDTEXT' )
+      return
 
 
 
 
 !$Procedure CLTEXT ( Close a text file opened by RDTEXT)
 
-      ENTRY  CLTEXT ( FILE )
+      entry  cltext ( file )
 
 ! $ Abstract
 !
@@ -907,56 +907,56 @@
 !
 !     Set up the error processing.
 !
-      CALL CHKIN ( 'CLTEXT' )
+      call chkin ( 'CLTEXT' )
 
 
 !
 !     Which file?
 !
-      NUMBER = 0
+      number = 0
 
-      INQUIRE (  FILE    =  FILE, &
-                 NUMBER  =  NUMBER, &
-                 IOSTAT  =  IOSTAT   )
+      inquire (  file    =  file, &
+                 number  =  number, &
+                 iostat  =  iostat   )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
 !        if the syntax is correct?  But just in case...
 !
-         CALL SETMSG ( 'INQUIRE error.  File = #, IOSTAT = #.' )
-         CALL ERRCH  ( '#', FILE                               )
-         CALL ERRINT ( '#', IOSTAT                             )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'                  )
-         CALL CHKOUT ( 'CLTEXT'                                )
-         RETURN
+         call setmsg ( 'INQUIRE error.  File = #, IOSTAT = #.' )
+         call errch  ( '#', file                               )
+         call errint ( '#', iostat                             )
+         call sigerr ( 'SPICE(INQUIREFAILED)'                  )
+         call chkout ( 'CLTEXT'                                )
+         return
 
-      END IF
+      end if
 
-      INDEX = ISRCHI ( NUMBER, N, UNITS )
+      index = isrchi ( number, n, units )
 
-      IF ( INDEX .GT. 0 ) THEN
+      if ( index .gt. 0 ) then
 
-         CLOSE ( UNITS(INDEX) )
+         close ( units(index) )
 
-         IF ( UNITS(INDEX) .EQ. LSTUNT ) THEN
-            LSTFIL = ' '
-         END IF
+         if ( units(index) .eq. lstunt ) then
+            lstfil = ' '
+         end if
 
 !
 !        Remember all that salient information about the file?
 !        Lose it.
 !
-         DO I = INDEX+1, N
-            UNITS(I-1)  = UNITS(I)
-         END DO
+         do i = index+1, n
+            units(i-1)  = units(i)
+         end do
 
-         N = N - 1
+         n = n - 1
 
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CLTEXT' )
+      call chkout ( 'CLTEXT' )
 
-      RETURN
-      END
+      return
+      end

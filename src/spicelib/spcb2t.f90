@@ -1,6 +1,6 @@
 !$Procedure SPCB2T ( SPK and CK, binary to text )
 
-      SUBROUTINE SPCB2T ( BINARY, UNIT )
+      subroutine spcb2t ( binary, unit )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         BINARY
-      INTEGER               UNIT
+      character*(*)         binary
+      integer               unit
 
 ! $ Brief_I/O
 !
@@ -177,54 +177,54 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
 !     IFNLEN is the length of a DAF internal file name.
 !
-      CHARACTER*(*)         BMARK
-      PARAMETER           ( BMARK ='~NAIF/SPC BEGIN COMMENTS~')
+      character*(*)         bmark
+      parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
 
-      CHARACTER*(*)         EMARK
-      PARAMETER           ( EMARK ='~NAIF/SPC END COMMENTS~'  )
+      character*(*)         emark
+      parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
 !
 !     Local variables
 !
-      INTEGER               HANDLE
-      INTEGER               IOSTAT
+      integer               handle
+      integer               iostat
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCB2T' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCB2T' )
+      end if
 
 !
 !     First, convert the binary data to text and write it to
 !     the text file.
 !
-      CALL DAFB2T ( BINARY, UNIT )
+      call dafb2t ( binary, unit )
 
 !
 !     Next, write the begin comments marker.
 !
-      WRITE ( UNIT, *, IOSTAT=IOSTAT ) BMARK
+      write ( unit, *, iostat=iostat ) bmark
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Error writing the begin comments marker '     // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Error writing the begin comments marker '     // &
                        'to the text file named FNM.  IOSTAT = #.'     )
-         CALL ERRFNM ( 'FNM', UNIT                                    )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                       )
-         CALL CHKOUT ( 'SPCB2T'                                       )
-         RETURN
-      END IF
+         call errfnm ( 'FNM', unit                                    )
+         call errint ( '#', iostat                                    )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         call chkout ( 'SPCB2T'                                       )
+         return
+      end if
 
 !
 !     Open the DAF for read access, extract the comments from
@@ -233,25 +233,25 @@
 !     writes nothing to the text file, but even so, we still
 !     want the markers.
 !
-      CALL DAFOPR ( BINARY, HANDLE )
-      CALL SPCEC  ( HANDLE, UNIT   )
-      CALL DAFCLS ( HANDLE         )
+      call dafopr ( binary, handle )
+      call spcec  ( handle, unit   )
+      call dafcls ( handle         )
 
 !
 !     Finally, write the end comments marker.
 !
-      WRITE ( UNIT, *, IOSTAT=IOSTAT ) EMARK
+      write ( unit, *, iostat=iostat ) emark
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Error writing the end comments marker '       // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Error writing the end comments marker '       // &
                        'to the text file named FNM.  IOSTAT = #.'     )
-         CALL ERRFNM ( 'FNM', UNIT                                    )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                       )
-         CALL CHKOUT ( 'SPCB2T'                                       )
-         RETURN
-      END IF
+         call errfnm ( 'FNM', unit                                    )
+         call errint ( '#', iostat                                    )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         call chkout ( 'SPCB2T'                                       )
+         return
+      end if
 
-      CALL CHKOUT ( 'SPCB2T' )
-      RETURN
-      END
+      call chkout ( 'SPCB2T' )
+      return
+      end

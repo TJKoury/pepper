@@ -1,6 +1,6 @@
 !$Procedure DSKD02 ( DSK, fetch d.p. type 2 data )
 
-      SUBROUTINE DSKD02 ( HANDLE, DLADSC, ITEM, START, ROOM, N, VALUES )
+      subroutine dskd02 ( handle, dladsc, item, start, room, n, values )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               ITEM
-      INTEGER               START
-      INTEGER               ROOM
-      INTEGER               N
-      DOUBLE PRECISION      VALUES ( * )
+      integer               handle
+      integer               dladsc ( * )
+      integer               item
+      integer               start
+      integer               room
+      integer               n
+      double precision      values ( * )
 
 ! $ Brief_I/O
 !
@@ -441,7 +441,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
@@ -450,67 +450,67 @@
 !
 !     Local variables
 !
-      INTEGER               B
-      INTEGER               DBASE
-      INTEGER               E
-      INTEGER               IBASE
-      INTEGER               NV
-      INTEGER               PRVHAN
-      INTEGER               PRVBAS
-      INTEGER               SIZE
+      integer               b
+      integer               dbase
+      integer               e
+      integer               ibase
+      integer               nv
+      integer               prvhan
+      integer               prvbas
+      integer               size
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  PRVBAS
-      SAVE                  PRVHAN
-      SAVE                  NV
+      save                  first
+      save                  prvbas
+      save                  prvhan
+      save                  nv
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 !
 !     Use discovery check-in.  This is done for efficiency; note
 !     however that this routine does not meet SPICE standards for
 !     discovery check-in eligibility.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Make sure we treat the input handle as new on the first pass.
 !        Set PRVHAN to an invalid handle value.
 !
-         PRVHAN = 0
+         prvhan = 0
 
 !
 !        Set previous segment base integer address to an invalid value
 !        as well.
 !
-         PRVBAS = -1
+         prvbas = -1
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
-
-
-      IF ( ROOM .LE. 0 ) THEN
-
-         CALL CHKIN  ( 'DSKD02' )
-         CALL SETMSG ( 'ROOM was #; must be positive.' )
-         CALL ERRINT ( '#',  ROOM                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'        )
-         CALL CHKOUT ( 'DSKD02'                        )
-         RETURN
-
-      END IF
+      end if
 
 
-      IBASE  = DLADSC ( IBSIDX )
-      DBASE  = DLADSC ( DBSIDX )
+      if ( room .le. 0 ) then
+
+         call chkin  ( 'DSKD02' )
+         call setmsg ( 'ROOM was #; must be positive.' )
+         call errint ( '#',  room                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'        )
+         call chkout ( 'DSKD02'                        )
+         return
+
+      end if
+
+
+      ibase  = dladsc ( ibsidx )
+      dbase  = dladsc ( dbsidx )
 
 !
 !     Either a new file or new segment in the same file will require
@@ -525,29 +525,29 @@
 !     but they can't share an integer base address with a type 2
 !     segment.
 !
-      IF (      ( HANDLE .NE. PRVHAN ) &
-           .OR. ( IBASE  .NE. PRVBAS )  ) THEN
+      if (      ( handle .ne. prvhan ) &
+           .or. ( ibase  .ne. prvbas )  ) then
 !
 !        Treat the input file and segment as new.
 !
 !        Read NV.
 !
-         CALL DASRDI ( HANDLE, IBASE+IXNV, IBASE+IXNV, NV )
+         call dasrdi ( handle, ibase+ixnv, ibase+ixnv, nv )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 !
 !        Update the saved handle value.
 !
-         PRVHAN = HANDLE
+         prvhan = handle
 
 !
 !        Update the saved integer base address.
 !
-         PRVBAS = IBASE
+         prvbas = ibase
 
-      END IF
+      end if
 
 !
 !     Branch based on the item to be returned.
@@ -555,86 +555,86 @@
 !     Note that we haven't checked the validity of START; we'll do this
 !     after the IF block.
 !
-      IF ( ITEM .EQ. KWVERT ) THEN
+      if ( item .eq. kwvert ) then
 !
 !        Return vertices.  There are 3*NV values in all.
 !        First locate the data.
 !
-         SIZE =   3*NV
-         B    = ( DBASE + IXVERT ) + START - 1
+         size =   3*nv
+         b    = ( dbase + ixvert ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWDSC ) THEN
+      else if ( item .eq. kwdsc ) then
 !
 !        Return DSK descriptor.
 !
-         SIZE =   DSKDSZ
-         B    = ( DBASE + IXDSCR ) + START - 1
+         size =   dskdsz
+         b    = ( dbase + ixdscr ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVTBD ) THEN
+      else if ( item .eq. kwvtbd ) then
 !
 !        Return vertex bounds.  There are 6 elements.
 !
-         SIZE =   6
-         B    = ( DBASE + IXVTBD ) + START - 1
+         size =   6
+         b    = ( dbase + ixvtbd ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVXOR ) THEN
+      else if ( item .eq. kwvxor ) then
 !
 !        Return voxel grid origin.  There are 3 elements.
 !
-         SIZE =   3
-         B    = ( DBASE + IXVXOR ) + START - 1
+         size =   3
+         b    = ( dbase + ixvxor ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVXSZ ) THEN
+      else if ( item .eq. kwvxsz ) then
 !
 !        Return voxel size.  This is a scalar.
 !
-         SIZE =   1
-         B    = ( DBASE + IXVXSZ ) + START - 1
+         size =   1
+         b    = ( dbase + ixvxsz ) + start - 1
 
-      ELSE
+      else
 
-         CALL CHKIN  ( 'DSKD02' )
-         CALL SETMSG ( 'Keyword parameter # was not recognized.' )
-         CALL ERRINT ( '#',  ITEM                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-         CALL CHKOUT ( 'DSKD02'                                  )
-         RETURN
+         call chkin  ( 'DSKD02' )
+         call setmsg ( 'Keyword parameter # was not recognized.' )
+         call errint ( '#',  item                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+         call chkout ( 'DSKD02'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The valid range for START is 1:SIZE.
 !
-      IF (  ( START .LT. 1 ) .OR. ( START .GT. SIZE )  ) THEN
+      if (  ( start .lt. 1 ) .or. ( start .gt. size )  ) then
 
-         CALL CHKIN  ( 'DSKD02' )
-         CALL SETMSG ( 'START must be in the range defined ' // &
+         call chkin  ( 'DSKD02' )
+         call setmsg ( 'START must be in the range defined ' // &
                        'by the size of the data associated ' // &
                        'with the keyword parameter #, '      // &
                        'namely 1:#.  Actual value of START ' // &
                        'was #.'                              )
-         CALL ERRINT ( '#',  ITEM                            )
-         CALL ERRINT ( '#',  SIZE                            )
-         CALL ERRINT ( '#',  START                           )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'              )
-         CALL CHKOUT ( 'DSKD02'                              )
-         RETURN
+         call errint ( '#',  item                            )
+         call errint ( '#',  size                            )
+         call errint ( '#',  start                           )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
+         call chkout ( 'DSKD02'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the requested data.  We already have the start address B.
 !
-      N  =   MIN ( ROOM, SIZE - START + 1 )
-      E  =   B + N - 1
+      n  =   min ( room, size - start + 1 )
+      e  =   b + n - 1
 
 
-      CALL DASRDD ( HANDLE, B, E, VALUES )
+      call dasrdd ( handle, b, e, values )
 
 
-      RETURN
-      END
+      return
+      end

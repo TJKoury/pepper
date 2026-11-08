@@ -1,9 +1,9 @@
 !$Procedure SYGETD ( Return all components for a symbol )
 
-      SUBROUTINE SYGETD ( NAME, &
-                          TABSYM, TABPTR, TABVAL, &
-                          N,      VALUES, &
-                          FOUND                     )
+      subroutine sygetd ( name, &
+                          tabsym, tabptr, tabval, &
+                          n,      values, &
+                          found                     )
 
 ! $ Abstract
 !
@@ -20,18 +20,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
-      INTEGER               N
-      DOUBLE PRECISION      VALUES     (        * )
-      LOGICAL               FOUND
+      character*(*)         name
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
+      integer               n
+      double precision      values     (        * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -188,64 +188,64 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
+      integer               locsym
+      integer               locval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYGETD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYGETD' )
+      end if
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      IF ( LOCSYM .EQ. 0 ) THEN
+      if ( locsym .eq. 0 ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
 !
 !     Otherwise, we can proceed without fear of error. Merely locate
 !     and return the appropriate component from the values table.
 !     We trust that the user has supplied enough room.
 !
-      ELSE
+      else
 
-         FOUND = .TRUE.
+         found = .true.
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
-         N      = TABPTR(LOCSYM)
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         n      = tabptr(locsym)
 
-         CALL MOVED ( TABVAL(LOCVAL), N, VALUES )
+         call moved ( tabval(locval), n, values )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYGETD' )
-      RETURN
-      END
+      call chkout ( 'SYGETD' )
+      return
+      end

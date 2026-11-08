@@ -1,6 +1,6 @@
 !$Procedure ZZGFCPRX ( GF, coordinate derivative proxy )
 
-      SUBROUTINE ZZGFCPRX ( STATE, CORSYS, RE, F, SENSE, CDSIGN )
+      subroutine zzgfcprx ( state, corsys, re, f, sense, cdsign )
 
 ! $ Abstract
 !
@@ -23,15 +23,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INCLUDE 'zzgf.inc'
+      implicit none
+      include 'zzgf.inc'
 
-      DOUBLE PRECISION      STATE  ( 6 )
-      CHARACTER*(*)         CORSYS
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      INTEGER               SENSE
-      INTEGER               CDSIGN ( 3 )
+      double precision      state  ( 6 )
+      character*(*)         corsys
+      double precision      re
+      double precision      f
+      integer               sense
+      integer               cdsign ( 3 )
 
 
 ! $ Brief_I/O
@@ -277,23 +277,23 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      INTEGER               UPIDX
-      PARAMETER           ( UPIDX  = 1 )
+      integer               upidx
+      parameter           ( upidx  = 1 )
 
-      INTEGER               ESTIDX
-      PARAMETER           ( ESTIDX = 2 )
+      integer               estidx
+      parameter           ( estidx = 2 )
 
-      INTEGER               NORIDX
-      PARAMETER           ( NORIDX = 3 )
+      integer               noridx
+      parameter           ( noridx = 3 )
 
 
 !
@@ -303,45 +303,45 @@
 !     descriptive names EAST for the "tangential"
 !     direction and NORTH for the "normal" direction.
 !
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      DP
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      RTNVEL ( 3 )
-      DOUBLE PRECISION      VEL    ( 3 )
-      DOUBLE PRECISION      XMAT   ( 3, 3 )
+      double precision      alt
+      double precision      dp
+      double precision      lat
+      double precision      lon
+      double precision      normal ( 3 )
+      double precision      rtnvel ( 3 )
+      double precision      vel    ( 3 )
+      double precision      xmat   ( 3, 3 )
 
-      INTEGER               DPSIGN
-      INTEGER               I
-      INTEGER               RTNSGN ( 3 )
+      integer               dpsign
+      integer               i
+      integer               rtnsgn ( 3 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFCPRX' )
+      call chkin ( 'ZZGFCPRX' )
 
 !
 !     For planetographic coordinates, check the longitude sense.
 !
-      IF ( CORSYS .EQ. PGRSYS ) THEN
+      if ( corsys .eq. pgrsys ) then
 
-         IF (  ( SENSE .NE. 1 ) .AND. ( SENSE .NE. -1 )  ) THEN
+         if (  ( sense .ne. 1 ) .and. ( sense .ne. -1 )  ) then
 
-            CALL SETMSG ( 'Longitude sense # should be 1 or -1.'  )
-            CALL ERRINT ( '#', SENSE                              )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                )
-            CALL CHKOUT ( 'ZZGFCPRX'                              )
-            RETURN
+            call setmsg ( 'Longitude sense # should be 1 or -1.'  )
+            call errint ( '#', sense                              )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
+            call chkout ( 'ZZGFCPRX'                              )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we have a zero velocity vector, just indicate that each
@@ -349,37 +349,37 @@
 !     velocity vector is non-zero, convert it to a unit vector; this
 !     guarantees that overflow can't occur.
 
-      IF (  VZERO( STATE(4) )  ) THEN
+      if (  vzero( state(4) )  ) then
 !
 !        The velocity is zero. Indicate that the coordinates are
 !        not changing and return. Returning now simplifies the
 !        logic of the rest of the routine, since the case of
 !        zero-velocity can be ignored.
 !
-         CALL CLEARI ( 3, CDSIGN )
+         call cleari ( 3, cdsign )
 
-         CALL CHKOUT ( 'ZZGFCPRX' )
-         RETURN
+         call chkout ( 'ZZGFCPRX' )
+         return
 
-      ELSE
-         CALL VHAT ( STATE(4), VEL )
-      END IF
+      else
+         call vhat ( state(4), vel )
+      end if
 
 !
 !     The rectangular case is trivial; handle it now.
 !
-      IF ( CORSYS .EQ. RECSYS ) THEN
+      if ( corsys .eq. recsys ) then
 !
 !        The output system is rectangular. Just indicate the
 !        signs of the input velocity.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            IF ( VEL(I) .EQ. 0.D0 ) THEN
+            if ( vel(i) .eq. 0.d0 ) then
 
-               CDSIGN(I) = 0
+               cdsign(i) = 0
 
-            ELSE
+            else
 !
 !              Use the Fortran sign transfer intrinsic function
 !              to set CDSIGN(I) to 1 or -1, depending
@@ -387,25 +387,25 @@
 !              is positive or negative. See reference [1] for a
 !              discussion of this Fortran intrinsic function.
 !
-               CDSIGN(I) = NINT(  SIGN( 1.D0, VEL(I) )  )
+               cdsign(i) = nint(  sign( 1.d0, vel(i) )  )
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        All done.
 !
-         CALL CHKOUT ( 'ZZGFCPRX' )
-         RETURN
+         call chkout ( 'ZZGFCPRX' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's quite a bit of common logic for the "on Z-axis" case;
 !     take care of it here.
 !
-      IF (       ( STATE(1) .EQ. 0.D0 ) &
-           .AND. ( STATE(2) .EQ. 0.D0 ) ) THEN
+      if (       ( state(1) .eq. 0.d0 ) &
+           .and. ( state(2) .eq. 0.d0 ) ) then
 !
 !        The position lies on the Z-axis.
 !
@@ -439,32 +439,32 @@
 !        Cylindrical coordinates are a special case which we treat
 !        separately.
 !
-         IF ( STATE(3) .NE. 0.D0 ) THEN
+         if ( state(3) .ne. 0.d0 ) then
 !
 !           The position is on the Z-axis but not at the origin.
 !
 !           Compute the dot product used for the range/altitude
 !           derivative.
 !
-            DP = VDOT ( STATE, VEL )
+            dp = vdot ( state, vel )
 
-            IF ( DP .EQ. 0.D0 ) THEN
+            if ( dp .eq. 0.d0 ) then
 
-               DPSIGN = 0
-            ELSE
-               DPSIGN = NINT(  SIGN( 1.D0, DP )  )
-            END IF
+               dpsign = 0
+            else
+               dpsign = nint(  sign( 1.d0, dp )  )
+            end if
 
-         ELSE
+         else
 !
 !           The position is at the origin. We know the velocity
 !           is non-zero, and any movement increases radius or
 !           altitude. However, neither radius nor altitude are
 !           differentiable here, so we indicate no sign.
 !
-            DPSIGN = 0
+            dpsign = 0
 
-         END IF
+         end if
 
 !
 !        Set the coordinate derivative signs for all but the
@@ -485,22 +485,22 @@
 !        Planetographic  Longitude, Latitude, Altitude
 !
 !
-         IF ( CORSYS .EQ. LATSYS ) THEN
+         if ( corsys .eq. latsys ) then
 !
 !           The radial derivative sign was computed; the
 !           other derivative signs are set to zero.
 !
-            CDSIGN(1) = DPSIGN
-            CDSIGN(2) = 0
-            CDSIGN(3) = 0
+            cdsign(1) = dpsign
+            cdsign(2) = 0
+            cdsign(3) = 0
 
-         ELSE IF ( CORSYS .EQ. SPHSYS ) THEN
+         else if ( corsys .eq. sphsys ) then
 !
 !           The radial derivative sign was computed; the
 !           longitude derivative signs is set to zero.
 !
-            CDSIGN(1) = DPSIGN
-            CDSIGN(3) = 0
+            cdsign(1) = dpsign
+            cdsign(3) = 0
 
 !
 !           Co-latitude is a special case. Co-latitude is
@@ -511,71 +511,71 @@
 !           of the co-latitude derivative to zero in this
 !           case.
 !
-            CDSIGN(2) = 0
+            cdsign(2) = 0
 
-         ELSE IF ( CORSYS .EQ. RADSYS ) THEN
+         else if ( corsys .eq. radsys ) then
 !
 !           RA/Dec derivatives are assigned in the same manner
 !           as latitudinal ones.
 !
-            CDSIGN(1) = DPSIGN
-            CDSIGN(2) = 0
-            CDSIGN(3) = 0
+            cdsign(1) = dpsign
+            cdsign(2) = 0
+            cdsign(3) = 0
 
-         ELSE IF ( CORSYS .EQ. GEOSYS ) THEN
+         else if ( corsys .eq. geosys ) then
 !
 !           Altitude plays the role of radius for this
 !           system.
 !
-            CDSIGN(1) = 0
-            CDSIGN(2) = 0
-            CDSIGN(3) = DPSIGN
+            cdsign(1) = 0
+            cdsign(2) = 0
+            cdsign(3) = dpsign
 
-         ELSE IF ( CORSYS .EQ. PGRSYS ) THEN
+         else if ( corsys .eq. pgrsys ) then
 !
 !           Altitude plays the role of radius for this
 !           system.
 !
-            CDSIGN(1) = 0
-            CDSIGN(2) = 0
-            CDSIGN(3) = DPSIGN
+            cdsign(1) = 0
+            cdsign(2) = 0
+            cdsign(3) = dpsign
 
-         ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
+         else if ( corsys .eq. cylsys ) then
 
-            CDSIGN(1) = 0
-            CDSIGN(2) = 0
+            cdsign(1) = 0
+            cdsign(2) = 0
 !
 !           For cylindrical coordinates, the derivative of Z with
 !           respect to time is already present in VEL.
 !
-            IF ( VEL(3) .EQ. 0.D0 ) THEN
-               CDSIGN(3) = 0
-            ELSE
-               CDSIGN(3) = NINT(  SIGN( 1.D0, VEL(3) )  )
-            END IF
+            if ( vel(3) .eq. 0.d0 ) then
+               cdsign(3) = 0
+            else
+               cdsign(3) = nint(  sign( 1.d0, vel(3) )  )
+            end if
 
 
-         ELSE
+         else
 !
 !           If we end up here, we have an invalid coordinate system.
 !
-            CALL SETMSG ( 'Coordinate system # is not supported. ' &
+            call setmsg ( 'Coordinate system # is not supported. ' &
             //            'Verify that the coordinate system ' &
             //            'specifier matches a value from zzgf.inc.' )
-            CALL ERRCH  ( '#', CORSYS                                )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-            CALL CHKOUT ( 'ZZGFCPRX'                                 )
-            RETURN
+            call errch  ( '#', corsys                                )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+            call chkout ( 'ZZGFCPRX'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        We've handled the on-Z-axis cases. Return now.
 !
-         CALL CHKOUT ( 'ZZGFCPRX' )
-         RETURN
+         call chkout ( 'ZZGFCPRX' )
+         return
 
-      END IF
+      end if
 
 !
 !     This is the normal case: the position is not on the Z-axis.
@@ -584,61 +584,61 @@
 !     Planetodetic and planetographic coordinate systems are a special
 !     case.
 !
-      IF ( ( CORSYS .EQ. GEOSYS ) .OR. ( CORSYS .EQ. PGRSYS )  ) THEN
+      if ( ( corsys .eq. geosys ) .or. ( corsys .eq. pgrsys )  ) then
 !
 !        Instead of defining the MRTN frame using the input
 !        position vector, we define it using an outward normal vector
 !        on the reference ellipsoid at the geodetic latitude
 !        and longitude of the input position.
 !
-         CALL RECGEO ( STATE, RE,  F,   LON, LAT, ALT )
+         call recgeo ( state, re,  f,   lon, lat, alt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFCPRX' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFCPRX' )
+            return
+         end if
 
-         CALL LATREC ( 1.D0,  LON, LAT, NORMAL )
+         call latrec ( 1.d0,  lon, lat, normal )
 
 
-      ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
+      else if ( corsys .eq. cylsys ) then
 !
 !        The normal vector is aligned with the local radial
 !        direction; this vector is parallel to the X-Y plane.
 !
-         CALL VPACK  ( STATE(1), STATE(2), 0.D0, NORMAL )
-         CALL VHATIP ( NORMAL )
+         call vpack  ( state(1), state(2), 0.d0, normal )
+         call vhatip ( normal )
 
-      ELSE
+      else
 !
 !        The position vector provides the normal direction.
 !
-         CALL VHAT ( STATE, NORMAL )
+         call vhat ( state, normal )
 
-      END IF
+      end if
 
 
 !     Obtain the matrix required to transform the velocity to the MRTN
 !     frame; transform the velocity.
 !
-      CALL ZZRTNMAT ( NORMAL, XMAT )
-      CALL MXV      ( XMAT,   VEL, RTNVEL )
+      call zzrtnmat ( normal, xmat )
+      call mxv      ( xmat,   vel, rtnvel )
 
 !
 !     We can think of the basis vectors of the MRTN frame as local "up",
 !     "East," "North" directions. Compute the signs of the up, East,
 !     and North velocity components.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( RTNVEL(I) .EQ. 0.D0 ) THEN
+         if ( rtnvel(i) .eq. 0.d0 ) then
 
-            RTNSGN(I) = 0
-         ELSE
-            RTNSGN(I) = NINT(  SIGN( 1.D0, RTNVEL(I) )  )
-         END IF
+            rtnsgn(i) = 0
+         else
+            rtnsgn(i) = nint(  sign( 1.d0, rtnvel(i) )  )
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the signs of the coordinate derivatives from the MRTN
@@ -658,66 +658,66 @@
 !        Planetographic  Longitude, Latitude, Altitude
 !
 !
-      IF ( CORSYS .EQ. LATSYS ) THEN
+      if ( corsys .eq. latsys ) then
 
-         CDSIGN(1) = RTNSGN(UPIDX)
-         CDSIGN(2) = RTNSGN(ESTIDX)
-         CDSIGN(3) = RTNSGN(NORIDX)
+         cdsign(1) = rtnsgn(upidx)
+         cdsign(2) = rtnsgn(estidx)
+         cdsign(3) = rtnsgn(noridx)
 
-      ELSE IF ( CORSYS .EQ. SPHSYS ) THEN
+      else if ( corsys .eq. sphsys ) then
 !
 !        For spherical coordinate systems, the sign of the
 !        derivative of co-latitude is the negative of the
 !        sign of the North derivative.
 !
-         CDSIGN(1) =   RTNSGN(UPIDX)
-         CDSIGN(2) = - RTNSGN(NORIDX)
-         CDSIGN(3) =   RTNSGN(ESTIDX)
+         cdsign(1) =   rtnsgn(upidx)
+         cdsign(2) = - rtnsgn(noridx)
+         cdsign(3) =   rtnsgn(estidx)
 
-      ELSE IF ( CORSYS .EQ. RADSYS ) THEN
+      else if ( corsys .eq. radsys ) then
 
-         CDSIGN(1) = RTNSGN(UPIDX)
-         CDSIGN(2) = RTNSGN(ESTIDX)
-         CDSIGN(3) = RTNSGN(NORIDX)
+         cdsign(1) = rtnsgn(upidx)
+         cdsign(2) = rtnsgn(estidx)
+         cdsign(3) = rtnsgn(noridx)
 
-      ELSE IF ( CORSYS .EQ. GEOSYS ) THEN
+      else if ( corsys .eq. geosys ) then
 
-         CDSIGN(1) = RTNSGN(ESTIDX)
-         CDSIGN(2) = RTNSGN(NORIDX)
-         CDSIGN(3) = RTNSGN(UPIDX)
+         cdsign(1) = rtnsgn(estidx)
+         cdsign(2) = rtnsgn(noridx)
+         cdsign(3) = rtnsgn(upidx)
 
-      ELSE IF ( CORSYS .EQ. PGRSYS ) THEN
+      else if ( corsys .eq. pgrsys ) then
 !
 !        For planetographic coordinates, altitude and latitude
 !        behave identically to their geodetic counterparts. We
 !        need to adjust the sign of the longitude derivative
 !        according to whether longitude is positive East or West.
 !
-         CDSIGN(1) = RTNSGN(ESTIDX) * SENSE
-         CDSIGN(2) = RTNSGN(NORIDX)
-         CDSIGN(3) = RTNSGN(UPIDX)
+         cdsign(1) = rtnsgn(estidx) * sense
+         cdsign(2) = rtnsgn(noridx)
+         cdsign(3) = rtnsgn(upidx)
 
-      ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
+      else if ( corsys .eq. cylsys ) then
 
-         CDSIGN(1) = RTNSGN(UPIDX)
-         CDSIGN(2) = RTNSGN(ESTIDX)
-         CDSIGN(3) = RTNSGN(NORIDX)
+         cdsign(1) = rtnsgn(upidx)
+         cdsign(2) = rtnsgn(estidx)
+         cdsign(3) = rtnsgn(noridx)
 
-      ELSE
+      else
 !
 !        If we end up here, we have an invalid coordinate system.
 !
-         CALL SETMSG ( 'Coordinate system # is not supported. ' &
+         call setmsg ( 'Coordinate system # is not supported. ' &
          //            'Verify that the coordinate system ' &
          //            'specifier matches a value from zzgf.inc.' )
-         CALL ERRCH  ( '#', CORSYS                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( 'ZZGFCPRX'                                 )
-         RETURN
+         call errch  ( '#', corsys                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( 'ZZGFCPRX'                                 )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFCPRX' )
-      RETURN
-      END
+      call chkout ( 'ZZGFCPRX' )
+      return
+      end
 

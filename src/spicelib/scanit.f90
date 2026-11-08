@@ -1,8 +1,8 @@
 !$Procedure SCANIT ( Scan a character string )
 
-      SUBROUTINE SCANIT ( STRING, START,  ROOM, &
-                          NMARKS, MARKS,  MRKLEN, PNTERS, &
-                          NTOKNS, IDENT,  BEG,    END     )
+      subroutine scanit ( string, start,  room, &
+                          nmarks, marks,  mrklen, pnters, &
+                          ntokns, ident,  beg,    end     )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      INTEGER               ROOM
-      INTEGER               NMARKS
-      CHARACTER*(*)         MARKS   ( * )
-      INTEGER               MRKLEN  ( * )
-      INTEGER               PNTERS  ( * )
-      INTEGER               START
-      INTEGER               NTOKNS
-      INTEGER               BEG     ( * )
-      INTEGER               END     ( * )
-      INTEGER               IDENT   ( * )
+      character*(*)         string
+      integer               room
+      integer               nmarks
+      character*(*)         marks   ( * )
+      integer               mrklen  ( * )
+      integer               pnters  ( * )
+      integer               start
+      integer               ntokns
+      integer               beg     ( * )
+      integer               end     ( * )
+      integer               ident   ( * )
 
 ! $ Brief_I/O
 !
@@ -385,61 +385,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               RTRIM
-      INTEGER               NCPOS
+      logical               return
+      integer               rtrim
+      integer               ncpos
 
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         LETTER
+      character*(1)         letter
 
-      INTEGER               BACKUP
-      INTEGER               EBLOCK
-      INTEGER               FCHAR
-      INTEGER               FINISH
-      INTEGER               I
-      INTEGER               INTVAL
-      INTEGER               J
-      INTEGER               JUMP
-      INTEGER               L
-      INTEGER               LAST
-      INTEGER               LAST1
-      INTEGER               LBOUND
-      INTEGER               LCHAR
-      INTEGER               N
-      INTEGER               OFFSET
-      INTEGER               SLOT
-      INTEGER               STOP
-      INTEGER               TEST
-      INTEGER               THIS1
-      INTEGER               UBOUND
+      integer               backup
+      integer               eblock
+      integer               fchar
+      integer               finish
+      integer               i
+      integer               intval
+      integer               j
+      integer               jump
+      integer               l
+      integer               last
+      integer               last1
+      integer               lbound
+      integer               lchar
+      integer               n
+      integer               offset
+      integer               slot
+      integer               stop
+      integer               test
+      integer               this1
+      integer               ubound
 
-      LOGICAL               EQUAL
-      LOGICAL               KNOWN
-
-
+      logical               equal
+      logical               known
 
 
-      IF ( .NOT. RETURN () ) THEN
 
-         CALL CHKIN  ( 'SCANIT'                                       )
-         CALL SETMSG ( 'Your program has referenced the umbrella '    // &
+
+      if ( .not. return () ) then
+
+         call chkin  ( 'SCANIT'                                       )
+         call setmsg ( 'Your program has referenced the umbrella '    // &
                        'subroutine SCANIT.  This may indicate a '     // &
                        'programming error.'                           )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)'                            )
-         CALL CHKOUT ( 'SCANIT'                                       )
+         call sigerr ( 'SPICE(BOGUSENTRY)'                            )
+         call chkout ( 'SCANIT'                                       )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure SCANPR ( Scanning preparation )
 
-      ENTRY SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
+      entry scanpr ( nmarks, marks, mrklen, pnters )
 
 ! $ Abstract
 !
@@ -815,29 +815,29 @@
 !
 !     We handle the case where NMARKS is non-positive separately.
 !
-      IF ( NMARKS .LE. 0 ) THEN
+      if ( nmarks .le. 0 ) then
 
-         PNTERS(1) = 0
-         PNTERS(2) = 0
-         PNTERS(3) = 0
-         PNTERS(4) = 0
-         PNTERS(5) = 0
+         pnters(1) = 0
+         pnters(2) = 0
+         pnters(3) = 0
+         pnters(4) = 0
+         pnters(5) = 0
 
-         RETURN
-      END IF
+         return
+      end if
 !
 !     First left justify MARKS and remove duplicates.
 !
-      DO I = 1, NMARKS
-         CALL LJUST ( MARKS(I), MARKS(I) )
-      END DO
+      do i = 1, nmarks
+         call ljust ( marks(i), marks(i) )
+      end do
 
-      N = NMARKS
+      n = nmarks
 
 !
 !     Sort and remove duplicates from the array MARKS.
 !
-      CALL RMDUPC ( N, MARKS )
+      call rmdupc ( n, marks )
 
 !
 !     All of the MARKS have the same declared length.
@@ -894,26 +894,26 @@
 !     Next determine the minimum and maximum ASCII values
 !     of the first characters of the MARKS.
 !
-      FCHAR     = ICHAR ( MARKS(1)(1:1) )
-      LCHAR     = ICHAR ( MARKS(N)(1:1) )
+      fchar     = ichar ( marks(1)(1:1) )
+      lchar     = ichar ( marks(n)(1:1) )
 
-      PNTERS(1) = FCHAR
-      PNTERS(2) = LCHAR
+      pnters(1) = fchar
+      pnters(2) = lchar
 
 !
 !     For the purposes of getting started, we will say the last
 !     character that started a MARK was one before FCHAR.  We
 !     will record the end of its block in slot 3 of PNTERS.
 !
-      LAST1     = FCHAR - 1
-      SLOT      = 3
+      last1     = fchar - 1
+      slot      = 3
 
-      DO  I = 1, N
+      do  i = 1, n
 
-         MRKLEN(I) = RTRIM( MARKS(I)      )
-         THIS1     = ICHAR( MARKS(I)(1:1) )
+         mrklen(i) = rtrim( marks(i)      )
+         this1     = ichar( marks(i)(1:1) )
 
-         IF ( THIS1 .NE. LAST1 ) THEN
+         if ( this1 .ne. last1 ) then
 
 !
 !           We need to record the address of the end of the last
@@ -925,39 +925,39 @@
 !           going from the last first character to the current
 !           first character.
 !
-            EBLOCK = I     - 1
-            JUMP   = THIS1 - LAST1
+            eblock = i     - 1
+            jump   = this1 - last1
 
 !
 !           The end of the block for all of the MARKS having
 !           first character between the last one and this one
 !           is the same.
 !
-            DO J = SLOT, SLOT + JUMP - 1
-               PNTERS(J) = EBLOCK
-            END DO
+            do j = slot, slot + jump - 1
+               pnters(j) = eblock
+            end do
 
-            SLOT  = SLOT  + JUMP
-            LAST1 = THIS1
+            slot  = slot  + jump
+            last1 = this1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      PNTERS(SLOT  ) = N
-      PNTERS(SLOT+1) = N
-      NMARKS         = N
+      pnters(slot  ) = n
+      pnters(slot+1) = n
+      nmarks         = n
 
-      RETURN
+      return
 
 
 
 
 !$Procedure SCAN ( Scan a string for tokens )
 
-      ENTRY SCAN   ( STRING, &
-                     MARKS,  MRKLEN, PNTERS, ROOM,   START, &
-                     NTOKNS, IDENT,  BEG,    END            )
+      entry scan   ( string, &
+                     marks,  mrklen, pnters, room,   start, &
+                     ntokns, ident,  beg,    end            )
 
 ! $ Abstract
 !
@@ -1406,68 +1406,68 @@
 !     Get the information concerning the range of the
 !     marks from the PNTERS array.
 !
-      OFFSET = PNTERS(1) - 4
-      LBOUND = PNTERS(1) - 1
-      UBOUND = PNTERS(2) + 1
+      offset = pnters(1) - 4
+      lbound = pnters(1) - 1
+      ubound = pnters(2) + 1
 
-      LAST   =  LEN ( STRING )
-      NTOKNS =  0
-      BACKUP =  START - 1
-      KNOWN  = .TRUE.
-      START  =  MAX ( 1, START )
+      last   =  len ( string )
+      ntokns =  0
+      backup =  start - 1
+      known  = .true.
+      start  =  max ( 1, start )
 
-      DO WHILE ( START .LE. LAST )
+      do while ( start .le. last )
 
 !
 !        Get the numeric code for this letter, and look up
 !        the range of markers that begin with this letter.
 !
-         LETTER = STRING(START:START)
+         letter = string(start:start)
 
-         INTVAL = MAX( LBOUND, MIN(ICHAR(LETTER), UBOUND) )
+         intval = max( lbound, min(ichar(letter), ubound) )
 
-         TEST   = PNTERS( INTVAL - OFFSET     )
-         FINISH = PNTERS( INTVAL - OFFSET - 1 )
+         test   = pnters( intval - offset     )
+         finish = pnters( intval - offset - 1 )
 
-         EQUAL  = .FALSE.
+         equal  = .false.
 !
 !        If TEST is greater than FINISH, then there is a range of
 !        markers that start with this letter.
 !
-         DO WHILE ( TEST .GT. FINISH )
+         do while ( test .gt. finish )
 
 !
 !           Look up the length of the next marker to test for
 !           and compute where it would end in STRING if there
 !           is a match.
 !
-            L    = MRKLEN ( TEST )
-            STOP = BACKUP + L
+            l    = mrklen ( test )
+            stop = backup + l
 
 !
 !           Make sure that we are not going to violate any substring
 !           references when we compare the current candidate mark with
 !           the substring having the same length and starting at START.
 !
-            IF ( STOP .GT. LAST ) THEN
+            if ( stop .gt. last ) then
 
-               TEST = TEST - 1
+               test = test - 1
 
-            ELSE
+            else
 !
 !              OK. The substring reference STRING(START:STOP) is
 !              legal.  See if it is equal to the current test mark.
 !
-               EQUAL = MARKS(TEST)(1:L) .EQ. STRING(START:STOP)
+               equal = marks(test)(1:l) .eq. string(start:stop)
 
 !
 !              If it isn't equal, just set up to test the next mark.
 !
-               IF ( .NOT. EQUAL ) THEN
+               if ( .not. equal ) then
 
-                  TEST = TEST - 1
+                  test = test - 1
 
-               ELSE
+               else
 
 !
 !                 If we were in the middle of an unrecognized string
@@ -1475,11 +1475,11 @@
 !                 to identify another token. If we don't we must return
 !                 now.
 !
-                  IF (       (        .NOT. KNOWN ) &
-                       .AND. ( NTOKNS .EQ.  ROOM  ) ) THEN
+                  if (       (        .not. known ) &
+                       .and. ( ntokns .eq.  room  ) ) then
 
-                     RETURN
-                  END IF
+                     return
+                  end if
 
 !
 !                 A space is a special kind of mark.  All white space
@@ -1487,15 +1487,15 @@
 !                 is a space, we need to collect all of the consecutive
 !                 blanks beginning with the one at the START position.
 !
-                  IF ( MARKS(TEST) .EQ. ' ' ) THEN
+                  if ( marks(test) .eq. ' ' ) then
 
-                     STOP = NCPOS(STRING, ' ', START) - 1
+                     stop = ncpos(string, ' ', start) - 1
 
-                     IF ( STOP .LT. 0 ) THEN
-                        STOP = LAST
-                     END IF
+                     if ( stop .lt. 0 ) then
+                        stop = last
+                     end if
 
-                  END IF
+                  end if
 
 
 !
@@ -1510,13 +1510,13 @@
 !                     of the remainder of the string that needs to be
 !                     scanned.
 !
-                  KNOWN            = .TRUE.
-                  NTOKNS           = NTOKNS + 1
-                  BEG   ( NTOKNS ) = START
-                  END   ( NTOKNS ) = STOP
-                  IDENT ( NTOKNS ) = TEST
-                  TEST             = FINISH
-                  START            = STOP
+                  known            = .true.
+                  ntokns           = ntokns + 1
+                  beg   ( ntokns ) = start
+                  end   ( ntokns ) = stop
+                  ident ( ntokns ) = test
+                  test             = finish
+                  start            = stop
 
 !
 !                 If we have just used up all available room,
@@ -1524,51 +1524,51 @@
 !                 to continue scanning on a subsequent call
 !                 and return.
 !
-                  IF ( NTOKNS .EQ. ROOM ) THEN
-                     START = START + 1
-                     RETURN
-                  END IF
+                  if ( ntokns .eq. room ) then
+                     start = start + 1
+                     return
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        If none of the markers matched a substring starting at
 !        the current position, we are beginning or continuing
 !        an unrecognized substring.
 !
-         IF ( .NOT. EQUAL ) THEN
+         if ( .not. equal ) then
 
 !
 !           If we are already in the middle of an unrecognized
 !           substring, just extend our current unrecognized string.
 !
-            IF ( .NOT. KNOWN ) THEN
+            if ( .not. known ) then
 
-               END(NTOKNS)   = START
+               end(ntokns)   = start
 
 !
 !           Otherwise, start up a new unrecognized substring.
 !
-            ELSE
+            else
 
-               NTOKNS        =  NTOKNS + 1
-               BEG  (NTOKNS) =  START
-               END  (NTOKNS) =  START
-               IDENT(NTOKNS) =  0
-               KNOWN         = .FALSE.
+               ntokns        =  ntokns + 1
+               beg  (ntokns) =  start
+               end  (ntokns) =  start
+               ident(ntokns) =  0
+               known         = .false.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         BACKUP = START
-         START  = START + 1
+         backup = start
+         start  = start + 1
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

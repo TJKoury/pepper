@@ -1,6 +1,6 @@
 !$Procedure TOUCHL ( Touch a variable )
 
-      LOGICAL FUNCTION TOUCHL ( LOG )
+      logical function touchl ( log )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               LOG
+      logical               log
 
 ! $ Brief_I/O
 !
@@ -121,6 +121,6 @@
 !-&
 
 
-      TOUCHL = LOG
-      RETURN
-      END
+      touchl = log
+      return
+      end

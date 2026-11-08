@@ -1,6 +1,6 @@
 !$Procedure NOTRU ( No true entries? )
 
-      LOGICAL FUNCTION NOTRU ( LOGCLS, N )
+      logical function notru ( logcls, n )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               LOGCLS ( * )
-      INTEGER               N
+      logical               logcls ( * )
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -115,25 +115,25 @@
 !-&
 
 
-      INTEGER               I
+      integer               i
 
 !
 !     Just do it.
 !
 
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( LOGCLS(I) ) THEN
+         if ( logcls(i) ) then
 
-            NOTRU = .FALSE.
-            RETURN
+            notru = .false.
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      NOTRU = .TRUE.
-      RETURN
+      notru = .true.
+      return
 
 
-      END
+      end

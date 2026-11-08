@@ -1,6 +1,6 @@
 !$Procedure VPACK ( Pack three scalar components into a vector )
 
-      SUBROUTINE VPACK ( X, Y, Z, V )
+      subroutine vpack ( x, y, z, v )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
-      DOUBLE PRECISION Z
-      DOUBLE PRECISION V ( 3 )
+      double precision x
+      double precision y
+      double precision z
+      double precision v ( 3 )
 
 ! $ Brief_I/O
 !
@@ -183,9 +183,9 @@
 !
 !     Just shorthand, like it says above.
 !
-      V(1) = X
-      V(2) = Y
-      V(3) = Z
+      v(1) = x
+      v(2) = y
+      v(3) = z
 
-      RETURN
-      END
+      return
+      end

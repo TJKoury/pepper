@@ -1,6 +1,6 @@
 !$Procedure ZZNAMFRM ( Frame name to ID translation, with bypass )
 
-      SUBROUTINE ZZNAMFRM ( USRCTR, SAVNAM, SAVCDE, FRNAME, FRCODE )
+      subroutine zznamfrm ( usrctr, savnam, savcde, frname, frcode )
 
 ! $ Abstract
 !
@@ -24,15 +24,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzctr.inc'
+      include              'zzctr.inc'
 
-      INTEGER               USRCTR    ( CTRSIZ )
-      CHARACTER*(*)         SAVNAM
-      INTEGER               SAVCDE
-      CHARACTER*(*)         FRNAME
-      INTEGER               FRCODE
+      integer               usrctr    ( ctrsiz )
+      character*(*)         savnam
+      integer               savcde
+      character*(*)         frname
+      integer               frcode
 
 ! $ Brief_I/O
 !
@@ -216,63 +216,63 @@
 !
 !     SPICE functions.
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
-      LOGICAL               UPDATE
+      logical               update
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check/update POOL state counter.
 !
-      CALL ZZPCTRCK ( USRCTR, UPDATE )
+      call zzpctrck ( usrctr, update )
 
 !
 !     Check update flag, saved ID, and saved name against the input.
 !
-      IF ( .NOT. UPDATE       .AND. &
-           SAVCDE .NE. 0      .AND. &
-           SAVNAM .EQ. FRNAME       ) THEN
+      if ( .not. update       .and. &
+           savcde .ne. 0      .and. &
+           savnam .eq. frname       ) then
 
 !
 !        No change in the POOL state, the saved name was successfully
 !        resolved earlier, and input and saved names are the same.
 !        Return saved ID.
 !
-         FRCODE = SAVCDE
+         frcode = savcde
 
-      ELSE
+      else
 
 !
 !        Check in because NAMFRM may fail.
 !
-         CALL CHKIN  ( 'ZZNAMFRM' )
+         call chkin  ( 'ZZNAMFRM' )
 
 !
 !        POOL state changed, or the saved name was never successfully
 !        resolved earlier, or input and saved names are different. Call
 !        NAMFRM to look up ID and reset saved values.
 !
-         CALL NAMFRM( FRNAME, FRCODE )
+         call namfrm( frname, frcode )
 
-         SAVNAM = FRNAME
-         SAVCDE = FRCODE
+         savnam = frname
+         savcde = frcode
 
 !
 !        Check out.
 !
-         CALL CHKOUT ( 'ZZNAMFRM' )
+         call chkout ( 'ZZNAMFRM' )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

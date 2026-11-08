@@ -1,6 +1,6 @@
 !$Procedure DASCLS ( DAS, close file )
 
-      SUBROUTINE DASCLS ( HANDLE )
+      subroutine dascls ( handle )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'das.inc'
+      include 'das.inc'
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -386,54 +386,54 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ELEMI
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               elemi
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
 !
 !     Local variables
 !
-      CHARACTER*(10)        METHOD
+      character*(10)        method
 
-      INTEGER               IOSTAT
-      INTEGER               UNIT
+      integer               iostat
+      integer               unit
 
-      LOGICAL               NOTSCR
+      logical               notscr
 
 !
 !     Saved variables
 !
-      INTEGER               FHSET ( LBCELL : FTSIZE )
-      SAVE                  FHSET
+      integer               fhset ( lbcell : ftsize )
+      save                  fhset
 
-      LOGICAL               PASS1
-      SAVE                  PASS1
+      logical               pass1
+      save                  pass1
 
 !
 !     Initial values
 !
-      DATA                  PASS1  / .TRUE.  /
+      data                  pass1  / .true.  /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASCLS' )
+      call chkin ( 'DASCLS' )
 
-      IF ( PASS1 ) THEN
-         CALL SSIZEI ( FTSIZE, FHSET )
-         PASS1 = .FALSE.
-      END IF
+      if ( pass1 ) then
+         call ssizei ( ftsize, fhset )
+         pass1 = .false.
+      end if
 
 !
 !     There are only four items on our worklist:
@@ -455,79 +455,79 @@
 !     See whether the input handle designates an open DAS file.  If not,
 !     return now.
 !
-      CALL DASHOF ( FHSET )
+      call dashof ( fhset )
 
-      IF (  .NOT.  ELEMI( HANDLE, FHSET )  )  THEN
-         CALL CHKOUT ( 'DASCLS' )
-         RETURN
-      END IF
+      if (  .not.  elemi( handle, fhset )  )  then
+         call chkout ( 'DASCLS' )
+         return
+      end if
 
 !
 !     If the file is open for writing, flush any buffered
 !     records that belong to it.
 !
-      CALL DASHAM ( HANDLE, METHOD )
+      call dasham ( handle, method )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASCLS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASCLS' )
+         return
+      end if
 
-      IF ( METHOD .EQ. 'WRITE ') THEN
+      if ( method .eq. 'WRITE ') then
 !
 !        Make sure that all buffered records belonging to the
 !        indicated file are written out.
 !
-         CALL DASWBR ( HANDLE )
+         call daswbr ( handle )
 
 !
 !        We cannot directly test the status of the file, but if
 !        the file is unnamed, it must be a scratch file.
 !
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+         call zzddhhlu ( handle, 'DAS', .false., unit )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DASCLS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DASCLS' )
+            return
+         end if
 
-         INQUIRE ( UNIT   = UNIT, &
-                   NAMED  = NOTSCR, &
-                   IOSTAT = IOSTAT )
+         inquire ( unit   = unit, &
+                   named  = notscr, &
+                   iostat = iostat )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Error occurred while performing an  '// &
+            call setmsg ( 'Error occurred while performing an  '// &
                           'INQUIRE on a DAS file about to be '  // &
                           'closed.  IOSTAT = #. File handle '   // &
                           'was #.  Logical unit was #.'         )
-            CALL ERRINT ( '#',  IOSTAT                          )
-            CALL ERRINT ( '#',  HANDLE                          )
-            CALL ERRINT ( '#',  UNIT                            )
-            CALL SIGERR ( 'SPICE(INQUIREFAILED)'                )
-            CALL CHKOUT ( 'DASCLS'                              )
-            RETURN
+            call errint ( '#',  iostat                          )
+            call errint ( '#',  handle                          )
+            call errint ( '#',  unit                            )
+            call sigerr ( 'SPICE(INQUIREFAILED)'                )
+            call chkout ( 'DASCLS'                              )
+            return
 
-         END IF
+         end if
 
 
-         IF ( NOTSCR ) THEN
+         if ( notscr ) then
 !
 !           Segregate the data records in the file according to data
 !           type.
 !
-            CALL DASSDR ( HANDLE )
+            call dassdr ( handle )
 
-         END IF
+         end if
 
 
-      END IF
+      end if
 
 !
 !     Close the file.
 !
-      CALL DASLLC ( HANDLE )
+      call dasllc ( handle )
 
-      CALL CHKOUT ( 'DASCLS' )
-      RETURN
-      END
+      call chkout ( 'DASCLS' )
+      return
+      end

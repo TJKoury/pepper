@@ -1,6 +1,6 @@
 !$Procedure SPKE01 ( S/P Kernel, evaluate, type 1 )
 
-      SUBROUTINE SPKE01 ( ET, RECORD, STATE )
+      subroutine spke01 ( et, record, state )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -146,7 +146,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
@@ -155,45 +155,45 @@
 !     roughly to the original memos written by Fred Krogh to explain
 !     how all this stuff really works.
 !
-      DOUBLE PRECISION      TL
-      DOUBLE PRECISION      G        (   15 )
+      double precision      tl
+      double precision      g        (   15 )
 
-      DOUBLE PRECISION      REFPOS   (    3 )
-      DOUBLE PRECISION      REFVEL   (    3 )
+      double precision      refpos   (    3 )
+      double precision      refvel   (    3 )
 
-      DOUBLE PRECISION      DT       ( 15,3 )
-      INTEGER               KQMAX1
-      INTEGER               KQ       (    3 )
+      double precision      dt       ( 15,3 )
+      integer               kqmax1
+      integer               kq       (    3 )
 
-      DOUBLE PRECISION      FC       (   14 )
+      double precision      fc       (   14 )
 
 
-      DOUBLE PRECISION      SUM
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      TP
-      DOUBLE PRECISION      WC       (   13 )
-      DOUBLE PRECISION      W        (   17 )
+      double precision      sum
+      double precision      delta
+      double precision      tp
+      double precision      wc       (   13 )
+      double precision      w        (   17 )
 
-      INTEGER               MQ2
-      INTEGER               KS1
-      INTEGER               KS
-      INTEGER               KQQ
-      INTEGER               I
-      INTEGER               J
-      INTEGER               JX
+      integer               mq2
+      integer               ks1
+      integer               ks
+      integer               kqq
+      integer               i
+      integer               j
+      integer               jx
 
 !
 !     Save everything between calls.
 !
-      SAVE
-      DATA                  FC (  1 )    / 1.D0 /
+      save
+      data                  fc (  1 )    / 1.d0 /
 
 !
 !     If the RETURN function is set, don't even bother with this.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Unpack the contents of the MDA array.
@@ -210,34 +210,34 @@
 !
 !     For our purposes, NTE is always 3.
 !
-      CALL MOVED ( RECORD( 1),  1, TL )
-      CALL MOVED ( RECORD( 2), 15, G  )
+      call moved ( record( 1),  1, tl )
+      call moved ( record( 2), 15, g  )
 !
 !     Collect the reference position and velocity.
 !
-      REFPOS(1) =  RECORD(17)
-      REFVEL(1) =  RECORD(18)
+      refpos(1) =  record(17)
+      refvel(1) =  record(18)
 
-      REFPOS(2) =  RECORD(19)
-      REFVEL(2) =  RECORD(20)
+      refpos(2) =  record(19)
+      refvel(2) =  record(20)
 
-      REFPOS(3) =  RECORD(21)
-      REFVEL(3) =  RECORD(22)
+      refpos(3) =  record(21)
+      refvel(3) =  record(22)
 
-      CALL MOVED ( RECORD(23), 45, DT )
+      call moved ( record(23), 45, dt )
 
-      KQMAX1    = INT ( RECORD(68) )
-      KQ(1)     = INT ( RECORD(69) )
-      KQ(2)     = INT ( RECORD(70) )
-      KQ(3)     = INT ( RECORD(71) )
+      kqmax1    = int ( record(68) )
+      kq(1)     = int ( record(69) )
+      kq(2)     = int ( record(70) )
+      kq(3)     = int ( record(71) )
 
 !
 !     Next we set up for the computation of the various differences
 !
-      DELTA     = ET     - TL
-      TP        = DELTA
-      MQ2       = KQMAX1 - 2
-      KS        = KQMAX1 - 1
+      delta     = et     - tl
+      tp        = delta
+      mq2       = kqmax1 - 2
+      ks        = kqmax1 - 1
 
 !
 !     This is clearly collecting some kind of coefficients.
@@ -251,18 +251,18 @@
 !     We then change it from DELTA  by the components of the stepsize
 !     vector G.
 !
-      DO J = 1, MQ2
-         FC(J+1) = TP    / G(J)
-         WC(J)   = DELTA / G(J)
-         TP      = DELTA + G(J)
-      END DO
+      do j = 1, mq2
+         fc(j+1) = tp    / g(j)
+         wc(j)   = delta / g(j)
+         tp      = delta + g(j)
+      end do
 
 !
 !     Collect KQMAX1 reciprocals.
 !
-      DO J = 1, KQMAX1
-         W(J) = 1.0D0/DBLE(J)
-      END DO
+      do j = 1, kqmax1
+         w(j) = 1.0d0/dble(j)
+      end do
 
 !
 !     Compute the W(K) terms needed for the position interpolation
@@ -270,70 +270,70 @@
 !     starts out as KQMAX1-1 (the ``maximum integration'')
 !     is at least 2.
 !
-      JX  = 0
-      KS1 = KS - 1
+      jx  = 0
+      ks1 = ks - 1
 
-      DO WHILE ( KS .GE. 2 )
+      do while ( ks .ge. 2 )
 
-         JX  = JX+1
+         jx  = jx+1
 
-         DO  J = 1, JX
-            W(J+KS) = FC(J+1)*W(J+KS1) - WC(J)*W(J+KS)
-         END DO
+         do  j = 1, jx
+            w(j+ks) = fc(j+1)*w(j+ks1) - wc(j)*w(j+ks)
+         end do
 
-         KS  = KS1
-         KS1 = KS1 - 1
+         ks  = ks1
+         ks1 = ks1 - 1
 
-      END DO
+      end do
 
 !
 !     Perform position interpolation: (Note that KS = 1 right now.
 !     We don't know much more than that.)
 !
-      DO  I = 1, 3
+      do  i = 1, 3
 
-         KQQ = KQ(I)
-         SUM = 0.0D0
+         kqq = kq(i)
+         sum = 0.0d0
 
-         DO J = KQQ, 1, -1
-            SUM = SUM + DT(J,I)*W(J+KS)
-         END DO
+         do j = kqq, 1, -1
+            sum = sum + dt(j,i)*w(j+ks)
+         end do
 
-         STATE(I) = REFPOS(I)  +  DELTA * ( REFVEL(I) + DELTA*SUM )
+         state(i) = refpos(i)  +  delta * ( refvel(i) + delta*sum )
 
-      END DO
+      end do
 
 !
 !     Again we need to compute the W(K) coefficients that are
 !     going to be used in the velocity interpolation.
 !     (Note, at this point, KS = 1, KS1 = 0.)
 !
-      DO  J = 1, JX
-         W(J+KS) = FC(J+1)*W(J+KS1) - WC(J)*W(J+KS)
-      END DO
+      do  j = 1, jx
+         w(j+ks) = fc(j+1)*w(j+ks1) - wc(j)*w(j+ks)
+      end do
 
-      KS = KS - 1
+      ks = ks - 1
 
 !
 !     Perform velocity interpolation:
 !
-      DO  I = 1, 3
+      do  i = 1, 3
 
-         KQQ = KQ(I)
-         SUM = 0.0D0
+         kqq = kq(i)
+         sum = 0.0d0
 
-         DO J = KQQ, 1, -1
-            SUM = SUM + DT(J,I)*W(J+KS)
-         END DO
+         do j = kqq, 1, -1
+            sum = sum + dt(j,i)*w(j+ks)
+         end do
 
-         STATE(I+3) = REFVEL(I) + DELTA*SUM
+         state(i+3) = refvel(i) + delta*sum
 
-      END DO
+      end do
 
 !
 !     That's all folks.  We don't know why we did anything, but
 !     at least we can tell structurally what we did.
 !
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ORDI ( The ordinal position of an element in a set )
 
-      INTEGER FUNCTION ORDI ( ITEM, SET )
+      integer function ordi ( item, set )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = - 5 )
+      integer               lbcell
+      parameter           ( lbcell = - 5 )
 
-      INTEGER               ITEM
-      INTEGER               SET ( LBCELL:* )
+      integer               item
+      integer               set ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -182,23 +182,23 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHI
-      INTEGER               CARDI
-      LOGICAL               RETURN
+      integer               bsrchi
+      integer               cardi
+      logical               return
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         ORDI = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ORDI' )
-      END IF
+      if ( return() ) then
+         ordi = 0
+         return
+      else
+         call chkin ( 'ORDI' )
+      end if
 !
 !     Given the structure of sets, there's not much to do.
 !
-      ORDI = BSRCHI ( ITEM, CARDI(SET), SET(1) )
+      ordi = bsrchi ( item, cardi(set), set(1) )
 
-      CALL CHKOUT ( 'ORDI' )
-      RETURN
-      END
+      call chkout ( 'ORDI' )
+      return
+      end

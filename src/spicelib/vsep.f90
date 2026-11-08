@@ -1,6 +1,6 @@
 !$Procedure VSEP  ( Angular separation of vectors, 3 dimensions )
 
-      DOUBLE PRECISION FUNCTION VSEP ( V1, V2 )
+      double precision function vsep ( v1, v2 )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  V1 ( 3 )
-      DOUBLE PRECISION  V2 ( 3 )
+      double precision  v1 ( 3 )
+      double precision  v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -241,10 +241,10 @@
 !
 !     SPICELIB functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      external              pi
+      double precision      pi
+      double precision      vdot
+      double precision      vnorm
 
 !
 !     Local Variables
@@ -254,44 +254,44 @@
 !        Either of the difference vectors: V1-V2 or V1-(-V2)
 !        Unit vectors parallel to V1 and V2
 !
-      DOUBLE PRECISION      DMAG1
-      DOUBLE PRECISION      DMAG2
-      DOUBLE PRECISION      VTEMP(3)
-      DOUBLE PRECISION      U1(3)
-      DOUBLE PRECISION      U2(3)
+      double precision      dmag1
+      double precision      dmag2
+      double precision      vtemp(3)
+      double precision      u1(3)
+      double precision      u2(3)
 
 !
 !  Calculate the magnitudes of V1 and V2; if either is 0, VSEP = 0
 !
-      CALL UNORM ( V1, U1, DMAG1 )
-      IF ( DMAG1 .EQ. 0.D0 ) THEN
-         VSEP = 0.D0
-         RETURN
-      END IF
+      call unorm ( v1, u1, dmag1 )
+      if ( dmag1 .eq. 0.d0 ) then
+         vsep = 0.d0
+         return
+      end if
 
-      CALL UNORM ( V2, U2, DMAG2 )
-      IF ( DMAG2 .EQ. 0.D0 ) THEN
-         VSEP = 0.D0
-         RETURN
-      END IF
+      call unorm ( v2, u2, dmag2 )
+      if ( dmag2 .eq. 0.d0 ) then
+         vsep = 0.d0
+         return
+      end if
 
-      IF      ( VDOT(U1,U2) .GT. 0 ) THEN
-         VTEMP(1) = U1(1) - U2(1)
-         VTEMP(2) = U1(2) - U2(2)
-         VTEMP(3) = U1(3) - U2(3)
+      if      ( vdot(u1,u2) .gt. 0 ) then
+         vtemp(1) = u1(1) - u2(1)
+         vtemp(2) = u1(2) - u2(2)
+         vtemp(3) = u1(3) - u2(3)
 
-         VSEP = 2.0D0 * ASIN (0.5D0 * VNORM(VTEMP))
+         vsep = 2.0d0 * asin (0.5d0 * vnorm(vtemp))
 
-      ELSE IF ( VDOT(U1,U2) .LT. 0 ) THEN
-         VTEMP(1) = U1(1) + U2(1)
-         VTEMP(2) = U1(2) + U2(2)
-         VTEMP(3) = U1(3) + U2(3)
+      else if ( vdot(u1,u2) .lt. 0 ) then
+         vtemp(1) = u1(1) + u2(1)
+         vtemp(2) = u1(2) + u2(2)
+         vtemp(3) = u1(3) + u2(3)
 
-         VSEP = PI() - 2.0D0 * ASIN (0.5D0 * VNORM(VTEMP))
+         vsep = pi() - 2.0d0 * asin (0.5d0 * vnorm(vtemp))
 
-      ELSE
-         VSEP = PI() / 2.0D0
-      END IF
+      else
+         vsep = pi() / 2.0d0
+      end if
 
-      RETURN
-      END
+      return
+      end

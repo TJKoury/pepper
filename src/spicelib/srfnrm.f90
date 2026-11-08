@@ -1,7 +1,7 @@
 !$Procedure SRFNRM ( Map surface points to outward normal vectors )
 
-      SUBROUTINE SRFNRM ( METHOD, TARGET, ET,    FIXREF, &
-                          NPTS,   SRFPTS, NORMLS        )
+      subroutine srfnrm ( method, target, et,    fixref, &
+                          npts,   srfpts, normls        )
 
 ! $ Abstract
 !
@@ -28,21 +28,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsk.inc'
-      INCLUDE 'dsktol.inc'
-      INCLUDE 'gf.inc'
-      INCLUDE 'zzctr.inc'
-      INCLUDE 'zzdsk.inc'
+      include 'dsk.inc'
+      include 'dsktol.inc'
+      include 'gf.inc'
+      include 'zzctr.inc'
+      include 'zzdsk.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      INTEGER               NPTS
-      DOUBLE PRECISION      SRFPTS ( 3, * )
-      DOUBLE PRECISION      NORMLS ( 3, * )
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         fixref
+      integer               npts
+      double precision      srfpts ( 3, * )
+      double precision      normls ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -813,221 +813,221 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'SRFNRM' )
+      character*(*)         rname
+      parameter           ( rname  = 'SRFNRM' )
 
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CVTLEN)    LMBTYP
-      CHARACTER*(MTHLEN)    PRVMTH
-      CHARACTER*(SHPLEN)    SHPSTR
-      CHARACTER*(SUBLEN)    SUBTYP
-      CHARACTER*(TMTLEN)    TRMTYP
+      character*(cvtlen)    lmbtyp
+      character*(mthlen)    prvmth
+      character*(shplen)    shpstr
+      character*(sublen)    subtyp
+      character*(tmtlen)    trmtyp
 
-      DOUBLE PRECISION      A2
-      DOUBLE PRECISION      B2
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      LEVEL
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      PTSRFM
+      double precision      a2
+      double precision      b2
+      double precision      c2
+      double precision      level
+      double precision      limit
+      double precision      maxr
+      double precision      ptsrfm
 
-      INTEGER               FIXFID
-      INTEGER               FXCENT
-      INTEGER               FXCLSS
-      INTEGER               FXCLID
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NSURF
-      INTEGER               SHAPE
-      INTEGER               SRFCTR ( CTRSIZ )
-      INTEGER               SRFLST ( MAXSRF )
-      INTEGER               TRGCDE
+      integer               fixfid
+      integer               fxcent
+      integer               fxclss
+      integer               fxclid
+      integer               i
+      integer               n
+      integer               nsurf
+      integer               shape
+      integer               srfctr ( ctrsiz )
+      integer               srflst ( maxsrf )
+      integer               trgcde
 
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               PRI
-      LOGICAL               SURFUP
+      logical               first
+      logical               fnd
+      logical               pri
+      logical               surfup
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(BDNMLN)    SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(bdnmln)    svtarg
+      integer               svtcde
+      logical               svfnd1
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFREF
-      INTEGER               SVFXFC
+      integer               svctr2 ( ctrsiz )
+      character*(frnmln)    svfref
+      integer               svfxfc
 
 !
 !     Saved target radius values.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      INTEGER               SVPRVT
-      DOUBLE PRECISION      SVRADI ( 3 )
+      integer               svctr3 ( ctrsiz )
+      integer               svprvt
+      double precision      svradi ( 3 )
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR2
-      SAVE                  SVFREF
-      SAVE                  SVFXFC
+      save                  svctr2
+      save                  svfref
+      save                  svfxfc
 
 !
 !     Saved target radius values.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVPRVT
-      SAVE                  SVRADI
+      save                  svctr3
+      save                  svprvt
+      save                  svradi
 
 !
 !     Saved values
 !
-      SAVE                  NSURF
-      SAVE                  FIRST
-      SAVE                  MAXR
-      SAVE                  PRI
-      SAVE                  PRVMTH
-      SAVE                  SHAPE
-      SAVE                  SRFCTR
-      SAVE                  SRFLST
+      save                  nsurf
+      save                  first
+      save                  maxr
+      save                  pri
+      save                  prvmth
+      save                  shape
+      save                  srfctr
+      save                  srflst
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  PRVMTH / ' '    /
-      DATA                  SVPRVT / 0      /
+      data                  first  / .true. /
+      data                  prvmth / ' '    /
+      data                  svprvt / 0      /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize local surface counter.
 !
-         CALL ZZCTRUIN ( SRFCTR )
+         call zzctruin ( srfctr )
 !
 !        Initialize target, frame, and radius counters.
 !
-         CALL ZZCTRUIN ( SVCTR1 )
-         CALL ZZCTRUIN ( SVCTR2 )
-         CALL ZZCTRUIN ( SVCTR3 )
+         call zzctruin ( svctr1 )
+         call zzctruin ( svctr2 )
+         call zzctruin ( svctr3 )
 
-      END IF
+      end if
 
 !
 !     Obtain integer code for the target.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, fnd    )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the attributes of the frame designated by FIXREF.
 !
-      CALL ZZNAMFRM ( SVCTR2, SVFREF, SVFXFC, FIXREF, FIXFID )
+      call zznamfrm ( svctr2, svfref, svfxfc, fixref, fixfid )
 
-      CALL FRINFO ( FIXFID, FXCENT, FXCLSS, FXCLID, FND )
+      call frinfo ( fixfid, fxcent, fxclss, fxclid, fnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+         call setmsg ( 'Reference frame # is not recognized by ' // &
                        'the SPICE frame subsystem. Possibly '    // &
                        'a required frame definition kernel has ' // &
                        'not been loaded.'                        )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-         CALL CHKOUT ( RNAME                                     )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call sigerr ( 'SPICE(NOFRAME)'                          )
+         call chkout ( rname                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      IF ( FXCENT .NE. TRGCDE ) THEN
+      if ( fxcent .ne. trgcde ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
          //            'center is #.'                             )
-         CALL ERRCH  ( '#',  FIXREF                               )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL ERRINT ( '#',  FXCENT                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  fixref                               )
+         call errch  ( '#',  target                               )
+         call errint ( '#',  fxcent                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check whether the surface name/ID mapping has been updated.
 !
-      CALL ZZSRFTRK ( SRFCTR, SURFUP )
+      call zzsrftrk ( srfctr, surfup )
 
 !
 !     Initialize the SINCPT utility package for the next computation.
 !     The choice of initialization routine depends on the target
 !     surface type.
 !
-      IF ( FIRST  .OR.  SURFUP  .OR.  ( METHOD .NE. PRVMTH ) ) THEN
+      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -1035,7 +1035,7 @@
 !        failure occurs in this branch. Once success is assured, we can
 !        record the current method in the previous method string.
 !
-         PRVMTH = ' '
+         prvmth = ' '
 
 !
 !        Parse the method string. If the string is valid, the
@@ -1045,194 +1045,194 @@
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         CALL ZZPRSMET ( TRGCDE, METHOD, MAXSRF, SHPSTR, SUBTYP, &
-                         PRI,    NSURF,  SRFLST, LMBTYP, TRMTYP )
+         call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
+                         pri,    nsurf,  srflst, lmbtyp, trmtyp )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF (  EQSTR( SHPSTR, 'ELLIPSOID' )  ) THEN
+         if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
-            SHAPE = ELLSHP
+            shape = ellshp
 
-         ELSE IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+         else if (  eqstr( shpstr, 'DSK' )  ) then
 
-            SHAPE = DSKSHP
+            shape = dskshp
 
-         ELSE
+         else
 !
 !           This is a backstop check.
 !
-            CALL SETMSG ( '[1] Returned shape value from method ' &
+            call setmsg ( '[1] Returned shape value from method ' &
             //            'string was <#>.'                      )
-            CALL ERRCH  ( '#', SHPSTR                            )
-            CALL SIGERR ( 'SPICE(BUG)'                           )
-            CALL CHKOUT ( RNAME                                  )
-            RETURN
+            call errch  ( '#', shpstr                            )
+            call sigerr ( 'SPICE(BUG)'                           )
+            call chkout ( rname                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        There should be no subtype specification in the method
 !        string.
 !
-         IF ( SUBTYP .NE. ' ' ) THEN
+         if ( subtyp .ne. ' ' ) then
 
-            CALL SETMSG ( 'Spurious sub-observer point type <#> ' &
+            call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
             //            'The sub-observer type is valid in ' &
             //            'the method strings for SUBPNT and ' &
             //            'SUBSLR, but is not applicable for SRFNRM.' )
-            CALL ERRCH  ( '#', SUBTYP                                 )
-            CALL ERRCH  ( '#', METHOD                                 )
-            CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                      )
-            CALL CHKOUT ( RNAME                                       )
-            RETURN
+            call errch  ( '#', subtyp                                 )
+            call errch  ( '#', method                                 )
+            call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
+            call chkout ( rname                                       )
+            return
 
-         END IF
+         end if
 
-         PRVMTH = METHOD
+         prvmth = method
 
-      END IF
+      end if
 
 !
 !     At this point, the first pass actions were successful.
 !
-      FIRST = .FALSE.
+      first = .false.
 
 !
 !     Check the target body shape.
 !
-      IF ( SHAPE .EQ. ELLSHP ) THEN
+      if ( shape .eq. ellshp ) then
 
-         IF ( TRGCDE .NE. SVPRVT ) THEN
+         if ( trgcde .ne. svprvt ) then
 !
 !           Reset counter to force lookup.
 !
-            CALL ZZCTRUIN ( SVCTR3 )
+            call zzctruin ( svctr3 )
 
-         END IF
+         end if
 !
 !        Look up target radii using counter.
 !
-         CALL ZZBODVCD ( TRGCDE, 'RADII', 3, SVCTR3, N, SVRADI )
+         call zzbodvcd ( trgcde, 'RADII', 3, svctr3, n, svradi )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF (  MIN( SVRADI(1), SVRADI(2), SVRADI(3) ) .LE. 0.D0 ) THEN
+         if (  min( svradi(1), svradi(2), svradi(3) ) .le. 0.d0 ) then
 
-            CALL SETMSG ( 'Body # radii should be positive but ' &
+            call setmsg ( 'Body # radii should be positive but ' &
             //            'were # # #.'                         )
-            CALL ERRCH  ( '#',  TARGET                          )
-            CALL ERRDP  ( '#',  SVRADI(1)                       )
-            CALL ERRDP  ( '#',  SVRADI(2)                       )
-            CALL ERRDP  ( '#',  SVRADI(3)                       )
-            CALL SIGERR ( 'SPICE(BADAXISLENGTH)'                )
-            CALL CHKOUT ( RNAME                                 )
-            RETURN
+            call errch  ( '#',  target                          )
+            call errdp  ( '#',  svradi(1)                       )
+            call errdp  ( '#',  svradi(2)                       )
+            call errdp  ( '#',  svradi(3)                       )
+            call sigerr ( 'SPICE(BADAXISLENGTH)'                )
+            call chkout ( rname                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        The radii are valid. Update the previous target ID.
 !
-         SVPRVT = TRGCDE
+         svprvt = trgcde
 
 !
 !        Compute the point-surface distance limit.
 !
-         MAXR   = MAX ( SVRADI(1), SVRADI(2), SVRADI(3) )
+         maxr   = max ( svradi(1), svradi(2), svradi(3) )
 
-         CALL DSKGTL ( KEYPTM, PTSRFM )
+         call dskgtl ( keyptm, ptsrfm )
 
-         LIMIT  = PTSRFM * MAXR
+         limit  = ptsrfm * maxr
 
 !
 !        Generate normal vectors.
 !
-         DO I = 1, NPTS
+         do i = 1, npts
 
-            A2    = SVRADI(1)*SVRADI(1)
-            B2    = SVRADI(2)*SVRADI(2)
-            C2    = SVRADI(3)*SVRADI(3)
+            a2    = svradi(1)*svradi(1)
+            b2    = svradi(2)*svradi(2)
+            c2    = svradi(3)*svradi(3)
 
-            LEVEL = (   ( SRFPTS(1,I)*SRFPTS(1,I) / A2 ) &
-                      + ( SRFPTS(2,I)*SRFPTS(2,I) / B2 ) &
-                      + ( SRFPTS(3,I)*SRFPTS(3,I) / C2 )  ) ** 0.5D0
+            level = (   ( srfpts(1,i)*srfpts(1,i) / a2 ) &
+                      + ( srfpts(2,i)*srfpts(2,i) / b2 ) &
+                      + ( srfpts(3,i)*srfpts(3,i) / c2 )  ) ** 0.5d0
 
 !
 !           The test below is a distance test if the target shape
 !           is a sphere. For other ellipsoids, it's an approximation.
 !
-            IF ( ABS( LEVEL - 1.D0 ) .GE. LIMIT ) THEN
+            if ( abs( level - 1.d0 ) .ge. limit ) then
 
-               CALL SETMSG ( 'Input point at index # is not on ' &
+               call setmsg ( 'Input point at index # is not on ' &
                //            'the target body surface. The ' &
                //            'level surface parameter (x/a)**2 ' &
                //            '+ (y/b)**2 + (z/c)**2 for this ' &
                //            'point is #.'                      )
-               CALL ERRINT ( '#', I                             )
-               CALL ERRDP  ( '#', LEVEL                         )
-               CALL SIGERR ( 'SPICE(POINTNOTONSURFACE)'         )
-               CALL CHKOUT ( RNAME                              )
-               RETURN
+               call errint ( '#', i                             )
+               call errdp  ( '#', level                         )
+               call sigerr ( 'SPICE(POINTNOTONSURFACE)'         )
+               call chkout ( rname                              )
+               return
 
-            END IF
+            end if
 
-            CALL SURFNM ( SVRADI(1),   SVRADI(2),  SVRADI(3), &
-                          SRFPTS(1,I), NORMLS(1,I)            )
+            call surfnm ( svradi(1),   svradi(2),  svradi(3), &
+                          srfpts(1,i), normls(1,i)            )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
-
-
-         END DO
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 
-      ELSE IF  ( SHAPE .EQ. DSKSHP ) THEN
+         end do
+
+
+      else if  ( shape .eq. dskshp ) then
 !
 !        Generate normal vectors.
 !
-         DO I = 1, NPTS
+         do i = 1, npts
 !
 !           Use the DSK API segment buffering system to efficiently
 !           select relevant segments and compute normals.
 !
-            CALL ZZSBFNRM ( TRGCDE, NSURF,       SRFLST,     ET, &
-                            FIXFID, SRFPTS(1,I), NORMLS(1,I)     )
+            call zzsbfnrm ( trgcde, nsurf,       srflst,     et, &
+                            fixfid, srfpts(1,i), normls(1,i)     )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 !
 !           Make sure normals have unit length.
 !
-            CALL VHATIP ( NORMLS(1,I) )
+            call vhatip ( normls(1,i) )
 
-         END DO
+         end do
 
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Input method <#> does not specify ' &
+         call setmsg ( 'Input method <#> does not specify ' &
          //            'the target shape as either ELLIPSOID ' &
          //            'or DSK.'                               )
-         CALL ERRCH  ( '#', METHOD                             )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                   )
-         CALL CHKOUT ( RNAME                                   )
-         RETURN
+         call errch  ( '#', method                             )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
+         call chkout ( rname                                   )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

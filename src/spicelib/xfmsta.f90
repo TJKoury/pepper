@@ -1,6 +1,6 @@
 !$Procedure XFMSTA ( Transform state between coordinate systems )
 
-      SUBROUTINE XFMSTA ( ISTATE, ICOSYS, OCOSYS, BODY, OSTATE )
+      subroutine xfmsta ( istate, icosys, ocosys, body, ostate )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      DOUBLE PRECISION      ISTATE(6)
-      CHARACTER*(*)         ICOSYS
-      CHARACTER*(*)         OCOSYS
-      CHARACTER*(*)         BODY
-      DOUBLE PRECISION      OSTATE(6)
+      double precision      istate(6)
+      character*(*)         icosys
+      character*(*)         ocosys
+      character*(*)         body
+      double precision      ostate(6)
 
 ! $ Brief_I/O
 !
@@ -569,10 +569,10 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      INTEGER               ISRCHC
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      double precision      dpmax
+      integer               isrchc
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -580,50 +580,50 @@
 !     Potentially large numbers produced by transforming the
 !     velocity using the Jacobian must not exceed DPMAX()/MARGIN:
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D2 )
+      double precision      margin
+      parameter           ( margin = 1.d2 )
 
 !
 !     The size of each coordinate system name must not exceed
 !     CHSIZ characters.
 !
-      INTEGER               CHSIZ
-      PARAMETER           ( CHSIZ  = 40 )
+      integer               chsiz
+      parameter           ( chsiz  = 40 )
 
 !
 !     NCOSYS is the number of coordinate systems supported by
 !     this routine.
 !
-      INTEGER               NCOSYS
-      PARAMETER           ( NCOSYS = 6 )
+      integer               ncosys
+      parameter           ( ncosys = 6 )
 
 !
 !     The following integer parameters represent the coordinate
 !     systems supported by this routine.
 !
-      INTEGER               RECTAN
-      PARAMETER           ( RECTAN = 1 )
+      integer               rectan
+      parameter           ( rectan = 1 )
 
-      INTEGER               CYL
-      PARAMETER           ( CYL    = 2 )
+      integer               cyl
+      parameter           ( cyl    = 2 )
 
-      INTEGER               LATNL
-      PARAMETER           ( LATNL  = 3 )
+      integer               latnl
+      parameter           ( latnl  = 3 )
 
-      INTEGER               SPHCL
-      PARAMETER           ( SPHCL  = 4 )
+      integer               sphcl
+      parameter           ( sphcl  = 4 )
 
-      INTEGER               GEODET
-      PARAMETER           ( GEODET = 5 )
+      integer               geodet
+      parameter           ( geodet = 5 )
 
-      INTEGER               PLNTGR
-      PARAMETER           ( PLNTGR = 6 )
+      integer               plntgr
+      parameter           ( plntgr = 6 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 
 !
@@ -634,16 +634,16 @@
 !     from the user that are made insensitive to case or leading and
 !     trailing spaces.
 !
-      CHARACTER*(CHSIZ)     COSYS  (NCOSYS)
-      CHARACTER*(CHSIZ)     ISYSU
-      CHARACTER*(CHSIZ)     OSYSU
+      character*(chsiz)     cosys  (ncosys)
+      character*(chsiz)     isysu
+      character*(chsiz)     osysu
 
 !
 !     IPOS and IVEL are the input position and velocity translated
 !     into rectangular.
 !
-      DOUBLE PRECISION      IPOS   ( 3 )
-      DOUBLE PRECISION      IVEL   ( 3 )
+      double precision      ipos   ( 3 )
+      double precision      ivel   ( 3 )
 
 !
 !     For transformations including either geodetic or planetographic
@@ -651,86 +651,86 @@
 !     associated with the input body. These values will be loaded
 !     from the kernel pool.
 !
-      DOUBLE PRECISION      RADII  ( 3 )
+      double precision      radii  ( 3 )
 
 !
 !     JACOBI is the Jacobian matrix that converts the velocity
 !     coordinates between systems.
 !
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      jacobi ( 3, 3 )
 
 !
 !     The flattening coefficient, F, is calculated when either
 !     geodetic or planetographic coordinate systems are included
 !     in the transformation.
 !
-      DOUBLE PRECISION      F
+      double precision      f
 
 !
 !     SQTMP and TOOBIG are used to check for possible numeric
 !     overflow situations.
 !
-      DOUBLE PRECISION      SQTMP
-      DOUBLE PRECISION      TOOBIG
+      double precision      sqtmp
+      double precision      toobig
 
 !
 !     BODYID is only used when the input or output coordinate
 !     systems are geodetic or planetographic. The BODYID is the NAID ID
 !     associated with the input body name.
 !
-      INTEGER               BODYID
+      integer               bodyid
 
 !
 !     ISYS and OSYS are the integer codes corresponding to the
 !     input and output coordinate systems. I and J are iterators.
 !
-      INTEGER               I
-      INTEGER               ISYS
-      INTEGER               J
-      INTEGER               OSYS
+      integer               i
+      integer               isys
+      integer               j
+      integer               osys
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVBODY
-      INTEGER               SVBDID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svbody
+      integer               svbdid
+      logical               svfnd1
 
-      LOGICAL               FIRST
+      logical               first
 !
 !     Saved variables
 !
-      SAVE                  COSYS
+      save                  cosys
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVBODY
-      SAVE                  SVBDID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svbody
+      save                  svbdid
+      save                  svfnd1
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Assign the names of the coordinate systems to a character
 !     array in which each coordinate system name is located at
 !     the index of the integer ID of the coordinate system.
 !
-      DATA COSYS ( RECTAN ) / 'RECTANGULAR'    /
-      DATA COSYS ( CYL    ) / 'CYLINDRICAL'    /
-      DATA COSYS ( LATNL  ) / 'LATITUDINAL'    /
-      DATA COSYS ( SPHCL  ) / 'SPHERICAL'      /
-      DATA COSYS ( GEODET ) / 'GEODETIC'       /
-      DATA COSYS ( PLNTGR ) / 'PLANETOGRAPHIC' /
+      data cosys ( rectan ) / 'RECTANGULAR'    /
+      data cosys ( cyl    ) / 'CYLINDRICAL'    /
+      data cosys ( latnl  ) / 'LATITUDINAL'    /
+      data cosys ( sphcl  ) / 'SPHERICAL'      /
+      data cosys ( geodet ) / 'GEODETIC'       /
+      data cosys ( plntgr ) / 'PLANETOGRAPHIC' /
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
@@ -745,32 +745,32 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'XFMSTA' )
+      call chkin ( 'XFMSTA' )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Remove initial and trailing spaces.
 !     Convert the input coordinate systems to upper case.
 !
-      CALL LJUCRS ( 0, ICOSYS, ISYSU )
-      CALL LJUCRS ( 0, OCOSYS, OSYSU )
+      call ljucrs ( 0, icosys, isysu )
+      call ljucrs ( 0, ocosys, osysu )
 
 !
 !     Check to see if the input and output coordinate systems
@@ -778,70 +778,70 @@
 !     code of the input and output coordinate systems into
 !     ISYS and OSYS.
 !
-      ISYS = ISRCHC ( ISYSU, NCOSYS, COSYS )
-      OSYS = ISRCHC ( OSYSU, NCOSYS, COSYS )
+      isys = isrchc ( isysu, ncosys, cosys )
+      osys = isrchc ( osysu, ncosys, cosys )
 
 !
 !     If the coordinate systems are not acceptable, an error is
 !     signaled.
 !
-      IF ( ( ISYS .EQ. 0 )  .OR.  ( OSYS .EQ. 0 ) ) THEN
+      if ( ( isys .eq. 0 )  .or.  ( osys .eq. 0 ) ) then
 
-         IF    ( ( ISYS .EQ. 0 )  .AND. ( OSYS .EQ. 0 ) ) THEN
+         if    ( ( isys .eq. 0 )  .and. ( osys .eq. 0 ) ) then
 
 !
 !           Both the input and the output coordinate systems were not
 !           recognized.
 !
-            CALL SETMSG ( 'Input coordinate system # ' &
+            call setmsg ( 'Input coordinate system # ' &
                       //  'and output coordinate system # ' &
                       //  'are not recognized.' )
-            CALL ERRCH  ( '#', ICOSYS )
-            CALL ERRCH  ( '#', OCOSYS )
-            CALL SIGERR ( 'SPICE(COORDSYSNOTREC)' )
-            CALL CHKOUT ( 'XFMSTA' )
-            RETURN
+            call errch  ( '#', icosys )
+            call errch  ( '#', ocosys )
+            call sigerr ( 'SPICE(COORDSYSNOTREC)' )
+            call chkout ( 'XFMSTA' )
+            return
 
-         ELSE IF ( ISYS .EQ. 0 ) THEN
+         else if ( isys .eq. 0 ) then
 
 !
 !           The input coordinate system was not recognized.
 !
-            CALL SETMSG ( 'Input coordinate system # ' &
+            call setmsg ( 'Input coordinate system # ' &
                      //   'was not recognized'  )
-            CALL ERRCH  ( '#', ICOSYS )
-            CALL SIGERR ( 'SPICE(COORDSYSNOTREC)' )
-            CALL CHKOUT ( 'XFMSTA' )
-            RETURN
+            call errch  ( '#', icosys )
+            call sigerr ( 'SPICE(COORDSYSNOTREC)' )
+            call chkout ( 'XFMSTA' )
+            return
 
-         ELSE
+         else
 
 !
 !           The output coordinate system was not recognized.
 !
-            CALL SETMSG ( 'Output coordinate system # ' &
+            call setmsg ( 'Output coordinate system # ' &
                      //   'was not recognized'    )
-            CALL ERRCH  ( '#', OCOSYS )
-            CALL SIGERR ( 'SPICE(COORDSYSNOTREC)' )
-            CALL CHKOUT ( 'XFMSTA' )
-            RETURN
+            call errch  ( '#', ocosys )
+            call sigerr ( 'SPICE(COORDSYSNOTREC)' )
+            call chkout ( 'XFMSTA' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the input and output coordinate systems are equal, set the
 !     output equal to the input since no conversion needs to take
 !     place.
 !
-      IF ( ISYS .EQ. OSYS ) THEN
+      if ( isys .eq. osys ) then
 
-         CALL VEQUG  ( ISTATE, 6, OSTATE )
-         CALL CHKOUT ( 'XFMSTA' )
-         RETURN
+         call vequg  ( istate, 6, ostate )
+         call chkout ( 'XFMSTA' )
+         return
 
-      END IF
+      end if
 
 !
 !     If converting to or from either geodetic or planetographic, the
@@ -850,87 +850,87 @@
 !     signaled. If the NAIF ID is valid, the radii of the body are
 !     located and the flattening coefficient is calculated.
 !
-      IF ( ( OSYS .EQ. GEODET ) .OR. ( OSYS .EQ. PLNTGR )   .OR. &
-           ( ISYS .EQ. GEODET ) .OR. ( ISYS .EQ. PLNTGR ) ) THEN
+      if ( ( osys .eq. geodet ) .or. ( osys .eq. plntgr )   .or. &
+           ( isys .eq. geodet ) .or. ( isys .eq. plntgr ) ) then
 
 !
 !        Find the NAIF ID code
 !
-         CALL ZZBODS2C ( SVCTR1, SVBODY, SVBDID, SVFND1, &
-                         BODY, BODYID, FOUND    )
+         call zzbods2c ( svctr1, svbody, svbdid, svfnd1, &
+                         body, bodyid, found    )
 !
 !        If the body's name was found, find the body's radii and
 !        compute flattening coefficient. Otherwise, signal an error.
 !
-         IF ( FOUND ) THEN
+         if ( found ) then
 
-            CALL ZZGFTREB ( BODYID, RADII )
+            call zzgftreb ( bodyid, radii )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'XFMSTA' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'XFMSTA' )
+               return
+            end if
 
 !
 !           If the difference of the equatorial and polar radii
 !           divided by the equatorial radius is greater than DPMAX,
 !           a numeric overflow may occur, so an error is signaled.
 !
-            IF ( SQRT(ABS( RADII(1) - RADII(3) )) / &
-                 SQRT(ABS( RADII(1) )) .GE. SQRT(DPMAX()) ) THEN
+            if ( sqrt(abs( radii(1) - radii(3) )) / &
+                 sqrt(abs( radii(1) )) .ge. sqrt(dpmax()) ) then
 
-               CALL SETMSG ( 'The equatorial radius for # ' &
+               call setmsg ( 'The equatorial radius for # ' &
                         //   'has a value of # and a polar radius of ' &
                         //   '#. The flattening coefficient cannot be ' &
                         //   'calculated due to numeric overflow.' )
-               CALL ERRCH  ( '#', BODY     )
-               CALL ERRDP  ( '#', RADII(1) )
-               CALL ERRDP  ( '#', RADII(3) )
-               CALL SIGERR ( 'SPICE(INVALIDRADIUS)' )
-               CALL CHKOUT ( 'XFMSTA'      )
-               RETURN
+               call errch  ( '#', body     )
+               call errdp  ( '#', radii(1) )
+               call errdp  ( '#', radii(3) )
+               call sigerr ( 'SPICE(INVALIDRADIUS)' )
+               call chkout ( 'XFMSTA'      )
+               return
 
-            END IF
+            end if
 
 !
 !           At this point, we also check for unequal equatorial radii,
 !           which are not allowed with geodetic or planetographic
 !           coordinates.
 !
-            IF ( RADII(1) .NE. RADII(2) ) THEN
+            if ( radii(1) .ne. radii(2) ) then
 
-               CALL SETMSG ( 'The body # has radii (#, #, #). ' &
+               call setmsg ( 'The body # has radii (#, #, #). ' &
                //            'Unequal equatorial ellipsoid radii are ' &
                //            'not supported for # and # coordinates.')
-               CALL ERRCH  ( '#', BODY                               )
-               CALL ERRDP  ( '#', RADII(1)                           )
-               CALL ERRDP  ( '#', RADII(2)                           )
-               CALL ERRDP  ( '#', RADII(3)                           )
-               CALL ERRCH  ( '#', COSYS ( GEODET )                   )
-               CALL ERRCH  ( '#', COSYS ( PLNTGR )                   )
-               CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                   )
-               CALL CHKOUT ( 'XFMSTA'                                )
-               RETURN
+               call errch  ( '#', body                               )
+               call errdp  ( '#', radii(1)                           )
+               call errdp  ( '#', radii(2)                           )
+               call errdp  ( '#', radii(3)                           )
+               call errch  ( '#', cosys ( geodet )                   )
+               call errch  ( '#', cosys ( plntgr )                   )
+               call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
+               call chkout ( 'XFMSTA'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Calculate the flattening coefficient, F.
 !
-            F = ( RADII(1) - RADII(3) ) / RADII(1)
+            f = ( radii(1) - radii(3) ) / radii(1)
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'The input body name # does not ' &
+            call setmsg ( 'The input body name # does not ' &
                      //   'have a valid NAIF ID code.' )
-            CALL ERRCH  ( '#', BODY )
-            CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'     )
-            CALL CHKOUT ( 'XFMSTA'  )
-            RETURN
+            call errch  ( '#', body )
+            call sigerr ( 'SPICE(IDCODENOTFOUND)'     )
+            call chkout ( 'XFMSTA'  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Conversion of the input to rectangular coordinates
@@ -946,152 +946,152 @@
 !     TOOBIG is used for preventing numerical overflow. The square
 !     roots of values are used to safely check if overflow will occur.
 !
-      TOOBIG = SQRT ( DPMAX() / MARGIN )
+      toobig = sqrt ( dpmax() / margin )
 
-      IF  ( ISYS .NE. RECTAN ) THEN
+      if  ( isys .ne. rectan ) then
 !
 !        To rectangular...
 !
-         IF       ( ISYS .EQ. CYL )    THEN
+         if       ( isys .eq. cyl )    then
 
 !
 !                  ... from cylindrical
 !
-            CALL CYLREC ( ISTATE(1), ISTATE(2), ISTATE(3), IPOS   )
+            call cylrec ( istate(1), istate(2), istate(3), ipos   )
 
-            CALL DRDCYL ( ISTATE(1), ISTATE(2), ISTATE(3), JACOBI )
+            call drdcyl ( istate(1), istate(2), istate(3), jacobi )
 
 
-         ELSE IF  ( ISYS .EQ. LATNL )  THEN
+         else if  ( isys .eq. latnl )  then
 
 !
 !                  ... from latitudinal
 !
-            CALL LATREC ( ISTATE(1), ISTATE(2), ISTATE(3), IPOS   )
+            call latrec ( istate(1), istate(2), istate(3), ipos   )
 
-            CALL DRDLAT ( ISTATE(1), ISTATE(2), ISTATE(3), JACOBI )
+            call drdlat ( istate(1), istate(2), istate(3), jacobi )
 
 
-         ELSE IF  ( ISYS .EQ. SPHCL )  THEN
+         else if  ( isys .eq. sphcl )  then
 
 !
 !                  ... from spherical
 !
-            CALL SPHREC ( ISTATE(1), ISTATE(2), ISTATE(3), IPOS   )
+            call sphrec ( istate(1), istate(2), istate(3), ipos   )
 
-            CALL DRDSPH ( ISTATE(1), ISTATE(2), ISTATE(3), JACOBI )
+            call drdsph ( istate(1), istate(2), istate(3), jacobi )
 
 
-         ELSE IF  ( ISYS .EQ. GEODET ) THEN
+         else if  ( isys .eq. geodet ) then
 
 !
 !                  ... from geodetic
 !
-            CALL GEOREC ( ISTATE(1), ISTATE(2), ISTATE(3), RADII(1), &
-                          F, IPOS )
+            call georec ( istate(1), istate(2), istate(3), radii(1), &
+                          f, ipos )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'XFMSTA' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'XFMSTA' )
+               return
+            end if
 
-            CALL DRDGEO ( ISTATE(1), ISTATE(2), ISTATE(3), RADII(1), &
-                          F, JACOBI )
+            call drdgeo ( istate(1), istate(2), istate(3), radii(1), &
+                          f, jacobi )
 
 
-         ELSE IF  ( ISYS .EQ. PLNTGR ) THEN
+         else if  ( isys .eq. plntgr ) then
 
 !
 !                  ... from planetographic
 !
-            CALL PGRREC ( BODY, ISTATE(1), ISTATE(2), ISTATE(3), &
-                          RADII(1), F, IPOS   )
+            call pgrrec ( body, istate(1), istate(2), istate(3), &
+                          radii(1), f, ipos   )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'XFMSTA' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'XFMSTA' )
+               return
+            end if
 
-            CALL DRDPGR ( BODY, ISTATE(1), ISTATE(2), ISTATE(3), &
-                          RADII(1), F, JACOBI )
+            call drdpgr ( body, istate(1), istate(2), istate(3), &
+                          radii(1), f, jacobi )
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'This error should never occur. ' &
+            call setmsg ( 'This error should never occur. ' &
                      //   'This is an intermediate step in which a ' &
                      //   'non-rectangular input state should be ' &
                      //   'transferred to rectangular.  The input ' &
                      //   'coordinate system is not recognized, yet ' &
                      //   'was not caught by an earlier check.' )
-            CALL SIGERR ( 'SPICE(BUG1)')
-            CALL CHKOUT ( 'XFMSTA' )
-            RETURN
+            call sigerr ( 'SPICE(BUG1)')
+            call chkout ( 'XFMSTA' )
+            return
 
-         END IF
+         end if
 
 !
 !        Some DRD* routines are not error free. Be safe and check
 !        FAILED to not use un-initialized JACOBI.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'XFMSTA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'XFMSTA' )
+            return
+         end if
 
 !
 !        If the multiplication of the Jacobian and velocity can cause
 !        overflow, signal an error.
 !
-         DO  I = 1, 3
+         do  i = 1, 3
 
-            DO  J = 1, 3
+            do  j = 1, 3
 
-               SQTMP = SQRT ( ABS ( JACOBI(I,J) ) ) * &
-                       SQRT ( ABS ( ISTATE(J+3) ) )
+               sqtmp = sqrt ( abs ( jacobi(i,j) ) ) * &
+                       sqrt ( abs ( istate(j+3) ) )
 
-               IF ( SQTMP .GT. TOOBIG ) THEN
+               if ( sqtmp .gt. toobig ) then
 
-                  CALL SETMSG ( 'The product of the Jacobian ' &
+                  call setmsg ( 'The product of the Jacobian ' &
                            //   'and velocity may cause numeric ' &
                            //   'overflow.' )
-                  CALL SIGERR ( 'SPICE(NUMERICOVERFLOW)' )
-                  CALL CHKOUT ( 'XFMSTA'    )
-                  RETURN
+                  call sigerr ( 'SPICE(NUMERICOVERFLOW)' )
+                  call chkout ( 'XFMSTA'    )
+                  return
 
-               END IF
+               end if
 
-            END DO
+            end do
 
-         END DO
+         end do
 
 !
 !        Transform the velocity into rectangular coordinates.
 !
-         CALL MXV ( JACOBI, ISTATE(4), IVEL )
+         call mxv ( jacobi, istate(4), ivel )
 
 
-      ELSE IF  ( ISYS .EQ. RECTAN ) THEN
+      else if  ( isys .eq. rectan ) then
 
 !
 !        If the input coordinate system is rectangular, the input
 !        position does not need to be translated into rectangular.
 !
-         CALL VEQU ( ISTATE(1), IPOS )
-         CALL VEQU ( ISTATE(4), IVEL )
+         call vequ ( istate(1), ipos )
+         call vequ ( istate(4), ivel )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'This error should never occur. ' &
+         call setmsg ( 'This error should never occur. ' &
                   //   'This is an ELSE statement. If the input ' &
                   //   'coordinate system is not rectangular, the ' &
                   //   'IF should be executed. If the input ' &
                   //   'coordinate system is rectangular, the ELSE IF ' &
                   //   'should be executed.' )
-         CALL SIGERR ( 'SPICE(BUG2)' )
-         CALL CHKOUT ( 'XFMSTA'    )
-         RETURN
+         call sigerr ( 'SPICE(BUG2)' )
+         call chkout ( 'XFMSTA'    )
+         return
 
-      END IF
+      end if
 
 !
 !     Conversion from rectangular into the output coordinates
@@ -1117,77 +1117,77 @@
 !       4)  Transform the velocity to the output coordinates using
 !           the Jacobian and the rectangular velocity IVEL.
 !
-      IF ( OSYS .NE. RECTAN ) THEN
+      if ( osys .ne. rectan ) then
 
 !
 !        From rectangular for the case when the input position is along
 !        the z-axis ...
 !
-         IF ( ( ABS(IPOS(1)) + ABS(IPOS(2)) ) .EQ. 0.D0) THEN
+         if ( ( abs(ipos(1)) + abs(ipos(2)) ) .eq. 0.d0) then
 
-            IF ( ( ABS(IVEL(1)) + ABS(IVEL(2)) ) .EQ. 0.D0 ) THEN
+            if ( ( abs(ivel(1)) + abs(ivel(2)) ) .eq. 0.d0 ) then
 !
 !              If the velocity is along the z-axis, then the velocity
 !              can be computed in the output coordinate frame even
 !              though the Jacobian is not defined.
 !
-               IF       ( OSYS .EQ. CYL )    THEN
+               if       ( osys .eq. cyl )    then
 
 !
 !                  ... to cylindrical
 !
-                  CALL VPACK  ( 0.D0, 0.D0, IVEL(3), OSTATE(4) )
+                  call vpack  ( 0.d0, 0.d0, ivel(3), ostate(4) )
 
-                  CALL RECCYL ( IPOS(1),  OSTATE(1), OSTATE(2), &
-                                OSTATE(3) )
+                  call reccyl ( ipos(1),  ostate(1), ostate(2), &
+                                ostate(3) )
 
 
-               ELSE IF  ( OSYS .EQ. LATNL )  THEN
+               else if  ( osys .eq. latnl )  then
 
 !
 !                  ... to latitudinal
 !
-                  CALL VPACK  ( IVEL(3), 0.D0, 0.D0, OSTATE(4) )
+                  call vpack  ( ivel(3), 0.d0, 0.d0, ostate(4) )
 
-                  CALL RECLAT ( IPOS(1), OSTATE(1),  OSTATE(2), &
-                                OSTATE(3) )
+                  call reclat ( ipos(1), ostate(1),  ostate(2), &
+                                ostate(3) )
 
 
-               ELSE IF  ( OSYS .EQ. SPHCL )  THEN
+               else if  ( osys .eq. sphcl )  then
 
 !
 !                  ... to spherical
 !
-                  CALL VPACK  ( IVEL(3), 0.D0, 0.D0, OSTATE(4) )
+                  call vpack  ( ivel(3), 0.d0, 0.d0, ostate(4) )
 
-                  CALL RECSPH ( IPOS(1), OSTATE(1),  OSTATE(2), &
-                                OSTATE(3) )
+                  call recsph ( ipos(1), ostate(1),  ostate(2), &
+                                ostate(3) )
 
 
-               ELSE IF  ( OSYS .EQ. GEODET ) THEN
+               else if  ( osys .eq. geodet ) then
 
 !
 !                  ... to geodetic
 !
-                  CALL VPACK  ( 0.D0, 0.D0, IVEL(3),  OSTATE(4) )
+                  call vpack  ( 0.d0, 0.d0, ivel(3),  ostate(4) )
 
-                  CALL RECGEO ( IPOS(1), RADII(1), F, OSTATE(1), &
-                                OSTATE(2), OSTATE(3) )
+                  call recgeo ( ipos(1), radii(1), f, ostate(1), &
+                                ostate(2), ostate(3) )
 
 
-               ELSE IF  ( OSYS .EQ. PLNTGR ) THEN
+               else if  ( osys .eq. plntgr ) then
 
 !
 !                  ... to planetographic
 !
-                  CALL VPACK  ( 0.D0, 0.D0, IVEL(3), OSTATE(4) )
+                  call vpack  ( 0.d0, 0.d0, ivel(3), ostate(4) )
 
-                  CALL RECPGR ( BODY, IPOS(1), RADII(1), F, OSTATE(1), &
-                                OSTATE(2), OSTATE(3) )
+                  call recpgr ( body, ipos(1), radii(1), f, ostate(1), &
+                                ostate(2), ostate(3) )
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'This error should never ' &
+                  call setmsg ( 'This error should never ' &
                        //   'occur. This is an intermediate step in ' &
                        //   'which a position and velocity along ' &
                        //   'the z-axis are converted to a ' &
@@ -1195,142 +1195,142 @@
                        //   'rectangular. The output coordinate ' &
                        //   'system is not recognized, yet was not ' &
                        //   'caught by an earlier check.' )
-                  CALL SIGERR ( 'SPICE(BUG3)' )
-                  CALL CHKOUT ( 'XFMSTA'    )
-                  RETURN
+                  call sigerr ( 'SPICE(BUG3)' )
+                  call chkout ( 'XFMSTA'    )
+                  return
 
-               END IF
+               end if
 !
 !              The output state has been calculated for the special
 !              case of the position and velocity existing along the
 !              z-axis.
 !
-               CALL CHKOUT ( 'XFMSTA' )
-               RETURN
+               call chkout ( 'XFMSTA' )
+               return
 
-            ELSE
+            else
 !
 !              The Jacobian is undefined and the velocity cannot be
 !              converted since it is not along the z-axis.
 !              Signal an error.
 !
-               CALL SETMSG ( 'Invalid input state: z axis.' )
-               CALL SIGERR ( 'SPICE(INVALIDSTATE)' )
-               CALL CHKOUT ( 'XFMSTA' )
-               RETURN
+               call setmsg ( 'Invalid input state: z axis.' )
+               call sigerr ( 'SPICE(INVALIDSTATE)' )
+               call chkout ( 'XFMSTA' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        From rectangular for cases when the input position is not along
 !        the z-axis ...
 !
-         IF       ( OSYS .EQ. CYL )    THEN
+         if       ( osys .eq. cyl )    then
 !
 !                  ... to cylindrical
 !
-            CALL DCYLDR ( IPOS(1), IPOS(2),   IPOS(3),   JACOBI    )
+            call dcyldr ( ipos(1), ipos(2),   ipos(3),   jacobi    )
 
-            CALL RECCYL ( IPOS(1), OSTATE(1), OSTATE(2), OSTATE(3) )
+            call reccyl ( ipos(1), ostate(1), ostate(2), ostate(3) )
 
-         ELSE IF  ( OSYS .EQ. LATNL )  THEN
+         else if  ( osys .eq. latnl )  then
 
 !
 !                  ... to latitudinal
 !
-            CALL DLATDR ( IPOS(1), IPOS(2),   IPOS(3),   JACOBI    )
+            call dlatdr ( ipos(1), ipos(2),   ipos(3),   jacobi    )
 
-            CALL RECLAT ( IPOS(1), OSTATE(1), OSTATE(2), OSTATE(3) )
+            call reclat ( ipos(1), ostate(1), ostate(2), ostate(3) )
 
-         ELSE IF  ( OSYS .EQ. SPHCL )  THEN
+         else if  ( osys .eq. sphcl )  then
 
 !
 !                  ... to spherical
 !
-            CALL DSPHDR ( IPOS(1), IPOS(2),   IPOS(3),   JACOBI    )
+            call dsphdr ( ipos(1), ipos(2),   ipos(3),   jacobi    )
 
-            CALL RECSPH ( IPOS(1), OSTATE(1), OSTATE(2), OSTATE(3) )
+            call recsph ( ipos(1), ostate(1), ostate(2), ostate(3) )
 
-         ELSE IF  ( OSYS .EQ. GEODET ) THEN
+         else if  ( osys .eq. geodet ) then
 
 !
 !                  ... to geodetic
 !
-            CALL DGEODR ( IPOS(1), IPOS(2),  IPOS(3), RADII(1), F, &
-                          JACOBI )
+            call dgeodr ( ipos(1), ipos(2),  ipos(3), radii(1), f, &
+                          jacobi )
 
-            CALL RECGEO ( IPOS(1), RADII(1), F, OSTATE(1), OSTATE(2), &
-                          OSTATE(3) )
+            call recgeo ( ipos(1), radii(1), f, ostate(1), ostate(2), &
+                          ostate(3) )
 
-         ELSE IF  ( OSYS .EQ. PLNTGR ) THEN
+         else if  ( osys .eq. plntgr ) then
 
 !
 !                  ... to planetographic
 !
-            CALL DPGRDR ( BODY, IPOS(1), IPOS(2), IPOS(3), RADII(1), &
-                          F,    JACOBI )
+            call dpgrdr ( body, ipos(1), ipos(2), ipos(3), radii(1), &
+                          f,    jacobi )
 
-            CALL RECPGR ( BODY, IPOS(1), RADII(1), F, OSTATE(1), &
-                          OSTATE(2), OSTATE(3) )
+            call recpgr ( body, ipos(1), radii(1), f, ostate(1), &
+                          ostate(2), ostate(3) )
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'This error should never occur. ' &
+            call setmsg ( 'This error should never occur. ' &
                      //   'This is an intermediate step in which a ' &
                      //   'state is converted to a non-rectangular ' &
                      //   'coordinate system from rectangular. The ' &
                      //   'output coordinate system is not recognized, ' &
                      //   'yet was not caught by an earlier check.' )
-            CALL SIGERR ( 'SPICE(BUG4)' )
-            CALL CHKOUT ( 'XFMSTA'    )
-            RETURN
+            call sigerr ( 'SPICE(BUG4)' )
+            call chkout ( 'XFMSTA'    )
+            return
 
-         END IF
+         end if
 
 !
 !        Many D*DR and REC* routines are not error free. Be safe and
 !        check FAILED to not use un-initialized JACOBI.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'XFMSTA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'XFMSTA' )
+            return
+         end if
 
 !
 !        If the multiplication of the Jacobian and velocity can cause
 !        overflow, signal an error.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            DO  J = 1, 3
+            do  j = 1, 3
 
-               SQTMP = SQRT ( ABS ( JACOBI(I,J) ) ) * &
-                       SQRT ( ABS ( IVEL(J)     ) )
+               sqtmp = sqrt ( abs ( jacobi(i,j) ) ) * &
+                       sqrt ( abs ( ivel(j)     ) )
 
-               IF ( SQTMP .GT. TOOBIG ) THEN
+               if ( sqtmp .gt. toobig ) then
 
-                  CALL SETMSG ( 'The product of the Jacobian ' &
+                  call setmsg ( 'The product of the Jacobian ' &
                            //   'and velocity may cause numeric ' &
                            //   'overflow.' )
-                  CALL SIGERR ( 'SPICE(NUMERICOVERFLOW)' )
-                  CALL CHKOUT ( 'XFMSTA'    )
-                  RETURN
+                  call sigerr ( 'SPICE(NUMERICOVERFLOW)' )
+                  call chkout ( 'XFMSTA'    )
+                  return
 
-               END IF
+               end if
 
-            END DO
+            end do
 
-         END DO
+         end do
 
 !
 !        Calculate the velocity in the output coordinate system.
 !
-         CALL MXV ( JACOBI, IVEL, OSTATE(4) )
+         call mxv ( jacobi, ivel, ostate(4) )
 
 
-      ELSE IF ( OSYS .EQ. RECTAN ) THEN
+      else if ( osys .eq. rectan ) then
 
 !
 !        If the output coordinate system is rectangular, the position
@@ -1338,23 +1338,23 @@
 !        the rectangular IPOS and IVEL, respectively, because the
 !        components have already been converted to rectangular.
 !
-         CALL VEQU ( IPOS, OSTATE(1) )
-         CALL VEQU ( IVEL, OSTATE(4) )
+         call vequ ( ipos, ostate(1) )
+         call vequ ( ivel, ostate(4) )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'This error should never occur. ' &
+         call setmsg ( 'This error should never occur. ' &
                   //   'This is an ELSE statement. If the output ' &
                   //   'coordinate system is not rectangular, the ' &
                   //   'IF should be executed. If the output ' &
                   //   'coordinate system is rectangular, the ELSE IF ' &
                   //   'should be executed.' )
-         CALL SIGERR ( 'SPICE(BUG5)' )
-         CALL CHKOUT ( 'XFMSTA'    )
-         RETURN
+         call sigerr ( 'SPICE(BUG5)' )
+         call chkout ( 'XFMSTA'    )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'XFMSTA' )
-      RETURN
-      END
+      call chkout ( 'XFMSTA' )
+      return
+      end

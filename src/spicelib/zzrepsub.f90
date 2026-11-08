@@ -1,6 +1,6 @@
 !$Procedure      ZZREPSUB ( Replace one substring with another )
 
-      SUBROUTINE ZZREPSUB ( IN, LEFT, RIGHT, STRING, OUT )
+      subroutine zzrepsub ( in, left, right, string, out )
 
 ! $ Abstract
 !
@@ -22,12 +22,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         IN
-      INTEGER               LEFT
-      INTEGER               RIGHT
-      CHARACTER*(*)         STRING
-      CHARACTER*(*)         OUT
+      implicit none
+      character*(*)         in
+      integer               left
+      integer               right
+      character*(*)         string
+      character*(*)         out
 
 ! $ Brief_I/O
 !
@@ -163,48 +163,48 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SUMAI
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               INLEN
-      INTEGER               STRLEN
-      INTEGER               OUTLEN
+      integer               inlen
+      integer               strlen
+      integer               outlen
 
-      INTEGER               REMAIN
-      INTEGER               USE         ( 3 )
+      integer               remain
+      integer               use         ( 3 )
 
-      INTEGER               END
-      INTEGER               NEXT
-      INTEGER               I
-      INTEGER               MYLEFT
-      INTEGER               MYRGHT
+      integer               end
+      integer               next
+      integer               i
+      integer               myleft
+      integer               myrght
 
 !
 !     Get the lengths of all the strings involved in this transaction.
 !
-      INLEN  = LEN ( IN     )
-      STRLEN = LEN ( STRING )
-      OUTLEN = LEN ( OUT    )
-      MYLEFT = MIN( INLEN+1, MAX(1, LEFT ) )
-      MYRGHT = MIN( INLEN,   MAX(0, RIGHT) )
+      inlen  = len ( in     )
+      strlen = len ( string )
+      outlen = len ( out    )
+      myleft = min( inlen+1, max(1, left ) )
+      myrght = min( inlen,   max(0, right) )
 !
 !     Reject bad inputs.
 !
-      IF ( MYLEFT .LT. 1 ) THEN
+      if ( myleft .lt. 1 ) then
 
-         MYLEFT = 1
+         myleft = 1
 
-      ELSE IF ( MYRGHT .GT. INLEN ) THEN
+      else if ( myrght .gt. inlen ) then
 
-         MYRGHT = INLEN
+         myrght = inlen
 
-      ELSE IF ( RIGHT .LT. LEFT-1 ) THEN
+      else if ( right .lt. left-1 ) then
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Consider three separate sections:
@@ -219,14 +219,14 @@
 !     REMAIN is the number of characters that will fit in the output
 !     string.
 !
-      REMAIN = OUTLEN
-      USE(1) = MIN ( REMAIN, MYLEFT - 1 )
+      remain = outlen
+      use(1) = min ( remain, myleft - 1 )
 
-      REMAIN = REMAIN - USE(1)
-      USE(2) = MIN ( REMAIN, STRLEN )
+      remain = remain - use(1)
+      use(2) = min ( remain, strlen )
 
-      REMAIN = REMAIN - USE(2)
-      USE(3) = MIN ( REMAIN, INLEN - RIGHT )
+      remain = remain - use(2)
+      use(3) = min ( remain, inlen - right )
 
 !
 !     Move the third section first. It gets moved back to front
@@ -234,51 +234,51 @@
 !     is longer than the original substring. The main thing is to
 !     avoid overwriting characters that have yet to be moved.
 !
-      END = SUMAI ( USE, 3 )
+      end = sumai ( use, 3 )
 
-      IF ( MYLEFT + STRLEN .GT. RIGHT ) THEN
+      if ( myleft + strlen .gt. right ) then
 
-         NEXT = END
+         next = end
 
-         DO I = USE(3), 1, -1
-            OUT(NEXT:NEXT) = IN(RIGHT+I:RIGHT+I)
-            NEXT           = NEXT - 1
-         END DO
+         do i = use(3), 1, -1
+            out(next:next) = in(right+i:right+i)
+            next           = next - 1
+         end do
 
-      ELSE
+      else
 
-         NEXT = MYLEFT + STRLEN
+         next = myleft + strlen
 
-         DO I = 1, USE(3)
-            OUT(NEXT:NEXT) = IN(RIGHT+I:RIGHT+I)
-            NEXT           = NEXT + 1
-         END DO
+         do i = 1, use(3)
+            out(next:next) = in(right+i:right+i)
+            next           = next + 1
+         end do
 
-      END IF
+      end if
 
 !
 !     The first two sections can be moved directly to the front of
 !     the output string.
 !
-      NEXT = 1
+      next = 1
 
-      DO I = 1, USE(1)
-         OUT(NEXT:NEXT) = IN(I:I)
-         NEXT           = NEXT + 1
-      END DO
+      do i = 1, use(1)
+         out(next:next) = in(i:i)
+         next           = next + 1
+      end do
 
-      DO I = 1, USE(2)
-         OUT(NEXT:NEXT) = STRING(I:I)
-         NEXT           = NEXT + 1
-      END DO
+      do i = 1, use(2)
+         out(next:next) = string(i:i)
+         next           = next + 1
+      end do
 
 !
 !     Pad with blanks, if the output string was not filled.
 !
-      IF ( END .LT. OUTLEN ) THEN
-         OUT(END+1: ) = ' '
-      END IF
+      if ( end .lt. outlen ) then
+         out(end+1: ) = ' '
+      end if
 
 
-      RETURN
-      END
+      return
+      end

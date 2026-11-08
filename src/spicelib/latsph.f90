@@ -1,6 +1,6 @@
 !$Procedure LATSPH ( Latitudinal to spherical coordinates )
 
-      SUBROUTINE LATSPH ( RADIUS, LON, LAT,  RHO, COLAT, SLON )
+      subroutine latsph ( radius, lon, lat,  rho, colat, slon )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RADIUS
-      DOUBLE PRECISION   LON
-      DOUBLE PRECISION   LAT
-      DOUBLE PRECISION   RHO
-      DOUBLE PRECISION   COLAT
-      DOUBLE PRECISION   SLON
+      double precision   radius
+      double precision   lon
+      double precision   lat
+      double precision   rho
+      double precision   colat
+      double precision   slon
 
 ! $ Brief_I/O
 !
@@ -423,27 +423,27 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
+      double precision      halfpi
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION TH
-      DOUBLE PRECISION PH
+      double precision th
+      double precision ph
 
 !
 !     Convert to spherical coordinates, storing the results in
 !     temporary variables
 !
-      TH = HALFPI() - LAT
-      PH = LON
+      th = halfpi() - lat
+      ph = lon
 
 !
 !     Move results to output variables
 !
-      RHO   = RADIUS
-      COLAT = TH
-      SLON  = PH
+      rho   = radius
+      colat = th
+      slon  = ph
 
-      RETURN
-      END
+      return
+      end

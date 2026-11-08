@@ -1,6 +1,6 @@
 !$Procedure ERRACT  ( Get/Set Default Error Action )
 
-      SUBROUTINE ERRACT ( OP, ACTION )
+      subroutine erract ( op, action )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)                 OP
-      CHARACTER*(*)                 ACTION
+      character*(*)                 op
+      character*(*)                 action
 
 ! $ Brief_I/O
 !
@@ -361,42 +361,42 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
 !
 !     Local Parameters
 !
 !     Define the length of an option.
 !
-      INTEGER               OPLEN
-      PARAMETER           ( OPLEN = 3 )
+      integer               oplen
+      parameter           ( oplen = 3 )
 !
 !     Define the maximum length of an action.
 !
-      INTEGER               ACTLEN
-      PARAMETER           ( ACTLEN = 7 )
+      integer               actlen
+      parameter           ( actlen = 7 )
 !
 !     Define the number of actions
 !
-      INTEGER               NUMACT
-      PARAMETER           ( NUMACT = 5 )
+      integer               numact
+      parameter           ( numact = 5 )
 !
 !     Local Variables
 !
-      CHARACTER*(OPLEN)     LOCOP
-      CHARACTER*(ACTLEN)    ACTNS (NUMACT)
-      CHARACTER*(ACTLEN)    LOCACT
+      character*(oplen)     locop
+      character*(actlen)    actns (numact)
+      character*(actlen)    locact
 
-      INTEGER               IACT
+      integer               iact
 !
 !     Saved Variables
 !
-      SAVE                  ACTNS
+      save                  actns
 
 !
 !     Initial Values:
 !
-      DATA                  ACTNS / 'ABORT  ', &
+      data                  actns / 'ABORT  ', &
                                     'REPORT ', &
                                     'RETURN ', &
                                     'IGNORE ', &
@@ -405,73 +405,73 @@
 !     Executable Code:
 !
 
-      CALL CHKIN ( 'ERRACT' )
+      call chkin ( 'ERRACT' )
 
 !
 !     We convert the input values to upper case, as needed. Note: we
 !     only check the first character of the input variable OP, as that
 !     is sufficient to distinguish 'GET' from 'SET'
 !
-      CALL LJUST ( OP,    LOCOP )
-      CALL UCASE ( LOCOP, LOCOP )
+      call ljust ( op,    locop )
+      call ucase ( locop, locop )
 
-      IF ( LOCOP .EQ. 'GET' ) THEN
+      if ( locop .eq. 'GET' ) then
 
-         CALL GETACT ( IACT )
+         call getact ( iact )
 
-         ACTION = ACTNS(IACT)
+         action = actns(iact)
 
-      ELSE IF ( LOCOP .EQ. 'SET' ) THEN
+      else if ( locop .eq. 'SET' ) then
 
-         CALL LJUST ( ACTION, LOCACT )
-         CALL UCASE ( LOCACT, LOCACT )
+         call ljust ( action, locact )
+         call ucase ( locact, locact )
 
-         IACT = ISRCHC ( LOCACT, NUMACT, ACTNS )
+         iact = isrchc ( locact, numact, actns )
 
-         IF ( IACT .GT. 0 ) THEN
+         if ( iact .gt. 0 ) then
 
-            CALL PUTACT ( IACT )
+            call putact ( iact )
 
-         ELSE
+         else
 !
 !           We have an invalid value of ACTION
 !
-            LOCACT = ACTION
+            locact = action
 
-            CALL SETMSG ( 'ERRACT: An invalid value of ACTION '  // &
+            call setmsg ( 'ERRACT: An invalid value of ACTION '  // &
                           'was supplied.  The value was:  '      // &
-                           LOCACT &
+                           locact &
                         )
 
-            CALL SIGERR ( 'SPICE(INVALIDACTION)' )
+            call sigerr ( 'SPICE(INVALIDACTION)' )
 
-         END IF
+         end if
 
 !
 !        We've set the error action, or signaled an error.
 !
 
-      ELSE
+      else
 
 !
 !        We have an invalid value of OP
 !
-         LOCOP = OP
+         locop = op
 
-         CALL SETMSG ( 'ERRACT: An invalid value of OP '  // &
+         call setmsg ( 'ERRACT: An invalid value of OP '  // &
                        'was supplied.  The value was:  '  // &
-                        LOCOP &
+                        locop &
                      )
 
-         CALL SIGERR ( 'SPICE(INVALIDOPERATION)' )
+         call sigerr ( 'SPICE(INVALIDOPERATION)' )
 
-      END IF
+      end if
 
 !
 !     We've performed the requested operation, or signaled an
 !     error.
 !
-      CALL CHKOUT ( 'ERRACT' )
-      RETURN
+      call chkout ( 'ERRACT' )
+      return
 
-      END
+      end

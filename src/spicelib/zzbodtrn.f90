@@ -1,6 +1,6 @@
 !$Procedure ZZBODTRN ( Private --- Body name and code translation )
 
-      SUBROUTINE ZZBODTRN ( NAME, CODE, FOUND, USRCTR, UPDATE )
+      subroutine zzbodtrn ( name, code, found, usrctr, update )
 
 ! $ Abstract
 !
@@ -22,16 +22,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzbodtrn.inc'
-      INCLUDE               'zzctr.inc'
+      include               'zzbodtrn.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         NAME
-      INTEGER               CODE
-      LOGICAL               FOUND
-      INTEGER               USRCTR    ( CTRSIZ )
-      LOGICAL               UPDATE
+      character*(*)         name
+      integer               code
+      logical               found
+      integer               usrctr    ( ctrsiz )
+      logical               update
 
 ! $ Brief_I/O
 !
@@ -651,8 +651,8 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
@@ -661,15 +661,15 @@
 !
 !     Length of watched POOL keywords.
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 !
 !     Lower bound of the built-in/BODDEF and kernel-defined hash
 !     collision list arrays.
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
 
 !
@@ -681,10 +681,10 @@
 !     code lists storing built-in/BODDEF name-code mappings. DEFSIZ is
 !     the current size of the lists
 !
-      CHARACTER*(MAXL)      DEFNAM  ( MAXE )
-      CHARACTER*(MAXL)      DEFNOR  ( MAXE )
-      INTEGER               DEFCOD  ( MAXE )
-      INTEGER               DEFSIZ
+      character*(maxl)      defnam  ( maxe )
+      character*(maxl)      defnor  ( maxe )
+      integer               defcod  ( maxe )
+      integer               defsiz
 
 !
 !     Name-based hash for built-in/BODDEF bodies. DNMLST, DNMPOL, and
@@ -692,10 +692,10 @@
 !     body name, normalized name, and ID in the arrays DEFNAM, DEFNOR,
 !     DEFCOD.
 !
-      INTEGER               DNMLST  (          MAXE )
-      INTEGER               DNMPOL  ( LBPOOL : MAXE )
-      CHARACTER*(MAXL)      DNMNMS  (          MAXE )
-      INTEGER               DNMIDX  (          MAXE )
+      integer               dnmlst  (          maxe )
+      integer               dnmpol  ( lbpool : maxe )
+      character*(maxl)      dnmnms  (          maxe )
+      integer               dnmidx  (          maxe )
 
 !
 !     ID-based hash for built-in/BODDEF bodies. DIDLST, DIDPOL, and
@@ -703,20 +703,20 @@
 !     body name, normalized name, and ID in the arrays DEFNAM, DEFNOR,
 !     DEFCOD.
 !
-      INTEGER               DIDLST  (          MAXE )
-      INTEGER               DIDPOL  ( LBPOOL : MAXE )
-      INTEGER               DIDIDS  (          MAXE )
-      INTEGER               DIDIDX  (          MAXE )
+      integer               didlst  (          maxe )
+      integer               didpol  ( lbpool : maxe )
+      integer               didids  (          maxe )
+      integer               dididx  (          maxe )
 
 !
 !     KERNAM, KERNOR, and KERCOD are the name, normalized name, and ID
 !     code lists storing kernel POOL name-code mappings. KERSIZ is the
 !     current size of the lists
 !
-      CHARACTER*(MAXL)      KERNAM  ( NROOM )
-      CHARACTER*(MAXL)      KERNOR  ( NROOM )
-      INTEGER               KERCOD  ( NROOM )
-      INTEGER               KERSIZ
+      character*(maxl)      kernam  ( nroom )
+      character*(maxl)      kernor  ( nroom )
+      integer               kercod  ( nroom )
+      integer               kersiz
 
 !
 !     Name-based hash for kernel POOL bodies. KNMLST, KNMPOL, and
@@ -724,10 +724,10 @@
 !     body name, normalized name, and ID in the arrays KERNAM, KERNOR,
 !     KERCOD.
 !
-      INTEGER               KNMLST  (          NROOM )
-      INTEGER               KNMPOL  ( LBPOOL : NROOM )
-      CHARACTER*(MAXL)      KNMNMS  (          NROOM )
-      INTEGER               KNMIDX  (          NROOM )
+      integer               knmlst  (          nroom )
+      integer               knmpol  ( lbpool : nroom )
+      character*(maxl)      knmnms  (          nroom )
+      integer               knmidx  (          nroom )
 
 !
 !     ID-based hash for kernel POOL bodies. KIDLST, KIDPOL, and KIDIDS
@@ -735,83 +735,83 @@
 !     name, normalized name, and ID in the arrays KERNAM, KERNOR,
 !     KERCOD.
 !
-      INTEGER               KIDLST  (          NROOM )
-      INTEGER               KIDPOL  ( LBPOOL : NROOM )
-      INTEGER               KIDIDS  (          NROOM )
-      INTEGER               KIDIDX  (          NROOM )
+      integer               kidlst  (          nroom )
+      integer               kidpol  ( lbpool : nroom )
+      integer               kidids  (          nroom )
+      integer               kididx  (          nroom )
 
 !
 !     ZZBODTRN state counter and POOL state counter.
 !
-      INTEGER               SUBCTR ( CTRSIZ )
-      INTEGER               PULCTR ( CTRSIZ )
+      integer               subctr ( ctrsiz )
+      integer               pulctr ( ctrsiz )
 
 !
 !     Flag indicating whether the built-in list was altered by BODDEF
 !     calls.
 !
-      LOGICAL               BODCHG
+      logical               bodchg
 
 !
 !     Flag indicating whether valid kernel POOL defined mappings
 !     are present in the KERNAM, KERNOR, and KERCOD lists.
 !
-      LOGICAL               EXTKER
+      logical               extker
 
 !
 !     Flag indicating whether valid kernel POOL defined mappings
 !     were successfully fetched from the POOL.
 !
-      LOGICAL               NODATA
+      logical               nodata
 
 !
 !     Other variables.
 !
-      CHARACTER*(MAXL)      TMPNAM
-      CHARACTER*(WDSIZE)    WNAMES  ( 2 )
+      character*(maxl)      tmpnam
+      character*(wdsize)    wnames  ( 2 )
 
-      INTEGER               CODIDX
-      INTEGER               I
-      INTEGER               INDEX
-      INTEGER               J
-      INTEGER               NWATCH
+      integer               codidx
+      integer               i
+      integer               index
+      integer               j
+      integer               nwatch
 
-      LOGICAL               FIRST
-      LOGICAL               LUPDTE
+      logical               first
+      logical               lupdte
 
 !
 !     Save all variables.
 !
-      SAVE
+      save
 
 !
 !     Data statements.
 !
-      DATA BODCHG            / .FALSE. /
-      DATA FIRST             / .TRUE.  /
-      DATA EXTKER            / .FALSE. /
-      DATA NODATA            / .TRUE.  /
-      DATA NWATCH            / 2 /
-      DATA WNAMES            / 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' /
+      data bodchg            / .false. /
+      data first             / .true.  /
+      data extker            / .false. /
+      data nodata            / .true.  /
+      data nwatch            / 2 /
+      data wnames            / 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' /
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'ZZBODTRN'          )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'ZZBODTRN'          )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin  ( 'ZZBODTRN'          )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'ZZBODTRN'          )
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure ZZBODN2C ( Private --- Body name to code )
 
-      ENTRY ZZBODN2C ( NAME, CODE, FOUND )
+      entry zzbodn2c ( name, code, found )
 
 ! $ Abstract
 !
@@ -1021,23 +1021,23 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODN2C' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODN2C' )
+      end if
 
 !
 !     Assume we will not find the code we seek.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     On the first pass through this entry point, initialize the
 !     built-in arrays, set the kernel pool watchers, and state
 !     counters.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters. Set ZZBODTRN state counter, for
@@ -1045,49 +1045,49 @@
 !        POOL counter, for which this umbrella is the user, to user
 !        values.
 !
-         CALL ZZCTRSIN ( SUBCTR )
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctrsin ( subctr )
+         call zzctruin ( pulctr )
 
 !
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code-name list.
 !
-         CALL ZZBODGET ( MAXE, DEFNAM, DEFNOR, DEFCOD, DEFSIZ )
+         call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODN2C' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODN2C' )
+            return
+         end if
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                         DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                         DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+         call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                         dnmlst, dnmpol, dnmnms, dnmidx, &
+                         didlst, didpol, didids, dididx  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODN2C' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODN2C' )
+            return
+         end if
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-         CALL SWPOOL ( 'ZZBODTRN', NWATCH, WNAMES )
+         call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODN2C' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODN2C' )
+            return
+         end if
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Check for updates to the kernel pool variables. Note: the first
@@ -1095,83 +1095,83 @@
 !     LUPDTE.  This ensures that any initial assignments are properly
 !     processed.
 !
-      CALL ZZCVPOOL ( 'ZZBODTRN', PULCTR, LUPDTE )
+      call zzcvpool ( 'ZZBODTRN', pulctr, lupdte )
 
-      IF ( LUPDTE .OR. NODATA ) THEN
+      if ( lupdte .or. nodata ) then
 
 !
 !        Conservatively increment the ZZBODTRN state counter
 !        in expectation of successful update.
 !
-         CALL ZZCTRINC ( SUBCTR )
+         call zzctrinc ( subctr )
 
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         CALL ZZBODKER ( KERNAM, KERNOR, KERCOD, KERSIZ, EXTKER, &
-                         KNMLST, KNMPOL, KNMNMS, KNMIDX, &
-                         KIDLST, KIDPOL, KIDIDS, KIDIDX  )
+         call zzbodker ( kernam, kernor, kercod, kersiz, extker, &
+                         knmlst, knmpol, knmnms, knmidx, &
+                         kidlst, kidpol, kidids, kididx  )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            CALL CHKOUT ( 'ZZBODN2C' )
-            RETURN
+            call chkout ( 'ZZBODN2C' )
+            return
 
-         END IF
+         end if
 
-         NODATA = .FALSE.
+         nodata = .false.
 
-      END IF
+      end if
 
 !
 !     Normalize the input argument NAME. We will look this normalized
 !     name up in the built-in and kernel pool names hashes.
 !
-      CALL LJUCRS ( 1, NAME, TMPNAM )
+      call ljucrs ( 1, name, tmpnam )
 
 !
 !     If necessary, first examine the contents of the kernel pool
 !     name-code mapping list.
 !
-      IF ( EXTKER ) THEN
+      if ( extker ) then
 
 !
 !        Check if this name is in the kernel pool names hash.
 !
-         CALL ZZHSCCHK ( KNMLST, KNMPOL, KNMNMS, TMPNAM, I )
+         call zzhscchk ( knmlst, knmpol, knmnms, tmpnam, i )
 
-         IF ( I .NE. 0 ) THEN
-            CODE  = KERCOD( KNMIDX( I ) )
-            FOUND = .TRUE.
-            CALL CHKOUT ( 'ZZBODN2C' )
-            RETURN
-         END IF
+         if ( i .ne. 0 ) then
+            code  = kercod( knmidx( i ) )
+            found = .true.
+            call chkout ( 'ZZBODN2C' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     If we reach here, we did not find this name in the kernel pool
 !     names hash. Check the built-in names hash.
 !
-      CALL ZZHSCCHK ( DNMLST, DNMPOL, DNMNMS, TMPNAM, I )
+      call zzhscchk ( dnmlst, dnmpol, dnmnms, tmpnam, i )
 
-      IF ( I .NE. 0 ) THEN
+      if ( i .ne. 0 ) then
 
-         CODE  = DEFCOD( DNMIDX( I ) )
-         FOUND = .TRUE.
+         code  = defcod( dnmidx( i ) )
+         found = .true.
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZBODN2C' )
-      RETURN
+      call chkout ( 'ZZBODN2C' )
+      return
 
 
 
 !$Procedure ZZBODC2N ( Private --- Body code to name )
 
-      ENTRY ZZBODC2N ( CODE, NAME, FOUND )
+      entry zzbodc2n ( code, name, found )
 
 ! $ Abstract
 !
@@ -1380,23 +1380,23 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODC2N' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODC2N' )
+      end if
 
 !
 !     Assume we will not find the name we seek.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     On the first pass through this entry point, initialize the
 !     built-in arrays, set the kernel pool watchers, and state
 !     counters.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters. Set ZZBODTRN state counter, for
@@ -1404,49 +1404,49 @@
 !        POOL counter, for which this umbrella is the user, to user
 !        values.
 !
-         CALL ZZCTRSIN ( SUBCTR )
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctrsin ( subctr )
+         call zzctruin ( pulctr )
 
 !
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         CALL ZZBODGET ( MAXE, DEFNAM, DEFNOR, DEFCOD, DEFSIZ )
+         call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODC2N' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODC2N' )
+            return
+         end if
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                         DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                         DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+         call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                         dnmlst, dnmpol, dnmnms, dnmidx, &
+                         didlst, didpol, didids, dididx  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODC2N' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODC2N' )
+            return
+         end if
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-         CALL SWPOOL ( 'ZZBODTRN', NWATCH, WNAMES )
+         call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODC2N' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODC2N' )
+            return
+         end if
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Check for updates to the kernel pool variables. Note: the first
@@ -1454,78 +1454,78 @@
 !     LUPDTE. This ensures that any initial assignments are properly
 !     processed.
 !
-      CALL ZZCVPOOL ( 'ZZBODTRN', PULCTR, LUPDTE )
+      call zzcvpool ( 'ZZBODTRN', pulctr, lupdte )
 
-      IF ( LUPDTE .OR. NODATA ) THEN
+      if ( lupdte .or. nodata ) then
 
 !
 !        Conservatively increment the ZZBODTRN state counter
 !        in expectation of successful update.
 !
-         CALL ZZCTRINC ( SUBCTR )
+         call zzctrinc ( subctr )
 
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         CALL ZZBODKER ( KERNAM, KERNOR, KERCOD, KERSIZ, EXTKER, &
-                         KNMLST, KNMPOL, KNMNMS, KNMIDX, &
-                         KIDLST, KIDPOL, KIDIDS, KIDIDX  )
+         call zzbodker ( kernam, kernor, kercod, kersiz, extker, &
+                         knmlst, knmpol, knmnms, knmidx, &
+                         kidlst, kidpol, kidids, kididx  )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            CALL CHKOUT ( 'ZZBODC2N' )
-            RETURN
+            call chkout ( 'ZZBODC2N' )
+            return
 
-         END IF
+         end if
 
-         NODATA = .FALSE.
+         nodata = .false.
 
-      END IF
+      end if
 
 !
 !     If necessary, first examine the contents of the kernel pool
 !     name-code mapping list.
 !
-      IF ( EXTKER ) THEN
+      if ( extker ) then
 
 !
 !        Check if this code is in the kernel pool codes hash.
 !
-         CALL ZZHSICHK ( KIDLST, KIDPOL, KIDIDS, CODE, I )
+         call zzhsichk ( kidlst, kidpol, kidids, code, i )
 
-         IF ( I .NE. 0 ) THEN
-            NAME  = KERNAM(KIDIDX(I))
-            FOUND = .TRUE.
-            CALL CHKOUT ( 'ZZBODC2N' )
-            RETURN
-         END IF
+         if ( i .ne. 0 ) then
+            name  = kernam(kididx(i))
+            found = .true.
+            call chkout ( 'ZZBODC2N' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     If we reach here, we did not find this code in the kernel pool
 !     codes hash. Check the built-in codes hash.
 !
-      CALL ZZHSICHK ( DIDLST, DIDPOL, DIDIDS, CODE, I )
+      call zzhsichk ( didlst, didpol, didids, code, i )
 
 !
 !     If we find a match, verify that it is not masked by a kernel pool
 !     entry before returning.
 !
-      IF ( I .NE. 0 ) THEN
+      if ( i .ne. 0 ) then
 
-         IF ( EXTKER ) THEN
+         if ( extker ) then
 
 !
 !           Only bother performing this check if there are actually
 !           mappings present in the kernel pool lists.
 !
-            CALL ZZHSCCHK ( KNMLST, KNMPOL, KNMNMS, &
-                                            DEFNOR(DIDIDX(I)), J )
+            call zzhscchk ( knmlst, knmpol, knmnms, &
+                                            defnor(dididx(i)), j )
 
-            IF ( J .NE. 0 ) THEN
+            if ( j .ne. 0 ) then
 
 !
 !              This name is defined in the kernel pool mappings. Set
@@ -1533,40 +1533,40 @@
 !              have higher precedence than any entries in the built-in
 !              mapping list.
 !
-               FOUND = .FALSE.
+               found = .false.
 
-            ELSE
+            else
 
 !
 !              No match for this name in the kernel pool mapping list.
 !              Return the name.
 !
-               NAME  = DEFNAM(DIDIDX(I))
-               FOUND = .TRUE.
+               name  = defnam(dididx(i))
+               found = .true.
 
-            END IF
+            end if
 
-         ELSE
+         else
 
 !
 !           No kernel pool mappings were defined, simply return
 !           return the name.
 !
-            NAME  = DEFNAM(DIDIDX(I))
-            FOUND = .TRUE.
+            name  = defnam(dididx(i))
+            found = .true.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZBODC2N' )
-      RETURN
+      call chkout ( 'ZZBODC2N' )
+      return
 
 
 
 !$Procedure ZZBODDEF ( Private --- Body name/code definition )
 
-      ENTRY ZZBODDEF ( NAME, CODE )
+      entry zzboddef ( name, code )
 
 ! $ Abstract
 !
@@ -1824,18 +1824,18 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODDEF' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODDEF' )
+      end if
 
 !
 !     On the first pass through this entry point, initialize the
 !     built-in arrays, set the kernel pool watchers, and state
 !     counters.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters. Set ZZBODTRN state counter, for
@@ -1843,87 +1843,87 @@
 !        POOL counter, for which this umbrella is the user, to user
 !        values.
 !
-         CALL ZZCTRSIN ( SUBCTR )
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctrsin ( subctr )
+         call zzctruin ( pulctr )
 
 !
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         CALL ZZBODGET ( MAXE, DEFNAM, DEFNOR, DEFCOD, DEFSIZ )
+         call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODDEF' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODDEF' )
+            return
+         end if
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                         DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                         DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+         call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                         dnmlst, dnmpol, dnmnms, dnmidx, &
+                         didlst, didpol, didids, dididx  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODDEF' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODDEF' )
+            return
+         end if
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-         CALL SWPOOL ( 'ZZBODTRN', NWATCH, WNAMES )
+         call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODDEF' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODDEF' )
+            return
+         end if
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Begin by verifying that the user is not attempting to assign a
 !     blank string a code.
 !
-      IF ( NAME .EQ. ' ' ) THEN
+      if ( name .eq. ' ' ) then
 
-         CALL SETMSG ( 'An attempt to assign the code, #, to ' &
+         call setmsg ( 'An attempt to assign the code, #, to ' &
          //            'a blank string was made.  Check loaded ' &
          //            'text kernels for a blank string in ' &
          //            'the NAIF_BODY_NAME array.'               )
-         CALL ERRINT ( '#', I                                    )
-         CALL SIGERR ( 'SPICE(BLANKNAMEASSIGNED)'                )
-         CALL CHKOUT ( 'ZZBODDEF'                                )
-         RETURN
+         call errint ( '#', i                                    )
+         call sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
+         call chkout ( 'ZZBODDEF'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Conservatively increment the ZZBODTRN state counter in
 !     expectation of successful addition.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Get normalized form of the input NAME.
 !
-      CALL LJUCRS ( 1, NAME, TMPNAM )
+      call ljucrs ( 1, name, tmpnam )
 
 !
 !     Determine if we are going to replace an entry currently present
 !     in the DEF* lists.
 !
-      CALL ZZHSCCHK ( DNMLST, DNMPOL, DNMNMS, TMPNAM, I )
+      call zzhscchk ( dnmlst, dnmpol, dnmnms, tmpnam, i )
 
-      IF ( I .NE. 0 ) THEN
+      if ( i .ne. 0 ) then
 
-         INDEX = DNMIDX( I )
+         index = dnmidx( i )
 
 !
 !        We are going to replace an existing entry.  There are
@@ -1943,31 +1943,31 @@
 !
 !        See if we should handle 1) first.
 !
-         CALL ZZHSICHK ( DIDLST, DIDPOL, DIDIDS, CODE, I )
+         call zzhsichk ( didlst, didpol, didids, code, i )
 
-         IF ( I .NE. 0 ) THEN
-            CODIDX = DIDIDX( I )
-         ELSE
-            CODIDX = 0
-         END IF
+         if ( i .ne. 0 ) then
+            codidx = dididx( i )
+         else
+            codidx = 0
+         end if
 
 !
 !        If CODIDX matches INDEX, then we simply have to replace the
 !        entry in DEFNAM and return.
 !
-         IF ( CODIDX .EQ. INDEX ) THEN
+         if ( codidx .eq. index ) then
 
 !
 !           We altered the built-in body list. Set BODCHG to .TRUE.
 !
-            BODCHG           = .TRUE.
+            bodchg           = .true.
 
-            DEFNAM ( INDEX ) = NAME
+            defnam ( index ) = name
 
-            CALL CHKOUT ( 'ZZBODDEF' )
-            RETURN
+            call chkout ( 'ZZBODDEF' )
+            return
 
-         END IF
+         end if
 
 !
 !        At this point we have to replace all of the values for the
@@ -1975,72 +1975,72 @@
 !        DEFCOD. This will require recomputing the hashes. First
 !        compress out the existing entry.
 !
-         DO I = INDEX+1, DEFSIZ
+         do i = index+1, defsiz
 
-            DEFNAM( I-1 ) = DEFNAM( I )
-            DEFNOR( I-1 ) = DEFNOR( I )
-            DEFCOD( I-1 ) = DEFCOD( I )
+            defnam( i-1 ) = defnam( i )
+            defnor( i-1 ) = defnor( i )
+            defcod( i-1 ) = defcod( i )
 
-         END DO
+         end do
 
-      ELSE
+      else
 
 !
 !        We need to add this entry to the list.  See if there
 !        is room; signal an error and return if there is not.
 !
-         IF ( DEFSIZ .GE. MAXE ) THEN
+         if ( defsiz .ge. maxe ) then
 
-            CALL SETMSG ( 'There is no room available for adding ' &
+            call setmsg ( 'There is no room available for adding ' &
             //            '''#''  to the list of name/code pairs. ' &
             //            'The number of names that can be ' &
             //            'supported is #.  This number has been ' &
             //            'reached. '                               )
-            CALL ERRCH  ( '#', NAME                                 )
-            CALL ERRINT ( '#', DEFSIZ                               )
-            CALL SIGERR ( 'SPICE(TOOMANYPAIRS)'                     )
-            CALL CHKOUT ( 'ZZBODDEF'                                )
-            RETURN
+            call errch  ( '#', name                                 )
+            call errint ( '#', defsiz                               )
+            call sigerr ( 'SPICE(TOOMANYPAIRS)'                     )
+            call chkout ( 'ZZBODDEF'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        If we reach here, then there is room in the list. Increase
 !        it's size counter.
 !
-         DEFSIZ = DEFSIZ + 1
+         defsiz = defsiz + 1
 
-      END IF
+      end if
 
 !
 !     We are changing the body list, inform ZZBODRST by setting BODCHG
 !     to .TRUE.
 !
-      BODCHG = .TRUE.
+      bodchg = .true.
 
 !
 !     Now, we need to add the new entry on to the end of the
 !     DEFNAM, DEFNOR, and DEFCOD lists.
 !
-      DEFNAM ( DEFSIZ ) = NAME
-      DEFNOR ( DEFSIZ ) = TMPNAM
-      DEFCOD ( DEFSIZ ) = CODE
+      defnam ( defsiz ) = name
+      defnor ( defsiz ) = tmpnam
+      defcod ( defsiz ) = code
 
 !
 !     Reset the built-in/BODDEF hashes.
 !
-      CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                      DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                      DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+      call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                      dnmlst, dnmpol, dnmnms, dnmidx, &
+                      didlst, didpol, didids, dididx  )
 
-      CALL CHKOUT ( 'ZZBODDEF' )
-      RETURN
+      call chkout ( 'ZZBODDEF' )
+      return
 
 
 
 !$Procedure ZZBODKIK ( Private --- Run the kernel read block )
 
-      ENTRY ZZBODKIK ( )
+      entry zzbodkik ( )
 
 ! $ Abstract
 !
@@ -2154,18 +2154,18 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODKIK' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODKIK' )
+      end if
 
 !
 !     On the first pass through this entry point, initialize the
 !     built-in arrays, set the kernel pool watchers, and state
 !     counters.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters. Set ZZBODTRN state counter, for
@@ -2173,49 +2173,49 @@
 !        POOL counter, for which this umbrella is the user, to user
 !        values.
 !
-         CALL ZZCTRSIN ( SUBCTR )
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctrsin ( subctr )
+         call zzctruin ( pulctr )
 
 !
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         CALL ZZBODGET ( MAXE, DEFNAM, DEFNOR, DEFCOD, DEFSIZ )
+         call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODKIK' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODKIK' )
+            return
+         end if
 
 !
 !        Populate the initial built-in/BODDEF hashes.
 !
-         CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                         DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                         DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+         call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                         dnmlst, dnmpol, dnmnms, dnmidx, &
+                         didlst, didpol, didids, dididx  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODKIK' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODKIK' )
+            return
+         end if
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-         CALL SWPOOL ( 'ZZBODTRN', NWATCH, WNAMES )
+         call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODKIK' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODKIK' )
+            return
+         end if
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 
 !
@@ -2224,44 +2224,44 @@
 !     LUPDTE. This ensures that any initial assignments are properly
 !     processed.
 !
-      CALL ZZCVPOOL ( 'ZZBODTRN', PULCTR, LUPDTE )
+      call zzcvpool ( 'ZZBODTRN', pulctr, lupdte )
 
-      IF ( LUPDTE .OR. NODATA ) THEN
+      if ( lupdte .or. nodata ) then
 
 !
 !        Conservatively increment the ZZBODTRN state counter
 !        in expectation of successful update.
 !
-         CALL ZZCTRINC ( SUBCTR )
+         call zzctrinc ( subctr )
 
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         CALL ZZBODKER ( KERNAM, KERNOR, KERCOD, KERSIZ, EXTKER, &
-                         KNMLST, KNMPOL, KNMNMS, KNMIDX, &
-                         KIDLST, KIDPOL, KIDIDS, KIDIDX  )
+         call zzbodker ( kernam, kernor, kercod, kersiz, extker, &
+                         knmlst, knmpol, knmnms, knmidx, &
+                         kidlst, kidpol, kidids, kididx  )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            CALL CHKOUT ( 'ZZBODKIK' )
-            RETURN
+            call chkout ( 'ZZBODKIK' )
+            return
 
-         END IF
+         end if
 
-         NODATA = .FALSE.
+         nodata = .false.
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZBODKIK' )
-      RETURN
+      call chkout ( 'ZZBODKIK' )
+      return
 
 
 
 !$Procedure ZZBODRST ( Private --- Body List Reset )
 
-      ENTRY ZZBODRST ( )
+      entry zzbodrst ( )
 
 ! $ Abstract
 !
@@ -2350,18 +2350,18 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODRST' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODRST' )
+      end if
 
 !
 !     On the first pass through this entry point, initialize the
 !     built-in arrays, set the kernel pool watchers, and state
 !     counters.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters. Set ZZBODTRN state counter, for
@@ -2369,62 +2369,62 @@
 !        POOL counter, for which this umbrella is the user, to user
 !        values.
 !
-         CALL ZZCTRSIN ( SUBCTR )
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctrsin ( subctr )
+         call zzctruin ( pulctr )
 
 !
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         CALL ZZBODGET ( MAXE, DEFNAM, DEFNOR, DEFCOD, DEFSIZ )
+         call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODRST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODRST' )
+            return
+         end if
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                         DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                         DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+         call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                         dnmlst, dnmpol, dnmnms, dnmidx, &
+                         didlst, didpol, didids, dididx  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODRST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODRST' )
+            return
+         end if
 
 !
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-         CALL SWPOOL ( 'ZZBODTRN', NWATCH, WNAMES )
+         call swpool ( 'ZZBODTRN', nwatch, wnames )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZBODRST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZBODRST' )
+            return
+         end if
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     See if the body list needs to be reset.
 !
-      IF ( BODCHG ) THEN
+      if ( bodchg ) then
 
-         BODCHG = .FALSE.
+         bodchg = .false.
 
 !
 !        Conservatively increment the ZZBODTRN state counter
 !        in expectation of successful update.
 !
-         CALL ZZCTRINC ( SUBCTR )
+         call zzctrinc ( subctr )
 
 !
 !        Fetch the initial body name-code mapping list. Note: we need
@@ -2432,25 +2432,25 @@
 !        to the improper specification of MAXE it would have been
 !        signaled already to the user.
 !
-         CALL ZZBODGET ( MAXE, DEFNAM, DEFNOR, DEFCOD, DEFSIZ )
+         call zzbodget ( maxe, defnam, defnor, defcod, defsiz )
 
 !
 !        Reset the built-in/BODDEF hashes.
 !
-         CALL ZZBODINI ( DEFNAM, DEFNOR, DEFCOD, DEFSIZ, MAXE, &
-                         DNMLST, DNMPOL, DNMNMS, DNMIDX, &
-                         DIDLST, DIDPOL, DIDIDS, DIDIDX  )
+         call zzbodini ( defnam, defnor, defcod, defsiz, maxe, &
+                         dnmlst, dnmpol, dnmnms, dnmidx, &
+                         didlst, didpol, didids, dididx  )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZBODRST' )
-      RETURN
+      call chkout ( 'ZZBODRST' )
+      return
 
 
 
 !$Procedure ZZBCTRCK ( Private -- check/update user's ZZBODTRN counter )
 
-      ENTRY ZZBCTRCK ( USRCTR, UPDATE )
+      entry zzbctrck ( usrctr, update )
 
 ! $ Abstract
 !
@@ -2616,56 +2616,56 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Check for updates to the kernel pool variables.
 !
-      CALL ZZCVPOOL ( 'ZZBODTRN', PULCTR, LUPDTE )
+      call zzcvpool ( 'ZZBODTRN', pulctr, lupdte )
 
-      IF ( LUPDTE .OR. NODATA ) THEN
+      if ( lupdte .or. nodata ) then
 
 !
 !        Check in because ZZBODKER can fail.
 !
-         CALL CHKIN ( 'ZZBCTRCK' )
+         call chkin ( 'ZZBCTRCK' )
 
 !
 !        Conservatively increment the ZZBODTRN state counter in
 !        expectation of successful update.
 !
-         CALL ZZCTRINC ( SUBCTR )
+         call zzctrinc ( subctr )
 
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         CALL ZZBODKER ( KERNAM, KERNOR, KERCOD, KERSIZ, EXTKER, &
-                         KNMLST, KNMPOL, KNMNMS, KNMIDX, &
-                         KIDLST, KIDPOL, KIDIDS, KIDIDX  )
+         call zzbodker ( kernam, kernor, kercod, kersiz, extker, &
+                         knmlst, knmpol, knmnms, knmidx, &
+                         kidlst, kidpol, kidids, kididx  )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            CALL CHKOUT ( 'ZZBCTRCK' )
-            RETURN
+            call chkout ( 'ZZBCTRCK' )
+            return
 
-         END IF
+         end if
 
-         NODATA = .FALSE.
+         nodata = .false.
 
-         CALL CHKOUT ( 'ZZBCTRCK' )
+         call chkout ( 'ZZBCTRCK' )
 
-      END IF
+      end if
 
 !
 !     Check the input counter against the ZZBODTRN counter.
 !
-      CALL ZZCTRCHK ( SUBCTR, USRCTR, UPDATE )
+      call zzctrchk ( subctr, usrctr, update )
 
-      RETURN
+      return
 
-      END
+      end
 

@@ -1,6 +1,6 @@
 !$Procedure       ZZVSTRNG ( Virtual String )
 
-      SUBROUTINE ZZVSTRNG( X, FILL, FROM, TO, RND, EXPONT, SUBSTR, DID )
+      subroutine zzvstrng( x, fill, from, to, rnd, expont, substr, did )
 
 ! $ Abstract
 !
@@ -20,15 +20,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      X
-      CHARACTER*(1)         FILL
-      INTEGER               FROM
-      INTEGER               TO
-      LOGICAL               RND
-      INTEGER               EXPONT
-      CHARACTER*(*)         SUBSTR
-      LOGICAL               DID
+      implicit none
+      double precision      x
+      character*(1)         fill
+      integer               from
+      integer               to
+      logical               rnd
+      integer               expont
+      character*(*)         substr
+      logical               did
 
 ! $ Brief_I/O
 !
@@ -180,63 +180,63 @@
 !
 
 
-      INTEGER               MAXSIG
-      PARAMETER           ( MAXSIG = 14 )
+      integer               maxsig
+      parameter           ( maxsig = 14 )
 
-      INTEGER               ESGN
-      PARAMETER           ( ESGN   = MAXSIG + 4 )
+      integer               esgn
+      parameter           ( esgn   = maxsig + 4 )
 
-      INTEGER               EFST
-      PARAMETER           ( EFST   = ESGN + 1 )
+      integer               efst
+      parameter           ( efst   = esgn + 1 )
 
-      INTEGER               ESCD
-      PARAMETER           ( ESCD   = EFST + 1 )
+      integer               escd
+      parameter           ( escd   = efst + 1 )
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = MAXSIG + 16 )
+      integer               wdsize
+      parameter           ( wdsize = maxsig + 16 )
 
-      LOGICAL               YES
-      PARAMETER           ( YES = .TRUE. )
+      logical               yes
+      parameter           ( yes = .true. )
 
-      LOGICAL               NO
-      PARAMETER           ( NO  = .FALSE. )
+      logical               no
+      parameter           ( no  = .false. )
 
 
 
-      CHARACTER*(WDSIZE)    STRING
-      CHARACTER*(1)         MYFILL
-      CHARACTER*(1)         LETTER
+      character*(wdsize)    string
+      character*(1)         myfill
+      character*(1)         letter
 
-      INTEGER               BLANK
-      INTEGER               CODE
-      INTEGER               CODE0
-      INTEGER               EXP
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LSUB
-      INTEGER               SLOT
-      INTEGER               VALUE
+      integer               blank
+      integer               code
+      integer               code0
+      integer               exp
+      integer               i
+      integer               j
+      integer               lsub
+      integer               slot
+      integer               value
 
-      LOGICAL               MINUS
-      LOGICAL               INCR
+      logical               minus
+      logical               incr
 
-      SAVE
+      save
 !
 !     Although we don't anticipate ever needing these values
 !     we set some initial values for EXP and STRING.
 !
-      DATA                  STRING / ' 0.0000000000000E+00 '/
-      DATA                  EXP    /   0   /
-      DATA                  MYFILL / ' '   /
+      data                  string / ' 0.0000000000000E+00 '/
+      data                  exp    /   0   /
+      data                  myfill / ' '   /
 !
 !     This routine doesn't do anything.
 !
-      RETURN
+      return
 
 
 !$Procedure      ZZVSTSTR ( Set Virtual String)
 
-      ENTRY ZZVSTSTR ( X, FILL, EXPONT )
+      entry zzvststr ( x, fill, expont )
 
 ! $ Abstract
 !
@@ -327,9 +327,9 @@
 !
 !-&
 
-      MYFILL = FILL
+      myfill = fill
 
-      CALL DPSTR ( X, MAXSIG, STRING )
+      call dpstr ( x, maxsig, string )
 
 !
 !     Parse the exponent, string looks like the pattern presented
@@ -347,37 +347,37 @@
 !                      ESGN = MAXSIG + 4
 !
 
-      CODE0 = ICHAR ( '0' )
-      BLANK = ICHAR ( ' ' )
+      code0 = ichar ( '0' )
+      blank = ichar ( ' ' )
 
 
-      MINUS = ICHAR( STRING(ESGN:ESGN) ).EQ. ICHAR('-')
-      CODE  = ICHAR( STRING(EFST:EFST) )
-      EXP   = CODE - CODE0
+      minus = ichar( string(esgn:esgn) ).eq. ichar('-')
+      code  = ichar( string(efst:efst) )
+      exp   = code - code0
 
-      I     = ESCD
-      CODE  = ICHAR( STRING(I:I) )
+      i     = escd
+      code  = ichar( string(i:i) )
 
-      DO WHILE ( CODE .NE. BLANK )
+      do while ( code .ne. blank )
 
-         EXP  = EXP * 10 + ( CODE - CODE0 )
-         I    = I + 1
-         CODE = ICHAR( STRING(I:I) )
+         exp  = exp * 10 + ( code - code0 )
+         i    = i + 1
+         code = ichar( string(i:i) )
 
-      END DO
+      end do
 
-      IF ( MINUS ) THEN
-         EXP = -EXP
-      END IF
+      if ( minus ) then
+         exp = -exp
+      end if
 
-      EXPONT = EXP
+      expont = exp
 
-      RETURN
+      return
 
 
 !$Procedure      ZZVSBSTR ( Virtual String Character )
 
-      ENTRY  ZZVSBSTR ( FROM, TO, RND, SUBSTR, DID )
+      entry  zzvsbstr ( from, to, rnd, substr, did )
 
 ! $ Abstract
 !
@@ -551,82 +551,82 @@
 !     to left.  First thing we do is get the index of the right most
 !     significant portion of SUBSTR that we will manipulate.
 !
-      J    = TO - FROM + 1
-      LSUB = LEN(SUBSTR)
+      j    = to - from + 1
+      lsub = len(substr)
 !
 !     Blank pad to the right of J (if there's anything to pad).
 !
-      IF ( J .LT. LSUB ) THEN
-         SUBSTR(J+1:) = ' '
-      END IF
+      if ( j .lt. lsub ) then
+         substr(j+1:) = ' '
+      end if
 !
 !     If we need to round the output string, locate the first numeric
 !     slot after TO.
 !
-      IF ( RND ) THEN
+      if ( rnd ) then
 
-         SLOT = TO + 1
+         slot = to + 1
 !
 !        If this points to the decimal point, move one more to the
 !        right.
 !
-         IF ( SLOT .EQ. 0 ) THEN
-            SLOT = SLOT + 1
-         END IF
+         if ( slot .eq. 0 ) then
+            slot = slot + 1
+         end if
 !
 !        Determine which digit D_i corresponds to SLOT.
 !
-         IF ( SLOT .LT. 0 ) THEN
-            I = EXP + SLOT + 1
-         ELSE
-            I = EXP + SLOT
-         END IF
+         if ( slot .lt. 0 ) then
+            i = exp + slot + 1
+         else
+            i = exp + slot
+         end if
 !
 !        We will need to round in D_i is 5 or more.
 !
-         IF ( I .LT. 0 ) THEN
-            LETTER = '0'
-         ELSE IF ( I .EQ. 0 ) THEN
-            LETTER = STRING(2:2)
-         ELSE IF ( I .LT. MAXSIG ) THEN
-            LETTER = STRING(3+I:3+I)
-         ELSE
-            LETTER = '0'
-         END IF
+         if ( i .lt. 0 ) then
+            letter = '0'
+         else if ( i .eq. 0 ) then
+            letter = string(2:2)
+         else if ( i .lt. maxsig ) then
+            letter = string(3+i:3+i)
+         else
+            letter = '0'
+         end if
 
-         INCR = LGE ( LETTER, '5' )
+         incr = lge ( letter, '5' )
 
-      ELSE
-         INCR = NO
-      END IF
+      else
+         incr = no
+      end if
 !
 !     Starting at the right most slot, we work left incrementing
 !     digits as required.  Note that once we don't round up
 !     some value, we are done incrementing.
 !
-      DO SLOT = TO, FROM, -1
+      do slot = to, from, -1
 
-         IF ( SLOT .EQ. 0 ) THEN
+         if ( slot .eq. 0 ) then
 
-            LETTER = '.'
+            letter = '.'
 
-         ELSE
+         else
 
 !
 !           Otherwise we need to first see which digit, d_I, is being
 !           requested.
 !
-            IF ( SLOT .LT. 0 ) THEN
-               I = EXP + SLOT + 1
-            ELSE
-               I = EXP + SLOT
-            END IF
+            if ( slot .lt. 0 ) then
+               i = exp + slot + 1
+            else
+               i = exp + slot
+            end if
 
 !
 !           Now just look up d_I according to the rule we established
 !           earlier.
 !
-            IF ( I .LT. 0 ) THEN
+            if ( i .lt. 0 ) then
 
 !
 !              If the SLOT is prior to the first significant character
@@ -634,83 +634,83 @@
 !              Otherwise we use a zero.
 !
 
-               IF ( INCR ) THEN
-                  LETTER = '1'
-                  INCR   = NO
-               ELSE
+               if ( incr ) then
+                  letter = '1'
+                  incr   = no
+               else
 
-                  IF ( SLOT .LT. -1 ) THEN
-                     LETTER = MYFILL
-                  ELSE
-                     LETTER = '0'
-                  END IF
+                  if ( slot .lt. -1 ) then
+                     letter = myfill
+                  else
+                     letter = '0'
+                  end if
 
-               END IF
+               end if
 
-            ELSE IF ( I .EQ. 0 ) THEN
+            else if ( i .eq. 0 ) then
 
 
-               LETTER = STRING(2:2)
+               letter = string(2:2)
 !
 !              If necessary, increment LETTER.
 !
-               IF ( INCR ) THEN
+               if ( incr ) then
 
-                  VALUE = ICHAR(LETTER) - CODE0 + 1
+                  value = ichar(letter) - code0 + 1
 !
 !                 If value is 10 or more we will need to
 !                 increment the next character too.  If VALUE
 !                 is less than 10, we are done incrementing set
 !                 INCR to NO.
 !
-                  IF ( VALUE .EQ. 10 ) THEN
-                     LETTER = '0'
-                  ELSE
-                     LETTER = CHAR ( VALUE + CODE0 )
-                     INCR   = NO
-                  END IF
+                  if ( value .eq. 10 ) then
+                     letter = '0'
+                  else
+                     letter = char ( value + code0 )
+                     incr   = no
+                  end if
 
-               END IF
+               end if
 
 
-            ELSE IF ( I .LT. MAXSIG ) THEN
+            else if ( i .lt. maxsig ) then
 !
 !              This case is virtually identical to the previous
 !              case, except that we need to pick off a different
 !              letter from STRING.
 !
-               LETTER = STRING(I+3:I+3)
+               letter = string(i+3:i+3)
 
-               IF ( INCR ) THEN
+               if ( incr ) then
 
-                  VALUE = ICHAR(LETTER) - CODE0 + 1
+                  value = ichar(letter) - code0 + 1
 
-                  IF ( VALUE .EQ. 10 ) THEN
-                     LETTER = '0'
-                  ELSE
-                     LETTER = CHAR ( VALUE + CODE0 )
-                     INCR   = NO
-                  END IF
-               END IF
+                  if ( value .eq. 10 ) then
+                     letter = '0'
+                  else
+                     letter = char ( value + code0 )
+                     incr   = no
+                  end if
+               end if
 
-            ELSE
+            else
 
-               LETTER = '0'
-               INCR   = NO
+               letter = '0'
+               incr   = no
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         IF ( J .LE. LSUB ) THEN
-            SUBSTR(J:J) = LETTER
-         END IF
+         if ( j .le. lsub ) then
+            substr(j:j) = letter
+         end if
 
-         J = J - 1
+         j = j - 1
 
-      END DO
+      end do
 
-      DID = INCR
+      did = incr
 
-      RETURN
-      END
+      return
+      end

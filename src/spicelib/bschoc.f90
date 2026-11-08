@@ -1,6 +1,6 @@
 !$Procedure BSCHOC ( Binary search with order vector, character )
 
-      INTEGER FUNCTION BSCHOC ( VALUE, NDIM, ARRAY, ORDER )
+      integer function bschoc ( value, ndim, array, order )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    VALUE
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY ( * )
-      INTEGER          ORDER ( * )
+      character*(*)    value
+      integer          ndim
+      character*(*)    array ( * )
+      integer          order ( * )
 
 ! $ Brief_I/O
 !
@@ -231,46 +231,46 @@
 !
 !     Local variables
 !
-      INTEGER          LEFT
-      INTEGER          RIGHT
-      INTEGER          I
+      integer          left
+      integer          right
+      integer          i
 
 
 !
 !     Set the initial bounds for the search area.
 !
-      LEFT  = 1
-      RIGHT = NDIM
+      left  = 1
+      right = ndim
 
-      DO WHILE ( LEFT .LE. RIGHT )
+      do while ( left .le. right )
 
 !
 !        Check the middle element.
 !
-         I = (LEFT+RIGHT)/2
+         i = (left+right)/2
 
 !
 !        If the middle element matches, return its location.
 !
-         IF ( VALUE .EQ. ARRAY(ORDER(I)) ) THEN
-            BSCHOC = ORDER(I)
-            RETURN
+         if ( value .eq. array(order(i)) ) then
+            bschoc = order(i)
+            return
 
 !
 !        Otherwise narrow the search area.
 !
-         ELSE IF ( LLT (VALUE, ARRAY(ORDER(I))) ) THEN
-            RIGHT = I-1
-         ELSE
-            LEFT  = I+1
-         END IF
+         else if ( llt (value, array(order(i))) ) then
+            right = i-1
+         else
+            left  = i+1
+         end if
 
-      END DO
+      end do
 
 !
 !     If the search area is empty, return zero.
 !
-      BSCHOC = 0
+      bschoc = 0
 
-      RETURN
-      END
+      return
+      end

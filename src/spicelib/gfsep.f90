@@ -1,11 +1,11 @@
 !$Procedure GFSEP (GF, angular separation search)
 
-      SUBROUTINE GFSEP ( TARG1,  SHAPE1, FRAME1, &
-                         TARG2,  SHAPE2, FRAME2, &
-                         ABCORR, OBSRVR, RELATE, &
-                         REFVAL, ADJUST, STEP, &
-                         CNFINE, MW,     NW, &
-                         WORK,   RESULT )
+      subroutine gfsep ( targ1,  shape1, frame1, &
+                         targ2,  shape2, frame2, &
+                         abcorr, obsrvr, relate, &
+                         refval, adjust, step, &
+                         cnfine, mw,     nw, &
+                         work,   result )
 
 ! $ Abstract
 !
@@ -30,32 +30,32 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzabcorr.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         TARG1
-      CHARACTER*(*)         SHAPE1
-      CHARACTER*(*)         FRAME1
-      CHARACTER*(*)         TARG2
-      CHARACTER*(*)         SHAPE2
-      CHARACTER*(*)         FRAME2
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         targ1
+      character*(*)         shape1
+      character*(*)         frame1
+      character*(*)         targ2
+      character*(*)         shape2
+      character*(*)         frame2
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         relate
+      double precision      refval
+      double precision      adjust
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1087,169 +1087,169 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               GFBAIL
-      INTEGER               SIZED
-      LOGICAL               EVEN
+      logical               return
+      logical               gfbail
+      integer               sized
+      logical               even
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfbail
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
 !
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               QNPARS
-      PARAMETER           ( QNPARS = 8 )
+      integer               qnpars
+      parameter           ( qnpars = 8 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      CHARACTER*(LNSIZE)    QCPARS ( QNPARS )
-      CHARACTER*(LNSIZE)    QPNAMS ( QNPARS )
+      character*(lnsize)    qcpars ( qnpars )
+      character*(lnsize)    qpnams ( qnpars )
 
-      DOUBLE PRECISION      QDPARS ( QNPARS )
+      double precision      qdpars ( qnpars )
 
-      INTEGER               QIPARS ( QNPARS )
+      integer               qipars ( qnpars )
 
-      LOGICAL               QLPARS ( QNPARS )
+      logical               qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GFSEP' )
+      call chkin ( 'GFSEP' )
 
 
-      IF ( MW .LT. 2 .OR. .NOT. EVEN(MW) ) THEN
+      if ( mw .lt. 2 .or. .not. even(mw) ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
-         CALL ERRINT ( '#',  MW                                   )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                  )
-         CALL CHKOUT ( 'GFSEP'                                    )
-         RETURN
+         call errint ( '#',  mw                                   )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                  )
+         call chkout ( 'GFSEP'                                    )
+         return
 
-      END IF
+      end if
 
 
-      IF ( NW .LT. NWSEP ) THEN
+      if ( nw .lt. nwsep ) then
 
-         CALL SETMSG ( 'Workspace window count was #; count must be ' &
+         call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                 )
-         CALL ERRINT ( '#',  NW                                      )
-         CALL ERRINT ( '#',  NWSEP                                   )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                     )
-         CALL CHKOUT ( 'GFSEP'                                       )
-         RETURN
+         call errint ( '#',  nw                                      )
+         call errint ( '#',  nwsep                                   )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
+         call chkout ( 'GFSEP'                                       )
+         return
 
-      END IF
+      end if
 
 
-      IF ( SIZED(RESULT) .LT. 2 .OR. .NOT. EVEN( SIZED(RESULT) ) ) THEN
+      if ( sized(result) .lt. 2 .or. .not. even( sized(result) ) ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )
-         CALL ERRINT ( '#', SIZED(RESULT)                          )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFSEP'                                     )
-         RETURN
+         call errint ( '#', sized(result)                          )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFSEP'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !    Set the TARGET1 body-fixed frame name and shape model identifier.
 !
-      QPNAMS(1) = 'TARGET1'
-      QCPARS(1) =  TARG1
+      qpnams(1) = 'TARGET1'
+      qcpars(1) =  targ1
 
-      QPNAMS(2) = 'FRAME1'
-      QCPARS(2) =  FRAME1
+      qpnams(2) = 'FRAME1'
+      qcpars(2) =  frame1
 
-      QPNAMS(3) = 'SHAPE1'
-      QCPARS(3) =  SHAPE1
+      qpnams(3) = 'SHAPE1'
+      qcpars(3) =  shape1
 
 !
 !    Set the TARGET2 body-fixed frame name and shape model identifier.
 !
-      QPNAMS(4) = 'TARGET2'
-      QCPARS(4) =  TARG2
+      qpnams(4) = 'TARGET2'
+      qcpars(4) =  targ2
 
-      QPNAMS(5) = 'FRAME2'
-      QCPARS(5) =  FRAME2
+      qpnams(5) = 'FRAME2'
+      qcpars(5) =  frame2
 
-      QPNAMS(6) = 'SHAPE2'
-      QCPARS(6) =  SHAPE2
+      qpnams(6) = 'SHAPE2'
+      qcpars(6) =  shape2
 
 !
 !     Observer, aberration and calculation reference frame settings.
 !
-      QPNAMS(7) = 'OBSERVER'
-      QCPARS(7) =  OBSRVR
+      qpnams(7) = 'OBSERVER'
+      qcpars(7) =  obsrvr
 
-      QPNAMS(8) = 'ABCORR'
-      QCPARS(8) =  ABCORR
+      qpnams(8) = 'ABCORR'
+      qcpars(8) =  abcorr
 
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Initialize the RESULT window to empty.
 !
-      CALL SCARDD ( 0, RESULT)
+      call scardd ( 0, result)
 
 !
 !     Look for solutions.
 !
 !     Progress report and bail-out options are set to .FALSE.
 !
-      CALL GFEVNT ( GFSTEP,   GFREFN,  'ANGULAR SEPARATION', &
-                    QNPARS,   QPNAMS,   QCPARS, &
-                    QDPARS,   QIPARS,   QLPARS, &
-                    RELATE,   REFVAL,   TOL, &
-                    ADJUST,   CNFINE,   .FALSE., &
-                    GFREPI,   GFREPU,   GFREPF, &
-                    MW,       NWSEP,    WORK, &
-                    .FALSE.,  GFBAIL,   RESULT )
+      call gfevnt ( gfstep,   gfrefn,  'ANGULAR SEPARATION', &
+                    qnpars,   qpnams,   qcpars, &
+                    qdpars,   qipars,   qlpars, &
+                    relate,   refval,   tol, &
+                    adjust,   cnfine,   .false., &
+                    gfrepi,   gfrepu,   gfrepf, &
+                    mw,       nwsep,    work, &
+                    .false.,  gfbail,   result )
 
-      CALL CHKOUT ( 'GFSEP' )
+      call chkout ( 'GFSEP' )
 
-      RETURN
-      END
+      return
+      end

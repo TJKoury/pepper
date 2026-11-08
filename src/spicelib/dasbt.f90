@@ -1,6 +1,6 @@
 !$Procedure DASBT ( DAS, convert binary file to transfer file )
 
-      SUBROUTINE DASBT ( BINFIL, XFRLUN )
+      subroutine dasbt ( binfil, xfrlun )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         BINFIL
-      INTEGER               XFRLUN
+      character*(*)         binfil
+      integer               xfrlun
 
 ! $ Brief_I/O
 !
@@ -181,15 +181,15 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 !
 !     Local parameters
 !
-      CHARACTER*(*)         QUOTE
-      PARAMETER           ( QUOTE  = ''''                         )
+      character*(*)         quote
+      parameter           ( quote  = ''''                         )
 !
 !      CHARACTER*(*)         BEGRES
 !      PARAMETER           ( BEGRES = 'BEGIN_RESERVED_BLOCK'      )
@@ -200,123 +200,123 @@
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'     )
 !
-      CHARACTER*(*)         BEGCOM
-      PARAMETER           ( BEGCOM = 'BEGIN_COMMENT_BLOCK'        )
+      character*(*)         begcom
+      parameter           ( begcom = 'BEGIN_COMMENT_BLOCK'        )
 
-      CHARACTER*(*)         ENDCOM
-      PARAMETER           ( ENDCOM = 'END_COMMENT_BLOCK'          )
+      character*(*)         endcom
+      parameter           ( endcom = 'END_COMMENT_BLOCK'          )
 
-      CHARACTER*(*)         TCMBLK
-      PARAMETER           ( TCMBLK = 'TOTAL_COMMENT_BLOCKS'       )
+      character*(*)         tcmblk
+      parameter           ( tcmblk = 'TOTAL_COMMENT_BLOCKS'       )
 
-      CHARACTER*(*)         BCBLK
-      PARAMETER           ( BCBLK  = 'BEGIN_CHARACTER_BLOCK'      )
+      character*(*)         bcblk
+      parameter           ( bcblk  = 'BEGIN_CHARACTER_BLOCK'      )
 
-      CHARACTER*(*)         ECBLK
-      PARAMETER           ( ECBLK  = 'END_CHARACTER_BLOCK'        )
+      character*(*)         ecblk
+      parameter           ( ecblk  = 'END_CHARACTER_BLOCK'        )
 
-      CHARACTER*(*)         TCBLKS
-      PARAMETER           ( TCBLKS = 'TOTAL_CHARACTER_BLOCKS'     )
+      character*(*)         tcblks
+      parameter           ( tcblks = 'TOTAL_CHARACTER_BLOCKS'     )
 
-      CHARACTER*(*)         BDBLK
-      PARAMETER           ( BDBLK  = 'BEGIN_DP_BLOCK'             )
+      character*(*)         bdblk
+      parameter           ( bdblk  = 'BEGIN_DP_BLOCK'             )
 
-      CHARACTER*(*)         EDBLK
-      PARAMETER           ( EDBLK  = 'END_DP_BLOCK'               )
+      character*(*)         edblk
+      parameter           ( edblk  = 'END_DP_BLOCK'               )
 
-      CHARACTER*(*)         TDBLKS
-      PARAMETER           ( TDBLKS = 'TOTAL_DP_BLOCKS'            )
+      character*(*)         tdblks
+      parameter           ( tdblks = 'TOTAL_DP_BLOCKS'            )
 
-      CHARACTER*(*)         BIBLK
-      PARAMETER           ( BIBLK  = 'BEGIN_INTEGER_BLOCK'        )
+      character*(*)         biblk
+      parameter           ( biblk  = 'BEGIN_INTEGER_BLOCK'        )
 
-      CHARACTER*(*)         EIBLK
-      PARAMETER           ( EIBLK  = 'END_INTEGER_BLOCK'          )
+      character*(*)         eiblk
+      parameter           ( eiblk  = 'END_INTEGER_BLOCK'          )
 
-      CHARACTER*(*)         TIBLKS
-      PARAMETER           ( TIBLKS = 'TOTAL_INTEGER_BLOCKS'       )
+      character*(*)         tiblks
+      parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'       )
 
-      CHARACTER*(*)         FTYPID
-      PARAMETER           ( FTYPID = 'DASETF'                     )
+      character*(*)         ftypid
+      parameter           ( ftypid = 'DASETF'                     )
 
-      CHARACTER*(*)         INFOLN
-      PARAMETER           ( INFOLN = 'NAIF DAS ENCODED TRANSFER FILE' )
+      character*(*)         infoln
+      parameter           ( infoln = 'NAIF DAS ENCODED TRANSFER FILE' )
 !
 !     Some parameters for writing the array markers
 !
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 80 )
+      integer               linlen
+      parameter           ( linlen = 80 )
 !
 !     Length of a character buffer array element.
 !
-      INTEGER               CBFLEN
-      PARAMETER           ( CBFLEN = 4                            )
+      integer               cbflen
+      parameter           ( cbflen = 4                            )
 !
 !     Length of a DAS file ID word.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8                            )
+      integer               idwlen
+      parameter           ( idwlen = 8                            )
 !
 !     Length of a DAS internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60                           )
+      integer               ifnlen
+      parameter           ( ifnlen = 60                           )
 !
 !     Length of a DAS comment record, in characters.
 !
-      INTEGER               CRLEN
-      PARAMETER           ( CRLEN = 1024                          )
+      integer               crlen
+      parameter           ( crlen = 1024                          )
 !
 !     Size of the character, double precision, and integer data buffers.
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 1024                         )
+      integer               bufsiz
+      parameter           ( bufsiz = 1024                         )
 !
 !     Beginning and ending string positions for reading/writing
 !     character data from/to a DAS file using the character data
 !     buffer.
 !
-      INTEGER               BCBPOS
-      PARAMETER           ( BCBPOS = 1                            )
+      integer               bcbpos
+      parameter           ( bcbpos = 1                            )
 
-      INTEGER               ECBPOS
-      PARAMETER           ( ECBPOS = CBFLEN                       )
+      integer               ecbpos
+      parameter           ( ecbpos = cbflen                       )
 !
 !     Local variables
 !
-      CHARACTER*(CBFLEN)    CBUFFR(BUFSIZ)
-      CHARACTER*(CRLEN)     CRECRD
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(LINLEN)    LINE
+      character*(cbflen)    cbuffr(bufsiz)
+      character*(crlen)     crecrd
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
+      character*(linlen)    line
 
-      DOUBLE PRECISION      DBUFFR(BUFSIZ)
+      double precision      dbuffr(bufsiz)
 
-      INTEGER               DASLUN
-      INTEGER               DTABEG
-      INTEGER               HANDLE
-      INTEGER               IBUFFR(BUFSIZ)
-      INTEGER               IOSTAT
-      INTEGER               NCDATA
-      INTEGER               NDDATA
-      INTEGER               NIDATA
-      INTEGER               NRESVR
-      INTEGER               NRESVC
-      INTEGER               NCOMR
-      INTEGER               NCOMC
-      INTEGER               NUMBLK
-      INTEGER               NUMDTA
-      INTEGER               NUMLFT
-      INTEGER               RECNO
+      integer               daslun
+      integer               dtabeg
+      integer               handle
+      integer               ibuffr(bufsiz)
+      integer               iostat
+      integer               ncdata
+      integer               nddata
+      integer               nidata
+      integer               nresvr
+      integer               nresvc
+      integer               ncomr
+      integer               ncomc
+      integer               numblk
+      integer               numdta
+      integer               numlft
+      integer               recno
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASBT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASBT' )
+      end if
 !
 !     When converting a binary DAS file into its DAS transfer file
 !     equivalent, all of the data contained in the binary file is
@@ -457,83 +457,83 @@
 !     We begin by opening the binary DAS file specified by BINFIL for
 !     read access, obtaining a file handle.
 !
-      CALL DASOPR( BINFIL, HANDLE )
+      call dasopr( binfil, handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while opening the file check out and
 !        return to the caller.
 !
-         CALL CHKOUT ( 'DASBT' )
-         RETURN
+         call chkout ( 'DASBT' )
+         return
 
-      END IF
+      end if
 !
 !     Get the contents of the DAS file record.
 !
-      CALL DASRFR ( HANDLE, &
-                    IDWORD, IFNAME, &
-                    NRESVR, NRESVC, &
-                    NCOMR,  NCOMC   )
+      call dasrfr ( handle, &
+                    idword, ifname, &
+                    nresvr, nresvc, &
+                    ncomr,  ncomc   )
 !
 !     Convert the DAS file handle into its equivalent Fortran logical
 !     unit. We need the logical unit so that we can read the reserved
 !     records and the comment records.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., DASLUN )
+      call zzddhhlu ( handle, 'DAS', .false., daslun )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while converting the DAS file handle to
 !        a logical unit, attempt to close the binary file, then check
 !        out and return.
 !
-         CALL DASCLS ( HANDLE  )
-         CALL CHKOUT ( 'DASBT' )
-         RETURN
+         call dascls ( handle  )
+         call chkout ( 'DASBT' )
+         return
 
-      END IF
+      end if
 !
 !     Check to be sure that the number of reserved records and the
 !     number of reserved characters are not being used. The DAS
 !     reserved record area is not currently implemented, so nobody
 !     should be using it.
 !
-      IF ( NRESVC .NE. 0 ) THEN
+      if ( nresvc .ne. 0 ) then
 !
 !        Set the error message, close the file, signal the error, and
 !        exit.
 !
-         CALL SETMSG ( 'The number of reserved characters was'      // &
+         call setmsg ( 'The number of reserved characters was'      // &
                        ' nonzero (#) in file: #, but the DAS'       // &
                        ' reserved record area has NOT been'         // &
                        ' implemented yet!'                           )
-         CALL ERRINT ( '#', NRESVC                                   )
-         CALL ERRFNM ( '#', DASLUN                                   )
-         CALL DASCLS ( HANDLE                                        )
-         CALL SIGERR ( 'SPICE(BADDASFILE)'                           )
-         CALL CHKOUT ( 'DASBT'                                       )
-         RETURN
+         call errint ( '#', nresvc                                   )
+         call errfnm ( '#', daslun                                   )
+         call dascls ( handle                                        )
+         call sigerr ( 'SPICE(BADDASFILE)'                           )
+         call chkout ( 'DASBT'                                       )
+         return
 
-      END IF
+      end if
 
-      IF ( NRESVR .NE. 0 ) THEN
+      if ( nresvr .ne. 0 ) then
 !
 !        Set the error message, close the file, signal the error, and
 !        exit.
 !
-         CALL SETMSG ( 'The number of reserved records was'         // &
+         call setmsg ( 'The number of reserved records was'         // &
                        ' nonzero (#) in file: #, but the DAS'       // &
                        ' reserved record area has NOT been'         // &
                        ' implemented yet!'                           )
-         CALL ERRINT ( '#', NRESVR                                   )
-         CALL ERRFNM ( '#', DASLUN                                   )
-         CALL DASCLS ( HANDLE                                        )
-         CALL SIGERR ( 'SPICE(BADDASFILE)'                           )
-         CALL CHKOUT ( 'DASBT'                                       )
-         RETURN
+         call errint ( '#', nresvr                                   )
+         call errfnm ( '#', daslun                                   )
+         call dascls ( handle                                        )
+         call sigerr ( 'SPICE(BADDASFILE)'                           )
+         call chkout ( 'DASBT'                                       )
+         return
 
-      END IF
+      end if
 !
 !     Write the information line containing the file type information
 !     and format version for the DAS transfer to the current position in
@@ -542,100 +542,100 @@
 !     for other purposes. Right now, it simply contains an expanded
 !     description of the file format version information ``word.''
 !
-      WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) FTYPID // ' ' // INFOLN
+      write (xfrlun,fmt='(A)',iostat=iostat) ftypid // ' ' // infoln
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        An error occurred, so close the binary DAS file, set an
 !        appropriate error message, and return to the caller.
 !
-         CALL DASCLS ( HANDLE                                 )
-         CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+         call dascls ( handle                                 )
+         call setmsg ( 'Error writing to the DAS transfer'   // &
                        ' file: #. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', XFRLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DASBT'                                )
-         RETURN
+         call errfnm ( '#', xfrlun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DASBT'                                )
+         return
 
-       END IF
+       end if
 !
 !     Write the DAS ID word to the DAS transfer file.
 !
-      WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) QUOTE // IDWORD // QUOTE
+      write (xfrlun,fmt='(A)',iostat=iostat) quote // idword // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        An error occurred, so close the binary DAS file, set an
 !        appropriate error message, and return to the caller.
 !
-         CALL DASCLS ( HANDLE                                 )
-         CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+         call dascls ( handle                                 )
+         call setmsg ( 'Error writing to the DAS transfer'   // &
                        ' file: #. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', XFRLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DASBT'                                )
-         RETURN
+         call errfnm ( '#', xfrlun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DASBT'                                )
+         return
 
-      END IF
+      end if
 !
 !     Write the internal file name of the DAS file to the DAS transfer
 !     file.
 !
-      WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) QUOTE // IFNAME // QUOTE
+      write (xfrlun,fmt='(A)',iostat=iostat) quote // ifname // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        An error occurred, so close the binary DAS file, set an
 !        appropriate error message, and return to the caller.
 !
-         CALL DASCLS ( HANDLE  )
-         CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+         call dascls ( handle  )
+         call setmsg ( 'Error writing to the DAS transfer'   // &
                        ' file: #. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', XFRLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DASBT'                                )
-         RETURN
+         call errfnm ( '#', xfrlun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DASBT'                                )
+         return
 
-      END IF
+      end if
 !
 !     Write the number of reserved records and reserved characters to
 !     the DAS transfer file.
 !
-      CALL WRENCI ( XFRLUN, 1, NRESVR )
-      CALL WRENCI ( XFRLUN, 1, NRESVC )
+      call wrenci ( xfrlun, 1, nresvr )
+      call wrenci ( xfrlun, 1, nresvc )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while writing the number of reserved
 !        records or number of reserved characters, attempt to close
 !        the binary file, then check out and return.
 !
-         CALL DASCLS ( HANDLE  )
-         CALL CHKOUT ( 'DASBT' )
-         RETURN
+         call dascls ( handle  )
+         call chkout ( 'DASBT' )
+         return
 
-      END IF
+      end if
 !
 !     Write the number of comment records and comment characters to
 !     the DAS transfer file.
 !
-      CALL WRENCI ( XFRLUN, 1, NCOMR )
-      CALL WRENCI ( XFRLUN, 1, NCOMC )
+      call wrenci ( xfrlun, 1, ncomr )
+      call wrenci ( xfrlun, 1, ncomc )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while writing the number of comment
 !        records or number of comment characters, attempt to close
 !        the binary file, then check out and return.
 !
-         CALL DASCLS ( HANDLE  )
-         CALL CHKOUT ( 'DASBT' )
-         RETURN
+         call dascls ( handle  )
+         call chkout ( 'DASBT' )
+         return
 
-      END IF
+      end if
 !
 !     **************************************************************
 !     When/if the reserved record area is implemented, the code to
@@ -649,60 +649,60 @@
 !     Write out the comment area of the DAS file, if there are any
 !     comment characters stored in it.
 !
-      IF ( NCOMC .GT. 0 ) THEN
+      if ( ncomc .gt. 0 ) then
 !
 !        Write out the comment records, one at a time.
 !
-         CRECRD = ' '
-         NUMLFT = NCOMC
-         NUMBLK = 0
-         RECNO  = 1 + NRESVR
+         crecrd = ' '
+         numlft = ncomc
+         numblk = 0
+         recno  = 1 + nresvr
 
-         DO WHILE ( NUMLFT .GT. 0 )
+         do while ( numlft .gt. 0 )
 
-            NUMBLK = NUMBLK + 1
-            RECNO  = RECNO  + 1
+            numblk = numblk + 1
+            recno  = recno  + 1
 
-            IF ( NUMLFT .GT. CRLEN ) THEN
+            if ( numlft .gt. crlen ) then
 
-               NUMDTA = CRLEN
+               numdta = crlen
 
-            ELSE
+            else
 
-               NUMDTA = NUMLFT
+               numdta = numlft
 
-            END IF
+            end if
 !
 !           Write out the begin comment block marker and the number of
 !           comment characters.
 !
-            LINE = BEGCOM // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE  )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = begcom // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line  )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                 )
-               CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+               call dascls ( handle                                 )
+               call setmsg ( 'Error writing to the DAS transfer'   // &
                              ' file: #. IOSTAT = #.'                )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DASBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DASBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Read a comment record and then encode and write it.
 !
-            CALL DASIOC ( 'READ', DASLUN, RECNO, CRECRD )
-            CALL WRENCC ( XFRLUN, NUMDTA, CRECRD        )
+            call dasioc ( 'READ', daslun, recno, crecrd )
+            call wrencc ( xfrlun, numdta, crecrd        )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              We want to check failed here because were in a loop.
 !              We should exit the loop, and the routine, as soon as
@@ -710,155 +710,155 @@
 !              for a long time. Attempt to close the binary DAS file
 !              that we opened and then return to the caller.
 !
-               CALL DASCLS ( HANDLE  )
-               CALL CHKOUT ( 'DASBT' )
-               RETURN
+               call dascls ( handle  )
+               call chkout ( 'DASBT' )
+               return
 
-            END IF
+            end if
 !
 !           Write out the end comment block marker and the number of
 !           comment characters.
 !
-            LINE = ENDCOM // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = endcom // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                 )
-               CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+               call dascls ( handle                                 )
+               call setmsg ( 'Error writing to the DAS transfer'   // &
                              ' file: #. IOSTAT = #.'                )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DASBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DASBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Update the number of comment characters remaining to be
 !           written.
 !
-            NUMLFT = NUMLFT - NUMDTA
+            numlft = numlft - numdta
 
-         END DO
+         end do
 !
 !        Write out the number of comment blocks processed, and the
 !        count of comment characters
 !
-         LINE = TCMBLK // ' #' // ' #'
-         CALL REPMI ( LINE, '#', NUMBLK, LINE )
-         CALL REPMI ( LINE, '#', NCOMC, LINE  )
-         WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+         line = tcmblk // ' #' // ' #'
+         call repmi ( line, '#', numblk, line )
+         call repmi ( line, '#', ncomc, line  )
+         write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
 !
-            CALL DASCLS ( HANDLE                                  )
-            CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+            call dascls ( handle                                  )
+            call setmsg ( 'Error writing to the DAS transfer'   // &
                           ' file: #. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', XFRLUN                             )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-            CALL CHKOUT ( 'DASBT'                                 )
-            RETURN
+            call errfnm ( '#', xfrlun                             )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+            call chkout ( 'DASBT'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Read in the data counts for each of the data types from the binary
 !     DAS file.
 !
-      CALL DASLLA ( HANDLE, NCDATA, NDDATA, NIDATA )
+      call daslla ( handle, ncdata, nddata, nidata )
 !
 !     Write the data counts to the DAS transfer file. These will be
 !     useful in determining which data types to expect in the DAS
 !     transfer file when converting it back to binary.
 !
-      CALL WRENCI( XFRLUN, 1, NCDATA )
-      CALL WRENCI( XFRLUN, 1, NDDATA )
-      CALL WRENCI( XFRLUN, 1, NIDATA )
+      call wrenci( xfrlun, 1, ncdata )
+      call wrenci( xfrlun, 1, nddata )
+      call wrenci( xfrlun, 1, nidata )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while writing any of the data counts to
 !        the DAS transfer file, attempt to close the binary file, then
 !        check out and return.
 !
-         CALL DASCLS ( HANDLE  )
-         CALL CHKOUT ( 'DASBT' )
-         RETURN
+         call dascls ( handle  )
+         call chkout ( 'DASBT' )
+         return
 
-      END IF
+      end if
 !
 !     Encode and write the CHARACTER data to the DAS transfer file, if
 !     there is any character data.
 !
-      IF ( NCDATA .GT. 0 ) THEN
+      if ( ncdata .gt. 0 ) then
 
-         NUMBLK = 0
-         DTABEG = 1
-         NUMLFT = NCDATA
+         numblk = 0
+         dtabeg = 1
+         numlft = ncdata
 
-         DO WHILE ( NUMLFT .GT. 0 )
+         do while ( numlft .gt. 0 )
 
-            NUMBLK = NUMBLK + 1
+            numblk = numblk + 1
 
-            IF ( NUMLFT .GE. ( CBFLEN * BUFSIZ ) ) THEN
+            if ( numlft .ge. ( cbflen * bufsiz ) ) then
 
-               NUMDTA = CBFLEN * BUFSIZ
+               numdta = cbflen * bufsiz
 
-            ELSE
+            else
 
-               NUMDTA = NUMLFT
+               numdta = numlft
 
-            END IF
+            end if
 !
 !           Write out the begin data block identifier, the block
 !           number, and the data count for the block.
 !
-            LINE = BCBLK // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = bcblk // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                 )
-               CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+               call dascls ( handle                                 )
+               call setmsg ( 'Error writing to the DAS transfer'   // &
                              ' file: #. IOSTAT = #.'                )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DASBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DASBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Read in NUMDTA characters. The desired data are specified by
 !           beginning and ending indices into the array, inclusive: thus
 !           the subtraction of 1 in the call.
 !
-            CALL DASRDC ( HANDLE, &
-                          DTABEG, DTABEG+NUMDTA-1, &
-                          BCBPOS, ECBPOS, &
-                          CBUFFR                   )
+            call dasrdc ( handle, &
+                          dtabeg, dtabeg+numdta-1, &
+                          bcbpos, ecbpos, &
+                          cbuffr                   )
 !
 !           Encode and write out a buffer of characters.
 !
-            CALL WRENCC ( XFRLUN, NUMDTA, CBUFFR )
+            call wrencc ( xfrlun, numdta, cbuffr )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              We want to check failed here because were in a loop.
 !              We should exit the loop, and the routine, as soon as
@@ -866,128 +866,128 @@
 !              for a long time. Attempt to close the binary DAS file
 !              that we opened and then return to the caller.
 !
-               CALL DASCLS ( HANDLE  )
-               CALL CHKOUT ( 'DASBT' )
-               RETURN
+               call dascls ( handle  )
+               call chkout ( 'DASBT' )
+               return
 
-            END IF
+            end if
 !
 !           Write out the end data block identifier, the block number,
 !           and the data count for the block.
 !
-            LINE = ECBLK // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = ecblk // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                  )
-               CALL SETMSG ( 'Error writing to the DAS transfer'    // &
+               call dascls ( handle                                  )
+               call setmsg ( 'Error writing to the DAS transfer'    // &
                              ' file: #. IOSTAT = #.'                 )
-               CALL ERRFNM ( '#', XFRLUN                             )
-               CALL ERRINT ( '#', IOSTAT                             )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-               CALL CHKOUT ( 'DASBT'                                 )
-               RETURN
+               call errfnm ( '#', xfrlun                             )
+               call errint ( '#', iostat                             )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+               call chkout ( 'DASBT'                                 )
+               return
 
-            END IF
+            end if
 !
 !           Increment the data pointer and decrement the amount of data
 !           left to move.
 !
-            DTABEG = DTABEG + NUMDTA
-            NUMLFT = NUMLFT - NUMDTA
+            dtabeg = dtabeg + numdta
+            numlft = numlft - numdta
 
-         END DO
+         end do
 !
 !        Write out the number of character data blocks processed
 !        processed, and the count of double precision data items.
 !
-         LINE = TCBLKS // ' #' // ' #'
-         CALL REPMI ( LINE, '#', NUMBLK, LINE )
-         CALL REPMI ( LINE, '#', NCDATA, LINE )
-         WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+         line = tcblks // ' #' // ' #'
+         call repmi ( line, '#', numblk, line )
+         call repmi ( line, '#', ncdata, line )
+         write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
 !
-            CALL DASCLS ( HANDLE                                  )
-            CALL SETMSG ( 'Error writing to the DAS transfer'    // &
+            call dascls ( handle                                  )
+            call setmsg ( 'Error writing to the DAS transfer'    // &
                           ' file: #. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', XFRLUN                             )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-            CALL CHKOUT ( 'DASBT'                                 )
-            RETURN
+            call errfnm ( '#', xfrlun                             )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+            call chkout ( 'DASBT'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Encode and write the DOUBLE PRECISION data to the DAS transfer
 !     file.
 !
-      IF ( NDDATA .GT. 0 ) THEN
+      if ( nddata .gt. 0 ) then
 
-         NUMBLK = 0
-         DTABEG = 1
-         NUMLFT = NDDATA
+         numblk = 0
+         dtabeg = 1
+         numlft = nddata
 
-         DO WHILE ( NUMLFT .GT. 0 )
+         do while ( numlft .gt. 0 )
 
-            NUMBLK = NUMBLK + 1
+            numblk = numblk + 1
 
-            IF ( NUMLFT .GE. BUFSIZ ) THEN
+            if ( numlft .ge. bufsiz ) then
 
-               NUMDTA = BUFSIZ
+               numdta = bufsiz
 
-            ELSE
+            else
 
-               NUMDTA = NUMLFT
+               numdta = numlft
 
-            END IF
+            end if
 !
 !           Write out the begin data block identifier, the block
 !           number, and the data count for the block.
 !
-            LINE = BDBLK // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = bdblk // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                 )
-            CALL SETMSG ( 'Error writing to the DAS transfer'      // &
+               call dascls ( handle                                 )
+            call setmsg ( 'Error writing to the DAS transfer'      // &
                           ' file: #. IOSTAT = #.'                   )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DASBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DASBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Read in NUMDTA double precision numbers.The desired data are
 !           specified by beginning and ending indices into the array,
 !           inclusive: thus the subtraction of 1 in the call.
 !
-            CALL DASRDD ( HANDLE, DTABEG, DTABEG+NUMDTA-1, DBUFFR )
+            call dasrdd ( handle, dtabeg, dtabeg+numdta-1, dbuffr )
 !
 !           Encode and write out a buffer of double precision numbers.
 !
-            CALL WRENCD ( XFRLUN, NUMDTA, DBUFFR )
+            call wrencd ( xfrlun, numdta, dbuffr )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              We want to check failed here because were in a loop.
 !              We should exit the loop, and the routine, as soon as
@@ -995,128 +995,128 @@
 !              for a long time. Attempt to close the binary DAS file
 !              that we opened and then return to the caller.
 !
-               CALL DASCLS ( HANDLE  )
-               CALL CHKOUT ( 'DASBT' )
-               RETURN
+               call dascls ( handle  )
+               call chkout ( 'DASBT' )
+               return
 
-            END IF
+            end if
 !
 !           Write out the end data block identifier, the block number,
 !           and the data count for the block.
 !
-            LINE = EDBLK // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = edblk // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                  )
-               CALL SETMSG ( 'Error writing to the DAS transfer'    // &
+               call dascls ( handle                                  )
+               call setmsg ( 'Error writing to the DAS transfer'    // &
                              ' file: #. IOSTAT = #.'                 )
-               CALL ERRFNM ( '#', XFRLUN                             )
-               CALL ERRINT ( '#', IOSTAT                             )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-               CALL CHKOUT ( 'DASBT'                                 )
-               RETURN
+               call errfnm ( '#', xfrlun                             )
+               call errint ( '#', iostat                             )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+               call chkout ( 'DASBT'                                 )
+               return
 
-            END IF
+            end if
 !
 !           Increment the data pointer and decrement the amount of data
 !           left to move.
 !
-            DTABEG = DTABEG + NUMDTA
-            NUMLFT = NUMLFT - NUMDTA
+            dtabeg = dtabeg + numdta
+            numlft = numlft - numdta
 
-         END DO
+         end do
 !
 !        Write out the number of double precision processed data blocks
 !        processed, and the count of double precision data items.
 !
-         LINE = TDBLKS// ' #' // ' #'
-         CALL REPMI ( LINE, '#', NUMBLK, LINE )
-         CALL REPMI ( LINE, '#', NDDATA, LINE )
-         WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+         line = tdblks// ' #' // ' #'
+         call repmi ( line, '#', numblk, line )
+         call repmi ( line, '#', nddata, line )
+         write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
 !
-            CALL DASCLS ( HANDLE                                  )
-            CALL SETMSG ( 'Error writing to the DAS transfer'    // &
+            call dascls ( handle                                  )
+            call setmsg ( 'Error writing to the DAS transfer'    // &
                           ' file: #. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', XFRLUN                             )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-            CALL CHKOUT ( 'DASBT'                                 )
-            RETURN
+            call errfnm ( '#', xfrlun                             )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+            call chkout ( 'DASBT'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Encode and write the INTEGER data to the DAS transfer file, if
 !     there is any.
 !
-      IF ( NIDATA .GT. 0 ) THEN
+      if ( nidata .gt. 0 ) then
 
-         NUMBLK = 0
-         DTABEG = 1
-         NUMLFT = NIDATA
+         numblk = 0
+         dtabeg = 1
+         numlft = nidata
 
-         DO WHILE ( NUMLFT .GT. 0 )
+         do while ( numlft .gt. 0 )
 
-            NUMBLK = NUMBLK + 1
+            numblk = numblk + 1
 
-            IF ( NUMLFT .GE. BUFSIZ ) THEN
+            if ( numlft .ge. bufsiz ) then
 
-               NUMDTA = BUFSIZ
+               numdta = bufsiz
 
-            ELSE
+            else
 
-               NUMDTA = NUMLFT
+               numdta = numlft
 
-            END IF
+            end if
 !
 !           Write out the begin data block identifier, the block number,
 !           and the data count for the block.
 !
-            LINE = BIBLK // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = biblk // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                 )
-               CALL SETMSG ( 'Error writing to the DAS transfer'   // &
+               call dascls ( handle                                 )
+               call setmsg ( 'Error writing to the DAS transfer'   // &
                              ' file: #. IOSTAT = #.'                )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DASBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DASBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Read in NUMDTA integers. The desired data are specified by
 !           beginning and ending indices into the array,inclusive: thus
 !           the subtraction of 1 in the call.
 !
-            CALL DASRDI ( HANDLE, DTABEG, DTABEG+NUMDTA-1, IBUFFR )
+            call dasrdi ( handle, dtabeg, dtabeg+numdta-1, ibuffr )
 !
 !           Encode and write out a buffer of integers.
 !
-            CALL WRENCI ( XFRLUN, NUMDTA, IBUFFR )
+            call wrenci ( xfrlun, numdta, ibuffr )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              We want to check failed here because were in a loop.
 !              We should exit the loop, and the routine, as soon as
@@ -1124,74 +1124,74 @@
 !              for a long time. Attempt to close the binary DAS file
 !              that we opened and then return to the caller.
 !
-               CALL DASCLS ( HANDLE  )
-               CALL CHKOUT ( 'DASBT' )
-               RETURN
+               call dascls ( handle  )
+               call chkout ( 'DASBT' )
+               return
 
-            END IF
+            end if
 !
 !           Write out the end data block identifier, the block number,
 !           and the data count for the block.
 !
-            LINE = EIBLK // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMBLK, LINE )
-            CALL REPMI ( LINE, '#', NUMDTA, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = eiblk // ' #' // ' #'
+            call repmi ( line, '#', numblk, line )
+            call repmi ( line, '#', numdta, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
 !
-               CALL DASCLS ( HANDLE                                  )
-               CALL SETMSG ( 'Error writing to the DAS transfer'    // &
+               call dascls ( handle                                  )
+               call setmsg ( 'Error writing to the DAS transfer'    // &
                              ' file: #. IOSTAT = #.'                 )
-               CALL ERRFNM ( '#', XFRLUN                             )
-               CALL ERRINT ( '#', IOSTAT                             )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-               CALL CHKOUT ( 'DASBT'                                 )
-               RETURN
+               call errfnm ( '#', xfrlun                             )
+               call errint ( '#', iostat                             )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+               call chkout ( 'DASBT'                                 )
+               return
 
-            END IF
+            end if
 !
 !           Increment the data pointers and decrement the amount of data
 !           left.
 !
-            DTABEG = DTABEG + NUMDTA
-            NUMLFT = NUMLFT - NUMDTA
+            dtabeg = dtabeg + numdta
+            numlft = numlft - numdta
 
-         END DO
+         end do
 !
 !        Write out the number of processed integer data blocks
 !        processed, and the count of double precision data items.
 !
-         LINE = TIBLKS // ' #' // ' #'
-         CALL REPMI ( LINE, '#', NUMBLK, LINE )
-         CALL REPMI ( LINE, '#', NIDATA, LINE )
-         WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+         line = tiblks // ' #' // ' #'
+         call repmi ( line, '#', numblk, line )
+         call repmi ( line, '#', nidata, line )
+         write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
 !
-            CALL DASCLS ( HANDLE                                  )
-            CALL SETMSG ( 'Error writing to the DAS transfer'    // &
+            call dascls ( handle                                  )
+            call setmsg ( 'Error writing to the DAS transfer'    // &
                           ' file: #. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', XFRLUN                             )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                )
-            CALL CHKOUT ( 'DASBT'                                 )
-            RETURN
+            call errfnm ( '#', xfrlun                             )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'                )
+            call chkout ( 'DASBT'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Close only the binary DAS file.
 !
-      CALL DASCLS ( HANDLE )
+      call dascls ( handle )
 
-      CALL CHKOUT ( 'DASBT' )
-      RETURN
-      END
+      call chkout ( 'DASBT' )
+      return
+      end

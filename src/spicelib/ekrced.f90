@@ -1,7 +1,7 @@
 !$Procedure EKRCED ( EK, read column entry element, d.p. )
 
-      SUBROUTINE EKRCED ( HANDLE,  SEGNO,  RECNO,  COLUMN, &
-                          NVALS,   DVALS,  ISNULL          )
+      subroutine ekrced ( handle,  segno,  recno,  column, &
+                          nvals,   dvals,  isnull          )
 
 ! $ Abstract
 !
@@ -20,19 +20,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RECNO
-      CHARACTER*(*)         COLUMN
-      INTEGER               NVALS
-      DOUBLE PRECISION      DVALS  ( * )
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segno
+      integer               recno
+      character*(*)         column
+      integer               nvals
+      double precision      dvals  ( * )
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -193,23 +193,23 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKESIZ
+      integer               zzekesiz
 
 !
 !     Local variables
 !
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               CLASS
-      INTEGER               DTYPE
-      INTEGER               RECPTR
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               coldsc ( cdscsz )
+      integer               class
+      integer               dtype
+      integer               recptr
+      integer               segdsc ( sdscsz )
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Use discovery check-in.
@@ -217,92 +217,92 @@
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
 !
-      CALL ZZEKSDSC ( HANDLE, SEGNO,  SEGDSC          )
-      CALL ZZEKCDSC ( HANDLE, SEGDSC, COLUMN, COLDSC  )
+      call zzeksdsc ( handle, segno,  segdsc          )
+      call zzekcdsc ( handle, segdsc, column, coldsc  )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     This column had better be of d.p. or TIME type.
 !
-      DTYPE  =  COLDSC(TYPIDX)
+      dtype  =  coldsc(typidx)
 
-      IF ( ( DTYPE .NE. DP ) .AND. ( DTYPE .NE. TIME )  ) THEN
+      if ( ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
 
-         CALL CHKIN  ( 'EKRCED'                                        )
-         CALL SETMSG ( 'Column # is of type #; EKRCED only works '    // &
+         call chkin  ( 'EKRCED'                                        )
+         call setmsg ( 'Column # is of type #; EKRCED only works '    // &
                        'with d.p. or TIME columns.  RECNO = #; '      // &
                        'SEGNO =  #; EK = #.'                           )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  DTYPE                                     )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                          )
-         CALL CHKOUT ( 'EKRCED'                                        )
-         RETURN
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  dtype                                     )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
+         call chkout ( 'EKRCED'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Now it's time to read data from the file.  Call the low-level
 !     reader appropriate to the column's class.
 !
-      CLASS  =  COLDSC ( CLSIDX )
+      class  =  coldsc ( clsidx )
 
 
-      IF ( CLASS .EQ. 2 ) THEN
+      if ( class .eq. 2 ) then
 !
 !        Look up the record pointer for the target record.
 !
-         CALL ZZEKTRDP ( HANDLE, SEGDSC(RTIDX),  RECNO,  RECPTR )
+         call zzektrdp ( handle, segdsc(rtidx),  recno,  recptr )
 
-         CALL ZZEKRD02 ( HANDLE, SEGDSC, COLDSC, RECPTR, DVALS, ISNULL )
-         NVALS  =  1
-
-
-      ELSE IF ( CLASS .EQ. 5 ) THEN
-
-         CALL ZZEKTRDP ( HANDLE, SEGDSC(RTIDX), RECNO, RECPTR )
-
-         NVALS  =  ZZEKESIZ ( HANDLE, SEGDSC, COLDSC, RECPTR )
-
-         CALL ZZEKRD05 (  HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                          1,       NVALS,   DVALS,   ISNULL,  FOUND  )
+         call zzekrd02 ( handle, segdsc, coldsc, recptr, dvals, isnull )
+         nvals  =  1
 
 
-      ELSE IF ( CLASS .EQ. 8 ) THEN
+      else if ( class .eq. 5 ) then
+
+         call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
+
+         nvals  =  zzekesiz ( handle, segdsc, coldsc, recptr )
+
+         call zzekrd05 (  handle,  segdsc,  coldsc,  recptr, &
+                          1,       nvals,   dvals,   isnull,  found  )
+
+
+      else if ( class .eq. 8 ) then
 !
 !        Records in class 8 columns are identified by a record number
 !        rather than a pointer.
 !
-         CALL ZZEKRD08 ( HANDLE, SEGDSC, COLDSC, RECNO, DVALS, ISNULL )
-         NVALS  =  1
+         call zzekrd08 ( handle, segdsc, coldsc, recno, dvals, isnull )
+         nvals  =  1
 
-      ELSE
+      else
 
 !
 !        This is an unsupported d.p. column class.
 !
-         SEGNO  =  SEGDSC ( SNOIDX )
+         segno  =  segdsc ( snoidx )
 
-         CALL CHKIN  ( 'EKRCED'                                        )
-         CALL SETMSG ( 'Class # from input column descriptor is not ' // &
+         call chkin  ( 'EKRCED'                                        )
+         call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported d.p. class.  COLUMN = #; '        // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
-         CALL ERRINT ( '#',  CLASS                                     )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'EKRCED'                                        )
-         RETURN
+         call errint ( '#',  class                                     )
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'EKRCED'                                        )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

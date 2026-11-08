@@ -1,6 +1,6 @@
 !$Procedure BRCKTI ( Bracket an integer value within an interval )
 
-      INTEGER  FUNCTION BRCKTI ( NUMBER, END1, END2 )
+      integer  function brckti ( number, end1, end2 )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER   NUMBER
-      INTEGER   END1
-      INTEGER   END2
+      integer   number
+      integer   end1
+      integer   end2
 
 ! $ Brief_I/O
 !
@@ -286,16 +286,16 @@
 !
 !     What else is there to say?
 !
-      IF ( END1 .LT. END2 ) THEN
+      if ( end1 .lt. end2 ) then
 
-         BRCKTI = MAX (  END1, MIN(END2,NUMBER)  )
+         brckti = max (  end1, min(end2,number)  )
 
-      ELSE
+      else
 
-         BRCKTI = MAX (  END2, MIN(END1,NUMBER)  )
+         brckti = max (  end2, min(end1,number)  )
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure  ZZEKCCHK ( Private: EK, check names in encoded query )
 
-      SUBROUTINE ZZEKCCHK (  QUERY,  EQRYI,  EQRYC,  NTAB,    TABLST, &
-                             ALSLST, BASE,   ERROR,  ERRMSG,  ERRPTR  )
+      subroutine zzekcchk (  query,  eqryi,  eqryc,  ntab,    tablst, &
+                             alslst, base,   error,  errmsg,  errptr  )
 
 ! $ Abstract
 !
@@ -21,25 +21,25 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekattdsc.inc'
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
+      include 'ekattdsc.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      INTEGER               NTAB
-      CHARACTER*(*)         TABLST ( * )
-      CHARACTER*(*)         ALSLST ( * )
-      INTEGER               BASE
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
-      INTEGER               ERRPTR
+      character*(*)         query
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      integer               ntab
+      character*(*)         tablst ( * )
+      character*(*)         alslst ( * )
+      integer               base
+      logical               error
+      character*(*)         errmsg
+      integer               errptr
 
 ! $ Brief_I/O
 !
@@ -193,9 +193,9 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
@@ -204,214 +204,214 @@
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
-      CHARACTER*(1)         CTOUCH
+      character*(cnamsz)    column
+      character*(1)         ctouch
 
-      INTEGER               ATTDSC ( ADSCSZ )
-      INTEGER               CB
-      INTEGER               CC
-      INTEGER               CE
-      INTEGER               COLIDX
-      INTEGER               I
-      INTEGER               IPARSE
-      INTEGER               J
-      INTEGER               LXB ( 2 )
-      INTEGER               NMATCH
-      INTEGER               TABIDX
-      INTEGER               TB
-      INTEGER               TE
+      integer               attdsc ( adscsz )
+      integer               cb
+      integer               cc
+      integer               ce
+      integer               colidx
+      integer               i
+      integer               iparse
+      integer               j
+      integer               lxb ( 2 )
+      integer               nmatch
+      integer               tabidx
+      integer               tb
+      integer               te
 
-      LOGICAL               FND
-      LOGICAL               NONAME
+      logical               fnd
+      logical               noname
 
 !
 !     No error to start with.
 !
-      ERROR  =  .FALSE.
-      ERRMSG =  ' '
-      ERRPTR =  0
+      error  =  .false.
+      errmsg =  ' '
+      errptr =  0
 
-      CTOUCH =  QUERY(1:1)
+      ctouch =  query(1:1)
 
 !
 !     The query must have been parsed at this point, or it's no go.
 !
-      CALL ZZEKREQI ( EQRYI, 'PARSED', IPARSE )
+      call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IPARSE .EQ. IFALSE ) THEN
+      if ( iparse .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKCCHK'                            )
-         CALL SETMSG ( 'Encoded query has not been parsed.'  )
-         CALL SIGERR ( 'SPICE(QUERYNOTPARSED)'               )
-         CALL CHKOUT ( 'ZZEKCCHK'                            )
-         RETURN
+         call chkin  ( 'ZZEKCCHK'                            )
+         call setmsg ( 'Encoded query has not been parsed.'  )
+         call sigerr ( 'SPICE(QUERYNOTPARSED)'               )
+         call chkout ( 'ZZEKCCHK'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the name and lexeme pointers for both the table and column.
 !     Decide whether a table name was supplied.
 !
-      TB      =  EQRYI ( BASE + EQBSTR )
-      TE      =  EQRYI ( BASE + EQESTR )
-      LXB(1)  =  EQRYI ( BASE + EQBLEX )
+      tb      =  eqryi ( base + eqbstr )
+      te      =  eqryi ( base + eqestr )
+      lxb(1)  =  eqryi ( base + eqblex )
 
-      CB      =  EQRYI ( BASE + EQVDSZ + EQBSTR )
-      CE      =  EQRYI ( BASE + EQVDSZ + EQESTR )
-      LXB(2)  =  EQRYI ( BASE + EQVDSZ + EQBLEX )
+      cb      =  eqryi ( base + eqvdsz + eqbstr )
+      ce      =  eqryi ( base + eqvdsz + eqestr )
+      lxb(2)  =  eqryi ( base + eqvdsz + eqblex )
 
-      IF (  ( CB .LE. 0 )  .OR.  ( CE .LE. 0 )  ) THEN
+      if (  ( cb .le. 0 )  .or.  ( ce .le. 0 )  ) then
 
-         CALL CHKIN  ( 'ZZEKCCHK'                                )
-         CALL SETMSG ( 'Invalid string bounds #:# for column.  ' // &
+         call chkin  ( 'ZZEKCCHK'                                )
+         call setmsg ( 'Invalid string bounds #:# for column.  ' // &
                        'Column name descriptor base is #.'       )
-         CALL ERRINT ( '#',  CB                                  )
-         CALL ERRINT ( '#',  CE                                  )
-         CALL ERRINT ( '#',  BASE                                )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKCCHK'                                )
-         RETURN
+         call errint ( '#',  cb                                  )
+         call errint ( '#',  ce                                  )
+         call errint ( '#',  base                                )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKCCHK'                                )
+         return
 
-      END IF
-
-
-      NONAME  =  TB .EQ. 0
+      end if
 
 
-      IF ( NONAME ) THEN
+      noname  =  tb .eq. 0
+
+
+      if ( noname ) then
 !
 !        If no table name is present, search for the LHS column among
 !        the tables in the FROM clause.  If exactly one table
 !        contains the column, that table is considered to be the
 !        qualifying table.  Otherwise, the qualification is in error.
 !
-         NMATCH = 0
+         nmatch = 0
 
-         DO I = 1, NTAB
+         do i = 1, ntab
 
-            CALL EKCCNT ( TABLST(I), CC  )
+            call ekccnt ( tablst(i), cc  )
 
-            DO J = 1, CC
+            do j = 1, cc
 
-               CALL EKCII ( TABLST(I),  J,  COLUMN,  ATTDSC )
+               call ekcii ( tablst(i),  j,  column,  attdsc )
 
-               IF (  EQRYC(CB:CE) .EQ. COLUMN ) THEN
-                  NMATCH  =  NMATCH + 1
-                  COLIDX  =  J
-                  TABIDX  =  I
-               END IF
+               if (  eqryc(cb:ce) .eq. column ) then
+                  nmatch  =  nmatch + 1
+                  colidx  =  j
+                  tabidx  =  i
+               end if
 
-            END DO
+            end do
 
-         END DO
+         end do
 
 
-         IF ( NMATCH .EQ. 0 ) THEN
+         if ( nmatch .eq. 0 ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Column <#> is not present in any table in FROM '// &
+            error  = .true.
+            errmsg = 'Column <#> is not present in any table in FROM '// &
                      'clause.'
 
-            CALL REPMC ( ERRMSG, '#', EQRYC(CB:CE), ERRMSG )
+            call repmc ( errmsg, '#', eqryc(cb:ce), errmsg )
 
-            ERRPTR = LXB(2)
-            RETURN
+            errptr = lxb(2)
+            return
 
 
-         ELSE IF ( NMATCH .GT. 1 ) THEN
+         else if ( nmatch .gt. 1 ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Column name <#> is ambiguous; a qualifying '// &
+            error  = .true.
+            errmsg = 'Column name <#> is ambiguous; a qualifying '// &
                      'table name or alias is required.'
 
-            CALL REPMC ( ERRMSG, '#', EQRYC(CB:CE), ERRMSG )
+            call repmc ( errmsg, '#', eqryc(cb:ce), errmsg )
 
-            ERRPTR = LXB(2)
-            RETURN
-
-
-         END IF
+            errptr = lxb(2)
+            return
 
 
+         end if
 
-      ELSE
+
+
+      else
 
 !
 !        Find the qualifying name in the FROM table list.  If the
 !        name is not there, look in the alias list.
 !
-         TABIDX  =  ISRCHC ( EQRYC(TB:TE), NTAB, TABLST )
+         tabidx  =  isrchc ( eqryc(tb:te), ntab, tablst )
 
-         IF ( TABIDX .EQ. 0 ) THEN
-            TABIDX  =  ISRCHC ( EQRYC(TB:TE), NTAB, ALSLST )
-         END IF
+         if ( tabidx .eq. 0 ) then
+            tabidx  =  isrchc ( eqryc(tb:te), ntab, alslst )
+         end if
 
 !
 !        If the table name wasn't in either list, we can't use it.
 !
-         IF ( TABIDX .EQ. 0 ) THEN
+         if ( tabidx .eq. 0 ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Table name <#> is not present in FROM clause.'
+            error  = .true.
+            errmsg = 'Table name <#> is not present in FROM clause.'
 
-            CALL REPMC ( ERRMSG, '#', EQRYC(TB:TE), ERRMSG )
+            call repmc ( errmsg, '#', eqryc(tb:te), errmsg )
 
-            ERRPTR = LXB(1)
-            RETURN
+            errptr = lxb(1)
+            return
 
-         END IF
+         end if
 
 !
 !        Check the column.  This column must be present in the
 !        table that qualifies it.
 !
-         CALL EKCCNT ( TABLST(TABIDX), CC  )
+         call ekccnt ( tablst(tabidx), cc  )
 
 
-         FND  =  .FALSE.
-         I    =   1
+         fnd  =  .false.
+         i    =   1
 
-         DO WHILE (  ( I .LE. CC )  .AND. ( .NOT. FND )  )
+         do while (  ( i .le. cc )  .and. ( .not. fnd )  )
 
-            CALL EKCII ( TABLST(TABIDX),  I,  COLUMN,  ATTDSC )
+            call ekcii ( tablst(tabidx),  i,  column,  attdsc )
 
-            IF ( EQRYC(CB:CE) .EQ. COLUMN ) THEN
-               FND     =  .TRUE.
-               COLIDX  =  I
-            ELSE
-               I       =  I + 1
-            END IF
+            if ( eqryc(cb:ce) .eq. column ) then
+               fnd     =  .true.
+               colidx  =  i
+            else
+               i       =  i + 1
+            end if
 
-         END DO
-
-
-         IF ( .NOT. FND ) THEN
-
-            ERROR  =  .TRUE.
-            ERRMSG =  'Column <#> does not exist in table <#>.'
-
-            CALL REPMC ( ERRMSG, '#', EQRYC(CB:CE), ERRMSG )
-            CALL REPMC ( ERRMSG, '#', EQRYC(TB:TE), ERRMSG )
-
-            ERRPTR = LXB(2)
-            RETURN
-
-         END IF
+         end do
 
 
-      END IF
+         if ( .not. fnd ) then
+
+            error  =  .true.
+            errmsg =  'Column <#> does not exist in table <#>.'
+
+            call repmc ( errmsg, '#', eqryc(cb:ce), errmsg )
+            call repmc ( errmsg, '#', eqryc(tb:te), errmsg )
+
+            errptr = lxb(2)
+            return
+
+         end if
+
+
+      end if
 
 
 !
 !     If we got this far, the table and column check out.  Fill in the
 !     table and column indices in their respective descriptors.
 !
-      EQRYI ( BASE +          EQTORD )  =  TABIDX
-      EQRYI ( BASE + EQVDSZ + EQCIDX )  =  COLIDX
+      eqryi ( base +          eqtord )  =  tabidx
+      eqryi ( base + eqvdsz + eqcidx )  =  colidx
 
-      RETURN
-      END
+      return
+      end

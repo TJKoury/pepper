@@ -1,7 +1,7 @@
 !$Procedure ZZPRSMET ( Private: parse method string )
 
-      SUBROUTINE ZZPRSMET ( BODYID, METHOD, MXNSRF, SHAPE,  SUBTYP, &
-                            PRI,    NSURF,  SRFLST, PNTDEF, TRMTYP )
+      subroutine zzprsmet ( bodyid, method, mxnsrf, shape,  subtyp, &
+                            pri,    nsurf,  srflst, pntdef, trmtyp )
 
 ! $ Abstract
 !
@@ -27,18 +27,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODYID
-      CHARACTER*(*)         METHOD
-      INTEGER               MXNSRF
-      CHARACTER*(*)         SHAPE
-      CHARACTER*(*)         SUBTYP
-      LOGICAL               PRI
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      CHARACTER*(*)         PNTDEF
-      CHARACTER*(*)         TRMTYP
+      integer               bodyid
+      character*(*)         method
+      integer               mxnsrf
+      character*(*)         shape
+      character*(*)         subtyp
+      logical               pri
+      integer               nsurf
+      integer               srflst ( * )
+      character*(*)         pntdef
+      character*(*)         trmtyp
 
 ! $ Brief_I/O
 !
@@ -316,217 +316,217 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         COMMA
-      PARAMETER           ( COMMA  = ',' )
+      character*(*)         comma
+      parameter           ( comma  = ',' )
 
-      CHARACTER*(*)         DQUOTE
-      PARAMETER           ( DQUOTE = '"' )
+      character*(*)         dquote
+      parameter           ( dquote = '"' )
 
-      CHARACTER*(*)         EQUALS
-      PARAMETER           ( EQUALS = '=' )
+      character*(*)         equals
+      parameter           ( equals = '=' )
 
-      CHARACTER*(*)         SLASH
-      PARAMETER           ( SLASH  = '/' )
+      character*(*)         slash
+      parameter           ( slash  = '/' )
 
-      INTEGER               NMAX
-      PARAMETER           ( NMAX   = 100 )
+      integer               nmax
+      parameter           ( nmax   = 100 )
 
-      INTEGER               METLEN
-      PARAMETER           ( METLEN = 1000 )
+      integer               metlen
+      parameter           ( metlen = 1000 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         CHR
-      CHARACTER*(METLEN)    LOCMTH
+      character*(1)         chr
+      character*(metlen)    locmth
 
-      INTEGER               BEGS ( NMAX + 2 )
-      INTEGER               CODE
-      INTEGER               ENDS ( NMAX + 2 )
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NPRI
-      INTEGER               NSHAPE
-      INTEGER               NLMBTP
-      INTEGER               NSUBTP
-      INTEGER               NSRFLS
-      INTEGER               NTRMTP
+      integer               begs ( nmax + 2 )
+      integer               code
+      integer               ends ( nmax + 2 )
+      integer               i
+      integer               n
+      integer               npri
+      integer               nshape
+      integer               nlmbtp
+      integer               nsubtp
+      integer               nsrfls
+      integer               ntrmtp
 
-      LOGICAL               DONE
-      LOGICAL               FND
+      logical               done
+      logical               fnd
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZPRSMET' )
+      call chkin ( 'ZZPRSMET' )
 
 
 !
 !     No shape or surfaces have been specified yet.
 !
-      SHAPE  = ' '
-      SUBTYP = ' '
-      PNTDEF = ' '
-      TRMTYP = ' '
-      PRI    = .TRUE.
-      NSURF  = 0
+      shape  = ' '
+      subtyp = ' '
+      pntdef = ' '
+      trmtyp = ' '
+      pri    = .true.
+      nsurf  = 0
 
 !
 !     Initialize clause counts.
 !
-      NPRI   = 0
-      NSHAPE = 0
-      NSUBTP = 0
-      NLMBTP = 0
-      NTRMTP = 0
-      NSRFLS = 0
+      npri   = 0
+      nshape = 0
+      nsubtp = 0
+      nlmbtp = 0
+      ntrmtp = 0
+      nsrfls = 0
 
-      LOCMTH(1:1) = SLASH
-      BEGS(1)     = 1
-      ENDS(1)     = 1
+      locmth(1:1) = slash
+      begs(1)     = 1
+      ends(1)     = 1
 
-      CALL LJUCRS ( 1, METHOD, LOCMTH(2:) )
+      call ljucrs ( 1, method, locmth(2:) )
 
 !
 !     Tokenize the input method string.
 !
-      CALL ZZLEXMET ( LOCMTH(2:), NMAX, N, BEGS(2), ENDS(2) )
+      call zzlexmet ( locmth(2:), nmax, n, begs(2), ends(2) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZPRSMET' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZPRSMET' )
+         return
+      end if
 
-      N = N + 1
+      n = n + 1
 
-      DO I = 2, N
-         BEGS(I) = BEGS(I) + 1
-         ENDS(I) = ENDS(I) + 1
-      END DO
+      do i = 2, n
+         begs(i) = begs(i) + 1
+         ends(i) = ends(i) + 1
+      end do
 
 !
 !     Identify the target shape.
 !
-      DONE = .FALSE.
-      I    = 1
+      done = .false.
+      i    = 1
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 
-         IF (  LOCMTH( BEGS(I):ENDS(I) ) .EQ.  'ELLIPSOID' ) THEN
+         if (  locmth( begs(i):ends(i) ) .eq.  'ELLIPSOID' ) then
 
-            NSHAPE = NSHAPE + 1
-            SHAPE  = 'ELLIPSOID'
+            nshape = nshape + 1
+            shape  = 'ELLIPSOID'
 
-         ELSE IF (  LOCMTH( BEGS(I):ENDS(I) ) .EQ.  'DSK' ) THEN
+         else if (  locmth( begs(i):ends(i) ) .eq.  'DSK' ) then
 
-            NSHAPE = NSHAPE + 1
-            SHAPE  = 'DSK'
+            nshape = nshape + 1
+            shape  = 'DSK'
 
-         END IF
+         end if
 
-         IF ( I .EQ. N ) THEN
+         if ( i .eq. n ) then
 
-            DONE = .TRUE.
-         ELSE
-            I    = I + 1
-         END IF
+            done = .true.
+         else
+            i    = i + 1
+         end if
 
-      END DO
+      end do
 
 
-      IF ( NSHAPE .NE. 1 ) THEN
+      if ( nshape .ne. 1 ) then
 
-         CALL SETMSG ( 'The "method" or "shape" string must contain ' &
+         call setmsg ( 'The "method" or "shape" string must contain ' &
          //            'exactly one instance of a shape keyword: ' &
          //            'ELLIPSOID or DSK, or additionally, in the ' &
          //            'case of occultation computations, POINT. ' &
          //            'The number of shape keywords was #. ' &
          //            'The input string was <#>.'                  )
-         CALL ERRINT ( '#', NSHAPE                                  )
-         CALL ERRCH  ( '#', METHOD                                  )
-         CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'                     )
-         CALL CHKOUT ( 'ZZPRSMET'                                   )
-         RETURN
+         call errint ( '#', nshape                                  )
+         call errch  ( '#', method                                  )
+         call sigerr ( 'SPICE(BADMETHODSYNTAX)'                     )
+         call chkout ( 'ZZPRSMET'                                   )
+         return
 
-      END IF
+      end if
 
 
-      IF ( SHAPE .EQ. 'DSK' ) THEN
+      if ( shape .eq. 'DSK' ) then
 !
 !        Traverse the tokens; identify clauses in the method string.
 !
-         I = 1
+         i = 1
 
-         DO WHILE ( I .LT. N )
+         do while ( i .lt. n )
 
-            CHR = LOCMTH( BEGS(I):ENDS(I) )
+            chr = locmth( begs(i):ends(i) )
 
-            IF ( CHR .EQ. SLASH ) THEN
+            if ( chr .eq. slash ) then
 !
 !              If the method string is correct, the next token should
 !              be a keyword.
 !
-               I = I + 1
+               i = i + 1
 
-               IF ( LOCMTH( BEGS(I):ENDS(I) )  .EQ.  'SURFACES' ) THEN
+               if ( locmth( begs(i):ends(i) )  .eq.  'SURFACES' ) then
 !
 !                 Normally, we're looking at the start of a surface
 !                 list at this point. We need at least an assignment
 !                 operator ('=') and a surface name or ID code following
 !                 the SURFACES keyword.
 !
-                  NSRFLS = NSRFLS + 1
+                  nsrfls = nsrfls + 1
 
-                  IF ( NSRFLS .GT. 1 ) THEN
+                  if ( nsrfls .gt. 1 ) then
 !
 !                    We have too many surface specifications.
 !
-                     CALL SETMSG ( 'Extra SURFACES keyword was found ' &
+                     call setmsg ( 'Extra SURFACES keyword was found ' &
                      //            'in the method string <#>.'       )
-                     CALL ERRCH  ( '#', METHOD                       )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'          )
-                     CALL CHKOUT ( 'ZZPRSMET'                        )
-                     RETURN
+                     call errch  ( '#', method                       )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
+                     call chkout ( 'ZZPRSMET'                        )
+                     return
 
-                  END IF
+                  end if
 
-                  IF ( I .GT. N-2 ) THEN
+                  if ( i .gt. n-2 ) then
 
-                     CALL SETMSG ( 'The surface list in the method ' &
+                     call setmsg ( 'The surface list in the method ' &
                      //            'string appears to be truncated. ' &
                      //            'The method string is <#>.'       )
-                     CALL ERRCH  ( '#', METHOD                       )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'          )
-                     CALL CHKOUT ( 'ZZPRSMET'                        )
-                     RETURN
+                     call errch  ( '#', method                       )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
+                     call chkout ( 'ZZPRSMET'                        )
+                     return
 
-                  END IF
+                  end if
 
-                  I   = I + 1
+                  i   = i + 1
 
-                  CHR = LOCMTH( BEGS(I):ENDS(I) )
+                  chr = locmth( begs(i):ends(i) )
 
-                  IF ( CHR .NE. EQUALS ) THEN
+                  if ( chr .ne. equals ) then
 
-                     CALL SETMSG ( 'The surface list in the method ' &
+                     call setmsg ( 'The surface list in the method ' &
                      //            'string lacks an "=" sign after ' &
                      //            'the SURFACES keyword. ' &
                      //            'The method string is <#>.'      )
-                     CALL ERRCH  ( '#', METHOD                      )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'         )
-                     CALL CHKOUT ( 'ZZPRSMET'                       )
-                     RETURN
+                     call errch  ( '#', method                      )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'         )
+                     call chkout ( 'ZZPRSMET'                       )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Prepare to read a list of names, quoted
@@ -534,361 +534,361 @@
 !                 there are multiple list entries, they're delimited by
 !                 commas.
 !
-                  I    = I + 1
-                  DONE = .FALSE.
+                  i    = i + 1
+                  done = .false.
 
-                  DO WHILE ( .NOT. DONE )
+                  do while ( .not. done )
 
-                     CHR = LOCMTH( BEGS(I):BEGS(I) )
+                     chr = locmth( begs(i):begs(i) )
 
-                     IF ( CHR .EQ. DQUOTE ) THEN
+                     if ( chr .eq. dquote ) then
 !
 !                       We expect the current token to be a quoted
 !                       string.
 !
-                        IF ( ENDS(I) .GT. BEGS(I)+1 ) THEN
+                        if ( ends(i) .gt. begs(i)+1 ) then
 
-                           BEGS(I) = BEGS(I) + 1
-                           ENDS(I) = ENDS(I) - 1
+                           begs(i) = begs(i) + 1
+                           ends(i) = ends(i) - 1
 
-                        ELSE
+                        else
 !
 !                          We have an invalid quoted string.
 !
-                           CALL SETMSG ( 'The surface list in the ' &
+                           call setmsg ( 'The surface list in the ' &
                            //            'method string ' &
                            //            'contains a double quote ' &
                            //            'character that is not a ' &
                            //            'delimiter of a valid quoted ' &
                            //            'string. ' &
                            //            'The method string is <#>.'   )
-                           CALL ERRCH  ( '#', METHOD                   )
-                           CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'      )
-                           CALL CHKOUT ( 'ZZPRSMET'                    )
-                           RETURN
+                           call errch  ( '#', method                   )
+                           call sigerr ( 'SPICE(BADMETHODSYNTAX)'      )
+                           call chkout ( 'ZZPRSMET'                    )
+                           return
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 
 !                    We have either a name or an integer in string form.
 !                    Convert the token to a surface ID code.
 !
-                     CALL SRFSCC ( LOCMTH(BEGS(I):ENDS(I)), &
-                                   BODYID,   CODE,   FND   )
+                     call srfscc ( locmth(begs(i):ends(i)), &
+                                   bodyid,   code,   fnd   )
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( 'ZZPRSMET' )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( 'ZZPRSMET' )
+                        return
+                     end if
 
-                     IF ( .NOT. FND ) THEN
+                     if ( .not. fnd ) then
 
-                        CALL SETMSG ( 'The surface name <#> could not ' &
+                        call setmsg ( 'The surface name <#> could not ' &
                         //            'be translated to an ID code. ' &
                         //            'The method string is <#>.'     )
-                        CALL ERRCH  ( '#', LOCMTH(BEGS(I):ENDS(I))    )
-                        CALL ERRCH  ( '#', METHOD                     )
-                        CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'         )
-                        CALL CHKOUT ( 'ZZPRSMET'                      )
-                        RETURN
+                        call errch  ( '#', locmth(begs(i):ends(i))    )
+                        call errch  ( '#', method                     )
+                        call sigerr ( 'SPICE(IDCODENOTFOUND)'         )
+                        call chkout ( 'ZZPRSMET'                      )
+                        return
 
-                     END IF
+                     end if
 
 
-                     NSURF = NSURF + 1
+                     nsurf = nsurf + 1
 !
 !                    Make sure there's room in the surface ID array.
 !
-                     IF ( NSURF .GT. MXNSRF ) THEN
+                     if ( nsurf .gt. mxnsrf ) then
 
-                        CALL SETMSG ( 'The surface name <#> could not ' &
+                        call setmsg ( 'The surface name <#> could not ' &
                         //            'be stored in the surface list ' &
                         //            'due to lack of room. The max' &
                         //            'imum number of surfaces that ' &
                         //            'can be specified is #. ' &
                         //            'The method string is <#>.'     )
-                        CALL ERRCH  ( '#', LOCMTH(BEGS(I):ENDS(I))    )
-                        CALL ERRINT ( '#', MXNSRF                     )
-                        CALL ERRCH  ( '#', METHOD                     )
-                        CALL SIGERR ( 'SPICE(TOOMANYSURFACES)'        )
-                        CALL CHKOUT ( 'ZZPRSMET'                      )
-                        RETURN
+                        call errch  ( '#', locmth(begs(i):ends(i))    )
+                        call errint ( '#', mxnsrf                     )
+                        call errch  ( '#', method                     )
+                        call sigerr ( 'SPICE(TOOMANYSURFACES)'        )
+                        call chkout ( 'ZZPRSMET'                      )
+                        return
 
-                     END IF
+                     end if
 
 !
 !                    Append the surface ID to the surface ID array.
 !
-                     SRFLST( NSURF ) = CODE
+                     srflst( nsurf ) = code
 
 
-                     IF ( I .EQ. N ) THEN
+                     if ( i .eq. n ) then
 !
 !                       We're at the end of the method string.
 !
-                        DONE = .TRUE.
+                        done = .true.
 
-                     ELSE
+                     else
 !
 !                       There are more tokens; the surface list may
 !                       contain more surface names or ID codes.
 !
-                        I   = I + 1
-                        CHR = LOCMTH( BEGS(I):ENDS(I) )
+                        i   = i + 1
+                        chr = locmth( begs(i):ends(i) )
 
-                        IF ( CHR .EQ. SLASH ) THEN
+                        if ( chr .eq. slash ) then
 !
 !                          We're at the end of the surface list.
 !
-                           DONE = .TRUE.
+                           done = .true.
 !
 !                          Decrement the token pointer so that the
 !                          slash will be seen as the next token.
 !
-                           I    = I - 1
+                           i    = i - 1
 
 
-                        ELSE IF ( CHR .EQ. COMMA ) THEN
+                        else if ( chr .eq. comma ) then
 !
 !                          We expect to find another surface name or
 !                          ID in the list.
 !
-                           IF ( I .LT. N ) THEN
+                           if ( i .lt. n ) then
 
-                              I = I + 1
+                              i = i + 1
 
-                           ELSE
+                           else
 !
 !                             We have a syntax error in the surface
 !                             list.
 !
-                              CALL SETMSG ( 'The surface list in the ' &
+                              call setmsg ( 'The surface list in the ' &
                               //            'method string contains ' &
                               //            'a comma that is not ' &
                               //            'followed by a surface ' &
                               //            'name or ID code. The ' &
                               //            'method string is <#>.'   )
-                              CALL ERRCH  ( '#', METHOD               )
-                              CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'  )
-                              CALL CHKOUT ( 'ZZPRSMET'                )
-                              RETURN
+                              call errch  ( '#', method               )
+                              call sigerr ( 'SPICE(BADMETHODSYNTAX)'  )
+                              call chkout ( 'ZZPRSMET'                )
+                              return
 
-                           END IF
+                           end if
 
 
-                        ELSE
+                        else
 !
 !                          We have a syntax error in the surface list.
 !
-                           CALL SETMSG ( 'The surface list in the ' &
+                           call setmsg ( 'The surface list in the ' &
                            //            'method string is followed ' &
                            //            'by the unexpected token <#>.' &
                            //            ' The method string is <#>.'  )
-                           CALL ERRCH  ( '#', LOCMTH(BEGS(I):ENDS(I))  )
-                           CALL ERRCH  ( '#', METHOD                   )
-                           CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'      )
-                           CALL CHKOUT ( 'ZZPRSMET'                    )
-                           RETURN
+                           call errch  ( '#', locmth(begs(i):ends(i))  )
+                           call errch  ( '#', method                   )
+                           call sigerr ( 'SPICE(BADMETHODSYNTAX)'      )
+                           call chkout ( 'ZZPRSMET'                    )
+                           return
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 
-                  END DO
-
-
-               ELSE IF (      LOCMTH( BEGS(I):ENDS(I) ) &
-                         .EQ. 'UNPRIORITIZED'            ) THEN
+                  end do
 
 
-                  NPRI = NPRI + 1
+               else if (      locmth( begs(i):ends(i) ) &
+                         .eq. 'UNPRIORITIZED'            ) then
 
-                  IF ( NPRI .GT. 1 ) THEN
+
+                  npri = npri + 1
+
+                  if ( npri .gt. 1 ) then
 !
 !                    We have too many prioritization specifications.
 !
-                     CALL SETMSG ( 'Extra prioritization keyword was ' &
+                     call setmsg ( 'Extra prioritization keyword was ' &
                      //            'found in the method string <#>.' )
-                     CALL ERRCH  ( '#', METHOD                       )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'          )
-                     CALL CHKOUT ( 'ZZPRSMET'                        )
-                     RETURN
+                     call errch  ( '#', method                       )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
+                     call chkout ( 'ZZPRSMET'                        )
+                     return
 
-                  END IF
-
-
-                  PRI  = .FALSE.
+                  end if
 
 
-               ELSE IF (     (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'INTERCEPT'                ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'NADIR'                    )  ) THEN
+                  pri  = .false.
+
+
+               else if (     (       locmth( begs(i):ends(i) ) &
+                               .eq. 'INTERCEPT'                ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'NADIR'                    )  ) then
 !
 !                 This is a sub-point type specification.
 !
-                  NSUBTP = NSUBTP + 1
+                  nsubtp = nsubtp + 1
 
-                  IF ( NSUBTP .GT. 1 ) THEN
+                  if ( nsubtp .gt. 1 ) then
 !
 !                    We have too many sub-point specifications.
 !
-                     CALL SETMSG ( 'Extra sub-point type <#> was found ' &
+                     call setmsg ( 'Extra sub-point type <#> was found ' &
                      //            'in the method string <#>.'         )
-                     CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )      )
-                     CALL ERRCH  ( '#', METHOD                         )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'            )
-                     CALL CHKOUT ( 'ZZPRSMET'                          )
-                     RETURN
+                     call errch  ( '#', locmth( begs(i):ends(i) )      )
+                     call errch  ( '#', method                         )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
+                     call chkout ( 'ZZPRSMET'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  SUBTYP = LOCMTH( BEGS(I):ENDS(I) )
+                  subtyp = locmth( begs(i):ends(i) )
 
 
-               ELSE IF (     (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'TANGENT'                ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'GUIDED'                   )  ) THEN
+               else if (     (       locmth( begs(i):ends(i) ) &
+                               .eq. 'TANGENT'                ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'GUIDED'                   )  ) then
 !
 !                 This is a point definition specification.
 !
-                  NLMBTP = NLMBTP + 1
+                  nlmbtp = nlmbtp + 1
 
-                  IF ( NLMBTP .GT. 1 ) THEN
+                  if ( nlmbtp .gt. 1 ) then
 !
 !                    We have too many point definition specifications.
 !
-                     CALL SETMSG ( 'Extra point definition <#> was ' &
+                     call setmsg ( 'Extra point definition <#> was ' &
                      //            'found in the method string <#>.'   )
-                     CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )      )
-                     CALL ERRCH  ( '#', METHOD                         )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'            )
-                     CALL CHKOUT ( 'ZZPRSMET'                          )
-                     RETURN
+                     call errch  ( '#', locmth( begs(i):ends(i) )      )
+                     call errch  ( '#', method                         )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
+                     call chkout ( 'ZZPRSMET'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  PNTDEF = LOCMTH( BEGS(I):ENDS(I) )
+                  pntdef = locmth( begs(i):ends(i) )
 
 
 
-               ELSE IF (     (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'UMBRAL'                   ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'PENUMBRAL'                )  ) THEN
+               else if (     (       locmth( begs(i):ends(i) ) &
+                               .eq. 'UMBRAL'                   ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'PENUMBRAL'                )  ) then
 !
 !                 This is a terminator type specification.
 !
-                  NTRMTP = NTRMTP + 1
+                  ntrmtp = ntrmtp + 1
 
-                  IF ( NTRMTP .GT. 1 ) THEN
+                  if ( ntrmtp .gt. 1 ) then
 !
 !                    We have too many terminator type specifications.
 !
-                     CALL SETMSG ( 'Extra terminator type <#> was ' &
+                     call setmsg ( 'Extra terminator type <#> was ' &
                      //            'found in the method string <#>.'   )
-                     CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )      )
-                     CALL ERRCH  ( '#', METHOD                         )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'            )
-                     CALL CHKOUT ( 'ZZPRSMET'                          )
-                     RETURN
+                     call errch  ( '#', locmth( begs(i):ends(i) )      )
+                     call errch  ( '#', method                         )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
+                     call chkout ( 'ZZPRSMET'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  TRMTYP = LOCMTH( BEGS(I):ENDS(I) )
+                  trmtyp = locmth( begs(i):ends(i) )
 
 
 
-               ELSE IF (  LOCMTH( BEGS(I):ENDS(I) ) .EQ. SLASH  )  THEN
+               else if (  locmth( begs(i):ends(i) ) .eq. slash  )  then
 !
 !                 Adjust the token index in the message to account
 !                 for the insertion of a slash at the beginning.
 !
-                  CALL SETMSG ( 'An unexpected slash character was ' &
+                  call setmsg ( 'An unexpected slash character was ' &
                   //            'found at index # in the method ' &
                   //            'string <#>.'                          )
-                  CALL ERRINT ( '#', BEGS(I)-1                         )
-                  CALL ERRCH  ( '#', METHOD                            )
-                  CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'               )
-                  CALL CHKOUT ( 'ZZPRSMET'                             )
-                  RETURN
+                  call errint ( '#', begs(i)-1                         )
+                  call errch  ( '#', method                            )
+                  call sigerr ( 'SPICE(BADMETHODSYNTAX)'               )
+                  call chkout ( 'ZZPRSMET'                             )
+                  return
 
 
-               ELSE IF ( LOCMTH( BEGS(I):ENDS(I) )  .NE.  'DSK'  ) THEN
+               else if ( locmth( begs(i):ends(i) )  .ne.  'DSK'  ) then
 !
 !                 'DSK' was the only valid token that could appear
 !                 at this point.
 !
-                  CALL SETMSG ( 'Unexpected token <#> was found ' &
+                  call setmsg ( 'Unexpected token <#> was found ' &
                   //            'in the method string <#>.'       )
-                  CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )    )
-                  CALL ERRCH  ( '#', METHOD                       )
-                  CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'          )
-                  CALL CHKOUT ( 'ZZPRSMET'                        )
-                  RETURN
+                  call errch  ( '#', locmth( begs(i):ends(i) )    )
+                  call errch  ( '#', method                       )
+                  call sigerr ( 'SPICE(BADMETHODSYNTAX)'          )
+                  call chkout ( 'ZZPRSMET'                        )
+                  return
 
-               END IF
+               end if
 
 
-            END IF
+            end if
 
-            I = I + 1
+            i = i + 1
 
-         END DO
+         end do
 
 !
 !        Currently, the UNPRIORITIZED keyword must be provided
 !        for DSK shapes.
 !
-         IF ( PRI ) THEN
+         if ( pri ) then
 
-            CALL SETMSG ( 'The keyword UNPRIORITIZED must be ' &
+            call setmsg ( 'The keyword UNPRIORITIZED must be ' &
             //            'present in the method string <#> ' &
             //            'when the target shape is DSK. ' &
             //            'Prioritized DSK segment searches ' &
             //            'are not currently supported.'      )
-            CALL ERRCH  ( '#', METHOD                         )
-            CALL SIGERR ( 'SPICE(BADPRIORITYSPEC)'            )
-            CALL CHKOUT ( 'ZZPRSMET'                          )
-            RETURN
+            call errch  ( '#', method                         )
+            call sigerr ( 'SPICE(BADPRIORITYSPEC)'            )
+            call chkout ( 'ZZPRSMET'                          )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF ( SHAPE .EQ. 'ELLIPSOID' ) THEN
+      else if ( shape .eq. 'ELLIPSOID' ) then
 !
 !        Check for legacy string inputs.
 !
-         IF ( EQSTR(METHOD, 'ELLIPSOID') ) THEN
+         if ( eqstr(method, 'ELLIPSOID') ) then
 !
 !           There are no other outputs to set.
 !
-            CALL CHKOUT ( 'ZZPRSMET' )
-            RETURN
+            call chkout ( 'ZZPRSMET' )
+            return
 
-         ELSE IF (      EQSTR(METHOD, 'NEARPOINT:ELLIPSOID') &
-                   .OR. EQSTR(METHOD, 'ELLIPSOID:NEARPOINT') &
-                   .OR. EQSTR(METHOD, 'NEARPOINT/ELLIPSOID') &
-                   .OR. EQSTR(METHOD, 'ELLIPSOID/NEARPOINT')  ) THEN
+         else if (      eqstr(method, 'NEARPOINT:ELLIPSOID') &
+                   .or. eqstr(method, 'ELLIPSOID:NEARPOINT') &
+                   .or. eqstr(method, 'NEARPOINT/ELLIPSOID') &
+                   .or. eqstr(method, 'ELLIPSOID/NEARPOINT')  ) then
 
-            SUBTYP = 'NEAR POINT'
+            subtyp = 'NEAR POINT'
 
-            CALL CHKOUT ( 'ZZPRSMET' )
-            RETURN
+            call chkout ( 'ZZPRSMET' )
+            return
 
-         ELSE IF (      EQSTR(METHOD, 'INTERCEPT:ELLIPSOID') &
-                   .OR. EQSTR(METHOD, 'ELLIPSOID:INTERCEPT') &
-                   .OR. EQSTR(METHOD, 'INTERCEPT/ELLIPSOID') &
-                   .OR. EQSTR(METHOD, 'ELLIPSOID/INTERCEPT')  ) THEN
+         else if (      eqstr(method, 'INTERCEPT:ELLIPSOID') &
+                   .or. eqstr(method, 'ELLIPSOID:INTERCEPT') &
+                   .or. eqstr(method, 'INTERCEPT/ELLIPSOID') &
+                   .or. eqstr(method, 'ELLIPSOID/INTERCEPT')  ) then
 
-            SUBTYP = 'INTERCEPT'
+            subtyp = 'INTERCEPT'
 
-            CALL CHKOUT ( 'ZZPRSMET' )
-            RETURN
+            call chkout ( 'ZZPRSMET' )
+            return
 
-         END IF
+         end if
 
 !
 !        At this point, we should have a "modern" style of method
@@ -897,185 +897,185 @@
 !
 !        Traverse the tokens; identify clauses in the method string.
 !
-         I = 1
+         i = 1
 
-         DO WHILE ( I .LE. N )
+         do while ( i .le. n )
 
-            CHR = LOCMTH( BEGS(I):ENDS(I) )
+            chr = locmth( begs(i):ends(i) )
 
-            IF ( CHR .EQ. SLASH ) THEN
+            if ( chr .eq. slash ) then
 !
 !              If the method string is correct, the next token should
 !              be a keyword. There had better be a next token.
 !
-               IF ( I .EQ. N ) THEN
+               if ( i .eq. n ) then
 
-                  CALL SETMSG ( 'Expected more tokens after final <#> ' &
+                  call setmsg ( 'Expected more tokens after final <#> ' &
                      //         'in the method string <#>.'            )
-                  CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )         )
-                  CALL ERRCH  ( '#', METHOD                            )
-                  CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'               )
-                  CALL CHKOUT ( 'ZZPRSMET'                             )
-                  RETURN
+                  call errch  ( '#', locmth( begs(i):ends(i) )         )
+                  call errch  ( '#', method                            )
+                  call sigerr ( 'SPICE(BADMETHODSYNTAX)'               )
+                  call chkout ( 'ZZPRSMET'                             )
+                  return
 
-               END IF
+               end if
 
-               I = I + 1
+               i = i + 1
 
 
-               IF (  LOCMTH( BEGS(I):ENDS(I) ) .EQ.  'ELLIPSOID' ) THEN
+               if (  locmth( begs(i):ends(i) ) .eq.  'ELLIPSOID' ) then
 !
 !                 This case is a no-op.
 !
 
-               ELSE IF (     (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'INTERCEPT'                ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'NADIR'                    ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'NEAR'                     )  ) THEN
+               else if (     (       locmth( begs(i):ends(i) ) &
+                               .eq. 'INTERCEPT'                ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'NADIR'                    ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'NEAR'                     )  ) then
 !
 !                 This is a sub-point type specification.
 !
-                  NSUBTP = NSUBTP + 1
+                  nsubtp = nsubtp + 1
 
-                  IF ( NSUBTP .GT. 1 ) THEN
+                  if ( nsubtp .gt. 1 ) then
 !
 !                    We have too many sub-point specifications.
 !
-                     CALL SETMSG ( 'Extra sub-point type <#> was found ' &
+                     call setmsg ( 'Extra sub-point type <#> was found ' &
                      //            'in the method string <#>.'         )
-                     CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )      )
-                     CALL ERRCH  ( '#', METHOD                         )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'            )
-                     CALL CHKOUT ( 'ZZPRSMET'                          )
-                     RETURN
+                     call errch  ( '#', locmth( begs(i):ends(i) )      )
+                     call errch  ( '#', method                         )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
+                     call chkout ( 'ZZPRSMET'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  IF ( LOCMTH( BEGS(I):ENDS(I) ) .EQ. 'NEAR' ) THEN
+                  if ( locmth( begs(i):ends(i) ) .eq. 'NEAR' ) then
 !
 !                    This may be a combination of old style and
 !                    new syntax, e.g. 'ELLIPSOID/NEAR POINT'.
 !
-                     IF (       ( SHAPE .EQ. 'ELLIPSOID' ) &
-                          .AND. ( I     .LT.  N          )  ) THEN
+                     if (       ( shape .eq. 'ELLIPSOID' ) &
+                          .and. ( i     .lt.  n          )  ) then
 !
 !                       We allow the "near point" sub-point type
 !                       for ellipsoids but not for DSK surfaces.
 !
-                        IF (     LOCMTH( BEGS(I+1) : ENDS(I+1) ) &
-                            .EQ. 'POINT'                          ) THEN
+                        if (     locmth( begs(i+1) : ends(i+1) ) &
+                            .eq. 'POINT'                          ) then
 
-                           SUBTYP = 'NADIR'
+                           subtyp = 'NADIR'
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 
-                  ELSE
-                     SUBTYP = LOCMTH( BEGS(I):ENDS(I) )
-                  END IF
-
-
+                  else
+                     subtyp = locmth( begs(i):ends(i) )
+                  end if
 
 
 
-               ELSE IF (     (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'TANGENT'                ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'GUIDED'                   )  ) THEN
+
+
+               else if (     (       locmth( begs(i):ends(i) ) &
+                               .eq. 'TANGENT'                ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'GUIDED'                   )  ) then
 !
 !                 This is a point definition specification.
 !
 
-                  NLMBTP = NLMBTP + 1
+                  nlmbtp = nlmbtp + 1
 
-                  IF ( NLMBTP .GT. 1 ) THEN
+                  if ( nlmbtp .gt. 1 ) then
 !
 !                    We have too many point definition specifications.
 !
-                     CALL SETMSG ( 'Extra point definition <#> was ' &
+                     call setmsg ( 'Extra point definition <#> was ' &
                      //            'found in the method string <#>.'   )
-                     CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )      )
-                     CALL ERRCH  ( '#', METHOD                         )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'            )
-                     CALL CHKOUT ( 'ZZPRSMET'                          )
-                     RETURN
+                     call errch  ( '#', locmth( begs(i):ends(i) )      )
+                     call errch  ( '#', method                         )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
+                     call chkout ( 'ZZPRSMET'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  PNTDEF = LOCMTH( BEGS(I):ENDS(I) )
+                  pntdef = locmth( begs(i):ends(i) )
 
-               ELSE IF (     (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'UMBRAL'                   ) &
-                        .OR. (       LOCMTH( BEGS(I):ENDS(I) ) &
-                               .EQ. 'PENUMBRAL'                )  ) THEN
+               else if (     (       locmth( begs(i):ends(i) ) &
+                               .eq. 'UMBRAL'                   ) &
+                        .or. (       locmth( begs(i):ends(i) ) &
+                               .eq. 'PENUMBRAL'                )  ) then
 !
 !                 This is a terminator type specification.
 !
-                  NTRMTP = NTRMTP + 1
+                  ntrmtp = ntrmtp + 1
 
-                  IF ( NTRMTP .GT. 1 ) THEN
+                  if ( ntrmtp .gt. 1 ) then
 !
 !                    We have too many terminator type specifications.
 !
-                     CALL SETMSG ( 'Extra terminator type <#> was ' &
+                     call setmsg ( 'Extra terminator type <#> was ' &
                      //            'found in the method string <#>.'   )
-                     CALL ERRCH  ( '#', LOCMTH( BEGS(I):ENDS(I) )      )
-                     CALL ERRCH  ( '#', METHOD                         )
-                     CALL SIGERR ( 'SPICE(BADMETHODSYNTAX)'            )
-                     CALL CHKOUT ( 'ZZPRSMET'                          )
-                     RETURN
+                     call errch  ( '#', locmth( begs(i):ends(i) )      )
+                     call errch  ( '#', method                         )
+                     call sigerr ( 'SPICE(BADMETHODSYNTAX)'            )
+                     call chkout ( 'ZZPRSMET'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  TRMTYP = LOCMTH( BEGS(I):ENDS(I) )
+                  trmtyp = locmth( begs(i):ends(i) )
 
-               ELSE
+               else
 !
 !                 Sorry, no other strings are allowed.
 !
-                  CALL SETMSG( 'Unexpected method string <#> was found ' &
+                  call setmsg( 'Unexpected method string <#> was found ' &
                   //           'specifying an ellipsoid shape.'        )
-                  CALL ERRCH ( '#', METHOD                             )
-                  CALL SIGERR( 'SPICE(BADMETHODSYNTAX)'                )
-                  CALL CHKOUT( 'ZZPRSMET'                              )
-                  RETURN
+                  call errch ( '#', method                             )
+                  call sigerr( 'SPICE(BADMETHODSYNTAX)'                )
+                  call chkout( 'ZZPRSMET'                              )
+                  return
 
-               END IF
+               end if
 
-            ELSE
+            else
 
-               CALL SETMSG( 'Unexpected method string <#> was found ' &
+               call setmsg( 'Unexpected method string <#> was found ' &
                //           'specifying an ellipsoid shape.'        )
-               CALL ERRCH ( '#', METHOD                             )
-               CALL SIGERR( 'SPICE(BADMETHODSYNTAX)'                )
-               CALL CHKOUT( 'ZZPRSMET'                              )
-               RETURN
+               call errch ( '#', method                             )
+               call sigerr( 'SPICE(BADMETHODSYNTAX)'                )
+               call chkout( 'ZZPRSMET'                              )
+               return
 
-            END IF
+            end if
 
 
 
-            I = I + 1
+            i = i + 1
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        This is a backstop error check.
 !
-         CALL SETMSG ( 'Unexpected shape value # was found. ' &
+         call setmsg ( 'Unexpected shape value # was found. ' &
          //            'This is due to a coding error, not ' &
          //            'to user input.'                      )
-         CALL ERRCH  ( '#', SHAPE                            )
-         CALL SIGERR ( 'SPICE(BUG)'                          )
-         CALL CHKOUT ( 'ZZPRSMET'                            )
-         RETURN
+         call errch  ( '#', shape                            )
+         call sigerr ( 'SPICE(BUG)'                          )
+         call chkout ( 'ZZPRSMET'                            )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZPRSMET' )
-      RETURN
-      END
+      call chkout ( 'ZZPRSMET' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKOPA ( SPK open for addition )
 
-      SUBROUTINE SPKOPA ( FILE, HANDLE )
+      subroutine spkopa ( file, handle )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FILE
-      INTEGER               HANDLE
+      character*(*)         file
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -289,85 +289,85 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               exists
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SMWDSZ
-      PARAMETER           ( SMWDSZ = 8 )
+      integer               smwdsz
+      parameter           ( smwdsz = 8 )
 
 !
 !     Local variables
 !
-      CHARACTER*(SMWDSZ)    ARCH
-      CHARACTER*(SMWDSZ)    TYPE
+      character*(smwdsz)    arch
+      character*(smwdsz)    type
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKOPA')
+      call chkin ( 'SPKOPA')
 
 !
 !     Until we get a legitimate handle we set HANDLE to zero.
 !
-      HANDLE = 0
+      handle = 0
 
 !
 !     First make sure the file exists.
 !
-      IF ( .NOT. EXISTS(FILE) ) THEN
+      if ( .not. exists(file) ) then
 
-         CALL SETMSG ( 'The file ''#'' is not recognized as an ' &
+         call setmsg ( 'The file ''#'' is not recognized as an ' &
          //            'existing file. ' )
-         CALL ERRCH  ( '#', FILE )
-         CALL SIGERR ( 'SPICE(FILENOTFOUND)'  )
-         CALL CHKOUT ( 'SPKOPA' )
+         call errch  ( '#', file )
+         call sigerr ( 'SPICE(FILENOTFOUND)'  )
+         call chkout ( 'SPKOPA' )
 
-         RETURN
-      END IF
+         return
+      end if
 
 !
 !     Next make sure it is an SPK file.
 !
-      CALL GETFAT ( FILE, ARCH, TYPE )
+      call getfat ( file, arch, type )
 
-      IF ( FAILED() )THEN
-         CALL CHKOUT ( 'SPKOPA' )
-         RETURN
-      END IF
+      if ( failed() )then
+         call chkout ( 'SPKOPA' )
+         return
+      end if
 
-      IF ( ARCH .NE. 'DAF' .OR. TYPE .NE. 'SPK' ) THEN
+      if ( arch .ne. 'DAF' .or. type .ne. 'SPK' ) then
 
-         CALL SETMSG ( 'The file ''#'' was not an SPK file.  The ' &
+         call setmsg ( 'The file ''#'' was not an SPK file.  The ' &
          //            'architecture and type of the file were ' &
          //            'found to be ''#'' and ''#'' respectively. ' )
 
-         CALL ERRCH  ( '#', FILE )
-         CALL ERRCH  ( '#', ARCH )
-         CALL ERRCH  ( '#', TYPE )
-         CALL SIGERR ( 'SPICE(FILEISNOTSPK)'  )
-         CALL CHKOUT ( 'SPKOPA' )
-         RETURN
-      END IF
+         call errch  ( '#', file )
+         call errch  ( '#', arch )
+         call errch  ( '#', type )
+         call sigerr ( 'SPICE(FILEISNOTSPK)'  )
+         call chkout ( 'SPKOPA' )
+         return
+      end if
 
 !
 !     That's the limit of the checks performed here.  We let DAFOPW
 !     handle the remaining checks.
 !
-      CALL DAFOPW ( FILE, HANDLE )
+      call dafopw ( file, handle )
 
-      IF ( FAILED() ) THEN
-         HANDLE = 0
-      END IF
+      if ( failed() ) then
+         handle = 0
+      end if
 
-      CALL CHKOUT ( 'SPKOPA' )
-      RETURN
+      call chkout ( 'SPKOPA' )
+      return
 
-      END
+      end

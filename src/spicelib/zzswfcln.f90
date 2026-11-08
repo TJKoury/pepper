@@ -1,6 +1,6 @@
 !$Procedure ZZSWFCLN ( Private, switch frame clean up )
 
-      SUBROUTINE ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+      subroutine zzswfcln ( hdfram, frpool, basbeg, framat )
 
 ! $ Abstract
 !
@@ -24,14 +24,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzswtchf.inc'
+      include 'zzswtchf.inc'
 
-      INTEGER               HDFRAM ( * )
-      INTEGER               FRPOOL ( LBSNGL : * )
-      INTEGER               BASBEG ( * )
-      INTEGER               FRAMAT
+      integer               hdfram ( * )
+      integer               frpool ( lbsngl : * )
+      integer               basbeg ( * )
+      integer               framat
 
 ! $ Brief_I/O
 !
@@ -117,17 +117,17 @@
 !     signaled, so it does not return upon entry after a SPICE error
 !     occurs.
 !
-      CALL CHKIN ( 'ZZSWFCLN' )
+      call chkin ( 'ZZSWFCLN' )
 
-      FRAMAT = 0
+      framat = 0
 
 !
 !     Both of the following routines will execute even when a SPICE
 !     error condition exists.
 !
-      CALL CLEARI   ( MAXFRM, BASBEG )
-      CALL ZZHSIINI ( MAXFRM, HDFRAM, FRPOOL )
+      call cleari   ( maxfrm, basbeg )
+      call zzhsiini ( maxfrm, hdfram, frpool )
 
-      CALL CHKOUT ( 'ZZSWFCLN' )
-      RETURN
-      END
+      call chkout ( 'ZZSWFCLN' )
+      return
+      end

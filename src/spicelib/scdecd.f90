@@ -1,6 +1,6 @@
 !$Procedure SCDECD ( Decode spacecraft clock )
 
-      SUBROUTINE SCDECD ( SC, SCLKDP, SCLKCH )
+      subroutine scdecd ( sc, sclkdp, sclkch )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sclk.inc'
+      include               'sclk.inc'
 
-      INTEGER               SC
-      DOUBLE PRECISION      SCLKDP
-      CHARACTER*(*)         SCLKCH
+      integer               sc
+      double precision      sclkdp
+      character*(*)         sclkch
 
 ! $ Brief_I/O
 !
@@ -486,51 +486,51 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
-      INTEGER               LSTLED
-      INTEGER               LASTNB
+      integer               lstled
+      integer               lastnb
 
 !
 !     Local variables
 !
-      CHARACTER*(PARTLN)    PRTSTR
+      character*(partln)    prtstr
 
-      INTEGER               NPARTS
-      INTEGER               PART
-      INTEGER               PRELEN
-      INTEGER               SUFLEN
-      INTEGER               I
+      integer               nparts
+      integer               part
+      integer               prelen
+      integer               suflen
+      integer               i
 
-      DOUBLE PRECISION      TICKS
-      DOUBLE PRECISION      PSTART   ( MXPART )
-      DOUBLE PRECISION      PSTOP    ( MXPART )
-      DOUBLE PRECISION      PTOTLS   ( MXPART )
+      double precision      ticks
+      double precision      pstart   ( mxpart )
+      double precision      pstop    ( mxpart )
+      double precision      ptotls   ( mxpart )
 
 !
 !     Saved variables
 !
-      SAVE                  PSTART
-      SAVE                  PSTOP
-      SAVE                  PTOTLS
+      save                  pstart
+      save                  pstop
+      save                  ptotls
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCDECD' )
+      call chkin ( 'SCDECD' )
 
 !
 !     Use a working copy of the input.
 !
-      TICKS = ANINT ( SCLKDP )
+      ticks = anint ( sclkdp )
 
-      SCLKCH = ' '
+      sclkch = ' '
 
 !
 !     Read the partition start and stop times (in ticks) for this
@@ -538,37 +538,37 @@
 !     check FAILED in case error handling is not in ABORT or
 !     DEFAULT mode.
 !
-      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      call scpart ( sc, nparts, pstart, pstop )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SCDECD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SCDECD' )
+         return
+      end if
 
-      IF ( NPARTS .GT. MXPART ) THEN
+      if ( nparts .gt. mxpart ) then
 !
 !        This code should be unreachable. It is included for safety.
 !
-         CALL SETMSG ( 'The number of partitions, #, for spacecraft ' // &
+         call setmsg ( 'The number of partitions, #, for spacecraft ' // &
                        '# exceeds the value for parameter MXPART, #.' )
-         CALL ERRINT ( '#', NPARTS           )
-         CALL ERRINT ( '#', SC               )
-         CALL ERRINT ( '#', MXPART           )
-         CALL SIGERR ( 'SPICE(TOOMANYPARTS)' )
-         CALL CHKOUT ( 'SCDECD'              )
-         RETURN
+         call errint ( '#', nparts           )
+         call errint ( '#', sc               )
+         call errint ( '#', mxpart           )
+         call sigerr ( 'SPICE(TOOMANYPARTS)' )
+         call chkout ( 'SCDECD'              )
+         return
 
-      END IF
+      end if
 
 !
 !     For each partition, compute the total number of ticks in that
 !     partition plus all preceding partitions.
 !
-      PTOTLS( 1 ) = ANINT ( PSTOP( 1 ) - PSTART( 1 ) )
+      ptotls( 1 ) = anint ( pstop( 1 ) - pstart( 1 ) )
 
-      DO I = 2, NPARTS
-         PTOTLS( I ) = ANINT ( PTOTLS( I-1 ) + PSTOP( I ) - PSTART( I ))
-      END DO
+      do i = 2, nparts
+         ptotls( i ) = anint ( ptotls( i-1 ) + pstop( i ) - pstart( i ))
+      end do
 
 !
 !     The partition corresponding to the input ticks is the first one
@@ -580,75 +580,75 @@
 !     Error if TICKS comes before the first partition (that is, if it's
 !     negative), or after the last one.
 !
-      IF ( TICKS .EQ. PTOTLS (NPARTS) )  THEN
-         PART = NPARTS
-      ELSE
-         PART = LSTLED ( TICKS, NPARTS, PTOTLS ) + 1
-      END IF
+      if ( ticks .eq. ptotls (nparts) )  then
+         part = nparts
+      else
+         part = lstled ( ticks, nparts, ptotls ) + 1
+      end if
 
 
-      IF ( ( TICKS .LT. 0.D0 ).OR.( PART .GT. NPARTS ) ) THEN
+      if ( ( ticks .lt. 0.d0 ).or.( part .gt. nparts ) ) then
 
-         CALL SETMSG ( 'Value for ticks, #, does not fall in any ' // &
+         call setmsg ( 'Value for ticks, #, does not fall in any ' // &
                        'partition for spacecraft #.'  )
-         CALL ERRDP  ( '#', TICKS                     )
-         CALL ERRINT ( '#', SC                        )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'       )
-         CALL CHKOUT ( 'SCDECD'                       )
-         RETURN
+         call errdp  ( '#', ticks                     )
+         call errint ( '#', sc                        )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'       )
+         call chkout ( 'SCDECD'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     To get the count in this partition, subtract off the total of
 !     the preceding partition counts and add the beginning count for
 !     this partition.
 !
-      IF ( PART .EQ. 1 ) THEN
-         TICKS = TICKS + PSTART( PART )
-      ELSE
-         TICKS = TICKS + PSTART( PART ) - PTOTLS( PART - 1 )
-      END IF
+      if ( part .eq. 1 ) then
+         ticks = ticks + pstart( part )
+      else
+         ticks = ticks + pstart( part ) - ptotls( part - 1 )
+      end if
 
 !
 !     Now create the output SCLK clock string.
 !
 !     First convert from ticks to clock string format.
 !
-      CALL SCFMT ( SC, TICKS, SCLKCH )
+      call scfmt ( sc, ticks, sclkch )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SCDECD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SCDECD' )
+         return
+      end if
 
 !
 !     Now convert the partition number to a character string and prefix
 !     it to the output string.
 !
-      CALL INTSTR ( PART, PRTSTR )
+      call intstr ( part, prtstr )
 
-      CALL SUFFIX ( '/', 0, PRTSTR )
+      call suffix ( '/', 0, prtstr )
 
-      PRELEN = LASTNB ( PRTSTR )
-      SUFLEN = LASTNB ( SCLKCH )
+      prelen = lastnb ( prtstr )
+      suflen = lastnb ( sclkch )
 
-      IF ( LEN ( SCLKCH ) - SUFLEN .LT. PRELEN ) THEN
+      if ( len ( sclkch ) - suflen .lt. prelen ) then
 
-         CALL SETMSG ( 'Output string too short to contain clock '    // &
+         call setmsg ( 'Output string too short to contain clock '    // &
                        'string. Input tick value: #, requires string '// &
                        'of length #, but declared length is #.'       )
-         CALL ERRDP  ( '#', SCLKDP )
-         CALL ERRINT ( '#', PRELEN + SUFLEN     )
-         CALL ERRINT ( '#', LEN ( SCLKCH )      )
-         CALL SIGERR ( 'SPICE(SCLKTRUNCATED)'   )
-         CALL CHKOUT ( 'SCDECD'                 )
-         RETURN
+         call errdp  ( '#', sclkdp )
+         call errint ( '#', prelen + suflen     )
+         call errint ( '#', len ( sclkch )      )
+         call sigerr ( 'SPICE(SCLKTRUNCATED)'   )
+         call chkout ( 'SCDECD'                 )
+         return
 
-      END IF
+      end if
 
-      CALL PREFIX ( PRTSTR, 0, SCLKCH )
+      call prefix ( prtstr, 0, sclkch )
 
-      CALL CHKOUT ( 'SCDECD' )
-      RETURN
-      END
+      call chkout ( 'SCDECD' )
+      return
+      end

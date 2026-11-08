@@ -1,6 +1,6 @@
 !$Procedure STPOOL ( String from pool )
 
-      SUBROUTINE STPOOL ( ITEM, NTH, CONTIN, NTHSTR, SIZE, FOUND )
+      subroutine stpool ( item, nth, contin, nthstr, size, found )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ITEM
-      INTEGER               NTH
-      CHARACTER*(*)         CONTIN
-      CHARACTER*(*)         NTHSTR
-      INTEGER               SIZE
-      LOGICAL               FOUND
+      character*(*)         item
+      integer               nth
+      character*(*)         contin
+      character*(*)         nthstr
+      integer               size
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -321,83 +321,83 @@
 
 !     SPICELIB Variables
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
+      integer               rtrim
+      logical               return
 
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      CHARACTER*(LNSIZE)    PART
+      character*(lnsize)    part
 
 
-      INTEGER               CFIRST
-      INTEGER               CLAST
-      INTEGER               COMP
-      INTEGER               CSIZE
-      INTEGER               N
-      INTEGER               PUTAT
-      INTEGER               ROOM
-      INTEGER               STRNO
+      integer               cfirst
+      integer               clast
+      integer               comp
+      integer               csize
+      integer               n
+      integer               putat
+      integer               room
+      integer               strno
 
-      LOGICAL               GOTIT
-      LOGICAL               MORE
+      logical               gotit
+      logical               more
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( NTH .LT. 1 ) THEN
-         FOUND  = .FALSE.
-         NTHSTR = ' '
-         SIZE   = 0
-         RETURN
-      END IF
+      if ( nth .lt. 1 ) then
+         found  = .false.
+         nthstr = ' '
+         size   = 0
+         return
+      end if
 
 
-      CALL CHKIN ( 'STPOOL')
+      call chkin ( 'STPOOL')
 
-      ROOM  = LEN(NTHSTR)
-      CSIZE = RTRIM(CONTIN)
-      PUTAT = 1
+      room  = len(nthstr)
+      csize = rtrim(contin)
+      putat = 1
 
 !
 !     Retrieve components until we've gone past the first NTH-1
 !     strings.
 !
-      STRNO = 1
-      COMP  = 1
-      FOUND = .FALSE.
+      strno = 1
+      comp  = 1
+      found = .false.
 
-      DO WHILE ( STRNO .LT. NTH )
+      do while ( strno .lt. nth )
 
-         CALL GCPOOL ( ITEM, COMP, 1, N, PART, GOTIT )
+         call gcpool ( item, comp, 1, n, part, gotit )
 
-         GOTIT = N .GT. 0
+         gotit = n .gt. 0
 
-         IF ( .NOT. GOTIT ) THEN
-            NTHSTR = ' '
-            SIZE   = 0
-            FOUND  = .FALSE.
-            CALL CHKOUT ( 'STPOOL' )
-            RETURN
-         END IF
+         if ( .not. gotit ) then
+            nthstr = ' '
+            size   = 0
+            found  = .false.
+            call chkout ( 'STPOOL' )
+            return
+         end if
 
-         CLAST  = RTRIM(PART)
-         CFIRST = CLAST - CSIZE + 1
+         clast  = rtrim(part)
+         cfirst = clast - csize + 1
 
-         IF ( CFIRST .LT. 0 ) THEN
-            STRNO = STRNO + 1
-         ELSE IF ( PART(CFIRST:CLAST) .NE. CONTIN ) THEN
-            STRNO = STRNO + 1
-         END IF
+         if ( cfirst .lt. 0 ) then
+            strno = strno + 1
+         else if ( part(cfirst:clast) .ne. contin ) then
+            strno = strno + 1
+         end if
 
-         COMP = COMP + 1
+         comp = comp + 1
 
-      END DO
+      end do
 
 !
 !     Once we've reached this point, COMP points to the component
@@ -405,61 +405,61 @@
 !     string.  Now just retrieve components until we run out or
 !     one is not continued.
 !
-      MORE   = .TRUE.
-      NTHSTR = ' '
-      N      =  0
+      more   = .true.
+      nthstr = ' '
+      n      =  0
 
-      DO WHILE ( MORE )
+      do while ( more )
 
-         CALL GCPOOL ( ITEM, COMP, 1, N, PART, MORE )
+         call gcpool ( item, comp, 1, n, part, more )
 
-         MORE = MORE .AND. N .GT. 0
+         more = more .and. n .gt. 0
 
-         IF ( MORE ) THEN
+         if ( more ) then
 
-            FOUND  = .TRUE.
+            found  = .true.
 
-            CLAST  = RTRIM(PART)
-            CFIRST = CLAST - CSIZE + 1
+            clast  = rtrim(part)
+            cfirst = clast - csize + 1
 
-            IF ( CFIRST .LT. 0 ) THEN
+            if ( cfirst .lt. 0 ) then
 
-               IF ( PUTAT .LE. ROOM ) THEN
-                  NTHSTR(PUTAT:) = PART(1:CLAST)
-               END IF
+               if ( putat .le. room ) then
+                  nthstr(putat:) = part(1:clast)
+               end if
 
-               PUTAT          = PUTAT + CLAST
-               MORE           = .FALSE.
+               putat          = putat + clast
+               more           = .false.
 
-            ELSE IF ( PART(CFIRST:CLAST) .NE. CONTIN ) THEN
+            else if ( part(cfirst:clast) .ne. contin ) then
 
-               IF ( PUTAT .LE. ROOM ) THEN
-                  NTHSTR(PUTAT:) = PART(1:CLAST)
-               END IF
-               PUTAT          = PUTAT + CLAST
-               MORE           = .FALSE.
+               if ( putat .le. room ) then
+                  nthstr(putat:) = part(1:clast)
+               end if
+               putat          = putat + clast
+               more           = .false.
 
-            ELSE IF ( CFIRST .GT. 1 ) THEN
+            else if ( cfirst .gt. 1 ) then
 
-               IF ( PUTAT .LE. ROOM ) THEN
-                  NTHSTR(PUTAT:) = PART(1:CFIRST-1)
-               END IF
-               PUTAT          = PUTAT + CFIRST - 1
+               if ( putat .le. room ) then
+                  nthstr(putat:) = part(1:cfirst-1)
+               end if
+               putat          = putat + cfirst - 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         COMP = COMP + 1
+         comp = comp + 1
 
-      END DO
+      end do
 
 !
 !     We are done.  Get the size of the full string and checkout.
 !
-      SIZE = PUTAT - 1
+      size = putat - 1
 
-      CALL CHKOUT ( 'STPOOL' )
+      call chkout ( 'STPOOL' )
 
-      RETURN
-      END
+      return
+      end

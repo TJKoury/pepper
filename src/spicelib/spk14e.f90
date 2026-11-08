@@ -1,6 +1,6 @@
 !$Procedure SPK14E ( SPK type 14: End a segment. )
 
-      SUBROUTINE SPK14E ( HANDLE )
+      subroutine spk14e ( handle )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -309,28 +309,28 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPK14E' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SPK14E' )
+      end if
 
 !
 !     This is simple, just call the routine which ends a generic
 !     segment.
 !
-      CALL SGWES ( HANDLE )
+      call sgwes ( handle )
 
 !
 !     No need to check FAILED() here, since all we do is check out.
 !     Leave it up to the caller.
 
-      CALL CHKOUT ( 'SPK14E' )
-      RETURN
+      call chkout ( 'SPK14E' )
+      return
 
-      END
+      end

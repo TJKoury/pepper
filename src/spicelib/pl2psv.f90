@@ -1,6 +1,6 @@
 !$Procedure PL2PSV ( Plane to point and spanning vectors )
 
-      SUBROUTINE PL2PSV ( PLANE, POINT, SPAN1, SPAN2 )
+      subroutine pl2psv ( plane, point, span1, span2 )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   =   4 )
+      integer               ubpl
+      parameter           ( ubpl   =   4 )
 
-      DOUBLE PRECISION      PLANE ( UBPL )
-      DOUBLE PRECISION      POINT (    3 )
-      DOUBLE PRECISION      SPAN1 (    3 )
-      DOUBLE PRECISION      SPAN2 (    3 )
+      double precision      plane ( ubpl )
+      double precision      point (    3 )
+      double precision      span1 (    3 )
+      double precision      span2 (    3 )
 
 ! $ Brief_I/O
 !
@@ -243,7 +243,7 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      NORMAL ( 3 )
+      double precision      normal ( 3 )
 
 !
 !     Note for programmers: validity of the input plane is not
@@ -254,7 +254,7 @@
 !     Find a unit normal vector for the plane, and find the closest
 !     point in the plane to the origin.
 !
-      CALL PL2NVP ( PLANE, NORMAL, POINT )
+      call pl2nvp ( plane, normal, point )
 
 !
 !     Next, find an orthogonal pair of vectors that are also
@@ -262,7 +262,7 @@
 !     FRAME does this for us.  NORMAL, SPAN1, and SPAN2 form a
 !     right-handed orthonormal system upon output from FRAME.
 !
-      CALL FRAME  ( NORMAL, SPAN1, SPAN2 )
+      call frame  ( normal, span1, span2 )
 
-      RETURN
-      END
+      return
+      end

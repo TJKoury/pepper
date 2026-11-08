@@ -1,6 +1,6 @@
 !$Procedure DAFFA ( DAF, find array )
 
-      SUBROUTINE DAFFA ( HANDLE, SUM, NAME, FOUND )
+      subroutine daffa ( handle, sum, name, found )
 
 ! $ Abstract
 !
@@ -16,17 +16,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               TBSIZE
-      PARAMETER           ( TBSIZE = FTSIZE )
+      integer               tbsize
+      parameter           ( tbsize = ftsize )
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      SUM    ( * )
-      CHARACTER*(*)         NAME
-      LOGICAL               FOUND
+      integer               handle
+      double precision      sum    ( * )
+      character*(*)         name
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -1091,35 +1091,35 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ELEMI
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               elemi
+      logical               failed
+      logical               return
 
 
 
 !
 !     Local parameters
 !
-      INTEGER               CRLEN
-      PARAMETER           ( CRLEN  = 1000 )
+      integer               crlen
+      parameter           ( crlen  = 1000 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN =   60 )
+      integer               ifnlen
+      parameter           ( ifnlen =   60 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL =   -5 )
+      integer               lbcell
+      parameter           ( lbcell =   -5 )
 
-      INTEGER               MAXNDC
-      PARAMETER           ( MAXNDC =  124 )
+      integer               maxndc
+      parameter           ( maxndc =  124 )
 
-      INTEGER               DPRSIZ
-      PARAMETER           ( DPRSIZ =  128 )
+      integer               dprsiz
+      parameter           ( dprsiz =  128 )
 
-      INTEGER               MAXNIC
-      PARAMETER           ( MAXNIC =  250 )
+      integer               maxnic
+      parameter           ( maxnic =  250 )
 
-      INTEGER               NIL
-      PARAMETER           ( NIL    =   -1 )
+      integer               nil
+      parameter           ( nil    =   -1 )
 
 
 !
@@ -1155,15 +1155,15 @@
 !     These variables are maintained in a table of parallel arrays;
 !     the size of the table is TBSIZE.
 !
-      INTEGER               STFH   (         TBSIZE )
-      INTEGER               STPREV (         TBSIZE )
-      INTEGER               STTHIS (         TBSIZE )
-      INTEGER               STNEXT (         TBSIZE )
-      INTEGER               STNSEG (         TBSIZE )
-      INTEGER               STCURR (         TBSIZE )
-      CHARACTER*(CRLEN)     STNR   (         TBSIZE )
-      LOGICAL               STHVNR (         TBSIZE )
-      DOUBLE PRECISION      STSR   ( DPRSIZ, TBSIZE )
+      integer               stfh   (         tbsize )
+      integer               stprev (         tbsize )
+      integer               stthis (         tbsize )
+      integer               stnext (         tbsize )
+      integer               stnseg (         tbsize )
+      integer               stcurr (         tbsize )
+      character*(crlen)     stnr   (         tbsize )
+      logical               sthvnr (         tbsize )
+      double precision      stsr   ( dprsiz, tbsize )
 
 !
 !     The table of state variables is indexed by a singly linked list
@@ -1178,9 +1178,9 @@
 !     STFPTR (`state table free pointer'), respectively. Every node in
 !     the pool is on exactly one of these lists.
 !
-      INTEGER               STPOOL ( TBSIZE )
-      INTEGER               STHEAD
-      INTEGER               STFPTR
+      integer               stpool ( tbsize )
+      integer               sthead
+      integer               stfptr
 
 !
 !     The pool starts out with all of the nodes on the free list. The
@@ -1210,67 +1210,67 @@
 !
 !     Other local variables
 !
-      CHARACTER*(FILEN)     DAFNAM
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(filen)     dafnam
+      character*(ifnlen)    ifname
 
-      DOUBLE PRECISION      EXDC   ( MAXNDC )
-      DOUBLE PRECISION      EXSUM  ( MAXNDC )
-      DOUBLE PRECISION      NEWDC  ( MAXNDC )
+      double precision      exdc   ( maxndc )
+      double precision      exsum  ( maxndc )
+      double precision      newdc  ( maxndc )
 
-      INTEGER               BWARD
-      INTEGER               EXIC   ( MAXNIC )
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               I
-      INTEGER               NAMSIZ
-      INTEGER               ND
-      INTEGER               NEWIC  ( MAXNIC )
-      INTEGER               NEXTP
-      INTEGER               NI
-      INTEGER               OPNSET ( LBCELL : FTSIZE )
-      INTEGER               P
-      INTEGER               PREV
-      INTEGER               SUMSIZ
+      integer               bward
+      integer               exic   ( maxnic )
+      integer               free
+      integer               fward
+      integer               i
+      integer               namsiz
+      integer               nd
+      integer               newic  ( maxnic )
+      integer               nextp
+      integer               ni
+      integer               opnset ( lbcell : ftsize )
+      integer               p
+      integer               prev
+      integer               sumsiz
 
-      LOGICAL               FIRST
-      LOGICAL               FND
-      INTEGER               OFFSET
+      logical               first
+      logical               fnd
+      integer               offset
 
 
 !
 !     Save everything between calls
 !
-      SAVE
+      save
 
 
 !
 !     Initial values
 !
-      DATA                  FIRST    / .TRUE.             /
-      DATA                  STHVNR   /  TBSIZE * .FALSE.  /
-      DATA                  STFPTR   /  NIL               /
-      DATA                  STHEAD   /  NIL               /
+      data                  first    / .true.             /
+      data                  sthvnr   /  tbsize * .false.  /
+      data                  stfptr   /  nil               /
+      data                  sthead   /  nil               /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'DAFFA'             )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'DAFFA'             )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'DAFFA'             )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'DAFFA'             )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DAFBFS ( DAF, begin forward search )
 
-      ENTRY DAFBFS ( HANDLE )
+      entry dafbfs ( handle )
 
 ! $ Abstract
 !
@@ -1546,66 +1546,66 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFBFS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFBFS' )
+      end if
 
 !
 !     Check out the file handle before going any further.
 !
-      CALL DAFSIH ( HANDLE, 'READ' )
+      call dafsih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFBFS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFBFS' )
+         return
+      end if
 
 !
 !     Initialize the state table pool, if this hasn't been done yet.
 !     Also initialize the cell used to obtain the set of handles of
 !     open DAFs.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL SSIZEI ( FTSIZE, OPNSET )
+         call ssizei ( ftsize, opnset )
 
-         DO I = 1,  TBSIZE - 1
-            STPOOL(I)   =  I + 1
-         END DO
+         do i = 1,  tbsize - 1
+            stpool(i)   =  i + 1
+         end do
 
-         STPOOL(TBSIZE) =  NIL
-         STFPTR         =  1
-         FIRST          = .FALSE.
+         stpool(tbsize) =  nil
+         stfptr         =  1
+         first          = .false.
 
-      END IF
+      end if
 
 !
 !     See whether we already have an entry for this DAF in the
 !     state table. Find the previous node if possible.
 !
-      P      =   STHEAD
-      PREV   =   NIL
-      FND    =  .FALSE.
+      p      =   sthead
+      prev   =   nil
+      fnd    =  .false.
 
-      DO WHILE (  ( P .NE. NIL )  .AND.  ( .NOT. FND )  )
+      do while (  ( p .ne. nil )  .and.  ( .not. fnd )  )
 
-         IF ( STFH(P) .EQ. HANDLE ) THEN
-            FND   =  .TRUE.
-         ELSE
-            PREV  =  P
-            P     =  STPOOL( P )
-         END IF
+         if ( stfh(p) .eq. handle ) then
+            fnd   =  .true.
+         else
+            prev  =  p
+            p     =  stpool( p )
+         end if
 
-      END DO
+      end do
 
 !
 !     At this point, either FND is false, or P points to a
 !     state table entry describing the DAF indicated by HANDLE.
 !     In the latter case, PREV is the predecessor of P.
 !
-      IF ( FND ) THEN
+      if ( fnd ) then
 !
 !        We already have a dossier on this DAF. We already have
 !        the information on the summary format, but we must re-set
@@ -1628,52 +1628,52 @@
 !           - Make P the active list head node.
 !
 !
-         IF ( P .NE. STHEAD ) THEN
+         if ( p .ne. sthead ) then
 !
 !           P is in the active list, but is not at the head. So,
 !           the predecessor of P is not NIL.
 !
-            STPOOL(PREV)  =  STPOOL(P)
-            STPOOL(P)     =  STHEAD
-            STHEAD        =  P
+            stpool(prev)  =  stpool(p)
+            stpool(p)     =  sthead
+            sthead        =  p
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        We don't yet have any information on this DAF. Make a new
 !        state table entry for the DAF. We may need to make room for
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         IF ( STFPTR .EQ. NIL ) THEN
+         if ( stfptr .eq. nil ) then
 !
 !           Oops, we're out of space. Time for garbage collection.
 !           Test each file handle to see whether it designates a DAF
 !           that is still open. DAFHOF will tell us which handles
 !           point to open DAFs.
 !
-            CALL DAFHOF ( OPNSET )
+            call dafhof ( opnset )
 
-            P     =  STHEAD
-            PREV  =  NIL
+            p     =  sthead
+            prev  =  nil
 !
 !           For every DAF file represented in the state table, we'll
 !           delete the corresponding state information if the DAF is
 !           now closed. We traverse the active list, examining each
 !           file handle as we go.
 !
-            DO WHILE ( P .NE. NIL )
+            do while ( p .ne. nil )
 
-               IF (  ELEMI ( STFH(P), OPNSET )   )  THEN
+               if (  elemi ( stfh(p), opnset )   )  then
 !
 !                 The file is open. Have a look at the next node.
 !
-                  PREV = P
-                  P    = STPOOL( P )
+                  prev = p
+                  p    = stpool( p )
 
-               ELSE
+               else
 !
 !                 This file handle is not on the list, so free the
 !                 node pointing to the information about the DAF it
@@ -1695,42 +1695,42 @@
 !                    - (PREV remains unchanged.)
 !
 !
-                  NEXTP  =  STPOOL( P )
+                  nextp  =  stpool( p )
 
 
-                  IF ( P .EQ. STHEAD ) THEN
+                  if ( p .eq. sthead ) then
 !
 !                    Re-assign STHEAD so that we don't lose the head
 !                    of the active list. P has no predecessor in this
 !                    case, so there's no need to set the forward pointer
 !                    of node PREV.
 !
-                     STHEAD = NEXTP
+                     sthead = nextp
 
-                  ELSE
+                  else
 !
 !                    Since P is not the head node of the active list,
 !                    PREV is not NIL, so we'll need to set the forward
 !                    pointer of node PREV.
 !
-                     STPOOL( PREV ) = NEXTP
+                     stpool( prev ) = nextp
 
-                  END IF
+                  end if
 
-                  STPOOL( P )  =  STFPTR
-                  STFPTR       =  P
-                  P            =  NEXTP
+                  stpool( p )  =  stfptr
+                  stfptr       =  p
+                  p            =  nextp
 
-               END IF
+               end if
 
-            END DO
+            end do
 !
 !           At this point, we've freed all nodes from the active
 !           list that were used to index information about DAFs that
 !           are no longer open. If there's any more room in the state
 !           table, we have it now.
 !
-         END IF
+         end if
 
 !
 !        If there still is no room, there is a bug in DAFAH, since DAFAH
@@ -1739,17 +1739,17 @@
 !        indicated by STFPTR. We'll allocate this node and use it to
 !        index the state information for the new DAF.
 !
-         P  =  STFPTR
+         p  =  stfptr
 
 !
 !        Update the free list pointer, link P to the previous head
 !        of the active list, and make P the head of the active list.
 !
-         STFPTR       =  STPOOL( P )
-         STPOOL( P )  =  STHEAD
-         STHEAD       =  P
+         stfptr       =  stpool( p )
+         stpool( p )  =  sthead
+         sthead       =  p
 
-      END IF
+      end if
 
 !
 !     At this point, P is the head node of the active list, and P is
@@ -1762,52 +1762,52 @@
 !     corresponding name record until necessary. In most searches,
 !     names are of no interest.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
-      CALL DAFGSR ( HANDLE, FWARD, 1, 128, STSR(1,P), FND )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
+      call dafgsr ( handle, fward, 1, 128, stsr(1,p), fnd )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'Attempt to read descriptor record # '    // &
+         call setmsg ( 'Attempt to read descriptor record # '    // &
                        'of DAF ''#'' failed; record was '        // &
                        'not found. This condition may indicate ' // &
                        'a corrupted DAF.' )
-         CALL ERRINT ( '#', STNEXT(P)                            )
-         CALL ERRCH  ( '#', DAFNAM                               )
-         CALL SIGERR ( 'SPICE(RECORDNOTFOUND)'                   )
-         CALL CHKOUT ( 'DAFBFS'                                  )
-         RETURN
+         call errint ( '#', stnext(p)                            )
+         call errch  ( '#', dafnam                               )
+         call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
+         call chkout ( 'DAFBFS'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Set up the state information for this file. Note that we
 !     don't have a name record yet, and we have no current array
 !     yet.
 !
-      STFH  ( P )  =  HANDLE
-      STTHIS( P )  =  FWARD
-      STNEXT( P )  =  INT ( STSR(1,P) )
-      STPREV( P )  =  INT ( STSR(2,P) )
-      STNSEG( P )  =  INT ( STSR(3,P) )
-      STHVNR( P )  = .FALSE.
+      stfh  ( p )  =  handle
+      stthis( p )  =  fward
+      stnext( p )  =  int ( stsr(1,p) )
+      stprev( p )  =  int ( stsr(2,p) )
+      stnseg( p )  =  int ( stsr(3,p) )
+      sthvnr( p )  = .false.
 
 !
 !     The arrays are returned in forward order within each summary
 !     record.
 !
-      STCURR( P )  =  0
+      stcurr( p )  =  0
 
-      CALL CHKOUT ( 'DAFBFS' )
-      RETURN
+      call chkout ( 'DAFBFS' )
+      return
 
 
 
 
 !$Procedure DAFFNA ( DAF, find next array )
 
-      ENTRY DAFFNA ( FOUND )
+      entry daffna ( found )
 
 ! $ Abstract
 !
@@ -2091,53 +2091,53 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFFNA' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFFNA' )
+      end if
 
 
 !
 !     FOUND will be false until we make it past the error checks.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFFNA'                              )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFFNA'                              )
+         return
 
 !
 !     Make sure that the `current' DAF is still open.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'READ' )
+         call dafsih ( stfh(p), 'READ' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFFNA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFFNA' )
+            return
+         end if
 
-      END IF
+      end if
 
 
 !
 !     Now that we know a search is going on, assume that we will find
 !     an array until proven otherwise.
 !
-      FOUND = .TRUE.
+      found = .true.
 
 
 !
@@ -2149,22 +2149,22 @@
 !     no more arrays to be found.)
 !
 
-      STCURR(P) = STCURR(P) + 1
+      stcurr(p) = stcurr(p) + 1
 
-      IF ( STCURR(P) .GT. STNSEG(P) ) THEN
+      if ( stcurr(p) .gt. stnseg(p) ) then
 
-         IF ( STNEXT(P) .EQ. 0 ) THEN
+         if ( stnext(p) .eq. 0 ) then
 !
 !           There are no more arrays in the list.
 !
-            FOUND     =  .FALSE.
+            found     =  .false.
 !
 !           Make sure that the array pointer stays pointing to
 !           the position following the end of the list. Otherwise,
 !           a call to DAFFPA might fail to find the last array in
 !           the list.
 !
-            STCURR(P) =   STNSEG(P) + 1
+            stcurr(p) =   stnseg(p) + 1
 !
 !           The careful reader may note that we're not updating any
 !           of the pointers
@@ -2177,54 +2177,54 @@
 !           If the array pointer is backed up again by a call to
 !           DAFFPA, the values we have right now will be correct.
 !
-         ELSE
+         else
 
-            CALL DAFGSR ( STFH(P), STNEXT(P), 1, 128, STSR(1,P), FND )
+            call dafgsr ( stfh(p), stnext(p), 1, 128, stsr(1,p), fnd )
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 
-               CALL DAFHFN ( STFH(P), DAFNAM )
+               call dafhfn ( stfh(p), dafnam )
 
-               CALL SETMSG ( 'Attempt to read descriptor record # '   // &
+               call setmsg ( 'Attempt to read descriptor record # '   // &
                              'of DAF ''#'' failed; record was '       // &
                              'not found. This condition may indicate '// &
                              'a corrupted DAF.' )
-               CALL ERRINT ( '#', STNEXT(P)                            )
-               CALL ERRCH  ( '#', DAFNAM                               )
-               CALL SIGERR ( 'SPICE(RECORDNOTFOUND)'                   )
-               CALL CHKOUT ( 'DAFFNA'                                  )
-               RETURN
+               call errint ( '#', stnext(p)                            )
+               call errch  ( '#', dafnam                               )
+               call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
+               call chkout ( 'DAFFNA'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           The name (character) record we've saved no longer applies
 !           to the current summary record. However, we've just updated
 !           the summary record, so the summary record remains valid.
 !
-            STHVNR( P )  = .FALSE.
+            sthvnr( p )  = .false.
 
-            STTHIS( P )  =  STNEXT(P)
-            STNEXT( P )  =  INT ( STSR(1,P) )
-            STPREV( P )  =  INT ( STSR(2,P) )
-            STNSEG( P )  =  INT ( STSR(3,P) )
-            STCURR( P )  =  1
+            stthis( p )  =  stnext(p)
+            stnext( p )  =  int ( stsr(1,p) )
+            stprev( p )  =  int ( stsr(2,p) )
+            stnseg( p )  =  int ( stsr(3,p) )
+            stcurr( p )  =  1
 
-            FOUND        = ( STNSEG(P) .GT. 0 )
+            found        = ( stnseg(p) .gt. 0 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFFNA' )
-      RETURN
+      call chkout ( 'DAFFNA' )
+      return
 
 
 
 
 !$Procedure DAFBBS ( DAF, begin backward search )
 
-      ENTRY DAFBBS ( HANDLE )
+      entry dafbbs ( handle )
 
 ! $ Abstract
 !
@@ -2500,66 +2500,66 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFBBS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFBBS' )
+      end if
 
 !
 !     Check out the file handle before going any further.
 !
-      CALL DAFSIH ( HANDLE, 'READ' )
+      call dafsih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFBBS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFBBS' )
+         return
+      end if
 
 !
 !     Initialize the state table pool, if this hasn't been done yet.
 !     Also initialize the cell used to obtain the set of handles of
 !     open DAFs.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL SSIZEI ( FTSIZE, OPNSET )
+         call ssizei ( ftsize, opnset )
 
-         DO I = 1,  TBSIZE - 1
-            STPOOL(I)   =  I + 1
-         END DO
+         do i = 1,  tbsize - 1
+            stpool(i)   =  i + 1
+         end do
 
-         STPOOL(TBSIZE) =  NIL
-         STFPTR         =  1
-         FIRST          = .FALSE.
+         stpool(tbsize) =  nil
+         stfptr         =  1
+         first          = .false.
 
-      END IF
+      end if
 
 !
 !     See whether we already have an entry for this DAF in the
 !     state table. Find the previous node if possible.
 !
-      P     =   STHEAD
-      PREV  =   NIL
-      FND   =  .FALSE.
+      p     =   sthead
+      prev  =   nil
+      fnd   =  .false.
 
-      DO WHILE (  ( P .NE. NIL )  .AND.  ( .NOT. FND )  )
+      do while (  ( p .ne. nil )  .and.  ( .not. fnd )  )
 
-         IF ( STFH(P) .EQ. HANDLE ) THEN
-            FND   =  .TRUE.
-         ELSE
-            PREV  =  P
-            P     =  STPOOL( P )
-         END IF
+         if ( stfh(p) .eq. handle ) then
+            fnd   =  .true.
+         else
+            prev  =  p
+            p     =  stpool( p )
+         end if
 
-      END DO
+      end do
 
 !
 !     At this point, either FND is false, or P points to a
 !     state table entry describing the DAF indicated by HANDLE.
 !     In the latter case, PREV is the predecessor of P.
 !
-      IF ( FND ) THEN
+      if ( fnd ) then
 !
 !        We already have a dossier on this DAF. We already have
 !        the information on the summary format, but we must re-set
@@ -2582,52 +2582,52 @@
 !           - Make P the active list head node.
 !
 !
-         IF ( P .NE. STHEAD ) THEN
+         if ( p .ne. sthead ) then
 !
 !           P is in the active list, but is not at the head. So,
 !           the predecessor of P is not NIL.
 !
-            STPOOL(PREV)  =  STPOOL(P)
-            STPOOL(P)     =  STHEAD
-            STHEAD        =  P
+            stpool(prev)  =  stpool(p)
+            stpool(p)     =  sthead
+            sthead        =  p
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        We don't yet have any information on this DAF. Make a new
 !        state table entry for the DAF. We may need to make room for
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         IF ( STFPTR .EQ. NIL ) THEN
+         if ( stfptr .eq. nil ) then
 !
 !           Oops, we're out of space. Time for garbage collection.
 !           Test each file handle to see whether it designates a DAF
 !           that is still open. DAFHOF will tell us which handles
 !           point to open DAFs.
 !
-            CALL DAFHOF ( OPNSET )
+            call dafhof ( opnset )
 
-            P     =  STHEAD
-            PREV  =  NIL
+            p     =  sthead
+            prev  =  nil
 !
 !           For every DAF file represented in the state table, we'll
 !           delete the corresponding state information if the DAF is
 !           now closed. We traverse the active list, examining each
 !           file handle as we go.
 !
-            DO WHILE ( P .NE. NIL )
+            do while ( p .ne. nil )
 
-               IF (  ELEMI ( STFH(P), OPNSET )   )  THEN
+               if (  elemi ( stfh(p), opnset )   )  then
 !
 !                 The file is open. Have a look at the next node.
 !
-                  PREV = P
-                  P    = STPOOL( P )
+                  prev = p
+                  p    = stpool( p )
 
-               ELSE
+               else
 !
 !                 This file handle is not on the list, so free the
 !                 node pointing to the information about the DAF it
@@ -2649,43 +2649,43 @@
 !                    - (PREV remains unchanged.)
 !
 !
-                  NEXTP  =  STPOOL( P )
+                  nextp  =  stpool( p )
 
 
-                  IF ( P .EQ. STHEAD ) THEN
+                  if ( p .eq. sthead ) then
 !
 !                    Re-assign STHEAD so that we don't lose the head
 !                    of the active list. P has no predecessor in this
 !                    case, so there's no need to set the forward pointer
 !                    of node PREV.
 !
-                     STHEAD = NEXTP
+                     sthead = nextp
 
-                  ELSE
+                  else
 !
 !                    Since P is not the head node of the active list,
 !                    PREV is not NIL, so we'll need to set the forward
 !                    pointer of node PREV.
 !
-                     STPOOL( PREV ) = NEXTP
+                     stpool( prev ) = nextp
 
-                  END IF
+                  end if
 
 
-                  STPOOL( P )  =  STFPTR
-                  STFPTR       =  P
-                  P            =  NEXTP
+                  stpool( p )  =  stfptr
+                  stfptr       =  p
+                  p            =  nextp
 
-               END IF
+               end if
 
-            END DO
+            end do
 !
 !           At this point, we've freed all nodes from the active
 !           list that were used to index information about DAFs that
 !           are no longer open. If there's any more room in the state
 !           table, we have it now.
 !
-         END IF
+         end if
 
 !
 !        If there still is no room, there is a bug in DAFAH, since DAFAH
@@ -2694,16 +2694,16 @@
 !        indicated by STFPTR. We'll allocate this node and use it to
 !        index the state information for the new DAF.
 !
-         P  =  STFPTR
+         p  =  stfptr
 !
 !        Update the free list pointer, link P to the previous head
 !        of the active list, and make P the head of the active list.
 !
-         STFPTR       =  STPOOL( P )
-         STPOOL( P )  =  STHEAD
-         STHEAD       =  P
+         stfptr       =  stpool( p )
+         stpool( p )  =  sthead
+         sthead       =  p
 
-      END IF
+      end if
 
 !
 !     At this point, P is the head node of the active list, and P is
@@ -2716,47 +2716,47 @@
 !     corresponding name record until necessary. In most searches,
 !     names are of no interest.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
-      CALL DAFGSR ( HANDLE, BWARD, 1, 128, STSR(1,P), FND )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
+      call dafgsr ( handle, bward, 1, 128, stsr(1,p), fnd )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'Attempt to read descriptor record # '    // &
+         call setmsg ( 'Attempt to read descriptor record # '    // &
                        'of DAF ''#'' failed; record was '        // &
                        'not found. This condition may indicate ' // &
                        'a corrupted DAF.' )
-         CALL ERRINT ( '#', STNEXT(P)                            )
-         CALL ERRCH  ( '#', DAFNAM                               )
-         CALL SIGERR ( 'SPICE(RECORDNOTFOUND)'                   )
-         CALL CHKOUT ( 'DAFBBS'                                  )
-         RETURN
+         call errint ( '#', stnext(p)                            )
+         call errch  ( '#', dafnam                               )
+         call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
+         call chkout ( 'DAFBBS'                                  )
+         return
 
-      END IF
+      end if
 
-      STFH  ( P )  =  HANDLE
-      STTHIS( P )  =  BWARD
-      STNEXT( P )  =  INT ( STSR(1,P) )
-      STPREV( P )  =  INT ( STSR(2,P) )
-      STNSEG( P )  =  INT ( STSR(3,P) )
-      STHVNR( P )  = .FALSE.
+      stfh  ( p )  =  handle
+      stthis( p )  =  bward
+      stnext( p )  =  int ( stsr(1,p) )
+      stprev( p )  =  int ( stsr(2,p) )
+      stnseg( p )  =  int ( stsr(3,p) )
+      sthvnr( p )  = .false.
 
 !
 !     The arrays are returned in backward order from each summary
 !     record.
 !
-      STCURR( P )  =  STNSEG( P ) + 1
+      stcurr( p )  =  stnseg( p ) + 1
 
-      CALL CHKOUT ( 'DAFBBS' )
-      RETURN
+      call chkout ( 'DAFBBS' )
+      return
 
 
 
 
 !$Procedure DAFFPA ( DAF, find previous array )
 
-      ENTRY DAFFPA ( FOUND )
+      entry daffpa ( found )
 
 ! $ Abstract
 !
@@ -3055,52 +3055,52 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFFPA' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFFPA' )
+      end if
 
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     FOUND will be false until we make it past the error checks.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFFPA'                              )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFFPA'                              )
+         return
 
 !
 !     Make sure that the `current' DAF is still open.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'READ' )
+         call dafsih ( stfh(p), 'READ' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFFPA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFFPA' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Now that we know a search is going on, assume that we will find
 !     an array until proven otherwise.
 !
-      FOUND = .TRUE.
+      found = .true.
 
 !
 !     Either there are more summaries left in this record, or
@@ -3110,22 +3110,22 @@
 !     record is empty, or doesn't exist, then there are simply
 !     no more arrays to be found.)
 !
-      STCURR( P )  =  STCURR( P ) - 1
+      stcurr( p )  =  stcurr( p ) - 1
 
-      IF ( STCURR(P) .LE. 0 ) THEN
+      if ( stcurr(p) .le. 0 ) then
 
-         IF ( STPREV(P) .EQ. 0 ) THEN
+         if ( stprev(p) .eq. 0 ) then
 !
 !           There is no predecessor of the current array in the list.
 !
-            FOUND = .FALSE.
+            found = .false.
 !
 !           Make sure that the array pointer stays pointing to
 !           the position preceding the front of the list. Otherwise,
 !           a call to DAFFNA might fail to find the first array in
 !           the list.
 !
-            STCURR(P) = 0
+            stcurr(p) = 0
 !
 !           The careful reader may note that we're not updating any
 !           of the pointers
@@ -3138,54 +3138,54 @@
 !           If the array pointer is moved forward again by a call to
 !           DAFFNA, the values we have right now will be correct.
 !
-         ELSE
+         else
 
-            CALL DAFGSR ( STFH(P), STPREV(P), 1, 128, STSR(1,P), FND )
+            call dafgsr ( stfh(p), stprev(p), 1, 128, stsr(1,p), fnd )
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 
-               CALL DAFHFN ( STFH(P), DAFNAM )
+               call dafhfn ( stfh(p), dafnam )
 
-               CALL SETMSG ( 'Attempt to read descriptor record # '   // &
+               call setmsg ( 'Attempt to read descriptor record # '   // &
                              'of DAF ''#'' failed; record was '       // &
                              'not found. This condition may indicate '// &
                              'a corrupted DAF.' )
-               CALL ERRINT ( '#', STNEXT(P)                            )
-               CALL ERRCH  ( '#', DAFNAM                               )
-               CALL SIGERR ( 'SPICE(RECORDNOTFOUND)'                   )
-               CALL CHKOUT ( 'DAFFPA'                                  )
-               RETURN
+               call errint ( '#', stnext(p)                            )
+               call errch  ( '#', dafnam                               )
+               call sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
+               call chkout ( 'DAFFPA'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           The name (character) record we've saved no longer applies
 !           to the current summary record. However, we've just updated
 !           the summary record, so the summary record remains valid.
 !
-            STHVNR( P )  = .FALSE.
+            sthvnr( p )  = .false.
 
-            STTHIS( P )  =  STPREV( P )
-            STNEXT( P )  =  INT ( STSR(1,P) )
-            STPREV( P )  =  INT ( STSR(2,P) )
-            STNSEG( P )  =  INT ( STSR(3,P) )
-            STCURR( P )  =  STNSEG( P )
+            stthis( p )  =  stprev( p )
+            stnext( p )  =  int ( stsr(1,p) )
+            stprev( p )  =  int ( stsr(2,p) )
+            stnseg( p )  =  int ( stsr(3,p) )
+            stcurr( p )  =  stnseg( p )
 
-            FOUND        =  ( STNSEG(P) .GT. 0 )
+            found        =  ( stnseg(p) .gt. 0 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFFPA' )
-      RETURN
+      call chkout ( 'DAFFPA' )
+      return
 
 
 
 
 !$Procedure DAFGS ( DAF, get summary )
 
-      ENTRY DAFGS ( SUM )
+      entry dafgs ( sum )
 
 ! $ Abstract
 !
@@ -3471,40 +3471,40 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFGS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFGS' )
+      end if
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFGS'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFGS'                               )
+         return
 
 !
 !     Make sure that the `current' DAF is still open.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'READ' )
+         call dafsih ( stfh(p), 'READ' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFGS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFGS' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the current pointer position to make sure that it's in
@@ -3513,51 +3513,51 @@
 !     current array was the last, or if DAFFPA was called when the
 !     current array was the first.
 !
-      IF ( STCURR(P) .EQ. 0 ) THEN
+      if ( stcurr(p) .eq. 0 ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `next'' array is '   // &
+         call setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFGS'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFGS'                                         )
+         return
 
-      ELSE IF ( STCURR(P) .GT. STNSEG(P) ) THEN
+      else if ( stcurr(p) .gt. stnseg(p) ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `previous'' array is'// &
+         call setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFGS'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFGS'                                         )
+         return
 
-      END IF
+      end if
 
 !
 !     The location of the summary depends on the current pointer
 !     position.
 !
-      CALL DAFHSF ( STFH(P), ND, NI )
+      call dafhsf ( stfh(p), nd, ni )
 
-      SUMSIZ  =  ND   +   ( NI + 1 ) / 2
+      sumsiz  =  nd   +   ( ni + 1 ) / 2
 
-      OFFSET  =  3    +   ( STCURR(P) - 1 )  *  SUMSIZ
+      offset  =  3    +   ( stcurr(p) - 1 )  *  sumsiz
 
-      CALL MOVED (  STSR( OFFSET+1, P ),  SUMSIZ,  SUM )
+      call moved (  stsr( offset+1, p ),  sumsiz,  sum )
 
-      CALL CHKOUT ( 'DAFGS' )
-      RETURN
+      call chkout ( 'DAFGS' )
+      return
 
 
 
 
 !$Procedure DAFGN ( DAF, get array name )
 
-      ENTRY DAFGN ( NAME )
+      entry dafgn ( name )
 
 ! $ Abstract
 !
@@ -3711,41 +3711,41 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFGN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFGN' )
+      end if
 
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFGN'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFGN'                               )
+         return
 
 !
 !     Make sure that the `current' DAF is still open.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'READ' )
+         call dafsih ( stfh(p), 'READ' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFGN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFGN' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the current pointer position to make sure that it's in
@@ -3754,60 +3754,60 @@
 !     called when the current array was the last, or if DAFFPA was
 !     called when the current array was the first.
 !
-      IF ( STCURR(P) .EQ. 0 ) THEN
+      if ( stcurr(p) .eq. 0 ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `next'' array is '   // &
+         call setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFGN'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFGN'                                         )
+         return
 
-      ELSE IF ( STCURR(P) .GT. STNSEG(P) ) THEN
+      else if ( stcurr(p) .gt. stnseg(p) ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `previous'' array is'// &
+         call setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFGN'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFGN'                                         )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Read the name record for this summary record, if we don't have it
 !     already.
 !
-      IF ( .NOT. STHVNR(P) ) THEN
+      if ( .not. sthvnr(p) ) then
 
-         CALL DAFRCR ( STFH(P), STTHIS(P)+1, STNR(P) )
+         call dafrcr ( stfh(p), stthis(p)+1, stnr(p) )
 
-         STHVNR( P )  =  .TRUE.
+         sthvnr( p )  =  .true.
 
-      END IF
+      end if
 
 
 !
 !     The location of the name depends on the current pointer
 !     position.
 !
-      CALL DAFHSF ( STFH(P), ND, NI )
+      call dafhsf ( stfh(p), nd, ni )
 
-      SUMSIZ  =  ND   +   ( NI + 1 ) / 2
+      sumsiz  =  nd   +   ( ni + 1 ) / 2
 
-      NAMSIZ  =  SUMSIZ * 8
+      namsiz  =  sumsiz * 8
 
-      OFFSET  =  ( STCURR(P) - 1 )  *  NAMSIZ
+      offset  =  ( stcurr(p) - 1 )  *  namsiz
 
-      NAME    =  STNR(P) (  OFFSET + 1  :  OFFSET + NAMSIZ  )
+      name    =  stnr(p) (  offset + 1  :  offset + namsiz  )
 
-      CALL CHKOUT ( 'DAFGN' )
-      RETURN
+      call chkout ( 'DAFGN' )
+      return
 
 
 
@@ -3815,7 +3815,7 @@
 
 !$Procedure DAFGH ( DAF, get handle )
 
-      ENTRY DAFGH ( HANDLE )
+      entry dafgh ( handle )
 
 ! $ Abstract
 !
@@ -4009,45 +4009,45 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFGH' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFGH' )
+      end if
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFGH'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFGH'                               )
+         return
 
 !
 !     Make sure that the `current' DAF is still open.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'READ' )
+         call dafsih ( stfh(p), 'READ' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFGH' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFGH' )
+            return
+         end if
 
-      END IF
+      end if
 
-      HANDLE = STFH( P )
+      handle = stfh( p )
 
-      CALL CHKOUT ( 'DAFGH' )
-      RETURN
+      call chkout ( 'DAFGH' )
+      return
 
 
 
@@ -4055,7 +4055,7 @@
 
 !$Procedure DAFRS ( DAF, replace summary )
 
-      ENTRY DAFRS ( SUM )
+      entry dafrs ( sum )
 
 ! $ Abstract
 !
@@ -4217,41 +4217,41 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFRS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFRS' )
+      end if
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFRS'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFRS'                               )
+         return
 
 !
 !     Make sure that the `current' DAF is still open, and that it
 !     is open for writing.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'WRITE' )
+         call dafsih ( stfh(p), 'WRITE' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFRS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFRS' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the current pointer position to make sure that it's in
@@ -4260,70 +4260,70 @@
 !     when the current array was the last, or if DAFFPA was called when
 !     the current array was the first.
 !
-      IF ( STCURR(P) .EQ. 0 ) THEN
+      if ( stcurr(p) .eq. 0 ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `next'' array is '   // &
+         call setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFRS'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFRS'                                         )
+         return
 
-      ELSE IF ( STCURR(P) .GT. STNSEG(P) ) THEN
+      else if ( stcurr(p) .gt. stnseg(p) ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `previous'' array is'// &
+         call setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFRS'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFRS'                                         )
+         return
 
-      END IF
+      end if
 
 !
 !     The location of the summary depends on the current pointer
 !     position.
 !
-      CALL DAFHSF ( STFH(P), ND, NI )
+      call dafhsf ( stfh(p), nd, ni )
 
-      SUMSIZ  =  ND   +   ( NI + 1 ) / 2
+      sumsiz  =  nd   +   ( ni + 1 ) / 2
 
-      OFFSET  =  3    +   ( STCURR(P) - 1 ) * SUMSIZ
+      offset  =  3    +   ( stcurr(p) - 1 ) * sumsiz
 
 !
 !     Get the existing summary, and unpack it. Replace everything
 !     but the addresses (the final two integer components), and
 !     repack. Then replace the existing summary within the record.
 !
-      CALL MOVED (  STSR( OFFSET+1, P ),  SUMSIZ,  EXSUM )
+      call moved (  stsr( offset+1, p ),  sumsiz,  exsum )
 
-      CALL DAFUS ( EXSUM, ND, NI, EXDC,  EXIC  )
-      CALL DAFUS ( SUM,   ND, NI, NEWDC, NEWIC )
+      call dafus ( exsum, nd, ni, exdc,  exic  )
+      call dafus ( sum,   nd, ni, newdc, newic )
 
-      CALL MOVED ( NEWDC, ND,   EXDC )
-      CALL MOVEI ( NEWIC, NI-2, EXIC )
-      CALL DAFPS ( ND, NI, EXDC, EXIC, EXSUM )
+      call moved ( newdc, nd,   exdc )
+      call movei ( newic, ni-2, exic )
+      call dafps ( nd, ni, exdc, exic, exsum )
 
-      CALL MOVED (  EXSUM,  SUMSIZ,  STSR( OFFSET+1, P )  )
+      call moved (  exsum,  sumsiz,  stsr( offset+1, p )  )
 
 !
 !     Rewrite the modified summary record.
 !
-      CALL DAFWDR ( STFH(P), STTHIS(P), STSR(1,P) )
+      call dafwdr ( stfh(p), stthis(p), stsr(1,p) )
 
-      CALL CHKOUT ( 'DAFRS' )
-      RETURN
+      call chkout ( 'DAFRS' )
+      return
 
 
 
 
 !$Procedure DAFRN ( DAF, change array name )
 
-      ENTRY DAFRN ( NAME )
+      entry dafrn ( name )
 
 ! $ Abstract
 !
@@ -4478,41 +4478,41 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFRN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFRN' )
+      end if
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFRN'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFRN'                               )
+         return
 
 !
 !     Make sure that the `current' DAF is still open, and that it
 !     is open for writing.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'WRITE' )
+         call dafsih ( stfh(p), 'WRITE' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFRN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFRN' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the current pointer position to make sure that it's in
@@ -4521,29 +4521,29 @@
 !     called when the current array was the last, or if DAFFPA was
 !     called when the current array was the first.
 !
-      IF ( STCURR(P) .EQ. 0 ) THEN
+      if ( stcurr(p) .eq. 0 ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `next'' array is '   // &
+         call setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFRN'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFRN'                                         )
+         return
 
-      ELSE IF ( STCURR(P) .GT. STNSEG(P) ) THEN
+      else if ( stcurr(p) .gt. stnseg(p) ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `previous'' array is'// &
+         call setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFRN'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFRN'                                         )
+         return
 
-      END IF
+      end if
 
 
 
@@ -4551,43 +4551,43 @@
 !     Read the name record for this summary record, if we don't have it
 !     already.
 !
-      IF ( .NOT. STHVNR(P) ) THEN
+      if ( .not. sthvnr(p) ) then
 
-         CALL DAFRCR ( STFH(P), STTHIS(P)+1, STNR(P) )
+         call dafrcr ( stfh(p), stthis(p)+1, stnr(p) )
 
-         STHVNR( P )  =  .TRUE.
+         sthvnr( p )  =  .true.
 
-      END IF
+      end if
 
 
 !
 !     The location of the name depends on the current pointer
 !     position.
 !
-      CALL DAFHSF ( STFH(P), ND, NI )
+      call dafhsf ( stfh(p), nd, ni )
 
-      SUMSIZ  =  ND   +   ( NI + 1 ) / 2
+      sumsiz  =  nd   +   ( ni + 1 ) / 2
 
-      NAMSIZ  =  SUMSIZ * 8
+      namsiz  =  sumsiz * 8
 
-      OFFSET  =  ( STCURR(P) - 1 )  *  NAMSIZ
+      offset  =  ( stcurr(p) - 1 )  *  namsiz
 
-      STNR(P) (  OFFSET + 1  :  OFFSET + NAMSIZ  )   =   NAME
+      stnr(p) (  offset + 1  :  offset + namsiz  )   =   name
 
 !
 !     Rewrite the character record.
 !
-      CALL DAFWCR ( STFH(P), STTHIS(P)+1, STNR(P) )
+      call dafwcr ( stfh(p), stthis(p)+1, stnr(p) )
 
-      CALL CHKOUT ( 'DAFRN' )
-      RETURN
+      call chkout ( 'DAFRN' )
+      return
 
 
 
 
 !$Procedure DAFWS ( DAF, write summary )
 
-      ENTRY DAFWS ( SUM )
+      entry dafws ( sum )
 
 ! $ Abstract
 !
@@ -4744,41 +4744,41 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFWS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFWS' )
+      end if
 
 !
 !     Operate on the last DAF in which a search has been started.
 !
-      P  =  STHEAD
+      p  =  sthead
 
 !
 !     Make sure that a search has been started in this DAF.
 !
-      IF ( P .EQ. NIL ) THEN
+      if ( p .eq. nil ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFWS'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFWS'                               )
+         return
 
 !
 !     Make sure that the `current' DAF is still open, and that it is
 !     open for writing.
 !
-      ELSE
+      else
 
-         CALL DAFSIH ( STFH(P), 'READ' )
+         call dafsih ( stfh(p), 'READ' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFWS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFWS' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the current pointer position to make sure that it's in
@@ -4787,29 +4787,29 @@
 !     when the current array was the last, or if DAFFPA was called
 !     when the current array was the first.
 !
-      IF ( STCURR(P) .EQ. 0 ) THEN
+      if ( stcurr(p) .eq. 0 ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `next'' array is '   // &
+         call setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFWS'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFWS'                                         )
+         return
 
-      ELSE IF ( STCURR(P) .GT. STNSEG(P) ) THEN
+      else if ( stcurr(p) .gt. stnseg(p) ) then
 
-         CALL DAFHFN ( STFH(P), DAFNAM )
+         call dafhfn ( stfh(p), dafnam )
 
-         CALL SETMSG ( 'No array is current; the `previous'' array is'// &
+         call setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         CALL ERRCH  ( '#',     DAFNAM                                 )
-         CALL SIGERR ( 'SPICE(NOCURRENTARRAY)'                         )
-         CALL CHKOUT ( 'DAFWS'                                         )
-         RETURN
+         call errch  ( '#',     dafnam                                 )
+         call sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
+         call chkout ( 'DAFWS'                                         )
+         return
 
-      END IF
+      end if
 
 
 
@@ -4817,28 +4817,28 @@
 !     The location of the summary depends on the current pointer
 !     position.
 !
-      CALL DAFHSF ( STFH(P), ND, NI )
+      call dafhsf ( stfh(p), nd, ni )
 
-      SUMSIZ  =  ND   +   ( NI + 1 ) / 2
+      sumsiz  =  nd   +   ( ni + 1 ) / 2
 
-      OFFSET  =  3    +   ( STCURR(P) - 1 ) * SUMSIZ
+      offset  =  3    +   ( stcurr(p) - 1 ) * sumsiz
 
-      CALL MOVED (  SUM,  SUMSIZ,  STSR( OFFSET+1, P )  )
+      call moved (  sum,  sumsiz,  stsr( offset+1, p )  )
 
 !
 !     Rewrite the modified summary record.
 !
-      CALL DAFWDR ( STFH(P), STTHIS(P), STSR(1,P) )
+      call dafwdr ( stfh(p), stthis(p), stsr(1,p) )
 
-      CALL CHKOUT ( 'DAFWS' )
-      RETURN
+      call chkout ( 'DAFWS' )
+      return
 
 
 
 
 !$Procedure DAFCS ( DAF, continue search )
 
-      ENTRY DAFCS ( HANDLE )
+      entry dafcs ( handle )
 
 ! $ Abstract
 !
@@ -4966,41 +4966,41 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFCS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFCS' )
+      end if
 
 !
 !     Validate the DAF's handle before going any further. DAFSIH will
 !     signal an error if HANDLE doesn't designate an open DAF.
 !
-      CALL DAFSIH ( HANDLE, 'READ' )
+      call dafsih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFCS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFCS' )
+         return
+      end if
 
 !
 !     See whether we already have an entry for this DAF in the
 !     state table. Find the previous node if possible.
 !
-      P     =   STHEAD
-      PREV  =   NIL
-      FND   =  .FALSE.
+      p     =   sthead
+      prev  =   nil
+      fnd   =  .false.
 
-      DO WHILE (  ( P .NE. NIL )  .AND.  ( .NOT. FND )  )
+      do while (  ( p .ne. nil )  .and.  ( .not. fnd )  )
 
-         IF ( STFH(P) .EQ. HANDLE ) THEN
-            FND   =  .TRUE.
-         ELSE
-            PREV  =  P
-            P     =  STPOOL( P )
-         END IF
+         if ( stfh(p) .eq. handle ) then
+            fnd   =  .true.
+         else
+            prev  =  p
+            p     =  stpool( p )
+         end if
 
-      END DO
+      end do
 
 !
 !     Either FND is false, or P is the index in the state table of
@@ -5011,14 +5011,14 @@
 !     You can't continue searching a DAF that you're not already
 !     searching.
 !
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'No DAF is currently being searched.' )
-         CALL SIGERR ( 'SPICE(DAFNOSEARCH)'                  )
-         CALL CHKOUT ( 'DAFCS'                               )
-         RETURN
+         call setmsg ( 'No DAF is currently being searched.' )
+         call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
+         call chkout ( 'DAFCS'                               )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -5032,17 +5032,17 @@
 !        - Make P the active list head node.
 !
 
-      IF ( P .NE. STHEAD ) THEN
+      if ( p .ne. sthead ) then
 !
 !        P is in the active list, but is not at the head. So,
 !        the predecessor of P is not NIL.
 !
-         STPOOL(PREV)  =  STPOOL(P)
-         STPOOL(P)     =  STHEAD
-         STHEAD        =  P
+         stpool(prev)  =  stpool(p)
+         stpool(p)     =  sthead
+         sthead        =  p
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFCS' )
-      RETURN
-      END
+      call chkout ( 'DAFCS' )
+      return
+      end

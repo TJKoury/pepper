@@ -1,7 +1,7 @@
 !$Procedure STCG01 ( STAR catalog type 1, get star data )
 
-      SUBROUTINE STCG01 ( INDEX,  RA,     DEC,    RASIG, &
-                          DECSIG, CATNUM, SPTYPE, VMAG )
+      subroutine stcg01 ( index,  ra,     dec,    rasig, &
+                          decsig, catnum, sptype, vmag )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               INDEX
-      DOUBLE PRECISION      RA
-      DOUBLE PRECISION      DEC
-      DOUBLE PRECISION      RASIG
-      DOUBLE PRECISION      DECSIG
-      INTEGER               CATNUM
-      CHARACTER*(*)         SPTYPE
-      DOUBLE PRECISION      VMAG
+      integer               index
+      double precision      ra
+      double precision      dec
+      double precision      rasig
+      double precision      decsig
+      integer               catnum
+      character*(*)         sptype
+      double precision      vmag
 
 ! $ Brief_I/O
 !
@@ -198,23 +198,23 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      DOUBLE PRECISION      RPD
+      logical               return
+      double precision      rpd
 
 !
 !     Local variables.
 !
-      LOGICAL               FOUND
-      LOGICAL               NULL
+      logical               found
+      logical               null
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'STCG01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'STCG01' )
+      end if
 
 !
 !     Fetch data from the catalog in the following order
@@ -228,77 +228,77 @@
 !     Since NULLs are not allowed in any of the star catalog
 !     columns, no check for NULLs is performed.
 !
-      CALL EKGD (  1, INDEX, 1, RA, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'RA value for star # not found. '    )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgd (  1, index, 1, ra, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'RA value for star # not found. '    )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
-      CALL EKGD (  2, INDEX, 1, DEC, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'DEC value for star # not found. '   )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgd (  2, index, 1, dec, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'DEC value for star # not found. '   )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
-      CALL EKGD (  3, INDEX, 1, RASIG, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'RASIG value for star # not found. ' )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgd (  3, index, 1, rasig, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'RASIG value for star # not found. ' )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
-      CALL EKGD (  4, INDEX, 1, DECSIG, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'DECSIG value for star # not found.' )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgd (  4, index, 1, decsig, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'DECSIG value for star # not found.' )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
-      CALL EKGI (  5, INDEX, 1, CATNUM, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'CATNUM value for star # not found.' )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgi (  5, index, 1, catnum, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'CATNUM value for star # not found.' )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
-      CALL EKGC (  6, INDEX, 1, SPTYPE, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'SPTYPE value for star # not found.' )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgc (  6, index, 1, sptype, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'SPTYPE value for star # not found.' )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
-      CALL EKGD (  7, INDEX, 1, VMAG, NULL, FOUND )
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'VMAG value for star # not found. '  )
-         CALL ERRINT ( '#', INDEX                           )
-         CALL SIGERR ( 'SPICE(BADSTARINDEX)'                )
-         CALL CHKOUT ( 'STCG01' )
-         RETURN
-      END IF
+      call ekgd (  7, index, 1, vmag, null, found )
+      if ( .not. found ) then
+         call setmsg ( 'VMAG value for star # not found. '  )
+         call errint ( '#', index                           )
+         call sigerr ( 'SPICE(BADSTARINDEX)'                )
+         call chkout ( 'STCG01' )
+         return
+      end if
 
 !
 !     Convert angles to radians before return.
 !
-      RA     = RA     * RPD()
-      DEC    = DEC    * RPD()
-      RASIG  = RASIG  * RPD()
-      DECSIG = DECSIG * RPD()
+      ra     = ra     * rpd()
+      dec    = dec    * rpd()
+      rasig  = rasig  * rpd()
+      decsig = decsig * rpd()
 
-      CALL CHKOUT ( 'STCG01' )
-      RETURN
-      END
+      call chkout ( 'STCG01' )
+      return
+      end

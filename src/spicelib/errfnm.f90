@@ -1,6 +1,6 @@
 !$Procedure ERRFNM ( Insert filename into long error message text )
 
-      SUBROUTINE ERRFNM ( MARKER, UNIT )
+      subroutine errfnm ( marker, unit )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         MARKER
+      character*(*)         marker
 
-      INTEGER               UNIT
+      integer               unit
 
-      INTEGER               FILEN
-      PARAMETER           ( FILEN = 128 )
+      integer               filen
+      parameter           ( filen = 128 )
 
 ! $ Brief_I/O
 !
@@ -201,9 +201,9 @@
 !
 !     Local variables
 !
-      CHARACTER*(FILEN)     NAME
+      character*(filen)     name
 
-      INTEGER               IOSTAT
+      integer               iostat
 
 
 
@@ -211,15 +211,15 @@
 !
 !     Initialize the variables.
 !
-      NAME = ' '
+      name = ' '
 
 !
 !     Get the name of the file attached to the logical unit number.
 !
 
-      INQUIRE ( UNIT   = UNIT, &
-                NAME   = NAME, &
-                IOSTAT = IOSTAT )
+      inquire ( unit   = unit, &
+                name   = name, &
+                iostat = iostat )
 
 
 !
@@ -233,16 +233,16 @@
 !     filename was unavailable from the system.
 !
 
-      IF ( ( IOSTAT .NE. 0 ) .OR. ( NAME .EQ. ' ' ) ) THEN
+      if ( ( iostat .ne. 0 ) .or. ( name .eq. ' ' ) ) then
 
-         NAME = '<unavailable from the system>'
+         name = '<unavailable from the system>'
 
-      END IF
+      end if
 
 !
 !     Let the error handling routine take it from here.
 !
-      CALL ERRCH ( MARKER, NAME )
+      call errch ( marker, name )
 
-      RETURN
-      END
+      return
+      end

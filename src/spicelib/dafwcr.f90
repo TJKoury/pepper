@@ -1,6 +1,6 @@
 !$Procedure DAFWCR ( DAF, write character record )
 
-      SUBROUTINE DAFWCR ( HANDLE, RECNO, CREC )
+      subroutine dafwcr ( handle, recno, crec )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      CHARACTER*(*)         CREC
+      integer               handle
+      integer               recno
+      character*(*)         crec
 
 ! $ Brief_I/O
 !
@@ -152,24 +152,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               UNIT
-      INTEGER               IOSTAT
+      integer               unit
+      integer               iostat
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFWCR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFWCR' )
+      end if
 
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAF', .false., unit )
 
 !
 !     Look out for
@@ -180,29 +180,29 @@
 !
 !       -- Failed write.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( LEN ( CREC ) .NE. 1000 ) THEN
+      if ( len ( crec ) .ne. 1000 ) then
 
-         CALL SETMSG ( 'Expected length of character record is 1000.' // &
+         call setmsg ( 'Expected length of character record is 1000.' // &
                        ' Length of passed record is #' )
-         CALL ERRINT ( '#', LEN ( CREC ) )
-         CALL SIGERR ( 'SPICE(DAFBADCRECLEN)' )
+         call errint ( '#', len ( crec ) )
+         call sigerr ( 'SPICE(DAFBADCRECLEN)' )
 
-      ELSE
+      else
 
-         WRITE (UNIT, &
-                REC=RECNO, &
-                IOSTAT=IOSTAT) CREC
+         write (unit, &
+                rec=recno, &
+                iostat=iostat) crec
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Character record write failed. Value of '  // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Character record write failed. Value of '  // &
                           'IOSTAT was #' )
-            CALL ERRINT ( '#', IOSTAT )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)' )
-         END IF
-      END IF
+            call errint ( '#', iostat )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)' )
+         end if
+      end if
 
-      CALL CHKOUT ( 'DAFWCR' )
-      RETURN
-      END
+      call chkout ( 'DAFWCR' )
+      return
+      end

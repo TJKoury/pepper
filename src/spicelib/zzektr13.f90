@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTR13 ( EK tree, 1-3 split )
 
-      SUBROUTINE ZZEKTR13 ( HANDLE, TREE )
+      subroutine zzektr13 ( handle, tree )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektype.inc'
+      include 'ektree.inc'
+      include 'ekpage.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
+      integer               handle
+      integer               tree
 
 ! $ Brief_I/O
 !
@@ -156,94 +156,94 @@
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               C1PAGE ( PGSIZI )
-      INTEGER               C2PAGE ( PGSIZI )
-      INTEGER               CHILD  ( 2 )
-      INTEGER               DELTA
-      INTEGER               I
-      INTEGER               MIDDLE
-      INTEGER               NRKEYS
-      INTEGER               ROOT
-      INTEGER               RPAGE  ( PGSIZI )
+      integer               base
+      integer               c1page ( pgsizi )
+      integer               c2page ( pgsizi )
+      integer               child  ( 2 )
+      integer               delta
+      integer               i
+      integer               middle
+      integer               nrkeys
+      integer               root
+      integer               rpage  ( pgsizi )
 
 !
 !     Use discovery check-in for speed.
 !
-      ROOT    =  TREE
+      root    =  tree
 
-      CALL ZZEKPGRI ( HANDLE, ROOT, RPAGE )
+      call zzekpgri ( handle, root, rpage )
 
-      NRKEYS  =  RPAGE ( TRNKR )
+      nrkeys  =  rpage ( trnkr )
 
 !
 !     The number of keys in the root must correspond exactly to an
 !     overflow level of 1 key.
 !
-      IF (  NRKEYS  .NE.  ( MXKEYR + 1 )  ) THEN
+      if (  nrkeys  .ne.  ( mxkeyr + 1 )  ) then
 
-         CALL CHKIN  ( 'ZZEKTR13'                                 )
-         CALL SETMSG ( 'Number of keys in root = #; should be #.' )
-         CALL ERRINT ( '#',  NRKEYS                               )
-         CALL ERRINT ( '#',  MXKEYR+1                             )
-         CALL SIGERR ( 'SPICE(BUG)'                               )
-         CALL CHKOUT ( 'ZZEKTR13'                                 )
-         RETURN
+         call chkin  ( 'ZZEKTR13'                                 )
+         call setmsg ( 'Number of keys in root = #; should be #.' )
+         call errint ( '#',  nrkeys                               )
+         call errint ( '#',  mxkeyr+1                             )
+         call sigerr ( 'SPICE(BUG)'                               )
+         call chkout ( 'ZZEKTR13'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Allocate two new pages; these will become children of the root.
 !     Each one will be assigned MNKEYC keys.
 !
-      DO I = 1, 2
-         CALL ZZEKPGAL ( HANDLE, INT, CHILD(I), BASE )
-      END DO
+      do i = 1, 2
+         call zzekpgal ( handle, int, child(i), base )
+      end do
 
 !
 !     Set the key count in the first child.
 !
-      CALL CLEARI ( PGSIZI, C1PAGE )
+      call cleari ( pgsizi, c1page )
 
-      C1PAGE ( TRNKC )  =  MNKEYC
+      c1page ( trnkc )  =  mnkeyc
 
 !
 !     Copy in the keys, data pointers, and child pointers from the
 !     first MNKEYC locations in the root.  Also take the left child
 !     pointer of the middle key.
 !
-      CALL MOVEI ( RPAGE(TRKEYR+1), MNKEYC,    C1PAGE(TRKEYC+1) )
-      CALL MOVEI ( RPAGE(TRDATR+1), MNKEYC,    C1PAGE(TRDATC+1) )
-      CALL MOVEI ( RPAGE(TRKIDR+1), MNKEYC+1,  C1PAGE(TRKIDC+1) )
+      call movei ( rpage(trkeyr+1), mnkeyc,    c1page(trkeyc+1) )
+      call movei ( rpage(trdatr+1), mnkeyc,    c1page(trdatc+1) )
+      call movei ( rpage(trkidr+1), mnkeyc+1,  c1page(trkidc+1) )
 
 !
 !     Set up the key count in the second child.
 !
-      CALL CLEARI ( PGSIZI, C2PAGE )
+      call cleari ( pgsizi, c2page )
 
-      C2PAGE ( TRNKC  )  =  MNKEYC
+      c2page ( trnkc  )  =  mnkeyc
 
 !
 !     Copy in the keys, data pointers, and child pointers from the
 !     last MNKEYC locations in the root.  Also take the last right
 !     child pointer.
 !
-      MIDDLE = MNKEYC + 1
+      middle = mnkeyc + 1
 
-      CALL MOVEI ( RPAGE(TRKEYR+MIDDLE+1), MNKEYC,    C2PAGE(TRKEYC+1) )
-      CALL MOVEI ( RPAGE(TRDATR+MIDDLE+1), MNKEYC,    C2PAGE(TRDATC+1) )
-      CALL MOVEI ( RPAGE(TRKIDR+MIDDLE+1), MNKEYC+1,  C2PAGE(TRKIDC+1) )
+      call movei ( rpage(trkeyr+middle+1), mnkeyc,    c2page(trkeyc+1) )
+      call movei ( rpage(trdatr+middle+1), mnkeyc,    c2page(trdatc+1) )
+      call movei ( rpage(trkidr+middle+1), mnkeyc+1,  c2page(trkidc+1) )
 
 !
 !     The keys in this second node must be adjusted to account for the
 !     loss of the predecessors assigned to the subtree headed by the
 !     left child, as well as of the middle key.
 !
-      DELTA  =  RPAGE ( TRKEYR + MIDDLE )
+      delta  =  rpage ( trkeyr + middle )
 
-      DO I = 1, MNKEYC
-         C2PAGE( TRKEYC + I )  =  C2PAGE( TRKEYC + I ) - DELTA
-      END DO
+      do i = 1, mnkeyc
+         c2page( trkeyc + i )  =  c2page( trkeyc + i ) - delta
+      end do
 
 !
 !     Now the root must be updated.  The root now contains just 1
@@ -252,24 +252,24 @@
 !     created.  The depth of the tree has increased, as well as the
 !     number of nodes in the tree.
 !
-      RPAGE ( TRKEYR + 1 )  =  RPAGE ( TRKEYR + MIDDLE )
-      RPAGE ( TRDATR + 1 )  =  RPAGE ( TRDATR + MIDDLE )
-      RPAGE ( TRKIDR + 1 )  =  CHILD(1)
-      RPAGE ( TRKIDR + 2 )  =  CHILD(2)
-      RPAGE ( TRNKR      )  =  1
-      RPAGE ( TRDPTH     )  =  RPAGE ( TRDPTH ) + 1
-      RPAGE ( TRNNOD     )  =  RPAGE ( TRNNOD ) + 2
+      rpage ( trkeyr + 1 )  =  rpage ( trkeyr + middle )
+      rpage ( trdatr + 1 )  =  rpage ( trdatr + middle )
+      rpage ( trkidr + 1 )  =  child(1)
+      rpage ( trkidr + 2 )  =  child(2)
+      rpage ( trnkr      )  =  1
+      rpage ( trdpth     )  =  rpage ( trdpth ) + 1
+      rpage ( trnnod     )  =  rpage ( trnnod ) + 2
 
-      CALL CLEARI ( MXKEYR, RPAGE(TRKEYR+2) )
-      CALL CLEARI ( MXKEYR, RPAGE(TRDATR+2) )
-      CALL CLEARI ( MXKEYR, RPAGE(TRKIDR+3) )
+      call cleari ( mxkeyr, rpage(trkeyr+2) )
+      call cleari ( mxkeyr, rpage(trdatr+2) )
+      call cleari ( mxkeyr, rpage(trkidr+3) )
 
 !
 !     Write out our updates.
 !
-      CALL ZZEKPGWI ( HANDLE,  ROOT,      RPAGE  )
-      CALL ZZEKPGWI ( HANDLE,  CHILD(1),  C1PAGE )
-      CALL ZZEKPGWI ( HANDLE,  CHILD(2),  C2PAGE )
+      call zzekpgwi ( handle,  root,      rpage  )
+      call zzekpgwi ( handle,  child(1),  c1page )
+      call zzekpgwi ( handle,  child(2),  c2page )
 
-      RETURN
-      END
+      return
+      end

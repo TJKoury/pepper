@@ -1,6 +1,6 @@
 !$Procedure NVP2PL ( Normal vector and point to plane )
 
-      SUBROUTINE NVP2PL ( NORMAL, POINT, PLANE )
+      subroutine nvp2pl ( normal, point, plane )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL    =   4 )
+      integer               ubpl
+      parameter           ( ubpl    =   4 )
 
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      POINT  (    3 )
-      DOUBLE PRECISION      PLANE  ( UBPL )
+      double precision      normal (    3 )
+      double precision      point  (    3 )
+      double precision      plane  ( ubpl )
 
 ! $ Brief_I/O
 !
@@ -157,10 +157,10 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -183,54 +183,54 @@
 !
 !
 
-      INTEGER               NMLPOS
-      PARAMETER           ( NMLPOS = 1 )
+      integer               nmlpos
+      parameter           ( nmlpos = 1 )
 
-      INTEGER               CONPOS
-      PARAMETER           ( CONPOS = 4 )
+      integer               conpos
+      parameter           ( conpos = 4 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TMPVEC ( 3 )
+      double precision      tmpvec ( 3 )
 
 
 !
 !     This routine checks in only if an error is discovered.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     The normal vector must be non-zero.
 !
-      IF ( VZERO (NORMAL) ) THEN
+      if ( vzero (normal) ) then
 
-         CALL CHKIN  ( 'NVP2PL'                            )
-         CALL SETMSG ( 'Plane''s normal must be non-zero.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                 )
-         CALL CHKOUT ( 'NVP2PL'                            )
-         RETURN
+         call chkin  ( 'NVP2PL'                            )
+         call setmsg ( 'Plane''s normal must be non-zero.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                 )
+         call chkout ( 'NVP2PL'                            )
+         return
 
-      END IF
+      end if
 
-      CALL VHAT ( NORMAL, PLANE(NMLPOS) )
+      call vhat ( normal, plane(nmlpos) )
 
-      PLANE(CONPOS)  =  VDOT ( POINT, PLANE(NMLPOS) )
+      plane(conpos)  =  vdot ( point, plane(nmlpos) )
 
 !
 !     The constant should be the distance of the plane from the
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      IF ( PLANE(CONPOS) .LT. 0.D0 ) THEN
+      if ( plane(conpos) .lt. 0.d0 ) then
 
-         PLANE(CONPOS) =   -PLANE(CONPOS)
-         CALL VMINUS     (  PLANE(NMLPOS), TMPVEC        )
-         CALL VEQU       (  TMPVEC,        PLANE(NMLPOS) )
+         plane(conpos) =   -plane(conpos)
+         call vminus     (  plane(nmlpos), tmpvec        )
+         call vequ       (  tmpvec,        plane(nmlpos) )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

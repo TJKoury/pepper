@@ -1,6 +1,6 @@
 !$Procedure PLTEXP ( Plate expander )
 
-      SUBROUTINE PLTEXP ( IVERTS, DELTA, OVERTS )
+      subroutine pltexp ( iverts, delta, overts )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      IVERTS ( 3, 3 )
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      OVERTS ( 3, 3 )
+      double precision      iverts ( 3, 3 )
+      double precision      delta
+      double precision      overts ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -215,9 +215,9 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SCLCTR ( 3 )
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      S
+      double precision      sclctr ( 3 )
+      double precision      d
+      double precision      s
 
 !
 !     Compute the centroid of the input vertices. Scale the centroid
@@ -225,11 +225,11 @@
 !
 !     Unroll all loops to avoid loop overhead.
 !
-      D = DELTA / 3.D0
+      d = delta / 3.d0
 
-      SCLCTR(1) = D * ( IVERTS(1,1) + IVERTS(1,2) + IVERTS(1,3) )
-      SCLCTR(2) = D * ( IVERTS(2,1) + IVERTS(2,2) + IVERTS(2,3) )
-      SCLCTR(3) = D * ( IVERTS(3,1) + IVERTS(3,2) + IVERTS(3,3) )
+      sclctr(1) = d * ( iverts(1,1) + iverts(1,2) + iverts(1,3) )
+      sclctr(2) = d * ( iverts(2,1) + iverts(2,2) + iverts(2,3) )
+      sclctr(3) = d * ( iverts(3,1) + iverts(3,2) + iverts(3,3) )
 
 !
 !     Compute the offsets of the vertices from the centroid CTROID;
@@ -247,19 +247,19 @@
 !
 !
 !
-      S = 1.D0 + DELTA
+      s = 1.d0 + delta
 
 
-      OVERTS(1,1) = ( S * IVERTS(1,1) ) - SCLCTR(1)
-      OVERTS(2,1) = ( S * IVERTS(2,1) ) - SCLCTR(2)
-      OVERTS(3,1) = ( S * IVERTS(3,1) ) - SCLCTR(3)
+      overts(1,1) = ( s * iverts(1,1) ) - sclctr(1)
+      overts(2,1) = ( s * iverts(2,1) ) - sclctr(2)
+      overts(3,1) = ( s * iverts(3,1) ) - sclctr(3)
 
-      OVERTS(1,2) = ( S * IVERTS(1,2) ) - SCLCTR(1)
-      OVERTS(2,2) = ( S * IVERTS(2,2) ) - SCLCTR(2)
-      OVERTS(3,2) = ( S * IVERTS(3,2) ) - SCLCTR(3)
+      overts(1,2) = ( s * iverts(1,2) ) - sclctr(1)
+      overts(2,2) = ( s * iverts(2,2) ) - sclctr(2)
+      overts(3,2) = ( s * iverts(3,2) ) - sclctr(3)
 
-      OVERTS(1,3) = ( S * IVERTS(1,3) ) - SCLCTR(1)
-      OVERTS(2,3) = ( S * IVERTS(2,3) ) - SCLCTR(2)
-      OVERTS(3,3) = ( S * IVERTS(3,3) ) - SCLCTR(3)
+      overts(1,3) = ( s * iverts(1,3) ) - sclctr(1)
+      overts(2,3) = ( s * iverts(2,3) ) - sclctr(2)
+      overts(3,3) = ( s * iverts(3,3) ) - sclctr(3)
 
-      END
+      end

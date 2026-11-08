@@ -1,6 +1,6 @@
 !$Procedure SAMCHI ( Same character --- case insensitive )
 
-      LOGICAL FUNCTION SAMCHI ( STR1, L1, STR2, L2 )
+      logical function samchi ( str1, l1, str2, l2 )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR1
-      INTEGER               L1
-      CHARACTER*(*)         STR2
-      INTEGER               L2
+      character*(*)         str1
+      integer               l1
+      character*(*)         str2
+      integer               l2
 
 ! $ Brief_I/O
 !
@@ -165,19 +165,19 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               EQCHR
+      logical               eqchr
 
 
-      IF (      L1 .LT. 1 &
-           .OR. L2 .LT. 1 &
-           .OR. L1 .GT. LEN(STR1) &
-           .OR. L2 .GT. LEN(STR2)  ) THEN
+      if (      l1 .lt. 1 &
+           .or. l2 .lt. 1 &
+           .or. l1 .gt. len(str1) &
+           .or. l2 .gt. len(str2)  ) then
 
-         SAMCHI = .FALSE.
-         RETURN
-      END IF
+         samchi = .false.
+         return
+      end if
 
-      SAMCHI = EQCHR( STR1(L1:L1), STR2(L2:L2) )
-      RETURN
+      samchi = eqchr( str1(l1:l1), str2(l2:l2) )
+      return
 
-      END
+      end

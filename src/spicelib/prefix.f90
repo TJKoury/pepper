@@ -1,6 +1,6 @@
 !$Procedure PREFIX (Prefix a character string)
 
-      SUBROUTINE PREFIX ( PREF, SPACES, STRING )
+      subroutine prefix ( pref, spaces, string )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    PREF
-      INTEGER          SPACES
-      CHARACTER*(*)    STRING
+      character*(*)    pref
+      integer          spaces
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -144,14 +144,14 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          LASTNB
+      integer          lastnb
 
 !
 !     Local variables
 !
-      INTEGER          PLEN
-      INTEGER          SLEN
-      INTEGER          SHIFT
+      integer          plen
+      integer          slen
+      integer          shift
 
 
 
@@ -160,12 +160,12 @@
 !     PLEN is the length of the prefix. Remember that a blank (null)
 !     prefix has zero length.
 !
-      PLEN = LASTNB ( PREF )
+      plen = lastnb ( pref )
 
 !
 !     SLEN is the allocated length of the string.
 !
-      SLEN = LEN ( STRING )
+      slen = len ( string )
 
 !
 !     We can't just do a concatenation, because the input and output
@@ -175,24 +175,24 @@
 !     the required number of spaces. If part of the string gets
 !     truncated, well, that's life.
 !
-      SHIFT = PLEN + MAX ( SPACES, 0 )
+      shift = plen + max ( spaces, 0 )
 
-      CALL SHIFTR ( STRING, SHIFT, ' ', STRING )
+      call shiftr ( string, shift, ' ', string )
 
 !
 !     Put the non-blank part of the prefix in the vacated part of
 !     the string. The spaces will fill themselves in.
 !
-      IF ( PLEN .GT. 0 ) THEN
+      if ( plen .gt. 0 ) then
 
-         IF ( SHIFT .LT. SLEN ) THEN
-            STRING(1:SHIFT) = PREF
+         if ( shift .lt. slen ) then
+            string(1:shift) = pref
 
-         ELSE
-            STRING = PREF
-         END IF
+         else
+            string = pref
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

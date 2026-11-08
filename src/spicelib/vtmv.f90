@@ -1,6 +1,6 @@
 !$Procedure VTMV ( Vector transpose times matrix times vector, 3 dim )
 
-      DOUBLE PRECISION FUNCTION VTMV ( V1, MATRIX, V2 )
+      double precision function vtmv ( v1, matrix, v2 )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V1     (   3 )
-      DOUBLE PRECISION   MATRIX ( 3,3 )
-      DOUBLE PRECISION   V2     (   3 )
+      double precision   v1     (   3 )
+      double precision   matrix ( 3,3 )
+      double precision   v2     (   3 )
 
 ! $ Brief_I/O
 !
@@ -222,15 +222,15 @@
 !
 !     Local variables
 !
-      INTEGER               K
-      INTEGER               L
+      integer               k
+      integer               l
 
-      VTMV = 0.D0
-      DO K=1,3
-         DO L=1,3
-            VTMV = VTMV + V1(K) * MATRIX(K,L) * V2(L)
-         END DO
-      END DO
+      vtmv = 0.d0
+      do k=1,3
+         do l=1,3
+            vtmv = vtmv + v1(k) * matrix(k,l) * v2(l)
+         end do
+      end do
 
-      RETURN
-      END
+      return
+      end

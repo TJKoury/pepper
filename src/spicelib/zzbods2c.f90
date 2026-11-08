@@ -1,7 +1,7 @@
 !$Procedure ZZBODS2C ( Body name to ID translation, with bypass )
 
-      SUBROUTINE ZZBODS2C ( USRCTR, SAVNAM, SAVCDE, SAVFND, &
-                                    NAME,   CODE,   FOUND    )
+      subroutine zzbods2c ( usrctr, savnam, savcde, savfnd, &
+                                    name,   code,   found    )
 
 ! $ Abstract
 !
@@ -25,17 +25,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzctr.inc'
+      include              'zzctr.inc'
 
-      INTEGER               USRCTR    ( CTRSIZ )
-      CHARACTER*(*)         SAVNAM
-      INTEGER               SAVCDE
-      LOGICAL               SAVFND
-      CHARACTER*(*)         NAME
-      INTEGER               CODE
-      LOGICAL               FOUND
+      integer               usrctr    ( ctrsiz )
+      character*(*)         savnam
+      integer               savcde
+      logical               savfnd
+      character*(*)         name
+      integer               code
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -245,47 +245,47 @@
 !
 !     SPICE functions.
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
-      LOGICAL               UPDATE
+      logical               update
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check/update ZZBODTRN state counter.
 !
-      CALL ZZBCTRCK ( USRCTR, UPDATE )
+      call zzbctrck ( usrctr, update )
 
 !
 !     Check update flag, saved found flag, and saved name against the
 !     input.
 !
-      IF ( .NOT. UPDATE     .AND. &
-           SAVFND           .AND. &
-           SAVNAM .EQ. NAME      ) THEN
+      if ( .not. update     .and. &
+           savfnd           .and. &
+           savnam .eq. name      ) then
 
 !
 !        No change in body-name mapping state, the saved name was
 !        successfully resolved earlier, and input and saved names are
 !        the same. Return saved ID and FOUND.
 !
-         CODE   = SAVCDE
-         FOUND  = SAVFND
+         code   = savcde
+         found  = savfnd
 
-      ELSE
+      else
 
 !
 !        Check in because BODS2C may fail.
 !
-         CALL CHKIN  ( 'ZZBODS2C' )
+         call chkin  ( 'ZZBODS2C' )
 
 !
 !        Body-name mapping state changed, or the saved name was never
@@ -293,19 +293,19 @@
 !        different. Call BODS2C to look up ID and FOUND and reset saved
 !        values.
 !
-         CALL BODS2C( NAME, CODE, FOUND )
+         call bods2c( name, code, found )
 
-         SAVNAM = NAME
-         SAVCDE = CODE
-         SAVFND = FOUND
+         savnam = name
+         savcde = code
+         savfnd = found
 
 !
 !        Check out.
 !
-         CALL CHKOUT ( 'ZZBODS2C' )
+         call chkout ( 'ZZBODS2C' )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

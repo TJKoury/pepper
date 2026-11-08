@@ -1,6 +1,6 @@
 !$Procedure VDIST ( Vector distance )
 
-      DOUBLE PRECISION FUNCTION  VDIST ( V1, V2 )
+      double precision function  vdist ( v1, v2 )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V1 ( 3 )
-      DOUBLE PRECISION      V2 ( 3 )
+      double precision      v1 ( 3 )
+      double precision      v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -157,20 +157,20 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DIFF ( 3 )
+      double precision      diff ( 3 )
 
 
 !
 !     No surprises.
 !
-      CALL VSUB ( V1, V2, DIFF )
+      call vsub ( v1, v2, diff )
 
-      VDIST = VNORM (DIFF)
+      vdist = vnorm (diff)
 
-      RETURN
-      END
+      return
+      end

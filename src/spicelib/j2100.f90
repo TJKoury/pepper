@@ -1,6 +1,6 @@
 !$Procedure J2100 ( Julian Date of 2100 JAN 1.5 )
 
-      DOUBLE PRECISION FUNCTION J2100 ( )
+      double precision function j2100 ( )
 
 ! $ Abstract
 !
@@ -95,7 +95,7 @@
 !-&
 
 
-      J2100 = 2488070.0D0
+      j2100 = 2488070.0d0
 
-      RETURN
-      END
+      return
+      end

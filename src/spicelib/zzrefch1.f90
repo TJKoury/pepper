@@ -1,6 +1,6 @@
 !$Procedure      ZZREFCH1 (Reference frame Change)
 
-      SUBROUTINE ZZREFCH1 ( FRAME1, FRAME2, ET, ROTATE )
+      subroutine zzrefch1 ( frame1, frame2, et, rotate )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'errhnd.inc'
-      INCLUDE              'frmtyp.inc'
+      include              'errhnd.inc'
+      include              'frmtyp.inc'
 
-      INTEGER               FRAME1
-      INTEGER               FRAME2
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      ROTATE ( 3, 3 )
+      integer               frame1
+      integer               frame2
+      double precision      et
+      double precision      rotate ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -145,30 +145,30 @@
 !
 !     SPICE functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               MAXNOD
-      PARAMETER           ( MAXNOD = 10 )
+      integer               maxnod
+      parameter           ( maxnod = 10 )
 
-      INTEGER               MAXXFM
-      PARAMETER           ( MAXXFM = MAXNOD + 4 )
+      integer               maxxfm
+      parameter           ( maxxfm = maxnod + 4 )
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      INTEGER               ROOTF
-      PARAMETER           ( ROOTF = 1 )
+      integer               rootf
+      parameter           ( rootf = 1 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(LMSGLN)    ERRMSG
+      character*(lmsgln)    errmsg
 
 !
 !     ROT contains the rotations from FRAME1 to FRAME2
@@ -177,146 +177,146 @@
 !     plan to add rotations beyond the obvious chain from
 !     FRAME1 to a root node.
 !
-      DOUBLE PRECISION      ROT ( 3, 3, MAXXFM )
+      double precision      rot ( 3, 3, maxxfm )
 
 !
 !     ROT2 is used to store intermediate rotation from
 !     FRAME2 to some node in the chain from FRAME1 to PCK or
 !     INERTL frames.
 !
-      DOUBLE PRECISION      ROT2  ( 3, 3, 2     )
-      DOUBLE PRECISION      TMPROT( 3, 3        )
+      double precision      rot2  ( 3, 3, 2     )
+      double precision      tmprot( 3, 3        )
 
-      INTEGER               CENT
-      INTEGER               CLASS
-      INTEGER               CLSSID
-      INTEGER               CMNODE
-      INTEGER               GET
+      integer               cent
+      integer               class
+      integer               clssid
+      integer               cmnode
+      integer               get
 !
 !     FRAME contains the frames we transform from in going from
 !     FRAME1 to FRAME2.  FRAME(1) = FRAME1 by  construction.
 !
-      INTEGER               FRAME ( MAXNOD )
-      INTEGER               I
-      INTEGER               INC
-      INTEGER               J
+      integer               frame ( maxnod )
+      integer               i
+      integer               inc
+      integer               j
 !
 !     NODE counts the number of rotations needed to go
 !     from FRAME1 to FRAME2.
 !
-      INTEGER               NODE
-      INTEGER               PUT
-      INTEGER               RELTO
-      INTEGER               THIS
+      integer               node
+      integer               put
+      integer               relto
+      integer               this
 
-      LOGICAL               DONE
-      LOGICAL               FOUND
-      LOGICAL               GOTONE
+      logical               done
+      logical               found
+      logical               gotone
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZREFCH1')
+      call chkin ( 'ZZREFCH1')
 !
 !     Do the obvious thing first.  If FRAME1 and FRAME2 are the
 !     same then we simply return the identity matrix.
 !
-      IF ( FRAME1 .EQ. FRAME2 ) THEN
+      if ( frame1 .eq. frame2 ) then
 
-         CALL IDENT  ( ROTATE )
-         CALL CHKOUT ( 'ZZREFCH1' )
-         RETURN
+         call ident  ( rotate )
+         call chkout ( 'ZZREFCH1' )
+         return
 
-      END IF
+      end if
 !
 !     Now perform the obvious check to make sure that both
 !     frames are recognized.
 !
-      CALL FRINFO ( FRAME1, CENT, CLASS, CLSSID, FOUND )
+      call frinfo ( frame1, cent, class, clssid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZREFCH1' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZREFCH1' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The number # is not a recognized id-code ' &
+         call setmsg ( 'The number # is not a recognized id-code ' &
          //            'for a reference frame. ' )
-         CALL ERRINT ( '#', FRAME1 )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
-         CALL CHKOUT ( 'ZZREFCH1' )
-         RETURN
+         call errint ( '#', frame1 )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
+         call chkout ( 'ZZREFCH1' )
+         return
 
-      END IF
+      end if
 
 
-      CALL FRINFO ( FRAME2, CENT, CLASS, CLSSID, FOUND )
+      call frinfo ( frame2, cent, class, clssid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZREFCH1' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZREFCH1' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The number # is not a recognized id-code ' &
+         call setmsg ( 'The number # is not a recognized id-code ' &
          //            'for a reference frame. ' )
-         CALL ERRINT ( '#', FRAME2 )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
-         CALL CHKOUT ( 'ZZREFCH1' )
-         RETURN
+         call errint ( '#', frame2 )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
+         call chkout ( 'ZZREFCH1' )
+         return
 
-      END IF
+      end if
 
 
 
-      NODE        = 1
-      FRAME(NODE) = FRAME1
-      FOUND       = .TRUE.
+      node        = 1
+      frame(node) = frame1
+      found       = .true.
 !
 !     Follow the chain of rotations until we run into
 !     one that rotates to J2000 (frame id = 1) or we hit FRAME2.
 !
-      DO WHILE (       FRAME(NODE) .NE. ROOTF &
-                 .AND. NODE        .LT. MAXNOD &
-                 .AND. FRAME(NODE) .NE. FRAME2 &
-                 .AND. FOUND   )
+      do while (       frame(node) .ne. rootf &
+                 .and. node        .lt. maxnod &
+                 .and. frame(node) .ne. frame2 &
+                 .and. found   )
 !
 !        Find out what rotation is available for this
 !        frame.
 !
-         CALL ZZROTGT1 ( FRAME(NODE),   ET, &
-                         ROT(1,1,NODE), FRAME(NODE+1), FOUND  )
+         call zzrotgt1 ( frame(node),   et, &
+                         rot(1,1,node), frame(node+1), found  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZREFCH1' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZREFCH1' )
+            return
+         end if
 
-         IF ( FOUND ) THEN
+         if ( found ) then
 !
 !           We found a rotation matrix.  ROT(1,1,NODE)
 !           now contains the rotation from FRAME(NODE)
 !           to FRAME(NODE+1).  We need to look up the information
 !           for the next NODE.
 !
-            NODE = NODE + 1
+            node = node + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      DONE =      FRAME(NODE) .EQ. ROOTF &
-             .OR. FRAME(NODE) .EQ. FRAME2 &
-             .OR. .NOT. FOUND
+      done =      frame(node) .eq. rootf &
+             .or. frame(node) .eq. frame2 &
+             .or. .not. found
 
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 !
 !        The only way to get to this point is to have run out of
 !        room in the array of reference frame rotation
@@ -325,15 +325,15 @@
 !        chain is.  We'll do this until we get to one of the
 !        root classes or we run into FRAME2.
 !
-         CALL ZZROTGT1 ( FRAME(NODE), ET, ROT(1,1,NODE), RELTO, FOUND )
+         call zzrotgt1 ( frame(node), et, rot(1,1,node), relto, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZREFCH1' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZREFCH1' )
+            return
+         end if
 
 
-         IF ( FOUND  ) THEN
+         if ( found  ) then
 !
 !           Recall that ROT(1,1,NODE-1) contains the rotation
 !           from FRAME(NODE-1) to FRAME(NODE).  We are going to replace
@@ -341,26 +341,26 @@
 !           that ROT(1,1,NODE-1) should be replaced with the
 !           rotation from FRAME(NODE) to RELTO.
 !
-            FRAME(NODE) = RELTO
-            CALL ZZRXR ( ROT(1,1,NODE-1), 2, TMPROT )
+            frame(node) = relto
+            call zzrxr ( rot(1,1,node-1), 2, tmprot )
 
-            DO I = 1,3
-               DO J = 1,3
-                  ROT(I,J,NODE-1) = TMPROT(I,J)
-               END DO
-            END DO
+            do i = 1,3
+               do j = 1,3
+                  rot(i,j,node-1) = tmprot(i,j)
+               end do
+            end do
 
-         END IF
+         end if
 !
 !        We are done if the class of the last frame is J2000
 !        or if the last frame is FRAME2 or if we simply couldn't get
 !        another rotation.
 !
-         DONE =        FRAME(NODE) .EQ. ROOTF &
-                  .OR. FRAME(NODE) .EQ. FRAME2 &
-                  .OR. .NOT. FOUND
+         done =        frame(node) .eq. rootf &
+                  .or. frame(node) .eq. frame2 &
+                  .or. .not. found
 
-      END DO
+      end do
 
 !
 !     Right now we have the following situation.  We have in hand
@@ -394,16 +394,16 @@
 !     We now have to do essentially the same thing for FRAME2.
 !
 
-      IF ( FRAME(NODE) .EQ. FRAME2 ) THEN
+      if ( frame(node) .eq. frame2 ) then
 !
 !        We can handle this one immediately with the private routine
 !        ZZRXR which multiplies a series of matrices.
 !
-         CALL ZZRXR (  ROT, NODE-1, ROTATE )
-         CALL CHKOUT ( 'ZZREFCH1' )
-         RETURN
+         call zzrxr (  rot, node-1, rotate )
+         call chkout ( 'ZZREFCH1' )
+         return
 
-      END IF
+      end if
 
 !
 !     We didn't luck out above.  So we follow the chain of
@@ -412,26 +412,26 @@
 !     does not share a node in the chain for FRAME1.
 !    ( GOTONE = .FALSE. ) .
 !
-      THIS   =  FRAME2
-      GOTONE = .FALSE.
+      this   =  frame2
+      gotone = .false.
 
 !
 !     First see if there is any chain to follow.
 !
-      DONE   =  THIS .EQ. ROOTF
+      done   =  this .eq. rootf
 
 !
 !     Set up the matrices ROT2(,,1) and ROT(,,2)  and set up
 !     PUT and GET pointers so that we know where to GET the partial
 !     rotation from and where to PUT partial results.
 !
-      IF ( .NOT. DONE ) THEN
+      if ( .not. done ) then
 
-         PUT = 1
-         GET = 1
-         INC = 1
+         put = 1
+         get = 1
+         inc = 1
 
-      END IF
+      end if
 
 !
 !     Follow the chain of rotations until we run into
@@ -441,56 +441,56 @@
 !     Note that this time we will simply keep track of the full
 !     rotation from FRAME2 to the last node.
 !
-      DO WHILE (  .NOT. DONE )
+      do while (  .not. done )
 !
 !        Find out what rotation is available for this
 !        frame.
 !
-         IF ( THIS  .EQ. FRAME2 ) THEN
+         if ( this  .eq. frame2 ) then
 !
 !           This is the first pass, just put the rotation
 !           directly into ROT2(,,PUT).
 !
-            CALL ZZROTGT1 ( THIS,  ET, ROT2(1,1,PUT), RELTO, FOUND  )
+            call zzrotgt1 ( this,  et, rot2(1,1,put), relto, found  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZREFCH1' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZREFCH1' )
+               return
+            end if
 
-            IF ( FOUND ) THEN
-               THIS   = RELTO
-               GET    = PUT
-               PUT    = PUT + INC
-               INC    =     - INC
-               CMNODE = ISRCHI ( THIS, NODE, FRAME )
-               GOTONE = CMNODE .GT. 0
-            END IF
+            if ( found ) then
+               this   = relto
+               get    = put
+               put    = put + inc
+               inc    =     - inc
+               cmnode = isrchi ( this, node, frame )
+               gotone = cmnode .gt. 0
+            end if
 
-         ELSE
+         else
 !
 !           Fetch the rotation into a temporary spot TMPROT
 !
-            CALL ZZROTGT1 ( THIS,  ET, TMPROT, RELTO,  FOUND  )
+            call zzrotgt1 ( this,  et, tmprot, relto,  found  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZREFCH1' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZREFCH1' )
+               return
+            end if
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              Next multiply TMPROT on the right by the last partial
 !              product (in ROT2(,,GET) ).  We do this in line.
 !
-               DO I=1,3
-                  DO J=1,3
+               do i=1,3
+                  do j=1,3
 
-                     ROT2(I,J,PUT) = TMPROT(I,1)*ROT2(1,J,GET) &
-                                   + TMPROT(I,2)*ROT2(2,J,GET) &
-                                   + TMPROT(I,3)*ROT2(3,J,GET)
-                  END DO
-               END DO
+                     rot2(i,j,put) = tmprot(i,1)*rot2(1,j,get) &
+                                   + tmprot(i,2)*rot2(2,j,get) &
+                                   + tmprot(i,3)*rot2(3,j,get)
+                  end do
+               end do
 
 
 
@@ -500,28 +500,28 @@
 !              so that PUT points to the next available storage
 !              locations.
 !
-               GET    = PUT
-               PUT    = PUT + INC
-               INC    =     - INC
-               THIS   = RELTO
+               get    = put
+               put    = put + inc
+               inc    =     - inc
+               this   = relto
 
-               CMNODE = ISRCHI ( THIS, NODE, FRAME )
-               GOTONE = CMNODE .GT. 0
+               cmnode = isrchi ( this, node, frame )
+               gotone = cmnode .gt. 0
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        See if we have a common node and determine whether or not
 !        we are done with this loop.
 !
-         DONE   =       THIS  .EQ. ROOTF &
-                  .OR.  GOTONE &
-                  .OR. .NOT. FOUND
+         done   =       this  .eq. rootf &
+                  .or.  gotone &
+                  .or. .not. found
 
 
-      END DO
+      end do
 
 !
 !     There are two possible scenarios.  Either the chain of
@@ -531,30 +531,30 @@
 !     the two chains don't intersect and there is no way to
 !     get from FRAME1 to FRAME2.
 !
-      IF ( .NOT. GOTONE ) THEN
+      if ( .not. gotone ) then
 
-         CALL ZZNOFCON ( ET, FRAME1, FRAME(NODE), FRAME2, THIS, ERRMSG )
+         call zznofcon ( et, frame1, frame(node), frame2, this, errmsg )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           We were unable to create the error message. This
 !           unfortunate situation could arise if a frame kernel
 !           is corrupted.
 !
-            CALL CHKOUT ( 'ZZREFCH1' )
-            RETURN
+            call chkout ( 'ZZREFCH1' )
+            return
 
-         END IF
+         end if
 !
 !        The normal case: signal an error with a descriptive long
 !        error message.
 !
-         CALL SETMSG ( ERRMSG                  )
-         CALL SIGERR ( 'SPICE(NOFRAMECONNECT)' )
-         CALL CHKOUT ( 'ZZREFCH1'              )
-         RETURN
+         call setmsg ( errmsg                  )
+         call sigerr ( 'SPICE(NOFRAMECONNECT)' )
+         call chkout ( 'ZZREFCH1'              )
+         return
 
-      END IF
+      end if
 
 !
 !     Recall that we have the following.
@@ -576,10 +576,10 @@
 !     sequence of rotation matrices together to get the
 !     result from FRAME1 to FRAME2.
 !
-      CALL XPOSE ( ROT2(1,1,GET), ROT(1,1,CMNODE) )
-      CALL ZZRXR ( ROT,   CMNODE, ROTATE          )
+      call xpose ( rot2(1,1,get), rot(1,1,cmnode) )
+      call zzrxr ( rot,   cmnode, rotate          )
 
-      CALL CHKOUT ( 'ZZREFCH1' )
-      RETURN
+      call chkout ( 'ZZREFCH1' )
+      return
 
-      END
+      end

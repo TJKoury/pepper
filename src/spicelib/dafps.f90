@@ -1,6 +1,6 @@
 !$Procedure DAFPS ( DAF, pack summary )
 
-      SUBROUTINE DAFPS ( ND, NI, DC, IC, SUM )
+      subroutine dafps ( nd, ni, dc, ic, sum )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               ND
-      INTEGER               NI
-      DOUBLE PRECISION      DC       ( * )
-      INTEGER               IC       ( * )
-      DOUBLE PRECISION      SUM      ( * )
+      integer               nd
+      integer               ni
+      double precision      dc       ( * )
+      integer               ic       ( * )
+      double precision      sum      ( * )
 
 ! $ Brief_I/O
 !
@@ -294,41 +294,41 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DEQUIV   ( 125 )
-      INTEGER               IEQUIV   ( 250 )
+      double precision      dequiv   ( 125 )
+      integer               iequiv   ( 250 )
 
-      INTEGER               N
-      INTEGER               M
+      integer               n
+      integer               m
 
 !
 !     Equivalences
 !
-      EQUIVALENCE         ( DEQUIV, IEQUIV )
+      equivalence         ( dequiv, iequiv )
 
 !
 !     Here's the deal: the DP components always precede the integer
 !     components, avoiding alignment problems. The DP components can
 !     be stored directly.
 !
-      N = MIN ( 125, MAX ( 0, ND ) )
+      n = min ( 125, max ( 0, nd ) )
 
-      CALL MOVED ( DC, N, SUM )
+      call moved ( dc, n, sum )
 
 !
 !     The integer components must detour through an equivalence.
 !
-      M = MIN ( 250 - 2 * N, MAX ( 0, NI ) )
+      m = min ( 250 - 2 * n, max ( 0, ni ) )
 
-      CALL MOVEI ( IC,          M,              IEQUIV   )
-      CALL MOVED ( DEQUIV,     (M - 1) / 2 + 1, SUM(N+1) )
+      call movei ( ic,          m,              iequiv   )
+      call moved ( dequiv,     (m - 1) / 2 + 1, sum(n+1) )
 
-      RETURN
+      return
 
 
 
 !$Procedure DAFUS ( DAF, unpack summary )
 
-      ENTRY DAFUS ( SUM, ND, NI, DC, IC )
+      entry dafus ( sum, nd, ni, dc, ic )
 
 ! $ Abstract
 !
@@ -615,14 +615,14 @@
 !
 !     Just undo whatever DAFPS did.
 !
-      N = MIN ( 125, MAX ( 0, ND ) )
+      n = min ( 125, max ( 0, nd ) )
 
-      CALL MOVED ( SUM, N, DC )
+      call moved ( sum, n, dc )
 
-      M = MIN ( 250 - 2 * N, MAX ( 0, NI ) )
+      m = min ( 250 - 2 * n, max ( 0, ni ) )
 
-      CALL MOVED ( SUM(N+1), (M - 1) / 2 + 1, DEQUIV )
-      CALL MOVEI ( IEQUIV,    M,              IC     )
+      call moved ( sum(n+1), (m - 1) / 2 + 1, dequiv )
+      call movei ( iequiv,    m,              ic     )
 
-      RETURN
-      END
+      return
+      end

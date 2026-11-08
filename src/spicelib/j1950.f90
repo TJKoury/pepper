@@ -1,6 +1,6 @@
 !$Procedure J1950 ( Julian Date of 1950.0 JAN 1.0 )
 
-      DOUBLE PRECISION FUNCTION J1950 ( )
+      double precision function j1950 ( )
 
 ! $ Abstract
 !
@@ -95,7 +95,7 @@
 !-&
 
 
-      J1950 = 2433282.5D0
+      j1950 = 2433282.5d0
 
-      RETURN
-      END
+      return
+      end

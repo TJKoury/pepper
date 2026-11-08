@@ -1,6 +1,6 @@
 !$Procedure SPKEZP ( S/P Kernel, easy position )
 
-      SUBROUTINE SPKEZP ( TARG, ET, REF, ABCORR, OBS, PTARG, LT )
+      subroutine spkezp ( targ, et, ref, abcorr, obs, ptarg, lt )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'zzctr.inc'
+      include               'frmtyp.inc'
+      include               'zzctr.inc'
 
 
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBS
-      DOUBLE PRECISION      PTARG    ( 3 )
-      DOUBLE PRECISION      LT
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      integer               obs
+      double precision      ptarg    ( 3 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -814,94 +814,94 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LTRIM
+      integer               ltrim
 
-      LOGICAL               EQCHR
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqchr
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  =  'SPKEZP' )
+      character*(*)         rname
+      parameter           ( rname  =  'SPKEZP' )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LTCENT
-      DOUBLE PRECISION      SOBS     ( 6    )
-      DOUBLE PRECISION      POSTN    ( 3    )
-      DOUBLE PRECISION      TEMP     ( 3    )
-      DOUBLE PRECISION      XFORM    ( 3, 3 )
+      double precision      ltcent
+      double precision      sobs     ( 6    )
+      double precision      postn    ( 3    )
+      double precision      temp     ( 3    )
+      double precision      xform    ( 3, 3 )
 
-      INTEGER               CENTER
-      INTEGER               FJ2000
-      INTEGER               I
-      INTEGER               REQFRM
-      INTEGER               TYPE
-      INTEGER               TYPEID
+      integer               center
+      integer               fj2000
+      integer               i
+      integer               reqfrm
+      integer               type
+      integer               typeid
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               XMIT
+      logical               first
+      logical               found
+      logical               xmit
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVREF
-      INTEGER               SVREQF
+      integer               svctr1 ( ctrsiz )
+      character*(frnmln)    svref
+      integer               svreqf
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST /.TRUE./
+      data                  first /.true./
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( RNAME )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( rname )
+      end if
 
 !
 !     Get the frame id for J2000 on the first call to this routine.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL NAMFRM( 'J2000', FJ2000 )
+         call namfrm( 'J2000', fj2000 )
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Decide whether the aberration correction is for received or
 !     transmitted radiation.
 !
-      I    = LTRIM(ABCORR)
-      XMIT = EQCHR ( ABCORR(I:I),  'X' )
+      i    = ltrim(abcorr)
+      xmit = eqchr ( abcorr(i:i),  'X' )
 
 !
 !     If we only want geometric positions, then compute just that.
@@ -911,66 +911,66 @@
 !     apparent position of the target body relative to the observer
 !     with the requested aberration corrections.
 !
-      IF ( EQSTR( ABCORR, 'NONE' ) ) THEN
+      if ( eqstr( abcorr, 'NONE' ) ) then
 
-         CALL SPKGPS ( TARG, ET, REF, OBS, PTARG, LT )
+         call spkgps ( targ, et, ref, obs, ptarg, lt )
 
-      ELSE
+      else
 !
 !        Get the auxiliary information about the requested output
 !        frame.
 !
-         CALL ZZNAMFRM ( SVCTR1, SVREF, SVREQF, REF, REQFRM )
+         call zznamfrm ( svctr1, svref, svreqf, ref, reqfrm )
 
-         IF ( REQFRM .EQ. 0 ) THEN
-            CALL SETMSG ( 'The requested output frame ''#'' is ' &
+         if ( reqfrm .eq. 0 ) then
+            call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
             //            'appropriate kernels have been loaded ' &
             //            'and that you have correctly entered ' &
             //            'the name of the output frame. ' )
-            CALL ERRCH  ( '#', REF )
-            CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
-            CALL CHKOUT ( RNAME )
-            RETURN
+            call errch  ( '#', ref )
+            call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
+            call chkout ( rname )
+            return
 
-         END IF
+         end if
 
-         CALL FRINFO ( REQFRM, CENTER, TYPE, TYPEID, FOUND )
+         call frinfo ( reqfrm, center, type, typeid, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'The requested output frame ''#'' is ' &
+            call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
             //            'appropriate kernels have been loaded ' &
             //            'and that you have correctly entered ' &
             //            'the name of the output frame. ' )
-            CALL ERRCH  ( '#',  REF )
-            CALL SIGERR ( 'SPICE(UNKNOWNFRAME2)' )
-            CALL CHKOUT ( RNAME )
+            call errch  ( '#',  ref )
+            call sigerr ( 'SPICE(UNKNOWNFRAME2)' )
+            call chkout ( rname )
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        If we are dealing with an inertial frame, we can simply
 !        call SPKSSB, SPKAPO and return.
 !
-         IF ( TYPE .EQ. INERTL ) THEN
+         if ( type .eq. inertl ) then
 
-            CALL SPKSSB ( OBS,  ET, REF, SOBS )
-            CALL SPKAPO ( TARG, ET, REF, SOBS, ABCORR, PTARG, LT )
-            CALL CHKOUT ( RNAME )
-            RETURN
+            call spkssb ( obs,  et, ref, sobs )
+            call spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
+            call chkout ( rname )
+            return
 
-         END IF
+         end if
 
 !
 !        Still here?
@@ -982,31 +982,31 @@
 !
 !        We also need the light time to the center of the frame.
 !
-         CALL SPKSSB ( OBS,  ET, 'J2000', SOBS )
-         CALL SPKAPO ( TARG, ET, 'J2000', SOBS, ABCORR, POSTN, LT )
+         call spkssb ( obs,  et, 'J2000', sobs )
+         call spkapo ( targ, et, 'J2000', sobs, abcorr, postn, lt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF ( CENTER .EQ. OBS ) THEN
-            LTCENT = 0.0D0
-         ELSE IF ( CENTER .EQ. TARG ) THEN
-            LTCENT = LT
-         ELSE
-            CALL SPKAPO ( CENTER, ET, 'J2000', SOBS, ABCORR, TEMP, &
-                          LTCENT )
-         END IF
+         if ( center .eq. obs ) then
+            ltcent = 0.0d0
+         else if ( center .eq. targ ) then
+            ltcent = lt
+         else
+            call spkapo ( center, et, 'J2000', sobs, abcorr, temp, &
+                          ltcent )
+         end if
 
 !
 !        If something went wrong (like we couldn't get the position of
 !        the center relative to the observer) now it is time to quit.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        If the aberration corrections are for transmission, negate
@@ -1014,25 +1014,25 @@
 !        of the non-inertial frame at an epoch later than ET by
 !        the one-way light time.
 !
-         IF ( XMIT ) THEN
-            LTCENT = -LTCENT
-         END IF
+         if ( xmit ) then
+            ltcent = -ltcent
+         end if
 
 !
 !        Get the rotation from J2000 to the requested frame
 !        and convert the position.
 !
-         CALL REFCHG ( FJ2000, REQFRM, ET-LTCENT, XFORM )
+         call refchg ( fj2000, reqfrm, et-ltcent, xform )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL MXV    ( XFORM,  POSTN,             PTARG )
+         call mxv    ( xform,  postn,             ptarg )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

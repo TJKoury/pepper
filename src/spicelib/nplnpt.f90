@@ -1,6 +1,6 @@
 !$Procedure NPLNPT ( Nearest point on line to point )
 
-      SUBROUTINE NPLNPT ( LINPT, LINDIR, POINT, PNEAR, DIST )
+      subroutine nplnpt ( linpt, lindir, point, pnear, dist )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      LINPT  ( 3 )
-      DOUBLE PRECISION      LINDIR ( 3 )
-      DOUBLE PRECISION      POINT  ( 3 )
+      double precision      linpt  ( 3 )
+      double precision      lindir ( 3 )
+      double precision      point  ( 3 )
 
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      DIST
+      double precision      pnear  ( 3 )
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -158,48 +158,48 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
+      double precision      vdist
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      PROJ  ( 3 )
-      DOUBLE PRECISION      TRANS ( 3 )
+      double precision      proj  ( 3 )
+      double precision      trans ( 3 )
 
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     We need a real direction vector to work with.
 !
-      IF (  VZERO (LINDIR)  )  THEN
+      if (  vzero (lindir)  )  then
 
-         CALL CHKIN  ( 'NPLNPT'                             )
-         CALL SETMSG ( 'Direction vector must be non-zero.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                  )
-         CALL CHKOUT ( 'NPLNPT'                             )
-         RETURN
+         call chkin  ( 'NPLNPT'                             )
+         call setmsg ( 'Direction vector must be non-zero.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                  )
+         call chkout ( 'NPLNPT'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     We translate line and input point so as to put the line through
 !     the origin.  Then the nearest point on the translated line to the
 !     translated point TRANS is the projection of TRANS onto the line.
 !
-      CALL VSUB  ( POINT,  LINPT,  TRANS )
-      CALL VPROJ ( TRANS,  LINDIR, PROJ  )
-      CALL VADD  ( PROJ,   LINPT,  PNEAR )
+      call vsub  ( point,  linpt,  trans )
+      call vproj ( trans,  lindir, proj  )
+      call vadd  ( proj,   linpt,  pnear )
 
-      DIST = VDIST ( PNEAR,  POINT )
+      dist = vdist ( pnear,  point )
 
-      RETURN
-      END
+      return
+      end

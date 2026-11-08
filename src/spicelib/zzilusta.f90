@@ -1,8 +1,8 @@
 !$Procedure ZZILUSTA ( Illumination angle states )
 
-      SUBROUTINE ZZILUSTA ( METHOD, TARGET, ILLUM,  ET, &
-                            FIXREF, ABCORR, OBSRVR, SPOINT, &
-                            NORMAL, PHSSTA, INCSTA, EMISTA  )
+      subroutine zzilusta ( method, target, illum,  et, &
+                            fixref, abcorr, obsrvr, spoint, &
+                            normal, phssta, incsta, emista  )
 
 ! $ Abstract
 !
@@ -29,22 +29,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILLUM
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      PHSSTA ( 2 )
-      DOUBLE PRECISION      INCSTA ( 2 )
-      DOUBLE PRECISION      EMISTA ( 2 )
+      character*(*)         method
+      character*(*)         target
+      character*(*)         illum
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      double precision      normal ( 3 )
+      double precision      phssta ( 2 )
+      double precision      incsta ( 2 )
+      double precision      emista ( 2 )
 
 ! $ Brief_I/O
 !
@@ -188,107 +188,107 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DVSEP
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
+      double precision      clight
+      double precision      dvsep
+      double precision      vdot
+      double precision      vsep
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               eqstr
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         IREF
-      PARAMETER           ( IREF = 'J2000' )
+      character*(*)         iref
+      parameter           ( iref = 'J2000' )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DLT
-      DOUBLE PRECISION      ETSURF
-      DOUBLE PRECISION      FXNSTA ( 6 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTSRC
-      DOUBLE PRECISION      NRMSTA ( 6 )
-      DOUBLE PRECISION      OBSSTA ( 6 )
-      DOUBLE PRECISION      SRCSTA ( 6 )
-      DOUBLE PRECISION      STARG  ( 6 )
-      DOUBLE PRECISION      TMPXFM ( 6, 6 )
-      DOUBLE PRECISION      UVEC   ( 3 )
-      DOUBLE PRECISION      XFORM  ( 6, 6 )
+      double precision      dlt
+      double precision      etsurf
+      double precision      fxnsta ( 6 )
+      double precision      lt
+      double precision      ltsrc
+      double precision      nrmsta ( 6 )
+      double precision      obssta ( 6 )
+      double precision      srcsta ( 6 )
+      double precision      starg  ( 6 )
+      double precision      tmpxfm ( 6, 6 )
+      double precision      uvec   ( 3 )
+      double precision      xform  ( 6, 6 )
 
-      LOGICAL               ATTBLK ( ABATSZ )
-      LOGICAL               USELT
-      LOGICAL               XMIT
+      logical               attblk ( abatsz )
+      logical               uselt
+      logical               xmit
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZILUSTA' )
+      call chkin ( 'ZZILUSTA' )
 
 !
 !     For now, only ellipsoids are supported as target shapes.
 !
-      IF (  .NOT.  EQSTR( METHOD, 'ELLIPSOID' )  ) THEN
+      if (  .not.  eqstr( method, 'ELLIPSOID' )  ) then
 
-         CALL SETMSG ( 'The computation method # was not recognized. ' )
-         CALL ERRCH  ( '#',  METHOD                                    )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                          )
-         CALL CHKOUT ( 'ZZILUSTA'                                      )
-         RETURN
+         call setmsg ( 'The computation method # was not recognized. ' )
+         call errch  ( '#',  method                                    )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
+         call chkout ( 'ZZILUSTA'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Reject zero normal vectors.
 !
-      IF ( VZERO(NORMAL) ) THEN
+      if ( vzero(normal) ) then
 
-         CALL SETMSG ( 'The input normal vector must not be zero, ' &
+         call setmsg ( 'The input normal vector must not be zero, ' &
          //            'but sadly, it was.'                       )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                        )
-         CALL CHKOUT ( 'ZZILUSTA'                                 )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                        )
+         call chkout ( 'ZZILUSTA'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the state of the target with respect to the
 !     observer. We'll represent the state in an inertial
 !     reference frame.
 !
-      CALL SPKCPT ( SPOINT,   TARGET, FIXREF, ET,    IREF, &
-                    'TARGET', ABCORR, OBSRVR, STARG, LT    )
+      call spkcpt ( spoint,   target, fixref, et,    iref, &
+                    'TARGET', abcorr, obsrvr, starg, lt    )
 
 !
 !     Compute the epoch associated with the surface point.
 !
-      CALL ZZCOREPC ( ABCORR, ET, LT, ETSURF )
+      call zzcorepc ( abcorr, et, lt, etsurf )
 
 !
 !     Now let the surface point be the observer, let the observation
 !     epoch be ETSURF, and find the apparent state of the illumination
 !     source as seen from the surface point.
 !
-      CALL SPKCPO ( ILLUM,  ETSURF, IREF,   'OBSERVER', ABCORR, &
-                    SPOINT, TARGET, FIXREF, SRCSTA,     LTSRC  )
+      call spkcpo ( illum,  etsurf, iref,   'OBSERVER', abcorr, &
+                    spoint, target, fixref, srcsta,     ltsrc  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'ZZILUSTA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'ZZILUSTA' )
+         return
+      end if
 
 !
 !     We will need to transform the state of the normal vector to
 !     the inertial frame. The epoch at which the transformation must be
 !     evaluated is that associated with the surface point.
 
-      CALL SXFORM ( FIXREF, IREF, ETSURF, XFORM )
+      call sxform ( fixref, iref, etsurf, xform )
 
 !
 !     Correct the body-fixed to inertial frame transformation for the
@@ -297,59 +297,59 @@
 !
 !     Start out by parsing ABCORR.
 !
-      CALL ZZVALCOR ( ABCORR, ATTBLK )
+      call zzvalcor ( abcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZILUSTA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZILUSTA' )
+         return
+      end if
 
-      USELT = ATTBLK( LTIDX  )
-      XMIT  = ATTBLK( XMTIDX )
+      uselt = attblk( ltidx  )
+      xmit  = attblk( xmtidx )
 
-      IF ( XMIT ) THEN
+      if ( xmit ) then
 
-         CALL SETMSG ( 'Aberration correction # is for transmission; ' &
+         call setmsg ( 'Aberration correction # is for transmission; ' &
          //            'only reception corrections are supported by ' &
          //            'this routine.'                                )
-         CALL ERRCH  ( '#', ABCORR                                    )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                         )
-         CALL CHKOUT ( 'ZZILUSTA' )
-         RETURN
+         call errch  ( '#', abcorr                                    )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                         )
+         call chkout ( 'ZZILUSTA' )
+         return
 
-      END IF
+      end if
 
 
-      IF ( USELT ) THEN
+      if ( uselt ) then
 !
 !        Compute the rate of change with respect to ET of the
 !        observer-surface point light time. This rate is the range rate
 !        divided by the speed of light.
 !
-         CALL VHAT ( STARG, UVEC )
+         call vhat ( starg, uvec )
 
-         DLT = VDOT ( STARG(4), UVEC ) / CLIGHT()
+         dlt = vdot ( starg(4), uvec ) / clight()
 !
 !        Correct the state transformation.
 !
-         CALL ZZCORSXF ( .FALSE., DLT, XFORM, TMPXFM )
+         call zzcorsxf ( .false., dlt, xform, tmpxfm )
 
-         CALL MOVED ( TMPXFM, 36, XFORM )
+         call moved ( tmpxfm, 36, xform )
 
-      END IF
+      end if
 
 !
 !     Create a body-fixed state vector for the normal vector.
 !     Convert the normal vector to unit length for safety.
 !
-      CALL VHAT   ( NORMAL, FXNSTA    )
-      CALL CLEARD ( 3,      FXNSTA(4) )
+      call vhat   ( normal, fxnsta    )
+      call cleard ( 3,      fxnsta(4) )
 
 !
 !     Transform the state of the normal vector to the inertial
 !     frame.
 !
-      CALL MXVG ( XFORM,  FXNSTA, 6, 6, NRMSTA )
+      call mxvg ( xform,  fxnsta, 6, 6, nrmsta )
 
 !
 !     We also must adjust the state of the illumination source for the
@@ -361,45 +361,45 @@
 !
 !     This code assumes reception corrections.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 !
 !        ETSURF = ET - LT, so
 !
 !        d(ETSURF) / d(ET) = ( 1 - DLT )
 !
-         CALL VSCLIP ( 1.D0 - DLT,  SRCSTA(4) )
+         call vsclip ( 1.d0 - dlt,  srcsta(4) )
 
-      END IF
+      end if
 
 !
 !     The surface-point observer state we wish to use is the negative
 !     of the observer-surface point state.
 !
-      CALL VMINUG ( STARG, 6, OBSSTA )
+      call vminug ( starg, 6, obssta )
 
 !
 !     Compute the state (value and rate of change )
 !     of the phase angle.
 !
-      PHSSTA( 1 ) =  VSEP  ( OBSSTA, SRCSTA )
-      PHSSTA( 2 ) =  DVSEP ( OBSSTA, SRCSTA )
+      phssta( 1 ) =  vsep  ( obssta, srcsta )
+      phssta( 2 ) =  dvsep ( obssta, srcsta )
 
 !
 !     Compute the state of the illumination source
 !     incidence angle.
 !
-      INCSTA( 1 ) =  VSEP  ( NRMSTA, SRCSTA )
-      INCSTA( 2 ) =  DVSEP ( NRMSTA, SRCSTA )
+      incsta( 1 ) =  vsep  ( nrmsta, srcsta )
+      incsta( 2 ) =  dvsep ( nrmsta, srcsta )
 
 !
 !     Compute the state of the emission angle.
 !
-      EMISTA( 1 ) =  VSEP  ( NRMSTA, OBSSTA )
-      EMISTA( 2 ) =  DVSEP ( NRMSTA, OBSSTA )
+      emista( 1 ) =  vsep  ( nrmsta, obssta )
+      emista( 2 ) =  dvsep ( nrmsta, obssta )
 
 
-      CALL CHKOUT ( 'ZZILUSTA' )
-      RETURN
-      END
+      call chkout ( 'ZZILUSTA' )
+      return
+      end
 
 

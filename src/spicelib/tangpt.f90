@@ -1,8 +1,8 @@
 !$Procedure TANGPT ( Ray-ellipsoid tangent point )
 
-      SUBROUTINE TANGPT ( METHOD, TARGET, ET,    FIXREF, ABCORR, &
-                          CORLOC, OBSRVR, DREF,  DVEC,   TANPT, &
-                          ALT,    RANGE,  SRFPT, TRGEPC, SRFVEC )
+      subroutine tangpt ( method, target, et,    fixref, abcorr, &
+                          corloc, obsrvr, dref,  dvec,   tanpt, &
+                          alt,    range,  srfpt, trgepc, srfvec )
 
 ! $ Abstract
 !
@@ -35,27 +35,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
+      include               'frmtyp.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         CORLOC
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         DREF
-      DOUBLE PRECISION      DVEC   ( 3 )
-      DOUBLE PRECISION      TANPT  ( 3 )
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      SRFPT  ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      SRFVEC ( 3 )
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         corloc
+      character*(*)         obsrvr
+      character*(*)         dref
+      double precision      dvec   ( 3 )
+      double precision      tanpt  ( 3 )
+      double precision      alt
+      double precision      range
+      double precision      srfpt  ( 3 )
+      double precision      trgepc
+      double precision      srfvec ( 3 )
 
 ! $ Brief_I/O
 !
@@ -1930,17 +1930,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VREL
+      double precision      clight
+      double precision      touchd
+      double precision      vdist
+      double precision      vdot
+      double precision      vnorm
+      double precision      vrel
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               eqstr
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -1967,140 +1967,140 @@
 !     which is dependent on the choice of aberration correction, is
 !     reached.
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-16 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-16 )
 
 !
 !     Upper bound on converged solution iterations.
 !
-      INTEGER               MXCVIT
-      PARAMETER           ( MXCVIT = 10 )
+      integer               mxcvit
+      parameter           ( mxcvit = 10 )
 
 !
 !     Upper bound on non-converged solution iterations.
 !
-      INTEGER               MXNCIT
-      PARAMETER           ( MXNCIT =  3 )
+      integer               mxncit
+      parameter           ( mxncit =  3 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Locus string length.
 !
-      INTEGER               LOCLEN
-      PARAMETER           ( LOCLEN = 15 )
+      integer               loclen
+      parameter           ( loclen = 15 )
 
 !
 !     Code for the frame J2000.
 !
-      INTEGER               J2CODE
-      PARAMETER           ( J2CODE = 1 )
+      integer               j2code
+      parameter           ( j2code = 1 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LOCLEN)    LOCSTR
-      CHARACTER*(CORLEN)    PRVCOR
-      CHARACTER*(LOCLEN)    PRVLOC
+      character*(loclen)    locstr
+      character*(corlen)    prvcor
+      character*(loclen)    prvloc
 
-      DOUBLE PRECISION      CTRPOS ( 3 )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      DVAL
-      DOUBLE PRECISION      EPCDIF
-      DOUBLE PRECISION      FIXDIR ( 3 )
-      DOUBLE PRECISION      FIXOBS ( 3 )
-      DOUBLE PRECISION      J2DIR  ( 3 )
-      DOUBLE PRECISION      J2FIXM ( 3, 3 )
-      DOUBLE PRECISION      J2LCUS ( 3 )
-      DOUBLE PRECISION      J2LPOS ( 3 )
-      DOUBLE PRECISION      J2OPOS ( 3 )
-      DOUBLE PRECISION      J2TPOS ( 3 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTCENT
-      DOUBLE PRECISION      LTDIFF
-      DOUBLE PRECISION      P      ( 3 )
-      DOUBLE PRECISION      PREVLT
-      DOUBLE PRECISION      PRVEPC
-      DOUBLE PRECISION      PRVSRF ( 3 )
-      DOUBLE PRECISION      PRVTAN ( 3 )
-      DOUBLE PRECISION      R2JMAT ( 3, 3 )
-      DOUBLE PRECISION      REFEPC
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SSBOST ( 6 )
-      DOUBLE PRECISION      SSBTST ( 6 )
-      DOUBLE PRECISION      STLFIX ( 3 )
-      DOUBLE PRECISION      STLLOC ( 3 )
-      DOUBLE PRECISION      STLOBS ( 3 )
-      DOUBLE PRECISION      STLOFF ( 3 )
-      DOUBLE PRECISION      TANOFF ( 3 )
-      DOUBLE PRECISION      TPOS   ( 3 )
-      DOUBLE PRECISION      TRGPOS ( 3 )
+      double precision      ctrpos ( 3 )
+      double precision      dist
+      double precision      dval
+      double precision      epcdif
+      double precision      fixdir ( 3 )
+      double precision      fixobs ( 3 )
+      double precision      j2dir  ( 3 )
+      double precision      j2fixm ( 3, 3 )
+      double precision      j2lcus ( 3 )
+      double precision      j2lpos ( 3 )
+      double precision      j2opos ( 3 )
+      double precision      j2tpos ( 3 )
+      double precision      lt
+      double precision      ltcent
+      double precision      ltdiff
+      double precision      p      ( 3 )
+      double precision      prevlt
+      double precision      prvepc
+      double precision      prvsrf ( 3 )
+      double precision      prvtan ( 3 )
+      double precision      r2jmat ( 3, 3 )
+      double precision      refepc
+      double precision      s
+      double precision      ssbost ( 6 )
+      double precision      ssbtst ( 6 )
+      double precision      stlfix ( 3 )
+      double precision      stlloc ( 3 )
+      double precision      stlobs ( 3 )
+      double precision      stloff ( 3 )
+      double precision      tanoff ( 3 )
+      double precision      tpos   ( 3 )
+      double precision      trgpos ( 3 )
 
-      INTEGER               DCENTR
-      INTEGER               DCLASS
-      INTEGER               DFRCDE
-      INTEGER               DTYPID
-      INTEGER               FXCENT
-      INTEGER               FXCLSS
-      INTEGER               FXFCDE
-      INTEGER               FXTYID
-      INTEGER               I
-      INTEGER               NITR
-      INTEGER               OBSCDE
-      INTEGER               TRGCDE
+      integer               dcentr
+      integer               dclass
+      integer               dfrcde
+      integer               dtypid
+      integer               fxcent
+      integer               fxclss
+      integer               fxfcde
+      integer               fxtyid
+      integer               i
+      integer               nitr
+      integer               obscde
+      integer               trgcde
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               LTCNV
-      LOGICAL               STLCNV
-      LOGICAL               TANLOC
-      LOGICAL               USECN
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               first
+      logical               fnd
+      logical               ltcnv
+      logical               stlcnv
+      logical               tanloc
+      logical               usecn
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved body name/ID item declarations.
 !
-      INTEGER               PRVTCD
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(BDNMLN)    SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               prvtcd
+      integer               svctr1 ( ctrsiz )
+      character*(bdnmln)    svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(BDNMLN)    SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(bdnmln)    svobsr
+      integer               svobsc
+      logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFREF
-      INTEGER               SVFXFC
+      integer               svctr3 ( ctrsiz )
+      character*(frnmln)    svfref
+      integer               svfxfc
 
-      INTEGER               SVCTR4 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVDREF
-      INTEGER               SVDFRC
+      integer               svctr4 ( ctrsiz )
+      character*(frnmln)    svdref
+      integer               svdfrc
 
 !
 !     Saved target radii declarations.
 !
-      INTEGER               SVCTR5 ( CTRSIZ )
-      DOUBLE PRECISION      SVRADI ( 3 )
-      INTEGER               SVNRAD
+      integer               svctr5 ( ctrsiz )
+      double precision      svradi ( 3 )
+      integer               svnrad
 
 
 !
@@ -2112,46 +2112,46 @@
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  PRVCOR
-      SAVE                  PRVLOC
-      SAVE                  PRVTCD
-      SAVE                  TANLOC
-      SAVE                  USECN
-      SAVE                  USELT
-      SAVE                  USESTL
-      SAVE                  XMIT
+      save                  first
+      save                  prvcor
+      save                  prvloc
+      save                  prvtcd
+      save                  tanloc
+      save                  usecn
+      save                  uselt
+      save                  usestl
+      save                  xmit
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVFREF
-      SAVE                  SVFXFC
+      save                  svctr3
+      save                  svfref
+      save                  svfxfc
 
-      SAVE                  SVCTR4
-      SAVE                  SVDREF
-      SAVE                  SVDFRC
+      save                  svctr4
+      save                  svdref
+      save                  svdfrc
 
 !
 !     Saved target radii items.
 !
-      SAVE                  SVCTR5
-      SAVE                  SVRADI
-      SAVE                  SVNRAD
+      save                  svctr5
+      save                  svradi
+      save                  svnrad
 
 !
 !     To be used if DSK shapes are supported:
@@ -2164,46 +2164,46 @@
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE.  /
-      DATA                  PRVCOR / ' '     /
-      DATA                  PRVLOC / ' '     /
-      DATA                  PRVTCD / 0       /
-      DATA                  TANLOC / .FALSE. /
-      DATA                  USECN  / .FALSE. /
-      DATA                  USELT  / .FALSE. /
-      DATA                  USESTL / .FALSE. /
-      DATA                  XMIT   / .FALSE. /
+      data                  first  / .true.  /
+      data                  prvcor / ' '     /
+      data                  prvloc / ' '     /
+      data                  prvtcd / 0       /
+      data                  tanloc / .false. /
+      data                  usecn  / .false. /
+      data                  uselt  / .false. /
+      data                  usestl / .false. /
+      data                  xmit   / .false. /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'TANGPT' )
+      call chkin ( 'TANGPT' )
 
 !
 !     Counter initialization is done separately.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
-         CALL ZZCTRUIN( SVCTR4 )
-         CALL ZZCTRUIN( SVCTR5 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
+         call zzctruin( svctr4 )
+         call zzctruin( svctr5 )
 !
 !        To be used if DSK shapes are supported:
 !
 !         CALL ZZCTRUIN( SVCTR6 )
 
-      END IF
+      end if
 
 !
 !     Parse the aberration correction specifier, if it's new.
 !
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        PRVCOR is updated only when a valid correction has been
 !        recognized. PRVCOR is blank on the first pass; afterward
@@ -2212,12 +2212,12 @@
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TANGPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TANGPT' )
+            return
+         end if
 !
 !        Set logical flags indicating the attributes of the requested
 !        correction:
@@ -2236,52 +2236,52 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         XMIT    =  ATTBLK ( XMTIDX )
-         USELT   =  ATTBLK ( LTIDX  )
-         USECN   =  ATTBLK ( CNVIDX )
-         USESTL  =  ATTBLK ( STLIDX )
+         xmit    =  attblk ( xmtidx )
+         uselt   =  attblk ( ltidx  )
+         usecn   =  attblk ( cnvidx )
+         usestl  =  attblk ( stlidx )
 
 !
 !        The aberration correction flag is valid; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
 !
 !        FIRST will be set to .FALSE. later, after all first-pass
 !        actions have been performed.
 !
-      END IF
+      end if
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.
 !     When light time correction is not used, setting S = 0
 !     allows us to seamlessly set TRGEPC equal to ET.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 
-         IF ( XMIT ) THEN
-            S   =  1.D0
-         ELSE
-            S   = -1.D0
-         END IF
+         if ( xmit ) then
+            s   =  1.d0
+         else
+            s   = -1.d0
+         end if
 
-      ELSE
-         S = 0.D0
-      END IF
+      else
+         s = 0.d0
+      end if
 
 !
 !     The method cannot be anything other than 'ELLIPSOID'.
 !
-      IF ( .NOT. EQSTR( METHOD, 'ELLIPSOID') ) THEN
+      if ( .not. eqstr( method, 'ELLIPSOID') ) then
 
-         CALL SETMSG ( 'Method is currently restricted to ' &
+         call setmsg ( 'Method is currently restricted to ' &
          //            'ELLIPSOID, but input value was #.' )
-         CALL ERRCH  ( '#', METHOD                         )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'               )
-         CALL CHKOUT ( 'TANGPT'                            )
-         RETURN
+         call errch  ( '#', method                         )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'               )
+         call chkout ( 'TANGPT'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Code from this point onward assumes the target shape is modeled
@@ -2292,125 +2292,125 @@
 !     POINT'. TANLOC is set to .TRUE. if and only if the locus is the
 !     tangent point.
 !
-      IF (  FIRST  .OR.  ( CORLOC .NE. PRVLOC )  ) THEN
+      if (  first  .or.  ( corloc .ne. prvloc )  ) then
 !
 !        Left justify the input locus string, convert to upper case,
 !        and compress all embedded blanks for comparison.
 !
-         CALL LJUCRS ( 0, CORLOC, LOCSTR )
+         call ljucrs ( 0, corloc, locstr )
 
-         IF ( LOCSTR .EQ. 'TANGENTPOINT' ) THEN
+         if ( locstr .eq. 'TANGENTPOINT' ) then
 
-            TANLOC = .TRUE.
+            tanloc = .true.
 
-         ELSE IF ( LOCSTR .EQ. 'SURFACEPOINT' ) THEN
+         else if ( locstr .eq. 'SURFACEPOINT' ) then
 
-            TANLOC = .FALSE.
+            tanloc = .false.
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Aberration correction locus must be one ' &
+            call setmsg ( 'Aberration correction locus must be one ' &
             //            'of TANGENT POINT or SURFACE POINT but ' &
             //            'was #.'                                  )
-            CALL ERRCH  ( '#', CORLOC                               )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-            CALL CHKOUT ( 'TANGPT'                                  )
-            RETURN
+            call errch  ( '#', corloc                               )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+            call chkout ( 'TANGPT'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        At this point we have a valid locus. TANLOC is set.
 !        Save the input locus string so we can check for
 !        a change on the next call.
 !
-         PRVLOC = CORLOC
+         prvloc = corloc
 
-      END IF
+      end if
 
 !
 !     Check for a zero ray direction vector.
 !
-      IF ( VZERO(DVEC) ) THEN
+      if ( vzero(dvec) ) then
 
-         CALL SETMSG ( 'Input ray direction was the zero ' &
+         call setmsg ( 'Input ray direction was the zero ' &
          //            'vector; this vector must be non-zero.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                     )
-         CALL CHKOUT ( 'TANGPT'                                )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                     )
+         call chkout ( 'TANGPT'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, fnd    )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'TANGPT'                                   )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'TANGPT'                                   )
+         return
 
-      END IF
+      end if
 
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, fnd    )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'TANGPT'                                   )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'TANGPT'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the input body codes. If they are equal, signal
 !     an error.
 !
-      IF ( OBSCDE .EQ. TRGCDE ) THEN
+      if ( obscde .eq. trgcde ) then
 
-         CALL SETMSG ( 'The observing body and target body are the ' &
+         call setmsg ( 'The observing body and target body are the ' &
          //            'same. Both are #.'                          )
-         CALL ERRCH  ( '#',  OBSRVR                                 )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         CALL CHKOUT ( 'TANGPT'                                     )
-         RETURN
+         call errch  ( '#',  obsrvr                                 )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
+         call chkout ( 'TANGPT'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the target body's ellipsoid radii.
 !
-      IF (  FIRST  .OR.  ( TRGCDE .NE. PRVTCD )  ) THEN
+      if (  first  .or.  ( trgcde .ne. prvtcd )  ) then
 !
 !        This the first pass, or else the target body has changed. We
 !        need to get radii for the new target body.
@@ -2418,164 +2418,164 @@
 !        Re-initialize the counter used to detect changes to the target
 !        body radii.
 !
-         CALL ZZCTRUIN( SVCTR5 )
+         call zzctruin( svctr5 )
 
-         PRVTCD = TRGCDE
+         prvtcd = trgcde
 
-      END IF
+      end if
 
-      CALL ZZBODVCD ( TRGCDE, 'RADII', 3, SVCTR5, SVNRAD, SVRADI )
+      call zzbodvcd ( trgcde, 'RADII', 3, svctr5, svnrad, svradi )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( SVNRAD .NE. 3 ) THEN
+      if ( svnrad .ne. 3 ) then
 
-         CALL SETMSG ( 'Number of radii associated with target ' &
+         call setmsg ( 'Number of radii associated with target ' &
          //            'body # is #; number must be 3.'         )
-         CALL ERRCH  ( '#',  TARGET                             )
-         CALL ERRINT ( '#',  SVNRAD                             )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                    )
-         CALL CHKOUT ( 'TANGPT'                                 )
-         RETURN
+         call errch  ( '#',  target                             )
+         call errint ( '#',  svnrad                             )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
+         call chkout ( 'TANGPT'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we've performed all first-pass actions.
 !
-      FIRST = .FALSE.
+      first = .false.
 
 !
 !     Determine the attributes of the frame designated by FIXREF.
 !
-      CALL ZZNAMFRM ( SVCTR3, SVFREF, SVFXFC, FIXREF, FXFCDE )
+      call zznamfrm ( svctr3, svfref, svfxfc, fixref, fxfcde )
 
-      CALL FRINFO ( FXFCDE, FXCENT, FXCLSS, FXTYID, FND )
+      call frinfo ( fxfcde, fxcent, fxclss, fxtyid, fnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' &
+         call setmsg ( 'Reference frame # is not recognized by ' &
          //            'the SPICE frame subsystem. Possibly ' &
          //            'a required frame definition kernel has ' &
          //            'not been loaded.'                        )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-         CALL CHKOUT ( 'TANGPT'                                  )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call sigerr ( 'SPICE(NOFRAME)'                          )
+         call chkout ( 'TANGPT'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      IF ( FXCENT .NE. TRGCDE ) THEN
+      if ( fxcent .ne. trgcde ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
          //            'center is #.'                             )
-         CALL ERRCH  ( '#',  FIXREF                               )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL ERRINT ( '#',  FXCENT                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( 'TANGPT'                                   )
-         RETURN
+         call errch  ( '#',  fixref                               )
+         call errch  ( '#',  target                               )
+         call errint ( '#',  fxcent                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( 'TANGPT'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the attributes of the frame designated by DREF.
 !
-      CALL ZZNAMFRM ( SVCTR4, SVDREF, SVDFRC, DREF, DFRCDE )
+      call zznamfrm ( svctr4, svdref, svdfrc, dref, dfrcde )
 
-      CALL FRINFO ( DFRCDE, DCENTR, DCLASS, DTYPID, FND )
+      call frinfo ( dfrcde, dcentr, dclass, dtypid, fnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' &
+         call setmsg ( 'Reference frame # is not recognized by ' &
          //            'the SPICE frame subsystem. Possibly ' &
          //            'a required frame definition kernel has ' &
          //            'not been loaded.'                        )
-         CALL ERRCH  ( '#',  DREF                                )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-         CALL CHKOUT ( 'TANGPT'                                  )
-         RETURN
+         call errch  ( '#',  dref                                )
+         call sigerr ( 'SPICE(NOFRAME)'                          )
+         call chkout ( 'TANGPT'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the position of the target relative to the observer. If
 !     light time corrections are used, this gives us an initial
 !     light time estimate and initial target epoch.
 !
-      CALL SPKPOS ( TARGET, ET, FIXREF, ABCORR, OBSRVR, TPOS, LT )
+      call spkpos ( target, et, fixref, abcorr, obsrvr, tpos, lt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( VZERO(TPOS) ) THEN
+      if ( vzero(tpos) ) then
 
-         CALL SETMSG ( 'Observer # and target # have distinct ' &
+         call setmsg ( 'Observer # and target # have distinct ' &
          //            'ID codes but the distance between these ' &
          //            'objects is zero.'                        )
-         CALL ERRCH  ( '#',  OBSRVR                              )
-         CALL ERRCH  ( '#',  TARGET                              )
-         CALL SIGERR ( 'SPICE(NOSEPARATION)'                     )
-         CALL CHKOUT ( 'TANGPT'                                  )
-         RETURN
+         call errch  ( '#',  obsrvr                              )
+         call errch  ( '#',  target                              )
+         call sigerr ( 'SPICE(NOSEPARATION)'                     )
+         call chkout ( 'TANGPT'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      CALL VMINUS ( TPOS, FIXOBS )
+      call vminus ( tpos, fixobs )
 
 !
 !     Now we can check whether the observer is inside the ellipsoid.
 !     Find the point on the ellipsoid that lies on the line between
 !     FIXOBS and the ellipsoid's center.
 !
-      CALL EDPNT ( FIXOBS, SVRADI(1), SVRADI(2), SVRADI(3), P )
+      call edpnt ( fixobs, svradi(1), svradi(2), svradi(3), p )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( VNORM(P) .GE. VNORM(FIXOBS) ) THEN
+      if ( vnorm(p) .ge. vnorm(fixobs) ) then
 
-         CALL SETMSG ( 'Observer # is inside ellipsoid representing ' &
+         call setmsg ( 'Observer # is inside ellipsoid representing ' &
          //            'target body # shape.'   )
-         CALL ERRCH  ( '#', OBSRVR              )
-         CALL ERRCH  ( '#', TARGET              )
-         CALL SIGERR ( 'SPICE(INVALIDGEOMETRY)' )
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
+         call errch  ( '#', obsrvr              )
+         call errch  ( '#', target              )
+         call sigerr ( 'SPICE(INVALIDGEOMETRY)' )
+         call chkout ( 'TANGPT' )
+         return
 
-      END IF
+      end if
 
 !
 !     The target epoch is dependent on the aberration correction. The
 !     coefficient S has been set to give us the correct answer for each
 !     case.
 !
-      TRGEPC = ET  +  S*LT
+      trgepc = et  +  s*lt
 
 !
 !     Transform the direction vector from frame DREF to the body-fixed
@@ -2595,13 +2595,13 @@
 !
 !     Let REFEPC be the epoch of participation of the observer.
 !
-      IF (      ( DCLASS .EQ.  INERTL ) &
-           .OR. ( DCENTR .EQ.  OBSCDE ) &
-           .OR. (        .NOT. USELT  )  ) THEN
+      if (      ( dclass .eq.  inertl ) &
+           .or. ( dcentr .eq.  obscde ) &
+           .or. (        .not. uselt  )  ) then
 
-         REFEPC = ET
+         refepc = et
 
-      ELSE
+      else
 !
 !        The epoch at which the orientation of ray frame is evaluated
 !        is the epoch of participation of the center of that frame.
@@ -2609,70 +2609,70 @@
 !        Find the light time from the observer to the center of
 !        frame DREF.
 !
-         CALL SPKEZP ( DCENTR, ET,     'J2000', ABCORR, &
-                       OBSCDE, CTRPOS, LTCENT          )
+         call spkezp ( dcentr, et,     'J2000', abcorr, &
+                       obscde, ctrpos, ltcent          )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TANGPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TANGPT' )
+            return
+         end if
 
-         REFEPC  =  ET  +  S * LTCENT
+         refepc  =  et  +  s * ltcent
 
-      END IF
+      end if
 
 !
 !     The epoch REFEPC associated with frame DREF has been set.
 !
 !     Compute the ray direction in the J2000 frame.
 !
-      IF ( DFRCDE .EQ. J2CODE ) THEN
+      if ( dfrcde .eq. j2code ) then
 
-         CALL VEQU ( DVEC, J2DIR )
+         call vequ ( dvec, j2dir )
 
-      ELSE
+      else
 
-         CALL REFCHG ( DFRCDE, J2CODE, REFEPC, R2JMAT )
+         call refchg ( dfrcde, j2code, refepc, r2jmat )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TANGPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TANGPT' )
+            return
+         end if
 
-         CALL MXV ( R2JMAT, DVEC, J2DIR )
+         call mxv ( r2jmat, dvec, j2dir )
 
-      END IF
+      end if
 
 !
 !     Now transform the ray direction from the J2000 frame to the
 !     target body-fixed frame at TRGEPC.
 !
-      CALL REFCHG ( J2CODE, FXFCDE, TRGEPC, J2FIXM )
+      call refchg ( j2code, fxfcde, trgepc, j2fixm )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      CALL MXV ( J2FIXM, J2DIR, FIXDIR )
+      call mxv ( j2fixm, j2dir, fixdir )
 
 !
 !     We have all the inputs needed to make initial estimates of
 !     our outputs.
 !
-      CALL NPEDLN ( SVRADI(1), SVRADI(2), SVRADI(3), &
-                    FIXOBS,    FIXDIR,    SRFPT,    ALT )
+      call npedln ( svradi(1), svradi(2), svradi(3), &
+                    fixobs,    fixdir,    srfpt,    alt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
 !
 !     Compute the observer-to-surface point vector for the initial
 !     estimated solution.
 !
-      CALL VSUB ( SRFPT, FIXOBS, SRFVEC )
+      call vsub ( srfpt, fixobs, srfvec )
 
 !
 !     Now compute the tangent point.
@@ -2684,7 +2684,7 @@
 !     We retain the altitude found by NPEDLN, since the following
 !     call can introduce round-off error in the intercept case.
 !
-      CALL NPLNPT ( FIXOBS, FIXDIR, SRFPT, TANPT, DVAL )
+      call nplnpt ( fixobs, fixdir, srfpt, tanpt, dval )
 
 !
 !     Note that TANPT might not be valid here, if we're in the look-
@@ -2693,16 +2693,16 @@
 !     A SPICE error should not be possible here but we check anyway
 !     for safety.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
-      IF ( .NOT. USELT ) THEN
+      if ( .not. uselt ) then
 !
 !        Aberration corrections are not used.
 !
-         TRGEPC = ET
+         trgepc = et
 
 !
 !        If TANPT is on or behind the ray's vertex, reset TANPT to be
@@ -2715,56 +2715,56 @@
 !        for the ray pointing away from the target could give a
 !        different result. We handle that case separately later on.
 !
-         CALL VSUB ( TANPT, FIXOBS, TANOFF )
+         call vsub ( tanpt, fixobs, tanoff )
 
-         IF ( VDOT( TANOFF, FIXDIR ) .LE. 0.D0 ) THEN
+         if ( vdot( tanoff, fixdir ) .le. 0.d0 ) then
 !
 !           TANPT is on or behind the ray's vertex.
 !
-            CALL VEQU ( FIXOBS, TANPT )
-            RANGE = 0.D0
+            call vequ ( fixobs, tanpt )
+            range = 0.d0
 
-            CALL NEARPT ( FIXOBS, SVRADI(1), SVRADI(2), SVRADI(3), &
-                          SRFPT,  ALT                             )
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'TANGPT' )
-               RETURN
-            END IF
+            call nearpt ( fixobs, svradi(1), svradi(2), svradi(3), &
+                          srfpt,  alt                             )
+            if ( failed() ) then
+               call chkout ( 'TANGPT' )
+               return
+            end if
 
 !
 !           Compute SRFVEC using our newly computed value of SRFPT.
 !
-            CALL VSUB ( SRFPT, FIXOBS, SRFVEC )
+            call vsub ( srfpt, fixobs, srfvec )
 
-         ELSE
+         else
 !
 !           The tangent point lies ahead of the observer.
 !
-            IF ( ALT .EQ. 0.D0 ) THEN
+            if ( alt .eq. 0.d0 ) then
 !
 !              This is the geometric intercept case. ALT, SRFPT, TANPT,
 !              and SRFVEC are already set. To eliminate any error in
 !              TANPT, we set it equal to SRFPT.
 !
-               CALL VEQU ( SRFPT, TANPT )
+               call vequ ( srfpt, tanpt )
 
-               RANGE = VNORM ( SRFVEC )
+               range = vnorm ( srfvec )
 
-            ELSE
+            else
 !
 !              This is the normal geometric case. All outputs
 !              other than range are already set.
 !
-               RANGE = VDIST ( FIXOBS, TANPT )
+               range = vdist ( fixobs, tanpt )
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
+         call chkout ( 'TANGPT' )
+         return
 
-      END IF
+      end if
 
 !
 !     Still here? Then we are using aberration corrections. The outputs
@@ -2779,27 +2779,27 @@
 !     iterations. The initial light time correction was for the target
 !     center.
 !
-      IF ( USECN ) THEN
-         NITR = MXCVIT
-      ELSE
-         NITR = MXNCIT
-      END IF
+      if ( usecn ) then
+         nitr = mxcvit
+      else
+         nitr = mxncit
+      end if
 !
 !     Compute new light time estimate and new target epoch.
 !
-      IF ( TANLOC ) THEN
+      if ( tanloc ) then
 !
 !        Compute distance to the tangent point.
 !
-         DIST = VDIST ( FIXOBS, TANPT )
+         dist = vdist ( fixobs, tanpt )
 
-      ELSE
+      else
 !
 !        Compute distance to the surface point.
 !
-         DIST = VNORM ( SRFVEC )
+         dist = vnorm ( srfvec )
 
-      END IF
+      end if
 
 !
 !     We'll need the state of the observer relative to the solar system
@@ -2807,42 +2807,42 @@
 !     of the target relative to the solar system barycenter will need
 !     to be re-computed on each loop iteration.
 !
-      CALL SPKSSB ( OBSCDE, ET, 'J2000', SSBOST )
+      call spkssb ( obscde, et, 'J2000', ssbost )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TANGPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TANGPT' )
+         return
+      end if
 
 !
 !     Compute light time based on distance to the aberration correction
 !     locus; compute the new target epoch based on the light time.
 !
-      LT     =  DIST / CLIGHT()
-      TRGEPC =  ET  +  S * LT
+      lt     =  dist / clight()
+      trgepc =  et  +  s * lt
 
-      PREVLT = 0.D0
-      PRVEPC = TRGEPC
+      prevlt = 0.d0
+      prvepc = trgepc
 
-      I      = 0
-      LTDIFF = 1.D0
-      EPCDIF = 1.D0
+      i      = 0
+      ltdiff = 1.d0
+      epcdif = 1.d0
 
 !
 !     Initialize STLCNV, the flag that indicates whether stellar
 !     aberration corrections have converged.
 !
-      IF ( USESTL ) THEN
-         STLCNV = .FALSE.
-      ELSE
-         STLCNV = .TRUE.
-      END IF
+      if ( usestl ) then
+         stlcnv = .false.
+      else
+         stlcnv = .true.
+      end if
 
 !
 !     Initialize LTCNV, the flag that indicates whether light time
 !     corrections have converged.
 !
-      LTCNV  = .FALSE.
+      ltcnv  = .false.
 
 !
 !     The loop terminates if both light time and stellar aberration
@@ -2867,30 +2867,30 @@
 !          becomes less than CNVLIM
 !
 !
-      DO WHILE (             ( I     .LT.  NITR   ) &
-                 .AND. .NOT. ( LTCNV .AND. STLCNV ) )
+      do while (             ( i     .lt.  nitr   ) &
+                 .and. .not. ( ltcnv .and. stlcnv ) )
 
-         IF ( USESTL ) THEN
+         if ( usestl ) then
 !
 !           Track the output points in order to test convergence of
 !           the stellar aberration correction.
 !
-            CALL VEQU ( TANPT, PRVTAN )
-            CALL VEQU ( SRFPT, PRVSRF )
+            call vequ ( tanpt, prvtan )
+            call vequ ( srfpt, prvsrf )
 
-         END IF
+         end if
 
 !
 !        Get the J2000-relative state of the target relative to
 !        the solar system barycenter at the target epoch. The
 !        observer's position doesn't change.
 !
-         CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+         call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TANGPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TANGPT' )
+            return
+         end if
 
 !
 !        Convert the position of the observer relative to the solar
@@ -2900,13 +2900,13 @@
 !        SSBOST contains the J2000-relative state of the observer
 !        relative to the solar system barycenter at ET.
 !
-         CALL VSUB   ( SSBOST,  SSBTST, J2OPOS         )
-         CALL PXFORM ( 'J2000', FIXREF, TRGEPC, J2FIXM )
+         call vsub   ( ssbost,  ssbtst, j2opos         )
+         call pxform ( 'J2000', fixref, trgepc, j2fixm )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TANGPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TANGPT' )
+            return
+         end if
 
 !
 !        If we're using stellar aberration corrections, which we
@@ -2914,7 +2914,7 @@
 !        compute the stellar aberration correction for the light time
 !        corrected aberration correction locus.
 !
-         IF ( USESTL ) THEN
+         if ( usestl ) then
 !
 !           Get the position of the aberration correction locus
 !           relative to the observer in the J2000 frame. The locus is
@@ -2923,18 +2923,18 @@
 !           First convert the locus from the target body-fixed frame to
 !           the J2000 frame.
 !
-            IF ( TANLOC ) THEN
-               CALL MTXV ( J2FIXM, TANPT, J2LCUS )
-            ELSE
-               CALL MTXV ( J2FIXM, SRFPT, J2LCUS )
-            END IF
+            if ( tanloc ) then
+               call mtxv ( j2fixm, tanpt, j2lcus )
+            else
+               call mtxv ( j2fixm, srfpt, j2lcus )
+            end if
 
 !
 !           Compute the position of the locus relative to the observer
 !           in the J2000 frame.
 !
-            CALL VMINUS ( J2OPOS, J2TPOS )
-            CALL VADD   ( J2TPOS, J2LCUS, J2LPOS )
+            call vminus ( j2opos, j2tpos )
+            call vadd   ( j2tpos, j2lcus, j2lpos )
 
 !
 !           Correct the vector from the observer to the aberration
@@ -2942,42 +2942,42 @@
 !           offset STLOFF from the uncorrected vector to the corrected
 !           vector.
 !
-            IF ( XMIT ) THEN
-               CALL STLABX ( J2LPOS, SSBOST(4), STLLOC )
-            ELSE
-               CALL STELAB ( J2LPOS, SSBOST(4), STLLOC )
-            END IF
+            if ( xmit ) then
+               call stlabx ( j2lpos, ssbost(4), stlloc )
+            else
+               call stelab ( j2lpos, ssbost(4), stlloc )
+            end if
 
-            CALL VSUB ( STLLOC, J2LPOS, STLOFF )
+            call vsub ( stlloc, j2lpos, stloff )
 
 !
 !           Convert the stellar aberration correction offset to the
 !           target body-fixed frame at TRGEPC.
 !
-            CALL MXV ( J2FIXM, STLOFF, STLFIX )
+            call mxv ( j2fixm, stloff, stlfix )
 
-         ELSE
+         else
 !
 !           We're not using stellar aberration correction, so just
 !           zero out the offset.
 !
-            CALL CLEARD ( 3, STLFIX )
+            call cleard ( 3, stlfix )
 
-         END IF
+         end if
 
 !
 !        Convert the observer's position relative to the target from
 !        the J2000 frame to the target frame at the target epoch. Let
 !        TRGPOS be the negative of this vector.
 !
-         CALL MXV    ( J2FIXM, J2OPOS, FIXOBS )
-         CALL VMINUS ( FIXOBS, TRGPOS )
+         call mxv    ( j2fixm, j2opos, fixobs )
+         call vminus ( fixobs, trgpos )
 
 !
 !        Convert the ray direction vector from the J2000 frame
 !        to the target frame at the target epoch.
 !
-         CALL MXV ( J2FIXM, J2DIR, FIXDIR )
+         call mxv ( j2fixm, j2dir, fixdir )
 
 !
 !        The ray-ellipsoid near point computation must be performed
@@ -2990,18 +2990,18 @@
 !        If stellar aberration correction was not commanded, then
 !        STLFIX is the zero vector.
 !
-         CALL VSUB ( FIXOBS, STLFIX, STLOBS )
+         call vsub ( fixobs, stlfix, stlobs )
 
 !
 !        Re-compute the surface point and ray altitude.
 !
-         CALL NPEDLN ( SVRADI(1), SVRADI(2), SVRADI(3), &
-                       STLOBS,    FIXDIR,    SRFPT,    ALT )
+         call npedln ( svradi(1), svradi(2), svradi(3), &
+                       stlobs,    fixdir,    srfpt,    alt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'TANGPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'TANGPT' )
+            return
+         end if
 
 !
 !        Now compute the tangent point.
@@ -3012,31 +3012,31 @@
 !        We retain the altitude found by NPEDLN, since the following
 !        call can introduce round-off error in the intercept case.
 !
-         IF ( ALT .NE. 0.D0 ) THEN
-            CALL NPLNPT ( STLOBS, FIXDIR, SRFPT, TANPT, DVAL )
-         ELSE
-            CALL VEQU ( SRFPT, TANPT )
-         END IF
+         if ( alt .ne. 0.d0 ) then
+            call nplnpt ( stlobs, fixdir, srfpt, tanpt, dval )
+         else
+            call vequ ( srfpt, tanpt )
+         end if
 
 !
 !        The output SRFVEC extends from the observer to the apparent
 !        position of the surface point.
 !
-         CALL VSUB ( SRFPT, STLOBS, SRFVEC )
+         call vsub ( srfpt, stlobs, srfvec )
 
 !
 !        We may need to update TANPT, SRFPT and SRFVEC if the tangent
 !        point is behind the observer (the look-away case).
 !
-         CALL VSUB ( TANPT, STLOBS, TANOFF )
+         call vsub ( tanpt, stlobs, tanoff )
 
-         IF ( VDOT( TANOFF, FIXDIR ) .LE. 0.D0 ) THEN
+         if ( vdot( tanoff, fixdir ) .le. 0.d0 ) then
 !
 !           TANPT is on or behind the ray's vertex. Reset TANPT to be
 !           the vertex.
 !
-            CALL VEQU ( STLOBS, TANPT )
-            RANGE = 0.D0
+            call vequ ( stlobs, tanpt )
+            range = 0.d0
 
 !
 !           In this case, the surface point is considered to be the
@@ -3044,33 +3044,33 @@
 !           of the observer above this point is the tangent point's
 !           altitude.
 !
-            CALL NEARPT ( STLOBS,    SVRADI(1), SVRADI(2), &
-                          SVRADI(3), SRFPT,     ALT       )
+            call nearpt ( stlobs,    svradi(1), svradi(2), &
+                          svradi(3), srfpt,     alt       )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'TANGPT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'TANGPT' )
+               return
+            end if
 
-            CALL VSUB ( SRFPT, TANPT, SRFVEC )
+            call vsub ( srfpt, tanpt, srfvec )
 
 !
 !           Set the light time and the target epoch, based on the
 !           locus.
 !
-            IF ( TANLOC ) THEN
+            if ( tanloc ) then
 
-               LT     = 0.D0
-               TRGEPC = ET
+               lt     = 0.d0
+               trgepc = et
 
-            ELSE
+            else
 
-               LT     = ALT / CLIGHT()
-               TRGEPC = ET + S*LT
+               lt     = alt / clight()
+               trgepc = et + s*lt
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           This is the normal case.
 !
@@ -3080,53 +3080,53 @@
 !           stellar aberration does not apply. Therefore we use FIXOBS
 !           as the observer position for the distance computations.
 !
-            IF ( TANLOC ) THEN
+            if ( tanloc ) then
 !
 !              Compute distance to the tangent point.
 !
-               DIST = VDIST ( FIXOBS, TANPT )
+               dist = vdist ( fixobs, tanpt )
 
-            ELSE
+            else
 !
 !              Compute distance to the surface point.
 !
-               DIST = VDIST ( FIXOBS, SRFPT )
+               dist = vdist ( fixobs, srfpt )
 
-            END IF
+            end if
 !
 !           Compute a new light time estimate and a new target epoch.
 !
-            LT     = DIST / CLIGHT()
-            TRGEPC = ET  +  S * LT
+            lt     = dist / clight()
+            trgepc = et  +  s * lt
 
-         END IF
+         end if
 
 !
 !        Compute the changes in the light time and target epoch for
 !        this loop pass. Determine whether light time and stellar
 !        aberration have converged.
 !
-         LT      =   TOUCHD( LT )
-         LTDIFF  =   ABS( LT     - PREVLT )
-         EPCDIF  =   ABS( TRGEPC - PRVEPC )
+         lt      =   touchd( lt )
+         ltdiff  =   abs( lt     - prevlt )
+         epcdif  =   abs( trgepc - prvepc )
 
-         PREVLT  =   LT
-         PRVEPC  =   TRGEPC
-         I       =   I + 1
+         prevlt  =   lt
+         prvepc  =   trgepc
+         i       =   i + 1
 
-         LTCNV  =        (  LTDIFF .LT. ( CNVLIM * ABS(LT) )  ) &
-                   .OR.  (  EPCDIF .EQ.   0.D0                )
+         ltcnv  =        (  ltdiff .lt. ( cnvlim * abs(lt) )  ) &
+                   .or.  (  epcdif .eq.   0.d0                )
 
-         IF ( USESTL ) THEN
+         if ( usestl ) then
 
-            STLCNV =       ( VREL( TANPT, PRVTAN ) .LT. CNVLIM ) &
-                     .AND. ( VREL( SRFPT, PRVSRF ) .LT. CNVLIM )
-         END IF
+            stlcnv =       ( vrel( tanpt, prvtan ) .lt. cnvlim ) &
+                     .and. ( vrel( srfpt, prvsrf ) .lt. cnvlim )
+         end if
 
-      END DO
+      end do
 
-      RANGE = VDIST ( STLOBS, TANPT )
+      range = vdist ( stlobs, tanpt )
 
-      CALL CHKOUT ( 'TANGPT' )
-      RETURN
-      END
+      call chkout ( 'TANGPT' )
+      return
+      end

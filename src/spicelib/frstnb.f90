@@ -1,6 +1,6 @@
 !$Procedure FRSTNB ( First non-blank character )
 
-      INTEGER FUNCTION FRSTNB ( STRING )
+      integer function frstnb ( string )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -118,30 +118,30 @@
 !
 !     Local parameters
 !
-      INTEGER               ISPACE
-      PARAMETER           ( ISPACE = 32 )
+      integer               ispace
+      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 !
 !     Just like it says in the header.
 !
-      IF ( STRING .EQ. ' ' ) THEN
-         FRSTNB = 0
+      if ( string .eq. ' ' ) then
+         frstnb = 0
 
-      ELSE
-         DO I = 1, LEN ( STRING )
+      else
+         do i = 1, len ( string )
 
-            IF ( ICHAR(STRING(I:I)) .NE. ISPACE ) THEN
-               FRSTNB = I
-               RETURN
-            END IF
+            if ( ichar(string(i:i)) .ne. ispace ) then
+               frstnb = i
+               return
+            end if
 
-         END DO
-      END IF
+         end do
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure LUN2FN ( Map logical unit of open file to its name. )
 
-      SUBROUTINE LUN2FN ( LUNIT, FILNAM )
+      subroutine lun2fn ( lunit, filnam )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          LUNIT
-      CHARACTER*(*)    FILNAM
+      integer          lunit
+      character*(*)    filnam
 
 ! $ Brief_I/O
 !
@@ -112,76 +112,76 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
-      LOGICAL               OPENED
+      logical               opened
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LUN2FN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'LUN2FN' )
+      end if
 
 !
 !     First we test to see if the filename is blank.
 !
-      IF ( LUNIT .LE. 0 ) THEN
+      if ( lunit .le. 0 ) then
 
-         CALL SETMSG ( 'The Fortran logical unit was not' // &
+         call setmsg ( 'The Fortran logical unit was not' // &
                        ' positive: #.'                     )
-         CALL ERRINT ( '#', LUNIT                          )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'            )
-         CALL CHKOUT ( 'LUN2FN'                            )
-         RETURN
+         call errint ( '#', lunit                          )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'            )
+         call chkout ( 'LUN2FN'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     So simple, it defies explanation: just INQUIRE.
 !
-      INQUIRE ( UNIT   = LUNIT, &
-                NAME   = FILNAM, &
-                OPENED = OPENED, &
-                IOSTAT = IOSTAT  )
+      inquire ( unit   = lunit, &
+                name   = filnam, &
+                opened = opened, &
+                iostat = iostat  )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'An error occurred while INQUIRing on'  // &
+         call setmsg ( 'An error occurred while INQUIRing on'  // &
                        ' unit #. The IOSTAT value is #.'        )
-         CALL ERRINT ( '#', LUNIT                               )
-         CALL ERRINT ( '#', IOSTAT                              )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'                   )
-         CALL CHKOUT ( 'LUN2FN'                                 )
-         RETURN
+         call errint ( '#', lunit                               )
+         call errint ( '#', iostat                              )
+         call sigerr ( 'SPICE(INQUIREFAILED)'                   )
+         call chkout ( 'LUN2FN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     If there is no open file associated with the logical unit LUNIT
 !     we cannot get a filename. So signal an error.
 !
-      IF ( .NOT. OPENED ) THEN
+      if ( .not. opened ) then
 
-         CALL SETMSG ( 'There was no open file associated with the' // &
+         call setmsg ( 'There was no open file associated with the' // &
                        ' logical unit #.'                            )
-         CALL ERRINT ( '#', LUNIT                                    )
-         CALL SIGERR ( 'SPICE(FILENOTOPEN)'                          )
-         CALL CHKOUT ( 'LUN2FN'                                      )
-         RETURN
+         call errint ( '#', lunit                                    )
+         call sigerr ( 'SPICE(FILENOTOPEN)'                          )
+         call chkout ( 'LUN2FN'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     If we made it to here, we are done. Just check out and return.
 !
-      CALL CHKOUT ( 'LUN2FN' )
-      RETURN
-      END
+      call chkout ( 'LUN2FN' )
+      return
+      end

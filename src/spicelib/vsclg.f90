@@ -1,6 +1,6 @@
 !$Procedure VSCLG ( Vector scaling, general dimension )
 
-      SUBROUTINE VSCLG ( S, V1, NDIM, VOUT )
+      subroutine vsclg ( s, v1, ndim, vout )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   S
-      DOUBLE PRECISION   V1   ( NDIM )
-      DOUBLE PRECISION   VOUT ( NDIM )
+      integer            ndim
+      double precision   s
+      double precision   v1   ( ndim )
+      double precision   vout ( ndim )
 
 ! $ Brief_I/O
 !
@@ -197,11 +197,11 @@
 !
 !     Local variables
 !
-      INTEGER            I
+      integer            i
 
-      DO I=1,NDIM
-         VOUT(I) = S * V1(I)
-      END DO
+      do i=1,ndim
+         vout(i) = s * v1(i)
+      end do
 
-      RETURN
-      END
+      return
+      end

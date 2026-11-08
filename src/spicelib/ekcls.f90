@@ -1,6 +1,6 @@
 !$Procedure EKCLS ( EK, close file )
 
-      SUBROUTINE EKCLS ( HANDLE )
+      subroutine ekcls ( handle )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -377,22 +377,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKCLS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKCLS' )
+      end if
 
 !
 !     Close the file as a DAS file.
 !
-      CALL DASCLS ( HANDLE )
+      call dascls ( handle )
 
-      CALL CHKOUT ( 'EKCLS' )
-      RETURN
-      END
+      call chkout ( 'EKCLS' )
+      return
+      end

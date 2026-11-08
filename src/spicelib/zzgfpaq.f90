@@ -1,6 +1,6 @@
 !$Procedure ZZGFPAQ ( Private --- GF, phase angle between bodies )
 
-      SUBROUTINE ZZGFPAQ ( ET, TARG, ILLMN, OBS, ABCORR, VALUE )
+      subroutine zzgfpaq ( et, targ, illmn, obs, abcorr, value )
 
 ! $ Abstract
 !
@@ -24,14 +24,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      INTEGER               TARG
-      INTEGER               ILLMN
-      INTEGER               OBS
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      VALUE
+      double precision      et
+      integer               targ
+      integer               illmn
+      integer               obs
+      character*(*)         abcorr
+      double precision      value
 
 ! $ Brief_I/O
 !
@@ -142,67 +142,67 @@
 !     SPICELIB functions.
 !
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               EQSTR
+      logical               failed
+      logical               return
+      logical               eqstr
 
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      PI
+      double precision      vsep
+      double precision      pi
 
 !
 !     Local Variables.
 !
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      PV1    ( 3 )
-      DOUBLE PRECISION      PV2    ( 3 )
+      double precision      lt
+      double precision      sep
+      double precision      pv1    ( 3 )
+      double precision      pv2    ( 3 )
 
-      CHARACTER*(5)         REF
+      character*(5)         ref
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFPAQ' )
+      call chkin  ( 'ZZGFPAQ' )
 
 !
 !     This calculation is invariant with respect to reference frame.
 !     Use J2000 for convenience.
 !
-      REF = 'J2000'
+      ref = 'J2000'
 
 !
 !     Get the position of the TARG object relative to OBS at ET.
 !
-      CALL SPKEZP ( TARG, ET, REF, ABCORR,  OBS, PV1, LT )
+      call spkezp ( targ, et, ref, abcorr,  obs, pv1, lt )
 
-      IF  (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFPAQ' )
-         RETURN
-      END IF
+      if  (  failed() ) then
+         call chkout ( 'ZZGFPAQ' )
+         return
+      end if
 
 
 !
 !     Get the state of the ILLMN object relative to TARG at ET
 !     for no aberration correction, or ET - LT otherwise.
 !
-      IF ( EQSTR( ABCORR, 'NONE' ) ) THEN
+      if ( eqstr( abcorr, 'NONE' ) ) then
 
-         CALL SPKEZP ( ILLMN, ET,      REF, ABCORR, TARG, PV2, LT )
+         call spkezp ( illmn, et,      ref, abcorr, targ, pv2, lt )
 
-      ELSE
+      else
 
-         CALL SPKEZP ( ILLMN, ET - LT, REF, ABCORR, TARG, PV2, LT )
+         call spkezp ( illmn, et - lt, ref, abcorr, targ, pv2, lt )
 
-      END IF
+      end if
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFPAQ' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'ZZGFPAQ' )
+         return
+      end if
 
 !
 !                       ILLMN      OBS
@@ -227,19 +227,19 @@
 !
 !     Calculate the angle separating the vectors relative to TARG
 !
-      SEP = VSEP( PV1, PV2 )
+      sep = vsep( pv1, pv2 )
 
 !
 !     The angle of interest is that between -PV1 and PV2 measured from
 !     TARG. Subtract SEP from PI to calculate this angle.
 !
-      VALUE = PI() - SEP
+      value = pi() - sep
 
 !
 !     All done.
 !
-      CALL CHKOUT (  'ZZGFPAQ' )
-      RETURN
+      call chkout (  'ZZGFPAQ' )
+      return
 
-      END
+      end
 

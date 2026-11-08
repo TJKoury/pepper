@@ -1,6 +1,6 @@
 !$Procedure SYDELC ( Delete a symbol from the symbol table )
 
-      SUBROUTINE SYDELC ( NAME, TABSYM, TABPTR, TABVAL )
+      subroutine sydelc ( name, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      CHARACTER*(*)         TABVAL     ( LBCELL:* )
+      character*(*)         name
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -146,67 +146,67 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               CARDI
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      integer               cardi
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NPTR
-      INTEGER               NVAL
+      integer               nsym
+      integer               nptr
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      INTEGER               DIMVAL
+      integer               locsym
+      integer               locval
+      integer               dimval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYDELC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SYDELC' )
+      end if
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NPTR = CARDI ( TABPTR )
-      NVAL = CARDC ( TABVAL )
+      nsym = cardc ( tabsym )
+      nptr = cardi ( tabptr )
+      nval = cardc ( tabval )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, we're done. If it is, we can proceed
 !     without fear of overflow.
 !
-      IF ( LOCSYM .GT. 0 ) THEN
+      if ( locsym .gt. 0 ) then
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
-         DIMVAL = TABPTR(LOCSYM)
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         dimval = tabptr(locsym)
 
-         CALL REMLAC ( 1, LOCSYM, TABSYM(1), NSYM )
-         CALL SCARDC ( NSYM, TABSYM )
+         call remlac ( 1, locsym, tabsym(1), nsym )
+         call scardc ( nsym, tabsym )
 
-         CALL REMLAI ( 1, LOCSYM, TABPTR(1), NPTR )
-         CALL SCARDI ( NPTR, TABPTR )
+         call remlai ( 1, locsym, tabptr(1), nptr )
+         call scardi ( nptr, tabptr )
 
-         CALL REMLAC ( DIMVAL, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDC ( NVAL, TABVAL )
+         call remlac ( dimval, locval, tabval(1), nval )
+         call scardc ( nval, tabval )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYDELC' )
-      RETURN
-      END
+      call chkout ( 'SYDELC' )
+      return
+      end

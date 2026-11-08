@@ -1,6 +1,6 @@
 !$Procedure WNEXTD ( Extract the endpoints from a DP window )
 
-      SUBROUTINE WNEXTD ( SIDE, WINDOW )
+      subroutine wnextd ( side, window )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*1           SIDE
-      DOUBLE PRECISION      WINDOW  ( LBCELL:* )
+      character*1           side
+      double precision      window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -155,57 +155,57 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
+      integer               card
+      integer               i
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNEXTD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'WNEXTD' )
+      end if
 
 !
 !     Get the cardinality of the window. (The size is not important;
 !     this routine can't create any new intervals.)
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Step through the window, keeping one endpoint from each interval.
 !     For the sake of efficiency, we have separate loops for the two
 !     possible values of SIDE.
 !
-      IF ( SIDE .EQ. 'L'  .OR.  SIDE .EQ. 'l' ) THEN
+      if ( side .eq. 'L'  .or.  side .eq. 'l' ) then
 
-         DO I = 1, CARD, 2
-            WINDOW(I+1) = WINDOW(I)
-         END DO
+         do i = 1, card, 2
+            window(i+1) = window(i)
+         end do
 
-      ELSE IF ( SIDE .EQ. 'R'  .OR.  SIDE .EQ. 'r' ) THEN
+      else if ( side .eq. 'R'  .or.  side .eq. 'r' ) then
 
-         DO I = 1, CARD, 2
-            WINDOW(I) = WINDOW(I+1)
-         END DO
+         do i = 1, card, 2
+            window(i) = window(i+1)
+         end do
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'SIDE was *.' )
-         CALL ERRCH  ( '*', SIDE     )
-         CALL SIGERR ( 'SPICE(INVALIDENDPNTSPEC)' )
+         call setmsg ( 'SIDE was *.' )
+         call errch  ( '*', side     )
+         call sigerr ( 'SPICE(INVALIDENDPNTSPEC)' )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'WNEXTD' )
-      RETURN
-      END
+      call chkout ( 'WNEXTD' )
+      return
+      end

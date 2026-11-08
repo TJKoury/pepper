@@ -1,6 +1,6 @@
 !$Procedure REPML ( Replace marker with logical value text )
 
-      SUBROUTINE REPML ( IN, MARKER, VALUE, RTCASE, OUT )
+      subroutine repml ( in, marker, value, rtcase, out )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         IN
-      CHARACTER*(*)         MARKER
-      LOGICAL               VALUE
-      CHARACTER*1           RTCASE
-      CHARACTER*(*)         OUT
+      character*(*)         in
+      character*(*)         marker
+      logical               value
+      character*1           rtcase
+      character*(*)         out
 
 ! $ Brief_I/O
 !
@@ -243,59 +243,59 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               ISRCHC
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               isrchc
+      integer               lastnb
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MAXLLT
-      PARAMETER           ( MAXLLT = 5 )
+      integer               maxllt
+      parameter           ( maxllt = 5 )
 
-      INTEGER               NCASE
-      PARAMETER           ( NCASE  = 3 )
+      integer               ncase
+      parameter           ( ncase  = 3 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXLLT)    LVALUE
-      CHARACTER*(MAXLLT)    VALSTR ( NCASE, 2 )
-      CHARACTER*(1)         TMPCAS
-      CHARACTER*(1)         CASSTR ( NCASE )
+      character*(maxllt)    lvalue
+      character*(maxllt)    valstr ( ncase, 2 )
+      character*(1)         tmpcas
+      character*(1)         casstr ( ncase )
 
-      INTEGER               CASIDX
-      INTEGER               MRKNBF
-      INTEGER               MRKNBL
-      INTEGER               MRKPSB
-      INTEGER               MRKPSE
-      INTEGER               VALIDX
+      integer               casidx
+      integer               mrknbf
+      integer               mrknbl
+      integer               mrkpsb
+      integer               mrkpse
+      integer               validx
 
 !
 !     Saved variables
 !
-      SAVE                  CASSTR
-      SAVE                  VALSTR
+      save                  casstr
+      save                  valstr
 
 !
 !     Initial values
 !
-      DATA                  CASSTR / 'U', 'L', 'C' /
+      data                  casstr / 'U', 'L', 'C' /
 
-      DATA                  VALSTR / 'TRUE',  'true',  'True', &
+      data                  valstr / 'TRUE',  'true',  'True', &
                                      'FALSE', 'false', 'False'  /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'REPML' )
+      call chkin ( 'REPML' )
 
 !
 !     Identify the case string and find its index in the
@@ -305,80 +305,80 @@
 !     RTCASE has length 1, so we need not be concerned with leading
 !     blanks.
 !
-      CALL UCASE ( RTCASE, TMPCAS )
+      call ucase ( rtcase, tmpcas )
 
-      CASIDX = ISRCHC ( TMPCAS, NCASE, CASSTR )
+      casidx = isrchc ( tmpcas, ncase, casstr )
 
-      IF ( CASIDX .EQ. 0 ) THEN
+      if ( casidx .eq. 0 ) then
 
-         CALL SETMSG ( 'Case (#) must be U, L, or C.' )
-         CALL ERRCH  ( '#', RTCASE                    )
-         CALL SIGERR ( 'SPICE(INVALIDCASE)'           )
-         CALL CHKOUT ( 'REPML'                        )
-         RETURN
+         call setmsg ( 'Case (#) must be U, L, or C.' )
+         call errch  ( '#', rtcase                    )
+         call sigerr ( 'SPICE(INVALIDCASE)'           )
+         call chkout ( 'REPML'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      IF ( MARKER .EQ. ' ' ) THEN
+      if ( marker .eq. ' ' ) then
 
-         OUT = IN
+         out = in
 
-         CALL CHKOUT ( 'REPML' )
-         RETURN
+         call chkout ( 'REPML' )
+         return
 
-      END IF
+      end if
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      MRKNBF = FRSTNB(MARKER)
-      MRKNBL = LASTNB(MARKER)
+      mrknbf = frstnb(marker)
+      mrknbl = lastnb(marker)
 
 !
 !     MARKER is non-blank, so the index range below is valid.
 !
-      MRKPSB = INDEX ( IN, MARKER( MRKNBF : MRKNBL )  )
+      mrkpsb = index ( in, marker( mrknbf : mrknbl )  )
 
-      IF ( MRKPSB .EQ. 0 ) THEN
+      if ( mrkpsb .eq. 0 ) then
 
-         OUT = IN
+         out = in
 
-         CALL CHKOUT ( 'REPML' )
-         RETURN
+         call chkout ( 'REPML' )
+         return
 
-      END IF
+      end if
 
-      MRKPSE = MRKPSB + MRKNBL - MRKNBF
+      mrkpse = mrkpsb + mrknbl - mrknbf
 
 !
 !     Okay, MARKER is non-blank and has been found.
 !
-      IF ( VALUE ) THEN
-         VALIDX = 1
-      ELSE
-         VALIDX = 2
-      END IF
+      if ( value ) then
+         validx = 1
+      else
+         validx = 2
+      end if
 
 !
 !     Set the value string based on the case specification and
 !     the input logical value.
 !
-      LVALUE = VALSTR( CASIDX, VALIDX )
+      lvalue = valstr( casidx, validx )
 
 !
 !     Replace MARKER with LVALUE.
 !
-      CALL REPSUB ( IN, &
-                    MRKPSB, &
-                    MRKPSE, &
-                    LVALUE( : LASTNB(LVALUE) ), &
-                    OUT )
+      call repsub ( in, &
+                    mrkpsb, &
+                    mrkpse, &
+                    lvalue( : lastnb(lvalue) ), &
+                    out )
 
-      CALL CHKOUT ( 'REPML' )
-      RETURN
-      END
+      call chkout ( 'REPML' )
+      return
+      end

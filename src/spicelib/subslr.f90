@@ -1,7 +1,7 @@
 !$Procedure SUBSLR ( Sub-solar point )
 
-      SUBROUTINE SUBSLR ( METHOD, TARGET, ET,     FIXREF, &
-                          ABCORR, OBSRVR, SPOINT, TRGEPC, SRFVEC )
+      subroutine subslr ( method, target, et,     fixref, &
+                          abcorr, obsrvr, spoint, trgepc, srfvec )
 
 ! $ Abstract
 !
@@ -29,24 +29,24 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'dsk.inc'
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
-      INCLUDE               'zzdsk.inc'
+      include               'dsk.inc'
+      include               'frmtyp.inc'
+      include               'gf.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
+      include               'zzdsk.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      SRFVEC ( 3 )
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      double precision      trgepc
+      double precision      srfvec ( 3 )
 
 ! $ Brief_I/O
 !
@@ -1155,227 +1155,227 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
+      double precision      clight
+      double precision      touchd
+      double precision      vdist
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  =  'SUBSLR' )
+      character*(*)         rname
+      parameter           ( rname  =  'SUBSLR' )
 
 !
 !     This value will become system-dependent when systems
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-17 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-17 )
 
 
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR = 10 )
+      integer               maxitr
+      parameter           ( maxitr = 10 )
 
-      INTEGER               SUN
-      PARAMETER           ( SUN    = 10 )
+      integer               sun
+      parameter           ( sun    = 10 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CVTLEN)    PNTDEF
-      CHARACTER*(CORLEN)    PRVCOR
-      CHARACTER*(MTHLEN)    PRVMTH
-      CHARACTER*(SHPLEN)    SHPSTR
-      CHARACTER*(SUBLEN)    SUBTYP
-      CHARACTER*(TMTLEN)    TRMSTR
+      character*(cvtlen)    pntdef
+      character*(corlen)    prvcor
+      character*(mthlen)    prvmth
+      character*(shplen)    shpstr
+      character*(sublen)    subtyp
+      character*(tmtlen)    trmstr
 
-      DOUBLE PRECISION      ALTSUN
-      DOUBLE PRECISION      DVEC   ( 3 )
-      DOUBLE PRECISION      ETDIFF
-      DOUBLE PRECISION      J2POS  ( 3 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTDIFF
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      DOUBLE PRECISION      OBSRNG
-      DOUBLE PRECISION      PREVET
-      DOUBLE PRECISION      PREVLT
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SLT
-      DOUBLE PRECISION      SPOS   ( 3 )
-      DOUBLE PRECISION      SSBOST ( 6 )
-      DOUBLE PRECISION      SSBTST ( 6 )
-      DOUBLE PRECISION      SSLRLT
-      DOUBLE PRECISION      SSLRST ( 6 )
-      DOUBLE PRECISION      SUNST  ( 6 )
-      DOUBLE PRECISION      TPOS   ( 3 )
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      double precision      altsun
+      double precision      dvec   ( 3 )
+      double precision      etdiff
+      double precision      j2pos  ( 3 )
+      double precision      lt
+      double precision      ltdiff
+      double precision      obspos ( 3 )
+      double precision      obsrng
+      double precision      prevet
+      double precision      prevlt
+      double precision      radii  ( 3 )
+      double precision      s
+      double precision      slt
+      double precision      spos   ( 3 )
+      double precision      ssbost ( 6 )
+      double precision      ssbtst ( 6 )
+      double precision      sslrlt
+      double precision      sslrst ( 6 )
+      double precision      sunst  ( 6 )
+      double precision      tpos   ( 3 )
+      double precision      xform  ( 3, 3 )
 
-      INTEGER               FIXCID
-      INTEGER               FIXCLS
-      INTEGER               FIXCTR
-      INTEGER               FIXFID
-      INTEGER               I
-      INTEGER               NITR
-      INTEGER               NSURF
-      INTEGER               OBSCDE
-      INTEGER               SHAPE
-      INTEGER               SRFLST ( MAXSRF )
-      INTEGER               TRGCDE
+      integer               fixcid
+      integer               fixcls
+      integer               fixctr
+      integer               fixfid
+      integer               i
+      integer               nitr
+      integer               nsurf
+      integer               obscde
+      integer               shape
+      integer               srflst ( maxsrf )
+      integer               trgcde
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               NEAR
-      LOGICAL               PRI
-      LOGICAL               SURFUP
-      LOGICAL               USECN
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               first
+      logical               fnd
+      logical               near
+      logical               pri
+      logical               surfup
+      logical               usecn
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsc
+      logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFREF
-      INTEGER               SVREFC
+      integer               svctr3 ( ctrsiz )
+      character*(frnmln)    svfref
+      integer               svrefc
 
 !
 !     Saved surface name/ID item declarations.
 !
-      INTEGER               SVCTR4 ( CTRSIZ )
+      integer               svctr4 ( ctrsiz )
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  NEAR
-      SAVE                  NSURF
-      SAVE                  PRI
-      SAVE                  PRVCOR
-      SAVE                  PRVMTH
-      SAVE                  SHAPE
-      SAVE                  SRFLST
-      SAVE                  USECN
-      SAVE                  USELT
-      SAVE                  USESTL
-      SAVE                  XMIT
+      save                  first
+      save                  near
+      save                  nsurf
+      save                  pri
+      save                  prvcor
+      save                  prvmth
+      save                  shape
+      save                  srflst
+      save                  usecn
+      save                  uselt
+      save                  usestl
+      save                  xmit
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVFREF
-      SAVE                  SVREFC
+      save                  svctr3
+      save                  svfref
+      save                  svrefc
 
 !
 !     Saved surface name/ID items.
 !
-      SAVE                  SVCTR4
+      save                  svctr4
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
-      DATA                  NEAR    / .TRUE. /
-      DATA                  PRVCOR  / ' '    /
-      DATA                  PRVMTH  / ' '    /
-      DATA                  SHAPE   / ELLSHP /
+      data                  first   / .true. /
+      data                  near    / .true. /
+      data                  prvcor  / ' '    /
+      data                  prvmth  / ' '    /
+      data                  shape   / ellshp /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 !
 !     Counter initialization is done separately.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
 
-      END IF
+      end if
 
 
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Reject an aberration correction flag calling for transmission
 !        corrections.
 !
-         IF ( ATTBLK(XMTIDX) ) THEN
+         if ( attblk(xmtidx) ) then
 
-            CALL SETMSG ( 'Aberration correction flag # calls for ' &
+            call setmsg ( 'Aberration correction flag # calls for ' &
             //            'transmission-style corrections.'        )
-            CALL ERRCH  ( '#', ABCORR                              )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                    )
-            CALL CHKOUT ( RNAME                                    )
-            RETURN
+            call errch  ( '#', abcorr                              )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                    )
+            call chkout ( rname                                    )
+            return
 
-         END IF
+         end if
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -1392,120 +1392,120 @@
 !        The above definitions are consistent with those used by
 !        ZZPRSCOR.
 !
-         XMIT    =  ATTBLK ( XMTIDX )
-         USELT   =  ATTBLK ( LTIDX  )
-         USECN   =  ATTBLK ( CNVIDX )
-         USESTL  =  ATTBLK ( STLIDX )
+         xmit    =  attblk ( xmtidx )
+         uselt   =  attblk ( ltidx  )
+         usecn   =  attblk ( cnvidx )
+         usestl  =  attblk ( stlidx )
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 
 !
 !     The target body may not be the sun.
 !
-      IF ( TRGCDE .EQ. SUN ) THEN
+      if ( trgcde .eq. sun ) then
 
-         CALL SETMSG ( 'The target body is the sun; the sub-solar ' &
+         call setmsg ( 'The target body is the sun; the sub-solar ' &
          //            'point is undefined for this case.'          )
-         CALL SIGERR ( 'SPICE(INVALIDTARGET)'                       )
-         CALL CHKOUT ( RNAME                                        )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDTARGET)'                       )
+         call chkout ( rname                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the attributes of the frame designated by FIXREF.
 !
-      CALL ZZNAMFRM ( SVCTR3, SVFREF, SVREFC, FIXREF, FIXFID )
+      call zznamfrm ( svctr3, svfref, svrefc, fixref, fixfid )
 
-      CALL FRINFO ( FIXFID, FIXCTR, FIXCLS, FIXCID, FND )
+      call frinfo ( fixfid, fixctr, fixcls, fixcid, fnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+         call setmsg ( 'Reference frame # is not recognized by ' // &
                        'the SPICE frame subsystem. Possibly '    // &
                        'a required frame definition kernel has ' // &
                        'not been loaded.'                        )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-         CALL CHKOUT ( RNAME                                     )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call sigerr ( 'SPICE(NOFRAME)'                          )
+         call chkout ( rname                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      IF ( FIXCTR .NE. TRGCDE ) THEN
+      if ( fixctr .ne. trgcde ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
          //            'center is #.'                             )
-         CALL ERRCH  ( '#',  FIXREF                               )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL ERRINT ( '#',  FIXCTR                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  fixref                               )
+         call errch  ( '#',  target                               )
+         call errint ( '#',  fixctr                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check whether the surface name/ID mapping has been updated.
 !
-      CALL ZZSRFTRK ( SVCTR4, SURFUP )
+      call zzsrftrk ( svctr4, surfup )
 
 !
 !     If necessary, parse the method specification. PRVMTH
@@ -1513,7 +1513,7 @@
 !     valid values. PRVMTH records the last valid value of
 !     METHOD; NEAR and SHAPE are the corresponding variables.
 !
-      IF ( FIRST  .OR.  SURFUP  .OR.  ( METHOD .NE. PRVMTH ) ) THEN
+      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -1521,7 +1521,7 @@
 !        failure occurs in this branch. Once success is assured, we can
 !        record the current method in the previous method string.
 !
-         PRVMTH = ' '
+         prvmth = ' '
 !
 !        Parse the method string. If the string is valid, the
 !        outputs SHAPE and SUBTYP will always be be set. However,
@@ -1530,122 +1530,122 @@
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         CALL ZZPRSMET ( TRGCDE, METHOD, MAXSRF, SHPSTR, SUBTYP, &
-                         PRI,    NSURF,  SRFLST, PNTDEF, TRMSTR )
+         call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
+                         pri,    nsurf,  srflst, pntdef, trmstr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 
-         IF ( SUBTYP .EQ. ' ' ) THEN
+         if ( subtyp .eq. ' ' ) then
 
-            CALL SETMSG ( 'Sub-solar point type is required ' &
+            call setmsg ( 'Sub-solar point type is required ' &
             //            'but was not found in the method string #.' )
-            CALL ERRCH  ( '#', METHOD                                 )
-            CALL SIGERR ( 'SPICE(INVALIDSUBTYPE)'                     )
-            CALL CHKOUT ( RNAME                                       )
-            RETURN
+            call errch  ( '#', method                                 )
+            call sigerr ( 'SPICE(INVALIDSUBTYPE)'                     )
+            call chkout ( rname                                       )
+            return
 
-         END IF
+         end if
 
 
-         IF (  EQSTR( SHPSTR, 'ELLIPSOID' )  ) THEN
+         if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
-            SHAPE = ELLSHP
+            shape = ellshp
 
-         ELSE IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+         else if (  eqstr( shpstr, 'DSK' )  ) then
 
-            SHAPE = DSKSHP
+            shape = dskshp
 
-         ELSE
+         else
 !
 !           This is a backstop check.
 !
-            CALL SETMSG ( 'Returned shape value from method ' &
+            call setmsg ( 'Returned shape value from method ' &
             //            'string was <#>.'                  )
-            CALL ERRCH  ( '#', SHPSTR                        )
-            CALL SIGERR ( 'SPICE(BUG)'                       )
-            CALL CHKOUT ( RNAME                              )
-            RETURN
+            call errch  ( '#', shpstr                        )
+            call sigerr ( 'SPICE(BUG)'                       )
+            call chkout ( rname                              )
+            return
 
-         END IF
+         end if
 
 
-         IF ( SHAPE .EQ. ELLSHP ) THEN
+         if ( shape .eq. ellshp ) then
 !
 !           Allow both "near point" and "nadir" expressions
 !           the ellipsoid case, since these are equivalent.
 !
-            NEAR =      EQSTR( SUBTYP, 'NEAR POINT' ) &
-                   .OR. EQSTR( SUBTYP, 'NADIR'      )
+            near =      eqstr( subtyp, 'NEAR POINT' ) &
+                   .or. eqstr( subtyp, 'NADIR'      )
 
-         ELSE
+         else
 !
 !           "near point" is not supported for DSKs.
 !
-            NEAR = EQSTR( SUBTYP, 'NADIR' )
+            near = eqstr( subtyp, 'NADIR' )
 
-         END IF
+         end if
 
 
-         IF ( .NOT. NEAR ) THEN
+         if ( .not. near ) then
 
-            IF ( .NOT. EQSTR( SUBTYP, 'INTERCEPT' ) ) THEN
+            if ( .not. eqstr( subtyp, 'INTERCEPT' ) ) then
 
-               CALL SETMSG ( 'Invalid sub-solar point type <#> ' &
+               call setmsg ( 'Invalid sub-solar point type <#> ' &
                //            'was found in the method string #.' )
-               CALL ERRCH  ( '#', SUBTYP                         )
-               CALL ERRCH  ( '#', METHOD                         )
-               CALL SIGERR ( 'SPICE(INVALIDSUBTYPE)'             )
-               CALL CHKOUT ( RNAME                               )
-               RETURN
+               call errch  ( '#', subtyp                         )
+               call errch  ( '#', method                         )
+               call sigerr ( 'SPICE(INVALIDSUBTYPE)'             )
+               call chkout ( rname                               )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Save the current value of METHOD.
 !
-         PRVMTH = METHOD
+         prvmth = method
 
-      END IF
+      end if
 
 !
 !     At this point, the first pass actions were successful.
 !
-      FIRST = .FALSE.
+      first = .false.
 
 
-      IF ( SHAPE .EQ. DSKSHP ) THEN
+      if ( shape .eq. dskshp ) then
 !
 !        This is the DSK case.
 !
 !        Initialize the intercept algorithm to use a DSK
 !        model for the surface of the target body.
 !
-         CALL ZZSUDSKI ( TRGCDE, NSURF, SRFLST, FIXFID )
+         call zzsudski ( trgcde, nsurf, srflst, fixfid )
 
 
-      ELSE IF ( SHAPE .NE. ELLSHP ) THEN
+      else if ( shape .ne. ellshp ) then
 
-         CALL SETMSG ( 'Computation method argument was <#>; this ' &
+         call setmsg ( 'Computation method argument was <#>; this ' &
          //            'string must specify a supported shape ' &
          //            'model and computation type. See the ' &
          //            'header of SUBSLR for details.'            )
-         CALL ERRCH  ( '#',  METHOD                               )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                     )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  method                               )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                     )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 
 !
@@ -1653,11 +1653,11 @@
 !     When light time correction is not used, setting S = 0
 !     allows us to seamlessly set TRGEPC equal to ET.
 !
-      IF ( USELT ) THEN
-         S = -1.D0
-      ELSE
-         S =  0.D0
-      END IF
+      if ( uselt ) then
+         s = -1.d0
+      else
+         s =  0.d0
+      end if
 
 !
 !     Determine the position of the observer in target body-fixed
@@ -1682,23 +1682,23 @@
 !            that corrected vector in order to compute the sub-solar
 !            point.
 !
-      CALL SPKEZP ( TRGCDE, ET, FIXREF, ABCORR, OBSCDE, TPOS, LT )
+      call spkezp ( trgcde, et, fixref, abcorr, obscde, tpos, lt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      CALL VMINUS ( TPOS, OBSPOS )
+      call vminus ( tpos, obspos )
 
 !
 !     Make a first estimate of the target epoch.
 !
-      TRGEPC = ET + S*LT
+      trgepc = et + s*lt
 
 !
 !     Find the sub-solar point given the target epoch, observer-target
@@ -1711,40 +1711,40 @@
 !
 !     Get the radii of the target body from the kernel pool.
 !
-      CALL ZZGFTREB ( TRGCDE, RADII )
+      call zzgftreb ( trgcde, radii )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     Get the position of the Sun SPOS as seen from the target
 !     in the target body-fixed frame at TRGEPC.
 !
-      CALL SPKEZP ( SUN, TRGEPC, FIXREF, ABCORR, TRGCDE, SPOS, SLT )
+      call spkezp ( sun, trgepc, fixref, abcorr, trgcde, spos, slt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     Make a first estimate of the sub-solar point. The algorithm
 !     we use depends on the sub-solar point definition.
 !
-      IF ( NEAR ) THEN
+      if ( near ) then
 !
 !        Locate the nearest point to the Sun on the target's
 !        reference ellipsoid.
 !
-         CALL NEARPT ( SPOS,   RADII(1), RADII(2), RADII(3), &
-                       SPOINT, ALTSUN                       )
+         call nearpt ( spos,   radii(1), radii(2), radii(3), &
+                       spoint, altsun                       )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        If the target is an ellipsoid, the NEARPT call above does the
@@ -1753,90 +1753,90 @@
 !        closest ray-DSK surface intercept to the sun is the initial
 !        estimate of the sub-solar point.
 !
-         IF ( SHAPE .EQ. DSKSHP ) THEN
+         if ( shape .eq. dskshp ) then
 !
 !           Generate the ray direction; find the DSK intercept.
 !
-            CALL VSUB ( SPOINT, SPOS, DVEC )
+            call vsub ( spoint, spos, dvec )
 
-            CALL ZZSBFXR ( TRGCDE, NSURF, SRFLST, TRGEPC, &
-                           FIXFID, SPOS,  DVEC,   SPOINT, FND )
+            call zzsbfxr ( trgcde, nsurf, srflst, trgepc, &
+                           fixfid, spos,  dvec,   spoint, fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 
-               CALL SETMSG ( 'No sub-solar point was found on ' &
+               call setmsg ( 'No sub-solar point was found on ' &
                //            'the surface defined by DSK data. ' &
                //            'Observer is #; target is #. This ' &
                //            'problem can occur for bodies having ' &
                //            'shapes not well modeled by ' &
                //            'ellipsoids. Consider using the ' &
                //            '"Intercept: DSK" computation method.' )
-               CALL ERRCH  ( '#', OBSRVR                            )
-               CALL ERRCH  ( '#', TARGET                            )
-               CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'              )
-               CALL CHKOUT ( RNAME                                  )
-               RETURN
+               call errch  ( '#', obsrvr                            )
+               call errch  ( '#', target                            )
+               call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'              )
+               call chkout ( rname                                  )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        This is the case for the "intercept" sub-solar point
 !        definition.
 !
 !        Generate the ray direction.
 !
-         CALL VMINUS ( SPOS, DVEC )
+         call vminus ( spos, dvec )
 
-         IF ( SHAPE .EQ. ELLSHP ) THEN
+         if ( shape .eq. ellshp ) then
 !
 !           Locate the surface intercept of the ray from the
 !           sun to the target center.
 !
-            CALL SURFPT ( SPOS,   DVEC, RADII(1), RADII(2), RADII(3), &
-                          SPOINT, FND                                )
+            call surfpt ( spos,   dvec, radii(1), radii(2), radii(3), &
+                          spoint, fnd                                )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 !
 !              If there's no intercept, we have a numerical problem.
 !
-               CALL SETMSG ( 'No intercept of sun-target ' &
+               call setmsg ( 'No intercept of sun-target ' &
                //            'ray was found.'              )
-               CALL SIGERR ( 'SPICE(DEGENERATECASE)'       )
-               CALL CHKOUT ( RNAME                         )
-               RETURN
+               call sigerr ( 'SPICE(DEGENERATECASE)'       )
+               call chkout ( rname                         )
+               return
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           Find the DSK intercept.
 !
-            CALL ZZSBFXR ( TRGCDE, NSURF, SRFLST, TRGEPC, &
-                           FIXFID, SPOS,  DVEC,   SPOINT, FND )
+            call zzsbfxr ( trgcde, nsurf, srflst, trgepc, &
+                           fixfid, spos,  dvec,   spoint, fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 
-               CALL SETMSG ( 'No sub-solar point was found on ' &
+               call setmsg ( 'No sub-solar point was found on ' &
                //            'the surface defined by DSK data. ' &
                //            'Observer is #; target is #. This ' &
                //            'problem can occur for a body having ' &
@@ -1844,22 +1844,22 @@
                //            'origin of the body-fixed reference ' &
                //            'frame is outside of the body. A tor' &
                //            'us is an example of such a shape.'   )
-               CALL ERRCH  ( '#', OBSRVR                           )
-               CALL ERRCH  ( '#', TARGET                           )
-               CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'             )
-               CALL CHKOUT ( RNAME                                 )
-               RETURN
+               call errch  ( '#', obsrvr                           )
+               call errch  ( '#', target                           )
+               call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'             )
+               call chkout ( rname                                 )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     If we're not using light time and stellar aberration
@@ -1868,27 +1868,27 @@
 !     stellar aberration corrections alone has been prevented by an
 !     earlier check.
 !
-      IF ( .NOT. USELT ) THEN
+      if ( .not. uselt ) then
 !
 !        The TRGEPC value we'll return is simply the input time. The
 !        previous call to SPKEZP call yielded the vector OBSPOS. SPOINT
 !        was set immediately above. The only output left to compute is
 !        SRFVEC.
 !
-         TRGEPC = ET
+         trgepc = et
 
-         CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+         call vsub ( spoint, obspos, srfvec )
 
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the range from the observer to the sub-solar
 !     point. We'll use this range for a light time estimate.
 !
-      OBSRNG = VDIST ( OBSPOS, SPOINT )
+      obsrng = vdist ( obspos, spoint )
 
 !
 !     Compute the one-way light time and target epoch based on our
@@ -1896,69 +1896,69 @@
 !     set to give us the correct answer for each aberration
 !     correction case.
 !
-      LT     = OBSRNG / CLIGHT()
-      TRGEPC = ET  + S*LT
+      lt     = obsrng / clight()
+      trgepc = et  + s*lt
 
 !
 !     We'll now make an improved sub-solar point estimate using the
 !     previous estimate of the sub-solar point. The number of
 !     iterations depends on the light time correction type.
 !
-      IF ( USECN ) THEN
-         NITR = MAXITR
-      ELSE
-         NITR = 1
-      END IF
+      if ( usecn ) then
+         nitr = maxitr
+      else
+         nitr = 1
+      end if
 
 !
 !     Get the J2000-relative state of the observer relative to
 !     the solar system barycenter at ET.
 !
-      CALL SPKSSB ( OBSCDE, ET, 'J2000', SSBOST )
+      call spkssb ( obscde, et, 'J2000', ssbost )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     Initialize the variables required to evaluate the
 !     loop termination condition.
 !
-      I      = 0
-      LTDIFF = 1.D0
-      ETDIFF = 1.D0
-      PREVLT = LT
-      PREVET = TRGEPC
+      i      = 0
+      ltdiff = 1.d0
+      etdiff = 1.d0
+      prevlt = lt
+      prevet = trgepc
 
-      DO WHILE (       ( I      .LT.   NITR                ) &
-                 .AND. ( LTDIFF .GT. ( CNVLIM * ABS(LT) )  ) &
-                 .AND. ( ETDIFF .GT.   0.D0                )  )
+      do while (       ( i      .lt.   nitr                ) &
+                 .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
+                 .and. ( etdiff .gt.   0.d0                )  )
 !
 !        Get the J2000-relative state of the target relative to
 !        the solar system barycenter at the target epoch.
 !
-         CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+         call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Find the position of the observer relative to the target.
 !        Convert this vector from the J2000 frame to the target
 !        frame at TRGEPC.
 !
-         CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
-         CALL PXFORM ( 'J2000', FIXREF, TRGEPC, XFORM )
+         call vsub   ( ssbost,  ssbtst, j2pos         )
+         call pxform ( 'J2000', fixref, trgepc, xform )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL MXV ( XFORM, J2POS, OBSPOS )
+         call mxv ( xform, j2pos, obspos )
 
 !
 !        Note: if we're using stellar aberration correction, we do not
@@ -1977,35 +1977,35 @@
 !        estimated sub-solar point.
 !
 
-         CALL SPKCPO ( 'SUN',  TRGEPC, FIXREF, 'OBSERVER', &
-                       ABCORR, SPOINT, TARGET, FIXREF, SUNST, SLT )
+         call spkcpo ( 'SUN',  trgepc, fixref, 'OBSERVER', &
+                       abcorr, spoint, target, fixref, sunst, slt )
 
 !
 !        Create the target-center to sun vector.
 !
-         CALL VADD ( SUNST, SPOINT, SPOS )
+         call vadd ( sunst, spoint, spos )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Find the sub-solar point using the current estimated
 !        geometry.
 !
-         IF ( NEAR ) THEN
+         if ( near ) then
 !
 !           Locate the nearest point to the sun on the target's
 !           reference ellipsoid.
 !
-            CALL NEARPT ( SPOS,   RADII(1), RADII(2), RADII(3), &
-                          SPOINT, ALTSUN                        )
+            call nearpt ( spos,   radii(1), radii(2), radii(3), &
+                          spoint, altsun                        )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 !
 !           If the target is an ellipsoid, the NEARPT call above does
 !           the trick. For DSKs, we define a ray emanating from the sun
@@ -2013,24 +2013,24 @@
 !           ellipsoid. The closest ray-DSK surface intercept to the sun
 !           is the initial estimate of the sub-solar point.
 !
-            IF ( SHAPE .EQ. DSKSHP ) THEN
+            if ( shape .eq. dskshp ) then
 !
 !              Locate the surface intercept of the ray from the
 !              Sun to the target center.
 !
-               CALL VSUB ( SPOINT, SPOS, DVEC )
+               call vsub ( spoint, spos, dvec )
 
-               CALL ZZSBFXR ( TRGCDE, NSURF, SRFLST, TRGEPC, &
-                              FIXFID, SPOS,  DVEC,   SPOINT, FND )
+               call zzsbfxr ( trgcde, nsurf, srflst, trgepc, &
+                              fixfid, spos,  dvec,   spoint, fnd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               IF ( .NOT. FND ) THEN
+               if ( .not. fnd ) then
 
-                  CALL SETMSG ( 'No sub-solar point was found on ' &
+                  call setmsg ( 'No sub-solar point was found on ' &
                   //            'the surface defined by DSK data. ' &
                   //            'Observer is #; target is #. This ' &
                   //            'problem can occur for bodies hav' &
@@ -2038,66 +2038,66 @@
                   //            'ellipsoids. Consider using the ' &
                   //            '"Intercept: DSK" computation ' &
                   //            'method.'                        )
-                  CALL ERRCH  ( '#', OBSRVR                      )
-                  CALL ERRCH  ( '#', TARGET                      )
-                  CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'        )
-                  CALL CHKOUT ( RNAME                            )
-                  RETURN
+                  call errch  ( '#', obsrvr                      )
+                  call errch  ( '#', target                      )
+                  call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'        )
+                  call chkout ( rname                            )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 
 !           This is the "intercept" case.
 !
 !           Generate the ray direction.
 !
-            CALL VMINUS ( SPOS, DVEC )
+            call vminus ( spos, dvec )
 
 
-            IF ( SHAPE .EQ. ELLSHP ) THEN
+            if ( shape .eq. ellshp ) then
 !
 !              Locate the surface intercept of the ray from the
 !              sun to the target center.
 !
-               CALL SURFPT ( SPOS,     DVEC,   RADII(1), RADII(2), &
-                             RADII(3), SPOINT, FND                )
+               call surfpt ( spos,     dvec,   radii(1), radii(2), &
+                             radii(3), spoint, fnd                )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               IF ( .NOT. FND ) THEN
+               if ( .not. fnd ) then
 !
 !                 If there's no intercept, we have a numerical problem.
 !
-                  CALL SETMSG ( 'No intercept of sun-target ' &
+                  call setmsg ( 'No intercept of sun-target ' &
                   //            'ray was found.'              )
-                  CALL SIGERR ( 'SPICE(DEGENERATECASE)'       )
-                  CALL CHKOUT ( RNAME                         )
-                  RETURN
+                  call sigerr ( 'SPICE(DEGENERATECASE)'       )
+                  call chkout ( rname                         )
+                  return
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              Find the DSK intercept.
 !
-               CALL ZZSBFXR ( TRGCDE, NSURF, SRFLST, TRGEPC, &
-                              FIXFID, SPOS,  DVEC,   SPOINT, FND )
+               call zzsbfxr ( trgcde, nsurf, srflst, trgepc, &
+                              fixfid, spos,  dvec,   spoint, fnd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               IF ( .NOT. FND ) THEN
+               if ( .not. fnd ) then
 
-                  CALL SETMSG ( 'No sub-solar point was found on ' &
+                  call setmsg ( 'No sub-solar point was found on ' &
                   //            'the surface defined by DSK data. ' &
                   //            'Observer is #; target is #. This ' &
                   //            'problem can occur for a body having ' &
@@ -2105,28 +2105,28 @@
                   //            'origin of the body-fixed reference ' &
                   //            'frame is outside of the body. A tor' &
                   //            'us is an example of such a shape.'   )
-                  CALL ERRCH  ( '#', OBSRVR                           )
-                  CALL ERRCH  ( '#', TARGET                           )
-                  CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'             )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errch  ( '#', obsrvr                           )
+                  call errch  ( '#', target                           )
+                  call sigerr ( 'SPICE(SUBPOINTNOTFOUND)'             )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Update the observer to sub-solar point range.
 !
-         OBSRNG = VDIST ( OBSPOS, SPOINT )
+         obsrng = vdist ( obspos, spoint )
 
 !
 !        Compute a new light time estimate and new target epoch.
 !
-         LT      =  OBSRNG / CLIGHT()
-         TRGEPC  =  ET  + S*LT
+         lt      =  obsrng / clight()
+         trgepc  =  et  + s*lt
 
 !
 !        At this point, we have new estimates of the sub-solar point
@@ -2143,35 +2143,35 @@
 !        the problem, because that variable can be optimized out of
 !        existence.
 !
-         LTDIFF  =   ABS( TOUCHD(LT     - PREVLT) )
-         ETDIFF  =   ABS( TOUCHD(TRGEPC - PREVET) )
-         PREVLT  =   LT
-         PREVET  =   TRGEPC
-         I       =   I + 1
+         ltdiff  =   abs( touchd(lt     - prevlt) )
+         etdiff  =   abs( touchd(trgepc - prevet) )
+         prevlt  =   lt
+         prevet  =   trgepc
+         i       =   i + 1
 
-         CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+         call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Find the position of the observer relative to the target.
 !        Convert this vector from the J2000 frame to the target
 !        frame at TRGEPC.
 !
-         CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
-         CALL PXFORM ( 'J2000', FIXREF, TRGEPC, XFORM )
+         call vsub   ( ssbost,  ssbtst, j2pos         )
+         call pxform ( 'J2000', fixref, trgepc, xform )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL MXV ( XFORM, J2POS, OBSPOS )
+         call mxv ( xform, j2pos, obspos )
 
-      END DO
+      end do
 
 !
 !     SPOINT and TRGEPC have been set. Compute SRFVEC, using
@@ -2181,23 +2181,23 @@
 !     stellar aberration corrections, so we may not be able
 !     to use it for this computation.
 !
-      IF ( USESTL ) THEN
+      if ( usestl ) then
 
-         CALL SPKCPT ( SPOINT,   TARGET, FIXREF, ET,     FIXREF, &
-                       'TARGET', ABCORR, OBSRVR, SSLRST, SSLRLT )
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         call spkcpt ( spoint,   target, fixref, et,     fixref, &
+                       'TARGET', abcorr, obsrvr, sslrst, sslrlt )
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL VEQU ( SSLRST, SRFVEC )
+         call vequ ( sslrst, srfvec )
 
-      ELSE
+      else
 
-         CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+         call vsub ( spoint, obspos, srfvec )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

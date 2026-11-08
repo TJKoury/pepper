@@ -7,7 +7,7 @@
 #endif
 !$Procedure ZZPLATFM ( Private --- Get platform attributes )
 
-      SUBROUTINE ZZPLATFM ( KEY, VALUE )
+      subroutine zzplatfm ( key, value )
 
 ! $ Abstract
 !
@@ -24,10 +24,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         KEY
-      CHARACTER*(*)         VALUE
+      character*(*)         key
+      character*(*)         value
 
 ! $ Brief_I/O
 !
@@ -248,7 +248,7 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
 !
 !     Local Parameters
@@ -259,106 +259,106 @@
 !
 !     SYSTEM Index.
 !
-      INTEGER               IDXSYS
-      PARAMETER           ( IDXSYS = 1 )
+      integer               idxsys
+      parameter           ( idxsys = 1 )
 
 !
 !     O/S Index.
 !
-      INTEGER               IDXOS
-      PARAMETER           ( IDXOS  = IDXSYS + 1 )
+      integer               idxos
+      parameter           ( idxos  = idxsys + 1 )
 
 !
 !     Compiler Index.
 !
-      INTEGER               IDXCMP
-      PARAMETER           ( IDXCMP = IDXOS  + 1 )
+      integer               idxcmp
+      parameter           ( idxcmp = idxos  + 1 )
 
 !
 !     Binary File Format Index.
 !
-      INTEGER               IDXFMT
-      PARAMETER           ( IDXFMT = IDXCMP + 1 )
+      integer               idxfmt
+      parameter           ( idxfmt = idxcmp + 1 )
 
 !
 !     Text File Format Index
 !
-      INTEGER               IDXTFM
-      PARAMETER           ( IDXTFM = IDXFMT + 1 )
+      integer               idxtfm
+      parameter           ( idxtfm = idxfmt + 1 )
 
 !
 !     Reads Binary File Format Index.
 !
-      INTEGER               IDXRBF
-      PARAMETER           ( IDXRBF = IDXTFM + 1 )
+      integer               idxrbf
+      parameter           ( idxrbf = idxtfm + 1 )
 
 !
 !     Size of the buffer in which KEY is placed.
 !
-      INTEGER               KYSIZE
-      PARAMETER           ( KYSIZE = 64 )
+      integer               kysize
+      parameter           ( kysize = 64 )
 
 !
 !     Maximum Size of local string returned in VALUE
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 !
 !     Number of Platform Dependent values stored here.
 !
-      INTEGER               NATTR
-      PARAMETER           ( NATTR  =  6 )
+      integer               nattr
+      parameter           ( nattr  =  6 )
 
 !
 !     Default Reply in the event of an invalid KEY.
 !
-      CHARACTER*(WDSIZE)     DEFRPY
-      PARAMETER            ( DEFRPY = '<UNAVAILABLE>' )
+      character*(wdsize)     defrpy
+      parameter            ( defrpy = '<UNAVAILABLE>' )
 
 !
 !     Local Variables
 !
 
-      CHARACTER*(KYSIZE)    KEYCPY
-      CHARACTER*(KYSIZE)    KEYVAL ( NATTR )
-      CHARACTER*(WDSIZE)    ATTCPY ( 0 : NATTR )
+      character*(kysize)    keycpy
+      character*(kysize)    keyval ( nattr )
+      character*(wdsize)    attcpy ( 0 : nattr )
 
-      INTEGER               INDEX
+      integer               index
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  ATTCPY
-      SAVE                  KEYVAL
+      save                  first
+      save                  attcpy
+      save                  keyval
 
 !
 !     Data Statements
 !
-      DATA   FIRST        /.TRUE./
+      data   first        /.true./
 
 !
 !     Make the initial assignments to the saved character array.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Store the keys in the KEYVAL array.
 !
-         KEYVAL (IDXSYS) = 'SYSTEM'
-         KEYVAL (IDXOS)  = 'O/S'
-         KEYVAL (IDXCMP) = 'COMPILER'
-         KEYVAL (IDXFMT) = 'FILE_FORMAT'
-         KEYVAL (IDXTFM) = 'TEXT_FORMAT'
-         KEYVAL (IDXRBF) = 'READS_BFF'
+         keyval (idxsys) = 'SYSTEM'
+         keyval (idxos)  = 'O/S'
+         keyval (idxcmp) = 'COMPILER'
+         keyval (idxfmt) = 'FILE_FORMAT'
+         keyval (idxtfm) = 'TEXT_FORMAT'
+         keyval (idxrbf) = 'READS_BFF'
 
 !
 !        Set the default reply to be the zero'th component of ATTCPY.
 !        This obviates IF-THEN-ELSE branching all together.
 !
-         ATTCPY (0) = DEFRPY
+         attcpy (0) = defrpy
 
 !
 !        Platform/Environment specific assignments follow.
@@ -369,70 +369,70 @@
 
 
 #if defined(SPICE_OS_MACOS)
-         ATTCPY (IDXSYS) = 'INTEL MAC'
+         attcpy (idxsys) = 'INTEL MAC'
 #else
-         ATTCPY (IDXSYS) = 'PC'
+         attcpy (idxsys) = 'PC'
 #endif
 
 
 
 
 #if defined(SPICE_OS_MACOS)
-         ATTCPY (IDXOS) = 'MAC OS-X'
+         attcpy (idxos) = 'MAC OS-X'
 #elif defined(SPICE_OS_LINUX)
-         ATTCPY (IDXOS) = 'LINUX'
+         attcpy (idxos) = 'LINUX'
 #elif defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         ATTCPY (IDXOS) = 'MICROSOFT WINDOWS'
+         attcpy (idxos) = 'MICROSOFT WINDOWS'
 #else
-         ATTCPY (IDXOS) = 'MICROSOFT WINDOWS/CYGWIN'
+         attcpy (idxos) = 'MICROSOFT WINDOWS/CYGWIN'
 #endif
 
 
 
 #if defined(SPICE_COMPILER_INTEL)
-         ATTCPY (IDXCMP) = 'INTEL FORTRAN/64BIT'
+         attcpy (idxcmp) = 'INTEL FORTRAN/64BIT'
 #else
-         ATTCPY (IDXCMP) = 'GFORTRAN/64BIT'
+         attcpy (idxcmp) = 'GFORTRAN/64BIT'
 #endif
 
 
 
-         ATTCPY (IDXFMT) = 'LTL-IEEE'
+         attcpy (idxfmt) = 'LTL-IEEE'
 
 
 
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         ATTCPY (IDXTFM) = 'CR-LF'
+         attcpy (idxtfm) = 'CR-LF'
 #else
-         ATTCPY (IDXTFM) = 'LF'
+         attcpy (idxtfm) = 'LF'
 #endif
 
 
 
-         ATTCPY (IDXRBF) = 'BIG-IEEE LTL-IEEE'
+         attcpy (idxrbf) = 'BIG-IEEE LTL-IEEE'
 
 !
 !        Don't execute these assignments again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Determine which KEY was passed in; do this by converting KEY
 !     to the known member of the equivalence class of possible
 !     values.
 !
-      CALL UCASE ( KEY,    KEYCPY )
-      CALL LJUST ( KEYCPY, KEYCPY )
+      call ucase ( key,    keycpy )
+      call ljust ( keycpy, keycpy )
 
 !
 !     Find out which key we were given.  In the event that one of the
 !     KEYVALs (or some equivalent string) was not passed in, ISRCHC
 !     returns a value of zero.
 !
-      INDEX = ISRCHC ( KEYCPY, NATTR, KEYVAL )
-      VALUE = ATTCPY ( INDEX )
+      index = isrchc ( keycpy, nattr, keyval )
+      value = attcpy ( index )
 
-      RETURN
-      END
+      return
+      end

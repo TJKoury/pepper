@@ -1,6 +1,6 @@
 !$Procedure CGV2EL ( Center and generating vectors to ellipse )
 
-      SUBROUTINE CGV2EL ( CENTER, VEC1, VEC2, ELLIPS )
+      subroutine cgv2el ( center, vec1, vec2, ellips )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL    =   9 )
+      integer               ubel
+      parameter           ( ubel    =   9 )
 
-      DOUBLE PRECISION      CENTER (    3 )
-      DOUBLE PRECISION      VEC1   (    3 )
-      DOUBLE PRECISION      VEC2   (    3 )
-      DOUBLE PRECISION      ELLIPS ( UBEL )
+      double precision      center (    3 )
+      double precision      vec1   (    3 )
+      double precision      vec2   (    3 )
+      double precision      ellips ( ubel )
 
 ! $ Brief_I/O
 !
@@ -296,7 +296,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -314,35 +314,35 @@
 !        MINPOS through MINPOS + 1
 !
 !
-      INTEGER               CTRPOS
-      PARAMETER           ( CTRPOS = 1 )
+      integer               ctrpos
+      parameter           ( ctrpos = 1 )
 
-      INTEGER               MAJPOS
-      PARAMETER           ( MAJPOS = 4 )
+      integer               majpos
+      parameter           ( majpos = 4 )
 
-      INTEGER               MINPOS
-      PARAMETER           ( MINPOS = 7 )
+      integer               minpos
+      parameter           ( minpos = 7 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CGV2EL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CGV2EL' )
+      end if
 
 !
 !     The center of the ellipse is held in the first three elements.
 !
-      CALL VEQU ( CENTER, ELLIPS(CTRPOS) )
+      call vequ ( center, ellips(ctrpos) )
 
 !
 !     Find the semi-axes of the ellipse.  These may be degenerate.
 !
-      CALL SAELGV ( VEC1, VEC2, ELLIPS(MAJPOS), ELLIPS(MINPOS) )
+      call saelgv ( vec1, vec2, ellips(majpos), ellips(minpos) )
 
-      CALL CHKOUT ( 'CGV2EL' )
-      RETURN
-      END
+      call chkout ( 'CGV2EL' )
+      return
+      end

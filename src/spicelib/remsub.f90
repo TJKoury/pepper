@@ -1,6 +1,6 @@
 !$Procedure REMSUB ( Remove a substring )
 
-      SUBROUTINE REMSUB ( IN, LEFT, RIGHT, OUT )
+      subroutine remsub ( in, left, right, out )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    IN
-      INTEGER          LEFT
-      INTEGER          RIGHT
-      CHARACTER*(*)    OUT
+      character*(*)    in
+      integer          left
+      integer          right
+      character*(*)    out
 
 ! $ Brief_I/O
 !
@@ -147,25 +147,25 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          LASTNB
-      LOGICAL          RETURN
+      integer          lastnb
+      logical          return
 
 !
 !     Other functions
 !
-      INTEGER          LEN
+      integer          len
 
 !
 !     Local variables
 !
-      INTEGER          INLEN
-      INTEGER          OUTLEN
+      integer          inlen
+      integer          outlen
 
-      INTEGER          L
-      INTEGER          R
+      integer          l
+      integer          r
 
-      INTEGER          I
-      INTEGER          J
+      integer          i
+      integer          j
 
 
 
@@ -173,77 +173,77 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'REMSUB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'REMSUB' )
+      end if
 
 !
 !     If a character position is out of range, signal an error.
 !
-      IF ( ( LEFT  .GT. RIGHT    )   .OR. &
-           ( RIGHT .LT. 1        )   .OR. &
-           ( LEFT  .LT. 1        )   .OR. &
-           ( RIGHT .GT. LEN (IN) )   .OR. &
-           ( LEFT  .GT. LEN (IN) ) )       THEN
+      if ( ( left  .gt. right    )   .or. &
+           ( right .lt. 1        )   .or. &
+           ( left  .lt. 1        )   .or. &
+           ( right .gt. len (in) )   .or. &
+           ( left  .gt. len (in) ) )       then
 
-         CALL SETMSG ( 'Left location was *. Right location was *.' )
-         CALL ERRINT ( '*', LEFT             )
-         CALL ERRINT ( '*', RIGHT            )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
-         CALL CHKOUT ( 'REMSUB' )
-         RETURN
+         call setmsg ( 'Left location was *. Right location was *.' )
+         call errint ( '*', left             )
+         call errint ( '*', right            )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
+         call chkout ( 'REMSUB' )
+         return
 
-      ELSE
+      else
 
-         L = LEFT
-         R = RIGHT
+         l = left
+         r = right
 
-      END IF
+      end if
 
 
 !
 !     How much of the input string will we use? And how big is the
 !     output string?
 !
-      INLEN  = LASTNB ( IN  )
-      OUTLEN = LEN    ( OUT )
+      inlen  = lastnb ( in  )
+      outlen = len    ( out )
 
 !
 !     Copy the first part of the input string. (One character at a
 !     time, in case this is being done in place.)
 !
-      DO I = 1, MIN ( L-1, OUTLEN )
+      do i = 1, min ( l-1, outlen )
 
-         OUT(I:I) = IN(I:I)
+         out(i:i) = in(i:i)
 
-      END DO
+      end do
 
 !
 !     Now move the rest of the string over.
 !
-      I = L
-      J = R + 1
+      i = l
+      j = r + 1
 
-      DO WHILE ( ( I .LE. OUTLEN ) .AND. ( J .LE. INLEN ) )
+      do while ( ( i .le. outlen ) .and. ( j .le. inlen ) )
 
-         OUT(I:I) = IN(J:J)
-         I        = I + 1
-         J        = J + 1
+         out(i:i) = in(j:j)
+         i        = i + 1
+         j        = j + 1
 
-      END DO
+      end do
 
 !
 !     Pad with blanks, if necessary.
 !
-      IF ( I .LE. OUTLEN ) THEN
+      if ( i .le. outlen ) then
 
-         OUT(I: ) = ' '
+         out(i: ) = ' '
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'REMSUB' )
-      RETURN
-      END
+      call chkout ( 'REMSUB' )
+      return
+      end

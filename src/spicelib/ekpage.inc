@@ -58,98 +58,98 @@
 !     paging system metadata array:
 !
 !
-      INTEGER               EPARCH
-      PARAMETER           ( EPARCH = 1 )
+      integer               eparch
+      parameter           ( eparch = 1 )
 
 !
 !     Number of metadata items per data type:
 !
-      INTEGER               EPNIPT
-      PARAMETER           ( EPNIPT = 5 )
+      integer               epnipt
+      parameter           ( epnipt = 5 )
 
 !
 !     Character metadata indices:
 !
-      INTEGER               EPPSZC
-      PARAMETER           ( EPPSZC = EPARCH + 1 )
+      integer               eppszc
+      parameter           ( eppszc = eparch + 1 )
 
-      INTEGER               EPBASC
-      PARAMETER           ( EPBASC = EPPSZC + 1 )
+      integer               epbasc
+      parameter           ( epbasc = eppszc + 1 )
 
-      INTEGER               EPNPC
-      PARAMETER           ( EPNPC  = EPBASC + 1 )
+      integer               epnpc
+      parameter           ( epnpc  = epbasc + 1 )
 
-      INTEGER               EPNFPC
-      PARAMETER           ( EPNFPC = EPNPC  + 1 )
+      integer               epnfpc
+      parameter           ( epnfpc = epnpc  + 1 )
 
-      INTEGER               EPFPC
-      PARAMETER           ( EPFPC  = EPNFPC + 1 )
+      integer               epfpc
+      parameter           ( epfpc  = epnfpc + 1 )
 
 !
 !     Double precision metadata indices:
 !
-      INTEGER               EPPSZD
-      PARAMETER           ( EPPSZD = EPPSZC + EPNIPT )
+      integer               eppszd
+      parameter           ( eppszd = eppszc + epnipt )
 
-      INTEGER               EPBASD
-      PARAMETER           ( EPBASD = EPPSZD + 1 )
+      integer               epbasd
+      parameter           ( epbasd = eppszd + 1 )
 
-      INTEGER               EPNPD
-      PARAMETER           ( EPNPD  = EPBASD + 1 )
+      integer               epnpd
+      parameter           ( epnpd  = epbasd + 1 )
 
-      INTEGER               EPNFPD
-      PARAMETER           ( EPNFPD = EPNPD  + 1 )
+      integer               epnfpd
+      parameter           ( epnfpd = epnpd  + 1 )
 
-      INTEGER               EPFPD
-      PARAMETER           ( EPFPD  = EPNFPD + 1 )
+      integer               epfpd
+      parameter           ( epfpd  = epnfpd + 1 )
 
 !
 !     Integer metadata indices:
 !
-      INTEGER               EPPSZI
-      PARAMETER           ( EPPSZI = EPPSZD + EPNIPT )
+      integer               eppszi
+      parameter           ( eppszi = eppszd + epnipt )
 
-      INTEGER               EPBASI
-      PARAMETER           ( EPBASI = EPPSZI + 1 )
+      integer               epbasi
+      parameter           ( epbasi = eppszi + 1 )
 
-      INTEGER               EPNPI
-      PARAMETER           ( EPNPI  = EPBASI + 1 )
+      integer               epnpi
+      parameter           ( epnpi  = epbasi + 1 )
 
-      INTEGER               EPNFPI
-      PARAMETER           ( EPNFPI = EPNPI  + 1 )
+      integer               epnfpi
+      parameter           ( epnfpi = epnpi  + 1 )
 
-      INTEGER               EPFPI
-      PARAMETER           ( EPFPI  = EPNFPI + 1 )
+      integer               epfpi
+      parameter           ( epfpi  = epnfpi + 1 )
 
 !
 !     Size of metadata area:
 !
-      INTEGER               EPMDSZ
-      PARAMETER           ( EPMDSZ = 1 + 3*EPNIPT )
+      integer               epmdsz
+      parameter           ( epmdsz = 1 + 3*epnipt )
 
 !
 !     Page sizes, in units of DAS words of the appropriate type:
 !
-      INTEGER               PGSIZC
-      PARAMETER           ( PGSIZC = 1024 )
+      integer               pgsizc
+      parameter           ( pgsizc = 1024 )
 
-      INTEGER               PGSIZD
-      PARAMETER           ( PGSIZD = 128 )
+      integer               pgsizd
+      parameter           ( pgsizd = 128 )
 
-      INTEGER               PGSIZI
-      PARAMETER           ( PGSIZI = 256 )
+      integer               pgsizi
+      parameter           ( pgsizi = 256 )
 
 !
 !     Default page base addresses:
 !
-      INTEGER               PGBASC
-      PARAMETER           ( PGBASC = 0 )
+      integer               pgbasc
+      parameter           ( pgbasc = 0 )
 
-      INTEGER               PGBASD
-      PARAMETER           ( PGBASD = 0 )
+      integer               pgbasd
+      parameter           ( pgbasd = 0 )
 
-      INTEGER               PGBASI
-      PARAMETER           ( PGBASI = 256 )
+      integer               pgbasi
+      parameter           ( pgbasi = 256 )
 
 
 !

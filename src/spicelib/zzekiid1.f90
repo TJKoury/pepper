@@ -1,6 +1,6 @@
 !$Procedure ZZEKIID1 ( EK, insert into index, d.p., type 1 )
 
-      SUBROUTINE ZZEKIID1 ( HANDLE, SEGDSC, COLDSC, DKEY, RECPTR, NULL )
+      subroutine zzekiid1 ( handle, segdsc, coldsc, dkey, recptr, null )
 
 ! $ Abstract
 !
@@ -20,19 +20,19 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      DOUBLE PRECISION      DKEY
-      INTEGER               RECPTR
-      LOGICAL               NULL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      double precision      dkey
+      integer               recptr
+      logical               null
 
 ! $ Brief_I/O
 !
@@ -146,102 +146,102 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      INTEGER               DTYPE
-      INTEGER               ITYPE
-      INTEGER               PRVIDX
-      INTEGER               PRVPTR
-      INTEGER               TREE
+      integer               dtype
+      integer               itype
+      integer               prvidx
+      integer               prvptr
+      integer               tree
 
-      LOGICAL               INDEXD
+      logical               indexd
 
 !
 !     Use discovery check-in.
 !
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 
 !
 !     If the column's not indexed, we have no business being here.
 !
-      INDEXD  =  COLDSC(IXTIDX) .NE. IFALSE
+      indexd  =  coldsc(ixtidx) .ne. ifalse
 
-      IF ( .NOT. INDEXD ) THEN
+      if ( .not. indexd ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKIID1'                 )
-         CALL SETMSG ( 'Column # is not indexed.' )
-         CALL ERRCH  ( '#',  COLUMN               )
-         CALL SIGERR ( 'SPICE(NOTINDEXED)'        )
-         CALL CHKOUT ( 'ZZEKIID1'                 )
-         RETURN
+         call chkin  ( 'ZZEKIID1'                 )
+         call setmsg ( 'Column # is not indexed.' )
+         call errch  ( '#',  column               )
+         call sigerr ( 'SPICE(NOTINDEXED)'        )
+         call chkout ( 'ZZEKIID1'                 )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the column's data type.
 !
-      DTYPE  =  COLDSC(TYPIDX)
+      dtype  =  coldsc(typidx)
 
-      IF (  ( DTYPE .NE. DP ) .AND. ( DTYPE .NE. TIME )  )  THEN
+      if (  ( dtype .ne. dp ) .and. ( dtype .ne. time )  )  then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKIID1'                                      )
-         CALL SETMSG ( 'Column # should be DP or TIME but has type #.' )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  DTYPE                                     )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                            )
-         CALL CHKOUT ( 'ZZEKIID1'                                      )
-         RETURN
+         call chkin  ( 'ZZEKIID1'                                      )
+         call setmsg ( 'Column # should be DP or TIME but has type #.' )
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  dtype                                     )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                            )
+         call chkout ( 'ZZEKIID1'                                      )
+         return
 
-      END IF
-
-
-      ITYPE  =  COLDSC(IXTIDX)
+      end if
 
 
-      IF ( ITYPE .EQ. 1 ) THEN
+      itype  =  coldsc(ixtidx)
+
+
+      if ( itype .eq. 1 ) then
 !
 !        Get the tree pointer from the column descriptor.
 !
-         TREE  =  COLDSC(IXPIDX)
+         tree  =  coldsc(ixpidx)
 
 !
 !        Locate the predecessor of the input key, record pointer pair.
 !
-         CALL ZZEKLERD (  HANDLE,  SEGDSC,  COLDSC,  DKEY, &
-                          RECPTR,  NULL,    PRVIDX,  PRVPTR  )
+         call zzeklerd (  handle,  segdsc,  coldsc,  dkey, &
+                          recptr,  null,    prvidx,  prvptr  )
 
 !
 !        Insert the new record pointer right after the item we've found.
 !
-         CALL ZZEKTRIN ( HANDLE, TREE, PRVIDX+1, RECPTR )
+         call zzektrin ( handle, tree, prvidx+1, recptr )
 
 
-      ELSE
+      else
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKIID1'                   )
-         CALL SETMSG ( 'Column # has index type #.' )
-         CALL ERRCH  ( '#',  COLUMN                 )
-         CALL ERRINT ( '#',  ITYPE                  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'         )
-         CALL CHKOUT ( 'ZZEKIID1'                   )
-         RETURN
+         call chkin  ( 'ZZEKIID1'                   )
+         call setmsg ( 'Column # has index type #.' )
+         call errch  ( '#',  column                 )
+         call errint ( '#',  itype                  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'         )
+         call chkout ( 'ZZEKIID1'                   )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

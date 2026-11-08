@@ -1,6 +1,6 @@
 !$Procedure ZZCHRLAT ( Chord latitude  )
 
-      SUBROUTINE ZZCHRLAT ( MIDLAT, DLON, EPTLAT )
+      subroutine zzchrlat ( midlat, dlon, eptlat )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      MIDLAT
-      DOUBLE PRECISION      DLON
-      DOUBLE PRECISION      EPTLAT
+      double precision      midlat
+      double precision      dlon
+      double precision      eptlat
 
 ! $ Brief_I/O
 !
@@ -219,55 +219,55 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
+      double precision      brcktd
+      double precision      halfpi
+      double precision      pi
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      MLAT
+      double precision      mlat
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( ( DLON .LT. 0.D0 ) .OR. ( DLON .GE. PI() ) )  THEN
+      if ( ( dlon .lt. 0.d0 ) .or. ( dlon .ge. pi() ) )  then
 
-         CALL CHKIN  ( 'ZZCHRLAT'                          )
-         CALL SETMSG ( 'The input longitude extent was #; ' &
+         call chkin  ( 'ZZCHRLAT'                          )
+         call setmsg ( 'The input longitude extent was #; ' &
          //            'this value must be in the range ' &
          //            '[0 : pi ) radians.'                )
-         CALL ERRDP  ( '#', DLON                           )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'            )
-         CALL CHKOUT ( 'ZZCHRLAT'                          )
-         RETURN
+         call errdp  ( '#', dlon                           )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'            )
+         call chkout ( 'ZZCHRLAT'                          )
+         return
 
-      END IF
+      end if
 
-      IF (  ABS(MIDLAT)  .GT.  ( HALFPI()+ANGMRG )  ) THEN
+      if (  abs(midlat)  .gt.  ( halfpi()+angmrg )  ) then
 
-         CALL CHKIN  ( 'ZZCHRLAT'                          )
-         CALL SETMSG ( 'The input latitude was #; this ' &
+         call chkin  ( 'ZZCHRLAT'                          )
+         call setmsg ( 'The input latitude was #; this ' &
          //            'value must be in the interval ' &
          //            '-pi/2 : pi/2 (radians).'           )
-         CALL ERRDP  ( '#', MIDLAT                         )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'            )
-         CALL CHKOUT ( 'ZZCHRLAT'                          )
-         RETURN
+         call errdp  ( '#', midlat                         )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'            )
+         call chkout ( 'ZZCHRLAT'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     The input latitude is, at worst, slightly out of range.
 !     Bracket it.
 !
-      MLAT = BRCKTD( MIDLAT, -HALFPI(), HALFPI() )
+      mlat = brcktd( midlat, -halfpi(), halfpi() )
 
 !
 !     The endpoint latitude EPTLAT is defined by
@@ -278,7 +278,7 @@
 !     the two-argument arctangent function and well-behaved
 !     trig functions as input arguments:
 !
-      EPTLAT = ATAN2 ( SIN(MLAT) * COS(DLON/2),  COS(MLAT) )
+      eptlat = atan2 ( sin(mlat) * cos(dlon/2),  cos(mlat) )
 
-      RETURN
-      END
+      return
+      end

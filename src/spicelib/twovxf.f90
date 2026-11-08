@@ -1,6 +1,6 @@
 !$Procedure TWOVXF ( Two states defining a frame transformation )
 
-      SUBROUTINE TWOVXF ( AXDEF, INDEXA, PLNDEF, INDEXP, XFORM )
+      subroutine twovxf ( axdef, indexa, plndef, indexp, xform )
 
 ! $ Abstract
 !
@@ -22,13 +22,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   AXDEF  ( 6 )
-      INTEGER            INDEXA
-      DOUBLE PRECISION   PLNDEF ( 6 )
-      INTEGER            INDEXP
-      DOUBLE PRECISION   XFORM  ( 6, 6 )
+      double precision   axdef  ( 6 )
+      integer            indexa
+      double precision   plndef ( 6 )
+      integer            indexp
+      double precision   xform  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -461,35 +461,35 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      XI     ( 6, 6 )
+      double precision      xi     ( 6, 6 )
 
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'TWOVXF' )
+      call chkin ( 'TWOVXF' )
 
 
 !
 !     Get the matrix XI that transforms states from the frame
 !     defined by AXDEF and PLNDEF to their base frame.
 !
-      CALL ZZTWOVXF ( AXDEF, INDEXA, PLNDEF, INDEXP, XI )
+      call zztwovxf ( axdef, indexa, plndef, indexp, xi )
 
 !
 !     Invert XI.
 !
-      CALL INVSTM ( XI, XFORM )
+      call invstm ( xi, xform )
 
-      CALL CHKOUT ( 'TWOVXF' )
-      RETURN
-      END
+      call chkout ( 'TWOVXF' )
+      return
+      end

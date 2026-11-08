@@ -1,6 +1,6 @@
 !$Procedure ZZDSKSPH ( DSK, bounding spheres for target body )
 
-      SUBROUTINE ZZDSKSPH ( BODYID, NSURF, SRFLST, MINRAD, MAXRAD )
+      subroutine zzdsksph ( bodyid, nsurf, srflst, minrad, maxrad )
 
 ! $ Abstract
 !
@@ -25,19 +25,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
-      INCLUDE 'dla.inc'
-      INCLUDE 'dsk.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'zzctr.inc'
+      include 'errhnd.inc'
+      include 'dla.inc'
+      include 'dsk.inc'
+      include 'dskdsc.inc'
+      include 'zzctr.inc'
 
-      INTEGER               BODYID
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      MINRAD
-      DOUBLE PRECISION      MAXRAD
+      integer               bodyid
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      minrad
+      double precision      maxrad
 
 ! $ Brief_I/O
 !
@@ -197,231 +197,231 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VNORM
+      double precision      dpmax
+      double precision      vnorm
 
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     EXTERNAL routines
 !
-      EXTERNAL              ZZDSKBDC
+      external              zzdskbdc
 
 !
 !     Local parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LMSGLN)    ERRMSG
-      CHARACTER*(FRNMLN)    FRNAME
+      character*(lmsgln)    errmsg
+      character*(frnmln)    frname
 
-      DOUBLE PRECISION      BOXCTR ( 3 )
-      DOUBLE PRECISION      BOXRAD
-      DOUBLE PRECISION      CTRMNR
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LX
-      DOUBLE PRECISION      LY
-      DOUBLE PRECISION      LZ
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      MIDTIM
-      DOUBLE PRECISION      MINR
-      DOUBLE PRECISION      OFFMAG
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      RP
-      DOUBLE PRECISION      SGMAXR
-      DOUBLE PRECISION      SGMINR
-      DOUBLE PRECISION      SVMAXR
-      DOUBLE PRECISION      SVMINR
+      double precision      boxctr ( 3 )
+      double precision      boxrad
+      double precision      ctrmnr
+      double precision      dskdsc ( dskdsz )
+      double precision      f
+      double precision      lt
+      double precision      lx
+      double precision      ly
+      double precision      lz
+      double precision      maxr
+      double precision      midtim
+      double precision      minr
+      double precision      offmag
+      double precision      offset ( 3 )
+      double precision      re
+      double precision      rp
+      double precision      sgmaxr
+      double precision      sgminr
+      double precision      svmaxr
+      double precision      svminr
 
-      INTEGER               CORSYS
-      INTEGER               CTR    ( CTRSIZ )
-      INTEGER               DLADSC ( DLADSZ )
-      INTEGER               FRAMID
-      INTEGER               FRCENT
-      INTEGER               FRCLID
-      INTEGER               FRCLAS
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               PRVBOD
-      INTEGER               PRVFID
-      INTEGER               PRVLST ( MAXSRF )
-      INTEGER               PRVNLS
-      INTEGER               SURFID
+      integer               corsys
+      integer               ctr    ( ctrsiz )
+      integer               dladsc ( dladsz )
+      integer               framid
+      integer               frcent
+      integer               frclid
+      integer               frclas
+      integer               handle
+      integer               i
+      integer               prvbod
+      integer               prvfid
+      integer               prvlst ( maxsrf )
+      integer               prvnls
+      integer               surfid
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               NEWLST
-      LOGICAL               SAME
-      LOGICAL               SEGFND
-      LOGICAL               UPDATE
+      logical               first
+      logical               found
+      logical               newlst
+      logical               same
+      logical               segfnd
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE                  CTR
-      SAVE                  FIRST
-      SAVE                  PRVBOD
-      SAVE                  PRVFID
-      SAVE                  PRVLST
-      SAVE                  PRVNLS
-      SAVE                  SVMAXR
-      SAVE                  SVMINR
+      save                  ctr
+      save                  first
+      save                  prvbod
+      save                  prvfid
+      save                  prvlst
+      save                  prvnls
+      save                  svmaxr
+      save                  svminr
 
 !
 !     Initial values
 !
-      DATA                  CTR    / -1, -1      /
-      DATA                  FIRST  / .TRUE.      /
-      DATA                  PRVFID /  0          /
-      DATA                  PRVBOD /  0          /
-      DATA                  PRVLST /  MAXSRF * 0 /
-      DATA                  PRVNLS / -1          /
-      DATA                  SVMAXR / -1.D0       /
-      DATA                  SVMINR / -1.D0       /
+      data                  ctr    / -1, -1      /
+      data                  first  / .true.      /
+      data                  prvfid /  0          /
+      data                  prvbod /  0          /
+      data                  prvlst /  maxsrf * 0 /
+      data                  prvnls / -1          /
+      data                  svmaxr / -1.d0       /
+      data                  svminr / -1.d0       /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKSPH' )
+      call chkin ( 'ZZDSKSPH' )
 
-      IF ( FIRST ) THEN
-         CALL ZZCTRUIN ( CTR )
-      END IF
+      if ( first ) then
+         call zzctruin ( ctr )
+      end if
 
 !
 !     Check NSURF.
 !
-      IF ( NSURF .LT. 0 ) THEN
+      if ( nsurf .lt. 0 ) then
 
-         CALL SETMSG ( 'NSURF must be non-negative but was #.' )
-         CALL ERRINT ( '#', NSURF                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                )
-         CALL CHKOUT ( 'ZZDSKSPH'                              )
-         RETURN
+         call setmsg ( 'NSURF must be non-negative but was #.' )
+         call errint ( '#', nsurf                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
+         call chkout ( 'ZZDSKSPH'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine whether the input body surface list matches
 !     the previous values. The following code applies whether
 !     or not the surface list is non-empty.
 !
-      NEWLST = .TRUE.
+      newlst = .true.
 
-      IF ( .NOT. FIRST ) THEN
+      if ( .not. first ) then
 
-         IF ( BODYID .EQ. PRVBOD ) THEN
+         if ( bodyid .eq. prvbod ) then
 
-            IF ( NSURF .EQ. PRVNLS ) THEN
+            if ( nsurf .eq. prvnls ) then
 
-               SAME = .TRUE.
-               I    = 1
+               same = .true.
+               i    = 1
 
-               DO WHILE ( ( I .LE. NSURF ) .AND.  SAME  )
+               do while ( ( i .le. nsurf ) .and.  same  )
 
-                  SAME = SRFLST(I) .EQ. PRVLST(I)
-                  I    = I + 1
-               END DO
+                  same = srflst(i) .eq. prvlst(i)
+                  i    = i + 1
+               end do
 !
 !              If SAME is true here, the body and surface list are the
 !              same as on the previous call.
 !
-               NEWLST = .NOT. SAME
+               newlst = .not. same
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Set PRVNLS to a value that can't match a valid value, so
 !     the surface list won't match after an error occurs. We'll
 !     reset PRVNLS prior to exit if all goes well.
 !
-      PRVNLS = -1
+      prvnls = -1
 
 !
 !     Check for DSK update in ZZDSKBSR.
 !
-      CALL ZZDSKCHK ( CTR, UPDATE )
+      call zzdskchk ( ctr, update )
 
 !
 !     Initialize the temporary variables MINR, MAXR.
 !
-      MINR = SVMINR
-      MAXR = SVMAXR
+      minr = svminr
+      maxr = svmaxr
 
 
-      IF ( FIRST .OR. UPDATE .OR. NEWLST ) THEN
+      if ( first .or. update .or. newlst ) then
 !
 !        Initialize the saved radius data.
 !
-         SVMAXR = -1.D0
-         SVMINR = DPMAX()
+         svmaxr = -1.d0
+         svminr = dpmax()
 
 !
 !        Prepare to fetch segment data. Initialize the ZZDSKBSR
 !        segment list for the body of interest.
 !
-         CALL ZZDSKBBL ( BODYID )
+         call zzdskbbl ( bodyid )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDSKSPH' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDSKSPH' )
+            return
+         end if
 
 !
 !        Fetch segment DSK descriptors for the indicated body and
 !        surface list.
 !
-         PRVFID = 0
-         CALL CLEARD ( 3, OFFSET )
+         prvfid = 0
+         call cleard ( 3, offset )
 
 !
 !        Re-initialize MINR and MAXR.
 !
-         MAXR = -1.D0
-         MINR = DPMAX()
+         maxr = -1.d0
+         minr = dpmax()
 
 !
 !        Examine all segments for BODYID.
 !
-         CALL ZZDSKBSS ( BODYID )
+         call zzdskbss ( bodyid )
 
-         CALL ZZDSKSBD ( BODYID )
-         CALL ZZDSKSNS ( ZZDSKBDC, HANDLE, DLADSC, DSKDSC, SEGFND )
+         call zzdsksbd ( bodyid )
+         call zzdsksns ( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDSKSPH' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDSKSPH' )
+            return
+         end if
 
-         DO WHILE ( SEGFND )
+         do while ( segfnd )
 
-            IF ( NSURF .GT. 0 ) THEN
+            if ( nsurf .gt. 0 ) then
 
-               SURFID = NINT( DSKDSC(SRFIDX) )
+               surfid = nint( dskdsc(srfidx) )
 
-               I      = ISRCHI ( SURFID, NSURF, SRFLST )
-            ELSE
-               I      = 1
-            END IF
+               i      = isrchi ( surfid, nsurf, srflst )
+            else
+               i      = 1
+            end if
 
-            IF ( I .GT. 0 ) THEN
+            if ( i .gt. 0 ) then
 !
 !              If we're checking surface IDs, this segment qualifies.
 !              Otherwise, we're not checking surface IDs, so the segment
@@ -430,73 +430,73 @@
 !              Get the frame ID of this segment, and look up the frame's
 !              center.
 !
-               FRAMID = NINT( DSKDSC(FRMIDX) )
+               framid = nint( dskdsc(frmidx) )
 
-               IF ( FRAMID .NE. PRVFID ) THEN
+               if ( framid .ne. prvfid ) then
 !
 !                 Get the frame center for the current segment.
 !
-                  CALL FRINFO ( FRAMID, FRCENT, FRCLAS, FRCLID, FOUND )
+                  call frinfo ( framid, frcent, frclas, frclid, found )
 
-                  IF ( .NOT. FOUND ) THEN
+                  if ( .not. found ) then
 
-                     CALL SETMSG ( 'No frame specification was found ' &
+                     call setmsg ( 'No frame specification was found ' &
                      //            'for frame ID #.'                  )
-                     CALL ERRINT ( '#', FRAMID                        )
-                     CALL SIGERR ( 'SPICE(NOFRAMEDATA)'               )
-                     CALL CHKOUT ( 'ZZDSKSPH'                         )
-                     RETURN
+                     call errint ( '#', framid                        )
+                     call sigerr ( 'SPICE(NOFRAMEDATA)'               )
+                     call chkout ( 'ZZDSKSPH'                         )
+                     return
 
-                  END IF
+                  end if
 
-                  IF ( FRCENT .EQ. BODYID ) THEN
+                  if ( frcent .eq. bodyid ) then
 !
 !                    The frame is centered at the target, so
 !                    the frame center offset magnitude is zero.
 !
-                     OFFMAG = 0.D0
+                     offmag = 0.d0
 
-                  ELSE
+                  else
 
-                     CALL FRMNAM ( FRAMID, FRNAME )
+                     call frmnam ( framid, frname )
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( 'ZZDSKSPH' )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( 'ZZDSKSPH' )
+                        return
+                     end if
 
-                     IF ( FRNAME .EQ. ' ' ) THEN
+                     if ( frname .eq. ' ' ) then
 
-                        CALL SETMSG ( 'No frame name was found ' &
+                        call setmsg ( 'No frame name was found ' &
                         //            'for frame ID #.'          )
-                        CALL ERRINT ( '#', FRAMID                )
-                        CALL SIGERR ( 'SPICE(FRAMENAMENOTFOUND)' )
-                        CALL CHKOUT ( 'ZZDSKSPH'                 )
-                        RETURN
+                        call errint ( '#', framid                )
+                        call sigerr ( 'SPICE(FRAMENAMENOTFOUND)' )
+                        call chkout ( 'ZZDSKSPH'                 )
+                        return
 
-                     END IF
+                     end if
 
-                     MIDTIM = ( DSKDSC(BTMIDX) + DSKDSC(ETMIDX) ) / 2
+                     midtim = ( dskdsc(btmidx) + dskdsc(etmidx) ) / 2
 
-                     CALL SPKGPS ( FRCENT, MIDTIM, FRNAME, &
-                                   BODYID, OFFSET, LT     )
+                     call spkgps ( frcent, midtim, frname, &
+                                   bodyid, offset, lt     )
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( 'ZZDSKSPH' )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( 'ZZDSKSPH' )
+                        return
+                     end if
 
-                     OFFMAG = VNORM( OFFSET )
+                     offmag = vnorm( offset )
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 !
 !              Get the segment coordinate system and derive the maximum
 !              radius of the segment.
 !
-               CORSYS = NINT( DSKDSC(SYSIDX) )
+               corsys = nint( dskdsc(sysidx) )
 
 !
 !              Get bounding radii for the segment relative to the
@@ -504,22 +504,22 @@
 !              for the offset of the origin from the segment's central
 !              body as a subsequent step.
 !
-               IF ( CORSYS .EQ. LATSYS ) THEN
+               if ( corsys .eq. latsys ) then
 
-                  SGMINR = DSKDSC(MN3IDX)
-                  SGMAXR = DSKDSC(MX3IDX)
+                  sgminr = dskdsc(mn3idx)
+                  sgmaxr = dskdsc(mx3idx)
 
 
-               ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+               else if ( corsys .eq. pdtsys ) then
 !
 !                 Use the reference spheroid and altitude bounds to
 !                 generate initial bounding radii.
 !
-                  RE = DSKDSC(PARIDX  )
-                  F  = DSKDSC(PARIDX+1)
-                  RP = RE *  (1.D0 - F)
+                  re = dskdsc(paridx  )
+                  f  = dskdsc(paridx+1)
+                  rp = re *  (1.d0 - f)
 
-                  IF ( F .GE. 0.D0 ) THEN
+                  if ( f .ge. 0.d0 ) then
 !
 !                    The spheroid is oblate. The maximum altitude over
 !                    the equator is an upper bound for the distance of
@@ -529,45 +529,45 @@
 !
 !                    The DSK descriptor gives us the altitude bounds.
 !
-                     SGMAXR = RE + DSKDSC(MX3IDX)
-                     SGMINR = RP + DSKDSC(MN3IDX)
+                     sgmaxr = re + dskdsc(mx3idx)
+                     sgminr = rp + dskdsc(mn3idx)
 
-                  ELSE
+                  else
 
 !                    The spheroid is prolate. The maximum altitude over
 !                    either pole is an upper bound for the distance of
 !                    any surface point from the origin.
 !
-                     SGMAXR = RP + DSKDSC(MX3IDX)
-                     SGMINR = RE + DSKDSC(MN3IDX)
+                     sgmaxr = rp + dskdsc(mx3idx)
+                     sgminr = re + dskdsc(mn3idx)
 
-                  END IF
+                  end if
 
 
 
-               ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+               else if ( corsys .eq. recsys ) then
 
-                  CALL ZZRECBOX ( DSKDSC(MN1IDX), BOXCTR, LX, &
-                                  LY,             LZ,     BOXRAD )
+                  call zzrecbox ( dskdsc(mn1idx), boxctr, lx, &
+                                  ly,             lz,     boxrad )
 !
 !                 SGMINR is a lower bound on the distance of the
 !                 segment from the origin of the coordinate system.
 !
-                  SGMINR = MAX ( VNORM(BOXCTR) - BOXRAD,  0.0D0 )
+                  sgminr = max ( vnorm(boxctr) - boxrad,  0.0d0 )
 
-                  SGMAXR =       VNORM(BOXCTR) + BOXRAD
+                  sgmaxr =       vnorm(boxctr) + boxrad
 
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'Coordinate system # is not ' &
+                  call setmsg ( 'Coordinate system # is not ' &
                   //            'currently supported.'        )
-                  CALL ERRINT ( '#', CORSYS                   )
-                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)'         )
-                  CALL CHKOUT ( 'ZZDSKSPH'                    )
-                  RETURN
+                  call errint ( '#', corsys                   )
+                  call sigerr ( 'SPICE(NOTSUPPORTED)'         )
+                  call chkout ( 'ZZDSKSPH'                    )
+                  return
 
-               END IF
+               end if
 
 !
 !              Apply the triangle inequality to derive minimum and
@@ -576,121 +576,121 @@
 !              and the body center, and given bounds on the distance of
 !              the surface from the frame's center.
 !
-               IF ( OFFMAG .LE. SGMINR ) THEN
+               if ( offmag .le. sgminr ) then
 !
 !                 The segment's central body is inside the inner
 !                 bounding sphere of the segment.
 !
-                  CTRMNR = SGMINR - OFFMAG
+                  ctrmnr = sgminr - offmag
 
-               ELSE IF ( OFFMAG .GE. SGMAXR ) THEN
+               else if ( offmag .ge. sgmaxr ) then
 !
 !                 The segment's central body is outside the outer
 !                 bounding sphere of the segment.
 !
-                  CTRMNR = OFFMAG - SGMAXR
+                  ctrmnr = offmag - sgmaxr
 
-               ELSE
+               else
 !
 !                 The segment's central body is between the bounding
 !                 spheres. No positive lower radius bound exists.
 !
-                  CTRMNR = 0.D0
+                  ctrmnr = 0.d0
 
-               END IF
+               end if
 
 !
 !              Update the segment's outer bounding radius to
 !              account for the frame center offset (which may
 !              be zero).
 !
-               SGMAXR = SGMAXR + OFFMAG
+               sgmaxr = sgmaxr + offmag
 
 !
 !              Update the global minimum and maximum radii.
 !
-               MINR = MIN( MINR, CTRMNR )
-               MAXR = MAX( MAXR, SGMAXR )
+               minr = min( minr, ctrmnr )
+               maxr = max( maxr, sgmaxr )
 
-            END IF
+            end if
 !
 !           Look at the next segment.
 !
-            CALL ZZDSKSBD( BODYID )
-            CALL ZZDSKSNS( ZZDSKBDC, HANDLE, DLADSC, DSKDSC, SEGFND )
+            call zzdsksbd( bodyid )
+            call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDSKSPH' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDSKSPH' )
+               return
+            end if
 
-         END DO
+         end do
 
-         IF (  ( MAXR .GT. 0.D0 ) .AND. (.NOT. FAILED() )  ) THEN
+         if (  ( maxr .gt. 0.d0 ) .and. (.not. failed() )  ) then
 !
 !           Update the saved bounds.
 !
-            SVMINR = MINR
-            SVMAXR = MAXR
+            svminr = minr
+            svmaxr = maxr
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( MAXR .LT. 0.D0 ) THEN
+      if ( maxr .lt. 0.d0 ) then
 !
 !        We tried to update the radius bounds but didn't find any
 !        segments for the specified body.
 !
 !        We have no radius data for the specified surface list.
 !
-         IF ( NSURF .EQ. 0 ) THEN
+         if ( nsurf .eq. 0 ) then
 
-            ERRMSG = 'No segments were found matching the body ID #.'
+            errmsg = 'No segments were found matching the body ID #.'
 
-         ELSE
+         else
 
-            ERRMSG = 'No segments were found matching the body ID # ' &
+            errmsg = 'No segments were found matching the body ID # ' &
             //       'and the surface list <@>.'
 
-            DO I = 1, NSURF-1
+            do i = 1, nsurf-1
 
-               CALL REPMC  ( ERRMSG, '@', '*, @',    ERRMSG )
-               CALL REPMI  ( ERRMSG, '*', SRFLST(I), ERRMSG )
+               call repmc  ( errmsg, '@', '*, @',    errmsg )
+               call repmi  ( errmsg, '*', srflst(i), errmsg )
 
-            END DO
+            end do
 
-            CALL REPMI  ( ERRMSG, '@', SRFLST(NSURF), ERRMSG )
+            call repmi  ( errmsg, '@', srflst(nsurf), errmsg )
 
-         END IF
+         end if
 
-         CALL SETMSG ( ERRMSG                   )
-         CALL ERRINT ( '#', BODYID              )
-         CALL SIGERR ( 'SPICE(DSKDATANOTFOUND)' )
-         CALL CHKOUT ( 'ZZDSKSPH'               )
-         RETURN
+         call setmsg ( errmsg                   )
+         call errint ( '#', bodyid              )
+         call sigerr ( 'SPICE(DSKDATANOTFOUND)' )
+         call chkout ( 'ZZDSKSPH'               )
+         return
 
-      END IF
+      end if
 
-      IF ( .NOT. FAILED() ) THEN
+      if ( .not. failed() ) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-         PRVBOD = BODYID
-         PRVNLS = NSURF
+         prvbod = bodyid
+         prvnls = nsurf
 
-         IF ( NEWLST ) THEN
+         if ( newlst ) then
 
-            CALL MOVEI ( SRFLST, NSURF, PRVLST )
+            call movei ( srflst, nsurf, prvlst )
 
-         END IF
+         end if
 
-         MAXRAD = SVMAXR
-         MINRAD = SVMINR
+         maxrad = svmaxr
+         minrad = svminr
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDSKSPH' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKSPH' )
+      return
+      end

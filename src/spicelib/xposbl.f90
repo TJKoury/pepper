@@ -1,6 +1,6 @@
 !$Procedure XPOSBL ( Transpose a matrix by blocks    )
 
-      SUBROUTINE XPOSBL ( BMAT, NROW, NCOL, BSIZE, BTMAT )
+      subroutine xposbl ( bmat, nrow, ncol, bsize, btmat )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NROW
-      INTEGER               NCOL
-      INTEGER               BSIZE
-      DOUBLE PRECISION      BMAT  ( NROW, NCOL )
-      DOUBLE PRECISION      BTMAT ( NROW, NCOL )
+      integer               nrow
+      integer               ncol
+      integer               bsize
+      double precision      bmat  ( nrow, ncol )
+      double precision      btmat ( nrow, ncol )
 
 ! $ Brief_I/O
 !
@@ -208,12 +208,12 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TEMP
+      double precision      temp
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               CB
-      INTEGER               RB
+      integer               i
+      integer               j
+      integer               cb
+      integer               rb
 
 
 !
@@ -280,86 +280,86 @@
 !     Let's first check to make sure that the requested operation
 !     makes sense.  Are all of the integers positive?
 !
-      IF (  BSIZE .LT. 1 ) THEN
-         CALL CHKIN  ( 'XPOSBL'                                       )
-         CALL SETMSG ( 'The block size is not positive. '             // &
+      if (  bsize .lt. 1 ) then
+         call chkin  ( 'XPOSBL'                                       )
+         call setmsg ( 'The block size is not positive. '             // &
                        'The block size is #.'                         )
-         CALL ERRINT ( '#', BSIZE                                     )
-         CALL SIGERR ( 'SPICE(BADBLOCKSIZE)'                          )
-         CALL CHKOUT ( 'XPOSBL'                                       )
-         RETURN
-      END IF
+         call errint ( '#', bsize                                     )
+         call sigerr ( 'SPICE(BADBLOCKSIZE)'                          )
+         call chkout ( 'XPOSBL'                                       )
+         return
+      end if
 
-      IF (  NROW .LT. 1 ) THEN
-         CALL CHKIN  ( 'XPOSBL'                                       )
-         CALL SETMSG ( 'The number of rows in the matrix is not '     // &
+      if (  nrow .lt. 1 ) then
+         call chkin  ( 'XPOSBL'                                       )
+         call setmsg ( 'The number of rows in the matrix is not '     // &
                        'positive. The number of rows is #.'           )
-         CALL ERRINT ( '#', NROW                                      )
-         CALL SIGERR ( 'SPICE(BADROWCOUNT)'                           )
-         CALL CHKOUT ( 'XPOSBL'                                       )
-         RETURN
-      END IF
+         call errint ( '#', nrow                                      )
+         call sigerr ( 'SPICE(BADROWCOUNT)'                           )
+         call chkout ( 'XPOSBL'                                       )
+         return
+      end if
 
-      IF (  NCOL .LT. 1 ) THEN
-         CALL CHKIN  ( 'XPOSBL'                                       )
-         CALL SETMSG ( 'The number of columns in the matrix is not '  // &
+      if (  ncol .lt. 1 ) then
+         call chkin  ( 'XPOSBL'                                       )
+         call setmsg ( 'The number of columns in the matrix is not '  // &
                        'positive. The number of columns is #.'        )
-         CALL ERRINT ( '#', NCOL                                      )
-         CALL SIGERR ( 'SPICE(BADCOLUMNCOUNT)'                        )
-         CALL CHKOUT ( 'XPOSBL'                                       )
-         RETURN
-      END IF
+         call errint ( '#', ncol                                      )
+         call sigerr ( 'SPICE(BADCOLUMNCOUNT)'                        )
+         call chkout ( 'XPOSBL'                                       )
+         return
+      end if
 
 
 
 !
 !     Is there a whole number of blocks in the matrix.
 !
-      IF (      ( MOD( NCOL, BSIZE ) .NE. 0 ) &
-           .OR. ( MOD( NROW, BSIZE ) .NE. 0 ) ) THEN
+      if (      ( mod( ncol, bsize ) .ne. 0 ) &
+           .or. ( mod( nrow, bsize ) .ne. 0 ) ) then
 
-         CALL CHKIN  ( 'XPOSBL'                                       )
-         CALL SETMSG ( 'The block size does not evenly divide both '  // &
+         call chkin  ( 'XPOSBL'                                       )
+         call setmsg ( 'The block size does not evenly divide both '  // &
                        'the number of rows and the number of '        // &
                        'columns. The '                                // &
                        'block size is #; the number of rows is #; '   // &
                        'the number of columns is #. '                 )
 
-         CALL ERRINT ( '#', BSIZE                                     )
-         CALL ERRINT ( '#', NROW                                      )
-         CALL ERRINT ( '#', NCOL                                      )
-         CALL SIGERR ( 'SPICE(BLOCKSNOTEVEN)'                         )
-         CALL CHKOUT ( 'XPOSBL'                                       )
-         RETURN
-      END IF
+         call errint ( '#', bsize                                     )
+         call errint ( '#', nrow                                      )
+         call errint ( '#', ncol                                      )
+         call sigerr ( 'SPICE(BLOCKSNOTEVEN)'                         )
+         call chkout ( 'XPOSBL'                                       )
+         return
+      end if
 
 !
 !     If we get to this point we are ready to do the transposes.
 !     Cycle over all of the blocks in the matrix.
 !
-      DO CB = 0, NCOL-1, BSIZE
-         DO RB = 0, NROW-1, BSIZE
+      do cb = 0, ncol-1, bsize
+         do rb = 0, nrow-1, bsize
 
 !
 !           OK. Transpose block ( RB, CB ).
 !
-            DO I = 1, BSIZE
-               DO J = 1, I
+            do i = 1, bsize
+               do j = 1, i
 
-                  IF ( I .EQ. J ) THEN
-                     BTMAT ( RB+I, CB+J ) = BMAT ( RB+I, CB+J )
-                  ELSE
-                     TEMP                 = BMAT ( RB+I, CB+J )
-                     BTMAT ( RB+I, CB+J ) = BMAT ( RB+J, CB+I )
-                     BTMAT ( RB+J, CB+I ) = TEMP
-                  END IF
+                  if ( i .eq. j ) then
+                     btmat ( rb+i, cb+j ) = bmat ( rb+i, cb+j )
+                  else
+                     temp                 = bmat ( rb+i, cb+j )
+                     btmat ( rb+i, cb+j ) = bmat ( rb+j, cb+i )
+                     btmat ( rb+j, cb+i ) = temp
+                  end if
 
-               END DO
-            END DO
+               end do
+            end do
 
-         END DO
-      END DO
+         end do
+      end do
 
 
-      RETURN
-      END
+      return
+      end

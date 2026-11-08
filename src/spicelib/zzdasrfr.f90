@@ -1,12 +1,12 @@
 !$Procedure      ZZDASRFR ( DAS, read file record )
 
-      SUBROUTINE ZZDASRFR ( HANDLE, &
-                            IDWORD, &
-                            IFNAME, &
-                            NRESVR, &
-                            NRESVC, &
-                            NCOMR, &
-                            NCOMC  )
+      subroutine zzdasrfr ( handle, &
+                            idword, &
+                            ifname, &
+                            nresvr, &
+                            nresvc, &
+                            ncomr, &
+                            ncomc  )
 
 ! $ Abstract
 !
@@ -24,17 +24,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzddhman.inc'
+      include 'zzddhman.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         IDWORD
-      CHARACTER*(*)         IFNAME
-      INTEGER               NRESVR
-      INTEGER               NRESVC
-      INTEGER               NCOMR
-      INTEGER               NCOMC
+      integer               handle
+      character*(*)         idword
+      character*(*)         ifname
+      integer               nresvr
+      integer               nresvc
+      integer               ncomr
+      integer               ncomc
 
 ! $ Brief_I/O
 !
@@ -172,20 +172,20 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =  8 )
+      integer               idwlen
+      parameter           ( idwlen =  8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
-      INTEGER               NWC
-      PARAMETER           ( NWC    = 1024 )
+      integer               nwc
+      parameter           ( nwc    = 1024 )
 
 !
 !     Parameters for positions of file record elements:
@@ -194,156 +194,156 @@
 !
 !     ID word begin and end:
 !
-      INTEGER               BEGIDW
-      PARAMETER           ( BEGIDW = 1 )
+      integer               begidw
+      parameter           ( begidw = 1 )
 
-      INTEGER               ENDIDW
-      PARAMETER           ( ENDIDW = 8 )
+      integer               endidw
+      parameter           ( endidw = 8 )
 
 
 !
 !     Internal file name begin and end:
 !
-      INTEGER               BEGIFN
-      PARAMETER           ( BEGIFN = 9 )
+      integer               begifn
+      parameter           ( begifn = 9 )
 
-      INTEGER               ENDIFN
-      PARAMETER           ( ENDIFN = 68 )
+      integer               endifn
+      parameter           ( endifn = 68 )
 
 !
 !     Reserved record count begin and end:
 !
-      INTEGER               BEGNRR
-      PARAMETER           ( BEGNRR = 69 )
+      integer               begnrr
+      parameter           ( begnrr = 69 )
 
-      INTEGER               ENDNRR
-      PARAMETER           ( ENDNRR = 72 )
+      integer               endnrr
+      parameter           ( endnrr = 72 )
 
 !
 !     Reserved record character count begin and end:
 !
-      INTEGER               BEGNRC
-      PARAMETER           ( BEGNRC = 73 )
+      integer               begnrc
+      parameter           ( begnrc = 73 )
 
-      INTEGER               ENDNRC
-      PARAMETER           ( ENDNRC = 76 )
+      integer               endnrc
+      parameter           ( endnrc = 76 )
 
 
 !
 !     Comment area record count begin and end:
 !
-      INTEGER               BEGNCR
-      PARAMETER           ( BEGNCR = 77 )
+      integer               begncr
+      parameter           ( begncr = 77 )
 
-      INTEGER               ENDNCR
-      PARAMETER           ( ENDNCR = 80 )
+      integer               endncr
+      parameter           ( endncr = 80 )
 
 !
 !     Comment area character count begin and end:
 !
-      INTEGER               BEGNCC
-      PARAMETER           ( BEGNCC = 81 )
+      integer               begncc
+      parameter           ( begncc = 81 )
 
-      INTEGER               ENDNCC
-      PARAMETER           ( ENDNCC = 84 )
+      integer               endncc
+      parameter           ( endncc = 84 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NWC)       CHRBUF
-      CHARACTER*(IDWLEN)    TMPIDW
-      CHARACTER*(IFNLEN)    TMPIFN
+      character*(nwc)       chrbuf
+      character*(idwlen)    tmpidw
+      character*(ifnlen)    tmpifn
 
-      INTEGER               IBFF
-      INTEGER               IOSTAT
-      INTEGER               NATBFF
-      INTEGER               UNIT
+      integer               ibff
+      integer               iostat
+      integer               natbff
+      integer               unit
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  NATBFF
+      save                  first
+      save                  natbff
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  NATBFF / -1     /
+      data                  first  / .true. /
+      data                  natbff / -1     /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDASRFR' )
+      call chkin ( 'ZZDASRFR' )
 
 !
 !     On the first pass through this routine, get the integer code of
 !     the host system's native binary file format.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHNFC ( NATBFF )
+         call zzddhnfc ( natbff )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'ZZDASRFR' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'ZZDASRFR' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get a logical unit for this DAS file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAS', .false., unit )
 
 !
 !     Get the integer code for the file's binary format.
 !
-      CALL ZZDDHPPF ( UNIT, DAS, IBFF )
+      call zzddhppf ( unit, das, ibff )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'ZZDASRFR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'ZZDASRFR' )
+         return
+      end if
 
-      IF ( IBFF .EQ. NATBFF ) THEN
+      if ( ibff .eq. natbff ) then
 !
 !        We're looking at a native file. Just read the file record.
 !
-         READ ( UNIT, &
-                REC     =  1, &
-                IOSTAT  =  IOSTAT ) TMPIDW, &
-                                    TMPIFN, &
-                                    NRESVR, &
-                                    NRESVC, &
-                                    NCOMR, &
-                                    NCOMC
+         read ( unit, &
+                rec     =  1, &
+                iostat  =  iostat ) tmpidw, &
+                                    tmpifn, &
+                                    nresvr, &
+                                    nresvc, &
+                                    ncomr, &
+                                    ncomc
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Could not DAS read file record. File was ' &
+            call setmsg ( 'Could not DAS read file record. File was ' &
             //            '#.  IOSTAT was #.'                        )
-            CALL ERRFNM ( '#', UNIT                                  )
-            CALL ERRINT ( '#', IOSTAT                                )
-            CALL SIGERR ( 'SPICE(DASFILEREADFAILED)'                 )
-            CALL CHKOUT ( 'ZZDASRFR'                                 )
-            RETURN
+            call errfnm ( '#', unit                                  )
+            call errint ( '#', iostat                                )
+            call sigerr ( 'SPICE(DASFILEREADFAILED)'                 )
+            call chkout ( 'ZZDASRFR'                                 )
+            return
 
-         END IF
+         end if
 
-         IDWORD  =  TMPIDW
-         IFNAME  =  TMPIFN
+         idword  =  tmpidw
+         ifname  =  tmpifn
 
 
-      ELSE
+      else
 !
 !        The file is non-native.
 !
@@ -353,40 +353,40 @@
 !        We'll read the file record as a character string and then
 !        pick it apart.
 !
-         READ ( UNIT, &
-                REC     =  1, &
-                IOSTAT  =  IOSTAT ) CHRBUF
+         read ( unit, &
+                rec     =  1, &
+                iostat  =  iostat ) chrbuf
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Could not read DAS file record. File is ' &
+            call setmsg ( 'Could not read DAS file record. File is ' &
             //            '#. IOSTAT was #. File''s BFF integer ' &
             //            'code is #.'                              )
-            CALL ERRFNM ( '#', UNIT                                 )
-            CALL ERRINT ( '#', IOSTAT                               )
-            CALL ERRINT ( '#', IBFF                                 )
-            CALL SIGERR ( 'SPICE(DASFILEREADFAILED)'                )
-            CALL CHKOUT ( 'ZZDASRFR'                                )
-            RETURN
+            call errfnm ( '#', unit                                 )
+            call errint ( '#', iostat                               )
+            call errint ( '#', ibff                                 )
+            call sigerr ( 'SPICE(DASFILEREADFAILED)'                )
+            call chkout ( 'ZZDASRFR'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Set the string output arguments.
 !
-         IDWORD = CHRBUF( BEGIDW : ENDIDW )
-         IFNAME = CHRBUF( BEGIFN : ENDIFN )
+         idword = chrbuf( begidw : endidw )
+         ifname = chrbuf( begifn : endifn )
 
 !
 !        The integer output arguments require translation.
 !
-         CALL ZZXLATEI ( IBFF,  CHRBUF( BEGNRR : ENDNRR ),  1,  NRESVR )
-         CALL ZZXLATEI ( IBFF,  CHRBUF( BEGNRC : ENDNRC ),  1,  NRESVC )
-         CALL ZZXLATEI ( IBFF,  CHRBUF( BEGNCR : ENDNCR ),  1,  NCOMR  )
-         CALL ZZXLATEI ( IBFF,  CHRBUF( BEGNCC : ENDNCC ),  1,  NCOMC  )
+         call zzxlatei ( ibff,  chrbuf( begnrr : endnrr ),  1,  nresvr )
+         call zzxlatei ( ibff,  chrbuf( begnrc : endnrc ),  1,  nresvc )
+         call zzxlatei ( ibff,  chrbuf( begncr : endncr ),  1,  ncomr  )
+         call zzxlatei ( ibff,  chrbuf( begncc : endncc ),  1,  ncomc  )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDASRFR' )
-      RETURN
-      END
+      call chkout ( 'ZZDASRFR' )
+      return
+      end

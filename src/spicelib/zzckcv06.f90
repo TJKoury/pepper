@@ -1,7 +1,7 @@
 !$Procedure ZZCKCV06 ( Private --- C-kernel segment coverage, type 06 )
 
-      SUBROUTINE ZZCKCV06 ( HANDLE, ARRBEG, ARREND, SCLKID, &
-                            DC,     TOL,    TIMSYS, SCHEDL )
+      subroutine zzckcv06 ( handle, arrbeg, arrend, sclkid, &
+                            dc,     tol,    timsys, schedl )
 
 ! $ Abstract
 !
@@ -24,21 +24,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'ck06.inc'
+      include              'ck06.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               HANDLE
-      INTEGER               ARRBEG
-      INTEGER               ARREND
-      INTEGER               SCLKID
-      DOUBLE PRECISION      DC     ( 2 )
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      SCHEDL ( LBCELL:* )
+      integer               handle
+      integer               arrbeg
+      integer               arrend
+      integer               sclkid
+      double precision      dc     ( 2 )
+      double precision      tol
+      character*(*)         timsys
+      double precision      schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -192,109 +192,109 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Number of elements in a type 6 mini-segment
 !     interval directory:
 !
-      INTEGER               NVDSIZ
-      PARAMETER           ( NVDSIZ = 100 )
+      integer               nvdsiz
+      parameter           ( nvdsiz = 100 )
 
 !
 !     Mini-segment epoch directory size:
 !
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
 !
 !     Type 6 control area size:
 !
-      INTEGER               NSGPAR
-      PARAMETER           ( NSGPAR = 2 )
+      integer               nsgpar
+      parameter           ( nsgpar = 2 )
 
 !
 !     Type 6 mini-segment control area size:
 !
-      INTEGER               MCTLSZ
-      PARAMETER           ( MCTLSZ = 4 )
+      integer               mctlsz
+      parameter           ( mctlsz = 4 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      BUFFER ( MCTLSZ )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      IVLBDS ( 2 )
-      DOUBLE PRECISION      LSTEPC
+      double precision      begin
+      double precision      buffer ( mctlsz )
+      double precision      et
+      double precision      finish
+      double precision      ivlbds ( 2 )
+      double precision      lstepc
 
-      INTEGER               EPADDR
-      INTEGER               I
-      INTEGER               IVLBAS
-      INTEGER               MINIE
-      INTEGER               NDIR
-      INTEGER               NINTVL
-      INTEGER               NIVDIR
-      INTEGER               NREC
-      INTEGER               PTRBAS
+      integer               epaddr
+      integer               i
+      integer               ivlbas
+      integer               minie
+      integer               ndir
+      integer               nintvl
+      integer               nivdir
+      integer               nrec
+      integer               ptrbas
 
-      LOGICAL               ISTDB
+      logical               istdb
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZCKCV06' )
+      call chkin ( 'ZZCKCV06' )
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZCKCV06'                                     )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZCKCV06'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set a logical flag indicating whether the time system is SCLK.
 !
-      ISTDB = EQSTR ( TIMSYS, 'TDB' )
+      istdb = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-            CALL CHKOUT ( 'ZZCKCV06'                                )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+            call chkout ( 'ZZCKCV06'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Fetch the mini-segment count from the segment.
 !
-      CALL DAFGDA ( HANDLE, ARREND, ARREND, BUFFER )
+      call dafgda ( handle, arrend, arrend, buffer )
 
-      NINTVL = NINT( BUFFER(1) )
+      nintvl = nint( buffer(1) )
 
 !
 !     Each mini-segment contributes a coverage interval to the
@@ -308,7 +308,7 @@
 !
 !     First compute PTRBAS. There are NINTVL+1 pointers.
 !
-      PTRBAS = ARREND - NSGPAR - ( NINTVL + 1 )
+      ptrbas = arrend - nsgpar - ( nintvl + 1 )
 
 !
 !     Compute the number of mini-segment interval directories.
@@ -318,28 +318,28 @@
 !        (  ( NINTVL + 1 ) - 1  )  /  NVDSIZ
 !
 !
-      NIVDIR = NINTVL / NVDSIZ
+      nivdir = nintvl / nvdsiz
 
 !
 !     The interval bounds and their directories precede the
 !     mini-segment pointers.
 !
-      IVLBAS = PTRBAS - NIVDIR - ( NINTVL + 1 )
+      ivlbas = ptrbas - nivdir - ( nintvl + 1 )
 
 !
 !     Now loop over the mini-segments and find the contribution
 !     from each one.
 !
-      DO I = 1,  NINTVL
+      do i = 1,  nintvl
 !
 !        Find the interval bounds for this mini-segment.
 !
-         CALL DAFGDA ( HANDLE, IVLBAS+I, IVLBAS+I+1, IVLBDS )
+         call dafgda ( handle, ivlbas+i, ivlbas+i+1, ivlbds )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZCKCV06' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZCKCV06' )
+            return
+         end if
 
 !
 !        Now find the last epoch of this mini-segment, since
@@ -349,110 +349,110 @@
 !        mini-segment. Convert these from relative to
 !        absolute DAF addresses.
 !
-         CALL DAFGDA ( HANDLE, PTRBAS+I, PTRBAS+I+1, BUFFER )
+         call dafgda ( handle, ptrbas+i, ptrbas+i+1, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZCKCV06' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZCKCV06' )
+            return
+         end if
 
-         MINIE = ( ARRBEG - 1 )  +  NINT( BUFFER(2) )  -  1
+         minie = ( arrbeg - 1 )  +  nint( buffer(2) )  -  1
 
 !
 !        Fetch the mini-segment's record count NREC.
 !
-         CALL DAFGDA ( HANDLE, MINIE, MINIE, BUFFER )
+         call dafgda ( handle, minie, minie, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZCKCV06' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZCKCV06' )
+            return
+         end if
 
-         NREC = NINT( BUFFER(1) )
+         nrec = nint( buffer(1) )
 
 !
 !        Compute the number of epoch directories for this
 !        mini-segment.
 !
-         NDIR = ( NREC - 1 ) / DIRSIZ
+         ndir = ( nrec - 1 ) / dirsiz
 
 !
 !        The last epoch precedes the mini-segment control
 !        area and the epoch directories.
 !
-         EPADDR = MINIE - MCTLSZ - NDIR
+         epaddr = minie - mctlsz - ndir
 
-         CALL DAFGDA ( HANDLE, EPADDR, EPADDR, LSTEPC )
+         call dafgda ( handle, epaddr, epaddr, lstepc )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZCKCV06' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZCKCV06' )
+            return
+         end if
 
 
-         BEGIN  = IVLBDS(1)
+         begin  = ivlbds(1)
 !
 !        The smaller of LSTEPC and IVLBDS(2) is the
 !        end of the mini-segment's coverage.
 !
-         FINISH = MIN ( LSTEPC, IVLBDS(2) )
+         finish = min ( lstepc, ivlbds(2) )
 !
 !        Truncate the interval using the segment bounds.
 !
-         BEGIN   =  MAX ( BEGIN,  DC(1) )
-         FINISH  =  MIN ( FINISH, DC(2) )
+         begin   =  max ( begin,  dc(1) )
+         finish  =  min ( finish, dc(2) )
 
 !
 !        Adjust the interval using the tolerance. Empty
 !        intervals *do not get expanded*; this choice is
 !        consistent with the type 6 reading algorithm.
 !
-         IF ( BEGIN .LE. FINISH ) THEN
+         if ( begin .le. finish ) then
 
-            IF ( TOL .GT. 0.D0 ) THEN
+            if ( tol .gt. 0.d0 ) then
 
-               BEGIN   =  MAX( BEGIN  - TOL, 0.D0 )
-               FINISH  =       FINISH + TOL
+               begin   =  max( begin  - tol, 0.d0 )
+               finish  =       finish + tol
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Convert the time to TDB if necessary.
 !
-         IF ( ISTDB ) THEN
+         if ( istdb ) then
 
-            CALL SCT2E ( SCLKID, BEGIN,  ET )
-            BEGIN  = ET
+            call sct2e ( sclkid, begin,  et )
+            begin  = et
 
-            CALL SCT2E ( SCLKID, FINISH, ET )
-            FINISH = ET
+            call sct2e ( sclkid, finish, et )
+            finish = et
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZCKCV06' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZCKCV06' )
+               return
+            end if
 
-         END IF
+         end if
 
 !
 !        Insert the interval into the window.
 !
-         IF ( BEGIN .LE. FINISH ) THEN
+         if ( begin .le. finish ) then
 
-            CALL WNINSD ( BEGIN, FINISH, SCHEDL )
+            call wninsd ( begin, finish, schedl )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZCKCV06' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZCKCV06' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZCKCV06' )
-      RETURN
-      END
+      call chkout ( 'ZZCKCV06' )
+      return
+      end

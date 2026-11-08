@@ -1,6 +1,6 @@
 !$Procedure ZZBODVCD ( Get d.p. kernel variable for body, with bypass )
 
-      SUBROUTINE ZZBODVCD ( BODYID, ITEM, MAXN, VARCTR, N, VALUES )
+      subroutine zzbodvcd ( bodyid, item, maxn, varctr, n, values )
 
 ! $ Abstract
 !
@@ -25,15 +25,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INCLUDE 'zzctr.inc'
+      implicit none
+      include 'zzctr.inc'
 
-      INTEGER               BODYID
-      CHARACTER*(*)         ITEM
-      INTEGER               MAXN
-      INTEGER               VARCTR ( CTRSIZ )
-      INTEGER               N
-      DOUBLE PRECISION      VALUES ( * )
+      integer               bodyid
+      character*(*)         item
+      integer               maxn
+      integer               varctr ( ctrsiz )
+      integer               n
+      double precision      values ( * )
 
 ! $ Brief_I/O
 !
@@ -295,43 +295,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      LOGICAL               UPDATE
+      logical               update
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZBODVCD' )
+      call chkin ( 'ZZBODVCD' )
 
 !
 !     See whether the kernel pool state has changed since the
 !     user counter was set. Update the user counter if so.
 !
-      CALL ZZPCTRCK ( VARCTR, UPDATE )
+      call zzpctrck ( varctr, update )
 
 !
 !     If the pool was updated, or if we're looking at a new variable,
 !     update the kernel variable values, size, and found flag.
 !     Otherwise do nothing.
 !
-      IF ( UPDATE ) THEN
+      if ( update ) then
 
-         CALL BODVCD ( BODYID, ITEM, MAXN, N, VALUES )
+         call bodvcd ( bodyid, item, maxn, n, values )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            N = 0
+            n = 0
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZBODVCD' )
-      RETURN
-      END
+      call chkout ( 'ZZBODVCD' )
+      return
+      end

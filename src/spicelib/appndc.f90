@@ -1,6 +1,6 @@
 !$Procedure APPNDC ( Append an item to a character cell )
 
-      SUBROUTINE APPNDC ( ITEM, CELL )
+      subroutine appndc ( item, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         ITEM
-      CHARACTER*(*)         CELL ( LBCELL:* )
+      character*(*)         item
+      character*(*)         cell ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -141,14 +141,14 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDC
-      INTEGER               SIZEC
+      logical               return
+      integer               cardc
+      integer               sizec
 
 !
 !     Local variables
 !
-      INTEGER               NWCARD
+      integer               nwcard
 
 
 
@@ -157,11 +157,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'APPNDC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'APPNDC' )
+      end if
 
 !
 !     Check to see if the cell can accommodate the addition of a
@@ -170,24 +170,24 @@
 !     addition of a new item, signal an error.
 !
 
-      NWCARD = CARDC (CELL) + 1
+      nwcard = cardc (cell) + 1
 
-      IF (  ( NWCARD )  .LE.  ( SIZEC (CELL) )  ) THEN
+      if (  ( nwcard )  .le.  ( sizec (cell) )  ) then
 
-         CELL (NWCARD) = ITEM
-         CALL SCARDC ( NWCARD, CELL )
+         cell (nwcard) = item
+         call scardc ( nwcard, cell )
 
-      ELSE
+      else
 
-        CALL SETMSG ( 'The cell cannot accommodate the '     // &
+        call setmsg ( 'The cell cannot accommodate the '     // &
                       'addition of the item *.'                 )
 
-        CALL ERRCH  ( '*', ITEM )
-        CALL SIGERR ( 'SPICE(CELLTOOSMALL)' )
+        call errch  ( '*', item )
+        call sigerr ( 'SPICE(CELLTOOSMALL)' )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'APPNDC' )
-      RETURN
-      END
+      call chkout ( 'APPNDC' )
+      return
+      end

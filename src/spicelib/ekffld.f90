@@ -1,6 +1,6 @@
 !$Procedure EKFFLD ( EK, finish fast write )
 
-      SUBROUTINE EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      subroutine ekffld ( handle, segno, rcptrs )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'eksegdsc.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RCPTRS ( * )
+      integer               handle
+      integer               segno
+      integer               rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -410,54 +410,54 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               STYPE
+      integer               segdsc ( sdscsz )
+      integer               stype
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKFFLD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKFFLD' )
+      end if
 
 !
 !     Read in the segment descriptor, and get the segment's type.
 !
-      CALL ZZEKSDSC (  HANDLE,  SEGNO,  SEGDSC )
+      call zzeksdsc (  handle,  segno,  segdsc )
 
-      STYPE  =  SEGDSC(EKTIDX)
+      stype  =  segdsc(ektidx)
 
 !
 !     Complete the fast write preparations appropriate to the segment's
 !     type.
 !
-      IF ( STYPE .EQ. 1 ) THEN
+      if ( stype .eq. 1 ) then
 
-         CALL ZZEKFF01 ( HANDLE, SEGNO, RCPTRS )
+         call zzekff01 ( handle, segno, rcptrs )
 
 
-      ELSE IF ( STYPE .EQ. 2 ) THEN
+      else if ( stype .eq. 2 ) then
 !
 !        Currently, no actions are taken to complete a type 2 segment.
 !
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Segment type # is not currently supported.' )
-         CALL ERRINT ( '#', STYPE                                   )
-         CALL SIGERR ( 'SPICE(BUG)'                                 )
-         CALL CHKOUT ( 'EKFFLD'                                     )
-         RETURN
+         call setmsg ( 'Segment type # is not currently supported.' )
+         call errint ( '#', stype                                   )
+         call sigerr ( 'SPICE(BUG)'                                 )
+         call chkout ( 'EKFFLD'                                     )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'EKFFLD' )
-      RETURN
-      END
+      call chkout ( 'EKFFLD' )
+      return
+      end

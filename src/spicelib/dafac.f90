@@ -1,6 +1,6 @@
 !$Procedure DAFAC ( DAF add comments )
 
-      SUBROUTINE DAFAC ( HANDLE, N, BUFFER )
+      subroutine dafac ( handle, n, buffer )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               N
-      CHARACTER*(*)         BUFFER(*)
+      integer               handle
+      integer               n
+      character*(*)         buffer(*)
 
 ! $ Brief_I/O
 !
@@ -352,96 +352,96 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CPOS
-      INTEGER               LASTNB
-      INTEGER               NCPOS
+      integer               cpos
+      integer               lastnb
+      integer               ncpos
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
 !     Length of a DAF file internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     Decimal value for the DAF comment area end-of-comment (EOC)
 !     marker.
 !
-      INTEGER               INTEOC
-      PARAMETER           ( INTEOC = 4 )
+      integer               inteoc
+      parameter           ( inteoc = 4 )
 !
 !     Decimal value for the DAF comment area end-of-line (EOL) marker.
 !
-      INTEGER               INTEOL
-      PARAMETER           ( INTEOL = 0 )
+      integer               inteol
+      parameter           ( inteol = 0 )
 !
 !     Length of a DAF character record, in characters.
 !
-      INTEGER               MXCREC
-      PARAMETER           ( MXCREC = 1000 )
+      integer               mxcrec
+      parameter           ( mxcrec = 1000 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      INTEGER               MAXPCH
-      PARAMETER           ( MAXPCH = 126 )
+      integer               maxpch
+      parameter           ( maxpch = 126 )
 
-      INTEGER               MINPCH
-      PARAMETER           ( MINPCH = 32 )
+      integer               minpch
+      parameter           ( minpch = 32 )
 !
 !     Local variables
 !
-      CHARACTER*(MXCREC)    CRECRD
-      CHARACTER*(1)         EOCMRK
-      CHARACTER*(1)         EOLMRK
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(mxcrec)    crecrd
+      character*(1)         eocmrk
+      character*(1)         eolmrk
+      character*(ifnlen)    ifname
 
-      INTEGER               CURPOS
-      INTEGER               DAFLUN
-      INTEGER               EOCPOS
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LENGTH
-      INTEGER               NCHARS
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NELPOS
-      INTEGER               NEWREC
-      INTEGER               NOTUSD
-      INTEGER               RECNO
-      INTEGER               RINUSE
-      INTEGER               SPACE
+      integer               curpos
+      integer               daflun
+      integer               eocpos
+      integer               i
+      integer               j
+      integer               length
+      integer               nchars
+      integer               ncomc
+      integer               ncomr
+      integer               nelpos
+      integer               newrec
+      integer               notusd
+      integer               recno
+      integer               rinuse
+      integer               space
 
-      INTEGER               IOSTAT
-      INTEGER               BWARD
-      INTEGER               FWARD
-      INTEGER               FREE
-      INTEGER               ND
-      INTEGER               NI
+      integer               iostat
+      integer               bward
+      integer               fward
+      integer               free
+      integer               nd
+      integer               ni
 
-      LOGICAL               EMPTY
-      LOGICAL               FIRST
-      LOGICAL               FOUND
+      logical               empty
+      logical               first
+      logical               found
 !
 !     Saved variables
 !
-      SAVE EOLMRK
-      SAVE EOCMRK
-      SAVE FIRST
+      save eolmrk
+      save eocmrk
+      save first
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFAC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFAC' )
+      end if
 !
 !     The lines of text in BUFFER will be ``packed'' into DAF comment
 !     records: the significant portion of each comment line from BUFFER
@@ -454,50 +454,50 @@
 !     we need to initialize the character value for the end-of-line
 !     marker and the character value for the end of comments marker.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         EOCMRK = CHAR ( INTEOC )
-         EOLMRK = CHAR ( INTEOL )
+         first  = .false.
+         eocmrk = char ( inteoc )
+         eolmrk = char ( inteol )
 
-      END IF
+      end if
 !
 !     Verify that the DAF file attached to HANDLE is opened with write
 !     access.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFAC' )
-         RETURN
+         call chkout ( 'DAFAC' )
+         return
 
-      END IF
+      end if
 !
 !     Convert the DAF file handle to its corresponding Fortran logical
 !     unit number for reading and writing comment records.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., DAFLUN )
+      call zzddhhlu ( handle, 'DAF', .false., daflun )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFAC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFAC' )
+         return
+      end if
 !
 !     Check for a nonpositive number of lines in the buffer.
 !
-      IF ( N .LE. 0 ) THEN
+      if ( n .le. 0 ) then
 
-         CALL SETMSG ( 'The number of comment lines to be added'  // &
+         call setmsg ( 'The number of comment lines to be added'  // &
                        ' to the binary DAF file ''#'' was not'    // &
                        ' positive: #.'                             )
-         CALL ERRFNM ( '#', DAFLUN                                 )
-         CALL ERRINT ( '#', N                                      )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                    )
-         CALL CHKOUT ( 'DAFAC'                                     )
-         RETURN
+         call errfnm ( '#', daflun                                 )
+         call errint ( '#', n                                      )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                    )
+         call chkout ( 'DAFAC'                                     )
+         return
 
-      END IF
+      end if
 !
 !     Count the number of characters in the buffer ignoring trailing
 !     blanks on nonblank lines and blank lines. The count will be
@@ -505,44 +505,44 @@
 !     count is used to determine the number of character records to be
 !     added to the binary DAF file attached to HANDLE.
 !
-      NCHARS = 0
+      nchars = 0
 
-      DO I = 1, N
+      do i = 1, n
 !
 !        Get the length of the significant portion of a comment line.
 !
-         LENGTH = LASTNB ( BUFFER(I) )
+         length = lastnb ( buffer(i) )
 !
 !        Scan the comment line for non printing characters.
 !
-         DO J = 1, LENGTH
+         do j = 1, length
 !
 !           Check to see that the characters in the buffer are all
 !           printing ASCII characters. The bounds for printing ASCII
 !           characters are given by MINPCH and MAXPCH, which are
 !           defined in the $ Local Parameters section of the header.
 !
-            IF ( ( ICHAR ( BUFFER(I)(J:J) ) .GT. MAXPCH ) .OR. &
-                 ( ICHAR ( BUFFER(I)(J:J) ) .LT. MINPCH )      ) THEN
+            if ( ( ichar ( buffer(i)(j:j) ) .gt. maxpch ) .or. &
+                 ( ichar ( buffer(i)(j:j) ) .lt. minpch )      ) then
 
-                  CALL SETMSG ( 'A nonprinting character was'      // &
+                  call setmsg ( 'A nonprinting character was'      // &
                                 ' encountered in the comment'      // &
                                 ' buffer. Value: #'                 )
-                  CALL ERRINT ( '#', ICHAR( BUFFER(I)(J:J) )        )
-                  CALL SIGERR ( 'SPICE(ILLEGALCHARACTER)'           )
-                  CALL CHKOUT ( 'DAFAC'                             )
-                  RETURN
+                  call errint ( '#', ichar( buffer(i)(j:j) )        )
+                  call sigerr ( 'SPICE(ILLEGALCHARACTER)'           )
+                  call chkout ( 'DAFAC'                             )
+                  return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Increment the number of characters by the length of the
 !        significant portion of the current line in the buffer.
 !
-         NCHARS = NCHARS + LENGTH
+         nchars = nchars + length
 
-      END DO
+      end do
 !
 !     We need to include the number of end of line markers in the
 !     number of characters, so add the number of comment lines to
@@ -550,112 +550,112 @@
 !     the contribution of any blank lines gets added to the character
 !     count. We also need to have space for the end of comments marker.
 !
-      NCHARS = NCHARS + N + 1
+      nchars = nchars + n + 1
 !
 !     Get the current number of comment records and comment characters
 !     from the DAF file attached to HANDLE. We will also get back some
 !     extra stuff that we do not use.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFAC' )
-         RETURN
+         call chkout ( 'DAFAC' )
+         return
 
-      END IF
+      end if
 !
 !     Compute the number of comment records and the number of comment
 !     characters. In order to perform these calculations, we assume
 !     that we have a valid comment area in the DAF file attached to
 !     HANDLE.
 !
-      NCOMR = FWARD - 2
+      ncomr = fward - 2
 
-      IF ( NCOMR .GT. 0 ) THEN
+      if ( ncomr .gt. 0 ) then
 !
 !        The starting record number is the number of comment records + 1
 !        where the 1 skips the file record.
 !
-         EMPTY  = .TRUE.
-         FOUND  = .FALSE.
-         NOTUSD = 0
+         empty  = .true.
+         found  = .false.
+         notusd = 0
 
-         DO WHILE ( ( NCOMR .GT. 0 ) .AND. ( .NOT. FOUND ) .AND. EMPTY )
+         do while ( ( ncomr .gt. 0 ) .and. ( .not. found ) .and. empty )
 
-            RECNO = NCOMR + 1
+            recno = ncomr + 1
 
-            READ ( DAFLUN, REC=RECNO, IOSTAT=IOSTAT ) CRECRD
+            read ( daflun, rec=recno, iostat=iostat ) crecrd
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error reading comment area of binary' // &
+               call setmsg ( 'Error reading comment area of binary' // &
                              ' file named ''#''.  IOSTAT = #.'       )
-               CALL ERRFNM ( '#', DAFLUN                             )
-               CALL ERRINT ( '#', IOSTAT                             )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'                 )
-               CALL CHKOUT ( 'DAFAC'                                 )
-               RETURN
+               call errfnm ( '#', daflun                             )
+               call errint ( '#', iostat                             )
+               call sigerr ( 'SPICE(FILEREADFAILED)'                 )
+               call chkout ( 'DAFAC'                                 )
+               return
 
-            END IF
+            end if
 !
 !           Scan the comment record looking for the end of comments
 !           marker.
 !
-            EOCPOS = CPOS ( CRECRD(1:MXCREC), EOCMRK, 1 )
+            eocpos = cpos ( crecrd(1:mxcrec), eocmrk, 1 )
 
-            IF ( EOCPOS .GT. 0 ) THEN
+            if ( eocpos .gt. 0 ) then
 
-               FOUND = .TRUE.
+               found = .true.
 
-            ELSE
+            else
 
-               NELPOS = NCPOS ( CRECRD(1:MXCREC), EOLMRK, 1 )
+               nelpos = ncpos ( crecrd(1:mxcrec), eolmrk, 1 )
 
-               IF ( NELPOS .NE. 0 ) THEN
+               if ( nelpos .ne. 0 ) then
 
-                  EMPTY = .FALSE.
+                  empty = .false.
 
-               ELSE
+               else
 
-                  NCOMR  = NCOMR  - 1
-                  NOTUSD = NOTUSD + 1
+                  ncomr  = ncomr  - 1
+                  notusd = notusd + 1
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        If we do not find the end of comments marker and the comment
 !        area is not empty, then it is an error.
 !
-         IF ( ( .NOT. FOUND ) .AND. ( .NOT. EMPTY ) ) THEN
+         if ( ( .not. found ) .and. ( .not. empty ) ) then
 
-            CALL SETMSG ( 'The comment area in the DAF file'   // &
+            call setmsg ( 'The comment area in the DAF file'   // &
                           ' ''#'' may be damaged. The end of'  // &
                           ' the comments could not be found.'   )
-            CALL ERRFNM ( '#', DAFLUN                           )
-            CALL SIGERR ( 'SPICE(BADCOMMENTAREA)'               )
-            CALL CHKOUT ( 'DAFAC'                               )
-            RETURN
+            call errfnm ( '#', daflun                           )
+            call sigerr ( 'SPICE(BADCOMMENTAREA)'               )
+            call chkout ( 'DAFAC'                               )
+            return
 
-         ELSE IF ( FOUND ) THEN
+         else if ( found ) then
 
-            NCOMC = MXCREC * ( NCOMR - 1 ) + EOCPOS - 1
+            ncomc = mxcrec * ( ncomr - 1 ) + eocpos - 1
 
-         ELSE IF ( EMPTY ) THEN
+         else if ( empty ) then
 
-            NCOMC = 0
+            ncomc = 0
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         NCOMC  = 0
-         NOTUSD = 0
+         ncomc  = 0
+         notusd = 0
 
-      END IF
+      end if
 !
 !     Determine the amount of free space in the comment area. If
 !     there are some comment records allocated, the space available
@@ -663,47 +663,47 @@
 !     a comment record, minus the number of comment characters already
 !     used. Otherwise, the space available is zero.
 !
-      IF ( NCOMR + NOTUSD .GT. 0 ) THEN
+      if ( ncomr + notusd .gt. 0 ) then
 
-         SPACE = NOTUSD * MXCREC + NCOMR * MXCREC - NCOMC
+         space = notusd * mxcrec + ncomr * mxcrec - ncomc
 
-      ELSE
+      else
 
-         SPACE = 0
+         space = 0
 
-      END IF
+      end if
 !
 !     Determine the number of new comment records which are necessary
 !     to store all of the comments from the buffer.
 !
-      IF ( NCHARS .GT. SPACE ) THEN
+      if ( nchars .gt. space ) then
 !
 !        If there are more characters to store than available space
 !        we need at least one new record.
 !
-         NEWREC = 1  +  (  ( NCHARS - SPACE )  - 1  ) / MXCREC
+         newrec = 1  +  (  ( nchars - space )  - 1  ) / mxcrec
 
-      ELSE
+      else
 !
 !        Otherwise, we do not need any new records.
 !
-         NEWREC = 0
+         newrec = 0
 
-      END IF
+      end if
 !
 !     Now add the necessary number of comment records to the file,
 !     if we need to add any.
 !
-      IF ( NEWREC .GT. 0 ) THEN
+      if ( newrec .gt. 0 ) then
 
-         CALL DAFARR ( HANDLE, NEWREC )
+         call dafarr ( handle, newrec )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFAC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFAC' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     At this point, we know that we have enough space to write all of
 !     the comments in BUFFER to the comment area. Either there was
@@ -714,7 +714,7 @@
 !
 !     We begin initializing the appropriate variables.
 !
-      IF ( NCOMC .EQ. 0 ) THEN
+      if ( ncomc .eq. 0 ) then
 !
 !        If there are no comments in the comment area, then we need
 !        to skip the file record. The first available comment record
@@ -722,11 +722,11 @@
 !        RECNO accordingly. We also initialize the current position in
 !        the comment record, and the comment record itself.
 !
-         RECNO  = 2
-         CURPOS = 1
-         CRECRD = ' '
+         recno  = 2
+         curpos = 1
+         crecrd = ' '
 
-      ELSE
+      else
 !
 !        If there are comments in the comment area, then we need to
 !        skip the file record and any comment records which have been
@@ -736,59 +736,59 @@
 !        in use, and set RECNO appropriately. Finally calculate the
 !        initial position.
 !
-         RINUSE = 1 + NCOMC / MXCREC
-         RECNO  = 1 + RINUSE
-         CURPOS = NCOMC - MXCREC * ( RINUSE - 1 ) + 1
+         rinuse = 1 + ncomc / mxcrec
+         recno  = 1 + rinuse
+         curpos = ncomc - mxcrec * ( rinuse - 1 ) + 1
 
-      END IF
+      end if
 !
 !     Begin ``packing'' the comments from the input buffer into the
 !     comment records, writing the comment records to the file as they
 !     become filled.
 !
-      DO I = 1, N
+      do i = 1, n
 !
 !        Get the length of the significant portion of comment line I.
 !
-         LENGTH = LASTNB ( BUFFER(I) )
+         length = lastnb ( buffer(i) )
 !
 !        Process the comment line.
 !
-         DO J = 1, LENGTH
+         do j = 1, length
 !
 !           If we have filled the comment record while processing
 !           comment line BUFFER(I), write out the comment record,
 !           increment the record number, RECNO, and reset the values
 !           of the current position and the comment record.
 !
-            IF ( CURPOS .GT. MXCREC ) THEN
+            if ( curpos .gt. mxcrec ) then
 
-               WRITE ( DAFLUN, REC=RECNO, IOSTAT=IOSTAT ) CRECRD
+               write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-               IF ( IOSTAT .NE. 0 ) THEN
+               if ( iostat .ne. 0 ) then
 
-                  CALL SETMSG ( 'Error writing to record # of the'  // &
+                  call setmsg ( 'Error writing to record # of the'  // &
                                 ' binary file named ''#''. IOSTAT'  // &
                                 ' = #.'                              )
-                  CALL ERRINT ( '#', RECNO                           )
-                  CALL ERRFNM ( '#', DAFLUN                          )
-                  CALL ERRINT ( '#', IOSTAT                          )
-                  CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'             )
-                  CALL CHKOUT ( 'DAFAC'                              )
-                  RETURN
+                  call errint ( '#', recno                           )
+                  call errfnm ( '#', daflun                          )
+                  call errint ( '#', iostat                          )
+                  call sigerr ( 'SPICE(FILEWRITEFAILED)'             )
+                  call chkout ( 'DAFAC'                              )
+                  return
 
-               END IF
+               end if
 
-               RECNO  = RECNO + 1
-               CURPOS = 1
-               CRECRD = ' '
+               recno  = recno + 1
+               curpos = 1
+               crecrd = ' '
 
-            END IF
+            end if
 
-            CRECRD(CURPOS:CURPOS) = BUFFER(I)(J:J)
-            CURPOS                = CURPOS + 1
+            crecrd(curpos:curpos) = buffer(i)(j:j)
+            curpos                = curpos + 1
 
-         END DO
+         end do
 !
 !        Check to see if we happened to exactly fill the comment record
 !        when we finished processing comment line BUFFER(I). If we
@@ -797,44 +797,44 @@
 !        number, RECNO, and reset the values of the current position
 !        and the comment record.
 !
-         IF ( CURPOS .GT. MXCREC ) THEN
+         if ( curpos .gt. mxcrec ) then
 
-               WRITE ( DAFLUN, REC=RECNO, IOSTAT=IOSTAT ) CRECRD
+               write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-               IF ( IOSTAT .NE. 0 ) THEN
+               if ( iostat .ne. 0 ) then
 
-                  CALL SETMSG ( 'Error writing to record # of the'  // &
+                  call setmsg ( 'Error writing to record # of the'  // &
                                 ' binary file named ''#''. IOSTAT'  // &
                                 ' = #.'                              )
-                  CALL ERRINT ( '#', RECNO                           )
-                  CALL ERRFNM ( '#', DAFLUN                          )
-                  CALL ERRINT ( '#', IOSTAT                          )
-                  CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'             )
-                  CALL CHKOUT ( 'DAFAC'                              )
-                  RETURN
+                  call errint ( '#', recno                           )
+                  call errfnm ( '#', daflun                          )
+                  call errint ( '#', iostat                          )
+                  call sigerr ( 'SPICE(FILEWRITEFAILED)'             )
+                  call chkout ( 'DAFAC'                              )
+                  return
 
-               END IF
+               end if
 
-            RECNO  = RECNO + 1
-            CURPOS = 1
-            CRECRD = ' '
+            recno  = recno + 1
+            curpos = 1
+            crecrd = ' '
 
-         END IF
+         end if
 !
 !        Append the end-of-line marker to the comment line that we just
 !        placed into the comment record.
 !
-         CRECRD(CURPOS:CURPOS) = EOLMRK
-         CURPOS                = CURPOS + 1
+         crecrd(curpos:curpos) = eolmrk
+         curpos                = curpos + 1
 
-      END DO
+      end do
 !
 !     We have now finished processing all of the comment lines in
 !     BUFFER, so we need write the current record to the file. This
 !     record will always contain something, so we always need to write
 !     it.
 !
-      IF ( CURPOS .GT. MXCREC ) THEN
+      if ( curpos .gt. mxcrec ) then
 !
 !        If we have completely filled the comment record, the last
 !        character of the last line n the buffer coincides with the
@@ -842,51 +842,51 @@
 !        the record and get set up to add the end of comments mark on
 !        the next record.
 !
-         WRITE ( DAFLUN, REC=RECNO, IOSTAT=IOSTAT ) CRECRD
+         write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Error writing to record # of the'    // &
+            call setmsg ( 'Error writing to record # of the'    // &
                           ' binary file named ''#''. IOSTAT'    // &
                           ' = #.'                                )
-            CALL ERRINT ( '#', RECNO                             )
-            CALL ERRFNM ( '#', DAFLUN                            )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-            CALL CHKOUT ( 'DAFAC'                                )
-            RETURN
+            call errint ( '#', recno                             )
+            call errfnm ( '#', daflun                            )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+            call chkout ( 'DAFAC'                                )
+            return
 
-         END IF
+         end if
 
-         RECNO  = RECNO + 1
-         CURPOS = 1
-         CRECRD = ' '
+         recno  = recno + 1
+         curpos = 1
+         crecrd = ' '
 
-      END IF
+      end if
 !
 !     Add the end of comments mark to the final comment record and
 !     write it to the file.
 !
-      CRECRD(CURPOS:CURPOS) = EOCMRK
+      crecrd(curpos:curpos) = eocmrk
 
-      WRITE ( DAFLUN, REC=RECNO, IOSTAT=IOSTAT ) CRECRD
+      write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error writing to record # of the'    // &
+         call setmsg ( 'Error writing to record # of the'    // &
                        ' binary file named ''#''. IOSTAT'    // &
                        ' = #.'                                )
-         CALL ERRINT ( '#', RECNO                             )
-         CALL ERRFNM ( '#', DAFLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DAFAC'                                )
-         RETURN
+         call errint ( '#', recno                             )
+         call errfnm ( '#', daflun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DAFAC'                                )
+         return
 
-      END IF
+      end if
 !
 !     Check out and leave DAFAC.
 !
-      CALL CHKOUT ( 'DAFAC' )
-      RETURN
-      END
+      call chkout ( 'DAFAC' )
+      return
+      end

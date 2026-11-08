@@ -1,6 +1,6 @@
 !$Procedure      ZZROTGT0 ( Frame get rotation )
 
-      SUBROUTINE ZZROTGT0 ( INFRM, ET, ROTATE, OUTFRM, FOUND )
+      subroutine zzrotgt0 ( infrm, et, rotate, outfrm, found )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'frmtyp.inc'
+      include              'frmtyp.inc'
 
-      INTEGER               INFRM
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      ROTATE ( 3, 3 )
-      INTEGER               OUTFRM
-      LOGICAL               FOUND
+      integer               infrm
+      double precision      et
+      double precision      rotate ( 3, 3 )
+      integer               outfrm
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -150,98 +150,98 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local Variables
 !
-      CHARACTER*(6)         VERSN
+      character*(6)         versn
 
-      INTEGER               CENTER
-      INTEGER               TYPE
-      INTEGER               TYPEID
+      integer               center
+      integer               type
+      integer               typeid
 
-      DOUBLE PRECISION      TIPM  ( 3, 3 )
+      double precision      tipm  ( 3, 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  VERSN
+      save                  versn
 
 !
 !     Initial values
 !
-      DATA                 VERSN / '4.0.0' /
+      data                 versn / '4.0.0' /
 
 !
 !     Set output flag.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZROTGT0' )
+      call chkin ( 'ZZROTGT0' )
 
 !
 !     Get all the needed information about this frame.
 !
-      CALL FRINFO ( INFRM, CENTER, TYPE, TYPEID, FOUND )
+      call frinfo ( infrm, center, type, typeid, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL CLEARD ( 9, ROTATE )
-         OUTFRM = 0
+         call cleard ( 9, rotate )
+         outfrm = 0
 
-         CALL CHKOUT ( 'ZZROTGT0' )
-         RETURN
+         call chkout ( 'ZZROTGT0' )
+         return
 
-      END IF
+      end if
 
 !
 !     FOUND was set to true by the FRINFO call. Compute rotation based
 !     on the frame class.
 !
-      IF ( TYPE .EQ. INERTL ) THEN
+      if ( type .eq. inertl ) then
 
-         CALL IRFROT ( INFRM, 1, ROTATE )
+         call irfrot ( infrm, 1, rotate )
 
-         IF ( .NOT. FAILED() ) THEN
+         if ( .not. failed() ) then
 
-            OUTFRM = 1
+            outfrm = 1
 
-         END IF
-
-
-      ELSE IF ( TYPE .EQ. PCK ) THEN
-
-         CALL TIPBOD ( 'J2000', TYPEID, ET, TIPM   )
-
-         IF ( .NOT. FAILED() ) THEN
-
-            CALL XPOSE ( TIPM, ROTATE )
-
-            OUTFRM = 1
-
-         END IF
+         end if
 
 
-      ELSE IF ( TYPE .EQ. CK ) THEN
+      else if ( type .eq. pck ) then
 
-         CALL CKFROT ( TYPEID, ET, ROTATE, OUTFRM, FOUND )
+         call tipbod ( 'J2000', typeid, et, tipm   )
+
+         if ( .not. failed() ) then
+
+            call xpose ( tipm, rotate )
+
+            outfrm = 1
+
+         end if
 
 
-      ELSE IF ( TYPE .EQ. TK ) THEN
+      else if ( type .eq. ck ) then
 
-         CALL TKFRAM  ( TYPEID, ROTATE, OUTFRM, FOUND )
+         call ckfrot ( typeid, et, rotate, outfrm, found )
 
 
-      ELSE IF ( TYPE .EQ. DYN ) THEN
+      else if ( type .eq. tk ) then
+
+         call tkfram  ( typeid, rotate, outfrm, found )
+
+
+      else if ( type .eq. dyn ) then
 
 !
 !        Unlike the other frame classes, the dynamic frame evaluation
@@ -249,7 +249,7 @@
 !        dynamic frame class ID. ZZDYNROT also requires the center ID
 !        we found via the FRINFO call.
 !
-         CALL ZZDYNRT0 ( INFRM, CENTER, ET, ROTATE, OUTFRM )
+         call zzdynrt0 ( infrm, center, et, rotate, outfrm )
 
 !
 !        The FOUND flag was set by FRINFO earlier; we don't touch
@@ -257,44 +257,44 @@
 !        to .FALSE. at end of this routine.
 !
 
-      ELSE IF ( TYPE .EQ. SWTCH ) THEN
+      else if ( type .eq. swtch ) then
 
-         CALL ZZSWFXFM ( INFRM, ET, 3, ROTATE, OUTFRM, FOUND )
+         call zzswfxfm ( infrm, et, 3, rotate, outfrm, found )
 
-      ELSE
+      else
 
-         CALL CLEARD ( 9, ROTATE )
-         OUTFRM = 0
-         FOUND  = .FALSE.
+         call cleard ( 9, rotate )
+         outfrm = 0
+         found  = .false.
 
-         CALL SETMSG ( 'The reference frame # has class #. ' &
+         call setmsg ( 'The reference frame # has class #. ' &
          //            'This form of reference frame is not ' &
          //            'supported in version # of ZZROTGT0. You need ' &
          //            'to update your version of SPICELIB to the ' &
          //            'latest version in order to support this ' &
          //            'frame. ' )
 
-         CALL ERRINT ( '#', INFRM )
-         CALL ERRINT ( '#', TYPE  )
-         CALL ERRCH  ( '#', VERSN )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAMETYPE)' )
-         CALL CHKOUT ( 'ZZROTGT0'                  )
-         RETURN
+         call errint ( '#', infrm )
+         call errint ( '#', type  )
+         call errch  ( '#', versn )
+         call sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
+         call chkout ( 'ZZROTGT0'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure to clear outputs in case of a failure as defined in
 !     in the header.
 !
-      IF ( FAILED() .OR. .NOT. FOUND ) THEN
+      if ( failed() .or. .not. found ) then
 
-         CALL CLEARD ( 9, ROTATE )
-         OUTFRM = 0
-         FOUND  = .FALSE.
+         call cleard ( 9, rotate )
+         outfrm = 0
+         found  = .false.
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZROTGT0' )
-      RETURN
-      END
+      call chkout ( 'ZZROTGT0' )
+      return
+      end

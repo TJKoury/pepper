@@ -1,6 +1,6 @@
 !$Procedure XPOSEG ( Transpose a matrix, general )
 
-      SUBROUTINE XPOSEG ( MATRIX, NROW, NCOL, XPOSEM )
+      subroutine xposeg ( matrix, nrow, ncol, xposem )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   MATRIX ( 0:* )
-      INTEGER            NROW
-      INTEGER            NCOL
-      DOUBLE PRECISION   XPOSEM ( 0:* )
+      double precision   matrix ( 0:* )
+      integer            nrow
+      integer            ncol
+      double precision   xposem ( 0:* )
 
 ! $ Brief_I/O
 !
@@ -201,101 +201,101 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION TEMP
-      DOUBLE PRECISION SOURCE
+      double precision temp
+      double precision source
 
-      INTEGER          DEST
-      INTEGER          MOVED
-      INTEGER          START
+      integer          dest
+      integer          moved
+      integer          start
 
-      INTEGER          K
-      INTEGER          NMOVES
-      INTEGER          R
-      INTEGER          M
-      INTEGER          N
+      integer          k
+      integer          nmoves
+      integer          r
+      integer          m
+      integer          n
 
 
 
 !
 !     Take care of dumb cases first.
 !
-      IF (( NROW .LE. 0 ) .OR. ( NCOL .LE. 0 )) THEN
-         RETURN
-      END IF
+      if (( nrow .le. 0 ) .or. ( ncol .le. 0 )) then
+         return
+      end if
 
-      N      = NROW
-      M      = NCOL
+      n      = nrow
+      m      = ncol
 
 !
 !     Set up the upper bound for the number of objects to be moved and
 !     initialize the counters.
 !
-      NMOVES = N*M - 2
-      MOVED  = 0
-      START  = 1
+      nmoves = n*m - 2
+      moved  = 0
+      start  = 1
 
 !
 !     Until MOVED is equal to NMOVES, there is some matrix element that
 !     has not been moved to its proper location in the transpose matrix.
 !
-      DO WHILE (MOVED .LT. NMOVES)
-         SOURCE  = MATRIX(START)
-         K       = START / N
-         R       = START - N*K
-         DEST    = R*M   + K
+      do while (moved .lt. nmoves)
+         source  = matrix(start)
+         k       = start / n
+         r       = start - n*k
+         dest    = r*m   + k
 
 !
 !        Perform this cycle of the permutation.  We will be done when
 !        the destination of the next element is equal to the starting
 !        position of the first element to be moved in this cycle.
 !
-         DO WHILE (DEST .NE. START)
-            TEMP         = MATRIX(DEST)
-            XPOSEM(DEST) = SOURCE
-            SOURCE       = TEMP
+         do while (dest .ne. start)
+            temp         = matrix(dest)
+            xposem(dest) = source
+            source       = temp
 
-            MOVED        = MOVED + 1
-            K            = DEST  / N
-            R            = DEST  - K*N
-            DEST         = M*R   + K
+            moved        = moved + 1
+            k            = dest  / n
+            r            = dest  - k*n
+            dest         = m*r   + k
 
-         END DO
+         end do
 
-         XPOSEM(DEST) = SOURCE
-         DEST         = 0
-         MOVED        = MOVED + 1
+         xposem(dest) = source
+         dest         = 0
+         moved        = moved + 1
 
 
 !
 !        Find the next element of the matrix that has not already been
 !        moved by the transposition operation.
 !
-         IF (MOVED .LT. NMOVES) THEN
+         if (moved .lt. nmoves) then
 
-            DO WHILE (DEST .NE. START)
-               START = START + 1
-               K     = START / N
-               R     = START - K*N
-               DEST  = R*M   + K
+            do while (dest .ne. start)
+               start = start + 1
+               k     = start / n
+               r     = start - k*n
+               dest  = r*m   + k
 
-               DO WHILE ( DEST .GT. START)
-                  K     = DEST / N
-                  R     = DEST - K*N
-                  DEST  = M*R  + K
-               END DO
+               do while ( dest .gt. start)
+                  k     = dest / n
+                  r     = dest - k*n
+                  dest  = m*r  + k
+               end do
 
-            END DO
+            end do
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Just in case this isn't an in-place transpose, move the last
 !     element of MATRIX to XPOSEM
 !
-      XPOSEM(0)     = MATRIX(0    )
-      XPOSEM(N*M-1) = MATRIX(N*M-1)
+      xposem(0)     = matrix(0    )
+      xposem(n*m-1) = matrix(n*m-1)
 
-      RETURN
-      END
+      return
+      end

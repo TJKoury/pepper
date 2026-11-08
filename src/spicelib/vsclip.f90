@@ -1,6 +1,6 @@
 !$Procedure VSCLIP ( Vector scaling, 3 dimensions, in place )
 
-      SUBROUTINE VSCLIP ( S, V )
+      subroutine vsclip ( s, v )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   S
-      DOUBLE PRECISION   V ( 3 )
+      double precision   s
+      double precision   v ( 3 )
 
 ! $ Brief_I/O
 !
@@ -117,9 +117,9 @@
 !-&
 
 
-      V(1) = S * V(1)
-      V(2) = S * V(2)
-      V(3) = S * V(3)
+      v(1) = s * v(1)
+      v(2) = s * v(2)
+      v(3) = s * v(3)
 
-      RETURN
-      END
+      return
+      end

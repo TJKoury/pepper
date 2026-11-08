@@ -1,6 +1,6 @@
 !$Procedure SPKR09 ( Read SPK record from segment, type 9 )
 
-      SUBROUTINE SPKR09 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr09 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -179,108 +179,108 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLTD
+      integer               lstltd
 
-      LOGICAL               ODD
-      LOGICAL               RETURN
+      logical               odd
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               STATSZ
-      PARAMETER           ( STATSZ = 6 )
+      integer               statsz
+      parameter           ( statsz = 6 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = DIRSIZ + 1 )
+      integer               bufsiz
+      parameter           ( bufsiz = dirsiz + 1 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      CONTRL ( 2  )
-      DOUBLE PRECISION      DC     ( ND )
+      double precision      buffer ( bufsiz )
+      double precision      contrl ( 2  )
+      double precision      dc     ( nd )
 
-      INTEGER               BEGIDX
-      INTEGER               BEGIN
-      INTEGER               BUFBAS
-      INTEGER               DEGREE
-      INTEGER               DIRBAS
-      INTEGER               END
-      INTEGER               ENDIDX
-      INTEGER               FIRST
-      INTEGER               GROUP
-      INTEGER               HIGH
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               LAST
-      INTEGER               LOW
-      INTEGER               N
-      INTEGER               NDIR
-      INTEGER               NEAR
-      INTEGER               NREAD
-      INTEGER               REMAIN
-      INTEGER               START
-      INTEGER               TIMBAS
-      INTEGER               TYPE
-      INTEGER               WNDSIZ
+      integer               begidx
+      integer               begin
+      integer               bufbas
+      integer               degree
+      integer               dirbas
+      integer               end
+      integer               endidx
+      integer               first
+      integer               group
+      integer               high
+      integer               i
+      integer               ic     ( ni )
+      integer               last
+      integer               low
+      integer               n
+      integer               ndir
+      integer               near
+      integer               nread
+      integer               remain
+      integer               start
+      integer               timbas
+      integer               type
+      integer               wndsiz
 
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
 !     of the segment.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      TYPE  = IC( 4 )
-      BEGIN = IC( 5 )
-      END   = IC( 6 )
+      type  = ic( 4 )
+      begin = ic( 5 )
+      end   = ic( 6 )
 
 !
 !     Make sure that this really is a type 9 or type 13 data segment.
 !
-      IF (  ( TYPE .NE. 09 ) .AND. ( TYPE .NE. 13 )  ) THEN
-         CALL CHKIN ( 'SPKR09'                                        )
-         CALL SETMSG( 'You are attempting to locate type 9 or type ' // &
+      if (  ( type .ne. 09 ) .and. ( type .ne. 13 )  ) then
+         call chkin ( 'SPKR09'                                        )
+         call setmsg( 'You are attempting to locate type 9 or type ' // &
                       '13 data in a type # data segment.'             )
-         CALL ERRINT( '#',  TYPE                                      )
-         CALL SIGERR( 'SPICE(WRONGSPKTYPE)'                           )
-         CALL CHKOUT( 'SPKR09'                                        )
-         RETURN
-      END IF
+         call errint( '#',  type                                      )
+         call sigerr( 'SPICE(WRONGSPKTYPE)'                           )
+         call chkout( 'SPKR09'                                        )
+         return
+      end if
 
 !
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      IF (  ( ET .LT. DC(1) )  .OR.  ( ET .GT. DC(2) )  )  THEN
-         CALL CHKIN ( 'SPKR09'                                      )
-         CALL SETMSG( 'Request time # is outside of descriptor '   // &
+      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+         call chkin ( 'SPKR09'                                      )
+         call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
-         CALL ERRDP ( '#',  ET                                      )
-         CALL ERRDP ( '#',  DC(1)                                   )
-         CALL ERRDP ( '#',  DC(2)                                   )
-         CALL SIGERR( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         CALL CHKOUT( 'SPKR09'                                      )
-         RETURN
+         call errdp ( '#',  et                                      )
+         call errdp ( '#',  dc(1)                                   )
+         call errdp ( '#',  dc(2)                                   )
+         call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
+         call chkout( 'SPKR09'                                      )
+         return
 
-      END IF
+      end if
 !
 !     From this point onward, we assume the segment was constructed
 !     correctly.  In particular, we assume:
@@ -311,12 +311,12 @@
 !     states make up our output record.
 !
 !
-      CALL DAFGDA ( HANDLE, END-1, END, CONTRL )
+      call dafgda ( handle, end-1, end, contrl )
 
-      DEGREE  =  NINT ( CONTRL(1) )
-      N       =  NINT ( CONTRL(2) )
+      degree  =  nint ( contrl(1) )
+      n       =  nint ( contrl(2) )
 
-      WNDSIZ  =  DEGREE + 1
+      wndsiz  =  degree + 1
 
 !
 !     We'll now select the set of states that define the interpolating
@@ -325,16 +325,16 @@
 !     use the variable GROUP to indicate the set of epochs to search
 !     within, once we've found the right directory entry.
 !
-      NDIR    =  (N-1) / DIRSIZ
-      DIRBAS  =  END  -  NDIR  -  2
+      ndir    =  (n-1) / dirsiz
+      dirbas  =  end  -  ndir  -  2
 
-      IF ( NDIR .EQ. 0 ) THEN
+      if ( ndir .eq. 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
-         GROUP  = 1
+         group  = 1
 
-      ELSE
+      else
 !
 !        There's at least one directory.  Find the first directory
 !        whose time is greater than or equal to the request time, if
@@ -343,34 +343,34 @@
 !        Having found the correct set of directory entries, we'll
 !        perform a binary search within that set for the desired entry.
 !
-         BUFBAS  =  DIRBAS
-         NREAD   =  MIN ( NDIR, BUFSIZ )
-         REMAIN  =  NDIR - NREAD
+         bufbas  =  dirbas
+         nread   =  min ( ndir, bufsiz )
+         remain  =  ndir - nread
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+         call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         DO WHILE (       ( BUFFER(NREAD) .LT. ET ) &
-                    .AND. ( REMAIN        .GT. 0  )   )
+         do while (       ( buffer(nread) .lt. et ) &
+                    .and. ( remain        .gt. 0  )   )
 
-            BUFBAS  =  BUFBAS + NREAD
-            NREAD   =  MIN ( REMAIN, BUFSIZ )
-            REMAIN  =  REMAIN - NREAD
+            bufbas  =  bufbas + nread
+            nread   =  min ( remain, bufsiz )
+            remain  =  remain - nread
 !
 !           Note:  NREAD is always > 0 here.
 !
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+            call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         END DO
+         end do
 
 !
 !        At this point, BUFBAS - DIRBAS is the number of directory
 !        entries preceding the one contained in BUFFER(1).
 !
-         GROUP  =     ( BUFBAS - DIRBAS ) &
-                    +   LSTLTD ( ET, NREAD, BUFFER ) &
+         group  =     ( bufbas - dirbas ) &
+                    +   lstltd ( et, nread, buffer ) &
                     +   1
 
-      END IF
+      end if
 
 !
 !     GROUP now indicates the set of epochs in which to search for the
@@ -384,51 +384,51 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      IF ( GROUP .EQ. 1 ) THEN
+      if ( group .eq. 1 ) then
 
-         BEGIDX  =  1
-         ENDIDX  =  MIN ( N, DIRSIZ )
+         begidx  =  1
+         endidx  =  min ( n, dirsiz )
 
-      ELSE
+      else
 !
 !        If the group index is greater than 1, we'll include the last
 !        time tag of the previous group in the set of time tags we look
 !        up.  That way, the request time is bracketed by the time tag
 !        set we look up.
 !
-         BEGIDX  =      (  GROUP  - 1 ) * DIRSIZ
-         ENDIDX  =  MIN (  BEGIDX + DIRSIZ,  N  )
+         begidx  =      (  group  - 1 ) * dirsiz
+         endidx  =  min (  begidx + dirsiz,  n  )
 
-      END IF
+      end if
 
 
-      TIMBAS  =  DIRBAS - N
+      timbas  =  dirbas - n
 
-      CALL DAFGDA ( HANDLE, TIMBAS+BEGIDX, TIMBAS+ENDIDX, BUFFER )
+      call dafgda ( handle, timbas+begidx, timbas+endidx, buffer )
 
 !
 !     Find two adjacent epochs bounding the request epoch.  The request
 !     time cannot be greater than all of epochs in the group, and it
 !     cannot precede the first element of the group.
 !
-      I     =  LSTLTD (  ET,  ENDIDX-BEGIDX+1,  BUFFER  )
+      i     =  lstltd (  et,  endidx-begidx+1,  buffer  )
 
 !
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      IF ( I .EQ. 0 ) THEN
-         LOW  =  1
-      ELSE
-         LOW  =  BEGIDX + I - 1
-      END IF
+      if ( i .eq. 0 ) then
+         low  =  1
+      else
+         low  =  begidx + i - 1
+      end if
 
-      HIGH  =  LOW  +  1
+      high  =  low  +  1
 
 !
 !     Now select the set of states used for interpolation.
 !
-      IF ( ODD(WNDSIZ) ) THEN
+      if ( odd(wndsiz) ) then
 !
 !        Find the index of the state whose epoch is closest to the
 !        input epoch.  The index I is in the range [0, DIRSIZ],
@@ -436,21 +436,21 @@
 !        never larger than the (ENDIDX-BEGIDX+1)th element of the
 !        buffer.
 !
-         IF ( I .EQ. 0 ) THEN
+         if ( i .eq. 0 ) then
 !
 !           This can happen only if the request time matches the
 !           first time tag of the segment.
 !
-            NEAR = LOW
+            near = low
 
-         ELSE IF (       DABS(  ET  -  BUFFER(I)    ) &
-                   .LT.  DABS(  ET  -  BUFFER(I+1)  )    )  THEN
+         else if (       dabs(  et  -  buffer(i)    ) &
+                   .lt.  dabs(  et  -  buffer(i+1)  )    )  then
 
-            NEAR = LOW
+            near = low
 
-         ELSE
-            NEAR = HIGH
-         END IF
+         else
+            near = high
+         end if
 
 !
 !        The epochs whose index is NEAR is the (WNDSIZ/2 + 1)th
@@ -459,11 +459,11 @@
 !        of the window will coincide with an endpoint of the coverage
 !        interval.
 !
-         FIRST =  MIN (  MAX ( NEAR - DEGREE/2,  1),   N-DEGREE  )
+         first =  min (  max ( near - degree/2,  1),   n-degree  )
 
-         LAST  =  FIRST  +  DEGREE
+         last  =  first  +  degree
 
-      ELSE
+      else
 !
 !        The group size is even.
 !
@@ -473,34 +473,34 @@
 !        in which case one endpoint of the window will coincide with
 !        an endpoint of the coverage interval.
 !
-         FIRST =  MIN (  MAX ( LOW - DEGREE/2,  1 ),   N-DEGREE  )
+         first =  min (  max ( low - degree/2,  1 ),   n-degree  )
 
-         LAST  =  FIRST  +  DEGREE
+         last  =  first  +  degree
 
-      END IF
+      end if
 
 !
 !     Put the size of the group of states into the output record.
 !
-      RECORD(1) =  WNDSIZ
+      record(1) =  wndsiz
 
 !
 !     Read the states.
 !
-      CALL DAFGDA ( HANDLE, &
-                    BEGIN + (FIRST-1)*STATSZ, &
-                    BEGIN +      LAST*STATSZ  -  1, &
-                    RECORD(2)                       )
+      call dafgda ( handle, &
+                    begin + (first-1)*statsz, &
+                    begin +      last*statsz  -  1, &
+                    record(2)                       )
 
 !
 !     Finally, add the epochs to the output record.
 !
-      START  =  BEGIN   +  N * STATSZ  +  FIRST - 2
+      start  =  begin   +  n * statsz  +  first - 2
 
-      CALL DAFGDA (  HANDLE, &
-                     START + 1, &
-                     START + WNDSIZ, &
-                     RECORD( 2 + WNDSIZ*STATSZ )   )
+      call dafgda (  handle, &
+                     start + 1, &
+                     start + wndsiz, &
+                     record( 2 + wndsiz*statsz )   )
 
-      RETURN
-      END
+      return
+      end

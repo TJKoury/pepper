@@ -1,6 +1,6 @@
 !$Procedure      ZZCKSPK ( SPK or CK )
 
-      SUBROUTINE ZZCKSPK ( HANDLE, CKSPK )
+      subroutine zzckspk ( handle, ckspk )
 
 ! $ Abstract
 !
@@ -21,9 +21,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INTEGER               HANDLE
-      CHARACTER*(*)         CKSPK
+      implicit none
+      integer               handle
+      character*(*)         ckspk
 
 ! $ Brief_I/O
 !
@@ -86,8 +86,8 @@
 !
 !-&
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 
 !
@@ -98,207 +98,207 @@
 !     integer portion of the DAF descriptor where the values are
 !     located.
 !
-      INTEGER               BODID
-      PARAMETER           ( BODID  =  1 )
+      integer               bodid
+      parameter           ( bodid  =  1 )
 
-      INTEGER               CENID
-      PARAMETER           ( CENID  = BODID  + 1 )
+      integer               cenid
+      parameter           ( cenid  = bodid  + 1 )
 
-      INTEGER               SPKFRM
-      PARAMETER           ( SPKFRM = CENID  + 1 )
+      integer               spkfrm
+      parameter           ( spkfrm = cenid  + 1 )
 
-      INTEGER               SPKTYP
-      PARAMETER           ( SPKTYP = SPKFRM + 1 )
+      integer               spktyp
+      parameter           ( spktyp = spkfrm + 1 )
 
-      INTEGER               START
-      PARAMETER           ( START  = SPKTYP + 1 )
+      integer               start
+      parameter           ( start  = spktyp + 1 )
 
-      INTEGER               FINISH
-      PARAMETER           ( FINISH = START  + 1 )
+      integer               finish
+      parameter           ( finish = start  + 1 )
 
-      INTEGER               CKRATE
-      PARAMETER           ( CKRATE = SPKTYP     )
+      integer               ckrate
+      parameter           ( ckrate = spktyp     )
 
-      INTEGER               CKTYPE
-      PARAMETER           ( CKTYPE = SPKFRM )
+      integer               cktype
+      parameter           ( cktype = spkfrm )
 
 !
 !     These parameters give the number of integer and double precision
 !     components of the descriptor for SPK and CK files.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 !
 !     The size of a summary.
 !
-      INTEGER               SUMSIZ
-      PARAMETER           ( SUMSIZ = ND + ((NI+1)/2) )
+      integer               sumsiz
+      parameter           ( sumsiz = nd + ((ni+1)/2) )
 
 
-      DOUBLE PRECISION      CHCKTM
-      DOUBLE PRECISION      DC    ( ND )
-      DOUBLE PRECISION      LASTDP
-      DOUBLE PRECISION      FRSTTM
-      DOUBLE PRECISION      SUM   ( SUMSIZ )
-      DOUBLE PRECISION      TIMES ( 2 )
+      double precision      chcktm
+      double precision      dc    ( nd )
+      double precision      lastdp
+      double precision      frsttm
+      double precision      sum   ( sumsiz )
+      double precision      times ( 2 )
 
-      INTEGER               ANGVEL
-      INTEGER               FIRST
-      INTEGER               FROM
-      INTEGER               IC    ( NI )
-      INTEGER               LAST
-      INTEGER               NCK2
-      INTEGER               NSPK
-      INTEGER               SIZE
-      INTEGER               THISND
-      INTEGER               THISNI
-      INTEGER               TO
-      INTEGER               TYPE
+      integer               angvel
+      integer               first
+      integer               from
+      integer               ic    ( ni )
+      integer               last
+      integer               nck2
+      integer               nspk
+      integer               size
+      integer               thisnd
+      integer               thisni
+      integer               to
+      integer               type
 
-      LOGICAL               CK2OK
-      LOGICAL               FOUND
-      LOGICAL               SPKOK
+      logical               ck2ok
+      logical               found
+      logical               spkok
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZCKSPK' )
+      call chkin ( 'ZZCKSPK' )
 !
 !     Make sure the values of ND and NI associated with this file
 !     have the correct values.
 !
-      CALL DAFHSF ( HANDLE, THISND, THISNI )
+      call dafhsf ( handle, thisnd, thisni )
 
-      IF (     THISND .NE. ND &
-          .OR. THISNI .NE. NI ) THEN
-         CKSPK = '?'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if (     thisnd .ne. nd &
+          .or. thisni .ne. ni ) then
+         ckspk = '?'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
 !
 !     We've got the correct values for ND and NI, examine the descriptor
 !     for the first array.
 !
-      CALL DAFBFS ( HANDLE )
-      CALL DAFFNA ( FOUND  )
+      call dafbfs ( handle )
+      call daffna ( found  )
 
-      IF ( FAILED () ) THEN
-         CKSPK = '?'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         ckspk = '?'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
 !
 !     If we don't find any segments, we don't have a clue about
 !     the file type.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CKSPK = '?'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
+         ckspk = '?'
+         call chkout ( 'ZZCKSPK' )
+         return
 
-      END IF
+      end if
 !
 !     Unpack the summary record.
 !
-      CALL DAFGS ( SUM                 )
-      CALL DAFUS ( SUM, ND, NI, DC, IC )
+      call dafgs ( sum                 )
+      call dafus ( sum, nd, ni, dc, ic )
 
 !
 !     Look at the slot where the angular velocity flag would
 !     be located if this is a CK file.
 !
-      ANGVEL = IC(CKRATE)
-      TYPE   = IC(CKTYPE)
+      angvel = ic(ckrate)
+      type   = ic(cktype)
 
 !
 !     Test 1. The value of ANGVEL may do the trick
 !     right at the start.
 !
-      IF ( ANGVEL .EQ. 0 ) THEN
-         CKSPK   = 'CK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( angvel .eq. 0 ) then
+         ckspk   = 'CK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
-      IF ( ANGVEL .GT. 1 ) THEN
-         CKSPK   = 'SPK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( angvel .gt. 1 ) then
+         ckspk   = 'SPK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
 !
 !     Test 2. If this is an SPK file, it has a type 01 segment.
 !     See if this is something orbiting the solar system
 !     barycenter.
 !
-      IF ( IC(CENID) .EQ. 0 ) THEN
-         CKSPK   = 'SPK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( ic(cenid) .eq. 0 ) then
+         ckspk   = 'SPK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
 !
 !     Test 3. This is the super test.  Compute the size of the
 !     segment and fetch the last d.p. from the segment.
 !
 
-      FIRST  = IC(START)
-      LAST   = IC(FINISH)
-      SIZE   = LAST  - FIRST +  1
+      first  = ic(start)
+      last   = ic(finish)
+      size   = last  - first +  1
 !
 !     Check the size of the array to see if it has any chance
 !     of being an SPK and if it does get the number of MDA records.
 !
-      CALL ZZSIZEOK ( SIZE-1, 72, 100, 0, SPKOK, NSPK )
+      call zzsizeok ( size-1, 72, 100, 0, spkok, nspk )
 
-      IF ( .NOT. SPKOK ) THEN
-         CKSPK = 'CK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( .not. spkok ) then
+         ckspk = 'CK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
 
-      CALL DAFGDA ( HANDLE, LAST, LAST, LASTDP )
+      call dafgda ( handle, last, last, lastdp )
 !
 !     See if the last number in the file is the allowed number of
 !     MDA records.  If not, this must be a CK segment.
 !
-      IF ( LASTDP .NE. DBLE(NSPK) ) THEN
-         CKSPK   = 'CK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( lastdp .ne. dble(nspk) ) then
+         ckspk   = 'CK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 !
 !     If we are still here, the last d.p. in the segment matches the
 !     expected number of MDA records.  If the potential CK type is
 !     not 2, we must have an SPK file.
 !
-      IF ( TYPE .NE. 2 ) THEN
-         CKSPK = 'SPK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( type .ne. 2 ) then
+         ckspk = 'SPK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 !
 !     We are getting down to the nitty gritty here. See if the
 !     size is compatible with a type 02 C-kernel.
 !
-      CALL ZZSIZEOK ( SIZE, 10, 100, 1, CK2OK, NCK2 )
+      call zzsizeok ( size, 10, 100, 1, ck2ok, nck2 )
 
-      IF ( .NOT. CK2OK ) THEN
-         CKSPK = 'SPK'
-         CALL CHKOUT ( 'ZZCKSPK' )
-         RETURN
-      END IF
+      if ( .not. ck2ok ) then
+         ckspk = 'SPK'
+         call chkout ( 'ZZCKSPK' )
+         return
+      end if
 
 !
 !     So much for being nice. We need to examine the structure of the
@@ -313,7 +313,7 @@
 !     (15,108), (20,144), (25, 180).  In all of these cases there is
 !     exactly 1 ck type 02 directory value.)
 !
-      IF ( NCK2 .LT. 201 ) THEN
+      if ( nck2 .lt. 201 ) then
 !
 !        Recall that MDA record contains its stop time as the first
 !        entry of the record.  These epochs show up duplicated in the
@@ -325,29 +325,29 @@
 !        the last stop tick shows up in this slot.  We need to look
 !        at this value to see what's up.
 !
-         CALL DAFGDA ( HANDLE, LAST-NSPK, LAST-NSPK, FRSTTM )
+         call dafgda ( handle, last-nspk, last-nspk, frsttm )
 
 !
 !        Now (under the assumption that we have an SPK segment) look
 !        up the epoch from the last MDA record--- the NSPK'th
 !        record.  This epoch must be greater than the first epoch
 !        in the array of epochs.
-         FROM = FIRST + (NSPK-1)*71
-         TO   = FROM
-         CALL DAFGDA ( HANDLE, FROM, TO, CHCKTM )
+         from = first + (nspk-1)*71
+         to   = from
+         call dafgda ( handle, from, to, chcktm )
 
 !
 !        If this is a type 02 segment.  The value we just picked out
 !        will come from the array of stop ticks.  The array of stop
 !        ticks is non-decreasing so:
 !
-         IF ( CHCKTM .GT. FRSTTM ) THEN
-            CKSPK = 'SPK'
-         ELSE
-            CKSPK = 'CK'
-         END IF
+         if ( chcktm .gt. frsttm ) then
+            ckspk = 'SPK'
+         else
+            ckspk = 'CK'
+         end if
 
-      ELSE
+      else
 !
 !        In this case there are at least 2 directory records if we
 !        have a CK.  We read the last potential tick value and the
@@ -355,10 +355,10 @@
 !        stop tick must be greater than the first potential directory
 !        record.
 !
-         FROM = LAST - (NCK2-1)/100
-         TO   = FROM + 1
+         from = last - (nck2-1)/100
+         to   = from + 1
 
-         CALL DAFGDA ( HANDLE, FROM, TO, TIMES )
+         call dafgda ( handle, from, to, times )
 !
 !        If we happen to have a TYPE 01 SPK segment we've just
 !        read two consecutive values from the epochs sub-array of the
@@ -381,15 +381,15 @@
 !        In the first case TIMES(1) > TIMES(2), in the later case
 !        we have TIMES(1) < TIMES(2)
 !
-         IF ( TIMES(1) .GT. TIMES(2) ) THEN
-            CKSPK = 'CK'
-         ELSE
-            CKSPK = 'SPK'
-         END IF
+         if ( times(1) .gt. times(2) ) then
+            ckspk = 'CK'
+         else
+            ckspk = 'SPK'
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZCKSPK' )
-      RETURN
+      call chkout ( 'ZZCKSPK' )
+      return
 
-      END
+      end

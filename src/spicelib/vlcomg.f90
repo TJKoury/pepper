@@ -1,6 +1,6 @@
 !$Procedure VLCOMG ( Vector linear combination, general dimension )
 
-      SUBROUTINE VLCOMG ( N, A, V1, B, V2, SUM )
+      subroutine vlcomg ( n, a, v1, b, v2, sum )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            N
-      DOUBLE PRECISION   A
-      DOUBLE PRECISION   V1  ( N )
-      DOUBLE PRECISION   B
-      DOUBLE PRECISION   V2  ( N )
-      DOUBLE PRECISION   SUM ( N )
+      integer            n
+      double precision   a
+      double precision   v1  ( n )
+      double precision   b
+      double precision   v2  ( n )
+      double precision   sum ( n )
 
 ! $ Brief_I/O
 !
@@ -202,11 +202,11 @@
 !
 !     Local variables
 !
-      INTEGER        I
+      integer        i
 
-      DO I = 1,N
-         SUM(I) = A*V1(I) + B*V2(I)
-      END DO
+      do i = 1,n
+         sum(i) = a*v1(i) + b*v2(i)
+      end do
 
-      RETURN
-      END
+      return
+      end

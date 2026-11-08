@@ -1,6 +1,6 @@
 !$Procedure SAMSUB (Same substrings)
 
-      LOGICAL FUNCTION SAMSUB ( STR1, B1, E1,  STR2, B2, E2 )
+      logical function samsub ( str1, b1, e1,  str2, b2, e2 )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR1
-      INTEGER               B1
-      INTEGER               E1
-      CHARACTER*(*)         STR2
-      INTEGER               B2
-      INTEGER               E2
+      character*(*)         str1
+      integer               b1
+      integer               e1
+      character*(*)         str2
+      integer               b2
+      integer               e2
 
 ! $ Brief_I/O
 !
@@ -187,20 +187,20 @@
 !-&
 
 
-      IF (      ( E1      .LT. B1           ) &
-           .OR. ( E2      .LT. B2           ) &
-           .OR. ( B1      .LT. 1            ) &
-           .OR. ( B2      .LT. 1            ) &
-           .OR. ( E1      .GT. LEN(STR1)    ) &
-           .OR. ( E2      .GT. LEN(STR2)    ) &
-           .OR. ( E1 - B1 .NE. E2 - B2      )  ) THEN
+      if (      ( e1      .lt. b1           ) &
+           .or. ( e2      .lt. b2           ) &
+           .or. ( b1      .lt. 1            ) &
+           .or. ( b2      .lt. 1            ) &
+           .or. ( e1      .gt. len(str1)    ) &
+           .or. ( e2      .gt. len(str2)    ) &
+           .or. ( e1 - b1 .ne. e2 - b2      )  ) then
 
-         SAMSUB = .FALSE.
-         RETURN
+         samsub = .false.
+         return
 
-      END IF
+      end if
 
-      SAMSUB = STR1(B1:E1) .EQ. STR2(B2:E2)
+      samsub = str1(b1:e1) .eq. str2(b2:e2)
 
-      RETURN
-      END
+      return
+      end

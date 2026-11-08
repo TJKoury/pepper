@@ -1,6 +1,6 @@
 !$Procedure ZZSPKAC0 ( S/P Kernel, aberration corrected state )
 
-      SUBROUTINE ZZSPKAC0 ( TARG, ET, REF, ABCORR, OBS, STARG, LT, DLT )
+      subroutine zzspkac0 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
 
 ! $ Abstract
 !
@@ -19,18 +19,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBS
-      DOUBLE PRECISION      STARG    ( 6 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      DLT
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      integer               obs
+      double precision      starg    ( 6 )
+      double precision      lt
+      double precision      dlt
 
 ! $ Brief_I/O
 !
@@ -477,81 +477,81 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME = 'ZZSPKAC0' )
+      character*(*)         rname
+      parameter           ( rname = 'ZZSPKAC0' )
 
-      DOUBLE PRECISION      DELTA
-      PARAMETER           ( DELTA = 1.D0 )
+      double precision      delta
+      parameter           ( delta = 1.d0 )
 
-      INTEGER               SSB
-      PARAMETER           ( SSB    = 0 )
+      integer               ssb
+      parameter           ( ssb    = 0 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    PRVCOR
+      character*(corlen)    prvcor
 
-      DOUBLE PRECISION      ACC    ( 3 )
-      DOUBLE PRECISION      LTSSB
-      DOUBLE PRECISION      SSBLT
-      DOUBLE PRECISION      SSBOBS ( 6 )
-      DOUBLE PRECISION      STOBS  ( 6, 2 )
-      DOUBLE PRECISION      T
+      double precision      acc    ( 3 )
+      double precision      ltssb
+      double precision      ssblt
+      double precision      ssbobs ( 6 )
+      double precision      stobs  ( 6, 2 )
+      double precision      t
 
-      INTEGER               I
-      INTEGER               REFID
+      integer               i
+      integer               refid
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               USESTL
+      logical               attblk ( nabcor )
+      logical               first
+      logical               usestl
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  PRVCOR
-      SAVE                  USESTL
+      save                  first
+      save                  prvcor
+      save                  usestl
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
-      DATA                  PRVCOR  / ' ' /
+      data                  prvcor  / ' ' /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( RNAME )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( rname )
+      end if
 
 
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -563,27 +563,27 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         USESTL  =  ATTBLK ( STLIDX )
+         usestl  =  attblk ( stlidx )
 
-         FIRST   = .FALSE.
+         first   = .false.
 
-      END IF
+      end if
 
 !
 !     See if the reference frame is a recognized inertial frame.
 !
-      CALL IRFNUM ( REF, REFID )
+      call irfnum ( ref, refid )
 
-      IF ( REFID .EQ. 0 ) THEN
+      if ( refid .eq. 0 ) then
 
-         CALL SETMSG ( 'The requested frame ''#'' is not a ' &
+         call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )
-         CALL ERRCH  ( '#', REF                             )
-         CALL SIGERR ( 'SPICE(BADFRAME)'                    )
-         CALL CHKOUT ( RNAME                                )
-         RETURN
+         call errch  ( '#', ref                             )
+         call sigerr ( 'SPICE(BADFRAME)'                    )
+         call chkout ( rname                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Prepare to look up the apparent state of the target
@@ -596,38 +596,38 @@
 !     Get the geometric state of the observer relative to the SSB,
 !     which we'll call SSBOBS.
 !
-      CALL ZZSPKGO0 ( OBS, ET, REF, SSB, SSBOBS, SSBLT )
+      call zzspkgo0 ( obs, et, ref, ssb, ssbobs, ssblt )
 
-      IF ( USESTL ) THEN
+      if ( usestl ) then
 !
 !        Numerically differentiate the observer velocity relative to
 !        the SSB to obtain acceleration. We first evaluate the
 !        geometric state of the observer relative to the solar system
 !        barycenter at ET +/- DELTA.
 
-         DO I = 1, 2
+         do i = 1, 2
 
-            T = ET + (2*I - 3)*DELTA
+            t = et + (2*i - 3)*delta
 
-            CALL ZZSPKGO0 ( OBS, T, REF, SSB, STOBS(1,I), LTSSB )
+            call zzspkgo0 ( obs, t, ref, ssb, stobs(1,i), ltssb )
 
-         END DO
+         end do
 
-         CALL QDERIV ( 3, STOBS(4,1), STOBS(4,2), DELTA, ACC )
+         call qderiv ( 3, stobs(4,1), stobs(4,2), delta, acc )
 
-      ELSE
+      else
 
-         CALL CLEARD ( 3, ACC )
+         call cleard ( 3, acc )
 
-      END IF
+      end if
 
 !
 !     Look up the apparent state. The light time and light
 !     rate are returned as well.
 !
-      CALL ZZSPKAS0 ( TARG,   ET,  REF,   ABCORR, &
-                      SSBOBS, ACC, STARG, LT,     DLT )
+      call zzspkas0 ( targ,   et,  ref,   abcorr, &
+                      ssbobs, acc, starg, lt,     dlt )
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

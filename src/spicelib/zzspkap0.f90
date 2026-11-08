@@ -1,6 +1,6 @@
 !$Procedure ZZSPKAP0 ( S/P Kernel, apparent state )
 
-      SUBROUTINE ZZSPKAP0 ( TARG, ET, REF, SOBS, ABCORR, STARG, LT )
+      subroutine zzspkap0 ( targ, et, ref, sobs, abcorr, starg, lt )
 
 ! $ Abstract
 !
@@ -21,15 +21,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      SOBS     ( 6 )
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      STARG    ( 6 )
-      DOUBLE PRECISION      LT
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      double precision      sobs     ( 6 )
+      character*(*)         abcorr
+      double precision      starg    ( 6 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -712,109 +712,109 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VNORM
+      double precision      clight
+      double precision      vnorm
 
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               ODD
-      LOGICAL               RETURN
+      logical               odd
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               CORLEN
-      PARAMETER           ( CORLEN = 5 )
+      integer               corlen
+      parameter           ( corlen = 5 )
 
-      INTEGER               NFLAGS
-      PARAMETER           ( NFLAGS = 9 )
+      integer               nflags
+      parameter           ( nflags = 9 )
 
 !
 !     Indices of flags in the FLAGS array:
 !
-      INTEGER               IXNONE
-      PARAMETER           ( IXNONE = 1 )
+      integer               ixnone
+      parameter           ( ixnone = 1 )
 
-      INTEGER               IXLT
-      PARAMETER           ( IXLT   = IXNONE + 1 )
+      integer               ixlt
+      parameter           ( ixlt   = ixnone + 1 )
 
-      INTEGER               IXLTS
-      PARAMETER           ( IXLTS  = IXLT   + 1 )
+      integer               ixlts
+      parameter           ( ixlts  = ixlt   + 1 )
 
-      INTEGER               IXCN
-      PARAMETER           ( IXCN   = IXLTS  + 1 )
+      integer               ixcn
+      parameter           ( ixcn   = ixlts  + 1 )
 
-      INTEGER               IXCNS
-      PARAMETER           ( IXCNS  = IXCN   + 1 )
+      integer               ixcns
+      parameter           ( ixcns  = ixcn   + 1 )
 
-      INTEGER               IXXLT
-      PARAMETER           ( IXXLT  = IXCNS  + 1 )
+      integer               ixxlt
+      parameter           ( ixxlt  = ixcns  + 1 )
 
-      INTEGER               IXXLTS
-      PARAMETER           ( IXXLTS = IXXLT  + 1 )
+      integer               ixxlts
+      parameter           ( ixxlts = ixxlt  + 1 )
 
-      INTEGER               IXXCN
-      PARAMETER           ( IXXCN  = IXXLTS + 1 )
+      integer               ixxcn
+      parameter           ( ixxcn  = ixxlts + 1 )
 
-      INTEGER               IXXCNS
-      PARAMETER           ( IXXCNS = IXXCN  + 1 )
+      integer               ixxcns
+      parameter           ( ixxcns = ixxcn  + 1 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    CORR
-      CHARACTER*(CORLEN)    FLAGS  ( NFLAGS )
-      CHARACTER*(CORLEN)    PRVCOR
+      character*(corlen)    corr
+      character*(corlen)    flags  ( nflags )
+      character*(corlen)    prvcor
 
-      DOUBLE PRECISION      SAPOS  ( 3 )
-      DOUBLE PRECISION      TSTATE ( 6 )
+      double precision      sapos  ( 3 )
+      double precision      tstate ( 6 )
 
-      INTEGER               I
-      INTEGER               LTSIGN
-      INTEGER               MAXITR
-      INTEGER               REFID
+      integer               i
+      integer               ltsign
+      integer               maxitr
+      integer               refid
 
-      LOGICAL               FIRST
-      LOGICAL               USECN
-      LOGICAL               USESTL
-      LOGICAL               USELT
-      LOGICAL               XMIT
+      logical               first
+      logical               usecn
+      logical               usestl
+      logical               uselt
+      logical               xmit
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  FLAGS
-      SAVE                  PRVCOR
-      SAVE                  USECN
-      SAVE                  USESTL
-      SAVE                  USELT
-      SAVE                  XMIT
+      save                  first
+      save                  flags
+      save                  prvcor
+      save                  usecn
+      save                  usestl
+      save                  uselt
+      save                  xmit
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
-      DATA                  FLAGS   / 'NONE', 'LT',  'LT+S', &
+      data                  flags   / 'NONE', 'LT',  'LT+S', &
                                               'CN',  'CN+S', &
                                               'XLT', 'XLT+S', &
                                               'XCN', 'XCN+S'  /
 
-      DATA                  PRVCOR  / ' ' /
+      data                  prvcor  / ' ' /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZSPKAP0' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZSPKAP0' )
+      end if
 
 
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
@@ -822,71 +822,71 @@
 !        Remove leading and embedded white space from the aberration
 !        correction flag and convert to upper case.
 !
-         CALL LJUCRS ( 0, ABCORR, CORR )
+         call ljucrs ( 0, abcorr, corr )
 
 !
 !        Locate the flag in our list of flags.
 !
-         I = ISRCHC ( CORR, NFLAGS, FLAGS )
+         i = isrchc ( corr, nflags, flags )
 
-         IF ( I .EQ. 0 ) THEN
+         if ( i .eq. 0 ) then
 
-            CALL SETMSG ( 'Requested aberration correction # is ' // &
+            call setmsg ( 'Requested aberration correction # is ' // &
                           'not supported.'                         )
-            CALL ERRCH  ( '#', ABCORR                              )
-            CALL SIGERR ( 'SPICE(SPKINVALIDOPTION)'                )
-            CALL CHKOUT ( 'ZZSPKAP0'                                 )
-            RETURN
+            call errch  ( '#', abcorr                              )
+            call sigerr ( 'SPICE(SPKINVALIDOPTION)'                )
+            call chkout ( 'ZZSPKAP0'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
 !
 !        Set logical flags indicating the attributes of the requested
 !        correction.
 !
-         XMIT    =  I .GT. IXCNS
+         xmit    =  i .gt. ixcns
 
-         USELT   =       ( I .EQ. IXLT  ) .OR. ( I .EQ. IXLTS  ) &
-                    .OR. ( I .EQ. IXXLT ) .OR. ( I .EQ. IXXLTS )
+         uselt   =       ( i .eq. ixlt  ) .or. ( i .eq. ixlts  ) &
+                    .or. ( i .eq. ixxlt ) .or. ( i .eq. ixxlts )
 
-         USESTL  =  ( I .GT. 1 )  .AND.  ODD(I)
+         usestl  =  ( i .gt. 1 )  .and.  odd(i)
 
-         USECN   =       ( I .EQ. IXCN  ) .OR. ( I .EQ. IXCNS  ) &
-                    .OR. ( I .EQ. IXXCN ) .OR. ( I .EQ. IXXCNS )
+         usecn   =       ( i .eq. ixcn  ) .or. ( i .eq. ixcns  ) &
+                    .or. ( i .eq. ixxcn ) .or. ( i .eq. ixxcns )
 
-         FIRST   = .FALSE.
+         first   = .false.
 
-      END IF
+      end if
 
 !
 !     See if the reference frame is a recognized inertial frame.
 !
-      CALL IRFNUM ( REF, REFID )
+      call irfnum ( ref, refid )
 
-      IF ( REFID .EQ. 0 ) THEN
+      if ( refid .eq. 0 ) then
 
-         CALL SETMSG ( 'The requested frame ''#'' is not a ' &
+         call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )
-         CALL ERRCH  ( '#', REF                             )
-         CALL SIGERR ( 'SPICE(BADFRAME)'                    )
-         CALL CHKOUT ( 'ZZSPKAP0'                             )
-         RETURN
+         call errch  ( '#', ref                             )
+         call sigerr ( 'SPICE(BADFRAME)'                    )
+         call chkout ( 'ZZSPKAP0'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the sign of the light time offset.
 !
-      IF ( XMIT ) THEN
-         LTSIGN = 1
-      ELSE
-         LTSIGN = -1
-      END IF
+      if ( xmit ) then
+         ltsign = 1
+      else
+         ltsign = -1
+      end if
 
 !
 !     Find the geometric state of the target body with respect to the
@@ -894,40 +894,40 @@
 !     to get the relative state. Use this to compute the one-way
 !     light time.
 !
-      CALL ZZSPKSB0 ( TARG,  ET,   REF, STARG  )
-      CALL VSUBG  ( STARG, SOBS, 6,   TSTATE )
-      CALL MOVED  ( TSTATE,      6,   STARG  )
+      call zzspksb0 ( targ,  et,   ref, starg  )
+      call vsubg  ( starg, sobs, 6,   tstate )
+      call moved  ( tstate,      6,   starg  )
 
-      LT = VNORM  ( STARG ) / CLIGHT()
+      lt = vnorm  ( starg ) / clight()
 
 !
 !     To correct for light time, find the state of the target body
 !     at the current epoch minus the one-way light time. Note that
 !     the observer remains where he is.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 
-         MAXITR = 1
+         maxitr = 1
 
-      ELSE IF ( USECN ) THEN
+      else if ( usecn ) then
 
-         MAXITR = 3
+         maxitr = 3
 
-      ELSE
+      else
 
-         MAXITR = 0
+         maxitr = 0
 
-      END IF
+      end if
 
 
-      DO I = 1, MAXITR
+      do i = 1, maxitr
 
-         CALL ZZSPKSB0 ( TARG,  ET + LTSIGN*LT,  REF,  STARG  )
-         CALL VSUBG  ( STARG, SOBS,            6,    TSTATE )
-         CALL MOVED  ( TSTATE,                 6,    STARG  )
-         LT = VNORM  ( STARG ) / CLIGHT()
+         call zzspksb0 ( targ,  et + ltsign*lt,  ref,  starg  )
+         call vsubg  ( starg, sobs,            6,    tstate )
+         call moved  ( tstate,                 6,    starg  )
+         lt = vnorm  ( starg ) / clight()
 
-      END DO
+      end do
 
 !
 !     At this point, STARG contains the light time corrected
@@ -938,33 +938,33 @@
 !     Stellar aberration corrections are not applied to the target's
 !     velocity.
 !
-      IF ( USESTL ) THEN
+      if ( usestl ) then
 
-         IF ( XMIT ) THEN
+         if ( xmit ) then
 !
 !           This is the transmission case.
 !
 !           Compute the position vector obtained by applying
 !           "reception" stellar aberration to STARG.
 !
-            CALL STLABX ( STARG, SOBS(4), SAPOS )
-            CALL VEQU   ( SAPOS, STARG )
+            call stlabx ( starg, sobs(4), sapos )
+            call vequ   ( sapos, starg )
 
-         ELSE
+         else
 !
 !           This is the reception case.
 !
 !           Compute the position vector obtained by applying
 !           "reception" stellar aberration to STARG.
 !
-            CALL STELAB ( STARG, SOBS(4), SAPOS )
-            CALL VEQU   ( SAPOS, STARG )
+            call stelab ( starg, sobs(4), sapos )
+            call vequ   ( sapos, starg )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZSPKAP0' )
-      RETURN
-      END
+      call chkout ( 'ZZSPKAP0' )
+      return
+      end

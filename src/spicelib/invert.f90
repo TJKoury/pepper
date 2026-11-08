@@ -1,6 +1,6 @@
 !$Procedure INVERT ( Invert a 3x3 matrix )
 
-      SUBROUTINE INVERT ( M, MOUT )
+      subroutine invert ( m, mout )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   M    ( 3,3 )
-      DOUBLE PRECISION   MOUT ( 3,3 )
+      double precision   m    ( 3,3 )
+      double precision   mout ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -222,38 +222,38 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION   DET
-      DOUBLE PRECISION   MTEMP(3,3)
-      DOUBLE PRECISION   MDET
-      DOUBLE PRECISION   INVDET
+      double precision   det
+      double precision   mtemp(3,3)
+      double precision   mdet
+      double precision   invdet
 
 !
 !  Find the determinant of M and check for singularity
 !
-      MDET = DET(M)
-      IF ( DABS(MDET) .LT. 1.D-16 ) THEN
-         CALL FILLD ( 0.D0, 9, MOUT )
-         RETURN
-      END IF
+      mdet = det(m)
+      if ( dabs(mdet) .lt. 1.d-16 ) then
+         call filld ( 0.d0, 9, mout )
+         return
+      end if
 
 !
 !  Get the cofactors of each element of M
 !
-      MTEMP(1,1) =  (M(2,2)*M(3,3) - M(3,2)*M(2,3))
-      MTEMP(1,2) = -(M(1,2)*M(3,3) - M(3,2)*M(1,3))
-      MTEMP(1,3) =  (M(1,2)*M(2,3) - M(2,2)*M(1,3))
-      MTEMP(2,1) = -(M(2,1)*M(3,3) - M(3,1)*M(2,3))
-      MTEMP(2,2) =  (M(1,1)*M(3,3) - M(3,1)*M(1,3))
-      MTEMP(2,3) = -(M(1,1)*M(2,3) - M(2,1)*M(1,3))
-      MTEMP(3,1) =  (M(2,1)*M(3,2) - M(3,1)*M(2,2))
-      MTEMP(3,2) = -(M(1,1)*M(3,2) - M(3,1)*M(1,2))
-      MTEMP(3,3) =  (M(1,1)*M(2,2) - M(2,1)*M(1,2))
+      mtemp(1,1) =  (m(2,2)*m(3,3) - m(3,2)*m(2,3))
+      mtemp(1,2) = -(m(1,2)*m(3,3) - m(3,2)*m(1,3))
+      mtemp(1,3) =  (m(1,2)*m(2,3) - m(2,2)*m(1,3))
+      mtemp(2,1) = -(m(2,1)*m(3,3) - m(3,1)*m(2,3))
+      mtemp(2,2) =  (m(1,1)*m(3,3) - m(3,1)*m(1,3))
+      mtemp(2,3) = -(m(1,1)*m(2,3) - m(2,1)*m(1,3))
+      mtemp(3,1) =  (m(2,1)*m(3,2) - m(3,1)*m(2,2))
+      mtemp(3,2) = -(m(1,1)*m(3,2) - m(3,1)*m(1,2))
+      mtemp(3,3) =  (m(1,1)*m(2,2) - m(2,1)*m(1,2))
 
 !
 !  Multiply the cofactor matrix by 1/MDET to obtain the inverse
 !
-      INVDET = 1.D0 / MDET
-      CALL VSCLG (INVDET, MTEMP, 9, MOUT)
+      invdet = 1.d0 / mdet
+      call vsclg (invdet, mtemp, 9, mout)
 !
-      RETURN
-      END
+      return
+      end

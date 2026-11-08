@@ -1,8 +1,8 @@
 !$Procedure GFDIST ( GF, distance search )
 
-      SUBROUTINE GFDIST ( TARGET, ABCORR, OBSRVR, RELATE, &
-                          REFVAL, ADJUST, STEP,   CNFINE, &
-                          MW,     NW,     WORK,   RESULT  )
+      subroutine gfdist ( target, abcorr, obsrvr, relate, &
+                          refval, adjust, step,   cnfine, &
+                          mw,     nw,     work,   result  )
 
 ! $ Abstract
 !
@@ -27,26 +27,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         target
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         relate
+      double precision      refval
+      double precision      adjust
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1217,10 +1217,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZED
+      integer               sized
 
-      LOGICAL               RETURN
-      LOGICAL               GFBAIL
+      logical               return
+      logical               gfbail
 
 !
 !     External functions
@@ -1229,149 +1229,149 @@
 !
 !     Interrupt indicator function:
 !
-      EXTERNAL              GFBAIL
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               QNPARS
-      PARAMETER           ( QNPARS = 3 )
+      integer               qnpars
+      parameter           ( qnpars = 3 )
 
-      LOGICAL               NOBAIL
-      PARAMETER           ( NOBAIL = .FALSE. )
+      logical               nobail
+      parameter           ( nobail = .false. )
 
-      LOGICAL               NORPT
-      PARAMETER           ( NORPT  = .FALSE. )
+      logical               norpt
+      parameter           ( norpt  = .false. )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      CHARACTER*(LNSIZE)    QCPARS ( QNPARS )
-      CHARACTER*(LNSIZE)    QPNAMS ( QNPARS )
+      character*(lnsize)    qcpars ( qnpars )
+      character*(lnsize)    qpnams ( qnpars )
 
-      DOUBLE PRECISION      QDPARS ( QNPARS )
+      double precision      qdpars ( qnpars )
 
-      INTEGER               QIPARS ( QNPARS )
+      integer               qipars ( qnpars )
 
-      LOGICAL               QLPARS ( QNPARS )
+      logical               qlpars ( qnpars )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GFDIST' )
+      call chkin ( 'GFDIST' )
 
 !
 !     Check the workspace window dimensions.
 !
-      IF ( MW .LT. 2 ) THEN
+      if ( mw .lt. 2 ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2.'                               )
-         CALL ERRINT ( '#',  MW                                    )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFDIST'                                    )
-         RETURN
+         call errint ( '#',  mw                                    )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFDIST'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( NW .LT. NWDIST ) THEN
+      if ( nw .lt. nwdist ) then
 
-         CALL SETMSG ( 'Workspace window count was #; count must be ' &
+         call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                 )
-         CALL ERRINT ( '#',  NW                                      )
-         CALL ERRINT ( '#',  NWDIST                                  )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                     )
-         CALL CHKOUT ( 'GFDIST'                                      )
-         RETURN
+         call errint ( '#',  nw                                      )
+         call errint ( '#',  nwdist                                  )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
+         call chkout ( 'GFDIST'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the result window size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2.'                             )
-         CALL ERRINT ( '#',  SIZED(RESULT)                       )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                 )
-         CALL CHKOUT ( 'GFDIST'                                  )
-         RETURN
+         call errint ( '#',  sized(result)                       )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                 )
+         call chkout ( 'GFDIST'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Set up a call to GFEVNT, which will handle the search.
 !
-      QPNAMS(1) = 'TARGET'
-      QCPARS(1) =  TARGET
+      qpnams(1) = 'TARGET'
+      qcpars(1) =  target
 
-      QPNAMS(2) = 'OBSERVER'
-      QCPARS(2) =  OBSRVR
+      qpnams(2) = 'OBSERVER'
+      qcpars(2) =  obsrvr
 
-      QPNAMS(3) = 'ABCORR'
-      QCPARS(3) =  ABCORR
+      qpnams(3) = 'ABCORR'
+      qcpars(3) =  abcorr
 
 !
 !     Check and set the step size.
 !
-      CALL GFSSTP ( STEP )
+      call gfsstp ( step )
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Initialize the RESULT window.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 !
 !     Look for solutions.
 !
 !     Progress report and bail-out options are set to .FALSE.
 !
-      CALL GFEVNT ( GFSTEP,   GFREFN,   'DISTANCE',  QNPARS, &
-                    QPNAMS,   QCPARS,   QDPARS,      QIPARS, &
-                    QLPARS,   RELATE,   REFVAL,      TOL, &
-                    ADJUST,   CNFINE,   NORPT,       GFREPI, &
-                    GFREPU,   GFREPF,   MW,          NWDIST, &
-                    WORK,     NOBAIL,   GFBAIL,      RESULT  )
+      call gfevnt ( gfstep,   gfrefn,   'DISTANCE',  qnpars, &
+                    qpnams,   qcpars,   qdpars,      qipars, &
+                    qlpars,   relate,   refval,      tol, &
+                    adjust,   cnfine,   norpt,       gfrepi, &
+                    gfrepu,   gfrepf,   mw,          nwdist, &
+                    work,     nobail,   gfbail,      result  )
 
-      CALL CHKOUT ( 'GFDIST' )
-      RETURN
-      END
+      call chkout ( 'GFDIST' )
+      return
+      end

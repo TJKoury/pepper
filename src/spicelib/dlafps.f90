@@ -1,6 +1,6 @@
 !$Procedure DLAFPS ( DLA, find previous segment )
 
-      SUBROUTINE DLAFPS ( HANDLE, DLADSC, PRVDSC, FOUND )
+      subroutine dlafps ( handle, dladsc, prvdsc, found )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               PRVDSC ( * )
-      LOGICAL               FOUND
+      integer               handle
+      integer               dladsc ( * )
+      integer               prvdsc ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -295,49 +295,49 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               BWD
+      integer               bwd
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DLAFPS' )
+      call chkin ( 'DLAFPS' )
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Extract the backward pointer from the segment descriptor.
 !
-      BWD = DLADSC( BWDIDX )
+      bwd = dladsc( bwdidx )
 
-      IF ( BWD .EQ. NULPTR ) THEN
+      if ( bwd .eq. nulptr ) then
 !
 !        There is no segment preceding the input segment.
 !
-         CALL CHKOUT ( 'DLAFPS' )
-         RETURN
+         call chkout ( 'DLAFPS' )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the previous descriptor
 !
-      CALL DASRDI ( HANDLE, BWD, BWD+DLADSZ-1, PRVDSC )
+      call dasrdi ( handle, bwd, bwd+dladsz-1, prvdsc )
 
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT ( 'DLAFPS' )
-      RETURN
-      END
+      call chkout ( 'DLAFPS' )
+      return
+      end

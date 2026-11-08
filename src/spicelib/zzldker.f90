@@ -1,6 +1,6 @@
 !$Procedure ZZLDKER ( Load a kernel )
 
-      SUBROUTINE ZZLDKER ( FILE, NOFILE, FILTYP, HANDLE )
+      subroutine zzldker ( file, nofile, filtyp, handle )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         FILE
-      CHARACTER*(*)         NOFILE
-      CHARACTER*(*)         FILTYP
-      INTEGER               HANDLE
+      implicit none
+      character*(*)         file
+      character*(*)         nofile
+      character*(*)         filtyp
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -225,48 +225,48 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               exists
+      logical               failed
+      logical               return
 
 
 !
 !     Local Variables.
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      INTEGER               EOLTSZ
-      PARAMETER           ( EOLTSZ = 5 )
+      integer               eoltsz
+      parameter           ( eoltsz = 5 )
 
-      INTEGER               KLINSZ
-      PARAMETER           ( KLINSZ = 132 )
+      integer               klinsz
+      parameter           ( klinsz = 132 )
 
-      CHARACTER*(WDSIZE)    VERSN
-      CHARACTER*(WDSIZE)    ARCH
-      CHARACTER*(WDSIZE)    MYTYPE
-      CHARACTER*(EOLTSZ)    TERMIN
-      CHARACTER*(KLINSZ)    KERLIN
+      character*(wdsize)    versn
+      character*(wdsize)    arch
+      character*(wdsize)    mytype
+      character*(eoltsz)    termin
+      character*(klinsz)    kerlin
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZLDKER' )
+      call chkin  ( 'ZZLDKER' )
 
-      IF ( .NOT. EXISTS( FILE ) ) THEN
+      if ( .not. exists( file ) ) then
 
-         CALL SETMSG ( NOFILE )
-         CALL ERRCH  ( '#', FILE )
-         CALL ERRCH  ( '#', 'could not be located.' )
-         CALL SIGERR ( 'SPICE(NOSUCHFILE)'  )
-         CALL CHKOUT ( 'ZZLDKER' )
-         RETURN
+         call setmsg ( nofile )
+         call errch  ( '#', file )
+         call errch  ( '#', 'could not be located.' )
+         call sigerr ( 'SPICE(NOSUCHFILE)'  )
+         call chkout ( 'ZZLDKER' )
+         return
 
-      END IF
+      end if
 
 
-      CALL GETFAT ( FILE, ARCH, MYTYPE )
+      call getfat ( file, arch, mytype )
 
 !
 !     Possible values for the architecture are:
@@ -283,104 +283,104 @@
 !
 !     Some of these are obviously losers.
 !
-      IF (      ARCH .EQ. 'XFR' &
-           .OR. ARCH .EQ. 'DEC' ) THEN
+      if (      arch .eq. 'XFR' &
+           .or. arch .eq. 'DEC' ) then
 
-         CALL SETMSG ( NOFILE )
-         CALL ERRCH  ( '#', FILE )
-         CALL ERRCH  ( '#', 'is a transfer format file. ' &
+         call setmsg ( nofile )
+         call errch  ( '#', file )
+         call errch  ( '#', 'is a transfer format file. ' &
          //                 'Transfer format files cannot be ' &
          //                 'loaded. ' )
-         CALL SIGERR ( 'SPICE(TRANSFERFILE)'  )
-         CALL CHKOUT ( 'ZZLDKER' )
-         RETURN
+         call sigerr ( 'SPICE(TRANSFERFILE)'  )
+         call chkout ( 'ZZLDKER' )
+         return
 
-      ELSE IF ( ARCH .EQ. 'TE1' ) THEN
+      else if ( arch .eq. 'TE1' ) then
 
-         CALL SETMSG ( NOFILE )
-         CALL ERRCH  ( '#', FILE )
-         CALL ERRCH  ( '#', 'is a type 1 text E-kernel.  These ' &
+         call setmsg ( nofile )
+         call errch  ( '#', file )
+         call errch  ( '#', 'is a type 1 text E-kernel.  These ' &
          //                 'files are obsolete and cannot be ' &
          //                 'loaded. ' )
-         CALL SIGERR ( 'SPICE(TYPE1TEXTEK)' )
-         CALL CHKOUT ( 'ZZLDKER' )
-         RETURN
+         call sigerr ( 'SPICE(TYPE1TEXTEK)' )
+         call chkout ( 'ZZLDKER' )
+         return
 
-      END IF
+      end if
 
 !
 !     That takes care of the obvious errors.  Try loading the
 !     kernel.
 !
-      HANDLE = 0
-      FILTYP = ' '
+      handle = 0
+      filtyp = ' '
 
-      IF ( ARCH .EQ. 'DAF' )      THEN
+      if ( arch .eq. 'DAF' )      then
 
-         IF      ( MYTYPE .EQ. 'SPK' ) THEN
+         if      ( mytype .eq. 'SPK' ) then
 
-            CALL SPKLEF ( FILE, HANDLE )
+            call spklef ( file, handle )
 
-         ELSE IF ( MYTYPE .EQ. 'CK' ) THEN
+         else if ( mytype .eq. 'CK' ) then
 
-            CALL CKLPF ( FILE, HANDLE )
+            call cklpf ( file, handle )
 
-         ELSE IF ( MYTYPE .EQ. 'PCK' ) THEN
+         else if ( mytype .eq. 'PCK' ) then
 
-            CALL PCKLOF ( FILE, HANDLE )
+            call pcklof ( file, handle )
 
-         ELSE
+         else
 
-            CALL TKVRSN ( 'TOOLKIT', VERSN )
-            CALL SETMSG ( NOFILE )
-            CALL ERRCH  ( '#', FILE )
-            CALL ERRCH  ( '#', 'is a "#" DAF file. This kind of ' &
+            call tkvrsn ( 'TOOLKIT', versn )
+            call setmsg ( nofile )
+            call errch  ( '#', file )
+            call errch  ( '#', 'is a "#" DAF file. This kind of ' &
             //                 'binary file is not supported in ' &
             //                 'version # of the SPICE toolkit. ' &
             //                 'Check with NAIF to see if your ' &
             //                 'toolkit version is up to date. ' )
-            CALL ERRCH  ( '#', MYTYPE  )
-            CALL ERRCH  ( '#', VERSN )
-            CALL SIGERR ( 'SPICE(UNKNOWNKERNELTYPE)' )
-            CALL CHKOUT ( 'ZZLDKER' )
-            RETURN
+            call errch  ( '#', mytype  )
+            call errch  ( '#', versn )
+            call sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
+            call chkout ( 'ZZLDKER' )
+            return
 
-         END IF
+         end if
 
-         FILTYP = MYTYPE
+         filtyp = mytype
 
 
-      ELSE IF ( ARCH .EQ. 'DAS' ) THEN
+      else if ( arch .eq. 'DAS' ) then
 
-         IF ( MYTYPE .EQ. 'EK' ) THEN
+         if ( mytype .eq. 'EK' ) then
 
-            CALL EKLEF ( FILE, HANDLE )
+            call eklef ( file, handle )
 
-         ELSE IF ( MYTYPE .EQ. 'DSK' ) THEN
+         else if ( mytype .eq. 'DSK' ) then
 
-            CALL ZZDSKLSF ( FILE, HANDLE )
+            call zzdsklsf ( file, handle )
 
-         ELSE
+         else
 
-            CALL TKVRSN ( 'TOOLKIT', VERSN )
-            CALL SETMSG ( NOFILE )
-            CALL ERRCH  ( '#', FILE )
-            CALL ERRCH  ( '#', 'is a "#" DAS file.  This kind of ' &
+            call tkvrsn ( 'TOOLKIT', versn )
+            call setmsg ( nofile )
+            call errch  ( '#', file )
+            call errch  ( '#', 'is a "#" DAS file.  This kind of ' &
             //                 'binary file is not supported in ' &
             //                 'version # of the SPICE toolkit. ' &
             //                 'Check with NAIF to see if your ' &
             //                 'toolkit version is up to date. ' )
-            CALL ERRCH  ( '#', MYTYPE  )
-            CALL ERRCH  ( '#', VERSN )
-            CALL SIGERR ( 'SPICE(UNKNOWNKERNELTYPE)' )
-            CALL CHKOUT ( 'ZZLDKER' )
-            RETURN
+            call errch  ( '#', mytype  )
+            call errch  ( '#', versn )
+            call sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
+            call chkout ( 'ZZLDKER' )
+            return
 
-         END IF
+         end if
 
-         FILTYP = MYTYPE
+         filtyp = mytype
 
-      ELSE
+      else
 
 
 
@@ -391,26 +391,26 @@
 !        detected with the one native to this platform and will
 !        stop if they don't match.
 !
-         CALL ZZASCII( FILE, KERLIN, .TRUE., TERMIN )
+         call zzascii( file, kerlin, .true., termin )
 
 
 !
 !        Load the file using the text file loader.
 !
-         CALL LDPOOL ( FILE )
+         call ldpool ( file )
 
-         IF ( .NOT. FAILED() ) THEN
-            FILTYP = 'TEXT'
+         if ( .not. failed() ) then
+            filtyp = 'TEXT'
 !
 !           Cause the kernel pool mechanism to perform
 !           the standard error checks on the pool
 !           data.
 !
-            CALL ZZBODKIK()
-         END IF
+            call zzbodkik()
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZLDKER' )
-      RETURN
-      END
+      call chkout ( 'ZZLDKER' )
+      return
+      end

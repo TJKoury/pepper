@@ -1,6 +1,6 @@
 !$Procedure REPLCH ( Replace characters in a string )
 
-      SUBROUTINE REPLCH ( INSTR, OLD, NEW, OUTSTR )
+      subroutine replch ( instr, old, new, outstr )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    INSTR
-      CHARACTER*1      OLD
-      CHARACTER*1      NEW
-      CHARACTER*(*)    OUTSTR
+      character*(*)    instr
+      character*1      old
+      character*1      new
+      character*(*)    outstr
 
 ! $ Brief_I/O
 !
@@ -130,7 +130,7 @@
 !
 !   Local Variables
 !
-      INTEGER          I
+      integer          i
 
 
 
@@ -138,18 +138,18 @@
 !     Move the input string to the output string. If it's too long,
 !     this will truncate it.
 !
-      OUTSTR = INSTR
+      outstr = instr
 
 !
 !     Check each character of OUTSTR and replace as necessary.
 !
-      DO I = 1, LEN ( OUTSTR )
+      do i = 1, len ( outstr )
 
-         IF ( OUTSTR(I:I) .EQ. OLD ) THEN
-            OUTSTR(I:I) = NEW
-         END IF
+         if ( outstr(i:i) .eq. old ) then
+            outstr(i:i) = new
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

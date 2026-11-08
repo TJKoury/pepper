@@ -1,6 +1,6 @@
 !$Procedure DAFRDA ( DAF, read data from address )
 
-      SUBROUTINE DAFRDA ( HANDLE, BEGIN, END, DATA )
+      subroutine dafrda ( handle, begin, end, data )
 
 ! $ Abstract
 !
@@ -21,12 +21,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BEGIN
-      INTEGER               END
-      DOUBLE PRECISION      DATA     ( * )
+      integer               handle
+      integer               begin
+      integer               end
+      double precision      data     ( * )
 
 ! $ Brief_I/O
 !
@@ -201,83 +201,83 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BSIZE
-      PARAMETER           ( BSIZE = 128 )
+      integer               bsize
+      parameter           ( bsize = 128 )
 
-      INTEGER               BEGR
-      INTEGER               BEGW
-      INTEGER               ENDR
-      INTEGER               ENDW
+      integer               begr
+      integer               begw
+      integer               endr
+      integer               endw
 
-      INTEGER               RECNO
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NEXT
+      integer               recno
+      integer               first
+      integer               last
+      integer               next
 
-      LOGICAL               FOUND
-      LOGICAL               NATIVE
+      logical               found
+      logical               native
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Check to see if HANDLE is associated with a DAF of the native
 !     binary file format.
 !
-      CALL ZZDDHISN ( HANDLE, NATIVE, FOUND )
+      call zzddhisn ( handle, native, found )
 
 !
 !     If the HANDLE was located, then check whether the binary file
 !     format is native.  Otherwise, defer diagnosing the missing
 !     handle to DAFRDR.
 !
-      IF ( ( FOUND ) .AND. ( .NOT. NATIVE ) ) THEN
-         CALL CHKIN  ( 'DAFRDA'                                 )
-         CALL SETMSG ( 'The binary file format for file ''#'' ' &
+      if ( ( found ) .and. ( .not. native ) ) then
+         call chkin  ( 'DAFRDA'                                 )
+         call setmsg ( 'The binary file format for file ''#'' ' &
          //            'is not native. This routine operates ' &
          //            'only on files of the native format.'    )
-         CALL ERRHAN ( '#', HANDLE                              )
-         CALL SIGERR ( 'SPICE(UNSUPPORTEDBFF)'                  )
-         CALL CHKOUT ( 'DAFRDA'                                 )
-         RETURN
-      END IF
+         call errhan ( '#', handle                              )
+         call sigerr ( 'SPICE(UNSUPPORTEDBFF)'                  )
+         call chkout ( 'DAFRDA'                                 )
+         return
+      end if
 
 !
 !     Bad addresses?
 !
-      IF ( BEGIN .LE. 0 ) THEN
-         CALL CHKIN  ( 'DAFRDA' )
-         CALL SETMSG ( 'Negative value for BEGIN address: #' )
-         CALL ERRINT ( '#', BEGIN )
-         CALL SIGERR ( 'SPICE(DAFNEGADDR)' )
-         CALL CHKOUT ( 'DAFRDA' )
-         RETURN
+      if ( begin .le. 0 ) then
+         call chkin  ( 'DAFRDA' )
+         call setmsg ( 'Negative value for BEGIN address: #' )
+         call errint ( '#', begin )
+         call sigerr ( 'SPICE(DAFNEGADDR)' )
+         call chkout ( 'DAFRDA' )
+         return
 
-      ELSE IF ( BEGIN .GT. END ) THEN
-         CALL CHKIN  ( 'DAFRDA' )
-         CALL SETMSG ( 'Beginning address (#) greater than ending '   // &
+      else if ( begin .gt. end ) then
+         call chkin  ( 'DAFRDA' )
+         call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#).' )
-         CALL ERRINT ( '#', BEGIN )
-         CALL ERRINT ( '#', END   )
-         CALL SIGERR ( 'SPICE(DAFBEGGTEND)' )
-         CALL CHKOUT ( 'DAFRDA' )
-         RETURN
-      END IF
+         call errint ( '#', begin )
+         call errint ( '#', end   )
+         call sigerr ( 'SPICE(DAFBEGGTEND)' )
+         call chkout ( 'DAFRDA' )
+         return
+      end if
 
 !
 !     Convert raw addresses to record/word representations.
 !
-      CALL DAFARW ( BEGIN, BEGR, BEGW )
-      CALL DAFARW ( END,   ENDR, ENDW )
+      call dafarw ( begin, begr, begw )
+      call dafarw ( end,   endr, endw )
 
 !
 !     Get as many records as needed. Return the last part of the
@@ -286,36 +286,36 @@
 !     be filled with zeros.
 !
 
-      NEXT = 1
+      next = 1
 
-      DO RECNO = BEGR, ENDR
+      do recno = begr, endr
 
-         IF ( BEGR .EQ. ENDR ) THEN
-            FIRST = BEGW
-            LAST  = ENDW
+         if ( begr .eq. endr ) then
+            first = begw
+            last  = endw
 
-         ELSE IF ( RECNO .EQ. BEGR ) THEN
-            FIRST = BEGW
-            LAST  = BSIZE
+         else if ( recno .eq. begr ) then
+            first = begw
+            last  = bsize
 
-         ELSE IF ( RECNO .EQ. ENDR ) THEN
-            FIRST = 1
-            LAST  = ENDW
+         else if ( recno .eq. endr ) then
+            first = 1
+            last  = endw
 
-         ELSE
-            FIRST = 1
-            LAST  = BSIZE
-         END IF
+         else
+            first = 1
+            last  = bsize
+         end if
 
-         CALL DAFRDR ( HANDLE, RECNO, FIRST, LAST, DATA( NEXT ), FOUND )
+         call dafrdr ( handle, recno, first, last, data( next ), found )
 
-         IF ( .NOT. FOUND ) THEN
-            CALL CLEARD ( LAST-FIRST+1, DATA( NEXT ) )
-         END IF
+         if ( .not. found ) then
+            call cleard ( last-first+1, data( next ) )
+         end if
 
-         NEXT = NEXT + ( LAST-FIRST+1 )
+         next = next + ( last-first+1 )
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

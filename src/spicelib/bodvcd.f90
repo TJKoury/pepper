@@ -1,6 +1,6 @@
 !$Procedure BODVCD ( Return d.p. values from the kernel pool )
 
-      SUBROUTINE BODVCD ( BODYID, ITEM, MAXN, DIM, VALUES )
+      subroutine bodvcd ( bodyid, item, maxn, dim, values )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODYID
-      CHARACTER*(*)         ITEM
-      INTEGER               MAXN
-      INTEGER               DIM
-      DOUBLE PRECISION      VALUES  ( * )
+      integer               bodyid
+      character*(*)         item
+      integer               maxn
+      integer               dim
+      double precision      values  ( * )
 
 ! $ Brief_I/O
 !
@@ -289,101 +289,101 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               CDELEN
-      PARAMETER           ( CDELEN = 16 )
+      integer               cdelen
+      parameter           ( cdelen = 16 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 32 )
+      integer               namlen
+      parameter           ( namlen = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CDELEN)    CODE
-      CHARACTER*1           TYPE
-      CHARACTER*(NAMLEN)    VARNAM
+      character*(cdelen)    code
+      character*1           type
+      character*(namlen)    varnam
 
-      LOGICAL               FOUND
+      logical               found
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-        RETURN
-      ELSE
-        CALL CHKIN ( 'BODVCD' )
-      END IF
+      if ( return () ) then
+        return
+      else
+        call chkin ( 'BODVCD' )
+      end if
 
 !
 !     Construct the variable name from BODY and ITEM.
 !
-      VARNAM = 'BODY'
+      varnam = 'BODY'
 
-      CALL INTSTR ( BODYID,    CODE   )
-      CALL SUFFIX ( CODE,   0, VARNAM )
-      CALL SUFFIX ( '_',    0, VARNAM )
-      CALL SUFFIX ( ITEM,   0, VARNAM )
+      call intstr ( bodyid,    code   )
+      call suffix ( code,   0, varnam )
+      call suffix ( '_',    0, varnam )
+      call suffix ( item,   0, varnam )
 
 !
 !     Make sure the item is present in the kernel pool.
 !
-      CALL DTPOOL ( VARNAM, FOUND, DIM, TYPE )
+      call dtpool ( varnam, found, dim, type )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The variable # could not be found in the ' // &
+         call setmsg ( 'The variable # could not be found in the ' // &
                        'kernel pool.'                              )
-         CALL ERRCH  ( '#', VARNAM                                 )
-         CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)'                  )
-         CALL CHKOUT ( 'BODVCD'                                    )
-         RETURN
+         call errch  ( '#', varnam                                 )
+         call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                  )
+         call chkout ( 'BODVCD'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the item's data type is numeric.
 !
-      IF ( TYPE .NE. 'N' ) THEN
+      if ( type .ne. 'N' ) then
 
-         CALL SETMSG ( 'The data associated with variable # ' // &
+         call setmsg ( 'The data associated with variable # ' // &
                        'are not of numeric type.'             )
-         CALL ERRCH  ( '#', VARNAM                            )
-         CALL SIGERR ( 'SPICE(TYPEMISMATCH)'                  )
-         CALL CHKOUT ( 'BODVCD'                               )
-         RETURN
+         call errch  ( '#', varnam                            )
+         call sigerr ( 'SPICE(TYPEMISMATCH)'                  )
+         call chkout ( 'BODVCD'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure there's enough room in the array VALUES to hold
 !     the requested data.
 !
-      IF ( MAXN .LT. DIM ) THEN
+      if ( maxn .lt. dim ) then
 
-         CALL SETMSG ( 'The data array associated with variable # ' // &
+         call setmsg ( 'The data array associated with variable # ' // &
                        'has dimension #, which is larger than the ' // &
                        'available space # in the output array.'    )
-         CALL ERRCH  ( '#', VARNAM                                 )
-         CALL ERRINT ( '#', DIM                                    )
-         CALL ERRINT ( '#', MAXN                                   )
-         CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'                      )
-         CALL CHKOUT ( 'BODVCD'                                    )
-         RETURN
+         call errch  ( '#', varnam                                 )
+         call errint ( '#', dim                                    )
+         call errint ( '#', maxn                                   )
+         call sigerr ( 'SPICE(ARRAYTOOSMALL)'                      )
+         call chkout ( 'BODVCD'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Grab the values.  We know at this point they're present in
 !     the kernel pool, so we don't check the FOUND flag.
 !
-      CALL GDPOOL ( VARNAM, 1, MAXN, DIM, VALUES, FOUND )
+      call gdpool ( varnam, 1, maxn, dim, values, found )
 
-      CALL CHKOUT ( 'BODVCD' )
-      RETURN
-      END
+      call chkout ( 'BODVCD' )
+      return
+      end

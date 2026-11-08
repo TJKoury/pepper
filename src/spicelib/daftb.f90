@@ -1,6 +1,6 @@
 !$Procedure DAFTB ( DAF, convert transfer file to binary file )
 
-      SUBROUTINE DAFTB ( XFRLUN, BINFIL )
+      subroutine daftb ( xfrlun, binfil )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               XFRLUN
-      CHARACTER*(*)         BINFIL
+      integer               xfrlun
+      character*(*)         binfil
 
 ! $ Brief_I/O
 !
@@ -235,85 +235,85 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local Parameters
 !
-      CHARACTER*(*)         BEGARR
-      PARAMETER           ( BEGARR = 'BEGIN_ARRAY' )
+      character*(*)         begarr
+      parameter           ( begarr = 'BEGIN_ARRAY' )
 
-      CHARACTER*(*)         ENDARR
-      PARAMETER           ( ENDARR = 'END_ARRAY' )
+      character*(*)         endarr
+      parameter           ( endarr = 'END_ARRAY' )
 
-      CHARACTER*(*)         TOTARR
-      PARAMETER           ( TOTARR = 'TOTAL_ARRAYS' )
+      character*(*)         totarr
+      parameter           ( totarr = 'TOTAL_ARRAYS' )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 1024 )
+      integer               bufsiz
+      parameter           ( bufsiz = 1024 )
 
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 255 )
+      integer               linlen
+      parameter           ( linlen = 255 )
 
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN = 320 )
+      integer               errlen
+      parameter           ( errlen = 320 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8    )
+      integer               idwlen
+      parameter           ( idwlen = 8    )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60   )
+      integer               ifnlen
+      parameter           ( ifnlen = 60   )
 
-      INTEGER               CRECL
-      PARAMETER           ( CRECL  = 1000 )
+      integer               crecl
+      parameter           ( crecl  = 1000 )
 
-      INTEGER               RESREC
-      PARAMETER           ( RESREC = 0 )
+      integer               resrec
+      parameter           ( resrec = 0 )
 !
 !     Local variables
 !
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(ERRLEN)    ERRMSG
-      CHARACTER*(LINLEN)    LINE
-      CHARACTER*(CRECL)     NAME
-      CHARACTER*(LINLEN)    REST
-      CHARACTER*(IDWLEN)    TARCH
-      CHARACTER*(IDWLEN)    TTYPE
-      CHARACTER*(LINLEN)    WORD
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
+      character*(errlen)    errmsg
+      character*(linlen)    line
+      character*(crecl)     name
+      character*(linlen)    rest
+      character*(idwlen)    tarch
+      character*(idwlen)    ttype
+      character*(linlen)    word
 
-      DOUBLE PRECISION      BUFFER( BUFSIZ )
-      DOUBLE PRECISION      DSUMRY( 125    )
-      DOUBLE PRECISION      SUMMRY( 125    )
+      double precision      buffer( bufsiz )
+      double precision      dsumry( 125    )
+      double precision      summry( 125    )
 
-      INTEGER               ARRCNT
-      INTEGER               BARR
-      INTEGER               BCNT
-      INTEGER               BINHDL
-      INTEGER               DTACNT
-      INTEGER               EARR
-      INTEGER               ECNT
-      INTEGER               ERRPTR
-      INTEGER               IOSTAT
-      INTEGER               ISUMRY( 250    )
-      INTEGER               LFTOVR
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NUMARR
-      INTEGER               NUMDTA
-      INTEGER               NUMLFT
-      INTEGER               SNMLEN
+      integer               arrcnt
+      integer               barr
+      integer               bcnt
+      integer               binhdl
+      integer               dtacnt
+      integer               earr
+      integer               ecnt
+      integer               errptr
+      integer               iostat
+      integer               isumry( 250    )
+      integer               lftovr
+      integer               nd
+      integer               ni
+      integer               numarr
+      integer               numdta
+      integer               numlft
+      integer               snmlen
 
-      LOGICAL               INARR
-      LOGICAL               MORE
+      logical               inarr
+      logical               more
 !
 !     Standard/ SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFTB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFTB' )
+      end if
 !
 !     A brief description of the DAF transfer file format and its
 !     intended use follows. This description is intended to provide a
@@ -426,45 +426,45 @@
 !
 !     Initialize a few things.
 !
-      TARCH  = ' '
-      TTYPE  = ' '
-      IDWORD = ' '
+      tarch  = ' '
+      ttype  = ' '
+      idword = ' '
 !
 !     We begin by reading the DAF file ID word from the DAF transfer
 !     file. We should have been positioned ready to read this. If an
 !     error occurs, set an appropriate error message and signal the
 !     error.
 !
-      READ (XFRLUN,*,IOSTAT=IOSTAT) IDWORD
+      read (xfrlun,*,iostat=iostat) idword
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error reading the file ID word from the'  // &
+         call setmsg ( 'Error reading the file ID word from the'  // &
                        ' DAF transfer file ''#''. IOSTAT = #.'     )
-         CALL ERRFNM ( '#', XFRLUN                                 )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT ( 'DAFTB'                                     )
-         RETURN
+         call errfnm ( '#', xfrlun                                 )
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout ( 'DAFTB'                                     )
+         return
 
-      END IF
+      end if
 !
 !     Separate the ID word into its components and verify that we are
 !     looking at a DAF transfer file. If we're not, then this routine
 !     should not be used.
 !
-      CALL IDW2AT ( IDWORD, TARCH, TTYPE )
+      call idw2at ( idword, tarch, ttype )
 
-      IF ( TARCH .NE. 'DAF' ) THEN
+      if ( tarch .ne. 'DAF' ) then
 
-         CALL SETMSG ( 'File architecture is not ''DAF'' for' // &
+         call setmsg ( 'File architecture is not ''DAF'' for' // &
                        ' file ''#'''                           )
-         CALL ERRFNM ( '#', XFRLUN                             )
-         CALL SIGERR ( 'SPICE(NOTADAFFILE)'                    )
-         CALL CHKOUT ( 'DAFTB'                                 )
-         RETURN
+         call errfnm ( '#', xfrlun                             )
+         call sigerr ( 'SPICE(NOTADAFFILE)'                    )
+         call chkout ( 'DAFTB'                                 )
+         return
 
-      END IF
+      end if
 !
 !     The file architecture is OK, but before we can open the binary
 !     DAF, we need to get the summary format and the internal file name
@@ -472,442 +472,442 @@
 !
 !     Read in the ND and NI values for the DAF file.
 !
-      CALL RDENCI( XFRLUN, 2, ISUMRY )
+      call rdenci( xfrlun, 2, isumry )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFTB' )
-         RETURN
+         call chkout ( 'DAFTB' )
+         return
 
-      END IF
+      end if
 
-      ND = ISUMRY(1)
-      NI = ISUMRY(2)
+      nd = isumry(1)
+      ni = isumry(2)
 !
 !     Read the internal filename for the DAF file.
 !
-      READ (XFRLUN,*,IOSTAT=IOSTAT) IFNAME
+      read (xfrlun,*,iostat=iostat) ifname
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error reading the internal filename from'  // &
+         call setmsg ( 'Error reading the internal filename from'  // &
                        ' the DAF transfer file ''#''. IOSTAT = #.'  )
-         CALL ERRFNM ( '#', XFRLUN                                  )
-         CALL ERRINT ( '#', IOSTAT                                  )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                      )
-         CALL CHKOUT ( 'DAFTB'                                      )
-         RETURN
+         call errfnm ( '#', xfrlun                                  )
+         call errint ( '#', iostat                                  )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                      )
+         call chkout ( 'DAFTB'                                      )
+         return
 
-      END IF
+      end if
 !
 !     Open a new binary DAF file. Call the proper open routine,
 !     depending on whether it's a new file or an old file.
 !
-      IF ( TTYPE .NE. '?' ) THEN
-         CALL DAFONW ( BINFIL, TTYPE, ND, NI, IFNAME, RESREC, BINHDL )
-      ELSE
-         CALL DAFOPN ( BINFIL, ND, NI, IFNAME, RESREC, BINHDL )
-      END IF
+      if ( ttype .ne. '?' ) then
+         call dafonw ( binfil, ttype, nd, ni, ifname, resrec, binhdl )
+      else
+         call dafopn ( binfil, nd, ni, ifname, resrec, binhdl )
+      end if
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFTB' )
-         RETURN
+         call chkout ( 'DAFTB' )
+         return
 
-      END IF
+      end if
 !
 !     Calculate the length of the segment names.
 !
-      SNMLEN = 8 * ( ND + ( NI + 1 ) / 2 )
+      snmlen = 8 * ( nd + ( ni + 1 ) / 2 )
 !
 !     Initialize a few things: the array counter and the data counter.
 !
-      ARRCNT = 0
-      DTACNT = 0
+      arrcnt = 0
+      dtacnt = 0
 !
 !     We currently have more to process.
 !
-      MORE  = .TRUE.
+      more  = .true.
 !
 !     We are currently not processing an array.
 !
-      INARR = .FALSE.
+      inarr = .false.
 !
 !     Begin converting the DAF transfer file into a binary DAF file
 !     here.
 !
-      DO WHILE ( MORE )
+      do while ( more )
 
-         READ (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE
+         read (xfrlun,fmt='(A)',iostat=iostat) line
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Error reading from the DAF transfer'  // &
+            call setmsg ( 'Error reading from the DAF transfer'  // &
                           ' file ''#''. IOSTAT = #.'              )
-            CALL ERRFNM ( '#', XFRLUN                             )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                 )
-            CALL CHKOUT ( 'DAFTB'                                 )
-            RETURN
+            call errfnm ( '#', xfrlun                             )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                 )
+            call chkout ( 'DAFTB'                                 )
+            return
 
-         END IF
+         end if
 !
 !        At this point, we should be beginning an array, ending an
 !        array, or scanning for the total number of arrays. So look
 !        for the appropriate keyword.
 !
-         CALL NEXTWD( LINE, WORD, REST )
+         call nextwd( line, word, rest )
 
-         IF ( WORD .EQ. BEGARR ) THEN
+         if ( word .eq. begarr ) then
 !
 !           Get the array number.
 !
-            CALL NEXTWD( REST, WORD, REST           )
-            CALL NPARSI( WORD, BARR, ERRMSG, ERRPTR )
+            call nextwd( rest, word, rest           )
+            call nparsi( word, barr, errmsg, errptr )
 
-            IF ( ERRMSG .NE. ' ' ) THEN
+            if ( errmsg .ne. ' ' ) then
 
-               CALL SETMSG ( 'Begin array error, could not parse'  // &
+               call setmsg ( 'Begin array error, could not parse'  // &
                              ' array number. Error: # File: #'      )
-               CALL ERRCH  ( '#', ERRMSG                            )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'            )
-               CALL CHKOUT ( 'DAFTB'                                )
-               RETURN
+               call errch  ( '#', errmsg                            )
+               call errfnm ( '#', xfrlun                            )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'            )
+               call chkout ( 'DAFTB'                                )
+               return
 
-            END IF
+            end if
 !
 !           Parse the count of double precision numbers in the array.
 !
-            CALL NEXTWD( REST, WORD, REST           )
-            CALL NPARSI( WORD, BCNT, ERRMSG, ERRPTR )
+            call nextwd( rest, word, rest           )
+            call nparsi( word, bcnt, errmsg, errptr )
 
-            IF ( ERRMSG .NE. ' ' ) THEN
+            if ( errmsg .ne. ' ' ) then
 
-               CALL SETMSG ( 'Begin array error, could not parse' // &
+               call setmsg ( 'Begin array error, could not parse' // &
                              ' the data count for array: #.'      // &
                              ' Error: # File: #'                   )
-               CALL ERRINT ( '#', BARR                             )
-               CALL ERRCH  ( '#', ERRMSG                           )
-               CALL ERRFNM ( '#', XFRLUN                           )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'           )
-               CALL CHKOUT ( 'DAFTB'                               )
-               RETURN
+               call errint ( '#', barr                             )
+               call errch  ( '#', errmsg                           )
+               call errfnm ( '#', xfrlun                           )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'           )
+               call chkout ( 'DAFTB'                               )
+               return
 
-            END IF
+            end if
 !
 !           If we got to here, we are inside an array, so set the in
 !           array flag, INARR, to .TRUE. and increment the array
 !           counter.
 !
-            INARR  = .TRUE.
-            ARRCNT = ARRCNT + 1
+            inarr  = .true.
+            arrcnt = arrcnt + 1
 
-         ELSE IF ( WORD .EQ. ENDARR ) THEN
+         else if ( word .eq. endarr ) then
 !
 !           Get the array number.
 !
-            CALL NEXTWD( REST, WORD, REST           )
-            CALL NPARSI( WORD, EARR, ERRMSG, ERRPTR )
+            call nextwd( rest, word, rest           )
+            call nparsi( word, earr, errmsg, errptr )
 
-            IF ( ERRMSG .NE. ' ' ) THEN
+            if ( errmsg .ne. ' ' ) then
 
-               CALL SETMSG ( 'End array error, could not parse'  // &
+               call setmsg ( 'End array error, could not parse'  // &
                              ' array number. Error: # File: #'    )
-               CALL ERRCH  ( '#', ERRMSG                          )
-               CALL ERRFNM ( '#', XFRLUN                          )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'          )
-               CALL CHKOUT ( 'DAFTB'                              )
-               RETURN
+               call errch  ( '#', errmsg                          )
+               call errfnm ( '#', xfrlun                          )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'          )
+               call chkout ( 'DAFTB'                              )
+               return
 
-            END IF
+            end if
 !
 !           Parse the count of double precision numbers in the array.
 !
-            CALL NEXTWD( REST, WORD, REST           )
-            CALL NPARSI( WORD, ECNT, ERRMSG, ERRPTR )
+            call nextwd( rest, word, rest           )
+            call nparsi( word, ecnt, errmsg, errptr )
 
-            IF ( ERRMSG .NE. ' ' ) THEN
+            if ( errmsg .ne. ' ' ) then
 
-               CALL SETMSG ( 'End array error, could not parse' // &
+               call setmsg ( 'End array error, could not parse' // &
                              ' the data count for array: #.'    // &
                              ' Error: # File: #'                 )
-               CALL ERRINT ( '#', EARR                           )
-               CALL ERRCH  ( '#', ERRMSG                         )
-               CALL ERRFNM ( '#', XFRLUN                         )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'         )
-               CALL CHKOUT ( 'DAFTB'                             )
-               RETURN
+               call errint ( '#', earr                           )
+               call errch  ( '#', errmsg                         )
+               call errfnm ( '#', xfrlun                         )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'         )
+               call chkout ( 'DAFTB'                             )
+               return
 
-            END IF
+            end if
 !
 !           Check to see if the beginning and ending array numbers
 !           match. If not, signal an appropriate error.
 !
-            IF ( EARR .NE. BARR ) THEN
+            if ( earr .ne. barr ) then
 
-               CALL SETMSG ( 'Data array number mismatch:'         // &
+               call setmsg ( 'Data array number mismatch:'         // &
                              ' Beginning number: #; Ending'        // &
                              ' number: #. File: #'                  )
-               CALL ERRINT ( '#', BARR                              )
-               CALL ERRINT ( '#', EARR                              )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'            )
-               CALL CHKOUT ( 'DAFTB'                                )
-               RETURN
+               call errint ( '#', barr                              )
+               call errint ( '#', earr                              )
+               call errfnm ( '#', xfrlun                            )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'            )
+               call chkout ( 'DAFTB'                                )
+               return
 
-            END IF
+            end if
 !
 !           Check to see if the beginning and ending array data counts
 !           match. If not, signal an appropriate error.
 !
-            IF ( ECNT .NE. BCNT ) THEN
+            if ( ecnt .ne. bcnt ) then
 
-               CALL SETMSG ( 'Data array count mismatch:'      // &
+               call setmsg ( 'Data array count mismatch:'      // &
                              ' Beginning count: #;'            // &
                              ' Ending count: #. File: #'        )
-               CALL ERRINT ( '#', BCNT                          )
-               CALL ERRINT ( '#', ECNT                          )
-               CALL ERRFNM ( '#', XFRLUN                        )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'        )
-               CALL CHKOUT ( 'DAFTB'                            )
-               RETURN
+               call errint ( '#', bcnt                          )
+               call errint ( '#', ecnt                          )
+               call errfnm ( '#', xfrlun                        )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'        )
+               call chkout ( 'DAFTB'                            )
+               return
 
-            END IF
+            end if
 !
 !           If we got to here, we have successfully ended the
 !           processing of an array, so set the in array flag, INARR,
 !           to  .FALSE..
 !
-            INARR = .FALSE.
+            inarr = .false.
 
-         ELSE IF ( WORD .EQ. TOTARR ) THEN
+         else if ( word .eq. totarr ) then
 !
 !           We have the total arrays keyword to parse, so get
 !           the total number of arrays processed.
 !
-            CALL NEXTWD( REST, WORD, REST             )
-            CALL NPARSI( WORD, NUMARR, ERRMSG, ERRPTR )
+            call nextwd( rest, word, rest             )
+            call nparsi( word, numarr, errmsg, errptr )
 
-            IF ( ERRMSG .NE. ' ' ) THEN
+            if ( errmsg .ne. ' ' ) then
 
-               CALL SETMSG ( 'Array count error, could not parse' // &
+               call setmsg ( 'Array count error, could not parse' // &
                              ' the total number of arrays: #.'    // &
                              ' File: #'                            )
-               CALL ERRCH  ( '#', ERRMSG                           )
-               CALL ERRFNM ( '#', XFRLUN                           )
-               CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'           )
-               CALL CHKOUT ( 'DAFTB'                               )
-               RETURN
+               call errch  ( '#', errmsg                           )
+               call errfnm ( '#', xfrlun                           )
+               call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'           )
+               call chkout ( 'DAFTB'                               )
+               return
 
-            END IF
+            end if
 
-            IF ( ARRCNT .NE. NUMARR ) THEN
+            if ( arrcnt .ne. numarr ) then
 
-                  CALL SETMSG ( 'The number of data arrays'          // &
+                  call setmsg ( 'The number of data arrays'          // &
                                 ' processed (#) was not equal to'    // &
                                 ' the number of data arrays placed'  // &
                                 ' in the DAF transfer file (#).'     // &
                                 ' File: #'                            )
-                  CALL ERRINT ( '#', ARRCNT                           )
-                  CALL ERRINT ( '#', NUMARR                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DAFTB'                               )
-                  RETURN
+                  call errint ( '#', arrcnt                           )
+                  call errint ( '#', numarr                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'           )
+                  call chkout ( 'DAFTB'                               )
+                  return
 
-            END IF
+            end if
 !
 !           If we got to here, we have successfully processed the
 !           entire data portion of the DAF transfer file, so there is
 !           no more data.
 !
-            MORE = .FALSE.
+            more = .false.
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Unknown keyword ''#'' encountered'      // &
+            call setmsg ( 'Unknown keyword ''#'' encountered'      // &
                           ' while processing the DAF transfer'     // &
                           ' file #.'                                )
-            CALL ERRCH  ( '#', WORD                                 )
-            CALL ERRFNM ( '#', XFRLUN                               )
-            CALL SIGERR ( 'SPICE(BADDAFTRANSFERFILE)'               )
-            CALL CHKOUT ( 'DAFTB'                                   )
-            RETURN
+            call errch  ( '#', word                                 )
+            call errfnm ( '#', xfrlun                               )
+            call sigerr ( 'SPICE(BADDAFTRANSFERFILE)'               )
+            call chkout ( 'DAFTB'                                   )
+            return
 
-         END IF
+         end if
 !
 !        If we have begun an array, then process it. Otherwise, we
 !        have either ended an array or ended the file.
 !
-         IF ( INARR ) THEN
+         if ( inarr ) then
 
-            DTACNT = 0
+            dtacnt = 0
 
-            READ (XFRLUN,*,IOSTAT=IOSTAT) NAME( :SNMLEN)
+            read (xfrlun,*,iostat=iostat) name( :snmlen)
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error reading the array name from the' // &
+               call setmsg ( 'Error reading the array name from the' // &
                              ' DAF transfer file #. IOSTAT = #.'      )
-               CALL ERRFNM ( '#', XFRLUN                              )
-               CALL ERRINT ( '#', IOSTAT                              )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'                  )
-               CALL CHKOUT ( 'DAFTB'                                  )
-               RETURN
+               call errfnm ( '#', xfrlun                              )
+               call errint ( '#', iostat                              )
+               call sigerr ( 'SPICE(FILEREADFAILED)'                  )
+               call chkout ( 'DAFTB'                                  )
+               return
 
-            END IF
+            end if
 !
 !           Read in the double precision part of the summary.
 !
-            CALL RDENCD ( XFRLUN, ND, DSUMRY )
+            call rdencd ( xfrlun, nd, dsumry )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CALL CHKOUT ( 'DAFTB' )
-               RETURN
+               call chkout ( 'DAFTB' )
+               return
 
-            END IF
+            end if
 !
 !           Read in the integer part of the summary. The beginning and
 !           ending addresses, ISUMRY(NI-1) and ISUMRY(NI), for the
 !           array are not known currently. They will be filled in when
 !           the array is actually written to the DAF file.
 !
-            CALL RDENCI( XFRLUN, NI-2, ISUMRY )
+            call rdenci( xfrlun, ni-2, isumry )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CALL CHKOUT ( 'DAFTB' )
-               RETURN
+               call chkout ( 'DAFTB' )
+               return
 
-            END IF
+            end if
 !
 !           Pack the summary information into the DAF array summary.
 !
-            CALL DAFPS  ( ND, NI, DSUMRY, ISUMRY, SUMMRY )
+            call dafps  ( nd, ni, dsumry, isumry, summry )
 !
 !           Begin a new array in the binary DAF file.
 !
-            CALL DAFBNA ( BINHDL, SUMMRY, NAME( :SNMLEN) )
+            call dafbna ( binhdl, summry, name( :snmlen) )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CALL CHKOUT ( 'DAFTB' )
-               RETURN
+               call chkout ( 'DAFTB' )
+               return
 
-            END IF
+            end if
 !
 !           Read and decode the data in the current DAF array.
 !
 !           First set the count of numbers yet to be decoded and placed
 !           in the binary DAF file.
 !
-            NUMLFT = BCNT
+            numlft = bcnt
 
-            DO WHILE ( NUMLFT .GT. 0 )
+            do while ( numlft .gt. 0 )
 !
 !              First, read in the count of encoded numbers in the
 !              current data block.
 !
-               READ (XFRLUN,*,IOSTAT=IOSTAT) NUMDTA
+               read (xfrlun,*,iostat=iostat) numdta
 
-               IF ( IOSTAT .NE. 0 ) THEN
+               if ( iostat .ne. 0 ) then
 
-                  CALL SETMSG ( 'Error reading array data from the' // &
+                  call setmsg ( 'Error reading array data from the' // &
                                 ' DAF transfer file #. IOSTAT = #.'  )
-                  CALL ERRFNM ( '#', XFRLUN                          )
-                  CALL ERRINT ( '#', IOSTAT                          )
-                  CALL SIGERR ( 'SPICE(FILEREADFAILED)'              )
-                  CALL CHKOUT ( 'DAFTB'                              )
-                  RETURN
+                  call errfnm ( '#', xfrlun                          )
+                  call errint ( '#', iostat                          )
+                  call sigerr ( 'SPICE(FILEREADFAILED)'              )
+                  call chkout ( 'DAFTB'                              )
+                  return
 
-               END IF
+               end if
 !
 !              Now read and decode the data in the current data block,
 !              placing the data in the current array in the binary DAF
 !              file.
 !
-               LFTOVR = NUMDTA
+               lftovr = numdta
 
-               DO WHILE ( LFTOVR .GT. 0 )
+               do while ( lftovr .gt. 0 )
 
-                  IF ( LFTOVR .GE. BUFSIZ ) THEN
+                  if ( lftovr .ge. bufsiz ) then
 
-                     NUMDTA = BUFSIZ
+                     numdta = bufsiz
 
-                  ELSE
+                  else
 
-                     NUMDTA = LFTOVR
+                     numdta = lftovr
 
-                  END IF
+                  end if
 !
 !                 Read and decode a buffer of encoded double precision
 !                 data from the DAF transfer file.
 !
-                  CALL RDENCD ( XFRLUN, NUMDTA, BUFFER )
+                  call rdencd ( xfrlun, numdta, buffer )
 
-                  IF ( FAILED() ) THEN
+                  if ( failed() ) then
 
-                     CALL CHKOUT ( 'DAFTB' )
-                     RETURN
+                     call chkout ( 'DAFTB' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Write the double precision data to the current array
 !                 in the binary DAF file.
 !
-                  CALL DAFADA ( BUFFER, NUMDTA )
+                  call dafada ( buffer, numdta )
 
-                  IF ( FAILED() ) THEN
+                  if ( failed() ) then
 
-                     CALL CHKOUT ( 'DAFTB' )
-                     RETURN
+                     call chkout ( 'DAFTB' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Decrement the counters for the amount of data
 !                 remaining to be moved from the current data block,
 !                 LFTOVR, and the current array, NUMLFT.
 !
-                  LFTOVR = LFTOVR - NUMDTA
-                  NUMLFT = NUMLFT - NUMDTA
+                  lftovr = lftovr - numdta
+                  numlft = numlft - numdta
 !
 !                 Increment the counter for the amount of data that
 !                 has been successfully moved into the current array
 !                 in the binary DAF file.
 !
-                  DTACNT = DTACNT + NUMDTA
+                  dtacnt = dtacnt + numdta
 
-               END DO
+               end do
 !
 !              At this point, we have either finished reading in the
 !              entire array, or we have just completed reading the
 !              current encoded block of data for the current array
 !              from the DAF transfer file.
 !
-            END DO
+            end do
 !
 !           If we got to here, we have successfully written an array
 !           to the binary file, so we need to end it.
 !
-            CALL DAFENA
+            call dafena
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CALL CHKOUT ( 'DAFTB' )
-               RETURN
+               call chkout ( 'DAFTB' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Close only the binary file.
 !
-      CALL DAFCLS ( BINHDL )
+      call dafcls ( binhdl )
 
-      CALL CHKOUT ( 'DAFTB' )
-      RETURN
-      END
+      call chkout ( 'DAFTB' )
+      return
+      end

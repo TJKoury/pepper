@@ -1,6 +1,6 @@
 !$Procedure SUMAD ( Sum of a double precision array )
 
-      DOUBLE PRECISION FUNCTION SUMAD ( ARRAY, N )
+      double precision function sumad ( array, n )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   ARRAY  ( * )
-      INTEGER            N
+      double precision   array  ( * )
+      integer            n
 
 ! $ Brief_I/O
 !
@@ -126,26 +126,26 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION SUM
-      INTEGER          I
+      double precision sum
+      integer          i
 
 
 !
 !     Begin at zero.
 !
-      SUM = 0.D0
+      sum = 0.d0
 
 !
 !     Sum the elements. If N is zero or negative, nothing happens.
 !
-      DO I = 1, N
-         SUM = SUM + ARRAY(I)
-      END DO
+      do i = 1, n
+         sum = sum + array(i)
+      end do
 
 !
 !     Return the sum.
 !
-      SUMAD = SUM
+      sumad = sum
 
-      RETURN
-      END
+      return
+      end

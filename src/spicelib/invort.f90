@@ -1,6 +1,6 @@
 !$Procedure INVORT ( Invert nearly orthogonal matrices )
 
-      SUBROUTINE INVORT ( M, MIT )
+      subroutine invort ( m, mit )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      M   ( 3, 3 )
-      DOUBLE PRECISION      MIT ( 3, 3 )
+      double precision      m   ( 3, 3 )
+      double precision      mit ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -232,30 +232,30 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
+      double precision      dpmax
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BOUND
-      DOUBLE PRECISION      LENGTH
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      TEMP   ( 3, 3 )
+      double precision      bound
+      double precision      length
+      double precision      scale
+      double precision      temp   ( 3, 3 )
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  BOUND
-      SAVE                  FIRST
+      save                  bound
+      save                  first
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
@@ -265,62 +265,62 @@
 !
 !     The first time through, get a copy of DPMAX.
 !
-      IF ( FIRST ) THEN
-         BOUND =  DPMAX()
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         bound =  dpmax()
+         first = .false.
+      end if
 
 !
 !     For each column, construct a scaled copy. However, make sure
 !     everything is do-able before trying something.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         CALL UNORM ( M(1,I), TEMP(1,I), LENGTH )
+         call unorm ( m(1,i), temp(1,i), length )
 
-         IF ( LENGTH .EQ. 0.0D0 ) THEN
+         if ( length .eq. 0.0d0 ) then
 
-            CALL CHKIN  ( 'INVORT'                                     )
-            CALL SETMSG ( 'Column # of the input matrix has a norm '  // &
+            call chkin  ( 'INVORT'                                     )
+            call setmsg ( 'Column # of the input matrix has a norm '  // &
                           'of zero. '                                  )
-            CALL ERRINT ( '#',        I                                )
-            CALL SIGERR ( 'SPICE(ZEROLENGTHCOLUMN)'                    )
-            CALL CHKOUT ( 'INVORT'                                     )
-            RETURN
+            call errint ( '#',        i                                )
+            call sigerr ( 'SPICE(ZEROLENGTHCOLUMN)'                    )
+            call chkout ( 'INVORT'                                     )
+            return
 
-         END IF
+         end if
 
 !
 !        Make sure we can actually rescale the rows.
 !
-         IF    ( LENGTH .LT. 1.0D0 ) THEN
+         if    ( length .lt. 1.0d0 ) then
 
-            IF (  ( LENGTH * BOUND ) .LT. 1.0D0 ) THEN
+            if (  ( length * bound ) .lt. 1.0d0 ) then
 
-               CALL CHKIN  ( 'INVORT' )
-               CALL SETMSG ( 'The length of column # is #. This '     // &
+               call chkin  ( 'INVORT' )
+               call setmsg ( 'The length of column # is #. This '     // &
                              'number cannot be inverted.  For this '  // &
                              'reason, the scaled transpose of the '   // &
                              'input matrix cannot be formed. '        )
-               CALL ERRINT ( '#',   I                                 )
-               CALL ERRDP  ( '#',   LENGTH                            )
-               CALL SIGERR ( 'SPICE(COLUMNTOOSMALL)'                  )
-               CALL CHKOUT ( 'INVORT'                                 )
-               RETURN
+               call errint ( '#',   i                                 )
+               call errdp  ( '#',   length                            )
+               call sigerr ( 'SPICE(COLUMNTOOSMALL)'                  )
+               call chkout ( 'INVORT'                                 )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         SCALE = 1.0D0 / LENGTH
+         scale = 1.0d0 / length
 
-         CALL VSCLIP ( SCALE, TEMP(1,I) )
+         call vsclip ( scale, temp(1,i) )
 
-      END DO
+      end do
 
 !
 !     If we make it this far, we just need to transpose TEMP into MIT.
 !
-      CALL XPOSE ( TEMP, MIT )
-      RETURN
-      END
+      call xpose ( temp, mit )
+      return
+      end

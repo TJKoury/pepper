@@ -1,6 +1,6 @@
 !$Procedure REPLWD ( Replace a word )
 
-      SUBROUTINE REPLWD ( INSTR, NTH, NEW, OUTSTR )
+      subroutine replwd ( instr, nth, new, outstr )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    INSTR
-      INTEGER          NTH
-      CHARACTER*(*)    NEW
-      CHARACTER*(*)    OUTSTR
+      character*(*)    instr
+      integer          nth
+      character*(*)    new
+      character*(*)    outstr
 
 ! $ Brief_I/O
 !
@@ -153,21 +153,21 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               lastnb
 
 !
 !   Local Variables
 !
-      CHARACTER*2           SHORT
-      INTEGER               BEGIN
-      INTEGER               I
-      INTEGER               J
-      INTEGER               F
-      INTEGER               L
-      INTEGER               K
-      INTEGER               N
-      INTEGER               SHIFT
+      character*2           short
+      integer               begin
+      integer               i
+      integer               j
+      integer               f
+      integer               l
+      integer               k
+      integer               n
+      integer               shift
 
 
 
@@ -177,31 +177,31 @@
 !     word is longer than the old one.  When its shorter we'll
 !     need to change this scheme slightly.)
 !
-      OUTSTR = INSTR
+      outstr = instr
 !
 !     Where does the word to be replaced begin? If there is none,
 !     just return the original string.
 !
-      CALL NTHWD  ( OUTSTR, NTH, SHORT, BEGIN )
+      call nthwd  ( outstr, nth, short, begin )
 
-      IF ( BEGIN .EQ. 0 ) THEN
+      if ( begin .eq. 0 ) then
 
-         RETURN
+         return
 
-      END IF
+      end if
 !
 !     Otherwise, find out where it ends as well.
 !
-      CALL FNDNWD ( INSTR, BEGIN, I, J )
+      call fndnwd ( instr, begin, i, j )
 
 !
 !     Now insert only the non-blank part of the replacement string.
 !     If the replacement string is blank, don't insert anything.
 !
-      IF ( NEW .NE. ' ' ) THEN
+      if ( new .ne. ' ' ) then
 
-         F = FRSTNB ( NEW )
-         L = LASTNB ( NEW )
+         f = frstnb ( new )
+         l = lastnb ( new )
 
 !
 !        Except in the lucky case that the word to insert is the
@@ -209,85 +209,85 @@
 !        to shift right or left by some amount.  Compute the
 !        appropriate amount to shift right.
 !
-         SHIFT = ( L - F ) - ( J - I )
+         shift = ( l - f ) - ( j - i )
 
-      ELSE
+      else
 
-         F     = 1
-         L     = 1
-         SHIFT = I - J
+         f     = 1
+         l     = 1
+         shift = i - j
 
-      END IF
+      end if
 
-      IF      ( SHIFT .GT. 0 ) THEN
+      if      ( shift .gt. 0 ) then
 
 !
 !        To shift right in place start at the right most character
 !        of the string and copy the character SHIFT spaces to the
 !        left.
 !
-         K = LEN(OUTSTR)
-         N = K - SHIFT
+         k = len(outstr)
+         n = k - shift
 
-         DO WHILE ( N .GT. J )
-            OUTSTR(K:K) = OUTSTR(N:N)
-            K           = K - 1
-            N           = N - 1
-         END DO
+         do while ( n .gt. j )
+            outstr(k:k) = outstr(n:n)
+            k           = k - 1
+            n           = n - 1
+         end do
 
 !
 !        Once the appropriate characters have been shifted out
 !        of the way, replace the opened space with the new
 !        word.
 !
-         DO WHILE (       ( F .LE. L           ) &
-                    .AND. ( I .LE. LEN(OUTSTR) ) )
-            OUTSTR(I:I) = NEW(F:F)
-            F           = F + 1
-            I           = I + 1
-         END DO
+         do while (       ( f .le. l           ) &
+                    .and. ( i .le. len(outstr) ) )
+            outstr(i:i) = new(f:f)
+            f           = f + 1
+            i           = i + 1
+         end do
 
-      ELSE
+      else
 
 !
 !        We have a left shift. Fill in the first part of the word
 !        we are replacing with the new one.
 !
-         DO WHILE (       ( F .LE. L           ) &
-                    .AND. ( I .LE. LEN(OUTSTR) ) )
+         do while (       ( f .le. l           ) &
+                    .and. ( i .le. len(outstr) ) )
 
-            OUTSTR(I:I) = NEW(F:F)
-            F           = F + 1
-            I           = I + 1
+            outstr(i:i) = new(f:f)
+            f           = f + 1
+            i           = i + 1
 
-         END DO
+         end do
 
 !
 !        Now starting just past the end of the word we are replacing
 !        shift the remainder of string left one character at a time.
 !
-         IF ( SHIFT .LT. 0 ) THEN
+         if ( shift .lt. 0 ) then
 
-            J = J + 1
+            j = j + 1
 
-            DO WHILE (       ( I .LE. LEN(OUTSTR)  ) &
-                       .AND. ( J .LE. LEN(INSTR)   ) )
+            do while (       ( i .le. len(outstr)  ) &
+                       .and. ( j .le. len(instr)   ) )
 
-               OUTSTR(I:I) = INSTR(J:J)
-               I           = I + 1
-               J           = J + 1
-            END DO
+               outstr(i:i) = instr(j:j)
+               i           = i + 1
+               j           = j + 1
+            end do
 
 !
 !           Finally pad the string with blanks.
 !
-            IF ( I .LE. LEN(OUTSTR) ) THEN
-               OUTSTR(I:) = ' '
-            END IF
+            if ( i .le. len(outstr) ) then
+               outstr(i:) = ' '
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

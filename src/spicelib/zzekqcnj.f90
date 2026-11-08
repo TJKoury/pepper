@@ -1,6 +1,6 @@
 !$Procedure  ZZEKQCNJ ( Private: EK, read conjunction sizes from query )
 
-      SUBROUTINE ZZEKQCNJ ( EQRYI, N, SIZE )
+      subroutine zzekqcnj ( eqryi, n, size )
 
 ! $ Abstract
 !
@@ -21,15 +21,15 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekbool.inc'
+      include 'ekquery.inc'
+      include 'ekbool.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               EQRYI ( LBCELL : * )
-      INTEGER               N
-      INTEGER               SIZE
+      integer               eqryi ( lbcell : * )
+      integer               n
+      integer               size
 
 ! $ Brief_I/O
 !
@@ -116,64 +116,64 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               IPARSE
-      INTEGER               LOC
-      INTEGER               NCNJ
-      INTEGER               NCNS
-      INTEGER               NTAB
+      integer               iparse
+      integer               loc
+      integer               ncnj
+      integer               ncns
+      integer               ntab
 
 !
 !     Use discovery check-in.
 !
 
-      CALL ZZEKREQI ( EQRYI, 'PARSED', IPARSE )
+      call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IPARSE .EQ. IFALSE ) THEN
+      if ( iparse .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKQCNJ'                                )
-         CALL SETMSG ( 'Encoded query has not yet been parsed.'  )
-         CALL SIGERR ( 'SPICE(UNPARSEDQUERY)'                    )
-         CALL CHKOUT ( 'ZZEKQCNJ'                                )
-         RETURN
+         call chkin  ( 'ZZEKQCNJ'                                )
+         call setmsg ( 'Encoded query has not yet been parsed.'  )
+         call sigerr ( 'SPICE(UNPARSEDQUERY)'                    )
+         call chkout ( 'ZZEKQCNJ'                                )
+         return
 
-      END IF
+      end if
 
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',         NTAB   )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONJUNCTIONS',   NCNJ   )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONSTRAINTS',    NCNS   )
+      call zzekreqi ( eqryi, 'NUM_TABLES',         ntab   )
+      call zzekreqi ( eqryi, 'NUM_CONJUNCTIONS',   ncnj   )
+      call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',    ncns   )
 
 
-      IF (  ( N .LT. 1 ) .OR. ( N .GT. NCNJ )  ) THEN
+      if (  ( n .lt. 1 ) .or. ( n .gt. ncnj )  ) then
 
-         CALL CHKIN  ( 'ZZEKQCNJ'                                  )
-         CALL SETMSG ( 'Table index # is out of valid range 1:#.'  )
-         CALL ERRINT ( '#',  N                                     )
-         CALL ERRINT ( '#',  NCNJ                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-         CALL CHKOUT ( 'ZZEKQCNJ'                                  )
-         RETURN
+         call chkin  ( 'ZZEKQCNJ'                                  )
+         call setmsg ( 'Table index # is out of valid range 1:#.'  )
+         call errint ( '#',  n                                     )
+         call errint ( '#',  ncnj                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+         call chkout ( 'ZZEKQCNJ'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the location of the requested conjunction size value.
 !
-      LOC    =     EQVBAS &
-                 + NTAB  *  2  *  EQVDSZ &
-                 + NCNS        *  EQCDSZ &
-                 + N
+      loc    =     eqvbas &
+                 + ntab  *  2  *  eqvdsz &
+                 + ncns        *  eqcdsz &
+                 + n
 
-      SIZE   =  EQRYI ( LOC )
+      size   =  eqryi ( loc )
 
 
-      RETURN
-      END
+      return
+      end

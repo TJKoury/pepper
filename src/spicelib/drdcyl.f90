@@ -1,6 +1,6 @@
 !$Procedure DRDCYL (Derivative of rectangular w.r.t. cylindrical)
 
-      SUBROUTINE DRDCYL ( R, CLON, Z, JACOBI )
+      subroutine drdcyl ( r, clon, z, jacobi )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      CLON
-      DOUBLE PRECISION      Z
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      r
+      double precision      clon
+      double precision      z
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -352,34 +352,34 @@
 !
 !     Local parameters
 !
-      INTEGER               DX
-      PARAMETER           ( DX     = 1 )
+      integer               dx
+      parameter           ( dx     = 1 )
 
-      INTEGER               DY
-      PARAMETER           ( DY     = 2 )
+      integer               dy
+      parameter           ( dy     = 2 )
 
-      INTEGER               DZ
-      PARAMETER           ( DZ     = 3 )
+      integer               dz
+      parameter           ( dz     = 3 )
 
-      INTEGER               DR
-      PARAMETER           ( DR     = 1 )
+      integer               dr
+      parameter           ( dr     = 1 )
 
-      INTEGER               DLON
-      PARAMETER           ( DLON   = 2 )
+      integer               dlon
+      parameter           ( dlon   = 2 )
 
 
 
-      JACOBI (DX,DR)     =  DCOS( CLON )
-      JACOBI (DY,DR)     =  DSIN( CLON )
-      JACOBI (DZ,DR)     =  0.0D0
+      jacobi (dx,dr)     =  dcos( clon )
+      jacobi (dy,dr)     =  dsin( clon )
+      jacobi (dz,dr)     =  0.0d0
 
-      JACOBI (DX,DLON)   = -DSIN( CLON ) * R
-      JACOBI (DY,DLON)   =  DCOS( CLON ) * R
-      JACOBI (DZ,DLON)   =  0.0D0
+      jacobi (dx,dlon)   = -dsin( clon ) * r
+      jacobi (dy,dlon)   =  dcos( clon ) * r
+      jacobi (dz,dlon)   =  0.0d0
 
-      JACOBI (DX,DZ)     =  0.0D0
-      JACOBI (DY,DZ)     =  0.0D0
-      JACOBI (DZ,DZ)     =  1.0D0
+      jacobi (dx,dz)     =  0.0d0
+      jacobi (dy,dz)     =  0.0d0
+      jacobi (dz,dz)     =  1.0d0
 
-      RETURN
-      END
+      return
+      end

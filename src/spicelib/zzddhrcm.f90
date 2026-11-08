@@ -1,6 +1,6 @@
 !$Procedure ZZDDHRCM ( Private --- DDH Request Count )
 
-      SUBROUTINE ZZDDHRCM ( NUT, UTCST, REQCNT )
+      subroutine zzddhrcm ( nut, utcst, reqcnt )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NUT
-      INTEGER               UTCST  ( * )
-      INTEGER               REQCNT
+      integer               nut
+      integer               utcst  ( * )
+      integer               reqcnt
 
 ! $ Brief_I/O
 !
@@ -116,30 +116,30 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMAX
+      integer               intmax
 
 !
 !     Local Variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Check to see if REQCNT is INTMAX, otherwise just increment
 !     REQCNT.
 !
-      IF ( REQCNT .EQ. INTMAX() ) THEN
+      if ( reqcnt .eq. intmax() ) then
 
-         REQCNT = INTMAX()/2 + 1
+         reqcnt = intmax()/2 + 1
 
-         DO I = 1,NUT
-            UTCST(I) = MAX(1, UTCST(I)/2 )
-         END DO
+         do i = 1,nut
+            utcst(i) = max(1, utcst(i)/2 )
+         end do
 
-      ELSE
+      else
 
-         REQCNT = REQCNT + 1
+         reqcnt = reqcnt + 1
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

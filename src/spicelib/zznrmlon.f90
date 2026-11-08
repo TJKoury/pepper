@@ -1,6 +1,6 @@
 !$Procedure ZZNRMLON ( Normalize longitude bounds )
 
-      SUBROUTINE ZZNRMLON ( INMIN, INMAX, TOL, OUTMIN, OUTMAX )
+      subroutine zznrmlon ( inmin, inmax, tol, outmin, outmax )
 
 ! $ Abstract
 !
@@ -27,13 +27,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      INMIN
-      DOUBLE PRECISION      INMAX
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      OUTMIN
-      DOUBLE PRECISION      OUTMAX
+      double precision      inmin
+      double precision      inmax
+      double precision      tol
+      double precision      outmin
+      double precision      outmax
 
 ! $ Brief_I/O
 !
@@ -151,117 +151,117 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      TWOPI
+      double precision      dpr
+      double precision      touchd
+      double precision      twopi
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      PI2
+      double precision      delta
+      double precision      pi2
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved values
 !
-      SAVE                  FIRST
-      SAVE                  PI2
+      save                  first
+      save                  pi2
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Use discovery check-in. Don't check RETURN.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         PI2   = TWOPI()
-         FIRST = .FALSE.
+         pi2   = twopi()
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     TOL cannot be negative.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZNRMLON'                                  )
-         CALL SETMSG ( 'Tolerance must be non-negative but was #.' )
-         CALL ERRDP  ( '#', TOL                                    )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         CALL CHKOUT ( 'ZZNRMLON'                                  )
-         RETURN
+         call chkin  ( 'ZZNRMLON'                                  )
+         call setmsg ( 'Tolerance must be non-negative but was #.' )
+         call errdp  ( '#', tol                                    )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
+         call chkout ( 'ZZNRMLON'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Reject inputs that lie outside of [-2*pi, 2*pi], accounting
 !     for the tolerance.
 !
-      IF (      ( INMIN .LT. -PI2-TOL ) &
-           .OR. ( INMIN .GT.  PI2+TOL )  ) THEN
+      if (      ( inmin .lt. -pi2-tol ) &
+           .or. ( inmin .gt.  pi2+tol )  ) then
 
-         CALL CHKIN  ( 'ZZNRMLON'                                  )
-         CALL SETMSG ( 'Longitude lower bound INMIN = # (radians), ' &
+         call chkin  ( 'ZZNRMLON'                                  )
+         call setmsg ( 'Longitude lower bound INMIN = # (radians), ' &
          //            ' = # (deg). The minimum allowed value is ' &
          //            ' -2*pi - TOL = # (radians), = # (deg).'    )
-         CALL ERRDP  ( '#', INMIN                                  )
-         CALL ERRDP  ( '#', INMIN * DPR()                          )
-         CALL ERRDP  ( '#',   -PI2  - TOL                          )
-         CALL ERRDP  ( '#', ( -PI2  - TOL ) * DPR()                )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         CALL CHKOUT ( 'ZZNRMLON'                                  )
-         RETURN
+         call errdp  ( '#', inmin                                  )
+         call errdp  ( '#', inmin * dpr()                          )
+         call errdp  ( '#',   -pi2  - tol                          )
+         call errdp  ( '#', ( -pi2  - tol ) * dpr()                )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
+         call chkout ( 'ZZNRMLON'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The input bounds may not be equal.
 !
-      IF ( INMIN .EQ. INMAX ) THEN
+      if ( inmin .eq. inmax ) then
 
-         CALL CHKIN  ( 'ZZNRMLON'                                  )
-         CALL SETMSG ( 'Longitude lower bound INMIN = # (radians), ' &
+         call chkin  ( 'ZZNRMLON'                                  )
+         call setmsg ( 'Longitude lower bound INMIN = # (radians), ' &
          //            ' = # (deg), is equal to upper bound.'      )
-         CALL ERRDP  ( '#', INMIN                                  )
-         CALL ERRDP  ( '#', INMIN * DPR()                          )
-         CALL SIGERR ( 'SPICE(ZEROBOUNDSEXTENT)'                   )
-         CALL CHKOUT ( 'ZZNRMLON'                                  )
-         RETURN
+         call errdp  ( '#', inmin                                  )
+         call errdp  ( '#', inmin * dpr()                          )
+         call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                   )
+         call chkout ( 'ZZNRMLON'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The input longitude is within range or is out of range by at most
 !     |TOL| radians. Bracket it.
 
-      OUTMIN = MAX( -PI2,  MIN( INMIN, PI2 ) )
+      outmin = max( -pi2,  min( inmin, pi2 ) )
 
 !
 !     Same deal for the upper bound.
 !
-      IF (      ( INMAX .LT. -PI2-TOL ) &
-           .OR. ( INMAX .GT.  PI2+TOL )  ) THEN
+      if (      ( inmax .lt. -pi2-tol ) &
+           .or. ( inmax .gt.  pi2+tol )  ) then
 
-         CALL CHKIN  ( 'ZZNRMLON'                                  )
-         CALL SETMSG ( 'Longitude upper bound INMAX = # (radians), ' &
+         call chkin  ( 'ZZNRMLON'                                  )
+         call setmsg ( 'Longitude upper bound INMAX = # (radians), ' &
          //            ' = # (deg). The minimum allowed value is ' &
          //            ' -2*pi - TOL = # (radians), = # (deg).'    )
-         CALL ERRDP  ( '#', INMAX                                  )
-         CALL ERRDP  ( '#', INMAX * DPR()                          )
-         CALL ERRDP  ( '#',   -PI2  - TOL                          )
-         CALL ERRDP  ( '#', ( -PI2  - TOL ) * DPR()                )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         CALL CHKOUT ( 'ZZNRMLON'                                  )
-         RETURN
+         call errdp  ( '#', inmax                                  )
+         call errdp  ( '#', inmax * dpr()                          )
+         call errdp  ( '#',   -pi2  - tol                          )
+         call errdp  ( '#', ( -pi2  - tol ) * dpr()                )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
+         call chkout ( 'ZZNRMLON'                                  )
+         return
 
-      END IF
+      end if
 
-      OUTMAX = MAX( -PI2,  MIN( INMAX, PI2 ) )
+      outmax = max( -pi2,  min( inmax, pi2 ) )
 
 !
 !     If the bounds are out of order, put them in order.
@@ -271,49 +271,49 @@
 !     less than TOL, the bounds are considered to be "out of
 !     order."
 !
-      IF ( OUTMAX .LE. TOUCHD(OUTMIN + TOL) ) THEN
+      if ( outmax .le. touchd(outmin + tol) ) then
 !
 !        Shift one of the bounds by 2*pi, while keeping
 !        the bounds in the range [-2pi, 2pi].
 !
-         IF ( OUTMAX .LE. 0.D0 ) THEN
+         if ( outmax .le. 0.d0 ) then
 !
 !           OUTMAX is non-positive. Shift it to the right.
 !
-            OUTMAX = MIN ( TOUCHD(OUTMAX + PI2),  PI2 )
+            outmax = min ( touchd(outmax + pi2),  pi2 )
 
-            IF ( OUTMAX .LT. OUTMIN ) THEN
+            if ( outmax .lt. outmin ) then
 !
 !              If the bounds are still out of order, shift the lower
 !              bound left.
 !
-               OUTMIN = MAX ( TOUCHD(OUTMIN - PI2), -PI2 )
+               outmin = max ( touchd(outmin - pi2), -pi2 )
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           OUTMAX is > 0. Shift the lower bound left.
 !
-            OUTMIN = MAX ( TOUCHD(OUTMIN - PI2), -PI2 )
+            outmin = max ( touchd(outmin - pi2), -pi2 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the bounds are too far apart, move them together. Note
 !     that OUTMIN and OUTMAX are already set at this point.
 !
-      DELTA = TOUCHD( OUTMAX - OUTMIN )
+      delta = touchd( outmax - outmin )
 
-      IF (  DELTA  .GT.  TOUCHD( PI2 + TOL )  ) THEN
+      if (  delta  .gt.  touchd( pi2 + tol )  ) then
 !
 !        Shift the upper bound lower by 2*pi.
 !
-         OUTMAX = TOUCHD( OUTMAX - PI2 )
+         outmax = touchd( outmax - pi2 )
 
-      END IF
+      end if
 
 
 !
@@ -322,24 +322,24 @@
 !     the input minimum and the bounds differ by an integer
 !     multiple of 2*pi.
 !
-      IF ( OUTMIN .EQ. OUTMAX ) THEN
+      if ( outmin .eq. outmax ) then
 
-         CALL CHKIN  ( 'ZZNRMLON'                                     )
-         CALL SETMSG ( 'After adjustment, input longitude lower ' &
+         call chkin  ( 'ZZNRMLON'                                     )
+         call setmsg ( 'After adjustment, input longitude lower ' &
          //            'bound INMIN = # (radians),  = # (deg), ' &
          //            'is equal to adjusted longitude upper bound. ' &
          //            'Input upper bound = # (radians),  = # (deg). ' &
          //            'When the input upper bound is less than the ' &
          //            'input lower bound, the difference must not ' &
          //            'be an integer multiple of 2*pi.'              )
-         CALL ERRDP  ( '#', INMIN                                     )
-         CALL ERRDP  ( '#', INMIN * DPR()                             )
-         CALL ERRDP  ( '#', INMAX                                     )
-         CALL ERRDP  ( '#', INMAX * DPR()                             )
-         CALL SIGERR ( 'SPICE(ZEROBOUNDSEXTENT)'                      )
-         CALL CHKOUT ( 'ZZNRMLON'                                     )
-         RETURN
+         call errdp  ( '#', inmin                                     )
+         call errdp  ( '#', inmin * dpr()                             )
+         call errdp  ( '#', inmax                                     )
+         call errdp  ( '#', inmax * dpr()                             )
+         call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                      )
+         call chkout ( 'ZZNRMLON'                                     )
+         return
 
-      END IF
+      end if
 
-      END
+      end

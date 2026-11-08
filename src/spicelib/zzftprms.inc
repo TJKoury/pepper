@@ -12,8 +12,8 @@
 !
 !     Size of FTP Test String Component:
 !
-      INTEGER               SIZSTR
-      PARAMETER           ( SIZSTR = 16 )
+      integer               sizstr
+      parameter           ( sizstr = 16 )
 
 !
 !     Size of Maximum Expanded FTP Validation String:
@@ -24,32 +24,32 @@
 !       corruption at worst doubles the number of characters.
 !       So take 3*SIZSTR to be on the safe side.)
 !
-      INTEGER               SIZEXP
-      PARAMETER           ( SIZEXP = (3 * SIZSTR) )
+      integer               sizexp
+      parameter           ( sizexp = (3 * sizstr) )
 
 !
 !     Size of FTP Validation String Brackets:
 !
-      INTEGER               SIZEND
-      PARAMETER           ( SIZEND = 6 )
+      integer               sizend
+      parameter           ( sizend = 6 )
 
 !
 !     Size of FTP Validation String:
 !
-      INTEGER               SIZFTP
-      PARAMETER           ( SIZFTP = ( SIZSTR + 2*SIZEND ) )
+      integer               sizftp
+      parameter           ( sizftp = ( sizstr + 2*sizend ) )
 
 !
 !     Size of DELIM.
 !
-      INTEGER               SIZDLM
-      PARAMETER           ( SIZDLM = 1 )
+      integer               sizdlm
+      parameter           ( sizdlm = 1 )
 
 !
 !     Number of character clusters present in the validation string.
 !
-      INTEGER               NUMTST
-      PARAMETER           ( NUMTST = 6 )
+      integer               numtst
+      parameter           ( numtst = 6 )
 
 !
 !     End Include Section:  Private FTP Validation String Parameters

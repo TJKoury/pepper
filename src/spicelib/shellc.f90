@@ -1,6 +1,6 @@
 !$Procedure SHELLC ( Shell sort a character array )
 
-      SUBROUTINE SHELLC ( NDIM, ARRAY )
+      subroutine shellc ( ndim, array )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY ( * )
+      integer          ndim
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -193,40 +193,40 @@
 !
 !     Local variables
 !
-      INTEGER          GAP
-      INTEGER          I
-      INTEGER          J
-      INTEGER          JG
+      integer          gap
+      integer          i
+      integer          j
+      integer          jg
 
 
 !
 !     This is a straightforward implementation of the Shell Sort
 !     algorithm.
 !
-      GAP = NDIM / 2
+      gap = ndim / 2
 
-      DO WHILE ( GAP .GT. 0 )
+      do while ( gap .gt. 0 )
 
-         DO I = GAP+1, NDIM
+         do i = gap+1, ndim
 
-            J = I - GAP
-            DO WHILE ( J .GT. 0 )
-               JG = J + GAP
+            j = i - gap
+            do while ( j .gt. 0 )
+               jg = j + gap
 
-               IF ( LLE (ARRAY(J), ARRAY(JG)) ) THEN
-                  J = 0
-               ELSE
-                  CALL SWAPC ( ARRAY(J), ARRAY(JG) )
-               END IF
+               if ( lle (array(j), array(jg)) ) then
+                  j = 0
+               else
+                  call swapc ( array(j), array(jg) )
+               end if
 
-               J = J - GAP
-            END DO
+               j = j - gap
+            end do
 
-         END DO
+         end do
 
-         GAP = GAP / 2
+         gap = gap / 2
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

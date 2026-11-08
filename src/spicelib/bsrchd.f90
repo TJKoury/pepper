@@ -1,6 +1,6 @@
 !$Procedure BSRCHD ( Binary search for double precision value )
 
-      INTEGER FUNCTION BSRCHD ( VALUE, NDIM, ARRAY )
+      integer function bsrchd ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   VALUE
-      INTEGER            NDIM
-      DOUBLE PRECISION   ARRAY ( * )
+      double precision   value
+      integer            ndim
+      double precision   array ( * )
 
 ! $ Brief_I/O
 !
@@ -140,47 +140,47 @@
 !
 !     Local variables
 !
-      INTEGER          LEFT
-      INTEGER          RIGHT
-      INTEGER          I
+      integer          left
+      integer          right
+      integer          i
 
 
 
 !
 !     Set the initial bounds for the search area.
 !
-      LEFT  = 1
-      RIGHT = NDIM
+      left  = 1
+      right = ndim
 
-      DO WHILE ( LEFT .LE. RIGHT )
+      do while ( left .le. right )
 
 !
 !        Check the middle element.
 !
-         I = (LEFT+RIGHT)/2
+         i = (left+right)/2
 
 !
 !        If the middle element matches, return its location.
 !
-         IF ( VALUE .EQ. ARRAY(I) ) THEN
-            BSRCHD = I
-            RETURN
+         if ( value .eq. array(i) ) then
+            bsrchd = i
+            return
 
 !
 !        Otherwise narrow the search area.
 !
-         ELSE IF ( VALUE .LT. ARRAY(I) ) THEN
-            RIGHT = I-1
-         ELSE
-            LEFT  = I+1
-         END IF
+         else if ( value .lt. array(i) ) then
+            right = i-1
+         else
+            left  = i+1
+         end if
 
-      END DO
+      end do
 
 !
 !     If the search area is empty, return zero.
 !
-      BSRCHD = 0
+      bsrchd = 0
 
-      RETURN
-      END
+      return
+      end

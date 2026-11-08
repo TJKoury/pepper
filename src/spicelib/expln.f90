@@ -1,6 +1,6 @@
 !$Procedure EXPLN ( Get Explanation for Short Error Message )
 
-       SUBROUTINE EXPLN ( MSG, EXPL )
+       subroutine expln ( msg, expl )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)                 MSG
-      CHARACTER*(*)                 EXPL
+      character*(*)                 msg
+      character*(*)                 expl
 
 ! $ Brief_I/O
 !
@@ -143,228 +143,228 @@
 !     alphabetically.
 !
 
-      IF      (  MSG  .EQ.  'SPICE(BADENDPOINTS)' ) THEN
+      if      (  msg  .eq.  'SPICE(BADENDPOINTS)' ) then
 
-         EXPL  = 'Invalid Endpoints--Left Endpoint Exceeds Right'     // &
+         expl  = 'Invalid Endpoints--Left Endpoint Exceeds Right'     // &
                  ' Endpoint'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(BADGEFVERSION)'  ) THEN
+      else if (  msg  .eq.  'SPICE(BADGEFVERSION)'  ) then
 
-         EXPL  =  'Version Identification of GEF File is Invalid'
+         expl  =  'Version Identification of GEF File is Invalid'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(BLANKMODULENAME)' ) THEN
+      else if (  msg  .eq.  'SPICE(BLANKMODULENAME)' ) then
 
-         EXPL  =  'A blank string was used as a module name'
+         expl  =  'A blank string was used as a module name'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(BOGUSENTRY)'   ) THEN
+      else if (  msg  .eq.  'SPICE(BOGUSENTRY)'   ) then
 
-         EXPL  = 'This Entry Point Contains No Executable Code'
+         expl  = 'This Entry Point Contains No Executable Code'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(CELLTOOSMALL)' ) THEN
+      else if (  msg  .eq.  'SPICE(CELLTOOSMALL)' ) then
 
-         EXPL  = 'Cardinality of Output Cell is Too Small'
+         expl  = 'Cardinality of Output Cell is Too Small'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(CLUSTERWRITEERROR)' ) THEN
+      else if (  msg  .eq.  'SPICE(CLUSTERWRITEERROR)' ) then
 
-         EXPL  = 'Error Writing to Ephemeris File'
+         expl  = 'Error Writing to Ephemeris File'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(DATATYPENOTRECOG)' )  THEN
+      else if (  msg  .eq.  'SPICE(DATATYPENOTRECOG)' )  then
 
-         EXPL  = 'Unrecognized Data Type Specification was Encountered'
+         expl  = 'Unrecognized Data Type Specification was Encountered'
 
 
-      ELSE IF (  MSG  .EQ.  'SPICE(DATEEXPECTED)'  ) THEN
+      else if (  msg  .eq.  'SPICE(DATEEXPECTED)'  ) then
 
-         EXPL  = 'The Value in the Kernel File was Expected to be a ' // &
+         expl  = 'The Value in the Kernel File was Expected to be a ' // &
                  'date.'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(DEVICENAMETOOLONG)' ) THEN
+      else if (  msg  .eq.  'SPICE(DEVICENAMETOOLONG)' ) then
 
-         EXPL  = 'Name of Device Exceeds 128-Character Limit'
+         expl  = 'Name of Device Exceeds 128-Character Limit'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(EMBEDDEDBLANK)' ) THEN
+      else if (  msg  .eq.  'SPICE(EMBEDDEDBLANK)' ) then
 
-         EXPL  = 'Invalid embedded blank was found in character string'
+         expl  = 'Invalid embedded blank was found in character string'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(FILEALREADYOPEN)' ) THEN
+      else if (  msg  .eq.  'SPICE(FILEALREADYOPEN)' ) then
 
-         EXPL  = 'File Open Failed Because the File was Already Open'
+         expl  = 'File Open Failed Because the File was Already Open'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(FILEOPENFAILED)'  ) THEN
+      else if (  msg  .eq.  'SPICE(FILEOPENFAILED)'  ) then
 
-         EXPL  = 'An Attempt to Open a File Failed'
+         expl  = 'An Attempt to Open a File Failed'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(FILEREADFAILED)'  ) THEN
+      else if (  msg  .eq.  'SPICE(FILEREADFAILED)'  ) then
 
-         EXPL  = 'An Attempt to Read a File Failed'
+         expl  = 'An Attempt to Read a File Failed'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(FILEWRITEFAILED)' ) THEN
+      else if (  msg  .eq.  'SPICE(FILEWRITEFAILED)' ) then
 
-         EXPL  = 'An Attempt to Write a File Failed'
+         expl  = 'An Attempt to Write a File Failed'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INCOMPATIBLEUNITS)' )  THEN
+      else if (  msg  .eq.  'SPICE(INCOMPATIBLEUNITS)' )  then
 
-         EXPL  = 'The Input and Output Units are Incompatible'
+         expl  = 'The Input and Output Units are Incompatible'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDACTION)'  ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDACTION)'  ) then
 
-         EXPL  = 'An Invalid Action Value Was Supplied'
+         expl  = 'An Invalid Action Value Was Supplied'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDARGUMENT)'  ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDARGUMENT)'  ) then
 
-         EXPL  = 'An Invalid Function Argument was Supplied'
+         expl  = 'An Invalid Function Argument was Supplied'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDCHECKOUT)' )  THEN
+      else if (  msg  .eq.  'SPICE(INVALIDCHECKOUT)' )  then
 
-         EXPL  = 'Checkout Was Attempted When No Routines Were'       // &
+         expl  = 'Checkout Was Attempted When No Routines Were'       // &
                  ' Checked In'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDCLUSTERNUM)'  ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDCLUSTERNUM)'  ) then
 
-         EXPL  = 'Invalid Cluster Number -- Cluster Numbers Must'     // &
+         expl  = 'Invalid Cluster Number -- Cluster Numbers Must'     // &
                  ' Exceed 1 '
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDEPOCH)' ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDEPOCH)' ) then
 
-         EXPL  = 'An Invalid Epoch Type Specification Was Supplied'
+         expl  = 'An Invalid Epoch Type Specification Was Supplied'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDINDEX)' ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDINDEX)' ) then
 
-         EXPL  = 'There Is No Element Corresponding to the'           // &
+         expl  = 'There Is No Element Corresponding to the'           // &
                  ' Supplied Index'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDTIMESTRING)'  ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDTIMESTRING)'  ) then
 
-         EXPL  = 'Time String Could Not Be Parsed'
+         expl  = 'Time String Could Not Be Parsed'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDLISTITEM)' )  THEN
+      else if (  msg  .eq.  'SPICE(INVALIDLISTITEM)' )  then
 
-         EXPL  = 'An Invalid Item Was Found in a List'
+         expl  = 'An Invalid Item Was Found in a List'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDMSGTYPE)'  )  THEN
+      else if (  msg  .eq.  'SPICE(INVALIDMSGTYPE)'  )  then
 
-         EXPL  = 'An Invalid Error Message Type Was Specified'
+         expl  = 'An Invalid Error Message Type Was Specified'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDOPERATION)' ) THEN
+      else if (  msg  .eq.  'SPICE(INVALIDOPERATION)' ) then
 
-         EXPL  = 'An Invalid Operation Value Was Supplied'
+         expl  = 'An Invalid Operation Value Was Supplied'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDOPTION)'  )  THEN
+      else if (  msg  .eq.  'SPICE(INVALIDOPTION)'  )  then
 
-         EXPL  = 'An Invalid Option Value Was Supplied'
+         expl  = 'An Invalid Option Value Was Supplied'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(INVALIDTIMEFORMAT)')  THEN
+      else if (  msg  .eq.  'SPICE(INVALIDTIMEFORMAT)')  then
 
-         EXPL  = 'Specification of Time String Format Was Not '       // &
+         expl  = 'Specification of Time String Format Was Not '       // &
                  'Recognized'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(KERNELVARNOTFOUND)' )  THEN
+      else if (  msg  .eq.  'SPICE(KERNELVARNOTFOUND)' )  then
 
-         EXPL  = 'The Variable Was not Found in the Kernel Pool.'
+         expl  = 'The Variable Was not Found in the Kernel Pool.'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NAMETABLEFULL)')  THEN
+      else if (  msg  .eq.  'SPICE(NAMETABLEFULL)')  then
 
-         EXPL  = 'No Further Symbols Can be Inserted; the Name Table'// &
+         expl  = 'No Further Symbols Can be Inserted; the Name Table'// &
                  ' is Full'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NOFREELOGICALUNIT)' ) THEN
+      else if (  msg  .eq.  'SPICE(NOFREELOGICALUNIT)' ) then
 
-         EXPL  = 'No More Logical Units are Available for Allocation'
+         expl  = 'No More Logical Units are Available for Allocation'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NOINTERVAL)'  )  THEN
+      else if (  msg  .eq.  'SPICE(NOINTERVAL)'  )  then
 
-         EXPL  = 'Window Does Not Contain Interval Corresponding'     // &
+         expl  = 'Window Does Not Contain Interval Corresponding'     // &
                  ' to the Supplied Index'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NOSEGMENT)'  )  THEN
+      else if (  msg  .eq.  'SPICE(NOSEGMENT)'  )  then
 
-         EXPL  = 'No Applicable Segment Found in Ephemeris File'
+         expl  = 'No Applicable Segment Found in Ephemeris File'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NOSUCHSYMBOL)' ) THEN
+      else if (  msg  .eq.  'SPICE(NOSUCHSYMBOL)' ) then
 
-         EXPL  = 'The Symbol Does Not Exist in the Symbol Table'
+         expl  = 'The Symbol Does Not Exist in the Symbol Table'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NOTDISTINCT)' ) THEN
+      else if (  msg  .eq.  'SPICE(NOTDISTINCT)' ) then
 
-         EXPL  = 'The Elements Must Be Distinct'
+         expl  = 'The Elements Must Be Distinct'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(NUMBEREXPECTED)'  )  THEN
+      else if (  msg  .eq.  'SPICE(NUMBEREXPECTED)'  )  then
 
-         EXPL  = 'The Value in the Kernel File was Expected '         // &
+         expl  = 'The Value in the Kernel File was Expected '         // &
                  'to be a Number.'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(POINTERTABLEFULL)' )   THEN
+      else if (  msg  .eq.  'SPICE(POINTERTABLEFULL)' )   then
 
-         EXPL  = 'No Further Symbols Can be Inserted; the Pointer '   // &
+         expl  = 'No Further Symbols Can be Inserted; the Pointer '   // &
                  'Table is Full'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(REFNOTREC)'    ) THEN
+      else if (  msg  .eq.  'SPICE(REFNOTREC)'    ) then
 
-         EXPL  = 'A Reference Frame Specification was Not'            // &
+         expl  = 'A Reference Frame Specification was Not'            // &
                  ' Recognized'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(SETEXCESS)'    ) THEN
+      else if (  msg  .eq.  'SPICE(SETEXCESS)'    ) then
 
-         EXPL  = 'Cardinality of Set Is Too Small to Contain'         // &
+         expl  = 'Cardinality of Set Is Too Small to Contain'         // &
                  ' Result of the Requested Operation'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(TOOMANYFILESOPEN)'  ) THEN
+      else if (  msg  .eq.  'SPICE(TOOMANYFILESOPEN)'  ) then
 
-         EXPL  = 'The SPICELIB Limit for Number of Open Files'        // &
+         expl  = 'The SPICELIB Limit for Number of Open Files'        // &
                  ' Has Already Been Reached'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(TRACEBACKOVERFLOW)'  ) THEN
+      else if (  msg  .eq.  'SPICE(TRACEBACKOVERFLOW)'  ) then
 
-         EXPL  = 'No More Entries Can Be Added to the Traceback'      // &
+         expl  = 'No More Entries Can Be Added to the Traceback'      // &
                  ' Representation'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(UNITSNOTREC)'  ) THEN
+      else if (  msg  .eq.  'SPICE(UNITSNOTREC)'  ) then
 
-         EXPL  = 'The Input or Output Units Were Not Recognized'
+         expl  = 'The Input or Output Units Were Not Recognized'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(UNMATCHENDPTS)') THEN
+      else if (  msg  .eq.  'SPICE(UNMATCHENDPTS)') then
 
-         EXPL  = 'Window Does Not Have an Even Number of Endpoints'
+         expl  = 'Window Does Not Have an Even Number of Endpoints'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(VALUETABLEFULL)' )  THEN
+      else if (  msg  .eq.  'SPICE(VALUETABLEFULL)' )  then
 
-         EXPL  = 'No Further Symbols Can be Inserted; the Value '     // &
+         expl  = 'No Further Symbols Can be Inserted; the Value '     // &
                  'Table is Full'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(WINDOWEXCESS)' ) THEN
+      else if (  msg  .eq.  'SPICE(WINDOWEXCESS)' ) then
 
-         EXPL  = 'Cardinality of Window Is Too Small to Contain'      // &
+         expl  = 'Cardinality of Window Is Too Small to Contain'      // &
                  ' Result of the Requested Operation'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(WINDOWTOOSMALL)' )  THEN
+      else if (  msg  .eq.  'SPICE(WINDOWTOOSMALL)' )  then
 
-         EXPL  = 'Cardinality of Output Window is Too Small'
+         expl  = 'Cardinality of Output Window is Too Small'
 
-      ELSE IF (  MSG  .EQ.  'SPICE(WRITEERROR)'  ) THEN
-
-
-         EXPL  = 'An Attempt to write to a specified unit failed.'
+      else if (  msg  .eq.  'SPICE(WRITEERROR)'  ) then
 
 
-      ELSE IF (  MSG  .EQ.  'SPICE(ZERORADIUS)'   ) THEN
-
-         EXPL  = 'Invalid Radius--Equatorial or Polar Radius is Zero'
+         expl  = 'An Attempt to write to a specified unit failed.'
 
 
-      ELSE IF (  MSG  .EQ.  'SPICE(ZEROVECTOR)'  ) THEN
+      else if (  msg  .eq.  'SPICE(ZERORADIUS)'   ) then
 
-         EXPL  = 'Input Vector is the Zero Vector'
-
-
-      ELSE IF (  MSG  .EQ.  'SPICE(ZEROAXISLENGTH)'  )  THEN
-
-         EXPL  = 'Input Axis Length is Zero'
+         expl  = 'Invalid Radius--Equatorial or Polar Radius is Zero'
 
 
-      ELSE
+      else if (  msg  .eq.  'SPICE(ZEROVECTOR)'  ) then
 
-         EXPL  = ' '
+         expl  = 'Input Vector is the Zero Vector'
 
-      END IF
 
-      END
+      else if (  msg  .eq.  'SPICE(ZEROAXISLENGTH)'  )  then
+
+         expl  = 'Input Axis Length is Zero'
+
+
+      else
+
+         expl  = ' '
+
+      end if
+
+      end

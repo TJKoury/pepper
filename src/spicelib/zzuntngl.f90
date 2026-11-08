@@ -1,8 +1,8 @@
 !$Procedure ZZUNTNGL ( Untangle an AB linked-cell list  )
 
-      SUBROUTINE ZZUNTNGL ( NPTR, MAXCEL, CELLS, &
-                            MAXB, PNTRS,  NOUT,  OUTLST )
-      IMPLICIT NONE
+      subroutine zzuntngl ( nptr, maxcel, cells, &
+                            maxb, pntrs,  nout,  outlst )
+      implicit none
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      INTEGER               NPTR
-      INTEGER               MAXCEL
-      INTEGER               CELLS  ( 2, * )
-      INTEGER               MAXB
-      INTEGER               PNTRS  ( * )
-      INTEGER               NOUT
-      INTEGER               OUTLST ( * )
+      integer               nptr
+      integer               maxcel
+      integer               cells  ( 2, * )
+      integer               maxb
+      integer               pntrs  ( * )
+      integer               nout
+      integer               outlst ( * )
 
 ! $ Brief_I/O
 !
@@ -194,55 +194,55 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
 !     Local Variables
 !
-      INTEGER               AVAL
-      INTEGER               PTRDEX
-      INTEGER               NFOUND
-      INTEGER               ROOM
+      integer               aval
+      integer               ptrdex
+      integer               nfound
+      integer               room
 
 !
 !     Standard SPICE error handling.
 !
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZUNTNGL' )
+      call chkin  ( 'ZZUNTNGL' )
 
-      IF ( NPTR .GT. MAXCEL ) THEN
+      if ( nptr .gt. maxcel ) then
 
-         CALL SETMSG ( 'Input pointer array is larger than ' &
+         call setmsg ( 'Input pointer array is larger than ' &
          //            'cell array. Pointer array size = ' &
          //            '#1. Cell array size = #2.'          )
-         CALL ERRINT ( '#1', NPTR                           )
-         CALL ERRINT ( '#2', MAXCEL                         )
-         CALL SIGERR ( 'SPICE(BARRAYTOOSMALL)'              )
-         CALL CHKOUT ( 'ZZUNTNGL'                           )
-         RETURN
+         call errint ( '#1', nptr                           )
+         call errint ( '#2', maxcel                         )
+         call sigerr ( 'SPICE(BARRAYTOOSMALL)'              )
+         call chkout ( 'ZZUNTNGL'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     ROOM is the remaining room in the output list.
 !
-      ROOM = MAXB
+      room = maxb
 
 !
 !     Initialize pointer index.
 !
-      PTRDEX = 0
+      ptrdex = 0
 
 !
 !     Loop over all A-values.
 !
-      DO AVAL = 1, NPTR
+      do aval = 1, nptr
 !
 !        Traverse the chained list for a particular A-value
 !        and collect associated B-values. If B-values exists,
@@ -252,87 +252,87 @@
 !
 !        Make sure the output pointers below are in range.
 !
-         IF ( PTRDEX+2 .GT. MAXB ) THEN
+         if ( ptrdex+2 .gt. maxb ) then
 
-            CALL SETMSG ( 'Index larger than output array. ' &
+            call setmsg ( 'Index larger than output array. ' &
             //            'Index = #1. Array size = #2.'     )
-            CALL ERRINT ( '#1', PTRDEX+2                     )
-            CALL ERRINT ( '#2', MAXB                         )
-            CALL SIGERR ( 'SPICE(BARRAYTOOSMALL)'            )
-            CALL CHKOUT ( 'ZZUNTNGL'                         )
-            RETURN
+            call errint ( '#1', ptrdex+2                     )
+            call errint ( '#2', maxb                         )
+            call sigerr ( 'SPICE(BARRAYTOOSMALL)'            )
+            call chkout ( 'ZZUNTNGL'                         )
+            return
 
-         END IF
+         end if
 
-         IF ( ROOM .LE. 0 ) THEN
+         if ( room .le. 0 ) then
 
-            CALL SETMSG ( 'Remaining room in output array is #1. ' &
+            call setmsg ( 'Remaining room in output array is #1. ' &
             //            'Current input pointer index = #2. Output ' &
             //            'array size = #3. Output pointer index ' &
             //            'is #4.'                                  )
-            CALL ERRINT ( '#1', ROOM                                )
-            CALL ERRINT ( '#2', AVAL                                )
-            CALL ERRINT ( '#3', MAXB                                )
-            CALL ERRINT ( '#4', PTRDEX                              )
-            CALL SIGERR ( 'SPICE(BARRAYTOOSMALL)'                   )
-            CALL CHKOUT ( 'ZZUNTNGL'                                )
-            RETURN
+            call errint ( '#1', room                                )
+            call errint ( '#2', aval                                )
+            call errint ( '#3', maxb                                )
+            call errint ( '#4', ptrdex                              )
+            call sigerr ( 'SPICE(BARRAYTOOSMALL)'                   )
+            call chkout ( 'ZZUNTNGL'                                )
+            return
 
-         END IF
+         end if
 
-         CALL ZZTRVLNK ( AVAL,    NPTR,  PNTRS, &
-                         MAXCEL,  CELLS, ROOM, &
-                         OUTLST(PTRDEX + 1), &
-                         OUTLST(PTRDEX + 2)     )
+         call zztrvlnk ( aval,    nptr,  pntrs, &
+                         maxcel,  cells, room, &
+                         outlst(ptrdex + 1), &
+                         outlst(ptrdex + 2)     )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZUNTNGL' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZUNTNGL' )
+            return
+         end if
 
 !
 !        Increment pointer PTRDEX if we found any B-vals.
 !
-         NFOUND = OUTLST(PTRDEX + 1)
+         nfound = outlst(ptrdex + 1)
 
-         IF ( NFOUND .GT. 0 ) THEN
+         if ( nfound .gt. 0 ) then
 !
 !           Store in PNTRS the pointer to the returned list.
 !           This assignment overwrites the input pointer from
 !           AVAL to the head of the associated list in CELLS.
 !
-            PNTRS(AVAL) = PTRDEX + 1
+            pntrs(aval) = ptrdex + 1
 !
 !           Update the count of available spaces in the
 !           output list. Account for the list size stored
 !           at the front of the list.
 !
-            ROOM = ROOM - ( 1 + NFOUND )
+            room = room - ( 1 + nfound )
 !
 !           Increment PTRDEX to mark the position of the final
 !           B-val.
 !
-            PTRDEX = PTRDEX + 1 + NFOUND
+            ptrdex = ptrdex + 1 + nfound
 
-         ELSE
+         else
 !
 !           If no associated B-values exist, set the
 !           PNTRS element to -1, indicating no B-value.
 !
-            PNTRS(AVAL) = -1
+            pntrs(aval) = -1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Return the current pointer value.
 !
-      NOUT = PTRDEX
+      nout = ptrdex
 
 !
 !     Standard SPICE error handling.
 !
-      CALL CHKOUT ( 'ZZUNTNGL' )
-      RETURN
-      END
+      call chkout ( 'ZZUNTNGL' )
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure  ZZNOFCON ( Create frame connection long error message )
 
-      SUBROUTINE ZZNOFCON ( ET, FRAME1, ENDP1, FRAME2, ENDP2, ERRMSG )
+      subroutine zznofcon ( et, frame1, endp1, frame2, endp2, errmsg )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -26,14 +26,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'frmtyp.inc'
+      include 'frmtyp.inc'
 
-      DOUBLE PRECISION      ET
-      INTEGER               FRAME1
-      INTEGER               ENDP1
-      INTEGER               FRAME2
-      INTEGER               ENDP2
-      CHARACTER*(*)         ERRMSG
+      double precision      et
+      integer               frame1
+      integer               endp1
+      integer               frame2
+      integer               endp2
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -270,60 +270,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               ZZSCLK
+      logical               failed
+      logical               return
+      logical               zzsclk
 
 !
 !     Local parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               TIMLEN
-      PARAMETER           ( TIMLEN = 35 )
+      integer               timlen
+      parameter           ( timlen = 35 )
 
-      INTEGER               PHRSLN
-      PARAMETER           ( PHRSLN = 600 )
+      integer               phrsln
+      parameter           ( phrsln = 600 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    BNAME ( 2 )
-      CHARACTER*(FRNMLN)    NAME  ( 2 )
-      CHARACTER*(PHRSLN)    PHRASE
-      CHARACTER*(TIMLEN)    TIMSTR
+      character*(frnmln)    bname ( 2 )
+      character*(frnmln)    name  ( 2 )
+      character*(phrsln)    phrase
+      character*(timlen)    timstr
 
-      INTEGER               ENDPS  ( 2 )
-      INTEGER               CENTER
-      INTEGER               CLASS
-      INTEGER               CLSSID
-      INTEGER               FRAMES ( 2 )
-      INTEGER               I
-      INTEGER               SCLKID
+      integer               endps  ( 2 )
+      integer               center
+      integer               class
+      integer               clssid
+      integer               frames ( 2 )
+      integer               i
+      integer               sclkid
 
-      LOGICAL               CKMISS
-      LOGICAL               FOUND
-      LOGICAL               HAVNAM ( 2 )
-      LOGICAL               SCMISS
+      logical               ckmiss
+      logical               found
+      logical               havnam ( 2 )
+      logical               scmiss
 
 !
 !     Because this routine might cause a SPICE error to be
 !     signaled, we have to check in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZNOFCON' )
+      call chkin ( 'ZZNOFCON' )
 
 !
 !     Capture input IDs in arrays.
 !
-      FRAMES(1) = FRAME1
-      FRAMES(2) = FRAME2
-      ENDPS(1)  = ENDP1
-      ENDPS(2)  = ENDP2
+      frames(1) = frame1
+      frames(2) = frame2
+      endps(1)  = endp1
+      endps(2)  = endp2
 
 !
 !     The flags CKMISS and SCMISS are used, respectively, to
@@ -332,158 +332,158 @@
 !     on if at least one lookup failed due to the indicated
 !     cause.
 !
-      CKMISS = .FALSE.
-      SCMISS = .FALSE.
+      ckmiss = .false.
+      scmiss = .false.
 
 !
 !     Get a string representation of the transformation epoch.
 !
-      CALL ETCAL ( ET, TIMSTR )
+      call etcal ( et, timstr )
 
 !
 !     Get the names of the participating frames, if available.
 !
-      CALL FRMNAM ( FRAMES(1),   NAME(1) )
-      CALL FRMNAM ( FRAMES(2),   NAME(2) )
-      CALL FRMNAM ( ENDPS(1),    BNAME(1) )
-      CALL FRMNAM ( ENDPS(2),    BNAME(2) )
+      call frmnam ( frames(1),   name(1) )
+      call frmnam ( frames(2),   name(2) )
+      call frmnam ( endps(1),    bname(1) )
+      call frmnam ( endps(2),    bname(2) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZNOFCON' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZNOFCON' )
+         return
+      end if
 
-      DO I = 1, 2
+      do i = 1, 2
 
-         IF ( NAME(I) .EQ. ' ' ) THEN
+         if ( name(i) .eq. ' ' ) then
 
-            NAME(I)   = 'Name not available'
-            HAVNAM(I) = .FALSE.
-         ELSE
-            HAVNAM(I) = .TRUE.
-         END IF
+            name(i)   = 'Name not available'
+            havnam(i) = .false.
+         else
+            havnam(i) = .true.
+         end if
 
-         IF ( BNAME(I) .EQ. ' ' ) THEN
-            BNAME(I) = 'Name not available'
-         END IF
+         if ( bname(i) .eq. ' ' ) then
+            bname(i) = 'Name not available'
+         end if
 
-      END DO
+      end do
 
-      ERRMSG = 'At epoch # TDB (# TDB), there is ' &
+      errmsg = 'At epoch # TDB (# TDB), there is ' &
       //       'insufficient information available to ' &
       //       'transform from reference frame # (@) to ' &
       //       'reference frame # (@).'
 
 
-      CALL REPMF ( ERRMSG, '#', ET,     14, 'E', ERRMSG )
-      CALL REPMC ( ERRMSG, '#', TIMSTR,          ERRMSG )
+      call repmf ( errmsg, '#', et,     14, 'E', errmsg )
+      call repmc ( errmsg, '#', timstr,          errmsg )
 
-      DO I = 1, 2
+      do i = 1, 2
 
-         CALL REPMI ( ERRMSG, '#', FRAMES(I), ERRMSG )
-         CALL REPMC ( ERRMSG, '@', NAME(I),   ERRMSG )
+         call repmi ( errmsg, '#', frames(i), errmsg )
+         call repmc ( errmsg, '@', name(i),   errmsg )
 
-      END DO
+      end do
 
 !
 !     For any frame graph longer than a single point, tell the user
 !     the endpoint of the frame connection graph originating
 !     at that frame.
 !
-      DO I = 1, 2
+      do i = 1, 2
 
-         IF ( FRAMES(I) .NE. ENDPS(I)  ) THEN
+         if ( frames(i) .ne. endps(i)  ) then
 
-            PHRASE = 'Frame # could be transformed to frame # (@).'
+            phrase = 'Frame # could be transformed to frame # (@).'
 
-            IF ( HAVNAM(I) ) THEN
-               CALL REPMC ( PHRASE, '#', NAME(I),   PHRASE )
-            ELSE
-               CALL REPMI ( PHRASE, '#', FRAMES(I), PHRASE )
-            END IF
+            if ( havnam(i) ) then
+               call repmc ( phrase, '#', name(i),   phrase )
+            else
+               call repmi ( phrase, '#', frames(i), phrase )
+            end if
 
-            CALL REPMI ( PHRASE, '#', ENDPS(I),  PHRASE )
-            CALL REPMC ( PHRASE, '@', BNAME(I),  PHRASE )
+            call repmi ( phrase, '#', endps(i),  phrase )
+            call repmc ( phrase, '@', bname(i),  phrase )
 
-            CALL SUFFIX ( PHRASE, 1, ERRMSG )
+            call suffix ( phrase, 1, errmsg )
 
 !
 !           The error messages below are appended only if they're not
 !           redundant.
 !
-            IF (  ( I .EQ. 1 )  .OR.  ( ENDPS(2) .NE. ENDPS(1) )  ) THEN
+            if (  ( i .eq. 1 )  .or.  ( endps(2) .ne. endps(1) )  ) then
 !
 !              For each endpoint frame, if that frame is of CK type,
 !              indicate the instrument ID for which CK data are needed.
 !
-               CALL FRINFO ( ENDPS(I), CENTER, CLASS, CLSSID, FOUND )
+               call frinfo ( endps(i), center, class, clssid, found )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZNOFCON' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZNOFCON' )
+                  return
+               end if
 
 
 
-               IF ( FOUND ) THEN
+               if ( found ) then
 
-                  IF ( CLASS .EQ. CK ) THEN
+                  if ( class .eq. ck ) then
 
-                     PHRASE = 'The latter is a CK frame; a CK file ' &
+                     phrase = 'The latter is a CK frame; a CK file ' &
                      //       'containing data for instrument or ' &
                      //       'structure # at the epoch shown above, ' &
                      //       'as well as a corresponding SCLK kernel, ' &
                      //       'must be loaded in order to use this ' &
                      //       'frame.'
 
-                     CALL REPMI ( PHRASE, '#', CLSSID, PHRASE )
+                     call repmi ( phrase, '#', clssid, phrase )
 
-                     CALL SUFFIX ( PHRASE, 1, ERRMSG )
+                     call suffix ( phrase, 1, errmsg )
 
 !
 !                    Find out whether we have SCLK data for this
 !                    CK ID.
 !
-                     CALL CKMETA ( CLSSID, 'SCLK', SCLKID )
+                     call ckmeta ( clssid, 'SCLK', sclkid )
 
-                     IF (  .NOT. ZZSCLK ( CLSSID, SCLKID )  ) THEN
+                     if (  .not. zzsclk ( clssid, sclkid )  ) then
 
-                        SCMISS = .TRUE.
+                        scmiss = .true.
 
-                        PHRASE = 'No SCLK kernel for instrument or ' &
+                        phrase = 'No SCLK kernel for instrument or ' &
                         //       'structure #, with corresponding ' &
                         //       'SCLK ID #, is currently loaded.'
 
-                        CALL REPMI ( PHRASE, '#', CLSSID, PHRASE )
-                        CALL REPMI ( PHRASE, '#', SCLKID, PHRASE )
+                        call repmi ( phrase, '#', clssid, phrase )
+                        call repmi ( phrase, '#', sclkid, phrase )
 
-                        CALL SUFFIX ( PHRASE, 1, ERRMSG )
+                        call suffix ( phrase, 1, errmsg )
 
 
-                     ELSE
+                     else
 !
 !                       If we got here and have the SCLK data, then
 !                       we don't have CK data.
 !
-                        CKMISS = .TRUE.
+                        ckmiss = .true.
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 !
 !                 End of CK frame case.
 !
-               END IF
+               end if
 !
 !              End of "info found" case.
 !
-            END IF
+            end if
 !
 !           End of distinct frame case.
 !
 
-         ELSE IF (        ( I        .EQ. 1        ) &
-                    .OR.  ( ENDPS(2) .NE. ENDPS(1) )  ) THEN
+         else if (        ( i        .eq. 1        ) &
+                    .or.  ( endps(2) .ne. endps(1) )  ) then
 !
 !           The error messages below are appended only if they're not
 !           redundant.
@@ -492,92 +492,92 @@
 !           this graph is a CK frame, generate a phrase
 !           indicating the needed CK data.
 !
-            CALL FRINFO ( FRAMES(I), CENTER, CLASS, CLSSID, FOUND )
+            call frinfo ( frames(i), center, class, clssid, found )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZNOFCON' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZNOFCON' )
+               return
+            end if
 
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 
-               IF ( CLASS .EQ. CK ) THEN
+               if ( class .eq. ck ) then
 
-                  PHRASE = '# is a CK frame; a CK file ' &
+                  phrase = '# is a CK frame; a CK file ' &
                   //       'containing data for instrument or ' &
                   //       'structure # at the epoch shown above, ' &
                   //       'as well as a corresponding SCLK kernel, ' &
                   //       'must be loaded in order to use this ' &
                   //       'frame.'
 
-                  IF ( HAVNAM(I) ) THEN
-                     CALL REPMC ( PHRASE, '#', NAME(I),   PHRASE )
-                  ELSE
-                     CALL REPMI ( PHRASE, '#', FRAMES(I), PHRASE )
-                  END IF
+                  if ( havnam(i) ) then
+                     call repmc ( phrase, '#', name(i),   phrase )
+                  else
+                     call repmi ( phrase, '#', frames(i), phrase )
+                  end if
 
-                  CALL REPMI ( PHRASE, '#', CLSSID, PHRASE )
+                  call repmi ( phrase, '#', clssid, phrase )
 
-                  CALL SUFFIX ( PHRASE, 1, ERRMSG )
+                  call suffix ( phrase, 1, errmsg )
 
 !
 !                 Find out whether we have SCLK data for this
 !                 CK ID.
 !
-                  CALL CKMETA ( CLSSID, 'SCLK', SCLKID )
+                  call ckmeta ( clssid, 'SCLK', sclkid )
 
-                  IF (  .NOT. ZZSCLK ( CLSSID, SCLKID )  ) THEN
+                  if (  .not. zzsclk ( clssid, sclkid )  ) then
 
-                     SCMISS = .TRUE.
+                     scmiss = .true.
 
-                     PHRASE = 'No SCLK kernel for instrument or ' &
+                     phrase = 'No SCLK kernel for instrument or ' &
                      //       'structure #, with corresponding ' &
                      //       'SCLK ID #, is currently loaded.'
 
-                     CALL REPMI ( PHRASE, '#', CLSSID, PHRASE )
-                     CALL REPMI ( PHRASE, '#', SCLKID, PHRASE )
+                     call repmi ( phrase, '#', clssid, phrase )
+                     call repmi ( phrase, '#', sclkid, phrase )
 
-                     CALL SUFFIX ( PHRASE, 1, ERRMSG )
+                     call suffix ( phrase, 1, errmsg )
 
-                  ELSE
+                  else
 !
 !                    If we got here and have the SCLK data, then
 !                    we don't have CK data.
 !
-                     CKMISS = .TRUE.
+                     ckmiss = .true.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !              End of CK frame case.
 !
-            END IF
+            end if
 !
 !           End of "info found" case.
 !
-         END IF
+         end if
 !
 !        End of path length case.
 !
-      END DO
+      end do
 !
 !     End of path loop.
 !
 
-      IF ( CKMISS ) THEN
+      if ( ckmiss ) then
 !
 !        At least one lookup failed due to missing CK data.
 !
 !        The informational message we include depends on whether we
 !        also lack SCLK data.
 !
-         IF ( SCMISS ) THEN
+         if ( scmiss ) then
 !
 !           We lack SCLK data for one frame and CK data for another.
 !
-            PHRASE = 'For a CK frame for which the corresponding SCLK ' &
+            phrase = 'For a CK frame for which the corresponding SCLK ' &
             //       'kernel has been loaded, ' &
             //       'failure to find required CK data ' &
             //       'could be due to one or more CK files ' &
@@ -591,11 +591,11 @@
             //       'You can use CKBRIEF with the -dump option ' &
             //       'to display coverage intervals of a CK file.'
 
-         ELSE
+         else
 !
 !           We have SCLK data but lack CK data.
 !
-            PHRASE = 'Failure to find required CK data ' &
+            phrase = 'Failure to find required CK data ' &
             //       'could be due to one or more CK files ' &
             //       'not having been loaded, or to the epoch ' &
             //       'shown above lying within a coverage gap or ' &
@@ -607,12 +607,12 @@
             //       'You can use CKBRIEF with the -dump option ' &
             //       'to display coverage intervals of a CK file.'
 
-         END IF
+         end if
 
-         CALL SUFFIX ( PHRASE, 1, ERRMSG )
+         call suffix ( phrase, 1, errmsg )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZNOFCON' )
-      RETURN
-      END
+      call chkout ( 'ZZNOFCON' )
+      return
+      end

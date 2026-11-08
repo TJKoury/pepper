@@ -1,6 +1,6 @@
 !$Procedure DAFGDA ( DAF, read data from address )
 
-      SUBROUTINE DAFGDA ( HANDLE, BADDR, EADDR, DATA )
+      subroutine dafgda ( handle, baddr, eaddr, data )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      DATA     ( * )
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      data     ( * )
 
 ! $ Brief_I/O
 !
@@ -248,60 +248,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BSIZE
-      PARAMETER           ( BSIZE = 128 )
+      integer               bsize
+      parameter           ( bsize = 128 )
 
-      INTEGER               BEGR
-      INTEGER               BEGW
-      INTEGER               ENDR
-      INTEGER               ENDW
+      integer               begr
+      integer               begw
+      integer               endr
+      integer               endw
 
-      INTEGER               RECNO
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NEXT
+      integer               recno
+      integer               first
+      integer               last
+      integer               next
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Bad addresses?
 !
-      IF ( BADDR .LE. 0 ) THEN
-         CALL CHKIN  ( 'DAFGDA' )
-         CALL SETMSG ( 'Negative value for BADDR address: #' )
-         CALL ERRINT ( '#', BADDR )
-         CALL SIGERR ( 'SPICE(DAFNEGADDR)' )
-         CALL CHKOUT ( 'DAFGDA' )
-         RETURN
+      if ( baddr .le. 0 ) then
+         call chkin  ( 'DAFGDA' )
+         call setmsg ( 'Negative value for BADDR address: #' )
+         call errint ( '#', baddr )
+         call sigerr ( 'SPICE(DAFNEGADDR)' )
+         call chkout ( 'DAFGDA' )
+         return
 
-      ELSE IF ( BADDR .GT. EADDR ) THEN
-         CALL CHKIN  ( 'DAFGDA' )
-         CALL SETMSG ( 'Beginning address (#) greater than ending '   // &
+      else if ( baddr .gt. eaddr ) then
+         call chkin  ( 'DAFGDA' )
+         call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#).' )
-         CALL ERRINT ( '#', BADDR )
-         CALL ERRINT ( '#', EADDR   )
-         CALL SIGERR ( 'SPICE(DAFBEGGTEND)' )
-         CALL CHKOUT ( 'DAFGDA' )
-         RETURN
-      END IF
+         call errint ( '#', baddr )
+         call errint ( '#', eaddr   )
+         call sigerr ( 'SPICE(DAFBEGGTEND)' )
+         call chkout ( 'DAFGDA' )
+         return
+      end if
 
 !
 !     Convert raw addresses to record/word representations.
 !
-      CALL DAFARW ( BADDR, BEGR, BEGW )
-      CALL DAFARW ( EADDR, ENDR, ENDW )
+      call dafarw ( baddr, begr, begw )
+      call dafarw ( eaddr, endr, endw )
 
 !
 !     Get as many records as needed. Return the last part of the
@@ -309,36 +309,36 @@
 !     every record in between. Any record not found is assumed to
 !     be filled with zeros.
 !
-      NEXT = 1
+      next = 1
 
-      DO RECNO = BEGR, ENDR
+      do recno = begr, endr
 
-         IF ( BEGR .EQ. ENDR ) THEN
-            FIRST = BEGW
-            LAST  = ENDW
+         if ( begr .eq. endr ) then
+            first = begw
+            last  = endw
 
-         ELSE IF ( RECNO .EQ. BEGR ) THEN
-            FIRST = BEGW
-            LAST  = BSIZE
+         else if ( recno .eq. begr ) then
+            first = begw
+            last  = bsize
 
-         ELSE IF ( RECNO .EQ. ENDR ) THEN
-            FIRST = 1
-            LAST  = ENDW
+         else if ( recno .eq. endr ) then
+            first = 1
+            last  = endw
 
-         ELSE
-            FIRST = 1
-            LAST  = BSIZE
-         END IF
+         else
+            first = 1
+            last  = bsize
+         end if
 
-         CALL DAFGDR ( HANDLE, RECNO, FIRST, LAST, DATA( NEXT ), FOUND )
+         call dafgdr ( handle, recno, first, last, data( next ), found )
 
-         IF ( .NOT. FOUND ) THEN
-            CALL CLEARD ( LAST-FIRST+1, DATA( NEXT ) )
-         END IF
+         if ( .not. found ) then
+            call cleard ( last-first+1, data( next ) )
+         end if
 
-         NEXT = NEXT + ( LAST-FIRST+1 )
+         next = next + ( last-first+1 )
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

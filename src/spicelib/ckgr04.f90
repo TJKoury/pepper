@@ -1,6 +1,6 @@
 !$Procedure CKGR04 ( C-kernel, get record, type 04 )
 
-      SUBROUTINE CKGR04 ( HANDLE, DESCR, RECNO, RECORD )
+      subroutine ckgr04 ( handle, descr, recno, record )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ckparam.inc'
+      include               'ckparam.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               RECNO
-      DOUBLE PRECISION      RECORD  ( * )
+      integer               handle
+      double precision      descr   ( * )
+      integer               recno
+      double precision      record  ( * )
 
 ! $ Brief_I/O
 !
@@ -261,16 +261,16 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NDC
-      PARAMETER           ( NDC    = 2 )
+      integer               ndc
+      parameter           ( ndc    = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC    = 6 )
+      integer               nic
+      parameter           ( nic    = 6 )
 
 !
 !     Length (in DPs) of non-coefficient front part of RECORD when
@@ -279,98 +279,98 @@
 !     CKR04 and CKE04 because it doesn't contain time at which
 !     pointing has to be evaluated.
 !
-      INTEGER                 SHFTAD
-      PARAMETER             ( SHFTAD = CK4SFT - 1 )
+      integer                 shftad
+      parameter             ( shftad = ck4sft - 1 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DCD    ( NDC )
+      double precision      dcd    ( ndc )
 
-      INTEGER               ENDS   ( 1 )
-      INTEGER               ICD    ( NIC )
-      INTEGER               K
-      INTEGER               NREC
-      INTEGER               NUMALL
-      INTEGER               NUMCFT ( QAVSIZ )
+      integer               ends   ( 1 )
+      integer               icd    ( nic )
+      integer               k
+      integer               nrec
+      integer               numall
+      integer               numcft ( qavsiz )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKGR04' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKGR04' )
+      end if
 
 !
 !     Unpack descriptor and check segment data type. Signal an error
 !     if it's not 4.
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
-      IF ( ICD( 3 ) .NE. CK4DTP ) THEN
-         CALL SETMSG ( 'Data type of the segment should be 4: '      // &
+      if ( icd( 3 ) .ne. ck4dtp ) then
+         call setmsg ( 'Data type of the segment should be 4: '      // &
                        'Passed  descriptor shows type = #.'          )
-         CALL ERRINT ( '#', ICD( 3 )                                 )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                      )
-         CALL CHKOUT ( 'CKGR04'                                      )
-         RETURN
-      END IF
+         call errint ( '#', icd( 3 )                                 )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                      )
+         call chkout ( 'CKGR04'                                      )
+         return
+      end if
 
 !
 !     If a request was made for a data record which doesn't
 !     exist, then signal an error and leave.
 !
-      CALL CKNR04 ( HANDLE, DESCR, NREC )
+      call cknr04 ( handle, descr, nrec )
 
-      IF ( ( RECNO .LT. 1 ) .OR. ( RECNO .GT. NREC ) ) THEN
-         CALL SETMSG ( 'Requested record number (#) does not '       // &
+      if ( ( recno .lt. 1 ) .or. ( recno .gt. nrec ) ) then
+         call setmsg ( 'Requested record number (#) does not '       // &
                        'exist. There are # records in the segment.'  )
-         CALL ERRINT ( '#', RECNO                                    )
-         CALL ERRINT ( '#', NREC                                     )
-         CALL SIGERR ( 'SPICE(CKNONEXISTREC)'                        )
-         CALL CHKOUT ( 'CKGR04'                                      )
-         RETURN
-      END IF
+         call errint ( '#', recno                                    )
+         call errint ( '#', nrec                                     )
+         call sigerr ( 'SPICE(CKNONEXISTREC)'                        )
+         call chkout ( 'CKGR04'                                      )
+         return
+      end if
 
 !
 !     Get the data record indexed by RECNO.
 !
-      CALL SGFPKT ( HANDLE, DESCR, RECNO, RECNO, RECORD, ENDS )
+      call sgfpkt ( handle, descr, recno, recno, record, ends )
 
 !
 !     Decode 7 numbers of coefficients from double precision value.
 !
-      CALL ZZCK4D2I ( RECORD( 3 ), QAVSIZ, CK4PCD, NUMCFT )
+      call zzck4d2i ( record( 3 ), qavsiz, ck4pcd, numcft )
 
 !
 !     Compute total number of coefficients in the fetched packet.
 !
-      NUMALL = 0
+      numall = 0
 
-      DO K = 1, QAVSIZ
-         NUMALL = NUMALL + NUMCFT ( K )
-      END DO
+      do k = 1, qavsiz
+         numall = numall + numcft ( k )
+      end do
 
 !
 !     Move polynomial coefficients to the right to free space for
 !     decoded numbers of coefficients and insert these numbers
 !     starting from the third position.
 !
-      DO K = NUMALL, 1, -1
-         RECORD ( K + SHFTAD ) = RECORD( K + 3 )
-      END DO
+      do k = numall, 1, -1
+         record ( k + shftad ) = record( k + 3 )
+      end do
 
-      DO K = 1, 7
-         RECORD( K + 2 ) = NUMCFT( K )
-      END DO
+      do k = 1, 7
+         record( k + 2 ) = numcft( k )
+      end do
 
 !
 !     All done.
 !
-      CALL CHKOUT ( 'CKGR04' )
+      call chkout ( 'CKGR04' )
 
-      RETURN
+      return
 
-      END
+      end

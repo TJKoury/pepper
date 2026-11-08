@@ -1,10 +1,10 @@
 !$Procedure GFOCCE ( GF, occultation event )
 
-      SUBROUTINE GFOCCE ( OCCTYP,  FRONT,   FSHAPE,  FFRAME, &
-                          BACK,    BSHAPE,  BFRAME,  ABCORR, &
-                          OBSRVR,  TOL,     UDSTEP,  UDREFN, &
-                          RPT,     UDREPI,  UDREPU,  UDREPF, &
-                          BAIL,    UDBAIL,  CNFINE,  RESULT )
+      subroutine gfocce ( occtyp,  front,   fshape,  fframe, &
+                          back,    bshape,  bframe,  abcorr, &
+                          obsrvr,  tol,     udstep,  udrefn, &
+                          rpt,     udrepi,  udrepu,  udrepf, &
+                          bail,    udbail,  cnfine,  result )
 
 ! $ Abstract
 !
@@ -31,35 +31,35 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'gf.inc'
-      INCLUDE 'zzdsk.inc'
+      include 'gf.inc'
+      include 'zzdsk.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         OCCTYP
-      CHARACTER*(*)         FRONT
-      CHARACTER*(*)         FSHAPE
-      CHARACTER*(*)         FFRAME
-      CHARACTER*(*)         BACK
-      CHARACTER*(*)         BSHAPE
-      CHARACTER*(*)         BFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      TOL
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      LOGICAL               RPT
-      EXTERNAL              UDREPI
-      EXTERNAL              UDREPU
-      EXTERNAL              UDREPF
-      LOGICAL               BAIL
-      LOGICAL               UDBAIL
-      EXTERNAL              UDBAIL
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         occtyp
+      character*(*)         front
+      character*(*)         fshape
+      character*(*)         fframe
+      character*(*)         back
+      character*(*)         bshape
+      character*(*)         bframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      tol
+      external              udstep
+      external              udrefn
+      logical               rpt
+      external              udrepi
+      external              udrepu
+      external              udrepf
+      logical               bail
+      logical               udbail
+      external              udbail
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1194,16 +1194,16 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
-      INTEGER               SIZED
+      integer               wncard
+      integer               sized
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     External routines
 !
-      EXTERNAL              ZZGFOCST
+      external              zzgfocst
 
 !
 !     Local parameters
@@ -1214,78 +1214,78 @@
 !     argument to ZZGFSOLV. The routine UDSTEP, which is passed to
 !     ZZGFSOLV, will be used by that routine to obtain the step size.
 !
-      DOUBLE PRECISION      STEP
-      PARAMETER           ( STEP   = 1.D0 )
+      double precision      step
+      parameter           ( step   = 1.d0 )
 
 !
 !     CSTEP indicates whether a constant step size, provided
 !     via the input argument STEP, is to be used by ZZGFSOLV.
 !
-      LOGICAL               CSTEP
-      PARAMETER           ( CSTEP  = .FALSE. )
+      logical               cstep
+      parameter           ( cstep  = .false. )
 
 !
 !     Local variables
 !
-      CHARACTER*(MTHLEN)    LBSHAP
-      CHARACTER*(MTHLEN)    LFSHAP
+      character*(mthlen)    lbshap
+      character*(mthlen)    lfshap
 
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      START
+      double precision      finish
+      double precision      start
 
-      INTEGER               COUNT
-      INTEGER               I
+      integer               count
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFOCCE' )
+      call chkin  ( 'GFOCCE' )
 
 !
 !     Check the result window's size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size must be at least 2 ' &
+         call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
-         CALL ERRINT ( '#',  SIZED(RESULT)                     )
-         CALL SIGERR ( 'SPICE(WINDOWTOOSMALL)'                 )
-         CALL CHKOUT ( 'GFOCCE'                                )
-         RETURN
+         call errint ( '#',  sized(result)                     )
+         call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
+         call chkout ( 'GFOCCE'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Empty the RESULT window.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 !
 !     Check the convergence tolerance.
 !
-      IF ( TOL .LE. 0.D0 ) THEN
+      if ( tol .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be positive but was #.' )
-         CALL ERRDP  ( '#',  TOL                               )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'               )
-         CALL CHKOUT ( 'GFOCCE'                                )
-         RETURN
+         call setmsg ( 'Tolerance must be positive but was #.' )
+         call errdp  ( '#',  tol                               )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
+         call chkout ( 'GFOCCE'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the target shape specifications.
 !
-      CALL LJUST ( BSHAPE, LBSHAP )
-      CALL UCASE ( LBSHAP, LBSHAP )
+      call ljust ( bshape, lbshap )
+      call ucase ( lbshap, lbshap )
 
-      CALL LJUST ( FSHAPE, LFSHAP )
-      CALL UCASE ( LFSHAP, LFSHAP )
+      call ljust ( fshape, lfshap )
+      call ucase ( lfshap, lfshap )
 
 !
 !     Note for maintenance programmer: these checks will
@@ -1293,88 +1293,88 @@
 !
 
 
-      IF (      ( LFSHAP .EQ. PTSHAP ) &
-          .AND. ( LBSHAP .EQ. PTSHAP )  ) THEN
+      if (      ( lfshap .eq. ptshap ) &
+          .and. ( lbshap .eq. ptshap )  ) then
 
-         CALL SETMSG ( 'The front and back target shape ' &
+         call setmsg ( 'The front and back target shape ' &
          //            'specifications are both PTSHAP; ' &
          //            'at least one of these targets ' &
          //            'must be an extended object.'     )
-         CALL SIGERR ( 'SPICE(INVALIDSHAPECOMBO)'        )
-         CALL CHKOUT ( 'GFOCCE'                          )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'        )
+         call chkout ( 'GFOCCE'                          )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Initialize the occultation calculation.
 !
-      CALL ZZGFOCIN  ( OCCTYP, FRONT,  LFSHAP, FFRAME, &
-                       BACK,   LBSHAP, BFRAME, OBSRVR, &
-                       ABCORR                         )
+      call zzgfocin  ( occtyp, front,  lfshap, fframe, &
+                       back,   lbshap, bframe, obsrvr, &
+                       abcorr                         )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'GFOCCE' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'GFOCCE' )
+         return
+      end if
 
 !
 !     Prepare the progress reporter if appropriate.
 !
-      IF ( RPT ) THEN
-         CALL UDREPI ( CNFINE, 'Occultation/transit search ', 'done.' )
-      END IF
+      if ( rpt ) then
+         call udrepi ( cnfine, 'Occultation/transit search ', 'done.' )
+      end if
 
 !
 !     Cycle over the intervals in the confining window.
 !
-      COUNT = WNCARD(CNFINE)
+      count = wncard(cnfine)
 
-      DO I = 1, COUNT
+      do i = 1, count
 !
 !        Retrieve the bounds for the Ith interval of the confinement
 !        window. Search this interval for occultation events. Union the
 !        result with the contents of the RESULT window.
 !
-         CALL WNFETD ( CNFINE, I, START, FINISH  )
+         call wnfetd ( cnfine, i, start, finish  )
 
-         CALL ZZGFSOLV ( ZZGFOCST,   UDSTEP,   UDREFN,   BAIL, &
-                         UDBAIL,     CSTEP,    STEP,     START, &
-                         FINISH,     TOL,      RPT,      UDREPU, &
-                         RESULT   )
+         call zzgfsolv ( zzgfocst,   udstep,   udrefn,   bail, &
+                         udbail,     cstep,    step,     start, &
+                         finish,     tol,      rpt,      udrepu, &
+                         result   )
 
 
-         IF (  FAILED()  ) THEN
-            CALL CHKOUT ( 'GFOCCE'  )
-            RETURN
-         END IF
+         if (  failed()  ) then
+            call chkout ( 'GFOCCE'  )
+            return
+         end if
 
-         IF ( BAIL ) THEN
+         if ( bail ) then
 !
 !           Interrupt handling is enabled.
 !
-            IF ( UDBAIL () ) THEN
+            if ( udbail () ) then
 !
 !              An interrupt has been issued. Return now regardless of
 !              whether the search has been completed.
 !
-               CALL CHKOUT ( 'GFOCCE' )
-               RETURN
+               call chkout ( 'GFOCCE' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     End the progress report.
 !
-      IF ( RPT ) THEN
-         CALL UDREPF
-      END IF
+      if ( rpt ) then
+         call udrepf
+      end if
 
-      CALL CHKOUT ( 'GFOCCE' )
-      RETURN
-      END
+      call chkout ( 'GFOCCE' )
+      return
+      end

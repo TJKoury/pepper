@@ -1,10 +1,10 @@
 !$Procedure SYNTHC ( Return Nth value associated with the symbol )
 
-      SUBROUTINE SYNTHC ( NAME, &
-                          NTH, &
-                          TABSYM, TABPTR, TABVAL, &
-                          VALUE, &
-                          FOUND                               )
+      subroutine synthc ( name, &
+                          nth, &
+                          tabsym, tabptr, tabval, &
+                          value, &
+                          found                               )
 
 ! $ Abstract
 !
@@ -21,18 +21,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      INTEGER               NTH
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      CHARACTER*(*)         TABVAL     ( LBCELL:* )
-      CHARACTER*(*)         VALUE
-      LOGICAL               FOUND
+      character*(*)         name
+      integer               nth
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      character*(*)         tabval     ( lbcell:* )
+      character*(*)         value
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -169,69 +169,69 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
+      integer               locsym
+      integer               locval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYNTHC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYNTHC' )
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      IF ( LOCSYM .EQ. 0 ) THEN
+      if ( locsym .eq. 0 ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
 !
 !     If the value of NTH is out of range, that's a problem too.
 !
-      ELSE IF ( NTH .LT. 1  .OR.  NTH .GT. TABPTR(LOCSYM) ) THEN
+      else if ( nth .lt. 1  .or.  nth .gt. tabptr(locsym) ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
 !
 !     Otherwise, we can proceed without fear of error. Merely locate
 !     and return the appropriate component from the values table.
 !
-      ELSE
+      else
 
-         FOUND  = .TRUE.
+         found  = .true.
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + NTH
-         VALUE  = TABVAL(LOCVAL)
+         locval = sumai ( tabptr(1), locsym-1 ) + nth
+         value  = tabval(locval)
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYNTHC' )
-      RETURN
-      END
+      call chkout ( 'SYNTHC' )
+      return
+      end

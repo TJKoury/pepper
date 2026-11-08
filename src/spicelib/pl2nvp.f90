@@ -1,6 +1,6 @@
 !$Procedure PL2NVP ( Plane to normal vector and point )
 
-      SUBROUTINE PL2NVP ( PLANE, NORMAL, POINT )
+      subroutine pl2nvp ( plane, normal, point )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   =    4 )
+      integer               ubpl
+      parameter           ( ubpl   =    4 )
 
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      POINT  (    3 )
+      double precision      plane  ( ubpl )
+      double precision      normal (    3 )
+      double precision      point  (    3 )
 
 ! $ Brief_I/O
 !
@@ -148,7 +148,7 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CONST
+      double precision      const
 
 !
 !     Note for programmers: validity of the input plane is not
@@ -160,8 +160,8 @@
 !     unit normal by the constant gives us the closest point in the
 !     plane to the origin.
 
-      CALL PL2NVC ( PLANE, NORMAL, CONST )
-      CALL VSCL   ( CONST, NORMAL, POINT )
+      call pl2nvc ( plane, normal, const )
+      call vscl   ( const, normal, point )
 
-      RETURN
-      END
+      return
+      end

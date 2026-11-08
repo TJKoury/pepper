@@ -1,8 +1,8 @@
 !$Procedure ZZDSKSBI ( DSK, initialize API segment buffer )
 
-      SUBROUTINE ZZDSKSBI ( MAXBOD, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                            BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                            STOFF,  STCTR,  STRAD                  )
+      subroutine zzdsksbi ( maxbod, stsize, btbody, btnbod, btsegp, &
+                            btstsz, sthan,  stdscr, stdlad, stfree, &
+                            stoff,  stctr,  strad                  )
 
 ! $ Abstract
 !
@@ -25,24 +25,24 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               MAXBOD
-      INTEGER               STSIZE
-      INTEGER               BTBODY ( * )
-      INTEGER               BTNBOD
-      INTEGER               BTSEGP ( * )
-      INTEGER               BTSTSZ ( * )
-      INTEGER               STHAN  ( * )
-      DOUBLE PRECISION      STDSCR ( DSKDSZ, * )
-      INTEGER               STDLAD ( DLADSZ, * )
-      INTEGER               STFREE
-      DOUBLE PRECISION      STOFF  ( 3, * )
-      DOUBLE PRECISION      STCTR  ( 3, * )
-      DOUBLE PRECISION      STRAD  ( * )
+      integer               maxbod
+      integer               stsize
+      integer               btbody ( * )
+      integer               btnbod
+      integer               btsegp ( * )
+      integer               btstsz ( * )
+      integer               sthan  ( * )
+      double precision      stdscr ( dskdsz, * )
+      integer               stdlad ( dladsz, * )
+      integer               stfree
+      double precision      stoff  ( 3, * )
+      double precision      stctr  ( 3, * )
+      double precision      strad  ( * )
 
 
 ! $ Brief_I/O
@@ -226,53 +226,53 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKSBI' )
+      call chkin ( 'ZZDSKSBI' )
 
 !
 !     Clear the body table.
 !
-      BTNBOD = 0
+      btnbod = 0
 
-      DO I = 1, MAXBOD
+      do i = 1, maxbod
 
-         BTBODY(I) = 0
-         BTSEGP(I) = 0
-         BTSTSZ(I) = 0
+         btbody(i) = 0
+         btsegp(i) = 0
+         btstsz(i) = 0
 
-      END DO
+      end do
 
 !
 !     Clear the segment table.
 !
-      DO I = 1, STSIZE
+      do i = 1, stsize
 
-         STHAN(I) = 0
+         sthan(i) = 0
 
-         CALL CLEARD( DSKDSZ, STDSCR(1,I) )
-         CALL CLEARI( DLADSZ, STDLAD(1,I) )
+         call cleard( dskdsz, stdscr(1,i) )
+         call cleari( dladsz, stdlad(1,i) )
 
-         CALL CLEARD( 3,      STOFF (1,I) )
-         CALL CLEARD( 3,      STCTR (1,I) )
+         call cleard( 3,      stoff (1,i) )
+         call cleard( 3,      stctr (1,i) )
 
-         STRAD(I) = 0.D0
+         strad(i) = 0.d0
 
-      END DO
+      end do
 
 
-      STFREE = 1
+      stfree = 1
 
-      CALL CHKOUT ( 'ZZDSKSBI' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKSBI' )
+      return
+      end

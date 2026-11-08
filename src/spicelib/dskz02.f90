@@ -1,6 +1,6 @@
 !$Procedure DSKZ02 ( DSK, fetch type 2 model size parameters )
 
-      SUBROUTINE DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      subroutine dskz02 ( handle, dladsc, nv, np )
 
 ! $ Abstract
 !
@@ -20,16 +20,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               NV
-      INTEGER               NP
+      integer               handle
+      integer               dladsc ( * )
+      integer               nv
+      integer               np
 
 ! $ Brief_I/O
 !
@@ -325,24 +325,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               N
+      integer               n
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKZ02' )
+      call chkin ( 'DSKZ02' )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWNV, 1, 1, N, NV )
-      CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+      call dski02 ( handle, dladsc, kwnv, 1, 1, n, nv )
+      call dski02 ( handle, dladsc, kwnp, 1, 1, n, np )
 
-      CALL CHKOUT ( 'DSKZ02' )
-      RETURN
-      END
+      call chkout ( 'DSKZ02' )
+      return
+      end

@@ -1,9 +1,9 @@
 !$Procedure ZZDDHF2H ( Private --- DDH Filename to Handle )
 
-      SUBROUTINE ZZDDHF2H ( FNAME,  FTABS,  FTAMH, FTARC, FTBFF, &
-                            FTHAN,  FTNAM,  FTRTM, FTMNM, NFT,   UTCST, &
-                            UTHAN,  UTLCK,  UTLUN, NUT,   EXISTS, &
-                            OPENED, HANDLE, FOUND, MNM                 )
+      subroutine zzddhf2h ( fname,  ftabs,  ftamh, ftarc, ftbff, &
+                            fthan,  ftnam,  ftrtm, ftmnm, nft,   utcst, &
+                            uthan,  utlck,  utlun, nut,   exists, &
+                            opened, handle, found, mnm                 )
 
 ! $ Abstract
 !
@@ -23,33 +23,33 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      CHARACTER*(*)         FNAME
+      character*(*)         fname
 
-      INTEGER               FTABS ( * )
-      INTEGER               FTAMH ( * )
-      INTEGER               FTARC ( * )
-      INTEGER               FTBFF ( * )
-      INTEGER               FTHAN ( * )
-      CHARACTER*(*)         FTNAM ( * )
-      INTEGER               FTRTM ( * )
-      DOUBLE PRECISION      FTMNM ( * )
-      INTEGER               NFT
+      integer               ftabs ( * )
+      integer               ftamh ( * )
+      integer               ftarc ( * )
+      integer               ftbff ( * )
+      integer               fthan ( * )
+      character*(*)         ftnam ( * )
+      integer               ftrtm ( * )
+      double precision      ftmnm ( * )
+      integer               nft
 
-      INTEGER               UTCST ( * )
-      INTEGER               UTHAN ( * )
-      LOGICAL               UTLCK ( * )
-      INTEGER               UTLUN ( * )
-      INTEGER               NUT
+      integer               utcst ( * )
+      integer               uthan ( * )
+      logical               utlck ( * )
+      integer               utlun ( * )
+      integer               nut
 
-      LOGICAL               EXISTS
-      LOGICAL               OPENED
-      INTEGER               HANDLE
-      LOGICAL               FOUND
-      DOUBLE PRECISION      MNM
+      logical               exists
+      logical               opened
+      integer               handle
+      logical               found
+      double precision      mnm
 
 ! $ Brief_I/O
 !
@@ -260,136 +260,136 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      ZZDDHMNM
+      double precision      zzddhmnm
 
-      INTEGER               ISRCHI
-      INTEGER               RTRIM
+      integer               isrchi
+      integer               rtrim
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
 !
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               RCHAR
-      INTEGER               UINDEX
-      INTEGER               UNIT
+      integer               i
+      integer               iostat
+      integer               rchar
+      integer               uindex
+      integer               unit
 
-      LOGICAL               LOCEXS
-      LOGICAL               LOCOPN
+      logical               locexs
+      logical               locopn
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHF2H' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHF2H' )
+      end if
 
 !
 !     First check to see if FNAME is blank.  If so, set FOUND to .FALSE.
 !     and return.  ZZDDHOPN prevents any blank filenames from being
 !     loaded into the file table.
 !
-      IF ( FNAME .EQ. ' ' ) THEN
+      if ( fname .eq. ' ' ) then
 
-         FOUND  = .FALSE.
-         HANDLE = 0
-         OPENED = .FALSE.
-         EXISTS = .FALSE.
-         CALL CHKOUT ( 'ZZDDHF2H' )
-         RETURN
+         found  = .false.
+         handle = 0
+         opened = .false.
+         exists = .false.
+         call chkout ( 'ZZDDHF2H' )
+         return
 
-      END IF
+      end if
 
 !
 !     Start by trimming the file name in preparation for the INQUIRE.
 !
-      RCHAR = RTRIM ( FNAME )
+      rchar = rtrim ( fname )
 
 !
 !     Now INQUIRE on the input file FNAME.
 !
-      INQUIRE ( FILE   = FNAME( 1:RCHAR ), &
-                EXIST  = LOCEXS, &
-                OPENED = LOCOPN, &
-                NUMBER = UNIT, &
-                IOSTAT = IOSTAT            )
+      inquire ( file   = fname( 1:rchar ), &
+                exist  = locexs, &
+                opened = locopn, &
+                number = unit, &
+                iostat = iostat            )
 
 !
 !     Check IOSTAT for failure.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
-         FOUND  = .FALSE.
-         HANDLE = 0
-         CALL SETMSG ( 'INQUIRE failed. Value of IOSTAT was #.' )
-         CALL ERRINT ( '#', IOSTAT                              )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'                   )
-         CALL CHKOUT ( 'ZZDDHF2H'                               )
-         RETURN
-      END IF
+      if ( iostat .ne. 0 ) then
+         found  = .false.
+         handle = 0
+         call setmsg ( 'INQUIRE failed. Value of IOSTAT was #.' )
+         call errint ( '#', iostat                              )
+         call sigerr ( 'SPICE(INQUIREFAILED)'                   )
+         call chkout ( 'ZZDDHF2H'                               )
+         return
+      end if
 
 !
 !     First, set some of the output arguments.  Remember, some
 !     systems consider non-existent files as open.  Compensate for
 !     this unusual behavior.
 !
-      EXISTS = LOCEXS
-      OPENED = LOCOPN .AND. EXISTS
+      exists = locexs
+      opened = locopn .and. exists
 
 !
 !     Now check to see if the file exists.  If it does not, then
 !     set FOUND to false and HANDLE to 0 as non-existent files
 !     can not possibly be present in the file table.
 !
-      IF ( .NOT. EXISTS ) THEN
+      if ( .not. exists ) then
 
-         FOUND  = .FALSE.
-         HANDLE = 0
-         CALL CHKOUT ( 'ZZDDHF2H' )
-         RETURN
+         found  = .false.
+         handle = 0
+         call chkout ( 'ZZDDHF2H' )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check to see if the file is opened.  If it is, we need to
 !     determine whether or not the logical unit to which it is
 !     attached is present in the unit table.
 !
-      IF ( OPENED ) THEN
+      if ( opened ) then
 
 !
 !        Since the file is opened, see if we can find its unit
 !        in the unit table.
 !
-         UINDEX = ISRCHI ( UNIT, NUT, UTLUN )
+         uindex = isrchi ( unit, nut, utlun )
 
 !
 !        When UINDEX is 0, the file is opened, but not by
 !        the DAF/DAS handle manager.  Set FOUND to FALSE, HANDLE
 !        to 0, and return to the caller.
 !
-         IF ( UINDEX .EQ. 0 ) THEN
-            HANDLE = 0
-            FOUND  = .FALSE.
-            CALL CHKOUT ( 'ZZDDHF2H' )
-            RETURN
-         END IF
+         if ( uindex .eq. 0 ) then
+            handle = 0
+            found  = .false.
+            call chkout ( 'ZZDDHF2H' )
+            return
+         end if
 
 !
 !        If we end up here, then we found UNIT in the unit table.
 !        Set FOUND to TRUE if the handle associated with UNIT is
 !        non-zero.
 !
-         HANDLE = UTHAN(UINDEX)
-         FOUND  = HANDLE .NE. 0
-         CALL CHKOUT ( 'ZZDDHF2H' )
-         RETURN
+         handle = uthan(uindex)
+         found  = handle .ne. 0
+         call chkout ( 'ZZDDHF2H' )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we took action for all simple cases.  Now
@@ -398,73 +398,73 @@
 !     and then INQUIRE on every file in the table.  To do this, we
 !     need a unit. Get one.
 !
-      CALL ZZDDHGTU ( UTCST, UTHAN, UTLCK, UTLUN, NUT, UINDEX )
+      call zzddhgtu ( utcst, uthan, utlck, utlun, nut, uindex )
 
-      IF ( FAILED() ) THEN
-         HANDLE = 0
-         FOUND  = .FALSE.
-         CALL CHKOUT ( 'ZZDDHF2H' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         handle = 0
+         found  = .false.
+         call chkout ( 'ZZDDHF2H' )
+         return
+      end if
 
 !
 !     Now open the file (which we know exists and isn't open). Since
 !     we effectively are just borrowing this unit, we are not going to
 !     set UTHAN or UTCST from the defaults that ZZDDHGTU sets up.
 !
-      OPEN ( UNIT   = UTLUN(UINDEX), &
-             FILE   = FNAME( 1:RCHAR ), &
-             ACCESS = 'DIRECT', &
-             RECL   = RECL, &
-             STATUS = 'OLD', &
-             IOSTAT = IOSTAT            )
+      open ( unit   = utlun(uindex), &
+             file   = fname( 1:rchar ), &
+             access = 'DIRECT', &
+             recl   = recl, &
+             status = 'OLD', &
+             iostat = iostat            )
 
 !
 !     Check IOSTAT.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
 !
 !        Since an error has occurred, set FOUND to false and HANDLE
 !        to 0.
 !
-         FOUND  = .FALSE.
-         HANDLE = 0
+         found  = .false.
+         handle = 0
 
 !
 !        Close the unit and remove it from the unit table.
 !
-         CLOSE ( UNIT = UTLUN(UINDEX) )
+         close ( unit = utlun(uindex) )
 
-         CALL ZZDDHRMU ( UINDEX, NFT, UTCST, UTHAN, UTLCK, UTLUN, NUT )
+         call zzddhrmu ( uindex, nft, utcst, uthan, utlck, utlun, nut )
 
 !
 !        Signal the error and return.
 !
-         CALL SETMSG ( 'Attempt to open file ''#'' failed. Value of ' &
+         call setmsg ( 'Attempt to open file ''#'' failed. Value of ' &
          //            'IOSTAT was #.'                                )
-         CALL ERRCH  ( '#', FNAME                                     )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL SIGERR ( 'SPICE(FILEOPENFAILED)'                        )
-         CALL CHKOUT ( 'ZZDDHF2H'                                     )
-         RETURN
+         call errch  ( '#', fname                                     )
+         call errint ( '#', iostat                                    )
+         call sigerr ( 'SPICE(FILEOPENFAILED)'                        )
+         call chkout ( 'ZZDDHF2H'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Get a unique enough DP number -- the Magic NuMber (MNM) ;) -- for
 !     this file.
 !
-      MNM = ZZDDHMNM ( UTLUN(UINDEX) )
+      mnm = zzddhmnm ( utlun(uindex) )
 
 !
 !     Now loop through all the files in the file table. Unfortunately
 !     we have no other choice.
 !
-      I     = 1
-      FOUND = .FALSE.
+      i     = 1
+      found = .false.
 
-      DO WHILE ( ( I .LE. NFT ) .AND. ( .NOT. FOUND ) )
+      do while ( ( i .le. nft ) .and. ( .not. found ) )
 
 !
 !        If this file's magic number is non-zero and is different from
@@ -473,95 +473,95 @@
 !        and will skip INQUIRE. In all other cases we will do INQUIRE
 !        and check UNITs.
 !
-         IF (   MNM .NE. 0.D0                               .AND. &
-              ( MNM .NE. FTMNM(I) .AND. FTAMH(I) .EQ. READ )     ) THEN
+         if (   mnm .ne. 0.d0                               .and. &
+              ( mnm .ne. ftmnm(i) .and. ftamh(i) .eq. read )     ) then
 
 !
 !           These files are not the same file. Clear IOSTAT and set
 !           UNIT to not match the UNIT of the input file.
 !
-            IOSTAT = 0
-            UNIT   = UTLUN(UINDEX) + 1
+            iostat = 0
+            unit   = utlun(uindex) + 1
 
-         ELSE
+         else
 
 !
 !           Do the INQUIRE. ;(
 !
-            INQUIRE ( FILE   = FTNAM(I) ( 1 : FTRTM(I) ), &
-                      EXIST  = LOCEXS, &
-                      OPENED = LOCOPN, &
-                      NUMBER = UNIT, &
-                      IOSTAT = IOSTAT               )
+            inquire ( file   = ftnam(i) ( 1 : ftrtm(i) ), &
+                      exist  = locexs, &
+                      opened = locopn, &
+                      number = unit, &
+                      iostat = iostat               )
 
-         END IF
+         end if
 
 !
 !        Check IOSTAT.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
 !
 !           Since we have an error condition, set FOUND to FALSE
 !           and HANDLE to 0.
 !
-            FOUND  = .FALSE.
-            HANDLE = 0
+            found  = .false.
+            handle = 0
 
 !
 !           Close the unit and clean up the unit table.
 !
-            CLOSE ( UNIT = UTLUN(UINDEX) )
+            close ( unit = utlun(uindex) )
 
-            CALL ZZDDHRMU ( UINDEX, NFT,   UTCST, UTHAN, &
-                            UTLCK,  UTLUN, NUT           )
+            call zzddhrmu ( uindex, nft,   utcst, uthan, &
+                            utlck,  utlun, nut           )
 
 
 !
 !           Signal the error and return.
 !
-            CALL SETMSG ( 'INQUIRE failed. Value of IOSTAT was #.' )
-            CALL ERRINT ( '#', IOSTAT                              )
-            CALL SIGERR ( 'SPICE(INQUIREFAILED)'                   )
-            CALL CHKOUT ( 'ZZDDHF2H'                               )
-            RETURN
+            call setmsg ( 'INQUIRE failed. Value of IOSTAT was #.' )
+            call errint ( '#', iostat                              )
+            call sigerr ( 'SPICE(INQUIREFAILED)'                   )
+            call chkout ( 'ZZDDHF2H'                               )
+            return
 
-         END IF
+         end if
 
 !
 !        Now check to see if FILE exists, is currently open. and
 !        its UNIT matches UTLUN(UINDEX).
 !
-         IF (       ( LOCEXS .AND. LOCOPN ) &
-              .AND. (   UNIT .EQ.  UTLUN(UINDEX) ) ) THEN
+         if (       ( locexs .and. locopn ) &
+              .and. (   unit .eq.  utlun(uindex) ) ) then
 
-               HANDLE = FTHAN(I)
-               FOUND  = .TRUE.
+               handle = fthan(i)
+               found  = .true.
 
 !
 !        Otherwise, continue searching.
 !
-         ELSE
-            I = I + 1
-         END IF
+         else
+            i = i + 1
+         end if
 
-      END DO
+      end do
 
 !
 !     Check to see if we found the file in the file table.
 !
-      IF ( .NOT. FOUND ) THEN
-         HANDLE = 0
-      END IF
+      if ( .not. found ) then
+         handle = 0
+      end if
 
 !
 !     Close the unit and clean up the unit table.
 !
-      CLOSE ( UNIT=UTLUN(UINDEX) )
+      close ( unit=utlun(uindex) )
 
-      CALL ZZDDHRMU ( UINDEX, NFT, UTCST, UTHAN, UTLCK,  UTLUN, NUT )
+      call zzddhrmu ( uindex, nft, utcst, uthan, utlck,  utlun, nut )
 
-      CALL CHKOUT ( 'ZZDDHF2H' )
-      RETURN
+      call chkout ( 'ZZDDHF2H' )
+      return
 
-      END
+      end

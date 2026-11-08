@@ -1,6 +1,6 @@
 !$Procedure DASIOI ( DAS, Fortran I/O, integer )
 
-      SUBROUTINE DASIOI ( ACTION, UNIT, RECNO, RECORD )
+      subroutine dasioi ( action, unit, recno, record )
 
 ! $ Abstract
 !
@@ -20,15 +20,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NWI
-      PARAMETER           ( NWI = 256 )
+      integer               nwi
+      parameter           ( nwi = 256 )
 
-      CHARACTER*(*)         ACTION
-      INTEGER               UNIT
-      INTEGER               RECNO
-      INTEGER               RECORD ( NWI )
+      character*(*)         action
+      integer               unit
+      integer               recno
+      integer               record ( nwi )
 
 ! $ Brief_I/O
 !
@@ -196,83 +196,83 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 
-      IF (   EQSTR ( ACTION, 'READ' )   ) THEN
+      if (   eqstr ( action, 'READ' )   ) then
 !
 !        We're supposed to read the file.
 !
-         READ (  UNIT    =    UNIT, &
-                 REC     =    RECNO, &
-                 IOSTAT  =    IOSTAT  )    RECORD
+         read (  unit    =    unit, &
+                 rec     =    recno, &
+                 iostat  =    iostat  )    record
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL CHKIN  ( 'DASIOI'                                     )
-            CALL SETMSG ( 'Could not read DAS integer record. '       // &
+            call chkin  ( 'DASIOI'                                     )
+            call setmsg ( 'Could not read DAS integer record. '       // &
                           'File = # Record number = #. IOSTAT = #.'    )
-            CALL ERRFNM ( '#', UNIT                                    )
-            CALL ERRINT ( '#', RECNO                                   )
-            CALL ERRINT ( '#', IOSTAT                                  )
-            CALL SIGERR ( 'SPICE(DASFILEREADFAILED)'                   )
-            CALL CHKOUT ( 'DASIOI'                                     )
-            RETURN
+            call errfnm ( '#', unit                                    )
+            call errint ( '#', recno                                   )
+            call errint ( '#', iostat                                  )
+            call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
+            call chkout ( 'DASIOI'                                     )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF (  EQSTR ( ACTION, 'WRITE' )  ) THEN
+      else if (  eqstr ( action, 'WRITE' )  ) then
 
 !
 !        We're supposed to write to the file.
 !
-         WRITE (  UNIT    =    UNIT, &
-                  REC     =    RECNO, &
-                  IOSTAT  =    IOSTAT  )    RECORD
+         write (  unit    =    unit, &
+                  rec     =    recno, &
+                  iostat  =    iostat  )    record
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL CHKIN  ( 'DASIOI'                                     )
-            CALL SETMSG ( 'Could not write DAS integer record. '      // &
+            call chkin  ( 'DASIOI'                                     )
+            call setmsg ( 'Could not write DAS integer record. '      // &
                           'File = # Record number = #. IOSTAT = #.'    )
-            CALL ERRFNM ( '#', UNIT                                    )
-            CALL ERRINT ( '#', RECNO                                   )
-            CALL ERRINT ( '#', IOSTAT                                  )
-            CALL SIGERR ( 'SPICE(DASFILEWRITEFAILED)'                  )
-            CALL CHKOUT ( 'DASIOI'                                     )
-            RETURN
+            call errfnm ( '#', unit                                    )
+            call errint ( '#', recno                                   )
+            call errint ( '#', iostat                                  )
+            call sigerr ( 'SPICE(DASFILEWRITEFAILED)'                  )
+            call chkout ( 'DASIOI'                                     )
+            return
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        The requested action is a little too weird.
 !
-         CALL CHKIN  ( 'DASIOI'                                )
-         CALL SETMSG ( 'Action was #; should be READ or WRITE' )
-         CALL ERRCH  ( '#', ACTION                             )
-         CALL SIGERR ( 'SPICE(UNRECOGNIZEDACTION)'             )
-         CALL CHKOUT ( 'DASIOI'                                )
-         RETURN
+         call chkin  ( 'DASIOI'                                )
+         call setmsg ( 'Action was #; should be READ or WRITE' )
+         call errch  ( '#', action                             )
+         call sigerr ( 'SPICE(UNRECOGNIZEDACTION)'             )
+         call chkout ( 'DASIOI'                                )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

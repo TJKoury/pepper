@@ -1,7 +1,7 @@
 !$Procedure ZZELLBDS ( Create bounding ellipsoids )
 
-      SUBROUTINE ZZELLBDS ( A, B, HMAX, HMIN, AMAX, BMAX, AMIN, BMIN )
-      IMPLICIT NONE
+      subroutine zzellbds ( a, b, hmax, hmin, amax, bmax, amin, bmin )
+      implicit none
 
 ! $ Abstract
 !
@@ -27,14 +27,14 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      HMAX
-      DOUBLE PRECISION      HMIN
-      DOUBLE PRECISION      AMAX
-      DOUBLE PRECISION      BMAX
-      DOUBLE PRECISION      AMIN
-      DOUBLE PRECISION      BMIN
+      double precision      a
+      double precision      b
+      double precision      hmax
+      double precision      hmin
+      double precision      amax
+      double precision      bmax
+      double precision      amin
+      double precision      bmin
 
 ! $ Brief_I/O
 !
@@ -339,78 +339,78 @@
 !
 !     Use discovery check-in.
 !
-      IF ( B .LE. 0.D0 ) THEN
+      if ( b .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZELLBDS'                                )
-         CALL SETMSG ( 'This routine requires B > 0, but B = #.' )
-         CALL ERRDP  ( '#',  B                                   )
-         CALL SIGERR ( 'SPICE(NONPOSITIVERADIUS)'                )
-         CALL CHKOUT ( 'ZZELLBDS'                                )
-         RETURN
+         call chkin  ( 'ZZELLBDS'                                )
+         call setmsg ( 'This routine requires B > 0, but B = #.' )
+         call errdp  ( '#',  b                                   )
+         call sigerr ( 'SPICE(NONPOSITIVERADIUS)'                )
+         call chkout ( 'ZZELLBDS'                                )
+         return
 
-      END IF
+      end if
 
-      IF ( B .GT. A ) THEN
+      if ( b .gt. a ) then
 
-         CALL CHKIN  ( 'ZZELLBDS'                                 )
-         CALL SETMSG ( 'This routine requires A >= B, but A = #; ' &
+         call chkin  ( 'ZZELLBDS'                                 )
+         call setmsg ( 'This routine requires A >= B, but A = #; ' &
          //            'B = #.'                                   )
-         CALL ERRDP  ( '#',  A                                    )
-         CALL ERRDP  ( '#',  B                                    )
-         CALL SIGERR ( 'SPICE(RADIIOUTOFORDER)'                   )
-         CALL CHKOUT ( 'ZZELLBDS'                                 )
-         RETURN
+         call errdp  ( '#',  a                                    )
+         call errdp  ( '#',  b                                    )
+         call sigerr ( 'SPICE(RADIIOUTOFORDER)'                   )
+         call chkout ( 'ZZELLBDS'                                 )
+         return
 
-      END IF
+      end if
 
-      IF ( ( B + HMIN ) .LE. 0.D0 ) THEN
+      if ( ( b + hmin ) .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZELLBDS'                                 )
-         CALL SETMSG ( 'This routine requires B + HMIN > 0, but ' &
+         call chkin  ( 'ZZELLBDS'                                 )
+         call setmsg ( 'This routine requires B + HMIN > 0, but ' &
          //            'B = #; HMIN = #, B+HMIN = #.'             )
-         CALL ERRDP  ( '#',  B                                    )
-         CALL ERRDP  ( '#',  HMIN                                 )
-         CALL ERRDP  ( '#',  B + HMIN                             )
-         CALL SIGERR ( 'SPICE(LOWERBOUNDTOOLOW)'                  )
-         CALL CHKOUT ( 'ZZELLBDS'                                 )
-         RETURN
+         call errdp  ( '#',  b                                    )
+         call errdp  ( '#',  hmin                                 )
+         call errdp  ( '#',  b + hmin                             )
+         call sigerr ( 'SPICE(LOWERBOUNDTOOLOW)'                  )
+         call chkout ( 'ZZELLBDS'                                 )
+         return
 
-      END IF
+      end if
 
-      IF ( HMIN .LT. 0.D0 ) THEN
+      if ( hmin .lt. 0.d0 ) then
 
-         IF (  ( B + (A/B)*HMIN ) .LE. 0.D0 ) THEN
+         if (  ( b + (a/b)*hmin ) .le. 0.d0 ) then
 
-            CALL CHKIN  ( 'ZZELLBDS'                                 )
-            CALL SETMSG ( 'For oblate spheroids and HMIN < 0, ' &
+            call chkin  ( 'ZZELLBDS'                                 )
+            call setmsg ( 'For oblate spheroids and HMIN < 0, ' &
             //            'This routine requires B + (A/B)HMIN > 0, ' &
             //            'but A = #, B = #; HMIN = #, ' &
             //            'B+(A/B)HMIN = #.'                         )
-            CALL ERRDP  ( '#',  A                                    )
-            CALL ERRDP  ( '#',  B                                    )
-            CALL ERRDP  ( '#',  HMIN                                 )
-            CALL ERRDP  ( '#',  B + (A/B)*HMIN                       )
-            CALL SIGERR ( 'SPICE(LOWERBOUNDTOOLOW)'                  )
-            CALL CHKOUT ( 'ZZELLBDS'                                 )
-            RETURN
+            call errdp  ( '#',  a                                    )
+            call errdp  ( '#',  b                                    )
+            call errdp  ( '#',  hmin                                 )
+            call errdp  ( '#',  b + (a/b)*hmin                       )
+            call sigerr ( 'SPICE(LOWERBOUNDTOOLOW)'                  )
+            call chkout ( 'ZZELLBDS'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( HMIN .GT. HMAX ) THEN
+      if ( hmin .gt. hmax ) then
 
-         CALL CHKIN  ( 'ZZELLBDS'                                 )
-         CALL SETMSG ( 'This routine requires HMAX >= HMIN, but ' &
+         call chkin  ( 'ZZELLBDS'                                 )
+         call setmsg ( 'This routine requires HMAX >= HMIN, but ' &
          //            'HMIN = #; HMAX = #.'                      )
-         CALL ERRDP  ( '#',  HMIN                                 )
-         CALL ERRDP  ( '#',  HMAX                                 )
-         CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)'                  )
-         CALL CHKOUT ( 'ZZELLBDS'                                 )
-         RETURN
+         call errdp  ( '#',  hmin                                 )
+         call errdp  ( '#',  hmax                                 )
+         call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                  )
+         call chkout ( 'ZZELLBDS'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     In the following comments, N, E, E', and LAMBDA are
@@ -419,7 +419,7 @@
 !
 !     Generate radii of the outer bounding ellipsoid.
 !
-      IF ( HMAX .GE. 0.D0 ) THEN
+      if ( hmax .ge. 0.d0 ) then
 !
 !        Pick radii of E' so that E' matches
 !
@@ -449,10 +449,10 @@
 !           BMAX =  B + LAMBDA*B/B**2  =  B + HMAX*(A/B)
 !
 !
-         AMAX = A  +  HMAX
-         BMAX = B  +  HMAX * (A/B)
+         amax = a  +  hmax
+         bmax = b  +  hmax * (a/b)
 
-      ELSE
+      else
 !
 !        HMAX < 0.
 !
@@ -464,15 +464,15 @@
 !           AMAX =  A + LAMBDA*A/A**2  =  A + HMAX * (B/A)
 !           BMAX =  B + LAMBDA*B/B**2  =  B + HMAX
 
-         AMAX = A  +  HMAX * (B/A)
-         BMAX = B  +  HMAX
+         amax = a  +  hmax * (b/a)
+         bmax = b  +  hmax
 
-      END IF
+      end if
 
 !
 !     Find radii of the inner bounding ellipsoid.
 !
-      IF ( HMIN .LE. 0 ) THEN
+      if ( hmin .le. 0 ) then
 !
 !        This case is similar to that of the outer bounding
 !        ellipsoid for HMAX >= 0. We can create an ellipse
@@ -484,10 +484,10 @@
 !           AMAX =  A + LAMBDA*A/A**2  =  A + HMAX
 !           BMAX =  B + LAMBDA*B/B**2  =  B + HMAX*(A/B)
 
-         AMIN = A  +  HMIN
-         BMIN = B  +  HMIN * (A/B)
+         amin = a  +  hmin
+         bmin = b  +  hmin * (a/b)
 
-      ELSE
+      else
 !
 !        HMIN > 0.
 !
@@ -499,10 +499,10 @@
 !           AMIN =  A + LAMBDA*A/A**2  =  A + HMIN * (B/A)
 !           BMIN =  B + LAMBDA*B/B**2  =  B + HMIN
 !
-         AMIN = A  +  HMIN * (B/A)
-         BMIN = B  +  HMIN
+         amin = a  +  hmin * (b/a)
+         bmin = b  +  hmin
 
-      END IF
+      end if
 
-      END
+      end
 

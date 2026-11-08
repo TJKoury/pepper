@@ -1,6 +1,6 @@
 !$Procedure    ZZSCLK ( Is there and SCLK for a CKID )
 
-      LOGICAL FUNCTION ZZSCLK ( CKID, SCLKID )
+      logical function zzsclk ( ckid, sclkid )
 
 ! $ Abstract
 !
@@ -21,9 +21,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INTEGER               CKID
-      INTEGER               SCLKID
+      implicit none
+      integer               ckid
+      integer               sclkid
 
 ! $ Brief_I/O
 !
@@ -102,124 +102,124 @@
 !-&
 !     SPICELIB Functions
 !
-      INTEGER               CARDI
-      INTEGER               SIZEI
+      integer               cardi
+      integer               sizei
 
-      LOGICAL               RETURN
-      LOGICAL               ELEMI
+      logical               return
+      logical               elemi
 
 !
 !     Local Variables
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               MAXIDS
-      PARAMETER           ( MAXIDS = 10 )
-
-
-      CHARACTER*(WDSIZE)    SCLK
-      CHARACTER*(WDSIZE)    SCLKVR ( 7 )
-      CHARACTER*(WDSIZE)    TYPE
-      CHARACTER*(WDSIZE)    AGENT
-
-      INTEGER               DTSIZE ( 7 )
-      INTEGER               I
-      INTEGER               N
-
-      INTEGER               KNOWN  ( LBCELL : MAXIDS )
-      INTEGER               PASSED ( LBCELL : MAXIDS )
-
-      LOGICAL               KEEPID
-      LOGICAL               UPDATE
-      LOGICAL               WATCH
-      LOGICAL               FIRST
-
-      LOGICAL               FOUND
-
-      SAVE                  KNOWN
-      SAVE                  PASSED
-      SAVE                  FIRST
-      SAVE                  DTSIZE
-
-      DATA                  FIRST / .TRUE. /
+      integer               maxids
+      parameter           ( maxids = 10 )
 
 
-      ZZSCLK = .FALSE.
+      character*(wdsize)    sclk
+      character*(wdsize)    sclkvr ( 7 )
+      character*(wdsize)    type
+      character*(wdsize)    agent
+
+      integer               dtsize ( 7 )
+      integer               i
+      integer               n
+
+      integer               known  ( lbcell : maxids )
+      integer               passed ( lbcell : maxids )
+
+      logical               keepid
+      logical               update
+      logical               watch
+      logical               first
+
+      logical               found
+
+      save                  known
+      save                  passed
+      save                  first
+      save                  dtsize
+
+      data                  first / .true. /
+
+
+      zzsclk = .false.
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSCLK')
+      call chkin ( 'ZZSCLK')
 
-      IF ( FIRST ) THEN
-         FIRST = .FALSE.
+      if ( first ) then
+         first = .false.
 
-         DTSIZE(1) = 1
-         DTSIZE(2) = 1
-         DTSIZE(3) = 1
-         DTSIZE(4) = 1
-         DTSIZE(5) = 3
-         DTSIZE(6) = 1
-         DTSIZE(7) = 1
+         dtsize(1) = 1
+         dtsize(2) = 1
+         dtsize(3) = 1
+         dtsize(4) = 1
+         dtsize(5) = 3
+         dtsize(6) = 1
+         dtsize(7) = 1
 
-         CALL SSIZEI ( MAXIDS, KNOWN )
-         CALL SSIZEI ( MAXIDS, PASSED )
-      END IF
+         call ssizei ( maxids, known )
+         call ssizei ( maxids, passed )
+      end if
 !
 !     We've got a text kernel (or meta kernel). See if there is an
 !     SCLK kernel loaded for the CKID provided in the calling inputs.
 !     If not, we'll use the default -CKID/1000 for the SCLK ID.
 !
-      CALL INTSTR ( -SCLKID, SCLK )
-      AGENT = 'ZZSCLK' // SCLK
+      call intstr ( -sclkid, sclk )
+      agent = 'ZZSCLK' // sclk
 
 !
 !     See if this is an ID-code we've encountered before.  If it
 !     is we can make use of stored knowledge about this ID-code.
 !
-      IF ( ELEMI( SCLKID, KNOWN ) ) THEN
+      if ( elemi( sclkid, known ) ) then
 
-         WATCH  = .FALSE.
-         KEEPID = .TRUE.
-         CALL CVPOOL ( AGENT, UPDATE )
+         watch  = .false.
+         keepid = .true.
+         call cvpool ( agent, update )
 
-      ELSE IF ( CARDI(KNOWN) .LT. SIZEI(KNOWN) ) THEN
+      else if ( cardi(known) .lt. sizei(known) ) then
 !
 !        The SCLKID specified is not in the list of SCLKIDs for
 !        this routine and there is room left in the pool of
 !        SCLKIDs to keep track of one more.  Put this ID into
 !        the list of known IDS
 !
-         CALL INSRTI( SCLKID, KNOWN )
-         UPDATE = .TRUE.
-         WATCH  = .TRUE.
-         KEEPID = .TRUE.
+         call insrti( sclkid, known )
+         update = .true.
+         watch  = .true.
+         keepid = .true.
 
-      ELSE
+      else
 
-         UPDATE = .TRUE.
-         KEEPID = .FALSE.
-         WATCH  = .FALSE.
+         update = .true.
+         keepid = .false.
+         watch  = .false.
 
-      END IF
+      end if
 
-      IF ( .NOT. UPDATE ) THEN
+      if ( .not. update ) then
 !
 !        Nothing has changed in the kernel pool w.r.t this agent.
 !        The test for an SCLK will not have changed either.
 !
-         ZZSCLK = ELEMI( SCLKID, PASSED )
-         CALL CHKOUT ( 'ZZSCLK' )
-         RETURN
+         zzsclk = elemi( sclkid, passed )
+         call chkout ( 'ZZSCLK' )
+         return
 
-      END IF
+      end if
 !
 !     If we are still here, we need to look in the kernel pool
 !     to see if we have an SCLK for this object.
@@ -227,55 +227,55 @@
 !     Construct all of the expected SCLK variables are
 !     available for this SCLK.
 !
-      SCLKVR(1) = 'SCLK_DATA_TYPE_'       // SCLK
-      SCLKVR(2) = 'SCLK01_N_FIELDS_'      // SCLK
-      SCLKVR(3) = 'SCLK01_MODULI_'        // SCLK
-      SCLKVR(4) = 'SCLK01_OFFSETS_'       // SCLK
-      SCLKVR(5) = 'SCLK01_COEFFICIENTS_'  // SCLK
-      SCLKVR(6) = 'SCLK_PARTITION_START_' // SCLK
-      SCLKVR(7) = 'SCLK_PARTITION_END_'   // SCLK
+      sclkvr(1) = 'SCLK_DATA_TYPE_'       // sclk
+      sclkvr(2) = 'SCLK01_N_FIELDS_'      // sclk
+      sclkvr(3) = 'SCLK01_MODULI_'        // sclk
+      sclkvr(4) = 'SCLK01_OFFSETS_'       // sclk
+      sclkvr(5) = 'SCLK01_COEFFICIENTS_'  // sclk
+      sclkvr(6) = 'SCLK_PARTITION_START_' // sclk
+      sclkvr(7) = 'SCLK_PARTITION_END_'   // sclk
 !
 !     If we are supposed to watch for this agent, we add him to
 !     the list of kernel pool agents.
 !
-      IF ( WATCH ) THEN
-         CALL SWPOOL ( AGENT, 7, SCLKVR )
-         CALL CVPOOL ( AGENT,    UPDATE )
-      END IF
+      if ( watch ) then
+         call swpool ( agent, 7, sclkvr )
+         call cvpool ( agent,    update )
+      end if
 !
 !     Check for all of the required variables and structure in
 !     the kernel pool.
 !
-      DO I = 1, 7
+      do i = 1, 7
 
-         CALL DTPOOL ( SCLKVR(I), FOUND, N, TYPE )
+         call dtpool ( sclkvr(i), found, n, type )
 
-         IF (       .NOT. FOUND &
-              .OR.  TYPE .NE. 'N' &
-              .OR. (N/DTSIZE(I))*DTSIZE(I) .NE. N   )THEN
+         if (       .not. found &
+              .or.  type .ne. 'N' &
+              .or. (n/dtsize(i))*dtsize(i) .ne. n   )then
 !
 !           We don't have adequate SCLK data for the specified
 !           object.  Remove this AGENT from the list of agents
 !           that have passed the test.
 !
-            CALL REMOVI ( SCLKID, PASSED )
-            CALL CHKOUT ( 'ZZSCLK' )
-            RETURN
-         END IF
+            call removi ( sclkid, passed )
+            call chkout ( 'ZZSCLK' )
+            return
+         end if
 
-      END DO
+      end do
 !
 !     Once we get to this point, we know we have SCLK data.  If
 !     there is room to WATCH for this agent,
 !
-      IF ( KEEPID ) THEN
-         CALL INSRTI ( SCLKID, PASSED )
-      END IF
+      if ( keepid ) then
+         call insrti ( sclkid, passed )
+      end if
 
 !
 !     As far as we can tell, everything looks ok.
 !
-      ZZSCLK = .TRUE.
-      CALL CHKOUT ( 'ZZSCLK' )
-      RETURN
-      END
+      zzsclk = .true.
+      call chkout ( 'ZZSCLK' )
+      return
+      end

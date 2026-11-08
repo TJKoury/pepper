@@ -1,6 +1,6 @@
 !$Procedure SYTRNI (Transpose two values associated with a symbol)
 
-      SUBROUTINE SYTRNI ( NAME, IDX1, IDX2, TABSYM, TABPTR, TABVAL )
+      subroutine sytrni ( name, idx1, idx2, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -17,17 +17,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      INTEGER               IDX1
-      INTEGER               IDX2
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      INTEGER               TABVAL     ( LBCELL:* )
+      character*(*)         name
+      integer               idx1
+      integer               idx2
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      integer               tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -189,79 +189,79 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      INTEGER               N
+      integer               locsym
+      integer               locval
+      integer               n
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
-      CALL CHKIN ( 'SYTRNI' )
+      if ( return () ) then
+         return
+      end if
+      call chkin ( 'SYTRNI' )
 
 !
 !     How many symbols?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
-      IF ( LOCSYM .GT. 0 ) THEN
+      if ( locsym .gt. 0 ) then
 
 !
 !        Are there enough values associated with the symbol?
 !
-         N = TABPTR(LOCSYM)
+         n = tabptr(locsym)
 
 !
 !        Are the indices valid?
 !
-         IF (        IDX1 .GE. 1 &
-              .AND.  IDX1 .LE. N &
-              .AND.  IDX2 .GE. 1 &
-              .AND.  IDX2 .LE. N ) THEN
+         if (        idx1 .ge. 1 &
+              .and.  idx1 .le. n &
+              .and.  idx2 .ge. 1 &
+              .and.  idx2 .le. n ) then
 
 !
 !           Exchange the values in place.
 !
-            IF ( IDX1 .NE. IDX2 ) THEN
+            if ( idx1 .ne. idx2 ) then
 
-               LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
+               locval = sumai ( tabptr(1), locsym-1 ) + 1
 
-               CALL SWAPI ( TABVAL(LOCVAL+IDX1-1), &
-                            TABVAL(LOCVAL+IDX2-1) )
+               call swapi ( tabval(locval+idx1-1), &
+                            tabval(locval+idx2-1) )
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'The first index was *. ' &
+            call setmsg ( 'The first index was *. ' &
             //            'The second index was *.' )
-            CALL ERRINT ( '*', IDX1                 )
-            CALL ERRINT ( '*', IDX2                 )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)'     )
+            call errint ( '*', idx1                 )
+            call errint ( '*', idx2                 )
+            call sigerr ( 'SPICE(INVALIDINDEX)'     )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYTRNI' )
-      RETURN
-      END
+      call chkout ( 'SYTRNI' )
+      return
+      end

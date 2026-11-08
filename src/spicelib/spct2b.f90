@@ -1,6 +1,6 @@
 !$Procedure SPCT2B ( SPK and CK, text to binary )
 
-      SUBROUTINE SPCT2B ( UNIT, BINARY )
+      subroutine spct2b ( unit, binary )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      CHARACTER*(*)         BINARY
+      integer               unit
+      character*(*)         binary
 
 ! $ Brief_I/O
 !
@@ -223,38 +223,38 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LTRIM
-      INTEGER               RTRIM
-      LOGICAL               RETURN
+      integer               ltrim
+      integer               rtrim
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         BMARK
-      PARAMETER           ( BMARK ='~NAIF/SPC BEGIN COMMENTS~')
+      character*(*)         bmark
+      parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
 
-      CHARACTER*(*)         EMARK
-      PARAMETER           ( EMARK ='~NAIF/SPC END COMMENTS~'  )
+      character*(*)         emark
+      parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
-      INTEGER               MAXCPR
-      PARAMETER           ( MAXCPR = 1000 )
+      integer               maxcpr
+      parameter           ( maxcpr = 1000 )
 !
 !     Local variables
 !
-      CHARACTER*(MAXCPR)    LINE
+      character*(maxcpr)    line
 
-      INTEGER               HANDLE
-      INTEGER               IOSTAT
-      INTEGER               SCRTCH
+      integer               handle
+      integer               iostat
+      integer               scrtch
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCT2B' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCT2B' )
+      end if
 
 !
 !     DAFT2B creates the new binary file and writes the data to
@@ -262,7 +262,7 @@
 !     it reads from the text file, it will signal an error.
 !     Initially, no records are reserved.
 !
-      CALL DAFT2B ( UNIT, BINARY, 0 )
+      call daft2b ( unit, binary, 0 )
 
 !
 !     The comments follow the data and are surrounded by markers.
@@ -274,24 +274,24 @@
 !     is check out, leaving the file pointer where it is, but
 !     that's better than signaling an error.
 !
-      READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+      read ( unit, fmt='(A)', iostat=iostat ) line
 
-      IF ( IOSTAT .GT. 0 ) THEN
-         CALL SETMSG ( 'Error reading the text file named FNM.  '     // &
+      if ( iostat .gt. 0 ) then
+         call setmsg ( 'Error reading the text file named FNM.  '     // &
                        'Value of IOSTAT is #.'                        )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL ERRFNM ( 'FNM', UNIT                                    )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                        )
-         CALL CHKOUT ( 'SPCT2B'                                       )
-         RETURN
-      END IF
+         call errint ( '#', iostat                                    )
+         call errfnm ( 'FNM', unit                                    )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                        )
+         call chkout ( 'SPCT2B'                                       )
+         return
+      end if
 
 
-      IF (   (  LINE ( LTRIM(LINE): )  .NE.  BMARK  )   .OR. &
-             (  IOSTAT                 .LT.  0      )   ) THEN
-         CALL CHKOUT ( 'SPCT2B' )
-         RETURN
-      END IF
+      if (   (  line ( ltrim(line): )  .ne.  bmark  )   .or. &
+             (  iostat                 .lt.  0      )   ) then
+         call chkout ( 'SPCT2B' )
+         return
+      end if
 
 !
 !     We're not at the end of the file, and the line we read
@@ -302,83 +302,83 @@
 !     but it's not okay to rewind the file connected to UNIT --
 !     we don't know the initial location of the file pointer.
 !
-      CALL GETLUN ( SCRTCH )
+      call getlun ( scrtch )
 
-      OPEN ( UNIT            =  SCRTCH, &
-             FORM            = 'FORMATTED', &
-             ACCESS          = 'SEQUENTIAL', &
-             STATUS          = 'SCRATCH', &
-             IOSTAT          =  IOSTAT      )
+      open ( unit            =  scrtch, &
+             form            = 'FORMATTED', &
+             access          = 'SEQUENTIAL', &
+             status          = 'SCRATCH', &
+             iostat          =  iostat      )
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Error opening a scratch file.  File name '    // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Error opening a scratch file.  File name '    // &
                        'was FNM.  Value of IOSTAT is #.'              )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL ERRFNM ( 'FNM', SCRTCH                                  )
-         CALL SIGERR ( 'SPICE(FILEOPENERROR)'                         )
-         CALL CHKOUT ( 'SPCT2B'                                       )
-         RETURN
-      END IF
+         call errint ( '#', iostat                                    )
+         call errfnm ( 'FNM', scrtch                                  )
+         call sigerr ( 'SPICE(FILEOPENERROR)'                         )
+         call chkout ( 'SPCT2B'                                       )
+         return
+      end if
 
-      WRITE ( SCRTCH, FMT='(A)', IOSTAT=IOSTAT ) LINE(1:RTRIM(LINE))
+      write ( scrtch, fmt='(A)', iostat=iostat ) line(1:rtrim(line))
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Error writing to scratch file. File name '    // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Error writing to scratch file. File name '    // &
                        'is FNM.  Value of IOSTAT is #.'               )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL ERRFNM ( 'FNM', SCRTCH                                  )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                       )
-         CALL CHKOUT ( 'SPCT2B'                                       )
-         RETURN
-      END IF
+         call errint ( '#', iostat                                    )
+         call errfnm ( 'FNM', scrtch                                  )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         call chkout ( 'SPCT2B'                                       )
+         return
+      end if
 
 !
 !     Continue reading lines from the text file and storing them
 !     in the scratch file until we get to the end marker.
 !
-      DO WHILE (  LINE ( LTRIM(LINE): ) .NE. EMARK  )
+      do while (  line ( ltrim(line): ) .ne. emark  )
 
-         READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+         read ( unit, fmt='(A)', iostat=iostat ) line
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error reading the text file named FNM.  ' // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error reading the text file named FNM.  ' // &
                           'Value of IOSTAT is #.'                    )
-            CALL ERRINT ( '#', IOSTAT                                )
-            CALL ERRFNM ( 'FNM', UNIT                                )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                    )
-            CALL CHKOUT ( 'SPCT2B'                                   )
-            RETURN
-         END IF
+            call errint ( '#', iostat                                )
+            call errfnm ( 'FNM', unit                                )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                    )
+            call chkout ( 'SPCT2B'                                   )
+            return
+         end if
 
-         WRITE ( SCRTCH, FMT='(A)', IOSTAT=IOSTAT ) LINE(1:RTRIM(LINE))
+         write ( scrtch, fmt='(A)', iostat=iostat ) line(1:rtrim(line))
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error writing to scratch file.  File name '// &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error writing to scratch file.  File name '// &
                           'is FNM.  Value of IOSTAT is #.'            )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FNM', SCRTCH                               )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                    )
-            CALL CHKOUT ( 'SPCT2B'                                    )
-            RETURN
-         END IF
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FNM', scrtch                               )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'                    )
+            call chkout ( 'SPCT2B'                                    )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Open the new binary file and add the comments that have been
 !     stored temporarily in a scratch file.
 !
-      CALL DAFOPW ( BINARY, HANDLE )
+      call dafopw ( binary, handle )
 
-      CALL SPCAC  ( HANDLE, SCRTCH, BMARK, EMARK )
+      call spcac  ( handle, scrtch, bmark, emark )
 
 !
 !     Close the files.  The scratch file is automatically deleted.
 !
-      CALL DAFCLS ( HANDLE )
+      call dafcls ( handle )
 
-      CLOSE ( SCRTCH )
+      close ( scrtch )
 
-      CALL CHKOUT ( 'SPCT2B' )
-      RETURN
-      END
+      call chkout ( 'SPCT2B' )
+      return
+      end

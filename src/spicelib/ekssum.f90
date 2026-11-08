@@ -1,8 +1,8 @@
 !$Procedure EKSSUM ( EK, return segment summary )
 
-      SUBROUTINE EKSSUM (  HANDLE,  SEGNO,   TABNAM,  NROWS, &
-                           NCOLS,   CNAMES,  DTYPES,  SIZES, &
-                           STRLNS,  INDEXD,  NULLOK          )
+      subroutine ekssum (  handle,  segno,   tabnam,  nrows, &
+                           ncols,   cnames,  dtypes,  sizes, &
+                           strlns,  indexd,  nullok          )
 
 ! $ Abstract
 !
@@ -20,25 +20,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekglimit.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekglimit.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      CHARACTER*(*)         TABNAM
-      INTEGER               NROWS
-      INTEGER               NCOLS
-      CHARACTER*(*)         CNAMES ( * )
-      CHARACTER*(*)         DTYPES ( * )
-      INTEGER               SIZES  ( * )
-      INTEGER               STRLNS ( * )
-      LOGICAL               INDEXD ( * )
-      LOGICAL               NULLOK ( * )
+      integer               handle
+      integer               segno
+      character*(*)         tabnam
+      integer               nrows
+      integer               ncols
+      character*(*)         cnames ( * )
+      character*(*)         dtypes ( * )
+      integer               sizes  ( * )
+      integer               strlns ( * )
+      logical               indexd ( * )
+      logical               nullok ( * )
 
 ! $ Brief_I/O
 !
@@ -282,77 +282,77 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NTYPES
-      PARAMETER           ( NTYPES = 4 )
+      integer               ntypes
+      parameter           ( ntypes = 4 )
 
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = 4 )
+      integer               short
+      parameter           ( short  = 4 )
 
 !
 !     Local variables
 !
-      CHARACTER*(SHORT)     TYPSTR ( NTYPES )
+      character*(short)     typstr ( ntypes )
 
-      INTEGER               CDSCRS ( CDSCSZ, MXCLSG )
-      INTEGER               I
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               cdscrs ( cdscsz, mxclsg )
+      integer               i
+      integer               segdsc ( sdscsz )
 
 !
 !     Saved variables
 !
-      SAVE                  TYPSTR
+      save                  typstr
 
 !
 !     Initial values
 !
-      DATA                  TYPSTR / 'CHR', 'DP', 'INT', 'TIME' /
+      data                  typstr / 'CHR', 'DP', 'INT', 'TIME' /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKSSUM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKSSUM' )
+      end if
 
 !
 !     Get the info from a knowledgeable source.
 !
-      CALL ZZEKSINF ( HANDLE, SEGNO, TABNAM, SEGDSC, CNAMES, CDSCRS )
+      call zzeksinf ( handle, segno, tabnam, segdsc, cnames, cdscrs )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKSSUM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKSSUM' )
+         return
+      end if
 
-      NROWS  =  SEGDSC ( NRIDX )
-      NCOLS  =  SEGDSC ( NCIDX )
+      nrows  =  segdsc ( nridx )
+      ncols  =  segdsc ( ncidx )
 
-      DO I = 1, NCOLS
+      do i = 1, ncols
 
-         DTYPES(I)  =  TYPSTR (  CDSCRS(TYPIDX,I)  )
+         dtypes(i)  =  typstr (  cdscrs(typidx,i)  )
 
-         SIZES (I)  =  CDSCRS(SIZIDX,I)
+         sizes (i)  =  cdscrs(sizidx,i)
 
-         IF ( CDSCRS(TYPIDX,I) .EQ. CHR ) THEN
-            STRLNS(I)  =  CDSCRS(LENIDX,I)
-         ELSE
-            STRLNS(I)  =  0
-         END IF
+         if ( cdscrs(typidx,i) .eq. chr ) then
+            strlns(i)  =  cdscrs(lenidx,i)
+         else
+            strlns(i)  =  0
+         end if
 
-         INDEXD(I)  =  CDSCRS(IXTIDX,I) .NE. IFALSE
-         NULLOK(I)  =  CDSCRS(NFLIDX,I) .NE. IFALSE
+         indexd(i)  =  cdscrs(ixtidx,i) .ne. ifalse
+         nullok(i)  =  cdscrs(nflidx,i) .ne. ifalse
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'EKSSUM' )
-      RETURN
-      END
+      call chkout ( 'EKSSUM' )
+      return
+      end

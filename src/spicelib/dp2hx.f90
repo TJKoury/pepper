@@ -1,6 +1,6 @@
 !$Procedure DP2HX ( D.p. number to hexadecimal string )
 
-      SUBROUTINE DP2HX ( NUMBER, HXSTR, HXSSIZ )
+      subroutine dp2hx ( number, hxstr, hxssiz )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               STRLEN
-      PARAMETER           ( STRLEN = 255 )
+      integer               strlen
+      parameter           ( strlen = 255 )
 
 
-      DOUBLE PRECISION      NUMBER
-      CHARACTER*(*)         HXSTR
-      INTEGER               HXSSIZ
+      double precision      number
+      character*(*)         hxstr
+      integer               hxssiz
 
 ! $ Brief_I/O
 !
@@ -314,64 +314,64 @@
 !
 !     Local Parameters
 !
-      CHARACTER*(1)         EXPCHR
-      PARAMETER           ( EXPCHR = '^')
+      character*(1)         expchr
+      parameter           ( expchr = '^')
 
-      DOUBLE PRECISION      BASE
-      PARAMETER           ( BASE = 16.0D0 )
+      double precision      base
+      parameter           ( base = 16.0d0 )
 
-      DOUBLE PRECISION      INVBAS
-      PARAMETER           ( INVBAS = 1.0D0/BASE )
+      double precision      invbas
+      parameter           ( invbas = 1.0d0/base )
 
-      INTEGER               EXPINB
-      PARAMETER           ( EXPINB = 1 )
+      integer               expinb
+      parameter           ( expinb = 1 )
 
-      DOUBLE PRECISION      FACTR1
-      PARAMETER           ( FACTR1 = 4294967296.0D0 )
+      double precision      factr1
+      parameter           ( factr1 = 4294967296.0d0 )
 
-      DOUBLE PRECISION      INVFC1
-      PARAMETER           ( INVFC1 = 1.0D0/FACTR1 )
+      double precision      invfc1
+      parameter           ( invfc1 = 1.0d0/factr1 )
 
-      INTEGER               EXPIN1
-      PARAMETER           ( EXPIN1 = 8 )
+      integer               expin1
+      parameter           ( expin1 = 8 )
 
-      DOUBLE PRECISION      FACTR2
-      PARAMETER           ( FACTR2 = 65536.0D0 )
+      double precision      factr2
+      parameter           ( factr2 = 65536.0d0 )
 
-      DOUBLE PRECISION      INVFC2
-      PARAMETER           ( INVFC2 = 1.0D0/FACTR2 )
+      double precision      invfc2
+      parameter           ( invfc2 = 1.0d0/factr2 )
 
-      INTEGER               EXPIN2
-      PARAMETER           ( EXPIN2 = 4 )
+      integer               expin2
+      parameter           ( expin2 = 4 )
 
-      INTEGER               MAXDIG
-      PARAMETER           ( MAXDIG = 16 )
+      integer               maxdig
+      parameter           ( maxdig = 16 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         DIGITS(0:MAXDIG-1)
-      CHARACTER*(STRLEN)    EXPSTR
-      CHARACTER*(STRLEN)    TMPSTR
+      character*(1)         digits(0:maxdig-1)
+      character*(strlen)    expstr
+      character*(strlen)    tmpstr
 
-      DOUBLE PRECISION      REMNDR
-      DOUBLE PRECISION      TMPNUM
+      double precision      remndr
+      double precision      tmpnum
 
-      INTEGER               EXPLEN
-      INTEGER               INTEXP
-      INTEGER               POSITN
-      INTEGER               RESULT
+      integer               explen
+      integer               intexp
+      integer               positn
+      integer               result
 
-      LOGICAL               NEGTIV
-      LOGICAL               POSTIV
+      logical               negtiv
+      logical               postiv
 !
 !     Saved variables
 !
-      SAVE                  DIGITS
+      save                  digits
 !
 !     Initial values
 !
-      DATA                  DIGITS / &
+      data                  digits / &
                                      '0', '1', '2', '3', &
                                      '4', '5', '6', '7', &
                                      '8', '9', 'A', 'B', &
@@ -383,9 +383,9 @@
 !     Make a copy of the input so that it will not be changed by this
 !     routine. Also, assume that we do not know the sign of the number.
 !
-      TMPNUM = NUMBER
-      NEGTIV = .FALSE.
-      POSTIV = .FALSE.
+      tmpnum = number
+      negtiv = .false.
+      postiv = .false.
 !
 !     Check to see what the sign of the number is, because we treat
 !     negative numbers, positive numbers and zero separately. This
@@ -394,15 +394,15 @@
 !
 !     Set the appropriate logical flag for the sign of the input number.
 !
-      IF ( TMPNUM .LT. 0.0D0 ) THEN
+      if ( tmpnum .lt. 0.0d0 ) then
 
-         NEGTIV = .TRUE.
+         negtiv = .true.
 
-      ELSE IF ( TMPNUM .GT. 0.0D0 ) THEN
+      else if ( tmpnum .gt. 0.0d0 ) then
 
-         POSTIV = .TRUE.
+         postiv = .true.
 
-      END IF
+      end if
 !
 !     If nonzero, a double precision number is first normalized,
 !     so that it has a value between 1.0D0/BASE and 1.0D0 or -1.0D0
@@ -417,246 +417,246 @@
 !     provide a significant speed improvement for the normalization
 !     process.
 !
-      INTEXP = 0
-      IF ( NEGTIV ) THEN
+      intexp = 0
+      if ( negtiv ) then
 
-         IF ( TMPNUM .GT. -1.0D0 ) THEN
+         if ( tmpnum .gt. -1.0d0 ) then
 !
 !           ABS(TMPNUM) .LT. 1.0
 !
-            DO WHILE ( FACTR1 * TMPNUM .GT. -1.0D0 )
+            do while ( factr1 * tmpnum .gt. -1.0d0 )
 !
 !              Scale the number and decrement the exponent.
 !
-               TMPNUM = TMPNUM * FACTR1
-               INTEXP = INTEXP - EXPIN1
+               tmpnum = tmpnum * factr1
+               intexp = intexp - expin1
 
-            END DO
+            end do
 
-            DO WHILE ( FACTR2 * TMPNUM .GT. -1.0D0 )
+            do while ( factr2 * tmpnum .gt. -1.0d0 )
 !
 !              Scale the number and decrement the exponent.
 !
-               TMPNUM = TMPNUM * FACTR2
-               INTEXP = INTEXP - EXPIN2
+               tmpnum = tmpnum * factr2
+               intexp = intexp - expin2
 
-            END DO
+            end do
 
-            DO WHILE ( ( BASE * TMPNUM ) .GT. -1.0D0 )
+            do while ( ( base * tmpnum ) .gt. -1.0d0 )
 !
 !              Scale the number and decrement the exponent.
 !
-               TMPNUM = TMPNUM * BASE
-               INTEXP = INTEXP - EXPINB
+               tmpnum = tmpnum * base
+               intexp = intexp - expinb
 
-            END DO
+            end do
 !
 !           At this point, -1 < TMPNUM <= -1/BASE.
 !
-         ELSE
+         else
 !
 !           ABS(TMPNUM) .GE. 1.0
 !
-            DO WHILE ( INVFC1 * TMPNUM .LE. -1.0D0 )
+            do while ( invfc1 * tmpnum .le. -1.0d0 )
 !
 !              Scale the number and increment the exponent.
 !
-               TMPNUM = TMPNUM * INVFC1
-               INTEXP = INTEXP + EXPIN1
+               tmpnum = tmpnum * invfc1
+               intexp = intexp + expin1
 
-            END DO
+            end do
 
-            DO WHILE ( INVFC2 * TMPNUM .LE. -1.0D0 )
+            do while ( invfc2 * tmpnum .le. -1.0d0 )
 !
 !              Scale the number and increment the exponent.
 !
-               TMPNUM = TMPNUM * INVFC2
-               INTEXP = INTEXP + EXPIN2
+               tmpnum = tmpnum * invfc2
+               intexp = intexp + expin2
 
-            END DO
+            end do
 
-            DO WHILE ( TMPNUM .LE. -1.0D0 )
+            do while ( tmpnum .le. -1.0d0 )
 !
 !              Scale the number and increment the exponent.
 !
-               TMPNUM = TMPNUM * INVBAS
-               INTEXP = INTEXP + EXPINB
+               tmpnum = tmpnum * invbas
+               intexp = intexp + expinb
 
-            END DO
+            end do
 !
 !           At this point, -1 < TMPNUM <= -1/BASE.
 !
-         END IF
+         end if
 
-      ELSE IF ( POSTIV ) THEN
+      else if ( postiv ) then
 
-         IF ( TMPNUM .LT. 1.0D0 ) THEN
+         if ( tmpnum .lt. 1.0d0 ) then
 !
 !           ABS(TMPNUM) .LT. 1.0
 !
-            DO WHILE ( FACTR1 * TMPNUM .LT. 1.0D0 )
+            do while ( factr1 * tmpnum .lt. 1.0d0 )
 !
 !              Scale the number and decrement the exponent.
 !
-               TMPNUM = TMPNUM * FACTR1
-               INTEXP = INTEXP - EXPIN1
+               tmpnum = tmpnum * factr1
+               intexp = intexp - expin1
 
-            END DO
+            end do
 
-            DO WHILE ( FACTR2 * TMPNUM .LT. 1.0D0 )
+            do while ( factr2 * tmpnum .lt. 1.0d0 )
 !
 !              Scale the number and decrement the exponent.
 !
-               TMPNUM = TMPNUM * FACTR2
-               INTEXP = INTEXP - EXPIN2
+               tmpnum = tmpnum * factr2
+               intexp = intexp - expin2
 
-            END DO
+            end do
 
-            DO WHILE ( ( BASE * TMPNUM ) .LT. 1.0D0 )
+            do while ( ( base * tmpnum ) .lt. 1.0d0 )
 !
 !              Scale the number and decrement the exponent.
 !
-               TMPNUM = TMPNUM * BASE
-               INTEXP = INTEXP - EXPINB
+               tmpnum = tmpnum * base
+               intexp = intexp - expinb
 
-            END DO
+            end do
 !
 !           At this point, 1/BASE <= TMPNUM < 1
 !
-         ELSE
+         else
 !
 !           ABS(TMPNUM) .GE. 1.0
 !
-            DO WHILE ( INVFC1 * TMPNUM .GE. 1.0D0 )
+            do while ( invfc1 * tmpnum .ge. 1.0d0 )
 !
 !              Scale the number and increment the exponent.
 !
-               TMPNUM = TMPNUM * INVFC1
-               INTEXP = INTEXP + EXPIN1
+               tmpnum = tmpnum * invfc1
+               intexp = intexp + expin1
 
-            END DO
+            end do
 
-            DO WHILE ( INVFC2 * TMPNUM .GE. 1.0D0 )
+            do while ( invfc2 * tmpnum .ge. 1.0d0 )
 !
 !              Scale the number and increment the exponent.
 !
-               TMPNUM = TMPNUM * INVFC2
-               INTEXP = INTEXP + EXPIN2
+               tmpnum = tmpnum * invfc2
+               intexp = intexp + expin2
 
-            END DO
+            end do
 
-            DO WHILE ( TMPNUM .GE. 1.0D0 )
+            do while ( tmpnum .ge. 1.0d0 )
 !
 !              Scale the number and increment the exponent.
 !
-               TMPNUM = TMPNUM * INVBAS
-               INTEXP = INTEXP + EXPINB
+               tmpnum = tmpnum * invbas
+               intexp = intexp + expinb
 
-            END DO
+            end do
 !
 !           At this point, 1/BASE <= TMPNUM < 1
 !
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We do different things for the cases where the number to be
 !     converted is positive, negative, or zero.
 !
-      IF ( NEGTIV ) THEN
+      if ( negtiv ) then
 !
 !        Set the beginning position.
 !
-         POSITN = 1
+         positn = 1
 !
 !        Put the minus sign in place.
 !
-         TMPSTR(POSITN:POSITN) = '-'
+         tmpstr(positn:positn) = '-'
 !
 !        Start with the remainder equal to the normalized value of the
 !        original number.
 !
-         REMNDR = TMPNUM
+         remndr = tmpnum
 !
 !        Collect all of the digits in the string.
 !
 !        This stopping test works because the base is a power of
 !        2 and the mantissa is composed of a sum of powers of 2.
 !
-         DO WHILE ( REMNDR .NE. 0.0D0 )
+         do while ( remndr .ne. 0.0d0 )
 !
 !           -1 < REMNDR <= -1/BASE
 !
-            POSITN                 = POSITN + 1
-            TMPNUM                 = REMNDR * BASE
-            RESULT                 = INT( TMPNUM )
-            REMNDR                 = TMPNUM - DBLE( RESULT )
-            TMPSTR (POSITN:POSITN) = DIGITS(-RESULT)
+            positn                 = positn + 1
+            tmpnum                 = remndr * base
+            result                 = int( tmpnum )
+            remndr                 = tmpnum - dble( result )
+            tmpstr (positn:positn) = digits(-result)
 
-         END DO
+         end do
 !
 !        Put the exponent on the end of the number and update the
 !        position.
 !
-         CALL INT2HX( INTEXP, EXPSTR, EXPLEN )
-         TMPSTR(POSITN+1:) = EXPCHR//EXPSTR(1:EXPLEN)
-         POSITN            = POSITN + EXPLEN + 1
+         call int2hx( intexp, expstr, explen )
+         tmpstr(positn+1:) = expchr//expstr(1:explen)
+         positn            = positn + explen + 1
 
-      ELSE IF ( POSTIV ) THEN
+      else if ( postiv ) then
 !
 !        Set the beginning position.
 !
-         POSITN = 0
+         positn = 0
 !
 !        Start with the remainder equal to the normalized value of the
 !        original number.
 !
-         REMNDR = TMPNUM
+         remndr = tmpnum
 !
 !        Collect all of the digits in the string.
 !
 !        This stopping test works because the base is a power of
 !        2 and the mantissa is composed of a sum of powers of 2.
 !
-         DO WHILE ( REMNDR .NE. 0.0D0 )
+         do while ( remndr .ne. 0.0d0 )
 !
 !           1/BASE <= REMNDR < 1
 !
-            POSITN                 = POSITN + 1
-            TMPNUM                 = REMNDR * BASE
-            RESULT                 = INT( TMPNUM )
-            REMNDR                 = TMPNUM - DBLE( RESULT )
-            TMPSTR (POSITN:POSITN) = DIGITS(RESULT)
+            positn                 = positn + 1
+            tmpnum                 = remndr * base
+            result                 = int( tmpnum )
+            remndr                 = tmpnum - dble( result )
+            tmpstr (positn:positn) = digits(result)
 
-         END DO
+         end do
 !
 !        Put the exponent on the end of the number and update the
 !        position.
 !
-         CALL INT2HX( INTEXP, EXPSTR, EXPLEN )
-         TMPSTR(POSITN+1:) = EXPCHR//EXPSTR(1:EXPLEN)
-         POSITN            = POSITN + EXPLEN + 1
+         call int2hx( intexp, expstr, explen )
+         tmpstr(positn+1:) = expchr//expstr(1:explen)
+         positn            = positn + explen + 1
 
-      ELSE
+      else
 !
 !        Treat zero as a special case, because it's easier.
 !
-         POSITN      = 3
-         TMPSTR(1:3) = '0^0'
+         positn      = 3
+         tmpstr(1:3) = '0^0'
 
-      END IF
+      end if
 !
 !     Set the value for the length of the character string produced
 !     before returning.
 !
-      HXSSIZ = POSITN
+      hxssiz = positn
 !
 !     Set the value of the output string before returning. Let the
 !     Fortran string assignment deal with the left justification, and
 !     the truncation on the right if HXSTR is not long enough to
 !     contain all of the characters produced.
 !
-      HXSTR = TMPSTR(:HXSSIZ)
+      hxstr = tmpstr(:hxssiz)
 
-      RETURN
-      END
+      return
+      end

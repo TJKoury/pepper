@@ -1,8 +1,8 @@
 !$Procedure  ZZTKNERR ( Create ZZTOKNS overflow error message )
 
-      SUBROUTINE ZZTKNERR ( TEMPLT, STRING, TOKEN, ERROR, STATUS )
+      subroutine zztknerr ( templt, string, token, error, status )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -25,11 +25,11 @@
 !
 ! $ Declarations
 
-      CHARACTER*(*)         TEMPLT
-      CHARACTER*(*)         STRING
-      CHARACTER*(*)         TOKEN
-      CHARACTER*(*)         ERROR
-      LOGICAL               STATUS
+      character*(*)         templt
+      character*(*)         string
+      character*(*)         token
+      character*(*)         error
+      logical               status
 
 ! $ Brief_I/O
 !
@@ -119,10 +119,10 @@
 !
 !-&
 
-      CALL REPMC ( TEMPLT, '#', STRING, ERROR )
-      CALL REPMC ( ERROR,  '#', TOKEN,  ERROR )
-      STATUS = .FALSE.
+      call repmc ( templt, '#', string, error )
+      call repmc ( error,  '#', token,  error )
+      status = .false.
 
-      RETURN
+      return
 
-      END
+      end

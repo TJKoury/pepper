@@ -1,6 +1,6 @@
 !$Procedure PUTLMS ( Store Long Error Message )
 
-      SUBROUTINE PUTLMS ( MSG )
+      subroutine putlms ( msg )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
+      include 'errhnd.inc'
 
-      CHARACTER*(*)          MSG
+      character*(*)          msg
 
 ! $ Brief_I/O
 !
@@ -138,28 +138,28 @@
 !
 !     The current long error message:
 !
-      CHARACTER*(LMSGLN)    SAVMSG
+      character*(lmsgln)    savmsg
 
-      SAVE                  SAVMSG
+      save                  savmsg
 
 !
 !     Initial values:
 !
-      DATA    SAVMSG      / ' ' /
+      data    savmsg      / ' ' /
 
 !
 !     Executable Code:
 !
-      SAVMSG = MSG
+      savmsg = msg
 
-      RETURN
+      return
 
 
 
 
 !$Procedure GETLMS ( Get Long Error Message )
 
-      ENTRY GETLMS ( MSG )
+      entry getlms ( msg )
 
 ! $ Abstract
 !
@@ -266,6 +266,6 @@
 !
 !     Grab the saved long message:
 !
-      MSG = SAVMSG
+      msg = savmsg
 
-      END
+      end

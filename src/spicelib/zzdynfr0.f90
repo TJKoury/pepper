@@ -1,7 +1,7 @@
 !$Procedure ZZDYNFR0 ( Dynamic state transformation evaluation )
 
-      SUBROUTINE ZZDYNFR0 ( INFRAM, CENTER, ET, XFORM, BASFRM )
-      IMPLICIT NONE
+      subroutine zzdynfr0 ( infram, center, et, xform, basfrm )
+      implicit none
 
 ! $ Abstract
 !
@@ -26,15 +26,15 @@
 !
 ! $ Declarations
 
-      INCLUDE 'frmtyp.inc'
-      INCLUDE 'zzabcorr.inc'
-      INCLUDE 'zzdyn.inc'
+      include 'frmtyp.inc'
+      include 'zzabcorr.inc'
+      include 'zzdyn.inc'
 
-      INTEGER               INFRAM
-      INTEGER               CENTER
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      XFORM ( 6, 6 )
-      INTEGER               BASFRM
+      integer               infram
+      integer               center
+      double precision      et
+      double precision      xform ( 6, 6 )
+      integer               basfrm
 
 ! $ Brief_I/O
 !
@@ -336,299 +336,299 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEP
+      double precision      vsep
 
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'ZZDYNFR0' )
+      character*(*)         rname
+      parameter           ( rname  = 'ZZDYNFR0' )
 
 
-      INTEGER               TIMLEN
-      PARAMETER           ( TIMLEN = 50 )
+      integer               timlen
+      parameter           ( timlen = 50 )
 
-      INTEGER               VNAMLN
-      PARAMETER           ( VNAMLN = 4 )
+      integer               vnamln
+      parameter           ( vnamln = 4 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    ABCORR
-      CHARACTER*(1)         AXES   ( 3 )
-      CHARACTER*(KVLEN)     AXNAME
-      CHARACTER*(FRNMLN)    BASNAM
-      CHARACTER*(FRNMLN)    CFRMNM
-      CHARACTER*(BDNMLN)    CTRNAM
-      CHARACTER*(CORLEN)    CVCORR
-      CHARACTER*(KVLEN)     DYNSTL
-      CHARACTER*(KVLEN)     DYNFAM
-      CHARACTER*(FRNMLN)    FFRAMS ( MXNFAC )
-      CHARACTER*(FRNMLN)    INNAME
-      CHARACTER*(KVNMLN)    ITMABC ( 2 )
-      CHARACTER*(KVNMLN)    ITMAXE ( 2 )
-      CHARACTER*(KVNMLN)    ITMCOF ( 3 )
-      CHARACTER*(KVNMLN)    ITMDEC ( 2 )
-      CHARACTER*(KVNMLN)    ITMFRM ( 2 )
-      CHARACTER*(KVNMLN)    ITMLAT ( 2 )
-      CHARACTER*(KVNMLN)    ITMLON ( 2 )
-      CHARACTER*(KVNMLN)    ITMOBS ( 2 )
-      CHARACTER*(KVNMLN)    ITMRA  ( 2 )
-      CHARACTER*(KVNMLN)    ITMSEP
-      CHARACTER*(KVNMLN)    ITMSPC ( 2 )
-      CHARACTER*(KVNMLN)    ITMTRG ( 2 )
-      CHARACTER*(KVNMLN)    ITMUNT ( 2 )
-      CHARACTER*(KVNMLN)    ITMVDF ( 2 )
-      CHARACTER*(KVNMLN)    ITMVEC ( 2 )
-      CHARACTER*(KVLEN)     NUTMOD
-      CHARACTER*(KVLEN)     OBLMOD
-      CHARACTER*(KVLEN)     PRCMOD
-      CHARACTER*(KVLEN)     ROTSTA
-      CHARACTER*(KVLEN)     SPEC
-      CHARACTER*(FRNMLN)    TFRAMS ( MXNFAC )
-      CHARACTER*(TIMLEN)    TIMSTR
-      CHARACTER*(KVLEN)     TMPFAM
-      CHARACTER*(KVLEN)     UNITS
-      CHARACTER*(KVLEN)     VECDEF ( 2 )
-      CHARACTER*(FRNMLN)    VELFRM
-      CHARACTER*(VNAMLN)    VNAME  ( 2 )
+      character*(corlen)    abcorr
+      character*(1)         axes   ( 3 )
+      character*(kvlen)     axname
+      character*(frnmln)    basnam
+      character*(frnmln)    cfrmnm
+      character*(bdnmln)    ctrnam
+      character*(corlen)    cvcorr
+      character*(kvlen)     dynstl
+      character*(kvlen)     dynfam
+      character*(frnmln)    fframs ( mxnfac )
+      character*(frnmln)    inname
+      character*(kvnmln)    itmabc ( 2 )
+      character*(kvnmln)    itmaxe ( 2 )
+      character*(kvnmln)    itmcof ( 3 )
+      character*(kvnmln)    itmdec ( 2 )
+      character*(kvnmln)    itmfrm ( 2 )
+      character*(kvnmln)    itmlat ( 2 )
+      character*(kvnmln)    itmlon ( 2 )
+      character*(kvnmln)    itmobs ( 2 )
+      character*(kvnmln)    itmra  ( 2 )
+      character*(kvnmln)    itmsep
+      character*(kvnmln)    itmspc ( 2 )
+      character*(kvnmln)    itmtrg ( 2 )
+      character*(kvnmln)    itmunt ( 2 )
+      character*(kvnmln)    itmvdf ( 2 )
+      character*(kvnmln)    itmvec ( 2 )
+      character*(kvlen)     nutmod
+      character*(kvlen)     oblmod
+      character*(kvlen)     prcmod
+      character*(kvlen)     rotsta
+      character*(kvlen)     spec
+      character*(frnmln)    tframs ( mxnfac )
+      character*(timlen)    timstr
+      character*(kvlen)     tmpfam
+      character*(kvlen)     units
+      character*(kvlen)     vecdef ( 2 )
+      character*(frnmln)    velfrm
+      character*(vnamln)    vname  ( 2 )
 
-      DOUBLE PRECISION      ACC    ( 3 )
-      DOUBLE PRECISION      ANGLES ( 2 )
-      DOUBLE PRECISION      COEFFS ( MAXCOF, 3 )
-      DOUBLE PRECISION      CTRPOS ( 3 )
-      DOUBLE PRECISION      DEC
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      DIRVEC ( 3 )
-      DOUBLE PRECISION      DMOB
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      EULANG ( 6 )
-      DOUBLE PRECISION      FET
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      MINSEP
-      DOUBLE PRECISION      MOB
-      DOUBLE PRECISION      NUTXF  ( 6, 6 )
-      DOUBLE PRECISION      OBLXF  ( 6, 6 )
-      DOUBLE PRECISION      POLY   ( 0 : 1 )
-      DOUBLE PRECISION      PRECXF ( 6, 6 )
-      DOUBLE PRECISION      RA
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      S2     ( 6, 2 )
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      STALT  ( 2 )
-      DOUBLE PRECISION      STEMP  ( 6 )
-      DOUBLE PRECISION      STNEAR ( 6 )
-      DOUBLE PRECISION      STOBS  ( 6 )
-      DOUBLE PRECISION      TARRAY ( 3 )
-      DOUBLE PRECISION      T0
-      DOUBLE PRECISION      VARRAY ( 3, 3 )
-      DOUBLE PRECISION      VET
-      DOUBLE PRECISION      VFLT
-      DOUBLE PRECISION      XF2000 ( 6, 6 )
-      DOUBLE PRECISION      XFINV  ( 6, 6 )
-      DOUBLE PRECISION      XFTEMP ( 6, 6 )
-      DOUBLE PRECISION      XIPM   ( 6, 6 )
-      DOUBLE PRECISION      XOUT   ( 6, 6 )
+      double precision      acc    ( 3 )
+      double precision      angles ( 2 )
+      double precision      coeffs ( maxcof, 3 )
+      double precision      ctrpos ( 3 )
+      double precision      dec
+      double precision      delta
+      double precision      dirvec ( 3 )
+      double precision      dmob
+      double precision      epoch
+      double precision      eulang ( 6 )
+      double precision      fet
+      double precision      lat
+      double precision      lon
+      double precision      lt
+      double precision      minsep
+      double precision      mob
+      double precision      nutxf  ( 6, 6 )
+      double precision      oblxf  ( 6, 6 )
+      double precision      poly   ( 0 : 1 )
+      double precision      precxf ( 6, 6 )
+      double precision      ra
+      double precision      radii  ( 3 )
+      double precision      s2     ( 6, 2 )
+      double precision      sep
+      double precision      stalt  ( 2 )
+      double precision      stemp  ( 6 )
+      double precision      stnear ( 6 )
+      double precision      stobs  ( 6 )
+      double precision      tarray ( 3 )
+      double precision      t0
+      double precision      varray ( 3, 3 )
+      double precision      vet
+      double precision      vflt
+      double precision      xf2000 ( 6, 6 )
+      double precision      xfinv  ( 6, 6 )
+      double precision      xftemp ( 6, 6 )
+      double precision      xipm   ( 6, 6 )
+      double precision      xout   ( 6, 6 )
 
-      INTEGER               AXIS   ( 2 )
-      INTEGER               CFRMID
-      INTEGER               CVOBS
-      INTEGER               DEGS   ( 3 )
-      INTEGER               EARTH
-      INTEGER               FRCID
-      INTEGER               FRCLS
-      INTEGER               FRCTR
-      INTEGER               FRID
-      INTEGER               FROMID
-      INTEGER               I
-      INTEGER               IAXES  ( 3 )
-      INTEGER               J
-      INTEGER               J2000
-      INTEGER               M
-      INTEGER               N
-      INTEGER               OBS
-      INTEGER               TARG
-      INTEGER               TOID
+      integer               axis   ( 2 )
+      integer               cfrmid
+      integer               cvobs
+      integer               degs   ( 3 )
+      integer               earth
+      integer               frcid
+      integer               frcls
+      integer               frctr
+      integer               frid
+      integer               fromid
+      integer               i
+      integer               iaxes  ( 3 )
+      integer               j
+      integer               j2000
+      integer               m
+      integer               n
+      integer               obs
+      integer               targ
+      integer               toid
 
-      LOGICAL               CORBLK ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               FROZEN
-      LOGICAL               INERT
-      LOGICAL               MEANEC
-      LOGICAL               MEANEQ
-      LOGICAL               NEGATE
-      LOGICAL               OFDATE
-      LOGICAL               TRUEEQ
+      logical               corblk ( nabcor )
+      logical               first
+      logical               fnd
+      logical               frozen
+      logical               inert
+      logical               meanec
+      logical               meaneq
+      logical               negate
+      logical               ofdate
+      logical               trueeq
 
 !
 !     Saved variables
 !
-      SAVE                  AXES
-      SAVE                  EARTH
-      SAVE                  FIRST
-      SAVE                  J2000
-      SAVE                  ITMABC
-      SAVE                  ITMAXE
-      SAVE                  ITMCOF
-      SAVE                  ITMDEC
-      SAVE                  ITMFRM
-      SAVE                  ITMLAT
-      SAVE                  ITMLON
-      SAVE                  ITMOBS
-      SAVE                  ITMRA
-      SAVE                  ITMSEP
-      SAVE                  ITMSPC
-      SAVE                  ITMTRG
-      SAVE                  ITMUNT
-      SAVE                  ITMVDF
-      SAVE                  ITMVEC
-      SAVE                  VNAME
+      save                  axes
+      save                  earth
+      save                  first
+      save                  j2000
+      save                  itmabc
+      save                  itmaxe
+      save                  itmcof
+      save                  itmdec
+      save                  itmfrm
+      save                  itmlat
+      save                  itmlon
+      save                  itmobs
+      save                  itmra
+      save                  itmsep
+      save                  itmspc
+      save                  itmtrg
+      save                  itmunt
+      save                  itmvdf
+      save                  itmvec
+      save                  vname
 
 !
 !     Initial values
 !
-      DATA                  AXES   / KVX,    KVY,     KVZ     /
-      DATA                  FIRST  / .TRUE.                   /
-      DATA                  ITMCOF / KWEAC1, KWEAC2,  KWEAC3  /
-      DATA                  ITMSEP / KWATOL                   /
-      DATA                  VNAME  / KWPRI,           KWSEC   /
+      data                  axes   / kvx,    kvy,     kvz     /
+      data                  first  / .true.                   /
+      data                  itmcof / kweac1, kweac2,  kweac3  /
+      data                  itmsep / kwatol                   /
+      data                  vname  / kwpri,           kwsec   /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Get the ID code for the J2000 frame.
 !
-         CALL IRFNUM ( 'J2000', J2000 )
+         call irfnum ( 'J2000', j2000 )
 
 !
 !        Get the ID code for the earth (we needn't check the found
 !        flag).
 !
-         CALL BODN2C ( 'EARTH', EARTH, FND )
+         call bodn2c ( 'EARTH', earth, fnd )
 
 !
 !        Initialize "item" strings used to create kernel variable
 !        names.
 !
-         DO I = 1, 2
+         do i = 1, 2
 !
 !           Vector axis:
 !
-            ITMAXE(I) = VNAME(I) // KWVAXI
+            itmaxe(i) = vname(i) // kwvaxi
 !
 !           Vector definition:
 !
-            ITMVDF(I) = VNAME(I) // KWVCDF
+            itmvdf(i) = vname(i) // kwvcdf
 !
 !           Vector aberration correction:
 !
-            ITMABC(I) = VNAME(I) // KWVABC
+            itmabc(i) = vname(i) // kwvabc
 !
 !           Vector frame:
 !
-            ITMFRM(I) = VNAME(I) // KWVFRM
+            itmfrm(i) = vname(i) // kwvfrm
 !
 !           Vector observer:
 !
-            ITMOBS(I) = VNAME(I) // KWVOBS
+            itmobs(i) = vname(i) // kwvobs
 !
 !           Vector target:
 !
-            ITMTRG(I) = VNAME(I) // KWVTRG
+            itmtrg(i) = vname(i) // kwvtrg
 !
 !           Vector longitude:
 !
-            ITMLON(I) = VNAME(I) // KWLON
+            itmlon(i) = vname(i) // kwlon
 !
 !           Vector latitude:
 !
-            ITMLAT(I) = VNAME(I) // KWLAT
+            itmlat(i) = vname(i) // kwlat
 !
 !           Vector right ascension:
 !
-            ITMRA(I)  = VNAME(I) // KWRA
+            itmra(i)  = vname(i) // kwra
 !
 !           Vector declination:
 !
-            ITMDEC(I) = VNAME(I) // KWDEC
+            itmdec(i) = vname(i) // kwdec
 !
 !           Vector units:
 !
-            ITMUNT(I) = VNAME(I) // KWUNIT
+            itmunt(i) = vname(i) // kwunit
 !
 !           Constant vector coordinate specification:
 !
-            ITMSPC(I) = VNAME(I) // KWVSPC
+            itmspc(i) = vname(i) // kwvspc
 !
 !           Constant vector in Cartesian coordinates, literal value:
 !
-            ITMVEC(I) = VNAME(I) // KWVECT
+            itmvec(i) = vname(i) // kwvect
 
-         END DO
+         end do
 
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 
 !
 !     Initialize the output arguments.
 !
-      CALL CLEARD ( 36, XFORM )
+      call cleard ( 36, xform )
 
-      BASFRM = 0
+      basfrm = 0
 
 !
 !     Initialize certain variables to ensure that we don't do
 !     arithmetic operations using bogus, possibly large,
 !     undefined values.
 !
-      CALL CLEARD ( 36, NUTXF  )
-      CALL CLEARD ( 36, OBLXF  )
-      CALL CLEARD ( 36, PRECXF )
-      CALL CLEARD ( 36, XF2000 )
-      CALL CLEARD ( 36, XFINV  )
-      CALL CLEARD ( 36, XIPM   )
+      call cleard ( 36, nutxf  )
+      call cleard ( 36, oblxf  )
+      call cleard ( 36, precxf )
+      call cleard ( 36, xf2000 )
+      call cleard ( 36, xfinv  )
+      call cleard ( 36, xipm   )
 
-      MOB    = 0.D0
-      DMOB   = 0.D0
-      T0     = 0.D0
-      FROZEN = .FALSE.
+      mob    = 0.d0
+      dmob   = 0.d0
+      t0     = 0.d0
+      frozen = .false.
 
 !
 !     Get the input frame name.
 !
-      CALL FRMNAM ( INFRAM, INNAME )
+      call frmnam ( infram, inname )
 
 !
 !     We need the name of the base frame.
 !
-      CALL ZZDYNFID ( INNAME, INFRAM, KWBFRM, BASFRM )
+      call zzdynfid ( inname, infram, kwbfrm, basfrm )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      CALL FRMNAM   ( BASFRM, BASNAM )
+      call frmnam   ( basfrm, basnam )
 
 !
 !     The output frame code and name are set.
@@ -636,31 +636,31 @@
 !     Look up the dynamic frame definition style from the kernel pool.
 !     The kernel variable's name might be specified by name or ID.
 !
-      CALL ZZDYNVAC ( INNAME, INFRAM, KWSTYL, 1, N, DYNSTL )
+      call zzdynvac ( inname, infram, kwstyl, 1, n, dynstl )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     At this time, the only supported dynamic frame definition style is
 !     PARAMETERIZED.
 !
-      IF (  EQSTR( DYNSTL, KVPARM )  ) THEN
+      if (  eqstr( dynstl, kvparm )  ) then
 !
 !        Parameterized dynamic frames belong to families.  Look up
 !        the family for this frame.
 !
-         CALL ZZDYNVAC ( INNAME, INFRAM, KWFFAM, 1, N, DYNFAM )
+         call zzdynvac ( inname, infram, kwffam, 1, n, dynfam )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL CMPRSS ( ' ', 0, DYNFAM, TMPFAM )
-         CALL UCASE  ( TMPFAM,         DYNFAM )
+         call cmprss ( ' ', 0, dynfam, tmpfam )
+         call ucase  ( tmpfam,         dynfam )
 
 !
 !        Determine whether we have an "of-date" frame family.
@@ -670,11 +670,11 @@
 !           TRUEEQ   True equator and equinox of date
 !           MEANEC   Mean ecliptic and equinox of date
 !
-         MEANEQ  =  DYNFAM .EQ. KVMEQT
-         TRUEEQ  =  DYNFAM .EQ. KVTEQT
-         MEANEC  =  DYNFAM .EQ. KVMECL
+         meaneq  =  dynfam .eq. kvmeqt
+         trueeq  =  dynfam .eq. kvteqt
+         meanec  =  dynfam .eq. kvmecl
 
-         OFDATE  =  MEANEQ .OR. MEANEC .OR. TRUEEQ
+         ofdate  =  meaneq .or. meanec .or. trueeq
 
 !
 !        Set the evaluation epoch T0.  Normally this epoch is ET,
@@ -685,63 +685,63 @@
 !        specified; let FROZEN receive the FOUND flag value
 !        returned by ZZDYNOAD.
 !
-         CALL ZZDYNOAD ( INNAME, INFRAM, KWFREZ, 1, N, T0, FROZEN )
+         call zzdynoad ( inname, infram, kwfrez, 1, n, t0, frozen )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF ( .NOT. FROZEN ) THEN
+         if ( .not. frozen ) then
 !
 !           Normal case:  just use the input epoch.
 !
-            T0 = ET
+            t0 = et
 
-         END IF
+         end if
 
 !
 !        Look up the rotation state keyword.  Rather than checking
 !        FAILED() after every call, we'll do it after we're
 !        done with processing the rotation state.
 !
-         CALL ZZDYNOAC ( INNAME, INFRAM, KWRSTA, 1, N, ROTSTA, FND )
+         call zzdynoac ( inname, infram, kwrsta, 1, n, rotsta, fnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        If the frame is frozen, the rotation state keyword *must be
 !        absent*.
 !
-         IF ( FROZEN .AND. FND ) THEN
+         if ( frozen .and. fnd ) then
 
-            CALL SETMSG ( 'Definition of frame # contains both ' // &
+            call setmsg ( 'Definition of frame # contains both ' // &
                           '# and # '                             // &
                           'keywords; at most one of these must ' // &
                           'be present in the frame definition. ' // &
                           'This situation is usually caused by ' // &
                           'an error in a frame kernel in which ' // &
                           'the frame is defined.'                )
-            CALL ERRCH  ( '#',  INNAME                           )
-            CALL ERRCH  ( '#',  KWFREZ                           )
-            CALL ERRCH  ( '#',  KWRSTA                           )
-            CALL SIGERR ( 'SPICE(FRAMEDEFERROR)'                 )
-            CALL CHKOUT ( RNAME                                  )
-            RETURN
+            call errch  ( '#',  inname                           )
+            call errch  ( '#',  kwfrez                           )
+            call errch  ( '#',  kwrsta                           )
+            call sigerr ( 'SPICE(FRAMEDEFERROR)'                 )
+            call chkout ( rname                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        If the frame belongs to an "of date" family, either the
 !        rotation state must be specified or the frame must be
 !        frozen.
 !
-         IF (  OFDATE  .AND.  (.NOT. FROZEN) .AND. (.NOT. FND )  ) THEN
+         if (  ofdate  .and.  (.not. frozen) .and. (.not. fnd )  ) then
 
-            CALL SETMSG ( 'Definition of frame #, which belongs to ' // &
+            call setmsg ( 'Definition of frame #, which belongs to ' // &
                           'parameterized dynamic frame family #, '   // &
                           'contains neither # nor # keywords; '      // &
                           'frames in this family require exactly '   // &
@@ -749,61 +749,61 @@
                           'This situation is usually caused by '     // &
                           'an error in a frame kernel in which '     // &
                           'the frame is defined.'                    )
-            CALL ERRCH  ( '#',  INNAME                               )
-            CALL ERRCH  ( '#',  DYNFAM                               )
-            CALL ERRCH  ( '#',  KWFREZ                               )
-            CALL ERRCH  ( '#',  KWRSTA                               )
-            CALL SIGERR ( 'SPICE(FRAMEDEFERROR)'                     )
-            CALL CHKOUT ( RNAME                                      )
-            RETURN
+            call errch  ( '#',  inname                               )
+            call errch  ( '#',  dynfam                               )
+            call errch  ( '#',  kwfrez                               )
+            call errch  ( '#',  kwrsta                               )
+            call sigerr ( 'SPICE(FRAMEDEFERROR)'                     )
+            call chkout ( rname                                      )
+            return
 
-         END IF
+         end if
 
 !
 !        Set the rotation state logical flag indicating whether
 !        the state is 'INERTIAL'.
 !
-         IF ( FND ) THEN
+         if ( fnd ) then
 !
 !           A rotation state keyword was found.
 !
 !           We know the state is not frozen if we arrive here.
 !
-            INERT  =  EQSTR ( ROTSTA, KVINRT )
+            inert  =  eqstr ( rotsta, kvinrt )
 
-            IF ( .NOT. INERT ) THEN
+            if ( .not. inert ) then
 !
 !              Catch invalid rotation states here.
 !
-               IF (  .NOT.  EQSTR ( ROTSTA, KVROTG )  ) THEN
+               if (  .not.  eqstr ( rotsta, kvrotg )  ) then
 
-                  CALL SETMSG ( 'Definition of frame # contains '     // &
+                  call setmsg ( 'Definition of frame # contains '     // &
                                 '# specification #. The only valid '  // &
                                 'rotation states are # or #. '        // &
                                 'This situation is usually caused by '// &
                                 'an error in a frame kernel in which '// &
                                 'the frame is defined.'               )
-                  CALL ERRCH  ( '#',  INNAME                          )
-                  CALL ERRCH  ( '#',  KWRSTA                          )
-                  CALL ERRCH  ( '#',  ROTSTA                          )
-                  CALL ERRCH  ( '#',  KVROTG                          )
-                  CALL ERRCH  ( '#',  KVINRT                          )
-                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                 )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errch  ( '#',  inname                          )
+                  call errch  ( '#',  kwrsta                          )
+                  call errch  ( '#',  rotsta                          )
+                  call errch  ( '#',  kvrotg                          )
+                  call errch  ( '#',  kvinrt                          )
+                  call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The state is not inertial unless there's a ROTATION_STATE
 !           keyword assignment telling us it is.
 !
-            INERT  = .FALSE.
+            inert  = .false.
 
-         END IF
+         end if
 
 !
 !        INERT and FROZEN are both set. The evaluation epoch T0 is also
@@ -812,116 +812,116 @@
 !        The following code block performs actions specific to
 !        the various dynamic frame families.
 !
-         IF ( OFDATE ) THEN
+         if ( ofdate ) then
 !
 !           Fetch the name of the true equator and equinox of date
 !           precession model.
 !
-            CALL ZZDYNVAC ( INNAME, INFRAM, KWPRCM, 1, N, PRCMOD )
+            call zzdynvac ( inname, infram, kwprcm, 1, n, prcmod )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 !
 !           Get the precession transformation.
 !
-            IF (  EQSTR( PRCMOD, KVM001 )  ) THEN
+            if (  eqstr( prcmod, kvm001 )  ) then
 !
 !              This is the 1976 IAU earth precession model.
 !
 !              Make sure the center of the input frame is the earth.
 !
-               IF ( CENTER .NE. EARTH ) THEN
+               if ( center .ne. earth ) then
 
-                  CALL BODC2N ( CENTER, CTRNAM, FND )
+                  call bodc2n ( center, ctrnam, fnd )
 
-                  IF ( .NOT. FND ) THEN
-                     CALL INTSTR ( CENTER, CTRNAM )
-                  END IF
+                  if ( .not. fnd ) then
+                     call intstr ( center, ctrnam )
+                  end if
 
-                  CALL SETMSG ( 'Definition of frame # specifies '    // &
+                  call setmsg ( 'Definition of frame # specifies '    // &
                                 'frame center # and precession '      // &
                                 'model #. This precession model '     // &
                                 'is not applicable to body #. '       // &
                                 'This situation is usually caused by '// &
                                 'an error in a frame kernel in which '// &
                                 'the frame is defined.'               )
-                  CALL ERRCH  ( '#',  INNAME                          )
-                  CALL ERRCH  ( '#',  CTRNAM                          )
-                  CALL ERRCH  ( '#',  KVM001                          )
-                  CALL ERRCH  ( '#',  CTRNAM                          )
-                  CALL SIGERR ( 'SPICE(INVALIDSELECTION)'             )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errch  ( '#',  inname                          )
+                  call errch  ( '#',  ctrnam                          )
+                  call errch  ( '#',  kvm001                          )
+                  call errch  ( '#',  ctrnam                          )
+                  call sigerr ( 'SPICE(INVALIDSELECTION)'             )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 !
 !              Look up the precession transformation.
 !
-               CALL ZZEPRC76 ( T0, PRECXF )
+               call zzeprc76 ( t0, precxf )
 
 !
 !              If we're in the mean-of-date case, invert this
 !              transformation to obtain the mapping from the
 !              mean-of-date frame to J2000.
 !
-               IF ( MEANEQ ) THEN
-                  CALL INVSTM ( PRECXF, XFTEMP )
-               END IF
+               if ( meaneq ) then
+                  call invstm ( precxf, xftemp )
+               end if
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'Definition of frame # specifies '    // &
+               call setmsg ( 'Definition of frame # specifies '    // &
                              'precession model #, which is not '   // &
                              'recognized. '                        // &
                              'This situation is usually caused by '// &
                              'an error in a frame kernel in which '// &
                              'the frame is defined.'               )
-               CALL ERRCH  ( '#',  INNAME                          )
-               CALL ERRCH  ( '#',  PRCMOD                          )
-               CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                 )
-               CALL CHKOUT ( RNAME                                 )
-               RETURN
+               call errch  ( '#',  inname                          )
+               call errch  ( '#',  prcmod                          )
+               call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
+               call chkout ( rname                                 )
+               return
 
-            END IF
+            end if
 
 !
 !           At this point the precession transformation PRECXF is set.
 !           If INFRAM is a mean equator and equinox of date frame, the
 !           inverse of PRECXF is currently stored in XFTEMP.
 
-            IF ( TRUEEQ ) THEN
+            if ( trueeq ) then
 !
 !              We need a nutation transformation as well. Get the name
 !              of the nutation model.
 !
-               CALL ZZDYNVAC ( INNAME, INFRAM, KWNUTM, 1, N, NUTMOD )
+               call zzdynvac ( inname, infram, kwnutm, 1, n, nutmod )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
 !
 !              Get the nutation transformation.
 !
-               IF (  EQSTR( NUTMOD, KVM002 )  ) THEN
+               if (  eqstr( nutmod, kvm002 )  ) then
 !
 !                 This is the 1980 IAU earth nutation model.
 !
 !                 Make sure the center is the earth.
 !
-                  IF ( CENTER .NE. EARTH ) THEN
+                  if ( center .ne. earth ) then
 
-                     CALL BODC2N ( CENTER, CTRNAM, FND )
+                     call bodc2n ( center, ctrnam, fnd )
 
-                     IF ( .NOT. FND ) THEN
-                        CALL INTSTR ( CENTER, CTRNAM )
-                     END IF
+                     if ( .not. fnd ) then
+                        call intstr ( center, ctrnam )
+                     end if
 
-                     CALL SETMSG ( 'Definition of frame # specifies ' // &
+                     call setmsg ( 'Definition of frame # specifies ' // &
                                    'frame center # and nutation '     // &
                                    'model #. This '                   // &
                                    'nutation model is not applicable '// &
@@ -929,76 +929,76 @@
                                    'usually caused by an error in a ' // &
                                    'frame kernel in which '           // &
                                    'the frame is defined.'            )
-                     CALL ERRCH  ( '#',  INNAME                       )
-                     CALL ERRCH  ( '#',  CTRNAM                       )
-                     CALL ERRCH  ( '#',  KVM002                       )
-                     CALL ERRCH  ( '#',  CTRNAM                       )
-                     CALL SIGERR ( 'SPICE(INVALIDSELECTION)'          )
-                     CALL CHKOUT ( RNAME                              )
-                     RETURN
+                     call errch  ( '#',  inname                       )
+                     call errch  ( '#',  ctrnam                       )
+                     call errch  ( '#',  kvm002                       )
+                     call errch  ( '#',  ctrnam                       )
+                     call sigerr ( 'SPICE(INVALIDSELECTION)'          )
+                     call chkout ( rname                              )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Look up the nutation transformation.
 !
-                  CALL ZZENUT80 ( T0, NUTXF )
+                  call zzenut80 ( t0, nutxf )
 
 !
 !                 Find the transformation from the J2000 frame to the
 !                 earth true of date frame.  Invert.
 !
-                  CALL MXMG   ( NUTXF, PRECXF, 6, 6, 6, XFINV )
-                  CALL INVSTM ( XFINV, XFTEMP )
+                  call mxmg   ( nutxf, precxf, 6, 6, 6, xfinv )
+                  call invstm ( xfinv, xftemp )
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'Definition of frame # specifies '    // &
+                  call setmsg ( 'Definition of frame # specifies '    // &
                                 'nutation model #, which is not '     // &
                                 'recognized. '                        // &
                                 'This situation is usually caused by '// &
                                 'an error in a frame kernel in which '// &
                                 'the frame is defined.'               )
-                  CALL ERRCH  ( '#',  INNAME                          )
-                  CALL ERRCH  ( '#',  NUTMOD                          )
-                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                 )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errch  ( '#',  inname                          )
+                  call errch  ( '#',  nutmod                          )
+                  call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 
 
-            ELSE IF ( MEANEC ) THEN
+            else if ( meanec ) then
 !
 !              We need a mean obliquity transformation as well.
 !              Get the name of the obliquity model.
 !
-               CALL ZZDYNVAC ( INNAME, INFRAM, KWOBQM, 1, N, OBLMOD )
+               call zzdynvac ( inname, infram, kwobqm, 1, n, oblmod )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
 !
 !              Get the obliquity transformation.
 !
-               IF (  EQSTR( OBLMOD, KVM003 )  ) THEN
+               if (  eqstr( oblmod, kvm003 )  ) then
 !
 !                 This is the 1980 IAU earth mean obliquity of
 !                 date model.
 !
 !                 Make sure the center is the earth.
 !
-                  IF ( CENTER .NE. EARTH ) THEN
+                  if ( center .ne. earth ) then
 
-                     CALL BODC2N ( CENTER, CTRNAM, FND )
+                     call bodc2n ( center, ctrnam, fnd )
 
-                     IF ( .NOT. FND ) THEN
-                        CALL INTSTR ( CENTER, CTRNAM )
-                     END IF
+                     if ( .not. fnd ) then
+                        call intstr ( center, ctrnam )
+                     end if
 
-                     CALL SETMSG ( 'Definition of frame # specifies ' // &
+                     call setmsg ( 'Definition of frame # specifies ' // &
                                    'frame center # and obliquity '    // &
                                    'model #.  This obliquity model '  // &
                                    'is not applicable to body #. '    // &
@@ -1006,21 +1006,21 @@
                                    'usually caused by an error in a ' // &
                                    'frame kernel in which '           // &
                                    'the frame is defined.'            )
-                     CALL ERRCH  ( '#',  INNAME                       )
-                     CALL ERRCH  ( '#',  CTRNAM                       )
-                     CALL ERRCH  ( '#',  KVM003                       )
-                     CALL ERRCH  ( '#',  CTRNAM                       )
-                     CALL SIGERR ( 'SPICE(INVALIDSELECTION)'          )
-                     CALL CHKOUT ( RNAME                              )
-                     RETURN
+                     call errch  ( '#',  inname                       )
+                     call errch  ( '#',  ctrnam                       )
+                     call errch  ( '#',  kvm003                       )
+                     call errch  ( '#',  ctrnam                       )
+                     call sigerr ( 'SPICE(INVALIDSELECTION)'          )
+                     call chkout ( rname                              )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Create the obliquity transformation. First look up
 !                 the obliquity state (angle and angular rate).
 !
-                  CALL ZZMOBLIQ ( T0, MOB, DMOB )
+                  call zzmobliq ( t0, mob, dmob )
 
 !
 !                 The obliquity rotation is about the mean-of-date
@@ -1028,36 +1028,36 @@
 !                 zero; the axes are arbitrary, as long as the
 !                 middle axis is distinct from the other two.
 !
-                  CALL CLEARD ( 6, EULANG )
-                  EULANG(3) = MOB
-                  EULANG(6) = DMOB
+                  call cleard ( 6, eulang )
+                  eulang(3) = mob
+                  eulang(6) = dmob
 
-                  CALL EUL2XF ( EULANG, 1, 3, 1, OBLXF )
+                  call eul2xf ( eulang, 1, 3, 1, oblxf )
 
 !
 !                 Find the transformation from the J2000 to the
 !                 earth mean ecliptic of date frame.  Invert.
 !
-                  CALL MXMG   ( OBLXF, PRECXF, 6, 6, 6, XFINV )
-                  CALL INVSTM ( XFINV, XFTEMP )
+                  call mxmg   ( oblxf, precxf, 6, 6, 6, xfinv )
+                  call invstm ( xfinv, xftemp )
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'Definition of frame # specifies '    // &
+                  call setmsg ( 'Definition of frame # specifies '    // &
                                 'obliquity model #, which is not '    // &
                                 'recognized. '                        // &
                                 'This situation is usually caused by '// &
                                 'an error in a frame kernel in which '// &
                                 'the frame is defined.'               )
-                  CALL ERRCH  ( '#',  INNAME                          )
-                  CALL ERRCH  ( '#',  OBLMOD                          )
-                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                 )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errch  ( '#',  inname                          )
+                  call errch  ( '#',  oblmod                          )
+                  call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           At this point, XFTEMP contains the mapping from the
@@ -1066,18 +1066,18 @@
 !           If the base frame is not J2000, we must find the
 !           transformation from J2000 to the base frame.
 !
-            IF ( BASFRM .NE. J2000 ) THEN
+            if ( basfrm .ne. j2000 ) then
 
-               CALL ZZFRMCH1 ( J2000,  BASFRM, T0,      XF2000 )
-               CALL MXMG     ( XF2000, XFTEMP, 6, 6, 6, XFORM  )
+               call zzfrmch1 ( j2000,  basfrm, t0,      xf2000 )
+               call mxmg     ( xf2000, xftemp, 6, 6, 6, xform  )
 
-            ELSE
+            else
 !
 !              Otherwise, XFTEMP is the matrix we want.
 !
-               CALL MOVED ( XFTEMP, 36, XFORM )
+               call moved ( xftemp, 36, xform )
 
-            END IF
+            end if
 
 !
 !           Now XFORM is the state transformation mapping from
@@ -1092,61 +1092,61 @@
 !           zero.
 !
 
-         ELSE IF ( DYNFAM .EQ. KV2VEC ) THEN
+         else if ( dynfam .eq. kv2vec ) then
 !
 !           The frame belongs to the TWO-VECTOR family.
 !
 !           Initialize the array S2.
 !
-            CALL CLEARD ( 12, S2 )
+            call cleard ( 12, s2 )
 
 !
 !           Fetch the specifications of the primary and secondary
 !           axes.
 !
-            DO I = 1, 2
+            do i = 1, 2
 !
 !              Get the name of the axis associated with the Ith
 !              defining vector.
 !
-               CALL ZZDYNVAC ( INNAME, INFRAM, ITMAXE(I), 1, N, AXNAME )
+               call zzdynvac ( inname, infram, itmaxe(i), 1, n, axname )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               CALL CMPRSS ( ' ', 0, AXNAME, AXNAME )
-               CALL UCASE  ( AXNAME,         AXNAME )
+               call cmprss ( ' ', 0, axname, axname )
+               call ucase  ( axname,         axname )
 
 !
 !              Set the sign flag associated with the axis.
 !
-               NEGATE  =  AXNAME(1:1) .EQ. '-'
+               negate  =  axname(1:1) .eq. '-'
 
-               CALL CMPRSS ( '-', 0, AXNAME, AXNAME )
-               CALL CMPRSS ( '+', 0, AXNAME, AXNAME )
+               call cmprss ( '-', 0, axname, axname )
+               call cmprss ( '+', 0, axname, axname )
 
-               AXIS(I) = ISRCHC ( AXNAME, 3, AXES )
+               axis(i) = isrchc ( axname, 3, axes )
 
 
-               IF ( AXIS(I) .EQ. 0 ) THEN
+               if ( axis(i) .eq. 0 ) then
 
-                  CALL SETMSG ( 'Definition of frame # associates '   // &
+                  call setmsg ( 'Definition of frame # associates '   // &
                                 'vector # with axis #.  The only '    // &
                                 'valid axis values are { X, -X, Y, '  // &
                                 '-Y, Z, -Z }. '                       // &
                                 'This situation is usually caused by '// &
                                 'an error in a frame kernel in which '// &
                                 'the frame is defined.'               )
-                  CALL ERRCH  ( '#',  INNAME                          )
-                  CALL ERRINT ( '#',  I                               )
-                  CALL ERRCH  ( '#',  AXNAME                          )
-                  CALL SIGERR ( 'SPICE(INVALIDAXIS)'                  )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errch  ( '#',  inname                          )
+                  call errint ( '#',  i                               )
+                  call errch  ( '#',  axname                          )
+                  call sigerr ( 'SPICE(INVALIDAXIS)'                  )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 
 !
 !              Find out how the vector is defined:
@@ -1159,73 +1159,73 @@
 !              VECDEF(I) indicates the vector definition method
 !              for the Ith vector.
 !
-               CALL ZZDYNVAC ( INNAME,  INFRAM,    ITMVDF(I), &
-                               1,       N,         VECDEF(I) )
+               call zzdynvac ( inname,  infram,    itmvdf(i), &
+                               1,       n,         vecdef(i) )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               CALL CMPRSS ( ' ',    0, VECDEF(I), VECDEF(I) )
-               CALL UCASE  ( VECDEF(I),            VECDEF(I) )
+               call cmprss ( ' ',    0, vecdef(i), vecdef(i) )
+               call ucase  ( vecdef(i),            vecdef(i) )
 
 
-               IF (  VECDEF(I) .EQ. KVPOSV  ) THEN
+               if (  vecdef(i) .eq. kvposv  ) then
 !
 !                 The vector is the position of a target relative
 !                 to an observer.
 !
 !                 We need a target, observer, and aberration correction.
 !
-                  CALL ZZDYNBID ( INNAME, INFRAM, ITMTRG(I), TARG )
+                  call zzdynbid ( inname, infram, itmtrg(i), targ )
 
-                  CALL ZZDYNBID ( INNAME, INFRAM, ITMOBS(I), OBS  )
+                  call zzdynbid ( inname, infram, itmobs(i), obs  )
 
-                  CALL ZZDYNVAC ( INNAME, INFRAM, ITMABC(I), &
-                                  1,      N,      ABCORR     )
+                  call zzdynvac ( inname, infram, itmabc(i), &
+                                  1,      n,      abcorr     )
 
 !
 !                 Look up the Ith state vector in the J2000 frame.
 !
-                  CALL ZZSPKEZ1 ( TARG,    T0,   'J2000', &
-                                  ABCORR,  OBS,  S2(1,I),  LT )
+                  call zzspkez1 ( targ,    t0,   'J2000', &
+                                  abcorr,  obs,  s2(1,i),  lt )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
 !
 !                 At this point, S2(*,I) contains position and
 !                 velocity relative to frame J2000.
 !
 
-               ELSE IF ( VECDEF(I) .EQ. KVVELV ) THEN
+               else if ( vecdef(i) .eq. kvvelv ) then
 !
 !                 The vector is the velocity of a target relative
 !                 to an observer.
 !
 !                 We need a target, observer, and aberration correction.
 !
-                  CALL ZZDYNBID ( INNAME, INFRAM, ITMTRG(I), TARG )
+                  call zzdynbid ( inname, infram, itmtrg(i), targ )
 
-                  CALL ZZDYNBID ( INNAME, INFRAM, ITMOBS(I), OBS  )
+                  call zzdynbid ( inname, infram, itmobs(i), obs  )
 
-                  CALL ZZDYNVAC ( INNAME, INFRAM, ITMABC(I), &
-                                  1,      N,      ABCORR     )
+                  call zzdynvac ( inname, infram, itmabc(i), &
+                                  1,      n,      abcorr     )
 
 !
 !                 We need to know the frame in which the velocity is
 !                 defined.
 !
-                  CALL ZZDYNFID ( INNAME, INFRAM, ITMFRM(I), FRID )
-                  CALL FRMNAM   ( FRID,   VELFRM  )
+                  call zzdynfid ( inname, infram, itmfrm(i), frid )
+                  call frmnam   ( frid,   velfrm  )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
 !
 !                 Obtain the velocity vector in the specified velocity
@@ -1233,37 +1233,37 @@
 !                 discrete differentiation.  (See notes in zzdyn.inc
 !                 regarding definition of DELTA.)
 !
-                  DELTA = MAX ( 1.D0,  (2.D0**QEXP) * T0 )
+                  delta = max ( 1.d0,  (2.d0**qexp) * t0 )
 
-                  CALL VPACK ( T0-DELTA, T0, T0+DELTA, TARRAY )
+                  call vpack ( t0-delta, t0, t0+delta, tarray )
 
 
-                  DO J = 1, 3
+                  do j = 1, 3
 
-                     CALL ZZSPKEZ1 ( TARG,   TARRAY(J), VELFRM, &
-                                     ABCORR, OBS,       STEMP,  LT )
+                     call zzspkez1 ( targ,   tarray(j), velfrm, &
+                                     abcorr, obs,       stemp,  lt )
 !
 !                    We compute the derivative using unit
 !                    velocity vectors.
 !
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( RNAME )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( rname )
+                        return
+                     end if
 
-                     CALL VHAT ( STEMP(4), VARRAY(1,J) )
+                     call vhat ( stemp(4), varray(1,j) )
 
-                  END DO
+                  end do
 
 !
 !                 Compute acceleration and fill in the velocity state
 !                 vector S2(*,I).
 !
-                  CALL QDERIV ( 3, &
-                                VARRAY(1,1),  VARRAY(1,3),  DELTA, ACC )
+                  call qderiv ( 3, &
+                                varray(1,1),  varray(1,3),  delta, acc )
 
-                  CALL VEQU   ( VARRAY(1,2),  S2(1,I) )
-                  CALL VEQU   ( ACC,          S2(4,I) )
+                  call vequ   ( varray(1,2),  s2(1,i) )
+                  call vequ   ( acc,          s2(4,i) )
 
 !
 !                 We need the epoch VET at which VELFRM is evaluated.
@@ -1272,15 +1272,15 @@
 !
 !                 Set the default value of VET here.
 !
-                  VET = T0
+                  vet = t0
 
 !
 !                 Parse the aberration correction.  Find the epoch used
 !                 to evaluate the velocity vector's frame.
 !
-                  CALL ZZVALCOR ( ABCORR, CORBLK )
+                  call zzvalcor ( abcorr, corblk )
 
-                  IF ( CORBLK(LTIDX) ) THEN
+                  if ( corblk(ltidx) ) then
 !
 !                    Light time correction is used.  The epoch used
 !                    to evaluate the velocity vector's frame depends
@@ -1288,11 +1288,11 @@
 !
 !                    Look up the velocity frame's center.
 !
-                     CALL FRINFO ( FRID, FRCTR, FRCLS, FRCID, FND )
+                     call frinfo ( frid, frctr, frcls, frcid, fnd )
 
-                     IF ( .NOT. FND ) THEN
+                     if ( .not. fnd ) then
 
-                        CALL SETMSG ( 'In definition of frame #, ' // &
+                        call setmsg ( 'In definition of frame #, ' // &
                                       'the frame associated with ' // &
                                       'a velocity vector has '     // &
                                       'frame ID code #, but no '   // &
@@ -1305,36 +1305,36 @@
                                       'is defined. The problem '   // &
                                       'also could be indicative '  // &
                                       'of a SPICELIB bug.'         )
-                        CALL ERRCH  ( '#',  INNAME                 )
-                        CALL ERRINT ( '#',  FRID                   )
-                        CALL SIGERR ( 'SPICE(FRAMEDATANOTFOUND)'   )
-                        CALL CHKOUT ( RNAME                        )
-                        RETURN
+                        call errch  ( '#',  inname                 )
+                        call errint ( '#',  frid                   )
+                        call sigerr ( 'SPICE(FRAMEDATANOTFOUND)'   )
+                        call chkout ( rname                        )
+                        return
 
-                     END IF
+                     end if
 
 !
 !                    If the velocity frame is non-inertial, we'll need
 !                    to compute the evaluation epoch for this frame.
 !
-                     IF ( FRCLS .NE. INERTL ) THEN
+                     if ( frcls .ne. inertl ) then
 !
 !                       Obtain light time from the observer to the
 !                       frame's center; find the evaluation epoch VET
 !                       for the frame.
 
-                        CALL ZZSPKZP1 ( FRCTR,  T0,  'J2000', &
-                                        ABCORR, OBS, CTRPOS,  VFLT )
-                        CALL ZZCOREPC ( ABCORR, T0,  VFLT,    VET  )
+                        call zzspkzp1 ( frctr,  t0,  'J2000', &
+                                        abcorr, obs, ctrpos,  vflt )
+                        call zzcorepc ( abcorr, t0,  vflt,    vet  )
 
-                        IF ( FAILED() ) THEN
-                           CALL CHKOUT ( RNAME )
-                           RETURN
-                        END IF
+                        if ( failed() ) then
+                           call chkout ( rname )
+                           return
+                        end if
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 
 !
 !                 The velocity frame's evaluation epoch VET is now set.
@@ -1345,19 +1345,19 @@
 !                 stages, first mapping velocity and acceleration into
 !                 the J2000 frame.
 !
-                  IF ( FRID .NE. J2000 ) THEN
+                  if ( frid .ne. j2000 ) then
 
-                     CALL ZZFRMCH1 ( FRID,    J2000,  VET,   XF2000  )
+                     call zzfrmch1 ( frid,    j2000,  vet,   xf2000  )
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( RNAME )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( rname )
+                        return
+                     end if
 
-                     CALL MXVG     ( XF2000,  S2(1,I), 6, 6, STEMP   )
-                     CALL MOVED    ( STEMP,   6,             S2(1,I) )
+                     call mxvg     ( xf2000,  s2(1,i), 6, 6, stemp   )
+                     call moved    ( stemp,   6,             s2(1,i) )
 
-                  END IF
+                  end if
 
 
 !
@@ -1365,7 +1365,7 @@
 !                 acceleration relative to frame J2000.
 !
 
-               ELSE IF ( VECDEF(I) .EQ. KVNEAR ) THEN
+               else if ( vecdef(i) .eq. kvnear ) then
 !
 !                 The vector points from an observer to the
 !                 sub-observer point (nearest point to the observer) on
@@ -1373,12 +1373,12 @@
 !
 !                 We need a target, observer, and aberration correction.
 !
-                  CALL ZZDYNBID ( INNAME, INFRAM, ITMTRG(I), TARG )
+                  call zzdynbid ( inname, infram, itmtrg(i), targ )
 
-                  CALL ZZDYNBID ( INNAME, INFRAM, ITMOBS(I), OBS  )
+                  call zzdynbid ( inname, infram, itmobs(i), obs  )
 
-                  CALL ZZDYNVAC ( INNAME, INFRAM, ITMABC(I), &
-                                  1,      N,      ABCORR     )
+                  call zzdynvac ( inname, infram, itmabc(i), &
+                                  1,      n,      abcorr     )
 
 !
 !                 The vector points from the observer to the nearest
@@ -1393,11 +1393,11 @@
 !                 Look up the body-fixed frame associated with the
 !                 target body.
 !
-                  CALL CIDFRM ( TARG, CFRMID, CFRMNM, FND )
+                  call cidfrm ( targ, cfrmid, cfrmnm, fnd )
 
-                  IF ( .NOT. FND ) THEN
+                  if ( .not. fnd ) then
 
-                     CALL SETMSG ( 'Definition of frame # requires ' // &
+                     call setmsg ( 'Definition of frame # requires ' // &
                                    'definition of body-fixed frame ' // &
                                    'associated with target body #. ' // &
                                    'A call to CIDFRM indicated no '  // &
@@ -1414,50 +1414,50 @@
                                    'which the parameterized '        // &
                                    'two-vector dynamic frame # '     // &
                                    'is defined.'                     )
-                     CALL ERRCH  ( '#',  INNAME                      )
-                     CALL ERRINT ( '#',  TARG                        )
-                     CALL ERRCH  ( '#',  INNAME                      )
-                     CALL SIGERR ( 'SPICE(FRAMEDATANOTFOUND)'        )
-                     CALL CHKOUT ( RNAME                             )
-                     RETURN
+                     call errch  ( '#',  inname                      )
+                     call errint ( '#',  targ                        )
+                     call errch  ( '#',  inname                      )
+                     call sigerr ( 'SPICE(FRAMEDATANOTFOUND)'        )
+                     call chkout ( rname                             )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Get the radii of the target body.
 !
-                  CALL ZZGFTREB ( TARG, RADII )
+                  call zzgftreb ( targ, radii )
 
 !
 !                 Look up the Ith state vector in the target-fixed
 !                 frame.  Negate the vector to obtain the target-to-
 !                 observer vector.
 !
-                  CALL ZZSPKEZ1 ( TARG,    T0,       CFRMNM, &
-                                  ABCORR,  OBS,      STEMP,    LT )
+                  call zzspkez1 ( targ,    t0,       cfrmnm, &
+                                  abcorr,  obs,      stemp,    lt )
 
 !
 !                 We check FAILED() here because VMINUG is a simple
 !                 arithmetic routine that doesn't return on entry.
 !
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  CALL VMINUG   ( STEMP,   6,        STOBS )
+                  call vminug   ( stemp,   6,        stobs )
 
-                  CALL DNEARP   ( STOBS,   RADII(1), RADII(2), RADII(3), &
-                                  STNEAR,  STALT,    FND               )
+                  call dnearp   ( stobs,   radii(1), radii(2), radii(3), &
+                                  stnear,  stalt,    fnd               )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  IF ( .NOT. FND ) THEN
+                  if ( .not. fnd ) then
 
-                     CALL SETMSG ( 'In definition of frame #, '      // &
+                     call setmsg ( 'In definition of frame #, '      // &
                                    'vector # is defined by the '     // &
                                    'near point on body # as seen '   // &
                                    'from body #.  The state of this '// &
@@ -1470,22 +1470,22 @@
                                    'is defined. The problem '        // &
                                    'also could be indicative '       // &
                                    'of a SPICELIB bug.'              )
-                     CALL ERRCH  ( '#',  INNAME                      )
-                     CALL ERRINT ( '#',  I                           )
-                     CALL ERRINT ( '#',  TARG                        )
-                     CALL ERRINT ( '#',  OBS                         )
-                     CALL SIGERR ( 'SPICE(DEGENERATECASE)'           )
-                     CALL CHKOUT ( RNAME                             )
-                     RETURN
+                     call errch  ( '#',  inname                      )
+                     call errint ( '#',  i                           )
+                     call errint ( '#',  targ                        )
+                     call errint ( '#',  obs                         )
+                     call sigerr ( 'SPICE(DEGENERATECASE)'           )
+                     call chkout ( rname                             )
+                     return
 
-                  END IF
+                  end if
 
 
 !
 !                 Find the observer-near point state in the target
 !                 body-fixed frame.
 !
-                  CALL VSUBG ( STNEAR, STOBS, 6, STEMP  )
+                  call vsubg ( stnear, stobs, 6, stemp  )
 
 !
 !                 Transform the state to frame J2000.  To get the
@@ -1494,21 +1494,21 @@
 !                 aberration correction and adjust the frame evaluation
 !                 epoch as needed.
 !
-                  CALL ZZCOREPC ( ABCORR, T0, LT, FET )
+                  call zzcorepc ( abcorr, t0, lt, fet )
 
 !
 !                 Obtain the matrix for transforming state vectors
 !                 from the target center frame to the J2000 frame and
 !                 apply it to the observer-to-near point state vector.
 !
-                  CALL ZZFRMCH1 ( CFRMID,  J2000,  FET,   XIPM    )
+                  call zzfrmch1 ( cfrmid,  j2000,  fet,   xipm    )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  CALL MXVG     ( XIPM,    STEMP,  6, 6,  S2(1,I) )
+                  call mxvg     ( xipm,    stemp,  6, 6,  s2(1,i) )
 
 !
 !                 At this point, S2(*,I) contains position and
@@ -1516,7 +1516,7 @@
 !                 seen by the observer, relative to frame J2000.
 !
 
-               ELSE IF ( VECDEF(I) .EQ. KVCONS ) THEN
+               else if ( vecdef(i) .eq. kvcons ) then
 !
 !                 The vector is constant in a specified frame.
 !
@@ -1526,7 +1526,7 @@
 !
 !                 Look up the ID of the frame first.
 !
-                  CALL ZZDYNFID ( INNAME, INFRAM, ITMFRM(I), FRID )
+                  call zzdynfid ( inname, infram, itmfrm(i), frid )
 
 !
 !                 Let FET ("frame ET") be the evaluation epoch for
@@ -1538,7 +1538,7 @@
 !
 !                 Set the default value of FET here.
 !
-                  FET = T0
+                  fet = t0
 
 !
 !                 Optionally, there is an aberration correction
@@ -1546,22 +1546,22 @@
 !                 If so, an observer must be associated with the
 !                 frame.  Look up the correction first.
 !
-                  CALL ZZDYNOAC ( INNAME, INFRAM, ITMABC(I), &
-                                  1,      N,      CVCORR,    FND )
+                  call zzdynoac ( inname, infram, itmabc(i), &
+                                  1,      n,      cvcorr,    fnd )
 
-                  IF ( .NOT. FND ) THEN
-                     CVCORR = 'NONE'
-                  END IF
+                  if ( .not. fnd ) then
+                     cvcorr = 'NONE'
+                  end if
 
-                  CALL ZZPRSCOR ( CVCORR, CORBLK )
+                  call zzprscor ( cvcorr, corblk )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
 
-                  IF ( .NOT. CORBLK(GEOIDX) ) THEN
+                  if ( .not. corblk(geoidx) ) then
 !
 !                    We need to apply an aberration correction to
 !                    the constant vector.
@@ -1572,9 +1572,9 @@
 !                       - Light time and stellar aberration corrections
 !                         are mutually exclusive.
 !
-                     IF ( CORBLK(LTIDX) .AND. CORBLK(STLIDX) ) THEN
+                     if ( corblk(ltidx) .and. corblk(stlidx) ) then
 
-                        CALL SETMSG ( 'Definition of frame # '       // &
+                        call setmsg ( 'Definition of frame # '       // &
                                       'specifies aberration '        // &
                                       'correction # for constant '   // &
                                       'vector.  Light time and '     // &
@@ -1587,15 +1587,15 @@
                                       'is usually caused by an '     // &
                                       'error in a frame kernel in '  // &
                                       'which the frame is defined.'  )
-                        CALL ERRCH  ( '#',  INNAME                   )
-                        CALL ERRCH  ( '#',  CVCORR                   )
-                        CALL SIGERR ( 'SPICE(INVALIDOPTION)'         )
-                        CALL CHKOUT ( RNAME                          )
-                        RETURN
+                        call errch  ( '#',  inname                   )
+                        call errch  ( '#',  cvcorr                   )
+                        call sigerr ( 'SPICE(INVALIDOPTION)'         )
+                        call chkout ( rname                          )
+                        return
 
-                     END IF
+                     end if
 
-                     IF ( CORBLK(LTIDX) ) THEN
+                     if ( corblk(ltidx) ) then
 !
 !                       Light time correction is used.  The epoch used
 !                       to evaluate the constant vector's frame depends
@@ -1603,11 +1603,11 @@
 !
 !                       Look up the constant vector frame's center.
 !
-                        CALL FRINFO ( FRID, FRCTR, FRCLS, FRCID, FND )
+                        call frinfo ( frid, frctr, frcls, frcid, fnd )
 
-                        IF ( .NOT. FND ) THEN
+                        if ( .not. fnd ) then
 
-                           CALL SETMSG ( 'In definition of frame #, ' // &
+                           call setmsg ( 'In definition of frame #, ' // &
                                          'the frame associated with ' // &
                                          'a constant vector has '     // &
                                          'frame ID code #, but no '   // &
@@ -1620,52 +1620,52 @@
                                          'is defined. The problem '   // &
                                          'also could be indicative '  // &
                                          'of a SPICELIB bug.'         )
-                           CALL ERRCH  ( '#',  INNAME                 )
-                           CALL ERRINT ( '#',  FRID                   )
-                           CALL SIGERR ( 'SPICE(FRAMEDATANOTFOUND)'   )
-                           CALL CHKOUT ( RNAME                        )
-                           RETURN
+                           call errch  ( '#',  inname                 )
+                           call errint ( '#',  frid                   )
+                           call sigerr ( 'SPICE(FRAMEDATANOTFOUND)'   )
+                           call chkout ( rname                        )
+                           return
 
-                        END IF
+                        end if
 !
 !                       If the constant vector frame is non-inertial,
 !                       we'll need to compute the evaluation epoch for
 !                       this frame.
 !
-                        IF ( FRCLS .NE. INERTL ) THEN
+                        if ( frcls .ne. inertl ) then
 !
 !                          Look up the observer associated with the
 !                          constant vector's frame.  This observer,
 !                          together with the frame's center, determines
 !                          the evaluation epoch for the frame.
 !
-                           CALL ZZDYNBID ( INNAME,    INFRAM, &
-                                           ITMOBS(I), CVOBS   )
+                           call zzdynbid ( inname,    infram, &
+                                           itmobs(i), cvobs   )
 
 !
 !                          Obtain light time from the observer to the
 !                          frame's center.
 !
-                           CALL ZZSPKZP1 ( FRCTR,  T0,   'J2000', &
-                                           CVCORR, CVOBS, CTRPOS,  LT )
+                           call zzspkzp1 ( frctr,  t0,   'J2000', &
+                                           cvcorr, cvobs, ctrpos,  lt )
 
 !
 !                          Re-set the evaluation epoch for the frame.
 !
-                           CALL ZZCOREPC ( CVCORR, T0, LT, FET )
+                           call zzcorepc ( cvcorr, t0, lt, fet )
 
-                           IF ( FAILED() ) THEN
-                              CALL CHKOUT ( RNAME )
-                              RETURN
-                           END IF
+                           if ( failed() ) then
+                              call chkout ( rname )
+                              return
+                           end if
 
-                        END IF
+                        end if
 !
 !                       The constant vector frame's evaluation epoch
 !                       FET has been set.
 !
 
-                     ELSE IF ( CORBLK(STLIDX) ) THEN
+                     else if ( corblk(stlidx) ) then
 !
 !                       Stellar aberration case.
 !
@@ -1677,19 +1677,19 @@
 !                       later, when the constant vector has been
 !                       transformed to the J2000 frame.
 !
-                        CALL ZZDYNBID ( INNAME,    INFRAM, &
-                                        ITMOBS(I), CVOBS   )
+                        call zzdynbid ( inname,    infram, &
+                                        itmobs(i), cvobs   )
 
-                        CALL ZZSPKSB1 ( CVOBS, T0, 'J2000', STOBS )
+                        call zzspksb1 ( cvobs, t0, 'J2000', stobs )
 
-                        IF ( FAILED() ) THEN
-                           CALL CHKOUT ( RNAME )
-                           RETURN
-                        END IF
+                        if ( failed() ) then
+                           call chkout ( rname )
+                           return
+                        end if
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 
 !
 !                 At this point FET is the frame evaluation epoch
@@ -1702,87 +1702,87 @@
 !
 !                 Get the constant vector specification.
 !
-                  CALL ZZDYNVAC ( INNAME,  INFRAM,  ITMSPC(I), &
-                                  1,       N,       SPEC       )
+                  call zzdynvac ( inname,  infram,  itmspc(i), &
+                                  1,       n,       spec       )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  CALL CMPRSS ( ' ', 0, SPEC, SPEC )
-                  CALL UCASE  ( SPEC,         SPEC )
+                  call cmprss ( ' ', 0, spec, spec )
+                  call ucase  ( spec,         spec )
 
 
-                  IF ( SPEC .EQ. KVRECC ) THEN
+                  if ( spec .eq. kvrecc ) then
 !
 !                    The coordinate system is rectangular.
 !
 !                    Look up the constant vector.
 !
-                     CALL ZZDYNVAD ( INNAME, INFRAM, ITMVEC(I), &
-                                     3,      N,      DIRVEC    )
+                     call zzdynvad ( inname, infram, itmvec(i), &
+                                     3,      n,      dirvec    )
 
 
-                  ELSE IF (      ( SPEC .EQ. KVLATC ) &
-                            .OR. ( SPEC .EQ. KVRADC ) ) THEN
+                  else if (      ( spec .eq. kvlatc ) &
+                            .or. ( spec .eq. kvradc ) ) then
 !
 !                    The coordinate system is latitudinal or RA/DEC.
 !
 !                    Look up the units associated with the angles.
 !
-                     CALL ZZDYNVAC ( INNAME,  INFRAM,  ITMUNT(I), &
-                                     1,       N,       UNITS     )
+                     call zzdynvac ( inname,  infram,  itmunt(i), &
+                                     1,       n,       units     )
 
 
-                     IF ( SPEC .EQ. KVLATC ) THEN
+                     if ( spec .eq. kvlatc ) then
 !
 !                       Look up longitude and latitude.
 !
-                        CALL ZZDYNVAD ( INNAME, INFRAM, ITMLON(I), &
-                                        1,      N,      LON        )
+                        call zzdynvad ( inname, infram, itmlon(i), &
+                                        1,      n,      lon        )
 
-                        CALL ZZDYNVAD ( INNAME, INFRAM, ITMLAT(I), &
-                                         1,     N,      LAT        )
+                        call zzdynvad ( inname, infram, itmlat(i), &
+                                         1,     n,      lat        )
 
 !
 !                       Convert angles from input units to radians.
 !
-                        CALL CONVRT ( LON, UNITS, KVRADN, ANGLES(1) )
-                        CALL CONVRT ( LAT, UNITS, KVRADN, ANGLES(2) )
+                        call convrt ( lon, units, kvradn, angles(1) )
+                        call convrt ( lat, units, kvradn, angles(2) )
 
-                     ELSE
+                     else
 !
 !                       Look up RA and DEC.
 !
-                        CALL ZZDYNVAD ( INNAME, INFRAM, ITMRA(I), &
-                                        1,      N,      RA        )
+                        call zzdynvad ( inname, infram, itmra(i), &
+                                        1,      n,      ra        )
 
-                        CALL ZZDYNVAD ( INNAME, INFRAM, ITMDEC(I), &
-                                        1,      N,      DEC       )
+                        call zzdynvad ( inname, infram, itmdec(i), &
+                                        1,      n,      dec       )
 
 !
 !                       Convert angles from input units to radians.
 !
-                        CALL CONVRT ( RA,  UNITS, KVRADN, ANGLES(1) )
-                        CALL CONVRT ( DEC, UNITS, KVRADN, ANGLES(2) )
+                        call convrt ( ra,  units, kvradn, angles(1) )
+                        call convrt ( dec, units, kvradn, angles(2) )
 
-                     END IF
+                     end if
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( RNAME )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( rname )
+                        return
+                     end if
 
 !
 !                    Now  produce a direction vector.
 !
-                     CALL LATREC ( 1.D0, ANGLES(1), ANGLES(2), DIRVEC )
+                     call latrec ( 1.d0, angles(1), angles(2), dirvec )
 
 
-                  ELSE
+                  else
 
-                     CALL SETMSG ( 'Definition of two-vector '       // &
+                     call setmsg ( 'Definition of two-vector '       // &
                                    'parameterized dynamic frame # '  // &
                                    'includes constant vector '       // &
                                    'specification #, which is '      // &
@@ -1790,13 +1790,13 @@
                                    'is usually caused by an error '  // &
                                    'in a frame kernel in which '     // &
                                    'the frame is defined.'           )
-                     CALL ERRCH  ( '#',  INNAME                      )
-                     CALL ERRCH  ( '#',  SPEC                        )
-                     CALL SIGERR ( 'SPICE(NOTSUPPORTED)'             )
-                     CALL CHKOUT ( RNAME                             )
-                     RETURN
+                     call errch  ( '#',  inname                      )
+                     call errch  ( '#',  spec                        )
+                     call sigerr ( 'SPICE(NOTSUPPORTED)'             )
+                     call chkout ( rname                             )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 At this point, the Cartesian coordinates of the
@@ -1807,58 +1807,58 @@
 !                 Fill in the state vector.  The velocity in the
 !                 constant vector's frame is zero.
 !
-                  CALL VEQU     ( DIRVEC, S2(1,I) )
-                  CALL CLEARD   ( 3,      S2(4,I) )
+                  call vequ     ( dirvec, s2(1,i) )
+                  call cleard   ( 3,      s2(4,i) )
 
-                  IF ( FRID .NE. J2000 ) THEN
+                  if ( frid .ne. j2000 ) then
 
-                     CALL ZZFRMCH1 ( FRID, J2000, FET, XIPM )
+                     call zzfrmch1 ( frid, j2000, fet, xipm )
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( RNAME )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( rname )
+                        return
+                     end if
 
-                     CALL MXVG     ( XIPM,   S2(1,I), 6, 6,  STEMP   )
-                     CALL MOVED    ( STEMP,  6,              S2(1,I) )
+                     call mxvg     ( xipm,   s2(1,i), 6, 6,  stemp   )
+                     call moved    ( stemp,  6,              s2(1,i) )
 
-                  END IF
+                  end if
 
 !
 !                 The state of the constant vector is now represented
 !                 in the J2000 frame, but we may still need to
 !                 apply a stellar aberration correction.
 !
-                  IF ( CORBLK(STLIDX) ) THEN
+                  if ( corblk(stlidx) ) then
 !
 !                    Perform the stellar aberration correction
 !                    appropriate to the radiation travel sense.
 
-                     IF ( CORBLK(XMTIDX) ) THEN
+                     if ( corblk(xmtidx) ) then
 !
 !                       The correction is for transmission.
 !
-                        CALL STLABX ( S2(1,I), STOBS(4), STEMP )
+                        call stlabx ( s2(1,i), stobs(4), stemp )
 
-                     ELSE
+                     else
 !
 !                       The correction is for reception.
 !
-                        CALL STELAB ( S2(1,I), STOBS(4), STEMP )
+                        call stelab ( s2(1,i), stobs(4), stemp )
 
-                     END IF
+                     end if
 
-                     IF ( FAILED() ) THEN
-                        CALL CHKOUT ( RNAME )
-                        RETURN
-                     END IF
+                     if ( failed() ) then
+                        call chkout ( rname )
+                        return
+                     end if
 
 !
 !                    Update the position portion of S2(*,I).
 !
-                     CALL VEQU ( STEMP, S2(1,I) )
+                     call vequ ( stemp, s2(1,i) )
 
-                  END IF
+                  end if
 
 !
 !                 At this point, S2(*,I) contains position and velocity
@@ -1867,9 +1867,9 @@
 !                 relative to frame J2000.
 !
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'Definition of two-vector '       // &
+                  call setmsg ( 'Definition of two-vector '       // &
                                 'parameterized dynamic frame # '  // &
                                 'includes vector '                // &
                                 'definition #, which is '         // &
@@ -1877,40 +1877,40 @@
                                 'is usually caused by an error '  // &
                                 'in a frame kernel in which '     // &
                                 'the frame is defined.'           )
-                  CALL ERRCH  ( '#',  INNAME                      )
-                  CALL ERRCH  ( '#',  VECDEF(I)                   )
-                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)'             )
-                  CALL CHKOUT ( RNAME                             )
-                  RETURN
+                  call errch  ( '#',  inname                      )
+                  call errch  ( '#',  vecdef(i)                   )
+                  call sigerr ( 'SPICE(NOTSUPPORTED)'             )
+                  call chkout ( rname                             )
+                  return
 
-               END IF
+               end if
 
 !
 !              Negate the state vector if the axis has negative sign.
 !
-               IF ( NEGATE ) THEN
-                  CALL VMINUG ( S2(1,I), 6, STEMP   )
-                  CALL MOVED  ( STEMP,   6, S2(1,I) )
-               END IF
+               if ( negate ) then
+                  call vminug ( s2(1,i), 6, stemp   )
+                  call moved  ( stemp,   6, s2(1,i) )
+               end if
 
 
-            END DO
+            end do
 
 !
 !           Look up the lower bound for the angular separation of
 !           the defining vectors.  Use the default value if none
 !           was supplied.
 !
-            CALL ZZDYNOAD ( INNAME, INFRAM, ITMSEP, 1, N, MINSEP, FND )
+            call zzdynoad ( inname, infram, itmsep, 1, n, minsep, fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
-               MINSEP = LBSEP
-            END IF
+            if ( .not. fnd ) then
+               minsep = lbsep
+            end if
 
 !
 !           Now use our states to compute our state transformation
@@ -1922,13 +1922,13 @@
 !           close to 0 or separation close to Pi---by comparing the
 !           sine of the separation to the sine of the separation limit.
 !
-            SEP = VSEP ( S2(1,1), S2(1,2) )
+            sep = vsep ( s2(1,1), s2(1,2) )
 
-            IF ( SIN(SEP) .LT. SIN(MINSEP) ) THEN
+            if ( sin(sep) .lt. sin(minsep) ) then
 
-               CALL ETCAL  ( T0, TIMSTR )
+               call etcal  ( t0, timstr )
 
-               CALL SETMSG ( 'Angular separation of vectors defining '// &
+               call setmsg ( 'Angular separation of vectors defining '// &
                              'two-vector parameterized dynamic frame '// &
                              '# is # (radians); minimum allowed diff' // &
                              'erence of separation from 0 or Pi is # '// &
@@ -1947,38 +1947,38 @@
                              'the # keyword can be used in '          // &
                              'the frame definition to adjust the '    // &
                              'separation limit.'                      )
-               CALL ERRCH  ( '#',  INNAME                             )
-               CALL ERRDP  ( '#',  SEP                                )
-               CALL ERRDP  ( '#',  MINSEP                             )
-               CALL ERRCH  ( '#',  TIMSTR                             )
-               CALL ERRCH  ( '#',  KWATOL                             )
-               CALL SIGERR ( 'SPICE(DEGENERATECASE)'                  )
-               CALL CHKOUT ( RNAME                                    )
-               RETURN
+               call errch  ( '#',  inname                             )
+               call errdp  ( '#',  sep                                )
+               call errdp  ( '#',  minsep                             )
+               call errch  ( '#',  timstr                             )
+               call errch  ( '#',  kwatol                             )
+               call sigerr ( 'SPICE(DEGENERATECASE)'                  )
+               call chkout ( rname                                    )
+               return
 
-            END IF
+            end if
 
 !
 !           We have both states expressed relative to frame J2000
 !           at this point.  Find the transformation from INNAME to
 !           the frame J2000, then from J2000 to frame BASNAM.
 !
-            CALL ZZTWOVXF ( S2(1,1), AXIS(1), S2(1,2), AXIS(2), XFORM )
+            call zztwovxf ( s2(1,1), axis(1), s2(1,2), axis(2), xform )
 
-            IF ( BASFRM .NE. J2000 ) THEN
+            if ( basfrm .ne. j2000 ) then
 
-               CALL MOVED ( XFORM, 36, XFTEMP )
+               call moved ( xform, 36, xftemp )
 
-               CALL ZZFRMCH1 ( J2000, BASFRM, T0, XF2000 )
+               call zzfrmch1 ( j2000, basfrm, t0, xf2000 )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               CALL MXMG ( XF2000,  XFTEMP,  6,  6,  6, XFORM  )
+               call mxmg ( xf2000,  xftemp,  6,  6,  6, xform  )
 
-            END IF
+            end if
 
 !
 !           This is the end of the work specific to two-vector frames.
@@ -1990,7 +1990,7 @@
 !           zero.
 !
 
-         ELSE IF ( DYNFAM .EQ. KVEULR ) THEN
+         else if ( dynfam .eq. kveulr ) then
 !
 !           The frame belongs to the Euler family.
 !
@@ -2004,67 +2004,67 @@
 !           Initialize EPOCH so subtraction doesn't overflow if EPOCH
 !           is invalid due to a lookup error.
 !
-            EPOCH = 0.D0
+            epoch = 0.d0
 
-            CALL ZZDYNVAD ( INNAME, INFRAM, KWEPOC, 1, N, EPOCH )
+            call zzdynvad ( inname, infram, kwepoc, 1, n, epoch )
 
-            DELTA = T0 - EPOCH
+            delta = t0 - epoch
 
 !
 !           Now the axis sequence.
 !
-            CALL ZZDYNVAI ( INNAME, INFRAM, KWEUAX, 3, N, IAXES )
+            call zzdynvai ( inname, infram, kweuax, 3, n, iaxes )
 
 !
 !           Now the coefficients for the angles.
 !
-            DO I = 1, 3
+            do i = 1, 3
 !
 !              Initialize N so subtraction doesn't overflow if N
 !              is invalid due to a lookup error.
 !
-               N = 0
+               n = 0
 
-               CALL ZZDYNVAD ( INNAME,  INFRAM,  ITMCOF(I), &
-                               MAXCOF,  N,       COEFFS(1,I) )
+               call zzdynvad ( inname,  infram,  itmcof(i), &
+                               maxcof,  n,       coeffs(1,i) )
 
 !
 !              Set the polynomial degree for the Ith angle.
 !
-               DEGS(I) = N - 1
+               degs(i) = n - 1
 
-            END DO
+            end do
 
 !
 !           Look up the units associated with the angles.
 !
-            CALL ZZDYNVAC ( INNAME, INFRAM, KWUNIT, 1, N, UNITS )
+            call zzdynvac ( inname, infram, kwunit, 1, n, units )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 !
 !           Evaluate the angles and their derivatives at DELTA.  Convert
 !           angles from input units to radians and radians/sec.
 !
-            DO I = 1, 3
+            do i = 1, 3
 
-               CALL POLYDS ( COEFFS(1,I), DEGS(I), 1, DELTA, POLY )
+               call polyds ( coeffs(1,i), degs(i), 1, delta, poly )
 !
 !              Convert units.  Fill in the Euler angle state vector.
 !
-               CALL CONVRT ( POLY(0), UNITS, KVRADN, EULANG(I  ) )
-               CALL CONVRT ( POLY(1), UNITS, KVRADN, EULANG(I+3) )
+               call convrt ( poly(0), units, kvradn, eulang(i  ) )
+               call convrt ( poly(1), units, kvradn, eulang(i+3) )
 
-            END DO
+            end do
 
 !
 !           Produce a state transformation matrix that maps from
 !           the defined frame to the base frame.
 !
-            CALL EUL2XF ( EULANG, IAXES(1), IAXES(2), IAXES(3), XFORM )
+            call eul2xf ( eulang, iaxes(1), iaxes(2), iaxes(3), xform )
 
 !
 !           This is the end of the work specific to Euler frames.
@@ -2076,7 +2076,7 @@
 !           zero.
 !
 
-         ELSE IF ( DYNFAM .EQ. KVPROD ) THEN
+         else if ( dynfam .eq. kvprod ) then
 !
 !           The frame belongs to the product family.
 !
@@ -2085,28 +2085,28 @@
 !
 !           Look up the "from" and "to" frames that define the product.
 !
-            CALL ZZDYNVAC ( INNAME, INFRAM, KWFFRM, MXNFAC, M, FFRAMS )
-            CALL ZZDYNVAC ( INNAME, INFRAM, KWTFRM, MXNFAC, N, TFRAMS )
+            call zzdynvac ( inname, infram, kwffrm, mxnfac, m, fframs )
+            call zzdynvac ( inname, infram, kwtfrm, mxnfac, n, tframs )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            IF ( N .NE. M ) THEN
+            if ( n .ne. m ) then
 
-               CALL SETMSG ( 'Definition of product ' &
+               call setmsg ( 'Definition of product ' &
                //            'parameterized dynamic frame # ' &
                //            'has # "from" frames and # "to" ' &
                //            'frames. These counts must match.' )
-               CALL ERRCH  ( '#',  INNAME                       )
-               CALL ERRINT ( '#',  M                            )
-               CALL ERRINT ( '#',  N                            )
-               CALL SIGERR ( 'SPICE(BADFRAMECOUNT)'             )
-               CALL CHKOUT ( RNAME                              )
-               RETURN
+               call errch  ( '#',  inname                       )
+               call errint ( '#',  m                            )
+               call errint ( '#',  n                            )
+               call sigerr ( 'SPICE(BADFRAMECOUNT)'             )
+               call chkout ( rname                              )
+               return
 
-            END IF
+            end if
 
 !
 !           The product of the factors is the transformation from the
@@ -2116,75 +2116,75 @@
 !           Compute the inverse of the product of the factors; place
 !           the result in XFORM.
 !
-            CALL NAMFRM ( FFRAMS(1), FROMID )
-            CALL NAMFRM ( TFRAMS(1), TOID   )
+            call namfrm ( fframs(1), fromid )
+            call namfrm ( tframs(1), toid   )
 
-            CALL ZZFRMCH1 ( TOID, FROMID, T0, XFORM )
+            call zzfrmch1 ( toid, fromid, t0, xform )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            DO I = 2, N
+            do i = 2, n
 
-               CALL MOVED  ( XFORM, 36, XFTEMP )
+               call moved  ( xform, 36, xftemp )
 
-               CALL NAMFRM ( FFRAMS(I), FROMID )
-               CALL NAMFRM ( TFRAMS(I), TOID   )
+               call namfrm ( fframs(i), fromid )
+               call namfrm ( tframs(i), toid   )
 
-               CALL ZZFRMCH1 ( TOID, FROMID, T0, XFORM )
+               call zzfrmch1 ( toid, fromid, t0, xform )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               CALL MXMG  ( XFORM, XFTEMP, 6, 6, 6, XOUT  )
-               CALL MOVED ( XOUT,  36,              XFORM )
+               call mxmg  ( xform, xftemp, 6, 6, 6, xout  )
+               call moved ( xout,  36,              xform )
 
-            END DO
+            end do
 
 
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Dynamic frame family # (in definition of '// &
+            call setmsg ( 'Dynamic frame family # (in definition of '// &
                           'frame #) is not supported. '              // &
                           'This situation is usually caused by '     // &
                           'an error in a frame kernel in which '     // &
                           'the frame is defined.'                    )
-            CALL ERRCH  ( '#',  DYNFAM                               )
-            CALL ERRCH  ( '#',  INNAME                               )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-            CALL CHKOUT ( RNAME                                      )
-            RETURN
+            call errch  ( '#',  dynfam                               )
+            call errch  ( '#',  inname                               )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+            call chkout ( rname                                      )
+            return
 
-         END IF
+         end if
 !
 !        This is the end of the IF block that processes the
 !        parameterized dynamic frame families.
 !
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Dynamic frame style # (in definition of ' // &
+         call setmsg ( 'Dynamic frame style # (in definition of ' // &
                        'frame #) is not supported. '              // &
                        'This situation is usually caused by '     // &
                        'an error in a frame kernel in which '     // &
                        'the frame is defined.'                    )
-         CALL ERRCH  ( '#',  DYNSTL                               )
-         CALL ERRCH  ( '#',  INNAME                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  dynstl                               )
+         call errch  ( '#',  inname                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     At this point XFORM is the state transformation matrix mapping
@@ -2194,22 +2194,22 @@
 !     zero derivative with respect to any inertial frame. Set the
 !     derivative block accordingly.
 !
-      IF ( INERT ) THEN
+      if ( inert ) then
 !
 !        See whether the base frame is inertial.
 !
-         CALL IRFNUM ( BASNAM, J )
+         call irfnum ( basnam, j )
 
-         IF ( J .GT. 0 ) THEN
+         if ( j .gt. 0 ) then
 !
 !           The base frame is  a recognized inertial frame.  Zero
 !           out the derivative block.
 !
-            DO I = 1, 3
-               CALL CLEARD ( 3, XFORM(4,I) )
-            END DO
+            do i = 1, 3
+               call cleard ( 3, xform(4,i) )
+            end do
 
-         ELSE
+         else
 !
 !           The base frame is *not* a recognized inertial frame.
 !
@@ -2218,18 +2218,18 @@
 !           this matrix.  Convert the resulting matrix to the state
 !           transformation from the defined frame to the output frame.
 !
-            CALL ZZFRMCH1 ( BASFRM, J2000, T0,      XF2000 )
+            call zzfrmch1 ( basfrm, j2000, t0,      xf2000 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            CALL MXMG     ( XF2000, XFORM, 6, 6, 6, XFTEMP )
+            call mxmg     ( xf2000, xform, 6, 6, 6, xftemp )
 
-            DO I = 1, 3
-               CALL CLEARD ( 3, XFTEMP(4,I) )
-            END DO
+            do i = 1, 3
+               call cleard ( 3, xftemp(4,i) )
+            end do
 
 !
 !           XFTEMP now represents the transformation from a
@@ -2242,33 +2242,33 @@
 !           derivative block of XFORM with the derivative block
 !           of the "inertial" transformation.
 !
-            CALL INVSTM ( XF2000, XFINV )
-            CALL MXMG   ( XFINV,  XFTEMP, 6, 6, 6, XOUT )
+            call invstm ( xf2000, xfinv )
+            call mxmg   ( xfinv,  xftemp, 6, 6, 6, xout )
 
-            DO I = 1, 3
-               CALL VEQU ( XOUT(4,I), XFORM(4,I) )
-            END DO
+            do i = 1, 3
+               call vequ ( xout(4,i), xform(4,i) )
+            end do
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the frame is frozen, zero out the derivative block of the
 !     transformation matrix.
 !
-      IF ( FROZEN ) THEN
+      if ( frozen ) then
 
-         DO I = 1, 3
-            CALL CLEARD ( 3, XFORM(4,I) )
-         END DO
+         do i = 1, 3
+            call cleard ( 3, xform(4,i) )
+         end do
 
-      END IF
+      end if
 
 !
 !     XFORM and BASFRM are set.
 !
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

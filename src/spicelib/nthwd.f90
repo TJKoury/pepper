@@ -1,6 +1,6 @@
 !$Procedure NTHWD ( N'th word in a character string )
 
-      SUBROUTINE NTHWD ( STRING, NTH, WORD, LOC )
+      subroutine nthwd ( string, nth, word, loc )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      INTEGER          NTH
-      CHARACTER*(*)    WORD
-      INTEGER          LOC
+      character*(*)    string
+      integer          nth
+      character*(*)    word
+      integer          loc
 
 ! $ Brief_I/O
 !
@@ -225,33 +225,33 @@
 !
 !     Local variables
 !
-      INTEGER          N
-      INTEGER          I
-      INTEGER          LENGTH
+      integer          n
+      integer          i
+      integer          length
 
-      LOGICAL          LOOP
+      logical          loop
 
 
 
 !
 !     Trivial cases first. Blank STRING? Nonpositive NTH?
 !
-      IF ( STRING .EQ. ' ' .OR. NTH .LT. 1 ) THEN
+      if ( string .eq. ' ' .or. nth .lt. 1 ) then
 
-         WORD = ' '
-         LOC  =  0
-         RETURN
+         word = ' '
+         loc  =  0
+         return
 
-      END IF
+      end if
 
 !
 !     Skip leading blanks.
 !
-      LOC = 1
+      loc = 1
 
-      DO WHILE ( STRING(LOC:LOC) .EQ. ' ' )
-         LOC = LOC + 1
-      END DO
+      do while ( string(loc:loc) .eq. ' ' )
+         loc = loc + 1
+      end do
 
 !
 !     If we wanted the first word, we have the location. Otherwise,
@@ -262,73 +262,73 @@
 !     N is the number of words found so far.
 !     I is the current location in STRING.
 !
-      N      = 1
-      I      = LOC
-      LENGTH = LEN ( STRING )
+      n      = 1
+      i      = loc
+      length = len ( string )
 
-      DO WHILE ( I .LT. LENGTH .AND. N .LT. NTH )
+      do while ( i .lt. length .and. n .lt. nth )
 
-         I = I + 1
+         i = i + 1
 
 !
 !        Blank signals end of the current word.
 !
-         IF ( STRING(I:I) .EQ. ' ' ) THEN
+         if ( string(i:i) .eq. ' ' ) then
 
 !
 !           Skip ahead to the next one.  The logic ensures no
 !           evaluation of STRING(I:I) if I > LEN(STRING).
 !
-            LOOP = I .LE. LENGTH
-            IF( LOOP ) THEN
-               LOOP = LOOP .AND. STRING(I:I) .EQ. ' '
-            END IF
+            loop = i .le. length
+            if( loop ) then
+               loop = loop .and. string(i:i) .eq. ' '
+            end if
 
-            DO WHILE ( LOOP )
-               I = I + 1
+            do while ( loop )
+               i = i + 1
 
-               IF( I .GT. LENGTH ) THEN
-                  LOOP = .FALSE.
-               ELSE IF ( STRING(I:I) .NE. ' ' ) THEN
-                  LOOP = .FALSE.
-               ELSE
-                  LOOP = .TRUE.
-               END IF
+               if( i .gt. length ) then
+                  loop = .false.
+               else if ( string(i:i) .ne. ' ' ) then
+                  loop = .false.
+               else
+                  loop = .true.
+               end if
 
-            END DO
+            end do
 
 !
 !           If not at the end of the string, we have another word.
 !
-            IF ( I .LE. LENGTH ) THEN
-               N   = N + 1
-               LOC = I
-            END IF
+            if ( i .le. length ) then
+               n   = n + 1
+               loc = i
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Couldn't find enough words? Return blank and zero.
 !
-      IF ( N .LT. NTH ) THEN
-         WORD = ' '
-         LOC  =  0
+      if ( n .lt. nth ) then
+         word = ' '
+         loc  =  0
 
 !
 !     Otherwise, find the rest of WORD (it continues until the next
 !     blank), and return the current LOC.
 !
-      ELSE
-         I = INDEX ( STRING(LOC: ), ' ' )
+      else
+         i = index ( string(loc: ), ' ' )
 
-         IF ( I .EQ. 0 ) THEN
-            WORD = STRING(LOC: )
-         ELSE
-            WORD = STRING(LOC:LOC+I-1)
-         END IF
-      END IF
+         if ( i .eq. 0 ) then
+            word = string(loc: )
+         else
+            word = string(loc:loc+i-1)
+         end if
+      end if
 
-      RETURN
-      END
+      return
+      end

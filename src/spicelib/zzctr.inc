@@ -24,8 +24,8 @@
 !
 !-&
 
-      INTEGER               CTRSIZ
-      PARAMETER           ( CTRSIZ = 2 )
+      integer               ctrsiz
+      parameter           ( ctrsiz = 2 )
 
 !
 !     End of include file.

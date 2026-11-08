@@ -1,9 +1,9 @@
 !$Procedure DSKXSI (DSK, ray-surface intercept with source information)
 
-      SUBROUTINE DSKXSI ( PRI,    TARGET, NSURF,  SRFLST, ET, &
-                          FIXREF, VERTEX, RAYDIR, MAXD,   MAXI, &
-                          XPT,    HANDLE, DLADSC, DSKDSC, DC, &
-                          IC,     FOUND                        )
+      subroutine dskxsi ( pri,    target, nsurf,  srflst, et, &
+                          fixref, vertex, raydir, maxd,   maxi, &
+                          xpt,    handle, dladsc, dskdsc, dc, &
+                          ic,     found                        )
 
 ! $ Abstract
 !
@@ -31,31 +31,31 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsk.inc'
-      INCLUDE 'dsktol.inc'
-      INCLUDE 'dsksrc.inc'
-      INCLUDE 'srftrn.inc'
-      INCLUDE 'zzctr.inc'
+      include 'dsk.inc'
+      include 'dsktol.inc'
+      include 'dsksrc.inc'
+      include 'srftrn.inc'
+      include 'zzctr.inc'
 
-      LOGICAL               PRI
-      CHARACTER*(*)         TARGET
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      INTEGER               MAXD
-      INTEGER               MAXI
-      DOUBLE PRECISION      XPT    ( 3 )
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      DOUBLE PRECISION      DSKDSC ( * )
-      DOUBLE PRECISION      DC     ( * )
-      INTEGER               IC     ( * )
-      LOGICAL               FOUND
+      logical               pri
+      character*(*)         target
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      et
+      character*(*)         fixref
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      integer               maxd
+      integer               maxi
+      double precision      xpt    ( 3 )
+      integer               handle
+      integer               dladsc ( * )
+      double precision      dskdsc ( * )
+      double precision      dc     ( * )
+      integer               ic     ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -823,241 +823,241 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    PRVFRM
-      CHARACTER*(BDNMLN)    SVTNAM
+      character*(frnmln)    prvfrm
+      character*(bdnmln)    svtnam
 
-      INTEGER               FIXFID
-      INTEGER               FRMCTR ( CTRSIZ )
-      INTEGER               FXCENT
-      INTEGER               FXCLSS
-      INTEGER               FXTPID
-      INTEGER               PRVTCD
-      INTEGER               SVTCDE
-      INTEGER               TRGCDE
-      INTEGER               TRGCTR ( CTRSIZ )
+      integer               fixfid
+      integer               frmctr ( ctrsiz )
+      integer               fxcent
+      integer               fxclss
+      integer               fxtpid
+      integer               prvtcd
+      integer               svtcde
+      integer               trgcde
+      integer               trgctr ( ctrsiz )
 
-      LOGICAL               FIRST
-      LOGICAL               FRMFND
-      LOGICAL               NEWFRM
-      LOGICAL               NEWTRG
-      LOGICAL               SVTFND
-      LOGICAL               TRGFND
-      LOGICAL               UPDATE
+      logical               first
+      logical               frmfnd
+      logical               newfrm
+      logical               newtrg
+      logical               svtfnd
+      logical               trgfnd
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  FIXFID
-      SAVE                  FRMCTR
-      SAVE                  PRVFRM
-      SAVE                  PRVTCD
-      SAVE                  SVTCDE
-      SAVE                  SVTFND
-      SAVE                  SVTNAM
-      SAVE                  TRGCDE
-      SAVE                  TRGCTR
+      save                  first
+      save                  fixfid
+      save                  frmctr
+      save                  prvfrm
+      save                  prvtcd
+      save                  svtcde
+      save                  svtfnd
+      save                  svtnam
+      save                  trgcde
+      save                  trgctr
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  PRVFRM / ' '    /
-      DATA                  PRVTCD / 0      /
+      data                  first  / .true. /
+      data                  prvfrm / ' '    /
+      data                  prvtcd / 0      /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKXSI' )
+      call chkin ( 'DSKXSI' )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( TRGCTR )
-         CALL ZZCTRUIN( FRMCTR )
+         call zzctruin( trgctr )
+         call zzctruin( frmctr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKXSI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKXSI' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Reject PRI if not set properly.
 !
-      IF ( PRI ) THEN
+      if ( pri ) then
 
-         CALL SETMSG ( 'In the N0066 SPICE Toolkit, PRI must be ' &
+         call setmsg ( 'In the N0066 SPICE Toolkit, PRI must be ' &
          //            'set to .FALSE., indicating that an ' &
          //            'unprioritized search is to be performed.' )
-         CALL SIGERR ( 'SPICE(BADPRIORITYSPEC)'                   )
-         CALL CHKOUT ( 'DSKXSI'                                   )
-         RETURN
+         call sigerr ( 'SPICE(BADPRIORITYSPEC)'                   )
+         call chkout ( 'DSKXSI'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Reject NSURF if not set properly. Zero is a valid value.
 !
-      IF ( NSURF .LT. 0 ) THEN
+      if ( nsurf .lt. 0 ) then
 
-         CALL SETMSG ( 'The surface count NSURF must be non-negative ' &
+         call setmsg ( 'The surface count NSURF must be non-negative ' &
          //            'but was #.'                                   )
-         CALL ERRINT ( '#',  NSURF                                    )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                          )
-         CALL CHKOUT ( 'DSKXSI'                                       )
-         RETURN
+         call errint ( '#',  nsurf                                    )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
+         call chkout ( 'DSKXSI'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Check output array sizes.
 !
-      IF (  ( MAXD .LT. DCSIZE ) .OR. ( MAXI .LT. ICSIZE )  ) THEN
+      if (  ( maxd .lt. dcsize ) .or. ( maxi .lt. icsize )  ) then
 
-         CALL SETMSG ( 'Output array size MAXD must be at least #; ' &
+         call setmsg ( 'Output array size MAXD must be at least #; ' &
          //            'output array size MAXI must be at least #. ' &
          //            'Actual sizes were # and # respectively.'    )
-         CALL ERRINT ( '#',  DCSIZE                                 )
-         CALL ERRINT ( '#',  ICSIZE                                 )
-         CALL ERRINT ( '#',  MAXD                                   )
-         CALL ERRINT ( '#',  MAXI                                   )
-         CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'                       )
-         CALL CHKOUT ( 'DSKXSI'                                     )
-         RETURN
+         call errint ( '#',  dcsize                                 )
+         call errint ( '#',  icsize                                 )
+         call errint ( '#',  maxd                                   )
+         call errint ( '#',  maxi                                   )
+         call sigerr ( 'SPICE(ARRAYTOOSMALL)'                       )
+         call chkout ( 'DSKXSI'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and reference frame.
 !
-      CALL ZZBODS2C ( TRGCTR, SVTNAM, SVTCDE, SVTFND, &
-                      TARGET, TRGCDE, TRGFND         )
+      call zzbods2c ( trgctr, svtnam, svtcde, svtfnd, &
+                      target, trgcde, trgfnd         )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKXSI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKXSI' )
+         return
+      end if
 
-      IF ( .NOT. TRGFND ) THEN
+      if ( .not. trgfnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'DSKXSI'                                   )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'DSKXSI'                                   )
+         return
 
-      END IF
+      end if
 
 
-      NEWFRM = ( FIXREF .NE. PRVFRM ) .OR. FIRST
-      NEWTRG = ( TRGCDE .NE. PRVTCD ) .OR. FIRST
+      newfrm = ( fixref .ne. prvfrm ) .or. first
+      newtrg = ( trgcde .ne. prvtcd ) .or. first
 
 !
 !     Get the frame ID if the pool state has changed. The
 !     first call to ZZPCKTRCK will indicate an update.
 !
-      CALL ZZPCTRCK ( FRMCTR, UPDATE )
+      call zzpctrck ( frmctr, update )
 
-      IF ( UPDATE .OR. NEWFRM .OR. NEWTRG ) THEN
+      if ( update .or. newfrm .or. newtrg ) then
 
-         CALL NAMFRM ( FIXREF, FIXFID )
+         call namfrm ( fixref, fixfid )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKXSI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKXSI' )
+            return
+         end if
 
-         IF ( FIXFID .EQ. 0 ) THEN
+         if ( fixfid .eq. 0 ) then
 
-            CALL SETMSG ( 'Reference frame # is not recognized by ' &
+            call setmsg ( 'Reference frame # is not recognized by ' &
             //            'the SPICE frame subsystem. Possibly ' &
             //            'a required frame definition kernel has ' &
             //            'not been loaded.'                        )
-            CALL ERRCH  ( '#',  FIXREF                              )
-            CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                   )
-            CALL CHKOUT ( 'DSKXSI'                                  )
-            RETURN
+            call errch  ( '#',  fixref                              )
+            call sigerr ( 'SPICE(IDCODENOTFOUND)'                   )
+            call chkout ( 'DSKXSI'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Determine the attributes of the frame designated by FIXREF.
 !
-         CALL FRINFO ( FIXFID, FXCENT, FXCLSS, FXTPID, FRMFND )
+         call frinfo ( fixfid, fxcent, fxclss, fxtpid, frmfnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKXSI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKXSI' )
+            return
+         end if
 
-         IF ( .NOT. FRMFND ) THEN
+         if ( .not. frmfnd ) then
 
-            CALL SETMSG ( 'Attributes for reference frame # ' &
+            call setmsg ( 'Attributes for reference frame # ' &
             //            'could not be obtained from ' &
             //            'the SPICE frame subsystem. Possibly ' &
             //            'a required frame definition kernel has ' &
             //            'not been loaded.'                        )
-            CALL ERRCH  ( '#',  FIXREF                              )
-            CALL SIGERR ( 'SPICE(NOFRAMEINFO)'                      )
-            CALL CHKOUT ( 'DSKXSI'                                  )
-            RETURN
+            call errch  ( '#',  fixref                              )
+            call sigerr ( 'SPICE(NOFRAMEINFO)'                      )
+            call chkout ( 'DSKXSI'                                  )
+            return
 
-         END IF
+         end if
 !
 !        Make sure that FIXREF is centered at the target body's center.
 !
-         IF ( FXCENT .NE. TRGCDE ) THEN
+         if ( fxcent .ne. trgcde ) then
 
-            CALL SETMSG ( 'Reference frame # is not centered at the ' &
+            call setmsg ( 'Reference frame # is not centered at the ' &
             //            'target body #. The ID code of the frame ' &
             //            'center is #.'                             )
-            CALL ERRCH  ( '#',  FIXREF                               )
-            CALL ERRCH  ( '#',  TARGET                               )
-            CALL ERRINT ( '#',  FXCENT                               )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-            CALL CHKOUT ( 'DSKXSI'                                   )
-            RETURN
+            call errch  ( '#',  fixref                               )
+            call errch  ( '#',  target                               )
+            call errint ( '#',  fxcent                               )
+            call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+            call chkout ( 'DSKXSI'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        We have a valid frame at this point. Save the name.
 !
-         FIRST  = .FALSE.
-         PRVFRM = FIXREF
+         first  = .false.
+         prvfrm = fixref
 
 !
 !        Update the previous target ID code as well.
 !
-         PRVTCD = TRGCDE
+         prvtcd = trgcde
 
-      END IF
+      end if
 
 !
 !     TRGCDE and FIXFID are set.
@@ -1065,11 +1065,11 @@
 !
 !     Perform the intercept computation.
 !
-      CALL ZZSBFXRI ( TRGCDE, NSURF,  SRFLST, ET, &
-                      FIXFID, VERTEX, RAYDIR, XPT, HANDLE, &
-                      DLADSC, DSKDSC, DC,     IC,  FOUND   )
+      call zzsbfxri ( trgcde, nsurf,  srflst, et, &
+                      fixfid, vertex, raydir, xpt, handle, &
+                      dladsc, dskdsc, dc,     ic,  found   )
 
 
-      CALL CHKOUT ( 'DSKXSI' )
-      RETURN
-      END
+      call chkout ( 'DSKXSI' )
+      return
+      end

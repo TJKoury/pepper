@@ -1,6 +1,6 @@
 !$Procedure DASLLA ( DAS, last logical addresses )
 
-      SUBROUTINE DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      subroutine daslla ( handle, lastc, lastd, lasti )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
+      integer               handle
+      integer               lastc
+      integer               lastd
+      integer               lasti
 
 ! $ Brief_I/O
 !
@@ -202,61 +202,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters.
 !
-      INTEGER               CHR
-      PARAMETER           ( CHR    =  1  )
+      integer               chr
+      parameter           ( chr    =  1  )
 
-      INTEGER               DP
-      PARAMETER           ( DP     =  2  )
+      integer               dp
+      parameter           ( dp     =  2  )
 
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
 !
 !     Local variables
 !
-      INTEGER               FREE
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
+      integer               free
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASLLA' )
+      call chkin ( 'DASLLA' )
 
 
 !
 !     The file summary for the indicated DAS file contains all of the
 !     information we need.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      LASTC = LASTLA(CHR)
-      LASTD = LASTLA(DP )
-      LASTI = LASTLA(INT)
+      lastc = lastla(chr)
+      lastd = lastla(dp )
+      lasti = lastla(int)
 
-      CALL CHKOUT ( 'DASLLA' )
-      RETURN
-      END
+      call chkout ( 'DASLLA' )
+      return
+      end

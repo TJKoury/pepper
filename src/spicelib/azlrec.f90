@@ -1,6 +1,6 @@
 !$Procedure AZLREC ( AZ/EL to rectangular coordinates )
 
-      SUBROUTINE AZLREC ( RANGE, AZ, EL, AZCCW, ELPLSZ, RECTAN )
+      subroutine azlrec ( range, az, el, azccw, elplsz, rectan )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RANGE
-      DOUBLE PRECISION   AZ
-      DOUBLE PRECISION   EL
-      LOGICAL            AZCCW
-      LOGICAL            ELPLSZ
-      DOUBLE PRECISION   RECTAN ( 3 )
+      double precision   range
+      double precision   az
+      double precision   el
+      logical            azccw
+      logical            elplsz
+      double precision   rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -583,14 +583,14 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      AZIMUT
-      DOUBLE PRECISION      ELEVAT
+      double precision      azimut
+      double precision      elevat
 
 !
 !     Error free routine. No check-in.
 !
-      AZIMUT = AZ
-      ELEVAT = EL
+      azimut = az
+      elevat = el
 
 !
 !     We are going to use RADREC to convert the azimuth and elevation
@@ -605,7 +605,7 @@
 !     If AZCCW is set to .FALSE. the azimuth is measured clockwise
 !     from the +X axis about the +Z axis.
 !
-      IF ( .NOT. AZCCW ) THEN
+      if ( .not. azccw ) then
 !
 !        We can simply negate AZ; we don't need to map it into the
 !        range [0, 2*pi]. LATREC will accept it as is.
@@ -614,27 +614,27 @@
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         IF ( AZ .NE. 0.D0 ) THEN
-            AZIMUT = -AZ
-         END IF
+         if ( az .ne. 0.d0 ) then
+            azimut = -az
+         end if
 
-      END IF
+      end if
 
 !
 !     If ELPLSZ is set to .FALSE. the elevation is measured positive
 !     from the XY plane towards the -Z axis.
 !
-      IF ( .NOT. ELPLSZ ) THEN
+      if ( .not. elplsz ) then
 !
 !        Negate only non-zero values of EL. Avoid creating
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         IF ( EL .NE. 0.D0 ) THEN
-            ELEVAT = -EL
-         END IF
+         if ( el .ne. 0.d0 ) then
+            elevat = -el
+         end if
 
-      END IF
+      end if
 
 !
 !     In principle, we could call the subroutine RADREC to convert AZ
@@ -643,7 +643,7 @@
 !
 !     We rely on LATREC to handle the case of RANGE < 0.
 !
-      CALL LATREC ( RANGE, AZIMUT, ELEVAT, RECTAN )
+      call latrec ( range, azimut, elevat, rectan )
 
-      RETURN
-      END
+      return
+      end

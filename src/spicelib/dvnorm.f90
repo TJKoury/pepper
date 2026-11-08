@@ -1,6 +1,6 @@
 !$Procedure DVNORM ( Derivative of vector norm )
 
-       DOUBLE PRECISION FUNCTION DVNORM( STATE )
+       double precision function dvnorm( state )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      STATE ( 6 )
+      double precision      state ( 6 )
 
 ! $ Brief_I/O
 !
@@ -230,30 +230,30 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      vdot
+      double precision      vnorm
 
 !
 !     Local Variables.
 !
-      DOUBLE PRECISION      XHAT ( 3 )
+      double precision      xhat ( 3 )
 
 !
 !     If "x" describes the zero vector, return zero as the derivative
 !     of the vector norm.
 !
-      IF ( VNORM( STATE(1) ) .EQ. 0.D0 ) THEN
+      if ( vnorm( state(1) ) .eq. 0.d0 ) then
 
-         DVNORM = 0.D0
-         RETURN
+         dvnorm = 0.d0
+         return
 
-      END IF
+      end if
 
 !
 !     Construct a unit vector from the x vector data
 !     in STATE.
 !
-      CALL VHAT( STATE(1), XHAT )
+      call vhat( state(1), xhat )
 
 !
 !     Project the velocity components onto the XHAT vector.
@@ -263,7 +263,7 @@
 !        ds           ||x||
 !
 
-      DVNORM = VDOT( STATE(4), XHAT )
+      dvnorm = vdot( state(4), xhat )
 
-      RETURN
-      END
+      return
+      end

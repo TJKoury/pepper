@@ -37,99 +37,99 @@
 !        WHERE
 !
 
-      INTEGER               KWLEN
-      PARAMETER           ( KWLEN  =   32 )
+      integer               kwlen
+      parameter           ( kwlen  =   32 )
 
-      INTEGER               NKEYWD
-      PARAMETER           ( NKEYWD =   29 )
+      integer               nkeywd
+      parameter           ( nkeywd =   29 )
 
 
-      INTEGER               KWALL
-      PARAMETER           ( KWALL  =          1 )
+      integer               kwall
+      parameter           ( kwall  =          1 )
 
-      INTEGER               KWAND
-      PARAMETER           ( KWAND  = KWALL  + 1 )
+      integer               kwand
+      parameter           ( kwand  = kwall  + 1 )
 
-      INTEGER               KWASND
-      PARAMETER           ( KWASND = KWAND  + 1 )
+      integer               kwasnd
+      parameter           ( kwasnd = kwand  + 1 )
 
-      INTEGER               KWAVG
-      PARAMETER           ( KWAVG  = KWASND + 1 )
+      integer               kwavg
+      parameter           ( kwavg  = kwasnd + 1 )
 
-      INTEGER               KWBETW
-      PARAMETER           ( KWBETW = KWAVG  + 1 )
+      integer               kwbetw
+      parameter           ( kwbetw = kwavg  + 1 )
 
-      INTEGER               KWBY
-      PARAMETER           ( KWBY   = KWBETW + 1 )
+      integer               kwby
+      parameter           ( kwby   = kwbetw + 1 )
 
-      INTEGER               KWCNT
-      PARAMETER           ( KWCNT  = KWBY   + 1 )
+      integer               kwcnt
+      parameter           ( kwcnt  = kwby   + 1 )
 
-      INTEGER               KWDSND
-      PARAMETER           ( KWDSND = KWCNT  + 1 )
+      integer               kwdsnd
+      parameter           ( kwdsnd = kwcnt  + 1 )
 
-      INTEGER               KWDSTN
-      PARAMETER           ( KWDSTN = KWDSND + 1 )
+      integer               kwdstn
+      parameter           ( kwdstn = kwdsnd + 1 )
 
-      INTEGER               KWEQ
-      PARAMETER           ( KWEQ   = KWDSTN + 1 )
+      integer               kweq
+      parameter           ( kweq   = kwdstn + 1 )
 
-      INTEGER               KWFROM
-      PARAMETER           ( KWFROM = KWEQ   + 1 )
+      integer               kwfrom
+      parameter           ( kwfrom = kweq   + 1 )
 
-      INTEGER               KWGE
-      PARAMETER           ( KWGE   = KWFROM + 1 )
+      integer               kwge
+      parameter           ( kwge   = kwfrom + 1 )
 
-      INTEGER               KWGRP
-      PARAMETER           ( KWGRP  = KWGE   + 1 )
+      integer               kwgrp
+      parameter           ( kwgrp  = kwge   + 1 )
 
-      INTEGER               KWGT
-      PARAMETER           ( KWGT   = KWGRP  + 1 )
+      integer               kwgt
+      parameter           ( kwgt   = kwgrp  + 1 )
 
-      INTEGER               KWHAV
-      PARAMETER           ( KWHAV  = KWGT   + 1 )
+      integer               kwhav
+      parameter           ( kwhav  = kwgt   + 1 )
 
-      INTEGER               KWIS
-      PARAMETER           ( KWIS   = KWHAV  + 1 )
+      integer               kwis
+      parameter           ( kwis   = kwhav  + 1 )
 
-      INTEGER               KWLE
-      PARAMETER           ( KWLE   = KWIS   + 1 )
+      integer               kwle
+      parameter           ( kwle   = kwis   + 1 )
 
-      INTEGER               KWLIKE
-      PARAMETER           ( KWLIKE = KWLE   + 1 )
+      integer               kwlike
+      parameter           ( kwlike = kwle   + 1 )
 
-      INTEGER               KWLT
-      PARAMETER           ( KWLT   = KWLIKE + 1 )
+      integer               kwlt
+      parameter           ( kwlt   = kwlike + 1 )
 
-      INTEGER               KWMAX
-      PARAMETER           ( KWMAX  = KWLT   + 1 )
+      integer               kwmax
+      parameter           ( kwmax  = kwlt   + 1 )
 
-      INTEGER               KWMIN
-      PARAMETER           ( KWMIN  = KWMAX  + 1 )
+      integer               kwmin
+      parameter           ( kwmin  = kwmax  + 1 )
 
-      INTEGER               KWNE
-      PARAMETER           ( KWNE   = KWMIN  + 1 )
+      integer               kwne
+      parameter           ( kwne   = kwmin  + 1 )
 
-      INTEGER               KWNOT
-      PARAMETER           ( KWNOT  = KWNE   + 1 )
+      integer               kwnot
+      parameter           ( kwnot  = kwne   + 1 )
 
-      INTEGER               KWNULL
-      PARAMETER           ( KWNULL = KWNOT  + 1 )
+      integer               kwnull
+      parameter           ( kwnull = kwnot  + 1 )
 
-      INTEGER               KWOR
-      PARAMETER           ( KWOR   = KWNULL + 1 )
+      integer               kwor
+      parameter           ( kwor   = kwnull + 1 )
 
-      INTEGER               KWORDR
-      PARAMETER           ( KWORDR = KWOR   + 1 )
+      integer               kwordr
+      parameter           ( kwordr = kwor   + 1 )
 
-      INTEGER               KWSEL
-      PARAMETER           ( KWSEL  = KWORDR + 1 )
+      integer               kwsel
+      parameter           ( kwsel  = kwordr + 1 )
 
-      INTEGER               KWSUM
-      PARAMETER           ( KWSUM  = KWSEL  + 1 )
+      integer               kwsum
+      parameter           ( kwsum  = kwsel  + 1 )
 
-      INTEGER               KWWHER
-      PARAMETER           ( KWWHER = KWSUM  + 1 )
+      integer               kwwher
+      parameter           ( kwwher = kwsum  + 1 )
 
 !
 !     End Include Section:  EK Keyword Code Parameters

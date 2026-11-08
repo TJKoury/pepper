@@ -1,6 +1,6 @@
 !$Procedure GETLUN ( Get a free logical unit )
 
-      SUBROUTINE GETLUN ( UNIT )
+      subroutine getlun ( unit )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          UNIT
+      integer          unit
 
 ! $ Brief_I/O
 !
@@ -177,56 +177,56 @@
 !
 !     Spicelib functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'GETLUN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'GETLUN' )
+      end if
 
 
 
 !
 !     Find a free logical unit, if there's one to be had.
 !
-      CALL FNDLUN ( UNIT )
+      call fndlun ( unit )
 
 
 
-      IF ( UNIT .EQ. 0 ) THEN
+      if ( unit .eq. 0 ) then
 !
 !        There are no free units to be had.  C'est la vie.  Signal an
 !        error.
 !
-         CALL SETMSG ( 'No free logical units are available.' )
-         CALL SIGERR ( 'SPICE(NOFREELOGICALUNIT)' )
-         CALL CHKOUT ( 'GETLUN' )
-         RETURN
+         call setmsg ( 'No free logical units are available.' )
+         call sigerr ( 'SPICE(NOFREELOGICALUNIT)' )
+         call chkout ( 'GETLUN' )
+         return
 
-      ELSE IF ( UNIT .LT. 0 ) THEN
+      else if ( unit .lt. 0 ) then
 !
 !        There are no free units to be had.  In this case, we know the
 !        "INQUIRE" attempted by FNDLUN failed.  Assign 0 to the unit
 !        number, and signal an error.
 !
 
-         CALL SETMSG ( 'INQUIRE iostat was #.' )
-         CALL ERRINT ( '#', - UNIT )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)' )
+         call setmsg ( 'INQUIRE iostat was #.' )
+         call errint ( '#', - unit )
+         call sigerr ( 'SPICE(INQUIREFAILED)' )
 
-         UNIT = 0
+         unit = 0
 
-         CALL CHKOUT ( 'GETLUN' )
-         RETURN
+         call chkout ( 'GETLUN' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'GETLUN' )
-      RETURN
-      END
+      call chkout ( 'GETLUN' )
+      return
+      end

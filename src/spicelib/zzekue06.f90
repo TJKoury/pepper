@@ -1,7 +1,7 @@
 !$Procedure      ZZEKUE06 ( EK, update column entry, class 6 )
 
-      SUBROUTINE ZZEKUE06 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  NVALS,   CVALS,  ISNULL  )
+      subroutine zzekue06 (  handle,  segdsc,  coldsc, &
+                             recptr,  nvals,   cvals,  isnull  )
 
 ! $ Abstract
 !
@@ -19,20 +19,20 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               NVALS
-      CHARACTER*(*)         CVALS
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               nvals
+      character*(*)         cvals
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -128,36 +128,36 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKUE06' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKUE06' )
+      end if
 
 !
 !     Get rid of the old column entry first.
 !
-      CALL ZZEKDE06 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      call zzekde06 ( handle, segdsc, coldsc, recptr )
 
-      IF ( FAILED() ) THEN
-         CALL  CHKOUT ( 'ZZEKUE06' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call  chkout ( 'ZZEKUE06' )
+         return
+      end if
 
 !
 !     We've reduced the problem to a solved one:  that of adding
 !     a column entry.
 !
-      CALL ZZEKAD06 (  HANDLE,  SEGDSC,  COLDSC, &
-                       RECPTR,  NVALS,   CVALS,  ISNULL )
+      call zzekad06 (  handle,  segdsc,  coldsc, &
+                       recptr,  nvals,   cvals,  isnull )
 
 
-      CALL CHKOUT ( 'ZZEKUE06' )
-      RETURN
-      END
+      call chkout ( 'ZZEKUE06' )
+      return
+      end

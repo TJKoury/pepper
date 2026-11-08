@@ -1,7 +1,7 @@
 !$Procedure ZZPDTBOX (Bounding box for planetodetic volume element)
 
-      SUBROUTINE ZZPDTBOX ( BOUNDS, CORPAR, CENTER, &
-                            LR,     LT,     LZ,     RADIUS )
+      subroutine zzpdtbox ( bounds, corpar, center, &
+                            lr,     lt,     lz,     radius )
 
 ! $ Abstract
 !
@@ -21,18 +21,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsktol.inc'
+      include 'dskdsc.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      LR
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LZ
-      DOUBLE PRECISION      RADIUS
+      double precision      bounds ( 2, 3 )
+      double precision      corpar ( * )
+      double precision      center ( 3 )
+      double precision      lr
+      double precision      lt
+      double precision      lz
+      double precision      radius
 
 ! $ Brief_I/O
 !
@@ -158,11 +158,11 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
+      double precision      halfpi
+      double precision      twopi
+      double precision      vnorm
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -171,53 +171,53 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BOTV   ( 3 )
-      DOUBLE PRECISION      DIAG   ( 3 )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      HDLON
-      DOUBLE PRECISION      INRAD
-      DOUBLE PRECISION      MAXABS
-      DOUBLE PRECISION      MAXALT
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MAXV   ( 3 )
-      DOUBLE PRECISION      MAXZ
-      DOUBLE PRECISION      MIDLON
-      DOUBLE PRECISION      MIDR
-      DOUBLE PRECISION      MINALT
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      MINV   ( 3 )
-      DOUBLE PRECISION      MINZ
-      DOUBLE PRECISION      OUTRAD
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      TOPV   ( 3 )
+      double precision      botv   ( 3 )
+      double precision      diag   ( 3 )
+      double precision      f
+      double precision      hdlon
+      double precision      inrad
+      double precision      maxabs
+      double precision      maxalt
+      double precision      maxlat
+      double precision      maxlon
+      double precision      maxv   ( 3 )
+      double precision      maxz
+      double precision      midlon
+      double precision      midr
+      double precision      minalt
+      double precision      minlat
+      double precision      minlon
+      double precision      minv   ( 3 )
+      double precision      minz
+      double precision      outrad
+      double precision      re
+      double precision      topv   ( 3 )
 
 !
 !     This routine uses discovery check-in. We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 
-      RE = CORPAR(1)
-      F  = CORPAR(2)
+      re = corpar(1)
+      f  = corpar(2)
 
 !
 !     The equatorial radius must be greater than zero.
 !
-      IF ( RE .LE. 0.0D0 ) THEN
+      if ( re .le. 0.0d0 ) then
 
-         CALL CHKIN  ( 'ZZPDTBOX'                                   )
-         CALL SETMSG ( 'Equatorial radius from CORPAR array was #.' )
-         CALL ERRDP  ( '#', RE                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                     )
-         CALL CHKOUT ( 'ZZPDTBOX'                                   )
-         RETURN
+         call chkin  ( 'ZZPDTBOX'                                   )
+         call setmsg ( 'Equatorial radius from CORPAR array was #.' )
+         call errdp  ( '#', re                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                     )
+         call chkout ( 'ZZPDTBOX'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -225,84 +225,84 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      IF ( F .GE. 1.D0 ) THEN
+      if ( f .ge. 1.d0 ) then
 
-         CALL CHKIN  ( 'ZZPDTBOX'                            )
-         CALL SETMSG ( 'Flattening coefficient from CORPAR ' &
+         call chkin  ( 'ZZPDTBOX'                            )
+         call setmsg ( 'Flattening coefficient from CORPAR ' &
          //            'array was #.'                        )
-         CALL ERRDP  ( '*', F                                )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-         CALL CHKOUT ( 'ZZPDTBOX'                            )
-         RETURN
+         call errdp  ( '*', f                                )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+         call chkout ( 'ZZPDTBOX'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Get local copies of the bounds of the volume element.
 !
-      MINLON = BOUNDS(1,1)
-      MAXLON = BOUNDS(2,1)
+      minlon = bounds(1,1)
+      maxlon = bounds(2,1)
 
-      IF ( MAXLON .LE. MINLON ) THEN
-         MAXLON = MAXLON + TWOPI()
-      END IF
+      if ( maxlon .le. minlon ) then
+         maxlon = maxlon + twopi()
+      end if
 
-      IF ( MAXLON .LE. MINLON) THEN
+      if ( maxlon .le. minlon) then
 
-         CALL CHKIN  ( 'ZZPDTBOX'                               )
-         CALL SETMSG ( 'Longitude bounds are #:#. Minimum ' &
+         call chkin  ( 'ZZPDTBOX'                               )
+         call setmsg ( 'Longitude bounds are #:#. Minimum ' &
          //            'longitude exceeds maximum by more than ' &
          //            '2 pi.'                                  )
-         CALL ERRDP  ( '#', MINLON                              )
-         CALL ERRDP  ( '#', BOUNDS(2,1)                         )
-         CALL SIGERR ( 'SPICE(BADLONGITUDERANGE)'               )
-         CALL CHKOUT ( 'ZZPDTBOX'                               )
-         RETURN
+         call errdp  ( '#', minlon                              )
+         call errdp  ( '#', bounds(2,1)                         )
+         call sigerr ( 'SPICE(BADLONGITUDERANGE)'               )
+         call chkout ( 'ZZPDTBOX'                               )
+         return
 
-      END IF
+      end if
 
-      MINLAT = BOUNDS(1,2)
-      MAXLAT = BOUNDS(2,2)
+      minlat = bounds(1,2)
+      maxlat = bounds(2,2)
 
-      MINALT = BOUNDS(1,3)
-      MAXALT = BOUNDS(2,3)
+      minalt = bounds(1,3)
+      maxalt = bounds(2,3)
 
-      IF ( MINLAT .GT. MAXLAT ) THEN
+      if ( minlat .gt. maxlat ) then
 
-         CALL CHKIN  ( 'ZZPDTBOX'                              )
-         CALL SETMSG ( 'Latitude bounds #:# are out of order.' )
-         CALL ERRDP  ( '#', MINLAT                             )
-         CALL ERRDP  ( '#', MAXLAT                             )
-         CALL SIGERR ( 'SPICE(BADLATITUDEBOUNDS)'              )
-         CALL CHKOUT ( 'ZZPDTBOX'                              )
-         RETURN
+         call chkin  ( 'ZZPDTBOX'                              )
+         call setmsg ( 'Latitude bounds #:# are out of order.' )
+         call errdp  ( '#', minlat                             )
+         call errdp  ( '#', maxlat                             )
+         call sigerr ( 'SPICE(BADLATITUDEBOUNDS)'              )
+         call chkout ( 'ZZPDTBOX'                              )
+         return
 
-      END IF
+      end if
 
-      IF ( MINLAT .LT. ( -HALFPI() - ANGMRG )  ) THEN
+      if ( minlat .lt. ( -halfpi() - angmrg )  ) then
 
-         CALL CHKIN  ( 'ZZPDTBOX'                               )
-         CALL SETMSG ( 'Minimum latitude # is less than -pi/2.' )
-         CALL ERRDP  ( '#', MINLAT                              )
-         CALL SIGERR ( 'SPICE(BADLATITUDERANGE)'                )
-         CALL CHKOUT ( 'ZZPDTBOX'                               )
-         RETURN
+         call chkin  ( 'ZZPDTBOX'                               )
+         call setmsg ( 'Minimum latitude # is less than -pi/2.' )
+         call errdp  ( '#', minlat                              )
+         call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
+         call chkout ( 'ZZPDTBOX'                               )
+         return
 
-      END IF
+      end if
 
-      IF ( MAXLAT .GT. ( HALFPI() + ANGMRG )  ) THEN
+      if ( maxlat .gt. ( halfpi() + angmrg )  ) then
 
-         CALL CHKIN  ( 'ZZPDTBOX'                               )
-         CALL SETMSG ( 'Maximum latitude # is more than -pi/2.' )
-         CALL ERRDP  ( '#', MAXLAT                              )
-         CALL SIGERR ( 'SPICE(BADLATITUDERANGE)'                )
-         CALL CHKOUT ( 'ZZPDTBOX'                               )
-         RETURN
+         call chkin  ( 'ZZPDTBOX'                               )
+         call setmsg ( 'Maximum latitude # is more than -pi/2.' )
+         call errdp  ( '#', maxlat                              )
+         call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
+         call chkout ( 'ZZPDTBOX'                               )
+         return
 
-      END IF
+      end if
 
-      MINLAT = MAX( MINLAT, -HALFPI() )
-      MAXLAT = MIN( MAXLAT,  HALFPI() )
+      minlat = max( minlat, -halfpi() )
+      maxlat = min( maxlat,  halfpi() )
 
 !
 !     Let INRAD and OUTRAD be, respectively, the radii of the
@@ -323,108 +323,108 @@
 !     surface of minimum altitude for which the absolute value of the
 !     latitude is maximum.
 !
-      IF ( MINLAT .GE. 0.D0 ) THEN
+      if ( minlat .ge. 0.d0 ) then
 
-         CALL GEOREC ( 0.D0, MINLAT, MAXALT, RE, F, MAXV )
-         CALL GEOREC ( 0.D0, MAXLAT, MINALT, RE, F, MINV )
+         call georec ( 0.d0, minlat, maxalt, re, f, maxv )
+         call georec ( 0.d0, maxlat, minalt, re, f, minv )
 
-         MAXV(3) = 0.D0
-         MINV(3) = 0.D0
+         maxv(3) = 0.d0
+         minv(3) = 0.d0
 
-         OUTRAD  = VNORM( MAXV )
-         INRAD   = VNORM( MINV )
+         outrad  = vnorm( maxv )
+         inrad   = vnorm( minv )
 
-      ELSE IF ( MAXLAT .LE. 0.D0 ) THEN
+      else if ( maxlat .le. 0.d0 ) then
 
-         CALL GEOREC ( 0.D0, MAXLAT, MAXALT, RE, F, MAXV )
-         CALL GEOREC ( 0.D0, MINLAT, MINALT, RE, F, MINV )
+         call georec ( 0.d0, maxlat, maxalt, re, f, maxv )
+         call georec ( 0.d0, minlat, minalt, re, f, minv )
 
-         MAXV(3) = 0.D0
-         MINV(3) = 0.D0
+         maxv(3) = 0.d0
+         minv(3) = 0.d0
 
-         OUTRAD  = VNORM( MAXV )
-         INRAD   = VNORM( MINV )
+         outrad  = vnorm( maxv )
+         inrad   = vnorm( minv )
 
-      ELSE
+      else
 
-         OUTRAD  = RE + MAXALT
+         outrad  = re + maxalt
 
-         MAXABS  = MAX( ABS(MAXLAT), ABS(MINLAT) )
+         maxabs  = max( abs(maxlat), abs(minlat) )
 
-         CALL GEOREC ( 0.D0, MAXABS, MINALT, RE, F, MINV )
+         call georec ( 0.d0, maxabs, minalt, re, f, minv )
 
-         MINV(3) = 0.D0
+         minv(3) = 0.d0
 
-         INRAD   = VNORM( MINV )
+         inrad   = vnorm( minv )
 
-      END IF
+      end if
 
 !
 !     Let MIDLON be the longitude of the midpoint of the element's
 !     longitude coverage. Let HDLON be one half of the extent of the
 !     longitude coverage.
 !
-      HDLON  = ( MAXLON - MINLON ) / 2
-      MIDLON =   MINLON + HDLON
+      hdlon  = ( maxlon - minlon ) / 2
+      midlon =   minlon + hdlon
 
 !
 !     LR is the length of the bounding box in the radial direction,
 !     where "radius" is defined as the distance from the Z axis.
 !
-      IF ( HDLON .LE. HALFPI() ) THEN
+      if ( hdlon .le. halfpi() ) then
 
-         LR = OUTRAD - ( INRAD * COS(HDLON) )
+         lr = outrad - ( inrad * cos(hdlon) )
 
-      ELSE
+      else
 
-         LR = ( 1.D0 - COS(HDLON) ) * OUTRAD
+         lr = ( 1.d0 - cos(hdlon) ) * outrad
 
-      END IF
+      end if
 
 !
 !     The tangential length of bounding box depends on the longitude
 !     extent. For any extent larger than Pi radians, the width
 !     is just that of the outer radius.
 !
-      IF ( HDLON .GT. HALFPI() ) THEN
+      if ( hdlon .gt. halfpi() ) then
 
-         LT = 2.D0 * OUTRAD
-      ELSE
-         LT = 2.D0 * OUTRAD * SIN( HDLON )
-      END IF
+         lt = 2.d0 * outrad
+      else
+         lt = 2.d0 * outrad * sin( hdlon )
+      end if
 
 !
 !     The height bounds are derived from the lowest and highest points
 !     on the element.
 !
-      IF ( MINLAT .GE. 0.D0 ) THEN
+      if ( minlat .ge. 0.d0 ) then
 
-         CALL GEOREC ( 0.D0, MAXLAT, MAXALT, RE, F, TOPV )
-         CALL GEOREC ( 0.D0, MINLAT, MINALT, RE, F, BOTV )
+         call georec ( 0.d0, maxlat, maxalt, re, f, topv )
+         call georec ( 0.d0, minlat, minalt, re, f, botv )
 
-      ELSE IF ( MAXLAT .LT. 0.D0 ) THEN
+      else if ( maxlat .lt. 0.d0 ) then
 
-         CALL GEOREC ( 0.D0, MAXLAT, MINALT, RE, F, TOPV )
-         CALL GEOREC ( 0.D0, MINLAT, MAXALT, RE, F, BOTV )
+         call georec ( 0.d0, maxlat, minalt, re, f, topv )
+         call georec ( 0.d0, minlat, maxalt, re, f, botv )
 
-      ELSE
+      else
 
-         CALL GEOREC ( 0.D0, MAXLAT, MAXALT, RE, F, TOPV )
-         CALL GEOREC ( 0.D0, MINLAT, MAXALT, RE, F, BOTV )
+         call georec ( 0.d0, maxlat, maxalt, re, f, topv )
+         call georec ( 0.d0, minlat, maxalt, re, f, botv )
 
-      END IF
+      end if
 
-      MAXZ = TOPV(3)
-      MINZ = BOTV(3)
+      maxz = topv(3)
+      minz = botv(3)
 
-      LZ   = MAXZ - MINZ
+      lz   = maxz - minz
 
 !
 !     Make sure all dimensions are non-negative.
 !
-      LR = MAX( 0.D0, LR )
-      LT = MAX( 0.D0, LT )
-      LZ = MAX( 0.D0, LZ )
+      lr = max( 0.d0, lr )
+      lt = max( 0.d0, lt )
+      lz = max( 0.d0, lz )
 
 !
 !     Compute the coordinates of the center of the box.
@@ -433,17 +433,17 @@
 !     longitude. The outer tangential edge is at radius
 !     OUTRAD. Let MIDR be the radius of the center.
 !
-      MIDR = OUTRAD - (LR/2)
+      midr = outrad - (lr/2)
 
-      CALL CYLREC ( MIDR, MIDLON, MINZ+(LZ/2), CENTER )
+      call cylrec ( midr, midlon, minz+(lz/2), center )
 
 !
 !     The radius is the distance from the center of the box
 !     to any corner.
 !
-      CALL VPACK ( LR/2, LT/2, LZ/2, DIAG )
+      call vpack ( lr/2, lt/2, lz/2, diag )
 
-      RADIUS = VNORM( DIAG )
+      radius = vnorm( diag )
 
-      RETURN
-      END
+      return
+      end

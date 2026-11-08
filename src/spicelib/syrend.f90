@@ -1,6 +1,6 @@
 !$Procedure SYREND ( Rename an existing symbol )
 
-      SUBROUTINE SYREND ( OLD, NEW, TABSYM, TABPTR, TABVAL )
+      subroutine syrend ( old, new, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -16,16 +16,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         OLD
-      CHARACTER*(*)         NEW
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
+      character*(*)         old
+      character*(*)         new
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -190,93 +190,93 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      integer               lstlec
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
-      INTEGER               OLDLOC
-      INTEGER               OLDVAL
-      INTEGER               OLDDIM
-      INTEGER               NEWLOC
-      INTEGER               NEWVAL
+      integer               oldloc
+      integer               oldval
+      integer               olddim
+      integer               newloc
+      integer               newval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYREND' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYREND' )
+      end if
 
 !
 !     Where was the old symbol?
 !
-      NSYM   = CARDC  ( TABSYM )
-      OLDLOC = BSRCHC ( OLD, NSYM, TABSYM(1) )
+      nsym   = cardc  ( tabsym )
+      oldloc = bsrchc ( old, nsym, tabsym(1) )
 
 !
 !     An overflow is simply not possible here. The only thing that can
 !     go wrong is that the old symbol does not exist.
 !
-      IF ( OLDLOC .EQ. 0 ) THEN
+      if ( oldloc .eq. 0 ) then
 
 
-         CALL SETMSG ( 'SYREND: The symbol # is not in the symbol ' // &
+         call setmsg ( 'SYREND: The symbol # is not in the symbol ' // &
                        'table.' )
-         CALL ERRCH  ( '#', OLD )
-         CALL SIGERR ( 'SPICE(NOSUCHSYMBOL)' )
+         call errch  ( '#', old )
+         call sigerr ( 'SPICE(NOSUCHSYMBOL)' )
 
 !
 !     Are these the same symbol?
 !
-      ELSE IF ( NEW .NE. OLD ) THEN
+      else if ( new .ne. old ) then
 
 !
 !        If the new symbol already exists, delete it.
 !
-         CALL SYDELD ( NEW, TABSYM, TABPTR, TABVAL )
+         call sydeld ( new, tabsym, tabptr, tabval )
 
-         NSYM   = CARDC  (            TABSYM    )
-         OLDLOC = BSRCHC ( OLD, NSYM, TABSYM(1) )
+         nsym   = cardc  (            tabsym    )
+         oldloc = bsrchc ( old, nsym, tabsym(1) )
 
 !
 !        Swap N elements at the old location with zero elements
 !        at the new location.
 !
-         NEWLOC = LSTLEC ( NEW, NSYM, TABSYM(1) ) + 1
+         newloc = lstlec ( new, nsym, tabsym(1) ) + 1
 
-         OLDVAL = SUMAI ( TABPTR(1), OLDLOC-1 ) + 1
-         NEWVAL = SUMAI ( TABPTR(1), NEWLOC-1 ) + 1
+         oldval = sumai ( tabptr(1), oldloc-1 ) + 1
+         newval = sumai ( tabptr(1), newloc-1 ) + 1
 
-         OLDDIM = TABPTR(OLDLOC)
+         olddim = tabptr(oldloc)
 
-         CALL SWAPAD ( OLDDIM, OLDVAL, 0, NEWVAL, TABVAL(1) )
+         call swapad ( olddim, oldval, 0, newval, tabval(1) )
 
 !
 !        Move the name and dimension the same way.
 !
-         CALL SWAPAC ( 1, OLDLOC, 0, NEWLOC, TABSYM(1) )
-         CALL SWAPAI ( 1, OLDLOC, 0, NEWLOC, TABPTR(1) )
+         call swapac ( 1, oldloc, 0, newloc, tabsym(1) )
+         call swapai ( 1, oldloc, 0, newloc, tabptr(1) )
 
-         IF ( OLDLOC .LT. NEWLOC ) THEN
-            NEWLOC = NEWLOC - 1
-         END IF
+         if ( oldloc .lt. newloc ) then
+            newloc = newloc - 1
+         end if
 
-         TABSYM(NEWLOC) = NEW
+         tabsym(newloc) = new
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYREND' )
-      RETURN
-      END
+      call chkout ( 'SYREND' )
+      return
+      end

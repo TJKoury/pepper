@@ -1,6 +1,6 @@
 !$Procedure REPMI  ( Replace marker with integer )
 
-      SUBROUTINE REPMI ( IN, MARKER, VALUE, OUT )
+      subroutine repmi ( in, marker, value, out )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         IN
-      CHARACTER*(*)         MARKER
-      INTEGER               VALUE
-      CHARACTER*(*)         OUT
+      character*(*)         in
+      character*(*)         marker
+      integer               value
+      character*(*)         out
 
-      INTEGER               MAXLI
-      PARAMETER           ( MAXLI = 11 )
+      integer               maxli
+      parameter           ( maxli = 11 )
 
 ! $ Brief_I/O
 !
@@ -246,61 +246,61 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               lastnb
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXLI)     SUBSTR
+      character*(maxli)     substr
 
-      INTEGER               MRKNBF
-      INTEGER               MRKNBL
+      integer               mrknbf
+      integer               mrknbl
 
-      INTEGER               MRKPSB
-      INTEGER               MRKPSE
+      integer               mrkpsb
+      integer               mrkpse
 
 
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      IF  ( MARKER .EQ. ' ' ) THEN
+      if  ( marker .eq. ' ' ) then
 
-         OUT = IN
-         RETURN
+         out = in
+         return
 
-      END IF
+      end if
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      MRKNBF = FRSTNB(MARKER)
-      MRKNBL = LASTNB(MARKER)
+      mrknbf = frstnb(marker)
+      mrknbl = lastnb(marker)
 
-      MRKPSB = INDEX ( IN, MARKER ( MRKNBF : MRKNBL )  )
+      mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      IF  ( MRKPSB .EQ. 0 ) THEN
+      if  ( mrkpsb .eq. 0 ) then
 
-         OUT = IN
-         RETURN
+         out = in
+         return
 
-      END IF
+      end if
 
-      MRKPSE = MRKPSB + MRKNBL - MRKNBF
+      mrkpse = mrkpsb + mrknbl - mrknbf
 
 !
 !     Okay, MARKER is non-blank and has been found. Convert the
 !     integer to text, and substitute the text for the marker.
 !
-      CALL INTSTR ( VALUE, SUBSTR )
+      call intstr ( value, substr )
 
-      CALL ZZREPSUB ( IN, &
-                      MRKPSB, &
-                      MRKPSE, &
-                      SUBSTR( :LASTNB(SUBSTR) ), &
-                      OUT  )
+      call zzrepsub ( in, &
+                      mrkpsb, &
+                      mrkpse, &
+                      substr( :lastnb(substr) ), &
+                      out  )
 
-      RETURN
-      END
+      return
+      end

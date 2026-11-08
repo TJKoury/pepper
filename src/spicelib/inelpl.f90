@@ -1,6 +1,6 @@
 !$Procedure INELPL ( Intersection of ellipse and plane )
 
-      SUBROUTINE INELPL ( ELLIPS, PLANE, NXPTS, XPT1, XPT2 )
+      subroutine inelpl ( ellips, plane, nxpts, xpt1, xpt2 )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL = 9 )
+      integer               ubel
+      parameter           ( ubel = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL = 4 )
+      integer               ubpl
+      parameter           ( ubpl = 4 )
 
-      DOUBLE PRECISION      ELLIPS ( UBEL )
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT1   ( 3 )
-      DOUBLE PRECISION      XPT2   ( 3 )
+      double precision      ellips ( ubel )
+      double precision      plane  ( ubpl )
+      integer               nxpts
+      double precision      xpt1   ( 3 )
+      double precision      xpt2   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -267,73 +267,73 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORMG
-      DOUBLE PRECISION      VSEP
+      double precision      halfpi
+      double precision      vdot
+      double precision      vnormg
+      double precision      vsep
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
-      LOGICAL               VZEROG
+      logical               return
+      logical               vzero
+      logical               vzerog
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      SEPLIM
-      PARAMETER           ( SEPLIM = 1.D-9 )
+      double precision      seplim
+      parameter           ( seplim = 1.d-9 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALPHA
-      DOUBLE PRECISION      ANGLE1
-      DOUBLE PRECISION      ANGLE2
-      DOUBLE PRECISION      BETA
-      DOUBLE PRECISION      CENTER (    3 )
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      INPCON
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      POINT  (    3 )
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      SMAJOR (    3 )
-      DOUBLE PRECISION      SMINOR (    3 )
-      DOUBLE PRECISION      TMPVEC (    3 )
-      DOUBLE PRECISION      TRANS  ( UBPL )
-      DOUBLE PRECISION      V      (    2 )
+      double precision      alpha
+      double precision      angle1
+      double precision      angle2
+      double precision      beta
+      double precision      center (    3 )
+      double precision      const
+      double precision      inpcon
+      double precision      normal (    3 )
+      double precision      point  (    3 )
+      double precision      sep
+      double precision      smajor (    3 )
+      double precision      sminor (    3 )
+      double precision      tmpvec (    3 )
+      double precision      trans  ( ubpl )
+      double precision      v      (    2 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'INELPL' )
+      call chkin ( 'INELPL' )
 
 !
 !     Check the input plane.
 !
-      CALL PL2NVC ( PLANE, NORMAL, INPCON )
+      call pl2nvc ( plane, normal, inpcon )
 
-      IF ( VZERO(NORMAL) ) THEN
+      if ( vzero(normal) ) then
 
-         CALL SETMSG ( 'Input SPICE plane has zero normal vector.' )
-         CALL SIGERR ( 'SPICE(INVALIDPLANE)'                       )
-         CALL CHKOUT ( 'INELPL'                                    )
-         RETURN
+         call setmsg ( 'Input SPICE plane has zero normal vector.' )
+         call sigerr ( 'SPICE(INVALIDPLANE)'                       )
+         call chkout ( 'INELPL'                                    )
+         return
 
-      ELSE IF ( INPCON .LT. 0.D0 ) THEN
+      else if ( inpcon .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Input SPICE plane has non-positive ' &
+         call setmsg ( 'Input SPICE plane has non-positive ' &
          //            'constant #. Properly constructed ' &
          //            'SPICE planes always have non-negative ' &
          //            'constants.'                                )
-         CALL ERRDP  ( '#',  INPCON                                )
-         CALL SIGERR ( 'SPICE(INVALIDPLANE)'                       )
-         CALL CHKOUT ( 'INELPL'                                    )
-         RETURN
+         call errdp  ( '#',  inpcon                                )
+         call sigerr ( 'SPICE(INVALIDPLANE)'                       )
+         call chkout ( 'INELPL'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the components of the input ellipse; check for
@@ -341,70 +341,70 @@
 !     but they must always be orthogonal. We require this
 !     check only if both semi-axes have non-zero length.
 !
-      CALL EL2CGV ( ELLIPS, CENTER, SMAJOR, SMINOR )
+      call el2cgv ( ellips, center, smajor, sminor )
 
-      IF ( .NOT. VZERO(SMINOR) ) THEN
+      if ( .not. vzero(sminor) ) then
 
-         SEP = VSEP( SMAJOR, SMINOR )
+         sep = vsep( smajor, sminor )
 
-         IF (  ABS( SEP - HALFPI() )  .GT.  SEPLIM  ) THEN
+         if (  abs( sep - halfpi() )  .gt.  seplim  ) then
 
-            CALL SETMSG ( 'Input SPICE ellipse has non-orthogonal ' &
+            call setmsg ( 'Input SPICE ellipse has non-orthogonal ' &
             //            'semi-axes: (#,#,#) and (#,#,#). Angular ' &
             //            'separation of these vectors is # radians. ' &
             //            'Properly constructed SPICE ellipses ' &
             //            'always have orthogonal semi-axes.'         )
-            CALL ERRDP  ( '#',  SMAJOR(1)                             )
-            CALL ERRDP  ( '#',  SMAJOR(2)                             )
-            CALL ERRDP  ( '#',  SMAJOR(3)                             )
-            CALL ERRDP  ( '#',  SMINOR(1)                             )
-            CALL ERRDP  ( '#',  SMINOR(2)                             )
-            CALL ERRDP  ( '#',  SMINOR(3)                             )
-            CALL ERRDP  ( '#',  SEP                                   )
-            CALL SIGERR ( 'SPICE(INVALIDELLIPSE)'                     )
-            CALL CHKOUT ( 'INELPL'                                    )
-            RETURN
+            call errdp  ( '#',  smajor(1)                             )
+            call errdp  ( '#',  smajor(2)                             )
+            call errdp  ( '#',  smajor(3)                             )
+            call errdp  ( '#',  sminor(1)                             )
+            call errdp  ( '#',  sminor(2)                             )
+            call errdp  ( '#',  sminor(3)                             )
+            call errdp  ( '#',  sep                                   )
+            call sigerr ( 'SPICE(INVALIDELLIPSE)'                     )
+            call chkout ( 'INELPL'                                    )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the input ellipse is a single point, decide now
 !     whether the ellipse lies in the plane.
 !
-      IF ( VZERO(SMAJOR) ) THEN
+      if ( vzero(smajor) ) then
 !
 !        The ellipse is a single point. If the ellipse's center
 !        lies in the plane, the whole ellipse is the one
 !        intersection point. Check the inner product of the
 !        center and the plane's normal vector.
 !
-         IF (  VDOT( CENTER, NORMAL )  .EQ.  INPCON  ) THEN
+         if (  vdot( center, normal )  .eq.  inpcon  ) then
 !
 !           The center does in fact lie in the plane.
 !
-            NXPTS = 1
+            nxpts = 1
 
-            CALL VEQU ( CENTER, XPT1 )
-            CALL VEQU ( CENTER, XPT2 )
+            call vequ ( center, xpt1 )
+            call vequ ( center, xpt2 )
 
-         ELSE
+         else
 !
 !           There's no intersection: the intersection arguments
 !           are left undefined in this case.
 !
-            NXPTS = 0
+            nxpts = 0
 
-         END IF
+         end if
 
 !
 !        Return now; this simplifies the logic to follow.
 !
-         CALL CHKOUT ( 'INELPL' )
-         RETURN
+         call chkout ( 'INELPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point the ellipse may still be degenerate: it can be a
@@ -416,11 +416,11 @@
 !     the plane, just get a point and normal vector, and translate
 !     the point.  Find the plane constant of the translated plane.
 !
-      CALL PL2NVP ( PLANE,   NORMAL,  TMPVEC )
-      CALL VSUB   ( TMPVEC,  CENTER,  POINT  )
-      CALL NVP2PL ( NORMAL,  POINT,   TRANS  )
+      call pl2nvp ( plane,   normal,  tmpvec )
+      call vsub   ( tmpvec,  center,  point  )
+      call nvp2pl ( normal,  point,   trans  )
 
-      CALL PL2NVC ( TRANS,   NORMAL,  CONST  )
+      call pl2nvc ( trans,   normal,  const  )
 
 !
 !     Ok, we can get to work.  The locus of the ellipse is
@@ -447,27 +447,27 @@
 !     theta are solutions. Let's get this case out of the way
 !     right now, shall we?
 !
-      V(1) = VDOT ( SMAJOR, NORMAL )
-      V(2) = VDOT ( SMINOR, NORMAL )
+      v(1) = vdot ( smajor, normal )
+      v(2) = vdot ( sminor, normal )
 
 !
 !     Test whether the plane and ellipse are parallel:
 !
-      IF (  VZEROG( V, 2 )  ) THEN
+      if (  vzerog( v, 2 )  ) then
 !
 !        The ellipse lies in the plane if and only if CONST is zero.
 !        In any case, we don't modify XPT1 or XPT2.
 !
-         IF ( CONST .EQ. 0.D0 ) THEN
-            NXPTS = -1
-         ELSE
-            NXPTS = 0
-         END IF
+         if ( const .eq. 0.d0 ) then
+            nxpts = -1
+         else
+            nxpts = 0
+         end if
 
-         CALL CHKOUT ( 'INELPL' )
-         RETURN
+         call chkout ( 'INELPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     Now if NORMAL is not orthogonal to both SMAJOR and SMINOR,
@@ -502,13 +502,13 @@
 !
 !     Let's return right now if there are no solutions.
 !
-      IF (  VNORMG( V, 2 )  .LT.  CONST  )   THEN
+      if (  vnormg( v, 2 )  .lt.  const  )   then
 
-         NXPTS = 0
-         CALL CHKOUT ( 'INELPL' )
-         RETURN
+         nxpts = 0
+         call chkout ( 'INELPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     Since (3) above is satisfied, the plane and ellipse intersect.
@@ -527,12 +527,12 @@
 !     The values of theta are the angles we seek.
 !
 
-      ALPHA   =  ACOS  (  CONST  /  VNORMG ( V, 2 )  )
+      alpha   =  acos  (  const  /  vnormg ( v, 2 )  )
 
-      BETA    =  ATAN2 ( V(2), V(1) )
+      beta    =  atan2 ( v(2), v(1) )
 
-      ANGLE1  =  BETA - ALPHA
-      ANGLE2  =  BETA + ALPHA
+      angle1  =  beta - alpha
+      angle2  =  beta + alpha
 
 !
 !     Determine the number of intersection points. We have a special
@@ -548,35 +548,35 @@
 !     the solutions are identical.
 !
 !
-      IF ( VZERO(SMINOR) ) THEN
+      if ( vzero(sminor) ) then
 
-         NXPTS = 1
+         nxpts = 1
 
-      ELSE
+      else
 
-         IF ( ANGLE1 .EQ. ANGLE2 ) THEN
+         if ( angle1 .eq. angle2 ) then
 !
 !           This case occurs when ALPHA is zero.
 !
-            NXPTS = 1
-         ELSE
-            NXPTS = 2
-         END IF
+            nxpts = 1
+         else
+            nxpts = 2
+         end if
 
-      END IF
+      end if
 
 !
 !     Compute the intersection points.
 !
-      CALL VLCOM3 ( 1.0D0,         CENTER, &
-                    DCOS(ANGLE1),  SMAJOR, &
-                    DSIN(ANGLE1),  SMINOR,    XPT1 )
+      call vlcom3 ( 1.0d0,         center, &
+                    dcos(angle1),  smajor, &
+                    dsin(angle1),  sminor,    xpt1 )
 
-      CALL VLCOM3 ( 1.0D0,         CENTER, &
-                    DCOS(ANGLE2),  SMAJOR, &
-                    DSIN(ANGLE2),  SMINOR,    XPT2 )
+      call vlcom3 ( 1.0d0,         center, &
+                    dcos(angle2),  smajor, &
+                    dsin(angle2),  sminor,    xpt2 )
 
 
-      CALL CHKOUT ( 'INELPL' )
-      RETURN
-      END
+      call chkout ( 'INELPL' )
+      return
+      end

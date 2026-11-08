@@ -1,7 +1,7 @@
 !$Procedure ZZRYTELT ( DSK, ray touches coordinate volume element )
 
-      SUBROUTINE ZZRYTELT ( VERTEX, RAYDIR, DSKDSC, &
-                            MARGIN, NXPTS,  XPT    )
+      subroutine zzrytelt ( vertex, raydir, dskdsc, &
+                            margin, nxpts,  xpt    )
 
 ! $ Abstract
 !
@@ -29,16 +29,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dskdsc.inc'
+      include 'dskdsc.inc'
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT    ( 3 )
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      dskdsc ( dskdsz )
+      double precision      margin
+      integer               nxpts
+      double precision      xpt    ( 3 )
 
 
 ! $ Brief_I/O
@@ -149,50 +149,50 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CORSYS
+      integer               corsys
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZRYTELT' )
-
-
-      CORSYS = NINT( DSKDSC(SYSIDX) )
-
-      IF ( CORSYS .EQ. LATSYS ) THEN
-
-         CALL ZZRYTLAT ( VERTEX, RAYDIR, DSKDSC(MN1IDX), &
-                         MARGIN, NXPTS,  XPT              )
+      call chkin ( 'ZZRYTELT' )
 
 
-      ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      corsys = nint( dskdsc(sysidx) )
 
-         CALL ZZRYTREC ( VERTEX, RAYDIR, DSKDSC(MN1IDX), &
-                         MARGIN, NXPTS,  XPT              )
+      if ( corsys .eq. latsys ) then
+
+         call zzrytlat ( vertex, raydir, dskdsc(mn1idx), &
+                         margin, nxpts,  xpt              )
 
 
-      ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+      else if ( corsys .eq. recsys ) then
 
-         CALL ZZRYTPDT ( VERTEX,         RAYDIR, &
-                         DSKDSC(MN1IDX), DSKDSC(PARIDX), &
-                         MARGIN,         NXPTS,          XPT )
-      ELSE
+         call zzrytrec ( vertex, raydir, dskdsc(mn1idx), &
+                         margin, nxpts,  xpt              )
 
-         CALL SETMSG( 'Coordinate system # is not supported.' )
-         CALL ERRINT( '#', CORSYS                             )
-         CALL SIGERR( 'SPICE(BADCOORDSYS)'                    )
-         CALL CHKOUT( 'ZZRYTELT'                              )
-         RETURN
 
-      END IF
+      else if ( corsys .eq. pdtsys ) then
 
-      CALL CHKOUT ( 'ZZRYTELT' )
-      RETURN
-      END
+         call zzrytpdt ( vertex,         raydir, &
+                         dskdsc(mn1idx), dskdsc(paridx), &
+                         margin,         nxpts,          xpt )
+      else
+
+         call setmsg( 'Coordinate system # is not supported.' )
+         call errint( '#', corsys                             )
+         call sigerr( 'SPICE(BADCOORDSYS)'                    )
+         call chkout( 'ZZRYTELT'                              )
+         return
+
+      end if
+
+      call chkout ( 'ZZRYTELT' )
+      return
+      end

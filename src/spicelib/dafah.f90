@@ -1,15 +1,15 @@
 !$Procedure DAFAH ( DAF, assign handles )
 
-      SUBROUTINE DAFAH ( FNAME, &
-                         FTYPE, &
-                         ND, &
-                         NI, &
-                         IFNAME, &
-                         RESV, &
-                         HANDLE, &
-                         UNIT, &
-                         FHSET, &
-                         ACCESS  )
+      subroutine dafah ( fname, &
+                         ftype, &
+                         nd, &
+                         ni, &
+                         ifname, &
+                         resv, &
+                         handle, &
+                         unit, &
+                         fhset, &
+                         access  )
 
 ! $ Abstract
 !
@@ -26,26 +26,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               INTEOC
-      PARAMETER           ( INTEOC = 4 )
+      integer               inteoc
+      parameter           ( inteoc = 4 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL  = -5 )
+      integer               lbcell
+      parameter           ( lbcell  = -5 )
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         FTYPE
-      INTEGER               ND
-      INTEGER               NI
-      CHARACTER*(*)         IFNAME
-      INTEGER               RESV
-      INTEGER               HANDLE
-      INTEGER               UNIT
-      INTEGER               FHSET ( LBCELL : * )
-      CHARACTER*(*)         ACCESS
+      character*(*)         fname
+      character*(*)         ftype
+      integer               nd
+      integer               ni
+      character*(*)         ifname
+      integer               resv
+      integer               handle
+      integer               unit
+      integer               fhset ( lbcell : * )
+      character*(*)         access
 
 ! $ Brief_I/O
 !
@@ -743,55 +743,55 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
-      INTEGER               LTRIM
-      INTEGER               RTRIM
+      integer               isrchi
+      integer               ltrim
+      integer               rtrim
 
-      LOGICAL               ELEMI
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               elemi
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ACCLEN
-      PARAMETER           ( ACCLEN =   10 )
+      integer               acclen
+      parameter           ( acclen =   10 )
 
-      INTEGER               ARCLEN
-      PARAMETER           ( ARCLEN =    3 )
+      integer               arclen
+      parameter           ( arclen =    3 )
 
-      INTEGER               CRLEN
-      PARAMETER           ( CRLEN  = 1000 )
+      integer               crlen
+      parameter           ( crlen  = 1000 )
 
-      INTEGER               DPRSIZ
-      PARAMETER           ( DPRSIZ =  128 )
+      integer               dprsiz
+      parameter           ( dprsiz =  128 )
 
-      INTEGER               FMTLEN
-      PARAMETER           ( FMTLEN =    8 )
+      integer               fmtlen
+      parameter           ( fmtlen =    8 )
 
-      INTEGER               IDLEN
-      PARAMETER           ( IDLEN  =    8 )
+      integer               idlen
+      parameter           ( idlen  =    8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN =   60 )
+      integer               ifnlen
+      parameter           ( ifnlen =   60 )
 
-      INTEGER               MAXND
-      PARAMETER           ( MAXND  =  124 )
+      integer               maxnd
+      parameter           ( maxnd  =  124 )
 
-      INTEGER               MAXNI
-      PARAMETER           ( MAXNI  =  250 )
+      integer               maxni
+      parameter           ( maxni  =  250 )
 
-      INTEGER               MAXSUM
-      PARAMETER           ( MAXSUM =  125 )
+      integer               maxsum
+      parameter           ( maxsum =  125 )
 
-      INTEGER               MAXPC
-      PARAMETER           ( MAXPC  =  126 )
+      integer               maxpc
+      parameter           ( maxpc  =  126 )
 
-      INTEGER               MINPC
-      PARAMETER           ( MINPC  =   32 )
+      integer               minpc
+      parameter           ( minpc  =   32 )
 
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN =    4 )
+      integer               typlen
+      parameter           ( typlen =    4 )
 
 !
 !     Local variables
@@ -818,42 +818,42 @@
 !     NEXT is incremented each time a file is opened to become the
 !     next file handle assigned.
 !
-      INTEGER               NFT
-      INTEGER               FTHAN  ( FTSIZE )
-      INTEGER               FTLNK  ( FTSIZE )
-      INTEGER               FTND   ( FTSIZE )
-      INTEGER               FTNI   ( FTSIZE )
-      INTEGER               FINDEX
+      integer               nft
+      integer               fthan  ( ftsize )
+      integer               ftlnk  ( ftsize )
+      integer               ftnd   ( ftsize )
+      integer               ftni   ( ftsize )
+      integer               findex
 
 !
 !     Other local variables
 !
-      CHARACTER*(ACCLEN)    ACC
-      CHARACTER*(CRLEN)     CREC
-      CHARACTER*(FILEN)     DAFNAM
-      CHARACTER*(FMTLEN)    FORMAT
-      CHARACTER*(IDLEN)     IDWORD
-      CHARACTER*(IFNLEN)    IFN
-      CHARACTER*(TYPLEN)    TTYPE
+      character*(acclen)    acc
+      character*(crlen)     crec
+      character*(filen)     dafnam
+      character*(fmtlen)    format
+      character*(idlen)     idword
+      character*(ifnlen)    ifn
+      character*(typlen)    ttype
 
-      DOUBLE PRECISION      DREC   ( DPRSIZ )
+      double precision      drec   ( dprsiz )
 
-      INTEGER               BWARD
-      INTEGER               FHLIST ( LBCELL : FTSIZE )
-      INTEGER               FND
-      INTEGER               FNI
-      INTEGER               FREE
-      INTEGER               FNB
-      INTEGER               FWARD
-      INTEGER               I
-      INTEGER               IARC
-      INTEGER               IBFF
-      INTEGER               IAMH
-      INTEGER               IOSTAT
-      INTEGER               LUN
+      integer               bward
+      integer               fhlist ( lbcell : ftsize )
+      integer               fnd
+      integer               fni
+      integer               free
+      integer               fnb
+      integer               fward
+      integer               i
+      integer               iarc
+      integer               ibff
+      integer               iamh
+      integer               iostat
+      integer               lun
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
+      logical               first
+      logical               found
 
 !
 !     Saved variables
@@ -862,33 +862,33 @@
 !
 !     Save everything between calls.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST    / .TRUE. /
-      DATA                  NFT      / 0      /
+      data                  first    / .true. /
+      data                  nft      / 0      /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'DAFAH' )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'DAFAH' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'DAFAH' )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'DAFAH' )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DAFOPR ( DAF, open for read )
 
-      ENTRY DAFOPR ( FNAME, HANDLE )
+      entry dafopr ( fname, handle )
 
 ! $ Abstract
 !
@@ -1305,32 +1305,32 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFOPR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFOPR' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         call ssizei ( ftsize, fhlist )
+         first = .false.
+      end if
 
 !
 !     Attempt to open the file; perform any appropriate checks.
 !
-      CALL ZZDDHOPN ( FNAME, 'READ', 'DAF', HANDLE )
+      call zzddhopn ( fname, 'READ', 'DAF', handle )
 
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFOPR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFOPR' )
+         return
+      end if
 
 
 !
@@ -1338,38 +1338,38 @@
 !     is simply increment its link count by one, check out and
 !     return.
 !
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .NE. 0 ) THEN
-         FTLNK(FINDEX) = FTLNK(FINDEX) + 1
-         CALL CHKOUT ( 'DAFOPR' )
-         RETURN
-      END IF
+      if ( findex .ne. 0 ) then
+         ftlnk(findex) = ftlnk(findex) + 1
+         call chkout ( 'DAFOPR' )
+         return
+      end if
 
 !
 !     Retrieve ND and NI from the file record.
 !
-      CALL ZZDAFGFR ( HANDLE, &
-                      IDWORD, &
-                      FND, &
-                      FNI, &
-                      IFN, &
-                      FWARD, &
-                      BWARD, &
-                      FREE, &
-                      FOUND   )
+      call zzdafgfr ( handle, &
+                      idword, &
+                      fnd, &
+                      fni, &
+                      ifn, &
+                      fward, &
+                      bward, &
+                      free, &
+                      found   )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ZZDDHCLS ( HANDLE, 'DAF', .FALSE.                      )
-         CALL SETMSG   ( 'Error reading the file record from the'  // &
+         call zzddhcls ( handle, 'DAF', .false.                      )
+         call setmsg   ( 'Error reading the file record from the'  // &
                          ' binary DAF file ''#''.'                   )
-         CALL ERRCH    ( '#', FNAME                                  )
-         CALL SIGERR   ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT   ( 'DAFOPR'                                    )
-         RETURN
+         call errch    ( '#', fname                                  )
+         call sigerr   ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout   ( 'DAFOPR'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we know that we have a valid DAF file, and we're
@@ -1378,26 +1378,26 @@
 !     Update the file table to include information about our newly
 !     opened DAF.
 !
-      NFT        = NFT  + 1
-      FTHAN(NFT) = HANDLE
-      FTND(NFT)  = FND
-      FTNI(NFT)  = FNI
-      FTLNK(NFT) = 1
+      nft        = nft  + 1
+      fthan(nft) = handle
+      ftnd(nft)  = fnd
+      ftni(nft)  = fni
+      ftlnk(nft) = 1
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
-      CALL CHKOUT ( 'DAFOPR' )
-      RETURN
+      call chkout ( 'DAFOPR' )
+      return
 
 
 
 
 !$Procedure DAFOPW ( DAF, open for write )
 
-      ENTRY DAFOPW ( FNAME, HANDLE )
+      entry dafopw ( fname, handle )
 
 ! $ Abstract
 !
@@ -1817,75 +1817,75 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFOPW' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFOPW' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
+         call ssizei ( ftsize, fhlist )
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Check to see if there is room in the file table.
 !
-      IF ( NFT .EQ. FTSIZE ) THEN
+      if ( nft .eq. ftsize ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. '     // &
+         call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DAFFTFULL)'                              )
-         CALL CHKOUT ( 'DAFOPW'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DAFFTFULL)'                              )
+         call chkout ( 'DAFOPW'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Attempt to open the file; perform any appropriate checks.
 !
-      CALL ZZDDHOPN ( FNAME, 'WRITE', 'DAF', HANDLE )
+      call zzddhopn ( fname, 'WRITE', 'DAF', handle )
 
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFOPW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFOPW' )
+         return
+      end if
 
 !
 !     Retrieve ND and NI from the file record.
 !
-      CALL ZZDAFGFR ( HANDLE, &
-                      IDWORD, &
-                      FND, &
-                      FNI, &
-                      IFN, &
-                      FWARD, &
-                      BWARD, &
-                      FREE, &
-                      FOUND   )
+      call zzdafgfr ( handle, &
+                      idword, &
+                      fnd, &
+                      fni, &
+                      ifn, &
+                      fward, &
+                      bward, &
+                      free, &
+                      found   )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ZZDDHCLS ( HANDLE, 'DAF', .FALSE.                      )
-         CALL SETMSG   ( 'Error reading the file record from the'  // &
+         call zzddhcls ( handle, 'DAF', .false.                      )
+         call setmsg   ( 'Error reading the file record from the'  // &
                          ' binary DAF file ''#''.'                   )
-         CALL ERRCH    ( '#', FNAME                                  )
-         CALL ERRINT   ( '#', IOSTAT                                 )
-         CALL SIGERR   ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT   ( 'DAFOPW'                                    )
-         RETURN
+         call errch    ( '#', fname                                  )
+         call errint   ( '#', iostat                                 )
+         call sigerr   ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout   ( 'DAFOPW'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we know that we have a valid DAF file, and we're
@@ -1894,26 +1894,26 @@
 !     Update the file table to include information about our
 !     newly opened DAF.
 !
-      NFT        = NFT  + 1
-      FTHAN(NFT) = HANDLE
-      FTND(NFT)  = FND
-      FTNI(NFT)  = FNI
-      FTLNK(NFT) = 1
+      nft        = nft  + 1
+      fthan(nft) = handle
+      ftnd(nft)  = fnd
+      ftni(nft)  = fni
+      ftlnk(nft) = 1
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
-      CALL CHKOUT ( 'DAFOPW' )
-      RETURN
+      call chkout ( 'DAFOPW' )
+      return
 
 
 
 
 !$Procedure DAFONW ( DAF, open new )
 
-      ENTRY DAFONW ( FNAME, FTYPE, ND, NI, IFNAME, RESV, HANDLE )
+      entry dafonw ( fname, ftype, nd, ni, ifname, resv, handle )
 
 ! $ Abstract
 !
@@ -2250,66 +2250,66 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFONW' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFONW' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         call ssizei ( ftsize, fhlist )
+         first = .false.
+      end if
 
 !
 !     Check to see if there is room in the file table.
 !
-      IF ( NFT .EQ. FTSIZE ) THEN
+      if ( nft .eq. ftsize ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. '     // &
+         call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DAFFTFULL)'                              )
-         CALL CHKOUT ( 'DAFONW'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DAFFTFULL)'                              )
+         call chkout ( 'DAFONW'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Check if the file type is blank.
 !
-      IF ( FTYPE .EQ. ' ' ) THEN
+      if ( ftype .eq. ' ' ) then
 
-         CALL SETMSG ( 'The file type is blank.' )
-         CALL SIGERR ( 'SPICE(BLANKFILETYPE)'    )
-         CALL CHKOUT ( 'DAFONW'                  )
-         RETURN
+         call setmsg ( 'The file type is blank.' )
+         call sigerr ( 'SPICE(BLANKFILETYPE)'    )
+         call chkout ( 'DAFONW'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Check for nonprinting characters in the file type.
 !
-      FNB = LTRIM ( FTYPE )
+      fnb = ltrim ( ftype )
 
-      DO I = FNB, RTRIM ( FTYPE )
+      do i = fnb, rtrim ( ftype )
 
-         IF ( ( ICHAR ( FTYPE(I:I) ) .GT. MAXPC )   .OR. &
-              ( ICHAR ( FTYPE(I:I) ) .LT. MINPC ) ) THEN
+         if ( ( ichar ( ftype(i:i) ) .gt. maxpc )   .or. &
+              ( ichar ( ftype(i:i) ) .lt. minpc ) ) then
 
-            CALL SETMSG ( 'The file type contains nonprinting' // &
+            call setmsg ( 'The file type contains nonprinting' // &
                           ' characters.'                        )
-            CALL SIGERR ( 'SPICE(ILLEGALCHARACTER)'             )
-            CALL CHKOUT ( 'DAFONW'                              )
-            RETURN
+            call sigerr ( 'SPICE(ILLEGALCHARACTER)'             )
+            call chkout ( 'DAFONW'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the value the file type in a temporary variable to be sure of
@@ -2318,216 +2318,216 @@
 !     nonblank character and its three (3), or fewer, immediate
 !     successors in the input string FTYPE.
 !
-      TTYPE  = FTYPE(FNB:)
-      IDWORD = 'DAF/' // TTYPE
+      ttype  = ftype(fnb:)
+      idword = 'DAF/' // ttype
 
 !
 !     Make sure ND and NI are in range.
 !
-      IF (  ( ND .LT. 0 )  .OR.  ( ND .GT. MAXND )  ) THEN
+      if (  ( nd .lt. 0 )  .or.  ( nd .gt. maxnd )  ) then
 
-         CALL SETMSG ( 'ND was #, should be in range [0,#].' )
-         CALL ERRINT ( '#', ND                               )
-         CALL ERRINT ( '#', MAXND                            )
-         CALL SIGERR ( 'SPICE(DAFINVALIDPARAMS)'             )
-         CALL CHKOUT ( 'DAFONW'                              )
-         RETURN
+         call setmsg ( 'ND was #, should be in range [0,#].' )
+         call errint ( '#', nd                               )
+         call errint ( '#', maxnd                            )
+         call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
+         call chkout ( 'DAFONW'                              )
+         return
 
-      END IF
+      end if
 
-      IF (  ( NI .LT. 2 )  .OR.  ( NI .GT. MAXNI )  ) THEN
+      if (  ( ni .lt. 2 )  .or.  ( ni .gt. maxni )  ) then
 
-         CALL SETMSG ( 'NI was #, should be in range [2,#].' )
-         CALL ERRINT ( '#', NI                               )
-         CALL ERRINT ( '#', MAXNI                            )
-         CALL SIGERR ( 'SPICE(DAFINVALIDPARAMS)'             )
-         CALL CHKOUT ( 'DAFONW'                              )
-         RETURN
+         call setmsg ( 'NI was #, should be in range [2,#].' )
+         call errint ( '#', ni                               )
+         call errint ( '#', maxni                            )
+         call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
+         call chkout ( 'DAFONW'                              )
+         return
 
-      END IF
+      end if
 
-      IF (  ( ND + (NI+1)/2 )  .GT.  MAXSUM  ) THEN
+      if (  ( nd + (ni+1)/2 )  .gt.  maxsum  ) then
 
-         CALL SETMSG ( 'Summary size was #, should not exceed #.' )
-         CALL ERRINT ( '#', ND + (NI+1)/2                         )
-         CALL ERRINT ( '#', MAXSUM                                )
-         CALL SIGERR ( 'SPICE(DAFINVALIDPARAMS)'                  )
-         CALL CHKOUT ( 'DAFONW'                                   )
-         RETURN
+         call setmsg ( 'Summary size was #, should not exceed #.' )
+         call errint ( '#', nd + (ni+1)/2                         )
+         call errint ( '#', maxsum                                )
+         call sigerr ( 'SPICE(DAFINVALIDPARAMS)'                  )
+         call chkout ( 'DAFONW'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     The user must reserve some non-negative number of records.
 !
-      IF ( RESV .LT. 0 ) THEN
+      if ( resv .lt. 0 ) then
 
-         CALL SETMSG ( 'An attempt was made to reserve a negative '   // &
+         call setmsg ( 'An attempt was made to reserve a negative '   // &
                        'number (#) of records.'                        )
-         CALL ERRINT ( '#', RESV                                       )
-         CALL SIGERR ( 'SPICE(DAFNORESV)'                              )
-         CALL CHKOUT ( 'DAFONW'                                        )
-         RETURN
+         call errint ( '#', resv                                       )
+         call sigerr ( 'SPICE(DAFNORESV)'                              )
+         call chkout ( 'DAFONW'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Attempt to create the file; perform any appropriate checks.
 !
-      CALL ZZDDHOPN ( FNAME, 'NEW', 'DAF', HANDLE )
+      call zzddhopn ( fname, 'NEW', 'DAF', handle )
 
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFONW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFONW' )
+         return
+      end if
 
-      IFN    = IFNAME
-      FND    = ND
-      FNI    = NI
-      FWARD  = RESV + 2
-      BWARD  = FWARD
-      CREC   = ' '
+      ifn    = ifname
+      fnd    = nd
+      fni    = ni
+      fward  = resv + 2
+      bward  = fward
+      crec   = ' '
 
-      CALL CLEARD ( 128, DREC )
-      CALL DAFRWA ( FWARD+2, 1, FREE )
+      call cleard ( 128, drec )
+      call dafrwa ( fward+2, 1, free )
 
 !
 !     Fetch a logical unit for HANDLE.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., LUN )
+      call zzddhhlu ( handle, 'DAF', .false., lun )
 
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFONW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFONW' )
+         return
+      end if
 
 !
 !     Fetch the system file format.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', FORMAT )
+      call zzplatfm ( 'FILE_FORMAT', format )
 
 !
 !     Write the new file record to the logical unit, LUN.
 !
-      CALL ZZDAFNFR ( LUN, &
-                      IDWORD, &
-                      FND, &
-                      FNI, &
-                      IFN, &
-                      FWARD, &
-                      BWARD, &
-                      FREE, &
-                      FORMAT  )
+      call zzdafnfr ( lun, &
+                      idword, &
+                      fnd, &
+                      fni, &
+                      ifn, &
+                      fward, &
+                      bward, &
+                      free, &
+                      format  )
 
 !
 !     Check to see whether or not ZZDAFNFR generated an error writing
 !     the file record to the logical unit.  In the event an error
 !     occurs, checkout and return.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFONW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFONW' )
+         return
+      end if
 
 !
 !     Write NULL filled reserved records.
 !
-      IF ( RESV .GT. 0 ) THEN
+      if ( resv .gt. 0 ) then
 
-         DO I = 1, CRLEN
-            CREC(I:I) = CHAR(0)
-         END DO
+         do i = 1, crlen
+            crec(i:i) = char(0)
+         end do
 
-         DO I = 2, RESV + 1
+         do i = 2, resv + 1
 !
 !            Place an end-of-comments marker in the first byte
 !            of the first record.
 !
-            IF ( I .EQ. 2 ) THEN
-               CREC(1:1) = CHAR(INTEOC)
-            ELSE
-               CREC(1:1) = CHAR(0)
-            END IF
+            if ( i .eq. 2 ) then
+               crec(1:1) = char(inteoc)
+            else
+               crec(1:1) = char(0)
+            end if
 
-            WRITE ( LUN, REC=I, IOSTAT=IOSTAT ) CREC
+            write ( lun, rec=i, iostat=iostat ) crec
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL ZZDDHCLS ( HANDLE, 'DAF', .TRUE. )
-               CALL SETMSG ( 'Attempt to write file ''#'' failed. '   // &
+               call zzddhcls ( handle, 'DAF', .true. )
+               call setmsg ( 'Attempt to write file ''#'' failed. '   // &
                              'Value of IOSTAT was #.'                  )
-               CALL ERRCH  ( '#', FNAME                                )
-               CALL ERRINT ( '#', IOSTAT                               )
-               CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                     )
-               CALL CHKOUT ( 'DAFONW'                                  )
-               RETURN
+               call errch  ( '#', fname                                )
+               call errint ( '#', iostat                               )
+               call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
+               call chkout ( 'DAFONW'                                  )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      WRITE ( LUN, REC=FWARD, IOSTAT=IOSTAT ) DREC
+      write ( lun, rec=fward, iostat=iostat ) drec
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL ZZDDHCLS ( HANDLE, 'DAF', .TRUE.                     )
-         CALL SETMSG   ( 'Attempt to write file ''#'' failed. '   // &
+         call zzddhcls ( handle, 'DAF', .true.                     )
+         call setmsg   ( 'Attempt to write file ''#'' failed. '   // &
                          'Value of IOSTAT was #.'                  )
-         CALL ERRCH    ( '#', FNAME                                )
-         CALL ERRINT   ( '#', IOSTAT                               )
-         CALL SIGERR   ( 'SPICE(DAFWRITEFAIL)'                     )
-         CALL CHKOUT   ( 'DAFONW'                                  )
-         RETURN
+         call errch    ( '#', fname                                )
+         call errint   ( '#', iostat                               )
+         call sigerr   ( 'SPICE(DAFWRITEFAIL)'                     )
+         call chkout   ( 'DAFONW'                                  )
+         return
 
-      END IF
+      end if
 
-      WRITE ( LUN, REC=FWARD+1, IOSTAT=IOSTAT ) CREC
+      write ( lun, rec=fward+1, iostat=iostat ) crec
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL ZZDDHCLS ( HANDLE, 'DAF', .TRUE.                     )
-         CALL SETMSG   ( 'Attempt to write file ''#'' failed. '   // &
+         call zzddhcls ( handle, 'DAF', .true.                     )
+         call setmsg   ( 'Attempt to write file ''#'' failed. '   // &
                          'Value of IOSTAT was #.'                  )
-         CALL ERRCH    ( '#', FNAME                                )
-         CALL ERRINT   ( '#', IOSTAT                               )
-         CALL SIGERR   ( 'SPICE(DAFWRITEFAIL)'                     )
-         CALL CHKOUT   ( 'DAFONW'                                  )
-         RETURN
+         call errch    ( '#', fname                                )
+         call errint   ( '#', iostat                               )
+         call sigerr   ( 'SPICE(DAFWRITEFAIL)'                     )
+         call chkout   ( 'DAFONW'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Update the file table to include information about our newly
 !     opened DAF.
 !
-      NFT        = NFT + 1
-      FTHAN(NFT) = HANDLE
-      FTND(NFT)  = FND
-      FTNI(NFT)  = FNI
-      FTLNK(NFT) = 1
+      nft        = nft + 1
+      fthan(nft) = handle
+      ftnd(nft)  = fnd
+      ftni(nft)  = fni
+      ftlnk(nft) = 1
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
-      CALL CHKOUT ( 'DAFONW' )
-      RETURN
+      call chkout ( 'DAFONW' )
+      return
 
 
 
 
 !$Procedure DAFOPN ( DAF, open new )
 
-      ENTRY DAFOPN ( FNAME, ND, NI, IFNAME, RESV, HANDLE )
+      entry dafopn ( fname, nd, ni, ifname, resv, handle )
 
 ! $ Abstract
 !
@@ -2832,235 +2832,235 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFOPN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFOPN' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         call ssizei ( ftsize, fhlist )
+         first = .false.
+      end if
 
 !
 !     Check to see if there is room in the file table.
 !
-      IF ( NFT .EQ. FTSIZE ) THEN
+      if ( nft .eq. ftsize ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. '     // &
+         call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DAFFTFULL)'                              )
-         CALL CHKOUT ( 'DAFOPN'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DAFFTFULL)'                              )
+         call chkout ( 'DAFOPN'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure ND and NI are in range.
 !
-      IF (  ( ND .LT. 0 )  .OR.  ( ND .GT. MAXND )  ) THEN
+      if (  ( nd .lt. 0 )  .or.  ( nd .gt. maxnd )  ) then
 
-         CALL SETMSG ( 'ND was #, should be in range [0,#].' )
-         CALL ERRINT ( '#', ND                               )
-         CALL ERRINT ( '#', MAXND                            )
-         CALL SIGERR ( 'SPICE(DAFINVALIDPARAMS)'             )
-         CALL CHKOUT ( 'DAFOPN'                              )
-         RETURN
+         call setmsg ( 'ND was #, should be in range [0,#].' )
+         call errint ( '#', nd                               )
+         call errint ( '#', maxnd                            )
+         call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
+         call chkout ( 'DAFOPN'                              )
+         return
 
-      END IF
+      end if
 
-      IF (  ( NI .LT. 2 )  .OR.  ( NI .GT. MAXNI )  ) THEN
+      if (  ( ni .lt. 2 )  .or.  ( ni .gt. maxni )  ) then
 
-         CALL SETMSG ( 'NI was #, should be in range [2,#].' )
-         CALL ERRINT ( '#', NI                               )
-         CALL ERRINT ( '#', MAXNI                            )
-         CALL SIGERR ( 'SPICE(DAFINVALIDPARAMS)'             )
-         CALL CHKOUT ( 'DAFOPN'                              )
-         RETURN
+         call setmsg ( 'NI was #, should be in range [2,#].' )
+         call errint ( '#', ni                               )
+         call errint ( '#', maxni                            )
+         call sigerr ( 'SPICE(DAFINVALIDPARAMS)'             )
+         call chkout ( 'DAFOPN'                              )
+         return
 
-      END IF
+      end if
 
-      IF (  ( ND + (NI+1)/2 )  .GT.  MAXSUM  ) THEN
+      if (  ( nd + (ni+1)/2 )  .gt.  maxsum  ) then
 
-         CALL SETMSG ( 'Summary size was #, should not exceed #.' )
-         CALL ERRINT ( '#', ND + (NI+1)/2                         )
-         CALL ERRINT ( '#', MAXSUM                                )
-         CALL SIGERR ( 'SPICE(DAFINVALIDPARAMS)'                  )
-         CALL CHKOUT ( 'DAFOPN'                                   )
-         RETURN
+         call setmsg ( 'Summary size was #, should not exceed #.' )
+         call errint ( '#', nd + (ni+1)/2                         )
+         call errint ( '#', maxsum                                )
+         call sigerr ( 'SPICE(DAFINVALIDPARAMS)'                  )
+         call chkout ( 'DAFOPN'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     The user must reserve some non-negative number of records.
 !
-      IF ( RESV .LT. 0 ) THEN
+      if ( resv .lt. 0 ) then
 
-         CALL SETMSG ( 'An attempt was made to reserve a negative '   // &
+         call setmsg ( 'An attempt was made to reserve a negative '   // &
                        'number (#) of records.'                        )
-         CALL ERRINT ( '#', RESV                                       )
-         CALL SIGERR ( 'SPICE(DAFNORESV)'                              )
-         CALL CHKOUT ( 'DAFOPN'                                        )
-         RETURN
+         call errint ( '#', resv                                       )
+         call sigerr ( 'SPICE(DAFNORESV)'                              )
+         call chkout ( 'DAFOPN'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Attempt to create the file; perform any appropriate checks.
 !
-      CALL ZZDDHOPN ( FNAME, 'NEW', 'DAF', HANDLE )
+      call zzddhopn ( fname, 'NEW', 'DAF', handle )
 
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFOPN' )
+         return
+      end if
 
-      IFN    = IFNAME
-      FND    = ND
-      FNI    = NI
-      FWARD  = RESV + 2
-      BWARD  = FWARD
-      CREC   = ' '
+      ifn    = ifname
+      fnd    = nd
+      fni    = ni
+      fward  = resv + 2
+      bward  = fward
+      crec   = ' '
 
-      CALL CLEARD ( 128, DREC )
-      CALL DAFRWA ( FWARD+2, 1, FREE )
+      call cleard ( 128, drec )
+      call dafrwa ( fward+2, 1, free )
 
 !
 !     Fetch a logical unit for HANDLE.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., LUN )
+      call zzddhhlu ( handle, 'DAF', .false., lun )
 
 !
 !     Check FAILED(); return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'DAFOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'DAFOPN' )
+         return
+      end if
 
 !
 !     Fetch the system file format.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', FORMAT )
+      call zzplatfm ( 'FILE_FORMAT', format )
 
 !
 !     Write the new file record to the logical unit, LUN.
 !
-      CALL ZZDAFNFR ( LUN, &
+      call zzdafnfr ( lun, &
                       'NAIF/DAF', &
-                      FND, &
-                      FNI, &
-                      IFN, &
-                      FWARD, &
-                      BWARD, &
-                      FREE, &
-                      FORMAT  )
+                      fnd, &
+                      fni, &
+                      ifn, &
+                      fward, &
+                      bward, &
+                      free, &
+                      format  )
 !
 !     Check to see whether or not ZZDAFNFR generated an error writing
 !     the file record to the logical unit.  In the event an error
 !     occurs, checkout and return.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFOPN' )
+         return
+      end if
 
 !
 !     Write NULL filled reserved records.
 !
-      IF ( RESV .GT. 0 ) THEN
+      if ( resv .gt. 0 ) then
 
-         DO I = 1, CRLEN
-            CREC(I:I) = CHAR(0)
-         END DO
+         do i = 1, crlen
+            crec(i:i) = char(0)
+         end do
 
-         DO I = 2, RESV + 1
+         do i = 2, resv + 1
 
-            WRITE ( LUN, REC=I, IOSTAT=IOSTAT ) CREC
+            write ( lun, rec=i, iostat=iostat ) crec
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL ZZDDHCLS ( HANDLE, 'DAF', .TRUE. )
+               call zzddhcls ( handle, 'DAF', .true. )
 
-               CALL SETMSG ( 'Attempt to write file ''#'' failed. '   // &
+               call setmsg ( 'Attempt to write file ''#'' failed. '   // &
                              'Value of IOSTAT was #.'                  )
-               CALL ERRCH  ( '#', FNAME                                )
-               CALL ERRINT ( '#', IOSTAT                               )
-               CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                     )
-               CALL CHKOUT ( 'DAFOPN'                                  )
-               RETURN
+               call errch  ( '#', fname                                )
+               call errint ( '#', iostat                               )
+               call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
+               call chkout ( 'DAFOPN'                                  )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      WRITE ( LUN, REC=FWARD, IOSTAT=IOSTAT ) DREC
+      write ( lun, rec=fward, iostat=iostat ) drec
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL ZZDDHCLS ( HANDLE, 'DAF', .TRUE. )
+         call zzddhcls ( handle, 'DAF', .true. )
 
-         CALL SETMSG ( 'Attempt to write file ''#'' failed. '   // &
+         call setmsg ( 'Attempt to write file ''#'' failed. '   // &
                        'Value of IOSTAT was #.'                  )
-         CALL ERRCH  ( '#', FNAME                                )
-         CALL ERRINT ( '#', IOSTAT                               )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                     )
-         CALL CHKOUT ( 'DAFOPN'                                  )
-         RETURN
+         call errch  ( '#', fname                                )
+         call errint ( '#', iostat                               )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
+         call chkout ( 'DAFOPN'                                  )
+         return
 
-      END IF
+      end if
 
-      WRITE ( LUN, REC=FWARD+1, IOSTAT=IOSTAT ) CREC
+      write ( lun, rec=fward+1, iostat=iostat ) crec
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL ZZDDHCLS ( HANDLE, 'DAF', .TRUE. )
+         call zzddhcls ( handle, 'DAF', .true. )
 
-         CALL SETMSG ( 'Attempt to write file ''#'' failed. '   // &
+         call setmsg ( 'Attempt to write file ''#'' failed. '   // &
                        'Value of IOSTAT was #.'                  )
-         CALL ERRCH  ( '#', FNAME                                )
-         CALL ERRINT ( '#', IOSTAT                               )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                     )
-         CALL CHKOUT ( 'DAFOPN'                                  )
-         RETURN
+         call errch  ( '#', fname                                )
+         call errint ( '#', iostat                               )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                     )
+         call chkout ( 'DAFOPN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Update the file table to include information about
 !     our newly opened DAF.
 !
-      NFT        = NFT + 1
-      FTHAN(NFT) = HANDLE
-      FTND(NFT)  = FND
-      FTNI(NFT)  = FNI
-      FTLNK(NFT) = 1
+      nft        = nft + 1
+      fthan(nft) = handle
+      ftnd(nft)  = fnd
+      ftni(nft)  = fni
+      ftlnk(nft) = 1
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
-      CALL CHKOUT ( 'DAFOPN' )
-      RETURN
+      call chkout ( 'DAFOPN' )
+      return
 
 
 
 
 !$Procedure DAFCLS ( DAF, close )
 
-      ENTRY DAFCLS ( HANDLE )
+      entry dafcls ( handle )
 
 ! $ Abstract
 !
@@ -3410,19 +3410,19 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFCLS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFCLS' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         call ssizei ( ftsize, fhlist )
+         first = .false.
+      end if
 
 !
 !     Is this file even open? If so, decrement the number of links
@@ -3431,43 +3431,43 @@
 !
 !     If the file is not open: no harm, no foul.
 !
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .GT. 0 ) THEN
+      if ( findex .gt. 0 ) then
 
-         FTLNK(FINDEX) = FTLNK(FINDEX) - 1
+         ftlnk(findex) = ftlnk(findex) - 1
 
-         IF ( FTLNK(FINDEX) .EQ. 0 ) THEN
+         if ( ftlnk(findex) .eq. 0 ) then
 
-            CALL ZZDDHCLS ( HANDLE, 'DAF', .FALSE. )
+            call zzddhcls ( handle, 'DAF', .false. )
 
-            DO I = FINDEX, NFT - 1
-               FTHAN(I) = FTHAN(I+1)
-               FTLNK(I) = FTLNK(I+1)
-               FTND(I)  = FTND(I+1)
-               FTNI(I)  = FTNI(I+1)
-            END DO
+            do i = findex, nft - 1
+               fthan(i) = fthan(i+1)
+               ftlnk(i) = ftlnk(i+1)
+               ftnd(i)  = ftnd(i+1)
+               ftni(i)  = ftni(i+1)
+            end do
 
-            NFT = NFT - 1
+            nft = nft - 1
 
 !
 !           Delete the handle from our handle set.
 !
-            CALL REMOVI ( HANDLE, FHLIST )
+            call removi ( handle, fhlist )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFCLS' )
-      RETURN
+      call chkout ( 'DAFCLS' )
+      return
 
 
 
 
 !$Procedure DAFHSF ( DAF, handle to summary format )
 
-      ENTRY DAFHSF ( HANDLE, ND, NI )
+      entry dafhsf ( handle, nd, ni )
 
 ! $ Abstract
 !
@@ -3730,36 +3730,36 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFHSF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFHSF' )
+      end if
 
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .GT. 0 ) THEN
+      if ( findex .gt. 0 ) then
 
-         ND = FTND(FINDEX)
-         NI = FTNI(FINDEX)
+         nd = ftnd(findex)
+         ni = ftni(findex)
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'There is no DAF open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                            )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHHANDLE)'               )
+         call setmsg ( 'There is no DAF open with handle = #' )
+         call errint ( '#', handle                            )
+         call sigerr ( 'SPICE(DAFNOSUCHHANDLE)'               )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFHSF' )
-      RETURN
+      call chkout ( 'DAFHSF' )
+      return
 
 
 
 
 !$Procedure DAFHLU ( DAF, handle to logical unit )
 
-      ENTRY DAFHLU ( HANDLE, UNIT )
+      entry dafhlu ( handle, unit )
 
 ! $ Abstract
 !
@@ -3961,23 +3961,23 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFHLU' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFHLU' )
+      end if
 
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .TRUE., UNIT )
+      call zzddhhlu ( handle, 'DAF', .true., unit )
 
-      CALL CHKOUT ( 'DAFHLU' )
-      RETURN
+      call chkout ( 'DAFHLU' )
+      return
 
 
 
 
 !$Procedure DAFLUH ( DAF, logical unit to handle )
 
-      ENTRY DAFLUH ( UNIT, HANDLE )
+      entry dafluh ( unit, handle )
 
 ! $ Abstract
 !
@@ -4142,48 +4142,48 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFLUH' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFLUH' )
+      end if
 
-      CALL ZZDDHLUH ( UNIT, HANDLE, FOUND )
+      call zzddhluh ( unit, handle, found )
 
-      IF ( .NOT. FOUND ) THEN
-         HANDLE = 0
-         CALL SETMSG ( 'There is no file open with unit = #' )
-         CALL ERRINT ( '#', UNIT                             )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHUNIT)'                )
-         CALL CHKOUT ( 'DAFLUH'                              )
-         RETURN
-      END IF
+      if ( .not. found ) then
+         handle = 0
+         call setmsg ( 'There is no file open with unit = #' )
+         call errint ( '#', unit                             )
+         call sigerr ( 'SPICE(DAFNOSUCHUNIT)'                )
+         call chkout ( 'DAFLUH'                              )
+         return
+      end if
 
 !
 !     Now make certain that the HANDLE is associated with a DAF.
 !
-      CALL ZZDDHNFO ( HANDLE, DAFNAM, IARC, IBFF, IAMH, FOUND )
+      call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
-      IF ( IARC .NE. DAF ) THEN
-         HANDLE = 0
-         CALL SETMSG ( 'The file, ''#'', connected to unit # ' &
+      if ( iarc .ne. daf ) then
+         handle = 0
+         call setmsg ( 'The file, ''#'', connected to unit # ' &
          //            'is not a DAF.'                         )
-         CALL ERRFNM ( '#', UNIT                               )
-         CALL ERRINT ( '#', UNIT                               )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHUNIT)'                  )
-         CALL CHKOUT ( 'DAFLUH'                                )
-         RETURN
-      END IF
+         call errfnm ( '#', unit                               )
+         call errint ( '#', unit                               )
+         call sigerr ( 'SPICE(DAFNOSUCHUNIT)'                  )
+         call chkout ( 'DAFLUH'                                )
+         return
+      end if
 
-      CALL CHKOUT ( 'DAFLUH' )
-      RETURN
+      call chkout ( 'DAFLUH' )
+      return
 
 
 
 
 !$Procedure DAFHFN ( DAF, handle to file name )
 
-      ENTRY DAFHFN ( HANDLE, FNAME )
+      entry dafhfn ( handle, fname )
 
 ! $ Abstract
 !
@@ -4367,33 +4367,33 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFHFN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFHFN' )
+      end if
 
-      CALL ZZDDHNFO ( HANDLE, DAFNAM, IARC, IBFF, IAMH, FOUND )
+      call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
-      IF ( ( .NOT. FOUND ) .OR. ( IARC .NE. DAF ) ) THEN
-         CALL SETMSG ( 'There is no file open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                             )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHHANDLE)'                )
-         CALL CHKOUT ( 'DAFHFN'                                )
-         RETURN
-      END IF
+      if ( ( .not. found ) .or. ( iarc .ne. daf ) ) then
+         call setmsg ( 'There is no file open with handle = #' )
+         call errint ( '#', handle                             )
+         call sigerr ( 'SPICE(DAFNOSUCHHANDLE)'                )
+         call chkout ( 'DAFHFN'                                )
+         return
+      end if
 
-      FNAME = DAFNAM
+      fname = dafnam
 
-      CALL CHKOUT ( 'DAFHFN' )
-      RETURN
+      call chkout ( 'DAFHFN' )
+      return
 
 
 
 
 !$Procedure DAFFNH ( DAF, file name to handle )
 
-      ENTRY DAFFNH ( FNAME, HANDLE )
+      entry daffnh ( fname, handle )
 
 ! $ Abstract
 !
@@ -4609,47 +4609,47 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFFNH' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFFNH' )
+      end if
 
-      CALL ZZDDHFNH ( FNAME, HANDLE, FOUND )
+      call zzddhfnh ( fname, handle, found )
 
-      IF ( ( .NOT. FOUND ) ) THEN
-         HANDLE = 0
-         CALL SETMSG ( 'There is no file in the DAF table with '  // &
+      if ( ( .not. found ) ) then
+         handle = 0
+         call setmsg ( 'There is no file in the DAF table with '  // &
                        'file name = ''#'''                          )
-         CALL ERRCH  ( '#', FNAME                                   )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHFILE)'                       )
-         CALL CHKOUT ( 'DAFFNH'                                     )
-         RETURN
-      END IF
+         call errch  ( '#', fname                                   )
+         call sigerr ( 'SPICE(DAFNOSUCHFILE)'                       )
+         call chkout ( 'DAFFNH'                                     )
+         return
+      end if
 
 !
 !     Now make certain that HANDLE is associated with a DAF.
 !
-      CALL ZZDDHNFO ( HANDLE, DAFNAM, IARC, IBFF, IAMH, FOUND )
+      call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
-      IF ( IARC .NE. DAF ) THEN
-         HANDLE = 0
-         CALL SETMSG ( 'The file, ''#'', is not a DAF.' )
-         CALL ERRCH  ( '#', FNAME                       )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHFILE)'           )
-         CALL CHKOUT ( 'DAFFNH'                         )
-         RETURN
-      END IF
+      if ( iarc .ne. daf ) then
+         handle = 0
+         call setmsg ( 'The file, ''#'', is not a DAF.' )
+         call errch  ( '#', fname                       )
+         call sigerr ( 'SPICE(DAFNOSUCHFILE)'           )
+         call chkout ( 'DAFFNH'                         )
+         return
+      end if
 
-      CALL CHKOUT ( 'DAFFNH' )
-      RETURN
+      call chkout ( 'DAFFNH' )
+      return
 
 
 
 
 !$Procedure DAFHOF ( DAF, handles of open files )
 
-      ENTRY DAFHOF ( FHSET )
+      entry dafhof ( fhset )
 
 ! $ Abstract
 !
@@ -4811,36 +4811,36 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFHOF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFHOF' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
+         call ssizei ( ftsize, fhlist )
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Just stuff our local list into the set.
 !
-      CALL COPYI ( FHLIST, FHSET )
+      call copyi ( fhlist, fhset )
 
-      CALL CHKOUT ( 'DAFHOF' )
-      RETURN
+      call chkout ( 'DAFHOF' )
+      return
 
 
 
 
 !$Procedure DAFSIH ( DAF, signal invalid handles )
 
-      ENTRY DAFSIH ( HANDLE, ACCESS )
+      entry dafsih ( handle, access )
 
 ! $ Abstract
 !
@@ -5086,45 +5086,45 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFSIH' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFSIH' )
+      end if
 
 !
 !     Initialize the handle list, if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL SSIZEI ( FTSIZE, FHLIST )
-         FIRST = .FALSE.
+         call ssizei ( ftsize, fhlist )
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
-      CALL LJUST ( ACCESS, ACC )
-      CALL UCASE ( ACC,    ACC )
+      call ljust ( access, acc )
+      call ucase ( acc,    acc )
 
 !
 !     Make sure we recognize the access type specified by the caller.
 !
-      IF (  ( ACC .NE. 'READ' ) .AND. ( ACC .NE. 'WRITE' )  ) THEN
+      if (  ( acc .ne. 'READ' ) .and. ( acc .ne. 'WRITE' )  ) then
 
-         CALL SETMSG ( 'Unrecognized access type.  Type was #. ' )
-         CALL ERRCH  ( '#', ACCESS                               )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-         CALL CHKOUT ( 'DAFSIH'                                  )
-         RETURN
+         call setmsg ( 'Unrecognized access type.  Type was #. ' )
+         call errch  ( '#', access                               )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+         call chkout ( 'DAFSIH'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Retrieve information about this HANDLE.
 !
-      CALL ZZDDHNFO ( HANDLE, DAFNAM, IARC, IBFF, IAMH, FOUND )
+      call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
 !
 !     See whether the input handle is in our list at all.  It's
@@ -5132,34 +5132,34 @@
 !     readable, so in the case that ACC is 'READ', we're done if
 !     the DAF is open.
 !
-      IF ( ( .NOT. FOUND ) .OR. ( .NOT. ELEMI( HANDLE, FHLIST ) ) ) THEN
+      if ( ( .not. found ) .or. ( .not. elemi( handle, fhlist ) ) ) then
 
-         CALL SETMSG ( 'There is no file open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                             )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHHANDLE)'                )
-         CALL CHKOUT ( 'DAFSIH'                                )
-         RETURN
+         call setmsg ( 'There is no file open with handle = #' )
+         call errint ( '#', handle                             )
+         call sigerr ( 'SPICE(DAFNOSUCHHANDLE)'                )
+         call chkout ( 'DAFSIH'                                )
+         return
 
 !
 !     If the access type is 'WRITE', the DAF must be open for writing.
 !     This is not the case if the value of IAMH returned from the handle
 !     manager is not READ.
 !
-      ELSE IF ( ( ACC .EQ. 'WRITE' ) .AND. ( IAMH .EQ. READ ) ) THEN
+      else if ( ( acc .eq. 'WRITE' ) .and. ( iamh .eq. read ) ) then
 
-         CALL SETMSG ( 'DAF not open for write.  Handle = #, ' // &
+         call setmsg ( 'DAF not open for write.  Handle = #, ' // &
                           'file = ''#'''                         )
-         CALL ERRINT ( '#', HANDLE                               )
-         CALL ERRCH  ( '#', DAFNAM                               )
-         CALL SIGERR ( 'SPICE(DAFINVALIDACCESS)'                 )
-         CALL CHKOUT ( 'DAFSIH'                                  )
-         RETURN
+         call errint ( '#', handle                               )
+         call errch  ( '#', dafnam                               )
+         call sigerr ( 'SPICE(DAFINVALIDACCESS)'                 )
+         call chkout ( 'DAFSIH'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The DAF's handle is o.k.
 !
-      CALL CHKOUT ( 'DAFSIH' )
-      RETURN
-      END
+      call chkout ( 'DAFSIH' )
+      return
+      end

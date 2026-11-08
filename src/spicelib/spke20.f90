@@ -1,6 +1,6 @@
 !$Procedure SPKE20 ( SPK, evaluate Chebyshev polynomials, type 20 )
 
-      SUBROUTINE SPKE20 ( ET, RECORD, XYZDOT )
+      subroutine spke20 ( et, record, xyzdot )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      XYZDOT   ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      xyzdot   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -191,27 +191,27 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      INTGRL ( 3 )
+      double precision      intgrl ( 3 )
 
-      INTEGER               DEGP
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NCOF
-      INTEGER               POSLOC
+      integer               degp
+      integer               i
+      integer               j
+      integer               ncof
+      integer               posloc
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKE20' )
+      call chkin ( 'SPKE20' )
 
 !
 !     The first number in the record is the record size. This is the
@@ -226,24 +226,24 @@
 !     The number of items counted by RECORD(1), other than the
 !     Chebyshev coefficients, is 5.
 !
-      NCOF = ( INT( RECORD( 1 ) ) - 5 ) / 3
+      ncof = ( int( record( 1 ) ) - 5 ) / 3
 
-      IF ( NCOF .LT. 1 ) THEN
+      if ( ncof .lt. 1 ) then
 
-         CALL SETMSG ( 'The input record''s coefficient count NCOF ' &
+         call setmsg ( 'The input record''s coefficient count NCOF ' &
          //            'should be positive but was #.'              )
-         CALL ERRINT ( '#', NCOF                                    )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'SPKE20'                                     )
-         RETURN
+         call errint ( '#', ncof                                    )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+         call chkout ( 'SPKE20'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     The degree of each polynomial is one less than the number of
 !     coefficients.
 !
-      DEGP = NCOF - 1
+      degp = ncof - 1
 
 !
 !     Pass the Chebyshev coefficient portion of the record into CHBIGR,
@@ -251,23 +251,23 @@
 !     component. The constants of integration are selected so that the
 !     integrals are zero when the input time is the interval midpoint.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         J = 4 + (I-1)*NCOF
+         j = 4 + (i-1)*ncof
 
-         CALL CHBIGR ( DEGP, RECORD(J),   RECORD(2), &
-                       ET,   XYZDOT(3+I), INTGRL(I)  )
-      END DO
+         call chbigr ( degp, record(j),   record(2), &
+                       et,   xyzdot(3+i), intgrl(i)  )
+      end do
 
 !
 !     Add the position vector or Euler angles at the interval midpoint
 !     to the integral.
 !
-      POSLOC = 4  +  ( 3 * NCOF )
+      posloc = 4  +  ( 3 * ncof )
 
-      CALL VADD ( RECORD(POSLOC), INTGRL, XYZDOT )
+      call vadd ( record(posloc), intgrl, xyzdot )
 
 
-      CALL CHKOUT ( 'SPKE20' )
-      RETURN
-      END
+      call chkout ( 'SPKE20' )
+      return
+      end

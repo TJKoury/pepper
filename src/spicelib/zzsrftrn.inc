@@ -45,14 +45,14 @@
 !
 !        srftrn.inc.
 !
-      INTEGER               NROOM
-      PARAMETER           ( NROOM   = 2003 )
+      integer               nroom
+      parameter           ( nroom   = 2003 )
 
 !
 !     Singly-linked list pool lower bound:
 !
-      INTEGER               LBSNGL
-      PARAMETER           ( LBSNGL = -5 )
+      integer               lbsngl
+      parameter           ( lbsngl = -5 )
 
 !
 !     End of file zzsrftrn.inc.

@@ -1,6 +1,6 @@
 !$Procedure LSTCLI ( Closest integer array element )
 
-      INTEGER FUNCTION  LSTCLI ( X, N, ARRAY )
+      integer function  lstcli ( x, n, array )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               X
-      INTEGER               N
-      INTEGER               ARRAY ( * )
+      integer               x
+      integer               n
+      integer               array ( * )
 
 ! $ Brief_I/O
 !
@@ -153,88 +153,88 @@
 !
 !     Local variables
 !
-      INTEGER          J
+      integer          j
 
-      INTEGER          BEGIN
-      INTEGER          END
-      INTEGER          MIDDLE
-      INTEGER          ITEMS
+      integer          begin
+      integer          end
+      integer          middle
+      integer          items
 
 !
 !     Save the size of the array and point to the beginning and ending
 !     positions. The pointers delimit the current search interval.
 !
-      ITEMS = N
-      BEGIN = 1
-      END   = N
+      items = n
+      begin = 1
+      end   = n
 
-      IF      ( N .LE. 0 ) THEN
+      if      ( n .le. 0 ) then
 
 !
 !        There is nothing in the array to compare against. Zero is the
 !        only sensible thing to return.
 !
-         LSTCLI = 0
-         RETURN
+         lstcli = 0
+         return
 
-      ELSE IF ( X .LE. ARRAY( BEGIN ) ) THEN
+      else if ( x .le. array( begin ) ) then
 
 !
 !        All elements of the array are at least as big as X. So the
 !        first element is the closest to X.
 !
-         LSTCLI = 1
+         lstcli = 1
 
-      ELSE IF ( ARRAY( END ) .LE. X ) THEN
+      else if ( array( end ) .le. x ) then
 
 !
 !        X is at least as big as all elements of the array.  So the last
 !        element is the closest to X.
 !
-         LSTCLI = END
+         lstcli = end
 
-      ELSE
+      else
 
 !
 !        X lies between some pair of elements of the array.
 !
-         DO WHILE ( ITEMS .GT. 2 )
+         do while ( items .gt. 2 )
 
-            J        = ITEMS/2
-            MIDDLE   = BEGIN + J
+            j        = items/2
+            middle   = begin + j
 
-            IF ( ARRAY( MIDDLE ) .LE. X ) THEN
-               BEGIN  = MIDDLE
-            ELSE
-               END    = MIDDLE
-            END IF
+            if ( array( middle ) .le. x ) then
+               begin  = middle
+            else
+               end    = middle
+            end if
 
-            ITEMS     = 1 + ( END - BEGIN )
+            items     = 1 + ( end - begin )
 
-         END DO
+         end do
 
 !
 !        Which of the two is closest?
 !
-         IF ( X - ARRAY( BEGIN ) .LT. ARRAY( END ) - X ) THEN
-            LSTCLI = BEGIN
-         ELSE
-            LSTCLI = END
-         END IF
+         if ( x - array( begin ) .lt. array( end ) - x ) then
+            lstcli = begin
+         else
+            lstcli = end
+         end if
 
-      END IF
+      end if
 
 !
 !     March down the array to find the last element equal to the
 !     closet value.
 !
-      DO WHILE (         LSTCLI .LT. N                     .AND. &
-                ARRAY( LSTCLI ) .EQ. ARRAY( LSTCLI + 1 ))
+      do while (         lstcli .lt. n                     .and. &
+                array( lstcli ) .eq. array( lstcli + 1 ))
 
-         LSTCLI = LSTCLI + 1
+         lstcli = lstcli + 1
 
-      END DO
+      end do
 
 
-      RETURN
-      END
+      return
+      end

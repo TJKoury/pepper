@@ -1,6 +1,6 @@
 !$Procedure      ZZEKGLNK ( EK, get link count for data page )
 
-      SUBROUTINE ZZEKGLNK ( HANDLE, TYPE, P, NLINKS )
+      subroutine zzekglnk ( handle, type, p, nlinks )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TYPE
-      INTEGER               P
-      INTEGER               NLINKS
+      integer               handle
+      integer               type
+      integer               p
+      integer               nlinks
 
 ! $ Brief_I/O
 !
@@ -100,50 +100,50 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DPLNK
-      INTEGER               BASE
+      double precision      dplnk
+      integer               base
 
 !
 !     Use discovery check-in.
 !
 !     Look up the base address of the page.
 !
-      CALL ZZEKPGBS ( TYPE, P, BASE )
+      call zzekpgbs ( type, p, base )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 !
 !        Look up the encoded count.
 !
-         CALL ZZEKGEI ( HANDLE, BASE+CLCIDX, NLINKS )
+         call zzekgei ( handle, base+clcidx, nlinks )
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 !
 !        Convert the encoded count to integer type.
 !
-         CALL DASRDD ( HANDLE, BASE+DLCIDX, BASE+DLCIDX, DPLNK )
+         call dasrdd ( handle, base+dlcidx, base+dlcidx, dplnk )
 
-         NLINKS  =  NINT ( DPLNK )
+         nlinks  =  nint ( dplnk )
 
 
-      ELSE
+      else
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, ZZEKPGBS would have complained.
 !
-         CALL DASRDI ( HANDLE, BASE+ILCIDX, BASE+ILCIDX, NLINKS )
+         call dasrdi ( handle, base+ilcidx, base+ilcidx, nlinks )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

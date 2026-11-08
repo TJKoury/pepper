@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAC02 ( EK, add class 2 column to segment )
 
-      SUBROUTINE ZZEKAC02 (  HANDLE,  SEGDSC,  COLDSC,  DVALS, &
-                             NLFLGS,  RCPTRS,  WKINDX         )
+      subroutine zzekac02 (  handle,  segdsc,  coldsc,  dvals, &
+                             nlflgs,  rcptrs,  wkindx         )
 
 ! $ Abstract
 !
@@ -18,22 +18,22 @@
 ! $ Declarations
 
 
-      INCLUDE  'ekbool.inc'
-      INCLUDE  'ekcnamsz.inc'
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'ekrecptr.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekbool.inc'
+      include  'ekcnamsz.inc'
+      include  'ekcoldsc.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'ekrecptr.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      DOUBLE PRECISION      DVALS  ( * )
-      LOGICAL               NLFLGS ( * )
-      INTEGER               RCPTRS ( * )
-      INTEGER               WKINDX ( * )
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      double precision      dvals  ( * )
+      logical               nlflgs ( * )
+      integer               rcptrs ( * )
+      integer               wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -181,149 +181,149 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = DPSIZE )
+      integer               bufsiz
+      parameter           ( bufsiz = dpsize )
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      DOUBLE PRECISION      PAGE   ( PGSIZD )
+      double precision      page   ( pgsizd )
 
-      INTEGER               ADRBUF ( BUFSIZ )
-      INTEGER               BUFPTR
-      INTEGER               CLASS
-      INTEGER               COLIDX
-      INTEGER               DSCBAS
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               IDXTYP
-      INTEGER               P
-      INTEGER               PBASE
-      INTEGER               MBASE
-      INTEGER               N
-      INTEGER               NDATA
-      INTEGER               NNULL
-      INTEGER               NROWS
-      INTEGER               NULPTR
-      INTEGER               NWRITE
-      INTEGER               REMAIN
-      INTEGER               TO
-      INTEGER               TREE
+      integer               adrbuf ( bufsiz )
+      integer               bufptr
+      integer               class
+      integer               colidx
+      integer               dscbas
+      integer               from
+      integer               i
+      integer               idxtyp
+      integer               p
+      integer               pbase
+      integer               mbase
+      integer               n
+      integer               ndata
+      integer               nnull
+      integer               nrows
+      integer               nulptr
+      integer               nwrite
+      integer               remain
+      integer               to
+      integer               tree
 
-      LOGICAL               INDEXD
-      LOGICAL               NULLOK
+      logical               indexd
+      logical               nullok
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKAC02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKAC02' )
+      end if
 
 !
 !     Grab the column's attributes.
 !
-      CLASS  =  COLDSC( CLSIDX )
-      IDXTYP =  COLDSC( IXTIDX )
-      NULPTR =  COLDSC( NFLIDX )
-      COLIDX =  COLDSC ( ORDIDX )
+      class  =  coldsc( clsidx )
+      idxtyp =  coldsc( ixtidx )
+      nulptr =  coldsc( nflidx )
+      colidx =  coldsc ( ordidx )
 
-      NULLOK =  NULPTR .NE. IFALSE
-      INDEXD =  IDXTYP .NE. IFALSE
+      nullok =  nulptr .ne. ifalse
+      indexd =  idxtyp .ne. ifalse
 
 !
 !     This column had better be class 2.
 !
-      IF ( CLASS .NE. 2 ) THEN
+      if ( class .ne. 2 ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Column class code # found in descriptor for ' // &
+         call setmsg ( 'Column class code # found in descriptor for ' // &
                        'column #.  Class should be 2.'                 )
-         CALL ERRINT ( '#', CLASS                                      )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'ZZEKAC02'                                      )
-         RETURN
+         call errint ( '#', class                                      )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'ZZEKAC02'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     If the column is indexed, the index type should be 1; we don't
 !     know how to create any other type of index.
 !
-      IF  (  INDEXD  .AND.  ( IDXTYP .NE. 1 )  ) THEN
+      if  (  indexd  .and.  ( idxtyp .ne. 1 )  ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Index type code # found in descriptor for '   // &
+         call setmsg ( 'Index type code # found in descriptor for '   // &
                        'column #.  Code should be 1.'                  )
-         CALL ERRINT ( '#', IDXTYP                                     )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(UNRECOGNIZEDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKAC02'                                      )
-         RETURN
+         call errint ( '#', idxtyp                                     )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(UNRECOGNIZEDTYPE)'                       )
+         call chkout ( 'ZZEKAC02'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Push the column's ordinal index on the stack.  This allows us
 !     to identify the column the addresses belong to.
 !
-      CALL ZZEKSPSH ( 1, COLIDX )
+      call zzekspsh ( 1, colidx )
 
 !
 !     Find the number of rows in the segment.
 !
-      NROWS   =  SEGDSC ( NRIDX )
+      nrows   =  segdsc ( nridx )
 
 !
 !     Decide how many pages we'll need to store the data.  Also
 !     record the number of data values to write.
 !
-      IF ( NULLOK ) THEN
+      if ( nullok ) then
 !
 !        Count the non-null rows; these are the ones that will take
 !        up space.
 !
-         NNULL  =  0
+         nnull  =  0
 
-         DO I = 1, NROWS
+         do i = 1, nrows
 
-            IF ( NLFLGS(I) ) THEN
-               NNULL  =  NNULL + 1
-            END IF
+            if ( nlflgs(i) ) then
+               nnull  =  nnull + 1
+            end if
 
-         END DO
+         end do
 
-         NDATA  =  NROWS - NNULL
-
-
-      ELSE
-
-         NDATA  =  NROWS
-
-      END IF
+         ndata  =  nrows - nnull
 
 
-      IF ( NDATA .GT. 0 ) THEN
+      else
+
+         ndata  =  nrows
+
+      end if
+
+
+      if ( ndata .gt. 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
 !
-         CALL ZZEKAPS  ( HANDLE, SEGDSC, DP, .FALSE., P, PBASE )
-         CALL CLEARD   ( PGSIZD, PAGE )
+         call zzekaps  ( handle, segdsc, dp, .false., p, pbase )
+         call cleard   ( pgsizd, page )
 
-      END IF
+      end if
 
 !
 !     Write the input data out to the target file a page at a time.
@@ -340,79 +340,79 @@
 !     items in the current page.
 !
 
-      REMAIN  =  NROWS
-      FROM    =  1
-      TO      =  1
-      BUFPTR  =  1
-      NWRITE  =  0
-      N       =  0
+      remain  =  nrows
+      from    =  1
+      to      =  1
+      bufptr  =  1
+      nwrite  =  0
+      n       =  0
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 
-         IF (  NULLOK  .AND.  ( NLFLGS(FROM) )  ) THEN
+         if (  nullok  .and.  ( nlflgs(from) )  ) then
 
-            ADRBUF(BUFPTR) =  NULL
+            adrbuf(bufptr) =  null
 
-         ELSE
+         else
 
-            ADRBUF(BUFPTR) =  TO      +  PBASE
-            PAGE(TO)       =  DVALS(FROM)
-            TO             =  TO      +  1
-            NWRITE         =  NWRITE  +  1
-            N              =  N       +  1
+            adrbuf(bufptr) =  to      +  pbase
+            page(to)       =  dvals(from)
+            to             =  to      +  1
+            nwrite         =  nwrite  +  1
+            n              =  n       +  1
 
-         END IF
-
-
-         FROM    =  FROM   + 1
-         REMAIN  =  REMAIN - 1
+         end if
 
 
-         IF (  ( BUFPTR .EQ. BUFSIZ ) .OR. ( REMAIN .EQ. 0 )  ) THEN
+         from    =  from   + 1
+         remain  =  remain - 1
+
+
+         if (  ( bufptr .eq. bufsiz ) .or. ( remain .eq. 0 )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.
 !
-            CALL ZZEKSPSH ( BUFPTR, ADRBUF )
-            BUFPTR  =  1
+            call zzekspsh ( bufptr, adrbuf )
+            bufptr  =  1
 
-         ELSE
+         else
 
-            BUFPTR  =  BUFPTR + 1
+            bufptr  =  bufptr + 1
 
-         END IF
+         end if
 
 
-         IF (  (   N      .EQ. DPSIZE ) .OR. &
-               ( ( NWRITE .EQ. NDATA  ) .AND. ( NDATA  .NE. 0 ) ) ) THEN
+         if (  (   n      .eq. dpsize ) .or. &
+               ( ( nwrite .eq. ndata  ) .and. ( ndata  .ne. 0 ) ) ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the
 !           current page.  First set the link count.
 !
-            PAGE ( DLCIDX ) =  N
+            page ( dlcidx ) =  n
 
 !
 !           Write out the data page.
 !
-            CALL ZZEKPGWD ( HANDLE, P, PAGE  )
+            call zzekpgwd ( handle, p, page  )
 
 !
 !           If there's more data to write, allocate another page.
 !
-            IF ( NWRITE .LT. NDATA ) THEN
+            if ( nwrite .lt. ndata ) then
 
-               CALL ZZEKAPS  ( HANDLE, SEGDSC, DP, .FALSE., P, PBASE )
-               CALL CLEARD   ( PGSIZD, PAGE )
+               call zzekaps  ( handle, segdsc, dp, .false., p, pbase )
+               call cleard   ( pgsizd, page )
 
-               N   =  0
-               TO  =  1
+               n   =  0
+               to  =  1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If the column is supposed to have an index, now is the time to
@@ -422,29 +422,29 @@
 !     load this sorted copy of the record pointer array into a tree in
 !     one shot.
 !
-      IF ( INDEXD ) THEN
+      if ( indexd ) then
 
-         CALL ZZEKORDD ( DVALS,  NULLOK, NLFLGS, NROWS, WKINDX )
+         call zzekordd ( dvals,  nullok, nlflgs, nrows, wkindx )
 
-         DO I = 1, NROWS
-            WKINDX(I) =  RCPTRS( WKINDX(I) )
-         END DO
+         do i = 1, nrows
+            wkindx(i) =  rcptrs( wkindx(i) )
+         end do
 
-         CALL ZZEKTRIT ( HANDLE, TREE                )
-         CALL ZZEKTR1S ( HANDLE, TREE, NROWS, WKINDX )
+         call zzektrit ( handle, tree                )
+         call zzektr1s ( handle, tree, nrows, wkindx )
 
 !
 !        Update the segment's metadata to point to the index.  The
 !        pointer indicates the root page of the tree.
 !
-         MBASE   =  SEGDSC ( IMDIDX )
-         DSCBAS  =  MBASE  +  SDSCSZ  +  (COLIDX-1)*CDSCSZ
+         mbase   =  segdsc ( imdidx )
+         dscbas  =  mbase  +  sdscsz  +  (colidx-1)*cdscsz
 
-         CALL DASUDI ( HANDLE,  DSCBAS+IXPIDX,  DSCBAS+IXPIDX,  TREE )
+         call dasudi ( handle,  dscbas+ixpidx,  dscbas+ixpidx,  tree )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKAC02' )
-      RETURN
-      END
+      call chkout ( 'ZZEKAC02' )
+      return
+      end

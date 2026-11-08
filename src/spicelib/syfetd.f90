@@ -1,6 +1,6 @@
 !$Procedure SYFETD ( Fetch the Nth symbol in the table )
 
-      SUBROUTINE SYFETD ( NTH, TABSYM, TABPTR, TABVAL, NAME, FOUND )
+      subroutine syfetd ( nth, tabsym, tabptr, tabval, name, found )
 
 ! $ Abstract
 !
@@ -16,17 +16,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               NTH
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
-      CHARACTER*(*)         NAME
-      LOGICAL               FOUND
+      integer               nth
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
+      character*(*)         name
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -156,49 +156,49 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      LOGICAL               RETURN
+      integer               cardc
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYFETD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYFETD' )
+      end if
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     If the value of NTH is out of range, that's a problem.
 !
-      IF ( NTH .LT. 1  .OR.  NTH .GT. NSYM ) THEN
+      if ( nth .lt. 1  .or.  nth .gt. nsym ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
 !
 !     Otherwise, we can proceed without fear of error. Merely locate
 !     and return the appropriate component from the values table.
 !
-      ELSE
+      else
 
-         FOUND = .TRUE.
-         NAME  = TABSYM(NTH)
+         found = .true.
+         name  = tabsym(nth)
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYFETD' )
-      RETURN
-      END
+      call chkout ( 'SYFETD' )
+      return
+      end

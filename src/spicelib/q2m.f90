@@ -1,6 +1,6 @@
 !$Procedure Q2M ( Quaternion to matrix )
 
-      SUBROUTINE Q2M ( Q, R )
+      subroutine q2m ( q, r )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      Q ( 0 : 3 )
-      DOUBLE PRECISION      R ( 3,  3 )
+      double precision      q ( 0 : 3 )
+      double precision      r ( 3,  3 )
 
 ! $ Brief_I/O
 !
@@ -449,18 +449,18 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      Q01
-      DOUBLE PRECISION      Q02
-      DOUBLE PRECISION      Q03
-      DOUBLE PRECISION      Q12
-      DOUBLE PRECISION      Q13
-      DOUBLE PRECISION      Q23
-      DOUBLE PRECISION      Q1S
-      DOUBLE PRECISION      Q2S
-      DOUBLE PRECISION      Q3S
+      double precision      q01
+      double precision      q02
+      double precision      q03
+      double precision      q12
+      double precision      q13
+      double precision      q23
+      double precision      q1s
+      double precision      q2s
+      double precision      q3s
 
-      DOUBLE PRECISION      L2
-      DOUBLE PRECISION      SHARPN
+      double precision      l2
+      double precision      sharpn
 
 
 !
@@ -552,57 +552,57 @@
 
 
 
-      Q01  =  Q(0) * Q(1)
-      Q02  =  Q(0) * Q(2)
-      Q03  =  Q(0) * Q(3)
+      q01  =  q(0) * q(1)
+      q02  =  q(0) * q(2)
+      q03  =  q(0) * q(3)
 
-      Q12  =  Q(1) * Q(2)
-      Q13  =  Q(1) * Q(3)
+      q12  =  q(1) * q(2)
+      q13  =  q(1) * q(3)
 
-      Q23  =  Q(2) * Q(3)
+      q23  =  q(2) * q(3)
 
-      Q1S  =  Q(1) * Q(1)
-      Q2S  =  Q(2) * Q(2)
-      Q3S  =  Q(3) * Q(3)
+      q1s  =  q(1) * q(1)
+      q2s  =  q(2) * q(2)
+      q3s  =  q(3) * q(3)
 
 !
 !     We sharpen the computation by effectively converting Q to
 !     a unit quaternion if it isn't one already.
 !
-      L2   =  Q(0) * Q(0) + Q1S + Q2S + Q3S
+      l2   =  q(0) * q(0) + q1s + q2s + q3s
 
-      IF ( L2 .NE. 1.0D0 .AND. L2 .NE. 0.0D0 ) THEN
+      if ( l2 .ne. 1.0d0 .and. l2 .ne. 0.0d0 ) then
 
-         SHARPN = 1.0D0 / L2
+         sharpn = 1.0d0 / l2
 
-         Q01    = Q01 * SHARPN
-         Q02    = Q02 * SHARPN
-         Q03    = Q03 * SHARPN
+         q01    = q01 * sharpn
+         q02    = q02 * sharpn
+         q03    = q03 * sharpn
 
-         Q12    = Q12 * SHARPN
-         Q13    = Q13 * SHARPN
+         q12    = q12 * sharpn
+         q13    = q13 * sharpn
 
-         Q23    = Q23 * SHARPN
+         q23    = q23 * sharpn
 
-         Q1S    = Q1S * SHARPN
-         Q2S    = Q2S * SHARPN
-         Q3S    = Q3S * SHARPN
+         q1s    = q1s * sharpn
+         q2s    = q2s * sharpn
+         q3s    = q3s * sharpn
 
-      END IF
+      end if
 
 
 
-      R(1,1) =  1.D0  -  2.D0 * ( Q2S + Q3S )
-      R(2,1) =           2.D0 * ( Q12 + Q03 )
-      R(3,1) =           2.D0 * ( Q13 - Q02 )
+      r(1,1) =  1.d0  -  2.d0 * ( q2s + q3s )
+      r(2,1) =           2.d0 * ( q12 + q03 )
+      r(3,1) =           2.d0 * ( q13 - q02 )
 
-      R(1,2) =           2.D0 * ( Q12 - Q03 )
-      R(2,2) =  1.D0  -  2.D0 * ( Q1S + Q3S )
-      R(3,2) =           2.D0 * ( Q23 + Q01 )
+      r(1,2) =           2.d0 * ( q12 - q03 )
+      r(2,2) =  1.d0  -  2.d0 * ( q1s + q3s )
+      r(3,2) =           2.d0 * ( q23 + q01 )
 
-      R(1,3) =           2.D0 * ( Q13 + Q02 )
-      R(2,3) =           2.D0 * ( Q23 - Q01 )
-      R(3,3) =  1.D0  -  2.D0 * ( Q1S + Q2S )
+      r(1,3) =           2.d0 * ( q13 + q02 )
+      r(2,3) =           2.d0 * ( q23 - q01 )
+      r(3,3) =  1.d0  -  2.d0 * ( q1s + q2s )
 
-      RETURN
-      END
+      return
+      end

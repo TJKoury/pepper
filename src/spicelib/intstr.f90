@@ -1,6 +1,6 @@
 !$Procedure INTSTR  ( Integer to character string )
 
-      SUBROUTINE INTSTR ( NUMBER, STRING )
+      subroutine intstr ( number, string )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NUMBER
-      CHARACTER*(*)         STRING
+      integer               number
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -150,31 +150,31 @@
 !
 !     Local Parameters
 !
-      INTEGER               BASE
-      PARAMETER           ( BASE = 10 )
+      integer               base
+      parameter           ( base = 10 )
 
-      INTEGER               STRLEN
-      PARAMETER           ( STRLEN = 80 )
+      integer               strlen
+      parameter           ( strlen = 80 )
 !
 !     Local variables
 !
-      CHARACTER*(STRLEN)    TMPSTR
+      character*(strlen)    tmpstr
 
-      CHARACTER*(1)         DIGITS(0:9)
+      character*(1)         digits(0:9)
 
-      INTEGER               TMPNUM
-      INTEGER               RESULT
-      INTEGER               REMNDR
+      integer               tmpnum
+      integer               result
+      integer               remndr
 
-      INTEGER               I
+      integer               i
 
 !
 !    Saved values
 !
-      SAVE DIGITS
+      save digits
 
 
-      DATA                  DIGITS / &
+      data                  digits / &
                                      '0', '1', '2', '3', &
                                      '4', '5', '6', '7', &
                                      '8', '9' &
@@ -192,12 +192,12 @@
 !
 !     Make a copy of the input so that it will not be modified.
 !
-      TMPNUM = NUMBER
+      tmpnum = number
 !
 !     Initialize the temporary character buffer used to store the
 !     character string as it is generated to blanks.
 !
-      TMPSTR = ' '
+      tmpstr = ' '
 !
 !     We need to do different things for the cases where the number to
 !     be converted is positive, negative, or zero. ( Actually, the
@@ -209,57 +209,57 @@
 !     For 32 bit numbers, INTMIN = -214748368 and INTMAX = 214748367.
 !     You should be able to see the repercussions of this.
 !
-      I = LEN( TMPSTR ) + 1
-      IF ( TMPNUM .LT. 0 ) THEN
+      i = len( tmpstr ) + 1
+      if ( tmpnum .lt. 0 ) then
 !
 !        Collect all of the digits in the string.
 !
-         DO WHILE ( TMPNUM .NE. 0 )
+         do while ( tmpnum .ne. 0 )
 
-            I      = I - 1
-            RESULT = TMPNUM / BASE
-            REMNDR = RESULT * BASE - TMPNUM
-            TMPNUM = RESULT
+            i      = i - 1
+            result = tmpnum / base
+            remndr = result * base - tmpnum
+            tmpnum = result
 
-            TMPSTR (I:I) = DIGITS(REMNDR)
+            tmpstr (i:i) = digits(remndr)
 
-         END DO
+         end do
 !
 !        Put the minus sign in place.
 !
-         I           = I - 1
-         TMPSTR(I:I) = '-'
+         i           = i - 1
+         tmpstr(i:i) = '-'
 
-      ELSE IF ( TMPNUM .GT. 0 ) THEN
+      else if ( tmpnum .gt. 0 ) then
 !
 !        Collect all of the digits in the string.
 !
-         DO WHILE ( TMPNUM .NE. 0 )
+         do while ( tmpnum .ne. 0 )
 
-            I      = I - 1
-            RESULT = TMPNUM / BASE
-            REMNDR = TMPNUM - RESULT * BASE
-            TMPNUM = RESULT
+            i      = i - 1
+            result = tmpnum / base
+            remndr = tmpnum - result * base
+            tmpnum = result
 
-            TMPSTR (I:I) = DIGITS(REMNDR)
+            tmpstr (i:i) = digits(remndr)
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        Treat zero as a special case, because it's easier.
 !
-         I           = I - 1
-         TMPSTR(I:I) = DIGITS(0)
+         i           = i - 1
+         tmpstr(i:i) = digits(0)
 
-      END IF
+      end if
 !
 !     Set the value of the output string before returning. Let the
 !     Fortran string equals deal with the left justification, and the
 !     truncation on the right if the string STRING is not long enough
 !     to contain all of the characters necessary.
 !
-      STRING = TMPSTR(I:LEN(TMPSTR))
+      string = tmpstr(i:len(tmpstr))
 
-      RETURN
-      END
+      return
+      end

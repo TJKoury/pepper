@@ -1,9 +1,9 @@
 !$Procedure ZZEKRCMP ( EK, row comparison )
 
-      LOGICAL FUNCTION ZZEKRCMP ( OP, &
-                                  NCOLS, &
-                                  HAN1, SGDSC1, CDLST1, ROW1, ELTS1, &
-                                  HAN2, SGDSC2, CDLST2, ROW2, ELTS2  )
+      logical function zzekrcmp ( op, &
+                                  ncols, &
+                                  han1, sgdsc1, cdlst1, row1, elts1, &
+                                  han2, sgdsc2, cdlst2, row2, elts2  )
 
 ! $ Abstract
 !
@@ -22,24 +22,24 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               OP
-      INTEGER               NCOLS
-      INTEGER               HAN1
-      INTEGER               SGDSC1 ( SDSCSZ )
-      INTEGER               CDLST1 ( CDSCSZ, * )
-      INTEGER               ROW1
-      INTEGER               ELTS1  ( * )
-      INTEGER               HAN2
-      INTEGER               SGDSC2 ( SDSCSZ )
-      INTEGER               CDLST2 ( CDSCSZ, * )
-      INTEGER               ROW2
-      INTEGER               ELTS2  ( * )
+      integer               op
+      integer               ncols
+      integer               han1
+      integer               sgdsc1 ( sdscsz )
+      integer               cdlst1 ( cdscsz, * )
+      integer               row1
+      integer               elts1  ( * )
+      integer               han2
+      integer               sgdsc2 ( sdscsz )
+      integer               cdlst2 ( cdscsz, * )
+      integer               row2
+      integer               elts2  ( * )
 
 ! $ Brief_I/O
 !
@@ -242,25 +242,25 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKECMP
+      integer               zzekecmp
 
 !
 !     Local variables
 !
-      INTEGER               CLDSCS ( CDSCSZ, 2 )
-      INTEGER               COL
-      INTEGER               ELTS   ( 2 )
-      INTEGER               HANS   ( 2 )
-      INTEGER               REL
-      INTEGER               ROWS   ( 2 )
-      INTEGER               SGDSCS ( SDSCSZ, 2 )
+      integer               cldscs ( cdscsz, 2 )
+      integer               col
+      integer               elts   ( 2 )
+      integer               hans   ( 2 )
+      integer               rel
+      integer               rows   ( 2 )
+      integer               sgdscs ( sdscsz, 2 )
 
 !
 !     Use discovery check-in for speed.
 !
 !     The function value defaults to .FALSE.
 !
-      ZZEKRCMP = .FALSE.
+      zzekrcmp = .false.
 
 !
 !     The input column descriptors identify the columns to be used
@@ -273,87 +273,87 @@
 !     The first step is to determine the relation that holds between
 !     the rows.  We start out assuming we have equality.
 !
-      HANS(1)  =  HAN1
-      HANS(2)  =  HAN2
+      hans(1)  =  han1
+      hans(2)  =  han2
 
-      CALL MOVEI ( SGDSC1, SDSCSZ, SGDSCS(1,1) )
-      CALL MOVEI ( SGDSC2, SDSCSZ, SGDSCS(1,2) )
+      call movei ( sgdsc1, sdscsz, sgdscs(1,1) )
+      call movei ( sgdsc2, sdscsz, sgdscs(1,2) )
 
-      ROWS(1)  =  ROW1
-      ROWS(2)  =  ROW2
+      rows(1)  =  row1
+      rows(2)  =  row2
 
-      REL      =  EQ
-      COL      =  1
+      rel      =  eq
+      col      =  1
 
-      DO WHILE (  ( COL .LE. NCOLS ) .AND. ( REL .EQ. EQ )  )
+      do while (  ( col .le. ncols ) .and. ( rel .eq. eq )  )
 !
 !        Compare the entries in the two rows in the columns indicated
 !        by the Nth column descriptor pair.
 !
-         CALL MOVEI ( CDLST1(1,COL), CDSCSZ, CLDSCS(1,1) )
-         CALL MOVEI ( CDLST2(1,COL), CDSCSZ, CLDSCS(1,2) )
+         call movei ( cdlst1(1,col), cdscsz, cldscs(1,1) )
+         call movei ( cdlst2(1,col), cdscsz, cldscs(1,2) )
 
-         ELTS(1)  =  ELTS1(COL)
-         ELTS(2)  =  ELTS2(COL)
+         elts(1)  =  elts1(col)
+         elts(2)  =  elts2(col)
 
-         REL      =  ZZEKECMP ( HANS,  SGDSCS,  CLDSCS, ROWS,  ELTS  )
+         rel      =  zzekecmp ( hans,  sgdscs,  cldscs, rows,  elts  )
 
 !
 !        We've completed the comparison for the column numbered COL.
 !
-         COL      =  COL + 1
+         col      =  col + 1
 
-      END DO
+      end do
 
 
 !
 !     Determine the truth of the input relational expression.
 !
-      IF ( OP .EQ. EQ )   THEN
+      if ( op .eq. eq )   then
 
-         ZZEKRCMP  =  REL .EQ. EQ
-
-
-      ELSE IF ( OP .EQ. LT )   THEN
-
-         ZZEKRCMP  =  REL .EQ. LT
+         zzekrcmp  =  rel .eq. eq
 
 
-      ELSE IF ( OP .EQ. LE )   THEN
+      else if ( op .eq. lt )   then
 
-         ZZEKRCMP  =  REL .NE. GT
-
-
-      ELSE IF ( OP .EQ. GT )   THEN
-
-         ZZEKRCMP  =  REL .EQ. GT
+         zzekrcmp  =  rel .eq. lt
 
 
-      ELSE IF ( OP .EQ. GE )   THEN
+      else if ( op .eq. le )   then
 
-         ZZEKRCMP  =  REL .NE. LT
-
-
-      ELSE IF ( OP .EQ. NE )   THEN
-
-         ZZEKRCMP  =  REL .NE. EQ
+         zzekrcmp  =  rel .ne. gt
 
 
-      ELSE
+      else if ( op .eq. gt )   then
+
+         zzekrcmp  =  rel .eq. gt
+
+
+      else if ( op .eq. ge )   then
+
+         zzekrcmp  =  rel .ne. lt
+
+
+      else if ( op .eq. ne )   then
+
+         zzekrcmp  =  rel .ne. eq
+
+
+      else
 !
 !        Sorry, we couldn't resist.
 !
-         ZZEKRCMP  =  .FALSE.
+         zzekrcmp  =  .false.
 
-         CALL CHKIN  ( 'ZZEKRCMP'                                      )
-         CALL SETMSG ( 'The relational operator # was not recognized.' )
-         CALL ERRINT ( '#',  OP                                        )
-         CALL SIGERR ( 'SPICE(UNNATURALRELATION)'                      )
-         CALL CHKOUT ( 'ZZEKRCMP'                                      )
-         RETURN
+         call chkin  ( 'ZZEKRCMP'                                      )
+         call setmsg ( 'The relational operator # was not recognized.' )
+         call errint ( '#',  op                                        )
+         call sigerr ( 'SPICE(UNNATURALRELATION)'                      )
+         call chkout ( 'ZZEKRCMP'                                      )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

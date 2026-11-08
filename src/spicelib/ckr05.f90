@@ -1,7 +1,7 @@
 !$Procedure CKR05 ( Read CK record from segment, type 05 )
 
-      SUBROUTINE CKR05 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV, &
-                         RECORD, FOUND                       )
+      subroutine ckr05 ( handle, descr, sclkdp, tol, needav, &
+                         record, found                       )
 
 ! $ Abstract
 !
@@ -18,18 +18,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ck05.inc'
-      INCLUDE 'ckparam.inc'
+      include 'ck05.inc'
+      include 'ckparam.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD   ( * )
-      LOGICAL               FOUND
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      sclkdp
+      double precision      tol
+      logical               needav
+      double precision      record   ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -235,190 +235,190 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPMAX
+      double precision      brcktd
+      double precision      dpmax
 
-      INTEGER               LSTLED
-      INTEGER               LSTLTD
+      integer               lstled
+      integer               lstltd
 
-      LOGICAL               ODD
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               odd
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               PBUFSZ
-      PARAMETER           ( PBUFSZ = DIRSIZ + 1 )
+      integer               pbufsz
+      parameter           ( pbufsz = dirsiz + 1 )
 
-      INTEGER               CTRLSZ
-      PARAMETER           ( CTRLSZ = 5 )
+      integer               ctrlsz
+      parameter           ( ctrlsz = 5 )
 
-      INTEGER               PARSIZ
-      PARAMETER           ( PARSIZ = 4 )
+      integer               parsiz
+      parameter           ( parsiz = 4 )
 
-      INTEGER               SBUFSZ
-      PARAMETER           ( SBUFSZ = DIRSIZ + 3 )
+      integer               sbufsz
+      parameter           ( sbufsz = dirsiz + 3 )
 
 !
 !     Maximum polynomial degree:
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 23 )
+      integer               maxdeg
+      parameter           ( maxdeg = 23 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CONTRL ( CTRLSZ )
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      HEPOCH
-      DOUBLE PRECISION      LEPOCH
-      DOUBLE PRECISION      NSTART
-      DOUBLE PRECISION      NNSTRT
-      DOUBLE PRECISION      PBUFFR ( PBUFSZ )
-      DOUBLE PRECISION      PREVN
-      DOUBLE PRECISION      PREVNN
-      DOUBLE PRECISION      PREVS
-      DOUBLE PRECISION      RATE
-      DOUBLE PRECISION      SBUFFR ( SBUFSZ )
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      T
+      double precision      contrl ( ctrlsz )
+      double precision      dc     ( nd )
+      double precision      hepoch
+      double precision      lepoch
+      double precision      nstart
+      double precision      nnstrt
+      double precision      pbuffr ( pbufsz )
+      double precision      prevn
+      double precision      prevnn
+      double precision      prevs
+      double precision      rate
+      double precision      sbuffr ( sbufsz )
+      double precision      start
+      double precision      t
 
-      INTEGER               PBEGIX
-      INTEGER               BEGIN
-      INTEGER               BUFBAS
-      INTEGER               DIRBAS
-      INTEGER               END
-      INTEGER               PENDIX
-      INTEGER               FIRST
-      INTEGER               HIGH
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               J
-      INTEGER               LAST
-      INTEGER               LBEG
-      INTEGER               LEND
-      INTEGER               LHAND
-      INTEGER               LSIZE
-      INTEGER               LOW
-      INTEGER               MAXWND
-      INTEGER               N
-      INTEGER               NIDIR
-      INTEGER               NPDIR
-      INTEGER               NINTS
-      INTEGER               NPREAD
-      INTEGER               NSRCH
-      INTEGER               NSREAD
-      INTEGER               PACKSZ
-      INTEGER               PGROUP
-      INTEGER               REMAIN
-      INTEGER               RSIZE
-      INTEGER               SBEGIX
-      INTEGER               SENDIX
-      INTEGER               SGROUP
-      INTEGER               SUBTYP
-      INTEGER               TIMBAS
-      INTEGER               TYPE
-      INTEGER               WNDSIZ
-      INTEGER               WSTART
+      integer               pbegix
+      integer               begin
+      integer               bufbas
+      integer               dirbas
+      integer               end
+      integer               pendix
+      integer               first
+      integer               high
+      integer               i
+      integer               ic     ( ni )
+      integer               j
+      integer               last
+      integer               lbeg
+      integer               lend
+      integer               lhand
+      integer               lsize
+      integer               low
+      integer               maxwnd
+      integer               n
+      integer               nidir
+      integer               npdir
+      integer               nints
+      integer               npread
+      integer               nsrch
+      integer               nsread
+      integer               packsz
+      integer               pgroup
+      integer               remain
+      integer               rsize
+      integer               sbegix
+      integer               sendix
+      integer               sgroup
+      integer               subtyp
+      integer               timbas
+      integer               type
+      integer               wndsiz
+      integer               wstart
 
 !
 !     Saved variables
 !
-      SAVE                  PREVS
-      SAVE                  PREVN
-      SAVE                  PREVNN
-      SAVE                  LHAND
-      SAVE                  LBEG
-      SAVE                  LEND
+      save                  prevs
+      save                  prevn
+      save                  prevnn
+      save                  lhand
+      save                  lbeg
+      save                  lend
 
 !
 !     Initial values
 !
-      DATA    LBEG    / -1    /
-      DATA    LEND    / -1    /
-      DATA    LHAND   / 0     /
-      DATA    PREVN   / -1.D0 /
-      DATA    PREVNN  / -1.D0 /
-      DATA    PREVS   / -1.D0 /
+      data    lbeg    / -1    /
+      data    lend    / -1    /
+      data    lhand   / 0     /
+      data    prevn   / -1.d0 /
+      data    prevnn  / -1.d0 /
+      data    prevs   / -1.d0 /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKR05' )
+      call chkin ( 'CKR05' )
 
 !
 !     No pointing found so far.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
 !     of the segment.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      TYPE  = IC( 3 )
-      BEGIN = IC( 5 )
-      END   = IC( 6 )
+      type  = ic( 3 )
+      begin = ic( 5 )
+      end   = ic( 6 )
 
 !
 !     Make sure that this really is a type 05 data segment.
 !
-      IF ( TYPE .NE. 5 ) THEN
-         CALL SETMSG( 'You are attempting to locate type * ' // &
+      if ( type .ne. 5 ) then
+         call setmsg( 'You are attempting to locate type * ' // &
                       'data in a type 5 data segment.'       )
-         CALL ERRINT( '*',  TYPE                             )
-         CALL SIGERR( 'SPICE(WRONGCKTYPE)'                   )
-         CALL CHKOUT( 'CKR05'                                )
-         RETURN
-      END IF
+         call errint( '*',  type                             )
+         call sigerr( 'SPICE(WRONGCKTYPE)'                   )
+         call chkout( 'CKR05'                                )
+         return
+      end if
 
 !
 !     Check the tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
-         CALL SETMSG( 'Tolerance must be non-negative but '  // &
+      if ( tol .lt. 0.d0 ) then
+         call setmsg( 'Tolerance must be non-negative but '  // &
                       'was actually *.'                      )
-         CALL ERRDP ( '*',  TOL                              )
-         CALL SIGERR( 'SPICE(VALUEOUTOFRANGE)'               )
-         CALL CHKOUT( 'CKR05'                                )
-         RETURN
-      END IF
+         call errdp ( '*',  tol                              )
+         call sigerr( 'SPICE(VALUEOUTOFRANGE)'               )
+         call chkout( 'CKR05'                                )
+         return
+      end if
 
 !
 !     Check the request time and tolerance against the bounds in
 !     the segment descriptor.
 !
-      IF (       ( (SCLKDP + TOL) .LT. DC(1) ) &
-           .OR.  ( (SCLKDP - TOL) .GT. DC(2) )  )  THEN
+      if (       ( (sclkdp + tol) .lt. dc(1) ) &
+           .or.  ( (sclkdp - tol) .gt. dc(2) )  )  then
 !
 !        The request time is too far outside the segment's coverage
 !        interval for any pointing to satisfy the request.
 !
-         CALL CHKOUT ( 'CKR05' )
-         RETURN
+         call chkout ( 'CKR05' )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the request time to use for searching.
 !
-      T = BRCKTD ( SCLKDP, DC(1), DC(2) )
+      t = brcktd ( sclkdp, dc(1), dc(2) )
 
 !
 !     From this point onward, we assume the segment was constructed
@@ -439,145 +439,145 @@
 !            the segment is at least 1 and is no larger than MAXDEG.
 !
 !
-      CALL DAFGDA ( HANDLE, END-CTRLSZ+1, END, CONTRL )
+      call dafgda ( handle, end-ctrlsz+1, end, contrl )
 
 !
 !     Check the FAILED flag just in case HANDLE is not attached to
 !     any DAF file and the error action is not set to ABORT.  We
 !     do this only after the first call to DAFGDA, as in CKR03.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKR05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKR05' )
+         return
+      end if
 
-      RATE    =         CONTRL(1)
-      SUBTYP  =  NINT ( CONTRL(2) )
-      WNDSIZ  =  NINT ( CONTRL(3) )
-      NINTS   =  NINT ( CONTRL(4) )
-      N       =  NINT ( CONTRL(5) )
+      rate    =         contrl(1)
+      subtyp  =  nint ( contrl(2) )
+      wndsiz  =  nint ( contrl(3) )
+      nints   =  nint ( contrl(4) )
+      n       =  nint ( contrl(5) )
 
 !
 !     Set the packet size, which is a function of the subtype.
 !
-      IF ( SUBTYP .EQ. C05TP0 ) THEN
+      if ( subtyp .eq. c05tp0 ) then
 
-         PACKSZ = C05PS0
+         packsz = c05ps0
 
-      ELSE IF ( SUBTYP .EQ. C05TP1 ) THEN
+      else if ( subtyp .eq. c05tp1 ) then
 
-         PACKSZ = C05PS1
+         packsz = c05ps1
 
-      ELSE IF ( SUBTYP .EQ. C05TP2 ) THEN
+      else if ( subtyp .eq. c05tp2 ) then
 
-         PACKSZ = C05PS2
+         packsz = c05ps2
 
-      ELSE IF ( SUBTYP .EQ. C05TP3 ) THEN
+      else if ( subtyp .eq. c05tp3 ) then
 
-         PACKSZ = C05PS3
+         packsz = c05ps3
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unexpected CK type 5 subtype # found in ' // &
+         call setmsg ( 'Unexpected CK type 5 subtype # found in ' // &
                        'type 5 segment.'                          )
-         CALL ERRINT ( '#',  SUBTYP                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( 'CKR05'                                    )
-         RETURN
+         call errint ( '#',  subtyp                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( 'CKR05'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the window size.
 !
-      IF ( WNDSIZ .LE. 0 ) THEN
+      if ( wndsiz .le. 0 ) then
 
-         CALL SETMSG ( 'Window size in type 05 segment was #; must ' // &
+         call setmsg ( 'Window size in type 05 segment was #; must ' // &
                        'be positive.'                                )
-         CALL ERRINT ( '#',  WNDSIZ                                  )
-         CALL SIGERR ( 'SPICE(INVALIDVALUE)'                         )
-         CALL CHKOUT ( 'CKR05'                                       )
-         RETURN
+         call errint ( '#',  wndsiz                                  )
+         call sigerr ( 'SPICE(INVALIDVALUE)'                         )
+         call chkout ( 'CKR05'                                       )
+         return
 
-      END IF
+      end if
 
 
-      IF (      ( SUBTYP .EQ. C05TP0 ) &
-           .OR. ( SUBTYP .EQ. C05TP2 )  ) THEN
+      if (      ( subtyp .eq. c05tp0 ) &
+           .or. ( subtyp .eq. c05tp2 )  ) then
 !
 !        These are the Hermite subtypes.
 !
-         MAXWND  =  (MAXDEG+1)/2
+         maxwnd  =  (maxdeg+1)/2
 
-         IF ( WNDSIZ .GT. MAXWND ) THEN
+         if ( wndsiz .gt. maxwnd ) then
 
-            CALL SETMSG ( 'Window size in type 05 segment was #; max '// &
+            call setmsg ( 'Window size in type 05 segment was #; max '// &
                           'allowed value is # for subtypes 0 and 2 '  // &
                           '(Hermite, 8 or 14-element packets).'       )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL ERRINT ( '#',  MAXWND                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'CKR05'                                     )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call errint ( '#',  maxwnd                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'CKR05'                                     )
+            return
 
-         END IF
+         end if
 
-         IF ( ODD(WNDSIZ) ) THEN
+         if ( odd(wndsiz) ) then
 
-            CALL SETMSG ( 'Window size in type 05 segment was #; '    // &
+            call setmsg ( 'Window size in type 05 segment was #; '    // &
                           'must be even for subtypes 0 and 2 '        // &
                           '(Hermite, 8 or 14-element packets).'       )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'CKR05'                                     )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'CKR05'                                     )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF (      ( SUBTYP .EQ. C05TP1 ) &
-                .OR. ( SUBTYP .EQ. C05TP3 )  ) THEN
+      else if (      ( subtyp .eq. c05tp1 ) &
+                .or. ( subtyp .eq. c05tp3 )  ) then
 !
 !        These are the Lagrange subtypes.
 !
-         MAXWND  =  MAXDEG + 1
+         maxwnd  =  maxdeg + 1
 
-         IF ( WNDSIZ .GT. MAXWND ) THEN
+         if ( wndsiz .gt. maxwnd ) then
 
-            CALL SETMSG ( 'Window size in type 05 segment was #; max '// &
+            call setmsg ( 'Window size in type 05 segment was #; max '// &
                           'allowed value is # for subtypes 1 and 3 '  // &
                           '(Lagrange, 4 or 7-element packets).'       )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL ERRINT ( '#',  MAXWND                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'CKR05'                                     )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call errint ( '#',  maxwnd                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'CKR05'                                     )
+            return
 
-         END IF
+         end if
 
-         IF ( ODD(WNDSIZ) ) THEN
+         if ( odd(wndsiz) ) then
 
-            CALL SETMSG ( 'Window size in type 05 segment was #; '    // &
+            call setmsg ( 'Window size in type 05 segment was #; '    // &
                           'must be even for subtypes 1 and 3 '        // &
                           '(Lagrange, 4 or 7-element packets).'       )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'CKR05'                                     )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'CKR05'                                     )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'This point should not be reached. Getting ' // &
+         call setmsg ( 'This point should not be reached. Getting ' // &
                        'here may indicate that the code needs to '  // &
                        'updated to handle the new subtype #'        )
-         CALL ERRINT ( '#', SUBTYP                                  )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                        )
-         CALL CHKOUT ( 'CKR05'                                      )
-         RETURN
+         call errint ( '#', subtyp                                  )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
+         call chkout ( 'CKR05'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     We now need to select the pointing values to interpolate
@@ -596,16 +596,16 @@
 !     pointing directory entry.
 !
 
-      NPDIR   =  (N-1) / DIRSIZ
-      DIRBAS  =  BEGIN +  N*PACKSZ  +  N  -  1
+      npdir   =  (n-1) / dirsiz
+      dirbas  =  begin +  n*packsz  +  n  -  1
 
-      IF ( NPDIR .EQ. 0 ) THEN
+      if ( npdir .eq. 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
-         PGROUP  = 1
+         pgroup  = 1
 
-      ELSE
+      else
 !
 !        There's at least one directory.  Find the first directory
 !        whose time is greater than or equal to the request time, if
@@ -614,27 +614,27 @@
 !        Having found the correct set of directory entries, we'll
 !        perform a binary search within that set for the desired entry.
 !
-         BUFBAS  =  DIRBAS
-         NPREAD  =  MIN ( NPDIR, DIRSIZ )
+         bufbas  =  dirbas
+         npread  =  min ( npdir, dirsiz )
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NPREAD, PBUFFR )
+         call dafgda ( handle, bufbas+1, bufbas+npread, pbuffr )
 
-         REMAIN  =  NPDIR - NPREAD
+         remain  =  npdir - npread
 
 
-         DO WHILE (       ( PBUFFR(NPREAD) .LT. T ) &
-                    .AND. ( REMAIN         .GT. 0 )   )
+         do while (       ( pbuffr(npread) .lt. t ) &
+                    .and. ( remain         .gt. 0 )   )
 
-            BUFBAS  =  BUFBAS + NPREAD
-            NPREAD  =  MIN ( REMAIN, DIRSIZ )
+            bufbas  =  bufbas + npread
+            npread  =  min ( remain, dirsiz )
 !
 !           Note:  NPREAD is always > 0 here.
 !
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NPREAD, PBUFFR )
+            call dafgda ( handle, bufbas+1, bufbas+npread, pbuffr )
 
-            REMAIN  =  REMAIN - NPREAD
+            remain  =  remain - npread
 
-         END DO
+         end do
 
 !
 !        At this point, BUFBAS - DIRBAS is the number of directory
@@ -643,11 +643,11 @@
 !        PGROUP is one more than the number of directories we've
 !        passed by.
 !
-         PGROUP  =     ( BUFBAS - DIRBAS ) &
-                    +   LSTLTD ( T, NPREAD, PBUFFR ) &
+         pgroup  =     ( bufbas - dirbas ) &
+                    +   lstltd ( t, npread, pbuffr ) &
                     +   1
 
-      END IF
+      end if
 
 !
 !     PGROUP now indicates the set of epochs in which to search for the
@@ -691,69 +691,69 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      IF ( PGROUP .EQ. 1 ) THEN
+      if ( pgroup .eq. 1 ) then
 
-         PBEGIX  =  1
-         PENDIX  =  MIN ( N, DIRSIZ )
+         pbegix  =  1
+         pendix  =  min ( n, dirsiz )
 
-      ELSE
+      else
 !
 !        If the group index is greater than 1, we'll include the last
 !        time tag of the previous group in the set of time tags we look
 !        up.  That way, the request time is strictly bracketed on the
 !        low side by the time tag set we look up.
 !
-         PBEGIX  =      (  PGROUP  - 1 ) * DIRSIZ
-         PENDIX  =  MIN (  PBEGIX + DIRSIZ,  N  )
+         pbegix  =      (  pgroup  - 1 ) * dirsiz
+         pendix  =  min (  pbegix + dirsiz,  n  )
 
-      END IF
+      end if
 
-      TIMBAS  =  DIRBAS - N
+      timbas  =  dirbas - n
 
-      CALL DAFGDA ( HANDLE, TIMBAS+PBEGIX, TIMBAS+PENDIX, PBUFFR )
+      call dafgda ( handle, timbas+pbegix, timbas+pendix, pbuffr )
 
-      NPREAD  =  PENDIX - PBEGIX + 1
+      npread  =  pendix - pbegix + 1
 
 !
 !     At this point, we'll deal with the cases where T lies outside
 !     of the range of epochs we've buffered.
 !
-      IF ( T .LT. PBUFFR(1) ) THEN
+      if ( t .lt. pbuffr(1) ) then
 !
 !        This can happen only if PGROUP = 1 and T precedes all epochs.
 !        If the input request time is too far from PBUFFR(1) on
 !        the low side, we're done.
 !
-         IF ( SCLKDP + TOL .LT. PBUFFR(1) ) THEN
+         if ( sclkdp + tol .lt. pbuffr(1) ) then
 
-            CALL CHKOUT ( 'CKR05' )
-            RETURN
+            call chkout ( 'CKR05' )
+            return
 
-         END IF
+         end if
 
 !
 !        Bracket T to move it within the range of buffered epochs.
 !
-         T = PBUFFR(1)
+         t = pbuffr(1)
 
 
-      ELSE IF ( T .GT. PBUFFR(NPREAD) ) THEN
+      else if ( t .gt. pbuffr(npread) ) then
 !
 !        This can happen only if T follows all epochs.
 !
-         IF ( SCLKDP - TOL .GT. PBUFFR(NPREAD) ) THEN
+         if ( sclkdp - tol .gt. pbuffr(npread) ) then
 
-            CALL CHKOUT ( 'CKR05' )
-            RETURN
+            call chkout ( 'CKR05' )
+            return
 
-         END IF
+         end if
 
 !
 !        Bracket T to move it within the range of buffered epochs.
 !
-         T = PBUFFR(NPREAD)
+         t = pbuffr(npread)
 
-      END IF
+      end if
 
 !
 !     At this point,
@@ -774,37 +774,37 @@
 !     request time cannot be greater than all of time tags in the
 !     group, and it cannot precede the first element of the group.
 !
-      I  =  LSTLTD (  T,  NPREAD,  PBUFFR  )
+      i  =  lstltd (  t,  npread,  pbuffr  )
 
 !
 !     The variables LOW and HIGH are the indices of a pair of time
 !     tags that bracket the request time.  Remember that NPREAD could
 !     be equal to 1, in which case we would have LOW = HIGH.
 !
-      IF ( I .EQ. 0 ) THEN
+      if ( i .eq. 0 ) then
 !
 !        This can happen only if PGROUP = 1 and T = PBUFFR(1).
 !
-         LOW    =  1
-         LEPOCH =  PBUFFR(1)
+         low    =  1
+         lepoch =  pbuffr(1)
 
-         IF ( N .EQ. 1 ) THEN
-            HIGH = 1
-         ELSE
-            HIGH = 2
-         END IF
+         if ( n .eq. 1 ) then
+            high = 1
+         else
+            high = 2
+         end if
 
-         HEPOCH = PBUFFR(HIGH)
+         hepoch = pbuffr(high)
 
-      ELSE
+      else
 
-         LOW    =  PBEGIX + I - 1
-         LEPOCH =  PBUFFR(I)
+         low    =  pbegix + i - 1
+         lepoch =  pbuffr(i)
 
-         HIGH   =  LOW + 1
-         HEPOCH =  PBUFFR(I+1)
+         high   =  low + 1
+         hepoch =  pbuffr(i+1)
 
-      END IF
+      end if
 
 !
 !     We now need to find the interpolation interval containing
@@ -834,31 +834,31 @@
 !        LEND       segment in the file LHAND that PREVS and PREVN
 !                   were found in.
 !
-      IF (  ( HANDLE .EQ. LHAND ) .AND. &
-            ( BEGIN  .EQ. LBEG  ) .AND. &
-            ( END    .EQ. LEND  ) .AND. &
-            ( T      .GE. PREVS ) .AND. &
-            ( T      .LT. PREVN )      ) THEN
+      if (  ( handle .eq. lhand ) .and. &
+            ( begin  .eq. lbeg  ) .and. &
+            ( end    .eq. lend  ) .and. &
+            ( t      .ge. prevs ) .and. &
+            ( t      .lt. prevn )      ) then
 
 
-         START  = PREVS
-         NSTART = PREVN
-         NNSTRT = PREVNN
+         start  = prevs
+         nstart = prevn
+         nnstrt = prevnn
 
-      ELSE
+      else
 !
 !        Search for the interpolation interval.
 !
-         NIDIR   =  (NINTS-1) / DIRSIZ
-         DIRBAS  =   END - CTRLSZ - NIDIR
+         nidir   =  (nints-1) / dirsiz
+         dirbas  =   end - ctrlsz - nidir
 
-         IF ( NIDIR .EQ. 0 ) THEN
+         if ( nidir .eq. 0 ) then
 !
 !           There's no mystery about which group of epochs to search.
 !
-            SGROUP  = 1
+            sgroup  = 1
 
-         ELSE
+         else
 !
 !           There's at least one directory.  Find the first directory
 !           whose time is greater than or equal to the request time, if
@@ -868,24 +868,24 @@
 !           we'll perform a binary search within that set for the
 !           desired entry.
 !
-            BUFBAS  =  DIRBAS
-            NSREAD  =  MIN ( NIDIR, DIRSIZ )
-            REMAIN  =  NIDIR - NSREAD
+            bufbas  =  dirbas
+            nsread  =  min ( nidir, dirsiz )
+            remain  =  nidir - nsread
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NSREAD, SBUFFR )
+            call dafgda ( handle, bufbas+1, bufbas+nsread, sbuffr )
 
-            DO WHILE (       ( SBUFFR(NSREAD) .LT. T ) &
-                       .AND. ( REMAIN         .GT. 0 )   )
+            do while (       ( sbuffr(nsread) .lt. t ) &
+                       .and. ( remain         .gt. 0 )   )
 
-               BUFBAS  =  BUFBAS + NSREAD
-               NSREAD  =  MIN ( REMAIN, DIRSIZ )
-               REMAIN  =  REMAIN - NSREAD
+               bufbas  =  bufbas + nsread
+               nsread  =  min ( remain, dirsiz )
+               remain  =  remain - nsread
 !
 !              Note:  NSREAD is always > 0 here.
 !
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NSREAD, SBUFFR )
+               call dafgda ( handle, bufbas+1, bufbas+nsread, sbuffr )
 
-            END DO
+            end do
 
 !
 !           At this point, BUFBAS - DIRBAS is the number of directory
@@ -894,11 +894,11 @@
 !           SGROUP is one more than the number of directories we've
 !           passed by.
 !
-            SGROUP  =     ( BUFBAS - DIRBAS ) &
-                       +   LSTLTD ( T, NSREAD, SBUFFR ) &
+            sgroup  =     ( bufbas - dirbas ) &
+                       +   lstltd ( t, nsread, sbuffr ) &
                        +   1
 
-         END IF
+         end if
 
 !
 !        SGROUP now indicates the set of interval start times in which
@@ -911,12 +911,12 @@
 !        indices, relative to the set of start times, of the first and
 !        last start times in the set we're going to look up.
 !
-         IF ( SGROUP .EQ. 1 ) THEN
+         if ( sgroup .eq. 1 ) then
 
-            SBEGIX  =  1
-            SENDIX  =  MIN ( NINTS, DIRSIZ + 2 )
+            sbegix  =  1
+            sendix  =  min ( nints, dirsiz + 2 )
 
-         ELSE
+         else
 !
 !           Look up the start times for the group of interest. Also
 !           buffer last start time from the previous group. Also, it
@@ -924,53 +924,53 @@
 !           times---the first two start times of the next group---if
 !           they exist.
 !
-            SBEGIX  =      (  SGROUP  - 1 ) * DIRSIZ
+            sbegix  =      (  sgroup  - 1 ) * dirsiz
 
-            SENDIX  =  MIN (  SBEGIX + DIRSIZ + 2,  NINTS  )
+            sendix  =  min (  sbegix + dirsiz + 2,  nints  )
 
-         END IF
+         end if
 
-         TIMBAS  =  DIRBAS - NINTS
+         timbas  =  dirbas - nints
 
-         CALL DAFGDA ( HANDLE, TIMBAS+SBEGIX, TIMBAS+SENDIX, SBUFFR )
+         call dafgda ( handle, timbas+sbegix, timbas+sendix, sbuffr )
 
-         NSREAD  =  SENDIX - SBEGIX + 1
+         nsread  =  sendix - sbegix + 1
 
 !
 !        Find the last interval start time less than or equal to the
 !        request time.  We know T is greater than or equal to the
 !        first start time, so I will be > 0.
 !
-         NSRCH  =  MIN ( DIRSIZ + 1, NSREAD )
+         nsrch  =  min ( dirsiz + 1, nsread )
 
-         I      =  LSTLED (  T,  NSRCH, SBUFFR  )
+         i      =  lstled (  t,  nsrch, sbuffr  )
 
-         START  =  SBUFFR(I)
+         start  =  sbuffr(i)
 
 !
 !        Let NSTART ("next start") be the start time that follows
 !        START, if START is not the last start time.  If NSTART
 !        has a successor, let NNSTRT be that start time.
 !
-         IF ( I .LT. NSREAD ) THEN
+         if ( i .lt. nsread ) then
 
-            NSTART = SBUFFR(I+1)
+            nstart = sbuffr(i+1)
 
-            IF ( I+1 .LT. NSREAD ) THEN
+            if ( i+1 .lt. nsread ) then
 
-               NNSTRT = SBUFFR(I+2)
-            ELSE
-               NNSTRT = DPMAX()
-            END IF
+               nnstrt = sbuffr(i+2)
+            else
+               nnstrt = dpmax()
+            end if
 
-         ELSE
+         else
 
-            NSTART = DPMAX()
-            NNSTRT = DPMAX()
+            nstart = dpmax()
+            nnstrt = dpmax()
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If T does not lie within the interpolation interval starting
@@ -980,7 +980,7 @@
 !     to the closer endpoint of the closer interval.  Otherwise,
 !     we return without finding pointing.
 !
-      IF ( HEPOCH .EQ. NSTART ) THEN
+      if ( hepoch .eq. nstart ) then
 !
 !        The first time tag greater than or equal to T is the start
 !        time of the next interpolation interval.
@@ -989,56 +989,56 @@
 !        LEPOCH is the last time tag of the first interval; HEPOCH
 !        is the first time tag of the next interval.
 !
-         IF (  ABS( T - LEPOCH ) .LE. ABS( HEPOCH - T )  ) THEN
+         if (  abs( t - lepoch ) .le. abs( hepoch - t )  ) then
 !
 !           T is closer to the first interval...
 !
-            IF (  ABS( T - LEPOCH )  .GT.  TOL  ) THEN
+            if (  abs( t - lepoch )  .gt.  tol  ) then
 !
 !              ...But T is too far from the interval.
 !
-               CALL CHKOUT ( 'CKR05' )
-               RETURN
+               call chkout ( 'CKR05' )
+               return
 
-            END IF
+            end if
 
 !
 !           Map T to the right endpoint of the preceding interval.
 !
-            T      = LEPOCH
-            HIGH   = LOW
-            HEPOCH = LEPOCH
+            t      = lepoch
+            high   = low
+            hepoch = lepoch
 
-         ELSE
+         else
 !
 !           T is closer to the second interval...
 !
-            IF (  ABS( HEPOCH - T )  .GT.  TOL  ) THEN
+            if (  abs( hepoch - t )  .gt.  tol  ) then
 !
 !              ...But T is too far from the interval.
 !
-               CALL CHKOUT ( 'CKR05' )
-               RETURN
+               call chkout ( 'CKR05' )
+               return
 
-            END IF
+            end if
 
 !
 !           Map T to the left endpoint of the next interval.
 !
-            T      = HEPOCH
-            LOW    = HIGH
-            LEPOCH = HEPOCH
+            t      = hepoch
+            low    = high
+            lepoch = hepoch
 
 !
 !           Since we're going to be picking time tags from the next
 !           interval, we'll need to adjust START and NSTART.
 !
-            START  = NSTART
-            NSTART = NNSTRT
+            start  = nstart
+            nstart = nnstrt
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     We now have
@@ -1073,32 +1073,32 @@
 !     We want this size to be WNDSIZ/2, but if not enough states are
 !     available, the set ranges from index 1 to index LOW.
 !
-      LSIZE =  MIN ( WNDSIZ/2, LOW )
+      lsize =  min ( wndsiz/2, low )
 
 !
 !     RSIZE is defined analogously for the right half of the window.
 !
-      RSIZE =  MIN (  WNDSIZ/2,  ( N - HIGH + 1 )  )
+      rsize =  min (  wndsiz/2,  ( n - high + 1 )  )
 
 !
 !     The window size is simply the sum of LSIZE and RSIZE.
 !
-      WNDSIZ =  LSIZE + RSIZE
+      wndsiz =  lsize + rsize
 
 !
 !     FIRST and LAST are the endpoints of the range of indices of
 !     time tags (and packets) we'll collect in the output record.
 !
-      FIRST =  LOW    -  LSIZE   +  1
+      first =  low    -  lsize   +  1
 
-      LAST  =  FIRST  +  WNDSIZ  -  1
+      last  =  first  +  wndsiz  -  1
 
 !
 !     Buffer the epochs.
 !
-      WSTART  =  BEGIN  +  N * PACKSZ  +  FIRST  -  1
+      wstart  =  begin  +  n * packsz  +  first  -  1
 
-      CALL DAFGDA (  HANDLE, WSTART, WSTART+WNDSIZ-1, PBUFFR )
+      call dafgda (  handle, wstart, wstart+wndsiz-1, pbuffr )
 
 !
 !     Discard any epochs less than START or greater than or equal
@@ -1106,67 +1106,67 @@
 !     I+1 to J.  This range is non-empty unless START and NSTART
 !     are both DPMAX().
 !
-      I = LSTLTD ( START,  WNDSIZ, PBUFFR )
-      J = LSTLTD ( NSTART, WNDSIZ, PBUFFR )
+      i = lstltd ( start,  wndsiz, pbuffr )
+      j = lstltd ( nstart, wndsiz, pbuffr )
 
 
-      IF ( I .EQ. J ) THEN
+      if ( i .eq. j ) then
 !
 !        Fuggedaboudit.
 !
-         CALL CHKOUT ( 'CKR05' )
-         RETURN
+         call chkout ( 'CKR05' )
+         return
 
-      END IF
+      end if
 
 !
 !     Update FIRST, LAST, and WNDSIZ.
 !
-      WNDSIZ = J     - I
-      FIRST  = FIRST + I
-      LAST   = FIRST + WNDSIZ - 1
+      wndsiz = j     - i
+      first  = first + i
+      last   = first + wndsiz - 1
 
 !
 !     Put the subtype into the output record.  The size of the group
 !     of packets is derived from the subtype, so we need not include
 !     the size.
 !
-      RECORD(1) =  T
-      RECORD(2) =  SUBTYP
-      RECORD(3) =  WNDSIZ
-      RECORD(4) =  RATE
+      record(1) =  t
+      record(2) =  subtyp
+      record(3) =  wndsiz
+      record(4) =  rate
 
 !
 !     Read the packets.
 !
-      CALL DAFGDA ( HANDLE, &
-                    BEGIN + (FIRST-1)*PACKSZ, &
-                    BEGIN +      LAST*PACKSZ  -  1, &
-                    RECORD(PARSIZ+1)                )
+      call dafgda ( handle, &
+                    begin + (first-1)*packsz, &
+                    begin +      last*packsz  -  1, &
+                    record(parsiz+1)                )
 
 !
 !     Finally, add the epochs to the output record.
 !
-      CALL MOVED ( PBUFFR(I+1), &
-                   J-I, &
-                   RECORD( PARSIZ + 1 + WNDSIZ*PACKSZ )  )
+      call moved ( pbuffr(i+1), &
+                   j-i, &
+                   record( parsiz + 1 + wndsiz*packsz )  )
 
 
 !
 !     Save the information about the interval and segment.
 !
-      LHAND  = HANDLE
-      LBEG   = BEGIN
-      LEND   = END
-      PREVS  = START
-      PREVN  = NSTART
-      PREVNN = NNSTRT
+      lhand  = handle
+      lbeg   = begin
+      lend   = end
+      prevs  = start
+      prevn  = nstart
+      prevnn = nnstrt
 
 !
 !     Indicate pointing was found.
 !
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT ( 'CKR05' )
-      RETURN
-      END
+      call chkout ( 'CKR05' )
+      return
+      end

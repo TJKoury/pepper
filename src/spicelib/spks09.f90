@@ -1,6 +1,6 @@
 !$Procedure SPKS09 ( S/P Kernel, subset, type 9 )
 
-      SUBROUTINE SPKS09 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks09 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -168,47 +168,47 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA     ( 6 )
+      double precision      data     ( 6 )
 
-      INTEGER               DEGREE
-      INTEGER               I
-      INTEGER               NDIR
-      INTEGER               NREC
-      INTEGER               OFFE
-      INTEGER               OFFSET
-      INTEGER               REC      ( 2 )
+      integer               degree
+      integer               i
+      integer               ndir
+      integer               nrec
+      integer               offe
+      integer               offset
+      integer               rec      ( 2 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS09' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS09' )
+      end if
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      IF (  BEGIN  .GT.  END  ) THEN
-         CALL CHKOUT ( 'SPKS09' )
-         RETURN
-      END IF
+      if (  begin  .gt.  end  ) then
+         call chkout ( 'SPKS09' )
+         return
+      end if
 
 !
 !     Get the number of records in the segment.  Get the polynomial
 !     degree as well.
 !
-      CALL DAFGDA ( HANDLE, EADDR-1, EADDR, DATA )
+      call dafgda ( handle, eaddr-1, eaddr, data )
 
-      DEGREE = NINT ( DATA(1) )
-      NREC   = NINT ( DATA(2) )
+      degree = nint ( data(1) )
+      nrec   = nint ( data(2) )
 
 !
 !     From the number of records, we can compute
@@ -217,8 +217,8 @@
 !
 !        OFFE      The offset of the first epoch.
 !
-      NDIR = ( NREC - 1 ) / 100
-      OFFE = EADDR - NDIR - NREC - 2
+      ndir = ( nrec - 1 ) / 100
+      offe = eaddr - ndir - nrec - 2
 
 !
 !     Examine the epochs in forward order, looking for the first
@@ -226,26 +226,26 @@
 !     whichever comes first). This epoch corresponds to the last
 !     state to be transferred.
 !
-      REC(2) = 1
-      CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
+      rec(2) = 1
+      call dafgda ( handle, offe+rec(2), offe+rec(2), data )
 
-      DO WHILE  ( REC(2) .LT. NREC  .AND.  DATA(1) .LT. END )
-         REC(2) = REC(2) + 1
-         CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
-      END DO
+      do while  ( rec(2) .lt. nrec  .and.  data(1) .lt. end )
+         rec(2) = rec(2) + 1
+         call dafgda ( handle, offe+rec(2), offe+rec(2), data )
+      end do
 
 !
 !     Make sure that there are DEGREE/2 additional states to the right
 !     of the one having index REC(2), if possible.  If not, take as
 !     many states as we can.
 !
-      REC(2)  =   MIN (  NREC,   REC(2) + DEGREE/2   )
+      rec(2)  =   min (  nrec,   rec(2) + degree/2   )
 
 !
 !     Make sure that REC(2) is large enough so that there are are at
 !     least DEGREE+1 states in the segment.
 !
-      REC(2)  =   MAX (  REC(2),  DEGREE + 1 )
+      rec(2)  =   max (  rec(2),  degree + 1 )
 
 !
 !     Now examine the epochs in reverse order, looking for the first
@@ -253,61 +253,61 @@
 !     whichever comes first). This epoch corresponds to the first
 !     state to be transferred.
 !
-      REC(1) = NREC
-      CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
+      rec(1) = nrec
+      call dafgda ( handle, offe+rec(1), offe+rec(1), data )
 
-      DO WHILE ( REC(1) .GT. 1  .AND.  DATA(1) .GT. BEGIN )
-         REC(1) = REC(1) - 1
-         CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
-      END DO
+      do while ( rec(1) .gt. 1  .and.  data(1) .gt. begin )
+         rec(1) = rec(1) - 1
+         call dafgda ( handle, offe+rec(1), offe+rec(1), data )
+      end do
 
 !
 !     Make sure that there are DEGREE/2 additional states to the left
 !     of the one having index REC(1), if possible.  If not, take as
 !     many states as we can.
 !
-      REC(1)  =   MAX (  1,   REC(1) - DEGREE/2   )
+      rec(1)  =   max (  1,   rec(1) - degree/2   )
 
 !
 !     Make sure that REC(1) is small enough so that there are are at
 !     least DEGREE+1 states in the segment.
 !
-      REC(1)  =   MIN (  REC(1),  NREC - DEGREE  )
+      rec(1)  =   min (  rec(1),  nrec - degree  )
 
 !
 !     Copy states REC(1) through REC(2) to the output file.
 !
-      DO  I = REC(1), REC(2)
-         OFFSET = BADDR  -  1  +  (I - 1) * 6
+      do  i = rec(1), rec(2)
+         offset = baddr  -  1  +  (i - 1) * 6
 
-         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+6, DATA    )
-         CALL DAFADA (                             DATA, 6 )
-      END DO
+         call dafgda ( handle, offset+1, offset+6, data    )
+         call dafada (                             data, 6 )
+      end do
 
 !
 !     Copy epochs REC(1) through REC(2) to the output file.
 !
-      DO  I = REC(1), REC(2)
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do  i = rec(1), rec(2)
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Put every 100'th epoch into the directory, except the last
 !     epoch, if that epoch's index would be a multiple of 100.
 !
-      DO  I = REC(1)+99, REC(2)-1, 100
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do  i = rec(1)+99, rec(2)-1, 100
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Store the polynomial degree and the number of records
 !     to end the segment.
 !
-      CALL DAFADA ( DBLE ( DEGREE ),                  1 )
-      CALL DAFADA ( DBLE ( REC(2) - REC(1) + 1 ),     1 )
+      call dafada ( dble ( degree ),                  1 )
+      call dafada ( dble ( rec(2) - rec(1) + 1 ),     1 )
 
-      CALL CHKOUT ( 'SPKS09' )
-      RETURN
-      END
+      call chkout ( 'SPKS09' )
+      return
+      end

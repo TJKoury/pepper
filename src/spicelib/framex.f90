@@ -1,7 +1,7 @@
 !$Procedure FRAMEX ( FRAMe EXpert )
 
-      SUBROUTINE FRAMEX ( CNAME,  FRNAME, FRCODE, CENT, &
-                          FRCLSS, CLSSID, FOUND )
+      subroutine framex ( cname,  frname, frcode, cent, &
+                          frclss, clssid, found )
 
 ! $ Abstract
 !
@@ -19,20 +19,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'ninert.inc'
-      INCLUDE              'nninrt.inc'
-      INCLUDE              'frmtyp.inc'
-      INCLUDE              'zzctr.inc'
+      include              'ninert.inc'
+      include              'nninrt.inc'
+      include              'frmtyp.inc'
+      include              'zzctr.inc'
 
-      CHARACTER*(*)         CNAME
-      CHARACTER*(*)         FRNAME
-      INTEGER               FRCODE
-      INTEGER               CENT
-      INTEGER               FRCLSS
-      INTEGER               CLSSID
-      LOGICAL               FOUND
+      character*(*)         cname
+      character*(*)         frname
+      integer               frcode
+      integer               cent
+      integer               frclss
+      integer               clssid
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -276,25 +276,25 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               BSCHOI
+      integer               bschoi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NON
-      PARAMETER           ( NON    = NNINRT )
+      integer               non
+      parameter           ( non    = nninrt )
 
-      INTEGER               NCOUNT
-      PARAMETER           ( NCOUNT = NINERT + NON )
+      integer               ncount
+      parameter           ( ncount = ninert + non )
 
-      INTEGER               ROOM
-      PARAMETER           ( ROOM   = 8 )
+      integer               room
+      parameter           ( room   = 8 )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
 !
 !     Body name length. The value BDNMLN used here must be the
@@ -304,72 +304,72 @@
 !
 !     Current value of MAXL = 36.
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
 !
 !     Frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Kernel variable name length.
 !
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN = 32 )
+      integer               kvnmln
+      parameter           ( kvnmln = 32 )
 
 !
 !     Kernel variable buffer size.
 !
-      INTEGER               KVBSZ
-      PARAMETER           ( KVBSZ  = 100 )
+      integer               kvbsz
+      parameter           ( kvbsz  = 100 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(1)         DATTYP
+      character*(1)         dattyp
 
-      CHARACTER*(BDNMLN)    LCNAME
+      character*(bdnmln)    lcname
 
-      CHARACTER*(FRNMLN)    LCFRAM
-      CHARACTER*(FRNMLN)    NAME   ( NCOUNT )
-      CHARACTER*(FRNMLN)    PNAME
+      character*(frnmln)    lcfram
+      character*(frnmln)    name   ( ncount )
+      character*(frnmln)    pname
 
-      CHARACTER*(KVNMLN)    KVBUFF ( KVBSZ )
-      CHARACTER*(KVNMLN)    LOOK2
-      CHARACTER*(KVNMLN)    LOOKUP
+      character*(kvnmln)    kvbuff ( kvbsz )
+      character*(kvnmln)    look2
+      character*(kvnmln)    lookup
 
-      CHARACTER*(LNSIZE)    LINE   ( ROOM )
+      character*(lnsize)    line   ( room )
 
-      INTEGER               CENTER ( NCOUNT )
-      INTEGER               CENTRD ( NCOUNT )
-      INTEGER               I
-      INTEGER               ID
-      INTEGER               IDCODE ( NCOUNT )
-      INTEGER               ITEM
-      INTEGER               KVCLID
-      INTEGER               KVCLSS
-      INTEGER               N
-      INTEGER               START
-      INTEGER               TYPE   ( NCOUNT )
-      INTEGER               TYPEID ( NCOUNT )
-      INTEGER               VALUES ( ROOM )
+      integer               center ( ncount )
+      integer               centrd ( ncount )
+      integer               i
+      integer               id
+      integer               idcode ( ncount )
+      integer               item
+      integer               kvclid
+      integer               kvclss
+      integer               n
+      integer               start
+      integer               type   ( ncount )
+      integer               typeid ( ncount )
+      integer               values ( room )
 
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               GOTIT
+      logical               first
+      logical               fnd
+      logical               gotit
 
 !
 !     POOL state counter.
 !
-      INTEGER               PULCTR ( CTRSIZ )
+      integer               pulctr ( ctrsiz )
 
 !
 !     Lower bound of collision lists in hashes.
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
 !
 !     The size of ID-based hash for kernel POOL frames.
@@ -381,18 +381,18 @@
 !
 !     For the current POOL MAXVAR set to 26003, such number is 5209.
 !
-      INTEGER               MAXKFR
-      PARAMETER           ( MAXKFR = 5209 )
+      integer               maxkfr
+      parameter           ( maxkfr = 5209 )
 
 !
 !     Name-based hash for kernel pool frames. KNMLST, KNMPOL, and
 !     KNMNMS provide an index in the frame ID array KNMIDS at which the
 !     ID for the frame with a given name is stored.
 !
-      INTEGER               KNMLST  (          MAXKFR )
-      INTEGER               KNMPOL  ( LBPOOL : MAXKFR )
-      CHARACTER*(FRNMLN)    KNMNMS  (          MAXKFR )
-      INTEGER               KNMIDS  (          MAXKFR )
+      integer               knmlst  (          maxkfr )
+      integer               knmpol  ( lbpool : maxkfr )
+      character*(frnmln)    knmnms  (          maxkfr )
+      integer               knmids  (          maxkfr )
 
 !
 !     ID-based hash for kernel pool frames. KIDLST, KIDPOL, and KIDIDS
@@ -400,17 +400,17 @@
 !     KCENT, KCLASS, and KCLSID at which the attributes of the frame
 !     with a given ID are stored.
 !
-      INTEGER               KIDLST  (          MAXKFR )
-      INTEGER               KIDPOL  ( LBPOOL : MAXKFR )
-      INTEGER               KIDIDS  (          MAXKFR )
+      integer               kidlst  (          maxkfr )
+      integer               kidpol  ( lbpool : maxkfr )
+      integer               kidids  (          maxkfr )
 
-      CHARACTER*(FRNMLN)    KNAME   (          MAXKFR )
-      INTEGER               KCENT   (          MAXKFR )
-      INTEGER               KCLASS  (          MAXKFR )
-      INTEGER               KCLSID  (          MAXKFR )
+      character*(frnmln)    kname   (          maxkfr )
+      integer               kcent   (          maxkfr )
+      integer               kclass  (          maxkfr )
+      integer               kclsid  (          maxkfr )
 
-      LOGICAL               LUPDTE
-      LOGICAL               LNEW
+      logical               lupdte
+      logical               lnew
 
 !
 !     The size of hashes for built-in frames.
@@ -424,8 +424,8 @@
 !     For the current N0067 NCOUNT equal to 145 (21 inertial + 124
 !     non-inertial), such number is 149.
 !
-      INTEGER               MAXBFR
-      PARAMETER           ( MAXBFR = 149 )
+      integer               maxbfr
+      parameter           ( maxbfr = 149 )
 
 !
 !     Name-based hash for built-in frames. BNMLST, BNMPOL, and BNMNMS
@@ -433,10 +433,10 @@
 !     attributes in the built-in frame attributes arrays IDCODE, NAME,
 !     CENTER, TYPE, and TYPEID.
 !
-      INTEGER               BNMLST  (          MAXBFR )
-      INTEGER               BNMPOL  ( LBPOOL : MAXBFR )
-      CHARACTER*(FRNMLN)    BNMNMS  (          MAXBFR )
-      INTEGER               BNMIDX  (          MAXBFR )
+      integer               bnmlst  (          maxbfr )
+      integer               bnmpol  ( lbpool : maxbfr )
+      character*(frnmln)    bnmnms  (          maxbfr )
+      integer               bnmidx  (          maxbfr )
 
 !
 !     ID-based hash for built-in frames. BIDLST, BIDPOL, and BIDIDS
@@ -444,10 +444,10 @@
 !     attributes in the built-in frame attributes arrays IDCODE, NAME,
 !     CENTER, TYPE, and TYPEID.
 !
-      INTEGER               BIDLST  (          MAXBFR )
-      INTEGER               BIDPOL  ( LBPOOL : MAXBFR )
-      INTEGER               BIDIDS  (          MAXBFR )
-      INTEGER               BIDIDX  (          MAXBFR )
+      integer               bidlst  (          maxbfr )
+      integer               bidpol  ( lbpool : maxbfr )
+      integer               bidids  (          maxbfr )
+      integer               bididx  (          maxbfr )
 
 !
 !     Saved variables
@@ -456,30 +456,30 @@
 !     rather than taking a chance and accidentally leaving something
 !     off the list.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
 
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
-      CALL CHKIN  ( 'FRAMEX' )
-      CALL SETMSG ( 'A call has been made to the umbrella ' &
+      call chkin  ( 'FRAMEX' )
+      call setmsg ( 'A call has been made to the umbrella ' &
       //            'routine FRAMEX. This routine doesn''t do ' &
       //            'anything. It acts only as an umbrella ' &
       //            'routine for its entry points. This call ' &
       //            'probably indicates a misunderstanding in ' &
       //            'programming. ' )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'FRAMEX' )
-      RETURN
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'FRAMEX' )
+      return
 
 
 
 !$Procedure NAMFRM ( frame NAMe to FRaMe id )
 
-      ENTRY NAMFRM ( FRNAME, FRCODE )
+      entry namfrm ( frname, frcode )
 
 ! $ Abstract
 !
@@ -648,148 +648,148 @@
 !-&
 
 
-      FRCODE = 0
+      frcode = 0
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     For efficiency, J2000 deserves special treatment.
 !
-      IF ( FRNAME .EQ. 'J2000' .OR. FRNAME .EQ. 'j2000') THEN
-         FRCODE = 1
-         RETURN
-      END IF
+      if ( frname .eq. 'J2000' .or. frname .eq. 'j2000') then
+         frcode = 1
+         return
+      end if
 
-      CALL CHKIN ( 'NAMFRM' )
+      call chkin ( 'NAMFRM' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
+         call zzhsiini ( maxkfr, kidlst, kidpol )
+         call zzhscini ( maxkfr, knmlst, knmpol )
 
 !
 !        Initialize built-in frame tables and hashes.
 !
-         CALL ZZFDAT   ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                         CENTER, TYPE,   TYPEID, CENTRD, &
-                         BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                         BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat   ( ncount, maxbfr, name,   idcode, &
+                         center, type,   typeid, centrd, &
+                         bnmlst, bnmpol, bnmnms, bnmidx, &
+                         bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'NAMFRM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'NAMFRM' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Determine the location of the requested item in the array
 !     of names.
 !
-      CALL LJUST ( FRNAME, PNAME )
-      CALL UCASE ( PNAME,  PNAME )
+      call ljust ( frname, pname )
+      call ucase ( pname,  pname )
 
-      CALL ZZHSCCHK ( BNMLST, BNMPOL, BNMNMS, PNAME, ITEM )
-      IF ( ITEM .NE. 0 ) THEN
-         ITEM = BNMIDX( ITEM )
-      END IF
+      call zzhscchk ( bnmlst, bnmpol, bnmnms, pname, item )
+      if ( item .ne. 0 ) then
+         item = bnmidx( item )
+      end if
 
 !
 !     If the name is in our hash, we can just look up its ID code in
 !     the parallel array.
 !
-      IF ( ITEM .GT. 0 ) THEN
+      if ( item .gt. 0 ) then
 
-         FRCODE = IDCODE ( ITEM )
+         frcode = idcode ( item )
 
-      ELSE
+      else
 
 !
 !        See if this frame is in the kernel pool frame name-based hash.
 !        First reset the hash if POOL has changed.
 !
-         CALL ZZPCTRCK ( PULCTR, LUPDTE )
+         call zzpctrck ( pulctr, lupdte )
 
-         IF ( LUPDTE ) THEN
-            CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-            CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         END IF
+         if ( lupdte ) then
+            call zzhscini ( maxkfr, knmlst, knmpol )
+            call zzhsiini ( maxkfr, kidlst, kidpol )
+         end if
 
 !
 !        Check if this name is in the hash.
 !
-         CALL ZZHSCCHK ( KNMLST, KNMPOL, KNMNMS, PNAME, ITEM )
+         call zzhscchk ( knmlst, knmpol, knmnms, pname, item )
 
-         IF ( ITEM .NE. 0 ) THEN
+         if ( item .ne. 0 ) then
 
-            FRCODE = KNMIDS ( ITEM )
+            frcode = knmids ( item )
 
-         ELSE
+         else
 
 !
 !           The name wasn't in the hash, see if we can find this frame
 !           in the kernel pool.
 !
-            CALL PREFIX ( 'FRAME_', 0,                  PNAME )
-            CALL GIPOOL (  PNAME,   1, ROOM, N, VALUES, GOTIT )
+            call prefix ( 'FRAME_', 0,                  pname )
+            call gipool (  pname,   1, room, n, values, gotit )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'NAMFRM' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'NAMFRM' )
+               return
+            end if
 
-            IF ( N .EQ. 1 .AND. GOTIT ) THEN
+            if ( n .eq. 1 .and. gotit ) then
 
-               FRCODE = VALUES(1)
+               frcode = values(1)
 
 !
 !              If we made it to this point, we successfully mapped the
 !              kernel frame name to its ID. Add this pair to the
 !              name-based hash.
 !
-               CALL ZZHSCADD ( KNMLST, KNMPOL, KNMNMS, PNAME, ITEM, &
-                                                              LNEW )
+               call zzhscadd ( knmlst, knmpol, knmnms, pname, item, &
+                                                              lnew )
 
-               IF ( .NOT. FAILED() .AND. ITEM .NE. 0 ) THEN
+               if ( .not. failed() .and. item .ne. 0 ) then
 
-                  KNMIDS ( ITEM ) = FRCODE
+                  knmids ( item ) = frcode
 
-               END IF
+               end if
 
-            ELSE
+            else
 
-               FRCODE = 0
+               frcode = 0
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'NAMFRM' )
-      RETURN
+      call chkout ( 'NAMFRM' )
+      return
 
 
 !$Procedure FRMNAM ( FRaMe id to frame NAMe )
 
-      ENTRY FRMNAM ( FRCODE, FRNAME )
+      entry frmnam ( frcode, frname )
 
 ! $ Abstract
 !
@@ -969,101 +969,101 @@
 !
 !     Standard SPICE error handling.
 !
-      FRNAME = ' '
+      frname = ' '
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     For efficiency, J2000 deserves special treatment.
 !
-      IF ( FRCODE .EQ. 1 ) THEN
-         FRNAME = 'J2000'
-         RETURN
-      END IF
+      if ( frcode .eq. 1 ) then
+         frname = 'J2000'
+         return
+      end if
 
-      CALL CHKIN ( 'FRMNAM' )
+      call chkin ( 'FRMNAM' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
+         call zzhsiini ( maxkfr, kidlst, kidpol )
+         call zzhscini ( maxkfr, knmlst, knmpol )
 
 !
 !        Initialize built-in frame tables and hashes.
 !
-         CALL ZZFDAT   ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                         CENTER, TYPE,   TYPEID, CENTRD, &
-                         BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                         BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat   ( ncount, maxbfr, name,   idcode, &
+                         center, type,   typeid, centrd, &
+                         bnmlst, bnmpol, bnmnms, bnmidx, &
+                         bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'FRMNAM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'FRMNAM' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 
-      CALL ZZHSICHK ( BIDLST, BIDPOL, BIDIDS, FRCODE, ITEM )
-      IF ( ITEM .NE. 0 ) THEN
-         ITEM = BIDIDX( ITEM )
-      END IF
+      call zzhsichk ( bidlst, bidpol, bidids, frcode, item )
+      if ( item .ne. 0 ) then
+         item = bididx( item )
+      end if
 
-      IF ( ITEM .NE. 0 ) THEN
+      if ( item .ne. 0 ) then
 
-         FRNAME = NAME(ITEM)
+         frname = name(item)
 
-      ELSE
+      else
 
 !
 !        See if this frame is in the kernel pool frame ID-based hash.
 !        First reset the hash if POOL has changed.
 !
-         CALL ZZPCTRCK ( PULCTR, LUPDTE )
+         call zzpctrck ( pulctr, lupdte )
 
-         IF ( LUPDTE ) THEN
-            CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-            CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         END IF
+         if ( lupdte ) then
+            call zzhscini ( maxkfr, knmlst, knmpol )
+            call zzhsiini ( maxkfr, kidlst, kidpol )
+         end if
 
 !
 !        Check if this ID is in the hash.
 !
-         CALL ZZHSICHK ( KIDLST, KIDPOL, KIDIDS, FRCODE, ITEM )
+         call zzhsichk ( kidlst, kidpol, kidids, frcode, item )
 
-         IF ( ITEM .NE. 0 ) THEN
+         if ( item .ne. 0 ) then
 
-            FRNAME = KNAME ( ITEM )
+            frname = kname ( item )
 
-         ELSE
+         else
 
 !
 !           The ID wasn't in the hash, see if we can find this frame in
 !           the kernel pool.
 !
-            PNAME      = 'FRAME_#_NAME'
-            CALL REPMI (  PNAME, '#', FRCODE, PNAME )
+            pname      = 'FRAME_#_NAME'
+            call repmi (  pname, '#', frcode, pname )
 
-            CALL GCPOOL ( PNAME, 1, ROOM, N, LINE, GOTIT )
+            call gcpool ( pname, 1, room, n, line, gotit )
 
-            IF ( N .EQ. 1 .AND. GOTIT ) THEN
+            if ( n .eq. 1 .and. gotit ) then
 
-               CALL LJUST ( LINE(1), FRNAME )
+               call ljust ( line(1), frname )
 
 !
 !              Note that since we did not collect all needed
@@ -1071,24 +1071,24 @@
 !              to the hash. This addition is done only by FRINFO.
 !
 
-            ELSE
+            else
 
-               FRNAME = ' '
+               frname = ' '
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'FRMNAM' )
-      RETURN
+      call chkout ( 'FRMNAM' )
+      return
 
 
 
 !$Procedure FRINFO ( FRame INFOrmation )
 
-      ENTRY FRINFO ( FRCODE, CENT, FRCLSS, CLSSID, FOUND )
+      entry frinfo ( frcode, cent, frclss, clssid, found )
 
 ! $ Abstract
 !
@@ -1346,149 +1346,149 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     For efficiency, J2000 deserves special treatment.
 !
-      IF ( FRCODE .EQ. 1 ) THEN
-         CENT   =  0
-         FRCLSS =  INERTL
-         CLSSID =  1
-         FOUND  = .TRUE.
-         RETURN
-      END IF
+      if ( frcode .eq. 1 ) then
+         cent   =  0
+         frclss =  inertl
+         clssid =  1
+         found  = .true.
+         return
+      end if
 
-      CALL CHKIN ( 'FRINFO' )
+      call chkin ( 'FRINFO' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
+         call zzhsiini ( maxkfr, kidlst, kidpol )
+         call zzhscini ( maxkfr, knmlst, knmpol )
 
 !
 !        Initialize built-in frame tables and hashes.
 !
-         CALL ZZFDAT   ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                         CENTER, TYPE,   TYPEID, CENTRD, &
-                         BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                         BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat   ( ncount, maxbfr, name,   idcode, &
+                         center, type,   typeid, centrd, &
+                         bnmlst, bnmpol, bnmnms, bnmidx, &
+                         bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'FRINFO' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'FRINFO' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     No frame information has been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Determine the location of the requested item in the array
 !     of ID codes.
 !
-      CALL ZZHSICHK ( BIDLST, BIDPOL, BIDIDS, FRCODE, ITEM )
-      IF ( ITEM .NE. 0 ) THEN
-         ITEM = BIDIDX( ITEM )
-      END IF
+      call zzhsichk ( bidlst, bidpol, bidids, frcode, item )
+      if ( item .ne. 0 ) then
+         item = bididx( item )
+      end if
 
 !
 !     If the name is in our hash, we can just look up its ID code in
 !     the parallel array.
 !
-      IF ( ITEM .GT. 0 ) THEN
+      if ( item .gt. 0 ) then
 
-         CENT   =  CENTER(ITEM)
-         FRCLSS =  TYPE  (ITEM)
-         CLSSID =  TYPEID(ITEM)
-         FOUND  = .TRUE.
+         cent   =  center(item)
+         frclss =  type  (item)
+         clssid =  typeid(item)
+         found  = .true.
 
-      ELSE
+      else
 
 !
 !        See if this frame is in the kernel pool frame ID-based hash.
 !        First reset the hash if POOL has changed.
 !
-         CALL ZZPCTRCK ( PULCTR, LUPDTE )
+         call zzpctrck ( pulctr, lupdte )
 
-         IF ( LUPDTE ) THEN
-            CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-            CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         END IF
+         if ( lupdte ) then
+            call zzhscini ( maxkfr, knmlst, knmpol )
+            call zzhsiini ( maxkfr, kidlst, kidpol )
+         end if
 
 !
 !        Check if this ID is in the hash.
 !
-         CALL ZZHSICHK ( KIDLST, KIDPOL, KIDIDS, FRCODE, ITEM )
+         call zzhsichk ( kidlst, kidpol, kidids, frcode, item )
 
-         IF ( ITEM .NE. 0 ) THEN
+         if ( item .ne. 0 ) then
 
-            CENT   =  KCENT  (ITEM)
-            FRCLSS =  KCLASS (ITEM)
-            CLSSID =  KCLSID (ITEM)
-            FOUND  = .TRUE.
+            cent   =  kcent  (item)
+            frclss =  kclass (item)
+            clssid =  kclsid (item)
+            found  = .true.
 
-         ELSE
+         else
 
 !
 !           The ID wasn't in the hash, see if we can find this frame in
 !           the kernel pool.
 !
-            PNAME     = 'FRAME_#_NAME'
-            CALL REPMI (  PNAME, '#', FRCODE, PNAME )
+            pname     = 'FRAME_#_NAME'
+            call repmi (  pname, '#', frcode, pname )
 
-            CALL GCPOOL ( PNAME, 1, ROOM, N, LINE, GOTIT )
+            call gcpool ( pname, 1, room, n, line, gotit )
 
-            IF ( GOTIT ) THEN
+            if ( gotit ) then
 
-               IF ( N .GT. 1 ) THEN
+               if ( n .gt. 1 ) then
 !
 !                 We have an array-valued variable that looks like
 !                 a frame name. We consider this an error.
 !
-                  CALL SETMSG ( 'Kernel variable # is array-valued; ' // &
+                  call setmsg ( 'Kernel variable # is array-valued; ' // &
                                 'Frame name variables must be '       // &
                                 'scalar-valued.'                      )
-                  CALL ERRCH  ( '#', PNAME                            )
-                  CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'             )
-                  CALL CHKOUT ( 'FRINFO'                              )
-                  RETURN
+                  call errch  ( '#', pname                            )
+                  call sigerr ( 'SPICE(INVALIDDIMENSION)'             )
+                  call chkout ( 'FRINFO'                              )
+                  return
 
-               END IF
+               end if
 
-               CALL LJUST ( LINE(1), LCFRAM )
+               call ljust ( line(1), lcfram )
 !
 !              Start by looking up the central body of the frame. The
 !              name of the kernel variable for the body could refer to
 !              the frame by name or frame ID; the body itself could be
 !              specified by name or body ID.
 !
-               CALL ZZDYNBID ( LCFRAM, FRCODE, 'CENTER', CENT )
+               call zzdynbid ( lcfram, frcode, 'CENTER', cent )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'FRINFO' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'FRINFO' )
+                  return
+               end if
 
-               FOUND = .TRUE.
+               found = .true.
 
 !
 !              FOUND has been set to indicate whether we found the
@@ -1496,49 +1496,49 @@
 !
 !              Next look up the frame class and class ID.
 !
-               CALL ZZDYNVAI ( LCFRAM, FRCODE, 'CLASS',    1, N, VALUES)
-               FRCLSS  = VALUES(1)
+               call zzdynvai ( lcfram, frcode, 'CLASS',    1, n, values)
+               frclss  = values(1)
 
-               CALL ZZDYNVAI ( LCFRAM, FRCODE, 'CLASS_ID', 1, N, VALUES)
-               CLSSID = VALUES(1)
+               call zzdynvai ( lcfram, frcode, 'CLASS_ID', 1, n, values)
+               clssid = values(1)
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'FRINFO' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'FRINFO' )
+                  return
+               end if
 
 
 !              If we made it to this point, we successfully collected
 !              all items for this frame. Add this frame to the
 !              ID-based hash.
 !
-               CALL ZZHSIADD ( KIDLST, KIDPOL, KIDIDS, FRCODE, ITEM, &
-                                                               LNEW )
+               call zzhsiadd ( kidlst, kidpol, kidids, frcode, item, &
+                                                               lnew )
 
-               IF ( .NOT. FAILED() .AND. ITEM .NE. 0 ) THEN
+               if ( .not. failed() .and. item .ne. 0 ) then
 
-                  KNAME  (ITEM) = LCFRAM
-                  KCENT  (ITEM) = CENT
-                  KCLASS (ITEM) = FRCLSS
-                  KCLSID (ITEM) = CLSSID
+                  kname  (item) = lcfram
+                  kcent  (item) = cent
+                  kclass (item) = frclss
+                  kclsid (item) = clssid
 
 !
 !                 Also, try to add this frame to the name-based hash.
 !
-                  CALL ZZHSCADD ( KNMLST, KNMPOL, KNMNMS, LCFRAM, &
-                                                       ITEM, LNEW )
+                  call zzhscadd ( knmlst, knmpol, knmnms, lcfram, &
+                                                       item, lnew )
 
-                  IF ( .NOT. FAILED() .AND. ITEM .NE. 0 ) THEN
+                  if ( .not. failed() .and. item .ne. 0 ) then
 
-                     KNMIDS ( ITEM ) = FRCODE
+                     knmids ( item ) = frcode
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        In support of the DSN, NAIF has reserved a block of
@@ -1546,26 +1546,26 @@
 !        These are always PCK based frames for the earth.
 !        The PCK ID code is just FRCODE - 10000.
 !
-         IF      ( .NOT. FOUND &
-                   .AND. FRCODE .GE. 13000 &
-                   .AND. FRCODE .LT. 14000 ) THEN
+         if      ( .not. found &
+                   .and. frcode .ge. 13000 &
+                   .and. frcode .lt. 14000 ) then
 
-            CENT   = 399
-            FRCLSS = PCK
-            CLSSID = FRCODE - 10000
-            FOUND  = .TRUE.
+            cent   = 399
+            frclss = pck
+            clssid = frcode - 10000
+            found  = .true.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'FRINFO' )
-      RETURN
+      call chkout ( 'FRINFO' )
+      return
 
 
 !$Procedure CIDFRM ( Center ID to FRaMe id and name )
 
-      ENTRY CIDFRM ( CENT, FRCODE, FRNAME, FOUND )
+      entry cidfrm ( cent, frcode, frname, found )
 
 ! $ Abstract
 !
@@ -1746,129 +1746,129 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CIDFRM' )
+      call chkin ( 'CIDFRM' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
+         call zzhsiini ( maxkfr, kidlst, kidpol )
+         call zzhscini ( maxkfr, knmlst, knmpol )
 
 !
 !        Initialize built-in frame tables and hashes.
 !
-         CALL ZZFDAT   ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                         CENTER, TYPE,   TYPEID, CENTRD, &
-                         BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                         BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat   ( ncount, maxbfr, name,   idcode, &
+                         center, type,   typeid, centrd, &
+                         bnmlst, bnmpol, bnmnms, bnmidx, &
+                         bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'CIDFRM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'CIDFRM' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     First look up in the kernel pool the frame associated with this
 !     center.
 !
-      LOOKUP = 'OBJECT_#_FRAME'
+      lookup = 'OBJECT_#_FRAME'
 
-      CALL REPMI  ( LOOKUP, '#',   CENT, LOOKUP )
-      CALL DTPOOL ( LOOKUP, GOTIT, N,    DATTYP )
+      call repmi  ( lookup, '#',   cent, lookup )
+      call dtpool ( lookup, gotit, n,    dattyp )
 !
 !     If we didn't find this object in the form OBJECT_<number>_FRAME
 !     maybe it is present in the form OBJECT_<name>_FRAME. It's
 !     worth a try.
 !
-      IF ( .NOT. GOTIT ) THEN
+      if ( .not. gotit ) then
 !
 !        See if we can get the name for this center's ID code.
 !
-         CALL BODC2N ( CENT, LCNAME, GOTIT )
+         call bodc2n ( cent, lcname, gotit )
 
-         IF ( GOTIT ) THEN
+         if ( gotit ) then
 !
 !           Construct and look up the alternative name in the
 !           kernel pool.
 !
-            LOOKUP = 'OBJECT_#_FRAME'
+            lookup = 'OBJECT_#_FRAME'
 
-            CALL REPMC  ( LOOKUP, '#', LCNAME, LOOKUP )
-            CALL UCASE  ( LOOKUP,              LOOKUP )
-            CALL DTPOOL ( LOOKUP, GOTIT, N,    DATTYP )
+            call repmc  ( lookup, '#', lcname, lookup )
+            call ucase  ( lookup,              lookup )
+            call dtpool ( lookup, gotit, n,    dattyp )
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     There are two cases. The user may specify either a name
 !     or ID code for the frame to use to model the orientation of
 !     an object. We assume they'll opt for the character string
 !     form so we test that case first.
 !
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 
-         IF ( DATTYP .EQ. 'C' ) THEN
+         if ( dattyp .eq. 'C' ) then
 
-            CALL GCPOOL ( LOOKUP, 1, 1, N,  PNAME, GOTIT )
+            call gcpool ( lookup, 1, 1, n,  pname, gotit )
 !
 !           We've got the name:  See if we have this in our handy hash
 !           of built-in names.
 !
-            CALL ZZHSCCHK ( BNMLST, BNMPOL, BNMNMS, PNAME, ITEM )
-            IF ( ITEM .NE. 0 ) THEN
-               ITEM = BNMIDX( ITEM )
-            END IF
+            call zzhscchk ( bnmlst, bnmpol, bnmnms, pname, item )
+            if ( item .ne. 0 ) then
+               item = bnmidx( item )
+            end if
 
-            IF ( ITEM .GT. 0 ) THEN
+            if ( item .gt. 0 ) then
 
-               FRNAME = PNAME
-               FRCODE = IDCODE ( ITEM )
-               FOUND  = .TRUE.
+               frname = pname
+               frcode = idcode ( item )
+               found  = .true.
 
-            ELSE
+            else
 
 !
 !              See if this frame is in the kernel pool frame name-based
 !              hash. First reset the hash if POOL has changed.
 !
-               CALL ZZPCTRCK ( PULCTR, LUPDTE )
+               call zzpctrck ( pulctr, lupdte )
 
-               IF ( LUPDTE ) THEN
-                  CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-                  CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-               END IF
+               if ( lupdte ) then
+                  call zzhscini ( maxkfr, knmlst, knmpol )
+                  call zzhsiini ( maxkfr, kidlst, kidpol )
+               end if
 
 !
 !              Check if this name is in the hash.
 !
-               CALL ZZHSCCHK ( KNMLST, KNMPOL, KNMNMS, PNAME, ITEM )
+               call zzhscchk ( knmlst, knmpol, knmnms, pname, item )
 
-               IF ( ITEM .NE. 0 ) THEN
+               if ( item .ne. 0 ) then
 
-                  FRNAME = PNAME
-                  FRCODE = KNMIDS ( ITEM )
-                  FOUND  = .TRUE.
+                  frname = pname
+                  frcode = knmids ( item )
+                  found  = .true.
 
-               ELSE
+               else
 
 !
 !                 Nope. Look in the kernel pool for the data associated
@@ -1877,118 +1877,118 @@
 !                 Capture the frame name now, since we're going to
 !                 modify PNAME.
 !
-                  FRNAME = PNAME
+                  frname = pname
 
-                  CALL PREFIX ( 'FRAME_', 0,                  PNAME )
-                  CALL GIPOOL (  PNAME,   1, ROOM, N, VALUES, GOTIT )
+                  call prefix ( 'FRAME_', 0,                  pname )
+                  call gipool (  pname,   1, room, n, values, gotit )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'CIDFRM' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'CIDFRM' )
+                     return
+                  end if
 
-                  IF ( N .EQ. 1 .AND. GOTIT ) THEN
+                  if ( n .eq. 1 .and. gotit ) then
 
-                     FRCODE = VALUES(1)
-                     FOUND  = .TRUE.
+                     frcode = values(1)
+                     found  = .true.
 
 !
 !                    If we made it to this point, we successfully
 !                    mapped the kernel frame name to its ID. Add this
 !                    pair to the name-based hash.
 !
-                     CALL ZZHSCADD ( KNMLST, KNMPOL, KNMNMS, FRNAME, &
-                                                       ITEM, LNEW )
+                     call zzhscadd ( knmlst, knmpol, knmnms, frname, &
+                                                       item, lnew )
 
-                     IF ( .NOT. FAILED() .AND. ITEM .NE. 0 ) THEN
+                     if ( .not. failed() .and. item .ne. 0 ) then
 
-                        KNMIDS ( ITEM ) = FRCODE
+                        knmids ( item ) = frcode
 
-                     END IF
+                     end if
 
-                  ELSE
+                  else
 
-                     FRCODE = 0
-                     FRNAME = ' '
-                     FOUND  = .FALSE.
+                     frcode = 0
+                     frname = ' '
+                     found  = .false.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         ELSE IF ( DATTYP .EQ. 'N' ) THEN
+         else if ( dattyp .eq. 'N' ) then
 !
 !           Ok. They decided to use the numeric form to specify
 !           the frame ID. We need to figure out the name of the frame.
 !           First we retrieve the frame ID they've loaded into the
 !           kernel pool.
 !
-            CALL GIPOOL ( LOOKUP, 1, 1, N, VALUES, GOTIT )
+            call gipool ( lookup, 1, 1, n, values, gotit )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CIDFRM' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CIDFRM' )
+               return
+            end if
 
 !
 !           We've got the frame ID, see if we already know about this
 !           ID code.
 !
-            CALL ZZHSICHK ( BIDLST, BIDPOL, BIDIDS, VALUES(1), ITEM )
-            IF ( ITEM .NE. 0 ) THEN
-               ITEM = BIDIDX( ITEM )
-            END IF
+            call zzhsichk ( bidlst, bidpol, bidids, values(1), item )
+            if ( item .ne. 0 ) then
+               item = bididx( item )
+            end if
 
-            IF ( ITEM .NE. 0 ) THEN
+            if ( item .ne. 0 ) then
 !
 !              Just look up the name and set the frame code.
 !
-               FRNAME = NAME  (ITEM)
-               FRCODE = VALUES(1)
-               FOUND  = .TRUE.
+               frname = name  (item)
+               frcode = values(1)
+               found  = .true.
 
-            ELSE
+            else
 
 !
 !              See if this frame is in the kernel pool frame ID-based
 !              hash. First reset the hash if POOL has changed.
 !
-               CALL ZZPCTRCK ( PULCTR, LUPDTE )
+               call zzpctrck ( pulctr, lupdte )
 
-               IF ( LUPDTE ) THEN
-                  CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-                  CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-               END IF
+               if ( lupdte ) then
+                  call zzhscini ( maxkfr, knmlst, knmpol )
+                  call zzhsiini ( maxkfr, kidlst, kidpol )
+               end if
 
 !
 !              Check if this ID is in the hash.
 !
-               CALL ZZHSICHK ( KIDLST, KIDPOL, KIDIDS, VALUES(1), ITEM )
+               call zzhsichk ( kidlst, kidpol, kidids, values(1), item )
 
-               IF ( ITEM .NE. 0 ) THEN
+               if ( item .ne. 0 ) then
 
-                  FRNAME = KNAME ( ITEM )
-                  FRCODE = VALUES(1)
-                  FOUND  = .TRUE.
+                  frname = kname ( item )
+                  frcode = values(1)
+                  found  = .true.
 
-               ELSE
+               else
 
 !
 !                 It is not in the hash. See if it's in the kernel pool
 !                 somewhere.
 !
-                  PNAME      = 'FRAME_#_NAME'
-                  CALL REPMI (  PNAME, '#', VALUES(1),   PNAME )
-                  CALL GCPOOL ( PNAME, 1, ROOM, N, LINE, GOTIT )
+                  pname      = 'FRAME_#_NAME'
+                  call repmi (  pname, '#', values(1),   pname )
+                  call gcpool ( pname, 1, room, n, line, gotit )
 
-                  IF ( N .EQ. 1 .AND. GOTIT ) THEN
+                  if ( n .eq. 1 .and. gotit ) then
 
-                     CALL LJUST ( LINE(1), FRNAME )
-                     FRCODE = VALUES(1)
-                     FOUND  = .TRUE.
+                     call ljust ( line(1), frname )
+                     frcode = values(1)
+                     found  = .true.
 
 !
 !                    Note that since we did not collect all needed
@@ -1996,78 +1996,78 @@
 !                    add it to the hash. This addition is done only by
 !                    FRINFO.
 !
-                  ELSE
+                  else
 
-                     FRCODE = VALUES(1)
-                     FRNAME = ' '
-                     FOUND  = .FALSE.
+                     frcode = values(1)
+                     frname = ' '
+                     found  = .false.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 !
 !        One way or the other we've filled in the values at this
 !        point. Nothing left to do but check out and return.
 !
-         CALL CHKOUT ( 'CIDFRM' )
-         RETURN
+         call chkout ( 'CIDFRM' )
+         return
 
-      END IF
+      end if
 !
 !     The only way to reach this point is if the user did not
 !     specify via the kernel pool a frame to use for this center.
 !
 !     We have a special case for EARTH.
 !
-      IF ( CENT .EQ. 399 ) THEN
+      if ( cent .eq. 399 ) then
 
-         FRCODE = 10013
-         FRNAME = 'IAU_EARTH'
-         FOUND  = .TRUE.
-         CALL CHKOUT ( 'CIDFRM' )
-         RETURN
+         frcode = 10013
+         frname = 'IAU_EARTH'
+         found  = .true.
+         call chkout ( 'CIDFRM' )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the location of the requested item in the array
 !     of centers.
 !
-      ITEM = BSCHOI ( CENT, NCOUNT, CENTER, CENTRD )
+      item = bschoi ( cent, ncount, center, centrd )
 
 !
 !     If the name is in our list, we can just look up its ID code and
 !     name in the parallel array.
 !
-      IF ( ITEM .GT. 0 ) THEN
+      if ( item .gt. 0 ) then
 
-         FRCODE =  IDCODE(ITEM)
-         FRNAME =  NAME  (ITEM)
-         FOUND  = .TRUE.
+         frcode =  idcode(item)
+         frname =  name  (item)
+         found  = .true.
 
-      ELSE
+      else
 !
 !        There's nothing we can do now. We don't know what frame
 !        might be associated with this object.
 !
-         FRNAME = ' '
-         FRCODE =  0
-         FOUND  = .FALSE.
+         frname = ' '
+         frcode =  0
+         found  = .false.
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CIDFRM' )
-      RETURN
+      call chkout ( 'CIDFRM' )
+      return
 
 
 !$Procedure CNMFRM ( Center NaMe to FRaMe id and name )
 
-      ENTRY CNMFRM ( CNAME, FRCODE, FRNAME, FOUND )
+      entry cnmfrm ( cname, frcode, frname, found )
 
 ! $ Abstract
 !
@@ -2251,79 +2251,79 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CNMFRM' )
+      call chkin ( 'CNMFRM' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
+         call zzhsiini ( maxkfr, kidlst, kidpol )
+         call zzhscini ( maxkfr, knmlst, knmpol )
 
 !
 !        Initialize built-in frame tables and hashes.
 !
-         CALL ZZFDAT   ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                         CENTER, TYPE,   TYPEID, CENTRD, &
-                         BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                         BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat   ( ncount, maxbfr, name,   idcode, &
+                         center, type,   typeid, centrd, &
+                         bnmlst, bnmpol, bnmnms, bnmidx, &
+                         bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'CNMFRM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'CNMFRM' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     First look up in the kernel pool the frame associated with this
 !     center.
 !
-      LOOKUP = 'OBJECT_#_FRAME'
+      lookup = 'OBJECT_#_FRAME'
 
-      CALL REPMC  ( LOOKUP, '#',   CNAME, LOOKUP )
-      CALL UCASE  ( LOOKUP,               LOOKUP )
-      CALL DTPOOL ( LOOKUP, GOTIT, N,     DATTYP )
+      call repmc  ( lookup, '#',   cname, lookup )
+      call ucase  ( lookup,               lookup )
+      call dtpool ( lookup, gotit, n,     dattyp )
 
 !
 !     If we didn't find this object in the form OBJECT_<name>_FRAME
 !     maybe it is present in the form OBJECT_<number>_FRAME. It's
 !     worth a try.
 !
-      IF ( .NOT. GOTIT ) THEN
+      if ( .not. gotit ) then
 !
 !        See if we can get the name for this center's ID code.
 !
-         CALL BODN2C ( CNAME, ID, GOTIT )
+         call bodn2c ( cname, id, gotit )
 
-         IF ( GOTIT ) THEN
+         if ( gotit ) then
 !
 !           Construct and look up the alternative name in the
 !           kernel pool.
 !
-            LOOKUP = 'OBJECT_#_FRAME'
+            lookup = 'OBJECT_#_FRAME'
 
-            CALL REPMI  ( LOOKUP, '#',   ID, LOOKUP )
-            CALL DTPOOL ( LOOKUP, GOTIT, N,  DATTYP )
+            call repmi  ( lookup, '#',   id, lookup )
+            call dtpool ( lookup, gotit, n,  dattyp )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     There are two cases. The user may specify either a name
@@ -2331,51 +2331,51 @@
 !     an object. We assume they'll opt for the character string
 !     form so we test that case first.
 !
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 
-         IF ( DATTYP .EQ. 'C' ) THEN
+         if ( dattyp .eq. 'C' ) then
 
-            CALL GCPOOL ( LOOKUP, 1, 1, N,  PNAME, GOTIT )
+            call gcpool ( lookup, 1, 1, n,  pname, gotit )
 !
 !           We've got the name:  See if we have this in our handy hash
 !           of built-in names.
 !
-            CALL ZZHSCCHK ( BNMLST, BNMPOL, BNMNMS, PNAME, ITEM )
-            IF ( ITEM .NE. 0 ) THEN
-               ITEM = BNMIDX( ITEM )
-            END IF
+            call zzhscchk ( bnmlst, bnmpol, bnmnms, pname, item )
+            if ( item .ne. 0 ) then
+               item = bnmidx( item )
+            end if
 
-            IF ( ITEM .GT. 0 ) THEN
+            if ( item .gt. 0 ) then
 
-               FRNAME = PNAME
-               FRCODE = IDCODE ( ITEM )
-               FOUND  = .TRUE.
+               frname = pname
+               frcode = idcode ( item )
+               found  = .true.
 
-            ELSE
+            else
 
 !
 !              See if this frame is in the kernel pool frame name-based
 !              hash. First reset the hash if POOL has changed.
 !
-               CALL ZZPCTRCK ( PULCTR, LUPDTE )
+               call zzpctrck ( pulctr, lupdte )
 
-               IF ( LUPDTE ) THEN
-                  CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-                  CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-               END IF
+               if ( lupdte ) then
+                  call zzhscini ( maxkfr, knmlst, knmpol )
+                  call zzhsiini ( maxkfr, kidlst, kidpol )
+               end if
 
 !
 !              Check if this name is in the hash.
 !
-               CALL ZZHSCCHK ( KNMLST, KNMPOL, KNMNMS, PNAME, ITEM )
+               call zzhscchk ( knmlst, knmpol, knmnms, pname, item )
 
-               IF ( ITEM .NE. 0 ) THEN
+               if ( item .ne. 0 ) then
 
-                  FRNAME = PNAME
-                  FRCODE = KNMIDS ( ITEM )
-                  FOUND  = .TRUE.
+                  frname = pname
+                  frcode = knmids ( item )
+                  found  = .true.
 
-               ELSE
+               else
 
 !
 !                 Nope. Look in the kernel pool for the data associated
@@ -2384,118 +2384,118 @@
 !                 Capture the frame name now, since we're going to
 !                 modify PNAME.
 !
-                  FRNAME = PNAME
+                  frname = pname
 
-                  CALL PREFIX ( 'FRAME_', 0,                  PNAME )
-                  CALL GIPOOL (  PNAME,   1, ROOM, N, VALUES, GOTIT )
+                  call prefix ( 'FRAME_', 0,                  pname )
+                  call gipool (  pname,   1, room, n, values, gotit )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'CNMFRM' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'CNMFRM' )
+                     return
+                  end if
 
-                  IF ( N .EQ. 1 .AND. GOTIT ) THEN
+                  if ( n .eq. 1 .and. gotit ) then
 
-                     FRCODE = VALUES(1)
-                     FOUND  = .TRUE.
+                     frcode = values(1)
+                     found  = .true.
 
 !
 !                    If we made it to this point, we successfully
 !                    mapped the kernel frame name to its ID. Add this
 !                    pair to the name-based hash.
 !
-                     CALL ZZHSCADD ( KNMLST, KNMPOL, KNMNMS, FRNAME, &
-                                                       ITEM, LNEW )
+                     call zzhscadd ( knmlst, knmpol, knmnms, frname, &
+                                                       item, lnew )
 
-                     IF ( .NOT. FAILED() .AND. ITEM .NE. 0 ) THEN
+                     if ( .not. failed() .and. item .ne. 0 ) then
 
-                        KNMIDS ( ITEM ) = FRCODE
+                        knmids ( item ) = frcode
 
-                     END IF
+                     end if
 
-                  ELSE
+                  else
 
-                     FRCODE = 0
-                     FRNAME = ' '
-                     FOUND  = .FALSE.
+                     frcode = 0
+                     frname = ' '
+                     found  = .false.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         ELSE IF ( DATTYP .EQ. 'N' ) THEN
+         else if ( dattyp .eq. 'N' ) then
 !
 !           Ok. They decided to use the numeric form to specify
 !           the frame ID. We need to figure out the name of the frame.
 !           First we retrieve the frame ID they've loaded into the
 !           kernel pool.
 !
-            CALL GIPOOL ( LOOKUP, 1, 1, N, VALUES, GOTIT )
+            call gipool ( lookup, 1, 1, n, values, gotit )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CNMFRM' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CNMFRM' )
+               return
+            end if
 
 !
 !           We've got the frame ID, see if we already know about this
 !           ID code.
 !
-            CALL ZZHSICHK ( BIDLST, BIDPOL, BIDIDS, VALUES(1), ITEM )
-            IF ( ITEM .NE. 0 ) THEN
-               ITEM = BIDIDX( ITEM )
-            END IF
+            call zzhsichk ( bidlst, bidpol, bidids, values(1), item )
+            if ( item .ne. 0 ) then
+               item = bididx( item )
+            end if
 
-            IF ( ITEM .NE. 0 ) THEN
+            if ( item .ne. 0 ) then
 !
 !              Just look up the name and set the frame code.
 !
-               FRNAME = NAME  (ITEM)
-               FRCODE = VALUES(1)
-               FOUND  = .TRUE.
+               frname = name  (item)
+               frcode = values(1)
+               found  = .true.
 
-            ELSE
+            else
 
 !
 !              See if this frame is in the kernel pool frame ID-based
 !              hash. First reset the hash if POOL has changed.
 !
-               CALL ZZPCTRCK ( PULCTR, LUPDTE )
+               call zzpctrck ( pulctr, lupdte )
 
-               IF ( LUPDTE ) THEN
-                  CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
-                  CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-               END IF
+               if ( lupdte ) then
+                  call zzhscini ( maxkfr, knmlst, knmpol )
+                  call zzhsiini ( maxkfr, kidlst, kidpol )
+               end if
 
 !
 !              Check if this ID is in the hash.
 !
-               CALL ZZHSICHK ( KIDLST, KIDPOL, KIDIDS, VALUES(1), ITEM )
+               call zzhsichk ( kidlst, kidpol, kidids, values(1), item )
 
-               IF ( ITEM .NE. 0 ) THEN
+               if ( item .ne. 0 ) then
 
-                  FRNAME = KNAME ( ITEM )
-                  FRCODE = VALUES(1)
-                  FOUND  = .TRUE.
+                  frname = kname ( item )
+                  frcode = values(1)
+                  found  = .true.
 
-               ELSE
+               else
 
 !
 !                 It is not in the hash. See if it's in the kernel pool
 !                 somewhere.
 !
-                  PNAME      = 'FRAME_#_NAME'
-                  CALL REPMI (  PNAME, '#', VALUES(1),   PNAME )
-                  CALL GCPOOL ( PNAME, 1, ROOM, N, LINE, GOTIT )
+                  pname      = 'FRAME_#_NAME'
+                  call repmi (  pname, '#', values(1),   pname )
+                  call gcpool ( pname, 1, room, n, line, gotit )
 
-                  IF ( N .EQ. 1 .AND. GOTIT ) THEN
+                  if ( n .eq. 1 .and. gotit ) then
 
-                     CALL LJUST ( LINE(1), FRNAME )
-                     FRCODE = VALUES(1)
-                     FOUND  = .TRUE.
+                     call ljust ( line(1), frname )
+                     frcode = values(1)
+                     found  = .true.
 
 !
 !                    Note that since we did not collect all needed
@@ -2503,72 +2503,72 @@
 !                    add it to the hash. This addition is done only by
 !                    FRINFO.
 !
-                  ELSE
+                  else
 
-                     FRCODE = VALUES(1)
-                     FRNAME = ' '
-                     FOUND  = .FALSE.
+                     frcode = values(1)
+                     frname = ' '
+                     found  = .false.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 !
 !        One way or the other we've filled in the values at this
 !        point. Nothing left to do but check out and return.
 !
-         CALL CHKOUT ( 'CNMFRM' )
-         RETURN
+         call chkout ( 'CNMFRM' )
+         return
 
-      END IF
+      end if
 !
 !     The only way to reach this point is if the user did not
 !     specify via the kernel pool a frame to use for this center.
 !
 !
-      FRNAME = 'IAU_#'
-      CALL REPMC ( FRNAME, '#', CNAME, FRNAME )
-      CALL UCASE ( FRNAME,             FRNAME )
+      frname = 'IAU_#'
+      call repmc ( frname, '#', cname, frname )
+      call ucase ( frname,             frname )
 
 !
 !     Determine the location of the requested item in the array
 !     of centers.
 !
-      CALL ZZHSCCHK ( BNMLST, BNMPOL, BNMNMS, FRNAME, ITEM )
-      IF ( ITEM .NE. 0 ) THEN
-         ITEM = BNMIDX( ITEM )
-      END IF
+      call zzhscchk ( bnmlst, bnmpol, bnmnms, frname, item )
+      if ( item .ne. 0 ) then
+         item = bnmidx( item )
+      end if
 
 !
 !     If the name is in our hash, we can just look up its ID code and
 !     name in the parallel array.
 !
-      IF ( ITEM .GT. 0 ) THEN
+      if ( item .gt. 0 ) then
 
-         FRCODE =  IDCODE(ITEM)
-         FOUND  = .TRUE.
+         frcode =  idcode(item)
+         found  = .true.
 
-      ELSE
+      else
 !
 !        There's nothing we can do now. We don't know what frame
 !        might be associated with this object.
 !
-         FRCODE =  0
-         FOUND  = .FALSE.
+         frcode =  0
+         found  = .false.
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CNMFRM' )
-      RETURN
+      call chkout ( 'CNMFRM' )
+      return
 
 
 !$Procedure CCIFRM ( frame Class and Class Id to FRaMe id and name )
 
-      ENTRY CCIFRM ( FRCLSS, CLSSID, FRCODE, FRNAME, CENT, FOUND )
+      entry ccifrm ( frclss, clssid, frcode, frname, cent, found )
 
 ! $ Abstract
 !
@@ -2844,73 +2844,73 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CCIFRM' )
+      call chkin ( 'CCIFRM' )
 
 !
 !     Perform any needed first pass initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize POOL state counter to the user value.
 !
-         CALL ZZCTRUIN ( PULCTR )
+         call zzctruin ( pulctr )
 
 !
 !        Initialize kernel POOL frame hashes.
 !
-         CALL ZZHSIINI ( MAXKFR, KIDLST, KIDPOL )
-         CALL ZZHSCINI ( MAXKFR, KNMLST, KNMPOL )
+         call zzhsiini ( maxkfr, kidlst, kidpol )
+         call zzhscini ( maxkfr, knmlst, knmpol )
 
 !
 !        Initialize built-in frame tables and hashes.
 !
-         CALL ZZFDAT   ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                         CENTER, TYPE,   TYPEID, CENTRD, &
-                         BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                         BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat   ( ncount, maxbfr, name,   idcode, &
+                         center, type,   typeid, centrd, &
+                         bnmlst, bnmpol, bnmnms, bnmidx, &
+                         bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'CCIFRM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'CCIFRM' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     No frame found so far.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     First try to look up from the built-in list the frame associated
 !     with the input class and class ID. Unfortunately, this is a
 !     linear search.
 !
-      DO I = 1, NCOUNT
+      do i = 1, ncount
 
-         IF (       ( TYPE(I)   .EQ. FRCLSS  ) &
-              .AND. ( TYPEID(I) .EQ. CLSSID ) ) THEN
+         if (       ( type(i)   .eq. frclss  ) &
+              .and. ( typeid(i) .eq. clssid ) ) then
 !
 !           We have a match. Assign the output arguments and return.
 !
-            FRNAME = NAME(I)
-            FRCODE = IDCODE(I)
-            CENT   = CENTER(I)
-            FOUND  = .TRUE.
+            frname = name(i)
+            frcode = idcode(i)
+            cent   = center(i)
+            found  = .true.
 
-            CALL CHKOUT ( 'CCIFRM' )
-            RETURN
+            call chkout ( 'CCIFRM' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Unfortunately we did not find a frame associated with the input
@@ -2920,74 +2920,74 @@
 !     the frame specifications in the kernel pool. Start out by looking
 !     the frame class assignments from any loaded frame specifications.
 !
-      LOOKUP = 'FRAME_*_CLASS'
+      lookup = 'FRAME_*_CLASS'
 
-      START = 1
-      CALL GNPOOL ( LOOKUP, START, KVBSZ, N, KVBUFF, FND )
+      start = 1
+      call gnpool ( lookup, start, kvbsz, n, kvbuff, fnd )
 
-      DO WHILE (  FND .AND. ( N .GT. 0 )  )
+      do while (  fnd .and. ( n .gt. 0 )  )
 !
 !        For each kernel variable name found in the buffer, look up the
 !        associated class. If the class matches the input class, look
 !        up the class ID as well. Set the output arguments and return
 !        if we get a complete match.
 !
-         DO I = 1, N
+         do i = 1, n
 
-            CALL GIPOOL ( KVBUFF(I), 1, 1, N, KVCLSS, FND )
+            call gipool ( kvbuff(i), 1, 1, n, kvclss, fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CCIFRM' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CCIFRM' )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 
-               CALL SETMSG ( 'Invalid frame specification found in ' &
+               call setmsg ( 'Invalid frame specification found in ' &
                //            'kernel pool: frame class keyword ' &
                //            'is # but integer class was not ' &
                //            'associated with this keyword.'       )
-               CALL ERRCH  ( '#',  KVBUFF(I)                       )
-               CALL SIGERR ( 'SPICE(INVALIDFRAMEDEF)'              )
-               CALL CHKOUT ( 'CCIFRM'                              )
-               RETURN
+               call errch  ( '#',  kvbuff(i)                       )
+               call sigerr ( 'SPICE(INVALIDFRAMEDEF)'              )
+               call chkout ( 'CCIFRM'                              )
+               return
 
-            END IF
+            end if
 
-            IF ( KVCLSS .EQ. FRCLSS ) THEN
+            if ( kvclss .eq. frclss ) then
 !
 !              Get the class ID for the current frame.
 !
-               LOOK2 = KVBUFF(I)
+               look2 = kvbuff(i)
 
-               CALL SUFFIX ( '_ID', 0, LOOK2 )
+               call suffix ( '_ID', 0, look2 )
 
-               CALL GIPOOL ( LOOK2, 1, 1, N, KVCLID, FND )
+               call gipool ( look2, 1, 1, n, kvclid, fnd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'CCIFRM' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'CCIFRM' )
+                  return
+               end if
 
-               IF ( .NOT. FND ) THEN
+               if ( .not. fnd ) then
 
 
-                  CALL SETMSG ( 'Invalid frame specification found in ' &
+                  call setmsg ( 'Invalid frame specification found in ' &
                   //            'kernel pool: frame class keyword ' &
                   //            'is # but associated integer ' &
                   //            'class ID assignment was not found.' )
-                  CALL ERRCH  ( '#',  KVBUFF(I)                      )
-                  CALL SIGERR ( 'SPICE(INVALIDFRAMEDEF)'             )
-                  CALL CHKOUT ( 'CCIFRM'                             )
-                  RETURN
+                  call errch  ( '#',  kvbuff(i)                      )
+                  call sigerr ( 'SPICE(INVALIDFRAMEDEF)'             )
+                  call chkout ( 'CCIFRM'                             )
+                  return
 
-               END IF
+               end if
 
 !
 !              Check the class ID for the current kernel variable
 !              against the input value.
 !
-               IF ( KVCLID .EQ. CLSSID ) THEN
+               if ( kvclid .eq. clssid ) then
 !
 !                 We have a match. We need to return the frame
 !                 ID, frame name, and center. As long as we're
@@ -2997,96 +2997,96 @@
 !                 Look up the frame name first. Create the frame
 !                 name keyword.
 !
-                  CALL REPMC ( KVBUFF(I), '_CLASS', '_NAME', LOOK2 )
+                  call repmc ( kvbuff(i), '_CLASS', '_NAME', look2 )
 
-                  CALL GCPOOL ( LOOK2, 1, 1, N, FRNAME, FND )
+                  call gcpool ( look2, 1, 1, n, frname, fnd )
 
-                  IF ( .NOT. FND ) THEN
+                  if ( .not. fnd ) then
 
-                     CALL SETMSG ( 'Invalid frame specification found ' &
+                     call setmsg ( 'Invalid frame specification found ' &
                      //            'in kernel pool: frame class keyword' &
                      //            ' is # but associated frame name ' &
                      //            'assignment was not found.'         )
-                     CALL ERRCH  ( '#',  KVBUFF(I)                     )
-                     CALL SIGERR ( 'SPICE(INVALIDFRAMEDEF)'            )
-                     CALL CHKOUT ( 'CCIFRM'                            )
-                     RETURN
+                     call errch  ( '#',  kvbuff(i)                     )
+                     call sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
+                     call chkout ( 'CCIFRM'                            )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 We could extract the frame ID code from KVBUFF(I), but
 !                 instead we'll make sure that the ID is defined in the
 !                 kernel pool.
 !
-                  LOOK2 = FRNAME
-                  CALL PREFIX ( 'FRAME_', 0, LOOK2 )
+                  look2 = frname
+                  call prefix ( 'FRAME_', 0, look2 )
 
-                  CALL GIPOOL ( LOOK2, 1, 1, N, FRCODE, FND )
+                  call gipool ( look2, 1, 1, n, frcode, fnd )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'CCIFRM' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'CCIFRM' )
+                     return
+                  end if
 
-                  IF ( .NOT. FND ) THEN
+                  if ( .not. fnd ) then
 
-                     CALL SETMSG ( 'Invalid frame specification found ' &
+                     call setmsg ( 'Invalid frame specification found ' &
                      //            'in kernel pool: frame name is ' &
                      //            'is # but associated frame ID ' &
                      //            'assignment was not found.'         )
-                     CALL ERRCH  ( '#',  FRNAME                        )
-                     CALL SIGERR ( 'SPICE(INVALIDFRAMEDEF)'            )
-                     CALL CHKOUT ( 'CCIFRM'                            )
-                     RETURN
+                     call errch  ( '#',  frname                        )
+                     call sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
+                     call chkout ( 'CCIFRM'                            )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Look up the frame center. Whether the frame center
 !                 has been specified by name or ID code, the ID code
 !                 will be returned by ZZDYNBID.
 !
-                  CALL ZZDYNBID ( FRNAME, FRCODE, 'CENTER', CENT )
+                  call zzdynbid ( frname, frcode, 'CENTER', cent )
 
 !
 !                 As long as we looked up the center successfully,
 !                 we're done.
 !
-                  IF ( .NOT. FAILED() ) THEN
+                  if ( .not. failed() ) then
 
-                     FOUND = .TRUE.
+                     found = .true.
 
-                  END IF
+                  end if
 
 !
 !                 Exit here, whether or not we looked up the frame's
 !                 center successfully.
 !
-                  CALL CHKOUT ( 'CCIFRM' )
-                  RETURN
+                  call chkout ( 'CCIFRM' )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 !
 !           Getting to this point means we didn't have a match;
 !           examine the next buffer entry.
 !
-         END DO
+         end do
 
 !
 !        Get the next buffer full of frame class keywords.
 !
-         START = START + N
-         CALL GNPOOL ( LOOKUP, START, KVBSZ, N, KVBUFF, FND )
+         start = start + n
+         call gnpool ( lookup, start, kvbsz, n, kvbuff, fnd )
 
-      END DO
+      end do
 
 !
 !     We drop down to this point only if no matching frame was found.
 !     The FOUND flag has already been set to .FALSE.
 !
-      CALL CHKOUT ( 'CCIFRM' )
-      RETURN
-      END
+      call chkout ( 'CCIFRM' )
+      return
+      end

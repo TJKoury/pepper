@@ -1,6 +1,6 @@
 !$Procedure DAFT2B ( DAF, text to binary )
 
-      SUBROUTINE DAFT2B ( TEXT, BINARY, RESV )
+      subroutine daft2b ( text, binary, resv )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               TEXT
-      CHARACTER*(*)         BINARY
-      INTEGER               RESV
+      integer               text
+      character*(*)         binary
+      integer               resv
 
-      INTEGER               BSIZE
-      PARAMETER           ( BSIZE = 1024 )
+      integer               bsize
+      parameter           ( bsize = 1024 )
 
 ! $ Brief_I/O
 !
@@ -299,111 +299,111 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1000)      NAME     ( 2 )
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(60)        IFNAME   ( 2 )
-      CHARACTER*(IDWLEN)    TARCH
-      CHARACTER*(IDWLEN)    TTYPE
+      character*(1000)      name     ( 2 )
+      character*(idwlen)    idword
+      character*(60)        ifname   ( 2 )
+      character*(idwlen)    tarch
+      character*(idwlen)    ttype
 
-      DOUBLE PRECISION      BUFFER   ( BSIZE )
-      DOUBLE PRECISION      DC       ( 125 )
-      DOUBLE PRECISION      SUM      ( 125 )
+      double precision      buffer   ( bsize )
+      double precision      dc       ( 125 )
+      double precision      sum      ( 125 )
 
-      INTEGER               CHUNK
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               IC       ( 250 )
-      INTEGER               IOSTAT
-      INTEGER               ISIZE
-      INTEGER               LSIZE
-      INTEGER               MORE
-      INTEGER               ND
-      INTEGER               NI
+      integer               chunk
+      integer               handle
+      integer               i
+      integer               ic       ( 250 )
+      integer               iostat
+      integer               isize
+      integer               lsize
+      integer               more
+      integer               nd
+      integer               ni
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFT2B' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFT2B' )
+      end if
 
-      IDWORD = ' '
-      TARCH  = ' '
-      TTYPE  = ' '
+      idword = ' '
+      tarch  = ' '
+      ttype  = ' '
 !
 !     We should be positioned and ready to read the file ID word from
 !     the text file, so let's try it.
 !
-      READ (TEXT,*,IOSTAT=IOSTAT) IDWORD
+      read (text,*,iostat=iostat) idword
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'The attempt to read from file ''#''' // &
+         call setmsg ( 'The attempt to read from file ''#''' // &
                        ' failed. IOSTAT = #.'                 )
-         CALL ERRFNM ( '#', TEXT                              )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-         CALL CHKOUT ( 'DAFT2B'                               )
-         RETURN
+         call errfnm ( '#', text                              )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+         call chkout ( 'DAFT2B'                               )
+         return
 
-      END IF
+      end if
 !
 !     Split the ID word into an architecture and type, and verify that
 !     the architecture is 'DAF'. If it is not, this is the wrong
 !     routine, and an error will be signaled.
 !
-      CALL IDW2AT ( IDWORD, TARCH, TTYPE )
+      call idw2at ( idword, tarch, ttype )
 
-      IF ( TARCH .NE. 'DAF' ) THEN
+      if ( tarch .ne. 'DAF' ) then
 
-         CALL SETMSG ( 'File architecture is not ''DAF'' for' // &
+         call setmsg ( 'File architecture is not ''DAF'' for' // &
                        ' file ''#'''                           )
-         CALL ERRFNM ( '#', TEXT                               )
-         CALL SIGERR ( 'SPICE(NOTADAFFILE)'                    )
-         CALL CHKOUT ( 'DAFT2B'                                )
-         RETURN
+         call errfnm ( '#', text                               )
+         call sigerr ( 'SPICE(NOTADAFFILE)'                    )
+         call chkout ( 'DAFT2B'                                )
+         return
 
-      END IF
+      end if
 
-      READ (TEXT,*,IOSTAT=IOSTAT) ND, NI, IFNAME(1)
+      read (text,*,iostat=iostat) nd, ni, ifname(1)
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'The attempt to read from file ''#''' // &
+         call setmsg ( 'The attempt to read from file ''#''' // &
                        ' failed. IOSTAT = #.'                 )
-         CALL ERRFNM ( '#', TEXT                              )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-         CALL CHKOUT ( 'DAFT2B'                               )
-         RETURN
+         call errfnm ( '#', text                              )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+         call chkout ( 'DAFT2B'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Open the new binary file.
 !
-      CALL DAFOPN ( BINARY, ND, NI, IFNAME(1), RESV, HANDLE )
+      call dafopn ( binary, nd, ni, ifname(1), resv, handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFT2B' )
-         RETURN
+         call chkout ( 'DAFT2B' )
+         return
 
-      END IF
+      end if
 !
 !     Each array is preceded by a '1', which indicates that more
 !     arrays are to come. The array itself begins with the name
@@ -416,244 +416,244 @@
 !     If the chunks in the file are bigger than the local buffer
 !     size, we are in trouble.
 !
-      LSIZE = ND + (NI - 1) / 2 + 1
-      ISIZE = LSIZE * 8
+      lsize = nd + (ni - 1) / 2 + 1
+      isize = lsize * 8
 
-      READ (TEXT,*,IOSTAT=IOSTAT) MORE
+      read (text,*,iostat=iostat) more
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                 )
-         CALL SETMSG ( 'The attempt to read from file ''#''' // &
+         call dafcls ( handle                                 )
+         call setmsg ( 'The attempt to read from file ''#''' // &
                        ' failed. IOSTAT = #.'                 )
-         CALL ERRFNM ( '#', TEXT                              )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-         CALL CHKOUT ( 'DAFT2B'                               )
-         RETURN
+         call errfnm ( '#', text                              )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+         call chkout ( 'DAFT2B'                               )
+         return
 
-      END IF
+      end if
 
-      DO WHILE ( MORE .GT. 0 )
+      do while ( more .gt. 0 )
 
-         READ (TEXT,*,IOSTAT=IOSTAT) NAME(1)( :ISIZE)
+         read (text,*,iostat=iostat) name(1)( :isize)
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                 )
-            CALL SETMSG ( 'The attempt to read from file ''#''' // &
+            call dafcls ( handle                                 )
+            call setmsg ( 'The attempt to read from file ''#''' // &
                           ' failed. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', TEXT                              )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-            CALL CHKOUT ( 'DAFT2B'                               )
-            RETURN
+            call errfnm ( '#', text                              )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+            call chkout ( 'DAFT2B'                               )
+            return
 
-         END IF
+         end if
 
-         READ (TEXT,*,IOSTAT=IOSTAT) ( DC(I), I = 1, ND     )
+         read (text,*,iostat=iostat) ( dc(i), i = 1, nd     )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                 )
-            CALL SETMSG ( 'The attempt to read from file ''#''' // &
+            call dafcls ( handle                                 )
+            call setmsg ( 'The attempt to read from file ''#''' // &
                           ' failed. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', TEXT                              )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-            CALL CHKOUT ( 'DAFT2B'                               )
-            RETURN
+            call errfnm ( '#', text                              )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+            call chkout ( 'DAFT2B'                               )
+            return
 
-         END IF
+         end if
 
-         READ (TEXT,*,IOSTAT=IOSTAT) ( IC(I), I = 1, NI - 2 )
+         read (text,*,iostat=iostat) ( ic(i), i = 1, ni - 2 )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                 )
-            CALL SETMSG ( 'The attempt to read from file ''#''' // &
+            call dafcls ( handle                                 )
+            call setmsg ( 'The attempt to read from file ''#''' // &
                           ' failed. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', TEXT                              )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-            CALL CHKOUT ( 'DAFT2B'                               )
-            RETURN
+            call errfnm ( '#', text                              )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+            call chkout ( 'DAFT2B'                               )
+            return
 
-         END IF
+         end if
 
-         CALL DAFPS  ( ND, NI, DC, IC, SUM           )
-         CALL DAFBNA ( HANDLE, SUM, NAME(1)( :ISIZE) )
+         call dafps  ( nd, ni, dc, ic, sum           )
+         call dafbna ( handle, sum, name(1)( :isize) )
 
-         IF ( FAILED () ) THEN
+         if ( failed () ) then
 
-            CALL CHKOUT ( 'DAFT2B' )
-            RETURN
+            call chkout ( 'DAFT2B' )
+            return
 
-         END IF
+         end if
 
-         READ (TEXT,*,IOSTAT=IOSTAT) CHUNK
+         read (text,*,iostat=iostat) chunk
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                 )
-            CALL SETMSG ( 'The attempt to read from file ''#''' // &
+            call dafcls ( handle                                 )
+            call setmsg ( 'The attempt to read from file ''#''' // &
                           ' failed. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', TEXT                              )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-            CALL CHKOUT ( 'DAFT2B'                               )
-            RETURN
+            call errfnm ( '#', text                              )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+            call chkout ( 'DAFT2B'                               )
+            return
 
-         END IF
+         end if
 
-         DO WHILE ( CHUNK .GT. 0 )
+         do while ( chunk .gt. 0 )
 
-            IF ( CHUNK .GT. BSIZE ) THEN
+            if ( chunk .gt. bsize ) then
 
-               CALL DAFCLS ( HANDLE                                 )
-               CALL SETMSG ( 'Buffer size exceeded. Increase to #.' )
-               CALL ERRINT ( '#', CHUNK                             )
-               CALL SIGERR ( 'SPICE(DAFOVERFLOW)'                   )
-               CALL CHKOUT ( 'DAFT2B'                               )
-               RETURN
+               call dafcls ( handle                                 )
+               call setmsg ( 'Buffer size exceeded. Increase to #.' )
+               call errint ( '#', chunk                             )
+               call sigerr ( 'SPICE(DAFOVERFLOW)'                   )
+               call chkout ( 'DAFT2B'                               )
+               return
 
-            ELSE
+            else
 
-               READ (TEXT,*,IOSTAT=IOSTAT) ( BUFFER(I), I = 1, CHUNK )
+               read (text,*,iostat=iostat) ( buffer(i), i = 1, chunk )
 
-               IF ( IOSTAT .NE. 0 ) THEN
+               if ( iostat .ne. 0 ) then
 
-                  CALL DAFCLS ( HANDLE                                 )
-                  CALL SETMSG ( 'The attempt to read from file ''#''' // &
+                  call dafcls ( handle                                 )
+                  call setmsg ( 'The attempt to read from file ''#''' // &
                                 ' failed. IOSTAT = #.'                 )
-                  CALL ERRFNM ( '#', TEXT                              )
-                  CALL ERRINT ( '#', IOSTAT                            )
-                  CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-                  CALL CHKOUT ( 'DAFT2B'                               )
-                  RETURN
+                  call errfnm ( '#', text                              )
+                  call errint ( '#', iostat                            )
+                  call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+                  call chkout ( 'DAFT2B'                               )
+                  return
 
-               END IF
+               end if
 
-               CALL DAFADA ( BUFFER, CHUNK )
+               call dafada ( buffer, chunk )
 
-               IF ( FAILED () ) THEN
+               if ( failed () ) then
 
-                  CALL CHKOUT ( 'DAFT2B' )
-                  RETURN
+                  call chkout ( 'DAFT2B' )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-            READ (TEXT,*,IOSTAT=IOSTAT) CHUNK
+            read (text,*,iostat=iostat) chunk
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL DAFCLS ( HANDLE                                 )
-               CALL SETMSG ( 'The attempt to read from file ''#''' // &
+               call dafcls ( handle                                 )
+               call setmsg ( 'The attempt to read from file ''#''' // &
                              ' failed. IOSTAT = #.'                 )
-               CALL ERRFNM ( '#', TEXT                              )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-               CALL CHKOUT ( 'DAFT2B'                               )
-               RETURN
+               call errfnm ( '#', text                              )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+               call chkout ( 'DAFT2B'                               )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-         READ (TEXT,*,IOSTAT=IOSTAT) NAME(2)( :ISIZE)
+         read (text,*,iostat=iostat) name(2)( :isize)
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                 )
-            CALL SETMSG ( 'The attempt to read from file ''#''' // &
+            call dafcls ( handle                                 )
+            call setmsg ( 'The attempt to read from file ''#''' // &
                           ' failed. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', TEXT                              )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-            CALL CHKOUT ( 'DAFT2B'                               )
-            RETURN
+            call errfnm ( '#', text                              )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+            call chkout ( 'DAFT2B'                               )
+            return
 
-         END IF
+         end if
 
-         IF ( NAME(1)( :ISIZE) .NE. NAME(2)( :ISIZE) ) THEN
+         if ( name(1)( :isize) .ne. name(2)( :isize) ) then
 
-            CALL DAFCLS ( HANDLE                          )
-            CALL SETMSG ( 'Array name mismatch: # and #.' )
-            CALL ERRCH  ( '#', NAME(1)( :ISIZE)           )
-            CALL ERRCH  ( '#', NAME(2)( :ISIZE)           )
-            CALL SIGERR ( 'SPICE(DAFNONAMEMATCH)'         )
-            CALL CHKOUT ( 'DAFT2B'                        )
-            RETURN
+            call dafcls ( handle                          )
+            call setmsg ( 'Array name mismatch: # and #.' )
+            call errch  ( '#', name(1)( :isize)           )
+            call errch  ( '#', name(2)( :isize)           )
+            call sigerr ( 'SPICE(DAFNONAMEMATCH)'         )
+            call chkout ( 'DAFT2B'                        )
+            return
 
-         ELSE
+         else
 
-            CALL DAFENA
+            call dafena
 
-            IF ( FAILED () ) THEN
+            if ( failed () ) then
 
-               CALL CHKOUT ( 'DAFT2B' )
-               RETURN
+               call chkout ( 'DAFT2B' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         READ (TEXT,*,IOSTAT=IOSTAT) MORE
+         read (text,*,iostat=iostat) more
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                 )
-            CALL SETMSG ( 'The attempt to read from file ''#''' // &
+            call dafcls ( handle                                 )
+            call setmsg ( 'The attempt to read from file ''#''' // &
                           ' failed. IOSTAT = #.'                 )
-            CALL ERRFNM ( '#', TEXT                              )
-            CALL ERRINT ( '#', IOSTAT                            )
-            CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-            CALL CHKOUT ( 'DAFT2B'                               )
-            RETURN
+            call errfnm ( '#', text                              )
+            call errint ( '#', iostat                            )
+            call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+            call chkout ( 'DAFT2B'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     The final '0' indicates that no arrays remain. The first shall
 !     be last: the internal file name brings up the rear. If it doesn't
 !     match the one at the front, complain.
 !
-      READ (TEXT,*,IOSTAT=IOSTAT) IFNAME(2)
+      read (text,*,iostat=iostat) ifname(2)
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                 )
-         CALL SETMSG ( 'The attempt to read from file ''#''' // &
+         call dafcls ( handle                                 )
+         call setmsg ( 'The attempt to read from file ''#''' // &
                        ' failed. IOSTAT = #.'                 )
-         CALL ERRFNM ( '#', TEXT                              )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(DAFREADFAIL)'                   )
-         CALL CHKOUT ( 'DAFT2B'                               )
-         RETURN
+         call errfnm ( '#', text                              )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(DAFREADFAIL)'                   )
+         call chkout ( 'DAFT2B'                               )
+         return
 
-      END IF
+      end if
 
-      IF ( IFNAME(1) .NE. IFNAME(2) ) THEN
+      if ( ifname(1) .ne. ifname(2) ) then
 
-         CALL DAFCLS ( HANDLE                                 )
-         CALL SETMSG ( 'Internal file name mismatch: # and #' )
-         CALL ERRCH  ( '#', IFNAME(1)                         )
-         CALL ERRCH  ( '#', IFNAME(2)                         )
-         CALL SIGERR ( 'SPICE(DAFNOIFNMATCH)'                 )
-         CALL CHKOUT ( 'DAFT2B'                               )
-         RETURN
+         call dafcls ( handle                                 )
+         call setmsg ( 'Internal file name mismatch: # and #' )
+         call errch  ( '#', ifname(1)                         )
+         call errch  ( '#', ifname(2)                         )
+         call sigerr ( 'SPICE(DAFNOIFNMATCH)'                 )
+         call chkout ( 'DAFT2B'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Close the DAF file we just created.
 !
-      CALL DAFCLS ( HANDLE )
+      call dafcls ( handle )
 
-      CALL CHKOUT ( 'DAFT2B' )
-      RETURN
-      END
+      call chkout ( 'DAFT2B' )
+      return
+      end

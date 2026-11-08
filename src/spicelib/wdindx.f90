@@ -1,6 +1,6 @@
 !$Procedure WDINDX ( Index of a Word Within a String )
 
-      INTEGER FUNCTION WDINDX ( STRING, WORD )
+      integer function wdindx ( string, word )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      CHARACTER*(*)    WORD
+      character*(*)    string
+      character*(*)    word
 
 ! $ Brief_I/O
 !
@@ -128,128 +128,128 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          FRSTNB
-      INTEGER          LASTNB
+      integer          frstnb
+      integer          lastnb
 
 !
 !     Local variables
 !
-      INTEGER          I
-      INTEGER          J
+      integer          i
+      integer          j
 
-      INTEGER          BEGWD
-      INTEGER          ENDWD
+      integer          begwd
+      integer          endwd
 
-      INTEGER          BEGSTR
-      INTEGER          ENDSTR
+      integer          begstr
+      integer          endstr
 
-      INTEGER          STRLEN
-      INTEGER          WDLEN
+      integer          strlen
+      integer          wdlen
 
-      INTEGER          BGTOND
+      integer          bgtond
 
 !
 !     Find the ends of the word and input string.
 !
-      ENDSTR = LASTNB ( STRING )
-      BEGSTR = FRSTNB ( STRING )
+      endstr = lastnb ( string )
+      begstr = frstnb ( string )
 
-      ENDWD  = LASTNB ( WORD   )
-      BEGWD  = FRSTNB ( WORD   )
+      endwd  = lastnb ( word   )
+      begwd  = frstnb ( word   )
 
 !
 !     Get the offset from the beginning of the word to the end of the
 !     word, the word length and the string length.
 !
-      BGTOND =     ENDWD  - BEGWD
-      WDLEN  = 1 + BGTOND
-      STRLEN = 1 + ENDSTR - BEGSTR
+      bgtond =     endwd  - begwd
+      wdlen  = 1 + bgtond
+      strlen = 1 + endstr - begstr
 
 !
 !     We deal with all of the pathologies first...
 !
-      IF (      ( ENDWD  .LT. 1      ) &
-           .OR. ( STRLEN .LT. WDLEN  ) ) THEN
+      if (      ( endwd  .lt. 1      ) &
+           .or. ( strlen .lt. wdlen  ) ) then
 
 !
 !        ... If we got a blank word or a string that is too short, then
 !        the index of the word is zero.
 !
-         WDINDX =  0
-         RETURN
+         wdindx =  0
+         return
 
-      ELSE IF ( STRLEN .EQ. WDLEN ) THEN
+      else if ( strlen .eq. wdlen ) then
 
 !
 !        ... the word and string have the same non-blank length.
 !        Either they match up or they don't.  Find out and return.
 !
-         IF ( STRING(BEGSTR:ENDSTR) .EQ. WORD(BEGWD:ENDWD) ) THEN
-            WDINDX = BEGSTR
-         ELSE
-            WDINDX = 0
-         END IF
+         if ( string(begstr:endstr) .eq. word(begwd:endwd) ) then
+            wdindx = begstr
+         else
+            wdindx = 0
+         end if
 
-         RETURN
-      END IF
+         return
+      end if
 
 !
 !     Ok.  Now we've got a realistic case to deal with.  The string
 !     length is longer than the word length.  Check to see if we have a
 !     match at the beginning of the string.
 !
-      I      = BEGSTR
-      J      = I + BGTOND
+      i      = begstr
+      j      = i + bgtond
 
-      IF (       ( STRING(I:J)     .EQ. WORD(BEGWD:ENDWD) ) &
-           .AND. ( STRING(J+1:J+1) .EQ. ' '               )  ) THEN
+      if (       ( string(i:j)     .eq. word(begwd:endwd) ) &
+           .and. ( string(j+1:j+1) .eq. ' '               )  ) then
 
-         WDINDX = I
-         RETURN
+         wdindx = i
+         return
 
-      END IF
+      end if
 
 !
 !     No luck yet?  Search the string until we find a word match or
 !     we run out of string to check.
 !
-      I      = BEGSTR + 1
-      J      = I      + BGTOND
+      i      = begstr + 1
+      j      = i      + bgtond
 
-      DO WHILE (       ( J                    .LT. ENDSTR            ) &
-                 .AND. &
-                 .NOT. (     (STRING(I  :J  ) .EQ. WORD(BEGWD:ENDWD) ) &
-                        .AND.(STRING(I-1:I-1) .EQ. ' '               ) &
-                        .AND.(STRING(J+1:J+1) .EQ. ' '               ) &
+      do while (       ( j                    .lt. endstr            ) &
+                 .and. &
+                 .not. (     (string(i  :j  ) .eq. word(begwd:endwd) ) &
+                        .and.(string(i-1:i-1) .eq. ' '               ) &
+                        .and.(string(j+1:j+1) .eq. ' '               ) &
                        ) &
                )
-         I   = I + 1
-         J   = J + 1
-      END DO
+         i   = i + 1
+         j   = j + 1
+      end do
 
 !
 !     If J equals ENDSTR then no match was found in the interior of the
 !     string.  We make a last check at the end.
 !
-      IF ( J .EQ. ENDSTR ) THEN
+      if ( j .eq. endstr ) then
 
-         IF (       ( STRING(I-1:I-1) .EQ. ' '               ) &
-              .AND. ( STRING(I  :J  ) .EQ. WORD(BEGWD:ENDWD) ) ) THEN
-            WDINDX = I
-         ELSE
-            WDINDX = 0
-         END IF
+         if (       ( string(i-1:i-1) .eq. ' '               ) &
+              .and. ( string(i  :j  ) .eq. word(begwd:endwd) ) ) then
+            wdindx = i
+         else
+            wdindx = 0
+         end if
 
-      ELSE
+      else
 !
 !        The only way to get here is if we exited the above loop before
 !        running out of room --- that is we had a word match.  Set
 !        the index to the value of "I" that got us out of the loop.
 !
-         WDINDX    = I
+         wdindx    = i
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

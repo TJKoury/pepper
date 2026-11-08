@@ -14,15 +14,15 @@
 !     parameter SDSCSZ, which defines the size of a segment descriptor,
 !     is declared in the include file eksegdsc.inc.
 !
-      INTEGER               CDOFF
-      PARAMETER           ( CDOFF  = 24 )
+      integer               cdoff
+      parameter           ( cdoff  = 24 )
 
 
 !
 !     Size of column descriptor
 !
-      INTEGER               CDSCSZ
-      PARAMETER           ( CDSCSZ = 11 )
+      integer               cdscsz
+      parameter           ( cdscsz = 11 )
 
 
 !
@@ -33,8 +33,8 @@
 !     word `class' to distinguish this item from the column's data
 !     type.)
 !
-      INTEGER               CLSIDX
-      PARAMETER           ( CLSIDX = 1 )
+      integer               clsidx
+      parameter           ( clsidx = 1 )
 
 !
 !     TYPIDX is the index of the column's data type code (CHR, INT, DP,
@@ -42,30 +42,30 @@
 !     will frequently be convenient to look up the type directly.
 !
 !
-      INTEGER               TYPIDX
-      PARAMETER           ( TYPIDX = CLSIDX + 1 )
+      integer               typidx
+      parameter           ( typidx = clsidx + 1 )
 
 !
 !     LENIDX is the index of the column's string length value, if the
 !     column has character type.  A value of IFALSE in this element of
 !     the descriptor indicates that the strings have variable length.
 !
-      INTEGER               LENIDX
-      PARAMETER           ( LENIDX = TYPIDX + 1 )
+      integer               lenidx
+      parameter           ( lenidx = typidx + 1 )
 
 !
 !     SIZIDX is the index of the column's element size value.  This
 !     descriptor element is meaningful for columns with fixed-size
 !     entries.  For variable-sized columns, this value is IFALSE.
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX = LENIDX + 1 )
+      integer               sizidx
+      parameter           ( sizidx = lenidx + 1 )
 
 !
 !     NAMIDX is the index of the base address of the column's name.
 !
-      INTEGER               NAMIDX
-      PARAMETER           ( NAMIDX = SIZIDX + 1 )
+      integer               namidx
+      parameter           ( namidx = sizidx + 1 )
 
 !
 !     IXTIDX is the data type of the column's index.  IXTIDX
@@ -73,8 +73,8 @@
 !     that are not indexed, the location IXTIDX contains the boolean
 !     value IFALSE.
 !
-      INTEGER               IXTIDX
-      PARAMETER           ( IXTIDX = NAMIDX + 1 )
+      integer               ixtidx
+      parameter           ( ixtidx = namidx + 1 )
 
 !
 !     IXPIDX is a pointer to the column's index.  IXTPDX contains a
@@ -82,30 +82,30 @@
 !     interpretation of the pointer depends on the data type of the
 !     index.
 !
-      INTEGER               IXPIDX
-      PARAMETER           ( IXPIDX = IXTIDX + 1 )
+      integer               ixpidx
+      parameter           ( ixpidx = ixtidx + 1 )
 
 !
 !     NFLIDX is the index of a flag indicating whether nulls are
 !     permitted in the column.  The value at location NFLIDX is
 !     ITRUE if nulls are permitted and IFALSE otherwise.
 !
-      INTEGER               NFLIDX
-      PARAMETER           ( NFLIDX = IXPIDX + 1 )
+      integer               nflidx
+      parameter           ( nflidx = ixpidx + 1 )
 
 !
 !     ORDIDX is the index of the column's ordinal position in the
 !     list of columns belonging to the column's parent segment.
 !
-      INTEGER               ORDIDX
-      PARAMETER           ( ORDIDX = NFLIDX + 1 )
+      integer               ordidx
+      parameter           ( ordidx = nflidx + 1 )
 
 !
 !     METIDX is the index of the column's integer metadata pointer.
 !     This pointer is a DAS integer address.
 !
-      INTEGER               METIDX
-      PARAMETER           ( METIDX = ORDIDX + 1 )
+      integer               metidx
+      parameter           ( metidx = ordidx + 1 )
 
 !
 !     The last position in the column descriptor is reserved.  No

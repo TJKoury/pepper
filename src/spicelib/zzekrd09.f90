@@ -1,9 +1,9 @@
 !$Procedure   ZZEKRD09 ( EK, read class 9 column entry elements )
 
-      SUBROUTINE ZZEKRD09 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECNO,   CVLEN,   CVAL,    ISNULL  )
+      subroutine zzekrd09 (  handle,  segdsc,  coldsc, &
+                             recno,   cvlen,   cval,    isnull  )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -22,22 +22,22 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekclas09.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekclas09.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekpage.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECNO
-      INTEGER               CVLEN
-      CHARACTER*(*)         CVAL
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recno
+      integer               cvlen
+      character*(*)         cval
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -172,80 +172,80 @@
 !
 !     Local variables
 !
-      CHARACTER*(1)         CFLAG
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(1)         cflag
+      character*(cnamsz)    column
 
-      INTEGER               ADDRSS
-      INTEGER               COLIDX
-      INTEGER               DATBAS
-      INTEGER               L
-      INTEGER               MDAT   ( MDSZ09 )
-      INTEGER               METLOC
-      INTEGER               NCOLS
-      INTEGER               NFLBAS
-      INTEGER               OFFSET
-      INTEGER               Q
-      INTEGER               R
-      INTEGER               SPP
+      integer               addrss
+      integer               colidx
+      integer               datbas
+      integer               l
+      integer               mdat   ( mdsz09 )
+      integer               metloc
+      integer               ncols
+      integer               nflbas
+      integer               offset
+      integer               q
+      integer               r
+      integer               spp
 
-      LOGICAL               NULLOK
+      logical               nullok
 
 !
 !     Use discovery check-in.
 !
 !     Make sure the column exists.
 !
-      NCOLS   =  SEGDSC ( NCIDX  )
-      COLIDX  =  COLDSC ( ORDIDX )
-      METLOC  =  COLDSC ( METIDX )
-      NULLOK  =  COLDSC ( NFLIDX ) .EQ. ITRUE
-      L       =  COLDSC ( LENIDX )
+      ncols   =  segdsc ( ncidx  )
+      colidx  =  coldsc ( ordidx )
+      metloc  =  coldsc ( metidx )
+      nullok  =  coldsc ( nflidx ) .eq. itrue
+      l       =  coldsc ( lenidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKRD09'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' // &
+         call chkin  ( 'ZZEKRD09'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' // &
                        'SEGNO = #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                    )
-         CALL ERRINT ( '#',  RECNO                             )
-         CALL ERRHAN ( '#',  HANDLE                            )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKRD09'                              )
-         RETURN
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call errint ( '#',  segdsc(snoidx)                    )
+         call errint ( '#',  recno                             )
+         call errhan ( '#',  handle                            )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKRD09'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Since class 9 columns have fixed-length strings, we already
 !     know the string length.
 !
-      CVLEN  =  L
+      cvlen  =  l
 
-      IF ( CVLEN .GT. LEN(CVAL) ) THEN
+      if ( cvlen .gt. len(cval) ) then
 !
 !        We have a string truncation error.  Look up the column
 !        name, record number, and file name before signaling an
 !        error.
 !
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKRD09'                                  )
-         CALL SETMSG ( 'String value has length #; output string '// &
+         call chkin  ( 'ZZEKRD09'                                  )
+         call setmsg ( 'String value has length #; output string '// &
                        'can hold only # characters.  COLUMN = #; '// &
                        'SEGNO = #; RECNO = #; EK = #'              )
-         CALL ERRINT ( '#',  CVLEN                                 )
-         CALL ERRINT ( '#',  LEN(CVAL)                             )
-         CALL ERRCH  ( '#',  COLUMN                                )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-         CALL ERRINT ( '#',  RECNO                                 )
-         CALL ERRHAN ( '#',  HANDLE                                )
-         CALL SIGERR ( 'SPICE(STRINGTRUNCATED)'                    )
-         CALL CHKOUT ( 'ZZEKRD09'                                  )
-         RETURN
+         call errint ( '#',  cvlen                                 )
+         call errint ( '#',  len(cval)                             )
+         call errch  ( '#',  column                                )
+         call errint ( '#',  segdsc(snoidx)                        )
+         call errint ( '#',  recno                                 )
+         call errhan ( '#',  handle                                )
+         call sigerr ( 'SPICE(STRINGTRUNCATED)'                    )
+         call chkout ( 'ZZEKRD09'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the metadata block.  There are two items in the block:
@@ -254,10 +254,10 @@
 !        2) The base address of the null flag array, if nulls are
 !           permitted.
 !
-      CALL DASRDI ( HANDLE, METLOC+1, METLOC+MDSZ09, MDAT )
+      call dasrdi ( handle, metloc+1, metloc+mdsz09, mdat )
 
-      DATBAS = MDAT ( DBIX09 )
-      NFLBAS = MDAT ( NFIX09 )
+      datbas = mdat ( dbix09 )
+      nflbas = mdat ( nfix09 )
 
 !
 !     If null values are permitted, the first step is to get
@@ -267,47 +267,47 @@
 !     There are CPSIZE null flags per page, and each page has size
 !     PGSIZC.  The null flags start at the beginning of the page.
 !
-      IF ( NULLOK ) THEN
+      if ( nullok ) then
 
-         Q       =  (RECNO-1)  / CPSIZE
-         R       =  RECNO  - Q * CPSIZE
-         OFFSET  =  R      + Q * PGSIZC
-         ADDRSS  =  NFLBAS + OFFSET
+         q       =  (recno-1)  / cpsize
+         r       =  recno  - q * cpsize
+         offset  =  r      + q * pgsizc
+         addrss  =  nflbas + offset
 
-         CALL DASRDC ( HANDLE, ADDRSS, ADDRSS, 1, 1, CFLAG )
+         call dasrdc ( handle, addrss, addrss, 1, 1, cflag )
 
-         ISNULL  =  CFLAG .EQ. CTRUE
+         isnull  =  cflag .eq. ctrue
 
-         IF ( ISNULL ) THEN
-            RETURN
-         END IF
+         if ( isnull ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     If we're still here, we'll read the data value.
 !
-      ISNULL  =  .FALSE.
+      isnull  =  .false.
 
 !
 !     The address calculation for the value is similar to that
 !     for the null flag.  However, the string length must be
 !     taken into account.
 !
-      SPP     =  CPSIZE     /   L
-      Q       =  (RECNO-1)  /   SPP
-      R       =  RECNO      -   Q*SPP
-      ADDRSS  =  DATBAS     +   Q*PGSIZC  +  (R-1)*L  +  1
+      spp     =  cpsize     /   l
+      q       =  (recno-1)  /   spp
+      r       =  recno      -   q*spp
+      addrss  =  datbas     +   q*pgsizc  +  (r-1)*l  +  1
 
-      CALL DASRDC ( HANDLE, ADDRSS, ADDRSS+L-1, 1, L, CVAL )
+      call dasrdc ( handle, addrss, addrss+l-1, 1, l, cval )
 
 !
 !     Blank-pad CVAL if required.
 !
-      IF ( LEN(CVAL) .GT. L ) THEN
-         CVAL( L+1 : )  =  ' '
-      END IF
+      if ( len(cval) .gt. l ) then
+         cval( l+1 : )  =  ' '
+      end if
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure LASTNB ( Last non-blank character )
 
-      INTEGER FUNCTION  LASTNB ( STRING )
+      integer function  lastnb ( string )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -122,30 +122,30 @@
 !
 !     Local parameters
 !
-      INTEGER               ISPACE
-      PARAMETER           ( ISPACE = 32 )
+      integer               ispace
+      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 !
 !     Just like it says in the header.
 !
-      IF ( STRING .EQ. ' ' ) THEN
-         LASTNB = 0
+      if ( string .eq. ' ' ) then
+         lastnb = 0
 
-      ELSE
-         DO I = LEN (STRING), 1, -1
+      else
+         do i = len (string), 1, -1
 
-            IF ( ICHAR(STRING(I:I)) .NE. ISPACE ) THEN
-               LASTNB = I
-               RETURN
-            END IF
+            if ( ichar(string(i:i)) .ne. ispace ) then
+               lastnb = i
+               return
+            end if
 
-         END DO
-      END IF
+         end do
+      end if
 
-      RETURN
-      END
+      return
+      end

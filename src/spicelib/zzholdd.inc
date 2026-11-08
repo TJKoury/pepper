@@ -80,20 +80,20 @@
 !     OP codes. The values exist in the integer domain
 !     [ -ZZNOP, -1],
 !
-      INTEGER               ZZGET
-      PARAMETER           ( ZZGET     = -1 )
+      integer               zzget
+      parameter           ( zzget     = -1 )
 
-      INTEGER               ZZPUT
-      PARAMETER           ( ZZPUT     = -2 )
+      integer               zzput
+      parameter           ( zzput     = -2 )
 
-      INTEGER               ZZRESET
-      PARAMETER           ( ZZRESET   = -3 )
+      integer               zzreset
+      parameter           ( zzreset   = -3 )
 
 !
 !     Current number of OP codes.
 !
-      INTEGER               ZZNOP
-      PARAMETER           ( ZZNOP     =  3 )
+      integer               zznop
+      parameter           ( zznop     =  3 )
 
 
 !
@@ -104,34 +104,34 @@
 !
 !     General use, primarily testing.
 !
-      INTEGER               GEN
-      PARAMETER           ( GEN       = 1 )
+      integer               gen
+      parameter           ( gen       = 1 )
 
 !
 !     The user defined GF reference value.
 !
-      INTEGER               GF_REF
-      PARAMETER           ( GF_REF    = 2 )
+      integer               gf_ref
+      parameter           ( gf_ref    = 2 )
 
 !
 !     The user defined GF convergence tolerance.
 !
-      INTEGER               GF_TOL
-      PARAMETER           ( GF_TOL    = 3 )
+      integer               gf_tol
+      parameter           ( gf_tol    = 3 )
 
 !
 !     The user defined GF step for numeric differentiation.
 !
-      INTEGER               GF_DT
-      PARAMETER           ( GF_DT     = 4 )
+      integer               gf_dt
+      parameter           ( gf_dt     = 4 )
 
 !
 !     Current number of ID codes, dimension of array
 !     in ZZHOLDD. Bad things can happen if this parameter
 !     does not have the proper value.
 !
-      INTEGER               NID
-      PARAMETER           ( NID       = 4 )
+      integer               nid
+      parameter           ( nid       = 4 )
 
 
 !

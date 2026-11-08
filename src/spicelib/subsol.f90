@@ -1,6 +1,6 @@
 !$Procedure SUBSOL ( Sub-solar point )
 
-      SUBROUTINE SUBSOL ( METHOD, TARGET, ET, ABCORR, OBSRVR, SPOINT )
+      subroutine subsol ( method, target, et, abcorr, obsrvr, spoint )
 
 ! $ Abstract
 !
@@ -26,16 +26,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
 
 ! $ Brief_I/O
 !
@@ -454,213 +454,213 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
-      EXTERNAL              LTIME
+      external              ltime
 !
 !     Local parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN =  80 )
+      integer               frnmln
+      parameter           ( frnmln =  80 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FRNAME
+      character*(frnmln)    frname
 
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      ETTARG
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      ORIGIN ( 3 )
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      SUNLT
+      double precision      alt
+      double precision      ettarg
+      double precision      lt
+      double precision      origin ( 3 )
+      double precision      pos    ( 3 )
+      double precision      radii  ( 3 )
+      double precision      sunlt
 
-      INTEGER               FRCODE
-      INTEGER               OBSCDE
-      INTEGER               TRGCDE
+      integer               frcode
+      integer               obscde
+      integer               trgcde
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsc
+      logical               svfnd2
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  ORIGIN
+      save                  origin
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values
 !
-      DATA                  ORIGIN / 3 * 0.0D0 /
+      data                  origin / 3 * 0.0d0 /
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SUBSOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SUBSOL' )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FOUND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SUBSOL'                                   )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SUBSOL'                                   )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FOUND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SUBSOL'                                   )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SUBSOL'                                   )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the input body codes.  If they are equal, signal
 !     an error.
 !
-      IF ( OBSCDE .EQ. TRGCDE ) THEN
+      if ( obscde .eq. trgcde ) then
 
-         CALL SETMSG ( 'In computing the sub-observer point, the '    // &
+         call setmsg ( 'In computing the sub-observer point, the '    // &
                        'observing body and target body are the same. '// &
                        'Both are #.'                                  )
-         CALL ERRCH  ( '#',  OBSRVR                                   )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                     )
-         CALL CHKOUT ( 'SUBSOL'                                       )
-         RETURN
+         call errch  ( '#',  obsrvr                                   )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                     )
+         call chkout ( 'SUBSOL'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the radii of the target body from the kernel pool.
 !
-      CALL ZZGFTREB ( TRGCDE, RADII )
+      call zzgftreb ( trgcde, radii )
 
-      IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SUBSOL' )
-            RETURN
-      END IF
+      if ( failed() ) then
+            call chkout ( 'SUBSOL' )
+            return
+      end if
 
 !
 !     Find the name of the body-fixed frame associated with the
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      CALL CIDFRM ( TRGCDE, FRCODE, FRNAME, FOUND )
+      call cidfrm ( trgcde, frcode, frname, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'No body-fixed frame is associated with '   // &
+         call setmsg ( 'No body-fixed frame is associated with '   // &
                        'target body #; a frame kernel must be '    // &
                        'loaded to make this association.  Consult '// &
                        'the FRAMES Required Reading for details.'   )
-         CALL ERRCH  ( '#', TARGET                                  )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                             )
-         CALL CHKOUT ( 'SUBSOL'                                     )
-         RETURN
+         call errch  ( '#', target                                  )
+         call sigerr ( 'SPICE(NOFRAME)'                             )
+         call chkout ( 'SUBSOL'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     If we're using aberration corrections, we'll need the
 !     one way light time from the target to the observer.  Otherwise,
 !     we set the time time to zero.
 !
-      IF (  EQSTR ( ABCORR, 'NONE' )  ) THEN
+      if (  eqstr ( abcorr, 'NONE' )  ) then
 
-         LT      =  0.0D0
-         ETTARG  =  ET
+         lt      =  0.0d0
+         ettarg  =  et
 
-      ELSE
+      else
 
-         CALL LTIME ( ET, OBSCDE, '<-', TRGCDE, ETTARG, LT )
+         call ltime ( et, obscde, '<-', trgcde, ettarg, lt )
 
-      END IF
+      end if
 
 !
 !     Determine the position of the sun in target body-fixed
@@ -674,54 +674,54 @@
 !     target body, using aberration corrections specified by the input
 !     argument ABCORR.
 !
-      CALL SPKPOS ( 'SUN', ETTARG, FRNAME, ABCORR, TARGET, POS, SUNLT )
+      call spkpos ( 'SUN', ettarg, frname, abcorr, target, pos, sunlt )
 
 !
 !     Find the sub-solar point using the specified geometric definition.
 !
-      IF (  EQSTR( METHOD, 'Near point' )  ) THEN
+      if (  eqstr( method, 'Near point' )  ) then
 !
 !        Locate the nearest point to the sun on the target.
 !
-         CALL NEARPT ( POS, RADII(1), RADII(2), RADII(3), SPOINT, ALT )
+         call nearpt ( pos, radii(1), radii(2), radii(3), spoint, alt )
 
 
-      ELSE IF (  EQSTR( METHOD, 'Intercept' )  ) THEN
+      else if (  eqstr( method, 'Intercept' )  ) then
 
-         CALL SURFPT ( ORIGIN,  POS,   RADII(1),  RADII(2),  RADII(3), &
-                       SPOINT,  FOUND                                  )
+         call surfpt ( origin,  pos,   radii(1),  radii(2),  radii(3), &
+                       spoint,  found                                  )
 
 !
 !        Since the line in question passes through the center of the
 !        target, there will always be a surface intercept.  So we should
 !        never have FOUND = .FALSE.
 !
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Call to SURFPT returned FOUND=FALSE even ' // &
+            call setmsg ( 'Call to SURFPT returned FOUND=FALSE even ' // &
                           'though vertex of ray is at target center. '// &
                           'This indicates a bug. Please contact NAIF.')
-            CALL SIGERR ( 'SPICE(BUG)'                                )
-            CALL CHKOUT ( 'SUBSOL'                                    )
-            RETURN
+            call sigerr ( 'SPICE(BUG)'                                )
+            call chkout ( 'SUBSOL'                                    )
+            return
 
-         END IF
+         end if
 
 
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The computation method # was not recognized. '// &
+         call setmsg ( 'The computation method # was not recognized. '// &
                        'Allowed values are "Near point" and '         // &
                        '"Intercept."'                                 )
-         CALL ERRCH  ( '#',  METHOD                                   )
-         CALL SIGERR ( 'SPICE(DUBIOUSMETHOD)'                         )
-         CALL CHKOUT ( 'SUBSOL'                                       )
-         RETURN
+         call errch  ( '#',  method                                   )
+         call sigerr ( 'SPICE(DUBIOUSMETHOD)'                         )
+         call chkout ( 'SUBSOL'                                       )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SUBSOL' )
-      RETURN
-      END
+      call chkout ( 'SUBSOL' )
+      return
+      end

@@ -1,14 +1,14 @@
 !$Procedure CKBSR ( C-kernel, buffer segments for readers )
 
-      SUBROUTINE CKBSR ( FNAME, &
-                         HANDLE, &
-                         INST, &
-                         SCLKDP, &
-                         TOL, &
-                         NEEDAV, &
-                         DESCR, &
-                         SEGID, &
-                         FOUND   )
+      subroutine ckbsr ( fname, &
+                         handle, &
+                         inst, &
+                         sclkdp, &
+                         tol, &
+                         needav, &
+                         descr, &
+                         segid, &
+                         found   )
 
 ! $ Abstract
 !
@@ -26,29 +26,29 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FNAME
-      INTEGER               HANDLE
-      INTEGER               INST
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      DESCR    ( * )
-      CHARACTER*(*)         SEGID
-      LOGICAL               FOUND
+      character*(*)         fname
+      integer               handle
+      integer               inst
+      double precision      sclkdp
+      double precision      tol
+      logical               needav
+      double precision      descr    ( * )
+      character*(*)         segid
+      logical               found
 
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE =  5000 )
+      integer               ftsize
+      parameter           ( ftsize =  5000 )
 
-      INTEGER               ITSIZE
-      PARAMETER           ( ITSIZE =  5000 )
+      integer               itsize
+      parameter           ( itsize =  5000 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL =   -5 )
+      integer               lbpool
+      parameter           ( lbpool =   -5 )
 
-      INTEGER               STSIZE
-      PARAMETER           ( STSIZE = 100000 )
+      integer               stsize
+      parameter           ( stsize = 100000 )
 
 ! $ Brief_I/O
 !
@@ -810,18 +810,18 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
+      double precision      dpmax
+      double precision      dpmin
 
-      INTEGER               INTMAX
-      INTEGER               ISRCHI
-      INTEGER               LNKNFN
-      INTEGER               LNKNXT
-      INTEGER               LNKPRV
-      INTEGER               LNKTL
+      integer               intmax
+      integer               isrchi
+      integer               lnknfn
+      integer               lnknxt
+      integer               lnkprv
+      integer               lnktl
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -839,32 +839,32 @@
 !                   components.
 !
 
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               DSCSIZ
-      PARAMETER           ( DSCSIZ = ND + (NI + 1)/2 )
+      integer               dscsiz
+      parameter           ( dscsiz = nd + (ni + 1)/2 )
 
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN = 40 )
+      integer               sidlen
+      parameter           ( sidlen = 40 )
 
-      INTEGER               SLEN
-      PARAMETER           ( SLEN   = 40 )
+      integer               slen
+      parameter           ( slen   = 40 )
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  = 1 )
+      integer               forwrd
+      parameter           ( forwrd  = 1 )
 
-      INTEGER               BCKWRD
-      PARAMETER           ( BCKWRD  = 2 )
+      integer               bckwrd
+      parameter           ( bckwrd  = 2 )
 
-      INTEGER               FREE
-      PARAMETER           ( FREE    = 0 )
+      integer               free
+      parameter           ( free    = 0 )
 
 
 !
@@ -897,11 +897,11 @@
 !     removed, succeeding files are moved forward to take up the
 !     slack. This keeps the table ordered by file number.
 !
-      INTEGER               NFT
-      INTEGER               FTHAN    ( FTSIZE )
-      INTEGER               FTNUM    ( FTSIZE )
-      INTEGER               NEXT
-      INTEGER               FINDEX
+      integer               nft
+      integer               fthan    ( ftsize )
+      integer               ftnum    ( ftsize )
+      integer               next
+      integer               findex
 
 !
 !     The instrument table contains the beginning of the list of the
@@ -958,24 +958,24 @@
 !     are removed, the last instrument is moved forward to take up the
 !     slack. This keeps the entries in the table contiguous.
 !
-      CHARACTER*(SIDLEN)    ITPRVI   ( ITSIZE )
+      character*(sidlen)    itprvi   ( itsize )
 
-      DOUBLE PRECISION      ITPRVD   ( DSCSIZ, ITSIZE )
-      DOUBLE PRECISION      ITLB     ( ITSIZE )
-      DOUBLE PRECISION      ITUB     ( ITSIZE )
+      double precision      itprvd   ( dscsiz, itsize )
+      double precision      itlb     ( itsize )
+      double precision      itub     ( itsize )
 
-      INTEGER               IINDEX
-      INTEGER               ITBEG    ( ITSIZE )
-      INTEGER               ITEXP    ( ITSIZE )
-      INTEGER               ITHFS    ( ITSIZE )
-      INTEGER               ITINS    ( ITSIZE )
-      INTEGER               ITLFS    ( ITSIZE )
-      INTEGER               ITPRVF   ( ITSIZE )
-      INTEGER               ITPRVH   ( ITSIZE )
-      INTEGER               ITRUEX   ( ITSIZE )
-      INTEGER               NIT
+      integer               iindex
+      integer               itbeg    ( itsize )
+      integer               itexp    ( itsize )
+      integer               ithfs    ( itsize )
+      integer               itins    ( itsize )
+      integer               itlfs    ( itsize )
+      integer               itprvf   ( itsize )
+      integer               itprvh   ( itsize )
+      integer               itruex   ( itsize )
+      integer               nit
 
-      LOGICAL               ITCHKP   ( ITSIZE )
+      logical               itchkp   ( itsize )
 
 !
 !     The segment table contains the handle, descriptor, and identifier
@@ -1001,121 +1001,121 @@
 !     as appropriate, according to the rules spelled out under
 !     entry point CKSNS.
 !
-      CHARACTER*(SIDLEN)    STIDNT (              STSIZE )
+      character*(sidlen)    stidnt (              stsize )
 
-      DOUBLE PRECISION      STDCD  ( ND,          STSIZE )
+      double precision      stdcd  ( nd,          stsize )
 
-      INTEGER               STHAN  (              STSIZE )
-      INTEGER               STICD  ( NI,          STSIZE )
-      INTEGER               STPOOL ( 2,  LBPOOL : STSIZE )
+      integer               sthan  (              stsize )
+      integer               sticd  ( ni,          stsize )
+      integer               stpool ( 2,  lbpool : stsize )
 
 !
 !     Other local variables
 !
-      CHARACTER*(SLEN)      DOING
-      CHARACTER*(SLEN)      STACK    ( 2 )
-      CHARACTER*(SLEN)      STATUS
-      CHARACTER*(SLEN)      URGENT
+      character*(slen)      doing
+      character*(slen)      stack    ( 2 )
+      character*(slen)      status
+      character*(slen)      urgent
 
-      DOUBLE PRECISION      ALPHA
-      DOUBLE PRECISION      DCD    ( ND )
-      DOUBLE PRECISION      OMEGA
-      DOUBLE PRECISION      REQT
-      DOUBLE PRECISION      SAVTOL
+      double precision      alpha
+      double precision      dcd    ( nd )
+      double precision      omega
+      double precision      reqt
+      double precision      savtol
 
-      INTEGER               CHEAP
-      INTEGER               COST
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               ICD   ( NI )
-      INTEGER               J
-      INTEGER               MINEXP
-      INTEGER               NEW
-      INTEGER               NXTSEG
-      INTEGER               P
-      INTEGER               SAVEP
-      INTEGER               SCINST
-      INTEGER               SLBEG
-      INTEGER               TAIL
-      INTEGER               TOP
+      integer               cheap
+      integer               cost
+      integer               head
+      integer               i
+      integer               icd   ( ni )
+      integer               j
+      integer               minexp
+      integer               new
+      integer               nxtseg
+      integer               p
+      integer               savep
+      integer               scinst
+      integer               slbeg
+      integer               tail
+      integer               top
 
-      LOGICAL               AVNEED
-      LOGICAL               FND
-      LOGICAL               FNDHAN
-      LOGICAL               FRESUB
-      LOGICAL               NEWSCH
+      logical               avneed
+      logical               fnd
+      logical               fndhan
+      logical               fresub
+      logical               newsch
 
 !
 !     Saved variables
 !
-      SAVE                  ALPHA
-      SAVE                  AVNEED
-      SAVE                  FINDEX
-      SAVE                  FND
-      SAVE                  FRESUB
-      SAVE                  FTHAN
-      SAVE                  FTNUM
-      SAVE                  IINDEX
-      SAVE                  ITBEG
-      SAVE                  ITCHKP
-      SAVE                  ITEXP
-      SAVE                  ITHFS
-      SAVE                  ITINS
-      SAVE                  ITLB
-      SAVE                  ITLFS
-      SAVE                  ITPRVD
-      SAVE                  ITPRVF
-      SAVE                  ITPRVH
-      SAVE                  ITPRVI
-      SAVE                  ITUB
-      SAVE                  ITRUEX
-      SAVE                  NEXT
-      SAVE                  NEWSCH
-      SAVE                  NFT
-      SAVE                  NIT
-      SAVE                  OMEGA
-      SAVE                  REQT
-      SAVE                  SAVEP
-      SAVE                  SAVTOL
-      SAVE                  SCINST
-      SAVE                  SLBEG
-      SAVE                  STATUS
-      SAVE                  STDCD
-      SAVE                  STHAN
-      SAVE                  STICD
-      SAVE                  STIDNT
-      SAVE                  STPOOL
-      SAVE                  TOP
+      save                  alpha
+      save                  avneed
+      save                  findex
+      save                  fnd
+      save                  fresub
+      save                  fthan
+      save                  ftnum
+      save                  iindex
+      save                  itbeg
+      save                  itchkp
+      save                  itexp
+      save                  ithfs
+      save                  itins
+      save                  itlb
+      save                  itlfs
+      save                  itprvd
+      save                  itprvf
+      save                  itprvh
+      save                  itprvi
+      save                  itub
+      save                  itruex
+      save                  next
+      save                  newsch
+      save                  nft
+      save                  nit
+      save                  omega
+      save                  reqt
+      save                  savep
+      save                  savtol
+      save                  scinst
+      save                  slbeg
+      save                  status
+      save                  stdcd
+      save                  sthan
+      save                  sticd
+      save                  stidnt
+      save                  stpool
+      save                  top
 
 !
 !     Initial values
 !
-      DATA                  FRESUB    / .FALSE.       /
-      DATA                  NFT       / 0             /
-      DATA                  NIT       / 0             /
-      DATA                  NEXT      / 0             /
-      DATA                  SAVEP     / 0             /
-      DATA                  SAVTOL    / 0.D0          /
-      DATA                  STATUS    / 'BOGUS ENTRY' /
+      data                  fresub    / .false.       /
+      data                  nft       / 0             /
+      data                  nit       / 0             /
+      data                  next      / 0             /
+      data                  savep     / 0             /
+      data                  savtol    / 0.d0          /
+      data                  status    / 'BOGUS ENTRY' /
 
 
 !
 !     Nobody has any business calling CKBSR directly.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'CKBSR' )
-      CALL SIGERR ( 'SPICE(CKBOGUSENTRY)' )
-      CALL CHKOUT ( 'CKBSR' )
+      call chkin  ( 'CKBSR' )
+      call sigerr ( 'SPICE(CKBOGUSENTRY)' )
+      call chkout ( 'CKBSR' )
 
-      RETURN
+      return
 
 
 !$Procedure CKLPF ( CK, load pointing file )
 
-      ENTRY CKLPF ( FNAME, HANDLE )
+      entry cklpf ( fname, handle )
 
 ! $ Abstract
 !
@@ -1385,33 +1385,33 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKLPF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKLPF' )
+      end if
 
 !
 !     Don't allow a search to continue after loading a file; a new
 !     search should be re-started.
 !
-      STATUS = 'BOGUS ENTRY'
+      status = 'BOGUS ENTRY'
 
 !
 !     Since a current search cannot be continued at this point,
 !     free the left-over partial list searched in the
 !     'CHECK PARTIAL LIST' state, if the list is present.
 !
-      IF ( FRESUB ) THEN
+      if ( fresub ) then
 !
 !        Return the partial list to the free list.
 !
-         TAIL = LNKTL( SLBEG, STPOOL )
-         CALL LNKFSL ( SLBEG, TAIL, STPOOL )
+         tail = lnktl( slbeg, stpool )
+         call lnkfsl ( slbeg, tail, stpool )
 
-         FRESUB = .FALSE.
+         fresub = .false.
 
-      END IF
+      end if
 
 !
 !     Any time we load a file, there is a possibility that the
@@ -1420,9 +1420,9 @@
 !     the loaded file, simply indicate that all of the re-use
 !     intervals are invalid.
 !
-      DO I = 1, NIT
-         ITCHKP(I) = .FALSE.
-      END DO
+      do i = 1, nit
+         itchkp(i) = .false.
+      end do
 
 !
 !     Nothing works unless at least one file has been loaded, so this
@@ -1433,58 +1433,58 @@
 !     want to re-initialize just because there are no instrument table
 !     entries.
 !
-      IF ( NFT .EQ. 0 ) THEN
-         CALL LNKINI ( STSIZE, STPOOL )
-      END IF
+      if ( nft .eq. 0 ) then
+         call lnkini ( stsize, stpool )
+      end if
 
 !
 !     To load a new file, first try to open it for reading.
 !
-      CALL DAFOPR ( FNAME, HANDLE )
+      call dafopr ( fname, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKLPF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKLPF' )
+         return
+      end if
 
 !
 !     Determine if the file is already in the table.
 !
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .GT. 0 ) THEN
+      if ( findex .gt. 0 ) then
 !
 !        The last call we made to DAFOPR added another DAF link to
 !        the CK file.  Remove this link.
 !
-         CALL DAFCLS ( HANDLE )
+         call dafcls ( handle )
 
 !
 !        Handle is already in the table.  Remove it.
 !
-         NFT = NFT - 1
+         nft = nft - 1
 
-         DO I = FINDEX, NFT
-            FTHAN( I ) = FTHAN( I + 1 )
-            FTNUM( I ) = FTNUM( I + 1 )
-         END DO
+         do i = findex, nft
+            fthan( i ) = fthan( i + 1 )
+            ftnum( i ) = ftnum( i + 1 )
+         end do
 
 !
 !        Unlink any segments that came from this file.
 !
-         I = 1
+         i = 1
 
-         DO WHILE ( I .LE. NIT )
+         do while ( i .le. nit )
 
-            P = ITBEG( I )
+            p = itbeg( i )
 
-            DO WHILE ( P .GT. 0 )
+            do while ( p .gt. 0 )
 !
 !              Find the successor of P, if any.
 !
-               NXTSEG = LNKNXT ( P, STPOOL )
+               nxtseg = lnknxt ( p, stpool )
 
-               IF ( STHAN( P ) .EQ. HANDLE ) THEN
+               if ( sthan( p ) .eq. handle ) then
 !
 !                 The segment corresponding to node P came from
 !                 the file we're unloading.  Delete the node for
@@ -1492,19 +1492,19 @@
 !                 to be the head node for instrument I's segment list,
 !                 make the successor of P the head of the list.
 !
-                  CALL LNKFSL ( P, P, STPOOL )
+                  call lnkfsl ( p, p, stpool )
 
-                  IF ( P .EQ. ITBEG(I) ) THEN
-                     ITBEG( I ) = NXTSEG
-                  END IF
+                  if ( p .eq. itbeg(i) ) then
+                     itbeg( i ) = nxtseg
+                  end if
 
-               END IF
+               end if
 !
 !              Update P.
 !
-               P = NXTSEG
+               p = nxtseg
 
-            END DO
+            end do
 
 !
 !           If the list for this instrument is now empty, shorten the
@@ -1512,7 +1512,7 @@
 !           instrument in the table into the space occupied by the
 !           one we've deleted.
 !
-            IF ( ITBEG( I ) .LE. 0 ) THEN
+            if ( itbeg( i ) .le. 0 ) then
 !
 !              Because all of the re-use intervals are invalid, we need
 !              not copy the saved items associated with them.  The
@@ -1527,53 +1527,53 @@
 !                 ITRUEX
 !                 ITUB
 !
-               ITINS( I ) = ITINS( NIT )
-               ITEXP( I ) = ITEXP( NIT )
-               ITHFS( I ) = ITHFS( NIT )
-               ITLFS( I ) = ITLFS( NIT )
-               ITBEG( I ) = ITBEG( NIT )
+               itins( i ) = itins( nit )
+               itexp( i ) = itexp( nit )
+               ithfs( i ) = ithfs( nit )
+               itlfs( i ) = itlfs( nit )
+               itbeg( i ) = itbeg( nit )
 
-               NIT = NIT - 1
+               nit = nit - 1
 
-            ELSE
+            else
 
-               I = I + 1
+               i = i + 1
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         IF ( NFT .EQ. FTSIZE ) THEN
+         if ( nft .eq. ftsize ) then
 
-            CALL DAFCLS ( HANDLE )
+            call dafcls ( handle )
 
-            CALL SETMSG ( 'Number of files loaded is at a maximum, ' // &
+            call setmsg ( 'Number of files loaded is at a maximum, ' // &
                           'as specified by the parameter FTSIZE, '   // &
                           'the value of which is #. You will need '  // &
                           'to either load fewer files, or change '   // &
                           'the parameter FTSIZE.'                     )
-            CALL ERRINT ( '#', FTSIZE                                 )
-            CALL SIGERR ( 'SPICE(CKTOOMANYFILES)'                     )
-            CALL CHKOUT ( 'CKLPF'                                     )
-            RETURN
+            call errint ( '#', ftsize                                 )
+            call sigerr ( 'SPICE(CKTOOMANYFILES)'                     )
+            call chkout ( 'CKLPF'                                     )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Determine the next file number.
 !
-      IF ( NEXT .LT. INTMAX()-1 ) THEN
+      if ( next .lt. intmax()-1 ) then
 
-         NEXT = NEXT + 1
+         next = next + 1
 
-      ELSE
+      else
 !
 !        The user is to be congratulated:  we've run out of file
 !        numbers.
@@ -1586,20 +1586,20 @@
 !        Set any instrument table entries that are lower than FTNUM(1)
 !        to zero.
 !
-         DO I = 1, NIT
+         do i = 1, nit
 !
 !           Re-map the HFS table for the Ith instrument.
 !
-            J = ISRCHI ( ITHFS(I), NFT, FTNUM )
+            j = isrchi ( ithfs(i), nft, ftnum )
 
-            IF ( J .GT. 0 ) THEN
+            if ( j .gt. 0 ) then
 !
 !              The highest file searched for instrument I is the Jth
 !              file in the file table.
 !
-               ITHFS(I) = J
+               ithfs(i) = j
 
-            ELSE
+            else
 !
 !              The highest file searched for instrument I is not in the
 !              file table.  This occurs when the highest file searched
@@ -1607,23 +1607,23 @@
 !              files appear to be "new" when a lookup for instrument
 !              I is performed.
 !
-               ITHFS(I) = 0
+               ithfs(i) = 0
 
-            END IF
+            end if
 
 !
 !           Re-map the LFS table for the Ith instrument.
 !
-            J = ISRCHI ( ITLFS(I), NFT, FTNUM )
+            j = isrchi ( itlfs(i), nft, ftnum )
 
-            IF ( J .GT. 0 ) THEN
+            if ( j .gt. 0 ) then
 !
 !              The lowest file searched for instrument I is the Jth file
 !              in the file table.
 !
-               ITLFS(I) = J
+               itlfs(i) = j
 
-            ELSE
+            else
 !
 !              The lowest file searched for instrument I is not in the
 !              file table.  This occurs when the lowest file searched
@@ -1631,46 +1631,46 @@
 !              highest file searched to force reconstruction of the
 !              list.
 !
-               ITLFS(I) = 0
-               ITHFS(I) = 0
+               itlfs(i) = 0
+               ithfs(i) = 0
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Re-map the file number table itself.
 !
-         DO I = 1, NFT
+         do i = 1, nft
 
-            FTNUM(I) = I
+            ftnum(i) = i
 
-         END DO
+         end do
 
 !
 !        Assign a new file number.
 !
-         NEXT = NFT + 1
+         next = nft + 1
 
-      END IF
+      end if
 
 !
 !     Now add this file to file table.
 !
-      NFT        = NFT  + 1
-      FTHAN(NFT) = HANDLE
-      FTNUM(NFT) = NEXT
+      nft        = nft  + 1
+      fthan(nft) = handle
+      ftnum(nft) = next
 
 
-      CALL CHKOUT ( 'CKLPF' )
-      RETURN
+      call chkout ( 'CKLPF' )
+      return
 
 
 
 
 !$Procedure CKUPF ( CK, Unload pointing file )
 
-      ENTRY CKUPF ( HANDLE )
+      entry ckupf ( handle )
 
 ! $ Abstract
 !
@@ -1877,33 +1877,33 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKUPF' )
+      call chkin ( 'CKUPF' )
 
 !
 !     Don't allow a search to continue after unloading a file; a new
 !     search should be re-started.
 !
-      STATUS = 'BOGUS ENTRY'
+      status = 'BOGUS ENTRY'
 
 !
 !     Since a current search cannot be continued at this point,
 !     free the left-over partial list searched in the
 !     'CHECK PARTIAL LIST' state, if the list is present.
 !
-      IF ( FRESUB ) THEN
+      if ( fresub ) then
 !
 !        Return the partial list to the free list.
 !
-         TAIL = LNKTL( SLBEG, STPOOL )
-         CALL LNKFSL ( SLBEG, TAIL, STPOOL )
+         tail = lnktl( slbeg, stpool )
+         call lnkfsl ( slbeg, tail, stpool )
 
-         FRESUB = .FALSE.
+         fresub = .false.
 
-      END IF
+      end if
 
 !
 !     All of the stored segments from the file must be removed
@@ -1912,57 +1912,57 @@
 !
 !     Don't do anything if the given handle is not in the file table.
 !
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .EQ. 0 ) THEN
-         CALL CHKOUT ( 'CKUPF' )
-         RETURN
-      END IF
+      if ( findex .eq. 0 ) then
+         call chkout ( 'CKUPF' )
+         return
+      end if
 !
 !
 !     First get rid of the entry in the file table. Close the file
 !     before wiping out the handle.
 !
-      CALL DAFCLS ( FTHAN(FINDEX) )
+      call dafcls ( fthan(findex) )
 
 
-      NFT = NFT - 1
+      nft = nft - 1
 
-      DO I = FINDEX, NFT
-         FTHAN( I ) = FTHAN( I + 1 )
-         FTNUM( I ) = FTNUM( I + 1 )
-      END DO
+      do i = findex, nft
+         fthan( i ) = fthan( i + 1 )
+         ftnum( i ) = ftnum( i + 1 )
+      end do
 
 !
 !     Check each instrument list individually. Note that the first
 !     node on each list, having no predecessor, must be handled
 !     specially.
 !
-      I = 1
+      i = 1
 
-      DO WHILE ( I .LE. NIT )
+      do while ( i .le. nit )
 
-         P = ITBEG( I )
+         p = itbeg( i )
 
-         DO WHILE ( P .GT. 0 )
+         do while ( p .gt. 0 )
 
-            NXTSEG = LNKNXT ( P, STPOOL )
+            nxtseg = lnknxt ( p, stpool )
 
-            IF ( STHAN(P) .EQ. HANDLE ) THEN
+            if ( sthan(p) .eq. handle ) then
 
-               IF ( P .EQ. ITBEG(I) ) THEN
-                  ITBEG( I ) = NXTSEG
-               END IF
+               if ( p .eq. itbeg(i) ) then
+                  itbeg( i ) = nxtseg
+               end if
 !
 !              Free this segment table entry.
 !
-               CALL LNKFSL ( P, P, STPOOL )
+               call lnkfsl ( p, p, stpool )
 
-            END IF
+            end if
 
-            P = NXTSEG
+            p = nxtseg
 
-         END DO
+         end do
 
 !
 !        If the list for this instrument is now empty, shorten the
@@ -1970,36 +1970,36 @@
 !        instrument in the table into the space occupied by the
 !        one we've deleted.
 !
-         IF ( ITBEG(I) .LE. 0 ) THEN
+         if ( itbeg(i) .le. 0 ) then
 
-            IF ( I .NE. NIT ) THEN
+            if ( i .ne. nit ) then
 
-               ITINS (I) = ITINS (NIT)
-               ITEXP (I) = ITEXP (NIT)
-               ITHFS (I) = ITHFS (NIT)
-               ITLFS (I) = ITLFS (NIT)
-               ITBEG (I) = ITBEG (NIT)
-               ITLB  (I) = ITLB  (NIT)
-               ITUB  (I) = ITUB  (NIT)
-               ITPRVF(I) = ITPRVF(NIT)
-               ITPRVH(I) = ITPRVH(NIT)
-               ITPRVI(I) = ITPRVI(NIT)
-               ITCHKP(I) = ITCHKP(NIT)
-               ITRUEX(I) = ITRUEX(NIT)
+               itins (i) = itins (nit)
+               itexp (i) = itexp (nit)
+               ithfs (i) = ithfs (nit)
+               itlfs (i) = itlfs (nit)
+               itbeg (i) = itbeg (nit)
+               itlb  (i) = itlb  (nit)
+               itub  (i) = itub  (nit)
+               itprvf(i) = itprvf(nit)
+               itprvh(i) = itprvh(nit)
+               itprvi(i) = itprvi(nit)
+               itchkp(i) = itchkp(nit)
+               itruex(i) = itruex(nit)
 
-               CALL MOVED ( ITPRVD(1,NIT), DSCSIZ, ITPRVD(1,I) )
+               call moved ( itprvd(1,nit), dscsiz, itprvd(1,i) )
 
-            END IF
+            end if
 
-            NIT = NIT - 1
+            nit = nit - 1
 
-         ELSE
+         else
 
-            I = I + 1
+            i = i + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Any time we unload a file, we may be removing the file
@@ -2008,28 +2008,28 @@
 !     with the re-use interval happens to be that of the file
 !     we're unloading, indicate that the re-use interval is invalid.
 !
-      DO I = 1, NIT
+      do i = 1, nit
 
-         IF ( ITCHKP(I) ) THEN
+         if ( itchkp(i) ) then
 
-            IF ( ITPRVH(I) .EQ. HANDLE ) THEN
-               ITCHKP(I) = .FALSE.
-            END IF
+            if ( itprvh(i) .eq. handle ) then
+               itchkp(i) = .false.
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'CKUPF' )
-      RETURN
+      call chkout ( 'CKUPF' )
+      return
 
 
 
 
 !$Procedure CKBSS ( CK, begin search for segment )
 
-      ENTRY CKBSS ( INST, SCLKDP, TOL, NEEDAV )
+      entry ckbss ( inst, sclkdp, tol, needav )
 
 ! $ Abstract
 !
@@ -2212,27 +2212,27 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKBSS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKBSS' )
+      end if
 
 !
 !     If we're starting a new search after passing through the
 !     'CHECK PARTIAL LIST' state, free the left-over partial list
 !     that was searched in that state, if necessary.
 !
-      IF ( FRESUB ) THEN
+      if ( fresub ) then
 !
 !        Return the partial list to the free list.
 !
-         TAIL = LNKTL( SLBEG, STPOOL )
-         CALL LNKFSL ( SLBEG, TAIL, STPOOL )
+         tail = lnktl( slbeg, stpool )
+         call lnkfsl ( slbeg, tail, stpool )
 
-         FRESUB = .FALSE.
+         fresub = .false.
 
-      END IF
+      end if
 
 !
 !     Make copies of the instrument ID code and angular velocity flag.
@@ -2241,65 +2241,65 @@
 !     And form the endpoints of the acceptable time interval using the
 !     input time and time tolerance.
 !
-      SCINST = INST
-      ALPHA  = SCLKDP - TOL
-      OMEGA  = SCLKDP + TOL
-      AVNEED = NEEDAV
-      REQT   = SCLKDP
-      SAVTOL = TOL
+      scinst = inst
+      alpha  = sclkdp - tol
+      omega  = sclkdp + tol
+      avneed = needav
+      reqt   = sclkdp
+      savtol = tol
 
 !
 !     There must be at least one file loaded.
 !
-      IF ( NFT .EQ. 0 ) THEN
+      if ( nft .eq. 0 ) then
 
-         CALL SETMSG ( 'At least one CK file must be loaded ' // &
+         call setmsg ( 'At least one CK file must be loaded ' // &
                        'by CKLPF before beginning a search.'       )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'                      )
-         CALL CHKOUT ( 'CKBSS'                                     )
-         RETURN
+         call sigerr ( 'SPICE(NOLOADEDFILES)'                      )
+         call chkout ( 'CKBSS'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     The stack of suspended tasks is empty.
 !
-      TOP = 0
+      top = 0
 
 !
 !     Is the instrument already in the instrument table?  The answer
 !     determines what the first task for CKSNS will be.
 !
-      IINDEX = ISRCHI ( SCINST, NIT, ITINS )
+      iindex = isrchi ( scinst, nit, itins )
 
-      IF ( IINDEX .EQ. 0 ) THEN
+      if ( iindex .eq. 0 ) then
 
-         STATUS = 'NEW INSTRUMENT'
+         status = 'NEW INSTRUMENT'
 
-      ELSE
+      else
 !
 !        Set the status so that CKSNS will determine whether to check
 !        the segment list, search new files, or return data from the
 !        re-use interval.
 !
-         STATUS = '?'
+         status = '?'
 
-      END IF
+      end if
 
 !
 !     Indicate a new search has started.
 !
-      NEWSCH = .TRUE.
+      newsch = .true.
 
 
-      CALL CHKOUT ( 'CKBSS' )
-      RETURN
+      call chkout ( 'CKBSS' )
+      return
 
 
 
 !$Procedure CKSNS ( C-kernel, Select next segment )
 
-      ENTRY CKSNS ( HANDLE, DESCR, SEGID, FOUND )
+      entry cksns ( handle, descr, segid, found )
 
 ! $ Abstract
 !
@@ -2612,22 +2612,22 @@
 !
 !     Nothing's been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKSNS' )
+      call chkin ( 'CKSNS' )
 
 !
 !     Initialize the segment list pointer to the saved value from
 !     the previous pass through this routine, if any.
 !
-      P = SAVEP
+      p = savep
 
 !
 !     CKSNS buffers segment descriptors and identifiers, to
@@ -2800,22 +2800,22 @@
 !        error will be signaled.
 !
 
-      IF ( STATUS .EQ. 'BOGUS ENTRY' )  THEN
+      if ( status .eq. 'BOGUS ENTRY' )  then
 
-         CALL SETMSG ( 'Must begin a search by calling CKBSS first.' )
-         CALL SIGERR ( 'SPICE(CALLCKBSSFIRST)' )
-         CALL CHKOUT ( 'CKSNS'                 )
-         RETURN
+         call setmsg ( 'Must begin a search by calling CKBSS first.' )
+         call sigerr ( 'SPICE(CALLCKBSSFIRST)' )
+         call chkout ( 'CKSNS'                 )
+         return
 
-      END IF
+      end if
 
 
-      DO WHILE ( STATUS .NE. 'HOPELESS' )
+      do while ( status .ne. 'HOPELESS' )
 !
 !        If new files have been added, they have to be searched.
 !        Otherwise, go right to the list of stored segments.
 !
-         IF ( STATUS .EQ. '?' ) THEN
+         if ( status .eq. '?' ) then
 !
 !           There are two ways to get to this point.
 !
@@ -2826,17 +2826,17 @@
 !               a new file.
 !
 
-            IF ( ITHFS( IINDEX ) .LT. FTNUM( NFT ) ) THEN
+            if ( ithfs( iindex ) .lt. ftnum( nft ) ) then
 
-               STATUS = 'NEW FILES'
+               status = 'NEW FILES'
 
-            ELSE
+            else
 !
 !              Much of the time, the segment used to satisfy the
 !              previous request will also satisfy the current
 !              request.  Check whether this is the case.
 !
-               IF ( ITCHKP(IINDEX) ) THEN
+               if ( itchkp(iindex) ) then
 !
 !                 The previous segment found for the current instrument
 !                 is a viable candidate for the current request.  See
@@ -2848,8 +2848,8 @@
 !                 because one or both endpoints may belong to
 !                 higher-priority segments.
 !
-                  IF (      ( REQT .GT. (ITLB(IINDEX) + SAVTOL) ) &
-                      .AND. ( REQT .LT. (ITUB(IINDEX) - SAVTOL) ) ) THEN
+                  if (      ( reqt .gt. (itlb(iindex) + savtol) ) &
+                      .and. ( reqt .lt. (itub(iindex) - savtol) ) ) then
 !
 !                    The request time falls into the portion of
 !                    the re-use interval that isn't blocked by
@@ -2857,37 +2857,37 @@
 !                    those segments is extended in either direction
 !                    by TOL.
 !
-                     IF (      ( .NOT. AVNEED          ) &
-                          .OR. ( ITPRVF(IINDEX) .NE. 0 )  ) THEN
+                     if (      ( .not. avneed          ) &
+                          .or. ( itprvf(iindex) .ne. 0 )  ) then
 !
 !                       This segment has angular velocity if we
 !                       need it.  The segment satisfies the
 !                       request.
 !
-                        HANDLE = ITPRVH(IINDEX)
-                        SEGID  = ITPRVI(IINDEX)
+                        handle = itprvh(iindex)
+                        segid  = itprvi(iindex)
 
-                        CALL MOVED ( ITPRVD(1,IINDEX), DSCSIZ, DESCR )
+                        call moved ( itprvd(1,iindex), dscsiz, descr )
 
-                        FOUND  = .TRUE.
+                        found  = .true.
 
 !
 !                       We can only use the re-use interval once on
 !                       a given search.  If this search is continued,
 !                       we'll have to check the list.  Prepare now.
 !
-                        SAVEP  =  ITBEG( IINDEX )
-                        STATUS = 'CHECK LIST'
+                        savep  =  itbeg( iindex )
+                        status = 'CHECK LIST'
 
-                        CALL CHKOUT ( 'CKSNS' )
-                        RETURN
+                        call chkout ( 'CKSNS' )
+                        return
 
-                     END IF
+                     end if
 !
 !                    We needed angular velocity data but didn't have
 !                    it if we reached this point.
 !
-                  END IF
+                  end if
 
 !
 !                 Adjust the expense here. If the expense of the list
@@ -2895,8 +2895,8 @@
 !                 unbuffered segment providing data for re-use, subtract
 !                 that component from the expense.
 !
-                  ITEXP(IINDEX)  = ITEXP(IINDEX) - ITRUEX(IINDEX)
-                  ITRUEX(IINDEX) = 0
+                  itexp(iindex)  = itexp(iindex) - itruex(iindex)
+                  itruex(iindex) = 0
 
 !
 !                 The re-use interval becomes invalid if it didn't
@@ -2914,30 +2914,30 @@
 !
 !                 Carry on with the usual search algorithm.
 !
-                  ITCHKP(IINDEX) = .FALSE.
+                  itchkp(iindex) = .false.
 
-               END IF
+               end if
 
 !
 !              If the segment list for this instrument is empty, make
 !              sure the expense is reset to 0.
 !
-               IF ( ITBEG(IINDEX) .EQ. 0 ) THEN
-                  ITEXP(IINDEX) = 0
-               END IF
+               if ( itbeg(iindex) .eq. 0 ) then
+                  itexp(iindex) = 0
+               end if
 
 !
 !              Prepare to look at the first segment in the list for
 !              this instrument.
 !
-               P      =  ITBEG( IINDEX )
-               STATUS = 'CHECK LIST'
+               p      =  itbeg( iindex )
+               status = 'CHECK LIST'
 
-            END IF
+            end if
 
 
 
-         ELSE IF ( STATUS .EQ. 'NEW INSTRUMENT' ) THEN
+         else if ( status .eq. 'NEW INSTRUMENT' ) then
 !
 !           New instruments are added to the end of the instrument
 !           table. If the table is full, one of the current occupants
@@ -2959,57 +2959,57 @@
 !           However, trying to handle this special case there was
 !           just more trouble than it was worth.
 !
-            IF ( NIT .LT. ITSIZE ) THEN
+            if ( nit .lt. itsize ) then
 !
 !              If the instrument table isn't full, the cheapest place is
 !              just the next unused row of the table.
 !
-               NIT   = NIT + 1
-               CHEAP = NIT
+               nit   = nit + 1
+               cheap = nit
 
-            ELSE
+            else
 !
 !              The instrument table is full.  Find the least
 !              expensive instrument in the table and remove it.
 !
-               CHEAP  = 1
-               MINEXP = ITEXP(1)
+               cheap  = 1
+               minexp = itexp(1)
 
-               DO I = 2, NIT
+               do i = 2, nit
 
-                  IF ( ITEXP(I) .LT. MINEXP ) THEN
-                     CHEAP  = I
-                     MINEXP = ITEXP(I)
-                  END IF
+                  if ( itexp(i) .lt. minexp ) then
+                     cheap  = i
+                     minexp = itexp(i)
+                  end if
 
-               END DO
+               end do
 
 !
 !              If there are any segments associated with the
 !              least expensive instrument, we put them back on the free
 !              list.
 !
-               HEAD = ITBEG(CHEAP)
+               head = itbeg(cheap)
 
-               IF ( HEAD .GT. 0 ) THEN
+               if ( head .gt. 0 ) then
 
-                  TAIL =  - LNKPRV ( HEAD, STPOOL )
-                  CALL LNKFSL ( HEAD, TAIL, STPOOL )
+                  tail =  - lnkprv ( head, stpool )
+                  call lnkfsl ( head, tail, stpool )
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Set up a table entry for the new instrument.
 !
-            ITINS (CHEAP) = SCINST
-            ITEXP (CHEAP) = 0
-            ITHFS (CHEAP) = FTNUM(NFT)
-            ITLFS (CHEAP) = FTNUM(NFT) + 1
-            ITBEG (CHEAP) = 0
-            ITCHKP(CHEAP) = .FALSE.
-            IINDEX        = CHEAP
+            itins (cheap) = scinst
+            itexp (cheap) = 0
+            ithfs (cheap) = ftnum(nft)
+            itlfs (cheap) = ftnum(nft) + 1
+            itbeg (cheap) = 0
+            itchkp(cheap) = .false.
+            iindex        = cheap
 
 !
 !           The following items associated with the re-use interval
@@ -3027,22 +3027,22 @@
 !           help prevent compilation warnings from zealous
 !           compilers.
 !
-            ITRUEX(CHEAP) = 0
-            ITLB  (CHEAP) = DPMIN()
-            ITUB  (CHEAP) = DPMAX()
-            ITPRVF(CHEAP) = 0
-            ITPRVH(CHEAP) = 0
-            ITPRVI(CHEAP) = ' '
-            CALL CLEARD ( DSCSIZ, ITPRVD(1,CHEAP) )
+            itruex(cheap) = 0
+            itlb  (cheap) = dpmin()
+            itub  (cheap) = dpmax()
+            itprvf(cheap) = 0
+            itprvh(cheap) = 0
+            itprvi(cheap) = ' '
+            call cleard ( dscsiz, itprvd(1,cheap) )
 
 !
 !           Now search all of the files for segments relating to
 !           this instrument.
 !
-            STATUS = 'OLD FILES'
+            status = 'OLD FILES'
 
 
-         ELSE IF ( STATUS .EQ. 'NEW FILES' ) THEN
+         else if ( status .eq. 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
 !           order, beginning with the oldest new file not yet searched.
@@ -3060,33 +3060,33 @@
 !           Find the next file to search; set FINDEX to the
 !           corresponding file table entry.
 
-            FINDEX = 1
+            findex = 1
 
-            DO WHILE ( ITHFS(IINDEX) .GE. FTNUM(FINDEX) )
+            do while ( ithfs(iindex) .ge. ftnum(findex) )
 
-               FINDEX = FINDEX + 1
+               findex = findex + 1
 
-            END DO
+            end do
 
-            ITHFS( IINDEX ) = FTNUM( FINDEX )
+            ithfs( iindex ) = ftnum( findex )
 
-            CALL DAFBFS ( FTHAN( FINDEX ) )
+            call dafbfs ( fthan( findex ) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CKSNS' )
+               return
+            end if
 
-            STATUS = 'NEW SEGMENTS'
+            status = 'NEW SEGMENTS'
 
 !
 !           The cost of the list contributed by the new file is
 !           zero so far.
 !
-            COST   = 0
+            cost   = 0
 
 
-         ELSE IF ( STATUS .EQ. 'NEW SEGMENTS' ) THEN
+         else if ( status .eq. 'NEW SEGMENTS' ) then
 !
 !           New files are searched in forward order. Segments, when
 !           found, are inserted at the front of the list. Invisible
@@ -3098,50 +3098,50 @@
 !           The only way to get here is from the NEW FILES block
 !           of the IF structure.
 
-            CALL DAFFNA ( FND )
+            call daffna ( fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CKSNS' )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 !
 !              We're out of segments in the current file.  Decide
 !              whether we need to examine another new file, or
 !              whether we're ready to check the list.
 !
-               STATUS = '?'
-               ITEXP( IINDEX ) = ITEXP( IINDEX ) + COST
+               status = '?'
+               itexp( iindex ) = itexp( iindex ) + cost
 
-            ELSE
+            else
 
-               CALL DAFGS ( DESCR )
-               CALL DAFUS ( DESCR, ND, NI, DCD, ICD )
+               call dafgs ( descr )
+               call dafus ( descr, nd, ni, dcd, icd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'CKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'CKSNS' )
+                  return
+               end if
 
-               IF (       ( ICD(1) .EQ. SCINST ) &
-                    .AND. ( DCD(1) .LE. DCD(2) )  ) THEN
+               if (       ( icd(1) .eq. scinst ) &
+                    .and. ( dcd(1) .le. dcd(2) )  ) then
 
-                  DOING  = 'NEW SEGMENTS'
-                  URGENT = 'ADD TO FRONT'
-                  STATUS = 'SUSPEND'
+                  doing  = 'NEW SEGMENTS'
+                  urgent = 'ADD TO FRONT'
+                  status = 'SUSPEND'
 
-               END IF
+               end if
 
-               COST = COST + 1
+               cost = cost + 1
 
-            END IF
+            end if
 !
 !           If we haven't reset the status, we'll return for another
 !           'NEW SEGMENTS' pass.
 !
 
-         ELSE IF ( STATUS .EQ. 'OLD FILES' ) THEN
+         else if ( status .eq. 'OLD FILES' ) then
 !
 !           When old files must be searched (because the segments in
 !           the list are inadequate), they should be searched in
@@ -3162,20 +3162,20 @@
 !              this instrument, didn't find an applicable segment and
 !              have some files left that have not been searched.
 
-            FINDEX = NFT
+            findex = nft
 
-            DO WHILE ( ITLFS( IINDEX ) .LE. FTNUM( FINDEX ) )
-               FINDEX = FINDEX - 1
-            END DO
+            do while ( itlfs( iindex ) .le. ftnum( findex ) )
+               findex = findex - 1
+            end do
 
-            CALL DAFBBS ( FTHAN( FINDEX ) )
+            call dafbbs ( fthan( findex ) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CKSNS' )
+               return
+            end if
 
-            STATUS = 'OLD SEGMENTS'
+            status = 'OLD SEGMENTS'
 
 !
 !           The next thing we'll do is search through all the segments
@@ -3183,7 +3183,7 @@
 !           The cost of the list contributed by the current file is
 !           zero so far.
 !
-            COST = 0
+            cost = 0
 
 !
 !        Old files are searched in backward order. Segments, when
@@ -3193,58 +3193,58 @@
 !        Each segment examined, whether applicable or not, adds to
 !        the expense of the list.
 !
-         ELSE IF ( STATUS .EQ. 'OLD SEGMENTS' ) THEN
+         else if ( status .eq. 'OLD SEGMENTS' ) then
 !
 !           There is only one way to get here---from the
 !           block 'OLD FILES'.  Note we do not add to the
 !           expense of the list for this instrument until we've
 !           completely searched this file.
 !
-            CALL DAFFPA ( FND )
+            call daffpa ( fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CKSNS' )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 !
 !              All of the segments in this file have been exhausted.
 !              Change the lowest file searched indicator for this
 !              instrument to be the current file, and go check the
 !              current list.
 !
-               ITLFS( IINDEX ) =  FTNUM( FINDEX )
-               ITEXP( IINDEX ) =  ITEXP( IINDEX ) + COST
-               P               =  ITBEG( IINDEX )
-               STATUS          = 'CHECK LIST'
+               itlfs( iindex ) =  ftnum( findex )
+               itexp( iindex ) =  itexp( iindex ) + cost
+               p               =  itbeg( iindex )
+               status          = 'CHECK LIST'
 
-            ELSE
+            else
 
-               CALL DAFGS ( DESCR )
-               CALL DAFUS ( DESCR, ND, NI, DCD, ICD )
+               call dafgs ( descr )
+               call dafus ( descr, nd, ni, dcd, icd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'CKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'CKSNS' )
+                  return
+               end if
 
-               IF (      ( ICD(1) .EQ. SCINST ) &
-                   .AND. ( DCD(1) .LE. DCD(2) )  ) THEN
+               if (      ( icd(1) .eq. scinst ) &
+                   .and. ( dcd(1) .le. dcd(2) )  ) then
 
-                  DOING  = 'OLD SEGMENTS'
-                  URGENT = 'ADD TO END'
-                  STATUS = 'SUSPEND'
+                  doing  = 'OLD SEGMENTS'
+                  urgent = 'ADD TO END'
+                  status = 'SUSPEND'
 
-               END IF
+               end if
 
-               COST = COST + 1
+               cost = cost + 1
 
-            END IF
+            end if
 
 
 
-         ELSE IF ( STATUS .EQ. 'CHECK LIST' ) THEN
+         else if ( status .eq. 'CHECK LIST' ) then
 !
 !           Okay, all the new files (and maybe an old file or two)
 !           have been searched. Time to look at the list of segments
@@ -3269,58 +3269,58 @@
 !           If this is a new search, initialize the re-use interval.
 !           If we're resuming a search, the re-use interval is invalid.
 !
-            IF ( NEWSCH ) THEN
+            if ( newsch ) then
 
-               ITLB(IINDEX) = DPMIN()
-               ITUB(IINDEX) = DPMAX()
+               itlb(iindex) = dpmin()
+               itub(iindex) = dpmax()
 
-            END IF
+            end if
 
-            DO WHILE ( P .GT. 0 )
+            do while ( p .gt. 0 )
 
-               IF ( NEWSCH ) THEN
+               if ( newsch ) then
 !
 !                 Trim the re-use interval if the request time lies
 !                 outside of the current segment.
 !
-                  IF ( REQT .GT. STDCD(2,P) ) THEN
+                  if ( reqt .gt. stdcd(2,p) ) then
 !
 !                    REQT is to the right of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
 !                    left, if necessary.
 !
-                     ITLB(IINDEX) = MAX ( ITLB(IINDEX), STDCD(2,P) )
+                     itlb(iindex) = max ( itlb(iindex), stdcd(2,p) )
 
 
-                  ELSE IF ( REQT .LT. STDCD(1,P) ) THEN
+                  else if ( reqt .lt. stdcd(1,p) ) then
 !
 !                    REQT is to the left of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
 !                    right, if necessary.
 !
-                     ITUB(IINDEX) = MIN ( ITUB(IINDEX), STDCD(1,P) )
+                     itub(iindex) = min ( itub(iindex), stdcd(1,p) )
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 
-               IF (       ( OMEGA .GE. STDCD(1,P) ) &
-                    .AND. ( ALPHA .LE. STDCD(2,P) )  ) THEN
+               if (       ( omega .ge. stdcd(1,p) ) &
+                    .and. ( alpha .le. stdcd(2,p) )  ) then
 !
 !                 The segment coverage interval intersects the request
 !                 interval ALPHA:OMEGA.
 !
-                  IF (  (.NOT. AVNEED) .OR. (STICD(4,P) .NE. 0)  ) THEN
+                  if (  (.not. avneed) .or. (sticd(4,p) .ne. 0)  ) then
 !
 !                    This segment satisfies the request.
 !
-                     CALL DAFPS ( ND,         NI, &
-                                  STDCD(1,P), STICD(1,P), DESCR )
+                     call dafps ( nd,         ni, &
+                                  stdcd(1,p), sticd(1,p), descr )
 
-                     SEGID  =  STIDNT( P )
-                     HANDLE =  STHAN ( P )
-                     FOUND  = .TRUE.
+                     segid  =  stidnt( p )
+                     handle =  sthan ( p )
+                     found  = .true.
 
 !
 !                    If the segment actually contains the request
@@ -3329,56 +3329,56 @@
 !                    to be in the interior of the interval:  it
 !                    cannot be one of the endpoints.
 !
-                     IF (         NEWSCH &
-                          .AND. ( REQT .GT. STDCD(1,P) ) &
-                          .AND. ( REQT .LT. STDCD(2,P) )  ) THEN
+                     if (         newsch &
+                          .and. ( reqt .gt. stdcd(1,p) ) &
+                          .and. ( reqt .lt. stdcd(2,p) )  ) then
 !
 !                       Set the re-use interval for the current
 !                       instrument.
 !
-                        ITLB(IINDEX) = MAX ( ITLB(IINDEX), STDCD(1,P) )
-                        ITUB(IINDEX) = MIN ( ITUB(IINDEX), STDCD(2,P) )
+                        itlb(iindex) = max ( itlb(iindex), stdcd(1,p) )
+                        itub(iindex) = min ( itub(iindex), stdcd(2,p) )
 
 !
 !                       Save the returned output items, in case this
 !                       segment may satisfy the next request.
 !
-                        ITPRVH(IINDEX) =  HANDLE
-                        ITPRVI(IINDEX) =  SEGID
-                        ITPRVF(IINDEX) =  STICD(4,P)
+                        itprvh(iindex) =  handle
+                        itprvi(iindex) =  segid
+                        itprvf(iindex) =  sticd(4,p)
 
-                        CALL MOVED ( DESCR, DSCSIZ, ITPRVD(1,IINDEX) )
+                        call moved ( descr, dscsiz, itprvd(1,iindex) )
 
-                        ITCHKP(IINDEX) =  .TRUE.
+                        itchkp(iindex) =  .true.
 
-                     END IF
+                     end if
 
 !
 !                    Go ahead and move the pointer up before returning
 !                    so that the search for the next applicable segment
 !                    will start at the right place.
 !
-                     SAVEP = STPOOL ( FORWRD, P )
+                     savep = stpool ( forwrd, p )
 
 !
 !                    Indicate the first pass of this search has been
 !                    completed.
 !
-                     NEWSCH = .FALSE.
+                     newsch = .false.
 
-                     CALL CHKOUT ( 'CKSNS' )
-                     RETURN
+                     call chkout ( 'CKSNS' )
+                     return
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !              Get the next node.  We avoid LNKNXT here in order
 !              to speed up the operation.
 !
-               P = STPOOL ( FORWRD, P )
+               p = stpool ( forwrd, p )
 
-            END DO
+            end do
 
 !
 !           If we're still here we didn't have information for this
@@ -3387,15 +3387,15 @@
 !           If there are more files, search them.
 !           Otherwise, things are hopeless, set the status that way.
 !
-            IF ( ITLFS( IINDEX ) .GT. FTNUM( 1 ) ) THEN
-               STATUS = 'OLD FILES'
-            ELSE
-               STATUS = 'HOPELESS'
-            END IF
+            if ( itlfs( iindex ) .gt. ftnum( 1 ) ) then
+               status = 'OLD FILES'
+            else
+               status = 'HOPELESS'
+            end if
 
 
 
-         ELSE IF ( STATUS .EQ. 'MAKE ROOM' ) THEN
+         else if ( status .eq. 'MAKE ROOM' ) then
 !
 !           When adding a new segment to a full table, one of the
 !           current instruments must be dropped.  The ideal
@@ -3429,38 +3429,38 @@
 !           be the index of the "cheapest" segment list in the
 !           instrument table.
 !
-            MINEXP = INTMAX()
-            CHEAP  = 0
+            minexp = intmax()
+            cheap  = 0
 
-            DO I = 1, NIT
+            do i = 1, nit
 
-               IF ( I .NE. IINDEX ) THEN
+               if ( i .ne. iindex ) then
 
-                  IF (      ( ITEXP(I) .LT. MINEXP   ) &
-                       .OR. ( CHEAP    .EQ. 0        )  )THEN
+                  if (      ( itexp(i) .lt. minexp   ) &
+                       .or. ( cheap    .eq. 0        )  )then
 !
 !                    This list is the cheapest seen so far,
 !                    possibly because it's the first one
 !                    considered.  At the moment, it's as good
 !                    a candidate for removal as any.
 !
-                     CHEAP  = I
-                     MINEXP = ITEXP(I)
+                     cheap  = i
+                     minexp = itexp(i)
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 
-            IF ( CHEAP .EQ. 0 ) THEN
+            if ( cheap .eq. 0 ) then
 !
 !              If there are no deletable segments, the Thing To
 !              Do depends on the task that was suspended before
 !              entering MAKE ROOM.
 !
-               IF ( STACK(TOP) .EQ. 'ADD TO END' ) THEN
+               if ( stack(top) .eq. 'ADD TO END' ) then
 !
 !                 The segment meta-data from the current file cannot
 !                 be buffered.  We'll search the partial list of
@@ -3468,10 +3468,10 @@
 !                 the rest of the file and any other old files, until
 !                 we find an applicable segment or run out of segments.
 !
-                  STATUS = 'PREPARE PARTIAL LIST'
+                  status = 'PREPARE PARTIAL LIST'
 
 
-               ELSE
+               else
 !
 !                 STACK(TOP) is set to 'ADD TO FRONT'.
 !
@@ -3483,78 +3483,78 @@
 !                 Return the current list to the segment table pool.
 !                 Note this list is non-empty.
 !
-                  P    =   ITBEG ( IINDEX )
-                  TAIL = - LNKPRV( P, STPOOL )
+                  p    =   itbeg ( iindex )
+                  tail = - lnkprv( p, stpool )
 
-                  CALL LNKFSL ( P, TAIL, STPOOL )
+                  call lnkfsl ( p, tail, stpool )
 !
 !                 Re-initialize the table for this instrument, and
 !                 initiate an 'OLD FILES' search, just as in 'NEW
 !                 INSTRUMENT'.
 !
-                  ITBEG( IINDEX ) = 0
-                  ITEXP( IINDEX ) = 0
-                  ITHFS( IINDEX ) = FTNUM( NFT )
-                  ITLFS( IINDEX ) = FTNUM( NFT ) + 1
+                  itbeg( iindex ) = 0
+                  itexp( iindex ) = 0
+                  ithfs( iindex ) = ftnum( nft )
+                  itlfs( iindex ) = ftnum( nft ) + 1
 
-                  STATUS = 'OLD FILES'
+                  status = 'OLD FILES'
 
-               END IF
+               end if
 
 !
 !              Unwind the stack; we've set the target states already.
 !
-               TOP = 0
+               top = 0
 
-            ELSE
+            else
 !
 !              Return this cheapest list to the segment pool.  This
 !              list could be empty.
 !
-               HEAD = ITBEG( CHEAP )
+               head = itbeg( cheap )
 
-               IF ( HEAD .GT. 0 ) THEN
+               if ( head .gt. 0 ) then
 
-                  TAIL = - LNKPRV ( HEAD, STPOOL )
+                  tail = - lnkprv ( head, stpool )
 
-                  CALL LNKFSL ( HEAD, TAIL, STPOOL )
+                  call lnkfsl ( head, tail, stpool )
 
-               END IF
+               end if
 
 !
 !              Fill the deleted instrument's space in the table with
 !              the final entry in the table.
 !
-               IF ( CHEAP .NE. NIT ) THEN
+               if ( cheap .ne. nit ) then
 
-                  ITINS (CHEAP) = ITINS (NIT)
-                  ITEXP (CHEAP) = ITEXP (NIT)
-                  ITHFS (CHEAP) = ITHFS (NIT)
-                  ITLFS (CHEAP) = ITLFS (NIT)
-                  ITBEG (CHEAP) = ITBEG (NIT)
-                  ITLB  (CHEAP) = ITLB  (NIT)
-                  ITUB  (CHEAP) = ITUB  (NIT)
-                  ITPRVH(CHEAP) = ITPRVH(NIT)
-                  ITPRVI(CHEAP) = ITPRVI(NIT)
-                  ITPRVF(CHEAP) = ITPRVF(NIT)
-                  ITCHKP(CHEAP) = ITCHKP(NIT)
-                  ITRUEX(CHEAP) = ITRUEX(NIT)
+                  itins (cheap) = itins (nit)
+                  itexp (cheap) = itexp (nit)
+                  ithfs (cheap) = ithfs (nit)
+                  itlfs (cheap) = itlfs (nit)
+                  itbeg (cheap) = itbeg (nit)
+                  itlb  (cheap) = itlb  (nit)
+                  itub  (cheap) = itub  (nit)
+                  itprvh(cheap) = itprvh(nit)
+                  itprvi(cheap) = itprvi(nit)
+                  itprvf(cheap) = itprvf(nit)
+                  itchkp(cheap) = itchkp(nit)
+                  itruex(cheap) = itruex(nit)
 
-                  CALL MOVED ( ITPRVD(1,NIT), DSCSIZ, ITPRVD(1,CHEAP) )
+                  call moved ( itprvd(1,nit), dscsiz, itprvd(1,cheap) )
 
-               END IF
+               end if
 
-               IF ( IINDEX .EQ. NIT ) THEN
-                  IINDEX = CHEAP
-               END IF
+               if ( iindex .eq. nit ) then
+                  iindex = cheap
+               end if
 
 !
 !              One less instrument now.
 !
-               NIT    = NIT - 1
-               STATUS = 'RESUME'
+               nit    = nit - 1
+               status = 'RESUME'
 
-            END IF
+            end if
 !
 !           Either we made room by freeing a non-empty segment list,
 !           or we're going to work without additional space.  In the
@@ -3563,7 +3563,7 @@
 !
 
 
-         ELSE IF ( STATUS .EQ. 'ADD TO FRONT' ) THEN
+         else if ( status .eq. 'ADD TO FRONT' ) then
 !
 !           The current segment information should be linked in at
 !           the head of the segment list for the current instrument,
@@ -3573,43 +3573,43 @@
 !           The only way to get here is from the block NEW SEGMENTS
 !           after suspending that task.
 
-            IF ( LNKNFN(STPOOL) .EQ. 0 ) THEN
+            if ( lnknfn(stpool) .eq. 0 ) then
 
-               DOING  = 'ADD TO FRONT'
-               URGENT = 'MAKE ROOM'
-               STATUS = 'SUSPEND'
+               doing  = 'ADD TO FRONT'
+               urgent = 'MAKE ROOM'
+               status = 'SUSPEND'
 
-            ELSE
+            else
 !
 !              Allocate a node and link it to the front of the list
 !              for the current instrument.
 !
-               CALL LNKAN ( STPOOL, NEW )
+               call lnkan ( stpool, new )
 
-               STHAN( NEW ) = FTHAN( FINDEX )
+               sthan( new ) = fthan( findex )
 
-               CALL DAFGN ( STIDNT(NEW) )
+               call dafgn ( stidnt(new) )
 
-               CALL DAFUS ( DESCR, ND, NI, STDCD(1,NEW), STICD(1,NEW) )
+               call dafus ( descr, nd, ni, stdcd(1,new), sticd(1,new) )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'CKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'CKSNS' )
+                  return
+               end if
 
 !
 !              If the current list is empty, this append operation
 !              is a no-op.
 !
-               CALL LNKILB ( NEW, ITBEG(IINDEX), STPOOL )
-               ITBEG( IINDEX ) = NEW
+               call lnkilb ( new, itbeg(iindex), stpool )
+               itbeg( iindex ) = new
 
-               STATUS  = 'RESUME'
+               status  = 'RESUME'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATUS .EQ. 'ADD TO END' ) THEN
+         else if ( status .eq. 'ADD TO END' ) then
 !
 !           The current segment information should be linked in at
 !           the tail of the segment list for the current instrument.
@@ -3617,51 +3617,51 @@
 !           The only way to get to this task is from the OLD SEGMENTS
 !           block after suspending that task.
 !
-            IF ( LNKNFN(STPOOL) .EQ. 0 ) THEN
+            if ( lnknfn(stpool) .eq. 0 ) then
 
-               DOING  = 'ADD TO END'
-               URGENT = 'MAKE ROOM'
-               STATUS = 'SUSPEND'
+               doing  = 'ADD TO END'
+               urgent = 'MAKE ROOM'
+               status = 'SUSPEND'
 
-            ELSE
+            else
 !
 !              Allocate a new node in the segment table pool.
 !
-               CALL LNKAN ( STPOOL, NEW )
+               call lnkan ( stpool, new )
 
-               STHAN( NEW ) = FTHAN( FINDEX )
+               sthan( new ) = fthan( findex )
 
-               CALL DAFGN ( STIDNT(NEW) )
+               call dafgn ( stidnt(new) )
 
-               CALL DAFUS ( DESCR, ND, NI, STDCD(1,NEW), STICD(1,NEW) )
+               call dafus ( descr, nd, ni, stdcd(1,new), sticd(1,new) )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'CKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'CKSNS' )
+                  return
+               end if
 
-               IF ( ITBEG(IINDEX) .LE. 0 ) THEN
+               if ( itbeg(iindex) .le. 0 ) then
 !
 !                 This is the first node in the list for this
 !                 instrument.
 !
-                  ITBEG( IINDEX ) = NEW
+                  itbeg( iindex ) = new
 
-               ELSE
+               else
 !
 !                 Link the new node to the tail of the list.
 !
-                  TAIL = - LNKPRV ( ITBEG(IINDEX), STPOOL )
-                  CALL LNKILA ( TAIL, NEW, STPOOL )
+                  tail = - lnkprv ( itbeg(iindex), stpool )
+                  call lnkila ( tail, new, stpool )
 
-               END IF
+               end if
 
-               STATUS = 'RESUME'
+               status = 'RESUME'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATUS .EQ. 'PREPARE PARTIAL LIST' ) THEN
+         else if ( status .eq. 'PREPARE PARTIAL LIST' ) then
 !
 !           When the segment table is completely full, continue
 !           the search by looking through the unchecked portion
@@ -3676,30 +3676,30 @@
 !           At this point, we need to initialize the cost of
 !           the re-use interval.
 !
-            ITRUEX(IINDEX) = 0
+            itruex(iindex) = 0
 
 !
 !           Find the portion of the current instrument's segment list
 !           which comes from the current file of interest.  SLBEG
 !           will point to the beginning of this sublist.
 !
-            SLBEG  = ITBEG( IINDEX )
-            FNDHAN = .FALSE.
+            slbeg  = itbeg( iindex )
+            fndhan = .false.
 
-            DO WHILE (  ( .NOT. FNDHAN ) .AND. ( SLBEG .GT. 0 )  )
+            do while (  ( .not. fndhan ) .and. ( slbeg .gt. 0 )  )
 
-               FNDHAN = STHAN(SLBEG) .EQ. FTHAN(FINDEX)
+               fndhan = sthan(slbeg) .eq. fthan(findex)
 
-               IF ( .NOT. FNDHAN ) THEN
+               if ( .not. fndhan ) then
 !
 !                 Get the next node.  We avoid LNKNXT here in order
 !                 to speed up the operation.
 !
-                  SLBEG = STPOOL ( FORWRD, SLBEG )
+                  slbeg = stpool ( forwrd, slbeg )
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           If the list contains segments from the current file,
@@ -3708,20 +3708,20 @@
 !           Otherwise, finish searching old files without buffering
 !           anything.
 !
-            IF ( SLBEG .GT. 0 ) THEN
+            if ( slbeg .gt. 0 ) then
 !
 !              The partial list from the current node onwards is to be
 !              returned to the free list.  Save this node, since
 !              we'll finish searching the list before freeing the
 !              partial list.
 !
-               P = SLBEG
+               p = slbeg
 
 !
 !              Record the fact that we'll need to free the partial list
 !              later.
 !
-               FRESUB = .TRUE.
+               fresub = .true.
 
 !
 !              It may be that the partial list we're going to delete is
@@ -3729,30 +3729,30 @@
 !              corresponding instrument table entry should be set to
 !              a non-positive value to indicate an empty segment list.
 !
-               IF ( P .EQ. ITBEG(IINDEX) ) THEN
+               if ( p .eq. itbeg(iindex) ) then
 
-                  ITBEG(IINDEX) = 0
+                  itbeg(iindex) = 0
 
 !
 !                 Also in this case, we must initialize the time
 !                 bounds for this instrument.
 !
-                  ITLB(IINDEX) = DPMIN()
-                  ITUB(IINDEX) = DPMAX()
+                  itlb(iindex) = dpmin()
+                  itub(iindex) = dpmax()
 
-               END IF
+               end if
 
-               STATUS = 'CHECK PARTIAL LIST'
-
-
-            ELSE
-
-               STATUS = 'SEARCH W/O BUFF'
-
-            END IF
+               status = 'CHECK PARTIAL LIST'
 
 
-         ELSE IF ( STATUS .EQ. 'CHECK PARTIAL LIST' ) THEN
+            else
+
+               status = 'SEARCH W/O BUFF'
+
+            end if
+
+
+         else if ( status .eq. 'CHECK PARTIAL LIST' ) then
 !
 !           The only ways to get here are from the
 !           'PREPARE PARTIAL LIST' state, or by resuming a search of
@@ -3767,63 +3767,63 @@
 !           Reject a segment if there is a need for angular velocity
 !           data and the segment doesn't have it.
 !
-            DO WHILE ( P .GT. 0 )
+            do while ( p .gt. 0 )
 !
 !              If this is a new search, update the re-use interval
 !              and its expense.
 !
-               IF ( NEWSCH ) THEN
+               if ( newsch ) then
 !
 !                 Every segment seen from the current file contributes
 !                 to the expense of the re-use interval.
 !
-                  ITRUEX(IINDEX) = ITRUEX(IINDEX) + 1
+                  itruex(iindex) = itruex(iindex) + 1
 
 !
 !                 Trim the re-use interval if the request time lies
 !                 outside the coverage of the current segment.
 !
-                  IF ( REQT .GT. STDCD(2,P) ) THEN
+                  if ( reqt .gt. stdcd(2,p) ) then
 !
 !                    REQT is to the right of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
 !                    left, if necessary.
 !
-                     ITLB(IINDEX) = MAX ( ITLB(IINDEX), STDCD(2,P) )
+                     itlb(iindex) = max ( itlb(iindex), stdcd(2,p) )
 
 
-                  ELSE IF ( REQT .LT. STDCD(1,P) ) THEN
+                  else if ( reqt .lt. stdcd(1,p) ) then
 !
 !                    REQT is to the left of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
 !                    right, if necessary.
 !
-                     ITUB(IINDEX) = MIN ( ITUB(IINDEX), STDCD(1,P) )
+                     itub(iindex) = min ( itub(iindex), stdcd(1,p) )
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !              We've updated the re-use interval if so required.
 !
 
-               IF (       ( OMEGA .GE. STDCD(1,P) ) &
-                    .AND. ( ALPHA .LE. STDCD(2,P) )  ) THEN
+               if (       ( omega .ge. stdcd(1,p) ) &
+                    .and. ( alpha .le. stdcd(2,p) )  ) then
 !
 !                 The segment coverage interval intersects the request
 !                 interval ALPHA:OMEGA.
 !
-                  IF (  (.NOT. AVNEED) .OR. (STICD(4,P) .NE. 0) ) THEN
+                  if (  (.not. avneed) .or. (sticd(4,p) .ne. 0) ) then
 !
 !                    This segment satisfies the request.  Set the
 !                    output arguments.
 !
-                     CALL DAFPS ( ND,         NI, &
-                                  STDCD(1,P), STICD(1,P), DESCR )
+                     call dafps ( nd,         ni, &
+                                  stdcd(1,p), sticd(1,p), descr )
 
-                     SEGID  =  STIDNT( P )
-                     HANDLE =  STHAN ( P )
-                     FOUND  = .TRUE.
+                     segid  =  stidnt( p )
+                     handle =  sthan ( p )
+                     found  = .true.
 
 !
 !                    If this is the first pass performed for the
@@ -3836,33 +3836,33 @@
 !                    the request time to be in the interior of the
 !                    interval:  it cannot be one of the endpoints.
 !
-                     IF (         NEWSCH &
-                          .AND. ( REQT .GT. STDCD(1,P) ) &
-                          .AND. ( REQT .LT. STDCD(2,P) )  ) THEN
+                     if (         newsch &
+                          .and. ( reqt .gt. stdcd(1,p) ) &
+                          .and. ( reqt .lt. stdcd(2,p) )  ) then
 !
 !                       Adjust the re-use interval for the current
 !                       instrument.
 !
-                        ITLB(IINDEX) = MAX( ITLB(IINDEX), STDCD(1,P) )
-                        ITUB(IINDEX) = MIN( ITUB(IINDEX), STDCD(2,P) )
+                        itlb(iindex) = max( itlb(iindex), stdcd(1,p) )
+                        itub(iindex) = min( itub(iindex), stdcd(2,p) )
 !
 !                       Save the returned output items, in case this
 !                       segment may satisfy the next request.
 !
-                        ITPRVH(IINDEX) =  HANDLE
-                        ITPRVI(IINDEX) =  SEGID
-                        ITPRVF(IINDEX) =  STICD(4,P)
+                        itprvh(iindex) =  handle
+                        itprvi(iindex) =  segid
+                        itprvf(iindex) =  sticd(4,p)
 
-                        CALL MOVED ( DESCR, DSCSIZ, ITPRVD(1,IINDEX) )
+                        call moved ( descr, dscsiz, itprvd(1,iindex) )
 
-                        ITCHKP(IINDEX) =  .TRUE.
+                        itchkp(iindex) =  .true.
 !
 !                       Update the expense of the list to reflect
 !                       the cost of locating this segment.
 !
-                        ITEXP(IINDEX) = ITEXP(IINDEX) + ITRUEX(IINDEX)
+                        itexp(iindex) = itexp(iindex) + itruex(iindex)
 
-                     END IF
+                     end if
 !
 !                    We've set the re-use interval.
 !
@@ -3873,7 +3873,7 @@
 !                    We avoid LNKNXT here in order to speed up the
 !                    operation.
 !
-                     SAVEP = STPOOL ( FORWRD, P )
+                     savep = stpool ( forwrd, p )
 
 !
 !                    We cannot free the partial list yet, because
@@ -3887,24 +3887,24 @@
 !                    Indicate the first pass of this search has been
 !                    completed.
 !
-                     NEWSCH = .FALSE.
+                     newsch = .false.
 
-                     CALL CHKOUT ( 'CKSNS' )
-                     RETURN
+                     call chkout ( 'CKSNS' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Getting here implies angular velocity was
 !                 requested but was not present in the segment.
 !
-               END IF
+               end if
 !
 !              The current segment didn't match.  Look at the next
 !              segment in the list.
 !
-               P = STPOOL ( FORWRD, P )
+               p = stpool ( forwrd, p )
 
-            END DO
+            end do
 !
 !           We're done looking at the partial list.
 !
@@ -3916,19 +3916,19 @@
 !
 !           Note the list is always non-empty at this point.
 !
-            TAIL = -LNKPRV( -P, STPOOL )
+            tail = -lnkprv( -p, stpool )
 
-            CALL LNKFSL ( SLBEG, TAIL, STPOOL )
+            call lnkfsl ( slbeg, tail, stpool )
 
-            FRESUB = .FALSE.
+            fresub = .false.
 
 !
 !           Search the remaining files.
 !
-            STATUS = 'SEARCH W/O BUFF'
+            status = 'SEARCH W/O BUFF'
 
 
-         ELSE IF ( STATUS .EQ. 'SEARCH W/O BUFF' ) THEN
+         else if ( status .eq. 'SEARCH W/O BUFF' ) then
 !
 !           The only ways to get here are from the
 !           'PREPARE PARTIAL LIST' and 'CHECK PARTIAL LIST' states.
@@ -3941,106 +3941,106 @@
 !           Recall that a search is already in progress and that a
 !           segment is currently under consideration (FND = .TRUE.).
 !
-            DO WHILE ( FINDEX .GT. 0 )
+            do while ( findex .gt. 0 )
 
-               DO WHILE ( FND )
+               do while ( fnd )
 
-                  IF ( NEWSCH ) THEN
+                  if ( newsch ) then
 !
 !                    Each segment found contributes to the expense of
 !                    the re-use interval.
 !
-                     ITRUEX(IINDEX) = ITRUEX(IINDEX) + 1
+                     itruex(iindex) = itruex(iindex) + 1
 
-                  END IF
+                  end if
 
-                  CALL DAFGS ( DESCR )
-                  CALL DAFUS ( DESCR, ND, NI, DCD, ICD )
+                  call dafgs ( descr )
+                  call dafus ( descr, nd, ni, dcd, icd )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'CKSNS' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'CKSNS' )
+                     return
+                  end if
 
 
-                  IF ( SCINST .EQ. ICD(1) ) THEN
+                  if ( scinst .eq. icd(1) ) then
 !
 !                    This is a segment for the instrument of interest.
 
-                     IF ( NEWSCH ) THEN
+                     if ( newsch ) then
 !
 !                       Update the re-use interval for this instrument.
 !
-                        IF ( REQT .GT. DCD(2) ) THEN
+                        if ( reqt .gt. dcd(2) ) then
 !
 !                          REQT is to the right of the coverage interval
 !                          of this segment.  Trim the re-use interval
 !                          on the left, if necessary.
 !
-                           ITLB(IINDEX) = MAX ( ITLB(IINDEX), DCD(2) )
+                           itlb(iindex) = max ( itlb(iindex), dcd(2) )
 
 
-                        ELSE IF ( REQT .LT. DCD(1) ) THEN
+                        else if ( reqt .lt. dcd(1) ) then
 !
 !                          REQT is to the left of the coverage interval
 !                          of this segment.  Trim the re-use interval
 !                          on the right, if necessary.
 !
-                           ITUB(IINDEX) = MIN ( ITUB(IINDEX), DCD(1) )
+                           itub(iindex) = min ( itub(iindex), dcd(1) )
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 !
 !                    We've trimmed the re-use interval if necessary.
 !
-                     IF (       ( OMEGA .GE. DCD(1) ) &
-                          .AND. ( ALPHA .LE. DCD(2) )  ) THEN
+                     if (       ( omega .ge. dcd(1) ) &
+                          .and. ( alpha .le. dcd(2) )  ) then
 !
 !                       The segment coverage interval intersects the
 !                       request interval ALPHA:OMEGA.
 !
-                        IF (      ( .NOT. AVNEED  ) &
-                             .OR. ( ICD(4) .NE. 0 )  ) THEN
+                        if (      ( .not. avneed  ) &
+                             .or. ( icd(4) .ne. 0 )  ) then
 !
 !                          This segment satisfies the request.  Set
 !                          the output arguments.
 !
-                           CALL DAFPS ( ND, NI, DCD, ICD, DESCR )
+                           call dafps ( nd, ni, dcd, icd, descr )
 
-                           CALL DAFGN ( SEGID )
+                           call dafgn ( segid )
 
-                           HANDLE =  FTHAN(FINDEX)
-                           FOUND  = .TRUE.
+                           handle =  fthan(findex)
+                           found  = .true.
 
-                           IF ( NEWSCH ) THEN
+                           if ( newsch ) then
 !
 !                             Adjust the re-use interval for the current
 !                             instrument.
 !
-                              ITLB(IINDEX) = MAX( ITLB(IINDEX), DCD(1) )
-                              ITUB(IINDEX) = MIN( ITUB(IINDEX), DCD(2) )
+                              itlb(iindex) = max( itlb(iindex), dcd(1) )
+                              itub(iindex) = min( itub(iindex), dcd(2) )
 
 !
 !                             Save the returned output items, in case
 !                             this segment may satisfy the next request.
 !
-                              ITPRVH(IINDEX) =  HANDLE
-                              ITPRVI(IINDEX) =  SEGID
-                              ITPRVF(IINDEX) =  ICD(4)
+                              itprvh(iindex) =  handle
+                              itprvi(iindex) =  segid
+                              itprvf(iindex) =  icd(4)
 
-                              CALL MOVED( DESCR, &
-                                          DSCSIZ, ITPRVD(1,IINDEX) )
+                              call moved( descr, &
+                                          dscsiz, itprvd(1,iindex) )
 
-                              ITCHKP(IINDEX) =  .TRUE.
+                              itchkp(iindex) =  .true.
 
 !
 !                             Update the expense of the list to reflect
 !                             cost of locating this segment.
 !
-                              ITEXP(IINDEX) =   ITEXP(IINDEX) &
-                                              + ITRUEX(IINDEX)
-                           END IF
+                              itexp(iindex) =   itexp(iindex) &
+                                              + itruex(iindex)
+                           end if
 !
 !                          The re-use interval is set.
 !
@@ -4049,82 +4049,82 @@
 !                          the search: you want to pick up exactly where
 !                          you  left off.
 !
-                           CALL DAFFPA ( FND )
+                           call daffpa ( fnd )
 !
 !                          Indicate the first pass of this search has
 !                          been completed.
 !
-                           NEWSCH = .FALSE.
+                           newsch = .false.
 
-                           CALL CHKOUT( 'CKSNS' )
-                           RETURN
+                           call chkout( 'CKSNS' )
+                           return
 
-                        END IF
+                        end if
 !
 !                       Getting here implies angular velocity was
 !                       requested but was not present in the segment.
 !
-                     END IF
+                     end if
 !
 !                    The current segment's coverage didn't intersect
 !                    the request interval.
 !
-                  END IF
+                  end if
 !
 !                 The current segment didn't contain data for the
 !                 specified instrument.
 !
 !                 Look at the next segment in the current file.
 !
-                  CALL DAFFPA ( FND )
+                  call daffpa ( fnd )
 
-               END DO
+               end do
 
 !
 !              Try the next oldest file.
 !
-               FINDEX = FINDEX -1
+               findex = findex -1
 
-               IF ( FINDEX .GT. 0 ) THEN
+               if ( findex .gt. 0 ) then
 
-                  CALL DAFBBS ( FTHAN( FINDEX ) )
-                  CALL DAFFPA ( FND             )
+                  call dafbbs ( fthan( findex ) )
+                  call daffpa ( fnd             )
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           There's nothing nowhere if you get to here.
 !
-            ITRUEX(IINDEX) = 0
-            STATUS         = 'HOPELESS'
+            itruex(iindex) = 0
+            status         = 'HOPELESS'
 
 
-         ELSE IF ( STATUS .EQ. 'SUSPEND' ) THEN
+         else if ( status .eq. 'SUSPEND' ) then
 !
 !           When a task is suspended, the current activity is placed on
 !           a stack, to be restored later. Two levels are provided,
 !           since some interrupts can be interrupted by others.
 !
-            TOP          = TOP + 1
-            STACK( TOP ) = DOING
-            STATUS       = URGENT
+            top          = top + 1
+            stack( top ) = doing
+            status       = urgent
 
-         ELSE IF ( STATUS .EQ. 'RESUME' ) THEN
+         else if ( status .eq. 'RESUME' ) then
 
-            STATUS = STACK( TOP )
-            TOP    = TOP - 1
+            status = stack( top )
+            top    = top - 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Can only get here if status is 'HOPELESS', in which case a
 !     segment was not found.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     If we didn't find a segment, don't attempt to use saved
@@ -4132,23 +4132,23 @@
 !     at this point.  Also, make sure the expense of the re-use
 !     interval is zeroed out.
 !
-      IF ( IINDEX .GT. 0 ) THEN
+      if ( iindex .gt. 0 ) then
 
-         ITCHKP(IINDEX) = .FALSE.
-         ITRUEX(IINDEX) =  0
+         itchkp(iindex) = .false.
+         itruex(iindex) =  0
 
-      END IF
+      end if
 
 !
 !     For safety, indicate the first pass of this search has been
 !     completed.  Normally, we won't return here before CKBSS is
 !     called again, but it's possible.
 !
-      NEWSCH = .FALSE.
+      newsch = .false.
 
 
-      CALL CHKOUT ( 'CKSNS' )
-      RETURN
+      call chkout ( 'CKSNS' )
+      return
 
 
 
@@ -4156,7 +4156,7 @@
 
 !$Procedure CKHAVE ( CK --- Are there any loaded? )
 
-      ENTRY CKHAVE ( FOUND )
+      entry ckhave ( found )
 
 ! $ Abstract
 !
@@ -4319,7 +4319,7 @@
 !-&
 
 
-      FOUND = NFT .GT. 0
-      RETURN
+      found = nft .gt. 0
+      return
 
-      END
+      end

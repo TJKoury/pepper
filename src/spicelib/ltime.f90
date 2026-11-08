@@ -1,6 +1,6 @@
 !$Procedure LTIME ( Light Time )
 
-      SUBROUTINE LTIME ( ETOBS, OBS, DIR, TARG, ETTARG, ELAPSD )
+      subroutine ltime ( etobs, obs, dir, targ, ettarg, elapsd )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ETOBS
-      INTEGER               OBS
-      CHARACTER*(2)         DIR
-      INTEGER               TARG
-      DOUBLE PRECISION      ETTARG
-      DOUBLE PRECISION      ELAPSD
+      double precision      etobs
+      integer               obs
+      character*(2)         dir
+      integer               targ
+      double precision      ettarg
+      double precision      elapsd
 
 ! $ Brief_I/O
 !
@@ -254,60 +254,60 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VDIST
-      INTEGER               RTRIM
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      double precision      clight
+      double precision      vdist
+      integer               rtrim
+      logical               failed
+      logical               return
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      MYET
-      DOUBLE PRECISION      SOBS  ( 6 )
-      DOUBLE PRECISION      STARG ( 6 )
+      double precision      c
+      double precision      lt
+      double precision      myet
+      double precision      sobs  ( 6 )
+      double precision      starg ( 6 )
 
-      INTEGER               BCENTR
-      INTEGER               R
+      integer               bcentr
+      integer               r
 
-      IF ( RETURN() )THEN
-         RETURN
-      END IF
+      if ( return() )then
+         return
+      end if
 
-      CALL CHKIN ( 'LTIME' )
+      call chkin ( 'LTIME' )
 !
 !     First perform the obvious error check.
 !
-      IF ( DIR .NE. '->' .AND. DIR .NE. '<-' ) THEN
+      if ( dir .ne. '->' .and. dir .ne. '<-' ) then
 
-         CALL SETMSG ( 'The direction specifier for the signal ' &
+         call setmsg ( 'The direction specifier for the signal ' &
          //            'was ''#''  it must be either ''->'' or ' &
          //            '''<-''. '            )
-         R =  RTRIM  (      DIR              )
-         CALL ERRCH  ( '#', DIR(1:R)         )
-         CALL SIGERR ( 'SPICE(BADDIRECTION)' )
-         CALL CHKOUT ( 'LTIME'               )
-         RETURN
+         r =  rtrim  (      dir              )
+         call errch  ( '#', dir(1:r)         )
+         call sigerr ( 'SPICE(BADDIRECTION)' )
+         call chkout ( 'LTIME'               )
+         return
 
-      END IF
+      end if
 
 !
 !     We need two constants, the speed of light and the id-code
 !     for the solar system barycenter.
 !
-      C      = CLIGHT ()
-      BCENTR = 0
-      MYET   = ETOBS
+      c      = clight ()
+      bcentr = 0
+      myet   = etobs
 
 !
 !     First get the barycenter relative states of the observer
 !     and target.
 !
-      CALL SPKGEO ( OBS,  MYET, 'J2000', BCENTR, SOBS,  LT )
-      CALL SPKGEO ( TARG, MYET, 'J2000', BCENTR, STARG, LT )
+      call spkgeo ( obs,  myet, 'J2000', bcentr, sobs,  lt )
+      call spkgeo ( targ, myet, 'J2000', bcentr, starg, lt )
 
-      ELAPSD = VDIST( SOBS, STARG ) / C
+      elapsd = vdist( sobs, starg ) / c
 
 !
 !     The rest is straight forward.  We either add the elapsed
@@ -320,52 +320,52 @@
 !     known objects in the solar system.  The ephemeris
 !     is certain to be much worse than this.
 !
-      IF ( DIR .EQ. '->' ) THEN
+      if ( dir .eq. '->' ) then
 
-         ETTARG = MYET + ELAPSD
+         ettarg = myet + elapsd
 
-         CALL SPKGEO ( TARG, ETTARG, 'J2000', BCENTR, STARG, LT )
+         call spkgeo ( targ, ettarg, 'J2000', bcentr, starg, lt )
 
-         ELAPSD = VDIST( SOBS, STARG ) / C
-         ETTARG = MYET + ELAPSD
+         elapsd = vdist( sobs, starg ) / c
+         ettarg = myet + elapsd
 
-         CALL SPKGEO ( TARG, ETTARG, 'J2000', BCENTR, STARG, LT )
+         call spkgeo ( targ, ettarg, 'J2000', bcentr, starg, lt )
 
-         ELAPSD = VDIST( SOBS, STARG ) / C
-         ETTARG = MYET + ELAPSD
+         elapsd = vdist( sobs, starg ) / c
+         ettarg = myet + elapsd
 
-         CALL SPKGEO ( TARG, ETTARG, 'J2000', BCENTR, STARG, LT )
+         call spkgeo ( targ, ettarg, 'J2000', bcentr, starg, lt )
 
-         ELAPSD = VDIST( SOBS, STARG ) / C
-         ETTARG = MYET + ELAPSD
+         elapsd = vdist( sobs, starg ) / c
+         ettarg = myet + elapsd
 
-      ELSE
+      else
 
-         ETTARG = MYET - ELAPSD
+         ettarg = myet - elapsd
 
-         CALL SPKGEO ( TARG, ETTARG, 'J2000', BCENTR, STARG, LT )
+         call spkgeo ( targ, ettarg, 'J2000', bcentr, starg, lt )
 
-         ELAPSD = VDIST( SOBS, STARG ) / C
-         ETTARG = MYET - ELAPSD
+         elapsd = vdist( sobs, starg ) / c
+         ettarg = myet - elapsd
 
-         CALL SPKGEO ( TARG, ETTARG, 'J2000', BCENTR, STARG, LT )
+         call spkgeo ( targ, ettarg, 'J2000', bcentr, starg, lt )
 
-         ELAPSD = VDIST( SOBS, STARG ) / C
-         ETTARG = MYET - ELAPSD
+         elapsd = vdist( sobs, starg ) / c
+         ettarg = myet - elapsd
 
-         CALL SPKGEO ( TARG, ETTARG, 'J2000', BCENTR, STARG, LT )
+         call spkgeo ( targ, ettarg, 'J2000', bcentr, starg, lt )
 
-         ELAPSD = VDIST( SOBS, STARG ) / C
-         ETTARG = MYET - ELAPSD
+         elapsd = vdist( sobs, starg ) / c
+         ettarg = myet - elapsd
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         ETTARG = MYET
-         ELAPSD = 0.0D0
-      END IF
+      if ( failed() ) then
+         ettarg = myet
+         elapsd = 0.0d0
+      end if
 
-      CALL CHKOUT ( 'LTIME' )
-      RETURN
+      call chkout ( 'LTIME' )
+      return
 
-      END
+      end

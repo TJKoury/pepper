@@ -1,6 +1,6 @@
 !$Procedure IRFTRN ( Inertial reference frame transformation )
 
-      SUBROUTINE IRFTRN ( REFA, REFB, ROTAB )
+      subroutine irftrn ( refa, refb, rotab )
 
 ! $ Abstract
 !
@@ -22,11 +22,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         REFA
-      CHARACTER*(*)         REFB
-      DOUBLE PRECISION      ROTAB ( 3, 3 )
+      character*(*)         refa
+      character*(*)         refb
+      double precision      rotab ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -164,32 +164,32 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CODEA
-      INTEGER               CODEB
+      integer               codea
+      integer               codeb
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'IRFTRN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'IRFTRN' )
+      end if
 
 !
 !     Encode the reference frame names, and find the transformation
 !     matrix.
 !
-      CALL IRFNUM ( REFA,  CODEA        )
-      CALL IRFNUM ( REFB,  CODEB        )
-      CALL IRFROT ( CODEA, CODEB, ROTAB )
+      call irfnum ( refa,  codea        )
+      call irfnum ( refb,  codeb        )
+      call irfrot ( codea, codeb, rotab )
 
-      CALL CHKOUT ( 'IRFTRN' )
-      RETURN
-      END
+      call chkout ( 'IRFTRN' )
+      return
+      end

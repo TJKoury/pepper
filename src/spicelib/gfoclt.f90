@@ -1,8 +1,8 @@
 !$Procedure GFOCLT ( GF, find occultation )
 
-      SUBROUTINE GFOCLT ( OCCTYP,  FRONT,   FSHAPE,  FFRAME, &
-                          BACK,    BSHAPE,  BFRAME,  ABCORR, &
-                          OBSRVR,  STEP,    CNFINE,  RESULT  )
+      subroutine gfoclt ( occtyp,  front,   fshape,  fframe, &
+                          back,    bshape,  bframe,  abcorr, &
+                          obsrvr,  step,    cnfine,  result  )
 
 ! $ Abstract
 !
@@ -33,26 +33,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         OCCTYP
-      CHARACTER*(*)         FRONT
-      CHARACTER*(*)         FSHAPE
-      CHARACTER*(*)         FFRAME
-      CHARACTER*(*)         BACK
-      CHARACTER*(*)         BSHAPE
-      CHARACTER*(*)         BFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         occtyp
+      character*(*)         front
+      character*(*)         fshape
+      character*(*)         fframe
+      character*(*)         back
+      character*(*)         bshape
+      character*(*)         bframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1729,15 +1729,15 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZED
+      integer               sized
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     External routines
@@ -1745,18 +1745,18 @@
 !
 !     Interrupt handler:
 !
-      LOGICAL               GFBAIL
-      EXTERNAL              GFBAIL
+      logical               gfbail
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work:
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepf
+      external              gfrepi
+      external              gfrepu
+      external              gfstep
 
 !
 !     Local parameters
@@ -1764,24 +1764,24 @@
 !
 !     Geometric quantity  bail switch:
 !
-      LOGICAL               BAIL
-      PARAMETER           ( BAIL = .FALSE. )
+      logical               bail
+      parameter           ( bail = .false. )
 
 !
 !     Progress report switch:
 !
-      LOGICAL               RPT
-      PARAMETER           ( RPT  = .FALSE. )
+      logical               rpt
+      parameter           ( rpt  = .false. )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFOCLT' )
+      call chkin  ( 'GFOCLT' )
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -1793,47 +1793,47 @@
 !
 !     Check the result window's size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size must be at least 2 ' &
+         call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
-         CALL ERRINT ( '#',  SIZED(RESULT)                     )
-         CALL SIGERR ( 'SPICE(WINDOWTOOSMALL)'                 )
-         CALL CHKOUT ( 'GFOCLT'                                )
-         RETURN
+         call errint ( '#',  sized(result)                     )
+         call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
+         call chkout ( 'GFOCLT'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check and set the step size.
 !
-      CALL GFSSTP ( STEP )
+      call gfsstp ( step )
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Look for solutions.
 !
-      CALL GFOCCE ( OCCTYP,  FRONT,   FSHAPE,  FFRAME, &
-                    BACK,    BSHAPE,  BFRAME,  ABCORR, &
-                    OBSRVR,  TOL,     GFSTEP,  GFREFN, &
-                    RPT,     GFREPI,  GFREPU,  GFREPF, &
-                    BAIL,    GFBAIL,  CNFINE,  RESULT )
+      call gfocce ( occtyp,  front,   fshape,  fframe, &
+                    back,    bshape,  bframe,  abcorr, &
+                    obsrvr,  tol,     gfstep,  gfrefn, &
+                    rpt,     gfrepi,  gfrepu,  gfrepf, &
+                    bail,    gfbail,  cnfine,  result )
 
 
-      CALL CHKOUT ( 'GFOCLT' )
+      call chkout ( 'GFOCLT' )
 
-      RETURN
-      END
+      return
+      end

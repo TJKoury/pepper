@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAD03 ( EK, add data to class 3 column )
 
-      SUBROUTINE ZZEKAD03 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  CVAL,    ISNULL  )
+      subroutine zzekad03 (  handle,  segdsc,  coldsc, &
+                             recptr,  cval,    isnull  )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      INTEGER               RECPTR
-      CHARACTER*(*)         CVAL
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      integer               recptr
+      character*(*)         cval
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -146,78 +146,78 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               COLIDX
-      INTEGER               DATPTR
-      INTEGER               ITYPE
-      INTEGER               LASTW
-      INTEGER               LNB
-      INTEGER               MBASE
-      INTEGER               N
-      INTEGER               NCOLS
-      INTEGER               NLINKS
-      INTEGER               NWRITE
-      INTEGER               P
-      INTEGER               P2
-      INTEGER               PBASE
-      INTEGER               PCOUNT
-      INTEGER               POS
-      INTEGER               PRVBAS
-      INTEGER               PTRLOC
-      INTEGER               RECNO
-      INTEGER               STRLEN
+      integer               colidx
+      integer               datptr
+      integer               itype
+      integer               lastw
+      integer               lnb
+      integer               mbase
+      integer               n
+      integer               ncols
+      integer               nlinks
+      integer               nwrite
+      integer               p
+      integer               p2
+      integer               pbase
+      integer               pcount
+      integer               pos
+      integer               prvbas
+      integer               ptrloc
+      integer               recno
+      integer               strlen
 
-      LOGICAL               FIXLEN
+      logical               fixlen
 
 !
 !     Use discovery check-in.
 !
 !     Make sure the column exists.
 !
-      NCOLS   =  SEGDSC ( NCIDX  )
-      COLIDX  =  COLDSC ( ORDIDX )
+      ncols   =  segdsc ( ncidx  )
+      colidx  =  coldsc ( ordidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKAD03'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKAD03'                              )
-         RETURN
+         call chkin  ( 'ZZEKAD03'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' )
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKAD03'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      IF (  ISNULL  .AND.  ( COLDSC(NFLIDX) .NE. ITRUE )  ) THEN
+      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKAD03'                                  )
-         CALL SETMSG ( 'Column having index # in segment # does '  // &
+         call chkin  ( 'ZZEKAD03'                                  )
+         call setmsg ( 'Column having index # in segment # does '  // &
                        'not allow nulls, but a null value was '    // &
                        'supplied for the element in record #.'     )
-         CALL ERRINT ( '#',  COLIDX                                )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-         CALL ERRINT ( '#',  RECNO                                 )
-         CALL SIGERR ( 'SPICE(BADATTRIBUTE)'                       )
-         CALL CHKOUT ( 'ZZEKAD03'                                  )
-         RETURN
+         call errint ( '#',  colidx                                )
+         call errint ( '#',  segdsc(snoidx)                        )
+         call errint ( '#',  recno                                 )
+         call sigerr ( 'SPICE(BADATTRIBUTE)'                       )
+         call chkout ( 'ZZEKAD03'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Decide the length of the string value.  If the column contains
@@ -226,48 +226,48 @@
 !     string length is the minimum of the non-blank length and the
 !     column's declared string length.  We don't store trailing blanks.
 !
-      FIXLEN  =  COLDSC(LENIDX) .NE. IFALSE
-      LNB     =  RTRIM ( CVAL )
+      fixlen  =  coldsc(lenidx) .ne. ifalse
+      lnb     =  rtrim ( cval )
 
-      IF ( FIXLEN ) THEN
-         STRLEN  =  MIN (  COLDSC(LENIDX),  LNB )
-      ELSE
-         STRLEN  =  LNB
-      END IF
+      if ( fixlen ) then
+         strlen  =  min (  coldsc(lenidx),  lnb )
+      else
+         strlen  =  lnb
+      end if
 
 !
 !     Compute the data pointer location.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
 
-      IF ( ISNULL ) THEN
+      if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
 !        metadata are not affected.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, NULL )
+         call dasudi ( handle, ptrloc, ptrloc, null )
 
 
-      ELSE
+      else
 !
 !        Write out the data value.  If we run out of room in the
 !        page we're writing to, we allocate a new page and link
 !        the previous page to it.
 !
-         N       =  STRLEN
-         POS     =  1
-         LASTW   =  SEGDSC ( LCWIDX )
-         P       =  SEGDSC ( LCPIDX )
-         PCOUNT  =  0
+         n       =  strlen
+         pos     =  1
+         lastw   =  segdsc ( lcwidx )
+         p       =  segdsc ( lcpidx )
+         pcount  =  0
 
 
-         DO WHILE ( N .GT. 0 )
+         do while ( n .gt. 0 )
 !
 !           Write as much data as possible into the current page.
 !
 
-            IF ( LASTW .LT. CPSIZE-ENCSIZ ) THEN
+            if ( lastw .lt. cpsize-encsiz ) then
 !
 !              There's room in the current page.  We never split an
 !              encoded character count across pages, and we always
@@ -277,138 +277,138 @@
 !
 !              Keep track of the number of pages our string spans.
 !
-               PCOUNT  =  PCOUNT + 1
+               pcount  =  pcount + 1
 
 !
 !              If this is the first data page, write the data pointer
 !              into the record pointer and the character count into
 !              the data page.
 !
-               IF ( PCOUNT .EQ. 1 ) THEN
+               if ( pcount .eq. 1 ) then
 
-                  CALL ZZEKPGBS ( CHR, P, PBASE )
+                  call zzekpgbs ( chr, p, pbase )
 
-                  DATPTR  =  PBASE + LASTW + 1
+                  datptr  =  pbase + lastw + 1
 
-                  CALL DASUDI  ( HANDLE, PTRLOC, PTRLOC, DATPTR )
-                  CALL ZZEKSEI ( HANDLE, DATPTR, STRLEN )
+                  call dasudi  ( handle, ptrloc, ptrloc, datptr )
+                  call zzeksei ( handle, datptr, strlen )
 !
 !                 Advance the data pointer to the first data
 !                 character's position.  The last word in use
 !                 increases as well.
 !
-                  DATPTR  =  DATPTR + ENCSIZ
-                  LASTW   =  LASTW  + ENCSIZ
+                  datptr  =  datptr + encsiz
+                  lastw   =  lastw  + encsiz
 
-               ELSE
+               else
 !
 !                 We still need the data pointer.
 !
-                  DATPTR  =  PBASE + 1
+                  datptr  =  pbase + 1
 
-               END IF
+               end if
 
 !
 !              Compute the number of characters to write into this page,
 !              and write that number of characters.
 !
-               NWRITE  =  MIN ( CPSIZE-LASTW, N )
+               nwrite  =  min ( cpsize-lastw, n )
 
-               CALL DASUDC (  HANDLE,   DATPTR,   DATPTR+NWRITE-1, &
-                              1,        NWRITE,   CVAL(POS:)        )
+               call dasudc (  handle,   datptr,   datptr+nwrite-1, &
+                              1,        nwrite,   cval(pos:)        )
 
-               N       =  N   -  NWRITE
-               POS     =  POS +  NWRITE
+               n       =  n   -  nwrite
+               pos     =  pos +  nwrite
 
 !
 !              The page containing the data item gains a link.
 !
-               CALL ZZEKGLNK ( HANDLE, CHR, P, NLINKS   )
-               CALL ZZEKSLNK ( HANDLE, CHR, P, NLINKS+1 )
+               call zzekglnk ( handle, chr, p, nlinks   )
+               call zzekslnk ( handle, chr, p, nlinks+1 )
 
 !
 !              The last character word in use must be updated.
 !
-               LASTW              =  LASTW + NWRITE
-               SEGDSC ( LCWIDX )  =  LASTW
+               lastw              =  lastw + nwrite
+               segdsc ( lcwidx )  =  lastw
 
 !
 !              Retain the base address of this data page.
 !
-               PRVBAS  =  PBASE
+               prvbas  =  pbase
 
 
-            ELSE
+            else
 !
 !              Allocate a data page.  If this is not the first data
 !              page written to, link the previous page to the current
 !              one.
 !
-               CALL ZZEKAPS ( HANDLE, SEGDSC, CHR, .FALSE., P2, PBASE )
+               call zzekaps ( handle, segdsc, chr, .false., p2, pbase )
 
-               IF ( PCOUNT .GT. 0 ) THEN
-                  CALL ZZEKSFWD ( HANDLE, CHR, P, P2 )
-               END IF
+               if ( pcount .gt. 0 ) then
+                  call zzeksfwd ( handle, chr, p, p2 )
+               end if
 
 !
 !              The last character page and word in use must be updated.
 !
-               P                  =  P2
-               LASTW              =  0
-               SEGDSC ( LCPIDX )  =  P
-               SEGDSC ( LCWIDX )  =  LASTW
+               p                  =  p2
+               lastw              =  0
+               segdsc ( lcpidx )  =  p
+               segdsc ( lcwidx )  =  lastw
 
 !
 !              Make sure the link count is zeroed out.
 !
-               CALL ZZEKSLNK ( HANDLE, CHR, P, 0 )
+               call zzekslnk ( handle, chr, p, 0 )
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Write out the updated segment descriptor.
 !
-      MBASE  =  SEGDSC(IMDIDX)
+      mbase  =  segdsc(imdidx)
 
-      CALL DASUDI ( HANDLE, MBASE+1, MBASE+SDSCSZ, SEGDSC )
+      call dasudi ( handle, mbase+1, mbase+sdscsz, segdsc )
 
 !
 !     If the column is indexed, we must update the index to account
 !     for the new element.
 !
-      ITYPE  =  COLDSC(IXTIDX)
+      itype  =  coldsc(ixtidx)
 
-      IF ( ITYPE .NE. IFALSE ) THEN
+      if ( itype .ne. ifalse ) then
 !
 !        The column is indexed.
 !
-         IF ( ITYPE .EQ. 1 ) THEN
+         if ( itype .eq. 1 ) then
 !
 !           The column has a type 1 index.  Insert the record number
 !           of the current element at the appropriate location.
 !
-            CALL ZZEKIIC1 (  HANDLE,  SEGDSC,  COLDSC, &
-                             CVAL,    RECPTR,  ISNULL   )
+            call zzekiic1 (  handle,  segdsc,  coldsc, &
+                             cval,    recptr,  isnull   )
 
-         ELSE
+         else
 
-            CALL CHKIN  ( 'ZZEKAD03'                                  )
-            CALL SETMSG ( 'Column having index # in segment # has '   // &
+            call chkin  ( 'ZZEKAD03'                                  )
+            call setmsg ( 'Column having index # in segment # has '   // &
                           'index type #.'                             )
-            CALL ERRINT ( '#',  COLIDX                                )
-            CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-            CALL ERRINT ( '#',  ITYPE                                 )
-            CALL SIGERR ( 'SPICE(INVALIDTYPE)'                        )
-            CALL CHKOUT ( 'ZZEKAD03'                                  )
-            RETURN
+            call errint ( '#',  colidx                                )
+            call errint ( '#',  segdsc(snoidx)                        )
+            call errint ( '#',  itype                                 )
+            call sigerr ( 'SPICE(INVALIDTYPE)'                        )
+            call chkout ( 'ZZEKAD03'                                  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

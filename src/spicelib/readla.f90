@@ -1,6 +1,6 @@
 !$Procedure READLA   ( Read array of lines from a logical unit )
 
-      SUBROUTINE READLA ( UNIT, MAXLIN, NUMLIN, ARRAY, EOF )
+      subroutine readla ( unit, maxlin, numlin, array, eof )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      INTEGER               MAXLIN
-      INTEGER               NUMLIN
-      CHARACTER*(*)         ARRAY(*)
-      LOGICAL               EOF
+      integer               unit
+      integer               maxlin
+      integer               numlin
+      character*(*)         array(*)
+      logical               eof
 
 ! $ Brief_I/O
 !
@@ -247,78 +247,78 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
-      LOGICAL               MYEOF
+      logical               myeof
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'READLA' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'READLA' )
+      end if
 !
 !     Check to see if the maximum number of lines is positive.
 !
-      IF ( MAXLIN .LE. 0 ) THEN
+      if ( maxlin .le. 0 ) then
 
-         CALL SETMSG ( 'The maximum number of lines for the output' // &
+         call setmsg ( 'The maximum number of lines for the output' // &
                        ' line array was not positive. It was: #.'    )
-         CALL ERRINT ( '#', MAXLIN                                   )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                      )
-         CALL CHKOUT ( 'READLA'                                      )
-         RETURN
+         call errint ( '#', maxlin                                   )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         call chkout ( 'READLA'                                      )
+         return
 
-      END IF
+      end if
 !
 !     Begin reading in the lines from the text file attached to UNIT.
 !     Stop when the array of lines is full, I = MAXLIN, or we hit the
 !     end of file.
 !
-      MYEOF  = .FALSE.
-      NUMLIN = 0
-      I      = 1
+      myeof  = .false.
+      numlin = 0
+      i      = 1
 
-      DO WHILE ( ( I .LE. MAXLIN ) .AND. ( .NOT. MYEOF ) )
+      do while ( ( i .le. maxlin ) .and. ( .not. myeof ) )
 
-         CALL READLN( UNIT, ARRAY(I), MYEOF )
+         call readln( unit, array(i), myeof )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           If the read failed, an appropriate error message has already
 !           been set, so we need to set the number of lines that have
 !           been correctly read from the file and return.
 !
-            CALL CHKOUT ( 'READLA' )
-            RETURN
+            call chkout ( 'READLA' )
+            return
 
-         END IF
+         end if
 
-         NUMLIN = I
-         I      = I + 1
+         numlin = i
+         i      = i + 1
 
-      END DO
+      end do
 !
 !     If we got to here, then we have either filled up the line buffer
 !     or we reached the end of the file. If we reached the end of the
 !     file we need to adjust the value of NUMLIN to remove the last read
 !     attempt.
 !
-      IF ( MYEOF ) THEN
+      if ( myeof ) then
 
-         NUMLIN = NUMLIN - 1
+         numlin = numlin - 1
 
-      END IF
+      end if
 
-      EOF = MYEOF
+      eof = myeof
 
-      CALL CHKOUT ( 'READLA' )
-      RETURN
+      call chkout ( 'READLA' )
+      return
 
-      END
+      end

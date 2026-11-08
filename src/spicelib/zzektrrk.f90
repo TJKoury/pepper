@@ -1,7 +1,7 @@
 !$Procedure      ZZEKTRRK ( EK tree, rotate keys )
 
-      SUBROUTINE ZZEKTRRK ( HANDLE,  TREE,   LEFT,  RIGHT, &
-                            PARENT,  PKIDX,  NROT         )
+      subroutine zzektrrk ( handle,  tree,   left,  right, &
+                            parent,  pkidx,  nrot         )
 
 ! $ Abstract
 !
@@ -19,16 +19,16 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ekpage.inc'
+      include 'ektree.inc'
+      include 'ekpage.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               LEFT
-      INTEGER               RIGHT
-      INTEGER               PARENT
-      INTEGER               PKIDX
-      INTEGER               NROT
+      integer               handle
+      integer               tree
+      integer               left
+      integer               right
+      integer               parent
+      integer               pkidx
+      integer               nrot
 
 ! $ Brief_I/O
 !
@@ -174,182 +174,182 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               DATBAS
-      INTEGER               DPAR
-      INTEGER               DROTAT
-      INTEGER               DSHIFT
-      INTEGER               FUTRPK
-      INTEGER               I
-      INTEGER               KEYBAS
-      INTEGER               KIDBAS
-      INTEGER               LNKEYS
-      INTEGER               LNSIZE
-      INTEGER               LPAGE  ( PGSIZI )
-      INTEGER               LSIB
-      INTEGER               NVOPAR
-      INTEGER               PPAGE  ( PGSIZI )
-      INTEGER               REMAIN
-      INTEGER               RNKEYS
-      INTEGER               ROOT
-      INTEGER               RPAGE  ( PGSIZI )
-      INTEGER               RSIB
-      INTEGER               SCHLEP
-      INTEGER               SUBSIZ
+      integer               datbas
+      integer               dpar
+      integer               drotat
+      integer               dshift
+      integer               futrpk
+      integer               i
+      integer               keybas
+      integer               kidbas
+      integer               lnkeys
+      integer               lnsize
+      integer               lpage  ( pgsizi )
+      integer               lsib
+      integer               nvopar
+      integer               ppage  ( pgsizi )
+      integer               remain
+      integer               rnkeys
+      integer               root
+      integer               rpage  ( pgsizi )
+      integer               rsib
+      integer               schlep
+      integer               subsiz
 
 
 !
 !     Use discovery check-in for speed.
 !
-      IF ( NROT .EQ. 0 ) THEN
-         RETURN
-      END IF
+      if ( nrot .eq. 0 ) then
+         return
+      end if
 
 
-      ROOT  =  TREE
+      root  =  tree
 
-      IF ( ( LEFT .EQ. ROOT ) .OR. ( RIGHT .EQ. ROOT )  ) THEN
+      if ( ( left .eq. root ) .or. ( right .eq. root )  ) then
 
-         CALL CHKIN  ( 'ZZEKTRRK'                                  )
-         CALL SETMSG ( 'Input node is root; only children are '   // &
+         call chkin  ( 'ZZEKTRRK'                                  )
+         call setmsg ( 'Input node is root; only children are '   // &
                        'eligible for key rotation.'                )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZEKTRRK'                                  )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZEKTRRK'                                  )
 
-      END IF
+      end if
 
 !
 !     Read in the input nodes.
 !
-      CALL ZZEKPGRI ( HANDLE, LEFT,   LPAGE )
-      CALL ZZEKPGRI ( HANDLE, RIGHT,  RPAGE )
-      CALL ZZEKPGRI ( HANDLE, PARENT, PPAGE )
+      call zzekpgri ( handle, left,   lpage )
+      call zzekpgri ( handle, right,  rpage )
+      call zzekpgri ( handle, parent, ppage )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Set the base index of the parent keys.  This value depends on
 !     whether the parent is the root.  Do the same for the pointer
 !     bases.
 !
-      IF ( PARENT .EQ. TREE ) THEN
-         KEYBAS = TRKEYR
-         DATBAS = TRDATR
-         KIDBAS = TRKIDR
-      ELSE
-         KEYBAS = TRKEYC
-         DATBAS = TRDATC
-         KIDBAS = TRKIDC
-      END IF
+      if ( parent .eq. tree ) then
+         keybas = trkeyr
+         datbas = trdatr
+         kidbas = trkidr
+      else
+         keybas = trkeyc
+         datbas = trdatc
+         kidbas = trkidc
+      end if
 
 !
 !     Verify that LEFT and RIGHT are siblings, and that PARENT is
 !     their common parent.
 !
-      LSIB  =  PPAGE ( KIDBAS+PKIDX   )
-      RSIB  =  PPAGE ( KIDBAS+PKIDX+1 )
+      lsib  =  ppage ( kidbas+pkidx   )
+      rsib  =  ppage ( kidbas+pkidx+1 )
 
-      IF (  ( LSIB .NE. LEFT ) .OR. ( RSIB .NE. RIGHT )  ) THEN
+      if (  ( lsib .ne. left ) .or. ( rsib .ne. right )  ) then
 
-         CALL CHKIN  ( 'ZZEKTRRK'                               )
-         CALL SETMSG ( 'LEFT, RIGHT, PARENT, and PKIDX are '   // &
+         call chkin  ( 'ZZEKTRRK'                               )
+         call setmsg ( 'LEFT, RIGHT, PARENT, and PKIDX are '   // &
                        'inconsistent. LEFT = #; RIGHT = #; '   // &
                        'PARENT = #; PKIDX = #; LSIB derived '  // &
                        'from PARENT = #; RSIB = #.'             )
-         CALL ERRINT ( '#',   LEFT                              )
-         CALL ERRINT ( '#',   RIGHT                             )
-         CALL ERRINT ( '#',   PARENT                            )
-         CALL ERRINT ( '#',   PKIDX                             )
-         CALL ERRINT ( '#',   LSIB                              )
-         CALL ERRINT ( '#',   RSIB                              )
-         CALL SIGERR ( 'SPICE(BUG)'                             )
-         CALL CHKOUT ( 'ZZEKTRRK'                               )
-         RETURN
+         call errint ( '#',   left                              )
+         call errint ( '#',   right                             )
+         call errint ( '#',   parent                            )
+         call errint ( '#',   pkidx                             )
+         call errint ( '#',   lsib                              )
+         call errint ( '#',   rsib                              )
+         call sigerr ( 'SPICE(BUG)'                             )
+         call chkout ( 'ZZEKTRRK'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the key counts for the left and right nodes.
 !
-      LNKEYS  =  LPAGE ( TRNKC )
-      RNKEYS  =  RPAGE ( TRNKC )
+      lnkeys  =  lpage ( trnkc )
+      rnkeys  =  rpage ( trnkc )
 
 !
 !     The requested rotation will not be permitted to cause an
 !     underflow of more than one key in the source node, nor an
 !     overflow of more than one key in the destination node.
 !
-      IF ( NROT .GT. 0 ) THEN
+      if ( nrot .gt. 0 ) then
 
-         IF (      ( ( LNKEYS - NROT ) .LT. ( MNKEYC - 1 ) ) &
-             .OR.  ( ( RNKEYS + NROT ) .GT. ( MXKEYC + 1 ) ) ) THEN
+         if (      ( ( lnkeys - nrot ) .lt. ( mnkeyc - 1 ) ) &
+             .or.  ( ( rnkeys + nrot ) .gt. ( mxkeyc + 1 ) ) ) then
 
-            CALL CHKIN  ( 'ZZEKTRRK'                                   )
-            CALL SETMSG ( 'Node # and right sibling # contain # and ' // &
+            call chkin  ( 'ZZEKTRRK'                                   )
+            call setmsg ( 'Node # and right sibling # contain # and ' // &
                           '# keys respectively; rotation of # keys '  // &
                           'to the right will violate the key count '  // &
                           'bounds of #:#.'                             )
-            CALL ERRINT ( '#',  LEFT                                   )
-            CALL ERRINT ( '#',  RIGHT                                  )
-            CALL ERRINT ( '#',  LNKEYS                                 )
-            CALL ERRINT ( '#',  RNKEYS                                 )
-            CALL ERRINT ( '#',  NROT                                   )
-            CALL ERRINT ( '#',  MNKEYC-1                               )
-            CALL ERRINT ( '#',  MXKEYC+1                               )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZEKTRRK'                                   )
-            RETURN
+            call errint ( '#',  left                                   )
+            call errint ( '#',  right                                  )
+            call errint ( '#',  lnkeys                                 )
+            call errint ( '#',  rnkeys                                 )
+            call errint ( '#',  nrot                                   )
+            call errint ( '#',  mnkeyc-1                               )
+            call errint ( '#',  mxkeyc+1                               )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZEKTRRK'                                   )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF ( NROT .LT. 0 ) THEN
+      else if ( nrot .lt. 0 ) then
 
-         IF (      ( ( LNKEYS - NROT ) .GT. ( MXKEYC + 1 ) ) &
-             .OR.  ( ( RNKEYS + NROT ) .LT. ( MNKEYC - 1 ) ) ) THEN
+         if (      ( ( lnkeys - nrot ) .gt. ( mxkeyc + 1 ) ) &
+             .or.  ( ( rnkeys + nrot ) .lt. ( mnkeyc - 1 ) ) ) then
 
-            CALL CHKIN  ( 'ZZEKTRRK'                                   )
-            CALL SETMSG ( 'Node # and right sibling # contain # and ' // &
+            call chkin  ( 'ZZEKTRRK'                                   )
+            call setmsg ( 'Node # and right sibling # contain # and ' // &
                           '# keys respectively; rotation of # keys '  // &
                           'to the left will violate the key count '   // &
                           'bounds of #:#.'                             )
-            CALL ERRINT ( '#',  LEFT                                   )
-            CALL ERRINT ( '#',  RIGHT                                  )
-            CALL ERRINT ( '#',  LNKEYS                                 )
-            CALL ERRINT ( '#',  RNKEYS                                 )
-            CALL ERRINT ( '#',  -NROT                                  )
-            CALL ERRINT ( '#',  MNKEYC-1                               )
-            CALL ERRINT ( '#',  MXKEYC+1                               )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZEKTRRK'                                   )
-            RETURN
+            call errint ( '#',  left                                   )
+            call errint ( '#',  right                                  )
+            call errint ( '#',  lnkeys                                 )
+            call errint ( '#',  rnkeys                                 )
+            call errint ( '#',  -nrot                                  )
+            call errint ( '#',  mnkeyc-1                               )
+            call errint ( '#',  mxkeyc+1                               )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZEKTRRK'                                   )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Compute the size of the tree headed by the left subnode.  We'll
 !     need this later.  The size of this tree is one less than the
 !     difference of the parent key and its predecessor, if any.
 !
-      IF ( PKIDX .EQ. 1 ) THEN
-         LNSIZE  =  PPAGE ( KEYBAS + 1 ) -  1
-      ELSE
-         LNSIZE  =  PPAGE(KEYBAS+PKIDX)  -  PPAGE(KEYBAS+PKIDX-1)  -  1
-      END IF
+      if ( pkidx .eq. 1 ) then
+         lnsize  =  ppage ( keybas + 1 ) -  1
+      else
+         lnsize  =  ppage(keybas+pkidx)  -  ppage(keybas+pkidx-1)  -  1
+      end if
 
 !
 !     Now, the actions we take depend on whether we must schlep keys
 !     to the right or left.
 !
-      IF ( NROT .GT. 0 ) THEN
+      if ( nrot .gt. 0 ) then
 !
 !        We'll rotate keys to the right.  There are a bunch of numbers
 !        to compute first:
@@ -373,8 +373,8 @@
 !              parent node remain unchanged.
 !
 !
-         SCHLEP  =  NROT
-         REMAIN  =  LNKEYS  -    SCHLEP
+         schlep  =  nrot
+         remain  =  lnkeys  -    schlep
 
 !
 !        The size of the rotated subtree is the original size of the
@@ -383,33 +383,33 @@
 !        REMAIN + 1, is the future right parent key; this key is also
 !        the successor of the subtree left behind.
 !
-         FUTRPK  =  LPAGE  ( TRKEYC+REMAIN+1 )
-         SUBSIZ  =  LNSIZE - FUTRPK
+         futrpk  =  lpage  ( trkeyc+remain+1 )
+         subsiz  =  lnsize - futrpk
 
 !
 !        The rotated set of keys will no longer be preceded by the
 !        set of keys of size NEWRPK that they originally followed.
 !
-         DROTAT  =  - FUTRPK
+         drotat  =  - futrpk
 
 !
 !        The shifted keys in the right sibling get SUBSIZ + 1 new
 !        predecessors.
 !
-         DSHIFT  =   SUBSIZ + 1
+         dshift  =   subsiz + 1
 
 !
 !        The old right parent key will become the successor of the
 !        shifted subtree.  Its value is just one greater than the
 !        size of this subtree.
 !
-         NVOPAR  =   DSHIFT
+         nvopar  =   dshift
 
 !
 !        The new parent key has DSHIFT fewer predecessors after
 !        the rotation.
 !
-         DPAR    =   - DSHIFT
+         dpar    =   - dshift
 
 !
 !        It's time for some action.  First of all, shift the keys
@@ -424,68 +424,68 @@
 !        these data sets is not important.  Within each data set, we
 !        must be careful not to trash occupied addresses.
 !
-         DO I = RNKEYS, 1, -1
-            RPAGE (TRKEYC + I + SCHLEP)  =  RPAGE (TRKEYC + I) + DSHIFT
-         END DO
+         do i = rnkeys, 1, -1
+            rpage (trkeyc + i + schlep)  =  rpage (trkeyc + i) + dshift
+         end do
 
-         DO I = RNKEYS, 1, -1
-            RPAGE (TRDATC + I + SCHLEP)  =  RPAGE (TRDATC + I)
-         END DO
+         do i = rnkeys, 1, -1
+            rpage (trdatc + i + schlep)  =  rpage (trdatc + i)
+         end do
 
-         DO I = RNKEYS+1, 1, -1
-            RPAGE (TRKIDC + I + SCHLEP)  =  RPAGE (TRKIDC + I)
-         END DO
+         do i = rnkeys+1, 1, -1
+            rpage (trkidc + i + schlep)  =  rpage (trkidc + i)
+         end do
 
 !
 !        `Move' the old parent key to its target destination in the
 !        sibling.  Actually, only the data pointer is copied; the key
 !        is simply set to its new value.
 !
-         RPAGE ( TRKEYC + SCHLEP )  =  NVOPAR
-         RPAGE ( TRDATC + SCHLEP )  =  PPAGE ( DATBAS + PKIDX )
+         rpage ( trkeyc + schlep )  =  nvopar
+         rpage ( trdatc + schlep )  =  ppage ( datbas + pkidx )
 
 !
 !        `Move' the future parent key to its target destination in the
 !        parent.  The data pointer is copied; the key is adjusted by
 !        the offset delta we've computed.
 !
-         PPAGE ( DATBAS + PKIDX )  =  LPAGE ( TRDATC + REMAIN  + 1    )
-         PPAGE ( KEYBAS + PKIDX )  =  PPAGE ( KEYBAS + PKIDX ) + DPAR
+         ppage ( datbas + pkidx )  =  lpage ( trdatc + remain  + 1    )
+         ppage ( keybas + pkidx )  =  ppage ( keybas + pkidx ) + dpar
 
 !
 !        Rotate the subtree following the future parent key to its
 !        destination in the sibling.  Update the keys to account for
 !        their new offset.
 !
-         DO I = 1, SCHLEP-1
-            RPAGE(TRKEYC+I) = LPAGE(TRKEYC+REMAIN+1+I) + DROTAT
-         END DO
+         do i = 1, schlep-1
+            rpage(trkeyc+i) = lpage(trkeyc+remain+1+i) + drotat
+         end do
 
-         CALL MOVEI( LPAGE(TRDATC+REMAIN+2), SCHLEP-1, RPAGE(TRDATC+1) )
-         CALL MOVEI( LPAGE(TRKIDC+REMAIN+2), SCHLEP,   RPAGE(TRKIDC+1) )
+         call movei( lpage(trdatc+remain+2), schlep-1, rpage(trdatc+1) )
+         call movei( lpage(trkidc+remain+2), schlep,   rpage(trkidc+1) )
 
 
 !
 !        Update the key counts in both the input node and sibling.
 !
-         LPAGE ( TRNKC )  =  LPAGE ( TRNKC )  -  SCHLEP
-         RPAGE ( TRNKC )  =  RPAGE ( TRNKC )  +  SCHLEP
+         lpage ( trnkc )  =  lpage ( trnkc )  -  schlep
+         rpage ( trnkc )  =  rpage ( trnkc )  +  schlep
 
 !
 !        Update the pages in the kernel.
 !
-         CALL ZZEKPGWI ( HANDLE, PARENT, PPAGE )
-         CALL ZZEKPGWI ( HANDLE, LEFT,   LPAGE )
-         CALL ZZEKPGWI ( HANDLE, RIGHT,  RPAGE )
+         call zzekpgwi ( handle, parent, ppage )
+         call zzekpgwi ( handle, left,   lpage )
+         call zzekpgwi ( handle, right,  rpage )
 
 
-      ELSE
+      else
 !
 !        Rotation to the left is almost, but not quite, a mirror image
 !        of rotation to the right.
 !
-         SCHLEP  =  - NROT
-         REMAIN  =    RNKEYS  -  SCHLEP
+         schlep  =  - nrot
+         remain  =    rnkeys  -  schlep
 
 !
 !        The size of the rotated subtree is one less than the value of
@@ -493,34 +493,34 @@
 !        SCHLEP and is also the predecessor of the subtree
 !        left behind.
 !
-         FUTRPK  =  RPAGE( TRKEYC + SCHLEP )
-         SUBSIZ  =  FUTRPK - 1
+         futrpk  =  rpage( trkeyc + schlep )
+         subsiz  =  futrpk - 1
 
 !
 !        The rotated set of keys will be preceded by the keys already
 !        present in LEFT, as well as the key moved in from the parent
 !        node.
 !
-         DROTAT  =  LNSIZE + 1
+         drotat  =  lnsize + 1
 
 !
 !        The shifted keys in the right sibling lose SUBSIZ + 1
 !        predecessors.
 !
-         DSHIFT  =  - ( SUBSIZ + 1 )
+         dshift  =  - ( subsiz + 1 )
 
 !
 !        The old parent key will become the successor of the
 !        keys already in LEFT; it will be the predecessor of the
 !        rotated subtree.
 !
-         NVOPAR  =   DROTAT
+         nvopar  =   drotat
 
 !
 !        The new parent key has (-DSHIFT) more predecessors after
 !        the rotation.
 !
-         DPAR    =  - DSHIFT
+         dpar    =  - dshift
 
 !
 !        It's time for some action.
@@ -529,29 +529,29 @@
 !        input node.  Actually, only the data pointer is copied; the key
 !        is simply set to its new value.
 !
-         LPAGE ( TRKEYC + LNKEYS + 1 )  =  NVOPAR
-         LPAGE ( TRDATC + LNKEYS + 1 )  =  PPAGE ( DATBAS + PKIDX )
+         lpage ( trkeyc + lnkeys + 1 )  =  nvopar
+         lpage ( trdatc + lnkeys + 1 )  =  ppage ( datbas + pkidx )
 
 !
 !        `Move' the future parent key to its target destination in the
 !        parent.  The data pointer is copied; the key is adjusted by
 !        the offset delta we've computed.
 !
-         PPAGE ( DATBAS + PKIDX )  =  RPAGE ( TRDATC + SCHLEP )
-         PPAGE ( KEYBAS + PKIDX )  =  PPAGE ( KEYBAS + PKIDX  ) + DPAR
+         ppage ( datbas + pkidx )  =  rpage ( trdatc + schlep )
+         ppage ( keybas + pkidx )  =  ppage ( keybas + pkidx  ) + dpar
 
 !
 !        Rotate the subtree following the future parent key to its
 !        destination in the sibling.  Update the keys to account for
 !        their new offset.
 !
-         CALL MOVEI( RPAGE(TRKEYC+1), SCHLEP-1, LPAGE(TRKEYC+LNKEYS+2) )
-         CALL MOVEI( RPAGE(TRDATC+1), SCHLEP-1, LPAGE(TRDATC+LNKEYS+2) )
-         CALL MOVEI( RPAGE(TRKIDC+1), SCHLEP,   LPAGE(TRKIDC+LNKEYS+2) )
+         call movei( rpage(trkeyc+1), schlep-1, lpage(trkeyc+lnkeys+2) )
+         call movei( rpage(trdatc+1), schlep-1, lpage(trdatc+lnkeys+2) )
+         call movei( rpage(trkidc+1), schlep,   lpage(trkidc+lnkeys+2) )
 
-         DO I = 1, SCHLEP-1
-            LPAGE(TRKEYC+LNKEYS+1+I) = LPAGE(TRKEYC+LNKEYS+1+I) + DROTAT
-         END DO
+         do i = 1, schlep-1
+            lpage(trkeyc+lnkeys+1+i) = lpage(trkeyc+lnkeys+1+i) + drotat
+         end do
 
 !
 !        Shift the remaining elements of the sibling to the left.
@@ -561,33 +561,33 @@
 !        Move the leftmost elements of each data component first.
 !        Adjust the keys at the same time.
 !
-         DO I = 1, REMAIN
-            RPAGE (TRKEYC + I)  =  RPAGE (TRKEYC + I + SCHLEP) + DSHIFT
-         END DO
+         do i = 1, remain
+            rpage (trkeyc + i)  =  rpage (trkeyc + i + schlep) + dshift
+         end do
 
-         DO I = 1, REMAIN
-            RPAGE (TRDATC + I)  =  RPAGE (TRDATC + I + SCHLEP)
-         END DO
+         do i = 1, remain
+            rpage (trdatc + i)  =  rpage (trdatc + i + schlep)
+         end do
 
-         DO I = 1, REMAIN+1
-            RPAGE (TRKIDC + I)  =  RPAGE (TRKIDC + I + SCHLEP)
-         END DO
+         do i = 1, remain+1
+            rpage (trkidc + i)  =  rpage (trkidc + i + schlep)
+         end do
 
 !
 !        Update the key counts in both the input node and sibling.
 !
-         LPAGE ( TRNKC )  =  LPAGE ( TRNKC )  +  SCHLEP
-         RPAGE ( TRNKC )  =  RPAGE ( TRNKC )  -  SCHLEP
+         lpage ( trnkc )  =  lpage ( trnkc )  +  schlep
+         rpage ( trnkc )  =  rpage ( trnkc )  -  schlep
 
 !
 !        Update the pages in the kernel.
 !
-         CALL ZZEKPGWI ( HANDLE, PARENT, PPAGE )
-         CALL ZZEKPGWI ( HANDLE, LEFT,   LPAGE )
-         CALL ZZEKPGWI ( HANDLE, RIGHT,  RPAGE )
+         call zzekpgwi ( handle, parent, ppage )
+         call zzekpgwi ( handle, left,   lpage )
+         call zzekpgwi ( handle, right,  rpage )
 
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

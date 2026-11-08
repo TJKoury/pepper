@@ -1,6 +1,6 @@
 !$Procedure SYORDD ( Order the components of a single symbol )
 
-      SUBROUTINE SYORDD ( NAME, TABSYM, TABPTR, TABVAL )
+      subroutine syordd ( name, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
+      character*(*)         name
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -151,55 +151,55 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      INTEGER               N
+      integer               locsym
+      integer               locval
+      integer               n
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYORDD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYORDD' )
+      end if
 
 
 !
 !     How many symbols?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If so, sort the components in place.
 !
-      IF ( LOCSYM .GT. 0 ) THEN
+      if ( locsym .gt. 0 ) then
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
-         N      = TABPTR(LOCSYM)
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         n      = tabptr(locsym)
 
-         CALL SHELLD ( TABPTR(LOCSYM), TABVAL(LOCVAL) )
+         call shelld ( tabptr(locsym), tabval(locval) )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYORDD' )
-      RETURN
-      END
+      call chkout ( 'SYORDD' )
+      return
+      end

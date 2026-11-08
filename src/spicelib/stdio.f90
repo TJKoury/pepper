@@ -1,6 +1,6 @@
 !$Procedure STDIO ( Standard IO )
 
-      SUBROUTINE STDIO ( NAME, UNIT )
+      subroutine stdio ( name, unit )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         NAME
-      INTEGER               UNIT
+      character*(*)         name
+      integer               unit
 
 ! $ Brief_I/O
 !
@@ -111,35 +111,35 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Variables
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 8 )
+      integer               wdsize
+      parameter           ( wdsize = 8 )
 
-      CHARACTER*(WDSIZE)    MYNAME
+      character*(wdsize)    myname
 
-      CALL LJUST ( NAME,   MYNAME )
-      CALL UCASE ( MYNAME, MYNAME )
+      call ljust ( name,   myname )
+      call ucase ( myname, myname )
 
-      IF ( MYNAME .EQ. 'STDIN' ) THEN
-         UNIT = 5
-      ELSE IF ( MYNAME .EQ. 'STDOUT' ) THEN
-         UNIT = 6
-      ELSE IF ( RETURN() ) THEN
-         RETURN
-      ELSE
+      if ( myname .eq. 'STDIN' ) then
+         unit = 5
+      else if ( myname .eq. 'STDOUT' ) then
+         unit = 6
+      else if ( return() ) then
+         return
+      else
 
-         CALL CHKIN  ( 'STDIO' )
-         CALL SETMSG ( 'The only "names" recognized by STDIO are ' &
+         call chkin  ( 'STDIO' )
+         call setmsg ( 'The only "names" recognized by STDIO are ' &
          //            '''STDIN'' and ''STDOUT'' you requested a ' &
          //            'unit for ''#''. '     )
-         CALL ERRCH  ( '#', NAME              )
-         CALL SIGERR ( 'SPICE(BADSTDIONAME)'  )
-         CALL CHKOUT ( 'STDIO' )
-      END IF
+         call errch  ( '#', name              )
+         call sigerr ( 'SPICE(BADSTDIONAME)'  )
+         call chkout ( 'STDIO' )
+      end if
 
-      RETURN
-      END
+      return
+      end

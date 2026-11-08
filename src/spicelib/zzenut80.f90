@@ -1,7 +1,7 @@
 !$Procedure ZZENUT80 ( Earth nutation transformation, IAU 1980 model )
 
-      SUBROUTINE ZZENUT80 ( ET, NUTXF )
-      IMPLICIT NONE
+      subroutine zzenut80 ( et, nutxf )
+      implicit none
 
 ! $ Abstract
 !
@@ -26,8 +26,8 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      NUTXF  ( 6, 6 )
+      double precision      et
+      double precision      nutxf  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -103,22 +103,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DMOB
-      DOUBLE PRECISION      DVNUT  ( 4 )
-      DOUBLE PRECISION      EULANG ( 6 )
-      DOUBLE PRECISION      MOB
+      double precision      dmob
+      double precision      dvnut  ( 4 )
+      double precision      eulang ( 6 )
+      double precision      mob
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZENUT80' )
+      call chkin ( 'ZZENUT80' )
 
 !
 !      Get nutation angles and their rates.  We're expecting
@@ -128,7 +128,7 @@
 !         DVNUT(3) = dPsi/dt     (radians/second)
 !         DVNUT(4) = dEpsilon/dt (radians/second)
 !
-      CALL ZZWAHR ( ET, DVNUT )
+      call zzwahr ( et, dvnut )
 
 !
 !     Get the mean obliquity of date.
@@ -144,7 +144,7 @@
 !         DMOB     is the time derivative of MOB at ET, expressed
 !                        in radians per second.
 
-      CALL ZZMOBLIQ ( ET, MOB, DMOB )
+      call zzmobliq ( et, mob, dmob )
 
 !
 !     The nutation rotation N is defined by
@@ -169,15 +169,15 @@
 !     the nutation base frame to the nutation frame.
 !
 
-      EULANG(1) =  -MOB  - DVNUT(2)
-      EULANG(2) =        - DVNUT(1)
-      EULANG(3) =   MOB
-      EULANG(4) =  -DMOB - DVNUT(4)
-      EULANG(5) =        - DVNUT(3)
-      EULANG(6) =   DMOB
+      eulang(1) =  -mob  - dvnut(2)
+      eulang(2) =        - dvnut(1)
+      eulang(3) =   mob
+      eulang(4) =  -dmob - dvnut(4)
+      eulang(5) =        - dvnut(3)
+      eulang(6) =   dmob
 
-      CALL EUL2XF ( EULANG, 1, 3, 1, NUTXF )
+      call eul2xf ( eulang, 1, 3, 1, nutxf )
 
-      CALL CHKOUT ( 'ZZENUT80' )
-      RETURN
-      END
+      call chkout ( 'ZZENUT80' )
+      return
+      end

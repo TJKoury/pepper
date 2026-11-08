@@ -1,6 +1,6 @@
 !$Procedure CKMETA ( CK ID to associated SCLK )
 
-      SUBROUTINE CKMETA ( CKID,  META, IDCODE )
+      subroutine ckmeta ( ckid,  meta, idcode )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      INTEGER               CKID
-      CHARACTER*(*)         META
-      INTEGER               IDCODE
+      integer               ckid
+      character*(*)         meta
+      integer               idcode
 
 ! $ Brief_I/O
 !
@@ -309,220 +309,220 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               BSCHOI
+      integer               bschoi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
 !     Local parameters
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      INTEGER               NCK
-      PARAMETER           ( NCK = 30 )
+      integer               nck
+      parameter           ( nck = 30 )
 
-      INTEGER               SCLK
-      PARAMETER           ( SCLK   =          1 )
+      integer               sclk
+      parameter           ( sclk   =          1 )
 
-      INTEGER               SPK
-      PARAMETER           ( SPK    = SCLK   + 1 )
+      integer               spk
+      parameter           ( spk    = sclk   + 1 )
 
 !
 !     Local variables
 !
-      CHARACTER*(7)         BASE
-      CHARACTER*(7)         MYMETA
-      CHARACTER*(WDSIZE)    LOOKUP ( 2, NCK )
-      CHARACTER*(WDSIZE)    AGENT  (    NCK )
+      character*(7)         base
+      character*(7)         mymeta
+      character*(wdsize)    lookup ( 2, nck )
+      character*(wdsize)    agent  (    nck )
 
 
-      INTEGER               CKS    (    NCK )
-      INTEGER               CKSORD (    NCK )
-      INTEGER               CURRNT
-      INTEGER               LAST
-      INTEGER               N
-      INTEGER               SCLKS  (    NCK )
-      INTEGER               SPKS   (    NCK )
-      INTEGER               THIS
-      INTEGER               USRCTR ( CTRSIZ, NCK )
+      integer               cks    (    nck )
+      integer               cksord (    nck )
+      integer               currnt
+      integer               last
+      integer               n
+      integer               sclks  (    nck )
+      integer               spks   (    nck )
+      integer               this
+      integer               usrctr ( ctrsiz, nck )
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND  (    2   )
-      LOGICAL               NODATA
-      LOGICAL               UPDATE
+      logical               first
+      logical               found  (    2   )
+      logical               nodata
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  BASE   / 'CKMETA.' /
-      DATA                  CURRNT / 0         /
-      DATA                  FIRST  / .TRUE.    /
-      DATA                  LAST   / 0         /
-      DATA                  NODATA / .TRUE.    /
+      data                  base   / 'CKMETA.' /
+      data                  currnt / 0         /
+      data                  first  / .true.    /
+      data                  last   / 0         /
+      data                  nodata / .true.    /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKMETA' )
+      call chkin ( 'CKMETA' )
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize all agent-specific POOL counters to user value.
 !
-         DO N = 1, NCK
-            CALL ZZCTRUIN( USRCTR( 1, N ) )
-         END DO
+         do n = 1, nck
+            call zzctruin( usrctr( 1, n ) )
+         end do
 
 !
 !        Clear AGENTS array. We will use a non-blank AGENT value as the
 !        flag to delete previously set watchers.
 !
-         CALL CLEARC ( NCK, AGENT )
+         call clearc ( nck, agent )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get an upper-case, left-justified copy of the metadata
 !     type ('SCLK' or 'SPK').
 !
-      CALL LJUCRS ( 1, META, MYMETA )
+      call ljucrs ( 1, meta, mymeta )
 
 !
 !     See if we already have this CK ID in hand.
 !
-      THIS = BSCHOI ( CKID, CURRNT, CKS, CKSORD )
+      this = bschoi ( ckid, currnt, cks, cksord )
 
-      IF ( THIS .GT. 0 ) THEN
+      if ( this .gt. 0 ) then
 !
 !        We've got it.  Check to see if its value has been updated.
 !        (Note that every CK ID  has its own agent and saved POOL
 !        counter.)
 !
-         CALL ZZCVPOOL ( AGENT( THIS ), USRCTR( 1, THIS ), UPDATE )
+         call zzcvpool ( agent( this ), usrctr( 1, this ), update )
 
-         IF ( UPDATE .OR. NODATA ) THEN
+         if ( update .or. nodata ) then
 
-            CALL GIPOOL( LOOKUP(SCLK,THIS), 1, 1, N, &
-                         SCLKS(THIS),       FOUND(SCLK) )
+            call gipool( lookup(sclk,this), 1, 1, n, &
+                         sclks(this),       found(sclk) )
 
-            CALL GIPOOL( LOOKUP(SPK, THIS), 1, 1, N, &
-                         SPKS (THIS),       FOUND(SPK) )
+            call gipool( lookup(spk, this), 1, 1, n, &
+                         spks (this),       found(spk) )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               NODATA = .TRUE.
+               nodata = .true.
 
-               CALL CHKOUT ( 'CKMETA' )
-               RETURN
+               call chkout ( 'CKMETA' )
+               return
 
-            END IF
+            end if
 
 !
 !           Note that failure to find data is not an error in this
 !           routine; it's just SPICE errors that are a problem.
 !
-            NODATA = .FALSE.
+            nodata = .false.
 
-         ELSE
+         else
 
 !
 !           The POOL variables did not change since the last check and
 !           we have already buffered IDs for this CK ID. Set found
 !           flags to make use of saved values.
 !
-            FOUND(SCLK) = .TRUE.
-            FOUND(SPK)  = .TRUE.
+            found(sclk) = .true.
+            found(spk)  = .true.
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 
 !
 !        We don't have this on our handy list. Find a place to put it.
 !
-         IF ( CURRNT .LT. NCK ) THEN
+         if ( currnt .lt. nck ) then
 
-            CURRNT = CURRNT + 1
-            LAST   = CURRNT
+            currnt = currnt + 1
+            last   = currnt
 
-         ELSE
+         else
 
-            LAST   = LAST + 1
+            last   = last + 1
 
-            IF ( LAST .GT. NCK ) THEN
-               LAST = 1
-            END IF
+            if ( last .gt. nck ) then
+               last = 1
+            end if
 
-         END IF
+         end if
 
-         THIS = LAST
+         this = last
 
 !
 !        If we already have a watcher at this index, delete it. Note
 !        we may have an update pending for this watcher, so we will
 !        check it first to clear it.
 !
-         IF ( AGENT( THIS ) .NE. ' ' ) THEN
-            CALL CVPOOL ( AGENT( THIS ), UPDATE )
-            CALL DWPOOL ( AGENT( THIS ) )
-         END IF
+         if ( agent( this ) .ne. ' ' ) then
+            call cvpool ( agent( this ), update )
+            call dwpool ( agent( this ) )
+         end if
 
 !
 !        Recompute the order vector for the CKS; construct the
 !        kernel pool variable names and the agent name.
 !
-         CKS(THIS) = CKID
+         cks(this) = ckid
 
-         CALL ORDERI (  CKS,    CURRNT, CKSORD            )
+         call orderi (  cks,    currnt, cksord            )
 
-         CALL INTSTR (  CKID,           LOOKUP(SCLK,THIS) )
-         CALL PREFIX ( 'CK_',   0,      LOOKUP(SCLK,THIS) )
+         call intstr (  ckid,           lookup(sclk,this) )
+         call prefix ( 'CK_',   0,      lookup(sclk,this) )
 
-         AGENT (     THIS) =  BASE   // LOOKUP(SCLK,THIS)
-         LOOKUP(SPK, THIS) =            LOOKUP(SCLK,THIS)
+         agent (     this) =  base   // lookup(sclk,this)
+         lookup(spk, this) =            lookup(sclk,this)
 
-         CALL SUFFIX ( '_SCLK',  0,     LOOKUP(SCLK,THIS) )
-         CALL SUFFIX ( '_SPK',   0,     LOOKUP(SPK, THIS) )
+         call suffix ( '_SCLK',  0,     lookup(sclk,this) )
+         call suffix ( '_SPK',   0,     lookup(spk, this) )
 
 !
 !        Set a watch for this item and fetch the current value
 !        from the kernel pool (if there is a value there).
 !
-         CALL SWPOOL ( AGENT( THIS ), 2, LOOKUP(1,THIS) )
+         call swpool ( agent( this ), 2, lookup(1,this) )
 
-         CALL CVPOOL ( AGENT( THIS ), UPDATE )
+         call cvpool ( agent( this ), update )
 
-         CALL GIPOOL (LOOKUP(SCLK,THIS), 1, 1, N, &
-                      SCLKS(THIS),       FOUND(SCLK) )
+         call gipool (lookup(sclk,this), 1, 1, n, &
+                      sclks(this),       found(sclk) )
 
-         CALL GIPOOL (LOOKUP(SPK, THIS), 1, 1, N, &
-                      SPKS (THIS),       FOUND(SPK ) )
+         call gipool (lookup(spk, this), 1, 1, n, &
+                      spks (this),       found(spk ) )
 
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            CALL CHKOUT ( 'CKMETA' )
-            RETURN
+            call chkout ( 'CKMETA' )
+            return
 
-         END IF
+         end if
 
 !
 !        Note that failure to find data is not an error in this
@@ -530,9 +530,9 @@
 !
 !        At this point, kernel data checks are done.
 !
-         NODATA = .FALSE.
+         nodata = .false.
 
-      END IF
+      end if
 
 !
 !     If we didn't find either _SCLK or _SPK variable, we manufacture
@@ -541,62 +541,62 @@
 !     -1000 if it's not there is no sensible ID to return.  We return
 !     zero in that case.
 !
-      IF ( .NOT. FOUND(SCLK) ) THEN
+      if ( .not. found(sclk) ) then
 
-         IF ( CKS(THIS) .LE. -1000 ) THEN
+         if ( cks(this) .le. -1000 ) then
 
-            SCLKS(THIS) = CKS(THIS)/1000
+            sclks(this) = cks(this)/1000
 
-         ELSE
+         else
 
-            SCLKS(THIS) = 0
+            sclks(this) = 0
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      IF ( .NOT. FOUND(SPK) ) THEN
+      if ( .not. found(spk) ) then
 
-         IF ( CKS(THIS) .LE. -1000 ) THEN
+         if ( cks(this) .le. -1000 ) then
 
-            SPKS(THIS) = CKS(THIS)/1000
+            spks(this) = cks(this)/1000
 
-         ELSE
+         else
 
-            SPKS(THIS) = 0
+            spks(this) = 0
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Set output ID.
 !
-      IF ( MYMETA .EQ. 'SPK' ) THEN
+      if ( mymeta .eq. 'SPK' ) then
 
-         IDCODE = SPKS (THIS)
+         idcode = spks (this)
 
-      ELSE IF ( MYMETA .EQ. 'SCLK' ) THEN
+      else if ( mymeta .eq. 'SCLK' ) then
 
-         IDCODE = SCLKS(THIS)
+         idcode = sclks(this)
 
-      ELSE
+      else
 
-         IDCODE = 0
+         idcode = 0
 
-         CALL SETMSG ( 'The CK meta data item "#" is not a ' &
+         call setmsg ( 'The CK meta data item "#" is not a ' &
          //            'recognized meta data item for the ' &
          //            'routine CKMETA. The recognized value ' &
          //            'are "SPK" and "SCLK". ' )
 
-         CALL ERRCH  ( '#', META )
-         CALL SIGERR ( 'SPICE(UNKNOWNCKMETA)'  )
-         CALL CHKOUT ( 'CKMETA' )
-         RETURN
+         call errch  ( '#', meta )
+         call sigerr ( 'SPICE(UNKNOWNCKMETA)'  )
+         call chkout ( 'CKMETA' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CKMETA' )
+      call chkout ( 'CKMETA' )
 
-      RETURN
-      END
+      return
+      end

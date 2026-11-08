@@ -1,7 +1,7 @@
 !$Procedure GFTFOV ( GF, is target in FOV? )
 
-      SUBROUTINE GFTFOV ( INST,   TARGET, TSHAPE, TFRAME, &
-                          ABCORR, OBSRVR, STEP,   CNFINE, RESULT )
+      subroutine gftfov ( inst,   target, tshape, tframe, &
+                          abcorr, obsrvr, step,   cnfine, result )
 
 ! $ Abstract
 !
@@ -32,23 +32,23 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         INST
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         TSHAPE
-      CHARACTER*(*)         TFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         inst
+      character*(*)         target
+      character*(*)         tshape
+      character*(*)         tframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -858,10 +858,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZED
+      integer               sized
 
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     External routines
@@ -869,18 +869,18 @@
 !
 !     Interrupt handler:
 !
-      LOGICAL               GFBAIL
-      EXTERNAL              GFBAIL
+      logical               gfbail
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work:
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
@@ -888,20 +888,20 @@
 !
 !     Geometric quantity  bail switch:
 !
-      LOGICAL               BAIL
-      PARAMETER           ( BAIL   = .FALSE. )
+      logical               bail
+      parameter           ( bail   = .false. )
 
 !
 !     Progress report switch:
 !
-      LOGICAL               RPT
-      PARAMETER           ( RPT    = .FALSE. )
+      logical               rpt
+      parameter           ( rpt    = .false. )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     Ray direction vector required by GFFOVE. This is
@@ -909,40 +909,40 @@
 !     the target is an ephemeris object. We initialize the
 !     ray to prevent portability problems.
 !
-      DOUBLE PRECISION      RAYDIR ( 3 )
+      double precision      raydir ( 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  RAYDIR
+      save                  raydir
 
 !
 !     Initial values
 !
-      DATA                  RAYDIR / 3 * 0.D0 /
+      data                  raydir / 3 * 0.d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFTFOV' )
+      call chkin  ( 'GFTFOV' )
 
 !
 !     Reject the target shape 'RAY'.
 !
-      IF (  EQSTR( TSHAPE, RYSHAP )  ) THEN
+      if (  eqstr( tshape, ryshap )  ) then
 
-         CALL SETMSG ( 'The target shape RAY is not supported ' &
+         call setmsg ( 'The target shape RAY is not supported ' &
          //            'by this routine. Use the routine ' &
          //            'GFRFOV instead.'                       )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                  )
-         CALL CHKOUT ( 'GFTFOV'                                )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDOPTION)'                  )
+         call chkout ( 'GFTFOV'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -954,45 +954,45 @@
 !
 !     Check the result window's size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size must be at least 2 ' &
+         call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
-         CALL ERRINT ( '#',  SIZED(RESULT)                     )
-         CALL SIGERR ( 'SPICE(WINDOWTOOSMALL)'                 )
-         CALL CHKOUT ( 'GFTFOV'                                )
-         RETURN
+         call errint ( '#',  sized(result)                     )
+         call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
+         call chkout ( 'GFTFOV'                                )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 
 !
 !     Look for solutions.
 !
-      CALL GFFOVE ( INST,   TSHAPE, RAYDIR, TARGET, TFRAME, ABCORR, &
-                    OBSRVR, TOL,    GFSTEP, GFREFN, RPT,    GFREPI, &
-                    GFREPU, GFREPF, BAIL,   GFBAIL, CNFINE, RESULT )
+      call gffove ( inst,   tshape, raydir, target, tframe, abcorr, &
+                    obsrvr, tol,    gfstep, gfrefn, rpt,    gfrepi, &
+                    gfrepu, gfrepf, bail,   gfbail, cnfine, result )
 
-      CALL CHKOUT ( 'GFTFOV' )
-      RETURN
-      END
+      call chkout ( 'GFTFOV' )
+      return
+      end

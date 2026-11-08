@@ -1,6 +1,6 @@
 !$Procedure SPKS10 ( S/P Kernel, subset, type 10 )
 
-      SUBROUTINE SPKS10 ( SRCHAN, SRCDSC, DSTHAN, DSTDSC, DSTSID )
+      subroutine spks10 ( srchan, srcdsc, dsthan, dstdsc, dstsid )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'sgparam.inc'
-      INTEGER               SRCHAN
-      DOUBLE PRECISION      SRCDSC(*)
-      INTEGER               DSTHAN
-      DOUBLE PRECISION      DSTDSC(*)
-      CHARACTER*(*)         DSTSID
+      include              'sgparam.inc'
+      integer               srchan
+      double precision      srcdsc(*)
+      integer               dsthan
+      double precision      dstdsc(*)
+      character*(*)         dstsid
 
 ! $ Brief_I/O
 !
@@ -115,91 +115,91 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 40 )
+      integer               wdsize
+      parameter           ( wdsize = 40 )
 !
 !     DAF ND and NI values for SPK files.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
 !
 !     The number of geophysical constants:
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 8 )
+      integer               nconst
+      parameter           ( nconst = 8 )
 !
 !     The number of elements per two-line set:
 !
-      INTEGER               NELEMS
-      PARAMETER           ( NELEMS = 10 )
+      integer               nelems
+      parameter           ( nelems = 10 )
 
-      INTEGER               NANGS
-      PARAMETER           ( NANGS  =  4 )
+      integer               nangs
+      parameter           ( nangs  =  4 )
 
-      INTEGER               PKTSIZ
-      PARAMETER           ( PKTSIZ = NELEMS + NANGS )
+      integer               pktsiz
+      parameter           ( pktsiz = nelems + nangs )
 
 !
 !     Local Variables
 !
-      CHARACTER*(WDSIZE)    TIME
+      character*(wdsize)    time
 
-      DOUBLE PRECISION      BEGTIM
-      DOUBLE PRECISION      CONSTS ( NCONST )
-      DOUBLE PRECISION      DTEMP  ( ND     )
-      DOUBLE PRECISION      ENDTIM
-      DOUBLE PRECISION      MYREF
-      DOUBLE PRECISION      PACKET ( PKTSIZ )
+      double precision      begtim
+      double precision      consts ( nconst )
+      double precision      dtemp  ( nd     )
+      double precision      endtim
+      double precision      myref
+      double precision      packet ( pktsiz )
 
-      INTEGER               BEGIDX
-      INTEGER               DUMMY
-      INTEGER               ENDIDX
-      INTEGER               I
-      INTEGER               ITEMP  ( NI )
-      INTEGER               NEPOCH
+      integer               begidx
+      integer               dummy
+      integer               endidx
+      integer               i
+      integer               itemp  ( ni )
+      integer               nepoch
 
-      LOGICAL               FOUND
+      logical               found
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS10' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS10' )
+      end if
 !
 !     First, unpack the destination segment descriptor and set some
 !     local variables.
 !
-      CALL DAFUS( DSTDSC, ND, NI, DTEMP, ITEMP )
+      call dafus( dstdsc, nd, ni, dtemp, itemp )
 
-      BEGTIM = DTEMP(1)
-      ENDTIM = DTEMP(2)
+      begtim = dtemp(1)
+      endtim = dtemp(2)
 !
 !     Get the constants for the input segment and send them to the
 !     output segment by beginning a fixed packet size segment.
 !
-      CALL SGFCON ( SRCHAN, SRCDSC, 1, NCONST, CONSTS )
-      CALL SGBWFS ( DSTHAN, DSTDSC,    DSTSID, &
-                    NCONST, CONSTS,    PKTSIZ, EXPCLS )
+      call sgfcon ( srchan, srcdsc, 1, nconst, consts )
+      call sgbwfs ( dsthan, dstdsc,    dstsid, &
+                    nconst, consts,    pktsiz, expcls )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKS10' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKS10' )
+         return
+      end if
 
 !
 !     Get the beginning and ending indices for the packets we need for
@@ -207,72 +207,72 @@
 !     and succeeding packets (if there are any) corresponding to the
 !     start and end times of the output segments
 !
-      CALL SGFRVI ( SRCHAN, SRCDSC, BEGTIM, MYREF, BEGIDX, FOUND )
+      call sgfrvi ( srchan, srcdsc, begtim, myref, begidx, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ETCAL  ( BEGTIM, TIME )
-         CALL SETMSG ( 'An error has occurred while attempting ' &
+         call etcal  ( begtim, time )
+         call setmsg ( 'An error has occurred while attempting ' &
          //            'to subset the a type 10 SPK segment. The ' &
          //            'error occurred while attempting to ' &
          //            'locate a packet for the epoch #.  There ' &
          //            'does not appear to be such a packet. ' )
-         CALL ERRCH  ( '#', TIME )
-         CALL SIGERR ( 'SPICE(CANNOTGETPACKET)'  )
-         CALL CHKOUT ( 'SPKS10' )
-         RETURN
+         call errch  ( '#', time )
+         call sigerr ( 'SPICE(CANNOTGETPACKET)'  )
+         call chkout ( 'SPKS10' )
+         return
 
-      END IF
+      end if
 
-      IF ( MYREF .GT. BEGTIM ) THEN
-         BEGIDX = MAX ( 1, BEGIDX - 1 )
-      END IF
+      if ( myref .gt. begtim ) then
+         begidx = max ( 1, begidx - 1 )
+      end if
 
 
-      CALL SGFRVI ( SRCHAN, SRCDSC, ENDTIM, MYREF, ENDIDX, FOUND )
+      call sgfrvi ( srchan, srcdsc, endtim, myref, endidx, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ETCAL  ( ENDTIM, TIME )
-         CALL SETMSG ( 'An error has occurred while attempting ' &
+         call etcal  ( endtim, time )
+         call setmsg ( 'An error has occurred while attempting ' &
          //            'to subset the a type 10 SPK segment. The ' &
          //            'error occurred while attempting to ' &
          //            'locate a packet for the epoch #.  There ' &
          //            'does not appear to be such a packet. ' )
-         CALL ERRCH  ( '#', TIME )
-         CALL SIGERR ( 'SPICE(CANNOTGETPACKET)'  )
-         CALL CHKOUT ( 'SPKS10' )
-         RETURN
+         call errch  ( '#', time )
+         call sigerr ( 'SPICE(CANNOTGETPACKET)'  )
+         call chkout ( 'SPKS10' )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the total number of epochs.
 !
-      CALL SGMETA ( SRCHAN, SRCDSC, NREF, NEPOCH )
+      call sgmeta ( srchan, srcdsc, nref, nepoch )
 
-      IF ( MYREF .LT. ENDTIM ) THEN
-         ENDIDX = MIN ( NEPOCH, ENDIDX + 1 )
-      END IF
+      if ( myref .lt. endtim ) then
+         endidx = min ( nepoch, endidx + 1 )
+      end if
 
 !
 !     Now we get the data one record at a time from the source segment
 !     and write it out to the destination segment.
 !
-      DO I = BEGIDX, ENDIDX
+      do i = begidx, endidx
 
-         CALL SGFPKT ( SRCHAN, SRCDSC, I, I,   PACKET, DUMMY )
-         CALL SGFREF ( SRCHAN, SRCDSC, I, I,           MYREF )
-         CALL SGWFPK ( DSTHAN, 1,      PACKET, 1,      MYREF )
+         call sgfpkt ( srchan, srcdsc, i, i,   packet, dummy )
+         call sgfref ( srchan, srcdsc, i, i,           myref )
+         call sgwfpk ( dsthan, 1,      packet, 1,      myref )
 
-      END DO
+      end do
 
 !
 !     Now all we need to do is end the segment.
 !
-      CALL SGWES  ( DSTHAN   )
+      call sgwes  ( dsthan   )
 
-      CALL CHKOUT ( 'SPKS10' )
-      RETURN
+      call chkout ( 'SPKS10' )
+      return
 
-      END
+      end

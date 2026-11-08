@@ -1,6 +1,6 @@
 !$Procedure RQUAD ( Roots of a quadratic equation )
 
-      SUBROUTINE RQUAD (  A,  B,  C,  ROOT1,  ROOT2  )
+      subroutine rquad (  a,  b,  c,  root1,  root2  )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      ROOT1 ( 2 )
-      DOUBLE PRECISION      ROOT2 ( 2 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      root1 ( 2 )
+      double precision      root2 ( 2 )
 
 ! $ Brief_I/O
 !
@@ -199,88 +199,88 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CON
-      DOUBLE PRECISION      DISCRM
-      DOUBLE PRECISION      LIN
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SQR
+      double precision      con
+      double precision      discrm
+      double precision      lin
+      double precision      scale
+      double precision      sqr
 
-      LOGICAL               ZEROED
+      logical               zeroed
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RQUAD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'RQUAD' )
+      end if
 
 !
 !     The degree of the equation is zero unless at least one of the
 !     second or first degree coefficients is non-zero.
 !
-      IF (  ( A .EQ. 0.D0 )  .AND.  ( B .EQ. 0.D0 )  )  THEN
+      if (  ( a .eq. 0.d0 )  .and.  ( b .eq. 0.d0 )  )  then
 
-         CALL SETMSG ( 'Both 1st and 2nd degree coefficients are zero.')
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                         )
-         CALL CHKOUT ( 'RQUAD'                                         )
-         RETURN
+         call setmsg ( 'Both 1st and 2nd degree coefficients are zero.')
+         call sigerr ( 'SPICE(DEGENERATECASE)'                         )
+         call chkout ( 'RQUAD'                                         )
+         return
 
-      END IF
+      end if
 
 !
 !     If we can scale the coefficients without zeroing any of them out,
 !     we will do so, to help prevent overflow.
 !
-      SCALE  = MAX ( ABS(A), ABS(B), ABS(C) )
+      scale  = max ( abs(a), abs(b), abs(c) )
 
 
-      ZEROED =      (  ( A .NE. 0.D0 ) .AND. ( A / SCALE .EQ. 0.D0 )  ) &
-               .OR. (  ( B .NE. 0.D0 ) .AND. ( B / SCALE .EQ. 0.D0 )  ) &
-               .OR. (  ( C .NE. 0.D0 ) .AND. ( C / SCALE .EQ. 0.D0 )  )
+      zeroed =      (  ( a .ne. 0.d0 ) .and. ( a / scale .eq. 0.d0 )  ) &
+               .or. (  ( b .ne. 0.d0 ) .and. ( b / scale .eq. 0.d0 )  ) &
+               .or. (  ( c .ne. 0.d0 ) .and. ( c / scale .eq. 0.d0 )  )
 
 
-      IF ( .NOT. ZEROED ) THEN
+      if ( .not. zeroed ) then
 
-         SQR = A / SCALE
-         LIN = B / SCALE
-         CON = C / SCALE
+         sqr = a / scale
+         lin = b / scale
+         con = c / scale
 
-      ELSE
+      else
 
-         SQR = A
-         LIN = B
-         CON = C
+         sqr = a
+         lin = b
+         con = c
 
-      END IF
+      end if
 
 !
 !     If the second-degree coefficient is non-zero, we have a bona fide
 !     quadratic equation, as opposed to a linear equation.
 !
-      IF ( SQR .NE. 0.D0 ) THEN
+      if ( sqr .ne. 0.d0 ) then
 !
 !        Compute the discriminant.
 !
-         DISCRM = LIN**2  -  4.D0 * SQR * CON
+         discrm = lin**2  -  4.d0 * sqr * con
 
 !
 !        A non-negative discriminant indicates that the roots are
 !        real.
 !
-         IF ( DISCRM .GE. 0.D0 ) THEN
+         if ( discrm .ge. 0.d0 ) then
 !
 !           The imaginary parts of both roots are zero.
 !
-            ROOT1(2) = 0.D0
-            ROOT2(2) = 0.D0
+            root1(2) = 0.d0
+            root2(2) = 0.d0
 !
 !           We can take advantage of the fact that CON/SQR is the
 !           product of the roots to improve the accuracy of the root
@@ -288,67 +288,67 @@
 !           first and then divide CON/SQR by it to obtain the smaller
 !           root.
 !
-            IF ( LIN .LT. 0.D0 ) THEN
+            if ( lin .lt. 0.d0 ) then
 !
 !              ROOT1 will contain the root of larger magnitude.
 !
-               ROOT1(1) =  ( - LIN + DSQRT(DISCRM) )  /  ( 2.D0 * SQR )
+               root1(1) =  ( - lin + dsqrt(discrm) )  /  ( 2.d0 * sqr )
 
-               ROOT2(1) =  ( CON / SQR )  /   ROOT1(1)
+               root2(1) =  ( con / sqr )  /   root1(1)
 
-            ELSE IF ( LIN .GT. 0.D0 ) THEN
+            else if ( lin .gt. 0.d0 ) then
 !
 !              ROOT2 will contain the root of larger magnitude.
 !
-               ROOT2(1) =  ( - LIN - DSQRT(DISCRM) )  /  ( 2.D0 * SQR )
+               root2(1) =  ( - lin - dsqrt(discrm) )  /  ( 2.d0 * sqr )
 
-               ROOT1(1) =  ( CON / SQR )  /   ROOT2(1)
+               root1(1) =  ( con / sqr )  /   root2(1)
 
-            ELSE
+            else
 !
 !              The roots have the same magnitude.
 !
-               ROOT1(1)  =    DSQRT( DISCRM )  /  ( 2.D0 * SQR )
+               root1(1)  =    dsqrt( discrm )  /  ( 2.d0 * sqr )
 
-               ROOT2(1)  =  - ROOT1(1)
+               root2(1)  =  - root1(1)
 
-            END IF
+            end if
 
 !
 !        The only other possibility is that the roots are complex.
 !
-         ELSE
+         else
 !
 !           The roots are complex conjugates, so they have equal
 !           magnitudes.
 !
-            ROOT1(1)  =  -LIN                /   ( 2.D0 * SQR )
-            ROOT1(2)  =   DSQRT( -DISCRM )   /   ( 2.D0 * SQR )
+            root1(1)  =  -lin                /   ( 2.d0 * sqr )
+            root1(2)  =   dsqrt( -discrm )   /   ( 2.d0 * sqr )
 
-            ROOT2(1)  =   ROOT1(1)
-            ROOT2(2)  =  -ROOT1(2)
+            root2(1)  =   root1(1)
+            root2(2)  =  -root1(2)
 
-         END IF
+         end if
 
 
 !
 !     If the second-degree coefficient is zero, we actually have a
 !     linear equation.
 !
-      ELSE IF ( LIN .NE. 0.D0 ) THEN
+      else if ( lin .ne. 0.d0 ) then
 
-         ROOT1(1) =  - CON / LIN
-         ROOT1(2) =    0.D0
+         root1(1) =  - con / lin
+         root1(2) =    0.d0
 
 !
 !        We set the second root equal to the first, rather than
 !        leaving it undefined.
 !
-         CALL MOVED ( ROOT1, 2, ROOT2 )
+         call moved ( root1, 2, root2 )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'RQUAD' )
-      RETURN
-      END
+      call chkout ( 'RQUAD' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure QDERIV ( Quadratic derivative )
 
-      SUBROUTINE QDERIV ( NDIM, F0, F2, DELTA, DFDT )
+      subroutine qderiv ( ndim, f0, f2, delta, dfdt )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NDIM
-      DOUBLE PRECISION      F0    ( NDIM )
-      DOUBLE PRECISION      F2    ( NDIM )
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      DFDT  ( NDIM )
+      integer               ndim
+      double precision      f0    ( ndim )
+      double precision      f2    ( ndim )
+      double precision      delta
+      double precision      dfdt  ( ndim )
 
 ! $ Brief_I/O
 !
@@ -194,16 +194,16 @@
 !
 !     Use discovery check-in.
 !
-      IF ( DELTA .EQ. 0.D0 ) THEN
+      if ( delta .eq. 0.d0 ) then
 
-         CALL CHKIN  ( 'QDERIV'                                    )
-         CALL SETMSG ( 'Delta abscissa value is zero; a non-zero ' // &
+         call chkin  ( 'QDERIV'                                    )
+         call setmsg ( 'Delta abscissa value is zero; a non-zero ' // &
                        'value is required.'                        )
-         CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                       )
-         CALL CHKOUT ( 'QDERIV'                                    )
-         RETURN
+         call sigerr ( 'SPICE(DIVIDEBYZERO)'                       )
+         call chkout ( 'QDERIV'                                    )
+         return
 
-      END IF
+      end if
 !
 !
 !     Our derivative estimate is
@@ -218,7 +218,7 @@
 !        =    (0.5/DELTA) * F(X2)  +  (-0.5/DELTA) * F(X0)
 !
 !
-      CALL VLCOMG (  NDIM, 0.5D0/DELTA, F2, -0.5D0/DELTA, F0, DFDT )
+      call vlcomg (  ndim, 0.5d0/delta, f2, -0.5d0/delta, f0, dfdt )
 
-      RETURN
-      END
+      return
+      end

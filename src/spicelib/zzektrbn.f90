@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRBN ( EK tree, balance nodes )
 
-      SUBROUTINE ZZEKTRBN ( HANDLE, TREE, LEFT, RIGHT, PARENT, PKIDX )
+      subroutine zzektrbn ( handle, tree, left, right, parent, pkidx )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      INCLUDE  'ektree.inc'
+      include  'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               LEFT
-      INTEGER               RIGHT
-      INTEGER               PARENT
-      INTEGER               PKIDX
+      integer               handle
+      integer               tree
+      integer               left
+      integer               right
+      integer               parent
+      integer               pkidx
 
 ! $ Brief_I/O
 !
@@ -165,37 +165,37 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRNK
+      integer               zzektrnk
 
 !
 !     Local variables
 !
-      INTEGER               LNKEYS
-      INTEGER               RNKEYS
-      INTEGER               ROOT
-      INTEGER               SCHLEP
-      INTEGER               SUM
+      integer               lnkeys
+      integer               rnkeys
+      integer               root
+      integer               schlep
+      integer               sum
 
 !
 !     Use discovery check-in for speed.
 !
-      ROOT  =  TREE
+      root  =  tree
 
-      IF ( ( LEFT .EQ. ROOT ) .OR. ( RIGHT .EQ. ROOT )  ) THEN
+      if ( ( left .eq. root ) .or. ( right .eq. root )  ) then
 
-         CALL CHKIN  ( 'ZZEKTRBN'                                  )
-         CALL SETMSG ( 'Input node is root; only children can be ' // &
+         call chkin  ( 'ZZEKTRBN'                                  )
+         call setmsg ( 'Input node is root; only children can be ' // &
                        'balanced.'                                 )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZEKTRBN'                                  )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZEKTRBN'                                  )
 
-      END IF
+      end if
 
 !
 !     Get the key counts for the left and right nodes.
 !
-      LNKEYS  =  ZZEKTRNK ( HANDLE, TREE, LEFT  )
-      RNKEYS  =  ZZEKTRNK ( HANDLE, TREE, RIGHT )
+      lnkeys  =  zzektrnk ( handle, tree, left  )
+      rnkeys  =  zzektrnk ( handle, tree, right )
 
 !
 !     Balancing the nodes should give each of them a key count in
@@ -206,50 +206,50 @@
 !     If that's not possible, we have a serious problem.
 !
 
-      SUM  =  LNKEYS + RNKEYS
+      sum  =  lnkeys + rnkeys
 
 
-      IF (      (  SUM .GT.  2*MXKEYC  ) &
-           .OR. (  SUM .LT.  2*MNKEYC  )   )  THEN
+      if (      (  sum .gt.  2*mxkeyc  ) &
+           .or. (  sum .lt.  2*mnkeyc  )   )  then
 
-         CALL CHKIN  ( 'ZZEKTRBN'                                      )
-         CALL SETMSG ( 'Node # and right sibling # contain # and # '  // &
+         call chkin  ( 'ZZEKTRBN'                                      )
+         call setmsg ( 'Node # and right sibling # contain # and # '  // &
                        'keys respectively; count sum should be in '   // &
                        'range #:#.'                                    )
-         CALL ERRINT ( '#',  LEFT                                      )
-         CALL ERRINT ( '#',  RIGHT                                     )
-         CALL ERRINT ( '#',  LNKEYS                                    )
-         CALL ERRINT ( '#',  RNKEYS                                    )
-         CALL ERRINT ( '#',  2*MNKEYC                                  )
-         CALL ERRINT ( '#',  2*MXKEYC                                  )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZEKTRBN'                                      )
-         RETURN
+         call errint ( '#',  left                                      )
+         call errint ( '#',  right                                     )
+         call errint ( '#',  lnkeys                                    )
+         call errint ( '#',  rnkeys                                    )
+         call errint ( '#',  2*mnkeyc                                  )
+         call errint ( '#',  2*mxkeyc                                  )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZEKTRBN'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Now, the actions we take depend on whether we must schlep keys
 !     to the right or left.
 !
-      IF ( LNKEYS .GT. RNKEYS ) THEN
+      if ( lnkeys .gt. rnkeys ) then
 
-         SCHLEP  =        LNKEYS  -  ( (SUM+1) / 2 )
+         schlep  =        lnkeys  -  ( (sum+1) / 2 )
 
-      ELSE IF ( LNKEYS .LT. RNKEYS ) THEN
+      else if ( lnkeys .lt. rnkeys ) then
 
-         SCHLEP  =  - (   RNKEYS  -  ( (SUM+1) / 2 )   )
+         schlep  =  - (   rnkeys  -  ( (sum+1) / 2 )   )
 
-      ELSE
+      else
 
-         SCHLEP  =  0
+         schlep  =  0
 
-      END IF
+      end if
 
 !
 !     Rotate the requested number of keys.
 !
-      CALL ZZEKTRRK ( HANDLE, TREE, LEFT, RIGHT, PARENT, PKIDX, SCHLEP )
+      call zzektrrk ( handle, tree, left, right, parent, pkidx, schlep )
 
-      RETURN
-      END
+      return
+      end

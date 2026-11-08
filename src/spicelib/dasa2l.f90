@@ -1,7 +1,7 @@
 !$Procedure DASA2L ( DAS, address to physical location )
 
-      SUBROUTINE DASA2L ( HANDLE, TYPE,   ADDRSS, &
-                          CLBASE, CLSIZE, RECNO,  WORDNO )
+      subroutine dasa2l ( handle, type,   addrss, &
+                          clbase, clsize, recno,  wordno )
 
 ! $ Abstract
 !
@@ -20,21 +20,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               TYPE
-      INTEGER               ADDRSS
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               handle
+      integer               type
+      integer               addrss
+      integer               clbase
+      integer               clsize
+      integer               recno
+      integer               wordno
 
-      INTEGER               CHAR
-      PARAMETER           ( CHAR   =  1  )
+      integer               char
+      parameter           ( char   =  1  )
 
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
 ! $ Brief_I/O
 !
@@ -363,8 +363,8 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
-      LOGICAL               FAILED
+      integer               isrchi
+      logical               failed
 
 !
 !     Local parameters
@@ -373,112 +373,112 @@
 !
 !     Words per data record, for each data type:
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC = 1024 )
+      integer               nwc
+      parameter           ( nwc = 1024 )
 
-      INTEGER               NWD
-      PARAMETER           ( NWD =  128 )
+      integer               nwd
+      parameter           ( nwd =  128 )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI =  256 )
+      integer               nwi
+      parameter           ( nwi =  256 )
 
 !
 !     Directory forward pointer location
 !
-      INTEGER               FWDLOC
-      PARAMETER           ( FWDLOC = 2 )
+      integer               fwdloc
+      parameter           ( fwdloc = 2 )
 
 !
 !     Directory address range locations
 !
-      INTEGER               CHRRNG
-      PARAMETER           ( CHRRNG =          3 )
+      integer               chrrng
+      parameter           ( chrrng =          3 )
 
-      INTEGER               DPRNG
-      PARAMETER           ( DPRNG  = CHRRNG + 2 )
+      integer               dprng
+      parameter           ( dprng  = chrrng + 2 )
 
-      INTEGER               INTRNG
-      PARAMETER           ( INTRNG = DPRNG  + 2 )
+      integer               intrng
+      parameter           ( intrng = dprng  + 2 )
 
 !
 !     Index of highest address in a `range array':
 !
-      INTEGER               HIGH
-      PARAMETER           ( HIGH = 2 )
+      integer               high
+      parameter           ( high = 2 )
 
 !
 !     Location of first type descriptor
 !
-      INTEGER               BEGDSC
-      PARAMETER           ( BEGDSC = 9 )
+      integer               begdsc
+      parameter           ( begdsc = 9 )
 
 !
 !     Access word length
 !
-      INTEGER               ACCLEN
-      PARAMETER           ( ACCLEN = 10 )
+      integer               acclen
+      parameter           ( acclen = 10 )
 
 !
 !     File table size
 !
-      INTEGER               MAXFIL
-      PARAMETER           ( MAXFIL = 20 )
+      integer               maxfil
+      parameter           ( maxfil = 20 )
 
-      INTEGER               MAXVEC
-      PARAMETER           ( MAXVEC = 3 * MAXFIL )
+      integer               maxvec
+      parameter           ( maxvec = 3 * maxfil )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(ACCLEN)    ACCESS
+      character*(acclen)    access
 
-      INTEGER               BASERC
-      INTEGER               CURTYP
-      INTEGER               DIRREC ( NWI )
-      INTEGER               DSCLOC
-      INTEGER               FIDX
-      INTEGER               FREE
-      INTEGER               HIADDR
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LSTREC ( 3 )
-      INTEGER               LSTWRD ( 3 )
-      INTEGER               MXADDR
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NDIRS
-      INTEGER               NEXT   ( 3 )
-      INTEGER               NFILES
-      INTEGER               NREC
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NTYPES
-      INTEGER               NW     ( 3 )
-      INTEGER               NXTREC
-      INTEGER               PREV   ( 3 )
-      INTEGER               PRVHAN
-      INTEGER               PRVTYP
-      INTEGER               RANGE  ( 2 )
-      INTEGER               RNGLOC ( 3 )
-      INTEGER               TBBASE ( 3, MAXFIL )
-      INTEGER               TBFWRD (    MAXFIL )
-      INTEGER               TBHAN  (    MAXFIL )
-      INTEGER               TBMXAD ( 3, MAXFIL )
-      INTEGER               TBSIZE ( 3, MAXFIL )
-      INTEGER               UB
-      LOGICAL               FAST
-      LOGICAL               KNOWN
-      LOGICAL               PRVOK
-      LOGICAL               TBFAST ( MAXFIL )
-      LOGICAL               TBRDON ( MAXFIL )
-      LOGICAL               SAMFIL
-      LOGICAL               SEGOK
+      integer               baserc
+      integer               curtyp
+      integer               dirrec ( nwi )
+      integer               dscloc
+      integer               fidx
+      integer               free
+      integer               hiaddr
+      integer               i
+      integer               j
+      integer               lstrec ( 3 )
+      integer               lstwrd ( 3 )
+      integer               mxaddr
+      integer               ncomc
+      integer               ncomr
+      integer               ndirs
+      integer               next   ( 3 )
+      integer               nfiles
+      integer               nrec
+      integer               nresvc
+      integer               nresvr
+      integer               ntypes
+      integer               nw     ( 3 )
+      integer               nxtrec
+      integer               prev   ( 3 )
+      integer               prvhan
+      integer               prvtyp
+      integer               range  ( 2 )
+      integer               rngloc ( 3 )
+      integer               tbbase ( 3, maxfil )
+      integer               tbfwrd (    maxfil )
+      integer               tbhan  (    maxfil )
+      integer               tbmxad ( 3, maxfil )
+      integer               tbsize ( 3, maxfil )
+      integer               ub
+      logical               fast
+      logical               known
+      logical               prvok
+      logical               tbfast ( maxfil )
+      logical               tbrdon ( maxfil )
+      logical               samfil
+      logical               segok
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
@@ -487,24 +487,24 @@
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      DATA                  NEXT   /  2,   3,   1   /
-      DATA                  PREV   /  3,   1,   2   /
-      DATA                  NW     /  NWC,    NWD,   NWI    /
-      DATA                  RNGLOC /  CHRRNG, DPRNG, INTRNG /
+      data                  next   /  2,   3,   1   /
+      data                  prev   /  3,   1,   2   /
+      data                  nw     /  nwc,    nwd,   nwi    /
+      data                  rngloc /  chrrng, dprng, intrng /
 
-      DATA                  FAST   / .FALSE.          /
-      DATA                  FIDX   / 0                /
-      DATA                  KNOWN  / .FALSE.          /
-      DATA                  NFILES / 0                /
-      DATA                  PRVHAN / 0                /
-      DATA                  PRVOK  / .FALSE.          /
-      DATA                  TBBASE / MAXVEC * -1      /
-      DATA                  TBFAST / MAXFIL * .FALSE. /
-      DATA                  TBFWRD / MAXFIL * -1      /
-      DATA                  TBHAN  / MAXFIL *  0      /
-      DATA                  TBMXAD / MAXVEC * -1      /
-      DATA                  TBRDON / MAXFIL * .FALSE. /
-      DATA                  TBSIZE / MAXVEC * -1      /
+      data                  fast   / .false.          /
+      data                  fidx   / 0                /
+      data                  known  / .false.          /
+      data                  nfiles / 0                /
+      data                  prvhan / 0                /
+      data                  prvok  / .false.          /
+      data                  tbbase / maxvec * -1      /
+      data                  tbfast / maxfil * .false. /
+      data                  tbfwrd / maxfil * -1      /
+      data                  tbhan  / maxfil *  0      /
+      data                  tbmxad / maxvec * -1      /
+      data                  tbrdon / maxfil * .false. /
+      data                  tbsize / maxvec * -1      /
 
 !
 !     Discovery check-in is used in this routine, even though
@@ -696,55 +696,55 @@
 !
 !     Make sure the data type is valid.
 !
-      IF (  ( TYPE .LT. CHAR ) .OR. ( TYPE .GT. INT )  ) THEN
+      if (  ( type .lt. char ) .or. ( type .gt. int )  ) then
 
-         CALL CHKIN    ( 'DASA2L'                         )
-         CALL SETMSG ( 'Invalid data type: #. File was #' )
-         CALL ERRINT ( '#',  TYPE                         )
-         CALL ERRHAN ( '#',  HANDLE                       )
-         CALL SIGERR ( 'SPICE(DASINVALIDTYPE)'            )
-         CALL CHKOUT ( 'DASA2L'                           )
-         RETURN
+         call chkin    ( 'DASA2L'                         )
+         call setmsg ( 'Invalid data type: #. File was #' )
+         call errint ( '#',  type                         )
+         call errhan ( '#',  handle                       )
+         call sigerr ( 'SPICE(DASINVALIDTYPE)'            )
+         call chkout ( 'DASA2L'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Decide whether we're looking at the same file as we did on the
 !     last call. We can use data from the previous call only if that
 !     call succeeded.
 !
-      SAMFIL =  ( HANDLE .EQ. PRVHAN )  .AND.  PRVOK
+      samfil =  ( handle .eq. prvhan )  .and.  prvok
 !
 !     PRVOK defaults to .FALSE. and will be reset if this call
 !     succeeds.
 !
-      PRVOK  = .FALSE.
+      prvok  = .false.
 
 !
 !     Fast files get priority handling. If we have a fast file
 !     that we saw on the previous call, skip directly to the
 !     address range check.
 !
-      IF (  .NOT. ( FAST .AND. SAMFIL )  ) THEN
+      if (  .not. ( fast .and. samfil )  ) then
 !
 !        Is this a file we recognize?
 !
-         IF ( SAMFIL ) THEN
+         if ( samfil ) then
 
-            KNOWN = .TRUE.
+            known = .true.
 
-         ELSE
+         else
 
-            FIDX  =  ISRCHI ( HANDLE, NFILES, TBHAN )
-            KNOWN =  FIDX .GT. 0
+            fidx  =  isrchi ( handle, nfiles, tbhan )
+            known =  fidx .gt. 0
 
-         END IF
+         end if
 
-         IF ( KNOWN ) THEN
+         if ( known ) then
 
-            FAST = TBFAST(FIDX)
+            fast = tbfast(fidx)
 
-         ELSE
+         else
 !
 !           This file is not in our list. We'll buffer information
 !           about this file.
@@ -755,34 +755,34 @@
 !           Note that unused entries (those for which the DAS handle is
 !           0) will drop out of the list automatically.
 !
-            UB = MIN ( NFILES, MAXFIL-1 )
+            ub = min ( nfiles, maxfil-1 )
 
-            DO I = UB, 1, -1
+            do i = ub, 1, -1
 
-               TBHAN (I+1) = TBHAN (I)
-               TBRDON(I+1) = TBRDON(I)
-               TBFAST(I+1) = TBFAST(I)
-               TBFWRD(I+1) = TBFWRD(I)
+               tbhan (i+1) = tbhan (i)
+               tbrdon(i+1) = tbrdon(i)
+               tbfast(i+1) = tbfast(i)
+               tbfwrd(i+1) = tbfwrd(i)
 
-               DO J = 1, 3
-                  TBBASE( J, I+1 ) = TBBASE( J, I )
-                  TBSIZE( J, I+1 ) = TBSIZE( J, I )
-                  TBMXAD( J, I+1 ) = TBMXAD( J, I )
-               END DO
+               do j = 1, 3
+                  tbbase( j, i+1 ) = tbbase( j, i )
+                  tbsize( j, i+1 ) = tbsize( j, i )
+                  tbmxad( j, i+1 ) = tbmxad( j, i )
+               end do
 
-            END DO
+            end do
 !
 !           Insert the new table entry at index 1.
 !
-            NFILES       =  MIN ( NFILES+1,  MAXFIL )
-            FIDX         =  1
-            TBHAN(FIDX)  =  HANDLE
+            nfiles       =  min ( nfiles+1,  maxfil )
+            fidx         =  1
+            tbhan(fidx)  =  handle
 !
 !           Set FAST to .FALSE. until we find out whether the file
 !           is read-only and segregated.
 !
-            FAST          =  .FALSE.
-            TBFAST(FIDX)  =  FAST
+            fast          =  .false.
+            tbfast(fidx)  =  fast
 !
 !           FIDX is now set whether or not the current file is known.
 !
@@ -793,62 +793,62 @@
 !           otherwise. The contents of the arrays TBBASE, TBSIZE, and
 !           TBMXAD are left undefined for slow files.
 !
-            CALL DASHAM ( HANDLE, ACCESS )
+            call dasham ( handle, access )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              Make sure the current table entry won't be found
 !              on a subsequent search.
 !
-               TBHAN(FIDX) = 0
-               RETURN
+               tbhan(fidx) = 0
+               return
 
-            END IF
+            end if
 
 !
 !           TBRDON(FIDX) indicates whether the file is read-only.
 !
-            TBRDON(FIDX) =  ACCESS .EQ. 'READ'
+            tbrdon(fidx) =  access .eq. 'READ'
 
-         END IF
+         end if
 
 !
 !        FIDX, KNOWN and TBRDON( FIDX ) are set.
 !
 !        Get the file summary if it isn't known already.
 !
-         IF (  .NOT.  ( KNOWN .AND. TBRDON(FIDX) )  ) THEN
+         if (  .not.  ( known .and. tbrdon(fidx) )  ) then
 !
 !           The file is new or it's writable; in either case the
 !           maximum addresses are unknown. Get the current address
 !           range for the file.
 !
-            CALL DASHFS ( HANDLE, &
-                          NRESVR, &
-                          NRESVC, &
-                          NCOMR, &
-                          NCOMC, &
-                          FREE, &
-                          TBMXAD(1,FIDX), &
-                          LSTREC, &
-                          LSTWRD )
+            call dashfs ( handle, &
+                          nresvr, &
+                          nresvc, &
+                          ncomr, &
+                          ncomc, &
+                          free, &
+                          tbmxad(1,fidx), &
+                          lstrec, &
+                          lstwrd )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              Make sure the current table entry won't be found
 !              on a subsequent search.
 !
-               TBHAN(FIDX) = 0
-               RETURN
+               tbhan(fidx) = 0
+               return
 
-            END IF
+            end if
 
 !
 !           Set the forward cluster pointer.
 !
-            TBFWRD(FIDX) = NRESVR + NCOMR + 2
+            tbfwrd(fidx) = nresvr + ncomr + 2
 
-         END IF
+         end if
 
 !
 !        TBMXAD is set.
@@ -856,7 +856,7 @@
 !        If this is an unknown file and is read-only, determine
 !        whether the file is segregated
 !
-         IF (  ( .NOT. KNOWN ) .AND.  TBRDON(FIDX)  ) THEN
+         if (  ( .not. known ) .and.  tbrdon(fidx)  ) then
 !
 !           The file is read-only; we need to know whether it is
 !           segregated. If so, there are at most three cluster
@@ -868,13 +868,13 @@
 !
 !           NREC is the record number of the first directory record.
 !
-            NREC   = TBFWRD( FIDX )
+            nrec   = tbfwrd( fidx )
 
-            CALL DASRRI ( HANDLE, NREC, 1, NWI, DIRREC )
+            call dasrri ( handle, nrec, 1, nwi, dirrec )
 
-            NXTREC = DIRREC( FWDLOC )
+            nxtrec = dirrec( fwdloc )
 
-            IF ( NXTREC .LE. 0 ) THEN
+            if ( nxtrec .le. 0 ) then
 !
 !              If this file is segregated, there are at most three
 !              cluster descriptors, and each one points to a cluster
@@ -883,57 +883,57 @@
 !              the size of the corresponding cluster must be large
 !              enough to hold all addresses of that type.
 !
-               NTYPES = 0
+               ntypes = 0
 
-               DO I = 1, 3
+               do i = 1, 3
 
-                  IF ( TBMXAD(I,FIDX) .GT. 0 ) THEN
-                     NTYPES = NTYPES + 1
-                  END IF
+                  if ( tbmxad(i,fidx) .gt. 0 ) then
+                     ntypes = ntypes + 1
+                  end if
 
-               END DO
+               end do
 
 !
 !              Now look at the first NTYPES cluster descriptors,
 !              collecting cluster bases and sizes as we go.
 !
-               BASERC  =  NREC   + 1
-               PRVTYP  =  PREV ( DIRREC(BEGDSC) )
-               DSCLOC  =  BEGDSC + 1
-               SEGOK   = .TRUE.
+               baserc  =  nrec   + 1
+               prvtyp  =  prev ( dirrec(begdsc) )
+               dscloc  =  begdsc + 1
+               segok   = .true.
 
-               DO WHILE (       ( DSCLOC .LE. (BEGDSC+NTYPES) ) &
-                          .AND.   SEGOK                        )
+               do while (       ( dscloc .le. (begdsc+ntypes) ) &
+                          .and.   segok                        )
 !
 !                 Find the type of the current descriptor.
 !
-                  IF ( DIRREC(DSCLOC) .GT. 0 ) THEN
-                     CURTYP  =  NEXT( PRVTYP )
-                  ELSE
-                     CURTYP  =  PREV( PRVTYP )
-                  END IF
+                  if ( dirrec(dscloc) .gt. 0 ) then
+                     curtyp  =  next( prvtyp )
+                  else
+                     curtyp  =  prev( prvtyp )
+                  end if
 
-                  PRVTYP                 =   CURTYP
-                  TBBASE( CURTYP, FIDX ) =   BASERC
-                  TBSIZE( CURTYP, FIDX ) =   ABS ( DIRREC( DSCLOC ) )
-                  BASERC                 =   BASERC &
-                                           + TBSIZE (CURTYP, FIDX )
+                  prvtyp                 =   curtyp
+                  tbbase( curtyp, fidx ) =   baserc
+                  tbsize( curtyp, fidx ) =   abs ( dirrec( dscloc ) )
+                  baserc                 =   baserc &
+                                           + tbsize (curtyp, fidx )
 
-                  SEGOK   =       TBMXAD( CURTYP, FIDX ) &
-                            .LE.  TBSIZE( CURTYP, FIDX ) * NW(CURTYP)
+                  segok   =       tbmxad( curtyp, fidx ) &
+                            .le.  tbsize( curtyp, fidx ) * nw(curtyp)
 
-                  DSCLOC  =  DSCLOC + 1
+                  dscloc  =  dscloc + 1
 !
 !                 This loop will terminate after at most 3
 !                 iterations. No further checks are needed.
 !
-               END DO
+               end do
 
 !
 !              Update FAST and TBFAST based on the segregation check.
 !
-               FAST         = SEGOK
-               TBFAST(FIDX) = FAST
+               fast         = segok
+               tbfast(fidx) = fast
 !
 !              If the file is FAST,
 !
@@ -942,56 +942,56 @@
 !
 !              have been updated as well.
 !
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        End of the segregation check.
 !
-      END IF
+      end if
 !
 !     End of the NOT FAST or NOT SAME case.
 !
 !     At this point we have the logical address ranges for the
 !     file. Check the input address against them.
 !
-      MXADDR = TBMXAD( TYPE, FIDX )
+      mxaddr = tbmxad( type, fidx )
 
-      IF (  ( ADDRSS .LT. 1 ) .OR. ( ADDRSS .GT. MXADDR )  ) THEN
+      if (  ( addrss .lt. 1 ) .or. ( addrss .gt. mxaddr )  ) then
 !
 !        Make sure the current table entry won't be found on a
 !        subsequent search.
 !
-         TBHAN(FIDX) = 0
+         tbhan(fidx) = 0
 
-         CALL CHKIN    ( 'DASA2L'                                 )
-         CALL SETMSG ( 'ADDRSS was #; valid range for type # is ' &
+         call chkin    ( 'DASA2L'                                 )
+         call setmsg ( 'ADDRSS was #; valid range for type # is ' &
          //            '# to #.  File was #'                      )
-         CALL ERRINT ( '#',  ADDRSS                               )
-         CALL ERRINT ( '#',  TYPE                                 )
-         CALL ERRINT ( '#',  1                                    )
-         CALL ERRINT ( '#',  MXADDR                               )
-         CALL ERRHAN ( '#',  HANDLE                               )
-         CALL SIGERR ( 'SPICE(DASNOSUCHADDRESS)'                  )
-         CALL CHKOUT ( 'DASA2L'                                   )
-         RETURN
+         call errint ( '#',  addrss                               )
+         call errint ( '#',  type                                 )
+         call errint ( '#',  1                                    )
+         call errint ( '#',  mxaddr                               )
+         call errhan ( '#',  handle                               )
+         call sigerr ( 'SPICE(DASNOSUCHADDRESS)'                  )
+         call chkout ( 'DASA2L'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     If we're looking at a "fast" file, we know the cluster base and
 !     size. HIADDR is the highest address (not necessarily in use) in
 !     the cluster.
 !
-      IF ( TBFAST(FIDX) ) THEN
+      if ( tbfast(fidx) ) then
 !
 !        The current file is "fast": read-only and segregated.
 !
-         CLBASE = TBBASE( TYPE, FIDX )
-         CLSIZE = TBSIZE( TYPE, FIDX )
-         HIADDR = CLSIZE * NW(TYPE)
+         clbase = tbbase( type, fidx )
+         clsize = tbsize( type, fidx )
+         hiaddr = clsize * nw(type)
 
-      ELSE
+      else
 !
 !        If we're not looking at a "fast" file, find the cluster
 !        containing the input address, for the input data type.
@@ -1006,46 +1006,46 @@
 !        record that contains the address we're looking for, since
 !        we've already checked that the address is in range.
 !
-         NREC  = TBFWRD( FIDX )
-         NDIRS = 1
+         nrec  = tbfwrd( fidx )
+         ndirs = 1
 
-         CALL DASRRI ( HANDLE, &
-                       NREC, &
-                       RNGLOC(TYPE), &
-                       RNGLOC(TYPE)+1, &
-                       RANGE )
+         call dasrri ( handle, &
+                       nrec, &
+                       rngloc(type), &
+                       rngloc(type)+1, &
+                       range )
 
 
-         DO WHILE ( RANGE(HIGH) .LT. ADDRSS )
+         do while ( range(high) .lt. addrss )
 !
 !           The record number of the next directory is the forward
 !           pointer in the current directory record. Update NREC with
 !           this pointer. Get the address range for the specified type
 !           covered by this next directory record.
 !
-            CALL DASRRI ( HANDLE, NREC, FWDLOC, FWDLOC, NXTREC )
+            call dasrri ( handle, nrec, fwdloc, fwdloc, nxtrec )
 
-            NREC  = NXTREC
-            NDIRS = NDIRS + 1
+            nrec  = nxtrec
+            ndirs = ndirs + 1
 
-            CALL DASRRI ( HANDLE, &
-                          NREC, &
-                          RNGLOC(TYPE), &
-                          RNGLOC(TYPE)+1, &
-                          RANGE           )
+            call dasrri ( handle, &
+                          nrec, &
+                          rngloc(type), &
+                          rngloc(type)+1, &
+                          range           )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              Make sure the current table entry won't be found
 !              on a subsequent search.
 !
-               TBHAN(FIDX) = 0
+               tbhan(fidx) = 0
 
-               RETURN
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        NREC is now the record number of the directory that contains
@@ -1058,18 +1058,18 @@
 !        the clusters whose descriptors we've seen. The variable HIADDR
 !        will contain this address.
 !
-         CALL DASRRI ( HANDLE, NREC, 1, NWI, DIRREC )
+         call dasrri ( handle, nrec, 1, nwi, dirrec )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           Make sure the current table entry won't be found on a
 !           subsequent search.
 !
-            TBHAN(FIDX) = 0
+            tbhan(fidx) = 0
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        In the process of finding the physical location corresponding
@@ -1078,13 +1078,13 @@
 !        this value with the number of the first data record of the
 !        next cluster.
 !
-         CLBASE  =  NREC + 1
+         clbase  =  nrec + 1
 
 !
 !        We'll initialize HIADDR with the value preceding the lowest
 !        address of type TYPE described by the current directory.
 !
-         HIADDR  =  DIRREC(RNGLOC(TYPE)) - 1
+         hiaddr  =  dirrec(rngloc(type)) - 1
 
 !
 !        Initialize the number of records described by the last seen
@@ -1092,7 +1092,7 @@
 !        yield the number of the first record of the current cluster;
 !        that's why it's initialized to 0.
 !
-         CLSIZE  =  0
+         clsize  =  0
 
 !
 !        Now find the descriptor for the cluster containing ADDRSS.
@@ -1103,12 +1103,12 @@
 !        At this point, HIADDR is less than ADDRSS, so the loop will
 !        always be executed at least once.
 !
-         PRVTYP  =  PREV ( DIRREC(BEGDSC) )
-         DSCLOC  =  BEGDSC + 1
+         prvtyp  =  prev ( dirrec(begdsc) )
+         dscloc  =  begdsc + 1
 
-         DO WHILE ( HIADDR .LT. ADDRSS )
+         do while ( hiaddr .lt. addrss )
 
-            IF ( DSCLOC .GT. NWI ) THEN
+            if ( dscloc .gt. nwi ) then
 !
 !              This situation shouldn't occur, but it might if the
 !              DAS file is corrupted.
@@ -1116,60 +1116,60 @@
 !              Make sure the current table entry won't be found
 !              on a subsequent search.
 !
-               TBHAN(FIDX) = 0
+               tbhan(fidx) = 0
 
-               CALL CHKIN  ( 'DASA2L'                               )
-               CALL SETMSG ( 'Directory record # in DAS file with ' &
+               call chkin  ( 'DASA2L'                               )
+               call setmsg ( 'Directory record # in DAS file with ' &
                //            'handle # is probably corrupted. No ' &
                //            'high cluster address at or above the ' &
                //            'input address # was found, though it ' &
                //            'should have been. High address was #. ' &
                //            'Data type was #.'                     )
-               CALL ERRINT ( '#', NREC                              )
-               CALL ERRINT ( '#', HANDLE                            )
-               CALL ERRINT ( '#', ADDRSS                            )
-               CALL ERRINT ( '#', HIADDR                            )
-               CALL ERRINT ( '#', TYPE                              )
-               CALL SIGERR ( 'SPICE(BADDASDIRECTORY)'               )
-               CALL CHKOUT ( 'DASA2L'                               )
-               RETURN
+               call errint ( '#', nrec                              )
+               call errint ( '#', handle                            )
+               call errint ( '#', addrss                            )
+               call errint ( '#', hiaddr                            )
+               call errint ( '#', type                              )
+               call sigerr ( 'SPICE(BADDASDIRECTORY)'               )
+               call chkout ( 'DASA2L'                               )
+               return
 
-            END IF
+            end if
 !
 !           Update CLBASE so that it is the record number of the
 !           first record of the current cluster.
 !
-            CLBASE = CLBASE + CLSIZE
+            clbase = clbase + clsize
 !
 !           Find the type of the current descriptor.
 !
-            IF ( DIRREC(DSCLOC) .GT. 0 ) THEN
-               CURTYP  =   NEXT( PRVTYP )
-            ELSE
-               CURTYP  =   PREV( PRVTYP )
-            END IF
+            if ( dirrec(dscloc) .gt. 0 ) then
+               curtyp  =   next( prvtyp )
+            else
+               curtyp  =   prev( prvtyp )
+            end if
 
 !
 !           Forgetting to update PRVTYP is a Very Bad Thing (VBT).
 !
-            PRVTYP = CURTYP
+            prvtyp = curtyp
 
 !
 !           If the current descriptor is of the type we're interested
 !           in, update the highest address count.
 !
-            IF ( CURTYP .EQ. TYPE ) THEN
-               HIADDR = HIADDR + ( NW(TYPE) * ABS( DIRREC(DSCLOC) ) )
-            END IF
+            if ( curtyp .eq. type ) then
+               hiaddr = hiaddr + ( nw(type) * abs( dirrec(dscloc) ) )
+            end if
 
 !
 !           Compute the number of records described by the current
 !           descriptor. Update the descriptor location.
 !
-            CLSIZE  =  ABS (  DIRREC( DSCLOC )  )
-            DSCLOC  =  DSCLOC + 1
+            clsize  =  abs (  dirrec( dscloc )  )
+            dscloc  =  dscloc + 1
 
-         END DO
+         end do
 !
 !        At this point, the variables
 !
@@ -1179,7 +1179,7 @@
 !
 !        are set.
 !
-      END IF
+      end if
 
 !
 !     At this point,
@@ -1214,15 +1214,15 @@
 !        +--------------------------------------+  CLBASE + CLSIZE - 1
 !
 !
-      RECNO  =     ( CLBASE + CLSIZE - 1 ) &
-                -  ( HIADDR - ADDRSS     ) / NW(TYPE)
+      recno  =     ( clbase + clsize - 1 ) &
+                -  ( hiaddr - addrss     ) / nw(type)
 
-      WORDNO =    ADDRSS    -   (  (ADDRSS-1) / NW(TYPE) ) * NW(TYPE)
+      wordno =    addrss    -   (  (addrss-1) / nw(type) ) * nw(type)
 !
 !     Update PRVHAN and set PRVOK to .TRUE. only if the call succeeded.
 !
-      PRVHAN =  HANDLE
-      PRVOK  = .TRUE.
+      prvhan =  handle
+      prvok  = .true.
 
-      RETURN
-      END
+      return
+      end

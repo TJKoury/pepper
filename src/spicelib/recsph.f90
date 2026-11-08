@@ -1,6 +1,6 @@
 !$Procedure RECSPH ( Rectangular to spherical coordinates )
 
-      SUBROUTINE RECSPH ( RECTAN, R, COLAT, SLON  )
+      subroutine recsph ( rectan, r, colat, slon  )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RECTAN ( 3 )
-      DOUBLE PRECISION   R
-      DOUBLE PRECISION   COLAT
-      DOUBLE PRECISION   SLON
+      double precision   rectan ( 3 )
+      double precision   r
+      double precision   colat
+      double precision   slon
 
 ! $ Brief_I/O
 !
@@ -370,40 +370,40 @@
 !-&
 
 
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
-      DOUBLE PRECISION Z
-      DOUBLE PRECISION BIG
+      double precision x
+      double precision y
+      double precision z
+      double precision big
 
 !
 !     Store rectangular coordinates in temporary variables
 !
-      BIG = MAX ( DABS(RECTAN(1)), DABS(RECTAN(2)), DABS(RECTAN(3)) )
+      big = max ( dabs(rectan(1)), dabs(rectan(2)), dabs(rectan(3)) )
 
-      IF ( BIG .GT. 0 ) THEN
+      if ( big .gt. 0 ) then
 
-         X      = RECTAN(1) / BIG
-         Y      = RECTAN(2) / BIG
-         Z      = RECTAN(3) / BIG
+         x      = rectan(1) / big
+         y      = rectan(2) / big
+         z      = rectan(3) / big
 
-         R      = BIG * DSQRT (X*X + Y*Y + Z*Z)
+         r      = big * dsqrt (x*x + y*y + z*z)
 
-         COLAT  = DATAN2 ( DSQRT(X*X + Y*Y), Z )
+         colat  = datan2 ( dsqrt(x*x + y*y), z )
 
-         X      = RECTAN(1)
-         Y      = RECTAN(2)
+         x      = rectan(1)
+         y      = rectan(2)
 
-         IF (X.EQ.0.0D0 .AND. Y.EQ.0.0D0) THEN
-            SLON  = 0.0D0
-         ELSE
-            SLON  = DATAN2 (Y,X)
-         END IF
+         if (x.eq.0.0d0 .and. y.eq.0.0d0) then
+            slon  = 0.0d0
+         else
+            slon  = datan2 (y,x)
+         end if
 
-      ELSE
-         R     = 0.0D0
-         COLAT = 0.0D0
-         SLON  = 0.0D0
-      END IF
+      else
+         r     = 0.0d0
+         colat = 0.0d0
+         slon  = 0.0d0
+      end if
 
-      RETURN
-      END
+      return
+      end

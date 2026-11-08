@@ -1,6 +1,6 @@
 !$Procedure MXM ( Matrix times matrix, 3x3 )
 
-      SUBROUTINE MXM ( M1, M2, MOUT )
+      subroutine mxm ( m1, m2, mout )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   M1   ( 3,3 )
-      DOUBLE PRECISION   M2   ( 3,3 )
-      DOUBLE PRECISION   MOUT ( 3,3 )
+      double precision   m1   ( 3,3 )
+      double precision   m2   ( 3,3 )
+      double precision   mout ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -205,25 +205,25 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      PRODM( 3, 3 )
+      double precision      prodm( 3, 3 )
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 !
 !  Perform the matrix multiplication
 !
-      DO I=1,3
-         DO J=1,3
-            PRODM(I,J) = M1(I,1)*M2(1,J) &
-                       + M1(I,2)*M2(2,J) &
-                       + M1(I,3)*M2(3,J)
-         END DO
-      END DO
+      do i=1,3
+         do j=1,3
+            prodm(i,j) = m1(i,1)*m2(1,j) &
+                       + m1(i,2)*m2(2,j) &
+                       + m1(i,3)*m2(3,j)
+         end do
+      end do
 !
 !  Move the result into MOUT
 !
-      CALL MOVED (PRODM,9,MOUT)
+      call moved (prodm,9,mout)
 
-      RETURN
-      END
+      return
+      end

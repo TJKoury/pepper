@@ -1,13 +1,13 @@
 !$Procedure      ZZPINI ( Private --- kernel pool initialization )
 
-      SUBROUTINE ZZPINI ( FIRST, &
-                          MAXVAR, MAXVAL, MAXLIN, &
-                          BEGDAT, BEGTXT, &
-                          NMPOOL, DPPOOL, CHPOOL, &
-                          NAMLST, DATLST, &
-                          MAXAGT, MXNOTE, WTVARS, &
-                          WTPTRS, WTPOOL, WTAGNT, &
-                          AGENTS, ACTIVE, NOTIFY, SUBCTR  )
+      subroutine zzpini ( first, &
+                          maxvar, maxval, maxlin, &
+                          begdat, begtxt, &
+                          nmpool, dppool, chpool, &
+                          namlst, datlst, &
+                          maxagt, mxnote, wtvars, &
+                          wtptrs, wtpool, wtagnt, &
+                          agents, active, notify, subctr  )
 
 ! $ Abstract
 !
@@ -29,37 +29,37 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzctr.inc'
+      include              'zzctr.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      LOGICAL               FIRST
-      INTEGER               MAXVAR
-      INTEGER               MAXVAL
-      INTEGER               MAXLIN
-      CHARACTER*(*)         BEGDAT
-      CHARACTER*(*)         BEGTXT
-      INTEGER               NMPOOL ( 2,  LBPOOL : MAXVAR )
-      INTEGER               DPPOOL ( 2,  LBPOOL : MAXVAL )
-      INTEGER               CHPOOL ( 2,  LBPOOL : MAXLIN )
-      INTEGER               NAMLST (              MAXVAR )
-      INTEGER               DATLST (              MAXVAR )
-      INTEGER               MAXAGT
-      INTEGER               MXNOTE
-      CHARACTER*(*)         WTVARS ( LBCELL : MAXVAR )
-      INTEGER               WTPTRS ( MAXVAR )
-      INTEGER               WTPOOL ( 2, LBPOOL:MXNOTE )
-      CHARACTER*(*)         WTAGNT ( MXNOTE )
-      CHARACTER*(*)         AGENTS ( LBCELL : * )
-      CHARACTER*(*)         ACTIVE ( LBCELL : * )
-      CHARACTER*(*)         NOTIFY ( LBCELL : * )
-      INTEGER               SUBCTR ( CTRSIZ )
+      logical               first
+      integer               maxvar
+      integer               maxval
+      integer               maxlin
+      character*(*)         begdat
+      character*(*)         begtxt
+      integer               nmpool ( 2,  lbpool : maxvar )
+      integer               dppool ( 2,  lbpool : maxval )
+      integer               chpool ( 2,  lbpool : maxlin )
+      integer               namlst (              maxvar )
+      integer               datlst (              maxvar )
+      integer               maxagt
+      integer               mxnote
+      character*(*)         wtvars ( lbcell : maxvar )
+      integer               wtptrs ( maxvar )
+      integer               wtpool ( 2, lbpool:mxnote )
+      character*(*)         wtagnt ( mxnote )
+      character*(*)         agents ( lbcell : * )
+      character*(*)         active ( lbcell : * )
+      character*(*)         notify ( lbcell : * )
+      integer               subctr ( ctrsiz )
 
 ! $ Brief_I/O
 !
@@ -244,76 +244,76 @@
 !
 !     SPICELIB Functions.
 !
-      INTEGER               TOUCHI
-      INTEGER               ZZSHSH
+      integer               touchi
+      integer               zzshsh
 
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               SHRTLN
-      PARAMETER           ( SHRTLN =  9 )
+      integer               shrtln
+      parameter           ( shrtln =  9 )
 
-      INTEGER               BSLASH
-      PARAMETER           ( BSLASH = 92 )
+      integer               bslash
+      parameter           ( bslash = 92 )
 
-      CHARACTER*(SHRTLN)    DAT
-      PARAMETER           ( DAT = 'begindata' )
+      character*(shrtln)    dat
+      parameter           ( dat = 'begindata' )
 
-      CHARACTER*(SHRTLN)    TXT
-      PARAMETER           ( TXT = 'begintext' )
+      character*(shrtln)    txt
+      parameter           ( txt = 'begintext' )
 
 !
 !     Local variables
 !
 
-      INTEGER               DUMMY
-      INTEGER               I
+      integer               dummy
+      integer               i
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL CHKIN ( 'ZZPINI' )
+         call chkin ( 'ZZPINI' )
 
-         DO I = 1, MAXVAR
-            NAMLST(I) = 0
-            DATLST(I) = 0
-         END DO
+         do i = 1, maxvar
+            namlst(i) = 0
+            datlst(i) = 0
+         end do
 
 !
 !        Set up hash function. Use TOUCHI to suppress
 !        compiler warnings.
 !
-         DUMMY  = ZZSHSH ( MAXVAR )
-         DUMMY  = TOUCHI ( DUMMY  )
+         dummy  = zzshsh ( maxvar )
+         dummy  = touchi ( dummy  )
 
-         BEGDAT = CHAR(BSLASH) // DAT
-         BEGTXT = CHAR(BSLASH) // TXT
+         begdat = char(bslash) // dat
+         begtxt = char(bslash) // txt
 
-         CALL LNKINI ( MAXVAR, NMPOOL )
-         CALL LNKINI ( MAXVAL, DPPOOL )
-         CALL LNKINI ( MAXLIN, CHPOOL )
+         call lnkini ( maxvar, nmpool )
+         call lnkini ( maxval, dppool )
+         call lnkini ( maxlin, chpool )
 
-         CALL SSIZEC ( MAXVAR, WTVARS )
-         CALL CLEARI ( MAXVAR, WTPTRS )
-         CALL LNKINI ( MXNOTE, WTPOOL )
-         CALL CLEARC ( MXNOTE, WTAGNT )
+         call ssizec ( maxvar, wtvars )
+         call cleari ( maxvar, wtptrs )
+         call lnkini ( mxnote, wtpool )
+         call clearc ( mxnote, wtagnt )
 
-         CALL SSIZEC ( MXNOTE, AGENTS )
-         CALL SSIZEC ( MXNOTE, ACTIVE )
-         CALL SSIZEC ( MXNOTE, NOTIFY )
+         call ssizec ( mxnote, agents )
+         call ssizec ( mxnote, active )
+         call ssizec ( mxnote, notify )
 
-         CALL ZZCTRSIN ( SUBCTR )
+         call zzctrsin ( subctr )
 
-         IF ( .NOT. FAILED() ) THEN
-            FIRST = .FALSE.
-         END IF
+         if ( .not. failed() ) then
+            first = .false.
+         end if
 
-         CALL CHKOUT ( 'ZZPINI' )
-         RETURN
+         call chkout ( 'ZZPINI' )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure ZZCKCV04 ( Private --- C-kernel segment coverage, type 04 )
 
-      SUBROUTINE ZZCKCV04 ( HANDLE,  ARRBEG,  ARREND, &
-                            SCLKID,  TOL,     TIMSYS,  SCHEDL  )
+      subroutine zzckcv04 ( handle,  arrbeg,  arrend, &
+                            sclkid,  tol,     timsys,  schedl  )
 
 ! $ Abstract
 !
@@ -24,20 +24,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'ckparam.inc'
+      include              'ckparam.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               HANDLE
-      INTEGER               ARRBEG
-      INTEGER               ARREND
-      INTEGER               SCLKID
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      SCHEDL ( LBCELL:* )
+      integer               handle
+      integer               arrbeg
+      integer               arrend
+      integer               sclkid
+      double precision      tol
+      character*(*)         timsys
+      double precision      schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -159,81 +159,81 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMAX
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      integer               intmax
+      logical               eqstr
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DESCR  ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      DOUBLE PRECISION      VALUES ( CK4RSZ )
+      double precision      dc     ( nd )
+      double precision      descr  ( 5 )
+      double precision      et
+      double precision      left
+      double precision      right
+      double precision      values ( ck4rsz )
 
-      INTEGER               ENDS   ( 2 )
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               NREC
+      integer               ends   ( 2 )
+      integer               i
+      integer               ic     ( ni )
+      integer               nrec
 
-      LOGICAL               ISTDB
+      logical               istdb
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZCKCV04' )
+      call chkin ( 'ZZCKCV04' )
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZCKCV04'                                     )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZCKCV04'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set a logical flag indicating whether the time systm is SCLK.
 !
-      ISTDB  = EQSTR ( TIMSYS, 'TDB' )
+      istdb  = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-            CALL CHKOUT ( 'ZZCKCV04'                                )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+            call chkout ( 'ZZCKCV04'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Build a descriptor record that satisfies the requirements
@@ -244,67 +244,67 @@
 !     should always work, as ND and NI aren't changing any
 !     time soon.
 !
-      IC ( 1 ) = INTMAX()
-      IC ( 2 ) = INTMAX()
-      IC ( 3 ) = 4
-      IC ( 4 ) = INTMAX()
-      IC ( 5 ) = ARRBEG
-      IC ( 6 ) = ARREND
+      ic ( 1 ) = intmax()
+      ic ( 2 ) = intmax()
+      ic ( 3 ) = 4
+      ic ( 4 ) = intmax()
+      ic ( 5 ) = arrbeg
+      ic ( 6 ) = arrend
 
-      DC ( 1 ) = 0.0D0
-      DC ( 2 ) = 0.0D0
+      dc ( 1 ) = 0.0d0
+      dc ( 2 ) = 0.0d0
 
-      CALL DAFPS ( ND, NI, DC, IC, DESCR )
+      call dafps ( nd, ni, dc, ic, descr )
 
 !
 !     Determine the number of records in the array.
 !
-      CALL CKNR04 ( HANDLE, DESCR, NREC )
+      call cknr04 ( handle, descr, nrec )
 
-      DO I = 1, NREC
+      do i = 1, nrec
 
 !
 !        Extract each packet of pointing coefficients.
 !
-         CALL SGFPKT ( HANDLE, DESCR, I, I, VALUES, ENDS )
+         call sgfpkt ( handle, descr, i, i, values, ends )
 
 !
 !        Compute the left and right end points of the interval
 !        of coverage related to this packet.
 !
-         LEFT  = VALUES ( 1 ) - VALUES ( 2 )
-         RIGHT = VALUES ( 1 ) + VALUES ( 2 )
+         left  = values ( 1 ) - values ( 2 )
+         right = values ( 1 ) + values ( 2 )
 
 !
 !        Adjust the interval using the tolerance.
 !
-         IF ( TOL .GT. 0.D0 ) THEN
+         if ( tol .gt. 0.d0 ) then
 
-            LEFT   =  MAX( LEFT  - TOL, 0.D0 )
-            RIGHT  =       RIGHT + TOL
+            left   =  max( left  - tol, 0.d0 )
+            right  =       right + tol
 
-         END IF
+         end if
 
 !
 !        Convert the time to TDB if necessary.
 !
-         IF ( ISTDB ) THEN
+         if ( istdb ) then
 
-            CALL SCT2E ( SCLKID, LEFT,  ET )
-            LEFT  = ET
+            call sct2e ( sclkid, left,  et )
+            left  = et
 
-            CALL SCT2E ( SCLKID, RIGHT, ET )
-            RIGHT = ET
+            call sct2e ( sclkid, right, et )
+            right = et
 
-         END IF
+         end if
 
 !
 !        Store the results in the schedule.
 !
-         CALL WNINSD ( LEFT, RIGHT, SCHEDL )
+         call wninsd ( left, right, schedl )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZCKCV04' )
-      RETURN
-      END
+      call chkout ( 'ZZCKCV04' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure BEUNS  ( Be an unsigned integer? )
 
-      LOGICAL FUNCTION BEUNS  ( STRING )
+      logical function beuns  ( string )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -148,15 +148,15 @@
 !
 !     SPICE functions
 !
-      INTEGER               FRSTNB
+      integer               frstnb
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               L
+      integer               i
+      integer               l
 
-      LOGICAL               OK
+      logical               ok
 
 
 
@@ -164,48 +164,48 @@
 !     Get the length of the string and the position of its
 !     first non-blank character.
 !
-      L     = LEN    ( STRING )
-      I     = FRSTNB ( STRING )
+      l     = len    ( string )
+      i     = frstnb ( string )
 
 !
 !     If there isn't a non-blank character, this isn't an
 !     unsigned integer.
 !
-      IF ( I .EQ. 0 ) THEN
-         BEUNS  = .FALSE.
-         RETURN
-      END IF
+      if ( i .eq. 0 ) then
+         beuns  = .false.
+         return
+      end if
 
 !
 !     As far as we know right now, everything is ok.  Examine
 !     characters until we run out of string or until we
 !     hit a non-digit character.
 !
-      OK = .TRUE.
+      ok = .true.
 
-      DO WHILE ( OK .AND. ( I .LE. L ) )
+      do while ( ok .and. ( i .le. l ) )
 
-         IF ( INDEX('0123456789', STRING(I:I) ) .GT. 0  ) THEN
-            I = I + 1
-         ELSE
-            OK = .FALSE.
-         END IF
+         if ( index('0123456789', string(i:i) ) .gt. 0  ) then
+            i = i + 1
+         else
+            ok = .false.
+         end if
 
-      END DO
+      end do
 
 !
 !     If the string still is ok as an unsigned integer, it must be
 !     one...
 !
-      IF ( OK ) THEN
-         BEUNS  = .TRUE.
-      ELSE
+      if ( ok ) then
+         beuns  = .true.
+      else
 
 !
 !     ... otherwise, it's an unsigned integer if the remainder is blank.
 !
-         BEUNS  = STRING(I:) .EQ. ' '
-      END IF
+         beuns  = string(i:) .eq. ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

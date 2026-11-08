@@ -1,8 +1,8 @@
 !$Procedure      ZZEKSCAN ( EK, scan query )
 
-      SUBROUTINE ZZEKSCAN (  QUERY,  MAXNTK, MAXNUM, NTOKEN, TOKENS, &
-                             LXBEGS, LXENDS, VALUES, NUMVLS, CHRBUF, &
-                             CHBEGS, CHENDS, SCNERR, ERRMSG         )
+      subroutine zzekscan (  query,  maxntk, maxnum, ntoken, tokens, &
+                             lxbegs, lxends, values, numvls, chrbuf, &
+                             chbegs, chends, scnerr, errmsg         )
 
 ! $ Abstract
 !
@@ -20,24 +20,24 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekkeyw.inc'
-      INCLUDE 'ektokn.inc'
-      INCLUDE 'ekqlimit.inc'
+      include 'ekkeyw.inc'
+      include 'ektokn.inc'
+      include 'ekqlimit.inc'
 
-      CHARACTER*(*)         QUERY
-      INTEGER               MAXNTK
-      INTEGER               MAXNUM
-      INTEGER               NTOKEN
-      INTEGER               TOKENS ( * )
-      INTEGER               LXBEGS ( * )
-      INTEGER               LXENDS ( * )
-      INTEGER               VALUES ( * )
-      DOUBLE PRECISION      NUMVLS ( * )
-      CHARACTER*(*)         CHRBUF
-      INTEGER               CHBEGS ( * )
-      INTEGER               CHENDS ( * )
-      LOGICAL               SCNERR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         query
+      integer               maxntk
+      integer               maxnum
+      integer               ntoken
+      integer               tokens ( * )
+      integer               lxbegs ( * )
+      integer               lxends ( * )
+      integer               values ( * )
+      double precision      numvls ( * )
+      character*(*)         chrbuf
+      integer               chbegs ( * )
+      integer               chends ( * )
+      logical               scnerr
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -288,114 +288,114 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               FRSTPC
-      INTEGER               ISRCHC
-      INTEGER               RTRIM
+      integer               bsrchc
+      integer               frstpc
+      integer               isrchc
+      integer               rtrim
 
-      LOGICAL               BEINT
-      LOGICAL               RETURN
+      logical               beint
+      logical               return
 
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         DQUOTE
-      PARAMETER           ( DQUOTE  = '"' )
+      character*(*)         dquote
+      parameter           ( dquote  = '"' )
 
-      CHARACTER*(*)         SQUOTE
-      PARAMETER           ( SQUOTE  = '''' )
+      character*(*)         squote
+      parameter           ( squote  = '''' )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE =   80 )
+      integer               lnsize
+      parameter           ( lnsize =   80 )
 
-      INTEGER               NXTTOK
-      PARAMETER           ( NXTTOK = 1 )
+      integer               nxttok
+      parameter           ( nxttok = 1 )
 
-      INTEGER               NEWTOK
-      PARAMETER           ( NEWTOK = NXTTOK + 1 )
+      integer               newtok
+      parameter           ( newtok = nxttok + 1 )
 
-      INTEGER               TERM
-      PARAMETER           ( TERM   = NEWTOK + 1 )
+      integer               term
+      parameter           ( term   = newtok + 1 )
 
-      INTEGER               QSTR
-      PARAMETER           ( QSTR   = TERM   + 1 )
+      integer               qstr
+      parameter           ( qstr   = term   + 1 )
 
-      INTEGER               DOT
-      PARAMETER           ( DOT    = QSTR   + 1 )
+      integer               dot
+      parameter           ( dot    = qstr   + 1 )
 
-      INTEGER               NUMBER
-      PARAMETER           ( NUMBER = DOT    + 1 )
+      integer               number
+      parameter           ( number = dot    + 1 )
 
-      INTEGER               IDENT
-      PARAMETER           ( IDENT  = NUMBER + 1 )
+      integer               ident
+      parameter           ( ident  = number + 1 )
 
-      INTEGER               SPCIAL
-      PARAMETER           ( SPCIAL = IDENT + 1 )
+      integer               spcial
+      parameter           ( spcial = ident + 1 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               MXSPEC
-      PARAMETER           ( MXSPEC = 512 )
+      integer               mxspec
+      parameter           ( mxspec = 512 )
 
 !
 !     Number of tokens made up of special characters:
 !
-      INTEGER               NSPEC
-      PARAMETER           ( NSPEC  = 13 )
+      integer               nspec
+      parameter           ( nspec  = 13 )
 
 !
 !     Max length of any such token:
 !
-      INTEGER               SPCLEN
-      PARAMETER           ( SPCLEN = 2 )
+      integer               spclen
+      parameter           ( spclen = 2 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         CHR
-      CHARACTER*(SPCLEN)    SPCSTR ( NSPEC )
-      CHARACTER*(LNSIZE)    HDCHRS
-      CHARACTER*(KWLEN)     KEYWDS ( NKEYWD )
-      CHARACTER*(LNSIZE)    TLCHRS
-      CHARACTER*(MAXQRY)    TQUERY
+      character*(1)         chr
+      character*(spclen)    spcstr ( nspec )
+      character*(lnsize)    hdchrs
+      character*(kwlen)     keywds ( nkeywd )
+      character*(lnsize)    tlchrs
+      character*(maxqry)    tquery
 
-      INTEGER               CHCARD
-      INTEGER               CPTR
-      INTEGER               I
-      INTEGER               IDSPEC ( LBCELL : MXSPEC )
-      INTEGER               J
-      INTEGER               KWVALS ( NKEYWD )
-      INTEGER               L
-      INTEGER               LAST
-      INTEGER               LENGTH
-      INTEGER               NCHARS
-      INTEGER               NNUMS
-      INTEGER               NSTRS
-      INTEGER               PTR
-      INTEGER               ROOM
-      INTEGER               STATE
-      INTEGER               SPCTOK ( NSPEC )
-      INTEGER               SPCVAL ( NSPEC )
+      integer               chcard
+      integer               cptr
+      integer               i
+      integer               idspec ( lbcell : mxspec )
+      integer               j
+      integer               kwvals ( nkeywd )
+      integer               l
+      integer               last
+      integer               length
+      integer               nchars
+      integer               nnums
+      integer               nstrs
+      integer               ptr
+      integer               room
+      integer               state
+      integer               spctok ( nspec )
+      integer               spcval ( nspec )
 
-      LOGICAL               PASS1
+      logical               pass1
 
 !
 !     Statement Functions
 !
-      LOGICAL               ISALPH
-      LOGICAL               ISDIGT
-      LOGICAL               ISDOT
-      LOGICAL               ISSIGN
-      LOGICAL               ISNUM
-      LOGICAL               ISQUOT
+      logical               isalph
+      logical               isdigt
+      logical               isdot
+      logical               issign
+      logical               isnum
+      logical               isquot
 
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
@@ -404,40 +404,40 @@
 !
 !     These keyword declarations must be made in alphabetical order!
 !
-      DATA  (  KEYWDS(I), KWVALS(I), I = 1, 10 )      / &
-                 'ALL',          KWALL, &
-                 'AND',          KWAND, &
-                 'ASC ',         KWASND, &
-                 'AVG ',         KWAVG, &
-                 'BETWEEN',      KWBETW, &
-                 'BY',           KWBY, &
-                 'COUNT',        KWCNT, &
-                 'DESC',         KWDSND, &
-                 'DISTINCT',     KWDSTN, &
-                 'EQ',           KWEQ                 /
+      data  (  keywds(i), kwvals(i), i = 1, 10 )      / &
+                 'ALL',          kwall, &
+                 'AND',          kwand, &
+                 'ASC ',         kwasnd, &
+                 'AVG ',         kwavg, &
+                 'BETWEEN',      kwbetw, &
+                 'BY',           kwby, &
+                 'COUNT',        kwcnt, &
+                 'DESC',         kwdsnd, &
+                 'DISTINCT',     kwdstn, &
+                 'EQ',           kweq                 /
 
-      DATA  (  KEYWDS(I), KWVALS(I), I = 11, 20 )     / &
-                 'FROM',         KWFROM, &
-                 'GE',           KWGE, &
-                 'GROUP',        KWGRP, &
-                 'GT',           KWGT, &
-                 'HAVING',       KWHAV, &
-                 'IS',           KWIS, &
-                 'LE',           KWLE, &
-                 'LIKE',         KWLIKE, &
-                 'LT',           KWLT, &
-                 'MAX',          KWMAX                /
+      data  (  keywds(i), kwvals(i), i = 11, 20 )     / &
+                 'FROM',         kwfrom, &
+                 'GE',           kwge, &
+                 'GROUP',        kwgrp, &
+                 'GT',           kwgt, &
+                 'HAVING',       kwhav, &
+                 'IS',           kwis, &
+                 'LE',           kwle, &
+                 'LIKE',         kwlike, &
+                 'LT',           kwlt, &
+                 'MAX',          kwmax                /
 
-      DATA  (  KEYWDS(I), KWVALS(I), I = 21, NKEYWD ) / &
-                 'MIN',          KWMIN, &
-                 'NE',           KWNE, &
-                 'NOT',          KWNOT, &
-                 'NULL',         KWNULL, &
-                 'OR',           KWOR, &
-                 'ORDER',        KWORDR, &
-                 'SELECT',       KWSEL, &
-                 'SUM',          KWSUM, &
-                 'WHERE',        KWWHER               /
+      data  (  keywds(i), kwvals(i), i = 21, nkeywd ) / &
+                 'MIN',          kwmin, &
+                 'NE',           kwne, &
+                 'NOT',          kwnot, &
+                 'NULL',         kwnull, &
+                 'OR',           kwor, &
+                 'ORDER',        kwordr, &
+                 'SELECT',       kwsel, &
+                 'SUM',          kwsum, &
+                 'WHERE',        kwwher               /
 
 !
 !     The following tokens are sequences of special characters.  Some
@@ -445,109 +445,109 @@
 !     this data statement, the longer sequences must precede the shorter
 !     ones, in order for the matching algorithm to work properly.
 !
-      DATA  (  SPCSTR(I), SPCTOK(I), SPCVAL(I), I = 1, NSPEC )  / &
-                 '!=',      TKKEY,    KWNE, &
-                 '^=',      TKKEY,    KWNE, &
-                 '<>',      TKKEY,    KWNE, &
-                 '<=',      TKKEY,    KWLE, &
-                 '>=',      TKKEY,    KWGE, &
-                 '<',       TKKEY,    KWLT, &
-                 '>',       TKKEY,    KWGT, &
-                 '=',       TKKEY,    KWEQ, &
-                 '(',       TKLPAR,   0, &
-                 ')',       TKRPAR,   0, &
-                 ',',       TKCOMA,   0, &
-                 '.',       TKDOT,    0, &
-                 '*',       TKSTAR,   0                         /
+      data  (  spcstr(i), spctok(i), spcval(i), i = 1, nspec )  / &
+                 '!=',      tkkey,    kwne, &
+                 '^=',      tkkey,    kwne, &
+                 '<>',      tkkey,    kwne, &
+                 '<=',      tkkey,    kwle, &
+                 '>=',      tkkey,    kwge, &
+                 '<',       tkkey,    kwlt, &
+                 '>',       tkkey,    kwgt, &
+                 '=',       tkkey,    kweq, &
+                 '(',       tklpar,   0, &
+                 ')',       tkrpar,   0, &
+                 ',',       tkcoma,   0, &
+                 '.',       tkdot,    0, &
+                 '*',       tkstar,   0                         /
 
 
-      DATA        PASS1              /  .TRUE.  /
+      data        pass1              /  .true.  /
 
 
 !
 !     Statement Function Definitions
 !
-      ISALPH ( CHR )  =       (      ( ICHAR(CHR) .GE. ICHAR('A') ) &
-                               .AND. ( ICHAR(CHR) .LE. ICHAR('Z') ) ) &
-                        .OR.  (      ( ICHAR(CHR) .GE. ICHAR('a') ) &
-                               .AND. ( ICHAR(CHR) .LE. ICHAR('z') ) )
+      isalph ( chr )  =       (      ( ichar(chr) .ge. ichar('A') ) &
+                               .and. ( ichar(chr) .le. ichar('Z') ) ) &
+                        .or.  (      ( ichar(chr) .ge. ichar('a') ) &
+                               .and. ( ichar(chr) .le. ichar('z') ) )
 
 
-      ISDIGT ( CHR )  =       (      ( ICHAR(CHR) .GE. ICHAR('0') ) &
-                               .AND. ( ICHAR(CHR) .LE. ICHAR('9') ) )
+      isdigt ( chr )  =       (      ( ichar(chr) .ge. ichar('0') ) &
+                               .and. ( ichar(chr) .le. ichar('9') ) )
 
 
-      ISDOT  ( CHR )  =     ( CHR .EQ. '.' )
+      isdot  ( chr )  =     ( chr .eq. '.' )
 
 
-      ISSIGN ( CHR )  =     ( CHR .EQ. '+' )    .OR. ( CHR .EQ. '-' )
+      issign ( chr )  =     ( chr .eq. '+' )    .or. ( chr .eq. '-' )
 
 
-      ISNUM  ( CHR )  =       ISDIGT( CHR )     .OR.   ISSIGN ( CHR ) &
-                                                .OR.  ( CHR .EQ. '.' )
+      isnum  ( chr )  =       isdigt( chr )     .or.   issign ( chr ) &
+                                                .or.  ( chr .eq. '.' )
 
 
-      ISQUOT ( CHR )  =     ( CHR .EQ. SQUOTE ) .OR. ( CHR .EQ. DQUOTE )
+      isquot ( chr )  =     ( chr .eq. squote ) .or. ( chr .eq. dquote )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKSCAN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKSCAN' )
+      end if
 
 !
 !     The first time through, set up our identifier character set.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Each identifier must start with a letter (of either case).
 !        The subsequent characters must be letters, numbers, dollar
 !        signs or underscores.
 !
-         HDCHRS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' // &
+         hdchrs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' // &
                   'abcdefghijklmnopqrstuvwxyz'
 
-         TLCHRS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' // &
+         tlchrs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' // &
                   'abcdefghijklmnopqrstuvwxyz' // &
                   '0123456789'                 // &
                   '$_'
 
 
-         CALL SSIZEI ( MXSPEC,         IDSPEC )
-         CALL LXCSID ( HDCHRS, TLCHRS, IDSPEC )
+         call ssizei ( mxspec,         idspec )
+         call lxcsid ( hdchrs, tlchrs, idspec )
 
-         PASS1  =  .FALSE.
+         pass1  =  .false.
 
-      END IF
+      end if
 
 !
 !     We'll work with a local copy of the query.
 !
-      L       =  RTRIM ( QUERY )
-      TQUERY  =  QUERY(:L)
+      l       =  rtrim ( query )
+      tquery  =  query(:l)
 
 !
 !     Initialize pointers and counts.
 !
-      CPTR   =  1
-      NNUMS  =  0
-      NSTRS  =  0
-      CHCARD =  0
-      NTOKEN =  0
+      cptr   =  1
+      nnums  =  0
+      nstrs  =  0
+      chcard =  0
+      ntoken =  0
 
 !
 !     Start out in the token search state.
 !
-      STATE  =  NXTTOK
+      state  =  nxttok
 
-      DO WHILE ( STATE .NE. TERM )
+      do while ( state .ne. term )
 
 
-         IF ( STATE .EQ. NXTTOK ) THEN
+         if ( state .eq. nxttok ) then
 !
 !           In our initial state, we're looking for a new token.
 !           We stop when we have enough characters to determine
@@ -557,46 +557,46 @@
 !           Set our character pointer to the beginning of the next
 !           token.
 !
-            IF ( NTOKEN .GT. 0 ) THEN
-              CPTR =  LXENDS(NTOKEN) + 1
-            END IF
+            if ( ntoken .gt. 0 ) then
+              cptr =  lxends(ntoken) + 1
+            end if
 
 
-            IF ( CPTR .GT. L ) THEN
+            if ( cptr .gt. l ) then
 
-               STATE  =  TERM
+               state  =  term
 
-            ELSE
-
-
-               DO WHILE (       ( TQUERY(CPTR:CPTR) .EQ. ' ' ) &
-                          .AND. ( CPTR              .LT. L   )  )
-
-                  CPTR  =  CPTR + 1
-               END DO
+            else
 
 
-               IF ( TQUERY(CPTR:CPTR) .EQ. ' ' ) THEN
+               do while (       ( tquery(cptr:cptr) .eq. ' ' ) &
+                          .and. ( cptr              .lt. l   )  )
+
+                  cptr  =  cptr + 1
+               end do
+
+
+               if ( tquery(cptr:cptr) .eq. ' ' ) then
 !
 !                 We're out of non-blank characters to look at.
 !
-                  STATE  =  TERM
+                  state  =  term
 
-               ELSE
+               else
 
-                  CHR    =  TQUERY(CPTR:CPTR)
-                  STATE  =  NEWTOK
+                  chr    =  tquery(cptr:cptr)
+                  state  =  newtok
 
-               END IF
+               end if
 
 
-            END IF
+            end if
 !
 !           STATE is in the set {NEWTOK, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. NEWTOK ) THEN
+         else if ( state .eq. newtok ) then
 !
 !           If we got this far, we have the initial character of
 !           something that could be a valid token.  We test for
@@ -609,41 +609,41 @@
 !           in that order.  Of course, we must have room in our output
 !           arrays for the token.
 !
-            IF ( NTOKEN .EQ. MAXNTK ) THEN
+            if ( ntoken .eq. maxntk ) then
 
-               ERRMSG  =  'Maximum allowed number of tokens is #; at '// &
+               errmsg  =  'Maximum allowed number of tokens is #; at '// &
                           'least # tokens are present in QUERY.'
-               CALL REPMI ( ERRMSG, '#', MAXNTK,   ERRMSG )
-               CALL REPMI ( ERRMSG, '#', MAXNTK+1, ERRMSG )
+               call repmi ( errmsg, '#', maxntk,   errmsg )
+               call repmi ( errmsg, '#', maxntk+1, errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 
-            IF ( ISQUOT(CHR) ) THEN
+            if ( isquot(chr) ) then
 
-               STATE = QSTR
+               state = qstr
 
-            ELSE IF ( ISDOT(CHR) ) THEN
+            else if ( isdot(chr) ) then
 
-               STATE = DOT
+               state = dot
 
-            ELSE IF ( ISNUM(CHR) ) THEN
+            else if ( isnum(chr) ) then
 
-               STATE = NUMBER
+               state = number
 
-            ELSE IF ( ISALPH(CHR) ) THEN
+            else if ( isalph(chr) ) then
 
-               STATE = IDENT
+               state = ident
 
-            ELSE
+            else
 
-               STATE = SPCIAL
+               state = spcial
 
-            END IF
+            end if
 
 !
 !           At this point, the next value of STATE has been determined.
@@ -653,97 +653,97 @@
 !
 
 
-         ELSE IF ( STATE .EQ. QSTR ) THEN
+         else if ( state .eq. qstr ) then
 !
 !           Look for a quoted string starting at location CPTR.
 !           Use the current character as the quote character.
 !
-            CALL LXQSTR ( TQUERY, CHR, CPTR, LAST, NCHARS )
+            call lxqstr ( tquery, chr, cptr, last, nchars )
 
-            IF ( NCHARS .EQ. 0 ) THEN
+            if ( nchars .eq. 0 ) then
 
-               ERRMSG = 'Invalid quoted string at location #.'
-               CALL REPMI ( ERRMSG, '#', CPTR, ERRMSG )
+               errmsg = 'Invalid quoted string at location #.'
+               call repmi ( errmsg, '#', cptr, errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 !
 !           We've located a quoted string lexeme.  Parse the lexeme
 !           and obtain the corresponding string value.  First make
 !           sure we have enough room for the parsed string.
 !
-            ROOM  =  LEN(CHRBUF)-CHCARD
+            room  =  len(chrbuf)-chcard
 
-            IF ( NCHARS .GT. ROOM )  THEN
+            if ( nchars .gt. room )  then
 
-               ERRMSG  =  'Insufficient space to store quoted '    // &
+               errmsg  =  'Insufficient space to store quoted '    // &
                           'string at location #; # chars needed; ' // &
                           'only # are available.'
 
-               CALL REPMI  ( ERRMSG, '#', CPTR,    ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', NCHARS,  ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', ROOM,    ERRMSG )
+               call repmi  ( errmsg, '#', cptr,    errmsg )
+               call repmi  ( errmsg, '#', nchars,  errmsg )
+               call repmi  ( errmsg, '#', room,    errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
-
-
-            CALL PARSQS ( TQUERY(CPTR:CPTR+NCHARS-1), &
-                          CHR, &
-                          CHRBUF(CHCARD+1:), &
-                          LENGTH, &
-                          SCNERR, &
-                          ERRMSG, &
-                          PTR              )
+            end if
 
 
-            IF ( SCNERR ) THEN
+            call parsqs ( tquery(cptr:cptr+nchars-1), &
+                          chr, &
+                          chrbuf(chcard+1:), &
+                          length, &
+                          scnerr, &
+                          errmsg, &
+                          ptr              )
 
-               CALL PREFIX ( '#', 2, ERRMSG )
 
-               CALL REPMC  ( ERRMSG, &
+            if ( scnerr ) then
+
+               call prefix ( '#', 2, errmsg )
+
+               call repmc  ( errmsg, &
                              '#', &
                              'Error occurred while parsing '    // &
                              'quoted string token at location #:', &
-                             ERRMSG                        )
+                             errmsg                        )
 
-               CALL REPMI  ( ERRMSG, '#', CPTR, ERRMSG )
+               call repmi  ( errmsg, '#', cptr, errmsg )
 
-               SCNERR = .TRUE.
+               scnerr = .true.
 
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 !
 !           We've found a valid quoted string.  Set our outputs.
 !
-            NTOKEN          =  NTOKEN + 1
-            TOKENS(NTOKEN)  =  TKQSTR
-            NSTRS           =  NSTRS  + 1
-            VALUES(NTOKEN)  =  NSTRS
-            CHBEGS(NSTRS)   =  CHCARD + 1
-            CHENDS(NSTRS)   =  CHCARD + LENGTH
-            CHCARD          =  CHENDS(NSTRS)
-            LXBEGS(NTOKEN)  =  CPTR
-            LXENDS(NTOKEN)  =  LAST
+            ntoken          =  ntoken + 1
+            tokens(ntoken)  =  tkqstr
+            nstrs           =  nstrs  + 1
+            values(ntoken)  =  nstrs
+            chbegs(nstrs)   =  chcard + 1
+            chends(nstrs)   =  chcard + length
+            chcard          =  chends(nstrs)
+            lxbegs(ntoken)  =  cptr
+            lxends(ntoken)  =  last
 
-            STATE           =  NXTTOK
+            state           =  nxttok
 
 !
 !           STATE is now NXTTOK.
 !
 
 
-         ELSE IF ( STATE .EQ. DOT ) THEN
+         else if ( state .eq. dot ) then
 !
 !           The token begins with a period.  We could be looking at
 !           a floating point number, or we could be looking at a
@@ -751,68 +751,68 @@
 !
 !           Look for a number starting at location CPTR.
 !
-            CALL LX4NUM ( TQUERY, CPTR, LAST, NCHARS )
+            call lx4num ( tquery, cptr, last, nchars )
 
-            IF ( NCHARS .GT. 0 ) THEN
-               STATE  =  NUMBER
-            ELSE
-               STATE  =  SPCIAL
-            END IF
+            if ( nchars .gt. 0 ) then
+               state  =  number
+            else
+               state  =  spcial
+            end if
 
 !
 !           STATE has been set to NUMBER or SPCIAL.  CPTR and NTOKEN
 !           remain unchanged.
 !
 
-         ELSE IF ( STATE .EQ. NUMBER ) THEN
+         else if ( state .eq. number ) then
 !
 !           Look for a number starting at location CPTR.
 !
-            CALL LX4NUM ( TQUERY, CPTR, LAST, NCHARS )
+            call lx4num ( tquery, cptr, last, nchars )
 
 
-            IF ( NCHARS .EQ. 0 ) THEN
+            if ( nchars .eq. 0 ) then
 
-               ERRMSG = 'Invalid numeric token at location #.'
-               CALL REPMI ( ERRMSG, '#', CPTR, ERRMSG )
+               errmsg = 'Invalid numeric token at location #.'
+               call repmi ( errmsg, '#', cptr, errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 !
 !           Parse the token, but only do so if there's enough
 !           room to store the result.
 !
-            ROOM  =  MAXNUM - NNUMS
+            room  =  maxnum - nnums
 
-            IF ( ROOM .LT. 1 ) THEN
+            if ( room .lt. 1 ) then
 
-               ERRMSG  =  'Insufficient space to store value of ' // &
+               errmsg  =  'Insufficient space to store value of ' // &
                           'number at location #; # elements are ' // &
                           'available in the NUMVLS array; # are ' // &
                           'required.'
 
-               CALL REPMI  ( ERRMSG, '#', CPTR,     ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', MAXNUM,   ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', MAXNUM+1, ERRMSG )
+               call repmi  ( errmsg, '#', cptr,     errmsg )
+               call repmi  ( errmsg, '#', maxnum,   errmsg )
+               call repmi  ( errmsg, '#', maxnum+1, errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
-
-
-            CALL NPARSD ( TQUERY(CPTR:LAST), &
-                          NUMVLS(NNUMS+1), &
-                          ERRMSG, &
-                          PTR                 )
+            end if
 
 
-            IF ( ERRMSG .NE. ' ' ) THEN
+            call nparsd ( tquery(cptr:last), &
+                          numvls(nnums+1), &
+                          errmsg, &
+                          ptr                 )
+
+
+            if ( errmsg .ne. ' ' ) then
 !
 !              This check is done for safety; by construction, we
 !              should always have a valid number if LX4NUM
@@ -820,141 +820,141 @@
 !              should always be blank.
 !
 
-               CALL PREFIX ( '#', 2, ERRMSG )
+               call prefix ( '#', 2, errmsg )
 
-               CALL REPMC  ( ERRMSG, &
+               call repmc  ( errmsg, &
                              '#', &
                              'Error found in numeric ' // &
                              'token at location #:', &
-                             ERRMSG                        )
+                             errmsg                        )
 
-               CALL REPMI  ( ERRMSG, '#', CPTR+PTR-1, ERRMSG )
+               call repmi  ( errmsg, '#', cptr+ptr-1, errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 !
 !           We found a valid numeric token.  We distinguish
 !           between integers and d.p. numbers; set the token
 !           to the most restrictive category possible.
 !
-            NTOKEN  =  NTOKEN + 1
+            ntoken  =  ntoken + 1
 
-            IF (   BEINT( TQUERY(CPTR:LAST) )    ) THEN
-               TOKENS(NTOKEN) =  TKINT
-            ELSE
-               TOKENS(NTOKEN) =  TKDP
-            END IF
+            if (   beint( tquery(cptr:last) )    ) then
+               tokens(ntoken) =  tkint
+            else
+               tokens(ntoken) =  tkdp
+            end if
 
 !
 !           Set the rest of our outputs.
 !
-            NNUMS           =  NNUMS  + 1
-            VALUES(NTOKEN)  =  NNUMS
-            LXBEGS(NTOKEN)  =  CPTR
-            LXENDS(NTOKEN)  =  LAST
+            nnums           =  nnums  + 1
+            values(ntoken)  =  nnums
+            lxbegs(ntoken)  =  cptr
+            lxends(ntoken)  =  last
 
-            STATE           =  NXTTOK
+            state           =  nxttok
 
 !
 !           STATE is now NXTTOK.
 !
 
 
-         ELSE IF ( STATE .EQ. IDENT ) THEN
+         else if ( state .eq. ident ) then
 !
 !           Look for an identifier starting at location CPTR.
 !
-            CALL LXIDNT ( IDSPEC, TQUERY, CPTR, LAST, NCHARS )
+            call lxidnt ( idspec, tquery, cptr, last, nchars )
 
 
-            IF ( NCHARS .EQ. 0 ) THEN
+            if ( nchars .eq. 0 ) then
 !
 !              This check is done for safety; by construction, we
 !              should always have a valid identifier of at least one
 !              character if we get to the IDENT state, so in fact
 !              NCHARS should never equal zero.
 !
-               ERRMSG = 'Invalid identifier at location #.'
-               CALL REPMI ( ERRMSG, '#', CPTR, ERRMSG )
+               errmsg = 'Invalid identifier at location #.'
+               call repmi ( errmsg, '#', cptr, errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 !
 !           We've located an identifier lexeme.  Make sure we have
 !           enough room for the string.
 !
-            ROOM  =  LEN(CHRBUF)-CHCARD
+            room  =  len(chrbuf)-chcard
 
-            IF ( NCHARS .GT. ROOM )  THEN
+            if ( nchars .gt. room )  then
 
-               ERRMSG  =  'Insufficient space to store identifier '// &
+               errmsg  =  'Insufficient space to store identifier '// &
                           'string at location #; # chars needed; ' // &
                           'only # are available.'
 
-               CALL REPMI  ( ERRMSG, '#', CPTR,   ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', NCHARS, ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', ROOM,   ERRMSG )
+               call repmi  ( errmsg, '#', cptr,   errmsg )
+               call repmi  ( errmsg, '#', nchars, errmsg )
+               call repmi  ( errmsg, '#', room,   errmsg )
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 
 !
 !           We've found a valid identifier or keyword.  Set our
 !           outputs.  Convert the string to upper case.
 !
-            NTOKEN =  NTOKEN + 1
+            ntoken =  ntoken + 1
 
-            CALL UCASE (  TQUERY( CPTR:LAST ), &
-                          CHRBUF( CHCARD+1:CHCARD+NCHARS )  )
+            call ucase (  tquery( cptr:last ), &
+                          chrbuf( chcard+1:chcard+nchars )  )
 
-            I      =  BSRCHC ( CHRBUF( CHCARD+1 : CHCARD+NCHARS ), &
-                               NKEYWD, &
-                               KEYWDS                            )
+            i      =  bsrchc ( chrbuf( chcard+1 : chcard+nchars ), &
+                               nkeywd, &
+                               keywds                            )
 
 
-            IF ( I .GT. 0 ) THEN
+            if ( i .gt. 0 ) then
 !
 !              It's a keyword.
 !
-               TOKENS(NTOKEN)  =  TKKEY
-               VALUES(NTOKEN)  =  KWVALS(I)
-               LXBEGS(NTOKEN)  =  CPTR
-               LXENDS(NTOKEN)  =  LAST
+               tokens(ntoken)  =  tkkey
+               values(ntoken)  =  kwvals(i)
+               lxbegs(ntoken)  =  cptr
+               lxends(ntoken)  =  last
 
-               STATE           =  NXTTOK
+               state           =  nxttok
 
-            ELSE
+            else
 !
 !              It's an identifier.
 !
-               NSTRS           =  NSTRS  + 1
-               CHBEGS(NSTRS)   =  CHCARD + 1
-               CHENDS(NSTRS)   =  CHCARD + NCHARS
-               CHCARD          =  CHENDS(NSTRS)
-               TOKENS(NTOKEN)  =  TKID
-               VALUES(NTOKEN)  =  NSTRS
-               LXBEGS(NTOKEN)  =  CPTR
-               LXENDS(NTOKEN)  =  LAST
+               nstrs           =  nstrs  + 1
+               chbegs(nstrs)   =  chcard + 1
+               chends(nstrs)   =  chcard + nchars
+               chcard          =  chends(nstrs)
+               tokens(ntoken)  =  tkid
+               values(ntoken)  =  nstrs
+               lxbegs(ntoken)  =  cptr
+               lxends(ntoken)  =  last
 
-               STATE           =  NXTTOK
+               state           =  nxttok
 
 !
 !              We finished scanning an identifier.
 !
 !              STATE is set to NXTTOK.
 !
-            END IF
+            end if
 !
 !           We scanned a keyword or an identifier.
 !
@@ -962,80 +962,80 @@
 !
 
 
-         ELSE IF ( STATE .EQ. SPCIAL ) THEN
+         else if ( state .eq. spcial ) then
 !
 !           Look for a valid token starting with a special character at
 !           location CPTR. We attempt to match the longest possible
 !           special token.
 !
-            I  =  MIN ( SPCLEN,   L - CPTR + 1 )
-            J  =  0
+            i  =  min ( spclen,   l - cptr + 1 )
+            j  =  0
 
-            DO WHILE (  ( I .GE. 1 ) .AND. ( J .EQ. 0 ) )
+            do while (  ( i .ge. 1 ) .and. ( j .eq. 0 ) )
 
-               LAST =  CPTR + I - 1
-               J    =  ISRCHC ( TQUERY(CPTR:LAST), NSPEC, SPCSTR )
+               last =  cptr + i - 1
+               j    =  isrchc ( tquery(cptr:last), nspec, spcstr )
 
-               IF ( J .EQ. 0 ) THEN
-                  I  =  I - 1
-               END IF
+               if ( j .eq. 0 ) then
+                  i  =  i - 1
+               end if
 
-            END DO
+            end do
 
 
-            IF ( J .GT. 0 ) THEN
+            if ( j .gt. 0 ) then
 !
 !              We've identified a valid token.
 !
-               NTOKEN =  NTOKEN + 1
+               ntoken =  ntoken + 1
 
-               TOKENS(NTOKEN)  =  SPCTOK(J)
-               VALUES(NTOKEN)  =  SPCVAL(J)
-               LXBEGS(NTOKEN)  =  CPTR
-               LXENDS(NTOKEN)  =  CPTR - 1 + RTRIM( SPCSTR(J) )
+               tokens(ntoken)  =  spctok(j)
+               values(ntoken)  =  spcval(j)
+               lxbegs(ntoken)  =  cptr
+               lxends(ntoken)  =  cptr - 1 + rtrim( spcstr(j) )
 
-               STATE           =  NXTTOK
+               state           =  nxttok
 
-            ELSE
+            else
 
-               ERRMSG = 'Invalid character found at location #. '
-               CALL REPMI  ( ERRMSG, '#', CPTR, ERRMSG )
+               errmsg = 'Invalid character found at location #. '
+               call repmi  ( errmsg, '#', cptr, errmsg )
 !
 !              If the offending character is printable, include it
 !              in the error message.  Otherwise, include the integer
 !              code for the character.
 !
-               IF ( FRSTPC(CHR) .GT. 0 ) THEN
+               if ( frstpc(chr) .gt. 0 ) then
 
-                  CALL SUFFIX ( '<character> = ''#''',   2, ERRMSG )
-                  CALL REPMC  ( ERRMSG, '#', CHR,           ERRMSG )
+                  call suffix ( '<character> = ''#''',   2, errmsg )
+                  call repmc  ( errmsg, '#', chr,           errmsg )
 
-               ELSE
+               else
 
-                  CALL SUFFIX ( 'ICHAR(<character>) = #', 2, ERRMSG )
-                  CALL REPMI  ( ERRMSG, '#', ICHAR(CHR),     ERRMSG )
+                  call suffix ( 'ICHAR(<character>) = #', 2, errmsg )
+                  call repmi  ( errmsg, '#', ichar(chr),     errmsg )
 
-               END IF
+               end if
 
-               SCNERR = .TRUE.
-               CALL CHKOUT ( 'ZZEKSCAN' )
-               RETURN
+               scnerr = .true.
+               call chkout ( 'ZZEKSCAN' )
+               return
 
-            END IF
+            end if
 !
 !           STATE is now NXTTOK.
 !
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we got this far, we've found the tokens in the query.
 !
-      SCNERR  =  .FALSE.
-      ERRMSG  =  ' '
+      scnerr  =  .false.
+      errmsg  =  ' '
 
-      CALL CHKOUT ( 'ZZEKSCAN' )
-      RETURN
-      END
+      call chkout ( 'ZZEKSCAN' )
+      return
+      end

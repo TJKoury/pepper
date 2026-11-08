@@ -1,6 +1,6 @@
 !$Procedure SPKS05 ( S/P Kernel, subset, type 5 )
 
-      SUBROUTINE SPKS05 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks05 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -155,40 +155,40 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA     ( 6 )
-      DOUBLE PRECISION      GM
+      double precision      data     ( 6 )
+      double precision      gm
 
-      INTEGER               I
-      INTEGER               NDIR
-      INTEGER               NREC
-      INTEGER               OFFE
-      INTEGER               OFFSET
-      INTEGER               REC      ( 2 )
+      integer               i
+      integer               ndir
+      integer               nrec
+      integer               offe
+      integer               offset
+      integer               rec      ( 2 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS05' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS05' )
+      end if
 
 !
 !     Get the number of records in the segment. While we're at it,
 !     get the GM of the central body as well (it's adjacent to NREC)
 !     since we'll need it anyway.
 !
-      CALL DAFGDA ( HANDLE, EADDR-1, EADDR, DATA )
+      call dafgda ( handle, eaddr-1, eaddr, data )
 
-      NREC = INT ( DATA(2) )
-      GM   = DATA(1)
+      nrec = int ( data(2) )
+      gm   = data(1)
 
 !
 !     From the number of records, we can compute
@@ -197,8 +197,8 @@
 !
 !        OFFE      The offset of the first epoch.
 !
-      NDIR = NREC / 100
-      OFFE = EADDR - NDIR - NREC - 2
+      ndir = nrec / 100
+      offe = eaddr - ndir - nrec - 2
 
 !
 !     Examine the epochs in forward order, looking for the first
@@ -206,13 +206,13 @@
 !     whichever comes first). This epoch corresponds to the last
 !     state to be transferred.
 !
-      REC(2) = 1
-      CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
+      rec(2) = 1
+      call dafgda ( handle, offe+rec(2), offe+rec(2), data )
 
-      DO WHILE ( REC(2) .LT. NREC  .AND.  DATA(1) .LT. END )
-         REC(2) = REC(2) + 1
-         CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
-      END DO
+      do while ( rec(2) .lt. nrec  .and.  data(1) .lt. end )
+         rec(2) = rec(2) + 1
+         call dafgda ( handle, offe+rec(2), offe+rec(2), data )
+      end do
 
 !
 !     Now examine them in reverse order, looking for the first
@@ -220,47 +220,47 @@
 !     whichever comes first). This epoch corresponds to the first
 !     state to be transferred.
 !
-      REC(1) = NREC
-      CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
+      rec(1) = nrec
+      call dafgda ( handle, offe+rec(1), offe+rec(1), data )
 
-      DO WHILE ( REC(1) .GT. 1  .AND.  DATA(1) .GT. BEGIN )
-         REC(1) = REC(1) - 1
-         CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
-      END DO
+      do while ( rec(1) .gt. 1  .and.  data(1) .gt. begin )
+         rec(1) = rec(1) - 1
+         call dafgda ( handle, offe+rec(1), offe+rec(1), data )
+      end do
 
 !
 !     Copy states REC(1) through REC(2) to the output file.
 !
-      DO I = REC(1), REC(2)
-         OFFSET = BADDR  -  1  +  (I - 1) * 6
+      do i = rec(1), rec(2)
+         offset = baddr  -  1  +  (i - 1) * 6
 
-         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+6, DATA    )
-         CALL DAFADA (                             DATA, 6 )
-      END DO
+         call dafgda ( handle, offset+1, offset+6, data    )
+         call dafada (                             data, 6 )
+      end do
 
 !
 !     Copy epochs REC(1) through REC(2) to the output file.
 !
-      DO I = REC(1), REC(2)
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do i = rec(1), rec(2)
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Put every 100'th epoch into the directory.
 !
-      DO I = REC(1)+99, REC(2), 100
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do i = rec(1)+99, rec(2), 100
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Store the GM of the central body and the number of records
 !     to end the segment.
 !
-      CALL DAFADA ( GM,                           1 )
-      CALL DAFADA ( DBLE ( REC(2) - REC(1) + 1 ), 1 )
+      call dafada ( gm,                           1 )
+      call dafada ( dble ( rec(2) - rec(1) + 1 ), 1 )
 
-      CALL CHKOUT ( 'SPKS05' )
-      RETURN
-      END
+      call chkout ( 'SPKS05' )
+      return
+      end

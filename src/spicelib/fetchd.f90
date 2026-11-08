@@ -1,6 +1,6 @@
 !$Procedure FETCHD ( Fetch from a DP set )
 
-      INTEGER FUNCTION FETCHD ( NTH, SET )
+      integer function fetchd ( nth, set )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               NTH
-      DOUBLE PRECISION      SET      ( LBCELL:* )
+      integer               nth
+      double precision      set      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -175,36 +175,36 @@
 !
 !     SPICELIB functions
 !
-      INTEGER            CARDD
-      LOGICAL            RETURN
+      integer            cardd
+      logical            return
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) THEN
-         FETCHD = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'FETCHD' )
-      END IF
+      if ( return () ) then
+         fetchd = 0
+         return
+      else
+         call chkin ( 'FETCHD' )
+      end if
 
 !
 !     Check to see if the N'TH element exists.
 !
-      IF ( NTH .LT. 1  .OR.  NTH .GT. CARDD ( SET ) ) THEN
-         FETCHD = 0
-         CALL SETMSG ( 'NTH element does not exist. NTH was *.' )
-         CALL ERRINT ( '*', NTH              )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
+      if ( nth .lt. 1  .or.  nth .gt. cardd ( set ) ) then
+         fetchd = 0
+         call setmsg ( 'NTH element does not exist. NTH was *.' )
+         call errint ( '*', nth              )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
 !
 !     The great secret is that, for now, sets really are maintained
 !     in order, for reasons of efficiency.
 !
-      ELSE
-         FETCHD = NTH
-      END IF
+      else
+         fetchd = nth
+      end if
 
 
-      CALL CHKOUT ( 'FETCHD' )
-      RETURN
-      END
+      call chkout ( 'FETCHD' )
+      return
+      end

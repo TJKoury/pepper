@@ -1,6 +1,6 @@
 !$Procedure SPKR05 ( Read SPK record from segment, type 5 )
 
-      SUBROUTINE SPKR05 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr05 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -180,84 +180,84 @@
 !
 !     Local parameters
 !
-      INTEGER               SIZE
-      PARAMETER           ( SIZE    = 100 )
+      integer               size
+      parameter           ( size    = 100 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ  = SIZE )
+      integer               dirsiz
+      parameter           ( dirsiz  = size )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ  = SIZE )
+      integer               bufsiz
+      parameter           ( bufsiz  = size )
 
-      INTEGER               STASIZ
-      PARAMETER           ( STASIZ =    6 )
+      integer               stasiz
+      parameter           ( stasiz =    6 )
 
-      INTEGER               ND
-      PARAMETER           ( ND =        2 )
+      integer               nd
+      parameter           ( nd =        2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI =        6 )
+      integer               ni
+      parameter           ( ni =        6 )
 
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLTD
-      LOGICAL               RETURN
+      integer               lstltd
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DC       (   ND )
-      DOUBLE PRECISION      DATA     ( SIZE )
+      double precision      dc       (   nd )
+      double precision      data     ( size )
 
-      INTEGER               IC       (   NI )
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               TYPE
-      INTEGER               NREC
-      INTEGER               NDIR
-      INTEGER               GROUP
-      INTEGER               DIRLOC
-      INTEGER               REMAIN
-      INTEGER               SKIP
-      INTEGER               GRPADD
-      INTEGER               ADDRSS
-      INTEGER               I
-      INTEGER               N
+      integer               ic       (   ni )
+      integer               begin
+      integer               end
+      integer               type
+      integer               nrec
+      integer               ndir
+      integer               group
+      integer               dirloc
+      integer               remain
+      integer               skip
+      integer               grpadd
+      integer               addrss
+      integer               i
+      integer               n
 
-      LOGICAL               FND
+      logical               fnd
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKR05' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKR05' )
+      end if
 
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      call dafus ( descr, nd, ni, dc, ic )
 
-      TYPE  = IC(4)
-      BEGIN = IC(5)
-      END   = IC(6)
+      type  = ic(4)
+      begin = ic(5)
+      end   = ic(6)
 
 !
 !     Make sure that this really is a type 5 data segment.
 !
-      IF ( TYPE .NE. 05 ) THEN
-         CALL SETMSG( 'You are attempting to locate type 5 '      // &
+      if ( type .ne. 05 ) then
+         call setmsg( 'You are attempting to locate type 5 '      // &
                       'data in a type # data segment.'              )
-         CALL ERRINT( '#',  TYPE                                    )
-         CALL SIGERR( 'SPICE(WRONGSPKTYPE)'                         )
-         CALL CHKOUT( 'SPKR05'                                      )
-         RETURN
-      END IF
+         call errint( '#',  type                                    )
+         call sigerr( 'SPICE(WRONGSPKTYPE)'                         )
+         call chkout( 'SPKR05'                                      )
+         return
+      end if
 
 !
 !     Get the number of records in the segment. While we're at it,
@@ -265,16 +265,16 @@
 !     since we'll need it anyway. Put it where it belongs, at the
 !     end of the output record.
 !
-      CALL DAFGDA ( HANDLE, END-1, END, DATA )
+      call dafgda ( handle, end-1, end, data )
 
-      NREC       = NINT ( DATA(2) )
-      RECORD(15) =        DATA(1)
+      nrec       = nint ( data(2) )
+      record(15) =        data(1)
 
 !
 !     From the number of records, we can compute the number of
 !     directory epochs.
 !
-      NDIR = NREC / DIRSIZ
+      ndir = nrec / dirsiz
 
 !
 !     The directory epochs narrow down the search to a group of DIRSIZ
@@ -292,38 +292,38 @@
 !                              .               .            .
 !                              N     (N-1)*100+1        N*100
 
-      IF ( NDIR .EQ. 0 ) THEN
+      if ( ndir .eq. 0 ) then
 !
 !        There is only one group if there are no directory epochs.
 !
-         GROUP = 1
+         group = 1
 
-      ELSE
+      else
 !
 !        Compute the location of the first directory epoch.  From the
 !        beginning of the segment, we need to go through all of the
 !        NREC states and epochs.
 !
-         DIRLOC = BEGIN + ( STASIZ + 1 ) * NREC
+         dirloc = begin + ( stasiz + 1 ) * nrec
 
 !
 !        Determine which group of DIRSIZ times to search, by finding
 !        the last directory epoch that is less than ET.
 !
-         FND    = .FALSE.
-         REMAIN =  NDIR
-         GROUP  =  0
+         fnd    = .false.
+         remain =  ndir
+         group  =  0
 
-         DO WHILE ( .NOT. FND )
+         do while ( .not. fnd )
 !
 !           Read in as many as BUFSIZ directory epochs at a time
 !           for comparison.
 !
-            N = MIN( REMAIN, BUFSIZ )
+            n = min( remain, bufsiz )
 
-            CALL DAFGDA ( HANDLE, DIRLOC, DIRLOC + N - 1, DATA )
+            call dafgda ( handle, dirloc, dirloc + n - 1, data )
 
-            REMAIN = REMAIN - N
+            remain = remain - n
 
 !
 !           Determine the last directory element in DATA that's less
@@ -336,35 +336,35 @@
 !           Otherwise keep looking.
 !
 !
-            I = LSTLTD( ET, N, DATA )
+            i = lstltd( et, n, data )
 
-            IF ( I .LT. N ) THEN
+            if ( i .lt. n ) then
 
-               GROUP =  GROUP + I + 1
-               FND   = .TRUE.
+               group =  group + i + 1
+               fnd   = .true.
 
-            ELSE IF ( REMAIN .EQ. 0 ) THEN
+            else if ( remain .eq. 0 ) then
 
-               GROUP =  NDIR + 1
-               FND   = .TRUE.
+               group =  ndir + 1
+               fnd   = .true.
 
-            ELSE
+            else
 
-               DIRLOC = DIRLOC + N
-               GROUP  = GROUP  + N
+               dirloc = dirloc + n
+               group  = group  + n
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Now we know which group of DIRSIZ (or less) epochs to look at.
 !     Out of the NREC epochs, the number that we should skip over
 !     to get to the proper group is DIRSIZ * ( GROUP - 1 ).
 !
-      SKIP = DIRSIZ * ( GROUP - 1 )
+      skip = dirsiz * ( group - 1 )
 
 !
 !     From this we can compute the index into the segment of the group
@@ -372,7 +372,7 @@
 !     STASIZ * NREC state numbers to get to the first epoch. Then we
 !     skip over the number just computed above.
 !
-      GRPADD = BEGIN + NREC * ( STASIZ ) + SKIP
+      grpadd = begin + nrec * ( stasiz ) + skip
 
 !
 !     The number of epochs that we have to look at may be less than
@@ -383,18 +383,18 @@
 !     are looking for is the same as the last directory epoch.
 !     We should not try to read in this instance.
 !
-      N = MIN ( DIRSIZ, NREC - SKIP )
+      n = min ( dirsiz, nrec - skip )
 
-      IF ( N .NE. 0 ) THEN
+      if ( n .ne. 0 ) then
 
-         CALL DAFGDA ( HANDLE, GRPADD, GRPADD + N - 1, DATA )
+         call dafgda ( handle, grpadd, grpadd + n - 1, data )
 !
 !        Find the index of the largest time in the group that is less
 !        than the input time.
 !
-         I = LSTLTD ( ET, N, DATA )
+         i = lstltd ( et, n, data )
 
-      ELSE
+      else
 !
 !        If we are here it means that ET is greater then the last
 !        time in the segment and there are no elements in the last
@@ -407,9 +407,9 @@
 !        epochs and I is pointing at the last element which is also the
 !        last time in the segment.
 !
-         N = I
+         n = i
 
-      END IF
+      end if
 
 !
 !     At this point N is the number of epochs in this GROUP which is
@@ -420,82 +420,82 @@
 !     than the first time or greater than the last one in the GROUP.
 !
 
-      IF ( I .EQ. 0 ) THEN
+      if ( i .eq. 0 ) then
 
-         IF ( GROUP .EQ. 1 ) THEN
+         if ( group .eq. 1 ) then
 
 !
 !           ET is less than or equal to the first time in the segment.
 !           Return the state at the first time twice.
 !
-            RECORD(13) = DATA(1)
-            RECORD(14) = DATA(1)
+            record(13) = data(1)
+            record(14) = data(1)
 
-            CALL DAFGDA ( HANDLE, BEGIN, BEGIN + 5, DATA )
+            call dafgda ( handle, begin, begin + 5, data )
 
-            CALL MOVED  ( DATA, 6, RECORD(1) )
-            CALL MOVED  ( DATA, 6, RECORD(7) )
+            call moved  ( data, 6, record(1) )
+            call moved  ( data, 6, record(7) )
 
-            CALL CHKOUT( 'SPKR05' )
-            RETURN
+            call chkout( 'SPKR05' )
+            return
 
-         ELSE
+         else
 !
 !           ET is less than or equal to the first time in this group
 !           but not the first time in the segment. Get the last time
 !           from the preceding group. The states for this case will
 !           be read outside of the IF block.
 !
-            CALL DAFGDA ( HANDLE, GRPADD - 1, GRPADD, DATA )
+            call dafgda ( handle, grpadd - 1, grpadd, data )
 
-            RECORD(13) = DATA(1)
-            RECORD(14) = DATA(2)
+            record(13) = data(1)
+            record(14) = data(2)
 
-         END IF
+         end if
 
-      ELSE IF ( I .EQ. N ) THEN
+      else if ( i .eq. n ) then
 
-         IF ( GROUP .EQ. (NDIR + 1) ) THEN
+         if ( group .eq. (ndir + 1) ) then
 !
 !           ET is greater than all of the times in the segment. Return
 !           the state for the last time twice.
 !
-            RECORD(13) = DATA(N)
-            RECORD(14) = DATA(N)
+            record(13) = data(n)
+            record(14) = data(n)
 
-            ADDRSS = BEGIN + ( NREC - 1 ) * STASIZ
+            addrss = begin + ( nrec - 1 ) * stasiz
 
-            CALL DAFGDA ( HANDLE, ADDRSS, ADDRSS + 5, DATA )
+            call dafgda ( handle, addrss, addrss + 5, data )
 
-            CALL MOVED ( DATA, 6, RECORD(1) )
-            CALL MOVED ( DATA, 6, RECORD(7) )
+            call moved ( data, 6, record(1) )
+            call moved ( data, 6, record(7) )
 
-            CALL CHKOUT( 'SPKR05' )
-            RETURN
+            call chkout( 'SPKR05' )
+            return
 
-         ELSE
+         else
 !
 !           ET is greater than the last time in this group but this is
 !           not the last time in the segment.  Need the first time from
 !           the following group. The states for this case will be read
 !           outside of the IF block.
 !
-            CALL DAFGDA ( HANDLE, GRPADD + N - 1, GRPADD + N, DATA )
+            call dafgda ( handle, grpadd + n - 1, grpadd + n, data )
 
-            RECORD(13) = DATA(1)
-            RECORD(14) = DATA(2)
+            record(13) = data(1)
+            record(14) = data(2)
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        There are two times in the group that bracket ET. The states
 !        for this case will be read outside of the IF block.
 !
-         RECORD(13) = DATA( I )
-         RECORD(14) = DATA(I+1)
+         record(13) = data( i )
+         record(14) = data(i+1)
 
-      END IF
+      end if
 
 !
 !     Read the consecutive states for the two epochs found above.
@@ -503,12 +503,12 @@
 !     equal to the time (SKIP + I + 1).
 !
 
-      ADDRSS = BEGIN + ( SKIP + I - 1 ) * STASIZ
+      addrss = begin + ( skip + i - 1 ) * stasiz
 
-      CALL DAFGDA ( HANDLE, ADDRSS, ADDRSS + 11, DATA )
+      call dafgda ( handle, addrss, addrss + 11, data )
 
-      CALL MOVED  ( DATA, 12, RECORD(1) )
+      call moved  ( data, 12, record(1) )
 
-      CALL CHKOUT( 'SPKR05' )
-      RETURN
-      END
+      call chkout( 'SPKR05' )
+      return
+      end

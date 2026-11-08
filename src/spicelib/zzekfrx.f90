@@ -1,6 +1,6 @@
 !$Procedure     ZZEKFRX ( EK, find record in index )
 
-      SUBROUTINE ZZEKFRX ( HANDLE, SEGDSC, COLDSC, RECPTR, POS )
+      subroutine zzekfrx ( handle, segdsc, coldsc, recptr, pos )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekqlimit.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               POS
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               pos
 
 ! $ Brief_I/O
 !
@@ -123,103 +123,103 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXSTR)    CVAL
+      character*(maxstr)    cval
 
-      DOUBLE PRECISION      DVAL
+      double precision      dval
 
-      INTEGER               CMPLEN
-      INTEGER               CVLEN
-      INTEGER               DTYPE
-      INTEGER               IVAL
-      INTEGER               PRVPTR
-      INTEGER               RECNO
+      integer               cmplen
+      integer               cvlen
+      integer               dtype
+      integer               ival
+      integer               prvptr
+      integer               recno
 
-      LOGICAL               FOUND
-      LOGICAL               ISNULL
+      logical               found
+      logical               isnull
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKFRX' )
+      call chkin ( 'ZZEKFRX' )
 
 !
 !     Determine the data type of the column, and look up the value
 !     associated with RECPTR.
 !
-      DTYPE  =  COLDSC ( TYPIDX )
+      dtype  =  coldsc ( typidx )
 
-      IF ( DTYPE .EQ. CHR ) THEN
+      if ( dtype .eq. chr ) then
 
-         CALL ZZEKRSC (  HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                         1,       CVLEN,   CVAL,    ISNULL,  FOUND  )
-
-
-         IF (  FOUND  .AND. ( .NOT. ISNULL )  ) THEN
-
-            CMPLEN = MIN ( CVLEN, MAXSTR )
-         ELSE
-            CMPLEN = 0
-         END IF
+         call zzekrsc (  handle,  segdsc,  coldsc,  recptr, &
+                         1,       cvlen,   cval,    isnull,  found  )
 
 
-      ELSE IF (  ( DTYPE .EQ. DP ) .OR. ( DTYPE .EQ. TIME )  ) THEN
+         if (  found  .and. ( .not. isnull )  ) then
 
-         CALL ZZEKRSD (  HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                         1,       DVAL,    ISNULL,  FOUND  )
+            cmplen = min ( cvlen, maxstr )
+         else
+            cmplen = 0
+         end if
 
 
-      ELSE IF ( DTYPE .EQ. INT ) THEN
+      else if (  ( dtype .eq. dp ) .or. ( dtype .eq. time )  ) then
 
-         CALL ZZEKRSI (  HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                         1,       IVAL,    ISNULL,  FOUND  )
+         call zzekrsd (  handle,  segdsc,  coldsc,  recptr, &
+                         1,       dval,    isnull,  found  )
 
-      ELSE
 
-         CALL SETMSG ( 'File = #; COLIDX = #. Unrecognized data ' // &
+      else if ( dtype .eq. int ) then
+
+         call zzekrsi (  handle,  segdsc,  coldsc,  recptr, &
+                         1,       ival,    isnull,  found  )
+
+      else
+
+         call setmsg ( 'File = #; COLIDX = #. Unrecognized data ' // &
                        'type code # found in descriptor.'           )
-         CALL ERRHAN ( '#',     HANDLE                              )
-         CALL ERRINT ( '#',     COLDSC(ORDIDX)                      )
-         CALL ERRINT ( '#',     DTYPE                               )
-         CALL SIGERR ( 'SPICE(ITEMNOTFOUND)'                        )
-         CALL CHKOUT ( 'ZZEKFRX'                                    )
-         RETURN
+         call errhan ( '#',     handle                              )
+         call errint ( '#',     coldsc(ordidx)                      )
+         call errint ( '#',     dtype                               )
+         call sigerr ( 'SPICE(ITEMNOTFOUND)'                        )
+         call chkout ( 'ZZEKFRX'                                    )
+         return
 
-      END IF
+      end if
 
 
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        We have a most heinous situation.  We should always be able
 !        to find the value associated with a record.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL SETMSG ( 'File = #; RECNO = #; COLIDX = #. Column '     // &
+         call setmsg ( 'File = #; RECNO = #; COLIDX = #. Column '     // &
                        'entry was not found.  This probably indicates'// &
                        ' a corrupted file or a bug in the EK code.'    )
-         CALL ERRHAN ( '#',     HANDLE                                 )
-         CALL ERRINT ( '#',     RECNO                                  )
-         CALL ERRINT ( '#',     COLDSC(ORDIDX)                         )
-         CALL SIGERR ( 'SPICE(ITEMNOTFOUND)'                           )
-         CALL CHKOUT ( 'ZZEKFRX'                                       )
-         RETURN
+         call errhan ( '#',     handle                                 )
+         call errint ( '#',     recno                                  )
+         call errint ( '#',     coldsc(ordidx)                         )
+         call sigerr ( 'SPICE(ITEMNOTFOUND)'                           )
+         call chkout ( 'ZZEKFRX'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the last column entry less than or equal to the one
@@ -229,51 +229,51 @@
 !     are not.  Therefore, the ordinal position POS will actually be
 !     the ordinal position of our record.
 !
-      IF ( DTYPE .EQ. CHR ) THEN
+      if ( dtype .eq. chr ) then
 
-         CALL ZZEKLERC ( HANDLE,  SEGDSC,  COLDSC,  CVAL(:CMPLEN), &
-                         RECPTR,  ISNULL,  POS,     PRVPTR         )
-
-
-      ELSE IF (  ( DTYPE .EQ. DP ) .OR. ( DTYPE .EQ. TIME )  ) THEN
-
-         CALL ZZEKLERD ( HANDLE,  SEGDSC,  COLDSC,  DVAL, &
-                         RECPTR,  ISNULL,  POS,     PRVPTR  )
+         call zzeklerc ( handle,  segdsc,  coldsc,  cval(:cmplen), &
+                         recptr,  isnull,  pos,     prvptr         )
 
 
-      ELSE
+      else if (  ( dtype .eq. dp ) .or. ( dtype .eq. time )  ) then
+
+         call zzeklerd ( handle,  segdsc,  coldsc,  dval, &
+                         recptr,  isnull,  pos,     prvptr  )
+
+
+      else
 !
 !        The data type is INT.  (We've already checked for invalid
 !        types.)
 !
 
-         CALL ZZEKLERI ( HANDLE,  SEGDSC,  COLDSC,  IVAL, &
-                         RECPTR,  ISNULL,  POS,     PRVPTR  )
+         call zzekleri ( handle,  segdsc,  coldsc,  ival, &
+                         recptr,  isnull,  pos,     prvptr  )
 
-      END IF
+      end if
 
 
-      IF ( PRVPTR .NE. RECPTR ) THEN
+      if ( prvptr .ne. recptr ) then
 !
 !        Big problem.  This should never happen.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL SETMSG ( 'File = #; RECNO = #; COLIDX = #.  Record ' // &
+         call setmsg ( 'File = #; RECNO = #; COLIDX = #.  Record ' // &
                        'that was last less than or equal to RECNO '// &
                        'was not equal to RECNO.  This probably '   // &
                        'indicates  a corrupted file or a bug in '  // &
                        'the EK code.'                               )
-         CALL ERRHAN ( '#',     HANDLE                              )
-         CALL ERRINT ( '#',     RECNO                               )
-         CALL ERRINT ( '#',     COLDSC(ORDIDX)                      )
-         CALL SIGERR ( 'SPICE(ITEMNOTFOUND)'                        )
-         CALL CHKOUT ( 'ZZEKFRX'                                    )
-         RETURN
+         call errhan ( '#',     handle                              )
+         call errint ( '#',     recno                               )
+         call errint ( '#',     coldsc(ordidx)                      )
+         call sigerr ( 'SPICE(ITEMNOTFOUND)'                        )
+         call chkout ( 'ZZEKFRX'                                    )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKFRX' )
-      RETURN
-      END
+      call chkout ( 'ZZEKFRX' )
+      return
+      end

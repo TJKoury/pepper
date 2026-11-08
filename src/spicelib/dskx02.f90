@@ -1,7 +1,7 @@
 !$Procedure DSKX02 ( DSK, ray-surface intercept, type 2 )
 
-      SUBROUTINE DSKX02 ( HANDLE, DLADSC, VERTEX, &
-                          RAYDIR, PLID,   XPT,    FOUND )
+      subroutine dskx02 ( handle, dladsc, vertex, &
+                          raydir, plid,   xpt,    found )
 
 ! $ Abstract
 !
@@ -20,21 +20,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'dla.inc'
-      INCLUDE              'dskdsc.inc'
-      INCLUDE              'dsk02.inc'
-      INCLUDE              'dsktol.inc'
+      include              'dla.inc'
+      include              'dskdsc.inc'
+      include              'dsk02.inc'
+      include              'dsktol.inc'
 
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC   ( * )
-      DOUBLE PRECISION      VERTEX   ( 3 )
-      DOUBLE PRECISION      RAYDIR   ( 3 )
-      INTEGER               PLID
-      DOUBLE PRECISION      XPT      ( 3 )
-      LOGICAL               FOUND
+      integer               handle
+      integer               dladsc   ( * )
+      double precision      vertex   ( 3 )
+      double precision      raydir   ( 3 )
+      integer               plid
+      double precision      xpt      ( 3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -839,17 +839,17 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDOT
+      double precision      dpmax
+      double precision      vdot
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
-      LOGICAL               VZERO
+      logical               return
+      logical               failed
+      logical               vzero
 
 !
 !     Statement function type declarations
 !
-      INTEGER               VOX2ID
+      integer               vox2id
 
 
 !
@@ -860,390 +860,390 @@
 !
 !     Tolerance used for vertex-voxel grid distance test:
 !
-      DOUBLE PRECISION      VTXTOL
-      PARAMETER           ( VTXTOL = 1.D-12 )
+      double precision      vtxtol
+      parameter           ( vtxtol = 1.d-12 )
 
 !
 !     Maximum number of voxels we can accept for
 !     one XDDA call.
 !
-      INTEGER               NVXLST
-      PARAMETER           ( NVXLST = 50000 )
+      integer               nvxlst
+      parameter           ( nvxlst = 50000 )
 
 !
 !     Maximum number of plates we work with
 !     at any time.
 !
-      INTEGER               MAXPL
-      PARAMETER           ( MAXPL  =  MAXPLT/125 )
+      integer               maxpl
+      parameter           ( maxpl  =  maxplt/125 )
 
 !
 !     Parameter indicating no coordinates are to be excluded
 !     in the test for a point being within segment boundaries.
 !
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
 !
 !     Local Variables
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 200 )
+      integer               bufsiz
+      parameter           ( bufsiz = 200 )
 
 
-      DOUBLE PRECISION      COORD  ( 3 )
-      DOUBLE PRECISION      EDGES  ( 3, 3 )
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      DOUBLE PRECISION      GRDEXT ( 3 )
-      DOUBLE PRECISION      GRDTOL
-      DOUBLE PRECISION      GREEDM
-      DOUBLE PRECISION      HITCOR ( 3 )
-      DOUBLE PRECISION      NEAR
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      OBSMAT ( 3, 3 )
-      DOUBLE PRECISION      POINTS ( 3, 3 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      VBUFF  ( 3, BUFSIZ )
-      DOUBLE PRECISION      VOXORI ( 3 )
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      VTX2   ( 3 )
-      DOUBLE PRECISION      VTXBDS ( 2, 3 )
-      DOUBLE PRECISION      VTXOFF ( 3 )
-      DOUBLE PRECISION      XPDFRC
-      DOUBLE PRECISION      XPNTS  ( 3, 3 )
-      DOUBLE PRECISION      XPT2   ( 3 )
-      DOUBLE PRECISION      XTOL
+      double precision      coord  ( 3 )
+      double precision      edges  ( 3, 3 )
+      double precision      dskdsc ( dskdsz )
+      double precision      grdext ( 3 )
+      double precision      grdtol
+      double precision      greedm
+      double precision      hitcor ( 3 )
+      double precision      near
+      double precision      normal ( 3 )
+      double precision      obsmat ( 3, 3 )
+      double precision      points ( 3, 3 )
+      double precision      scale
+      double precision      udir   ( 3 )
+      double precision      vbuff  ( 3, bufsiz )
+      double precision      voxori ( 3 )
+      double precision      voxsiz
+      double precision      vtx2   ( 3 )
+      double precision      vtxbds ( 2, 3 )
+      double precision      vtxoff ( 3 )
+      double precision      xpdfrc
+      double precision      xpnts  ( 3, 3 )
+      double precision      xpt2   ( 3 )
+      double precision      xtol
 
-      INTEGER               CGREXT ( 3 )
-      INTEGER               CGRPTR ( MAXCGR )
-      INTEGER               CGSCAL
-      INTEGER               CGSCL2
-      INTEGER               CGXYZ  ( 3 )
-      INTEGER               CORSYS
-      INTEGER               CVID
-      INTEGER               DIM
-      INTEGER               DIM1
-      INTEGER               DIM2
-      INTEGER               FINAL
-      INTEGER               FX
-      INTEGER               FY
-      INTEGER               FZ
-      INTEGER               GROUP
-      INTEGER               GRPBEG
-      INTEGER               GRPEND
-      INTEGER               GRPSIZ
-      INTEGER               I
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               J
-      INTEGER               K
-      INTEGER               MINIDX
-      INTEGER               NCGR
-      INTEGER               NGROUP
-      INTEGER               NP
-      INTEGER               NPLATE
-      INTEGER               NV
-      INTEGER               NVBUF
-      INTEGER               NVXOUT
-      INTEGER               NVXTOT
-      INTEGER               OFFSET
-      INTEGER               ORDVEC ( MAXPL )
-      INTEGER               PLATID ( MAXPL )
-      INTEGER               PLROOM
-      INTEGER               PNTR
-      INTEGER               PRVDSC ( DLADSZ )
-      INTEGER               PRVHAN
-      INTEGER               SOURCE ( MAXPL )
-      INTEGER               START
-      INTEGER               TO
-      INTEGER               TOTPLT
-      INTEGER               VGREXT ( 3 )
-      INTEGER               VI
-      INTEGER               VIDS   ( 3 )
-      INTEGER               VIDXS  (    BUFSIZ )
-      INTEGER               VLOC
-      INTEGER               VOXLST ( 3, NVXLST )
-      INTEGER               VOXNPL
-      INTEGER               VOXNPT
-      INTEGER               VOXPTR
-      INTEGER               VTXNPL
-      INTEGER               VXC1
-      INTEGER               VXC2
-      INTEGER               VXC3
-      INTEGER               VXLCG  ( 3, NVXLST )
-      INTEGER               VXLOUT ( NVXLST )
-      INTEGER               VXLSTR ( NVXLST )
-      INTEGER               W
+      integer               cgrext ( 3 )
+      integer               cgrptr ( maxcgr )
+      integer               cgscal
+      integer               cgscl2
+      integer               cgxyz  ( 3 )
+      integer               corsys
+      integer               cvid
+      integer               dim
+      integer               dim1
+      integer               dim2
+      integer               final
+      integer               fx
+      integer               fy
+      integer               fz
+      integer               group
+      integer               grpbeg
+      integer               grpend
+      integer               grpsiz
+      integer               i
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               j
+      integer               k
+      integer               minidx
+      integer               ncgr
+      integer               ngroup
+      integer               np
+      integer               nplate
+      integer               nv
+      integer               nvbuf
+      integer               nvxout
+      integer               nvxtot
+      integer               offset
+      integer               ordvec ( maxpl )
+      integer               platid ( maxpl )
+      integer               plroom
+      integer               pntr
+      integer               prvdsc ( dladsz )
+      integer               prvhan
+      integer               source ( maxpl )
+      integer               start
+      integer               to
+      integer               totplt
+      integer               vgrext ( 3 )
+      integer               vi
+      integer               vids   ( 3 )
+      integer               vidxs  (    bufsiz )
+      integer               vloc
+      integer               voxlst ( 3, nvxlst )
+      integer               voxnpl
+      integer               voxnpt
+      integer               voxptr
+      integer               vtxnpl
+      integer               vxc1
+      integer               vxc2
+      integer               vxc3
+      integer               vxlcg  ( 3, nvxlst )
+      integer               vxlout ( nvxlst )
+      integer               vxlstr ( nvxlst )
+      integer               w
 
-      LOGICAL               BOXHIT
-      LOGICAL               EXTRA
-      LOGICAL               HAVE
-      LOGICAL               HITS
-      LOGICAL               INSEG
-      LOGICAL               INVOX
-      LOGICAL               NEWSEG
+      logical               boxhit
+      logical               extra
+      logical               have
+      logical               hits
+      logical               inseg
+      logical               invox
+      logical               newseg
 
 !
 !     Saved variables
 !
-      SAVE                  CGREXT
-      SAVE                  CGRPTR
-      SAVE                  CGSCAL
-      SAVE                  CGSCL2
-      SAVE                  CORSYS
-      SAVE                  DSKDSC
-      SAVE                  GRDEXT
-      SAVE                  GRDTOL
-      SAVE                  NCGR
-      SAVE                  NP
-      SAVE                  NV
-      SAVE                  NVXTOT
-      SAVE                  ORDVEC
-      SAVE                  PLATID
-      SAVE                  PRVDSC
-      SAVE                  PRVHAN
-      SAVE                  SOURCE
-      SAVE                  VBUFF
-      SAVE                  VIDXS
-      SAVE                  VGREXT
-      SAVE                  VOXLST
-      SAVE                  VOXNPL
-      SAVE                  VOXNPT
-      SAVE                  VOXORI
-      SAVE                  VOXSIZ
-      SAVE                  VTXBDS
-      SAVE                  VTXNPL
-      SAVE                  VXLCG
-      SAVE                  VXLOUT
-      SAVE                  VXLSTR
-      SAVE                  XTOL
+      save                  cgrext
+      save                  cgrptr
+      save                  cgscal
+      save                  cgscl2
+      save                  corsys
+      save                  dskdsc
+      save                  grdext
+      save                  grdtol
+      save                  ncgr
+      save                  np
+      save                  nv
+      save                  nvxtot
+      save                  ordvec
+      save                  platid
+      save                  prvdsc
+      save                  prvhan
+      save                  source
+      save                  vbuff
+      save                  vidxs
+      save                  vgrext
+      save                  voxlst
+      save                  voxnpl
+      save                  voxnpt
+      save                  voxori
+      save                  voxsiz
+      save                  vtxbds
+      save                  vtxnpl
+      save                  vxlcg
+      save                  vxlout
+      save                  vxlstr
+      save                  xtol
 
 !
 !     Initial values
 !
-      DATA                  GRDEXT  / 3 * -1.D0 /
-      DATA                  PRVHAN  / 0 /
-      DATA                  PRVDSC  / DLADSZ * 0 /
+      data                  grdext  / 3 * -1.d0 /
+      data                  prvhan  / 0 /
+      data                  prvdsc  / dladsz * 0 /
 
 !
 !     Statement functions
 !
-      VOX2ID ( I1, I2, I3, DIM1, DIM2 ) =  I1 + DIM1*( I2 +  I3* DIM2 &
-                                                          - (1 + DIM2) )
+      vox2id ( i1, i2, i3, dim1, dim2 ) =  i1 + dim1*( i2 +  i3* dim2 &
+                                                          - (1 + dim2) )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKX02' )
+      call chkin ( 'DSKX02' )
 
 !
 !     Until we have better knowledge we assume there is no intersection.
 !
-      PLID   =  0
-      FOUND  = .FALSE.
-      HAVE   = .FALSE.
-      NEAR   = DPMAX()
+      plid   =  0
+      found  = .false.
+      have   = .false.
+      near   = dpmax()
 
 !
 !     Initialize the vertex buffer.
 !
-      CALL CLEARI( BUFSIZ, VIDXS )
+      call cleari( bufsiz, vidxs )
 
 !
 !     Check whether the ray direction vector is the zero vector.
 !
-      IF ( VZERO( RAYDIR ) ) THEN
+      if ( vzero( raydir ) ) then
 
-         CALL SETMSG ( 'Ray direction is the zero vector.' )
-         CALL SIGERR ( 'SPICE(RAYISZEROVECTOR)'            )
-         CALL CHKOUT ( 'DSKX02'                            )
-         RETURN
+         call setmsg ( 'Ray direction is the zero vector.' )
+         call sigerr ( 'SPICE(RAYISZEROVECTOR)'            )
+         call chkout ( 'DSKX02'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Obtain the unit vector of the ray from the observer.
 !
-      CALL VHAT ( RAYDIR, UDIR )
+      call vhat ( raydir, udir )
 
 !
 !     Decide whether we're looking at a new segment.
 !
-      NEWSEG = .TRUE.
+      newseg = .true.
 
-      IF ( HANDLE .EQ. PRVHAN ) THEN
+      if ( handle .eq. prvhan ) then
 !
 !        The input handle matches the previous handle.  Note that the
 !        initial value of PRVHAN is 0, which is never a valid handle,
 !        so on the first pass, this test will fail.
 !
-         IF (       ( DLADSC(IBSIDX) .EQ. PRVDSC(IBSIDX) ) &
-              .AND. ( DLADSC(DBSIDX) .EQ. PRVDSC(DBSIDX) ) &
-              .AND. ( DLADSC(CBSIDX) .EQ. PRVDSC(CBSIDX) )  ) THEN
+         if (       ( dladsc(ibsidx) .eq. prvdsc(ibsidx) ) &
+              .and. ( dladsc(dbsidx) .eq. prvdsc(dbsidx) ) &
+              .and. ( dladsc(cbsidx) .eq. prvdsc(cbsidx) )  ) then
 !
 !           All of the DLA segment base addresses match.
 !
-            NEWSEG = .FALSE.
+            newseg = .false.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( NEWSEG ) THEN
+      if ( newseg ) then
 !
 !        Make sure we can't have a match with an earlier
 !        segment on a subsequent call, if we exit this
 !        block due to an error.
 !
-         PRVHAN = 0
+         prvhan = 0
 
 !
 !        Retrieve the voxel grid origin in model
 !        units and calculate the farthest extent of the
 !        voxel grid in voxel space.
 !
-         CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT, &
-                       VTXBDS, VOXSIZ, VOXORI, VGREXT, &
-                       CGSCAL, VTXNPL, VOXNPT, VOXNPL         )
+         call dskb02 ( handle, dladsc, nv,     np,     nvxtot, &
+                       vtxbds, voxsiz, voxori, vgrext, &
+                       cgscal, vtxnpl, voxnpt, voxnpl         )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKX02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKX02' )
+            return
+         end if
 
 !
 !        Compute the grid dimensions in units of km. First check
 !        the voxel size.
 !
-         IF ( VOXSIZ .EQ. 0 ) THEN
-            CALL SETMSG ( 'Voxel size is zero. This is an error ' &
+         if ( voxsiz .eq. 0 ) then
+            call setmsg ( 'Voxel size is zero. This is an error ' &
             //            'in the DSK file attached to handle #.' )
-            CALL ERRINT ( '#', HANDLE                             )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                   )
-            CALL CHKOUT ( 'DSKX02'                                )
-            RETURN
+            call errint ( '#', handle                             )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                   )
+            call chkout ( 'DSKX02'                                )
+            return
 
-         END IF
+         end if
 
-         DO I = 1, 3
-            GRDEXT(I) = VGREXT(I) * VOXSIZ
-         END DO
+         do i = 1, 3
+            grdext(i) = vgrext(i) * voxsiz
+         end do
 
 !
 !        Set the margin used for checking whether the ray's vertex
 !        is close to the voxel grid.
 !
-         GRDTOL = VTXTOL * MAX( GRDEXT(1), GRDEXT(2), GRDEXT(3) )
+         grdtol = vtxtol * max( grdext(1), grdext(2), grdext(3) )
 
 !
 !        Check the coarse grid voxel scale.
 !
-         IF ( CGSCAL .LT. 1 ) THEN
+         if ( cgscal .lt. 1 ) then
 
-            CALL SETMSG ( 'Coarse grid scale = #; should be >= 1.' )
-            CALL ERRINT ( '#', CGSCAL                              )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-            CALL CHKOUT ( 'DSKX02'                                 )
-            RETURN
+            call setmsg ( 'Coarse grid scale = #; should be >= 1.' )
+            call errint ( '#', cgscal                              )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+            call chkout ( 'DSKX02'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        Get the coarse voxel grid dimensions and the coarse voxel
 !        occupancy flags.
 !
-         DO I = 1, 3
-            CGREXT(I) = VGREXT(I) / CGSCAL
-         END DO
+         do i = 1, 3
+            cgrext(i) = vgrext(i) / cgscal
+         end do
 
-         CGSCL2 = CGSCAL * CGSCAL
+         cgscl2 = cgscal * cgscal
 
-         NCGR   = NVXTOT / CGSCAL**3
+         ncgr   = nvxtot / cgscal**3
 
-         IF ( NCGR .GT. MAXCGR ) THEN
+         if ( ncgr .gt. maxcgr ) then
 
-            CALL SETMSG ( 'Coarse grid size NCGR = #. Buffer size = #' )
-            CALL ERRINT ( '#', NCGR                                    )
-            CALL ERRINT ( '#', MAXCGR                                  )
-            CALL SIGERR ( 'SPICE(GRIDTOOLARGE)'                        )
-            CALL CHKOUT ( 'DSKX02'                                     )
-            RETURN
+            call setmsg ( 'Coarse grid size NCGR = #. Buffer size = #' )
+            call errint ( '#', ncgr                                    )
+            call errint ( '#', maxcgr                                  )
+            call sigerr ( 'SPICE(GRIDTOOLARGE)'                        )
+            call chkout ( 'DSKX02'                                     )
+            return
 
-         END IF
+         end if
 
-         CALL DSKI02 ( HANDLE, DLADSC, KWCGPT, 1, MAXCGR, DIM, CGRPTR )
+         call dski02 ( handle, dladsc, kwcgpt, 1, maxcgr, dim, cgrptr )
 
-         CALL DSKGD  ( HANDLE, DLADSC, DSKDSC )
+         call dskgd  ( handle, dladsc, dskdsc )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKX02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKX02' )
+            return
+         end if
 
-         CORSYS = NINT( DSKDSC(SYSIDX) )
+         corsys = nint( dskdsc(sysidx) )
 
 
-         PRVHAN = HANDLE
+         prvhan = handle
 
-         CALL MOVEI ( DLADSC, DLADSZ, PRVDSC )
+         call movei ( dladsc, dladsz, prvdsc )
 
-      END IF
+      end if
 
 !
 !     Compute tolerance used for determining whether an intercept
 !     is inside a voxel. The expansion fraction must be fetched
 !     on every call to DSKX02.
 !
-      CALL DSKGTL ( KEYXFR, XPDFRC )
+      call dskgtl ( keyxfr, xpdfrc )
 
-      XTOL   = XPDFRC * MAX( ABS( GRDEXT(1) ), &
-                             ABS( GRDEXT(2) ), &
-                             ABS( GRDEXT(3) )  )
+      xtol   = xpdfrc * max( abs( grdext(1) ), &
+                             abs( grdext(2) ), &
+                             abs( grdext(3) )  )
 
 !
 !     Find the ray intercept on the surface of the fine voxel grid,
 !     if the intercept exists.
 !
-      CALL ZZRAYBOX ( VERTEX, RAYDIR, VOXORI, GRDEXT, VTX2, BOXHIT )
+      call zzraybox ( vertex, raydir, voxori, grdext, vtx2, boxhit )
 
-      IF ( .NOT. BOXHIT ) THEN
-         CALL CHKOUT ( 'DSKX02' )
-         RETURN
-      END IF
+      if ( .not. boxhit ) then
+         call chkout ( 'DSKX02' )
+         return
+      end if
 
 !
 !     Convert the grid intercept to voxel space coordinates.
 !     The result COORD will be used as the ray's vertex in XDDA.
 !
-      CALL ZZTOGRID ( VTX2, VOXORI, VOXSIZ, COORD )
+      call zztogrid ( vtx2, voxori, voxsiz, coord )
 
 !
 !     Determine the voxels hit by the ray.
 !
-      CALL XDDA ( COORD, UDIR, VGREXT, NVXLST, NVXOUT, VOXLST )
+      call xdda ( coord, udir, vgrext, nvxlst, nvxout, voxlst )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKX02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKX02' )
+         return
+      end if
 
 !
 !     We don't expect the voxel list to be empty, but leave now
 !     if it is.
 !
-      IF ( NVXOUT .EQ. 0 ) THEN
-         CALL CHKOUT ( 'DSKX02' )
-         RETURN
-      END IF
+      if ( nvxout .eq. 0 ) then
+         call chkout ( 'DSKX02' )
+         return
+      end if
 
 !
 !     Rather than using the original observer's location, we use a
@@ -1257,24 +1257,24 @@
 !     This vertex change is not performed if the vertex is already
 !     inside, or within a small margin away from, the voxel grid.
 !
-      CALL VSUB ( VERTEX, VOXORI, VTXOFF )
+      call vsub ( vertex, voxori, vtxoff )
 
-      IF (      (  VTXOFF(1) .LT.   -GRDTOL               ) &
-           .OR. (  VTXOFF(1) .GT.  ( GRDTOL + GRDEXT(1) ) ) &
-           .OR. (  VTXOFF(2) .LT.   -GRDTOL               ) &
-           .OR. (  VTXOFF(2) .GT.  ( GRDTOL + GRDEXT(2) ) ) &
-           .OR. (  VTXOFF(3) .LT.   -GRDTOL               ) &
-           .OR. (  VTXOFF(3) .GT.  ( GRDTOL + GRDEXT(3) ) )   ) THEN
+      if (      (  vtxoff(1) .lt.   -grdtol               ) &
+           .or. (  vtxoff(1) .gt.  ( grdtol + grdext(1) ) ) &
+           .or. (  vtxoff(2) .lt.   -grdtol               ) &
+           .or. (  vtxoff(2) .gt.  ( grdtol + grdext(2) ) ) &
+           .or. (  vtxoff(3) .lt.   -grdtol               ) &
+           .or. (  vtxoff(3) .gt.  ( grdtol + grdext(3) ) )   ) then
 
 !
 !        The vertex is outside of the voxel grid by more than the
 !        margin. Move the ray-grid intercept away from the grid to
 !        improve numeric performance.
 !
-         CALL VLCOM3 (  1.D0, VOXORI, VOXSIZ, COORD, &
-                       -1.D0, UDIR,   VTX2           )
+         call vlcom3 (  1.d0, voxori, voxsiz, coord, &
+                       -1.d0, udir,   vtx2           )
 
-      END IF
+      end if
 
 !
 !     We are going to need to subtract the location of the observer
@@ -1282,62 +1282,62 @@
 !     make 3 copies of the observer's location so that we make a single
 !     subroutine call to handle the 3 subtractions.
 !
-      CALL VEQU ( VTX2, OBSMAT(1,1) )
-      CALL VEQU ( VTX2, OBSMAT(1,2) )
-      CALL VEQU ( VTX2, OBSMAT(1,3) )
+      call vequ ( vtx2, obsmat(1,1) )
+      call vequ ( vtx2, obsmat(1,2) )
+      call vequ ( vtx2, obsmat(1,3) )
 
 !
 !     Use the coarse voxel grid to compress the voxel list. We
 !     remove all voxels belonging to empty coarse voxels.
 !
-      TO = 0
+      to = 0
 
-      DO I = 1, NVXOUT
+      do i = 1, nvxout
 !
 !        Find the coordinates, then the ID, of the coarse voxel
 !        containing this voxel.
 !
-         DO J = 1, 3
-            CGXYZ(J) = ( ( VOXLST(J,I) - 1 ) / CGSCAL ) + 1
-         END DO
+         do j = 1, 3
+            cgxyz(j) = ( ( voxlst(j,i) - 1 ) / cgscal ) + 1
+         end do
 
 
-         CVID = VOX2ID ( CGXYZ(1),  CGXYZ(2), CGXYZ(3), &
-                         CGREXT(1), CGREXT(2)           )
+         cvid = vox2id ( cgxyz(1),  cgxyz(2), cgxyz(3), &
+                         cgrext(1), cgrext(2)           )
 
-         IF ( CGRPTR(CVID) .GT. 0 ) THEN
+         if ( cgrptr(cvid) .gt. 0 ) then
 !
 !           This coarse voxel is non-empty; add the index of the
 !           current voxel to the output list.  Save the coordinates of
 !           the parent coarse voxel as well.
 !
-            TO         = TO + 1
-            VXLOUT(TO) = I
+            to         = to + 1
+            vxlout(to) = i
 
-            DO J = 1, 3
-               VXLCG (J,TO) = CGXYZ (J)
-            END DO
+            do j = 1, 3
+               vxlcg (j,to) = cgxyz (j)
+            end do
 !
 !           Save the coarse voxel start pointer as well.
 !
-            VXLSTR(TO) = CGRPTR(CVID)
+            vxlstr(to) = cgrptr(cvid)
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Update NVXOUT to be the number of voxels in the compressed list.
 !
-      NVXOUT = TO
+      nvxout = to
 !
 !     If the voxel list became empty after compression, we're
 !     done.
 !
-      IF ( NVXOUT .EQ. 0 ) THEN
-         CALL CHKOUT( 'DSKX02' )
-         RETURN
-      END IF
+      if ( nvxout .eq. 0 ) then
+         call chkout( 'DSKX02' )
+         return
+      end if
 
 !
 !     Initialize PNTR in case the voxel list is empty.
@@ -1345,37 +1345,37 @@
 !     should never be empty at this point.) PNTR will
 !     be referenced after the end of the outer loop below.
 !
-      PNTR   = 1
+      pntr   = 1
 
 !
 !     The vertex buffer is empty so far.
 !
-      NVBUF  = 0
+      nvbuf  = 0
 
 !
 !     Break up the list of voxels into groups; process each
 !     group in turn until we find an intersection or run out
 !     of voxels.
 !
-      GRPSIZ =  MAX ( 1,  (NVXOUT+1)/2)
+      grpsiz =  max ( 1,  (nvxout+1)/2)
 
-      NGROUP =  (NVXOUT-1)/GRPSIZ + 1
+      ngroup =  (nvxout-1)/grpsiz + 1
 
-      GROUP  =  1
-
-
-      DO WHILE (  ( GROUP .LE. NGROUP )  .AND.  ( .NOT. HAVE )  )
+      group  =  1
 
 
-         PNTR   = 1
+      do while (  ( group .le. ngroup )  .and.  ( .not. have )  )
 
-         GRPBEG = (GROUP-1)*GRPSIZ + 1
 
-         GRPEND = MIN ( GRPBEG + GRPSIZ - 1,  NVXOUT )
+         pntr   = 1
 
-         PLROOM = MAXPL
+         grpbeg = (group-1)*grpsiz + 1
 
-         DO VI = GRPBEG, GRPEND
+         grpend = min ( grpbeg + grpsiz - 1,  nvxout )
+
+         plroom = maxpl
+
+         do vi = grpbeg, grpend
 !
 !           Look up the plate list pointer for this voxel.
 !
@@ -1383,74 +1383,74 @@
 !           We begin by finding the offset of the voxel from
 !           the base of its parent coarse voxel.
 !
-            J      =  VXLOUT(VI)
+            j      =  vxlout(vi)
 
-            FX     =  VOXLST(1,J)  -  CGSCAL * ( VXLCG(1,VI) - 1 )
-            FY     =  VOXLST(2,J)  -  CGSCAL * ( VXLCG(2,VI) - 1 )
-            FZ     =  VOXLST(3,J)  -  CGSCAL * ( VXLCG(3,VI) - 1 )
+            fx     =  voxlst(1,j)  -  cgscal * ( vxlcg(1,vi) - 1 )
+            fy     =  voxlst(2,j)  -  cgscal * ( vxlcg(2,vi) - 1 )
+            fz     =  voxlst(3,j)  -  cgscal * ( vxlcg(3,vi) - 1 )
 
-            OFFSET = FX + CGSCAL*(FY-1) + CGSCL2*(FZ-1)
+            offset = fx + cgscal*(fy-1) + cgscl2*(fz-1)
 
 !
 !           Now compute the index of voxel-plate list pointer in
 !           the pointer array, and look up the pointer.
 !
-            J = VXLSTR(VI) + OFFSET - 1
+            j = vxlstr(vi) + offset - 1
 
-            CALL DSKI02 ( HANDLE, DLADSC, KWVXPT, J, 1, DIM, VOXPTR )
+            call dski02 ( handle, dladsc, kwvxpt, j, 1, dim, voxptr )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DSKX02' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DSKX02' )
+               return
+            end if
 
-            IF ( VOXPTR .EQ. -1 ) THEN
+            if ( voxptr .eq. -1 ) then
 
-               NPLATE = 0
+               nplate = 0
 
-            ELSE
+            else
 !
 !              Get the plate count for this voxel.
 !
-               CALL DSKI02 ( HANDLE, DLADSC, KWVXPL, VOXPTR, &
-                             1,      DIM,    NPLATE          )
+               call dski02 ( handle, dladsc, kwvxpl, voxptr, &
+                             1,      dim,    nplate          )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'DSKX02' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'DSKX02' )
+                  return
+               end if
 
-            END IF
+            end if
 
 
-            IF ( NPLATE .GT. 0 ) THEN
+            if ( nplate .gt. 0 ) then
 
-               IF ( NPLATE .LE. PLROOM ) THEN
+               if ( nplate .le. plroom ) then
 !
 !                 Get the plate list for this voxel.
 !
-                  CALL DSKI02 ( HANDLE,   DLADSC, KWVXPL, &
-                                VOXPTR+1, NPLATE, DIM,    PLATID(PNTR) )
+                  call dski02 ( handle,   dladsc, kwvxpl, &
+                                voxptr+1, nplate, dim,    platid(pntr) )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'DSKX02' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'DSKX02' )
+                     return
+                  end if
 
-                  PLROOM = PLROOM - NPLATE
+                  plroom = plroom - nplate
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'NPLATE = #. Available room in ' &
+                  call setmsg ( 'NPLATE = #. Available room in ' &
                   //            'PLATID array = #. Array size = #.' )
-                  CALL ERRINT ( '#', NPLATE                         )
-                  CALL ERRINT ( '#', PLROOM                         )
-                  CALL ERRINT ( '#', MAXPL                          )
-                  CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'              )
-                  CALL CHKOUT ( 'DSKX02'                            )
-                  RETURN
+                  call errint ( '#', nplate                         )
+                  call errint ( '#', plroom                         )
+                  call errint ( '#', maxpl                          )
+                  call sigerr ( 'SPICE(ARRAYTOOSMALL)'              )
+                  call chkout ( 'DSKX02'                            )
+                  return
 
-               END IF
+               end if
 
 !
 !              Fill in the corresponding elements of the parallel
@@ -1458,20 +1458,20 @@
 !              XDDA lists these voxels in the order the ray hits
 !              them, so the lowest indexed voxels are hit first.
 !
-               CALL FILLI ( VI, NPLATE, SOURCE(PNTR) )
+               call filli ( vi, nplate, source(pntr) )
 
-            END IF
+            end if
 
 !
 !           NPLATE returns zero or greater.
 !
-            PNTR = PNTR + NPLATE
+            pntr = pntr + nplate
 
-         END DO
+         end do
 !
 !        We've collected all plate info for the current voxel group.
 !
-         TOTPLT = PNTR-1
+         totplt = pntr-1
 
 !
 !        We want to sort the plate ID array and remove duplicates.
@@ -1480,7 +1480,7 @@
 !        So we find the order vector for the plate ID array, then use
 !        this vector to mark duplicates.
 !
-         CALL ORDERI ( PLATID, TOTPLT, ORDVEC )
+         call orderi ( platid, totplt, ordvec )
 
 !
 !        Negate the plate ID of every duplicate we find, leaving
@@ -1495,15 +1495,15 @@
 !
 !        The following loop considers plate IDs in increasing order.
 !
-         MINIDX = ORDVEC(1)
+         minidx = ordvec(1)
 
-         DO I = 2, TOTPLT
+         do i = 2, totplt
 !
 !           The condition below uses absolute value because the plate
 !           ID at index I-1 may have been "marked" via negation.
 !
-            IF (              PLATID( ORDVEC(I  ) ) &
-                 .EQ.  ABS (  PLATID( ORDVEC(I-1) )  )    ) THEN
+            if (              platid( ordvec(i  ) ) &
+                 .eq.  abs (  platid( ordvec(i-1) )  )    ) then
 !
 !              The plates having indices ORDVEC(I-1) and ORDVEC(I) are
 !              duplicates.
@@ -1516,149 +1516,149 @@
 !              at the old "minimum"; otherwise negate the plate ID at
 !              index ORDVEC(I).
 !
-               IF ( ORDVEC(I) .LT. MINIDX ) THEN
+               if ( ordvec(i) .lt. minidx ) then
 !
 !                 The plate that was previously at the minimum index is
 !                 now considered a duplicate. The new minimum index for
 !                 the current plate ID value is ORDVEC(I).
 !
-                  PLATID(MINIDX)  =  - PLATID(MINIDX)
-                  MINIDX          =    ORDVEC(I)
+                  platid(minidx)  =  - platid(minidx)
+                  minidx          =    ordvec(i)
 
-               ELSE
+               else
 !
 !                 The current plate is a duplicate; mark it.
 !
-                  PLATID( ORDVEC(I) ) =  - PLATID( ORDVEC(I) )
+                  platid( ordvec(i) ) =  - platid( ordvec(i) )
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We're looking at a new plate ID. For the moment, this
 !              ID has no duplicates.
 !
-               MINIDX = ORDVEC(I)
+               minidx = ordvec(i)
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        If something went wrong up above there is no point in
 !        going on from here.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKX02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKX02' )
+            return
+         end if
 
 !
 !        Now examine each plate in the PLATID list for this voxel group.
 !        PNTR has the value of the index available for data in
 !        PLATID, so the final location of data is at index PNTR - 1.
 !
-         EXTRA  = .FALSE.
-         FINAL  = 0
-         NEAR   = 0.D0
+         extra  = .false.
+         final  = 0
+         near   = 0.d0
 
-         I      = 1
+         i      = 1
 
-         DO WHILE (  ( I .LE. TOTPLT ) .AND. ( .NOT. EXTRA )  )
+         do while (  ( i .le. totplt ) .and. ( .not. extra )  )
 !
 !           Retrieve the current plate ID.
 !
-            J = PLATID(I)
+            j = platid(i)
 
 
-            IF ( J .GT. 0 ) THEN
+            if ( j .gt. 0 ) then
 !
 !              This is not a duplicate plate; consider it.
 !
-               IF ( HAVE ) THEN
+               if ( have ) then
 !
 !                 We already have a hit. See whether this plate resides
 !                 in the voxel in which the last hit was found, or in a
 !                 later voxel.
 !
-                  IF ( SOURCE(I) .GT. FINAL ) THEN
+                  if ( source(i) .gt. final ) then
 !
 !                    This is a "late plate": it occurs in a voxel later
 !                    than that in which the first valid hit was found.
 !
-                     EXTRA = .TRUE.
+                     extra = .true.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 
-               IF ( .NOT. EXTRA ) THEN
+               if ( .not. extra ) then
 !
 !                 Fetch the vertex IDs of this plate.
 !
-                  START = 3*(J-1) + 1
+                  start = 3*(j-1) + 1
 
-                  CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, &
-                                START,  3,      DIM,    VIDS )
+                  call dski02 ( handle, dladsc, kwplat, &
+                                start,  3,      dim,    vids )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'DSKX02' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'DSKX02' )
+                     return
+                  end if
 
 !
 !                 Fetch the vertices themselves.
 !
-                  DO K = 1, 3
+                  do k = 1, 3
 !
 !                    Any vertex may be buffered already. Look in
 !                    the vertex buffer before reading the vertex.
 !
-                     VLOC = ISRCHI ( VIDS(K), NVBUF, VIDXS )
+                     vloc = isrchi ( vids(k), nvbuf, vidxs )
 
-                     IF ( VLOC .GT. 0 ) THEN
+                     if ( vloc .gt. 0 ) then
 !
 !                       The vertex was buffered; just copy it.
 !
-                        CALL VEQU ( VBUFF(1,VLOC), POINTS(1,K) )
+                        call vequ ( vbuff(1,vloc), points(1,k) )
 
-                     ELSE
+                     else
 !
 !                       Read in the vertex.
 !
-                        START = 3*( VIDS(K) - 1 ) + 1
+                        start = 3*( vids(k) - 1 ) + 1
 
-                        CALL DSKD02 ( HANDLE, DLADSC, KWVERT, &
-                                      START,  3,      DIM, &
-                                      POINTS(1,K)            )
+                        call dskd02 ( handle, dladsc, kwvert, &
+                                      start,  3,      dim, &
+                                      points(1,k)            )
 
-                        IF ( FAILED() ) THEN
-                           CALL CHKOUT ( 'DSKX02' )
-                           RETURN
-                        END IF
+                        if ( failed() ) then
+                           call chkout ( 'DSKX02' )
+                           return
+                        end if
 
 !
 !                       If there's room, buffer this vertex.
 !
-                        IF ( NVBUF .LT. BUFSIZ ) THEN
+                        if ( nvbuf .lt. bufsiz ) then
 
-                           NVBUF = NVBUF + 1
+                           nvbuf = nvbuf + 1
 
-                           CALL VEQU ( POINTS(1,K), VBUFF(1,NVBUF) )
+                           call vequ ( points(1,k), vbuff(1,nvbuf) )
 
-                           VIDXS( NVBUF ) = VIDS(K)
+                           vidxs( nvbuf ) = vids(k)
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 
-                  END DO
+                  end do
 
-               END IF
+               end if
 
 
-               IF ( .NOT. EXTRA ) THEN
+               if ( .not. extra ) then
 !
 !                 The current plate qualifies for testing using INSANG.
 !
@@ -1670,32 +1670,32 @@
 !                 members of the edge rays. Finally see if the ray
 !                 lies inside the tetrahedron.
 !
-                  CALL VSUBG  ( POINTS,     OBSMAT, 9,  EDGES )
+                  call vsubg  ( points,     obsmat, 9,  edges )
 
-                  CALL PLTEXP ( EDGES,      XPDFRC,     XPNTS )
+                  call pltexp ( edges,      xpdfrc,     xpnts )
 
-                  CALL INSANG ( UDIR, &
-                                XPNTS(1,1), XPNTS(1,2), XPNTS(1,3), &
-                                HITS,       SCALE )
+                  call insang ( udir, &
+                                xpnts(1,1), xpnts(1,2), xpnts(1,3), &
+                                hits,       scale )
 
-                  IF ( HITS ) THEN
+                  if ( hits ) then
 !
 !                    Reject intersections with plates that face away
 !                    from the ray. Accept intersections with plates
 !                    that face toward the ray.
 !
-                     CALL PLTNRM ( POINTS(1,1), POINTS(1,2), &
-                                   POINTS(1,3), NORMAL      )
+                     call pltnrm ( points(1,1), points(1,2), &
+                                   points(1,3), normal      )
 
-                     HITS = VDOT( UDIR, NORMAL ) .LE. 0.D0
+                     hits = vdot( udir, normal ) .le. 0.d0
 
-                  END IF
+                  end if
 
-                  IF ( HITS ) THEN
+                  if ( hits ) then
 !
 !                    The ray intersects this plate.
 !
-                     IF ( ( .NOT. HAVE ) .OR. ( SCALE .LT. NEAR ) ) THEN
+                     if ( ( .not. have ) .or. ( scale .lt. near ) ) then
 !
 !                       Either this is the first intersection we've
 !                       found, or this is the closest intersection to
@@ -1714,7 +1714,7 @@
 !                          ___    ____   __________
 !                          XPT2 = VTX2 + SCALE*UDIR
 !
-                        CALL VLCOM ( 1.D0, VTX2, SCALE, UDIR, XPT2 )
+                        call vlcom ( 1.d0, vtx2, scale, udir, xpt2 )
 
 !
 !                       Compute the voxel grid coordinates of the
@@ -1723,42 +1723,42 @@
 !                       be precise). Note that the components of HITCOR
 !                       are zero-based.
 !
-                        CALL ZZTOGRID ( XPT2, VOXORI, VOXSIZ, HITCOR )
+                        call zztogrid ( xpt2, voxori, voxsiz, hitcor )
 !
 !                       Look up the voxel grid coordinates (integer,
 !                       1-based) of the current voxel.
 !
-                        K     = VXLOUT ( SOURCE(I) )
+                        k     = vxlout ( source(i) )
 
-                        VXC1  = VOXLST(1,K)
-                        VXC2  = VOXLST(2,K)
-                        VXC3  = VOXLST(3,K)
+                        vxc1  = voxlst(1,k)
+                        vxc2  = voxlst(2,k)
+                        vxc3  = voxlst(3,k)
 
-                        INVOX =       ( HITCOR(1) .GT. (VXC1-XTOL-1) ) &
-                                .AND. ( HITCOR(1) .LT. (VXC1+XTOL  ) ) &
-                                .AND. ( HITCOR(2) .GT. (VXC2-XTOL-1) ) &
-                                .AND. ( HITCOR(2) .LT. (VXC2+XTOL  ) ) &
-                                .AND. ( HITCOR(3) .GT. (VXC3-XTOL-1) ) &
-                                .AND. ( HITCOR(3) .LT. (VXC3+XTOL  ) )
+                        invox =       ( hitcor(1) .gt. (vxc1-xtol-1) ) &
+                                .and. ( hitcor(1) .lt. (vxc1+xtol  ) ) &
+                                .and. ( hitcor(2) .gt. (vxc2-xtol-1) ) &
+                                .and. ( hitcor(2) .lt. (vxc2+xtol  ) ) &
+                                .and. ( hitcor(3) .gt. (vxc3-xtol-1) ) &
+                                .and. ( hitcor(3) .lt. (vxc3+xtol  ) )
 
 
-                        IF ( INVOX ) THEN
+                        if ( invox ) then
 !
 !                          Reject solutions that are outside of the
 !                          segment's boundaries, where the boundaries
 !                          are extended using the "greedy" margin.
 !
-                           CALL DSKGTL ( KEYSGR, GREEDM )
+                           call dskgtl ( keysgr, greedm )
 
-                           CALL ZZINVELT ( XPT2, &
-                                           CORSYS, &
-                                           DSKDSC(PARIDX), &
-                                           DSKDSC(MN1IDX), &
-                                           GREEDM, &
-                                           NONE, &
-                                           INSEG          )
+                           call zzinvelt ( xpt2, &
+                                           corsys, &
+                                           dskdsc(paridx), &
+                                           dskdsc(mn1idx), &
+                                           greedm, &
+                                           none, &
+                                           inseg          )
 
-                           IF ( INSEG ) THEN
+                           if ( inseg ) then
 !
 !                             We have a viable intercept. Record the
 !                             scale, plate ID, and source voxel index
@@ -1767,74 +1767,74 @@
 !                             intercepts beyond the voxel designated by
 !                             FINAL.
 !
-                              CALL VEQU ( XPT2, XPT )
+                              call vequ ( xpt2, xpt )
 
-                              HAVE   = .TRUE.
-                              NEAR   = SCALE
-                              PLID   = J
-                              FINAL  = SOURCE(I)
+                              have   = .true.
+                              near   = scale
+                              plid   = j
+                              final  = source(i)
 !
 !                             Indicate that a solution was found. We'll
 !                             keep looking for a better one if PLID is
 !                             not the last plate of the current voxel.
 !
-                              FOUND  = .TRUE.
+                              found  = .true.
 
-                           END IF
+                           end if
 
-                        ELSE
+                        else
 !
 !                          We must re-consider this plate if we
 !                          encounter it in a voxel later in the voxel
 !                          list. Remove all duplication markings for
 !                          this plate.
 !
-                           W = ABS(J)
+                           w = abs(j)
 
-                           DO K = 1, TOTPLT
+                           do k = 1, totplt
 
-                              IF ( ABS(PLATID(K)) .EQ. W ) THEN
-                                 PLATID(K) = W
-                              END IF
+                              if ( abs(platid(k)) .eq. w ) then
+                                 platid(k) = w
+                              end if
 
-                           END DO
+                           end do
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 !
 !                    End of case of checking possible solution
 !                    intercept.
 !
-                  END IF
+                  end if
 !
 !                 We're done with processing the current hit.
 !
-               END IF
+               end if
 !
 !              We're done with processing the current qualifying plate.
 !
-            END IF
+            end if
 !
 !           We're done with the current plate.
 !
 !           Fetch the next plate for this voxel group.
 !
-            I = I + 1
+            i = i + 1
 
-         END DO
+         end do
 !
 !        We're done with the current voxel group.
 !
-         GROUP = GROUP + 1
+         group = group + 1
 
-      END DO
+      end do
 !
 !     We've either found an intercept or have run out of voxel groups
 !     to check.
 !
 !     That's all folks.
 !
-      CALL CHKOUT ( 'DSKX02' )
-      RETURN
-      END
+      call chkout ( 'DSKX02' )
+      return
+      end

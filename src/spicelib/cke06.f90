@@ -1,6 +1,6 @@
 !$Procedure CKE06 ( C-Kernel, evaluate, type 6 )
 
-      SUBROUTINE CKE06 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      subroutine cke06 ( needav, record, cmat, av, clkout )
 
 ! $ Abstract
 !
@@ -16,17 +16,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ck06.inc'
-      INCLUDE 'ckparam.inc'
+      include 'ck06.inc'
+      include 'ckparam.inc'
 
 
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      CMAT     ( 3, 3 )
-      DOUBLE PRECISION      AV       ( 3 )
-      DOUBLE PRECISION      CLKOUT
+      logical               needav
+      double precision      record   ( * )
+      double precision      cmat     ( 3, 3 )
+      double precision      av       ( 3 )
+      double precision      clkout
 
 ! $ Brief_I/O
 !
@@ -320,24 +320,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKE06' )
+      call chkin ( 'CKE06' )
 
 !
 !     Given that our nominally type 6 input record is actually a
 !     valid type 5 record, we let the type 5 evaluator do the
 !     work.
 !
-      CALL CKE05 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      call cke05 ( needav, record, cmat, av, clkout )
 
-      CALL CHKOUT ( 'CKE06' )
-      RETURN
-      END
+      call chkout ( 'CKE06' )
+      return
+      end

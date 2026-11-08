@@ -1,8 +1,8 @@
 !$Procedure SPKUDS ( SPK - unpack segment descriptor )
 
-      SUBROUTINE SPKUDS ( DESCR, &
-                          BODY,  CENTER, FRAME,  TYPE, &
-                          FIRST, LAST,   BADDRS, EADDRS )
+      subroutine spkuds ( descr, &
+                          body,  center, frame,  type, &
+                          first, last,   baddrs, eaddrs )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      DESCR ( * )
-      INTEGER               BODY
-      INTEGER               CENTER
-      INTEGER               FRAME
-      INTEGER               TYPE
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      INTEGER               BADDRS
-      INTEGER               EADDRS
+      double precision      descr ( * )
+      integer               body
+      integer               center
+      integer               frame
+      integer               type
+      double precision      first
+      double precision      last
+      integer               baddrs
+      integer               eaddrs
 
 ! $ Brief_I/O
 !
@@ -158,58 +158,58 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Values of ND and NI for SPK files.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DPPART ( ND )
+      double precision      dppart ( nd )
 
-      INTEGER               IPART  ( NI )
+      integer               ipart  ( ni )
 
 !
 !     Standard introductory error handling preparations.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
-      CALL CHKIN ( 'SPKUDS' )
+      if ( return() ) then
+         return
+      end if
+      call chkin ( 'SPKUDS' )
 
 !
 !     No judgments are made about the descriptor when we
 !     unpack it.  If things were done right when the descriptor
 !     was created, it should be fine now.
 !
-      CALL DAFUS ( DESCR, ND, NI, DPPART, IPART )
+      call dafus ( descr, nd, ni, dppart, ipart )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKUDS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKUDS' )
+         return
+      end if
 
-      BODY   = IPART(1)
-      CENTER = IPART(2)
-      FRAME  = IPART(3)
-      TYPE   = IPART(4)
-      BADDRS = IPART(5)
-      EADDRS = IPART(6)
+      body   = ipart(1)
+      center = ipart(2)
+      frame  = ipart(3)
+      type   = ipart(4)
+      baddrs = ipart(5)
+      eaddrs = ipart(6)
 
-      FIRST  = DPPART(1)
-      LAST   = DPPART(2)
+      first  = dppart(1)
+      last   = dppart(2)
 
-      CALL CHKOUT ( 'SPKUDS' )
-      RETURN
+      call chkout ( 'SPKUDS' )
+      return
 
-      END
+      end

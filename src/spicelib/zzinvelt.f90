@@ -1,7 +1,7 @@
 !$Procedure ZZINVELT ( DSK, in volume element? )
 
-      SUBROUTINE ZZINVELT ( P,      CORSYS, CORPAR, BOUNDS, &
-                            MARGIN, EXCLUD, INSIDE         )
+      subroutine zzinvelt ( p,      corsys, corpar, bounds, &
+                            margin, exclud, inside         )
 
 ! $ Abstract
 !
@@ -27,19 +27,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dsktol.inc'
+      include 'dskdsc.inc'
 
 
-      DOUBLE PRECISION      P      ( 3 )
-      INTEGER               CORSYS
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               EXCLUD
-      LOGICAL               INSIDE
+      double precision      p      ( 3 )
+      integer               corsys
+      double precision      corpar ( * )
+      double precision      bounds ( 2, 3 )
+      double precision      margin
+      integer               exclud
+      logical               inside
 
 ! $ Brief_I/O
 !
@@ -236,58 +236,58 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZINVELT' )
+      call chkin ( 'ZZINVELT' )
 
 
-      IF ( MARGIN .LT. 0.D0 ) THEN
+      if ( margin .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Margin must be non-negative but was #.' )
-         CALL ERRDP  ( '#', MARGIN                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZINVELT'                               )
-         RETURN
+         call setmsg ( 'Margin must be non-negative but was #.' )
+         call errdp  ( '#', margin                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZINVELT'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Delegate the job to one of the coordinate system-specific
 !     routines.
 !
-      IF ( CORSYS .EQ. LATSYS ) THEN
+      if ( corsys .eq. latsys ) then
 
-         CALL ZZINLAT ( P, BOUNDS, MARGIN, EXCLUD, INSIDE )
-
-
-      ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
-
-         CALL ZZINPDT ( P, BOUNDS, CORPAR, MARGIN, EXCLUD, INSIDE )
+         call zzinlat ( p, bounds, margin, exclud, inside )
 
 
-      ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      else if ( corsys .eq. pdtsys ) then
 
-         CALL ZZINREC ( P, BOUNDS, MARGIN, EXCLUD, INSIDE )
+         call zzinpdt ( p, bounds, corpar, margin, exclud, inside )
 
 
-      ELSE
+      else if ( corsys .eq. recsys ) then
 
-         CALL SETMSG ( 'Coordinate system code # was not recognized.' )
-         CALL ERRINT ( '#', CORSYS                                    )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                          )
-         CALL CHKOUT ( 'ZZINVELT'                                     )
-         RETURN
+         call zzinrec ( p, bounds, margin, exclud, inside )
 
-      END IF
 
-      CALL CHKOUT ( 'ZZINVELT' )
-      RETURN
-      END
+      else
+
+         call setmsg ( 'Coordinate system code # was not recognized.' )
+         call errint ( '#', corsys                                    )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
+         call chkout ( 'ZZINVELT'                                     )
+         return
+
+      end if
+
+      call chkout ( 'ZZINVELT' )
+      return
+      end
 

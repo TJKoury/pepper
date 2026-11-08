@@ -1,8 +1,8 @@
 !$Procedure ZZASCII ( determine/verify EOL terminators in a text file )
 
-      SUBROUTINE ZZASCII ( FILE, LINE, CHECK, TERMIN )
+      subroutine zzascii ( file, line, check, termin )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -21,10 +21,10 @@
 !
 ! $ Declarations
 
-      CHARACTER*(*)         FILE
-      CHARACTER*(*)         LINE
-      LOGICAL               CHECK
-      CHARACTER*(*)         TERMIN
+      character*(*)         file
+      character*(*)         line
+      logical               check
+      character*(*)         termin
 
 ! $ Brief_I/O
 !
@@ -261,132 +261,132 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
-      INTEGER               RTRIM
+      logical               eqstr
+      logical               return
+      integer               rtrim
 
 !
 !     Local parameters.
 !
-      INTEGER               EOLTSZ
-      PARAMETER           ( EOLTSZ = 5 )
+      integer               eoltsz
+      parameter           ( eoltsz = 5 )
 
 !
 !     Local variables.
 !
-      CHARACTER*(EOLTSZ)    NATIVE
+      character*(eoltsz)    native
 
-      INTEGER               DOSCNT
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               MACCNT
-      INTEGER               NUMBER
-      INTEGER               RECLEN
-      INTEGER               UNXCNT
+      integer               doscnt
+      integer               i
+      integer               iostat
+      integer               maccnt
+      integer               number
+      integer               reclen
+      integer               unxcnt
 
 !
 !     Discovery check-in. Can't determine the terminator in RETURN
 !     mode.
 !
-      IF ( RETURN() ) THEN
-         TERMIN = '?'
-         RETURN
-      END IF
+      if ( return() ) then
+         termin = '?'
+         return
+      end if
 
 !
 !     Check-in to the error system.
 !
-      CALL CHKIN( 'ZZASCII' )
+      call chkin( 'ZZASCII' )
 
 !
 !     Retrieve the native line terminator.
 !
-      CALL ZZPLATFM ( 'TEXT_FORMAT', NATIVE )
+      call zzplatfm ( 'TEXT_FORMAT', native )
 
 !
 !     If it is VAX, return immediately with undefined terminator.
 !
-      IF ( EQSTR( NATIVE, 'VAX' ) ) THEN
+      if ( eqstr( native, 'VAX' ) ) then
 
-         TERMIN = '?'
+         termin = '?'
 
-         CALL CHKOUT ( 'ZZASCII' )
-         RETURN
+         call chkout ( 'ZZASCII' )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the record length that will be used to read data from
 !     the file.
 !
-      RECLEN  = LEN(LINE)
+      reclen  = len(line)
 
 !
 !     Check the length of the work string is sufficient to perform the
 !     operations. Less than 3 is a no-op.
 !
-      IF ( LEN(LINE) .LT. 3 ) THEN
+      if ( len(line) .lt. 3 ) then
 
-         TERMIN = '?'
+         termin = '?'
 
-         CALL SETMSG ( 'Work string lacks sufficient length' &
+         call setmsg ( 'Work string lacks sufficient length' &
                     // ' to perform operation.')
-         CALL SIGERR ( 'SPICE(STRINGTOOSHORT)' )
-         CALL CHKOUT ( 'ZZASCII' )
-         RETURN
+         call sigerr ( 'SPICE(STRINGTOOSHORT)' )
+         call chkout ( 'ZZASCII' )
+         return
 
-      END IF
+      end if
 
 !
 !     Find a free logical unit for file access.
 !
-      CALL GETLUN ( NUMBER )
+      call getlun ( number )
 
 !
 !     Open the file for DIRECT access.
 !
-      OPEN ( UNIT               = NUMBER  , &
-             FILE               = FILE( :RTRIM(FILE) ), &
-             ACCESS             = 'DIRECT', &
-             STATUS             = 'OLD'   , &
-             RECL               = RECLEN  , &
+      open ( unit               = number  , &
+             file               = file( :rtrim(file) ), &
+             access             = 'DIRECT', &
+             status             = 'OLD'   , &
+             recl               = reclen  , &
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-             MODE               = 'READ', &
+             mode               = 'READ', &
 #else
 #endif
-             IOSTAT             = IOSTAT  )
+             iostat             = iostat  )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
 !
 !        The open failed, can't determine the terminator if the routine
 !        can't open the file.
 !
-         TERMIN = '?'
+         termin = '?'
 
 !
 !        Execute a close, J.I.C.
 !
-         CLOSE( NUMBER )
+         close( number )
 
-         CALL SETMSG ( 'File open failed for file ''$1''. IOSTAT ' &
+         call setmsg ( 'File open failed for file ''$1''. IOSTAT ' &
                      //' value $2.' )
-         CALL ERRCH  ( '$1', FILE            )
-         CALL ERRINT ( '$2', IOSTAT          )
-         CALL SIGERR ( 'SPICE(FILEOPENFAIL)' )
-         CALL CHKOUT ( 'ZZASCII' )
-         RETURN
+         call errch  ( '$1', file            )
+         call errint ( '$2', iostat          )
+         call sigerr ( 'SPICE(FILEOPENFAIL)' )
+         call chkout ( 'ZZASCII' )
+         return
 
-      END IF
+      end if
 
 !
 !     Read a line into the LINE variable assigned by the user.
 !
-      LINE = ' '
+      line = ' '
 
-      READ ( NUMBER, REC=1, IOSTAT=IOSTAT ) LINE
+      read ( number, rec=1, iostat=iostat ) line
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
 !
 !        If something went wrong during this read, a part or the whole
@@ -394,104 +394,104 @@
 !        making wrong determination based on it, set terminator to
 !        undefined and return.
 !
-         TERMIN = '?'
+         termin = '?'
 
 !
 !        Execute a close, J.I.C.
 !
-         CLOSE( NUMBER )
+         close( number )
 
-         CALL CHKOUT ( 'ZZASCII' )
-         RETURN
+         call chkout ( 'ZZASCII' )
+         return
 
-      END IF
+      end if
 
 !
 !     We have a line of text data. Use ICHAR to scan for carriage
 !     returns and line feeds and count how may of various recognized
 !     line termination sequences are in this line.
 !
-      DOSCNT = 0
-      UNXCNT = 0
-      MACCNT = 0
+      doscnt = 0
+      unxcnt = 0
+      maccnt = 0
 
-      I      = 1
+      i      = 1
 
-      DO WHILE ( I .LT. LEN(LINE) )
+      do while ( i .lt. len(line) )
 
 !
 !        Check for ICHAR values of 10 (LF) and 13 (CR).
 !
-         IF      ( ICHAR(LINE(I:I)) .EQ. 10 ) THEN
+         if      ( ichar(line(i:i)) .eq. 10 ) then
 
 !
 !           Found a UNIX line terminator LF.
 !
-            UNXCNT = UNXCNT + 1
+            unxcnt = unxcnt + 1
 
-         ELSE IF ( ICHAR(LINE(I:I)) .EQ. 13 ) THEN
+         else if ( ichar(line(i:i)) .eq. 13 ) then
 
 !
 !           Found CR, increment character counter and check
 !           the next character.
 !
-            I = I + 1
+            i = i + 1
 
-            IF ( ICHAR(LINE(I:I)) .EQ. 10 ) THEN
+            if ( ichar(line(i:i)) .eq. 10 ) then
 
 !
 !              Found a DOS line terminator CR+LF.
 !
-               DOSCNT = DOSCNT + 1
+               doscnt = doscnt + 1
 
-            ELSE
+            else
 
 !
 !              Found a Classic Mac line terminator CR.
 !
-               MACCNT = MACCNT + 1
+               maccnt = maccnt + 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         I = I + 1
+         i = i + 1
 
-      END DO
+      end do
 
 !
 !     Examine the counters.
 !
-      IF      ( DOSCNT .GT. 0 .AND. &
-                UNXCNT .EQ. 0 .AND. &
-                MACCNT .EQ. 0       ) THEN
+      if      ( doscnt .gt. 0 .and. &
+                unxcnt .eq. 0 .and. &
+                maccnt .eq. 0       ) then
 
 !
 !        Only DOS terminator counter is non-zero. ID the file as DOS.
 !
-         TERMIN = 'CR-LF'
+         termin = 'CR-LF'
 
-      ELSE IF ( DOSCNT .EQ. 0 .AND. &
-                UNXCNT .GT. 0 .AND. &
-                MACCNT .EQ. 0       ) THEN
+      else if ( doscnt .eq. 0 .and. &
+                unxcnt .gt. 0 .and. &
+                maccnt .eq. 0       ) then
 
 
 !
 !        Only Unix terminator counter is non-zero. ID the file as UNIX.
 !
-         TERMIN =  'LF'
+         termin =  'LF'
 
-      ELSE IF ( DOSCNT .EQ. 0 .AND. &
-                UNXCNT .EQ. 0 .AND. &
-                MACCNT .GT. 0       ) THEN
+      else if ( doscnt .eq. 0 .and. &
+                unxcnt .eq. 0 .and. &
+                maccnt .gt. 0       ) then
 
 !
 !        Only Mac terminator counter is non-zero. ID the file as Mac
 !        Classic.
 !
-         TERMIN =  'CR'
+         termin =  'CR'
 
-      ELSE
+      else
 
 !
 !        We can get here in two cases. First if the line did not
@@ -499,30 +499,30 @@
 !        one kind of terminators. In either case the format of the file
 !        is unclear.
 !
-         TERMIN = '?'
+         termin = '?'
 
-      END IF
+      end if
 
 !
 !     Close the file.
 !
-      CLOSE ( NUMBER )
+      close ( number )
 
 !
 !     If we were told check the terminator against the native one, do
 !     it.
 !
-      IF ( CHECK ) THEN
+      if ( check ) then
 
 !
 !        If the terminator was identified and does not match the native
 !        one, error out.
 !
-         IF ( .NOT. EQSTR( TERMIN, NATIVE ) .AND. &
-              .NOT. EQSTR( TERMIN, '?'    )       ) THEN
+         if ( .not. eqstr( termin, native ) .and. &
+              .not. eqstr( termin, '?'    )       ) then
 
 
-            CALL SETMSG ( 'Text file ''$1'' contains lines ' &
+            call setmsg ( 'Text file ''$1'' contains lines ' &
                      //   'terminated with ''$2'' while ' &
                      //   'the expected terminator for ' &
                      //   'this platform is ''$3''. SPICE ' &
@@ -537,18 +537,18 @@
                      //   'form using a utility such as ' &
                      //   'dos2unix or unix2dos.'     )
 
-            CALL ERRCH  ( '$1', FILE   )
-            CALL ERRCH  ( '$2', TERMIN )
-            CALL ERRCH  ( '$3', NATIVE )
-            CALL SIGERR ( 'SPICE(INCOMPATIBLEEOL)' )
-            CALL CHKOUT ( 'ZZASCII' )
-            RETURN
+            call errch  ( '$1', file   )
+            call errch  ( '$2', termin )
+            call errch  ( '$3', native )
+            call sigerr ( 'SPICE(INCOMPATIBLEEOL)' )
+            call chkout ( 'ZZASCII' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT( 'ZZASCII' )
+      call chkout( 'ZZASCII' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure HX2DP ( Hexadecimal string to d.p. number )
 
-      SUBROUTINE HX2DP ( STRING, NUMBER, ERROR, ERRMSG )
+      subroutine hx2dp ( string, number, error, errmsg )
 
 ! $ Abstract
 !
@@ -19,16 +19,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               MAXMAN
-      PARAMETER           ( MAXMAN = 31 )
+      integer               maxman
+      parameter           ( maxman = 31 )
 
 
-      CHARACTER*(*)         STRING
-      DOUBLE PRECISION      NUMBER
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         string
+      double precision      number
+      logical               error
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -398,87 +398,87 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      DPMAX
+      double precision      dpmin
+      double precision      dpmax
 !
 !     Local Parameters
 !
-      CHARACTER*(1)         EXPCHR
-      PARAMETER           ( EXPCHR = '^' )
+      character*(1)         expchr
+      parameter           ( expchr = '^' )
 
-      DOUBLE PRECISION      BASE
-      PARAMETER           ( BASE = 16.0D0 )
+      double precision      base
+      parameter           ( base = 16.0d0 )
 
-      DOUBLE PRECISION      INVBAS
-      PARAMETER           ( INVBAS = 1.0D0/BASE )
+      double precision      invbas
+      parameter           ( invbas = 1.0d0/base )
 
-      INTEGER               MAXDIG
-      PARAMETER           ( MAXDIG = 16 )
+      integer               maxdig
+      parameter           ( maxdig = 16 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DPVAL(0:MAXDIG-1)
-      DOUBLE PRECISION      MAXDP
-      DOUBLE PRECISION      MINDP
-      DOUBLE PRECISION      SCALES(MAXMAN)
-      DOUBLE PRECISION      TMPNUM
+      double precision      dpval(0:maxdig-1)
+      double precision      maxdp
+      double precision      mindp
+      double precision      scales(maxman)
+      double precision      tmpnum
 
-      INTEGER               DIGBEG
-      INTEGER               DIGEND
-      INTEGER               I
-      INTEGER               IEXPCH
-      INTEGER               IEXPON
-      INTEGER               IMINUS
-      INTEGER               IPLUS
-      INTEGER               ISPACE
-      INTEGER               IVAL(MAXMAN+1)
-      INTEGER               LCCBEG
-      INTEGER               LCCEND
-      INTEGER               LETTER
-      INTEGER               NDIGIT
-      INTEGER               POSITN
-      INTEGER               STRBEG
-      INTEGER               STREND
-      INTEGER               UCCBEG
-      INTEGER               UCCEND
+      integer               digbeg
+      integer               digend
+      integer               i
+      integer               iexpch
+      integer               iexpon
+      integer               iminus
+      integer               iplus
+      integer               ispace
+      integer               ival(maxman+1)
+      integer               lccbeg
+      integer               lccend
+      integer               letter
+      integer               ndigit
+      integer               positn
+      integer               strbeg
+      integer               strend
+      integer               uccbeg
+      integer               uccend
 
-      LOGICAL               FIRST
-      LOGICAL               MORE
-      LOGICAL               NEGTIV
-      LOGICAL               FNDEXP
+      logical               first
+      logical               more
+      logical               negtiv
+      logical               fndexp
 !
 !     Saved variables
 !
-      SAVE                  DPVAL
-      SAVE                  MAXDP
-      SAVE                  MINDP
-      SAVE                  SCALES
+      save                  dpval
+      save                  maxdp
+      save                  mindp
+      save                  scales
 
-      SAVE                  DIGBEG
-      SAVE                  DIGEND
-      SAVE                  IEXPCH
-      SAVE                  IMINUS
-      SAVE                  IPLUS
-      SAVE                  ISPACE
-      SAVE                  LCCBEG
-      SAVE                  LCCEND
-      SAVE                  UCCBEG
-      SAVE                  UCCEND
+      save                  digbeg
+      save                  digend
+      save                  iexpch
+      save                  iminus
+      save                  iplus
+      save                  ispace
+      save                  lccbeg
+      save                  lccend
+      save                  uccbeg
+      save                  uccend
 
-      SAVE                  FIRST
+      save                  first
 !
 !     Initial values
 !
-      DATA                  DPVAL   / &
-                                       0.0D0,  1.0D0,  2.0D0,  3.0D0, &
-                                       4.0D0,  5.0D0,  6.0D0,  7.0D0, &
-                                       8.0D0,  9.0D0, 10.0D0, 11.0D0, &
-                                      12.0D0, 13.0D0, 14.0D0, 15.0D0 &
+      data                  dpval   / &
+                                       0.0d0,  1.0d0,  2.0d0,  3.0d0, &
+                                       4.0d0,  5.0d0,  6.0d0,  7.0d0, &
+                                       8.0d0,  9.0d0, 10.0d0, 11.0d0, &
+                                      12.0d0, 13.0d0, 14.0d0, 15.0d0 &
                                     /
 
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 
@@ -510,7 +510,7 @@
 !        6) The double precision number is then scaled by the exponent
 !           obtained in step 3.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        If this is the first call, set up the array that is used to
 !        properly scale each of the hexadecimal digits when summing
@@ -522,14 +522,14 @@
 !        may be changed when a greater precision is known to exist on
 !        any of the supported platforms.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-         SCALES(1) = INVBAS
-         DO I = 2, MAXMAN
+         scales(1) = invbas
+         do i = 2, maxman
 
-            SCALES(I) = INVBAS * SCALES(I-1)
+            scales(i) = invbas * scales(i-1)
 
-         END DO
+         end do
 !
 !        Initialize the upper and lower bounds for the decimal digits,
 !        the upper and lower bounds for the uppercase hexadecimal
@@ -537,19 +537,19 @@
 !        hexadecimal digits, the space, the plus sign, and the minus
 !        sign in the character sequence.
 !
-         DIGBEG = ICHAR( '0' )
-         DIGEND = ICHAR( '9' )
-         UCCBEG = ICHAR( 'A' )
-         UCCEND = ICHAR( 'F' )
-         LCCBEG = ICHAR( 'a' )
-         LCCEND = ICHAR( 'f' )
-         IMINUS = ICHAR( '-' )
-         IPLUS  = ICHAR( '+' )
-         ISPACE = ICHAR( ' ' )
+         digbeg = ichar( '0' )
+         digend = ichar( '9' )
+         uccbeg = ichar( 'A' )
+         uccend = ichar( 'F' )
+         lccbeg = ichar( 'a' )
+         lccend = ichar( 'f' )
+         iminus = ichar( '-' )
+         iplus  = ichar( '+' )
+         ispace = ichar( ' ' )
 !
 !        Also get the integer value for the exponent character.
 !
-         IEXPCH = ICHAR( EXPCHR )
+         iexpch = ichar( expchr )
 !
 !        Initialize some boundary values for error checking while
 !        constructing the desired double precision number. These
@@ -557,74 +557,74 @@
 !        is imminent due to the overly large magnitude of a positive
 !        or negative number.
 !
-         MINDP = DPMIN() * INVBAS
-         MAXDP = DPMAX() * INVBAS
+         mindp = dpmin() * invbas
+         maxdp = dpmax() * invbas
 
-      END IF
+      end if
 !
 !     There are no errors initially, so set the error flag to
 !     .FALSE.
 !
-      ERROR = .FALSE.
+      error = .false.
 !
 !     If the string is blank, set the error flag and return immediately.
 !
-      IF ( STRING .EQ. ' ' ) THEN
+      if ( string .eq. ' ' ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'ERROR: A blank input string is not allowed.'
-         RETURN
+         error  = .true.
+         errmsg = 'ERROR: A blank input string is not allowed.'
+         return
 
-      END IF
+      end if
 !
 !     Initialize a few other things.
 !
-      ERRMSG = ' '
-      TMPNUM = 0.0D0
+      errmsg = ' '
+      tmpnum = 0.0d0
 !
 !     Assume that the number is nonnegative.
 !
-      NEGTIV = .FALSE.
+      negtiv = .false.
 !
 !     Skip any leading white space. We know that there is at least
 !     one nonblank character at this point, so we will not loop
 !     off the end of the string.
 !
-      STRBEG = 1
+      strbeg = 1
 
-      DO WHILE ( ICHAR( STRING(STRBEG:STRBEG ) ) .EQ. ISPACE )
+      do while ( ichar( string(strbeg:strbeg ) ) .eq. ispace )
 
-         STRBEG = STRBEG + 1
+         strbeg = strbeg + 1
 
-      END DO
+      end do
 !
 !     Now, we want to find the end of the significant portion of
 !     the input string and the position of the exponent character.
 !
-      STREND = STRBEG + 1
-      MORE   = .TRUE.
+      strend = strbeg + 1
+      more   = .true.
 
-      DO WHILE ( MORE )
+      do while ( more )
 
-         IF ( STREND .LE. LEN( STRING ) ) THEN
+         if ( strend .le. len( string ) ) then
 
-            IF ( STRING(STREND:) .NE. ' ' ) THEN
+            if ( string(strend:) .ne. ' ' ) then
 
-               STREND = STREND + 1
+               strend = strend + 1
 
-            ELSE
+            else
 
-               MORE = .FALSE.
+               more = .false.
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            MORE = .FALSE.
+            more = .false.
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     At this point, STREND is one larger than the length of the
 !     significant portion of the string because we incremented
@@ -632,13 +632,13 @@
 !     value of STREND so that it exactly represents the position
 !     of the last significant character in the string.
 !
-      STREND = STREND - 1
+      strend = strend - 1
 !
 !     Set the position pointer to the beginning of the significant
 !     part, i.e., the nonblank part, of the string, because we are
 !     now ready to try and parse the number.
 !
-      POSITN = STRBEG
+      positn = strbeg
 !
 !     The first character should be either a plus sign, '+', a
 !     minus sign, '-', or a digit, '0' - '9', 'A' - 'F', or
@@ -651,16 +651,16 @@
 !     If the character is a plus sign, we want to increment the
 !     position.
 !
-      IF ( ICHAR( STRING(POSITN:POSITN) ) .EQ. IMINUS ) THEN
+      if ( ichar( string(positn:positn) ) .eq. iminus ) then
 
-         NEGTIV = .TRUE.
-         POSITN = POSITN + 1
+         negtiv = .true.
+         positn = positn + 1
 
-      ELSE IF ( ICHAR( STRING(POSITN:POSITN) ) .EQ. IPLUS ) THEN
+      else if ( ichar( string(positn:positn) ) .eq. iplus ) then
 
-         POSITN = POSITN + 1
+         positn = positn + 1
 
-      END IF
+      end if
 !
 !     Collect all of the digits in the mantissa, storing them
 !     for later conversion. We do this because we want to add
@@ -674,64 +674,64 @@
 !     We currently have no digits, and we have not found the
 !     exponent character yet.
 !
-      NDIGIT = 0
-      FNDEXP = .FALSE.
-      DO WHILE ( ( POSITN .LE. STREND ) .AND. ( .NOT. FNDEXP ) )
+      ndigit = 0
+      fndexp = .false.
+      do while ( ( positn .le. strend ) .and. ( .not. fndexp ) )
 
-         LETTER = ICHAR( STRING(POSITN:POSITN) )
+         letter = ichar( string(positn:positn) )
 
-         IF ( ( LETTER .GE. DIGBEG ) .AND. &
-              ( LETTER .LE. DIGEND ) ) THEN
+         if ( ( letter .ge. digbeg ) .and. &
+              ( letter .le. digend ) ) then
 
-            POSITN       = POSITN + 1
-            NDIGIT       = NDIGIT + 1
-            IVAL(NDIGIT) = LETTER - DIGBEG
+            positn       = positn + 1
+            ndigit       = ndigit + 1
+            ival(ndigit) = letter - digbeg
 
-         ELSE IF ( ( LETTER .GE. UCCBEG ) .AND. &
-                   ( LETTER .LE. UCCEND ) ) THEN
+         else if ( ( letter .ge. uccbeg ) .and. &
+                   ( letter .le. uccend ) ) then
 
-            POSITN       = POSITN + 1
-            NDIGIT       = NDIGIT + 1
-            IVAL(NDIGIT) = 10 + LETTER - UCCBEG
+            positn       = positn + 1
+            ndigit       = ndigit + 1
+            ival(ndigit) = 10 + letter - uccbeg
 
-         ELSE IF ( ( LETTER .GE. LCCBEG ) .AND. &
-                   ( LETTER .LE. LCCEND ) ) THEN
+         else if ( ( letter .ge. lccbeg ) .and. &
+                   ( letter .le. lccend ) ) then
 
-            POSITN       = POSITN + 1
-            NDIGIT       = NDIGIT + 1
-           IVAL(NDIGIT) = 10 + LETTER - LCCBEG
+            positn       = positn + 1
+            ndigit       = ndigit + 1
+           ival(ndigit) = 10 + letter - lccbeg
 
-         ELSE IF ( LETTER .EQ. IEXPCH ) THEN
+         else if ( letter .eq. iexpch ) then
 !
 !           We have found the exponent character, so set the
 !           indicator and increment the position.
 !
-            FNDEXP = .TRUE.
-            POSITN = POSITN + 1
+            fndexp = .true.
+            positn = positn + 1
 
-         ELSE
+         else
 
-            ERROR  = .TRUE.
-            ERRMSG = 'ERROR: Illegal character ''#'' encountered.'
-            CALL REPMC( ERRMSG, '#', CHAR( LETTER ), ERRMSG )
-            RETURN
+            error  = .true.
+            errmsg = 'ERROR: Illegal character ''#'' encountered.'
+            call repmc( errmsg, '#', char( letter ), errmsg )
+            return
 
-         END IF
+         end if
 !
 !        We need to make sure that the number of mantissa digits
 !        remains less than or equal to the number of mantissa
 !        digits that we declared, see the MAXMAN parameter.
 !
-         IF ( NDIGIT .GT. MAXMAN ) THEN
+         if ( ndigit .gt. maxman ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'ERROR: Too many digits in the mantissa (> #).'
-            CALL REPMI ( ERRMSG, '#', MAXMAN, ERRMSG )
-            RETURN
+            error  = .true.
+            errmsg = 'ERROR: Too many digits in the mantissa (> #).'
+            call repmi ( errmsg, '#', maxman, errmsg )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     At this point, we have found an exponent character, and:
 !
@@ -741,30 +741,30 @@
 !        2) We are positioned on the first digit of the exponent,
 !           and are ready to try and parse it.
 !
-      IF ( POSITN .LE. STREND ) THEN
+      if ( positn .le. strend ) then
 !
 !        If there is at least one significant character left in the
 !        string, we need to try and parse it as an exponent.
 !
-         CALL HX2INT( STRING(POSITN:), IEXPON, ERROR, ERRMSG )
+         call hx2int( string(positn:), iexpon, error, errmsg )
 
-         IF ( ERROR ) THEN
+         if ( error ) then
 !
 !           If an error occurred while attempting to parse the
 !           exponent, we simply want to exit. The error message
 !           is already set.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         ERROR  = .TRUE.
-         ERRMSG = 'ERROR: Missing exponent.'
-         RETURN
+         error  = .true.
+         errmsg = 'ERROR: Missing exponent.'
+         return
 
-      END IF
+      end if
 !
 !     We now have everything that we need to build the double
 !     precision number, a mantissa and an exponent. So, let's
@@ -773,25 +773,25 @@
 !
 !     First, we build up the mantissa ...
 !
-      IF ( NEGTIV ) THEN
+      if ( negtiv ) then
 
-         DO WHILE ( NDIGIT .GT. 0 )
+         do while ( ndigit .gt. 0 )
 
-            TMPNUM = TMPNUM - DPVAL(IVAL(NDIGIT)) * SCALES(NDIGIT)
-            NDIGIT = NDIGIT - 1
+            tmpnum = tmpnum - dpval(ival(ndigit)) * scales(ndigit)
+            ndigit = ndigit - 1
 
-         END DO
+         end do
 
-      ELSE
+      else
 
-         DO WHILE ( NDIGIT .GT. 0 )
+         do while ( ndigit .gt. 0 )
 
-            TMPNUM = TMPNUM + DPVAL(IVAL(NDIGIT)) * SCALES(NDIGIT)
-            NDIGIT = NDIGIT - 1
+            tmpnum = tmpnum + dpval(ival(ndigit)) * scales(ndigit)
+            ndigit = ndigit - 1
 
-         END DO
+         end do
 
-      END IF
+      end if
 !
 !     At this point, one of the following is true:
 !
@@ -807,65 +807,65 @@
 !     the exponent is zero, we will simply fall through the loop
 !     structures below at no greater cost than a few comparisons.
 !
-      IF ( IEXPON .LT. 0 ) THEN
+      if ( iexpon .lt. 0 ) then
 !
 !        We do not check for any sort of underflow conditions.
 !
-         DO I = 1, -IEXPON
+         do i = 1, -iexpon
 
-            TMPNUM = TMPNUM * INVBAS
+            tmpnum = tmpnum * invbas
 
-         END DO
+         end do
 
-      ELSE
+      else
 
-         IF ( NEGTIV ) THEN
+         if ( negtiv ) then
 
-            DO I = 1, IEXPON
+            do i = 1, iexpon
 
-               IF ( TMPNUM .GE. MINDP ) THEN
+               if ( tmpnum .ge. mindp ) then
 
-                  TMPNUM = TMPNUM * BASE
+                  tmpnum = tmpnum * base
 
-               ELSE
+               else
 
-                  ERROR  = .TRUE.
-                  ERRMSG = 'ERROR: Number is too small to be'// &
+                  error  = .true.
+                  errmsg = 'ERROR: Number is too small to be'// &
                            ' represented.'
-                  RETURN
+                  return
 
-               END IF
+               end if
 
-            END DO
+            end do
 
-         ELSE
+         else
 
-            DO I = 1, IEXPON
+            do i = 1, iexpon
 
-               IF ( TMPNUM .LE. MAXDP ) THEN
+               if ( tmpnum .le. maxdp ) then
 
-                  TMPNUM = TMPNUM * BASE
+                  tmpnum = tmpnum * base
 
-               ELSE
+               else
 
-                  ERROR  = .TRUE.
-                  ERRMSG = 'ERROR: Number is too large to be'// &
+                  error  = .true.
+                  errmsg = 'ERROR: Number is too large to be'// &
                            ' represented.'
-                  RETURN
+                  return
 
-               END IF
+               end if
 
-            END DO
+            end do
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     If we got to here, we have successfully parsed the hexadecimal
 !     string into a double precision number. So, set the value and
 !     return.
 !
-      NUMBER = TMPNUM
+      number = tmpnum
 
-      RETURN
-      END
+      return
+      end

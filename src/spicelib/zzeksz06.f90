@@ -1,6 +1,6 @@
 !$Procedure ZZEKSZ06 ( EK, element entry size, class 6 )
 
-      INTEGER FUNCTION ZZEKSZ06 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      integer function zzeksz06 ( handle, segdsc, coldsc, recptr )
 
 ! $ Abstract
 !
@@ -17,17 +17,17 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               COLDSC ( CDSCSZ )
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               recptr
+      integer               coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -117,72 +117,72 @@
 !
 !     Local variables
 !
-      INTEGER               COLIDX
-      INTEGER               DATPTR
-      INTEGER               NCOLS
-      INTEGER               NREC
-      INTEGER               PTRLOC
+      integer               colidx
+      integer               datptr
+      integer               ncols
+      integer               nrec
+      integer               ptrloc
 
 !
 !     Use discovery check-in.
 !
 !     Initialize the function's return value.
 !
-      ZZEKSZ06  =  0
+      zzeksz06  =  0
 
-      NREC    =  SEGDSC ( NRIDX  )
-      COLIDX  =  COLDSC ( ORDIDX )
+      nrec    =  segdsc ( nridx  )
+      colidx  =  coldsc ( ordidx )
 
 !
 !     Make sure the column exists.
 !
-      NCOLS  =  SEGDSC ( NCIDX )
+      ncols  =  segdsc ( ncidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKSZ06'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NREC                              )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKSZ06'                              )
-         RETURN
+         call chkin  ( 'ZZEKSZ06'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' )
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  nrec                              )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKSZ06'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     If the column has fixed-size entries, just return the declared
 !     size.
 !
-      IF ( COLDSC(SIZIDX) .NE. IFALSE ) THEN
+      if ( coldsc(sizidx) .ne. ifalse ) then
 
-         ZZEKSZ06  =  COLDSC(SIZIDX)
-         RETURN
+         zzeksz06  =  coldsc(sizidx)
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the data pointer location.  Read the data pointer.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF ( DATPTR .LT. 1 ) THEN
+      if ( datptr .lt. 1 ) then
 !
 !        The value is null.  Null entries are always considered to have
 !        size 1.
 !
-         ZZEKSZ06  =  1
+         zzeksz06  =  1
 
-      ELSE
+      else
 !
 !        DATPTR points to the element count.
 !
-         CALL ZZEKGEI ( HANDLE, DATPTR, ZZEKSZ06 )
+         call zzekgei ( handle, datptr, zzeksz06 )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

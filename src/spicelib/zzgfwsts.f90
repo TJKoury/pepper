@@ -1,6 +1,6 @@
 !$Procedure ZZGFWSTS ( Private --- GF, sift first window thru second )
 
-      SUBROUTINE ZZGFWSTS ( WNDW1, WNDW2, INCLSN, WNDW3 )
+      subroutine zzgfwsts ( wndw1, wndw2, inclsn, wndw3 )
 
 ! $ Abstract
 !
@@ -21,15 +21,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      WNDW1 ( LBCELL : * )
-      DOUBLE PRECISION      WNDW2 ( LBCELL : * )
-      CHARACTER*(*)         INCLSN
-      DOUBLE PRECISION      WNDW3 ( LBCELL : * )
+      double precision      wndw1 ( lbcell : * )
+      double precision      wndw2 ( lbcell : * )
+      character*(*)         inclsn
+      double precision      wndw3 ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -146,222 +146,222 @@
 !     SPICELIB functions
 !
 
-      INTEGER               CARDD
-      INTEGER               SIZED
+      integer               cardd
+      integer               sized
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               INCLEN
-      PARAMETER           ( INCLEN = 2 )
+      integer               inclen
+      parameter           ( inclen = 2 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(INCLEN)    LOCINC
+      character*(inclen)    locinc
 
-      INTEGER               BEGP1
-      INTEGER               BEGP2
-      INTEGER               BEGP3
-      INTEGER               ENDP1
-      INTEGER               ENDP2
-      INTEGER               ENDP3
-      INTEGER               MAXPTS
-      INTEGER               OVFLOW
-      INTEGER               SIZE1
-      INTEGER               SIZE2
+      integer               begp1
+      integer               begp2
+      integer               begp3
+      integer               endp1
+      integer               endp2
+      integer               endp3
+      integer               maxpts
+      integer               ovflow
+      integer               size1
+      integer               size2
 
-      LOGICAL               CLOSED
-      LOGICAL               KEEP
-      LOGICAL               LEFT
-      LOGICAL               OPEN
-      LOGICAL               RIGHT
+      logical               closed
+      logical               keep
+      logical               left
+      logical               open
+      logical               right
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFWSTS')
+      call chkin ( 'ZZGFWSTS')
 
 !
 !     Store the maximum number of endpoints that can be loaded into
 !     WNDW3
 !
-      MAXPTS      = SIZED ( WNDW3 )
-      CALL SSIZED ( MAXPTS, WNDW3 )
+      maxpts      = sized ( wndw3 )
+      call ssized ( maxpts, wndw3 )
 
 !
 !     Find the number of endpoints in each of the input windows.
 !
-      SIZE1     = CARDD( WNDW1 )
-      SIZE2     = CARDD( WNDW2 )
+      size1     = cardd( wndw1 )
+      size2     = cardd( wndw2 )
 
 !
 !     Initialize the place holders for each of the input windows.
 !
-      BEGP1     =  1
-      BEGP2     =  1
+      begp1     =  1
+      begp2     =  1
 
-      ENDP1     =  2
-      ENDP2     =  2
+      endp1     =  2
+      endp2     =  2
 
-      BEGP3     = -1
-      ENDP3     =  0
+      begp3     = -1
+      endp3     =  0
 
 
-      CALL CMPRSS ( ' ', 0, INCLSN, LOCINC )
+      call cmprss ( ' ', 0, inclsn, locinc )
 
-      OPEN   = LOCINC .EQ. '()'
-      LEFT   = LOCINC .EQ. '[)'
-      RIGHT  = LOCINC .EQ. '(]'
-      CLOSED = LOCINC .EQ. '[]'
+      open   = locinc .eq. '()'
+      left   = locinc .eq. '[)'
+      right  = locinc .eq. '(]'
+      closed = locinc .eq. '[]'
 
-      IF ( .NOT. (     OPEN &
-                  .OR. LEFT &
-                  .OR. RIGHT &
-                  .OR. CLOSED ) ) THEN
+      if ( .not. (     open &
+                  .or. left &
+                  .or. right &
+                  .or. closed ) ) then
 
-         CALL SETMSG ( 'The value of the inclusion flag must be ' &
+         call setmsg ( 'The value of the inclusion flag must be ' &
          //            'one of the following: ''[]'', ''[)'', ' &
          //            '''(]'', or ''()''.  However the value ' &
          //            'supplied was ''#''. ' )
-         CALL ERRCH  ( '#', INCLSN )
-         CALL SIGERR ( 'SPICE(UNKNOWNINCLUSION)'  )
-         CALL CHKOUT ( 'ZZGFWSTS' )
-         RETURN
+         call errch  ( '#', inclsn )
+         call sigerr ( 'SPICE(UNKNOWNINCLUSION)'  )
+         call chkout ( 'ZZGFWSTS' )
+         return
 
-      END IF
+      end if
 
 !
 !     We haven't had a chance to overflow yet.
 !
-      OVFLOW    = 0
+      ovflow    = 0
 
-      DO WHILE (       ( BEGP1 .LT. SIZE1 ) &
-                 .AND. ( BEGP2 .LT. SIZE2 ) )
+      do while (       ( begp1 .lt. size1 ) &
+                 .and. ( begp2 .lt. size2 ) )
 !
 !        Using the current interval endpoints determine the overlap of
 !        the two intervals.
 !
-         IF      ( WNDW1(ENDP1) .LT. WNDW2(BEGP2)  ) THEN
+         if      ( wndw1(endp1) .lt. wndw2(begp2)  ) then
 !
 !           the end of the first interval precedes the beginning of the
 !           second
 !
-            BEGP1    = BEGP1    + 2
-            ENDP1    = ENDP1    + 2
+            begp1    = begp1    + 2
+            endp1    = endp1    + 2
 
-         ELSE IF ( WNDW2(ENDP2) .LT. WNDW1(BEGP1) ) THEN
+         else if ( wndw2(endp2) .lt. wndw1(begp1) ) then
 !
 !           the end of the second interval precedes the beginning of the
 !           first
 !
-            BEGP2    = BEGP2    + 2
-            ENDP2    = ENDP2    + 2
+            begp2    = begp2    + 2
+            endp2    = endp2    + 2
 
-         ELSE
+         else
 !
 !           the intervals intersect.  Is the first contained in the
 !           second?
 !
-            IF      ( CLOSED ) THEN
+            if      ( closed ) then
 
-               KEEP =       ( WNDW1(BEGP1) .GE. WNDW2(BEGP2) ) &
-                      .AND. ( WNDW1(ENDP1) .LE. WNDW2(ENDP2) )
+               keep =       ( wndw1(begp1) .ge. wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) .le. wndw2(endp2) )
 
-            ELSE IF ( OPEN   ) THEN
+            else if ( open   ) then
 
-               KEEP =       ( WNDW1(BEGP1) .GT. WNDW2(BEGP2) ) &
-                      .AND. ( WNDW1(ENDP1) .LT. WNDW2(ENDP2) )
+               keep =       ( wndw1(begp1) .gt. wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) .lt. wndw2(endp2) )
 
-            ELSE IF ( LEFT   ) THEN
+            else if ( left   ) then
 
-               KEEP =       ( WNDW1(BEGP1) .GE. WNDW2(BEGP2) ) &
-                      .AND. ( WNDW1(ENDP1) .LT. WNDW2(ENDP2) )
+               keep =       ( wndw1(begp1) .ge. wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) .lt. wndw2(endp2) )
 
-            ELSE IF ( RIGHT ) THEN
+            else if ( right ) then
 
-               KEEP =       ( WNDW1(BEGP1) .GT. WNDW2(BEGP2) ) &
-                      .AND. ( WNDW1(ENDP1) .LE. WNDW2(ENDP2) )
+               keep =       ( wndw1(begp1) .gt. wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) .le. wndw2(endp2) )
 
-            END IF
+            end if
 
-            IF ( KEEP ) THEN
+            if ( keep ) then
 
-               BEGP3 = BEGP3    + 2
-               ENDP3 = ENDP3    + 2
+               begp3 = begp3    + 2
+               endp3 = endp3    + 2
 
-               IF ( BEGP3 .LT. MAXPTS ) THEN
+               if ( begp3 .lt. maxpts ) then
 
 !
 !                 Adequate room is left in WNDW3 to include this
 !                 interval
 !
-                  WNDW3 ( BEGP3 ) = WNDW1(BEGP1)
-                  WNDW3 ( ENDP3 ) = WNDW1(ENDP1)
+                  wndw3 ( begp3 ) = wndw1(begp1)
+                  wndw3 ( endp3 ) = wndw1(endp1)
 
-               ELSE
+               else
 
-                  OVFLOW = OVFLOW + 2
+                  ovflow = ovflow + 2
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Determine which window pointers to increment
 !
-            IF      (  WNDW1(ENDP1) .LT. WNDW2(ENDP2)  ) THEN
+            if      (  wndw1(endp1) .lt. wndw2(endp2)  ) then
 !
 !              The first interval lies before the end of the second
 !
-               BEGP1    = BEGP1    + 2
-               ENDP1    = ENDP1    + 2
+               begp1    = begp1    + 2
+               endp1    = endp1    + 2
 
-            ELSE IF ( WNDW2(ENDP2) .LT. WNDW1(ENDP1) ) THEN
+            else if ( wndw2(endp2) .lt. wndw1(endp1) ) then
 !
 !              The second interval lies before the end of the first
 !
-               BEGP2    = BEGP2    + 2
-               ENDP2    = ENDP2    + 2
+               begp2    = begp2    + 2
+               endp2    = endp2    + 2
 
-            ELSE
+            else
 !
 !              The first and second intervals end at the same place
 !
-               BEGP1    = BEGP1    + 2
-               ENDP1    = ENDP1    + 2
+               begp1    = begp1    + 2
+               endp1    = endp1    + 2
 
-               BEGP2    = BEGP2    + 2
-               ENDP2    = ENDP2    + 2
+               begp2    = begp2    + 2
+               endp2    = endp2    + 2
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      IF ( OVFLOW .GT. 0 ) THEN
+      if ( ovflow .gt. 0 ) then
 
-         CALL SETMSG ( 'The output window does not have ' &
+         call setmsg ( 'The output window does not have ' &
          //            'sufficient memory to contain the result ' &
          //            'of sifting the two given windows. The ' &
          //            'output window requires space for # ' &
          //            'more values than what has been provided. ')
-         CALL ERRINT ( '#', OVFLOW        )
-         CALL SIGERR ( 'SPICE(OUTOFROOM)' )
+         call errint ( '#', ovflow        )
+         call sigerr ( 'SPICE(OUTOFROOM)' )
 
-      ELSE
+      else
 
-         CALL SCARDD ( ENDP3, WNDW3 )
+         call scardd ( endp3, wndw3 )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFWSTS' )
-      RETURN
-      END
+      call chkout ( 'ZZGFWSTS' )
+      return
+      end

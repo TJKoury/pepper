@@ -1,6 +1,6 @@
 !$Procedure SWAPI ( Swap integer values )
 
-      SUBROUTINE SWAPI ( A, B )
+      subroutine swapi ( a, b )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          A
-      INTEGER          B
+      integer          a
+      integer          b
 
 ! $ Brief_I/O
 !
@@ -113,16 +113,16 @@
 !
 !     Local variables
 !
-      INTEGER          TEMP
+      integer          temp
 
 
 
 !
 !     What is there to say?
 !
-      TEMP = A
-      A    = B
-      B    = TEMP
+      temp = a
+      a    = b
+      b    = temp
 
-      RETURN
-      END
+      return
+      end

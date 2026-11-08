@@ -1,6 +1,6 @@
 !$Procedure SPKSUB ( S/P Kernel, subset )
 
-      SUBROUTINE SPKSUB ( HANDLE, DESCR, IDENT, BEGIN, END, NEWH )
+      subroutine spksub ( handle, descr, ident, begin, end, newh )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      CHARACTER*(*)         IDENT
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
-      INTEGER               NEWH
+      integer               handle
+      double precision      descr    ( 5 )
+      character*(*)         ident
+      double precision      begin
+      double precision      end
+      integer               newh
 
 ! $ Brief_I/O
 !
@@ -218,88 +218,88 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALPHA
-      DOUBLE PRECISION      DC       ( 2 )
-      DOUBLE PRECISION      NDSCR    ( 5 )
-      DOUBLE PRECISION      OMEGA
+      double precision      alpha
+      double precision      dc       ( 2 )
+      double precision      ndscr    ( 5 )
+      double precision      omega
 
-      INTEGER               BADDR
-      INTEGER               EADDR
-      INTEGER               IC       ( 6 )
-      INTEGER               TYPE
+      integer               baddr
+      integer               eaddr
+      integer               ic       ( 6 )
+      integer               type
 
-      LOGICAL               OKAY
+      logical               okay
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKSUB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKSUB' )
+      end if
 
 !
 !     Unpack the descriptor.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      ALPHA = DC(1)
-      OMEGA = DC(2)
-      TYPE  = IC(4)
-      BADDR = IC(5)
-      EADDR = IC(6)
+      alpha = dc(1)
+      omega = dc(2)
+      type  = ic(4)
+      baddr = ic(5)
+      eaddr = ic(6)
 
 !
 !     Make sure the epochs check out.
 !
-      OKAY = (        ALPHA .LE. BEGIN &
-               .AND.  BEGIN .LE. END &
-               .AND.  END   .LE. OMEGA )
+      okay = (        alpha .le. begin &
+               .and.  begin .le. end &
+               .and.  end   .le. omega )
 
-      IF ( .NOT. OKAY ) THEN
-         CALL SETMSG ( 'Specified interval [#, #] is not a subset ' // &
+      if ( .not. okay ) then
+         call setmsg ( 'Specified interval [#, #] is not a subset ' // &
                        'of segment interval [#, #].' )
-         CALL ERRDP  ( '#', BEGIN                    )
-         CALL ERRDP  ( '#', END                      )
-         CALL ERRDP  ( '#', ALPHA                    )
-         CALL ERRDP  ( '#', OMEGA                    )
-         CALL SIGERR ( 'SPICE(SPKNOTASUBSET)'        )
+         call errdp  ( '#', begin                    )
+         call errdp  ( '#', end                      )
+         call errdp  ( '#', alpha                    )
+         call errdp  ( '#', omega                    )
+         call sigerr ( 'SPICE(SPKNOTASUBSET)'        )
 
-         CALL CHKOUT ( 'SPKSUB' )
-         RETURN
-      END IF
+         call chkout ( 'SPKSUB' )
+         return
+      end if
 
 !
 !     Begin the new segment, with a descriptor containing the subset
 !     epochs.
 !
-      DC(1) = BEGIN
-      DC(2) = END
-      CALL DAFPS  ( 2, 6, DC, IC, NDSCR )
+      dc(1) = begin
+      dc(2) = end
+      call dafps  ( 2, 6, dc, ic, ndscr )
 
 !
 !     Let the type-specific (SPKSnn) routines decide what to move.
 !
-      IF ( TYPE .EQ. 01 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS01 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      if ( type .eq. 01 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks01 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 02 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS02 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 02 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks02 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 03 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS03 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 03 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks03 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
 !
 !      Type 04 has not been yet been added to SPICELIB.
@@ -309,76 +309,76 @@
 !         CALL SPKS04 ( HANDLE, BADDR, EADDR, BEGIN, END )
 !         CALL DAFENA
 
-      ELSE IF ( TYPE .EQ. 05 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS05 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 05 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks05 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 08 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS08 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 08 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks08 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 09 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS09 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 09 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks09 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 10 ) THEN
-         CALL SPKS10 ( HANDLE, DESCR, NEWH, NDSCR, IDENT )
+      else if ( type .eq. 10 ) then
+         call spks10 ( handle, descr, newh, ndscr, ident )
 
-      ELSE IF ( TYPE .EQ. 12 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS12 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 12 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks12 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 13 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS13 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 13 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks13 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 14 ) THEN
-         CALL SPKS14 ( HANDLE, DESCR, NEWH, NDSCR, IDENT )
+      else if ( type .eq. 14 ) then
+         call spks14 ( handle, descr, newh, ndscr, ident )
 
-      ELSE IF ( TYPE .EQ. 15 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS15 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 15 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks15 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 17 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS17 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 17 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks17 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 18 ) THEN
-         CALL DAFBNA ( NEWH, NDSCR,  IDENT )
-         CALL SPKS18 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 18 ) then
+         call dafbna ( newh, ndscr,  ident )
+         call spks18 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 19 ) THEN
-         CALL DAFBNA ( NEWH,   NDSCR, IDENT )
-         CALL SPKS19 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 19 ) then
+         call dafbna ( newh,   ndscr, ident )
+         call spks19 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 20 ) THEN
-         CALL DAFBNA ( NEWH,   NDSCR, IDENT )
-         CALL SPKS20 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 20 ) then
+         call dafbna ( newh,   ndscr, ident )
+         call spks20 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE IF ( TYPE .EQ. 21 ) THEN
-         CALL DAFBNA ( NEWH,   NDSCR, IDENT )
-         CALL SPKS21 ( HANDLE, BADDR, EADDR, BEGIN, END )
-         CALL DAFENA
+      else if ( type .eq. 21 ) then
+         call dafbna ( newh,   ndscr, ident )
+         call spks21 ( handle, baddr, eaddr, begin, end )
+         call dafena
 
-      ELSE
-         CALL SETMSG ( 'SPK data type # is not supported.' )
-         CALL ERRINT ( '#', TYPE                           )
-         CALL SIGERR ( 'SPICE(SPKTYPENOTSUPP)'             )
+      else
+         call setmsg ( 'SPK data type # is not supported.' )
+         call errint ( '#', type                           )
+         call sigerr ( 'SPICE(SPKTYPENOTSUPP)'             )
 
-         CALL CHKOUT ( 'SPKSUB' )
-         RETURN
-      END IF
+         call chkout ( 'SPKSUB' )
+         return
+      end if
 
-      CALL CHKOUT ( 'SPKSUB' )
-      RETURN
-      END
+      call chkout ( 'SPKSUB' )
+      return
+      end

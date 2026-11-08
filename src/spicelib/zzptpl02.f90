@@ -1,7 +1,7 @@
 !$Procedure ZZPTPL02 ( DSK, map point to plate, type 2 )
 
-      SUBROUTINE ZZPTPL02 ( HANDLE, DLADSC, DSKDSC, POINT, &
-                            PLID,   PLATE,  VERTS,  FOUND )
+      subroutine zzptpl02 ( handle, dladsc, dskdsc, point, &
+                            plid,   plate,  verts,  found )
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -30,21 +30,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
-      INCLUDE 'dsktol.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
+      include 'dsktol.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      DOUBLE PRECISION      DSKDSC ( * )
-      DOUBLE PRECISION      POINT  ( 3 )
-      INTEGER               PLID
-      INTEGER               PLATE  ( 3 )
-      DOUBLE PRECISION      VERTS  ( 3, 3 )
-      LOGICAL               FOUND
+      integer               handle
+      integer               dladsc ( * )
+      double precision      dskdsc ( * )
+      double precision      point  ( 3 )
+      integer               plid
+      integer               plate  ( 3 )
+      double precision      verts  ( 3, 3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -234,220 +234,220 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDOT
+      double precision      dpmax
+      double precision      vdot
 
-      INTEGER               BRCKTI
-      INTEGER               ZZVOX2ID
+      integer               brckti
+      integer               zzvox2id
 
-      LOGICAL               DLASSG
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               dlassg
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 1000 )
+      integer               bufsiz
+      parameter           ( bufsiz = 1000 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BOXCTR ( 3 )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      DMIN
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      PNTOFF ( 3 )
-      DOUBLE PRECISION      PTSRFM
-      DOUBLE PRECISION      VOXORI ( 3 )
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      VRTTMP ( 3, 3 )
-      DOUBLE PRECISION      XPDFRC
-      DOUBLE PRECISION      XVERTS ( 3, 3 )
+      double precision      boxctr ( 3 )
+      double precision      dist
+      double precision      dmin
+      double precision      limit
+      double precision      offset ( 3 )
+      double precision      maxr
+      double precision      normal ( 3 )
+      double precision      pnear  ( 3 )
+      double precision      pntoff ( 3 )
+      double precision      ptsrfm
+      double precision      voxori ( 3 )
+      double precision      voxsiz
+      double precision      vrttmp ( 3, 3 )
+      double precision      xpdfrc
+      double precision      xverts ( 3, 3 )
 
-      INTEGER               CGRCOR ( 3 )
-      INTEGER               CGREXT ( 3 )
-      INTEGER               CGROFF ( 3 )
-      INTEGER               CGRPTR
-      INTEGER               CGRSCL
-      INTEGER               CORSYS
-      INTEGER               CGRVID
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               N
-      INTEGER               NPLATE
-      INTEGER               NREAD
-      INTEGER               PIDTMP
-      INTEGER               PLTBUF ( BUFSIZ )
-      INTEGER               PLTPTR
-      INTEGER               PLTTMP ( 3 )
-      INTEGER               PTRLOC
-      INTEGER               PRVDSC ( DLADSZ )
-      INTEGER               PRVHAN
-      INTEGER               PTROFF
-      INTEGER               REMAIN
-      INTEGER               START
-      INTEGER               VGRCOR ( 3 )
-      INTEGER               VGREXT ( 3 )
-      INTEGER               VID
+      integer               cgrcor ( 3 )
+      integer               cgrext ( 3 )
+      integer               cgroff ( 3 )
+      integer               cgrptr
+      integer               cgrscl
+      integer               corsys
+      integer               cgrvid
+      integer               i
+      integer               j
+      integer               k
+      integer               n
+      integer               nplate
+      integer               nread
+      integer               pidtmp
+      integer               pltbuf ( bufsiz )
+      integer               pltptr
+      integer               plttmp ( 3 )
+      integer               ptrloc
+      integer               prvdsc ( dladsz )
+      integer               prvhan
+      integer               ptroff
+      integer               remain
+      integer               start
+      integer               vgrcor ( 3 )
+      integer               vgrext ( 3 )
+      integer               vid
 
-      LOGICAL               INSIDE
-      LOGICAL               PASS1
+      logical               inside
+      logical               pass1
 
 !
 !     Saved variables
 !
-      SAVE                  CGRSCL
-      SAVE                  CORSYS
-      SAVE                  LIMIT
-      SAVE                  MAXR
-      SAVE                  PASS1
-      SAVE                  PRVHAN
-      SAVE                  PRVDSC
-      SAVE                  VGREXT
-      SAVE                  VOXORI
-      SAVE                  VOXSIZ
+      save                  cgrscl
+      save                  corsys
+      save                  limit
+      save                  maxr
+      save                  pass1
+      save                  prvhan
+      save                  prvdsc
+      save                  vgrext
+      save                  voxori
+      save                  voxsiz
 
 !
 !     Initial values
 !
-      DATA                  LIMIT  / -1.D0      /
-      DATA                  PASS1  / .TRUE.     /
-      DATA                  PRVDSC / DLADSZ * 0 /
-      DATA                  PRVHAN / 0          /
+      data                  limit  / -1.d0      /
+      data                  pass1  / .true.     /
+      data                  prvdsc / dladsz * 0 /
+      data                  prvhan / 0          /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZPTPL02' )
+      call chkin ( 'ZZPTPL02' )
 
 !
 !     No plate has been found so far.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Decide whether we're looking at the segment we saw
 !     on the previous call.
 !
-      IF (  PASS1  .OR. &
-            .NOT.  DLASSG( HANDLE, PRVHAN, DLADSC, PRVDSC )  ) THEN
+      if (  pass1  .or. &
+            .not.  dlassg( handle, prvhan, dladsc, prvdsc )  ) then
 !
 !        We'll need to look up the voxel grid parameters for this
 !        segment.
 !
-         CALL DSKD02 ( HANDLE, DLADSC, KWVXOR, 1, 3, N, VOXORI )
-         CALL DSKD02 ( HANDLE, DLADSC, KWVXSZ, 1, 1, N, VOXSIZ )
-         CALL DSKI02 ( HANDLE, DLADSC, KWVGRX, 1, 3, N, VGREXT )
-         CALL DSKI02 ( HANDLE, DLADSC, KWCGSC, 1, 1, N, CGRSCL )
+         call dskd02 ( handle, dladsc, kwvxor, 1, 3, n, voxori )
+         call dskd02 ( handle, dladsc, kwvxsz, 1, 1, n, voxsiz )
+         call dski02 ( handle, dladsc, kwvgrx, 1, 3, n, vgrext )
+         call dski02 ( handle, dladsc, kwcgsc, 1, 1, n, cgrscl )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZPTPL02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZPTPL02' )
+            return
+         end if
 
 
-         IF ( VOXSIZ .EQ. 0.D0 ) THEN
+         if ( voxsiz .eq. 0.d0 ) then
 
-            CALL SETMSG ( 'Voxel edge length is zero; length ' &
+            call setmsg ( 'Voxel edge length is zero; length ' &
             //            'must be positive.'                  )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'             )
-            CALL CHKOUT ( 'ZZPTPL02'                           )
-            RETURN
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'             )
+            call chkout ( 'ZZPTPL02'                           )
+            return
 
-         END IF
+         end if
 
-         IF ( CGRSCL .EQ. 0 ) THEN
+         if ( cgrscl .eq. 0 ) then
 
-            CALL SETMSG ( 'Coarse voxel scale is zero; scale ' &
+            call setmsg ( 'Coarse voxel scale is zero; scale ' &
             //            'must be positive.'                  )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'             )
-            CALL CHKOUT ( 'ZZPTPL02'                           )
-            RETURN
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'             )
+            call chkout ( 'ZZPTPL02'                           )
+            return
 
-         END IF
+         end if
 
-         CORSYS = NINT( DSKDSC(SYSIDX) )
+         corsys = nint( dskdsc(sysidx) )
 
-         CALL ZZSEGBOX ( DSKDSC, BOXCTR, MAXR )
+         call zzsegbox ( dskdsc, boxctr, maxr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZPTPL02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZPTPL02' )
+            return
+         end if
 
 !
 !        We successfully obtained the desired segment parameters, so we
 !        don't need to execute this code again until the segment
 !        changes. Save the current handle and DLA descriptor.
 !
-         PRVHAN = HANDLE
-         CALL MOVEI ( DLADSC, DLADSZ, PRVDSC )
+         prvhan = handle
+         call movei ( dladsc, dladsz, prvdsc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Look up the point-plate membership margin; compute
 !     the distance limit. This call must be made on every
 !     call to ZZPTPL02.
 !
-      CALL DSKGTL ( KEYPTM, PTSRFM )
+      call dskgtl ( keyptm, ptsrfm )
 
-      LIMIT = PTSRFM * MAXR
+      limit = ptsrfm * maxr
 
 !
 !     Look up the plate expansion fraction. This call must be made on
 !     every call to ZZPTPL02.
 !
-      CALL DSKGTL ( KEYXFR, XPDFRC )
+      call dskgtl ( keyxfr, xpdfrc )
 
 !
 !     Find out whether the point is within the volume element
 !     bounding the segment.
 !
-      CALL ZZINVELT ( POINT,          CORSYS, DSKDSC(PARIDX), &
-                      DSKDSC(MN1IDX), PTSRFM, 0,              INSIDE )
+      call zzinvelt ( point,          corsys, dskdsc(paridx), &
+                      dskdsc(mn1idx), ptsrfm, 0,              inside )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZPTPL02' )
+         return
+      end if
 
 
-      IF ( .NOT. INSIDE ) THEN
+      if ( .not. inside ) then
 !
 !        The point is too far from the segment to be considered
 !        to lie on a plate in that segment.
 !
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
+         call chkout ( 'ZZPTPL02' )
+         return
 
-      END IF
+      end if
 
 !
 !     Map the point to the coordinates of a voxel containing it. If the
 !     point is outside the voxel grid, map the point to the closest
 !     voxel.
 !
-      CALL VSUB ( POINT, VOXORI, OFFSET )
+      call vsub ( point, voxori, offset )
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         J         = INT( OFFSET(I) / VOXSIZ ) + 1
+         j         = int( offset(i) / voxsiz ) + 1
 
-         VGRCOR(I) = BRCKTI( J,  1,  VGREXT(I) )
+         vgrcor(i) = brckti( j,  1,  vgrext(i) )
 
-      END DO
+      end do
 
 !
 !     Compute the coordinates of the coarse voxel containing the fine
@@ -456,12 +456,12 @@
 !     pointer associating the fine voxel with its plate list. The
 !     1-d offset PTROFF is 1-based.
 !
-      CALL ZZVOXCVO ( VGRCOR, VGREXT, CGRSCL, CGRCOR, CGROFF, PTROFF )
+      call zzvoxcvo ( vgrcor, vgrext, cgrscl, cgrcor, cgroff, ptroff )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZPTPL02' )
+         return
+      end if
 
 !
 !     Fetch the pointer from the coarse voxel to the first element of
@@ -470,113 +470,113 @@
 !     We'll need the 1-D offset of the coarse voxel from the base of
 !     the coarse voxel grid.
 !
-      DO I = 1, 3
-         CGREXT(I) = VGREXT(I) / CGRSCL
-      END DO
+      do i = 1, 3
+         cgrext(i) = vgrext(i) / cgrscl
+      end do
 
-      CGRVID = ZZVOX2ID ( CGRCOR, CGREXT )
+      cgrvid = zzvox2id ( cgrcor, cgrext )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWCGPT, CGRVID, 1, N, CGRPTR )
+      call dski02 ( handle, dladsc, kwcgpt, cgrvid, 1, n, cgrptr )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZPTPL02' )
+         return
+      end if
 
-      IF ( CGRPTR .LT. 1 ) THEN
+      if ( cgrptr .lt. 1 ) then
 !
 !        There are no non-empty fine voxels, hence no plates, in the
 !        coarse voxel we're looking at.
 !
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
+         call chkout ( 'ZZPTPL02' )
+         return
 
-      END IF
+      end if
 !
 !     Look up the pointer to the plate list for this voxel, and if
 !     the pointer is non-null, look up the plate count.
 !
-      PTRLOC = (CGRPTR - 1) + PTROFF
+      ptrloc = (cgrptr - 1) + ptroff
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWVXPT, PTRLOC, 1, N, PLTPTR )
+      call dski02 ( handle, dladsc, kwvxpt, ptrloc, 1, n, pltptr )
 
-      IF (  FAILED()  .OR.  ( PLTPTR .LT. 1 )  ) THEN
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
-      END IF
+      if (  failed()  .or.  ( pltptr .lt. 1 )  ) then
+         call chkout ( 'ZZPTPL02' )
+         return
+      end if
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWVXPL, PLTPTR, 1, N, NPLATE )
+      call dski02 ( handle, dladsc, kwvxpl, pltptr, 1, n, nplate )
 
-      IF (  FAILED()  .OR.  ( NPLATE .LT. 1 )  ) THEN
-         CALL CHKOUT ( 'ZZPTPL02' )
-         RETURN
-      END IF
+      if (  failed()  .or.  ( nplate .lt. 1 )  ) then
+         call chkout ( 'ZZPTPL02' )
+         return
+      end if
 
 !
 !     Loop through the plates, keeping track of the minimum plate-point
 !     distance.
 !
-      DMIN   = DPMAX()
-      REMAIN = NPLATE
-      NREAD  = MIN ( REMAIN, BUFSIZ )
-      I      = 1
+      dmin   = dpmax()
+      remain = nplate
+      nread  = min ( remain, bufsiz )
+      i      = 1
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 !
 !        Look up the current set of plate IDs.
 !
-         CALL DSKI02 ( HANDLE,   DLADSC, KWVXPL, &
-                       PLTPTR+I, NREAD,  N,      PLTBUF )
+         call dski02 ( handle,   dladsc, kwvxpl, &
+                       pltptr+i, nread,  n,      pltbuf )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZPTPL02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZPTPL02' )
+            return
+         end if
 !
 !        Look up the vertices of each plate in the buffer and find
 !        the distance of the point from that plate. Quit if we
 !        find a match.
 !
-         DO J = 1, NREAD
+         do j = 1, nread
 
-            PIDTMP = PLTBUF(J)
-            START  = ( 3*(PIDTMP-1) ) + 1
+            pidtmp = pltbuf(j)
+            start  = ( 3*(pidtmp-1) ) + 1
 
-            CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START, 3, N, PLTTMP )
+            call dski02 ( handle, dladsc, kwplat, start, 3, n, plttmp )
 
-            DO K = 1, 3
+            do k = 1, 3
 
-               VID   = PLTTMP(K)
-               START = ( 3*(VID-1) ) + 1
+               vid   = plttmp(k)
+               start = ( 3*(vid-1) ) + 1
 
-               CALL DSKD02 ( HANDLE, DLADSC, KWVERT, &
-                             START,  3,      N,      VRTTMP(1,K) )
+               call dskd02 ( handle, dladsc, kwvert, &
+                             start,  3,      n,      vrttmp(1,k) )
 
-            END DO
+            end do
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZPTPL02' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZPTPL02' )
+               return
+            end if
 
 !
 !           Work with an expanded version of the plate.
 !
-            CALL PLTEXP ( VRTTMP, XPDFRC, XVERTS )
+            call pltexp ( vrttmp, xpdfrc, xverts )
 
-            CALL PLTNRM ( XVERTS(1,1), XVERTS(1,2), XVERTS(1,3), &
-                          NORMAL                                )
+            call pltnrm ( xverts(1,1), xverts(1,2), xverts(1,3), &
+                          normal                                )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZPTPL02' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZPTPL02' )
+               return
+            end if
 
-            CALL VHATIP ( NORMAL )
+            call vhatip ( normal )
 
-            CALL VSUB ( POINT, XVERTS(1,1), PNTOFF )
+            call vsub ( point, xverts(1,1), pntoff )
 
-            IF ( ABS( VDOT(PNTOFF,NORMAL) ) .LE. LIMIT ) THEN
+            if ( abs( vdot(pntoff,normal) ) .le. limit ) then
 !
 !              The input point lies in a narrow region of space
 !              bounded by two planes, both of which are parallel
@@ -587,52 +587,52 @@
 !              containing that plate. However, the proportion of such
 !              cases will normally be small.
 !
-               CALL PLTNP ( POINT,       XVERTS(1,1), XVERTS(1,2), &
-                            XVERTS(1,3), PNEAR,       DIST        )
+               call pltnp ( point,       xverts(1,1), xverts(1,2), &
+                            xverts(1,3), pnear,       dist        )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZPTPL02' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZPTPL02' )
+                  return
+               end if
 
-            ELSE
-               DIST = DPMAX()
-            END IF
+            else
+               dist = dpmax()
+            end if
 
-            IF ( DIST .LE. LIMIT ) THEN
+            if ( dist .le. limit ) then
 !
 !              We have a reasonable candidate for the closest plate.
 !
-               FOUND = .TRUE.
+               found = .true.
 
-               IF ( DIST .LT. DMIN ) THEN
+               if ( dist .lt. dmin ) then
 
-                  DMIN  = DIST
-                  PLID  = PIDTMP
+                  dmin  = dist
+                  plid  = pidtmp
 !
 !                 Set the output vertices to the original version.
 !
-                  CALL MOVEI ( PLTTMP, 3, PLATE )
-                  CALL MOVED ( VRTTMP, 9, VERTS )
+                  call movei ( plttmp, 3, plate )
+                  call moved ( vrttmp, 9, verts )
 !
 !                 We'll return the above values if we don't find
 !                 a better match.
 !
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Prepare to read the next set of plate IDs, if any.
 !
-         REMAIN = REMAIN - NREAD
-         I      = I      + NREAD
-         NREAD  = MIN ( REMAIN, BUFSIZ )
+         remain = remain - nread
+         i      = i      + nread
+         nread  = min ( remain, bufsiz )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZPTPL02' )
-      RETURN
-      END
+      call chkout ( 'ZZPTPL02' )
+      return
+      end

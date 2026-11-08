@@ -1,6 +1,6 @@
 !$Procedure READLN ( Read a text line from a logical unit )
 
-      SUBROUTINE READLN ( UNIT, LINE, EOF )
+      subroutine readln ( unit, line, eof )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 !
-      INTEGER            UNIT
-      CHARACTER*(*)      LINE
-      LOGICAL            EOF
+      integer            unit
+      character*(*)      line
+      logical            eof
 !
 ! $ Brief_I/O
 !
@@ -126,41 +126,41 @@
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 !
 !     Standard SPICE error handling.
 !
 !
 !     Read in the next line from the text file attached to UNIT.
 !
-      READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+      read ( unit, fmt='(A)', iostat=iostat ) line
 !
 !     Check to see if we got a read error, and signal it if we did.
 !
-      IF ( IOSTAT .GT. 0  ) THEN
+      if ( iostat .gt. 0  ) then
 
-         CALL CHKIN  ( 'READLN'                                  )
-         CALL SETMSG ( 'Error reading from file: #. IOSTAT = #.' )
-         CALL ERRFNM ( '#', UNIT                                 )
-         CALL ERRINT ( '#', IOSTAT                               )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                   )
-         CALL CHKOUT ( 'READLN'                                  )
-         RETURN
+         call chkin  ( 'READLN'                                  )
+         call setmsg ( 'Error reading from file: #. IOSTAT = #.' )
+         call errfnm ( '#', unit                                 )
+         call errint ( '#', iostat                               )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                   )
+         call chkout ( 'READLN'                                  )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if we got the end of file, and set the logical
 !     flag EOF if we did.
 !
-      IF ( IOSTAT .LT. 0 ) THEN
+      if ( iostat .lt. 0 ) then
 
-         EOF = .TRUE.
+         eof = .true.
 
-      ELSE
+      else
 
-         EOF = .FALSE.
+         eof = .false.
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

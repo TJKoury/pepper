@@ -1,7 +1,7 @@
 !$Procedure FOVTRG ( Is target in FOV at time? )
 
-      SUBROUTINE FOVTRG ( INST,   TARGET, TSHAPE, TFRAME, &
-                          ABCORR, OBSRVR, ET,     VISIBL )
+      subroutine fovtrg ( inst,   target, tshape, tframe, &
+                          abcorr, obsrvr, et,     visibl )
 
 ! $ Abstract
 !
@@ -27,18 +27,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'gf.inc'
+      include              'gf.inc'
 
-      CHARACTER*(*)         INST
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         TSHAPE
-      CHARACTER*(*)         TFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      ET
-      LOGICAL               VISIBL
+      character*(*)         inst
+      character*(*)         target
+      character*(*)         tshape
+      character*(*)         tframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      et
+      logical               visibl
 
 ! $ Brief_I/O
 !
@@ -578,9 +578,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local variables
@@ -590,40 +590,40 @@
 !     the target is an ephemeris object. We initialize the
 !     ray to prevent portability problems.
 !
-      DOUBLE PRECISION      RAYDIR ( 3 )
+      double precision      raydir ( 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  RAYDIR
+      save                  raydir
 
 !
 !     Initial values
 !
-      DATA                  RAYDIR / 3 * 0.D0 /
+      data                  raydir / 3 * 0.d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'FOVTRG' )
+      call chkin  ( 'FOVTRG' )
 
 !
 !     Reject the target shape 'RAY'.
 !
-      IF (  EQSTR( TSHAPE, RYSHAP )  ) THEN
+      if (  eqstr( tshape, ryshap )  ) then
 
-         CALL SETMSG ( 'The target shape RAY is not supported ' &
+         call setmsg ( 'The target shape RAY is not supported ' &
          //            'by this routine. Use the routine ' &
          //            'FOVRAY instead.'                       )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                  )
-         CALL CHKOUT ( 'FOVTRG'                                )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDOPTION)'                  )
+         call chkout ( 'FOVTRG'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -635,18 +635,18 @@
 !
 !     Initialize the visibility calculation.
 !
-      CALL ZZGFFVIN ( INST,   TSHAPE, RAYDIR, &
-                      TARGET, TFRAME, ABCORR, OBSRVR )
+      call zzgffvin ( inst,   tshape, raydir, &
+                      target, tframe, abcorr, obsrvr )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'FOVTRG' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'FOVTRG' )
+         return
+      end if
 !
 !     Calculate the visibility state.
 !
-      CALL ZZGFFVST ( ET, VISIBL )
+      call zzgffvst ( et, visibl )
 
-      CALL CHKOUT ( 'FOVTRG' )
-      RETURN
-      END
+      call chkout ( 'FOVTRG' )
+      return
+      end

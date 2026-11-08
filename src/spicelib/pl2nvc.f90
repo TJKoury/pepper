@@ -1,6 +1,6 @@
 !$Procedure PL2NVC ( Plane to normal vector and constant )
 
-      SUBROUTINE PL2NVC ( PLANE, NORMAL, KONST )
+      subroutine pl2nvc ( plane, normal, konst )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL    =   4 )
+      integer               ubpl
+      parameter           ( ubpl    =   4 )
 
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      KONST
+      double precision      plane  ( ubpl )
+      double precision      normal (    3 )
+      double precision      konst
 
 ! $ Brief_I/O
 !
@@ -370,11 +370,11 @@
 !        closest point in the plane to the origin.
 !
 !
-      INTEGER               NMLPOS
-      PARAMETER           ( NMLPOS = 1 )
+      integer               nmlpos
+      parameter           ( nmlpos = 1 )
 
-      INTEGER               CONPOS
-      PARAMETER           ( CONPOS = 4 )
+      integer               conpos
+      parameter           ( conpos = 4 )
 
 !
 !     Note for programmers: validity of the input plane is not
@@ -384,8 +384,8 @@
 !
 !     Unpack the plane.
 !
-      CALL VEQU ( PLANE(NMLPOS), NORMAL )
-      KONST   =   PLANE(CONPOS)
+      call vequ ( plane(nmlpos), normal )
+      konst   =   plane(conpos)
 
-      RETURN
-      END
+      return
+      end

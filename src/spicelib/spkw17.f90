@@ -1,7 +1,7 @@
 !$Procedure SPKW17 ( SPK, write a type 17 segment )
 
-      SUBROUTINE SPKW17 ( HANDLE, BODY,  CENTER, FRAME, FIRST, LAST, &
-                          SEGID,  EPOCH, EQEL,   RAPOL, DECPOL  )
+      subroutine spkw17 ( handle, body,  center, frame, first, last, &
+                          segid,  epoch, eqel,   rapol, decpol  )
 
 ! $ Abstract
 !
@@ -17,19 +17,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      EQEL  ( 9 )
-      DOUBLE PRECISION      RAPOL
-      DOUBLE PRECISION      DECPOL
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      double precision      epoch
+      double precision      eqel  ( 9 )
+      double precision      rapol
+      double precision      decpol
 
 ! $ Brief_I/O
 !
@@ -408,10 +408,10 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
@@ -419,78 +419,78 @@
 !
 !     Segment descriptor size
 !
-      INTEGER               NS
-      PARAMETER           ( NS      =   5 )
+      integer               ns
+      parameter           ( ns      =   5 )
 
 !
 !     Segment identifier size
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
 !
 !     SPK data type
 !
-      INTEGER               TYPE
-      PARAMETER           ( TYPE    = 17 )
+      integer               type
+      parameter           ( type    = 17 )
 
 !
 !     Range of printing characters
 !
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
 !
 !     Number of items in a segment
 !
-      INTEGER               DATSIZ
-      PARAMETER           ( DATSIZ  = 12 )
+      integer               datsiz
+      parameter           ( datsiz  = 12 )
 
 
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      DESCR  ( NS )
-      DOUBLE PRECISION      H
-      DOUBLE PRECISION      K
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      RECORD ( DATSIZ )
+      double precision      a
+      double precision      descr  ( ns )
+      double precision      h
+      double precision      k
+      double precision      ecc
+      double precision      record ( datsiz )
 
-      INTEGER               I
-      INTEGER               VALUE
+      integer               i
+      integer               value
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKW17')
+      call chkin ( 'SPKW17')
 
 !
 !     Fetch the various entities from the inputs and put them into
 !     the data record, first the epoch.
 !
-      RECORD(1) = EPOCH
+      record(1) = epoch
 
 !
 !     The trajectory pole vector.
 !
-      CALL MOVED ( EQEL, 9, RECORD(2) )
+      call moved ( eqel, 9, record(2) )
 
 
-      RECORD(11) = RAPOL
-      RECORD(12) = DECPOL
+      record(11) = rapol
+      record(12) = decpol
 
 
-      A      = RECORD(2)
-      H      = RECORD(3)
-      K      = RECORD(4)
-      ECC    = DSQRT( H*H + K*K )
+      a      = record(2)
+      h      = record(3)
+      k      = record(4)
+      ecc    = dsqrt( h*h + k*k )
 
 !
 !     Check all the inputs here for obvious failures.  It's much
@@ -498,92 +498,92 @@
 !     segment into an SPK file and diagnose it later.
 !
 
-      IF ( A .LE. 0 ) THEN
+      if ( a .le. 0 ) then
 
-         CALL SETMSG ( 'The semimajor axis supplied to the ' &
+         call setmsg ( 'The semimajor axis supplied to the ' &
          //            'SPK type 17 evaluator was non-positive.  This ' &
          //            'value must be positive. The value supplied was ' &
          //            '#.' )
-         CALL ERRDP  ( '#', A                  )
-         CALL SIGERR ( 'SPICE(BADSEMIAXIS)' )
-         CALL CHKOUT ( 'SPKW17'                )
-         RETURN
+         call errdp  ( '#', a                  )
+         call sigerr ( 'SPICE(BADSEMIAXIS)' )
+         call chkout ( 'SPKW17'                )
+         return
 
-      ELSE IF ( ECC .GT. 0.9D0 ) THEN
+      else if ( ecc .gt. 0.9d0 ) then
 
-         CALL SETMSG ( 'The eccentricity supplied for a type 17 ' &
+         call setmsg ( 'The eccentricity supplied for a type 17 ' &
          //            'segment is greater than 0.9.  It must be ' &
          //            'less than 0.9.' &
          //            'The value supplied ' &
          //            'to the type 17 evaluator was #. ' )
-         CALL ERRDP  ( '#',   ECC                )
-         CALL SIGERR ( 'SPICE(BADECCENTRICITY)'  )
-         CALL CHKOUT ( 'SPKW17'                  )
-         RETURN
+         call errdp  ( '#',   ecc                )
+         call sigerr ( 'SPICE(BADECCENTRICITY)'  )
+         call chkout ( 'SPKW17'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the segment identifier is not too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' &
+         call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SPKW17'                                  )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SPKW17'                                  )
+         return
 
-      END IF
+      end if
 !
 !     Make sure the segment identifier has only printing characters.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         VALUE = ICHAR( SEGID(I:I) )
+         value = ichar( segid(i:i) )
 
-         IF ( ( VALUE .LT. FPRINT ) .OR. ( VALUE .GT. LPRINT ) ) THEN
+         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains ' &
+            call setmsg ( 'The segment identifier contains ' &
             //            'the nonprintable character having ascii ' &
             //            'code #.'                               )
-            CALL ERRINT ( '#',   VALUE                            )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'SPKW17'                                )
-            RETURN
+            call errint ( '#',   value                            )
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'SPKW17'                                )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     All of the obvious checks have been performed on the input
 !     record.  Create the segment descriptor. (FIRST and LAST are
 !     checked by SPKPDS as well as consistency between BODY and CENTER).
 !
-      CALL SPKPDS ( BODY,  CENTER, FRAME, TYPE, FIRST, LAST, &
-                    DESCR        )
+      call spkpds ( body,  center, frame, type, first, last, &
+                    descr        )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW17' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW17' )
+         return
+      end if
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW17' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW17' )
+         return
+      end if
 
-      CALL DAFADA ( RECORD, DATSIZ )
+      call dafada ( record, datsiz )
 
-      IF ( .NOT. FAILED() ) THEN
-         CALL DAFENA
-      END IF
+      if ( .not. failed() ) then
+         call dafena
+      end if
 
-      CALL CHKOUT ( 'SPKW17' )
-      RETURN
-      END
+      call chkout ( 'SPKW17' )
+      return
+      end

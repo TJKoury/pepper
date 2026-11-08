@@ -1,6 +1,6 @@
 !$Procedure POLYDS ( Compute a Polynomial and its Derivatives )
 
-      SUBROUTINE POLYDS ( COEFFS, DEG, NDERIV, T, P )
+      subroutine polyds ( coeffs, deg, nderiv, t, p )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      COEFFS ( 0:* )
-      INTEGER               DEG
-      INTEGER               NDERIV
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      P      ( 0:* )
+      double precision      coeffs ( 0:* )
+      integer               deg
+      integer               nderiv
+      double precision      t
+      double precision      p      ( 0:* )
 
 ! $ Brief_I/O
 !
@@ -244,14 +244,14 @@
 !
 !     Local variables
 !
-      INTEGER          I
-      INTEGER          K
-      DOUBLE PRECISION SCALE
+      integer          i
+      integer          k
+      double precision scale
 
 
-      IF ( NDERIV .LT. 0 ) THEN
-         RETURN
-      END IF
+      if ( nderiv .lt. 0 ) then
+         return
+      end if
 
 !
 !     The following loops may not look like much, but they compute
@@ -338,32 +338,32 @@
 !     Initialize the polynomial value (and all of its derivatives) to be
 !     zero.
 !
-      DO I = 0, NDERIV
-         P(I) = 0.0D0
-      END DO
+      do i = 0, nderiv
+         p(i) = 0.0d0
+      end do
 
 
 !
 !     Set up the loop "counters" (they count backwards) for the first
 !     pass through the loop.
 !
-      K     = DEG
-      I     = NDERIV
-      SCALE = DBLE ( NDERIV )
+      k     = deg
+      i     = nderiv
+      scale = dble ( nderiv )
 
-      DO WHILE ( K .GE. 0 )
+      do while ( k .ge. 0 )
 
-         DO WHILE ( I .GT. 0 )
-            P(I)  = T*P(I) + SCALE*P(I-1)
-            SCALE = SCALE - 1
-            I     = I - 1
-         END DO
+         do while ( i .gt. 0 )
+            p(i)  = t*p(i) + scale*p(i-1)
+            scale = scale - 1
+            i     = i - 1
+         end do
 
-         P(0)  = T*P(0) + COEFFS(K)
-         K     = K - 1
-         I     = NDERIV
-         SCALE = DBLE( NDERIV )
-      END DO
+         p(0)  = t*p(0) + coeffs(k)
+         k     = k - 1
+         i     = nderiv
+         scale = dble( nderiv )
+      end do
 
-      RETURN
-      END
+      return
+      end

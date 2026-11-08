@@ -1,6 +1,6 @@
 !$Procedure SCTRAN  ( SCLK name/ID code translation )
 
-      SUBROUTINE SCTRAN ( CLKNAM, CLKID, FOUND )
+      subroutine sctran ( clknam, clkid, found )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         CLKNAM
-      INTEGER               CLKID
-      LOGICAL               FOUND
+      character*(*)         clknam
+      integer               clkid
+      logical               found
 
-      INTEGER               MAXLEN
-      PARAMETER           ( MAXLEN = 32 )
+      integer               maxlen
+      parameter           ( maxlen = 32 )
 
 ! $ Brief_I/O
 !
@@ -133,31 +133,31 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               POSR
-      INTEGER               RTRIM
+      integer               posr
+      integer               rtrim
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXLEN)    TMPNAM
+      character*(maxlen)    tmpnam
 
-      INTEGER               LOC
+      integer               loc
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCTRAN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SCTRAN' )
+      end if
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'SCTRAN' )
-      RETURN
+      call chkout ( 'SCTRAN' )
+      return
 
 
 
@@ -165,7 +165,7 @@
 
 !$Procedure SCN2ID  ( SCLK name to ID code )
 
-      ENTRY SCN2ID ( CLKNAM, CLKID, FOUND )
+      entry scn2id ( clknam, clkid, found )
 
 ! $ Abstract
 !
@@ -316,22 +316,22 @@
 !
 !     Convert name to upper case.
 !
-      CALL UCASE ( CLKNAM, TMPNAM )
+      call ucase ( clknam, tmpnam )
 
 !
 !     Remove the final occurrence of the  string 'SCLK' from
 !     the input name.
 !
-      LOC = POSR ( TMPNAM, 'SCLK', RTRIM(TMPNAM) )
+      loc = posr ( tmpnam, 'SCLK', rtrim(tmpnam) )
 
 
-      IF ( LOC .GT. 0 ) THEN
-         TMPNAM(LOC:LOC+3) = ' '
-      END IF
+      if ( loc .gt. 0 ) then
+         tmpnam(loc:loc+3) = ' '
+      end if
 
-      CALL BODN2C ( TMPNAM, CLKID, FOUND )
+      call bodn2c ( tmpnam, clkid, found )
 
-      RETURN
+      return
 
 
 
@@ -341,7 +341,7 @@
 
 !$Procedure SCID2N  ( SCLK ID code to name )
 
-      ENTRY SCID2N ( CLKID, CLKNAM, FOUND )
+      entry scid2n ( clkid, clknam, found )
 
 ! $ Abstract
 !
@@ -470,13 +470,13 @@
 !-&
 
 
-      CALL BODC2N ( CLKID, CLKNAM, FOUND )
+      call bodc2n ( clkid, clknam, found )
 
-      IF ( .NOT. FOUND ) THEN
-         RETURN
-      END IF
+      if ( .not. found ) then
+         return
+      end if
 
-      CALL SUFFIX ( 'SCLK', 1, CLKNAM )
+      call suffix ( 'SCLK', 1, clknam )
 
-      RETURN
-      END
+      return
+      end

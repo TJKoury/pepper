@@ -1,6 +1,6 @@
 !$Procedure FN2LUN ( Map name of open file to its logical unit. )
 
-      SUBROUTINE FN2LUN ( FILNAM, LUNIT )
+      subroutine fn2lun ( filnam, lunit )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    FILNAM
-      INTEGER          LUNIT
+      character*(*)    filnam
+      integer          lunit
 
 ! $ Brief_I/O
 !
@@ -115,88 +115,88 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
-      LOGICAL               EXISTS
-      LOGICAL               OPENED
+      logical               exists
+      logical               opened
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'FN2LUN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'FN2LUN' )
+      end if
 
 !
 !     First we test to see if the filename is blank.
 !
-      IF ( FILNAM .EQ. ' ' ) THEN
+      if ( filnam .eq. ' ' ) then
 
-         CALL SETMSG ( 'The filename is blank.' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'   )
-         CALL CHKOUT ( 'FN2LUN'                 )
-         RETURN
+         call setmsg ( 'The filename is blank.' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'   )
+         call chkout ( 'FN2LUN'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     So simple, it defies explanation: just INQUIRE.
 !
-      INQUIRE ( FILE   = FILNAM, &
-                NUMBER = LUNIT, &
-                EXIST  = EXISTS, &
-                OPENED = OPENED, &
-                IOSTAT = IOSTAT  )
+      inquire ( file   = filnam, &
+                number = lunit, &
+                exist  = exists, &
+                opened = opened, &
+                iostat = iostat  )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'INQUIRE error on file ''#''.'  // &
+         call setmsg ( 'INQUIRE error on file ''#''.'  // &
                        ' The value of IOSTAT is: #.'    )
-         CALL ERRCH  ( '#', FILNAM                      )
-         CALL ERRINT ( '#', IOSTAT                      )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'           )
-         CALL CHKOUT ( 'FN2LUN'                         )
-         RETURN
+         call errch  ( '#', filnam                      )
+         call errint ( '#', iostat                      )
+         call sigerr ( 'SPICE(INQUIREFAILED)'           )
+         call chkout ( 'FN2LUN'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     A file cannot be open if it does not exist. We need to check this
 !     because for some environments files are considered to be open if
 !     they do not exist.
 !
-      IF ( .NOT. EXISTS ) THEN
+      if ( .not. exists ) then
 
-         CALL SETMSG ( 'No file with the name ''#'' was found.' )
-         CALL ERRCH  ( '#', FILNAM                              )
-         CALL SIGERR ( 'SPICE(FILEDOESNOTEXIST)'                )
-         CALL CHKOUT ( 'FN2LUN'                                 )
-         RETURN
+         call setmsg ( 'No file with the name ''#'' was found.' )
+         call errch  ( '#', filnam                              )
+         call sigerr ( 'SPICE(FILEDOESNOTEXIST)'                )
+         call chkout ( 'FN2LUN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check to see if the file is opened. If not, then it is an
 !     error, there cannot be a logical unit associated with it..
 !
-      IF ( .NOT. OPENED ) THEN
+      if ( .not. opened ) then
 
-         CALL SETMSG ( 'There was not an open file associated with' // &
+         call setmsg ( 'There was not an open file associated with' // &
                        ' the filename ''#''.'                        )
-         CALL ERRCH  ( '#', FILNAM                                   )
-         CALL SIGERR ( 'SPICE(FILENOTOPEN)'                          )
-         CALL CHKOUT ( 'FN2LUN'                                      )
-         RETURN
+         call errch  ( '#', filnam                                   )
+         call sigerr ( 'SPICE(FILENOTOPEN)'                          )
+         call chkout ( 'FN2LUN'                                      )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'FN2LUN' )
-      RETURN
-      END
+      call chkout ( 'FN2LUN' )
+      return
+      end

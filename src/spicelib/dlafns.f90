@@ -1,6 +1,6 @@
 !$Procedure DLAFNS ( DLA, find next segment )
 
-      SUBROUTINE DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
+      subroutine dlafns ( handle, dladsc, nxtdsc, found )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               NXTDSC ( * )
-      LOGICAL               FOUND
+      integer               handle
+      integer               dladsc ( * )
+      integer               nxtdsc ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -287,48 +287,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               FWD
+      integer               fwd
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DLAFNS' )
+      call chkin ( 'DLAFNS' )
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Extract the forward pointer from the segment descriptor.
 !
-      FWD = DLADSC( FWDIDX )
+      fwd = dladsc( fwdidx )
 
-      IF ( FWD .EQ. NULPTR ) THEN
+      if ( fwd .eq. nulptr ) then
 !
 !        There is no segment following the input segment.
 !
-         CALL CHKOUT ( 'DLAFNS' )
-         RETURN
+         call chkout ( 'DLAFNS' )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the next descriptor
 !
-      CALL DASRDI ( HANDLE, FWD, FWD+DLADSZ-1, NXTDSC )
+      call dasrdi ( handle, fwd, fwd+dladsz-1, nxtdsc )
 
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT ( 'DLAFNS' )
-      RETURN
-      END
+      call chkout ( 'DLAFNS' )
+      return
+      end

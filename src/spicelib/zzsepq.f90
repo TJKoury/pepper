@@ -1,9 +1,9 @@
 !$Procedure ZZSEPQ ( Separation quantity from observer )
 
-      DOUBLE PRECISION FUNCTION ZZSEPQ ( ET, &
-                                         BOD1, BOD2, &
-                                         R1,   R2, &
-                                         OBS,  ABCORR, REF )
+      double precision function zzsepq ( et, &
+                                         bod1, bod2, &
+                                         r1,   r2, &
+                                         obs,  abcorr, ref )
 
 ! $ Abstract
 !
@@ -21,16 +21,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      INTEGER               BOD1
-      INTEGER               BOD2
-      DOUBLE PRECISION      R1
-      DOUBLE PRECISION      R2
-      INTEGER               OBS
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         REF
+      double precision      et
+      integer               bod1
+      integer               bod2
+      double precision      r1
+      double precision      r2
+      integer               obs
+      character*(*)         abcorr
+      character*(*)         ref
 
 ! $ Brief_I/O
 !
@@ -216,148 +216,148 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      double precision      dasine
+      double precision      vnorm
+      double precision      vsep
+      logical               failed
+      logical               return
 
 
 !
 !     Local Variables.
 !
-      DOUBLE PRECISION      ANG1
-      DOUBLE PRECISION      ANG2
-      DOUBLE PRECISION      PV1    ( 3 )
-      DOUBLE PRECISION      PV2    ( 3 )
-      DOUBLE PRECISION      RANGE1
-      DOUBLE PRECISION      RANGE2
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      LT
+      double precision      ang1
+      double precision      ang2
+      double precision      pv1    ( 3 )
+      double precision      pv2    ( 3 )
+      double precision      range1
+      double precision      range2
+      double precision      theta
+      double precision      lt
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      DOUBLE PRECISION      ATOL
-      PARAMETER           ( ATOL  = 1.D-12 )
+      double precision      atol
+      parameter           ( atol  = 1.d-12 )
 
 !
 !     Set an initial value to return in case of error.
 !
-      ZZSEPQ = 0.D0
+      zzsepq = 0.d0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN( 'ZZSEPQ' )
+      call chkin( 'ZZSEPQ' )
 
 !
 !     First check for bad inputs.
 !
-      IF ( (R1 .LT. 0.D0) .OR. (R2 .LT. 0.D0) ) THEN
+      if ( (r1 .lt. 0.d0) .or. (r2 .lt. 0.d0) ) then
 
-         CALL SETMSG  ('A negative radius for a body was ' &
+         call setmsg  ('A negative radius for a body was ' &
          //            'encountered. The radius for body #1 was given ' &
          //            'as #2, the radius of body #3 was given as #4.')
 
-         CALL ERRINT  ('#1', BOD1         )
-         CALL ERRDP   ('#2', R1            )
-         CALL ERRINT  ('#3', BOD2         )
-         CALL ERRDP   ('#4', R2            )
-         CALL SIGERR  ('SPICE(BADRADIUS)' )
-         CALL CHKOUT  ('ZZSEPQ'          )
-         RETURN
-      END IF
+         call errint  ('#1', bod1         )
+         call errdp   ('#2', r1            )
+         call errint  ('#3', bod2         )
+         call errdp   ('#4', r2            )
+         call sigerr  ('SPICE(BADRADIUS)' )
+         call chkout  ('ZZSEPQ'          )
+         return
+      end if
 
 
 !
 !     Get the state of the BOD1, BOD2 objects relative to OBS.
 !
-      CALL SPKEZP ( BOD1, ET, REF, ABCORR,  OBS, PV1, LT )
+      call spkezp ( bod1, et, ref, abcorr,  obs, pv1, lt )
 
-      IF  (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSEPQ' )
-         RETURN
-      END IF
+      if  (  failed() ) then
+         call chkout ( 'ZZSEPQ' )
+         return
+      end if
 
 
-       CALL SPKEZP ( BOD2, ET, REF, ABCORR, OBS, PV2, LT )
+       call spkezp ( bod2, et, ref, abcorr, obs, pv2, lt )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSEPQ' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'ZZSEPQ' )
+         return
+      end if
 
 !
 !     Compute the range to the objects of interest.
 !
-      RANGE1 = VNORM( PV1 )
-      RANGE2 = VNORM( PV2 )
+      range1 = vnorm( pv1 )
+      range2 = vnorm( pv2 )
 
 !
 !     Compute the apparent angular radii as seen from OBS.
 !
-      IF ( RANGE1 .GT. R1 ) THEN
+      if ( range1 .gt. r1 ) then
 
-         ANG1 = DASINE( R1/RANGE1, ATOL )
+         ang1 = dasine( r1/range1, atol )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSEPQ' )
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout ( 'ZZSEPQ' )
+            return
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG  ('Observer object #1 located within surface ' &
+         call setmsg  ('Observer object #1 located within surface ' &
                      //'of target 1 object #2. Range to target 1 #3, ' &
                      //'radius of target 1 #4')
 
-         CALL ERRINT  ('#1', OBS           )
-         CALL ERRINT  ('#2', BOD1         )
-         CALL ERRDP   ('#3', RANGE1        )
-         CALL ERRDP   ('#4', R1             )
-         CALL SIGERR  ('SPICE(INSIDEBODY)' )
-         CALL CHKOUT  ('ZZSEPQ'             )
-         RETURN
+         call errint  ('#1', obs           )
+         call errint  ('#2', bod1         )
+         call errdp   ('#3', range1        )
+         call errdp   ('#4', r1             )
+         call sigerr  ('SPICE(INSIDEBODY)' )
+         call chkout  ('ZZSEPQ'             )
+         return
 
-      END IF
+      end if
 
-      IF ( RANGE2 .GT. R2 ) THEN
+      if ( range2 .gt. r2 ) then
 
-         ANG2 = DASINE ( R2/RANGE2, ATOL )
+         ang2 = dasine ( r2/range2, atol )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT ('ZZSEPQ')
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout ('ZZSEPQ')
+            return
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG  ('Observer object #1 located within surface ' &
+         call setmsg  ('Observer object #1 located within surface ' &
                      //'of target 2 object #2. Range to target 2 #3, ' &
                      //'radius of target 2 #4')
 
-         CALL ERRINT  ('#1', OBS           )
-         CALL ERRINT  ('#2', BOD2         )
-         CALL ERRDP   ('#3', RANGE2        )
-         CALL ERRDP   ('#4', R2             )
-         CALL SIGERR  ('SPICE(INSIDEBODY)' )
-         CALL CHKOUT  ('ZZSEPQ'             )
-         RETURN
+         call errint  ('#1', obs           )
+         call errint  ('#2', bod2         )
+         call errdp   ('#3', range2        )
+         call errdp   ('#4', r2             )
+         call sigerr  ('SPICE(INSIDEBODY)' )
+         call chkout  ('ZZSEPQ'             )
+         return
 
-      END IF
+      end if
 
 !
 !     Finally compute the apparent separation.
 !
-      THETA = VSEP( PV1, PV2 )
-      ZZSEPQ = THETA - ANG1 - ANG2
+      theta = vsep( pv1, pv2 )
+      zzsepq = theta - ang1 - ang2
 
-      CALL CHKOUT ('ZZSEPQ')
-      RETURN
-      END
+      call chkout ('ZZSEPQ')
+      return
+      end

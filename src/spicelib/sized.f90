@@ -1,6 +1,6 @@
 !$Procedure SIZED ( Size of a double precision cell )
 
-      INTEGER FUNCTION SIZED ( CELL )
+      integer function sized ( cell )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      CELL   ( LBCELL:* )
+      double precision      cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -144,56 +144,56 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 
-      IF ( RETURN() ) THEN
-         SIZED = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SIZED' )
-      END IF
+      if ( return() ) then
+         sized = 0
+         return
+      else
+         call chkin ( 'SIZED' )
+      end if
 
 !
 !     Set return value, regardless of validity.
 !
-      SIZED = INT ( CELL(-1) )
+      sized = int ( cell(-1) )
 
 !
 !     Squeal if something is awry.
 !
 
-      IF (  INT( CELL(-1) )  .LT.  0  )  THEN
+      if (  int( cell(-1) )  .lt.  0  )  then
 
-         CALL SETMSG ( 'Invalid cell size.  The size was #.')
-         CALL ERRINT ( '#', INT( CELL(-1) )  )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'  )
-         CALL CHKOUT ( 'SIZED' )
-         RETURN
+         call setmsg ( 'Invalid cell size.  The size was #.')
+         call errint ( '#', int( cell(-1) )  )
+         call sigerr ( 'SPICE(INVALIDSIZE)'  )
+         call chkout ( 'SIZED' )
+         return
 
-      ELSE IF ( INT( CELL(0) )  .LT.  0  ) THEN
+      else if ( int( cell(0) )  .lt.  0  ) then
 
-         CALL SETMSG ( 'Invalid cell cardinality.  The cardinality '  // &
+         call setmsg ( 'Invalid cell cardinality.  The cardinality '  // &
                        'was #.'      )
-         CALL ERRINT ( '#', INT ( CELL(0) )  )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)'  )
-         CALL CHKOUT ( 'SIZED' )
-         RETURN
+         call errint ( '#', int ( cell(0) )  )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)'  )
+         call chkout ( 'SIZED' )
+         return
 
-      ELSE IF ( INT(CELL(0)) .GT. INT(CELL(-1))  ) THEN
+      else if ( int(cell(0)) .gt. int(cell(-1))  ) then
 
-         CALL SETMSG ( 'Invalid cell cardinality; cardinality exceeds'// &
+         call setmsg ( 'Invalid cell cardinality; cardinality exceeds'// &
                        ' cell size.  The cardinality was #.  The size'// &
                        ' was #.'  )
-         CALL ERRINT ( '#', INT(CELL( 0))  )
-         CALL ERRINT ( '#', INT(CELL(-1))  )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'SIZED' )
-         RETURN
+         call errint ( '#', int(cell( 0))  )
+         call errint ( '#', int(cell(-1))  )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'SIZED' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SIZED' )
-      RETURN
-      END
+      call chkout ( 'SIZED' )
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure SPK14B ( SPK type 14: Begin a segment.)
 
-      SUBROUTINE SPK14B ( HANDLE, SEGID, &
-                          BODY,   CENTER, FRAME, &
-                          FIRST,  LAST,   CHBDEG  )
+      subroutine spk14b ( handle, segid, &
+                          body,   center, frame, &
+                          first,  last,   chbdeg  )
 
 ! $ Abstract
 !
@@ -19,18 +19,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         SEGID
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      INTEGER               CHBDEG
+      integer               handle
+      character*(*)         segid
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      integer               chbdeg
 
 ! $ Brief_I/O
 !
@@ -362,88 +362,88 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local Parameters
 !
 !     DAF ND and NI values for SPK files.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 !
 !     Length of an SPK descriptor.
 !
-      INTEGER               NDESCR
-      PARAMETER           ( NDESCR =  ND + (NI+1)/2 )
+      integer               ndescr
+      parameter           ( ndescr =  nd + (ni+1)/2 )
 !
 !     Length of a state.
 !
-      INTEGER               NSTATE
-      PARAMETER           ( NSTATE = 6 )
+      integer               nstate
+      parameter           ( nstate = 6 )
 !
 !     The type of this segment
 !
-      INTEGER               TYPE
-      PARAMETER           ( TYPE = 14 )
+      integer               type
+      parameter           ( type = 14 )
 !
 !     The number of constants:
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 1 )
+      integer               nconst
+      parameter           ( nconst = 1 )
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DCOEFF
-      DOUBLE PRECISION      DESCR(NDESCR)
+      double precision      dcoeff
+      double precision      descr(ndescr)
 
-      INTEGER               NCOEFF
-      INTEGER               PKTSIZ
+      integer               ncoeff
+      integer               pktsiz
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPK14B' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SPK14B' )
+      end if
 !
 !     First, check the degree of the polynomial to be sure that it is
 !     not negative.
 !
-      IF ( CHBDEG .LT. 0 ) THEN
+      if ( chbdeg .lt. 0 ) then
 
-         CALL SETMSG ( 'The degree of the Chebyshev Polynomial'  // &
+         call setmsg ( 'The degree of the Chebyshev Polynomial'  // &
                        ' was negative, #. The degree of the'     // &
                        ' polynomial must be greater than or'     // &
                        ' equal to zero.'                          )
-         CALL ERRINT ( '#', CHBDEG                                )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                   )
-         CALL CHKOUT ( 'SPK14B'                                   )
-         RETURN
+         call errint ( '#', chbdeg                                )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+         call chkout ( 'SPK14B'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Create a descriptor for the segment we are about to write.
 !
-      CALL SPKPDS ( BODY,  CENTER, FRAME, TYPE, FIRST, LAST, DESCR )
+      call spkpds ( body,  center, frame, type, first, last, descr )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'SPK14B' )
-         RETURN
+         call chkout ( 'SPK14B' )
+         return
 
-      END IF
+      end if
 !
 !     We've got a valid descriptor, so compute a few things and begin
 !     the segment.
 !
-      NCOEFF = CHBDEG + 1
-      PKTSIZ = NSTATE * NCOEFF + 2
-      DCOEFF = DBLE ( NCOEFF )
+      ncoeff = chbdeg + 1
+      pktsiz = nstate * ncoeff + 2
+      dcoeff = dble ( ncoeff )
 !
 !     For this data type, we want to use an explicit reference value
 !     index where the reference epochs are in increasing order. We also
@@ -452,15 +452,15 @@
 !     epoch. These characteristics are prescribed by the mnemonic EXPLE.
 !     See the include file 'sgparam.inc' for more details.
 !
-      CALL SGBWFS ( HANDLE, DESCR,  SEGID,  NCONST, &
-                            DCOEFF, PKTSIZ, EXPLE   )
+      call sgbwfs ( handle, descr,  segid,  nconst, &
+                            dcoeff, pktsiz, exple   )
 
 !
 !     No need to check FAILED() here, since all we do is check out.
 !     Leave it up to the caller.
 !
 
-      CALL CHKOUT ( 'SPK14B' )
-      RETURN
+      call chkout ( 'SPK14B' )
+      return
 
-      END
+      end

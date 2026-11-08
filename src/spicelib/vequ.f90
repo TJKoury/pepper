@@ -1,6 +1,6 @@
 !$Procedure VEQU ( Vector equality, 3 dimensions )
 
-      SUBROUTINE VEQU ( VIN, VOUT )
+      subroutine vequ ( vin, vout )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  VIN   ( 3 )
-      DOUBLE PRECISION  VOUT  ( 3 )
+      double precision  vin   ( 3 )
+      double precision  vout  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -170,9 +170,9 @@
 !-&
 
 
-      VOUT(1) = VIN(1)
-      VOUT(2) = VIN(2)
-      VOUT(3) = VIN(3)
+      vout(1) = vin(1)
+      vout(2) = vin(2)
+      vout(3) = vin(3)
 
-      RETURN
-      END
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure KEEPER ( Keeps track of SPICE kernels )
 
-      SUBROUTINE KEEPER ( WHICH,  KIND, &
-                          FILE,   COUNT, FILTYP,  HANDLE, &
-                          SRCFIL, FOUND )
+      subroutine keeper ( which,  kind, &
+                          file,   count, filtyp,  handle, &
+                          srcfil, found )
 
 ! $ Abstract
 !
@@ -20,29 +20,29 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               WHICH
-      CHARACTER*(*)         KIND
-      CHARACTER*(*)         FILE
-      INTEGER               COUNT
-      CHARACTER*(*)         FILTYP
-      INTEGER               HANDLE
-      CHARACTER*(*)         SRCFIL
-      LOGICAL               FOUND
+      integer               which
+      character*(*)         kind
+      character*(*)         file
+      integer               count
+      character*(*)         filtyp
+      integer               handle
+      character*(*)         srcfil
+      logical               found
 
 
-      INTEGER               FILSIZ
-      PARAMETER           ( FILSIZ = 255 )
+      integer               filsiz
+      parameter           ( filsiz = 255 )
 
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE = 5000 )
+      integer               ftsize
+      parameter           ( ftsize = 5000 )
 
-      INTEGER               MAXTXT
-      PARAMETER           ( MAXTXT = 300 )
+      integer               maxtxt
+      parameter           ( maxtxt = 300 )
 
-      INTEGER               MAXFIL
-      PARAMETER           ( MAXFIL = FTSIZE + MAXTXT )
+      integer               maxfil
+      parameter           ( maxfil = ftsize + maxtxt )
 
 ! $ Brief_I/O
 !
@@ -572,14 +572,14 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      INTEGER               POS
-      INTEGER               RTRIM
+      integer               isrchc
+      integer               pos
+      integer               rtrim
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               SAMSUB
+      logical               eqstr
+      logical               failed
+      logical               return
+      logical               samsub
 
 !
 !     Here we set up the database of loaded kernels
@@ -587,15 +587,15 @@
 !     The name of every file loaded through this interface will
 !     be stored in the array FILES.
 !
-      CHARACTER*(FILSIZ)    FILES ( MAXFIL )
-      SAVE                  FILES
+      character*(filsiz)    files ( maxfil )
+      save                  files
 !
 !     The handle of every loaded file will be stored in the array
 !     HANDLS.  If the file is a text kernel it will be assigned the
 !     handle 0.
 !
-      INTEGER               HANDLS( MAXFIL )
-      SAVE                  HANDLS
+      integer               handls( maxfil )
+      save                  handls
 !
 !     The source of each file specified will be stored in the integer
 !     array SRCFIL.  If the file is loaded directly, its source
@@ -603,119 +603,119 @@
 !     in a text kernel, the index of the source file in FILES will
 !     be stored in SRCES.
 !
-      INTEGER               SRCES ( MAXFIL )
-      SAVE                  SRCES
+      integer               srces ( maxfil )
+      save                  srces
 !
 !     The file type of every loaded kernel will be stored in the array
 !     TYPES.
 !
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN = 8 )
+      integer               typlen
+      parameter           ( typlen = 8 )
 
-      CHARACTER*(TYPLEN)    TYPES ( MAXFIL )
-      SAVE                  TYPES
+      character*(typlen)    types ( maxfil )
+      save                  types
 
 !
 !     The number of files loaded through this interfaces is kept in the
 !     integer LOADED.
 !
-      INTEGER               LOADED
-      SAVE                  LOADED
+      integer               loaded
+      save                  loaded
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
-
-
-      INTEGER               NKNOWN
-      PARAMETER           ( NKNOWN = 3 )
-
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
-
-      INTEGER               MSGSIZ
-      PARAMETER           ( MSGSIZ = 500 )
-
-      CHARACTER*(1)         NORC
-      CHARACTER*(FILSIZ)    FIL2LD
-
-      CHARACTER*(FILSIZ)    PVALUE
-      CHARACTER*(LNSIZE)    SYMBOL
-
-      CHARACTER*(MSGSIZ)    NOFILE
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 
-      CHARACTER*(WDSIZE)    KNOWN ( NKNOWN )
-      SAVE                  KNOWN
+      integer               nknown
+      parameter           ( nknown = 3 )
 
-      CHARACTER*(TYPLEN)    THSTYP
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               B
-      INTEGER               CURSRC
-      INTEGER               D
-      INTEGER               DOLLAR
-      INTEGER               E
-      INTEGER               FIDX
-      INTEGER               FILNUM
-      INTEGER               FNMLEN
-      INTEGER               HITS
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               LIDX
-      INTEGER               MYHAND
-      INTEGER               N
-      INTEGER               N1
-      INTEGER               N2
-      INTEGER               N3
-      INTEGER               NMULT
-      INTEGER               NPATHS
-      INTEGER               NPVALS
-      INTEGER               R
-      INTEGER               SIZE
-      INTEGER               SRC
-      INTEGER               START
-      INTEGER               USE
+      integer               msgsiz
+      parameter           ( msgsiz = 500 )
 
-      LOGICAL               ADD
-      LOGICAL               DIDCK
-      LOGICAL               DIDDSK
-      LOGICAL               DIDEK
-      LOGICAL               DIDPCK
-      LOGICAL               DIDSPK
-      LOGICAL               DIDTXT
-      LOGICAL               DOCK
-      LOGICAL               DODSK
-      LOGICAL               DOEK
-      LOGICAL               DOMETA
-      LOGICAL               DOPCK
-      LOGICAL               DOSPK
-      LOGICAL               DOTEXT
-      LOGICAL               FIRST
-      SAVE                  FIRST
+      character*(1)         norc
+      character*(filsiz)    fil2ld
 
-      LOGICAL               FND
-      LOGICAL               GOTIT
-      LOGICAL               OK
-      LOGICAL               PATHS
-      LOGICAL               SINGLE
-      LOGICAL               UPDATE
+      character*(filsiz)    pvalue
+      character*(lnsize)    symbol
+
+      character*(msgsiz)    nofile
 
 
-      DATA                  FIRST     / .TRUE. /
-      DATA                  LOADED    /  0  /
+      character*(wdsize)    known ( nknown )
+      save                  known
+
+      character*(typlen)    thstyp
+
+      integer               b
+      integer               cursrc
+      integer               d
+      integer               dollar
+      integer               e
+      integer               fidx
+      integer               filnum
+      integer               fnmlen
+      integer               hits
+      integer               i
+      integer               j
+      integer               k
+      integer               lidx
+      integer               myhand
+      integer               n
+      integer               n1
+      integer               n2
+      integer               n3
+      integer               nmult
+      integer               npaths
+      integer               npvals
+      integer               r
+      integer               size
+      integer               src
+      integer               start
+      integer               use
+
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               first
+      save                  first
+
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+
+
+      data                  first     / .true. /
+      data                  loaded    /  0  /
 
 
 
-      CALL CHKIN  ( 'KEEPER' )
-      CALL SETMSG ( 'The routine KEEPER is an umbrella for a ' &
+      call chkin  ( 'KEEPER' )
+      call setmsg ( 'The routine KEEPER is an umbrella for a ' &
       //            'collection of entry points that manage the ' &
       //            'loading, tracking and unloading of SPICE ' &
       //            'kernels.  KEEPER should not be called ' &
       //            'directly. It is likely that a programming ' &
       //            'error has been made. ' )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)'  )
-      CALL CHKOUT ( 'KEEPER' )
-      RETURN
+      call sigerr ( 'SPICE(BOGUSENTRY)'  )
+      call chkout ( 'KEEPER' )
+      return
 
 
 
@@ -723,7 +723,7 @@
 
 !$Procedure FURNSH ( Furnish a program with SPICE kernels )
 
-      ENTRY FURNSH ( FILE )
+      entry furnsh ( file )
 
 ! $ Abstract
 !
@@ -1336,48 +1336,48 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'FURNSH')
+      call chkin ( 'FURNSH')
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST    = .FALSE.
-         KNOWN(1) = 'KERNELS_TO_LOAD'
-         KNOWN(2) = 'PATH_SYMBOLS'
-         KNOWN(3) = 'PATH_VALUES'
-         LOADED   =  0
+         first    = .false.
+         known(1) = 'KERNELS_TO_LOAD'
+         known(2) = 'PATH_SYMBOLS'
+         known(3) = 'PATH_VALUES'
+         loaded   =  0
 
-         CALL SWPOOL ( 'FURNSH', NKNOWN, KNOWN )
-         CALL CVPOOL ( 'FURNSH', UPDATE )
+         call swpool ( 'FURNSH', nknown, known )
+         call cvpool ( 'FURNSH', update )
 
-      END IF
+      end if
 
 !
 !     Reject excessively long file names.
 !
-      IF ( RTRIM(FILE) .GT. FILSIZ ) THEN
+      if ( rtrim(file) .gt. filsiz ) then
 
-         CALL SETMSG ( 'Input file name <#> has length @ characters. ' &
+         call setmsg ( 'Input file name <#> has length @ characters. ' &
          //            'The limit on the length of file names stored ' &
          //            'by FURNSH is @ characters.'                   )
-         CALL ERRCH  ( '#', FILE                                      )
-         CALL ERRINT ( '@', RTRIM(FILE)                               )
-         CALL ERRINT ( '@', FILSIZ                                    )
-         CALL SIGERR ( 'SPICE(FILENAMETOOLONG)'                       )
-         CALL CHKOUT ( 'FURNSH'                                       )
-         RETURN
+         call errch  ( '#', file                                      )
+         call errint ( '@', rtrim(file)                               )
+         call errint ( '@', filsiz                                    )
+         call sigerr ( 'SPICE(FILENAMETOOLONG)'                       )
+         call chkout ( 'FURNSH'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure we have room to load at least one more file.
 !
-      IF ( LOADED .EQ. MAXFIL ) THEN
+      if ( loaded .eq. maxfil ) then
 
-         CALL SETMSG ( 'There is no room left in KEEPER to load ' &
+         call setmsg ( 'There is no room left in KEEPER to load ' &
          //            'another SPICE kernel.  The current limit ' &
          //            'on the number of files that can be ' &
          //            'loaded is #.  If you really need more ' &
@@ -1385,181 +1385,181 @@
          //            'increase the parameter MAXFIL in the ' &
          //            'subroutine KEEPER. ' )
 
-         CALL ERRINT ( '#', MAXFIL )
-         CALL SIGERR ( 'SPICE(NOMOREROOM)'  )
-         CALL CHKOUT ( 'FURNSH' )
-         RETURN
+         call errint ( '#', maxfil )
+         call sigerr ( 'SPICE(NOMOREROOM)'  )
+         call chkout ( 'FURNSH' )
+         return
 
-      END IF
+      end if
 !
 !     We don't want external interactions with the kernel pool to
 !     have any affect on FURNSH's watch so we check the watcher
 !     here prior to the call to ZZLDKER.
 !
-      CALL CVPOOL ( 'FURNSH', UPDATE )
+      call cvpool ( 'FURNSH', update )
 
 !
 !     Set a preliminary value for the error message in case the
 !     call to ZZLDKER doesn't succeed.
 !
-      NOFILE = 'The attempt to load "#" by the routine FURNSH ' &
+      nofile = 'The attempt to load "#" by the routine FURNSH ' &
       //       'failed. It #'
 
-      CALL ZZLDKER ( FILE, NOFILE, THSTYP, MYHAND )
+      call zzldker ( file, nofile, thstyp, myhand )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'FURNSH' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'FURNSH' )
+         return
+      end if
 
 
-      LOADED = LOADED + 1
-      CURSRC = LOADED
+      loaded = loaded + 1
+      cursrc = loaded
 
-      FILES (LOADED) = FILE
-      TYPES (LOADED) = THSTYP
-      HANDLS(LOADED) = MYHAND
-      SRCES (LOADED) = 0
+      files (loaded) = file
+      types (loaded) = thstyp
+      handls(loaded) = myhand
+      srces (loaded) = 0
 
-       CALL CVPOOL ( 'FURNSH', UPDATE )
+       call cvpool ( 'FURNSH', update )
 
-      IF ( .NOT. UPDATE ) THEN
+      if ( .not. update ) then
 !
 !        Nothing to do.  None of the control variables
 !        were set in FILE.
 !
-         CALL CHKOUT ( 'FURNSH' )
-         RETURN
+         call chkout ( 'FURNSH' )
+         return
 
-      END IF
+      end if
 
 !
 !     See what is present in the kernel pool: Are any path symbols
 !     defined?
 !
-      CALL DTPOOL ( 'PATH_SYMBOLS', PATHS, NPATHS, NORC )
+      call dtpool ( 'PATH_SYMBOLS', paths, npaths, norc )
 
-      IF (  PATHS .AND. ( NORC .EQ. 'C' )  ) THEN
+      if (  paths .and. ( norc .eq. 'C' )  ) then
 !
 !        Make sure that the values are equal in number. We need to
 !        use STPOOL to count the path values, since some of them
 !        might span multiple array elements.
 !
-         I = 1
-         CALL STPOOL( 'PATH_VALUES', I, '+', PVALUE, SIZE, OK )
+         i = 1
+         call stpool( 'PATH_VALUES', i, '+', pvalue, size, ok )
 
-         DO WHILE (  OK  .AND.  ( .NOT. FAILED() )  )
+         do while (  ok  .and.  ( .not. failed() )  )
 !
 !           Reject excessively long path names.
 !
-            IF ( SIZE .GT. FILSIZ ) THEN
+            if ( size .gt. filsiz ) then
 
-               CALL SETMSG ( 'In meta-kernel <#>, the path at ' &
+               call setmsg ( 'In meta-kernel <#>, the path at ' &
                //            'index # in the PATH_VALUES list has ' &
                //            'length # characters; the limit is # ' &
                //            'characters.'                          )
-               CALL ERRCH  ( '#', FILE                              )
-               CALL ERRINT ( '#', I                                 )
-               CALL ERRINT ( '#', SIZE                              )
-               CALL ERRINT ( '#', FILSIZ                            )
-               CALL SIGERR ( 'SPICE(PATHTOOLONG)'                   )
-               CALL CHKOUT ( 'FURNSH'                               )
-               RETURN
+               call errch  ( '#', file                              )
+               call errint ( '#', i                                 )
+               call errint ( '#', size                              )
+               call errint ( '#', filsiz                            )
+               call sigerr ( 'SPICE(PATHTOOLONG)'                   )
+               call chkout ( 'FURNSH'                               )
+               return
 
-            END IF
+            end if
 
-            I = I + 1
-            CALL STPOOL( 'PATH_VALUES', I, '+', PVALUE, SIZE, OK )
+            i = i + 1
+            call stpool( 'PATH_VALUES', i, '+', pvalue, size, ok )
 
-         END DO
+         end do
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'FURNSH' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'FURNSH' )
+            return
+         end if
 
-         NPVALS = I - 1
+         npvals = i - 1
 
-         IF ( NPVALS .NE. NPATHS ) THEN
+         if ( npvals .ne. npaths ) then
 
-            CALL SETMSG ( 'Number of path symbols is #; number of ' &
+            call setmsg ( 'Number of path symbols is #; number of ' &
             //            'path values is #; counts must match.'  )
-            CALL ERRINT ( '#', NPATHS                             )
-            CALL ERRINT ( '#', NPVALS                             )
-            CALL SIGERR ( 'SPICE(PATHMISMATCH)'                   )
-            CALL CHKOUT ( 'FURNSH'                                )
-            RETURN
+            call errint ( '#', npaths                             )
+            call errint ( '#', npvals                             )
+            call sigerr ( 'SPICE(PATHMISMATCH)'                   )
+            call chkout ( 'FURNSH'                                )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         PATHS = .FALSE.
+         paths = .false.
 
-      END IF
+      end if
 
 !
 !     This kernel appears to be a legitimate meta-text kernel. Mark
 !     it as such and then process its contents.
 !
-      TYPES(LOADED) = 'META'
+      types(loaded) = 'META'
 
 !
 !     Now load all kernels specified in the KERNELS_TO_LOAD variable.
 !
-      FILNUM = 1
-      FIDX   = 1
+      filnum = 1
+      fidx   = 1
 
-      CALL SEPOOL( 'KERNELS_TO_LOAD',  FIDX,    '+', &
-                   FIL2LD,             FNMLEN,  LIDX,  OK )
+      call sepool( 'KERNELS_TO_LOAD',  fidx,    '+', &
+                   fil2ld,             fnmlen,  lidx,  ok )
 
-      DO WHILE (  OK  .AND.  ( .NOT. FAILED() )  )
+      do while (  ok  .and.  ( .not. failed() )  )
 !
 !        Reject excessively long file names.
 !
-         IF ( FNMLEN .GT. FILSIZ ) THEN
+         if ( fnmlen .gt. filsiz ) then
 
-            CALL SETMSG ( 'In meta-kernel <#>, the file name at ' &
+            call setmsg ( 'In meta-kernel <#>, the file name at ' &
             //            'index # in the KERNELS_TO_LOAD list has ' &
             //            'length # characters; the limit is # ' &
             //            'characters.'                             )
-            CALL ERRCH  ( '#', FILE                                 )
-            CALL ERRINT ( '#', FILNUM                               )
-            CALL ERRINT ( '#', FNMLEN                               )
-            CALL ERRINT ( '#', FILSIZ                               )
-            CALL SIGERR ( 'SPICE(FILENAMETOOLONG)'                  )
-            CALL CHKOUT ( 'FURNSH'                                  )
-            RETURN
+            call errch  ( '#', file                                 )
+            call errint ( '#', filnum                               )
+            call errint ( '#', fnmlen                               )
+            call errint ( '#', filsiz                               )
+            call sigerr ( 'SPICE(FILENAMETOOLONG)'                  )
+            call chkout ( 'FURNSH'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Make sure we have room to load at least one more file.
 !
-         IF ( LOADED .EQ. MAXFIL ) THEN
+         if ( loaded .eq. maxfil ) then
 
-            CALL SETMSG ( 'There is no room left in KEEPER to ' &
+            call setmsg ( 'There is no room left in KEEPER to ' &
             //            'load another SPICE kernel. The ' &
             //            'current limit on the number of files ' &
             //            'that can be loaded is #.'             )
 
-            CALL ERRINT ( '#', MAXFIL )
-            CALL SIGERR ( 'SPICE(NOMOREROOM)'  )
-            CALL CHKOUT ( 'FURNSH' )
-            RETURN
+            call errint ( '#', maxfil )
+            call sigerr ( 'SPICE(NOMOREROOM)'  )
+            call chkout ( 'FURNSH' )
+            return
 
-         END IF
+         end if
 
 !
 !        Resolve any path symbols that may be present.
 !        Make sure we have room to load at least one more file.
 !
-         IF ( PATHS ) THEN
+         if ( paths ) then
 
-            START  = 1
-            DOLLAR = POS( FIL2LD, '$', START )
+            start  = 1
+            dollar = pos( fil2ld, '$', start )
 
-            DO WHILE ( DOLLAR .GT. 0 )
+            do while ( dollar .gt. 0 )
 !
 !              Determine the longest path symbol that fits into the
 !              current file name.  We fetch path symbols one at a
@@ -1567,117 +1567,117 @@
 !              string that follows the '$'.  The longest match
 !              is the one we use as a symbol.
 !
-               SIZE = 0
-               USE  = 0
-               D    = DOLLAR
+               size = 0
+               use  = 0
+               d    = dollar
 
 
-               DO I = 1, NPATHS
+               do i = 1, npaths
 
-                  CALL GCPOOL( 'PATH_SYMBOLS', I, 1, N, SYMBOL, FND )
+                  call gcpool( 'PATH_SYMBOLS', i, 1, n, symbol, fnd )
 
-                  R =  RTRIM ( SYMBOL )
+                  r =  rtrim ( symbol )
 
-                  IF (       R  .GT. SIZE &
-                       .AND. SAMSUB( SYMBOL,1,R, FIL2LD,D+1,D+R ) ) THEN
-                     USE  = I
-                     SIZE = R
-                  END IF
+                  if (       r  .gt. size &
+                       .and. samsub( symbol,1,r, fil2ld,d+1,d+r ) ) then
+                     use  = i
+                     size = r
+                  end if
 
-               END DO
+               end do
 !
 !              If we found a matching path symbol, get the corresponding
 !              value and put it into the file name.
 !
-               IF ( USE .GT. 0 ) THEN
+               if ( use .gt. 0 ) then
 !
 !                 Get the path value having index USE in the set of
 !                 path values. Note that we've already checked that
 !                 the path value will fit in PVALUE.
 !
-                  CALL STPOOL( 'PATH_VALUES', USE, '+', PVALUE, N, FND )
+                  call stpool( 'PATH_VALUES', use, '+', pvalue, n, fnd )
 
 !
 !                 When the path is substituted for the symbol, the
 !                 total length of the path and file name must fit in
 !                 the name buffer.
 !
-                  IF ( ( FNMLEN + N - SIZE - 1 )  .GT.  FILSIZ ) THEN
+                  if ( ( fnmlen + n - size - 1 )  .gt.  filsiz ) then
 
-                     CALL SETMSG ( 'In meta-kernel <#>, the path at ' &
+                     call setmsg ( 'In meta-kernel <#>, the path at ' &
                      //            'index # in the PATH_SYMBOLS list ' &
                      //            'has # characters and the ' &
                      //            'file name at index # has ' &
                      //            '# characters. The combined path ' &
                      //            'and file name has # characters; ' &
                      //            'the limit is # characters.'       )
-                     CALL ERRCH  ( '#', FILE                          )
-                     CALL ERRINT ( '#', USE                           )
-                     CALL ERRINT ( '#', N                             )
-                     CALL ERRINT ( '#', FILNUM                        )
-                     CALL ERRINT ( '#', FNMLEN                        )
-                     CALL ERRINT ( '#', FNMLEN + N                    )
-                     CALL ERRINT ( '#', FILSIZ                        )
-                     CALL SIGERR ( 'SPICE(FILENAMETOOLONG)'           )
-                     CALL CHKOUT ( 'FURNSH'                           )
-                     RETURN
+                     call errch  ( '#', file                          )
+                     call errint ( '#', use                           )
+                     call errint ( '#', n                             )
+                     call errint ( '#', filnum                        )
+                     call errint ( '#', fnmlen                        )
+                     call errint ( '#', fnmlen + n                    )
+                     call errint ( '#', filsiz                        )
+                     call sigerr ( 'SPICE(FILENAMETOOLONG)'           )
+                     call chkout ( 'FURNSH'                           )
+                     return
 
-                  END IF
+                  end if
 
-                  CALL REPSUB( FIL2LD, D, D+SIZE, PVALUE(1:N), FIL2LD )
+                  call repsub( fil2ld, d, d+size, pvalue(1:n), fil2ld )
 
-               END IF
+               end if
 !
 !              Look for the next occurrence of a '$' after the last
 !              place we found one.
 !
-               START  = DOLLAR + 1
-               DOLLAR = POS( FIL2LD, '$', START )
+               start  = dollar + 1
+               dollar = pos( fil2ld, '$', start )
 
-            END DO
+            end do
 
-         END IF
+         end if
 !
 !        If any path symbols were present, they have now been
 !        resolved.  Let ZZLDKER handle the task of loading this
 !        kernel.  Make up a message template for use if ZZLDKER
 !        runs into a problem.
 !
-         NOFILE = 'The @ file ''#'' specified by KERNELS_TO_LOAD ' &
+         nofile = 'The @ file ''#'' specified by KERNELS_TO_LOAD ' &
          //       'in the file @ #'
 
-         CALL REPMOT ( NOFILE, '@', FILNUM, 'L', NOFILE )
-         CALL REPMC  ( NOFILE, '@', FILE,        NOFILE )
+         call repmot ( nofile, '@', filnum, 'L', nofile )
+         call repmc  ( nofile, '@', file,        nofile )
 
-         CALL ZZLDKER( FIL2LD, NOFILE, THSTYP, MYHAND )
+         call zzldker( fil2ld, nofile, thstyp, myhand )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'FURNSH' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'FURNSH' )
+            return
+         end if
 
-         IF ( THSTYP .EQ. 'TEXT' ) THEN
+         if ( thstyp .eq. 'TEXT' ) then
 !
 !           See if we stepped on any of the recognized variables.  If
 !           we did, there's no point in trying to continue.
 !
-            CALL CVPOOL ( 'FURNSH', UPDATE )
+            call cvpool ( 'FURNSH', update )
 
-            IF ( UPDATE ) THEN
+            if ( update ) then
 !
 !              First clean up the debris created by this attempt
 !              at recursion.
 !
-               DO I = 1, NKNOWN
-                  CALL DVPOOL ( KNOWN(I) )
-               END DO
+               do i = 1, nknown
+                  call dvpool ( known(i) )
+               end do
 !
 !              Take care of any watcher activation caused by the
 !              mop-up of the preceding loop.
 !
-               CALL CVPOOL ( 'FURNSH', UPDATE )
+               call cvpool ( 'FURNSH', update )
 
-               CALL SETMSG ( 'Hmmm.  This is interesting. In the ' &
+               call setmsg ( 'Hmmm.  This is interesting. In the ' &
                //            'meta-text kernel ''#'' you''ve ' &
                //            'requested that the text kernel ' &
                //            '''#'' be loaded. This second file ' &
@@ -1688,52 +1688,52 @@
                //            'path is fraught with peril and can ' &
                //            'not be supported by FURNSH. ' )
 
-               CALL ERRCH  ( '#', FILE   )
-               CALL ERRCH  ( '#', FIL2LD )
-               CALL SIGERR ( 'SPICE(RECURSIVELOADING)' )
-               CALL CHKOUT ( 'FURNSH' )
-               RETURN
-            END IF
+               call errch  ( '#', file   )
+               call errch  ( '#', fil2ld )
+               call sigerr ( 'SPICE(RECURSIVELOADING)' )
+               call chkout ( 'FURNSH' )
+               return
+            end if
 
-         END IF
+         end if
 !
 !        Add the latest file loaded to our database of loaded
 !        files.
 !
-         LOADED         = LOADED + 1
-         FILES (LOADED) = FIL2LD
-         TYPES (LOADED) = THSTYP
-         HANDLS(LOADED) = MYHAND
-         SRCES (LOADED) = CURSRC
+         loaded         = loaded + 1
+         files (loaded) = fil2ld
+         types (loaded) = thstyp
+         handls(loaded) = myhand
+         srces (loaded) = cursrc
 
 !
 !        Get the name of the next file to load.
 !
-         FILNUM = FILNUM + 1
-         FIDX   = LIDX   + 1
+         filnum = filnum + 1
+         fidx   = lidx   + 1
 
-         CALL SEPOOL( 'KERNELS_TO_LOAD',  FIDX,    '+', &
-                       FIL2LD,            FNMLEN,  LIDX,  OK )
+         call sepool( 'KERNELS_TO_LOAD',  fidx,    '+', &
+                       fil2ld,            fnmlen,  lidx,  ok )
 
-      END DO
+      end do
 
 !
 !     Last Step.  Remove the special variables from the kernel pool.
 !
-      DO I = 1, NKNOWN
-         CALL DVPOOL ( KNOWN(I) )
-      END DO
+      do i = 1, nknown
+         call dvpool ( known(i) )
+      end do
 
-      CALL CVPOOL ( 'FURNSH', UPDATE )
+      call cvpool ( 'FURNSH', update )
 
-      CALL CHKOUT ( 'FURNSH' )
-      RETURN
+      call chkout ( 'FURNSH' )
+      return
 
 
 
 !$Procedure KTOTAL ( Kernel Totals )
 
-      ENTRY KTOTAL ( KIND, COUNT )
+      entry ktotal ( kind, count )
 
 ! $ Abstract
 !
@@ -2011,74 +2011,74 @@
 !-&
 
 
-      IF ( LOADED .EQ. 0 ) THEN
-         COUNT = 0
-         RETURN
-      END IF
+      if ( loaded .eq. 0 ) then
+         count = 0
+         return
+      end if
 
-      CALL CHKIN  ( 'KTOTAL' )
+      call chkin  ( 'KTOTAL' )
 !
 !     Parse KIND to see which kernels are of interest.
 !
-      DOSPK  = .FALSE.
-      DOCK   = .FALSE.
-      DODSK  = .FALSE.
-      DOTEXT = .FALSE.
-      DOMETA = .FALSE.
-      DOEK   = .FALSE.
-      DOPCK  = .FALSE.
-      START  = 1
+      dospk  = .false.
+      dock   = .false.
+      dodsk  = .false.
+      dotext = .false.
+      dometa = .false.
+      doek   = .false.
+      dopck  = .false.
+      start  = 1
 
-      CALL FNDNWD ( KIND, START, B, E )
-
-
-      DO WHILE ( B .GT. 0 )
-
-         IF ( EQSTR( KIND(B:E), 'ALL' ) )THEN
-            COUNT = LOADED
-            CALL CHKOUT ( 'KTOTAL' )
-            RETURN
-         ELSE
-            DOCK   = DOCK   .OR. EQSTR ( KIND(B:E), 'CK' )
-            DODSK  = DODSK  .OR. EQSTR ( KIND(B:E), 'DSK' )
-            DOEK   = DOEK   .OR. EQSTR ( KIND(B:E), 'EK' )
-            DOMETA = DOMETA .OR. EQSTR ( KIND(B:E), 'META' )
-            DOPCK  = DOPCK  .OR. EQSTR ( KIND(B:E), 'PCK' )
-            DOSPK  = DOSPK  .OR. EQSTR ( KIND(B:E), 'SPK' )
-            DOTEXT = DOTEXT .OR. EQSTR ( KIND(B:E), 'TEXT' )
-         END IF
-
-         START = E + 1
-         CALL FNDNWD ( KIND, START, B, E )
-
-      END DO
-
-      COUNT = 0
+      call fndnwd ( kind, start, b, e )
 
 
-      DO I = 1, LOADED
+      do while ( b .gt. 0 )
 
-         ADD =      ( TYPES(I) .EQ. 'CK'   .AND. DOCK   ) &
-               .OR. ( TYPES(I) .EQ. 'DSK'  .AND. DODSK  ) &
-               .OR. ( TYPES(I) .EQ. 'EK'   .AND. DOEK   ) &
-               .OR. ( TYPES(I) .EQ. 'META' .AND. DOMETA ) &
-               .OR. ( TYPES(I) .EQ. 'PCK'  .AND. DOPCK  ) &
-               .OR. ( TYPES(I) .EQ. 'SPK'  .AND. DOSPK  ) &
-               .OR. ( TYPES(I) .EQ. 'TEXT' .AND. DOTEXT )
+         if ( eqstr( kind(b:e), 'ALL' ) )then
+            count = loaded
+            call chkout ( 'KTOTAL' )
+            return
+         else
+            dock   = dock   .or. eqstr ( kind(b:e), 'CK' )
+            dodsk  = dodsk  .or. eqstr ( kind(b:e), 'DSK' )
+            doek   = doek   .or. eqstr ( kind(b:e), 'EK' )
+            dometa = dometa .or. eqstr ( kind(b:e), 'META' )
+            dopck  = dopck  .or. eqstr ( kind(b:e), 'PCK' )
+            dospk  = dospk  .or. eqstr ( kind(b:e), 'SPK' )
+            dotext = dotext .or. eqstr ( kind(b:e), 'TEXT' )
+         end if
 
-         IF ( ADD ) THEN
-            COUNT = COUNT + 1
-         END IF
+         start = e + 1
+         call fndnwd ( kind, start, b, e )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'KTOTAL' )
-      RETURN
+      count = 0
+
+
+      do i = 1, loaded
+
+         add =      ( types(i) .eq. 'CK'   .and. dock   ) &
+               .or. ( types(i) .eq. 'DSK'  .and. dodsk  ) &
+               .or. ( types(i) .eq. 'EK'   .and. doek   ) &
+               .or. ( types(i) .eq. 'META' .and. dometa ) &
+               .or. ( types(i) .eq. 'PCK'  .and. dopck  ) &
+               .or. ( types(i) .eq. 'SPK'  .and. dospk  ) &
+               .or. ( types(i) .eq. 'TEXT' .and. dotext )
+
+         if ( add ) then
+            count = count + 1
+         end if
+
+      end do
+
+      call chkout ( 'KTOTAL' )
+      return
 
 
 !$Procedure KDATA ( Kernel Data )
 
-      ENTRY KDATA ( WHICH, KIND, FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      entry kdata ( which, kind, file, filtyp, srcfil, handle, found )
 
 ! $ Abstract
 !
@@ -2417,106 +2417,106 @@
 !-&
 
 
-      FILE   = ' '
-      FILTYP = ' '
-      SRCFIL = ' '
-      HANDLE =  0
-      FOUND  = .FALSE.
+      file   = ' '
+      filtyp = ' '
+      srcfil = ' '
+      handle =  0
+      found  = .false.
 
-      IF ( WHICH .LT. 1 .OR. WHICH .GT. LOADED ) THEN
-         RETURN
-      END IF
+      if ( which .lt. 1 .or. which .gt. loaded ) then
+         return
+      end if
 !
 !     Parse KIND to see which kernels are of interest.
 !
-      DOSPK  = .FALSE.
-      DOCK   = .FALSE.
-      DODSK  = .FALSE.
-      DOTEXT = .FALSE.
-      DOMETA = .FALSE.
-      DOEK   = .FALSE.
-      DOPCK  = .FALSE.
-      START  = 1
-      CALL FNDNWD ( KIND, START, B, E )
+      dospk  = .false.
+      dock   = .false.
+      dodsk  = .false.
+      dotext = .false.
+      dometa = .false.
+      doek   = .false.
+      dopck  = .false.
+      start  = 1
+      call fndnwd ( kind, start, b, e )
 
-      DO WHILE ( B .GT. 0 )
+      do while ( b .gt. 0 )
 
-         IF ( EQSTR( KIND(B:E), 'ALL' ) )THEN
+         if ( eqstr( kind(b:e), 'ALL' ) )then
 !
 !           There's no point in going on, we can fill in the output
 !           variables right now.
 !
-            FOUND  = .TRUE.
-            FILE   = FILES (WHICH)
-            FILTYP = TYPES (WHICH)
-            HANDLE = HANDLS(WHICH)
+            found  = .true.
+            file   = files (which)
+            filtyp = types (which)
+            handle = handls(which)
 
-            IF ( SRCES(WHICH) .NE. 0 ) THEN
-               SRCFIL = FILES( SRCES(WHICH) )
-            END IF
-            RETURN
+            if ( srces(which) .ne. 0 ) then
+               srcfil = files( srces(which) )
+            end if
+            return
 
-         ELSE
-            DOCK   = DOCK   .OR. EQSTR ( KIND(B:E), 'CK' )
-            DODSK  = DODSK  .OR. EQSTR ( KIND(B:E), 'DSK' )
-            DOEK   = DOEK   .OR. EQSTR ( KIND(B:E), 'EK' )
-            DOMETA = DOMETA .OR. EQSTR ( KIND(B:E), 'META' )
-            DOPCK  = DOPCK  .OR. EQSTR ( KIND(B:E), 'PCK' )
-            DOSPK  = DOSPK  .OR. EQSTR ( KIND(B:E), 'SPK' )
-            DOTEXT = DOTEXT .OR. EQSTR ( KIND(B:E), 'TEXT' )
-         END IF
+         else
+            dock   = dock   .or. eqstr ( kind(b:e), 'CK' )
+            dodsk  = dodsk  .or. eqstr ( kind(b:e), 'DSK' )
+            doek   = doek   .or. eqstr ( kind(b:e), 'EK' )
+            dometa = dometa .or. eqstr ( kind(b:e), 'META' )
+            dopck  = dopck  .or. eqstr ( kind(b:e), 'PCK' )
+            dospk  = dospk  .or. eqstr ( kind(b:e), 'SPK' )
+            dotext = dotext .or. eqstr ( kind(b:e), 'TEXT' )
+         end if
 
-         START = E + 1
-         CALL FNDNWD ( KIND, START, B, E )
+         start = e + 1
+         call fndnwd ( kind, start, b, e )
 
-      END DO
+      end do
 
 !
 !     Examine the loaded kernels one at a time until we match
 !     WHICH files of the specified KIND.
 !
-      HITS = 0
+      hits = 0
 
-      DO I = 1, LOADED
+      do i = 1, loaded
 
-         ADD =      ( TYPES(I) .EQ. 'CK'   .AND. DOCK   ) &
-               .OR. ( TYPES(I) .EQ. 'DSK'  .AND. DODSK  ) &
-               .OR. ( TYPES(I) .EQ. 'EK'   .AND. DOEK   ) &
-               .OR. ( TYPES(I) .EQ. 'META' .AND. DOMETA ) &
-               .OR. ( TYPES(I) .EQ. 'PCK'  .AND. DOPCK  ) &
-               .OR. ( TYPES(I) .EQ. 'SPK'  .AND. DOSPK  ) &
-               .OR. ( TYPES(I) .EQ. 'TEXT' .AND. DOTEXT )
+         add =      ( types(i) .eq. 'CK'   .and. dock   ) &
+               .or. ( types(i) .eq. 'DSK'  .and. dodsk  ) &
+               .or. ( types(i) .eq. 'EK'   .and. doek   ) &
+               .or. ( types(i) .eq. 'META' .and. dometa ) &
+               .or. ( types(i) .eq. 'PCK'  .and. dopck  ) &
+               .or. ( types(i) .eq. 'SPK'  .and. dospk  ) &
+               .or. ( types(i) .eq. 'TEXT' .and. dotext )
 
-         IF ( ADD ) THEN
+         if ( add ) then
 
-            HITS = HITS + 1
+            hits = hits + 1
 !
 !           If we've reached the specified number, fill in the
 !           requested information and return.
 !
-            IF ( HITS .EQ. WHICH ) THEN
+            if ( hits .eq. which ) then
 
-               FOUND  = .TRUE.
-               FILE   = FILES (I)
-               FILTYP = TYPES (I)
-               HANDLE = HANDLS(I)
+               found  = .true.
+               file   = files (i)
+               filtyp = types (i)
+               handle = handls(i)
 
-               IF ( SRCES(I) .NE. 0 ) THEN
-                  SRCFIL = FILES( SRCES(I) )
-               END IF
-               RETURN
-            END IF
-         END IF
+               if ( srces(i) .ne. 0 ) then
+                  srcfil = files( srces(i) )
+               end if
+               return
+            end if
+         end if
 
-      END DO
+      end do
 
-      RETURN
+      return
 
 
 
 !$Procedure KINFO ( Kernel Information )
 
-      ENTRY KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      entry kinfo ( file, filtyp, srcfil, handle, found )
 
 ! $ Abstract
 !
@@ -2810,33 +2810,33 @@
 !-&
 
 
-      FILTYP = ' '
-      SRCFIL = ' '
-      HANDLE =  0
-      FOUND  = .FALSE.
+      filtyp = ' '
+      srcfil = ' '
+      handle =  0
+      found  = .false.
 
-      I = ISRCHC ( FILE, LOADED, FILES )
+      i = isrchc ( file, loaded, files )
 
-      IF ( I .GT. 0 ) THEN
+      if ( i .gt. 0 ) then
 
-         FOUND  = .TRUE.
-         FILTYP = TYPES (I)
-         HANDLE = HANDLS(I)
+         found  = .true.
+         filtyp = types (i)
+         handle = handls(i)
 
-         IF ( SRCES(I) .NE. 0 ) THEN
-            SRCFIL = FILES( SRCES(I) )
-         END IF
+         if ( srces(i) .ne. 0 ) then
+            srcfil = files( srces(i) )
+         end if
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure KCLEAR ( Keeper clear )
 
-      ENTRY KCLEAR
+      entry kclear
 
 ! $ Abstract
 !
@@ -3060,11 +3060,11 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'KCLEAR' )
+      call chkin ( 'KCLEAR' )
 
 !
 !     Unloading all kernels is actually much less work than
@@ -3072,54 +3072,54 @@
 !     binary kernels via the "unload" routines for their
 !     respective subsystems, then clear the kernel pool.
 !
-      DO I = 1, LOADED
+      do i = 1, loaded
 
-         IF (      TYPES(I) .EQ. 'SPK' ) THEN
+         if (      types(i) .eq. 'SPK' ) then
 
-            CALL SPKUEF ( HANDLS(I) )
+            call spkuef ( handls(i) )
 
-         ELSE IF ( TYPES(I) .EQ. 'CK' ) THEN
+         else if ( types(i) .eq. 'CK' ) then
 
-            CALL CKUPF ( HANDLS(I) )
+            call ckupf ( handls(i) )
 
-         ELSE IF ( TYPES(I) .EQ. 'PCK' ) THEN
+         else if ( types(i) .eq. 'PCK' ) then
 
-            CALL PCKUOF ( HANDLS(I) )
+            call pckuof ( handls(i) )
 
-         ELSE IF ( TYPES(I) .EQ. 'EK' ) THEN
+         else if ( types(i) .eq. 'EK' ) then
 
-            CALL EKUEF ( HANDLS(I) )
+            call ekuef ( handls(i) )
 
-         ELSE IF ( TYPES(I) .EQ. 'DSK' ) THEN
+         else if ( types(i) .eq. 'DSK' ) then
 
-            CALL ZZDSKUSF ( HANDLS(I) )
+            call zzdskusf ( handls(i) )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      CALL CLPOOL
+      call clpool
 
 !
 !     Although it's not strictly necessary, we initialize
 !     KEEPER's database arrays.  This step may occasionally
 !     be helpful for debugging.
 !
-      DO I = 1, LOADED
+      do i = 1, loaded
 
-         FILES (I)  = ' '
-         HANDLS(I) = 0
-         SRCES (I) = 0
-         TYPES (I) = ' '
+         files (i)  = ' '
+         handls(i) = 0
+         srces (i) = 0
+         types (i) = ' '
 
-      END DO
+      end do
 
 !
 !     There's just one counter that indicates the number of
 !     database entries:  LOADED.  Set this counter to
 !     its initial state.
 !
-      LOADED = 0
+      loaded = 0
 
 !
 !     Calling CLPOOL doesn't remove watches, but it does send a message
@@ -3127,11 +3127,11 @@
 !     Clear this indication by calling CVPOOL.  (This is done for
 !     safety; the current implementation of FURNSH doesn't require it.)
 !
-      CALL CVPOOL ( 'FURNSH', UPDATE )
+      call cvpool ( 'FURNSH', update )
 
 
-      CALL CHKOUT ( 'KCLEAR' )
-      RETURN
+      call chkout ( 'KCLEAR' )
+      return
 
 
 
@@ -3140,7 +3140,7 @@
 
 !$Procedure UNLOAD ( Unload a kernel )
 
-      ENTRY UNLOAD ( FILE )
+      entry unload ( file )
 
 ! $ Abstract
 !
@@ -3628,19 +3628,19 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'UNLOAD' )
+      call chkin  ( 'UNLOAD' )
 
 
-      DIDSPK = .FALSE.
-      DIDPCK = .FALSE.
-      DIDCK  = .FALSE.
-      DIDEK  = .FALSE.
-      DIDDSK = .FALSE.
-      DIDTXT = .FALSE.
+      didspk = .false.
+      didpck = .false.
+      didck  = .false.
+      didek  = .false.
+      diddsk = .false.
+      didtxt = .false.
 
 
 !
@@ -3648,26 +3648,26 @@
 !     through the list of loaded files so that we unload in the right
 !     order.
 !
-      GOTIT = .FALSE.
-      I     = LOADED
+      gotit = .false.
+      i     = loaded
 
-      DO WHILE ( .NOT. GOTIT .AND. I .GT. 0 )
+      do while ( .not. gotit .and. i .gt. 0 )
 
-         IF ( FILES(I) .EQ. FILE ) THEN
-            GOTIT = .TRUE.
-         ELSE
-            I     = I - 1
-         END IF
+         if ( files(i) .eq. file ) then
+            gotit = .true.
+         else
+            i     = i - 1
+         end if
 
-      END DO
+      end do
 
 !
 !     If we didn't locate the requested file, there is nothing to do.
 !
-      IF ( .NOT. GOTIT ) THEN
-         CALL CHKOUT ( 'UNLOAD' )
-         RETURN
-      END IF
+      if ( .not. gotit ) then
+         call chkout ( 'UNLOAD' )
+         return
+      end if
 
 !
 !     We need to know what type of file we've got so that we
@@ -3681,102 +3681,102 @@
 !     across all file types. We don't need to rely on file
 !     names.
 !
-      IF (    ( TYPES(I) .EQ. 'SPK' ) &
-          .OR.( TYPES(I) .EQ. 'CK'  ) &
-          .OR.( TYPES(I) .EQ. 'DSK' ) &
-          .OR.( TYPES(I) .EQ. 'EK'  ) &
-          .OR.( TYPES(I) .EQ. 'PCK' ) ) THEN
+      if (    ( types(i) .eq. 'SPK' ) &
+          .or.( types(i) .eq. 'CK'  ) &
+          .or.( types(i) .eq. 'DSK' ) &
+          .or.( types(i) .eq. 'EK'  ) &
+          .or.( types(i) .eq. 'PCK' ) ) then
 !
 !        Count the occurrences of the file in the database.
 !        Stop if we reach two occurrences.
 !
-         NMULT = 0
-         J     = 1
+         nmult = 0
+         j     = 1
 
-         DO WHILE ( ( J .LE. LOADED ) .AND. ( NMULT .LT. 2 ) )
+         do while ( ( j .le. loaded ) .and. ( nmult .lt. 2 ) )
 
-            IF ( HANDLS(J) .EQ. HANDLS(I) ) THEN
+            if ( handls(j) .eq. handls(i) ) then
 !
 !              To be safe, make sure we're not looking at
 !              a text kernel with a random, matching handle
 !              value.
 !
-               IF (      ( TYPES(J) .NE. 'TEXT' ) &
-                   .AND. ( TYPES(J) .NE. 'META' ) ) THEN
+               if (      ( types(j) .ne. 'TEXT' ) &
+                   .and. ( types(j) .ne. 'META' ) ) then
 
-                  NMULT = NMULT + 1
+                  nmult = nmult + 1
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-            J = J + 1
+            j = j + 1
 
-         END DO
+         end do
 
-         SINGLE = NMULT .EQ. 1
+         single = nmult .eq. 1
 
-      END IF
+      end if
 
 
-      IF (      TYPES(I) .EQ. 'SPK' ) THEN
+      if (      types(i) .eq. 'SPK' ) then
 
-         IF ( SINGLE ) THEN
-            CALL SPKUEF ( HANDLS(I) )
-         END IF
+         if ( single ) then
+            call spkuef ( handls(i) )
+         end if
 
-         DIDSPK = .TRUE.
+         didspk = .true.
 
-      ELSE IF ( TYPES(I) .EQ. 'CK' ) THEN
+      else if ( types(i) .eq. 'CK' ) then
 
-         IF ( SINGLE ) THEN
-            CALL CKUPF ( HANDLS(I) )
-         END IF
+         if ( single ) then
+            call ckupf ( handls(i) )
+         end if
 
-         DIDCK = .TRUE.
+         didck = .true.
 
-      ELSE IF ( TYPES(I) .EQ. 'DSK' ) THEN
+      else if ( types(i) .eq. 'DSK' ) then
 
-         IF ( SINGLE ) THEN
-            CALL ZZDSKUSF ( HANDLS(I) )
-         END IF
+         if ( single ) then
+            call zzdskusf ( handls(i) )
+         end if
 
-         DIDDSK = .TRUE.
+         diddsk = .true.
 
-      ELSE IF ( TYPES(I) .EQ. 'PCK' ) THEN
+      else if ( types(i) .eq. 'PCK' ) then
 
-         IF ( SINGLE ) THEN
-            CALL PCKUOF ( HANDLS(I) )
-         END IF
+         if ( single ) then
+            call pckuof ( handls(i) )
+         end if
 
-         DIDPCK = .TRUE.
+         didpck = .true.
 
-      ELSE IF ( TYPES(I) .EQ. 'EK' ) THEN
+      else if ( types(i) .eq. 'EK' ) then
 
-         IF ( SINGLE ) THEN
-            CALL EKUEF ( HANDLS(I) )
-         END IF
+         if ( single ) then
+            call ekuef ( handls(i) )
+         end if
 
-         DIDEK = .TRUE.
+         didek = .true.
 
-      ELSE IF ( TYPES(I) .EQ. 'TEXT' ) THEN
+      else if ( types(i) .eq. 'TEXT' ) then
 
-         CALL CLPOOL
-         DIDTXT = .TRUE.
+         call clpool
+         didtxt = .true.
 
-      ELSE IF ( TYPES(I) .EQ. 'META' ) THEN
+      else if ( types(i) .eq. 'META' ) then
 !
 !        This is a special case, we need to undo the effect of loading
 !        the meta-kernel.  This means we need to unload all kernels
 !        that were loaded using this meta-kernel.
 !
-         DIDTXT = .TRUE.
-         SRC    = I
+         didtxt = .true.
+         src    = i
 
 
-         DO J = LOADED, SRC+1, -1
+         do j = loaded, src+1, -1
 
-            IF ( SRCES(J) .EQ. SRC ) THEN
+            if ( srces(j) .eq. src ) then
 !
 !              This file was loaded by the meta-kernel of interest.
 !              We only need to unload the binary kernels as we
@@ -3789,94 +3789,94 @@
 !              this test on each loop pass, since the count
 !              may have changed since the last pass.
 !
-               IF (     ( TYPES(J) .EQ. 'SPK' ) &
-                   .OR. ( TYPES(J) .EQ. 'CK'  ) &
-                   .OR. ( TYPES(J) .EQ. 'DSK' ) &
-                   .OR. ( TYPES(J) .EQ. 'EK'  ) &
-                   .OR. ( TYPES(J) .EQ. 'PCK' ) ) THEN
+               if (     ( types(j) .eq. 'SPK' ) &
+                   .or. ( types(j) .eq. 'CK'  ) &
+                   .or. ( types(j) .eq. 'DSK' ) &
+                   .or. ( types(j) .eq. 'EK'  ) &
+                   .or. ( types(j) .eq. 'PCK' ) ) then
 !
 !                 Count the occurrences of the file in the database.
 !                 Stop if we reach two occurrences.
 !
-                  NMULT = 0
-                  K     = 1
+                  nmult = 0
+                  k     = 1
 
-                  DO WHILE (      ( K     .LE. LOADED ) &
-                            .AND. ( NMULT .LT. 2      ) )
+                  do while (      ( k     .le. loaded ) &
+                            .and. ( nmult .lt. 2      ) )
 
-                     IF ( HANDLS(K) .EQ. HANDLS(J) ) THEN
+                     if ( handls(k) .eq. handls(j) ) then
 !
 !                       To be safe, make sure we're not looking at a
 !                       text kernel with a random, matching handle
 !                       value.
 !
-                        IF (     ( TYPES(K) .NE. 'TEXT' ) &
-                           .AND. ( TYPES(K) .NE. 'META' ) ) THEN
+                        if (     ( types(k) .ne. 'TEXT' ) &
+                           .and. ( types(k) .ne. 'META' ) ) then
 
-                           NMULT = NMULT + 1
+                           nmult = nmult + 1
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 
-                     K = K + 1
+                     k = k + 1
 
-                  END DO
+                  end do
 
-                  SINGLE = NMULT .EQ. 1
+                  single = nmult .eq. 1
 
-               END IF
+               end if
 
 
-               IF ( TYPES(J) .EQ. 'SPK' ) THEN
+               if ( types(j) .eq. 'SPK' ) then
 
-                  IF ( SINGLE ) THEN
-                     CALL SPKUEF ( HANDLS(J) )
-                  END IF
+                  if ( single ) then
+                     call spkuef ( handls(j) )
+                  end if
 
-                  DIDSPK = .TRUE.
+                  didspk = .true.
 
-               ELSE IF ( TYPES(J) .EQ. 'CK' ) THEN
+               else if ( types(j) .eq. 'CK' ) then
 
-                  IF ( SINGLE ) THEN
-                     CALL CKUPF ( HANDLS(J) )
-                  END IF
+                  if ( single ) then
+                     call ckupf ( handls(j) )
+                  end if
 
-                  DIDCK = .TRUE.
+                  didck = .true.
 
-               ELSE IF ( TYPES(J) .EQ. 'DSK' ) THEN
+               else if ( types(j) .eq. 'DSK' ) then
 
-                  IF ( SINGLE ) THEN
-                     CALL ZZDSKUSF ( HANDLS(J) )
-                  END IF
+                  if ( single ) then
+                     call zzdskusf ( handls(j) )
+                  end if
 
-                  DIDDSK = .TRUE.
+                  diddsk = .true.
 
-               ELSE IF ( TYPES(J) .EQ. 'PCK' ) THEN
+               else if ( types(j) .eq. 'PCK' ) then
 
-                  IF ( SINGLE ) THEN
-                     CALL PCKUOF ( HANDLS(J) )
-                  END IF
+                  if ( single ) then
+                     call pckuof ( handls(j) )
+                  end if
 
-                  DIDPCK = .TRUE.
+                  didpck = .true.
 
-               ELSE IF ( TYPES(J) .EQ. 'EK' ) THEN
+               else if ( types(j) .eq. 'EK' ) then
 
-                  IF ( SINGLE ) THEN
-                     CALL EKUEF ( HANDLS(J) )
-                  END IF
+                  if ( single ) then
+                     call ekuef ( handls(j) )
+                  end if
 
-                  DIDEK = .TRUE.
+                  didek = .true.
 
-               END IF
+               end if
 
-               N1 = LOADED
-               N2 = LOADED
-               N3 = LOADED
-               CALL REMLAC ( 1, J, FILES,  N1 )
-               CALL REMLAC ( 1, J, TYPES,  N2 )
-               CALL REMLAI ( 1, J, SRCES,  N3 )
-               CALL REMLAI ( 1, J, HANDLS, LOADED )
+               n1 = loaded
+               n2 = loaded
+               n3 = loaded
+               call remlac ( 1, j, files,  n1 )
+               call remlac ( 1, j, types,  n2 )
+               call remlai ( 1, j, srces,  n3 )
+               call remlai ( 1, j, handls, loaded )
 
 !
 !              Each time we delete an item from the database, any
@@ -3888,161 +3888,161 @@
 !              So, we need examine only those entries from index J
 !              upwards.
 !
-               DO K = J, LOADED
+               do k = j, loaded
 
-                  IF ( SRCES(K) .GT. J ) THEN
+                  if ( srces(k) .gt. j ) then
 !
 !                    This pointer is affected by the deletion of
 !                    the Jth database entry.
 !
-                     SRCES(K) = SRCES(K)-1
+                     srces(k) = srces(k)-1
 
-                  END IF
+                  end if
 
-               END DO
+               end do
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Now clear the kernel pool.
 !
-         CALL CLPOOL
+         call clpool
 
-      END IF
+      end if
 !
 !     Remove the I'th kernel from our local database.
 !
-      N1 = LOADED
-      N2 = LOADED
-      N3 = LOADED
-      CALL REMLAC ( 1, I, FILES,  N1 )
-      CALL REMLAC ( 1, I, TYPES,  N2 )
-      CALL REMLAI ( 1, I, SRCES,  N3 )
-      CALL REMLAI ( 1, I, HANDLS, LOADED )
+      n1 = loaded
+      n2 = loaded
+      n3 = loaded
+      call remlac ( 1, i, files,  n1 )
+      call remlac ( 1, i, types,  n2 )
+      call remlai ( 1, i, srces,  n3 )
+      call remlai ( 1, i, handls, loaded )
 
 !
 !     Update any source pointers affected by the deletion of the Ith
 !     database entry.
 !
-      DO J = I, LOADED
+      do j = i, loaded
 
-         IF ( SRCES(J) .GT. I ) THEN
+         if ( srces(j) .gt. i ) then
 !
 !           This pointer is affected by the deletion of the Ith
 !           database entry.
 !
-            SRCES(J) = SRCES(J)-1
+            srces(j) = srces(j)-1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we unloaded a text kernel, we now need to reload all
 !     of the text kernels that were not unloaded.
 !
-      IF ( DIDTXT ) THEN
+      if ( didtxt ) then
 
-         DO I = 1, LOADED
+         do i = 1, loaded
 
-            IF (      TYPES(I) .EQ. 'TEXT' &
-                 .OR. TYPES(I) .EQ. 'META' ) THEN
+            if (      types(i) .eq. 'TEXT' &
+                 .or. types(i) .eq. 'META' ) then
 
-               CALL LDPOOL ( FILES(I) )
+               call ldpool ( files(i) )
 
-               IF ( TYPES(I) .EQ. 'META' ) THEN
+               if ( types(i) .eq. 'META' ) then
 !
 !                 Clean up any debris that may have been left lying
 !                 around because we reloaded a meta-text kernel.
 !
-                  DO J = 1, NKNOWN
-                     CALL DVPOOL ( KNOWN(J) )
-                  END DO
+                  do j = 1, nknown
+                     call dvpool ( known(j) )
+                  end do
 
-                  CALL CVPOOL ( 'FURNSH', UPDATE )
+                  call cvpool ( 'FURNSH', update )
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     If any SPK files were unloaded, we need to reload everything
 !     to establish the right priority sequence for segments.
 !
-      IF ( DIDSPK ) THEN
+      if ( didspk ) then
 
-         DO I = 1, LOADED
-            IF ( TYPES(I) .EQ. 'SPK' ) THEN
-               CALL SPKLEF ( FILES(I), HANDLS(I) )
-            END IF
-         END DO
+         do i = 1, loaded
+            if ( types(i) .eq. 'SPK' ) then
+               call spklef ( files(i), handls(i) )
+            end if
+         end do
 
-      END IF
+      end if
 !
 !     If any CK files were unloaded, we need to reload all of the
 !     C-kernels to make sure that we have the correct priorities
 !     for the remaining C-kernels.
 !
-      IF ( DIDCK ) THEN
+      if ( didck ) then
 
-         DO I = 1, LOADED
-            IF ( TYPES(I) .EQ. 'CK' ) THEN
-               CALL CKLPF ( FILES(I), HANDLS(I) )
-            END IF
-         END DO
+         do i = 1, loaded
+            if ( types(i) .eq. 'CK' ) then
+               call cklpf ( files(i), handls(i) )
+            end if
+         end do
 
-      END IF
+      end if
 
 !
 !     If any DSK files were unloaded, we need to reload the remaining
 !     ones to make sure that we have the correct priorities for the
 !     remaining DSKs.
 !
-      IF ( DIDDSK ) THEN
+      if ( diddsk ) then
 
-         DO I = 1, LOADED
-            IF ( TYPES(I) .EQ. 'DSK' ) THEN
-               CALL ZZDSKLSF ( FILES(I), HANDLS(I) )
-            END IF
-         END DO
+         do i = 1, loaded
+            if ( types(i) .eq. 'DSK' ) then
+               call zzdsklsf ( files(i), handls(i) )
+            end if
+         end do
 
-      END IF
+      end if
 
 !
 !     If any binary PCK files were unloaded, we need to reload any
 !     remaining ones to re-establish the correct priorities for
 !     kernels.
 !
-      IF ( DIDPCK ) THEN
+      if ( didpck ) then
 
-         DO I = 1, LOADED
-            IF ( TYPES(I) .EQ. 'PCK' ) THEN
-               CALL PCKLOF ( FILES(I), HANDLS(I) )
-            END IF
-         END DO
+         do i = 1, loaded
+            if ( types(i) .eq. 'PCK' ) then
+               call pcklof ( files(i), handls(i) )
+            end if
+         end do
 
-      END IF
+      end if
 !
 !     Finally, if any E-kernels were unloaded, we reload the remaining
 !     kernels to make sure the state is restored to the correct set
 !     of loaded kernels.
 !
-      IF ( DIDEK ) THEN
+      if ( didek ) then
 
-         DO I = 1, LOADED
-            IF ( TYPES(I) .EQ. 'EK' ) THEN
-               CALL EKLEF ( FILES(I), HANDLS(I) )
-            END IF
-         END DO
+         do i = 1, loaded
+            if ( types(i) .eq. 'EK' ) then
+               call eklef ( files(i), handls(i) )
+            end if
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'UNLOAD' )
-      RETURN
+      call chkout ( 'UNLOAD' )
+      return
 
-      END
+      end

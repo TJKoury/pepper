@@ -1,6 +1,6 @@
 !$Procedure ZZGETBFF ( Private --- Get Binary File Format )
 
-      SUBROUTINE ZZGETBFF ( BFFID )
+      subroutine zzgetbff ( bffid )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               BFFID
+      integer               bffid
 
 ! $ Brief_I/O
 !
@@ -143,59 +143,59 @@
 !
 !     Local Parameters
 !
-      DOUBLE PRECISION      DPVALU
-      PARAMETER           ( DPVALU = 7.0D0 )
+      double precision      dpvalu
+      parameter           ( dpvalu = 7.0d0 )
 
 !
 !     Local Variables
 !
-      INTEGER               I
+      integer               i
 
-      DOUBLE PRECISION      DEQUIV
-      INTEGER               IEQUIV ( 2 )
+      double precision      dequiv
+      integer               iequiv ( 2 )
 
-      EQUIVALENCE         ( DEQUIV, IEQUIV )
+      equivalence         ( dequiv, iequiv )
 
-      INTEGER               INT1ST ( NUMBFF )
-      INTEGER               INT2ND ( NUMBFF )
+      integer               int1st ( numbff )
+      integer               int2nd ( numbff )
 
-      DATA                  INT1ST(BIGI3E)  / 1075576832 /
-      DATA                  INT2ND(BIGI3E)  / 0          /
+      data                  int1st(bigi3e)  / 1075576832 /
+      data                  int2nd(bigi3e)  / 0          /
 
-      DATA                  INT1ST(LTLI3E)  / 0          /
-      DATA                  INT2ND(LTLI3E)  / 1075576832 /
+      data                  int1st(ltli3e)  / 0          /
+      data                  int2nd(ltli3e)  / 1075576832 /
 
-      DATA                  INT1ST(VAXGFL)  / 16444      /
-      DATA                  INT2ND(VAXGFL)  / 0          /
+      data                  int1st(vaxgfl)  / 16444      /
+      data                  int2nd(vaxgfl)  / 0          /
 
-      DATA                  INT1ST(VAXDFL)  / 16864      /
-      DATA                  INT2ND(VAXDFL)  / 0          /
+      data                  int1st(vaxdfl)  / 16864      /
+      data                  int2nd(vaxdfl)  / 0          /
 
-      SAVE                  INT1ST
-      SAVE                  INT2ND
+      save                  int1st
+      save                  int2nd
 
 !
 !     Copy DPVALU into the equivalenced DP, DEQUIV.
 !
-      DEQUIV = DPVALU
+      dequiv = dpvalu
 
 !
 !     Examine the integer pairs, to identify the binary
 !     file format.
 !
-      BFFID = 0
+      bffid = 0
 
-      DO I = 1, NUMBFF
+      do i = 1, numbff
 
-         IF ( ( IEQUIV(1) .EQ. INT1ST(I) ) .AND. &
-              ( IEQUIV(2) .EQ. INT2ND(I) )       ) THEN
+         if ( ( iequiv(1) .eq. int1st(i) ) .and. &
+              ( iequiv(2) .eq. int2nd(i) )       ) then
 
-            BFFID = I
+            bffid = i
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
+      return
 
-      END
+      end

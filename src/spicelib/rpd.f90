@@ -1,6 +1,6 @@
 !$Procedure RPD ( Radians per degree )
 
-      DOUBLE PRECISION FUNCTION RPD ( )
+      double precision function rpd ( )
 
 ! $ Abstract
 !
@@ -111,23 +111,23 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VALUE
-      SAVE                  VALUE
+      double precision      value
+      save                  value
 
 !
 !     Initial values
 !
-      DATA                  VALUE      / 0.D0 /
+      data                  value      / 0.d0 /
 
 
 !
 !     What is there to say?
 !
-      IF ( VALUE .EQ. 0.D0 ) THEN
-         VALUE = ACOS ( -1.D0 ) / 180.D0
-      END IF
+      if ( value .eq. 0.d0 ) then
+         value = acos ( -1.d0 ) / 180.d0
+      end if
 
-      RPD = VALUE
+      rpd = value
 
-      RETURN
-      END
+      return
+      end

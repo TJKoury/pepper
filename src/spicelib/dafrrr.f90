@@ -1,6 +1,6 @@
 !$Procedure DAFRRR ( DAF, remove reserved records )
 
-      SUBROUTINE DAFRRR ( HANDLE, RESV )
+      subroutine dafrrr ( handle, resv )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               RESV
+      integer               handle
+      integer               resv
 
 ! $ Brief_I/O
 !
@@ -169,111 +169,111 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60       )
+      integer               ifnlen
+      parameter           ( ifnlen = 60       )
 
 !
 !     WPR         is the maximum number of double precision
 !                 numbers per record.  WPR stands for words
 !                 per record.
 !
-      INTEGER               WPR
-      PARAMETER           ( WPR    = 128      )
+      integer               wpr
+      parameter           ( wpr    = 128      )
 
 !
 !     MAXD,       are the maximum number of double precision
 !     MAXI,       numbers, integers, and characters, respectively,
 !     MAXC        not including space reserved for control information.
 !
-      INTEGER               MAXD
-      PARAMETER           ( MAXD   = WPR  - 3 )
+      integer               maxd
+      parameter           ( maxd   = wpr  - 3 )
 
-      INTEGER               MAXI
-      PARAMETER           ( MAXI   = MAXD * 2 )
+      integer               maxi
+      parameter           ( maxi   = maxd * 2 )
 
-      INTEGER               MAXC
-      PARAMETER           ( MAXC   = MAXD * 8 )
+      integer               maxc
+      parameter           ( maxc   = maxd * 8 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXC)      CREC
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(maxc)      crec
+      character*(ifnlen)    ifname
 
-      DOUBLE PRECISION      DC      ( MAXD )
-      DOUBLE PRECISION      DREC    ( WPR  )
-      DOUBLE PRECISION      SUM     ( MAXD )
+      double precision      dc      ( maxd )
+      double precision      drec    ( wpr  )
+      double precision      sum     ( maxd )
 
-      INTEGER               BEGBLK
-      INTEGER               BWARD
-      INTEGER               DECR
-      INTEGER               ENDBLK
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               IC      ( MAXI )
-      INTEGER               ND
-      INTEGER               NEXT
-      INTEGER               NI
-      INTEGER               RECNO
-      INTEGER               REMOVE
-      INTEGER               WORD
+      integer               begblk
+      integer               bward
+      integer               decr
+      integer               endblk
+      integer               free
+      integer               fward
+      integer               ic      ( maxi )
+      integer               nd
+      integer               next
+      integer               ni
+      integer               recno
+      integer               remove
+      integer               word
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFRRR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFRRR' )
+      end if
 
 !
 !     Before proceeding any further, check that the DAF associated
 !     with HANDLE is available for write access.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFRRR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFRRR' )
+         return
+      end if
 
 !
 !     Get the contents of the file record. If it fails, then just check
 !     out and return, as an appropriate error message should have
 !     already been set.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      IF ( FAILED () ) THEN
+      if ( failed () ) then
 
-         CALL CHKOUT ( 'DAFRRR' )
-         RETURN
+         call chkout ( 'DAFRRR' )
+         return
 
-      END IF
+      end if
 
 !
 !     Don't remove more than the current number of reserved records!
 !     If there are none, check out.
 !
-      REMOVE = MIN ( RESV, FWARD - 2 )
+      remove = min ( resv, fward - 2 )
 
-      IF ( REMOVE .LT. 1 ) THEN
+      if ( remove .lt. 1 ) then
 
-         CALL CHKOUT ( 'DAFRRR' )
-         RETURN
+         call chkout ( 'DAFRRR' )
+         return
 
-      END IF
+      end if
 
 !
 !     Okay, here's the plan. We are just going to move records
@@ -285,7 +285,7 @@
 !     same amount: the number of words per record (128) times
 !     the number of records removed.
 !
-      DECR = WPR * REMOVE
+      decr = wpr * remove
 
 !
 !     Records will be moved in `blocks', where each block contains
@@ -302,9 +302,9 @@
 !
 !     BEGBLK is initially the first summary record location.
 !
-      BEGBLK = FWARD
+      begblk = fward
 
-      DO WHILE ( ( BEGBLK .GT. 0 )  .AND.  ( .NOT. FAILED() ) )
+      do while ( ( begblk .gt. 0 )  .and.  ( .not. failed() ) )
 
 !
 !        Move the summary record first. The location of the next
@@ -314,81 +314,81 @@
 !        Be sure to adjust the forward and backward pointers;
 !        otherwise, we won't be able to find the summaries again.
 !
-         RECNO = BEGBLK
-         CALL DAFRDR ( HANDLE, RECNO, 1, WPR, DREC, FOUND )
+         recno = begblk
+         call dafrdr ( handle, recno, 1, wpr, drec, found )
 
-         IF ( INT ( DREC(1) ) .GT. 0 ) THEN
-            ENDBLK = INT ( DREC(1) ) - 1
-            NEXT   = INT ( DREC(1) )
-         ELSE
-            CALL DAFARW ( FREE, ENDBLK, WORD )
-            NEXT = 0
-         END IF
+         if ( int ( drec(1) ) .gt. 0 ) then
+            endblk = int ( drec(1) ) - 1
+            next   = int ( drec(1) )
+         else
+            call dafarw ( free, endblk, word )
+            next = 0
+         end if
 
-         IF ( INT ( DREC(1) ) .GT. 0 ) THEN
-            DREC(1) = DREC(1) - DBLE ( REMOVE )
-         END IF
+         if ( int ( drec(1) ) .gt. 0 ) then
+            drec(1) = drec(1) - dble ( remove )
+         end if
 
-         IF ( INT ( DREC(2) ) .GT. 0 ) THEN
-            DREC(2) = DREC(2) - DBLE ( REMOVE )
-         END IF
+         if ( int ( drec(2) ) .gt. 0 ) then
+            drec(2) = drec(2) - dble ( remove )
+         end if
 
-         CALL DAFWDR ( HANDLE, RECNO - REMOVE, DREC )
+         call dafwdr ( handle, recno - remove, drec )
 
 !
 !        Then the name record.
 !
-         RECNO = BEGBLK + 1
-         CALL DAFRCR ( HANDLE, RECNO,          CREC )
-         CALL DAFWCR ( HANDLE, RECNO - REMOVE, CREC )
+         recno = begblk + 1
+         call dafrcr ( handle, recno,          crec )
+         call dafwcr ( handle, recno - remove, crec )
 
 !
 !        Finally, the data records.
 !
-         DO RECNO = BEGBLK + 2, ENDBLK
-            CALL DAFRDR ( HANDLE, RECNO,          1, WPR, DREC, FOUND )
-            CALL DAFWDR ( HANDLE, RECNO - REMOVE,         DREC        )
-         END DO
+         do recno = begblk + 2, endblk
+            call dafrdr ( handle, recno,          1, wpr, drec, found )
+            call dafwdr ( handle, recno - remove,         drec        )
+         end do
 
 !
 !        Start the next block, if one exists.
 !
-         BEGBLK = NEXT
+         begblk = next
 
-      END DO
+      end do
 
 !
 !     Rewrite the file record, to reflect the new organization of
 !     the file.
 !
-      FWARD = FWARD - REMOVE
-      BWARD = BWARD - REMOVE
-      FREE  = FREE  - DECR
+      fward = fward - remove
+      bward = bward - remove
+      free  = free  - decr
 
-      CALL DAFWFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafwfr ( handle, nd, ni, ifname, fward, bward, free )
 
 !
 !     Get the summary for each array, decrement the addresses (stored
 !     in the final two integer components), and replace the summary.
 !
-      CALL DAFBFS ( HANDLE )
-      CALL DAFFNA ( FOUND  )
+      call dafbfs ( handle )
+      call daffna ( found  )
 
-      DO WHILE ( FOUND  .AND.  ( .NOT. FAILED() ) )
+      do while ( found  .and.  ( .not. failed() ) )
 
-         CALL DAFGS  ( SUM                 )
-         CALL DAFUS  ( SUM, ND, NI, DC, IC )
+         call dafgs  ( sum                 )
+         call dafus  ( sum, nd, ni, dc, ic )
 
-         IC(NI-1) = IC(NI-1) - DECR
-         IC(NI  ) = IC(NI  ) - DECR
+         ic(ni-1) = ic(ni-1) - decr
+         ic(ni  ) = ic(ni  ) - decr
 
-         CALL DAFPS ( ND, NI, DC, IC, SUM )
-         CALL DAFWS (                 SUM )
+         call dafps ( nd, ni, dc, ic, sum )
+         call dafws (                 sum )
 
-         CALL DAFFNA ( FOUND )
+         call daffna ( found )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DAFRRR' )
-      RETURN
-      END
+      call chkout ( 'DAFRRR' )
+      return
+      end

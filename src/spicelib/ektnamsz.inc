@@ -5,8 +5,8 @@
 !
 !     Size of table name, in characters.
 !
-      INTEGER               TNAMSZ
-      PARAMETER           ( TNAMSZ = 64 )
+      integer               tnamsz
+      parameter           ( tnamsz = 64 )
 
 !
 !     End Include Section:  EK Table Name Size

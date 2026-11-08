@@ -1,6 +1,6 @@
 !$Procedure ERRINT ( Insert Integer into Error Message Text )
 
-      SUBROUTINE ERRINT ( MARKER, INTNUM )
+      subroutine errint ( marker, intnum )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
+      include 'errhnd.inc'
 
-      CHARACTER*(*)        MARKER
-      INTEGER              INTNUM
+      character*(*)        marker
+      integer              intnum
 
 ! $ Brief_I/O
 !
@@ -219,106 +219,106 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
-      INTEGER               FRSTNB
-      LOGICAL               ALLOWD
+      integer               lastnb
+      integer               frstnb
+      logical               allowd
 
 !
 !     Local Variables:
 !
-      CHARACTER*(LMSGLN)    LNGMSG
-      CHARACTER*(LMSGLN)    TMPMSG
-      CHARACTER*(11)        ISTRNG
+      character*(lmsgln)    lngmsg
+      character*(lmsgln)    tmpmsg
+      character*(11)        istrng
 
-      INTEGER               STRPOS
+      integer               strpos
 
 
 !
 !     Changes to the long error message have to be allowed, or we
 !     do nothing.
 !
-      IF ( .NOT. ALLOWD() ) THEN
-         RETURN
-      END IF
+      if ( .not. allowd() ) then
+         return
+      end if
 
 !
 !     MARKER has to have some non-blank characters, or we do nothing.
 !
-      IF ( LASTNB(MARKER) .EQ. 0 ) THEN
-         RETURN
-      END IF
+      if ( lastnb(marker) .eq. 0 ) then
+         return
+      end if
 
 !
 !     Get a copy of the current long error message.  Convert INTNUM
 !     to a character string.
 !
-      CALL GETLMS ( LNGMSG )
-      CALL INTSTR ( INTNUM, ISTRNG )
+      call getlms ( lngmsg )
+      call intstr ( intnum, istrng )
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks):
 !
-      STRPOS = INDEX (  LNGMSG, &
-                        MARKER ( FRSTNB(MARKER):LASTNB(MARKER) )  )
+      strpos = index (  lngmsg, &
+                        marker ( frstnb(marker):lastnb(marker) )  )
 
-      IF  ( STRPOS .EQ. 0 ) THEN
+      if  ( strpos .eq. 0 ) then
 
-         RETURN
+         return
 
-      ELSE
+      else
 !
 !        We put together TMPMSG, a copy of LNGMSG with MARKER
 !        replaced by the character representation of INTNUM:
 !
 
-         IF ( STRPOS .GT. 1 ) THEN
+         if ( strpos .gt. 1 ) then
 
-            IF (     ( STRPOS + LASTNB(MARKER) - FRSTNB(MARKER) ) &
-                .LT.   LASTNB ( LNGMSG )                          ) THEN
+            if (     ( strpos + lastnb(marker) - frstnb(marker) ) &
+                .lt.   lastnb ( lngmsg )                          ) then
 !
 !              There's more of the long message after the marker...
 !
-               TMPMSG = &
-               LNGMSG ( :STRPOS - 1 )                                 // &
-               ISTRNG ( :LASTNB(ISTRNG) )                             // &
-               LNGMSG ( STRPOS + LASTNB(MARKER) - FRSTNB(MARKER) + 1: )
+               tmpmsg = &
+               lngmsg ( :strpos - 1 )                                 // &
+               istrng ( :lastnb(istrng) )                             // &
+               lngmsg ( strpos + lastnb(marker) - frstnb(marker) + 1: )
 
-            ELSE
+            else
 
-               TMPMSG =  LNGMSG ( :STRPOS - 1     )                   // &
-                         ISTRNG ( :LASTNB(ISTRNG) )
+               tmpmsg =  lngmsg ( :strpos - 1     )                   // &
+                         istrng ( :lastnb(istrng) )
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           We're starting with the integer, so we know it fits...
 !
-            IF (      ( LASTNB(MARKER) - FRSTNB(MARKER) ) &
-                 .LT.   LASTNB(LNGMSG)                    ) THEN
+            if (      ( lastnb(marker) - frstnb(marker) ) &
+                 .lt.   lastnb(lngmsg)                    ) then
 !
 !              There's more of the long message after the marker...
 !
-               TMPMSG = ISTRNG ( :LASTNB(ISTRNG)                 ) // &
-                        LNGMSG ( STRPOS + LASTNB(MARKER) &
-                                        - FRSTNB(MARKER)  + 1 :  )
-            ELSE
+               tmpmsg = istrng ( :lastnb(istrng)                 ) // &
+                        lngmsg ( strpos + lastnb(marker) &
+                                        - frstnb(marker)  + 1 :  )
+            else
 !
 !              The marker's the whole string:
 !
-               TMPMSG = ISTRNG
+               tmpmsg = istrng
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 !
 !        Update the long message:
 !
-         CALL PUTLMS ( TMPMSG )
+         call putlms ( tmpmsg )
 
-      END IF
+      end if
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure CHGIRF ( Change inertial reference frames )
 
-      SUBROUTINE CHGIRF ( REFA, REFB, ROTAB, NAME, INDEX )
+      subroutine chgirf ( refa, refb, rotab, name, index )
 
 ! $ Abstract
 !
@@ -24,14 +24,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'ninert.inc'
-      INTEGER               REFA
-      INTEGER               REFB
-      DOUBLE PRECISION      ROTAB    ( 3,3 )
-      CHARACTER*(*)         NAME
-      INTEGER               INDEX
+      include              'ninert.inc'
+      integer               refa
+      integer               refb
+      double precision      rotab    ( 3,3 )
+      character*(*)         name
+      integer               index
 
 ! $ Brief_I/O
 !
@@ -211,47 +211,47 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ESRCHC
-      INTEGER               ISRCHC
-      INTEGER               WDCNT
+      integer               esrchc
+      integer               isrchc
+      integer               wdcnt
 
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MAXF
-      PARAMETER           ( MAXF = NINERT )
+      integer               maxf
+      parameter           ( maxf = ninert )
 
 !
 !     Local variables
 !
-      CHARACTER*16          BASES  (   MAXF )
-      CHARACTER*80          DEFS   (   MAXF )
-      CHARACTER*25          ERROR
-      CHARACTER*16          FRAMES (   MAXF )
-      CHARACTER*25          WORD
+      character*16          bases  (   maxf )
+      character*80          defs   (   maxf )
+      character*25          error
+      character*16          frames (   maxf )
+      character*25          word
 
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      RADANG
-      DOUBLE PRECISION      TMPMAT ( 3, 3    )
-      DOUBLE PRECISION      TRANS  ( 9, MAXF )
+      double precision      angle
+      double precision      radang
+      double precision      tmpmat ( 3, 3    )
+      double precision      trans  ( 9, maxf )
 
-      INTEGER               AXIS
-      INTEGER               B
-      INTEGER               DFRAME
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LOC
-      INTEGER               P
+      integer               axis
+      integer               b
+      integer               dframe
+      integer               i
+      integer               j
+      integer               loc
+      integer               p
 
-      LOGICAL               READY
+      logical               ready
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
@@ -303,15 +303,15 @@
 !     Note also that the list of valid reference frames maintained
 !     by CHGIRF must be updated whenever new frames are added.
 !
-      DATA READY       / .FALSE. /
+      data ready       / .false. /
 
 !
 !     The root frame is mostly for show. Rotate by 0 arc seconds
 !     about the x-axis to obtain the identity matrix.
 !
-      DATA FRAMES( 1)  / 'J2000'  /
-      DATA BASES ( 1)  / 'J2000'  /
-      DATA DEFS  ( 1)  / '0.0  1' /
+      data frames( 1)  / 'J2000'  /
+      data bases ( 1)  / 'J2000'  /
+      data defs  ( 1)  / '0.0  1' /
 
 !
 !     The B1950 reference frame is obtained by precessing the J2000
@@ -335,9 +335,9 @@
 !        theta =  1002.26108439117"
 !        zeta  =  1152.84248596724"
 !
-      DATA FRAMES( 2)  / 'B1950' /
-      DATA BASES ( 2)  / 'J2000' /
-      DATA DEFS  ( 2)  / &
+      data frames( 2)  / 'B1950' /
+      data bases ( 2)  / 'J2000' /
+      data defs  ( 2)  / &
       '1152.84248596724 3  -1002.26108439117  2  1153.04066200330  3' /
 
 !
@@ -348,9 +348,9 @@
 !        [ 0.525" ]
 !                  3
 !
-      DATA FRAMES( 3)  / 'FK4'   /
-      DATA BASES ( 3)  / 'B1950' /
-      DATA DEFS  ( 3)  / '0.525  3' /
+      data frames( 3)  / 'FK4'   /
+      data bases ( 3)  / 'B1950' /
+      data defs  ( 3)  / '0.525  3' /
 
 
 !
@@ -372,9 +372,9 @@
 !     At his suggestion, we will use the untruncated value, and
 !     stick to a single rotation.
 !
-      DATA FRAMES( 4)  / 'DE-118' /
-      DATA BASES ( 4)  / 'B1950'  /
-      DATA DEFS  ( 4)  / '0.53155  3' /
+      data frames( 4)  / 'DE-118' /
+      data bases ( 4)  / 'B1950'  /
+      data defs  ( 4)  / '0.53155  3' /
 
 !
 !     Most of the other DE reference frames may be defined relative
@@ -395,37 +395,37 @@
 !     We will use B1950 for now, since the offsets generally have
 !     more significant digits.
 !
-      DATA FRAMES( 5)  / 'DE-96'  /
-      DATA BASES ( 5)  / 'B1950'  /
-      DATA DEFS  ( 5)  / '0.4107  3' /
+      data frames( 5)  / 'DE-96'  /
+      data bases ( 5)  / 'B1950'  /
+      data defs  ( 5)  / '0.4107  3' /
 
-      DATA FRAMES( 6)  / 'DE-102' /
-      DATA BASES ( 6)  / 'B1950'  /
-      DATA DEFS  ( 6)  / '0.1359  3' /
+      data frames( 6)  / 'DE-102' /
+      data bases ( 6)  / 'B1950'  /
+      data defs  ( 6)  / '0.1359  3' /
 
-      DATA FRAMES( 7)  / 'DE-108' /
-      DATA BASES ( 7)  / 'B1950'  /
-      DATA DEFS  ( 7)  / '0.4775  3' /
+      data frames( 7)  / 'DE-108' /
+      data bases ( 7)  / 'B1950'  /
+      data defs  ( 7)  / '0.4775  3' /
 
-      DATA FRAMES( 8)  / 'DE-111' /
-      DATA BASES ( 8)  / 'B1950'  /
-      DATA DEFS  ( 8)  / '0.5880  3' /
+      data frames( 8)  / 'DE-111' /
+      data bases ( 8)  / 'B1950'  /
+      data defs  ( 8)  / '0.5880  3' /
 
-      DATA FRAMES( 9)  / 'DE-114' /
-      DATA BASES ( 9)  / 'B1950'  /
-      DATA DEFS  ( 9)  / '0.5529  3' /
+      data frames( 9)  / 'DE-114' /
+      data bases ( 9)  / 'B1950'  /
+      data defs  ( 9)  / '0.5529  3' /
 
-      DATA FRAMES(10)  / 'DE-122' /
-      DATA BASES (10)  / 'B1950'  /
-      DATA DEFS  (10)  / '0.5316  3' /
+      data frames(10)  / 'DE-122' /
+      data bases (10)  / 'B1950'  /
+      data defs  (10)  / '0.5316  3' /
 
-      DATA FRAMES(11)  / 'DE-125' /
-      DATA BASES (11)  / 'B1950'  /
-      DATA DEFS  (11)  / '0.5754  3' /
+      data frames(11)  / 'DE-125' /
+      data bases (11)  / 'B1950'  /
+      data defs  (11)  / '0.5754  3' /
 
-      DATA FRAMES(12)  / 'DE-130' /
-      DATA BASES (12)  / 'B1950'  /
-      DATA DEFS  (12)  / '0.5247  3' /
+      data frames(12)  / 'DE-130' /
+      data bases (12)  / 'B1950'  /
+      data defs  (12)  / '0.5247  3' /
 
 !
 !     The Galactic System II reference frame is defined by the
@@ -446,9 +446,9 @@
 !              o
 !        282.25   = 1016100"
 !
-      DATA FRAMES(13)  / 'GALACTIC' /
-      DATA BASES (13)  / 'FK4'      /
-      DATA DEFS  (13)  / '1177200.0  3  225360.0  1  1016100.0  3' /
+      data frames(13)  / 'GALACTIC' /
+      data bases (13)  / 'FK4'      /
+      data defs  (13)  / '1177200.0  3  225360.0  1  1016100.0  3' /
 
 !
 !     According to Standish, the various DE-200 frames are identical
@@ -461,38 +461,38 @@
 !        [ 0.0 ]
 !               3
 !
-      DATA FRAMES(14)  / 'DE-200' /
-      DATA BASES (14)  / 'J2000'  /
-      DATA DEFS  (14)  / '0.0  3' /
+      data frames(14)  / 'DE-200' /
+      data bases (14)  / 'J2000'  /
+      data defs  (14)  / '0.0  3' /
 
-      DATA FRAMES(15)  / 'DE-202' /
-      DATA BASES (15)  / 'J2000'  /
-      DATA DEFS  (15)  / '0.0  3' /
+      data frames(15)  / 'DE-202' /
+      data bases (15)  / 'J2000'  /
+      data defs  (15)  / '0.0  3' /
 !
 !     The values for the transformation from J2000 to MARSIAU_MO
 !     are derived from the constants given for the pole of Mars
 !     on page 8-2 of reference [6].
 !
-      DATA FRAMES(16)  / 'MARSIAU' /
-      DATA BASES (16)  / 'J2000'   /
-      DATA DEFS  (16)  / '324000.0D0 3 133610.4D0 2 -152348.4D0 3' /
+      data frames(16)  / 'MARSIAU' /
+      data bases (16)  / 'J2000'   /
+      data defs  (16)  / '324000.0D0 3 133610.4D0 2 -152348.4D0 3' /
 
 !
 !     The value for the obliquity of the ecliptic at J2000  is
 !     taken from page  114 of [7] equation 3.222-1.  This agrees
 !     with the expression given in [5]
 !
-      DATA FRAMES(17)  / 'ECLIPJ2000'   /
-      DATA BASES (17)  / 'J2000'        /
-      DATA DEFS  (17)  / '84381.448 1'  /
+      data frames(17)  / 'ECLIPJ2000'   /
+      data bases (17)  / 'J2000'        /
+      data defs  (17)  / '84381.448 1'  /
 
 !
 !     The value for the obliquity of the ecliptic at B1950  is
 !     taken from page  171 of [7].
 !
-      DATA FRAMES(18)  / 'ECLIPB1950'   /
-      DATA BASES (18)  / 'B1950'       /
-      DATA DEFS  (18)  / '84404.836 1' /
+      data frames(18)  / 'ECLIPB1950'   /
+      data bases (18)  / 'B1950'       /
+      data defs  (18)  / '84404.836 1' /
 
 !
 !     The frame for DE-140 is simply DE-400 rotated by the rotation:
@@ -536,9 +536,9 @@
 !     for the transformation from J2000 to B1950
 !
 
-      DATA FRAMES(19)  / 'DE-140'       /
-      DATA BASES (19)  / 'J2000'        /
-      DATA DEFS  (19)  / &
+      data frames(19)  / 'DE-140'       /
+      data bases (19)  / 'J2000'        /
+      data defs  (19)  / &
       '1152.71013777252 3  -1002.25042010533  2  1153.75719544491  3'/
 !
 !     The frame for DE-142 is simply DE-402 rotated by the rotation:
@@ -554,9 +554,9 @@
 !     from J2000 to DE140.  Only the input matrix changed to use the
 !     one given above.
 !
-      DATA FRAMES(20)  / 'DE-142'       /
-      DATA BASES (20)  / 'J2000'        /
-      DATA DEFS  (20)  / &
+      data frames(20)  / 'DE-142'       /
+      data bases (20)  / 'J2000'        /
+      data defs  (20)  / &
       '1152.72061453864 3  -1002.25052830351  2  1153.74663857521  3' /
 
 !
@@ -573,36 +573,36 @@
 !     from J2000 to DE140.  Only the input matrix changed to use the
 !     one given above.
 !
-      DATA FRAMES(21)  / 'DE-143'       /
-      DATA BASES (21)  / 'J2000'        /
-      DATA DEFS  (21) &
+      data frames(21)  / 'DE-143'       /
+      data bases (21)  / 'J2000'        /
+      data defs  (21) &
       /'1153.03919093833, 3, -1002.24822382286, 2, 1153.42900222357, 3'/
 
 !
 !     Until defined (by a call to IRFDEF), the default frame is
 !     undefined.
 !
-      DATA DFRAME      / 0 /
+      data dframe      / 0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CHGIRF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CHGIRF' )
+      end if
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'CHGIRF' )
-      RETURN
+      call chkout ( 'CHGIRF' )
+      return
 
 
 
 !$Procedure IRFROT ( Inertial reference frame rotation )
 
-      ENTRY IRFROT ( REFA, REFB, ROTAB )
+      entry irfrot ( refa, refb, rotab )
 
 ! $ Abstract
 !
@@ -855,9 +855,9 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     If it has not been done already, construct the transformation
@@ -871,41 +871,41 @@
 !        R             = (R           ) (R          )
 !         root->frame      base->frame    root->base
 !
-      IF ( .NOT. READY ) THEN
+      if ( .not. ready ) then
 
-         CALL CHKIN ( 'IRFROT' )
+         call chkin ( 'IRFROT' )
 
-         DO I = 1, MAXF
+         do i = 1, maxf
 
-            CALL ROTATE ( 0.D0, 1, TRANS(1,I) )
+            call rotate ( 0.d0, 1, trans(1,i) )
 
-            DO J = WDCNT ( DEFS(I) ), 2, -2
+            do j = wdcnt ( defs(i) ), 2, -2
 
-               CALL NTHWD  ( DEFS(I),     J,  WORD, LOC )
-               CALL NPARSI ( WORD,     AXIS, ERROR,   P )
+               call nthwd  ( defs(i),     j,  word, loc )
+               call nparsi ( word,     axis, error,   p )
 
-               CALL NTHWD  ( DEFS(I),   J-1,  WORD, LOC )
-               CALL NPARSD ( WORD,    ANGLE, ERROR,   P )
+               call nthwd  ( defs(i),   j-1,  word, loc )
+               call nparsd ( word,    angle, error,   p )
 
-               CALL CONVRT ( ANGLE, 'ARCSECONDS', 'RADIANS', RADANG )
+               call convrt ( angle, 'ARCSECONDS', 'RADIANS', radang )
 
-               CALL ROTMAT ( TRANS(1,I),  RADANG,  AXIS,  TMPMAT     )
-               CALL MOVED  ( TMPMAT,      9,              TRANS(1,I) )
+               call rotmat ( trans(1,i),  radang,  axis,  tmpmat     )
+               call moved  ( tmpmat,      9,              trans(1,i) )
 
-            END DO
+            end do
 
-            B = ISRCHC ( BASES(I), I, FRAMES )
+            b = isrchc ( bases(i), i, frames )
 
-            CALL MXM   ( TRANS(1,I), TRANS(1,B), TMPMAT     )
-            CALL MOVED ( TMPMAT,     9,          TRANS(1,I) )
+            call mxm   ( trans(1,i), trans(1,b), tmpmat     )
+            call moved ( tmpmat,     9,          trans(1,i) )
 
-         END DO
+         end do
 
-         CALL CHKOUT ( 'IRFROT' )
+         call chkout ( 'IRFROT' )
 
-         READY = .TRUE.
+         ready = .true.
 
-      END IF
+      end if
 
 !
 !     If the transformations have been defined, we can proceed with
@@ -925,50 +925,50 @@
 !
 !     should work, but why risk roundoff problems?
 !
-      IF ( REFA .LT. 1  .OR.  REFA .GT. MAXF ) THEN
+      if ( refa .lt. 1  .or.  refa .gt. maxf ) then
 
-         CALL CHKIN  ( 'IRFROT' )
-         CALL SETMSG ( 'A request has been made to obtain the ' &
+         call chkin  ( 'IRFROT' )
+         call setmsg ( 'A request has been made to obtain the ' &
          //            'transformation from inertial reference ' &
          //            'frame # to inertial reference frame #. ' &
          //            'Unfortunately # is not the id-code of a ' &
          //            'known inertial frame. ' )
-         CALL ERRINT ( '#', REFA )
-         CALL ERRINT ( '#', REFB )
-         CALL ERRINT ( '#', REFA )
-         CALL SIGERR ( 'SPICE(IRFNOTREC)' )
-         CALL CHKOUT ( 'IRFROT' )
+         call errint ( '#', refa )
+         call errint ( '#', refb )
+         call errint ( '#', refa )
+         call sigerr ( 'SPICE(IRFNOTREC)' )
+         call chkout ( 'IRFROT' )
 
-      ELSE IF ( REFB .LT. 1  .OR.  REFB .GT. MAXF ) THEN
+      else if ( refb .lt. 1  .or.  refb .gt. maxf ) then
 
-         CALL CHKIN  ( 'IRFROT' )
-         CALL SETMSG ( 'A request has been made to obtain the ' &
+         call chkin  ( 'IRFROT' )
+         call setmsg ( 'A request has been made to obtain the ' &
          //            'transformation from inertial reference ' &
          //            'frame # to inertial reference frame #. ' &
          //            'Unfortunately # is not the id-code of a ' &
          //            'known inertial frame. ' )
-         CALL ERRINT ( '#', REFA )
-         CALL ERRINT ( '#', REFB )
-         CALL ERRINT ( '#', REFB )
-         CALL SIGERR ( 'SPICE(IRFNOTREC)' )
-         CALL CHKOUT ( 'IRFROT' )
+         call errint ( '#', refa )
+         call errint ( '#', refb )
+         call errint ( '#', refb )
+         call sigerr ( 'SPICE(IRFNOTREC)' )
+         call chkout ( 'IRFROT' )
 
 
-      ELSE IF ( REFA .EQ. REFB ) THEN
-         CALL ROTATE ( 0.D0, 1, ROTAB )
+      else if ( refa .eq. refb ) then
+         call rotate ( 0.d0, 1, rotab )
 
-      ELSE
-         CALL MXMT ( TRANS(1,REFB), TRANS(1,REFA), ROTAB )
-      END IF
+      else
+         call mxmt ( trans(1,refb), trans(1,refa), rotab )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure IRFNUM ( Inertial reference frame number )
 
-      ENTRY IRFNUM ( NAME, INDEX )
+      entry irfnum ( name, index )
 
 ! $ Abstract
 !
@@ -1165,29 +1165,29 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      IF ( NAME .EQ. 'J2000' .OR. NAME .EQ. 'j2000' ) THEN
-         INDEX = 1
-         RETURN
-      END IF
+      if ( name .eq. 'J2000' .or. name .eq. 'j2000' ) then
+         index = 1
+         return
+      end if
 
-      IF ( EQSTR ( NAME, 'DEFAULT' ) ) THEN
-         INDEX = DFRAME
-      ELSE
-         INDEX = ESRCHC ( NAME, MAXF, FRAMES )
-      END IF
+      if ( eqstr ( name, 'DEFAULT' ) ) then
+         index = dframe
+      else
+         index = esrchc ( name, maxf, frames )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure IRFNAM ( Inertial reference frame name )
 
-      ENTRY IRFNAM ( INDEX, NAME )
+      entry irfnam ( index, name )
 
 ! $ Abstract
 !
@@ -1375,27 +1375,27 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'IRFNAM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'IRFNAM' )
+      end if
 
-      IF ( INDEX .LT. 1  .OR.  INDEX .GT. MAXF ) THEN
-         NAME = ' '
+      if ( index .lt. 1  .or.  index .gt. maxf ) then
+         name = ' '
 
-      ELSE
-         NAME = FRAMES(INDEX)
-      END IF
+      else
+         name = frames(index)
+      end if
 
-      CALL CHKOUT ( 'IRFNAM' )
-      RETURN
+      call chkout ( 'IRFNAM' )
+      return
 
 
 
 !$Procedure IRFDEF ( Inertial reference frame, default )
 
-      ENTRY IRFDEF ( INDEX )
+      entry irfdef ( index )
 
 ! $ Abstract
 !
@@ -1592,30 +1592,30 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'IRFDEF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'IRFDEF' )
+      end if
 
 !
 !     There's not much to do, except save the value for later use.
 !
-      IF ( INDEX .LT. 1  .OR.  INDEX .GT. MAXF ) THEN
+      if ( index .lt. 1  .or.  index .gt. maxf ) then
 
-         CALL SETMSG ( 'The reference frame with id-code # is ' &
+         call setmsg ( 'The reference frame with id-code # is ' &
          //            'not a recognized inertial reference ' &
          //            'frame. ' )
-         CALL ERRINT ( '#', INDEX )
+         call errint ( '#', index )
 
 
-         CALL SIGERR ( 'SPICE(IRFNOTREC)' )
+         call sigerr ( 'SPICE(IRFNOTREC)' )
 
-      ELSE
-         DFRAME = INDEX
-      END IF
+      else
+         dframe = index
+      end if
 
-      CALL CHKOUT ( 'IRFDEF' )
-      RETURN
+      call chkout ( 'IRFDEF' )
+      return
 
-      END
+      end

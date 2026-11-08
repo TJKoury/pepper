@@ -1,6 +1,6 @@
 !$Procedure DAFBT ( DAF, convert binary file to transfer file )
 
-      SUBROUTINE DAFBT ( BINFIL, XFRLUN )
+      subroutine dafbt ( binfil, xfrlun )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         BINFIL
-      INTEGER               XFRLUN
+      character*(*)         binfil
+      integer               xfrlun
 
 ! $ Brief_I/O
 !
@@ -237,83 +237,83 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 !
 !     Local parameters
 !
-      CHARACTER*(*)         QUOTE
-      PARAMETER           ( QUOTE  = ''''           )
+      character*(*)         quote
+      parameter           ( quote  = ''''           )
 
-      CHARACTER*(*)         BEGARR
-      PARAMETER           ( BEGARR = 'BEGIN_ARRAY'  )
+      character*(*)         begarr
+      parameter           ( begarr = 'BEGIN_ARRAY'  )
 
-      CHARACTER*(*)         ENDARR
-      PARAMETER           ( ENDARR = 'END_ARRAY'    )
+      character*(*)         endarr
+      parameter           ( endarr = 'END_ARRAY'    )
 
-      CHARACTER*(*)         TOTARR
-      PARAMETER           ( TOTARR = 'TOTAL_ARRAYS' )
+      character*(*)         totarr
+      parameter           ( totarr = 'TOTAL_ARRAYS' )
 
-      CHARACTER*(*)         FTYPID
-      PARAMETER           ( FTYPID = 'DAFETF'       )
+      character*(*)         ftypid
+      parameter           ( ftypid = 'DAFETF'       )
 
-      CHARACTER*(*)         INFOLN
-      PARAMETER           ( INFOLN = 'NAIF DAF ENCODED TRANSFER FILE' )
+      character*(*)         infoln
+      parameter           ( infoln = 'NAIF DAF ENCODED TRANSFER FILE' )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 1024 )
+      integer               bufsiz
+      parameter           ( bufsiz = 1024 )
 
-      INTEGER               CRECL
-      PARAMETER           ( CRECL  = 1000 )
+      integer               crecl
+      parameter           ( crecl  = 1000 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8    )
+      integer               idwlen
+      parameter           ( idwlen = 8    )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60   )
+      integer               ifnlen
+      parameter           ( ifnlen = 60   )
 
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 80   )
+      integer               linlen
+      parameter           ( linlen = 80   )
 !
 !     Local variables
 !
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(LINLEN)    LINE
-      CHARACTER*(CRECL)     NAME
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
+      character*(linlen)    line
+      character*(crecl)     name
 
-      DOUBLE PRECISION      BUFFER( BUFSIZ )
-      DOUBLE PRECISION      DSUMRY( 125    )
-      DOUBLE PRECISION      SUMMRY( 125    )
+      double precision      buffer( bufsiz )
+      double precision      dsumry( 125    )
+      double precision      summry( 125    )
 
-      INTEGER               BINHDL
-      INTEGER               BINLUN
-      INTEGER               BWARD
-      INTEGER               DTABEG
-      INTEGER               DTACNT
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               IOSTAT
-      INTEGER               ISUMRY( 250    )
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NUMARR
-      INTEGER               NUMDTA
-      INTEGER               NUMLFT
-      INTEGER               SNMLEN
+      integer               binhdl
+      integer               binlun
+      integer               bward
+      integer               dtabeg
+      integer               dtacnt
+      integer               free
+      integer               fward
+      integer               iostat
+      integer               isumry( 250    )
+      integer               nd
+      integer               ni
+      integer               numarr
+      integer               numdta
+      integer               numlft
+      integer               snmlen
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFBT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFBT' )
+      end if
 !
 !     A brief description of the DAF transfer file format and its
 !     intended use follows. This description is intended to provide a
@@ -435,17 +435,17 @@
 !     We begin by opening the binary DAF file specified by BINFIL for
 !     read access, obtaining a DAF file handle.
 !
-      CALL DAFOPR( BINFIL, BINHDL )
+      call dafopr( binfil, binhdl )
 !
 !     If the open failed, check out and return, as an appropriate error
 !     message should have already been set.
 !
-      IF ( FAILED () ) THEN
+      if ( failed () ) then
 
-         CALL CHKOUT( 'DAFBT' )
-         RETURN
+         call chkout( 'DAFBT' )
+         return
 
-      END IF
+      end if
 !
 !     At this point, we know that we have a DAF file, because we were
 !     able to successfully open it, so we will attempt to proceed with
@@ -455,47 +455,47 @@
 !     unit. We need to do this in order to accurately move the file
 !     ID word to the DAF transfer file.
 !
-      CALL ZZDDHHLU ( BINHDL, 'DAF', .FALSE., BINLUN )
+      call zzddhhlu ( binhdl, 'DAF', .false., binlun )
 
 !
 !     If the translation failed, checkout and return, as an appropriate
 !     error message should have already been set.
 !
-      IF ( FAILED () ) THEN
-         CALL CHKOUT( 'DAFBT' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout( 'DAFBT' )
+         return
+      end if
 !
 !     Read the ID word from the binary file. It should be the first 8
 !     characters on the first record in the file.
 !
-      READ( BINLUN,REC=1,IOSTAT=IOSTAT ) IDWORD
+      read( binlun,rec=1,iostat=iostat ) idword
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error reading the file ID word from the'  // &
+         call setmsg ( 'Error reading the file ID word from the'  // &
                        ' binary DAF file ''#''. IOSTAT = #.'       )
-         CALL ERRFNM ( '#', BINLUN                                 )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT ( 'DAFBT'                                     )
-         RETURN
+         call errfnm ( '#', binlun                                 )
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout ( 'DAFBT'                                     )
+         return
 
-      END IF
+      end if
 !
 !     Get the contents of the file record: the number of double
 !     precision numbers in the summary (ND), the number of integers
 !     in the summary (NI), the internal filename (IFNAME), and some
 !     data pointer information (FWARD, BWARD, FREE).
 !
-      CALL DAFRFR ( BINHDL, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafrfr ( binhdl, nd, ni, ifname, fward, bward, free )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFBT' )
-         RETURN
+         call chkout ( 'DAFBT' )
+         return
 
-      END IF
+      end if
 !
 !     Write the information line containing the file type information
 !     for the DAF transfer file format to the current position in the
@@ -504,322 +504,322 @@
 !     for other purposes. Right now, it simply contains an expanded
 !     description of the file type information ``word.''
 !
-      WRITE(XFRLUN,FMT='(A)',IOSTAT=IOSTAT) FTYPID // ' ' // INFOLN
+      write(xfrlun,fmt='(A)',iostat=iostat) ftypid // ' ' // infoln
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error writing to the DAF transfer'  // &
+         call setmsg ( 'Error writing to the DAF transfer'  // &
                        ' file ''#''.IOSTAT = #.'             )
-         CALL ERRFNM ( '#', XFRLUN                           )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'              )
-         CALL CHKOUT ( 'DAFBT'                               )
-         RETURN
+         call errfnm ( '#', xfrlun                           )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'              )
+         call chkout ( 'DAFBT'                               )
+         return
 
-       END IF
+       end if
 !
 !     Write the ID word to the DAF transfer file.
 !
-      WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) QUOTE // IDWORD // QUOTE
+      write (xfrlun,fmt='(A)',iostat=iostat) quote // idword // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+         call setmsg ( 'Error writing to the DAF transfer'   // &
                        ' file ''#''. IOSTAT = #.'             )
-         CALL ERRFNM ( '#', XFRLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DAFBT'                                )
-         RETURN
+         call errfnm ( '#', xfrlun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DAFBT'                                )
+         return
 
-      END IF
+      end if
 !
 !     Write out the ND and NI values for the DAF file architecture.
 !
-      ISUMRY(1) = ND
-      ISUMRY(2) = NI
+      isumry(1) = nd
+      isumry(2) = ni
 
-      CALL WRENCI( XFRLUN, 2, ISUMRY )
+      call wrenci( xfrlun, 2, isumry )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFBT' )
-         RETURN
+         call chkout ( 'DAFBT' )
+         return
 
-      END IF
+      end if
 !
 !     Write out the internal file name.
 !
-      WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) QUOTE // IFNAME // QUOTE
+      write (xfrlun,fmt='(A)',iostat=iostat) quote // ifname // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+         call setmsg ( 'Error writing to the DAF transfer'   // &
                        ' file ''#''. IOSTAT = #.'             )
-         CALL ERRFNM ( '#', XFRLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DAFBT'                                )
-         RETURN
+         call errfnm ( '#', xfrlun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DAFBT'                                )
+         return
 
-      END IF
+      end if
 !
 !     Calculate the length of the segment names.
 !
-      SNMLEN = 8 * ( ND + ( NI + 1 ) / 2 )
+      snmlen = 8 * ( nd + ( ni + 1 ) / 2 )
 !
 !     Get ready to begin a forward search through the DAF file for the
 !     data.
 !
-      CALL DAFBFS ( BINHDL )
+      call dafbfs ( binhdl )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFBT' )
-         RETURN
+         call chkout ( 'DAFBT' )
+         return
 
-      END IF
+      end if
 !
 !     Initialize the number of arrays processed to zero.
 !
-      NUMARR = 0
+      numarr = 0
 !
 !     We'll assume that we will find some data, until proven otherwise.
 !
-      FOUND = .TRUE.
+      found = .true.
 !
 !     Begin looking for and processing the arrays in the binary DAF
 !     file.
 !
-      DO WHILE ( FOUND )
+      do while ( found )
 !
 !        Look for a DAF array.
 !
-         CALL DAFFNA ( FOUND  )
+         call daffna ( found  )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DAFBT' )
-            RETURN
+            call chkout ( 'DAFBT' )
+            return
 
-         END IF
+         end if
 !
 !        If we found an array, then we need to process it. Start
 !        by incrementing the number of arrays processed. If not,
 !        we just skip to the bottom of the loop.
 !
-         IF ( FOUND ) THEN
+         if ( found ) then
 
-            NUMARR = NUMARR + 1
+            numarr = numarr + 1
 !
 !           Get and unpack the summary information for the current
 !           array.
 !
-            CALL DAFGS ( SUMMRY )
-            CALL DAFUS ( SUMMRY, ND, NI, DSUMRY, ISUMRY )
+            call dafgs ( summry )
+            call dafus ( summry, nd, ni, dsumry, isumry )
 !
 !           Get the name of the current array.
 !
-            CALL DAFGN ( NAME )
+            call dafgn ( name )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              If an error occurred on any of the DAF system calls
 !              above, return to the caller. An appropriate error
 !              message will have already been set by the routine which
 !              signaled the error.
 !
-               CALL CHKOUT ( 'DAFBT' )
-               RETURN
+               call chkout ( 'DAFBT' )
+               return
 
-            END IF
+            end if
 !
 !           Get the beginning address for the data in the current array.
 !
-            DTABEG = ISUMRY(NI-1)
+            dtabeg = isumry(ni-1)
 !
 !           Set the number of double precision numbers in the current
 !           array.
 !
-            DTACNT = ISUMRY(NI) - ISUMRY(NI-1) + 1
+            dtacnt = isumry(ni) - isumry(ni-1) + 1
 
-            LINE = BEGARR // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMARR, LINE )
-            CALL REPMI ( LINE, '#', DTACNT, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = begarr // ' #' // ' #'
+            call repmi ( line, '#', numarr, line )
+            call repmi ( line, '#', dtacnt, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+               call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DAFBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DAFBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Write the name of the current array.
 !
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) &
-                                    QUOTE // NAME( :SNMLEN) // QUOTE
+            write (xfrlun,fmt='(A)',iostat=iostat) &
+                                    quote // name( :snmlen) // quote
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+               call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DAFBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DAFBT'                                )
+               return
 
-            END IF
+            end if
 !
 !           Write out the double precision part of the summary.
 !
-            CALL WRENCD( XFRLUN, ND, DSUMRY )
+            call wrencd( xfrlun, nd, dsumry )
 !
 !           Write out the integer part of the summary, excluding the
 !           beginning and ending addresses of the data in the array,
 !           ISUMRY(NI-1) and ISUMRY(NI), since these values vary with
 !           the number of reserved records allocated.
 !
-            CALL WRENCI( XFRLUN, NI-2, ISUMRY )
+            call wrenci( xfrlun, ni-2, isumry )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              If an error occurred on any of the data encoding calls
 !              above, return to the caller. An appropriate error message
 !              will have already been set by the routine which signaled
 !              the error.
 !
-               CALL CHKOUT ( 'DAFBT' )
-               RETURN
+               call chkout ( 'DAFBT' )
+               return
 
-            END IF
+            end if
 
-            NUMLFT = DTACNT
+            numlft = dtacnt
 
-            DO WHILE ( NUMLFT .GT. 0 )
+            do while ( numlft .gt. 0 )
 
-               IF ( NUMLFT .GE. BUFSIZ ) THEN
+               if ( numlft .ge. bufsiz ) then
 
-                  NUMDTA = BUFSIZ
+                  numdta = bufsiz
 
-               ELSE
+               else
 
-                  NUMDTA = NUMLFT
+                  numdta = numlft
 
-               END IF
+               end if
 !
 !              Read in NUMDTA numbers from the current array. The
 !              desired data are specified by beginning and ending
 !              indices into the array, inclusive: thus the subtraction
 !              of 1 in the call.
 !
-               CALL DAFGDA ( BINHDL, DTABEG, DTABEG+NUMDTA-1, BUFFER )
+               call dafgda ( binhdl, dtabeg, dtabeg+numdta-1, buffer )
 
-               IF ( FAILED() ) THEN
+               if ( failed() ) then
 !
 !                 We want to check failed here because were in a loop.
 !                 We should exit the loop, and the routine, as soon as
 !                 an error is detected, so we don't continue doing
 !                 things for a long time.
 !
-                  CALL CHKOUT ( 'DAFBT' )
-                  RETURN
+                  call chkout ( 'DAFBT' )
+                  return
 
-               END IF
+               end if
 !
 !              Write out the count of double precision numbers which are
 !              in the buffer.
 !
-               LINE = '#'
-               CALL REPMI ( LINE, '#', NUMDTA, LINE )
-               WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+               line = '#'
+               call repmi ( line, '#', numdta, line )
+               write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-               IF ( IOSTAT .NE. 0 ) THEN
+               if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+               call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL ERRINT ( '#', IOSTAT                         )
-                  CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'            )
-                  CALL CHKOUT ( 'DAFBT'                             )
-                  RETURN
+                  call errfnm ( '#', xfrlun                         )
+                  call errint ( '#', iostat                         )
+                  call sigerr ( 'SPICE(FILEWRITEFAILED)'            )
+                  call chkout ( 'DAFBT'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Encode and write out a buffer of double precision
 !              numbers.
 !
-               CALL WRENCD( XFRLUN, NUMDTA, BUFFER )
+               call wrencd( xfrlun, numdta, buffer )
 
-               IF ( FAILED() ) THEN
+               if ( failed() ) then
 !
 !                 We want to check failed here because were in a loop.
 !                 We should exit the loop, and the routine, as soon as
 !                 an error is detected, so we don't continue doing
 !                 things for a long time.
 !
-                  CALL CHKOUT ( 'DAFBT' )
-                  RETURN
+                  call chkout ( 'DAFBT' )
+                  return
 
-               END IF
+               end if
 
-               NUMLFT = NUMLFT - NUMDTA
-               DTABEG = DTABEG + NUMDTA
+               numlft = numlft - numdta
+               dtabeg = dtabeg + numdta
 
-            END DO
+            end do
 
-            LINE = ENDARR // ' #' // ' #'
-            CALL REPMI ( LINE, '#', NUMARR, LINE )
-            CALL REPMI ( LINE, '#', DTACNT, LINE )
-            WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+            line = endarr // ' #' // ' #'
+            call repmi ( line, '#', numarr, line )
+            call repmi ( line, '#', dtacnt, line )
+            write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+               call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
-               CALL ERRFNM ( '#', XFRLUN                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-               CALL CHKOUT ( 'DAFBT'                                )
-               RETURN
+               call errfnm ( '#', xfrlun                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+               call chkout ( 'DAFBT'                                )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        At this point, one complete DAF array has been written to the
 !        DAF transfer file.
 !
-      END DO
+      end do
 !
 !     Write out the number of arrays processed.
 !
-      LINE = TOTARR // ' #'
-      CALL REPMI ( LINE, '#', NUMARR, LINE )
-      WRITE (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE(:RTRIM(LINE))
+      line = totarr // ' #'
+      call repmi ( line, '#', numarr, line )
+      write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error writing to the DAF transfer'   // &
+         call setmsg ( 'Error writing to the DAF transfer'   // &
                        ' file ''#''. IOSTAT = #.'             )
-         CALL ERRFNM ( '#', XFRLUN                            )
-         CALL ERRINT ( '#', IOSTAT                            )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DAFBT'                                )
-         RETURN
+         call errfnm ( '#', xfrlun                            )
+         call errint ( '#', iostat                            )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'               )
+         call chkout ( 'DAFBT'                                )
+         return
 
-      END IF
+      end if
 !
 !     Close only the binary file.
 !
-      CALL DAFCLS ( BINHDL )
+      call dafcls ( binhdl )
 
-      CALL CHKOUT ( 'DAFBT' )
-      RETURN
-      END
+      call chkout ( 'DAFBT' )
+      return
+      end

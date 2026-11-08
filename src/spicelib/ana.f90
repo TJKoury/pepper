@@ -1,6 +1,6 @@
 !$Procedure ANA ( AN or A ? )
 
-      CHARACTER*(*) FUNCTION ANA ( WORD, CASE )
+      character*(*) function ana ( word, case )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         WORD
-      CHARACTER*(*)         CASE
+      character*(*)         word
+      character*(*)         case
 
 ! $ Brief_I/O
 !
@@ -151,46 +151,46 @@
 !-&
 
 
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      INTEGER               ANWRDS
-      PARAMETER           ( ANWRDS = 22 )
+      integer               anwrds
+      parameter           ( anwrds = 22 )
 
-      INTEGER               AWRDS
-      PARAMETER           ( AWRDS  = 33 )
+      integer               awrds
+      parameter           ( awrds  = 33 )
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      CHARACTER*(8)         ANWORD ( ANWRDS )
-      CHARACTER*(8)         AWORD  ( AWRDS  )
+      character*(8)         anword ( anwrds )
+      character*(8)         aword  ( awrds  )
 
-      CHARACTER*(WDSIZE)    MYWORD
-      CHARACTER*(1)         MYCASE
-      CHARACTER*(1)         BEGIN
-
-
-      INTEGER               I
-      INTEGER               CAPS
-
-      CHARACTER*(WDSIZE)    START ( 7 )
-
-      CHARACTER*(2)         A  ( 3 )
-      CHARACTER*(2)         AN ( 3 )
-
-      SAVE
-
-      DATA                  A  / 'A',  'A',  'a'  /
-      DATA                  AN / 'AN', 'An', 'an' /
+      character*(wdsize)    myword
+      character*(1)         mycase
+      character*(1)         begin
 
 
-      DATA  ANWORD / 'HEIR', 'HONEST', 'HONOR', 'H',  'HOUR', &
+      integer               i
+      integer               caps
+
+      character*(wdsize)    start ( 7 )
+
+      character*(2)         a  ( 3 )
+      character*(2)         an ( 3 )
+
+      save
+
+      data                  a  / 'A',  'A',  'a'  /
+      data                  an / 'AN', 'An', 'an' /
+
+
+      data  anword / 'HEIR', 'HONEST', 'HONOR', 'H',  'HOUR', &
                      'HORS ','HOMBRE', 'F',     'L',  'M', &
                      'N',    'R',      'S',     'X', &
                      'UNIN', 'UNIM',   'ONEI',  'ONER', &
                      'SPK',  'EK',     'IK',     'SCLK' /
 
-      DATA  AWORD  / 'HORSE',   'ONE',   'ONE-',   'ONCE', &
+      data  aword  / 'HORSE',   'ONE',   'ONE-',   'ONCE', &
                      'ONENESS', 'UIG',   'UIN',    'UKA', &
                      'UKE',     'UKO',   'UKI',    'UKU', &
                      'ULOT',    'UNANI', 'UNI',    'UNINU', &
@@ -199,39 +199,39 @@
                      'UTI',     'UTO',   'UVA',    'UVE', &
                      'UVU',     'EU',    'EWE',    'UTRI', 'U' /
 
-      CALL UCASE ( WORD,              MYWORD )
-      CALL REPLCH( MYWORD, '''', ' ', MYWORD )
-      CALL REPLCH( MYWORD, '"',  ' ', MYWORD )
-      CALL LJUST ( MYWORD,            MYWORD )
-      CALL UCASE ( CASE,              MYCASE )
+      call ucase ( word,              myword )
+      call replch( myword, '''', ' ', myword )
+      call replch( myword, '"',  ' ', myword )
+      call ljust ( myword,            myword )
+      call ucase ( case,              mycase )
 
 
-      ANA = ' '
+      ana = ' '
 
-      IF ( MYCASE .EQ. 'U' ) THEN
-         CAPS = 1
-      ELSE IF ( MYCASE .EQ. 'C' ) THEN
-         CAPS = 2
-      ELSE
-         CAPS = 3
-      END IF
+      if ( mycase .eq. 'U' ) then
+         caps = 1
+      else if ( mycase .eq. 'C' ) then
+         caps = 2
+      else
+         caps = 3
+      end if
 
 !
 !     Handle the obvious things first.
 !
-      BEGIN = MYWORD(1:1)
+      begin = myword(1:1)
 
-      IF      ( INDEX( 'AI', BEGIN ) .GT. 0 ) THEN
+      if      ( index( 'AI', begin ) .gt. 0 ) then
 
-         ANA = AN(CAPS)
-         RETURN
+         ana = an(caps)
+         return
 
-      ELSE IF ( INDEX( 'BCDGJKPQTVWYZ', BEGIN ) .GT. 0 ) THEN
+      else if ( index( 'BCDGJKPQTVWYZ', begin ) .gt. 0 ) then
 
-         ANA = A(CAPS)
-         RETURN
+         ana = a(caps)
+         return
 
-      END IF
+      end if
 
 !
 !     If we are still here, we need to be a bit more careful
@@ -239,46 +239,46 @@
 !
 !     Get the beginnings of the input word.
 !
-      DO I = 1, 7
-         START(I) = MYWORD(1:I)
-      END DO
+      do i = 1, 7
+         start(i) = myword(1:i)
+      end do
 
 !
 !     Now see if the start of the input word belongs to
 !     one of the special collections.
 !
-      DO I = 7, 2, -1
+      do i = 7, 2, -1
 
-         IF ( ISRCHC ( START(I), AWRDS,  AWORD ) .NE. 0 ) THEN
+         if ( isrchc ( start(i), awrds,  aword ) .ne. 0 ) then
 
-            ANA = A (CAPS)
-            RETURN
+            ana = a (caps)
+            return
 
-         END IF
+         end if
 
-         IF ( ISRCHC ( START(I), ANWRDS, ANWORD ) .NE. 0 ) THEN
+         if ( isrchc ( start(i), anwrds, anword ) .ne. 0 ) then
 
-            ANA = AN(CAPS)
-            RETURN
+            ana = an(caps)
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we got this far we can determine the ANA by
 !     just looking at the beginning of the string.
 !
-      IF ( INDEX( 'AEIOU', MYWORD(1:1) ) .GT. 0 ) THEN
+      if ( index( 'AEIOU', myword(1:1) ) .gt. 0 ) then
 
-         ANA = AN(CAPS)
+         ana = an(caps)
 
-      ELSE
+      else
 
-         ANA = A (CAPS)
+         ana = a (caps)
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

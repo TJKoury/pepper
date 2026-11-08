@@ -1,6 +1,6 @@
 !$Procedure EQCHR (Equivalent characters)
 
-      LOGICAL FUNCTION EQCHR ( A, B )
+      logical function eqchr ( a, b )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(1)         A
-      CHARACTER*(1)         B
+      character*(1)         a
+      character*(1)         b
 
 ! $ Brief_I/O
 !
@@ -156,85 +156,85 @@
 !
 !     Entry points.
 !
-      LOGICAL               NECHR
+      logical               nechr
 !
 !     Range of characters
 !
-      INTEGER               LSTCHR
-      PARAMETER           ( LSTCHR = 255 )
+      integer               lstchr
+      parameter           ( lstchr = 255 )
 !
 !     Local Variables
 !
 !     The array UVALUE contains the ICHAR values for the upper case
 !     version of each character.
 !
-      INTEGER               UVALUE ( 0 : LSTCHR )
-      INTEGER               I
-      INTEGER               J
+      integer               uvalue ( 0 : lstchr )
+      integer               i
+      integer               j
 
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA FIRST / .TRUE. /
+      data first / .true. /
 
 
 !
 !     The first time through the loop we set the upper case values
 !     for each of the lower case letters.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         DO I = 0, LSTCHR
-            UVALUE(I) = I
-         END DO
+         do i = 0, lstchr
+            uvalue(i) = i
+         end do
 
-         FIRST = .FALSE.
+         first = .false.
 
-         UVALUE( ICHAR('a') ) = ICHAR( 'A' )
-         UVALUE( ICHAR('b') ) = ICHAR( 'B' )
-         UVALUE( ICHAR('c') ) = ICHAR( 'C' )
-         UVALUE( ICHAR('d') ) = ICHAR( 'D' )
-         UVALUE( ICHAR('e') ) = ICHAR( 'E' )
-         UVALUE( ICHAR('f') ) = ICHAR( 'F' )
-         UVALUE( ICHAR('g') ) = ICHAR( 'G' )
-         UVALUE( ICHAR('h') ) = ICHAR( 'H' )
-         UVALUE( ICHAR('i') ) = ICHAR( 'I' )
-         UVALUE( ICHAR('j') ) = ICHAR( 'J' )
-         UVALUE( ICHAR('k') ) = ICHAR( 'K' )
-         UVALUE( ICHAR('l') ) = ICHAR( 'L' )
-         UVALUE( ICHAR('m') ) = ICHAR( 'M' )
-         UVALUE( ICHAR('n') ) = ICHAR( 'N' )
-         UVALUE( ICHAR('o') ) = ICHAR( 'O' )
-         UVALUE( ICHAR('p') ) = ICHAR( 'P' )
-         UVALUE( ICHAR('q') ) = ICHAR( 'Q' )
-         UVALUE( ICHAR('r') ) = ICHAR( 'R' )
-         UVALUE( ICHAR('s') ) = ICHAR( 'S' )
-         UVALUE( ICHAR('t') ) = ICHAR( 'T' )
-         UVALUE( ICHAR('u') ) = ICHAR( 'U' )
-         UVALUE( ICHAR('v') ) = ICHAR( 'V' )
-         UVALUE( ICHAR('w') ) = ICHAR( 'W' )
-         UVALUE( ICHAR('x') ) = ICHAR( 'X' )
-         UVALUE( ICHAR('y') ) = ICHAR( 'Y' )
-         UVALUE( ICHAR('z') ) = ICHAR( 'Z' )
+         uvalue( ichar('a') ) = ichar( 'A' )
+         uvalue( ichar('b') ) = ichar( 'B' )
+         uvalue( ichar('c') ) = ichar( 'C' )
+         uvalue( ichar('d') ) = ichar( 'D' )
+         uvalue( ichar('e') ) = ichar( 'E' )
+         uvalue( ichar('f') ) = ichar( 'F' )
+         uvalue( ichar('g') ) = ichar( 'G' )
+         uvalue( ichar('h') ) = ichar( 'H' )
+         uvalue( ichar('i') ) = ichar( 'I' )
+         uvalue( ichar('j') ) = ichar( 'J' )
+         uvalue( ichar('k') ) = ichar( 'K' )
+         uvalue( ichar('l') ) = ichar( 'L' )
+         uvalue( ichar('m') ) = ichar( 'M' )
+         uvalue( ichar('n') ) = ichar( 'N' )
+         uvalue( ichar('o') ) = ichar( 'O' )
+         uvalue( ichar('p') ) = ichar( 'P' )
+         uvalue( ichar('q') ) = ichar( 'Q' )
+         uvalue( ichar('r') ) = ichar( 'R' )
+         uvalue( ichar('s') ) = ichar( 'S' )
+         uvalue( ichar('t') ) = ichar( 'T' )
+         uvalue( ichar('u') ) = ichar( 'U' )
+         uvalue( ichar('v') ) = ichar( 'V' )
+         uvalue( ichar('w') ) = ichar( 'W' )
+         uvalue( ichar('x') ) = ichar( 'X' )
+         uvalue( ichar('y') ) = ichar( 'Y' )
+         uvalue( ichar('z') ) = ichar( 'Z' )
 
-      END IF
+      end if
 
-      I     = ICHAR(A)
-      J     = ICHAR(B)
+      i     = ichar(a)
+      j     = ichar(b)
 
-      IF ( I .GT. LSTCHR .OR. J .GT. LSTCHR ) THEN
-         EQCHR = I .EQ. J
-      ELSE
-         EQCHR = UVALUE(I) .EQ. UVALUE(J)
-      END IF
+      if ( i .gt. lstchr .or. j .gt. lstchr ) then
+         eqchr = i .eq. j
+      else
+         eqchr = uvalue(i) .eq. uvalue(j)
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure NECHR (Not Equivalent characters)
 
-      ENTRY NECHR ( A, B )
+      entry nechr ( a, b )
 
 ! $ Abstract
 !
@@ -380,53 +380,53 @@
 !-&
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         DO I = 0, LSTCHR
-            UVALUE(I) = I
-         END DO
+         do i = 0, lstchr
+            uvalue(i) = i
+         end do
 
-         UVALUE( ICHAR('a') ) = ICHAR( 'A' )
-         UVALUE( ICHAR('b') ) = ICHAR( 'B' )
-         UVALUE( ICHAR('c') ) = ICHAR( 'C' )
-         UVALUE( ICHAR('d') ) = ICHAR( 'D' )
-         UVALUE( ICHAR('e') ) = ICHAR( 'E' )
-         UVALUE( ICHAR('f') ) = ICHAR( 'F' )
-         UVALUE( ICHAR('g') ) = ICHAR( 'G' )
-         UVALUE( ICHAR('h') ) = ICHAR( 'H' )
-         UVALUE( ICHAR('i') ) = ICHAR( 'I' )
-         UVALUE( ICHAR('j') ) = ICHAR( 'J' )
-         UVALUE( ICHAR('k') ) = ICHAR( 'K' )
-         UVALUE( ICHAR('l') ) = ICHAR( 'L' )
-         UVALUE( ICHAR('m') ) = ICHAR( 'M' )
-         UVALUE( ICHAR('n') ) = ICHAR( 'N' )
-         UVALUE( ICHAR('o') ) = ICHAR( 'O' )
-         UVALUE( ICHAR('p') ) = ICHAR( 'P' )
-         UVALUE( ICHAR('q') ) = ICHAR( 'Q' )
-         UVALUE( ICHAR('r') ) = ICHAR( 'R' )
-         UVALUE( ICHAR('s') ) = ICHAR( 'S' )
-         UVALUE( ICHAR('t') ) = ICHAR( 'T' )
-         UVALUE( ICHAR('u') ) = ICHAR( 'U' )
-         UVALUE( ICHAR('v') ) = ICHAR( 'V' )
-         UVALUE( ICHAR('w') ) = ICHAR( 'W' )
-         UVALUE( ICHAR('x') ) = ICHAR( 'X' )
-         UVALUE( ICHAR('y') ) = ICHAR( 'Y' )
-         UVALUE( ICHAR('z') ) = ICHAR( 'Z' )
+         uvalue( ichar('a') ) = ichar( 'A' )
+         uvalue( ichar('b') ) = ichar( 'B' )
+         uvalue( ichar('c') ) = ichar( 'C' )
+         uvalue( ichar('d') ) = ichar( 'D' )
+         uvalue( ichar('e') ) = ichar( 'E' )
+         uvalue( ichar('f') ) = ichar( 'F' )
+         uvalue( ichar('g') ) = ichar( 'G' )
+         uvalue( ichar('h') ) = ichar( 'H' )
+         uvalue( ichar('i') ) = ichar( 'I' )
+         uvalue( ichar('j') ) = ichar( 'J' )
+         uvalue( ichar('k') ) = ichar( 'K' )
+         uvalue( ichar('l') ) = ichar( 'L' )
+         uvalue( ichar('m') ) = ichar( 'M' )
+         uvalue( ichar('n') ) = ichar( 'N' )
+         uvalue( ichar('o') ) = ichar( 'O' )
+         uvalue( ichar('p') ) = ichar( 'P' )
+         uvalue( ichar('q') ) = ichar( 'Q' )
+         uvalue( ichar('r') ) = ichar( 'R' )
+         uvalue( ichar('s') ) = ichar( 'S' )
+         uvalue( ichar('t') ) = ichar( 'T' )
+         uvalue( ichar('u') ) = ichar( 'U' )
+         uvalue( ichar('v') ) = ichar( 'V' )
+         uvalue( ichar('w') ) = ichar( 'W' )
+         uvalue( ichar('x') ) = ichar( 'X' )
+         uvalue( ichar('y') ) = ichar( 'Y' )
+         uvalue( ichar('z') ) = ichar( 'Z' )
 
-      END IF
+      end if
 
-      I     = ICHAR(A)
-      J     = ICHAR(B)
+      i     = ichar(a)
+      j     = ichar(b)
 
-      IF ( I .GT. LSTCHR .OR. J .GT. LSTCHR ) THEN
-         NECHR = I .NE. J
-      ELSE
-         NECHR = UVALUE(I) .NE. UVALUE(J)
-      END IF
+      if ( i .gt. lstchr .or. j .gt. lstchr ) then
+         nechr = i .ne. j
+      else
+         nechr = uvalue(i) .ne. uvalue(j)
+      end if
 
-      RETURN
+      return
 
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPCAC ( SPK and CK, add comments )
 
-      SUBROUTINE SPCAC ( HANDLE, UNIT, BMARK, EMARK )
+      subroutine spcac ( handle, unit, bmark, emark )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               UNIT
-      CHARACTER*(*)         BMARK
-      CHARACTER*(*)         EMARK
+      integer               handle
+      integer               unit
+      character*(*)         bmark
+      character*(*)         emark
 
 ! $ Brief_I/O
 !
@@ -305,11 +305,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               COUNTC
-      INTEGER               LASTNB
+      integer               countc
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -319,68 +319,68 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60     )
+      integer               ifnlen
+      parameter           ( ifnlen = 60     )
 
-      INTEGER               MAXCPR
-      PARAMETER           ( MAXCPR = 1000   )
+      integer               maxcpr
+      parameter           ( maxcpr = 1000   )
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXCPR+2)  DATA
-      CHARACTER*(1)         EOT
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(MAXCPR)    LINE
-      CHARACTER*(1)         NULL
-      CHARACTER*(MAXCPR)    RECORD
+      character*(maxcpr+2)  data
+      character*(1)         eot
+      character*(ifnlen)    ifname
+      character*(maxcpr)    line
+      character*(1)         null
+      character*(maxcpr)    record
 
-      INTEGER               BLINE
-      INTEGER               BWARD
-      INTEGER               C
-      INTEGER               CHARS
-      INTEGER               DAFU
-      INTEGER               EOL
-      INTEGER               ELINE
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               L
-      INTEGER               LASTRR
-      INTEGER               LINES
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NR
-      INTEGER               NRR
-      INTEGER               POS
-      INTEGER               POSEOT
-      INTEGER               REC
-      INTEGER               SPACE
-      INTEGER               START
-      INTEGER               TOTAL
+      integer               bline
+      integer               bward
+      integer               c
+      integer               chars
+      integer               dafu
+      integer               eol
+      integer               eline
+      integer               free
+      integer               fward
+      integer               i
+      integer               iostat
+      integer               l
+      integer               lastrr
+      integer               lines
+      integer               nd
+      integer               ni
+      integer               nr
+      integer               nrr
+      integer               pos
+      integer               poseot
+      integer               rec
+      integer               space
+      integer               start
+      integer               total
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCAC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCAC' )
+      end if
 
 !
 !     Before doing anything, determine if the file associated with
 !     HANDLE is available for WRITE access.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCAC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCAC' )
+         return
+      end if
 
 !
 !     Rewind the comment file - we'll start the search for BMARK
@@ -392,49 +392,49 @@
 !     LOCLN will compute BLINE and ELINE taking the current position
 !     of the file pointer as line 1.
 !
-      REWIND ( UNIT )
+      rewind ( unit )
 
-      CALL LOCLN ( UNIT, BMARK, EMARK, LINE, BLINE, ELINE, FOUND )
+      call locln ( unit, bmark, emark, line, bline, eline, found )
 
 !
 !     If the markers are not found, or if BMARK and EMARK are on
 !     successive lines, there is nothing to put in the comment area.
 !
-      IF ( .NOT. FOUND ) THEN
-         CALL CHKOUT ( 'SPCAC' )
-         RETURN
-      END IF
+      if ( .not. found ) then
+         call chkout ( 'SPCAC' )
+         return
+      end if
 
 !
 !     Adjust BLINE and ELINE so we are pointing to the group of lines
 !     BETWEEN the markers.  Check and make sure there is at least one
 !     line in the group.
 !
-      IF ( BMARK .NE. ' ' ) THEN
-         BLINE = BLINE + 1
-      END IF
+      if ( bmark .ne. ' ' ) then
+         bline = bline + 1
+      end if
 
-      IF ( EMARK .NE. ' ' ) THEN
-         ELINE = ELINE - 1
-      END IF
+      if ( emark .ne. ' ' ) then
+         eline = eline - 1
+      end if
 
-      IF ( BLINE .GT. ELINE ) THEN
-         CALL CHKOUT ( 'SPCAC' )
-         RETURN
-      END IF
+      if ( bline .gt. eline ) then
+         call chkout ( 'SPCAC' )
+         return
+      end if
 
 !
 !     Calculate the number of lines and the total number of characters
 !     in those lines.  The characters must all be printable, or
 !     else COUNTC will signal an error.
 !
-      LINES = ELINE - BLINE + 1
-      CHARS = COUNTC ( UNIT, BLINE, ELINE, LINE )
+      lines = eline - bline + 1
+      chars = countc ( unit, bline, eline, line )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCAC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCAC' )
+         return
+      end if
 
 !
 !     Read the file record to find out if the DAF contains any
@@ -444,18 +444,18 @@
 !     that first summary record, and NRR is the number of reserved
 !     records in the file.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
-      NRR    = FWARD - 2
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
+      nrr    = fward - 2
 
 !
 !     Get the logical unit for reading from and writing to the DAF.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., DAFU )
+      call zzddhhlu ( handle, 'DAF', .false., dafu )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCAC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCAC' )
+         return
+      end if
 
 !
 !     Assign the value of NULL and EOT.  NULL gets appended to the
@@ -463,48 +463,48 @@
 !     all the comments.  Assign initial values for SPACE, RECORD,
 !     and START.
 !
-      NULL = CHAR( 0)
-      EOT  = CHAR( 4)
-      SPACE  = 0
-      RECORD = ' '
-      START  = 0
-      LASTRR = 0
+      null = char( 0)
+      eot  = char( 4)
+      space  = 0
+      record = ' '
+      start  = 0
+      lastrr = 0
 
-      IF ( NRR .NE. 0 ) THEN
+      if ( nrr .ne. 0 ) then
 !
 !        At this point, we know there exist reserved records in the
 !        DAF. We need to search from the last record to the first,
 !        seeking for the EOT (end of transmission) character, as it
 !        marks the end of the comment region.
 !
-         LASTRR = FWARD - 1
-         I      = LASTRR + 1
-         POSEOT = 0
+         lastrr = fward - 1
+         i      = lastrr + 1
+         poseot = 0
 
-         DO WHILE ( ( I .GT. 1 ) .AND. ( POSEOT .EQ. 0 ) )
+         do while ( ( i .gt. 1 ) .and. ( poseot .eq. 0 ) )
 !
 !           Decrement the counter now.  This keeps it in
 !           sync with the exit conditions.
 !
-            I = I - 1
-            READ ( DAFU, REC=I, IOSTAT=IOSTAT ) RECORD
+            i = i - 1
+            read ( dafu, rec=i, iostat=iostat ) record
 
-            IF ( IOSTAT .NE. 0 ) THEN
-               CALL SETMSG ( 'Error reading comment area of binary '// &
+            if ( iostat .ne. 0 ) then
+               call setmsg ( 'Error reading comment area of binary '// &
                              'file named FILE.  IOSTAT = *.'          )
-               CALL ERRINT ( '*', IOSTAT                              )
-               CALL ERRFNM ( 'FILE', DAFU                             )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'                  )
-               CALL CHKOUT ( 'SPCAC'                                  )
-               RETURN
-            END IF
+               call errint ( '*', iostat                              )
+               call errfnm ( 'FILE', dafu                             )
+               call sigerr ( 'SPICE(FILEREADFAILED)'                  )
+               call chkout ( 'SPCAC'                                  )
+               return
+            end if
 !
 !           Call INDEX. If POSEOT is 0, then RECORD doesn't contain
 !           the EOT character.
 !
-            POSEOT = INDEX ( RECORD, EOT )
+            poseot = index ( record, eot )
 
-         END DO
+         end do
 
 !
 !        The amount of free space in the reserved records of the
@@ -512,29 +512,29 @@
 !        records ( LASTRR - I ), and the number of characters used
 !        in last record with data (MAXCPR - POSEOT).
 !
-         SPACE = MAXCPR*(LASTRR - I + 1) - POSEOT
+         space = maxcpr*(lastrr - i + 1) - poseot
 !
 !        Adjust the value of LASTRR to indicate the record where
 !        the EOT lies.  From here on out, the purpose of this
 !        variable is to indicate where to start dumping comments.
 !
-         LASTRR = I
+         lastrr = i
 !
 !        If POSEOT is 0, then there are no comments in the file, but
 !        there are reserved records.  Branch on this:
 !
-         IF ( POSEOT .EQ. 0 ) THEN
+         if ( poseot .eq. 0 ) then
 !
 !           Leaving this string index at zero may be causing all sorts
 !           of warning bells to go off in your head. However, before
 !           this index value is used to address the contents of a
 !           string it's incremented by 1.
 !
-            START = POSEOT
+            start = poseot
 !
 !        Handle the case when POSEOT is non-zero.
 !
-         ELSE
+         else
 !
 !           Replace the end-of-transmission character with a new line
 !           character (we use null), so a blank line will come between
@@ -542,13 +542,13 @@
 !           position after which the first character of the new text
 !           goes.
 !
-            RECORD ( POSEOT:POSEOT ) = NULL
+            record ( poseot:poseot ) = null
 
-            START = POSEOT
+            start = poseot
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Compute the number of records (NR) needed to store all of these
@@ -563,158 +563,158 @@
 !     record, we don't need to reserve any more.  Otherwise compute
 !     the number we need.
 !
-      TOTAL = CHARS + LINES + 1
+      total = chars + lines + 1
 
-      IF (  ( TOTAL - SPACE ) .GT. 0  ) THEN
+      if (  ( total - space ) .gt. 0  ) then
 
-         NR = (  ( TOTAL - SPACE ) - 1  ) / MAXCPR    +   1
+         nr = (  ( total - space ) - 1  ) / maxcpr    +   1
 
-      ELSE
+      else
 
-         NR = 0
+         nr = 0
 
-      END IF
+      end if
 
 !
 !     Reserve the records to create a comment area large enough
 !     to hold it all, if we need to.  If we can't do it, there's no
 !     point in going on.
 !
-      IF ( NR .GT. 0 ) THEN
+      if ( nr .gt. 0 ) then
 
-         CALL DAFARR ( HANDLE, NR )
+         call dafarr ( handle, nr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPCAC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPCAC' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Load the group of lines in the comment file into the reserved
 !     records. Keep adding lines to the current record until it has
 !     been filled, then write it to the DAF, and begin a new record.
 !
-      REC    = MAX ( LASTRR-1, 1 )
-      POS    = START
+      rec    = max ( lastrr-1, 1 )
+      pos    = start
 
 !
 !     Rewind the text file then skip past the lines that we don't want
 !     to position the file pointer at the correct record.
 !
-      REWIND ( UNIT )
+      rewind ( unit )
 
-      DO L = 1, BLINE - 1
+      do l = 1, bline - 1
 
-         READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+         read ( unit, fmt='(A)', iostat=iostat ) line
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error reading line # in text file named '  // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error reading line # in text file named '  // &
                           'FILE.  IOSTAT = *.'                        )
-            CALL ERRINT ( '#', L                                      )
-            CALL ERRINT ( '*', IOSTAT                                 )
-            CALL ERRFNM ( 'FILE', UNIT                                )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'SPCAC'                                     )
-            RETURN
-         END IF
+            call errint ( '#', l                                      )
+            call errint ( '*', iostat                                 )
+            call errfnm ( 'FILE', unit                                )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'SPCAC'                                     )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Start reading the lines that we do want.  LINE is MAXCPR long
 !     so that's the maximum number of characters that are read.
 !
-      DO L = 1, LINES
+      do l = 1, lines
 
-         READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+         read ( unit, fmt='(A)', iostat=iostat ) line
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error reading line # in text file named '  // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error reading line # in text file named '  // &
                           'FILE.  IOSTAT = *.'                        )
-            CALL ERRINT ( '#', L+BLINE-1                              )
-            CALL ERRINT ( '*', IOSTAT                                 )
-            CALL ERRFNM ( 'FILE', UNIT                                )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'SPCAC'                                     )
-            RETURN
-         END IF
+            call errint ( '#', l+bline-1                              )
+            call errint ( '*', iostat                                 )
+            call errfnm ( 'FILE', unit                                )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'SPCAC'                                     )
+            return
+         end if
 
 !
 !        Each line is followed by a null character.
 !
-         DATA          = LINE
-         EOL           = LASTNB ( DATA ) + 1
-         DATA(EOL:EOL) = NULL
+         data          = line
+         eol           = lastnb ( data ) + 1
+         data(eol:eol) = null
 
 !
 !        The final line is followed by an additional
 !        end-of-transmission character.
 !
-         IF ( L .EQ. LINES ) THEN
-            EOL           = EOL + 1
-            DATA(EOL:EOL) = EOT
-         END IF
+         if ( l .eq. lines ) then
+            eol           = eol + 1
+            data(eol:eol) = eot
+         end if
 
 !
 !        Moving characters one at a time is slower, but simpler,
 !        than trying to move them in blocks.
 !
-         DO C = 1, EOL
+         do c = 1, eol
 
 !
 !           If the current record is full, write it to the DAF.
 !
-            IF ( POS .EQ. MAXCPR ) THEN
+            if ( pos .eq. maxcpr ) then
 
-               REC = REC + 1
-               WRITE ( DAFU, REC=REC, IOSTAT=IOSTAT ) RECORD
+               rec = rec + 1
+               write ( dafu, rec=rec, iostat=iostat ) record
 
-               IF ( IOSTAT .EQ. 0 ) THEN
-                  RECORD = ' '
-                  POS    = 0
+               if ( iostat .eq. 0 ) then
+                  record = ' '
+                  pos    = 0
 
-               ELSE
-                  CALL SETMSG ( 'Error writing to record # of the '  // &
+               else
+                  call setmsg ( 'Error writing to record # of the '  // &
                                 'binary file named FILE. IOSTAT = *.' )
-                  CALL ERRINT ( '#', REC                              )
-                  CALL ERRINT ( '*', IOSTAT                           )
-                  CALL ERRFNM ( 'FILE', DAFU                          )
-                  CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'              )
-                  CALL CHKOUT ( 'SPCAC'                               )
-                  RETURN
-               END IF
+                  call errint ( '#', rec                              )
+                  call errint ( '*', iostat                           )
+                  call errfnm ( 'FILE', dafu                          )
+                  call sigerr ( 'SPICE(FILEWRITEFAILED)'              )
+                  call chkout ( 'SPCAC'                               )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           Add the next character to the current record.
 !
-            POS             = POS + 1
-            RECORD(POS:POS) = DATA(C:C)
+            pos             = pos + 1
+            record(pos:pos) = data(c:c)
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Write the final record to the DAF.
 !
-      REC = REC + 1
-      WRITE ( DAFU, REC=REC, IOSTAT=IOSTAT ) RECORD
+      rec = rec + 1
+      write ( dafu, rec=rec, iostat=iostat ) record
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Error writing the final record, record #, '   // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Error writing the final record, record #, '   // &
                        'of the binary file named FILE.  IOSTAT = *.'  )
-         CALL ERRINT ( '#', REC                                       )
-         CALL ERRINT ( '*', IOSTAT                                    )
-         CALL ERRFNM ( 'FILE', DAFU                                   )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                       )
-         CALL CHKOUT ( 'SPCAC'                                        )
-         RETURN
-      END IF
+         call errint ( '#', rec                                       )
+         call errint ( '*', iostat                                    )
+         call errfnm ( 'FILE', dafu                                   )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         call chkout ( 'SPCAC'                                        )
+         return
+      end if
 
-      CALL CHKOUT ( 'SPCAC' )
-      RETURN
-      END
+      call chkout ( 'SPCAC' )
+      return
+      end

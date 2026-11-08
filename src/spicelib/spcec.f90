@@ -1,6 +1,6 @@
 !$Procedure SPCEC ( SPK and CK, extract comments )
 
-      SUBROUTINE SPCEC ( HANDLE, UNIT )
+      subroutine spcec ( handle, unit )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               UNIT
+      integer               handle
+      integer               unit
 
 ! $ Brief_I/O
 !
@@ -189,8 +189,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -200,51 +200,51 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
-      INTEGER               MAXCPR
-      PARAMETER           ( MAXCPR = 1000   )
+      integer               maxcpr
+      parameter           ( maxcpr = 1000   )
 
 !
 !     Local variables
 !
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(MAXCPR)    LINE
-      CHARACTER*(MAXCPR)    RECORD
-      CHARACTER*(1)         EOT
-      CHARACTER*(1)         NULL
+      character*(ifnlen)    ifname
+      character*(maxcpr)    line
+      character*(maxcpr)    record
+      character*(1)         eot
+      character*(1)         null
 
-      INTEGER               BWARD
-      INTEGER               C
-      INTEGER               DAFU
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               IOSTAT
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NRR
-      INTEGER               POS
-      INTEGER               REC
+      integer               bward
+      integer               c
+      integer               dafu
+      integer               free
+      integer               fward
+      integer               iostat
+      integer               nd
+      integer               ni
+      integer               nrr
+      integer               pos
+      integer               rec
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCEC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCEC' )
+      end if
 
 !
 !     First, check to see if HANDLE is a legitimate DAF handle.
 !
-      CALL DAFSIH ( HANDLE, 'READ' )
+      call dafsih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCEC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCEC' )
+         return
+      end if
 
 !
 !     Read the file record to find out if the DAF contains any
@@ -254,24 +254,24 @@
 !     record, and NRR is the number of reserved records in the file.
 !     If there are no reserved records, there's nothing to be done.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
-      NRR = FWARD - 2
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
+      nrr = fward - 2
 
-      IF ( NRR .EQ. 0 ) THEN
-         CALL CHKOUT ( 'SPCEC' )
-         RETURN
-      END IF
+      if ( nrr .eq. 0 ) then
+         call chkout ( 'SPCEC' )
+         return
+      end if
 
 !
 !     We need to read directly from the SPK or CK file, using a logical
 !     unit instead of a handle.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., DAFU )
+      call zzddhhlu ( handle, 'DAF', .false., dafu )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCEC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCEC' )
+         return
+      end if
 
 !
 !     Load the contents of the reserved records into individual lines,
@@ -282,36 +282,36 @@
 !     In the comment area, NULL means end-of-line, and EOT means
 !     end-of-transmission, or in other words, end-of-comments.
 !
-      NULL = CHAR ( 0 )
-      EOT  = CHAR ( 4 )
+      null = char ( 0 )
+      eot  = char ( 4 )
 
-      LINE   = ' '
-      RECORD = ' '
-      POS    = 0
+      line   = ' '
+      record = ' '
+      pos    = 0
 
-      DO REC = 1, NRR
+      do rec = 1, nrr
 
-         READ ( DAFU, REC=REC+1, IOSTAT=IOSTAT ) RECORD
+         read ( dafu, rec=rec+1, iostat=iostat ) record
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error reading comment area of the binary ' // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error reading comment area of the binary ' // &
                           'file named FNM.  Value of IOSTAT is #.'    )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FNM', DAFU                                 )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'SPCEC'                                     )
-            RETURN
-         END IF
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FNM', dafu                                 )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'SPCEC'                                     )
+            return
+         end if
 
-         DO C = 1, MAXCPR
+         do c = 1, maxcpr
 
 !
 !           End-of-transmission means we're done.
 !
-            IF ( RECORD(C:C) .EQ. EOT ) THEN
+            if ( record(c:c) .eq. eot ) then
 
-               CALL CHKOUT ( 'SPCEC' )
-               RETURN
+               call chkout ( 'SPCEC' )
+               return
 
 !
 !           NULL means that the current line is ready to be written to
@@ -319,40 +319,40 @@
 !           get written.  After this, the current line should be empty
 !           again.
 !
-            ELSE IF ( RECORD(C:C) .EQ. NULL ) THEN
+            else if ( record(c:c) .eq. null ) then
 
-               IF ( POS .EQ. 0 ) THEN
-                  WRITE ( UNIT, *, IOSTAT=IOSTAT )
-               ELSE
-                  WRITE ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE( :POS)
-               END IF
+               if ( pos .eq. 0 ) then
+                  write ( unit, *, iostat=iostat )
+               else
+                  write ( unit, fmt='(A)', iostat=iostat ) line( :pos)
+               end if
 
-               IF ( IOSTAT .NE. 0 ) THEN
-                  CALL SETMSG ( 'Error writing to the text file '     // &
+               if ( iostat .ne. 0 ) then
+                  call setmsg ( 'Error writing to the text file '     // &
                                 'named FNM.  Value of IOSTAT is #.'   )
-                  CALL ERRINT ( '#', IOSTAT                           )
-                  CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'              )
-                  CALL CHKOUT ( 'SPCEC'                               )
-                  RETURN
-               END IF
+                  call errint ( '#', iostat                           )
+                  call sigerr ( 'SPICE(FILEWRITEFAILED)'              )
+                  call chkout ( 'SPCEC'                               )
+                  return
+               end if
 
-               LINE = ' '
-               POS  = 0
+               line = ' '
+               pos  = 0
 
 !
 !           If this a normal character, add it to the current line.
 !
-            ELSE
+            else
 
-               POS           = POS + 1
-               LINE(POS:POS) = RECORD(C:C)
+               pos           = pos + 1
+               line(pos:pos) = record(c:c)
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'SPCEC' )
-      RETURN
-      END
+      call chkout ( 'SPCEC' )
+      return
+      end

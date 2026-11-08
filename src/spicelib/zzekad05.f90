@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAD05 ( EK, add data to class 5 column )
 
-      SUBROUTINE ZZEKAD05 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  NVALS,   DVALS,  ISNULL  )
+      subroutine zzekad05 (  handle,  segdsc,  coldsc, &
+                             recptr,  nvals,   dvals,  isnull  )
 
 ! $ Abstract
 !
@@ -20,20 +20,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      INTEGER               RECPTR
-      INTEGER               NVALS
-      DOUBLE PRECISION      DVALS  ( * )
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      integer               recptr
+      integer               nvals
+      double precision      dvals  ( * )
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -167,241 +167,241 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               COLIDX
-      INTEGER               DATPTR
-      INTEGER               LASTW
-      INTEGER               MBASE
-      INTEGER               NCOLS
-      INTEGER               NLINKS
-      INTEGER               NREC
-      INTEGER               NWRITE
-      INTEGER               P
-      INTEGER               P2
-      INTEGER               PBASE
-      INTEGER               PRVBAS
-      INTEGER               PTRLOC
-      INTEGER               RECNO
-      INTEGER               REMAIN
-      INTEGER               ROOM
-      INTEGER               START
+      integer               colidx
+      integer               datptr
+      integer               lastw
+      integer               mbase
+      integer               ncols
+      integer               nlinks
+      integer               nrec
+      integer               nwrite
+      integer               p
+      integer               p2
+      integer               pbase
+      integer               prvbas
+      integer               ptrloc
+      integer               recno
+      integer               remain
+      integer               room
+      integer               start
 
-      LOGICAL               FSTPAG
+      logical               fstpag
 
 !
 !     Use discovery check-in.
 !
-      NREC    =  SEGDSC ( NRIDX  )
-      COLIDX  =  COLDSC ( ORDIDX )
+      nrec    =  segdsc ( nridx  )
+      colidx  =  coldsc ( ordidx )
 
 !
 !     Make sure the column exists.
 !
-      NCOLS  =  SEGDSC ( NCIDX )
+      ncols  =  segdsc ( ncidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKAD05'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NREC                              )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKAD05'                              )
-         RETURN
+         call chkin  ( 'ZZEKAD05'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' )
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  nrec                              )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKAD05'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      IF (  ISNULL  .AND.  ( COLDSC(NFLIDX) .NE. ITRUE )  ) THEN
+      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKAD05'                                  )
-         CALL SETMSG ( 'Column having index # in segment # does '  // &
+         call chkin  ( 'ZZEKAD05'                                  )
+         call setmsg ( 'Column having index # in segment # does '  // &
                        'not allow nulls, but a null value was '    // &
                        'supplied for the element in record #.'     )
-         CALL ERRINT ( '#',  COLIDX                                )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-         CALL ERRINT ( '#',  RECNO                                 )
-         CALL SIGERR ( 'SPICE(BADATTRIBUTE)'                       )
-         CALL CHKOUT ( 'ZZEKAD05'                                  )
-         RETURN
+         call errint ( '#',  colidx                                )
+         call errint ( '#',  segdsc(snoidx)                        )
+         call errint ( '#',  recno                                 )
+         call sigerr ( 'SPICE(BADATTRIBUTE)'                       )
+         call chkout ( 'ZZEKAD05'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Check NVALS.  If the column has fixed-size entries, NVALS must
 !     match the declared entry size.  In all cases, NVALS must be
 !     positive.
 !
-      IF ( NVALS .LT. 1 ) THEN
+      if ( nvals .lt. 1 ) then
 
-         CALL CHKIN  ( 'ZZEKAD05'                                  )
-         CALL SETMSG ( 'COLIDX = #;  segment = #; NVALS = #;  '  // &
+         call chkin  ( 'ZZEKAD05'                                  )
+         call setmsg ( 'COLIDX = #;  segment = #; NVALS = #;  '  // &
                        'NVALS must be positive '                   )
-         CALL ERRINT ( '#',  COLIDX                                )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-         CALL ERRINT ( '#',  NVALS                                 )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-         CALL CHKOUT ( 'ZZEKAD05'                                  )
-         RETURN
+         call errint ( '#',  colidx                                )
+         call errint ( '#',  segdsc(snoidx)                        )
+         call errint ( '#',  nvals                                 )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+         call chkout ( 'ZZEKAD05'                                  )
+         return
 
-      END IF
+      end if
 
 
-      IF ( COLDSC(SIZIDX) .NE. IFALSE ) THEN
+      if ( coldsc(sizidx) .ne. ifalse ) then
 
-         IF ( NVALS .NE. COLDSC(SIZIDX) ) THEN
+         if ( nvals .ne. coldsc(sizidx) ) then
 
-            CALL CHKIN  ( 'ZZEKAD05'                                   )
-            CALL SETMSG ( 'COLIDX = #;  segment = #; NVALS = #; '     // &
+            call chkin  ( 'ZZEKAD05'                                   )
+            call setmsg ( 'COLIDX = #;  segment = #; NVALS = #; '     // &
                           'declared entry size = #.  Sizes must match.')
-            CALL ERRINT ( '#',  COLIDX                                 )
-            CALL ERRINT ( '#',  SEGDSC(SNOIDX)                         )
-            CALL ERRINT ( '#',  NVALS                                  )
-            CALL ERRINT ( '#',  COLDSC(SIZIDX)                         )
-            CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-            CALL CHKOUT ( 'ZZEKAD05'                                   )
-            RETURN
+            call errint ( '#',  colidx                                 )
+            call errint ( '#',  segdsc(snoidx)                         )
+            call errint ( '#',  nvals                                  )
+            call errint ( '#',  coldsc(sizidx)                         )
+            call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+            call chkout ( 'ZZEKAD05'                                   )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Compute the data pointer location.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
 
-      IF ( ISNULL ) THEN
+      if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
 !        metadata are not affected.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, NULL )
+         call dasudi ( handle, ptrloc, ptrloc, null )
 
 
-      ELSE
+      else
 
-         LASTW   =  SEGDSC ( LDWIDX )
-         ROOM    =  DPSIZE - LASTW
-         REMAIN  =  NVALS
-         START   =  1
-         FSTPAG  =  .TRUE.
+         lastw   =  segdsc ( ldwidx )
+         room    =  dpsize - lastw
+         remain  =  nvals
+         start   =  1
+         fstpag  =  .true.
 
 
-         DO WHILE ( REMAIN .GT. 0 )
+         do while ( remain .gt. 0 )
 !
 !           Decide where to write the data values.  In order to write
 !           to the current page, we require enough room for the count
 !           and at least one column entry element.
 !
-            IF ( ROOM .GE. 2 ) THEN
+            if ( room .ge. 2 ) then
 !
 !              There's room in the current page.  If this is the first
 !              page this entry is written on, set the data pointer
 !              and count.  Write as much of the value as possible to
 !              the current page.
 !
-               P       =   SEGDSC(LDPIDX)
+               p       =   segdsc(ldpidx)
 
-               CALL ZZEKPGBS ( DP,  P,  PBASE )
+               call zzekpgbs ( dp,  p,  pbase )
 
-               PRVBAS  =  PBASE
-               DATPTR  =  PBASE + LASTW + 1
+               prvbas  =  pbase
+               datptr  =  pbase + lastw + 1
 
-               IF ( FSTPAG ) THEN
+               if ( fstpag ) then
 
-                  CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, DATPTR      )
-                  CALL DASUDD ( HANDLE, DATPTR, DATPTR, DBLE(NVALS) )
+                  call dasudi ( handle, ptrloc, ptrloc, datptr      )
+                  call dasudd ( handle, datptr, datptr, dble(nvals) )
 
-                  ROOM    =  ROOM   - 1
-                  DATPTR  =  DATPTR + 1
+                  room    =  room   - 1
+                  datptr  =  datptr + 1
 
-               END IF
+               end if
 
 
-               NWRITE  =  MIN ( REMAIN, ROOM )
+               nwrite  =  min ( remain, room )
 
-               CALL DASUDD ( HANDLE, &
-                             DATPTR, &
-                             DATPTR+NWRITE-1, &
-                             DVALS ( START )  )
+               call dasudd ( handle, &
+                             datptr, &
+                             datptr+nwrite-1, &
+                             dvals ( start )  )
 
-               REMAIN  =  REMAIN - NWRITE
-               ROOM    =  ROOM   - NWRITE
-               START   =  START  + NWRITE
+               remain  =  remain - nwrite
+               room    =  room   - nwrite
+               start   =  start  + nwrite
 
 !
 !              The page containing the data item gains a link.
 !
-               CALL ZZEKGLNK ( HANDLE, DP, P, NLINKS   )
-               CALL ZZEKSLNK ( HANDLE, DP, P, NLINKS+1 )
+               call zzekglnk ( handle, dp, p, nlinks   )
+               call zzekslnk ( handle, dp, p, nlinks+1 )
 
 !
 !              The last d.p. word in use must be updated.  Account
 !              for the count, if this is the first page on which the
 !              current entry is written.
 !
-               IF ( FSTPAG ) THEN
-                  SEGDSC ( LDWIDX )  =  LASTW + 1 + NWRITE
-                  FSTPAG             =  .FALSE.
-               ELSE
-                  SEGDSC ( LDWIDX )  =  LASTW + NWRITE
-               END IF
+               if ( fstpag ) then
+                  segdsc ( ldwidx )  =  lastw + 1 + nwrite
+                  fstpag             =  .false.
+               else
+                  segdsc ( ldwidx )  =  lastw + nwrite
+               end if
 
 
-            ELSE
+            else
 !
 !              Allocate a d.p. data page.  If this is not the first data
 !              page written to, link the previous page to the current
 !              one.
 !
-               CALL ZZEKAPS ( HANDLE, SEGDSC, DP, .FALSE., P2, PBASE )
+               call zzekaps ( handle, segdsc, dp, .false., p2, pbase )
 
-               IF ( .NOT. FSTPAG ) THEN
-                  CALL ZZEKSFWD ( HANDLE, DP, P, P2 )
-               END IF
+               if ( .not. fstpag ) then
+                  call zzeksfwd ( handle, dp, p, p2 )
+               end if
 
 !
 !              The last d.p. page and word in use must be updated.
 !
-               P                  =  P2
-               LASTW              =  0
-               SEGDSC ( LDPIDX )  =  P
-               SEGDSC ( LDWIDX )  =  LASTW
-               ROOM               =  DPSIZE
+               p                  =  p2
+               lastw              =  0
+               segdsc ( ldpidx )  =  p
+               segdsc ( ldwidx )  =  lastw
+               room               =  dpsize
 !
 !              Make sure the link count is zeroed out.
 !
-               CALL ZZEKSLNK ( HANDLE, DP, P, 0 )
+               call zzekslnk ( handle, dp, p, 0 )
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 
-      END IF
+      end if
 
 !
 !     Write out the updated segment descriptor.
 !
-      MBASE  =  SEGDSC(IMDIDX)
+      mbase  =  segdsc(imdidx)
 
-      CALL DASUDI ( HANDLE, MBASE+1, MBASE+SDSCSZ, SEGDSC )
+      call dasudi ( handle, mbase+1, mbase+sdscsz, segdsc )
 
 !
 !     Class 5 columns are not indexed, so we need not update any
 !     index to account for the new element.
 !
 
-      RETURN
-      END
+      return
+      end

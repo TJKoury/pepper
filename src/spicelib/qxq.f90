@@ -1,6 +1,6 @@
 !$Procedure QXQ (Quaternion times quaternion)
 
-      SUBROUTINE QXQ ( Q1, Q2, QOUT )
+      subroutine qxq ( q1, q2, qout )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      Q1   ( 0 : 3 )
-      DOUBLE PRECISION      Q2   ( 0 : 3 )
-      DOUBLE PRECISION      QOUT ( 0 : 3 )
+      double precision      q1   ( 0 : 3 )
+      double precision      q2   ( 0 : 3 )
+      double precision      qout ( 0 : 3 )
 
 ! $ Brief_I/O
 !
@@ -559,28 +559,28 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CROSS ( 3 )
+      double precision      cross ( 3 )
 
 
 !
 !     Compute the scalar part of the product.
 !
-      QOUT(0)  =  Q1(0) * Q2(0)  -  VDOT( Q1(1), Q2(1) )
+      qout(0)  =  q1(0) * q2(0)  -  vdot( q1(1), q2(1) )
 
 !
 !     And now the vector part.  The SPICELIB routine VLCOM3 computes
 !     a linear combination of three 3-vectors.
 !
-      CALL VCRSS  ( Q1(1),  Q2(1),  CROSS )
+      call vcrss  ( q1(1),  q2(1),  cross )
 
-      CALL VLCOM3 ( Q1(0),  Q2(1), &
-                    Q2(0),  Q1(1), &
-                    1.D0,   CROSS,  QOUT(1) )
+      call vlcom3 ( q1(0),  q2(1), &
+                    q2(0),  q1(1), &
+                    1.d0,   cross,  qout(1) )
 
-      RETURN
-      END
+      return
+      end

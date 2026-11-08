@@ -1,6 +1,6 @@
 !$Procedure ISORDV ( Is it an order vector )
 
-      LOGICAL FUNCTION ISORDV ( ARRAY, N )
+      logical function isordv ( array, n )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               ARRAY (*)
-      INTEGER               N
+      integer               array (*)
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -161,35 +161,35 @@
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     Let's take care of the goofy case first.
 !
-      IF      ( N .LT. 1 ) THEN
-         ISORDV = .FALSE.
-         RETURN
-      ELSE IF ( N .EQ. 1 ) THEN
-         ISORDV = ARRAY(1) .EQ. 1
-         RETURN
-      END IF
+      if      ( n .lt. 1 ) then
+         isordv = .false.
+         return
+      else if ( n .eq. 1 ) then
+         isordv = array(1) .eq. 1
+         return
+      end if
 
 
 !
 !     Make an initial pass through the array to be sure we
 !     have legitimate values.
 !
-      DO I = 1, N
+      do i = 1, n
 
-         IF (      ( ARRAY(I) .LT. 1 ) &
-              .OR. ( ARRAY(I) .GT. N )  ) THEN
-            ISORDV = .FALSE.
-            RETURN
-         END IF
+         if (      ( array(i) .lt. 1 ) &
+              .or. ( array(i) .gt. n )  ) then
+            isordv = .false.
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Ok. All of the values are in range.  We just need to check
@@ -265,21 +265,21 @@
 !
 !     Then check to make sure that all of the sign bits are '-'.
 !
-      DO I = 1, N
-         J        = ABS( ARRAY(I) )
-         ARRAY(J) = -    ARRAY(J)
-      END DO
+      do i = 1, n
+         j        = abs( array(i) )
+         array(j) = -    array(j)
+      end do
 
 !
 !     Check each item to see if it's been hit.
 !
-      ISORDV = .TRUE.
+      isordv = .true.
 
-      DO I = 1, N
-         ISORDV   =  ISORDV .AND. ( ARRAY(I) .LT. 0 )
-         ARRAY(I) =          ABS  ( ARRAY(I)        )
-      END DO
+      do i = 1, n
+         isordv   =  isordv .and. ( array(i) .lt. 0 )
+         array(i) =          abs  ( array(i)        )
+      end do
 
 
-      RETURN
-      END
+      return
+      end

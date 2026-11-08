@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRSZ ( EK, tree size )
 
-      INTEGER FUNCTION ZZEKTRSZ ( HANDLE, TREE )
+      integer function zzektrsz ( handle, tree )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
+      integer               handle
+      integer               tree
 
 ! $ Brief_I/O
 !
@@ -94,19 +94,19 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRBS
+      integer               zzektrbs
 
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
+      integer               addrss
 
 !
 !     Go straight to the address at which the key count is stored.
 !
-      ADDRSS  =  ZZEKTRBS ( TREE )  +  TRNKEY
+      addrss  =  zzektrbs ( tree )  +  trnkey
 
-      CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, ZZEKTRSZ )
+      call dasrdi ( handle, addrss, addrss, zzektrsz )
 
-      RETURN
-      END
+      return
+      end

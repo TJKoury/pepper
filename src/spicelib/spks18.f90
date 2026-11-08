@@ -1,6 +1,6 @@
 !$Procedure SPKS18 ( S/P Kernel, subset, type 18 )
 
-      SUBROUTINE SPKS18 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks18 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk18.inc'
+      include 'spk18.inc'
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -194,47 +194,47 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MSIZE
-      PARAMETER           ( MSIZE  = 3 )
+      integer               msize
+      parameter           ( msize  = 3 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA     ( 12 )
+      double precision      data     ( 12 )
 
-      INTEGER               I
-      INTEGER               NDIR
-      INTEGER               NREC
-      INTEGER               OFFE
-      INTEGER               OFFSET
-      INTEGER               PACKSZ
-      INTEGER               REC      ( 2 )
-      INTEGER               SUBTYP
-      INTEGER               WINSIZ
-      INTEGER               WNSZM1
+      integer               i
+      integer               ndir
+      integer               nrec
+      integer               offe
+      integer               offset
+      integer               packsz
+      integer               rec      ( 2 )
+      integer               subtyp
+      integer               winsiz
+      integer               wnszm1
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS18' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS18' )
+      end if
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      IF (  BEGIN  .GT.  END  ) THEN
-         CALL CHKOUT ( 'SPKS18' )
-         RETURN
-      END IF
+      if (  begin  .gt.  end  ) then
+         call chkout ( 'SPKS18' )
+         return
+      end if
 
 !
 !     Read the segment structure metadata.
@@ -242,33 +242,33 @@
 !     Get the type 18 segment subtype.  Next get the quantity "window
 !     size." Also get the number of records in the segment.
 !
-      CALL DAFGDA ( HANDLE, EADDR-MSIZE+1, EADDR, DATA )
+      call dafgda ( handle, eaddr-msize+1, eaddr, data )
 
-      SUBTYP = NINT ( DATA(1) )
-      WINSIZ = NINT ( DATA(2) )
-      NREC   = NINT ( DATA(3) )
+      subtyp = nint ( data(1) )
+      winsiz = nint ( data(2) )
+      nrec   = nint ( data(3) )
 
 !
 !     Set the packet size based on the subtype.
 !
-      IF ( SUBTYP .EQ. S18TP0 ) THEN
+      if ( subtyp .eq. s18tp0 ) then
 
-         PACKSZ = S18PS0
+         packsz = s18ps0
 
-      ELSE IF ( SUBTYP .EQ. S18TP1 ) THEN
+      else if ( subtyp .eq. s18tp1 ) then
 
-         PACKSZ = S18PS1
+         packsz = s18ps1
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unexpected SPK type 18 subtype found in ' // &
+         call setmsg ( 'Unexpected SPK type 18 subtype found in ' // &
                        'type 18 record.'                          )
-         CALL ERRINT ( '#',  SUBTYP                               )
-         CALL SIGERR ( 'SPICE(INVALIDVALUE)'                      )
-         CALL CHKOUT ( 'SPKS18'                                   )
-         RETURN
+         call errint ( '#',  subtyp                               )
+         call sigerr ( 'SPICE(INVALIDVALUE)'                      )
+         call chkout ( 'SPKS18'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     From the number of records, we can compute
@@ -277,8 +277,8 @@
 !
 !        OFFE      The offset of the first epoch.
 !
-      NDIR = ( NREC - 1 ) / 100
-      OFFE = EADDR - NDIR - NREC - MSIZE
+      ndir = ( nrec - 1 ) / 100
+      offe = eaddr - ndir - nrec - msize
 
 !
 !     Examine the epochs in forward order, looking for the first
@@ -286,13 +286,13 @@
 !     whichever comes first). This epoch corresponds to the last
 !     state to be transferred.
 !
-      REC(2) = 1
-      CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
+      rec(2) = 1
+      call dafgda ( handle, offe+rec(2), offe+rec(2), data )
 
-      DO WHILE  ( REC(2) .LT. NREC  .AND.  DATA(1) .LT. END )
-         REC(2) = REC(2) + 1
-         CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
-      END DO
+      do while  ( rec(2) .lt. nrec  .and.  data(1) .lt. end )
+         rec(2) = rec(2) + 1
+         call dafgda ( handle, offe+rec(2), offe+rec(2), data )
+      end do
 
 !
 !     Let WNSZM1 be one less than the window size.
@@ -301,9 +301,9 @@
 !     of the one having index REC(2), if possible.  If not, take as
 !     many states as we can.
 !
-      WNSZM1  =   WINSIZ - 1
+      wnszm1  =   winsiz - 1
 
-      REC(2)  =   MIN (  NREC,   REC(2) + WNSZM1/2   )
+      rec(2)  =   min (  nrec,   rec(2) + wnszm1/2   )
 
 !
 !     Now examine the epochs in reverse order, looking for the first
@@ -311,56 +311,56 @@
 !     whichever comes first). This epoch corresponds to the first
 !     state to be transferred.
 !
-      REC(1) = NREC
-      CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
+      rec(1) = nrec
+      call dafgda ( handle, offe+rec(1), offe+rec(1), data )
 
-      DO WHILE ( REC(1) .GT. 1  .AND.  DATA(1) .GT. BEGIN )
-         REC(1) = REC(1) - 1
-         CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
-      END DO
+      do while ( rec(1) .gt. 1  .and.  data(1) .gt. begin )
+         rec(1) = rec(1) - 1
+         call dafgda ( handle, offe+rec(1), offe+rec(1), data )
+      end do
 
 !
 !     Make sure that there are WNSZM1/2 additional states to the left
 !     of the one having index REC(1), if possible.  If not, take as
 !     many states as we can.
 !
-      REC(1)  =   MAX (  1,   REC(1) - WNSZM1/2   )
+      rec(1)  =   max (  1,   rec(1) - wnszm1/2   )
 
 !
 !     Copy states REC(1) through REC(2) to the output file.
 !
-      DO  I = REC(1), REC(2)
-         OFFSET = BADDR  -  1  +  (I - 1) * PACKSZ
+      do  i = rec(1), rec(2)
+         offset = baddr  -  1  +  (i - 1) * packsz
 
-         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+PACKSZ, DATA         )
-         CALL DAFADA (                                  DATA, PACKSZ )
-      END DO
+         call dafgda ( handle, offset+1, offset+packsz, data         )
+         call dafada (                                  data, packsz )
+      end do
 
 !
 !     Copy epochs REC(1) through REC(2) to the output file.
 !
-      DO  I = REC(1), REC(2)
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do  i = rec(1), rec(2)
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Put every 100'th epoch into the directory, except the last
 !     epoch, if that epoch's index would be a multiple of 100.
 !
-      DO  I = REC(1)+99, REC(2)-1, 100
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do  i = rec(1)+99, rec(2)-1, 100
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Store subtype, the window size, and the number of
 !     records to end the segment.
 !
-      CALL DAFADA ( DBLE ( SUBTYP ),                  1 )
-      CALL DAFADA ( DBLE ( WINSIZ ),                  1 )
-      CALL DAFADA ( DBLE ( REC(2) - REC(1) + 1 ),     1 )
+      call dafada ( dble ( subtyp ),                  1 )
+      call dafada ( dble ( winsiz ),                  1 )
+      call dafada ( dble ( rec(2) - rec(1) + 1 ),     1 )
 
-      CALL CHKOUT ( 'SPKS18' )
-      RETURN
-      END
+      call chkout ( 'SPKS18' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZFRMGT0 ( Frame get transformation )
 
-      SUBROUTINE ZZFRMGT0 ( INFRM, ET, XFORM, OUTFRM, FOUND )
+      subroutine zzfrmgt0 ( infrm, et, xform, outfrm, found )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'frmtyp.inc'
+      include              'frmtyp.inc'
 
-      INTEGER               INFRM
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      XFORM ( 6, 6 )
-      INTEGER               OUTFRM
-      LOGICAL               FOUND
+      integer               infrm
+      double precision      et
+      double precision      xform ( 6, 6 )
+      integer               outfrm
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -151,194 +151,194 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local Variables
 !
-      CHARACTER*(6)         VERSN
+      character*(6)         versn
 
-      INTEGER               CENTER
-      INTEGER               I
-      INTEGER               J
-      INTEGER               TYPE
-      INTEGER               TYPEID
+      integer               center
+      integer               i
+      integer               j
+      integer               type
+      integer               typeid
 
-      DOUBLE PRECISION      IDNT66 ( 6, 6 )
-      DOUBLE PRECISION      TSIPM  ( 6, 6 )
-      DOUBLE PRECISION      ROTATE ( 3, 3 )
+      double precision      idnt66 ( 6, 6 )
+      double precision      tsipm  ( 6, 6 )
+      double precision      rotate ( 3, 3 )
 
-      LOGICAL               PASS1
+      logical               pass1
 !
 !     Saved variables
 !
-      SAVE                  IDNT66
-      SAVE                  PASS1
-      SAVE                  VERSN
+      save                  idnt66
+      save                  pass1
+      save                  versn
 
 !
 !     Initial values
 !
-      DATA                 PASS1 / .TRUE.  /
-      DATA                 VERSN / '4.0.0' /
+      data                 pass1 / .true.  /
+      data                 versn / '4.0.0' /
 
 !
 !     Set output flag.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZFRMGT0' )
+      call chkin ( 'ZZFRMGT0' )
 
 !
 !     On the first pass, initialize the identity matrix.
 !
-      IF ( PASS1 ) then
+      if ( pass1 ) then
 
-         CALL CLEARD( 36, IDNT66 )
+         call cleard( 36, idnt66 )
 
-         DO I = 1, 6
-            IDNT66(I,I) = 1.D0
-         END DO
+         do i = 1, 6
+            idnt66(i,i) = 1.d0
+         end do
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get all the needed information about this frame.
 !
-      CALL FRINFO ( INFRM, CENTER, TYPE, TYPEID, FOUND )
+      call frinfo ( infrm, center, type, typeid, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL CLEARD ( 36, XFORM )
-         OUTFRM = 0
+         call cleard ( 36, xform )
+         outfrm = 0
 
-         CALL CHKOUT ( 'ZZFRMGT0' )
-         RETURN
+         call chkout ( 'ZZFRMGT0' )
+         return
 
-      END IF
+      end if
 
 !
 !     FOUND was set to true by the FRINFO call. Compute transformation
 !     based on the frame class.
 !
-      IF ( TYPE .EQ. INERTL ) THEN
+      if ( type .eq. inertl ) then
 
-         CALL IRFROT ( INFRM, 1, ROTATE )
+         call irfrot ( infrm, 1, rotate )
 
-         IF ( .NOT. FAILED() ) THEN
+         if ( .not. failed() ) then
 
-            DO I = 1,3
-               DO J = 1,3
-                  XFORM(I,  J  ) = ROTATE(I,J)
-                  XFORM(I+3,J+3) = ROTATE(I,J)
-                  XFORM(I+3,J  ) = 0.0D0
-                  XFORM(I,  J+3) = 0.0D0
-               END DO
-            END DO
+            do i = 1,3
+               do j = 1,3
+                  xform(i,  j  ) = rotate(i,j)
+                  xform(i+3,j+3) = rotate(i,j)
+                  xform(i+3,j  ) = 0.0d0
+                  xform(i,  j+3) = 0.0d0
+               end do
+            end do
 
-            OUTFRM = 1
+            outfrm = 1
 
-         END IF
-
-
-      ELSE IF ( TYPE .EQ. PCK ) THEN
-
-         CALL TISBOD ( 'J2000', TYPEID, ET, TSIPM  )
-
-         IF ( .NOT. FAILED() ) THEN
-
-            CALL INVSTM ( TSIPM, XFORM )
-
-            OUTFRM = 1
-
-         END IF
+         end if
 
 
-      ELSE IF ( TYPE .EQ. CK ) THEN
+      else if ( type .eq. pck ) then
 
-         CALL CKFXFM ( TYPEID, ET, XFORM, OUTFRM, FOUND )
+         call tisbod ( 'J2000', typeid, et, tsipm  )
 
+         if ( .not. failed() ) then
 
-      ELSE IF ( TYPE .EQ. TK ) THEN
+            call invstm ( tsipm, xform )
 
-         CALL TKFRAM  ( TYPEID, ROTATE, OUTFRM, FOUND )
+            outfrm = 1
 
-         IF ( .NOT. FAILED() ) THEN
-
-            DO I = 1,3
-               DO J = 1,3
-                  XFORM(I,  J  ) = ROTATE(I,J)
-                  XFORM(I+3,J+3) = ROTATE(I,J)
-                  XFORM(I+3,J  ) = 0.0D0
-                  XFORM(I,  J+3) = 0.0D0
-               END DO
-            END DO
-
-         END IF
+         end if
 
 
-      ELSE IF ( TYPE .EQ. DYN ) THEN
+      else if ( type .eq. ck ) then
+
+         call ckfxfm ( typeid, et, xform, outfrm, found )
+
+
+      else if ( type .eq. tk ) then
+
+         call tkfram  ( typeid, rotate, outfrm, found )
+
+         if ( .not. failed() ) then
+
+            do i = 1,3
+               do j = 1,3
+                  xform(i,  j  ) = rotate(i,j)
+                  xform(i+3,j+3) = rotate(i,j)
+                  xform(i+3,j  ) = 0.0d0
+                  xform(i,  j+3) = 0.0d0
+               end do
+            end do
+
+         end if
+
+
+      else if ( type .eq. dyn ) then
 !
 !        Unlike the other frame classes, the dynamic frame evaluation
 !        routine ZZDYNFRM requires the input frame ID rather than the
 !        dynamic frame class ID. ZZDYNFRM also requires the center ID
 !        we found via the FRINFO call.
 !
-         CALL ZZDYNFR0 ( INFRM, CENTER, ET, XFORM, OUTFRM )
+         call zzdynfr0 ( infrm, center, et, xform, outfrm )
 
 !
 !        The FOUND flag was set by FRINFO earlier; we don't touch
 !        it here. If ZZDYNFRM signaled an error, FOUND will be set
 !        to .FALSE. at end of this routine.
 !
-      ELSE IF ( TYPE .EQ. SWTCH ) THEN
+      else if ( type .eq. swtch ) then
 
-         CALL ZZSWFXFM ( INFRM, ET, 6, XFORM, OUTFRM, FOUND )
+         call zzswfxfm ( infrm, et, 6, xform, outfrm, found )
 
-      ELSE
+      else
 
-         CALL CLEARD ( 36, XFORM )
-         OUTFRM = 0
-         FOUND  = .FALSE.
+         call cleard ( 36, xform )
+         outfrm = 0
+         found  = .false.
 
-         CALL SETMSG ( 'The reference frame # has class #. ' &
+         call setmsg ( 'The reference frame # has class #. ' &
          //            'This form of reference frame is not ' &
          //            'supported in version # of ZZFRMGT0. You need ' &
          //            'to update your version of SPICELIB to the ' &
          //            'latest version in order to support this ' &
          //            'frame. ' )
 
-         CALL ERRINT ( '#', INFRM )
-         CALL ERRINT ( '#', TYPE  )
-         CALL ERRCH  ( '#', VERSN )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAMETYPE)' )
-         CALL CHKOUT ( 'ZZFRMGT0'                  )
-         RETURN
+         call errint ( '#', infrm )
+         call errint ( '#', type  )
+         call errch  ( '#', versn )
+         call sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
+         call chkout ( 'ZZFRMGT0'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure to clear outputs in case of a failure as defined in
 !     in the header.
 !
-      IF ( FAILED() .OR. .NOT. FOUND ) THEN
+      if ( failed() .or. .not. found ) then
 
-         CALL CLEARD ( 36, XFORM )
-         OUTFRM = 0
-         FOUND  = .FALSE.
+         call cleard ( 36, xform )
+         outfrm = 0
+         found  = .false.
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZFRMGT0' )
-      RETURN
-      END
+      call chkout ( 'ZZFRMGT0' )
+      return
+      end

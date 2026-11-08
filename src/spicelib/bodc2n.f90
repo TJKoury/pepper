@@ -1,6 +1,6 @@
 !$Procedure BODC2N ( Body ID code to name translation )
 
-      SUBROUTINE BODC2N ( CODE, NAME, FOUND )
+      subroutine bodc2n ( code, name, found )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               CODE
-      CHARACTER*(*)         NAME
-      LOGICAL               FOUND
+      integer               code
+      character*(*)         name
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -239,23 +239,23 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'BODC2N' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'BODC2N' )
+      end if
 
-      CALL ZZBODC2N ( CODE, NAME, FOUND )
+      call zzbodc2n ( code, name, found )
 !
 !     No need for any error checking, since all we do is check out
 !     and return anyway. We leave the error checking to the caller.
 !
-      CALL CHKOUT ( 'BODC2N' )
-      RETURN
+      call chkout ( 'BODC2N' )
+      return
 
-      END
+      end

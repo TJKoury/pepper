@@ -1,7 +1,7 @@
 !$Procedure ZZEKERI1 ( EK, LLE using record pointers, integer, type 1 )
 
-      SUBROUTINE ZZEKERI1 (  HANDLE,  SEGDSC,  COLDSC,  IKEY, &
-                             RECPTR,  NULL,    PRVIDX,  PRVPTR  )
+      subroutine zzekeri1 (  handle,  segdsc,  coldsc,  ikey, &
+                             recptr,  null,    prvidx,  prvptr  )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               IKEY
-      INTEGER               RECPTR
-      LOGICAL               NULL
-      INTEGER               PRVIDX
-      INTEGER               PRVPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               ikey
+      integer               recptr
+      logical               null
+      integer               prvidx
+      integer               prvptr
 
 ! $ Brief_I/O
 !
@@ -167,116 +167,116 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRSZ
+      integer               zzektrsz
 
-      LOGICAL               ZZEKSCMP
+      logical               zzekscmp
 
 !
 !     Local variables
 !
-      INTEGER               BEGIN
-      INTEGER               BEGPTR
-      INTEGER               END
-      INTEGER               ENDPTR
-      INTEGER               MIDDLE
-      INTEGER               MIDPTR
-      INTEGER               NREC
-      INTEGER               TREE
-      INTEGER               TSIZE
+      integer               begin
+      integer               begptr
+      integer               end
+      integer               endptr
+      integer               middle
+      integer               midptr
+      integer               nrec
+      integer               tree
+      integer               tsize
 
-      LOGICAL               LEQ
+      logical               leq
 
 !
 !     Use discovery check-in.
 !
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Make sure the number of records in the segment is at least as
 !     large as the number of entries in the index:  we must not look
 !     up any entries that don't exist!
 !
-      TREE   =  COLDSC   ( IXPIDX )
-      TSIZE  =  ZZEKTRSZ ( HANDLE, TREE )
-      NREC   =  SEGDSC   ( NRIDX  )
+      tree   =  coldsc   ( ixpidx )
+      tsize  =  zzektrsz ( handle, tree )
+      nrec   =  segdsc   ( nridx  )
 
-      IF ( TSIZE .GT. NREC ) THEN
+      if ( tsize .gt. nrec ) then
 
-         CALL CHKIN  ( 'ZZEKERI1'                                      )
-         CALL SETMSG ( 'Index size = # but column contains # records.' )
-         CALL ERRINT ( '#',  TSIZE                                     )
-         CALL ERRINT ( '#',  NREC                                      )
-         CALL SIGERR ( 'SPICE(SIZEMISMATCH)'                           )
-         CALL CHKOUT ( 'ZZEKERI1'                                      )
-         RETURN
+         call chkin  ( 'ZZEKERI1'                                      )
+         call setmsg ( 'Index size = # but column contains # records.' )
+         call errint ( '#',  tsize                                     )
+         call errint ( '#',  nrec                                      )
+         call sigerr ( 'SPICE(SIZEMISMATCH)'                           )
+         call chkout ( 'ZZEKERI1'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Handle the case of an empty tree gracefully.
 !
-      IF ( TSIZE .EQ. 0 ) THEN
+      if ( tsize .eq. 0 ) then
 
-         PRVIDX = 0
-         PRVPTR = 0
+         prvidx = 0
+         prvptr = 0
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     The algorithm used here is very like unto that used in LSTLED.
 !
-      BEGIN   =   1
-      END     =   TSIZE
+      begin   =   1
+      end     =   tsize
 
 !
 !     Get the record pointers BEGPTR and ENDPTR of the least and
 !     greatest elements in the column.
 !
-      CALL ZZEKTRDP ( HANDLE, TREE, BEGIN, BEGPTR )
-      CALL ZZEKTRDP ( HANDLE, TREE, END,   ENDPTR )
+      call zzektrdp ( handle, tree, begin, begptr )
+      call zzektrdp ( handle, tree, end,   endptr )
 
 !
 !     Compare the input value to the smallest value in the column.
 !
-      IF  (  ZZEKSCMP ( GT,      HANDLE,  SEGDSC,  COLDSC, &
-                        BEGPTR,  1,       INT,     ' ', &
-                        0.D0,    IKEY,    NULL            )  ) THEN
+      if  (  zzekscmp ( gt,      handle,  segdsc,  coldsc, &
+                        begptr,  1,       int,     ' ', &
+                        0.d0,    ikey,    null            )  ) then
 !
 !        The smallest entry of the column is greater than the input
 !        value, so none of the entries are less than or equal to the
 !        input value.
 !
-         PRVIDX = 0
-         PRVPTR = 0
+         prvidx = 0
+         prvptr = 0
 
-         RETURN
+         return
 
 
-      ELSE IF  (  ZZEKSCMP ( EQ,      HANDLE,  SEGDSC,  COLDSC, &
-                             BEGPTR,  1,       INT,     ' ', &
-                             0.D0,    IKEY,    NULL            ) &
+      else if  (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
+                             begptr,  1,       int,     ' ', &
+                             0.d0,    ikey,    null            ) &
 
-                .AND.      (  RECPTR  .LT.  BEGPTR )             ) THEN
+                .and.      (  recptr  .lt.  begptr )             ) then
 !
 !        The smallest entry of the column is greater than the input
 !        value, based on a comparison of record pointers, so none of the
 !        entries are less than or equal to the input value.
 !
-         PRVIDX = 0
-         PRVPTR = 0
+         prvidx = 0
+         prvptr = 0
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we know the input value is greater than or equal
@@ -284,35 +284,35 @@
 !
 !     Compare the input value to the greatest value in the column.
 !
-      IF (  ZZEKSCMP ( LT,      HANDLE,  SEGDSC,   COLDSC, &
-                       ENDPTR,  1,       INT,      ' ', &
-                       0.D0,    IKEY,    NULL             )  ) THEN
+      if (  zzekscmp ( lt,      handle,  segdsc,   coldsc, &
+                       endptr,  1,       int,      ' ', &
+                       0.d0,    ikey,    null             )  ) then
 !
 !        The last element of the column is less than the
 !        input value.
 !
-         PRVIDX  =  TSIZE
+         prvidx  =  tsize
 
-         CALL ZZEKTRDP ( HANDLE, TREE, PRVIDX, PRVPTR )
+         call zzektrdp ( handle, tree, prvidx, prvptr )
 
-         RETURN
+         return
 
 
-      ELSE IF (  ZZEKSCMP ( EQ,      HANDLE,  SEGDSC,  COLDSC, &
-                            ENDPTR,  1,       INT,     ' ', &
-                            0.D0,    IKEY,    NULL             ) &
+      else if (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
+                            endptr,  1,       int,     ' ', &
+                            0.d0,    ikey,    null             ) &
 
-               .AND.      (  ENDPTR  .LE.  RECPTR )       ) THEN
+               .and.      (  endptr  .le.  recptr )       ) then
 !
 !        The last element of the column is less than or equal to the
 !        input value, based on a comparison of record pointers.
 !
-         PRVIDX  =  TSIZE
-         PRVPTR  =  ENDPTR
+         prvidx  =  tsize
+         prvptr  =  endptr
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     The input value lies between some pair of column entries.
@@ -323,67 +323,67 @@
 !     Below, we'll use the variable LEQ to indicate whether the "middle"
 !     element in our search is less than or equal to the input value.
 !
-      DO WHILE ( END .GT. BEGIN+1 )
+      do while ( end .gt. begin+1 )
 !
 !        Find the record pointer of the element whose ordinal position
 !        is halfway between BEGIN and END.
 !
-         MIDDLE   =  ( BEGIN  + END )  / 2
+         middle   =  ( begin  + end )  / 2
 
-         CALL ZZEKTRDP ( HANDLE, TREE, MIDDLE, MIDPTR )
+         call zzektrdp ( handle, tree, middle, midptr )
 
 !
 !        Determine the order relation between IKEY and the column
 !        entry at record MIDPTR.
 !
-         IF (  ZZEKSCMP ( LT,      HANDLE,  SEGDSC,  COLDSC, &
-                          MIDPTR,  1,       INT,     ' ' , &
-                          0.D0,    IKEY,    NULL            )  ) THEN
+         if (  zzekscmp ( lt,      handle,  segdsc,  coldsc, &
+                          midptr,  1,       int,     ' ' , &
+                          0.d0,    ikey,    null            )  ) then
 !
 !           The column element at record MIDPTR is strictly less than
 !           IKEY, based on data values.
 !
-            LEQ  =  .TRUE.
+            leq  =  .true.
 
 
-         ELSE IF ( ZZEKSCMP ( EQ,      HANDLE,  SEGDSC,  COLDSC, &
-                              MIDPTR,  1,       INT,     ' ', &
-                              0.D0,    IKEY,    NULL           ) ) THEN
+         else if ( zzekscmp ( eq,      handle,  segdsc,  coldsc, &
+                              midptr,  1,       int,     ' ', &
+                              0.d0,    ikey,    null           ) ) then
 !
 !           The column entry's value matches IKEY.  We must
 !           compare record pointers at this point.
 !
-            LEQ  =  MIDPTR .LE. RECPTR
+            leq  =  midptr .le. recptr
 
-         ELSE
+         else
 !
 !           The inequality of data values is strict.
 !
-            LEQ  = .FALSE.
+            leq  = .false.
 
-         END IF
+         end if
 
 
-         IF ( LEQ ) THEN
+         if ( leq ) then
 !
 !           The middle value is less than or equal to the input
 !           value.
 !
-            BEGIN = MIDDLE
-         ELSE
-            END   = MIDDLE
-         END IF
+            begin = middle
+         else
+            end   = middle
+         end if
 !
 !        The input value is greater than or equal to the element
 !        having ordinal position BEGIN and strictly less than the
 !        element having ordinal position END.
 !
-      END DO
+      end do
 
 
-      PRVIDX = BEGIN
-      CALL ZZEKTRDP ( HANDLE, TREE, PRVIDX, PRVPTR )
+      prvidx = begin
+      call zzektrdp ( handle, tree, prvidx, prvptr )
 
 
-      RETURN
-      END
+      return
+      end

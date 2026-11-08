@@ -1,7 +1,7 @@
 !$Procedure      ZZGFSSIN ( GF, state of surface intercept point )
 
-      SUBROUTINE ZZGFSSIN ( METHOD, TRGID, ET,   FIXREF, ABCORR, OBSID, &
-                            DREF,   DCTR,  DVEC, RADII,  STATE,  FOUND )
+      subroutine zzgfssin ( method, trgid, et,   fixref, abcorr, obsid, &
+                            dref,   dctr,  dvec, radii,  state,  found )
 
 ! $ Abstract
 !
@@ -28,24 +28,24 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
-      INCLUDE               'zzabcorr.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
+      include               'zzabcorr.inc'
 
-      CHARACTER*(*)         METHOD
-      INTEGER               TRGID
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBSID
-      CHARACTER*(*)         DREF
-      INTEGER               DCTR
-      DOUBLE PRECISION      DVEC   ( 3 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      STATE  ( 6 )
-      LOGICAL               FOUND
+      character*(*)         method
+      integer               trgid
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      integer               obsid
+      character*(*)         dref
+      integer               dctr
+      double precision      dvec   ( 3 )
+      double precision      radii  ( 3 )
+      double precision      state  ( 6 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -344,179 +344,179 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VDOT
+      double precision      clight
+      double precision      vdot
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      TDELTA
-      PARAMETER           ( TDELTA = 1.D0 )
+      double precision      tdelta
+      parameter           ( tdelta = 1.d0 )
 
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
 !
 !     Local variables
 !
-      CHARACTER*(BDNMLN)    SVOBS
-      CHARACTER*(BDNMLN)    SVTARG
+      character*(bdnmln)    svobs
+      character*(bdnmln)    svtarg
 
-      DOUBLE PRECISION      ACC    ( 3 )
-      DOUBLE PRECISION      CORXFI ( 6, 6 )
-      DOUBLE PRECISION      CORXFM ( 6, 6 )
-      DOUBLE PRECISION      CTRSTA ( 6 )
-      DOUBLE PRECISION      DCORXF ( 6, 6 )
-      DOUBLE PRECISION      DLT
-      DOUBLE PRECISION      DLTCTR
-      DOUBLE PRECISION      DRFEPC
-      DOUBLE PRECISION      DRXFRM ( 6, 6 )
-      DOUBLE PRECISION      FXDSTA ( 6 )
-      DOUBLE PRECISION      FXOSTA ( 6 )
-      DOUBLE PRECISION      FXPSTA ( 6 )
-      DOUBLE PRECISION      FXPVEL ( 3 )
-      DOUBLE PRECISION      FXTSTA ( 6 )
-      DOUBLE PRECISION      J2DSTA ( 6 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTCTR
-      DOUBLE PRECISION      LTSIGN
-      DOUBLE PRECISION      OBSPNT ( 6 )
-      DOUBLE PRECISION      OBSSTA ( 6, 2 )
-      DOUBLE PRECISION      OBSTRG ( 6 )
-      DOUBLE PRECISION      PNTSTA ( 6 )
-      DOUBLE PRECISION      SA     ( 3 )
-      DOUBLE PRECISION      SASTAT ( 6 )
-      DOUBLE PRECISION      SAVEL  ( 3 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      SRFVEC ( 3 )
-      DOUBLE PRECISION      SSBOBS ( 6 )
-      DOUBLE PRECISION      SSBTG0 ( 6 )
-      DOUBLE PRECISION      SSBTRG ( 6 )
-      DOUBLE PRECISION      STEMP  ( 6 )
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      UPOS   ( 3 )
-      DOUBLE PRECISION      XFORM  ( 6, 6 )
+      double precision      acc    ( 3 )
+      double precision      corxfi ( 6, 6 )
+      double precision      corxfm ( 6, 6 )
+      double precision      ctrsta ( 6 )
+      double precision      dcorxf ( 6, 6 )
+      double precision      dlt
+      double precision      dltctr
+      double precision      drfepc
+      double precision      drxfrm ( 6, 6 )
+      double precision      fxdsta ( 6 )
+      double precision      fxosta ( 6 )
+      double precision      fxpsta ( 6 )
+      double precision      fxpvel ( 3 )
+      double precision      fxtsta ( 6 )
+      double precision      j2dsta ( 6 )
+      double precision      lt
+      double precision      ltctr
+      double precision      ltsign
+      double precision      obspnt ( 6 )
+      double precision      obssta ( 6, 2 )
+      double precision      obstrg ( 6 )
+      double precision      pntsta ( 6 )
+      double precision      sa     ( 3 )
+      double precision      sastat ( 6 )
+      double precision      savel  ( 3 )
+      double precision      scale
+      double precision      spoint ( 3 )
+      double precision      srfvec ( 3 )
+      double precision      ssbobs ( 6 )
+      double precision      ssbtg0 ( 6 )
+      double precision      ssbtrg ( 6 )
+      double precision      stemp  ( 6 )
+      double precision      t
+      double precision      trgepc
+      double precision      upos   ( 3 )
+      double precision      xform  ( 6, 6 )
 
-      INTEGER               CENTER
-      INTEGER               CLSSID
-      INTEGER               FRCODE
-      INTEGER               FRCLSS
-      INTEGER               I
-      INTEGER               PRVOBS
-      INTEGER               PRVTRG
+      integer               center
+      integer               clssid
+      integer               frcode
+      integer               frclss
+      integer               i
+      integer               prvobs
+      integer               prvtrg
 
-      LOGICAL               ATTBLK ( ABATSZ )
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               GEOM
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               attblk ( abatsz )
+      logical               first
+      logical               fnd
+      logical               geom
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  SVOBS
-      SAVE                  PRVOBS
-      SAVE                  PRVTRG
-      SAVE                  SVTARG
+      save                  first
+      save                  svobs
+      save                  prvobs
+      save                  prvtrg
+      save                  svtarg
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
-      DATA                  PRVOBS /  0 /
-      DATA                  PRVTRG /  0 /
+      data                  prvobs /  0 /
+      data                  prvtrg /  0 /
 
-      DATA                  SVOBS / ' ' /
-      DATA                  SVTARG / ' ' /
+      data                  svobs / ' ' /
+      data                  svtarg / ' ' /
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFSSIN' )
+      call chkin ( 'ZZGFSSIN' )
 
 !
 !     No result has been found.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 
-      IF (  FIRST  .OR. ( TRGID .NE. PRVTRG )  ) THEN
+      if (  first  .or. ( trgid .ne. prvtrg )  ) then
 
-         CALL BODC2S ( TRGID, SVTARG )
+         call bodc2s ( trgid, svtarg )
 
-         PRVTRG = TRGID
+         prvtrg = trgid
 
-      END IF
+      end if
 
 
-      IF (  FIRST  .OR. ( OBSID .NE. PRVOBS )  ) THEN
+      if (  first  .or. ( obsid .ne. prvobs )  ) then
 
-         CALL BODC2S ( OBSID, SVOBS )
+         call bodc2s ( obsid, svobs )
 
-         PRVOBS = OBSID
+         prvobs = obsid
 
-      END IF
+      end if
 
-      FIRST = .FALSE.
+      first = .false.
 
 !
 !     Parse the aberration correction specifier.
 !
-      CALL ZZVALCOR ( ABCORR, ATTBLK )
+      call zzvalcor ( abcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFSSIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFSSIN' )
+         return
+      end if
 
-      GEOM   = ATTBLK( GEOIDX )
-      USELT  = ATTBLK( LTIDX  )
-      USESTL = ATTBLK( STLIDX )
-      XMIT   = ATTBLK( XMTIDX )
+      geom   = attblk( geoidx )
+      uselt  = attblk( ltidx  )
+      usestl = attblk( stlidx )
+      xmit   = attblk( xmtidx )
 
 !
 !     Set the sign associated with the light time correction.
 !
-      IF ( XMIT ) THEN
-         LTSIGN =  1.D0
-      ELSE
-         LTSIGN = -1.D0
-      END IF
+      if ( xmit ) then
+         ltsign =  1.d0
+      else
+         ltsign = -1.d0
+      end if
 
 !
 !     Decide whether the surface intercept point is computed using
 !     the "near point" or "surface intercept" method. Only
 !     ellipsoids may be used a shape models for this computation.
 !
-      IF (  .NOT. EQSTR( METHOD, 'Ellipsoid' )  ) THEN
+      if (  .not. eqstr( method, 'Ellipsoid' )  ) then
 
-         CALL SETMSG ( 'Surface intercept point computation method # ' &
+         call setmsg ( 'Surface intercept point computation method # ' &
          //            'is not supported by this routine.'            )
-         CALL ERRCH  ( '#', METHOD                                    )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                          )
-         CALL CHKOUT ( 'ZZGFSSIN'                                     )
-         RETURN
+         call errch  ( '#', method                                    )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
+         call chkout ( 'ZZGFSSIN'                                     )
+         return
 
-      END IF
+      end if
 
 
-      IF ( GEOM ) THEN
+      if ( geom ) then
 !
 !        This is the geometric case.
 !
@@ -525,51 +525,51 @@
 !
 !        Compute the state transformation from DREF to J2000.
 !
-         CALL SXFORM ( DREF, 'J2000', ET, DCORXF )
+         call sxform ( dref, 'J2000', et, dcorxf )
 
 !
 !        Transform the ray's direction vector from DREF to the J2000
 !        frame. The velocity of DVEC in frame DREF is zero.
 !
-         CALL MOVED  ( DVEC, 3, STEMP    )
-         CALL CLEARD (       3, STEMP(4) )
+         call moved  ( dvec, 3, stemp    )
+         call cleard (       3, stemp(4) )
 
-         CALL MXVG ( DCORXF, STEMP, 6, 6, J2DSTA )
+         call mxvg ( dcorxf, stemp, 6, 6, j2dsta )
 
 !
 !        We need to check the body-fixed reference frame here.
 !
-         CALL NAMFRM ( FIXREF, FRCODE )
-         CALL FRINFO ( FRCODE, CENTER, FRCLSS, CLSSID, FND )
+         call namfrm ( fixref, frcode )
+         call frinfo ( frcode, center, frclss, clssid, fnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFSSIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFSSIN' )
+            return
+         end if
 
-         IF ( .NOT. FND ) THEN
+         if ( .not. fnd ) then
 
-            CALL SETMSG ( 'Input reference frame # was not ' &
+            call setmsg ( 'Input reference frame # was not ' &
             //            'recognized.'                     )
-            CALL ERRCH  ( '#', FIXREF                       )
-            CALL SIGERR ( 'SPICE(NOFRAME)'                  )
-            CALL CHKOUT ( 'ZZGFSSIN'                        )
-            RETURN
+            call errch  ( '#', fixref                       )
+            call sigerr ( 'SPICE(NOFRAME)'                  )
+            call chkout ( 'ZZGFSSIN'                        )
+            return
 
-         END IF
+         end if
 
-         IF ( CENTER .NE. TRGID ) THEN
+         if ( center .ne. trgid ) then
 
-            CALL SETMSG ( 'Input reference frame # is centered ' &
+            call setmsg ( 'Input reference frame # is centered ' &
             //            'on body # instead of body #.'        )
-            CALL ERRCH  ( '#', FIXREF                           )
-            CALL ERRINT ( '#', CENTER                           )
-            CALL ERRINT ( '#', TRGID                            )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'                 )
-            CALL CHKOUT ( 'ZZGFSSIN'                            )
-            RETURN
+            call errch  ( '#', fixref                           )
+            call errint ( '#', center                           )
+            call errint ( '#', trgid                            )
+            call sigerr ( 'SPICE(INVALIDFRAME)'                 )
+            call chkout ( 'ZZGFSSIN'                            )
+            return
 
-         END IF
+         end if
 
 
 !        Get the state of the target with respect to the observer,
@@ -577,18 +577,18 @@
 !        need to propagate states to the solar system barycenter in
 !        this case.
 !
-         CALL SPKGEO ( TRGID, ET, FIXREF, OBSID, FXTSTA, LT )
+         call spkgeo ( trgid, et, fixref, obsid, fxtsta, lt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFSSIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFSSIN' )
+            return
+         end if
 
 !
 !        Compute the state of the observer with respect to the target
 !        in the body-fixed frame.
 !
-         CALL VMINUG ( FXTSTA, 6, FXOSTA )
+         call vminug ( fxtsta, 6, fxosta )
 
 !
 !        Transform the state of the direction vector from the J2000
@@ -596,42 +596,42 @@
 !        light time corrections are involved, the state transformation
 !        matrix from SXFORM works just fine.
 !
-         CALL SXFORM ( 'J2000', FIXREF, ET,   XFORM  )
-         CALL MXVG   ( XFORM,   J2DSTA, 6, 6, FXDSTA )
+         call sxform ( 'J2000', fixref, et,   xform  )
+         call mxvg   ( xform,   j2dsta, 6, 6, fxdsta )
 
 !
 !        Now we can obtain the surface velocity of the surface intercept
 !        point.
 !
-         CALL SURFPV ( FXOSTA,   FXDSTA,   RADII(1), &
-                       RADII(2), RADII(3), FXPSTA,   FOUND )
+         call surfpv ( fxosta,   fxdsta,   radii(1), &
+                       radii(2), radii(3), fxpsta,   found )
 
 !
 !        It's not an error for SURFPV to be unable to compute an
 !        intercept state; return now if the state was not
 !        computable.
 !
-         IF ( .NOT. FOUND ) THEN
-            CALL CHKOUT ( 'ZZGFSSIN' )
-            RETURN
-         END IF
+         if ( .not. found ) then
+            call chkout ( 'ZZGFSSIN' )
+            return
+         end if
 
 
-      ELSE IF ( USELT ) THEN
+      else if ( uselt ) then
 !
 !        Light time and possibly stellar aberration corrections
 !        are applied.
 !
 !        Compute the state transformation from DREF to J2000.
 !
-         IF ( OBSID .EQ. DCTR ) THEN
+         if ( obsid .eq. dctr ) then
 !
 !           DREF is centered on the observer, so there's no light time
 !           correction.
 !
-            CALL SXFORM ( DREF, 'J2000', ET, DCORXF )
+            call sxform ( dref, 'J2000', et, dcorxf )
 
-         ELSE
+         else
 !
 !           Find the epoch DRFEPC associated with the input direction
 !           vector's reference frame DREF. We use SPK rules for
@@ -643,33 +643,33 @@
 !           Find the light time from the observer to the center of
 !           frame DREF.
 !
-            CALL SPKACS ( DCTR,   ET,    'J2000', ABCORR, OBSID, &
-                          CTRSTA, LTCTR, DLTCTR                 )
+            call spkacs ( dctr,   et,    'J2000', abcorr, obsid, &
+                          ctrsta, ltctr, dltctr                 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFSSIN' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFSSIN' )
+               return
+            end if
 
-            DRFEPC  =  ET  +  LTSIGN * LTCTR
+            drfepc  =  et  +  ltsign * ltctr
 
 !
 !           Compute the state of the input direction vector in the
 !           J2000 frame at DRFEPC. Correct the state transformation for
 !           the rate of change of light time.
 !
-            CALL SXFORM   ( DREF, 'J2000', DRFEPC, DRXFRM )
-            CALL ZZCORSXF ( XMIT, DLTCTR,  DRXFRM, DCORXF )
+            call sxform   ( dref, 'J2000', drfepc, drxfrm )
+            call zzcorsxf ( xmit, dltctr,  drxfrm, dcorxf )
 
-         END IF
+         end if
 
 !
 !        The velocity of DVEC in frame DREF is zero.
 !
-         CALL MOVED  ( DVEC, 3, STEMP    )
-         CALL CLEARD (       3, STEMP(4) )
+         call moved  ( dvec, 3, stemp    )
+         call cleard (       3, stemp(4) )
 
-         CALL MXVG ( DCORXF, STEMP, 6, 6, J2DSTA )
+         call mxvg ( dcorxf, stemp, 6, 6, j2dsta )
 
 !
 !        We'll transform J2DSTA to the target body-fixed frame at
@@ -729,71 +729,71 @@
 !        Note that SINCPT will signal an error if FIXREF is not
 !        actually centered on the target body.
 !
-         CALL SINCPT ( METHOD, SVTARG, ET,     FIXREF, ABCORR, SVOBS, &
-                       DREF,   DVEC,   SPOINT, TRGEPC, SRFVEC, FOUND )
+         call sincpt ( method, svtarg, et,     fixref, abcorr, svobs, &
+                       dref,   dvec,   spoint, trgepc, srfvec, found )
 !
 !        It's not an error for SINCPT to be unable to compute an
 !        intercept point; return now if the intercept was not found.
 !
-         IF ( .NOT. FOUND ) THEN
-            CALL CHKOUT ( 'ZZGFSSIN' )
-            RETURN
-         END IF
+         if ( .not. found ) then
+            call chkout ( 'ZZGFSSIN' )
+            return
+         end if
 
 !
 !        Get J2000-relative states of observer and target with respect
 !        to the solar system barycenter at their respective epochs of
 !        participation.
 !
-         CALL SPKSSB ( OBSID, ET,     'J2000', SSBOBS )
-         CALL SPKSSB ( TRGID, TRGEPC, 'J2000', SSBTG0 )
+         call spkssb ( obsid, et,     'J2000', ssbobs )
+         call spkssb ( trgid, trgepc, 'J2000', ssbtg0 )
 
 !
 !        Get the uncorrected J2000 to body-fixed to state
 !        transformation at TRGEPC.
 !
-         CALL SXFORM ( 'J2000', FIXREF, TRGEPC, XFORM )
+         call sxform ( 'J2000', fixref, trgepc, xform )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFSSIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFSSIN' )
+            return
+         end if
 
 !
 !        Initialize the state of the surface intercept point in the
 !        body-fixed frame. At this point we don't know the point's
 !        velocity; set it to zero.
 !
-         CALL MOVED  ( SPOINT, 3, FXPSTA    )
-         CALL CLEARD (         3, FXPSTA(4) )
+         call moved  ( spoint, 3, fxpsta    )
+         call cleard (         3, fxpsta(4) )
 
-         IF ( USESTL ) THEN
+         if ( usestl ) then
 !
 !           We're going to need the acceleration of the observer
 !           relative to the SSB. Compute this now.
 !
-            DO I = 1, 2
+            do i = 1, 2
 !
 !              The epoch is ET -/+ TDELTA.
 !
-               T =  ET  + (2*I-3)*TDELTA
+               t =  et  + (2*i-3)*tdelta
 
-               CALL SPKSSB ( OBSID,  T,  'J2000', OBSSTA(1,I) )
+               call spkssb ( obsid,  t,  'J2000', obssta(1,i) )
 
-            END DO
+            end do
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFSSIN' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFSSIN' )
+               return
+            end if
 
 !
 !           Compute the observer's acceleration using a quadratic
 !           approximation.
 !
-            CALL QDERIV ( 3, OBSSTA(4,1), OBSSTA(4,2), TDELTA, ACC )
+            call qderiv ( 3, obssta(4,1), obssta(4,2), tdelta, acc )
 
-         END IF
+         end if
 
 !
 !        The rest of the algorithm is iterative. On the first
@@ -805,117 +805,117 @@
 !        pass yields a reasonable estimate. On the second pass,
 !        we'll use the velocity derived on the first pass.
 !
-         CALL CLEARD ( 3, FXPVEL )
+         call cleard ( 3, fxpvel )
 
 !
 !        We'll also estimate the rate of change of light time
 !        as zero on the first pass.
 !
-         DLT = 0.D0
+         dlt = 0.d0
 
-         DO I = 1, 3
+         do i = 1, 3
 !
 !           Correct the target's velocity for the rate of
 !           change of light time.
 !
-            IF ( XMIT ) THEN
-               SCALE = 1.D0 + DLT
-            ELSE
-               SCALE = 1.D0 - DLT
-            END IF
+            if ( xmit ) then
+               scale = 1.d0 + dlt
+            else
+               scale = 1.d0 - dlt
+            end if
 
 !
 !           Scale the velocity portion of the target state to
 !           correct the velocity for the rate of change of light
 !           time.
 !
-            CALL MOVED ( SSBTG0, 3,         SSBTRG    )
-            CALL VSCL  ( SCALE,  SSBTG0(4), SSBTRG(4) )
+            call moved ( ssbtg0, 3,         ssbtrg    )
+            call vscl  ( scale,  ssbtg0(4), ssbtrg(4) )
 
 !
 !           Get the state of the target with respect to the observer.
 !
-            CALL VSUBG ( SSBTRG, SSBOBS, 6, OBSTRG )
+            call vsubg ( ssbtrg, ssbobs, 6, obstrg )
 
 !
 !           Correct the J2000 to body-fixed state transformation matrix
 !           for the rate of change of light time.
 !
-            CALL ZZCORSXF ( XMIT, DLT, XFORM, CORXFM )
+            call zzcorsxf ( xmit, dlt, xform, corxfm )
 
 !
 !           Invert CORXFM to obtain the corrected
 !           body-fixed to J2000 state transformation.
 !
-            CALL INVSTM ( CORXFM, CORXFI )
+            call invstm ( corxfm, corxfi )
 
 !
 !           Convert the surface intercept point state to the J2000
 !           frame.
 !
-            CALL MXVG ( CORXFI, FXPSTA, 6, 6, PNTSTA )
+            call mxvg ( corxfi, fxpsta, 6, 6, pntsta )
 
 !
 !           Find the J2000-relative state of the surface intercept
 !           point with respect to the target.
 !
-            CALL VADDG ( OBSTRG, PNTSTA, 6, OBSPNT )
+            call vaddg ( obstrg, pntsta, 6, obspnt )
 
-            IF ( USESTL ) THEN
+            if ( usestl ) then
 !
 !              Now compute the stellar aberration correction
 !              applicable to OBSPNT. We need the velocity of
 !              this correction as well.
 !
-               CALL ZZSTELAB ( XMIT, ACC, SSBOBS(4), OBSPNT, SA, SAVEL )
+               call zzstelab ( xmit, acc, ssbobs(4), obspnt, sa, savel )
 
-               CALL MOVED ( SA,    3, SASTAT    )
-               CALL MOVED ( SAVEL, 3, SASTAT(4) )
+               call moved ( sa,    3, sastat    )
+               call moved ( savel, 3, sastat(4) )
 !
 !              Adding the stellar aberration state to the target center
 !              state gives us the state of the target center with
 !              respect to the observer, corrected for the aberrations
 !              applicable to the surface intercept point.
 !
-               CALL VADDG ( OBSTRG, SASTAT, 6, STEMP )
+               call vaddg ( obstrg, sastat, 6, stemp )
 
-            ELSE
-               CALL MOVED ( OBSTRG, 6, STEMP )
-            END IF
+            else
+               call moved ( obstrg, 6, stemp )
+            end if
 
 !
 !           Convert STEMP to the body-fixed reference frame.
 !
-            CALL MXVG ( CORXFM, STEMP, 6, 6, FXTSTA )
+            call mxvg ( corxfm, stemp, 6, 6, fxtsta )
 
 !
 !           At long last, compute the state of the observer
 !           with respect to the target in the body-fixed frame.
 !
-            CALL VMINUG ( FXTSTA, 6, FXOSTA )
+            call vminug ( fxtsta, 6, fxosta )
 
 !
 !           Transform the state of the direction vector from the
 !           J2000 frame to the target body-fixed frame at TRGEPC.
 !
-            CALL MXVG ( CORXFM, J2DSTA, 6, 6, FXDSTA )
+            call mxvg ( corxfm, j2dsta, 6, 6, fxdsta )
 
 !
 !           Now we can obtain the surface velocity of the
 !           surface intercept point.
 !
-            CALL SURFPV ( FXOSTA,   FXDSTA,   RADII(1), &
-                          RADII(2), RADII(3), FXPSTA,   FOUND )
+            call surfpv ( fxosta,   fxdsta,   radii(1), &
+                          radii(2), radii(3), fxpsta,   found )
 
 !
 !           It's not an error for SURFPV to be unable to compute an
 !           intercept state; return now if the state was not
 !           computable.
 !
-            IF ( .NOT. FOUND ) THEN
-               CALL CHKOUT ( 'ZZGFSSIN' )
-               RETURN
-            END IF
+            if ( .not. found ) then
+               call chkout ( 'ZZGFSSIN' )
+               return
+            end if
 
 !
 !           At this point we can update the surface point
@@ -928,8 +928,8 @@
 !           add the result to the state of the target center
 !           with respect to the observer.
 !
-            CALL MXVG  ( CORXFI, FXPSTA, 6, 6, PNTSTA )
-            CALL VADDG ( OBSTRG, PNTSTA, 6,    OBSPNT )
+            call mxvg  ( corxfi, fxpsta, 6, 6, pntsta )
+            call vaddg ( obstrg, pntsta, 6,    obspnt )
 
 !
 !           Now that we have an improved estimate of the
@@ -948,35 +948,35 @@
 !           made by including stellar aberration is too small to make
 !           it worthwhile to make this adjustment.
 !
-            CALL VHAT ( OBSPNT, UPOS )
+            call vhat ( obspnt, upos )
 
-            DLT = VDOT ( OBSPNT(4), UPOS ) / CLIGHT()
+            dlt = vdot ( obspnt(4), upos ) / clight()
 
 !
 !           With FXPVEL and DLT updated, we'll repeat our
 !           computations.
 !
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        We should never get here.
 !
-         CALL SETMSG ( 'Aberration correction # was not ' &
+         call setmsg ( 'Aberration correction # was not ' &
          //            'recognized.'                      )
-         CALL ERRCH  ( '#',  ABCORR                       )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'              )
-         CALL CHKOUT ( 'ZZGFSSIN'                         )
-         RETURN
+         call errch  ( '#',  abcorr                       )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'              )
+         call chkout ( 'ZZGFSSIN'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Copy the computed state to the output argument STATE.
 !     FOUND has already been set to .TRUE. by SURFPV.
 !
-      CALL MOVED ( FXPSTA, 6, STATE )
+      call moved ( fxpsta, 6, state )
 
-      CALL CHKOUT  ( 'ZZGFSSIN' )
-      RETURN
-      END
+      call chkout  ( 'ZZGFSSIN' )
+      return
+      end

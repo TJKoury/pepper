@@ -1,6 +1,6 @@
 !$Procedure   ZZGFDSPS  ( GF, display string  )
 
-      SUBROUTINE ZZGFDSPS ( NLEAD, STRING, FMT, NTRAIL )
+      subroutine zzgfdsps ( nlead, string, fmt, ntrail )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NLEAD
-      CHARACTER*(*)         STRING
-      CHARACTER*(*)         FMT
-      INTEGER               NTRAIL
+      integer               nlead
+      character*(*)         string
+      character*(*)         fmt
+      integer               ntrail
 
 ! $ Brief_I/O
 !
@@ -201,22 +201,22 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(LNSIZE)    TMPSTR
+      character*(lnsize)    tmpstr
 
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               L
+      integer               i
+      integer               iostat
+      integer               l
 
 !
 !     Use discovery check-in.
@@ -225,8 +225,8 @@
 !
 !     Get a local copy of the input string.
 !
-      TMPSTR = STRING
-      L      = RTRIM(TMPSTR)
+      tmpstr = string
+      l      = rtrim(tmpstr)
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Write leading blank lines, if any.
@@ -235,13 +235,13 @@
 !     here so as to avoid overwriting the last status line.
 #endif
 !
-      DO I = 1, NLEAD
+      do i = 1, nlead
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         CALL TOSTDO ( ' ' )
+         call tostdo ( ' ' )
 #else
-         WRITE (*, '(A)' ) CHAR(27)//'[B'
+         write (*, '(A)' ) char(27)//'[B'
 #endif
-      END DO
+      end do
 
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -253,22 +253,22 @@
 #endif
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      CALL TOSTDO (   TMPSTR( : RTRIM(TMPSTR) )   )
+      call tostdo (   tmpstr( : rtrim(tmpstr) )   )
 #else
-      CALL SUFFIX (  CHAR(27)//'[A', 0, TMPSTR )
+      call suffix (  char(27)//'[A', 0, tmpstr )
 
-      WRITE ( *, '(A)', IOSTAT = IOSTAT ) TMPSTR( : RTRIM(TMPSTR) )
+      write ( *, '(A)', iostat = iostat ) tmpstr( : rtrim(tmpstr) )
 
-      IF ( IOSTAT .NE. 0  ) THEN
+      if ( iostat .ne. 0  ) then
 
-         CALL CHKIN  ( 'ZZGFDSPS'                                      )
-         CALL SETMSG ( 'Error writing to standard output: IOSTAT = #.' )
-         CALL ERRINT ( '#', IOSTAT                                     )
-         CALL SIGERR ( 'SPICE(WRITEFAILED)'                            )
-         CALL CHKOUT ( 'ZZGFDSPS'                                      )
-         RETURN
+         call chkin  ( 'ZZGFDSPS'                                      )
+         call setmsg ( 'Error writing to standard output: IOSTAT = #.' )
+         call errint ( '#', iostat                                     )
+         call sigerr ( 'SPICE(WRITEFAILED)'                            )
+         call chkout ( 'ZZGFDSPS'                                      )
+         return
 
-      END IF
+      end if
 #endif
 
 !
@@ -279,13 +279,13 @@
 !     here so as to avoid overwriting the last status line.
 #endif
 !
-      DO I = 1, NTRAIL
+      do i = 1, ntrail
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         CALL TOSTDO ( ' ' )
+         call tostdo ( ' ' )
 #else
-         WRITE (*, '(A)' ) CHAR(27)//'[B'
+         write (*, '(A)' ) char(27)//'[B'
 #endif
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

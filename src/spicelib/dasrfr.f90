@@ -1,7 +1,7 @@
 !$Procedure DASRFR ( DAS, read file record )
 
-      SUBROUTINE DASRFR ( HANDLE, IDWORD, IFNAME, NRESVR, &
-                          NRESVC, NCOMR,  NCOMC          )
+      subroutine dasrfr ( handle, idword, ifname, nresvr, &
+                          nresvc, ncomr,  ncomc          )
 
 ! $ Abstract
 !
@@ -20,15 +20,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         IDWORD
-      CHARACTER*(*)         IFNAME
-      INTEGER               NRESVR
-      INTEGER               NRESVC
-      INTEGER               NCOMR
-      INTEGER               NCOMC
+      integer               handle
+      character*(*)         idword
+      character*(*)         ifname
+      integer               nresvr
+      integer               nresvc
+      integer               ncomr
+      integer               ncomc
 
 ! $ Brief_I/O
 !
@@ -278,27 +278,27 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASRFR' )
+      call chkin ( 'DASRFR' )
 
 
-      CALL ZZDASRFR ( HANDLE, IDWORD, IFNAME, &
-                      NRESVR, NRESVC, NCOMR,  NCOMC )
+      call zzdasrfr ( handle, idword, ifname, &
+                      nresvr, nresvc, ncomr,  ncomc )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DASRFR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DASRFR' )
+         return
+      end if
 
-      CALL CHKOUT ( 'DASRFR' )
-      RETURN
-      END
+      call chkout ( 'DASRFR' )
+      return
+      end

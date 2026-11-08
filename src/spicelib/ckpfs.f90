@@ -1,7 +1,7 @@
 !$Procedure CKPFS ( C-kernel, get pointing from segment )
 
-      SUBROUTINE CKPFS ( HANDLE, DESCR, SCLKDP, TOL,  NEEDAV, &
-                         CMAT,   AV,    CLKOUT, FOUND         )
+      subroutine ckpfs ( handle, descr, sclkdp, tol,  needav, &
+                         cmat,   av,    clkout, found         )
 
 ! $ Abstract
 !
@@ -18,19 +18,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ckparam.inc'
+      include               'ckparam.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( *    )
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      CMAT   ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3    )
-      DOUBLE PRECISION      CLKOUT
-      LOGICAL               FOUND
+      integer               handle
+      double precision      descr  ( *    )
+      double precision      sclkdp
+      double precision      tol
+      logical               needav
+      double precision      cmat   ( 3, 3 )
+      double precision      av     ( 3    )
+      double precision      clkout
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -368,8 +368,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -380,34 +380,34 @@
 !        NIC        is the number of integer components in an unpacked
 !                   C-kernel segment descriptor.
 !
-      INTEGER               NDC
-      PARAMETER           ( NDC    = 2  )
+      integer               ndc
+      parameter           ( ndc    = 2  )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC    = 6  )
+      integer               nic
+      parameter           ( nic    = 6  )
 
 !
 !     Local variables
 !
-      INTEGER               ICD    ( NIC    )
-      INTEGER               TYPE
+      integer               icd    ( nic    )
+      integer               type
 
-      DOUBLE PRECISION      DCD    ( NDC    )
-      DOUBLE PRECISION      RECORD ( CKMRSZ )
+      double precision      dcd    ( ndc    )
+      double precision      record ( ckmrsz )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKPFS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKPFS' )
+      end if
 
 !
 !     Start off with FOUND set to false.
 !
-      FOUND  = .FALSE.
+      found  = .false.
 
 !
 !     Upgrading CKPFS to accommodate new data types involves following
@@ -429,76 +429,76 @@
 !     Unpack the descriptor to see what the data type of the segment is,
 !     and call the appropriate read-and-evaluate routines.
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
-      TYPE = ICD( 3 )
+      type = icd( 3 )
 
-      IF ( TYPE .EQ. 1 ) THEN
+      if ( type .eq. 1 ) then
 
-         CALL CKR01 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV, RECORD, &
-                      FOUND )
+         call ckr01 ( handle, descr, sclkdp, tol, needav, record, &
+                      found )
 
-         IF ( FOUND ) THEN
-            CALL CKE01 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
-         END IF
+         if ( found ) then
+            call cke01 ( needav, record, cmat, av, clkout )
+         end if
 
-      ELSE  IF ( TYPE .EQ. 2 ) THEN
+      else  if ( type .eq. 2 ) then
 
-         CALL CKR02 ( HANDLE, DESCR, SCLKDP, TOL, RECORD, FOUND )
+         call ckr02 ( handle, descr, sclkdp, tol, record, found )
 
-         IF ( FOUND ) THEN
-            CALL CKE02 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
-         END IF
+         if ( found ) then
+            call cke02 ( needav, record, cmat, av, clkout )
+         end if
 
-      ELSE  IF ( TYPE .EQ. 3 ) THEN
+      else  if ( type .eq. 3 ) then
 
-         CALL CKR03 (HANDLE, DESCR, SCLKDP, TOL, NEEDAV, RECORD, FOUND)
+         call ckr03 (handle, descr, sclkdp, tol, needav, record, found)
 
-         IF ( FOUND ) THEN
-            CALL CKE03 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
-         END IF
+         if ( found ) then
+            call cke03 ( needav, record, cmat, av, clkout )
+         end if
 
-      ELSE  IF ( TYPE .EQ. 4 ) THEN
+      else  if ( type .eq. 4 ) then
 
-         CALL CKR04 (HANDLE, DESCR, SCLKDP, TOL, NEEDAV, RECORD, FOUND)
+         call ckr04 (handle, descr, sclkdp, tol, needav, record, found)
 
-         IF ( FOUND ) THEN
-            CALL CKE04 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
-         END IF
+         if ( found ) then
+            call cke04 ( needav, record, cmat, av, clkout )
+         end if
 
-      ELSE  IF ( TYPE .EQ. 5 ) THEN
+      else  if ( type .eq. 5 ) then
 
-         CALL CKR05 (HANDLE, DESCR, SCLKDP, TOL, NEEDAV, RECORD, FOUND)
+         call ckr05 (handle, descr, sclkdp, tol, needav, record, found)
 
-         IF ( FOUND ) THEN
-            CALL CKE05 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
-         END IF
+         if ( found ) then
+            call cke05 ( needav, record, cmat, av, clkout )
+         end if
 
-      ELSE  IF ( TYPE .EQ. 6 ) THEN
+      else  if ( type .eq. 6 ) then
 
-         CALL CKR06 (HANDLE, DESCR, SCLKDP, TOL, NEEDAV, RECORD, FOUND)
+         call ckr06 (handle, descr, sclkdp, tol, needav, record, found)
 
-         IF ( FOUND ) THEN
-            CALL CKE06 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
-         END IF
+         if ( found ) then
+            call cke06 ( needav, record, cmat, av, clkout )
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The data type # is not currently supported.' )
-         CALL ERRINT ( '#', TYPE                                     )
-         CALL SIGERR ( 'SPICE(CKUNKNOWNDATATYPE)'                    )
+         call setmsg ( 'The data type # is not currently supported.' )
+         call errint ( '#', type                                     )
+         call sigerr ( 'SPICE(CKUNKNOWNDATATYPE)'                    )
 
-      END IF
+      end if
 
 !
 !     In case an evaluator signaled an error, we check the SPICE
 !     error status here. If a SPICE error occurred, indicate no
 !     data were found.
 !
-      IF ( FAILED() ) THEN
-         FOUND = .FALSE.
-      END IF
+      if ( failed() ) then
+         found = .false.
+      end if
 
-      CALL CHKOUT ( 'CKPFS' )
-      RETURN
-      END
+      call chkout ( 'CKPFS' )
+      return
+      end

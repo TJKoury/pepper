@@ -1,6 +1,6 @@
 !$Procedure PROP2B ( Propagate a two-body solution )
 
-      SUBROUTINE PROP2B ( GM, PVINIT, DT, PVPROP )
+      subroutine prop2b ( gm, pvinit, dt, pvprop )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      GM
-      DOUBLE PRECISION      PVINIT ( 6 )
-      DOUBLE PRECISION      DT
-      DOUBLE PRECISION      PVPROP ( 6 )
+      double precision      gm
+      double precision      pvinit ( 6 )
+      double precision      dt
+      double precision      pvprop ( 6 )
 
 ! $ Brief_I/O
 !
@@ -280,24 +280,24 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      brcktd
+      double precision      dpmax
+      double precision      vdot
+      double precision      vnorm
 
-      INTEGER               BRCKTI
+      integer               brckti
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local Parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 3 )
+      integer               bufsiz
+      parameter           ( bufsiz = 3 )
 
-      INTEGER               MAXBIT
-      PARAMETER           ( MAXBIT = 64 )
+      integer               maxbit
+      parameter           ( maxbit = 64 )
 
 !
 !     Local variables
@@ -307,109 +307,109 @@
 !     equation and in the propagation of the input state.  They are
 !     described as they are introduced in the code below.
 !
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      B2RV
-      DOUBLE PRECISION      BQ
-      DOUBLE PRECISION      BR
-      DOUBLE PRECISION      BR0
-      DOUBLE PRECISION      C0
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      C3
-      DOUBLE PRECISION      E
-      DOUBLE PRECISION      EQVEC  ( 3 )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      FX2
-      DOUBLE PRECISION      H2
-      DOUBLE PRECISION      HVEC   ( 3 )
-      DOUBLE PRECISION      KFUN
-      DOUBLE PRECISION      KFUNL
-      DOUBLE PRECISION      KFUNU
-      DOUBLE PRECISION      LOGBND
-      DOUBLE PRECISION      LOWER
-      DOUBLE PRECISION      OLDX
-      DOUBLE PRECISION      PC
-      DOUBLE PRECISION      PCDOT
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      QOVR0
-      DOUBLE PRECISION      R0
-      DOUBLE PRECISION      RV
-      DOUBLE PRECISION      TMPVEC ( 3 )
-      DOUBLE PRECISION      UPPER
-      DOUBLE PRECISION      VC
-      DOUBLE PRECISION      VCDOT
-      DOUBLE PRECISION      VEL    ( 3 )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      X2
-      DOUBLE PRECISION      X3
+      double precision      b
+      double precision      b2rv
+      double precision      bq
+      double precision      br
+      double precision      br0
+      double precision      c0
+      double precision      c1
+      double precision      c2
+      double precision      c3
+      double precision      e
+      double precision      eqvec  ( 3 )
+      double precision      f
+      double precision      fx2
+      double precision      h2
+      double precision      hvec   ( 3 )
+      double precision      kfun
+      double precision      kfunl
+      double precision      kfunu
+      double precision      logbnd
+      double precision      lower
+      double precision      oldx
+      double precision      pc
+      double precision      pcdot
+      double precision      pos    ( 3 )
+      double precision      q
+      double precision      qovr0
+      double precision      r0
+      double precision      rv
+      double precision      tmpvec ( 3 )
+      double precision      upper
+      double precision      vc
+      double precision      vcdot
+      double precision      vel    ( 3 )
+      double precision      x
+      double precision      x2
+      double precision      x3
 
 !
 !     The variables below store intermediate results that can be
 !     reused if PVINIT is supplied more than once to this routine.
 !     In this way, the number of redundant computations can be reduced.
 !
-      DOUBLE PRECISION      SAVEPV ( 6, BUFSIZ )
-      DOUBLE PRECISION      SAVEGM (    BUFSIZ )
-      DOUBLE PRECISION      SBOUND (    BUFSIZ )
-      DOUBLE PRECISION      SB2RV  (    BUFSIZ )
-      DOUBLE PRECISION      SBQ    (    BUFSIZ )
-      DOUBLE PRECISION      SBR0   (    BUFSIZ )
-      DOUBLE PRECISION      SF     (    BUFSIZ )
-      DOUBLE PRECISION      SQOVR0 (    BUFSIZ )
+      double precision      savepv ( 6, bufsiz )
+      double precision      savegm (    bufsiz )
+      double precision      sbound (    bufsiz )
+      double precision      sb2rv  (    bufsiz )
+      double precision      sbq    (    bufsiz )
+      double precision      sbr0   (    bufsiz )
+      double precision      sf     (    bufsiz )
+      double precision      sqovr0 (    bufsiz )
 
-      INTEGER               NEWEST (    BUFSIZ )
-      INTEGER               NSAVED
+      integer               newest (    bufsiz )
+      integer               nsaved
 
 !
 !     Variables used to bracket X in our solution of Kepler's equation.
 !
-      DOUBLE PRECISION      BOUND
-      DOUBLE PRECISION      FIXED
-      DOUBLE PRECISION      LOGDPM
-      DOUBLE PRECISION      LOGF
-      DOUBLE PRECISION      LOGMXC
-      DOUBLE PRECISION      MAXC
-      DOUBLE PRECISION      ROOTF
+      double precision      bound
+      double precision      fixed
+      double precision      logdpm
+      double precision      logf
+      double precision      logmxc
+      double precision      maxc
+      double precision      rootf
 
-      INTEGER               BUMPED
-      INTEGER               I
-      INTEGER               K
-      INTEGER               MOSTC
-      INTEGER               LCOUNT
+      integer               bumped
+      integer               i
+      integer               k
+      integer               mostc
+      integer               lcount
 
-      LOGICAL               NEW
+      logical               new
 
 !
 !     Save everything.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  NSAVED  / 0       /
-      DATA                  NEWEST  / 1, 2, 3 /
+      data                  nsaved  / 0       /
+      data                  newest  / 1, 2, 3 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PROP2B' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PROP2B' )
+      end if
 
 !
 !     Life will be easier if we use POS and VEL to hold the state.
 !
-      POS(1) = PVINIT(1)
-      POS(2) = PVINIT(2)
-      POS(3) = PVINIT(3)
+      pos(1) = pvinit(1)
+      pos(2) = pvinit(2)
+      pos(3) = pvinit(3)
 
-      VEL(1) = PVINIT(4)
-      VEL(2) = PVINIT(5)
-      VEL(3) = PVINIT(6)
+      vel(1) = pvinit(4)
+      vel(2) = pvinit(5)
+      vel(3) = pvinit(6)
 
 !
 !     If we propagate many states from the same initial state,
@@ -436,51 +436,51 @@
 !     BUFSIZ states buffered.  From that point on, when a new state is
 !     encountered we will overwrite the oldest buffered state.
 !
-      I   =  0
-      NEW = .TRUE.
+      i   =  0
+      new = .true.
 
-      DO WHILE ( ( I .LT. NSAVED ) .AND. NEW )
+      do while ( ( i .lt. nsaved ) .and. new )
 
-         I   = I + 1
-         K   = NEWEST(I)
+         i   = i + 1
+         k   = newest(i)
 
-         NEW =     ( PVINIT(1) .NE. SAVEPV(1,K) ) &
-              .OR. ( PVINIT(2) .NE. SAVEPV(2,K) ) &
-              .OR. ( PVINIT(3) .NE. SAVEPV(3,K) ) &
-              .OR. ( PVINIT(4) .NE. SAVEPV(4,K) ) &
-              .OR. ( PVINIT(5) .NE. SAVEPV(5,K) ) &
-              .OR. ( PVINIT(6) .NE. SAVEPV(6,K) ) &
-              .OR. ( GM        .NE. SAVEGM(  K) )
+         new =     ( pvinit(1) .ne. savepv(1,k) ) &
+              .or. ( pvinit(2) .ne. savepv(2,k) ) &
+              .or. ( pvinit(3) .ne. savepv(3,k) ) &
+              .or. ( pvinit(4) .ne. savepv(4,k) ) &
+              .or. ( pvinit(5) .ne. savepv(5,k) ) &
+              .or. ( pvinit(6) .ne. savepv(6,k) ) &
+              .or. ( gm        .ne. savegm(  k) )
 
-      END DO
+      end do
 
 
-      IF ( .NOT. NEW ) THEN
+      if ( .not. new ) then
 !
 !        We update the order vector NEWEST so that the state being
 !        used this time becomes the "youngest" state.
 !
-         K      = I
-         BUMPED = NEWEST(K)
+         k      = i
+         bumped = newest(k)
 
-         DO I = K, 2, -1
-            NEWEST(I) = NEWEST(I-1)
-         END DO
+         do i = k, 2, -1
+            newest(i) = newest(i-1)
+         end do
 
-         NEWEST(1) = BUMPED
-         K         = BUMPED
+         newest(1) = bumped
+         k         = bumped
 
 !
 !        Now look up all of the other saved quantities.
 !
-         B2RV   = SB2RV (K)
-         BOUND  = SBOUND(K)
-         BQ     = SBQ   (K)
-         BR0    = SBR0  (K)
-         F      = SF    (K)
-         QOVR0  = SQOVR0(K)
+         b2rv   = sb2rv (k)
+         bound  = sbound(k)
+         bq     = sbq   (k)
+         br0    = sbr0  (k)
+         f      = sf    (k)
+         qovr0  = sqovr0(k)
 
-      ELSE
+      else
 
 !
 !        We have a new state, new GM or both.  First let's make sure
@@ -488,29 +488,29 @@
 !        only states, GMs and intermediate values that are "good.")
 !        First check for nonpositive mass.
 !
-         IF ( GM .LE. 0.0D0 ) THEN
-            CALL SIGERR ( 'SPICE(NONPOSITIVEMASS)'   )
-            CALL CHKOUT ( 'PROP2B'                   )
-            RETURN
-         END IF
+         if ( gm .le. 0.0d0 ) then
+            call sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
+            call chkout ( 'PROP2B'                   )
+            return
+         end if
 
 !
 !        Next for a zero position vector
 !
-         IF ( VZERO(POS) ) THEN
-            CALL SIGERR ( 'SPICE(ZEROPOSITION)'   )
-            CALL CHKOUT ( 'PROP2B'                )
-            RETURN
-         END IF
+         if ( vzero(pos) ) then
+            call sigerr ( 'SPICE(ZEROPOSITION)'   )
+            call chkout ( 'PROP2B'                )
+            return
+         end if
 
 !
 !        Finally for a zero velocity vector
 !
-         IF ( VZERO(VEL) ) THEN
-            CALL SIGERR ( 'SPICE(ZEROVELOCITY)'   )
-            CALL CHKOUT ( 'PROP2B'                )
-            RETURN
-         END IF
+         if ( vzero(vel) ) then
+            call sigerr ( 'SPICE(ZEROVELOCITY)'   )
+            call chkout ( 'PROP2B'                )
+            return
+         end if
 
 !
 !        Obvious problems have been checked. Here are the relevant
@@ -526,8 +526,8 @@
 !
 !           RV       be the value of the dot product  POS * VEL
 !
-         R0 = VNORM ( POS      )
-         RV = VDOT  ( POS, VEL )
+         r0 = vnorm ( pos      )
+         rv = vdot  ( pos, vel )
 
 !
 !        Let HVEC be the specific angular momentum vector and let Q be
@@ -539,19 +539,19 @@
 !                   2)    H2    = |HVEC|  =  GM*(1+E)*Q
 !
 !
-         CALL VCRSS ( POS,  VEL,     HVEC )
-         H2 = VDOT  ( HVEC, HVEC          )
+         call vcrss ( pos,  vel,     hvec )
+         h2 = vdot  ( hvec, hvec          )
 
 
 !
 !        Let's make sure we are not in the pathological case of
 !        rectilinear motion.
 !
-         IF ( H2 .EQ. 0 ) THEN
-            CALL SIGERR ( 'SPICE(NONCONICMOTION)'   )
-            CALL CHKOUT ( 'PROP2B'                  )
-            RETURN
-         END IF
+         if ( h2 .eq. 0 ) then
+            call sigerr ( 'SPICE(NONCONICMOTION)'   )
+            call chkout ( 'PROP2B'                  )
+            return
+         end if
 
 !
 !        Let E be the eccentricity of the orbit.
@@ -569,15 +569,15 @@
 !                                            GM            R0
 !
 !
-         CALL VCRSS ( VEL,       HVEC,                      TMPVEC  )
-         CALL VLCOM ( 1.0D0/GM,  TMPVEC,  -1.0D0/R0,  POS,  EQVEC   )
+         call vcrss ( vel,       hvec,                      tmpvec  )
+         call vlcom ( 1.0d0/gm,  tmpvec,  -1.0d0/r0,  pos,  eqvec   )
 
-         E  = VNORM ( EQVEC )
+         e  = vnorm ( eqvec )
 
 !
 !        Solve the equation H2 = GM*Q*(1+E) for Q.
 !
-         Q  = H2 / ( GM * (1+E) )
+         q  = h2 / ( gm * (1+e) )
 
 !
 !        From the discussion of the universal variables formulation in
@@ -622,11 +622,11 @@
 !        at a time DT past the epoch of the state POS and VEL.
 !        Evidently we will need the constants:
 !
-         F      = 1.0D0 - E
-         B      = DSQRT ( Q / GM )
-         BR0    = B*R0
-         B2RV   = B*B*RV
-         BQ     = B*Q
+         f      = 1.0d0 - e
+         b      = dsqrt ( q / gm )
+         br0    = b*r0
+         b2rv   = b*b*rv
+         bq     = b*q
 
 !
 !        The state corresponding to the value of X that solves this
@@ -666,7 +666,7 @@
 !
 !        Therefore we will also need the constant
 !
-         QOVR0   = Q / R0
+         qovr0   = q / r0
 
 !
 !        We will have to find the unique value of X such that
@@ -850,23 +850,23 @@
 !        for n = 3).
 !
 !
-         MAXC   = MAX   ( 1.0D0, DABS(BR0), &
-                                 DABS(B2RV), &
-                                 DABS(BQ), &
-                                 DABS(QOVR0/BQ) )
+         maxc   = max   ( 1.0d0, dabs(br0), &
+                                 dabs(b2rv), &
+                                 dabs(bq), &
+                                 dabs(qovr0/bq) )
 
-         IF ( F .LT. 0 ) THEN
+         if ( f .lt. 0 ) then
 
-            LOGMXC = LOG   ( MAXC            )
-            LOGDPM = LOG   ( DPMAX() / 2.0D0 )
+            logmxc = log   ( maxc            )
+            logdpm = log   ( dpmax() / 2.0d0 )
 
-            FIXED  = LOGDPM  - LOGMXC
+            fixed  = logdpm  - logmxc
 
-            ROOTF  = DSQRT ( - F             )
-            LOGF   = LOG   ( - F             )
+            rootf  = dsqrt ( - f             )
+            logf   = log   ( - f             )
 
-            BOUND  = MIN (  (FIXED              )/ROOTF, &
-                            (FIXED + 1.5D0*LOGF )/ROOTF )
+            bound  = min (  (fixed              )/rootf, &
+                            (fixed + 1.5d0*logf )/rootf )
 
 !
 !           Note that in the above, we can always perform the division
@@ -878,7 +878,7 @@
 !           is representable on the host machine.  Thus BOUND is at
 !           worst M*10**(N/2)  This will always be computable.
 !
-        ELSE
+        else
 
 !
 !
@@ -910,48 +910,48 @@
 !
 !           (We'll use logarithms to compute the upper bound for |X|.)
 !
-            LOGBND =      ( DLOG(1.5D0) + DLOG(DPMAX()) - DLOG(MAXC) ) &
-                     /      3.0D0
+            logbnd =      ( dlog(1.5d0) + dlog(dpmax()) - dlog(maxc) ) &
+                     /      3.0d0
 
-            BOUND  = DEXP ( LOGBND )
+            bound  = dexp ( logbnd )
 
-         END IF
+         end if
 !
 !        All the obvious problems have been checked, move everybody
 !        on the list down and put the new guy on top of the list.
 !
 
-         NSAVED = BRCKTI ( NSAVED+1, 1, BUFSIZ )
-         BUMPED = NEWEST ( NSAVED              )
+         nsaved = brckti ( nsaved+1, 1, bufsiz )
+         bumped = newest ( nsaved              )
 
-         DO I = NSAVED, 2, -1
-            NEWEST(I) = NEWEST(I-1)
-         END DO
+         do i = nsaved, 2, -1
+            newest(i) = newest(i-1)
+         end do
 
-         NEWEST(1) = BUMPED
-         K         = BUMPED
+         newest(1) = bumped
+         k         = bumped
 
-         SAVEPV(1,K) = PVINIT(1)
-         SAVEPV(2,K) = PVINIT(2)
-         SAVEPV(3,K) = PVINIT(3)
-         SAVEPV(4,K) = PVINIT(4)
-         SAVEPV(5,K) = PVINIT(5)
-         SAVEPV(6,K) = PVINIT(6)
-         SAVEGM(  K) = GM
+         savepv(1,k) = pvinit(1)
+         savepv(2,k) = pvinit(2)
+         savepv(3,k) = pvinit(3)
+         savepv(4,k) = pvinit(4)
+         savepv(5,k) = pvinit(5)
+         savepv(6,k) = pvinit(6)
+         savegm(  k) = gm
 
 !
 !        Finally we save the results of all of the above
 !        computations so that we won't have to do them again,
 !        if this initial state and GM are entered again.
 !
-         SB2RV (K) = B2RV
-         SBOUND(K) = BOUND
-         SBQ   (K) = BQ
-         SBR0  (K) = BR0
-         SF    (K) = F
-         SQOVR0(K) = QOVR0
+         sb2rv (k) = b2rv
+         sbound(k) = bound
+         sbq   (k) = bq
+         sbr0  (k) = br0
+         sf    (k) = f
+         sqovr0(k) = qovr0
 
-      END IF
+      end if
 !
 !
 !     We are now ready to find the unique value of X such that
@@ -1018,25 +1018,25 @@
 !        the endpoints of these shifted intervals always stay safely
 !        inside the domain for which KFUN can be computed.
 !
-      X    = DT / BQ
-      X    = BRCKTD ( X, -BOUND, BOUND )
-      FX2  = F*X*X
+      x    = dt / bq
+      x    = brcktd ( x, -bound, bound )
+      fx2  = f*x*x
 
-      CALL STMP03 ( FX2, C0, C1, C2, C3 )
+      call stmp03 ( fx2, c0, c1, c2, c3 )
 
-      KFUN =   X*(BR0*C1 + X*( B2RV*C2 + X*(BQ*C3) ) )
+      kfun =   x*(br0*c1 + x*( b2rv*c2 + x*(bq*c3) ) )
 
-      IF ( DT .LT. 0 ) THEN
+      if ( dt .lt. 0 ) then
 
-         UPPER = 0
-         LOWER = X
+         upper = 0
+         lower = x
 
-         DO WHILE ( KFUN .GT. DT )
+         do while ( kfun .gt. dt )
 
-            UPPER = LOWER
-            LOWER = LOWER * 2.0D0
-            OLDX  = X
-            X     = BRCKTD ( LOWER, -BOUND, BOUND )
+            upper = lower
+            lower = lower * 2.0d0
+            oldx  = x
+            x     = brcktd ( lower, -bound, bound )
 
 !
 !           Make sure we are making progress. (In other words make sure
@@ -1045,90 +1045,90 @@
 !           there's nothing further we can do.  We'll have to call it
 !           quits and tell the user what happened.)
 !
-            IF ( X .EQ. OLDX ) THEN
+            if ( x .eq. oldx ) then
 
-               FX2 = F*BOUND*BOUND
+               fx2 = f*bound*bound
 
-               CALL STMP03 ( FX2, C0, C1, C2, C3 )
+               call stmp03 ( fx2, c0, c1, c2, c3 )
 
-               KFUNL = -BOUND*(BR0*C1 - BOUND*(B2RV*C2 - BOUND*BQ*C3))
-               KFUNU =  BOUND*(BR0*C1 + BOUND*(B2RV*C2 + BOUND*BQ*C3))
+               kfunl = -bound*(br0*c1 - bound*(b2rv*c2 - bound*bq*c3))
+               kfunu =  bound*(br0*c1 + bound*(b2rv*c2 + bound*bq*c3))
 
-               CALL SETMSG ( 'The input delta time (DT) has a '       // &
+               call setmsg ( 'The input delta time (DT) has a '       // &
                              'value of #.  This is beyond the '       // &
                              'range of DT for which we can '          // &
                              'reliably propagate states. The limits ' // &
                              'for this GM and initial state are '     // &
                              'from # to #. '                          )
-               CALL ERRDP  ( '#', DT                                  )
-               CALL ERRDP  ( '#', KFUNL                               )
-               CALL ERRDP  ( '#', KFUNU                               )
-               CALL SIGERR ( 'SPICE(DTOUTOFRANGE)'                    )
-               CALL CHKOUT ( 'PROP2B'                                 )
-               RETURN
-            END IF
+               call errdp  ( '#', dt                                  )
+               call errdp  ( '#', kfunl                               )
+               call errdp  ( '#', kfunu                               )
+               call sigerr ( 'SPICE(DTOUTOFRANGE)'                    )
+               call chkout ( 'PROP2B'                                 )
+               return
+            end if
 
-            FX2   = F*X*X
+            fx2   = f*x*x
 
-            CALL STMP03 ( FX2, C0, C1, C2, C3 )
+            call stmp03 ( fx2, c0, c1, c2, c3 )
 
-            KFUN = X*(BR0*C1 + X*( B2RV*C2 + X*(BQ*C3) ) )
+            kfun = x*(br0*c1 + x*( b2rv*c2 + x*(bq*c3) ) )
 
-         END DO
+         end do
 
 
-      ELSE IF ( DT .GT. 0 ) THEN
+      else if ( dt .gt. 0 ) then
 
-         LOWER = 0
-         UPPER = X
+         lower = 0
+         upper = x
 
-         DO WHILE ( KFUN .LT. DT )
+         do while ( kfun .lt. dt )
 
-            LOWER = UPPER
-            UPPER = UPPER * 2.0D0
-            OLDX  = X
-            X     = BRCKTD ( UPPER, -BOUND, BOUND )
+            lower = upper
+            upper = upper * 2.0d0
+            oldx  = x
+            x     = brcktd ( upper, -bound, bound )
 !
 !           Make sure we are making progress.
 !
-            IF ( X .EQ. OLDX ) THEN
+            if ( x .eq. oldx ) then
 
-               FX2 = F*BOUND*BOUND
+               fx2 = f*bound*bound
 
-               CALL STMP03 ( FX2, C0, C1, C2, C3 )
+               call stmp03 ( fx2, c0, c1, c2, c3 )
 
-               KFUNL = -BOUND*(BR0*C1 - BOUND*(B2RV*C2 - BOUND*BQ*C3))
-               KFUNU =  BOUND*(BR0*C1 + BOUND*(B2RV*C2 + BOUND*BQ*C3))
+               kfunl = -bound*(br0*c1 - bound*(b2rv*c2 - bound*bq*c3))
+               kfunu =  bound*(br0*c1 + bound*(b2rv*c2 + bound*bq*c3))
 
-               CALL SETMSG ( 'The input delta time (DT) has a '       // &
+               call setmsg ( 'The input delta time (DT) has a '       // &
                              'value of #.  This is beyond the '       // &
                              'range of DT for which we can '          // &
                              'reliably propagate states. The limits ' // &
                              'for this GM and initial state are '     // &
                              'from # to #. '                          )
-               CALL ERRDP  ( '#', DT                                  )
-               CALL ERRDP  ( '#', KFUNL                               )
-               CALL ERRDP  ( '#', KFUNU                               )
-               CALL SIGERR ( 'SPICE(DTOUTOFRANGE)'                    )
-               CALL CHKOUT ( 'PROP2B'                                 )
-               RETURN
-            END IF
+               call errdp  ( '#', dt                                  )
+               call errdp  ( '#', kfunl                               )
+               call errdp  ( '#', kfunu                               )
+               call sigerr ( 'SPICE(DTOUTOFRANGE)'                    )
+               call chkout ( 'PROP2B'                                 )
+               return
+            end if
 
-            FX2  = F*X*X
+            fx2  = f*x*x
 
-            CALL STMP03 ( FX2, C0, C1, C2, C3 )
+            call stmp03 ( fx2, c0, c1, c2, c3 )
 
-            KFUN = X*(BR0*C1 + X*( B2RV*C2 + X*BQ*C3 ) )
+            kfun = x*(br0*c1 + x*( b2rv*c2 + x*bq*c3 ) )
 
-         END DO
+         end do
 
-      ELSE
+      else
 
-         CALL VEQUG  ( PVINIT, 6, PVPROP )
-         CALL CHKOUT ( 'PROP2B'          )
-         RETURN
+         call vequg  ( pvinit, 6, pvprop )
+         call chkout ( 'PROP2B'          )
+         return
 
-      END IF
+      end if
 
 !
 !     Ok. We've bracketed the root.  Now for lack of anything more
@@ -1144,48 +1144,48 @@
 !     loop fails to terminate.  With the loop counter we force
 !     termination of the loop.
 !
-      X    = MIN ( UPPER, MAX ( LOWER, (LOWER + UPPER)/2.0D0) )
-      FX2  = F*X*X
+      x    = min ( upper, max ( lower, (lower + upper)/2.0d0) )
+      fx2  = f*x*x
 
-      CALL STMP03 ( FX2, C0, C1, C2, C3 )
-      LCOUNT = 0
-      MOSTC  = 1000
+      call stmp03 ( fx2, c0, c1, c2, c3 )
+      lcount = 0
+      mostc  = 1000
 
-      DO WHILE (         X      .GT. LOWER &
-                 .AND.   X      .LT. UPPER &
-                 .AND.   LCOUNT .LT. MOSTC )
+      do while (         x      .gt. lower &
+                 .and.   x      .lt. upper &
+                 .and.   lcount .lt. mostc )
 
-         KFUN = X*(BR0*C1 + X*( B2RV*C2 + X*BQ*C3 ) )
+         kfun = x*(br0*c1 + x*( b2rv*c2 + x*bq*c3 ) )
 
-         IF ( KFUN .GT. DT ) THEN
-            UPPER = X
-         ELSE IF ( KFUN .LT. DT ) THEN
-            LOWER = X
-         ELSE
-            UPPER = X
-            LOWER = X
-         END IF
+         if ( kfun .gt. dt ) then
+            upper = x
+         else if ( kfun .lt. dt ) then
+            lower = x
+         else
+            upper = x
+            lower = x
+         end if
 !
 !        As soon as the bracketing values move away from
 !        zero we can modify the count limit.
 !
-         IF ( MOSTC .GT. MAXBIT ) THEN
+         if ( mostc .gt. maxbit ) then
 
-            IF ( UPPER .NE. 0.0D0 .AND. LOWER .NE. 0.0D0 ) THEN
-               MOSTC   = MAXBIT
-               LCOUNT = 0
-            END IF
+            if ( upper .ne. 0.0d0 .and. lower .ne. 0.0d0 ) then
+               mostc   = maxbit
+               lcount = 0
+            end if
 
-         END IF
+         end if
 
-         X    = MIN ( UPPER, MAX ( LOWER, (LOWER + UPPER)/2.0D0 ) )
-         FX2  = F*X*X
+         x    = min ( upper, max ( lower, (lower + upper)/2.0d0 ) )
+         fx2  = f*x*x
 
-         CALL STMP03 ( FX2, C0, C1, C2, C3 )
+         call stmp03 ( fx2, c0, c1, c2, c3 )
 
-         LCOUNT = LCOUNT + 1
+         lcount = lcount + 1
 
-      END DO
+      end do
 
 
 !
@@ -1194,24 +1194,24 @@
 !     of BOUND above, one can show that none of the computations
 !     below can cause an overflow).
 !
-      X2    = X *X
-      X3    = X2*X
-      BR    = BR0*C0 + X*( B2RV*C1  + X*(BQ*C2) )
+      x2    = x *x
+      x3    = x2*x
+      br    = br0*c0 + x*( b2rv*c1  + x*(bq*c2) )
 
 
-      PC    = 1.0D0     -      QOVR0        * X2 * C2
-      VC    = DT        -      BQ           * X3 * C3
-      PCDOT =           -     (QOVR0 / BR ) * X  * C1
-      VCDOT = 1.0D0     -     (BQ    / BR ) * X2 * C2
+      pc    = 1.0d0     -      qovr0        * x2 * c2
+      vc    = dt        -      bq           * x3 * c3
+      pcdot =           -     (qovr0 / br ) * x  * c1
+      vcdot = 1.0d0     -     (bq    / br ) * x2 * c2
 
 
 !
 !     ... and compute the linear combinations needed to get PVPROP
 !
-      CALL VLCOM ( PC,    POS, VC,    VEL,       PVPROP(1) )
-      CALL VLCOM ( PCDOT, POS, VCDOT, VEL,       PVPROP(4) )
+      call vlcom ( pc,    pos, vc,    vel,       pvprop(1) )
+      call vlcom ( pcdot, pos, vcdot, vel,       pvprop(4) )
 
-      CALL CHKOUT ( 'PROP2B' )
-      RETURN
+      call chkout ( 'PROP2B' )
+      return
 
-      END
+      end

@@ -1,8 +1,8 @@
 !$Procedure ZZSRFINI ( Private --- Surface-Code Hash Initialization )
 
-      SUBROUTINE ZZSRFINI ( NORNAM, CODES,  BODIES, &
-                            NVALS,  MAXVAL, SNMHLS, SNMPOL, &
-                            SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+      subroutine zzsrfini ( nornam, codes,  bodies, &
+                            nvals,  maxval, snmhls, snmpol, &
+                            snmidx, sidhls, sidpol, sididx )
 
 ! $ Abstract
 !
@@ -24,22 +24,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'srftrn.inc'
-      INCLUDE              'zzsrftrn.inc'
+      include              'srftrn.inc'
+      include              'zzsrftrn.inc'
 
-      CHARACTER*(*)         NORNAM (          * )
-      INTEGER               CODES  (          * )
-      INTEGER               BODIES (          * )
-      INTEGER               NVALS
-      INTEGER               MAXVAL
-      INTEGER               SNMHLS (          * )
-      INTEGER               SNMPOL ( LBSNGL : * )
-      INTEGER               SNMIDX (          * )
-      INTEGER               SIDHLS (          * )
-      INTEGER               SIDPOL ( LBSNGL : * )
-      INTEGER               SIDIDX (          * )
+      character*(*)         nornam (          * )
+      integer               codes  (          * )
+      integer               bodies (          * )
+      integer               nvals
+      integer               maxval
+      integer               snmhls (          * )
+      integer               snmpol ( lbsngl : * )
+      integer               snmidx (          * )
+      integer               sidhls (          * )
+      integer               sidpol ( lbsngl : * )
+      integer               sididx (          * )
 
 ! $ Brief_I/O
 !
@@ -199,33 +199,33 @@
 !
 !     SPICELIB functions.
 !
-      INTEGER               ZZHASH2
-      INTEGER               ZZHASHI
+      integer               zzhash2
+      integer               zzhashi
 
 !
 !     Hash control area items.
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX =   0 )
+      integer               sizidx
+      parameter           ( sizidx =   0 )
 
-      INTEGER               FREIDX
-      PARAMETER           ( FREIDX =  -1 )
+      integer               freidx
+      parameter           ( freidx =  -1 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(SFNMLN)    SQSHNM
+      character*(sfnmln)    sqshnm
 
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               ITEMAT
-      INTEGER               LOOKAT
-      INTEGER               NODE
+      integer               head
+      integer               i
+      integer               itemat
+      integer               lookat
+      integer               node
 
-      LOGICAL               FULL
-      LOGICAL               IDNEW
-      LOGICAL               LFOUND
-      LOGICAL               NAMNEW
+      logical               full
+      logical               idnew
+      logical               lfound
+      logical               namnew
 
 !
 !     This routine uses discovery check-in.
@@ -233,31 +233,31 @@
 !
 !     Consistency check.
 !
-      IF ( MAXVAL .LT. NVALS ) THEN
+      if ( maxval .lt. nvals ) then
 
-         CALL CHKIN  ( 'ZZSRFINI'                                )
-         CALL SETMSG ( 'There is an inconsistency between the ' &
+         call chkin  ( 'ZZSRFINI'                                )
+         call setmsg ( 'There is an inconsistency between the ' &
          //            'number of input bodies and the size of ' &
          //            'the output hashes. The number of input ' &
          //            'bodies was #. The size of the output ' &
          //            'hashes was #.'                           )
-         CALL ERRINT ( '#', NVALS                                )
-         CALL ERRINT ( '#', MAXVAL                               )
-         CALL SIGERR ( 'SPICE(BUG1)'                             )
-         CALL CHKOUT ( 'ZZSRFINI'                                )
-         RETURN
+         call errint ( '#', nvals                                )
+         call errint ( '#', maxval                               )
+         call sigerr ( 'SPICE(BUG1)'                             )
+         call chkout ( 'ZZSRFINI'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize output hashes. Set all collision list pointers
 !     to 0, which is the null value.
 !
-      CALL ZZHSIINI ( MAXVAL, SIDHLS, SIDPOL )
-      CALL ZZHSCINI ( MAXVAL, SNMHLS, SNMPOL )
+      call zzhsiini ( maxval, sidhls, sidpol )
+      call zzhscini ( maxval, snmhls, snmpol )
 
-      CALL CLEARI ( SIDPOL(0), SIDPOL(1))
-      CALL CLEARI ( SNMPOL(0), SNMPOL(1))
+      call cleari ( sidpol(0), sidpol(1))
+      call cleari ( snmpol(0), snmpol(1))
 
 !
 !     Loop through the input arrays to populate hashes. We do it
@@ -268,7 +268,7 @@
 !     the highest priority ID is associated with the name in the
 !     mapping data structures.
 !
-      DO I = NVALS, 1, -1
+      do i = nvals, 1, -1
 !
 !        Register this normalized surface name and body ID, but only if
 !        the name from this pair is not already in the hash.
@@ -282,18 +282,18 @@
 !        all blanks compressed out. (A normalized name may have single
 !        blanks separating words comprising the name.)
 !
-         CALL CMPRSS ( ' ', 0, NORNAM(I), SQSHNM )
+         call cmprss ( ' ', 0, nornam(i), sqshnm )
 
-         LOOKAT = ZZHASH2( SQSHNM, SNMPOL(SIZIDX) )
+         lookat = zzhash2( sqshnm, snmpol(sizidx) )
 
-         HEAD   = SNMHLS ( LOOKAT )
+         head   = snmhls ( lookat )
 
 !
 !        Indicate name and body were not found to begin with.
 !
-         LFOUND  = .FALSE.
-         ITEMAT  = 0
-         NAMNEW  = .TRUE.
+         lfound  = .false.
+         itemat  = 0
+         namnew  = .true.
 
 !
 !        See if this normalized name and corresponding body ID are,
@@ -303,27 +303,27 @@
 !        SNMIDX to indicate the location of the body ID corresponding
 !        to a name.
 !
-         NODE = HEAD
+         node = head
 
-         IF ( NODE .GT. 0 ) THEN
+         if ( node .gt. 0 ) then
 !
 !           Start at the head node and check each normalized name saved
 !           for this hash value until we find a name and body ID that
 !           match or run out of items in the collision list.
 !
-            DO WHILE (  ( NODE .GT. 0 ) .AND. ( .NOT. LFOUND )  )
+            do while (  ( node .gt. 0 ) .and. ( .not. lfound )  )
 
-               LFOUND =       ( NORNAM( SNMIDX(NODE) ) .EQ. NORNAM(I) ) &
-                        .AND. ( BODIES( SNMIDX(NODE) ) .EQ. BODIES(I) )
+               lfound =       ( nornam( snmidx(node) ) .eq. nornam(i) ) &
+                        .and. ( bodies( snmidx(node) ) .eq. bodies(i) )
 
-               ITEMAT = NODE
-               NODE   = SNMPOL ( NODE )
+               itemat = node
+               node   = snmpol ( node )
 
-            END DO
+            end do
 
-            NAMNEW = .NOT. LFOUND
+            namnew = .not. lfound
 
-         END IF
+         end if
 
 !
 !        ITEMAT is the node at which a name match was found by the
@@ -333,53 +333,53 @@
 !        ITEMAT will be used below only if the list is non-empty and
 !        no match was found, in which case ITEMAT is non-zero.
 !
-         IF ( NAMNEW ) THEN
+         if ( namnew ) then
 !
 !           We need to add the current normalized name and BODY ID
 !           to the hash. Make sure there's room.
 !
-            FULL = ( SNMPOL(FREIDX) .GT. SNMPOL(SIZIDX) )
+            full = ( snmpol(freidx) .gt. snmpol(sizidx) )
 
-            IF ( FULL ) THEN
+            if ( full ) then
 
-               CALL CHKIN  ( 'ZZSRFINI'                          )
-               CALL SETMSG ( 'Could not add name # body ID # ' &
+               call chkin  ( 'ZZSRFINI'                          )
+               call setmsg ( 'Could not add name # body ID # ' &
                //            'to the hash.'                      )
-               CALL ERRCH  ( '#', NORNAM(I)                      )
-               CALL ERRINT ( '#', BODIES(I)                      )
-               CALL SIGERR ( 'SPICE(BUG2)'                       )
-               CALL CHKOUT ( 'ZZSRFINI'                          )
-               RETURN
+               call errch  ( '#', nornam(i)                      )
+               call errint ( '#', bodies(i)                      )
+               call sigerr ( 'SPICE(BUG2)'                       )
+               call chkout ( 'ZZSRFINI'                          )
+               return
 
-            ELSE
+            else
 !
 !              Store the item at the first free location in
 !              the collision pool.
 !
-               NODE           = SNMPOL(FREIDX)
-               SNMPOL(FREIDX) = SNMPOL(FREIDX) + 1
+               node           = snmpol(freidx)
+               snmpol(freidx) = snmpol(freidx) + 1
 
-               IF ( HEAD .GT. 0 ) THEN
+               if ( head .gt. 0 ) then
 !
 !                 Link the new entry at the tail of the applicable
 !                 collision list. The index of the tail node is ITEMAT.
 !
-                  SNMPOL(ITEMAT) = NODE
+                  snmpol(itemat) = node
 
-               ELSE
+               else
 !
 !                 Insert the new head node into the head list.
 !
-                  SNMHLS(LOOKAT) = NODE
+                  snmhls(lookat) = node
 
-               END IF
+               end if
 !
 !              Set the index in the data arrays for the new pool
 !              entry.
 !
-               SNMIDX(NODE) = I
+               snmidx(node) = i
 
-            END IF
+            end if
 
 !
 !           NAMNEW indicates that the Ith normalized name and body ID
@@ -401,43 +401,43 @@
 !
 !           Use hash function to get index of the head node.
 !
-            LOOKAT = ZZHASHI( CODES(I), SIDPOL(SIZIDX) )
+            lookat = zzhashi( codes(i), sidpol(sizidx) )
 
-            HEAD   = SIDHLS ( LOOKAT )
+            head   = sidhls ( lookat )
 
 !
 !           Indicate surface ID and body were not found to begin with.
 !
-            LFOUND  = .FALSE.
-            ITEMAT  = 0
-            IDNEW   = .TRUE.
+            lfound  = .false.
+            itemat  = 0
+            idnew   = .true.
 
 !
 !           See if this surface ID and corresponding body ID are,
 !           respectively, in the surface ID list and body ID list.
 !
-            NODE = HEAD
+            node = head
 
-            IF ( NODE .GT. 0 ) THEN
+            if ( node .gt. 0 ) then
 !
 !              Start at the head node and check each surface ID saved
 !              for this hash value until we find a surface ID and body
 !              ID that match or run out of items in this collision
 !              list.
 !
-               DO WHILE (  ( NODE .GT. 0 ) .AND. ( .NOT. LFOUND )  )
+               do while (  ( node .gt. 0 ) .and. ( .not. lfound )  )
 
-                  LFOUND =      ( CODES (SIDIDX(NODE)) .EQ. CODES (I) ) &
-                          .AND. ( BODIES(SIDIDX(NODE)) .EQ. BODIES(I) )
+                  lfound =      ( codes (sididx(node)) .eq. codes (i) ) &
+                          .and. ( bodies(sididx(node)) .eq. bodies(i) )
 
-                  ITEMAT = NODE
-                  NODE   = SIDPOL ( NODE )
+                  itemat = node
+                  node   = sidpol ( node )
 
-               END DO
+               end do
 
-               IDNEW = .NOT. LFOUND
+               idnew = .not. lfound
 
-            END IF
+            end if
 
 !
 !           ITEMAT is the node at which a surface ID code match was
@@ -448,65 +448,65 @@
 !           ITEMAT will be used below only if the list is non-empty and
 !           no match was found, in which case ITEMAT is non-zero.
 !
-            IF ( IDNEW ) THEN
+            if ( idnew ) then
 !
 !              We need to add the current surface ID and BODY ID
 !              to the hash. Make sure there's room.
 !
-               FULL = ( SIDPOL(FREIDX) .GT. SIDPOL(SIZIDX) )
+               full = ( sidpol(freidx) .gt. sidpol(sizidx) )
 
-               IF ( FULL ) THEN
+               if ( full ) then
 
-                  CALL CHKIN  ( 'ZZSRFINI'                             )
-                  CALL SETMSG ( 'Could not add surface ID # body ID # ' &
+                  call chkin  ( 'ZZSRFINI'                             )
+                  call setmsg ( 'Could not add surface ID # body ID # ' &
                   //            'to the hash.'                         )
-                  CALL ERRINT ( '#', CODES(I)                          )
-                  CALL ERRINT ( '#', BODIES(I)                         )
-                  CALL SIGERR ( 'SPICE(BUG3)'                          )
-                  CALL CHKOUT ( 'ZZSRFINI'                             )
-                  RETURN
+                  call errint ( '#', codes(i)                          )
+                  call errint ( '#', bodies(i)                         )
+                  call sigerr ( 'SPICE(BUG3)'                          )
+                  call chkout ( 'ZZSRFINI'                             )
+                  return
 
-               ELSE
+               else
 !
 !                 Store the item at the first free location in the
 !                 collision pool.
 !
-                  NODE           = SIDPOL(FREIDX)
-                  SIDPOL(FREIDX) = SIDPOL(FREIDX) + 1
+                  node           = sidpol(freidx)
+                  sidpol(freidx) = sidpol(freidx) + 1
 
-                  IF ( HEAD .GT. 0 ) THEN
+                  if ( head .gt. 0 ) then
 !
 !                    Link the new entry at the tail of the applicable
 !                    collision list. The index of the tail node is
 !                    ITEMAT.
 !
-                     SIDPOL(ITEMAT) = NODE
+                     sidpol(itemat) = node
 
-                  ELSE
+                  else
 !
 !                    Insert the new head node into the head list.
 !
-                     SIDHLS(LOOKAT) = NODE
+                     sidhls(lookat) = node
 
-                  END IF
+                  end if
 !
 !                 Set the index in the data arrays for the new pool
 !                 entry.
 !
-                  SIDIDX(NODE) = I
+                  sididx(node) = i
 
-               END IF
+               end if
 
-            END IF
+            end if
 !
 !           We've processed the new (surface ID, body ID) pair.
 !
-         END IF
+         end if
 !
 !        We've processed the Ith mapping between (surface name, body
 !        ID) and (surface ID, body ID).
 !
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

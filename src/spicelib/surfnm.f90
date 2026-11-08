@@ -1,6 +1,6 @@
 !$Procedure SURFNM ( Surface normal vector on an ellipsoid )
 
-      SUBROUTINE SURFNM ( A, B, C, POINT, NORMAL )
+      subroutine surfnm ( a, b, c, point, normal )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   A
-      DOUBLE PRECISION   B
-      DOUBLE PRECISION   C
-      DOUBLE PRECISION   POINT  ( 3 )
-      DOUBLE PRECISION   NORMAL ( 3 )
+      double precision   a
+      double precision   b
+      double precision   c
+      double precision   point  ( 3 )
+      double precision   normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -163,24 +163,24 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      M
-      DOUBLE PRECISION      A1
-      DOUBLE PRECISION      B1
-      DOUBLE PRECISION      C1
+      double precision      m
+      double precision      a1
+      double precision      b1
+      double precision      c1
 
-      CHARACTER*32          MSSG ( 7 )
-      INTEGER               BAD
-      SAVE
+      character*32          mssg ( 7 )
+      integer               bad
+      save
 
 !
 !     Initial values
 !
-      DATA                  MSSG  / 'Axis A was nonpositive.', &
+      data                  mssg  / 'Axis A was nonpositive.', &
                                     'Axis B was nonpositive.', &
                                     'Axes A and B were nonpositive.', &
                                     'Axis C was nonpositive.', &
@@ -191,43 +191,43 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SURFNM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SURFNM' )
+      end if
 
 
 !
 !     Check the axes to make sure that none of them is less than or
 !     equal to zero. If one is, signal an error and return.
 !
-      BAD = 0
+      bad = 0
 
-      IF ( A .LE. 0 ) &
-         BAD = BAD + 1
+      if ( a .le. 0 ) &
+         bad = bad + 1
 
-      IF ( B .LE. 0 ) &
-         BAD = BAD + 2
+      if ( b .le. 0 ) &
+         bad = bad + 2
 
-      IF ( C .LE. 0 ) &
-         BAD = BAD + 4
+      if ( c .le. 0 ) &
+         bad = bad + 4
 
 
-      IF ( BAD .GT. 0 ) THEN
-         CALL SETMSG ( MSSG (BAD)                                     // &
+      if ( bad .gt. 0 ) then
+         call setmsg ( mssg (bad)                                     // &
                        ' ? '                                           )
-         CALL ERRCH  ( ' ? ', 'The A,B, and C axes were '             // &
+         call errch  ( ' ? ', 'The A,B, and C axes were '             // &
                               '#, #, and # respectively.'              )
 
-         CALL ERRDP  ( '#', A )
-         CALL ERRDP  ( '#', B )
-         CALL ERRDP  ( '#', C )
+         call errdp  ( '#', a )
+         call errdp  ( '#', b )
+         call errdp  ( '#', c )
 
-         CALL SIGERR ( 'SPICE(BADAXISLENGTH)' )
-         CALL CHKOUT ( 'SURFNM' )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(BADAXISLENGTH)' )
+         call chkout ( 'SURFNM' )
+         return
+      end if
 
 !
 !     Mathematically we want to compute (Px/a**2, Py/b**2, Pz/c**2)
@@ -237,26 +237,26 @@
 !     We can use the trick below to avoid the unpleasantness of
 !     multiplication and division overflows.
 !
-      M         = MIN ( A, B, C )
+      m         = min ( a, b, c )
 
 !
 !     M can be divided by A,B or C without fear of an overflow
 !     occurring.
 !
-      A1        = M/A
-      B1        = M/B
-      C1        = M/C
+      a1        = m/a
+      b1        = m/b
+      c1        = m/c
 
 !
 !     All of the terms A1,B1,C1 are less than 1. Thus no overflows
 !     can occur.
 !
-      NORMAL(1) = POINT(1) * (A1*A1)
-      NORMAL(2) = POINT(2) * (B1*B1)
-      NORMAL(3) = POINT(3) * (C1*C1)
+      normal(1) = point(1) * (a1*a1)
+      normal(2) = point(2) * (b1*b1)
+      normal(3) = point(3) * (c1*c1)
 
-      CALL VHATIP ( NORMAL )
+      call vhatip ( normal )
 
-      CALL CHKOUT ( 'SURFNM' )
-      RETURN
-      END
+      call chkout ( 'SURFNM' )
+      return
+      end

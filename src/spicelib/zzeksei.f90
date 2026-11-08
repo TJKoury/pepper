@@ -1,6 +1,6 @@
 !$Procedure  ZZEKSEI ( Private: EK, set encoded integer )
 
-      SUBROUTINE ZZEKSEI ( HANDLE, ADDRSS, IVAL )
+      subroutine zzeksei ( handle, addrss, ival )
 
 ! $ Abstract
 !
@@ -23,11 +23,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
+      include 'ekdatpag.inc'
 
-      INTEGER               HANDLE
-      INTEGER               ADDRSS
-      INTEGER               IVAL
+      integer               handle
+      integer               addrss
+      integer               ival
 
 ! $ Brief_I/O
 !
@@ -114,7 +114,7 @@
 !
 !     Local variables
 !
-      CHARACTER*(ENCSIZ)    CVAL
+      character*(encsiz)    cval
 
 
 !
@@ -123,13 +123,13 @@
 !
 !     Encode the number.
 !
-      CALL PRTENC ( IVAL, CVAL )
+      call prtenc ( ival, cval )
 
 !
 !     Write the encoded value.
 !
-      CALL DASUDC ( HANDLE, ADDRSS, ADDRSS+ENCSIZ-1, 1, ENCSIZ, CVAL )
+      call dasudc ( handle, addrss, addrss+encsiz-1, 1, encsiz, cval )
 
 
-      RETURN
-      END
+      return
+      end

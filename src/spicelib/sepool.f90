@@ -1,6 +1,6 @@
 !$Procedure SEPOOL ( String from pool )
 
-      SUBROUTINE SEPOOL ( ITEM, FIDX, CONTIN, STRING, SIZE, LIDX, FOUND)
+      subroutine sepool ( item, fidx, contin, string, size, lidx, found)
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ITEM
-      INTEGER               FIDX
-      CHARACTER*(*)         CONTIN
-      CHARACTER*(*)         STRING
-      INTEGER               SIZE
-      INTEGER               LIDX
-      LOGICAL               FOUND
+      character*(*)         item
+      integer               fidx
+      character*(*)         contin
+      character*(*)         string
+      integer               size
+      integer               lidx
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -324,131 +324,131 @@
 
 !     SPICELIB Variables
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
+      integer               rtrim
+      logical               return
 
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      CHARACTER*(LNSIZE)    PART
+      character*(lnsize)    part
 
 
-      INTEGER               CFIRST
-      INTEGER               CLAST
-      INTEGER               COMP
-      INTEGER               CSIZE
-      INTEGER               N
-      INTEGER               PUTAT
-      INTEGER               ROOM
+      integer               cfirst
+      integer               clast
+      integer               comp
+      integer               csize
+      integer               n
+      integer               putat
+      integer               room
 
-      LOGICAL               GOTIT
-      LOGICAL               MORE
+      logical               gotit
+      logical               more
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Return empty output if the input index is bad.
 !
-      IF ( FIDX .LT. 1 ) THEN
-         FOUND  = .FALSE.
-         STRING = ' '
-         SIZE   = 0
-         LIDX   = 0
-         RETURN
-      END IF
+      if ( fidx .lt. 1 ) then
+         found  = .false.
+         string = ' '
+         size   = 0
+         lidx   = 0
+         return
+      end if
 
 !
 !     Check in.
 !
-      CALL CHKIN ( 'SEPOOL')
+      call chkin ( 'SEPOOL')
 
 !
 !     Check if the first component exists. Return empty output if not.
 !
-      CALL GCPOOL ( ITEM, FIDX, 1, N, PART, GOTIT )
+      call gcpool ( item, fidx, 1, n, part, gotit )
 
-      GOTIT = GOTIT .AND. N .GT. 0
+      gotit = gotit .and. n .gt. 0
 
-      IF ( .NOT. GOTIT ) THEN
-         FOUND  = .FALSE.
-         STRING = ' '
-         SIZE   = 0
-         LIDX   = 0
-         CALL CHKOUT ( 'SEPOOL' )
-         RETURN
-      END IF
+      if ( .not. gotit ) then
+         found  = .false.
+         string = ' '
+         size   = 0
+         lidx   = 0
+         call chkout ( 'SEPOOL' )
+         return
+      end if
 
 !
 !     Fetch the string using Bill's algorithm from STPOOL 'as is'.
 !
-      ROOM   = LEN(STRING)
-      CSIZE  = RTRIM(CONTIN)
-      PUTAT  = 1
+      room   = len(string)
+      csize  = rtrim(contin)
+      putat  = 1
 
-      COMP   = FIDX
-      MORE   = .TRUE.
-      STRING = ' '
-      N      =  0
+      comp   = fidx
+      more   = .true.
+      string = ' '
+      n      =  0
 
-      DO WHILE ( MORE )
+      do while ( more )
 
-         CALL GCPOOL ( ITEM, COMP, 1, N, PART, MORE )
+         call gcpool ( item, comp, 1, n, part, more )
 
-         MORE = MORE .AND. N .GT. 0
+         more = more .and. n .gt. 0
 
-         IF ( MORE ) THEN
+         if ( more ) then
 
-            FOUND  = .TRUE.
+            found  = .true.
 
-            CLAST  = RTRIM(PART)
-            CFIRST = CLAST - CSIZE + 1
+            clast  = rtrim(part)
+            cfirst = clast - csize + 1
 
-            IF ( CFIRST .LT. 0 ) THEN
+            if ( cfirst .lt. 0 ) then
 
-               IF ( PUTAT .LE. ROOM ) THEN
-                  STRING(PUTAT:) = PART(1:CLAST)
-               END IF
+               if ( putat .le. room ) then
+                  string(putat:) = part(1:clast)
+               end if
 
-               PUTAT          = PUTAT + CLAST
-               MORE           = .FALSE.
+               putat          = putat + clast
+               more           = .false.
 
-            ELSE IF ( PART(CFIRST:CLAST) .NE. CONTIN ) THEN
+            else if ( part(cfirst:clast) .ne. contin ) then
 
-               IF ( PUTAT .LE. ROOM ) THEN
-                  STRING(PUTAT:) = PART(1:CLAST)
-               END IF
-               PUTAT          = PUTAT + CLAST
-               MORE           = .FALSE.
+               if ( putat .le. room ) then
+                  string(putat:) = part(1:clast)
+               end if
+               putat          = putat + clast
+               more           = .false.
 
-            ELSE IF ( CFIRST .GT. 1 ) THEN
+            else if ( cfirst .gt. 1 ) then
 
-               IF ( PUTAT .LE. ROOM ) THEN
-                  STRING(PUTAT:) = PART(1:CFIRST-1)
-               END IF
-               PUTAT          = PUTAT + CFIRST - 1
+               if ( putat .le. room ) then
+                  string(putat:) = part(1:cfirst-1)
+               end if
+               putat          = putat + cfirst - 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         COMP = COMP + 1
+         comp = comp + 1
 
-      END DO
+      end do
 
 !
 !     We are done. Get the size of the full string and the index of its
 !     last component and checkout.
 !
-      SIZE = PUTAT - 1
-      LIDX = COMP  - 1
+      size = putat - 1
+      lidx = comp  - 1
 
-      CALL CHKOUT ( 'SEPOOL' )
+      call chkout ( 'SEPOOL' )
 
-      RETURN
-      END
+      return
+      end

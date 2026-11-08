@@ -1,7 +1,7 @@
 !$Procedure      ZZELVUPY ( Is ellipse in polygonal field of view? )
 
-      SUBROUTINE ZZELVUPY ( ELLIPS, VERTEX, AXIS, N, BOUNDS, FOUND )
-      IMPLICIT NONE
+      subroutine zzelvupy ( ellips, vertex, axis, n, bounds, found )
+      implicit none
 
 ! $ Abstract
 !
@@ -22,23 +22,23 @@
 !
 ! $ Declarations
 
-      INCLUDE 'errhnd.inc'
+      include 'errhnd.inc'
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL = 9 )
+      integer               ubel
+      parameter           ( ubel = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL = 4 )
+      integer               ubpl
+      parameter           ( ubpl = 4 )
 
-      INTEGER               MAXFOV
-      PARAMETER           ( MAXFOV = 10000 )
+      integer               maxfov
+      parameter           ( maxfov = 10000 )
 
-      DOUBLE PRECISION      ELLIPS ( UBEL )
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      AXIS   ( 3 )
-      INTEGER               N
-      DOUBLE PRECISION      BOUNDS ( 3, N )
-      LOGICAL               FOUND
+      double precision      ellips ( ubel )
+      double precision      vertex ( 3 )
+      double precision      axis   ( 3 )
+      integer               n
+      double precision      bounds ( 3, n )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -281,16 +281,16 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      pi
+      double precision      vdist
+      double precision      vdot
+      double precision      vnorm
+      double precision      vsep
 
-      INTEGER               ZZWIND
+      integer               zzwind
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -299,68 +299,68 @@
 !
 !     Local variables
 !
-      CHARACTER*(LMSGLN)    ERRMSG
+      character*(lmsgln)    errmsg
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      APEX   ( 3 )
-      DOUBLE PRECISION      ASEP
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      CONSEP
-      DOUBLE PRECISION      CP     ( 3 )
-      DOUBLE PRECISION      CTRVEC ( 3 )
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      EASIZE
-      DOUBLE PRECISION      EBSCTR ( 3 )
-      DOUBLE PRECISION      EDGE1  ( 3 )
-      DOUBLE PRECISION      EDGE2  ( 3 )
-      DOUBLE PRECISION      ELLSCL ( UBEL )
-      DOUBLE PRECISION      EPLANE ( UBPL )
-      DOUBLE PRECISION      FOVPLN ( UBPL )
-      DOUBLE PRECISION      GV1    ( 3 )
-      DOUBLE PRECISION      GV2    ( 3 )
-      DOUBLE PRECISION      HAFEDG
-      DOUBLE PRECISION      HAFSEC
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      ORIGIN ( 3 )
-      DOUBLE PRECISION      PASIZE
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SMAJOR ( 3 )
-      DOUBLE PRECISION      SMINOR ( 3 )
-      DOUBLE PRECISION      VBSCTR ( 3 )
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      VXPT1  ( 3 )
-      DOUBLE PRECISION      VXPT2  ( 3 )
-      DOUBLE PRECISION      WORK   ( 3, MAXFOV )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      XPT    ( 3 )
-      DOUBLE PRECISION      XPT1   ( 3 )
-      DOUBLE PRECISION      XPT2   ( 3 )
-      DOUBLE PRECISION      Y
+      double precision      a
+      double precision      apex   ( 3 )
+      double precision      asep
+      double precision      b
+      double precision      center ( 3 )
+      double precision      consep
+      double precision      cp     ( 3 )
+      double precision      ctrvec ( 3 )
+      double precision      d
+      double precision      easize
+      double precision      ebsctr ( 3 )
+      double precision      edge1  ( 3 )
+      double precision      edge2  ( 3 )
+      double precision      ellscl ( ubel )
+      double precision      eplane ( ubpl )
+      double precision      fovpln ( ubpl )
+      double precision      gv1    ( 3 )
+      double precision      gv2    ( 3 )
+      double precision      hafedg
+      double precision      hafsec
+      double precision      offset ( 3 )
+      double precision      origin ( 3 )
+      double precision      pasize
+      double precision      plane  ( ubpl )
+      double precision      scale
+      double precision      smajor ( 3 )
+      double precision      sminor ( 3 )
+      double precision      vbsctr ( 3 )
+      double precision      vtemp  ( 3 )
+      double precision      vxpt1  ( 3 )
+      double precision      vxpt2  ( 3 )
+      double precision      work   ( 3, maxfov )
+      double precision      x
+      double precision      xpt    ( 3 )
+      double precision      xpt1   ( 3 )
+      double precision      xpt2   ( 3 )
+      double precision      y
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NXPTS
+      integer               i
+      integer               j
+      integer               nxpts
 
 
 !
 !     Saved variables
 !
-      SAVE                 ORIGIN
-      SAVE                 WORK
+      save                 origin
+      save                 work
 
 !
 !     Initial values
 !
-      DATA                 ORIGIN /  3 * 0.D0 /
+      data                 origin /  3 * 0.d0 /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZELVUPY' )
+      call chkin ( 'ZZELVUPY' )
 
 !
 !     We start out by checking the inputs.
@@ -386,14 +386,14 @@
 !     of the FOUND flag here so it won't have to be set in every error
 !     checking block below.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Validate the ellipse.  First find the center and the semi-axes
 !     of the ellipse.
 !
-      CALL EL2CGV ( ELLIPS, CENTER, GV1,    GV2    )
-      CALL SAELGV ( GV1,    GV2,    SMAJOR, SMINOR )
+      call el2cgv ( ellips, center, gv1,    gv2    )
+      call saelgv ( gv1,    gv2,    smajor, sminor )
 
 !
 !     Check the semi-axis lengths.
@@ -402,100 +402,100 @@
 !     the semi-minor axis to be the zero vector as well.  But
 !     round-off error could conceivably violate this assumption.
 !
-      IF ( VZERO(SMAJOR) .OR. VZERO(SMINOR) ) THEN
+      if ( vzero(smajor) .or. vzero(sminor) ) then
 
-         CALL SETMSG ( 'Input ellipse has semi-major axis '   // &
+         call setmsg ( 'Input ellipse has semi-major axis '   // &
                        'length # and semi-minor axis length ' // &
                        '#.  Both vectors are required to be ' // &
                        'non-zero.'                            )
-         CALL ERRDP  ( '#', VNORM(SMAJOR)                     )
-         CALL ERRDP  ( '#', VNORM(SMINOR)                     )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                    )
-         CALL CHKOUT ( 'ZZELVUPY'                             )
-         RETURN
+         call errdp  ( '#', vnorm(smajor)                     )
+         call errdp  ( '#', vnorm(sminor)                     )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                    )
+         call chkout ( 'ZZELVUPY'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the vectors defining the ellipse and the vertex of the
 !     pyramid so that the largest of these vectors has unit length.
 !
-      SCALE = 1.D0 / MAX ( VNORM(CENTER), VNORM(SMAJOR), VNORM(VERTEX) )
+      scale = 1.d0 / max ( vnorm(center), vnorm(smajor), vnorm(vertex) )
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         CENTER(I) = SCALE * CENTER(I)
-         SMAJOR(I) = SCALE * SMAJOR(I)
-         SMINOR(I) = SCALE * SMINOR(I)
-         APEX  (I) = SCALE * VERTEX(I)
+         center(i) = scale * center(i)
+         smajor(i) = scale * smajor(i)
+         sminor(i) = scale * sminor(i)
+         apex  (i) = scale * vertex(i)
 
-      END DO
+      end do
 
 !
 !     Create a scaled ellipse.  We'll perform the FOV side-ellipse
 !     intersection computations using this ellipse.
 !
-      CALL CGV2EL ( CENTER, SMAJOR, SMINOR, ELLSCL )
+      call cgv2el ( center, smajor, sminor, ellscl )
 
 !
 !     After scaling, make sure the semi-axes have sufficient length to
 !     prevent numerical problems.  Let A and B be the scaled semi-axis
 !     lengths of the ellipse.
 !
-      A = VNORM ( SMAJOR )
-      B = VNORM ( SMINOR )
+      a = vnorm ( smajor )
+      b = vnorm ( sminor )
 
-      IF ( B .EQ. 0.D0 ) THEN
+      if ( b .eq. 0.d0 ) then
 
-         CALL SETMSG ( 'Scaled ellipse''s semi-minor axis length = 0.' )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                         )
-         CALL CHKOUT ( 'ZZELVUPY'                                      )
-         RETURN
+         call setmsg ( 'Scaled ellipse''s semi-minor axis length = 0.' )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                         )
+         call chkout ( 'ZZELVUPY'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Validate the input pyramid.
 !
 !     The axis must not be the zero vector.
 !
-      IF (  VZERO(AXIS)  ) THEN
+      if (  vzero(axis)  ) then
 
-         CALL SETMSG ( 'The pyramid''s axis the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                    )
-         CALL CHKOUT ( 'ZZELVUPY'                             )
-         RETURN
+         call setmsg ( 'The pyramid''s axis the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                    )
+         call chkout ( 'ZZELVUPY'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     There must be at least three boundary vectors.
 !
-      IF ( N .LT. 3 ) THEN
+      if ( n .lt. 3 ) then
 
-         CALL SETMSG ( 'The number of boundary vectors was #; ' // &
+         call setmsg ( 'The number of boundary vectors was #; ' // &
                        'this number must be at least 3.'        )
-         CALL ERRINT ( '#',  N                                  )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                    )
-         CALL CHKOUT ( 'ZZELVUPY'                               )
-         RETURN
+         call errint ( '#',  n                                  )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
+         call chkout ( 'ZZELVUPY'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     There must be no more than MAXFOV boundary vectors.
 !
-      IF ( N .GT. MAXFOV ) THEN
+      if ( n .gt. maxfov ) then
 
-         CALL SETMSG ( 'The number of boundary vectors was #; ' // &
+         call setmsg ( 'The number of boundary vectors was #; ' // &
                        'this number must not exceed #.'         )
-         CALL ERRINT ( '#',  N                                  )
-         CALL ERRINT ( '#',  MAXFOV                             )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                    )
-         CALL CHKOUT ( 'ZZELVUPY'                               )
-         RETURN
+         call errint ( '#',  n                                  )
+         call errint ( '#',  maxfov                             )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
+         call chkout ( 'ZZELVUPY'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     We must initialize certain variables before continuing with
@@ -505,7 +505,7 @@
 !     ellipse.  This vector will be used in several places later;
 !     it's convenient to compute it here.
 !
-      CALL VSUB ( CENTER, APEX, CTRVEC )
+      call vsub ( center, apex, ctrvec )
 
 !
 !     Compute PASIZE:  an upper bound on the angular radius of a
@@ -513,78 +513,78 @@
 !     we're at it, check the angular separation of the boundary
 !     vectors from the central axis and from each other.
 !
-      PASIZE = 0.D0
+      pasize = 0.d0
 
-      DO I = 1, N
+      do i = 1, n
 !
 !        Each boundary vector must have angular separation from the
 !        axis of less than pi/2 radians.  Keep track of the maximum
 !        angular separation PASIZE as we go.  We'll use this variable
 !        later in a non-intersection test.
 !
-         ASEP = VSEP ( AXIS, BOUNDS(1,I) )
+         asep = vsep ( axis, bounds(1,i) )
 
-         IF ( ASEP .GE. PI()/2  ) THEN
+         if ( asep .ge. pi()/2  ) then
 
-            CALL SETMSG ( 'The angular separation of boundary '   // &
+            call setmsg ( 'The angular separation of boundary '   // &
                           'vector # from the axis is #. This '    // &
                           'number must less than pi/2.'           )
-            CALL ERRINT ( '#',  I                                 )
-            CALL ERRDP  ( '#',  ASEP                              )
-            CALL SIGERR ( 'SPICE(INVALIDFOV)'                     )
-            CALL CHKOUT ( 'ZZELVUPY'                              )
-            RETURN
+            call errint ( '#',  i                                 )
+            call errdp  ( '#',  asep                              )
+            call sigerr ( 'SPICE(INVALIDFOV)'                     )
+            call chkout ( 'ZZELVUPY'                              )
+            return
 
-         END IF
+         end if
 
-         PASIZE = MAX ( PASIZE, ASEP )
+         pasize = max ( pasize, asep )
 
 !
 !        Each boundary vector must have non-zero angular separation
 !        from its neighbors.
 !
-         IF ( I .LT. N ) THEN
-            J  = I + 1
-         ELSE
-            J  = 1
-         END IF
+         if ( i .lt. n ) then
+            j  = i + 1
+         else
+            j  = 1
+         end if
 
-         CALL UCRSS ( BOUNDS(1,I), BOUNDS(1,J), CP )
+         call ucrss ( bounds(1,i), bounds(1,j), cp )
 
-         IF ( VZERO(CP) ) THEN
+         if ( vzero(cp) ) then
 !
 !           The cross product may be zero because one of the
 !           boundary vectors is zero.  Check this first.
 !
-            IF (  VZERO( BOUNDS(1,J) ) .OR. VZERO( BOUNDS(1,I) ) ) THEN
+            if (  vzero( bounds(1,j) ) .or. vzero( bounds(1,i) ) ) then
 
-               ERRMSG = 'The # boundary vector is the zero vector.'
+               errmsg = 'The # boundary vector is the zero vector.'
 
-               IF (  VZERO( BOUNDS(1,I) )  ) THEN
-                  J = I
-               END IF
+               if (  vzero( bounds(1,i) )  ) then
+                  j = i
+               end if
 
-               CALL REPMOT ( ERRMSG, '#', J, 'L', ERRMSG )
-               CALL SETMSG ( ERRMSG                      )
-               CALL SIGERR ( 'SPICE(ZEROVECTOR)'         )
+               call repmot ( errmsg, '#', j, 'L', errmsg )
+               call setmsg ( errmsg                      )
+               call sigerr ( 'SPICE(ZEROVECTOR)'         )
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'The angular separation of boundary '   // &
+               call setmsg ( 'The angular separation of boundary '   // &
                              'vector # from vector # is 0.'          // &
                              'This number must be positive.'         )
-               CALL ERRINT ( '#',  I                                 )
-               CALL ERRINT ( '#',  J                                 )
-               CALL SIGERR ( 'SPICE(INVALIDFOV)'                     )
+               call errint ( '#',  i                                 )
+               call errint ( '#',  j                                 )
+               call sigerr ( 'SPICE(INVALIDFOV)'                     )
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'ZZELVUPY' )
-            RETURN
+            call chkout ( 'ZZELVUPY' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     That's it for the error checks.  We'll now answer the question
@@ -604,11 +604,11 @@
 !     The test can be performed only if the apex of the FOV is outside
 !     of the sphere of radius A centered at the ellipse center.
 !
-      D  =  VDIST ( CENTER, APEX )
+      d  =  vdist ( center, apex )
 
-      IF ( A .LT. D ) THEN
+      if ( a .lt. d ) then
 
-         EASIZE  =  ASIN ( A / D )
+         easize  =  asin ( a / d )
 
 !
 !        The variable PASIZE already contains the angular radius of a
@@ -621,15 +621,15 @@
 !        the sum of the angular radii of the ellipse's and pyramid's
 !        bounding cones, there can be no intersection.
 !
-         CONSEP = VSEP ( CTRVEC, AXIS )  -  ( EASIZE + PASIZE )
+         consep = vsep ( ctrvec, axis )  -  ( easize + pasize )
 
-         IF ( CONSEP .GT. 0.D0 ) THEN
+         if ( consep .gt. 0.d0 ) then
 
-            CALL CHKOUT ( 'ZZELVUPY' )
-            RETURN
-         END IF
+            call chkout ( 'ZZELVUPY' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, we have to take a more detailed look at the
@@ -646,38 +646,38 @@
 !     The center of the ellipse must lie in the correct half-space
 !     for this test to be applicable.
 !
-      IF (  VDOT( AXIS, CTRVEC ) .GT. 0.D0 ) THEN
+      if (  vdot( axis, ctrvec ) .gt. 0.d0 ) then
 !
 !        Construct the plane and find the polygon.
 !
-         CALL NVP2PL ( AXIS, CTRVEC, FOVPLN )
+         call nvp2pl ( axis, ctrvec, fovpln )
 
 !
 !        Create the planar FOV boundary using the intersections
 !        of the FOV boundary vectors with FOVPLN.
 !
-         DO I = 1, N
+         do i = 1, n
 
-            CALL INRYPL ( ORIGIN,  BOUNDS(1,I),  FOVPLN, &
-                          NXPTS,   WORK  (1,I)           )
+            call inrypl ( origin,  bounds(1,i),  fovpln, &
+                          nxpts,   work  (1,i)           )
 
 !
 !           We expect to have a single point of intersection for each
 !           boundary vector.
 !
-            IF ( NXPTS .NE. 1 ) THEN
+            if ( nxpts .ne. 1 ) then
 
-               CALL SETMSG ( 'NXPTS = # for boundary vector #/FOV ' // &
+               call setmsg ( 'NXPTS = # for boundary vector #/FOV ' // &
                              'plane intersection.'                  )
-               CALL ERRINT ( '#',  NXPTS                            )
-               CALL ERRINT ( '#',  I                                )
-               CALL SIGERR ( 'SPICE(BUG)'                           )
-               CALL CHKOUT ( 'ZZELVUPY'                             )
-               RETURN
+               call errint ( '#',  nxpts                            )
+               call errint ( '#',  i                                )
+               call sigerr ( 'SPICE(BUG)'                           )
+               call chkout ( 'ZZELVUPY'                             )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Now WORK contains the polygon representing the intersection of
@@ -685,19 +685,19 @@
 !        the polygon about the ellipse center is non-zero, we conclude
 !        the center is in the pyramid.
 !
-         IF (   ZZWIND( FOVPLN, N, WORK, CTRVEC )  .NE.  0 ) THEN
+         if (   zzwind( fovpln, n, work, ctrvec )  .ne.  0 ) then
 !
 !           The center of the ellipse is inside the pyramid.  We're
 !           done.
 !
-            FOUND = .TRUE.
+            found = .true.
 
-            CALL CHKOUT ( 'ZZELVUPY' )
-            RETURN
+            call chkout ( 'ZZELVUPY' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check whether the ray defined by APEX and the first boundary
@@ -715,9 +715,9 @@
 !     are orthogonal, and because PSV2PL (via a call to UCRSS)
 !     does scaling to prevent underflow.
 !
-      CALL PSV2PL ( CENTER,  SMAJOR,       SMINOR,  EPLANE )
+      call psv2pl ( center,  smajor,       sminor,  eplane )
 
-      CALL INRYPL ( APEX,    BOUNDS(1,1),  EPLANE,  NXPTS,  XPT )
+      call inrypl ( apex,    bounds(1,1),  eplane,  nxpts,  xpt )
 
 !
 !     The routine INRYPL can return the NXPTS values 1, 0, or INF---a
@@ -725,7 +725,7 @@
 !     and plane.  If the value is 1, the boundary ray may intersect
 !     the region bounded by the ellipse.
 !
-      IF ( NXPTS .EQ. 1 ) THEN
+      if ( nxpts .eq. 1 ) then
 !
 !        The boundary ray intersects the plane of the ellipse in a
 !        single point. Decide whether this point is inside the ellipse.
@@ -745,24 +745,24 @@
 !        ellipse.  So in this special case, APEX would be in the region
 !        bounded by the ellipse.
 !
-         CALL VSUB ( XPT, CENTER, OFFSET )
+         call vsub ( xpt, center, offset )
 
-         X  =  VDOT  ( OFFSET, SMAJOR ) / A
-         Y  =  VDOT  ( OFFSET, SMINOR ) / B
+         x  =  vdot  ( offset, smajor ) / a
+         y  =  vdot  ( offset, sminor ) / b
 
-         IF (  ( (X/A)**2.D0  +  (Y/B)**2.D0 ) .LE.  1.D0  ) THEN
+         if (  ( (x/a)**2.d0  +  (y/b)**2.d0 ) .le.  1.d0  ) then
 !
 !           The boundary-vector-plane intercept lies in the
 !           topologically closed region bounded by the ellipse.
 !
-            FOUND = .TRUE.
+            found = .true.
 
-            CALL CHKOUT ( 'ZZELVUPY' )
-            RETURN
+            call chkout ( 'ZZELVUPY' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check whether one of the pyramid's sides intersects the ellipse.
@@ -773,18 +773,18 @@
 !     apex and this segment (point) is then checked for intersection
 !     with the currently considered side of the pyramid.
 !
-      I  =  1
+      i  =  1
 
-      DO WHILE (  ( I .LE. N ) .AND. ( .NOT. FOUND )  )
+      do while (  ( i .le. n ) .and. ( .not. found )  )
 !
 !        Create a SPICELIB plane containing the Ith side of the
 !        pyramid.
 !
-         IF ( I .LT. N ) THEN
-            J  = I + 1
-         ELSE
-            J  = 1
-         END IF
+         if ( i .lt. n ) then
+            j  = i + 1
+         else
+            j  = 1
+         end if
 
 !
 !        Although PSV2PL can signal an error if the spanning
@@ -792,36 +792,36 @@
 !        because we've already ensured the cross product of
 !        these vectors is non-zero.
 !
-         CALL PSV2PL ( APEX, BOUNDS(1,I), BOUNDS(1,J), PLANE )
+         call psv2pl ( apex, bounds(1,i), bounds(1,j), plane )
 !
 !        Find the intersection of the plane and the ellipse.
 !
-         CALL INELPL ( ELLSCL, PLANE, NXPTS, XPT1, XPT2 )
+         call inelpl ( ellscl, plane, nxpts, xpt1, xpt2 )
 
 !
 !        If the ellipse-plane intersection is non-empty, test it to see
 !        whether it has non-empty intersection with the current side of
 !        the pyramid.
 !
-         IF ( NXPTS .GT. 0 ) THEN
+         if ( nxpts .gt. 0 ) then
 !
 !           Let EDGE1 and EDGE2 be the unit length boundary vectors
 !           forming the edges of the currently considered side of the
 !           pyramid.
 !
-            CALL VHAT ( BOUNDS(1,I), EDGE1 )
-            CALL VHAT ( BOUNDS(1,J), EDGE2 )
+            call vhat ( bounds(1,i), edge1 )
+            call vhat ( bounds(1,j), edge2 )
 
 !
 !           Let EBSCTR ("pyramid edge bisector") be a bisector of the
 !           sector bounded by EDGE1 and EDGE2.
 !
-            CALL VLCOM ( 0.5D0, EDGE1, 0.5D0, EDGE2, EBSCTR )
+            call vlcom ( 0.5d0, edge1, 0.5d0, edge2, ebsctr )
 
 !
 !           Let HAFEDG be half of the angular measure of this sector.
 !
-            HAFEDG = VSEP ( EDGE1, EDGE2 ) / 2.D0
+            hafedg = vsep ( edge1, edge2 ) / 2.d0
 
 !
 !           Let VXPT1 and VXPT2 be the unit vectors pointing from the
@@ -829,11 +829,11 @@
 !           and the plane containing the currently considered side of
 !           the pyramid.
 !
-            CALL VSUB ( XPT1,  APEX,  VTEMP )
-            CALL VHAT ( VTEMP,        VXPT1 )
+            call vsub ( xpt1,  apex,  vtemp )
+            call vhat ( vtemp,        vxpt1 )
 
-            CALL VSUB ( XPT2,  APEX,  VTEMP )
-            CALL VHAT ( VTEMP,        VXPT2 )
+            call vsub ( xpt2,  apex,  vtemp )
+            call vhat ( vtemp,        vxpt2 )
 
 !
 !           At this point we'll introduce a bit of terminology. We're
@@ -853,13 +853,13 @@
 !           Let VBSCTR ("VXPT bisector") be a bisector of the sector
 !           bounded by VXPT1 and VXPT2.
 !
-            CALL VLCOM ( 0.5D0, VXPT1, 0.5D0, VXPT2, VBSCTR )
+            call vlcom ( 0.5d0, vxpt1, 0.5d0, vxpt2, vbsctr )
 
 !
 !           Let HAFSEC be half of the angular measure of the sector
 !           bounded by VXPT1 and VXPT2.
 !
-            HAFSEC = VSEP ( VXPT1, VXPT2 ) / 2.D0
+            hafsec = vsep ( vxpt1, vxpt2 ) / 2.d0
 
 !
 !           EDGE1, EDGE2, VXPT1, and VXPT2 are four co-planar vectors
@@ -889,50 +889,50 @@
 !              Case 3:  VBSCTR lies between EDGE1 and EDGE2.
 !              Case 4:  EBSCTR lies between VXPT1 and VXPT2.
 !
-            IF      ( VSEP(VXPT1,  EBSCTR) .LE. HAFEDG ) THEN
+            if      ( vsep(vxpt1,  ebsctr) .le. hafedg ) then
 
-               FOUND = .TRUE.
+               found = .true.
 
-            ELSE IF ( VSEP(VXPT2,  EBSCTR) .LE. HAFEDG ) THEN
+            else if ( vsep(vxpt2,  ebsctr) .le. hafedg ) then
 
-               FOUND = .TRUE.
+               found = .true.
 
-            ELSE IF ( VSEP(VBSCTR, EBSCTR) .LE. HAFEDG ) THEN
+            else if ( vsep(vbsctr, ebsctr) .le. hafedg ) then
 
-               FOUND = .TRUE.
+               found = .true.
 
-            ELSE IF ( VSEP(EBSCTR, VBSCTR) .LE. HAFSEC ) THEN
+            else if ( vsep(ebsctr, vbsctr) .le. hafsec ) then
 
-               FOUND = .TRUE.
+               found = .true.
 
-            END IF
+            end if
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              We've found an intersection.  We're done.
 !
-               CALL CHKOUT ( 'ZZELVUPY' )
-               RETURN
+               call chkout ( 'ZZELVUPY' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        If no intersection was found, look at the next side of the
 !        pyramid.
 !
-         I = I + 1
+         i = i + 1
 
-      END DO
+      end do
 
 !
 !     If we got this far, the ellipse is not in view.  FOUND has
 !     already been set to .FALSE.
 !
 
-      CALL CHKOUT ( 'ZZELVUPY' )
-      RETURN
-      END
+      call chkout ( 'ZZELVUPY' )
+      return
+      end
 
 

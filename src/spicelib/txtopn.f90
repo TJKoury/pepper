@@ -1,6 +1,6 @@
 !$Procedure TXTOPN ( Text file, open new )
 
-      SUBROUTINE TXTOPN ( FNAME, UNIT )
+      subroutine txtopn ( fname, unit )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FNAME
-      INTEGER               UNIT
+      character*(*)         fname
+      integer               unit
 
 ! $ Brief_I/O
 !
@@ -308,49 +308,49 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'TXTOPN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'TXTOPN' )
+      end if
 
-      IF ( FNAME .EQ. ' ' ) THEN
-         CALL SETMSG ( 'A blank string is unacceptable as a file name' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'                          )
-         CALL CHKOUT ( 'TXTOPN'                                        )
-         RETURN
-      END IF
+      if ( fname .eq. ' ' ) then
+         call setmsg ( 'A blank string is unacceptable as a file name' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'                          )
+         call chkout ( 'TXTOPN'                                        )
+         return
+      end if
 
-      CALL GETLUN ( UNIT )
+      call getlun ( unit )
 
-      OPEN ( UNIT            =  UNIT, &
-             FILE            =  FNAME, &
-             FORM            = 'FORMATTED', &
-             ACCESS          = 'SEQUENTIAL', &
-             STATUS          = 'NEW', &
-             IOSTAT          =  IOSTAT      )
+      open ( unit            =  unit, &
+             file            =  fname, &
+             form            = 'FORMATTED', &
+             access          = 'SEQUENTIAL', &
+             status          = 'NEW', &
+             iostat          =  iostat      )
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Could not open file #. IOSTAT was #. ' )
-         CALL ERRCH  ( '#', FNAME                              )
-         CALL ERRINT ( '#', IOSTAT                             )
-         CALL SIGERR ( 'SPICE(FILEOPENFAILED)'                 )
-         CALL CHKOUT ( 'TXTOPN'                                )
-         RETURN
-      END IF
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Could not open file #. IOSTAT was #. ' )
+         call errch  ( '#', fname                              )
+         call errint ( '#', iostat                             )
+         call sigerr ( 'SPICE(FILEOPENFAILED)'                 )
+         call chkout ( 'TXTOPN'                                )
+         return
+      end if
 
-      CALL CHKOUT ( 'TXTOPN' )
-      RETURN
-      END
+      call chkout ( 'TXTOPN' )
+      return
+      end

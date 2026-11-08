@@ -1,6 +1,6 @@
 !$Procedure PCK03A ( PCK, add data to a type 3 segment )
 
-      SUBROUTINE PCK03A ( HANDLE, NCSETS, COEFFS, EPOCHS )
+      subroutine pck03a ( handle, ncsets, coeffs, epochs )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               NCSETS
-      DOUBLE PRECISION      COEFFS ( * )
-      DOUBLE PRECISION      EPOCHS ( * )
+      integer               handle
+      integer               ncsets
+      double precision      coeffs ( * )
+      double precision      epochs ( * )
 
 ! $ Brief_I/O
 !
@@ -325,45 +325,45 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCK03A' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'PCK03A' )
+      end if
 
 !
 !     First, check to see if the number of coefficient sets and epochs
 !     is positive.
 !
-      IF ( NCSETS .LE. 0 ) THEN
+      if ( ncsets .le. 0 ) then
 
-         CALL SETMSG ( 'The number of coefficient sets and epochs' &
+         call setmsg ( 'The number of coefficient sets and epochs' &
          //            ' to be added to the PCK segment in the file' &
          //            ' ''#'' was not positive. Its value was: #.'  )
-         CALL ERRHAN ( '#', HANDLE                                   )
-         CALL ERRINT ( '#', NCSETS                                   )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                      )
-         CALL CHKOUT ( 'PCK03A'                                      )
-         RETURN
+         call errhan ( '#', handle                                   )
+         call errint ( '#', ncsets                                   )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         call chkout ( 'PCK03A'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Add the data.
 !
-      CALL SGWFPK ( HANDLE, NCSETS, COEFFS, NCSETS, EPOCHS )
+      call sgwfpk ( handle, ncsets, coeffs, ncsets, epochs )
 
 !
 !     No need to check FAILED() here, since all we do is check out.
 !     Leave it up to the caller.
 !
 
-      CALL CHKOUT ( 'PCK03A' )
-      RETURN
+      call chkout ( 'PCK03A' )
+      return
 
-      END
+      end

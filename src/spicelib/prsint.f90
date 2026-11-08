@@ -1,6 +1,6 @@
 !$Procedure PRSINT   ( Parse integer with error checking )
 
-      SUBROUTINE PRSINT ( STRING, INTVAL )
+      subroutine prsint ( string, intval )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      INTEGER               INTVAL
+      character*(*)         string
+      integer               intval
 
 ! $ Brief_I/O
 !
@@ -205,29 +205,29 @@
 !
 !     Local parameters
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 320 )
+      integer               msglen
+      parameter           ( msglen = 320 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    ERRMSG
-      INTEGER               PTR
+      character*(msglen)    errmsg
+      integer               ptr
 
 !
 !     Use discovery check-in.
 !
-      CALL NPARSI ( STRING, INTVAL, ERRMSG, PTR )
+      call nparsi ( string, intval, errmsg, ptr )
 
-      IF ( ERRMSG .NE. ' ' ) THEN
+      if ( errmsg .ne. ' ' ) then
 
-         CALL CHKIN  ( 'PRSINT'               )
-         CALL SETMSG ( ERRMSG                 )
-         CALL SIGERR ( 'SPICE(NOTANINTEGER)'  )
-         CALL CHKOUT ( 'PRSINT'               )
-         RETURN
+         call chkin  ( 'PRSINT'               )
+         call setmsg ( errmsg                 )
+         call sigerr ( 'SPICE(NOTANINTEGER)'  )
+         call chkout ( 'PRSINT'               )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

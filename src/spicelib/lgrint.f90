@@ -1,6 +1,6 @@
 !$Procedure LGRINT ( Lagrange polynomial interpolation )
 
-      DOUBLE PRECISION FUNCTION LGRINT ( N, XVALS, YVALS, WORK, X )
+      double precision function lgrint ( n, xvals, yvals, work, x )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      DOUBLE PRECISION      XVALS ( * )
-      DOUBLE PRECISION      YVALS ( * )
-      DOUBLE PRECISION      WORK  ( * )
-      DOUBLE PRECISION      X
+      integer               n
+      double precision      xvals ( * )
+      double precision      yvals ( * )
+      double precision      work  ( * )
+      double precision      x
 
 ! $ Brief_I/O
 !
@@ -227,42 +227,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      DENOM
+      double precision      c1
+      double precision      c2
+      double precision      denom
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     Check in only if an error is detected.
 !
-      IF ( RETURN() ) THEN
-         LGRINT = 0.D0
-         RETURN
-      END IF
+      if ( return() ) then
+         lgrint = 0.d0
+         return
+      end if
 
 !
 !     No data, no interpolation.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         LGRINT = 0.D0
+         lgrint = 0.d0
 
-         CALL CHKIN  ( 'LGRINT'                              )
-         CALL SETMSG ( 'Array size must be positive; was #.' )
-         CALL ERRINT ( '#',  N                               )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                  )
-         CALL CHKOUT ( 'LGRINT'                              )
-         RETURN
+         call chkin  ( 'LGRINT'                              )
+         call setmsg ( 'Array size must be positive; was #.' )
+         call errint ( '#',  n                               )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                  )
+         call chkout ( 'LGRINT'                              )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -353,47 +353,47 @@
 !         I
 !
 !
-      DO I = 1, N
-         WORK(I) = YVALS(I)
-      END DO
+      do i = 1, n
+         work(i) = yvals(i)
+      end do
 
 !
 !     Compute columns 2 through N of the table.  Note that DENOM must
 !     be non-zero, or else a divide-by-zero error will occur.
 !
-      DO J = 1, N-1
+      do j = 1, n-1
 
-         DO I = 1, N-J
+         do i = 1, n-j
 
-            DENOM    =     XVALS(I)  -  XVALS(I+J)
+            denom    =     xvals(i)  -  xvals(i+j)
 
-            IF ( DENOM .EQ. 0.D0 ) THEN
+            if ( denom .eq. 0.d0 ) then
 
-               LGRINT = 0.D0
-               CALL CHKIN ( 'LGRINT'                   )
-               CALL SETMSG ( 'XVALS(#) = XVALS(#) = #' )
-               CALL ERRINT ( '#',   I                  )
-               CALL ERRINT ( '#',   I + J              )
-               CALL ERRDP  ( '#',   XVALS(I)           )
-               CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'     )
-               CALL CHKOUT ( 'LGRINT'                  )
-               RETURN
+               lgrint = 0.d0
+               call chkin ( 'LGRINT'                   )
+               call setmsg ( 'XVALS(#) = XVALS(#) = #' )
+               call errint ( '#',   i                  )
+               call errint ( '#',   i + j              )
+               call errdp  ( '#',   xvals(i)           )
+               call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
+               call chkout ( 'LGRINT'                  )
+               return
 
-            END IF
+            end if
 
-            C1       =     X         -  XVALS(I+J)
-            C2       =     XVALS(I)  -  X
+            c1       =     x         -  xvals(i+j)
+            c2       =     xvals(i)  -  x
 
-            WORK(I)  =  (  C1 * WORK(I)  +  C2 * WORK(I+1)  ) / DENOM
+            work(i)  =  (  c1 * work(i)  +  c2 * work(i+1)  ) / denom
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Our result is sitting in WORK(1) at this point.
 !
-      LGRINT = WORK(1)
+      lgrint = work(1)
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRIT ( EK tree, initialize )
 
-      SUBROUTINE ZZEKTRIT ( HANDLE, TREE )
+      subroutine zzektrit ( handle, tree )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
+      integer               handle
+      integer               tree
 
 ! $ Brief_I/O
 !
@@ -101,64 +101,64 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               P
-      INTEGER               PAGE  ( PGSIZI )
+      integer               base
+      integer               p
+      integer               page  ( pgsizi )
 
 !
 !     Saved variables
 !
-      SAVE                  PAGE
+      save                  page
 
 !
 !     Initial values
 !
-      DATA                  PAGE / PGSIZI * 0 /
+      data                  page / pgsizi * 0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKTRIT' )
+      call chkin ( 'ZZEKTRIT' )
 
 !
 !     Start out by allocating a DAS integer page.  We'll write the root
 !     node out to this page.
 !
-      CALL ZZEKPGAL ( HANDLE, INT, P, BASE )
+      call zzekpgal ( handle, int, p, base )
 
-      PAGE ( TRTYPE )  =  TRVERS
-      PAGE ( TRNNOD )  =  1
-      PAGE ( TRNKEY )  =  0
-      PAGE ( TRNKR  )  =  0
-      PAGE ( TRDPTH )  =  1
+      page ( trtype )  =  trvers
+      page ( trnnod )  =  1
+      page ( trnkey )  =  0
+      page ( trnkr  )  =  0
+      page ( trdpth )  =  1
 
 !
 !     Set all keys to zero; set all child and data pointers to null.
 !
-      CALL CLEARI (  MXKEYR,  PAGE(TRKEYR+1)  )
-      CALL CLEARI (  MXKEYR,  PAGE(TRDATR+1)  )
-      CALL CLEARI (  MXKIDR,  PAGE(TRKIDR+1)  )
+      call cleari (  mxkeyr,  page(trkeyr+1)  )
+      call cleari (  mxkeyr,  page(trdatr+1)  )
+      call cleari (  mxkidr,  page(trkidr+1)  )
 
 !
 !     Write out the page.
 !
-      CALL ZZEKPGWI ( HANDLE, P, PAGE )
+      call zzekpgwi ( handle, p, page )
 
 !
 !     The identifier we return is just the page number of the tree's
 !     root.
 !
-      TREE  =  P
+      tree  =  p
 
-      CALL CHKOUT ( 'ZZEKTRIT' )
-      RETURN
-      END
+      call chkout ( 'ZZEKTRIT' )
+      return
+      end

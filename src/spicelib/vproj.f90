@@ -1,6 +1,6 @@
 !$Procedure VPROJ ( Vector projection, 3 dimensions )
 
-      SUBROUTINE VPROJ ( A, B, P )
+      subroutine vproj ( a, b, p )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   A ( 3 )
-      DOUBLE PRECISION   B ( 3 )
-      DOUBLE PRECISION   P ( 3 )
+      double precision   a ( 3 )
+      double precision   b ( 3 )
+      double precision   p ( 3 )
 
 ! $ Brief_I/O
 !
@@ -225,46 +225,46 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BIGA
-      DOUBLE PRECISION      BIGB
-      DOUBLE PRECISION      R(3)
-      DOUBLE PRECISION      T(3)
-      DOUBLE PRECISION      SCALE
+      double precision      biga
+      double precision      bigb
+      double precision      r(3)
+      double precision      t(3)
+      double precision      scale
 
 
-      BIGA = MAX ( DABS(A(1)), DABS(A(2)), DABS(A(3)) )
-      BIGB = MAX ( DABS(B(1)), DABS(B(2)), DABS(B(3)) )
+      biga = max ( dabs(a(1)), dabs(a(2)), dabs(a(3)) )
+      bigb = max ( dabs(b(1)), dabs(b(2)), dabs(b(3)) )
 
-      IF ( BIGA .EQ. 0 ) THEN
-         P(1) = 0.0D0
-         P(2) = 0.0D0
-         P(3) = 0.0D0
-         RETURN
-      END IF
+      if ( biga .eq. 0 ) then
+         p(1) = 0.0d0
+         p(2) = 0.0d0
+         p(3) = 0.0d0
+         return
+      end if
 
-      IF (  BIGB .EQ. 0 ) THEN
-         P(1) = 0.0D0
-         P(2) = 0.0D0
-         P(3) = 0.0D0
-         RETURN
-      END IF
+      if (  bigb .eq. 0 ) then
+         p(1) = 0.0d0
+         p(2) = 0.0d0
+         p(3) = 0.0d0
+         return
+      end if
 
-      R(1)  = B(1) / BIGB
-      R(2)  = B(2) / BIGB
-      R(3)  = B(3) / BIGB
+      r(1)  = b(1) / bigb
+      r(2)  = b(2) / bigb
+      r(3)  = b(3) / bigb
 
-      T(1)  = A(1) / BIGA
-      T(2)  = A(2) / BIGA
-      T(3)  = A(3) / BIGA
+      t(1)  = a(1) / biga
+      t(2)  = a(2) / biga
+      t(3)  = a(3) / biga
 
-      SCALE = VDOT (T,R) * BIGA  / VDOT (R,R)
+      scale = vdot (t,r) * biga  / vdot (r,r)
 
-      CALL VSCL ( SCALE, R, P )
+      call vscl ( scale, r, p )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure EDNMPT ( Ellipsoid normal vector to surface point )
 
-      SUBROUTINE EDNMPT ( A, B, C, NORMAL, POINT )
+      subroutine ednmpt ( a, b, c, normal, point )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      POINT  ( 3 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      normal ( 3 )
+      double precision      point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -305,98 +305,98 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TOUCHD
+      double precision      touchd
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ARG
-      DOUBLE PRECISION      LAMBDA
-      DOUBLE PRECISION      NA2
-      DOUBLE PRECISION      NB2
-      DOUBLE PRECISION      NC2
-      DOUBLE PRECISION      SA
-      DOUBLE PRECISION      SB
-      DOUBLE PRECISION      SC
-      DOUBLE PRECISION      SCALE
+      double precision      arg
+      double precision      lambda
+      double precision      na2
+      double precision      nb2
+      double precision      nc2
+      double precision      sa
+      double precision      sb
+      double precision      sc
+      double precision      scale
 
 !
 !     Use discovery check-in. We will test RETURN though, since
 !     we could have invalid inputs to our arithmetic computations
 !     if a SPICE error condition exists upon entry.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Perform some preliminary checks.
 !
 !     We need a non-degenerate ellipsoid to start with.
 !
-      IF (      ( A .LE. 0.D0 ) &
-           .OR. ( B .LE. 0.D0 ) &
-           .OR. ( C .LE. 0.D0 )  ) THEN
+      if (      ( a .le. 0.d0 ) &
+           .or. ( b .le. 0.d0 ) &
+           .or. ( c .le. 0.d0 )  ) then
 
-         CALL CHKIN  ( 'EDNMPT'                               )
-         CALL SETMSG ( 'All ellipsoid semi-axis lengths must ' &
+         call chkin  ( 'EDNMPT'                               )
+         call setmsg ( 'All ellipsoid semi-axis lengths must ' &
          //            'be strictly positive. Lengths were: ' &
          //            'A = #; B = #; C = #'                  )
-         CALL ERRDP  ( '#',  A                                )
-         CALL ERRDP  ( '#',  B                                )
-         CALL ERRDP  ( '#',  C                                )
-         CALL SIGERR ( 'SPICE(BADAXISLENGTH)'                 )
-         CALL CHKOUT ( 'EDNMPT'                               )
-         RETURN
+         call errdp  ( '#',  a                                )
+         call errdp  ( '#',  b                                )
+         call errdp  ( '#',  c                                )
+         call sigerr ( 'SPICE(BADAXISLENGTH)'                 )
+         call chkout ( 'EDNMPT'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     We'll work with scaled copies of the input semi-axis
 !     lengths.
 !
-      SCALE = MAX ( A, B, C )
+      scale = max ( a, b, c )
 
-      SA    = TOUCHD( A / SCALE )
-      SB    = TOUCHD( B / SCALE )
-      SC    = TOUCHD( C / SCALE )
+      sa    = touchd( a / scale )
+      sb    = touchd( b / scale )
+      sc    = touchd( c / scale )
 !
 !     If any of the scaled-semi axes underflowed to zero,
 !     we can't continue.
 !
-      IF (      ( SA .LE. 0.D0 ) &
-           .OR. ( SB .LE. 0.D0 ) &
-           .OR. ( SC .LE. 0.D0 )  ) THEN
+      if (      ( sa .le. 0.d0 ) &
+           .or. ( sb .le. 0.d0 ) &
+           .or. ( sc .le. 0.d0 )  ) then
 
-         CALL CHKIN  ( 'EDNMPT'                                   )
-         CALL SETMSG ( 'Scaled semi-axis lengths must be ' &
+         call chkin  ( 'EDNMPT'                                   )
+         call setmsg ( 'Scaled semi-axis lengths must be ' &
          //            'strictly positive. Scaled lengths were: ' &
          //            'SA = #; SB = #; SC = #'                   )
-         CALL ERRDP  ( '#',  SA                                   )
-         CALL ERRDP  ( '#',  SB                                   )
-         CALL ERRDP  ( '#',  SC                                   )
-         CALL SIGERR ( 'SPICE(AXISUNDERFLOW)'                     )
-         CALL CHKOUT ( 'EDNMPT'                                   )
-         RETURN
+         call errdp  ( '#',  sa                                   )
+         call errdp  ( '#',  sb                                   )
+         call errdp  ( '#',  sc                                   )
+         call sigerr ( 'SPICE(AXISUNDERFLOW)'                     )
+         call chkout ( 'EDNMPT'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     The normal vector can't be the zero vector.
 !
-      IF ( VZERO(NORMAL) ) THEN
+      if ( vzero(normal) ) then
 
-         CALL CHKIN  ( 'EDNMPT'                                       )
-         CALL SETMSG ( 'The input normal vector was the zero vector. ' &
+         call chkin  ( 'EDNMPT'                                       )
+         call setmsg ( 'The input normal vector was the zero vector. ' &
          //            'There is no solution.'                        )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                            )
-         CALL CHKOUT ( 'EDNMPT'                                       )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                            )
+         call chkout ( 'EDNMPT'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     In general, given an ellipsoid E with axes a, b, c,
@@ -428,33 +428,33 @@
 !        lambda = 1 / sqrt( ( n1 * a  ) + (n2 * b ) + (n3 + c ) )
 !
 !
-      NA2 = NORMAL(1) * SA * SA
-      NB2 = NORMAL(2) * SB * SB
-      NC2 = NORMAL(3) * SC * SC
+      na2 = normal(1) * sa * sa
+      nb2 = normal(2) * sb * sb
+      nc2 = normal(3) * sc * sc
 
-      ARG = TOUCHD(   ( NA2 * NORMAL(1) ) + ( NB2 * NORMAL(2) ) &
-                    + ( NC2 * NORMAL(3) )                        )
+      arg = touchd(   ( na2 * normal(1) ) + ( nb2 * normal(2) ) &
+                    + ( nc2 * normal(3) )                        )
 
-      IF ( ARG .LE. 0.D0 ) THEN
+      if ( arg .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'EDNMPT'                                   )
-         CALL SETMSG ( 'Scale factor LAMBDA must be positive, ' &
+         call chkin  ( 'EDNMPT'                                   )
+         call setmsg ( 'Scale factor LAMBDA must be positive, ' &
          //            'but reciprocal of square of LAMBDA is #.' )
-         CALL ERRDP  ( '#', ARG                                   )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                    )
-         CALL CHKOUT ( 'EDNMPT'                                   )
-         RETURN
+         call errdp  ( '#', arg                                   )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                    )
+         call chkout ( 'EDNMPT'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute LAMBDA as above, and scale it too. This will place
 !     POINT on the original ellipsoid.
 !
-      LAMBDA   = ( ARG ** (-0.5D0) ) * SCALE
+      lambda   = ( arg ** (-0.5d0) ) * scale
 
-      POINT(1) = LAMBDA * NA2
-      POINT(2) = LAMBDA * NB2
-      POINT(3) = LAMBDA * NC2
+      point(1) = lambda * na2
+      point(2) = lambda * nb2
+      point(3) = lambda * nc2
 
-      END
+      end

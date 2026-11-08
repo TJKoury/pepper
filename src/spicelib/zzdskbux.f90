@@ -1,9 +1,9 @@
 !$Procedure ZZDSKBUX ( DSK, buffered unprioritized ray intercept )
 
-      SUBROUTINE ZZDSKBUX ( BODYID, NSURF,  SRFLST, ET,     FIXFID, &
-                            NSEG,   HANBUF, DLABUF, DSKBUF, OFFBUF, &
-                            CTRBUF, RADBUF, VERTEX, RAYDIR, XPT, &
-                            SEGIDX, DC,     IC,     FOUND          )
+      subroutine zzdskbux ( bodyid, nsurf,  srflst, et,     fixfid, &
+                            nseg,   hanbuf, dlabuf, dskbuf, offbuf, &
+                            ctrbuf, radbuf, vertex, raydir, xpt, &
+                            segidx, dc,     ic,     found          )
 
 ! $ Abstract
 !
@@ -37,33 +37,33 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsktol.inc'
-      INCLUDE 'zzctr.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsktol.inc'
+      include 'zzctr.inc'
 
 
-      INTEGER               BODYID
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      ET
-      INTEGER               FIXFID
-      INTEGER               NSEG
-      INTEGER               HANBUF ( * )
-      INTEGER               DLABUF ( DLADSZ, * )
-      DOUBLE PRECISION      DSKBUF ( DSKDSZ, * )
-      DOUBLE PRECISION      OFFBUF ( 3,      * )
-      DOUBLE PRECISION      CTRBUF ( 3,      * )
-      DOUBLE PRECISION      RADBUF ( * )
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
-      INTEGER               SEGIDX
-      DOUBLE PRECISION      DC     ( * )
-      INTEGER               IC     ( * )
-      LOGICAL               FOUND
+      integer               bodyid
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      et
+      integer               fixfid
+      integer               nseg
+      integer               hanbuf ( * )
+      integer               dlabuf ( dladsz, * )
+      double precision      dskbuf ( dskdsz, * )
+      double precision      offbuf ( 3,      * )
+      double precision      ctrbuf ( 3,      * )
+      double precision      radbuf ( * )
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      xpt    ( 3 )
+      integer               segidx
+      double precision      dc     ( * )
+      integer               ic     ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -304,61 +304,61 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
+      double precision      vdist
+      double precision      vnorm
 
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      RADSCL
-      PARAMETER           ( RADSCL = 1.01D0 )
+      double precision      radscl
+      parameter           ( radscl = 1.01d0 )
 
-      INTEGER               MAXHIT
-      PARAMETER           ( MAXHIT = 1000 )
+      integer               maxhit
+      parameter           ( maxhit = 1000 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      DMIN
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      MINRAD
-      DOUBLE PRECISION      SEGDIR ( 3 )
-      DOUBLE PRECISION      SEGVTX ( 3 )
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      SGDIST ( MAXHIT )
-      DOUBLE PRECISION      SGMARG
-      DOUBLE PRECISION      SGXBUF ( 3, 3, MAXHIT )
-      DOUBLE PRECISION      SPHVTX ( 3 )
-      DOUBLE PRECISION      SRFX   ( 3 )
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      double precision      dist
+      double precision      dmin
+      double precision      maxrad
+      double precision      minrad
+      double precision      segdir ( 3 )
+      double precision      segvtx ( 3 )
+      double precision      pnear  ( 3 )
+      double precision      sgdist ( maxhit )
+      double precision      sgmarg
+      double precision      sgxbuf ( 3, 3, maxhit )
+      double precision      sphvtx ( 3 )
+      double precision      srfx   ( 3 )
+      double precision      vtemp  ( 3 )
+      double precision      xform  ( 3, 3 )
 
-      INTEGER               DTYPE
-      INTEGER               I
-      INTEGER               IORDER ( MAXHIT )
-      INTEGER               J
-      INTEGER               K
-      INTEGER               NHIT
-      INTEGER               NXPTS
-      INTEGER               PRVFRM
-      INTEGER               SEGFID
-      INTEGER               SGHIT  ( MAXHIT )
-      INTEGER               SURFCE
-      INTEGER               WINNER
+      integer               dtype
+      integer               i
+      integer               iorder ( maxhit )
+      integer               j
+      integer               k
+      integer               nhit
+      integer               nxpts
+      integer               prvfrm
+      integer               segfid
+      integer               sghit  ( maxhit )
+      integer               surfce
+      integer               winner
 
-      LOGICAL               BODYOK
-      LOGICAL               DONE
-      LOGICAL               MULTFR
-      LOGICAL               SURFOK
-      LOGICAL               TIMEOK
-      LOGICAL               XFND
+      logical               bodyok
+      logical               done
+      logical               multfr
+      logical               surfok
+      logical               timeok
+      logical               xfnd
 
 
 !
@@ -368,66 +368,66 @@
 !
 !     Initial values
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKBUX' )
+      call chkin ( 'ZZDSKBUX' )
 
 !
 !     Check the incoming segment count.
 !
-      IF ( NSEG .LE. 0 ) THEN
+      if ( nseg .le. 0 ) then
 
-         CALL SETMSG ( 'Input segment list was empty. This may ' &
+         call setmsg ( 'Input segment list was empty. This may ' &
          //            'be due to no DSKs containing data for ' &
          //            'body # having been loaded.'            )
-         CALL ERRINT ( '#',  BODYID                            )
-         CALL SIGERR ( 'SPICE(NODSKSEGMENTS)'                  )
-         CALL CHKOUT ( 'ZZDSKBUX'                              )
-         RETURN
+         call errint ( '#',  bodyid                            )
+         call sigerr ( 'SPICE(NODSKSEGMENTS)'                  )
+         call chkout ( 'ZZDSKBUX'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     No intercept has been found.
 !
-      SEGIDX = 0
-      FOUND  = .FALSE.
+      segidx = 0
+      found  = .false.
 
 !
 !     Indicate we haven't yet seen a segment frame different
 !     from the one designated by FIXFID.
 !
-      MULTFR = .FALSE.
+      multfr = .false.
 
 !
 !     Obtain the "greedy" segment margin.
 !
-      CALL DSKGTL ( KEYSGR, SGMARG )
+      call dskgtl ( keysgr, sgmarg )
 
 !
 !     Make a local copy of the ray. We'll update this copy
 !     later if need be.
 !
-      CALL VEQU ( VERTEX, SEGVTX )
-      CALL VEQU ( RAYDIR, SEGDIR )
+      call vequ ( vertex, segvtx )
+      call vequ ( raydir, segdir )
 
 !
 !     Obtain the radius of an outer bounding sphere for the given body
 !     and surface list.
 !
-      CALL ZZDSKSPH ( BODYID, NSURF, SRFLST, MINRAD, MAXRAD )
+      call zzdsksph ( bodyid, nsurf, srflst, minrad, maxrad )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZDSKBUX' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZDSKBUX' )
+         return
+      end if
 !
 !     Scale up the bounding sphere to avoid round-off difficulties.
 !     We'll use this value in the loop below.
 !
-      MAXRAD = MAXRAD * RADSCL
+      maxrad = maxrad * radscl
 
 !
 !     If the ray's vertex is distant from the target, use a vertex on
@@ -441,28 +441,28 @@
 !     expansion factor is used. Using an intercept on the outer
 !     bounding sphere greatly ameliorates this problem.
 !
-      IF ( VNORM(SEGVTX) .GT. MAXRAD ) THEN
+      if ( vnorm(segvtx) .gt. maxrad ) then
 !
 !        Find the intercept of the ray with the outer bounding
 !        sphere. We'll use this intercept as the vertex for
 !        later computations.
 !
-         CALL SURFPT ( SEGVTX, SEGDIR, MAXRAD, &
-                       MAXRAD, MAXRAD, SPHVTX, XFND )
+         call surfpt ( segvtx, segdir, maxrad, &
+                       maxrad, maxrad, sphvtx, xfnd )
 
-         IF ( FAILED() .OR. ( .NOT. XFND ) ) THEN
+         if ( failed() .or. ( .not. xfnd ) ) then
 !
 !           It would be highly unusual for the SURFPT call to
 !           fail to produce an intercept. Check anyway.
 !
-            CALL CHKOUT ( 'ZZDSKBUX' )
-            RETURN
+            call chkout ( 'ZZDSKBUX' )
+            return
 
-         END IF
+         end if
 
-         CALL VEQU ( SPHVTX, SEGVTX )
+         call vequ ( sphvtx, segvtx )
 
-      END IF
+      end if
 
 !
 !     By default, each segment in the input list must be checked
@@ -473,46 +473,46 @@
 !     of their bounding spheres. Only those segments whose bounding
 !     spheres are hit are examined further.
 !
-      NHIT   = 0
-      PRVFRM = 0
+      nhit   = 0
+      prvfrm = 0
 
-      DO I = 1, NSEG
+      do i = 1, nseg
 !
 !        BODYOK indicates whether the input body ID matches that
 !        of the current segment.
 !
-         SURFOK = .FALSE.
-         TIMEOK = .FALSE.
+         surfok = .false.
+         timeok = .false.
 
-         BODYOK = BODYID .EQ. NINT( DSKBUF(CTRIDX,I) )
+         bodyok = bodyid .eq. nint( dskbuf(ctridx,i) )
 
-         IF ( BODYOK ) THEN
+         if ( bodyok ) then
 !
 !           See whether the current segment contains a surface we're
 !           supposed to consider. If the surface list is empty, we
 !           consider all surfaces. Otherwise, the surface of the
 !           segment must be on the surface list in order to qualify.
 !
-            J = 0
+            j = 0
 
-            IF ( NSURF .GT. 0 ) THEN
+            if ( nsurf .gt. 0 ) then
 
-               SURFCE = NINT( DSKBUF(SRFIDX,I) )
-               J      = ISRCHI( SURFCE, NSURF, SRFLST )
+               surfce = nint( dskbuf(srfidx,i) )
+               j      = isrchi( surfce, nsurf, srflst )
 
-            END IF
+            end if
 
-            SURFOK = ( NSURF .EQ. 0 ) .OR. ( J .GT. 0 )
+            surfok = ( nsurf .eq. 0 ) .or. ( j .gt. 0 )
 
 !
 !           See whether the segment covers the input epoch.
 !
-            TIMEOK =        ( ET .GE. DSKBUF(BTMIDX,I) ) &
-                      .AND. ( ET .LE. DSKBUF(ETMIDX,I) )
+            timeok =        ( et .ge. dskbuf(btmidx,i) ) &
+                      .and. ( et .le. dskbuf(etmidx,i) )
 
-         END IF
+         end if
 
-         IF ( BODYOK .AND. SURFOK .AND. TIMEOK  ) THEN
+         if ( bodyok .and. surfok .and. timeok  ) then
 !
 !           This segment is to be considered.
 !
@@ -523,17 +523,17 @@
 !           Get the segment's frame ID. Get the transformation from the
 !           input frame to the output frame if needed.
 
-            SEGFID = NINT( DSKBUF(FRMIDX,I) )
+            segfid = nint( dskbuf(frmidx,i) )
 
 
-            IF ( SEGFID .NE. FIXFID ) THEN
+            if ( segfid .ne. fixfid ) then
 !
 !              We have a segment that uses a different frame
 !              from that specified by FIXFID.
 !
-               MULTFR = .TRUE.
+               multfr = .true.
 
-               IF ( SEGFID .NE. PRVFRM ) THEN
+               if ( segfid .ne. prvfrm ) then
 !
 !                 The frame of the current segment doesn't match
 !                 that of the previous segment, so we'll need
@@ -543,12 +543,12 @@
 !                 Otherwise, XFORM already contains the correct
 !                 transformation.
 !
-                  CALL REFCHG ( FIXFID, SEGFID, ET, XFORM )
+                  call refchg ( fixfid, segfid, et, xform )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'ZZDSKBUX' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'ZZDSKBUX' )
+                     return
+                  end if
 
 !
 !                 Transform the local copy of the ray to the segment's
@@ -556,108 +556,108 @@
 !                 so that it represents an offset relative to center of
 !                 the segment's frame.
 !
-                  CALL MXV  ( XFORM, RAYDIR, SEGDIR )
-                  CALL MXV  ( XFORM, VERTEX, SEGVTX )
+                  call mxv  ( xform, raydir, segdir )
+                  call mxv  ( xform, vertex, segvtx )
 
 !
 !                 The direction of the buffered offset is from the body
 !                 to the segment frame's center. The offset is
 !                 expressed in the segment's frame.
 !
-                  CALL VSUB ( SEGVTX, OFFBUF(1,I), VTEMP  )
-                  CALL VEQU ( VTEMP,               SEGVTX )
+                  call vsub ( segvtx, offbuf(1,i), vtemp  )
+                  call vequ ( vtemp,               segvtx )
 
-               END IF
+               end if
 
 
-            ELSE IF ( MULTFR ) THEN
+            else if ( multfr ) then
 !
 !              The input and segment frames are the same for this
 !              segment, but the current values of SEGVTX and SEGDIR
 !              need to be reset.
 !
-               CALL VEQU ( VERTEX, SEGVTX )
-               CALL VEQU ( RAYDIR, SEGDIR )
+               call vequ ( vertex, segvtx )
+               call vequ ( raydir, segdir )
 
-            END IF
+            end if
 
 !
 !           Find the distance of the ray from the "center" of the
 !           segment's coverage volume.
 !
-            CALL NPLNPT ( SEGVTX, SEGDIR, CTRBUF(1,I), PNEAR, DIST )
+            call nplnpt ( segvtx, segdir, ctrbuf(1,i), pnear, dist )
 
 
-            IF ( DIST .LE. RADBUF(I) ) THEN
+            if ( dist .le. radbuf(i) ) then
 !
 !              The line containing the ray intersects the bounding
 !              surface. We'll check the boundary of the segment for an
 !              intersection.
 !
-               CALL ZZRYTELT ( SEGVTX, SEGDIR, DSKBUF(1,I), &
-                               SGMARG, NXPTS,  XPT         )
+               call zzrytelt ( segvtx, segdir, dskbuf(1,i), &
+                               sgmarg, nxpts,  xpt         )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDSKBUX' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDSKBUX' )
+                  return
+               end if
 
-               IF ( NXPTS .GT. 0 ) THEN
+               if ( nxpts .gt. 0 ) then
 !
 !                 The ray hits the boundary of this segment. Save the
 !                 index of the segment in the "hit list." Record the
 !                 distance from the ray's vertex to the intercept in
 !                 the parallel array SGDIST.
 
-                  IF ( NHIT .EQ. MAXHIT ) THEN
+                  if ( nhit .eq. maxhit ) then
 
-                     CALL SETMSG ( 'Too many segments were hit by the ' &
+                     call setmsg ( 'Too many segments were hit by the ' &
                      //            'input ray. Buffer size is #.'      )
-                     CALL ERRINT ( '#', MAXHIT                         )
-                     CALL SIGERR ( 'SPICE(BUFFERTOOSMALL)'             )
-                     CALL CHKOUT ( 'ZZDSKBUX'                          )
-                     RETURN
+                     call errint ( '#', maxhit                         )
+                     call sigerr ( 'SPICE(BUFFERTOOSMALL)'             )
+                     call chkout ( 'ZZDSKBUX'                          )
+                     return
 
-                  END IF
+                  end if
 
-                  NHIT           = NHIT + 1
-                  SGHIT ( NHIT ) = I
-                  SGDIST( NHIT ) = VDIST( SEGVTX, XPT )
+                  nhit           = nhit + 1
+                  sghit ( nhit ) = i
+                  sgdist( nhit ) = vdist( segvtx, xpt )
 !
 !                 Save the frame transformation for this segment.
 !
-                  CALL MOVED ( XFORM, 9, SGXBUF(1,1,NHIT) )
+                  call moved ( xform, 9, sgxbuf(1,1,nhit) )
 
-               END IF
+               end if
 
 
-            END IF
+            end if
 !
 !           The current segment matched the input criteria.
 !
 !           Update the saved segment frame ID to that of the segment
 !           we just examined.
 !
-            PRVFRM = SEGFID
+            prvfrm = segfid
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Leave now if no segments were hit.
 !
-      IF ( NHIT .EQ. 0 ) THEN
-         CALL CHKOUT ( 'ZZDSKBUX' )
-         RETURN
-      END IF
+      if ( nhit .eq. 0 ) then
+         call chkout ( 'ZZDSKBUX' )
+         return
+      end if
 
 !
 !     Find the order of the segments on the hit list, where
 !     the metric is the distance of the ray intercepts from
 !     the ray's vertex.
 !
-      CALL ORDERD ( SGDIST, NHIT, IORDER )
+      call orderd ( sgdist, nhit, iorder )
 
 !
 !     Now process the segments on the hit list in order. If we find a
@@ -668,70 +668,70 @@
 !     vertex-surface distance is smaller, we terminate the search,
 !     since no other segment can contribute a closer intercept.
 !
-      I      = 1
-      DONE   = .FALSE.
-      WINNER = 0
-      PRVFRM = 0
+      i      = 1
+      done   = .false.
+      winner = 0
+      prvfrm = 0
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 !
 !        J is the index in the hit list of the segment
 !        we're considering. K is the index of that segment
 !        in the parallel input arrays.
 !
-         J = IORDER(I)
-         K = SGHIT (J)
+         j = iorder(i)
+         k = sghit (j)
 
 
-         SEGFID = NINT( DSKBUF(FRMIDX,K) )
+         segfid = nint( dskbuf(frmidx,k) )
 
-         IF ( SEGFID .NE. FIXFID ) THEN
+         if ( segfid .ne. fixfid ) then
 
-            IF ( SEGFID .NE. PRVFRM ) THEN
+            if ( segfid .ne. prvfrm ) then
 !
 !              Transform and shift the input ray.
 !
 !              Here J is an index in the hit list and K is
 !              an index in the input arrays.
 !
-               CALL MOVED ( SGXBUF(1,1,J), 9, XFORM )
+               call moved ( sgxbuf(1,1,j), 9, xform )
 
-               CALL MXV  ( XFORM,  VERTEX, SEGVTX )
-               CALL MXV  ( XFORM,  RAYDIR, SEGDIR )
+               call mxv  ( xform,  vertex, segvtx )
+               call mxv  ( xform,  raydir, segdir )
 
-               CALL VSUB ( SEGVTX, OFFBUF(1,K), VTEMP  )
-               CALL VEQU ( VTEMP,               SEGVTX )
+               call vsub ( segvtx, offbuf(1,k), vtemp  )
+               call vequ ( vtemp,               segvtx )
 
-            END IF
+            end if
 
-         ELSE IF ( MULTFR ) THEN
+         else if ( multfr ) then
 
-            CALL VEQU ( VERTEX, SEGVTX )
-            CALL VEQU ( RAYDIR, SEGDIR )
+            call vequ ( vertex, segvtx )
+            call vequ ( raydir, segdir )
 
-         END IF
+         end if
 
 !
 !        Find the surface intercept using the segment topography
 !        data.
 !
-         DTYPE = NINT( DSKBUF(TYPIDX,K) )
+         dtype = nint( dskbuf(typidx,k) )
 
-         CALL ZZDSKSGX ( HANBUF(K), DLABUF(1,K), DTYPE, ET, &
-                         SEGVTX,    SEGDIR,      SRFX,  DC, &
-                         IC,        XFND                   )
+         call zzdsksgx ( hanbuf(k), dlabuf(1,k), dtype, et, &
+                         segvtx,    segdir,      srfx,  dc, &
+                         ic,        xfnd                   )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'ZZDSKBUX' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'ZZDSKBUX' )
+            return
+         end if
 
 
-         IF ( XFND ) THEN
+         if ( xfnd ) then
 !
 !           At least one surface intercept exists.
 !
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 !
 !              The intercept we just found is the first one, and
 !              at least for now, it is the winner.
@@ -739,88 +739,88 @@
 !              Save the intercept and vertex-intercept distance
 !              for this segment.
 !
-               FOUND  = .TRUE.
-               DMIN   = VDIST( SRFX, SEGVTX )
+               found  = .true.
+               dmin   = vdist( srfx, segvtx )
 
-               CALL VEQU ( SRFX, XPT )
+               call vequ ( srfx, xpt )
 
-               WINNER = J
+               winner = j
 
-            ELSE
+            else
 !
 !              At least one surface intercept was found already.
 !
 !              Compare the vertex-intercept distance for this segment
 !              to the best found so far.
 !
-               DIST = VDIST( SRFX, SEGVTX )
+               dist = vdist( srfx, segvtx )
 
-               IF ( DIST .LT. DMIN ) THEN
+               if ( dist .lt. dmin ) then
 !
 !                 This intercept is closer to the ray's vertex than
 !                 any we've seen yet. We have a new winner.
 !
-                  DMIN   = DIST
+                  dmin   = dist
 
-                  CALL VEQU ( SRFX, XPT )
+                  call vequ ( srfx, xpt )
 
-                  WINNER = J
+                  winner = j
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        If there's at least one solution in hand, see whether
 !        we can stop looking for better solutions.
 !
-         IF ( FOUND ) THEN
+         if ( found ) then
 
-            IF ( I .LT. NHIT ) THEN
+            if ( i .lt. nhit ) then
 !
 !              There are more segments in the hit list. Compare the
 !              minimum vertex-intercept distance of the segments we've
 !              checked to the vertex-boundary distance of the next
 !              segment.
 !
-               J = IORDER(I+1)
+               j = iorder(i+1)
 
-               IF ( DMIN .LE. SGDIST(J) ) THEN
+               if ( dmin .le. sgdist(j) ) then
 !
 !                 The best intercept we've found is closer to the
 !                 vertex than any intercept that may exist in the
 !                 current segment, or any of the remaining segments in
 !                 the hit list.
 !
-                  DONE  = .TRUE.
+                  done  = .true.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         IF ( .NOT. DONE ) THEN
+         if ( .not. done ) then
 
-            IF ( I .EQ. NHIT ) THEN
+            if ( i .eq. nhit ) then
 !
 !              We've looked at all of the segments.
 !
-               DONE = .TRUE.
+               done = .true.
 
-            ELSE
+            else
 !
 !              Consider the next segment.
 !
-               I = I + 1
+               i = i + 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we have an intercept, it may be represented in a frame
@@ -828,17 +828,17 @@
 !     input frame, and shift it as well if the segment frame and
 !     input frame have different centers.
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        K is the index in the input arrays of the "winning" segment.
 !        We'll return this index as SEGIDX.
 !
-         K      = SGHIT ( WINNER )
-         SEGIDX = K
+         k      = sghit ( winner )
+         segidx = k
 
-         SEGFID = NINT( DSKBUF(FRMIDX,K) )
+         segfid = nint( dskbuf(frmidx,k) )
 
-         IF ( SEGFID .NE. FIXFID ) THEN
+         if ( segfid .ne. fixfid ) then
 !
 !           The segment frame and input frame differ. The intercept
 !           must be converted back to the input frame. It also may
@@ -847,27 +847,27 @@
 !           done before the frame transformation, since the offset
 !           is expressed relative to the segment's frame.
 !
-            IF ( .NOT. VZERO( OFFBUF(1,K) ) ) THEN
+            if ( .not. vzero( offbuf(1,k) ) ) then
 !
 !              OFFBUF(*,K) contains the offset of the segment frame
 !              center from the segment's central body.
 !
-               CALL VADD ( XPT,   OFFBUF(1,K), VTEMP )
-               CALL VEQU ( VTEMP,              XPT   )
+               call vadd ( xpt,   offbuf(1,k), vtemp )
+               call vequ ( vtemp,              xpt   )
 
-            END IF
+            end if
 
-            CALL MOVED( SGXBUF(1,1,WINNER), 9, XFORM )
+            call moved( sgxbuf(1,1,winner), 9, xform )
 
-            CALL MTXV ( XFORM, XPT, VTEMP )
-            CALL VEQU ( VTEMP,      XPT   )
+            call mtxv ( xform, xpt, vtemp )
+            call vequ ( vtemp,      xpt   )
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     FOUND and XPT are set.
 !
-      CALL CHKOUT ( 'ZZDSKBUX' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKBUX' )
+      return
+      end

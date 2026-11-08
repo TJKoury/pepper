@@ -1,6 +1,6 @@
 !$Procedure CHBIGR ( Chebyshev expansion integral )
 
-      SUBROUTINE CHBIGR ( DEGP, CP, X2S, X, P, ITGRLP )
+      subroutine chbigr ( degp, cp, x2s, x, p, itgrlp )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               DEGP
-      DOUBLE PRECISION      CP     ( * )
-      DOUBLE PRECISION      X2S    ( 2 )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      P
-      DOUBLE PRECISION      ITGRLP
+      integer               degp
+      double precision      cp     ( * )
+      double precision      x2s    ( 2 )
+      double precision      x
+      double precision      p
+      double precision      itgrlp
 
 ! $ Brief_I/O
 !
@@ -342,62 +342,62 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A2
-      DOUBLE PRECISION      ADEGP1
-      DOUBLE PRECISION      ADEGP2
-      DOUBLE PRECISION      AI
-      DOUBLE PRECISION      C0
-      DOUBLE PRECISION      F      ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      S2
-      DOUBLE PRECISION      W      ( 3 )
-      DOUBLE PRECISION      Z      ( 3 )
+      double precision      a2
+      double precision      adegp1
+      double precision      adegp2
+      double precision      ai
+      double precision      c0
+      double precision      f      ( 3 )
+      double precision      s
+      double precision      s2
+      double precision      w      ( 3 )
+      double precision      z      ( 3 )
 
-      INTEGER               I
-      INTEGER               NTERMS
+      integer               i
+      integer               nterms
 
 !
 !     Test RETURN but don't check in. Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check the expansion degree.
 !
-      IF ( DEGP .LT. 0 )  THEN
+      if ( degp .lt. 0 )  then
 
-         CALL CHKIN  ( 'CHBIGR'                                )
-         CALL SETMSG ( 'Expansion degree must be non-negative ' &
+         call chkin  ( 'CHBIGR'                                )
+         call setmsg ( 'Expansion degree must be non-negative ' &
          //            'but was #.'                            )
-         CALL ERRINT ( '#', DEGP                               )
-         CALL SIGERR ( 'SPICE(INVALIDDEGREE)'                  )
-         CALL CHKOUT ( 'CHBIGR'                                )
-         RETURN
+         call errint ( '#', degp                               )
+         call sigerr ( 'SPICE(INVALIDDEGREE)'                  )
+         call chkout ( 'CHBIGR'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the radius of the domain interval.
 !
-      IF ( X2S(2) .LE. 0.D0 )  THEN
+      if ( x2s(2) .le. 0.d0 )  then
 
-         CALL CHKIN  ( 'CHBIGR'                            )
-         CALL SETMSG ( 'Interval radius must be positive ' &
+         call chkin  ( 'CHBIGR'                            )
+         call setmsg ( 'Interval radius must be positive ' &
          //            'but was #.'                        )
-         CALL ERRDP  ( '#', X2S(2)                         )
-         CALL SIGERR ( 'SPICE(INVALIDRADIUS)'              )
-         CALL CHKOUT ( 'CHBIGR'                            )
-         RETURN
+         call errdp  ( '#', x2s(2)                         )
+         call sigerr ( 'SPICE(INVALIDRADIUS)'              )
+         call chkout ( 'CHBIGR'                            )
+         return
 
-      END IF
+      end if
 
-      NTERMS = DEGP + 1
+      nterms = degp + 1
 
 !
 !     Background
@@ -590,8 +590,8 @@
 !
 !     Note we've already checked that X2S(2) is positive.
 !
-      S     = (X-X2S(1)) / X2S(2)
-      S2    = 2.0D0 * S
+      s     = (x-x2s(1)) / x2s(2)
+      s2    = 2.0d0 * s
 
 !
 !     Pre-compute the coefficients of the integral expansion
@@ -603,31 +603,31 @@
 !
 !     above and are set according to equations 5a, 5c, and 5d.
 !
-      IF ( NTERMS .GE. 3 ) THEN
+      if ( nterms .ge. 3 ) then
 
-         A2 = CP(1) - 0.5D0*CP(3)
-      ELSE
-         A2 = CP(1)
-      END IF
+         a2 = cp(1) - 0.5d0*cp(3)
+      else
+         a2 = cp(1)
+      end if
 
 !
 !     Initialize the two highest-indexed coefficients of
 !     the integral expansion.
 !
-      ADEGP1 = 0.D0
-      ADEGP2 = 0.D0
+      adegp1 = 0.d0
+      adegp2 = 0.d0
 
-      IF ( DEGP .GE. 2 ) THEN
+      if ( degp .ge. 2 ) then
 
-         ADEGP1 = 0.5D0 * CP(DEGP) / DEGP
+         adegp1 = 0.5d0 * cp(degp) / degp
 
-      END IF
+      end if
 
-      IF ( DEGP .GE. 1 ) THEN
+      if ( degp .ge. 1 ) then
 
-         ADEGP2 = 0.5D0 * CP(DEGP+1) / (DEGP+1)
+         adegp2 = 0.5d0 * cp(degp+1) / (degp+1)
 
-      END IF
+      end if
 
 !
 !     The three quantities we'll compute require different numbers of
@@ -642,77 +642,77 @@
 !     the start of the loop, after the first loop pass, F would have
 !     the contents assigned below.
 !
-      F(3) = 0.D0
-      F(2) = 0.D0
+      f(3) = 0.d0
+      f(2) = 0.d0
 !
 !     The initial value of F(1) is the highest-order coefficient of
 !     the integral's expansion.
 !
-      IF ( DEGP .EQ. 0 ) THEN
-         F(1) = A2
-      ELSE
-         F(1) = ADEGP2
-      END IF
+      if ( degp .eq. 0 ) then
+         f(1) = a2
+      else
+         f(1) = adegp2
+      end if
 !
 !     We also want to evaluate [I(f)](0); we'll use this to
 !     make the integral 0 at x = 0. We'll use the terms
 !     Z(*) to evaluate the expansion of the integral at x = 0.
 !
-      Z(3) = 0.D0
-      Z(2) = 0.D0
-      Z(1) = F(1)
+      z(3) = 0.d0
+      z(2) = 0.d0
+      z(1) = f(1)
 !
 !     We'll use the terms W(*) to evaluate the input expansion.
 !
-      W(1) = 0.D0
-      W(2) = 0.D0
+      w(1) = 0.d0
+      w(2) = 0.d0
 
 !
 !     NTERMS is DEGP+1.
 !
-      I = NTERMS
+      i = nterms
 
-      DO WHILE ( I .GT. 1 )
+      do while ( i .gt. 1 )
 !
 !        The variable AI represents A(I), which is the Ith coefficient
 !        of the Chebyshev expansion of the indefinite integral. AI is
 !        set according to formulas 5a-c above.
 !
-         IF ( I .EQ. 2 ) THEN
+         if ( i .eq. 2 ) then
 
-            AI = A2
+            ai = a2
 
-         ELSE IF ( I .LT. NTERMS ) THEN
+         else if ( i .lt. nterms ) then
 !
 !           AI is A ; I >= 3; DEGP >= 3.
 !                  I
 !
-            AI = 0.5D0 * ( CP(I-1) - CP(I+1) ) / (I-1)
+            ai = 0.5d0 * ( cp(i-1) - cp(i+1) ) / (i-1)
 
-         ELSE
+         else
 !
 !           AI is A      ; I = NTERMS.
 !                  DEGP+1
 !
-            AI = ADEGP1
+            ai = adegp1
 
-         END IF
+         end if
 
-         F(3) = F(2)
-         F(2) = F(1)
-         F(1) = AI     + ( S2*F(2)  - F(3) )
+         f(3) = f(2)
+         f(2) = f(1)
+         f(1) = ai     + ( s2*f(2)  - f(3) )
 
-         Z(3) = Z(2)
-         Z(2) = Z(1)
-         Z(1) = AI     - Z(3)
+         z(3) = z(2)
+         z(2) = z(1)
+         z(1) = ai     - z(3)
 
-         W(3) = W(2)
-         W(2) = W(1)
-         W(1) = CP(I)  + ( S2*W(2)  - W(3) )
+         w(3) = w(2)
+         w(2) = w(1)
+         w(1) = cp(i)  + ( s2*w(2)  - w(3) )
 
-         I    = I - 1
+         i    = i - 1
 
-      END DO
+      end do
 
 !
 !     C0 is the negative of the input expansion evaluated at x=0, and
@@ -722,9 +722,9 @@
 !
 !     The other terms are computed as in CHBINT.
 !
-      C0      =                    Z(2)
-      ITGRLP  = C0    +   S*F(1) - F(2)
-      P       = CP(1) + ( S*W(1) - W(2) )
+      c0      =                    z(2)
+      itgrlp  = c0    +   s*f(1) - f(2)
+      p       = cp(1) + ( s*w(1) - w(2) )
 
 !
 !     Scale the integral to account for the change of variables
@@ -732,7 +732,7 @@
 !
 !        dX/dS = X2S(2)
 !
-      ITGRLP = X2S(2) * ITGRLP
+      itgrlp = x2s(2) * itgrlp
 
-      RETURN
-      END
+      return
+      end

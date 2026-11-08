@@ -1,6 +1,6 @@
 !$Procedure FNDLUN ( Find a free logical unit )
 
-      SUBROUTINE FNDLUN ( UNIT )
+      subroutine fndlun ( unit )
 
 ! $ Abstract
 !
@@ -16,18 +16,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          UNIT
+      integer          unit
 
-      INTEGER          MINLUN
-      PARAMETER      ( MINLUN =  1 )
+      integer          minlun
+      parameter      ( minlun =  1 )
 
-      INTEGER          MAXLUN
+      integer          maxlun
 #if defined(SPICE_OS_MACOS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER      ( MAXLUN = 63 )
+      parameter      ( maxlun = 63 )
 #else
-      PARAMETER      ( MAXLUN = 99 )
+      parameter      ( maxlun = 99 )
 #endif
 
 ! $ Brief_I/O
@@ -482,127 +482,127 @@
 !
 !     Parameters
 !
-      INTEGER               NRESV
-      PARAMETER           ( NRESV = 3 )
+      integer               nresv
+      parameter           ( nresv = 3 )
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               LAST
-      INTEGER               RESNUM  ( NRESV )
+      integer               i
+      integer               iostat
+      integer               last
+      integer               resnum  ( nresv )
 
-      LOGICAL               FIRST
-      LOGICAL               OPENED
-      LOGICAL               RESVD   ( MINLUN : MAXLUN )
+      logical               first
+      logical               opened
+      logical               resvd   ( minlun : maxlun )
 
 
 !
 !     Save everything between calls.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA             LAST      / MINLUN /
-      DATA             FIRST     / .TRUE. /
+      data             last      / minlun /
+      data             first     / .true. /
 
 
 !
 !     VAX, SUN, PC, HP, SGI, DEC Alpha-OSF/1, and PC/Lunix
 !     reserved units.
 !
-      DATA             RESNUM    / 5, 6, 7 /
+      data             resnum    / 5, 6, 7 /
 
 
 !
 !     Initialize RESVD if it hasn't already been done.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         DO I = MINLUN, MAXLUN
-            RESVD ( I ) = .FALSE.
-         END DO
+         do i = minlun, maxlun
+            resvd ( i ) = .false.
+         end do
 
-         DO I = 1, NRESV
-            RESVD ( RESNUM(I) ) = .TRUE.
-         END DO
+         do i = 1, nresv
+            resvd ( resnum(i) ) = .true.
+         end do
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Begin with the unit following the last one returned.
 !     Cycle through the available units. Skip reserved units,
 !     INQUIRE about others.
 !
-      DO I = LAST+1, MAXLUN
+      do i = last+1, maxlun
 
-         IF ( RESVD(I) ) THEN
-            OPENED = .TRUE.
-         ELSE
-            INQUIRE ( UNIT=I, OPENED=OPENED, IOSTAT=IOSTAT )
+         if ( resvd(i) ) then
+            opened = .true.
+         else
+            inquire ( unit=i, opened=opened, iostat=iostat )
 
-            IF ( IOSTAT .GT. 0 ) THEN
-               UNIT = -IOSTAT
-               RETURN
-            END IF
+            if ( iostat .gt. 0 ) then
+               unit = -iostat
+               return
+            end if
 
-         END IF
+         end if
 
-         IF ( .NOT. OPENED ) THEN
-            UNIT = I
-            LAST = UNIT
-            RETURN
-         END IF
+         if ( .not. opened ) then
+            unit = i
+            last = unit
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     If we've come this far, we need to search the first part of
 !     the list again, up to the last unit returned. Once again,
 !     skip reserved units, INQUIRE about others.
 !
-      DO I = MINLUN, LAST
+      do i = minlun, last
 
-         IF ( RESVD(I) ) THEN
-            OPENED = .TRUE.
-         ELSE
-            INQUIRE ( UNIT=I, OPENED=OPENED, IOSTAT=IOSTAT )
+         if ( resvd(i) ) then
+            opened = .true.
+         else
+            inquire ( unit=i, opened=opened, iostat=iostat )
 
-            IF ( IOSTAT .GT. 0 ) THEN
-               UNIT = -IOSTAT
-               RETURN
-            END IF
+            if ( iostat .gt. 0 ) then
+               unit = -iostat
+               return
+            end if
 
-         END IF
+         end if
 
-         IF ( .NOT. OPENED ) THEN
-            UNIT = I
-            LAST = UNIT
-            RETURN
-         END IF
+         if ( .not. opened ) then
+            unit = i
+            last = unit
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     If we've come this far, there are no free units to be had.
 !     C'est la vie. Assign 0 to the unit number.
 !
 
-      UNIT = 0
+      unit = 0
 
-      RETURN
+      return
 
 
 
 
 !$Procedure RESLUN ( Reserve a logical unit )
 
-      ENTRY RESLUN ( UNIT )
+      entry reslun ( unit )
 
 ! $ Abstract
 !
@@ -796,36 +796,36 @@
 !
 !     Initialize RESVD if it hasn't already been done.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         DO I = MINLUN, MAXLUN
-            RESVD ( I ) = .FALSE.
-         END DO
+         do i = minlun, maxlun
+            resvd ( i ) = .false.
+         end do
 
-         DO I = 1, NRESV
-            RESVD ( RESNUM(I) ) = .TRUE.
-         END DO
+         do i = 1, nresv
+            resvd ( resnum(i) ) = .true.
+         end do
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     If UNIT is in the proper range, set the corresponding flag
 !     to TRUE.
 !
-      IF ( UNIT .GE. MINLUN .AND. UNIT .LE. MAXLUN ) THEN
-         RESVD(UNIT) = .TRUE.
-      END IF
+      if ( unit .ge. minlun .and. unit .le. maxlun ) then
+         resvd(unit) = .true.
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure FRELUN ( Free a reserved logical unit )
 
-      ENTRY FRELUN ( UNIT )
+      entry frelun ( unit )
 
 ! $ Abstract
 !
@@ -1025,36 +1025,36 @@
 !
 !     Initialize RESVD if it hasn't already been done.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         DO I = MINLUN, MAXLUN
-            RESVD ( I ) = .FALSE.
-         END DO
+         do i = minlun, maxlun
+            resvd ( i ) = .false.
+         end do
 
-         DO I = 1, NRESV
-            RESVD ( RESNUM(I) ) = .TRUE.
-         END DO
+         do i = 1, nresv
+            resvd ( resnum(i) ) = .true.
+         end do
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     If UNIT is in the proper range and it has not been reserved by
 !     default, set the corresponding flag to FALSE.
 !
-      IF ( UNIT .GE. MINLUN .AND. UNIT .LE. MAXLUN ) THEN
+      if ( unit .ge. minlun .and. unit .le. maxlun ) then
 
-         DO I = 1, NRESV
-            IF ( UNIT .EQ. RESNUM(I) ) THEN
-               RETURN
-            END IF
-         END DO
+         do i = 1, nresv
+            if ( unit .eq. resnum(i) ) then
+               return
+            end if
+         end do
 
-         RESVD ( UNIT ) = .FALSE.
+         resvd ( unit ) = .false.
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

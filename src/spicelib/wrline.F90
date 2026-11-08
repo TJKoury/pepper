@@ -1,6 +1,6 @@
 !$Procedure WRLINE ( Write Output Line to a Device )
 
-      SUBROUTINE WRLINE ( DEVICE, LINE )
+      subroutine wrline ( device, line )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)          DEVICE
-      CHARACTER*(*)          LINE
+      character*(*)          device
+      character*(*)          line
 
-      INTEGER                FILEN
+      integer                filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER            ( FILEN = 128 )
+      parameter            ( filen = 128 )
 #else
-      PARAMETER            ( FILEN = 255 )
+      parameter            ( filen = 255 )
 #endif
 
 ! $ Brief_I/O
@@ -524,46 +524,46 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LTRIM
-      INTEGER               RTRIM
+      integer               ltrim
+      integer               rtrim
 
 !
 !     Local variables
 !
-      CHARACTER*240         ERROR
-      CHARACTER*11          ERRSTR
-      CHARACTER*(FILEN)     TMPNAM
+      character*240         error
+      character*11          errstr
+      character*(filen)     tmpnam
 
-      INTEGER               IOSTAT
-      INTEGER               UNIT
+      integer               iostat
+      integer               unit
 
-      LOGICAL               EXISTS
-      LOGICAL               OPENED
+      logical               exists
+      logical               opened
 
 
 !
 !     Executable Code:
 !
-      CALL LJUST ( DEVICE, TMPNAM )
-      CALL UCASE ( TMPNAM, TMPNAM )
+      call ljust ( device, tmpnam )
+      call ucase ( tmpnam, tmpnam )
 
 !
 !     TMPNAM is now left justified and is in upper case.
 !
-      IF ( TMPNAM .EQ. 'NULL' ) THEN
+      if ( tmpnam .eq. 'NULL' ) then
 
-         RETURN
+         return
 
-      ELSE IF ( TMPNAM .EQ. 'SCREEN' ) THEN
+      else if ( tmpnam .eq. 'SCREEN' ) then
 
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         WRITE ( *, *, IOSTAT=IOSTAT ) LINE(:RTRIM(LINE))
+         write ( *, *, iostat=iostat ) line(:rtrim(line))
 #else
-         WRITE ( *, FMT='(A)', IOSTAT=IOSTAT ) LINE(:RTRIM(LINE))
+         write ( *, fmt='(A)', iostat=iostat ) line(:rtrim(line))
 #endif
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Find out whether we'll need to open the file.
@@ -572,42 +572,42 @@
 !     may be (possibly due to a Sun compiler bug) deemed to be OPEN by
 !     Sun Fortran.
 !
-      INQUIRE ( FILE         = DEVICE( LTRIM(DEVICE): ), &
-                OPENED       = OPENED, &
-                EXIST        = EXISTS, &
-                NUMBER       = UNIT, &
-                IOSTAT       = IOSTAT   )
+      inquire ( file         = device( ltrim(device): ), &
+                opened       = opened, &
+                exist        = exists, &
+                number       = unit, &
+                iostat       = iostat   )
 
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
 !        if the syntax is correct?  But just in case...
 !
-         WRITE (*,*) 'SPICE(INQUIREFAILED)'
-         WRITE (*,*) 'WRLINE: File = ', DEVICE, 'IOSTAT = ', IOSTAT
-         RETURN
+         write (*,*) 'SPICE(INQUIREFAILED)'
+         write (*,*) 'WRLINE: File = ', device, 'IOSTAT = ', iostat
+         return
 
-      END IF
+      end if
 
 
-      IF ( .NOT. ( OPENED .AND. EXISTS )  ) THEN
+      if ( .not. ( opened .and. exists )  ) then
 !
 !        We will need a free logical unit.  There is always the chance
 !        that no units are available.
 !
-         CALL FNDLUN ( UNIT )
+         call fndlun ( unit )
 
-         IF ( UNIT .LT. 1 ) THEN
+         if ( unit .lt. 1 ) then
 
-            WRITE (*,*) 'SPICE(NOFREELOGICALUNIT)'
-            WRITE (*,*) ' '
-            WRITE (*,*) 'WRLINE: Maximum number of logical units '    // &
+            write (*,*) 'SPICE(NOFREELOGICALUNIT)'
+            write (*,*) ' '
+            write (*,*) 'WRLINE: Maximum number of logical units '    // &
                         'that can be allocated by SPICELIB has '      // &
                         'already been reached'
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        Okay, we have a unit. Open the file, and hope nothing
@@ -618,35 +618,35 @@
 !        may be inserted into the OPEN statement.)
 !
 
-         OPEN ( FILE            = DEVICE( LTRIM(DEVICE): ), &
-                UNIT            = UNIT, &
-                STATUS          = 'NEW', &
-                IOSTAT          = IOSTAT )
+         open ( file            = device( ltrim(device): ), &
+                unit            = unit, &
+                status          = 'NEW', &
+                iostat          = iostat )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            WRITE (*,*) 'SPICE(FILEOPENFAILED)'
-            WRITE (*,*) ' '
+            write (*,*) 'SPICE(FILEOPENFAILED)'
+            write (*,*) ' '
 
-            ERROR = 'WRLINE: An error occurred while attempting to open'
+            error = 'WRLINE: An error occurred while attempting to open'
 
-            CALL SUFFIX ( DEVICE, 1, ERROR )
-            CALL SUFFIX ( '.',    0, ERROR )
-            CALL SUFFIX ( 'The value of IOSTAT returned was', 2, &
-                          ERROR  )
-            CALL SUFFIX ( ':',    0, ERROR  )
-            CALL INTSTR ( IOSTAT,    ERRSTR )
-            CALL SUFFIX ( ERRSTR, 1, ERROR  )
-            CALL SUFFIX ( '.',    0, ERROR  )
+            call suffix ( device, 1, error )
+            call suffix ( '.',    0, error )
+            call suffix ( 'The value of IOSTAT returned was', 2, &
+                          error  )
+            call suffix ( ':',    0, error  )
+            call intstr ( iostat,    errstr )
+            call suffix ( errstr, 1, error  )
+            call suffix ( '.',    0, error  )
 
-            WRITE (*,*) ERROR
-            RETURN
+            write (*,*) error
+            return
 
-         END IF
+         end if
 !
 !        Whew! We're ready to write to this file.
 !
-      END IF
+      end if
 
 !
 !     At this point, either we opened the file, or it was already
@@ -654,39 +654,39 @@
 !
 !     This is the easy part. Write the next line to the file.
 !
-      WRITE ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE(:RTRIM(LINE))
+      write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))
 
 !
 !     Well, what happened? Any non-zero value for IOSTAT indicates
 !     an error.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         ERROR = 'WRLINE: An error occurred while attempting to '     // &
+         error = 'WRLINE: An error occurred while attempting to '     // &
                  'WRITE to '
 
-         CALL SUFFIX ( DEVICE, 1, ERROR  )
-         CALL SUFFIX ( '.',    0, ERROR  )
-         CALL SUFFIX ( 'The value of IOSTAT returned was', 2, &
-                       ERROR  )
-         CALL SUFFIX ( ':',    0, ERROR  )
-         CALL INTSTR ( IOSTAT,    ERRSTR )
-         CALL SUFFIX ( ERRSTR, 1, ERROR  )
-         CALL SUFFIX ( '.',    0, ERROR  )
+         call suffix ( device, 1, error  )
+         call suffix ( '.',    0, error  )
+         call suffix ( 'The value of IOSTAT returned was', 2, &
+                       error  )
+         call suffix ( ':',    0, error  )
+         call intstr ( iostat,    errstr )
+         call suffix ( errstr, 1, error  )
+         call suffix ( '.',    0, error  )
 
-         WRITE (*,*) ERROR
+         write (*,*) error
 
-         RETURN
+         return
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure CLLINE ( Close a device )
 
-      ENTRY CLLINE ( DEVICE )
+      entry clline ( device )
 
 ! $ Abstract
 !
@@ -852,22 +852,22 @@
 !
 !     Find the unit connected to DEVICE.
 !
-      INQUIRE ( FILE         = DEVICE( LTRIM(DEVICE): ), &
-                NUMBER       = UNIT, &
-                IOSTAT       = IOSTAT   )
+      inquire ( file         = device( ltrim(device): ), &
+                number       = unit, &
+                iostat       = iostat   )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
 !        if the syntax is correct?  But just in case...
 !
-         WRITE (*,*) 'SPICE(INQUIREFAILED)'
-         WRITE (*,*) 'CLLINE:  File = ', DEVICE, 'IOSTAT = ', IOSTAT
-         RETURN
+         write (*,*) 'SPICE(INQUIREFAILED)'
+         write (*,*) 'CLLINE:  File = ', device, 'IOSTAT = ', iostat
+         return
 
-      END IF
+      end if
 
-      CLOSE ( UNIT )
+      close ( unit )
 
-      RETURN
-      END
+      return
+      end

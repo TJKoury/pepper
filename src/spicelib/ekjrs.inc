@@ -5,8 +5,8 @@
 !
 !     Maximum number of join row sets in a join row set union:
 !
-      INTEGER               MXJRS
-      PARAMETER           ( MXJRS  = 200 )
+      integer               mxjrs
+      parameter           ( mxjrs  = 200 )
 
 
 !
@@ -58,32 +58,32 @@
 !
 !     Base-relative index of join row set size
 !
-      INTEGER               JSZIDX
-      PARAMETER           ( JSZIDX = 1 )
+      integer               jszidx
+      parameter           ( jszidx = 1 )
 
 !
 !     Index of row vector count
 !
-      INTEGER               JRCIDX
-      PARAMETER           ( JRCIDX = 2 )
+      integer               jrcidx
+      parameter           ( jrcidx = 2 )
 
 !
 !     Index of table count
 !
-      INTEGER               JTCIDX
-      PARAMETER           ( JTCIDX = 3 )
+      integer               jtcidx
+      parameter           ( jtcidx = 3 )
 
 !
 !     Index of segment vector count
 !
-      INTEGER               JSCIDX
-      PARAMETER           ( JSCIDX = 4 )
+      integer               jscidx
+      parameter           ( jscidx = 4 )
 
 !
 !     Base address of first segment vector
 !
-      INTEGER               JSVBAS
-      PARAMETER           ( JSVBAS = 4 )
+      integer               jsvbas
+      parameter           ( jsvbas = 4 )
 !
 !
 !     End Include Section:  EK Join Row Set Parameters

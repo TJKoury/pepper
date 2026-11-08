@@ -1,6 +1,6 @@
 !$Procedure      ZZFRMCH1 (Frame Change)
 
-      SUBROUTINE ZZFRMCH1 ( FRAME1, FRAME2, ET, XFORM )
+      subroutine zzfrmch1 ( frame1, frame2, et, xform )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'errhnd.inc'
-      INCLUDE              'frmtyp.inc'
+      include              'errhnd.inc'
+      include              'frmtyp.inc'
 
-      INTEGER               FRAME1
-      INTEGER               FRAME2
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      XFORM ( 6, 6 )
+      integer               frame1
+      integer               frame2
+      double precision      et
+      double precision      xform ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -261,32 +261,32 @@
 !
 !     SPICE functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               MAXNOD
-      PARAMETER           ( MAXNOD = 10 )
+      integer               maxnod
+      parameter           ( maxnod = 10 )
 
-      INTEGER               MAXXFM
-      PARAMETER           ( MAXXFM = MAXNOD + 4 )
+      integer               maxxfm
+      parameter           ( maxxfm = maxnod + 4 )
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      INTEGER               ROOTF
-      PARAMETER           ( ROOTF = 1 )
+      integer               rootf
+      parameter           ( rootf = 1 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(LMSGLN)    ERRMSG
+      character*(lmsgln)    errmsg
 
-      DOUBLE PRECISION      TEMPXF( 6, 6 )
+      double precision      tempxf( 6, 6 )
 !
 !     TRANS contains the transformations from FRAME1 to FRAME2
 !     TRANS(1...6,1...6,I) has the transformation from FRAME(I)
@@ -294,160 +294,160 @@
 !     plan to add transformations beyond the obvious chain from
 !     FRAME1 to a root node.
 !
-      DOUBLE PRECISION      TRANS ( 6, 6, MAXXFM )
+      double precision      trans ( 6, 6, maxxfm )
 
 !
 !     TRANS2 is used to store intermediate transformations from
 !     FRAME2 to some node in the chain from FRAME1 to PCK or
 !     INERTL frames.
 !
-      DOUBLE PRECISION      TRANS2( 6, 6, 2      )
+      double precision      trans2( 6, 6, 2      )
 
 
-      INTEGER               CENT
-      INTEGER               CLASS
-      INTEGER               CLSSID
-      INTEGER               CMNODE
+      integer               cent
+      integer               class
+      integer               clssid
+      integer               cmnode
 !
 !     FRAME contains the frames we transform from in going from
 !     FRAME1 to FRAME2.  FRAME(1) = FRAME1 by  construction.
 !
-      INTEGER               FRAME ( MAXNOD )
-      INTEGER               GET
-      INTEGER               I
-      INTEGER               INC
-      INTEGER               J
-      INTEGER               K
-      INTEGER               L
+      integer               frame ( maxnod )
+      integer               get
+      integer               i
+      integer               inc
+      integer               j
+      integer               k
+      integer               l
 
 !
 !     NODE counts the number of transformations needed to go
 !     from FRAME1 to FRAME2.
 !
-      INTEGER               NODE
+      integer               node
 
-      INTEGER               PUT
-      INTEGER               RELTO
-      INTEGER               THIS
+      integer               put
+      integer               relto
+      integer               this
 
-      LOGICAL               DONE
-      LOGICAL               FOUND
-      LOGICAL               GOTONE
+      logical               done
+      logical               found
+      logical               gotone
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZFRMCH1')
+      call chkin ( 'ZZFRMCH1')
 !
 !     Do the obvious thing first.  If FRAME1 and FRAME2 are the
 !     same then we simply return the identity matrix.
 !
-      IF ( FRAME1 .EQ. FRAME2 ) THEN
+      if ( frame1 .eq. frame2 ) then
 
-         DO I = 1, 6
+         do i = 1, 6
 
-            XFORM(I,I) = 1.0D0
+            xform(i,i) = 1.0d0
 
-            DO J = 1, I-1
-               XFORM(I,J) = 0.0D0
-               XFORM(J,I) = 0.0D0
-            END DO
+            do j = 1, i-1
+               xform(i,j) = 0.0d0
+               xform(j,i) = 0.0d0
+            end do
 
-         END DO
+         end do
 
-         CALL CHKOUT ( 'ZZFRMCH1' )
-         RETURN
+         call chkout ( 'ZZFRMCH1' )
+         return
 
-      END IF
+      end if
 !
 !     Now perform the obvious check to make sure that both
 !     frames are recognized.
 !
-      CALL FRINFO ( FRAME1, CENT, CLASS, CLSSID, FOUND )
+      call frinfo ( frame1, cent, class, clssid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZFRMCH1' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZFRMCH1' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The number # is not a recognized id-code ' &
+         call setmsg ( 'The number # is not a recognized id-code ' &
          //            'for a reference frame. ' )
-         CALL ERRINT ( '#', FRAME1 )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
-         CALL CHKOUT ( 'ZZFRMCH1' )
-         RETURN
+         call errint ( '#', frame1 )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
+         call chkout ( 'ZZFRMCH1' )
+         return
 
-      END IF
+      end if
 
 
-      CALL FRINFO ( FRAME2, CENT, CLASS, CLSSID, FOUND )
+      call frinfo ( frame2, cent, class, clssid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZFRMCH1' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZFRMCH1' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The number # is not a recognized id-code ' &
+         call setmsg ( 'The number # is not a recognized id-code ' &
          //            'for a reference frame. ' )
-         CALL ERRINT ( '#', FRAME2 )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
-         CALL CHKOUT ( 'ZZFRMCH1' )
-         RETURN
+         call errint ( '#', frame2 )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
+         call chkout ( 'ZZFRMCH1' )
+         return
 
-      END IF
+      end if
 
 
 
-      NODE        = 1
-      FRAME(NODE) = FRAME1
-      FOUND       = .TRUE.
+      node        = 1
+      frame(node) = frame1
+      found       = .true.
 !
 !     Follow the chain of transformations until we run into
 !     one that transforms to J2000 (frame id = 1) or we hit FRAME2.
 !
-      DO WHILE (       FRAME(NODE) .NE. ROOTF &
-                 .AND. NODE        .LT. MAXNOD &
-                 .AND. FRAME(NODE) .NE. FRAME2 &
-                 .AND. FOUND   )
+      do while (       frame(node) .ne. rootf &
+                 .and. node        .lt. maxnod &
+                 .and. frame(node) .ne. frame2 &
+                 .and. found   )
 !
 !        Find out what transformation is available for this
 !        frame.
 !
-         CALL ZZFRMGT1 ( FRAME(NODE),     ET, &
-                         TRANS(1,1,NODE), FRAME(NODE+1), FOUND )
+         call zzfrmgt1 ( frame(node),     et, &
+                         trans(1,1,node), frame(node+1), found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZFRMCH1' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZFRMCH1' )
+            return
+         end if
 
-         IF ( FOUND ) THEN
+         if ( found ) then
 !
 !           We found a transformation matrix.  TRANS(1,1,NODE)
 !           now contains the transformation from FRAME(NODE)
 !           to FRAME(NODE+1).  We need to look up the information
 !           for the next NODE.
 !
-            NODE = NODE + 1
+            node = node + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      DONE =      FRAME(NODE) .EQ. ROOTF &
-             .OR. FRAME(NODE) .EQ. FRAME2 &
-             .OR. .NOT. FOUND
+      done =      frame(node) .eq. rootf &
+             .or. frame(node) .eq. frame2 &
+             .or. .not. found
 
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 !
 !        The only way to get to this point is to have run out of
 !        room in the array of reference frame transformation
@@ -456,14 +456,14 @@
 !        chain is.  We'll do this until we get to one of the
 !        root classes or we run into FRAME2.
 !
-         CALL ZZFRMGT1( FRAME(NODE), ET, TRANS(1,1,NODE), RELTO, FOUND )
+         call zzfrmgt1( frame(node), et, trans(1,1,node), relto, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZFRMCH1' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZFRMCH1' )
+            return
+         end if
 
-         IF ( FOUND  ) THEN
+         if ( found  ) then
 !
 !           Recall that TRANS(1,1,NODE-1) contains the transformation
 !           from FRAME(NODE-1) to FRAME(NODE).  We are going to replace
@@ -471,26 +471,26 @@
 !           that TRANS(1,1,NODE-1) should be replaced with the
 !           transformation from FRAME(NODE) to RELTO.
 !
-            FRAME(NODE) = RELTO
-            CALL ZZMSXF ( TRANS(1,1,NODE-1), 2, TEMPXF )
+            frame(node) = relto
+            call zzmsxf ( trans(1,1,node-1), 2, tempxf )
 
-            DO I = 1,6
-               DO J = 1,6
-                  TRANS(I,J,NODE-1) = TEMPXF(I,J)
-               END DO
-            END DO
+            do i = 1,6
+               do j = 1,6
+                  trans(i,j,node-1) = tempxf(i,j)
+               end do
+            end do
 
-         END IF
+         end if
 !
 !        We are done if the class of the last frame is J2000
 !        or if the last frame is FRAME2 or if we simply couldn't get
 !        another transformation.
 !
-         DONE =        FRAME(NODE) .EQ. ROOTF &
-                  .OR. FRAME(NODE) .EQ. FRAME2 &
-                  .OR. .NOT. FOUND
+         done =        frame(node) .eq. rootf &
+                  .or. frame(node) .eq. frame2 &
+                  .or. .not. found
 
-      END DO
+      end do
 
 !
 !     Right now we have the following situation.  We have in hand
@@ -524,17 +524,17 @@
 !     We now have to do essentially the same thing for FRAME2.
 !
 
-      IF ( FRAME(NODE) .EQ. FRAME2 ) THEN
+      if ( frame(node) .eq. frame2 ) then
 !
 !        We can handle this one immediately with the private routine
 !        ZZMSXF which multiplies a series of state transformation
 !        matrices.
 !
-         CALL ZZMSXF (  TRANS, NODE-1, XFORM )
-         CALL CHKOUT ( 'ZZFRMCH1' )
-         RETURN
+         call zzmsxf (  trans, node-1, xform )
+         call chkout ( 'ZZFRMCH1' )
+         return
 
-      END IF
+      end if
 
 !
 !     We didn't luck out above.  So we follow the chain of
@@ -543,34 +543,34 @@
 !     does not share a node in the chain for FRAME1.
 !    ( GOTONE = .FALSE. ) .
 !
-      THIS   =  FRAME2
-      GOTONE = .FALSE.
+      this   =  frame2
+      gotone = .false.
 
 !
 !     First see if there is any chain to follow.
 !
-      DONE   =  THIS .EQ. ROOTF
+      done   =  this .eq. rootf
 
 !
 !     Set up the matrices TRANS2(,,1) and TRANS(,,2)  and set up
 !     PUT and GET pointers so that we know where to GET the partial
 !     transformation from and where to PUT partial results.
 !
-      IF ( .NOT. DONE ) THEN
+      if ( .not. done ) then
 
-         DO K = 1, 2
-            DO I=1,3
-               DO J = 4,6
-                  TRANS2(I,J,K) = 0.0D0
-               END DO
-            END DO
-         END DO
+         do k = 1, 2
+            do i=1,3
+               do j = 4,6
+                  trans2(i,j,k) = 0.0d0
+               end do
+            end do
+         end do
 
-         PUT = 1
-         GET = 1
-         INC = 1
+         put = 1
+         get = 1
+         inc = 1
 
-      END IF
+      end if
 
 !
 !     Follow the chain of transformations until we run into
@@ -580,39 +580,39 @@
 !     Note that this time we will simply keep track of the full
 !     translation from FRAME2 to the last node.
 !
-      DO WHILE (  .NOT. DONE )
+      do while (  .not. done )
 !
 !        Find out what transformation is available for this
 !        frame.
 !
-         IF ( THIS  .EQ. FRAME2 ) THEN
+         if ( this  .eq. frame2 ) then
 !
 !           This is the first pass, just put the transformation
 !           directly into TRANS2(,,PUT).
 !
-            CALL ZZFRMGT1 ( THIS, ET, TRANS2(1,1,PUT), RELTO, FOUND )
+            call zzfrmgt1 ( this, et, trans2(1,1,put), relto, found )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZFRMCH1' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZFRMCH1' )
+               return
+            end if
 
-            IF ( FOUND ) THEN
-               THIS   = RELTO
-               GET    = PUT
-               PUT    = PUT + INC
-               INC    =     - INC
-               CMNODE = ISRCHI ( THIS, NODE, FRAME )
-               GOTONE = CMNODE .GT. 0
-            END IF
+            if ( found ) then
+               this   = relto
+               get    = put
+               put    = put + inc
+               inc    =     - inc
+               cmnode = isrchi ( this, node, frame )
+               gotone = cmnode .gt. 0
+            end if
 
-         ELSE
+         else
 !
 !           Fetch the transformation into a temporary spot TEMPXF
 !
-            CALL ZZFRMGT1 ( THIS, ET, TEMPXF, RELTO, FOUND )
+            call zzfrmgt1 ( this, et, tempxf, relto, found )
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              Next multiply TEMPXF on the right by the last partial
 !              product (in TRANS2(,,GET) ).  We do this in line because
@@ -620,26 +620,26 @@
 !              normal result of MXMG.  For a discussion of why this
 !              works see ZZMSXF.
 !
-               DO I=1,3
-                  DO J=1,3
+               do i=1,3
+                  do j=1,3
 
-                     TRANS2(I,J,PUT) = TEMPXF(I,1)*TRANS2(1,J,GET) &
-                                     + TEMPXF(I,2)*TRANS2(2,J,GET) &
-                                     + TEMPXF(I,3)*TRANS2(3,J,GET)
-                  END DO
-               END DO
+                     trans2(i,j,put) = tempxf(i,1)*trans2(1,j,get) &
+                                     + tempxf(i,2)*trans2(2,j,get) &
+                                     + tempxf(i,3)*trans2(3,j,get)
+                  end do
+               end do
 
-               DO I=4,6
-                  DO J=1,3
+               do i=4,6
+                  do j=1,3
 
-                     TRANS2(I,J,PUT) = TEMPXF(I,1)*TRANS2(1,J,GET) &
-                                     + TEMPXF(I,2)*TRANS2(2,J,GET) &
-                                     + TEMPXF(I,3)*TRANS2(3,J,GET) &
-                                     + TEMPXF(I,4)*TRANS2(4,J,GET) &
-                                     + TEMPXF(I,5)*TRANS2(5,J,GET) &
-                                     + TEMPXF(I,6)*TRANS2(6,J,GET)
-                  END DO
-               END DO
+                     trans2(i,j,put) = tempxf(i,1)*trans2(1,j,get) &
+                                     + tempxf(i,2)*trans2(2,j,get) &
+                                     + tempxf(i,3)*trans2(3,j,get) &
+                                     + tempxf(i,4)*trans2(4,j,get) &
+                                     + tempxf(i,5)*trans2(5,j,get) &
+                                     + tempxf(i,6)*trans2(6,j,get)
+                  end do
+               end do
 !
 !              Note that we don't have to compute the upper right
 !              hand block.  It's already set to zero by construction.
@@ -647,13 +647,13 @@
 !              Finally we can just copy the lower right hand block
 !              from the upper left hand block of the matrix.
 !
-               DO I = 4,6
-                  K = I - 3
-                  DO J = 4,6
-                     L = J - 3
-                     TRANS2(I,J,PUT) = TRANS2(K,L,PUT)
-                  END DO
-               END DO
+               do i = 4,6
+                  k = i - 3
+                  do j = 4,6
+                     l = j - 3
+                     trans2(i,j,put) = trans2(k,l,put)
+                  end do
+               end do
 
 !
 !              Adjust GET and PUT so that GET points to the slots
@@ -661,28 +661,28 @@
 !              so that PUT points to the next available storage
 !              locations.
 !
-               GET    = PUT
-               PUT    = PUT + INC
-               INC    =     - INC
-               THIS   = RELTO
+               get    = put
+               put    = put + inc
+               inc    =     - inc
+               this   = relto
 
-               CMNODE = ISRCHI ( THIS, NODE, FRAME )
-               GOTONE = CMNODE .GT. 0
+               cmnode = isrchi ( this, node, frame )
+               gotone = cmnode .gt. 0
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        See if we have a common node and determine whether or not
 !        we are done with this loop.
 !
-         DONE   =       THIS  .EQ. ROOTF &
-                  .OR.  GOTONE &
-                  .OR. .NOT. FOUND
+         done   =       this  .eq. rootf &
+                  .or.  gotone &
+                  .or. .not. found
 
 
-      END DO
+      end do
 
 !
 !     There are two possible scenarios.  Either the chain of
@@ -692,30 +692,30 @@
 !     the two chains don't intersect and there is no way to
 !     get from FRAME1 to FRAME2.
 !
-      IF ( .NOT. GOTONE ) THEN
+      if ( .not. gotone ) then
 
-         CALL ZZNOFCON ( ET, FRAME1, FRAME(NODE), FRAME2, THIS, ERRMSG )
+         call zznofcon ( et, frame1, frame(node), frame2, this, errmsg )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           We were unable to create the error message. This
 !           unfortunate situation could arise if a frame kernel
 !           is corrupted.
 !
-            CALL CHKOUT ( 'ZZFRMCH1' )
-            RETURN
+            call chkout ( 'ZZFRMCH1' )
+            return
 
-         END IF
+         end if
 !
 !        The normal case: signal an error with a descriptive long
 !        error message.
 !
-         CALL SETMSG ( ERRMSG                  )
-         CALL SIGERR ( 'SPICE(NOFRAMECONNECT)' )
-         CALL CHKOUT ( 'ZZFRMCH1'              )
-         RETURN
+         call setmsg ( errmsg                  )
+         call sigerr ( 'SPICE(NOFRAMECONNECT)' )
+         call chkout ( 'ZZFRMCH1'              )
+         return
 
-      END IF
+      end if
 
 !
 !     Recall that we have the following.
@@ -737,10 +737,10 @@
 !     sequence of transformation matrices together to get the
 !     result from FRAME1 to FRAME2.
 !
-      CALL INVSTM ( TRANS2(1,1,GET), TRANS(1,1,CMNODE) )
-      CALL ZZMSXF ( TRANS,   CMNODE, XFORM             )
+      call invstm ( trans2(1,1,get), trans(1,1,cmnode) )
+      call zzmsxf ( trans,   cmnode, xform             )
 
-      CALL CHKOUT ( 'ZZFRMCH1' )
-      RETURN
+      call chkout ( 'ZZFRMCH1' )
+      return
 
-      END
+      end

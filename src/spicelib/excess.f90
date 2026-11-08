@@ -1,6 +1,6 @@
 !$Procedure EXCESS ( Report an excess of elements in a cell )
 
-      SUBROUTINE EXCESS ( NUMBER, STRUCT )
+      subroutine excess ( number, struct )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          NUMBER
-      CHARACTER*(*)    STRUCT
+      integer          number
+      character*(*)    struct
 
 ! $ Brief_I/O
 !
@@ -155,74 +155,74 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               LONGLN
-      PARAMETER           ( LONGLN = 320 )
-      CHARACTER*(LONGLN)    ERROR
+      integer               longln
+      parameter           ( longln = 320 )
+      character*(longln)    error
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) RETURN
-      CALL CHKIN ( 'EXCESS' )
+      if ( return () ) return
+      call chkin ( 'EXCESS' )
 !
 !     If there is no excess, don't report one.
 !
-      IF ( NUMBER .GT. 0 ) THEN
+      if ( number .gt. 0 ) then
 
 !
 !        Begin with the number. We will build the rest of the
 !        message around it.
 !
-         CALL INTSTR ( NUMBER, ERROR )
+         call intstr ( number, error )
 
 !
 !        A short blurb goes in front of the number.
 !
-         CALL PREFIX ( 'An excess of', 1, ERROR )
+         call prefix ( 'An excess of', 1, error )
 
 !
 !        Singular or plural?
 !
-         IF ( NUMBER .EQ. 1 ) THEN
-            CALL SUFFIX ( 'element', 1, ERROR )
-         ELSE
-            CALL SUFFIX ( 'elements', 1, ERROR )
-         END IF
+         if ( number .eq. 1 ) then
+            call suffix ( 'element', 1, error )
+         else
+            call suffix ( 'elements', 1, error )
+         end if
 
 !
 !        Another short blurb.
 !
-         CALL SUFFIX ( 'could not be accommodated in the output', &
+         call suffix ( 'could not be accommodated in the output', &
                        1, &
-                       ERROR                                      )
+                       error                                      )
 
 !
 !        And the name of the structure.
 !
-         CALL SUFFIX ( STRUCT, 1, ERROR   )
+         call suffix ( struct, 1, error   )
 
 !
 !        And a period at the end, to complete the sentence.
 !
-         CALL SUFFIX ( '.', 0, ERROR )
+         call suffix ( '.', 0, error )
 
 !
 !        Set the long error message:
 !
-         CALL SETMSG ( ERROR )
+         call setmsg ( error )
 
-      ELSE
+      else
 
-          ERROR = ' '
+          error = ' '
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'EXCESS' )
+      call chkout ( 'EXCESS' )
 
-      RETURN
-      END
+      return
+      end

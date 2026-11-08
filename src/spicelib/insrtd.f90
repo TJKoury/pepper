@@ -1,6 +1,6 @@
 !$Procedure INSRTD ( Insert an item into a double precision set )
 
-      SUBROUTINE INSRTD ( ITEM, A )
+      subroutine insrtd ( item, a )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      ITEM
-      DOUBLE PRECISION      A     ( LBCELL:* )
+      double precision      item
+      double precision      a     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -228,82 +228,82 @@
 !
 !     SPICELIB functions
 !
-      INTEGER             CARDD
-      INTEGER             LSTLED
-      INTEGER             SIZED
+      integer             cardd
+      integer             lstled
+      integer             sized
 
-      LOGICAL             RETURN
+      logical             return
 
 !
 !     Local variables
 !
-      INTEGER             CARD
-      INTEGER             I
-      INTEGER             LAST
-      INTEGER             SIZE
+      integer             card
+      integer             i
+      integer             last
+      integer             size
 
-      LOGICAL             IN
+      logical             in
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'INSRTD' )
+      call chkin ( 'INSRTD' )
 
 !
 !     What are the size and cardinality of the set?
 !
-      SIZE = SIZED ( A )
-      CARD = CARDD ( A )
+      size = sized ( a )
+      card = cardd ( a )
 
 !
 !     Find the last element of the set which would come before the
 !     input item. This will be the item itself, if it is already an
 !     element of the set.
 !
-      LAST = LSTLED ( ITEM, CARD, A(1) )
+      last = lstled ( item, card, a(1) )
 
 !
 !     Is the item already in the set? If not, it needs to be inserted.
 !
-      IF ( LAST .GT. 0 ) THEN
-         IN  =  A(LAST) .EQ. ITEM
-      ELSE
-         IN  =  .FALSE.
-      END IF
+      if ( last .gt. 0 ) then
+         in  =  a(last) .eq. item
+      else
+         in  =  .false.
+      end if
 
 
-      IF ( .NOT. IN ) THEN
+      if ( .not. in ) then
 !
 !        If there is room in the set for the new element, then move
 !        the succeeding elements back to make room. And update the
 !        cardinality for future reference.
 !
-         IF ( CARD .LT. SIZE ) THEN
+         if ( card .lt. size ) then
 
-            DO I = CARD,  LAST+1,  -1
-               A(I+1) = A(I)
-            END DO
+            do i = card,  last+1,  -1
+               a(i+1) = a(i)
+            end do
 
-            A(LAST+1) = ITEM
+            a(last+1) = item
 
-            CALL SCARDD ( CARD+1,  A )
+            call scardd ( card+1,  a )
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'An element could not be inserted '   // &
+            call setmsg ( 'An element could not be inserted '   // &
                           'into the set due to lack of space; ' // &
                           'set size is #.'                      )
-            CALL ERRINT ( '#', SIZE                             )
-            CALL SIGERR ( 'SPICE(SETEXCESS)'                    )
+            call errint ( '#', size                             )
+            call sigerr ( 'SPICE(SETEXCESS)'                    )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'INSRTD' )
-      RETURN
-      END
+      call chkout ( 'INSRTD' )
+      return
+      end

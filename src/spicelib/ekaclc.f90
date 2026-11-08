@@ -1,7 +1,7 @@
 !$Procedure EKACLC ( EK, add character column to segment )
 
-      SUBROUTINE EKACLC (  HANDLE,  SEGNO,   COLUMN,  CVALS, &
-                           ENTSZS,  NLFLGS,  RCPTRS,  WKINDX  )
+      subroutine ekaclc (  handle,  segno,   column,  cvals, &
+                           entszs,  nlflgs,  rcptrs,  wkindx  )
 
 ! $ Abstract
 !
@@ -17,20 +17,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekcoldsc.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      CHARACTER*(*)         COLUMN
-      CHARACTER*(*)         CVALS  ( * )
-      INTEGER               ENTSZS ( * )
-      LOGICAL               NLFLGS ( * )
-      INTEGER               RCPTRS ( * )
-      INTEGER               WKINDX ( * )
+      integer               handle
+      integer               segno
+      character*(*)         column
+      character*(*)         cvals  ( * )
+      integer               entszs ( * )
+      logical               nlflgs ( * )
+      integer               rcptrs ( * )
+      integer               wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -463,94 +463,94 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CLASS
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               DTYPE
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               class
+      integer               coldsc ( cdscsz )
+      integer               dtype
+      integer               segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKACLC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKACLC' )
+      end if
 
 !
 !     Find the descriptors for the specified segment and column.
 !
-      CALL ZZEKSDSC ( HANDLE,  SEGNO,   SEGDSC          )
-      CALL ZZEKCDSC ( HANDLE,  SEGDSC,  COLUMN,  COLDSC )
+      call zzeksdsc ( handle,  segno,   segdsc          )
+      call zzekcdsc ( handle,  segdsc,  column,  coldsc )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKACLC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKACLC' )
+         return
+      end if
 
 !
 !     This column had better be of character type.
 !
-      CLASS  =  COLDSC ( CLSIDX )
-      DTYPE  =  COLDSC ( TYPIDX )
+      class  =  coldsc ( clsidx )
+      dtype  =  coldsc ( typidx )
 
-      IF ( DTYPE .NE. CHR ) THEN
+      if ( dtype .ne. chr ) then
 
-         CALL SETMSG ( 'Column # is of type #; EKACLC only works '  // &
+         call setmsg ( 'Column # is of type #; EKACLC only works '  // &
                        'with character columns.'                     )
-         CALL ERRCH  ( '#',  COLUMN                                  )
-         CALL ERRINT ( '#',  DTYPE                                   )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                        )
-         CALL CHKOUT ( 'EKACLC'                                      )
-         RETURN
+         call errch  ( '#',  column                                  )
+         call errint ( '#',  dtype                                   )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                        )
+         call chkout ( 'EKACLC'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Hand off the task to the routine of the appropriate class.
 !
-      IF ( CLASS .EQ. 3 ) THEN
+      if ( class .eq. 3 ) then
 !
 !        Class 3 columns contain character scalars.
 !
-         CALL ZZEKAC03 (  HANDLE,  SEGDSC,  COLDSC,  CVALS, &
-                                   NLFLGS,  RCPTRS,  WKINDX )
+         call zzekac03 (  handle,  segdsc,  coldsc,  cvals, &
+                                   nlflgs,  rcptrs,  wkindx )
 
-      ELSE IF ( CLASS .EQ. 6 ) THEN
+      else if ( class .eq. 6 ) then
 !
 !        Class 6 columns contain character arrays.
 !
-         CALL ZZEKAC06 ( HANDLE, SEGDSC, COLDSC, CVALS, ENTSZS, NLFLGS )
+         call zzekac06 ( handle, segdsc, coldsc, cvals, entszs, nlflgs )
 
 
-      ELSE IF ( CLASS .EQ. 9 ) THEN
+      else if ( class .eq. 9 ) then
 !
 !        Class 9 columns contain fixed-count, fixed-length character
 !        scalars.
 !
-         CALL ZZEKAC09 ( HANDLE, SEGDSC, COLDSC, CVALS, NLFLGS, WKINDX )
+         call zzekac09 ( handle, segdsc, coldsc, cvals, nlflgs, wkindx )
 
 
-      ELSE
+      else
 !
 !        This is an unsupported column class.
 !
-         CALL SETMSG ( 'Unsupported column class code # found in '   // &
+         call setmsg ( 'Unsupported column class code # found in '   // &
                        'descriptor for column #.'                      )
-         CALL ERRINT ( '#', CLASS                                      )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                           )
-         CALL CHKOUT ( 'EKACLC'                                        )
-         RETURN
+         call errint ( '#', class                                      )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                           )
+         call chkout ( 'EKACLC'                                        )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'EKACLC' )
-      RETURN
-      END
+      call chkout ( 'EKACLC' )
+      return
+      end

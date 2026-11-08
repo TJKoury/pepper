@@ -1,6 +1,6 @@
 !$Procedure SGFRVI ( Generic Segments: Fetch ref. value and index )
 
-      SUBROUTINE SGFRVI ( HANDLE, DESCR, X, VALUE, INDX, FOUND )
+      subroutine sgfrvi ( handle, descr, x, value, indx, found )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR ( * )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      VALUE
-      INTEGER               INDX
-      LOGICAL               FOUND
+      integer               handle
+      double precision      descr ( * )
+      double precision      x
+      double precision      value
+      integer               indx
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -174,102 +174,102 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMAX
-      INTEGER               LSTLED
+      integer               intmax
+      integer               lstled
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Include the mnemonic values for the generic segment declarations.
 !
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = DIRSIZ + 1 )
+      integer               bufsiz
+      parameter           ( bufsiz = dirsiz + 1 )
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      DPIMAX
-      DOUBLE PRECISION      DPTEMP
-      DOUBLE PRECISION      ENDREF
-      DOUBLE PRECISION      MYVALU
+      double precision      buffer ( bufsiz )
+      double precision      dpimax
+      double precision      dptemp
+      double precision      endref
+      double precision      myvalu
 
-      INTEGER               BEGIN
-      INTEGER               BFINDX
-      INTEGER               FULLRD
-      INTEGER               END
-      INTEGER               I
-      INTEGER               MYINDX
-      INTEGER               NFETCH
-      INTEGER               MYNPKT
-      INTEGER               MYNRDR
-      INTEGER               MYNREF
-      INTEGER               MYRDRB
-      INTEGER               MYRDRT
-      INTEGER               MYREFB
-      INTEGER               RDRIDX
-      INTEGER               REMAIN
+      integer               begin
+      integer               bfindx
+      integer               fullrd
+      integer               end
+      integer               i
+      integer               myindx
+      integer               nfetch
+      integer               mynpkt
+      integer               mynrdr
+      integer               mynref
+      integer               myrdrb
+      integer               myrdrt
+      integer               myrefb
+      integer               rdridx
+      integer               remain
 
-      LOGICAL               DONE
-      LOGICAL               FIRST
-      LOGICAL               ISDIRV
-      LOGICAL               MYFND
+      logical               done
+      logical               first
+      logical               isdirv
+      logical               myfnd
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
+      save                  first
 !
 !     Initial Values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGFRVI' )
+      call chkin ( 'SGFRVI' )
 !
 !     Set the value for the maximum index as a double precision number,
 !     but only do it the first time into the subroutine.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         DPIMAX = DBLE( INTMAX() )
+         first  = .false.
+         dpimax = dble( intmax() )
 
-      END IF
+      end if
 
 !
 !     Collect the necessary meta data values common to all cases.
 !
-      CALL SGMETA ( HANDLE, DESCR, NPKT,   MYNPKT )
-      CALL SGMETA ( HANDLE, DESCR, NREF,   MYNREF )
-      CALL SGMETA ( HANDLE, DESCR, RDRTYP, MYRDRT )
-      CALL SGMETA ( HANDLE, DESCR, REFBAS, MYREFB )
+      call sgmeta ( handle, descr, npkt,   mynpkt )
+      call sgmeta ( handle, descr, nref,   mynref )
+      call sgmeta ( handle, descr, rdrtyp, myrdrt )
+      call sgmeta ( handle, descr, refbas, myrefb )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGFRVI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGFRVI' )
+         return
+      end if
 !
 !     Check to be sure that we know how to deal with the type of index
 !     in the segment. The index type should be between the minimum
 !     allowed index type, MNIDXT, and the maximum allowed index type,
 !     MXIDXT, as specified in the file 'sgparam.inc'.
 !
-      IF ( ( MYRDRT .LT. MNIDXT) .OR. ( MYRDRT .GT. MXIDXT ) ) THEN
+      if ( ( myrdrt .lt. mnidxt) .or. ( myrdrt .gt. mxidxt ) ) then
 
-         CALL SETMSG ( 'The generic DAF segment you attempted to' &
+         call setmsg ( 'The generic DAF segment you attempted to' &
          //            ' read has an unsupported reference directory' &
          //            ' structure. The integer code given for this' &
          //            ' structure is #, and allowed codes are within' &
@@ -277,20 +277,20 @@
          //            ' anomaly is your version of SPICELIB needs' &
          //            ' updating. Contact your system administrator' &
          //            ' or NAIF for a toolkit update.'               )
-         CALL ERRINT ( '#', MYRDRT                                    )
-         CALL ERRINT ( '#', MNIDXT                                    )
-         CALL ERRINT ( '#', MXIDXT                                    )
-         CALL SIGERR ( 'SPICE(UNKNOWNREFDIR)'                         )
-         CALL CHKOUT ( 'SGFRVI'                                       )
-         RETURN
+         call errint ( '#', myrdrt                                    )
+         call errint ( '#', mnidxt                                    )
+         call errint ( '#', mxidxt                                    )
+         call sigerr ( 'SPICE(UNKNOWNREFDIR)'                         )
+         call chkout ( 'SGFRVI'                                       )
+         return
 
-      END IF
+      end if
 !
 !     We don't have an index yet and we initialize things to zero.
 !
-      MYFND  = .FALSE.
-      MYINDX = 0
-      MYVALU = 0.0D0
+      myfnd  = .false.
+      myindx = 0
+      myvalu = 0.0d0
 !
 !     We pass the idiot checks, so lets proceed. We have a IF block for
 !     each allowed reference directory type code.
@@ -327,18 +327,18 @@
 !        For explicitly indexed packets we simply search the reference
 !        directory for an appropriate reference value.
 !
-      IF ( ( MYRDRT .NE. IMPLE ) .AND. ( MYRDRT .NE. IMPCLS ) ) THEN
+      if ( ( myrdrt .ne. imple ) .and. ( myrdrt .ne. impcls ) ) then
 !
 !        In addition to the meta data items we already have, we also
 !        need these.
 !
-         CALL SGMETA ( HANDLE, DESCR, NRDR,   MYNRDR )
-         CALL SGMETA ( HANDLE, DESCR, RDRBAS, MYRDRB )
+         call sgmeta ( handle, descr, nrdr,   mynrdr )
+         call sgmeta ( handle, descr, rdrbas, myrdrb )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGFRVI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGFRVI' )
+            return
+         end if
 !
 !        We need to scan the reference directory (if there is one) to
 !        determine the appropriate block of reference values to read
@@ -351,101 +351,101 @@
 !        We have not started yet, so we're not done and we cannot have a
 !        reference directory value yet.
 !
-         DONE   = .FALSE.
-         ISDIRV = .FALSE.
+         done   = .false.
+         isdirv = .false.
 !
 !        We have not read any full buffers of reference directory values
 !        yet, all of the reference directory values remain to be read,
 !        and we have no index for a reference directory value.
 !
-         FULLRD = 0
-         REMAIN = MYNRDR
-         RDRIDX = 0
+         fullrd = 0
+         remain = mynrdr
+         rdridx = 0
 !
 !        Search the reference directory values to select the appropriate
 !        block of reference values to read.
 !
-         DO WHILE ( ( .NOT. DONE ) .AND. ( REMAIN .GT. 0 ) )
+         do while ( ( .not. done ) .and. ( remain .gt. 0 ) )
 !
 !           Read a buffer of reference directory items.
 !
-            NFETCH = MIN ( DIRSIZ, REMAIN )
-            BEGIN  = MYRDRB + FULLRD * DIRSIZ + 1
-            END    = BEGIN  + NFETCH - 1
+            nfetch = min ( dirsiz, remain )
+            begin  = myrdrb + fullrd * dirsiz + 1
+            end    = begin  + nfetch - 1
 
-            CALL DAFGDA ( HANDLE, BEGIN, END, BUFFER )
+            call dafgda ( handle, begin, end, buffer )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGFRVI' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGFRVI' )
+               return
+            end if
 !
 !           See if X is in the current buffer.
 !
-            RDRIDX = LSTLED ( X, NFETCH, BUFFER )
+            rdridx = lstled ( x, nfetch, buffer )
 
-            IF ( RDRIDX .EQ. 0 ) THEN
+            if ( rdridx .eq. 0 ) then
 !
 !              If not, then X < BUFFER(1) and we're done. This indicates
 !              that the desired reference value is before, or in, the
 !              previous block of reference values.
 !
-               DONE = .TRUE.
+               done = .true.
 
-            ELSE IF ( RDRIDX .EQ. NFETCH ) THEN
+            else if ( rdridx .eq. nfetch ) then
 !
 !              If we get the last value of the buffer, then either we
 !              are done, X = BUFFER(NFETCH), or X > BUFFER(NFETCH).
 !
-               IF ( X .EQ. BUFFER(NFETCH) ) THEN
+               if ( x .eq. buffer(nfetch) ) then
 !
 !                 If X = BUFFER(NFETCH) we are done, we have a directory
 !                 value, and it might be a value we want to return.
 !
-                  DONE   = .TRUE.
-                  ISDIRV = .TRUE.
+                  done   = .true.
+                  isdirv = .true.
 
-               ELSE
+               else
 !
 !                 Otherwise, we might have more stuff to read, so update
 !                 the remainder and the current number of full buffer
 !                 reads and try the loop again.
 !
-                  REMAIN = REMAIN - NFETCH
+                  remain = remain - nfetch
 
-                  IF ( REMAIN .GT. 0 ) THEN
+                  if ( remain .gt. 0 ) then
 !
 !                    We don't want to increment FULLRD for a partial
 !                    buffer read. The arithmetic for the index
 !                    calculations below will use RDRIDX to deal with
 !                    this.
 !
-                     FULLRD = FULLRD + 1
+                     fullrd = fullrd + 1
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              BUFFER(1) <= X < BUFFER(NFETCH), i.e., we have something
 !              in the buffer. Check to see if X = BUFFER(RDRIDX). If so,
 !              we are done, we have a directory value, and it might be a
 !              value we want to return. Otherwise, we are just done.
 !
-               DONE = .TRUE.
+               done = .true.
 
-               IF ( X .EQ. BUFFER(RDRIDX) ) THEN
+               if ( x .eq. buffer(rdridx) ) then
 
-                  ISDIRV = .TRUE.
+                  isdirv = .true.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-         RDRIDX = FULLRD * DIRSIZ + RDRIDX
+         rdridx = fullrd * dirsiz + rdridx
 !
 !        There are three cases that we need to consider when X is not a
 !        reference directory value:
@@ -454,9 +454,9 @@
 !           Case 2: RDRIDX = 0
 !           Case 3: RDRIDX = MYNRDR
 !
-         IF ( .NOT. ISDIRV ) THEN
+         if ( .not. isdirv ) then
 
-            IF ( ( RDRIDX .GT. 0 ) .AND. ( RDRIDX .LT. MYNRDR ) ) THEN
+            if ( ( rdridx .gt. 0 ) .and. ( rdridx .lt. mynrdr ) ) then
 !
 !              If we were able to bracket X before reaching the end of
 !              the reference directory, then we KNOW that we have a
@@ -466,44 +466,44 @@
 !              values that bracket the desired reference value into
 !              BUFFER, so that they are there if we need them.
 !
-               NFETCH = MIN( BUFSIZ, MYNREF - RDRIDX*DIRSIZ + 1 )
+               nfetch = min( bufsiz, mynref - rdridx*dirsiz + 1 )
 
-               BEGIN  = MYREFB + DIRSIZ * RDRIDX
-               END    = BEGIN  + NFETCH - 1
+               begin  = myrefb + dirsiz * rdridx
+               end    = begin  + nfetch - 1
 
-               CALL DAFGDA ( HANDLE, BEGIN, END, BUFFER )
+               call dafgda ( handle, begin, end, buffer )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGFRVI' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGFRVI' )
+                  return
+               end if
 
-               BFINDX = LSTLED ( X, NFETCH, BUFFER )
-               MYINDX = DIRSIZ * RDRIDX + BFINDX - 1
+               bfindx = lstled ( x, nfetch, buffer )
+               myindx = dirsiz * rdridx + bfindx - 1
 
-            ELSE IF ( RDRIDX .EQ. 0 ) THEN
+            else if ( rdridx .eq. 0 ) then
 !
 !              The reference value may be one of the reference values
 !              less than the first reference directory item. So we
 !              compute the beginning and ending addresses for the data,
 !              read it in, and try to find a reference value.
 !
-               NFETCH = MIN ( BUFSIZ, MYNREF )
+               nfetch = min ( bufsiz, mynref )
 
-               BEGIN  = MYREFB + 1
-               END    = BEGIN  + NFETCH - 1
+               begin  = myrefb + 1
+               end    = begin  + nfetch - 1
 
-               CALL DAFGDA ( HANDLE, BEGIN, END, BUFFER )
+               call dafgda ( handle, begin, end, buffer )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGFRVI' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGFRVI' )
+                  return
+               end if
 
-               BFINDX = LSTLED ( X, NFETCH, BUFFER )
-               MYINDX = BFINDX
+               bfindx = lstled ( x, nfetch, buffer )
+               myindx = bfindx
 
-            ELSE IF ( RDRIDX .EQ. MYNRDR ) THEN
+            else if ( rdridx .eq. mynrdr ) then
 !
 !              If we were not able to bracket X before reaching the end
 !              of the reference directory, then we might have a
@@ -519,40 +519,40 @@
 !              we are here. For similar reasons, NFETCH can never be
 !              negative.
 !
-               BEGIN  = MYREFB + DIRSIZ * RDRIDX
-               END    = MYREFB + MYNREF
-               NFETCH = END - BEGIN + 1
+               begin  = myrefb + dirsiz * rdridx
+               end    = myrefb + mynref
+               nfetch = end - begin + 1
 
-               CALL DAFGDA ( HANDLE, BEGIN, END, BUFFER )
+               call dafgda ( handle, begin, end, buffer )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGFRVI' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGFRVI' )
+                  return
+               end if
 
-               BFINDX = LSTLED ( X, NFETCH, BUFFER )
-               MYINDX = DIRSIZ * RDRIDX + BFINDX - 1
+               bfindx = lstled ( x, nfetch, buffer )
+               myindx = dirsiz * rdridx + bfindx - 1
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           We have a reference directory value, whose index is easy to
 !           compute.
 !
-            MYINDX = DIRSIZ * RDRIDX
+            myindx = dirsiz * rdridx
 
-         END IF
+         end if
 !
 !        Now, if we have a candidate for a reference value, lets make
 !        sure, based on the type of index we have.
 !
-         IF ( MYRDRT .EQ. EXPLT ) THEN
+         if ( myrdrt .eq. explt ) then
 !
 !           We have a reference value only if X > some reference
 !           value.
 !
-            IF ( .NOT. ISDIRV ) THEN
+            if ( .not. isdirv ) then
 !
 !              If the value is not a reference directory value, then
 !              we have two cases:
@@ -560,8 +560,8 @@
 !                 Case 1: 0 < MYINDX <= MYNREF
 !                 Case 2: MYINDX = 0
 !
-               IF (       ( MYINDX .GT. 0      ) &
-                    .AND. ( MYINDX .LE. MYNREF ) ) THEN
+               if (       ( myindx .gt. 0      ) &
+                    .and. ( myindx .le. mynref ) ) then
 !
 !                 We found a reference value. The reference value we
 !                 want is either the value indicated by MYINDX or
@@ -569,82 +569,82 @@
 !                 if there is such a value. To deal with this we
 !                 split the test up into two cases.
 !
-                  IF ( MYINDX .GT. 1 ) THEN
+                  if ( myindx .gt. 1 ) then
 !
 !                    If X > BUFFER(BFINDX) then we are done, so set the
 !                    value. If not, then we want the reference value
 !                    that is immediately before the current one.
 !
-                     IF ( X .GT. BUFFER(BFINDX) ) THEN
+                     if ( x .gt. buffer(bfindx) ) then
 
-                        MYFND  = .TRUE.
-                        MYVALU = BUFFER(BFINDX)
+                        myfnd  = .true.
+                        myvalu = buffer(bfindx)
 
-                     ELSE
+                     else
 
-                        MYFND = .TRUE.
-                        MYVALU = BUFFER(BFINDX-1)
-                        MYINDX = MYINDX - 1
+                        myfnd = .true.
+                        myvalu = buffer(bfindx-1)
+                        myindx = myindx - 1
 
-                     END IF
+                     end if
 
-                  ELSE
+                  else
 !
 !                    Remember, MYINDX is 1 here. If we are greater
 !                    than the first reference value in the segment,
 !                    we are done. Otherwise there is no reference
 !                    value to be associated with X.
 !
-                     IF ( X .GT. BUFFER(MYINDX) ) THEN
+                     if ( x .gt. buffer(myindx) ) then
 
-                        MYFND  = .TRUE.
-                        MYVALU = BUFFER(MYINDX)
+                        myfnd  = .true.
+                        myvalu = buffer(myindx)
 
-                     ELSE
+                     else
 !
 !                       We did not find a reference value. X was
 !                       equal to the first reference value of the
 !                       generic segment.
 !
-                        MYFND = .FALSE.
+                        myfnd = .false.
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 
-               ELSE IF ( MYINDX .EQ. 0 ) THEN
+               else if ( myindx .eq. 0 ) then
 !
 !                 We did not find a reference value. X was < the
 !                 first reference value for the generic segment.
 !
-                  MYFND = .FALSE.
+                  myfnd = .false.
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We have a reference directory value, and we are done.
 !              Either the reference directory value is the one we
 !              want or the reference value immediately preceding it
 !              is the one we want.
 !
-               MYFND  = .TRUE.
+               myfnd  = .true.
 
-               MYINDX = MYINDX - 1
+               myindx = myindx - 1
 
-               BEGIN  = MYREFB + MYINDX
-               END    = BEGIN
+               begin  = myrefb + myindx
+               end    = begin
 
-               CALL DAFGDA ( HANDLE, BEGIN, END, MYVALU )
+               call dafgda ( handle, begin, end, myvalu )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGFRVI' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGFRVI' )
+                  return
+               end if
 
-            END IF
+            end if
 
-         ELSE IF ( MYRDRT .EQ. EXPLE ) THEN
+         else if ( myrdrt .eq. exple ) then
 !
 !           We have a reference value only if X >= some reference
 !           value. At this point, either we have the value and index
@@ -653,39 +653,39 @@
 !           is not a reference directory value, and the second when
 !           it is.
 !
-            IF ( .NOT. ISDIRV ) THEN
+            if ( .not. isdirv ) then
 !
 !              If X is not a directory value, then MYINDX is either
 !              equal to zero, implying that X is before the first
 !              reference value in the generic segment, or MYINDX > 0,
 !              implying that we have found a reference value.
 !
-               IF (       ( MYINDX .GT. 0      ) &
-                    .AND. ( MYINDX .LE. MYNREF ) ) THEN
+               if (       ( myindx .gt. 0      ) &
+                    .and. ( myindx .le. mynref ) ) then
 
-                  MYFND  = .TRUE.
-                  MYVALU = BUFFER(BFINDX)
+                  myfnd  = .true.
+                  myvalu = buffer(bfindx)
 
-               ELSE IF ( MYINDX .EQ. 0 ) THEN
+               else if ( myindx .eq. 0 ) then
 !
 !                 We did not find a reference value. X was < the
 !                 first reference value for the generic segment.
 !
-                  MYFND = .FALSE.
+                  myfnd = .false.
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We have a reference directory value, and it is the one
 !              we want.
 !
-               MYFND  = .TRUE.
-               MYVALU = X
+               myfnd  = .true.
+               myvalu = x
 
-            END IF
+            end if
 
-         ELSE IF ( MYRDRT .EQ. EXPCLS ) THEN
+         else if ( myrdrt .eq. expcls ) then
 !
 !           We have a reference value for every value of X. If X <
 !           the first reference value of the generic segment, the
@@ -696,7 +696,7 @@
 !           closest reference value to X, resolving a tie by
 !           accepting the larger reference value.
 !
-            IF ( .NOT. ISDIRV ) THEN
+            if ( .not. isdirv ) then
 !
 !              If X is not a directory value, then MYINDX is either
 !              equal to zero, implying that X is before the first
@@ -706,181 +706,181 @@
 !              MYINDX = MYNPKT implying that X is greater than or
 !              equal to the last reference value.
 !
-               IF (       ( MYINDX .GT. 0      ) &
-                    .AND. ( MYINDX .LT. MYNREF ) ) THEN
+               if (       ( myindx .gt. 0      ) &
+                    .and. ( myindx .lt. mynref ) ) then
 
-                  I = BFINDX
+                  i = bfindx
 !
 !                 Find the closest value to X, choosing the larger in
 !                 the event of a tie.
 !
-                  IF ( (BUFFER(I+1) - X) .LE. (X - BUFFER(I)) ) THEN
+                  if ( (buffer(i+1) - x) .le. (x - buffer(i)) ) then
 
-                     I      = I + 1
-                     MYINDX = MYINDX + 1
+                     i      = i + 1
+                     myindx = myindx + 1
 
-                  END IF
+                  end if
 
-                  MYFND  = .TRUE.
-                  MYVALU = BUFFER(I)
+                  myfnd  = .true.
+                  myvalu = buffer(i)
 
-               ELSE IF ( MYINDX .EQ. 0 ) THEN
+               else if ( myindx .eq. 0 ) then
 !
 !                 X is before the first reference value for the
 !                 generic segment, so the closest reference value is
 !                 the first one.
 !
-                  MYFND  = .TRUE.
-                  MYINDX = 1
-                  MYVALU = BUFFER(1)
+                  myfnd  = .true.
+                  myindx = 1
+                  myvalu = buffer(1)
 
-               ELSE IF ( MYINDX .EQ. MYNREF ) THEN
+               else if ( myindx .eq. mynref ) then
 !
 !                 X is at of after the last reference value for the
 !                 generic segment, so the closest reference value is
 !                 the last reference value, which will be in BUFFER.
 !
 
-                  MYFND  = .TRUE.
-                  MYVALU = BUFFER(BFINDX)
+                  myfnd  = .true.
+                  myvalu = buffer(bfindx)
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We have a reference directory value, and it is the one
 !              we want.
 !
-               MYFND  = .TRUE.
-               MYVALU = X
+               myfnd  = .true.
+               myvalu = x
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE IF ( MYRDRT .EQ. IMPLE ) THEN
+      else if ( myrdrt .eq. imple ) then
 !
 !        Get the begin and end addresses from which to read the
 !        reference values and get the reference values.
 !
-         BEGIN = MYREFB + 1
-         END   = MYREFB + 2
+         begin = myrefb + 1
+         end   = myrefb + 2
 
-         CALL DAFGDA ( HANDLE, BEGIN, END, BUFFER )
+         call dafgda ( handle, begin, end, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGFRVI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGFRVI' )
+            return
+         end if
 
-         ENDREF = BUFFER(1) + DBLE(MYNPKT-1) * BUFFER(2)
+         endref = buffer(1) + dble(mynpkt-1) * buffer(2)
 !
 !        Compute the index if we can.
 !
-         IF ( X .LT. BUFFER(1) ) THEN
+         if ( x .lt. buffer(1) ) then
 !
 !           If X is less than BUFFER(1), we do not have a reference
 !           value.
 !
-            MYFND = .FALSE.
+            myfnd = .false.
 
-         ELSE IF ( X .GT. ENDREF ) THEN
+         else if ( x .gt. endref ) then
 !
 !           If X is greater than ENDREF, then we have a reference
 !           value, ENDREF.
 !
-            MYFND  = .TRUE.
-            MYINDX = MYNPKT
-            MYVALU = ENDREF
+            myfnd  = .true.
+            myindx = mynpkt
+            myvalu = endref
 
-         ELSE
+         else
 !
 !           r_1 < X < r_N, i.e., we found a value. Compute the index
 !           and the reference value.
 !
-            IF ( MYNPKT .GT. 1 ) THEN
+            if ( mynpkt .gt. 1 ) then
 
-               MYFND = .TRUE.
+               myfnd = .true.
 !
 !              Compute the index.
 !
-               DPTEMP = 1.0D0 + (X - BUFFER(1)) / BUFFER(2)
+               dptemp = 1.0d0 + (x - buffer(1)) / buffer(2)
 !
 !              Test to see if we can safely convert the index to an
 !              integer.
 !
-               IF ( DPTEMP .GT. DPIMAX ) THEN
+               if ( dptemp .gt. dpimax ) then
 
-                  CALL SETMSG ( 'The computed index is too large' &
+                  call setmsg ( 'The computed index is too large' &
                   //            ' to be represented as an integer.' &
                   //            ' The most likely problem is that' &
                   //            ' an incorrect value was stored' &
                   //            ' for the step size. The value' &
                   //            ' found for the step was: #'        )
-                  CALL ERRDP ( '#', BUFFER(2)                       )
-                  CALL SIGERR ( 'SPICE(INDEXTOOLARGE)'              )
-                  CALL CHKOUT ( 'SGFRVI'                            )
-                  RETURN
+                  call errdp ( '#', buffer(2)                       )
+                  call sigerr ( 'SPICE(INDEXTOOLARGE)'              )
+                  call chkout ( 'SGFRVI'                            )
+                  return
 
-               END IF
+               end if
 
-               MYINDX = IDINT( DPTEMP         )
-               MYINDX = MIN  ( MYINDX, MYNPKT )
+               myindx = idint( dptemp         )
+               myindx = min  ( myindx, mynpkt )
 
-            ELSE
+            else
 !
 !              There is only one packet.
 !
-               MYINDX = 1
+               myindx = 1
 
-            END IF
+            end if
 !
 !           Compute the reference value.
 !
-            MYVALU = BUFFER(1) + DBLE(MYINDX-1) * BUFFER(2)
+            myvalu = buffer(1) + dble(myindx-1) * buffer(2)
 
-         END IF
+         end if
 
-      ELSE IF ( MYRDRT .EQ. IMPCLS ) THEN
+      else if ( myrdrt .eq. impcls ) then
 !
 !        Get the begin and end addresses from which to read the
 !        reference values and get the reference values.
 !
-         BEGIN = MYREFB + 1
-         END   = MYREFB + 2
+         begin = myrefb + 1
+         end   = myrefb + 2
 
-         CALL DAFGDA ( HANDLE, BEGIN, END, BUFFER )
+         call dafgda ( handle, begin, end, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGFRVI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGFRVI' )
+            return
+         end if
 
-         ENDREF = BUFFER(1) + DBLE(MYNPKT-1) * BUFFER(2)
+         endref = buffer(1) + dble(mynpkt-1) * buffer(2)
 !
 !        Compute the index if we can.
 !
-         IF ( X .LT. BUFFER(1) ) THEN
+         if ( x .lt. buffer(1) ) then
 !
 !           If X < BUFFER(1), then we found a value, the index
 !           returned will be 1 and the reference value returned will
 !           be BUFFER(1).
 !
-            MYFND  = .TRUE.
-            MYINDX = 1
-            MYVALU = BUFFER(1)
+            myfnd  = .true.
+            myindx = 1
+            myvalu = buffer(1)
 
-         ELSE IF (  X .GT. ENDREF ) THEN
+         else if (  x .gt. endref ) then
 !
 !           If X > ENDREF, then we found a value, the index returned
 !           will be MYNPKT and the reference value returned will be
 !           ENDREF.
 !
-            MYFND  = .TRUE.
-            MYINDX = MYNPKT
-            MYVALU = ENDREF
+            myfnd  = .true.
+            myindx = mynpkt
+            myvalu = endref
 
-         ELSE
+         else
 !
 !           r_1 < X < r_N, i.e., we found a value. Compute the index
 !           and the reference value. If X is closer to r_I, the index
@@ -888,62 +888,62 @@
 !           closer to r_(I+1), the index returned will be I+1 with a
 !           reference value of r_(I+1).
 !
-            IF ( MYNPKT .GT. 1 ) THEN
+            if ( mynpkt .gt. 1 ) then
 
-               MYFND = .TRUE.
+               myfnd = .true.
 !
 !              Compute the index.
 !
-               DPTEMP = 1.5D0 + (X - BUFFER(1)) / BUFFER(2)
+               dptemp = 1.5d0 + (x - buffer(1)) / buffer(2)
 
-               IF ( DPTEMP .GT. DPIMAX + 0.5D0 ) THEN
+               if ( dptemp .gt. dpimax + 0.5d0 ) then
 
-                  CALL SETMSG ( 'The computed index is too large' &
+                  call setmsg ( 'The computed index is too large' &
                   //            ' to be represented as an integer.' &
                   //            ' The most likely problem is that' &
                   //            ' an incorrect value was stored' &
                   //            ' for the step size. The value' &
                   //            ' found for the step was: #'        )
-                  CALL ERRDP ( '#', BUFFER(2)                       )
-                  CALL SIGERR ( 'SPICE(INDEXTOOLARGE)'              )
-                  CALL CHKOUT ( 'SGFRVI'                            )
-                  RETURN
+                  call errdp ( '#', buffer(2)                       )
+                  call sigerr ( 'SPICE(INDEXTOOLARGE)'              )
+                  call chkout ( 'SGFRVI'                            )
+                  return
 
-               END IF
+               end if
 
-               MYINDX = IDINT( DPTEMP )
+               myindx = idint( dptemp )
 
-            ELSE
+            else
 !
 !              There is only one packet.
 !
-               MYINDX = 1
+               myindx = 1
 
-            END IF
+            end if
 !
 !           Compute the reference value.
 !
-            MYVALU = BUFFER(1) + DBLE(MYINDX-1) * BUFFER(2)
+            myvalu = buffer(1) + dble(myindx-1) * buffer(2)
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, we have either found a value or not. If so, then we
 !     need to set the index, value, and found flag for output.
 !     Otherwise, we simply set the found flag.
 !
-      IF ( MYFND ) THEN
+      if ( myfnd ) then
 
-         INDX  = MYINDX
-         VALUE = MYVALU
+         indx  = myindx
+         value = myvalu
 
-      END IF
+      end if
 
-      FOUND = MYFND
+      found = myfnd
 
-      CALL CHKOUT ( 'SGFRVI' )
-      RETURN
+      call chkout ( 'SGFRVI' )
+      return
 
-      END
+      end

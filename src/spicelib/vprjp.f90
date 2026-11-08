@@ -1,6 +1,6 @@
 !$Procedure VPRJP ( Vector projection onto plane )
 
-      SUBROUTINE VPRJP ( VIN, PLANE, VOUT )
+      subroutine vprjp ( vin, plane, vout )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   =   4 )
+      integer               ubpl
+      parameter           ( ubpl   =   4 )
 
-      DOUBLE PRECISION      VIN   (    3 )
-      DOUBLE PRECISION      PLANE ( UBPL )
-      DOUBLE PRECISION      VOUT  (    3 )
+      double precision      vin   (    3 )
+      double precision      plane ( ubpl )
+      double precision      vout  (    3 )
 
 ! $ Brief_I/O
 !
@@ -207,11 +207,11 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               APPROX
-      LOGICAL               RETURN
+      logical               approx
+      logical               return
 
 !
 !     Local parameters
@@ -219,44 +219,44 @@
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      DOUBLE PRECISION      MAGTOL
-      PARAMETER           ( MAGTOL = 1.D-14 )
+      double precision      magtol
+      parameter           ( magtol = 1.d-14 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      NORMAL ( 3 )
+      double precision      const
+      double precision      normal ( 3 )
 
 !
 !     Check RETURN but use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Obtain a unit vector normal to the input plane, and a constant
 !     for the plane.
 !
-      CALL PL2NVC ( PLANE, NORMAL, CONST )
+      call pl2nvc ( plane, normal, const )
 
 !
 !     The normal vector returned by PL2NVC should be a unit vector.
 !
-      IF (  .NOT.  APPROX( VNORM(NORMAL), 1.D0, MAGTOL )  ) THEN
+      if (  .not.  approx( vnorm(normal), 1.d0, magtol )  ) then
 
-         CALL CHKIN  ( 'VPRJP' )
-         CALL SETMSG ( 'Normal vector returned by PL2NVC does not ' &
+         call chkin  ( 'VPRJP' )
+         call setmsg ( 'Normal vector returned by PL2NVC does not ' &
          //            'have unit length; the difference of the ' &
          //            'length from 1 is #. The input plane is ' &
          //            'invalid. '                                )
-         CALL ERRDP  ( '#',  VNORM(NORMAL) - 1.D0                 )
-         CALL SIGERR ( 'SPICE(NONUNITNORMAL)'                     )
-         CALL CHKOUT ( 'VPRJP' )
-         RETURN
+         call errdp  ( '#',  vnorm(normal) - 1.d0                 )
+         call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
+         call chkout ( 'VPRJP' )
+         return
 
-      END IF
+      end if
 
 !
 !     Let the notation < a, b > indicate the inner product of vectors
@@ -275,11 +275,11 @@
 !
 !     Subtracting this multiple of NORMAL from VIN yields VOUT.
 !
-      CALL VLCOM (  1.0D0, &
-                    VIN, &
-                    CONST - VDOT ( VIN, NORMAL ), &
-                    NORMAL, &
-                    VOUT                          )
+      call vlcom (  1.0d0, &
+                    vin, &
+                    const - vdot ( vin, normal ), &
+                    normal, &
+                    vout                          )
 
-      RETURN
-      END
+      return
+      end

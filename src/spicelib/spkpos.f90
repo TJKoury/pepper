@@ -1,6 +1,6 @@
 !$Procedure SPKPOS ( S/P Kernel, position )
 
-      SUBROUTINE SPKPOS ( TARG, ET, REF, ABCORR, OBS, PTARG, LT )
+      subroutine spkpos ( targ, et, ref, abcorr, obs, ptarg, lt )
 
 ! $ Abstract
 !
@@ -22,17 +22,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBS
-      DOUBLE PRECISION      PTARG    ( 3 )
-      DOUBLE PRECISION      LT
+      character*(*)         targ
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      character*(*)         obs
+      double precision      ptarg    ( 3 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -468,91 +468,91 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 !
 !     Local variables
 !
-      INTEGER               TARGID
-      INTEGER               OBSID
+      integer               targid
+      integer               obsid
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTGID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtgid
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSN
-      INTEGER               SVOBSI
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsn
+      integer               svobsi
+      logical               svfnd2
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTGID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtgid
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSN
-      SAVE                  SVOBSI
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsn
+      save                  svobsi
+      save                  svfnd2
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKPOS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKPOS' )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Starting from translation of target name to its code
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTGID, SVFND1, &
-                      TARG, TARGID, FOUND    )
+      call zzbods2c ( svctr1, svtarg, svtgid, svfnd1, &
+                      targ, targid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
@@ -560,24 +560,24 @@
          //            'Alternatively you may call SPKEZP ' &
          //            'directly if you know the SPICE id-codes ' &
          //            'for both ''#'' and ''#'' '                )
-         CALL ERRCH  ( '#', TARG                                  )
-         CALL ERRCH  ( '#', TARG                                  )
-         CALL ERRCH  ( '#', OBS                                   )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SPKPOS'                                   )
-         RETURN
+         call errch  ( '#', targ                                  )
+         call errch  ( '#', targ                                  )
+         call errch  ( '#', obs                                   )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SPKPOS'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Now do the same for observer.
 !
-      CALL ZZBODS2C ( SVCTR2, SVOBSN, SVOBSI, SVFND2, &
-                      OBS, OBSID, FOUND    )
+      call zzbods2c ( svctr2, svobsn, svobsi, svfnd2, &
+                      obs, obsid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
@@ -585,21 +585,21 @@
          //            'Alternatively you may call SPKEZP ' &
          //            'directly if you know the SPICE id-codes ' &
          //            'for both ''#'' and ''#'' '                )
-         CALL ERRCH  ( '#', OBS                                   )
-         CALL ERRCH  ( '#', TARG                                  )
-         CALL ERRCH  ( '#', OBS                                   )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SPKPOS'                                   )
-         RETURN
+         call errch  ( '#', obs                                   )
+         call errch  ( '#', targ                                  )
+         call errch  ( '#', obs                                   )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SPKPOS'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     After all translations are done we can call SPKEZP.
 !
-      CALL SPKEZP ( TARGID, ET, REF, ABCORR, OBSID, PTARG, LT )
+      call spkezp ( targid, et, ref, abcorr, obsid, ptarg, lt )
 
 
-      CALL CHKOUT ( 'SPKPOS' )
-      RETURN
-      END
+      call chkout ( 'SPKPOS' )
+      return
+      end

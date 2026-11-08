@@ -1,6 +1,6 @@
 !$Procedure BYEBYE ( Exit a program indicating an error status )
 
-      SUBROUTINE BYEBYE ( STATUS )
+      subroutine byebye ( status )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STATUS
+      character*(*)         status
 
 ! $ Brief_I/O
 !
@@ -251,52 +251,52 @@
 !     Define the maximum length for the usable portion of a status
 !     string.
 !
-      INTEGER               STLEN
-      PARAMETER           ( STLEN = 7 )
+      integer               stlen
+      parameter           ( stlen = 7 )
 !
 !     Define the notion of 'SUCCESS' and 'FAILURE'.
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 #else
-      INTEGER               FAILUR
-      PARAMETER           ( FAILUR = 1 )
+      integer               failur
+      parameter           ( failur = 1 )
 
-      INTEGER               SUCCES
-      PARAMETER           ( SUCCES = 0 )
+      integer               succes
+      parameter           ( succes = 0 )
 #endif
 
 
-      CHARACTER*(STLEN)     CHSTAT
+      character*(stlen)     chstat
 
-      LOGICAL               MYSTAT
+      logical               mystat
 
-      CALL LJUST ( STATUS, CHSTAT )
-      CALL UCASE ( CHSTAT, CHSTAT )
+      call ljust ( status, chstat )
+      call ucase ( chstat, chstat )
 
-      IF ( CHSTAT .EQ. 'SUCCESS' ) THEN
-         MYSTAT = .TRUE.
-      ELSE
-         MYSTAT = .FALSE.
-      END IF
+      if ( chstat .eq. 'SUCCESS' ) then
+         mystat = .true.
+      else
+         mystat = .false.
+      end if
 
-      IF ( MYSTAT ) THEN
+      if ( mystat ) then
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         STOP 0
+         stop 0
 #else
-         CALL EXIT ( SUCCES )
+         call exit ( succes )
 #endif
-      ELSE
+      else
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         STOP 1
+         stop 1
 #else
-         CALL EXIT ( FAILUR )
+         call exit ( failur )
 #endif
-      END IF
+      end if
 
 !
 !     We never really get here, but for pedantic reasons we must
 !     have a RETURN statement in a subroutine.
 !
-      RETURN
+      return
 
-      END
+      end

@@ -1,7 +1,7 @@
 !$Procedure ZZBODBLT ( Private --- Retrieve Built-In Body-Code Maps )
 
-      SUBROUTINE ZZBODBLT ( ROOM,  NAMES,  NORNAM, CODES, &
-                            NVALS, DEVICE, REQST          )
+      subroutine zzbodblt ( room,  names,  nornam, codes, &
+                            nvals, device, reqst          )
 
 ! $ Abstract
 !
@@ -22,17 +22,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzbodtrn.inc'
+      include              'zzbodtrn.inc'
 
-      INTEGER               ROOM
-      CHARACTER*(*)         NAMES  ( * )
-      CHARACTER*(*)         NORNAM ( * )
-      INTEGER               CODES  ( * )
-      INTEGER               NVALS
-      CHARACTER*(*)         DEVICE
-      CHARACTER*(*)         REQST
+      integer               room
+      character*(*)         names  ( * )
+      character*(*)         nornam ( * )
+      integer               codes  ( * )
+      integer               nvals
+      character*(*)         device
+      character*(*)         reqst
 
 ! $ Brief_I/O
 !
@@ -333,10 +333,10 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local Parameters
@@ -345,50 +345,50 @@
 !
 !     Local Variables
 !
-      CHARACTER*(MAXL)      BLTNAM ( NPERM )
-      CHARACTER*(MAXL)      BLTNOR ( NPERM )
-      CHARACTER*(4)         ZZRQST
-      CHARACTER*(MAXL)      ZZINT
-      CHARACTER*(2*MAXL+3)  ZZLINE
+      character*(maxl)      bltnam ( nperm )
+      character*(maxl)      bltnor ( nperm )
+      character*(4)         zzrqst
+      character*(maxl)      zzint
+      character*(2*maxl+3)  zzline
 
-      INTEGER               BLTCOD ( NPERM )
-      INTEGER               I
-      INTEGER               ZZOCOD ( NPERM )
-      INTEGER               ZZONAM ( NPERM )
+      integer               bltcod ( nperm )
+      integer               i
+      integer               zzocod ( nperm )
+      integer               zzonam ( nperm )
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved Variables
 !
-      SAVE                  BLTCOD
-      SAVE                  BLTNAM
-      SAVE                  BLTNOR
-      SAVE                  FIRST
+      save                  bltcod
+      save                  bltnam
+      save                  bltnor
+      save                  first
 
 !
 !     Data Statements
 !
-      DATA                  FIRST     / .TRUE. /
+      data                  first     / .true. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'ZZBODBLT'          )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'ZZBODBLT'          )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin  ( 'ZZBODBLT'          )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'ZZBODBLT'          )
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure ZZBODGET ( Private --- Body-Code Get Built-In List )
 
-      ENTRY ZZBODGET ( ROOM, NAMES, NORNAM, CODES, NVALS )
+      entry zzbodget ( room, names, nornam, codes, nvals )
 
 ! $ Abstract
 !
@@ -497,70 +497,70 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODGET' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODGET' )
+      end if
 
 
 !
 !     On the first invocation compute the normalized forms of BLTNAM
 !     and store them in BLTNOR.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Retrieve the default mapping list.
 !
-         CALL ZZIDMAP( BLTCOD, BLTNAM )
+         call zzidmap( bltcod, bltnam )
 
-         DO I = 1, NPERM
-            CALL LJUST  (         BLTNAM(I), BLTNOR(I) )
-            CALL UCASE  (         BLTNOR(I), BLTNOR(I) )
-            CALL CMPRSS ( ' ', 1, BLTNOR(I), BLTNOR(I) )
-         END DO
+         do i = 1, nperm
+            call ljust  (         bltnam(i), bltnor(i) )
+            call ucase  (         bltnor(i), bltnor(i) )
+            call cmprss ( ' ', 1, bltnor(i), bltnor(i) )
+         end do
 
 !
 !        Do not do this again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Copy the contents of BLTNAM, BLTNOR, and BLTCOD to the output
 !     arguments, but only if there is sufficient room.
 !
-      IF ( ROOM .LT. NPERM ) THEN
+      if ( room .lt. nperm ) then
 
-         CALL SETMSG ( 'Insufficient room to copy the stored ' &
+         call setmsg ( 'Insufficient room to copy the stored ' &
          //            'body name-code mappings to the output ' &
          //            'arguments.  Space required is #, but ' &
          //            'the caller supplied #.'                 )
-         CALL ERRINT ( '#', NPERM                               )
-         CALL ERRINT ( '#', ROOM                                )
-         CALL SIGERR ( 'SPICE(BUG)'                             )
-         CALL CHKOUT ( 'ZZBODGET'                               )
-         RETURN
+         call errint ( '#', nperm                               )
+         call errint ( '#', room                                )
+         call sigerr ( 'SPICE(BUG)'                             )
+         call chkout ( 'ZZBODGET'                               )
+         return
 
-      END IF
+      end if
 
-      CALL MOVEC ( BLTNAM, NPERM, NAMES  )
-      CALL MOVEC ( BLTNOR, NPERM, NORNAM )
-      CALL MOVEI ( BLTCOD, NPERM, CODES  )
+      call movec ( bltnam, nperm, names  )
+      call movec ( bltnor, nperm, nornam )
+      call movei ( bltcod, nperm, codes  )
 
-      NVALS = NPERM
+      nvals = nperm
 
-      CALL CHKOUT ( 'ZZBODGET' )
-      RETURN
+      call chkout ( 'ZZBODGET' )
+      return
 
 
 
 
 !$Procedure ZZBODLST ( Output permanent collection to some device. )
 
-      ENTRY ZZBODLST ( DEVICE, REQST )
+      entry zzbodlst ( device, reqst )
 
 ! $ Abstract
 !
@@ -709,72 +709,72 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODLST' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODLST' )
+      end if
 
 !
 !     Upper case the ZZRQST value.
 !
-      CALL UCASE  ( REQST, ZZRQST )
-      CALL INTSTR ( NPERM, ZZINT  )
+      call ucase  ( reqst, zzrqst )
+      call intstr ( nperm, zzint  )
 
-      ZZLINE = 'Total number of name/ID mappings: '//ZZINT
+      zzline = 'Total number of name/ID mappings: '//zzint
 
-      CALL WRLINE ( DEVICE, ZZLINE(1: LASTNB( ZZLINE ) ) )
+      call wrline ( device, zzline(1: lastnb( zzline ) ) )
 
 !
 !     Retrieve the current set of name/ID mappings
 !
-      CALL ZZIDMAP( BLTCOD, BLTNAM )
+      call zzidmap( bltcod, bltnam )
 
 !
 !      Branch as defined by the value of ZZRQST. 'ID' or 'BOTH'.
 !
-      IF ( EQSTR( ZZRQST , 'ID') .OR. EQSTR( ZZRQST , 'BOTH') ) THEN
+      if ( eqstr( zzrqst , 'ID') .or. eqstr( zzrqst , 'BOTH') ) then
 
-         CALL ORDERI ( BLTCOD, NPERM, ZZOCOD )
+         call orderi ( bltcod, nperm, zzocod )
 
-         CALL WRLINE ( DEVICE, ' ' )
-         CALL WRLINE ( DEVICE, 'ID to name mappings.' )
+         call wrline ( device, ' ' )
+         call wrline ( device, 'ID to name mappings.' )
 
-         DO I = 1, NPERM
+         do i = 1, nperm
 
-            CALL INTSTR ( BLTCOD(ZZOCOD(I)) , ZZINT )
+            call intstr ( bltcod(zzocod(i)) , zzint )
 
-            ZZLINE = ZZINT // ' | ' // BLTNAM(ZZOCOD(I))
+            zzline = zzint // ' | ' // bltnam(zzocod(i))
 
-            CALL WRLINE ( DEVICE, ZZLINE(1: LASTNB( ZZLINE ) ) )
+            call wrline ( device, zzline(1: lastnb( zzline ) ) )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     ... 'NAME' or 'BOTH'.
 !
-      IF ( EQSTR( ZZRQST, 'NAME') .OR. EQSTR( ZZRQST, 'BOTH') ) THEN
+      if ( eqstr( zzrqst, 'NAME') .or. eqstr( zzrqst, 'BOTH') ) then
 
-         CALL ORDERC ( BLTNAM, NPERM, ZZONAM )
+         call orderc ( bltnam, nperm, zzonam )
 
-         CALL WRLINE ( DEVICE, ' ' )
-         CALL WRLINE ( DEVICE, 'Name to ID mappings.' )
+         call wrline ( device, ' ' )
+         call wrline ( device, 'Name to ID mappings.' )
 
-         DO I = 1, NPERM
+         do i = 1, nperm
 
-            CALL INTSTR ( BLTCOD(ZZONAM(I)) , ZZINT )
+            call intstr ( bltcod(zzonam(i)) , zzint )
 
-            ZZLINE = BLTNAM(ZZONAM(I)) // ' | ' // ZZINT
+            zzline = bltnam(zzonam(i)) // ' | ' // zzint
 
-            CALL WRLINE ( DEVICE, ZZLINE(1:LASTNB( ZZLINE ) ) )
+            call wrline ( device, zzline(1:lastnb( zzline ) ) )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZBODLST' )
-      RETURN
+      call chkout ( 'ZZBODLST' )
+      return
 
-      END
+      end

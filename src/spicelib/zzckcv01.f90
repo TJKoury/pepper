@@ -1,7 +1,7 @@
 !$Procedure ZZCKCV01 ( Private --- C-kernel segment coverage, type 01 )
 
-      SUBROUTINE ZZCKCV01 ( HANDLE,  ARRBEG,  ARREND, &
-                            SCLKID,  TOL,     TIMSYS,  SCHEDL  )
+      subroutine zzckcv01 ( handle,  arrbeg,  arrend, &
+                            sclkid,  tol,     timsys,  schedl  )
 
 ! $ Abstract
 !
@@ -24,18 +24,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               HANDLE
-      INTEGER               ARRBEG
-      INTEGER               ARREND
-      INTEGER               SCLKID
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      SCHEDL ( LBCELL:* )
+      integer               handle
+      integer               arrbeg
+      integer               arrend
+      integer               sclkid
+      double precision      tol
+      character*(*)         timsys
+      double precision      schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -166,87 +166,87 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
-      INTEGER               QAVSIZ
-      PARAMETER           ( QAVSIZ = 7 )
+      integer               qavsiz
+      parameter           ( qavsiz = 7 )
 
-      INTEGER               QSIZ
-      PARAMETER           ( QSIZ   = 4 )
+      integer               qsiz
+      parameter           ( qsiz   = 4 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      FINISH
+      double precision      begin
+      double precision      buffer ( bufsiz )
+      double precision      et
+      double precision      finish
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NREC
-      INTEGER               OFFSET
-      INTEGER               PSIZ
-      INTEGER               REMAIN
-      INTEGER               TBASE
-      INTEGER               NAVSLN
-      INTEGER               AVSLN
-      INTEGER               SEGLEN
+      integer               i
+      integer               n
+      integer               nrec
+      integer               offset
+      integer               psiz
+      integer               remain
+      integer               tbase
+      integer               navsln
+      integer               avsln
+      integer               seglen
 
-      LOGICAL               ISTDB
+      logical               istdb
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZCKCV01' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZCKCV01' )
+      end if
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZCKCV01'                                     )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZCKCV01'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set a logical flag indicating whether the time systm is SCLK.
 !
-      ISTDB  = EQSTR ( TIMSYS, 'TDB' )
+      istdb  = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-            CALL CHKOUT ( 'ZZCKCV01'                                )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+            call chkout ( 'ZZCKCV01'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The coverage window is the set of singleton intervals consisting
@@ -255,9 +255,9 @@
 !
 !     First, get the number of records in this segment.
 !
-      CALL DAFGDA ( HANDLE, ARREND, ARREND, BUFFER )
+      call dafgda ( handle, arrend, arrend, buffer )
 
-      NREC = INT( BUFFER(1) )
+      nrec = int( buffer(1) )
 
 !
 !     Determine the size of the pointing packets. This is dependent
@@ -266,43 +266,43 @@
 !
 !     Assume a record size of 4, i.e. no angular rate data.
 !
-      NAVSLN = 5 * NREC + ( NREC - 1 ) / 100 + 1
+      navsln = 5 * nrec + ( nrec - 1 ) / 100 + 1
 
 !
 !     Assume a record size of 7, i.e. angular rate data.
 !
-      AVSLN  = 8 * NREC + ( NREC - 1 ) / 100 + 1
+      avsln  = 8 * nrec + ( nrec - 1 ) / 100 + 1
 
 !
 !     Compute the actual length of the segment.
 !
-      SEGLEN = ARREND - ARRBEG + 1
+      seglen = arrend - arrbeg + 1
 
-      IF ( SEGLEN .EQ. NAVSLN ) THEN
-         PSIZ = QSIZ
-      ELSE IF ( SEGLEN .EQ. AVSLN ) THEN
-         PSIZ = QAVSIZ
-      ELSE
-         CALL SETMSG ( 'The requested segment in file # reports a ' &
+      if ( seglen .eq. navsln ) then
+         psiz = qsiz
+      else if ( seglen .eq. avsln ) then
+         psiz = qavsiz
+      else
+         call setmsg ( 'The requested segment in file # reports a ' &
          //            'length of # d.p. numbers, but the metadata ' &
          //            'in the segment indicates the length must ' &
          //            'either be # (no angular rate data) or # ' &
          //            '(angular rate data). Perhaps the segment ' &
          //            'is not type 1?'                              )
-         CALL ERRHAN ( '#', HANDLE                                   )
-         CALL ERRINT ( '#', SEGLEN                                   )
-         CALL ERRINT ( '#', NAVSLN                                   )
-         CALL ERRINT ( '#', AVSLN                                    )
-         CALL SIGERR ( 'SPICE(BADCK1SEGMENT)'                        )
-         CALL CHKOUT ( 'ZZCKCV01'                                    )
-         RETURN
-      END IF
+         call errhan ( '#', handle                                   )
+         call errint ( '#', seglen                                   )
+         call errint ( '#', navsln                                   )
+         call errint ( '#', avsln                                    )
+         call sigerr ( 'SPICE(BADCK1SEGMENT)'                        )
+         call chkout ( 'ZZCKCV01'                                    )
+         return
+      end if
 
 !
 !     The epochs start right after the pointing data. Let TBASE be the
 !     address preceding the first epoch.
 !
-      TBASE  = ARRBEG  +  NREC * PSIZ  -  1
+      tbase  = arrbeg  +  nrec * psiz  -  1
 
 !
 !     Grab the epochs. Make a singleton interval out of each one; add
@@ -311,61 +311,61 @@
 !     For efficiency, we'll read the epochs into a buffer of length
 !     BUFSIZ.
 !
-      REMAIN = NREC
-      OFFSET = 0
+      remain = nrec
+      offset = 0
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 
 !
 !        Buffer the next set of epochs.
 !
-         N  =  MIN ( BUFSIZ, REMAIN )
+         n  =  min ( bufsiz, remain )
 
-         CALL DAFGDA ( HANDLE, &
-                       TBASE + OFFSET + 1, &
-                       TBASE + OFFSET + N, &
-                       BUFFER              )
+         call dafgda ( handle, &
+                       tbase + offset + 1, &
+                       tbase + offset + n, &
+                       buffer              )
 
 !
 !        Insert the current batch of N singleton intervals.
 !
-         DO I = 1, N
+         do i = 1, n
 
-            BEGIN   =  BUFFER(I)
-            FINISH  =  BUFFER(I)
+            begin   =  buffer(i)
+            finish  =  buffer(i)
 
 
-            IF ( TOL .GT. 0.D0 ) THEN
+            if ( tol .gt. 0.d0 ) then
 !
 !              Adjust the interval using the tolerance.
 !
-               BEGIN   =  MAX( BEGIN  - TOL, 0.D0 )
-               FINISH  =       FINISH + TOL
+               begin   =  max( begin  - tol, 0.d0 )
+               finish  =       finish + tol
 
-            END IF
+            end if
 
 !
 !           Convert the time to TDB if necessary.
 !
-            IF ( ISTDB ) THEN
+            if ( istdb ) then
 
-               CALL SCT2E ( SCLKID, BEGIN,  ET )
-               BEGIN  = ET
+               call sct2e ( sclkid, begin,  et )
+               begin  = et
 
-               CALL SCT2E ( SCLKID, FINISH, ET )
-               FINISH = ET
+               call sct2e ( sclkid, finish, et )
+               finish = et
 
-            END IF
+            end if
 
-            CALL WNINSD ( BEGIN, FINISH, SCHEDL )
+            call wninsd ( begin, finish, schedl )
 
-         END DO
+         end do
 
-         OFFSET = OFFSET + N
-         REMAIN = REMAIN - N
+         offset = offset + n
+         remain = remain - n
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZCKCV01' )
-      RETURN
-      END
+      call chkout ( 'ZZCKCV01' )
+      return
+      end

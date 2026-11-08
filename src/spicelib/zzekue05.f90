@@ -1,7 +1,7 @@
 !$Procedure      ZZEKUE05 ( EK, update column entry, class 5 )
 
-      SUBROUTINE ZZEKUE05 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  NVALS,   DVALS,  ISNULL  )
+      subroutine zzekue05 (  handle,  segdsc,  coldsc, &
+                             recptr,  nvals,   dvals,  isnull  )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               NVALS
-      DOUBLE PRECISION      DVALS
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               nvals
+      double precision      dvals
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -126,36 +126,36 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKUE05' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKUE05' )
+      end if
 
 !
 !     Get rid of the old column entry first.
 !
-      CALL ZZEKDE05 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      call zzekde05 ( handle, segdsc, coldsc, recptr )
 
-      IF ( FAILED() ) THEN
-         CALL  CHKOUT ( 'ZZEKUE05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call  chkout ( 'ZZEKUE05' )
+         return
+      end if
 
 !
 !     We've reduced the problem to a solved one:  that of adding
 !     a column entry.
 !
-      CALL ZZEKAD05 (  HANDLE,  SEGDSC,  COLDSC, &
-                       RECPTR,  NVALS,   DVALS,  ISNULL )
+      call zzekad05 (  handle,  segdsc,  coldsc, &
+                       recptr,  nvals,   dvals,  isnull )
 
 
-      CALL CHKOUT ( 'ZZEKUE05' )
-      RETURN
-      END
+      call chkout ( 'ZZEKUE05' )
+      return
+      end

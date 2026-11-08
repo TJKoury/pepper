@@ -1,6 +1,6 @@
 !$Procedure CKE01 ( CK evaluate pointing record, data type 1 )
 
-      SUBROUTINE CKE01 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      subroutine cke01 ( needav, record, cmat, av, clkout )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( *    )
-      DOUBLE PRECISION      CMAT   ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3    )
-      DOUBLE PRECISION      CLKOUT
+      logical               needav
+      double precision      record ( *    )
+      double precision      cmat   ( 3, 3 )
+      double precision      av     ( 3    )
+      double precision      clkout
 
 ! $ Brief_I/O
 !
@@ -349,32 +349,32 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN( 'CKE01' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin( 'CKE01' )
+      end if
 
 !
 !     Dissect the record.
 !
-      CLKOUT = RECORD( 1 )
+      clkout = record( 1 )
 
-      CALL Q2M ( RECORD( 2 ), CMAT )
+      call q2m ( record( 2 ), cmat )
 
-      IF ( NEEDAV ) THEN
+      if ( needav ) then
 
-         AV( 1 ) = RECORD( 6 )
-         AV( 2 ) = RECORD( 7 )
-         AV( 3 ) = RECORD( 8 )
+         av( 1 ) = record( 6 )
+         av( 2 ) = record( 7 )
+         av( 3 ) = record( 8 )
 
-      END IF
+      end if
 
-      CALL CHKOUT( 'CKE01' )
-      RETURN
-      END
+      call chkout( 'CKE01' )
+      return
+      end

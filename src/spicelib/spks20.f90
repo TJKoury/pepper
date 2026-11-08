@@ -1,6 +1,6 @@
 !$Procedure SPKS20 ( S/P Kernel, subset, type 20 )
 
-      SUBROUTINE SPKS20 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks20 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -118,49 +118,49 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
+      double precision      j2000
+      double precision      spd
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BTIME
-      DOUBLE PRECISION      DATA   ( BUFSIZ )
-      DOUBLE PRECISION      DSCALE
-      DOUBLE PRECISION      TSCALE
-      DOUBLE PRECISION      INITJD
-      DOUBLE PRECISION      INITFR
-      DOUBLE PRECISION      INTLEN
-      DOUBLE PRECISION      INTRVL
-      DOUBLE PRECISION      SUBBEG
-      DOUBLE PRECISION      SUBIFR
-      DOUBLE PRECISION      SUBIJD
+      double precision      btime
+      double precision      data   ( bufsiz )
+      double precision      dscale
+      double precision      tscale
+      double precision      initjd
+      double precision      initfr
+      double precision      intlen
+      double precision      intrvl
+      double precision      subbeg
+      double precision      subifr
+      double precision      subijd
 
-      INTEGER               RECSIZ
-      INTEGER               NREC
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               REMAIN
-      INTEGER               ADDR
-      INTEGER               MOVE
+      integer               recsiz
+      integer               nrec
+      integer               first
+      integer               last
+      integer               remain
+      integer               addr
+      integer               move
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKS20' )
+      call chkin ( 'SPKS20' )
 
 !
 !     The segment is made up of a number of logical records, each
@@ -176,29 +176,29 @@
 !     For convenience, we'll fetch the segment's distance and time
 !     scales in the same call.
 !
-      CALL DAFGDA ( HANDLE, EADDR-6, EADDR, DATA )
+      call dafgda ( handle, eaddr-6, eaddr, data )
 
-      DSCALE =      DATA( 1 )
-      TSCALE =      DATA( 2 )
-      INITJD =      DATA( 3 )
-      INITFR =      DATA( 4 )
-      INTLEN =      DATA( 5 )
-      RECSIZ = INT( DATA( 6 ) )
-      NREC   = INT( DATA( 7 ) )
+      dscale =      data( 1 )
+      tscale =      data( 2 )
+      initjd =      data( 3 )
+      initfr =      data( 4 )
+      intlen =      data( 5 )
+      recsiz = int( data( 6 ) )
+      nrec   = int( data( 7 ) )
 
-      BTIME  = ( ( INITJD - J2000() ) + INITFR ) * SPD()
-      INTRVL = INTLEN * SPD()
+      btime  = ( ( initjd - j2000() ) + initfr ) * spd()
+      intrvl = intlen * spd()
 
-      FIRST = INT( (BEGIN - BTIME) / INTRVL ) + 1
-      FIRST = MAX( 1,  MIN( FIRST, NREC )  )
+      first = int( (begin - btime) / intrvl ) + 1
+      first = max( 1,  min( first, nrec )  )
 
-      LAST  = INT( (END   - BTIME) / INTRVL ) + 1
-      LAST  = MAX( 1,  MIN( LAST,  NREC )  )
+      last  = int( (end   - btime) / intrvl ) + 1
+      last  = max( 1,  min( last,  nrec )  )
 
 !
 !     The number of records to be moved.
 !
-      NREC = LAST - FIRST + 1
+      nrec = last - first + 1
 
 !
 !     We're going to move the data in chunks of BUFSIZ d.p. words.
@@ -206,19 +206,19 @@
 !     beginning of the records to move, and the number to move this
 !     time.
 !
-      REMAIN = NREC * RECSIZ
-      ADDR   = BADDR + ( FIRST - 1 )*RECSIZ
-      MOVE   = MIN( BUFSIZ, REMAIN )
+      remain = nrec * recsiz
+      addr   = baddr + ( first - 1 )*recsiz
+      move   = min( bufsiz, remain )
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 
-         CALL DAFGDA ( HANDLE, ADDR, ADDR + MOVE - 1, DATA )
-         CALL DAFADA ( DATA, MOVE )
-         REMAIN = REMAIN - MOVE
-         ADDR   = ADDR   + MOVE
-         MOVE   = MIN( BUFSIZ, REMAIN )
+         call dafgda ( handle, addr, addr + move - 1, data )
+         call dafada ( data, move )
+         remain = remain - move
+         addr   = addr   + move
+         move   = min( bufsiz, remain )
 
-      END DO
+      end do
 
 !
 !     That's all the records we have to move. But there are still seven
@@ -240,21 +240,21 @@
 !     Let SUBBEG be the subset begin time expressed as a TDB Julian
 !     date.
 !
-      SUBBEG =  J2000()  +  (  BTIME + ( FIRST - 1 )*INTRVL  ) / SPD()
+      subbeg =  j2000()  +  (  btime + ( first - 1 )*intrvl  ) / spd()
 
-      SUBIJD =  AINT( SUBBEG )
-      SUBIFR =  SUBBEG - SUBIJD
+      subijd =  aint( subbeg )
+      subifr =  subbeg - subijd
 
-      DATA( 1 ) = DSCALE
-      DATA( 2 ) = TSCALE
-      DATA( 3 ) = SUBIJD
-      DATA( 4 ) = SUBIFR
-      DATA( 5 ) = INTLEN
-      DATA( 6 ) = DBLE( RECSIZ )
-      DATA( 7 ) = DBLE( NREC   )
+      data( 1 ) = dscale
+      data( 2 ) = tscale
+      data( 3 ) = subijd
+      data( 4 ) = subifr
+      data( 5 ) = intlen
+      data( 6 ) = dble( recsiz )
+      data( 7 ) = dble( nrec   )
 
-      CALL DAFADA ( DATA, 7 )
+      call dafada ( data, 7 )
 
-      CALL CHKOUT ( 'SPKS20' )
-      RETURN
-      END
+      call chkout ( 'SPKS20' )
+      return
+      end

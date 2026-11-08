@@ -1,7 +1,7 @@
 !$Procedure LGRESP ( Lagrange interpolation on equally spaced points )
 
-      DOUBLE PRECISION FUNCTION LGRESP (  N,      FIRST,  STEP, &
-                                          YVALS,  WORK,   X      )
+      double precision function lgresp (  n,      first,  step, &
+                                          yvals,  work,   x      )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      YVALS ( * )
-      DOUBLE PRECISION      WORK  ( * )
-      DOUBLE PRECISION      X
+      integer               n
+      double precision      first
+      double precision      step
+      double precision      yvals ( * )
+      double precision      work  ( * )
+      double precision      x
 
 ! $ Brief_I/O
 !
@@ -290,58 +290,58 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      NEWX
+      double precision      c1
+      double precision      c2
+      double precision      newx
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     Check in only if an error is detected.
 !
-      IF ( RETURN() ) THEN
-         LGRESP = 0.D0
-         RETURN
-      END IF
+      if ( return() ) then
+         lgresp = 0.d0
+         return
+      end if
 
 !
 !     No data, no interpolation.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         LGRESP = 0.D0
+         lgresp = 0.d0
 
-         CALL CHKIN  ( 'LGRESP'                              )
-         CALL SETMSG ( 'Array size must be positive; was #.' )
-         CALL ERRINT ( '#',  N                               )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                  )
-         CALL CHKOUT ( 'LGRESP'                              )
-         RETURN
+         call chkin  ( 'LGRESP'                              )
+         call setmsg ( 'Array size must be positive; was #.' )
+         call errint ( '#',  n                               )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                  )
+         call chkout ( 'LGRESP'                              )
+         return
 
-      END IF
+      end if
 
 
 !
 !     The step size must be non-zero.
 !
-      IF ( STEP .EQ. 0.D0 ) THEN
+      if ( step .eq. 0.d0 ) then
 
-         LGRESP = 0.D0
+         lgresp = 0.d0
 
-         CALL CHKIN  ( 'LGRESP'                 )
-         CALL SETMSG ( 'Step size was zero.'    )
-         CALL SIGERR ( 'SPICE(INVALIDSTEPSIZE)' )
-         CALL CHKOUT ( 'LGRESP'                 )
-         RETURN
+         call chkin  ( 'LGRESP'                 )
+         call setmsg ( 'Step size was zero.'    )
+         call sigerr ( 'SPICE(INVALIDSTEPSIZE)' )
+         call chkout ( 'LGRESP'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     We can simplify the interpolation problem by shifting
@@ -349,7 +349,7 @@
 !     and are separated by a unit step.  All we need to do is
 !     shift and scale X.
 !
-      NEWX  =  (  ( X - FIRST ) / STEP  )  +  1.D0
+      newx  =  (  ( x - first ) / step  )  +  1.d0
 
 !
 !     We're going to compute the value of our interpolating polynomial
@@ -441,30 +441,30 @@
 !         I
 !
 !
-      DO I = 1, N
-         WORK(I) = YVALS(I)
-      END DO
+      do i = 1, n
+         work(i) = yvals(i)
+      end do
 
 !
 !     Compute columns 2 through N of the table.
 !
-      DO J = 1, N-1
+      do j = 1, n-1
 
-         DO I = 1, N-J
+         do i = 1, n-j
 
-            C1       =   DBLE(I+J)   -   NEWX
-            C2       =   NEWX        -   DBLE(I)
+            c1       =   dble(i+j)   -   newx
+            c2       =   newx        -   dble(i)
 
-            WORK(I)  =  (  C1 * WORK(I)  +  C2 * WORK(I+1)  )  / DBLE(J)
+            work(i)  =  (  c1 * work(i)  +  c2 * work(i+1)  )  / dble(j)
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Our result is sitting in WORK(1) at this point.
 !
-      LGRESP = WORK(1)
+      lgresp = work(1)
 
-      RETURN
-      END
+      return
+      end

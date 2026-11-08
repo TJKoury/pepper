@@ -1,10 +1,10 @@
 !$Procedure ZZRVAR ( Private --- Pool, read the next kernel variable )
 
-      SUBROUTINE ZZRVAR ( NAMLST, &
-                          NMPOOL, NAMES, DATLST, &
-                          DPPOOL, DPVALS, &
-                          CHPOOL, CHVALS, &
-                          VARNAM, EOF )
+      subroutine zzrvar ( namlst, &
+                          nmpool, names, datlst, &
+                          dppool, dpvals, &
+                          chpool, chvals, &
+                          varnam, eof )
 
 ! $ Abstract
 !
@@ -25,27 +25,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      implicit none
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               NAMLST     (           * )
-      INTEGER               NMPOOL     ( 2, LBPOOL:* )
-      CHARACTER*(*)         NAMES      (           * )
-      INTEGER               DATLST     (           * )
-      INTEGER               DPPOOL     ( 2, LBPOOL:* )
-      DOUBLE PRECISION      DPVALS     (           * )
-      INTEGER               CHPOOL     ( 2, LBPOOL:* )
-      CHARACTER*(*)         CHVALS     (           * )
+      integer               namlst     (           * )
+      integer               nmpool     ( 2, lbpool:* )
+      character*(*)         names      (           * )
+      integer               datlst     (           * )
+      integer               dppool     ( 2, lbpool:* )
+      double precision      dpvals     (           * )
+      integer               chpool     ( 2, lbpool:* )
+      character*(*)         chvals     (           * )
 
-      CHARACTER*(*)         VARNAM
-      LOGICAL               EOF
+      character*(*)         varnam
+      logical               eof
 
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 132 )
+      integer               linlen
+      parameter           ( linlen = 132 )
 
-      INTEGER               MAXLEN
-      PARAMETER           ( MAXLEN =    32 )
+      integer               maxlen
+      parameter           ( maxlen =    32 )
 
 ! $ Brief_I/O
 !
@@ -221,14 +221,14 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTPC
-      INTEGER               LNKNFN
-      INTEGER               RTRIM
-      INTEGER               ZZHASH
-      INTEGER               LASTNB
+      integer               lastpc
+      integer               lnknfn
+      integer               rtrim
+      integer               zzhash
+      integer               lastnb
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local parameters.
@@ -239,14 +239,14 @@
 !     processing flow of a variable assignment.
 !
 
-      INTEGER               BEGIN
-      PARAMETER           ( BEGIN  = 1 )
+      integer               begin
+      parameter           ( begin  = 1 )
 
-      INTEGER               DONE
-      PARAMETER           ( DONE   = BEGIN  + 1 )
+      integer               done
+      parameter           ( done   = begin  + 1 )
 
-      INTEGER               INVAR
-      PARAMETER           ( INVAR  = DONE   + 1 )
+      integer               invar
+      parameter           ( invar  = done   + 1 )
 
 !
 !     Next we have the various types of tokens that can be found
@@ -259,23 +259,23 @@
 !     EQ  --- equal sign
 !     EQP --- equal sign plus
 !
-      INTEGER               Q
-      PARAMETER           ( Q      = 1          )
+      integer               q
+      parameter           ( q      = 1          )
 
-      INTEGER               NQ
-      PARAMETER           ( NQ     = Q      + 1 )
+      integer               nq
+      parameter           ( nq     = q      + 1 )
 
-      INTEGER               BV
-      PARAMETER           ( BV     = NQ     + 1 )
+      integer               bv
+      parameter           ( bv     = nq     + 1 )
 
-      INTEGER               EV
-      PARAMETER           ( EV     = BV     + 1 )
+      integer               ev
+      parameter           ( ev     = bv     + 1 )
 
-      INTEGER               EQ
-      PARAMETER           ( EQ     = EV     + 1 )
+      integer               eq
+      parameter           ( eq     = ev     + 1 )
 
-      INTEGER               EQP
-      PARAMETER           ( EQP    = EQ     + 1 )
+      integer               eqp
+      parameter           ( eqp    = eq     + 1 )
 
 !
 !     A variable can have one of three types as we process
@@ -283,174 +283,174 @@
 !
 !
 
-      INTEGER               STRTYP
-      PARAMETER           ( STRTYP = 1 )
+      integer               strtyp
+      parameter           ( strtyp = 1 )
 
-      INTEGER               NUMTYP
-      PARAMETER           ( NUMTYP = STRTYP + 1 )
+      integer               numtyp
+      parameter           ( numtyp = strtyp + 1 )
 
-      INTEGER               UNKNWN
-      PARAMETER           ( UNKNWN = NUMTYP + 1 )
+      integer               unknwn
+      parameter           ( unknwn = numtyp + 1 )
 
 !
 !     The next two parameters indicate which component of a linked
 !     list node point to the previous node and the next node.
 !
-      INTEGER               PREV
-      PARAMETER           ( PREV = 2 )
+      integer               prev
+      parameter           ( prev = 2 )
 
-      INTEGER               NEXT
-      PARAMETER           ( NEXT = 1 )
+      integer               next
+      parameter           ( next = 1 )
 
 
-      INTEGER               FILSIZ
-      PARAMETER           ( FILSIZ = 255 )
+      integer               filsiz
+      parameter           ( filsiz = 255 )
 !
 !     The next collection of variables are set up in first pass
 !     through this routine.  They would be parameters if FORTRAN
 !     allowed us to do this in a standard way.
 !
-      INTEGER               IBLANK
-      INTEGER               ICOMMA
-      INTEGER               IEQUAL
-      INTEGER               ILPARN
-      INTEGER               IPLUS
-      INTEGER               IQUOTE
-      INTEGER               IRPARN
-      INTEGER               ITAB
-      INTEGER               ITMARK
+      integer               iblank
+      integer               icomma
+      integer               iequal
+      integer               ilparn
+      integer               iplus
+      integer               iquote
+      integer               irparn
+      integer               itab
+      integer               itmark
 
 
-      CHARACTER*(LINLEN)    LINE
-      CHARACTER*(LINLEN)    NAME
-      CHARACTER*(FILSIZ)    FILE
+      character*(linlen)    line
+      character*(linlen)    name
+      character*(filsiz)    file
 
-      CHARACTER*(255)       ERROR
+      character*(255)       error
 
-      DOUBLE PRECISION      DVALUE
+      double precision      dvalue
 
 
-      INTEGER               AT
-      INTEGER               B
-      INTEGER               BADAT
-      INTEGER               CHNODE
-      INTEGER               CODE
-      INTEGER               COUNT
-      INTEGER               DATAHD
-      INTEGER               DIRCTV
-      INTEGER               DPNODE
-      INTEGER               E
-      INTEGER               FREE
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LOOKAT
-      INTEGER               LSTNB
-      INTEGER               NAMEAT
-      INTEGER               NCOMP
-      INTEGER               NODE
-      INTEGER               NUMBER
-      INTEGER               NXTTOK
-      INTEGER               R1
-      INTEGER               R2
-      INTEGER               STATUS
-      INTEGER               TAIL
-      INTEGER               VARLEN
-      INTEGER               VARTYP
+      integer               at
+      integer               b
+      integer               badat
+      integer               chnode
+      integer               code
+      integer               count
+      integer               datahd
+      integer               dirctv
+      integer               dpnode
+      integer               e
+      integer               free
+      integer               head
+      integer               i
+      integer               j
+      integer               lookat
+      integer               lstnb
+      integer               nameat
+      integer               ncomp
+      integer               node
+      integer               number
+      integer               nxttok
+      integer               r1
+      integer               r2
+      integer               status
+      integer               tail
+      integer               varlen
+      integer               vartyp
 
-      INTEGER               BEGS(LINLEN)
-      INTEGER               ENDS(LINLEN)
-      INTEGER               TYPE(LINLEN)
+      integer               begs(linlen)
+      integer               ends(linlen)
+      integer               type(linlen)
 
 
 !
 !     The logicals below are used to take apart the tokens in an
 !     input line.
 !
-      LOGICAL               EVEN
-      LOGICAL               INTOKN
-      LOGICAL               INQUOT
-      LOGICAL               INSEPF
+      logical               even
+      logical               intokn
+      logical               inquot
+      logical               insepf
 
-      LOGICAL               FULL
-      LOGICAL               FOUND
-      LOGICAL               FIRST
+      logical               full
+      logical               found
+      logical               first
 
 !
 !     The following logicals are in-line functions that are used
 !     when processing the input strings.
 !
-      LOGICAL               ISSEP
-      LOGICAL               ISQUOT
-      LOGICAL               ISEQU
-      LOGICAL               ISRPAR
-      LOGICAL               ISLPAR
-      LOGICAL               ISPLUS
-      LOGICAL               ISBAD
-      LOGICAL               ISTIME
+      logical               issep
+      logical               isquot
+      logical               isequ
+      logical               isrpar
+      logical               islpar
+      logical               isplus
+      logical               isbad
+      logical               istime
 !
 !     Save everything.
 !
-      SAVE
+      save
 
 
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 !
 !     Below are a collection of In-line function definitions that are
 !     intended to make the code a bit easier to write and read.
 !
 
-      ISSEP ( CODE ) =      CODE .EQ. IBLANK &
-                       .OR. CODE .EQ. ICOMMA &
-                       .OR. CODE .EQ. ILPARN &
-                       .OR. CODE .EQ. IRPARN &
-                       .OR. CODE .EQ. IEQUAL &
-                       .OR. CODE .EQ. ITAB
+      issep ( code ) =      code .eq. iblank &
+                       .or. code .eq. icomma &
+                       .or. code .eq. ilparn &
+                       .or. code .eq. irparn &
+                       .or. code .eq. iequal &
+                       .or. code .eq. itab
 
-      ISQUOT( CODE ) =      CODE .EQ. IQUOTE
-      ISEQU ( CODE ) =      CODE .EQ. IEQUAL
-      ISRPAR( CODE ) =      CODE .EQ. IRPARN
-      ISLPAR( CODE ) =      CODE .EQ. ILPARN
-      ISPLUS( CODE ) =      CODE .EQ. IPLUS
-      ISTIME( CODE ) =      CODE .EQ. ITMARK
+      isquot( code ) =      code .eq. iquote
+      isequ ( code ) =      code .eq. iequal
+      isrpar( code ) =      code .eq. irparn
+      islpar( code ) =      code .eq. ilparn
+      isplus( code ) =      code .eq. iplus
+      istime( code ) =      code .eq. itmark
 
 
-      ISBAD ( DIRCTV ) =       DIRCTV .NE. EQ &
-                         .AND. DIRCTV .NE. EQP
+      isbad ( dirctv ) =       dirctv .ne. eq &
+                         .and. dirctv .ne. eqp
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZRVAR' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZRVAR' )
+      end if
 !
 !     Initializations.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         ICOMMA =  ICHAR( ','   )
-         IBLANK =  ICHAR( ' '   )
-         IQUOTE =  ICHAR( ''''  )
-         ILPARN =  ICHAR( '('   )
-         IRPARN =  ICHAR( ')'   )
-         IEQUAL =  ICHAR( '='   )
-         IPLUS  =  ICHAR( '+'   )
-         ITMARK =  ICHAR( '@'   )
-         ITAB   =  9
+         first  = .false.
+         icomma =  ichar( ','   )
+         iblank =  ichar( ' '   )
+         iquote =  ichar( ''''  )
+         ilparn =  ichar( '('   )
+         irparn =  ichar( ')'   )
+         iequal =  ichar( '='   )
+         iplus  =  ichar( '+'   )
+         itmark =  ichar( '@'   )
+         itab   =  9
 
-      END IF
+      end if
 
 !
 !     No variable yet and no parsing errors so far.
 !
-      NAME  = ' '
-      ERROR = ' '
-      NCOMP = 0
+      name  = ' '
+      error = ' '
+      ncomp = 0
 
 
 !
@@ -459,16 +459,16 @@
 !     the whole variable, unless we get an error, in which case
 !     we can quit.
 !
-      STATUS = BEGIN
+      status = begin
 
-      DO WHILE ( ( STATUS .NE. DONE ) .AND. ( .NOT. FAILED() ) )
+      do while ( ( status .ne. done ) .and. ( .not. failed() ) )
 
-         CALL RDKDAT ( LINE, EOF )
+         call rdkdat ( line, eof )
 
-         IF ( EOF ) THEN
-            CALL CHKOUT ( 'ZZRVAR' )
-            RETURN
-         END IF
+         if ( eof ) then
+            call chkout ( 'ZZRVAR' )
+            return
+         end if
 
 
 !
@@ -491,23 +491,23 @@
 !        separator.
 !
 
-         EVEN   = .TRUE.
-         INTOKN = .FALSE.
-         INQUOT = .FALSE.
-         INSEPF = .TRUE.
+         even   = .true.
+         intokn = .false.
+         inquot = .false.
+         insepf = .true.
 
-         COUNT  =  0
-         I      =  0
+         count  =  0
+         i      =  0
 
-         DO WHILE ( I .LT. LEN(LINE) )
+         do while ( i .lt. len(line) )
 !
 !           The current character is either a separator, quote or
 !           some other character.
 !
-            I    = I + 1
-            CODE = ICHAR(LINE(I:I))
+            i    = i + 1
+            code = ichar(line(i:i))
 
-            IF ( ISSEP(CODE) ) THEN
+            if ( issep(code) ) then
 !
 !              There are 3 possible states we could be in
 !                 Separation Field
@@ -517,78 +517,78 @@
 !              In the first two cases nothing changes, but in the
 !              next two cases we transition to a separation field.
 !
-               IF ( INTOKN .OR. ( INQUOT .AND. EVEN ) ) THEN
-                  INQUOT = .FALSE.
-                  INTOKN = .FALSE.
-                  INSEPF = .TRUE.
-               END IF
+               if ( intokn .or. ( inquot .and. even ) ) then
+                  inquot = .false.
+                  intokn = .false.
+                  insepf = .true.
+               end if
 
-               IF ( INSEPF ) THEN
+               if ( insepf ) then
 !
 !                 We need to see if this is one of the special
 !                 separators
 !
-                  IF      ( ISEQU(CODE)  ) THEN
+                  if      ( isequ(code)  ) then
 
-                     COUNT       = COUNT + 1
-                     BEGS(COUNT) = I
-                     TYPE(COUNT) = EQ
-                     ENDS(COUNT) = I
+                     count       = count + 1
+                     begs(count) = i
+                     type(count) = eq
+                     ends(count) = i
 
-                     IF ( I .GT. 1 ) THEN
+                     if ( i .gt. 1 ) then
 !
 !                       Look back at the previous character.
 !                       See if it is a plus character.
 !
-                        CODE = ICHAR( LINE(I-1:I-1) )
+                        code = ichar( line(i-1:i-1) )
 
-                        IF ( ISPLUS(CODE) ) THEN
+                        if ( isplus(code) ) then
 !
 !                          This is the directive '+=' we need
 !                          to set the beginning of this token
 !                          to the one before this and adjust
 !                          the end of the last token.
 !
-                           TYPE(COUNT) = EQP
-                           BEGS(COUNT) = I-1
+                           type(count) = eqp
+                           begs(count) = i-1
 
-                           IF (      BEGS(COUNT-1) &
-                                .EQ. ENDS(COUNT-1) ) THEN
+                           if (      begs(count-1) &
+                                .eq. ends(count-1) ) then
 
-                              COUNT       = COUNT - 1
-                              BEGS(COUNT) = I - 1
-                              ENDS(COUNT) = I
-                              TYPE(COUNT) = EQP
+                              count       = count - 1
+                              begs(count) = i - 1
+                              ends(count) = i
+                              type(count) = eqp
 
-                           ELSE
+                           else
 
-                              ENDS(COUNT-1) = ENDS(COUNT-1) - 1
+                              ends(count-1) = ends(count-1) - 1
 
-                           END IF
+                           end if
 
-                        END IF
+                        end if
 
-                     END IF
+                     end if
 
-                  ELSE IF ( ISRPAR(CODE) ) THEN
+                  else if ( isrpar(code) ) then
 
-                     COUNT       = COUNT + 1
-                     BEGS(COUNT) = I
-                     ENDS(COUNT) = I
-                     TYPE(COUNT) = EV
+                     count       = count + 1
+                     begs(count) = i
+                     ends(count) = i
+                     type(count) = ev
 
-                  ELSE IF ( ISLPAR(CODE) ) THEN
+                  else if ( islpar(code) ) then
 
-                     COUNT       = COUNT + 1
-                     BEGS(COUNT) = I
-                     ENDS(COUNT) = I
-                     TYPE(COUNT) = BV
+                     count       = count + 1
+                     begs(count) = i
+                     ends(count) = i
+                     type(count) = bv
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            ELSE IF ( ISQUOT(CODE) ) THEN
+            else if ( isquot(code) ) then
 !
 !              There are 3 cases of interest.
 !                 We are in a quoted substring already
@@ -597,22 +597,22 @@
 !              In the first case nothing changes.  In the second
 !              two cases we change to being in a quoted substring.
 !
-               EVEN = .NOT. EVEN
+               even = .not. even
 
-               IF ( .NOT. INQUOT ) THEN
+               if ( .not. inquot ) then
 
-                  INSEPF      = .FALSE.
-                  INTOKN      = .FALSE.
-                  INQUOT      = .TRUE.
-                  COUNT       =  COUNT + 1
-                  BEGS(COUNT) =  I
-                  TYPE(COUNT) =  Q
+                  insepf      = .false.
+                  intokn      = .false.
+                  inquot      = .true.
+                  count       =  count + 1
+                  begs(count) =  i
+                  type(count) =  q
 
-               END IF
+               end if
 
-               ENDS(COUNT) = I
+               ends(count) = i
 
-            ELSE
+            else
 !
 !              This is some character other than a quote, or
 !              separator character.
@@ -630,66 +630,66 @@
 !              those cases.
 !
 
-               IF ( INSEPF .OR. ( INQUOT .AND. EVEN ) ) THEN
-                  INQUOT      = .FALSE.
-                  INSEPF      = .FALSE.
-                  INTOKN      = .TRUE.
-                  COUNT       =  COUNT + 1
-                  BEGS(COUNT) =  I
-                  TYPE(COUNT) =  NQ
-               END IF
+               if ( insepf .or. ( inquot .and. even ) ) then
+                  inquot      = .false.
+                  insepf      = .false.
+                  intokn      = .true.
+                  count       =  count + 1
+                  begs(count) =  i
+                  type(count) =  nq
+               end if
 
-               ENDS(COUNT) = I
+               ends(count) = i
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 
 !
 !        The first word on the first line should be the name of a
 !        variable. The second word should be a directive: = or +=.
 !
-         IF ( STATUS .EQ. BEGIN ) THEN
+         if ( status .eq. begin ) then
 !
 !           There must be at least 3 contributing tokens on this line.
 !
-            IF ( COUNT .LT. 3 ) THEN
+            if ( count .lt. 3 ) then
 
-               CALL RDKLIN ( FILE, NUMBER   )
-               CALL SETMSG ( 'A kernel variable was not properly ' &
+               call rdklin ( file, number   )
+               call setmsg ( 'A kernel variable was not properly ' &
                //            'formed on line # of the file #. ' &
                //            'Such an assignment should have the ' &
                //            'form: ''<variable name> [+]= ' &
                //            '<values>''. This line was ''#''. ' )
 
-               R1 = RTRIM(FILE)
-               R2 = RTRIM(LINE)
+               r1 = rtrim(file)
+               r2 = rtrim(line)
 
-               CALL ERRINT ( '#', NUMBER     )
-               CALL ERRCH  ( '#', FILE(1:R1) )
-               CALL ERRCH  ( '#', LINE(1:R2) )
-               CALL SIGERR ( 'SPICE(BADVARASSIGN)' )
-               CALL CHKOUT ( 'ZZRVAR' )
-               RETURN
+               call errint ( '#', number     )
+               call errch  ( '#', file(1:r1) )
+               call errch  ( '#', line(1:r2) )
+               call sigerr ( 'SPICE(BADVARASSIGN)' )
+               call chkout ( 'ZZRVAR' )
+               return
 
-            END IF
+            end if
 !
 !           See if the variable name is legitimate:
 !
-            BADAT = LASTPC(LINE(BEGS(1):ENDS(1)))
+            badat = lastpc(line(begs(1):ends(1)))
 
-            IF ( BADAT .LE. ENDS(1) - BEGS(1) ) THEN
+            if ( badat .le. ends(1) - begs(1) ) then
 !
 !              There is a non-printing character in the variable
 !              name.  This isn't allowed.
 !
-               AT = BEGS(1) + BADAT
+               at = begs(1) + badat
 
-               CALL RDKLIN ( FILE, NUMBER   )
-               R1 = RTRIM  ( FILE )
+               call rdklin ( file, number   )
+               r1 = rtrim  ( file )
 
-               CALL SETMSG ( 'There is a non-printing character ' &
+               call setmsg ( 'There is a non-printing character ' &
                //            'embedded in line # of the text ' &
                //            'kernel file #.  Non-printing ' &
                //            'characters are not allowed in ' &
@@ -698,55 +698,55 @@
                //            'code #. ' )
 
 
-               CALL ERRINT ( '#', NUMBER             )
-               CALL ERRCH  ( '#',        FILE(1 :R1) )
-               CALL ERRINT ( '#', ICHAR(LINE(AT:AT)) )
-               CALL SIGERR ( 'SPICE(NONPRINTINGCHAR)')
-               CALL CHKOUT ( 'ZZRVAR' )
-               RETURN
-            END IF
+               call errint ( '#', number             )
+               call errch  ( '#',        file(1 :r1) )
+               call errint ( '#', ichar(line(at:at)) )
+               call sigerr ( 'SPICE(NONPRINTINGCHAR)')
+               call chkout ( 'ZZRVAR' )
+               return
+            end if
 
 
 !
 !           Check the variable name length; signal an error
 !           if longer than MAXLEN.
 !
-            VARLEN = LEN( LINE( BEGS(1): ENDS(1) ) )
+            varlen = len( line( begs(1): ends(1) ) )
 
-            IF ( VARLEN .GT. MAXLEN ) THEN
+            if ( varlen .gt. maxlen ) then
 
-               CALL SETMSG ( 'A kernel pool variable name read from a ' &
+               call setmsg ( 'A kernel pool variable name read from a ' &
                //            'kernel file exceeds the maximum allowed ' &
                //            'length #1. The actual length of the ' &
                //            'variable name is #2, the offending ' &
                //            'variable name to #3 characters: ' &
                //            '''#4''.')
 
-               CALL ERRINT ( '#1', MAXLEN                   )
-               CALL ERRINT ( '#2', VARLEN                   )
-               CALL ERRINT ( '#3', LINLEN                   )
-               CALL ERRCH  ( '#4', LINE( BEGS(1): ENDS(1) ) )
-               CALL SIGERR ( 'SPICE(BADVARNAME)'            )
+               call errint ( '#1', maxlen                   )
+               call errint ( '#2', varlen                   )
+               call errint ( '#3', linlen                   )
+               call errch  ( '#4', line( begs(1): ends(1) ) )
+               call sigerr ( 'SPICE(BADVARNAME)'            )
 
-            END IF
+            end if
 
 !
 !           The variable name is ok. How about the directive.
 !
 
-            VARNAM = LINE(BEGS(1):ENDS(1))
+            varnam = line(begs(1):ends(1))
 
-            DIRCTV = TYPE(2)
+            dirctv = type(2)
 
 !
 !           If this is replacement (=) and not an addition (+=),
 !           delete the values currently associated with the variable.
 !           They will be replaced later.
 !
-            IF ( ISBAD(DIRCTV) ) THEN
+            if ( isbad(dirctv) ) then
 
-               CALL RDKLIN ( FILE, NUMBER   )
-               CALL SETMSG ( 'A kernel variable was not properly ' &
+               call rdklin ( file, number   )
+               call setmsg ( 'A kernel variable was not properly ' &
                //            'formed on line # of the file #. ' &
                //            'Such an assignment should have the ' &
                //            'form: ''<variable name> [+]= ' &
@@ -755,91 +755,91 @@
                //            'one of the expected forms: ''='' or ' &
                //            '''+=''. The line was ''#''. ' )
 
-               R1 = RTRIM(FILE)
-               R2 = RTRIM(LINE)
+               r1 = rtrim(file)
+               r2 = rtrim(line)
 
-               CALL ERRINT ( '#', NUMBER     )
-               CALL ERRCH  ( '#', FILE(1:R1) )
-               CALL ERRCH  ( '#', LINE(1:R2) )
-               CALL SIGERR ( 'SPICE(BADVARASSIGN)' )
-               CALL CHKOUT ( 'ZZRVAR' )
-               RETURN
+               call errint ( '#', number     )
+               call errch  ( '#', file(1:r1) )
+               call errch  ( '#', line(1:r2) )
+               call sigerr ( 'SPICE(BADVARASSIGN)' )
+               call chkout ( 'ZZRVAR' )
+               return
 
-            END IF
+            end if
 !
 !           Locate this variable name in the name pool or insert it
 !           if it isn't there.  The location will be NAMEAT and
 !           we will use the variable FOUND to indicate whether or
 !           not it was already present.
 !
-            LOOKAT =  ZZHASH ( VARNAM )
-            NODE   =  NAMLST ( LOOKAT )
-            FULL   =  LNKNFN ( NMPOOL ) .LE. 0
-            FOUND  = .FALSE.
+            lookat =  zzhash ( varnam )
+            node   =  namlst ( lookat )
+            full   =  lnknfn ( nmpool ) .le. 0
+            found  = .false.
 !
 !           See if this name (or one colliding with it in the
 !           hash scheme) has already been stored in the name list.
 !
-            IF ( NODE .GT. 0 ) THEN
+            if ( node .gt. 0 ) then
 
-               HEAD =  NODE
-               TAIL = -NMPOOL(PREV,HEAD)
+               head =  node
+               tail = -nmpool(prev,head)
 
-               DO WHILE ( NODE .GT. 0 .AND. .NOT. FOUND )
+               do while ( node .gt. 0 .and. .not. found )
 
-                  FOUND  =  NAMES (NODE) .EQ. VARNAM
-                  NAMEAT =  NODE
-                  NODE   =  NMPOOL(NEXT,NODE)
+                  found  =  names (node) .eq. varnam
+                  nameat =  node
+                  node   =  nmpool(next,node)
 
-               END DO
+               end do
 
-               IF (       .NOT. FOUND &
-                    .AND. .NOT. FULL   ) THEN
+               if (       .not. found &
+                    .and. .not. full   ) then
 !
 !                 We didn't find this name on the conflict resolution
 !                 list. Allocate a new slot for it.
 !
-                  CALL LNKAN  ( NMPOOL, NODE         )
-                  CALL LNKILA ( TAIL,   NODE, NMPOOL )
+                  call lnkan  ( nmpool, node         )
+                  call lnkila ( tail,   node, nmpool )
 
-                  NAMES(NODE) =  VARNAM
-                  NAMEAT      =  NODE
+                  names(node) =  varnam
+                  nameat      =  node
 
-               END IF
+               end if
 
-            ELSE IF ( .NOT. FULL ) THEN
+            else if ( .not. full ) then
 !
 !              Nothing like this variable name (in the hashing sense)
 !              has been loaded so far.  We need to allocate
 !              a name slot for this variable.
 !
-               CALL LNKAN ( NMPOOL, NODE )
+               call lnkan ( nmpool, node )
 
-               NAMLST(LOOKAT) =  NODE
-               NAMES (NODE  ) =  VARNAM
-               NAMEAT         =  NODE
+               namlst(lookat) =  node
+               names (node  ) =  varnam
+               nameat         =  node
 
-            END IF
+            end if
 !
 !           If the name pool was full and we didn't find this name
 !           we've got an error. Diagnose it and return.
 !
-            IF ( FULL .AND. .NOT. FOUND ) THEN
+            if ( full .and. .not. found ) then
 
-               CALL RDKLIN ( FILE, NUMBER )
-               R1 = RTRIM  ( FILE )
+               call rdklin ( file, number )
+               r1 = rtrim  ( file )
 
-               CALL SETMSG ( 'The kernel pool does not have room ' &
+               call setmsg ( 'The kernel pool does not have room ' &
                //            'for any more variables.  It filled ' &
                //            'up at line # of the kernel file #. ' )
 
-               CALL ERRINT ( '#', NUMBER             )
-               CALL ERRCH  ( '#', FILE(1:R1)         )
-               CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-               CALL CHKOUT ( 'ZZRVAR' )
-               RETURN
+               call errint ( '#', number             )
+               call errch  ( '#', file(1:r1)         )
+               call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+               call chkout ( 'ZZRVAR' )
+               return
 
-            END IF
+            end if
 
 
 !
@@ -847,67 +847,67 @@
 !           to remove data and allocate a new list or simply append
 !           data to the existing list.
 !
-            IF ( DIRCTV .EQ. EQ ) THEN
+            if ( dirctv .eq. eq ) then
 !
 !              We are going to dump whatever is associated with
 !              this name and then we will need to allocate a new
 !              linked list for the data.
 !
-               VARTYP =  UNKNWN
+               vartyp =  unknwn
 
-               IF ( FOUND ) THEN
+               if ( found ) then
 !
 !                 We need to free the data associated with this
 !                 variable.
 !
-                  DATAHD         = DATLST( NAMEAT )
-                  DATLST(NAMEAT) = 0
+                  datahd         = datlst( nameat )
+                  datlst(nameat) = 0
 
-                  IF ( DATAHD .LT. 0 ) THEN
+                  if ( datahd .lt. 0 ) then
 !
 !                    This variable was character type we need to
 !                    free a linked list from the character data
 !                    pool.
 !
-                     HEAD = - DATAHD
-                     TAIL = - CHPOOL(PREV,HEAD)
+                     head = - datahd
+                     tail = - chpool(prev,head)
 
-                     CALL LNKFSL ( HEAD, TAIL, CHPOOL )
+                     call lnkfsl ( head, tail, chpool )
 
-                  ELSE
+                  else
 !
 !                    This variable was numeric type. We need to
 !                    free a linked list from the numeric pool.
 !
-                     HEAD =   DATAHD
-                     TAIL = - DPPOOL(PREV,HEAD)
+                     head =   datahd
+                     tail = - dppool(prev,head)
 
-                     CALL LNKFSL ( HEAD, TAIL, DPPOOL )
+                     call lnkfsl ( head, tail, dppool )
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 
-            ELSE IF ( DIRCTV .EQ. EQP ) THEN
+            else if ( dirctv .eq. eqp ) then
 !
 !              We need to append to the current variable.
 !
-               IF ( FOUND ) THEN
+               if ( found ) then
 
-                  IF ( DATLST(NAMEAT) .GT. 0 ) THEN
-                     VARTYP = NUMTYP
-                  ELSE IF ( DATLST(NAMEAT) .LT. 0 ) THEN
-                     VARTYP = STRTYP
-                  ELSE
-                     VARTYP = UNKNWN
-                  END IF
+                  if ( datlst(nameat) .gt. 0 ) then
+                     vartyp = numtyp
+                  else if ( datlst(nameat) .lt. 0 ) then
+                     vartyp = strtyp
+                  else
+                     vartyp = unknwn
+                  end if
 
-               ELSE
-                  VARTYP = UNKNWN
-               END IF
+               else
+                  vartyp = unknwn
+               end if
 
-            END IF
+            end if
 
 
 
@@ -921,23 +921,23 @@
 !           terminate after one iteration.
 !
 
-            IF ( TYPE(3) .EQ. BV ) THEN
-               NXTTOK        = 4
-            ELSE
-               NXTTOK      = 3
-               COUNT       = COUNT + 1
-               TYPE(COUNT) = EV
-            END IF
+            if ( type(3) .eq. bv ) then
+               nxttok        = 4
+            else
+               nxttok      = 3
+               count       = count + 1
+               type(count) = ev
+            end if
 
 
 !
 !        For subsequent lines, treat everything as a new value.
 !
-         ELSE
+         else
 
-            NXTTOK = 1
+            nxttok = 1
 
-         END IF
+         end if
 
 !
 !        We have a value anyway. Store it in the table.
@@ -947,41 +947,41 @@
 !
 !        Dates begin with @; anything else is presumed to be a number.
 !
-         DO WHILE ( TYPE(NXTTOK) .NE. EV .AND. NXTTOK .LE. COUNT )
+         do while ( type(nxttok) .ne. ev .and. nxttok .le. count )
 !
 !           Get the begin and end of this token.
 !
-            B = BEGS(NXTTOK)
-            E = ENDS(NXTTOK)
+            b = begs(nxttok)
+            e = ends(nxttok)
 
-            IF ( VARTYP .EQ. UNKNWN ) THEN
+            if ( vartyp .eq. unknwn ) then
 !
 !              We need to determine which category of variable we
 !              have by looking at this token and deducing the
 !              type.
 !
-               IF      ( TYPE(NXTTOK) .EQ. Q  ) THEN
+               if      ( type(nxttok) .eq. q  ) then
 
-                  VARTYP = STRTYP
+                  vartyp = strtyp
 
-               ELSE IF ( TYPE(NXTTOK) .EQ. NQ ) THEN
+               else if ( type(nxttok) .eq. nq ) then
 
-                  VARTYP = NUMTYP
+                  vartyp = numtyp
 
-               ELSE
+               else
 !
 !                 This is an error. We should have had one of the
 !                 two previous types.
 !
 !                 First perform the clean up function.
 !
-                  CALL ZZCLN ( LOOKAT, NAMEAT, &
-                               NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+                  call zzcln ( lookat, nameat, &
+                               namlst, datlst, nmpool, chpool, dppool )
 
-                  CALL RDKLIN ( FILE, NUMBER )
-                  R1 = RTRIM  ( FILE         )
+                  call rdklin ( file, number )
+                  r1 = rtrim  ( file         )
 
-                  CALL SETMSG ( 'The first item following the ' &
+                  call setmsg ( 'The first item following the ' &
                   //            'assignment operator should be ' &
                   //            'the value of a variable or a ' &
                   //            'left parenthesis ''('' followed ' &
@@ -990,33 +990,33 @@
                   //            'text kernel file ''#''. ' )
 
 
-                  CALL ERRINT ( '#', NUMBER     )
-                  CALL ERRCH  ( '#', FILE(1:R1) )
-                  CALL SIGERR ( 'SPICE(BADVARASSIGN)' )
-                  CALL CHKOUT ( 'ZZRVAR' )
-                  RETURN
+                  call errint ( '#', number     )
+                  call errch  ( '#', file(1:r1) )
+                  call sigerr ( 'SPICE(BADVARASSIGN)' )
+                  call chkout ( 'ZZRVAR' )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-            IF ( VARTYP .EQ. STRTYP ) THEN
+            if ( vartyp .eq. strtyp ) then
 !
 !              First make sure that this token represents a string.
 !
-               IF ( TYPE(NXTTOK) .NE. Q ) THEN
+               if ( type(nxttok) .ne. q ) then
 !
 !                 First perform the clean up function.
 !
-                  CALL ZZCLN ( LOOKAT, NAMEAT, &
-                               NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+                  call zzcln ( lookat, nameat, &
+                               namlst, datlst, nmpool, chpool, dppool )
 
-                  CALL RDKLIN ( FILE,  NUMBER )
-                  R1 = RTRIM  ( VARNAM        )
-                  R2 = RTRIM  ( FILE          )
+                  call rdklin ( file,  number )
+                  r1 = rtrim  ( varnam        )
+                  r2 = rtrim  ( file          )
 
-                  CALL SETMSG ( 'The kernel variable # has ' &
+                  call setmsg ( 'The kernel variable # has ' &
                   //            'been set up as a string ' &
                   //            'variable.  However, the value ' &
                   //            'that you are attempting to ' &
@@ -1024,52 +1024,52 @@
                   //            '# of the kernel file ''#'' is ' &
                   //            'not a string value. ' )
 
-                  CALL ERRCH  ( '#', VARNAM(1:R1) )
-                  CALL ERRINT ( '#', NUMBER       )
-                  CALL ERRCH  ( '#', FILE  (1:R2) )
-                  CALL SIGERR ( 'SPICE(TYPEMISMATCH)' )
-                  CALL CHKOUT ( 'ZZRVAR' )
-                  RETURN
+                  call errch  ( '#', varnam(1:r1) )
+                  call errint ( '#', number       )
+                  call errch  ( '#', file  (1:r2) )
+                  call sigerr ( 'SPICE(TYPEMISMATCH)' )
+                  call chkout ( 'ZZRVAR' )
+                  return
 
-               END IF
+               end if
 !
 !              Still going? Make sure there is something between
 !              the quotes.
 !
-               IF ( B+1 .GE. E ) THEN
+               if ( b+1 .ge. e ) then
 !
 !                 First perform the clean up function.
 !
-                  CALL ZZCLN ( LOOKAT, NAMEAT, &
-                               NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+                  call zzcln ( lookat, nameat, &
+                               namlst, datlst, nmpool, chpool, dppool )
 
-                  CALL RDKLIN ( FILE,  NUMBER )
-                  R1 = RTRIM  ( FILE          )
+                  call rdklin ( file,  number )
+                  r1 = rtrim  ( file          )
 
-                  CALL SETMSG ( 'There is a quoted string with ' &
+                  call setmsg ( 'There is a quoted string with ' &
                   //            'no characters on line # of the ' &
                   //            'text kernel file ''#''. ' )
 
-                  CALL ERRINT ( '#', NUMBER       )
-                  CALL ERRCH  ( '#', FILE  (1:R1) )
-                  CALL SIGERR ( 'SPICE(TYPEMISMATCH)' )
-                  CALL CHKOUT ( 'ZZRVAR' )
-                  RETURN
+                  call errint ( '#', number       )
+                  call errch  ( '#', file  (1:r1) )
+                  call sigerr ( 'SPICE(TYPEMISMATCH)' )
+                  call chkout ( 'ZZRVAR' )
+                  return
 
-               END IF
+               end if
 
 !
 !              We are ready to go.  Allocate a node for this data
 !              item. First make sure there is room to do so.
 !
-               FREE = LNKNFN ( CHPOOL )
+               free = lnknfn ( chpool )
 
-               IF ( FREE .LE. 0 ) THEN
+               if ( free .le. 0 ) then
 
-                  CALL RDKLIN ( FILE,  NUMBER )
-                  R1 = RTRIM  ( FILE          )
+                  call rdklin ( file,  number )
+                  r1 = rtrim  ( file          )
 
-                  CALL SETMSG ( 'There is no room available for ' &
+                  call setmsg ( 'There is no room available for ' &
                   //            'adding another character value ' &
                   //            'to the kernel pool.  The ' &
                   //            'character values buffer became ' &
@@ -1077,43 +1077,43 @@
                   //            'kernel file ''#''. ' )
 
 
-                  CALL ERRINT ( '#', NUMBER       )
-                  CALL ERRCH  ( '#', FILE  (1:R1) )
-                  CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-                  CALL CHKOUT ( 'ZZRVAR' )
-                  RETURN
+                  call errint ( '#', number       )
+                  call errch  ( '#', file  (1:r1) )
+                  call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+                  call chkout ( 'ZZRVAR' )
+                  return
 
 
-               END IF
+               end if
 !
 !              Allocate a node for storing this string value:
 !
-               CALL LNKAN ( CHPOOL, CHNODE )
+               call lnkan ( chpool, chnode )
 
-               IF ( DATLST(NAMEAT) .EQ. 0 ) THEN
+               if ( datlst(nameat) .eq. 0 ) then
 !
 !                 There was no data for this name yet.  We make
 !                 CHNODE be the head of the data list for this name.
 !
-                  DATLST(NAMEAT) = -CHNODE
+                  datlst(nameat) = -chnode
 
-               ELSE
+               else
 !
 !                 Put this node after the tail of the current list.
 !
-                  HEAD = -DATLST(NAMEAT)
-                  TAIL = -CHPOOL(PREV, HEAD )
+                  head = -datlst(nameat)
+                  tail = -chpool(prev, head )
 
-                  CALL LNKILA ( TAIL, CHNODE, CHPOOL )
+                  call lnkila ( tail, chnode, chpool )
 
-               END IF
+               end if
 !
 !              Finally insert this data item in the data buffer
 !              at CHNODE.  Note any quotes will be doubled so we
 !              have to undo this affect when we store the data.
 !
-               CHVALS(CHNODE) = ' '
-               NCOMP          = NCOMP + 1
+               chvals(chnode) = ' '
+               ncomp          = ncomp + 1
 
 !
 !              Adjust end-of-token position (E) if it happens to the
@@ -1121,48 +1121,48 @@
 !              This has to be done to make sure that all meaningful
 !              characters get moved to the value.
 !
-               CODE = ICHAR(LINE(E:E))
-               IF ( .NOT. ISQUOT(CODE) ) THEN
-                  E = E + 1
-               END IF
+               code = ichar(line(e:e))
+               if ( .not. isquot(code) ) then
+                  e = e + 1
+               end if
 
-               I = 1
-               J = B+1
+               i = 1
+               j = b+1
 
-               DO WHILE ( J .LT. E )
-                  CODE = ICHAR(LINE(J:J))
+               do while ( j .lt. e )
+                  code = ichar(line(j:j))
 
-                  IF ( ISQUOT(CODE) ) THEN
-                     J = J+1
-                  END IF
+                  if ( isquot(code) ) then
+                     j = j+1
+                  end if
 
-                  IF ( I .LE. LEN(CHVALS(CHNODE)) ) THEN
-                     CHVALS(CHNODE)(I:I) = LINE(J:J)
-                     I = I + 1
-                     J = J + 1
-                  ELSE
-                     J = J + 1
-                  END IF
+                  if ( i .le. len(chvals(chnode)) ) then
+                     chvals(chnode)(i:i) = line(j:j)
+                     i = i + 1
+                     j = j + 1
+                  else
+                     j = j + 1
+                  end if
 
-               END DO
+               end do
 !
 !              That's all for this value. It's now time to loop
 !              back through and get the next value.
 !
-            ELSE
+            else
 
-               IF ( TYPE(NXTTOK) .NE. NQ ) THEN
+               if ( type(nxttok) .ne. nq ) then
 !
 !                 First perform the clean up function.
 !
-                  CALL ZZCLN ( LOOKAT, NAMEAT, &
-                               NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+                  call zzcln ( lookat, nameat, &
+                               namlst, datlst, nmpool, chpool, dppool )
 
-                  CALL RDKLIN ( FILE,  NUMBER )
-                  R1 = RTRIM  ( VARNAM        )
-                  R2 = RTRIM  ( FILE          )
+                  call rdklin ( file,  number )
+                  r1 = rtrim  ( varnam        )
+                  r2 = rtrim  ( file          )
 
-                  CALL SETMSG ( 'The kernel variable # has ' &
+                  call setmsg ( 'The kernel variable # has ' &
                   //            'been set up as a numeric or time ' &
                   //            'variable.  However, the value ' &
                   //            'that you are attempting to ' &
@@ -1170,36 +1170,36 @@
                   //            '# of the kernel file ''#'' is ' &
                   //            'not a numeric or time value. ' )
 
-                  CALL ERRCH  ( '#', VARNAM(1:R1) )
-                  CALL ERRINT ( '#', NUMBER       )
-                  CALL ERRCH  ( '#', FILE  (1:R2) )
-                  CALL SIGERR ( 'SPICE(TYPEMISMATCH)' )
-                  CALL CHKOUT ( 'ZZRVAR' )
-                  RETURN
+                  call errch  ( '#', varnam(1:r1) )
+                  call errint ( '#', number       )
+                  call errch  ( '#', file  (1:r2) )
+                  call sigerr ( 'SPICE(TYPEMISMATCH)' )
+                  call chkout ( 'ZZRVAR' )
+                  return
 
-               END IF
+               end if
 !
 !              Look at the first character to see if we have a time
 !              or a number.
 !
-               CODE = ICHAR( LINE(B:B) )
+               code = ichar( line(b:b) )
 
-               IF ( ISTIME(CODE) ) THEN
+               if ( istime(code) ) then
 !
 !                 We need to have more than a single character.
 !
-                  IF ( E .EQ. B ) THEN
+                  if ( e .eq. b ) then
 !
 !                    First perform the clean up function.
 !
-                     CALL ZZCLN (LOOKAT, NAMEAT, &
-                                 NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL)
+                     call zzcln (lookat, nameat, &
+                                 namlst, datlst, nmpool, chpool, dppool)
 
-                     CALL RDKLIN( FILE,   NUMBER )
-                     R1 = RTRIM ( VARNAM        )
-                     R2 = RTRIM ( FILE          )
+                     call rdklin( file,   number )
+                     r1 = rtrim ( varnam        )
+                     r2 = rtrim ( file          )
 
-                     CALL SETMSG ( 'At character # of  line # in ' &
+                     call setmsg ( 'At character # of  line # in ' &
                      //            'the text kernel file ''#'' the ' &
                      //            'character ''@'' appears.  This ' &
                      //            'character is reserved for ' &
@@ -1209,86 +1209,86 @@
                      //            'being used in this fashion for ' &
                      //            'the variable ''#''. ' )
 
-                     CALL ERRINT ( '#', B            )
-                     CALL ERRINT ( '#', NUMBER       )
-                     CALL ERRCH  ( '#', FILE  (1:R2) )
-                     CALL ERRCH  ( '#', VARNAM(1:R1) )
-                     CALL SIGERR ( 'SPICE(BADTIMESPEC)' )
-                     CALL CHKOUT ( 'ZZRVAR' )
-                     RETURN
+                     call errint ( '#', b            )
+                     call errint ( '#', number       )
+                     call errch  ( '#', file  (1:r2) )
+                     call errch  ( '#', varnam(1:r1) )
+                     call sigerr ( 'SPICE(BADTIMESPEC)' )
+                     call chkout ( 'ZZRVAR' )
+                     return
 
-                  END IF
+                  end if
 
 
-                  CALL TPARSE ( LINE(B+1:E), DVALUE, ERROR )
+                  call tparse ( line(b+1:e), dvalue, error )
 
-                  IF ( ERROR .NE. ' ' ) THEN
+                  if ( error .ne. ' ' ) then
 !
 !                    First perform the clean up function.
 !
-                     CALL ZZCLN (LOOKAT, NAMEAT, &
-                                 NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL)
+                     call zzcln (lookat, nameat, &
+                                 namlst, datlst, nmpool, chpool, dppool)
 
-                     CALL RDKLIN ( FILE, NUMBER )
-                     R1 = RTRIM  ( FILE )
+                     call rdklin ( file, number )
+                     r1 = rtrim  ( file )
 
-                     LSTNB = LASTNB(ERROR)
+                     lstnb = lastnb(error)
 
-                     CALL SETMSG ( 'Encountered ''#'' while ' &
+                     call setmsg ( 'Encountered ''#'' while ' &
                      //            'attempting to parse a time ' &
                      //            'on line # of the text kernel ' &
                      //            'file ''#''.  Error message: ' &
                      //            '''#''' )
 
-                     CALL ERRCH  ( '#', LINE(B+1:E)     )
-                     CALL ERRINT ( '#', NUMBER          )
-                     CALL ERRCH  ( '#', FILE            )
-                     CALL ERRCH  ( '#', ERROR(1:LSTNB)  )
-                     CALL SIGERR ( 'SPICE(BADTIMESPEC)' )
-                     CALL CHKOUT ( 'ZZRVAR'             )
-                     RETURN
-                  END IF
+                     call errch  ( '#', line(b+1:e)     )
+                     call errint ( '#', number          )
+                     call errch  ( '#', file            )
+                     call errch  ( '#', error(1:lstnb)  )
+                     call sigerr ( 'SPICE(BADTIMESPEC)' )
+                     call chkout ( 'ZZRVAR'             )
+                     return
+                  end if
 
-               ELSE
+               else
 
-                  CALL NPARSD ( LINE(B:E), DVALUE, ERROR, I )
+                  call nparsd ( line(b:e), dvalue, error, i )
 
-                  IF ( ERROR .NE. ' ' ) THEN
+                  if ( error .ne. ' ' ) then
 
-                     CALL ZZCLN (LOOKAT, NAMEAT, &
-                                 NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL)
+                     call zzcln (lookat, nameat, &
+                                 namlst, datlst, nmpool, chpool, dppool)
 
-                     CALL RDKLIN ( FILE, NUMBER )
+                     call rdklin ( file, number )
 
-                     LSTNB = LASTNB(ERROR)
+                     lstnb = lastnb(error)
 
-                     CALL SETMSG ( 'Encountered ''#'' while ' &
+                     call setmsg ( 'Encountered ''#'' while ' &
                      //            'attempting to parse a number on ' &
                      //            'line # of the text kernel file ' &
                      //            '''#''.  Error message: ' &
                      //            '''#''' )
-                     CALL ERRCH  ( '#',  LINE(B:E) )
-                     CALL ERRINT ( '#',  NUMBER    )
-                     CALL ERRCH  ( '#',  FILE      )
-                     CALL ERRCH  ( '#', ERROR(1:LSTNB) )
-                     CALL SIGERR ( 'SPICE(NUMBEREXPECTED)' )
-                     CALL CHKOUT ( 'ZZRVAR' )
-                     RETURN
-                  END IF
+                     call errch  ( '#',  line(b:e) )
+                     call errint ( '#',  number    )
+                     call errch  ( '#',  file      )
+                     call errch  ( '#', error(1:lstnb) )
+                     call sigerr ( 'SPICE(NUMBEREXPECTED)' )
+                     call chkout ( 'ZZRVAR' )
+                     return
+                  end if
 
-               END IF
+               end if
 !
 !              OK. We have a parsed value.  See if there is room in
 !              the numeric portion of the pool to store this value.
 !
-               FREE = LNKNFN ( DPPOOL )
+               free = lnknfn ( dppool )
 
-               IF ( FREE .LE. 0 ) THEN
+               if ( free .le. 0 ) then
 
-                  CALL RDKLIN ( FILE,  NUMBER )
-                  R1 = RTRIM  ( FILE          )
+                  call rdklin ( file,  number )
+                  r1 = rtrim  ( file          )
 
-                  CALL SETMSG ( 'There is no room available for ' &
+                  call setmsg ( 'There is no room available for ' &
                   //            'adding another numeric value ' &
                   //            'to the kernel pool.  The ' &
                   //            'numeric values buffer became ' &
@@ -1296,51 +1296,51 @@
                   //            'kernel file ''#''. ' )
 
 
-                  CALL ERRINT ( '#', NUMBER       )
-                  CALL ERRCH  ( '#', FILE  (1:R1) )
-                  CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-                  CALL CHKOUT ( 'ZZRVAR' )
-                  RETURN
+                  call errint ( '#', number       )
+                  call errch  ( '#', file  (1:r1) )
+                  call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+                  call chkout ( 'ZZRVAR' )
+                  return
 
 
-               END IF
+               end if
 
 !
 !              Allocate a node for storing this numeric value:
 !
-               CALL LNKAN ( DPPOOL, DPNODE )
+               call lnkan ( dppool, dpnode )
 
-               IF ( DATLST(NAMEAT) .EQ. 0 ) THEN
+               if ( datlst(nameat) .eq. 0 ) then
 !
 !                 There was no data for this name yet.  We make
 !                 DPNODE be the head of the data list for this name.
 !
-                  DATLST(NAMEAT) =  DPNODE
+                  datlst(nameat) =  dpnode
 
-               ELSE
+               else
 !
 !                 Put this node after the tail of the current list.
 !
-                  HEAD =  DATLST(NAMEAT)
-                  TAIL = -DPPOOL(PREV, HEAD )
+                  head =  datlst(nameat)
+                  tail = -dppool(prev, head )
 
-                  CALL LNKILA ( TAIL, DPNODE, DPPOOL )
+                  call lnkila ( tail, dpnode, dppool )
 
-               END IF
+               end if
 !
 !              Finally insert this data item into the numeric buffer.
 !
-               DPVALS(DPNODE) = DVALUE
-               NCOMP          = NCOMP + 1
+               dpvals(dpnode) = dvalue
+               ncomp          = ncomp + 1
 
-            END IF
+            end if
 
 !
 !           Now process the next token in the list of tokens.
 !
-            NXTTOK = NXTTOK + 1
+            nxttok = nxttok + 1
 
-         END DO
+         end do
 !
 !        We could have ended the above loop in one of two ways.
 !
@@ -1348,28 +1348,28 @@
 !           an end of vector marker.
 !        2) We hit an end of vector marker.
 !
-         IF ( NXTTOK .GT. COUNT ) THEN
-            STATUS = INVAR
-         ELSE
-            STATUS = DONE
-         END IF
+         if ( nxttok .gt. count ) then
+            status = invar
+         else
+            status = done
+         end if
 
-      END DO
+      end do
 
 !
 !     It is possible that we reached this point without actually
 !     assigning a value to the kernel pool variable.  This can
 !     happen if there is a vector input of the form NAME = ( )
 !
-      IF ( NCOMP .LT. 1 ) THEN
+      if ( ncomp .lt. 1 ) then
 
-         CALL ZZCLN ( LOOKAT, NAMEAT, &
-                      NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+         call zzcln ( lookat, nameat, &
+                      namlst, datlst, nmpool, chpool, dppool )
 
-         CALL RDKLIN ( FILE,  NUMBER )
-         R1 = RTRIM  ( FILE          )
+         call rdklin ( file,  number )
+         r1 = rtrim  ( file          )
 
-         CALL SETMSG ( 'The first item following the ' &
+         call setmsg ( 'The first item following the ' &
          //            'assignment operator should be ' &
          //            'the value of a variable or a ' &
          //            'left parenthesis ''('' followed ' &
@@ -1377,21 +1377,21 @@
          //            'is not true on line # of the ' &
          //            'text kernel file ''#''. ' )
 
-         CALL ERRINT ( '#', NUMBER       )
-         CALL ERRCH  ( '#', FILE  (1:R1) )
-         CALL SIGERR ( 'SPICE(BADVARASSIGN)' )
-         CALL CHKOUT ( 'ZZRVAR' )
-         RETURN
+         call errint ( '#', number       )
+         call errch  ( '#', file  (1:r1) )
+         call sigerr ( 'SPICE(BADVARASSIGN)' )
+         call chkout ( 'ZZRVAR' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Return the name of the variable.
 !
-      NAME = VARNAM
+      name = varnam
 
 
-      CALL CHKOUT ( 'ZZRVAR' )
-      RETURN
-      END
+      call chkout ( 'ZZRVAR' )
+      return
+      end

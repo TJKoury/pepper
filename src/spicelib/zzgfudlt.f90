@@ -1,6 +1,6 @@
 !$Procedure ZZGFUDLT ( Private --- GF, scalar function < ref value )
 
-      SUBROUTINE ZZGFUDLT ( UDFUNC, ET, ISLESS )
+      subroutine zzgfudlt ( udfunc, et, isless )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzholdd.inc'
+      include               'zzholdd.inc'
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
-      DOUBLE PRECISION      ET
-      LOGICAL               ISLESS
+      double precision      et
+      logical               isless
 
 ! $ Brief_I/O
 !
@@ -131,67 +131,67 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      UDVAL
-      DOUBLE PRECISION      REFVAL
+      double precision      udval
+      double precision      refval
 
-      LOGICAL               OK
+      logical               ok
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFUDLT' )
+      call chkin ( 'ZZGFUDLT' )
 
 !
 !     Default value of false for ISLESS.
 !
-      ISLESS = .FALSE.
+      isless = .false.
 
 !
 !     Call the routine, return the scalar value corresponding to ET.
 !
-      CALL UDFUNC ( ET, UDVAL )
+      call udfunc ( et, udval )
 
 !
 !     Check for an error, return if found.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFUDLT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFUDLT' )
+         return
+      end if
 
 !
 !     Retrieve the stored reference value. Signal an error if a
 !     get call fails.
 !
-      CALL ZZHOLDD ( ZZGET, GF_REF, OK, REFVAL )
+      call zzholdd ( zzget, gf_ref, ok, refval )
 
-      IF ( .NOT. OK ) THEN
-         CALL SETMSG ( 'ZZHOLDD GET failed. This indicates a logic ' &
+      if ( .not. ok ) then
+         call setmsg ( 'ZZHOLDD GET failed. This indicates a logic ' &
                  //    'error in the GF code due either to a failure ' &
                  //    'to store the GF reference value or a post ' &
                  //    'store reset of ZZHOLDD.' )
-         CALL SIGERR ( 'SPICE(ZZHOLDDGETFAILED)' )
-         CALL CHKOUT ( 'ZZGFUDLT'                )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(ZZHOLDDGETFAILED)' )
+         call chkout ( 'ZZGFUDLT'                )
+         return
+      end if
 
-      ISLESS = UDVAL .LT. REFVAL
+      isless = udval .lt. refval
 
-      CALL CHKOUT ( 'ZZGFUDLT' )
-      RETURN
+      call chkout ( 'ZZGFUDLT' )
+      return
 
-      END
+      end
 
 
 

@@ -1,6 +1,6 @@
 !$Procedure EVEN  ( Is an integer even? )
 
-      LOGICAL FUNCTION EVEN ( IVAL )
+      logical function even ( ival )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          IVAL
+      integer          ival
 
 ! $ Brief_I/O
 !
@@ -122,7 +122,7 @@
 !
 !     Self-explanatory.
 !
-      EVEN = ( MOD (IVAL,2) .EQ. 0 )
+      even = ( mod (ival,2) .eq. 0 )
 
-      RETURN
-      END
+      return
+      end

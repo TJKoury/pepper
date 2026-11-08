@@ -1,9 +1,9 @@
 !$Procedure POOL ( Maintain a pool of kernel variables )
 
-      SUBROUTINE POOL ( FNAME,  UNIT,   NAME,   NAMES,  NNAMES, &
-                        AGENT,  N,      VALUES, FOUND,  UPDATE, &
-                        START,  ROOM,   CVALS,  IVALS,  TYPE, &
-                        UWVARS, UWPTRS, UWPOOL, UWAGNT, USRCTR )
+      subroutine pool ( fname,  unit,   name,   names,  nnames, &
+                        agent,  n,      values, found,  update, &
+                        start,  room,   cvals,  ivals,  type, &
+                        uwvars, uwptrs, uwpool, uwagnt, usrctr )
 
 ! $ Abstract
 !
@@ -20,58 +20,58 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzctr.inc'
+      include              'zzctr.inc'
 
-      INTEGER               MAXVAR
-      PARAMETER           ( MAXVAR =  26003 )
+      integer               maxvar
+      parameter           ( maxvar =  26003 )
 
-      INTEGER               MAXVAL
-      PARAMETER           ( MAXVAL = 400000 )
+      integer               maxval
+      parameter           ( maxval = 400000 )
 
-      INTEGER               MAXLIN
-      PARAMETER           ( MAXLIN =  15000 )
+      integer               maxlin
+      parameter           ( maxlin =  15000 )
 
-      INTEGER               MAXCHR
-      PARAMETER           ( MAXCHR =     80 )
+      integer               maxchr
+      parameter           ( maxchr =     80 )
 
-      INTEGER               MAXLEN
-      PARAMETER           ( MAXLEN =     32 )
+      integer               maxlen
+      parameter           ( maxlen =     32 )
 
-      INTEGER               MAXAGT
-      PARAMETER           ( MAXAGT =   1000 )
+      integer               maxagt
+      parameter           ( maxagt =   1000 )
 
-      INTEGER               MXNOTE
-      PARAMETER           ( MXNOTE =  MAXVAR * 5 )
+      integer               mxnote
+      parameter           ( mxnote =  maxvar * 5 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
 
-      CHARACTER*(*)         FNAME
-      INTEGER               UNIT
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         NAMES     ( * )
-      INTEGER               NNAMES
-      CHARACTER*(*)         AGENT
-      INTEGER               N
-      DOUBLE PRECISION      VALUES    ( * )
-      LOGICAL               FOUND
-      LOGICAL               UPDATE
-      INTEGER               START
-      INTEGER               ROOM
-      CHARACTER*(*)         CVALS     ( * )
-      INTEGER               IVALS     ( * )
-      CHARACTER*(*)         TYPE
-      CHARACTER*(*)         UWVARS    ( LBCELL : * )
-      INTEGER               UWPTRS    ( * )
-      INTEGER               UWPOOL    ( 2, LBCELL : * )
-      CHARACTER*(*)         UWAGNT    ( * )
-      INTEGER               USRCTR    ( CTRSIZ )
+      character*(*)         fname
+      integer               unit
+      character*(*)         name
+      character*(*)         names     ( * )
+      integer               nnames
+      character*(*)         agent
+      integer               n
+      double precision      values    ( * )
+      logical               found
+      logical               update
+      integer               start
+      integer               room
+      character*(*)         cvals     ( * )
+      integer               ivals     ( * )
+      character*(*)         type
+      character*(*)         uwvars    ( lbcell : * )
+      integer               uwptrs    ( * )
+      integer               uwpool    ( 2, lbcell : * )
+      character*(*)         uwagnt    ( * )
+      integer               usrctr    ( ctrsiz )
 
 ! $ Brief_I/O
 !
@@ -679,47 +679,47 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               INTMAX
-      INTEGER               INTMIN
-      INTEGER               LNKNFN
-      INTEGER               LNKNXT
-      INTEGER               LNKTL
-      INTEGER               LSTLTC
-      INTEGER               RTRIM
-      INTEGER               SIZEC
-      INTEGER               LASTNB
+      integer               bsrchc
+      integer               cardc
+      integer               intmax
+      integer               intmin
+      integer               lnknfn
+      integer               lnknxt
+      integer               lnktl
+      integer               lstltc
+      integer               rtrim
+      integer               sizec
+      integer               lastnb
 
 
-      LOGICAL               ELEMC
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               MATCHI
-      LOGICAL               RETURN
+      logical               elemc
+      logical               eqstr
+      logical               failed
+      logical               matchi
+      logical               return
 
 !
 !     Private SPICELIB functions
 !
-      INTEGER               ZZHASH
+      integer               zzhash
 
 !
 !     Local Parameters
 !
-      CHARACTER*(1)         QUOTE
-      PARAMETER           ( QUOTE = '''' )
+      character*(1)         quote
+      parameter           ( quote = '''' )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 132 )
+      integer               lnsize
+      parameter           ( lnsize = 132 )
 
 !
 !     The next two variables are for use in traversing linked lists.
 !
-      INTEGER               PREV
-      PARAMETER           ( PREV = 2 )
+      integer               prev
+      parameter           ( prev = 2 )
 
-      INTEGER               NEXT
-      PARAMETER           ( NEXT = 1 )
+      integer               next
+      parameter           ( next = 1 )
 
 
 
@@ -734,13 +734,13 @@
 !     This is the reason for the following block of declarations.
 !     Admittedly this is bizarre, but it works.
 !
-      INTEGER               MRKLEN
-      PARAMETER           ( MRKLEN = 10 )
+      integer               mrklen
+      parameter           ( mrklen = 10 )
 
 
 
-      CHARACTER*(MRKLEN)    BEGDAT
-      CHARACTER*(MRKLEN)    BEGTXT
+      character*(mrklen)    begdat
+      character*(mrklen)    begtxt
 
 
 !
@@ -875,15 +875,15 @@
 !     +------------+         +------------+
 !
 !
-      CHARACTER*(MAXLEN)    PNAMES   (           MAXVAR )
-      INTEGER               NAMLST   (           MAXVAR )
-      INTEGER               NMPOOL   ( 2, LBPOOL:MAXVAR )
-      INTEGER               DATLST   (           MAXVAR )
+      character*(maxlen)    pnames   (           maxvar )
+      integer               namlst   (           maxvar )
+      integer               nmpool   ( 2, lbpool:maxvar )
+      integer               datlst   (           maxvar )
 
-      INTEGER               CHPOOL   ( 2, LBPOOL:MAXLIN )
-      INTEGER               DPPOOL   ( 2, LBPOOL:MAXVAL )
-      CHARACTER*(MAXCHR)    CHVALS   (           MAXLIN )
-      DOUBLE PRECISION      DPVALS   (           MAXVAL )
+      integer               chpool   ( 2, lbpool:maxlin )
+      integer               dppool   ( 2, lbpool:maxval )
+      character*(maxchr)    chvals   (           maxlin )
+      double precision      dpvals   (           maxval )
 
 !
 !     The WT... variables make up the data structure that
@@ -908,10 +908,10 @@
 !     +--------+   +--------+   +---------+   +---------+
 !
 !
-      CHARACTER*(MAXLEN)    WTVARS   (    LBCELL : MAXVAR )
-      INTEGER               WTPOOL   ( 2, LBPOOL : MXNOTE )
-      CHARACTER*(MAXLEN)    WTAGNT   ( MXNOTE )
-      INTEGER               WTPTRS   ( MAXVAR )
+      character*(maxlen)    wtvars   (    lbcell : maxvar )
+      integer               wtpool   ( 2, lbpool : mxnote )
+      character*(maxlen)    wtagnt   ( mxnote )
+      integer               wtptrs   ( maxvar )
 
 !
 !     Agents contains the list of agents that need to be notified
@@ -922,113 +922,113 @@
 !     they must be able to hold the largest possible number
 !     of agents that could be associated with a kernel variable.
 !
-      CHARACTER*(MAXLEN)    ACTIVE   ( LBCELL:MXNOTE )
-      CHARACTER*(MAXLEN)    AGENTS   ( LBCELL:MXNOTE )
-      CHARACTER*(MAXLEN)    NOTIFY   ( LBCELL:MXNOTE )
+      character*(maxlen)    active   ( lbcell:mxnote )
+      character*(maxlen)    agents   ( lbcell:mxnote )
+      character*(maxlen)    notify   ( lbcell:mxnote )
 
 !
 !     First is our initialization flag.
 !
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     POOL state counter.
 !
-      INTEGER               SUBCTR ( CTRSIZ )
+      integer               subctr ( ctrsiz )
 
 !
 !     The remaining local variables...
 !
-      CHARACTER*(2)         FINISH
-      CHARACTER*(LNSIZE)    CVALUE
-      CHARACTER*(LNSIZE)    LINE
-      CHARACTER*(MAXLEN)    VARNAM
+      character*(2)         finish
+      character*(lnsize)    cvalue
+      character*(lnsize)    line
+      character*(maxlen)    varnam
 
-      DOUBLE PRECISION      BIG
-      DOUBLE PRECISION      DVALUE
-      DOUBLE PRECISION      SMALL
+      double precision      big
+      double precision      dvalue
+      double precision      small
 
-      INTEGER               AGNODE
-      INTEGER               AVAIL
-      INTEGER               BEGIN
-      INTEGER               CHNODE
-      INTEGER               CODE
-      INTEGER               DATAHD
-      INTEGER               DNODE
-      INTEGER               DPNODE
-      INTEGER               FREE
-      INTEGER               HEAD
-      INTEGER               HITS
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               IQUOTE
-      INTEGER               J
-      INTEGER               K
-      INTEGER               LINNUM
-      INTEGER               LOOKAT
-      INTEGER               MARGIN
-      INTEGER               NAMEAT
-      INTEGER               NEED
-      INTEGER               NFETCH
-      INTEGER               NNODE
-      INTEGER               NNODES
-      INTEGER               NODE
-      INTEGER               NPTRS
-      INTEGER               NVARS
-      INTEGER               NW
-      INTEGER               R
-      INTEGER               SPACE
-      INTEGER               TAIL
-      INTEGER               TOFREE
-      INTEGER               VARLEN
+      integer               agnode
+      integer               avail
+      integer               begin
+      integer               chnode
+      integer               code
+      integer               datahd
+      integer               dnode
+      integer               dpnode
+      integer               free
+      integer               head
+      integer               hits
+      integer               i
+      integer               iostat
+      integer               iquote
+      integer               j
+      integer               k
+      integer               linnum
+      integer               lookat
+      integer               margin
+      integer               nameat
+      integer               need
+      integer               nfetch
+      integer               nnode
+      integer               nnodes
+      integer               node
+      integer               nptrs
+      integer               nvars
+      integer               nw
+      integer               r
+      integer               space
+      integer               tail
+      integer               tofree
+      integer               varlen
 
-      LOGICAL               CHR
-      LOGICAL               DP
-      LOGICAL               EOF
-      LOGICAL               GOTIT
-      LOGICAL               ISQUOT
-      LOGICAL               NOAGNT
-      LOGICAL               SUCCES
-      LOGICAL               VECTOR
+      logical               chr
+      logical               dp
+      logical               eof
+      logical               gotit
+      logical               isquot
+      logical               noagnt
+      logical               succes
+      logical               vector
 
 !
 !     Save EVERYTHING.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Set up the definition of our in-line functions.
 !
-      ISQUOT(CODE) = CODE .EQ. IQUOTE
+      isquot(code) = code .eq. iquote
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'POOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'POOL' )
+      end if
 
 !
 !     This routine should never be called. If this routine is called,
 !     an error is signaled.
 !
-      CALL SETMSG ( 'POOL: You have called an entry which performs '  // &
+      call setmsg ( 'POOL: You have called an entry which performs '  // &
                     'performs no run-time function. This may '        // &
                     'indicate a bug. Please check the documentation ' // &
                     'for the subroutine POOL.' )
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'POOL' )
-      RETURN
+      call chkout ( 'POOL' )
+      return
 
 
 
@@ -1036,7 +1036,7 @@
 
 !$Procedure CLPOOL ( Clear the pool of kernel variables )
 
-      ENTRY CLPOOL
+      entry clpool
 
 ! $ Abstract
 !
@@ -1352,61 +1352,61 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CLPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'CLPOOL' )
+      end if
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Wipe out all of the PNAMES data.
 !
-      DO I = 1, MAXVAR
-         NAMLST(I) = 0
-         DATLST(I) = 0
-         PNAMES(I) = ' '
-      END DO
+      do i = 1, maxvar
+         namlst(i) = 0
+         datlst(i) = 0
+         pnames(i) = ' '
+      end do
 !
 !     Free up all of the space in all of the linked list pools, except
 !     for the watcher pool.
 !
-      CALL LNKINI ( MAXVAR, NMPOOL )
-      CALL LNKINI ( MAXVAL, DPPOOL )
-      CALL LNKINI ( MAXLIN, CHPOOL )
+      call lnkini ( maxvar, nmpool )
+      call lnkini ( maxval, dppool )
+      call lnkini ( maxlin, chpool )
 
-      DO I = 1, CARDC ( WTVARS )
+      do i = 1, cardc ( wtvars )
 !
 !        Union the update set AGENTS with the set of agents
 !        associated with the Ith watched variable.
 !
-         CALL ZZNWPOOL ( WTVARS(I), WTVARS, WTPTRS, WTPOOL, &
-                         WTAGNT,    ACTIVE, NOTIFY, AGENTS )
-      END DO
+         call zznwpool ( wtvars(i), wtvars, wtptrs, wtpool, &
+                         wtagnt,    active, notify, agents )
+      end do
 
-      CALL CHKOUT ( 'CLPOOL' )
-      RETURN
+      call chkout ( 'CLPOOL' )
+      return
 
 
 
@@ -1414,7 +1414,7 @@
 
 !$Procedure LDPOOL ( Load variables from a kernel file into the pool )
 
-      ENTRY LDPOOL ( FNAME )
+      entry ldpool ( fname )
 
 ! $ Abstract
 !
@@ -1808,75 +1808,75 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LDPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'LDPOOL' )
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Open the kernel file and read the first variable.
 !
-      CALL RDKNEW ( FNAME )
-      CALL ZZRVAR ( NAMLST, &
-                    NMPOOL, PNAMES, DATLST, &
-                    DPPOOL, DPVALS, &
-                    CHPOOL, CHVALS, &
-                    VARNAM, EOF )
+      call rdknew ( fname )
+      call zzrvar ( namlst, &
+                    nmpool, pnames, datlst, &
+                    dppool, dpvals, &
+                    chpool, chvals, &
+                    varnam, eof )
 
 !
 !     Read the variables in the file, one at a time.
 !
-      DO WHILE (  ( .NOT. EOF ) .AND. (.NOT. FAILED() )   )
+      do while (  ( .not. eof ) .and. (.not. failed() )   )
 
-         IF ( VARNAM .NE. ' ' ) THEN
+         if ( varnam .ne. ' ' ) then
 !
 !           See if this variable is being watched; if it is, add its
 !           associated agents to the list of AGENTS to be notified of a
 !           watched variable update.
 !
-            IF (  ELEMC( VARNAM, WTVARS )  ) THEN
+            if (  elemc( varnam, wtvars )  ) then
 !
 !              Union the update set AGENTS with the set of agents
 !              associated with the variable NAME.
 !
-               CALL ZZNWPOOL ( VARNAM, WTVARS, WTPTRS, WTPOOL, &
-                               WTAGNT, ACTIVE, NOTIFY, AGENTS )
+               call zznwpool ( varnam, wtvars, wtptrs, wtpool, &
+                               wtagnt, active, notify, agents )
 
-            END IF
-
-
-         END IF
+            end if
 
 
-         CALL ZZRVAR ( NAMLST, &
-                       NMPOOL, PNAMES, DATLST, &
-                       DPPOOL, DPVALS, &
-                       CHPOOL, CHVALS, &
-                       VARNAM, EOF )
+         end if
 
-      END DO
+
+         call zzrvar ( namlst, &
+                       nmpool, pnames, datlst, &
+                       dppool, dpvals, &
+                       chpool, chvals, &
+                       varnam, eof )
+
+      end do
 !
 !     We need to make sure that the kernel file gets closed.  Normally
 !     the calling tree of ZZRVAR take care of this, but if a parsing
@@ -1885,16 +1885,16 @@
 !     of the problem.  If the file has been closed already, this
 !     doesn't hurt anything.
 !
-      CALL CLTEXT (  FNAME  )
-      CALL CHKOUT ( 'LDPOOL' )
-      RETURN
+      call cltext (  fname  )
+      call chkout ( 'LDPOOL' )
+      return
 
 
 
 
 !$Procedure RTPOOL ( Return the value of a pooled kernel variable )
 
-      ENTRY RTPOOL ( NAME, N, VALUES, FOUND )
+      entry rtpool ( name, n, values, found )
 
 ! $ Abstract
 !
@@ -2110,69 +2110,69 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RTPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'RTPOOL' )
+      end if
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'RTPOOL' )
-         RETURN
+         found = .false.
+         call chkout ( 'RTPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NODE   = NAMLST( LOOKAT      )
-      SUCCES = NAME .EQ. PNAMES(NODE)
+      node   = namlst( lookat      )
+      succes = name .eq. pnames(node)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NODE = NMPOOL ( NEXT, NODE )
+         node = nmpool ( next, node )
 
-         IF ( NODE .LT. 0 ) THEN
+         if ( node .lt. 0 ) then
 
-            FOUND = .FALSE.
-            CALL CHKOUT ( 'RTPOOL' )
-            RETURN
+            found = .false.
+            call chkout ( 'RTPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NODE)
+         succes = name .eq. pnames(node)
 
-      END DO
+      end do
 !
 !     If you get to this point, the variable NAME is present in the
 !     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
@@ -2183,33 +2183,33 @@
 !     is positive.  We use negative values to point to character
 !     values.
 !
-      IF ( DATLST(NODE) .LE. 0 ) THEN
+      if ( datlst(node) .le. 0 ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
-      ELSE
+      else
 
-         FOUND = .TRUE.
-         N     =  0
-         NODE  =  DATLST(NODE)
+         found = .true.
+         n     =  0
+         node  =  datlst(node)
 
-         DO WHILE ( NODE .GT. 0 )
-            N         = N + 1
-            VALUES(N) = DPVALS(     NODE)
-            NODE      = DPPOOL(NEXT,NODE)
-         END DO
+         do while ( node .gt. 0 )
+            n         = n + 1
+            values(n) = dpvals(     node)
+            node      = dppool(next,node)
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'RTPOOL' )
-      RETURN
+      call chkout ( 'RTPOOL' )
+      return
 
 
 
 
 !$Procedure EXPOOL ( Confirm the existence of a pooled kernel variable )
 
-      ENTRY EXPOOL ( NAME, FOUND )
+      entry expool ( name, found )
 
 ! $ Abstract
 !
@@ -2526,69 +2526,69 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EXPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'EXPOOL' )
+      end if
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'EXPOOL' )
-         RETURN
+         found = .false.
+         call chkout ( 'EXPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NODE   = NAMLST ( LOOKAT      )
-      SUCCES = NAME .EQ. PNAMES(NODE)
+      node   = namlst ( lookat      )
+      succes = name .eq. pnames(node)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NODE = NMPOOL ( NEXT, NODE )
+         node = nmpool ( next, node )
 
-         IF ( NODE .LT. 0 ) THEN
+         if ( node .lt. 0 ) then
 
-            FOUND = .FALSE.
-            CALL CHKOUT ( 'EXPOOL' )
-            RETURN
+            found = .false.
+            call chkout ( 'EXPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NODE)
+         succes = name .eq. pnames(node)
 
-      END DO
+      end do
 !
 !     If you get to this point, the variable NAME is present in the
 !     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
@@ -2597,10 +2597,10 @@
 !     However, recall that EXPOOL indicates the existence only of
 !     d.p. values.
 !
-      FOUND = DATLST(NODE) .GT. 0
+      found = datlst(node) .gt. 0
 
-      CALL CHKOUT ( 'EXPOOL' )
-      RETURN
+      call chkout ( 'EXPOOL' )
+      return
 
 
 
@@ -2608,7 +2608,7 @@
 
 !$Procedure WRPOOL ( Write the variables in pool to a specified unit )
 
-      ENTRY WRPOOL ( UNIT )
+      entry wrpool ( unit )
 
 ! $ Abstract
 !
@@ -2904,191 +2904,191 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WRPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'WRPOOL' )
+      end if
 
 !
 !     Indicate the beginning of a data section.
 !
-      WRITE ( UNIT, '(1X,A)', IOSTAT=IOSTAT ) BEGDAT
-      WRITE ( UNIT, '(1X,A)', IOSTAT=IOSTAT )
+      write ( unit, '(1X,A)', iostat=iostat ) begdat
+      write ( unit, '(1X,A)', iostat=iostat )
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL IOERR ( 'writing a variable to the output ' &
+      if ( iostat .ne. 0 ) then
+         call ioerr ( 'writing a variable to the output ' &
          //           'kernel file ', &
                       ' ', &
-                       IOSTAT             )
-         CALL SIGERR ( 'SPICE(WRITEERROR)' )
-         CALL CHKOUT ( 'WRPOOL'            )
-         RETURN
-      END IF
+                       iostat             )
+         call sigerr ( 'SPICE(WRITEERROR)' )
+         call chkout ( 'WRPOOL'            )
+         return
+      end if
 
 !
 !     Next prepare for writing out the data.
 !
-      IQUOTE = ICHAR ( QUOTE    )
-      MARGIN = MAXLEN + 6
+      iquote = ichar ( quote    )
+      margin = maxlen + 6
 
-      DO K = 1, MAXVAR
+      do k = 1, maxvar
 !
 !        Get the head of this list.
 !
-         NNODE = NAMLST(K)
+         nnode = namlst(k)
 
-         DO WHILE ( NNODE .GT. 0 )
+         do while ( nnode .gt. 0 )
 
-            LINE   = PNAMES( NNODE )
-            DATAHD = DATLST( NNODE )
-            DP     = DATAHD .GT. 0
-            CHR    = DATAHD .LT. 0
-            DNODE  = ABS(DATAHD)
+            line   = pnames( nnode )
+            datahd = datlst( nnode )
+            dp     = datahd .gt. 0
+            chr    = datahd .lt. 0
+            dnode  = abs(datahd)
 !
 !           Determine whether or not this is a vector object.
 !
-            IF ( DP ) THEN
-               VECTOR = DPPOOL( NEXT, DNODE ) .GT. 0
-            ELSE IF ( CHR ) THEN
-               VECTOR = CHPOOL( NEXT, DNODE ) .GT. 0
-            ELSE
-               CALL SETMSG ( 'This error is never supposed to ' &
+            if ( dp ) then
+               vector = dppool( next, dnode ) .gt. 0
+            else if ( chr ) then
+               vector = chpool( next, dnode ) .gt. 0
+            else
+               call setmsg ( 'This error is never supposed to ' &
                //            'occur. No data was available for ' &
                //            'the variable ''#''. ' )
 
-               R = RTRIM(PNAMES(NNODE))
-               CALL ERRCH  ( '#', PNAMES(NNODE)(1:R) )
-               CALL SIGERR ( 'SPICE(BUG)'           )
-               CALL CHKOUT ( 'WRPOOL' )
-               RETURN
-            END IF
+               r = rtrim(pnames(nnode))
+               call errch  ( '#', pnames(nnode)(1:r) )
+               call sigerr ( 'SPICE(BUG)'           )
+               call chkout ( 'WRPOOL' )
+               return
+            end if
 !
 !           If still here, then we can set up the beginning of this
 !           output line.
 !
-            LINE(MAXLEN+2:) = '= '
+            line(maxlen+2:) = '= '
 
-            IF ( VECTOR ) THEN
-               LINE(MAXLEN+4:) = '( '
-            END IF
+            if ( vector ) then
+               line(maxlen+4:) = '( '
+            end if
 !
 !           Now fetch all of the data associated with this variable.
 !           We'll write them out one per line.
 !
-            DO WHILE ( DNODE .GT. 0 )
+            do while ( dnode .gt. 0 )
 !
 !              Get the next data value and the address of the next node.
 !
-               IF ( DP ) THEN
-                  DVALUE = DPVALS(DNODE)
-                  DNODE  = DPPOOL(NEXT,DNODE)
-               ELSE
-                  CVALUE = QUOTE
-                  J      = 1
+               if ( dp ) then
+                  dvalue = dpvals(dnode)
+                  dnode  = dppool(next,dnode)
+               else
+                  cvalue = quote
+                  j      = 1
 !
 !                 We have to double up each of the quotes on output.
 !                 For this reason we copy the letters one at a time
 !                 into the output holding area CVALUE.
 !
-                  DO I = 1, RTRIM(CHVALS(DNODE))
-                     J           = J + 1
-                     CVALUE(J:J) = CHVALS(DNODE)(I:I)
+                  do i = 1, rtrim(chvals(dnode))
+                     j           = j + 1
+                     cvalue(j:j) = chvals(dnode)(i:i)
 
-                     CODE = ICHAR(CHVALS(DNODE)(I:I))
+                     code = ichar(chvals(dnode)(i:i))
 
-                     IF ( ISQUOT(CODE) ) THEN
-                        J           = J+1
-                        CVALUE(J:J) = CHVALS(DNODE)(I:I)
-                     END IF
-                  END DO
+                     if ( isquot(code) ) then
+                        j           = j+1
+                        cvalue(j:j) = chvals(dnode)(i:i)
+                     end if
+                  end do
 
-                  J           = J + 1
-                  CVALUE(J:J) = QUOTE
-                  DNODE       = CHPOOL(NEXT,DNODE)
-               END IF
+                  j           = j + 1
+                  cvalue(j:j) = quote
+                  dnode       = chpool(next,dnode)
+               end if
 
 !
 !              We will need to properly finish off this write with
 !              either a comma, a blank or a right parenthesis.
 !
-               IF ( DNODE .GT. 0 ) THEN
-                  FINISH = ', '
-               ELSE IF ( VECTOR ) THEN
-                  FINISH = ' )'
-               ELSE
-                  FINISH = ' '
-               END IF
+               if ( dnode .gt. 0 ) then
+                  finish = ', '
+               else if ( vector ) then
+                  finish = ' )'
+               else
+                  finish = ' '
+               end if
 !
 !              Now write out our data.
 !
-               IF ( DP ) THEN
-                  WRITE ( UNIT, '(1X,A,D25.17,A)', IOSTAT=IOSTAT ) &
-                  LINE(1:MARGIN), DVALUE, FINISH
-               ELSE
-                  WRITE ( UNIT, '(1X,3A)', IOSTAT=IOSTAT ) &
-                  LINE(1:MARGIN), CVALUE(1:J), FINISH
-               END IF
+               if ( dp ) then
+                  write ( unit, '(1X,A,D25.17,A)', iostat=iostat ) &
+                  line(1:margin), dvalue, finish
+               else
+                  write ( unit, '(1X,3A)', iostat=iostat ) &
+                  line(1:margin), cvalue(1:j), finish
+               end if
 
 !
 !              Check the IOSTAT code.  After all, that's why it's there.
 !
-               IF ( IOSTAT .NE. 0 ) THEN
-                  CALL IOERR ( 'writing a variable to the output ' &
+               if ( iostat .ne. 0 ) then
+                  call ioerr ( 'writing a variable to the output ' &
                   //           'kernel file ', &
                                 ' ', &
-                                IOSTAT              )
-                  CALL SIGERR ( 'SPICE(WRITEERROR)' )
-                  CALL CHKOUT ( 'WRPOOL'            )
-                  RETURN
-               END IF
+                                iostat              )
+                  call sigerr ( 'SPICE(WRITEERROR)' )
+                  call chkout ( 'WRPOOL'            )
+                  return
+               end if
 
 !
 !              Blank out the output line so that we'll have
 !              leading blanks for subsequent components of the
 !              vector (if we are in fact writing one).
 !
-               LINE = ' '
+               line = ' '
 
-            END DO
+            end do
 !
 !           Get the next name for this node:
 !
-            NNODE = NMPOOL(NEXT,NNODE)
+            nnode = nmpool(next,nnode)
 
-         END DO
+         end do
 !
 !        Get the next node (if there is one).
 !
-      END DO
+      end do
 
 
 !
 !     Indicate the beginning of a text section. Data sections and
 !     text sections must alternate, even if the text section is blank.
 !
-      WRITE ( UNIT, '(1X,A)', IOSTAT=IOSTAT )
-      WRITE ( UNIT, '(1X,A)', IOSTAT=IOSTAT ) BEGTXT
+      write ( unit, '(1X,A)', iostat=iostat )
+      write ( unit, '(1X,A)', iostat=iostat ) begtxt
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL IOERR ( 'writing a variable to the output ' &
+      if ( iostat .ne. 0 ) then
+         call ioerr ( 'writing a variable to the output ' &
          //           'kernel file ', &
                         ' ', &
-                        IOSTAT              )
-         CALL SIGERR ( 'SPICE(WRITEERROR)' )
-         CALL CHKOUT ( 'WRPOOL'            )
-         RETURN
-      END IF
+                        iostat              )
+         call sigerr ( 'SPICE(WRITEERROR)' )
+         call chkout ( 'WRPOOL'            )
+         return
+      end if
 
-      CALL CHKOUT ( 'WRPOOL' )
-      RETURN
+      call chkout ( 'WRPOOL' )
+      return
 
 
 
 
 !$Procedure SWPOOL ( Set watch on a pool variable )
 
-      ENTRY SWPOOL ( AGENT, NNAMES, NAMES )
+      entry swpool ( agent, nnames, names )
 
 ! $ Abstract
 !
@@ -3384,27 +3384,27 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SWPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SWPOOL' )
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter. Although setting a watcher does not
@@ -3412,7 +3412,7 @@
 !     sure that the next call to CVPOOL with this watcher triggers the
 !     initial update.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Do all of the error checking we need to do BEFORE touching
@@ -3421,36 +3421,36 @@
 !
 !     First make sure we can handle any new kernel variable names.
 !
-      NEED = 0
+      need = 0
 
-      DO I = 1, NNAMES
+      do i = 1, nnames
 
-         IF (  .NOT.  ELEMC( NAMES(I), WTVARS )  ) THEN
-            NEED = NEED + 1
-         END IF
+         if (  .not.  elemc( names(i), wtvars )  ) then
+            need = need + 1
+         end if
 
-      END DO
+      end do
 
-      SPACE = SIZEC(WTVARS) - CARDC(WTVARS)
+      space = sizec(wtvars) - cardc(wtvars)
 
 
-      IF ( NEED .GT. SPACE ) THEN
+      if ( need .gt. space ) then
 
-         CALL SETMSG ( 'The watched kernel variable name ' &
+         call setmsg ( 'The watched kernel variable name ' &
          //            'list WTVARS has room for # more ' &
          //            'elements, so the # new names (in ' &
          //            'a list of # names) ' &
          //            'associated with agent # ' &
          //            'cannot be inserted.'              )
-         CALL ERRINT ( '#', SPACE                         )
-         CALL ERRINT ( '#', NEED                          )
-         CALL ERRINT ( '#', NNAMES                        )
-         CALL ERRCH  ( '#', AGENT                         )
-         CALL SIGERR ( 'SPICE(KERVARSETOVERFLOW)'         )
-         CALL CHKOUT ( 'SWPOOL'                           )
-         RETURN
+         call errint ( '#', space                         )
+         call errint ( '#', need                          )
+         call errint ( '#', nnames                        )
+         call errch  ( '#', agent                         )
+         call sigerr ( 'SPICE(KERVARSETOVERFLOW)'         )
+         call chkout ( 'SWPOOL'                           )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -3459,68 +3459,68 @@
 !     check for kernel variables that would have more than
 !     MAXAGT agents watching them if this watch were established.
 !
-      NEED = 0
+      need = 0
 
-      DO I = 1, NNAMES
+      do i = 1, nnames
 !
 !        Get the agents associated with NAMES(I). The output argument
 !        ACTIVE is a SPICE set.
 !
-         CALL ZZGAPOOL ( NAMES(I), WTVARS, WTPTRS, &
-                         WTPOOL,   WTAGNT, ACTIVE )
+         call zzgapool ( names(i), wtvars, wtptrs, &
+                         wtpool,   wtagnt, active )
 
 
-         NFETCH = CARDC( ACTIVE )
+         nfetch = cardc( active )
 
 
-         NOAGNT =       ( NFETCH .EQ.   0               ) &
-                   .OR. ( .NOT.  ELEMC( AGENT, ACTIVE ) )
+         noagnt =       ( nfetch .eq.   0               ) &
+                   .or. ( .not.  elemc( agent, active ) )
 
-         IF ( NOAGNT ) THEN
+         if ( noagnt ) then
 
-            NEED = NEED + 1
+            need = need + 1
 !
 !           Check the number of agents already associated with the
 !           current kernel variable.
 !
-            IF ( NFETCH .EQ. MAXAGT ) THEN
+            if ( nfetch .eq. maxagt ) then
 
-               CALL SETMSG ( 'The list of agents to notify when # '   // &
+               call setmsg ( 'The list of agents to notify when # '   // &
                              'is updated is too big. The maximum '    // &
                              'number of agents that any kernel'       // &
                              'pool variable can activate is #.'       )
-               CALL ERRCH  ( '#', NAMES(I)                            )
-               CALL ERRINT ( '#', MAXAGT                              )
-               CALL SIGERR ( 'SPICE(TOOMANYWATCHES)'                  )
-               CALL CHKOUT ( 'SWPOOL'                                 )
-               RETURN
+               call errch  ( '#', names(i)                            )
+               call errint ( '#', maxagt                              )
+               call sigerr ( 'SPICE(TOOMANYWATCHES)'                  )
+               call chkout ( 'SWPOOL'                                 )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     See whether WTAGNT has enough room to set this watch.
 !
-      SPACE = LNKNFN( WTPOOL )
+      space = lnknfn( wtpool )
 
-      IF ( NEED .GT. SPACE ) THEN
+      if ( need .gt. space ) then
 
-         CALL SETMSG ( 'The watched kernel variable agent ' &
+         call setmsg ( 'The watched kernel variable agent ' &
          //            'list WTAGNT has room for # more ' &
          //            'elements, so the # new occurrences ' &
          //            'of agent # required for the input ' &
          //            'watch cannot be inserted.'          )
-         CALL ERRINT ( '#', SPACE                           )
-         CALL ERRINT ( '#', NEED                            )
-         CALL ERRCH  ( '#', AGENT                           )
-         CALL SIGERR ( 'SPICE(AGENTLISTOVERFLOW)'           )
-         CALL CHKOUT ( 'SWPOOL'                             )
-         RETURN
+         call errint ( '#', space                           )
+         call errint ( '#', need                            )
+         call errch  ( '#', agent                           )
+         call sigerr ( 'SPICE(AGENTLISTOVERFLOW)'           )
+         call chkout ( 'SWPOOL'                             )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -3531,15 +3531,15 @@
 !     into its list of guys to be notified when a variable change
 !     occurs.
 !
-      DO I = 1, NNAMES
+      do i = 1, nnames
 !
 !        Get the agents associated with NAMES(I). The output argument
 !        ACTIVE is a SPICE set.
 !
-         CALL ZZGAPOOL ( NAMES(I), WTVARS, WTPTRS, &
-                         WTPOOL,   WTAGNT, ACTIVE )
+         call zzgapool ( names(i), wtvars, wtptrs, &
+                         wtpool,   wtagnt, active )
 
-         NFETCH = CARDC( ACTIVE )
+         nfetch = cardc( active )
 
 !
 !        Three things can happen now:
@@ -3561,41 +3561,41 @@
 !        We'll just take them one at a time.
 !
 !
-         IF ( NFETCH .GT. 0 ) THEN
+         if ( nfetch .gt. 0 ) then
 
-            IF (  .NOT.  ELEMC( AGENT, ACTIVE )  ) THEN
+            if (  .not.  elemc( agent, active )  ) then
 !
 !              Case 1: at least one agent is already watching NAMES(I),
 !              but AGENT is not watching NAMES(I). We need the head of
 !              the agent list for this kernel variable.
 !
-               J    = BSRCHC ( NAMES(I), CARDC(WTVARS), WTVARS(1) )
+               j    = bsrchc ( names(i), cardc(wtvars), wtvars(1) )
 
-               HEAD = WTPTRS(J)
+               head = wtptrs(j)
 
 !
 !              Allocate a free node in the watch pool; append this node
 !              to the tail of the agent list for the kernel variable;
 !              we know that list is non-empty.
 !
-               CALL LNKAN  ( WTPOOL, NODE )
+               call lnkan  ( wtpool, node )
 
-               TAIL = LNKTL( HEAD,   WTPOOL )
+               tail = lnktl( head,   wtpool )
 
-               CALL LNKILA ( TAIL,   NODE, WTPOOL )
+               call lnkila ( tail,   node, wtpool )
 
 !
 !              Store the agent name at index NODE in the agent list.
 !
-               WTAGNT( NODE ) = AGENT
+               wtagnt( node ) = agent
 
 !
 !              The insertion is complete. We update AGENTS, which is
 !              the set of agents to notify, at the end of this routine.
 !
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           Case 2: the kernel variable NAMES(I) isn't watched. Add it
 !           the watcher system. We've already ensured that there's
@@ -3607,7 +3607,7 @@
 !           always follow that of the last element in WTVARS
 !           less than NAMES(I).
 !
-            J = 1 + LSTLTC ( NAMES(I), CARDC(WTVARS), WTVARS(1) )
+            j = 1 + lstltc ( names(i), cardc(wtvars), wtvars(1) )
 
 !
 !           Note that we don't use INSRTC to add NAMES(I) to WTVARS
@@ -3626,49 +3626,49 @@
 !
 !           NPTRS is the size of the associated pointer table WTPTRS.
 !
-            NVARS = CARDC( WTVARS )
-            NPTRS = NVARS
+            nvars = cardc( wtvars )
+            nptrs = nvars
 
-            CALL INSLAC ( NAMES(I), 1, J, WTVARS(1), NVARS )
+            call inslac ( names(i), 1, j, wtvars(1), nvars )
 
 !
 !           WTVARS is actually a set, so we must update its cardinality.
 !
-            CALL SCARDC ( NVARS, WTVARS )
+            call scardc ( nvars, wtvars )
 
 !
 !           Allocate a free node in the watch pool.
 !
-            CALL LNKAN ( WTPOOL, NODE )
+            call lnkan ( wtpool, node )
 
 !
 !           Now insert NODE in the pointer table WTPTRS at index J.
 !
-            CALL INSLAI ( NODE, 1, J, WTPTRS, NPTRS )
+            call inslai ( node, 1, j, wtptrs, nptrs )
 
 !
 !           Store the agent name at index NODE in the agent list.
 !
-            WTAGNT( NODE ) = AGENT
+            wtagnt( node ) = agent
 
 !
 !           The insertion is complete. We update AGENTS, which is the
 !           set of agents to notify, at the end of this routine.
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     We ALWAYS put this agent into the list of agents to be notified.
 !
-      CALL INSRTC ( AGENT, AGENTS )
+      call insrtc ( agent, agents )
 
 !
 !     That is all.
 !
-      CALL CHKOUT ( 'SWPOOL' )
-      RETURN
+      call chkout ( 'SWPOOL' )
+      return
 
 
 
@@ -3678,7 +3678,7 @@
 
 !$Procedure CVPOOL ( Check variable in the pool for update)
 
-      ENTRY CVPOOL ( AGENT, UPDATE )
+      entry cvpool ( agent, update )
 
 ! $ Abstract
 !
@@ -3984,42 +3984,42 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CVPOOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CVPOOL' )
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Check to see if our agent is on the list of agents to be
 !     notified.  If it is, we take this agent off the list---he's
 !     now considered to have been notified.
 !
-      UPDATE = ELEMC  ( AGENT, AGENTS )
+      update = elemc  ( agent, agents )
 
-      IF ( UPDATE ) THEN
-         CALL REMOVC ( AGENT, AGENTS )
-      END IF
+      if ( update ) then
+         call removc ( agent, agents )
+      end if
 
 
-      CALL CHKOUT ( 'CVPOOL' )
-      RETURN
+      call chkout ( 'CVPOOL' )
+      return
 
 
 
@@ -4027,7 +4027,7 @@
 
 !$Procedure GCPOOL (Get character data from the kernel pool)
 
-      ENTRY GCPOOL ( NAME, START, ROOM, N, CVALS, FOUND )
+      entry gcpool ( name, start, room, n, cvals, found )
 
 ! $ Abstract
 !
@@ -4268,145 +4268,145 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'GCPOOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'GCPOOL' )
+      end if
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Perform the one obvious error check first.
 !
-      IF ( ROOM .LT. 1 ) THEN
+      if ( room .lt. 1 ) then
 
-         CALL SETMSG ( 'The amount of room specified as ' &
+         call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
 
-         CALL ERRINT ( '#', ROOM )
-         CALL SIGERR ( 'SPICE(BADARRAYSIZE)'  )
-         CALL CHKOUT ( 'GCPOOL' )
-         RETURN
+         call errint ( '#', room )
+         call sigerr ( 'SPICE(BADARRAYSIZE)'  )
+         call chkout ( 'GCPOOL' )
+         return
 
-      END IF
+      end if
 
 
 
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'GCPOOL' )
-         RETURN
+         found = .false.
+         call chkout ( 'GCPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NODE   = NAMLST( LOOKAT      )
-      SUCCES = NAME .EQ. PNAMES(NODE)
+      node   = namlst( lookat      )
+      succes = name .eq. pnames(node)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NODE = NMPOOL ( NEXT, NODE )
+         node = nmpool ( next, node )
 
-         IF ( NODE .LT. 0 ) THEN
+         if ( node .lt. 0 ) then
 
-            FOUND = .FALSE.
-            CALL CHKOUT ( 'GCPOOL' )
-            RETURN
+            found = .false.
+            call chkout ( 'GCPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NODE)
+         succes = name .eq. pnames(node)
 
-      END DO
+      end do
 !
 !     If you get to this point, the variable NAME is present in the
 !     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
 !     head of a linked list of values for this NAME.
 !
-      DATAHD = DATLST(NODE)
+      datahd = datlst(node)
 
-      IF ( DATAHD .GT. 0 ) THEN
+      if ( datahd .gt. 0 ) then
 
-         N     =  0
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'GCPOOL' )
-         RETURN
+         n     =  0
+         found = .false.
+         call chkout ( 'GCPOOL' )
+         return
 
-      ELSE IF ( DATAHD .EQ. 0 ) THEN
+      else if ( datahd .eq. 0 ) then
 
-         CALL SETMSG ( 'This is never supposed to happen.  The ' &
+         call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
          //            'name list, but the pointer to the head ' &
          //            'of the data for this variable is zero. ' &
          //            'Please note your activities and report ' &
          //            'this error to NAIF. '   )
-         CALL ERRCH  ( '#', NAME(1:RTRIM(NAME)) )
-         CALL SIGERR ( 'SPICE(BUG)'             )
-         CALL CHKOUT ( 'GCPOOL'                 )
-         RETURN
+         call errch  ( '#', name(1:rtrim(name)) )
+         call sigerr ( 'SPICE(BUG)'             )
+         call chkout ( 'GCPOOL'                 )
+         return
 
-      END IF
+      end if
 
-      FOUND = .TRUE.
-      K     =  0
-      N     =  0
-      BEGIN =  MAX( START, 1 )
-      NODE  =  -DATAHD
+      found = .true.
+      k     =  0
+      n     =  0
+      begin =  max( start, 1 )
+      node  =  -datahd
 
-      DO WHILE ( NODE .GT. 0  )
+      do while ( node .gt. 0  )
 
-         K = K + 1
+         k = k + 1
 
-         IF ( K .GE. BEGIN ) THEN
-            N        = N+1
-            CVALS(N) = CHVALS(     NODE)
+         if ( k .ge. begin ) then
+            n        = n+1
+            cvals(n) = chvals(     node)
 
-            IF ( N .EQ. ROOM ) THEN
-               CALL CHKOUT ( 'GCPOOL' )
-               RETURN
-            END IF
+            if ( n .eq. room ) then
+               call chkout ( 'GCPOOL' )
+               return
+            end if
 
-         END IF
+         end if
 
-         NODE = CHPOOL(NEXT,NODE)
+         node = chpool(next,node)
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'GCPOOL' )
-      RETURN
+      call chkout ( 'GCPOOL' )
+      return
 
 
 
@@ -4417,7 +4417,7 @@
 
 !$Procedure GDPOOL (Get d.p. values from the kernel pool)
 
-      ENTRY GDPOOL ( NAME, START, ROOM, N, VALUES, FOUND )
+      entry gdpool ( name, start, room, n, values, found )
 
 ! $ Abstract
 !
@@ -4651,144 +4651,144 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'GDPOOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'GDPOOL' )
+      end if
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Perform the one obvious error check first.
 !
-      IF ( ROOM .LT. 1 ) THEN
+      if ( room .lt. 1 ) then
 
-         CALL SETMSG ( 'The amount of room specified as ' &
+         call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
 
-         CALL ERRINT ( '#', ROOM )
-         CALL SIGERR ( 'SPICE(BADARRAYSIZE)'  )
-         CALL CHKOUT ( 'GDPOOL' )
-         RETURN
+         call errint ( '#', room )
+         call sigerr ( 'SPICE(BADARRAYSIZE)'  )
+         call chkout ( 'GDPOOL' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'GDPOOL' )
-         RETURN
+         found = .false.
+         call chkout ( 'GDPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NODE   = NAMLST( LOOKAT      )
-      SUCCES = NAME .EQ. PNAMES(NODE)
+      node   = namlst( lookat      )
+      succes = name .eq. pnames(node)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NODE = NMPOOL ( NEXT, NODE )
+         node = nmpool ( next, node )
 
-         IF ( NODE .LT. 0 ) THEN
+         if ( node .lt. 0 ) then
 
-            FOUND = .FALSE.
-            CALL CHKOUT ( 'GDPOOL' )
-            RETURN
+            found = .false.
+            call chkout ( 'GDPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NODE)
+         succes = name .eq. pnames(node)
 
-      END DO
+      end do
 !
 !     If you get to this point, the variable NAME is present in the
 !     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
 !     head of a linked list of values for this NAME.
 !
-      DATAHD = DATLST(NODE)
+      datahd = datlst(node)
 
-      IF ( DATAHD .LT. 0 ) THEN
+      if ( datahd .lt. 0 ) then
 
-         N     =  0
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'GDPOOL' )
-         RETURN
+         n     =  0
+         found = .false.
+         call chkout ( 'GDPOOL' )
+         return
 
-      ELSE IF ( DATAHD .EQ. 0 ) THEN
+      else if ( datahd .eq. 0 ) then
 
-         CALL SETMSG ( 'This is never supposed to happen.  The ' &
+         call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
          //            'name list, but the pointer to the head ' &
          //            'of the data for this variable is zero. ' &
          //            'Please note your activities and report ' &
          //            'this error to NAIF. '   )
-         CALL ERRCH  ( '#', NAME(1:RTRIM(NAME)) )
-         CALL SIGERR ( 'SPICE(BUG)'             )
-         CALL CHKOUT ( 'GDPOOL'                 )
-         RETURN
+         call errch  ( '#', name(1:rtrim(name)) )
+         call sigerr ( 'SPICE(BUG)'             )
+         call chkout ( 'GDPOOL'                 )
+         return
 
-      END IF
+      end if
 
-      FOUND = .TRUE.
-      K     =  0
-      N     =  0
-      BEGIN =  MAX( START, 1 )
-      NODE  =  DATAHD
+      found = .true.
+      k     =  0
+      n     =  0
+      begin =  max( start, 1 )
+      node  =  datahd
 
-      DO WHILE ( NODE .GT. 0  )
+      do while ( node .gt. 0  )
 
-         K = K + 1
+         k = k + 1
 
-         IF ( K .GE. BEGIN ) THEN
-            N = N+1
-            VALUES(N) = DPVALS(     NODE)
+         if ( k .ge. begin ) then
+            n = n+1
+            values(n) = dpvals(     node)
 
-            IF ( N .EQ. ROOM ) THEN
-               CALL CHKOUT ( 'GDPOOL' )
-               RETURN
-            END IF
+            if ( n .eq. room ) then
+               call chkout ( 'GDPOOL' )
+               return
+            end if
 
-         END IF
+         end if
 
-         NODE = DPPOOL(NEXT,NODE)
+         node = dppool(next,node)
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'GDPOOL' )
-      RETURN
+      call chkout ( 'GDPOOL' )
+      return
 
 
 
@@ -4796,7 +4796,7 @@
 
 !$Procedure GIPOOL (Get integers from the kernel pool)
 
-      ENTRY GIPOOL ( NAME, START, ROOM, N, IVALS, FOUND )
+      entry gipool ( name, start, room, n, ivals, found )
 
 ! $ Abstract
 !
@@ -5034,176 +5034,176 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'GIPOOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'GIPOOL' )
+      end if
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Perform the one obvious error check first.
 !
-      IF ( ROOM .LT. 1 ) THEN
+      if ( room .lt. 1 ) then
 
-         CALL SETMSG ( 'The amount of room specified as ' &
+         call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
 
-         CALL ERRINT ( '#', ROOM )
-         CALL SIGERR ( 'SPICE(BADARRAYSIZE)'  )
-         CALL CHKOUT ( 'GIPOOL' )
-         RETURN
+         call errint ( '#', room )
+         call sigerr ( 'SPICE(BADARRAYSIZE)'  )
+         call chkout ( 'GIPOOL' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'GIPOOL' )
-         RETURN
+         found = .false.
+         call chkout ( 'GIPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NODE   = NAMLST( LOOKAT      )
-      SUCCES = NAME .EQ. PNAMES(NODE)
+      node   = namlst( lookat      )
+      succes = name .eq. pnames(node)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NODE = NMPOOL ( NEXT, NODE )
+         node = nmpool ( next, node )
 
-         IF ( NODE .LT. 0 ) THEN
+         if ( node .lt. 0 ) then
 
-            FOUND = .FALSE.
-            CALL CHKOUT ( 'GIPOOL' )
-            RETURN
+            found = .false.
+            call chkout ( 'GIPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NODE)
+         succes = name .eq. pnames(node)
 
-      END DO
+      end do
 !
 !     If you get to this point, the variable NAME is present in the
 !     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
 !     head of a linked list of values for this NAME.
 !
-      DATAHD = DATLST(NODE)
+      datahd = datlst(node)
 
-      IF ( DATAHD .LT. 0 ) THEN
+      if ( datahd .lt. 0 ) then
 
-         N     =  0
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'GIPOOL' )
-         RETURN
+         n     =  0
+         found = .false.
+         call chkout ( 'GIPOOL' )
+         return
 
-      ELSE IF ( DATAHD .EQ. 0 ) THEN
+      else if ( datahd .eq. 0 ) then
 
-         CALL SETMSG ( 'This is never supposed to happen.  The ' &
+         call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
          //            'name list, but the pointer to the head ' &
          //            'of the data for this variable is zero. ' &
          //            'Please note your activities and report ' &
          //            'this error to NAIF. '   )
-         CALL ERRCH  ( '#', NAME(1:RTRIM(NAME)) )
-         CALL SIGERR ( 'SPICE(BUG)'             )
-         CALL CHKOUT ( 'GIPOOL'                )
-         RETURN
+         call errch  ( '#', name(1:rtrim(name)) )
+         call sigerr ( 'SPICE(BUG)'             )
+         call chkout ( 'GIPOOL'                )
+         return
 
-      END IF
+      end if
 !
 !     Prepare for fetching values.
 !
-      BIG   =  DBLE( INTMAX() )
-      SMALL =  DBLE( INTMIN() )
-      FOUND = .TRUE.
-      K     =  0
-      N     =  0
-      BEGIN =  MAX( START, 1 )
-      NODE  =  DATAHD
+      big   =  dble( intmax() )
+      small =  dble( intmin() )
+      found = .true.
+      k     =  0
+      n     =  0
+      begin =  max( start, 1 )
+      node  =  datahd
 
-      DO WHILE ( NODE .GT. 0  )
+      do while ( node .gt. 0  )
 
-         K = K + 1
+         k = k + 1
 
-         IF ( K .GE. BEGIN ) THEN
-            N = N+1
+         if ( k .ge. begin ) then
+            n = n+1
 
-            IF (       DPVALS(NODE) .GE. SMALL &
-                 .AND. DPVALS(NODE) .LE. BIG   ) THEN
+            if (       dpvals(node) .ge. small &
+                 .and. dpvals(node) .le. big   ) then
 
-               IVALS(N) = IDNINT( DPVALS( NODE) )
+               ivals(n) = idnint( dpvals( node) )
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'The value associated with index # ' &
+               call setmsg ( 'The value associated with index # ' &
                //            'of the kernel variable # is ' &
                //            'outside the range of integers. ' &
                //            'The value stored was: # .'      )
 
 
-               CALL ERRINT ( '#', K                     )
-               CALL ERRCH  ( '#', NAME(1:RTRIM(NAME))   )
-               CALL ERRDP  ( '#', DPVALS(NODE)          )
-               CALL SIGERR ( 'SPICE(INTOUTOFRANGE)'     )
-               CALL CHKOUT ( 'GIPOOL' )
-               RETURN
+               call errint ( '#', k                     )
+               call errch  ( '#', name(1:rtrim(name))   )
+               call errdp  ( '#', dpvals(node)          )
+               call sigerr ( 'SPICE(INTOUTOFRANGE)'     )
+               call chkout ( 'GIPOOL' )
+               return
 
 
-            END IF
-            IF ( N .EQ. ROOM ) THEN
-               CALL CHKOUT ( 'GIPOOL' )
-               RETURN
-            END IF
+            end if
+            if ( n .eq. room ) then
+               call chkout ( 'GIPOOL' )
+               return
+            end if
 
-         END IF
+         end if
 
-         NODE = DPPOOL(NEXT,NODE)
+         node = dppool(next,node)
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'GIPOOL' )
-      RETURN
+      call chkout ( 'GIPOOL' )
+      return
 
 
 
 
 !$Procedure DTPOOL (Data for a kernel pool variable)
 
-      ENTRY DTPOOL ( NAME, FOUND, N, TYPE )
+      entry dtpool ( name, found, n, type )
 
 ! $ Abstract
 !
@@ -5448,129 +5448,129 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DTPOOL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DTPOOL' )
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Until we find otherwise, we shall assume there is no data
 !     for this variable.
 !
-      FOUND = .FALSE.
-      N     =  0
-      TYPE  = 'X'
+      found = .false.
+      n     =  0
+      type  = 'X'
 
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         CALL CHKOUT ( 'DTPOOL' )
-         RETURN
+         call chkout ( 'DTPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NODE   = NAMLST( LOOKAT      )
-      SUCCES = NAME .EQ. PNAMES(NODE)
+      node   = namlst( lookat      )
+      succes = name .eq. pnames(node)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NODE = NMPOOL ( NEXT, NODE )
+         node = nmpool ( next, node )
 
-         IF ( NODE .LT. 0 ) THEN
+         if ( node .lt. 0 ) then
 
-            CALL CHKOUT ( 'DTPOOL' )
-            RETURN
+            call chkout ( 'DTPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NODE)
+         succes = name .eq. pnames(node)
 
-      END DO
+      end do
 !
 !     If you get to this point, the variable NAME is present in the
 !     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
 !     head of a linked list of values for this NAME.
 !
 
-      DATAHD = DATLST(NODE)
+      datahd = datlst(node)
 
-      IF ( DATAHD .LT. 0 ) THEN
+      if ( datahd .lt. 0 ) then
 
-         TYPE  = 'C'
-         FOUND = .TRUE.
-         NODE  = -DATAHD
+         type  = 'C'
+         found = .true.
+         node  = -datahd
 
-         DO WHILE ( NODE .GT. 0 )
-            N    = N + 1
-            NODE = CHPOOL(NEXT,NODE)
-         END DO
+         do while ( node .gt. 0 )
+            n    = n + 1
+            node = chpool(next,node)
+         end do
 
-      ELSE IF ( DATAHD .GT. 0 ) THEN
+      else if ( datahd .gt. 0 ) then
 
-         TYPE  = 'N'
-         FOUND = .TRUE.
-         NODE  =  DATAHD
+         type  = 'N'
+         found = .true.
+         node  =  datahd
 
-         DO WHILE ( NODE .GT. 0 )
-            N    = N + 1
-            NODE = DPPOOL(NEXT,NODE)
-         END DO
+         do while ( node .gt. 0 )
+            n    = n + 1
+            node = dppool(next,node)
+         end do
 
-      ELSE IF ( DATAHD .EQ. 0 ) THEN
+      else if ( datahd .eq. 0 ) then
 
-         CALL SETMSG ( 'This is never supposed to happen.  The ' &
+         call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
          //            'name list, but the pointer to the head ' &
          //            'of the data for this variable is zero. ' &
          //            'Please note your activities and report ' &
          //            'this error to NAIF. '   )
-         CALL ERRCH  ( '#', NAME(1:RTRIM(NAME)) )
-         CALL SIGERR ( 'SPICE(BUG)'             )
-         CALL CHKOUT ( 'DTPOOL'                 )
+         call errch  ( '#', name(1:rtrim(name)) )
+         call sigerr ( 'SPICE(BUG)'             )
+         call chkout ( 'DTPOOL'                 )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DTPOOL' )
-      RETURN
+      call chkout ( 'DTPOOL' )
+      return
 
 
 
 
 !$Procedure PCPOOL ( Put character strings into the kernel pool )
 
-      ENTRY PCPOOL ( NAME, N, CVALS )
+      entry pcpool ( name, n, cvals )
 
 ! $ Abstract
 !
@@ -5820,124 +5820,124 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( N .LE. 0 ) THEN
-         RETURN
-      END IF
+      if ( n .le. 0 ) then
+         return
+      end if
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PCPOOL' )
+      call chkin ( 'PCPOOL' )
 
 
 !
 !     Check the variable name length; signal an error
 !     if longer than MAXLEN.
 !
-      VARLEN = LEN( NAME(1: LASTNB(NAME) )  )
+      varlen = len( name(1: lastnb(name) )  )
 
-      IF ( VARLEN .GT. MAXLEN ) THEN
+      if ( varlen .gt. maxlen ) then
 
-         CALL SETMSG ( 'The input kernel pool variable name ' &
+         call setmsg ( 'The input kernel pool variable name ' &
          //            'exceeds the maximum allowed ' &
          //            'length of #1. The length of the variable ' &
          //            'name is #2, the offending variable name: ' &
          //            '''#3''.')
 
-         CALL ERRINT ( '#1', MAXLEN                   )
-         CALL ERRINT ( '#2', VARLEN                   )
-         CALL ERRCH  ( '#3', NAME                     )
-         CALL SIGERR ( 'SPICE(BADVARNAME)'            )
-         CALL CHKOUT ( 'PCPOOL'                       )
-         RETURN
+         call errint ( '#1', maxlen                   )
+         call errint ( '#2', varlen                   )
+         call errch  ( '#3', name                     )
+         call sigerr ( 'SPICE(BADVARNAME)'            )
+         call chkout ( 'PCPOOL'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Find out where the name for this item is located
 !     in the data tables.
 !
-      CALL ZZGPNM ( NAMLST, &
-                    NMPOOL, PNAMES, DATLST, &
-                    DPPOOL, DPVALS, &
-                    CHPOOL, CHVALS, &
-                    NAME,   GOTIT,  LOOKAT, NAMEAT )
+      call zzgpnm ( namlst, &
+                    nmpool, pnames, datlst, &
+                    dppool, dpvals, &
+                    chpool, chvals, &
+                    name,   gotit,  lookat, nameat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'PCPOOL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'PCPOOL' )
+         return
+      end if
 !
 !     Determine how much room is available for inserting new d.p.s
 !     values into the kernel pool.
 !
-      AVAIL = LNKNFN(CHPOOL)
+      avail = lnknfn(chpool)
 
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 !
 !        If we found the specified variable in the kernel pool, we
 !        may be able to free up some space before inserting data.
 !        We need to take this into account when determining
 !        the amount of free room in the pool.
 !
-         DATAHD         = DATLST( NAMEAT )
+         datahd         = datlst( nameat )
 
-         IF ( DATAHD .GT. 0 ) THEN
+         if ( datahd .gt. 0 ) then
 !
 !           No extra strings will be freed.  We have whatever
 !           free space is in the CHPOOL right now.
 !
-         ELSE
+         else
 !
 !           Find out how many items are in the current
 !           list of strings associated with the variable.
 !
-            TOFREE =   0
-            NODE   = - DATAHD
+            tofree =   0
+            node   = - datahd
 
-            DO WHILE ( NODE .GT. 0 )
-               TOFREE = TOFREE + 1
-               NODE   = CHPOOL(NEXT,NODE)
-            END DO
+            do while ( node .gt. 0 )
+               tofree = tofree + 1
+               node   = chpool(next,node)
+            end do
 !
 !           Add the number we will free to the amount currently
 !           free in the dp pool.
 !
-            AVAIL = AVAIL + TOFREE
+            avail = avail + tofree
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the AVAIL for new data is less than the number of items
 !     to be added, we just bail out here.
 !
-      IF ( AVAIL .LT. N ) THEN
+      if ( avail .lt. n ) then
 
-         IF ( .NOT. GOTIT ) THEN
+         if ( .not. gotit ) then
 !
 !           We need to perform some clean up.  We've allocated
 !           a new name but it has nothing in it. On the other hand
@@ -5945,126 +5945,126 @@
 !           only read from the pool. We haven't altered anything.
 !           But in that case we'll never get into this block of code.
 !
-            CALL ZZCLN ( LOOKAT, NAMEAT, &
-                         NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+            call zzcln ( lookat, nameat, &
+                         namlst, datlst, nmpool, chpool, dppool )
 
-         END IF
+         end if
 
 
-         CALL SETMSG ( 'There is not sufficient space available ' &
+         call setmsg ( 'There is not sufficient space available ' &
          //            'in the kernel pool to store the # items ' &
          //            'associated with the name #.  There is ' &
          //            'room to store only # items. ' )
-         CALL ERRINT ( '#', N  )
-         CALL ERRCH  ( '#', NAME )
-         CALL ERRINT ( '#', AVAIL   )
-         CALL SIGERR ( 'SPICE(NOMOREROOM)' )
-         CALL CHKOUT ( 'PCPOOL' )
-         RETURN
+         call errint ( '#', n  )
+         call errch  ( '#', name )
+         call errint ( '#', avail   )
+         call sigerr ( 'SPICE(NOMOREROOM)' )
+         call chkout ( 'PCPOOL' )
+         return
 
-      END IF
+      end if
 
 !
 !     There is room to insert the data.  Free up any required
 !     nodes.
 !
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 
 !
 !        We need to free the data associated with this
 !        variable.  But first make sure there will be room
 !        to add data.
 !
-         DATAHD         = DATLST( NAMEAT )
-         DATLST(NAMEAT) = 0
+         datahd         = datlst( nameat )
+         datlst(nameat) = 0
 
-         IF ( DATAHD .GT. 0 ) THEN
+         if ( datahd .gt. 0 ) then
 
 !
 !           This variable was character type we need to
 !           free a linked list from the character data
 !           pool.
 !
-            HEAD =   DATAHD
-            TAIL = - DPPOOL(PREV,HEAD)
+            head =   datahd
+            tail = - dppool(prev,head)
 
-            CALL LNKFSL ( HEAD, TAIL, DPPOOL )
+            call lnkfsl ( head, tail, dppool )
 
-         ELSE
+         else
 
 !
 !           This variable was character type. We need to
 !           free a linked list from the numeric pool.
 !
-            HEAD = - DATAHD
-            TAIL = - CHPOOL(PREV,HEAD)
+            head = - datahd
+            tail = - chpool(prev,head)
 
-            CALL LNKFSL ( HEAD, TAIL, CHPOOL )
+            call lnkfsl ( head, tail, chpool )
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We have done all of the freeing and checking that
 !     needs to be done.  Now add the data.
 !
-      DO I = 1, N
+      do i = 1, n
 
 !
 !        We are ready to go.  Allocate a node for this data
 !        item. First make sure there is room to do so.
 !
-         FREE = LNKNFN ( CHPOOL )
+         free = lnknfn ( chpool )
 
-         IF ( FREE .LE. 0 ) THEN
+         if ( free .le. 0 ) then
 
-            CALL SETMSG ( 'There is no room available for ' &
+            call setmsg ( 'There is no room available for ' &
             //            'adding another character value ' &
             //            'to the kernel pool.' )
-            CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-            CALL CHKOUT ( 'PCPOOL' )
-            RETURN
+            call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+            call chkout ( 'PCPOOL' )
+            return
 
-         END IF
+         end if
 
 !
 !        Allocate a node for storing this string value:
 !
-         CALL LNKAN ( CHPOOL, CHNODE )
+         call lnkan ( chpool, chnode )
 
-         IF ( DATLST(NAMEAT) .EQ. 0 ) THEN
+         if ( datlst(nameat) .eq. 0 ) then
 
 !
 !           There was no data for this name yet.  We make
 !           CHNODE be the head of the data list for this name.
 !
-            DATLST(NAMEAT) = -CHNODE
+            datlst(nameat) = -chnode
 
-         ELSE
+         else
 
 !
 !           Put this node after the tail of the current list.
 !
-            HEAD = -DATLST(NAMEAT)
-            TAIL = -CHPOOL(PREV, HEAD )
+            head = -datlst(nameat)
+            tail = -chpool(prev, head )
 
-            CALL LNKILA ( TAIL, CHNODE, CHPOOL )
+            call lnkila ( tail, chnode, chpool )
 
-         END IF
+         end if
 
 !
 !        Finally insert this data item in the data buffer
 !        at CHNODE.  Note any quotes will be doubled so we
 !        have to undo this affect when we store the data.
 !
-         CHVALS(CHNODE) = CVALS(I)
+         chvals(chnode) = cvals(i)
 
 !
 !        That's all for this value. It's now time to loop
 !        back through and get the next value.
 !
 
-      END DO
+      end do
 
 
 !
@@ -6072,25 +6072,25 @@
 !     If it is, add its associated agents to the list of
 !     AGENTS to be notified of a watched variable update.
 !
-      IF (  ELEMC( NAME, WTVARS )  ) THEN
+      if (  elemc( name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
 !        associated with the variable NAME.
 !
-         CALL ZZNWPOOL ( NAME,   WTVARS, WTPTRS, WTPOOL, &
-                         WTAGNT, ACTIVE, NOTIFY, AGENTS )
+         call zznwpool ( name,   wtvars, wtptrs, wtpool, &
+                         wtagnt, active, notify, agents )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'PCPOOL' )
-      RETURN
+      call chkout ( 'PCPOOL' )
+      return
 
 
 
 
 !$Procedure PDPOOL ( Put d.p.'s into the kernel pool )
 
-      ENTRY PDPOOL ( NAME, N, VALUES )
+      entry pdpool ( name, n, values )
 
 ! $ Abstract
 !
@@ -6339,124 +6339,124 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( N .LE. 0 ) THEN
-         RETURN
-      END IF
+      if ( n .le. 0 ) then
+         return
+      end if
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PDPOOL' )
+      call chkin ( 'PDPOOL' )
 
 
 !
 !     Check the variable name length; signal an error
 !     if longer than MAXLEN.
 !
-      VARLEN = LEN( NAME(1: LASTNB(NAME) )  )
+      varlen = len( name(1: lastnb(name) )  )
 
-      IF ( VARLEN .GT. MAXLEN ) THEN
+      if ( varlen .gt. maxlen ) then
 
-         CALL SETMSG ( 'The input kernel pool variable name ' &
+         call setmsg ( 'The input kernel pool variable name ' &
          //            'exceeds the maximum allowed ' &
          //            'length of #1. The length of the variable ' &
          //            'name is #2, the offending variable name: ' &
          //            '''#3''.')
 
-         CALL ERRINT ( '#1', MAXLEN                   )
-         CALL ERRINT ( '#2', VARLEN                   )
-         CALL ERRCH  ( '#3', NAME                     )
-         CALL SIGERR ( 'SPICE(BADVARNAME)'            )
-         CALL CHKOUT ( 'PDPOOL'                       )
-         RETURN
+         call errint ( '#1', maxlen                   )
+         call errint ( '#2', varlen                   )
+         call errch  ( '#3', name                     )
+         call sigerr ( 'SPICE(BADVARNAME)'            )
+         call chkout ( 'PDPOOL'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Find out where the name for this item is located
 !     in the data tables.
 !
-      CALL ZZGPNM ( NAMLST, &
-                    NMPOOL, PNAMES, DATLST, &
-                    DPPOOL, DPVALS, &
-                    CHPOOL, CHVALS, &
-                    NAME,   GOTIT,  LOOKAT, NAMEAT )
+      call zzgpnm ( namlst, &
+                    nmpool, pnames, datlst, &
+                    dppool, dpvals, &
+                    chpool, chvals, &
+                    name,   gotit,  lookat, nameat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'PDPOOL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'PDPOOL' )
+         return
+      end if
 !
 !     Determine how much room is available for inserting new d.p.s
 !     values into the kernel pool.
 !
-      AVAIL = LNKNFN(DPPOOL)
+      avail = lnknfn(dppool)
 
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 !
 !        If we found the specified variable in the kernel pool, we
 !        may be able to free up some space before inserting data.
 !        We need to take this into account when determining
 !        the amount of free room in the pool.
 !
-         DATAHD         = DATLST( NAMEAT )
+         datahd         = datlst( nameat )
 
-         IF ( DATAHD .LT. 0 ) THEN
+         if ( datahd .lt. 0 ) then
 !
 !           No extra d.p.s will be freed.  We have whatever
 !           free space is in the DPPOOL right now.
 !
-         ELSE
+         else
 !
 !           Find out how many items are in the current
 !           list of d.p. associated with the variable.
 !
-            TOFREE = 0
-            NODE   =  DATAHD
+            tofree = 0
+            node   =  datahd
 
-            DO WHILE ( NODE .GT. 0 )
-               TOFREE = TOFREE + 1
-               NODE   = DPPOOL(NEXT,NODE)
-            END DO
+            do while ( node .gt. 0 )
+               tofree = tofree + 1
+               node   = dppool(next,node)
+            end do
 !
 !           Add the number we will free to the amount currently
 !           free in the dp pool.
 !
-            AVAIL = AVAIL + TOFREE
+            avail = avail + tofree
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the AVAIL for new data is less than the number of items
 !     to be added, we just bail out here.
 !
-      IF ( AVAIL .LT. N ) THEN
+      if ( avail .lt. n ) then
 
-         IF ( .NOT. GOTIT ) THEN
+         if ( .not. gotit ) then
 !
 !           We need to perform some clean up.  We've allocated
 !           a new name but it has nothing in it. On the other hand
@@ -6464,125 +6464,125 @@
 !           only read from the pool. We haven't altered anything.
 !           But in that case we'll never get into this block of code.
 !
-            CALL ZZCLN ( LOOKAT, NAMEAT, &
-                         NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+            call zzcln ( lookat, nameat, &
+                         namlst, datlst, nmpool, chpool, dppool )
 
-         END IF
+         end if
 
 
-         CALL SETMSG ( 'There is not sufficient space available ' &
+         call setmsg ( 'There is not sufficient space available ' &
          //            'in the kernel pool to store the # items ' &
          //            'associated with the name #.  There is ' &
          //            'room to store only # items. ' )
-         CALL ERRINT ( '#', N  )
-         CALL ERRCH  ( '#', NAME )
-         CALL ERRINT ( '#', AVAIL   )
-         CALL SIGERR ( 'SPICE(NOMOREROOM)' )
-         CALL CHKOUT ( 'PDPOOL' )
-         RETURN
+         call errint ( '#', n  )
+         call errch  ( '#', name )
+         call errint ( '#', avail   )
+         call sigerr ( 'SPICE(NOMOREROOM)' )
+         call chkout ( 'PDPOOL' )
+         return
 
-      END IF
+      end if
 
 !
 !     There is room to insert the data.  Free up any required
 !     nodes.
 !
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 
 !
 !        We need to free the data associated with this
 !        variable.  But first make sure there will be room
 !        to add data.
 !
-         DATAHD         = DATLST( NAMEAT )
-         DATLST(NAMEAT) = 0
+         datahd         = datlst( nameat )
+         datlst(nameat) = 0
 
-         IF ( DATAHD .LT. 0 ) THEN
+         if ( datahd .lt. 0 ) then
 
 !
 !           This variable was character type we need to
 !           free a linked list from the character data
 !           pool.
 !
-            HEAD = - DATAHD
-            TAIL = - CHPOOL(PREV,HEAD)
+            head = - datahd
+            tail = - chpool(prev,head)
 
-            CALL LNKFSL ( HEAD, TAIL, CHPOOL )
+            call lnkfsl ( head, tail, chpool )
 
-         ELSE
+         else
 
 !
 !           This variable was numeric type. We need to
 !           free a linked list from the numeric pool.
 !
-            HEAD =   DATAHD
-            TAIL = - DPPOOL(PREV,HEAD)
+            head =   datahd
+            tail = - dppool(prev,head)
 
-            CALL LNKFSL ( HEAD, TAIL, DPPOOL )
+            call lnkfsl ( head, tail, dppool )
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We have done all of the freeing and checking that
 !     needs to be done.  Now add the data.
 !
-      DO I = 1, N
+      do i = 1, n
 
 !
 !        OK. See if there is room in
 !        the numeric portion of the pool to store this value.
 !
-         FREE = LNKNFN ( DPPOOL )
+         free = lnknfn ( dppool )
 
-         IF ( FREE .LE. 0 ) THEN
+         if ( free .le. 0 ) then
 !
 !           This branch of the code should never be exercised,
 !           but it doesn't hurt to program in a redundant check.
 !
-            CALL ZZCLN ( LOOKAT, NAMEAT, &
-                         NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+            call zzcln ( lookat, nameat, &
+                         namlst, datlst, nmpool, chpool, dppool )
 
-            CALL SETMSG ( 'There is no room available for ' &
+            call setmsg ( 'There is no room available for ' &
             //            'adding another numeric value ' &
             //            'to the kernel pool.' )
-            CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-            CALL CHKOUT ( 'PDPOOL' )
-            RETURN
+            call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+            call chkout ( 'PDPOOL' )
+            return
 
-         END IF
+         end if
 
 !
 !        Allocate a node for storing this numeric value:
 !
-         CALL LNKAN ( DPPOOL, DPNODE )
+         call lnkan ( dppool, dpnode )
 
-         IF ( DATLST(NAMEAT) .EQ. 0 ) THEN
+         if ( datlst(nameat) .eq. 0 ) then
 
 !
 !           There was no data for this name yet.  We make
 !           DPNODE be the head of the data list for this name.
 !
-            DATLST(NAMEAT) =  DPNODE
+            datlst(nameat) =  dpnode
 
-         ELSE
+         else
 
 !
 !           Put this node after the tail of the current list.
 !
-            HEAD =  DATLST(NAMEAT)
-            TAIL = -DPPOOL(PREV, HEAD )
+            head =  datlst(nameat)
+            tail = -dppool(prev, head )
 
-            CALL LNKILA ( TAIL, DPNODE, DPPOOL )
+            call lnkila ( tail, dpnode, dppool )
 
-         END IF
+         end if
 
 !
 !        Finally insert this data item into the numeric buffer.
 !
-         DPVALS(DPNODE) = VALUES(I)
+         dpvals(dpnode) = values(i)
 
-      END DO
+      end do
 
 
 !
@@ -6590,25 +6590,25 @@
 !     If it is, add its associated agents to the list of
 !     AGENTS to be notified of a watched variable update.
 !
-      IF (  ELEMC( NAME, WTVARS )  ) THEN
+      if (  elemc( name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
 !        associated with the variable NAME.
 !
-         CALL ZZNWPOOL ( NAME,   WTVARS, WTPTRS, WTPOOL, &
-                         WTAGNT, ACTIVE, NOTIFY, AGENTS )
-      END IF
+         call zznwpool ( name,   wtvars, wtptrs, wtpool, &
+                         wtagnt, active, notify, agents )
+      end if
 
 
-      CALL CHKOUT ( 'PDPOOL' )
-      RETURN
+      call chkout ( 'PDPOOL' )
+      return
 
 
 
 
 !$Procedure PIPOOL ( Put integers into the kernel pool )
 
-      ENTRY PIPOOL ( NAME, N, IVALS )
+      entry pipool ( name, n, ivals )
 
 ! $ Abstract
 !
@@ -6857,124 +6857,124 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( N .LE. 0 ) THEN
-         RETURN
-      END IF
+      if ( n .le. 0 ) then
+         return
+      end if
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PIPOOL' )
+      call chkin ( 'PIPOOL' )
 
 
 !
 !     Check the variable name length; signal an error
 !     if longer than MAXLEN.
 !
-      VARLEN = LEN( NAME(1: LASTNB(NAME) )  )
+      varlen = len( name(1: lastnb(name) )  )
 
-      IF ( VARLEN .GT. MAXLEN ) THEN
+      if ( varlen .gt. maxlen ) then
 
-         CALL SETMSG ( 'The input kernel pool variable name ' &
+         call setmsg ( 'The input kernel pool variable name ' &
          //            'exceeds the maximum allowed ' &
          //            'length of #1. The length of the variable ' &
          //            'name is #2, the offending variable name: ' &
          //            '''#3''.')
 
-         CALL ERRINT ( '#1', MAXLEN                   )
-         CALL ERRINT ( '#2', VARLEN                   )
-         CALL ERRCH  ( '#3', NAME                     )
-         CALL SIGERR ( 'SPICE(BADVARNAME)'            )
-         CALL CHKOUT ( 'PIPOOL'                       )
-         RETURN
+         call errint ( '#1', maxlen                   )
+         call errint ( '#2', varlen                   )
+         call errch  ( '#3', name                     )
+         call sigerr ( 'SPICE(BADVARNAME)'            )
+         call chkout ( 'PIPOOL'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Find out where the name for this item is located
 !     in the data tables.
 !
-      CALL ZZGPNM ( NAMLST, &
-                    NMPOOL, PNAMES, DATLST, &
-                    DPPOOL, DPVALS, &
-                    CHPOOL, CHVALS, &
-                    NAME, GOTIT,  LOOKAT, NAMEAT )
+      call zzgpnm ( namlst, &
+                    nmpool, pnames, datlst, &
+                    dppool, dpvals, &
+                    chpool, chvals, &
+                    name, gotit,  lookat, nameat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'PIPOOL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'PIPOOL' )
+         return
+      end if
 !
 !     Determine how much room is available for inserting new d.p.s
 !     values into the kernel pool.
 !
-      AVAIL = LNKNFN(DPPOOL)
+      avail = lnknfn(dppool)
 
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 !
 !        If we found the specified variable in the kernel pool, we
 !        may be able to free up some space before inserting data.
 !        We need to take this into account when determining
 !        the amount of free room in the pool.
 !
-         DATAHD         = DATLST( NAMEAT )
+         datahd         = datlst( nameat )
 
-         IF ( DATAHD .LT. 0 ) THEN
+         if ( datahd .lt. 0 ) then
 !
 !           No extra d.p.s will be freed.  We have whatever
 !           free space is in the DPPOOL right now.
 !
-         ELSE
+         else
 !
 !           Find out how many items are in the current
 !           list of d.p. associated with the variable.
 !
-            TOFREE = 0
-            NODE   =  DATAHD
+            tofree = 0
+            node   =  datahd
 
-            DO WHILE ( NODE .GT. 0 )
-               TOFREE = TOFREE + 1
-               NODE   = DPPOOL(NEXT,NODE)
-            END DO
+            do while ( node .gt. 0 )
+               tofree = tofree + 1
+               node   = dppool(next,node)
+            end do
 !
 !           Add the number we will free to the amount currently
 !           free in the dp pool.
 !
-            AVAIL = AVAIL + TOFREE
+            avail = avail + tofree
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the AVAIL for new data is less than the number of items
 !     to be added, we just bail out here.
 !
-      IF ( AVAIL .LT. N ) THEN
+      if ( avail .lt. n ) then
 
-         IF ( .NOT. GOTIT ) THEN
+         if ( .not. gotit ) then
 !
 !           We need to perform some clean up.  We've allocated
 !           a new name but it has nothing in it. On the other hand
@@ -6982,124 +6982,124 @@
 !           only read from the pool. We haven't altered anything.
 !           But in that case we'll never get into this block of code.
 !
-            CALL ZZCLN ( LOOKAT, NAMEAT, &
-                         NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+            call zzcln ( lookat, nameat, &
+                         namlst, datlst, nmpool, chpool, dppool )
 
-         END IF
+         end if
 
-         CALL SETMSG ( 'There is not sufficient space available ' &
+         call setmsg ( 'There is not sufficient space available ' &
          //            'in the kernel pool to store the # items ' &
          //            'associated with the name #.  There is ' &
          //            'room to store only # items. ' )
-         CALL ERRINT ( '#', N  )
-         CALL ERRCH  ( '#', NAME )
-         CALL ERRINT ( '#', AVAIL   )
-         CALL SIGERR ( 'SPICE(NOMOREROOM)' )
-         CALL CHKOUT ( 'PIPOOL' )
-         RETURN
+         call errint ( '#', n  )
+         call errch  ( '#', name )
+         call errint ( '#', avail   )
+         call sigerr ( 'SPICE(NOMOREROOM)' )
+         call chkout ( 'PIPOOL' )
+         return
 
-      END IF
+      end if
 
 !
 !     There is room to insert the data.  Free up any required
 !     nodes.
 !
-      IF ( GOTIT ) THEN
+      if ( gotit ) then
 
 !
 !        We need to free the data associated with this
 !        variable.  But first make sure there will be room
 !        to add data.
 !
-         DATAHD         = DATLST( NAMEAT )
-         DATLST(NAMEAT) = 0
+         datahd         = datlst( nameat )
+         datlst(nameat) = 0
 
-         IF ( DATAHD .LT. 0 ) THEN
+         if ( datahd .lt. 0 ) then
 
 !
 !           This variable was character type we need to
 !           free a linked list from the character data
 !           pool.
 !
-            HEAD = - DATAHD
-            TAIL = - CHPOOL(PREV,HEAD)
+            head = - datahd
+            tail = - chpool(prev,head)
 
-            CALL LNKFSL ( HEAD, TAIL, CHPOOL )
+            call lnkfsl ( head, tail, chpool )
 
-         ELSE
+         else
 
 !
 !           This variable was numeric type. We need to
 !           free a linked list from the numeric pool.
 !
-            HEAD =   DATAHD
-            TAIL = - DPPOOL(PREV,HEAD)
+            head =   datahd
+            tail = - dppool(prev,head)
 
-            CALL LNKFSL ( HEAD, TAIL, DPPOOL )
+            call lnkfsl ( head, tail, dppool )
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We have done all of the freeing and checking that
 !     needs to be done.  Now add the data.
 !
-      DO I = 1, N
+      do i = 1, n
 
 !
 !        OK. See if there is room in
 !        the numeric portion of the pool to store this value.
 !
-         FREE = LNKNFN ( DPPOOL )
+         free = lnknfn ( dppool )
 
-         IF ( FREE .LE. 0 ) THEN
+         if ( free .le. 0 ) then
 !
 !           This branch of the code should never be exercised,
 !           but it doesn't hurt to program in a redundant check.
 !
-            CALL ZZCLN ( LOOKAT, NAMEAT, &
-                         NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+            call zzcln ( lookat, nameat, &
+                         namlst, datlst, nmpool, chpool, dppool )
 
-            CALL SETMSG ( 'There is no room available for ' &
+            call setmsg ( 'There is no room available for ' &
             //            'adding another numeric value ' &
             //            'to the kernel pool.' )
-            CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-            CALL CHKOUT ( 'PIPOOL' )
-            RETURN
+            call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+            call chkout ( 'PIPOOL' )
+            return
 
-         END IF
+         end if
 
 !
 !        Allocate a node for storing this numeric value:
 !
-         CALL LNKAN ( DPPOOL, DPNODE )
+         call lnkan ( dppool, dpnode )
 
-         IF ( DATLST(NAMEAT) .EQ. 0 ) THEN
+         if ( datlst(nameat) .eq. 0 ) then
 
 !
 !           There was no data for this name yet.  We make
 !           DPNODE be the head of the data list for this name.
 !
-            DATLST(NAMEAT) =  DPNODE
+            datlst(nameat) =  dpnode
 
-         ELSE
+         else
 
 !
 !           Put this node after the tail of the current list.
 !
-            HEAD =  DATLST(NAMEAT)
-            TAIL = -DPPOOL(PREV, HEAD )
+            head =  datlst(nameat)
+            tail = -dppool(prev, head )
 
-            CALL LNKILA ( TAIL, DPNODE, DPPOOL )
+            call lnkila ( tail, dpnode, dppool )
 
-         END IF
+         end if
 
 !
 !        Finally insert this data item into the numeric buffer.
 !
-         DPVALS(DPNODE) = DBLE( IVALS(I) )
+         dpvals(dpnode) = dble( ivals(i) )
 
-      END DO
+      end do
 
 
 !
@@ -7107,19 +7107,19 @@
 !     If it is, add its associated agents to the list of
 !     AGENTS to be notified of a watched variable update.
 !
-      IF (  ELEMC( NAME, WTVARS )  ) THEN
+      if (  elemc( name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
 !        associated with the variable NAME.
 !
-         CALL ZZNWPOOL ( NAME,   WTVARS, WTPTRS, WTPOOL, &
-                         WTAGNT, ACTIVE, NOTIFY, AGENTS )
+         call zznwpool ( name,   wtvars, wtptrs, wtpool, &
+                         wtagnt, active, notify, agents )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'PIPOOL' )
-      RETURN
+      call chkout ( 'PIPOOL' )
+      return
 
 
 
@@ -7127,7 +7127,7 @@
 
 !$Procedure LMPOOL ( Load variables from memory into the pool )
 
-      ENTRY LMPOOL ( CVALS, N )
+      entry lmpool ( cvals, n )
 
 ! $ Abstract
 !
@@ -7310,89 +7310,89 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LMPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'LMPOOL' )
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Read from the internal SPICE pool buffer
 !
-      LINNUM = 1
+      linnum = 1
 
-      CALL ZZRVBF ( CVALS,  N,      LINNUM,  NAMLST, &
-                    NMPOOL, PNAMES, DATLST, &
-                    DPPOOL, DPVALS, &
-                    CHPOOL, CHVALS, &
-                    VARNAM, EOF )
+      call zzrvbf ( cvals,  n,      linnum,  namlst, &
+                    nmpool, pnames, datlst, &
+                    dppool, dpvals, &
+                    chpool, chvals, &
+                    varnam, eof )
 
 
 !
 !     Read the variables in the file, one at a time.
 !
-      DO WHILE ( .NOT. EOF .AND. .NOT. FAILED() )
+      do while ( .not. eof .and. .not. failed() )
 
-         IF ( VARNAM .NE. ' ' ) THEN
+         if ( varnam .ne. ' ' ) then
 
-            IF (  ELEMC( VARNAM, WTVARS )  ) THEN
+            if (  elemc( varnam, wtvars )  ) then
 !
 !              The variable VARNAM is watched.
 !
 !              Union the update set AGENTS with the set of agents
 !              associated with the variable VARNAM.
 !
-               CALL ZZNWPOOL ( VARNAM, WTVARS, WTPTRS, WTPOOL, &
-                               WTAGNT, ACTIVE, NOTIFY, AGENTS )
+               call zznwpool ( varnam, wtvars, wtptrs, wtpool, &
+                               wtagnt, active, notify, agents )
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        We've processed VARNAM if it was non-blank.
 !
-         CALL ZZRVBF ( CVALS,  N,      LINNUM,  NAMLST, &
-                       NMPOOL, PNAMES, DATLST, &
-                       DPPOOL, DPVALS, &
-                       CHPOOL, CHVALS, &
-                       VARNAM, EOF )
+         call zzrvbf ( cvals,  n,      linnum,  namlst, &
+                       nmpool, pnames, datlst, &
+                       dppool, dpvals, &
+                       chpool, chvals, &
+                       varnam, eof )
 
-      END DO
+      end do
 
 !
 !     That's it, the buffer supplied has been completely parsed
 !     and placed into the kernel pool.
 !
-      CALL CHKOUT  ( 'LMPOOL' )
-      RETURN
+      call chkout  ( 'LMPOOL' )
+      return
 
 
 
 
 !$Procedure SZPOOL (Get size limitations of the kernel pool)
 
-      ENTRY SZPOOL ( NAME, N, FOUND )
+      entry szpool ( name, n, found )
 
 ! $ Abstract
 !
@@ -7549,42 +7549,42 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SZPOOL')
+      call chkin ( 'SZPOOL')
 
-      FOUND = .TRUE.
+      found = .true.
 
-      IF ( EQSTR( NAME, 'MAXVAR' ) ) THEN
-         N = MAXVAR
-      ELSE IF ( EQSTR( NAME, 'MAXVAL' ) ) THEN
-         N = MAXVAL
-      ELSE IF ( EQSTR( NAME, 'MAXLIN' ) ) THEN
-         N = MAXLIN
-      ELSE IF ( EQSTR( NAME, 'MAXCHR' ) ) THEN
-         N = MAXCHR
-      ELSE IF ( EQSTR( NAME, 'MXNOTE' ) ) THEN
-         N = MXNOTE
-      ELSE IF ( EQSTR( NAME, 'MAXLEN' ) ) THEN
-         N = MAXLEN
-      ELSE IF ( EQSTR( NAME, 'MAXAGT' ) ) THEN
-         N = MAXAGT
-      ELSE
-         N     = 0
-         FOUND = .FALSE.
-      END IF
+      if ( eqstr( name, 'MAXVAR' ) ) then
+         n = maxvar
+      else if ( eqstr( name, 'MAXVAL' ) ) then
+         n = maxval
+      else if ( eqstr( name, 'MAXLIN' ) ) then
+         n = maxlin
+      else if ( eqstr( name, 'MAXCHR' ) ) then
+         n = maxchr
+      else if ( eqstr( name, 'MXNOTE' ) ) then
+         n = mxnote
+      else if ( eqstr( name, 'MAXLEN' ) ) then
+         n = maxlen
+      else if ( eqstr( name, 'MAXAGT' ) ) then
+         n = maxagt
+      else
+         n     = 0
+         found = .false.
+      end if
 
-      CALL CHKOUT ( 'SZPOOL' )
-      RETURN
+      call chkout ( 'SZPOOL' )
+      return
 
 
 
 
 !$Procedure DVPOOL ( Delete a variable from the kernel pool )
 
-      ENTRY DVPOOL ( NAME )
+      entry dvpool ( name )
 
 ! $ Abstract
 !
@@ -7751,32 +7751,32 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DVPOOL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'DVPOOL' )
+      end if
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     Locate the variable name in the hash table.  If the variable
@@ -7785,41 +7785,41 @@
 !
 !     Compute the hash value of this name.
 !
-      LOOKAT = ZZHASH ( NAME )
+      lookat = zzhash ( name )
 
 !
 !     Now see if there is a non-empty conflict resolution list for the
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      IF ( NAMLST(LOOKAT) .EQ. 0 ) THEN
+      if ( namlst(lookat) .eq. 0 ) then
 
-         CALL CHKOUT ( 'DVPOOL' )
-         RETURN
+         call chkout ( 'DVPOOL' )
+         return
 
-      END IF
+      end if
 !
 !     If were are still here NAMLST(LOOKAT) is the first node of
 !     a conflict resolution list.  See if the NAME corresponding
 !     to this node is the one we are looking for.
 !
-      NAMEAT = NAMLST( LOOKAT )
-      SUCCES = NAME .EQ. PNAMES(NAMEAT)
+      nameat = namlst( lookat )
+      succes = name .eq. pnames(nameat)
 
-      DO WHILE ( .NOT. SUCCES )
+      do while ( .not. succes )
 
-         NAMEAT = NMPOOL ( NEXT, NAMEAT )
+         nameat = nmpool ( next, nameat )
 
-         IF ( NAMEAT .LT. 0 ) THEN
+         if ( nameat .lt. 0 ) then
 
-            CALL CHKOUT ( 'DVPOOL' )
-            RETURN
+            call chkout ( 'DVPOOL' )
+            return
 
-         END IF
+         end if
 
-         SUCCES = NAME .EQ. PNAMES(NAMEAT)
+         succes = name .eq. pnames(nameat)
 
-      END DO
+      end do
 
 !
 !     Ok, the variable's here.  The head node of its value list is
@@ -7829,8 +7829,8 @@
 !     CHPOOL.
 !
 !
-      CALL ZZCLN ( LOOKAT, NAMEAT, &
-                   NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+      call zzcln ( lookat, nameat, &
+                   namlst, datlst, nmpool, chpool, dppool )
 
 !
 !     For consistency with CLPOOL, blank out the PNAMES entry containing
@@ -7838,32 +7838,32 @@
 !     when errors occur during the population of the kernel pool, PNAMES
 !     is not cleaned out
 !
-      PNAMES ( NAMEAT )  =  ' '
+      pnames ( nameat )  =  ' '
 
 !
 !     There may be agents watching the variable we just wiped out.  If
 !     so, add these agents to the list of agents to be notified of a
 !     watched variable update.
 !
-      IF (  ELEMC( NAME, WTVARS )  ) THEN
+      if (  elemc( name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
 !        associated with the variable NAME.
 !
-         CALL ZZNWPOOL ( NAME,   WTVARS, WTPTRS, WTPOOL, &
-                         WTAGNT, ACTIVE, NOTIFY, AGENTS )
+         call zznwpool ( name,   wtvars, wtptrs, wtpool, &
+                         wtagnt, active, notify, agents )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DVPOOL' )
-      RETURN
+      call chkout ( 'DVPOOL' )
+      return
 
 
 
 
 !$Procedure GNPOOL (Get names of kernel pool variables)
 
-      ENTRY GNPOOL ( NAME, START, ROOM, N, CVALS, FOUND )
+      entry gnpool ( name, start, room, n, cvals, found )
 
 ! $ Abstract
 !
@@ -8106,116 +8106,116 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GNPOOL')
+      call chkin ( 'GNPOOL')
 
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Perform the one obvious error check first.
 !
-      IF ( ROOM .LT. 1 ) THEN
+      if ( room .lt. 1 ) then
 
-         CALL SETMSG ( 'The amount of room specified as ' &
+         call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
 
-         CALL ERRINT ( '#', ROOM )
-         CALL SIGERR ( 'SPICE(BADARRAYSIZE)'  )
-         CALL CHKOUT ( 'GNPOOL' )
-         RETURN
+         call errint ( '#', room )
+         call sigerr ( 'SPICE(BADARRAYSIZE)'  )
+         call chkout ( 'GNPOOL' )
+         return
 
-      END IF
+      end if
 
 !
 !     So far we've encountered no matching names.
 !
-      HITS  = 0
-      N     = 0
-      BEGIN = MAX( 1, START )
+      hits  = 0
+      n     = 0
+      begin = max( 1, start )
 
-      DO K = 1, MAXVAR
+      do k = 1, maxvar
 !
 !        See if there is any variable associated with this hash value.
 !
-         NNODE = NAMLST(K)
+         nnode = namlst(k)
 
-         DO WHILE (  NNODE .GT. 0 )
+         do while (  nnode .gt. 0 )
 !
 !           There is some name list associated with this node. See if
 !           it the current one matches the supplied template.
 !
-            IF ( MATCHI( PNAMES(NNODE), NAME, '*', '%' ) ) THEN
+            if ( matchi( pnames(nnode), name, '*', '%' ) ) then
 
 !
 !              We've got a match.  Record this fact and if we have
 !              reached (or passed) the starting point, put this name
 !              on the output list.
 !
-               HITS = HITS + 1
+               hits = hits + 1
 
-               IF ( HITS .GE. START ) THEN
+               if ( hits .ge. start ) then
 
-                  IF ( N .LT. ROOM ) THEN
-                     N        = N + 1
-                     CVALS(N) = PNAMES(NNODE)
-                  END IF
+                  if ( n .lt. room ) then
+                     n        = n + 1
+                     cvals(n) = pnames(nnode)
+                  end if
 !
 !                 If we've filled up the buffer, we may as well
 !                 quit now.
 !
-                  IF ( N .EQ. ROOM ) THEN
-                     FOUND = .TRUE.
-                     CALL CHKOUT ( 'GNPOOL' )
-                     RETURN
-                  END IF
+                  if ( n .eq. room ) then
+                     found = .true.
+                     call chkout ( 'GNPOOL' )
+                     return
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Get the next name for this node.
 !
-            NNODE = NMPOOL(NEXT,NNODE)
+            nnode = nmpool(next,nnode)
 
-         END DO
+         end do
 !
 !        Advance to the next hash value.
 !
-      END DO
+      end do
 
 
-      FOUND = HITS .GT. 0
+      found = hits .gt. 0
 
-      CALL CHKOUT ( 'GNPOOL' )
-      RETURN
+      call chkout ( 'GNPOOL' )
+      return
 
 
 
 !$Procedure DWPOOL ( Delete watch from kernel pool )
 
-      ENTRY DWPOOL ( AGENT )
+      entry dwpool ( agent )
 
 ! $ Abstract
 !
@@ -8338,54 +8338,54 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DWPOOL' )
+      call chkin ( 'DWPOOL' )
 
 !
 !     Initialize the pool if necessary.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZPINI (  FIRST, &
-                        MAXVAR, MAXVAL, MAXLIN, &
-                        BEGDAT, BEGTXT, &
-                        NMPOOL, DPPOOL, CHPOOL, &
-                        NAMLST, DATLST, &
-                        MAXAGT, MXNOTE, WTVARS, &
-                        WTPTRS, WTPOOL, WTAGNT, &
-                        AGENTS, ACTIVE, NOTIFY, SUBCTR )
+         call zzpini (  first, &
+                        maxvar, maxval, maxlin, &
+                        begdat, begtxt, &
+                        nmpool, dppool, chpool, &
+                        namlst, datlst, &
+                        maxagt, mxnote, wtvars, &
+                        wtptrs, wtpool, wtagnt, &
+                        agents, active, notify, subctr )
 
-      END IF
+      end if
 
 !
 !     Make sure we're not silencing an agent who has something
 !     to say.
 !
-      IF (  ELEMC( AGENT, AGENTS )  ) THEN
+      if (  elemc( agent, agents )  ) then
 
-         CALL SETMSG ( 'Could not delete AGENT # from the watch ' &
+         call setmsg ( 'Could not delete AGENT # from the watch ' &
          //            'symbol table because AGENT is associated ' &
          //            'with at least one updated kernel variable. ' )
-         CALL ERRCH  ( '#', AGENT                                    )
-         CALL SIGERR ( 'SPICE(UPDATEPENDING)'                        )
-         CALL CHKOUT ( 'DWPOOL'                                      )
-         RETURN
+         call errch  ( '#', agent                                    )
+         call sigerr ( 'SPICE(UPDATEPENDING)'                        )
+         call chkout ( 'DWPOOL'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Increment POOL state counter.
 !
-      CALL ZZCTRINC ( SUBCTR )
+      call zzctrinc ( subctr )
 
 !
 !     AGENT is no longer on the list of agents associated with a
 !     kernel variable update.
 !
-      CALL REMOVC ( AGENT, AGENTS )
+      call removc ( agent, agents )
 
 !
 !     For each kernel variable in the watcher's list, remove
@@ -8417,9 +8417,9 @@
 !     Since WTVARS may shrink due to deletion of watches, we
 !     fetch the cardinality of WTVARS on each loop iteration.
 !
-      I = 1
+      i = 1
 
-      DO WHILE (  ( I .LE. CARDC(WTVARS) )  .AND.  ( .NOT. FAILED() )  )
+      do while (  ( i .le. cardc(wtvars) )  .and.  ( .not. failed() )  )
 !
 !        Search the list of agents associated with the Ith watched
 !        variable for AGENT. We want the list count as well, so
@@ -8431,38 +8431,38 @@
 !        If we find AGENT, we'll use AGNODE to designate
 !        the node associated with AGENT.
 !
-         NODE   = WTPTRS(I)
-         NNODES = 0
-         AGNODE = 0
+         node   = wtptrs(i)
+         nnodes = 0
+         agnode = 0
 
-         DO WHILE ( NODE .GT. 0 )
+         do while ( node .gt. 0 )
 
-            NNODES = NNODES + 1
+            nnodes = nnodes + 1
 !
 !           Fetch the next agent for the Ith kernel variable.
 !
-            IF ( WTAGNT(NODE) .EQ. AGENT ) THEN
+            if ( wtagnt(node) .eq. agent ) then
 !
 !               Save the current node.
 !
-                AGNODE = NODE
+                agnode = node
 
-            END IF
+            end if
 !
 !           Find the next node in the list.
 !
-            NODE = LNKNXT( NODE, WTPOOL )
+            node = lnknxt( node, wtpool )
 
-         END DO
+         end do
 
-         IF ( AGNODE .GT. 0 ) THEN
+         if ( agnode .gt. 0 ) then
 !
 !           The input agent is on the agent list for the Ith watched
 !           kernel variable. Delete this agent from the list. Delete
 !           the node corresponding to AGENT from the watch pool. First
 !           set the corresponding agent name to blank.
 !
-            WTAGNT(AGNODE) = ' '
+            wtagnt(agnode) = ' '
 
 !
 !           If we're about to delete the head node of the agent list,
@@ -8471,35 +8471,35 @@
 !           of AGNODE; we'll handle that case after the LNKFSL call
 !           below.
 !
-            IF ( WTPTRS(I) .EQ. AGNODE ) THEN
+            if ( wtptrs(i) .eq. agnode ) then
 
-               WTPTRS(I) = LNKNXT( AGNODE, WTPOOL )
+               wtptrs(i) = lnknxt( agnode, wtpool )
 
-            END IF
+            end if
 
 !
 !           Now free AGNODE.
 !
-            CALL LNKFSL ( AGNODE, AGNODE, WTPOOL )
+            call lnkfsl ( agnode, agnode, wtpool )
 
 
-            IF ( NNODES .EQ. 1 ) THEN
+            if ( nnodes .eq. 1 ) then
 !
 !              In fact AGENT is the *only* agent for the Ith variable.
 !              Deleting AGENT means that nobody's watching this
 !              variable any more, so delete the variable from the
 !              watched variable set.
 
-               NW     = CARDC( WTVARS )
+               nw     = cardc( wtvars )
 
-               VARNAM = WTVARS(I)
+               varnam = wtvars(i)
 
-               CALL REMOVC ( VARNAM, WTVARS )
+               call removc ( varnam, wtvars )
 
 !
 !              Remove the associated pointer from the pointer array.
 !
-               CALL REMLAI ( 1, I, WTPTRS, NW )
+               call remlai ( 1, i, wtptrs, nw )
 
 !
 !              Since we deleted the current variable table entry and
@@ -8508,15 +8508,15 @@
 !              here to compensate for the increment operation at the
 !              bottom of the loop.
 !
-               I = I - 1
+               i = i - 1
 
-            END IF
+            end if
 !
 !           We've now deleted AGENT from the AGENT list for WTVARS(I).
 !           If the deletion left no agents watching WTVARS(I), we
 !           deleted WTVARS(I) and its associated pointer WTPTRS(I).
 !
-         END IF
+         end if
 !
 !        We've processed the Ith kernel variable in the watcher table.
 !
@@ -8524,24 +8524,24 @@
 !        at that time, so the increment operation here always is
 !        applicable.
 !
-         I = I + 1
+         i = i + 1
 
 !
 !        At this point in the loop, either I has increased or
 !        CARDC(WTVARS) has decreased; hence we've made progress
 !        toward loop termination.
 !
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DWPOOL' )
-      RETURN
+      call chkout ( 'DWPOOL' )
+      return
 
 
 
 
 !$Procedure ZZVUPOOL ( Private: view kernel pool watch system )
 
-      ENTRY ZZVUPOOL ( UWVARS, UWPTRS, UWPOOL, UWAGNT )
+      entry zzvupool ( uwvars, uwptrs, uwpool, uwagnt )
 
 ! $ Abstract
 !
@@ -8677,14 +8677,14 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZVUPOOL' )
+      call chkin ( 'ZZVUPOOL' )
 
-      CALL COPYC ( WTVARS, UWVARS                )
-      CALL MOVEI ( WTPTRS, CARDC(WTVARS), UWPTRS )
+      call copyc ( wtvars, uwvars                )
+      call movei ( wtptrs, cardc(wtvars), uwptrs )
 
 !
 !     UWPOOL is expected to have dimensions
@@ -8692,20 +8692,20 @@
 !        ( 2,  LBPOOL : MXNOTE )
 !
 
-      I = 2 * ( 6 + MXNOTE )
+      i = 2 * ( 6 + mxnote )
 
-      CALL MOVEI ( WTPOOL, I, UWPOOL )
+      call movei ( wtpool, i, uwpool )
 
-      CALL MOVEC ( WTAGNT, MXNOTE, UWAGNT )
+      call movec ( wtagnt, mxnote, uwagnt )
 
 
-      CALL CHKOUT ( 'ZZVUPOOL' )
-      RETURN
+      call chkout ( 'ZZVUPOOL' )
+      return
 
 
 !$Procedure ZZPCTRCK ( Private: check/update user's POOL state counter )
 
-      ENTRY ZZPCTRCK ( USRCTR, UPDATE )
+      entry zzpctrck ( usrctr, update )
 
 ! $ Abstract
 !
@@ -8878,11 +8878,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL ZZCTRCHK ( SUBCTR, USRCTR, UPDATE )
+      call zzctrchk ( subctr, usrctr, update )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure RMAINI ( Remainder --- integer )
 
-      SUBROUTINE RMAINI ( NUM, DENOM, Q, REM )
+      subroutine rmaini ( num, denom, q, rem )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NUM
-      INTEGER               DENOM
-      INTEGER               Q
-      INTEGER               REM
+      integer               num
+      integer               denom
+      integer               q
+      integer               rem
 
 ! $ Brief_I/O
 !
@@ -119,22 +119,22 @@
 !
 !     Take care of the zero-denominator case first
 !
-      IF ( DENOM .EQ. 0.0D0 ) THEN
-         CALL CHKIN  ( 'RMAINI'                                       )
-         CALL SETMSG ( 'Attempting to compute a quotient with a '     // &
+      if ( denom .eq. 0.0d0 ) then
+         call chkin  ( 'RMAINI'                                       )
+         call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )
-         CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                          )
-         CALL CHKOUT ( 'RMAINI'                                       )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(DIVIDEBYZERO)'                          )
+         call chkout ( 'RMAINI'                                       )
+         return
+      end if
 
-      Q   = NUM / DENOM
-      REM = NUM - DENOM*Q
+      q   = num / denom
+      rem = num - denom*q
 
-      IF ( REM .LT. 0 ) THEN
-         Q   = Q   - 1
-         REM = REM + DENOM
-      END IF
+      if ( rem .lt. 0 ) then
+         q   = q   - 1
+         rem = rem + denom
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSCA ( EK, scratch area )
 
-      SUBROUTINE ZZEKSCA ( N, BEG, END, IDATA, TOP )
+      subroutine zzeksca ( n, beg, end, idata, top )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      INTEGER               N
-      INTEGER               BEG
-      INTEGER               END
-      INTEGER               IDATA ( * )
-      INTEGER               TOP
+      integer               n
+      integer               beg
+      integer               end
+      integer               idata ( * )
+      integer               top
 
 ! $ Brief_I/O
 !
@@ -234,8 +234,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -249,70 +249,70 @@
 !     word of the scratch DAS file corresponds to scratch area address
 !     MEMSIZ + 1.
 !
-      INTEGER               MEMSIZ
-      PARAMETER           ( MEMSIZ = 2500000 )
+      integer               memsiz
+      parameter           ( memsiz = 2500000 )
 
 
 
 !
 !     Local variables
 !
-      INTEGER               B
-      INTEGER               BASE
-      INTEGER               E
-      INTEGER               I
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               NUMADD
-      INTEGER               NUMRD
-      INTEGER               RB
-      INTEGER               REMAIN
-      INTEGER               RT
-      INTEGER               SCRHAN
-      INTEGER               SCRTCH ( MEMSIZ )
-      INTEGER               START
-      INTEGER               T
+      integer               b
+      integer               base
+      integer               e
+      integer               i
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               numadd
+      integer               numrd
+      integer               rb
+      integer               remain
+      integer               rt
+      integer               scrhan
+      integer               scrtch ( memsiz )
+      integer               start
+      integer               t
 
-      LOGICAL               FIRST
+      logical               first
 
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE.  /
-      DATA                  T      /  0      /
+      data                  first  / .true.  /
+      data                  t      /  0      /
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKSCA' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKSCA' )
+      end if
 
 !
 !     This routine should never be called directly.
 !
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'ZZEKSCA' )
-      RETURN
+      call chkout ( 'ZZEKSCA' )
+      return
 
 
 
 
 !$Procedure    ZZEKSTOP  ( EK scratch area, stack top )
 
-      ENTRY ZZEKSTOP ( TOP )
+      entry zzekstop ( top )
 
 ! $ Abstract
 !
@@ -400,8 +400,8 @@
 !
 !-&
 
-      TOP  =  T
-      RETURN
+      top  =  t
+      return
 
 
 
@@ -410,7 +410,7 @@
 
 !$Procedure    ZZEKSPSH  ( EK scratch area, push data )
 
-      ENTRY ZZEKSPSH ( N, IDATA )
+      entry zzekspsh ( n, idata )
 
 ! $ Abstract
 !
@@ -527,55 +527,55 @@
 !
 !     First time through, open a scratch DAS file.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         CALL DASOPS ( SCRHAN )
+         call dasops ( scrhan )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Go back if there's no data to write.
 !
-      IF ( N .LT. 1 ) THEN
-         RETURN
-      END IF
+      if ( n .lt. 1 ) then
+         return
+      end if
 
 !
 !     Add as much data as possible to our big array.
 !
-      IF ( T .LT. MEMSIZ ) THEN
+      if ( t .lt. memsiz ) then
 
-         NUMADD = MIN ( N, MEMSIZ-T )
+         numadd = min ( n, memsiz-t )
 
-         DO I = 1, NUMADD
-            SCRTCH(T+I) = IDATA(I)
-         END DO
+         do i = 1, numadd
+            scrtch(t+i) = idata(i)
+         end do
 
-         T      = T + NUMADD
+         t      = t + numadd
 
-         IF ( NUMADD .EQ. N ) THEN
-            RETURN
-         END IF
+         if ( numadd .eq. n ) then
+            return
+         end if
 
-         REMAIN = N - NUMADD
-         START  = 1 + NUMADD
+         remain = n - numadd
+         start  = 1 + numadd
 
-         IF ( REMAIN .EQ. 0 ) THEN
-            RETURN
-         END IF
+         if ( remain .eq. 0 ) then
+            return
+         end if
 
-      ELSE
+      else
 
-         REMAIN = N
-         START  = 1
+         remain = n
+         start  = 1
 
-      END IF
+      end if
 !
 !     At this point, REMAIN and START are set, and T reflects the
 !     amount of data we've pushed so far.  If we got this far,
@@ -588,7 +588,7 @@
 !     be written to addresses previously written to, and which
 !     part will be appended.
 !
-      CALL DASLLA ( SCRHAN, LASTC, LASTD, LASTI )
+      call daslla ( scrhan, lastc, lastd, lasti )
 
 !
 !     To simplify our arithmetic, we'll work with a variable RT
@@ -596,47 +596,47 @@
 !     of the DAS integer array.  At this point, RT is greater than
 !     or equal to zero.
 !
-      RT  =  T - MEMSIZ
+      rt  =  t - memsiz
 
-      IF ( RT .LT. LASTI ) THEN
+      if ( rt .lt. lasti ) then
 !
 !        Some data can be added by updating DAS addresses.  The
 !        available range for updating is B:E, where B and E are
 !        calculated below.  This case can occur only when LASTI > 0.
 !
-         B       =  RT + 1
-         E       =  MIN ( LASTI,  RT + REMAIN )
+         b       =  rt + 1
+         e       =  min ( lasti,  rt + remain )
 
-         CALL DASUDI ( SCRHAN, B, E, IDATA(START) )
+         call dasudi ( scrhan, b, e, idata(start) )
 
-         NUMADD  =  E      - B + 1
-         START   =  START  + NUMADD
-         REMAIN  =  REMAIN - NUMADD
-         T       =  T      + NUMADD
+         numadd  =  e      - b + 1
+         start   =  start  + numadd
+         remain  =  remain - numadd
+         t       =  t      + numadd
 
-         IF ( REMAIN .EQ. 0 ) THEN
-            RETURN
-         END IF
+         if ( remain .eq. 0 ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, START and REMAIN are set, and T reflects the
 !     amount of data we've pushed so far..  The remaining data
 !     must be appended to the scratch DAS file.
 !
-      CALL DASADI ( SCRHAN, REMAIN, IDATA(START) )
+      call dasadi ( scrhan, remain, idata(start) )
 
-      T = T + REMAIN
+      t = t + remain
 
-      RETURN
+      return
 
 
 
 
 !$Procedure    ZZEKSPOP  ( EK scratch area, pop data )
 
-      ENTRY ZZEKSPOP ( N, IDATA )
+      entry zzekspop ( n, idata )
 
 ! $ Abstract
 !
@@ -751,79 +751,79 @@
 !
 !     First time through, open a scratch DAS file.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         CALL DASOPS ( SCRHAN )
+         call dasops ( scrhan )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     You can't pop a negative number of elements.
 !
-      IF ( N .LT. 0 ) THEN
+      if ( n .lt. 0 ) then
 
-         CALL CHKIN  ( 'ZZEKSPOP'                             )
-         CALL SETMSG ( 'Pop count must be non-negative; '    // &
+         call chkin  ( 'ZZEKSPOP'                             )
+         call setmsg ( 'Pop count must be non-negative; '    // &
                        'call requests popping # elements.'    )
-         CALL ERRINT ( '#', N                                 )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                  )
-         CALL CHKOUT ( 'ZZEKSPOP'                             )
-         RETURN
+         call errint ( '#', n                                 )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                  )
+         call chkout ( 'ZZEKSPOP'                             )
+         return
 
 !
 !     It's an error to try to pop more data than we have on the
 !     stack.
 !
-      ELSE IF ( N .GT. T ) THEN
+      else if ( n .gt. t ) then
 
-         CALL CHKIN  ( 'ZZEKSPOP'                                      )
-         CALL SETMSG ( 'EK stack pointer = #; call requests popping ' // &
+         call chkin  ( 'ZZEKSPOP'                                      )
+         call setmsg ( 'EK stack pointer = #; call requests popping ' // &
                        '# items.'                                      )
-         CALL ERRINT ( '#', T                                          )
-         CALL ERRINT ( '#', N                                          )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                           )
-         CALL CHKOUT ( 'ZZEKSPOP'                                      )
-         RETURN
+         call errint ( '#', t                                          )
+         call errint ( '#', n                                          )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
+         call chkout ( 'ZZEKSPOP'                                      )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Read as much data as possible from our big array.
 !
-      BASE  = T - N
+      base  = t - n
 
-      IF ( BASE .LT. MEMSIZ ) THEN
+      if ( base .lt. memsiz ) then
 
-         NUMRD = MIN ( N, MEMSIZ-BASE )
+         numrd = min ( n, memsiz-base )
 
-         DO I = 1, NUMRD
-            IDATA(I) = SCRTCH(BASE+I)
-         END DO
+         do i = 1, numrd
+            idata(i) = scrtch(base+i)
+         end do
 
-         IF ( NUMRD .EQ. N ) THEN
+         if ( numrd .eq. n ) then
 
-            T  =  T - NUMRD
-            RETURN
+            t  =  t - numrd
+            return
 
-         END IF
+         end if
 
-         REMAIN = N      -  NUMRD
-         BASE   = MEMSIZ
-         START  = NUMRD  +  1
+         remain = n      -  numrd
+         base   = memsiz
+         start  = numrd  +  1
 
-      ELSE
+      else
 
-         REMAIN = N
-         START  = 1
+         remain = n
+         start  = 1
 
-      END IF
+      end if
 
 !
 !     At this point, REMAIN, START and BASE are set.  If we got this
@@ -831,15 +831,15 @@
 !     Compute the base address to read from relative to the start of
 !     the DAS array.
 !
-      RB     =  BASE - MEMSIZ
-      B      =  RB   + 1
-      E      =  RB   + REMAIN
+      rb     =  base - memsiz
+      b      =  rb   + 1
+      e      =  rb   + remain
 
-      CALL DASRDI ( SCRHAN, B, E, IDATA(START) )
+      call dasrdi ( scrhan, b, e, idata(start) )
 
-      T      =  T - N
+      t      =  t - n
 
-      RETURN
+      return
 
 
 
@@ -848,7 +848,7 @@
 
 !$Procedure    ZZEKSDEC  ( EK scratch area, decrement stack pointer )
 
-      ENTRY ZZEKSDEC ( N )
+      entry zzeksdec ( n )
 
 ! $ Abstract
 !
@@ -949,60 +949,60 @@
 !
 !     First time through, open a scratch DAS file.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         CALL DASOPS ( SCRHAN )
+         call dasops ( scrhan )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
-      END IF
+      end if
 
 
 !
 !     Catch non-positive decrement requests.
 !
-      IF ( N .LT. 0 ) THEN
+      if ( n .lt. 0 ) then
 
-         CALL CHKIN  ( 'ZZEKSDEC'                               )
-         CALL SETMSG ( 'Decrement value must be non-negative; ' // &
+         call chkin  ( 'ZZEKSDEC'                               )
+         call setmsg ( 'Decrement value must be non-negative; ' // &
                        'call requests decrement by #.'          )
-         CALL ERRINT ( '#', N                                   )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                    )
-         CALL CHKOUT ( 'ZZEKSDEC'                               )
-         RETURN
+         call errint ( '#', n                                   )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
+         call chkout ( 'ZZEKSDEC'                               )
+         return
 
 !
 !     It's an error to try to decrement the pointer by more than
 !     the current stack depth.
 !
-      ELSE IF ( N .GT. T ) THEN
+      else if ( n .gt. t ) then
 
-         CALL CHKIN  ( 'ZZEKSDEC'                               )
-         CALL SETMSG ( 'EK stack pointer = #; call requests  ' // &
+         call chkin  ( 'ZZEKSDEC'                               )
+         call setmsg ( 'EK stack pointer = #; call requests  ' // &
                        'decrement by #.'                        )
-         CALL ERRINT ( '#', T                                   )
-         CALL ERRINT ( '#', N                                   )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                    )
-         CALL CHKOUT ( 'ZZEKSDEC'                               )
-         RETURN
+         call errint ( '#', t                                   )
+         call errint ( '#', n                                   )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
+         call chkout ( 'ZZEKSDEC'                               )
+         return
 
-      END IF
+      end if
 
 
-      T  =  T  -  N
+      t  =  t  -  n
 
-      RETURN
+      return
 
 
 
 
 !$Procedure    ZZEKSUPD  ( EK scratch area, update )
 
-      ENTRY ZZEKSUPD ( BEG, END, IDATA )
+      entry zzeksupd ( beg, end, idata )
 
 ! $ Abstract
 !
@@ -1132,67 +1132,67 @@
 !
 !     Validate the addresses.
 !
-      IF (  ( BEG .LT. 1 ) .OR. ( BEG .GT. T )  ) THEN
+      if (  ( beg .lt. 1 ) .or. ( beg .gt. t )  ) then
 
-         CALL CHKIN  ( 'ZZEKSUPD'                                    )
-         CALL SETMSG ( 'Start address BEG was #; valid range is 1:#' )
-         CALL ERRINT ( '#',  BEG                                     )
-         CALL ERRINT ( '#',  T                                       )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                       )
-         CALL CHKOUT ( 'ZZEKSUPD'                                    )
-         RETURN
+         call chkin  ( 'ZZEKSUPD'                                    )
+         call setmsg ( 'Start address BEG was #; valid range is 1:#' )
+         call errint ( '#',  beg                                     )
+         call errint ( '#',  t                                       )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
+         call chkout ( 'ZZEKSUPD'                                    )
+         return
 
-      ELSE IF (  ( END .LT. 1 ) .OR. ( END .GT. T  )  ) THEN
+      else if (  ( end .lt. 1 ) .or. ( end .gt. t  )  ) then
 
-         CALL CHKIN  ( 'ZZEKSUPD'                                    )
-         CALL SETMSG ( 'End address END was #; valid range is 1:#'   )
-         CALL ERRINT ( '#',  END                                     )
-         CALL ERRINT ( '#',  T                                       )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                       )
-         CALL CHKOUT ( 'ZZEKSUPD'                                    )
-         RETURN
+         call chkin  ( 'ZZEKSUPD'                                    )
+         call setmsg ( 'End address END was #; valid range is 1:#'   )
+         call errint ( '#',  end                                     )
+         call errint ( '#',  t                                       )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
+         call chkout ( 'ZZEKSUPD'                                    )
+         return
 
-      ELSE IF ( BEG .GT. END ) THEN
-         RETURN
-      END IF
+      else if ( beg .gt. end ) then
+         return
+      end if
 
 
-      IF ( END .LE. MEMSIZ ) THEN
+      if ( end .le. memsiz ) then
 !
 !        If the entire range is in memory, fine.  Update the range
 !        now.
 !
-         DO I = BEG, END
-            SCRTCH(I)  =  IDATA(I-BEG+1)
-         END DO
+         do i = beg, end
+            scrtch(i)  =  idata(i-beg+1)
+         end do
 
 
-      ELSE IF ( BEG .LE. MEMSIZ ) THEN
+      else if ( beg .le. memsiz ) then
 !
 !        Update the portion of the address range that's in memory.
 !
-         DO I = BEG, MEMSIZ
-            SCRTCH(I)  =  IDATA(I-BEG+1)
-         END DO
+         do i = beg, memsiz
+            scrtch(i)  =  idata(i-beg+1)
+         end do
 
 !
 !        Now update the rest of the range, which is in the scratch
 !        DAS file.
 !
-         CALL DASUDI  ( SCRHAN, &
+         call dasudi  ( scrhan, &
                         1, &
-                        END-MEMSIZ, &
-                        IDATA( MEMSIZ-BEG+2 )  )
+                        end-memsiz, &
+                        idata( memsiz-beg+2 )  )
 
-      ELSE
+      else
 !
 !        The whole range is in the DAS file.
 !
-         CALL DASUDI ( SCRHAN,  BEG-MEMSIZ,  END-MEMSIZ,  IDATA )
+         call dasudi ( scrhan,  beg-memsiz,  end-memsiz,  idata )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
@@ -1201,7 +1201,7 @@
 
 !$Procedure    ZZEKSRD  ( EK scratch area, read )
 
-      ENTRY ZZEKSRD ( BEG, END, IDATA )
+      entry zzeksrd ( beg, end, idata )
 
 ! $ Abstract
 !
@@ -1327,73 +1327,73 @@
 !
 !     Validate the addresses.
 !
-      IF (  ( BEG .LT. 1 ) .OR. ( BEG .GT. T  )  ) THEN
+      if (  ( beg .lt. 1 ) .or. ( beg .gt. t  )  ) then
 
-         CALL CHKIN  ( 'ZZEKSRD'                                     )
-         CALL SETMSG ( 'Start address BEG was #; valid range is 1:#' )
-         CALL ERRINT ( '#',  BEG                                     )
-         CALL ERRINT ( '#',  T                                       )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                       )
-         CALL CHKOUT ( 'ZZEKSRD'                                     )
-         RETURN
+         call chkin  ( 'ZZEKSRD'                                     )
+         call setmsg ( 'Start address BEG was #; valid range is 1:#' )
+         call errint ( '#',  beg                                     )
+         call errint ( '#',  t                                       )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
+         call chkout ( 'ZZEKSRD'                                     )
+         return
 
-      ELSE IF (  ( END .LT. 1 ) .OR. ( END .GT. T  )  ) THEN
+      else if (  ( end .lt. 1 ) .or. ( end .gt. t  )  ) then
 
-         CALL CHKIN  ( 'ZZEKSRD'                                     )
-         CALL SETMSG ( 'End address END was #; valid range is 1:#'   )
-         CALL ERRINT ( '#',  END                                     )
-         CALL ERRINT ( '#',  T                                       )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                       )
-         CALL CHKOUT ( 'ZZEKSRD'                                     )
-         RETURN
+         call chkin  ( 'ZZEKSRD'                                     )
+         call setmsg ( 'End address END was #; valid range is 1:#'   )
+         call errint ( '#',  end                                     )
+         call errint ( '#',  t                                       )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                       )
+         call chkout ( 'ZZEKSRD'                                     )
+         return
 
-      ELSE IF ( BEG .GT. END ) THEN
-         RETURN
-      END IF
+      else if ( beg .gt. end ) then
+         return
+      end if
 
 
-      IF ( END .LE. MEMSIZ ) THEN
+      if ( end .le. memsiz ) then
 !
 !        If the entire range is in memory, fine.  Read from the range
 !        now.
 !
-         DO I = BEG, END
-            IDATA(I-BEG+1)  =  SCRTCH(I)
-         END DO
+         do i = beg, end
+            idata(i-beg+1)  =  scrtch(i)
+         end do
 
 
-      ELSE IF ( BEG .LE. MEMSIZ ) THEN
+      else if ( beg .le. memsiz ) then
 !
 !        Read from the portion of the address range that's in memory.
 !
-         DO I = BEG, MEMSIZ
-            IDATA(I-BEG+1)  =  SCRTCH(I)
-         END DO
+         do i = beg, memsiz
+            idata(i-beg+1)  =  scrtch(i)
+         end do
 
 !
 !        Now read the rest of the range, which is in the scratch
 !        DAS file.
 !
-         CALL DASRDI  ( SCRHAN, &
+         call dasrdi  ( scrhan, &
                         1, &
-                        END-MEMSIZ, &
-                        IDATA( MEMSIZ-BEG+2 )  )
+                        end-memsiz, &
+                        idata( memsiz-beg+2 )  )
 
-      ELSE
+      else
 !
 !        The whole range is in the DAS file.
 !
-         CALL DASRDI ( SCRHAN,  BEG-MEMSIZ,  END-MEMSIZ,  IDATA )
+         call dasrdi ( scrhan,  beg-memsiz,  end-memsiz,  idata )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure    ZZEKSCLN  ( EK scratch area, clean up )
 
-      ENTRY ZZEKSCLN
+      entry zzekscln
 
 ! $ Abstract
 !
@@ -1484,31 +1484,31 @@
 !
 !     Clean out the stack buffer.
 !
-      CALL CLEARI ( MEMSIZ, SCRTCH )
-      T  = 0
+      call cleari ( memsiz, scrtch )
+      t  = 0
 
 !
 !     If FIRST has been set to .FALSE., we've an open scratch DAS
 !     to dispose of.
 !
-      IF ( .NOT. FIRST ) THEN
+      if ( .not. first ) then
 !
 !        Write out the buffered records belonging to the scratch file;
 !        this will cause them to be returned to the free list.
 !
-         CALL DASWBR ( SCRHAN )
+         call daswbr ( scrhan )
 
 !
 !        Dump the scratch DAS.
 !
-         CALL DASLLC ( SCRHAN )
+         call dasllc ( scrhan )
 
-      END IF
+      end if
 
 !
 !     Tell the system to re-initialize on the next pass.
 !
-      FIRST = .TRUE.
+      first = .true.
 
-      RETURN
-      END
+      return
+      end

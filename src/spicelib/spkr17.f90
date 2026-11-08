@@ -1,6 +1,6 @@
 !$Procedure SPKR17 ( Read SPK record from segment, type 17 )
 
-      SUBROUTINE SPKR17 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr17 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR (5)
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD(*)
+      integer               handle
+      double precision      descr (5)
+      double precision      et
+      double precision      record(*)
 
 ! $ Brief_I/O
 !
@@ -186,84 +186,84 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Variables
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
 !
 !     The difference between the first and last address of a type 17
 !     segment should be 11.
 !
-      INTEGER               DIFF
-      PARAMETER           ( DIFF = 11 )
+      integer               diff
+      parameter           ( diff = 11 )
 
-      DOUBLE PRECISION      DC  ( ND )
-      INTEGER               IC  ( NI )
+      double precision      dc  ( nd )
+      integer               ic  ( ni )
 
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               TYPE
+      integer               begin
+      integer               end
+      integer               type
 
 !
 !     Standard Spice Error Handling.
 !
-      IF (RETURN() ) THEN
-         RETURN
-      END IF
+      if (return() ) then
+         return
+      end if
 
-      CALL CHKIN('SPKR17')
+      call chkin('SPKR17')
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS( DESCR, ND, NI, DC, IC )
+      call dafus( descr, nd, ni, dc, ic )
 
-      TYPE  = IC(4)
-      BEGIN = IC(5)
-      END   = IC(6)
+      type  = ic(4)
+      begin = ic(5)
+      end   = ic(6)
 !
 !     Make sure that this really is a type 17 data segment.
 !
-      IF (TYPE .NE. 17) THEN
+      if (type .ne. 17) then
 
-         CALL SETMSG ('You are attempting to locate type 17 ' // &
+         call setmsg ('You are attempting to locate type 17 ' // &
                       'data in a type # data segment.')
-         CALL ERRINT ('#', TYPE                       )
-         CALL SIGERR ('SPICE(WRONGSPKTYPE)'           )
-         CALL CHKOUT ('SPKR17'                        )
-         RETURN
+         call errint ('#', type                       )
+         call sigerr ('SPICE(WRONGSPKTYPE)'           )
+         call chkout ('SPKR17'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Since it doesn't cost much we make sure that the segment has
 !     the correct amount of data.
 !
-      IF ( END - BEGIN .NE. DIFF ) THEN
+      if ( end - begin .ne. diff ) then
 
-         CALL SETMSG ( 'A type 17 segment should contain exactly ' &
+         call setmsg ( 'A type 17 segment should contain exactly ' &
          //            '# double precision values.  The segment ' &
          //            'supplied had #.  The segment is badly ' &
          //            'formed. ' )
 
-         CALL ERRINT ( '#',   END-BEGIN+1         )
-         CALL ERRINT ( '#',   DIFF+1              )
-         CALL SIGERR ( 'SPICE(MALFORMEDSEGMENT)'  )
-         CALL CHKOUT ( 'SPKR17'                   )
-         RETURN
+         call errint ( '#',   end-begin+1         )
+         call errint ( '#',   diff+1              )
+         call sigerr ( 'SPICE(MALFORMEDSEGMENT)'  )
+         call chkout ( 'SPKR17'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the data for the record.
 !
-      CALL DAFGDA ( HANDLE, BEGIN, END, RECORD )
-      CALL CHKOUT ('SPKR17')
-      RETURN
-      END
+      call dafgda ( handle, begin, end, record )
+      call chkout ('SPKR17')
+      return
+      end

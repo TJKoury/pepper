@@ -1,6 +1,6 @@
 !$Procedure MXMTG  ( Matrix times matrix transpose, general dimension )
 
-      SUBROUTINE MXMTG ( M1, M2, NR1, NC1C2, NR2, MOUT )
+      subroutine mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NR1
-      INTEGER            NC1C2
-      INTEGER            NR2
-      DOUBLE PRECISION   M1   ( NR1,NC1C2 )
-      DOUBLE PRECISION   M2   ( NR2,NC1C2 )
-      DOUBLE PRECISION   MOUT ( NR1,NR2   )
+      integer            nr1
+      integer            nc1c2
+      integer            nr2
+      double precision   m1   ( nr1,nc1c2 )
+      double precision   m2   ( nr2,nc1c2 )
+      double precision   mout ( nr1,nr2   )
 
 ! $ Brief_I/O
 !
@@ -212,28 +212,28 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION   SUM
-      INTEGER            I
-      INTEGER            J
-      INTEGER            K
+      double precision   sum
+      integer            i
+      integer            j
+      integer            k
 
 !
 !  Perform the matrix multiplication
 !
-      DO I = 1, NR1
+      do i = 1, nr1
 
-         DO J = 1, NR2
-            SUM = 0.D0
+         do j = 1, nr2
+            sum = 0.d0
 
-            DO K = 1, NC1C2
-               SUM = SUM + M1(I,K)*M2(J,K)
-            END DO
+            do k = 1, nc1c2
+               sum = sum + m1(i,k)*m2(j,k)
+            end do
 
-            MOUT(I,J) = SUM
+            mout(i,j) = sum
 
-         END DO
+         end do
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

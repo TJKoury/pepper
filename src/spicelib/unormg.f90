@@ -1,6 +1,6 @@
 !$Procedure UNORMG ( Unit vector and norm, general dimension )
 
-      SUBROUTINE UNORMG ( V1, NDIM, VOUT, VMAG )
+      subroutine unormg ( v1, ndim, vout, vmag )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   V1   ( NDIM )
-      DOUBLE PRECISION   VOUT ( NDIM )
-      DOUBLE PRECISION   VMAG
+      integer            ndim
+      double precision   v1   ( ndim )
+      double precision   vout ( ndim )
+      double precision   vmag
 
 ! $ Brief_I/O
 !
@@ -195,17 +195,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION   VNORMG
+      double precision   vnormg
 
 !
 !     Local variables
 !
-      INTEGER            I
+      integer            i
 
 !
 !  Obtain the magnitude of V1
 !
-      VMAG = VNORMG (V1,NDIM)
+      vmag = vnormg (v1,ndim)
 
 !
 !   If VMAG is nonzero, then normalize. Note that this process is
@@ -214,15 +214,15 @@
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      IF (VMAG.GT.0.D0) THEN
-         DO I = 1, NDIM
-            VOUT(I) = V1(I) / VMAG
-         END DO
-      ELSE
-         DO I = 1, NDIM
-            VOUT(I) = 0.D0
-         END DO
-      END IF
+      if (vmag.gt.0.d0) then
+         do i = 1, ndim
+            vout(i) = v1(i) / vmag
+         end do
+      else
+         do i = 1, ndim
+            vout(i) = 0.d0
+         end do
+      end if
 !
-      RETURN
-      END
+      return
+      end

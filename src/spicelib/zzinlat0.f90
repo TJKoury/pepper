@@ -1,6 +1,6 @@
 !$Procedure ZZINLAT0 ( DSK, in latitudinal element, w/o margin? )
 
-      SUBROUTINE ZZINLAT0 ( R, LON, LAT, BOUNDS, EXCLUD, INSIDE )
+      subroutine zzinlat0 ( r, lon, lat, bounds, exclud, inside )
 
 ! $ Abstract
 !
@@ -28,28 +28,28 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      INTEGER               EXCLUD
-      LOGICAL               INSIDE
+      double precision      r
+      double precision      lon
+      double precision      lat
+      double precision      bounds ( 2, 3 )
+      integer               exclud
+      logical               inside
 
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
-      INTEGER               LONIDX
-      PARAMETER           ( LONIDX = 1 )
+      integer               lonidx
+      parameter           ( lonidx = 1 )
 
-      INTEGER               LATIDX
-      PARAMETER           ( LATIDX = 2 )
+      integer               latidx
+      parameter           ( latidx = 2 )
 
-      INTEGER               RADIDX
-      PARAMETER           ( RADIDX = 3 )
+      integer               radidx
+      parameter           ( radidx = 3 )
 
 ! $ Brief_I/O
 !
@@ -223,58 +223,58 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
+      double precision      twopi
 
 !
 !     Local parameters
 !
-      INTEGER               LOWER
-      PARAMETER           ( LOWER = 1 )
+      integer               lower
+      parameter           ( lower = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER = 2 )
+      integer               upper
+      parameter           ( upper = 2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LOCLON
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      MINR
-      DOUBLE PRECISION      PI2
+      double precision      loclon
+      double precision      maxlat
+      double precision      maxlon
+      double precision      maxr
+      double precision      minlat
+      double precision      minlon
+      double precision      minr
+      double precision      pi2
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  PI2
+      save                  first
+      save                  pi2
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
-      DATA                  PI2   / -1.D0  /
+      data                  first / .true. /
+      data                  pi2   / -1.d0  /
 
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         PI2   = TWOPI()
-         FIRST = .FALSE.
+         pi2   = twopi()
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Assume the point is outside to start. This allows us
 !     to skip setting INSIDE when we find a boundary test
 !     failure.
 !
-      INSIDE = .FALSE.
+      inside = .false.
 !
 !     Compare coordinates of the input point and the segment
 !     bounds.
@@ -282,54 +282,54 @@
 !     Special case: if the input point is at the origin, and the
 !     volume element contains the origin, the point is inside.
 !
-      IF ( R .EQ. 0.D0 ) THEN
+      if ( r .eq. 0.d0 ) then
 
-         IF ( BOUNDS(LOWER, RADIDX) .EQ. 0.D0 ) THEN
+         if ( bounds(lower, radidx) .eq. 0.d0 ) then
 
-            INSIDE = .TRUE.
+            inside = .true.
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 
-      IF ( EXCLUD .NE. RADIDX ) THEN
+      if ( exclud .ne. radidx ) then
 !
 !        Compare the point's radius to the segment's radius bounds.
 !
-         MINR = BOUNDS(LOWER, RADIDX)
-         MAXR = BOUNDS(UPPER, RADIDX)
+         minr = bounds(lower, radidx)
+         maxr = bounds(upper, radidx)
 
-         IF ( ( R .LT. MINR ) .OR. ( R .GT. MAXR ) ) THEN
+         if ( ( r .lt. minr ) .or. ( r .gt. maxr ) ) then
 !
 !           The point's radius is outside of the segment's range.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( EXCLUD .NE. LATIDX ) THEN
+      if ( exclud .ne. latidx ) then
 !
 !        Compare the point's latitude to the segment's latitude bounds.
 !
-         MINLAT = BOUNDS(LOWER, LATIDX)
-         MAXLAT = BOUNDS(UPPER, LATIDX)
+         minlat = bounds(lower, latidx)
+         maxlat = bounds(upper, latidx)
 
-         IF ( ( LAT .LT. MINLAT ) .OR. ( LAT .GT. MAXLAT ) ) THEN
+         if ( ( lat .lt. minlat ) .or. ( lat .gt. maxlat ) ) then
 !
 !           The point's latitude is outside of the segment's range.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Move the longitude of the input point into the interval
@@ -338,55 +338,55 @@
 !
 !     if necessary and if possible.
 !
-      IF ( EXCLUD .NE. LONIDX ) THEN
+      if ( exclud .ne. lonidx ) then
 !
 !        Put the local longitude bounds in order, if necessary.
 !
-         CALL ZZNRMLON ( BOUNDS(1,LONIDX),  BOUNDS(2,LONIDX), &
-                         ANGMRG,   MINLON,  MAXLON           )
+         call zznrmlon ( bounds(1,lonidx),  bounds(2,lonidx), &
+                         angmrg,   minlon,  maxlon           )
 !
 !        Compare the point's longitude to the segment's longitude
 !        bounds.
 !
-         LOCLON = LON
+         loclon = lon
 
 
-         IF ( LON .LT. ( MINLON - LONALI ) ) THEN
+         if ( lon .lt. ( minlon - lonali ) ) then
 !
 !           If the point's longitude is less than the segment's
 !           longitude by more than a small margin, shift the longitude
 !           right by 2*pi.
 
-            LOCLON = LON + PI2
+            loclon = lon + pi2
 
-         ELSE IF ( LON .GT. ( MAXLON + LONALI ) ) THEN
+         else if ( lon .gt. ( maxlon + lonali ) ) then
 !
 !           If the point's longitude is greater than the segment's
 !           longitude by more than a small margin, shift the longitude
 !           left by 2*pi.
 
-            LOCLON = LON - PI2
+            loclon = lon - pi2
 
-         END IF
+         end if
 
 
-         IF (        ( LOCLON .LT. (MINLON-ANGMRG) ) &
-                .OR. ( LOCLON .GT. (MAXLON+ANGMRG) )  ) THEN
+         if (        ( loclon .lt. (minlon-angmrg) ) &
+                .or. ( loclon .gt. (maxlon+angmrg) )  ) then
 !
 !           The point's longitude, adjusted if necessary for
 !           comparison, is outside of the segment's range.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
 
-      END IF
+      end if
 !
 !     Getting to this point means the input point is inside
 !     the segment. Being on the boundary counts as inside.
 !
-      INSIDE = .TRUE.
+      inside = .true.
 
-      RETURN
-      END
+      return
+      end

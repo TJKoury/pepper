@@ -1,6 +1,6 @@
 !$Procedure SYPOPC ( Pop a value from a particular symbol )
 
-      SUBROUTINE SYPOPC ( NAME, TABSYM, TABPTR, TABVAL, VALUE, FOUND )
+      subroutine sypopc ( name, tabsym, tabptr, tabval, value, found )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      CHARACTER*(*)         TABVAL     ( LBCELL:* )
-      CHARACTER*(*)         VALUE
-      LOGICAL               FOUND
+      character*(*)         name
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      character*(*)         tabval     ( lbcell:* )
+      character*(*)         value
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -171,90 +171,90 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               CARDI
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      integer               cardi
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NPTR
-      INTEGER               NVAL
+      integer               nsym
+      integer               nptr
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
+      integer               locsym
+      integer               locval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYPOPC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYPOPC' )
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NPTR = CARDI ( TABPTR )
-      NVAL = CARDC ( TABVAL )
+      nsym = cardc ( tabsym )
+      nptr = cardi ( tabptr )
+      nval = cardc ( tabval )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      IF ( LOCSYM .EQ. 0 ) THEN
+      if ( locsym .eq. 0 ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
 !
 !     If it is in the table, we can proceed without fear of overflow.
 !
-      ELSE
+      else
 
-         FOUND = .TRUE.
+         found = .true.
 
 !
 !        Begin by saving and removing the initial value for this
 !        symbol from the value table.
 !
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
-         VALUE  = TABVAL(LOCVAL)
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         value  = tabval(locval)
 
-         CALL REMLAC ( 1, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDC ( NVAL, TABVAL )
+         call remlac ( 1, locval, tabval(1), nval )
+         call scardc ( nval, tabval )
 
 !
 !        If this was the sole value for the symbol, remove the
 !        symbol from the name and pointer tables. Otherwise just
 !        decrement the dimension.
 !
-         IF ( TABPTR(LOCSYM) .EQ. 1 ) THEN
+         if ( tabptr(locsym) .eq. 1 ) then
 
-            CALL REMLAC ( 1, LOCSYM, TABSYM(1), NSYM )
-            CALL SCARDC ( NSYM, TABSYM )
+            call remlac ( 1, locsym, tabsym(1), nsym )
+            call scardc ( nsym, tabsym )
 
-            CALL REMLAI ( 1, LOCSYM, TABPTR(1), NPTR )
-            CALL SCARDI ( NPTR, TABPTR )
+            call remlai ( 1, locsym, tabptr(1), nptr )
+            call scardi ( nptr, tabptr )
 
-         ELSE
-            TABPTR(LOCSYM) = TABPTR(LOCSYM) - 1
-         END IF
+         else
+            tabptr(locsym) = tabptr(locsym) - 1
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYPOPC' )
-      RETURN
-      END
+      call chkout ( 'SYPOPC' )
+      return
+      end

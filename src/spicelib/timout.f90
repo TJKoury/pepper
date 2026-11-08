@@ -1,6 +1,6 @@
 !$Procedure TIMOUT ( Time Output )
 
-      SUBROUTINE  TIMOUT ( ET, PICTUR, OUTPUT )
+      subroutine  timout ( et, pictur, output )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         PICTUR
-      CHARACTER*(*)         OUTPUT
+      double precision      et
+      character*(*)         pictur
+      character*(*)         output
 
 ! $ Brief_I/O
 !
@@ -749,19 +749,19 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BRCKTI
-      INTEGER               BSRCHC
-      INTEGER               ISRCHI
-      INTEGER               RTRIM
-      EXTERNAL              SCAN
+      integer               brckti
+      integer               bsrchc
+      integer               isrchi
+      integer               rtrim
+      external              scan
 
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      UNITIM
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      J1950
+      double precision      brcktd
+      double precision      unitim
+      double precision      spd
+      double precision      j2000
+      double precision      j1950
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -771,221 +771,221 @@
 !     of the various kinds of components we will be looking at in the
 !     input time string.
 !
-      INTEGER               CURRNT
-      PARAMETER           ( CURRNT = 1 )
+      integer               currnt
+      parameter           ( currnt = 1 )
 
-      INTEGER               BEGIN
-      PARAMETER           ( BEGIN  = CURRNT )
+      integer               begin
+      parameter           ( begin  = currnt )
 
-      INTEGER               NONAME
-      PARAMETER           ( NONAME = CURRNT  + 1 )
+      integer               noname
+      parameter           ( noname = currnt  + 1 )
 
-      INTEGER               YEAR
-      PARAMETER           ( YEAR   = NONAME + 1 )
+      integer               year
+      parameter           ( year   = noname + 1 )
 
-      INTEGER               YR
-      PARAMETER           ( YR     = YEAR   + 1 )
+      integer               yr
+      parameter           ( yr     = year   + 1 )
 
-      INTEGER               UMON
-      PARAMETER           ( UMON   = YR     + 1 )
+      integer               umon
+      parameter           ( umon   = yr     + 1 )
 
-      INTEGER               MMON
-      PARAMETER           ( MMON   = UMON   + 1 )
+      integer               mmon
+      parameter           ( mmon   = umon   + 1 )
 
-      INTEGER               LMON
-      PARAMETER           ( LMON   = MMON   + 1 )
+      integer               lmon
+      parameter           ( lmon   = mmon   + 1 )
 
-      INTEGER               UMNTH
-      PARAMETER           ( UMNTH  = LMON   + 1 )
+      integer               umnth
+      parameter           ( umnth  = lmon   + 1 )
 
-      INTEGER               MMNTH
-      PARAMETER           ( MMNTH  = UMNTH  + 1 )
+      integer               mmnth
+      parameter           ( mmnth  = umnth  + 1 )
 
-      INTEGER               LMNTH
-      PARAMETER           ( LMNTH  = MMNTH  + 1 )
+      integer               lmnth
+      parameter           ( lmnth  = mmnth  + 1 )
 
-      INTEGER               MONTH
-      PARAMETER           ( MONTH  = LMNTH  + 1 )
+      integer               month
+      parameter           ( month  = lmnth  + 1 )
 
-      INTEGER               DOY
-      PARAMETER           ( DOY    = MONTH  + 1 )
+      integer               doy
+      parameter           ( doy    = month  + 1 )
 
-      INTEGER               UWKD
-      PARAMETER           ( UWKD   = DOY    + 1 )
+      integer               uwkd
+      parameter           ( uwkd   = doy    + 1 )
 
-      INTEGER               MWKD
-      PARAMETER           ( MWKD   = UWKD   + 1 )
+      integer               mwkd
+      parameter           ( mwkd   = uwkd   + 1 )
 
-      INTEGER               LWKD
-      PARAMETER           ( LWKD   = MWKD   + 1 )
+      integer               lwkd
+      parameter           ( lwkd   = mwkd   + 1 )
 
-      INTEGER               UWEEKD
-      PARAMETER           ( UWEEKD = LWKD   + 1 )
+      integer               uweekd
+      parameter           ( uweekd = lwkd   + 1 )
 
-      INTEGER               MWEEKD
-      PARAMETER           ( MWEEKD = UWEEKD + 1 )
+      integer               mweekd
+      parameter           ( mweekd = uweekd + 1 )
 
-      INTEGER               LWEEKD
-      PARAMETER           ( LWEEKD = MWEEKD + 1 )
+      integer               lweekd
+      parameter           ( lweekd = mweekd + 1 )
 
-      INTEGER               DAY
-      PARAMETER           ( DAY    = LWEEKD + 1 )
+      integer               day
+      parameter           ( day    = lweekd + 1 )
 
-      INTEGER               MINUTE
-      PARAMETER           ( MINUTE = DAY    + 1 )
+      integer               minute
+      parameter           ( minute = day    + 1 )
 
-      INTEGER               HOUR
-      PARAMETER           ( HOUR   = MINUTE + 1 )
+      integer               hour
+      parameter           ( hour   = minute + 1 )
 
-      INTEGER               SEC
-      PARAMETER           ( SEC    = HOUR   + 1 )
+      integer               sec
+      parameter           ( sec    = hour   + 1 )
 
-      INTEGER               POINT
-      PARAMETER           ( POINT  = SEC    + 1 )
+      integer               point
+      parameter           ( point  = sec    + 1 )
 
-      INTEGER               PLACE
-      PARAMETER           ( PLACE  = POINT  + 1 )
+      integer               place
+      parameter           ( place  = point  + 1 )
 
-      INTEGER               JULIAN
-      PARAMETER           ( JULIAN = PLACE  + 1 )
+      integer               julian
+      parameter           ( julian = place  + 1 )
 
-      INTEGER               UTC
-      PARAMETER           ( UTC    = JULIAN + 1 )
+      integer               utc
+      parameter           ( utc    = julian + 1 )
 
-      INTEGER               TDB
-      PARAMETER           ( TDB    = UTC    + 1 )
+      integer               tdb
+      parameter           ( tdb    = utc    + 1 )
 
-      INTEGER               TDT
-      PARAMETER           ( TDT    = TDB    + 1 )
+      integer               tdt
+      parameter           ( tdt    = tdb    + 1 )
 
-      INTEGER               TT
-      PARAMETER           ( TT     = TDT    + 1 )
+      integer               tt
+      parameter           ( tt     = tdt    + 1 )
 
-      INTEGER               SP2000
-      PARAMETER           ( SP2000 = TT     + 1 )
+      integer               sp2000
+      parameter           ( sp2000 = tt     + 1 )
 
-      INTEGER               SP1950
-      PARAMETER           ( SP1950 = SP2000 + 1 )
+      integer               sp1950
+      parameter           ( sp1950 = sp2000 + 1 )
 
-      INTEGER               ROUND
-      PARAMETER           ( ROUND  = SP1950 + 1 )
+      integer               round
+      parameter           ( round  = sp1950 + 1 )
 
-      INTEGER               TRUNC
-      PARAMETER           ( TRUNC  = ROUND  + 1 )
+      integer               trunc
+      parameter           ( trunc  = round  + 1 )
 
-      INTEGER               UERA
-      PARAMETER           ( UERA   = TRUNC  + 1 )
+      integer               uera
+      parameter           ( uera   = trunc  + 1 )
 
-      INTEGER               LERA
-      PARAMETER           ( LERA   = UERA   + 1 )
+      integer               lera
+      parameter           ( lera   = uera   + 1 )
 
-      INTEGER               UERAX
-      PARAMETER           ( UERAX  = LERA + 1 )
+      integer               uerax
+      parameter           ( uerax  = lera + 1 )
 
-      INTEGER               LERAX
-      PARAMETER           ( LERAX  = UERAX + 1 )
+      integer               lerax
+      parameter           ( lerax  = uerax + 1 )
 
-      INTEGER               UAMPM
-      PARAMETER           ( UAMPM  = LERAX   + 1 )
+      integer               uampm
+      parameter           ( uampm  = lerax   + 1 )
 
-      INTEGER               LAMPM
-      PARAMETER           ( LAMPM  = UAMPM  + 1 )
+      integer               lampm
+      parameter           ( lampm  = uampm  + 1 )
 
-      INTEGER               UTCP
-      PARAMETER           ( UTCP   = LAMPM  + 1 )
+      integer               utcp
+      parameter           ( utcp   = lampm  + 1 )
 
-      INTEGER               UTCM
-      PARAMETER           ( UTCM   = UTCP   + 1 )
+      integer               utcm
+      parameter           ( utcm   = utcp   + 1 )
 
-      INTEGER               JCAL
-      PARAMETER           ( JCAL   = UTCM   + 1 )
+      integer               jcal
+      parameter           ( jcal   = utcm   + 1 )
 
-      INTEGER               GCAL
-      PARAMETER           ( GCAL   = JCAL   + 1 )
+      integer               gcal
+      parameter           ( gcal   = jcal   + 1 )
 
-      INTEGER               MCAL
-      PARAMETER           ( MCAL   = GCAL   + 1 )
+      integer               mcal
+      parameter           ( mcal   = gcal   + 1 )
 
-      INTEGER               TIMSYS
-      PARAMETER           ( TIMSYS = MCAL   + 1 )
+      integer               timsys
+      parameter           ( timsys = mcal   + 1 )
 
-      INTEGER               CALNDR
-      PARAMETER           ( CALNDR = TIMSYS + 1 )
+      integer               calndr
+      parameter           ( calndr = timsys + 1 )
 
-      INTEGER               AMPM
-      PARAMETER           ( AMPM   = CALNDR + 1 )
+      integer               ampm
+      parameter           ( ampm   = calndr + 1 )
 
-      INTEGER               MON
-      PARAMETER           ( MON    = AMPM   + 1 )
+      integer               mon
+      parameter           ( mon    = ampm   + 1 )
 
-      INTEGER               WKDAY
-      PARAMETER           ( WKDAY  = MON    + 1 )
+      integer               wkday
+      parameter           ( wkday  = mon    + 1 )
 
-      INTEGER               ERA
-      PARAMETER           ( ERA    = WKDAY  + 1 )
+      integer               era
+      parameter           ( era    = wkday  + 1 )
 
-      INTEGER               NOON
-      PARAMETER           ( NOON   = ERA    + 1 )
+      integer               noon
+      parameter           ( noon   = era    + 1 )
 
-      INTEGER               RLYEAR
-      PARAMETER           ( RLYEAR = NOON   + 1 )
+      integer               rlyear
+      parameter           ( rlyear = noon   + 1 )
 
-      INTEGER               FINISH
-      PARAMETER           ( FINISH = RLYEAR      )
+      integer               finish
+      parameter           ( finish = rlyear      )
 
 !
 !     The following parameters serve as an enumeration of the various
 !     time formats that are recognized.
 !
-      INTEGER               YMD
-      PARAMETER           ( YMD    = 1 )
+      integer               ymd
+      parameter           ( ymd    = 1 )
 
-      INTEGER               CONTIN
-      PARAMETER           ( CONTIN = YMD + 1 )
+      integer               contin
+      parameter           ( contin = ymd + 1 )
 
 !
 !     The parameters below are used to declare the space needed for
 !     scanning the input format string.
 !
-      INTEGER               MAXMRK
-      PARAMETER           ( MAXMRK = 43  )
+      integer               maxmrk
+      parameter           ( maxmrk = 43  )
 
-      INTEGER               ROOM
-      PARAMETER           ( ROOM   = 100 )
+      integer               room
+      parameter           ( room   = 100 )
 
 !
 !     The length of the local string that we will use for copying
 !     the format string.
 !
-      INTEGER               MAXLEN
-      PARAMETER           ( MAXLEN = 256 )
+      integer               maxlen
+      parameter           ( maxlen = 256 )
 
-      INTEGER               MRKSIZ
-      PARAMETER           ( MRKSIZ = 8 )
+      integer               mrksiz
+      parameter           ( mrksiz = 8 )
 
-      INTEGER               LOCLEN
-      PARAMETER           ( LOCLEN = 32 )
+      integer               loclen
+      parameter           ( loclen = 32 )
 
 !
 !     Local variables
 !
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     The next set of variables holds the marks and auxiliary
 !     arrays used for scanning the format string.
 !
-      CHARACTER*(MRKSIZ)    MARKS  (     MAXMRK )
-      INTEGER               CLASS  ( 0 : MAXMRK )
-      INTEGER               NMARKS
-      INTEGER               MRKLEN (     MAXMRK )
-      INTEGER               PNTRS  (     100    )
+      character*(mrksiz)    marks  (     maxmrk )
+      integer               class  ( 0 : maxmrk )
+      integer               nmarks
+      integer               mrklen (     maxmrk )
+      integer               pntrs  (     100    )
 
-      INTEGER               DUMP   (     11     )
-      INTEGER               NDUMP
-      INTEGER               TIMFMT
-      INTEGER               TYPE
-      INTEGER               NUMTYP
+      integer               dump   (     11     )
+      integer               ndump
+      integer               timfmt
+      integer               type
+      integer               numtyp
 
 !
 !     The variables below are used to hold, base formats, values of
@@ -993,44 +993,44 @@
 !     the lengths of the format pictures and whether or not various
 !     components have already been computed.
 !
-      CHARACTER*(32)        ORIGNL ( BEGIN : FINISH )
-      DOUBLE PRECISION      VALUES ( BEGIN : FINISH )
-      DOUBLE PRECISION      PAD    ( BEGIN : FINISH )
-      INTEGER               LENGTH ( BEGIN : FINISH )
-      INTEGER               ID     ( BEGIN : FINISH )
-      LOGICAL               HAVE   ( BEGIN : FINISH )
+      character*(32)        orignl ( begin : finish )
+      double precision      values ( begin : finish )
+      double precision      pad    ( begin : finish )
+      integer               length ( begin : finish )
+      integer               id     ( begin : finish )
+      logical               have   ( begin : finish )
 
 !
 !     The array below contains the indexes of the various values
 !     associated with the three different times of time vectors
 !     that we will be using YMD, YD, CONTIN.
 !
-      INTEGER               COMPNT ( 8, CONTIN )
+      integer               compnt ( 8, contin )
 
 !
 !     We will be making a local copy of the input format string
 !     and the input time.
 !
-      CHARACTER*(MAXLEN)    MYSTR
-      CHARACTER*(MAXLEN)    SUBSTR
-      CHARACTER*(MAXLEN)    STRING
+      character*(maxlen)    mystr
+      character*(maxlen)    substr
+      character*(maxlen)    string
 
-      DOUBLE PRECISION      MYET
+      double precision      myet
 
 !
 !     The integers below are used to mark substring boundaries.
 !
-      INTEGER               B
-      INTEGER               E
-      INTEGER               START
-      INTEGER               NTOKNS
-      INTEGER               IDENT  (  ROOM   )
-      INTEGER               BEG    (  ROOM   )
-      INTEGER               END    (  ROOM   )
+      integer               b
+      integer               e
+      integer               start
+      integer               ntokns
+      integer               ident  (  room   )
+      integer               beg    (  room   )
+      integer               end    (  room   )
 
-      CHARACTER*(LOCLEN)    FMT
-      INTEGER               WIDTH
-      INTEGER               APPND
+      character*(loclen)    fmt
+      integer               width
+      integer               appnd
 
 !
 !     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
@@ -1039,134 +1039,134 @@
 !     types.  The one used based upon the input PICTUR is stored
 !     in BASTYP.
 !
-      INTEGER               TIMTYP
-      CHARACTER*(8)         YMDFMT
-      CHARACTER*(8)         YWFMT
-      CHARACTER*(16)        BASTYP
-      CHARACTER*(16)        INTYP
-      CHARACTER*(16)        TSYS
-      CHARACTER*(16)        CAL
-      CHARACTER*(32)        ZON
+      integer               timtyp
+      character*(8)         ymdfmt
+      character*(8)         ywfmt
+      character*(16)        bastyp
+      character*(16)        intyp
+      character*(16)        tsys
+      character*(16)        cal
+      character*(32)        zon
 
-      DOUBLE PRECISION      HOFF
-      DOUBLE PRECISION      MOFF
-      INTEGER               CALTYP
-      INTEGER               LAST
+      double precision      hoff
+      double precision      moff
+      integer               caltyp
+      integer               last
 
-      LOGICAL               OK
-      LOGICAL               DOERA
-      LOGICAL               DOZONE
+      logical               ok
+      logical               doera
+      logical               dozone
 
 !
 !     Loop counters and delimiters
 !
-      INTEGER               I
-      INTEGER               J
-      INTEGER               PART
-      INTEGER               STOPAT
-      INTEGER               TRNCAT
+      integer               i
+      integer               j
+      integer               part
+      integer               stopat
+      integer               trncat
 
 !
 !     Utility double precision numbers
 !
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      FACTOR
-      DOUBLE PRECISION      FRAC
-      DOUBLE PRECISION      INCR
-      DOUBLE PRECISION      INTMED
-      DOUBLE PRECISION      NTVEC  ( 8 )
-      DOUBLE PRECISION      PTVEC  ( 8 )
-      DOUBLE PRECISION      TEMPD
-      DOUBLE PRECISION      TIMPAD
-      DOUBLE PRECISION      TVEC   ( 8 )
-      DOUBLE PRECISION      VALUE
+      double precision      delta
+      double precision      factor
+      double precision      frac
+      double precision      incr
+      double precision      intmed
+      double precision      ntvec  ( 8 )
+      double precision      ptvec  ( 8 )
+      double precision      tempd
+      double precision      timpad
+      double precision      tvec   ( 8 )
+      double precision      value
 
 !
 !     The array power is used to assist in the truncation of double
 !     precision values.
 !
-      DOUBLE PRECISION      POWER  ( 0 : 14 )
-      DOUBLE PRECISION      X
+      double precision      power  ( 0 : 14 )
+      double precision      x
 
 !
 !     calendar variables.
 !
-      INTEGER               JYEAR
-      INTEGER               JMONTH
-      INTEGER               JDAY
-      INTEGER               JDOY
-      INTEGER               GYEAR
-      INTEGER               GMONTH
-      INTEGER               GDAY
-      INTEGER               GDOY
-      LOGICAL               GO2JUL
+      integer               jyear
+      integer               jmonth
+      integer               jday
+      integer               jdoy
+      integer               gyear
+      integer               gmonth
+      integer               gday
+      integer               gdoy
+      logical               go2jul
 
 !
 !     Character string representations for months and week days.
 !
-      CHARACTER*(9)         MONTHS ( 12 )
-      CHARACTER*(9)         MYMON
-      INTEGER               MYLEN
-      INTEGER               MONTYP
-      INTEGER               MLEN   ( 12 )
-      CHARACTER*(9)         WKDAYS (  7 )
-      CHARACTER*(9)         MYWKD
-      INTEGER               WKLEN  (  7 )
-      INTEGER               WKTYP
+      character*(9)         months ( 12 )
+      character*(9)         mymon
+      integer               mylen
+      integer               montyp
+      integer               mlen   ( 12 )
+      character*(9)         wkdays (  7 )
+      character*(9)         mywkd
+      integer               wklen  (  7 )
+      integer               wktyp
 
-      INTEGER               INDX
+      integer               indx
 
-      LOGICAL               UNKNWN
-      LOGICAL               MAKING
-      LOGICAL               PUMPUP
-      LOGICAL               VANISH
+      logical               unknwn
+      logical               making
+      logical               pumpup
+      logical               vanish
 
 !
 !     Save everything.
 !
-      SAVE
+      save
 
 
 !
 !     Initial values
 !
 
-      DATA                 MONTHS  / 'January',   'February', &
+      data                 months  / 'January',   'February', &
                                      'March',     'April', &
                                      'May',       'June', &
                                      'July',      'August', &
                                      'September', 'October', &
                                      'November',  'December' /
 
-      DATA                 MLEN    /  7,           8, &
+      data                 mlen    /  7,           8, &
                                       5,           5, &
                                       3,           4, &
                                       4,           6, &
                                       9,           7, &
                                       8,           8 /
 
-      DATA                 WKDAYS  / 'Sunday',    'Monday', &
+      data                 wkdays  / 'Sunday',    'Monday', &
                                      'Tuesday',   'Wednesday', &
                                      'Thursday',  'Friday', &
                                      'Saturday' /
 
-      DATA                 WKLEN   /  6,           6, &
+      data                 wklen   /  6,           6, &
                                       7,           9, &
                                       8,           6, &
                                       8 /
 
-      DATA                 FIRST   / .TRUE. /
+      data                 first   / .true. /
 
-      DATA                 POWER   / 1.0D0,  1.0D1,  1.0D2,  1.0D3, &
-                                     1.0D4,  1.0D5,  1.0D6,  1.0D7, &
-                                     1.0D8,  1.0D9,  1.0D10, 1.0D11, &
-                                     1.0D12, 1.0D13, 1.0D14         /
+      data                 power   / 1.0d0,  1.0d1,  1.0d2,  1.0d3, &
+                                     1.0d4,  1.0d5,  1.0d6,  1.0d7, &
+                                     1.0d8,  1.0d9,  1.0d10, 1.0d11, &
+                                     1.0d12, 1.0d13, 1.0d14         /
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'TIMOUT' )
+      call chkin ( 'TIMOUT' )
 
 !
 !     Chapter 1. Initializations.
@@ -1176,57 +1176,57 @@
 !     that will be used for scanning, the classes of these tokens
 !     and the array of ID's for time systems.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST    = .FALSE.
+         first    = .false.
 
-         MARKS (  1 ) = 'YYYY'
-         MARKS (  2 ) = 'YR'
-         MARKS (  3 ) = 'MON'
-         MARKS (  4 ) = 'Mon'
-         MARKS (  5 ) = 'mon'
-         MARKS (  6 ) = 'MONTH'
-         MARKS (  7 ) = 'Month'
-         MARKS (  8 ) = 'month'
-         MARKS (  9 ) = 'MM'
-         MARKS ( 10 ) = 'DOY'
-         MARKS ( 11 ) = 'WKD'
-         MARKS ( 12 ) = 'Wkd'
-         MARKS ( 13 ) = 'wkd'
-         MARKS ( 14 ) = 'WEEKDAY'
-         MARKS ( 15 ) = 'Weekday'
-         MARKS ( 16 ) = 'weekday'
-         MARKS ( 17 ) = 'DD'
-         MARKS ( 18 ) = 'MN'
-         MARKS ( 19 ) = 'HR'
-         MARKS ( 20 ) = 'SC'
-         MARKS ( 21 ) = '.#'
-         MARKS ( 22 ) = '#'
-         MARKS ( 23 ) = 'JULIAND'
-         MARKS ( 24 ) = '::UTC'
-         MARKS ( 25 ) = '::TDB'
-         MARKS ( 26 ) = '::TDT'
-         MARKS ( 27 ) = '::TT'
-         MARKS ( 28 ) = 'SP2000'
-         MARKS ( 29 ) = 'SP1950'
-         MARKS ( 30 ) = '::RND'
-         MARKS ( 31 ) = '::TRNC'
-         MARKS ( 32 ) = 'ERA'
-         MARKS ( 33 ) = 'era'
-         MARKS ( 34 ) = 'AMPM'
-         MARKS ( 35 ) = 'ampm'
-         MARKS ( 36 ) = '::UTC+'
-         MARKS ( 37 ) = '::UTC-'
-         MARKS ( 38 ) = '::JCAL'
-         MARKS ( 39 ) = '::GCAL'
-         MARKS ( 40 ) = '::MCAL'
-         MARKS ( 41 ) = 'AP'
-         MARKS ( 42 ) = '?ERA?'
-         MARKS ( 43 ) = '?era?'
+         marks (  1 ) = 'YYYY'
+         marks (  2 ) = 'YR'
+         marks (  3 ) = 'MON'
+         marks (  4 ) = 'Mon'
+         marks (  5 ) = 'mon'
+         marks (  6 ) = 'MONTH'
+         marks (  7 ) = 'Month'
+         marks (  8 ) = 'month'
+         marks (  9 ) = 'MM'
+         marks ( 10 ) = 'DOY'
+         marks ( 11 ) = 'WKD'
+         marks ( 12 ) = 'Wkd'
+         marks ( 13 ) = 'wkd'
+         marks ( 14 ) = 'WEEKDAY'
+         marks ( 15 ) = 'Weekday'
+         marks ( 16 ) = 'weekday'
+         marks ( 17 ) = 'DD'
+         marks ( 18 ) = 'MN'
+         marks ( 19 ) = 'HR'
+         marks ( 20 ) = 'SC'
+         marks ( 21 ) = '.#'
+         marks ( 22 ) = '#'
+         marks ( 23 ) = 'JULIAND'
+         marks ( 24 ) = '::UTC'
+         marks ( 25 ) = '::TDB'
+         marks ( 26 ) = '::TDT'
+         marks ( 27 ) = '::TT'
+         marks ( 28 ) = 'SP2000'
+         marks ( 29 ) = 'SP1950'
+         marks ( 30 ) = '::RND'
+         marks ( 31 ) = '::TRNC'
+         marks ( 32 ) = 'ERA'
+         marks ( 33 ) = 'era'
+         marks ( 34 ) = 'AMPM'
+         marks ( 35 ) = 'ampm'
+         marks ( 36 ) = '::UTC+'
+         marks ( 37 ) = '::UTC-'
+         marks ( 38 ) = '::JCAL'
+         marks ( 39 ) = '::GCAL'
+         marks ( 40 ) = '::MCAL'
+         marks ( 41 ) = 'AP'
+         marks ( 42 ) = '?ERA?'
+         marks ( 43 ) = '?era?'
 
-         NMARKS       =  43
+         nmarks       =  43
 
-         CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTRS )
+         call scanpr ( nmarks, marks, mrklen, pntrs )
 
 !
 !        Now that we've prepared our recognized substrings and
@@ -1234,185 +1234,185 @@
 !        various marks and classify the various marks.
 !        substrings.
 !
-         ID ( NONAME ) = 0
-         ID ( YEAR   ) = BSRCHC ( 'YYYY',    NMARKS, MARKS )
-         ID ( YR     ) = BSRCHC ( 'YR',      NMARKS, MARKS )
-         ID ( UMON   ) = BSRCHC ( 'MON',     NMARKS, MARKS )
-         ID ( MMON   ) = BSRCHC ( 'Mon',     NMARKS, MARKS )
-         ID ( LMON   ) = BSRCHC ( 'mon',     NMARKS, MARKS )
-         ID ( UMNTH  ) = BSRCHC ( 'MONTH',   NMARKS, MARKS )
-         ID ( MMNTH  ) = BSRCHC ( 'Month',   NMARKS, MARKS )
-         ID ( LMNTH  ) = BSRCHC ( 'month',   NMARKS, MARKS )
-         ID ( MONTH  ) = BSRCHC ( 'MM',      NMARKS, MARKS )
-         ID ( DOY    ) = BSRCHC ( 'DOY',     NMARKS, MARKS )
-         ID ( UWKD   ) = BSRCHC ( 'WKD',     NMARKS, MARKS )
-         ID ( MWKD   ) = BSRCHC ( 'Wkd',     NMARKS, MARKS )
-         ID ( LWKD   ) = BSRCHC ( 'wkd',     NMARKS, MARKS )
-         ID ( UWEEKD ) = BSRCHC ( 'WEEKDAY', NMARKS, MARKS )
-         ID ( MWEEKD ) = BSRCHC ( 'Weekday', NMARKS, MARKS )
-         ID ( LWEEKD ) = BSRCHC ( 'weekday', NMARKS, MARKS )
-         ID ( DAY    ) = BSRCHC ( 'DD',      NMARKS, MARKS )
-         ID ( MINUTE ) = BSRCHC ( 'MN',      NMARKS, MARKS )
-         ID ( HOUR   ) = BSRCHC ( 'HR',      NMARKS, MARKS )
-         ID ( SEC    ) = BSRCHC ( 'SC',      NMARKS, MARKS )
-         ID ( POINT  ) = BSRCHC ( '.#',      NMARKS, MARKS )
-         ID ( PLACE  ) = BSRCHC ( '#',       NMARKS, MARKS )
-         ID ( JULIAN ) = BSRCHC ( 'JULIAND', NMARKS, MARKS )
-         ID ( UTC    ) = BSRCHC ( '::UTC',   NMARKS, MARKS )
-         ID ( TDB    ) = BSRCHC ( '::TDB',   NMARKS, MARKS )
-         ID ( TDT    ) = BSRCHC ( '::TDT',   NMARKS, MARKS )
-         ID ( TT     ) = BSRCHC ( '::TT',    NMARKS, MARKS )
-         ID ( SP2000 ) = BSRCHC ( 'SP2000',  NMARKS, MARKS )
-         ID ( SP1950 ) = BSRCHC ( 'SP1950',  NMARKS, MARKS )
-         ID ( ROUND  ) = BSRCHC ( '::RND',   NMARKS, MARKS )
-         ID ( TRUNC  ) = BSRCHC ( '::TRNC',  NMARKS, MARKS )
-         ID ( UERA   ) = BSRCHC ( 'ERA',     NMARKS, MARKS )
-         ID ( LERA   ) = BSRCHC ( 'era',     NMARKS, MARKS )
-         ID ( UERAX  ) = BSRCHC ( '?ERA?',   NMARKS, MARKS )
-         ID ( LERAX  ) = BSRCHC ( '?era?',   NMARKS, MARKS )
-         ID ( UAMPM  ) = BSRCHC ( 'AMPM',    NMARKS, MARKS )
-         ID ( LAMPM  ) = BSRCHC ( 'ampm',    NMARKS, MARKS )
-         ID ( UTCP   ) = BSRCHC ( '::UTC+',  NMARKS, MARKS )
-         ID ( UTCM   ) = BSRCHC ( '::UTC-',  NMARKS, MARKS )
-         ID ( JCAL   ) = BSRCHC ( '::JCAL',  NMARKS, MARKS )
-         ID ( GCAL   ) = BSRCHC ( '::GCAL',  NMARKS, MARKS )
-         ID ( MCAL   ) = BSRCHC ( '::MCAL',  NMARKS, MARKS )
-         ID ( AMPM   ) = BSRCHC ( 'AP',      NMARKS, MARKS )
+         id ( noname ) = 0
+         id ( year   ) = bsrchc ( 'YYYY',    nmarks, marks )
+         id ( yr     ) = bsrchc ( 'YR',      nmarks, marks )
+         id ( umon   ) = bsrchc ( 'MON',     nmarks, marks )
+         id ( mmon   ) = bsrchc ( 'Mon',     nmarks, marks )
+         id ( lmon   ) = bsrchc ( 'mon',     nmarks, marks )
+         id ( umnth  ) = bsrchc ( 'MONTH',   nmarks, marks )
+         id ( mmnth  ) = bsrchc ( 'Month',   nmarks, marks )
+         id ( lmnth  ) = bsrchc ( 'month',   nmarks, marks )
+         id ( month  ) = bsrchc ( 'MM',      nmarks, marks )
+         id ( doy    ) = bsrchc ( 'DOY',     nmarks, marks )
+         id ( uwkd   ) = bsrchc ( 'WKD',     nmarks, marks )
+         id ( mwkd   ) = bsrchc ( 'Wkd',     nmarks, marks )
+         id ( lwkd   ) = bsrchc ( 'wkd',     nmarks, marks )
+         id ( uweekd ) = bsrchc ( 'WEEKDAY', nmarks, marks )
+         id ( mweekd ) = bsrchc ( 'Weekday', nmarks, marks )
+         id ( lweekd ) = bsrchc ( 'weekday', nmarks, marks )
+         id ( day    ) = bsrchc ( 'DD',      nmarks, marks )
+         id ( minute ) = bsrchc ( 'MN',      nmarks, marks )
+         id ( hour   ) = bsrchc ( 'HR',      nmarks, marks )
+         id ( sec    ) = bsrchc ( 'SC',      nmarks, marks )
+         id ( point  ) = bsrchc ( '.#',      nmarks, marks )
+         id ( place  ) = bsrchc ( '#',       nmarks, marks )
+         id ( julian ) = bsrchc ( 'JULIAND', nmarks, marks )
+         id ( utc    ) = bsrchc ( '::UTC',   nmarks, marks )
+         id ( tdb    ) = bsrchc ( '::TDB',   nmarks, marks )
+         id ( tdt    ) = bsrchc ( '::TDT',   nmarks, marks )
+         id ( tt     ) = bsrchc ( '::TT',    nmarks, marks )
+         id ( sp2000 ) = bsrchc ( 'SP2000',  nmarks, marks )
+         id ( sp1950 ) = bsrchc ( 'SP1950',  nmarks, marks )
+         id ( round  ) = bsrchc ( '::RND',   nmarks, marks )
+         id ( trunc  ) = bsrchc ( '::TRNC',  nmarks, marks )
+         id ( uera   ) = bsrchc ( 'ERA',     nmarks, marks )
+         id ( lera   ) = bsrchc ( 'era',     nmarks, marks )
+         id ( uerax  ) = bsrchc ( '?ERA?',   nmarks, marks )
+         id ( lerax  ) = bsrchc ( '?era?',   nmarks, marks )
+         id ( uampm  ) = bsrchc ( 'AMPM',    nmarks, marks )
+         id ( lampm  ) = bsrchc ( 'ampm',    nmarks, marks )
+         id ( utcp   ) = bsrchc ( '::UTC+',  nmarks, marks )
+         id ( utcm   ) = bsrchc ( '::UTC-',  nmarks, marks )
+         id ( jcal   ) = bsrchc ( '::JCAL',  nmarks, marks )
+         id ( gcal   ) = bsrchc ( '::GCAL',  nmarks, marks )
+         id ( mcal   ) = bsrchc ( '::MCAL',  nmarks, marks )
+         id ( ampm   ) = bsrchc ( 'AP',      nmarks, marks )
 
-         CLASS ( ID(NONAME)  ) =  NONAME
-         CLASS ( ID(YEAR)    ) =  YEAR
-         CLASS ( ID(YR)      ) =  YR
-         CLASS ( ID(UMON)    ) =  MON
-         CLASS ( ID(MMON)    ) =  MON
-         CLASS ( ID(LMON)    ) =  MON
-         CLASS ( ID(UMNTH)   ) =  MON
-         CLASS ( ID(MMNTH)   ) =  MON
-         CLASS ( ID(LMNTH)   ) =  MON
-         CLASS ( ID(MONTH)   ) =  MONTH
-         CLASS ( ID(DOY)     ) =  DOY
-         CLASS ( ID(UWKD)    ) =  WKDAY
-         CLASS ( ID(MWKD)    ) =  WKDAY
-         CLASS ( ID(LWKD)    ) =  WKDAY
-         CLASS ( ID(UWEEKD)  ) =  WKDAY
-         CLASS ( ID(MWEEKD)  ) =  WKDAY
-         CLASS ( ID(LWEEKD)  ) =  WKDAY
-         CLASS ( ID(DAY)     ) =  DAY
-         CLASS ( ID(MINUTE)  ) =  MINUTE
-         CLASS ( ID(HOUR)    ) =  HOUR
-         CLASS ( ID(SEC)     ) =  SEC
-         CLASS ( ID(POINT)   ) =  POINT
-         CLASS ( ID(PLACE)   ) =  PLACE
-         CLASS ( ID(JULIAN)  ) =  JULIAN
-         CLASS ( ID(UTC)     ) =  TIMSYS
-         CLASS ( ID(TDB)     ) =  TIMSYS
-         CLASS ( ID(TDT)     ) =  TIMSYS
-         CLASS ( ID(TT)      ) =  TIMSYS
-         CLASS ( ID(SP2000)  ) =  SP2000
-         CLASS ( ID(SP1950)  ) =  SP1950
-         CLASS ( ID(ROUND)   ) =  ROUND
-         CLASS ( ID(TRUNC)   ) =  TRUNC
-         CLASS ( ID(UERA)    ) =  ERA
-         CLASS ( ID(LERA)    ) =  ERA
-         CLASS ( ID(UERAX)   ) =  ERA
-         CLASS ( ID(LERAX)   ) =  ERA
-         CLASS ( ID(UAMPM)   ) =  NOON
-         CLASS ( ID(LAMPM)   ) =  NOON
-         CLASS ( ID(UTCP)    ) =  TIMSYS
-         CLASS ( ID(UTCM)    ) =  TIMSYS
-         CLASS ( ID(JCAL)    ) =  CALNDR
-         CLASS ( ID(GCAL)    ) =  CALNDR
-         CLASS ( ID(MCAL)    ) =  CALNDR
-         CLASS ( ID(AMPM)    ) =  AMPM
+         class ( id(noname)  ) =  noname
+         class ( id(year)    ) =  year
+         class ( id(yr)      ) =  yr
+         class ( id(umon)    ) =  mon
+         class ( id(mmon)    ) =  mon
+         class ( id(lmon)    ) =  mon
+         class ( id(umnth)   ) =  mon
+         class ( id(mmnth)   ) =  mon
+         class ( id(lmnth)   ) =  mon
+         class ( id(month)   ) =  month
+         class ( id(doy)     ) =  doy
+         class ( id(uwkd)    ) =  wkday
+         class ( id(mwkd)    ) =  wkday
+         class ( id(lwkd)    ) =  wkday
+         class ( id(uweekd)  ) =  wkday
+         class ( id(mweekd)  ) =  wkday
+         class ( id(lweekd)  ) =  wkday
+         class ( id(day)     ) =  day
+         class ( id(minute)  ) =  minute
+         class ( id(hour)    ) =  hour
+         class ( id(sec)     ) =  sec
+         class ( id(point)   ) =  point
+         class ( id(place)   ) =  place
+         class ( id(julian)  ) =  julian
+         class ( id(utc)     ) =  timsys
+         class ( id(tdb)     ) =  timsys
+         class ( id(tdt)     ) =  timsys
+         class ( id(tt)      ) =  timsys
+         class ( id(sp2000)  ) =  sp2000
+         class ( id(sp1950)  ) =  sp1950
+         class ( id(round)   ) =  round
+         class ( id(trunc)   ) =  trunc
+         class ( id(uera)    ) =  era
+         class ( id(lera)    ) =  era
+         class ( id(uerax)   ) =  era
+         class ( id(lerax)   ) =  era
+         class ( id(uampm)   ) =  noon
+         class ( id(lampm)   ) =  noon
+         class ( id(utcp)    ) =  timsys
+         class ( id(utcm)    ) =  timsys
+         class ( id(jcal)    ) =  calndr
+         class ( id(gcal)    ) =  calndr
+         class ( id(mcal)    ) =  calndr
+         class ( id(ampm)    ) =  ampm
 
-         DO I = BEGIN, FINISH
-            PAD (I) = 0.0D0
-         END DO
+         do i = begin, finish
+            pad (i) = 0.0d0
+         end do
 
-         PAD  ( SEC    )     =   0.5D0
-         PAD  ( MINUTE )     =  60.0D0 * PAD(SEC)
-         PAD  ( HOUR   )     =  60.0D0 * PAD(MINUTE)
-         PAD  ( DAY    )     =  24.0D0 * PAD(HOUR)
-         PAD  ( MONTH  )     =  30.0D0 * PAD(DAY)
-         PAD  ( DOY    )     =           PAD(DAY)
-         PAD  ( MON    )     =           PAD(MONTH)
-         PAD  ( YEAR   )     = 365.0D0 * PAD(DAY)
-         PAD  ( YR     )     = 365.0D0 * PAD(DAY)
-         PAD  ( JULIAN )     =           PAD(DAY)
-         PAD  ( SP2000 )     =           PAD(SEC)
-         PAD  ( SP1950 )     =           PAD(SEC)
-         PAD  ( AMPM   )     =           PAD(HOUR)
+         pad  ( sec    )     =   0.5d0
+         pad  ( minute )     =  60.0d0 * pad(sec)
+         pad  ( hour   )     =  60.0d0 * pad(minute)
+         pad  ( day    )     =  24.0d0 * pad(hour)
+         pad  ( month  )     =  30.0d0 * pad(day)
+         pad  ( doy    )     =           pad(day)
+         pad  ( mon    )     =           pad(month)
+         pad  ( year   )     = 365.0d0 * pad(day)
+         pad  ( yr     )     = 365.0d0 * pad(day)
+         pad  ( julian )     =           pad(day)
+         pad  ( sp2000 )     =           pad(sec)
+         pad  ( sp1950 )     =           pad(sec)
+         pad  ( ampm   )     =           pad(hour)
 
 !
 !        After we've made the initial scan for tokens and determined
 !        the time system requested, we will want to get rid of the
 !        time system tokens.
 !
-         DUMP (  1 ) = ID(UTC)
-         DUMP (  2 ) = ID(TDT)
-         DUMP (  3 ) = ID(TT)
-         DUMP (  4 ) = ID(TDB)
-         DUMP (  5 ) = ID(ROUND)
-         DUMP (  6 ) = ID(TRUNC)
-         DUMP (  7 ) = ID(UTCM)
-         DUMP (  8 ) = ID(UTCP)
-         DUMP (  9 ) = ID(JCAL)
-         DUMP ( 10 ) = ID(GCAL)
-         DUMP ( 11 ) = ID(MCAL)
+         dump (  1 ) = id(utc)
+         dump (  2 ) = id(tdt)
+         dump (  3 ) = id(tt)
+         dump (  4 ) = id(tdb)
+         dump (  5 ) = id(round)
+         dump (  6 ) = id(trunc)
+         dump (  7 ) = id(utcm)
+         dump (  8 ) = id(utcp)
+         dump (  9 ) = id(jcal)
+         dump ( 10 ) = id(gcal)
+         dump ( 11 ) = id(mcal)
 
-         NDUMP      = 11
+         ndump      = 11
 
 !
 !        Set up the default formats for the various time components
 !
-         ORIGNL(YEAR)   = 'YYYY'
-         LENGTH(YEAR)   =  4
+         orignl(year)   = 'YYYY'
+         length(year)   =  4
 
-         ORIGNL(YR)     = '0Y'
-         LENGTH(YR)     =  2
+         orignl(yr)     = '0Y'
+         length(yr)     =  2
 
-         ORIGNL(DOY)    = '0DD'
-         LENGTH(DOY)    =  3
+         orignl(doy)    = '0DD'
+         length(doy)    =  3
 
-         ORIGNL(DAY)    = '0D'
-         LENGTH(DAY)    =  2
+         orignl(day)    = '0D'
+         length(day)    =  2
 
-         ORIGNL(MONTH)  = '0M'
-         LENGTH(MONTH)  =  2
+         orignl(month)  = '0M'
+         length(month)  =  2
 
-         ORIGNL(HOUR)   = '0H'
-         LENGTH(HOUR)   =  2
+         orignl(hour)   = '0H'
+         length(hour)   =  2
 
-         ORIGNL(AMPM)   = '0H'
-         LENGTH(AMPM)   =  2
+         orignl(ampm)   = '0H'
+         length(ampm)   =  2
 
-         ORIGNL(MINUTE) = '0M'
-         LENGTH(MINUTE) =  2
+         orignl(minute) = '0M'
+         length(minute) =  2
 
-         ORIGNL(SEC)    = '0S'
-         LENGTH(SEC)    =  2
+         orignl(sec)    = '0S'
+         length(sec)    =  2
 
-         ORIGNL(JULIAN) = 'XXXXXXX'
-         LENGTH(JULIAN) =  7
+         orignl(julian) = 'XXXXXXX'
+         length(julian) =  7
 
-         ORIGNL(SP2000) = 'XXXXXXXXXXX'
-         LENGTH(SP2000) =  11
+         orignl(sp2000) = 'XXXXXXXXXXX'
+         length(sp2000) =  11
 
-         ORIGNL(SP1950) = 'XXXXXXXXXXX'
-         LENGTH(SP1950) =  11
+         orignl(sp1950) = 'XXXXXXXXXXX'
+         length(sp1950) =  11
 
 !
 !        Finally set up the component pointers...
 !
-         COMPNT(1,YMD)    = RLYEAR
-         COMPNT(2,YMD)    = MONTH
-         COMPNT(3,YMD)    = DAY
-         COMPNT(4,YMD)    = HOUR
-         COMPNT(5,YMD)    = MINUTE
-         COMPNT(6,YMD)    = SEC
+         compnt(1,ymd)    = rlyear
+         compnt(2,ymd)    = month
+         compnt(3,ymd)    = day
+         compnt(4,ymd)    = hour
+         compnt(5,ymd)    = minute
+         compnt(6,ymd)    = sec
 
-         COMPNT(1,CONTIN) = CURRNT
+         compnt(1,contin) = currnt
 
-      END IF
+      end if
 
 !
 !     Chapter 2.  Parsing the input picture.
@@ -1424,49 +1424,49 @@
 !     output string will terminate with no unfinished business
 !     left to resolve).
 !
-      MYSTR = ' '
-      CALL    LJUST ( PICTUR, MYSTR(1:MAXLEN-1) )
-      E     = RTRIM (         MYSTR             ) + 1
-      START = 1
+      mystr = ' '
+      call    ljust ( pictur, mystr(1:maxlen-1) )
+      e     = rtrim (         mystr             ) + 1
+      start = 1
 
 !
 !     Scan the input string.
 !
-      CALL SCAN ( MYSTR(1:E), &
-                  MARKS,      MRKLEN, PNTRS,  ROOM,  START, &
-                  NTOKNS,     IDENT,  BEG,    END           )
+      call scan ( mystr(1:e), &
+                  marks,      mrklen, pntrs,  room,  start, &
+                  ntokns,     ident,  beg,    end           )
 
 !
 !     Locate the time system that will be used.  This must
 !     be one of the following: UTC, TDB, TT, TDT
 !
-      UNKNWN = .TRUE.
-      GO2JUL = .FALSE.
-      DOZONE = .FALSE.
-      I      = 1
-      HOFF   = 0.0D0
-      MOFF   = 0.0D0
+      unknwn = .true.
+      go2jul = .false.
+      dozone = .false.
+      i      = 1
+      hoff   = 0.0d0
+      moff   = 0.0d0
 
 !
 !     Get the default time type from TIMDEF
 !
-      CALL TIMDEF ( 'GET', 'SYSTEM', TSYS )
+      call timdef ( 'GET', 'SYSTEM', tsys )
 
-      IF ( TSYS .EQ. 'UTC' ) THEN
-         TIMTYP = ID(UTC)
-      ELSE IF ( TSYS .EQ. 'TDB' ) THEN
-         TIMTYP = ID(TDB)
-      ELSE IF ( (TSYS .EQ. 'TDT') .OR. (TSYS .EQ. 'TT') ) THEN
-         TIMTYP = ID(TDT)
-      ELSE
-         TIMTYP = ID(UTCP)
+      if ( tsys .eq. 'UTC' ) then
+         timtyp = id(utc)
+      else if ( tsys .eq. 'TDB' ) then
+         timtyp = id(tdb)
+      else if ( (tsys .eq. 'TDT') .or. (tsys .eq. 'TT') ) then
+         timtyp = id(tdt)
+      else
+         timtyp = id(utcp)
 
-         CALL TIMDEF ( 'GET', 'ZONE', ZON )
+         call timdef ( 'GET', 'ZONE', zon )
 
-         CALL PREFIX ( '::', 0, ZON )
-         CALL ZZUTCPM( ZON, 1, HOFF, MOFF, LAST, OK )
+         call prefix ( '::', 0, zon )
+         call zzutcpm( zon, 1, hoff, moff, last, ok )
 
-         DOZONE = OK
+         dozone = ok
 
 !
 !        The routine TIMDEF uses ZZUTCPM to determine whether
@@ -1476,33 +1476,33 @@
 !        someday use something other that ZZUTCPM for checking
 !        we put in the unneeded check below.
 !
-         IF ( .NOT. OK ) THEN
-            TIMTYP = ID(UTC)
-         END IF
+         if ( .not. ok ) then
+            timtyp = id(utc)
+         end if
 
-      END IF
+      end if
 
 
-      DO WHILE ( UNKNWN .AND. I .LE. NTOKNS )
+      do while ( unknwn .and. i .le. ntokns )
 
-         IF ( CLASS(IDENT(I)) .EQ. TIMSYS ) THEN
-            TIMTYP = IDENT(I)
-            UNKNWN = .FALSE.
-            DOZONE = .FALSE.
+         if ( class(ident(i)) .eq. timsys ) then
+            timtyp = ident(i)
+            unknwn = .false.
+            dozone = .false.
 
-            IF(      IDENT(I) .EQ. ID(UTCP) &
-                .OR. IDENT(I) .EQ. ID(UTCM) ) THEN
+            if(      ident(i) .eq. id(utcp) &
+                .or. ident(i) .eq. id(utcm) ) then
 
 !
 !              We've got a time zone specification. Parse it and
 !              store the offsets from UTC.
 !
-               CALL ZZUTCPM ( MYSTR, BEG(I), HOFF, MOFF, LAST, OK )
+               call zzutcpm ( mystr, beg(i), hoff, moff, last, ok )
 
-               IF ( OK ) THEN
+               if ( ok ) then
 
-                  DOZONE = .TRUE.
-                  TIMTYP = ID(UTCP)
+                  dozone = .true.
+                  timtyp = id(utcp)
 
 !
 !                 If we ran all the way up to the end of the next
@@ -1514,80 +1514,80 @@
 !                 other meta markers from  our copy of the time
 !                 format string.
 !
-                  IF ( LAST .EQ. END(I+1) ) THEN
-                     IDENT(I+1) = IDENT(I)
-                     I          = I + 1
-                  ELSE
-                     END(I)     = LAST
-                     BEG(I+1)   = LAST + 1
-                  END IF
+                  if ( last .eq. end(i+1) ) then
+                     ident(i+1) = ident(i)
+                     i          = i + 1
+                  else
+                     end(i)     = last
+                     beg(i+1)   = last + 1
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
-         I = I + 1
+         i = i + 1
 
-      END DO
+      end do
 
 !
 !     Determine whether we should use the Julian or gregorian (default)
 !     calendar
 !
-      UNKNWN = .TRUE.
-      I      = 1
+      unknwn = .true.
+      i      = 1
 
 !
 !     Get the default calendar from TIMDEF.
 !
-      CALL TIMDEF ( 'GET', 'CALENDAR', CAL )
+      call timdef ( 'GET', 'CALENDAR', cal )
 
-      IF      ( CAL .EQ. 'GREGORIAN' ) THEN
-         CALTYP = ID(GCAL)
-      ELSE IF ( CAL .EQ. 'JULIAN'    ) THEN
-         CALTYP = ID(JCAL)
-      ELSE
-         CALTYP = ID(MCAL)
-      END IF
+      if      ( cal .eq. 'GREGORIAN' ) then
+         caltyp = id(gcal)
+      else if ( cal .eq. 'JULIAN'    ) then
+         caltyp = id(jcal)
+      else
+         caltyp = id(mcal)
+      end if
 
-      DO WHILE ( UNKNWN .AND. I .LE. NTOKNS )
+      do while ( unknwn .and. i .le. ntokns )
 
-         IF ( CLASS(IDENT(I)) .EQ. CALNDR ) THEN
-            CALTYP = IDENT(I)
-            UNKNWN = .FALSE.
-         END IF
+         if ( class(ident(i)) .eq. calndr ) then
+            caltyp = ident(i)
+            unknwn = .false.
+         end if
 
-         I = I + 1
-      END DO
+         i = i + 1
+      end do
 
 
 !
 !     Next determine whether or not we shall be performing rounding
 !     on output.
 !
-      PUMPUP =      ISRCHI ( ID(ROUND), NTOKNS, IDENT ) .NE. 0
+      pumpup =      isrchi ( id(round), ntokns, ident ) .ne. 0
 
 !
 !     Determine if we have an Era specification
 !
-      DOERA  =      ISRCHI ( ID(LERA),  NTOKNS, IDENT ) .NE. 0 &
-               .OR. ISRCHI ( ID(UERA),  NTOKNS, IDENT ) .NE. 0 &
-               .OR. ISRCHI ( ID(UERAX), NTOKNS, IDENT ) .NE. 0 &
-               .OR. ISRCHI ( ID(LERAX), NTOKNS, IDENT ) .NE. 0
+      doera  =      isrchi ( id(lera),  ntokns, ident ) .ne. 0 &
+               .or. isrchi ( id(uera),  ntokns, ident ) .ne. 0 &
+               .or. isrchi ( id(uerax), ntokns, ident ) .ne. 0 &
+               .or. isrchi ( id(lerax), ntokns, ident ) .ne. 0
 
 !
 !     Until we've examined the year, we assume that the era is not
 !     supposed to vanish.
 !
-      VANISH = .FALSE.
+      vanish = .false.
 !
 !     Next remove all of the time system dudes from the list of
 !     tokens.
 !
-      CALL SCANRJ ( DUMP, NDUMP, NTOKNS, IDENT, BEG, END )
+      call scanrj ( dump, ndump, ntokns, ident, beg, end )
 
 
 !
@@ -1596,9 +1596,9 @@
 !     in either case we are going to pad the input time.  For now
 !     we pad it by zero.
 !
-      TIMPAD = 0.0D0
+      timpad = 0.0d0
 
-      IF ( PUMPUP ) THEN
+      if ( pumpup ) then
 
 !
 !        We need to determine the amount to pad ET by.  So we need
@@ -1606,82 +1606,82 @@
 !        that has been requested.  Keep in mind that the last token
 !        is of type NONAME (its a blank) by construction.
 !
-         I = 1
+         i = 1
 
-         DO WHILE ( I .LE. NTOKNS )
+         do while ( i .le. ntokns )
 
-            TYPE = CLASS ( IDENT(I) )
+            type = class ( ident(i) )
 
-            IF   (      ( TYPE .EQ. NONAME ) &
-                   .OR. ( TYPE .EQ. POINT  ) &
-                   .OR. ( TYPE .EQ. PLACE  ) &
-                   .OR. ( TYPE .EQ. NOON   ) &
-                   .OR. ( TYPE .EQ. ERA    ) &
-                   .OR. ( TYPE .EQ. MON    ) &
-                   .OR. ( TYPE .EQ. WKDAY  ) ) THEN
+            if   (      ( type .eq. noname ) &
+                   .or. ( type .eq. point  ) &
+                   .or. ( type .eq. place  ) &
+                   .or. ( type .eq. noon   ) &
+                   .or. ( type .eq. era    ) &
+                   .or. ( type .eq. mon    ) &
+                   .or. ( type .eq. wkday  ) ) then
 
 !
 !              Don't do anything, just go on to the next token.
 !
-               I = I + 1
+               i = i + 1
 
-            ELSE
+            else
 
 !
 !              Look up the amount we should pad our time by.
 !
-               FACTOR = 1.0D0
-               INCR   = PAD ( TYPE )
+               factor = 1.0d0
+               incr   = pad ( type )
 
 !
 !              Examine the next token.  If it's not a decimal point
 !              and marker, we have the least significant part of
 !              this component.
 !
-               I      = I + 1
-               TYPE   = CLASS(IDENT(I))
+               i      = i + 1
+               type   = class(ident(i))
 
-               IF ( TYPE .EQ. POINT ) THEN
+               if ( type .eq. point ) then
 
-                  FACTOR = FACTOR * 0.1D0
-                  I      = I + 1
+                  factor = factor * 0.1d0
+                  i      = i + 1
 
 !
 !                 Now just look for the end of the string of place
 !                 holders
 !
-                  DO WHILE ( IDENT(I) .EQ. ID(PLACE) )
-                     FACTOR = FACTOR * 0.1D0
-                     I      = I + 1
-                  END DO
+                  do while ( ident(i) .eq. id(place) )
+                     factor = factor * 0.1d0
+                     i      = i + 1
+                  end do
 
-               END IF
+               end if
 
 !
 !              Now compute the time pad for this component of the
 !              time string.
 !
-               INCR = INCR * FACTOR
+               incr = incr * factor
 
-               IF ( TIMPAD .NE. 0.0D0 ) THEN
-                  TIMPAD = MIN ( TIMPAD, INCR )
-               ELSE
-                  TIMPAD = INCR
-               END IF
+               if ( timpad .ne. 0.0d0 ) then
+                  timpad = min ( timpad, incr )
+               else
+                  timpad = incr
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Right now we don't have any components of the time format
 !     and we don't need any of them so far.
 !
-      DO PART = BEGIN, FINISH
-         HAVE(PART) = .FALSE.
-      END DO
+      do part = begin, finish
+         have(part) = .false.
+      end do
 
 
 !
@@ -1698,54 +1698,54 @@
 !     our base input system.
 !
 !
-      MYET = ET
+      myet = et
 
-      IF      ( TIMTYP .EQ. ID(TDB) ) THEN
+      if      ( timtyp .eq. id(tdb) ) then
 
 !
 !        Since we are likely to need SP2000, SP1950 or JD, we
 !        compute them now.
 !
-         MYET           = MYET + TIMPAD
-         VALUES(SP2000) = MYET
-         VALUES(JULIAN) = UNITIM( MYET,   'TDB',  'JDTDB'  )
-         VALUES(SP1950) = VALUES(SP2000) + SPD()*( J2000() - J1950() )
+         myet           = myet + timpad
+         values(sp2000) = myet
+         values(julian) = unitim( myet,   'TDB',  'JDTDB'  )
+         values(sp1950) = values(sp2000) + spd()*( j2000() - j1950() )
 
-         BASTYP         = 'FORMAL'
-         YMDFMT         = 'YMDF'
-         YWFMT          = 'YMWDF'
-         HAVE  (SP2000) = .TRUE.
-         HAVE  (SP1950) = .TRUE.
-         HAVE  (JULIAN) = .TRUE.
+         bastyp         = 'FORMAL'
+         ymdfmt         = 'YMDF'
+         ywfmt          = 'YMWDF'
+         have  (sp2000) = .true.
+         have  (sp1950) = .true.
+         have  (julian) = .true.
 
-      ELSE IF ( (TIMTYP .EQ. ID(TDT)) .OR. &
-                (TIMTYP .EQ. ID(TT)) ) THEN
+      else if ( (timtyp .eq. id(tdt)) .or. &
+                (timtyp .eq. id(tt)) ) then
 
-         MYET           = UNITIM( MYET,   'TDB',  'TDT'    )  + TIMPAD
-         VALUES(SP2000) = MYET
-         VALUES(JULIAN) = UNITIM( MYET,   'TDT',  'JDTDT'  )
-         VALUES(SP1950) = VALUES(SP2000) + SPD()*( J2000() - J1950() )
+         myet           = unitim( myet,   'TDB',  'TDT'    )  + timpad
+         values(sp2000) = myet
+         values(julian) = unitim( myet,   'TDT',  'JDTDT'  )
+         values(sp1950) = values(sp2000) + spd()*( j2000() - j1950() )
 
-         BASTYP         = 'FORMAL'
-         YMDFMT         = 'YMDF'
-         YWFMT          = 'YMWDF'
-         HAVE  (SP2000) = .TRUE.
-         HAVE  (SP1950) = .TRUE.
-         HAVE  (JULIAN) = .TRUE.
+         bastyp         = 'FORMAL'
+         ymdfmt         = 'YMDF'
+         ywfmt          = 'YMWDF'
+         have  (sp2000) = .true.
+         have  (sp1950) = .true.
+         have  (julian) = .true.
 
-      ELSE
+      else
 
 !
 !        In this case we convert to an earth based frame for our
 !        working epoch.  This rounds properly when it's time to get
 !        fractional components.
 !
-         MYET   =  UNITIM ( MYET, 'TDB', 'TDT' ) + TIMPAD
-         BASTYP = 'TDT'
-         YMDFMT = 'YMD'
-         YWFMT  = 'YMWD'
+         myet   =  unitim ( myet, 'TDB', 'TDT' ) + timpad
+         bastyp = 'TDT'
+         ymdfmt = 'YMD'
+         ywfmt  = 'YMWD'
 
-      END IF
+      end if
 
 !
 !     Chapter 3.  Building the Output String
@@ -1757,13 +1757,13 @@
 !     and construct the output string.  We will
 !     put the next portion of the output at APPND
 !
-      APPND  =  1
-      MAKING = .FALSE.
+      appnd  =  1
+      making = .false.
 
-      DO I = 1, NTOKNS
+      do i = 1, ntokns
 
-         TYPE    = CLASS( IDENT(I) )
-         TVEC(1) = MYET
+         type    = class( ident(i) )
+         tvec(1) = myet
 
 !
 !        If the next marker is not one we use as a place holder
@@ -1772,44 +1772,44 @@
 !        building is done.  We can construct the component and
 !        append it to the string we are building.
 !
-         IF ( (TYPE .NE. PLACE) .AND.  MAKING ) THEN
+         if ( (type .ne. place) .and.  making ) then
 
 !
 !           We also need to be sure this isn't a decimal point
 !           marker before we add on to the output string.
 !
-            IF ( (TYPE .NE. POINT) .OR. HAVE(POINT) ) THEN
+            if ( (type .ne. point) .or. have(point) ) then
 
 !
 !              We are going to truncate the number to the number of
 !              places requested NOT round.
 !
-               TRNCAT = BRCKTI( WIDTH - LENGTH(NUMTYP) - 1, 0, 14 )
-               FRAC   = VALUE - DINT(VALUE )
+               trncat = brckti( width - length(numtyp) - 1, 0, 14 )
+               frac   = value - dint(value )
 
-               IF ( FRAC .LT. 0 ) THEN
-                  VALUE = VALUE - 1.0D0
-                  FRAC  = FRAC  + 1.0D0
-               END IF
+               if ( frac .lt. 0 ) then
+                  value = value - 1.0d0
+                  frac  = frac  + 1.0d0
+               end if
 
-               INTMED = ( DINT( FRAC * POWER(TRNCAT) ) - 0.125D0 ) &
-                                      / POWER(TRNCAT)
+               intmed = ( dint( frac * power(trncat) ) - 0.125d0 ) &
+                                      / power(trncat)
 
-               FRAC   = BRCKTD( INTMED,      0.0D0,      1.0D0 )
+               frac   = brcktd( intmed,      0.0d0,      1.0d0 )
 
-               VALUE  = DINT(VALUE) + FRAC
+               value  = dint(value) + frac
 
-               CALL DPFMT ( VALUE, FMT, SUBSTR )
+               call dpfmt ( value, fmt, substr )
 
 
-               STRING(APPND:) = SUBSTR
-               APPND          = APPND + WIDTH
-               HAVE  (POINT)  =.FALSE.
-               MAKING         =.FALSE.
+               string(appnd:) = substr
+               appnd          = appnd + width
+               have  (point)  =.false.
+               making         =.false.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        If the token isn't recognized we can just
@@ -1817,27 +1817,27 @@
 !        adjust the point at which the next substring is
 !        to be appended.
 !
-         IF ( TYPE .EQ. NONAME ) THEN
+         if ( type .eq. noname ) then
 
-            STRING(APPND:) = MYSTR ( BEG(I) : END(I) )
-            APPND          = APPND - BEG(I) + END(I) + 1
+            string(appnd:) = mystr ( beg(i) : end(i) )
+            appnd          = appnd - beg(i) + end(i) + 1
 
 !
 !        If the token is a place holder, we either just append it
 !        or tack it on to a format string we are creating..
 !
-         ELSE IF ( TYPE .EQ. PLACE ) THEN
+         else if ( type .eq. place ) then
 
 
-            IF ( MAKING ) THEN
-               B           = WIDTH + 1
-               E           = B     - BEG(I) + END(I)
-               FMT(B:E)    = MYSTR ( BEG(I) : END(I) )
-               WIDTH       = WIDTH - BEG(I) + END(I) + 1
-            ELSE
-               STRING(APPND:APPND) = MYSTR ( BEG(I) : END(I) )
-               APPND               = APPND - BEG(I) + END(I) + 1
-            END IF
+            if ( making ) then
+               b           = width + 1
+               e           = b     - beg(i) + end(i)
+               fmt(b:e)    = mystr ( beg(i) : end(i) )
+               width       = width - beg(i) + end(i) + 1
+            else
+               string(appnd:appnd) = mystr ( beg(i) : end(i) )
+               appnd               = appnd - beg(i) + end(i) + 1
+            end if
 
 !
 !        If the token is the decimal point plus place holder
@@ -1845,31 +1845,31 @@
 !        format and determine the fractional part of the current
 !        quantity.
 !
-         ELSE IF ( TYPE .EQ. POINT ) THEN
+         else if ( type .eq. point ) then
 
-            IF ( .NOT. MAKING ) THEN
+            if ( .not. making ) then
 
-               B           =  APPND
-               E           =  APPND - BEG(I) + END(I)
-               STRING(B:E) =  MYSTR ( BEG(I) : END(I) )
-               APPND       =  E + 1
-               HAVE(POINT) = .FALSE.
+               b           =  appnd
+               e           =  appnd - beg(i) + end(i)
+               string(b:e) =  mystr ( beg(i) : end(i) )
+               appnd       =  e + 1
+               have(point) = .false.
 
-            ELSE IF ( TIMFMT .EQ. CONTIN ) THEN
+            else if ( timfmt .eq. contin ) then
 
-               B           = WIDTH + 1
-               E           = B     - BEG(I) + END(I)
-               FMT(B:E)    = MYSTR ( BEG(I) : END(I) )
-               WIDTH       = E
-               HAVE(POINT) =.TRUE.
+               b           = width + 1
+               e           = b     - beg(i) + end(i)
+               fmt(b:e)    = mystr ( beg(i) : end(i) )
+               width       = e
+               have(point) =.true.
 
-            ELSE
+            else
 
-               B           = WIDTH + 1
-               E           = B     - BEG(I) + END(I)
-               FMT(B:E)    = MYSTR ( BEG(I) : END(I) )
-               WIDTH       = E
-               HAVE(POINT) =.TRUE.
+               b           = width + 1
+               e           = b     - beg(i) + end(i)
+               fmt(b:e)    = mystr ( beg(i) : end(i) )
+               width       = e
+               have(point) =.true.
 
 !
 !              Since we obviously are going to be needing
@@ -1902,17 +1902,17 @@
 !              of trouble now.
 !
 
-               CALL TTRANS( INTYP, BASTYP, PTVEC  )
-               CALL TTRANS( INTYP, BASTYP, NTVEC  )
+               call ttrans( intyp, bastyp, ptvec  )
+               call ttrans( intyp, bastyp, ntvec  )
 
-               DELTA = MAX(1.0D0, NTVEC(1) - PTVEC(1) )
-               FRAC  = BRCKTD( 0.0D0, 1.0D0, (MYET - PTVEC(1)) / DELTA )
+               delta = max(1.0d0, ntvec(1) - ptvec(1) )
+               frac  = brcktd( 0.0d0, 1.0d0, (myet - ptvec(1)) / delta )
 
-               VALUE = VALUE + FRAC
+               value = value + frac
 
-            END IF
+            end if
 
-         ELSE
+         else
 
 !
 !        If we get to this point we have an honest time
@@ -1922,133 +1922,133 @@
 !        after the next long IF-THEN block that gets the value
 !        if we don't already have it).
 !
-            MAKING      =.TRUE.
-            HAVE(POINT) =.FALSE.
-            FMT         = ORIGNL( TYPE )
-            WIDTH       = LENGTH( TYPE )
-            NUMTYP      =         TYPE
+            making      =.true.
+            have(point) =.false.
+            fmt         = orignl( type )
+            width       = length( type )
+            numtyp      =         type
 
-            IF ( .NOT. HAVE(TYPE) )  THEN
+            if ( .not. have(type) )  then
 
-               TVEC(1) = MYET
+               tvec(1) = myet
 
 !
 !              Most components are handled in the next block.
 !
-               IF (       (TYPE .EQ. YEAR) &
-                     .OR. (TYPE .EQ. YR) &
-                     .OR. (TYPE .EQ. MONTH) &
-                     .OR. (TYPE .EQ. MON) &
-                     .OR. (TYPE .EQ. DAY) &
-                     .OR. (TYPE .EQ. DOY) &
-                     .OR. (TYPE .EQ. NOON) &
-                     .OR. (TYPE .EQ. HOUR) &
-                     .OR. (TYPE .EQ. ERA) &
-                     .OR. (TYPE .EQ. AMPM) &
-                     .OR. (TYPE .EQ. MINUTE) &
-                     .OR. (TYPE .EQ. SEC)   ) THEN
+               if (       (type .eq. year) &
+                     .or. (type .eq. yr) &
+                     .or. (type .eq. month) &
+                     .or. (type .eq. mon) &
+                     .or. (type .eq. day) &
+                     .or. (type .eq. doy) &
+                     .or. (type .eq. noon) &
+                     .or. (type .eq. hour) &
+                     .or. (type .eq. era) &
+                     .or. (type .eq. ampm) &
+                     .or. (type .eq. minute) &
+                     .or. (type .eq. sec)   ) then
 
 
-                  CALL TTRANS ( BASTYP, YMDFMT, TVEC )
+                  call ttrans ( bastyp, ymdfmt, tvec )
 
 !
 !                 The seconds component is finished.  Regardless
 !                 of any zone or calendar modifications, we just
 !                 don't have to deal with this component any more.
 !
-                  VALUES(SEC)    = TVEC(6)
+                  values(sec)    = tvec(6)
 
 !
 !                 If we need to deal with time zones, this is
 !                 the time to do it.
 !
-                  IF ( TIMTYP .EQ. ID(UTCP) ) THEN
+                  if ( timtyp .eq. id(utcp) ) then
 
-                     TVEC(4) = TVEC(4) + HOFF
-                     TVEC(5) = TVEC(5) + MOFF
-                     TVEC(6) = 0.0D0
+                     tvec(4) = tvec(4) + hoff
+                     tvec(5) = tvec(5) + moff
+                     tvec(6) = 0.0d0
 
-                     CALL TTRANS ( 'YMDF', 'YMDF', TVEC )
+                     call ttrans ( 'YMDF', 'YMDF', tvec )
 
-                  END IF
+                  end if
 
 !
 !                 One way or the other the hours and minutes components
 !                 are finished.  Record their values.
 !
-                  VALUES(HOUR)   = TVEC(4)
-                  VALUES(MINUTE) = TVEC(5)
+                  values(hour)   = tvec(4)
+                  values(minute) = tvec(5)
 
-                  IF ( VALUES(HOUR) .EQ. 0.0D0 ) THEN
-                     VALUES(AMPM) =  12.0D0
-                  ELSE IF ( VALUES(HOUR) .GT. 12.0D0 ) THEN
-                     VALUES(AMPM) = VALUES(HOUR) - 12.0D0
-                  ELSE
-                     VALUES(AMPM) = VALUES(HOUR)
-                  END IF
+                  if ( values(hour) .eq. 0.0d0 ) then
+                     values(ampm) =  12.0d0
+                  else if ( values(hour) .gt. 12.0d0 ) then
+                     values(ampm) = values(hour) - 12.0d0
+                  else
+                     values(ampm) = values(hour)
+                  end if
 
 !
 !                 Finally, if we need to change the calendar to
 !                 Julian this is the place to handle it.
 !
-                  JYEAR  = NINT( TVEC(1) )
-                  JMONTH = NINT( TVEC(2) )
-                  JDAY   = NINT( TVEC(3) )
+                  jyear  = nint( tvec(1) )
+                  jmonth = nint( tvec(2) )
+                  jday   = nint( tvec(3) )
 
-                  CALL GR2JUL ( JYEAR, JMONTH, JDAY, JDOY )
+                  call gr2jul ( jyear, jmonth, jday, jdoy )
 
-                  GYEAR  = JYEAR
-                  GMONTH = JMONTH
-                  GDAY   = JDAY
+                  gyear  = jyear
+                  gmonth = jmonth
+                  gday   = jday
 
-                  CALL JUL2GR ( GYEAR, GMONTH, GDAY, GDOY )
+                  call jul2gr ( gyear, gmonth, gday, gdoy )
 
-                  IF      ( CALTYP .EQ. ID(GCAL) ) THEN
+                  if      ( caltyp .eq. id(gcal) ) then
 
-                     VALUES(YEAR)  = DBLE(GYEAR)
-                     VALUES(MONTH) = DBLE(GMONTH)
-                     VALUES(DAY)   = DBLE(GDAY)
-                     VALUES(DOY)   = DBLE(GDOY)
-                     GO2JUL        = .FALSE.
+                     values(year)  = dble(gyear)
+                     values(month) = dble(gmonth)
+                     values(day)   = dble(gday)
+                     values(doy)   = dble(gdoy)
+                     go2jul        = .false.
 
-                  ELSE IF ( CALTYP .EQ. ID(JCAL) ) THEN
+                  else if ( caltyp .eq. id(jcal) ) then
 
-                     VALUES(YEAR)  = DBLE(JYEAR)
-                     VALUES(MONTH) = DBLE(JMONTH)
-                     VALUES(DAY)   = DBLE(JDAY)
-                     VALUES(DOY)   = DBLE(JDOY)
-                     GO2JUL        = .TRUE.
+                     values(year)  = dble(jyear)
+                     values(month) = dble(jmonth)
+                     values(day)   = dble(jday)
+                     values(doy)   = dble(jdoy)
+                     go2jul        = .true.
 
-                  ELSE IF ( CALTYP .EQ. ID(MCAL) ) THEN
+                  else if ( caltyp .eq. id(mcal) ) then
 
 
-                     IF      ( GYEAR .LT. 1582 ) THEN
-                        GO2JUL = .TRUE.
-                     ELSE IF ( GYEAR .GT. 1582 ) THEN
-                        GO2JUL = .FALSE.
-                     ELSE IF ( GMONTH .LT. 10 ) THEN
-                        GO2JUL = .TRUE.
-                     ELSE IF ( GMONTH .GT. 10 ) THEN
-                        GO2JUL = .FALSE.
-                     ELSE IF ( GDAY   .GE. 15 ) THEN
-                        GO2JUL = .FALSE.
-                     ELSE
-                        GO2JUL = .TRUE.
-                     END IF
+                     if      ( gyear .lt. 1582 ) then
+                        go2jul = .true.
+                     else if ( gyear .gt. 1582 ) then
+                        go2jul = .false.
+                     else if ( gmonth .lt. 10 ) then
+                        go2jul = .true.
+                     else if ( gmonth .gt. 10 ) then
+                        go2jul = .false.
+                     else if ( gday   .ge. 15 ) then
+                        go2jul = .false.
+                     else
+                        go2jul = .true.
+                     end if
 
-                     IF ( GO2JUL ) THEN
-                        VALUES(YEAR)  = DBLE(JYEAR)
-                        VALUES(MONTH) = DBLE(JMONTH)
-                        VALUES(DAY)   = DBLE(JDAY)
-                        VALUES(DOY)   = DBLE(JDOY)
-                     ELSE
-                        VALUES(YEAR)  = DBLE(GYEAR)
-                        VALUES(MONTH) = DBLE(GMONTH)
-                        VALUES(DAY)   = DBLE(GDAY)
-                        VALUES(DOY)   = DBLE(GDOY)
-                     END IF
+                     if ( go2jul ) then
+                        values(year)  = dble(jyear)
+                        values(month) = dble(jmonth)
+                        values(day)   = dble(jday)
+                        values(doy)   = dble(jdoy)
+                     else
+                        values(year)  = dble(gyear)
+                        values(month) = dble(gmonth)
+                        values(day)   = dble(gday)
+                        values(doy)   = dble(gdoy)
+                     end if
 
-                  END IF
+                  end if
 
 !
 !                 Determine the era associated with the epoch.  Also
@@ -2059,101 +2059,101 @@
 !                 it can be used when determining rounding of
 !                 other components.
 !
-                  VALUES(RLYEAR) = VALUES(YEAR)
+                  values(rlyear) = values(year)
 
-                  IF ( DOERA ) THEN
+                  if ( doera ) then
 
-                     IF ( VALUES(YEAR) .LT. 1 ) THEN
-                        VALUES(YEAR) = 1.0D0 - VALUES(YEAR)
-                        VALUES(ERA)  = 1.0D0
-                     ELSE
-                        VALUES(ERA)  = 2.0D0
-                     END IF
+                     if ( values(year) .lt. 1 ) then
+                        values(year) = 1.0d0 - values(year)
+                        values(era)  = 1.0d0
+                     else
+                        values(era)  = 2.0d0
+                     end if
 
-                     VANISH = VALUES(YEAR) .GE. 1000.0D0
+                     vanish = values(year) .ge. 1000.0d0
 
-                  END IF
+                  end if
 
 !
 !                 Fetch the last two digits of the year.
 !
-                  CALL RMAIND ( VALUES(YEAR), 100.0D0, X, TEMPD )
-                  VALUES(YR) = TEMPD
+                  call rmaind ( values(year), 100.0d0, x, tempd )
+                  values(yr) = tempd
 
-                  HAVE  (YEAR)   = .TRUE.
-                  HAVE  (YR)     = .TRUE.
-                  HAVE  (DOY)    = .TRUE.
-                  HAVE  (MONTH)  = .TRUE.
-                  HAVE  (MON)    = .TRUE.
-                  HAVE  (DAY)    = .TRUE.
-                  HAVE  (HOUR)   = .TRUE.
-                  HAVE  (MINUTE) = .TRUE.
-                  HAVE  (SEC)    = .TRUE.
-                  HAVE  (AMPM)   = .TRUE.
-                  HAVE  (ERA)    = .TRUE.
+                  have  (year)   = .true.
+                  have  (yr)     = .true.
+                  have  (doy)    = .true.
+                  have  (month)  = .true.
+                  have  (mon)    = .true.
+                  have  (day)    = .true.
+                  have  (hour)   = .true.
+                  have  (minute) = .true.
+                  have  (sec)    = .true.
+                  have  (ampm)   = .true.
+                  have  (era)    = .true.
 
 
-               ELSE IF ( TYPE .EQ. WKDAY ) THEN
+               else if ( type .eq. wkday ) then
 
-                  TVEC(1) = MYET
+                  tvec(1) = myet
 
-                  CALL TTRANS ( BASTYP, YWFMT, TVEC )
+                  call ttrans ( bastyp, ywfmt, tvec )
 
 !
 !                 Weekday. If we need to deal with time zones, this is
 !                 the time to do it.
 !
-                  IF ( TIMTYP .EQ. ID(UTCP) ) THEN
+                  if ( timtyp .eq. id(utcp) ) then
 
-                     TVEC(5) = TVEC(5) + HOFF
-                     TVEC(6) = TVEC(6) + MOFF
-                     TVEC(7) = 0.0D0
+                     tvec(5) = tvec(5) + hoff
+                     tvec(6) = tvec(6) + moff
+                     tvec(7) = 0.0d0
 
-                     CALL TTRANS ( 'YMWDF', 'YMWDF', TVEC )
+                     call ttrans ( 'YMWDF', 'YMWDF', tvec )
 
 
-                  END IF
+                  end if
 
-                  VALUES(WKDAY)  = TVEC(4)
-                  HAVE  (WKDAY)  =.TRUE.
+                  values(wkday)  = tvec(4)
+                  have  (wkday)  =.true.
 
-               ELSE IF (      ( TYPE .EQ. SP1950 ) &
-                         .OR. ( TYPE .EQ. SP2000 ) ) THEN
+               else if (      ( type .eq. sp1950 ) &
+                         .or. ( type .eq. sp2000 ) ) then
 
 !
 !                 The only way to get here is if the output time
 !                 type is UTC or a time zone (otherwise we'd
 !                 already HAVE SP2000 and SP1950).
 !
-                  TVEC(1) = MYET
+                  tvec(1) = myet
 
-                  CALL TTRANS ( BASTYP, 'FORMAL', TVEC )
+                  call ttrans ( bastyp, 'FORMAL', tvec )
 
-                  VALUES(SP2000) = TVEC(1)
-                  VALUES(SP1950) = VALUES(SP2000) &
-                                 + SPD() * ( J2000() - J1950() )
+                  values(sp2000) = tvec(1)
+                  values(sp1950) = values(sp2000) &
+                                 + spd() * ( j2000() - j1950() )
 
-                  HAVE  (SP2000) = .TRUE.
-                  HAVE  (SP1950) = .TRUE.
+                  have  (sp2000) = .true.
+                  have  (sp1950) = .true.
 
-               ELSE IF ( TYPE .EQ. JULIAN ) THEN
+               else if ( type .eq. julian ) then
 
 !
 !                 The same tale can be told here as in the last
 !                 case.  We can only get here if this is UTC
 !                 output.
 !
-                  TVEC(1) = MYET
+                  tvec(1) = myet
 
-                  CALL TTRANS ( BASTYP, 'JDUTC', TVEC )
+                  call ttrans ( bastyp, 'JDUTC', tvec )
 
-                  VALUES(JULIAN) = TVEC(1)
-                  HAVE  (JULIAN) =.TRUE.
+                  values(julian) = tvec(1)
+                  have  (julian) =.true.
 
-               END IF
+               end if
 
 
-            END IF
+            end if
 
 !
 !           O.K. whatever thing we are about to construct, we now
@@ -2164,156 +2164,156 @@
 !           We need to treat character months, weekdays, eras, a.m.'s
 !           and p.m.'s specially.
 !
-            IF ( TYPE .EQ. MON ) THEN
+            if ( type .eq. mon ) then
 
-               INDX           = NINT  ( VALUES(MONTH) )
-               MYMON          = MONTHS( INDX )
-               MONTYP         = IDENT ( I )
+               indx           = nint  ( values(month) )
+               mymon          = months( indx )
+               montyp         = ident ( i )
 
 !
 !              There is no ELSE case in the block below because all of
 !              the possible MONTYP values are checked explicitly.
 !
-               IF      ( MONTYP .EQ. ID(UMON)  ) THEN
-                  CALL UCASE ( MYMON, MYMON )
-                  MYMON(4:) = ' '
-                  MYLEN     = 3
-               ELSE IF ( MONTYP .EQ. ID(MMON)   ) THEN
-                  MYMON(4:) = ' '
-                  MYLEN     = 3
-               ELSE IF ( MONTYP .EQ. ID(LMON)   ) THEN
-                  CALL LCASE ( MYMON, MYMON )
-                  MYMON(4:) = ' '
-                  MYLEN     = 3
-               ELSE IF ( MONTYP .EQ. ID(MMNTH) ) THEN
-                  MYLEN     = MLEN(INDX)
-               ELSE IF ( MONTYP .EQ. ID(UMNTH) ) THEN
-                  CALL UCASE ( MYMON, MYMON )
-                  MYLEN     = MLEN(INDX)
-               ELSE IF ( MONTYP .EQ. ID(LMNTH) ) THEN
-                  CALL LCASE ( MYMON, MYMON )
-                  MYLEN     = MLEN(INDX)
-               END IF
+               if      ( montyp .eq. id(umon)  ) then
+                  call ucase ( mymon, mymon )
+                  mymon(4:) = ' '
+                  mylen     = 3
+               else if ( montyp .eq. id(mmon)   ) then
+                  mymon(4:) = ' '
+                  mylen     = 3
+               else if ( montyp .eq. id(lmon)   ) then
+                  call lcase ( mymon, mymon )
+                  mymon(4:) = ' '
+                  mylen     = 3
+               else if ( montyp .eq. id(mmnth) ) then
+                  mylen     = mlen(indx)
+               else if ( montyp .eq. id(umnth) ) then
+                  call ucase ( mymon, mymon )
+                  mylen     = mlen(indx)
+               else if ( montyp .eq. id(lmnth) ) then
+                  call lcase ( mymon, mymon )
+                  mylen     = mlen(indx)
+               end if
 
-               STRING(APPND:) = MYMON
-               APPND          = APPND + MYLEN
-               MAKING         =.FALSE.
+               string(appnd:) = mymon
+               appnd          = appnd + mylen
+               making         =.false.
 
-            ELSE IF ( TYPE .EQ. WKDAY ) THEN
+            else if ( type .eq. wkday ) then
 
-               INDX           = NINT  ( VALUES(WKDAY) )
-               MYWKD          = WKDAYS( INDX )
-               WKTYP          = IDENT ( I )
+               indx           = nint  ( values(wkday) )
+               mywkd          = wkdays( indx )
+               wktyp          = ident ( i )
 
 !
 !              There is no ELSE case in the block below because all of
 !              the possible WKTYP values are checked explicitly.
 !
-               IF      ( WKTYP .EQ. ID(UWKD)   ) THEN
-                  CALL UCASE ( MYWKD, MYWKD )
-                  MYWKD(4:) = ' '
-                  MYLEN     = 3
-               ELSE IF ( WKTYP .EQ. ID(MWKD)   ) THEN
-                  MYWKD(4:) = ' '
-                  MYLEN     = 3
-               ELSE IF ( WKTYP .EQ. ID(LWKD)   ) THEN
-                  CALL LCASE ( MYWKD, MYWKD )
-                  MYWKD(4:) = ' '
-                  MYLEN     = 3
-               ELSE IF ( WKTYP .EQ. ID(MWEEKD) ) THEN
-                  MYLEN     = WKLEN(INDX)
-               ELSE IF ( WKTYP .EQ. ID(UWEEKD) ) THEN
-                  CALL UCASE ( MYWKD, MYWKD )
-                  MYLEN     = WKLEN(INDX)
-               ELSE IF ( WKTYP .EQ. ID(LWEEKD) ) THEN
-                  CALL LCASE ( MYWKD, MYWKD )
-                  MYLEN     = WKLEN(INDX)
-               END IF
+               if      ( wktyp .eq. id(uwkd)   ) then
+                  call ucase ( mywkd, mywkd )
+                  mywkd(4:) = ' '
+                  mylen     = 3
+               else if ( wktyp .eq. id(mwkd)   ) then
+                  mywkd(4:) = ' '
+                  mylen     = 3
+               else if ( wktyp .eq. id(lwkd)   ) then
+                  call lcase ( mywkd, mywkd )
+                  mywkd(4:) = ' '
+                  mylen     = 3
+               else if ( wktyp .eq. id(mweekd) ) then
+                  mylen     = wklen(indx)
+               else if ( wktyp .eq. id(uweekd) ) then
+                  call ucase ( mywkd, mywkd )
+                  mylen     = wklen(indx)
+               else if ( wktyp .eq. id(lweekd) ) then
+                  call lcase ( mywkd, mywkd )
+                  mylen     = wklen(indx)
+               end if
 
-               STRING(APPND:) = MYWKD
-               APPND          = APPND + MYLEN
-               MAKING         =.FALSE.
+               string(appnd:) = mywkd
+               appnd          = appnd + mylen
+               making         =.false.
 
 
-            ELSE IF ( TYPE .EQ. ERA ) THEN
+            else if ( type .eq. era ) then
 
-               IF      (         VALUES(ERA)    .EQ. 2.0D0 &
-                         .AND. (      IDENT(I) .EQ. ID(UERA) &
-                                 .OR. IDENT(I) .EQ. ID(UERAX) ) ) THEN
+               if      (         values(era)    .eq. 2.0d0 &
+                         .and. (      ident(i) .eq. id(uera) &
+                                 .or. ident(i) .eq. id(uerax) ) ) then
 
-                  STRING(APPND:) = ' A.D.'
+                  string(appnd:) = ' A.D.'
 
-               ELSE IF (         VALUES(ERA)   .EQ. 2.0D0 &
-                         .AND. (      IDENT(I) .EQ. ID(LERA) &
-                                 .OR. IDENT(I) .EQ. ID(LERAX) ) ) THEN
-                   STRING(APPND:) = ' a.d.'
+               else if (         values(era)   .eq. 2.0d0 &
+                         .and. (      ident(i) .eq. id(lera) &
+                                 .or. ident(i) .eq. id(lerax) ) ) then
+                   string(appnd:) = ' a.d.'
 
-               ELSE IF  (         VALUES(ERA)  .EQ. 1.0D0 &
-                         .AND. (      IDENT(I) .EQ. ID(UERA) &
-                                 .OR. IDENT(I) .EQ. ID(UERAX) ) ) THEN
+               else if  (         values(era)  .eq. 1.0d0 &
+                         .and. (      ident(i) .eq. id(uera) &
+                                 .or. ident(i) .eq. id(uerax) ) ) then
 
-                  STRING(APPND:) = ' B.C.'
+                  string(appnd:) = ' B.C.'
 
-               ELSE
+               else
 
-                  STRING(APPND:) = ' b.c.'
+                  string(appnd:) = ' b.c.'
 
-               END IF
+               end if
 !
 !              If we have the vanishing kind of era, and we've
 !              determined that it needs to vanish, then blank out the
 !              portion of the string we just filled in. and don't
 !              increment the place holder.
 !
-               IF (     IDENT(I) .EQ. ID(UERAX) &
-                   .OR. IDENT(I) .EQ. ID(LERAX)) THEN
+               if (     ident(i) .eq. id(uerax) &
+                   .or. ident(i) .eq. id(lerax)) then
 
-                  IF ( VANISH ) THEN
-                     STRING(APPND:) = ' '
-                     APPND = APPND + 1
-                  ELSE
-                     APPND = APPND + 6
-                  END IF
+                  if ( vanish ) then
+                     string(appnd:) = ' '
+                     appnd = appnd + 1
+                  else
+                     appnd = appnd + 6
+                  end if
 
-               ELSE
-                  CALL LJUST ( STRING(APPND:), STRING(APPND:) )
-                  APPND          = APPND + 4
-               END IF
+               else
+                  call ljust ( string(appnd:), string(appnd:) )
+                  appnd          = appnd + 4
+               end if
 
-               MAKING         =.FALSE.
+               making         =.false.
 
-            ELSE IF ( TYPE .EQ. NOON ) THEN
+            else if ( type .eq. noon ) then
 
 
-               IF      (       IDENT(I)   .EQ. ID(UAMPM) &
-                         .AND. VALUES(HOUR) .GE. 12.0D0    ) THEN
+               if      (       ident(i)   .eq. id(uampm) &
+                         .and. values(hour) .ge. 12.0d0    ) then
 
-                  STRING(APPND:) = 'P.M.'
+                  string(appnd:) = 'P.M.'
 
-               ELSE IF (       IDENT(I)    .EQ. ID(UAMPM) &
-                         .AND. VALUES(HOUR) .LT. 12.0D0    ) THEN
+               else if (       ident(i)    .eq. id(uampm) &
+                         .and. values(hour) .lt. 12.0d0    ) then
 
-                  STRING(APPND:) = 'A.M.'
+                  string(appnd:) = 'A.M.'
 
-               ELSE IF (       IDENT(I)    .EQ. ID(LAMPM) &
-                         .AND. VALUES(HOUR) .GE. 12.0D0    ) THEN
+               else if (       ident(i)    .eq. id(lampm) &
+                         .and. values(hour) .ge. 12.0d0    ) then
 
-                  STRING(APPND:) = 'p.m.'
+                  string(appnd:) = 'p.m.'
 
-               ELSE
+               else
 
-                  STRING(APPND:) = 'a.m.'
+                  string(appnd:) = 'a.m.'
 
-               END IF
+               end if
 
-               APPND          = APPND + 4
-               MAKING         =.FALSE.
+               appnd          = appnd + 4
+               making         =.false.
 
-            ELSE
+            else
 
-               VALUE = VALUES( TYPE )
+               value = values( type )
 
-            END IF
+            end if
 
 !
 !           If we are now creating a format string, we should
@@ -2321,7 +2321,7 @@
 !           the next for this component (just in case we need it
 !           later).
 !
-            IF ( MAKING ) THEN
+            if ( making ) then
 
 !
 !              We store the value of our current type in the
@@ -2329,7 +2329,7 @@
 !              is used by the single numeric types, JD, SP2000,
 !              and SP1950.
 !
-               VALUES(CURRNT) = VALUES(TYPE)
+               values(currnt) = values(type)
 
 !
 !              Here's how this works:  We will copy all of
@@ -2348,35 +2348,35 @@
 !              have to do it when we are filling in the truncated
 !              portions.
 !
-               DO J = 1, 7
-                  PTVEC(J) = 0.0D0
-                  NTVEC(J) = 0.0D0
-               END DO
+               do j = 1, 7
+                  ptvec(j) = 0.0d0
+                  ntvec(j) = 0.0d0
+               end do
 
 
-               IF      ( TYPE .EQ. YEAR  .OR. TYPE .EQ. YR ) THEN
+               if      ( type .eq. year  .or. type .eq. yr ) then
 
-                  STOPAT = 1
-                  TIMFMT = YMD
-                  INTYP  = YMDFMT
-                  INCR   = 1.0D0
+                  stopat = 1
+                  timfmt = ymd
+                  intyp  = ymdfmt
+                  incr   = 1.0d0
 
-               ELSE IF ( TYPE .EQ. MONTH) THEN
+               else if ( type .eq. month) then
 
-                  STOPAT = 2
-                  TIMFMT = YMD
-                  INTYP  = YMDFMT
-                  INCR   = 1.0D0
+                  stopat = 2
+                  timfmt = ymd
+                  intyp  = ymdfmt
+                  incr   = 1.0d0
 
-               ELSE IF ( TYPE .EQ. DAY .OR. TYPE .EQ. DOY ) THEN
+               else if ( type .eq. day .or. type .eq. doy ) then
 
-                  STOPAT = 3
-                  TIMFMT = YMD
-                  INTYP  = YMDFMT
-                  INCR   = 1.0D0
+                  stopat = 3
+                  timfmt = ymd
+                  intyp  = ymdfmt
+                  incr   = 1.0d0
 
 
-               ELSE IF ( TYPE .EQ. HOUR .OR. TYPE .EQ. AMPM ) THEN
+               else if ( type .eq. hour .or. type .eq. ampm ) then
 
 !
 !                 Note that in this case (and the next 2) that if we
@@ -2385,67 +2385,67 @@
 !                 format. Thus we have all of the more significant
 !                 components for this format.
 !
-                  STOPAT = 4
-                  TIMFMT = YMD
-                  INTYP  = YMDFMT
-                  INCR   = 1.0D0
+                  stopat = 4
+                  timfmt = ymd
+                  intyp  = ymdfmt
+                  incr   = 1.0d0
 
-               ELSE IF ( TYPE .EQ. MINUTE  ) THEN
+               else if ( type .eq. minute  ) then
 
-                  STOPAT = 5
-                  TIMFMT = YMD
-                  INTYP  = YMDFMT
+                  stopat = 5
+                  timfmt = ymd
+                  intyp  = ymdfmt
 
-                  INCR   = 1.0D0
+                  incr   = 1.0d0
 
-               ELSE IF ( TYPE .EQ. SEC  ) THEN
+               else if ( type .eq. sec  ) then
 
-                  STOPAT = 6
-                  TIMFMT = YMD
-                  INTYP  = YMDFMT
-                  INCR   = 0.0D0
+                  stopat = 6
+                  timfmt = ymd
+                  intyp  = ymdfmt
+                  incr   = 0.0d0
 
 
-               ELSE IF ( TYPE .EQ. JULIAN ) THEN
+               else if ( type .eq. julian ) then
 
-                  STOPAT = 1
-                  TIMFMT = CONTIN
-                  INCR   = 0.0D0
+                  stopat = 1
+                  timfmt = contin
+                  incr   = 0.0d0
 
-                  IF      ( (TIMTYP .EQ. ID(TDT)) .OR. &
-                            (TIMTYP .EQ. ID(TT))) THEN
-                     INTYP = 'JDTDT'
-                  ELSE IF ( TIMTYP .EQ. ID(TDB) ) THEN
-                     INTYP = 'JDTDB'
-                  ELSE IF (      TIMTYP .EQ. ID(UTC) &
-                            .OR. TIMTYP .EQ. ID(UTCP) ) THEN
-                     INTYP = 'JDUTC'
-                  END IF
+                  if      ( (timtyp .eq. id(tdt)) .or. &
+                            (timtyp .eq. id(tt))) then
+                     intyp = 'JDTDT'
+                  else if ( timtyp .eq. id(tdb) ) then
+                     intyp = 'JDTDB'
+                  else if (      timtyp .eq. id(utc) &
+                            .or. timtyp .eq. id(utcp) ) then
+                     intyp = 'JDUTC'
+                  end if
 
-               ELSE
+               else
 
 !
 !                 The only types left are the continuous (numeric)
 !                 types.
 !
-                  STOPAT = 1
-                  TIMFMT = CONTIN
-                  INCR   = 0.0D0
-                  INTYP  = BASTYP
+                  stopat = 1
+                  timfmt = contin
+                  incr   = 0.0d0
+                  intyp  = bastyp
 
 
-               END IF
+               end if
 
 !
 !              Ok.  We are now ready to construct the previous
 !              and next time vectors.
 !
-               DO J = 1, STOPAT
-                  PTVEC(J) = VALUES(COMPNT(J,TIMFMT))
-                  NTVEC(J) = PTVEC (J)
-               END DO
+               do j = 1, stopat
+                  ptvec(j) = values(compnt(j,timfmt))
+                  ntvec(j) = ptvec (j)
+               end do
 
-               NTVEC(STOPAT) = NTVEC(STOPAT) + INCR
+               ntvec(stopat) = ntvec(stopat) + incr
 
 !
 !              If the type is a year or month, then we need to set
@@ -2453,82 +2453,82 @@
 !              beginnings of years not beginning of last months of
 !              the previous year.
 !
-               IF ( TYPE .EQ. YEAR  .OR. TYPE .EQ. YR ) THEN
-                  PTVEC(2) = 1.0D0
-                  NTVEC(2) = 1.0D0
-                  PTVEC(3) = 1.0D0
-                  NTVEC(3) = 1.0D0
-               ELSE IF ( TYPE .EQ. MONTH ) THEN
-                  PTVEC(3) = 1.0D0
-                  NTVEC(3) = 1.0D0
-               END IF
+               if ( type .eq. year  .or. type .eq. yr ) then
+                  ptvec(2) = 1.0d0
+                  ntvec(2) = 1.0d0
+                  ptvec(3) = 1.0d0
+                  ntvec(3) = 1.0d0
+               else if ( type .eq. month ) then
+                  ptvec(3) = 1.0d0
+                  ntvec(3) = 1.0d0
+               end if
 
-               IF ( GO2JUL .AND. TIMFMT .NE. CONTIN ) THEN
+               if ( go2jul .and. timfmt .ne. contin ) then
 
 !
 !                 Convert both PTVEC and NTVEC to the gregorian
 !                 calendar
 !
-                  JYEAR  = NINT(PTVEC(1))
-                  JMONTH = NINT(PTVEC(2))
-                  JDAY   = NINT(PTVEC(3))
+                  jyear  = nint(ptvec(1))
+                  jmonth = nint(ptvec(2))
+                  jday   = nint(ptvec(3))
 
-                  CALL JUL2GR ( JYEAR, JMONTH, JDAY, JDOY )
+                  call jul2gr ( jyear, jmonth, jday, jdoy )
 
-                  PTVEC(1) = DBLE(JYEAR)
-                  PTVEC(2) = DBLE(JMONTH)
-                  PTVEC(3) = DBLE(JDAY)
+                  ptvec(1) = dble(jyear)
+                  ptvec(2) = dble(jmonth)
+                  ptvec(3) = dble(jday)
 
-                  JYEAR  = NINT(NTVEC(1))
-                  JMONTH = NINT(NTVEC(2))
-                  JDAY   = NINT(NTVEC(3))
+                  jyear  = nint(ntvec(1))
+                  jmonth = nint(ntvec(2))
+                  jday   = nint(ntvec(3))
 
-                  CALL JUL2GR ( JYEAR, JMONTH, JDAY, JDOY )
+                  call jul2gr ( jyear, jmonth, jday, jdoy )
 
-                  NTVEC(1) = DBLE(JYEAR)
-                  NTVEC(2) = DBLE(JMONTH)
-                  NTVEC(3) = DBLE(JDAY)
+                  ntvec(1) = dble(jyear)
+                  ntvec(2) = dble(jmonth)
+                  ntvec(3) = dble(jday)
 
-               END IF
+               end if
 
 !
 !              Handle the +/- time zone shifts.
 !
-               IF ( DOZONE .AND. (TIMFMT .NE. CONTIN) ) THEN
+               if ( dozone .and. (timfmt .ne. contin) ) then
 
-                  PTVEC(4) = PTVEC(4) - HOFF
-                  NTVEC(4) = NTVEC(4) - HOFF
+                  ptvec(4) = ptvec(4) - hoff
+                  ntvec(4) = ntvec(4) - hoff
 
-                  PTVEC(5) = PTVEC(5) - MOFF
-                  NTVEC(5) = NTVEC(5) - MOFF
+                  ptvec(5) = ptvec(5) - moff
+                  ntvec(5) = ntvec(5) - moff
 
-                  PTVEC(6) = 0.0D0
-                  NTVEC(6) = 0.0D0
+                  ptvec(6) = 0.0d0
+                  ntvec(6) = 0.0d0
 
-                  CALL TTRANS ( 'YMDF', 'YMDF', PTVEC )
-                  CALL TTRANS ( 'YMDF', 'YMDF', NTVEC )
+                  call ttrans ( 'YMDF', 'YMDF', ptvec )
+                  call ttrans ( 'YMDF', 'YMDF', ntvec )
 
-                  IF ( TYPE .EQ. SEC ) THEN
-                     PTVEC(6) = VALUES(SEC)
-                     NTVEC(6) = VALUES(SEC)
-                  END IF
+                  if ( type .eq. sec ) then
+                     ptvec(6) = values(sec)
+                     ntvec(6) = values(sec)
+                  end if
 
-               END IF
+               end if
 
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     All that's left to do is to copy the constructed string
 !     to the output string.
 !
-      OUTPUT = STRING
+      output = string
 
 
-      CALL CHKOUT ( 'TIMOUT' )
-      RETURN
-      END
+      call chkout ( 'TIMOUT' )
+      return
+      end

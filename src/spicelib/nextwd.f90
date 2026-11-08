@@ -1,6 +1,6 @@
 !$Procedure NEXTWD ( Next word in a character string )
 
-      SUBROUTINE NEXTWD ( STRING, NEXT, REST )
+      subroutine nextwd ( string, next, rest )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)     STRING
-      CHARACTER*(*)     NEXT
-      CHARACTER*(*)     REST
+      character*(*)     string
+      character*(*)     next
+      character*(*)     rest
 
 ! $ Brief_I/O
 !
@@ -218,52 +218,52 @@
 !
 !     Local Parameters
 !
-      INTEGER               ISPACE
-      PARAMETER           ( ISPACE = 32 )
+      integer               ispace
+      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               I
+      integer               begin
+      integer               end
+      integer               i
 
-      LOGICAL               INWORD
+      logical               inword
 
 !
 !     The trivial case.
 !
-      IF ( STRING .EQ. ' ' ) THEN
+      if ( string .eq. ' ' ) then
 
-         NEXT = ' '
-         REST = ' '
+         next = ' '
+         rest = ' '
 
 !
 !     The non-trivial case.
 !
-      ELSE
+      else
 !
 !        Get the length of the string.
 !
-         END = LEN ( STRING )
+         end = len ( string )
 
 !
 !        Skip leading blanks and set flags indicating that we are
 !        not in a word and that we do not have a word.
 !
-         BEGIN  = 1
-         INWORD = .FALSE.
+         begin  = 1
+         inword = .false.
 !
 !        We know the string is not blank, so we will eventually
 !        get to a word, thus no need to check against END here.
 !
-         DO WHILE ( .NOT. INWORD )
-            IF ( ICHAR( STRING(BEGIN:BEGIN) ) .EQ. ISPACE ) THEN
-               BEGIN = BEGIN + 1
-            ELSE
-               INWORD = .TRUE.
-            END IF
-         END DO
+         do while ( .not. inword )
+            if ( ichar( string(begin:begin) ) .eq. ispace ) then
+               begin = begin + 1
+            else
+               inword = .true.
+            end if
+         end do
 
 !
 !        We are now in a word. Step through the input string until the
@@ -273,19 +273,19 @@
 !        cleanly with the case where the string is a single character
 !        long and not blank (because we're in that case).
 !
-         I = BEGIN
-         DO WHILE ( INWORD )
-            IF ( ICHAR ( STRING(I:I) ) .NE. ISPACE ) THEN
-               I = I + 1
-               IF ( I .GT. END ) THEN
-                  I      = I - 1
-                  INWORD = .FALSE.
-               END IF
-            ELSE
-               I      = I - 1
-               INWORD = .FALSE.
-            END IF
-         END DO
+         i = begin
+         do while ( inword )
+            if ( ichar ( string(i:i) ) .ne. ispace ) then
+               i = i + 1
+               if ( i .gt. end ) then
+                  i      = i - 1
+                  inword = .false.
+               end if
+            else
+               i      = i - 1
+               inword = .false.
+            end if
+         end do
 
 !
 !        Our word is the substring between BEGIN and I. Note that I
@@ -294,15 +294,15 @@
 !        the right thing if STRING and REST overlap. If we do not have
 !        a word, the NEXT and REST are both blank.
 !
-         NEXT = STRING(BEGIN:I)
+         next = string(begin:i)
 
-         IF ( I .LT. END ) THEN
-            CALL LJUST ( STRING(I+1:), REST )
-         ELSE
-            REST = ' '
-         END IF
+         if ( i .lt. end ) then
+            call ljust ( string(i+1:), rest )
+         else
+            rest = ' '
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

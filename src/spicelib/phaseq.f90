@@ -1,7 +1,7 @@
 !$Procedure PHASEQ ( Phase angle quantity between bodies centers )
 
-      DOUBLE PRECISION FUNCTION PHASEQ ( ET,     TARGET, ILLMN, &
-                                         OBSRVR, ABCORR )
+      double precision function phaseq ( et,     target, illmn, &
+                                         obsrvr, abcorr )
 
 ! $ Abstract
 !
@@ -21,16 +21,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
 
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILLMN
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         ABCORR
+      double precision      et
+      character*(*)         target
+      character*(*)         illmn
+      character*(*)         obsrvr
+      character*(*)         abcorr
 
 ! $ Brief_I/O
 !
@@ -505,232 +505,232 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'PHASEQ' )
+      character*(*)         rname
+      parameter           ( rname  = 'PHASEQ' )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 
 
 !
 !     Local Variables.
 !
-      INTEGER               TARG
-      INTEGER               ILLUM
-      INTEGER               OBS
+      integer               targ
+      integer               illum
+      integer               obs
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FND
+      logical               attblk ( nabcor )
+      logical               fnd
 
-      CHARACTER*(32)        XBCORR
+      character*(32)        xbcorr
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTGID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtgid
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVILMN
-      INTEGER               SVICDE
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svilmn
+      integer               svicde
+      logical               svfnd2
 
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSN
-      LOGICAL               SVFND3
+      integer               svctr3 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsn
+      logical               svfnd3
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTGID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtgid
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVILMN
-      SAVE                  SVICDE
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svilmn
+      save                  svicde
+      save                  svfnd2
 
-      SAVE                  SVCTR3
-      SAVE                  SVOBSR
-      SAVE                  SVOBSN
-      SAVE                  SVFND3
+      save                  svctr3
+      save                  svobsr
+      save                  svobsn
+      save                  svfnd3
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
-      PHASEQ = 0.D0
+      phaseq = 0.d0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( RNAME )
+      call chkin  ( rname )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target, illuminator, and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTGID, SVFND1, &
-                      TARGET, TARG, FND    )
+      call zzbods2c ( svctr1, svtarg, svtgid, svfnd1, &
+                      target, targ, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT (  RNAME                                     )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout (  rname                                     )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR2, SVILMN, SVICDE, SVFND2, &
-                      ILLMN, ILLUM, FND    )
+      call zzbods2c ( svctr2, svilmn, svicde, svfnd2, &
+                      illmn, illum, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The illuminator, ' &
+         call setmsg ( 'The illuminator, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', ILLMN                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT (  RNAME                                     )
-         RETURN
+         call errch  ( '#', illmn                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout (  rname                                     )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR3, SVOBSR, SVOBSN, SVFND3, &
-                      OBSRVR, OBS, FND    )
+      call zzbods2c ( svctr3, svobsr, svobsn, svfnd3, &
+                      obsrvr, obs, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT (  RNAME                                     )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout (  rname                                     )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
-      CALL LJUCRS ( 0, ABCORR, XBCORR )
+      call ljucrs ( 0, abcorr, xbcorr )
 
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( XBCORR, ATTBLK )
+      call zzvalcor ( xbcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 
 !
 !     Restrict correction to reception cases. The attribute block ID
 !     for transmit corrections is XMTIDX.
 !
-      IF( ATTBLK(XMTIDX) ) THEN
+      if( attblk(xmtidx) ) then
 
-         CALL SETMSG ( 'Invalid aberration correction ''#''. ' &
+         call setmsg ( 'Invalid aberration correction ''#''. ' &
          //            'Phase angle geometry calculations currently ' &
          //            'restricted to reception cases.')
-         CALL ERRCH  ( '#', ABCORR )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)' )
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call errch  ( '#', abcorr )
+         call sigerr ( 'SPICE(INVALIDOPTION)' )
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Make sure the observer, illuminator, and target are distinct.
 !
-      IF ( (TARG .EQ. OBS  )   .OR. &
-           (TARG .EQ. ILLUM)   .OR. &
-           (OBS  .EQ. ILLUM)      ) THEN
+      if ( (targ .eq. obs  )   .or. &
+           (targ .eq. illum)   .or. &
+           (obs  .eq. illum)      ) then
 
-         CALL SETMSG ( 'The observer, illuminator, and ' &
+         call setmsg ( 'The observer, illuminator, and ' &
          //            'target must be distinct objects, but ' &
          //            'are not: OBSRVR = #, TARGET = #, ' &
          //            'are not: ILLMN= #.' )
-         CALL ERRCH  ( '#', OBSRVR                         )
-         CALL ERRCH  ( '#', TARGET                         )
-         CALL ERRCH  ( '#', ILLMN                          )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'          )
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call errch  ( '#', obsrvr                         )
+         call errch  ( '#', target                         )
+         call errch  ( '#', illmn                          )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 !
 !     Call the routine to calculate the phase angle
 !
-      CALL ZZGFPAQ ( ET, TARG, ILLUM, OBS, XBCORR, PHASEQ )
+      call zzgfpaq ( et, targ, illum, obs, xbcorr, phaseq )
 
 
 !
 !     All done.
 !
-      CALL CHKOUT ( RNAME )
-      RETURN
+      call chkout ( rname )
+      return
 
-      END
+      end

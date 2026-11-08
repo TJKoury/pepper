@@ -1,6 +1,6 @@
 !$Procedure RDENCI  ( Read encoded integers from text file )
 
-      SUBROUTINE RDENCI ( UNIT, N, DATA )
+      subroutine rdenci ( unit, n, data )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      INTEGER               N
-      INTEGER               DATA(*)
+      integer               unit
+      integer               n
+      integer               data(*)
 
 ! $ Brief_I/O
 !
@@ -154,59 +154,59 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local parameters
 !
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN = 80 )
+      integer               errlen
+      parameter           ( errlen = 80 )
 
-      INTEGER               MAXENC
-      PARAMETER           ( MAXENC = 64 )
+      integer               maxenc
+      parameter           ( maxenc = 64 )
 
-      INTEGER               WRKSIZ
-      PARAMETER           ( WRKSIZ = 64 )
+      integer               wrksiz
+      parameter           ( wrksiz = 64 )
 !
 !     Local variables
 !
-      CHARACTER*(ERRLEN)    ERRMSG
-      CHARACTER*(MAXENC)    WORK(WRKSIZ)
+      character*(errlen)    errmsg
+      character*(maxenc)    work(wrksiz)
 
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               ITMBEG
-      INTEGER               NITMS
+      integer               i
+      integer               iostat
+      integer               itmbeg
+      integer               nitms
 
-      LOGICAL               ERROR
+      logical               error
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDENCI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'RDENCI' )
+      end if
 !
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL SETMSG ( 'The number of data items to be read was' // &
+         call setmsg ( 'The number of data items to be read was' // &
                        ' not positive: #.'                        )
-         CALL ERRINT ( '#', N                                     )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                   )
-         CALL CHKOUT ( 'RDENCI'                                   )
-         RETURN
+         call errint ( '#', n                                     )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+         call chkout ( 'RDENCI'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Initialize the beginning location to place the decoded data
 !     items.
 !
-      ITMBEG = 1
+      itmbeg = 1
 !
 !     We read in the encoded numbers in blocks of size WRKSIZ, and if
 !     there was not a read error we will attempt to decode the numbers.
@@ -222,64 +222,64 @@
 !     in blocks of size NITMS. Each time the number of data items
 !     NITMS is reached, decode the encoded numbers into the data array.
 !
-      DO WHILE ( ITMBEG .LE. N )
+      do while ( itmbeg .le. n )
 !
 !        The number of items is either the size of the workspace, or
 !        the number of data items which remain to be processed, which
 !        should always be less than or equal to the size of the
 !        workspace.
 !
-         NITMS = MIN ( WRKSIZ, N - ITMBEG + 1 )
+         nitms = min ( wrksiz, n - itmbeg + 1 )
 !
 !        Read in a block of data items to be decoded.
 !
-         READ (UNIT,*,IOSTAT=IOSTAT) ( WORK(I), I = 1, NITMS )
+         read (unit,*,iostat=iostat) ( work(i), i = 1, nitms )
 !
 !        Check to see if we got a read error: IOSTAT .NE. 0. If we did,
 !        then signal an error. EOF is considered to be a read error,
 !        since we know exactly how many data items we expect to read.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Error reading from logical unit #,' // &
+            call setmsg ( 'Error reading from logical unit #,' // &
                           ' IOSTAT = #.'                        )
-            CALL ERRINT ( '#', UNIT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'               )
-            CALL CHKOUT ( 'RDENCI'                              )
-            RETURN
+            call errint ( '#', unit                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(FILEREADFAILED)'               )
+            call chkout ( 'RDENCI'                              )
+            return
 
-         END IF
+         end if
 !
 !        Begin to decode the data items into the data array. Signal an
 !        error if we cannot decode a data item.
 !
-         DO I = 1, NITMS
+         do i = 1, nitms
 
-            CALL HX2INT ( WORK(I), DATA(ITMBEG + I - 1), ERROR, ERRMSG )
-            IF ( ERROR ) THEN
+            call hx2int ( work(i), data(itmbeg + i - 1), error, errmsg )
+            if ( error ) then
 
-               CALL SETMSG ( 'Decoding error occurred while'       // &
+               call setmsg ( 'Decoding error occurred while'       // &
                              ' attempting to decode item #: #. #'   )
-               CALL ERRINT ( '#', I                                 )
-               CALL ERRCH  ( '#', WORK(I)                           )
-               CALL ERRCH  ( '#', ERRMSG                            )
-               CALL SIGERR ( 'SPICE(DECODINGERROR)'                 )
-               CALL CHKOUT ( 'RDENCI'                               )
-               RETURN
+               call errint ( '#', i                                 )
+               call errch  ( '#', work(i)                           )
+               call errch  ( '#', errmsg                            )
+               call sigerr ( 'SPICE(DECODINGERROR)'                 )
+               call chkout ( 'RDENCI'                               )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Position the data item pointer at the next location to begin
 !        placing the decoded items in the array DATA, and continue
 !        processing the until done.
 !
-         ITMBEG = ITMBEG + NITMS
+         itmbeg = itmbeg + nitms
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'RDENCI' )
-      RETURN
-      END
+      call chkout ( 'RDENCI' )
+      return
+      end

@@ -1,9 +1,9 @@
 !$Procedure ZZFDAT ( Initialize built-in frame names and ID codes )
 
-      SUBROUTINE ZZFDAT ( NCOUNT, MAXBFR, NAME,   IDCODE, &
-                          CENTER, TYPE,   TYPID,  CENTRD, &
-                          BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                          BIDLST, BIDPOL, BIDIDS, BIDIDX )
+      subroutine zzfdat ( ncount, maxbfr, name,   idcode, &
+                          center, type,   typid,  centrd, &
+                          bnmlst, bnmpol, bnmnms, bnmidx, &
+                          bidlst, bidpol, bidids, bididx )
 
 ! $ Abstract
 !
@@ -25,31 +25,31 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'frmtyp.inc'
-      INCLUDE              'ninert.inc'
-      INCLUDE              'nninrt.inc'
+      include              'frmtyp.inc'
+      include              'ninert.inc'
+      include              'nninrt.inc'
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               NCOUNT
-      INTEGER               MAXBFR
-      CHARACTER*(*)         NAME   (          * )
-      INTEGER               IDCODE (          * )
-      INTEGER               CENTER (          * )
-      INTEGER               TYPE   (          * )
-      INTEGER               TYPID  (          * )
-      INTEGER               CENTRD (          * )
-      INTEGER               BNMLST (          * )
-      INTEGER               BNMPOL ( LBPOOL : * )
-      CHARACTER*(*)         BNMNMS (          * )
-      INTEGER               BNMIDX (          * )
-      INTEGER               BIDLST (          * )
-      INTEGER               BIDPOL ( LBPOOL : * )
-      INTEGER               BIDIDS (          * )
-      INTEGER               BIDIDX (          * )
+      integer               ncount
+      integer               maxbfr
+      character*(*)         name   (          * )
+      integer               idcode (          * )
+      integer               center (          * )
+      integer               type   (          * )
+      integer               typid  (          * )
+      integer               centrd (          * )
+      integer               bnmlst (          * )
+      integer               bnmpol ( lbpool : * )
+      character*(*)         bnmnms (          * )
+      integer               bnmidx (          * )
+      integer               bidlst (          * )
+      integer               bidpol ( lbpool : * )
+      integer               bidids (          * )
+      integer               bididx (          * )
 
 ! $ Brief_I/O
 !
@@ -342,11 +342,11 @@
 !-&
 
 
-      INTEGER               NON
-      PARAMETER           ( NON    = NNINRT )
+      integer               non
+      parameter           ( non    = nninrt )
 
-      INTEGER               NNAMES
-      PARAMETER           ( NNAMES = NINERT + NON )
+      integer               nnames
+      parameter           ( nnames = ninert + non )
 
 !
 !     To add to the list of recognized frames,
@@ -399,835 +399,835 @@
 !     Local variables.
 !
 
-      INTEGER               I
-      INTEGER               ITEM
+      integer               i
+      integer               item
 
-      LOGICAL               NEW
+      logical               new
 
 
 !
 !     Perform the consistency checks first.
 !
-      IF ( NCOUNT .NE. NNAMES ) THEN
-         CALL CHKIN ( 'ZZFDAT' )
-         CALL SETMSG( 'There is an inconsistency between the ' &
+      if ( ncount .ne. nnames ) then
+         call chkin ( 'ZZFDAT' )
+         call setmsg( 'There is an inconsistency between the ' &
          //           'version of the routine calling ZZFDAT and ' &
          //           'the current version of ZZFDAT. Check to ' &
          //           'make sure that you have the most current ' &
          //           'versions of ZZFDAT and the routines that ' &
          //           'make use of it.' )
-         CALL SIGERR ( 'SPICE(VERSIONMISMATCH1)'  )
-         CALL CHKOUT ( 'ZZFDAT' )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(VERSIONMISMATCH1)'  )
+         call chkout ( 'ZZFDAT' )
+         return
+      end if
 
-      IF ( MAXBFR .LT. NNAMES ) THEN
-         CALL CHKIN ( 'ZZFDAT' )
-         CALL SETMSG( 'There is an inconsistency between the ' &
+      if ( maxbfr .lt. nnames ) then
+         call chkin ( 'ZZFDAT' )
+         call setmsg( 'There is an inconsistency between the ' &
          //           'version of the routine calling ZZFDAT and ' &
          //           'the current version of ZZFDAT. Check to ' &
          //           'make sure that you have the most current ' &
          //           'versions of ZZFDAT and the routines that ' &
          //           'make use of it.' )
-         CALL SIGERR ( 'SPICE(VERSIONMISMATCH2)' )
-         CALL CHKOUT ( 'ZZFDAT' )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(VERSIONMISMATCH2)' )
+         call chkout ( 'ZZFDAT' )
+         return
+      end if
 
 !
 !     Inertial Frames Section
 !
 !     Fetch the names of the inertial frames from CHGIRF.
 !
-      DO I = 1, NINERT
-         IDCODE( I ) = I
-         CENTER( I ) = 0
-         TYPE  ( I ) = INERTL
-         TYPID ( I ) = I
-         CALL IRFNAM ( I, NAME(I) )
-      END DO
+      do i = 1, ninert
+         idcode( i ) = i
+         center( i ) = 0
+         type  ( i ) = inertl
+         typid ( i ) = i
+         call irfnam ( i, name(i) )
+      end do
 
 !
 !     Non-Inertial Frames Section.
 !
-      NAME   ( NINERT +   1 ) = 'IAU_MERCURY_BARYCENTER'
-      IDCODE ( NINERT +   1 ) =  10001
-      CENTER ( NINERT +   1 ) =  1
-      TYPID  ( NINERT +   1 ) =  1
-      TYPE   ( NINERT +   1 ) =  PCK
-
-      NAME   ( NINERT +   2 ) = 'IAU_VENUS_BARYCENTER'
-      IDCODE ( NINERT +   2 ) =  10002
-      CENTER ( NINERT +   2 ) =  2
-      TYPID  ( NINERT +   2 ) =  2
-      TYPE   ( NINERT +   2 ) =  PCK
-
-      NAME   ( NINERT +   3 ) = 'IAU_EARTH_BARYCENTER'
-      IDCODE ( NINERT +   3 ) =  10003
-      CENTER ( NINERT +   3 ) =  3
-      TYPID  ( NINERT +   3 ) =  3
-      TYPE   ( NINERT +   3 ) =  PCK
-
-      NAME   ( NINERT +   4 ) = 'IAU_MARS_BARYCENTER'
-      IDCODE ( NINERT +   4 ) =  10004
-      CENTER ( NINERT +   4 ) =  4
-      TYPID  ( NINERT +   4 ) =  4
-      TYPE   ( NINERT +   4 ) =  PCK
-
-      NAME   ( NINERT +   5 ) = 'IAU_JUPITER_BARYCENTER'
-      IDCODE ( NINERT +   5 ) =  10005
-      CENTER ( NINERT +   5 ) =  5
-      TYPID  ( NINERT +   5 ) =  5
-      TYPE   ( NINERT +   5 ) =  PCK
-
-      NAME   ( NINERT +   6 ) = 'IAU_SATURN_BARYCENTER'
-      IDCODE ( NINERT +   6 ) =  10006
-      CENTER ( NINERT +   6 ) =  6
-      TYPID  ( NINERT +   6 ) =  6
-      TYPE   ( NINERT +   6 ) =  PCK
-
-      NAME   ( NINERT +   7 ) = 'IAU_URANUS_BARYCENTER'
-      IDCODE ( NINERT +   7 ) =  10007
-      CENTER ( NINERT +   7 ) =  7
-      TYPID  ( NINERT +   7 ) =  7
-      TYPE   ( NINERT +   7 ) =  PCK
-
-      NAME   ( NINERT +   8 ) = 'IAU_NEPTUNE_BARYCENTER'
-      IDCODE ( NINERT +   8 ) =  10008
-      CENTER ( NINERT +   8 ) =  8
-      TYPID  ( NINERT +   8 ) =  8
-      TYPE   ( NINERT +   8 ) =  PCK
-
-      NAME   ( NINERT +   9 ) = 'IAU_PLUTO_BARYCENTER'
-      IDCODE ( NINERT +   9 ) =  10009
-      CENTER ( NINERT +   9 ) =  9
-      TYPID  ( NINERT +   9 ) =  9
-      TYPE   ( NINERT +   9 ) =  PCK
-
-      NAME   ( NINERT +  10 ) = 'IAU_SUN'
-      IDCODE ( NINERT +  10 ) =  10010
-      CENTER ( NINERT +  10 ) =  10
-      TYPID  ( NINERT +  10 ) =  10
-      TYPE   ( NINERT +  10 ) =  PCK
-
-      NAME   ( NINERT +  11 ) = 'IAU_MERCURY'
-      IDCODE ( NINERT +  11 ) =  10011
-      CENTER ( NINERT +  11 ) =  199
-      TYPID  ( NINERT +  11 ) =  199
-      TYPE   ( NINERT +  11 ) =  PCK
-
-      NAME   ( NINERT +  12 ) = 'IAU_VENUS'
-      IDCODE ( NINERT +  12 ) =  10012
-      CENTER ( NINERT +  12 ) =  299
-      TYPID  ( NINERT +  12 ) =  299
-      TYPE   ( NINERT +  12 ) =  PCK
-
-      NAME   ( NINERT +  13 ) = 'IAU_EARTH'
-      IDCODE ( NINERT +  13 ) =  10013
-      CENTER ( NINERT +  13 ) =  399
-      TYPID  ( NINERT +  13 ) =  399
-      TYPE   ( NINERT +  13 ) =  PCK
-
-      NAME   ( NINERT +  14 ) = 'IAU_MARS'
-      IDCODE ( NINERT +  14 ) =  10014
-      CENTER ( NINERT +  14 ) =  499
-      TYPID  ( NINERT +  14 ) =  499
-      TYPE   ( NINERT +  14 ) =  PCK
-
-      NAME   ( NINERT +  15 ) = 'IAU_JUPITER'
-      IDCODE ( NINERT +  15 ) =  10015
-      CENTER ( NINERT +  15 ) =  599
-      TYPID  ( NINERT +  15 ) =  599
-      TYPE   ( NINERT +  15 ) =  PCK
-
-      NAME   ( NINERT +  16 ) = 'IAU_SATURN'
-      IDCODE ( NINERT +  16 ) =  10016
-      CENTER ( NINERT +  16 ) =  699
-      TYPID  ( NINERT +  16 ) =  699
-      TYPE   ( NINERT +  16 ) =  PCK
-
-      NAME   ( NINERT +  17 ) = 'IAU_URANUS'
-      IDCODE ( NINERT +  17 ) =  10017
-      CENTER ( NINERT +  17 ) =  799
-      TYPID  ( NINERT +  17 ) =  799
-      TYPE   ( NINERT +  17 ) =  PCK
-
-      NAME   ( NINERT +  18 ) = 'IAU_NEPTUNE'
-      IDCODE ( NINERT +  18 ) =  10018
-      CENTER ( NINERT +  18 ) =  899
-      TYPID  ( NINERT +  18 ) =  899
-      TYPE   ( NINERT +  18 ) =  PCK
-
-      NAME   ( NINERT +  19 ) = 'IAU_PLUTO'
-      IDCODE ( NINERT +  19 ) =  10019
-      CENTER ( NINERT +  19 ) =  999
-      TYPID  ( NINERT +  19 ) =  999
-      TYPE   ( NINERT +  19 ) =  PCK
-
-      NAME   ( NINERT +  20 ) = 'IAU_MOON'
-      IDCODE ( NINERT +  20 ) =  10020
-      CENTER ( NINERT +  20 ) =  301
-      TYPID  ( NINERT +  20 ) =  301
-      TYPE   ( NINERT +  20 ) =  PCK
-
-      NAME   ( NINERT +  21 ) = 'IAU_PHOBOS'
-      IDCODE ( NINERT +  21 ) =  10021
-      CENTER ( NINERT +  21 ) =  401
-      TYPID  ( NINERT +  21 ) =  401
-      TYPE   ( NINERT +  21 ) =  PCK
-
-      NAME   ( NINERT +  22 ) = 'IAU_DEIMOS'
-      IDCODE ( NINERT +  22 ) =  10022
-      CENTER ( NINERT +  22 ) =  402
-      TYPID  ( NINERT +  22 ) =  402
-      TYPE   ( NINERT +  22 ) =  PCK
-
-      NAME   ( NINERT +  23 ) = 'IAU_IO'
-      IDCODE ( NINERT +  23 ) =  10023
-      CENTER ( NINERT +  23 ) =  501
-      TYPID  ( NINERT +  23 ) =  501
-      TYPE   ( NINERT +  23 ) =  PCK
-
-      NAME   ( NINERT +  24 ) = 'IAU_EUROPA'
-      IDCODE ( NINERT +  24 ) =  10024
-      CENTER ( NINERT +  24 ) =  502
-      TYPID  ( NINERT +  24 ) =  502
-      TYPE   ( NINERT +  24 ) =  PCK
-
-      NAME   ( NINERT +  25 ) = 'IAU_GANYMEDE'
-      IDCODE ( NINERT +  25 ) =  10025
-      CENTER ( NINERT +  25 ) =  503
-      TYPID  ( NINERT +  25 ) =  503
-      TYPE   ( NINERT +  25 ) =  PCK
-
-      NAME   ( NINERT +  26 ) = 'IAU_CALLISTO'
-      IDCODE ( NINERT +  26 ) =  10026
-      CENTER ( NINERT +  26 ) =  504
-      TYPID  ( NINERT +  26 ) =  504
-      TYPE   ( NINERT +  26 ) =  PCK
-
-      NAME   ( NINERT +  27 ) = 'IAU_AMALTHEA'
-      IDCODE ( NINERT +  27 ) =  10027
-      CENTER ( NINERT +  27 ) =  505
-      TYPID  ( NINERT +  27 ) =  505
-      TYPE   ( NINERT +  27 ) =  PCK
-
-      NAME   ( NINERT +  28 ) = 'IAU_HIMALIA'
-      IDCODE ( NINERT +  28 ) =  10028
-      CENTER ( NINERT +  28 ) =  506
-      TYPID  ( NINERT +  28 ) =  506
-      TYPE   ( NINERT +  28 ) =  PCK
-
-      NAME   ( NINERT +  29 ) = 'IAU_ELARA'
-      IDCODE ( NINERT +  29 ) =  10029
-      CENTER ( NINERT +  29 ) =  507
-      TYPID  ( NINERT +  29 ) =  507
-      TYPE   ( NINERT +  29 ) =  PCK
-
-      NAME   ( NINERT +  30 ) = 'IAU_PASIPHAE'
-      IDCODE ( NINERT +  30 ) =  10030
-      CENTER ( NINERT +  30 ) =  508
-      TYPID  ( NINERT +  30 ) =  508
-      TYPE   ( NINERT +  30 ) =  PCK
-
-      NAME   ( NINERT +  31 ) = 'IAU_SINOPE'
-      IDCODE ( NINERT +  31 ) =  10031
-      CENTER ( NINERT +  31 ) =  509
-      TYPID  ( NINERT +  31 ) =  509
-      TYPE   ( NINERT +  31 ) =  PCK
-
-      NAME   ( NINERT +  32 ) = 'IAU_LYSITHEA'
-      IDCODE ( NINERT +  32 ) =  10032
-      CENTER ( NINERT +  32 ) =  510
-      TYPID  ( NINERT +  32 ) =  510
-      TYPE   ( NINERT +  32 ) =  PCK
-
-      NAME   ( NINERT +  33 ) = 'IAU_CARME'
-      IDCODE ( NINERT +  33 ) =  10033
-      CENTER ( NINERT +  33 ) =  511
-      TYPID  ( NINERT +  33 ) =  511
-      TYPE   ( NINERT +  33 ) =  PCK
-
-      NAME   ( NINERT +  34 ) = 'IAU_ANANKE'
-      IDCODE ( NINERT +  34 ) =  10034
-      CENTER ( NINERT +  34 ) =  512
-      TYPID  ( NINERT +  34 ) =  512
-      TYPE   ( NINERT +  34 ) =  PCK
-
-      NAME   ( NINERT +  35 ) = 'IAU_LEDA'
-      IDCODE ( NINERT +  35 ) =  10035
-      CENTER ( NINERT +  35 ) =  513
-      TYPID  ( NINERT +  35 ) =  513
-      TYPE   ( NINERT +  35 ) =  PCK
-
-      NAME   ( NINERT +  36 ) = 'IAU_THEBE'
-      IDCODE ( NINERT +  36 ) =  10036
-      CENTER ( NINERT +  36 ) =  514
-      TYPID  ( NINERT +  36 ) =  514
-      TYPE   ( NINERT +  36 ) =  PCK
-
-      NAME   ( NINERT +  37 ) = 'IAU_ADRASTEA'
-      IDCODE ( NINERT +  37 ) =  10037
-      CENTER ( NINERT +  37 ) =  515
-      TYPID  ( NINERT +  37 ) =  515
-      TYPE   ( NINERT +  37 ) =  PCK
-
-      NAME   ( NINERT +  38 ) = 'IAU_METIS'
-      IDCODE ( NINERT +  38 ) =  10038
-      CENTER ( NINERT +  38 ) =  516
-      TYPID  ( NINERT +  38 ) =  516
-      TYPE   ( NINERT +  38 ) =  PCK
-
-      NAME   ( NINERT +  39 ) = 'IAU_MIMAS'
-      IDCODE ( NINERT +  39 ) =  10039
-      CENTER ( NINERT +  39 ) =  601
-      TYPID  ( NINERT +  39 ) =  601
-      TYPE   ( NINERT +  39 ) =  PCK
-
-      NAME   ( NINERT +  40 ) = 'IAU_ENCELADUS'
-      IDCODE ( NINERT +  40 ) =  10040
-      CENTER ( NINERT +  40 ) =  602
-      TYPID  ( NINERT +  40 ) =  602
-      TYPE   ( NINERT +  40 ) =  PCK
-
-      NAME   ( NINERT +  41 ) = 'IAU_TETHYS'
-      IDCODE ( NINERT +  41 ) =  10041
-      CENTER ( NINERT +  41 ) =  603
-      TYPID  ( NINERT +  41 ) =  603
-      TYPE   ( NINERT +  41 ) =  PCK
-
-      NAME   ( NINERT +  42 ) = 'IAU_DIONE'
-      IDCODE ( NINERT +  42 ) =  10042
-      CENTER ( NINERT +  42 ) =  604
-      TYPID  ( NINERT +  42 ) =  604
-      TYPE   ( NINERT +  42 ) =  PCK
-
-      NAME   ( NINERT +  43 ) = 'IAU_RHEA'
-      IDCODE ( NINERT +  43 ) =  10043
-      CENTER ( NINERT +  43 ) =  605
-      TYPID  ( NINERT +  43 ) =  605
-      TYPE   ( NINERT +  43 ) =  PCK
-
-      NAME   ( NINERT +  44 ) = 'IAU_TITAN'
-      IDCODE ( NINERT +  44 ) =  10044
-      CENTER ( NINERT +  44 ) =  606
-      TYPID  ( NINERT +  44 ) =  606
-      TYPE   ( NINERT +  44 ) =  PCK
-
-      NAME   ( NINERT +  45 ) = 'IAU_HYPERION'
-      IDCODE ( NINERT +  45 ) =  10045
-      CENTER ( NINERT +  45 ) =  607
-      TYPID  ( NINERT +  45 ) =  607
-      TYPE   ( NINERT +  45 ) =  PCK
-
-      NAME   ( NINERT +  46 ) = 'IAU_IAPETUS'
-      IDCODE ( NINERT +  46 ) =  10046
-      CENTER ( NINERT +  46 ) =  608
-      TYPID  ( NINERT +  46 ) =  608
-      TYPE   ( NINERT +  46 ) =  PCK
-
-      NAME   ( NINERT +  47 ) = 'IAU_PHOEBE'
-      IDCODE ( NINERT +  47 ) =  10047
-      CENTER ( NINERT +  47 ) =  609
-      TYPID  ( NINERT +  47 ) =  609
-      TYPE   ( NINERT +  47 ) =  PCK
-
-      NAME   ( NINERT +  48 ) = 'IAU_JANUS'
-      IDCODE ( NINERT +  48 ) =  10048
-      CENTER ( NINERT +  48 ) =  610
-      TYPID  ( NINERT +  48 ) =  610
-      TYPE   ( NINERT +  48 ) =  PCK
-
-      NAME   ( NINERT +  49 ) = 'IAU_EPIMETHEUS'
-      IDCODE ( NINERT +  49 ) =  10049
-      CENTER ( NINERT +  49 ) =  611
-      TYPID  ( NINERT +  49 ) =  611
-      TYPE   ( NINERT +  49 ) =  PCK
-
-      NAME   ( NINERT +  50 ) = 'IAU_HELENE'
-      IDCODE ( NINERT +  50 ) =  10050
-      CENTER ( NINERT +  50 ) =  612
-      TYPID  ( NINERT +  50 ) =  612
-      TYPE   ( NINERT +  50 ) =  PCK
-
-      NAME   ( NINERT +  51 ) = 'IAU_TELESTO'
-      IDCODE ( NINERT +  51 ) =  10051
-      CENTER ( NINERT +  51 ) =  613
-      TYPID  ( NINERT +  51 ) =  613
-      TYPE   ( NINERT +  51 ) =  PCK
-
-      NAME   ( NINERT +  52 ) = 'IAU_CALYPSO'
-      IDCODE ( NINERT +  52 ) =  10052
-      CENTER ( NINERT +  52 ) =  614
-      TYPID  ( NINERT +  52 ) =  614
-      TYPE   ( NINERT +  52 ) =  PCK
-
-      NAME   ( NINERT +  53 ) = 'IAU_ATLAS'
-      IDCODE ( NINERT +  53 ) =  10053
-      CENTER ( NINERT +  53 ) =  615
-      TYPID  ( NINERT +  53 ) =  615
-      TYPE   ( NINERT +  53 ) =  PCK
-
-      NAME   ( NINERT +  54 ) = 'IAU_PROMETHEUS'
-      IDCODE ( NINERT +  54 ) =  10054
-      CENTER ( NINERT +  54 ) =  616
-      TYPID  ( NINERT +  54 ) =  616
-      TYPE   ( NINERT +  54 ) =  PCK
-
-      NAME   ( NINERT +  55 ) = 'IAU_PANDORA'
-      IDCODE ( NINERT +  55 ) =  10055
-      CENTER ( NINERT +  55 ) =  617
-      TYPID  ( NINERT +  55 ) =  617
-      TYPE   ( NINERT +  55 ) =  PCK
-
-      NAME   ( NINERT +  56 ) = 'IAU_ARIEL'
-      IDCODE ( NINERT +  56 ) =  10056
-      CENTER ( NINERT +  56 ) =  701
-      TYPID  ( NINERT +  56 ) =  701
-      TYPE   ( NINERT +  56 ) =  PCK
-
-      NAME   ( NINERT +  57 ) = 'IAU_UMBRIEL'
-      IDCODE ( NINERT +  57 ) =  10057
-      CENTER ( NINERT +  57 ) =  702
-      TYPID  ( NINERT +  57 ) =  702
-      TYPE   ( NINERT +  57 ) =  PCK
-
-      NAME   ( NINERT +  58 ) = 'IAU_TITANIA'
-      IDCODE ( NINERT +  58 ) =  10058
-      CENTER ( NINERT +  58 ) =  703
-      TYPID  ( NINERT +  58 ) =  703
-      TYPE   ( NINERT +  58 ) =  PCK
-
-      NAME   ( NINERT +  59 ) = 'IAU_OBERON'
-      IDCODE ( NINERT +  59 ) =  10059
-      CENTER ( NINERT +  59 ) =  704
-      TYPID  ( NINERT +  59 ) =  704
-      TYPE   ( NINERT +  59 ) =  PCK
-
-      NAME   ( NINERT +  60 ) = 'IAU_MIRANDA'
-      IDCODE ( NINERT +  60 ) =  10060
-      CENTER ( NINERT +  60 ) =  705
-      TYPID  ( NINERT +  60 ) =  705
-      TYPE   ( NINERT +  60 ) =  PCK
-
-      NAME   ( NINERT +  61 ) = 'IAU_CORDELIA'
-      IDCODE ( NINERT +  61 ) =  10061
-      CENTER ( NINERT +  61 ) =  706
-      TYPID  ( NINERT +  61 ) =  706
-      TYPE   ( NINERT +  61 ) =  PCK
-
-      NAME   ( NINERT +  62 ) = 'IAU_OPHELIA'
-      IDCODE ( NINERT +  62 ) =  10062
-      CENTER ( NINERT +  62 ) =  707
-      TYPID  ( NINERT +  62 ) =  707
-      TYPE   ( NINERT +  62 ) =  PCK
-
-      NAME   ( NINERT +  63 ) = 'IAU_BIANCA'
-      IDCODE ( NINERT +  63 ) =  10063
-      CENTER ( NINERT +  63 ) =  708
-      TYPID  ( NINERT +  63 ) =  708
-      TYPE   ( NINERT +  63 ) =  PCK
-
-      NAME   ( NINERT +  64 ) = 'IAU_CRESSIDA'
-      IDCODE ( NINERT +  64 ) =  10064
-      CENTER ( NINERT +  64 ) =  709
-      TYPID  ( NINERT +  64 ) =  709
-      TYPE   ( NINERT +  64 ) =  PCK
-
-      NAME   ( NINERT +  65 ) = 'IAU_DESDEMONA'
-      IDCODE ( NINERT +  65 ) =  10065
-      CENTER ( NINERT +  65 ) =  710
-      TYPID  ( NINERT +  65 ) =  710
-      TYPE   ( NINERT +  65 ) =  PCK
-
-      NAME   ( NINERT +  66 ) = 'IAU_JULIET'
-      IDCODE ( NINERT +  66 ) =  10066
-      CENTER ( NINERT +  66 ) =  711
-      TYPID  ( NINERT +  66 ) =  711
-      TYPE   ( NINERT +  66 ) =  PCK
-
-      NAME   ( NINERT +  67 ) = 'IAU_PORTIA'
-      IDCODE ( NINERT +  67 ) =  10067
-      CENTER ( NINERT +  67 ) =  712
-      TYPID  ( NINERT +  67 ) =  712
-      TYPE   ( NINERT +  67 ) =  PCK
-
-      NAME   ( NINERT +  68 ) = 'IAU_ROSALIND'
-      IDCODE ( NINERT +  68 ) =  10068
-      CENTER ( NINERT +  68 ) =  713
-      TYPID  ( NINERT +  68 ) =  713
-      TYPE   ( NINERT +  68 ) =  PCK
-
-      NAME   ( NINERT +  69 ) = 'IAU_BELINDA'
-      IDCODE ( NINERT +  69 ) =  10069
-      CENTER ( NINERT +  69 ) =  714
-      TYPID  ( NINERT +  69 ) =  714
-      TYPE   ( NINERT +  69 ) =  PCK
-
-      NAME   ( NINERT +  70 ) = 'IAU_PUCK'
-      IDCODE ( NINERT +  70 ) =  10070
-      CENTER ( NINERT +  70 ) =  715
-      TYPID  ( NINERT +  70 ) =  715
-      TYPE   ( NINERT +  70 ) =  PCK
-
-      NAME   ( NINERT +  71 ) = 'IAU_TRITON'
-      IDCODE ( NINERT +  71 ) =  10071
-      CENTER ( NINERT +  71 ) =  801
-      TYPID  ( NINERT +  71 ) =  801
-      TYPE   ( NINERT +  71 ) =  PCK
-
-      NAME   ( NINERT +  72 ) = 'IAU_NEREID'
-      IDCODE ( NINERT +  72 ) =  10072
-      CENTER ( NINERT +  72 ) =  802
-      TYPID  ( NINERT +  72 ) =  802
-      TYPE   ( NINERT +  72 ) =  PCK
-
-      NAME   ( NINERT +  73 ) = 'IAU_NAIAD'
-      IDCODE ( NINERT +  73 ) =  10073
-      CENTER ( NINERT +  73 ) =  803
-      TYPID  ( NINERT +  73 ) =  803
-      TYPE   ( NINERT +  73 ) =  PCK
-
-      NAME   ( NINERT +  74 ) = 'IAU_THALASSA'
-      IDCODE ( NINERT +  74 ) =  10074
-      CENTER ( NINERT +  74 ) =  804
-      TYPID  ( NINERT +  74 ) =  804
-      TYPE   ( NINERT +  74 ) =  PCK
-
-      NAME   ( NINERT +  75 ) = 'IAU_DESPINA'
-      IDCODE ( NINERT +  75 ) =  10075
-      CENTER ( NINERT +  75 ) =  805
-      TYPID  ( NINERT +  75 ) =  805
-      TYPE   ( NINERT +  75 ) =  PCK
-
-      NAME   ( NINERT +  76 ) = 'IAU_GALATEA'
-      IDCODE ( NINERT +  76 ) =  10076
-      CENTER ( NINERT +  76 ) =  806
-      TYPID  ( NINERT +  76 ) =  806
-      TYPE   ( NINERT +  76 ) =  PCK
-
-      NAME   ( NINERT +  77 ) = 'IAU_LARISSA'
-      IDCODE ( NINERT +  77 ) =  10077
-      CENTER ( NINERT +  77 ) =  807
-      TYPID  ( NINERT +  77 ) =  807
-      TYPE   ( NINERT +  77 ) =  PCK
-
-      NAME   ( NINERT +  78 ) = 'IAU_PROTEUS'
-      IDCODE ( NINERT +  78 ) =  10078
-      CENTER ( NINERT +  78 ) =  808
-      TYPID  ( NINERT +  78 ) =  808
-      TYPE   ( NINERT +  78 ) =  PCK
-
-      NAME   ( NINERT +  79 ) = 'IAU_CHARON'
-      IDCODE ( NINERT +  79 ) =  10079
-      CENTER ( NINERT +  79 ) =  901
-      TYPID  ( NINERT +  79 ) =  901
-      TYPE   ( NINERT +  79 ) =  PCK
+      name   ( ninert +   1 ) = 'IAU_MERCURY_BARYCENTER'
+      idcode ( ninert +   1 ) =  10001
+      center ( ninert +   1 ) =  1
+      typid  ( ninert +   1 ) =  1
+      type   ( ninert +   1 ) =  pck
+
+      name   ( ninert +   2 ) = 'IAU_VENUS_BARYCENTER'
+      idcode ( ninert +   2 ) =  10002
+      center ( ninert +   2 ) =  2
+      typid  ( ninert +   2 ) =  2
+      type   ( ninert +   2 ) =  pck
+
+      name   ( ninert +   3 ) = 'IAU_EARTH_BARYCENTER'
+      idcode ( ninert +   3 ) =  10003
+      center ( ninert +   3 ) =  3
+      typid  ( ninert +   3 ) =  3
+      type   ( ninert +   3 ) =  pck
+
+      name   ( ninert +   4 ) = 'IAU_MARS_BARYCENTER'
+      idcode ( ninert +   4 ) =  10004
+      center ( ninert +   4 ) =  4
+      typid  ( ninert +   4 ) =  4
+      type   ( ninert +   4 ) =  pck
+
+      name   ( ninert +   5 ) = 'IAU_JUPITER_BARYCENTER'
+      idcode ( ninert +   5 ) =  10005
+      center ( ninert +   5 ) =  5
+      typid  ( ninert +   5 ) =  5
+      type   ( ninert +   5 ) =  pck
+
+      name   ( ninert +   6 ) = 'IAU_SATURN_BARYCENTER'
+      idcode ( ninert +   6 ) =  10006
+      center ( ninert +   6 ) =  6
+      typid  ( ninert +   6 ) =  6
+      type   ( ninert +   6 ) =  pck
+
+      name   ( ninert +   7 ) = 'IAU_URANUS_BARYCENTER'
+      idcode ( ninert +   7 ) =  10007
+      center ( ninert +   7 ) =  7
+      typid  ( ninert +   7 ) =  7
+      type   ( ninert +   7 ) =  pck
+
+      name   ( ninert +   8 ) = 'IAU_NEPTUNE_BARYCENTER'
+      idcode ( ninert +   8 ) =  10008
+      center ( ninert +   8 ) =  8
+      typid  ( ninert +   8 ) =  8
+      type   ( ninert +   8 ) =  pck
+
+      name   ( ninert +   9 ) = 'IAU_PLUTO_BARYCENTER'
+      idcode ( ninert +   9 ) =  10009
+      center ( ninert +   9 ) =  9
+      typid  ( ninert +   9 ) =  9
+      type   ( ninert +   9 ) =  pck
+
+      name   ( ninert +  10 ) = 'IAU_SUN'
+      idcode ( ninert +  10 ) =  10010
+      center ( ninert +  10 ) =  10
+      typid  ( ninert +  10 ) =  10
+      type   ( ninert +  10 ) =  pck
+
+      name   ( ninert +  11 ) = 'IAU_MERCURY'
+      idcode ( ninert +  11 ) =  10011
+      center ( ninert +  11 ) =  199
+      typid  ( ninert +  11 ) =  199
+      type   ( ninert +  11 ) =  pck
+
+      name   ( ninert +  12 ) = 'IAU_VENUS'
+      idcode ( ninert +  12 ) =  10012
+      center ( ninert +  12 ) =  299
+      typid  ( ninert +  12 ) =  299
+      type   ( ninert +  12 ) =  pck
+
+      name   ( ninert +  13 ) = 'IAU_EARTH'
+      idcode ( ninert +  13 ) =  10013
+      center ( ninert +  13 ) =  399
+      typid  ( ninert +  13 ) =  399
+      type   ( ninert +  13 ) =  pck
+
+      name   ( ninert +  14 ) = 'IAU_MARS'
+      idcode ( ninert +  14 ) =  10014
+      center ( ninert +  14 ) =  499
+      typid  ( ninert +  14 ) =  499
+      type   ( ninert +  14 ) =  pck
+
+      name   ( ninert +  15 ) = 'IAU_JUPITER'
+      idcode ( ninert +  15 ) =  10015
+      center ( ninert +  15 ) =  599
+      typid  ( ninert +  15 ) =  599
+      type   ( ninert +  15 ) =  pck
+
+      name   ( ninert +  16 ) = 'IAU_SATURN'
+      idcode ( ninert +  16 ) =  10016
+      center ( ninert +  16 ) =  699
+      typid  ( ninert +  16 ) =  699
+      type   ( ninert +  16 ) =  pck
+
+      name   ( ninert +  17 ) = 'IAU_URANUS'
+      idcode ( ninert +  17 ) =  10017
+      center ( ninert +  17 ) =  799
+      typid  ( ninert +  17 ) =  799
+      type   ( ninert +  17 ) =  pck
+
+      name   ( ninert +  18 ) = 'IAU_NEPTUNE'
+      idcode ( ninert +  18 ) =  10018
+      center ( ninert +  18 ) =  899
+      typid  ( ninert +  18 ) =  899
+      type   ( ninert +  18 ) =  pck
+
+      name   ( ninert +  19 ) = 'IAU_PLUTO'
+      idcode ( ninert +  19 ) =  10019
+      center ( ninert +  19 ) =  999
+      typid  ( ninert +  19 ) =  999
+      type   ( ninert +  19 ) =  pck
+
+      name   ( ninert +  20 ) = 'IAU_MOON'
+      idcode ( ninert +  20 ) =  10020
+      center ( ninert +  20 ) =  301
+      typid  ( ninert +  20 ) =  301
+      type   ( ninert +  20 ) =  pck
+
+      name   ( ninert +  21 ) = 'IAU_PHOBOS'
+      idcode ( ninert +  21 ) =  10021
+      center ( ninert +  21 ) =  401
+      typid  ( ninert +  21 ) =  401
+      type   ( ninert +  21 ) =  pck
+
+      name   ( ninert +  22 ) = 'IAU_DEIMOS'
+      idcode ( ninert +  22 ) =  10022
+      center ( ninert +  22 ) =  402
+      typid  ( ninert +  22 ) =  402
+      type   ( ninert +  22 ) =  pck
+
+      name   ( ninert +  23 ) = 'IAU_IO'
+      idcode ( ninert +  23 ) =  10023
+      center ( ninert +  23 ) =  501
+      typid  ( ninert +  23 ) =  501
+      type   ( ninert +  23 ) =  pck
+
+      name   ( ninert +  24 ) = 'IAU_EUROPA'
+      idcode ( ninert +  24 ) =  10024
+      center ( ninert +  24 ) =  502
+      typid  ( ninert +  24 ) =  502
+      type   ( ninert +  24 ) =  pck
+
+      name   ( ninert +  25 ) = 'IAU_GANYMEDE'
+      idcode ( ninert +  25 ) =  10025
+      center ( ninert +  25 ) =  503
+      typid  ( ninert +  25 ) =  503
+      type   ( ninert +  25 ) =  pck
+
+      name   ( ninert +  26 ) = 'IAU_CALLISTO'
+      idcode ( ninert +  26 ) =  10026
+      center ( ninert +  26 ) =  504
+      typid  ( ninert +  26 ) =  504
+      type   ( ninert +  26 ) =  pck
+
+      name   ( ninert +  27 ) = 'IAU_AMALTHEA'
+      idcode ( ninert +  27 ) =  10027
+      center ( ninert +  27 ) =  505
+      typid  ( ninert +  27 ) =  505
+      type   ( ninert +  27 ) =  pck
+
+      name   ( ninert +  28 ) = 'IAU_HIMALIA'
+      idcode ( ninert +  28 ) =  10028
+      center ( ninert +  28 ) =  506
+      typid  ( ninert +  28 ) =  506
+      type   ( ninert +  28 ) =  pck
+
+      name   ( ninert +  29 ) = 'IAU_ELARA'
+      idcode ( ninert +  29 ) =  10029
+      center ( ninert +  29 ) =  507
+      typid  ( ninert +  29 ) =  507
+      type   ( ninert +  29 ) =  pck
+
+      name   ( ninert +  30 ) = 'IAU_PASIPHAE'
+      idcode ( ninert +  30 ) =  10030
+      center ( ninert +  30 ) =  508
+      typid  ( ninert +  30 ) =  508
+      type   ( ninert +  30 ) =  pck
+
+      name   ( ninert +  31 ) = 'IAU_SINOPE'
+      idcode ( ninert +  31 ) =  10031
+      center ( ninert +  31 ) =  509
+      typid  ( ninert +  31 ) =  509
+      type   ( ninert +  31 ) =  pck
+
+      name   ( ninert +  32 ) = 'IAU_LYSITHEA'
+      idcode ( ninert +  32 ) =  10032
+      center ( ninert +  32 ) =  510
+      typid  ( ninert +  32 ) =  510
+      type   ( ninert +  32 ) =  pck
+
+      name   ( ninert +  33 ) = 'IAU_CARME'
+      idcode ( ninert +  33 ) =  10033
+      center ( ninert +  33 ) =  511
+      typid  ( ninert +  33 ) =  511
+      type   ( ninert +  33 ) =  pck
+
+      name   ( ninert +  34 ) = 'IAU_ANANKE'
+      idcode ( ninert +  34 ) =  10034
+      center ( ninert +  34 ) =  512
+      typid  ( ninert +  34 ) =  512
+      type   ( ninert +  34 ) =  pck
+
+      name   ( ninert +  35 ) = 'IAU_LEDA'
+      idcode ( ninert +  35 ) =  10035
+      center ( ninert +  35 ) =  513
+      typid  ( ninert +  35 ) =  513
+      type   ( ninert +  35 ) =  pck
+
+      name   ( ninert +  36 ) = 'IAU_THEBE'
+      idcode ( ninert +  36 ) =  10036
+      center ( ninert +  36 ) =  514
+      typid  ( ninert +  36 ) =  514
+      type   ( ninert +  36 ) =  pck
+
+      name   ( ninert +  37 ) = 'IAU_ADRASTEA'
+      idcode ( ninert +  37 ) =  10037
+      center ( ninert +  37 ) =  515
+      typid  ( ninert +  37 ) =  515
+      type   ( ninert +  37 ) =  pck
+
+      name   ( ninert +  38 ) = 'IAU_METIS'
+      idcode ( ninert +  38 ) =  10038
+      center ( ninert +  38 ) =  516
+      typid  ( ninert +  38 ) =  516
+      type   ( ninert +  38 ) =  pck
+
+      name   ( ninert +  39 ) = 'IAU_MIMAS'
+      idcode ( ninert +  39 ) =  10039
+      center ( ninert +  39 ) =  601
+      typid  ( ninert +  39 ) =  601
+      type   ( ninert +  39 ) =  pck
+
+      name   ( ninert +  40 ) = 'IAU_ENCELADUS'
+      idcode ( ninert +  40 ) =  10040
+      center ( ninert +  40 ) =  602
+      typid  ( ninert +  40 ) =  602
+      type   ( ninert +  40 ) =  pck
+
+      name   ( ninert +  41 ) = 'IAU_TETHYS'
+      idcode ( ninert +  41 ) =  10041
+      center ( ninert +  41 ) =  603
+      typid  ( ninert +  41 ) =  603
+      type   ( ninert +  41 ) =  pck
+
+      name   ( ninert +  42 ) = 'IAU_DIONE'
+      idcode ( ninert +  42 ) =  10042
+      center ( ninert +  42 ) =  604
+      typid  ( ninert +  42 ) =  604
+      type   ( ninert +  42 ) =  pck
+
+      name   ( ninert +  43 ) = 'IAU_RHEA'
+      idcode ( ninert +  43 ) =  10043
+      center ( ninert +  43 ) =  605
+      typid  ( ninert +  43 ) =  605
+      type   ( ninert +  43 ) =  pck
+
+      name   ( ninert +  44 ) = 'IAU_TITAN'
+      idcode ( ninert +  44 ) =  10044
+      center ( ninert +  44 ) =  606
+      typid  ( ninert +  44 ) =  606
+      type   ( ninert +  44 ) =  pck
+
+      name   ( ninert +  45 ) = 'IAU_HYPERION'
+      idcode ( ninert +  45 ) =  10045
+      center ( ninert +  45 ) =  607
+      typid  ( ninert +  45 ) =  607
+      type   ( ninert +  45 ) =  pck
+
+      name   ( ninert +  46 ) = 'IAU_IAPETUS'
+      idcode ( ninert +  46 ) =  10046
+      center ( ninert +  46 ) =  608
+      typid  ( ninert +  46 ) =  608
+      type   ( ninert +  46 ) =  pck
+
+      name   ( ninert +  47 ) = 'IAU_PHOEBE'
+      idcode ( ninert +  47 ) =  10047
+      center ( ninert +  47 ) =  609
+      typid  ( ninert +  47 ) =  609
+      type   ( ninert +  47 ) =  pck
+
+      name   ( ninert +  48 ) = 'IAU_JANUS'
+      idcode ( ninert +  48 ) =  10048
+      center ( ninert +  48 ) =  610
+      typid  ( ninert +  48 ) =  610
+      type   ( ninert +  48 ) =  pck
+
+      name   ( ninert +  49 ) = 'IAU_EPIMETHEUS'
+      idcode ( ninert +  49 ) =  10049
+      center ( ninert +  49 ) =  611
+      typid  ( ninert +  49 ) =  611
+      type   ( ninert +  49 ) =  pck
+
+      name   ( ninert +  50 ) = 'IAU_HELENE'
+      idcode ( ninert +  50 ) =  10050
+      center ( ninert +  50 ) =  612
+      typid  ( ninert +  50 ) =  612
+      type   ( ninert +  50 ) =  pck
+
+      name   ( ninert +  51 ) = 'IAU_TELESTO'
+      idcode ( ninert +  51 ) =  10051
+      center ( ninert +  51 ) =  613
+      typid  ( ninert +  51 ) =  613
+      type   ( ninert +  51 ) =  pck
+
+      name   ( ninert +  52 ) = 'IAU_CALYPSO'
+      idcode ( ninert +  52 ) =  10052
+      center ( ninert +  52 ) =  614
+      typid  ( ninert +  52 ) =  614
+      type   ( ninert +  52 ) =  pck
+
+      name   ( ninert +  53 ) = 'IAU_ATLAS'
+      idcode ( ninert +  53 ) =  10053
+      center ( ninert +  53 ) =  615
+      typid  ( ninert +  53 ) =  615
+      type   ( ninert +  53 ) =  pck
+
+      name   ( ninert +  54 ) = 'IAU_PROMETHEUS'
+      idcode ( ninert +  54 ) =  10054
+      center ( ninert +  54 ) =  616
+      typid  ( ninert +  54 ) =  616
+      type   ( ninert +  54 ) =  pck
+
+      name   ( ninert +  55 ) = 'IAU_PANDORA'
+      idcode ( ninert +  55 ) =  10055
+      center ( ninert +  55 ) =  617
+      typid  ( ninert +  55 ) =  617
+      type   ( ninert +  55 ) =  pck
+
+      name   ( ninert +  56 ) = 'IAU_ARIEL'
+      idcode ( ninert +  56 ) =  10056
+      center ( ninert +  56 ) =  701
+      typid  ( ninert +  56 ) =  701
+      type   ( ninert +  56 ) =  pck
+
+      name   ( ninert +  57 ) = 'IAU_UMBRIEL'
+      idcode ( ninert +  57 ) =  10057
+      center ( ninert +  57 ) =  702
+      typid  ( ninert +  57 ) =  702
+      type   ( ninert +  57 ) =  pck
+
+      name   ( ninert +  58 ) = 'IAU_TITANIA'
+      idcode ( ninert +  58 ) =  10058
+      center ( ninert +  58 ) =  703
+      typid  ( ninert +  58 ) =  703
+      type   ( ninert +  58 ) =  pck
+
+      name   ( ninert +  59 ) = 'IAU_OBERON'
+      idcode ( ninert +  59 ) =  10059
+      center ( ninert +  59 ) =  704
+      typid  ( ninert +  59 ) =  704
+      type   ( ninert +  59 ) =  pck
+
+      name   ( ninert +  60 ) = 'IAU_MIRANDA'
+      idcode ( ninert +  60 ) =  10060
+      center ( ninert +  60 ) =  705
+      typid  ( ninert +  60 ) =  705
+      type   ( ninert +  60 ) =  pck
+
+      name   ( ninert +  61 ) = 'IAU_CORDELIA'
+      idcode ( ninert +  61 ) =  10061
+      center ( ninert +  61 ) =  706
+      typid  ( ninert +  61 ) =  706
+      type   ( ninert +  61 ) =  pck
+
+      name   ( ninert +  62 ) = 'IAU_OPHELIA'
+      idcode ( ninert +  62 ) =  10062
+      center ( ninert +  62 ) =  707
+      typid  ( ninert +  62 ) =  707
+      type   ( ninert +  62 ) =  pck
+
+      name   ( ninert +  63 ) = 'IAU_BIANCA'
+      idcode ( ninert +  63 ) =  10063
+      center ( ninert +  63 ) =  708
+      typid  ( ninert +  63 ) =  708
+      type   ( ninert +  63 ) =  pck
+
+      name   ( ninert +  64 ) = 'IAU_CRESSIDA'
+      idcode ( ninert +  64 ) =  10064
+      center ( ninert +  64 ) =  709
+      typid  ( ninert +  64 ) =  709
+      type   ( ninert +  64 ) =  pck
+
+      name   ( ninert +  65 ) = 'IAU_DESDEMONA'
+      idcode ( ninert +  65 ) =  10065
+      center ( ninert +  65 ) =  710
+      typid  ( ninert +  65 ) =  710
+      type   ( ninert +  65 ) =  pck
+
+      name   ( ninert +  66 ) = 'IAU_JULIET'
+      idcode ( ninert +  66 ) =  10066
+      center ( ninert +  66 ) =  711
+      typid  ( ninert +  66 ) =  711
+      type   ( ninert +  66 ) =  pck
+
+      name   ( ninert +  67 ) = 'IAU_PORTIA'
+      idcode ( ninert +  67 ) =  10067
+      center ( ninert +  67 ) =  712
+      typid  ( ninert +  67 ) =  712
+      type   ( ninert +  67 ) =  pck
+
+      name   ( ninert +  68 ) = 'IAU_ROSALIND'
+      idcode ( ninert +  68 ) =  10068
+      center ( ninert +  68 ) =  713
+      typid  ( ninert +  68 ) =  713
+      type   ( ninert +  68 ) =  pck
+
+      name   ( ninert +  69 ) = 'IAU_BELINDA'
+      idcode ( ninert +  69 ) =  10069
+      center ( ninert +  69 ) =  714
+      typid  ( ninert +  69 ) =  714
+      type   ( ninert +  69 ) =  pck
+
+      name   ( ninert +  70 ) = 'IAU_PUCK'
+      idcode ( ninert +  70 ) =  10070
+      center ( ninert +  70 ) =  715
+      typid  ( ninert +  70 ) =  715
+      type   ( ninert +  70 ) =  pck
+
+      name   ( ninert +  71 ) = 'IAU_TRITON'
+      idcode ( ninert +  71 ) =  10071
+      center ( ninert +  71 ) =  801
+      typid  ( ninert +  71 ) =  801
+      type   ( ninert +  71 ) =  pck
+
+      name   ( ninert +  72 ) = 'IAU_NEREID'
+      idcode ( ninert +  72 ) =  10072
+      center ( ninert +  72 ) =  802
+      typid  ( ninert +  72 ) =  802
+      type   ( ninert +  72 ) =  pck
+
+      name   ( ninert +  73 ) = 'IAU_NAIAD'
+      idcode ( ninert +  73 ) =  10073
+      center ( ninert +  73 ) =  803
+      typid  ( ninert +  73 ) =  803
+      type   ( ninert +  73 ) =  pck
+
+      name   ( ninert +  74 ) = 'IAU_THALASSA'
+      idcode ( ninert +  74 ) =  10074
+      center ( ninert +  74 ) =  804
+      typid  ( ninert +  74 ) =  804
+      type   ( ninert +  74 ) =  pck
+
+      name   ( ninert +  75 ) = 'IAU_DESPINA'
+      idcode ( ninert +  75 ) =  10075
+      center ( ninert +  75 ) =  805
+      typid  ( ninert +  75 ) =  805
+      type   ( ninert +  75 ) =  pck
+
+      name   ( ninert +  76 ) = 'IAU_GALATEA'
+      idcode ( ninert +  76 ) =  10076
+      center ( ninert +  76 ) =  806
+      typid  ( ninert +  76 ) =  806
+      type   ( ninert +  76 ) =  pck
+
+      name   ( ninert +  77 ) = 'IAU_LARISSA'
+      idcode ( ninert +  77 ) =  10077
+      center ( ninert +  77 ) =  807
+      typid  ( ninert +  77 ) =  807
+      type   ( ninert +  77 ) =  pck
+
+      name   ( ninert +  78 ) = 'IAU_PROTEUS'
+      idcode ( ninert +  78 ) =  10078
+      center ( ninert +  78 ) =  808
+      typid  ( ninert +  78 ) =  808
+      type   ( ninert +  78 ) =  pck
+
+      name   ( ninert +  79 ) = 'IAU_CHARON'
+      idcode ( ninert +  79 ) =  10079
+      center ( ninert +  79 ) =  901
+      typid  ( ninert +  79 ) =  901
+      type   ( ninert +  79 ) =  pck
 
 !
 !     This is for the first new PCK frame---the high precision earth
 !     frame ITRF93.
 !
-      NAME   ( NINERT +  80 ) = 'ITRF93'
-      IDCODE ( NINERT +  80 ) =  13000
-      CENTER ( NINERT +  80 ) =  399
-      TYPID  ( NINERT +  80 ) =  3000
-      TYPE   ( NINERT +  80 ) =  PCK
+      name   ( ninert +  80 ) = 'ITRF93'
+      idcode ( ninert +  80 ) =  13000
+      center ( ninert +  80 ) =  399
+      typid  ( ninert +  80 ) =  3000
+      type   ( ninert +  80 ) =  pck
 
 !
 !     This if for the alias frame EARTH BODYFIXED.  This is a TK
 !     class frame.  To use it a FRAME kernel must be loaded via
 !     FURNSH.
 !
-      NAME   ( NINERT +  81 ) = 'EARTH_FIXED'
-      IDCODE ( NINERT +  81 ) =  10081
-      CENTER ( NINERT +  81 ) =  399
-      TYPID  ( NINERT +  81 ) =  10081
-      TYPE   ( NINERT +  81 ) =  TK
+      name   ( ninert +  81 ) = 'EARTH_FIXED'
+      idcode ( ninert +  81 ) =  10081
+      center ( ninert +  81 ) =  399
+      typid  ( ninert +  81 ) =  10081
+      type   ( ninert +  81 ) =  tk
 
 !
 !     Frames introduced into the generic NAIF PCK
 !     system as referenced from the 1997 IAU report.
 !
-      NAME   ( NINERT +  82 ) =  'IAU_PAN'
-      IDCODE ( NINERT +  82 ) =  10082
-      CENTER ( NINERT +  82 ) =  618
-      TYPID  ( NINERT +  82 ) =  618
-      TYPE   ( NINERT +  82 ) =  PCK
+      name   ( ninert +  82 ) =  'IAU_PAN'
+      idcode ( ninert +  82 ) =  10082
+      center ( ninert +  82 ) =  618
+      typid  ( ninert +  82 ) =  618
+      type   ( ninert +  82 ) =  pck
 
-      NAME   ( NINERT +  83 ) =  'IAU_GASPRA'
-      IDCODE ( NINERT +  83 ) =  10083
-      CENTER ( NINERT +  83 ) =  9511010
-      TYPID  ( NINERT +  83 ) =  9511010
-      TYPE   ( NINERT +  83 ) =  PCK
+      name   ( ninert +  83 ) =  'IAU_GASPRA'
+      idcode ( ninert +  83 ) =  10083
+      center ( ninert +  83 ) =  9511010
+      typid  ( ninert +  83 ) =  9511010
+      type   ( ninert +  83 ) =  pck
 
-      NAME   ( NINERT +  84 ) =  'IAU_IDA'
-      IDCODE ( NINERT +  84 ) =  10084
-      CENTER ( NINERT +  84 ) =  2431010
-      TYPID  ( NINERT +  84 ) =  2431010
-      TYPE   ( NINERT +  84 ) =  PCK
+      name   ( ninert +  84 ) =  'IAU_IDA'
+      idcode ( ninert +  84 ) =  10084
+      center ( ninert +  84 ) =  2431010
+      typid  ( ninert +  84 ) =  2431010
+      type   ( ninert +  84 ) =  pck
 
 !
 !     Frame referenced from the Eros orientation model in the 2000 IAU
 !     report.
 !
-      NAME   ( NINERT +  85 ) =  'IAU_EROS'
-      IDCODE ( NINERT +  85 ) =  10085
-      CENTER ( NINERT +  85 ) =  2000433
-      TYPID  ( NINERT +  85 ) =  2000433
-      TYPE   ( NINERT +  85 ) =  PCK
+      name   ( ninert +  85 ) =  'IAU_EROS'
+      idcode ( ninert +  85 ) =  10085
+      center ( ninert +  85 ) =  2000433
+      typid  ( ninert +  85 ) =  2000433
+      type   ( ninert +  85 ) =  pck
 
 !
 !     Frames for Jovian satellites approved by IAU in late 2002.
 !
-      NAME   ( NINERT +  86 ) =  'IAU_CALLIRRHOE'
-      IDCODE ( NINERT +  86 ) =  10086
-      CENTER ( NINERT +  86 ) =  517
-      TYPID  ( NINERT +  86 ) =  517
-      TYPE   ( NINERT +  86 ) =  PCK
+      name   ( ninert +  86 ) =  'IAU_CALLIRRHOE'
+      idcode ( ninert +  86 ) =  10086
+      center ( ninert +  86 ) =  517
+      typid  ( ninert +  86 ) =  517
+      type   ( ninert +  86 ) =  pck
 
-      NAME   ( NINERT +  87 ) =  'IAU_THEMISTO'
-      IDCODE ( NINERT +  87 ) =  10087
-      CENTER ( NINERT +  87 ) =  518
-      TYPID  ( NINERT +  87 ) =  518
-      TYPE   ( NINERT +  87 ) =  PCK
+      name   ( ninert +  87 ) =  'IAU_THEMISTO'
+      idcode ( ninert +  87 ) =  10087
+      center ( ninert +  87 ) =  518
+      typid  ( ninert +  87 ) =  518
+      type   ( ninert +  87 ) =  pck
 
-      NAME   ( NINERT +  88 ) =  'IAU_MEGACLITE'
-      IDCODE ( NINERT +  88 ) =  10088
-      CENTER ( NINERT +  88 ) =  519
-      TYPID  ( NINERT +  88 ) =  519
-      TYPE   ( NINERT +  88 ) =  PCK
+      name   ( ninert +  88 ) =  'IAU_MEGACLITE'
+      idcode ( ninert +  88 ) =  10088
+      center ( ninert +  88 ) =  519
+      typid  ( ninert +  88 ) =  519
+      type   ( ninert +  88 ) =  pck
 
-      NAME   ( NINERT +  89 ) =  'IAU_TAYGETE'
-      IDCODE ( NINERT +  89 ) =  10089
-      CENTER ( NINERT +  89 ) =  520
-      TYPID  ( NINERT +  89 ) =  520
-      TYPE   ( NINERT +  89 ) =  PCK
+      name   ( ninert +  89 ) =  'IAU_TAYGETE'
+      idcode ( ninert +  89 ) =  10089
+      center ( ninert +  89 ) =  520
+      typid  ( ninert +  89 ) =  520
+      type   ( ninert +  89 ) =  pck
 
-      NAME   ( NINERT +  90 ) =  'IAU_CHALDENE'
-      IDCODE ( NINERT +  90 ) =  10090
-      CENTER ( NINERT +  90 ) =  521
-      TYPID  ( NINERT +  90 ) =  521
-      TYPE   ( NINERT +  90 ) =  PCK
+      name   ( ninert +  90 ) =  'IAU_CHALDENE'
+      idcode ( ninert +  90 ) =  10090
+      center ( ninert +  90 ) =  521
+      typid  ( ninert +  90 ) =  521
+      type   ( ninert +  90 ) =  pck
 
-      NAME   ( NINERT +  91 ) =  'IAU_HARPALYKE'
-      IDCODE ( NINERT +  91 ) =  10091
-      CENTER ( NINERT +  91 ) =  522
-      TYPID  ( NINERT +  91 ) =  522
-      TYPE   ( NINERT +  91 ) =  PCK
+      name   ( ninert +  91 ) =  'IAU_HARPALYKE'
+      idcode ( ninert +  91 ) =  10091
+      center ( ninert +  91 ) =  522
+      typid  ( ninert +  91 ) =  522
+      type   ( ninert +  91 ) =  pck
 
-      NAME   ( NINERT +  92 ) =  'IAU_KALYKE'
-      IDCODE ( NINERT +  92 ) =  10092
-      CENTER ( NINERT +  92 ) =  523
-      TYPID  ( NINERT +  92 ) =  523
-      TYPE   ( NINERT +  92 ) =  PCK
+      name   ( ninert +  92 ) =  'IAU_KALYKE'
+      idcode ( ninert +  92 ) =  10092
+      center ( ninert +  92 ) =  523
+      typid  ( ninert +  92 ) =  523
+      type   ( ninert +  92 ) =  pck
 
-      NAME   ( NINERT +  93 ) =  'IAU_IOCASTE'
-      IDCODE ( NINERT +  93 ) =  10093
-      CENTER ( NINERT +  93 ) =  524
-      TYPID  ( NINERT +  93 ) =  524
-      TYPE   ( NINERT +  93 ) =  PCK
+      name   ( ninert +  93 ) =  'IAU_IOCASTE'
+      idcode ( ninert +  93 ) =  10093
+      center ( ninert +  93 ) =  524
+      typid  ( ninert +  93 ) =  524
+      type   ( ninert +  93 ) =  pck
 
-      NAME   ( NINERT +  94 ) =  'IAU_ERINOME'
-      IDCODE ( NINERT +  94 ) =  10094
-      CENTER ( NINERT +  94 ) =  525
-      TYPID  ( NINERT +  94 ) =  525
-      TYPE   ( NINERT +  94 ) =  PCK
+      name   ( ninert +  94 ) =  'IAU_ERINOME'
+      idcode ( ninert +  94 ) =  10094
+      center ( ninert +  94 ) =  525
+      typid  ( ninert +  94 ) =  525
+      type   ( ninert +  94 ) =  pck
 
-      NAME   ( NINERT +  95 ) =  'IAU_ISONOE'
-      IDCODE ( NINERT +  95 ) =  10095
-      CENTER ( NINERT +  95 ) =  526
-      TYPID  ( NINERT +  95 ) =  526
-      TYPE   ( NINERT +  95 ) =  PCK
+      name   ( ninert +  95 ) =  'IAU_ISONOE'
+      idcode ( ninert +  95 ) =  10095
+      center ( ninert +  95 ) =  526
+      typid  ( ninert +  95 ) =  526
+      type   ( ninert +  95 ) =  pck
 
-      NAME   ( NINERT +  96 ) =  'IAU_PRAXIDIKE'
-      IDCODE ( NINERT +  96 ) =  10096
-      CENTER ( NINERT +  96 ) =  527
-      TYPID  ( NINERT +  96 ) =  527
-      TYPE   ( NINERT +  96 ) =  PCK
+      name   ( ninert +  96 ) =  'IAU_PRAXIDIKE'
+      idcode ( ninert +  96 ) =  10096
+      center ( ninert +  96 ) =  527
+      typid  ( ninert +  96 ) =  527
+      type   ( ninert +  96 ) =  pck
 
 !
 !     Frames for comets and asteroids, for which rotation constants
 !     were added in 2006 IAU Report.
 !
-      NAME   ( NINERT +  97 ) =  'IAU_BORRELLY'
-      IDCODE ( NINERT +  97 ) =  10097
-      CENTER ( NINERT +  97 ) =  1000005
-      TYPID  ( NINERT +  97 ) =  1000005
-      TYPE   ( NINERT +  97 ) =  PCK
+      name   ( ninert +  97 ) =  'IAU_BORRELLY'
+      idcode ( ninert +  97 ) =  10097
+      center ( ninert +  97 ) =  1000005
+      typid  ( ninert +  97 ) =  1000005
+      type   ( ninert +  97 ) =  pck
 
-      NAME   ( NINERT +  98 ) =  'IAU_TEMPEL_1'
-      IDCODE ( NINERT +  98 ) =  10098
-      CENTER ( NINERT +  98 ) =  1000093
-      TYPID  ( NINERT +  98 ) =  1000093
-      TYPE   ( NINERT +  98 ) =  PCK
+      name   ( ninert +  98 ) =  'IAU_TEMPEL_1'
+      idcode ( ninert +  98 ) =  10098
+      center ( ninert +  98 ) =  1000093
+      typid  ( ninert +  98 ) =  1000093
+      type   ( ninert +  98 ) =  pck
 
-      NAME   ( NINERT +  99 ) =  'IAU_VESTA'
-      IDCODE ( NINERT +  99 ) =  10099
-      CENTER ( NINERT +  99 ) =  2000004
-      TYPID  ( NINERT +  99 ) =  2000004
-      TYPE   ( NINERT +  99 ) =  PCK
+      name   ( ninert +  99 ) =  'IAU_VESTA'
+      idcode ( ninert +  99 ) =  10099
+      center ( ninert +  99 ) =  2000004
+      typid  ( ninert +  99 ) =  2000004
+      type   ( ninert +  99 ) =  pck
 
-      NAME   ( NINERT + 100 ) =  'IAU_ITOKAWA'
-      IDCODE ( NINERT + 100 ) =  10100
-      CENTER ( NINERT + 100 ) =  2025143
-      TYPID  ( NINERT + 100 ) =  2025143
-      TYPE   ( NINERT + 100 ) =  PCK
+      name   ( ninert + 100 ) =  'IAU_ITOKAWA'
+      idcode ( ninert + 100 ) =  10100
+      center ( ninert + 100 ) =  2025143
+      typid  ( ninert + 100 ) =  2025143
+      type   ( ninert + 100 ) =  pck
 
 !
 !     Frames for asteroids, for which rotation constants were added in
 !     2009 IAU Report.
 !
-      NAME   ( NINERT + 101 ) =  'IAU_CERES'
-      IDCODE ( NINERT + 101 ) =  10101
-      CENTER ( NINERT + 101 ) =  2000001
-      TYPID  ( NINERT + 101 ) =  2000001
-      TYPE   ( NINERT + 101 ) =  PCK
+      name   ( ninert + 101 ) =  'IAU_CERES'
+      idcode ( ninert + 101 ) =  10101
+      center ( ninert + 101 ) =  2000001
+      typid  ( ninert + 101 ) =  2000001
+      type   ( ninert + 101 ) =  pck
 
-      NAME   ( NINERT + 102 ) =  'IAU_PALLAS'
-      IDCODE ( NINERT + 102 ) =  10102
-      CENTER ( NINERT + 102 ) =  2000002
-      TYPID  ( NINERT + 102 ) =  2000002
-      TYPE   ( NINERT + 102 ) =  PCK
+      name   ( ninert + 102 ) =  'IAU_PALLAS'
+      idcode ( ninert + 102 ) =  10102
+      center ( ninert + 102 ) =  2000002
+      typid  ( ninert + 102 ) =  2000002
+      type   ( ninert + 102 ) =  pck
 
-      NAME   ( NINERT + 103 ) =  'IAU_LUTETIA'
-      IDCODE ( NINERT + 103 ) =  10103
-      CENTER ( NINERT + 103 ) =  2000021
-      TYPID  ( NINERT + 103 ) =  2000021
-      TYPE   ( NINERT + 103 ) =  PCK
+      name   ( ninert + 103 ) =  'IAU_LUTETIA'
+      idcode ( ninert + 103 ) =  10103
+      center ( ninert + 103 ) =  2000021
+      typid  ( ninert + 103 ) =  2000021
+      type   ( ninert + 103 ) =  pck
 
-      NAME   ( NINERT + 104 ) =  'IAU_DAVIDA'
-      IDCODE ( NINERT + 104 ) =  10104
-      CENTER ( NINERT + 104 ) =  2000511
-      TYPID  ( NINERT + 104 ) =  2000511
-      TYPE   ( NINERT + 104 ) =  PCK
+      name   ( ninert + 104 ) =  'IAU_DAVIDA'
+      idcode ( ninert + 104 ) =  10104
+      center ( ninert + 104 ) =  2000511
+      typid  ( ninert + 104 ) =  2000511
+      type   ( ninert + 104 ) =  pck
 
-      NAME   ( NINERT + 105 ) =  'IAU_STEINS'
-      IDCODE ( NINERT + 105 ) =  10105
-      CENTER ( NINERT + 105 ) =  2002867
-      TYPID  ( NINERT + 105 ) =  2002867
-      TYPE   ( NINERT + 105 ) =  PCK
+      name   ( ninert + 105 ) =  'IAU_STEINS'
+      idcode ( ninert + 105 ) =  10105
+      center ( ninert + 105 ) =  2002867
+      typid  ( ninert + 105 ) =  2002867
+      type   ( ninert + 105 ) =  pck
 
 !
 !     Frame for Bennu asteroid, for OSIRIS-Rex project.
 !
-      NAME   ( NINERT + 106 ) =  'IAU_BENNU'
-      IDCODE ( NINERT + 106 ) =  10106
-      CENTER ( NINERT + 106 ) =  2101955
-      TYPID  ( NINERT + 106 ) =  2101955
-      TYPE   ( NINERT + 106 ) =  PCK
+      name   ( ninert + 106 ) =  'IAU_BENNU'
+      idcode ( ninert + 106 ) =  10106
+      center ( ninert + 106 ) =  2101955
+      typid  ( ninert + 106 ) =  2101955
+      type   ( ninert + 106 ) =  pck
 
 !
 !     Frames for asteroid 52 Europa, Nix, Hydra, and Hayabusa 2,
 !     New Horizons, DART, and Lucy mission targets.
 !
-      NAME   ( NINERT + 107 ) =  'IAU_52_EUROPA'
-      IDCODE ( NINERT + 107 ) =  10107
-      CENTER ( NINERT + 107 ) =  2000052
-      TYPID  ( NINERT + 107 ) =  2000052
-      TYPE   ( NINERT + 107 ) =  PCK
+      name   ( ninert + 107 ) =  'IAU_52_EUROPA'
+      idcode ( ninert + 107 ) =  10107
+      center ( ninert + 107 ) =  2000052
+      typid  ( ninert + 107 ) =  2000052
+      type   ( ninert + 107 ) =  pck
 
-      NAME   ( NINERT + 108 ) =  'IAU_NIX'
-      IDCODE ( NINERT + 108 ) =  10108
-      CENTER ( NINERT + 108 ) =  902
-      TYPID  ( NINERT + 108 ) =  902
-      TYPE   ( NINERT + 108 ) =  PCK
+      name   ( ninert + 108 ) =  'IAU_NIX'
+      idcode ( ninert + 108 ) =  10108
+      center ( ninert + 108 ) =  902
+      typid  ( ninert + 108 ) =  902
+      type   ( ninert + 108 ) =  pck
 
-      NAME   ( NINERT + 109 ) =  'IAU_HYDRA'
-      IDCODE ( NINERT + 109 ) =  10109
-      CENTER ( NINERT + 109 ) =  903
-      TYPID  ( NINERT + 109 ) =  903
-      TYPE   ( NINERT + 109 ) =  PCK
+      name   ( ninert + 109 ) =  'IAU_HYDRA'
+      idcode ( ninert + 109 ) =  10109
+      center ( ninert + 109 ) =  903
+      typid  ( ninert + 109 ) =  903
+      type   ( ninert + 109 ) =  pck
 
-      NAME   ( NINERT + 110 ) =  'IAU_RYUGU'
-      IDCODE ( NINERT + 110 ) =  10110
-      CENTER ( NINERT + 110 ) =  2162173
-      TYPID  ( NINERT + 110 ) =  2162173
-      TYPE   ( NINERT + 110 ) =  PCK
+      name   ( ninert + 110 ) =  'IAU_RYUGU'
+      idcode ( ninert + 110 ) =  10110
+      center ( ninert + 110 ) =  2162173
+      typid  ( ninert + 110 ) =  2162173
+      type   ( ninert + 110 ) =  pck
 
-      NAME   ( NINERT + 111 ) =  'IAU_ARROKOTH'
-      IDCODE ( NINERT + 111 ) =  10111
-      CENTER ( NINERT + 111 ) =  2486958
-      TYPID  ( NINERT + 111 ) =  2486958
-      TYPE   ( NINERT + 111 ) =  PCK
+      name   ( ninert + 111 ) =  'IAU_ARROKOTH'
+      idcode ( ninert + 111 ) =  10111
+      center ( ninert + 111 ) =  2486958
+      typid  ( ninert + 111 ) =  2486958
+      type   ( ninert + 111 ) =  pck
 
-      NAME   ( NINERT + 112 ) =  'IAU_DIDYMOS_BARYCENTER'
-      IDCODE ( NINERT + 112 ) =  10112
-      CENTER ( NINERT + 112 ) =  20065803
-      TYPID  ( NINERT + 112 ) =  20065803
-      TYPE   ( NINERT + 112 ) =  PCK
+      name   ( ninert + 112 ) =  'IAU_DIDYMOS_BARYCENTER'
+      idcode ( ninert + 112 ) =  10112
+      center ( ninert + 112 ) =  20065803
+      typid  ( ninert + 112 ) =  20065803
+      type   ( ninert + 112 ) =  pck
 
-      NAME   ( NINERT + 113 ) =  'IAU_DIDYMOS'
-      IDCODE ( NINERT + 113 ) =  10113
-      CENTER ( NINERT + 113 ) =  920065803
-      TYPID  ( NINERT + 113 ) =  920065803
-      TYPE   ( NINERT + 113 ) =  PCK
+      name   ( ninert + 113 ) =  'IAU_DIDYMOS'
+      idcode ( ninert + 113 ) =  10113
+      center ( ninert + 113 ) =  920065803
+      typid  ( ninert + 113 ) =  920065803
+      type   ( ninert + 113 ) =  pck
 
-      NAME   ( NINERT + 114 ) =  'IAU_DIMORPHOS'
-      IDCODE ( NINERT + 114 ) =  10114
-      CENTER ( NINERT + 114 ) =  120065803
-      TYPID  ( NINERT + 114 ) =  120065803
-      TYPE   ( NINERT + 114 ) =  PCK
+      name   ( ninert + 114 ) =  'IAU_DIMORPHOS'
+      idcode ( ninert + 114 ) =  10114
+      center ( ninert + 114 ) =  120065803
+      typid  ( ninert + 114 ) =  120065803
+      type   ( ninert + 114 ) =  pck
 
-      NAME   ( NINERT + 115 ) =  'IAU_DONALDJOHANSON'
-      IDCODE ( NINERT + 115 ) =  10115
-      CENTER ( NINERT + 115 ) =  20052246
-      TYPID  ( NINERT + 115 ) =  20052246
-      TYPE   ( NINERT + 115 ) =  PCK
+      name   ( ninert + 115 ) =  'IAU_DONALDJOHANSON'
+      idcode ( ninert + 115 ) =  10115
+      center ( ninert + 115 ) =  20052246
+      typid  ( ninert + 115 ) =  20052246
+      type   ( ninert + 115 ) =  pck
 
-      NAME   ( NINERT + 116 ) =  'IAU_EURYBATES'
-      IDCODE ( NINERT + 116 ) =  10116
-      CENTER ( NINERT + 116 ) =  920003548
-      TYPID  ( NINERT + 116 ) =  920003548
-      TYPE   ( NINERT + 116 ) =  PCK
+      name   ( ninert + 116 ) =  'IAU_EURYBATES'
+      idcode ( ninert + 116 ) =  10116
+      center ( ninert + 116 ) =  920003548
+      typid  ( ninert + 116 ) =  920003548
+      type   ( ninert + 116 ) =  pck
 
-      NAME   ( NINERT + 117 ) =  'IAU_EURYBATES_BARYCENTER'
-      IDCODE ( NINERT + 117 ) =  10117
-      CENTER ( NINERT + 117 ) =  20003548
-      TYPID  ( NINERT + 117 ) =  20003548
-      TYPE   ( NINERT + 117 ) =  PCK
+      name   ( ninert + 117 ) =  'IAU_EURYBATES_BARYCENTER'
+      idcode ( ninert + 117 ) =  10117
+      center ( ninert + 117 ) =  20003548
+      typid  ( ninert + 117 ) =  20003548
+      type   ( ninert + 117 ) =  pck
 
-      NAME   ( NINERT + 118 ) =  'IAU_QUETA'
-      IDCODE ( NINERT + 118 ) =  10118
-      CENTER ( NINERT + 118 ) =  120003548
-      TYPID  ( NINERT + 118 ) =  120003548
-      TYPE   ( NINERT + 118 ) =  PCK
+      name   ( ninert + 118 ) =  'IAU_QUETA'
+      idcode ( ninert + 118 ) =  10118
+      center ( ninert + 118 ) =  120003548
+      typid  ( ninert + 118 ) =  120003548
+      type   ( ninert + 118 ) =  pck
 
-      NAME   ( NINERT + 119 ) =  'IAU_POLYMELE'
-      IDCODE ( NINERT + 119 ) =  10119
-      CENTER ( NINERT + 119 ) =  20015094
-      TYPID  ( NINERT + 119 ) =  20015094
-      TYPE   ( NINERT + 119 ) =  PCK
+      name   ( ninert + 119 ) =  'IAU_POLYMELE'
+      idcode ( ninert + 119 ) =  10119
+      center ( ninert + 119 ) =  20015094
+      typid  ( ninert + 119 ) =  20015094
+      type   ( ninert + 119 ) =  pck
 
-      NAME   ( NINERT + 120 ) =  'IAU_LEUCUS'
-      IDCODE ( NINERT + 120 ) =  10120
-      CENTER ( NINERT + 120 ) =  20011351
-      TYPID  ( NINERT + 120 ) =  20011351
-      TYPE   ( NINERT + 120 ) =  PCK
+      name   ( ninert + 120 ) =  'IAU_LEUCUS'
+      idcode ( ninert + 120 ) =  10120
+      center ( ninert + 120 ) =  20011351
+      typid  ( ninert + 120 ) =  20011351
+      type   ( ninert + 120 ) =  pck
 
-      NAME   ( NINERT + 121 ) =  'IAU_ORUS'
-      IDCODE ( NINERT + 121 ) =  10121
-      CENTER ( NINERT + 121 ) =  20021900
-      TYPID  ( NINERT + 121 ) =  20021900
-      TYPE   ( NINERT + 121 ) =  PCK
+      name   ( ninert + 121 ) =  'IAU_ORUS'
+      idcode ( ninert + 121 ) =  10121
+      center ( ninert + 121 ) =  20021900
+      typid  ( ninert + 121 ) =  20021900
+      type   ( ninert + 121 ) =  pck
 
-      NAME   ( NINERT + 122 ) =  'IAU_PATROCLUS_BARYCENTER'
-      IDCODE ( NINERT + 122 ) =  10122
-      CENTER ( NINERT + 122 ) =  20000617
-      TYPID  ( NINERT + 122 ) =  20000617
-      TYPE   ( NINERT + 122 ) =  PCK
+      name   ( ninert + 122 ) =  'IAU_PATROCLUS_BARYCENTER'
+      idcode ( ninert + 122 ) =  10122
+      center ( ninert + 122 ) =  20000617
+      typid  ( ninert + 122 ) =  20000617
+      type   ( ninert + 122 ) =  pck
 
-      NAME   ( NINERT + 123 ) =  'IAU_PATROCLUS'
-      IDCODE ( NINERT + 123 ) =  10123
-      CENTER ( NINERT + 123 ) =  920000617
-      TYPID  ( NINERT + 123 ) =  920000617
-      TYPE   ( NINERT + 123 ) =  PCK
+      name   ( ninert + 123 ) =  'IAU_PATROCLUS'
+      idcode ( ninert + 123 ) =  10123
+      center ( ninert + 123 ) =  920000617
+      typid  ( ninert + 123 ) =  920000617
+      type   ( ninert + 123 ) =  pck
 
-      NAME   ( NINERT + 124 ) =  'IAU_MENOETIUS'
-      IDCODE ( NINERT + 124 ) =  10124
-      CENTER ( NINERT + 124 ) =  120000617
-      TYPID  ( NINERT + 124 ) =  120000617
-      TYPE   ( NINERT + 124 ) =  PCK
+      name   ( ninert + 124 ) =  'IAU_MENOETIUS'
+      idcode ( ninert + 124 ) =  10124
+      center ( ninert + 124 ) =  120000617
+      typid  ( ninert + 124 ) =  120000617
+      type   ( ninert + 124 ) =  pck
 
 !
 !     Below is a template to use for adding another non-inertial
@@ -1245,27 +1245,27 @@
 !
 !     Generate order vector for centers (used by CIDFRM).
 !
-      CALL ORDERI ( CENTER, NNAMES, CENTRD )
+      call orderi ( center, nnames, centrd )
 
 !
 !     Initialize build-in frame name- and ID-based hashes.
 !
-      CALL ZZHSCINI ( MAXBFR, BNMLST, BNMPOL )
-      CALL ZZHSIINI ( MAXBFR, BIDLST, BIDPOL )
+      call zzhscini ( maxbfr, bnmlst, bnmpol )
+      call zzhsiini ( maxbfr, bidlst, bidpol )
 
 !
 !     Register all built-in frames in the frame name- and ID-based
 !     hashes.
 !
-      DO I = 1, NNAMES
+      do i = 1, nnames
 
-         CALL ZZHSCADD ( BNMLST, BNMPOL, BNMNMS, NAME(I),   ITEM, NEW )
-         BNMIDX( ITEM ) = I
+         call zzhscadd ( bnmlst, bnmpol, bnmnms, name(i),   item, new )
+         bnmidx( item ) = i
 
-         CALL ZZHSIADD ( BIDLST, BIDPOL, BIDIDS, IDCODE(I), ITEM, NEW )
-         BIDIDX( ITEM ) = I
+         call zzhsiadd ( bidlst, bidpol, bidids, idcode(i), item, new )
+         bididx( item ) = i
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

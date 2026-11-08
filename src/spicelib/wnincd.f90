@@ -1,6 +1,6 @@
 !$Procedure WNINCD ( Included in a double precision window )
 
-      LOGICAL FUNCTION WNINCD ( LEFT, RIGHT, WINDOW )
+      logical function wnincd ( left, right, window )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      DOUBLE PRECISION      WINDOW      ( LBCELL:* )
+      double precision      left
+      double precision      right
+      double precision      window      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -150,14 +150,14 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
+      integer               card
+      integer               i
 
 
 
@@ -165,34 +165,34 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         WNINCD = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNINCD' )
-      END IF
+      if ( return () ) then
+         wnincd = .false.
+         return
+      else
+         call chkin ( 'WNINCD' )
+      end if
 
 !
 !     How many endpoints in the window?
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Check this interval agains every interval in the window.
 !     Inefficient, but foolproof.
 !
-      DO I = 1, CARD, 2
+      do i = 1, card, 2
 
-         IF ( LEFT .GE. WINDOW(I)  .AND.  RIGHT .LE. WINDOW(I+1) ) THEN
-            WNINCD = .TRUE.
-            CALL CHKOUT ( 'WNINCD' )
-            RETURN
-         END IF
+         if ( left .ge. window(i)  .and.  right .le. window(i+1) ) then
+            wnincd = .true.
+            call chkout ( 'WNINCD' )
+            return
+         end if
 
-      END DO
+      end do
 
-      WNINCD = .FALSE.
+      wnincd = .false.
 
-      CALL CHKOUT ( 'WNINCD' )
-      RETURN
-      END
+      call chkout ( 'WNINCD' )
+      return
+      end

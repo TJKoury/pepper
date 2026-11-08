@@ -1,6 +1,6 @@
 !$Procedure LX4UNS (Scan for unsigned integer)
 
-      SUBROUTINE LX4UNS ( STRING, FIRST, LAST, NCHAR )
+      subroutine lx4uns ( string, first, last, nchar )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NCHAR
+      character*(*)         string
+      integer               first
+      integer               last
+      integer               nchar
 
 ! $ Brief_I/O
 !
@@ -155,87 +155,87 @@
 !
 !     Local parameters
 !
-      INTEGER               MAXC
-      PARAMETER           ( MAXC    =   255 )
+      integer               maxc
+      parameter           ( maxc    =   255 )
 
-      INTEGER               MINC
-      PARAMETER           ( MINC    =  -128 )
+      integer               minc
+      parameter           ( minc    =  -128 )
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               L
+      integer               i
+      integer               l
 
-      LOGICAL               DIGIT ( MINC : MAXC )
-      LOGICAL               DOINIT
+      logical               digit ( minc : maxc )
+      logical               doinit
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  DOINIT / .TRUE. /
+      data                  doinit / .true. /
 
 !
 !     First we perform some initializations that are needed on
 !     each pass through this routine.
 !
-      IF ( DOINIT ) THEN
+      if ( doinit ) then
 
-         DOINIT = .FALSE.
+         doinit = .false.
 
-         DO I = MINC, MAXC
-            DIGIT(I)  = .FALSE.
-         END DO
+         do i = minc, maxc
+            digit(i)  = .false.
+         end do
 
-         DIGIT(ICHAR('0')) = .TRUE.
-         DIGIT(ICHAR('1')) = .TRUE.
-         DIGIT(ICHAR('2')) = .TRUE.
-         DIGIT(ICHAR('3')) = .TRUE.
-         DIGIT(ICHAR('4')) = .TRUE.
-         DIGIT(ICHAR('5')) = .TRUE.
-         DIGIT(ICHAR('6')) = .TRUE.
-         DIGIT(ICHAR('7')) = .TRUE.
-         DIGIT(ICHAR('8')) = .TRUE.
-         DIGIT(ICHAR('9')) = .TRUE.
+         digit(ichar('0')) = .true.
+         digit(ichar('1')) = .true.
+         digit(ichar('2')) = .true.
+         digit(ichar('3')) = .true.
+         digit(ichar('4')) = .true.
+         digit(ichar('5')) = .true.
+         digit(ichar('6')) = .true.
+         digit(ichar('7')) = .true.
+         digit(ichar('8')) = .true.
+         digit(ichar('9')) = .true.
 
-      END IF
+      end if
 
 
-      LAST  = FIRST - 1
-      L     = LEN ( STRING )
+      last  = first - 1
+      l     = len ( string )
 
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      IF ( FIRST .LT. 1 .OR. FIRST .GT. L ) THEN
-         NCHAR = 0
-         RETURN
-      END IF
+      if ( first .lt. 1 .or. first .gt. l ) then
+         nchar = 0
+         return
+      end if
 
 !
 !     Now for the real work of the routine. Examine characters one
 !     at a time...
 !
-      DO I = FIRST, L
+      do i = first, l
 
 !
 !        If this character is a digit, move the LAST pointer one
 !        further down on the string.  Otherwise set NCHAR and return.
 !
-         IF ( DIGIT(ICHAR(STRING(I:I))) ) THEN
-            LAST  = LAST + 1
-         ELSE
-            NCHAR = LAST + 1 - FIRST
-            RETURN
-         END IF
-      END DO
+         if ( digit(ichar(string(i:i))) ) then
+            last  = last + 1
+         else
+            nchar = last + 1 - first
+            return
+         end if
+      end do
 
-      NCHAR = LAST + 1 - FIRST
+      nchar = last + 1 - first
 
-      RETURN
-      END
+      return
+      end

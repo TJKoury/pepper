@@ -1,6 +1,6 @@
 !$Procedure BLTFRM ( Built-in frame IDs )
 
-      SUBROUTINE BLTFRM ( FRMCLS, IDSET )
+      subroutine bltfrm ( frmcls, idset )
 
 ! $ Abstract
 !
@@ -22,17 +22,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'frmtyp.inc'
-      INCLUDE 'ninert.inc'
-      INCLUDE 'nninrt.inc'
+      include 'frmtyp.inc'
+      include 'ninert.inc'
+      include 'nninrt.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               FRMCLS
-      INTEGER               IDSET  ( LBCELL : * )
+      integer               frmcls
+      integer               idset  ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -305,55 +305,55 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZEI
+      integer               sizei
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NFRAME
-      PARAMETER           ( NFRAME = NINERT + NNINRT )
+      integer               nframe
+      parameter           ( nframe = ninert + nninrt )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FRNAME ( NFRAME )
+      character*(frnmln)    frname ( nframe )
 
-      INTEGER               CTRORD ( NFRAME )
-      INTEGER               CENTER ( NFRAME )
-      INTEGER               CORDER ( NFRAME )
-      INTEGER               FCLASS ( NFRAME )
-      INTEGER               FCLSID ( NFRAME )
-      INTEGER               FCODE  ( NFRAME )
-      INTEGER               I
-      INTEGER               J
-      INTEGER               TO
+      integer               ctrord ( nframe )
+      integer               center ( nframe )
+      integer               corder ( nframe )
+      integer               fclass ( nframe )
+      integer               fclsid ( nframe )
+      integer               fcode  ( nframe )
+      integer               i
+      integer               j
+      integer               to
 
-      LOGICAL               PASS1
+      logical               pass1
 
 !
 !     Built-in frame hashes returned by ZZFDAT.
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               MAXBFR
-      PARAMETER           ( MAXBFR = NFRAME+1 )
+      integer               maxbfr
+      parameter           ( maxbfr = nframe+1 )
 
-      INTEGER               BNMLST  (          MAXBFR )
-      INTEGER               BNMPOL  ( LBPOOL : MAXBFR )
-      CHARACTER*(FRNMLN)    BNMNMS  (          MAXBFR )
-      INTEGER               BNMIDX  (          MAXBFR )
+      integer               bnmlst  (          maxbfr )
+      integer               bnmpol  ( lbpool : maxbfr )
+      character*(frnmln)    bnmnms  (          maxbfr )
+      integer               bnmidx  (          maxbfr )
 
-      INTEGER               BIDLST  (          MAXBFR )
-      INTEGER               BIDPOL  ( LBPOOL : MAXBFR )
-      INTEGER               BIDIDS  (          MAXBFR )
-      INTEGER               BIDIDX  (          MAXBFR )
+      integer               bidlst  (          maxbfr )
+      integer               bidpol  ( lbpool : maxbfr )
+      integer               bidids  (          maxbfr )
+      integer               bididx  (          maxbfr )
 
 !
 !     Saved variables
@@ -362,107 +362,107 @@
 !     Save all variables in order to avoid problems
 !     in code translated by f2c.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  PASS1 / .TRUE. /
+      data                  pass1 / .true. /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'BLTFRM' )
+      call chkin ( 'BLTFRM' )
 !
 !     The output set starts out empty.
 !
-      CALL SCARDI ( 0, IDSET )
+      call scardi ( 0, idset )
 
 !
 !     On the first pass, fetch all data for the
 !     built-in frames.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL ZZFDAT ( NFRAME, MAXBFR, FRNAME, FCODE, &
-                       CENTER, FCLASS, FCLSID, CTRORD, &
-                       BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                       BIDLST, BIDPOL, BIDIDS, BIDIDX )
+         call zzfdat ( nframe, maxbfr, frname, fcode, &
+                       center, fclass, fclsid, ctrord, &
+                       bnmlst, bnmpol, bnmnms, bnmidx, &
+                       bidlst, bidpol, bidids, bididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'BLTFRM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'BLTFRM' )
+            return
+         end if
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Check the input frame class.
 !
 !     This block of code must be kept in sync with frmtyp.inc.
 !
-      IF  (      ( FRMCLS .GT. SWTCH ) &
-            .OR. ( FRMCLS .EQ. 0   ) &
-            .OR. ( FRMCLS .LT. ALL )  ) THEN
+      if  (      ( frmcls .gt. swtch ) &
+            .or. ( frmcls .eq. 0   ) &
+            .or. ( frmcls .lt. all )  ) then
 
-         CALL SETMSG ( 'Frame class specifier FRMCLS was #; this ' &
+         call setmsg ( 'Frame class specifier FRMCLS was #; this ' &
          //            'value is not supported.'                  )
-         CALL ERRINT ( '#',  FRMCLS                               )
-         CALL SIGERR ( 'SPICE(BADFRAMECLASS)'                     )
-         CALL CHKOUT ( 'BLTFRM'                                   )
-         RETURN
+         call errint ( '#',  frmcls                               )
+         call sigerr ( 'SPICE(BADFRAMECLASS)'                     )
+         call chkout ( 'BLTFRM'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the set is large enough to hold all of
 !     the IDs of the built-in frames.
 !
-      IF ( SIZEI(IDSET) .LT. NFRAME ) THEN
+      if ( sizei(idset) .lt. nframe ) then
 
-         CALL SETMSG ( 'Frame ID set argument IDSET has size #; ' &
+         call setmsg ( 'Frame ID set argument IDSET has size #; ' &
          //            'required size is at least #.'           )
-         CALL ERRINT ( '#', SIZEI(IDSET)                        )
-         CALL ERRINT ( '#', NFRAME                              )
-         CALL SIGERR ( 'SPICE(SETTOOSMALL)'                     )
-         CALL CHKOUT ( 'BLTFRM'                                 )
-         RETURN
+         call errint ( '#', sizei(idset)                        )
+         call errint ( '#', nframe                              )
+         call sigerr ( 'SPICE(SETTOOSMALL)'                     )
+         call chkout ( 'BLTFRM'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Transfer ID codes of all frames of the specified class
 !     to the output set. First, generate an order vector for
 !     the ID codes.
 !
-      CALL ORDERI ( FCODE, NFRAME, CORDER )
+      call orderi ( fcode, nframe, corder )
 
-      TO = 0
+      to = 0
 
-      DO I = 1, NFRAME
+      do i = 1, nframe
 !
 !        Get the index J in the parallel data arrays of
 !        the Ith frame, ordered by ID code.
 !
-         J = CORDER(I)
+         j = corder(i)
 
-         IF (      ( FCLASS(J) .EQ. FRMCLS ) &
-              .OR. ( FRMCLS    .EQ. ALL    )  ) THEN
+         if (      ( fclass(j) .eq. frmcls ) &
+              .or. ( frmcls    .eq. all    )  ) then
 !
 !           The frame at index J belongs to the
 !           requested class. Append the frame's ID
 !           code to the set.
 !
-            TO        = TO + 1
-            IDSET(TO) = FCODE(J)
+            to        = to + 1
+            idset(to) = fcode(j)
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the cardinality of the output set.
@@ -471,8 +471,8 @@
 !     the elements is not necessary. We rely on ZZFDAT to not give us
 !     duplicate frame specifications.
 !
-      CALL SCARDI ( TO, IDSET )
+      call scardi ( to, idset )
 
-      CALL CHKOUT ( 'BLTFRM' )
-      RETURN
-      END
+      call chkout ( 'BLTFRM' )
+      return
+      end

@@ -33,71 +33,71 @@
 !
 !     Parameters supporting METHOD string parsing:
 !
-      INTEGER               DSKSHP
-      PARAMETER           ( DSKSHP = 2 )
+      integer               dskshp
+      parameter           ( dskshp = 2 )
 
-      INTEGER               ELLSHP
-      PARAMETER           ( ELLSHP = 1 )
+      integer               ellshp
+      parameter           ( ellshp = 1 )
 
 !
 !     Local method length.
 !
-      INTEGER               MTHLEN
-      PARAMETER           ( MTHLEN = 500 )
+      integer               mthlen
+      parameter           ( mthlen = 500 )
 
 !
 !     Length of sub-point type string.
 !
-      INTEGER               SUBLEN
-      PARAMETER           ( SUBLEN = 20 )
+      integer               sublen
+      parameter           ( sublen = 20 )
 
 !
 !     Length of curve type string.
 !
-      INTEGER               CVTLEN
-      PARAMETER           ( CVTLEN = 20 )
+      integer               cvtlen
+      parameter           ( cvtlen = 20 )
 
 !
 !     Limb type parameter codes.
 !
-      INTEGER               TANGNT
-      PARAMETER           ( TANGNT = 1 )
+      integer               tangnt
+      parameter           ( tangnt = 1 )
 
-      INTEGER               GUIDED
-      PARAMETER           ( GUIDED = 2 )
+      integer               guided
+      parameter           ( guided = 2 )
 
 !
 !     Length of terminator type string.
 !
-      INTEGER               TMTLEN
-      PARAMETER           ( TMTLEN = 20 )
+      integer               tmtlen
+      parameter           ( tmtlen = 20 )
 
 !
 !     Terminator type and limb parameter codes.
 !
-      INTEGER               LMBCRV
-      PARAMETER           ( LMBCRV = 0 )
+      integer               lmbcrv
+      parameter           ( lmbcrv = 0 )
 
-      INTEGER               UMBRAL
-      PARAMETER           ( UMBRAL = 1 )
+      integer               umbral
+      parameter           ( umbral = 1 )
 
-      INTEGER               PNMBRL
-      PARAMETER           ( PNMBRL = 2 )
+      integer               pnmbrl
+      parameter           ( pnmbrl = 2 )
 
 !
 !     Length of aberration correction locus string.
 !
-      INTEGER               ACLLEN
-      PARAMETER           ( ACLLEN = 25 )
+      integer               acllen
+      parameter           ( acllen = 25 )
 
 !
 !     Aberration correction locus codes.
 !
-      INTEGER               CTRCOR
-      PARAMETER           ( CTRCOR = 1 )
+      integer               ctrcor
+      parameter           ( ctrcor = 1 )
 
-      INTEGER               ELLCOR
-      PARAMETER           ( ELLCOR = 2 )
+      integer               ellcor
+      parameter           ( ellcor = 2 )
 
 !
 !     End of include file zzdsk.inc

@@ -1,8 +1,8 @@
 !$Procedure ZZSRFKER ( Surface translation, process kernel update )
 
-      SUBROUTINE ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                            EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                            SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+      subroutine zzsrfker ( kernam, nornam, kersid, kerbid, &
+                            extker, nkvar,  snmhls, snmpol, &
+                            snmidx, sidhls, sidpol, sididx )
 
 ! $ Abstract
 !
@@ -24,23 +24,23 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'srftrn.inc'
-      INCLUDE              'zzsrftrn.inc'
+      include              'srftrn.inc'
+      include              'zzsrftrn.inc'
 
-      CHARACTER*(SFNMLN)    KERNAM (          * )
-      CHARACTER*(SFNMLN)    NORNAM (          * )
-      INTEGER               KERSID (          * )
-      INTEGER               KERBID (          * )
-      LOGICAL               EXTKER
-      INTEGER               NKVAR
-      INTEGER               SNMHLS (          * )
-      INTEGER               SNMPOL ( LBSNGL : * )
-      INTEGER               SNMIDX (          * )
-      INTEGER               SIDHLS (          * )
-      INTEGER               SIDPOL ( LBSNGL : * )
-      INTEGER               SIDIDX (          * )
+      character*(sfnmln)    kernam (          * )
+      character*(sfnmln)    nornam (          * )
+      integer               kersid (          * )
+      integer               kerbid (          * )
+      logical               extker
+      integer               nkvar
+      integer               snmhls (          * )
+      integer               snmpol ( lbsngl : * )
+      integer               snmidx (          * )
+      integer               sidhls (          * )
+      integer               sidpol ( lbsngl : * )
+      integer               sididx (          * )
 
 ! $ Brief_I/O
 !
@@ -211,63 +211,63 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         KVSFBD
-      PARAMETER           ( KVSFBD = 'NAIF_SURFACE_BODY' )
+      character*(*)         kvsfbd
+      parameter           ( kvsfbd = 'NAIF_SURFACE_BODY' )
 
-      CHARACTER*(*)         KVSFCD
-      PARAMETER           ( KVSFCD = 'NAIF_SURFACE_CODE' )
+      character*(*)         kvsfcd
+      parameter           ( kvsfcd = 'NAIF_SURFACE_CODE' )
 
-      CHARACTER*(*)         KVSFNM
-      PARAMETER           ( KVSFNM = 'NAIF_SURFACE_NAME' )
+      character*(*)         kvsfnm
+      parameter           ( kvsfnm = 'NAIF_SURFACE_NAME' )
 
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN = 32 )
+      integer               kvnmln
+      parameter           ( kvnmln = 32 )
 
-      INTEGER               NNAMES
-      PARAMETER           ( NNAMES = 3 )
+      integer               nnames
+      parameter           ( nnames = 3 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         BDTYPE
-      CHARACTER*(1)         CDTYPE
-      CHARACTER*(1)         NDTYPE
-      CHARACTER*(KVNMLN)    NAMES  ( NNAMES )
+      character*(1)         bdtype
+      character*(1)         cdtype
+      character*(1)         ndtype
+      character*(kvnmln)    names  ( nnames )
 
-      INTEGER               I
-      INTEGER               NBODY
-      INTEGER               NCODE
-      INTEGER               NNAME
+      integer               i
+      integer               nbody
+      integer               ncode
+      integer               nname
 
-      LOGICAL               PASS1
-      LOGICAL               FNDBOD
-      LOGICAL               FNDCDE
-      LOGICAL               FNDNAM
+      logical               pass1
+      logical               fndbod
+      logical               fndcde
+      logical               fndnam
 
 
 !
 !     Saved variables
 !
-      SAVE                  PASS1
+      save                  pass1
 
 !
 !     Initial values
 !
-      DATA                  PASS1 / .TRUE. /
-      DATA                  NAMES / KVSFBD, KVSFCD, KVSFNM /
+      data                  pass1 / .true. /
+      data                  names / kvsfbd, kvsfcd, kvsfnm /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSRFKER' )
+      call chkin ( 'ZZSRFKER' )
 
 !
 !     The primary functions performed inline in this routine are
@@ -281,90 +281,90 @@
 !          structures is delegated to ZZSRFINI.
 !
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Set watch on kernel variables used for the surface mapping.
 !
-         CALL SWPOOL ( 'ZZSRFTRN', NNAMES, NAMES )
+         call swpool ( 'ZZSRFTRN', nnames, names )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSRFKER' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSRFKER' )
+            return
+         end if
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Indicate that no data are available until we find out
 !     otherwise.
 !
-      EXTKER = .FALSE.
-      NKVAR  =  0
+      extker = .false.
+      nkvar  =  0
 
 !
 !     Fetch attributes of the surface mapping kernel variables.
 !
-      CALL DTPOOL ( KVSFNM, FNDNAM, NNAME, NDTYPE )
-      CALL DTPOOL ( KVSFCD, FNDCDE, NCODE, CDTYPE )
-      CALL DTPOOL ( KVSFBD, FNDBOD, NBODY, BDTYPE )
+      call dtpool ( kvsfnm, fndnam, nname, ndtype )
+      call dtpool ( kvsfcd, fndcde, ncode, cdtype )
+      call dtpool ( kvsfbd, fndbod, nbody, bdtype )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSRFKER' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSRFKER' )
+         return
+      end if
 
 !
 !     The variables must all be present or all be absent.
 !
-      IF ( ( FNDCDE .NEQV. FNDNAM ) .OR. ( FNDBOD .NEQV. FNDNAM ) ) THEN
+      if ( ( fndcde .neqv. fndnam ) .or. ( fndbod .neqv. fndnam ) ) then
 
-         CALL SETMSG ( 'Surface mapping kernel variables are in an ' &
+         call setmsg ( 'Surface mapping kernel variables are in an ' &
          //            'inconsistent state. # was #; # was #; # ' &
          //            'was #.'                                      )
 
-         CALL ERRCH  ( '#', KVSFNM )
+         call errch  ( '#', kvsfnm )
 
-         IF ( FNDNAM ) THEN
-            CALL ERRCH ( '#', 'found' )
-         ELSE
-            CALL ERRCH ( '#', 'not found' )
-         END IF
-
-
-         CALL ERRCH  ( '#', KVSFCD )
-
-         IF ( FNDCDE ) THEN
-            CALL ERRCH ( '#', 'found' )
-         ELSE
-            CALL ERRCH ( '#', 'not found' )
-         END IF
+         if ( fndnam ) then
+            call errch ( '#', 'found' )
+         else
+            call errch ( '#', 'not found' )
+         end if
 
 
-         CALL ERRCH  ( '#', KVSFBD )
+         call errch  ( '#', kvsfcd )
 
-         IF ( FNDBOD ) THEN
-            CALL ERRCH ( '#', 'found' )
-         ELSE
-            CALL ERRCH ( '#', 'not found' )
-         END IF
+         if ( fndcde ) then
+            call errch ( '#', 'found' )
+         else
+            call errch ( '#', 'not found' )
+         end if
 
-         CALL SIGERR ( 'SPICE(BADSURFACEMAP)' )
-         CALL CHKOUT ( 'ZZSRFKER'             )
-         RETURN
 
-      END IF
+         call errch  ( '#', kvsfbd )
+
+         if ( fndbod ) then
+            call errch ( '#', 'found' )
+         else
+            call errch ( '#', 'not found' )
+         end if
+
+         call sigerr ( 'SPICE(BADSURFACEMAP)' )
+         call chkout ( 'ZZSRFKER'             )
+         return
+
+      end if
 
 !
 !     If the variables are not present, leave now.
 !
-      EXTKER = FNDNAM .AND. FNDCDE .AND. FNDBOD
+      extker = fndnam .and. fndcde .and. fndbod
 
-      IF ( .NOT. EXTKER ) THEN
-         CALL CHKOUT ( 'ZZSRFKER' )
-         RETURN
-      END IF
+      if ( .not. extker ) then
+         call chkout ( 'ZZSRFKER' )
+         return
+      end if
 
 !
 !     Make sure the kernel variables aren't larger than our arrays.
@@ -372,112 +372,112 @@
 !
 !     Check variable types.
 !
-      IF (     ( NDTYPE .NE. 'C' ) &
-          .OR. ( CDTYPE .NE. 'N' ) &
-          .OR. ( BDTYPE .NE. 'N' ) ) THEN
+      if (     ( ndtype .ne. 'C' ) &
+          .or. ( cdtype .ne. 'N' ) &
+          .or. ( bdtype .ne. 'N' ) ) then
 
-         CALL SETMSG ( 'Surface mapping kernel variable types ' &
+         call setmsg ( 'Surface mapping kernel variable types ' &
          //            'are: # = #; # = #; # = #. These types ' &
          //            'must be, respectively, ''C'', ''N'', ' &
          //            '''N''.'                                )
-         CALL ERRCH  ( '#', KVSFNM                             )
-         CALL ERRCH  ( '#', NDTYPE                             )
-         CALL ERRCH  ( '#', KVSFCD                             )
-         CALL ERRCH  ( '#', CDTYPE                             )
-         CALL ERRCH  ( '#', KVSFBD                             )
-         CALL ERRCH  ( '#', BDTYPE                             )
-         CALL SIGERR ( 'SPICE(BADVARIABLETYPE)'                )
-         CALL CHKOUT ( 'ZZSRFKER'                              )
-         RETURN
+         call errch  ( '#', kvsfnm                             )
+         call errch  ( '#', ndtype                             )
+         call errch  ( '#', kvsfcd                             )
+         call errch  ( '#', cdtype                             )
+         call errch  ( '#', kvsfbd                             )
+         call errch  ( '#', bdtype                             )
+         call sigerr ( 'SPICE(BADVARIABLETYPE)'                )
+         call chkout ( 'ZZSRFKER'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Check variable dimensions.
 !
-      IF (     ( NNAME .GT. MXNSRF ) &
-          .OR. ( NCODE .GT. MXNSRF ) &
-          .OR. ( NBODY .GT. MXNSRF ) ) THEN
+      if (     ( nname .gt. mxnsrf ) &
+          .or. ( ncode .gt. mxnsrf ) &
+          .or. ( nbody .gt. mxnsrf ) ) then
 
-         CALL SETMSG ( 'Surface mapping kernel variable sizes ' &
+         call setmsg ( 'Surface mapping kernel variable sizes ' &
          //            'are: # = #; # = #; # = #. Maximum ' &
          //            'allowed size is #.'                    )
-         CALL ERRCH  ( '#', KVSFNM                             )
-         CALL ERRINT ( '#', NNAME                              )
-         CALL ERRCH  ( '#', KVSFCD                             )
-         CALL ERRINT ( '#', NCODE                              )
-         CALL ERRCH  ( '#', KVSFBD                             )
-         CALL ERRINT ( '#', NBODY                              )
-         CALL ERRINT ( '#', MXNSRF                             )
-         CALL SIGERR ( 'SPICE(TOOMANYSURFACES)'                )
-         CALL CHKOUT ( 'ZZSRFKER'                              )
-         RETURN
+         call errch  ( '#', kvsfnm                             )
+         call errint ( '#', nname                              )
+         call errch  ( '#', kvsfcd                             )
+         call errint ( '#', ncode                              )
+         call errch  ( '#', kvsfbd                             )
+         call errint ( '#', nbody                              )
+         call errint ( '#', mxnsrf                             )
+         call sigerr ( 'SPICE(TOOMANYSURFACES)'                )
+         call chkout ( 'ZZSRFKER'                              )
+         return
 
-      END IF
+      end if
 
-      IF (  ( NCODE .NE. NNAME ) .OR. ( NBODY .NE. NNAME )  ) THEN
+      if (  ( ncode .ne. nname ) .or. ( nbody .ne. nname )  ) then
 
-         CALL SETMSG ( 'Surface variable sizes do not match. Size ' &
+         call setmsg ( 'Surface variable sizes do not match. Size ' &
          //            'of # is #; size of # is #; size of # is #.'  )
-         CALL ERRCH  ( '#', KVSFNM                                   )
-         CALL ERRINT ( '#', NNAME                                    )
-         CALL ERRCH  ( '#', KVSFCD                                   )
-         CALL ERRINT ( '#', NCODE                                    )
-         CALL ERRCH  ( '#', KVSFBD                                   )
-         CALL ERRINT ( '#', NBODY                                    )
-         CALL SIGERR ( 'SPICE(ARRAYSIZEMISMATCH)'                    )
-         CALL CHKOUT ( 'ZZSRFKER'                                    )
-         RETURN
+         call errch  ( '#', kvsfnm                                   )
+         call errint ( '#', nname                                    )
+         call errch  ( '#', kvsfcd                                   )
+         call errint ( '#', ncode                                    )
+         call errch  ( '#', kvsfbd                                   )
+         call errint ( '#', nbody                                    )
+         call sigerr ( 'SPICE(ARRAYSIZEMISMATCH)'                    )
+         call chkout ( 'ZZSRFKER'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Fetch mapping variables.
 !
 !     Note that we'll check the variable sizes below.
 !
-      CALL GCPOOL ( KVSFNM, 1, MXNSRF, NNAME, KERNAM, FNDNAM )
-      CALL GIPOOL ( KVSFCD, 1, MXNSRF, NCODE, KERSID, FNDCDE )
-      CALL GIPOOL ( KVSFBD, 1, MXNSRF, NBODY, KERBID, FNDBOD )
+      call gcpool ( kvsfnm, 1, mxnsrf, nname, kernam, fndnam )
+      call gipool ( kvsfcd, 1, mxnsrf, ncode, kersid, fndcde )
+      call gipool ( kvsfbd, 1, mxnsrf, nbody, kerbid, fndbod )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSRFKER' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSRFKER' )
+         return
+      end if
 
 
-      NKVAR = NNAME
+      nkvar = nname
 
 !
 !     Produce normalized name array. Check for blank names
 !     as we go.
 !
-      DO I = 1, NKVAR
+      do i = 1, nkvar
 
-         IF ( KERNAM(I) .EQ. ' ' ) THEN
+         if ( kernam(i) .eq. ' ' ) then
 
-            CALL SETMSG ( 'An attempt to assign the code, #, to ' &
+            call setmsg ( 'An attempt to assign the code, #, to ' &
             //            'a blank string was made.  Check loaded ' &
             //            'text kernels for a blank string in ' &
             //            'the NAIF_SURFACE_NAME array.'            )
-            CALL ERRINT ( '#', I                                    )
-            CALL SIGERR ( 'SPICE(BLANKNAMEASSIGNED)'                )
-            CALL CHKOUT ( 'ZZSRFKER'                                )
-            RETURN
+            call errint ( '#', i                                    )
+            call sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
+            call chkout ( 'ZZSRFKER'                                )
+            return
 
-         END IF
+         end if
 
-         CALL LJUCRS ( 1, KERNAM(I), NORNAM(I) )
+         call ljucrs ( 1, kernam(i), nornam(i) )
 
-      END DO
+      end do
 
 !
 !     Initialize hash data structures.
 !
-      CALL ZZSRFINI ( NORNAM, KERSID, KERBID, NKVAR, &
-                      NROOM,  SNMHLS, SNMPOL, SNMIDX, &
-                      SIDHLS, SIDPOL, SIDIDX         )
+      call zzsrfini ( nornam, kersid, kerbid, nkvar, &
+                      nroom,  snmhls, snmpol, snmidx, &
+                      sidhls, sidpol, sididx         )
 
-      CALL CHKOUT ( 'ZZSRFKER' )
-      RETURN
-      END
+      call chkout ( 'ZZSRFKER' )
+      return
+      end

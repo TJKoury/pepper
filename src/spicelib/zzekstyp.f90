@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSTYP ( EK, determine segment type )
 
-      INTEGER FUNCTION ZZEKSTYP ( NCOLS, CDSCRS )
+      integer function zzekstyp ( ncols, cdscrs )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekglimit.inc'
+      include 'ekcoldsc.inc'
+      include 'ekglimit.inc'
 
-      INTEGER               NCOLS
-      INTEGER               CDSCRS ( CDSCSZ, * )
+      integer               ncols
+      integer               cdscrs ( cdscsz, * )
 
 ! $ Brief_I/O
 !
@@ -104,73 +104,73 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
-      LOGICAL               FIXED
-      LOGICAL               VAR
+      logical               fixed
+      logical               var
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         ZZEKSTYP = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKSTYP' )
-      END IF
+      if ( return () ) then
+         zzekstyp = 0
+         return
+      else
+         call chkin ( 'ZZEKSTYP' )
+      end if
 
 !
 !     FIXED and VAR indicate whether we've seen any fixed or variable
 !     column classes so far.
 !
-      FIXED  =  .FALSE.
-      VAR    =  .FALSE.
+      fixed  =  .false.
+      var    =  .false.
 
-      DO I = 1, NCOLS
+      do i = 1, ncols
 
-         IF (       ( CDSCRS(CLSIDX,I) .GE. 1 ) &
-              .AND. ( CDSCRS(CLSIDX,I) .LE. 6 )  ) THEN
+         if (       ( cdscrs(clsidx,i) .ge. 1 ) &
+              .and. ( cdscrs(clsidx,i) .le. 6 )  ) then
 
-            VAR   = .TRUE.
+            var   = .true.
 
-         ELSE IF (       ( CDSCRS(CLSIDX,I) .GE. 7 ) &
-                   .AND. ( CDSCRS(CLSIDX,I) .LE. 9 )  ) THEN
+         else if (       ( cdscrs(clsidx,i) .ge. 7 ) &
+                   .and. ( cdscrs(clsidx,i) .le. 9 )  ) then
 
-            FIXED = .TRUE.
+            fixed = .true.
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      IF (  VAR  .AND. ( .NOT. FIXED )  ) THEN
+      if (  var  .and. ( .not. fixed )  ) then
 
-         ZZEKSTYP = 1
+         zzekstyp = 1
 
-      ELSE IF (  FIXED  .AND. ( .NOT. VAR )  ) THEN
+      else if (  fixed  .and. ( .not. var )  ) then
 
-         ZZEKSTYP = 2
+         zzekstyp = 2
 
-      ELSE
+      else
 
-         ZZEKSTYP = 0
+         zzekstyp = 0
 
-         CALL SETMSG ( 'Column set contains a mixture of variable ' // &
+         call setmsg ( 'Column set contains a mixture of variable ' // &
                        'and fixed-count columns.  Segments must '   // &
                        'contain all variable or all fixed count '   // &
                        'columns.'                                    )
-         CALL SIGERR ( 'SPICE(BADATTRIBUTES)'                        )
-         CALL CHKOUT ( 'ZZEKSTYP'                                    )
-         RETURN
+         call sigerr ( 'SPICE(BADATTRIBUTES)'                        )
+         call chkout ( 'ZZEKSTYP'                                    )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKSTYP' )
-      RETURN
-      END
+      call chkout ( 'ZZEKSTYP' )
+      return
+      end

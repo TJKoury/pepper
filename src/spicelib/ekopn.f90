@@ -1,6 +1,6 @@
 !$Procedure EKOPN ( EK, open new file )
 
-      SUBROUTINE EKOPN ( FNAME, IFNAME, NCOMCH, HANDLE )
+      subroutine ekopn ( fname, ifname, ncomch, handle )
 
 ! $ Abstract
 !
@@ -20,15 +20,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekfilpar.inc'
+      include 'ektype.inc'
+      include 'ekfilpar.inc'
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         IFNAME
-      INTEGER               NCOMCH
-      INTEGER               HANDLE
+      character*(*)         fname
+      character*(*)         ifname
+      integer               ncomch
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -321,91 +321,91 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
 !     Local parameters
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC    = 1024 )
+      integer               nwc
+      parameter           ( nwc    = 1024 )
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               NCR
-      INTEGER               P
+      integer               base
+      integer               ncr
+      integer               p
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKOPN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKOPN' )
+      end if
 
 !
 !     Check the comment character count.
 !
-      IF ( NCOMCH .LT. 0 ) THEN
+      if ( ncomch .lt. 0 ) then
 
-         CALL SETMSG ( 'The number of reserved comment characters ' // &
+         call setmsg ( 'The number of reserved comment characters ' // &
                        'must be non-negative but was #.'            )
-         CALL ERRINT ( '#',  NCOMCH                                 )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'EKOPN'                                      )
-         RETURN
+         call errint ( '#',  ncomch                                 )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+         call chkout ( 'EKOPN'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     A new DAS file is a must.  The file type is EK.
 !     Reserve enough comment records to accommodate the requested
 !     number of comment characters.
 !
-      NCR  =  ( NWC + NCOMCH - 1 ) / NWC
+      ncr  =  ( nwc + ncomch - 1 ) / nwc
 
-      CALL DASONW ( FNAME, 'EK', IFNAME, NCR, HANDLE )
+      call dasonw ( fname, 'EK', ifname, ncr, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKOPN' )
+         return
+      end if
 
 !
 !     Initialize the file for paged access.  The EK architecture
 !     code is automatically set by the paging initialization routine.
 !
-      CALL ZZEKPGIN ( HANDLE )
+      call zzekpgin ( handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKOPN' )
+         return
+      end if
 
 !
 !     Allocate the first integer page for the file's metadata.  We
 !     don't need to examine the page number; it's 1.
 !
-      CALL ZZEKPGAN ( HANDLE, INT, P, BASE )
+      call zzekpgan ( handle, int, p, base )
 
 !
 !     Initialize a new tree.  This tree will point to the file's
 !     segments.
 !
-      CALL ZZEKTRIT ( HANDLE, P )
+      call zzektrit ( handle, p )
 
 !
 !     Save the segment pointer's root page number.
 !
-      CALL DASUDI ( HANDLE, BASE+SGTIDX, BASE+SGTIDX, P )
+      call dasudi ( handle, base+sgtidx, base+sgtidx, p )
 
 !
 !     That's it.  We're ready to add data to the file.
 !
-      CALL CHKOUT ( 'EKOPN' )
-      RETURN
-      END
+      call chkout ( 'EKOPN' )
+      return
+      end

@@ -1,9 +1,9 @@
 !$Procedure ZZDSKSBA ( DSK, add entry to API segment buffer )
 
-      SUBROUTINE ZZDSKSBA ( BODYID, &
-                            MAXBOD, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                            BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                            STOFF,  STCTR,  STRAD                  )
+      subroutine zzdsksba ( bodyid, &
+                            maxbod, stsize, btbody, btnbod, btsegp, &
+                            btstsz, sthan,  stdscr, stdlad, stfree, &
+                            stoff,  stctr,  strad                  )
 
 ! $ Abstract
 !
@@ -27,25 +27,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               BODYID
-      INTEGER               MAXBOD
-      INTEGER               STSIZE
-      INTEGER               BTBODY ( * )
-      INTEGER               BTNBOD
-      INTEGER               BTSEGP ( * )
-      INTEGER               BTSTSZ ( * )
-      INTEGER               STHAN  ( * )
-      DOUBLE PRECISION      STDSCR ( DSKDSZ, * )
-      INTEGER               STDLAD ( DLADSZ, * )
-      INTEGER               STFREE
-      DOUBLE PRECISION      STOFF  ( 3, * )
-      DOUBLE PRECISION      STCTR  ( 3, * )
-      DOUBLE PRECISION      STRAD  ( * )
+      integer               bodyid
+      integer               maxbod
+      integer               stsize
+      integer               btbody ( * )
+      integer               btnbod
+      integer               btsegp ( * )
+      integer               btstsz ( * )
+      integer               sthan  ( * )
+      double precision      stdscr ( dskdsz, * )
+      integer               stdlad ( dladsz, * )
+      integer               stfree
+      double precision      stoff  ( 3, * )
+      double precision      stctr  ( 3, * )
+      double precision      strad  ( * )
 
 ! $ Brief_I/O
 !
@@ -321,54 +321,54 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               ZZDSKSBD
+      logical               failed
+      logical               return
+      logical               zzdsksbd
 
 !
 !     External routines
 !
-      EXTERNAL              ZZDSKBDC
+      external              zzdskbdc
 
 !
 !     Local parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FRNAME
+      character*(frnmln)    frname
 
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      LT
+      double precision      dskdsc ( dskdsz )
+      double precision      et
+      double precision      lt
 
-      INTEGER               AVAIL
-      INTEGER               DLADSC ( DLADSZ )
-      INTEGER               FRMCTR
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NSEG
-      INTEGER               SEGCLD
-      INTEGER               SEGCLS
-      INTEGER               SEGCTR
-      INTEGER               SEGFID
+      integer               avail
+      integer               dladsc ( dladsz )
+      integer               frmctr
+      integer               handle
+      integer               i
+      integer               j
+      integer               nseg
+      integer               segcld
+      integer               segcls
+      integer               segctr
+      integer               segfid
 
-      LOGICAL               FRMFND
-      LOGICAL               SEGFND
-      LOGICAL               STATUS
+      logical               frmfnd
+      logical               segfnd
+      logical               status
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKSBA' )
+      call chkin ( 'ZZDSKSBA' )
 
 !
 !     Check the body table for presence of the new body. It's
@@ -376,57 +376,57 @@
 !     present. (Such a call likely indicates the tables were
 !     not re-initialized after a BSR state change.)
 !
-      I = ISRCHI( BODYID, BTNBOD, BTBODY )
+      i = isrchi( bodyid, btnbod, btbody )
 
-      IF ( I .GT. 0 ) THEN
+      if ( i .gt. 0 ) then
 
-         CALL SETMSG ( 'Body # is already present in the DSK segment ' &
+         call setmsg ( 'Body # is already present in the DSK segment ' &
          //            'buffer body table. The table must be ' &
          //            're-initialized before this body can be added.' )
-         CALL ERRINT ( '#', BODYID                                     )
-         CALL SIGERR ( 'SPICE(INVALIDADD)'                             )
-         CALL CHKOUT ( 'ZZDSKSBA'                                      )
-         RETURN
+         call errint ( '#', bodyid                                     )
+         call sigerr ( 'SPICE(INVALIDADD)'                             )
+         call chkout ( 'ZZDSKSBA'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the BSR segment list for the body is up to
 !     date.
 !
-      CALL ZZDSKBBL ( BODYID )
+      call zzdskbbl ( bodyid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'ZZDSKSBA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'ZZDSKSBA' )
+         return
+      end if
 
 !
 !     Count the segments in the BSR system for the body.
 !
-      NSEG   = 0
-      STATUS = ZZDSKSBD( BODYID )
+      nseg   = 0
+      status = zzdsksbd( bodyid )
 
-      CALL ZZDSKBSS( BODYID )
-      CALL ZZDSKSNS( ZZDSKBDC, HANDLE, DLADSC, DSKDSC, SEGFND )
+      call zzdskbss( bodyid )
+      call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'ZZDSKSBA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'ZZDSKSBA' )
+         return
+      end if
 
-      DO WHILE ( SEGFND )
+      do while ( segfnd )
 
-         NSEG = NSEG + 1
+         nseg = nseg + 1
 
-         CALL ZZDSKSNS( ZZDSKBDC, HANDLE, DLADSC, DSKDSC, SEGFND )
+         call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'ZZDSKSBA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'ZZDSKSBA' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Check the number of segments for BODY against the size of the
@@ -435,163 +435,163 @@
 !     this situation should not occur if STSIZE is consistent with
 !     the value in ZZDSKBSR.
 !
-      IF ( NSEG .GT. STSIZE ) THEN
+      if ( nseg .gt. stsize ) then
 
-         CALL SETMSG ( 'The number of segments for body # is #; ' &
+         call setmsg ( 'The number of segments for body # is #; ' &
          //            'the size STSIZE of the input segment table ' &
          //            'is #.'                                       )
-         CALL ERRINT ( '#', BODYID                                   )
-         CALL ERRINT ( '#', NSEG                                     )
-         CALL ERRINT ( '#', STSIZE                                   )
-         CALL SIGERR ( 'SPICE(SEGMENTTABLEFULL)'                     )
-         CALL CHKOUT ( 'ZZDSKSBA'                                    )
-         RETURN
+         call errint ( '#', bodyid                                   )
+         call errint ( '#', nseg                                     )
+         call errint ( '#', stsize                                   )
+         call sigerr ( 'SPICE(SEGMENTTABLEFULL)'                     )
+         call chkout ( 'ZZDSKSBA'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     If we don't have enough room to store new entries in the body
 !     table or in the segment table, make room.
 !
-      AVAIL = STSIZE - STFREE + 1
+      avail = stsize - stfree + 1
 
-      IF (  ( BTNBOD .EQ. MAXBOD ) .OR. ( AVAIL .LT. NSEG )  ) THEN
+      if (  ( btnbod .eq. maxbod ) .or. ( avail .lt. nseg )  ) then
 
-         CALL ZZDSKSBR ( NSEG, &
-                         MAXBOD, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                         BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                         STOFF,  STCTR,  STRAD                  )
+         call zzdsksbr ( nseg, &
+                         maxbod, stsize, btbody, btnbod, btsegp, &
+                         btstsz, sthan,  stdscr, stdlad, stfree, &
+                         stoff,  stctr,  strad                  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDSKSBA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDSKSBA' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Append the new body ID to the body table. We've ensured there's
 !     room in the table.
 !
-      BTNBOD           = BTNBOD + 1
-      BTBODY( BTNBOD ) = BODYID
-      BTSEGP( BTNBOD ) = STFREE
-      BTSTSZ( BTNBOD ) = NSEG
+      btnbod           = btnbod + 1
+      btbody( btnbod ) = bodyid
+      btsegp( btnbod ) = stfree
+      btstsz( btnbod ) = nseg
 
 !
 !     Make a second pass through the BSR segment list, this time
 !     accumulating segments in the input segment table as we go.
 !
-      STATUS = ZZDSKSBD( BODYID )
+      status = zzdsksbd( bodyid )
 
-      CALL ZZDSKBSS( BODYID )
-      CALL ZZDSKSNS( ZZDSKBDC, HANDLE, DLADSC, DSKDSC, SEGFND )
+      call zzdskbss( bodyid )
+      call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'ZZDSKSBA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'ZZDSKSBA' )
+         return
+      end if
 
-      DO WHILE ( SEGFND )
+      do while ( segfnd )
 !
 !        Insert handle and descriptor data for the current segment at
 !        index STFREE in the segment table.
 !
-         STHAN( STFREE ) = HANDLE
+         sthan( stfree ) = handle
 
-         CALL MOVEI ( DLADSC, DLADSZ, STDLAD(1,STFREE) )
-         CALL MOVED ( DSKDSC, DSKDSZ, STDSCR(1,STFREE) )
+         call movei ( dladsc, dladsz, stdlad(1,stfree) )
+         call moved ( dskdsc, dskdsz, stdscr(1,stfree) )
 
-         STFREE          = STFREE + 1
+         stfree          = stfree + 1
 
-         CALL ZZDSKSNS( ZZDSKBDC, HANDLE, DLADSC, DSKDSC, SEGFND )
+         call zzdsksns( zzdskbdc, handle, dladsc, dskdsc, segfnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'ZZDSKSBA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'ZZDSKSBA' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Compute bounding spheres and frame center offsets for each
 !     segment.
 !
-      DO I = 1, NSEG
+      do i = 1, nseg
 !
 !        J is the index in the segment table of the Ith segment
 !        for BODYID.
 !
-         J  = BTSEGP( BTNBOD ) + I - 1
+         j  = btsegp( btnbod ) + i - 1
 
-         CALL ZZSEGBOX ( STDSCR(1,J), STCTR(1,J), STRAD(J) )
+         call zzsegbox ( stdscr(1,j), stctr(1,j), strad(j) )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'ZZDSKSBA' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'ZZDSKSBA' )
+            return
+         end if
 
 !
 !        Obtain the center of the frame for the Ith segment.
 !
-         SEGFID = NINT( STDSCR(FRMIDX,J) )
+         segfid = nint( stdscr(frmidx,j) )
 
-         CALL FRINFO ( SEGFID, FRMCTR, SEGCLS, SEGCLD, FRMFND )
+         call frinfo ( segfid, frmctr, segcls, segcld, frmfnd )
 
-         IF ( .NOT. FRMFND ) THEN
+         if ( .not. frmfnd ) then
 
-            CALL SETMSG ( 'Could not look up frame info for ' &
+            call setmsg ( 'Could not look up frame info for ' &
             //            'segment frame having ID #.'       )
-            CALL ERRINT ( '#', SEGFID                        )
-            CALL SIGERR ( 'SPICE(NOFRAMEINFO)'               )
-            CALL CHKOUT ( 'ZZDSKSBA'                         )
-            RETURN
+            call errint ( '#', segfid                        )
+            call sigerr ( 'SPICE(NOFRAMEINFO)'               )
+            call chkout ( 'ZZDSKSBA'                         )
+            return
 
-         END IF
+         end if
 !
 !        If the frame center is not the same as the central
 !        body, compute the offset between the two. Otherwise
 !        set the offset to zero.
 !
-         SEGCTR = NINT( STDSCR(CTRIDX,J) )
+         segctr = nint( stdscr(ctridx,j) )
 
-         IF ( SEGCTR .EQ. FRMCTR ) THEN
+         if ( segctr .eq. frmctr ) then
 
-            CALL CLEARD ( 3, STOFF(1,J) )
+            call cleard ( 3, stoff(1,j) )
 
-         ELSE
+         else
 
-            CALL FRMNAM ( SEGFID, FRNAME )
+            call frmnam ( segfid, frname )
 
-            IF ( FRNAME .EQ. ' ' ) THEN
+            if ( frname .eq. ' ' ) then
 
-               CALL SETMSG ( 'Could not look up frame info for ' &
+               call setmsg ( 'Could not look up frame info for ' &
                //            'segment frame having ID #.'       )
-               CALL ERRINT ( '#', SEGFID                        )
-               CALL SIGERR ( 'SPICE(NOFRAMENAME)'               )
-               CALL CHKOUT ( 'ZZDSKSBA'                         )
-               RETURN
+               call errint ( '#', segfid                        )
+               call sigerr ( 'SPICE(NOFRAMENAME)'               )
+               call chkout ( 'ZZDSKSBA'                         )
+               return
 
-            END IF
+            end if
 
 !
 !           Note that SPK data must be available at the midpoint of the
 !           DSK coverage epoch in order for the following call to work.
 !
-            ET = ( STDSCR(BTMIDX,J) + STDSCR(ETMIDX,J) ) / 2
+            et = ( stdscr(btmidx,j) + stdscr(etmidx,j) ) / 2
 
-            CALL SPKGPS ( FRMCTR, ET, FRNAME, SEGCTR, STOFF(1,J), LT )
+            call spkgps ( frmctr, et, frname, segctr, stoff(1,j), lt )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDSKSBA' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDSKSBA' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZDSKSBA' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKSBA' )
+      return
+      end

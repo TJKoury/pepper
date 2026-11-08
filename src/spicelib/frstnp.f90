@@ -1,6 +1,6 @@
 !$Procedure FRSTNP ( First non-printable character )
 
-      INTEGER FUNCTION FRSTNP ( STRING )
+      integer function frstnp ( string )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -161,27 +161,27 @@
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 !
 !     Look for the first character outside the range [32,126], and
 !     return its index.
 !
-      DO I = 1, LEN ( STRING )
+      do i = 1, len ( string )
 
-         IF (       (ICHAR ( STRING(I:I) ) .LT.  32) &
-              .OR.  (ICHAR ( STRING(I:I) ) .GT. 126) ) THEN
+         if (       (ichar ( string(i:i) ) .lt.  32) &
+              .or.  (ichar ( string(i:i) ) .gt. 126) ) then
 
-            FRSTNP = I
-            RETURN
-         END IF
+            frstnp = i
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Still here? All characters are printable. Return zero.
 !
-      FRSTNP = 0
+      frstnp = 0
 
-      RETURN
-      END
+      return
+      end

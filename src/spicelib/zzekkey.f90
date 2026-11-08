@@ -1,9 +1,9 @@
 !$Procedure  ZZEKKEY  ( EK, determine key column )
 
-      SUBROUTINE ZZEKKEY ( HANDLE,  SEGDSC,  NROWS,   NCNSTR,  CLIDXS, &
-                           DSCLST,  OPS,     DTYPES,  CHRBUF,  CBEGS, &
-                           CENDS,   DVALS,   IVALS,   ACTIVE,  KEY, &
-                           KEYDSC,  BEGIDX,  ENDIDX,  FOUND          )
+      subroutine zzekkey ( handle,  segdsc,  nrows,   ncnstr,  clidxs, &
+                           dsclst,  ops,     dtypes,  chrbuf,  cbegs, &
+                           cends,   dvals,   ivals,   active,  key, &
+                           keydsc,  begidx,  endidx,  found          )
 
 ! $ Abstract
 !
@@ -21,32 +21,32 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               NROWS
-      INTEGER               NCNSTR
-      INTEGER               CLIDXS ( * )
-      INTEGER               DSCLST ( CDSCSZ, * )
-      INTEGER               OPS    ( * )
-      INTEGER               DTYPES ( * )
-      CHARACTER*(*)         CHRBUF
-      INTEGER               CBEGS  ( * )
-      INTEGER               CENDS  ( * )
-      DOUBLE PRECISION      DVALS  ( * )
-      INTEGER               IVALS  ( * )
-      LOGICAL               ACTIVE ( * )
-      INTEGER               KEY
-      INTEGER               KEYDSC ( * )
-      INTEGER               BEGIDX
-      INTEGER               ENDIDX
-      LOGICAL               FOUND
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               nrows
+      integer               ncnstr
+      integer               clidxs ( * )
+      integer               dsclst ( cdscsz, * )
+      integer               ops    ( * )
+      integer               dtypes ( * )
+      character*(*)         chrbuf
+      integer               cbegs  ( * )
+      integer               cends  ( * )
+      double precision      dvals  ( * )
+      integer               ivals  ( * )
+      logical               active ( * )
+      integer               key
+      integer               keydsc ( * )
+      integer               begidx
+      integer               endidx
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -303,128 +303,128 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
-      INTEGER               ORDI
+      integer               cardi
+      integer               ordi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Other functions
 !
-      INTEGER               ZZEKILLE
-      INTEGER               ZZEKILLT
+      integer               zzekille
+      integer               zzekillt
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
 
 !
 !     Local variables
 !
-      INTEGER               B
-      INTEGER               BEST
-      INTEGER               COL
-      INTEGER               CONMAP ( MAXCON )
-      INTEGER               DTYPE
-      INTEGER               E
-      INTEGER               ELTIDX
-      INTEGER               I
-      INTEGER               IDXSET ( LBCELL : MAXCON )
-      INTEGER               J
-      INTEGER               LASTLE
-      INTEGER               LASTLT
-      INTEGER               MAXPTR
-      INTEGER               MINPTR
-      INTEGER               NMATCH
+      integer               b
+      integer               best
+      integer               col
+      integer               conmap ( maxcon )
+      integer               dtype
+      integer               e
+      integer               eltidx
+      integer               i
+      integer               idxset ( lbcell : maxcon )
+      integer               j
+      integer               lastle
+      integer               lastlt
+      integer               maxptr
+      integer               minptr
+      integer               nmatch
 
-      LOGICAL               ELIM
-      LOGICAL               FND
-      LOGICAL               INDEXD
+      logical               elim
+      logical               fnd
+      logical               indexd
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKKEY' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKKEY' )
+      end if
 
 !
 !     There's no key column to begin with.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 
-      IF (  ( NCNSTR .LT. 0 ) .OR. ( NCNSTR .GT. MAXCON )  ) THEN
+      if (  ( ncnstr .lt. 0 ) .or. ( ncnstr .gt. maxcon )  ) then
 
-         CALL SETMSG ( 'The number of constraints was #; valid '  // &
+         call setmsg ( 'The number of constraints was #; valid '  // &
                        'range is 0:#'                              )
-         CALL ERRINT ( '#',   NCNSTR                               )
-         CALL ERRINT ( '#',   MAXCON                               )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-         CALL CHKOUT ( 'ZZEKKEY'                                   )
-         RETURN
+         call errint ( '#',   ncnstr                               )
+         call errint ( '#',   maxcon                               )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+         call chkout ( 'ZZEKKEY'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Make a set out of the indices of indexed columns referenced
 !     in active constraints.  Maintain a mapping from each column
 !     to the index of some constraint that references that column.
 !
-      CALL SSIZEI ( MAXCON, IDXSET )
+      call ssizei ( maxcon, idxset )
 
 
-      DO I = 1, NCNSTR
+      do i = 1, ncnstr
 
-         IF ( ACTIVE(I) ) THEN
+         if ( active(i) ) then
 
-            INDEXD  =  DSCLST(IXTIDX,I) .NE. IFALSE
+            indexd  =  dsclst(ixtidx,i) .ne. ifalse
 
-            IF ( INDEXD ) THEN
-               CALL INSRTI ( CLIDXS(I), IDXSET )
-            END IF
+            if ( indexd ) then
+               call insrti ( clidxs(i), idxset )
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      DO I = 1, CARDI(IDXSET)
+      do i = 1, cardi(idxset)
 
-         FND = .FALSE.
-         J   =  1
+         fnd = .false.
+         j   =  1
 
-         DO WHILE (  ( J .LE. NCNSTR ) .AND. ( .NOT. FND )  )
+         do while (  ( j .le. ncnstr ) .and. ( .not. fnd )  )
 
-            IF (   ACTIVE(J) .AND. ( CLIDXS(J) .EQ. IDXSET(I) )  ) THEN
-               FND       =   .TRUE.
-               CONMAP(I) =   J
-            ELSE
-               J         =   J + 1
-            END IF
+            if (   active(j) .and. ( clidxs(j) .eq. idxset(i) )  ) then
+               fnd       =   .true.
+               conmap(i) =   j
+            else
+               j         =   j + 1
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 
 !
 !     We finish up now if there are no indexed columns
 !     on which there are active constraints.
 !
-      IF ( CARDI(IDXSET) .EQ. 0 ) THEN
+      if ( cardi(idxset) .eq. 0 ) then
 
-         CALL CHKOUT ( 'ZZEKKEY' )
-         RETURN
+         call chkout ( 'ZZEKKEY' )
+         return
 
-      END IF
+      end if
 
 !
 !     For each column in the `indexed' set, find out how many
@@ -432,34 +432,34 @@
 !     column.  If we find that the constraints on some column eliminate
 !     all matching rows, we can stop.
 !
-      BEGIDX  =  1
-      ENDIDX  =  NROWS
-      BEST    =  IDXSET(1)
-      NMATCH  =  NROWS
+      begidx  =  1
+      endidx  =  nrows
+      best    =  idxset(1)
+      nmatch  =  nrows
 
-      ELIM    = .FALSE.
-      ELTIDX  =  1
+      elim    = .false.
+      eltidx  =  1
 
-      DO WHILE (  ( ELTIDX .LE. CARDI(IDXSET) )  .AND. ( .NOT. ELIM )  )
+      do while (  ( eltidx .le. cardi(idxset) )  .and. ( .not. elim )  )
 !
 !        Get the attribute list pointer for the current column.
 !
-         COL   = IDXSET(ELTIDX)
+         col   = idxset(eltidx)
 
 !
 !        Set the initial values of MINPTR, MAXPTR, and NMATCH
 !
-         MINPTR       =  1
-         MAXPTR       =  NROWS
-         I            =  1
+         minptr       =  1
+         maxptr       =  nrows
+         i            =  1
 
-         DO WHILE (  ( I .LE. NCNSTR ) .AND. ( .NOT. ELIM )  )
+         do while (  ( i .le. ncnstr ) .and. ( .not. elim )  )
 !
 !           For each constraint, increase MINPTR or decrease MAXPTR
 !           if the constraint allows us to do so.
 !
 
-            IF (  ( CLIDXS(I) .EQ. COL ) .AND. ( ACTIVE(I) )  )  THEN
+            if (  ( clidxs(i) .eq. col ) .and. ( active(i) )  )  then
 !
 !              The Ith constraint is active and applies to this column.
 !
@@ -468,55 +468,55 @@
 !              Otherwise, set the bounds to default valid values to
 !              avoid subscript bounds errors.
 !
-               DTYPE  =  DSCLST( TYPIDX, I )
+               dtype  =  dsclst( typidx, i )
 
-               IF ( DTYPE .EQ. CHR ) THEN
-                  B = CBEGS(I)
-                  E = CENDS(I)
-               ELSE
-                  B  =  1
-                  E  =  1
-               END IF
+               if ( dtype .eq. chr ) then
+                  b = cbegs(i)
+                  e = cends(i)
+               else
+                  b  =  1
+                  e  =  1
+               end if
 
 !
 !              At this point, MINPTR and MAXPTR are in the range
 !              1:NROWS, and MINPTR is less than or equal to MAXPTR.
 !
 
-               IF ( OPS(I) .EQ. LT ) THEN
+               if ( ops(i) .eq. lt ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less than the
 !                 value cited in the Ith constraint.
 !
-                  LASTLT  =  ZZEKILLT ( HANDLE,         SEGDSC, &
-                                        DSCLST(1,I),    NROWS, &
-                                        DTYPES(I),      CHRBUF(B:E), &
-                                        DVALS(I),       IVALS(I)  )
+                  lastlt  =  zzekillt ( handle,         segdsc, &
+                                        dsclst(1,i),    nrows, &
+                                        dtypes(i),      chrbuf(b:e), &
+                                        dvals(i),       ivals(i)  )
 !
 !                 If all column elements were greater than or equal
 !                 to the specified value, MAXPTR will be set to zero.
 !
-                  MAXPTR  =  MIN ( LASTLT, MAXPTR )
-                  ELIM    =  MAXPTR .EQ. 0
+                  maxptr  =  min ( lastlt, maxptr )
+                  elim    =  maxptr .eq. 0
 
 
-               ELSE IF ( OPS(I) .EQ. LE ) THEN
+               else if ( ops(i) .eq. le ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less or equal to
 !                 the value cited in the Ith constraint.
 !
-                  LASTLE  =  ZZEKILLE ( HANDLE,         SEGDSC, &
-                                        DSCLST(1,I),    NROWS, &
-                                        DTYPES(I),      CHRBUF(B:E), &
-                                        DVALS(I),       IVALS(I)    )
+                  lastle  =  zzekille ( handle,         segdsc, &
+                                        dsclst(1,i),    nrows, &
+                                        dtypes(i),      chrbuf(b:e), &
+                                        dvals(i),       ivals(i)    )
 
-                  MAXPTR  =  MIN ( LASTLE, MAXPTR )
-                  ELIM    =  MAXPTR .EQ. 0
+                  maxptr  =  min ( lastle, maxptr )
+                  elim    =  maxptr .eq. 0
 
 
-               ELSE IF ( OPS(I) .EQ. EQ ) THEN
+               else if ( ops(i) .eq. eq ) then
 !
 !                 Find both the pointer to the last row whose
 !                 value in this column is less than the value cited in
@@ -527,18 +527,18 @@
 !                 the latter pointer, bound the range of pointers
 !                 to possible matching rows.
 !
-                  LASTLT  =  ZZEKILLT ( HANDLE,         SEGDSC, &
-                                        DSCLST(1,I),    NROWS, &
-                                        DTYPES(I),      CHRBUF(B:E), &
-                                        DVALS(I),       IVALS(I)    )
+                  lastlt  =  zzekillt ( handle,         segdsc, &
+                                        dsclst(1,i),    nrows, &
+                                        dtypes(i),      chrbuf(b:e), &
+                                        dvals(i),       ivals(i)    )
 
 
-                  LASTLE  =  ZZEKILLE ( HANDLE,         SEGDSC, &
-                                        DSCLST(1,I),    NROWS, &
-                                        DTYPES(I),      CHRBUF(B:E), &
-                                        DVALS(I),       IVALS(I)    )
+                  lastle  =  zzekille ( handle,         segdsc, &
+                                        dsclst(1,i),    nrows, &
+                                        dtypes(i),      chrbuf(b:e), &
+                                        dvals(i),       ivals(i)    )
 
-                  IF ( LASTLT .LT. LASTLE ) THEN
+                  if ( lastlt .lt. lastle ) then
 !
 !                    There is at least one row whose value in the
 !                    current column matches the value cited in the Ith
@@ -547,19 +547,19 @@
 !                    the first pointer to such a row (even if LASTLT is
 !                    zero).
 !
-                     MINPTR = MAX ( LASTLT+1, MINPTR )
-                     MAXPTR = MIN ( LASTLE,   MAXPTR )
+                     minptr = max ( lastlt+1, minptr )
+                     maxptr = min ( lastle,   maxptr )
 
-                  ELSE
+                  else
 !
 !                    No rows match this constraint.
 !
-                     ELIM  =  .TRUE.
+                     elim  =  .true.
 
-                  END IF
+                  end if
 
 
-               ELSE IF ( OPS(I) .EQ. GT ) THEN
+               else if ( ops(i) .eq. gt ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less or equal to
@@ -568,16 +568,16 @@
 !                 constraints on this column is the successor of
 !                 this pointer or a greater pointer.
 !
-                  LASTLE  =  ZZEKILLE ( HANDLE,         SEGDSC, &
-                                        DSCLST(1,I),    NROWS, &
-                                        DTYPES(I),      CHRBUF(B:E), &
-                                        DVALS(I),       IVALS(I)    )
+                  lastle  =  zzekille ( handle,         segdsc, &
+                                        dsclst(1,i),    nrows, &
+                                        dtypes(i),      chrbuf(b:e), &
+                                        dvals(i),       ivals(i)    )
 
-                  MINPTR  =  MAX ( LASTLE + 1,  MINPTR )
-                  ELIM    =  LASTLE .EQ. NROWS
+                  minptr  =  max ( lastle + 1,  minptr )
+                  elim    =  lastle .eq. nrows
 
 
-               ELSE IF ( OPS(I) .EQ. GE ) THEN
+               else if ( ops(i) .eq. ge ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less than the
@@ -586,40 +586,40 @@
 !                 constraints on this column is the successor of
 !                 this pointer or a greater pointer.
 !
-                  LASTLT  =  ZZEKILLT ( HANDLE,         SEGDSC, &
-                                        DSCLST(1,I),    NROWS, &
-                                        DTYPES(I),      CHRBUF(B:E), &
-                                        DVALS(I),       IVALS(I)    )
+                  lastlt  =  zzekillt ( handle,         segdsc, &
+                                        dsclst(1,i),    nrows, &
+                                        dtypes(i),      chrbuf(b:e), &
+                                        dvals(i),       ivals(i)    )
 
-                  MINPTR  =  MAX ( LASTLT + 1, MINPTR )
-                  ELIM    =  LASTLT .EQ. NROWS
+                  minptr  =  max ( lastlt + 1, minptr )
+                  elim    =  lastlt .eq. nrows
 
-               END IF
+               end if
 !
 !              We've checked the Ith constraint to see whether
 !              it applied to the current column, and if it did,
 !              we adjusted MINPTR and MAXPTR to reflect the
 !              constraint.
 !
-            END IF
+            end if
 !
 !           We've applied the Ith constraint, if it was active.
 !
-            IF ( MINPTR .GT. MAXPTR ) THEN
-               ELIM  =  .TRUE.
-            END IF
+            if ( minptr .gt. maxptr ) then
+               elim  =  .true.
+            end if
 
 
-            IF ( .NOT. ELIM ) THEN
-               I  =  I  +  1
-            END IF
+            if ( .not. elim ) then
+               i  =  i  +  1
+            end if
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZEKKEY' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZEKKEY' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        We've applied all of active, applicable constraints to column
@@ -627,85 +627,85 @@
 !        segment entirely, save the number of candidate rows we'd have
 !        if we kept this column as the key column.
 !
-         IF ( .NOT. ELIM ) THEN
+         if ( .not. elim ) then
 
-            NMATCH  =  MAXPTR - MINPTR + 1
+            nmatch  =  maxptr - minptr + 1
 
-            IF (  NMATCH .LT. ( ENDIDX - BEGIDX + 1 )  ) THEN
+            if (  nmatch .lt. ( endidx - begidx + 1 )  ) then
 !
 !              This is our new key column, until a better one comes
 !              along.
 !
-               BEST    =  COL
-               BEGIDX  =  MINPTR
-               ENDIDX  =  MAXPTR
+               best    =  col
+               begidx  =  minptr
+               endidx  =  maxptr
 
-            END IF
+            end if
 
-            ELTIDX  =  ELTIDX + 1
+            eltidx  =  eltidx + 1
 
-         END IF
-
-
-      END DO
+         end if
 
 
-      IF ( ELIM ) THEN
+      end do
+
+
+      if ( elim ) then
 !
 !        If the segment was eliminated by constraints on the last column
 !        we looked at, set BEGIDX and ENDIDX to indicate the absence of
 !        matching rows.
 !
-         KEY     =  COL
-         BEGIDX  =  1
-         ENDIDX  =  0
+         key     =  col
+         begidx  =  1
+         endidx  =  0
 
-      ELSE
+      else
 !
 !        BEST, BEGIDX, and ENDIDX are set to reflect the key column.
 !        Set KEY and grab the descriptor of the key column.
 !
-         KEY     =  BEST
+         key     =  best
 
-      END IF
+      end if
 
 
-      I   =  CONMAP(  ORDI( KEY, IDXSET )  )
+      i   =  conmap(  ordi( key, idxset )  )
 
-      CALL MOVEI ( DSCLST(1,I), CDSCSZ, KEYDSC )
+      call movei ( dsclst(1,i), cdscsz, keydsc )
 
 
 !
 !     De-activate constraints on the key column that we've already
 !     applied.
 !
-      DO I = 1, NCNSTR
+      do i = 1, ncnstr
 
-         IF (  ACTIVE(I)  .AND.  ( CLIDXS(I) .EQ. KEY )  )  THEN
+         if (  active(i)  .and.  ( clidxs(i) .eq. key )  )  then
 
-            IF (       ( OPS(I) .EQ. LT ) &
-                 .OR.  ( OPS(I) .EQ. LE ) &
-                 .OR.  ( OPS(I) .EQ. EQ ) &
-                 .OR.  ( OPS(I) .EQ. GE ) &
-                 .OR.  ( OPS(I) .EQ. GT )  ) THEN
+            if (       ( ops(i) .eq. lt ) &
+                 .or.  ( ops(i) .eq. le ) &
+                 .or.  ( ops(i) .eq. eq ) &
+                 .or.  ( ops(i) .eq. ge ) &
+                 .or.  ( ops(i) .eq. gt )  ) then
 
 !
 !              This constraint is met by the candidate rows; we can
 !              turn it off.
 !
-               ACTIVE(I)  =  .FALSE.
+               active(i)  =  .false.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     At this point, we've found a key column.
 !
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT ( 'ZZEKKEY' )
-      RETURN
-      END
+      call chkout ( 'ZZEKKEY' )
+      return
+      end

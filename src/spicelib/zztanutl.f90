@@ -1,8 +1,8 @@
 !$Procedure ZZTANUTL ( DSK, tangent ray utilities )
 
-      SUBROUTINE ZZTANUTL ( CURVE,  SRCRAD, SHAPE, TRGCDE, NSURF, &
-                            SRFLST, FIXFID, ET,    PLNVEC, AXIS, &
-                            ANGLE,  OCULTD, POINT                )
+      subroutine zztanutl ( curve,  srcrad, shape, trgcde, nsurf, &
+                            srflst, fixfid, et,    plnvec, axis, &
+                            angle,  ocultd, point                )
 
 ! $ Abstract
 !
@@ -30,23 +30,23 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzdsk.inc'
+      include 'zzdsk.inc'
 
-      INTEGER               CURVE
-      DOUBLE PRECISION      SRCRAD
-      INTEGER               SHAPE
-      INTEGER               TRGCDE
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      INTEGER               FIXFID
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      PLNVEC ( 3 )
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      ANGLE
-      LOGICAL               OCULTD
-      DOUBLE PRECISION      POINT  ( 3 )
+      integer               curve
+      double precision      srcrad
+      integer               shape
+      integer               trgcde
+      integer               nsurf
+      integer               srflst ( * )
+      integer               fixfid
+      double precision      et
+      double precision      plnvec ( 3 )
+      double precision      axis   ( 3 )
+      double precision      angle
+      logical               ocultd
+      double precision      point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -155,47 +155,47 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
+      double precision      pi
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      APEX   ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      SVAXIS ( 3 )
-      DOUBLE PRECISION      SVET
-      DOUBLE PRECISION      SVIRAD
-      DOUBLE PRECISION      SVNRML ( 3 )
-      DOUBLE PRECISION      SVVRTX ( 3 )
-      DOUBLE PRECISION      VRTOFF ( 3 )
+      double precision      apex   ( 3 )
+      double precision      raydir ( 3 )
+      double precision      svaxis ( 3 )
+      double precision      svet
+      double precision      svirad
+      double precision      svnrml ( 3 )
+      double precision      svvrtx ( 3 )
+      double precision      vrtoff ( 3 )
 
-      INTEGER               SVCURV
+      integer               svcurv
 
 !
 !     Saved variables
 !
-      SAVE                  SVAXIS
-      SAVE                  SVCURV
-      SAVE                  SVET
-      SAVE                  SVIRAD
-      SAVE                  SVNRML
-      SAVE                  SVVRTX
+      save                  svaxis
+      save                  svcurv
+      save                  svet
+      save                  svirad
+      save                  svnrml
+      save                  svvrtx
 
-      CALL CHKIN  ( 'ZZTANUTL'          )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZTANUTL'          )
-      RETURN
+      call chkin  ( 'ZZTANUTL'          )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZTANUTL'          )
+      return
 
 
 
 
 !$Procedure ZZTANINI ( DSK, tangent utility initialization )
 
-      ENTRY ZZTANINI ( CURVE,  SRCRAD, SHAPE, TRGCDE, NSURF, &
-                       SRFLST, FIXFID, ET,    PLNVEC, AXIS   )
+      entry zztanini ( curve,  srcrad, shape, trgcde, nsurf, &
+                       srflst, fixfid, et,    plnvec, axis   )
 
 ! $ Abstract
 !
@@ -443,92 +443,92 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZTANINI' )
+      call chkin ( 'ZZTANINI' )
 
 !
 !     Check for zero vectors on input.
 !
-      IF ( VZERO(AXIS) ) THEN
+      if ( vzero(axis) ) then
 
-         CALL SETMSG ( 'Input axis vector is the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                     )
-         CALL CHKOUT ( 'ZZTANINI'                              )
-         RETURN
+         call setmsg ( 'Input axis vector is the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                     )
+         call chkout ( 'ZZTANINI'                              )
+         return
 
-      END IF
+      end if
 
-      IF ( VZERO(PLNVEC) ) THEN
+      if ( vzero(plnvec) ) then
 
-         CALL SETMSG ( 'Input reference vector is the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                          )
-         CALL CHKOUT ( 'ZZTANINI'                                   )
-         RETURN
+         call setmsg ( 'Input reference vector is the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                          )
+         call chkout ( 'ZZTANINI'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Save the curve type.
 !
-      IF (       ( CURVE .NE. LMBCRV ) &
-          .AND.  ( CURVE .NE. UMBRAL ) &
-          .AND.  ( CURVE .NE. PNMBRL )  ) THEN
+      if (       ( curve .ne. lmbcrv ) &
+          .and.  ( curve .ne. umbral ) &
+          .and.  ( curve .ne. pnmbrl )  ) then
 
-         CALL SETMSG ( 'Curve type code # was not recognized.' )
-         CALL ERRINT ( '#', CURVE                              )
-         CALL SIGERR ( 'SPICE(BADCURVETYPE)'                   )
-         CALL CHKOUT ( 'ZZTANINI'                              )
-         RETURN
+         call setmsg ( 'Curve type code # was not recognized.' )
+         call errint ( '#', curve                              )
+         call sigerr ( 'SPICE(BADCURVETYPE)'                   )
+         call chkout ( 'ZZTANINI'                              )
+         return
 
-      END IF
+      end if
 
-      SVCURV = CURVE
+      svcurv = curve
 
 !
 !     Save the illumination source radius.
 !
-      IF (  ( CURVE .EQ. UMBRAL ) .OR. ( CURVE .EQ. PNMBRL )  ) THEN
+      if (  ( curve .eq. umbral ) .or. ( curve .eq. pnmbrl )  ) then
 
-         IF ( SRCRAD .LE. 0.D0 ) THEN
+         if ( srcrad .le. 0.d0 ) then
 
-            CALL SETMSG ( 'The source radius was #. The radius ' &
+            call setmsg ( 'The source radius was #. The radius ' &
             //            'must be positive for a terminator ' &
             //            'computation.'                         )
-            CALL ERRDP  ( '#', SRCRAD                            )
-            CALL SIGERR ( 'SPICE(BADSOURCERADIUS)'               )
-            CALL CHKOUT ( 'ZZTANINI'                             )
-            RETURN
+            call errdp  ( '#', srcrad                            )
+            call sigerr ( 'SPICE(BADSOURCERADIUS)'               )
+            call chkout ( 'ZZTANINI'                             )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      SVIRAD = SRCRAD
+      svirad = srcrad
 
 !
 !     Compute a normal vector to the plane defined by
 !     AXIS and PLNVEC. The direction of positive rotation
 !     about the normal is from AXIS toward PLNVEC.
 !
-      CALL VCRSS ( AXIS, PLNVEC, SVNRML )
+      call vcrss ( axis, plnvec, svnrml )
 
-      IF ( VZERO(SVNRML) ) THEN
+      if ( vzero(svnrml) ) then
 
-         CALL SETMSG ( 'Input reference vector and axis vector ' &
+         call setmsg ( 'Input reference vector and axis vector ' &
          //            'are linearly dependent.'                 )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                   )
-         CALL CHKOUT ( 'ZZTANINI'                                )
-         RETURN
+         call sigerr ( 'SPICE(DEGENERATECASE)'                   )
+         call chkout ( 'ZZTANINI'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the normal vector to unit length.
 !
-      CALL VHATIP ( SVNRML )
+      call vhatip ( svnrml )
 
 !
 !     Save a unit-length copy of the input axis.
@@ -537,45 +537,45 @@
 !     will be used, after addition of an offset, in the
 !     terminator computations. Save the evaluation epoch.
 !
-      CALL VEQU ( AXIS, SVVRTX )
-      CALL VHAT ( AXIS, SVAXIS )
+      call vequ ( axis, svvrtx )
+      call vhat ( axis, svaxis )
 
-      SVET = ET
+      svet = et
 !
 !     Prepare the DSK SINCPT utilities for a computation with
 !     the input surface set.
 !
-      IF ( SHAPE .EQ. ELLSHP ) THEN
+      if ( shape .eq. ellshp ) then
 !
 !        This is the ellipsoid case.
 !
-         CALL ZZSUELIN ( TRGCDE )
+         call zzsuelin ( trgcde )
 
-      ELSE IF ( SHAPE .EQ. DSKSHP ) THEN
+      else if ( shape .eq. dskshp ) then
 !
 !        This is the DSK case.
 !
-         CALL ZZSUDSKI ( TRGCDE, NSURF, SRFLST, FIXFID )
+         call zzsudski ( trgcde, nsurf, srflst, fixfid )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Target shape code # was not recognized.' )
-         CALL ERRINT ( '#', SHAPE                                )
-         CALL SIGERR ( 'SPICE(BADSHAPE)'                         )
-         CALL CHKOUT ( 'ZZTANINI'                                )
-         RETURN
+         call setmsg ( 'Target shape code # was not recognized.' )
+         call errint ( '#', shape                                )
+         call sigerr ( 'SPICE(BADSHAPE)'                         )
+         call chkout ( 'ZZTANINI'                                )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZTANINI' )
-      RETURN
+      call chkout ( 'ZZTANINI' )
+      return
 
 
 
 
 !$Procedure ZZTANSTA ( DSK, tangent ray state )
 
-      ENTRY ZZTANSTA ( ANGLE, OCULTD, POINT )
+      entry zztansta ( angle, ocultd, point )
 
 ! $ Abstract
 !
@@ -735,25 +735,25 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZTANSTA' )
+      call chkin ( 'ZZTANSTA' )
 
 
-      IF ( SVCURV .EQ. LMBCRV ) THEN
+      if ( svcurv .eq. lmbcrv ) then
 !
 !        This is the limb case.
 !
 !        We'll rotate SVAXIS by ANGLE to achieve the desired result.
 !
-         CALL VROTV ( SVAXIS, SVNRML, ANGLE, RAYDIR )
+         call vrotv ( svaxis, svnrml, angle, raydir )
 
-         CALL ZZRAYSFX ( SVVRTX, RAYDIR, SVET, POINT, OCULTD )
+         call zzraysfx ( svvrtx, raydir, svet, point, ocultd )
 
 
-      ELSE IF ( SVCURV .EQ. UMBRAL ) THEN
+      else if ( svcurv .eq. umbral ) then
 !
 !        This is the umbral terminator case.
 !
@@ -761,7 +761,7 @@
 !        the axis about the cutting half-plane normal by
 !        the input angle.
 !
-         CALL VROTV ( SVAXIS, SVNRML, ANGLE, RAYDIR )
+         call vrotv ( svaxis, svnrml, angle, raydir )
 !
 !        Produce the offset of the ray's vertex from the
 !        center of the source by rotating the axis
@@ -769,14 +769,14 @@
 !        of the vector must be SVIRAD. The saved axis
 !        has unit length.
 !
-         CALL VROTV  ( SVAXIS, SVNRML, ANGLE-(PI()/2), VRTOFF )
-         CALL VSCLIP ( SVIRAD, VRTOFF )
-         CALL VADD   ( SVVRTX, VRTOFF, APEX )
+         call vrotv  ( svaxis, svnrml, angle-(pi()/2), vrtoff )
+         call vsclip ( svirad, vrtoff )
+         call vadd   ( svvrtx, vrtoff, apex )
 
-         CALL ZZRAYSFX ( APEX, RAYDIR, SVET, POINT, OCULTD )
+         call zzraysfx ( apex, raydir, svet, point, ocultd )
 
 
-      ELSE IF ( SVCURV .EQ. PNMBRL ) THEN
+      else if ( svcurv .eq. pnmbrl ) then
 !
 !        This is the penumbral terminator case.
 !
@@ -784,34 +784,34 @@
 !        the axis about the cutting half-plane normal by
 !        the *negative* of the input angle.
 !
-         CALL VROTV ( SVAXIS, SVNRML, -ANGLE, RAYDIR )
+         call vrotv ( svaxis, svnrml, -angle, raydir )
 !
 !        Produce the ray's vertex by rotating the axis
 !        vector about the normal, *not its negative,*
 !        by 3*pi/2 - ANGLE radians. The length of the vector
 !        must be SRCRAD. The saved axis has unit length.
 !
-         CALL VROTV  ( SVAXIS, SVNRML, (1.5D0*PI())-ANGLE, VRTOFF )
+         call vrotv  ( svaxis, svnrml, (1.5d0*pi())-angle, vrtoff )
 
-         CALL VSCLIP ( SVIRAD, VRTOFF )
+         call vsclip ( svirad, vrtoff )
 
-         CALL VADD   ( SVVRTX, VRTOFF, APEX )
+         call vadd   ( svvrtx, vrtoff, apex )
 
-         CALL ZZRAYSFX ( APEX, RAYDIR, SVET, POINT, OCULTD )
+         call zzraysfx ( apex, raydir, svet, point, ocultd )
 
-      ELSE
+      else
 !
 !        This case should have been ruled out by a check in
 !        ZZTANINI. Check again anyway.
 !
-         CALL SETMSG ( 'Bad curve type code #.' )
-         CALL ERRINT ( '#', SVCURV              )
-         CALL SIGERR ( 'SPICE(BUG)'             )
-         CALL CHKOUT ( 'ZZTANSTA'               )
-         RETURN
+         call setmsg ( 'Bad curve type code #.' )
+         call errint ( '#', svcurv              )
+         call sigerr ( 'SPICE(BUG)'             )
+         call chkout ( 'ZZTANSTA'               )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZTANSTA' )
-      RETURN
-      END
+      call chkout ( 'ZZTANSTA' )
+      return
+      end

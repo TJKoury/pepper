@@ -1,7 +1,7 @@
 !$Procedure ZZGAPOOL ( Private: get agent set for watched variable )
 
-      SUBROUTINE ZZGAPOOL ( VARNAM, WTVARS, WTPTRS, &
-                            WTPOOL, WTAGNT, AGTSET )
+      subroutine zzgapool ( varnam, wtvars, wtptrs, &
+                            wtpool, wtagnt, agtset )
 
 
 ! $ Abstract
@@ -25,20 +25,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      CHARACTER*(*)         VARNAM
-      CHARACTER*(*)         WTVARS ( LBCELL : * )
-      INTEGER               WTPTRS ( * )
-      INTEGER               WTPOOL ( 2, LBPOOL : * )
-      CHARACTER*(*)         WTAGNT ( * )
-      CHARACTER*(*)         AGTSET ( LBCELL : * )
+      character*(*)         varnam
+      character*(*)         wtvars ( lbcell : * )
+      integer               wtptrs ( * )
+      integer               wtpool ( 2, lbpool : * )
+      character*(*)         wtagnt ( * )
+      character*(*)         agtset ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -138,69 +138,69 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               LNKNXT
-      INTEGER               SIZEC
+      integer               bsrchc
+      integer               cardc
+      integer               lnknxt
+      integer               sizec
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               LOC
-      INTEGER               NFETCH
-      INTEGER               NODE
+      integer               loc
+      integer               nfetch
+      integer               node
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGAPOOL' )
+      call chkin ( 'ZZGAPOOL' )
 
 !
 !     The output agent set is empty until we find any
 !     agents.
 !
-      CALL SCARDC ( 0, AGTSET )
+      call scardc ( 0, agtset )
 
 !
 !     Find the location of VARNAM in the set of watched
 !     variables.
 !
-      LOC = BSRCHC ( VARNAM, CARDC(WTVARS), WTVARS(1) )
+      loc = bsrchc ( varnam, cardc(wtvars), wtvars(1) )
 
-      IF ( LOC .EQ. 0 ) THEN
+      if ( loc .eq. 0 ) then
 !
 !        This variable is not watched. The agent set is
 !        empty.
 !
-         CALL CHKOUT ( 'ZZGAPOOL' )
-         RETURN
+         call chkout ( 'ZZGAPOOL' )
+         return
 
-      END IF
+      end if
 
 !
 !     Set NODE to the head node of the agent list for VARNAM.
 !     Traverse the agent list for VARNAM. Collect the agents
 !     as an unordered list, then turn the list into a set.
 !
-      NODE   = WTPTRS(LOC)
-      NFETCH = 0
+      node   = wtptrs(loc)
+      nfetch = 0
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         NFETCH         = NFETCH + 1
-         AGTSET(NFETCH) = WTAGNT(NODE)
+         nfetch         = nfetch + 1
+         agtset(nfetch) = wtagnt(node)
 
-         NODE           = LNKNXT( NODE, WTPOOL )
+         node           = lnknxt( node, wtpool )
 
-      END DO
+      end do
 
-      CALL VALIDC ( SIZEC(AGTSET), NFETCH, AGTSET )
+      call validc ( sizec(agtset), nfetch, agtset )
 
 
-      CALL CHKOUT ( 'ZZGAPOOL' )
-      RETURN
-      END
+      call chkout ( 'ZZGAPOOL' )
+      return
+      end

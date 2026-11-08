@@ -1,6 +1,6 @@
 !$Procedure SCFMT ( Convert SCLK "ticks" to character clock format )
 
-      SUBROUTINE SCFMT ( SC, TICKS, CLKSTR )
+      subroutine scfmt ( sc, ticks, clkstr )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               SC
-      DOUBLE PRECISION      TICKS
-      CHARACTER*(*)         CLKSTR
+      integer               sc
+      double precision      ticks
+      character*(*)         clkstr
 
 ! $ Brief_I/O
 !
@@ -368,42 +368,42 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SCTYPE
-      LOGICAL               RETURN
+      integer               sctype
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               TYPE
+      integer               type
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCFMT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SCFMT' )
+      end if
 
 !
 !     Determine which data type the spacecraft clock belongs to and
 !     calls SCFMnn, where nn corresponds to the data type code. SCFMTnn
 !     handles the actual conversion from ticks to clock string format.
 !
-      TYPE  =  SCTYPE( SC )
+      type  =  sctype( sc )
 
-      IF  ( TYPE .EQ. 1 )  THEN
-         CALL SCFM01( SC, TICKS, CLKSTR )
-      ELSE
-         CALL SETMSG ( 'Clock type # is not supported. ' )
-         CALL ERRINT ( '#', TYPE                         )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'             )
-         CALL CHKOUT ( 'SCFMT'                           )
-         RETURN
-      END IF
+      if  ( type .eq. 1 )  then
+         call scfm01( sc, ticks, clkstr )
+      else
+         call setmsg ( 'Clock type # is not supported. ' )
+         call errint ( '#', type                         )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'             )
+         call chkout ( 'SCFMT'                           )
+         return
+      end if
 
 
-      CALL CHKOUT ( 'SCFMT' )
-      RETURN
-      END
+      call chkout ( 'SCFMT' )
+      return
+      end

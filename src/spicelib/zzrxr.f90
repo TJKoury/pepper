@@ -1,7 +1,7 @@
 !$Procedure      ZZRXR ( Multiply sequence of 3x3 matrices )
 
 
-      SUBROUTINE ZZRXR ( MATRIX, N, OUTPUT )
+      subroutine zzrxr ( matrix, n, output )
 
 ! $ Abstract
 !
@@ -22,10 +22,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      MATRIX ( 3, 3, * )
-      INTEGER               N
-      DOUBLE PRECISION      OUTPUT ( 3, 3    )
+      implicit none
+      double precision      matrix ( 3, 3, * )
+      integer               n
+      double precision      output ( 3, 3    )
 
 ! $ Brief_I/O
 !
@@ -106,42 +106,42 @@
 !
 !-&
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
+      integer               i
+      integer               j
+      integer               k
 
-      INTEGER               GET
-      INTEGER               PUT
-      INTEGER               INCR
+      integer               get
+      integer               put
+      integer               incr
 
-      DOUBLE PRECISION      TEMP ( 3, 3, 2 )
+      double precision      temp ( 3, 3, 2 )
 
 !
 !    If we have more than 2 matrices to deal with we will need to
 !    set up the PUT location
 !
-      PUT = 1
+      put = 1
 
 !
 !     We perform tests in the order they seem most likely to
 !     occur.
 !
-      IF ( N .EQ. 2 ) THEN
+      if ( n .eq. 2 ) then
 !
 !        If there are exactly two inputs, then the output takes
 !        only a single matrix multiply.
 !
-         DO J = 1,3
-            DO K = 1,3
+         do j = 1,3
+            do k = 1,3
 
-               OUTPUT(J,K) = MATRIX(J,1,2)*MATRIX(1,K,1) &
-                           + MATRIX(J,2,2)*MATRIX(2,K,1) &
-                           + MATRIX(J,3,2)*MATRIX(3,K,1)
-            END DO
-         END DO
+               output(j,k) = matrix(j,1,2)*matrix(1,k,1) &
+                           + matrix(j,2,2)*matrix(2,k,1) &
+                           + matrix(j,3,2)*matrix(3,k,1)
+            end do
+         end do
 
 
-      ELSE IF ( N .GT. 2 ) THEN
+      else if ( n .gt. 2 ) then
 
 !
 !        We need to compute the product
@@ -153,14 +153,14 @@
 !
 !        First compute the upper left hand 3x3 portion of the product...
 !
-         DO J = 1,3
-            DO K = 1,3
+         do j = 1,3
+            do k = 1,3
 
-               TEMP(J,K,PUT) =  MATRIX(J,1,2)*MATRIX(1,K,1) &
-                              + MATRIX(J,2,2)*MATRIX(2,K,1) &
-                              + MATRIX(J,3,2)*MATRIX(3,K,1)
-            END DO
-         END DO
+               temp(j,k,put) =  matrix(j,1,2)*matrix(1,k,1) &
+                              + matrix(j,2,2)*matrix(2,k,1) &
+                              + matrix(j,3,2)*matrix(3,k,1)
+            end do
+         end do
 
 !
 !        Now continue building the product.  Note we will toggle
@@ -171,24 +171,24 @@
 !        of the loop below (keeping mind the next three values) to
 !        see the little trick that's used to toggle back and forth.
 !
-         INCR = -1
-         PUT  =  2
-         GET  =  1
+         incr = -1
+         put  =  2
+         get  =  1
 
-         DO I = 3, N-1
+         do i = 3, n-1
 !
 !           First the upper left hand portion of the product.
 !
-            DO J = 1,3
-               DO K = 1,3
+            do j = 1,3
+               do k = 1,3
 
 
-                  TEMP(J,K,PUT) =  MATRIX(J,1,I)*TEMP(1,K,GET) &
-                                 + MATRIX(J,2,I)*TEMP(2,K,GET) &
-                                 + MATRIX(J,3,I)*TEMP(3,K,GET)
+                  temp(j,k,put) =  matrix(j,1,i)*temp(1,k,get) &
+                                 + matrix(j,2,i)*temp(2,k,get) &
+                                 + matrix(j,3,i)*temp(3,k,get)
 
-               END DO
-            END DO
+               end do
+            end do
 
 !
 !           And as before, we don't need to compute the upper right
@@ -196,44 +196,44 @@
 !           we just skip them.  Toggle GET and PUT so we will
 !           be ready for the next pass.
 !
-            GET  =  PUT
-            PUT  =  PUT + INCR
-            INCR =      - INCR
+            get  =  put
+            put  =  put + incr
+            incr =      - incr
 
-         END DO
+         end do
 
 
 !
 !        Finally compute the last product.  First the upper
 !        left hand portion of the product.
 !
-         DO J = 1,3
-            DO K = 1,3
+         do j = 1,3
+            do k = 1,3
 
-               OUTPUT(J,K) = MATRIX(J,1,N)*TEMP(1,K,GET) &
-                           + MATRIX(J,2,N)*TEMP(2,K,GET) &
-                           + MATRIX(J,3,N)*TEMP(3,K,GET)
-            END DO
-         END DO
+               output(j,k) = matrix(j,1,n)*temp(1,k,get) &
+                           + matrix(j,2,n)*temp(2,k,get) &
+                           + matrix(j,3,n)*temp(3,k,get)
+            end do
+         end do
 
 
-      ELSE IF ( N .EQ. 1 ) THEN
+      else if ( n .eq. 1 ) then
 !
 !        If there is only one matrix in the list the output is
 !        simply the input.
 !
-         DO I = 1, 3
-            DO J = 1, 3
-               OUTPUT(J,I) = MATRIX(J,I,1)
-            END DO
-         END DO
+         do i = 1, 3
+            do j = 1, 3
+               output(j,i) = matrix(j,i,1)
+            end do
+         end do
 
 
-      ELSE IF ( N .LE. 0 ) THEN
+      else if ( n .le. 0 ) then
 
-         CALL IDENT ( OUTPUT )
+         call ident ( output )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

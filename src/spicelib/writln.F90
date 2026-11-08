@@ -1,6 +1,6 @@
 !$Procedure WRITLN ( Write a text line to a logical unit )
 
-      SUBROUTINE WRITLN ( LINE, UNIT )
+      subroutine writln ( line, unit )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)      LINE
-      INTEGER            UNIT
+      character*(*)      line
+      integer            unit
 
 ! $ Brief_I/O
 !
@@ -302,7 +302,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -313,14 +313,14 @@
 !     but the Fortran standard does not specify a value, so it may be
 !     different for different fortran implementations.
 !
-      INTEGER               STDOUT
-      PARAMETER           ( STDOUT = 6 )
+      integer               stdout
+      parameter           ( stdout = 6 )
 !
 #else
 #endif
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -344,29 +344,29 @@
 !     specifier FMT='(A)', which does not use any vertical carriage
 !     control characters.
 !
-       IF ( UNIT .EQ. STDOUT ) THEN
-          WRITE ( UNIT, *, IOSTAT=IOSTAT ) LINE(:RTRIM(LINE))
-       ELSE
-          WRITE ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE(:RTRIM(LINE))
-       END IF
+       if ( unit .eq. stdout ) then
+          write ( unit, *, iostat=iostat ) line(:rtrim(line))
+       else
+          write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))
+       end if
 #else
-      WRITE ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE(:RTRIM(LINE))
+      write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))
 #endif
 !
 !     Check to see if we got a write error, and signal it if we did.
 !     Also check in and check out.
 !
-      IF ( IOSTAT .NE. 0  ) THEN
+      if ( iostat .ne. 0  ) then
 
-         CALL CHKIN  ( 'WRITLN'                                  )
-         CALL SETMSG ( 'Error Writing to file: #. IOSTAT = #.'   )
-         CALL ERRFNM ( '#', UNIT                                 )
-         CALL ERRINT ( '#', IOSTAT                               )
-         CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'                  )
-         CALL CHKOUT ( 'WRITLN'                                  )
-         RETURN
+         call chkin  ( 'WRITLN'                                  )
+         call setmsg ( 'Error Writing to file: #. IOSTAT = #.'   )
+         call errfnm ( '#', unit                                 )
+         call errint ( '#', iostat                               )
+         call sigerr ( 'SPICE(FILEWRITEFAILED)'                  )
+         call chkout ( 'WRITLN'                                  )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

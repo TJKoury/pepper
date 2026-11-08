@@ -1,6 +1,6 @@
 !$Procedure      ZZEKMLOC ( EK, return integer metadata location )
 
-      SUBROUTINE ZZEKMLOC ( HANDLE, SEGNO, PAGE, BASE )
+      subroutine zzekmloc ( handle, segno, page, base )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekfilpar.inc'
+      include 'ekfilpar.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               PAGE
-      INTEGER               BASE
+      integer               handle
+      integer               segno
+      integer               page
+      integer               base
 
 ! $ Brief_I/O
 !
@@ -135,19 +135,19 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               EKNSEG
+      integer               eknseg
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRBS
+      integer               zzektrbs
 
 !
 !     Local variables
 !
-      INTEGER               NSEG
-      INTEGER               TBASE
-      INTEGER               TREE
+      integer               nseg
+      integer               tbase
+      integer               tree
 
 
 !
@@ -159,43 +159,43 @@
 !
 !     Get the segment count; validate SEGNO.
 !
-      NSEG  =  EKNSEG ( HANDLE )
+      nseg  =  eknseg ( handle )
 
 !
 !     Check out SEGNO.
 !
-      IF (  ( SEGNO .LT. 1 ) .OR. ( SEGNO .GT. NSEG )  )  THEN
+      if (  ( segno .lt. 1 ) .or. ( segno .gt. nseg )  )  then
 
-         CALL CHKIN  ( 'ZZEKMLOC'                                )
-         CALL SETMSG ( 'Segment number = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  SEGNO                               )
-         CALL ERRINT ( '#',  NSEG                                )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-         CALL CHKOUT ( 'ZZEKMLOC'                                )
-         RETURN
+         call chkin  ( 'ZZEKMLOC'                                )
+         call setmsg ( 'Segment number = #; valid range is 1:#.' )
+         call errint ( '#',  segno                               )
+         call errint ( '#',  nseg                                )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+         call chkout ( 'ZZEKMLOC'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the segment in the segment tree.
 !     Obtain the base address of the first integer page.
 !
-      TBASE = ZZEKTRBS ( 1 )
+      tbase = zzektrbs ( 1 )
 
 !
 !     Look up the head node of the segment tree.
 !
-      CALL DASRDI ( HANDLE, TBASE+SGTIDX, TBASE+SGTIDX, TREE )
+      call dasrdi ( handle, tbase+sgtidx, tbase+sgtidx, tree )
 
 !
 !     Get the segment pointer for the segment having index SEGNO.
 !     This pointer is actually the page number we're looking for.
 !
-      CALL ZZEKTRDP ( HANDLE, TREE, SEGNO, PAGE )
+      call zzektrdp ( handle, tree, segno, page )
 
 !
 !     Return the base address of the metadata page as well.
 !
-      BASE  =  ZZEKTRBS ( PAGE )
+      base  =  zzektrbs ( page )
 
-      END
+      end

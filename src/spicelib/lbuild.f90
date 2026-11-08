@@ -1,6 +1,6 @@
 !$Procedure LBUILD ( Build a list in a character string )
 
-      SUBROUTINE LBUILD ( ITEMS, N, DELIM, LIST )
+      subroutine lbuild ( items, n, delim, list )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    ITEMS ( * )
-      INTEGER          N
-      CHARACTER*(*)    DELIM
-      CHARACTER*(*)    LIST
+      character*(*)    items ( * )
+      integer          n
+      character*(*)    delim
+      character*(*)    list
 
 ! $ Brief_I/O
 !
@@ -156,19 +156,19 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          FRSTNB
-      INTEGER          LASTNB
+      integer          frstnb
+      integer          lastnb
 
 !
 !     Local variables
 !
-      INTEGER          LPOS
-      INTEGER          FIRST
-      INTEGER          LAST
-      INTEGER          DLEN
-      INTEGER          LLEN
-      INTEGER          ILEN
-      INTEGER          I
+      integer          lpos
+      integer          first
+      integer          last
+      integer          dlen
+      integer          llen
+      integer          ilen
+      integer          i
 
 
 
@@ -182,45 +182,45 @@
 !     DLEN is the length of DELIM.
 !     ILEN is the length of the next item in the list.
 !
-      LIST = ' '
-      LPOS = 1
-      LLEN = LEN ( LIST  )
-      DLEN = LEN ( DELIM )
+      list = ' '
+      lpos = 1
+      llen = len ( list  )
+      dlen = len ( delim )
 
-      IF ( N .GT. 0 ) THEN
+      if ( n .gt. 0 ) then
 
-         DO I = 1, N
+         do i = 1, n
 
-            IF ( LPOS .LE. LLEN ) THEN
+            if ( lpos .le. llen ) then
 
-               IF ( ITEMS(I) .EQ. ' ' ) THEN
-                  LIST(LPOS: ) = DELIM
-                  LPOS         = LPOS + DLEN
+               if ( items(i) .eq. ' ' ) then
+                  list(lpos: ) = delim
+                  lpos         = lpos + dlen
 
-               ELSE
-                  FIRST = FRSTNB ( ITEMS(I) )
-                  LAST  = LASTNB ( ITEMS(I) )
-                  ILEN  = LAST - FIRST + 1
+               else
+                  first = frstnb ( items(i) )
+                  last  = lastnb ( items(i) )
+                  ilen  = last - first + 1
 
-                  LIST(LPOS: ) = ITEMS(I)(FIRST:LAST)
-                  CALL SUFFIX ( DELIM, 0, LIST )
+                  list(lpos: ) = items(i)(first:last)
+                  call suffix ( delim, 0, list )
 
-                  LPOS = LPOS + ILEN + DLEN
-               END IF
+                  lpos = lpos + ilen + dlen
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !     We're at the end of the list. Right now, the list ends in
 !     a delimiter. Drop it.
 !
-         IF ( LPOS-DLEN .LE. LLEN ) THEN
-            LIST(LPOS-DLEN: ) = ' '
-         END IF
+         if ( lpos-dlen .le. llen ) then
+            list(lpos-dlen: ) = ' '
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure EXACT ( Round to exact value )
 
-      DOUBLE PRECISION FUNCTION EXACT ( NUMBER, VALUE, TOL )
+      double precision function exact ( number, value, tol )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      NUMBER
-      DOUBLE PRECISION      VALUE
-      DOUBLE PRECISION      TOL
+      double precision      number
+      double precision      value
+      double precision      tol
 
 ! $ Brief_I/O
 !
@@ -115,12 +115,12 @@
 !
 !     Just shorthand, really.
 !
-      IF ( ABS ( NUMBER - VALUE ) .LE. TOL ) THEN
-         EXACT = VALUE
+      if ( abs ( number - value ) .le. tol ) then
+         exact = value
 
-      ELSE
-         EXACT = NUMBER
-      END IF
+      else
+         exact = number
+      end if
 
-      RETURN
-      END
+      return
+      end

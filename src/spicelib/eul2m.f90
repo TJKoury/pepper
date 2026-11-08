@@ -1,7 +1,7 @@
 !$Procedure EUL2M ( Euler angles to matrix )
 
-      SUBROUTINE EUL2M (  ANGLE3,   ANGLE2,   ANGLE1, &
-                          AXIS3,    AXIS2,    AXIS1,   R  )
+      subroutine eul2m (  angle3,   angle2,   angle1, &
+                          axis3,    axis2,    axis1,   r  )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ANGLE3
-      DOUBLE PRECISION      ANGLE2
-      DOUBLE PRECISION      ANGLE1
+      double precision      angle3
+      double precision      angle2
+      double precision      angle1
 
-      INTEGER               AXIS3
-      INTEGER               AXIS2
-      INTEGER               AXIS1
+      integer               axis3
+      integer               axis2
+      integer               axis1
 
-      DOUBLE PRECISION      R ( 3, 3 )
+      double precision      r ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -425,52 +425,52 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      R1    ( 3, 3 )
-      LOGICAL               BADAX
+      double precision      r1    ( 3, 3 )
+      logical               badax
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EUL2M' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EUL2M' )
+      end if
 
 !
 !     Make sure the axis numbers are all right:  They must belong to
 !     the set {1, 2, 3}.
 !
-      BADAX =       (  ( AXIS3 .LT. 1 ) .OR. ( AXIS3 .GT. 3 )  ) &
-               .OR. (  ( AXIS2 .LT. 1 ) .OR. ( AXIS2 .GT. 3 )  ) &
-               .OR. (  ( AXIS1 .LT. 1 ) .OR. ( AXIS1 .GT. 3 )  )
+      badax =       (  ( axis3 .lt. 1 ) .or. ( axis3 .gt. 3 )  ) &
+               .or. (  ( axis2 .lt. 1 ) .or. ( axis2 .gt. 3 )  ) &
+               .or. (  ( axis1 .lt. 1 ) .or. ( axis1 .gt. 3 )  )
 
 
-      IF ( BADAX ) THEN
+      if ( badax ) then
 
-         CALL SETMSG ( 'Axis numbers are #,  #,  #. ' )
-         CALL ERRINT ( '#',  AXIS3                    )
-         CALL ERRINT ( '#',  AXIS2                    )
-         CALL ERRINT ( '#',  AXIS1                    )
-         CALL SIGERR ( 'SPICE(BADAXISNUMBERS)'        )
-         CALL CHKOUT ( 'EUL2M'                        )
-         RETURN
+         call setmsg ( 'Axis numbers are #,  #,  #. ' )
+         call errint ( '#',  axis3                    )
+         call errint ( '#',  axis2                    )
+         call errint ( '#',  axis1                    )
+         call sigerr ( 'SPICE(BADAXISNUMBERS)'        )
+         call chkout ( 'EUL2M'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Just do it.
 !
-      CALL ROTATE (      ANGLE1,  AXIS1,  R  )
-      CALL ROTMAT ( R,   ANGLE2,  AXIS2,  R1 )
-      CALL ROTMAT ( R1,  ANGLE3,  AXIS3,  R  )
+      call rotate (      angle1,  axis1,  r  )
+      call rotmat ( r,   angle2,  axis2,  r1 )
+      call rotmat ( r1,  angle3,  axis3,  r  )
 
-      CALL CHKOUT ( 'EUL2M' )
-      RETURN
-      END
+      call chkout ( 'EUL2M' )
+      return
+      end

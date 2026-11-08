@@ -1,6 +1,6 @@
 !$Procedure SAELGV ( Semi-axes of ellipse from generating vectors )
 
-      SUBROUTINE SAELGV ( VEC1, VEC2, SMAJOR, SMINOR )
+      subroutine saelgv ( vec1, vec2, smajor, sminor )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VEC1   ( 3 )
-      DOUBLE PRECISION      VEC2   ( 3 )
-      DOUBLE PRECISION      SMAJOR ( 3 )
-      DOUBLE PRECISION      SMINOR ( 3 )
+      double precision      vec1   ( 3 )
+      double precision      vec2   ( 3 )
+      double precision      smajor ( 3 )
+      double precision      sminor ( 3 )
 
 ! $ Brief_I/O
 !
@@ -209,34 +209,34 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C      ( 2, 2 )
-      DOUBLE PRECISION      EIGVAL ( 2, 2 )
-      DOUBLE PRECISION      S      ( 2, 2 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      TMPVC1 ( 3 )
-      DOUBLE PRECISION      TMPVC2 ( 3 )
+      double precision      c      ( 2, 2 )
+      double precision      eigval ( 2, 2 )
+      double precision      s      ( 2, 2 )
+      double precision      scale
+      double precision      tmpvc1 ( 3 )
+      double precision      tmpvc2 ( 3 )
 
-      INTEGER               I
-      INTEGER               MAJOR
-      INTEGER               MINOR
+      integer               i
+      integer               major
+      integer               minor
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SAELGV' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SAELGV' )
+      end if
 
 !
 !        Let the notation
@@ -386,71 +386,71 @@
 !
 !     Copy the input vectors.
 !
-      CALL MOVED ( VEC1, 3, TMPVC1 )
-      CALL MOVED ( VEC2, 3, TMPVC2 )
+      call moved ( vec1, 3, tmpvc1 )
+      call moved ( vec2, 3, tmpvc2 )
 
 !
 !     Scale the vectors to try to prevent arithmetic unpleasantness.
 !     We avoid using the quotient 1/SCALE, as this value may overflow.
 !     No need to go further if SCALE turns out to be zero.
 !
-      SCALE = MAX (  VNORM ( TMPVC1 ),   VNORM ( TMPVC2 )  )
+      scale = max (  vnorm ( tmpvc1 ),   vnorm ( tmpvc2 )  )
 
-      IF ( SCALE .EQ. 0.D0 ) THEN
+      if ( scale .eq. 0.d0 ) then
 
-         CALL CLEARD ( 3, SMAJOR )
-         CALL CLEARD ( 3, SMINOR )
+         call cleard ( 3, smajor )
+         call cleard ( 3, sminor )
 
-         CALL CHKOUT ( 'SAELGV' )
-         RETURN
+         call chkout ( 'SAELGV' )
+         return
 
-      END IF
+      end if
 
-      DO I = 1, 3
-         TMPVC1(I) = TMPVC1(I) / SCALE
-         TMPVC2(I) = TMPVC2(I) / SCALE
-      END DO
+      do i = 1, 3
+         tmpvc1(i) = tmpvc1(i) / scale
+         tmpvc2(i) = tmpvc2(i) / scale
+      end do
 
 !
 !     Compute S and diagonalize it:
 !
-      S(1,1) = VDOT ( TMPVC1, TMPVC1 )
-      S(2,1) = VDOT ( TMPVC1, TMPVC2 )
-      S(1,2) = S(2,1)
-      S(2,2) = VDOT ( TMPVC2, TMPVC2 )
+      s(1,1) = vdot ( tmpvc1, tmpvc1 )
+      s(2,1) = vdot ( tmpvc1, tmpvc2 )
+      s(1,2) = s(2,1)
+      s(2,2) = vdot ( tmpvc2, tmpvc2 )
 
-      CALL DIAGS2 ( S, EIGVAL, C )
+      call diags2 ( s, eigval, c )
 
 !
 !     Find the semi-axes.
 !
-      IF (   DABS( EIGVAL(1,1) )  .GE.  DABS( EIGVAL(2,2) )   )  THEN
+      if (   dabs( eigval(1,1) )  .ge.  dabs( eigval(2,2) )   )  then
 !
 !        The first eigenvector ( first column of C ) corresponds
 !        to the semi-major axis of the ellipse.
 !
-         MAJOR = 1
-         MINOR = 2
+         major = 1
+         minor = 2
 
-      ELSE
+      else
 !
 !        The second eigenvector corresponds to the semi-major axis.
 !
-         MAJOR = 2
-         MINOR = 1
+         major = 2
+         minor = 1
 
-      END IF
+      end if
 
-      CALL VLCOM ( C(1,MAJOR), TMPVC1, C(2,MAJOR), TMPVC2, SMAJOR )
-      CALL VLCOM ( C(1,MINOR), TMPVC1, C(2,MINOR), TMPVC2, SMINOR )
+      call vlcom ( c(1,major), tmpvc1, c(2,major), tmpvc2, smajor )
+      call vlcom ( c(1,minor), tmpvc1, c(2,minor), tmpvc2, sminor )
 
 !
 !     Undo the initial scaling.
 !
-      CALL VSCLIP ( SCALE, SMAJOR )
-      CALL VSCLIP ( SCALE, SMINOR )
+      call vsclip ( scale, smajor )
+      call vsclip ( scale, sminor )
 
 
-      CALL CHKOUT ( 'SAELGV' )
-      RETURN
-      END
+      call chkout ( 'SAELGV' )
+      return
+      end

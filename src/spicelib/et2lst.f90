@@ -1,6 +1,6 @@
 !$Procedure ET2LST ( ET to Local Solar Time )
 
-      SUBROUTINE ET2LST ( ET, BODY, LON, TYPE, HR, MN, SC, TIME, AMPM )
+      subroutine et2lst ( et, body, lon, type, hr, mn, sc, time, ampm )
 
 ! $ Abstract
 !
@@ -17,17 +17,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      INTEGER               BODY
-      DOUBLE PRECISION      LON
-      CHARACTER*(*)         TYPE
-      INTEGER               HR
-      INTEGER               MN
-      INTEGER               SC
-      CHARACTER*(*)         TIME
-      CHARACTER*(*)         AMPM
+      double precision      et
+      integer               body
+      double precision      lon
+      character*(*)         type
+      integer               hr
+      integer               mn
+      integer               sc
+      character*(*)         time
+      character*(*)         ampm
 
 ! $ Brief_I/O
 !
@@ -425,76 +425,76 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
+      double precision      brcktd
+      double precision      pi
+      double precision      twopi
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               SUN
-      PARAMETER           ( SUN    = 10 )
+      integer               sun
+      parameter           ( sun    = 10 )
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 
 !
 !     Local Variables
 !
-      CHARACTER*(4)         AMORPM
-      CHARACTER*(BDNMLN)    BODNAM
-      CHARACTER*(WDSIZE)    FRAME
-      CHARACTER*(2)         H
-      CHARACTER*(WDSIZE)    BPMKWD
-      CHARACTER*(2)         M
-      CHARACTER*(WDSIZE)    MYTYPE
-      CHARACTER*(2)         S
-      CHARACTER*(1)         KWTYPE
+      character*(4)         amorpm
+      character*(bdnmln)    bodnam
+      character*(wdsize)    frame
+      character*(2)         h
+      character*(wdsize)    bpmkwd
+      character*(2)         m
+      character*(wdsize)    mytype
+      character*(2)         s
+      character*(1)         kwtype
 
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      HOURS
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      MINS
-      DOUBLE PRECISION      MYLONG
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      RATE
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      SECNDS
-      DOUBLE PRECISION      SLAT
-      DOUBLE PRECISION      SLONG
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      TMPANG
-      DOUBLE PRECISION      TMPSEC
+      double precision      angle
+      double precision      hours
+      double precision      lat
+      double precision      lt
+      double precision      mins
+      double precision      mylong
+      double precision      range
+      double precision      rate
+      double precision      q
+      double precision      secnds
+      double precision      slat
+      double precision      slong
+      double precision      spoint ( 3 )
+      double precision      state  ( 6 )
+      double precision      tmpang
+      double precision      tmpsec
 
-      INTEGER               FRCODE
-      INTEGER               HRAMPM
-      INTEGER               N
+      integer               frcode
+      integer               hrampm
+      integer               n
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ET2LST')
+      call chkin ( 'ET2LST')
 
 
-      CALL LJUST ( TYPE,   MYTYPE )
-      CALL UCASE ( MYTYPE, MYTYPE )
+      call ljust ( type,   mytype )
+      call ucase ( mytype, mytype )
 
-      IF ( MYTYPE .EQ. 'PLANETOGRAPHIC' ) THEN
+      if ( mytype .eq. 'PLANETOGRAPHIC' ) then
 !
 !        Find planetocentric longitude corresponding to the input
 !        longitude.  We first represent in rectangular coordinates
@@ -506,11 +506,11 @@
 !        a name, if possible.  Otherwise, just convert the input code
 !        to a string.
 !
-         CALL BODC2N ( BODY, BODNAM, FOUND )
+         call bodc2n ( body, bodnam, found )
 
-         IF ( .NOT. FOUND ) THEN
-            CALL INTSTR ( BODY, BODNAM )
-         END IF
+         if ( .not. found ) then
+            call intstr ( body, bodnam )
+         end if
 
 !
 !        Convert planetographic coordinates to rectangular coordinates.
@@ -522,195 +522,195 @@
 !            Equatorial radius = 1
 !            Flattening factor = 0
 !
-         CALL PGRREC ( BODNAM, LON, 0.D0, 0.D0, 1.D0, 0.D0, SPOINT )
+         call pgrrec ( bodnam, lon, 0.d0, 0.d0, 1.d0, 0.d0, spoint )
 
 !
 !        The output MYLONG is planetocentric longitude.  The other
 !        outputs are not used.  Note that the variable RANGE appears
 !        later in another RECLAT call; it's not used after that.
 !
-         CALL RECLAT ( SPOINT, RANGE, MYLONG, LAT )
+         call reclat ( spoint, range, mylong, lat )
 
 
-      ELSE IF ( MYTYPE .EQ. 'PLANETOCENTRIC' ) THEN
+      else if ( mytype .eq. 'PLANETOCENTRIC' ) then
 
-         MYLONG = LON
+         mylong = lon
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The coordinate system ''#'' is not a ' &
+         call setmsg ( 'The coordinate system ''#'' is not a ' &
          //            'recognized system of longitude.  The ' &
          //            'recognized systems are ' &
          //            '''PLANETOCENTRIC'' and ' &
          //            '''PLANETOGRAPHIC''. ' )
 
-         CALL ERRCH  ( '#', TYPE )
-         CALL SIGERR ( 'SPICE(UNKNOWNSYSTEM)'  )
-         CALL CHKOUT ( 'ET2LST' )
-         RETURN
+         call errch  ( '#', type )
+         call sigerr ( 'SPICE(UNKNOWNSYSTEM)'  )
+         call chkout ( 'ET2LST' )
+         return
 
-      END IF
+      end if
 !
 !     It's always noon on the surface of the sun.
 !
-      IF ( BODY .EQ. 10 ) THEN
+      if ( body .eq. 10 ) then
 
-         HR = 12
-         MN = 0
-         SC = 0
+         hr = 12
+         mn = 0
+         sc = 0
 
-         TIME = '12:00:00'
-         AMPM = '12:00:00 P.M.'
+         time = '12:00:00'
+         ampm = '12:00:00 P.M.'
 
-         CALL CHKOUT ( 'ET2LST' )
-         RETURN
+         call chkout ( 'ET2LST' )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the body-fixed position of the sun.
 !
-      CALL CIDFRM ( BODY, FRCODE, FRAME, FOUND )
+      call cidfrm ( body, frcode, frame, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The body-fixed frame associated with ' &
+         call setmsg ( 'The body-fixed frame associated with ' &
          //            'body # could not be determined.  This ' &
          //            'information needs to be "loaded" via a ' &
          //            'frames definition kernel.  See ' &
          //            'frames.req for more details. '         )
-         CALL ERRINT ( '#', BODY                               )
-         CALL SIGERR ( 'SPICE(CANTFINDFRAME)'                  )
-         CALL CHKOUT ( 'ET2LST'                                )
-         RETURN
+         call errint ( '#', body                               )
+         call sigerr ( 'SPICE(CANTFINDFRAME)'                  )
+         call chkout ( 'ET2LST'                                )
+         return
 
-      END IF
+      end if
 
 
 
-      CALL SPKEZ  (  SUN,   ET,    FRAME, 'LT+S', BODY, STATE, LT )
-      CALL RECLAT (  STATE, RANGE, SLONG,  SLAT )
+      call spkez  (  sun,   et,    frame, 'LT+S', body, state, lt )
+      call reclat (  state, range, slong,  slat )
 
-      ANGLE = MYLONG - SLONG
+      angle = mylong - slong
 
 !
 !     Force the angle into the region from -PI to PI
 !
-      CALL RMAIND ( ANGLE, TWOPI(), Q, TMPANG )
-      ANGLE = TMPANG
+      call rmaind ( angle, twopi(), q, tmpang )
+      angle = tmpang
 
-      IF ( ANGLE .GT. PI() ) THEN
-         ANGLE = ANGLE - TWOPI()
-      END IF
+      if ( angle .gt. pi() ) then
+         angle = angle - twopi()
+      end if
 
 !
 !     Get the rotation sense of the body and invert the angle if the
 !     rotation sense is retrograde. Use the BODY#_PM PCK keyword to
 !     determine the sense of the body rotation.
 !
-      BPMKWD = 'BODY#_PM'
-      CALL REPMI ( BPMKWD, '#', BODY, BPMKWD )
+      bpmkwd = 'BODY#_PM'
+      call repmi ( bpmkwd, '#', body, bpmkwd )
 
-      CALL DTPOOL ( BPMKWD, FOUND, N, KWTYPE )
+      call dtpool ( bpmkwd, found, n, kwtype )
 
-      IF (      .NOT. FOUND &
-            .OR. KWTYPE .NE. 'N' &
-            .OR. N      .LT.  2  ) THEN
+      if (      .not. found &
+            .or. kwtype .ne. 'N' &
+            .or. n      .lt.  2  ) then
 
-         CALL SETMSG ( 'The rotation type for the body # could ' &
+         call setmsg ( 'The rotation type for the body # could ' &
          //            'not be determined because the # keyword ' &
          //            'was either not found in the POOL or ' &
          //            'or it was not of the expected type and/or ' &
          //            'dimension. This keyword is usually ' &
          //            'provided via a planetary constants ' &
          //            'kernel. See pck.req for more details. ')
-         CALL ERRINT ( '#', BODY                               )
-         CALL ERRCH  ( '#', BPMKWD                             )
-         CALL SIGERR ( 'SPICE(CANTGETROTATIONTYPE)'            )
-         CALL CHKOUT ( 'ET2LST'                                )
-         RETURN
+         call errint ( '#', body                               )
+         call errch  ( '#', bpmkwd                             )
+         call sigerr ( 'SPICE(CANTGETROTATIONTYPE)'            )
+         call chkout ( 'ET2LST'                                )
+         return
 
-      ELSE
+      else
 
 !
 !        If the rotation rate is negative, invert the angle.
 !
-         CALL GDPOOL ( BPMKWD, 2, 1, N, RATE, FOUND )
+         call gdpool ( bpmkwd, 2, 1, n, rate, found )
 
-         IF ( RATE .LT. 0.D0 ) THEN
-            ANGLE = - ANGLE
-         END IF
+         if ( rate .lt. 0.d0 ) then
+            angle = - angle
+         end if
 
-      END IF
+      end if
 
 !
 !     Convert the angle to "angle seconds" before or after local noon.
 !
-      SECNDS = 86400.0D0 * ANGLE / TWOPI()
-      SECNDS = BRCKTD ( SECNDS, -43200.0D0, 43200.0D0 )
+      secnds = 86400.0d0 * angle / twopi()
+      secnds = brcktd ( secnds, -43200.0d0, 43200.0d0 )
 
 !
 !     Get the hour, and minutes components of the local time.
 !
-      CALL RMAIND ( SECNDS, 3600.0D0, HOURS, TMPSEC )
-      CALL RMAIND ( TMPSEC, 60.0D0,   MINS,  SECNDS )
+      call rmaind ( secnds, 3600.0d0, hours, tmpsec )
+      call rmaind ( tmpsec, 60.0d0,   mins,  secnds )
 !
 !     Construct the integer components of the local time.
 !
-      HR = 12 + INT(HOURS)
-      MN =      INT(MINS)
-      SC =      INT(SECNDS)
+      hr = 12 + int(hours)
+      mn =      int(mins)
+      sc =      int(secnds)
 !
 !     Set the A.M./P.M. components of local time.
 !
-      IF      ( HR .EQ. 24 ) THEN
+      if      ( hr .eq. 24 ) then
 
-         HR     = 0
-         HRAMPM = 12
-         AMORPM = 'A.M.'
+         hr     = 0
+         hrampm = 12
+         amorpm = 'A.M.'
 
-      ELSE IF ( HR .GT. 12 ) THEN
+      else if ( hr .gt. 12 ) then
 
-         HRAMPM = HR - 12
-         AMORPM = 'P.M.'
+         hrampm = hr - 12
+         amorpm = 'P.M.'
 
-      ELSE IF ( HR .EQ. 12 ) THEN
+      else if ( hr .eq. 12 ) then
 
-         HRAMPM = 12
-         AMORPM = 'P.M.'
+         hrampm = 12
+         amorpm = 'P.M.'
 
-      ELSE IF ( HR .EQ. 0 ) THEN
+      else if ( hr .eq. 0 ) then
 
-         HRAMPM = 12
-         AMORPM = 'A.M.'
+         hrampm = 12
+         amorpm = 'A.M.'
 
-      ELSE
+      else
 
-         HRAMPM = HR
-         AMORPM = 'A.M.'
+         hrampm = hr
+         amorpm = 'A.M.'
 
-      END IF
+      end if
 
 !
 !     Now construct the two strings we need.
 !
-      HOURS  = DBLE(HR)
-      MINS   = DBLE(MN)
-      SECNDS = DBLE(SC)
+      hours  = dble(hr)
+      mins   = dble(mn)
+      secnds = dble(sc)
 
-      CALL DPFMT ( HOURS,  '0x', H )
-      CALL DPFMT ( MINS,   '0x', M )
-      CALL DPFMT ( SECNDS, '0x', S )
+      call dpfmt ( hours,  '0x', h )
+      call dpfmt ( mins,   '0x', m )
+      call dpfmt ( secnds, '0x', s )
 
-      TIME = H // ':' // M // ':' // S
+      time = h // ':' // m // ':' // s
 
 
-      HOURS = DBLE(HRAMPM)
+      hours = dble(hrampm)
 
-      CALL DPFMT ( HOURS,  '0x', H )
+      call dpfmt ( hours,  '0x', h )
 
-      AMPM = H // ':' // M // ':' // S //  ' ' // AMORPM
+      ampm = h // ':' // m // ':' // s //  ' ' // amorpm
 
-      CALL CHKOUT ( 'ET2LST' )
-      RETURN
-      END
+      call chkout ( 'ET2LST' )
+      return
+      end

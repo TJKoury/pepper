@@ -1,6 +1,6 @@
 !$Procedure SPKEZ ( S/P Kernel, easy reader )
 
-      SUBROUTINE SPKEZ ( TARG, ET, REF, ABCORR, OBS, STARG, LT )
+      subroutine spkez ( targ, et, ref, abcorr, obs, starg, lt )
 
 ! $ Abstract
 !
@@ -21,20 +21,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
+      include               'frmtyp.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
 
 
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBS
-      DOUBLE PRECISION      STARG    ( 6 )
-      DOUBLE PRECISION      LT
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      integer               obs
+      double precision      starg    ( 6 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -1009,107 +1009,107 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  =  'SPKEZ' )
+      character*(*)         rname
+      parameter           ( rname  =  'SPKEZ' )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    PRVCOR
+      character*(corlen)    prvcor
 
-      DOUBLE PRECISION      DLT
-      DOUBLE PRECISION      DLTCTR
-      DOUBLE PRECISION      LTCENT
-      DOUBLE PRECISION      STATE    ( 6    )
-      DOUBLE PRECISION      STOBS    ( 6    )
-      DOUBLE PRECISION      TEMP     ( 6    )
-      DOUBLE PRECISION      XFORM    ( 6, 6 )
+      double precision      dlt
+      double precision      dltctr
+      double precision      ltcent
+      double precision      state    ( 6    )
+      double precision      stobs    ( 6    )
+      double precision      temp     ( 6    )
+      double precision      xform    ( 6, 6 )
 
-      INTEGER               CENTER
-      INTEGER               FJ2000
-      INTEGER               I
-      INTEGER               LTSIGN
-      INTEGER               REQFRM
-      INTEGER               TYPE
-      INTEGER               TYPEID
+      integer               center
+      integer               fj2000
+      integer               i
+      integer               ltsign
+      integer               reqfrm
+      integer               type
+      integer               typeid
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FOUND
-      LOGICAL               USEGEO
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               found
+      logical               usegeo
+      logical               xmit
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVREF
-      INTEGER               SVREQF
+      integer               svctr1 ( ctrsiz )
+      character*(frnmln)    svref
+      integer               svreqf
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST   /.TRUE./
-      DATA                  PRVCOR  / ' ' /
+      data                  first   /.true./
+      data                  prvcor  / ' ' /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 
 !
 !     Counter initialization is done separately.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-      END IF
+      end if
 
 
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -1123,21 +1123,21 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         XMIT    =  ATTBLK ( XMTIDX )
-         USEGEO  =  ATTBLK ( GEOIDX )
+         xmit    =  attblk ( xmtidx )
+         usegeo  =  attblk ( geoidx )
 
 !
 !        Get the frame ID for J2000 on the first call to this routine.
 !
-         IF ( FIRST ) THEN
+         if ( first ) then
 
-            CALL NAMFRM( 'J2000', FJ2000 )
+            call namfrm( 'J2000', fj2000 )
 
-            FIRST   = .FALSE.
+            first   = .false.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we only want a geometric state, then use SPKGEO to compute
@@ -1148,66 +1148,66 @@
 !     compute the requested state in the J2000 frame, then transform it
 !     to the frame designated by REF.
 !
-      IF ( USEGEO ) THEN
+      if ( usegeo ) then
 
-         CALL SPKGEO ( TARG, ET, REF, OBS, STARG, LT )
+         call spkgeo ( targ, et, ref, obs, starg, lt )
 
-      ELSE
+      else
 !
 !        Get the auxiliary information about the requested output
 !        frame.
 !
-         CALL ZZNAMFRM ( SVCTR1, SVREF, SVREQF, REF, REQFRM )
+         call zznamfrm ( svctr1, svref, svreqf, ref, reqfrm )
 
-         IF ( REQFRM .EQ. 0 ) THEN
-            CALL SETMSG ( 'The requested output frame ''#'' is ' &
+         if ( reqfrm .eq. 0 ) then
+            call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
             //            'appropriate kernels have been loaded ' &
             //            'and that you have correctly entered ' &
             //            'the name of the output frame. ' )
-            CALL ERRCH  ( '#', REF )
-            CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
-            CALL CHKOUT ( RNAME )
-            RETURN
+            call errch  ( '#', ref )
+            call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
+            call chkout ( rname )
+            return
 
-         END IF
+         end if
 
 
-         CALL FRINFO ( REQFRM, CENTER, TYPE, TYPEID, FOUND )
+         call frinfo ( reqfrm, center, type, typeid, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'The requested output frame ''#'' is ' &
+            call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
             //            'appropriate kernels have been loaded ' &
             //            'and that you have correctly entered ' &
             //            'the name of the output frame. ' )
-            CALL ERRCH  ( '#', REF )
-            CALL SIGERR ( 'SPICE(UNKNOWNFRAME2)' )
-            CALL CHKOUT ( RNAME )
+            call errch  ( '#', ref )
+            call sigerr ( 'SPICE(UNKNOWNFRAME2)' )
+            call chkout ( rname )
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        If we are dealing with an inertial frame, we can simply
 !        call SPKACS and return.
 !
-         IF ( TYPE .EQ. INERTL ) THEN
+         if ( type .eq. inertl ) then
 
-            CALL SPKACS ( TARG, ET, REF, ABCORR, OBS, STARG, LT, DLT )
-            CALL CHKOUT ( RNAME )
-            RETURN
+            call spkacs ( targ, et, ref, abcorr, obs, starg, lt, dlt )
+            call chkout ( rname )
+            return
 
-         END IF
+         end if
 !
 !        Still here?
 !
@@ -1221,38 +1221,38 @@
 !        variable STATE when we compute the inertial apparent state
 !        of the target relative to the observer.
 !
-         CALL SPKACS ( TARG, ET, 'J2000', ABCORR, OBS, STATE, LT, DLT )
+         call spkacs ( targ, et, 'J2000', abcorr, obs, state, lt, dlt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF ( CENTER .EQ. OBS ) THEN
+         if ( center .eq. obs ) then
 
-            LTCENT = 0.0D0
-            DLTCTR = 0.0D0
+            ltcent = 0.0d0
+            dltctr = 0.0d0
 
-         ELSE IF ( CENTER .EQ. TARG ) THEN
+         else if ( center .eq. targ ) then
 
-            LTCENT = LT
-            DLTCTR = DLT
+            ltcent = lt
+            dltctr = dlt
 
-         ELSE
+         else
 
-            CALL SPKSSB ( OBS,    ET,     'J2000',         STOBS )
-            CALL SPKLTC ( CENTER, ET,     'J2000', ABCORR, STOBS, &
-                          TEMP,   LTCENT, DLTCTR                 )
-         END IF
+            call spkssb ( obs,    et,     'J2000',         stobs )
+            call spkltc ( center, et,     'J2000', abcorr, stobs, &
+                          temp,   ltcent, dltctr                 )
+         end if
 
 !
 !        If something went wrong (like we couldn't get the state of
 !        the center relative to the observer) now it is time to quit.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        If the aberration corrections are for transmission, make the
@@ -1260,23 +1260,23 @@
 !        orientation of the non-inertial frame at an epoch later than
 !        ET by the one-way light time.
 !
-         IF ( XMIT ) THEN
+         if ( xmit ) then
 
-            LTSIGN =  1
-         ELSE
-            LTSIGN = -1
-         END IF
+            ltsign =  1
+         else
+            ltsign = -1
+         end if
 
 !
 !        Get the state transformation from J2000 to the requested frame
 !        and convert the state.
 !
-         CALL FRMCHG ( FJ2000, REQFRM, ET + LTSIGN*LTCENT, XFORM )
+         call frmchg ( fj2000, reqfrm, et + ltsign*ltcent, xform )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        There's a tricky bit here:  since XFORM is evaluated
@@ -1301,20 +1301,20 @@
 !
 !        So we'll scale the derivative block of XFORM accordingly.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            CALL VSCLIP ( 1.D0 + LTSIGN*DLTCTR, XFORM(4,I))
+            call vsclip ( 1.d0 + ltsign*dltctr, xform(4,i))
 
-         END DO
+         end do
 
 !
 !        Now apply the frame transformation XFORM to produce the
 !        state expressed relative to the request frame REQFRM.
 !
-         CALL MXVG ( XFORM, STATE, 6, 6, STARG )
+         call mxvg ( xform, state, 6, 6, starg )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

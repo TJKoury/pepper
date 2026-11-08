@@ -1,6 +1,6 @@
 !$Procedure INSLAC ( Insert at location in a character array )
 
-      SUBROUTINE INSLAC ( ELTS, NE, LOC, ARRAY, NA )
+      subroutine inslac ( elts, ne, loc, array, na )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    ELTS  ( * )
-      INTEGER          NE
-      INTEGER          LOC
-      CHARACTER*(*)    ARRAY ( * )
-      INTEGER          NA
+      character*(*)    elts  ( * )
+      integer          ne
+      integer          loc
+      character*(*)    array ( * )
+      integer          na
 
 ! $ Brief_I/O
 !
@@ -184,19 +184,19 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 
 !
 !     Other functions
 !
-      INTEGER          MAX
+      integer          max
 
 !
 !     Local variables
 !
-      INTEGER          SIZE
-      INTEGER          I
+      integer          size
+      integer          i
 
 
 
@@ -204,64 +204,64 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'INSLAC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'INSLAC' )
+      end if
 
 
 !
 !     Check the dimension of the array.
 !
-      SIZE = MAX ( 0, NA )
+      size = max ( 0, na )
 
 !
 !     Make sure the location at which the elements are to be inserted
 !     is not out of range. If it is, signal an error and bail out.
 !
 
-      IF ( ( LOC .LT. 1 ) .OR. ( LOC .GT. SIZE+1 ) ) THEN
+      if ( ( loc .lt. 1 ) .or. ( loc .gt. size+1 ) ) then
 
-         CALL SETMSG ( 'Location was *.'     )
-         CALL ERRINT ( '*', LOC              )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
-         CALL CHKOUT ( 'INSLAC' )
-         RETURN
+         call setmsg ( 'Location was *.'     )
+         call errint ( '*', loc              )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
+         call chkout ( 'INSLAC' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     If the number of elements to be inserted is greater than zero,
 !     insert them. If not, do not modify the array.
 !
-      IF ( NE .GT. 0 ) THEN
+      if ( ne .gt. 0 ) then
 
 !
 !        Move the trailing elements back to make room for the new ones.
 !
-         DO I = SIZE, LOC, -1
-            ARRAY(I+NE) = ARRAY(I)
-         END DO
+         do i = size, loc, -1
+            array(i+ne) = array(i)
+         end do
 
 !
 !        Now put the new elements in the vacated spaces.
 !
-         DO I = 1, NE
-            ARRAY(LOC+I-1) = ELTS(I)
-         END DO
+         do i = 1, ne
+            array(loc+i-1) = elts(i)
+         end do
 
 !
 !        Update the number of elements in the array.
 !
-         NA = SIZE + NE
+         na = size + ne
 
 
-      END IF
+      end if
 
 
 
-      CALL CHKOUT ( 'INSLAC' )
-      RETURN
-      END
+      call chkout ( 'INSLAC' )
+      return
+      end

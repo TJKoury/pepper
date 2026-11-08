@@ -1,7 +1,7 @@
 !$Procedure ZZSCAD01 ( SPICE private, add clock to database, type 01 )
 
-      SUBROUTINE ZZSCAD01 ( SC,     HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                            DPBUFF, IFREE,  INTBUF, SCBASE, SCLKAT )
+      subroutine zzscad01 ( sc,     hdsclk, scpool, clklst, dpfree, &
+                            dpbuff, ifree,  intbuf, scbase, sclkat )
 
 ! $ Abstract
 !
@@ -22,21 +22,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
-      INCLUDE 'zzsc01.inc'
+      include 'errhnd.inc'
+      include 'zzsc01.inc'
 
-      INTEGER               SC
-      INTEGER               HDSCLK ( * )
-      INTEGER               SCPOOL ( LBSNGL : * )
-      INTEGER               CLKLST ( * )
-      INTEGER               DPFREE
-      DOUBLE PRECISION      DPBUFF ( * )
-      INTEGER               IFREE
-      INTEGER               INTBUF ( * )
-      INTEGER               SCBASE ( * )
-      INTEGER               SCLKAT
+      integer               sc
+      integer               hdsclk ( * )
+      integer               scpool ( lbsngl : * )
+      integer               clklst ( * )
+      integer               dpfree
+      double precision      dpbuff ( * )
+      integer               ifree
+      integer               intbuf ( * )
+      integer               scbase ( * )
+      integer               sclkat
 
 ! $ Brief_I/O
 !
@@ -226,14 +226,14 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN =     60 )
+      integer               namlen
+      parameter           ( namlen =     60 )
 
 !
 !     Following are parameters for the indices within the
@@ -242,99 +242,99 @@
 !
 !     NOTE: indices for the d.p. variables must be listed first.
 !
-      INTEGER               COFIDX
-      PARAMETER           ( COFIDX =          1 )
+      integer               cofidx
+      parameter           ( cofidx =          1 )
 
-      INTEGER               PRSIDX
-      PARAMETER           ( PRSIDX = COFIDX + 1 )
+      integer               prsidx
+      parameter           ( prsidx = cofidx + 1 )
 
-      INTEGER               PREIDX
-      PARAMETER           ( PREIDX = PRSIDX + 1 )
+      integer               preidx
+      parameter           ( preidx = prsidx + 1 )
 
-      INTEGER               OFFIDX
-      PARAMETER           ( OFFIDX = PREIDX + 1 )
+      integer               offidx
+      parameter           ( offidx = preidx + 1 )
 
-      INTEGER               MODIDX
-      PARAMETER           ( MODIDX = OFFIDX + 1 )
+      integer               modidx
+      parameter           ( modidx = offidx + 1 )
 
-      INTEGER               NFLIDX
-      PARAMETER           ( NFLIDX = MODIDX + 1 )
+      integer               nflidx
+      parameter           ( nflidx = modidx + 1 )
 
-      INTEGER               DELIDX
-      PARAMETER           ( DELIDX = NFLIDX + 1 )
+      integer               delidx
+      parameter           ( delidx = nflidx + 1 )
 
-      INTEGER               SYSIDX
-      PARAMETER           ( SYSIDX = DELIDX + 1 )
+      integer               sysidx
+      parameter           ( sysidx = delidx + 1 )
 
-      INTEGER               NKITEM
-      PARAMETER           ( NKITEM = SYSIDX )
+      integer               nkitem
+      parameter           ( nkitem = sysidx )
 
-      INTEGER               NDP
-      PARAMETER           ( NDP    = MODIDX )
+      integer               ndp
+      parameter           ( ndp    = modidx )
 
 !
 !     Maximum number of elements in coefficient array:
 !
-      INTEGER               MXCFSZ
-      PARAMETER           ( MXCFSZ =  3 * MXCOEF )
+      integer               mxcfsz
+      parameter           ( mxcfsz =  3 * mxcoef )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         KVTYPE ( NKITEM )
-      CHARACTER*(NAMLEN)    KVNAME ( NKITEM )
-      CHARACTER*(NAMLEN)    NAMLST ( NKITEM )
-      CHARACTER*(SMSGLN)    SHRTMS
+      character*(1)         kvtype ( nkitem )
+      character*(namlen)    kvname ( nkitem )
+      character*(namlen)    namlst ( nkitem )
+      character*(smsgln)    shrtms
 
-      INTEGER               DPBASE
-      INTEGER               DPROOM
-      INTEGER               I
-      INTEGER               IBASE
-      INTEGER               IBIX   ( NKITEM )
-      INTEGER               IROOM
-      INTEGER               KVMAXN ( NKITEM )
-      INTEGER               KVSIZE ( NKITEM )
-      INTEGER               N
-      INTEGER               NCOEFF
-      INTEGER               NDPVAL
-      INTEGER               NMOD
-      INTEGER               NOFF
-      INTEGER               NPART
-      INTEGER               NPARTB
-      INTEGER               NPARTE
-      INTEGER               NSCAVL
-      INTEGER               NSYS
-      INTEGER               PRVSC
+      integer               dpbase
+      integer               dproom
+      integer               i
+      integer               ibase
+      integer               ibix   ( nkitem )
+      integer               iroom
+      integer               kvmaxn ( nkitem )
+      integer               kvsize ( nkitem )
+      integer               n
+      integer               ncoeff
+      integer               ndpval
+      integer               nmod
+      integer               noff
+      integer               npart
+      integer               npartb
+      integer               nparte
+      integer               nscavl
+      integer               nsys
+      integer               prvsc
 
-      LOGICAL               FOUND
-      LOGICAL               NEW
+      logical               found
+      logical               new
 
 !
 !     Saved values
 !
-      SAVE                 IBIX
-      SAVE                 KVMAXN
-      SAVE                 NAMLST
+      save                 ibix
+      save                 kvmaxn
+      save                 namlst
 
 !
 !     Initial values
 !
-      DATA ( NAMLST(I), KVMAXN(I), IBIX(I), I = 1, NKITEM ) / &
-        'SCLK01_COEFFICIENTS',    MXCFSZ,    IXBCOF, &
-        'SCLK_PARTITION_START',   MXPART,    IXBSTR, &
-        'SCLK_PARTITION_END',     MXPART,    IXBEND, &
-        'SCLK01_OFFSETS',         MXNFLD,    IXBOFF, &
-        'SCLK01_MODULI',          MXNFLD,    IXBMOD, &
+      data ( namlst(i), kvmaxn(i), ibix(i), i = 1, nkitem ) / &
+        'SCLK01_COEFFICIENTS',    mxcfsz,    ixbcof, &
+        'SCLK_PARTITION_START',   mxpart,    ixbstr, &
+        'SCLK_PARTITION_END',     mxpart,    ixbend, &
+        'SCLK01_OFFSETS',         mxnfld,    ixboff, &
+        'SCLK01_MODULI',          mxnfld,    ixbmod, &
         'SCLK01_N_FIELDS',        1,         0, &
         'SCLK01_OUTPUT_DELIM',    1,         0, &
         'SCLK01_TIME_SYSTEM',     1,         0              /
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSCAD01' )
+      call chkin ( 'ZZSCAD01' )
 
 !
 !     Make up a list of names of kernel variables that we'll use.
@@ -342,99 +342,99 @@
 !     require the addition of a spacecraft code suffix.  For the
 !     rest of the names, we'll have to add the suffix.
 !
-      CALL MOVEC ( NAMLST, NKITEM, KVNAME )
+      call movec ( namlst, nkitem, kvname )
 
-      DO I = 1, NKITEM
-         CALL SUFFIX ( '_#',        0,         KVNAME(I) )
-         CALL REPMI  ( KVNAME(I),  '#',  -SC,  KVNAME(I) )
-      END DO
+      do i = 1, nkitem
+         call suffix ( '_#',        0,         kvname(i) )
+         call repmi  ( kvname(i),  '#',  -sc,  kvname(i) )
+      end do
 
 !
 !     Check available room in the clock hash and in the numeric data
 !     buffers. If there's no room, re-initialize the entire data
 !     structure.
 !
-      CALL ZZHSIAVL ( SCPOOL, NSCAVL )
+      call zzhsiavl ( scpool, nscavl )
 
-      IF ( NSCAVL .EQ. 0 ) THEN
+      if ( nscavl .eq. 0 ) then
 
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-      END IF
+      end if
 
 !
 !     Add this clock to the hash.
 !
-      CALL ZZHSIADD ( HDSCLK, SCPOOL, CLKLST, SC, SCLKAT, NEW )
+      call zzhsiadd ( hdsclk, scpool, clklst, sc, sclkat, new )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL CHKOUT ( 'ZZSCAD01' )
-         RETURN
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call chkout ( 'ZZSCAD01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Check room in the integer buffer.
 !
-      IROOM = IBUFSZ + 1 - IFREE
+      iroom = ibufsz + 1 - ifree
 
-      IF (  ( IROOM .LT. NIVALS ) .OR. ( IROOM .GT. IBUFSZ )  ) THEN
+      if (  ( iroom .lt. nivals ) .or. ( iroom .gt. ibufsz )  ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         I = IFREE
+         i = ifree
 
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-         CALL SETMSG ( 'IROOM was #; must be in range #:#. ' &
+         call setmsg ( 'IROOM was #; must be in range #:#. ' &
          //            'IFREE was #; must be in range 1:#.' )
-         CALL ERRINT ( '#', IROOM    )
-         CALL ERRINT ( '#', NIVALS   )
-         CALL ERRINT ( '#', IBUFSZ   )
-         CALL ERRINT ( '#', I        )
-         CALL ERRINT ( '#', IBUFSZ+1 )
-         CALL SIGERR ( 'SPICE(BUG)'  )
-         CALL CHKOUT ( 'ZZSCAD01'    )
-         RETURN
+         call errint ( '#', iroom    )
+         call errint ( '#', nivals   )
+         call errint ( '#', ibufsz   )
+         call errint ( '#', i        )
+         call errint ( '#', ibufsz+1 )
+         call sigerr ( 'SPICE(BUG)'  )
+         call chkout ( 'ZZSCAD01'    )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute available room for double precision data.
 !
-      DPROOM = DBUFSZ + 1 - DPFREE
+      dproom = dbufsz + 1 - dpfree
 
-      IF (  ( DPROOM .LT. 0 ) .OR. ( DPROOM .GT. DBUFSZ )  ) THEN
+      if (  ( dproom .lt. 0 ) .or. ( dproom .gt. dbufsz )  ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         I = DPFREE
+         i = dpfree
 
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-         CALL SETMSG ( 'DPROOM was #; must be in range 0:#. ' &
+         call setmsg ( 'DPROOM was #; must be in range 0:#. ' &
          //            'DPFREE was #; must be in range 1:#.' )
-         CALL ERRINT ( '#', DPROOM   )
-         CALL ERRINT ( '#', DBUFSZ   )
-         CALL ERRINT ( '#', I        )
-         CALL ERRINT ( '#', DBUFSZ+1 )
-         CALL SIGERR ( 'SPICE(BUG)'  )
-         CALL CHKOUT ( 'ZZSCAD01'    )
-         RETURN
+         call errint ( '#', dproom   )
+         call errint ( '#', dbufsz   )
+         call errint ( '#', i        )
+         call errint ( '#', dbufsz+1 )
+         call sigerr ( 'SPICE(BUG)'  )
+         call chkout ( 'ZZSCAD01'    )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the base address for the next item to be added to the
 !     integer buffer. The index of the first element of the item
 !     is the successor of IBASE.
 !
-      IBASE            = IFREE-1
-      SCBASE( SCLKAT ) = IBASE
+      ibase            = ifree-1
+      scbase( sclkat ) = ibase
 
 !
 !     Fetch from the kernel pool the integer items we need:
@@ -443,25 +443,25 @@
 !        -  The output delimiter code
 !        -  The parallel time system code (optional; defaults to TDB)
 !
-      CALL SCLI01 ( NAMLST(NFLIDX), SC, 1, N,    INTBUF(IBASE+IXNFLD) )
-      CALL SCLI01 ( NAMLST(DELIDX), SC, 1, N,    INTBUF(IBASE+IXDLIM) )
-      CALL SCLI01 ( NAMLST(SYSIDX), SC, 1, NSYS, INTBUF(IBASE+IXTSYS) )
+      call scli01 ( namlst(nflidx), sc, 1, n,    intbuf(ibase+ixnfld) )
+      call scli01 ( namlst(delidx), sc, 1, n,    intbuf(ibase+ixdlim) )
+      call scli01 ( namlst(sysidx), sc, 1, nsys, intbuf(ibase+ixtsys) )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL CHKOUT ( 'ZZSCAD01' )
-         RETURN
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call chkout ( 'ZZSCAD01' )
+         return
 
-      END IF
+      end if
 
 !
 !     The time system code need not be provided in the kernel pool.
 !     Set it to the default value if it's not present.
 !
-      IF ( NSYS .EQ. 0 ) THEN
-         INTBUF(IBASE+IXTSYS) = TDB
-      END IF
+      if ( nsys .eq. 0 ) then
+         intbuf(ibase+ixtsys) = tdb
+      end if
 
 !
 !     Check for presence in the kernel pool of all required d.p. kernel
@@ -475,120 +475,120 @@
 !     passed-in buffers. We need to know in advance how much room is
 !     needed.
 !
-      DO I = 1, NDP
+      do i = 1, ndp
 
-         CALL DTPOOL ( KVNAME(I), FOUND, KVSIZE(I), KVTYPE(I) )
+         call dtpool ( kvname(i), found, kvsize(i), kvtype(i) )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           This code should be unreachable but is provided for
 !           safety. Initialize local data structures. ZZSCIN01 sets
 !           PRVSC to 0.
 !
-            CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, &
-                            DPFREE, IFREE,  PRVSC  )
+            call zzscin01 ( hdsclk, scpool, clklst, &
+                            dpfree, ifree,  prvsc  )
 
-            CALL CHKOUT ( 'ZZSCAD01' )
-            RETURN
+            call chkout ( 'ZZSCAD01' )
+            return
 
-         END IF
+         end if
 
 !
 !        Check that each required d.p. kernel variable was found.
 !
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, &
-                            DPFREE, IFREE,  PRVSC  )
+            call zzscin01 ( hdsclk, scpool, clklst, &
+                            dpfree, ifree,  prvsc  )
 
-            CALL SETMSG ( 'Kernel variable # for spacecraft clock ' &
+            call setmsg ( 'Kernel variable # for spacecraft clock ' &
             //            '# was not found. An SCLK kernel for ' &
             //            'this clock may not have been loaded.'   )
-            CALL ERRCH  ( '#', KVNAME(I)                           )
-            CALL ERRINT ( '#', SC                                  )
-            CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)'               )
-            CALL CHKOUT ( 'ZZSCAD01'                               )
-            RETURN
+            call errch  ( '#', kvname(i)                           )
+            call errint ( '#', sc                                  )
+            call sigerr ( 'SPICE(KERNELVARNOTFOUND)'               )
+            call chkout ( 'ZZSCAD01'                               )
+            return
 
-         END IF
+         end if
 
 !
 !        Check the number of values associated with the kernel
 !        variable.
 !
-         IF ( KVSIZE(I) .GT. KVMAXN(I) ) THEN
+         if ( kvsize(i) .gt. kvmaxn(i) ) then
 
-            CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, &
-                            DPFREE, IFREE,  PRVSC  )
+            call zzscin01 ( hdsclk, scpool, clklst, &
+                            dpfree, ifree,  prvsc  )
 
-            CALL SETMSG ( 'The number of values associated with ' &
+            call setmsg ( 'The number of values associated with ' &
             //            'the kernel variable # for clock # ' &
             //            'is #, which exceeds the limit #.'     )
-            CALL ERRCH  ( '#', KVNAME(I)                         )
-            CALL ERRINT ( '#', SC                                )
-            CALL ERRINT ( '#', KVSIZE(I)                         )
-            CALL ERRINT ( '#', KVMAXN(I)                         )
+            call errch  ( '#', kvname(i)                         )
+            call errint ( '#', sc                                )
+            call errint ( '#', kvsize(i)                         )
+            call errint ( '#', kvmaxn(i)                         )
 !
 !           Customize the short error message a bit.
 !
-            IF ( I .EQ. COFIDX ) THEN
+            if ( i .eq. cofidx ) then
 
-               SHRTMS = 'SPICE(TOOMANYCOEFFS)'
+               shrtms = 'SPICE(TOOMANYCOEFFS)'
 
-            ELSE IF (     ( I .EQ. PRSIDX ) &
-                     .OR. ( I .EQ. PREIDX ) ) THEN
+            else if (     ( i .eq. prsidx ) &
+                     .or. ( i .eq. preidx ) ) then
 
-               SHRTMS = 'SPICE(TOOMANYPARTITIONS)'
-            ELSE
-               SHRTMS = 'SPICE(KERNELVARTOOLARGE)'
-            END IF
+               shrtms = 'SPICE(TOOMANYPARTITIONS)'
+            else
+               shrtms = 'SPICE(KERNELVARTOOLARGE)'
+            end if
 
-            CALL SIGERR (  SHRTMS    )
-            CALL CHKOUT ( 'ZZSCAD01' )
-            RETURN
+            call sigerr (  shrtms    )
+            call chkout ( 'ZZSCAD01' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Store kernel variable sizes as scalars for convenience.
 !
-      NCOEFF = KVSIZE(COFIDX)
-      NPARTB = KVSIZE(PRSIDX)
-      NPARTE = KVSIZE(PREIDX)
-      NMOD   = KVSIZE(MODIDX)
-      NOFF   = KVSIZE(OFFIDX)
+      ncoeff = kvsize(cofidx)
+      npartb = kvsize(prsidx)
+      nparte = kvsize(preidx)
+      nmod   = kvsize(modidx)
+      noff   = kvsize(offidx)
 
 !
 !     NDPVAL is the number of d.p. values that must be buffered to
 !     support this clock.
 !
-      NDPVAL = NCOEFF + NPARTB + NPARTE + NMOD + NOFF
+      ndpval = ncoeff + npartb + nparte + nmod + noff
 
 !
 !     Check whether sizes of partition start and end kernel variables
 !     match.
 !
-      IF ( NPARTB .NE. NPARTE  ) THEN
+      if ( npartb .ne. nparte  ) then
 
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-         CALL SETMSG ( 'The numbers of partition start times # and ' &
+         call setmsg ( 'The numbers of partition start times # and ' &
          //            'stop times # are unequal for spacecraft ' &
          //            'clock #.'                                  )
-         CALL ERRINT ( '#', NPARTB                                 )
-         CALL ERRINT ( '#', NPARTE                                 )
-         CALL ERRINT ( '#', SC                                     )
-         CALL SIGERR ( 'SPICE(NUMPARTSUNEQUAL)'                    )
-         CALL CHKOUT ( 'ZZSCAD01'                                  )
-         RETURN
+         call errint ( '#', npartb                                 )
+         call errint ( '#', nparte                                 )
+         call errint ( '#', sc                                     )
+         call sigerr ( 'SPICE(NUMPARTSUNEQUAL)'                    )
+         call chkout ( 'ZZSCAD01'                                  )
+         return
 
-      ELSE
-         NPART = NPARTB
-      END IF
+      else
+         npart = npartb
+      end if
 
-      IF ( NDPVAL .GT. DBUFSZ ) THEN
+      if ( ndpval .gt. dbufsz ) then
 !
 !        We couldn't make enough room even if we dumped all buffered
 !        data.
@@ -597,33 +597,33 @@
 !        We've already checked the existence, types, and sizes of the
 !        d.p. kernel variables.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-         CALL SETMSG ( 'Total number of double precision data ' &
+         call setmsg ( 'Total number of double precision data ' &
          //            'values for SCLK # is #; this count exceeds ' &
          //            'the maximum supported count #.' )
-         CALL ERRINT ( '#', SC                          )
-         CALL ERRINT ( '#', NDPVAL                      )
-         CALL ERRINT ( '#', DBUFSZ                      )
-         CALL SIGERR ( 'SPICE(BUG)'                     )
-         CALL CHKOUT ( 'ZZSCAD01'                       )
-         RETURN
+         call errint ( '#', sc                          )
+         call errint ( '#', ndpval                      )
+         call errint ( '#', dbufsz                      )
+         call sigerr ( 'SPICE(BUG)'                     )
+         call chkout ( 'ZZSCAD01'                       )
+         return
 
-      ELSE IF ( NDPVAL .GT. DPROOM ) THEN
+      else if ( ndpval .gt. dproom ) then
 !
 !        We don't have room for this clock, but we will if we dump
 !        the existing buffered data.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-      END IF
+      end if
 
 !
 !     Store in the integer buffer the sizes of the coefficient array
 !     and the number of partitions.
 !
-      INTBUF( IBASE+IXNCOF ) = NCOEFF
-      INTBUF( IBASE+IXNPRT ) = NPART
+      intbuf( ibase+ixncof ) = ncoeff
+      intbuf( ibase+ixnprt ) = npart
 
 !
 !     Fetch from the kernel pool the d.p. items we need:
@@ -640,45 +640,45 @@
 !     We don't update DPFREE until all d.p. data have been fetched
 !     successfully.
 !
-      DPBASE = DPFREE - 1
+      dpbase = dpfree - 1
 
-      DO I = 1, NDP
+      do i = 1, ndp
 !
 !        Store in the integer buffer the base index in the d.p.
 !        buffer of the kernel variable's values.
 !
-         INTBUF( IBASE + IBIX(I) ) = DPBASE
+         intbuf( ibase + ibix(i) ) = dpbase
 !
 !        Fetch d.p. values into buffer.
 !
-         CALL SCLD01 ( NAMLST(I), SC, &
-                       KVMAXN(I), N,  DPBUFF(DPBASE + 1) )
+         call scld01 ( namlst(i), sc, &
+                       kvmaxn(i), n,  dpbuff(dpbase + 1) )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           This code could be reached if the kernel variable has
 !           character type.
 !
-            CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, &
-                            DPFREE, IFREE,  PRVSC  )
+            call zzscin01 ( hdsclk, scpool, clklst, &
+                            dpfree, ifree,  prvsc  )
 
-            CALL CHKOUT ( 'ZZSCAD01' )
-            RETURN
+            call chkout ( 'ZZSCAD01' )
+            return
 
-         END IF
+         end if
 !
 !        Update the d.p. buffer base index.
 !
-         DPBASE = DPBASE + N
+         dpbase = dpbase + n
 
-      END DO
+      end do
 
 !
 !     Account for buffer usage for the new clock.
 !
-      DPFREE = DPFREE + NDPVAL
-      IFREE  = IFREE  + NIVALS
+      dpfree = dpfree + ndpval
+      ifree  = ifree  + nivals
 
-      CALL CHKOUT ( 'ZZSCAD01' )
-      RETURN
-      END
+      call chkout ( 'ZZSCAD01' )
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure ZZGFUDB ( Private --- GF, general use boolean search )
 
-      SUBROUTINE ZZGFUDB ( UDFUNS, UDFUNB, TOL,     UDSTEP,  UDREFN, &
-                           RPT,    UDREPI, UDREPU,  UDREPF, &
-                           BAIL,   UDBAIL, CNFINE,  RESULT )
+      subroutine zzgfudb ( udfuns, udfunb, tol,     udstep,  udrefn, &
+                           rpt,    udrepi, udrepu,  udrepf, &
+                           bail,   udbail, cnfine,  result )
 
 ! $ Abstract
 !
@@ -26,27 +26,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'gf.inc'
+      include 'gf.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      EXTERNAL              UDFUNS
-      EXTERNAL              UDFUNB
-      DOUBLE PRECISION      TOL
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      LOGICAL               RPT
-      EXTERNAL              UDREPI
-      EXTERNAL              UDREPU
-      EXTERNAL              UDREPF
-      LOGICAL               BAIL
-      LOGICAL               UDBAIL
-      EXTERNAL              UDBAIL
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      external              udfuns
+      external              udfunb
+      double precision      tol
+      external              udstep
+      external              udrefn
+      logical               rpt
+      external              udrepi
+      external              udrepu
+      external              udrepf
+      logical               bail
+      logical               udbail
+      external              udbail
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -511,9 +511,9 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      integer               wncard
+      logical               failed
+      logical               return
 
 
 !
@@ -525,116 +525,116 @@
 !     argument to ZZGFSOLVX. The routine UDSTEP, which is passed to
 !     ZZGFSOLVX, will be used by that routine to obtain the step size.
 !
-      DOUBLE PRECISION      STEP
-      PARAMETER           ( STEP   = 1.D0 )
+      double precision      step
+      parameter           ( step   = 1.d0 )
 
 !
 !     CSTEP indicates whether a constant step size, provided
 !     via the input argument STEP, is to be used by ZZGFSOLVX.
 !
-      LOGICAL               CSTEP
-      PARAMETER           ( CSTEP  = .FALSE. )
+      logical               cstep
+      parameter           ( cstep  = .false. )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      START
+      double precision      finish
+      double precision      start
 
-      INTEGER               COUNT
-      INTEGER               I
+      integer               count
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFUDB' )
+      call chkin  ( 'ZZGFUDB' )
 
 !
 !     Check the convergence tolerance.
 !
-      IF ( TOL .LE. 0.D0 ) THEN
+      if ( tol .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be positive but was #.' )
-         CALL ERRDP  ( '#',  TOL                               )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'               )
-         CALL CHKOUT ( 'ZZGFUDB'                               )
-         RETURN
+         call setmsg ( 'Tolerance must be positive but was #.' )
+         call errdp  ( '#',  tol                               )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
+         call chkout ( 'ZZGFUDB'                               )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Prepare the progress reporter if appropriate.
 !
-      IF ( RPT ) THEN
-         CALL UDREPI ( CNFINE, 'User defined boolean event search ', &
+      if ( rpt ) then
+         call udrepi ( cnfine, 'User defined boolean event search ', &
                                'done.' )
-      END IF
+      end if
 
 !
 !     Cycle over the intervals in the confining window.
 !
-      COUNT = WNCARD(CNFINE)
+      count = wncard(cnfine)
 
-      DO I = 1, COUNT
+      do i = 1, count
 
 !
 !        Retrieve the bounds for the Ith interval of the confinement
 !        window. Search this interval for boolean events. Union the
 !        result with the contents of the RESULT window.
 !
-         CALL WNFETD ( CNFINE, I, START, FINISH )
+         call wnfetd ( cnfine, i, start, finish )
 
 !
 !        Call ZZGFSOLVX to do the event detection work. The boolean
 !        function passes as UDFUNB, the scalar as UDFUNS.
 !
 
-         CALL ZZGFSOLVX ( UDFUNS, UDFUNB, &
-                          UDSTEP, UDREFN, &
-                          BAIL,   UDBAIL, &
-                          CSTEP,  STEP, &
-                          START,  FINISH, &
-                          TOL, &
-                          RPT,    UDREPU, &
-                          RESULT )
+         call zzgfsolvx ( udfuns, udfunb, &
+                          udstep, udrefn, &
+                          bail,   udbail, &
+                          cstep,  step, &
+                          start,  finish, &
+                          tol, &
+                          rpt,    udrepu, &
+                          result )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFUDB'  )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFUDB'  )
+            return
+         end if
 
-         IF ( BAIL ) THEN
+         if ( bail ) then
 !
 !           Interrupt handling is enabled.
 !
-            IF ( UDBAIL() ) THEN
+            if ( udbail() ) then
 !
 !              An interrupt has been issued. Return now regardless of
 !              whether the search completed.
 !
-               CALL CHKOUT ( 'ZZGFUDB' )
-               RETURN
+               call chkout ( 'ZZGFUDB' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     End the progress report.
 !
-      IF ( RPT ) THEN
-         CALL UDREPF
-      END IF
+      if ( rpt ) then
+         call udrepf
+      end if
 
-      CALL CHKOUT ( 'ZZGFUDB' )
-      RETURN
-      END
+      call chkout ( 'ZZGFUDB' )
+      return
+      end
 

@@ -1,6 +1,6 @@
 !$Procedure INSANG ( Inside Tetrahedral Angle )
 
-      SUBROUTINE INSANG ( V, E1, E2, E3, FOUND, SCALE )
+      subroutine insang ( v, e1, e2, e3, found, scale )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V     ( 3 )
-      DOUBLE PRECISION      E1    ( 3 )
-      DOUBLE PRECISION      E2    ( 3 )
-      DOUBLE PRECISION      E3    ( 3 )
-      LOGICAL               FOUND
-      DOUBLE PRECISION      SCALE
+      double precision      v     ( 3 )
+      double precision      e1    ( 3 )
+      double precision      e2    ( 3 )
+      double precision      e3    ( 3 )
+      logical               found
+      double precision      scale
 
 ! $ Brief_I/O
 !
@@ -184,25 +184,25 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      EN
-      DOUBLE PRECISION      NORM12 ( 3 )
-      DOUBLE PRECISION      NORM23 ( 3 )
-      DOUBLE PRECISION      NORM31 ( 3 )
-      DOUBLE PRECISION      VN12
-      DOUBLE PRECISION      VN23
-      DOUBLE PRECISION      VN31
+      double precision      denom
+      double precision      en
+      double precision      norm12 ( 3 )
+      double precision      norm23 ( 3 )
+      double precision      norm31 ( 3 )
+      double precision      vn12
+      double precision      vn23
+      double precision      vn31
 !
 !     Our initial value for SCALE is zero.  When we have better
 !     information, we'll change this.
 !
-      SCALE = 0.0D0
+      scale = 0.0d0
 
 !
 !     First we construct a normal to the plane spanned by E1 and E2
@@ -210,40 +210,40 @@
 !     get the zero vector, E1 and E2 are linearly dependent so we
 !     set the value of FOUND to FALSE and return.
 !
-      CALL VCRSS ( E1, E2, NORM12 )
+      call vcrss ( e1, e2, norm12 )
 
 !
 !     First make sure V and E3 are in the same half space
 !     bounded by E1 and E2.  If they are not, we can return.
 !
-      VN12 = VDOT( V,  NORM12 )
-      EN   = VDOT( E3, NORM12 )
+      vn12 = vdot( v,  norm12 )
+      en   = vdot( e3, norm12 )
 !
 !     Determine whether NORML and E3 are perpendicular.  If they
 !     are perpendicular, E3 is a linear combination of E1 and E2.
 !     In this case set FOUND to FALSE and return.
 !
-      IF ( EN .EQ. 0.0D0 ) THEN
-         FOUND = .FALSE.
-         RETURN
-      END IF
+      if ( en .eq. 0.0d0 ) then
+         found = .false.
+         return
+      end if
 !
 !     Now check to see if V and E3 are in the same half space.  If
 !     not, we can stop and return the value FALSE.
 !
-      IF (       EN   .GT. 0.0D0 &
-           .AND. VN12 .LT. 0.0D0 ) THEN
+      if (       en   .gt. 0.0d0 &
+           .and. vn12 .lt. 0.0d0 ) then
 
-         FOUND = .FALSE.
-         RETURN
+         found = .false.
+         return
 
-      ELSE IF (       EN   .LT. 0.0D0 &
-                .AND. VN12 .GT. 0.0D0 ) THEN
+      else if (       en   .lt. 0.0d0 &
+                .and. vn12 .gt. 0.0d0 ) then
 
-         FOUND = .FALSE.
-         RETURN
+         found = .false.
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that V and E1 are on the same side of the plane
@@ -252,53 +252,53 @@
 !
 !       < (E1 x E2), E3 > =  < (E2 x E3), E1 > = < (E3 x E1), E2 >
 !
-      CALL VCRSS ( E2, E3, NORM23 )
-      VN23 = VDOT  ( V,      NORM23 )
+      call vcrss ( e2, e3, norm23 )
+      vn23 = vdot  ( v,      norm23 )
 
 !
 !     The following tests are the same as in the previous case.
 !
-      IF (       EN   .GT. 0.0D0 &
-           .AND. VN23 .LT. 0.0D0 ) THEN
+      if (       en   .gt. 0.0d0 &
+           .and. vn23 .lt. 0.0d0 ) then
 
-         FOUND = .FALSE.
-         RETURN
+         found = .false.
+         return
 
-      ELSE IF (       EN   .LT. 0.0D0 &
-                .AND. VN23 .GT. 0.0D0 ) THEN
+      else if (       en   .lt. 0.0d0 &
+                .and. vn23 .gt. 0.0d0 ) then
 
-         FOUND = .FALSE.
-         RETURN
+         found = .false.
+         return
 
-      END IF
+      end if
 
 !
 !     Finally check to see if V and E2 are in the same half space
 !     bounded by E3 and E2
 !
-      CALL VCRSS ( E3, E1, NORM31 )
-      VN31 = VDOT  ( V,      NORM31 )
+      call vcrss ( e3, e1, norm31 )
+      vn31 = vdot  ( v,      norm31 )
 
-      IF (       EN   .GT. 0.0D0 &
-           .AND. VN31 .LT. 0.0D0 ) THEN
+      if (       en   .gt. 0.0d0 &
+           .and. vn31 .lt. 0.0d0 ) then
 
-         FOUND = .FALSE.
-         RETURN
+         found = .false.
+         return
 
-      ELSE IF (       EN   .LT. 0.0D0 &
-                .AND. VN31 .GT. 0.0D0 ) THEN
+      else if (       en   .lt. 0.0d0 &
+                .and. vn31 .gt. 0.0d0 ) then
 
-         FOUND = .FALSE.
-         RETURN
+         found = .false.
+         return
 
-      END IF
+      end if
 
 !
 !     If you get this far, we know that V is lies in the intersection
 !     of the half spaces determined by the various combinations of
 !     E1, E2 and E3.
 !
-      FOUND = .TRUE.
+      found = .true.
 
 !
 !     Now find the intersection. First get a normal to the triangle.
@@ -334,14 +334,14 @@
 !
 !        =  EN / ( VN12 + VN23 + VN31 )
 !
-      DENOM = VN12 + VN23 + VN31
+      denom = vn12 + vn23 + vn31
 
-      IF ( DENOM .EQ. 0.0D0 ) THEN
-         FOUND = .FALSE.
-      ELSE
-         FOUND = .TRUE.
-         SCALE =  EN/DENOM
-      END IF
+      if ( denom .eq. 0.0d0 ) then
+         found = .false.
+      else
+         found = .true.
+         scale =  en/denom
+      end if
 
-      RETURN
-      END
+      return
+      end

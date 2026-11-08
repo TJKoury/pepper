@@ -1,6 +1,6 @@
 !$Procedure MOVEI  ( Move a integer array to another )
 
-      SUBROUTINE MOVEI ( ARRFRM, NDIM, ARRTO )
+      subroutine movei ( arrfrm, ndim, arrto )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER         ARRFRM ( * )
-      INTEGER         NDIM
-      INTEGER         ARRTO  ( * )
+      integer         arrfrm ( * )
+      integer         ndim
+      integer         arrto  ( * )
 
 ! $ Brief_I/O
 !
@@ -138,13 +138,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-        ARRTO(I) = ARRFRM(I)
-      END DO
+      do i = 1, ndim
+        arrto(i) = arrfrm(i)
+      end do
 
 
-      RETURN
-      END
+      return
+      end

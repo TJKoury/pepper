@@ -1,6 +1,6 @@
 !$Procedure NPARSI ( Integer parsing of a character string)
 
-      SUBROUTINE NPARSI (  STRING,  N, ERROR, PNTER)
+      subroutine nparsi (  string,  n, error, pnter)
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      INTEGER          N
-      CHARACTER*(*)    ERROR
-      INTEGER          PNTER
+      character*(*)    string
+      integer          n
+      character*(*)    error
+      integer          pnter
 
 ! $ Brief_I/O
 !
@@ -217,60 +217,60 @@
 !     SPICELIB functions
 !
 
-      INTEGER               INTMAX
-      INTEGER               INTMIN
+      integer               intmax
+      integer               intmin
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      XMNINT
-      DOUBLE PRECISION      XMXINT
-      DOUBLE PRECISION      X
+      double precision      xmnint
+      double precision      xmxint
+      double precision      x
 
-      LOGICAL               FIRST
+      logical               first
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  XMNINT
-      SAVE                  XMXINT
+      save                  first
+      save                  xmnint
+      save                  xmxint
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 !
 !     If this is the first time NPARSI has been called, initialize
 !     bounds for the range of integers.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         XMXINT =  DBLE ( INTMAX () )
-         XMNINT =  DBLE ( INTMIN () )
+         first  = .false.
+         xmxint =  dble ( intmax () )
+         xmnint =  dble ( intmin () )
 
-      END IF
+      end if
 !
 !     NPARSD will define ERROR and PNTER if there is an error,
 !     so we do not need to initialize them here.
 !
-      CALL NPARSD ( STRING, X, ERROR, PNTER )
+      call nparsd ( string, x, error, pnter )
 
-      IF ( PNTER .EQ. 0 ) THEN
+      if ( pnter .eq. 0 ) then
 
-         IF (     ( DINT(X) .LT. XMNINT ) &
-             .OR. ( DINT(X) .GT. XMXINT ) ) THEN
+         if (     ( dint(x) .lt. xmnint ) &
+             .or. ( dint(x) .gt. xmxint ) ) then
 
-            PNTER = 1
-            ERROR = 'NPARSI: Value entered is beyond the bounds of '// &
+            pnter = 1
+            error = 'NPARSI: Value entered is beyond the bounds of '// &
                     'representable integers.'
 
-         ELSE
+         else
 
-            N = IDINT(X)
+            n = idint(x)
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

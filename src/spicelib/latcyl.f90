@@ -1,6 +1,6 @@
 !$Procedure LATCYL ( Latitudinal to cylindrical coordinates )
 
-      SUBROUTINE LATCYL ( RADIUS, LON, LAT, R, CLON, Z )
+      subroutine latcyl ( radius, lon, lat, r, clon, z )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RADIUS
-      DOUBLE PRECISION   LON
-      DOUBLE PRECISION   LAT
-      DOUBLE PRECISION   R
-      DOUBLE PRECISION   CLON
-      DOUBLE PRECISION   Z
+      double precision   radius
+      double precision   lon
+      double precision   lat
+      double precision   r
+      double precision   clon
+      double precision   z
 
 ! $ Brief_I/O
 !
@@ -476,21 +476,21 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION RH
-      DOUBLE PRECISION ZZ
+      double precision rh
+      double precision zz
 
 !
 !     Convert to cylindrical, storing in temporary variables
 !
-      RH = RADIUS * DCOS(LAT)
-      ZZ = RADIUS * DSIN(LAT)
+      rh = radius * dcos(lat)
+      zz = radius * dsin(lat)
 
 !
 !     Move the results to output variables.
 !
-      CLON  = LON
-      R     = RH
-      Z     = ZZ
+      clon  = lon
+      r     = rh
+      z     = zz
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DASUDC ( DAS, update data, character )
 
-      SUBROUTINE DASUDC ( HANDLE, FIRST, LAST, BPOS, EPOS, DATA )
+      subroutine dasudc ( handle, first, last, bpos, epos, data )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               BPOS
-      INTEGER               EPOS
-      CHARACTER*(*)         DATA   ( * )
+      integer               handle
+      integer               first
+      integer               last
+      integer               bpos
+      integer               epos
+      character*(*)         data   ( * )
 
 ! $ Brief_I/O
 !
@@ -403,124 +403,124 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC  =  1024 )
+      integer               nwc
+      parameter           ( nwc  =  1024 )
 
-      INTEGER               CHAR
-      PARAMETER           ( CHAR =  1  )
+      integer               char
+      parameter           ( char =  1  )
 
 !
 !     Local variables
 !
-      INTEGER               CHR
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               ELT
-      INTEGER               L
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               N
-      INTEGER               NMOVE
-      INTEGER               NMOVED
-      INTEGER               NUMCHR
-      INTEGER               NWRITN
-      INTEGER               RECNO
-      INTEGER               RCPOS
-      INTEGER               WORDNO
+      integer               chr
+      integer               clbase
+      integer               clsize
+      integer               elt
+      integer               l
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               n
+      integer               nmove
+      integer               nmoved
+      integer               numchr
+      integer               nwritn
+      integer               recno
+      integer               rcpos
+      integer               wordno
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASUDC' )
+      call chkin ( 'DASUDC' )
 
 !
 !     Get the last logical addresses in use in this DAS file.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
 !
 !     Validate the input addresses.
 !
-      IF (      ( FIRST .LT. 1     ) &
-           .OR. ( FIRST .GT. LASTC ) &
-           .OR. ( LAST  .LT. 1     ) &
-           .OR. ( LAST  .GT. LASTC )  ) THEN
+      if (      ( first .lt. 1     ) &
+           .or. ( first .gt. lastc ) &
+           .or. ( last  .lt. 1     ) &
+           .or. ( last  .gt. lastc )  ) then
 
-         CALL SETMSG ( 'FIRST was #. LAST was #. Valid range is [1,#].')
-         CALL ERRINT ( '#',   FIRST                                    )
-         CALL ERRINT ( '#',   LAST                                     )
-         CALL ERRINT ( '#',   LASTC                                    )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                         )
-         CALL CHKOUT ( 'DASUDC'                                        )
-         RETURN
+         call setmsg ( 'FIRST was #. LAST was #. Valid range is [1,#].')
+         call errint ( '#',   first                                    )
+         call errint ( '#',   last                                     )
+         call errint ( '#',   lastc                                    )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                         )
+         call chkout ( 'DASUDC'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure BPOS and EPOS are valid and compatible with the string
 !     length of the input array.
 !
-      IF (  ( BPOS .LT. 1 ) .OR. ( BPOS .GT. LEN( DATA(1) ) )  ) THEN
+      if (  ( bpos .lt. 1 ) .or. ( bpos .gt. len( data(1) ) )  ) then
 
-         CALL SETMSG ( 'String begin index must be ' &
+         call setmsg ( 'String begin index must be ' &
          //            'in the range #:# but was #.' )
-         CALL ERRINT ( '#', 1                        )
-         CALL ERRINT ( '#', LEN( DATA(1) )           )
-         CALL ERRINT ( '#', BPOS                     )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'         )
-         CALL CHKOUT ( 'DASUDC'                      )
-         RETURN
+         call errint ( '#', 1                        )
+         call errint ( '#', len( data(1) )           )
+         call errint ( '#', bpos                     )
+         call sigerr ( 'SPICE(INVALIDINDEX)'         )
+         call chkout ( 'DASUDC'                      )
+         return
 
-      END IF
+      end if
 
-      IF (  ( EPOS .LT. 1 ) .OR. ( EPOS .GT. LEN( DATA(1) ) )  ) THEN
+      if (  ( epos .lt. 1 ) .or. ( epos .gt. len( data(1) ) )  ) then
 
-         CALL SETMSG ( 'String end index must be in ' &
+         call setmsg ( 'String end index must be in ' &
          //            'the range #:# but was #.'    )
-         CALL ERRINT ( '#', 1                        )
-         CALL ERRINT ( '#', LEN( DATA(1) )           )
-         CALL ERRINT ( '#', EPOS                     )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'         )
-         CALL CHKOUT ( 'DASUDC'                      )
-         RETURN
+         call errint ( '#', 1                        )
+         call errint ( '#', len( data(1) )           )
+         call errint ( '#', epos                     )
+         call sigerr ( 'SPICE(INVALIDINDEX)'         )
+         call chkout ( 'DASUDC'                      )
+         return
 
-      END IF
+      end if
 
-      IF ( BPOS .GT. EPOS ) THEN
+      if ( bpos .gt. epos ) then
 
-         CALL SETMSG ( 'String begin index # must be less ' &
+         call setmsg ( 'String begin index # must be less ' &
          //            'than or equal to the end index #.' )
-         CALL ERRINT ( '#', BPOS                           )
-         CALL ERRINT ( '#', EPOS                           )
-         CALL SIGERR ( 'SPICE(INDICESOUTOFORDER)'          )
-         CALL CHKOUT ( 'DASUDC'                            )
-         RETURN
+         call errint ( '#', bpos                           )
+         call errint ( '#', epos                           )
+         call sigerr ( 'SPICE(INDICESOUTOFORDER)'          )
+         call chkout ( 'DASUDC'                            )
+         return
 
-      END IF
+      end if
 !
 !     Get the length of the substrings of DATA.  Count the total number
 !     of characters to write.
 !
-      L       =  EPOS - BPOS  + 1
-      N       =  LAST - FIRST + 1
-      NWRITN  =  0
+      l       =  epos - bpos  + 1
+      n       =  last - first + 1
+      nwritn  =  0
 
 !
 !     Find out the physical location of the first character to update.
 !
-      CALL DASA2L ( HANDLE, CHAR, FIRST, CLBASE, CLSIZE, RECNO, WORDNO )
+      call dasa2l ( handle, char, first, clbase, clsize, recno, wordno )
 
 !
 !     Write as much data into record RECNO as is necessary and possible.
@@ -537,115 +537,115 @@
 !     RCPOS is the character position we'll write to next in the current
 !     record.
 !
-      NUMCHR  =  MIN ( N,  NWC - WORDNO + 1 )
-      ELT     =  1
-      CHR     =  BPOS
-      NMOVED  =  0
-      RCPOS   =  WORDNO
+      numchr  =  min ( n,  nwc - wordno + 1 )
+      elt     =  1
+      chr     =  bpos
+      nmoved  =  0
+      rcpos   =  wordno
 
 
-      DO WHILE (  ( NMOVED .LT. NUMCHR ) .AND. ( .NOT. FAILED() )  )
+      do while (  ( nmoved .lt. numchr ) .and. ( .not. failed() )  )
 
-         IF ( CHR .GT. EPOS ) THEN
-            ELT = ELT + 1
-            CHR = BPOS
-         END IF
+         if ( chr .gt. epos ) then
+            elt = elt + 1
+            chr = bpos
+         end if
 
 !
 !        Find out how many characters to move from the current array
 !        element to the current record.
 !
-         NMOVE   =  MIN (  NUMCHR - NMOVED,   EPOS - CHR + 1  )
+         nmove   =  min (  numchr - nmoved,   epos - chr + 1  )
 
 !
 !        Update the current record.
 !
-         CALL DASURC (  HANDLE, &
-                        RECNO, &
-                        RCPOS, &
-                        RCPOS + NMOVE - 1, &
-                        DATA(ELT) ( CHR  :  CHR + NMOVE - 1 )   )
+         call dasurc (  handle, &
+                        recno, &
+                        rcpos, &
+                        rcpos + nmove - 1, &
+                        data(elt) ( chr  :  chr + nmove - 1 )   )
 
-         NMOVED  =  NMOVED + NMOVE
-         RCPOS   =  RCPOS  + NMOVE
-         CHR     =  CHR    + NMOVE
+         nmoved  =  nmoved + nmove
+         rcpos   =  rcpos  + nmove
+         chr     =  chr    + nmove
 
-      END DO
+      end do
 
-      NWRITN =  NUMCHR
-      RECNO  =  RECNO + 1
+      nwritn =  numchr
+      recno  =  recno + 1
 
 !
 !     Update as many additional records as necessary.
 !
 
-      DO WHILE (  ( NWRITN .LT. N ) .AND. ( .NOT. FAILED() )  )
+      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
 
 !
 !        At this point, RECNO is the correct number of the record to
 !        write to next.  CLBASE is the number of the first record of
 !        the cluster we're about to write to.
 !
-         IF (  RECNO  .LT.  ( CLBASE + CLSIZE )  ) THEN
+         if (  recno  .lt.  ( clbase + clsize )  ) then
 
 !
 !           We can continue writing the current cluster.  Find
 !           out how many elements to write to the current record,
 !           and write them.
 !
-            NUMCHR  =  MIN ( N - NWRITN,  NWC )
-            NMOVED  =  0
-            RCPOS   =  1
+            numchr  =  min ( n - nwritn,  nwc )
+            nmoved  =  0
+            rcpos   =  1
 
-            DO WHILE ( ( NMOVED .LT. NUMCHR ) .AND. ( .NOT. FAILED() ) )
+            do while ( ( nmoved .lt. numchr ) .and. ( .not. failed() ) )
 
-               IF ( CHR .GT. L ) THEN
-                  ELT = ELT + 1
-                  CHR = BPOS
-               END IF
+               if ( chr .gt. l ) then
+                  elt = elt + 1
+                  chr = bpos
+               end if
 
 !
 !              Find out how many characters to move from the array
 !              element to the current record.
 !
-               NMOVE   =  MIN (  NUMCHR - NMOVED,   EPOS - CHR + 1  )
+               nmove   =  min (  numchr - nmoved,   epos - chr + 1  )
 
-               CALL DASURC (  HANDLE, &
-                              RECNO, &
-                              RCPOS, &
-                              RCPOS + NMOVE - 1, &
-                              DATA(ELT) ( CHR  :  CHR + NMOVE - 1 )  )
+               call dasurc (  handle, &
+                              recno, &
+                              rcpos, &
+                              rcpos + nmove - 1, &
+                              data(elt) ( chr  :  chr + nmove - 1 )  )
 
-               NMOVED  =  NMOVED + NMOVE
-               RCPOS   =  RCPOS  + NMOVE
-               CHR     =  CHR    + NMOVE
+               nmoved  =  nmoved + nmove
+               rcpos   =  rcpos  + nmove
+               chr     =  chr    + nmove
 
-            END DO
+            end do
 
-            NWRITN  =   NWRITN + NUMCHR
-            RECNO   =   RECNO  + 1
+            nwritn  =   nwritn + numchr
+            recno   =   recno  + 1
 
 
-         ELSE
+         else
 
 !
 !           We must find the next character cluster to write to.
 !           The first character in this cluster has address FIRST +
 !           NWRITN.
 !
-            CALL DASA2L ( HANDLE, &
-                          CHAR, &
-                          FIRST + NWRITN, &
-                          CLBASE, &
-                          CLSIZE, &
-                          RECNO, &
-                          WORDNO  )
+            call dasa2l ( handle, &
+                          char, &
+                          first + nwritn, &
+                          clbase, &
+                          clsize, &
+                          recno, &
+                          wordno  )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'DASUDC' )
-      RETURN
-      END
+      call chkout ( 'DASUDC' )
+      return
+      end

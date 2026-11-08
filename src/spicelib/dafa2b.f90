@@ -1,6 +1,6 @@
 !$Procedure DAFA2B ( DAF, ASCII to binary )
 
-      SUBROUTINE DAFA2B ( ASCII, BINARY, RESV )
+      subroutine dafa2b ( ascii, binary, resv )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ASCII
-      CHARACTER*(*)         BINARY
-      INTEGER               RESV
+      character*(*)         ascii
+      character*(*)         binary
+      integer               resv
 
 ! $ Brief_I/O
 !
@@ -183,57 +183,57 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               UNIT
+      integer               unit
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFA2B' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFA2B' )
+      end if
 
 !
 !     Open the ASCII file for reading. If an error occurs, then check
 !     out and return. An appropriate error message will have already
 !     been set.
 !
-      CALL TXTOPR ( ASCII, UNIT )
+      call txtopr ( ascii, unit )
 
-      IF ( FAILED () ) THEN
+      if ( failed () ) then
 
-         CALL CHKOUT ( 'DAFA2B' )
-         RETURN
+         call chkout ( 'DAFA2B' )
+         return
 
-      END IF
+      end if
 
 !
 !     Call DAFT2B to perform the conversion. If it fails, then just
 !     check out and return, as an appropriate error message should have
 !     already been set. Also close the text file that we opened.
 !
-      CALL DAFT2B ( UNIT, BINARY, RESV )
+      call daft2b ( unit, binary, resv )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CLOSE       ( UNIT     )
-         CALL CHKOUT ( 'DAFA2B' )
-         RETURN
+         close       ( unit     )
+         call chkout ( 'DAFA2B' )
+         return
 
-      END IF
+      end if
 
 !
 !     Close the file.
 !
-      CLOSE ( UNIT )
+      close ( unit )
 
-      CALL CHKOUT ( 'DAFA2B' )
-      RETURN
-      END
+      call chkout ( 'DAFA2B' )
+      return
+      end

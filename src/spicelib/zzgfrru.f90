@@ -1,8 +1,8 @@
 !$Procedure ZZGFRRU ( Private --- GF, range rate utility routine )
 
-      SUBROUTINE ZZGFRRU ( TARGET, ABCORR, OBSRVR, DT, &
-                           UDFUNC, ET,     DECRES, RVL, &
-                           XTARG, XABCOR, XOBS, XDT )
+      subroutine zzgfrru ( target, abcorr, obsrvr, dt, &
+                           udfunc, et,     decres, rvl, &
+                           xtarg, xabcor, xobs, xdt )
 
 ! $ Abstract
 !
@@ -26,21 +26,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      DT
-      LOGICAL               DECRES
-      DOUBLE PRECISION      RVL
-      INTEGER               XTARG
-      CHARACTER*(*)         XABCOR
-      INTEGER               XOBS
-      DOUBLE PRECISION      XDT
+      character*(*)         target
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      et
+      double precision      dt
+      logical               decres
+      double precision      rvl
+      integer               xtarg
+      character*(*)         xabcor
+      integer               xobs
+      double precision      xdt
 
 ! $ Brief_I/O
 !
@@ -236,63 +236,63 @@
 !
 !-&
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      DRVEL
-      DOUBLE PRECISION      SRHAT  ( 6 )
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      DFDT   ( 6 )
-      DOUBLE PRECISION      STATES ( 6, 2 )
+      double precision      lt
+      double precision      drvel
+      double precision      srhat  ( 6 )
+      double precision      state  ( 6 )
+      double precision      dfdt   ( 6 )
+      double precision      states ( 6, 2 )
 
-      INTEGER               N
+      integer               n
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FOUND
+      logical               attblk ( nabcor )
+      logical               found
 
 
 !
 !     Saved Variables
 !
-      CHARACTER*(CORLEN)    SVABCO
-      SAVE                  SVABCO
+      character*(corlen)    svabco
+      save                  svabco
 
-      INTEGER               SVTARG
-      SAVE                  SVTARG
+      integer               svtarg
+      save                  svtarg
 
-      CHARACTER*(32)        SVREF
-      SAVE                  SVREF
+      character*(32)        svref
+      save                  svref
 
-      INTEGER               SVOBS
-      SAVE                  SVOBS
+      integer               svobs
+      save                  svobs
 
-      DOUBLE PRECISION      SVDT
-      SAVE                  SVDT
+      double precision      svdt
+      save                  svdt
 
-      CALL CHKIN  ( 'ZZGFRRU'           )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZGFRRU'           )
+      call chkin  ( 'ZZGFRRU'           )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZGFRRU'           )
 
-      RETURN
+      return
 
 
 
 !$Procedure ZZGFRRIN ( Private --- GF, range rate initialization )
 
-      ENTRY ZZGFRRIN ( TARGET, ABCORR, OBSRVR, DT )
+      entry zzgfrrin ( target, abcorr, obsrvr, dt )
 
 ! $ Abstract
 !
@@ -467,112 +467,112 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFRRIN' )
+      call chkin ( 'ZZGFRRIN' )
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
 !
-      CALL BODS2C ( TARGET, SVTARG, FOUND )
+      call bods2c ( target, svtarg, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target object, ' &
+         call setmsg ( 'The target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFRRIN'                                 )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFRRIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, SVOBS, FOUND )
+      call bods2c ( obsrvr, svobs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFRRIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFRRIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the observer and target are distinct.
 !
-      IF ( SVTARG .EQ. SVOBS ) THEN
+      if ( svtarg .eq. svobs ) then
 
-         CALL SETMSG ( 'The observer and target must be ' &
+         call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
          //            'OBSRVR = #; TARGET = #.'           )
-         CALL ERRCH  ( '#', OBSRVR                         )
-         CALL ERRCH  ( '#', TARGET                         )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'          )
-         CALL CHKOUT ( 'ZZGFRRIN'                          )
-         RETURN
+         call errch  ( '#', obsrvr                         )
+         call errch  ( '#', target                         )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
+         call chkout ( 'ZZGFRRIN'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
-      CALL CMPRSS ( ' ', 0, ABCORR, SVABCO )
-      CALL UCASE  ( SVABCO,         SVABCO )
+      call cmprss ( ' ', 0, abcorr, svabco )
+      call ucase  ( svabco,         svabco )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( SVABCO, ATTBLK )
+      call zzvalcor ( svabco, attblk )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'ZZGFRRIN' )
-         RETURN
+         call chkout ( 'ZZGFRRIN' )
+         return
 
-      END IF
+      end if
 
 !
 !     The "delta" argument for QDERIV, DT, must have a non-zero value.
 !
-      IF ( DT .EQ. 0.D0 ) THEN
+      if ( dt .eq. 0.d0 ) then
 
-         CALL SETMSG ( 'Delta value for QDERIV is zero; a non-zero ' // &
+         call setmsg ( 'Delta value for QDERIV is zero; a non-zero ' // &
                        'value is required.'                        )
-         CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-         CALL CHKOUT ( 'ZZGFRRIN' )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+         call chkout ( 'ZZGFRRIN' )
+         return
 
-      END IF
+      end if
 
 !
 !     Save the DT value.
 !
-      SVREF  = 'J2000'
-      SVDT   = DT
+      svref  = 'J2000'
+      svdt   = dt
 
-      CALL CHKOUT ( 'ZZGFRRIN' )
-      RETURN
+      call chkout ( 'ZZGFRRIN' )
+      return
 
 
 
 
 !$Procedure ZZGFRRDC (  Private --- GF, when range rate is decreasing )
 
-      ENTRY ZZGFRRDC ( UDFUNC, ET, DECRES )
+      entry zzgfrrdc ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -687,13 +687,13 @@
 !     Standard SPICE error handling.
 !
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFRRDC' )
+      call chkin  ( 'ZZGFRRDC' )
 
-      N  = 6
+      n  = 6
 
 !
 !     The range rate of interest is of SVTARG relative to the SVOBS.
@@ -701,10 +701,10 @@
 !     to SVOBS.
 !
 
-      CALL SPKEZ (SVTARG, ET-SVDT, SVREF, SVABCO, SVOBS, &
-                                                  STATES(1,1), LT)
-      CALL SPKEZ (SVTARG, ET+SVDT, SVREF, SVABCO, SVOBS, &
-                                                  STATES(1,2), LT)
+      call spkez (svtarg, et-svdt, svref, svabco, svobs, &
+                                                  states(1,1), lt)
+      call spkez (svtarg, et+svdt, svref, svabco, svobs, &
+                                                  states(1,2), lt)
 
 !
 !     Approximate the derivative of the position and velocity by
@@ -717,14 +717,14 @@
 !        DFDT(5) = Ay
 !        DFDT(6) = Az
 !
-      CALL QDERIV ( N, STATES(1,1), STATES(1,2), SVDT, DFDT )
+      call qderiv ( n, states(1,1), states(1,2), svdt, dfdt )
 
-      CALL SPKEZ ( SVTARG, ET, SVREF, SVABCO, SVOBS, STATE, LT )
+      call spkez ( svtarg, et, svref, svabco, svobs, state, lt )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT (  'ZZGFRRDC' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout (  'ZZGFRRDC' )
+         return
+      end if
 
 !
 !        d ||r||     ^
@@ -737,20 +737,20 @@
 !          2
 !        dt          dt             dt
 !
-      CALL DVHAT ( STATE, SRHAT )
+      call dvhat ( state, srhat )
 
-      DRVEL  =  VDOT( DFDT(4), SRHAT ) + VDOT( STATE(4), SRHAT(4) )
-      DECRES =  DRVEL .LT. 0.D0
+      drvel  =  vdot( dfdt(4), srhat ) + vdot( state(4), srhat(4) )
+      decres =  drvel .lt. 0.d0
 
-      CALL CHKOUT ( 'ZZGFRRDC' )
-      RETURN
+      call chkout ( 'ZZGFRRDC' )
+      return
 
 
 
 
 !$Procedure ZZGFRRGQ ( Private --- GF, get range rate between bodies )
 
-      ENTRY ZZGFRRGQ ( ET, RVL )
+      entry zzgfrrgq ( et, rvl )
 
 ! $ Abstract
 !
@@ -836,16 +836,16 @@
 !
 !-&
 
-      CALL ZZGFRRQ ( ET, SVTARG, SVOBS, SVABCO, RVL )
+      call zzgfrrq ( et, svtarg, svobs, svabco, rvl )
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZGFRRX ( Private -- GF, retrieve ZZGFRRIN values )
 
-      ENTRY ZZGFRRX ( XTARG, XABCOR, XOBS, XDT )
+      entry zzgfrrx ( xtarg, xabcor, xobs, xdt )
 
 ! $ Abstract
 !
@@ -934,10 +934,10 @@
 !
 !-&
 
-         XTARG  = SVTARG
-         XABCOR = SVABCO
-         XOBS   = SVOBS
-         XDT    = SVDT
+         xtarg  = svtarg
+         xabcor = svabco
+         xobs   = svobs
+         xdt    = svdt
 
-      RETURN
-      END
+      return
+      end

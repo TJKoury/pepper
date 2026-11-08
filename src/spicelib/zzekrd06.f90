@@ -1,9 +1,9 @@
 !$Procedure   ZZEKRD06 ( EK, read class 6 column entry elements )
 
-      SUBROUTINE ZZEKRD06 ( HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                            BEG,     END,     CVALS,   ISNULL,  FOUND )
+      subroutine zzekrd06 ( handle,  segdsc,  coldsc,  recptr, &
+                            beg,     end,     cvals,   isnull,  found )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -22,23 +22,23 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               BEG
-      INTEGER               END
-      CHARACTER*(*)         CVALS  ( * )
-      LOGICAL               ISNULL
-      LOGICAL               FOUND
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               beg
+      integer               end
+      character*(*)         cvals  ( * )
+      logical               isnull
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -191,42 +191,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      INTEGER               AVAIL
-      INTEGER               BASE
-      INTEGER               COLIDX
-      INTEGER               CVLEN
-      INTEGER               D
-      INTEGER               DATPTR
-      INTEGER               DELTA
-      INTEGER               ELTIDX
-      INTEGER               ELTOFF
-      INTEGER               MAXELT
-      INTEGER               NCOLS
-      INTEGER               NELT
-      INTEGER               NREAD
-      INTEGER               NSKIP
-      INTEGER               OFFSET
-      INTEGER               P
-      INTEGER               PAGNUM
-      INTEGER               PG
-      INTEGER               PTRLOC
-      INTEGER               PTROFF
-      INTEGER               RECNO
-      INTEGER               REMAIN
-      INTEGER               START
-      INTEGER               STRLEN
+      integer               avail
+      integer               base
+      integer               colidx
+      integer               cvlen
+      integer               d
+      integer               datptr
+      integer               delta
+      integer               eltidx
+      integer               eltoff
+      integer               maxelt
+      integer               ncols
+      integer               nelt
+      integer               nread
+      integer               nskip
+      integer               offset
+      integer               p
+      integer               pagnum
+      integer               pg
+      integer               ptrloc
+      integer               ptroff
+      integer               recno
+      integer               remain
+      integer               start
+      integer               strlen
 
 
 !
@@ -234,91 +234,91 @@
 !
 !     Make sure the column exists.
 !
-      NCOLS  =  SEGDSC ( NCIDX  )
-      COLIDX =  COLDSC ( ORDIDX )
+      ncols  =  segdsc ( ncidx  )
+      colidx =  coldsc ( ordidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKRD06'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKRD06'                              )
-         RETURN
+         call chkin  ( 'ZZEKRD06'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' )
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKRD06'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the output buffer is wide enough to hold the returned
 !     strings.
 !
-      CVLEN   =  LEN    ( CVALS(1) )
-      STRLEN  =  COLDSC ( LENIDX   )
+      cvlen   =  len    ( cvals(1) )
+      strlen  =  coldsc ( lenidx   )
 
-      IF ( STRLEN .GT. CVLEN ) THEN
+      if ( strlen .gt. cvlen ) then
 !
 !        We have a string truncation error.  Look up the column
 !        name, record number, and file name before signaling an
 !        error.
 !
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKRD06'                                  )
-         CALL SETMSG ( 'String value has length #; output string '// &
+         call chkin  ( 'ZZEKRD06'                                  )
+         call setmsg ( 'String value has length #; output string '// &
                        'can hold only # characters.  COLUMN = #; '// &
                        'SEGNO = #; RECNO = #; EK = #'              )
-         CALL ERRINT ( '#',  STRLEN                                )
-         CALL ERRINT ( '#',  CVLEN                                 )
-         CALL ERRCH  ( '#',  COLUMN                                )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-         CALL ERRINT ( '#',  RECNO                                 )
-         CALL ERRHAN ( '#',  HANDLE                                )
-         CALL SIGERR ( 'SPICE(STRINGTRUNCATED)'                    )
-         CALL CHKOUT ( 'ZZEKRD06'                                  )
-         RETURN
+         call errint ( '#',  strlen                                )
+         call errint ( '#',  cvlen                                 )
+         call errch  ( '#',  column                                )
+         call errint ( '#',  segdsc(snoidx)                        )
+         call errint ( '#',  recno                                 )
+         call errhan ( '#',  handle                                )
+         call sigerr ( 'SPICE(STRINGTRUNCATED)'                    )
+         call chkout ( 'ZZEKRD06'                                  )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Compute the data pointer location, and read the pointer.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF ( DATPTR .GT. 0 ) THEN
+      if ( datptr .gt. 0 ) then
 !
 !        The entry is non-null.
 !
-         ISNULL  =  .FALSE.
+         isnull  =  .false.
 
 !
 !        Get the element count.  Check for range specifications that
 !        can't be met.
 !
-         CALL ZZEKGEI ( HANDLE, DATPTR, NELT )
+         call zzekgei ( handle, datptr, nelt )
 
-         IF (  ( BEG .LT. 1 ) .OR. ( BEG .GT. NELT )  )  THEN
+         if (  ( beg .lt. 1 ) .or. ( beg .gt. nelt )  )  then
 
-            FOUND  =  .FALSE.
-            RETURN
+            found  =  .false.
+            return
 
-         ELSE IF (  ( END .LT. 1 ) .OR. ( END .GT. NELT )  )  THEN
+         else if (  ( end .lt. 1 ) .or. ( end .gt. nelt )  )  then
 
-            FOUND  =  .FALSE.
-            RETURN
+            found  =  .false.
+            return
 
-         ELSE IF ( END .LT. BEG ) THEN
+         else if ( end .lt. beg ) then
 
-            FOUND  =  .FALSE.
-            RETURN
+            found  =  .false.
+            return
 
-         END IF
+         end if
 
 !
 !        The request is valid, so read the data.  The first step is to
@@ -331,22 +331,22 @@
 !        of the element from the base of the page on which the column
 !        entry starts.
 !
-         CALL ZZEKPGPG ( CHR, DATPTR, P, BASE )
+         call zzekpgpg ( chr, datptr, p, base )
 
-         PTROFF  =  DATPTR  -  BASE
-         OFFSET  =  PTROFF  +  ENCSIZ   +   STRLEN * ( BEG - 1 )
+         ptroff  =  datptr  -  base
+         offset  =  ptroff  +  encsiz   +   strlen * ( beg - 1 )
 
-         IF ( OFFSET .LE. CPSIZE ) THEN
+         if ( offset .le. cpsize ) then
 
-            PAGNUM   =    1
-            ELTOFF   =    OFFSET
+            pagnum   =    1
+            eltoff   =    offset
 
-         ELSE
+         else
 
-            PAGNUM   =  ( OFFSET  +  CPSIZE   -   1 ) / CPSIZE
-            ELTOFF   =    OFFSET  -    ( PAGNUM - 1 ) * CPSIZE
+            pagnum   =  ( offset  +  cpsize   -   1 ) / cpsize
+            eltoff   =    offset  -    ( pagnum - 1 ) * cpsize
 
-         END IF
+         end if
 
 !
 !        Get the absolute page number and base address of the page
@@ -354,24 +354,24 @@
 !        which the column entry starts, we'll chain along using
 !        the page's forward links until we arrive at the correct page.
 !
-         PG  =  1
+         pg  =  1
 
-         DO WHILE ( PG .LT. PAGNUM )
+         do while ( pg .lt. pagnum )
 !
 !           Get the link to the next page, then look up the base
 !           address of that page.
 !
-            CALL ZZEKGEI  ( HANDLE, BASE+CFPIDX, P    )
-            CALL ZZEKPGBS ( CHR,    P,           BASE )
+            call zzekgei  ( handle, base+cfpidx, p    )
+            call zzekpgbs ( chr,    p,           base )
 
-            PG  =  PG + 1
+            pg  =  pg + 1
 
-         END DO
+         end do
 
 !
 !        The desired element starts at address BASE + ELTOFF.
 !
-         DATPTR  =  BASE + ELTOFF
+         datptr  =  base + eltoff
 
 !
 !        At this point, P is the page on which the element having index
@@ -379,49 +379,49 @@
 !
 !        Read the strings one at a time.
 !
-         ELTIDX   =  1
-         MAXELT   =  END - BEG + 1
+         eltidx   =  1
+         maxelt   =  end - beg + 1
 
-         DO WHILE (  ( ELTIDX .LE. MAXELT ) .AND. ( .NOT. FAILED() )  )
+         do while (  ( eltidx .le. maxelt ) .and. ( .not. failed() )  )
 !
 !           Read the current string.  The string may be continued over
 !           multiple pages.  Read only as many characters as will fit
 !           in the output buffer element CVALS(ELTIDX).
 !
-            REMAIN  =  MIN ( CVLEN, STRLEN )
-            START   =  1
+            remain  =  min ( cvlen, strlen )
+            start   =  1
 
-            DO WHILE (  ( REMAIN .GT. 0 ) .AND. ( .NOT. FAILED() )  )
+            do while (  ( remain .gt. 0 ) .and. ( .not. failed() )  )
 
-               AVAIL  =  BASE + CPSIZE - DATPTR + 1
-               NREAD  =  MIN  ( REMAIN,  AVAIL )
+               avail  =  base + cpsize - datptr + 1
+               nread  =  min  ( remain,  avail )
 
-               IF ( NREAD .GT. 0 ) THEN
+               if ( nread .gt. 0 ) then
 
-                  CALL DASRDC ( HANDLE, &
-                                DATPTR, &
-                                DATPTR + NREAD - 1, &
-                                START, &
-                                START + NREAD - 1, &
-                                CVALS ( ELTIDX )    )
+                  call dasrdc ( handle, &
+                                datptr, &
+                                datptr + nread - 1, &
+                                start, &
+                                start + nread - 1, &
+                                cvals ( eltidx )    )
 
-                  START  =  START  + NREAD
-                  REMAIN =  REMAIN - NREAD
-                  DATPTR =  DATPTR + NREAD
+                  start  =  start  + nread
+                  remain =  remain - nread
+                  datptr =  datptr + nread
 
-               ELSE
+               else
 !
 !                 Go to the next page for the continuation of the
 !                 current string.
 !
-                  CALL ZZEKGEI  ( HANDLE, BASE+CFPIDX, P    )
-                  CALL ZZEKPGBS ( CHR,    P,           BASE )
+                  call zzekgei  ( handle, base+cfpidx, p    )
+                  call zzekpgbs ( chr,    p,           base )
 
-                  DATPTR  =  BASE   +  1
+                  datptr  =  base   +  1
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           If we did not read all of the current array element,
@@ -430,104 +430,104 @@
 !           of the current page, the logic above will set DATPTR to
 !           indicate the first character of the next continuation page.
 !
-            DELTA  =  STRLEN - CVLEN
+            delta  =  strlen - cvlen
 
-            IF ( DELTA .GT. 0 ) THEN
+            if ( delta .gt. 0 ) then
 
-               D  =  DELTA
+               d  =  delta
 
-               DO WHILE ( D .GT. 0 )
+               do while ( d .gt. 0 )
 
-                  AVAIL  =  BASE + CPSIZE - DATPTR + 1
-                  NSKIP  =  MIN  ( D,  AVAIL )
+                  avail  =  base + cpsize - datptr + 1
+                  nskip  =  min  ( d,  avail )
 
-                  IF ( NSKIP .GT. 0 ) THEN
+                  if ( nskip .gt. 0 ) then
 
-                     D      =  D      - NSKIP
-                     DATPTR =  DATPTR + NSKIP
+                     d      =  d      - nskip
+                     datptr =  datptr + nskip
 
-                  ELSE
+                  else
 !
 !                    Go to the next page for the continuation of the
 !                    current string.
 !
-                     CALL ZZEKGEI  ( HANDLE, BASE+CFPIDX, P    )
-                     CALL ZZEKPGBS ( CHR,    P,           BASE )
+                     call zzekgei  ( handle, base+cfpidx, p    )
+                     call zzekpgbs ( chr,    p,           base )
 
-                     DATPTR  =  BASE   +  1
+                     datptr  =  base   +  1
 
-                  END IF
+                  end if
 
-               END DO
+               end do
 
-            END IF
+            end if
 
 !
 !           Blank-pad the output string if necessary.
 !
-            IF ( CVLEN .GT. STRLEN ) THEN
-               CVALS ( ELTIDX ) ( STRLEN+1: ) = ' '
-            END IF
+            if ( cvlen .gt. strlen ) then
+               cvals ( eltidx ) ( strlen+1: ) = ' '
+            end if
 
 
-            ELTIDX  =  ELTIDX + 1
+            eltidx  =  eltidx + 1
 
-         END DO
-
-
-         FOUND =  .NOT. FAILED()
+         end do
 
 
-      ELSE IF ( DATPTR .EQ. NULL ) THEN
+         found =  .not. failed()
+
+
+      else if ( datptr .eq. null ) then
 !
 !        The value is null.
 !
-         ISNULL =  .TRUE.
-         FOUND  =  .TRUE.
+         isnull =  .true.
+         found  =  .true.
 
 
-      ELSE IF ( DATPTR .EQ. UNINIT ) THEN
+      else if ( datptr .eq. uninit ) then
 !
 !        The data value is absent.  This is an error.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL ZZEKCNAM ( HANDLE,   COLDSC, COLUMN )
+         call zzekcnam ( handle,   coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKRD06'                                    )
-         CALL SETMSG ( 'Attempted to read uninitialized column '    // &
+         call chkin  ( 'ZZEKRD06'                                    )
+         call setmsg ( 'Attempted to read uninitialized column '    // &
                        'entry.  SEGNO = #; COLUMN = #; RECNO = #; ' // &
                        'EK = #'                                      )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                          )
-         CALL ERRCH  ( '#',  COLUMN                                  )
-         CALL ERRINT ( '#',  RECNO                                   )
-         CALL ERRHAN ( '#',  HANDLE                                  )
-         CALL SIGERR ( 'SPICE(UNINITIALIZED)'                        )
-         CALL CHKOUT ( 'ZZEKRD06'                                    )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                          )
+         call errch  ( '#',  column                                  )
+         call errint ( '#',  recno                                   )
+         call errhan ( '#',  handle                                  )
+         call sigerr ( 'SPICE(UNINITIALIZED)'                        )
+         call chkout ( 'ZZEKRD06'                                    )
+         return
 
 
-      ELSE
+      else
 !
 !        The data pointer is corrupted.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL ZZEKCNAM ( HANDLE,   COLDSC, COLUMN )
+         call zzekcnam ( handle,   coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKRD06'                                )
-         CALL SETMSG ( 'Data pointer is corrupted. SEGNO = #; '  // &
+         call chkin  ( 'ZZEKRD06'                                )
+         call setmsg ( 'Data pointer is corrupted. SEGNO = #; '  // &
                        'COLUMN =  #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                      )
-         CALL ERRCH  ( '#',  COLUMN                              )
-         CALL ERRINT ( '#',  RECNO                               )
-         CALL ERRHAN ( '#',  HANDLE                              )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKRD06'                                )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                      )
+         call errch  ( '#',  column                              )
+         call errint ( '#',  recno                               )
+         call errhan ( '#',  handle                              )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKRD06'                                )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

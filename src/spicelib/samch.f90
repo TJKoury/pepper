@@ -1,6 +1,6 @@
 !$Procedure SAMCH ( Same character )
 
-      LOGICAL FUNCTION SAMCH ( STR1, L1, STR2, L2 )
+      logical function samch ( str1, l1, str2, l2 )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR1
-      INTEGER               L1
-      CHARACTER*(*)         STR2
-      INTEGER               L2
+      character*(*)         str1
+      integer               l1
+      character*(*)         str2
+      integer               l2
 
 ! $ Brief_I/O
 !
@@ -161,16 +161,16 @@
 !-&
 
 
-      IF (      L1 .LT. 1 &
-           .OR. L2 .LT. 1 &
-           .OR. L1 .GT. LEN(STR1) &
-           .OR. L2 .GT. LEN(STR2)  ) THEN
+      if (      l1 .lt. 1 &
+           .or. l2 .lt. 1 &
+           .or. l1 .gt. len(str1) &
+           .or. l2 .gt. len(str2)  ) then
 
-         SAMCH = .FALSE.
-         RETURN
-      END IF
+         samch = .false.
+         return
+      end if
 
-      SAMCH = ICHAR(STR1(L1:L1)) .EQ. ICHAR(STR2(L2:L2))
-      RETURN
+      samch = ichar(str1(l1:l1)) .eq. ichar(str2(l2:l2))
+      return
 
-      END
+      end

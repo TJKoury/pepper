@@ -1,6 +1,6 @@
 !$Procedure PUTSMS ( Store Short Error Message )
 
-      SUBROUTINE PUTSMS ( MSG )
+      subroutine putsms ( msg )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
+      include 'errhnd.inc'
 
-      CHARACTER*(*)          MSG
+      character*(*)          msg
 
 ! $ Brief_I/O
 !
@@ -140,28 +140,28 @@
 !
 !     The current short error message:
 !
-      CHARACTER*(SMSGLN)    SAVMSG
+      character*(smsgln)    savmsg
 
-      SAVE                  SAVMSG
+      save                  savmsg
 
 !
 !     Initial values:
 !
-      DATA    SAVMSG      / ' ' /
+      data    savmsg      / ' ' /
 
 !
 !     Executable Code:
 !
-      SAVMSG = MSG
+      savmsg = msg
 
-      RETURN
+      return
 
 
 
 
 !$Procedure GETSMS ( Get Short Error Message )
 
-       ENTRY GETSMS ( MSG )
+       entry getsms ( msg )
 
 ! $ Abstract
 !
@@ -271,6 +271,6 @@
 !
 !     Grab saved short message:
 !
-      MSG = SAVMSG
+      msg = savmsg
 
-      END
+      end

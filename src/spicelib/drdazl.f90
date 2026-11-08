@@ -1,6 +1,6 @@
 !$Procedure DRDAZL ( Derivative of rectangular w.r.t. AZ/EL )
 
-      SUBROUTINE DRDAZL ( RANGE, AZ, EL, AZCCW, ELPLSZ, JACOBI )
+      subroutine drdazl ( range, az, el, azccw, elplsz, jacobi )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      AZ
-      DOUBLE PRECISION      EL
-      LOGICAL               AZCCW
-      LOGICAL               ELPLSZ
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      range
+      double precision      az
+      double precision      el
+      logical               azccw
+      logical               elplsz
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -474,77 +474,77 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
+      double precision      lat
+      double precision      lon
 
-      INTEGER               AZSNSE
-      INTEGER               ELDIR
-      INTEGER               I
+      integer               azsnse
+      integer               eldir
+      integer               i
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DRDAZL' )
+      call chkin ( 'DRDAZL' )
 
 !
 !     The input range must be non-negative. If not, signal an error
 !     and check out.
 !
-      IF ( RANGE .LT. 0.0D0 ) THEN
+      if ( range .lt. 0.0d0 ) then
 
-         CALL SETMSG ( 'Input range was #. Negative ' &
+         call setmsg ( 'Input range was #. Negative ' &
          //            'values are not allowed.'  )
-         CALL ERRDP  ( '#', RANGE                 )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'   )
-         CALL CHKOUT ( 'DRDAZL'                   )
-         RETURN
+         call errdp  ( '#', range                 )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
+         call chkout ( 'DRDAZL'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the input azimuth and elevation to the equivalent
 !     latitudinal coordinates, and define the rotation sense for the
 !     azimuth and direction for the elevation
 !
-      IF ( AZCCW ) THEN
+      if ( azccw ) then
 
-         LON    = AZ
-         AZSNSE = 1
+         lon    = az
+         azsnse = 1
 
-      ELSE
+      else
 
-         LON    = -AZ
-         AZSNSE = -1
+         lon    = -az
+         azsnse = -1
 
-      END IF
+      end if
 
-      IF ( ELPLSZ ) THEN
+      if ( elplsz ) then
 
-         LAT    = EL
-         ELDIR  = 1
+         lat    = el
+         eldir  = 1
 
-      ELSE
+      else
 
-         LAT    = -EL
-         ELDIR  = -1
+         lat    = -el
+         eldir  = -1
 
-      END IF
+      end if
 
 !
 !     Now we have the latitudinal equivalent coordinates, use them to
 !     find the Jacobian matrix of rectangular coordinates with respect
 !     to latitudinal coordinates.
 !
-      CALL DRDLAT ( RANGE, LON, LAT, JACOBI )
+      call drdlat ( range, lon, lat, jacobi )
 
 !
 !     The matrix JACOBI is
@@ -580,13 +580,13 @@
 !     want to compute: the Jacobian matrix of rectangular
 !     coordinates with respect to azimuth/elevation coordinates.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         JACOBI(I,2) = AZSNSE * JACOBI(I,2)
-         JACOBI(I,3) = ELDIR  * JACOBI(I,3)
+         jacobi(i,2) = azsnse * jacobi(i,2)
+         jacobi(i,3) = eldir  * jacobi(i,3)
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DRDAZL' )
-      RETURN
-      END
+      call chkout ( 'DRDAZL' )
+      return
+      end

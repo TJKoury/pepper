@@ -1,6 +1,6 @@
 !$Procedure ISRCHD  ( Search in a double precision array )
 
-      INTEGER FUNCTION  ISRCHD ( VALUE, NDIM, ARRAY )
+      integer function  isrchd ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   VALUE
-      INTEGER            NDIM
-      DOUBLE PRECISION   ARRAY ( * )
+      double precision   value
+      integer            ndim
+      double precision   array ( * )
 
 ! $ Brief_I/O
 !
@@ -125,19 +125,19 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      ISRCHD = 0
+      isrchd = 0
 
-      DO I = 1, NDIM
+      do i = 1, ndim
 
-         IF ( ARRAY(I) .EQ. VALUE ) THEN
-            ISRCHD = I
-            RETURN
-         END IF
+         if ( array(i) .eq. value ) then
+            isrchd = i
+            return
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

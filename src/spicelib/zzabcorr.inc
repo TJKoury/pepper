@@ -73,43 +73,43 @@
 
 !     Number of aberration correction choices:
 !
-      INTEGER               NABCOR
-      PARAMETER           ( NABCOR = 15 )
+      integer               nabcor
+      parameter           ( nabcor = 15 )
 
 !
 !     Aberration correction attribute block size
 !     (number of aberration correction attributes):
 !
-      INTEGER               ABATSZ
-      PARAMETER           ( ABATSZ = 6 )
+      integer               abatsz
+      parameter           ( abatsz = 6 )
 
 !
 !     Indices of attributes within an aberration correction
 !     attribute block:
 !
-      INTEGER               GEOIDX
-      PARAMETER           ( GEOIDX = 1 )
+      integer               geoidx
+      parameter           ( geoidx = 1 )
 
-      INTEGER               LTIDX
-      PARAMETER           ( LTIDX  = GEOIDX + 1 )
+      integer               ltidx
+      parameter           ( ltidx  = geoidx + 1 )
 
-      INTEGER               STLIDX
-      PARAMETER           ( STLIDX = LTIDX  + 1 )
+      integer               stlidx
+      parameter           ( stlidx = ltidx  + 1 )
 
-      INTEGER               CNVIDX
-      PARAMETER           ( CNVIDX = STLIDX + 1 )
+      integer               cnvidx
+      parameter           ( cnvidx = stlidx + 1 )
 
-      INTEGER               XMTIDX
-      PARAMETER           ( XMTIDX = CNVIDX + 1 )
+      integer               xmtidx
+      parameter           ( xmtidx = cnvidx + 1 )
 
-      INTEGER               RELIDX
-      PARAMETER           ( RELIDX = XMTIDX + 1 )
+      integer               relidx
+      parameter           ( relidx = xmtidx + 1 )
 
 !
 !     Maximum length of an aberration correction string:
 !
-      INTEGER               CORLEN
-      PARAMETER           ( CORLEN = 5 )
+      integer               corlen
+      parameter           ( corlen = 5 )
 
 !
 !     End of include file zzabcorr.inc

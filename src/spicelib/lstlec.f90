@@ -1,6 +1,6 @@
 !$Procedure LSTLEC ( Last character element less than or equal to. )
 
-      INTEGER FUNCTION  LSTLEC ( STRING, N, ARRAY )
+      integer function  lstlec ( string, n, array )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      INTEGER          N
-      CHARACTER*(*)    ARRAY ( * )
+      character*(*)    string
+      integer          n
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -197,69 +197,69 @@
 !
 !     Local variables
 !
-      INTEGER          J
+      integer          j
 
-      INTEGER          BEGIN
-      INTEGER          END
-      INTEGER          MIDDLE
-      INTEGER          ITEMS
-
-
-
-      ITEMS = N
-
-      BEGIN = 1
-      END   = N
+      integer          begin
+      integer          end
+      integer          middle
+      integer          items
 
 
 
-      IF      ( N .LE. 0            ) THEN
+      items = n
+
+      begin = 1
+      end   = n
+
+
+
+      if      ( n .le. 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
 !        to compare against.  Zero is the only sensible thing to return.
 !
-         LSTLEC = 0
+         lstlec = 0
 
-      ELSE IF ( LLT (STRING, ARRAY(BEGIN)) ) THEN
+      else if ( llt (string, array(begin)) ) then
 
 !
 !        None of the array elements are less than or equal to STRING
 !
-         LSTLEC = 0
+         lstlec = 0
 
-      ELSE IF ( LGE (STRING, ARRAY(END))   ) THEN
+      else if ( lge (string, array(end))   ) then
 
 !
 !        STRING is greater than or equal to all elements of the array.
 !        Thus the last element of the array is the last item less than
 !        or equal to STRING.
 !
-         LSTLEC = END
+         lstlec = end
 
-      ELSE
+      else
 
 !
 !        STRING lies between some pair of elements of the array
 !
 
-         DO WHILE ( ITEMS .GT. 2 )
+         do while ( items .gt. 2 )
 
-            J        = ITEMS/2
-            MIDDLE   = BEGIN + J
+            j        = items/2
+            middle   = begin + j
 
-            IF ( LLE (ARRAY(MIDDLE), STRING) ) THEN
-               BEGIN = MIDDLE
-            ELSE
-               END   = MIDDLE
-            END IF
+            if ( lle (array(middle), string) ) then
+               begin = middle
+            else
+               end   = middle
+            end if
 
-            ITEMS    = 1 + (END - BEGIN)
-         END DO
+            items    = 1 + (end - begin)
+         end do
 
-         LSTLEC = BEGIN
+         lstlec = begin
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

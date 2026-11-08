@@ -1,8 +1,8 @@
 !$Procedure EDTERM ( Ellipsoid terminator )
 
-      SUBROUTINE EDTERM ( TRMTYP, SOURCE, TARGET, ET, &
-                          FIXREF, ABCORR, OBSRVR, NPTS, &
-                          TRGEPC, OBSPOS, TRMPTS        )
+      subroutine edterm ( trmtyp, source, target, et, &
+                          fixref, abcorr, obsrvr, npts, &
+                          trgepc, obspos, trmpts        )
 
 ! $ Abstract
 !
@@ -25,21 +25,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         TRMTYP
-      CHARACTER*(*)         SOURCE
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      INTEGER               NPTS
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      DOUBLE PRECISION      TRMPTS ( 3, NPTS )
+      character*(*)         trmtyp
+      character*(*)         source
+      character*(*)         target
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      integer               npts
+      double precision      trgepc
+      double precision      obspos ( 3 )
+      double precision      trmpts ( 3, npts )
 
 ! $ Brief_I/O
 !
@@ -774,271 +774,271 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LTSRC
-      DOUBLE PRECISION      LTTARG
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      SRCPOS ( 3 )
-      DOUBLE PRECISION      SRCRAD ( 3 )
-      DOUBLE PRECISION      TRGPOS ( 3 )
-      DOUBLE PRECISION      TRGRAD ( 3 )
+      double precision      ltsrc
+      double precision      lttarg
+      double precision      r
+      double precision      srcpos ( 3 )
+      double precision      srcrad ( 3 )
+      double precision      trgpos ( 3 )
+      double precision      trgrad ( 3 )
 
-      INTEGER               CENTER
-      INTEGER               CLSSID
-      INTEGER               FRCLAS
-      INTEGER               FRCODE
-      INTEGER               OBSID
-      INTEGER               SRCID
-      INTEGER               TRGID
+      integer               center
+      integer               clssid
+      integer               frclas
+      integer               frcode
+      integer               obsid
+      integer               srcid
+      integer               trgid
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTGID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtgid
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVSCRE
-      INTEGER               SVSRCI
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svscre
+      integer               svsrci
+      logical               svfnd2
 
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSI
-      LOGICAL               SVFND3
+      integer               svctr3 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsi
+      logical               svfnd3
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR4 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFREF
-      INTEGER               SVFRCD
+      integer               svctr4 ( ctrsiz )
+      character*(frnmln)    svfref
+      integer               svfrcd
 
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTGID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtgid
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVSCRE
-      SAVE                  SVSRCI
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svscre
+      save                  svsrci
+      save                  svfnd2
 
-      SAVE                  SVCTR3
-      SAVE                  SVOBSR
-      SAVE                  SVOBSI
-      SAVE                  SVFND3
+      save                  svctr3
+      save                  svobsr
+      save                  svobsi
+      save                  svfnd3
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR4
-      SAVE                  SVFREF
-      SAVE                  SVFRCD
+      save                  svctr4
+      save                  svfref
+      save                  svfrcd
 
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'EDTERM' )
+      call chkin ( 'EDTERM' )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
-         CALL ZZCTRUIN( SVCTR4 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
+         call zzctruin( svctr4 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get the input frame code and frame info.
 !
-      CALL ZZNAMFRM ( SVCTR4, SVFREF, SVFRCD, FIXREF, FRCODE )
+      call zznamfrm ( svctr4, svfref, svfrcd, fixref, frcode )
 
-      IF ( FRCODE .EQ. 0 ) THEN
+      if ( frcode .eq. 0 ) then
 
-         CALL SETMSG ( 'Input frame # has no associated frame ' &
+         call setmsg ( 'Input frame # has no associated frame ' &
          //            'ID code.'                               )
-         CALL ERRCH  ( '#',  FIXREF                             )
-         CALL SIGERR ( 'SPICE(NOTRANSLATION)'                   )
-         CALL CHKOUT ( 'EDTERM'                                 )
-         RETURN
+         call errch  ( '#',  fixref                             )
+         call sigerr ( 'SPICE(NOTRANSLATION)'                   )
+         call chkout ( 'EDTERM'                                 )
+         return
 
-      END IF
+      end if
 
-      CALL FRINFO ( FRCODE, CENTER, FRCLAS, CLSSID, FOUND )
+      call frinfo ( frcode, center, frclas, clssid, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Input frame # has associated frame ' &
+         call setmsg ( 'Input frame # has associated frame ' &
          //            'ID code #, but no info was found ' &
          //            'by FRINFO for this frame.'              )
-         CALL ERRCH  ( '#',  FIXREF                             )
-         CALL ERRINT ( '#',  FRCODE                             )
-         CALL SIGERR ( 'SPICE(BUG)'                             )
-         CALL CHKOUT ( 'EDTERM'                                 )
-         RETURN
+         call errch  ( '#',  fixref                             )
+         call errint ( '#',  frcode                             )
+         call sigerr ( 'SPICE(BUG)'                             )
+         call chkout ( 'EDTERM'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the ID codes of the target, source, and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTGID, SVFND1, &
-                      TARGET, TRGID, FOUND    )
+      call zzbods2c ( svctr1, svtarg, svtgid, svfnd1, &
+                      target, trgid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Input target # has no associated body ' &
+         call setmsg ( 'Input target # has no associated body ' &
          //            'ID code.'                               )
-         CALL ERRCH  ( '#',  TARGET                             )
-         CALL SIGERR ( 'SPICE(NOTRANSLATION)'                   )
-         CALL CHKOUT ( 'EDTERM'                                 )
-         RETURN
+         call errch  ( '#',  target                             )
+         call sigerr ( 'SPICE(NOTRANSLATION)'                   )
+         call chkout ( 'EDTERM'                                 )
+         return
 
-      END IF
+      end if
 
-      CALL ZZBODS2C ( SVCTR2, SVSCRE, SVSRCI, SVFND2, &
-                      SOURCE, SRCID, FOUND    )
+      call zzbods2c ( svctr2, svscre, svsrci, svfnd2, &
+                      source, srcid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Input source # has no associated body ' &
+         call setmsg ( 'Input source # has no associated body ' &
          //            'ID code.'                               )
-         CALL ERRCH  ( '#',  SOURCE                             )
-         CALL SIGERR ( 'SPICE(NOTRANSLATION)'                   )
-         CALL CHKOUT ( 'EDTERM'                                 )
-         RETURN
+         call errch  ( '#',  source                             )
+         call sigerr ( 'SPICE(NOTRANSLATION)'                   )
+         call chkout ( 'EDTERM'                                 )
+         return
 
-      END IF
+      end if
 
-      CALL ZZBODS2C ( SVCTR3, SVOBSR, SVOBSI, SVFND3, &
-                      OBSRVR, OBSID, FOUND    )
+      call zzbods2c ( svctr3, svobsr, svobsi, svfnd3, &
+                      obsrvr, obsid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Input observer # has no associated body ' &
+         call setmsg ( 'Input observer # has no associated body ' &
          //            'ID code.'                               )
-         CALL ERRCH  ( '#',  OBSRVR                             )
-         CALL SIGERR ( 'SPICE(NOTRANSLATION)'                   )
-         CALL CHKOUT ( 'EDTERM'                                 )
-         RETURN
+         call errch  ( '#',  obsrvr                             )
+         call sigerr ( 'SPICE(NOTRANSLATION)'                   )
+         call chkout ( 'EDTERM'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     If the frame is not centered on the target, reject it.
 !
-      IF ( CENTER .NE. TRGID ) THEN
+      if ( center .ne. trgid ) then
 
-         CALL SETMSG ( 'Input frame # is not centered on target ' &
+         call setmsg ( 'Input frame # is not centered on target ' &
          //            'body #. This frame must be a body-fixed ' &
          //            'frame associated with the target.'       )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL ERRCH  ( '#',  TARGET                              )
-         CALL SIGERR ( 'SPICE(INVALIDFIXREF)'                    )
-         CALL CHKOUT ( 'EDTERM'                                  )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call errch  ( '#',  target                              )
+         call sigerr ( 'SPICE(INVALIDFIXREF)'                    )
+         call chkout ( 'EDTERM'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the radii associated with the target body.
 !
-      CALL ZZGFTREB ( TRGID, TRGRAD )
+      call zzgftreb ( trgid, trgrad )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EDTERM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EDTERM' )
+         return
+      end if
 
 !
 !     Look up the radii associated with the light source.
 !
-      CALL ZZGFTREB ( SRCID, SRCRAD )
+      call zzgftreb ( srcid, srcrad )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EDTERM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EDTERM' )
+         return
+      end if
 
-      R = MAX ( SRCRAD(1), SRCRAD(2), SRCRAD(3) )
+      r = max ( srcrad(1), srcrad(2), srcrad(3) )
 
 !
 !     Look up the observer-target vector and the target-source vector.
 !     Also set the output OBSPOS.
 !
-      CALL SPKEZP   ( TRGID, ET,     FIXREF, ABCORR, &
-                      OBSID, TRGPOS, LTTARG         )
+      call spkezp   ( trgid, et,     fixref, abcorr, &
+                      obsid, trgpos, lttarg         )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'EDTERM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'EDTERM' )
+         return
+      end if
 
-      CALL ZZCOREPC ( ABCORR, ET,    LTTARG, TRGEPC )
+      call zzcorepc ( abcorr, et,    lttarg, trgepc )
 
-      CALL VMINUS   ( TRGPOS, OBSPOS )
+      call vminus   ( trgpos, obspos )
 
-      CALL SPKEZP   ( SRCID, TRGEPC, FIXREF, ABCORR, &
-                      TRGID, SRCPOS, LTSRC          )
+      call spkezp   ( srcid, trgepc, fixref, abcorr, &
+                      trgid, srcpos, ltsrc          )
 
 !
 !     We're ready to compute the terminator.
 !
-      CALL ZZEDTERM ( TRMTYP, TRGRAD(1), TRGRAD(2), TRGRAD(3), &
-                      R,      SRCPOS,    NPTS,      TRMPTS     )
+      call zzedterm ( trmtyp, trgrad(1), trgrad(2), trgrad(3), &
+                      r,      srcpos,    npts,      trmpts     )
 
 
-      CALL CHKOUT ( 'EDTERM' )
-      RETURN
-      END
+      call chkout ( 'EDTERM' )
+      return
+      end

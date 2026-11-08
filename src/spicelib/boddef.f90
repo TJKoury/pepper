@@ -1,6 +1,6 @@
 !$Procedure BODDEF ( Body name/ID code definition )
 
-      SUBROUTINE BODDEF ( NAME, CODE )
+      subroutine boddef ( name, code )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         NAME
-      INTEGER               CODE
+      character*(*)         name
+      integer               code
 
 ! $ Brief_I/O
 !
@@ -269,24 +269,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'BODDEF' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'BODDEF' )
+      end if
 
-      CALL ZZBODDEF ( NAME, CODE )
+      call zzboddef ( name, code )
 
 !
 !     No need for any error checking, since all we do is check out
 !     and return anyway. We leave the error checking to the caller.
 !
-      CALL CHKOUT ( 'BODDEF' )
-      RETURN
+      call chkout ( 'BODDEF' )
+      return
 
-      END
+      end

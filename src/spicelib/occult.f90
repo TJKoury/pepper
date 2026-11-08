@@ -1,8 +1,8 @@
 !$Procedure OCCULT ( find occultation type at time )
 
-      SUBROUTINE OCCULT ( TARG1,  SHAPE1, FRAME1, &
-                          TARG2,  SHAPE2, FRAME2, &
-                          ABCORR, OBSRVR, ET,     OCLTID )
+      subroutine occult ( targ1,  shape1, frame1, &
+                          targ2,  shape2, frame2, &
+                          abcorr, obsrvr, et,     ocltid )
 
 ! $ Abstract
 !
@@ -27,23 +27,23 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'gf.inc'
-      INCLUDE 'occult.inc'
-      INCLUDE 'dsk.inc'
-      INCLUDE 'zzdsk.inc'
+      include 'gf.inc'
+      include 'occult.inc'
+      include 'dsk.inc'
+      include 'zzdsk.inc'
 
-      CHARACTER*(*)         TARG1
-      CHARACTER*(*)         SHAPE1
-      CHARACTER*(*)         FRAME1
-      CHARACTER*(*)         TARG2
-      CHARACTER*(*)         SHAPE2
-      CHARACTER*(*)         FRAME2
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      ET
-      INTEGER               OCLTID
+      character*(*)         targ1
+      character*(*)         shape1
+      character*(*)         frame1
+      character*(*)         targ2
+      character*(*)         shape2
+      character*(*)         frame2
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      et
+      integer               ocltid
 
 ! $ Brief_I/O
 !
@@ -790,59 +790,59 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     External routines
 !
-      EXTERNAL              ZZGFOCIN
-      EXTERNAL              ZZGFOCST
+      external              zzgfocin
+      external              zzgfocst
 !
 !     Local parameters
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 !
 !     Local variables
 !
-      CHARACTER*(BDNMLN)    BACK
-      CHARACTER*(BDNMLN)    BNAME
-      CHARACTER*(FRNMLN)    BFRAME
-      CHARACTER*(MTHLEN)    BMETHD
-      CHARACTER*(MTHLEN)    BSHAPE
-      CHARACTER*(MTHLEN)    FMETHD
-      CHARACTER*(BDNMLN)    FNAME
-      CHARACTER*(BDNMLN)    FRONT
-      CHARACTER*(FRNMLN)    FFRAME
-      CHARACTER*(MTHLEN)    FSHAPE
-      CHARACTER*(SHPLEN)    OCCTYP ( 3 )
-      CHARACTER*(CVTLEN)    PNTDEF
-      CHARACTER*(SHPLEN)    PRSHP1
-      CHARACTER*(SHPLEN)    PRSHP2
-      CHARACTER*(MTHLEN)    SHAP1
-      CHARACTER*(MTHLEN)    SHAP2
-      CHARACTER*(SUBLEN)    SUBTYP
-      CHARACTER*(TMTLEN)    TRMTYP
+      character*(bdnmln)    back
+      character*(bdnmln)    bname
+      character*(frnmln)    bframe
+      character*(mthlen)    bmethd
+      character*(mthlen)    bshape
+      character*(mthlen)    fmethd
+      character*(bdnmln)    fname
+      character*(bdnmln)    front
+      character*(frnmln)    fframe
+      character*(mthlen)    fshape
+      character*(shplen)    occtyp ( 3 )
+      character*(cvtlen)    pntdef
+      character*(shplen)    prshp1
+      character*(shplen)    prshp2
+      character*(mthlen)    shap1
+      character*(mthlen)    shap2
+      character*(sublen)    subtyp
+      character*(tmtlen)    trmtyp
 
-      INTEGER               I
-      INTEGER               ID1
-      INTEGER               ID2
-      INTEGER               INDEX
-      INTEGER               MLTFAC
-      INTEGER               NSURF
-      INTEGER               SRFLST ( MAXSRF )
+      integer               i
+      integer               id1
+      integer               id2
+      integer               index
+      integer               mltfac
+      integer               nsurf
+      integer               srflst ( maxsrf )
 
-      LOGICAL               ELLPS2
-      LOGICAL               FOUND
-      LOGICAL               OCSTAT
-      LOGICAL               PRI
+      logical               ellps2
+      logical               found
+      logical               ocstat
+      logical               pri
 !
 !     Saved variables
 !
-      SAVE                  OCCTYP
+      save                  occtyp
 
 !
 !     The variable OCCTYP associates the string of an occultation
@@ -878,102 +878,102 @@
 !           3          Total          TARG2   TARG1   -1      -3
 !
 
-      DATA OCCTYP ( PARTL2 ) / PARTL  /
-      DATA OCCTYP ( ANNLR2 ) / ANNULR /
-      DATA OCCTYP ( TOTAL2 ) / FULL   /
+      data occtyp ( partl2 ) / partl  /
+      data occtyp ( annlr2 ) / annulr /
+      data occtyp ( total2 ) / full   /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'OCCULT' )
+      call chkin ( 'OCCULT' )
 
 !
 !     Left justify the shapes and target names and make them upper case.
 !
-      CALL LJUST ( SHAPE1, SHAP1 )
-      CALL UCASE ( SHAP1,  SHAP1 )
+      call ljust ( shape1, shap1 )
+      call ucase ( shap1,  shap1 )
 
-      CALL LJUST ( SHAPE2, SHAP2 )
-      CALL UCASE ( SHAP2,  SHAP2 )
+      call ljust ( shape2, shap2 )
+      call ucase ( shap2,  shap2 )
 
-      CALL LJUST ( TARG1,  FNAME )
-      CALL UCASE ( FNAME,  FNAME )
+      call ljust ( targ1,  fname )
+      call ucase ( fname,  fname )
 
-      CALL LJUST ( TARG2,  BNAME )
-      CALL UCASE ( BNAME,  BNAME )
+      call ljust ( targ2,  bname )
+      call ucase ( bname,  bname )
 
 !
 !     The variable ELLPS2 is a flag that indicates whether both targets
 !     are represented as ellipsoids.
 !
-      ELLPS2 =   ( SHAP1 .EQ. EDSHAP )  .AND. &
-                 ( SHAP2 .EQ. EDSHAP )
+      ellps2 =   ( shap1 .eq. edshap )  .and. &
+                 ( shap2 .eq. edshap )
 
 !
 !     Parse the input shapes. We need the target ID codes
 !     for this.
 !
-      IF ( SHAP1 .EQ. 'POINT' ) THEN
+      if ( shap1 .eq. 'POINT' ) then
 
-         PRSHP1 = SHAP1(:SHPLEN)
+         prshp1 = shap1(:shplen)
 
-      ELSE
+      else
 
-         CALL BODS2C ( FNAME, ID1, FOUND )
+         call bods2c ( fname, id1, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'First target name # could not be ' &
+            call setmsg ( 'First target name # could not be ' &
             //            'mapped to an ID code.'            )
-            CALL ERRCH  ( '#', FNAME                         )
-            CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'            )
-            CALL CHKOUT ( 'OCCULT'                           )
-            RETURN
+            call errch  ( '#', fname                         )
+            call sigerr ( 'SPICE(IDCODENOTFOUND)'            )
+            call chkout ( 'OCCULT'                           )
+            return
 
-         END IF
+         end if
 
-         CALL ZZPRSMET ( ID1, SHAP1, MAXSRF, PRSHP1, SUBTYP, &
-                         PRI, NSURF, SRFLST, PNTDEF, TRMTYP )
+         call zzprsmet ( id1, shap1, maxsrf, prshp1, subtyp, &
+                         pri, nsurf, srflst, pntdef, trmtyp )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'OCCULT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'OCCULT' )
+            return
+         end if
 
-      END IF
+      end if
 
-      IF ( SHAP2 .EQ. 'POINT' ) THEN
+      if ( shap2 .eq. 'POINT' ) then
 
-         PRSHP2 = SHAP2(:SHPLEN)
+         prshp2 = shap2(:shplen)
 
-      ELSE
+      else
 
-         CALL BODS2C ( BNAME, ID2, FOUND )
+         call bods2c ( bname, id2, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Second target name # could not be ' &
+            call setmsg ( 'Second target name # could not be ' &
             //            'mapped to an ID code.'            )
-            CALL ERRCH  ( '#', BNAME                         )
-            CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'            )
-            CALL CHKOUT ( 'OCCULT'                           )
-            RETURN
+            call errch  ( '#', bname                         )
+            call sigerr ( 'SPICE(IDCODENOTFOUND)'            )
+            call chkout ( 'OCCULT'                           )
+            return
 
-         END IF
+         end if
 
-         CALL ZZPRSMET ( ID2, SHAP2, MAXSRF, PRSHP2, SUBTYP, &
-                         PRI, NSURF, SRFLST, PNTDEF, TRMTYP )
+         call zzprsmet ( id2, shap2, maxsrf, prshp2, subtyp, &
+                         pri, nsurf, srflst, pntdef, trmtyp )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'OCCULT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'OCCULT' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Test two main cases:
@@ -983,40 +983,40 @@
 !
 !     First, initialize the occultation code to reflect no occultation.
 !
-      OCLTID = NOOCC
+      ocltid = noocc
 
-      DO I = 1, 2
+      do i = 1, 2
 !
 !        The first time through, make the first target the
 !        front. On the second time, make the second target the front.
 !        For details on the variable MLTFAC, please see the detailed
 !        explanation of the OCCTYP variable near the start of the code.
 !
-         IF ( I .EQ. 1 ) THEN
+         if ( i .eq. 1 ) then
 
-            FRONT  = FNAME
-            FMETHD = SHAP1
-            BMETHD = SHAP2
-            FSHAPE = PRSHP1
-            FFRAME = FRAME1
-            BACK   = BNAME
-            BSHAPE = PRSHP2
-            BFRAME = FRAME2
-            MLTFAC = 1
+            front  = fname
+            fmethd = shap1
+            bmethd = shap2
+            fshape = prshp1
+            fframe = frame1
+            back   = bname
+            bshape = prshp2
+            bframe = frame2
+            mltfac = 1
 
-         ELSE
+         else
 
-            FRONT  = BNAME
-            FMETHD = SHAP2
-            BMETHD = SHAP1
-            FSHAPE = PRSHP2
-            FFRAME = FRAME2
-            BACK   = FNAME
-            BSHAPE = PRSHP1
-            BFRAME = FRAME1
-            MLTFAC = -1
+            front  = bname
+            fmethd = shap2
+            bmethd = shap1
+            fshape = prshp2
+            fframe = frame2
+            back   = fname
+            bshape = prshp1
+            bframe = frame1
+            mltfac = -1
 
-         END IF
+         end if
 
 !
 !        Check if there is any occultation with the current front/back
@@ -1024,16 +1024,16 @@
 !        returns a true/false logical indicating if there is an
 !        occultation.
 !
-         CALL ZZGFOCIN ( ANY, FRONT,  FMETHD, FFRAME, &
-                              BACK,   BMETHD, BFRAME, &
-                              OBSRVR, ABCORR        )
+         call zzgfocin ( any, front,  fmethd, fframe, &
+                              back,   bmethd, bframe, &
+                              obsrvr, abcorr        )
 
-         CALL ZZGFOCST ( ET, OCSTAT )
+         call zzgfocst ( et, ocstat )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'OCCULT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'OCCULT' )
+            return
+         end if
 
 !
 !        If there was an occultation, and both targets are represented
@@ -1042,76 +1042,76 @@
 !        occult.inc are changed, the following DO loop will need to be
 !        altered.
 !
-         IF ( OCSTAT ) THEN
+         if ( ocstat ) then
 !
 !           An occultation exists.
 !
-            IF ( ELLPS2 ) THEN
+            if ( ellps2 ) then
 !
 !              Both shapes are ellipsoids.
 !
-               DO  INDEX = PARTL2, TOTAL2
+               do  index = partl2, total2
 
-                  CALL ZZGFOCIN ( OCCTYP(INDEX), &
-                                  FRONT,  FSHAPE, FFRAME, &
-                                  BACK,   BSHAPE, BFRAME, &
-                                  OBSRVR, ABCORR        )
+                  call zzgfocin ( occtyp(index), &
+                                  front,  fshape, fframe, &
+                                  back,   bshape, bframe, &
+                                  obsrvr, abcorr        )
 
-                  CALL ZZGFOCST ( ET, OCSTAT )
+                  call zzgfocst ( et, ocstat )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'OCCULT' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'OCCULT' )
+                     return
+                  end if
 !
 !                 If the occultation condition is true, return the
 !                 integer occultation ID code.
 !
-                  IF ( OCSTAT ) THEN
+                  if ( ocstat ) then
 
-                     OCLTID = MLTFAC * INDEX
+                     ocltid = mltfac * index
 
-                     CALL CHKOUT ( 'OCCULT' )
-                     RETURN
+                     call chkout ( 'OCCULT' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 End the DO loop that checks the occultation type.
 !
-               END DO
+               end do
 
 
-            ELSE IF (      ( FSHAPE .EQ. EDSHAP ) &
-                      .OR. ( FSHAPE .EQ. DSSHAP )  ) THEN
+            else if (      ( fshape .eq. edshap ) &
+                      .or. ( fshape .eq. dsshap )  ) then
 !
 !              The front target is an ellipsoid or DSK shape: this
 !              is a total occultation. (Other target is a point).
 !
-               OCLTID = MLTFAC * TOTAL2
+               ocltid = mltfac * total2
 
-               CALL CHKOUT ( 'OCCULT' )
-               RETURN
+               call chkout ( 'OCCULT' )
+               return
 
 
-            ELSE IF (      ( BSHAPE .EQ. EDSHAP ) &
-                      .OR. ( BSHAPE .EQ. DSSHAP )  ) THEN
+            else if (      ( bshape .eq. edshap ) &
+                      .or. ( bshape .eq. dsshap )  ) then
 !
 !              The back target is an ellipsoid or DSK shape: this is an
 !              annular occultation. (Other target is a point).
 !
-               OCLTID = MLTFAC * ANNLR2
+               ocltid = mltfac * annlr2
 
-               CALL CHKOUT ( 'OCCULT' )
-               RETURN
+               call chkout ( 'OCCULT' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        End the DO loop that checks the front/back orientation of
 !        the input targets.
 !
-      END DO
+      end do
 
 !
 !     If the occultation searches show that there was no occultation
@@ -1120,17 +1120,17 @@
 !     the occultation code indicates an occultation was found, an error
 !     has occurred.
 !
-      IF ( OCLTID .NE. NOOCC ) THEN
+      if ( ocltid .ne. noocc ) then
 
-         CALL SETMSG ( 'This error should never be reached; ' &
+         call setmsg ( 'This error should never be reached; ' &
               //       'the occultation code result # is invalid.')
-         CALL ERRINT ( '#', OCLTID  )
-         CALL SIGERR ( 'SPICE(BUG)' )
-         CALL CHKOUT ( 'OCCULT'      )
-         RETURN
+         call errint ( '#', ocltid  )
+         call sigerr ( 'SPICE(BUG)' )
+         call chkout ( 'OCCULT'      )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'OCCULT' )
-      RETURN
-      END
+      call chkout ( 'OCCULT' )
+      return
+      end

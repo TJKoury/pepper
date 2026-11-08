@@ -1,6 +1,6 @@
 !$Procedure SCENCD ( Encode spacecraft clock )
 
-      SUBROUTINE SCENCD ( SC, SCLKCH, SCLKDP )
+      subroutine scencd ( sc, sclkch, sclkdp )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sclk.inc'
+      include               'sclk.inc'
 
-      INTEGER               SC
-      CHARACTER*(*)         SCLKCH
-      DOUBLE PRECISION      SCLKDP
+      integer               sc
+      character*(*)         sclkch
+      double precision      sclkdp
 
 ! $ Brief_I/O
 !
@@ -489,124 +489,124 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      INTEGER               CPOS
+      logical               failed
+      logical               return
+      integer               cpos
 
 !
 !     Local variables
 !
-      INTEGER               POS
-      INTEGER               NPARTS
-      INTEGER               PNTER
-      INTEGER               PART
-      INTEGER               I
+      integer               pos
+      integer               nparts
+      integer               pnter
+      integer               part
+      integer               i
 
-      DOUBLE PRECISION      TICKS
-      DOUBLE PRECISION      PSTART   ( MXPART )
-      DOUBLE PRECISION      PSTOP    ( MXPART )
-      DOUBLE PRECISION      PTOTLS   ( MXPART )
+      double precision      ticks
+      double precision      pstart   ( mxpart )
+      double precision      pstop    ( mxpart )
+      double precision      ptotls   ( mxpart )
 
-      CHARACTER*(25)        ERROR
+      character*(25)        error
 
 !
 !     Saved variables
 !
-      SAVE                  PSTART
-      SAVE                  PSTOP
-      SAVE                  PTOTLS
+      save                  pstart
+      save                  pstop
+      save                  ptotls
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCENCD' )
+      call chkin ( 'SCENCD' )
 
 !
 !     Read the partition start and stop times (in ticks) for this
 !     mission. Error if there are too many of them.
 !
-      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      call scpart ( sc, nparts, pstart, pstop )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SCENCD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SCENCD' )
+         return
+      end if
 
-      IF ( NPARTS .GT. MXPART ) THEN
+      if ( nparts .gt. mxpart ) then
 !
 !        This code should be unreachable. It is included for safety.
 !
-         CALL SETMSG ( 'The number of partitions, #, for spacecraft ' // &
+         call setmsg ( 'The number of partitions, #, for spacecraft ' // &
                        '# exceeds the value for parameter MXPART, #.' )
-         CALL ERRINT ( '#', NPARTS           )
-         CALL ERRINT ( '#', SC               )
-         CALL ERRINT ( '#', MXPART           )
-         CALL SIGERR ( 'SPICE(TOOMANYPARTS)' )
-         CALL CHKOUT ( 'SCENCD'              )
-         RETURN
+         call errint ( '#', nparts           )
+         call errint ( '#', sc               )
+         call errint ( '#', mxpart           )
+         call sigerr ( 'SPICE(TOOMANYPARTS)' )
+         call chkout ( 'SCENCD'              )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the non-partition portion of the clock string to ticks.
 !
-      POS = CPOS ( SCLKCH, '/', 1 )
+      pos = cpos ( sclkch, '/', 1 )
 
-      IF ( POS .EQ. 1 ) THEN
+      if ( pos .eq. 1 ) then
 
-         CALL SETMSG ( 'Unable to parse the partition number '   // &
+         call setmsg ( 'Unable to parse the partition number '   // &
                        'from SCLK string #.'  )
-         CALL ERRCH  ( '#', SCLKCH            )
-         CALL SIGERR ( 'SPICE(BADPARTNUMBER)' )
-         CALL CHKOUT ( 'SCENCD'               )
-         RETURN
+         call errch  ( '#', sclkch            )
+         call sigerr ( 'SPICE(BADPARTNUMBER)' )
+         call chkout ( 'SCENCD'               )
+         return
 
-      END IF
+      end if
 
-      IF ( POS .EQ. LEN(SCLKCH) ) THEN
+      if ( pos .eq. len(sclkch) ) then
 
-         CALL SETMSG ( 'No SCLK components follow ' &
+         call setmsg ( 'No SCLK components follow ' &
          //            'slash in SCLK string #.'  )
-         CALL ERRCH  ( '#', SCLKCH                )
-         CALL SIGERR ( 'SPICE(INVALIDSCLKSTRING)' )
-         CALL CHKOUT ( 'SCENCD'                   )
-         RETURN
+         call errch  ( '#', sclkch                )
+         call sigerr ( 'SPICE(INVALIDSCLKSTRING)' )
+         call chkout ( 'SCENCD'                   )
+         return
 
-      END IF
+      end if
 
-      CALL SCTIKS (  SC, SCLKCH( POS+1 : ), TICKS )
+      call sctiks (  sc, sclkch( pos+1 : ), ticks )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SCENCD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SCENCD' )
+         return
+      end if
 
-      TICKS = ANINT ( TICKS )
+      ticks = anint ( ticks )
 
 !
 !     PSTART and PSTOP represent integers but are read from the
 !     kernel pool as double precision numbers. Make them whole
 !     numbers so that logical tests may be performed with them.
 !
-      DO I = 1, NPARTS
-         PSTOP (I) = ANINT ( PSTOP(I)  )
-         PSTART(I) = ANINT ( PSTART(I) )
-      END DO
+      do i = 1, nparts
+         pstop (i) = anint ( pstop(i)  )
+         pstart(i) = anint ( pstart(i) )
+      end do
 
 !
 !     For each partition, compute the total number of ticks in that
 !     partition plus all preceding partitions.
 !
-      PTOTLS( 1 ) = ANINT ( PSTOP( 1 ) - PSTART( 1 ) )
+      ptotls( 1 ) = anint ( pstop( 1 ) - pstart( 1 ) )
 
-      DO I = 2, NPARTS
-         PTOTLS( I ) = ANINT ( PTOTLS( I-1 ) + PSTOP( I ) - PSTART( I ))
-      END DO
+      do i = 2, nparts
+         ptotls( i ) = anint ( ptotls( i-1 ) + pstop( i ) - pstart( i ))
+      end do
 
 !
 !     Determine the partition number for the input clock string:
@@ -631,71 +631,71 @@
 !              of the partitions.
 !
 !
-      IF ( POS .GT. 1 ) THEN
+      if ( pos .gt. 1 ) then
 
-         PART = 0
+         part = 0
 
-         CALL NPARSI ( SCLKCH( :POS-1 ), PART, ERROR, PNTER )
+         call nparsi ( sclkch( :pos-1 ), part, error, pnter )
 
-         IF ( ERROR .NE. ' ' ) THEN
+         if ( error .ne. ' ' ) then
 
-            CALL SETMSG ( 'Unable to parse the partition number '   // &
+            call setmsg ( 'Unable to parse the partition number '   // &
                           'from SCLK string #.'  )
-            CALL ERRCH  ( '#', SCLKCH            )
-            CALL SIGERR ( 'SPICE(BADPARTNUMBER)' )
-            CALL CHKOUT ( 'SCENCD'               )
-            RETURN
+            call errch  ( '#', sclkch            )
+            call sigerr ( 'SPICE(BADPARTNUMBER)' )
+            call chkout ( 'SCENCD'               )
+            return
 
-         ELSE IF ( PART .LE. 0 .OR. PART .GT. NPARTS ) THEN
+         else if ( part .le. 0 .or. part .gt. nparts ) then
 
-            CALL SETMSG ( 'Partition number # taken from SCLK string '// &
+            call setmsg ( 'Partition number # taken from SCLK string '// &
                           '# is not in acceptable range 1 to #.'     )
-            CALL ERRINT ( '#', PART              )
-            CALL ERRCH  ( '#', SCLKCH            )
-            CALL ERRINT ( '#', NPARTS            )
-            CALL SIGERR ( 'SPICE(BADPARTNUMBER)' )
-            CALL CHKOUT ( 'SCENCD'               )
-            RETURN
+            call errint ( '#', part              )
+            call errch  ( '#', sclkch            )
+            call errint ( '#', nparts            )
+            call sigerr ( 'SPICE(BADPARTNUMBER)' )
+            call chkout ( 'SCENCD'               )
+            return
 
-         ELSE IF ( TICKS .LT. PSTART( PART )   .OR. &
-                   TICKS .GT. PSTOP ( PART ) )  THEN
+         else if ( ticks .lt. pstart( part )   .or. &
+                   ticks .gt. pstop ( part ) )  then
 
-            CALL SETMSG ( 'SCLK count # does not fall in the '        // &
+            call setmsg ( 'SCLK count # does not fall in the '        // &
                           'boundaries of partition number #.'  )
-            CALL ERRCH  ( '#', SCLKCH        )
-            CALL ERRINT ( '#', PART          )
-            CALL SIGERR ( 'SPICE(NOTINPART)' )
-            CALL CHKOUT ( 'SCENCD'           )
-            RETURN
+            call errch  ( '#', sclkch        )
+            call errint ( '#', part          )
+            call sigerr ( 'SPICE(NOTINPART)' )
+            call chkout ( 'SCENCD'           )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         PART = 1
+         part = 1
 
-         DO WHILE (   PART  .LE. NPARTS             .AND. &
-                    ( TICKS .LT. PSTART( PART )     .OR. &
-                      TICKS .GT. PSTOP ( PART ) )        )
+         do while (   part  .le. nparts             .and. &
+                    ( ticks .lt. pstart( part )     .or. &
+                      ticks .gt. pstop ( part ) )        )
 
-            PART = PART + 1
+            part = part + 1
 
-         END DO
+         end do
 
-         IF ( PART .GT. NPARTS ) THEN
+         if ( part .gt. nparts ) then
 
-            CALL SETMSG ( 'SCLK count # does not fall in the '        // &
+            call setmsg ( 'SCLK count # does not fall in the '        // &
                           'boundaries of any of the partitions for '  // &
                           'spacecraft #.'      )
-            CALL ERRCH  ( '#', SCLKCH          )
-            CALL ERRINT ( '#', SC              )
-            CALL SIGERR ( 'SPICE(NOPARTITION)' )
-            CALL CHKOUT ( 'SCENCD'             )
-            RETURN
+            call errch  ( '#', sclkch          )
+            call errint ( '#', sc              )
+            call sigerr ( 'SPICE(NOPARTITION)' )
+            call chkout ( 'SCENCD'             )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now we have a valid partition number, and the number of ticks for
@@ -703,12 +703,12 @@
 !     mission, add in the total number of ticks in preceding partitions
 !     and subtract off the starting ticks value for this partition.
 !
-      IF ( PART .GT. 1 ) THEN
-         SCLKDP = TICKS - PSTART( PART ) + PTOTLS( PART - 1 )
-      ELSE
-         SCLKDP = TICKS - PSTART( PART )
-      END IF
+      if ( part .gt. 1 ) then
+         sclkdp = ticks - pstart( part ) + ptotls( part - 1 )
+      else
+         sclkdp = ticks - pstart( part )
+      end if
 
-      CALL CHKOUT ( 'SCENCD' )
-      RETURN
-      END
+      call chkout ( 'SCENCD' )
+      return
+      end

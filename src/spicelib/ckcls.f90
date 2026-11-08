@@ -1,6 +1,6 @@
 !$Procedure CKCLS ( CK, Close file )
 
-      SUBROUTINE CKCLS ( HANDLE )
+      subroutine ckcls ( handle )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -312,29 +312,29 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ACCLEN
-      PARAMETER           ( ACCLEN= 5 )
+      integer               acclen
+      parameter           ( acclen= 5 )
 !
 !     Local Variables
 !
-      CHARACTER*(ACCLEN)    ACCESS
+      character*(acclen)    access
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKCLS' )
+      call chkin ( 'CKCLS' )
 
 !
 !     Get the access method for the file. Currently, if HANDLE < 0, the
@@ -342,16 +342,16 @@
 !     'READ'.  In the future this should make use of the private entry
 !     in the handle manager umbrella, ZZDDHNFO.
 !
-      IF ( HANDLE .LT. 0 ) THEN
-         ACCESS = 'WRITE'
-      ELSE IF ( HANDLE .GT. 0 ) THEN
-         ACCESS = 'READ'
-      END IF
+      if ( handle .lt. 0 ) then
+         access = 'WRITE'
+      else if ( handle .gt. 0 ) then
+         access = 'READ'
+      end if
 !
 !     Fix the ID word if the file is open for writing and close the
 !     file, or just close the file.
 !
-      IF ( ACCESS .EQ. 'WRITE' ) THEN
+      if ( access .eq. 'WRITE' ) then
 
 !
 !        Check to see if there are any segments in the file. If there
@@ -359,37 +359,37 @@
 !        programming error of some sort anyway. Why would you create a
 !        file and put nothing in it?
 !
-         CALL DAFBFS ( HANDLE )
-         CALL DAFFNA ( FOUND )
+         call dafbfs ( handle )
+         call daffna ( found )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'CKCLS' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'CKCLS' )
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'No segments were found in the CK file' &
+            call setmsg ( 'No segments were found in the CK file' &
             //            ' ''#''. There must be at least one segment' &
             //            ' in the file when this subroutine is' &
             //            ' called.'                                   )
-            CALL ERRHAN ( '#', HANDLE                                  )
-            CALL SIGERR ( 'SPICE(NOSEGMENTSFOUND)'                     )
-            CALL CHKOUT ( 'CKCLS'                                      )
-            RETURN
+            call errhan ( '#', handle                                  )
+            call sigerr ( 'SPICE(NOSEGMENTSFOUND)'                     )
+            call chkout ( 'CKCLS'                                      )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Close the file.
 !
-      CALL DAFCLS   ( HANDLE )
+      call dafcls   ( handle )
 !
 !     No need to check FAILED() here, since we just return. The caller
 !     should check it though.
 !
-      CALL CHKOUT ( 'CKCLS' )
-      RETURN
+      call chkout ( 'CKCLS' )
+      return
 
-      END
+      end

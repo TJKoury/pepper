@@ -41,20 +41,20 @@
 !     The degree is compatible with the maximum degrees
 !     supported by types 13 and 21.
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 27 )
+      integer               maxdeg
+      parameter           ( maxdeg = 27 )
 
 !
 !     Integer code indicating `true':
 !
-      INTEGER               ITRUE
-      PARAMETER           ( ITRUE  =  1 )
+      integer               itrue
+      parameter           ( itrue  =  1 )
 
 !
 !     Integer code indicating `false':
 !
-      INTEGER               IFALSE
-      PARAMETER           ( IFALSE = -1 )
+      integer               ifalse
+      parameter           ( ifalse = -1 )
 
 !
 !     SPK type 19 subtype codes:
@@ -62,51 +62,51 @@
 !
 !     Subtype 0:  Hermite interpolation, 12-element packets.
 !
-      INTEGER               S19TP0
-      PARAMETER           ( S19TP0 = 0 )
+      integer               s19tp0
+      parameter           ( s19tp0 = 0 )
 
 !
 !     Subtype 1:  Lagrange interpolation, 6-element packets.
 !
-      INTEGER               S19TP1
-      PARAMETER           ( S19TP1 = S19TP0 + 1 )
+      integer               s19tp1
+      parameter           ( s19tp1 = s19tp0 + 1 )
 
 !
 !     Subtype 2:  Hermite interpolation, 6-element packets.
 !
-      INTEGER               S19TP2
-      PARAMETER           ( S19TP2 = S19TP1 + 1 )
+      integer               s19tp2
+      parameter           ( s19tp2 = s19tp1 + 1 )
 
 
 !
 !     Packet sizes associated with the various subtypes:
 !
-      INTEGER               S19PS0
-      PARAMETER           ( S19PS0 = 12 )
+      integer               s19ps0
+      parameter           ( s19ps0 = 12 )
 
-      INTEGER               S19PS1
-      PARAMETER           ( S19PS1 =  6 )
+      integer               s19ps1
+      parameter           ( s19ps1 =  6 )
 
-      INTEGER               S19PS2
-      PARAMETER           ( S19PS2 =  6 )
+      integer               s19ps2
+      parameter           ( s19ps2 =  6 )
 
 !
 !     Number of subtypes:
 !
-      INTEGER               S19NST
-      PARAMETER           ( S19NST = 3 )
+      integer               s19nst
+      parameter           ( s19nst = 3 )
 
 !
 !     Maximum packet size for type 19:
 !
-      INTEGER               S19MXZ
-      PARAMETER           ( S19MXZ = S19PS0 )
+      integer               s19mxz
+      parameter           ( s19mxz = s19ps0 )
 
 !
 !     Minimum packet size for type 19:
 !
-      INTEGER               S19MNZ
-      PARAMETER           ( S19MNZ = S19PS1 )
+      integer               s19mnz
+      parameter           ( s19mnz = s19ps1 )
 
 !
 !     The SPKPVN record size declared in spkrec.inc must be at least as
@@ -120,8 +120,8 @@
 !        - MAXDEG+1 packets of size S19PS1
 !        - MAXDEG+1 time tags
 !
-      INTEGER               MAXRSZ
-      PARAMETER           ( MAXRSZ =  2 + (MAXDEG+1)*(S19PS1+1) )
+      integer               maxrsz
+      parameter           ( maxrsz =  2 + (maxdeg+1)*(s19ps1+1) )
 
 !
 !     End of include file spk19.inc.

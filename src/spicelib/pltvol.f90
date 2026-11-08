@@ -1,6 +1,6 @@
 !$Procedure PLTVOL ( Compute volume of plate model )
 
-      DOUBLE PRECISION FUNCTION PLTVOL ( NV, VRTCES, NP, PLATES )
+      double precision function pltvol ( nv, vrtces, np, plates )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NV
-      DOUBLE PRECISION      VRTCES ( 3, NV )
-      INTEGER               NP
-      INTEGER               PLATES ( 3, NP )
+      integer               nv
+      double precision      vrtces ( 3, nv )
+      integer               np
+      integer               plates ( 3, np )
 
 ! $ Brief_I/O
 !
@@ -275,87 +275,87 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DET
+      double precision      det
 
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      M ( 3, 3 )
+      double precision      m ( 3, 3 )
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     The function must have an initial value.
 !
-      PLTVOL  =  0.D0
+      pltvol  =  0.d0
 
 !
 !     This routine uses discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check the vertex and plate counts.
 !
-      IF ( NV .LT. 4 ) THEN
+      if ( nv .lt. 4 ) then
 
-         CALL CHKIN  ( 'PLTVOL'                                      )
-         CALL SETMSG ( 'At least 4 vertices are needed, but NV = #.' )
-         CALL ERRINT ( '#',  NV                                      )
-         CALL SIGERR ( 'SPICE(TOOFEWVERTICES)'                       )
-         CALL CHKOUT ( 'PLTVOL'                                      )
-         RETURN
+         call chkin  ( 'PLTVOL'                                      )
+         call setmsg ( 'At least 4 vertices are needed, but NV = #.' )
+         call errint ( '#',  nv                                      )
+         call sigerr ( 'SPICE(TOOFEWVERTICES)'                       )
+         call chkout ( 'PLTVOL'                                      )
+         return
 
-      END IF
+      end if
 
-      IF ( NP .LT. 4 ) THEN
+      if ( np .lt. 4 ) then
 
-         CALL CHKIN  ( 'PLTVOL'                                    )
-         CALL SETMSG ( 'At least 4 plates are needed, but NP = #.' )
-         CALL ERRINT ( '#',  NP                                    )
-         CALL SIGERR ( 'SPICE(TOOFEWPLATES)'                       )
-         CALL CHKOUT ( 'PLTVOL'                                    )
-         RETURN
+         call chkin  ( 'PLTVOL'                                    )
+         call setmsg ( 'At least 4 plates are needed, but NP = #.' )
+         call errint ( '#',  np                                    )
+         call sigerr ( 'SPICE(TOOFEWPLATES)'                       )
+         call chkout ( 'PLTVOL'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the vertex indices are in the range [1, NV].
 !
-      DO I = 1, NP
+      do i = 1, np
 
-         DO J = 1, 3
+         do j = 1, 3
 
-            IF (      ( PLATES(J,I) .LT. 1  ) &
-                 .OR. ( PLATES(J,I) .GT. NV )  ) THEN
+            if (      ( plates(j,i) .lt. 1  ) &
+                 .or. ( plates(j,i) .gt. nv )  ) then
 
-               CALL CHKIN  ( 'PLTVOL'                                  )
-               CALL SETMSG ( 'Vertex indices must be in the range ' &
+               call chkin  ( 'PLTVOL'                                  )
+               call setmsg ( 'Vertex indices must be in the range ' &
                //            '[1, NV] for all SPICE language versions. ' &
                //            'The input value of NV was #. Vertex ' &
                //            'index # in plate # was #. (The vertex ' &
                //            'and plate numbers in this message are ' &
                //            '1-based as well.)'                       )
-               CALL ERRINT ( '#',  NV                                  )
-               CALL ERRINT ( '#',  J                                   )
-               CALL ERRINT ( '#',  I                                   )
-               CALL ERRINT ( '#',  PLATES(J,I)                         )
-               CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                  )
-               CALL CHKOUT ( 'PLTVOL'                                  )
-               RETURN
+               call errint ( '#',  nv                                  )
+               call errint ( '#',  j                                   )
+               call errint ( '#',  i                                   )
+               call errint ( '#',  plates(j,i)                         )
+               call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                  )
+               call chkout ( 'PLTVOL'                                  )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     The volume computation below requires only a few lines of code,
@@ -560,15 +560,15 @@
 !
 !     Note that PLTVOL has already been initialized to 0.D0.
 !
-      DO I = 1, NP
+      do i = 1, np
 !
 !        Pack the vertices of the current plate into a 3x3 matrix.
 !
-         DO J = 1, 3
+         do j = 1, 3
 
-            CALL VEQU (  VRTCES( 1, PLATES(J,I) ),  M(1,J)  )
+            call vequ (  vrtces( 1, plates(j,i) ),  m(1,j)  )
 
-         END DO
+         end do
 
 !
 !        The determinant of M gives the volume of the parallelepiped
@@ -577,13 +577,13 @@
 !        the area of the pyramid's base is half that of base of the
 !        parallelepiped. So the determinant must be divided by 6.
 !
-         PLTVOL = PLTVOL  +  (  DET( M ) / 6.D0  )
+         pltvol = pltvol  +  (  det( m ) / 6.d0  )
 
-      END DO
+      end do
 
 !
 !     No check-out required, since the routine is not checked in
 !     at this point.
 !
-      RETURN
-      END
+      return
+      end

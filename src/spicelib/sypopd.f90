@@ -1,6 +1,6 @@
 !$Procedure SYPOPD ( Pop a value from a particular symbol )
 
-      SUBROUTINE SYPOPD ( NAME, TABSYM, TABPTR, TABVAL, VALUE, FOUND )
+      subroutine sypopd ( name, tabsym, tabptr, tabval, value, found )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
-      DOUBLE PRECISION      VALUE
-      LOGICAL               FOUND
+      character*(*)         name
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
+      double precision      value
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -179,91 +179,91 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               CARDD
-      INTEGER               CARDI
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      integer               cardd
+      integer               cardi
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NPTR
-      INTEGER               NVAL
+      integer               nsym
+      integer               nptr
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
+      integer               locsym
+      integer               locval
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYPOPD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYPOPD' )
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NPTR = CARDI ( TABPTR )
-      NVAL = CARDD ( TABVAL )
+      nsym = cardc ( tabsym )
+      nptr = cardi ( tabptr )
+      nval = cardd ( tabval )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      IF ( LOCSYM .EQ. 0 ) THEN
+      if ( locsym .eq. 0 ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
 !
 !     If it is in the table, we can proceed without fear of overflow.
 !
-      ELSE
+      else
 
-         FOUND = .TRUE.
+         found = .true.
 
 !
 !        Begin by saving and removing the initial value for this
 !        symbol from the value table.
 !
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
-         VALUE  = TABVAL(LOCVAL)
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         value  = tabval(locval)
 
-         CALL REMLAD ( 1, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDD ( NVAL, TABVAL )
+         call remlad ( 1, locval, tabval(1), nval )
+         call scardd ( nval, tabval )
 
 !
 !        If this was the sole value for the symbol, remove the
 !        symbol from the name and pointer tables. Otherwise just
 !        decrement the dimension.
 !
-         IF ( TABPTR(LOCSYM) .EQ. 1 ) THEN
+         if ( tabptr(locsym) .eq. 1 ) then
 
-            CALL REMLAC ( 1, LOCSYM, TABSYM(1), NSYM )
-            CALL SCARDC ( NSYM, TABSYM )
+            call remlac ( 1, locsym, tabsym(1), nsym )
+            call scardc ( nsym, tabsym )
 
-            CALL REMLAI ( 1, LOCSYM, TABPTR(1), NPTR )
-            CALL SCARDI ( NPTR, TABPTR )
+            call remlai ( 1, locsym, tabptr(1), nptr )
+            call scardi ( nptr, tabptr )
 
-         ELSE
-            TABPTR(LOCSYM) = TABPTR(LOCSYM) - 1
-         END IF
+         else
+            tabptr(locsym) = tabptr(locsym) - 1
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYPOPD' )
-      RETURN
-      END
+      call chkout ( 'SYPOPD' )
+      return
+      end

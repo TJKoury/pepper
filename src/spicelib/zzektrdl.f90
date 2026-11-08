@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRDL ( EK tree, delete value )
 
-      SUBROUTINE ZZEKTRDL ( HANDLE, TREE, KEY )
+      subroutine zzektrdl ( handle, tree, key )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
+      integer               handle
+      integer               tree
+      integer               key
 
 ! $ Brief_I/O
 !
@@ -178,80 +178,80 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Other functions
 !
-      INTEGER               ZZEKTRNK
+      integer               zzektrnk
 
 !
 !     Local parameters
 !
-      INTEGER               TERM
-      PARAMETER           ( TERM   = 1 )
+      integer               term
+      parameter           ( term   = 1 )
 
-      INTEGER               LCHECK
-      PARAMETER           ( LCHECK = TERM   + 1 )
+      integer               lcheck
+      parameter           ( lcheck = term   + 1 )
 
-      INTEGER               RCHECK
-      PARAMETER           ( RCHECK = LCHECK + 1 )
+      integer               rcheck
+      parameter           ( rcheck = lcheck + 1 )
 
-      INTEGER               BALNCE
-      PARAMETER           ( BALNCE = RCHECK + 1 )
+      integer               balnce
+      parameter           ( balnce = rcheck + 1 )
 
-      INTEGER               MERG32
-      PARAMETER           ( MERG32 = BALNCE + 1 )
+      integer               merg32
+      parameter           ( merg32 = balnce + 1 )
 
-      INTEGER               MERG31
-      PARAMETER           ( MERG31 = MERG32 + 1 )
+      integer               merg31
+      parameter           ( merg31 = merg32 + 1 )
 
-      INTEGER               LLCHCK
-      PARAMETER           ( LLCHCK = MERG31 + 1 )
+      integer               llchck
+      parameter           ( llchck = merg31 + 1 )
 
-      INTEGER               RRCHCK
-      PARAMETER           ( RRCHCK = LLCHCK + 1 )
+      integer               rrchck
+      parameter           ( rrchck = llchck + 1 )
 
 !
 !     Local variables
 !
-      INTEGER               IDX
-      INTEGER               LEFT
-      INTEGER               LEVEL
-      INTEGER               LKEY
-      INTEGER               LLKEY
-      INTEGER               LLSIB
-      INTEGER               LNKEY
-      INTEGER               LNODE
-      INTEGER               LPIDX
-      INTEGER               LPKEY
-      INTEGER               LRKEY
-      INTEGER               LRSIB
-      INTEGER               LSIB
-      INTEGER               MNODE
-      INTEGER               NKEYS
-      INTEGER               NODE
-      INTEGER               NOFFST
-      INTEGER               PARENT
-      INTEGER               PKEY
-      INTEGER               POFFST
-      INTEGER               PTR
-      INTEGER               RIGHT
-      INTEGER               RKEY
-      INTEGER               RLKEY
-      INTEGER               RLSIB
-      INTEGER               RNODE
-      INTEGER               ROOT
-      INTEGER               RPIDX
-      INTEGER               RPKEY
-      INTEGER               RRKEY
-      INTEGER               RRSIB
-      INTEGER               RSIB
-      INTEGER               STATE
-      INTEGER               TRGKEY
-      INTEGER               TRUST
+      integer               idx
+      integer               left
+      integer               level
+      integer               lkey
+      integer               llkey
+      integer               llsib
+      integer               lnkey
+      integer               lnode
+      integer               lpidx
+      integer               lpkey
+      integer               lrkey
+      integer               lrsib
+      integer               lsib
+      integer               mnode
+      integer               nkeys
+      integer               node
+      integer               noffst
+      integer               parent
+      integer               pkey
+      integer               poffst
+      integer               ptr
+      integer               right
+      integer               rkey
+      integer               rlkey
+      integer               rlsib
+      integer               rnode
+      integer               root
+      integer               rpidx
+      integer               rpkey
+      integer               rrkey
+      integer               rrsib
+      integer               rsib
+      integer               state
+      integer               trgkey
+      integer               trust
 
-      LOGICAL               UNDRFL
+      logical               undrfl
 
 
 !
@@ -260,30 +260,30 @@
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
 !
-      ROOT  =  TREE
+      root  =  tree
 
 !
 !     Work with a local copy of the input key.
 !
-      LKEY  =  KEY
+      lkey  =  key
 
 !
 !     The first step is to delete the key from the tree without
 !     balancing.  This step may cause a node to underflow.  We'll
 !     handle the underflow later.
 !
-      CALL ZZEKTRUD ( HANDLE, TREE, LKEY, TRGKEY, UNDRFL )
+      call zzektrud ( handle, tree, lkey, trgkey, undrfl )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     If the deletion didn't result in an underflow, we're done.
 !
-      IF ( .NOT. UNDRFL ) THEN
-         RETURN
-      END IF
+      if ( .not. undrfl ) then
+         return
+      end if
 
 !
 !     Handle node underflows, as required.  We describe our approach
@@ -313,274 +313,274 @@
 !           root and has one sibling.  Execute a 3-1 merge.
 !
 
-      STATE = LCHECK
+      state = lcheck
 
 
-      DO WHILE ( STATE .NE. TERM )
+      do while ( state .ne. term )
 
 
-         IF ( STATE .EQ. LCHECK ) THEN
+         if ( state .eq. lcheck ) then
 !
 !           Look up the node containing the target key TRGKEY.  This
 !           is where the underflow occurred; note that this node may
 !           be different from the one that contained LKEY.
 !
-            CALL ZZEKTRLK (  HANDLE,  TREE,    TRGKEY,  IDX, &
-                             NODE,    NOFFST,  LEVEL,   PTR  )
+            call zzektrlk (  handle,  tree,    trgkey,  idx, &
+                             node,    noffst,  level,   ptr  )
 
 !
 !           Look up the siblings of NODE.  If either sibling exists
 !           and has a surplus of keys, we can remove the underflow
 !           by balancing.
 !
-            CALL ZZEKTRSB (  HANDLE,  TREE,  TRGKEY, &
-                             LSIB,    LKEY,  RSIB,    RKEY  )
+            call zzektrsb (  handle,  tree,  trgkey, &
+                             lsib,    lkey,  rsib,    rkey  )
 
 
-            IF ( LSIB .GT. 0 ) THEN
+            if ( lsib .gt. 0 ) then
 
-               NKEYS = ZZEKTRNK ( HANDLE, TREE, LSIB )
+               nkeys = zzektrnk ( handle, tree, lsib )
 
-               IF ( NKEYS .GT. MNKEYC ) THEN
+               if ( nkeys .gt. mnkeyc ) then
 !
 !                 The left sibling can contribute a key.
 !
-                  LNKEY  =  LKEY
-                  LNODE  =  LSIB
-                  RNODE  =  NODE
+                  lnkey  =  lkey
+                  lnode  =  lsib
+                  rnode  =  node
 
-                  STATE  =  BALNCE
+                  state  =  balnce
 
 
-               ELSE IF ( RSIB .GT. 0 ) THEN
+               else if ( rsib .gt. 0 ) then
 !
 !                 The left sibling cannot help with balancing, but
 !                 the right sibling may be able to.
 !
-                  STATE  =  RCHECK
+                  state  =  rcheck
 
 
-               ELSE
+               else
 !
 !                 The right sibling does not exist; the only chance
 !                 of balancing will come from the left sibling of
 !                 LSIB, if such a sibling exists.
 !
-                  STATE  =  LLCHCK
+                  state  =  llchck
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              There is no left sibling, so there must be a right
 !              sibling.  Examine it.
 !
-               STATE = RCHECK
+               state = rcheck
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. RCHECK ) THEN
+         else if ( state .eq. rcheck ) then
 !
 !           See whether there's a node surplus in the right sibling
 !           The left sibling has already been checked and found wanting,
 !           or wasn't found at all.
 !
-            NKEYS = ZZEKTRNK ( HANDLE, TREE, RSIB )
+            nkeys = zzektrnk ( handle, tree, rsib )
 
-            IF ( NKEYS .GT. MNKEYC ) THEN
+            if ( nkeys .gt. mnkeyc ) then
 !
 !              The right sibling can contribute a key.
 !
-               LNKEY  =  TRGKEY
-               LNODE  =  NODE
-               RNODE  =  RSIB
+               lnkey  =  trgkey
+               lnode  =  node
+               rnode  =  rsib
 
-               STATE  =  BALNCE
+               state  =  balnce
 
 
-            ELSE IF ( LSIB .GT. 0 ) THEN
+            else if ( lsib .gt. 0 ) then
 !
 !              NODE has siblings on both sides, and each one contains
 !              the minimum number of keys.  Execute a 3-2 merge.
 !
-               LNKEY   =  LKEY
-               LNODE   =  LSIB
-               MNODE   =  NODE
-               RNODE   =  RSIB
+               lnkey   =  lkey
+               lnode   =  lsib
+               mnode   =  node
+               rnode   =  rsib
 
-               STATE   =  MERG32
+               state   =  merg32
 
-            ELSE
+            else
 !
 !              Look for the right sibling of the right sibling.
 !
-               STATE  =  RRCHCK
+               state  =  rrchck
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. LLCHCK ) THEN
+         else if ( state .eq. llchck ) then
 !
 !           See whether the left sibling has its own left sibling.
 !
-            CALL ZZEKTRSB (  HANDLE,  TREE,   LKEY, &
-                             LLSIB,   LLKEY,  LRSIB,  LRKEY  )
+            call zzektrsb (  handle,  tree,   lkey, &
+                             llsib,   llkey,  lrsib,  lrkey  )
 
 
-            IF ( LLSIB .GT. 0 ) THEN
+            if ( llsib .gt. 0 ) then
 
-               NKEYS = ZZEKTRNK ( HANDLE, TREE, LLSIB )
+               nkeys = zzektrnk ( handle, tree, llsib )
 
 
-               IF ( NKEYS .GT. MNKEYC ) THEN
+               if ( nkeys .gt. mnkeyc ) then
 !
 !                 The left**2 sibling can contribute a key.  Rotate
 !                 this key into the left sibling.  We'll need the
 !                 parent and index of left parent key of LSIB in order
 !                 to do this rotation.
 !
-                  CALL ZZEKTRPI ( HANDLE,  TREE,    LKEY,   PARENT, &
-                                  PKEY,    POFFST,  LPIDX,  LPKEY, &
-                                  LLSIB,   RPIDX,   RPKEY,  LRSIB  )
+                  call zzektrpi ( handle,  tree,    lkey,   parent, &
+                                  pkey,    poffst,  lpidx,  lpkey, &
+                                  llsib,   rpidx,   rpkey,  lrsib  )
 
-                  CALL ZZEKTRRK ( HANDLE,  TREE,    LLSIB,  LSIB, &
-                                  PARENT,  LPIDX,   1              )
+                  call zzektrrk ( handle,  tree,    llsib,  lsib, &
+                                  parent,  lpidx,   1              )
 
 !
 !                 Now LSIB has a one-key surplus, so we can balance
 !                 LSIB and NODE.
 !
-                  LNKEY  =  LKEY
-                  LNODE  =  LSIB
-                  RNODE  =  NODE
+                  lnkey  =  lkey
+                  lnode  =  lsib
+                  rnode  =  node
 
-                  STATE  =  BALNCE
+                  state  =  balnce
 
 
-               ELSE
+               else
 !
 !                 The left**2 sibling contains the minimum allowed
 !                 number of keys.  Execute a 3-2 merge, with NODE
 !                 as the right node.
 !
-                  LNKEY   =  LLKEY
-                  LNODE   =  LLSIB
-                  MNODE   =  LSIB
-                  RNODE   =  NODE
+                  lnkey   =  llkey
+                  lnode   =  llsib
+                  mnode   =  lsib
+                  rnode   =  node
 
-                  STATE   =  MERG32
+                  state   =  merg32
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              LSIB and NODE are the only children of their parent.
 !              The parent must be the root.  Also, LSIB and NODE
 !              together contain the one less than twice the minimum
 !              allowed number of keys.  Execute a 3-1 merge.
 !
-               LNODE  =  LSIB
-               RNODE  =  NODE
+               lnode  =  lsib
+               rnode  =  node
 
-               STATE  =  MERG31
+               state  =  merg31
 
-            END IF
+            end if
 
 
 
-         ELSE IF ( STATE .EQ. RRCHCK ) THEN
+         else if ( state .eq. rrchck ) then
 !
 !           See whether the right sibling has its own right sibling.
 !
-            CALL ZZEKTRSB (  HANDLE,  TREE,   RKEY, &
-                             RLSIB,   RLKEY,  RRSIB,  RRKEY  )
+            call zzektrsb (  handle,  tree,   rkey, &
+                             rlsib,   rlkey,  rrsib,  rrkey  )
 
 
-            IF ( RRSIB .GT. 0 ) THEN
+            if ( rrsib .gt. 0 ) then
 
-               NKEYS = ZZEKTRNK ( HANDLE, TREE, RRSIB )
+               nkeys = zzektrnk ( handle, tree, rrsib )
 
 
-               IF ( NKEYS .GT. MNKEYC ) THEN
+               if ( nkeys .gt. mnkeyc ) then
 !
 !                 The right**2 sibling can contribute a key.  Rotate
 !                 this key into the right sibling.  We'll need the
 !                 parent and index of the right parent key of RSIB in
 !                 order to do this rotation.
 !
-                  CALL ZZEKTRPI ( HANDLE,  TREE,    RKEY,   PARENT, &
-                                  PKEY,    POFFST,  LPIDX,  LPKEY, &
-                                  RLSIB,   RPIDX,   RPKEY,  RRSIB  )
+                  call zzektrpi ( handle,  tree,    rkey,   parent, &
+                                  pkey,    poffst,  lpidx,  lpkey, &
+                                  rlsib,   rpidx,   rpkey,  rrsib  )
 
-                  CALL ZZEKTRRK ( HANDLE,  TREE,    RSIB,   RRSIB, &
-                                  PARENT,  RPIDX,   -1             )
+                  call zzektrrk ( handle,  tree,    rsib,   rrsib, &
+                                  parent,  rpidx,   -1             )
 
 !
 !                 Now RSIB has a one-key surplus, so we can balance
 !                 RSIB and NODE.
 !
-                  LNKEY  =  TRGKEY
-                  LNODE  =  NODE
-                  RNODE  =  RSIB
+                  lnkey  =  trgkey
+                  lnode  =  node
+                  rnode  =  rsib
 
-                  STATE  =  BALNCE
+                  state  =  balnce
 
 
-               ELSE
+               else
 !
 !                 The right**2 sibling contains the minimum allowed
 !                 number of keys.  Execute a 3-2 merge, with NODE
 !                 as the left node.
 !
-                  LNKEY   =  TRGKEY
-                  LNODE   =  NODE
-                  MNODE   =  RSIB
-                  RNODE   =  RRSIB
+                  lnkey   =  trgkey
+                  lnode   =  node
+                  mnode   =  rsib
+                  rnode   =  rrsib
 
-                  STATE   =  MERG32
+                  state   =  merg32
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              RSIB and NODE are the only children of their parent.
 !              The parent must be the root.  Also, RSIB and NODE
 !              together contain one less than twice the minimum allowed
 !              number of keys.  Execute a 3-1 merge.
 !
-               LNODE  =  NODE
-               RNODE  =  RSIB
+               lnode  =  node
+               rnode  =  rsib
 
-               STATE  =  MERG31
+               state  =  merg31
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. BALNCE ) THEN
+         else if ( state .eq. balnce ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
 !           there are enough keys to accommodate the underflow.  After
 !           balancing these nodes, we're done.
 !
-            CALL ZZEKTRPI ( HANDLE,  TREE,    LNKEY,   PARENT, &
-                            PKEY,    POFFST,  LPIDX,   LPKEY, &
-                            RLSIB,   RPIDX,   RPKEY,   RRSIB  )
+            call zzektrpi ( handle,  tree,    lnkey,   parent, &
+                            pkey,    poffst,  lpidx,   lpkey, &
+                            rlsib,   rpidx,   rpkey,   rrsib  )
 
 !
 !           The common parent of the nodes is PARENT.  The right parent
 !           key of the left node is at location RPIDX.  We're ready to
 !           balance the nodes.
 !
-            CALL ZZEKTRBN ( HANDLE, TREE, LNODE, RNODE, PARENT, RPIDX )
+            call zzektrbn ( handle, tree, lnode, rnode, parent, rpidx )
 
-            STATE  =  TERM
+            state  =  term
 
 
-         ELSE IF ( STATE .EQ. MERG32 ) THEN
+         else if ( state .eq. merg32 ) then
 !
 !           LNODE, MNODE, and RNODE are siblings, and between the three
 !           nodes, there's an underflow of one key.  Merge these three
@@ -595,22 +595,22 @@
 !           leftmost node LNODE.  The first key of LNODE won't be
 !           touched by the merge.
 !
-            CALL ZZEKTRKI ( HANDLE,  TREE,    LNKEY,   1,   TRUST )
+            call zzektrki ( handle,  tree,    lnkey,   1,   trust )
 
-            CALL ZZEKTRPI ( HANDLE,  TREE,    LNKEY,   PARENT, &
-                            PKEY,    POFFST,  LPIDX,   LPKEY, &
-                            RLSIB,   RPIDX,   RPKEY,   RRSIB  )
+            call zzektrpi ( handle,  tree,    lnkey,   parent, &
+                            pkey,    poffst,  lpidx,   lpkey, &
+                            rlsib,   rpidx,   rpkey,   rrsib  )
 
 !
 !           The right parent key of the left node is the left parent
 !           key of the middle node.  The index of this key is required
 !           by ZZEKTR32.
 !
-            CALL ZZEKTR32 ( HANDLE,  TREE,    LNODE,  MNODE, &
-                            RNODE,   PARENT,  RPIDX,  UNDRFL  )
+            call zzektr32 ( handle,  tree,    lnode,  mnode, &
+                            rnode,   parent,  rpidx,  undrfl  )
 
 
-            IF ( UNDRFL ) THEN
+            if ( undrfl ) then
 !
 !              We'll need to handle underflow in the parent.
 !              The parent should be correctly identified by the
@@ -620,31 +620,31 @@
 !              the parent if the parent is the root:  the parent
 !              contains at least one key after this merge.
 !
-               CALL ZZEKTRPI ( HANDLE, TREE,   TRUST,  PARENT, &
-                               PKEY,   POFFST, LPIDX,  LPKEY, &
-                               LEFT,   RPIDX,  RPKEY,  RIGHT  )
+               call zzektrpi ( handle, tree,   trust,  parent, &
+                               pkey,   poffst, lpidx,  lpkey, &
+                               left,   rpidx,  rpkey,  right  )
 
-               TRGKEY =  PKEY
-               STATE  =  LCHECK
+               trgkey =  pkey
+               state  =  lcheck
 
-            ELSE
-               STATE  =  TERM
-            END IF
+            else
+               state  =  term
+            end if
 
 
-         ELSE IF ( STATE .EQ. MERG31 ) THEN
+         else if ( state .eq. merg31 ) then
 !
 !           We've got an underflow in the two children of the root.
 !           Move all of the keys from these children into the root.
 !           The root contains the maximum allowed number of keys
 !           after this merge.
 !
-            CALL ZZEKTR31 ( HANDLE, TREE )
-            STATE  =  TERM
+            call zzektr31 ( handle, tree )
+            state  =  term
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

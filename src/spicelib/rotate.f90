@@ -1,6 +1,6 @@
 !$Procedure ROTATE ( Generate a rotation matrix )
 
-      SUBROUTINE ROTATE ( ANGLE, IAXIS, MOUT )
+      subroutine rotate ( angle, iaxis, mout )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   ANGLE
-      INTEGER            IAXIS
-      DOUBLE PRECISION   MOUT  ( 3,3 )
+      double precision   angle
+      integer            iaxis
+      double precision   mout  ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -158,45 +158,45 @@
 
 !
 !
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      C
+      double precision      s
+      double precision      c
 
-      INTEGER               TEMP
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               INDEXS ( 5 )
-      SAVE                  INDEXS
+      integer               temp
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               indexs ( 5 )
+      save                  indexs
 
-      DATA                  INDEXS  / 3, 1, 2, 3, 1 /
+      data                  indexs  / 3, 1, 2, 3, 1 /
 !
 !  Get the sine and cosine of ANGLE
 !
-      S = DSIN(ANGLE)
-      C = DCOS(ANGLE)
+      s = dsin(angle)
+      c = dcos(angle)
 !
 !  Get indices for axes. The first index is for the axis of rotation.
 !  The next two axes follow in right hand order (XYZ).  First get the
 !  non-negative value of IAXIS mod 3 .
 !
-      TEMP = MOD ( MOD(IAXIS,3) + 3, 3 )
+      temp = mod ( mod(iaxis,3) + 3, 3 )
 
-      I1 = INDEXS( TEMP + 1 )
-      I2 = INDEXS( TEMP + 2 )
-      I3 = INDEXS( TEMP + 3 )
+      i1 = indexs( temp + 1 )
+      i2 = indexs( temp + 2 )
+      i3 = indexs( temp + 3 )
 
 !
 !  Construct the rotation matrix
 !
-      MOUT(I1,I1) = 1.D0
-      MOUT(I2,I1) = 0.D0
-      MOUT(I3,I1) = 0.D0
-      MOUT(I1,I2) = 0.D0
-      MOUT(I2,I2) = C
-      MOUT(I3,I2) = -S
-      MOUT(I1,I3) = 0.D0
-      MOUT(I2,I3) = S
-      MOUT(I3,I3) = C
+      mout(i1,i1) = 1.d0
+      mout(i2,i1) = 0.d0
+      mout(i3,i1) = 0.d0
+      mout(i1,i2) = 0.d0
+      mout(i2,i2) = c
+      mout(i3,i2) = -s
+      mout(i1,i3) = 0.d0
+      mout(i2,i3) = s
+      mout(i3,i3) = c
 !
-      RETURN
-      END
+      return
+      end

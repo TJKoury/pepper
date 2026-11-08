@@ -1,7 +1,7 @@
 !$Procedure EKIFLD ( EK, initialize segment for fast write )
 
-      SUBROUTINE EKIFLD (  HANDLE,  TABNAM,  NCOLS,  NROWS, &
-                           CNAMES,  DECLS,   SEGNO,  RCPTRS  )
+      subroutine ekifld (  handle,  tabnam,  ncols,  nrows, &
+                           cnames,  decls,   segno,  rcptrs  )
 
 ! $ Abstract
 !
@@ -17,19 +17,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         TABNAM
-      INTEGER               NCOLS
-      INTEGER               NROWS
-      CHARACTER*(*)         CNAMES ( * )
-      CHARACTER*(*)         DECLS  ( * )
-      INTEGER               SEGNO
-      INTEGER               RCPTRS ( * )
+      integer               handle
+      character*(*)         tabnam
+      integer               ncols
+      integer               nrows
+      character*(*)         cnames ( * )
+      character*(*)         decls  ( * )
+      integer               segno
+      integer               rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -557,86 +557,86 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               MBASE
-      INTEGER               P
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               STYPE
+      integer               mbase
+      integer               p
+      integer               segdsc ( sdscsz )
+      integer               stype
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKIFLD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKIFLD' )
+      end if
 
 !
 !     Check out NROWS.
 !
-      IF ( NROWS .LT. 1 ) THEN
+      if ( nrows .lt. 1 ) then
 
-         CALL SETMSG ( 'Number of rows must be > 0, was #. ' )
-         CALL ERRINT ( '#',  NROWS                           )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                 )
-         CALL CHKOUT ( 'EKIFLD'                              )
-         RETURN
+         call setmsg ( 'Number of rows must be > 0, was #. ' )
+         call errint ( '#',  nrows                           )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                 )
+         call chkout ( 'EKIFLD'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Create the segment's metadata.
 !
-      CALL EKBSEG ( HANDLE, TABNAM, NCOLS, CNAMES, DECLS, SEGNO )
+      call ekbseg ( handle, tabnam, ncols, cnames, decls, segno )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKIFLD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKIFLD' )
+         return
+      end if
 
 !
 !     Fill the number of rows into the (file's) segment descriptor.
 !
-      CALL ZZEKMLOC (  HANDLE,  SEGNO,        P,            MBASE  )
-      CALL DASUDI   (  HANDLE,  MBASE+NRIDX,  MBASE+NRIDX,  NROWS  )
+      call zzekmloc (  handle,  segno,        p,            mbase  )
+      call dasudi   (  handle,  mbase+nridx,  mbase+nridx,  nrows  )
 
 !
 !     Read in the segment descriptor, and get the segment's type.
 !
-      CALL ZZEKSDSC (  HANDLE,  SEGNO,  SEGDSC )
+      call zzeksdsc (  handle,  segno,  segdsc )
 
-      STYPE  =  SEGDSC(EKTIDX)
+      stype  =  segdsc(ektidx)
 
 !
 !     Complete the fast write preparations appropriate to the segment's
 !     type.
 !
-      IF ( STYPE .EQ. 1 ) THEN
+      if ( stype .eq. 1 ) then
 
-         CALL ZZEKIF01 ( HANDLE, SEGNO, RCPTRS )
-
-
-      ELSE IF ( STYPE .EQ. 2 ) THEN
-
-         CALL ZZEKIF02 ( HANDLE, SEGNO )
-
-      ELSE
-
-         CALL SETMSG ( 'Segment type # is not currently supported.' )
-         CALL ERRINT ( '#', STYPE                                   )
-         CALL SIGERR ( 'SPICE(BUG)'                                 )
-         CALL CHKOUT ( 'EKIFLD'                                     )
-         RETURN
-
-      END IF
+         call zzekif01 ( handle, segno, rcptrs )
 
 
-      CALL CHKOUT ( 'EKIFLD' )
-      RETURN
-      END
+      else if ( stype .eq. 2 ) then
+
+         call zzekif02 ( handle, segno )
+
+      else
+
+         call setmsg ( 'Segment type # is not currently supported.' )
+         call errint ( '#', stype                                   )
+         call sigerr ( 'SPICE(BUG)'                                 )
+         call chkout ( 'EKIFLD'                                     )
+         return
+
+      end if
+
+
+      call chkout ( 'EKIFLD' )
+      return
+      end

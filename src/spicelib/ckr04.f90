@@ -1,7 +1,7 @@
 !$Procedure CKR04 ( C-kernel, read pointing record, data type 4 )
 
-      SUBROUTINE CKR04 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV, &
-                         RECORD, FOUND )
+      subroutine ckr04 ( handle, descr, sclkdp, tol, needav, &
+                         record, found )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ckparam.inc'
+      include               'ckparam.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( * )
-      LOGICAL               FOUND
+      integer               handle
+      double precision      descr  ( * )
+      double precision      sclkdp
+      double precision      tol
+      logical               needav
+      double precision      record ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -363,46 +363,46 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VALUE
-      DOUBLE PRECISION      MIDPT1
-      DOUBLE PRECISION      MIDPT2
-      DOUBLE PRECISION      RAD1
-      DOUBLE PRECISION      RAD2
-      DOUBLE PRECISION      LBND1
-      DOUBLE PRECISION      LBND2
-      DOUBLE PRECISION      RBND1
-      DOUBLE PRECISION      DCD    ( 2 )
-      DOUBLE PRECISION      CLKOUT
+      double precision      value
+      double precision      midpt1
+      double precision      midpt2
+      double precision      rad1
+      double precision      rad2
+      double precision      lbnd1
+      double precision      lbnd2
+      double precision      rbnd1
+      double precision      dcd    ( 2 )
+      double precision      clkout
 
-      INTEGER               NUMALL
-      INTEGER               NUMCFT ( QAVSIZ )
-      INTEGER               ICD    ( 6 )
-      INTEGER               ENDS
-      INTEGER               INDX
-      INTEGER               K
-      INTEGER               NREC
+      integer               numall
+      integer               numcft ( qavsiz )
+      integer               icd    ( 6 )
+      integer               ends
+      integer               indx
+      integer               k
+      integer               nrec
 
-      LOGICAL               EXIST
+      logical               exist
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKR04' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKR04' )
+      end if
 
 !
 !     Set initial value of the found flag to "NOT FOUND".
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     We need to unpack and analyze descriptor components. The
@@ -418,203 +418,203 @@
 !        ICD(5)  Initial address of segment data
 !        ICD(6)  Final address of segment data
 !
-      CALL DAFUS  ( DESCR, 2, 6, DCD, ICD )
+      call dafus  ( descr, 2, 6, dcd, icd )
 
 !
 !     Check if the segment is type 4. Signal an error if it's not.
 !
-      IF ( ICD( 3 ) .NE. CK4DTP ) THEN
+      if ( icd( 3 ) .ne. ck4dtp ) then
 
-         CALL SETMSG ( 'The segment is not a type 4 segment.  '   // &
+         call setmsg ( 'The segment is not a type 4 segment.  '   // &
                        'Type is #'                                 )
-         CALL ERRINT ( '#', ICD(3)                                 )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                      )
-         CALL CHKOUT ( 'CKR04'                                     )
-         RETURN
+         call errint ( '#', icd(3)                                 )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
+         call chkout ( 'CKR04'                                     )
+         return
 
-      END IF
+      end if
 
-      IF ( NEEDAV ) THEN
+      if ( needav ) then
 
 !
 !        Signal an error if angular velocities are required but
 !        they are not present in the segment.
 !
-         IF ( ICD( 4 ) .NE. 1 ) THEN
+         if ( icd( 4 ) .ne. 1 ) then
 
-            CALL SETMSG ( 'Segment does not contain angular '     // &
+            call setmsg ( 'Segment does not contain angular '     // &
                           'velocity data.'                        )
-            CALL SIGERR ( 'SPICE(NOAVDATA)'                       )
-            CALL CHKOUT ( 'CKR04'                                 )
-            RETURN
+            call sigerr ( 'SPICE(NOAVDATA)'                       )
+            call chkout ( 'CKR04'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Get number of records (packets) in the segment.
 !
-      CALL CKNR04 ( HANDLE, DESCR, NREC )
+      call cknr04 ( handle, descr, nrec )
 
 !
 !     Locate the last time in the set of reference epochs less than or
 !     equal to the input SCLKDP.
 !
-      CALL SGFRVI ( HANDLE, DESCR, SCLKDP, VALUE, INDX, EXIST )
+      call sgfrvi ( handle, descr, sclkdp, value, indx, exist )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKR04' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKR04' )
+         return
+      end if
 
-      IF ( .NOT. EXIST ) THEN
+      if ( .not. exist ) then
 
 !
 !        We didn't find reference value with means that SCLKDP is
 !        less than the left bound of the first interpolation interval.
 !        Fetch the first record.
 !
-         INDX = 1
-         CALL SGFPKT ( HANDLE, DESCR, INDX, INDX, RECORD, ENDS )
+         indx = 1
+         call sgfpkt ( handle, descr, indx, indx, record, ends )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'CKR04' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'CKR04' )
+            return
+         end if
 
-         MIDPT1 = RECORD( 1 )
-         RAD1   = RECORD( 2 )
+         midpt1 = record( 1 )
+         rad1   = record( 2 )
 
 !
 !        Check whether SCLKDP is within TOL of the left bound of the
 !        first interval.
 !
-         LBND1 = MIDPT1 - RAD1 - TOL
+         lbnd1 = midpt1 - rad1 - tol
 
-         IF ( SCLKDP .GE. LBND1  ) THEN
+         if ( sclkdp .ge. lbnd1  ) then
 
-            FOUND = .TRUE.
-            CLKOUT = MIDPT1 - RAD1
+            found = .true.
+            clkout = midpt1 - rad1
 
-         END IF
+         end if
 
-      ELSE
+      else
 
 !
 !        We found reference value.
 !
-         IF ( INDX .GE. NREC ) THEN
+         if ( indx .ge. nrec ) then
 
 !
 !           The SCLKDP is greater than the left bound of the last
 !           interpolation interval. Fetch the last record.
 !
-            INDX = NREC
+            indx = nrec
 
-            CALL SGFPKT ( HANDLE, DESCR, INDX, INDX, RECORD, ENDS )
+            call sgfpkt ( handle, descr, indx, indx, record, ends )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CKR04' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CKR04' )
+               return
+            end if
 
-            MIDPT1 = RECORD( 1 )
-            RAD1   = RECORD( 2 )
+            midpt1 = record( 1 )
+            rad1   = record( 2 )
 
 !
 !           Check whether SCLKDP is within TOL of the right bound of
 !           the last interval.
 !
-            RBND1 = MIDPT1 + RAD1 + TOL
+            rbnd1 = midpt1 + rad1 + tol
 
-            IF ( SCLKDP .LE. RBND1 ) THEN
+            if ( sclkdp .le. rbnd1 ) then
 
-               FOUND = .TRUE.
+               found = .true.
 
 !
 !              Check whether SCLKDP falls between right bound of the
 !              last interval and right bound + TOL.
 !
-               RBND1 = MIDPT1 + RAD1
+               rbnd1 = midpt1 + rad1
 
-               IF ( SCLKDP .GE. RBND1 ) THEN
+               if ( sclkdp .ge. rbnd1 ) then
 
-                  CLKOUT = MIDPT1 + RAD1
+                  clkout = midpt1 + rad1
 
-               ELSE
+               else
 
 !
 !                 SCLKDP belongs to the last interval
 !
-                  CLKOUT = SCLKDP
+                  clkout = sclkdp
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         ELSE IF ( ( INDX .GE. 1 ) .AND. ( INDX .LT. NREC ) ) THEN
+         else if ( ( indx .ge. 1 ) .and. ( indx .lt. nrec ) ) then
 
 !
 !           The SCLKDP lies between left bound of the first interval
 !           and the right bound of the interval before the last
 !           interval. Fetch the found record.
 !
-            CALL SGFPKT ( HANDLE, DESCR, INDX, INDX, RECORD, ENDS )
+            call sgfpkt ( handle, descr, indx, indx, record, ends )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'CKR04' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'CKR04' )
+               return
+            end if
 
-            MIDPT1 = RECORD( 1 )
-            RAD1   = RECORD( 2 )
+            midpt1 = record( 1 )
+            rad1   = record( 2 )
 
 !
 !           Check whether SCLKDP belongs to current interval.
 !
-            RBND1 = MIDPT1 + RAD1
+            rbnd1 = midpt1 + rad1
 
-            IF ( SCLKDP .LE. RBND1 ) THEN
+            if ( sclkdp .le. rbnd1 ) then
 
-               FOUND = .TRUE.
-               CLKOUT = SCLKDP
+               found = .true.
+               clkout = sclkdp
 
-            ELSE
+            else
 
 !
 !              SCLKDP doesn't belong to current interval. Fetch the
 !              next packet.
 !
-               CALL SGFPKT ( HANDLE, DESCR, INDX + 1, INDX + 1, RECORD, &
-                                                               ENDS )
+               call sgfpkt ( handle, descr, indx + 1, indx + 1, record, &
+                                                               ends )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'CKR04' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'CKR04' )
+                  return
+               end if
 
-               MIDPT2 = RECORD( 1 )
-               RAD2   = RECORD( 2 )
+               midpt2 = record( 1 )
+               rad2   = record( 2 )
 
 !
 !              Find the closest interval bound for SCLKDP.
 !
-               RBND1 = MIDPT1 + RAD1
-               LBND2 = MIDPT2 - RAD2
+               rbnd1 = midpt1 + rad1
+               lbnd2 = midpt2 - rad2
 
-               IF ( ( SCLKDP - RBND1 ) .LE. ( LBND2 - SCLKDP ) ) THEN
+               if ( ( sclkdp - rbnd1 ) .le. ( lbnd2 - sclkdp ) ) then
 
 !
 !                 SCLKDP is closer to the right bound of current
 !                 interval. Check whether it's within TOL of it.
 !
-                  RBND1 = MIDPT1 + RAD1 + TOL
+                  rbnd1 = midpt1 + rad1 + tol
 
-                  IF ( SCLKDP .LE. RBND1 ) THEN
+                  if ( sclkdp .le. rbnd1 ) then
 
-                     FOUND = .TRUE.
-                     CLKOUT = MIDPT1 + RAD1
+                     found = .true.
+                     clkout = midpt1 + rad1
 
 !
 !                    At this point we need to re-read our current
@@ -623,81 +623,81 @@
 !                    fetched this packet successfully one call to
 !                    SGFPKT ago.
 !
-                     CALL SGFPKT( HANDLE, DESCR, INDX, INDX, RECORD, &
-                                                                ENDS )
+                     call sgfpkt( handle, descr, indx, indx, record, &
+                                                                ends )
 
-                  END IF
+                  end if
 
-               ELSE
+               else
 
 !
 !                 SCLKDP is closer to the left bound of the next
 !                 interval. Check whether it's within TOL of it.
 !
-                  LBND2 = MIDPT2 - RAD2 - TOL
+                  lbnd2 = midpt2 - rad2 - tol
 
-                  IF ( SCLKDP .GE. LBND2 ) THEN
+                  if ( sclkdp .ge. lbnd2 ) then
 
-                     FOUND = .TRUE.
-                     INDX = INDX + 1
-                     CLKOUT = MIDPT2 - RAD2
+                     found = .true.
+                     indx = indx + 1
+                     clkout = midpt2 - rad2
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we found the interval on segment the SCLKDP belongs to, then
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 
 !
 !        Decode numbers of polynomial coefficients.
 !
-         CALL ZZCK4D2I ( RECORD( 3 ), QAVSIZ, CK4PCD, NUMCFT )
+         call zzck4d2i ( record( 3 ), qavsiz, ck4pcd, numcft )
 
 !
 !        Count total number of coefficients.
 !
-         NUMALL = 0
+         numall = 0
 
-         DO K = 1, QAVSIZ
-            NUMALL = NUMALL + NUMCFT ( K )
-         END DO
+         do k = 1, qavsiz
+            numall = numall + numcft ( k )
+         end do
 
 !
 !        Move coefficients to the right and insert numbers of
 !        coefficients into output RECORD.
 !
-         DO K = NUMALL, 1, -1
-            RECORD ( K + CK4SFT ) = RECORD( K + 3 )
-         END DO
+         do k = numall, 1, -1
+            record ( k + ck4sft ) = record( k + 3 )
+         end do
 
-         DO K = 1, QAVSIZ
-            RECORD( K + 3 ) = NUMCFT( K )
-         END DO
+         do k = 1, qavsiz
+            record( k + 3 ) = numcft( k )
+         end do
 
-         RECORD( 3 ) = RECORD( 2 )
-         RECORD( 2 ) = RECORD( 1 )
+         record( 3 ) = record( 2 )
+         record( 2 ) = record( 1 )
 
 !
 !        Insert CLKOUT into output RECORD
 !
-         RECORD( 1 ) = CLKOUT
+         record( 1 ) = clkout
 
-      END IF
+      end if
 
 !
 !     All done.
 !
-      CALL CHKOUT ( 'CKR04' )
+      call chkout ( 'CKR04' )
 
-      RETURN
+      return
 
-      END
+      end

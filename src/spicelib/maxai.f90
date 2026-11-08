@@ -1,6 +1,6 @@
 !$Procedure MAXAI  ( Maximum element of array, integer )
 
-      SUBROUTINE MAXAI ( ARRAY, NDIM, MAXVAL, LOC )
+      subroutine maxai ( array, ndim, maxval, loc )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               ARRAY ( * )
-      INTEGER               NDIM
-      INTEGER               MAXVAL
-      INTEGER               LOC
+      integer               array ( * )
+      integer               ndim
+      integer               maxval
+      integer               loc
 
 ! $ Brief_I/O
 !
@@ -131,22 +131,22 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
-      IF (NDIM .LE. 0) THEN
-         LOC = 0
-         RETURN
-      END IF
+      if (ndim .le. 0) then
+         loc = 0
+         return
+      end if
 
-      MAXVAL = ARRAY(1)
-      LOC = 1
+      maxval = array(1)
+      loc = 1
 
-      DO I = 2, NDIM
-         IF (ARRAY(I) .GT. MAXVAL) THEN
-            MAXVAL = ARRAY(I)
-            LOC = I
-         END IF
-      END DO
+      do i = 2, ndim
+         if (array(i) .gt. maxval) then
+            maxval = array(i)
+            loc = i
+         end if
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DAFDC ( DAF delete comments )
 
-      SUBROUTINE DAFDC ( HANDLE )
+      subroutine dafdc ( handle )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -253,83 +253,83 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
 !     Length of a DAF file internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     Local variables
 !
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(ifnlen)    ifname
 
-      INTEGER               BWARD
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               NCOMR
-      INTEGER               ND
-      INTEGER               NI
+      integer               bward
+      integer               free
+      integer               fward
+      integer               ncomr
+      integer               nd
+      integer               ni
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFDC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFDC' )
+      end if
 !
 !     Verify that the DAF attached to HANDLE was opened with write
 !     access.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFDC' )
-         RETURN
+         call chkout ( 'DAFDC' )
+         return
 
-      END IF
+      end if
 !
 !     Read the file record to obtain the current number of comment
 !     records in the DAF attached to HANDLE. We will also get back some
 !     extra stuff that we do not use.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      NCOMR = FWARD - 2
+      ncomr = fward - 2
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFDC' )
-         RETURN
+         call chkout ( 'DAFDC' )
+         return
 
-      END IF
+      end if
 !
 !     Now we will attempt to remove the comment records, if there are
 !     any, otherwise we do nothing.
 !
-      IF ( NCOMR .GT. 0 ) THEN
+      if ( ncomr .gt. 0 ) then
 !
 !        We have some comment records, so remove them.
 !
-         CALL DAFRRR ( HANDLE, NCOMR )
+         call dafrrr ( handle, ncomr )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DAFDC' )
-            RETURN
+            call chkout ( 'DAFDC' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We're done now, so goodbye.
 !
-      CALL CHKOUT ( 'DAFDC' )
-      RETURN
-      END
+      call chkout ( 'DAFDC' )
+      return
+      end

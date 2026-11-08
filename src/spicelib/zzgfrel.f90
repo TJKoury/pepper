@@ -1,11 +1,11 @@
 !$Procedure ZZGFREL ( Private --- GF, geometric relation finder )
 
-      SUBROUTINE ZZGFREL ( UDSTEP,   UDREFN,  UDQDEC,  UDCOND, &
-                           UDFUNC,   UDQREF,  RELATE,  REFVAL, &
-                           TOL,      ADJUST,  CNFINE,  MW, &
-                           NW,       WORK,    RPT,     UDREPI, &
-                           UDREPU,   UDREPF,  RPTPRE,  RPTSUF, &
-                           BAIL,     UDBAIL,  RESULT           )
+      subroutine zzgfrel ( udstep,   udrefn,  udqdec,  udcond, &
+                           udfunc,   udqref,  relate,  refval, &
+                           tol,      adjust,  cnfine,  mw, &
+                           nw,       work,    rpt,     udrepi, &
+                           udrepu,   udrepf,  rptpre,  rptsuf, &
+                           bail,     udbail,  result           )
 
 ! $ Abstract
 !
@@ -36,40 +36,40 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
+      include               'gf.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               NWREQ
-      PARAMETER           ( NWREQ  = 5 )
+      integer               nwreq
+      parameter           ( nwreq  = 5 )
 
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      EXTERNAL              UDQDEC
-      EXTERNAL              UDCOND
-      EXTERNAL              UDFUNC
-      EXTERNAL              UDQREF
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK ( LBCELL : MW, NW )
-      LOGICAL               RPT
-      EXTERNAL              UDREPI
-      EXTERNAL              UDREPU
-      EXTERNAL              UDREPF
-      CHARACTER*(*)         RPTPRE ( * )
-      CHARACTER*(*)         RPTSUF ( * )
-      LOGICAL               UDBAIL
-      LOGICAL               BAIL
-      EXTERNAL              UDBAIL
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      external              udstep
+      external              udrefn
+      external              udqdec
+      external              udcond
+      external              udfunc
+      external              udqref
+      character*(*)         relate
+      double precision      refval
+      double precision      tol
+      double precision      adjust
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work ( lbcell : mw, nw )
+      logical               rpt
+      external              udrepi
+      external              udrepu
+      external              udrepf
+      character*(*)         rptpre ( * )
+      character*(*)         rptsuf ( * )
+      logical               udbail
+      logical               bail
+      external              udbail
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -502,105 +502,105 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               ISRCHC
-      INTEGER               SIZED
-      INTEGER               WNCARD
+      integer               cardd
+      integer               isrchc
+      integer               sized
+      integer               wncard
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LEFT
-      PARAMETER           ( LEFT   = 1 )
+      integer               left
+      parameter           ( left   = 1 )
 
-      INTEGER               RIGHT
-      PARAMETER           ( RIGHT  = 2 )
+      integer               right
+      parameter           ( right  = 2 )
 
-      INTEGER               MAXCLN
-      PARAMETER           ( MAXCLN = 80 )
+      integer               maxcln
+      parameter           ( maxcln = 80 )
 
 !
 !     Workspace window indices:
 !
-      INTEGER               CONFIN
-      PARAMETER           ( CONFIN = 3 )
+      integer               confin
+      parameter           ( confin = 3 )
 
-      INTEGER               COPY
-      PARAMETER           ( COPY   = 4 )
+      integer               copy
+      parameter           ( copy   = 4 )
 
-      INTEGER               DECRES
-      PARAMETER           ( DECRES = 2 )
+      integer               decres
+      parameter           ( decres = 2 )
 
-      INTEGER               INCRES
-      PARAMETER           ( INCRES = 1 )
+      integer               incres
+      parameter           ( incres = 1 )
 
-      INTEGER               TEMPW
-      PARAMETER           ( TEMPW  = 5 )
+      integer               tempw
+      parameter           ( tempw  = 5 )
 
 
 !
 !     Number of supported comparison operators.
 !
-      INTEGER               NC
-      PARAMETER           ( NC     = 7 )
+      integer               nc
+      parameter           ( nc     = 7 )
 
 !     One-letter alias for LBCELL to make references to the workspace
 !     array tolerable:
 !
-      INTEGER               B
-      PARAMETER           ( B      = LBCELL )
+      integer               b
+      parameter           ( b      = lbcell )
 
 !
 !     Context string length:
 !
-      INTEGER               CTXLEN
-      PARAMETER           ( CTXLEN = 500 )
+      integer               ctxlen
+      parameter           ( ctxlen = 500 )
 
 !
 !     Local variables
 !
 
-      CHARACTER*(MAXCLN)    CNAMES ( NC )
-      CHARACTER*(CTXLEN)    CONTXT
-      CHARACTER*(MAXCLN)    LOCREL
+      character*(maxcln)    cnames ( nc )
+      character*(ctxlen)    contxt
+      character*(maxcln)    locrel
 
-      DOUBLE PRECISION      ADDL
-      DOUBLE PRECISION      ADDR
-      DOUBLE PRECISION      ENDPT  (  2 )
-      DOUBLE PRECISION      EXTREM
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      REFER2
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      VALUE
+      double precision      addl
+      double precision      addr
+      double precision      endpt  (  2 )
+      double precision      extrem
+      double precision      finish
+      double precision      refer2
+      double precision      start
+      double precision      step
+      double precision      value
 
-      INTEGER               CASE
-      INTEGER               COUNT
-      INTEGER               I
-      INTEGER               MAXAT
-      INTEGER               MINAT
-      INTEGER               NAME    (  2 )
-      INTEGER               PASS
-      INTEGER               QCNUM
-      INTEGER               WANT
-      INTEGER               WINSIZ
+      integer               case
+      integer               count
+      integer               i
+      integer               maxat
+      integer               minat
+      integer               name    (  2 )
+      integer               pass
+      integer               qcnum
+      integer               want
+      integer               winsiz
 
-      LOGICAL               CSTEP
-      LOGICAL               NEED
+      logical               cstep
+      logical               need
 
 
 !
 !     Saved variables
 !
-      SAVE                  CNAMES
+      save                  cnames
 
 !
 !     Below we initialize the list of comparison operator names.
 !
-      DATA                  CNAMES / '<', &
+      data                  cnames / '<', &
                                      '=', &
                                      '>', &
                                      'LOCMIN', &
@@ -612,71 +612,71 @@
 !
 !     Set constant step parameter to .FALSE..
 !
-      DATA                  CSTEP / .FALSE. /
+      data                  cstep / .false. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFREL' )
+      call chkin  ( 'ZZGFREL' )
 
 !
 !     Make sure we have enough workspace windows.
 !
-      IF ( NW .LT. NWREQ ) THEN
+      if ( nw .lt. nwreq ) then
 
-         CALL SETMSG ( 'The number of workspace windows (#) is less ' &
+         call setmsg ( 'The number of workspace windows (#) is less ' &
          //            'than the minimum #.'                         )
-         CALL ERRINT ( '#',  NW                                      )
-         CALL ERRINT ( '#',  NWREQ                                   )
-         CALL SIGERR ( 'SPICE(TOOFEWWINDOWS)'                        )
-         CALL CHKOUT ( 'ZZGFREL'                                     )
-         RETURN
+         call errint ( '#',  nw                                      )
+         call errint ( '#',  nwreq                                   )
+         call sigerr ( 'SPICE(TOOFEWWINDOWS)'                        )
+         call chkout ( 'ZZGFREL'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the workspace windows can contain at least one interval.
 !
-      IF ( MW .LT. 2 ) THEN
+      if ( mw .lt. 2 ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2.'                               )
-         CALL ERRINT ( '#',  MW                                    )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'ZZGFREL'                                   )
-         RETURN
+         call errint ( '#',  mw                                    )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'ZZGFREL'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the result window size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2.'                             )
-         CALL ERRINT ( '#',  SIZED(RESULT)                       )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                 )
-         CALL CHKOUT ( 'ZZGFREL'                                 )
-         RETURN
+         call errint ( '#',  sized(result)                       )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                 )
+         call chkout ( 'ZZGFREL'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the requested comparison is one we recognize.
 !
-      CALL LJUST ( RELATE, LOCREL )
-      CALL UCASE ( LOCREL, LOCREL )
+      call ljust ( relate, locrel )
+      call ucase ( locrel, locrel )
 
-      QCNUM = ISRCHC ( LOCREL, NC, CNAMES )
+      qcnum = isrchc ( locrel, nc, cnames )
 
-      IF ( QCNUM .EQ. 0 ) THEN
+      if ( qcnum .eq. 0 ) then
 
-        CALL SETMSG ('The comparison operator, # is not '            // &
+        call setmsg ('The comparison operator, # is not '            // &
                      'recognized.  Supported quantities are: '       // &
                      '<, '                                           // &
                      '=, '                                           // &
@@ -685,75 +685,75 @@
                      'ABSMIN, '                                      // &
                      'LOCMAX, '                                      // &
                      'ABSMAX.'                                        )
-         CALL ERRCH  ('#', RELATE                                     )
-         CALL SIGERR ('SPICE(NOTRECOGNIZED)'                          )
-         CALL CHKOUT ('ZZGFREL'                                       )
-         RETURN
+         call errch  ('#', relate                                     )
+         call sigerr ('SPICE(NOTRECOGNIZED)'                          )
+         call chkout ('ZZGFREL'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Confirm ADJUST is non-negative.
 !
-      IF ( ADJUST .LT. 0.D0 ) THEN
+      if ( adjust .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'ADJUST was #; must be non-negative.' )
-         CALL ERRDP  ( '#',  ADJUST                          )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-         CALL CHKOUT ( 'ZZGFREL'                             )
-         RETURN
+         call setmsg ( 'ADJUST was #; must be non-negative.' )
+         call errdp  ( '#',  adjust                          )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+         call chkout ( 'ZZGFREL'                             )
+         return
 
-      END IF
+      end if
 
 !
 !    Confirm ADJUST equals zero unless LOCREL (RELATE) has value
 !    "ABSMAX" or "ABSMIN."
 !
-      IF(  (LOCREL .NE. 'ABSMIN')  .AND. (LOCREL .NE. 'ABSMAX' ) ) THEN
+      if(  (locrel .ne. 'ABSMIN')  .and. (locrel .ne. 'ABSMAX' ) ) then
 
-         IF ( ADJUST .NE. 0.D0 ) THEN
+         if ( adjust .ne. 0.d0 ) then
 
-            CALL SETMSG ( 'ADJUST should have value zero for all '  // &
+            call setmsg ( 'ADJUST should have value zero for all '  // &
                           'comparison operators except ABSMAX and ' // &
                           'ABSMIN' )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                     )
-            CALL CHKOUT ( 'ZZGFREL'                                 )
-            RETURN
+            call sigerr ( 'SPICE(INVALIDVALUE)'                     )
+            call chkout ( 'ZZGFREL'                                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the confinement window is empty, the result window must
 !     be empty as well.  In this case, there's not much to do.
 !
-      IF ( CARDD(CNFINE) .EQ. 0 ) THEN
+      if ( cardd(cnfine) .eq. 0 ) then
 
-         CALL SCARDD ( 0, RESULT )
-         CALL CHKOUT ('ZZGFREL' )
-         RETURN
+         call scardd ( 0, result )
+         call chkout ('ZZGFREL' )
+         return
 
-      END IF
+      end if
 
 !
 !     We need to set up several working windows, one each for
 !     increasing and decreasing schedules, one for the confining
 !     schedule and one for copying.
 !
-      CALL SSIZED ( MW, WORK(B,DECRES) )
-      CALL SSIZED ( MW, WORK(B,INCRES) )
-      CALL SSIZED ( MW, WORK(B,CONFIN) )
-      CALL SSIZED ( MW, WORK(B,COPY  ) )
-      CALL SSIZED ( MW, WORK(B,TEMPW ) )
+      call ssized ( mw, work(b,decres) )
+      call ssized ( mw, work(b,incres) )
+      call ssized ( mw, work(b,confin) )
+      call ssized ( mw, work(b,copy  ) )
+      call ssized ( mw, work(b,tempw ) )
 
-      NAME(1) = DECRES
-      NAME(2) = INCRES
+      name(1) = decres
+      name(2) = incres
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT (  'ZZGFREL' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout (  'ZZGFREL' )
+         return
+      end if
 
 !
 !     For equality constraints, we work with a somewhat expanded
@@ -762,44 +762,44 @@
 !     window. The expansion amount is ADDWIN. For other cases the
 !     expansion amount is set to zero.
 !
-      IF ( RELATE .EQ.  '=' ) THEN
+      if ( relate .eq.  '=' ) then
 
-         ADDL = ADDWIN
-         ADDR = ADDWIN
-      ELSE
-         ADDL = 0.0D0
-         ADDR = 0.0D0
-      END IF
+         addl = addwin
+         addr = addwin
+      else
+         addl = 0.0d0
+         addr = 0.0d0
+      end if
 
-      CALL COPYD  ( CNFINE,     WORK(B,CONFIN) )
-      CALL WNEXPD ( ADDL, ADDR, WORK(B,CONFIN) )
+      call copyd  ( cnfine,     work(b,confin) )
+      call wnexpd ( addl, addr, work(b,confin) )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT (  'ZZGFREL' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout (  'ZZGFREL' )
+         return
+      end if
 
 !
 !     Make a local copy of the reference value.
 !
-      REFER2 = REFVAL
+      refer2 = refval
 
 !
 !     Set the pass number for progress reporting.
 !
-      PASS = 1
+      pass = 1
 
 !
 !     Initialize the work in progress reporter.
 !
-      IF ( RPT ) THEN
-         CALL UDREPI ( WORK(B,CONFIN), RPTPRE(PASS), RPTSUF(PASS) )
-      END IF
+      if ( rpt ) then
+         call udrepi ( work(b,confin), rptpre(pass), rptsuf(pass) )
+      end if
 
 !
 !     Look up the size of the confinement schedule...
 !
-      COUNT = WNCARD ( WORK(B,CONFIN) )
+      count = wncard ( work(b,confin) )
 
 !
 !     Start the window that contains intervals when the quantity of
@@ -807,43 +807,43 @@
 !     (expanded) CNFINE when the selected geometric quantity function
 !     is decreasing, since this is how ZZGFSOLV is configured.
 !
-      DO I = 1, COUNT
+      do i = 1, count
 !
 !        Locate the bounds for the I'th interval of the confinement
 !        schedule. Results are accumulated in the WORK array.
 !
-         CALL WNFETD ( WORK(B,CONFIN), I, START, FINISH  )
+         call wnfetd ( work(b,confin), i, start, finish  )
 
-         CALL ZZGFSOLV ( UDQDEC,  UDSTEP, UDREFN,  BAIL, &
-                         UDBAIL,  CSTEP,  STEP,    START, &
-                         FINISH,  TOL,    RPT,     UDREPU, &
-                         WORK(B,DECRES) )
+         call zzgfsolv ( udqdec,  udstep, udrefn,  bail, &
+                         udbail,  cstep,  step,    start, &
+                         finish,  tol,    rpt,     udrepu, &
+                         work(b,decres) )
 
-         IF (  FAILED()  ) THEN
-            CALL CHKOUT ( 'ZZGFREL'  )
-            RETURN
-         END IF
+         if (  failed()  ) then
+            call chkout ( 'ZZGFREL'  )
+            return
+         end if
 
-         IF ( BAIL ) THEN
+         if ( bail ) then
 
-            IF ( UDBAIL () ) THEN
+            if ( udbail () ) then
 
-               IF ( RPT ) THEN
-                  CALL UDREPF
-               END IF
+               if ( rpt ) then
+                  call udrepf
+               end if
 
-               CALL CHKOUT ( 'ZZGFREL' )
-               RETURN
+               call chkout ( 'ZZGFREL' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      IF ( RPT ) THEN
-         CALL UDREPF
-      END IF
+      if ( rpt ) then
+         call udrepf
+      end if
 
 
 !
@@ -872,7 +872,7 @@
 !     quantity, there is at most one time within each of the intervals
 !     that the desired value is achieved.
 !
-      IF ( LOCREL .EQ. 'LOCMIN' ) THEN
+      if ( locrel .eq. 'LOCMIN' ) then
 !
 !        We are interested in only interior minima of the quantity.
 !        These occur at right endpoints of the intervals in TEMPW
@@ -880,47 +880,47 @@
 !        endpoints. Then find those that are contained in the initial
 !        confinement schedule, excluding endpoints.
 !
-         CALL WNEXTD ( 'R', WORK(B,DECRES) )
+         call wnextd ( 'R', work(b,decres) )
 
-         CALL ZZGFWSTS ( WORK(B,DECRES), CNFINE, '()', RESULT )
+         call zzgfwsts ( work(b,decres), cnfine, '()', result )
 
-         CALL CHKOUT (  'ZZGFREL' )
-         RETURN
+         call chkout (  'ZZGFREL' )
+         return
 
 
-      ELSE IF ( LOCREL .EQ. 'LOCMAX' ) THEN
+      else if ( locrel .eq. 'LOCMAX' ) then
 !
 !        We are interested in only interior maxima of the quantity.
 !        These occur at right endpoints of the intervals in TEMPW
 !        that are interior points of CNFINE.
 !
-         CALL WNEXTD ( 'L', WORK(B,DECRES) )
+         call wnextd ( 'L', work(b,decres) )
 
-         CALL ZZGFWSTS ( WORK(B,DECRES), CNFINE,  '()',  RESULT )
+         call zzgfwsts ( work(b,decres), cnfine,  '()',  result )
 
-         CALL CHKOUT (  'ZZGFREL' )
-         RETURN
+         call chkout (  'ZZGFREL' )
+         return
 
-      END IF
+      end if
 
 !
 !     We will need the intervals when the quantity of interest is
 !     increasing in value.
 !
-      IF ( ( LOCREL .EQ. 'ABSMIN') .OR. ( LOCREL .EQ. 'ABSMAX') ) THEN
+      if ( ( locrel .eq. 'ABSMIN') .or. ( locrel .eq. 'ABSMAX') ) then
 !
 !        We need an absolute max or min over the schedule CNFINE.
 !        But we have decreasing values in WORK(B,DECRES).
 !        Make a copy of WORK(B,DECRES) then compute the schedules
 !        of decreasing or increasing quantity over the schedule CNFINE.
 !
-         CALL COPYD  ( WORK(B,DECRES), WORK(B,COPY) )
+         call copyd  ( work(b,decres), work(b,copy) )
 
-         CALL WNINTD ( CNFINE,         WORK(B,DECRES), WORK(B,TEMPW ) )
-         CALL COPYD  ( WORK(B,TEMPW),                  WORK(B,DECRES) )
+         call wnintd ( cnfine,         work(b,decres), work(b,tempw ) )
+         call copyd  ( work(b,tempw),                  work(b,decres) )
 
-         CALL WNDIFD ( CNFINE,         WORK(B,DECRES), WORK(B,TEMPW ) )
-         CALL COPYD  ( WORK(B,TEMPW),                  WORK(B,INCRES) )
+         call wndifd ( cnfine,         work(b,decres), work(b,tempw ) )
+         call copyd  ( work(b,tempw),                  work(b,incres) )
 
 !
 !        Here's what we plan to do, we want to look over two schedules
@@ -931,13 +931,13 @@
 !        endpoint of an interval, the max is at the RIGHT endpoint of
 !        an interval
 !
-         MINAT = RIGHT
-         MAXAT = LEFT
+         minat = right
+         maxat = left
 
 !
 !        As yet we still need to compute our first extremum.
 !
-         NEED  = .TRUE.
+         need  = .true.
 
 !
 !        The extrema search is logically the same for both
@@ -945,150 +945,150 @@
 !        our extremum and when we find a more extreme value
 !        replace it. DECREASING is first.
 !
-         DO CASE = 1, 2
+         do case = 1, 2
 
-            IF ( LOCREL .EQ. 'ABSMIN' ) THEN
+            if ( locrel .eq. 'ABSMIN' ) then
 
-               WANT  = MINAT
+               want  = minat
 
-            ELSE IF ( LOCREL .EQ. 'ABSMAX' ) THEN
+            else if ( locrel .eq. 'ABSMAX' ) then
 
-               WANT  = MAXAT
+               want  = maxat
 
-            END IF
+            end if
 
 
-            WINSIZ = WNCARD (  WORK( B, NAME(CASE) )  )
+            winsiz = wncard (  work( b, name(case) )  )
 
-            DO I = 1, WINSIZ
+            do i = 1, winsiz
 
-               CALL WNFETD ( WORK( B,  NAME(CASE) ), I, &
-                             ENDPT(1), ENDPT(2)  )
+               call wnfetd ( work( b,  name(case) ), i, &
+                             endpt(1), endpt(2)  )
 
-               CALL UDFUNC ( ENDPT(WANT), VALUE )
+               call udfunc ( endpt(want), value )
 
-               IF (  FAILED() ) THEN
-                  CALL CHKOUT (  'ZZGFREL' )
-                  RETURN
-               END IF
+               if (  failed() ) then
+                  call chkout (  'ZZGFREL' )
+                  return
+               end if
 
 !
 !              Initialize the extreme value. This step will
 !              be executed on the first pass through the
 !              DECREASING interval.
 !
-               IF ( NEED ) THEN
+               if ( need ) then
 
-                  NEED   = .FALSE.
-                  EXTREM = VALUE
+                  need   = .false.
+                  extrem = value
 
-               END IF
+               end if
 
 !
 !              Check to see if current VALUE is more extreme than
 !              EXTREM.
 !
-               IF ( LOCREL .EQ. 'ABSMIN' ) THEN
+               if ( locrel .eq. 'ABSMIN' ) then
 
-                  IF (       ( ADJUST .EQ. 0.0D0  ) &
-                       .AND. ( VALUE  .LE. EXTREM )  ) THEN
+                  if (       ( adjust .eq. 0.0d0  ) &
+                       .and. ( value  .le. extrem )  ) then
 !
 !                    Let's save the epoch in case it's that of the
 !                    absolute min. Add this endpoint as a singleton
 !                    interval to the RESULT window.
 !
-                     CALL SCARDD ( 0, RESULT )
+                     call scardd ( 0, result )
 
-                     CONTXT = 'Saving current candidate epoch at ' &
+                     contxt = 'Saving current candidate epoch at ' &
                      //       'which an absolute minimum may occur.'
 
-                     CALL ZZWNINSD ( ENDPT(WANT), ENDPT(WANT), &
-                                     CONTXT,      RESULT      )
+                     call zzwninsd ( endpt(want), endpt(want), &
+                                     contxt,      result      )
 
-                  END IF
+                  end if
 
-                  EXTREM = MIN ( EXTREM, VALUE )
+                  extrem = min ( extrem, value )
 
 
-               ELSE
+               else
 
-                  IF (       ( ADJUST .EQ. 0.0D0  ) &
-                       .AND. ( VALUE  .GE. EXTREM )  ) THEN
+                  if (       ( adjust .eq. 0.0d0  ) &
+                       .and. ( value  .ge. extrem )  ) then
 !
 !                    Let's save the epoch in case it's that of the
 !                    absolute max. Add this endpoint as a singleton
 !                    interval to the RESULT window.
 !
-                     CALL SCARDD ( 0, RESULT )
+                     call scardd ( 0, result )
 
-                     CONTXT = 'Saving current candidate epoch at ' &
+                     contxt = 'Saving current candidate epoch at ' &
                      //       'which an absolute maximum may occur.'
 
-                     CALL ZZWNINSD ( ENDPT(WANT), ENDPT(WANT), &
-                                     CONTXT,      RESULT      )
+                     call zzwninsd ( endpt(want), endpt(want), &
+                                     contxt,      result      )
 
-                  END IF
+                  end if
 
-                  EXTREM = MAX ( EXTREM, VALUE )
+                  extrem = max ( extrem, value )
 
-               END IF
+               end if
 
-            END DO
+            end do
 
-            IF (  FAILED() ) THEN
-               CALL CHKOUT (  'ZZGFREL' )
-               RETURN
-            END IF
+            if (  failed() ) then
+               call chkout (  'ZZGFREL' )
+               return
+            end if
 
 !
 !           When we go to the next schedule, the min and max are at
 !           opposite ends of the intervals.
 !
-            CALL SWAPI ( MINAT, MAXAT )
+            call swapi ( minat, maxat )
 
-         END DO
+         end do
 
 !
 !        If the adjustment is zero, we're done.
 !
-         IF ( ADJUST .EQ. 0.0D0 ) THEN
+         if ( adjust .eq. 0.0d0 ) then
 
-            CALL CHKOUT (  'ZZGFREL' )
-            RETURN
+            call chkout (  'ZZGFREL' )
+            return
 
-         END IF
+         end if
 
 !
 !        We have a non-zero adjustment. we have the extreme value. Now
 !        we need to find the epochs when the extreme value is achieved,
 !        allowing for adjustment.
 !
-         IF ( LOCREL  .EQ. 'ABSMIN' ) THEN
+         if ( locrel  .eq. 'ABSMIN' ) then
 
-            REFER2 = EXTREM + ADJUST
+            refer2 = extrem + adjust
 
-         ELSE
+         else
 !
 !           The only other possible value of LOCREL within this block
 !           is 'ABSMAX'.
 !
-            REFER2 = EXTREM - ADJUST
+            refer2 = extrem - adjust
 
-         END IF
+         end if
 !
 !        If we reach this point, we need to re-establish the
 !        original expanded coverage of 'DECREASING' and 'INCREASING'.
 !
-         CALL COPYD ( WORK(B,COPY), WORK(B,DECRES) )
+         call copyd ( work(b,copy), work(b,decres) )
 
-      END IF
+      end if
 
-      CALL WNDIFD ( WORK(B,CONFIN), WORK(B,DECRES), WORK(B,INCRES) )
+      call wndifd ( work(b,confin), work(b,decres), work(b,incres) )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT (  'ZZGFREL' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout (  'ZZGFREL' )
+         return
+      end if
 
 
 !
@@ -1098,13 +1098,13 @@
 !     which may have been changed in the ABSOLUTE MAX or MIN blocks
 !     above.
 !
-      CALL UDQREF ( REFER2 )
+      call udqref ( refer2 )
 
 !
 !     If progress reporting is enabled, initialize the progress
 !     reporter for a second pass over the confinement window.
 !
-      IF ( RPT ) THEN
+      if ( rpt ) then
 !
 !        Note that the window passed to UDREPI need not contain the
 !        same intervals as those passed to UDREPU; the window passed to
@@ -1113,29 +1113,29 @@
 !        the progress reporting system the sum of the measures of the
 !        increasing and decreasing windows.
 !
-         PASS = 2
+         pass = 2
 
-         CALL UDREPI ( WORK(B,CONFIN), RPTPRE(PASS), RPTSUF(PASS) )
+         call udrepi ( work(b,confin), rptpre(pass), rptsuf(pass) )
 
-      END IF
+      end if
 
 !
 !     Find those intervals when the geometric quantity is less than
 !     REFER2.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
-      DO CASE = 1, 2
+      do case = 1, 2
 
-         WINSIZ = WNCARD (  WORK(B, NAME(CASE))  )
+         winsiz = wncard (  work(b, name(case))  )
 
 !
 !        Search each interval of the window identified by NAME(CASE) for
 !        times when the quantity is less than the reference value.
 !
-         DO I = 1, WINSIZ
+         do i = 1, winsiz
 
-            CALL WNFETD ( WORK( B, NAME(CASE)), I, START, FINISH  )
+            call wnfetd ( work( b, name(case)), i, start, finish  )
 !
 !           For each interval, accumulate the result in RESULT.
 !
@@ -1143,89 +1143,89 @@
 !           within each window, so the step size can be large. In fact,
 !           we use the interval length as the step size.
 !
-            STEP = FINISH - START
+            step = finish - start
 
-            CALL ZZGFSOLV ( UDCOND, UDSTEP,  UDREFN,  BAIL, &
-                            UDBAIL, .TRUE.,  STEP,    START, &
-                            FINISH, TOL,     RPT,     UDREPU, &
-                            RESULT                           )
+            call zzgfsolv ( udcond, udstep,  udrefn,  bail, &
+                            udbail, .true.,  step,    start, &
+                            finish, tol,     rpt,     udrepu, &
+                            result                           )
 
-            IF (  FAILED()  ) THEN
-               CALL CHKOUT ( 'ZZGFREL'  )
-               RETURN
-            END IF
+            if (  failed()  ) then
+               call chkout ( 'ZZGFREL'  )
+               return
+            end if
 
-            IF ( BAIL ) THEN
-               IF ( UDBAIL () ) THEN
-                  CALL CHKOUT ( 'ZZGFREL' )
-                  RETURN
-               END IF
-            END IF
+            if ( bail ) then
+               if ( udbail () ) then
+                  call chkout ( 'ZZGFREL' )
+                  return
+               end if
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 
-      IF ( RPT ) THEN
+      if ( rpt ) then
 !
 !        Finish the progress report for the second pass.
 !
-         CALL UDREPF
+         call udrepf
 
-      END IF
+      end if
 
 !
 !     RESULT is the window, within the expanded confinement window,
 !     over which the function of interest is less than the reference
 !     value. We can use this window to get whatever was requested.
 !
-      IF ( ( LOCREL .EQ. '<' ) .OR. ( LOCREL .EQ. 'ABSMIN' ) ) THEN
+      if ( ( locrel .eq. '<' ) .or. ( locrel .eq. 'ABSMIN' ) ) then
 !
 !        We simply need to restrict our result to the original
 !        confinement schedule. Note that the ABSMIN search with
 !        non-zero adjustment is now a search for values less than the
 !        adjusted absolute minimum. Same for ABSMAX below.
 !
-         CALL WNINTD ( CNFINE,         RESULT,  WORK(B,TEMPW) )
-         CALL COPYD  ( WORK(B,TEMPW),           RESULT        )
+         call wnintd ( cnfine,         result,  work(b,tempw) )
+         call copyd  ( work(b,tempw),           result        )
 
 
-      ELSE IF ( ( LOCREL .EQ. '>' ) .OR. ( LOCREL .EQ. 'ABSMAX' ) ) THEN
+      else if ( ( locrel .eq. '>' ) .or. ( locrel .eq. 'ABSMAX' ) ) then
 !
 !        Subtract from the confinement window the window where the
 !        quantity is less than the reference value: the remainder is
 !        the portion of the confinement window on which the quantity is
 !        greater than or equal to the reference value.
 !
-         CALL WNDIFD ( CNFINE,         RESULT,  WORK(B,TEMPW) )
-         CALL COPYD  ( WORK(B,TEMPW),           RESULT        )
+         call wndifd ( cnfine,         result,  work(b,tempw) )
+         call copyd  ( work(b,tempw),           result        )
 
-      ELSE
+      else
 !
 !        This is the branch for the relational operator '='.
 !
 !        Create a window of singleton intervals from the endpoints
 !        of RESULT.
 !
-         CALL SCARDD ( 0, WORK(B,TEMPW) )
+         call scardd ( 0, work(b,tempw) )
 
-         DO I = 1, CARDD(RESULT)
+         do i = 1, cardd(result)
 
-            CONTXT = 'Inserting endpoints of result window into ' &
+            contxt = 'Inserting endpoints of result window into ' &
             //       'workspace window WORK(B,TEMPW). These points ' &
             //       'are candidate epochs that may satisfy an ' &
             //       'equality constraint.'
 
-            CALL ZZWNINSD ( RESULT(I), RESULT(I), &
-                            CONTXT,    WORK(B,TEMPW) )
+            call zzwninsd ( result(i), result(i), &
+                            contxt,    work(b,tempw) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFREL' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFREL' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        The window WORK(B,TEMPW) contains singleton intervals where
@@ -1239,10 +1239,10 @@
 !        original confinement window CNFINE; these are by construction
 !        interior points of the expanded confinement window.
 !
-         CALL WNINTD ( CNFINE,  WORK(B,TEMPW),  RESULT )
+         call wnintd ( cnfine,  work(b,tempw),  result )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFREL' )
-      RETURN
-      END
+      call chkout ( 'ZZGFREL' )
+      return
+      end

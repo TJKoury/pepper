@@ -1,6 +1,6 @@
 !$Procedure SIGDGT ( Retain significant digits )
 
-      SUBROUTINE SIGDGT ( IN, OUT )
+      subroutine sigdgt ( in, out )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    IN
-      CHARACTER*(*)    OUT
+      character*(*)    in
+      character*(*)    out
 
 ! $ Brief_I/O
 !
@@ -148,201 +148,201 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
-      INTEGER               CPOS
+      integer               frstnb
+      integer               lastnb
+      integer               cpos
 
 !
 !     Local variables
 !
-      INTEGER               BEGIN
-      INTEGER               END
-      CHARACTER*1           LCHAR
-      INTEGER               ZERO
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               L
+      integer               begin
+      integer               end
+      character*1           lchar
+      integer               zero
+      integer               i
+      integer               j
+      integer               k
+      integer               l
 
 
 !
 !     Find the first and last non-blank characters in the string.
 !
-      BEGIN  = MAX ( 1, FRSTNB (IN) )
-      END    = MAX ( 1, LASTNB (IN) )
-      LCHAR  = ' '
+      begin  = max ( 1, frstnb (in) )
+      end    = max ( 1, lastnb (in) )
+      lchar  = ' '
 !
 !     Trivial case.
 !
-      IF ( BEGIN .EQ. END ) THEN
+      if ( begin .eq. end ) then
 
-         OUT(1:1) = IN(BEGIN:BEGIN)
+         out(1:1) = in(begin:begin)
 
-         IF ( LEN(OUT) .GT. 1 ) OUT(2:) = ' '
+         if ( len(out) .gt. 1 ) out(2:) = ' '
 
 !
 !     If there is no decimal point, all zeros are significant.
 !
-      ELSE IF ( INDEX (IN, '.') .EQ. 0 ) THEN
+      else if ( index (in, '.') .eq. 0 ) then
 
-         L      = 1
-         K      = BEGIN
+         l      = 1
+         k      = begin
 
-         DO WHILE (       ( L .LE. LEN(OUT) ) &
-                    .AND. ( K .LE. END      ) )
+         do while (       ( l .le. len(out) ) &
+                    .and. ( k .le. end      ) )
 
-            OUT(L:L) = IN(K:K)
+            out(l:l) = in(k:k)
 
 !
 !           Don't increment L if the last item copied was a space
 !           (we don't want to copy extra spaces).
 !
-            IF ( IN(K:K) .NE. ' ' .OR. LCHAR .NE. ' ' ) &
-            L        = L+1
-            LCHAR    = IN(K:K)
-            K        = K+1
+            if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+            l        = l+1
+            lchar    = in(k:k)
+            k        = k+1
 
-         END DO
+         end do
 
-         IF ( L .LE. LEN(OUT) ) OUT(L:) = ' '
+         if ( l .le. len(out) ) out(l:) = ' '
 
-      ELSE
+      else
 
 !
 !        Is there is a decimal point and an exponent immediately
 !        preceded by zero ('...0E', '...0D', '...0e', '...0d') or
 !        by a space ('... E', '... D', '... e', '... d')?
 !
-         ZERO = INDEX ( IN, '0E' )
+         zero = index ( in, '0E' )
 
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, '0D' )
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, '0e' )
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, '0d' )
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, ' E' )
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, ' D' )
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, ' e' )
-         IF ( ZERO .EQ. 0 )    ZERO = INDEX ( IN, ' d' )
+         if ( zero .eq. 0 )    zero = index ( in, '0D' )
+         if ( zero .eq. 0 )    zero = index ( in, '0e' )
+         if ( zero .eq. 0 )    zero = index ( in, '0d' )
+         if ( zero .eq. 0 )    zero = index ( in, ' E' )
+         if ( zero .eq. 0 )    zero = index ( in, ' D' )
+         if ( zero .eq. 0 )    zero = index ( in, ' e' )
+         if ( zero .eq. 0 )    zero = index ( in, ' d' )
 
 !
 !        Begin there, and move toward the front of the string until
 !        something other than a blank or a zero is encountered. Then
 !        remove the superfluous characters.
 !
-         IF ( ZERO .GT. 0 ) THEN
+         if ( zero .gt. 0 ) then
 
-            J = ZERO + 1
-            I = ZERO
+            j = zero + 1
+            i = zero
 
-            DO WHILE ( IN(I:I) .EQ. '0'  .OR. IN(I:I) .EQ. ' ' )
-               I = I - 1
-            END DO
+            do while ( in(i:i) .eq. '0'  .or. in(i:i) .eq. ' ' )
+               i = i - 1
+            end do
 
-            L = 1
-            K = BEGIN
+            l = 1
+            k = begin
 
-            DO WHILE (       ( L .LE. LEN(OUT) ) &
-                       .AND. ( K .LE. I        ) )
+            do while (       ( l .le. len(out) ) &
+                       .and. ( k .le. i        ) )
 
-               OUT(L:L) = IN(K:K)
+               out(l:l) = in(k:k)
 
 !
 !              Don't increment L if the last item copied was a space.
 !
-               IF ( IN(K:K) .NE. ' ' .OR. LCHAR .NE. ' ' ) &
-               L        = L+1
-               LCHAR    = IN(K:K)
-               K        = K+1
+               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               l        = l+1
+               lchar    = in(k:k)
+               k        = k+1
 
-            END DO
+            end do
 
-            K = J
+            k = j
 
-            DO WHILE (       ( L .LE. LEN(OUT) ) &
-                       .AND. ( K .LE. END      ) )
+            do while (       ( l .le. len(out) ) &
+                       .and. ( k .le. end      ) )
 
-               OUT(L:L) = IN(K:K)
+               out(l:l) = in(k:k)
 
 !
 !              Increment L only if we don't have two consecutive
 !              spaces.
 !
-               IF ( IN(K:K) .NE. ' ' .OR. LCHAR .NE. ' ' ) &
-               L        = L+1
-               LCHAR    = IN(K:K)
-               K        = K+1
+               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               l        = l+1
+               lchar    = in(k:k)
+               k        = k+1
 
-            END DO
+            end do
 
-            IF ( L .LE. LEN(OUT) ) OUT(L:) = ' '
+            if ( l .le. len(out) ) out(l:) = ' '
 !
 !
 !        Is there is a decimal point and no exponent, and is the last
 !        non-blank character a zero ('...0')? Then truncate the string
 !        after the last character that is neither a blank nor a zero.
 !
-         ELSE IF (       IN(END:END)            .EQ. '0' &
-                   .AND. CPOS ( IN, 'EeDd', 1 ) .eq.  0 ) THEN
+         else if (       in(end:end)            .eq. '0' &
+                   .and. cpos ( in, 'EeDd', 1 ) .eq.  0 ) then
 
-            I = END
+            i = end
 
-            DO WHILE ( IN(I:I) .EQ. '0' .OR. IN(I:I) .EQ. ' ' )
-               I = I - 1
-            END DO
+            do while ( in(i:i) .eq. '0' .or. in(i:i) .eq. ' ' )
+               i = i - 1
+            end do
 
-            L = 1
-            K = BEGIN
+            l = 1
+            k = begin
 
-            DO WHILE (       ( L .LE. LEN(OUT) ) &
-                       .AND. ( K .LE. I        ) )
+            do while (       ( l .le. len(out) ) &
+                       .and. ( k .le. i        ) )
 
-               OUT(L:L) = IN(K:K)
+               out(l:l) = in(k:k)
 
 !
 !              Increment L only if we don't have two consecutive
 !              spaces.
 !
-               IF ( IN(K:K) .NE. ' ' .OR. LCHAR .NE. ' ' ) &
-               L        = L+1
-               LCHAR    = IN(K:K)
-               K        = K+1
+               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               l        = l+1
+               lchar    = in(k:k)
+               k        = k+1
 
-            END DO
+            end do
 
-            IF ( L .LE. LEN(OUT) ) OUT(L:) = ' '
+            if ( l .le. len(out) ) out(l:) = ' '
 
-         ELSE
+         else
 
-            L = 1
-            K = BEGIN
+            l = 1
+            k = begin
 
-            DO WHILE (       ( L .LE. LEN(OUT) ) &
-                       .AND. ( K .LE. END      ) )
+            do while (       ( l .le. len(out) ) &
+                       .and. ( k .le. end      ) )
 
-               OUT(L:L) = IN(K:K)
+               out(l:l) = in(k:k)
 
 !
 !              Increment L only if we don't have two consecutive spaces.
 !
-               IF ( IN(K:K) .NE. ' ' .OR. LCHAR .NE. ' ' ) &
-               L        = L+1
-               LCHAR    = IN(K:K)
-               K        = K+1
+               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               l        = l+1
+               lchar    = in(k:k)
+               k        = k+1
 
-            END DO
+            end do
 
-            IF ( L .LE. LEN(OUT) ) OUT(L:) = ' '
+            if ( l .le. len(out) ) out(l:) = ' '
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Special case. The string '.0000....' reduces to '.' after the
 !     zeros are removed.
 !
-      IF ( OUT .EQ. '.' ) THEN
-         OUT = '0'
-      END IF
+      if ( out .eq. '.' ) then
+         out = '0'
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRKI ( EK tree, look up key by index )
 
-      SUBROUTINE ZZEKTRKI ( HANDLE, TREE, NODKEY, N, KEY )
+      subroutine zzektrki ( handle, tree, nodkey, n, key )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 ! $ Declarations
 
 
-      INCLUDE 'ektree.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               NODKEY
-      INTEGER               N
-      INTEGER               KEY
+      integer               handle
+      integer               tree
+      integer               nodkey
+      integer               n
+      integer               key
 
 ! $ Brief_I/O
 !
@@ -119,64 +119,64 @@
 !
 !     Functions
 !
-      INTEGER               ZZEKTRBS
-      INTEGER               ZZEKTRNK
+      integer               zzektrbs
+      integer               zzektrnk
 
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
-      INTEGER               BASE
-      INTEGER               IDX
-      INTEGER               LEVEL
-      INTEGER               NODE
-      INTEGER               NOFFST
-      INTEGER               PTR
-      INTEGER               SIZE
+      integer               addrss
+      integer               base
+      integer               idx
+      integer               level
+      integer               node
+      integer               noffst
+      integer               ptr
+      integer               size
 
 
 
 
 
-      CALL ZZEKTRLK (  HANDLE,  TREE,    NODKEY,  IDX, &
-                       NODE,    NOFFST,  LEVEL,   PTR   )
+      call zzektrlk (  handle,  tree,    nodkey,  idx, &
+                       node,    noffst,  level,   ptr   )
 
-      SIZE  =  ZZEKTRNK ( HANDLE, TREE,  NODE )
+      size  =  zzektrnk ( handle, tree,  node )
 
 !
 !     Reject bad indices.
 !
-      IF (  ( N .LT. 0 ) .OR. ( N .GT. SIZE )  )  THEN
+      if (  ( n .lt. 0 ) .or. ( n .gt. size )  )  then
 
-         CALL CHKIN  ( 'ZZEKTRKI'                                  )
-         CALL SETMSG ( 'Key index = #; valid range in node # is ' // &
+         call chkin  ( 'ZZEKTRKI'                                  )
+         call setmsg ( 'Key index = #; valid range in node # is ' // &
                        '1:#'                                       )
-         CALL ERRINT ( '#',  N                                     )
-         CALL ERRINT ( '#',  NODE                                  )
-         CALL ERRINT ( '#',  SIZE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-         CALL CHKOUT ( 'ZZEKTRKI'                                  )
-         RETURN
+         call errint ( '#',  n                                     )
+         call errint ( '#',  node                                  )
+         call errint ( '#',  size                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+         call chkout ( 'ZZEKTRKI'                                  )
+         return
 
-      END IF
-
-
-      BASE  =  ZZEKTRBS ( NODE )
+      end if
 
 
-      IF ( LEVEL .EQ. 1 ) THEN
-         ADDRSS = BASE + TRKEYR + N
-      ELSE
-         ADDRSS = BASE + TRKEYC + N
-      END IF
+      base  =  zzektrbs ( node )
 
 
-      CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, KEY )
+      if ( level .eq. 1 ) then
+         addrss = base + trkeyr + n
+      else
+         addrss = base + trkeyc + n
+      end if
+
+
+      call dasrdi ( handle, addrss, addrss, key )
 
 !
 !     Map the key from relative to absolute.
 !
-      KEY  =  KEY + NOFFST
+      key  =  key + noffst
 
 
-      END
+      end

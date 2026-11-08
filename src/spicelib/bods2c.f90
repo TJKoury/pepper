@@ -1,6 +1,6 @@
 !$Procedure BODS2C ( Body string to ID code translation )
 
-      SUBROUTINE BODS2C ( NAME, CODE, FOUND )
+      subroutine bods2c ( name, code, found )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         NAME
-      INTEGER               CODE
-      LOGICAL               FOUND
+      character*(*)         name
+      integer               code
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -249,44 +249,44 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               BEINT
-      LOGICAL               RETURN
+      logical               beint
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 1 )
+      integer               msglen
+      parameter           ( msglen = 1 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    ERRMSG
-      INTEGER               PTR
+      character*(msglen)    errmsg
+      integer               ptr
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'BODS2C' )
+      call chkin ( 'BODS2C' )
 
 !
 !     Attempt to translate the input name to an integer code.  Call
 !     the private routine ZZBODN2C to avoid additional CHKIN and
 !     CHKOUT calls.
 !
-      CALL ZZBODN2C ( NAME, CODE, FOUND )
+      call zzbodn2c ( name, code, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        It's possible the name is a string representation
 !        of an integer, for example, '999'.  If so, find
 !        the equivalent datum of INTEGER type.
 !
-         IF ( BEINT(NAME) ) THEN
+         if ( beint(name) ) then
 !
 !           The input conforms to the syntax of an integer, but it may
 !           be outside of the range of the INTEGER data type.
@@ -294,22 +294,22 @@
 !           rather than the cleaner PRSINT to attempt to convert the
 !           string to an INTEGER.
 !
-            CALL NPARSI ( NAME, CODE, ERRMSG, PTR )
+            call nparsi ( name, code, errmsg, ptr )
 
 !
 !           We have an ID code if and only if PTR is zero.
 !
-            FOUND = PTR .EQ. 0
+            found = ptr .eq. 0
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     FOUND is set.  CODE is set if NAME was a recognized name
 !     or a string representation of an integer.
 !
 
-      CALL CHKOUT ( 'BODS2C' )
-      RETURN
-      END
+      call chkout ( 'BODS2C' )
+      return
+      end

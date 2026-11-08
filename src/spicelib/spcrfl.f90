@@ -1,6 +1,6 @@
 !$Procedure SPCRFL ( SPK and CK, read first line of comments )
 
-      SUBROUTINE SPCRFL ( HANDLE, LINE, EOC )
+      subroutine spcrfl ( handle, line, eoc )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         LINE
-      LOGICAL               EOC
+      integer               handle
+      character*(*)         line
+      logical               eoc
 
 ! $ Brief_I/O
 !
@@ -214,10 +214,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               POS
+      integer               pos
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -227,57 +227,57 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
-      INTEGER               MAXCPR
-      PARAMETER           ( MAXCPR = 1000   )
+      integer               maxcpr
+      parameter           ( maxcpr = 1000   )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         EOT
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(1)         NULL
-      CHARACTER*(MAXCPR)    RECORD
-      CHARACTER*(MAXCPR)    TEMP
+      character*(1)         eot
+      character*(ifnlen)    ifname
+      character*(1)         null
+      character*(maxcpr)    record
+      character*(maxcpr)    temp
 
-      INTEGER               BOL
-      INTEGER               BWARD
-      INTEGER               DAFU
-      INTEGER               EOL
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               HANBUF
-      INTEGER               IOSTAT
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NRR
-      INTEGER               POSNUL
-      INTEGER               REC
-      INTEGER               TMPLEN
+      integer               bol
+      integer               bward
+      integer               dafu
+      integer               eol
+      integer               free
+      integer               fward
+      integer               hanbuf
+      integer               iostat
+      integer               nd
+      integer               ni
+      integer               nrr
+      integer               posnul
+      integer               rec
+      integer               tmplen
 
-      LOGICAL               CALLED
-      LOGICAL               EOCSAV
+      logical               called
+      logical               eocsav
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCRFL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCRFL' )
+      end if
 
 !
 !     SPCRFL has been called for this file.
 !
-      CALLED = .TRUE.
+      called = .true.
 
 
 !
@@ -289,80 +289,80 @@
 !
 !     If there are no reserved records, there are no comments.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
-      NRR = FWARD - 2
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
+      nrr = fward - 2
 
-      IF ( NRR .EQ. 0 ) THEN
-         LINE   = ' '
-         EOC    = .TRUE.
-         EOCSAV = EOC
-         CALL CHKOUT ( 'SPCRFL' )
-         RETURN
-      END IF
+      if ( nrr .eq. 0 ) then
+         line   = ' '
+         eoc    = .true.
+         eocsav = eoc
+         call chkout ( 'SPCRFL' )
+         return
+      end if
 
 !
 !     We need to read directly from the SPK/CK file, using a logical
 !     unit instead of a handle.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., DAFU )
+      call zzddhhlu ( handle, 'DAF', .false., dafu )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCRFL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCRFL' )
+         return
+      end if
 
 !
 !     Buffer the value of HANDLE.
 !
-      HANBUF = HANDLE
+      hanbuf = handle
 
 !
 !     In the comment area, NULL means end-of-line, and EOT means
 !     end-of-transmission, or in other words, end-of-comments.
 !
-      NULL = CHAR ( 0 )
-      EOT  = CHAR ( 4 )
+      null = char ( 0 )
+      eot  = char ( 4 )
 
 !
 !     Read the first reserved record.
 !
-      REC = 2
+      rec = 2
 
-      READ ( DAFU, REC=REC, IOSTAT=IOSTAT ) RECORD
+      read ( dafu, rec=rec, iostat=iostat ) record
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Error reading comment area of the binary ' // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Error reading comment area of the binary ' // &
                        'file named FNM at record #.  Value of '    // &
                        'IOSTAT is #.'                              )
-         CALL ERRINT ( '#', REC                                    )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL ERRFNM ( 'FNM', DAFU                                 )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT ( 'SPCRFL'                                    )
-         RETURN
-      END IF
+         call errint ( '#', rec                                    )
+         call errint ( '#', iostat                                 )
+         call errfnm ( 'FNM', dafu                                 )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout ( 'SPCRFL'                                    )
+         return
+      end if
 
 !
 !     The first line of comments begins with the first character
 !     of the record.  A NULL character specifies the end.
 !
-      POSNUL = POS ( RECORD, NULL, 1 )
+      posnul = pos ( record, null, 1 )
 
-      IF ( POSNUL .EQ. 0 ) THEN
+      if ( posnul .eq. 0 ) then
 !
 !        No NULL is in the record, so LINE is just the whole
 !        record.  (The maximum length of a line written to
 !        the comment area by SPCAC is MAXCPR characters).
 !
-         EOL = MAXCPR
+         eol = maxcpr
 
-      ELSE
+      else
 !
 !        The end of the line precedes the NULL character.
 !
-         EOL = POSNUL - 1
+         eol = posnul - 1
 
-      END IF
+      end if
 
 !
 !     Now we have the position of the end of the first line.
@@ -370,24 +370,24 @@
 !     since we have a line to return.  If the first character
 !     was a NULL, the line is blank.
 !
-      IF ( EOL .EQ. 0 ) THEN
-         LINE = ' '
-      ELSE
-         LINE = RECORD ( 1: EOL )
-      END IF
+      if ( eol .eq. 0 ) then
+         line = ' '
+      else
+         line = record ( 1: eol )
+      end if
 
-      EOC     = .FALSE.
-      EOCSAV  = EOC
+      eoc     = .false.
+      eocsav  = eoc
 
-      CALL CHKOUT ( 'SPCRFL' )
-      RETURN
+      call chkout ( 'SPCRFL' )
+      return
 
 
 
 
 !$Procedure SPCRNL ( SPK and CK, read next line of comments )
 
-      ENTRY SPCRNL ( LINE, EOC )
+      entry spcrnl ( line, eoc )
 
 ! $ Abstract
 !
@@ -586,46 +586,46 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCRNL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCRNL' )
+      end if
 
 
 !
 !     If SPCRFL hasn't been called, then we don't know which
 !     file to read from.
 !
-      IF ( .NOT. CALLED ) THEN
-         CALL SETMSG ( 'You must call SPCRFL to read the first '      // &
+      if ( .not. called ) then
+         call setmsg ( 'You must call SPCRFL to read the first '      // &
                        'line of comments before calling SPCRNL '      // &
                        'to read the next line.'                       )
-         CALL SIGERR ( 'SPICE(SPCRFLNOTCALLED)'                       )
-         CALL CHKOUT ( 'SPCRNL'                                       )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(SPCRFLNOTCALLED)'                       )
+         call chkout ( 'SPCRNL'                                       )
+         return
+      end if
 
 !
 !     If we were at the end of comments before, then we're still
 !     at the end.
 !
-      IF ( EOCSAV ) THEN
-         LINE = ' '
-         EOC  = .TRUE.
-         CALL CHKOUT ( 'SPCRNL' )
-         RETURN
-      END IF
+      if ( eocsav ) then
+         line = ' '
+         eoc  = .true.
+         call chkout ( 'SPCRNL' )
+         return
+      end if
 
 !
 !     Retrieve a logical unit for HANBUF.
 !
-      CALL ZZDDHHLU ( HANBUF, 'DAF', .FALSE., DAFU )
+      call zzddhhlu ( hanbuf, 'DAF', .false., dafu )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPCRNL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPCRNL' )
+         return
+      end if
 
 !
 !     RECORD contains the last line and EOL is the position of
@@ -635,13 +635,13 @@
 !     EOL.  If that puts BOL off the end of the current RECORD,
 !     then we have to go to the next record.
 !
-      BOL = EOL + 2
+      bol = eol + 2
 
-      IF ( BOL .GT. MAXCPR ) THEN
+      if ( bol .gt. maxcpr ) then
 
-         BOL = BOL - MAXCPR
+         bol = bol - maxcpr
 
-         REC = REC + 1
+         rec = rec + 1
 
 !
 !        Check to make sure that we're not reading past the
@@ -649,39 +649,39 @@
 !        It is the number of the first record after the reserved
 !        records.
 !
-         IF ( REC .GE. FWARD ) THEN
-            CALL SETMSG ( 'The comment area of the binary file '      // &
+         if ( rec .ge. fward ) then
+            call setmsg ( 'The comment area of the binary file '      // &
                           'named FNM is formatted incorrectly. '      // &
                           'The end of the comments is not marked '    // &
                           'as it should be in record #. Calling '     // &
                           'SPCDC or DAFRRR will remove the comment '  // &
                           'area and eliminate this format error. '    // &
                           'Comments should be written ONLY by SPCAC.' )
-            CALL ERRINT ( '#', REC-1                                  )
-            CALL ERRFNM ( 'FNM', DAFU                                 )
-            CALL SIGERR ( 'SPICE(FORMATERROR)'                        )
-            CALL CHKOUT ( 'SPCRNL'                                    )
-            RETURN
-         END IF
+            call errint ( '#', rec-1                                  )
+            call errfnm ( 'FNM', dafu                                 )
+            call sigerr ( 'SPICE(FORMATERROR)'                        )
+            call chkout ( 'SPCRNL'                                    )
+            return
+         end if
 
 !
 !        All clear to read the record.
 !
-         READ ( DAFU, REC=REC, IOSTAT=IOSTAT ) RECORD
+         read ( dafu, rec=rec, iostat=iostat ) record
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error reading comment area of the binary ' // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error reading comment area of the binary ' // &
                           'file named FNM at record #.  Value of '    // &
                           'IOSTAT is #.'                              )
-            CALL ERRINT ( '#', REC                                    )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FNM', DAFU                                 )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'SPCRNL'                                    )
-            RETURN
-         END IF
+            call errint ( '#', rec                                    )
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FNM', dafu                                 )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'SPCRNL'                                    )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     RECORD is now the record of the file that contains the
@@ -689,54 +689,54 @@
 !     exist or may be blank or may be a character string.
 !
 
-      IF ( RECORD ( BOL: BOL ) .EQ. EOT ) THEN
+      if ( record ( bol: bol ) .eq. eot ) then
 !
 !        There isn't a next line to get.  We're at the end of
 !        the comments.
 !
-         LINE   = ' '
-         EOC    = .TRUE.
-         EOCSAV = EOC
-         CALL CHKOUT ( 'SPCRNL' )
-         RETURN
-      END IF
+         line   = ' '
+         eoc    = .true.
+         eocsav = eoc
+         call chkout ( 'SPCRNL' )
+         return
+      end if
 
 
-      IF ( RECORD ( BOL: BOL ) .EQ. NULL ) THEN
+      if ( record ( bol: bol ) .eq. null ) then
 !
 !        Just a NULL means a blank line.
 !
-         EOL    = BOL - 1
-         LINE   = ' '
-         EOC    = .FALSE.
-         EOCSAV = EOC
-         CALL CHKOUT ( 'SPCRNL' )
-         RETURN
-      END IF
+         eol    = bol - 1
+         line   = ' '
+         eoc    = .false.
+         eocsav = eoc
+         call chkout ( 'SPCRNL' )
+         return
+      end if
 
 !
 !     The beginning of the next line is a character.  Now we have
 !     to find the end.  It precedes the next NULL.
 !
-      POSNUL = POS ( RECORD, NULL, BOL )
+      posnul = pos ( record, null, bol )
 
-      IF ( POSNUL .NE. 0 ) THEN
+      if ( posnul .ne. 0 ) then
 
-         EOL    = POSNUL - 1
-         LINE   = RECORD ( BOL: EOL )
-         EOC    = .FALSE.
-         EOCSAV = EOC
+         eol    = posnul - 1
+         line   = record ( bol: eol )
+         eoc    = .false.
+         eocsav = eoc
 
-      ELSE
+      else
 !
 !        There is no NULL in the rest of the record, so we have to
 !        read the next record to find it.  Save the first part
 !        of the line in TEMP.
 !
-         TEMP = RECORD ( BOL: MAXCPR )
-         TMPLEN = MAXCPR - BOL + 1
+         temp = record ( bol: maxcpr )
+         tmplen = maxcpr - bol + 1
 
-         REC = REC + 1
+         rec = rec + 1
 
 !
 !        Check to make sure that we're not reading past the
@@ -744,37 +744,37 @@
 !        It is the number of the first record after the reserved
 !        records.
 !
-         IF ( REC .GE. FWARD ) THEN
-            CALL SETMSG ( 'The comment area of the binary file '      // &
+         if ( rec .ge. fward ) then
+            call setmsg ( 'The comment area of the binary file '      // &
                           'named FNM is formatted incorrectly. '      // &
                           'The end of the comments is not marked '    // &
                           'as it should be in record #. Calling '     // &
                           'SPCDC or DAFRRR will remove the comment '  // &
                           'area and eliminate this format error. '    // &
                           'Comments should be written ONLY by SPCAC.' )
-            CALL ERRINT ( '#', REC-1                                  )
-            CALL ERRFNM ( 'FNM', DAFU                                 )
-            CALL SIGERR ( 'SPICE(FORMATERROR)'                        )
-            CALL CHKOUT ( 'SPCRNL'                                    )
-            RETURN
-         END IF
+            call errint ( '#', rec-1                                  )
+            call errfnm ( 'FNM', dafu                                 )
+            call sigerr ( 'SPICE(FORMATERROR)'                        )
+            call chkout ( 'SPCRNL'                                    )
+            return
+         end if
 
 !
 !        All clear to read the record.
 !
-         READ ( DAFU, REC=REC, IOSTAT=IOSTAT ) RECORD
+         read ( dafu, rec=rec, iostat=iostat ) record
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Error reading comment area of the binary ' // &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Error reading comment area of the binary ' // &
                           'file named FNM at record #.  Value of '    // &
                           'IOSTAT is #.'                              )
-            CALL ERRINT ( '#', REC                                    )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FNM', DAFU                                 )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'SPCRNL'                                    )
-            RETURN
-         END IF
+            call errint ( '#', rec                                    )
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FNM', dafu                                 )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'SPCRNL'                                    )
+            return
+         end if
 
 !
 !        There should be a null in this new record.  If there isn't
@@ -782,18 +782,18 @@
 !        MAXCPR characters according to SPCAC.  So BOL and the NULL
 !        should be in the same record or in adjacent records.
 !
-         POSNUL = POS ( RECORD, NULL, 1 )
+         posnul = pos ( record, null, 1 )
 
-         IF ( POSNUL .EQ. 0 ) THEN
-            CALL SETMSG ( 'Cannot find the end of the line.  There '  // &
+         if ( posnul .eq. 0 ) then
+            call setmsg ( 'Cannot find the end of the line.  There '  // &
                           'is something wrong with the format of the' // &
                           'comments.'                                 )
-            CALL SIGERR ( 'SPICE(FORMATERROR)'                        )
-            CALL CHKOUT ( 'SPCRNL'                                    )
-            RETURN
-         END IF
+            call sigerr ( 'SPICE(FORMATERROR)'                        )
+            call chkout ( 'SPCRNL'                                    )
+            return
+         end if
 
-         EOL = POSNUL - 1
+         eol = posnul - 1
 
 !
 !        EOL is zero if the NULL was the first character of the
@@ -801,17 +801,17 @@
 !        the line from the two adjacent records.  Then assign the
 !        values of LINE and EOC.
 !
-         IF ( EOL .NE. 0 ) THEN
-            TEMP( TMPLEN+1: ) = RECORD( 1 : EOL )
-         END IF
+         if ( eol .ne. 0 ) then
+            temp( tmplen+1: ) = record( 1 : eol )
+         end if
 
-         LINE   = TEMP
-         EOC    = .FALSE.
-         EOCSAV = EOC
+         line   = temp
+         eoc    = .false.
+         eocsav = eoc
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SPCRNL' )
-      RETURN
-      END
+      call chkout ( 'SPCRNL' )
+      return
+      end

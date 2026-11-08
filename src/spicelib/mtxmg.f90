@@ -1,6 +1,6 @@
 !$Procedure MTXMG ( Matrix transpose times matrix, general dimension )
 
-      SUBROUTINE MTXMG ( M1, M2, NC1, NR1R2, NC2, MOUT )
+      subroutine mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NC1
-      INTEGER            NR1R2
-      INTEGER            NC2
-      DOUBLE PRECISION   M1   ( NR1R2,NC1 )
-      DOUBLE PRECISION   M2   ( NR1R2,NC2 )
-      DOUBLE PRECISION   MOUT ( NC1,  NC2 )
+      integer            nc1
+      integer            nr1r2
+      integer            nc2
+      double precision   m1   ( nr1r2,nc1 )
+      double precision   m2   ( nr1r2,nc2 )
+      double precision   mout ( nc1,  nc2 )
 
 ! $ Brief_I/O
 !
@@ -216,23 +216,23 @@
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
+      integer               i
+      integer               j
+      integer               k
 
 !
 !  Perform the matrix multiplication
 !
-      DO I = 1, NC1
-         DO J = 1, NC2
+      do i = 1, nc1
+         do j = 1, nc2
 
-            MOUT(I,J) = 0.D0
-            DO K = 1, NR1R2
-               MOUT(I,J) = MOUT(I,J) + M1(K,I)*M2(K,J)
-            END DO
+            mout(i,j) = 0.d0
+            do k = 1, nr1r2
+               mout(i,j) = mout(i,j) + m1(k,i)*m2(k,j)
+            end do
 
-         END DO
-      END DO
+         end do
+      end do
 !
-      RETURN
-      END
+      return
+      end

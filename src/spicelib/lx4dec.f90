@@ -1,6 +1,6 @@
 !$Procedure LX4DEC (Scan for signed integer)
 
-      SUBROUTINE LX4DEC ( STRING, FIRST, LAST, NCHAR )
+      subroutine lx4dec ( string, first, last, nchar )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NCHAR
+      character*(*)         string
+      integer               first
+      integer               last
+      integer               nchar
 
 ! $ Brief_I/O
 !
@@ -166,118 +166,118 @@
 !-&
 
 
-      INTEGER               F
-      INTEGER               I
-      INTEGER               J
-      INTEGER               L
-      INTEGER               N
-      INTEGER               NEXT
+      integer               f
+      integer               i
+      integer               j
+      integer               l
+      integer               n
+      integer               next
 
-      LAST  = FIRST - 1
-      NEXT  = FIRST + 1
-      L     = LEN ( STRING )
+      last  = first - 1
+      next  = first + 1
+      l     = len ( string )
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      IF ( FIRST .LT. 1 .OR. FIRST .GT. L ) THEN
-         NCHAR = 0
-         RETURN
-      END IF
+      if ( first .lt. 1 .or. first .gt. l ) then
+         nchar = 0
+         return
+      end if
 !
 !     There are two cases to take care of (and in both cases
 !     LX4SGN or LX4UNS do  almost all of the work).
 !
-      I = ICHAR( STRING(FIRST:FIRST) )
+      i = ichar( string(first:first) )
 
-      IF ( NEXT .LT. L ) THEN
-         J = ICHAR( STRING(NEXT:NEXT) )
-      ELSE
-         J = ICHAR( ' ' )
-      END IF
+      if ( next .lt. l ) then
+         j = ichar( string(next:next) )
+      else
+         j = ichar( ' ' )
+      end if
 
-      IF ( I .EQ. ICHAR('.' ) ) THEN
+      if ( i .eq. ichar('.' ) ) then
 !
 !        Case 1. The string begins with a decimal point.
 !        There must be an unsigned integer following.
 !
-         F = FIRST + 1
+         f = first + 1
 
-         CALL LX4UNS ( STRING, F, LAST, NCHAR )
+         call lx4uns ( string, f, last, nchar )
 
-         IF ( NCHAR .EQ. 0 ) THEN
-            LAST  = FIRST - 1
-         ELSE
-            NCHAR = NCHAR + 1
-         END IF
+         if ( nchar .eq. 0 ) then
+            last  = first - 1
+         else
+            nchar = nchar + 1
+         end if
 
-      ELSE IF (    (     I .EQ. ICHAR('-') &
-                    .OR. I .EQ. ICHAR('+') ) &
-               .AND.     J .EQ. ICHAR('.')    ) THEN
+      else if (    (     i .eq. ichar('-') &
+                    .or. i .eq. ichar('+') ) &
+               .and.     j .eq. ichar('.')    ) then
 !
 !        Case 2. The string begins with a sign followed by
 !        a decimal point. There must be an unsigned integer following.
 !
-         F = NEXT + 1
+         f = next + 1
 
-         CALL LX4UNS ( STRING, F, LAST, NCHAR )
+         call lx4uns ( string, f, last, nchar )
 
-         IF ( NCHAR .EQ. 0 ) THEN
-            LAST  = FIRST - 1
-         ELSE
-            NCHAR = NCHAR + 1
-         END IF
+         if ( nchar .eq. 0 ) then
+            last  = first - 1
+         else
+            nchar = nchar + 1
+         end if
 
-      ELSE IF ( I .EQ. ICHAR('+') .AND. J .EQ. ICHAR('.') ) THEN
+      else if ( i .eq. ichar('+') .and. j .eq. ichar('.') ) then
 !
 !        Case 2. The string begins with a minus sign followed by
 !        a decimal point. There must be an unsigned integer following.
 !
-         F = NEXT + 1
+         f = next + 1
 
-         CALL LX4UNS ( STRING, F, LAST, NCHAR )
+         call lx4uns ( string, f, last, nchar )
 
-         IF ( NCHAR .EQ. 0 ) THEN
-            LAST  = FIRST - 1
-         ELSE
-            NCHAR = NCHAR + 1
-         END IF
+         if ( nchar .eq. 0 ) then
+            last  = first - 1
+         else
+            nchar = nchar + 1
+         end if
 
-      ELSE
+      else
 !
 !        Case 3.  The leading character is not a decimal point.
 !        First check to see how much signed integer we have.
 !
-         CALL LX4SGN ( STRING, FIRST, LAST, NCHAR )
+         call lx4sgn ( string, first, last, nchar )
 !
 !        If we got some part of a signed integer, we next see
 !        if there is a decimal point followed by an unsigned
 !        integer.
 !
-         IF ( NCHAR .GT. 0 .AND. LAST .LT. L ) THEN
+         if ( nchar .gt. 0 .and. last .lt. l ) then
 
-            F = LAST + 1
-            I = ICHAR( STRING(F:F) )
+            f = last + 1
+            i = ichar( string(f:f) )
 
-            IF ( I .EQ. ICHAR( '.' ) ) THEN
+            if ( i .eq. ichar( '.' ) ) then
 
-               LAST = F
-               F    = LAST + 1
+               last = f
+               f    = last + 1
 !
 !              After the decimal point we may have an unsigned integer.
 !
-               CALL LX4UNS ( STRING, F, LAST, N )
+               call lx4uns ( string, f, last, n )
 !
 !              LAST is either pointing to the decimal point or the
 !              end of an unsigned integer.  In either case we need
 !              to update NCHAR.
 !
-               NCHAR = LAST + 1 - FIRST
+               nchar = last + 1 - first
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

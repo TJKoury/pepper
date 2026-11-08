@@ -1,6 +1,6 @@
 !$Procedure ZZVALCOR ( Validate aberration correction )
 
-      SUBROUTINE ZZVALCOR ( ABCORR, ATTBLK )
+      subroutine zzvalcor ( abcorr, attblk )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         ABCORR
-      LOGICAL               ATTBLK ( * )
+      character*(*)         abcorr
+      logical               attblk ( * )
 
 ! $ Brief_I/O
 !
@@ -162,60 +162,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZVALCOR' )
+      call chkin ( 'ZZVALCOR' )
 
 !
 !     Parse the aberration correction string and obtain
 !     an attribute block.
 !
-      CALL ZZPRSCOR ( ABCORR, ATTBLK )
+      call zzprscor ( abcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZVALCOR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZVALCOR' )
+         return
+      end if
 
 !
 !     Check the attribute block. We don't allow relativistic
 !     corrections.
 !
-      IF ( ATTBLK(RELIDX) ) THEN
+      if ( attblk(relidx) ) then
 
-         CALL SETMSG ( 'Aberration correction specification # calls ' &
+         call setmsg ( 'Aberration correction specification # calls ' &
          //            'for relativistic corrections, which are ' &
          //            'not supported.'                               )
-         CALL ERRCH  ( '#',  ABCORR                                   )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                         )
-         CALL CHKOUT ( 'ZZVALCOR'                                     )
-         RETURN
+         call errch  ( '#',  abcorr                                   )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                         )
+         call chkout ( 'ZZVALCOR'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Stellar aberration corrections are allowed only if light
 !     time corrections are specified as well.
 !
-      IF (  ATTBLK(STLIDX)  .AND.  ( .NOT. ATTBLK(LTIDX) )  ) THEN
+      if (  attblk(stlidx)  .and.  ( .not. attblk(ltidx) )  ) then
 
-         CALL SETMSG ( 'Aberration correction specification # calls ' &
+         call setmsg ( 'Aberration correction specification # calls ' &
          //            'for stellar aberration correction without ' &
          //            'light time correction; this combination ' &
          //            'is not supported.'                            )
-         CALL ERRCH  ( '#',  ABCORR                                   )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                         )
-         CALL CHKOUT ( 'ZZVALCOR'                                     )
-         RETURN
+         call errch  ( '#',  abcorr                                   )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                         )
+         call chkout ( 'ZZVALCOR'                                     )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZVALCOR' )
-      RETURN
-      END
+      call chkout ( 'ZZVALCOR' )
+      return
+      end

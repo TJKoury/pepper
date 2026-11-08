@@ -28,8 +28,8 @@
 !
 !     Encoded query architecture type:
 !
-      INTEGER               EQARCH
-      PARAMETER           ( EQARCH = 2 )
+      integer               eqarch
+      parameter           ( eqarch = 2 )
 
 !
 !     `Name resolution' consists of:
@@ -58,24 +58,24 @@
 !     query has been initialized.  Values are ITRUE or IFALSE.  See the
 !     include file ekbool.inc for parameter values.
 !
-      INTEGER               EQINIT
-      PARAMETER           ( EQINIT = EQARCH + 1 )
+      integer               eqinit
+      parameter           ( eqinit = eqarch + 1 )
 
 !
 !     Parse status---this flag indicates whether the parsing operation
 !     that produced an encoded query has been completed. Values are
 !     ITRUE or IFALSE.
 !
-      INTEGER               EQPARS
-      PARAMETER           ( EQPARS = EQINIT + 1 )
+      integer               eqpars
+      parameter           ( eqpars = eqinit + 1 )
 
 !
 !     Name resolution status---this flag indicates whether names
 !     have been resolved in an encoded query.  Values are ITRUE or
 !     IFALSE.
 !
-      INTEGER               EQNRES
-      PARAMETER           ( EQNRES = EQPARS + 1 )
+      integer               eqnres
+      parameter           ( eqnres = eqpars + 1 )
 
 !
 !     Time resolution status---this flag indicates whether time values
@@ -83,27 +83,27 @@
 !     consists of converting strings representing time values to ET.
 !     Values of the status are ITRUE or IFALSE.
 !
-      INTEGER               EQTRES
-      PARAMETER           ( EQTRES = EQNRES + 1 )
+      integer               eqtres
+      parameter           ( eqtres = eqnres + 1 )
 
 !
 !     Semantic check status---this flag indicates whether semantic
 !     checking of constraints has been performed.
 !
-      INTEGER               EQSCHK
-      PARAMETER           ( EQSCHK = EQTRES + 1 )
+      integer               eqschk
+      parameter           ( eqschk = eqtres + 1 )
 
 !
 !     Number of tables specified in FROM clause:
 !
-      INTEGER               EQNTAB
-      PARAMETER           ( EQNTAB = EQSCHK + 1 )
+      integer               eqntab
+      parameter           ( eqntab = eqschk + 1 )
 
 !
 !     Number of constraints in query:
 !
-      INTEGER               EQNCNS
-      PARAMETER           ( EQNCNS = EQNTAB + 1 )
+      integer               eqncns
+      parameter           ( eqncns = eqntab + 1 )
 
 !
 !     A special value is used to indicate the `maximal' constraint---
@@ -111,50 +111,50 @@
 !     are equivalent to the maximal constraint, the location EQNCNS
 !     is assigned the value EQMXML
 !
-      INTEGER               EQMXML
-      PARAMETER           ( EQMXML = -1 )
+      integer               eqmxml
+      parameter           ( eqmxml = -1 )
 
 !
 !     Number of constraint conjunctions:
 !
-      INTEGER               EQNCNJ
-      PARAMETER           ( EQNCNJ = EQNCNS + 1 )
+      integer               eqncnj
+      parameter           ( eqncnj = eqncns + 1 )
 
 !
 !     Number of order-by columns:
 !
-      INTEGER               EQNORD
-      PARAMETER           ( EQNORD = EQNCNJ + 1 )
+      integer               eqnord
+      parameter           ( eqnord = eqncnj + 1 )
 
 !
 !     Number of SELECT columns:
 !
-      INTEGER               EQNSEL
-      PARAMETER           ( EQNSEL = EQNORD + 1 )
+      integer               eqnsel
+      parameter           ( eqnsel = eqnord + 1 )
 
 !
 !     Size of double precision buffer:
 !
-      INTEGER               EQNSIZ
-      PARAMETER           ( EQNSIZ = EQNSEL + 1 )
+      integer               eqnsiz
+      parameter           ( eqnsiz = eqnsel + 1 )
 
 !
 !     `Free' pointer into double precision buffer:
 !
-      INTEGER               EQNPTR
-      PARAMETER           ( EQNPTR = EQNSIZ + 1 )
+      integer               eqnptr
+      parameter           ( eqnptr = eqnsiz + 1 )
 
 !
 !     Size of character string buffer:
 !
-      INTEGER               EQCSIZ
-      PARAMETER           ( EQCSIZ = EQNPTR + 1 )
+      integer               eqcsiz
+      parameter           ( eqcsiz = eqnptr + 1 )
 
 !
 !     `Free' pointer into character string buffer:
 !
-      INTEGER               EQCPTR
-      PARAMETER           ( EQCPTR = EQCSIZ + 1 )
+      integer               eqcptr
+      parameter           ( eqcptr = eqcsiz + 1 )
 
 !
 !     The following four base pointers will be valid after a query
@@ -162,26 +162,26 @@
 !
 !     Base pointer for SELECT column descriptors:
 !
-      INTEGER               EQBSEL
-      PARAMETER           ( EQBSEL = EQCPTR + 1 )
+      integer               eqbsel
+      parameter           ( eqbsel = eqcptr + 1 )
 
 !
 !     Base pointer for constraint descriptors:
 !
-      INTEGER               EQBCON
-      PARAMETER           ( EQBCON = EQBSEL + 1 )
+      integer               eqbcon
+      parameter           ( eqbcon = eqbsel + 1 )
 
 !
 !     Base pointer for conjunction sizes:
 !
-      INTEGER               EQBCNJ
-      PARAMETER           ( EQBCNJ = EQBCON + 1 )
+      integer               eqbcnj
+      parameter           ( eqbcnj = eqbcon + 1 )
 
 !
 !     Base pointer for order-by column descriptors:
 !
-      INTEGER               EQBORD
-      PARAMETER           ( EQBORD = EQBCON + 1 )
+      integer               eqbord
+      parameter           ( eqbord = eqbcon + 1 )
 
 
 !
@@ -192,8 +192,8 @@
 !     after the input query has been re-arranged as a disjunction of
 !     conjunctions of constraints.
 !
-      INTEGER               EQVBAS
-      PARAMETER           ( EQVBAS = EQBORD )
+      integer               eqvbas
+      parameter           ( eqvbas = eqbord )
 
 !
 !     The offsets of specific elements within descriptors are
@@ -239,20 +239,20 @@
 !
 !     Parameters for string value descriptor elements:
 !
-      INTEGER               EQDTYP
-      PARAMETER           ( EQDTYP = 1 )
+      integer               eqdtyp
+      parameter           ( eqdtyp = 1 )
 
-      INTEGER               EQBLEX
-      PARAMETER           ( EQBLEX = EQDTYP + 1 )
+      integer               eqblex
+      parameter           ( eqblex = eqdtyp + 1 )
 
-      INTEGER               EQELEX
-      PARAMETER           ( EQELEX = EQBLEX + 1 )
+      integer               eqelex
+      parameter           ( eqelex = eqblex + 1 )
 
-      INTEGER               EQBSTR
-      PARAMETER           ( EQBSTR = EQELEX + 1 )
+      integer               eqbstr
+      parameter           ( eqbstr = eqelex + 1 )
 
-      INTEGER               EQESTR
-      PARAMETER           ( EQESTR = EQBSTR + 1 )
+      integer               eqestr
+      parameter           ( eqestr = eqbstr + 1 )
 
 !
 !     Numeric value descriptors are similar to those for string values,
@@ -260,16 +260,16 @@
 !     they represent.  This pointer is the index of the value in the
 !     encoded query's numeric buffer.
 !
-      INTEGER               EQVPTR
-      PARAMETER           ( EQVPTR = EQELEX + 1 )
+      integer               eqvptr
+      parameter           ( eqvptr = eqelex + 1 )
 
 !
 !     All value descriptors have the same size.  In order to allow
 !     table descriptors to have the same size as value descriptors,
 !     we include an extra element in the descriptor.
 !
-      INTEGER               EQVDSZ
-      PARAMETER           ( EQVDSZ = 6 )
+      integer               eqvdsz
+      parameter           ( eqvdsz = 6 )
 
 
 !
@@ -281,11 +281,11 @@
 !     position of the column in the logical table to which the column
 !     belongs.  The index element is filled in during name resolution.
 !
-      INTEGER               EQBCOL
-      PARAMETER           ( EQBCOL = 1 )
+      integer               eqbcol
+      parameter           ( eqbcol = 1 )
 
-      INTEGER               EQCIDX
-      PARAMETER           ( EQCIDX = EQVDSZ )
+      integer               eqcidx
+      parameter           ( eqcidx = eqvdsz )
 
 !
 !     Table Descriptors
@@ -297,11 +297,11 @@
 !     The index element is filled in during name resolution.  Aliases
 !     and table names have identical descriptor structures.
 !
-      INTEGER               EQBTAB
-      PARAMETER           ( EQBTAB = 1 )
+      integer               eqbtab
+      parameter           ( eqbtab = 1 )
 
-      INTEGER               EQTORD
-      PARAMETER           ( EQTORD = EQVDSZ )
+      integer               eqtord
+      parameter           ( eqtord = eqvdsz )
 
 !
 !     Constraint descriptors
@@ -313,47 +313,47 @@
 !          in two columns or the value in a column and a literal
 !          value.  The values of this element are EQCOL and EQVAL.
 !
-      INTEGER               EQCTYP
-      PARAMETER           ( EQCTYP = 1 )
+      integer               eqctyp
+      parameter           ( eqctyp = 1 )
 
-      INTEGER               EQCOL
-      PARAMETER           ( EQCOL  = 1 )
+      integer               eqcol
+      parameter           ( eqcol  = 1 )
 
-      INTEGER               EQVAL
-      PARAMETER           ( EQVAL  = 2 )
+      integer               eqval
+      parameter           ( eqval  = 2 )
 
 !
 !
 !        - A descriptor for the table used to qualify the
 !          column name on the left side of the constraint.
 !
-      INTEGER               EQLTAB
-      PARAMETER           ( EQLTAB = EQCTYP + 1 )
+      integer               eqltab
+      parameter           ( eqltab = eqctyp + 1 )
 
 !
 !        - A character value descriptor for the column name on the left
 !          side of the query.
 !
-      INTEGER               EQLCOL
-      PARAMETER           ( EQLCOL = EQLTAB + EQVDSZ )
+      integer               eqlcol
+      parameter           ( eqlcol = eqltab + eqvdsz )
 
 !
 !        - An operator code indicating the relational operator used
 !          in the constraint.
 !
-      INTEGER               EQOPCD
-      PARAMETER           ( EQOPCD = EQLCOL + EQVDSZ )
+      integer               eqopcd
+      parameter           ( eqopcd = eqlcol + eqvdsz )
 
 !
 !        If the constraint compares values from two columns, the
 !        next items are table and column name descriptors that apply to
 !        the column named on the right side of the relational operator.
 !
-      INTEGER               EQRTAB
-      PARAMETER           ( EQRTAB = EQOPCD + 1 )
+      integer               eqrtab
+      parameter           ( eqrtab = eqopcd + 1 )
 
-      INTEGER               EQRCOL
-      PARAMETER           ( EQRCOL = EQRTAB + EQVDSZ )
+      integer               eqrcol
+      parameter           ( eqrcol = eqrtab + eqvdsz )
 
 
 !
@@ -362,15 +362,15 @@
 !
 !        - a value descriptor.
 !
-      INTEGER               EQBVAL
-      PARAMETER           ( EQBVAL = EQOPCD + 1 )
+      integer               eqbval
+      parameter           ( eqbval = eqopcd + 1 )
 
 
 !
 !        - Size of a constraint descriptor:
 !
-      INTEGER               EQCDSZ
-      PARAMETER           ( EQCDSZ = 2 + 4*EQVDSZ )
+      integer               eqcdsz
+      parameter           ( eqcdsz = 2 + 4*eqvdsz )
 
 
 !
@@ -391,32 +391,32 @@
 !     itself; one additional element is used to indicate the direction
 !     of the ordering (ascending vs descending).
 !
-      INTEGER               EQOTAB
-      PARAMETER           ( EQOTAB = 1 )
+      integer               eqotab
+      parameter           ( eqotab = 1 )
 
-      INTEGER               EQOCOL
-      PARAMETER           ( EQOCOL = EQOTAB + EQVDSZ )
+      integer               eqocol
+      parameter           ( eqocol = eqotab + eqvdsz )
 
 !
 !        - The last integer in the descriptor indicates whether the
 !          order direction is ascending or descending.
 !
-      INTEGER               EQODIR
-      PARAMETER           ( EQODIR = EQOCOL + EQVDSZ )
+      integer               eqodir
+      parameter           ( eqodir = eqocol + eqvdsz )
 !
 !        - Size of an order-by column descriptor:
 !
-      INTEGER               EQODSZ
-      PARAMETER           ( EQODSZ = 1 + 2*EQVDSZ )
+      integer               eqodsz
+      parameter           ( eqodsz = 1 + 2*eqvdsz )
 
 !
 !     Codes indicating sense of ordering (ascending vs descending):
 !
-      INTEGER               EQASND
-      PARAMETER           ( EQASND = 0 )
+      integer               eqasnd
+      parameter           ( eqasnd = 0 )
 
-      INTEGER               EQDSND
-      PARAMETER           ( EQDSND = 1 )
+      integer               eqdsnd
+      parameter           ( eqdsnd = 1 )
 
 !
 !     SELECT Column Descriptors
@@ -426,17 +426,17 @@
 !     the table containing the column and for the name of the column
 !     itself.
 !
-      INTEGER               EQSTAB
-      PARAMETER           ( EQSTAB = 1 )
+      integer               eqstab
+      parameter           ( eqstab = 1 )
 
-      INTEGER               EQSCOL
-      PARAMETER           ( EQSCOL = EQSTAB + EQVDSZ )
+      integer               eqscol
+      parameter           ( eqscol = eqstab + eqvdsz )
 
 !
 !        - Size of a SELECT column descriptor:
 !
-      INTEGER               EQSDSZ
-      PARAMETER           ( EQSDSZ = 2*EQVDSZ )
+      integer               eqsdsz
+      parameter           ( eqsdsz = 2*eqvdsz )
 
 
 !
@@ -463,13 +463,13 @@
 !    .                              +  MAXSEL * EQSDSZ     )
 !
 
-      INTEGER               EQIMIN
-      PARAMETER           ( EQIMIN =   EQVBAS &
-                                    +  10     * EQVDSZ * 2 &
-                                    +  1000   * EQCDSZ &
+      integer               eqimin
+      parameter           ( eqimin =   eqvbas &
+                                    +  10     * eqvdsz * 2 &
+                                    +  1000   * eqcdsz &
                                     +  1000 &
-                                    +  10     * EQODSZ &
-                                    +  50     * EQSDSZ     )
+                                    +  10     * eqodsz &
+                                    +  50     * eqsdsz     )
 
 !
 !     End Include Section:  EK Encoded Query Internal Parameters

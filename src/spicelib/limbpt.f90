@@ -1,9 +1,9 @@
 !$Procedure LIMBPT ( Limb points on an extended object )
 
-       SUBROUTINE LIMBPT ( METHOD, TARGET, ET,     FIXREF, ABCORR, &
-                           CORLOC, OBSRVR, REFVEC, ROLSTP, NCUTS, &
-                           SCHSTP, SOLTOL, MAXN,   NPTS,   POINTS, &
-                           EPOCHS, TANGTS                         )
+       subroutine limbpt ( method, target, et,     fixref, abcorr, &
+                           corloc, obsrvr, refvec, rolstp, ncuts, &
+                           schstp, soltol, maxn,   npts,   points, &
+                           epochs, tangts                         )
 
 ! $ Abstract
 !
@@ -31,32 +31,32 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'dsk.inc'
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
-      INCLUDE               'zzdsk.inc'
+      include               'dsk.inc'
+      include               'frmtyp.inc'
+      include               'gf.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
+      include               'zzdsk.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         CORLOC
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      REFVEC ( 3 )
-      DOUBLE PRECISION      ROLSTP
-      INTEGER               NCUTS
-      DOUBLE PRECISION      SCHSTP
-      DOUBLE PRECISION      SOLTOL
-      INTEGER               MAXN
-      INTEGER               NPTS   ( * )
-      DOUBLE PRECISION      POINTS ( 3, * )
-      DOUBLE PRECISION      EPOCHS ( * )
-      DOUBLE PRECISION      TANGTS ( 3, * )
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         corloc
+      character*(*)         obsrvr
+      double precision      refvec ( 3 )
+      double precision      rolstp
+      integer               ncuts
+      double precision      schstp
+      double precision      soltol
+      integer               maxn
+      integer               npts   ( * )
+      double precision      points ( 3, * )
+      double precision      epochs ( * )
+      double precision      tangts ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -2102,32 +2102,32 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      clight
+      double precision      touchd
+      double precision      vdot
+      double precision      vnorm
 
-      INTEGER               CARDD
+      integer               cardd
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               eqstr
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'LIMBPT' )
+      character*(*)         rname
+      parameter           ( rname  = 'LIMBPT' )
 
-      CHARACTER*(*)         IREF
-      PARAMETER           ( IREF   = 'J2000' )
+      character*(*)         iref
+      parameter           ( iref   = 'J2000' )
 
 !
 !     Convergence limit:
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-18 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-18 )
 !
 !     This limit was chosen to achieve convergence on
 !     platforms providing extended precision arithmetic.
@@ -2137,251 +2137,251 @@
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR = 5 )
+      integer               maxitr
+      parameter           ( maxitr = 5 )
 
-      INTEGER               SSB
-      PARAMETER           ( SSB   = 0 )
+      integer               ssb
+      parameter           ( ssb   = 0 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               MAXIVL
-      PARAMETER           ( MAXIVL = 1000 )
+      integer               maxivl
+      parameter           ( maxivl = 1000 )
 
-      INTEGER               MAXWIN
-      PARAMETER           ( MAXWIN = 2 * MAXIVL )
+      integer               maxwin
+      parameter           ( maxwin = 2 * maxivl )
 
 !
 !     SPICELIB ellipse upper bound:
 !
-      INTEGER               UBEL
-      PARAMETER           ( UBEL   = 9 )
+      integer               ubel
+      parameter           ( ubel   = 9 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CVTLEN)    LMBSTR
-      CHARACTER*(ACLLEN)    NRMLOC
-      CHARACTER*(CORLEN)    PRVCOR
-      CHARACTER*(ACLLEN)    PRVLOC
-      CHARACTER*(MTHLEN)    PRVMTH
-      CHARACTER*(SHPLEN)    SHPSTR
-      CHARACTER*(SUBLEN)    SUBTYP
-      CHARACTER*(TMTLEN)    TRMSTR
+      character*(cvtlen)    lmbstr
+      character*(acllen)    nrmloc
+      character*(corlen)    prvcor
+      character*(acllen)    prvloc
+      character*(mthlen)    prvmth
+      character*(shplen)    shpstr
+      character*(sublen)    subtyp
+      character*(tmtlen)    trmstr
 
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      CORTRG ( 3 )
-      DOUBLE PRECISION      CP     ( 3 )
-      DOUBLE PRECISION      CUTNML ( 3 )
-      DOUBLE PRECISION      EDIR   ( 3 )
-      DOUBLE PRECISION      ENORML ( 3 )
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      EPOINT ( 3 )
-      DOUBLE PRECISION      IPOINT ( 3 )
-      DOUBLE PRECISION      ISRFVC ( 3 )
-      DOUBLE PRECISION      LIMB   ( UBEL )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTERR
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      PLNVEC ( 3 )
-      DOUBLE PRECISION      PNTBUF ( 3, MAXWIN )
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      PRVLT
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      RAYVTX ( 3 )
-      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      DOUBLE PRECISION      ROLL
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SMAJOR ( 3 )
-      DOUBLE PRECISION      SMINOR ( 3 )
-      DOUBLE PRECISION      PTARG  ( 3 )
-      DOUBLE PRECISION      STLOFF ( 3 )
-      DOUBLE PRECISION      STLPOS ( 3 )
-      DOUBLE PRECISION      STOBS  ( 6 )
-      DOUBLE PRECISION      SSBLT
-      DOUBLE PRECISION      SSBTRG ( 3 )
-      DOUBLE PRECISION      TMPVEC ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      double precision      axis   ( 3 )
+      double precision      center ( 3 )
+      double precision      cortrg ( 3 )
+      double precision      cp     ( 3 )
+      double precision      cutnml ( 3 )
+      double precision      edir   ( 3 )
+      double precision      enorml ( 3 )
+      double precision      epoch
+      double precision      epoint ( 3 )
+      double precision      ipoint ( 3 )
+      double precision      isrfvc ( 3 )
+      double precision      limb   ( ubel )
+      double precision      lt
+      double precision      lterr
+      double precision      maxrad
+      double precision      plnvec ( 3 )
+      double precision      pntbuf ( 3, maxwin )
+      double precision      pos    ( 3 )
+      double precision      prvlt
+      double precision      raydir ( 3 )
+      double precision      rayvtx ( 3 )
+      double precision      result ( lbcell : maxwin )
+      double precision      roll
+      double precision      s
+      double precision      smajor ( 3 )
+      double precision      sminor ( 3 )
+      double precision      ptarg  ( 3 )
+      double precision      stloff ( 3 )
+      double precision      stlpos ( 3 )
+      double precision      stobs  ( 6 )
+      double precision      ssblt
+      double precision      ssbtrg ( 3 )
+      double precision      tmpvec ( 3 )
+      double precision      trgepc
+      double precision      xform  ( 3, 3 )
 
-      INTEGER               FXCENT
-      INTEGER               FXCLSS
-      INTEGER               FXFCDE
-      INTEGER               FXTYID
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LMBTYP
-      INTEGER               LOCCDE
-      INTEGER               NSURF
-      INTEGER               NUMITR
-      INTEGER               OBSCDE
-      INTEGER               PRVTRG
-      INTEGER               ROOM
-      INTEGER               SHAPE
-      INTEGER               SRFLST ( MAXSRF )
-      INTEGER               SVNRAD
-      INTEGER               TO
-      INTEGER               TOTAL
-      INTEGER               TRGCDE
+      integer               fxcent
+      integer               fxclss
+      integer               fxfcde
+      integer               fxtyid
+      integer               i
+      integer               j
+      integer               lmbtyp
+      integer               loccde
+      integer               nsurf
+      integer               numitr
+      integer               obscde
+      integer               prvtrg
+      integer               room
+      integer               shape
+      integer               srflst ( maxsrf )
+      integer               svnrad
+      integer               to
+      integer               total
+      integer               trgcde
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               PRI
-      LOGICAL               SURFUP
-      LOGICAL               USECN
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               first
+      logical               fnd
+      logical               pri
+      logical               surfup
+      logical               usecn
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsc
+      logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFREF
-      INTEGER               SVFXFC
+      integer               svctr3 ( ctrsiz )
+      character*(frnmln)    svfref
+      integer               svfxfc
 
 
 !
 !     Saved surface name/ID item declarations.
 !
-      INTEGER               SVCTR4 ( CTRSIZ )
+      integer               svctr4 ( ctrsiz )
 
 !
 !     Saved target radii declarations.
 !
-      INTEGER               SVCTR5 ( CTRSIZ )
-      DOUBLE PRECISION      SVRADI ( 3 )
+      integer               svctr5 ( ctrsiz )
+      double precision      svradi ( 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  LMBTYP
-      SAVE                  LOCCDE
-      SAVE                  NSURF
-      SAVE                  PNTBUF
-      SAVE                  PRI
-      SAVE                  PRVCOR
-      SAVE                  PRVLOC
-      SAVE                  PRVMTH
-      SAVE                  PRVTRG
-      SAVE                  SHAPE
-      SAVE                  SRFLST
-      SAVE                  SUBTYP
-      SAVE                  SVNRAD
-      SAVE                  USECN
-      SAVE                  USELT
-      SAVE                  USESTL
-      SAVE                  XMIT
+      save                  first
+      save                  lmbtyp
+      save                  loccde
+      save                  nsurf
+      save                  pntbuf
+      save                  pri
+      save                  prvcor
+      save                  prvloc
+      save                  prvmth
+      save                  prvtrg
+      save                  shape
+      save                  srflst
+      save                  subtyp
+      save                  svnrad
+      save                  usecn
+      save                  uselt
+      save                  usestl
+      save                  xmit
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVFREF
-      SAVE                  SVFXFC
+      save                  svctr3
+      save                  svfref
+      save                  svfxfc
 
 
 !
 !     Saved surface name/ID items.
 !
-      SAVE                  SVCTR4
+      save                  svctr4
 
 !
 !     Saved reference ellipsoid items.
 !
-      SAVE                  SVCTR5
-      SAVE                  SVRADI
+      save                  svctr5
+      save                  svradi
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE.  /
-      DATA                  PRVCOR / ' '     /
-      DATA                  PRVLOC / ' '     /
-      DATA                  PRVMTH / ' '     /
-      DATA                  PRVTRG / 0       /
-      DATA                  SVNRAD / 0       /
-      DATA                  USECN  / .FALSE. /
-      DATA                  USELT  / .FALSE. /
-      DATA                  USESTL / .FALSE. /
-      DATA                  XMIT   / .FALSE. /
+      data                  first  / .true.  /
+      data                  prvcor / ' '     /
+      data                  prvloc / ' '     /
+      data                  prvmth / ' '     /
+      data                  prvtrg / 0       /
+      data                  svnrad / 0       /
+      data                  usecn  / .false. /
+      data                  uselt  / .false. /
+      data                  usestl / .false. /
+      data                  xmit   / .false. /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 !
 !     Counter initialization is done separately.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
-         CALL ZZCTRUIN( SVCTR4 )
-         CALL ZZCTRUIN( SVCTR5 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
+         call zzctruin( svctr4 )
+         call zzctruin( svctr5 )
 
-      END IF
+      end if
 
 
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -2398,145 +2398,145 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         USELT   =  ATTBLK ( LTIDX  )
-         USECN   =  ATTBLK ( CNVIDX )
-         USESTL  =  ATTBLK ( STLIDX )
-         XMIT    =  ATTBLK ( XMTIDX )
+         uselt   =  attblk ( ltidx  )
+         usecn   =  attblk ( cnvidx )
+         usestl  =  attblk ( stlidx )
+         xmit    =  attblk ( xmtidx )
 !
 !        The aberration correction flag is valid; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
-      END IF
+      end if
 
 !
 !     Set the sign S prefixing LT in expression for light time-
 !     corrected epochs associated with limb points.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 
-         IF ( XMIT ) THEN
-            S   =  1.D0
-         ELSE
-            S   = -1.D0
-         END IF
+         if ( xmit ) then
+            s   =  1.d0
+         else
+            s   = -1.d0
+         end if
 
-      ELSE
-         S = 0.D0
-      END IF
+      else
+         s = 0.d0
+      end if
 
 !
 !     Obtain integer codes for the target and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the input body codes. If they are equal, signal
 !     an error.
 !
-      IF ( OBSCDE .EQ. TRGCDE ) THEN
+      if ( obscde .eq. trgcde ) then
 
-         CALL SETMSG ( 'In computing the surface intercept point, ' // &
+         call setmsg ( 'In computing the surface intercept point, ' // &
                        'the observing body and target body are the '// &
                        'same. Both are #.'                          )
-         CALL ERRCH  ( '#',  OBSRVR                                 )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         CALL CHKOUT ( RNAME                                        )
-         RETURN
+         call errch  ( '#',  obsrvr                                 )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
+         call chkout ( rname                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the attributes of the frame designated by FIXREF.
 !
-      CALL ZZNAMFRM ( SVCTR3, SVFREF, SVFXFC, FIXREF, FXFCDE )
+      call zznamfrm ( svctr3, svfref, svfxfc, fixref, fxfcde )
 
-      CALL FRINFO ( FXFCDE, FXCENT, FXCLSS, FXTYID, FND )
+      call frinfo ( fxfcde, fxcent, fxclss, fxtyid, fnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+         call setmsg ( 'Reference frame # is not recognized by ' // &
                        'the SPICE frame subsystem. Possibly '    // &
                        'a required frame definition kernel has ' // &
                        'not been loaded.'                        )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-         CALL CHKOUT ( RNAME                                     )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call sigerr ( 'SPICE(NOFRAME)'                          )
+         call chkout ( rname                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      IF ( FXCENT .NE. TRGCDE ) THEN
+      if ( fxcent .ne. trgcde ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
          //            'center is #.'                             )
-         CALL ERRCH  ( '#',  FIXREF                               )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL ERRINT ( '#',  FXCENT                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  fixref                               )
+         call errch  ( '#',  target                               )
+         call errint ( '#',  fxcent                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check whether the surface name/ID mapping has been updated.
 !
-      CALL ZZSRFTRK ( SVCTR4, SURFUP )
+      call zzsrftrk ( svctr4, surfup )
 
 !
 !     Initialize the SINCPT utility package for the next computation.
 !     The choice of initialization routine depends on the target
 !     surface type.
 !
-      IF ( FIRST  .OR.  SURFUP  .OR.  ( METHOD .NE. PRVMTH ) ) THEN
+      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -2544,7 +2544,7 @@
 !        failure occurs in this branch. Once success is assured, we can
 !        record the current method in the previous method string.
 !
-         PRVMTH = ' '
+         prvmth = ' '
 
 !
 !        Parse the method string. If the string is valid, the
@@ -2554,361 +2554,361 @@
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         CALL ZZPRSMET ( TRGCDE, METHOD, MAXSRF, SHPSTR, SUBTYP, &
-                         PRI,    NSURF,  SRFLST, LMBSTR, TRMSTR )
+         call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
+                         pri,    nsurf,  srflst, lmbstr, trmstr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 
-         IF (  EQSTR( SHPSTR, 'ELLIPSOID' )  ) THEN
+         if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
-            SHAPE = ELLSHP
+            shape = ellshp
 
-         ELSE IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+         else if (  eqstr( shpstr, 'DSK' )  ) then
 
-            SHAPE = DSKSHP
+            shape = dskshp
 
-         ELSE
+         else
 !
 !           This is a backstop check.
 !
-            CALL SETMSG ( '[1] Returned shape value from method ' &
+            call setmsg ( '[1] Returned shape value from method ' &
             //            'string was <#>.'                      )
-            CALL ERRCH  ( '#', SHPSTR                            )
-            CALL SIGERR ( 'SPICE(BUG)'                           )
-            CALL CHKOUT ( RNAME                                  )
-            RETURN
+            call errch  ( '#', shpstr                            )
+            call sigerr ( 'SPICE(BUG)'                           )
+            call chkout ( rname                                  )
+            return
 
-         END IF
+         end if
 
 
-         IF (  EQSTR( LMBSTR, 'TANGENT' )  ) THEN
+         if (  eqstr( lmbstr, 'TANGENT' )  ) then
 
-            LMBTYP = TANGNT
+            lmbtyp = tangnt
 
-         ELSE IF (  EQSTR( LMBSTR, 'GUIDED' )  ) THEN
+         else if (  eqstr( lmbstr, 'GUIDED' )  ) then
 
-            LMBTYP = GUIDED
+            lmbtyp = guided
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Returned limb type from method ' &
+            call setmsg ( 'Returned limb type from method ' &
             //            'string was <#>. Value must be ' &
             //            'TANGENT or GUIDED.'              )
-            CALL ERRCH  ( '#', LMBSTR                       )
-            CALL SIGERR ( 'SPICE(INVALIDLIMBTYPE)'          )
-            CALL CHKOUT ( RNAME                             )
-            RETURN
+            call errch  ( '#', lmbstr                       )
+            call sigerr ( 'SPICE(INVALIDLIMBTYPE)'          )
+            call chkout ( rname                             )
+            return
 
-         END IF
+         end if
 
 !
 !        There should be no subtype specification in the method
 !        string.
 !
-         IF ( SUBTYP .NE. ' ' ) THEN
+         if ( subtyp .ne. ' ' ) then
 
-            CALL SETMSG ( 'Spurious sub-observer point type <#> ' &
+            call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
             //            'The sub-observer type is valid in ' &
             //            'the method strings for SUBPNT and ' &
             //            'SUBSLR, but is not applicable for LIMBPT.' )
-            CALL ERRCH  ( '#', SUBTYP                                 )
-            CALL ERRCH  ( '#', METHOD                                 )
-            CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                      )
-            CALL CHKOUT ( RNAME                                       )
-            RETURN
+            call errch  ( '#', subtyp                                 )
+            call errch  ( '#', method                                 )
+            call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
+            call chkout ( rname                                       )
+            return
 
-         END IF
+         end if
 
 !
 !        There should be no terminator specification in the method
 !        string.
 !
-         IF ( TRMSTR .NE. ' ' ) THEN
+         if ( trmstr .ne. ' ' ) then
 
-            CALL SETMSG ( 'Spurious terminator shadow type <#> ' &
+            call setmsg ( 'Spurious terminator shadow type <#> ' &
             //            'was present in the method string #. ' &
             //            'The terminator shadow type is valid in ' &
             //            'the method string for TERMPT, but is not ' &
             //            'applicable for LIMBPT.'                    )
-            CALL ERRCH  ( '#', TRMSTR                                 )
-            CALL ERRCH  ( '#', METHOD                                 )
-            CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                      )
-            CALL CHKOUT ( RNAME                                       )
-            RETURN
+            call errch  ( '#', trmstr                                 )
+            call errch  ( '#', method                                 )
+            call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
+            call chkout ( rname                                       )
+            return
 
-         END IF
+         end if
 
-         PRVMTH = METHOD
+         prvmth = method
 
-      END IF
+      end if
 
 
 !
 !     Identify the aberration correction locus.
 !
-      IF (  FIRST  .OR.  ( CORLOC .NE. PRVLOC )  ) THEN
+      if (  first  .or.  ( corloc .ne. prvloc )  ) then
 
-         CALL LJUCRS ( 1, CORLOC, NRMLOC )
+         call ljucrs ( 1, corloc, nrmloc )
 
-         IF ( NRMLOC .EQ. 'CENTER' ) THEN
+         if ( nrmloc .eq. 'CENTER' ) then
 
-            LOCCDE = CTRCOR
+            loccde = ctrcor
 
-         ELSE IF ( NRMLOC .EQ. 'ELLIPSOID LIMB' ) THEN
+         else if ( nrmloc .eq. 'ELLIPSOID LIMB' ) then
 
-            LOCCDE = ELLCOR
+            loccde = ellcor
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Aberration correction locus <#> ' &
+            call setmsg ( 'Aberration correction locus <#> ' &
             //            'was not recognized.'              )
-            CALL ERRCH  ( '#', CORLOC                        )
-            CALL SIGERR ( 'SPICE(INVALIDLOCUS)'              )
-            CALL CHKOUT ( RNAME                              )
-            RETURN
+            call errch  ( '#', corloc                        )
+            call sigerr ( 'SPICE(INVALIDLOCUS)'              )
+            call chkout ( rname                              )
+            return
 
-         END IF
+         end if
 !
 !        At this point we have a valid locus. LOCCDE is set.
 !        Save the input locus string so we can check for
 !        a change on the next call.
 !
-         PRVLOC = CORLOC
+         prvloc = corloc
 
-      END IF
+      end if
 
 !
 !     Check the reference vector.
 !
-      IF ( VZERO(REFVEC) ) THEN
+      if ( vzero(refvec) ) then
 
-         CALL SETMSG ( 'The reference vector was the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                         )
-         CALL CHKOUT ( RNAME                                       )
-         RETURN
+         call setmsg ( 'The reference vector was the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                         )
+         call chkout ( rname                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, the first pass actions were successful.
 !
-      FIRST  = .FALSE.
+      first  = .false.
 
 !
 !     Check MAXN.
 !
-      IF ( MAXN .LT. 1 ) THEN
+      if ( maxn .lt. 1 ) then
 
-         CALL SETMSG ( 'MAXN = #; MAXN is required ' &
+         call setmsg ( 'MAXN = #; MAXN is required ' &
          //            'to be at least 1.'           )
-         CALL ERRINT ( '#',  MAXN                    )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'          )
-         CALL CHKOUT ( RNAME                         )
-         RETURN
+         call errint ( '#',  maxn                    )
+         call sigerr ( 'SPICE(INVALIDSIZE)'          )
+         call chkout ( rname                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
-      IF (  ( NCUTS .LT. 1 ) .OR. ( NCUTS .GT. MAXN )  ) THEN
+      if (  ( ncuts .lt. 1 ) .or. ( ncuts .gt. maxn )  ) then
 
-         CALL SETMSG ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
+         call setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
          //            'to be non-negative and no larger than ' &
          //            'MAXN.'                                 )
-         CALL ERRINT ( '#',  NCUTS                             )
-         CALL ERRINT ( '#',  MAXN                              )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                   )
-         CALL CHKOUT ( RNAME                                   )
-         RETURN
+         call errint ( '#',  ncuts                             )
+         call errint ( '#',  maxn                              )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                   )
+         call chkout ( rname                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the angular search step size and convergence
 !     tolerance. These checks apply only to DSK shapes.
 !
-      IF ( SHAPE .EQ. DSKSHP ) THEN
+      if ( shape .eq. dskshp ) then
 
-         IF ( SCHSTP .LE. 0.D0 ) THEN
+         if ( schstp .le. 0.d0 ) then
 
-            CALL SETMSG ( 'The angular search step ' &
+            call setmsg ( 'The angular search step ' &
             //            'SCHSTP = #; SCHSTP is required ' &
             //            'to be positive.'                )
-            CALL ERRDP  ( '#',  SCHSTP                     )
-            CALL SIGERR ( 'SPICE(INVALIDSEARCHSTEP)'       )
-            CALL CHKOUT ( RNAME                            )
-            RETURN
+            call errdp  ( '#',  schstp                     )
+            call sigerr ( 'SPICE(INVALIDSEARCHSTEP)'       )
+            call chkout ( rname                            )
+            return
 
-         END IF
+         end if
 
-         IF ( SOLTOL .LE. 0.D0 ) THEN
+         if ( soltol .le. 0.d0 ) then
 
-            CALL SETMSG ( 'The angular search tolerance ' &
+            call setmsg ( 'The angular search tolerance ' &
             //            'SOLTOL = #; SOLTOL is required ' &
             //            'to be positive.'                )
-            CALL ERRDP  ( '#',  SCHSTP                     )
-            CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'        )
-            CALL CHKOUT ( RNAME                            )
-            RETURN
+            call errdp  ( '#',  schstp                     )
+            call sigerr ( 'SPICE(INVALIDTOLERANCE)'        )
+            call chkout ( rname                            )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the roll step. This value applies only if
 !     there are multiple cutting half-planes.
 !
-      IF (  ( NCUTS .GT. 1 ) .AND. ( ROLSTP .EQ. 0.D0 )  ) THEN
+      if (  ( ncuts .gt. 1 ) .and. ( rolstp .eq. 0.d0 )  ) then
 
-         CALL SETMSG ( 'The angular roll step is 0.D0. ' &
+         call setmsg ( 'The angular roll step is 0.D0. ' &
          //            'NCUTS = #. ROLSTP is required ' &
          //            'to be non-zero when NCUTS is ' &
          //            'greater than 1.'                )
-         CALL ERRINT ( '#',  NCUTS                      )
-         CALL SIGERR ( 'SPICE(INVALIDROLLSTEP)'         )
-         CALL CHKOUT ( RNAME                            )
-         RETURN
+         call errint ( '#',  ncuts                      )
+         call sigerr ( 'SPICE(INVALIDROLLSTEP)'         )
+         call chkout ( rname                            )
+         return
 
-      END IF
+      end if
 
 
-      IF ( SHAPE .EQ. DSKSHP ) THEN
+      if ( shape .eq. dskshp ) then
 !
 !        This is the DSK case.
 !
 !        Initialize the intercept algorithm to use a DSK
 !        model for the surface of the target body.
 !
-         CALL ZZSUDSKI ( TRGCDE, NSURF, SRFLST, FXFCDE )
+         call zzsudski ( trgcde, nsurf, srflst, fxfcde )
 
-      ELSE IF ( SHAPE .NE. ELLSHP ) THEN
+      else if ( shape .ne. ellshp ) then
 
-         CALL SETMSG ( 'Computation method argument was <#>; this ' &
+         call setmsg ( 'Computation method argument was <#>; this ' &
          //            'string must specify a supported shape ' &
          //            'model and computation type. See the ' &
          //            'description of METHOD in the header of ' &
          //            'SUBPNT for details.'                      )
-         CALL ERRCH  ( '#',  METHOD                               )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                     )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  method                               )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                     )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 
 !
 !     Check MAXN.
 !
-      IF ( MAXN .LT. 1 ) THEN
+      if ( maxn .lt. 1 ) then
 
-         CALL SETMSG ( 'MAXN = #; MAXN is required ' &
+         call setmsg ( 'MAXN = #; MAXN is required ' &
          //            'to be at least 1.'           )
-         CALL ERRINT ( '#',  MAXN                    )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'          )
-         CALL CHKOUT ( RNAME                         )
-         RETURN
+         call errint ( '#',  maxn                    )
+         call sigerr ( 'SPICE(INVALIDSIZE)'          )
+         call chkout ( rname                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
-      IF (  ( NCUTS .LT. 1 ) .OR. ( NCUTS .GT. MAXN )  ) THEN
+      if (  ( ncuts .lt. 1 ) .or. ( ncuts .gt. maxn )  ) then
 
-         CALL SETMSG ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
+         call setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
          //            'to be non-negative and no larger than ' &
          //            'MAXN.'                                 )
-         CALL ERRINT ( '#',  NCUTS                             )
-         CALL ERRINT ( '#',  MAXN                              )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                   )
-         CALL CHKOUT ( RNAME                                   )
-         RETURN
+         call errint ( '#',  ncuts                             )
+         call errint ( '#',  maxn                              )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                   )
+         call chkout ( rname                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Get target body radii if necessary.
 !
-      IF (      ( SHAPE  .EQ. ELLSHP ) &
-           .OR. ( LOCCDE .EQ. ELLCOR ) &
-           .OR. ( LMBTYP .EQ. GUIDED )  ) THEN
+      if (      ( shape  .eq. ellshp ) &
+           .or. ( loccde .eq. ellcor ) &
+           .or. ( lmbtyp .eq. guided )  ) then
 
-         IF ( TRGCDE .NE. PRVTRG ) THEN
+         if ( trgcde .ne. prvtrg ) then
 !
 !           Reset counter to force lookup.
 !
-            CALL ZZCTRUIN ( SVCTR5 )
+            call zzctruin ( svctr5 )
 
-         END IF
+         end if
 !
 !        Look up target radii using counter.
 !
-         CALL ZZBODVCD ( TRGCDE, 'RADII', 3, SVCTR5, SVNRAD, SVRADI )
+         call zzbodvcd ( trgcde, 'RADII', 3, svctr5, svnrad, svradi )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         IF ( SVNRAD .NE. 3 ) THEN
+         if ( svnrad .ne. 3 ) then
 
-            CALL SETMSG ( 'Number of target radii must be 3 ' &
+            call setmsg ( 'Number of target radii must be 3 ' &
             //            'but was #.'                       )
-            CALL ERRINT ( '#',  SVNRAD                       )
-            CALL SIGERR ( 'SPICE(BADRADIUSCOUNT)'            )
-            CALL CHKOUT ( RNAME                              )
-            RETURN
+            call errint ( '#',  svnrad                       )
+            call sigerr ( 'SPICE(BADRADIUSCOUNT)'            )
+            call chkout ( rname                              )
+            return
 
-         END IF
+         end if
 
-         PRVTRG = TRGCDE
+         prvtrg = trgcde
 
-      END IF
+      end if
 
 !
 !     Set up activities are complete at this point.
 !
 !     Find limb points on the target.
 !
-      CALL CLEARI ( NCUTS,  NPTS   )
-      CALL SSIZED ( MAXWIN, RESULT )
+      call cleari ( ncuts,  npts   )
+      call ssized ( maxwin, result )
 
 !
 !     Get initial observer-target vector, expressed in the target
 !     body-fixed frame, evaluated at the target epoch. This vector
 !     will be used for all option combinations.
 !
-      CALL SPKPOS ( TARGET, ET, FIXREF, ABCORR, OBSRVR, POS, LT )
+      call spkpos ( target, et, fixref, abcorr, obsrvr, pos, lt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      IF ( VZERO(POS) ) THEN
+      if ( vzero(pos) ) then
 
-         CALL SETMSG ( 'The distance between the observer and ' &
+         call setmsg ( 'The distance between the observer and ' &
          //            'target at ET # is zero.'               )
-         CALL ERRDP  ( '#',  ET                                )
-         CALL SIGERR ( 'SPICE(NOSEPARATION)'                   )
-         CALL CHKOUT ( RNAME                                   )
-         RETURN
+         call errdp  ( '#',  et                                )
+         call sigerr ( 'SPICE(NOSEPARATION)'                   )
+         call chkout ( rname                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     The limb-finding technique depends on the aberration correction
@@ -2916,108 +2916,108 @@
 !     simpler case.
 !
 
-      IF ( LOCCDE .EQ. CTRCOR ) THEN
+      if ( loccde .eq. ctrcor ) then
 !
 !        Aberration corrections are those applicable at the target
 !        center.
 !
 !        Compute the epoch associated with the target center.
 !
-         CALL ZZCOREPC ( ABCORR, ET, LT, TRGEPC )
+         call zzcorepc ( abcorr, et, lt, trgepc )
 
 !
 !        Compute the central axis, which is also the common ray vertex.
 !        The axis points from the target to the observer.
 !
-         CALL VMINUS ( POS, AXIS )
+         call vminus ( pos, axis )
 
 !
 !        Make sure the reference vector and axis are linearly
 !        independent.
 !
-         CALL VCRSS ( AXIS, REFVEC, CP )
+         call vcrss ( axis, refvec, cp )
 
-         IF ( VZERO(CP) ) THEN
+         if ( vzero(cp) ) then
 
-            CALL SETMSG ( 'Input reference vector and observer-target ' &
+            call setmsg ( 'Input reference vector and observer-target ' &
             //            'vector are linearly dependent.'             )
-            CALL SIGERR ( 'SPICE(DEGENERATECASE)'                      )
-            CALL CHKOUT ( RNAME                                        )
-            RETURN
+            call sigerr ( 'SPICE(DEGENERATECASE)'                      )
+            call chkout ( rname                                        )
+            return
 
-         END IF
+         end if
 
 !
 !        If we're using an ellipsoidal shape model, or if
 !        we're using the "guided" limb option, find the
 !        limb parameters of the reference ellipsoid.
 !
-         IF (  ( SHAPE .EQ. ELLSHP ) .OR. ( LMBTYP .EQ. GUIDED ) ) THEN
+         if (  ( shape .eq. ellshp ) .or. ( lmbtyp .eq. guided ) ) then
 
-            CALL EDLIMB ( SVRADI(1), SVRADI(2), SVRADI(3), &
-                          AXIS,      LIMB                 )
+            call edlimb ( svradi(1), svradi(2), svradi(3), &
+                          axis,      limb                 )
 
-            CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
+            call el2cgv ( limb, center, smajor, sminor )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            CALL UCRSS ( SMAJOR, SMINOR, ENORML )
+            call ucrss ( smajor, sminor, enorml )
 
 !
 !           Make sure ENORML points into the same half-space as
 !           AXIS.
 !
-            IF ( VDOT( ENORML, AXIS ) .LT. 0.D0 ) THEN
+            if ( vdot( enorml, axis ) .lt. 0.d0 ) then
 
-               CALL VSCLIP ( -1.D0, ENORML )
+               call vsclip ( -1.d0, enorml )
 
-            END IF
+            end if
 
 
-            IF ( SHAPE .EQ. DSKSHP ) THEN
+            if ( shape .eq. dskshp ) then
 !
 !              Caution: this requires that ZZSUDSKI has been
 !              called first.
 !
-               CALL ZZMAXRAD ( MAXRAD )
+               call zzmaxrad ( maxrad )
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-         TO    = 1
-         ROOM  = MAXN
-         TOTAL = 0
+         to    = 1
+         room  = maxn
+         total = 0
 
 !
 !        Loop over the half planes, collecting limb points for
 !        each one.
 !
-         DO I = 1, NCUTS
+         do i = 1, ncuts
 
-            ROLL = ( I - 1 ) * ROLSTP
+            roll = ( i - 1 ) * rolstp
 !
 !           Rotation of the half-planes is in the positive
 !           sense about AXIS.
 !
-            CALL VROTV ( REFVEC, AXIS, ROLL, PLNVEC )
+            call vrotv ( refvec, axis, roll, plnvec )
 
 !
 !           Let CUTNML be a vector normal to the current cutting
 !           half-plane. We'll use this vector later.
 !
-            CALL UCRSS ( AXIS, PLNVEC, CUTNML )
+            call ucrss ( axis, plnvec, cutnml )
 
 
-            IF ( SHAPE .EQ. DSKSHP ) THEN
+            if ( shape .eq. dskshp ) then
 !
 !              This is the DSK case.
 !
-               IF ( LMBTYP .EQ. TANGNT ) THEN
+               if ( lmbtyp .eq. tangnt ) then
 !
 !                 This type of solution finds actual tangent rays on
 !                 the target.
@@ -3027,25 +3027,25 @@
 !
 !                 Note that RESULT is a cell, not a window.
 !
-                  CALL SCARDD ( 0, RESULT )
+                  call scardd ( 0, result )
 !
 !                 Note that the evaluation epoch for the surface is
 !                 optionally corrected for light time.
 !
-                  CALL ZZTANGNT ( LMBCRV, 0.D0,   SHAPE,  TRGCDE, &
-                                  NSURF,  SRFLST, FXFCDE, TRGEPC, &
-                                  PLNVEC, AXIS,   SCHSTP, SOLTOL, &
-                                  RESULT, PNTBUF                 )
+                  call zztangnt ( lmbcrv, 0.d0,   shape,  trgcde, &
+                                  nsurf,  srflst, fxfcde, trgepc, &
+                                  plnvec, axis,   schstp, soltol, &
+                                  result, pntbuf                 )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  NPTS(I) = CARDD( RESULT )
+                  npts(i) = cardd( result )
 
 
-               ELSE IF ( LMBTYP .EQ. GUIDED ) THEN
+               else if ( lmbtyp .eq. guided ) then
 !
 !                 This option uses the target's reference ellipsoid for
 !                 guidance. For DSK shapes, the limb points are
@@ -3057,18 +3057,18 @@
 !                 plane and the cutting half-plane. Let EDIR the
 !                 unit direction vector satisfying these constraints.
 !
-                  CALL UCRSS ( CUTNML, ENORML, EDIR )
+                  call ucrss ( cutnml, enorml, edir )
 
-                  IF ( VZERO(EDIR) ) THEN
+                  if ( vzero(edir) ) then
 
-                     CALL SETMSG ( 'Vector defining cutting half plane ' &
+                     call setmsg ( 'Vector defining cutting half plane ' &
                      //            'and ellipsoid limb normal vector ' &
                      //            'are linearly dependent.'           )
-                     CALL SIGERR ( 'SPICE(DEGENERATECASE)'             )
-                     CALL CHKOUT ( RNAME                               )
-                     RETURN
+                     call sigerr ( 'SPICE(DEGENERATECASE)'             )
+                     call chkout ( rname                               )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Find the intercept on the target surface of the ray
@@ -3077,39 +3077,39 @@
 !                 perform this computation, since the surface may be
 !                 invisible from the interior of the target.
 !
-                  CALL VLCOM ( 1.D0, CENTER, 3.D0*MAXRAD, EDIR, RAYVTX )
-                  CALL VMINUS( EDIR, RAYDIR )
+                  call vlcom ( 1.d0, center, 3.d0*maxrad, edir, rayvtx )
+                  call vminus( edir, raydir )
 
-                  CALL ZZRAYSFX ( RAYVTX,      RAYDIR, TRGEPC, &
-                                  PNTBUF(1,1), FND             )
+                  call zzraysfx ( rayvtx,      raydir, trgepc, &
+                                  pntbuf(1,1), fnd             )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  IF ( FND ) THEN
+                  if ( fnd ) then
 
-                     NPTS(I) = 1
-                  ELSE
-                     NPTS(I) = 0
-                  END IF
+                     npts(i) = 1
+                  else
+                     npts(i) = 0
+                  end if
 
 
-               ELSE
+               else
 !
 !                 This is a backstop case; it should never be reached.
 !
-                  CALL SETMSG ( 'Invalid limb type code: #' )
-                  CALL ERRINT ( '#', LMBTYP                 )
-                  CALL SIGERR ( 'SPICE(BUG)'                )
-                  CALL CHKOUT ( RNAME                       )
-                  RETURN
+                  call setmsg ( 'Invalid limb type code: #' )
+                  call errint ( '#', lmbtyp                 )
+                  call sigerr ( 'SPICE(BUG)'                )
+                  call chkout ( rname                       )
+                  return
 
-               END IF
+               end if
 
 
-            ELSE IF ( SHAPE .EQ. ELLSHP ) THEN
+            else if ( shape .eq. ellshp ) then
 !
 !              This is the ellipsoid case.
 !
@@ -3117,77 +3117,77 @@
 !              and the cutting half-plane. Let EDIR be the unit
 !              direction vector satisfying these constraints.
 !
-               CALL UCRSS ( CUTNML, ENORML, EDIR )
+               call ucrss ( cutnml, enorml, edir )
 
-               IF ( VZERO(EDIR) ) THEN
+               if ( vzero(edir) ) then
 
-                  CALL SETMSG ( 'Vector defining cutting half plane ' &
+                  call setmsg ( 'Vector defining cutting half plane ' &
                   //            'and ellipsoid limb normal vector ' &
                   //            'are linearly dependent.'           )
-                  CALL SIGERR ( 'SPICE(DEGENERATECASE)'             )
-                  CALL CHKOUT ( RNAME                               )
-                  RETURN
+                  call sigerr ( 'SPICE(DEGENERATECASE)'             )
+                  call chkout ( rname                               )
+                  return
 
-               END IF
+               end if
 
 !
 !              Find the intercept on the target surface of the
 !              the ray emanating from CENTER in the direction EDIR.
 !
-               CALL SURFPT ( CENTER,    EDIR,      SVRADI(1), &
-                             SVRADI(2), SVRADI(3), PNTBUF(1,1), FND )
+               call surfpt ( center,    edir,      svradi(1), &
+                             svradi(2), svradi(3), pntbuf(1,1), fnd )
 
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               IF ( .NOT. FND ) THEN
+               if ( .not. fnd ) then
 
-                  CALL SETMSG ( 'Limb point not found on reference ' &
+                  call setmsg ( 'Limb point not found on reference ' &
                   //            'ellipsoid for cutting half plane ' &
                   //            'at index #. The point should always ' &
                   //            'be found.'                           )
-                  CALL ERRINT ( '#', I                                )
-                  CALL SIGERR ( 'SPICE(BUG)'                          )
-                  CALL CHKOUT ( RNAME                                 )
-                  RETURN
+                  call errint ( '#', i                                )
+                  call sigerr ( 'SPICE(BUG)'                          )
+                  call chkout ( rname                                 )
+                  return
 
-               END IF
+               end if
 
-               NPTS(I) = 1
+               npts(i) = 1
 
-            ELSE
+            else
 !
 !              This is a backstop case; it should never be reached.
 !
-               CALL SETMSG ( 'Invalid shape code: #' )
-               CALL ERRINT ( '#', SHAPE             )
-               CALL SIGERR ( 'SPICE(BUG)'            )
-               CALL CHKOUT ( RNAME                   )
-               RETURN
+               call setmsg ( 'Invalid shape code: #' )
+               call errint ( '#', shape             )
+               call sigerr ( 'SPICE(BUG)'            )
+               call chkout ( rname                   )
+               return
 
-            END IF
+            end if
 
 
-            TOTAL = TOTAL + NPTS(I)
+            total = total + npts(i)
 
-            IF ( NPTS(I) .GT. ROOM ) THEN
+            if ( npts(i) .gt. room ) then
 
-               CALL SETMSG ( 'Out of room in output arrays. Index of ' &
+               call setmsg ( 'Out of room in output arrays. Index of ' &
                //            'cutting half-plane is # out of #. ' &
                //            'Number of limb points collected so far ' &
                //            'is #. Available room is #.'             )
-               CALL ERRINT ( '#', I                                   )
-               CALL ERRINT ( '#', NCUTS                               )
-               CALL ERRINT ( '#', TOTAL                               )
-               CALL ERRINT ( '#', ROOM                                )
-               CALL SIGERR ( 'SPICE(OUTOFROOM)'                       )
-               CALL CHKOUT ( RNAME                                    )
-               RETURN
+               call errint ( '#', i                                   )
+               call errint ( '#', ncuts                               )
+               call errint ( '#', total                               )
+               call errint ( '#', room                                )
+               call sigerr ( 'SPICE(OUTOFROOM)'                       )
+               call chkout ( rname                                    )
+               return
 
-            END IF
+            end if
 
 !
 !           Transfer the limb points we found to the output limb point
@@ -3195,21 +3195,21 @@
 !           go. Store in each element of the output array the epoch
 !           associated with the target center.
 !
-            DO J = 1, NPTS(I)
+            do j = 1, npts(i)
 
-               CALL VEQU ( PNTBUF(1,J),       POINTS(1,TO) )
-               CALL VSUB ( PNTBUF(1,J), AXIS, TANGTS(1,TO) )
+               call vequ ( pntbuf(1,j),       points(1,to) )
+               call vsub ( pntbuf(1,j), axis, tangts(1,to) )
 
-               EPOCHS(TO) = TRGEPC
+               epochs(to) = trgepc
 
-               TO         = TO + 1
+               to         = to + 1
 
-            END DO
+            end do
 
-         END DO
+         end do
 
 
-      ELSE IF ( LOCCDE .EQ. ELLCOR ) THEN
+      else if ( loccde .eq. ellcor ) then
 !
 !        Aberration corrections are done for each cutting half plane.
 !        Corrections are performed for the intersections of the
@@ -3218,51 +3218,51 @@
 !        This locus is supported only for the "tangent" limb point
 !        method.
 !
-         IF ( LMBTYP .NE. TANGNT ) THEN
+         if ( lmbtyp .ne. tangnt ) then
 
-            CALL SETMSG ( 'Limb type <#> is not supported for the ' &
+            call setmsg ( 'Limb type <#> is not supported for the ' &
             //            '# aberration correction locus. Only the ' &
             //            'TANGENT limb type is supported for this ' &
             //            'locus.'                                  )
 
-            IF ( LMBTYP .EQ. GUIDED ) THEN
-               CALL ERRCH  ( '#',  'GUIDED' )
-            ELSE
-               CALL ERRINT ( '#',  LMBTYP )
-            END IF
+            if ( lmbtyp .eq. guided ) then
+               call errch  ( '#',  'GUIDED' )
+            else
+               call errint ( '#',  lmbtyp )
+            end if
 
-            CALL ERRCH  ( '#',  CORLOC             )
-            CALL SIGERR ( 'SPICE(BADLIMBLOCUSMIX)' )
-            CALL CHKOUT ( RNAME                    )
-            RETURN
+            call errch  ( '#',  corloc             )
+            call sigerr ( 'SPICE(BADLIMBLOCUSMIX)' )
+            call chkout ( rname                    )
+            return
 
-         END IF
+         end if
 
 !
 !        We need the state of the observer relative to the solar
 !        system barycenter. This state is expressed relative to
 !        an inertial reference frame. This state is computed once.
 !
-         CALL SPKSSB ( OBSCDE, ET, IREF, STOBS )
+         call spkssb ( obscde, et, iref, stobs )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         TO    = 1
-         ROOM  = MAXN
-         TOTAL = 0
+         to    = 1
+         room  = maxn
+         total = 0
 !
 !        Loop over the half planes, collecting limb points for
 !        each one.
 !
-         DO I = 1, NCUTS
+         do i = 1, ncuts
 
-            ROLL = ( I - 1 ) * ROLSTP
+            roll = ( i - 1 ) * rolstp
 
 
-            IF ( USELT ) THEN
+            if ( uselt ) then
 !
 !              We'll do an independent light time and stellar
 !              aberration correction for each half plane.
@@ -3270,72 +3270,72 @@
 !              Let NUMITR be the number of iterations we'll perform to
 !              compute the light time.
 !
-               IF ( USECN ) THEN
-                  NUMITR = MAXITR
-               ELSE
-                  NUMITR = 2
-               END IF
+               if ( usecn ) then
+                  numitr = maxitr
+               else
+                  numitr = 2
+               end if
 
-               J     = 0
-               LTERR = 1.D0
+               j     = 0
+               lterr = 1.d0
 
-               DO WHILE (       ( J     .LT. NUMITR ) &
-                          .AND. ( LTERR .GT. CNVLIM )  )
+               do while (       ( j     .lt. numitr ) &
+                          .and. ( lterr .gt. cnvlim )  )
 !
 !                 LT was set either prior to this loop or
 !                 during the previous loop iteration.
 !
-                  EPOCH  =  TOUCHD( ET + S*LT )
+                  epoch  =  touchd( et + s*lt )
 
-                  CALL SPKGPS ( TRGCDE, EPOCH,  IREF, &
-                                SSB,    SSBTRG, SSBLT )
+                  call spkgps ( trgcde, epoch,  iref, &
+                                ssb,    ssbtrg, ssblt )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 !
 !                 Compute the position of the target center relative to
 !                 the observer in the inertial frame.
 !
-                  CALL VSUB ( SSBTRG, STOBS, PTARG )
+                  call vsub ( ssbtrg, stobs, ptarg )
 
-                  IF ( USESTL ) THEN
+                  if ( usestl ) then
 !
 !                    Apply a stellar aberration correction to the
 !                    observer-target center vector.
 !
-                     IF ( J .EQ. 0 ) THEN
+                     if ( j .eq. 0 ) then
 !
 !                       On the first pass, we approximate the
 !                       correction by using the correction applicable
 !                       to the target center.
 !
-                        IF ( XMIT ) THEN
-                           CALL STLABX ( PTARG,  STOBS(4), STLPOS )
-                        ELSE
-                           CALL STELAB ( PTARG,  STOBS(4), STLPOS )
-                        END IF
+                        if ( xmit ) then
+                           call stlabx ( ptarg,  stobs(4), stlpos )
+                        else
+                           call stelab ( ptarg,  stobs(4), stlpos )
+                        end if
 
-                     ELSE
+                     else
 !
 !                       We apply the correction found for the previous
 !                       limb point estimate.
 !
-                        CALL VADD ( PTARG, STLOFF, STLPOS )
+                        call vadd ( ptarg, stloff, stlpos )
 
-                     END IF
+                     end if
 !
 !                    Set CORTRG with the vector corrected for
 !                    stellar aberration.
 !
-                     CALL VEQU ( STLPOS, CORTRG )
+                     call vequ ( stlpos, cortrg )
 
-                  ELSE
+                  else
 
-                     CALL VEQU ( PTARG,  CORTRG )
+                     call vequ ( ptarg,  cortrg )
 
-                  END IF
+                  end if
 !
 !                 CORTRG is inertially referenced and includes the
 !                 stellar aberration correction, if there is one. PTARG
@@ -3346,98 +3346,98 @@
 !                 the target body-fixed frame; negate the result. This
 !                 gives us the axis for the limb computation.
 !
-                  CALL PXFORM ( IREF, FIXREF, EPOCH, XFORM )
+                  call pxform ( iref, fixref, epoch, xform )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  CALL MXV    ( XFORM,  CORTRG, TMPVEC )
-                  CALL VMINUS ( TMPVEC,         AXIS   )
+                  call mxv    ( xform,  cortrg, tmpvec )
+                  call vminus ( tmpvec,         axis   )
 !
 !                 Rotate the reference vector about the axis by
 !                 the current angle to obtain the plane vector.
 !
-                  CALL VROTV ( REFVEC, AXIS, ROLL, PLNVEC )
+                  call vrotv ( refvec, axis, roll, plnvec )
 !
 !                 Find the limb, the limb center and semi-axes, and
 !                 limb plane's normal vector for the current viewing
 !                 geometry.
 !
-                  CALL EDLIMB ( SVRADI(1), SVRADI(2), SVRADI(3), &
-                                AXIS,      LIMB                 )
+                  call edlimb ( svradi(1), svradi(2), svradi(3), &
+                                axis,      limb                 )
 
-                  CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
+                  call el2cgv ( limb, center, smajor, sminor )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  CALL UCRSS ( SMAJOR, SMINOR, ENORML )
+                  call ucrss ( smajor, sminor, enorml )
 
 !
 !                 Make sure ENORML points into the same half-space as
 !                 AXIS.
 !
-                  IF ( VDOT( ENORML, AXIS ) .LT. 0.D0 ) THEN
+                  if ( vdot( enorml, axis ) .lt. 0.d0 ) then
 
-                     CALL VSCLIP ( -1.D0, ENORML )
+                     call vsclip ( -1.d0, enorml )
 
-                  END IF
+                  end if
 
 !
 !                 Let CUTNML be a vector normal to the current cutting
 !                 half-plane.
 !
-                  CALL UCRSS ( AXIS, PLNVEC, CUTNML )
+                  call ucrss ( axis, plnvec, cutnml )
 
 !                 The limb point we seek must lie in both the limb
 !                 plane and the cutting half-plane. Let EDIR be the
 !                 unit direction vector satisfying these constraints.
 !
-                  CALL UCRSS ( CUTNML, ENORML, EDIR )
+                  call ucrss ( cutnml, enorml, edir )
 
 
-                  IF ( VZERO(EDIR) ) THEN
+                  if ( vzero(edir) ) then
 
-                     CALL SETMSG ( 'Vector defining cutting half plane ' &
+                     call setmsg ( 'Vector defining cutting half plane ' &
                      //            'and ellipsoid limb normal vector ' &
                      //            'are linearly dependent. This error ' &
                      //            'occurred while computing the limb ' &
                      //            'point on the reference ellipsoid ' &
                      //            'in half plane #.'                  )
-                     CALL ERRINT ( '#',  I                             )
-                     CALL SIGERR ( 'SPICE(DEGENERATECASE)'             )
-                     CALL CHKOUT ( RNAME                               )
-                     RETURN
+                     call errint ( '#',  i                             )
+                     call sigerr ( 'SPICE(DEGENERATECASE)'             )
+                     call chkout ( rname                               )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Compute the ellipsoid limb point.
 !
-                  CALL SURFPT ( CENTER,    EDIR,      SVRADI(1), &
-                                SVRADI(2), SVRADI(3), EPOINT,    FND )
+                  call surfpt ( center,    edir,      svradi(1), &
+                                svradi(2), svradi(3), epoint,    fnd )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  IF ( .NOT. FND ) THEN
+                  if ( .not. fnd ) then
 
-                     CALL SETMSG ( 'Limb point not found on reference ' &
+                     call setmsg ( 'Limb point not found on reference ' &
                      //            'ellipsoid for cutting half plane ' &
                      //            'at index #. The point should ' &
                      //            'always be found.'                  )
-                     CALL ERRINT ( '#', I                              )
-                     CALL SIGERR ( 'SPICE(BUG)'                        )
-                     CALL CHKOUT ( RNAME                               )
-                     RETURN
+                     call errint ( '#', i                              )
+                     call sigerr ( 'SPICE(BUG)'                        )
+                     call chkout ( rname                               )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 In order to compute the next light time and stellar
@@ -3445,10 +3445,10 @@
 !                 referenced vector from the observer to the light-time
 !                 corrected limb point.
 !
-                  CALL MTXV ( XFORM,  EPOINT, IPOINT )
-                  CALL VADD ( IPOINT, PTARG,  ISRFVC )
+                  call mtxv ( xform,  epoint, ipoint )
+                  call vadd ( ipoint, ptarg,  isrfvc )
 
-                  IF ( USESTL ) THEN
+                  if ( usestl ) then
 !
 !                    We're correcting for stellar aberration. Another
 !                    loop iteration may occur. Prepare the stellar
@@ -3458,20 +3458,20 @@
 !                    frame and compute the stellar aberration
 !                    correction that applies to this vector.
 !
-                     IF ( XMIT ) THEN
-                        CALL STLABX ( ISRFVC, STOBS(4), STLPOS )
-                     ELSE
-                        CALL STELAB ( ISRFVC, STOBS(4), STLPOS )
-                     END IF
+                     if ( xmit ) then
+                        call stlabx ( isrfvc, stobs(4), stlpos )
+                     else
+                        call stelab ( isrfvc, stobs(4), stlpos )
+                     end if
 
-                     CALL VSUB ( STLPOS, ISRFVC, STLOFF )
+                     call vsub ( stlpos, isrfvc, stloff )
 
-                  END IF
+                  end if
 !
 !                 Compute the light time to the limb point.
 !
-                  PRVLT = LT
-                  LT    = TOUCHD(  VNORM(ISRFVC) / CLIGHT()  )
+                  prvlt = lt
+                  lt    = touchd(  vnorm(isrfvc) / clight()  )
 
 !
 !                 LTERR is the magnitude of the change between the
@@ -3479,12 +3479,12 @@
 !                 estimate, relative to the previous light time
 !                 corrected epoch.
 !
-                  LTERR = TOUCHD(    ABS( LT  - PRVLT      ) &
-                                   / MAX( 1.D0, ABS(EPOCH) )  )
+                  lterr = touchd(    abs( lt  - prvlt      ) &
+                                   / max( 1.d0, abs(epoch) )  )
 
-                  J     = J + 1
+                  j     = j + 1
 
-               END DO
+               end do
 !
 !              We now have the light time and the stellar aberration
 !              offset applicable to the limb point on the ellipsoid for
@@ -3493,12 +3493,12 @@
 !
 !              Compute the axis in the body-fixed frame.
 !
-               CALL MXV    ( XFORM,  CORTRG, TMPVEC )
-               CALL VMINUS ( TMPVEC, AXIS )
+               call mxv    ( xform,  cortrg, tmpvec )
+               call vminus ( tmpvec, axis )
 
-               EPOCH = ET + S*LT
+               epoch = et + s*lt
 
-            ELSE
+            else
 !
 !              This is the geometric case.
 !
@@ -3509,18 +3509,18 @@
 !              Compute the central axis, which is the common ray
 !              vertex.
 !
-               CALL VMINUS ( POS, AXIS )
+               call vminus ( pos, axis )
 
 !
 !              The target epoch matches the observer epoch.
 !
-               EPOCH = ET
+               epoch = et
 
 !
 !              EPOCH and AXIS are set. Reset the plane definition
 !              vector PLNVEC based on the new value of AXIS.
 !
-               CALL VROTV ( REFVEC, AXIS, ROLL, PLNVEC )
+               call vrotv ( refvec, axis, roll, plnvec )
 
 !
 !              We're ready to compute the limb point in the current
@@ -3531,144 +3531,144 @@
 !              limb plane's normal vector for the current viewing
 !              geometry.
 !
-               CALL EDLIMB ( SVRADI(1), SVRADI(2), SVRADI(3), &
-                             AXIS,      LIMB                 )
+               call edlimb ( svradi(1), svradi(2), svradi(3), &
+                             axis,      limb                 )
 
-               CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
+               call el2cgv ( limb, center, smajor, sminor )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               CALL UCRSS ( SMAJOR, SMINOR, ENORML )
+               call ucrss ( smajor, sminor, enorml )
 !
 !              Make sure ENORML points into the same half-space as
 !              AXIS.
 !
-               IF ( VDOT( ENORML, AXIS ) .LT. 0.D0 ) THEN
+               if ( vdot( enorml, axis ) .lt. 0.d0 ) then
 
-                  CALL VSCLIP ( -1.D0, ENORML )
+                  call vsclip ( -1.d0, enorml )
 
-               END IF
+               end if
 
 !
 !              Let CUTNML be a vector normal to the current cutting
 !              half-plane.
 !
-               CALL UCRSS ( AXIS, PLNVEC, CUTNML )
+               call ucrss ( axis, plnvec, cutnml )
 !
 !              The limb point we seek must lie in both the limb
 !              plane and the cutting half-plane. Let EDIR be the
 !              unit direction vector satisfying these constraints.
 !
-               CALL UCRSS ( CUTNML, ENORML, EDIR )
+               call ucrss ( cutnml, enorml, edir )
 
-               IF ( VZERO(EDIR) ) THEN
+               if ( vzero(edir) ) then
 
-                  CALL SETMSG ( 'Vector defining cutting half plane ' &
+                  call setmsg ( 'Vector defining cutting half plane ' &
                   //            'and ellipsoid limb normal vector ' &
                   //            'are linearly dependent. This ' &
                   //            'occurred while computing the limb ' &
                   //            'point on the reference ellipsoid ' &
                   //            'in half plane #.'                  )
-                  CALL ERRINT ( '#',  I                             )
-                  CALL SIGERR ( 'SPICE(DEGENERATECASE)'             )
-                  CALL CHKOUT ( RNAME                               )
-                  RETURN
+                  call errint ( '#',  i                             )
+                  call sigerr ( 'SPICE(DEGENERATECASE)'             )
+                  call chkout ( rname                               )
+                  return
 
-               END IF
+               end if
 !
 !              Compute the ellipsoid limb point.
 !
-               CALL SURFPT ( CENTER,    EDIR,      SVRADI(1), &
-                             SVRADI(2), SVRADI(3), EPOINT,    FND )
+               call surfpt ( center,    edir,      svradi(1), &
+                             svradi(2), svradi(3), epoint,    fnd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               IF ( .NOT. FND ) THEN
+               if ( .not. fnd ) then
 
-                  CALL SETMSG ( 'Limb point not found on reference ' &
+                  call setmsg ( 'Limb point not found on reference ' &
                   //            'ellipsoid for cutting half plane ' &
                   //            'at index #. The point should ' &
                   //            'always be found.'                  )
-                  CALL ERRINT ( '#', I                              )
-                  CALL SIGERR ( 'SPICE(BUG)'                        )
-                  CALL CHKOUT ( RNAME                               )
-                  RETURN
+                  call errint ( '#', i                              )
+                  call sigerr ( 'SPICE(BUG)'                        )
+                  call chkout ( rname                               )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 !
 !           Set the output point (there's exactly 1 in all cases) and
 !           the point count here. These values apply to the ellipsoid
 !           case. In the DSK case, we'll update the values when we
 !           know them.
 !
-            CALL VEQU ( EPOINT, PNTBUF(1,1) )
+            call vequ ( epoint, pntbuf(1,1) )
 
-            NPTS(I) = 1
+            npts(i) = 1
 
 
-            IF ( SHAPE .EQ. DSKSHP ) THEN
+            if ( shape .eq. dskshp ) then
 !
 !              Find the limb points on the target surface as modeled
 !              by DSK data. We'll use the axis and epoch we've
 !              determined from the ellipsoid approximation.
 !
-               CALL SCARDD ( 0, RESULT )
+               call scardd ( 0, result )
 !
 !              Note that the evaluation epoch for the surface is
 !              corrected for light time.
 !
-               CALL ZZTANGNT ( LMBCRV, 0.D0,   SHAPE, TRGCDE, &
-                               NSURF,  SRFLST, FXFCDE, EPOCH, &
-                               PLNVEC, AXIS,   SCHSTP, SOLTOL, &
-                               RESULT, PNTBUF                 )
+               call zztangnt ( lmbcrv, 0.d0,   shape, trgcde, &
+                               nsurf,  srflst, fxfcde, epoch, &
+                               plnvec, axis,   schstp, soltol, &
+                               result, pntbuf                 )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 !
 !              Update the limb point count for this cutting
 !              half-plane.
 !
-               NPTS(I) = CARDD( RESULT )
+               npts(i) = cardd( result )
 
 
-            ELSE IF ( SHAPE .NE. ELLSHP ) THEN
+            else if ( shape .ne. ellshp ) then
 
-               CALL SETMSG ( 'Backstop error: SHAPE = #.' )
-               CALL ERRINT ( '#', SHAPE                   )
-               CALL SIGERR ( 'SPICE(BUG)'                  )
-               CALL CHKOUT ( RNAME                         )
-               RETURN
+               call setmsg ( 'Backstop error: SHAPE = #.' )
+               call errint ( '#', shape                   )
+               call sigerr ( 'SPICE(BUG)'                  )
+               call chkout ( rname                         )
+               return
 
-            END IF
+            end if
 
 
-            TOTAL = TOTAL + NPTS(I)
+            total = total + npts(i)
 
-            IF ( NPTS(I) .GT. ROOM ) THEN
+            if ( npts(i) .gt. room ) then
 
-               CALL SETMSG ( 'Out of room in output arrays. Index of ' &
+               call setmsg ( 'Out of room in output arrays. Index of ' &
                //            'cutting half-plane is # out of #. ' &
                //            'Number of limb points collected so far ' &
                //            'is #. Available room is #.'             )
-               CALL ERRINT ( '#', I                                   )
-               CALL ERRINT ( '#', NCUTS                               )
-               CALL ERRINT ( '#', TOTAL                               )
-               CALL ERRINT ( '#', ROOM                                )
-               CALL SIGERR ( 'SPICE(OUTOFROOM)'                       )
-               CALL CHKOUT ( RNAME                                    )
-               RETURN
+               call errint ( '#', i                                   )
+               call errint ( '#', ncuts                               )
+               call errint ( '#', total                               )
+               call errint ( '#', room                                )
+               call sigerr ( 'SPICE(OUTOFROOM)'                       )
+               call chkout ( rname                                    )
+               return
 
-            END IF
+            end if
 
 !
 !           Transfer the limb points we found to the output limb
@@ -3676,33 +3676,33 @@
 !           array as we go. In this case, we set the elements of
 !           the output target epoch array as well.
 !
-            DO J = 1, NPTS(I)
+            do j = 1, npts(i)
 
-               CALL VEQU ( PNTBUF(1,J),       POINTS(1,TO) )
-               CALL VSUB ( PNTBUF(1,J), AXIS, TANGTS(1,TO) )
+               call vequ ( pntbuf(1,j),       points(1,to) )
+               call vsub ( pntbuf(1,j), axis, tangts(1,to) )
 
-               EPOCHS(TO) = EPOCH
+               epochs(to) = epoch
 
-               TO         = TO + 1
+               to         = to + 1
 
-            END DO
+            end do
 !
 !           We've found the limb points and tangent vectors
 !           for the Ith half-plane.
 !
-         END DO
+         end do
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Aberration correction locus # is not ' &
+         call setmsg ( 'Aberration correction locus # is not ' &
          //            'recognized.'                          )
-         CALL ERRCH  ( '#',  CORLOC                           )
-         CALL SIGERR ( 'SPICE(INVALIDLOCUS)'                  )
-         CALL CHKOUT ( RNAME                                  )
-         RETURN
+         call errch  ( '#',  corloc                           )
+         call sigerr ( 'SPICE(INVALIDLOCUS)'                  )
+         call chkout ( rname                                  )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

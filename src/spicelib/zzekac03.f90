@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAC03 ( EK, add class 3 column to segment )
 
-      SUBROUTINE ZZEKAC03 (  HANDLE,  SEGDSC,  COLDSC,  CVALS, &
-                             NLFLGS,  RCPTRS,  WKINDX  )
+      subroutine zzekac03 (  handle,  segdsc,  coldsc,  cvals, &
+                             nlflgs,  rcptrs,  wkindx  )
 
 ! $ Abstract
 !
@@ -18,22 +18,22 @@
 ! $ Declarations
 
 
-      INCLUDE  'ekbool.inc'
-      INCLUDE  'ekcnamsz.inc'
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'ekrecptr.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekbool.inc'
+      include  'ekcnamsz.inc'
+      include  'ekcoldsc.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'ekrecptr.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      CHARACTER*(*)         CVALS  ( * )
-      LOGICAL               NLFLGS ( * )
-      INTEGER               RCPTRS ( * )
-      INTEGER               WKINDX ( * )
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      character*(*)         cvals  ( * )
+      logical               nlflgs ( * )
+      integer               rcptrs ( * )
+      integer               wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -161,165 +161,165 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = CPSIZE )
+      integer               bufsiz
+      parameter           ( bufsiz = cpsize )
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
-      CHARACTER*(PGSIZC)    PAGE
+      character*(cnamsz)    column
+      character*(pgsizc)    page
 
-      INTEGER               ADRBUF ( BUFSIZ )
-      INTEGER               BUFPTR
-      INTEGER               CLASS
-      INTEGER               COLIDX
-      INTEGER               COLWID
-      INTEGER               DSCBAS
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               IDXTYP
-      INTEGER               P
-      INTEGER               P2
-      INTEGER               PBASE
-      INTEGER               POS
-      INTEGER               MBASE
-      INTEGER               N
-      INTEGER               NCHARS
-      INTEGER               NDATA
-      INTEGER               NLINKS
-      INTEGER               NNULL
-      INTEGER               NROWS
-      INTEGER               NULPTR
-      INTEGER               NWRITE
-      INTEGER               REMAIN
-      INTEGER               ROOM
-      INTEGER               STRLEN
-      INTEGER               TO
-      INTEGER               TREE
+      integer               adrbuf ( bufsiz )
+      integer               bufptr
+      integer               class
+      integer               colidx
+      integer               colwid
+      integer               dscbas
+      integer               from
+      integer               i
+      integer               idxtyp
+      integer               p
+      integer               p2
+      integer               pbase
+      integer               pos
+      integer               mbase
+      integer               n
+      integer               nchars
+      integer               ndata
+      integer               nlinks
+      integer               nnull
+      integer               nrows
+      integer               nulptr
+      integer               nwrite
+      integer               remain
+      integer               room
+      integer               strlen
+      integer               to
+      integer               tree
 
-      LOGICAL               FIXLEN
-      LOGICAL               INDEXD
-      LOGICAL               NULLOK
+      logical               fixlen
+      logical               indexd
+      logical               nullok
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKAC03' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKAC03' )
+      end if
 
 !
 !     Grab the column's attributes.  Initialize the maximum non-blank
 !     width of the column.
 !
-      CLASS  =  COLDSC ( CLSIDX )
-      IDXTYP =  COLDSC ( IXTIDX )
-      NULPTR =  COLDSC ( NFLIDX )
-      COLIDX =  COLDSC ( ORDIDX )
-      COLWID =  COLDSC ( LENIDX )
+      class  =  coldsc ( clsidx )
+      idxtyp =  coldsc ( ixtidx )
+      nulptr =  coldsc ( nflidx )
+      colidx =  coldsc ( ordidx )
+      colwid =  coldsc ( lenidx )
 
-      NULLOK =  NULPTR .NE. IFALSE
-      INDEXD =  IDXTYP .NE. IFALSE
-      FIXLEN =  COLWID .NE. IFALSE
+      nullok =  nulptr .ne. ifalse
+      indexd =  idxtyp .ne. ifalse
+      fixlen =  colwid .ne. ifalse
 
 !
 !     This column had better be class 3.
 !
-      IF ( CLASS .NE. 3 ) THEN
+      if ( class .ne. 3 ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Column class code # found in descriptor for ' // &
+         call setmsg ( 'Column class code # found in descriptor for ' // &
                        'column #.  Class should be 3.'                 )
-         CALL ERRINT ( '#', CLASS                                      )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'ZZEKAC03'                                      )
-         RETURN
+         call errint ( '#', class                                      )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'ZZEKAC03'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     If the column is indexed, the index type should be 1; we don't
 !     know how to create any other type of index.
 !
-      IF  (  INDEXD  .AND.  ( IDXTYP .NE. 1 )  ) THEN
+      if  (  indexd  .and.  ( idxtyp .ne. 1 )  ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Index type code # found in descriptor for '   // &
+         call setmsg ( 'Index type code # found in descriptor for '   // &
                        'column #.  Code should be 1.'                  )
-         CALL ERRINT ( '#', IDXTYP                                     )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(UNRECOGNIZEDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKAC03'                                      )
-         RETURN
+         call errint ( '#', idxtyp                                     )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(UNRECOGNIZEDTYPE)'                       )
+         call chkout ( 'ZZEKAC03'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Push the column's ordinal index on the stack.  This allows us
 !     to identify the column the addresses belong to.
 !
-      CALL ZZEKSPSH ( 1, COLIDX )
+      call zzekspsh ( 1, colidx )
 
 !
 !     Find the number of rows in the segment.
 !
-      NROWS   =  SEGDSC ( NRIDX )
+      nrows   =  segdsc ( nridx )
 
 !
 !     Count the number of strings to write.
 !
-      IF ( NULLOK ) THEN
+      if ( nullok ) then
 !
 !        Count the non-null column entries; these are the
 !        ones that will take up space.
 !
-         NNULL  =  0
-         NDATA  =  0
+         nnull  =  0
+         ndata  =  0
 
-         DO I = 1, NROWS
+         do i = 1, nrows
 
-            IF ( NLFLGS(I) ) THEN
-               NNULL  =  NNULL + 1
-            END IF
+            if ( nlflgs(i) ) then
+               nnull  =  nnull + 1
+            end if
 
-         END DO
+         end do
 
-         NDATA  =   NROWS  -  NNULL
+         ndata  =   nrows  -  nnull
 
-      ELSE
+      else
 
-         NDATA  =   NROWS
+         ndata  =   nrows
 
-      END IF
+      end if
 
 
-      IF ( NDATA .GT. 0 ) THEN
+      if ( ndata .gt. 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
 !
-         CALL ZZEKAPS ( HANDLE, SEGDSC, CHR, .FALSE., P, PBASE )
-         PAGE  =  ' '
+         call zzekaps ( handle, segdsc, chr, .false., p, pbase )
+         page  =  ' '
 
 !
 !        The link count starts out at zero.
 !
-         CALL PRTENC ( 0,  PAGE(CLCIDX:CLCIDX+ENCSIZ-1) )
+         call prtenc ( 0,  page(clcidx:clcidx+encsiz-1) )
 
-      END IF
+      end if
 
 !
 !     Write the input data out to the target file a page at a time.
@@ -338,25 +338,25 @@
 !     will be used to count the column entries written so far.
 !
 
-      REMAIN  =  NROWS
-      FROM    =  0
-      TO      =  1
-      BUFPTR  =  1
-      NWRITE  =  0
-      N       =  0
+      remain  =  nrows
+      from    =  0
+      to      =  1
+      bufptr  =  1
+      nwrite  =  0
+      n       =  0
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 !
 !        Examine a column entry.  Write it out if it's non-null.
 !
-         FROM  =  FROM   + 1
+         from  =  from   + 1
 
 
-         IF (  NULLOK  .AND.  ( NLFLGS(FROM) )  ) THEN
+         if (  nullok  .and.  ( nlflgs(from) )  ) then
 
-            ADRBUF(BUFPTR) =  NULL
+            adrbuf(bufptr) =  null
 
-         ELSE
+         else
 !
 !           Write out the current column entry.  The entry
 !           might span multiple pages.  However, we're guaranteed
@@ -366,153 +366,153 @@
 !           Update the non-blank width for the column each time we
 !           determine the length of an input string.
 !
-            IF ( FIXLEN ) THEN
-               STRLEN  =  MIN (  RTRIM( CVALS(FROM) ),  COLWID  )
-            ELSE
-               STRLEN  =  RTRIM( CVALS(FROM) )
-            END IF
+            if ( fixlen ) then
+               strlen  =  min (  rtrim( cvals(from) ),  colwid  )
+            else
+               strlen  =  rtrim( cvals(from) )
+            end if
 
-            ADRBUF(BUFPTR) =  TO  +  PBASE
-            POS            =  1
+            adrbuf(bufptr) =  to  +  pbase
+            pos            =  1
 
 !
 !           Start out with the string length.
 !
-            CALL PRTENC (  STRLEN,  PAGE(TO : TO+ENCSIZ-1)  )
+            call prtenc (  strlen,  page(to : to+encsiz-1)  )
 
-            N       =   N  +  ENCSIZ
-            TO      =   N  +  1
-            NCHARS  =   STRLEN
+            n       =   n  +  encsiz
+            to      =   n  +  1
+            nchars  =   strlen
 
 
-            DO WHILE ( NCHARS .GT. 0 )
+            do while ( nchars .gt. 0 )
 
-               ROOM  =  CPSIZE - N
+               room  =  cpsize - n
 
-               IF ( NCHARS .LE. ROOM ) THEN
+               if ( nchars .le. room ) then
 !
 !                 The remaining portion of the string will fit on the
 !                 current page.
 !
-                  PAGE(TO:TO+NCHARS-1) =  CVALS(FROM) (POS:POS+NCHARS-1)
-                  N                    =  N   +  NCHARS
-                  TO                   =  N   +  1
-                  NCHARS               =  0
+                  page(to:to+nchars-1) =  cvals(from) (pos:pos+nchars-1)
+                  n                    =  n   +  nchars
+                  to                   =  n   +  1
+                  nchars               =  0
 
 !
 !                 Add a link to the current page.
 !
 
-                  CALL PRTDEC ( PAGE(CLCIDX:CLCIDX+ENCSIZ-1),   NLINKS )
+                  call prtdec ( page(clcidx:clcidx+encsiz-1),   nlinks )
 
-                  CALL PRTENC ( NLINKS+1, PAGE(CLCIDX:CLCIDX+ENCSIZ-1) )
+                  call prtenc ( nlinks+1, page(clcidx:clcidx+encsiz-1) )
 
 
-               ELSE
+               else
 !
 !                 The string will have to be continued on another page.
 !                 Write out the first ROOM characters to the current
 !                 page first.
 !
-                  PAGE(TO:CPSIZE)  =  CVALS(FROM) (POS:POS+ROOM-1)
-                  POS              =  POS    + ROOM
-                  NCHARS           =  NCHARS - ROOM
+                  page(to:cpsize)  =  cvals(from) (pos:pos+room-1)
+                  pos              =  pos    + room
+                  nchars           =  nchars - room
 
 !
 !                 Add a link to the current page.
 !
-                  CALL PRTDEC ( PAGE(CLCIDX:CLCIDX+ENCSIZ-1),   NLINKS )
+                  call prtdec ( page(clcidx:clcidx+encsiz-1),   nlinks )
 
-                  CALL PRTENC ( NLINKS+1, PAGE(CLCIDX:CLCIDX+ENCSIZ-1) )
+                  call prtenc ( nlinks+1, page(clcidx:clcidx+encsiz-1) )
 
 !
 !                 Allocate another page.  Fill in the forward pointer
 !                 in the previous page.
 !
-                  CALL ZZEKAPS (  HANDLE,  SEGDSC,  CHR, &
-                                 .FALSE.,  P2,      PBASE )
+                  call zzekaps (  handle,  segdsc,  chr, &
+                                 .false.,  p2,      pbase )
 
-                  CALL PRTENC   ( P2,  PAGE(CFPIDX:CFPIDX+ENCSIZ-1) )
+                  call prtenc   ( p2,  page(cfpidx:cfpidx+encsiz-1) )
 
 !
 !                 Write out the full data page.  Get ready to write
 !                 to the new page.
 !
-                  CALL ZZEKPGWC ( HANDLE, P, PAGE  )
+                  call zzekpgwc ( handle, p, page  )
 
-                  P    =  P2
-                  PAGE = ' '
-                  CALL PRTENC ( 0,  PAGE(CLCIDX:CLCIDX+ENCSIZ-1) )
+                  p    =  p2
+                  page = ' '
+                  call prtenc ( 0,  page(clcidx:clcidx+encsiz-1) )
 
-                  N    =  0
-                  TO   =  1
+                  n    =  0
+                  to   =  1
 
-               END IF
+               end if
 
-            END DO
+            end do
 !
 !           We've written out a column entry.
 !
-            NWRITE  =  NWRITE + 1
+            nwrite  =  nwrite + 1
 
 
-         END IF
+         end if
 !
 !        We're done with the current column entry, null or not.
 !
 
-         IF ( NWRITE .LT. NDATA ) THEN
+         if ( nwrite .lt. ndata ) then
 !
 !           There is at least one more column entry to write.
 !           If there's not enough room on the current page to begin
 !           writing another column entry, write out the page and
 !           allocate another.
 !
-            ROOM  =  CPSIZE - N
+            room  =  cpsize - n
 
-            IF ( ROOM  .LT.  ( 1 + ENCSIZ )  ) THEN
+            if ( room  .lt.  ( 1 + encsiz )  ) then
 
-               CALL ZZEKPGWC ( HANDLE, P,      PAGE  )
-               CALL ZZEKAPS  ( HANDLE, SEGDSC, CHR, .FALSE., P, PBASE )
+               call zzekpgwc ( handle, p,      page  )
+               call zzekaps  ( handle, segdsc, chr, .false., p, pbase )
 
-               PAGE  =  ' '
-               CALL PRTENC ( 0,  PAGE(CLCIDX:CLCIDX+ENCSIZ-1) )
+               page  =  ' '
+               call prtenc ( 0,  page(clcidx:clcidx+encsiz-1) )
 
-               N     =  0
-               TO    =  1
+               n     =  0
+               to    =  1
 
-            END IF
+            end if
 
 
-         ELSE IF ( N .GT. 0 ) THEN
+         else if ( n .gt. 0 ) then
 !
 !           We've written the last of the non-null data to the current
 !           page.  Write out this page.
 !
-            CALL ZZEKPGWC ( HANDLE,  P,  PAGE  )
-            N  =  0
+            call zzekpgwc ( handle,  p,  page  )
+            n  =  0
 
-         END IF
-
-
-         REMAIN  =  REMAIN - 1
+         end if
 
 
-         IF (  ( BUFPTR .EQ. BUFSIZ ) .OR. ( REMAIN .EQ. 0 )  ) THEN
+         remain  =  remain - 1
+
+
+         if (  ( bufptr .eq. bufsiz ) .or. ( remain .eq. 0 )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.
 !
-            CALL ZZEKSPSH ( BUFPTR, ADRBUF )
-            BUFPTR  =  1
+            call zzekspsh ( bufptr, adrbuf )
+            bufptr  =  1
 
-         ELSE
+         else
 
-            BUFPTR  =  BUFPTR + 1
+            bufptr  =  bufptr + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If the column is supposed to have an index, now is the time to
@@ -522,29 +522,29 @@
 !     load this sorted copy of the record pointer array into a tree in
 !     one shot.
 !
-      IF ( INDEXD ) THEN
+      if ( indexd ) then
 
-         CALL ZZEKORDC ( CVALS,  NULLOK, NLFLGS, NROWS, WKINDX )
+         call zzekordc ( cvals,  nullok, nlflgs, nrows, wkindx )
 
-         DO I = 1, NROWS
-            WKINDX(I) =  RCPTRS( WKINDX(I) )
-         END DO
+         do i = 1, nrows
+            wkindx(i) =  rcptrs( wkindx(i) )
+         end do
 
-         CALL ZZEKTRIT ( HANDLE, TREE                )
-         CALL ZZEKTR1S ( HANDLE, TREE, NROWS, WKINDX )
+         call zzektrit ( handle, tree                )
+         call zzektr1s ( handle, tree, nrows, wkindx )
 
 !
 !        Update the segment's metadata to point to the index.  The
 !        pointer indicates the root page of the tree.
 !
-         MBASE   =  SEGDSC ( IMDIDX )
-         DSCBAS  =  MBASE  +  SDSCSZ  +  (COLIDX-1)*CDSCSZ
+         mbase   =  segdsc ( imdidx )
+         dscbas  =  mbase  +  sdscsz  +  (colidx-1)*cdscsz
 
-         CALL DASUDI ( HANDLE,  DSCBAS+IXPIDX,  DSCBAS+IXPIDX,  TREE )
+         call dasudi ( handle,  dscbas+ixpidx,  dscbas+ixpidx,  tree )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKAC03' )
-      RETURN
-      END
+      call chkout ( 'ZZEKAC03' )
+      return
+      end

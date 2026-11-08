@@ -1,6 +1,6 @@
 !$Procedure TTRANS ( Time transformation )
 
-      SUBROUTINE TTRANS ( FROM, TO, TVEC )
+      subroutine ttrans ( from, to, tvec )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      INTEGER               MXCOMP
-      PARAMETER           ( MXCOMP = 10 )
+      integer               mxcomp
+      parameter           ( mxcomp = 10 )
 
-      CHARACTER*(*)         FROM
-      CHARACTER*(*)         TO
-      DOUBLE PRECISION      TVEC ( MXCOMP )
+      character*(*)         from
+      character*(*)         to
+      double precision      tvec ( mxcomp )
 
 ! $ Brief_I/O
 !
@@ -453,31 +453,31 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
-      INTEGER               BSRCHC
-      INTEGER               LSTLEI
-      INTEGER               LSTLED
-      INTEGER               LSTLTI
+      integer               bsrchc
+      integer               lstlei
+      integer               lstled
+      integer               lstlti
 
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      UNITIM
+      double precision      j2000
+      double precision      spd
+      double precision      unitim
 
-      LOGICAL               ODD
-      LOGICAL               ELEMC
+      logical               odd
+      logical               elemc
 
 
 !
 !     Local (in-line) functions
 !
-      INTEGER               DIVBLE
-      INTEGER               DOY
-      INTEGER               DP0001
-      INTEGER               LDAYS
-      INTEGER               YDAYS
+      integer               divble
+      integer               doy
+      integer               dp0001
+      integer               ldays
+      integer               ydays
 
-      DOUBLE PRECISION      HMSSEC
+      double precision      hmssec
 
 !
 !     Local parameters
@@ -488,153 +488,153 @@
 !     We declare the variables that contain the number of days in
 !     400 years, 100 years, 4 years and 1 year.
 !
-      INTEGER               DP400Y
-      PARAMETER           ( DP400Y = 365*400 + 97 )
+      integer               dp400y
+      parameter           ( dp400y = 365*400 + 97 )
 
-      INTEGER               DP100Y
-      PARAMETER           ( DP100Y = 365*100 + 24 )
+      integer               dp100y
+      parameter           ( dp100y = 365*100 + 24 )
 
-      INTEGER               DP4Y
-      PARAMETER           ( DP4Y   = 365*4   + 1  )
+      integer               dp4y
+      parameter           ( dp4y   = 365*4   + 1  )
 
-      INTEGER               DP1Y
-      PARAMETER           ( DP1Y   = 365 )
+      integer               dp1y
+      parameter           ( dp1y   = 365 )
 
 
 !
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      INTEGER               JAN
-      PARAMETER           ( JAN = 31 )
+      integer               jan
+      parameter           ( jan = 31 )
 
-      INTEGER               FEB
-      PARAMETER           ( FEB = 28 )
+      integer               feb
+      parameter           ( feb = 28 )
 
-      INTEGER               MAR
-      PARAMETER           ( MAR = 31 )
+      integer               mar
+      parameter           ( mar = 31 )
 
-      INTEGER               APR
-      PARAMETER           ( APR = 30 )
+      integer               apr
+      parameter           ( apr = 30 )
 
-      INTEGER               MAY
-      PARAMETER           ( MAY = 31 )
+      integer               may
+      parameter           ( may = 31 )
 
-      INTEGER               JUN
-      PARAMETER           ( JUN = 30 )
+      integer               jun
+      parameter           ( jun = 30 )
 
-      INTEGER               JUL
-      PARAMETER           ( JUL = 31 )
+      integer               jul
+      parameter           ( jul = 31 )
 
-      INTEGER               AUG
-      PARAMETER           ( AUG = 31 )
+      integer               aug
+      parameter           ( aug = 31 )
 
-      INTEGER               SEP
-      PARAMETER           ( SEP = 30 )
+      integer               sep
+      parameter           ( sep = 30 )
 
-      INTEGER               OCT
-      PARAMETER           ( OCT = 31 )
+      integer               oct
+      parameter           ( oct = 31 )
 
-      INTEGER               NOV
-      PARAMETER           ( NOV = 30 )
+      integer               nov
+      parameter           ( nov = 30 )
 
-      INTEGER               DEC
-      PARAMETER           ( DEC = 31 )
+      integer               dec
+      parameter           ( dec = 31 )
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      INTEGER               JAN0
-      PARAMETER           ( JAN0 = 0  )
+      integer               jan0
+      parameter           ( jan0 = 0  )
 
-      INTEGER               FEB0
-      PARAMETER           ( FEB0 = JAN + JAN0 )
+      integer               feb0
+      parameter           ( feb0 = jan + jan0 )
 
-      INTEGER               MAR0
-      PARAMETER           ( MAR0 = FEB + FEB0 )
+      integer               mar0
+      parameter           ( mar0 = feb + feb0 )
 
-      INTEGER               APR0
-      PARAMETER           ( APR0 = MAR + MAR0 )
+      integer               apr0
+      parameter           ( apr0 = mar + mar0 )
 
-      INTEGER               MAY0
-      PARAMETER           ( MAY0 = APR + APR0 )
+      integer               may0
+      parameter           ( may0 = apr + apr0 )
 
-      INTEGER               JUN0
-      PARAMETER           ( JUN0 = MAY + MAY0 )
+      integer               jun0
+      parameter           ( jun0 = may + may0 )
 
-      INTEGER               JUL0
-      PARAMETER           ( JUL0 = JUN + JUN0 )
+      integer               jul0
+      parameter           ( jul0 = jun + jun0 )
 
-      INTEGER               AUG0
-      PARAMETER           ( AUG0 = JUL + JUL0 )
+      integer               aug0
+      parameter           ( aug0 = jul + jul0 )
 
-      INTEGER               SEP0
-      PARAMETER           ( SEP0 = AUG + AUG0 )
+      integer               sep0
+      parameter           ( sep0 = aug + aug0 )
 
-      INTEGER               OCT0
-      PARAMETER           ( OCT0 = SEP + SEP0 )
+      integer               oct0
+      parameter           ( oct0 = sep + sep0 )
 
-      INTEGER               NOV0
-      PARAMETER           ( NOV0 = OCT + OCT0 )
+      integer               nov0
+      parameter           ( nov0 = oct + oct0 )
 
-      INTEGER               DEC0
-      PARAMETER           ( DEC0 = NOV + NOV0 )
+      integer               dec0
+      parameter           ( dec0 = nov + nov0 )
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      INTEGER               JANL0
-      PARAMETER           ( JANL0 = JAN0  )
+      integer               janl0
+      parameter           ( janl0 = jan0  )
 
-      INTEGER               FEBL0
-      PARAMETER           ( FEBL0 = FEB0 )
+      integer               febl0
+      parameter           ( febl0 = feb0 )
 
-      INTEGER               MARL0
-      PARAMETER           ( MARL0 = MAR0 + 1 )
+      integer               marl0
+      parameter           ( marl0 = mar0 + 1 )
 
-      INTEGER               APRL0
-      PARAMETER           ( APRL0 = APR0 + 1 )
+      integer               aprl0
+      parameter           ( aprl0 = apr0 + 1 )
 
-      INTEGER               MAYL0
-      PARAMETER           ( MAYL0 = MAY0 + 1 )
+      integer               mayl0
+      parameter           ( mayl0 = may0 + 1 )
 
-      INTEGER               JUNL0
-      PARAMETER           ( JUNL0 = JUN0 + 1 )
+      integer               junl0
+      parameter           ( junl0 = jun0 + 1 )
 
-      INTEGER               JULL0
-      PARAMETER           ( JULL0 = JUL0 + 1 )
+      integer               jull0
+      parameter           ( jull0 = jul0 + 1 )
 
-      INTEGER               AUGL0
-      PARAMETER           ( AUGL0 = AUG0 + 1 )
+      integer               augl0
+      parameter           ( augl0 = aug0 + 1 )
 
-      INTEGER               SEPL0
-      PARAMETER           ( SEPL0 = SEP0 + 1 )
+      integer               sepl0
+      parameter           ( sepl0 = sep0 + 1 )
 
-      INTEGER               OCTL0
-      PARAMETER           ( OCTL0 = OCT0 + 1 )
+      integer               octl0
+      parameter           ( octl0 = oct0 + 1 )
 
-      INTEGER               NOVL0
-      PARAMETER           ( NOVL0 = NOV0 + 1 )
+      integer               novl0
+      parameter           ( novl0 = nov0 + 1 )
 
-      INTEGER               DECL0
-      PARAMETER           ( DECL0 = DEC0 + 1 )
+      integer               decl0
+      parameter           ( decl0 = dec0 + 1 )
 
 !
 !     MAXLP is the maximum number of leap seconds that can be
 !     stored internally.   The value of 140 should be sufficient
 !     to store leap seconds through the year 2100.
 !
-      INTEGER               MAXLP
-      PARAMETER           ( MAXLP = 140 )
+      integer               maxlp
+      parameter           ( maxlp = 140 )
 
 !
 !     MAXVAR is the number of kernel pool variables required by this
 !     routine.
 !
-      INTEGER               MAXVAR
-      PARAMETER           ( MAXVAR = 1 )
+      integer               maxvar
+      parameter           ( maxvar = 1 )
 
 !
 !
@@ -664,199 +664,199 @@
 !     YWDF
 !
 
-      INTEGER               DAYSEC
-      PARAMETER           ( DAYSEC = 1 )
+      integer               daysec
+      parameter           ( daysec = 1 )
 
-      INTEGER               DAYP2
-      PARAMETER           ( DAYP2 = DAYSEC + 1 )
+      integer               dayp2
+      parameter           ( dayp2 = daysec + 1 )
 
-      INTEGER               ET
-      PARAMETER           ( ET     = DAYP2 + 1 )
+      integer               et
+      parameter           ( et     = dayp2 + 1 )
 
-      INTEGER               FRML
-      PARAMETER           ( FRML = ET     + 1 )
+      integer               frml
+      parameter           ( frml = et     + 1 )
 
-      INTEGER               JDTDB
-      PARAMETER           ( JDTDB  = FRML + 1 )
+      integer               jdtdb
+      parameter           ( jdtdb  = frml + 1 )
 
-      INTEGER               JDTDT
-      PARAMETER           ( JDTDT  = JDTDB  + 1 )
+      integer               jdtdt
+      parameter           ( jdtdt  = jdtdb  + 1 )
 
-      INTEGER               JDUTC
-      PARAMETER           ( JDUTC  = JDTDT  + 1 )
+      integer               jdutc
+      parameter           ( jdutc  = jdtdt  + 1 )
 
-      INTEGER               JED
-      PARAMETER           ( JED    = JDUTC  + 1 )
+      integer               jed
+      parameter           ( jed    = jdutc  + 1 )
 
-      INTEGER               TTAI
-      PARAMETER           ( TTAI   = JED    + 1 )
+      integer               ttai
+      parameter           ( ttai   = jed    + 1 )
 
-      INTEGER               TDB
-      PARAMETER           ( TDB    = TTAI   + 1 )
+      integer               tdb
+      parameter           ( tdb    = ttai   + 1 )
 
-      INTEGER               TDT
-      PARAMETER           ( TDT    = TDB    + 1 )
+      integer               tdt
+      parameter           ( tdt    = tdb    + 1 )
 
-      INTEGER               YD
-      PARAMETER           ( YD     = TDT    + 1 )
+      integer               yd
+      parameter           ( yd     = tdt    + 1 )
 
-      INTEGER               YDD
-      PARAMETER           ( YDD    = YD     + 1 )
+      integer               ydd
+      parameter           ( ydd    = yd     + 1 )
 
-      INTEGER               YDDF
-      PARAMETER           ( YDDF   = YDD    + 1 )
+      integer               yddf
+      parameter           ( yddf   = ydd    + 1 )
 
-      INTEGER               YDF
-      PARAMETER           ( YDF    = YDDF   + 1 )
+      integer               ydf
+      parameter           ( ydf    = yddf   + 1 )
 
-      INTEGER               YMD
-      PARAMETER           ( YMD    = YDF    + 1 )
+      integer               ymd
+      parameter           ( ymd    = ydf    + 1 )
 
-      INTEGER               YMDF
-      PARAMETER           ( YMDF   = YMD    + 1 )
+      integer               ymdf
+      parameter           ( ymdf   = ymd    + 1 )
 
-      INTEGER               YMWD
-      PARAMETER           ( YMWD   = YMDF   + 1 )
+      integer               ymwd
+      parameter           ( ymwd   = ymdf   + 1 )
 
-      INTEGER               YMWDF
-      PARAMETER           ( YMWDF  = YMWD   + 1 )
+      integer               ymwdf
+      parameter           ( ymwdf  = ymwd   + 1 )
 
-      INTEGER               YWD
-      PARAMETER           ( YWD    = YMWDF  + 1 )
+      integer               ywd
+      parameter           ( ywd    = ymwdf  + 1 )
 
-      INTEGER               YWDF
-      PARAMETER           ( YWDF   = YWD    + 1 )
+      integer               ywdf
+      parameter           ( ywdf   = ywd    + 1 )
 
-      INTEGER               NREC
-      PARAMETER           ( NREC   = YWDF )
+      integer               nrec
+      parameter           ( nrec   = ywdf )
 !
 !     The following parameters just make the code seem a bit
 !     more natural.
 !
-      LOGICAL               NO
-      PARAMETER           ( NO  = .FALSE. )
+      logical               no
+      parameter           ( no  = .false. )
 
-      LOGICAL               YES
-      PARAMETER           ( YES = .TRUE. )
+      logical               yes
+      parameter           ( yes = .true. )
 
 !
 !     Local variables
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
 
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN =  8 )
+      integer               typlen
+      parameter           ( typlen =  8 )
 
-      CHARACTER*(TYPLEN)    UNIFRM (LBCELL : NREC )
+      character*(typlen)    unifrm (lbcell : nrec )
 
-      CHARACTER*(TYPLEN)    RECOG   ( NREC )
-      INTEGER               PARSED  ( NREC )
-      LOGICAL               NEEDY   ( NREC )
-      LOGICAL               FORML   ( NREC )
-      INTEGER               ORDVEC  ( NREC )
+      character*(typlen)    recog   ( nrec )
+      integer               parsed  ( nrec )
+      logical               needy   ( nrec )
+      logical               forml   ( nrec )
+      integer               ordvec  ( nrec )
 
-      CHARACTER*(32)        REST
-      CHARACTER*(32)        MYFROM
-      CHARACTER*(32)        MYTO
-      CHARACTER*(32)        VARS   ( MAXVAR )
+      character*(32)        rest
+      character*(32)        myfrom
+      character*(32)        myto
+      character*(32)        vars   ( maxvar )
 
-      DOUBLE PRECISION      DAYDP
-      DOUBLE PRECISION      DAYLEN
-      DOUBLE PRECISION      DP2000
-      DOUBLE PRECISION      DT
-      DOUBLE PRECISION      EXSECS
-      DOUBLE PRECISION      FORMAL
-      DOUBLE PRECISION      FRAC
-      DOUBLE PRECISION      HALFD
-      DOUBLE PRECISION      HOURS
-      DOUBLE PRECISION      JD1101
-      DOUBLE PRECISION      JDSECS
-      DOUBLE PRECISION      LASTDT
-      DOUBLE PRECISION      MINS
-      DOUBLE PRECISION      SECS
-      DOUBLE PRECISION      SECSPD
-      DOUBLE PRECISION      TAI
-      DOUBLE PRECISION      TAITAB ( 2*MAXLP )
-      DOUBLE PRECISION      TEMPD
-      DOUBLE PRECISION      TSECS
+      double precision      daydp
+      double precision      daylen
+      double precision      dp2000
+      double precision      dt
+      double precision      exsecs
+      double precision      formal
+      double precision      frac
+      double precision      halfd
+      double precision      hours
+      double precision      jd1101
+      double precision      jdsecs
+      double precision      lastdt
+      double precision      mins
+      double precision      secs
+      double precision      secspd
+      double precision      tai
+      double precision      taitab ( 2*maxlp )
+      double precision      tempd
+      double precision      tsecs
 
-      INTEGER               DAY
-      INTEGER               DAYNUM
-      INTEGER               DAYPTR
-      INTEGER               DAYTAB ( 2*MAXLP )
-      INTEGER               DN2000
-      INTEGER               DOFFST
-      INTEGER               DOFYR
-      INTEGER               DPSUN
-      INTEGER               DYEAR
-      INTEGER               FMDAY
-      INTEGER               FYRDAY
-      INTEGER               I
-      INTEGER               MONTH
-      INTEGER               NREF
-      INTEGER               OFFSET
-      INTEGER               PFROM
-      INTEGER               PTO
-      INTEGER               QINT
-      INTEGER               REFPTR
-      INTEGER               REM
-      INTEGER               SUNDAY
-      INTEGER               TAIPTR
-      INTEGER               TEMPI
-      INTEGER               USRCTR ( CTRSIZ )
-      INTEGER               WEEK
-      INTEGER               WKDAY
-      INTEGER               YEAR
-      INTEGER               YR1
-      INTEGER               YR100
-      INTEGER               YR4
-      INTEGER               YR400
+      integer               day
+      integer               daynum
+      integer               dayptr
+      integer               daytab ( 2*maxlp )
+      integer               dn2000
+      integer               doffst
+      integer               dofyr
+      integer               dpsun
+      integer               dyear
+      integer               fmday
+      integer               fyrday
+      integer               i
+      integer               month
+      integer               nref
+      integer               offset
+      integer               pfrom
+      integer               pto
+      integer               qint
+      integer               refptr
+      integer               rem
+      integer               sunday
+      integer               taiptr
+      integer               tempi
+      integer               usrctr ( ctrsiz )
+      integer               week
+      integer               wkday
+      integer               year
+      integer               yr1
+      integer               yr100
+      integer               yr4
+      integer               yr400
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               NODATA
-      LOGICAL               UPDATE
+      logical               first
+      logical               found
+      logical               nodata
+      logical               update
 
 !
 !     The array EXTRA contains the number of many additional days that
 !     appear before the first of a month during a leap year (as opposed
 !     to a non-leap year).
 !
-      INTEGER               EXTRA  ( 12 )
+      integer               extra  ( 12 )
 
-      INTEGER               DPBEGL ( 12 )
+      integer               dpbegl ( 12 )
 
 !
 !     DPJAN0(I) gives the number of days that occur before the I'th
 !     month of a normal year.
 !
-      INTEGER               DPJAN0 ( 12 )
+      integer               dpjan0 ( 12 )
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
-      DATA                  EXTRA   /  0,     0,     1,     1, &
+      data                  extra   /  0,     0,     1,     1, &
                                        1,     1,     1,     1, &
                                        1,     1,     1,     1    /
 
-      DATA                  DPJAN0  /  JAN0,  FEB0,  MAR0,  APR0, &
-                                       MAY0,  JUN0,  JUL0,  AUG0, &
-                                       SEP0,  OCT0,  NOV0,  DEC0 /
+      data                  dpjan0  /  jan0,  feb0,  mar0,  apr0, &
+                                       may0,  jun0,  jul0,  aug0, &
+                                       sep0,  oct0,  nov0,  dec0 /
 
-      DATA                  DPBEGL  /  JANL0, FEBL0, MARL0, APRL0, &
-                                       MAYL0, JUNL0, JULL0, AUGL0, &
-                                       SEPL0, OCTL0, NOVL0, DECL0 /
+      data                  dpbegl  /  janl0, febl0, marl0, aprl0, &
+                                       mayl0, junl0, jull0, augl0, &
+                                       sepl0, octl0, novl0, decl0 /
 
-      DATA                  NODATA  / .TRUE. /
+      data                  nodata  / .true. /
 
 
 !
@@ -865,22 +865,22 @@
 !     The number of days elapsed since Jan 1, of year 1 A.D. to
 !     Jan 1 of YEAR is given by:
 !
-      YDAYS(YEAR) = 365*(YEAR-1) &
-                  +    ((YEAR-1)/4) &
-                  -    ((YEAR-1)/100) &
-                  +    ((YEAR-1)/400)
+      ydays(year) = 365*(year-1) &
+                  +    ((year-1)/4) &
+                  -    ((year-1)/100) &
+                  +    ((year-1)/400)
 
 !
 !     Return 1 if YEAR is divisible by N, otherwise return 0.
 !
-      DIVBLE(YEAR,I) = MAX ( 0, 1 + ((IABS(YEAR)/I)*I) - IABS(YEAR) )
+      divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
 
 !
 !     The number of leap days in a year is given by:
 !
-      LDAYS(YEAR) = DIVBLE( YEAR, 4   ) &
-                  - DIVBLE( YEAR, 100 ) &
-                  + DIVBLE( YEAR, 400 )
+      ldays(year) = divble( year, 4   ) &
+                  - divble( year, 100 ) &
+                  + divble( year, 400 )
 
 !
 !     To compute the day of the year we
@@ -892,16 +892,16 @@
 !
 !        add on the number of days into the month
 !
-      DOY(YEAR,MONTH,DAY) = DPJAN0 ( MONTH ) &
-                          + EXTRA  ( MONTH ) * LDAYS(YEAR) &
-                          + DAY
+      doy(year,month,day) = dpjan0 ( month ) &
+                          + extra  ( month ) * ldays(year) &
+                          + day
 
 
 !
 !     The number of days since 1 Jan 1 A.D. is given by:
 !
-      DP0001(YEAR,MONTH,DAY) = YDAYS(YEAR) &
-                             + DOY  (YEAR, MONTH, DAY) &
+      dp0001(year,month,day) = ydays(year) &
+                             + doy  (year, month, day) &
                              - 1
 
 
@@ -909,41 +909,41 @@
 !     The number of seconds represented by HOURS hours MINS minutes
 !     and SECS seconds.
 !
-      HMSSEC ( HOURS, MINS, SECS ) = HOURS * 3600.0D0 &
-                                   + MINS  *   60.0D0 &
-                                   + SECS
+      hmssec ( hours, mins, secs ) = hours * 3600.0d0 &
+                                   + mins  *   60.0d0 &
+                                   + secs
 
 
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'TTRANS' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'TTRANS' )
+      end if
 
 !
 !     The first time any of the entry points are called we
 !     must set up the "watcher" for the kernel pool variables
 !     that will be needed by this routine.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST   = .FALSE.
+         first   = .false.
 
-         SECSPD  = SPD()
-         HALFD   = SPD() / 2.0D0
+         secspd  = spd()
+         halfd   = spd() / 2.0d0
 
-         DN2000  = DP0001 ( 2000, 1, 1 )
-         SUNDAY  = DP0001 ( 1991, 1, 6 )
+         dn2000  = dp0001 ( 2000, 1, 1 )
+         sunday  = dp0001 ( 1991, 1, 6 )
 
-         JD1101  = J2000() - DBLE(DN2000) - 0.5D0
+         jd1101  = j2000() - dble(dn2000) - 0.5d0
 
 !
 !        Initialize the list of Uniform time systems.
 !
-         CALL SSIZEC ( NREC, UNIFRM )
+         call ssizec ( nrec, unifrm )
 
 !
 !        Set up the set of recognized time vectors.
@@ -976,177 +976,177 @@
 !                the time system has a year.  NEEDY(I) = NO means
 !                it doesn't
 !
-         RECOG ( 01 ) = 'DAYSEC '
-         PARSED( 01 ) =  DAYSEC
-         FORML ( 01 ) =  NO
-         NEEDY ( 01 ) =  NO
+         recog ( 01 ) = 'DAYSEC '
+         parsed( 01 ) =  daysec
+         forml ( 01 ) =  no
+         needy ( 01 ) =  no
 
-         RECOG ( 02 ) = 'DP2000 '
-         PARSED( 02 ) =  DAYP2
-         FORML ( 02 ) =  NO
-         NEEDY ( 02 ) =  NO
+         recog ( 02 ) = 'DP2000 '
+         parsed( 02 ) =  dayp2
+         forml ( 02 ) =  no
+         needy ( 02 ) =  no
 
-         RECOG ( 03 ) = 'ET '
-         PARSED( 03 ) =  ET
-         FORML ( 03 ) =  NO
-         NEEDY ( 03 ) =  NO
+         recog ( 03 ) = 'ET '
+         parsed( 03 ) =  et
+         forml ( 03 ) =  no
+         needy ( 03 ) =  no
 
-         CALL INSRTC ( 'ET', UNIFRM )
+         call insrtc ( 'ET', unifrm )
 
-         RECOG ( 04 ) = 'FORMAL '
-         PARSED( 04 ) =  FRML
-         FORML ( 04 ) =  YES
-         NEEDY ( 04 ) =  NO
+         recog ( 04 ) = 'FORMAL '
+         parsed( 04 ) =  frml
+         forml ( 04 ) =  yes
+         needy ( 04 ) =  no
 
-         RECOG ( 05 ) = 'JDTDB '
-         PARSED( 05 ) =  JDTDB
-         FORML ( 05 ) =  NO
-         NEEDY ( 05 ) =  NO
+         recog ( 05 ) = 'JDTDB '
+         parsed( 05 ) =  jdtdb
+         forml ( 05 ) =  no
+         needy ( 05 ) =  no
 
-         CALL INSRTC ( 'JDTDB', UNIFRM )
+         call insrtc ( 'JDTDB', unifrm )
 
-         RECOG ( 06 ) = 'JDTDT '
-         PARSED( 06 ) =  JDTDT
-         FORML ( 06 ) =  NO
-         NEEDY ( 06 ) =  NO
+         recog ( 06 ) = 'JDTDT '
+         parsed( 06 ) =  jdtdt
+         forml ( 06 ) =  no
+         needy ( 06 ) =  no
 
-         CALL INSRTC ( 'JDTDT', UNIFRM )
+         call insrtc ( 'JDTDT', unifrm )
 
-         RECOG ( 07 ) = 'JDUTC '
-         PARSED( 07 ) =  JDUTC
-         FORML ( 07 ) =  YES
-         NEEDY ( 07 ) =  NO
+         recog ( 07 ) = 'JDUTC '
+         parsed( 07 ) =  jdutc
+         forml ( 07 ) =  yes
+         needy ( 07 ) =  no
 
-         RECOG ( 08 ) = 'JED '
-         PARSED( 08 ) =  JED
-         FORML ( 08 ) =  NO
-         NEEDY ( 08 ) =  NO
+         recog ( 08 ) = 'JED '
+         parsed( 08 ) =  jed
+         forml ( 08 ) =  no
+         needy ( 08 ) =  no
 
-         CALL INSRTC ( 'JED', UNIFRM )
+         call insrtc ( 'JED', unifrm )
 
-         RECOG ( 09 ) = 'TAI '
-         PARSED( 09 ) =  TTAI
-         FORML ( 09 ) =  NO
-         NEEDY ( 09 ) =  NO
+         recog ( 09 ) = 'TAI '
+         parsed( 09 ) =  ttai
+         forml ( 09 ) =  no
+         needy ( 09 ) =  no
 
-         CALL INSRTC ( 'TAI', UNIFRM )
+         call insrtc ( 'TAI', unifrm )
 
-         RECOG ( 10 ) = 'TDB '
-         PARSED( 10 ) =  TDB
-         FORML ( 10 ) =  NO
-         NEEDY ( 10 ) =  NO
+         recog ( 10 ) = 'TDB '
+         parsed( 10 ) =  tdb
+         forml ( 10 ) =  no
+         needy ( 10 ) =  no
 
-         CALL INSRTC ( 'TDB', UNIFRM )
+         call insrtc ( 'TDB', unifrm )
 
-         RECOG ( 11 ) = 'TDT '
-         PARSED( 11 ) =  TDT
-         FORML ( 11 ) =  NO
-         NEEDY ( 11 ) =  NO
+         recog ( 11 ) = 'TDT '
+         parsed( 11 ) =  tdt
+         forml ( 11 ) =  no
+         needy ( 11 ) =  no
 
-         CALL INSRTC ( 'TDT', UNIFRM )
+         call insrtc ( 'TDT', unifrm )
 
-         RECOG ( 12 ) = 'YD '
-         PARSED( 12 ) =  YD
-         FORML ( 12 ) =  NO
-         NEEDY ( 12 ) =  YES
+         recog ( 12 ) = 'YD '
+         parsed( 12 ) =  yd
+         forml ( 12 ) =  no
+         needy ( 12 ) =  yes
 
-         RECOG ( 13 ) = 'YD.D '
-         PARSED( 13 ) =  YDD
-         FORML ( 13 ) =  NO
-         NEEDY ( 13 ) =  YES
+         recog ( 13 ) = 'YD.D '
+         parsed( 13 ) =  ydd
+         forml ( 13 ) =  no
+         needy ( 13 ) =  yes
 
-         RECOG ( 14 ) = 'YD.DF '
-         PARSED( 14 ) =  YDDF
-         FORML ( 14 ) =  YES
-         NEEDY ( 14 ) =  YES
+         recog ( 14 ) = 'YD.DF '
+         parsed( 14 ) =  yddf
+         forml ( 14 ) =  yes
+         needy ( 14 ) =  yes
 
-         RECOG ( 15 ) = 'YDF '
-         PARSED( 15 ) =  YDF
-         FORML ( 15 ) =  YES
-         NEEDY ( 15 ) =  YES
+         recog ( 15 ) = 'YDF '
+         parsed( 15 ) =  ydf
+         forml ( 15 ) =  yes
+         needy ( 15 ) =  yes
 
-         RECOG ( 16 ) = 'YMD '
-         PARSED( 16 ) =  YMD
-         FORML ( 16 ) =  NO
-         NEEDY ( 16 ) =  YES
+         recog ( 16 ) = 'YMD '
+         parsed( 16 ) =  ymd
+         forml ( 16 ) =  no
+         needy ( 16 ) =  yes
 
-         RECOG ( 17 ) = 'YMDF '
-         PARSED( 17 ) =  YMDF
-         FORML ( 17 ) =  YES
-         NEEDY ( 17 ) =  YES
+         recog ( 17 ) = 'YMDF '
+         parsed( 17 ) =  ymdf
+         forml ( 17 ) =  yes
+         needy ( 17 ) =  yes
 
-         RECOG ( 18 ) = 'YMWD '
-         PARSED( 18 ) =  YMWD
-         FORML ( 18 ) =  NO
-         NEEDY ( 18 ) =  YES
+         recog ( 18 ) = 'YMWD '
+         parsed( 18 ) =  ymwd
+         forml ( 18 ) =  no
+         needy ( 18 ) =  yes
 
-         RECOG ( 19 ) = 'YMWDF '
-         PARSED( 19 ) =  YMWDF
-         FORML ( 19 ) =  YES
-         NEEDY ( 19 ) =  YES
+         recog ( 19 ) = 'YMWDF '
+         parsed( 19 ) =  ymwdf
+         forml ( 19 ) =  yes
+         needy ( 19 ) =  yes
 
-         RECOG ( 20 ) = 'YWD '
-         PARSED( 20 ) =  YWD
-         FORML ( 20 ) =  NO
-         NEEDY ( 20 ) =  YES
+         recog ( 20 ) = 'YWD '
+         parsed( 20 ) =  ywd
+         forml ( 20 ) =  no
+         needy ( 20 ) =  yes
 
-         RECOG ( 21 ) = 'YWDF '
-         PARSED( 21 ) =  YWDF
-         FORML ( 21 ) =  YES
-         NEEDY ( 21 ) =  YES
+         recog ( 21 ) = 'YWDF '
+         parsed( 21 ) =  ywdf
+         forml ( 21 ) =  yes
+         needy ( 21 ) =  yes
 
-         CALL ORDERC ( RECOG,  NREC, ORDVEC )
-         CALL REORDC ( ORDVEC, NREC, RECOG  )
-         CALL REORDI ( ORDVEC, NREC, PARSED )
-         CALL REORDL ( ORDVEC, NREC, FORML  )
-         CALL REORDL ( ORDVEC, NREC, NEEDY  )
+         call orderc ( recog,  nrec, ordvec )
+         call reordc ( ordvec, nrec, recog  )
+         call reordi ( ordvec, nrec, parsed )
+         call reordl ( ordvec, nrec, forml  )
+         call reordl ( ordvec, nrec, needy  )
 
 !
 !        Initialize the local POOL counter to user value.
 !
-         CALL ZZCTRUIN( USRCTR )
+         call zzctruin( usrctr )
 
 !
 !        Set up the kernel pool watchers
 !
-         VARS(1) = 'DELTET/DELTA_AT'
+         vars(1) = 'DELTET/DELTA_AT'
 
-         CALL SWPOOL ( 'TTRANS', 1, VARS )
+         call swpool ( 'TTRANS', 1, vars )
 
-      END IF
+      end if
 
 !
 !     Check to see if any of the kernel items required by this
 !     routine have been updated since the last call to this
 !     entry point.
 !
-      CALL ZZCVPOOL ( 'TTRANS', USRCTR, UPDATE )
+      call zzcvpool ( 'TTRANS', usrctr, update )
 
-      IF ( UPDATE .OR. NODATA ) THEN
+      if ( update .or. nodata ) then
 !
 !        We load the TAI-UTC offsets and formal leapsecond epochs
 !        into the TAITAB.  (We will modify this array in a minute).
 !
-         CALL GDPOOL ( 'DELTET/DELTA_AT',  1,       2*MAXLP, &
-                       NREF,               TAITAB,  FOUND    )
+         call gdpool ( 'DELTET/DELTA_AT',  1,       2*maxlp, &
+                       nref,               taitab,  found    )
 
 !
 !        Make sure all of the requested data was there.
 !
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            CALL SETMSG ( 'The variable that points to the '          // &
+            call setmsg ( 'The variable that points to the '          // &
                           'leapseconds (DELTET/DELTA_AT) could not '  // &
                           'be located in the kernel pool.  It is '    // &
                           'likely that the leapseconds kernel has '   // &
                           'not been loaded.'                          )
-            CALL SIGERR ( 'SPICE(NOLEAPSECONDS)'                      )
-            CALL CHKOUT ( 'TTRANS'                                    )
-            RETURN
+            call sigerr ( 'SPICE(NOLEAPSECONDS)'                      )
+            call chkout ( 'TTRANS'                                    )
+            return
 
-         END IF
+         end if
 
 
 !
@@ -1181,68 +1181,68 @@
 !        the day number past 1 Jan 1 AD for the beginning of the
 !        days loaded in TAITAB.
 !
-         LASTDT = TAITAB(1) - 1.0D0
+         lastdt = taitab(1) - 1.0d0
 
-         DO I = 1, NREF, 2
+         do i = 1, nref, 2
 
-            OFFSET         = I
-            REFPTR         = I + 1
+            offset         = i
+            refptr         = i + 1
 
-            DT             = TAITAB(OFFSET)
-            FORMAL         = TAITAB(REFPTR)
-            TAITAB(OFFSET) = FORMAL - SECSPD + LASTDT
-            TAITAB(REFPTR) = FORMAL          + DT
+            dt             = taitab(offset)
+            formal         = taitab(refptr)
+            taitab(offset) = formal - secspd + lastdt
+            taitab(refptr) = formal          + dt
 
-            DAYNUM         = INT ( ( FORMAL + HALFD ) / SECSPD ) &
-                           + DN2000
+            daynum         = int ( ( formal + halfd ) / secspd ) &
+                           + dn2000
 
-            DAYTAB(OFFSET) = DAYNUM - 1
-            DAYTAB(REFPTR) = DAYNUM
+            daytab(offset) = daynum - 1
+            daytab(refptr) = daynum
 
-            LASTDT         = DT
+            lastdt         = dt
 
-         END DO
+         end do
 
 !
 !        Since we don't have to do it very often, make sure the
 !        times in the TAI table are in increasing order.
 !
-         DO I = 2, NREF
+         do i = 2, nref
 
-            NODATA = .TRUE.
+            nodata = .true.
 
-            IF ( TAITAB(I-1) .GE. TAITAB(I) ) THEN
-               CALL SETMSG ( 'Either the leapsecond epochs taken '    // &
+            if ( taitab(i-1) .ge. taitab(i) ) then
+               call setmsg ( 'Either the leapsecond epochs taken '    // &
                              'from the kernel pool are not properly ' // &
                              'ordered or the UTC - TAI offsets '      // &
                              'are completely out of range. '          )
-               CALL SIGERR ( 'SPICE(BADLEAPSECONDS)'                  )
-               CALL CHKOUT ( 'TTRANS'                                 )
-               RETURN
-            END IF
+               call sigerr ( 'SPICE(BADLEAPSECONDS)'                  )
+               call chkout ( 'TTRANS'                                 )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        At this point, we've completed all checks on kernel data.
 !
-         NODATA = .FALSE.
+         nodata = .false.
 
-      END IF
+      end if
 
 !
 !     Make local normalized copies of FROM and TO.
 !
-      CALL NEXTWD ( FROM,   MYFROM, REST )
-      CALL NEXTWD ( TO,     MYTO,   REST )
-      CALL UCASE  ( MYFROM, MYFROM       )
-      CALL UCASE  ( MYTO,   MYTO         )
+      call nextwd ( from,   myfrom, rest )
+      call nextwd ( to,     myto,   rest )
+      call ucase  ( myfrom, myfrom       )
+      call ucase  ( myto,   myto         )
 
 !
 !     Make sure that the FROM and TO are recognized time types.
 !
-      PTO   = BSRCHC ( MYTO,   NREC, RECOG )
-      PFROM = BSRCHC ( MYFROM, NREC, RECOG )
+      pto   = bsrchc ( myto,   nrec, recog )
+      pfrom = bsrchc ( myfrom, nrec, recog )
 
 !
 !     Eventually, we need to handle SCLKs.  When that happens
@@ -1295,25 +1295,25 @@
 !     For now we are NOT going to deal with SCLK so if something
 !     isn't recognized, we can just signal an error and quit.
 !
-      IF ( PFROM .EQ. 0 ) THEN
+      if ( pfrom .eq. 0 ) then
 
-         CALL SETMSG ( 'The FROM time representation ''#'' is ' &
+         call setmsg ( 'The FROM time representation ''#'' is ' &
          //            'not recognized. ' )
-         CALL ERRCH  ( '#', FROM                   )
-         CALL SIGERR ( 'SPICE(UNKNONWNTIMESYSTEM)' )
-         CALL CHKOUT ( 'TTRANS'                    )
-         RETURN
+         call errch  ( '#', from                   )
+         call sigerr ( 'SPICE(UNKNONWNTIMESYSTEM)' )
+         call chkout ( 'TTRANS'                    )
+         return
 
-      ELSE IF ( PTO .EQ. 0 ) THEN
+      else if ( pto .eq. 0 ) then
 
-         CALL SETMSG ( 'The TO time representation ''#'' is ' &
+         call setmsg ( 'The TO time representation ''#'' is ' &
          //            'not recognized. ' )
-         CALL ERRCH  ( '#', FROM                   )
-         CALL SIGERR ( 'SPICE(UNKNONWNTIMESYSTEM)' )
-         CALL CHKOUT ( 'TTRANS'                    )
-         RETURN
+         call errch  ( '#', from                   )
+         call sigerr ( 'SPICE(UNKNONWNTIMESYSTEM)' )
+         call chkout ( 'TTRANS'                    )
+         return
 
-      END IF
+      end if
 
 !
 !     OK.  We have made our last attempt at diagnosing a user error.
@@ -1324,234 +1324,234 @@
 !     past the beginning of the day.  None of the cases below
 !     are particularly tricky.  There's just a lot of cases.
 !
-      IF ( (PFROM .EQ. YMD) .OR. (PFROM .EQ. YMDF) ) THEN
+      if ( (pfrom .eq. ymd) .or. (pfrom .eq. ymdf) ) then
 
-         YEAR   = INT( TVEC(1) )
-         MONTH  = INT( TVEC(2) )
-         DAY    = INT( TVEC(3) )
+         year   = int( tvec(1) )
+         month  = int( tvec(2) )
+         day    = int( tvec(3) )
 
-         CALL RMAINI ( MONTH-1, 12, DYEAR, MONTH )
+         call rmaini ( month-1, 12, dyear, month )
 
-         YEAR   = YEAR  + DYEAR
-         MONTH  = MONTH + 1
-         DOFFST = 0
+         year   = year  + dyear
+         month  = month + 1
+         doffst = 0
 
-         IF ( YEAR .LE. 0 ) THEN
+         if ( year .le. 0 ) then
 
-            CALL RMAINI ( YEAR, 400, YR400, TEMPI )
-            YEAR = TEMPI
+            call rmaini ( year, 400, yr400, tempi )
+            year = tempi
 
-            IF ( YEAR .EQ. 0 ) THEN
-               YEAR  = YEAR + 400
-               YR400 = YR400 - 1
-            END IF
+            if ( year .eq. 0 ) then
+               year  = year + 400
+               yr400 = yr400 - 1
+            end if
 
-            DOFFST = DP400Y * YR400
+            doffst = dp400y * yr400
 
-         END IF
+         end if
 
-         DAYNUM = DP0001 ( YEAR,          MONTH,         DAY     ) &
-                + DOFFST
-
-!
-!        Calculate seconds from midnight, 00:00:00.
-!
-         SECS   = HMSSEC( TVEC(4), TVEC(5), TVEC(6) )
-
-      ELSE IF ( PFROM .EQ. YD  .OR. PFROM .EQ. YDF ) THEN
-
-         YEAR   = INT( TVEC(1) )
-         DAY    = INT( TVEC(2) )
-         MONTH  = 1
-
-         DOFFST = 0
-
-         IF ( YEAR .LE. 0 ) THEN
-
-            CALL RMAINI ( YEAR, 400, YR400, TEMPI )
-            YEAR = TEMPI
-
-            IF ( YEAR .EQ. 0 ) THEN
-               YEAR  = YEAR + 400
-               YR400 = YR400 - 1
-            END IF
-
-            DOFFST = DP400Y * YR400
-
-         END IF
-
-         DAYNUM = DP0001 ( YEAR,          MONTH,         DAY     ) &
-                + DOFFST
+         daynum = dp0001 ( year,          month,         day     ) &
+                + doffst
 
 !
 !        Calculate seconds from midnight, 00:00:00.
 !
-         SECS   = HMSSEC ( TVEC(3), TVEC(4), TVEC(5) )
+         secs   = hmssec( tvec(4), tvec(5), tvec(6) )
 
-      ELSE IF ( PFROM .EQ. YDD .OR. PFROM .EQ. YDDF   ) THEN
+      else if ( pfrom .eq. yd  .or. pfrom .eq. ydf ) then
 
-         YEAR   = INT(TVEC(1))
-         DAY    = INT(TVEC(2))
-         MONTH  = 1
+         year   = int( tvec(1) )
+         day    = int( tvec(2) )
+         month  = 1
 
-         DOFFST = 0
+         doffst = 0
 
-         IF ( YEAR .LE. 0 ) THEN
+         if ( year .le. 0 ) then
 
-            CALL RMAINI ( YEAR, 400, YR400, TEMPI )
-            YEAR = TEMPI
+            call rmaini ( year, 400, yr400, tempi )
+            year = tempi
 
-            IF ( YEAR .EQ. 0 ) THEN
-               YEAR  = YEAR + 400
-               YR400 = YR400 - 1
-            END IF
+            if ( year .eq. 0 ) then
+               year  = year + 400
+               yr400 = yr400 - 1
+            end if
 
-            DOFFST = DP400Y * YR400
+            doffst = dp400y * yr400
 
-         END IF
+         end if
 
-         FRAC   = TVEC(2) - DBLE(DAY)
-         DAYNUM = DP0001  ( YEAR, MONTH, DAY ) &
-                + DOFFST
+         daynum = dp0001 ( year,          month,         day     ) &
+                + doffst
+
+!
+!        Calculate seconds from midnight, 00:00:00.
+!
+         secs   = hmssec ( tvec(3), tvec(4), tvec(5) )
+
+      else if ( pfrom .eq. ydd .or. pfrom .eq. yddf   ) then
+
+         year   = int(tvec(1))
+         day    = int(tvec(2))
+         month  = 1
+
+         doffst = 0
+
+         if ( year .le. 0 ) then
+
+            call rmaini ( year, 400, yr400, tempi )
+            year = tempi
+
+            if ( year .eq. 0 ) then
+               year  = year + 400
+               yr400 = yr400 - 1
+            end if
+
+            doffst = dp400y * yr400
+
+         end if
+
+         frac   = tvec(2) - dble(day)
+         daynum = dp0001  ( year, month, day ) &
+                + doffst
 
 !
 !        Normally the length of a day is 86400 seconds, but this day
 !        might be a leapsecond day.  We will set DAYLEN to SECSPD and
 !        change it if it turns out this is a day with a leapsecond.
 !
-         IF ( PFROM .EQ. YDDF ) THEN
-            SECS = FRAC * SECSPD
-         ELSE
-            DAYLEN = SECSPD
-            DAYPTR = LSTLEI ( DAYNUM, NREF, DAYTAB )
+         if ( pfrom .eq. yddf ) then
+            secs = frac * secspd
+         else
+            daylen = secspd
+            dayptr = lstlei ( daynum, nref, daytab )
 
-            IF ( ODD(DAYPTR) ) THEN
-               DAYLEN = TAITAB(DAYPTR+1) - TAITAB(DAYPTR)
-            END IF
+            if ( odd(dayptr) ) then
+               daylen = taitab(dayptr+1) - taitab(dayptr)
+            end if
 
-            SECS = FRAC * DAYLEN
-         END IF
+            secs = frac * daylen
+         end if
 
 
-      ELSE IF ( PFROM .EQ. FRML ) THEN
+      else if ( pfrom .eq. frml ) then
 
 !
 !        First lets get the number of days since 1-Jan-2000 00:00:00
 !
-         CALL RMAIND ( TVEC(1) + HALFD, SECSPD, DP2000, SECS )
+         call rmaind ( tvec(1) + halfd, secspd, dp2000, secs )
 
-         DAYNUM = INT(DP2000) + DN2000
+         daynum = int(dp2000) + dn2000
 
 
 
-      ELSE IF ( PFROM .EQ. JDUTC  ) THEN
+      else if ( pfrom .eq. jdutc  ) then
 
 !
 !        JD1101 is the julian date UTC of Jan 1, 1 AD.
 !
-         JDSECS = (TVEC(1) - JD1101)*SECSPD
+         jdsecs = (tvec(1) - jd1101)*secspd
 
-         CALL RMAIND ( JDSECS, SECSPD, DAYDP, SECS )
+         call rmaind ( jdsecs, secspd, daydp, secs )
 
-         DAYNUM = INT(DAYDP)
-
-
-
-      ELSE IF ( PFROM .EQ. DAYSEC ) THEN
-
-         DAYNUM = INT(TVEC(1))
-         SECS   = TVEC(2)
+         daynum = int(daydp)
 
 
 
-      ELSE IF ( PFROM .EQ. DAYP2 ) THEN
+      else if ( pfrom .eq. daysec ) then
 
-         DAYNUM = INT(TVEC(1)) + DN2000
-         SECS   = TVEC(2)
+         daynum = int(tvec(1))
+         secs   = tvec(2)
 
 
 
-      ELSE IF ( (PFROM .EQ. YWD) .OR. (PFROM .EQ. YWDF) ) THEN
+      else if ( pfrom .eq. dayp2 ) then
 
-         YEAR   = INT( TVEC(1) )
-         WEEK   = INT( TVEC(2) ) - 1
-         WKDAY  = INT( TVEC(3) )
-         MONTH  = 1
+         daynum = int(tvec(1)) + dn2000
+         secs   = tvec(2)
+
+
+
+      else if ( (pfrom .eq. ywd) .or. (pfrom .eq. ywdf) ) then
+
+         year   = int( tvec(1) )
+         week   = int( tvec(2) ) - 1
+         wkday  = int( tvec(3) )
+         month  = 1
 
 !
 !        Compute the days past 1 jan 1 of the beginning of this
 !        year and month.
 !
 
-         DOFFST = 0
+         doffst = 0
 
-         IF ( YEAR .LE. 0 ) THEN
+         if ( year .le. 0 ) then
 
-            CALL RMAINI ( YEAR, 400, YR400, TEMPI )
-            YEAR = TEMPI
+            call rmaini ( year, 400, yr400, tempi )
+            year = tempi
 
-            IF ( YEAR .EQ. 0 ) THEN
-               YEAR  = YEAR + 400
-               YR400 = YR400 - 1
-            END IF
+            if ( year .eq. 0 ) then
+               year  = year + 400
+               yr400 = yr400 - 1
+            end if
 
-            DOFFST = DP400Y * YR400
+            doffst = dp400y * yr400
 
-         END IF
+         end if
 
-         DAYNUM = DP0001 ( YEAR, MONTH, 1 ) &
-                + DOFFST
+         daynum = dp0001 ( year, month, 1 ) &
+                + doffst
 
-         CALL RMAINI ( DAYNUM - SUNDAY, 7, QINT, DPSUN )
+         call rmaini ( daynum - sunday, 7, qint, dpsun )
 
-         FYRDAY = DPSUN + 1
+         fyrday = dpsun + 1
 
-         CALL RMAINI ( WKDAY - FYRDAY, 7,  QINT, OFFSET )
+         call rmaini ( wkday - fyrday, 7,  qint, offset )
 
-         DAYNUM = DAYNUM + WEEK*7 + OFFSET
-
-!
-!        Calculate seconds from midnight, 00:00:00.
-!
-         SECS   = HMSSEC ( TVEC(4), TVEC(5), TVEC(6) )
-
-      ELSE IF ( PFROM .EQ. YMWD .OR. PFROM .EQ. YMWDF ) THEN
-
-         YEAR   = INT( TVEC(1) )
-         MONTH  = INT( TVEC(2) )
-         WEEK   = INT( TVEC(3) ) - 1
-         DAY    = INT( TVEC(4) )
-
-         DOFFST = 0
-
-         IF ( YEAR .LE. 0 ) THEN
-
-            CALL RMAINI ( YEAR, 400, YR400, TEMPI )
-            YEAR = TEMPI
-
-            IF ( YEAR .EQ. 0 ) THEN
-               YEAR  = YEAR + 400
-               YR400 = YR400 - 1
-            END IF
-
-            DOFFST = DP400Y * YR400
-
-         END IF
-
-         DAYNUM = DP0001 ( YEAR, MONTH, 1 ) &
-                + DOFFST
-
-         CALL RMAINI ( DAYNUM - SUNDAY, 7, QINT, DPSUN  )
-         FMDAY  = DPSUN + 1
-
-         CALL RMAINI ( DAY - FMDAY, 7, QINT, OFFSET )
-
-         DAYNUM = DAYNUM + WEEK*7 + OFFSET
+         daynum = daynum + week*7 + offset
 
 !
 !        Calculate seconds from midnight, 00:00:00.
 !
-         SECS   = HMSSEC ( TVEC(5), TVEC(6), TVEC(7) )
+         secs   = hmssec ( tvec(4), tvec(5), tvec(6) )
+
+      else if ( pfrom .eq. ymwd .or. pfrom .eq. ymwdf ) then
+
+         year   = int( tvec(1) )
+         month  = int( tvec(2) )
+         week   = int( tvec(3) ) - 1
+         day    = int( tvec(4) )
+
+         doffst = 0
+
+         if ( year .le. 0 ) then
+
+            call rmaini ( year, 400, yr400, tempi )
+            year = tempi
+
+            if ( year .eq. 0 ) then
+               year  = year + 400
+               yr400 = yr400 - 1
+            end if
+
+            doffst = dp400y * yr400
+
+         end if
+
+         daynum = dp0001 ( year, month, 1 ) &
+                + doffst
+
+         call rmaini ( daynum - sunday, 7, qint, dpsun  )
+         fmday  = dpsun + 1
+
+         call rmaini ( day - fmday, 7, qint, offset )
+
+         daynum = daynum + week*7 + offset
+
+!
+!        Calculate seconds from midnight, 00:00:00.
+!
+         secs   = hmssec ( tvec(5), tvec(6), tvec(7) )
 
 
 
@@ -1560,27 +1560,27 @@
 !     If we get to this point the type must be one of the continuous
 !     time types: 'TAI', 'TDT', 'TDB', 'JED', 'ET', 'JDTDT', 'JDTDB'.
 !
-      ELSE
+      else
 !
 !        If the output time is one of the continuous time systems
 !        we can take a short cut and just perform the computation
 !        directly.
 !
-         IF ( ELEMC ( MYTO, UNIFRM ) ) THEN
+         if ( elemc ( myto, unifrm ) ) then
 
-            TVEC(1) = UNITIM ( TVEC(1), MYFROM, MYTO )
-            CALL CHKOUT ( 'TTRANS' )
-            RETURN
+            tvec(1) = unitim ( tvec(1), myfrom, myto )
+            call chkout ( 'TTRANS' )
+            return
 
-         END IF
+         end if
 
 !
 !        The output time system isn't one of the uniform time systems.
 !        Convert what we have to TAI and then to the DAYNUM, SECOND
 !        representation.
 !
-         TAI    = UNITIM ( TVEC(1), MYFROM, 'TAI'   )
-         TAIPTR = LSTLED ( TAI,     NREF,    TAITAB )
+         tai    = unitim ( tvec(1), myfrom, 'TAI'   )
+         taiptr = lstled ( tai,     nref,    taitab )
 
 !
 !        If the TAIPTR value is odd, then the TAI time falls during
@@ -1588,11 +1588,11 @@
 !        number and compute the number of seconds into that
 !        day directly ...
 !
-         IF ( ODD(TAIPTR) ) THEN
+         if ( odd(taiptr) ) then
 
-            DAYNUM = DAYTAB (TAIPTR)
-            SECS   = TAI &
-                   - TAITAB (TAIPTR)
+            daynum = daytab (taiptr)
+            secs   = tai &
+                   - taitab (taiptr)
 
 !
 !        ...Otherwise, all days since the reference TAI time have
@@ -1601,32 +1601,32 @@
 !        Thus we can simply compute the number of days and seconds
 !        that have elapsed since the reference TAI time.
 !
-         ELSE
+         else
 
 !
 !           If TAI is before the first time in the table, we can
 !           compute the number of days and seconds before the first
 !           entry in the TAI table.
 !
-            TAIPTR = MAX ( TAIPTR, 1)
+            taiptr = max ( taiptr, 1)
 
-            CALL  RMAIND ( TAI     - TAITAB(TAIPTR), SECSPD, &
-                           DAYDP,                    SECS    )
+            call  rmaind ( tai     - taitab(taiptr), secspd, &
+                           daydp,                    secs    )
 
-            DAYNUM = INT ( DAYDP ) + DAYTAB(TAIPTR)
+            daynum = int ( daydp ) + daytab(taiptr)
 
-         END IF
+         end if
 
 
-      END IF
+      end if
 
-      IF ( FORML ( PFROM )  ) THEN
+      if ( forml ( pfrom )  ) then
 
-         CALL RMAIND ( SECS, SECSPD, DAYDP, TSECS )
-         DAYNUM = DAYNUM + INT(DAYDP)
-         SECS   = TSECS
+         call rmaind ( secs, secspd, daydp, tsecs )
+         daynum = daynum + int(daydp)
+         secs   = tsecs
 
-      END IF
+      end if
 
 
 !     ==================================================================
@@ -1635,47 +1635,47 @@
 !     depending upon whether or not the output system is a formal
 !     time system or not.
 !
-      IF ( FORML(PTO) .AND. FORML(PFROM) ) THEN
+      if ( forml(pto) .and. forml(pfrom) ) then
 !
 !        We don't have to do anything here.
 !
-      ELSE
+      else
 
-         IF (      (SECS .GT. (SECSPD - 1.0D0)) &
-              .OR. (SECS .LT. 0.0D0)          ) THEN
+         if (      (secs .gt. (secspd - 1.0d0)) &
+              .or. (secs .lt. 0.0d0)          ) then
 
 !
 !           First convert to TAI...
 !
-            DAYPTR = MAX( 1, LSTLEI ( DAYNUM, NREF, DAYTAB ) )
-            SECS   = SECS &
-                   + DBLE ( DAYNUM - DAYTAB(DAYPTR) ) * SECSPD
-            TAI    = TAITAB(DAYPTR) + SECS
+            dayptr = max( 1, lstlei ( daynum, nref, daytab ) )
+            secs   = secs &
+                   + dble ( daynum - daytab(dayptr) ) * secspd
+            tai    = taitab(dayptr) + secs
 
 !
 !           ...then back to DAYNUM and SECS
 !
-            TAIPTR = LSTLED ( TAI, NREF, TAITAB )
+            taiptr = lstled ( tai, nref, taitab )
 
-            IF ( ODD(TAIPTR) ) THEN
+            if ( odd(taiptr) ) then
 
-               DAYNUM = DAYTAB ( TAIPTR )
-               SECS   = TAI &
-                      - TAITAB ( TAIPTR )
+               daynum = daytab ( taiptr )
+               secs   = tai &
+                      - taitab ( taiptr )
 
-            ELSE
+            else
 
-               TAIPTR = MAX ( 1, TAIPTR )
-               DAYNUM = DAYTAB ( TAIPTR )
+               taiptr = max ( 1, taiptr )
+               daynum = daytab ( taiptr )
 
-               CALL RMAIND ( TAI - TAITAB(TAIPTR), SECSPD, DAYDP, SECS )
+               call rmaind ( tai - taitab(taiptr), secspd, daydp, secs )
 
-               DAYNUM = DAYNUM + INT ( DAYDP )
+               daynum = daynum + int ( daydp )
 
-            END IF
-         END IF
+            end if
+         end if
 
-      END IF
+      end if
 !
 !     One last thing.  If we are going to a formal time vector,
 !     we want to ignore positive leapseconds. (Negative ones
@@ -1691,10 +1691,10 @@
 !     increment the day number by one and set SECS to zero.
 !
 
-      IF ( FORML(PTO) .AND. SECS .GT. SECSPD ) THEN
-         DAYNUM = DAYNUM + 1
-         SECS   = 0
-      END IF
+      if ( forml(pto) .and. secs .gt. secspd ) then
+         daynum = daynum + 1
+         secs   = 0
+      end if
 !
 !     OK. Now we have DAYNUM and SECS,  convert this form to the
 !     one requested.
@@ -1703,39 +1703,39 @@
 !     will need some form of year, etc.  Do the work now and sort it
 !     it all out at the appropriate time later on.
 !
-      IF ( NEEDY ( PTO )  ) THEN
+      if ( needy ( pto )  ) then
 
-         YR400  =  DAYNUM / DP400Y
-         REM    =  DAYNUM - DP400Y*YR400
+         yr400  =  daynum / dp400y
+         rem    =  daynum - dp400y*yr400
 !
 !        We want to be able to deal with years prior to  1 Jan 1
 !        So we make sure the remainder is positive.
 !
-         IF ( REM .LT. 0 ) THEN
-            YR400 = YR400 - 1
-            REM   = REM + DP400Y
-         END IF
+         if ( rem .lt. 0 ) then
+            yr400 = yr400 - 1
+            rem   = rem + dp400y
+         end if
 
-         YR100  =  MIN ( 3, REM   / DP100Y )
-         REM    =  REM    - YR100 * DP100Y
+         yr100  =  min ( 3, rem   / dp100y )
+         rem    =  rem    - yr100 * dp100y
 
-         YR4    =  MIN (24, REM / DP4Y )
-         REM    =  REM    - YR4 * DP4Y
+         yr4    =  min (24, rem / dp4y )
+         rem    =  rem    - yr4 * dp4y
 
-         YR1    =  MIN (3,  REM / DP1Y )
-         REM    =  REM    - YR1 * DP1Y
+         yr1    =  min (3,  rem / dp1y )
+         rem    =  rem    - yr1 * dp1y
 
-         DOFYR  =  REM    + 1
+         dofyr  =  rem    + 1
 
-         YEAR   = YR400*400 + YR100*100 + YR4*4 + YR1 + 1
+         year   = yr400*400 + yr100*100 + yr4*4 + yr1 + 1
 
-         IF ( LDAYS(YEAR) .EQ. 0 ) THEN
-            MONTH  = LSTLTI ( DOFYR, 12, DPJAN0 )
-            DAY    = DOFYR - DPJAN0(MONTH)
-         ELSE
-            MONTH  = LSTLTI ( DOFYR, 12, DPBEGL )
-            DAY    = DOFYR - DPBEGL(MONTH)
-         END IF
+         if ( ldays(year) .eq. 0 ) then
+            month  = lstlti ( dofyr, 12, dpjan0 )
+            day    = dofyr - dpjan0(month)
+         else
+            month  = lstlti ( dofyr, 12, dpbegl )
+            day    = dofyr - dpbegl(month)
+         end if
 
 
 !
@@ -1743,127 +1743,127 @@
 !        86399 to hours, minutes and seconds.  Take anything extra
 !        and put it in EXSECS.
 !
-         EXSECS = MAX ( 0.0D0, SECS - SECSPD + 1 )
-         TSECS  = SECS - EXSECS
+         exsecs = max ( 0.0d0, secs - secspd + 1 )
+         tsecs  = secs - exsecs
 
-         CALL RMAIND ( TSECS, 3600.0D0, HOURS, TEMPD )
-         CALL RMAIND ( TEMPD,   60.0D0, MINS,  TSECS )
+         call rmaind ( tsecs, 3600.0d0, hours, tempd )
+         call rmaind ( tempd,   60.0d0, mins,  tsecs )
 
-         TSECS  = TSECS + EXSECS
+         tsecs  = tsecs + exsecs
 
-      END IF
+      end if
 
 !=====================================================================
 !
 !     Finally, we convert to the requested output.
 !
-      IF      ( PTO .EQ. YMD .OR. PTO .EQ. YMDF ) THEN
+      if      ( pto .eq. ymd .or. pto .eq. ymdf ) then
 
-         TVEC(1) = DBLE ( YEAR  )
-         TVEC(2) = DBLE ( MONTH )
-         TVEC(3) = DBLE ( DAY   )
-         TVEC(4) = HOURS
-         TVEC(5) = MINS
-         TVEC(6) = TSECS
+         tvec(1) = dble ( year  )
+         tvec(2) = dble ( month )
+         tvec(3) = dble ( day   )
+         tvec(4) = hours
+         tvec(5) = mins
+         tvec(6) = tsecs
 
-      ELSE IF ( PTO .EQ. YD .OR. PTO .EQ. YDF  ) THEN
+      else if ( pto .eq. yd .or. pto .eq. ydf  ) then
 
-         TVEC(1) = DBLE ( YEAR  )
-         TVEC(2) = DBLE ( DOFYR )
-         TVEC(3) = HOURS
-         TVEC(4) = MINS
-         TVEC(5) = TSECS
+         tvec(1) = dble ( year  )
+         tvec(2) = dble ( dofyr )
+         tvec(3) = hours
+         tvec(4) = mins
+         tvec(5) = tsecs
 
-      ELSE IF ( PTO .EQ. YDD .OR. PTO .EQ. YDDF   ) THEN
+      else if ( pto .eq. ydd .or. pto .eq. yddf   ) then
 
-         TVEC(1) = DBLE   ( YEAR  )
+         tvec(1) = dble   ( year  )
 
-         IF ( PTO .EQ. YDD ) THEN
-            DAYPTR  = LSTLEI ( DAYNUM, NREF, DAYTAB )
-            DAYLEN  = SECSPD
+         if ( pto .eq. ydd ) then
+            dayptr  = lstlei ( daynum, nref, daytab )
+            daylen  = secspd
 
-            IF ( ODD(DAYPTR) ) THEN
-               DAYLEN = TAITAB(DAYPTR+1) - TAITAB(DAYPTR)
-            END IF
+            if ( odd(dayptr) ) then
+               daylen = taitab(dayptr+1) - taitab(dayptr)
+            end if
 
-            TVEC(2) = DBLE(DOFYR) + SECS/DAYLEN
-         ELSE
-            TVEC(2) = DBLE(DOFYR) + SECS/SECSPD
-         END IF
+            tvec(2) = dble(dofyr) + secs/daylen
+         else
+            tvec(2) = dble(dofyr) + secs/secspd
+         end if
 
 
-      ELSE IF ( PTO .EQ. FRML ) THEN
+      else if ( pto .eq. frml ) then
 
-         TVEC(1) = DBLE ( DAYNUM - DN2000 ) * SECSPD &
-                 - HALFD &
-                 + SECS
+         tvec(1) = dble ( daynum - dn2000 ) * secspd &
+                 - halfd &
+                 + secs
 
-      ELSE IF ( PTO .EQ. JDUTC  ) THEN
+      else if ( pto .eq. jdutc  ) then
 
-         TVEC(1) = JD1101 + DBLE( DAYNUM ) + SECS/SECSPD
+         tvec(1) = jd1101 + dble( daynum ) + secs/secspd
 
-      ELSE IF ( PTO .EQ. DAYSEC ) THEN
+      else if ( pto .eq. daysec ) then
 
-         TVEC(1) = DBLE(DAYNUM)
-         TVEC(2) = SECS
+         tvec(1) = dble(daynum)
+         tvec(2) = secs
 
-      ELSE IF ( PTO .EQ. DAYP2 ) THEN
+      else if ( pto .eq. dayp2 ) then
 
-         TVEC(1) = DBLE (DAYNUM - DN2000)
-         TVEC(2) = SECS
+         tvec(1) = dble (daynum - dn2000)
+         tvec(2) = secs
 
-      ELSE IF ( PTO  .EQ. YWD .OR. PTO .EQ. YWDF ) THEN
+      else if ( pto  .eq. ywd .or. pto .eq. ywdf ) then
 !
 !        First compute the day of the week, and the week number
 !
-         CALL   RMAINI  ( DAYNUM - SUNDAY, 7, QINT, DAY )
-         WEEK    = 1 + (( DOFYR  - 1 )   / 7)
+         call   rmaini  ( daynum - sunday, 7, qint, day )
+         week    = 1 + (( dofyr  - 1 )   / 7)
 
 !
 !        Now just put everything where it belongs.
 !
-         TVEC(1) = DBLE(YEAR)
-         TVEC(2) = DBLE(WEEK)
-         TVEC(3) = DBLE(DAY) + 1.0D0
-         TVEC(4) = HOURS
-         TVEC(5) = MINS
-         TVEC(6) = TSECS
+         tvec(1) = dble(year)
+         tvec(2) = dble(week)
+         tvec(3) = dble(day) + 1.0d0
+         tvec(4) = hours
+         tvec(5) = mins
+         tvec(6) = tsecs
 
-      ELSE IF ( PTO .EQ. YMWD .OR. PTO .EQ. YMWDF ) THEN
+      else if ( pto .eq. ymwd .or. pto .eq. ymwdf ) then
 
 !
 !        First compute how many weeks into the month DAYNUM is,
 !        and compute the day of week number.
 !
-         TVEC(1) = DBLE (YEAR)
-         DOFFST  = 0
+         tvec(1) = dble (year)
+         doffst  = 0
 
-         IF ( YEAR .LE. 0 ) THEN
+         if ( year .le. 0 ) then
 
-            CALL RMAINI ( YEAR, 400, YR400, TEMPI )
-            YEAR = TEMPI
+            call rmaini ( year, 400, yr400, tempi )
+            year = tempi
 
-            IF ( YEAR .EQ. 0 ) THEN
-               YEAR  = YEAR + 400
-               YR400 = YR400 - 1
-            END IF
+            if ( year .eq. 0 ) then
+               year  = year + 400
+               yr400 = yr400 - 1
+            end if
 
-            DOFFST = DP400Y * YR400
+            doffst = dp400y * yr400
 
-         END IF
+         end if
 
-         WEEK    = 1 + ( DAYNUM - DP0001(YEAR, MONTH, 1) - DOFFST ) / 7
-         CALL RMAINI   ( DAYNUM - SUNDAY,   7, QINT, DAY )
+         week    = 1 + ( daynum - dp0001(year, month, 1) - doffst ) / 7
+         call rmaini   ( daynum - sunday,   7, qint, day )
 
 !
 !        Now just move the remaining stuff into TVEC.
 !
-         TVEC(2) = DBLE (MONTH)
-         TVEC(3) = DBLE (WEEK)
-         TVEC(4) = DBLE (DAY) + 1.0D0
-         TVEC(5) = HOURS
-         TVEC(6) = MINS
-         TVEC(7) = TSECS
+         tvec(2) = dble (month)
+         tvec(3) = dble (week)
+         tvec(4) = dble (day) + 1.0d0
+         tvec(5) = hours
+         tvec(6) = mins
+         tvec(7) = tsecs
 
 !
 !     If we get to this point the type must be one of the continuous
@@ -1871,16 +1871,16 @@
 !
 !     First convert to TAI and then to the appropriate output type.
 !
-      ELSE
+      else
 
-         DAYPTR  = MAX( 1, LSTLEI ( DAYNUM, NREF, DAYTAB ) )
-         SECS    = SECS &
-                 + DBLE ( DAYNUM - DAYTAB(DAYPTR) ) * SECSPD
-         TAI     = TAITAB(DAYPTR) + SECS
+         dayptr  = max( 1, lstlei ( daynum, nref, daytab ) )
+         secs    = secs &
+                 + dble ( daynum - daytab(dayptr) ) * secspd
+         tai     = taitab(dayptr) + secs
 
-         TVEC(1) = UNITIM ( TAI, 'TAI', MYTO )
+         tvec(1) = unitim ( tai, 'TAI', myto )
 
-      END IF
+      end if
 
 
 !
@@ -1895,6 +1895,6 @@
 !     END IF
 !
 
-      CALL CHKOUT ( 'TTRANS' )
-      RETURN
-      END
+      call chkout ( 'TTRANS' )
+      return
+      end

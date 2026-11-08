@@ -1,8 +1,8 @@
 !$Procedure SRFXPT ( Surface intercept point )
 
-      SUBROUTINE SRFXPT ( METHOD,  TARGET,  ET,      ABCORR, &
-                          OBSRVR,  DREF,    DVEC,    SPOINT, &
-                          DIST,    TRGEPC,  OBSPOS,  FOUND )
+      subroutine srfxpt ( method,  target,  et,      abcorr, &
+                          obsrvr,  dref,    dvec,    spoint, &
+                          dist,    trgepc,  obspos,  found )
 
 ! $ Abstract
 !
@@ -29,23 +29,23 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'frmtyp.inc'
-      INCLUDE               'zzctr.inc'
+      include              'frmtyp.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         DREF
-      DOUBLE PRECISION      DVEC   ( 3 )
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      LOGICAL               FOUND
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         dref
+      double precision      dvec   ( 3 )
+      double precision      spoint ( 3 )
+      double precision      dist
+      double precision      trgepc
+      double precision      obspos ( 3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -1001,17 +1001,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      clight
+      double precision      dasine
+      double precision      touchd
+      double precision      vdist
+      double precision      vnorm
+      double precision      vsep
 
-      LOGICAL               EQCHR
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqchr
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -1021,302 +1021,302 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-17 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-17 )
 
 !
 !     Round-off error limit for arc sine input:
 !
-      DOUBLE PRECISION      RNDTOL
-      PARAMETER           ( RNDTOL = 1.D-14 )
+      double precision      rndtol
+      parameter           ( rndtol = 1.d-14 )
 
 !
 !     Fraction of planetary angular radius used to define
 !     region outside of which rays are immediately rejected
 !     as non-intersecting.
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.001D0 )
+      double precision      margin
+      parameter           ( margin = 1.001d0 )
 
 
-      INTEGER               ABCLEN
-      PARAMETER           ( ABCLEN =  15 )
+      integer               abclen
+      parameter           ( abclen =  15 )
 
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR =  10 )
+      integer               maxitr
+      parameter           ( maxitr =  10 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FRNAME
-      CHARACTER*(ABCLEN)    LOCCOR
+      character*(frnmln)    frname
+      character*(abclen)    loccor
 
-      DOUBLE PRECISION      ETDIFF
-      DOUBLE PRECISION      J2DIR  ( 3 )
-      DOUBLE PRECISION      J2EST  ( 3 )
-      DOUBLE PRECISION      J2POS  ( 3 )
-      DOUBLE PRECISION      J2TMAT ( 3, 3 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTCENT
-      DOUBLE PRECISION      LTDIFF
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      NEGPOS ( 3 )
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      PREVET
-      DOUBLE PRECISION      PREVLT
-      DOUBLE PRECISION      R2JMAT ( 3, 3 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      RAYALT
-      DOUBLE PRECISION      REFEPC
-      DOUBLE PRECISION      REJECT
-      DOUBLE PRECISION      RPOS   ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SSBOST ( 6 )
-      DOUBLE PRECISION      SSBTST ( 6 )
-      DOUBLE PRECISION      STLDIR ( 3 )
-      DOUBLE PRECISION      STLERR ( 3 )
-      DOUBLE PRECISION      STLTMP ( 3 )
-      DOUBLE PRECISION      TPOS   ( 3 )
-      DOUBLE PRECISION      TRGDIR ( 3 )
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      double precision      etdiff
+      double precision      j2dir  ( 3 )
+      double precision      j2est  ( 3 )
+      double precision      j2pos  ( 3 )
+      double precision      j2tmat ( 3, 3 )
+      double precision      lt
+      double precision      ltcent
+      double precision      ltdiff
+      double precision      maxrad
+      double precision      negpos ( 3 )
+      double precision      pnear  ( 3 )
+      double precision      prevet
+      double precision      prevlt
+      double precision      r2jmat ( 3, 3 )
+      double precision      radii  ( 3 )
+      double precision      range
+      double precision      rayalt
+      double precision      refepc
+      double precision      reject
+      double precision      rpos   ( 3 )
+      double precision      s
+      double precision      ssbost ( 6 )
+      double precision      ssbtst ( 6 )
+      double precision      stldir ( 3 )
+      double precision      stlerr ( 3 )
+      double precision      stltmp ( 3 )
+      double precision      tpos   ( 3 )
+      double precision      trgdir ( 3 )
+      double precision      xform  ( 3, 3 )
 
-      INTEGER               CENTER
-      INTEGER               FRCODE
-      INTEGER               I
-      INTEGER               NITR
-      INTEGER               OBSCDE
-      INTEGER               REFCDE
-      INTEGER               TRGCDE
-      INTEGER               TYPE
-      INTEGER               TYPEID
+      integer               center
+      integer               frcode
+      integer               i
+      integer               nitr
+      integer               obscde
+      integer               refcde
+      integer               trgcde
+      integer               type
+      integer               typeid
 
-      LOGICAL               FND
-      LOGICAL               USECN
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               fnd
+      logical               usecn
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsc
+      logical               svfnd2
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVDREF
-      INTEGER               SVREFC
+      integer               svctr3 ( ctrsiz )
+      character*(frnmln)    svdref
+      integer               svrefc
 
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVDREF
-      SAVE                  SVREFC
+      save                  svctr3
+      save                  svdref
+      save                  svrefc
 
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SRFXPT' )
+      call chkin ( 'SRFXPT' )
 
 !
 !     Nothing has been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SRFXPT'                                   )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SRFXPT'                                   )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SRFXPT'                                   )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SRFXPT'                                   )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the input body codes.  If they are equal, signal
 !     an error.
 !
-      IF ( OBSCDE .EQ. TRGCDE ) THEN
+      if ( obscde .eq. trgcde ) then
 
-         CALL SETMSG ( 'In computing the surface intercept point, ' // &
+         call setmsg ( 'In computing the surface intercept point, ' // &
                        'the observing body and target body are the '// &
                        'same. Both are #.'                          )
-         CALL ERRCH  ( '#',  OBSRVR                                 )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         CALL CHKOUT ( 'SRFXPT'                                     )
-         RETURN
+         call errch  ( '#',  obsrvr                                 )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
+         call chkout ( 'SRFXPT'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Get a left-justified, upper case copy of the aberration
 !     correction flag.
 !
-      CALL LJUST ( ABCORR, LOCCOR )
-      CALL UCASE ( LOCCOR, LOCCOR )
+      call ljust ( abcorr, loccor )
+      call ucase ( loccor, loccor )
 
 !
 !     Check for stellar aberration in the aberration correction flag.
 !
-      USESTL  =  INDEX( LOCCOR, '+S') .GT. 0
+      usestl  =  index( loccor, '+S') .gt. 0
 
 !
 !     Now remove the stellar aberration component from the aberration
 !     correction flag; we'll do our state lookups without stellar
 !     aberration correction.
 !
-      CALL REPMC ( LOCCOR, '+S', ' ', LOCCOR )
+      call repmc ( loccor, '+S', ' ', loccor )
 
 !
 !     Decide whether the aberration correction is for received or
 !     transmitted radiation.
 !
-      XMIT = EQCHR ( LOCCOR(1:1),  'X' )
+      xmit = eqchr ( loccor(1:1),  'X' )
 
 !
 !     Decide what sort of light time correction has been requested.
 !
-      USECN = ( LOCCOR(1:2) .EQ. 'CN' ) .OR. ( LOCCOR(1:3) .EQ. 'XCN' )
+      usecn = ( loccor(1:2) .eq. 'CN' ) .or. ( loccor(1:3) .eq. 'XCN' )
 
-      USELT =        USECN &
-              .OR. ( LOCCOR(1:2) .EQ. 'LT'  ) &
-              .OR. ( LOCCOR(1:3) .EQ. 'XLT' )
+      uselt =        usecn &
+              .or. ( loccor(1:2) .eq. 'LT'  ) &
+              .or. ( loccor(1:3) .eq. 'XLT' )
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.
 !     When light time correction is not used, setting S = 0
 !     allows us to seamlessly set TRGEPC equal to ET.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 
-         IF ( XMIT ) THEN
-            S   =  1.D0
-         ELSE
-            S   = -1.D0
-         END IF
+         if ( xmit ) then
+            s   =  1.d0
+         else
+            s   = -1.d0
+         end if
 
-      ELSE
-         S = 0.D0
-      END IF
+      else
+         s = 0.d0
+      end if
 
 !
 !     Find the name of the body-fixed frame associated with the
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      CALL CIDFRM ( TRGCDE, FRCODE, FRNAME, FND )
+      call cidfrm ( trgcde, frcode, frname, fnd )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'No body-fixed frame is associated with '   // &
+         call setmsg ( 'No body-fixed frame is associated with '   // &
                        'target body #; a frame kernel must be '    // &
                        'loaded to make this association.  Consult '// &
                        'the FRAMES Required Reading for details.'   )
-         CALL ERRCH  ( '#', TARGET                                  )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                             )
-         CALL CHKOUT ( 'SRFXPT'                                     )
-         RETURN
+         call errch  ( '#', target                                  )
+         call sigerr ( 'SPICE(NOFRAME)'                             )
+         call chkout ( 'SRFXPT'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the position of the observer in target
@@ -1342,13 +1342,13 @@
 !            point.
 !
 
-      CALL SPKEZP ( TRGCDE, ET, FRNAME, LOCCOR, OBSCDE, TPOS, LT )
+      call spkezp ( trgcde, et, frname, loccor, obscde, tpos, lt )
 
 !
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      CALL VMINUS ( TPOS, OBSPOS )
+      call vminus ( tpos, obspos )
 
 !
 !     We now need to convert the direction vector into the
@@ -1357,32 +1357,32 @@
 !     coefficient S has been set to give us the correct answer
 !     for each case.
 !
-      TRGEPC = ET  +  S*LT
+      trgepc = et  +  s*lt
 
 !
 !     Determine the attributes of the frame designated by DREF.
 !
-      CALL ZZNAMFRM ( SVCTR3, SVDREF, SVREFC, DREF, REFCDE )
+      call zznamfrm ( svctr3, svdref, svrefc, dref, refcde )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFXPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFXPT' )
+         return
+      end if
 
-      CALL FRINFO ( REFCDE, CENTER, TYPE, TYPEID, FND )
+      call frinfo ( refcde, center, type, typeid, fnd )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+         call setmsg ( 'Reference frame # is not recognized by ' // &
                        'the SPICE frame subsystem.  Possibly '   // &
                        'a required frame definition kernel has ' // &
                        'not been loaded.'                        )
-         CALL ERRCH  ( '#',  DREF                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-         CALL CHKOUT ( 'SRFXPT'                                  )
-         RETURN
+         call errch  ( '#',  dref                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+         call chkout ( 'SRFXPT'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Transform the direction vector from frame DREF to the body-fixed
@@ -1393,22 +1393,22 @@
 !     from frame DREF to J2000, then from J2000 to the target
 !     frame.
 !
-      IF ( TYPE .EQ. INERTL ) THEN
+      if ( type .eq. inertl ) then
 !
 !        Inertial frames can be evaluated at any epoch.
 !
-         REFEPC = ET
+         refepc = et
 
 
-      ELSE IF ( .NOT. USELT ) THEN
+      else if ( .not. uselt ) then
 !
 !        We're not using light time corrections (converged or
 !        otherwise), so there's no time offset.
 !
-         REFEPC = ET
+         refepc = et
 
 
-      ELSE IF ( CENTER .EQ. OBSCDE ) THEN
+      else if ( center .eq. obscde ) then
 !
 !        If the center of frame DREF is the observer (which is
 !        usually the case if the observer is a spacecraft), then
@@ -1417,24 +1417,24 @@
 !        There's no offset between the center for frame DREF
 !        and the observer.
 !
-         REFEPC = ET
+         refepc = et
 
-      ELSE
+      else
 !
 !        Find the light time from the observer to the center of
 !        frame DREF.
 !
-         CALL SPKEZP ( CENTER, ET, 'J2000', LOCCOR, OBSCDE, &
-                       RPOS,   LTCENT                       )
+         call spkezp ( center, et, 'J2000', loccor, obscde, &
+                       rpos,   ltcent                       )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SRFXPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SRFXPT' )
+            return
+         end if
 
-         REFEPC  =  ET  +  S * LTCENT
+         refepc  =  et  +  s * ltcent
 
-      END IF
+      end if
 
 !
 !     The epoch REFEPC associated with frame DREF has been set.
@@ -1454,27 +1454,27 @@
 !     other hand, so we don't have to recompute J2DIR.  We need TRGDIR
 !     in all cases.
 !
-      CALL PXFORM ( DREF, 'J2000', REFEPC,  R2JMAT )
+      call pxform ( dref, 'J2000', refepc,  r2jmat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFXPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFXPT' )
+         return
+      end if
 
-      CALL MXV ( R2JMAT, DVEC, J2DIR )
+      call mxv ( r2jmat, dvec, j2dir )
 
 !
 !     Map J2DIR (in the J2000 frame) to the target body-fixed
 !     frame.
 !
-      CALL PXFORM ( 'J2000', FRNAME,  TRGEPC,  J2TMAT )
+      call pxform ( 'J2000', frname,  trgepc,  j2tmat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFXPT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFXPT' )
+         return
+      end if
 
-      CALL MXV ( J2TMAT, J2DIR, TRGDIR )
+      call mxv ( j2tmat, j2dir, trgdir )
 
 !
 !     At this point,
@@ -1488,7 +1488,7 @@
 !     the solar system barycenter at ET.  We'll use this in
 !     several places later.
 !
-      CALL SPKSSB ( OBSCDE, ET, 'J2000', SSBOST )
+      call spkssb ( obscde, et, 'J2000', ssbost )
 
 !
 !     If we're using stellar aberration correction, at this point we'll
@@ -1498,14 +1498,14 @@
 !     by applying the inverse of the correction to the ray, we obtain
 !     the ray with which we must perform our intercept computation.
 !
-      IF ( USESTL ) THEN
+      if ( usestl ) then
 !
 !        We approximate the inverse stellar aberration correction by
 !        using the correction for the reverse transmission direction.
 !        If we're in the reception case, we apply the transmission
 !        stellar aberration correction to J2DIR and vice versa.
 !
-         IF ( XMIT ) THEN
+         if ( xmit ) then
 !
 !           Use reception stellar aberration correction
 !           routine STELAB to generate a first estimate of
@@ -1514,72 +1514,72 @@
 !           of the transmission stellar aberration correction
 !           mapping to J2DIR.
 !
-            CALL STELAB ( J2DIR, SSBOST(4), STLDIR )
+            call stelab ( j2dir, ssbost(4), stldir )
 
 !
 !           Estimate the error in our first approximation
 !           by applying the transmission stellar aberration
 !           to STLDIR and finding the difference with J2DIR.
 !
-            CALL STLABX ( STLDIR, SSBOST(4), J2EST  )
-            CALL VSUB   ( J2DIR,  J2EST,     STLERR )
+            call stlabx ( stldir, ssbost(4), j2est  )
+            call vsub   ( j2dir,  j2est,     stlerr )
 
 !
 !           Adding the error in the transmission mapping to STLDIR
 !           will give us a second-order estimate of the inverse.
 !
-            CALL VADD ( STLERR, STLDIR, STLTMP )
-            CALL VEQU ( STLTMP,         STLDIR )
+            call vadd ( stlerr, stldir, stltmp )
+            call vequ ( stltmp,         stldir )
 !
 !           At this point we've found a good estimate of the
 !           direction vector under the inverse of the transmission
 !           stellar aberration correction mapping.
 !
-         ELSE
+         else
 !
 !           Use transmission stellar aberration correction
 !           routine STLABX to generate a first estimate of
 !           the direction vector after stellar aberration
 !           has been "removed."
 !
-            CALL STLABX ( J2DIR, SSBOST(4), STLDIR )
+            call stlabx ( j2dir, ssbost(4), stldir )
 
 !
 !           Estimate the error in our first approximation
 !           by applying the reception stellar aberration
 !           to STLDIR and finding the difference with J2DIR.
 !
-            CALL STELAB ( STLDIR, SSBOST(4), J2EST  )
-            CALL VSUB   ( J2DIR,  J2EST,     STLERR )
+            call stelab ( stldir, ssbost(4), j2est  )
+            call vsub   ( j2dir,  j2est,     stlerr )
 
 !
 !           Adding the error in the reception mapping to STLDIR
 !           will give us a second-order estimate of the inverse.
 !
-            CALL VADD ( STLERR, STLDIR, STLTMP )
-            CALL VEQU ( STLTMP,         STLDIR )
+            call vadd ( stlerr, stldir, stltmp )
+            call vequ ( stltmp,         stldir )
 
 !
 !           At this point we've found a good estimate of the
 !           direction vector under the inverse of the reception
 !           stellar aberration correction mapping.
 !
-         END IF
+         end if
 
 !
 !        Replace the J2000-relative ray direction with the corrected
 !        direction.
 !
-         CALL VEQU ( STLDIR,  J2DIR )
-         CALL MXV  ( J2TMAT,  J2DIR,   TRGDIR )
+         call vequ ( stldir,  j2dir )
+         call mxv  ( j2tmat,  j2dir,   trgdir )
 
-      END IF
+      end if
 
 !
 !     Find the surface intercept point and distance from observer to
 !     intercept point using the specified geometric definition.
 !
-      IF (  EQSTR( METHOD, 'Ellipsoid' )  ) THEN
+      if (  eqstr( method, 'Ellipsoid' )  ) then
 !
 !        Find the surface intercept given the target epoch,
 !        observer-target position, and target body orientation
@@ -1592,12 +1592,12 @@
 !
 !        Get the radii of the target body from the kernel pool.
 !
-         CALL ZZGFTREB ( TRGCDE, RADII )
+         call zzgftreb ( trgcde, radii )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SRFXPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SRFXPT' )
+            return
+         end if
 
 !
 !        Make an easy test to see whether we can quit now because
@@ -1606,54 +1606,54 @@
 !        the maximum triaxial radius), we're done.  Let REJECT be
 !        the angular separation limit.
 !
-         MAXRAD = MAX  ( RADII(1), RADII(2), RADII(3) )
+         maxrad = max  ( radii(1), radii(2), radii(3) )
 
-         RANGE  = VNORM(OBSPOS)
+         range  = vnorm(obspos)
 
-         IF ( RANGE .EQ. 0.D0 ) THEN
+         if ( range .eq. 0.d0 ) then
 !
 !           We've already ensured that observer and target are
 !           distinct, so this should be a very unusual occurrence.
 !
-            CALL SETMSG ( 'Observer-target distance is zero.' )
-            CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'               )
-            CALL CHKOUT ( 'SRFXPT'                            )
-            RETURN
+            call setmsg ( 'Observer-target distance is zero.' )
+            call sigerr ( 'SPICE(DIVIDEBYZERO)'               )
+            call chkout ( 'SRFXPT'                            )
+            return
 
-         END IF
+         end if
 
 
-         IF ( RANGE .GT. MARGIN*MAXRAD ) THEN
+         if ( range .gt. margin*maxrad ) then
 !
 !           Compute the arc sine with SPICE error checking.
 !
-            REJECT = DASINE ( MARGIN * MAXRAD / RANGE,  RNDTOL )
+            reject = dasine ( margin * maxrad / range,  rndtol )
 
-            CALL VMINUS ( OBSPOS, NEGPOS )
+            call vminus ( obspos, negpos )
 
-            IF (  VSEP( NEGPOS, TRGDIR )  .GT.  REJECT  ) THEN
+            if (  vsep( negpos, trgdir )  .gt.  reject  ) then
 !
 !              The angular separation of ray and target is too great
 !              for a solution to exist, even with a better light time
 !              estimate.
 !
-               CALL CHKOUT ( 'SRFXPT' )
-               RETURN
+               call chkout ( 'SRFXPT' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Locate the nearest point to the observer on the target.
 !
-         CALL SURFPT ( OBSPOS, TRGDIR, RADII(1), RADII(2), RADII(3), &
-                       SPOINT, FOUND                                 )
+         call surfpt ( obspos, trgdir, radii(1), radii(2), radii(3), &
+                       spoint, found                                 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SRFXPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SRFXPT' )
+            return
+         end if
 
 !
 !        If we're not using light time corrections, we're almost
@@ -1661,19 +1661,19 @@
 !        If an intercept was found, SPOINT has been set as well.
 !        We haven't yet computed DIST.
 !
-         IF ( .NOT. USELT ) THEN
+         if ( .not. uselt ) then
 
-            IF ( FOUND ) THEN
-               DIST  =  VDIST ( OBSPOS, SPOINT )
-            END IF
+            if ( found ) then
+               dist  =  vdist ( obspos, spoint )
+            end if
 
-            CALL CHKOUT ( 'SRFXPT' )
-            RETURN
+            call chkout ( 'SRFXPT' )
+            return
 
-         END IF
+         end if
 
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 !
 !           If there's no intercept, we're probably done.  However,
 !           we need to guard against the possibility that the ray does
@@ -1687,87 +1687,87 @@
 !           If we're using converged Newtonian corrections, we
 !           iterate this procedure up to two times.
 !
-            IF ( USECN ) THEN
-               NITR = 2
-            ELSE
-               NITR = 1
-            END IF
+            if ( usecn ) then
+               nitr = 2
+            else
+               nitr = 1
+            end if
 
-            I = 1
+            i = 1
 
-            DO WHILE (  ( I .LE. NITR ) .AND. ( .NOT. FOUND )  )
+            do while (  ( i .le. nitr ) .and. ( .not. found )  )
 
-               CALL NPEDLN ( RADII(1), RADII(2), RADII(3), OBSPOS, &
-                             TRGDIR,   PNEAR,    RAYALT           )
+               call npedln ( radii(1), radii(2), radii(3), obspos, &
+                             trgdir,   pnear,    rayalt           )
 
-               LT      =  VDIST ( OBSPOS, PNEAR ) / CLIGHT()
+               lt      =  vdist ( obspos, pnear ) / clight()
 !
 !              Use the new light time estimate to repeat the intercept
 !              computation.
 !
-               TRGEPC  =  ET  +  S * LT
+               trgepc  =  et  +  s * lt
 
 !
 !              Get the J2000-relative state of the target relative to
 !              the solar system barycenter at the target epoch.
 !
-               CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+               call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SRFXPT' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SRFXPT' )
+                  return
+               end if
 
 !
 !              Find the position of the observer relative to the target.
 !              Convert this vector from the J2000 frame to the target
 !              frame at TRGEPC.
 !
-               CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
-               CALL PXFORM ( 'J2000', FRNAME, TRGEPC, XFORM )
+               call vsub   ( ssbost,  ssbtst, j2pos         )
+               call pxform ( 'J2000', frname, trgepc, xform )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SRFXPT' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SRFXPT' )
+                  return
+               end if
 
 !
 !              Convert the observer's position relative to the target
 !              from the J2000 frame to the target frame at the target
 !              epoch.
 !
-               CALL MXV ( XFORM, J2POS, OBSPOS )
+               call mxv ( xform, j2pos, obspos )
 
 !
 !              Convert the ray's direction vector from the J2000 frame
 !              to the target frame at the target epoch.
 !
-               CALL MXV ( XFORM, J2DIR, TRGDIR )
+               call mxv ( xform, j2dir, trgdir )
 
 !
 !              Repeat the intercept computation.
 !
-               CALL SURFPT ( OBSPOS,   TRGDIR, RADII(1), RADII(2), &
-                             RADII(3), SPOINT, FOUND               )
+               call surfpt ( obspos,   trgdir, radii(1), radii(2), &
+                             radii(3), spoint, found               )
 
-               I = I + 1
+               i = i + 1
 
-            END DO
+            end do
 !
 !           If there's still no intercept, we're done.
 !
-            IF ( .NOT. FOUND ) THEN
-               CALL CHKOUT ( 'SRFXPT' )
-               RETURN
-            END IF
+            if ( .not. found ) then
+               call chkout ( 'SRFXPT' )
+               return
+            end if
 
-         END IF
+         end if
 
 !
 !        We've got an intersection.  SURFPT doesn't compute range, so do
 !        it here.
 !
-         DIST  =  VDIST ( OBSPOS, SPOINT )
+         dist  =  vdist ( obspos, spoint )
 
 !
 !        Since we're using light time corrections, we're going to make
@@ -1775,97 +1775,97 @@
 !        our computation of the target position and orientation using
 !        the new light time value.
 !
-         IF ( USECN ) THEN
-            NITR = MAXITR
-         ELSE
-            NITR = 1
-         END IF
+         if ( usecn ) then
+            nitr = maxitr
+         else
+            nitr = 1
+         end if
 
 
 !
 !        Get the J2000-relative state of the observer relative to
 !        the solar system barycenter at ET.
 !
-         CALL SPKSSB ( OBSCDE, ET, 'J2000', SSBOST )
+         call spkssb ( obscde, et, 'J2000', ssbost )
 
 !
 !        Compute new light time estimate and new target epoch.
 !
-         LT     =  DIST / CLIGHT()
-         TRGEPC =  ET  +  S * LT
+         lt     =  dist / clight()
+         trgepc =  et  +  s * lt
 
-         PREVLT = 0.D0
-         PREVET = TRGEPC
+         prevlt = 0.d0
+         prevet = trgepc
 
-         I      = 0
-         LTDIFF = 1.D0
-         ETDIFF = 1.D0
+         i      = 0
+         ltdiff = 1.d0
+         etdiff = 1.d0
 
-         DO WHILE (       ( I      .LT.   NITR                ) &
-                    .AND. ( LTDIFF .GT. ( CNVLIM * ABS(LT) )  ) &
-                    .AND. ( ETDIFF .GT.   0.D0                )  )
+         do while (       ( i      .lt.   nitr                ) &
+                    .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
+                    .and. ( etdiff .gt.   0.d0                )  )
 
 !
 !           Get the J2000-relative state of the target relative to
 !           the solar system barycenter at the target epoch.
 !
-            CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+            call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SRFXPT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SRFXPT' )
+               return
+            end if
 !
 !           Find the position of the observer relative to the target.
 !           Convert this vector from the J2000 frame to the target
 !           frame at TRGEPC.
 !
-            CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
-            CALL PXFORM ( 'J2000', FRNAME, TRGEPC, XFORM )
+            call vsub   ( ssbost,  ssbtst, j2pos         )
+            call pxform ( 'J2000', frname, trgepc, xform )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SRFXPT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SRFXPT' )
+               return
+            end if
 
 !
 !           Convert the observer's position relative to the target from
 !           the J2000 frame to the target frame at the target epoch.
 !
-            CALL MXV    ( XFORM,  J2POS, OBSPOS )
-            CALL VMINUS ( OBSPOS, NEGPOS )
+            call mxv    ( xform,  j2pos, obspos )
+            call vminus ( obspos, negpos )
 
 !
 !           Convert the ray's direction vector from the J2000 frame
 !           to the target frame at the target epoch.
 !
-            CALL MXV ( XFORM, J2DIR, TRGDIR )
+            call mxv ( xform, j2dir, trgdir )
 
 !
 !           Repeat the intercept computation.
 !
-            CALL SURFPT ( OBSPOS, TRGDIR, RADII(1), RADII(2), RADII(3), &
-                          SPOINT, FOUND                                )
+            call surfpt ( obspos, trgdir, radii(1), radii(2), radii(3), &
+                          spoint, found                                )
 
 !
 !           If there's no intercept, we're done.
 !
-            IF ( .NOT. FOUND ) THEN
-                CALL CHKOUT ( 'SRFXPT' )
-               RETURN
-            END IF
+            if ( .not. found ) then
+                call chkout ( 'SRFXPT' )
+               return
+            end if
 
 !
 !           Compute the distance between intercept and observer.
 !
-            DIST    =   VDIST ( OBSPOS, SPOINT )
+            dist    =   vdist ( obspos, spoint )
 
 !
 !           Compute new light time estimate and new target epoch.
 !
-            LT      =  DIST / CLIGHT()
+            lt      =  dist / clight()
 
-            TRGEPC  =  ET  +  S * LT
+            trgepc  =  et  +  s * lt
 
 !
 !           We use the d.p. identity function TOUCHD to force the
@@ -1877,27 +1877,27 @@
 !           variable doesn't solve the problem, because that variable
 !           can be optimized out of existence.
 !
-            LTDIFF  =   ABS( TOUCHD(LT     - PREVLT) )
-            ETDIFF  =   ABS( TOUCHD(TRGEPC - PREVET) )
-            PREVLT  =   LT
-            PREVET  =   TRGEPC
-            I       =   I + 1
+            ltdiff  =   abs( touchd(lt     - prevlt) )
+            etdiff  =   abs( touchd(trgepc - prevet) )
+            prevlt  =   lt
+            prevet  =   trgepc
+            i       =   i + 1
 
-         END DO
+         end do
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The computation method # was not recognized. ' )
-         CALL ERRCH  ( '#',  METHOD                                    )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                          )
-         CALL CHKOUT ( 'SRFXPT'                                        )
-         RETURN
+         call setmsg ( 'The computation method # was not recognized. ' )
+         call errch  ( '#',  method                                    )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
+         call chkout ( 'SRFXPT'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     FOUND, SPOINT, TRGEPC, and DIST have been set at this point.
 !
-      CALL CHKOUT ( 'SRFXPT' )
-      RETURN
-      END
+      call chkout ( 'SRFXPT' )
+      return
+      end

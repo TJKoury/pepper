@@ -1,6 +1,6 @@
 !$Procedure LXQSTR ( Lex quoted string )
 
-      SUBROUTINE LXQSTR ( STRING, QCHAR, FIRST, LAST, NCHAR )
+      subroutine lxqstr ( string, qchar, first, last, nchar )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      CHARACTER*(1)         QCHAR
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NCHAR
+      character*(*)         string
+      character*(1)         qchar
+      integer               first
+      integer               last
+      integer               nchar
 
 ! $ Brief_I/O
 !
@@ -215,47 +215,47 @@
 !
 !     Local variables
 !
-      INTEGER               L
-      INTEGER               LOC
-      INTEGER               POS
+      integer               l
+      integer               loc
+      integer               pos
 
-      LOGICAL               EVEN
+      logical               even
 
 
 !
 !     Error free, no check-in required.
 !
-      L    =   LEN(STRING)
+      l    =   len(string)
 
 !
 !     Handle the cases in which we can tell right away that
 !     no token can be found.
 !
-      IF (       (  FIRST                .LT.  1      ) &
-            .OR. (  FIRST                .GT.  L-1    ) &
-            .OR. (  QCHAR                .EQ.  ' '    ) &
-            .OR. (  STRING(FIRST:FIRST)  .NE.  QCHAR  )   ) THEN
+      if (       (  first                .lt.  1      ) &
+            .or. (  first                .gt.  l-1    ) &
+            .or. (  qchar                .eq.  ' '    ) &
+            .or. (  string(first:first)  .ne.  qchar  )   ) then
 
-         LAST  = FIRST - 1
-         NCHAR = 0
-         RETURN
+         last  = first - 1
+         nchar = 0
+         return
 
-      END IF
+      end if
 
 !
 !     We started out with a quote character, if we got this far.  Now
 !     we have to see whether a quoted string token exists.  Note that
 !     we can safely assume FIRST+1 does not exceed L.
 !
-      LOC = INDEX (  STRING( FIRST+1: L ),  QCHAR  )
+      loc = index (  string( first+1: l ),  qchar  )
 
-      IF ( LOC .EQ. 0 ) THEN
+      if ( loc .eq. 0 ) then
 
-         LAST  = FIRST - 1
-         NCHAR = 0
-         RETURN
+         last  = first - 1
+         nchar = 0
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we have a candidate ending point for the token.
@@ -272,43 +272,43 @@
 !     even number of quotes.  The variable POS will point to the current
 !     character to examine.
 !
-      LAST  =  FIRST + LOC
-      EVEN  = .TRUE.
-      POS   =  LAST  + 1
+      last  =  first + loc
+      even  = .true.
+      pos   =  last  + 1
 
 
-      DO WHILE (  POS  .LE.  L  )
+      do while (  pos  .le.  l  )
 
-         IF ( STRING(POS:POS) .EQ. QCHAR ) THEN
+         if ( string(pos:pos) .eq. qchar ) then
 !
 !           Each quote character we see toggles the quote parity.
 !
-            EVEN  =  .NOT. EVEN
+            even  =  .not. even
 !
 !           If the current parity is even, the current quote character
 !           becomes the candidate for the final quote.  This character
 !           can lose out only to a quote that is further to the right.
 !
-            IF ( EVEN ) THEN
-               LAST = POS
-            END IF
+            if ( even ) then
+               last = pos
+            end if
 
-         ELSE
+         else
 
-            IF ( EVEN ) THEN
+            if ( even ) then
 !
 !              The last even-numbered quote was followed by a non-quote
 !              character.  We're done.
 !
-               NCHAR  =  LAST - FIRST + 1
-               RETURN
+               nchar  =  last - first + 1
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-         POS  =  POS + 1
+         pos  =  pos + 1
 
 !
 !        At this point in the loop,
@@ -322,14 +322,14 @@
 !
 !           POS is the index of the next character to examine.
 !
-      END DO
+      end do
 
 !
 !     Since there are no further characters to examine, the value of
 !     LAST that we already have is the largest value we can get.
 !
-      NCHAR  =  LAST - FIRST + 1
+      nchar  =  last - first + 1
 
 
-      RETURN
-      END
+      return
+      end

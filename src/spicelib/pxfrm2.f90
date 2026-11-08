@@ -1,6 +1,6 @@
 !$Procedure PXFRM2 ( Position Transform Matrix, Different Epochs )
 
-      SUBROUTINE PXFRM2 ( FROM, TO, ETFROM, ETTO, ROTATE  )
+      subroutine pxfrm2 ( from, to, etfrom, etto, rotate  )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         FROM
-      CHARACTER*(*)         TO
-      DOUBLE PRECISION      ETFROM
-      DOUBLE PRECISION      ETTO
-      DOUBLE PRECISION      ROTATE  ( 3, 3 )
+      character*(*)         from
+      character*(*)         to
+      double precision      etfrom
+      double precision      etto
+      double precision      rotate  ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -572,7 +572,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -581,91 +581,91 @@
 !     The J2000 frame has a NAIF ID of 1. Any inertial reference
 !     frame could have been used for this program instead of J2000.
 !
-      INTEGER               JCODE
-      PARAMETER           ( JCODE = 1 )
+      integer               jcode
+      parameter           ( jcode = 1 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      INTEGER               FCODE
-      INTEGER               TCODE
+      integer               fcode
+      integer               tcode
 
-      DOUBLE PRECISION      JF ( 3, 3 )
-      DOUBLE PRECISION      TJ ( 3, 3 )
+      double precision      jf ( 3, 3 )
+      double precision      tj ( 3, 3 )
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFROM
-      INTEGER               SVFCOD
+      integer               svctr1 ( ctrsiz )
+      character*(frnmln)    svfrom
+      integer               svfcod
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVTO
-      INTEGER               SVTCDE
+      integer               svctr2 ( ctrsiz )
+      character*(frnmln)    svto
+      integer               svtcde
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVFROM
-      SAVE                  SVFCOD
+      save                  svctr1
+      save                  svfrom
+      save                  svfcod
 
-      SAVE                  SVCTR2
-      SAVE                  SVTO
-      SAVE                  SVTCDE
+      save                  svctr2
+      save                  svto
+      save                  svtcde
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'PXFRM2' )
+      call chkin  ( 'PXFRM2' )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     The frame names must be converted to their corresponding IDs.
 !
-      CALL ZZNAMFRM ( SVCTR1, SVFROM, SVFCOD, FROM, FCODE )
-      CALL ZZNAMFRM ( SVCTR2, SVTO,   SVTCDE, TO,   TCODE )
+      call zznamfrm ( svctr1, svfrom, svfcod, from, fcode )
+      call zznamfrm ( svctr2, svto,   svtcde, to,   tcode )
 
 !
 !     Only non-zero ID codes are legitimate frame ID codes.  Zero
 !     indicates that the frame was not recognized.
 !
-      IF      ( (FCODE .NE. 0) .AND. (TCODE .NE. 0) ) THEN
+      if      ( (fcode .ne. 0) .and. (tcode .ne. 0) ) then
 
 !
 !        The following three lines of code calculate the following:
@@ -679,37 +679,37 @@
 !
 !                              [ROTATE] = [TF] = [TJ][JF]
 !
-         CALL REFCHG ( FCODE, JCODE, ETFROM, JF )
-         CALL REFCHG ( JCODE, TCODE, ETTO,   TJ )
-         CALL MXM    ( TJ,    JF,    ROTATE     )
+         call refchg ( fcode, jcode, etfrom, jf )
+         call refchg ( jcode, tcode, etto,   tj )
+         call mxm    ( tj,    jf,    rotate     )
 
-      ELSE IF ( (FCODE .EQ. 0) .AND. (TCODE .EQ. 0) ) THEN
+      else if ( (fcode .eq. 0) .and. (tcode .eq. 0) ) then
 
-         CALL SETMSG ( 'Neither frame # nor # was ' &
+         call setmsg ( 'Neither frame # nor # was ' &
          //            'recognized as a known reference frame. ' )
-         CALL ERRCH  ( '#', FROM )
-         CALL ERRCH  ( '#', TO   )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
+         call errch  ( '#', from )
+         call errch  ( '#', to   )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-      ELSE IF   (FCODE .EQ. 0) THEN
+      else if   (fcode .eq. 0) then
 
-         CALL SETMSG ( 'The frame # was not recognized as a ' &
+         call setmsg ( 'The frame # was not recognized as a ' &
          //            'known reference frame. ' )
-         CALL ERRCH  ( '#', FROM )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
+         call errch  ( '#', from )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-      ELSE
+      else
 !
 !        TCODE is zero
 !
-         CALL SETMSG ( 'The frame # was not recognized as a ' &
+         call setmsg ( 'The frame # was not recognized as a ' &
          //            'known reference frame. ' )
-         CALL ERRCH  ( '#', TO   )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'  )
+         call errch  ( '#', to   )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'PXFRM2' )
-      RETURN
+      call chkout ( 'PXFRM2' )
+      return
 
-      END
+      end

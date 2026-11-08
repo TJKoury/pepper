@@ -1,6 +1,6 @@
 !$Procedure WRENCC ( Write characters to text file encoded )
 
-      SUBROUTINE WRENCC ( UNIT, N, DATA )
+      subroutine wrencc ( unit, n, data )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      INTEGER               N
-      CHARACTER*(*)         DATA ( * )
+      integer               unit
+      integer               n
+      character*(*)         data ( * )
 
 ! $ Brief_I/O
 !
@@ -449,85 +449,85 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(1)         QUOTE
-      PARAMETER           ( QUOTE = '''' )
+      character*(1)         quote
+      parameter           ( quote = '''' )
 
-      CHARACTER*(1)         ESCCHR
-      PARAMETER           ( ESCCHR = '@')
+      character*(1)         escchr
+      parameter           ( escchr = '@')
 
-      CHARACTER*(1)         CHRFPC
-      PARAMETER           ( CHRFPC = ' ')
+      character*(1)         chrfpc
+      parameter           ( chrfpc = ' ')
 
-      CHARACTER*(1)         CHRLPC
-      PARAMETER           ( CHRLPC = '~')
+      character*(1)         chrlpc
+      parameter           ( chrlpc = '~')
 
-      INTEGER               MAXENC
-      PARAMETER           ( MAXENC = 64 )
+      integer               maxenc
+      parameter           ( maxenc = 64 )
 
-      INTEGER               HEXBAS
-      PARAMETER           ( HEXBAS = 16 )
+      integer               hexbas
+      parameter           ( hexbas = 16 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         CARG
-      CHARACTER*(1)         CH
-      CHARACTER*(MAXENC)    ENCCHR
-      CHARACTER*(1)         HEXDIG(0:15)
-      CHARACTER*(2)         LFTOVR
+      character*(1)         carg
+      character*(1)         ch
+      character*(maxenc)    encchr
+      character*(1)         hexdig(0:15)
+      character*(2)         lftovr
 
-      INTEGER               DTALEN
-      INTEGER               DTALIN
-      INTEGER               DTAPOS
-      INTEGER               ENCPOS
-      INTEGER               HIBITS
-      INTEGER               INTCH
-      INTEGER               INTESC
-      INTEGER               INTFPC
-      INTEGER               INTLPC
-      INTEGER               INTQUO
-      INTEGER               IOSTAT
-      INTEGER               LOBITS
-      INTEGER               NCHARS
-      INTEGER               NCHOUT
-      INTEGER               ROOM
+      integer               dtalen
+      integer               dtalin
+      integer               dtapos
+      integer               encpos
+      integer               hibits
+      integer               intch
+      integer               intesc
+      integer               intfpc
+      integer               intlpc
+      integer               intquo
+      integer               iostat
+      integer               lobits
+      integer               nchars
+      integer               nchout
+      integer               room
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Statement Functions
 !
-      INTEGER               ZZICHR
+      integer               zzichr
 
 !
 !     Saved variables
 !
-      SAVE                  HEXDIG
-      SAVE                  INTESC
-      SAVE                  INTFPC
-      SAVE                  INTLPC
-      SAVE                  INTQUO
+      save                  hexdig
+      save                  intesc
+      save                  intfpc
+      save                  intlpc
+      save                  intquo
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values
 !
 !     Define the hexadecimal digits
 !
-      DATA                  HEXDIG / &
+      data                  hexdig / &
                                      '0', '1', '2', '3', &
                                      '4', '5', '6', '7', &
                                      '8', '9', 'A', 'B', &
                                      'C', 'D', 'E', 'F' &
                                    /
 
-      DATA                  FIRST    / .TRUE. /
+      data                  first    / .true. /
 
 !
 !     Statement Function Definitions
@@ -544,54 +544,54 @@
 #endif
 !
 #if defined(SPICE_COMPILER_INTEL)
-      ZZICHR(CARG) = ICHAR(CARG)
+      zzichr(carg) = ichar(carg)
 #else
-      ZZICHR(CARG) = ICHAR(CARG) - MAX( -1, MIN(0,ICHAR(CARG)) )*256
+      zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
 #endif
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WRENCC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'WRENCC' )
+      end if
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the integer values for the special characters
 !
-         FIRST  = .FALSE.
-         INTESC = ZZICHR( ESCCHR )
-         INTQUO = ZZICHR( QUOTE  )
-         INTFPC = ZZICHR( CHRFPC )
-         INTLPC = ZZICHR( CHRLPC )
+         first  = .false.
+         intesc = zzichr( escchr )
+         intquo = zzichr( quote  )
+         intfpc = zzichr( chrfpc )
+         intlpc = zzichr( chrlpc )
 
-      END IF
+      end if
 !
 !     Get the length of a data ``line'' in the data buffer DATA.
 !
-      DTALEN = LEN( DATA(1) )
+      dtalen = len( data(1) )
 !
 !     Make sure that the encoding character string is empty when we
 !     start.
 !
-      ENCCHR = ' '
+      encchr = ' '
 !
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL SETMSG ( 'The number of data items to be written was' // &
+         call setmsg ( 'The number of data items to be written was' // &
                        ' not positive: #.'                           )
-         CALL ERRINT ( '#', N                                        )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                      )
-         CALL CHKOUT ( 'WRENCC'                                      )
-         RETURN
+         call errint ( '#', n                                        )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         call chkout ( 'WRENCC'                                      )
+         return
 
-      END IF
+      end if
 !
 !     We need to begin scanning through the characters and placing them
 !     into a temporary buffer that is an appropriate length for output
@@ -603,22 +603,22 @@
 !
 !     Initialize the data line and data line position.
 !
-      DTALIN = 1
-      DTAPOS = 1
+      dtalin = 1
+      dtapos = 1
 !
 !     Initialize the encoded character buffer position.
 !
-      ENCPOS = 1
+      encpos = 1
 !
 !     Set the number of characters encoded to zero, and set the number
 !     of characters output to zero. The number of output characters may
 !     be larger than the number of characters because characters that
 !     are escaped are more than one character in length.
 !
-      NCHARS = 0
-      NCHOUT = 0
+      nchars = 0
+      nchout = 0
 
-      DO WHILE ( NCHARS .LT. N )
+      do while ( nchars .lt. n )
 !
 !        At this point, we know the following:
 !
@@ -628,18 +628,18 @@
 !           (4) 0 <= NCHARS <= N
 !           (5) 0 <= NCHOUT
 !
-         CH    = DATA(DTALIN)(DTAPOS:DTAPOS)
-         INTCH = ZZICHR( CH )
+         ch    = data(dtalin)(dtapos:dtapos)
+         intch = zzichr( ch )
 !
 !        If the character is a special character, then encode it and
 !        place it in the encoded character buffer. Otherwise the
 !        character is a printing character, so just put it in the
 !        encoded character buffer.
 !
-         IF ( ( INTCH .LT. INTFPC ) .OR. &
-              ( INTCH .GT. INTLPC ) .OR. &
-              ( INTCH .EQ. INTESC ) .OR. &
-              ( INTCH .EQ. INTQUO ) ) THEN
+         if ( ( intch .lt. intfpc ) .or. &
+              ( intch .gt. intlpc ) .or. &
+              ( intch .eq. intesc ) .or. &
+              ( intch .eq. intquo ) ) then
 !
 !           The character is a nonprinting character, the escape
 !           character, or a single quote, and so we need to encode
@@ -647,9 +647,9 @@
 !           hexadecimal digits which represent the position of the
 !           character in the ASCII character sequence.
 !
-            HIBITS                = INTCH / HEXBAS
-            LOBITS                = INTCH - HIBITS * HEXBAS
-            ENCCHR(ENCPOS:ENCPOS) = ESCCHR
+            hibits                = intch / hexbas
+            lobits                = intch - hibits * hexbas
+            encchr(encpos:encpos) = escchr
 !
 !           We need to see if there is enough room in the encoded
 !           character buffer to place all of the hexadecimal digits
@@ -658,106 +658,106 @@
 !           which will be placed in the encoded character buffer after
 !           the filled buffer is written to the file.
 !
-            ROOM = MAXENC - ENCPOS
+            room = maxenc - encpos
 
-            IF ( ROOM .GE. 2 ) THEN
+            if ( room .ge. 2 ) then
 
-               ENCCHR(ENCPOS+1:ENCPOS+1) = HEXDIG(HIBITS)
-               ENCCHR(ENCPOS+2:ENCPOS+2) = HEXDIG(LOBITS)
+               encchr(encpos+1:encpos+1) = hexdig(hibits)
+               encchr(encpos+2:encpos+2) = hexdig(lobits)
 
-            ELSE IF ( ROOM .EQ. 1 ) THEN
+            else if ( room .eq. 1 ) then
 
-               ENCCHR(ENCPOS+1:ENCPOS+1) = HEXDIG(HIBITS)
-               LFTOVR(1:1)               = HEXDIG(LOBITS)
-               LFTOVR(2:2)               = ' '
+               encchr(encpos+1:encpos+1) = hexdig(hibits)
+               lftovr(1:1)               = hexdig(lobits)
+               lftovr(2:2)               = ' '
 
-            ELSE
+            else
 
-               LFTOVR(1:1) = HEXDIG(HIBITS)
-               LFTOVR(2:2) = HEXDIG(LOBITS)
+               lftovr(1:1) = hexdig(hibits)
+               lftovr(2:2) = hexdig(lobits)
 
-            END IF
+            end if
 !
 !           Increment the character buffer pointers, including the
 !           pointer for the encoded character (possibly over
 !           incrementing, but that's OK).
 !
-            NCHARS = NCHARS + 1
-            DTAPOS = DTAPOS + 1
-            ENCPOS = ENCPOS + 3
-            NCHOUT = NCHOUT + 3
+            nchars = nchars + 1
+            dtapos = dtapos + 1
+            encpos = encpos + 3
+            nchout = nchout + 3
 
-         ELSE
+         else
 !
 !           The character is a printing character, and we encode it
 !           as itself and increment the character buffer pointers
 !           appropriately.
 !
-            ENCCHR(ENCPOS:ENCPOS) = CH
-            NCHARS                = NCHARS + 1
-            DTAPOS                = DTAPOS + 1
-            ENCPOS                = ENCPOS + 1
-            NCHOUT                = NCHOUT + 1
+            encchr(encpos:encpos) = ch
+            nchars                = nchars + 1
+            dtapos                = dtapos + 1
+            encpos                = encpos + 1
+            nchout                = nchout + 1
 
-         END IF
+         end if
 !
 !        If we have filled the encoded character buffer, we need to
 !        write it out to the file and prepare it for reuse.
 !
-         IF ( ENCPOS .GT. MAXENC ) THEN
+         if ( encpos .gt. maxenc ) then
 !
 !           Write out the encoded character buffer placing single
 !           quotes around it so that it may be read using a Fortran
 !           list directed read statement rather than the format
 !           specifier FMT = '(A)'.
 !
-            WRITE ( UNIT, &
-                    FMT='(A)', &
-                    IOSTAT=IOSTAT ) &
-                    QUOTE // ENCCHR // QUOTE
+            write ( unit, &
+                    fmt='(A)', &
+                    iostat=iostat ) &
+                    quote // encchr // quote
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error writing to logical unit #,' // &
+               call setmsg ( 'Error writing to logical unit #,' // &
                              ' IOSTAT = #.'                      )
-               CALL ERRINT ( '#', UNIT                           )
-               CALL ERRINT ( '#', IOSTAT                         )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'            )
-               CALL CHKOUT ( 'WRENCC'                            )
-               RETURN
+               call errint ( '#', unit                           )
+               call errint ( '#', iostat                         )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'            )
+               call chkout ( 'WRENCC'                            )
+               return
 
-            END IF
+            end if
 !
 !           Get ready to fill up the encoded character buffer again,
 !           taking care to place any leftover characters in the buffer
 !           first.
 !
-            NCHOUT = NCHOUT - MAXENC
+            nchout = nchout - maxenc
 
-            IF ( NCHOUT .GT. 0 ) THEN
+            if ( nchout .gt. 0 ) then
 
-               ENCCHR(1:2) = LFTOVR(1:2)
+               encchr(1:2) = lftovr(1:2)
 
-            END IF
+            end if
 
-            ENCPOS          = 1 + NCHOUT
-            ENCCHR(ENCPOS:) = ' '
-            LFTOVR          = ' '
+            encpos          = 1 + nchout
+            encchr(encpos:) = ' '
+            lftovr          = ' '
 
-         END IF
+         end if
 !
 !        If we have reached the end of the current data ``line'' in the
 !        data buffer DATA, we need to increment the data line pointer
 !        and reset the data position pointer.
 !
-         IF ( DTAPOS .GT. DTALEN ) THEN
+         if ( dtapos .gt. dtalen ) then
 
-            DTALIN = DTALIN + 1
-            DTAPOS = 1
+            dtalin = dtalin + 1
+            dtapos = 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     If the number of output characters remaining is greater than
 !     zero, we need to flush the encoded character buffer before
@@ -768,32 +768,32 @@
 !     blanks out to MAXENC character positions, so there is no
 !     ``garbage'' written at the end of the data.
 !
-      IF ( NCHOUT .GT. 0 ) THEN
+      if ( nchout .gt. 0 ) then
 !
 !        Write out the encoded character buffer placing single
 !        quotes around it so that it may be read using a Fortran
 !        list directed read statement rather than the format
 !        specifier FMT = '(A)'.
 !
-         WRITE ( UNIT, &
-                 FMT='(A)', &
-                 IOSTAT=IOSTAT) &
-                 QUOTE // ENCCHR // QUOTE
+         write ( unit, &
+                 fmt='(A)', &
+                 iostat=iostat) &
+                 quote // encchr // quote
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Error writing to logical unit #,' // &
+            call setmsg ( 'Error writing to logical unit #,' // &
                           ' IOSTAT = #.'                      )
-            CALL ERRINT ( '#', UNIT                           )
-            CALL ERRINT ( '#', IOSTAT                         )
-            CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'            )
-            CALL CHKOUT ( 'WRENCC'                            )
-            RETURN
+            call errint ( '#', unit                           )
+            call errint ( '#', iostat                         )
+            call sigerr ( 'SPICE(FILEWRITEFAILED)'            )
+            call chkout ( 'WRENCC'                            )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'WRENCC' )
-      RETURN
-      END
+      call chkout ( 'WRENCC' )
+      return
+      end

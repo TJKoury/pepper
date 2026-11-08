@@ -1,6 +1,6 @@
 !$Procedure VDOT ( Vector dot product, 3 dimensions )
 
-      DOUBLE PRECISION FUNCTION VDOT ( V1, V2 )
+      double precision function vdot ( v1, v2 )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V1 ( 3 )
-      DOUBLE PRECISION   V2 ( 3 )
+      double precision   v1 ( 3 )
+      double precision   v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -203,7 +203,7 @@
 !-&
 
 
-      VDOT = V1(1)*V2(1) + V1(2)*V2(2) + V1(3)*V2(3)
+      vdot = v1(1)*v2(1) + v1(2)*v2(2) + v1(3)*v2(3)
 !
-      RETURN
-      END
+      return
+      end

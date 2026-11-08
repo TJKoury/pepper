@@ -1,6 +1,6 @@
 !$Procedure SPKE05 ( Evaluate SPK record, type 5 )
 
-      SUBROUTINE SPKE05 ( ET, RECORD, STATE )
+      subroutine spke05 ( et, record, state )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -208,47 +208,47 @@
 !
 !     SPICELIB functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
+      external              pi
+      double precision      pi
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ARG
-      DOUBLE PRECISION      DARGDT
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      DWDT
-      DOUBLE PRECISION      GM
-      DOUBLE PRECISION      NUMER
-      DOUBLE PRECISION      PV       ( 6, 2 )
-      DOUBLE PRECISION      S1       ( 6 )
-      DOUBLE PRECISION      S2       ( 6 )
-      DOUBLE PRECISION      T1
-      DOUBLE PRECISION      T2
-      DOUBLE PRECISION      VCOMP    ( 3 )
-      DOUBLE PRECISION      VEL      ( 3 )
-      DOUBLE PRECISION      W
+      double precision      arg
+      double precision      dargdt
+      double precision      denom
+      double precision      dwdt
+      double precision      gm
+      double precision      numer
+      double precision      pv       ( 6, 2 )
+      double precision      s1       ( 6 )
+      double precision      s2       ( 6 )
+      double precision      t1
+      double precision      t2
+      double precision      vcomp    ( 3 )
+      double precision      vel      ( 3 )
+      double precision      w
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKE05' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKE05' )
+      end if
 
 !
 !     Unpack the record, for easier reading.
 !
-      CALL MOVED ( RECORD, 12, PV )
+      call moved ( record, 12, pv )
 
-      T1 = RECORD(13)
-      T2 = RECORD(14)
-      GM = RECORD(15)
+      t1 = record(13)
+      t2 = record(14)
+      gm = record(15)
 
 !
 !     Evaluate the two states. Call them s_1(t) and s_2(t).
@@ -280,30 +280,30 @@
 !     symmetric and zero at both t1 and t2.
 !
 !
-      IF ( T1 .NE. T2 ) THEN
+      if ( t1 .ne. t2 ) then
 
-         CALL PROP2B ( GM, PV(1,1), ET - T1, S1 )
-         CALL PROP2B ( GM, PV(1,2), ET - T2, S2 )
+         call prop2b ( gm, pv(1,1), et - t1, s1 )
+         call prop2b ( gm, pv(1,2), et - t2, s2 )
 
-         NUMER  = ET - T1
-         DENOM  = T2 - T1
-         ARG    = NUMER*PI()/DENOM
-         DARGDT =       PI()/DENOM
+         numer  = et - t1
+         denom  = t2 - t1
+         arg    = numer*pi()/denom
+         dargdt =       pi()/denom
 
-         W      =  0.5D0 + 0.5D0 * COS( ARG )
-         DWDT   =        - 0.5D0 * SIN( ARG ) * DARGDT
+         w      =  0.5d0 + 0.5d0 * cos( arg )
+         dwdt   =        - 0.5d0 * sin( arg ) * dargdt
 
-         CALL VLCOMG ( 6,  W,    S1,       1.D0-W, S2,     STATE    )
-         CALL VLCOM  (     DWDT, S1,       -DWDT,  S2,     VCOMP    )
-         CALL VADD   (           STATE(4),         VCOMP,  VEL      )
-         CALL VEQU   (           VEL,                      STATE(4) )
+         call vlcomg ( 6,  w,    s1,       1.d0-w, s2,     state    )
+         call vlcom  (     dwdt, s1,       -dwdt,  s2,     vcomp    )
+         call vadd   (           state(4),         vcomp,  vel      )
+         call vequ   (           vel,                      state(4) )
 
-      ELSE
+      else
 
-         CALL PROP2B ( GM, PV(1,1), ET - T1, STATE )
+         call prop2b ( gm, pv(1,1), et - t1, state )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SPKE05' )
-      RETURN
-      END
+      call chkout ( 'SPKE05' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZEKGFWD ( EK, get forward pointer for data page )
 
-      SUBROUTINE ZZEKGFWD ( HANDLE, TYPE, P, FWARD )
+      subroutine zzekgfwd ( handle, type, p, fward )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TYPE
-      INTEGER               P
-      INTEGER               FWARD
+      integer               handle
+      integer               type
+      integer               p
+      integer               fward
 
 ! $ Brief_I/O
 !
@@ -104,49 +104,49 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DPPTR
-      INTEGER               BASE
+      double precision      dpptr
+      integer               base
 
 !
 !     Use discovery check-in.
 !
 !     Look up the base address of the page.
 !
-      CALL ZZEKPGBS ( TYPE, P, BASE )
+      call zzekpgbs ( type, p, base )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 !
 !        Get the encoded pointer.
 !
-         CALL ZZEKGEI ( HANDLE, BASE+CFPIDX, FWARD )
+         call zzekgei ( handle, base+cfpidx, fward )
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 !
 !        Convert the d.p. pointer to integer type.
 !
-         CALL DASRDD ( HANDLE, BASE+DFPIDX, BASE+DFPIDX, DPPTR )
+         call dasrdd ( handle, base+dfpidx, base+dfpidx, dpptr )
 
-         FWARD  =  NINT ( DPPTR )
+         fward  =  nint ( dpptr )
 
-      ELSE
+      else
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, ZZEKPGBS would have complained.
 !
-         CALL DASRDI ( HANDLE, BASE+IFPIDX, BASE+IFPIDX, FWARD )
+         call dasrdi ( handle, base+ifpidx, base+ifpidx, fward )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

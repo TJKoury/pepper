@@ -1,6 +1,6 @@
 !$Procedure ZZTEME ( J2000 to TEME at epoch )
 
-      SUBROUTINE ZZTEME( ET, J2TM, TM2J )
+      subroutine zzteme( et, j2tm, tm2j )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      J2TM    ( 6, 6 )
-      DOUBLE PRECISION      TM2J    ( 6, 6 )
+      double precision      et
+      double precision      j2tm    ( 6, 6 )
+      double precision      tm2j    ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -100,55 +100,55 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      M1     ( 6, 6 )
-      DOUBLE PRECISION      M1INV  ( 6, 6 )
-      DOUBLE PRECISION      M2     ( 6, 6 )
-      DOUBLE PRECISION      M2INV  ( 6, 6 )
-      DOUBLE PRECISION      XJ2000 ( 6 )
-      DOUBLE PRECISION      Z      ( 6 )
-      DOUBLE PRECISION      ZJ2000 ( 6 )
+      double precision      m1     ( 6, 6 )
+      double precision      m1inv  ( 6, 6 )
+      double precision      m2     ( 6, 6 )
+      double precision      m2inv  ( 6, 6 )
+      double precision      xj2000 ( 6 )
+      double precision      z      ( 6 )
+      double precision      zj2000 ( 6 )
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZTEME' )
+      call chkin ( 'ZZTEME' )
 
 !
 !     Extract the MEME +X vector and its derivative, both
 !     expressed relative to the J2000 frame, into X.
 !
-      CALL ZZEPRC76( ET, M1    )
-      CALL INVSTM  ( M1, M1INV )
+      call zzeprc76( et, m1    )
+      call invstm  ( m1, m1inv )
 
-      CALL MOVED ( M1INV(1,1), 6, XJ2000 )
+      call moved ( m1inv(1,1), 6, xj2000 )
 
 !
 !     Extract the TETE +Z vector and its derivative, both
 !     expressed relative to the MEME frame, into Z.
 !
-      CALL ZZENUT80( ET, M2    )
-      CALL INVSTM  ( M2, M2INV )
+      call zzenut80( et, m2    )
+      call invstm  ( m2, m2inv )
 
-      CALL MOVED ( M2INV(1,3), 6, Z )
+      call moved ( m2inv(1,3), 6, z )
 
 !
 !     Transform Z to the J2000 frame.
 !
-      CALL MXVG ( M1INV, Z, 6, 6, ZJ2000 )
+      call mxvg ( m1inv, z, 6, 6, zj2000 )
 
 !
 !     Compute the TEME to J2000 state transformation, and the
 !     inverse.
 !
-      CALL ZZTWOVXF ( ZJ2000, 3, XJ2000, 1, TM2J )
-      CALL INVSTM   ( TM2J,  J2TM )
+      call zztwovxf ( zj2000, 3, xj2000, 1, tm2j )
+      call invstm   ( tm2j,  j2tm )
 
-      CALL CHKOUT ( 'ZZTEME' )
-      RETURN
-      END
+      call chkout ( 'ZZTEME' )
+      return
+      end

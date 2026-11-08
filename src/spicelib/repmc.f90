@@ -1,6 +1,6 @@
 !$Procedure REPMC  ( Replace marker with character string )
 
-      SUBROUTINE REPMC ( IN, MARKER, VALUE, OUT )
+      subroutine repmc ( in, marker, value, out )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         IN
-      CHARACTER*(*)         MARKER
-      CHARACTER*(*)         VALUE
-      CHARACTER*(*)         OUT
+      character*(*)         in
+      character*(*)         marker
+      character*(*)         value
+      character*(*)         out
 
 ! $ Brief_I/O
 !
@@ -245,70 +245,70 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               lastnb
 
 !
 !     Local variables
 !
-      INTEGER               MRKNBF
-      INTEGER               MRKNBL
+      integer               mrknbf
+      integer               mrknbl
 
-      INTEGER               MRKPSB
-      INTEGER               MRKPSE
+      integer               mrkpsb
+      integer               mrkpse
 
 
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      IF ( MARKER .EQ. ' ' ) THEN
+      if ( marker .eq. ' ' ) then
 
-         OUT = IN
-         RETURN
+         out = in
+         return
 
-      END IF
+      end if
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      MRKNBF = FRSTNB(MARKER)
-      MRKNBL = LASTNB(MARKER)
+      mrknbf = frstnb(marker)
+      mrknbl = lastnb(marker)
 
-      MRKPSB = INDEX ( IN, MARKER ( MRKNBF : MRKNBL )  )
+      mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      IF  ( MRKPSB .EQ. 0 ) THEN
+      if  ( mrkpsb .eq. 0 ) then
 
-         OUT = IN
-         RETURN
+         out = in
+         return
 
-      END IF
+      end if
 
-      MRKPSE = MRKPSB + MRKNBL - MRKNBF
+      mrkpse = mrkpsb + mrknbl - mrknbf
 
 !
 !     Okay, MARKER is non-blank and has been found. If VALUE is
 !     blank, substitute a single blank. (This removes the marker.)
 !     Otherwise substitute the non-blank portion.
 !
-      IF ( VALUE .EQ. ' ' ) THEN
+      if ( value .eq. ' ' ) then
 
-         CALL ZZREPSUB ( IN, &
-                         MRKPSB, &
-                         MRKPSE, &
+         call zzrepsub ( in, &
+                         mrkpsb, &
+                         mrkpse, &
                          ' ', &
-                         OUT  )
+                         out  )
 
-      ELSE
+      else
 
-         CALL ZZREPSUB ( IN, &
-                         MRKPSB, &
-                         MRKPSE, &
-                         VALUE( FRSTNB(VALUE) : LASTNB(VALUE) ), &
-                         OUT  )
+         call zzrepsub ( in, &
+                         mrkpsb, &
+                         mrkpse, &
+                         value( frstnb(value) : lastnb(value) ), &
+                         out  )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

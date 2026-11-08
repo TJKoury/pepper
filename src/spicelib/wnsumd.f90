@@ -1,8 +1,8 @@
 !$Procedure WNSUMD ( Summary of a double precision window )
 
-      SUBROUTINE WNSUMD ( WINDOW, &
-                          MEAS,   AVG,   STDDEV, &
-                          IDXSML, IDXLON         )
+      subroutine wnsumd ( window, &
+                          meas,   avg,   stddev, &
+                          idxsml, idxlon         )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      WINDOW    ( LBCELL:* )
-      DOUBLE PRECISION      MEAS
-      DOUBLE PRECISION      AVG
-      DOUBLE PRECISION      STDDEV
-      INTEGER               IDXSML
-      INTEGER               IDXLON
+      double precision      window    ( lbcell:* )
+      double precision      meas
+      double precision      avg
+      double precision      stddev
+      integer               idxsml
+      integer               idxlon
 
 ! $ Brief_I/O
 !
@@ -331,104 +331,104 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
-      LOGICAL               EVEN
+      integer               cardd
+      logical               return
+      logical               even
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      M
-      DOUBLE PRECISION      SUM
-      DOUBLE PRECISION      SUMSQR
-      DOUBLE PRECISION      MSHORT
-      DOUBLE PRECISION      MLONG
+      double precision      m
+      double precision      sum
+      double precision      sumsqr
+      double precision      mshort
+      double precision      mlong
 
-      INTEGER               I
-      INTEGER               CARD
+      integer               i
+      integer               card
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Get the cardinality (number of endpoints) of the window.
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Confirm evenness of CARD.
 !
-      IF ( .NOT. EVEN( CARD ) ) THEN
+      if ( .not. even( card ) ) then
 
-         CALL CHKIN  ( 'WNSUMD' )
-         CALL SETMSG ( 'Input window has odd cardinality. A valid ' &
+         call chkin  ( 'WNSUMD' )
+         call setmsg ( 'Input window has odd cardinality. A valid ' &
                   //   'SPICE window must have even element ' &
                   //   'cardinality.' )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'WNSUMD' )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'WNSUMD' )
+         return
 
-      END IF
+      end if
 
 !
 !     Trivial case: no intervals. Return all zeros.
 !
-      IF ( CARD .EQ. 0 ) THEN
+      if ( card .eq. 0 ) then
 
-         MEAS   = 0.D0
-         AVG    = 0.D0
-         STDDEV = 0.D0
-         IDXSML  = 0
-         IDXLON   = 0
+         meas   = 0.d0
+         avg    = 0.d0
+         stddev = 0.d0
+         idxsml  = 0
+         idxlon   = 0
 
 !
 !     Collect the sum of the measures and the squares of the measures
 !     for each of the intervals in the window. At the same time, keep
 !     track of the shortest and longest intervals encountered.
 !
-      ELSE
+      else
 
-         SUM    = 0.D0
-         SUMSQR = 0.D0
+         sum    = 0.d0
+         sumsqr = 0.d0
 
-         IDXSML  = 1
-         MSHORT = WINDOW(2) - WINDOW(1)
+         idxsml  = 1
+         mshort = window(2) - window(1)
 
-         IDXLON   = 1
-         MLONG  = WINDOW(2) - WINDOW(1)
+         idxlon   = 1
+         mlong  = window(2) - window(1)
 
-         DO I = 1, CARD, 2
+         do i = 1, card, 2
 
-            M       = WINDOW(I+1) - WINDOW(I)
-            SUM     = SUM         + M
-            SUMSQR  = SUMSQR      + M*M
+            m       = window(i+1) - window(i)
+            sum     = sum         + m
+            sumsqr  = sumsqr      + m*m
 
-            IF ( M .LT. MSHORT ) THEN
-               IDXSML  = I
-               MSHORT = M
-            END IF
+            if ( m .lt. mshort ) then
+               idxsml  = i
+               mshort = m
+            end if
 
-            IF ( M .GT. MLONG ) THEN
-               IDXLON  = I
-               MLONG = M
-            END IF
+            if ( m .gt. mlong ) then
+               idxlon  = i
+               mlong = m
+            end if
 
-         END DO
+         end do
 
 !
 !        The envelope please?
 !
-         MEAS   = SUM
-         AVG    = MEAS * 2.D0 / DBLE ( CARD )
-         STDDEV = DSQRT ( ( SUMSQR * 2.D0 / DBLE ( CARD ) ) - AVG*AVG )
+         meas   = sum
+         avg    = meas * 2.d0 / dble ( card )
+         stddev = dsqrt ( ( sumsqr * 2.d0 / dble ( card ) ) - avg*avg )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

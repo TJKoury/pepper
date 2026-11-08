@@ -1,6 +1,6 @@
 !$Procedure LX4SGN (Scan for signed integer)
 
-      SUBROUTINE LX4SGN ( STRING, FIRST, LAST, NCHAR )
+      subroutine lx4sgn ( string, first, last, nchar )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NCHAR
+      character*(*)         string
+      integer               first
+      integer               last
+      integer               nchar
 
 ! $ Brief_I/O
 !
@@ -149,48 +149,48 @@
 !-&
 
 
-      INTEGER               F
-      INTEGER               I
-      INTEGER               L
+      integer               f
+      integer               i
+      integer               l
 
-      LAST  = FIRST - 1
-      L     = LEN ( STRING )
+      last  = first - 1
+      l     = len ( string )
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      IF ( FIRST .LT. 1 .OR. FIRST .GT. L ) THEN
-         NCHAR = 0
-         RETURN
-      END IF
+      if ( first .lt. 1 .or. first .gt. l ) then
+         nchar = 0
+         return
+      end if
 !
 !     There are two cases to take care of (and in both cases
 !     LX4UNS does almost all of the work).
 !
-      I = ICHAR( STRING(FIRST:FIRST) )
+      i = ichar( string(first:first) )
 
-      IF ( I .EQ. ICHAR('+' ) .OR. I .EQ. ICHAR('-') ) THEN
+      if ( i .eq. ichar('+' ) .or. i .eq. ichar('-') ) then
 !
 !        Case 1. The string begins with a + or -.  There must
 !        be an unsigned integer following.
 !
-         F = FIRST + 1
+         f = first + 1
 
-         CALL LX4UNS ( STRING, F, LAST, NCHAR )
+         call lx4uns ( string, f, last, nchar )
 
-         IF ( NCHAR .EQ. 0 ) THEN
-            LAST  = FIRST - 1
-         ELSE
-            NCHAR = NCHAR + 1
-         END IF
+         if ( nchar .eq. 0 ) then
+            last  = first - 1
+         else
+            nchar = nchar + 1
+         end if
 
-      ELSE
+      else
 !
 !        Case 2.  The leading character is not a sign character.
 !        We simply check to see how much unsigned integer we have.
 !
-         CALL LX4UNS ( STRING, FIRST, LAST, NCHAR )
+         call lx4uns ( string, first, last, nchar )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

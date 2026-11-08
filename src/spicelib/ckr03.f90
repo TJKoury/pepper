@@ -1,7 +1,7 @@
 !$Procedure CKR03 ( C-kernel, read pointing record, data type 3 )
 
-      SUBROUTINE CKR03 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV, &
-                         RECORD, FOUND )
+      subroutine ckr03 ( handle, descr, sclkdp, tol, needav, &
+                         record, found )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( * )
-      LOGICAL               FOUND
+      integer               handle
+      double precision      descr  ( * )
+      double precision      sclkdp
+      double precision      tol
+      logical               needav
+      double precision      record ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -349,13 +349,13 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
-      INTEGER               LSTLTD
-      INTEGER               LSTLED
+      integer               lstltd
+      integer               lstled
 
-      DOUBLE PRECISION      DPMAX
+      double precision      dpmax
 
 !
 !     Local parameters
@@ -383,89 +383,89 @@
 !                   operates on.
 !
 !
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               QSIZ
-      PARAMETER           ( QSIZ   = 4 )
+      integer               qsiz
+      parameter           ( qsiz   = 4 )
 
-      INTEGER               QAVSIZ
-      PARAMETER           ( QAVSIZ = 7 )
+      integer               qavsiz
+      parameter           ( qavsiz = 7 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE =  3 )
+      integer               dtype
+      parameter           ( dtype =  3 )
 
 !
 !     Local variables
 !
-      INTEGER               ICD    ( NI )
-      INTEGER               BEG
-      INTEGER               END
-      INTEGER               LBEG
-      INTEGER               LEND
-      INTEGER               LHAND
-      INTEGER               NUMREC
-      INTEGER               NUMINT
-      INTEGER               NRDIR
-      INTEGER               NIDIR
-      INTEGER               GROUP
-      INTEGER               DIRLOC
-      INTEGER               REMAIN
-      INTEGER               SKIP
-      INTEGER               GRPADD
-      INTEGER               ADDR
-      INTEGER               LADDR
-      INTEGER               RADDR
-      INTEGER               PSIZ
-      INTEGER               I
-      INTEGER               N
+      integer               icd    ( ni )
+      integer               beg
+      integer               end
+      integer               lbeg
+      integer               lend
+      integer               lhand
+      integer               numrec
+      integer               numint
+      integer               nrdir
+      integer               nidir
+      integer               group
+      integer               dirloc
+      integer               remain
+      integer               skip
+      integer               grpadd
+      integer               addr
+      integer               laddr
+      integer               raddr
+      integer               psiz
+      integer               i
+      integer               n
 
-      DOUBLE PRECISION      DCD    ( ND     )
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      LSCLK
-      DOUBLE PRECISION      RSCLK
-      DOUBLE PRECISION      RDIFF
-      DOUBLE PRECISION      LDIFF
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      NSTART
-      DOUBLE PRECISION      PREVS
-      DOUBLE PRECISION      PREVN
+      double precision      dcd    ( nd     )
+      double precision      buffer ( bufsiz )
+      double precision      lsclk
+      double precision      rsclk
+      double precision      rdiff
+      double precision      ldiff
+      double precision      start
+      double precision      nstart
+      double precision      prevs
+      double precision      prevn
 
-      LOGICAL               FND
+      logical               fnd
 
 
 !
 !     Saved variables.
 !
 
-      SAVE                  PREVS
-      SAVE                  PREVN
-      SAVE                  LHAND
-      SAVE                  LBEG
-      SAVE                  LEND
+      save                  prevs
+      save                  prevn
+      save                  lhand
+      save                  lbeg
+      save                  lend
 
 
 !
 !     Initial values.
 !
-      DATA    PREVS   / -1.D0 /
+      data    prevs   / -1.d0 /
 
-      DATA    PREVN   / -1.D0 /
+      data    prevn   / -1.d0 /
 
-      DATA    LHAND   / 0     /
+      data    lhand   / 0     /
 
-      DATA    LBEG    / -1    /
+      data    lbeg    / -1    /
 
-      DATA    LEND    / -1    /
+      data    lend    / -1    /
 
 
 
@@ -473,17 +473,17 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKR03' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKR03' )
+      end if
 
 !
 !     Start off with FOUND equal to false just in case a SPICELIB error
 !     is signaled and the return mode is not set to ABORT.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     We need to look at a few of the descriptor components.
@@ -501,52 +501,52 @@
 !        ICD(6)  Final address of segment data
 !
 
-      CALL DAFUS ( DESCR, ND, NI, DCD, ICD )
+      call dafus ( descr, nd, ni, dcd, icd )
 
 !
 !     Check to make sure that the segment is type 3.
 !
-      IF ( ICD( 3 ) .NE. DTYPE ) THEN
+      if ( icd( 3 ) .ne. dtype ) then
 
-         CALL SETMSG ( 'The segment is not a type 3 segment.  '   // &
+         call setmsg ( 'The segment is not a type 3 segment.  '   // &
                        'Type is #'                                 )
-         CALL ERRINT ( '#', ICD(3)                                 )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                      )
-         CALL CHKOUT ( 'CKR03'                                     )
-         RETURN
+         call errint ( '#', icd(3)                                 )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
+         call chkout ( 'CKR03'                                     )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Does this segment contain angular velocity?
 !
-      IF ( ICD ( 4 ) .EQ. 1 ) THEN
+      if ( icd ( 4 ) .eq. 1 ) then
 
-         PSIZ = QAVSIZ
+         psiz = qavsiz
 
-      ELSE
+      else
 
-         PSIZ = QSIZ
+         psiz = qsiz
 
-         IF ( NEEDAV ) THEN
+         if ( needav ) then
 
-            CALL SETMSG ( 'Segment does not contain angular velocity '// &
+            call setmsg ( 'Segment does not contain angular velocity '// &
                           'data.'                                      )
-            CALL SIGERR ( 'SPICE(NOAVDATA)'                            )
-            CALL CHKOUT ( 'CKR03'                                      )
-            RETURN
+            call sigerr ( 'SPICE(NOAVDATA)'                            )
+            call chkout ( 'CKR03'                                      )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The beginning and ending addresses of the segment are in the
 !     descriptor.
 !
-      BEG = ICD( 5 )
-      END = ICD( 6 )
+      beg = icd( 5 )
+      end = icd( 6 )
 
 
 !
@@ -588,23 +588,23 @@
 !     in this segment, and from that determine the number of respective
 !     directory epochs.
 !
-      CALL DAFGDA ( HANDLE, END - 1, END, BUFFER )
+      call dafgda ( handle, end - 1, end, buffer )
 
-      NUMINT  = NINT ( BUFFER ( 1 ) )
-      NUMREC  = NINT ( BUFFER ( 2 ) )
+      numint  = nint ( buffer ( 1 ) )
+      numrec  = nint ( buffer ( 2 ) )
 
-      NIDIR   = ( NUMINT - 1 ) / DIRSIZ
-      NRDIR   = ( NUMREC - 1 ) / DIRSIZ
+      nidir   = ( numint - 1 ) / dirsiz
+      nrdir   = ( numrec - 1 ) / dirsiz
 
 !
 !     Check the FAILED flag just in case HANDLE is not attached to
 !     any DAF file and the error action is not set to ABORT. You need
 !     need to do this only after the first call to DAFGDA.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKR03' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKR03' )
+         return
+      end if
 
 !
 !     To find the times that bracket the request time we will first
@@ -642,73 +642,73 @@
 !
 !     There is only one group if there are no directory epochs.
 !
-      IF ( NRDIR .EQ. 0 ) THEN
+      if ( nrdir .eq. 0 ) then
 
-         GROUP = 1
+         group = 1
 
-      ELSE
+      else
 !
 !        Compute the location of the first directory epoch.  From the
 !        beginning of the segment, we need to go through all of the
 !        pointing numbers (PSIZ*NUMREC of them) and then through all of
 !        the NUMREC SCLK times.
 !
-         DIRLOC = BEG + ( PSIZ + 1 ) * NUMREC
+         dirloc = beg + ( psiz + 1 ) * numrec
 !
 !        Search through the directory times.  Read in as many as BUFSIZ
 !        directory epochs at a time for comparison.
 !
-         FND    = .FALSE.
-         REMAIN =  NRDIR
-         GROUP  =  0
+         fnd    = .false.
+         remain =  nrdir
+         group  =  0
 
-         DO WHILE ( .NOT. FND )
+         do while ( .not. fnd )
 !
 !           The number of records to read into the buffer.
 !
-            N = MIN( REMAIN, BUFSIZ )
+            n = min( remain, bufsiz )
 
-            CALL DAFGDA ( HANDLE, DIRLOC, DIRLOC + N - 1, BUFFER )
+            call dafgda ( handle, dirloc, dirloc + n - 1, buffer )
 
-            REMAIN = REMAIN - N
+            remain = remain - n
 !
 !           Determine the last directory element in BUFFER that's less
 !           than SCLKDP.
 !
-            I = LSTLTD( SCLKDP, N, BUFFER )
+            i = lstltd( sclkdp, n, buffer )
 
-            IF ( I .LT. N ) THEN
+            if ( i .lt. n ) then
 
-               GROUP =  GROUP + I + 1
-               FND   = .TRUE.
+               group =  group + i + 1
+               fnd   = .true.
 
-            ELSE IF ( REMAIN .EQ. 0 ) THEN
+            else if ( remain .eq. 0 ) then
 !
 !              The request time is greater than the last directory time
 !              so we want the last group in the segment.
 !
-               GROUP =  NRDIR + 1
-               FND   = .TRUE.
+               group =  nrdir + 1
+               fnd   = .true.
 
-            ELSE
+            else
 !
 !              Need to read another block of directory times.
 !
-               DIRLOC = DIRLOC + N
-               GROUP  = GROUP  + N
+               dirloc = dirloc + n
+               group  = group  + n
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Now we know which group of DIRSIZ (or less) times to look at.
 !     Out of the NUMREC SCLK times, the number that we should skip over
 !     to get to the proper group is DIRSIZ * ( GROUP - 1 ).
 !
-      SKIP = DIRSIZ * ( GROUP - 1 )
+      skip = dirsiz * ( group - 1 )
 
 !
 !     From this we can compute the address in the segment of the group
@@ -716,22 +716,22 @@
 !     PSIZ * NUMREC pointing numbers to get to the first SCLK time.
 !     Then we skip over the number just computed above.
 !
-      GRPADD = BEG  +  ( NUMREC * PSIZ )  +  SKIP
+      grpadd = beg  +  ( numrec * psiz )  +  skip
 
 !
 !     The number of times that we have to look at may be less than
 !     DIRSIZ.  However many there are, go ahead and read them into the
 !     buffer.
 !
-      N = MIN ( DIRSIZ, NUMREC - SKIP )
+      n = min ( dirsiz, numrec - skip )
 
-      CALL DAFGDA ( HANDLE, GRPADD, GRPADD + N - 1, BUFFER )
+      call dafgda ( handle, grpadd, grpadd + n - 1, buffer )
 
 !
 !     Find the largest time in the group less than or equal to the input
 !     time.
 !
-      I = LSTLED ( SCLKDP, N, BUFFER )
+      i = lstled ( sclkdp, n, buffer )
 
 !
 !     Find the pointing instances in the segment that bracket the
@@ -744,55 +744,55 @@
 !     the last or less than the first time in the segment separately.
 !
 
-      IF ( I .EQ. 0 ) THEN
+      if ( i .eq. 0 ) then
 
-         IF ( GROUP .EQ. 1 ) THEN
+         if ( group .eq. 1 ) then
 !
 !           The time occurs before the first time in the segment. Since
 !           this time cannot possibly be in any of the intervals, the
 !           first time can satisfy the request for pointing only if it
 !           is within the tolerance of the request time.
 !
-            IF ( ( BUFFER(1) - SCLKDP ) .LE. TOL ) THEN
+            if ( ( buffer(1) - sclkdp ) .le. tol ) then
 
-               RECORD ( 1 ) = BUFFER(1)
-               RECORD ( 9 ) = BUFFER(1)
+               record ( 1 ) = buffer(1)
+               record ( 9 ) = buffer(1)
 !
 !              Calculate the address of the quaternion and angular
 !              velocity data.  Then read it from the file.
 !
-               CALL DAFGDA ( HANDLE, BEG, BEG + PSIZ - 1, BUFFER )
+               call dafgda ( handle, beg, beg + psiz - 1, buffer )
 
-               CALL MOVED ( BUFFER, PSIZ, RECORD ( 2  ) )
-               CALL MOVED ( BUFFER, PSIZ, RECORD ( 10 ) )
+               call moved ( buffer, psiz, record ( 2  ) )
+               call moved ( buffer, psiz, record ( 10 ) )
 
-               RECORD ( 17 ) = SCLKDP
+               record ( 17 ) = sclkdp
 
-               FOUND = .TRUE.
+               found = .true.
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'CKR03' )
-            RETURN
+            call chkout ( 'CKR03' )
+            return
 
-         ELSE
+         else
 
 !
 !           The first time in the current group brackets the request
 !           time on the right and the last time from the preceding
 !           group brackets on the left.
 !
-            RSCLK = BUFFER ( 1 )
+            rsclk = buffer ( 1 )
 
-            RADDR = BEG  +  SKIP * PSIZ
+            raddr = beg  +  skip * psiz
 
-            CALL DAFGDA ( HANDLE, GRPADD - 1, GRPADD - 1, LSCLK )
+            call dafgda ( handle, grpadd - 1, grpadd - 1, lsclk )
 
-            LADDR = RADDR - PSIZ
+            laddr = raddr - psiz
 
-         END IF
+         end if
 
-      ELSE  IF ( I .EQ. N ) THEN
+      else  if ( i .eq. n ) then
 
 !
 !        There are two possible cases, but the same action can handle
@@ -813,43 +813,43 @@
 !           SCLKDP - BUFFER(N) will be zero in this case. )
 !
 
-         IF ( ( SCLKDP - BUFFER(N) ) .LE. TOL ) THEN
+         if ( ( sclkdp - buffer(n) ) .le. tol ) then
 
-            RECORD ( 1 ) = BUFFER(N)
-            RECORD ( 9 ) = BUFFER(N)
+            record ( 1 ) = buffer(n)
+            record ( 9 ) = buffer(n)
 !
 !           Calculate the address of the quaternion and angular
 !           velocity data.  Then read it from the file.
 !
-            ADDR = BEG + PSIZ * ( SKIP + N - 1 )
+            addr = beg + psiz * ( skip + n - 1 )
 
-            CALL DAFGDA ( HANDLE, ADDR, ADDR + PSIZ - 1, BUFFER )
+            call dafgda ( handle, addr, addr + psiz - 1, buffer )
 
-            CALL MOVED ( BUFFER, PSIZ, RECORD ( 2  ) )
-            CALL MOVED ( BUFFER, PSIZ, RECORD ( 10 ) )
+            call moved ( buffer, psiz, record ( 2  ) )
+            call moved ( buffer, psiz, record ( 10 ) )
 
-            RECORD ( 17 ) = SCLKDP
+            record ( 17 ) = sclkdp
 
-            FOUND = .TRUE.
+            found = .true.
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'CKR03' )
-         RETURN
+         call chkout ( 'CKR03' )
+         return
 
-      ELSE
+      else
 
 !
 !        The bracketing times are contained in this group.
 !
-         LSCLK = BUFFER ( I     )
-         RSCLK = BUFFER ( I + 1 )
+         lsclk = buffer ( i     )
+         rsclk = buffer ( i + 1 )
 
-         LADDR = BEG  +  ( SKIP + I - 1 ) * PSIZ
+         laddr = beg  +  ( skip + i - 1 ) * psiz
 
-         RADDR = LADDR + PSIZ
+         raddr = laddr + psiz
 
-      END IF
+      end if
 
 
 !
@@ -884,16 +884,16 @@
 !     LEND       segment in the file LHAND that PREVS and PREVN
 !                were found in.
 !
-      IF (  ( HANDLE .EQ. LHAND ) .AND. &
-            ( BEG    .EQ. LBEG  ) .AND. &
-            ( END    .EQ. LEND  ) .AND. &
-            ( SCLKDP .GE. PREVS ) .AND. &
-            ( SCLKDP .LT. PREVN )      ) THEN
+      if (  ( handle .eq. lhand ) .and. &
+            ( beg    .eq. lbeg  ) .and. &
+            ( end    .eq. lend  ) .and. &
+            ( sclkdp .ge. prevs ) .and. &
+            ( sclkdp .lt. prevn )      ) then
 
-         START  = PREVS
-         NSTART = PREVN
+         start  = prevs
+         nstart = prevn
 
-      ELSE
+      else
 
 !
 !        The START times of all of the intervals are stored in the
@@ -909,11 +909,11 @@
 !
 !        There is only one group if there are no directory epochs.
 !
-         IF ( NIDIR .EQ. 0 ) THEN
+         if ( nidir .eq. 0 ) then
 
-            GROUP = 1
+            group = 1
 
-         ELSE
+         else
 !
 !           Compute the location of the first directory epoch.  From the
 !           beginning of the segment, we need to go through all of the
@@ -921,7 +921,7 @@
 !           the NUMREC SCLK times and NRDIR directory times, and then
 !           finally through the NUMINT interval start times.
 !
-            DIRLOC = BEG + ( PSIZ + 1 ) * NUMREC  +  NRDIR  +  NUMINT
+            dirloc = beg + ( psiz + 1 ) * numrec  +  nrdir  +  numint
 
 !
 !           Locate the largest directory time less than the
@@ -930,57 +930,57 @@
 !           Read in as many as BUFSIZ directory epochs at a time for
 !           comparison.
 !
-            FND    = .FALSE.
-            REMAIN =  NIDIR
-            GROUP  =  0
+            fnd    = .false.
+            remain =  nidir
+            group  =  0
 
-            DO WHILE ( .NOT. FND )
+            do while ( .not. fnd )
 !
 !              The number of records to read into the buffer.
 !
-               N = MIN( REMAIN, BUFSIZ )
+               n = min( remain, bufsiz )
 
-               CALL DAFGDA ( HANDLE, DIRLOC, DIRLOC + N - 1, BUFFER )
+               call dafgda ( handle, dirloc, dirloc + n - 1, buffer )
 
-               REMAIN = REMAIN - N
+               remain = remain - n
 !
 !              Determine the last directory element in BUFFER that's
 !              less than SCLKDP.
 !
-               I = LSTLTD ( SCLKDP, N, BUFFER )
+               i = lstltd ( sclkdp, n, buffer )
 
-               IF ( I .LT. N ) THEN
+               if ( i .lt. n ) then
 
-                  GROUP =  GROUP + I + 1
-                  FND   = .TRUE.
+                  group =  group + i + 1
+                  fnd   = .true.
 
-               ELSE IF ( REMAIN .EQ. 0 ) THEN
+               else if ( remain .eq. 0 ) then
 !
 !                 The request time is greater than the last directory
 !                 time so we want the last group in the segment.
 !
-                  GROUP =  NIDIR + 1
-                  FND   = .TRUE.
+                  group =  nidir + 1
+                  fnd   = .true.
 
-               ELSE
+               else
 !
 !                 Need to read another block of directory times.
 !
-                  DIRLOC = DIRLOC + N
-                  GROUP  = GROUP  + N
+                  dirloc = dirloc + n
+                  group  = group  + n
 
-               END IF
+               end if
 
-            END DO
+            end do
 
-         END IF
+         end if
 
 !
 !        Now we know which group of DIRSIZ (or less) times to look at.
 !        Out of the NUMINT SCLK START times, the number that we should
 !        skip over to get to the proper group is DIRSIZ * ( GROUP - 1 ).
 !
-         SKIP = DIRSIZ * ( GROUP - 1 )
+         skip = dirsiz * ( group - 1 )
 
 !
 !        From this we can compute the address in the segment of the
@@ -990,23 +990,23 @@
 !        over the number just computed above.
 !
 
-         GRPADD = BEG  +  ( PSIZ + 1 ) * NUMREC  +  NRDIR  +  SKIP
+         grpadd = beg  +  ( psiz + 1 ) * numrec  +  nrdir  +  skip
 
 !
 !        The number of times that we have to look at may be less than
 !        DIRSIZ.  However many there are, go ahead and read them into
 !        the buffer.
 !
-         N = MIN ( DIRSIZ, NUMINT - SKIP )
+         n = min ( dirsiz, numint - skip )
 
-         CALL DAFGDA ( HANDLE, GRPADD, GRPADD + N - 1, BUFFER )
+         call dafgda ( handle, grpadd, grpadd + n - 1, buffer )
 !
 !        Find the index of the largest time in the group that is less
 !        than or equal to the input time.
 !
-         I = LSTLED ( SCLKDP, N, BUFFER )
+         i = lstled ( sclkdp, n, buffer )
 
-         IF ( I .EQ. 0 ) THEN
+         if ( i .eq. 0 ) then
 !
 !           The first start time in the buffer is the start of the
 !           interval following the one containing the request time.
@@ -1015,54 +1015,54 @@
 !           the request time occurring before the first time in the
 !           segment has already been handled.
 !
-            NSTART = BUFFER (1)
+            nstart = buffer (1)
 
-            ADDR = GRPADD - 1
+            addr = grpadd - 1
 
-            CALL DAFGDA ( HANDLE, ADDR, ADDR, START )
+            call dafgda ( handle, addr, addr, start )
 
-         ELSE  IF ( I .EQ. N ) THEN
+         else  if ( i .eq. n ) then
 
-            IF ( GROUP .EQ. ( NIDIR + 1 ) ) THEN
+            if ( group .eq. ( nidir + 1 ) ) then
 !
 !              This is the last interval in the segment.
 !
-               START = BUFFER ( N )
+               start = buffer ( n )
 
-               NSTART = DPMAX ()
+               nstart = dpmax ()
 
-            ELSE
+            else
 !
 !              The last START time in this group is equal to the
 !              request time.
 !
-               START = BUFFER ( N )
+               start = buffer ( n )
 
-               ADDR = GRPADD + N
+               addr = grpadd + n
 
-               CALL DAFGDA ( HANDLE, ADDR, ADDR, NSTART )
+               call dafgda ( handle, addr, addr, nstart )
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The bracketing START times are contained in this group.
 !
-            START  = BUFFER ( I     )
-            NSTART = BUFFER ( I + 1 )
+            start  = buffer ( i     )
+            nstart = buffer ( i + 1 )
 
-         END IF
+         end if
 
 !
 !        Save the information about the interval and segment.
 !
-         LHAND = HANDLE
-         LBEG  = BEG
-         LEND  = END
-         PREVS = START
-         PREVN = NSTART
+         lhand = handle
+         lbeg  = beg
+         lend  = end
+         prevs = start
+         prevn = nstart
 
-      END IF
+      end if
 
 
 !
@@ -1077,63 +1077,63 @@
 !     time of the next interval.
 !
 
-      IF ( RSCLK .LT. NSTART ) THEN
+      if ( rsclk .lt. nstart ) then
 
-         RECORD ( 1 ) = LSCLK
+         record ( 1 ) = lsclk
 
-         CALL DAFGDA ( HANDLE, LADDR, LADDR + PSIZ - 1, RECORD ( 2 ) )
+         call dafgda ( handle, laddr, laddr + psiz - 1, record ( 2 ) )
 
-         RECORD ( 9 ) = RSCLK
+         record ( 9 ) = rsclk
 
-         CALL DAFGDA ( HANDLE, RADDR, RADDR + PSIZ - 1, RECORD ( 10 ) )
+         call dafgda ( handle, raddr, raddr + psiz - 1, record ( 10 ) )
 
-         RECORD ( 17 ) = SCLKDP
+         record ( 17 ) = sclkdp
 
-         FOUND = .TRUE.
+         found = .true.
 
-      ELSE
+      else
 
-         LDIFF = SCLKDP - LSCLK
-         RDIFF = RSCLK  - SCLKDP
+         ldiff = sclkdp - lsclk
+         rdiff = rsclk  - sclkdp
 
-         IF ( ( LDIFF .LE. TOL ) .OR. ( RDIFF .LE. TOL ) ) THEN
+         if ( ( ldiff .le. tol ) .or. ( rdiff .le. tol ) ) then
 !
 !           Return the pointing instance closest to the request time.
 !
 !           If the request time is midway between LSCLK and RSCLK then
 !           grab the pointing instance associated with the greater time.
 !
-            IF ( LDIFF .LT. RDIFF ) THEN
+            if ( ldiff .lt. rdiff ) then
 
-               RECORD ( 1 ) = LSCLK
-               RECORD ( 9 ) = LSCLK
+               record ( 1 ) = lsclk
+               record ( 9 ) = lsclk
 
-               CALL DAFGDA ( HANDLE, LADDR, LADDR+PSIZ-1, BUFFER )
+               call dafgda ( handle, laddr, laddr+psiz-1, buffer )
 
-               CALL MOVED ( BUFFER, PSIZ, RECORD ( 2  ) )
-               CALL MOVED ( BUFFER, PSIZ, RECORD ( 10 ) )
+               call moved ( buffer, psiz, record ( 2  ) )
+               call moved ( buffer, psiz, record ( 10 ) )
 
-            ELSE
+            else
 
-               RECORD ( 1 ) = RSCLK
-               RECORD ( 9 ) = RSCLK
+               record ( 1 ) = rsclk
+               record ( 9 ) = rsclk
 
-               CALL DAFGDA ( HANDLE, RADDR, RADDR+PSIZ-1, BUFFER )
+               call dafgda ( handle, raddr, raddr+psiz-1, buffer )
 
-               CALL MOVED ( BUFFER, PSIZ, RECORD ( 2  ) )
-               CALL MOVED ( BUFFER, PSIZ, RECORD ( 10 ) )
+               call moved ( buffer, psiz, record ( 2  ) )
+               call moved ( buffer, psiz, record ( 10 ) )
 
-            END IF
+            end if
 
-            RECORD ( 17 ) = SCLKDP
+            record ( 17 ) = sclkdp
 
-            FOUND = .TRUE.
+            found = .true.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CKR03' )
+      call chkout ( 'CKR03' )
 
-      RETURN
-      END
+      return
+      end

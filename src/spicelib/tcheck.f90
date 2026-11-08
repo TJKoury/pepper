@@ -1,6 +1,6 @@
 !$Procedure TCHECK ( Time Check )
 
-      SUBROUTINE TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
+      subroutine tcheck ( tvec, type, mods, modify, ok, error )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      TVEC   ( * )
-      CHARACTER*(*)         TYPE
-      LOGICAL               MODS
-      CHARACTER*(*)         MODIFY ( * )
-      LOGICAL               OK
-      CHARACTER*(*)         ERROR
+      double precision      tvec   ( * )
+      character*(*)         type
+      logical               mods
+      character*(*)         modify ( * )
+      logical               ok
+      character*(*)         error
 
 ! $ Brief_I/O
 !
@@ -262,343 +262,343 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
+      logical               eqstr
 
 !
 !     In-line Functions
 !
-      INTEGER               DIVBLE
+      integer               divble
 
 
-      INTEGER               ERA
-      PARAMETER           ( ERA    =  1 )
+      integer               era
+      parameter           ( era    =  1 )
 
-      INTEGER               WDAY
-      PARAMETER           ( WDAY   = ERA    + 1 )
+      integer               wday
+      parameter           ( wday   = era    + 1 )
 
-      INTEGER               ZONE
-      PARAMETER           ( ZONE   = WDAY   + 1 )
+      integer               zone
+      parameter           ( zone   = wday   + 1 )
 
-      INTEGER               AMPM
-      PARAMETER           ( AMPM   = ZONE   + 1 )
+      integer               ampm
+      parameter           ( ampm   = zone   + 1 )
 
-      INTEGER               SYSTEM
-      PARAMETER           ( SYSTEM = AMPM   + 1 )
+      integer               system
+      parameter           ( system = ampm   + 1 )
 
-      INTEGER               NMODS
-      PARAMETER           ( NMODS = SYSTEM )
+      integer               nmods
+      parameter           ( nmods = system )
 
 
 !
 !     Local Variables
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 200 )
+      integer               lnsize
+      parameter           ( lnsize = 200 )
 
-      CHARACTER*(LNSIZE)    MESSGE
+      character*(lnsize)    messge
 
-      CHARACTER*(10)        MNAMES ( 12 )
-      CHARACTER*(7)         CNAME  (  4 )
+      character*(10)        mnames ( 12 )
+      character*(7)         cname  (  4 )
 
-      DOUBLE PRECISION      DINMON ( 12 )
+      double precision      dinmon ( 12 )
 
-      DOUBLE PRECISION      DOY
-      DOUBLE PRECISION      DINYR
-      DOUBLE PRECISION      JUN30
-      DOUBLE PRECISION      HUBND
-      DOUBLE PRECISION      HLBND
+      double precision      doy
+      double precision      dinyr
+      double precision      jun30
+      double precision      hubnd
+      double precision      hlbnd
 
-      INTEGER               COMP
-      INTEGER               DAY
-      INTEGER               HOUR
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               LEAPDY
-      INTEGER               MINUTE
-      INTEGER               MONTH
-      INTEGER               MYEAR
-      INTEGER               SECOND
-      INTEGER               YEAR
+      integer               comp
+      integer               day
+      integer               hour
+      integer               i
+      integer               j
+      integer               k
+      integer               leapdy
+      integer               minute
+      integer               month
+      integer               myear
+      integer               second
+      integer               year
 
-      LOGICAL               DOCHCK
-      LOGICAL               MODTRU
+      logical               dochck
+      logical               modtru
 
-      SAVE
+      save
 
-      DATA                  DOCHCK / .FALSE. /
+      data                  dochck / .false. /
 
-      DATA                  DINMON / 31.0D0,  28.0D0, &
-                                     31.0D0,  30.0D0, &
-                                     31.0D0,  30.0D0, &
-                                     31.0D0,  31.0D0, &
-                                     30.0D0,  31.0D0, &
-                                     30.0D0,  31.0D0  /
+      data                  dinmon / 31.0d0,  28.0d0, &
+                                     31.0d0,  30.0d0, &
+                                     31.0d0,  30.0d0, &
+                                     31.0d0,  31.0d0, &
+                                     30.0d0,  31.0d0, &
+                                     30.0d0,  31.0d0  /
 
-      DATA                  MNAMES / 'January',    'February', &
+      data                  mnames / 'January',    'February', &
                                      'March',      'April', &
                                      'May',        'June', &
                                      'July',       'August', &
                                      'September',  'October', &
                                      'November',   'December' /
 
-      DATA                  CNAME / 'days',        'hours', &
+      data                  cname / 'days',        'hours', &
                                     'minutes',     'seconds' /
 !
 !     The in-line function DIVBLE returns 1 if YEAR is divisible
 !     by I,  it returns 0 otherwise.
 !
-      DIVBLE(YEAR,I) = MAX ( 0, 1 + ((IABS(YEAR)/I)*I) - IABS(YEAR) )
+      divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
 !
 !     If checking isn't enabled, there is nothing to do.
 !
-      IF ( .NOT. DOCHCK ) THEN
-         OK    = .TRUE.
-         ERROR = ' '
-         RETURN
-      END IF
+      if ( .not. dochck ) then
+         ok    = .true.
+         error = ' '
+         return
+      end if
 !
 !     Ok.  Checking has been enabled.  Proceed with the various
 !     checks.
 !
-      YEAR = NINT( TVEC(1) )
+      year = nint( tvec(1) )
 
-      MODTRU = .FALSE.
-      IF ( MODS ) THEN
-         MODTRU = (MODIFY(ERA) .EQ. 'B.C.')
-      END IF
+      modtru = .false.
+      if ( mods ) then
+         modtru = (modify(era) .eq. 'B.C.')
+      end if
 
-      IF ( MODTRU ) THEN
-         MYEAR = 1 - YEAR
-      ELSE
-         MYEAR = YEAR
-      END IF
+      if ( modtru ) then
+         myear = 1 - year
+      else
+         myear = year
+      end if
 
-      LEAPDY    =  DIVBLE( MYEAR, 4   ) &
-                -  DIVBLE( MYEAR, 100 ) &
-                +  DIVBLE( MYEAR, 400 )
+      leapdy    =  divble( myear, 4   ) &
+                -  divble( myear, 100 ) &
+                +  divble( myear, 400 )
 
-      DINMON(2) = 28.0D0  + DBLE(LEAPDY)
-      DINYR     = 365.0D0 + DBLE(LEAPDY)
-      JUN30     = 181.0D0 + DBLE(LEAPDY)
+      dinmon(2) = 28.0d0  + dble(leapdy)
+      dinyr     = 365.0d0 + dble(leapdy)
+      jun30     = 181.0d0 + dble(leapdy)
 !
 !     The error message that will be attached to an out of range
 !     problem for hours depends upon whether the AMPM modifier
 !     was specified.  We set up valid range as well as the out
 !     of range messages here.
 !
-      MODTRU = .FALSE.
-      IF ( MODS ) THEN
-         MODTRU = (MODIFY(AMPM) .NE. ' ')
-      END IF
+      modtru = .false.
+      if ( mods ) then
+         modtru = (modify(ampm) .ne. ' ')
+      end if
 
-      IF ( MODTRU ) THEN
+      if ( modtru ) then
 
-         HUBND  = 13.0D0
-         HLBND  =  1.0D0
-         MESSGE = 'The hours component of the time specified was ' &
+         hubnd  = 13.0d0
+         hlbnd  =  1.0d0
+         messge = 'The hours component of the time specified was ' &
          //       '#. When either A.M. or P.M. is specified with ' &
          //       'the time the hours component must be at least ' &
          //       '1.0D0 and less than 13.0D0. '
 
-      ELSE
+      else
 
-         HUBND  = 24.0D0
-         HLBND  =  0.0D0
-         MESSGE = 'The hours component of the time specified was ' &
+         hubnd  = 24.0d0
+         hlbnd  =  0.0d0
+         messge = 'The hours component of the time specified was ' &
          //       '#.  The hours component must be greater than ' &
          //       'or equal to 0.0D0 and less than 24.0D0. '
 
-      END IF
+      end if
 !
 !     We only check YD and YMD anything else is out of the
 !     province of this routine.
 !
-      IF ( TYPE .NE. 'YD' .AND. TYPE .NE. 'YMD' ) THEN
+      if ( type .ne. 'YD' .and. type .ne. 'YMD' ) then
 
-         OK    = .FALSE.
-         ERROR = 'The type of the time vector specified was #, ' &
+         ok    = .false.
+         error = 'The type of the time vector specified was #, ' &
          //      'only ''YD'' and ''YMD'' are recognized. '
-         CALL REPMC ( ERROR, '#', TYPE, ERROR )
-         RETURN
+         call repmc ( error, '#', type, error )
+         return
 
-      END IF
+      end if
 
 
 !
 !     First check.  The year must be an integer.
 !
-      IF ( TVEC(1) .NE. DBLE(YEAR) ) THEN
-         OK    = .FALSE.
-         ERROR = 'The year value was #.  This must be an ' &
+      if ( tvec(1) .ne. dble(year) ) then
+         ok    = .false.
+         error = 'The year value was #.  This must be an ' &
          //      'integral value. '
-         CALL REPMD ( ERROR,  '#', TVEC(1), 8, ERROR )
+         call repmd ( error,  '#', tvec(1), 8, error )
 
-         RETURN
-      END IF
+         return
+      end if
 
 
-      IF      ( TYPE .EQ. 'YD' ) THEN
+      if      ( type .eq. 'YD' ) then
 
-         DAY    = 2
-         HOUR   = 3
-         MINUTE = 4
-         SECOND = 5
-         DOY    = TVEC(2)
+         day    = 2
+         hour   = 3
+         minute = 4
+         second = 5
+         doy    = tvec(2)
 
-         IF (      TVEC(2) .GE. DINYR + 1.0D0 &
-             .OR.  TVEC(2) .LT. 1.0D0       ) THEN
+         if (      tvec(2) .ge. dinyr + 1.0d0 &
+             .or.  tvec(2) .lt. 1.0d0       ) then
 
-            OK    = .FALSE.
-            ERROR = 'Day # has been specified for the year #. ' &
+            ok    = .false.
+            error = 'Day # has been specified for the year #. ' &
             //      'The correct range for the day of year for ' &
             //      'this year is from 1 to #. '
 
-            CALL REPMD ( ERROR, '#', TVEC(2), 8, ERROR )
-            CALL REPMI ( ERROR, '#', YEAR,       ERROR )
-            CALL REPMI ( ERROR, '#', 365+LEAPDY, ERROR )
-            RETURN
+            call repmd ( error, '#', tvec(2), 8, error )
+            call repmi ( error, '#', year,       error )
+            call repmi ( error, '#', 365+leapdy, error )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF ( TYPE .EQ. 'YMD' ) THEN
+      else if ( type .eq. 'YMD' ) then
 
-         MONTH  = NINT( TVEC(2) )
-         DAY    = 3
-         HOUR   = 4
-         MINUTE = 5
-         SECOND = 6
-         DOY    = 0.0D0
+         month  = nint( tvec(2) )
+         day    = 3
+         hour   = 4
+         minute = 5
+         second = 6
+         doy    = 0.0d0
 
-         IF ( TVEC(2) .NE. DBLE(MONTH) ) THEN
+         if ( tvec(2) .ne. dble(month) ) then
 
-            OK    = .FALSE.
-            ERROR = 'The month specified, #, was not an integer. ' &
+            ok    = .false.
+            error = 'The month specified, #, was not an integer. ' &
             //      'The month must be an integer in the range ' &
             //      'from 1 to 12. '
-            CALL REPMD ( ERROR,  '#', TVEC(2), 3, ERROR )
-            RETURN
+            call repmd ( error,  '#', tvec(2), 3, error )
+            return
 
-         ELSE IF (      TVEC(2) .LT.   1.0D0 &
-                   .OR. TVEC(2) .GT.  12.0D0 ) THEN
+         else if (      tvec(2) .lt.   1.0d0 &
+                   .or. tvec(2) .gt.  12.0d0 ) then
 
-            OK    = .FALSE.
-            ERROR = 'The month specified was #.  The month must ' &
+            ok    = .false.
+            error = 'The month specified was #.  The month must ' &
             //      'be an integer in the range from 1 to 12 ' &
             //      '(inclusive). '
-            CALL REPMI ( ERROR, '#', MONTH, ERROR )
-            RETURN
+            call repmi ( error, '#', month, error )
+            return
 
-         ELSE IF (      TVEC(3) .LT. 1.0D0 &
-                   .OR. TVEC(3) .GE. DINMON(MONTH) + 1.0D0 ) THEN
+         else if (      tvec(3) .lt. 1.0d0 &
+                   .or. tvec(3) .ge. dinmon(month) + 1.0d0 ) then
 
-            OK    = .FALSE.
-            ERROR = 'The day of the month specified for the ' &
+            ok    = .false.
+            error = 'The day of the month specified for the ' &
             //      'month of # was #.  For # the day must be at ' &
             //      'least 1.0D0 and less than #. '
-            CALL REPMC ( ERROR, '#', MNAMES(MONTH), ERROR )
-            CALL REPMD ( ERROR, '#', TVEC(3), 3,    ERROR )
-            CALL REPMC ( ERROR, '#', MNAMES(MONTH), ERROR )
-            CALL REPMD ( ERROR, '#', DINMON(MONTH)+1.0D0, 2, ERROR )
-            RETURN
+            call repmc ( error, '#', mnames(month), error )
+            call repmd ( error, '#', tvec(3), 3,    error )
+            call repmc ( error, '#', mnames(month), error )
+            call repmd ( error, '#', dinmon(month)+1.0d0, 2, error )
+            return
 
-         END IF
+         end if
 
-         DO I = 1, MONTH -1
-            DOY = DOY + DINMON(I)
-         END DO
+         do i = 1, month -1
+            doy = doy + dinmon(i)
+         end do
 
-         DOY = DOY + TVEC(3)
+         doy = doy + tvec(3)
 
 
-      END IF
+      end if
 
 
 !
 !     Make sure the hours, minutes and seconds are all in range.
 !
-      IF (     TVEC(HOUR) .GE. HUBND &
-          .OR. TVEC(HOUR) .LT. HLBND ) THEN
+      if (     tvec(hour) .ge. hubnd &
+          .or. tvec(hour) .lt. hlbnd ) then
 
-         OK    = .FALSE.
-         ERROR = MESSGE
-         CALL REPMD ( ERROR,  '#', TVEC(HOUR), 2, ERROR )
-         RETURN
+         ok    = .false.
+         error = messge
+         call repmd ( error,  '#', tvec(hour), 2, error )
+         return
 
-      ELSE IF (     TVEC(MINUTE) .GE. 60.0D0 &
-               .OR. TVEC(MINUTE) .LT.  0.0D0 ) THEN
+      else if (     tvec(minute) .ge. 60.0d0 &
+               .or. tvec(minute) .lt.  0.0d0 ) then
 
-         OK    = .FALSE.
-         ERROR = 'The minutes component of the time specified ' &
+         ok    = .false.
+         error = 'The minutes component of the time specified ' &
          //      'was #. This value must be greater than or ' &
          //      'equal to 0.0 and less than 60.0. '
-         CALL REPMD ( ERROR,  '#', TVEC(MINUTE), 2, ERROR )
-         RETURN
+         call repmd ( error,  '#', tvec(minute), 2, error )
+         return
 
-      END IF
+      end if
 
-      IF (     TVEC(SECOND) .GE. 60.0D0 &
-          .OR. TVEC(SECOND) .LT.  0.0D0 ) THEN
+      if (     tvec(second) .ge. 60.0d0 &
+          .or. tvec(second) .lt.  0.0d0 ) then
 !
 !        We allow for the possibility that we might have a leapsecond.
 !
-         MODTRU = .FALSE.
-         IF ( MODS ) THEN
-            MODTRU = ( MODIFY(AMPM) .EQ. 'P.M.')
-         END IF
+         modtru = .false.
+         if ( mods ) then
+            modtru = ( modify(ampm) .eq. 'P.M.')
+         end if
 
-         IF (        TVEC(SECOND) .LT. 61.0D0 &
-              .AND.  TVEC(SECOND) .GT.  0.0D0 &
-              .AND.  TVEC(MINUTE) .EQ. 59.0D0 &
-              .AND.  TVEC(HOUR)   .EQ. 23.0D0 &
-              .AND.( DOY .EQ. DINYR .OR. DOY .EQ. JUN30 ) ) THEN
+         if (        tvec(second) .lt. 61.0d0 &
+              .and.  tvec(second) .gt.  0.0d0 &
+              .and.  tvec(minute) .eq. 59.0d0 &
+              .and.  tvec(hour)   .eq. 23.0d0 &
+              .and.( doy .eq. dinyr .or. doy .eq. jun30 ) ) then
 !
 !           Don't do anything.
 !
-         ELSE IF (        TVEC(SECOND) .LT. 61.0D0 &
-              .AND.  TVEC(SECOND) .GT.  0.0D0 &
-              .AND.  TVEC(MINUTE) .EQ. 59.0D0 &
-              .AND.  TVEC(HOUR)   .EQ. 11.0D0 &
-              .AND.  MODTRU &
-              .AND.( DOY .EQ. DINYR .OR. DOY .EQ. JUN30 ) ) THEN
+         else if (        tvec(second) .lt. 61.0d0 &
+              .and.  tvec(second) .gt.  0.0d0 &
+              .and.  tvec(minute) .eq. 59.0d0 &
+              .and.  tvec(hour)   .eq. 11.0d0 &
+              .and.  modtru &
+              .and.( doy .eq. dinyr .or. doy .eq. jun30 ) ) then
 !
 !           Don't do anything.
 !
-         ELSE
+         else
 
-            OK    = .FALSE.
-            ERROR = 'The seconds component of time must be at least ' &
+            ok    = .false.
+            error = 'The seconds component of time must be at least ' &
             //      '0.0D0 and less than 60.0D0 (61.0D0 during the ' &
             //      'last minute of June ' &
             //      '30 and December 31). The value supplied was #. '
 
-            CALL REPMD ( ERROR,  '#', TVEC(SECOND), 8, ERROR )
-            RETURN
+            call repmd ( error,  '#', tvec(second), 8, error )
+            return
 
-         END IF
-      END IF
+         end if
+      end if
 
 !
 !     One final check.  If some component is not an integer
 !     the remaining components must be zero.
 !
-      COMP     = 0
+      comp     = 0
 
-      DO I = DAY, MINUTE
+      do i = day, minute
 
-         COMP = COMP + 1
-         K    = COMP
+         comp = comp + 1
+         k    = comp
 
-         IF ( TVEC(I) .NE. NINT(TVEC(I)) ) THEN
+         if ( tvec(i) .ne. nint(tvec(i)) ) then
 
-            DO J = I+1, SECOND
+            do j = i+1, second
 
-               K = K+1
+               k = k+1
 
-               IF ( TVEC(J) .NE. 0.0D0 ) THEN
-                  OK    = .FALSE.
-                  ERROR = 'The ''#'' component of the date has a ' &
+               if ( tvec(j) .ne. 0.0d0 ) then
+                  ok    = .false.
+                  error = 'The ''#'' component of the date has a ' &
                   //      'fractional component.  This is ' &
                   //      'allowed only if all components of ' &
                   //      'lesser significance have value 0.0D0. ' &
@@ -606,32 +606,32 @@
                   //      '#. '
 
 
-                  CALL REPMC ( ERROR, '#', CNAME(COMP), ERROR )
-                  CALL REPMC ( ERROR, '#', CNAME(K),    ERROR )
-                  CALL REPMD ( ERROR, '#', TVEC(J), 2,  ERROR )
-                  RETURN
-               END IF
+                  call repmc ( error, '#', cname(comp), error )
+                  call repmc ( error, '#', cname(k),    error )
+                  call repmd ( error, '#', tvec(j), 2,  error )
+                  return
+               end if
 
-            END DO
+            end do
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we make it this far, all components pass the reasonableness
 !     tests.
 !
-      OK    = .TRUE.
-      ERROR = ' '
-      RETURN
+      ok    = .true.
+      error = ' '
+      return
 
 
 
 
 !$Procedure TPARCH ( Parse check---check format of strings )
 
-      ENTRY TPARCH ( TYPE )
+      entry tparch ( type )
 
 ! $ Abstract
 !
@@ -894,15 +894,15 @@
 !-&
 
 
-      DOCHCK = EQSTR( TYPE, 'YES' )
+      dochck = eqstr( type, 'YES' )
 
-      RETURN
+      return
 
 
 
 !$Procedure TCHCKD ( Time components are checked )
 
-      ENTRY TCHCKD ( TYPE )
+      entry tchckd ( type )
 
 ! $ Abstract
 !
@@ -1015,11 +1015,11 @@
 !-&
 
 
-      IF ( DOCHCK ) THEN
-         TYPE = 'YES'
-      ELSE
-         TYPE = 'NO'
-      END IF
+      if ( dochck ) then
+         type = 'YES'
+      else
+         type = 'NO'
+      end if
 
-      RETURN
-      END
+      return
+      end

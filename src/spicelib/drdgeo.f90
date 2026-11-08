@@ -1,6 +1,6 @@
 !$Procedure DRDGEO ( Derivative of rectangular w.r.t. geodetic )
 
-      SUBROUTINE DRDGEO ( LON, LAT, ALT, RE, F, JACOBI )
+      subroutine drdgeo ( lon, lat, alt, re, f, jacobi )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      lon
+      double precision      lat
+      double precision      alt
+      double precision      re
+      double precision      f
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -409,51 +409,51 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 !
 !     Local parameters
 !
-      INTEGER               DX
-      PARAMETER           ( DX     = 1 )
+      integer               dx
+      parameter           ( dx     = 1 )
 
-      INTEGER               DY
-      PARAMETER           ( DY     = 2 )
+      integer               dy
+      parameter           ( dy     = 2 )
 
-      INTEGER               DZ
-      PARAMETER           ( DZ     = 3 )
+      integer               dz
+      parameter           ( dz     = 3 )
 
-      INTEGER               DLON
-      PARAMETER           ( DLON   = 1 )
+      integer               dlon
+      parameter           ( dlon   = 1 )
 
-      INTEGER               DLAT
-      PARAMETER           ( DLAT   = 2 )
+      integer               dlat
+      parameter           ( dlat   = 2 )
 
-      INTEGER               DALT
-      PARAMETER           ( DALT   = 3 )
+      integer               dalt
+      parameter           ( dalt   = 3 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CLAT
-      DOUBLE PRECISION      CLON
-      DOUBLE PRECISION      DGDLAT
-      DOUBLE PRECISION      G
-      DOUBLE PRECISION      SLAT
-      DOUBLE PRECISION      SLON
+      double precision      clat
+      double precision      clon
+      double precision      dgdlat
+      double precision      g
+      double precision      slat
+      double precision      slon
 
-      DOUBLE PRECISION      FLAT
-      DOUBLE PRECISION      FLAT2
-      DOUBLE PRECISION      G2
+      double precision      flat
+      double precision      flat2
+      double precision      g2
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DRDGEO' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DRDGEO' )
+      end if
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -461,25 +461,25 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      IF ( F .GE. 1.0D0 ) THEN
+      if ( f .ge. 1.0d0 ) then
 
-          CALL SETMSG ( 'Flattening coefficient was *.'  )
-          CALL ERRDP  ( '*', F                           )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-          CALL CHKOUT ( 'DRDGEO'                         )
-          RETURN
+          call setmsg ( 'Flattening coefficient was *.'  )
+          call errdp  ( '*', f                           )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+          call chkout ( 'DRDGEO'                         )
+          return
 
-      END IF
+      end if
 
-      IF ( RE .LE. 0.0D0 ) THEN
+      if ( re .le. 0.0d0 ) then
 
-          CALL SETMSG ( 'Equatorial Radius <= 0.0D0. RE = *' )
-          CALL ERRDP  ( '*', RE                              )
-          CALL SIGERR ( 'SPICE(BADRADIUS)'                   )
-          CALL CHKOUT ( 'DRDGEO'                             )
-          RETURN
+          call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
+          call errdp  ( '*', re                              )
+          call sigerr ( 'SPICE(BADRADIUS)'                   )
+          call chkout ( 'DRDGEO'                             )
+          return
 
-      END IF
+      end if
 
 !
 !     For the record, here is a derivation of the formulae for the
@@ -632,45 +632,45 @@
 !     We're going to need the sine and cosine of LAT and LON many
 !     times.  We'll just compute them once.
 !
-      CLAT              = DCOS ( LAT )
-      CLON              = DCOS ( LON )
-      SLAT              = DSIN ( LAT )
-      SLON              = DSIN ( LON )
+      clat              = dcos ( lat )
+      clon              = dcos ( lon )
+      slat              = dsin ( lat )
+      slon              = dsin ( lon )
 
 !
 !     Referring to the G given in the header we have...
 !
-      FLAT              = 1.D0 - F
-      FLAT2             = FLAT * FLAT
+      flat              = 1.d0 - f
+      flat2             = flat * flat
 
-      G                 = DSQRT( CLAT*CLAT   +   FLAT2 * SLAT*SLAT )
-      G2                = G * G
-      DGDLAT            = ( -1.0D0  +  FLAT2 ) * SLAT * CLAT / G
+      g                 = dsqrt( clat*clat   +   flat2 * slat*slat )
+      g2                = g * g
+      dgdlat            = ( -1.0d0  +  flat2 ) * slat * clat / g
 
 !
 !     Now simply take the partial derivatives of the x,y,z w.r.t.
 !     lon, lat, alt.
 !
-      JACOBI (DX,DLON)  =  - ( ALT + RE/G ) * SLON * CLAT
-      JACOBI (DY,DLON)  =    ( ALT + RE/G ) * CLON * CLAT
-      JACOBI (DZ,DLON)  =    0.0D0
+      jacobi (dx,dlon)  =  - ( alt + re/g ) * slon * clat
+      jacobi (dy,dlon)  =    ( alt + re/g ) * clon * clat
+      jacobi (dz,dlon)  =    0.0d0
 
 
-      JACOBI (DX,DLAT)  =    (      -  RE*DGDLAT / G2 ) * CLON * CLAT &
-                           - ( ALT  +  RE        / G  ) * CLON * SLAT
+      jacobi (dx,dlat)  =    (      -  re*dgdlat / g2 ) * clon * clat &
+                           - ( alt  +  re        / g  ) * clon * slat
 
-      JACOBI (DY,DLAT)  =    (      -  RE*DGDLAT / G2 ) * SLON * CLAT &
-                           - ( ALT  +  RE        / G  ) * SLON * SLAT
+      jacobi (dy,dlat)  =    (      -  re*dgdlat / g2 ) * slon * clat &
+                           - ( alt  +  re        / g  ) * slon * slat
 
-      JACOBI (DZ,DLAT)  =    (      -  FLAT2*RE*DGDLAT / G2 ) * SLAT &
-                           + ( ALT  +  FLAT2*RE        / G  ) * CLAT
-
-
-      JACOBI (DX,DALT)  =  CLON * CLAT
-      JACOBI (DY,DALT)  =  SLON * CLAT
-      JACOBI (DZ,DALT)  =         SLAT
+      jacobi (dz,dlat)  =    (      -  flat2*re*dgdlat / g2 ) * slat &
+                           + ( alt  +  flat2*re        / g  ) * clat
 
 
-      CALL CHKOUT ( 'DRDGEO' )
-      RETURN
-      END
+      jacobi (dx,dalt)  =  clon * clat
+      jacobi (dy,dalt)  =  slon * clat
+      jacobi (dz,dalt)  =         slat
+
+
+      call chkout ( 'DRDGEO' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SDIFFC ( Symmetric difference of two character sets )
 
-      SUBROUTINE SDIFFC ( A, B, C )
+      subroutine sdiffc ( a, b, c )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)      A      ( LBCELL:* )
-      CHARACTER*(*)      B      ( LBCELL:* )
-      CHARACTER*(*)      C      ( LBCELL:* )
+      character*(*)      a      ( lbcell:* )
+      character*(*)      b      ( lbcell:* )
+      character*(*)      c      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,22 +168,22 @@
 !
 !     SPICELIB functions
 !
-      INTEGER              CARDC
-      INTEGER              SIZEC
-      LOGICAL              RETURN
+      integer              cardc
+      integer              sizec
+      logical              return
 !
 !     Local variables
 !
 
-      INTEGER             APOINT
-      INTEGER             BPOINT
+      integer             apoint
+      integer             bpoint
 
-      INTEGER             CSIZE
-      INTEGER             ACARD
-      INTEGER             BCARD
-      INTEGER             CCARD
+      integer             csize
+      integer             acard
+      integer             bcard
+      integer             ccard
 
-      INTEGER             OVER
+      integer             over
 
 
 
@@ -191,89 +191,89 @@
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) RETURN
-      CALL CHKIN ( 'SDIFFC' )
+      if ( return () ) return
+      call chkin ( 'SDIFFC' )
 
 !
 !     Make sure output set elements are long enough.
 !
-      IF (               LEN( C(LBCELL) ) &
-            .LT.  MAX (  LEN( A(LBCELL) ), LEN( B(LBCELL) )  )   ) THEN
+      if (               len( c(lbcell) ) &
+            .lt.  max (  len( a(lbcell) ), len( b(lbcell) )  )   ) then
 
-         CALL SETMSG ( 'Length of output cell is #.  Length required' // &
+         call setmsg ( 'Length of output cell is #.  Length required' // &
                        ' to contain result is #.'  )
 
-         CALL ERRINT ( '#', LEN( C(LBCELL) )  )
-         CALL ERRINT ( '#', MAX (  LEN(A(LBCELL)), LEN(B(LBCELL)) )  )
+         call errint ( '#', len( c(lbcell) )  )
+         call errint ( '#', max (  len(a(lbcell)), len(b(lbcell)) )  )
 
-         CALL SIGERR ( 'SPICE(ELEMENTSTOOSHORT)' )
+         call sigerr ( 'SPICE(ELEMENTSTOOSHORT)' )
 
-         CALL CHKOUT ( 'SDIFFC' )
-         RETURN
+         call chkout ( 'SDIFFC' )
+         return
 
-      END IF
+      end if
 !
 !     Find the cardinality of the input sets, and the allowed size
 !     of the output set.
 !
-      ACARD = CARDC ( A )
-      BCARD = CARDC ( B )
-      CSIZE = SIZEC ( C )
+      acard = cardc ( a )
+      bcard = cardc ( b )
+      csize = sizec ( c )
 
 !
 !     Begin with the input pointers at the first elements of the
 !     input sets. The cardinality of the output set is zero.
 !     And there is no overflow so far.
 !
-      APOINT = 1
-      BPOINT = 1
+      apoint = 1
+      bpoint = 1
 
-      CCARD  = 0
-      OVER   = 0
+      ccard  = 0
+      over   = 0
 
 
 
 !
 !     When the end of both input sets are reached, we're done.
 !
-      DO WHILE ( APOINT .LE. ACARD .OR. BPOINT .LE. BCARD )
+      do while ( apoint .le. acard .or. bpoint .le. bcard )
 
 !
 !        If there is still space in the output set, fill it
 !        as necessary.
 !
-         IF ( CCARD .LT. CSIZE ) THEN
+         if ( ccard .lt. csize ) then
 
-            IF ( APOINT .GT. ACARD ) THEN
+            if ( apoint .gt. acard ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = B(BPOINT)
-               BPOINT   = BPOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = b(bpoint)
+               bpoint   = bpoint + 1
 
-            ELSE IF ( BPOINT .GT. BCARD ) THEN
+            else if ( bpoint .gt. bcard ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = A(APOINT)
-               APOINT   = APOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = a(apoint)
+               apoint   = apoint + 1
 
-            ELSE IF ( A(APOINT) .EQ. B(BPOINT) ) THEN
+            else if ( a(apoint) .eq. b(bpoint) ) then
 
-               APOINT = APOINT + 1
-               BPOINT = BPOINT + 1
+               apoint = apoint + 1
+               bpoint = bpoint + 1
 
-            ELSE IF ( LLT ( A(APOINT), B(BPOINT) ) ) THEN
+            else if ( llt ( a(apoint), b(bpoint) ) ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = A(APOINT)
-               APOINT   = APOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = a(apoint)
+               apoint   = apoint + 1
 
-            ELSE IF ( LLT ( B(BPOINT), A(APOINT) ) ) THEN
+            else if ( llt ( b(bpoint), a(apoint) ) ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = B(BPOINT)
-               BPOINT   = BPOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = b(bpoint)
+               bpoint   = bpoint + 1
 
-            END IF
+            end if
 
 
 
@@ -281,53 +281,53 @@
 !        Otherwise, stop following the array, but continue to count the
 !        number of elements in excess of the size of the output set.
 !
-         ELSE
+         else
 
-            IF ( APOINT .GT. ACARD ) THEN
+            if ( apoint .gt. acard ) then
 
-               OVER   = OVER   + 1
-               BPOINT = BPOINT + 1
+               over   = over   + 1
+               bpoint = bpoint + 1
 
-            ELSE IF ( BPOINT .GT. BCARD ) THEN
+            else if ( bpoint .gt. bcard ) then
 
-               OVER   = OVER   + 1
-               APOINT = APOINT + 1
+               over   = over   + 1
+               apoint = apoint + 1
 
-            ELSE IF ( A(APOINT) .EQ. B(BPOINT) ) THEN
+            else if ( a(apoint) .eq. b(bpoint) ) then
 
-               APOINT = APOINT + 1
-               BPOINT = BPOINT + 1
+               apoint = apoint + 1
+               bpoint = bpoint + 1
 
-            ELSE IF ( LLT ( A(APOINT), B(BPOINT) ) ) THEN
+            else if ( llt ( a(apoint), b(bpoint) ) ) then
 
-               OVER   = OVER   + 1
-               APOINT = APOINT + 1
+               over   = over   + 1
+               apoint = apoint + 1
 
-            ELSE IF ( LLT ( B(BPOINT), A(APOINT) ) ) THEN
+            else if ( llt ( b(bpoint), a(apoint) ) ) then
 
-               OVER   = OVER   + 1
-               BPOINT = BPOINT + 1
+               over   = over   + 1
+               bpoint = bpoint + 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the cardinality of the output set.
 !
-      CALL SCARDC ( CCARD, C )
+      call scardc ( ccard, c )
 
 !
 !     Report any excess.
 !
-      IF ( OVER .GT. 0 ) THEN
-         CALL EXCESS ( OVER, 'set' )
-         CALL SIGERR ( 'SPICE(SETEXCESS)' )
-      END IF
+      if ( over .gt. 0 ) then
+         call excess ( over, 'set' )
+         call sigerr ( 'SPICE(SETEXCESS)' )
+      end if
 
-      CALL CHKOUT ( 'SDIFFC' )
+      call chkout ( 'SDIFFC' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure VLCOM ( Vector linear combination, 3 dimensions )
 
-      SUBROUTINE VLCOM ( A, V1, B, V2, SUM )
+      subroutine vlcom ( a, v1, b, v2, sum )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   A
-      DOUBLE PRECISION   V1  ( 3 )
-      DOUBLE PRECISION   B
-      DOUBLE PRECISION   V2  ( 3 )
-      DOUBLE PRECISION   SUM ( 3 )
+      double precision   a
+      double precision   v1  ( 3 )
+      double precision   b
+      double precision   v2  ( 3 )
+      double precision   sum ( 3 )
 
 ! $ Brief_I/O
 !
@@ -272,9 +272,9 @@
 !-&
 
 
-      SUM(1) = A*V1(1) + B*V2(1)
-      SUM(2) = A*V1(2) + B*V2(2)
-      SUM(3) = A*V1(3) + B*V2(3)
+      sum(1) = a*v1(1) + b*v2(1)
+      sum(2) = a*v1(2) + b*v2(2)
+      sum(3) = a*v1(3) + b*v2(3)
 
-      RETURN
-      END
+      return
+      end

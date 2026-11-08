@@ -1,6 +1,6 @@
 !$Procedure DVCRSS ( Derivative of Vector cross product )
 
-      SUBROUTINE DVCRSS ( S1, S2, SOUT )
+      subroutine dvcrss ( s1, s2, sout )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    S1   ( 6 )
-      DOUBLE PRECISION    S2   ( 6 )
-      DOUBLE PRECISION    SOUT ( 6 )
+      double precision    s1   ( 6 )
+      double precision    s2   ( 6 )
+      double precision    sout ( 6 )
 
 ! $ Brief_I/O
 !
@@ -371,26 +371,26 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      DVTMP1 ( 3 )
-      DOUBLE PRECISION      DVTMP2 ( 3 )
+      double precision      vtemp  ( 3 )
+      double precision      dvtmp1 ( 3 )
+      double precision      dvtmp2 ( 3 )
 
 !
 !     Calculate the cross product of S1 and S2, store it in VTEMP.
 !
-      CALL VCRSS ( S1(1), S2(1), VTEMP  )
+      call vcrss ( s1(1), s2(1), vtemp  )
 
 !
 !     Calculate the two components of the derivative of S1 x S2.
 !
-      CALL VCRSS ( S1(4), S2(1), DVTMP1 )
-      CALL VCRSS ( S1(1), S2(4), DVTMP2 )
+      call vcrss ( s1(4), s2(1), dvtmp1 )
+      call vcrss ( s1(1), s2(4), dvtmp2 )
 
 !
 !     Put all of the pieces into SOUT.
 !
-      CALL VEQU  ( VTEMP,          SOUT(1) )
-      CALL VADD  ( DVTMP1, DVTMP2, SOUT(4) )
+      call vequ  ( vtemp,          sout(1) )
+      call vadd  ( dvtmp1, dvtmp2, sout(4) )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKCLS ( SPK, Close file )
 
-      SUBROUTINE SPKCLS ( HANDLE )
+      subroutine spkcls ( handle )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -230,29 +230,29 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               ACCLEN
-      PARAMETER           ( ACCLEN = 5 )
+      integer               acclen
+      parameter           ( acclen = 5 )
 !
 !     Local Variables
 !
-      CHARACTER*(ACCLEN)    ACCESS
+      character*(acclen)    access
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKCLS' )
+      call chkin ( 'SPKCLS' )
 
 !
 !     Get the access method for the file. Currently, if HANDLE < 0, the
@@ -260,54 +260,54 @@
 !     'READ'.  In the future this should make use of the private entry
 !     in the handle manager umbrella, ZZDDHNFO.
 !
-      IF ( HANDLE .LT. 0 ) THEN
-         ACCESS = 'WRITE'
-      ELSE IF ( HANDLE .GT. 0 ) THEN
-         ACCESS = 'READ'
-      END IF
+      if ( handle .lt. 0 ) then
+         access = 'WRITE'
+      else if ( handle .gt. 0 ) then
+         access = 'READ'
+      end if
 
 !
 !     If the file is open for writing and there are segments in the file
 !     fix the ID word and close the file, or just close the file.
 !
-      IF ( ACCESS .EQ. 'WRITE' ) THEN
+      if ( access .eq. 'WRITE' ) then
 !
 !        Check to see if there are any segments in the file. If there
 !        are no segments, we signal an error. This probably indicates a
 !        programming error of some sort anyway. Why would you create a
 !        file and put nothing in it?
 !
-         CALL DAFBFS ( HANDLE )
-         CALL DAFFNA ( FOUND )
+         call dafbfs ( handle )
+         call daffna ( found )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'SPKCLS' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'SPKCLS' )
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'No segments were found in the SPK file' &
+            call setmsg ( 'No segments were found in the SPK file' &
             //            ' ''#''. There must be at least one segment' &
             //            ' in the file when this subroutine is' &
             //            ' called.'                                   )
-            CALL ERRHAN ( '#', HANDLE                                  )
-            CALL SIGERR ( 'SPICE(NOSEGMENTSFOUND)'                     )
-            CALL CHKOUT ( 'SPKCLS'                                     )
-            RETURN
+            call errhan ( '#', handle                                  )
+            call sigerr ( 'SPICE(NOSEGMENTSFOUND)'                     )
+            call chkout ( 'SPKCLS'                                     )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Close the file.
 !
-      CALL DAFCLS   ( HANDLE )
+      call dafcls   ( handle )
 !
 !     No need to check FAILED() here, since we only call spicelib
 !     subroutines and return. The caller should check it though.
 !
-      CALL CHKOUT ( 'SPKCLS' )
-      RETURN
+      call chkout ( 'SPKCLS' )
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZEKGRS ( EK, get record status )
 
-      SUBROUTINE ZZEKGRS ( HANDLE, RECPTR, STATUS )
+      subroutine zzekgrs ( handle, recptr, status )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekrecptr.inc'
+      include 'ekrecptr.inc'
 
-      INTEGER               HANDLE
-      INTEGER               RECPTR
-      INTEGER               STATUS
+      integer               handle
+      integer               recptr
+      integer               status
 
 ! $ Brief_I/O
 !
@@ -90,7 +90,7 @@
 !
 !     Local variables
 !
-      INTEGER               LOC
+      integer               loc
 
 !
 !     Use discovery check-in.
@@ -98,9 +98,9 @@
 !
 !     Compute the status word location, and read the status.
 !
-      LOC  =  RECPTR + STAIDX
+      loc  =  recptr + staidx
 
-      CALL DASRDI ( HANDLE, LOC, LOC, STATUS )
+      call dasrdi ( handle, loc, loc, status )
 
-      RETURN
-      END
+      return
+      end

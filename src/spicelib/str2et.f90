@@ -1,6 +1,6 @@
 !$Procedure STR2ET ( String to ET )
 
-      SUBROUTINE STR2ET ( TIMSTR, ET )
+      subroutine str2et ( timstr, et )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         TIMSTR
-      DOUBLE PRECISION      ET
+      character*(*)         timstr
+      double precision      et
 
 ! $ Brief_I/O
 !
@@ -696,119 +696,119 @@
 !
 !     SPICELIB Functions.
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local (in-line) Functions
 !
-      INTEGER               SMWDSZ
-      PARAMETER           ( SMWDSZ = 16 )
+      integer               smwdsz
+      parameter           ( smwdsz = 16 )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               MSGSIZ
-      PARAMETER           ( MSGSIZ = 400 )
+      integer               msgsiz
+      parameter           ( msgsiz = 400 )
 
-      INTEGER               ERA
-      PARAMETER           ( ERA    = 1 )
+      integer               era
+      parameter           ( era    = 1 )
 
-      INTEGER               WKDAY
-      PARAMETER           ( WKDAY  = ERA    + 1 )
+      integer               wkday
+      parameter           ( wkday  = era    + 1 )
 
-      INTEGER               ZONE
-      PARAMETER           ( ZONE   = WKDAY  + 1 )
+      integer               zone
+      parameter           ( zone   = wkday  + 1 )
 
-      INTEGER               AMPM
-      PARAMETER           ( AMPM   = ZONE   + 1 )
+      integer               ampm
+      parameter           ( ampm   = zone   + 1 )
 
-      INTEGER               SYSTEM
-      PARAMETER           ( SYSTEM = AMPM   + 1 )
+      integer               system
+      parameter           ( system = ampm   + 1 )
 
-      CHARACTER*(LNSIZE)    PICTUR
-      CHARACTER*(MSGSIZ)    ERROR
+      character*(lnsize)    pictur
+      character*(msgsiz)    error
 
-      CHARACTER*(SMWDSZ)    CALNDR
-      CHARACTER*(SMWDSZ)    CHECK
-      CHARACTER*(SMWDSZ)    DEFSYS
-      CHARACTER*(SMWDSZ)    DEFZON
-      CHARACTER*(SMWDSZ)    FORML
-      CHARACTER*(SMWDSZ)    JULN
-      CHARACTER*(SMWDSZ)    MIXED
-      CHARACTER*(SMWDSZ)    GREGRN
-      CHARACTER*(SMWDSZ)    MODIFY ( SYSTEM )
-      CHARACTER*(SMWDSZ)    TYPE
+      character*(smwdsz)    calndr
+      character*(smwdsz)    check
+      character*(smwdsz)    defsys
+      character*(smwdsz)    defzon
+      character*(smwdsz)    forml
+      character*(smwdsz)    juln
+      character*(smwdsz)    mixed
+      character*(smwdsz)    gregrn
+      character*(smwdsz)    modify ( system )
+      character*(smwdsz)    type
 
-      CHARACTER*(2)         HSTR
-      CHARACTER*(2)         MSTR
+      character*(2)         hstr
+      character*(2)         mstr
 
-      CHARACTER*(SMWDSZ)    MNAME  ( 12 )
+      character*(smwdsz)    mname  ( 12 )
 
-      DOUBLE PRECISION      DHOFF
-      DOUBLE PRECISION      DMOFF
-      DOUBLE PRECISION      EXTRA
-      DOUBLE PRECISION      FRAC
-      DOUBLE PRECISION      HOFF
-      DOUBLE PRECISION      HOUR
-      DOUBLE PRECISION      MDY    ( 2 )
-      DOUBLE PRECISION      MINUTE
-      DOUBLE PRECISION      MOFF
-      DOUBLE PRECISION      MON    ( 2 )
-      DOUBLE PRECISION      SECS
-      DOUBLE PRECISION      TVEC   ( 8 )
-      DOUBLE PRECISION      TVECM  ( 8 )
+      double precision      dhoff
+      double precision      dmoff
+      double precision      extra
+      double precision      frac
+      double precision      hoff
+      double precision      hour
+      double precision      mdy    ( 2 )
+      double precision      minute
+      double precision      moff
+      double precision      mon    ( 2 )
+      double precision      secs
+      double precision      tvec   ( 8 )
+      double precision      tvecm  ( 8 )
 
-      INTEGER               CYEAR
-      INTEGER               GYEAR
+      integer               cyear
+      integer               gyear
 
-      INTEGER               DAY
-      INTEGER               DOY
-      INTEGER               I
-      INTEGER               LAST
-      INTEGER               MONTH
-      INTEGER               NTVEC
-      INTEGER               ORGNYR
-      INTEGER               YEAR
+      integer               day
+      integer               doy
+      integer               i
+      integer               last
+      integer               month
+      integer               ntvec
+      integer               orgnyr
+      integer               year
 
 !
 !     The following integers are pointers to the
 !     locations of various components in a time vector.
 !
-      INTEGER               DY
-      INTEGER               HR
-      INTEGER               MM
-      INTEGER               MN
-      INTEGER               SC
-      INTEGER               YR
+      integer               dy
+      integer               hr
+      integer               mm
+      integer               mn
+      integer               sc
+      integer               yr
 
-      LOGICAL               ADJUST
-      LOGICAL               DOJUL
-      LOGICAL               MODS
-      LOGICAL               OK
-      LOGICAL               OK1
-      LOGICAL               OK2
-      LOGICAL               SUCCES
-      LOGICAL               YABBRV
-      LOGICAL               ZONED
+      logical               adjust
+      logical               dojul
+      logical               mods
+      logical               ok
+      logical               ok1
+      logical               ok2
+      logical               succes
+      logical               yabbrv
+      logical               zoned
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  DEFZON  / ' '         /
-      DATA                  DEFSYS  / 'UTC'       /
-      DATA                  MIXED   / 'MIXED'     /
-      DATA                  JULN    / 'JULIAN'    /
-      DATA                  GREGRN  / 'GREGORIAN' /
-      DATA                  DHOFF   /  0.0D0      /
-      DATA                  DMOFF   /  0.0D0      /
+      data                  defzon  / ' '         /
+      data                  defsys  / 'UTC'       /
+      data                  mixed   / 'MIXED'     /
+      data                  juln    / 'JULIAN'    /
+      data                  gregrn  / 'GREGORIAN' /
+      data                  dhoff   /  0.0d0      /
+      data                  dmoff   /  0.0d0      /
 
-      DATA                  MNAME   /   'January',   'February', &
+      data                  mname   /   'January',   'February', &
                                         'March',     'April', &
                                         'May',       'June', &
                                         'July',      'August', &
@@ -818,175 +818,175 @@
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'STR2ET' )
+      call chkin ( 'STR2ET' )
 
 !
 !     Collect the current defaults.
 !
-      CALL TIMDEF ( 'GET', 'SYSTEM',   DEFSYS )
-      CALL TIMDEF ( 'GET', 'ZONE',     DEFZON )
-      CALL TIMDEF ( 'GET', 'CALENDAR', CALNDR )
+      call timdef ( 'GET', 'SYSTEM',   defsys )
+      call timdef ( 'GET', 'ZONE',     defzon )
+      call timdef ( 'GET', 'CALENDAR', calndr )
 
-      IF ( DEFZON .NE. ' ' ) THEN
-         CALL PREFIX  ( '::', 0, DEFZON )
-         CALL ZZUTCPM ( DEFZON, 1, DHOFF, DMOFF, LAST, SUCCES )
-      ELSE
-         DHOFF = 0.0D0
-         DMOFF = 0.0D0
-      END IF
+      if ( defzon .ne. ' ' ) then
+         call prefix  ( '::', 0, defzon )
+         call zzutcpm ( defzon, 1, dhoff, dmoff, last, succes )
+      else
+         dhoff = 0.0d0
+         dmoff = 0.0d0
+      end if
 
 !
 !     See if TPARTV can recognize what the user has supplied.
 !
-      CALL TPARTV ( TIMSTR, &
-                    TVEC,   NTVEC, TYPE, &
-                    MODIFY, MODS,  YABBRV, SUCCES, &
-                    PICTUR, ERROR )
+      call tpartv ( timstr, &
+                    tvec,   ntvec, type, &
+                    modify, mods,  yabbrv, succes, &
+                    pictur, error )
 
 
-      IF ( .NOT. SUCCES ) THEN
+      if ( .not. succes ) then
 
-         CALL SETMSG ( ERROR )
-         CALL SIGERR ( 'SPICE(UNPARSEDTIME)' )
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call setmsg ( error )
+         call sigerr ( 'SPICE(UNPARSEDTIME)' )
+         call chkout ( 'STR2ET' )
+         return
 
-      END IF
+      end if
 
 !
 !     A system and time zone are incompatible components in a
 !     time string.
 !
-      IF (       MODIFY(ZONE)   .NE. ' ' &
-           .AND. MODIFY(SYSTEM) .NE. ' ' ) THEN
+      if (       modify(zone)   .ne. ' ' &
+           .and. modify(system) .ne. ' ' ) then
 
-         CALL SETMSG ( 'Both a time system and time zone have ' &
+         call setmsg ( 'Both a time system and time zone have ' &
          //            'been specified in the input string (# ' &
          //            'and #). These are inconsistent. A ' &
          //            'time zone is a fixed offset from UTC. ' )
 
-         CALL ERRCH  ( '#', MODIFY(SYSTEM)   )
-         CALL ERRCH  ( '#', MODIFY(ZONE)     )
-         CALL SIGERR ( 'SPICE(TIMECONFLICT)' )
-         CALL CHKOUT ( 'STR2ET'              )
-         RETURN
+         call errch  ( '#', modify(system)   )
+         call errch  ( '#', modify(zone)     )
+         call sigerr ( 'SPICE(TIMECONFLICT)' )
+         call chkout ( 'STR2ET'              )
+         return
 
-      END IF
+      end if
 !
 !     If both the zone and system are empty, we can replace them
 !     with the default zone and system values (only one of which
 !     can be non-blank).
 !
-      ZONED = .FALSE.
+      zoned = .false.
 
-      IF ( MODIFY(ZONE) .EQ. ' ' .AND. MODIFY(SYSTEM) .EQ. ' ' ) THEN
+      if ( modify(zone) .eq. ' ' .and. modify(system) .eq. ' ' ) then
 
-         MODIFY(ZONE)   = DEFZON
-         MODIFY(SYSTEM) = DEFSYS
-         HOFF           = DHOFF
-         MOFF           = DMOFF
-         ZONED          = MODIFY(ZONE) .NE. ' '
+         modify(zone)   = defzon
+         modify(system) = defsys
+         hoff           = dhoff
+         moff           = dmoff
+         zoned          = modify(zone) .ne. ' '
 
 
-      ELSE IF ( MODIFY(ZONE) .NE. ' ' ) THEN
+      else if ( modify(zone) .ne. ' ' ) then
 !
 !        Parse the time zone specification.  If we don't succeed
 !        in the parsing, signal an error.
 !
-         ZONED = .TRUE.
-         CALL PREFIX  ( '::', 0, MODIFY(ZONE) )
-         CALL ZZUTCPM ( MODIFY(ZONE), 1, HOFF, MOFF, LAST, SUCCES )
+         zoned = .true.
+         call prefix  ( '::', 0, modify(zone) )
+         call zzutcpm ( modify(zone), 1, hoff, moff, last, succes )
 
-         IF ( .NOT. SUCCES ) THEN
-            CALL SETMSG ( '# is not a legitimate time zone ' &
+         if ( .not. succes ) then
+            call setmsg ( '# is not a legitimate time zone ' &
             //            'specification. '       )
-            CALL ERRCH  ( '#', MODIFY(ZONE)(3:)   )
-            CALL SIGERR ( 'SPICE(TIMEZONEERROR)'  )
-            CALL CHKOUT ( 'STR2ET' )
-            RETURN
-         END IF
+            call errch  ( '#', modify(zone)(3:)   )
+            call sigerr ( 'SPICE(TIMEZONEERROR)'  )
+            call chkout ( 'STR2ET' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     We handle the julian date case now.  It doesn't have the
 !     complications associated with it that the calendar strings
 !     have.
 !
-      IF ( TYPE .EQ. 'JD' ) THEN
+      if ( type .eq. 'JD' ) then
 
-         IF      ( MODIFY(SYSTEM) .EQ. 'UTC' ) THEN
-            TYPE = 'JDUTC'
-         ELSE IF ( MODIFY(SYSTEM) .EQ. 'TDB' ) THEN
-            TYPE = 'JDTDB'
-         ELSE IF ( MODIFY(SYSTEM) .EQ. 'TDT' ) THEN
-            TYPE = 'JDTDT'
-         ELSE
-            TYPE = 'JDUTC'
-         END IF
+         if      ( modify(system) .eq. 'UTC' ) then
+            type = 'JDUTC'
+         else if ( modify(system) .eq. 'TDB' ) then
+            type = 'JDTDB'
+         else if ( modify(system) .eq. 'TDT' ) then
+            type = 'JDTDT'
+         else
+            type = 'JDUTC'
+         end if
 
-         CALL TTRANS ( TYPE, 'TDB', TVEC )
-         ET = TVEC(1)
+         call ttrans ( type, 'TDB', tvec )
+         et = tvec(1)
 
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call chkout ( 'STR2ET' )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the indexes of the hours, minutes, seconds, etc. components
 !     of the time vector.
 !
-      IF ( TYPE .EQ. 'YD' ) THEN
-         YR    =  1
-         DY    =  2
-         HR    =  3
-         MN    =  4
-         SC    =  5
-         FORML = 'YDF'
-      ELSE
-         YR    =  1
-         MM    =  2
-         DY    =  3
-         HR    =  4
-         MN    =  5
-         SC    =  6
-         FORML = 'YMDF'
-      END IF
+      if ( type .eq. 'YD' ) then
+         yr    =  1
+         dy    =  2
+         hr    =  3
+         mn    =  4
+         sc    =  5
+         forml = 'YDF'
+      else
+         yr    =  1
+         mm    =  2
+         dy    =  3
+         hr    =  4
+         mn    =  5
+         sc    =  6
+         forml = 'YMDF'
+      end if
 
 
 !
 !     Check the components for reasonableness.
 !
-      CALL TCHCKD ( CHECK )
-      CALL TPARCH ( 'YES' )
+      call tchckd ( check )
+      call tparch ( 'YES' )
 
 !
 !     If the calendar is NOT Gregorian, or if we have a time zone
 !     present, we avoid the problem of checking for legitimate
 !     leapseconds (at least we avoid this problem for the moment).
 !
-      ADJUST = .FALSE.
+      adjust = .false.
 
-      IF ( ZONED .OR.  CALNDR .NE. GREGRN ) THEN
+      if ( zoned .or.  calndr .ne. gregrn ) then
 
-         IF (       TVEC(SC) .GE. 60.0D0 &
-              .AND. TVEC(SC) .LT. 61.0D0 ) THEN
+         if (       tvec(sc) .ge. 60.0d0 &
+              .and. tvec(sc) .lt. 61.0d0 ) then
 
-            ADJUST   = .TRUE.
-            TVEC(SC) = TVEC(SC) - 1.0D0
+            adjust   = .true.
+            tvec(sc) = tvec(sc) - 1.0d0
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 
-      IF ( CALNDR .EQ. MIXED  ) THEN
+      if ( calndr .eq. mixed  ) then
 !
 !        This is a bit awkward, but here's what's going on.
 !        If the input calendar is part of the Julian calendar
@@ -1001,128 +1001,128 @@
 !        have a problem we call TCHECK twice and .OR. the results
 !        of the checks to see if we have a legitimate time vector.
 !
-         IF ( TVEC(YR) .LT. 1580.0D0 ) THEN
+         if ( tvec(yr) .lt. 1580.0d0 ) then
 
-            CALL MOVED  ( TVEC, 6, TVECM )
+            call moved  ( tvec, 6, tvecm )
 
-            TVECM(1) = TVECM(1) + 4.0D0
+            tvecm(1) = tvecm(1) + 4.0d0
 
-            CALL TCHECK ( TVECM, TYPE, MODS, MODIFY, OK1, ERROR )
-            CALL TCHECK ( TVEC,  TYPE, MODS, MODIFY, OK2, ERROR )
+            call tcheck ( tvecm, type, mods, modify, ok1, error )
+            call tcheck ( tvec,  type, mods, modify, ok2, error )
 
-            OK = OK1 .OR. OK2
+            ok = ok1 .or. ok2
 
-         ELSE
+         else
 
-            CALL TCHECK ( TVEC,  TYPE, MODS, MODIFY, OK, ERROR )
+            call tcheck ( tvec,  type, mods, modify, ok, error )
 
-         END IF
+         end if
 
-      ELSE IF ( CALNDR .EQ. JULN  ) THEN
+      else if ( calndr .eq. juln  ) then
 !
 !        Basically, this is the same story as before, but there
 !        are no bounds in the years where we might be on a century.
 !        So we just check twice for each time vector.
 !
-         CALL MOVED  ( TVEC, 6, TVECM )
+         call moved  ( tvec, 6, tvecm )
 
-         TVECM(1) = TVECM(1) + 4.0D0
+         tvecm(1) = tvecm(1) + 4.0d0
 
-         CALL TCHECK ( TVECM, TYPE, MODS, MODIFY, OK1, ERROR )
-         CALL TCHECK ( TVEC,  TYPE, MODS, MODIFY, OK2, ERROR )
+         call tcheck ( tvecm, type, mods, modify, ok1, error )
+         call tcheck ( tvec,  type, mods, modify, ok2, error )
 
-         OK = OK1 .OR. OK2
+         ok = ok1 .or. ok2
 
-      ELSE
+      else
 !
 !        TCHECK was designed for the Gregorian Calendar,  So we
 !        don't have much to do.
 !
-         CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
+         call tcheck ( tvec, type, mods, modify, ok, error )
 
-      END IF
+      end if
 !
 !     Reset the checking status.
 !
-      CALL TPARCH ( CHECK  )
+      call tparch ( check  )
 
 !
 !     If we didn't get an OK from the inspection above,
 !     say so and signal an error.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         CALL SETMSG ( ERROR )
-         CALL SIGERR ( 'SPICE(BADTIMESTRING)' )
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call setmsg ( error )
+         call sigerr ( 'SPICE(BADTIMESTRING)' )
+         call chkout ( 'STR2ET' )
+         return
 
-      END IF
+      end if
 !
 !     Reset TVEC(SC) if it was adjusted earlier.
 !
-      IF ( ADJUST ) THEN
-         TVEC(SC) = TVEC(SC) + 1.0D0
-      END IF
+      if ( adjust ) then
+         tvec(sc) = tvec(sc) + 1.0d0
+      end if
 
 !
 !     There are no leapseconds in the TDT and TDB time systems
 !     This means that the seconds component must be less than 60.
 !
-      IF (      MODIFY(SYSTEM) .EQ. 'TDT' &
-           .OR. MODIFY(SYSTEM) .EQ. 'TDB' ) THEN
+      if (      modify(system) .eq. 'TDT' &
+           .or. modify(system) .eq. 'TDB' ) then
 
-         IF ( TVEC(SC) .GE. 60.0D0 ) THEN
+         if ( tvec(sc) .ge. 60.0d0 ) then
 
-            CALL SETMSG ( 'The seconds component of time must ' &
+            call setmsg ( 'The seconds component of time must ' &
             //            'be less than 60 for any ' &
             //            'calendar representation of #. ' )
-            CALL ERRCH  ( '#', MODIFY(SYSTEM) )
-            CALL SIGERR ( 'SPICE(BADTIMESTRING)' )
-            CALL CHKOUT ( 'STR2ET' )
-            RETURN
+            call errch  ( '#', modify(system) )
+            call sigerr ( 'SPICE(BADTIMESTRING)' )
+            call chkout ( 'STR2ET' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 !
 !     If a B.C. era marker is present we can't have a year abbreviation
 !
-      IF ( MODIFY(ERA) .EQ. 'B.C.' .AND. YABBRV ) THEN
+      if ( modify(era) .eq. 'B.C.' .and. yabbrv ) then
 
-         CALL SETMSG ( 'The Year may be abbreviated only if the ' &
+         call setmsg ( 'The Year may be abbreviated only if the ' &
          //            'year belongs to the Christian Era (A.D.) ' )
-         CALL SIGERR ( 'SPICE(BADTIMESTRING)' )
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call sigerr ( 'SPICE(BADTIMESTRING)' )
+         call chkout ( 'STR2ET' )
+         return
 
-      END IF
+      end if
 !
 !     If the era is B.C. we need to reset the year.
 !
-      IF ( MODIFY(ERA) .EQ. 'B.C.' ) THEN
-         TVEC(YR) = 1.0D0 - TVEC(YR)
-      END IF
+      if ( modify(era) .eq. 'B.C.' ) then
+         tvec(yr) = 1.0d0 - tvec(yr)
+      end if
 
 !
 !     If there is a A.M. or P.M. time string modifier, we need to adjust
 !     the hours component of the time.
 !
-      IF     ( MODIFY(AMPM) .EQ. 'P.M.'   ) THEN
+      if     ( modify(ampm) .eq. 'P.M.'   ) then
 
-         IF ( TVEC(HR) .LT. 12.0D0 ) THEN
-            TVEC(HR) = TVEC(HR) + 12.0D0
-         END IF
+         if ( tvec(hr) .lt. 12.0d0 ) then
+            tvec(hr) = tvec(hr) + 12.0d0
+         end if
 
-      ELSE IF ( MODIFY(AMPM) .EQ. 'A.M.' ) THEN
+      else if ( modify(ampm) .eq. 'A.M.' ) then
 
-         IF ( TVEC(HR) .GE. 12.0D0 ) THEN
-            TVEC(HR) = TVEC(HR) - 12.0D0
-         END IF
+         if ( tvec(hr) .ge. 12.0d0 ) then
+            tvec(hr) = tvec(hr) - 12.0d0
+         end if
 
-      END IF
+      end if
 
 !
 !     If the year has been abbreviated, we need to convert it
@@ -1130,174 +1130,174 @@
 !     than 100 that is not qualified with the B.C. or A.D. era
 !     string is in fact an abbreviated year.
 !
-      YEAR = NINT( TVEC(YR) )
+      year = nint( tvec(yr) )
 
-      IF ( YABBRV ) THEN
+      if ( yabbrv ) then
 
-         CALL       TEXPYR ( YEAR )
-         TVEC(YR) = DBLE   ( YEAR )
+         call       texpyr ( year )
+         tvec(yr) = dble   ( year )
 
-      ELSE IF (       YEAR        .LT. 100 &
-                .AND. MODIFY(ERA) .EQ. ' ' ) THEN
+      else if (       year        .lt. 100 &
+                .and. modify(era) .eq. ' ' ) then
 
-         CALL       TEXPYR ( YEAR )
-         TVEC(YR) = DBLE   ( YEAR )
+         call       texpyr ( year )
+         tvec(yr) = dble   ( year )
 
-      END IF
+      end if
 
 
 !
 !     We may need to convert to the Gregorian Calendar, now is
 !     the time to do so.
 !
-      IF ( CALNDR .EQ. MIXED ) THEN
+      if ( calndr .eq. mixed ) then
 !
 !        We need to check the components.
 !
-         IF ( TYPE .EQ. 'YD' ) THEN
+         if ( type .eq. 'YD' ) then
 
-            DOJUL =            TVEC(YR) .LT. 1582.0D0 &
-                   .OR. (      TVEC(YR) .EQ. 1582.0D0 &
-                         .AND. TVEC(DY) .LT.  279.0D0 )
+            dojul =            tvec(yr) .lt. 1582.0d0 &
+                   .or. (      tvec(yr) .eq. 1582.0d0 &
+                         .and. tvec(dy) .lt.  279.0d0 )
 
-         ELSE
+         else
 
-            DOJUL =             TVEC(YR) .LT. 1582.0D0 &
-                   .OR. (       TVEC(YR) .LE. 1582.0D0 &
-                          .AND. TVEC(MM) .LT.   10.0D0 ) &
-                   .OR. (       TVEC(YR) .LE. 1582.0D0 &
-                          .AND. TVEC(MM) .LE.   10.0D0 &
-                          .AND. TVEC(DY) .LT.    6.0D0 )
+            dojul =             tvec(yr) .lt. 1582.0d0 &
+                   .or. (       tvec(yr) .le. 1582.0d0 &
+                          .and. tvec(mm) .lt.   10.0d0 ) &
+                   .or. (       tvec(yr) .le. 1582.0d0 &
+                          .and. tvec(mm) .le.   10.0d0 &
+                          .and. tvec(dy) .lt.    6.0d0 )
 
-         END IF
+         end if
 
-      ELSE IF ( CALNDR .EQ. JULN ) THEN
+      else if ( calndr .eq. juln ) then
 
-         DOJUL = .TRUE.
+         dojul = .true.
 
-      ELSE
+      else
 
-         DOJUL = .FALSE.
+         dojul = .false.
 
-      END IF
+      end if
 !
 !     If the input string is from the julian calendar, we need
 !     to convert it to Gregorian.  We also need to save the original
 !     year value in the unlikely event it is needed for a later
 !     diagnostic message.
 !
-      IF ( DOJUL ) THEN
+      if ( dojul ) then
 
-         IF ( TYPE .EQ. 'YD' ) THEN
+         if ( type .eq. 'YD' ) then
 
-            YEAR   = DINT( TVEC(YR) )
-            MONTH  = 1
-            DAY    = DINT( TVEC(DY) )
-            FRAC   = TVEC(DY) - DBLE(DAY)
-            ORGNYR = YEAR
+            year   = dint( tvec(yr) )
+            month  = 1
+            day    = dint( tvec(dy) )
+            frac   = tvec(dy) - dble(day)
+            orgnyr = year
 
-            CALL JUL2GR ( YEAR, MONTH, DAY, DOY )
+            call jul2gr ( year, month, day, doy )
 
-            TVEC(YR) = DBLE(YEAR)
-            TVEC(DY) = DBLE(DOY ) + FRAC
+            tvec(yr) = dble(year)
+            tvec(dy) = dble(doy ) + frac
 
-         ELSE
+         else
 
-            YEAR   = DINT ( TVEC(YR) )
-            MONTH  = DINT ( TVEC(MM) )
-            DAY    = DINT ( TVEC(DY) )
-            FRAC   = TVEC(DY) - DBLE(DAY)
-            ORGNYR = YEAR
+            year   = dint ( tvec(yr) )
+            month  = dint ( tvec(mm) )
+            day    = dint ( tvec(dy) )
+            frac   = tvec(dy) - dble(day)
+            orgnyr = year
 
-            CALL JUL2GR ( YEAR, MONTH, DAY, DOY )
+            call jul2gr ( year, month, day, doy )
 
-            TVEC(YR) = DBLE(YEAR)
-            TVEC(MM) = DBLE(MONTH)
-            TVEC(DY) = DBLE(DAY) + FRAC
+            tvec(yr) = dble(year)
+            tvec(mm) = dble(month)
+            tvec(dy) = dble(day) + frac
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         ORGNYR = DINT( TVEC(YR) )
+         orgnyr = dint( tvec(yr) )
 
-      END IF
+      end if
 
 !
 !     The TDT and TDB calendars don't need to worry about time
 !     zone adjustments.
 !
-      IF      ( MODIFY(SYSTEM) .EQ. 'TDT' ) THEN
+      if      ( modify(system) .eq. 'TDT' ) then
 
-         CALL TTRANS ( FORML, 'FORMAL', TVEC )
-         CALL TTRANS ( 'TDT',  'TDB',    TVEC )
-         ET = TVEC(1)
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call ttrans ( forml, 'FORMAL', tvec )
+         call ttrans ( 'TDT',  'TDB',    tvec )
+         et = tvec(1)
+         call chkout ( 'STR2ET' )
+         return
 
-      ELSE IF ( MODIFY(SYSTEM) .EQ. 'TDB' ) THEN
+      else if ( modify(system) .eq. 'TDB' ) then
 
-         CALL TTRANS ( FORML, 'FORMAL', TVEC(1) )
-         ET = TVEC(1)
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call ttrans ( forml, 'FORMAL', tvec(1) )
+         et = tvec(1)
+         call chkout ( 'STR2ET' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     If a time zone has been specified, we need to convert
 !     from the time zone components to UTC components.
 !
-      IF ( ZONED  ) THEN
+      if ( zoned  ) then
 !
 !        A time zone was specified explicitly in the input
 !        string.  We need to compute the hour and minute offsets
 !        associated with the time zone.
 !
-         TVEC(HR) = TVEC(HR) - HOFF
-         TVEC(MN) = TVEC(MN) - MOFF
-         SECS     = TVEC(SC)
-         TVEC(SC) = 0.0D0
+         tvec(hr) = tvec(hr) - hoff
+         tvec(mn) = tvec(mn) - moff
+         secs     = tvec(sc)
+         tvec(sc) = 0.0d0
 
-         CALL TTRANS ( FORML, FORML, TVEC )
+         call ttrans ( forml, forml, tvec )
 
-         TVEC(SC) = SECS
+         tvec(sc) = secs
 
-      END IF
+      end if
 !
 !     If we decided to forgo the leapseconds check earlier
 !     now is the time to do it.  We've now got Gregorian UTC
 !     time components.
 !
 
-      IF ( ADJUST ) THEN
+      if ( adjust ) then
 
-         CALL TCHCKD ( CHECK )
-         CALL TPARCH ( 'YES' )
+         call tchckd ( check )
+         call tparch ( 'YES' )
 
-         MODS         = .FALSE.
-         MODIFY(AMPM) = ' '
+         mods         = .false.
+         modify(ampm) = ' '
 
-         CALL TCHECK ( TVEC,  TYPE, MODS, MODIFY, OK, ERROR )
+         call tcheck ( tvec,  type, mods, modify, ok, error )
 
-      ELSE
+      else
 
-         OK = .TRUE.
+         ok = .true.
 
-      END IF
+      end if
 
 
-      IF ( OK ) THEN
+      if ( ok ) then
 !
 !        That's it we are ready to rumble.
 !
-         CALL TTRANS ( TYPE, 'TDB', TVEC )
-         ET = TVEC(1)
-         CALL CHKOUT ( 'STR2ET' )
-         RETURN
+         call ttrans ( type, 'TDB', tvec )
+         et = tvec(1)
+         call chkout ( 'STR2ET' )
+         return
 
-      END IF
+      end if
 
 !     ===============================================================
 !     If you are still here, it is because OK was .FALSE. in the test
@@ -1307,58 +1307,58 @@
 !     unlikely to occur very often.)
 !
 
-      IF ( ZONED .AND. DOJUL ) THEN
+      if ( zoned .and. dojul ) then
 
-         ERROR  = 'The seconds component of ''#'' is out of range. ' &
+         error  = 'The seconds component of ''#'' is out of range. ' &
          //       'On the Julian Calendar ' &
          //       'in the specified time zone  (#) leapseconds ' &
          //       'can occur during the year # only in the ' &
          //       'second that immediately follows the time #:#:59 ' &
          //       'on  # # and # #. '
 
-         CALL REPMC ( ERROR,  '#', TIMSTR,           ERROR  )
-         CALL REPMC ( ERROR , '#', MODIFY(ZONE)(3:), ERROR  )
+         call repmc ( error,  '#', timstr,           error  )
+         call repmc ( error , '#', modify(zone)(3:), error  )
 
 
-      ELSE IF ( ZONED ) THEN
+      else if ( zoned ) then
 !
 !        If we had a time zone, we want to say what time zone
 !        in the output string.
 !
-         ERROR  = 'The seconds component of ''#'' is out of range. ' &
+         error  = 'The seconds component of ''#'' is out of range. ' &
          //       'In the specified time zone  (#) leapseconds ' &
          //       'can occur during the year # only in the ' &
          //       'second that immediately follows the time #:#:59 ' &
          //       'on  # # and # #.'
 
-         CALL REPMC ( ERROR,  '#', TIMSTR,           ERROR  )
-         CALL REPMC ( ERROR , '#', MODIFY(ZONE)(3:), ERROR  )
+         call repmc ( error,  '#', timstr,           error  )
+         call repmc ( error , '#', modify(zone)(3:), error  )
 
-      ELSE
+      else
 !
 !        No time zone, this case can only occur if we interpreted
 !        the input string as a date on the Julian Calendar
 !
-         ERROR  = 'The seconds component of ''#'' is out of range. ' &
+         error  = 'The seconds component of ''#'' is out of range. ' &
          //       'Leapseconds can occur during the year # of ' &
          //       'the Julian calendar only in the second that ' &
          //       'immediately follows the time #:#:59  on # # ' &
          //       'and # #.'' '
 
-         CALL REPMC ( ERROR,  '#', TIMSTR,           ERROR  )
+         call repmc ( error,  '#', timstr,           error  )
 
-      END IF
+      end if
 
 !
 !     First fill in the year portion of the error message.
 !
-      CALL REPMI ( ERROR , '#', ORGNYR, ERROR  )
+      call repmi ( error , '#', orgnyr, error  )
 
-      MON(1) =  6.0D0
-      MON(2) = 12.0D0
+      mon(1) =  6.0d0
+      mon(2) = 12.0d0
 
-      MDY(1) = 30.0D0
-      MDY(2) = 31.0D0
+      mdy(1) = 30.0d0
+      mdy(2) = 31.0d0
 !
 !     Next Fill in the hours and minutes. Recall that leapseconds
 !     occur during the last second of the 59'th minute of the 23'rd
@@ -1366,34 +1366,34 @@
 !     minute of the 23'rd + HOFF hour of the time zone.  We adjust
 !     these to account for hour roll over and day roll over.
 !
-      MINUTE = 59.0D0 + MOFF
+      minute = 59.0d0 + moff
 
-      IF ( MINUTE .GT. 59.0D0 ) THEN
-         MINUTE = MINUTE - 60.0D0
-         EXTRA  = 1.0D0
-      ELSE IF ( MINUTE .LT. 0.0D0 ) THEN
-         MINUTE = MINUTE + 60.0D0
-         EXTRA  = -1.0D0
-      ELSE
-         EXTRA  = 0.0D0
-      END IF
+      if ( minute .gt. 59.0d0 ) then
+         minute = minute - 60.0d0
+         extra  = 1.0d0
+      else if ( minute .lt. 0.0d0 ) then
+         minute = minute + 60.0d0
+         extra  = -1.0d0
+      else
+         extra  = 0.0d0
+      end if
 
 
-      HOUR = 23.0D0 + HOFF + EXTRA
+      hour = 23.0d0 + hoff + extra
 
-      IF ( HOUR .GT. 23 ) THEN
-         HOUR = HOUR - 24
-      END IF
+      if ( hour .gt. 23 ) then
+         hour = hour - 24
+      end if
 
 !
 !     Convert the hours and minutes to strings and place the
 !     strings in the message.
 !
-      CALL DPFMT ( HOUR,   '0x', HSTR )
-      CALL DPFMT ( MINUTE, '0x', MSTR )
+      call dpfmt ( hour,   '0x', hstr )
+      call dpfmt ( minute, '0x', mstr )
 
-      CALL REPMC ( ERROR , '#', HSTR, ERROR  )
-      CALL REPMC ( ERROR , '#', MSTR, ERROR  )
+      call repmc ( error , '#', hstr, error  )
+      call repmc ( error , '#', mstr, error  )
 
 !
 !     Last step we generate the month and day corresponding
@@ -1412,47 +1412,47 @@
 !     that might have leapseconds in the user specified year
 !     of whatever calendar happens to be in use.
 !
-      CYEAR = DINT( TVEC(YR) )
+      cyear = dint( tvec(yr) )
 
-      DO GYEAR = CYEAR, CYEAR-1, -1
+      do gyear = cyear, cyear-1, -1
 
-         DO I = 1, 2
+         do i = 1, 2
 
-            TVEC(1) = DBLE(GYEAR)
-            TVEC(2) = MON(I)
-            TVEC(3) = MDY(I)
-            TVEC(4) = 23.0D0 + HOFF
-            TVEC(5) = 59.0D0 + MOFF
-            TVEC(6) = 0.0D0
+            tvec(1) = dble(gyear)
+            tvec(2) = mon(i)
+            tvec(3) = mdy(i)
+            tvec(4) = 23.0d0 + hoff
+            tvec(5) = 59.0d0 + moff
+            tvec(6) = 0.0d0
 !
 !           Normalize the time vector.
 !
-            CALL TTRANS ( 'YMDF', 'YMDF', TVEC )
+            call ttrans ( 'YMDF', 'YMDF', tvec )
 
-            YEAR   = NINT(TVEC(1))
-            MONTH  = NINT(TVEC(2))
-            DAY    = NINT(TVEC(3))
+            year   = nint(tvec(1))
+            month  = nint(tvec(2))
+            day    = nint(tvec(3))
 
-            IF ( DOJUL ) THEN
-               CALL GR2JUL ( YEAR, MONTH, DAY, DOY )
-            END IF
-
-
-            IF ( YEAR .EQ. ORGNYR ) THEN
-
-               CALL REPMC ( ERROR, '#', MNAME(MONTH), ERROR  )
-               CALL REPMI ( ERROR, '#', DAY,          ERROR  )
-
-            END IF
-
-         END DO
-
-      END DO
-
-      CALL SETMSG ( ERROR  )
-      CALL SIGERR ( 'SPICE(BADTIMESTRING)' )
-      CALL CHKOUT ( 'STR2ET' )
-      RETURN
+            if ( dojul ) then
+               call gr2jul ( year, month, day, doy )
+            end if
 
 
-      END
+            if ( year .eq. orgnyr ) then
+
+               call repmc ( error, '#', mname(month), error  )
+               call repmi ( error, '#', day,          error  )
+
+            end if
+
+         end do
+
+      end do
+
+      call setmsg ( error  )
+      call sigerr ( 'SPICE(BADTIMESTRING)' )
+      call chkout ( 'STR2ET' )
+      return
+
+
+      end

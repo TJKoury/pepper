@@ -1,8 +1,8 @@
 !$Procedure ZZGFPAU ( Private --- GF, phase angle utility routine )
 
-      SUBROUTINE ZZGFPAU ( TARGET, ILLMN,  ABCORR, OBSRVR, &
-                           UDFUNC, ET,     DECRES, RVL, &
-                           XTARG,  XILLMN, XABCOR, XOBS, XABLK )
+      subroutine zzgfpau ( target, illmn,  abcorr, obsrvr, &
+                           udfunc, et,     decres, rvl, &
+                           xtarg,  xillmn, xabcor, xobs, xablk )
 
 ! $ Abstract
 !
@@ -25,22 +25,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILLMN
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      ET
-      LOGICAL               DECRES
-      DOUBLE PRECISION      RVL
-      INTEGER               XTARG
-      INTEGER               XILLMN
-      CHARACTER*(*)         XABCOR
-      INTEGER               XOBS
-      LOGICAL               XABLK  ( NABCOR )
+      character*(*)         target
+      character*(*)         illmn
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      et
+      logical               decres
+      double precision      rvl
+      integer               xtarg
+      integer               xillmn
+      character*(*)         xabcor
+      integer               xobs
+      logical               xablk  ( nabcor )
 
 
 ! $ Brief_I/O
@@ -201,17 +201,17 @@
 !
 !-&
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DVSEP
-      DOUBLE PRECISION      VDOT
+      double precision      clight
+      double precision      dvsep
+      double precision      vdot
 
 
 !
@@ -222,51 +222,51 @@
 !     The phase angle calculation is invariant with respect to
 !     reference frame. Use J2000 for convenience.
 !
-      CHARACTER*(*)         REF
-      PARAMETER           ( REF    = 'J2000' )
+      character*(*)         ref
+      parameter           ( ref    = 'J2000' )
 
 
 !
 !     Local Variables
 !
-      CHARACTER*(CORLEN)    SVABCO
+      character*(corlen)    svabco
 
-      DOUBLE PRECISION      DSEP
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      DLT
-      DOUBLE PRECISION      S1   (6)
-      DOUBLE PRECISION      S2   (6)
-      DOUBLE PRECISION      UVEC (3)
+      double precision      dsep
+      double precision      lt
+      double precision      dlt
+      double precision      s1   (6)
+      double precision      s2   (6)
+      double precision      uvec (3)
 
-      INTEGER               SVILLM
-      INTEGER               SVOBS
-      INTEGER               SVTARG
-      INTEGER               I
+      integer               svillm
+      integer               svobs
+      integer               svtarg
+      integer               i
 
-      LOGICAL               SVABLK ( NABCOR )
-      LOGICAL               FOUND
+      logical               svablk ( nabcor )
+      logical               found
 
 
 !
 !     Saved Variables
 !
-      SAVE                  SVABLK
-      SAVE                  SVABCO
-      SAVE                  SVTARG
-      SAVE                  SVOBS
-      SAVE                  SVILLM
+      save                  svablk
+      save                  svabco
+      save                  svtarg
+      save                  svobs
+      save                  svillm
 
-      CALL CHKIN  ( 'ZZGFPAU'           )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZGFPAU'           )
+      call chkin  ( 'ZZGFPAU'           )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZGFPAU'           )
 
-      RETURN
+      return
 
 
 
 !$Procedure  ZZGFPAIN ( Private --- GF, phase angle initialization )
 
-      ENTRY ZZGFPAIN ( TARGET, ILLMN, ABCORR, OBSRVR )
+      entry zzgfpain ( target, illmn, abcorr, obsrvr )
 
 ! $ Abstract
 !
@@ -425,130 +425,130 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFPAIN' )
+      call chkin ( 'ZZGFPAIN' )
 
 !
 !     Find NAIF IDs for TARGET, ILLMN, and OBSRVR.
 !
-      CALL BODS2C ( TARGET, SVTARG, FOUND )
+      call bods2c ( target, svtarg, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target object, ' &
+         call setmsg ( 'The target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFPAIN'                                 )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFPAIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( ILLMN, SVILLM, FOUND )
+      call bods2c ( illmn, svillm, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The illuminator object, ' &
+         call setmsg ( 'The illuminator object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFPAIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFPAIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, SVOBS, FOUND )
+      call bods2c ( obsrvr, svobs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer object, ' &
+         call setmsg ( 'The observer object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFPAIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFPAIN'                                 )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Make sure the observer, illuminator, and target are distinct.
 !
-      IF ( (SVTARG .EQ. SVOBS)   .OR. &
-           (SVTARG .EQ. SVILLM) .OR. &
-           (SVOBS  .EQ. SVILLM)      ) THEN
+      if ( (svtarg .eq. svobs)   .or. &
+           (svtarg .eq. svillm) .or. &
+           (svobs  .eq. svillm)      ) then
 
-         CALL SETMSG ( 'The observer, illuminator, and ' &
+         call setmsg ( 'The observer, illuminator, and ' &
          //            'target must be distinct objects, but ' &
          //            'are not: OBSRVR = #, TARGET = #, ' &
          //            'are not: ILLMN= #.' )
-         CALL ERRCH  ( '#', OBSRVR                         )
-         CALL ERRCH  ( '#', TARGET                         )
-         CALL ERRCH  ( '#', ILLMN                          )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'          )
-         CALL CHKOUT ( 'ZZGFPAIN'                          )
-         RETURN
+         call errch  ( '#', obsrvr                         )
+         call errch  ( '#', target                         )
+         call errch  ( '#', illmn                          )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
+         call chkout ( 'ZZGFPAIN'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
-      CALL CMPRSS ( ' ', 0, ABCORR, SVABCO )
-      CALL UCASE  ( SVABCO,         SVABCO )
+      call cmprss ( ' ', 0, abcorr, svabco )
+      call ucase  ( svabco,         svabco )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( SVABCO, SVABLK )
+      call zzvalcor ( svabco, svablk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFPAIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFPAIN' )
+         return
+      end if
 
 !
 !     Restrict correction to reception cases.
 !
 
-      IF( SVABLK(XMTIDX) ) THEN
+      if( svablk(xmtidx) ) then
 
-         CALL SETMSG ( 'Invalid aberration correction ''#''. ' &
+         call setmsg ( 'Invalid aberration correction ''#''. ' &
          //            'Phase angle geometry calculations currently ' &
          //            'restricted to reception cases.')
-         CALL ERRCH  ( '#', ABCORR )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)' )
-         CALL CHKOUT ( 'ZZGFPAIN' )
-         RETURN
+         call errch  ( '#', abcorr )
+         call sigerr ( 'SPICE(INVALIDOPTION)' )
+         call chkout ( 'ZZGFPAIN' )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZGFPAIN' )
-      RETURN
+      call chkout ( 'ZZGFPAIN' )
+      return
 
 
 
 
 !$Procedure ZZGFPADC ( Private --- GF, when phase angle is decreasing )
 
-      ENTRY ZZGFPADC ( UDFUNC, ET, DECRES )
+      entry zzgfpadc ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -652,43 +652,43 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFPADC' )
+      call chkin  ( 'ZZGFPADC' )
 
 
 !
 !     Get the state of the TARG object relative to OBS at ET.
 !
-      CALL SPKEZ ( SVTARG, ET, REF, SVABCO, SVOBS, S1, LT )
+      call spkez ( svtarg, et, ref, svabco, svobs, s1, lt )
 
-      IF  (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFPADC' )
-         RETURN
-      END IF
+      if  (  failed() ) then
+         call chkout ( 'ZZGFPADC' )
+         return
+      end if
 
 
 !
 !     Get the state of the ILLMN object relative to TARG at ET
 !     for no aberration correction, or ET - LT otherwise.
 !
-      IF ( SVABLK(GEOIDX) ) THEN
+      if ( svablk(geoidx) ) then
 
 !
 !        No correction, geometric.
 !
-         CALL SPKEZ ( SVILLM, ET,      REF, SVABCO, SVTARG, S2, LT )
+         call spkez ( svillm, et,      ref, svabco, svtarg, s2, lt )
 
-      ELSE
+      else
 
-         CALL SPKEZ ( SVILLM, ET - LT, REF, SVABCO, SVTARG, S2, LT )
+         call spkez ( svillm, et - lt, ref, svabco, svtarg, s2, lt )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFPADC' )
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout ( 'ZZGFPADC' )
+            return
+         end if
 
 !
 !        Correct velocity for time derivative of the observer target
@@ -708,21 +708,21 @@
 !        dt        C   dt         C
 !
 !
-         CALL VHAT ( S1, UVEC )
+         call vhat ( s1, uvec )
 
-         DLT = VDOT ( UVEC, S1(4) ) / CLIGHT()
+         dlt = vdot ( uvec, s1(4) ) / clight()
 
 !
 !        Apply the correction to the velocity vector components.
 !
-         CALL VSCLIP ( 1.D0 - DLT,  S2(4) )
+         call vsclip ( 1.d0 - dlt,  s2(4) )
 
-      END IF
+      end if
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFPADC' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'ZZGFPADC' )
+         return
+      end if
 
 !
 !                       ILLMN      OBS
@@ -748,19 +748,19 @@
 !        ------ = - ----
 !         dt         dt
 !
-      DSEP   = DVSEP( S1, S2 )
+      dsep   = dvsep( s1, s2 )
 
-      DECRES = -DSEP .LT. 0.D0
+      decres = -dsep .lt. 0.d0
 
-      CALL CHKOUT ( 'ZZGFPADC' )
-      RETURN
+      call chkout ( 'ZZGFPADC' )
+      return
 
 
 
 
 !$Procedure ZZGFPAGQ ( Private --- GF, phase angle between two bodies )
 
-      ENTRY ZZGFPAGQ ( ET, RVL )
+      entry zzgfpagq ( et, rvl )
 
 ! $ Abstract
 !
@@ -845,16 +845,16 @@
 !
 !-&
 
-      CALL ZZGFPAQ ( ET, SVTARG, SVILLM, SVOBS, SVABCO, RVL )
+      call zzgfpaq ( et, svtarg, svillm, svobs, svabco, rvl )
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZGFPAX ( Private -- GF, retrieve ZZGFPAIN values )
 
-      ENTRY ZZGFPAX ( XTARG, XILLMN, XABCOR, XOBS, XABLK )
+      entry zzgfpax ( xtarg, xillmn, xabcor, xobs, xablk )
 
 ! $ Abstract
 !
@@ -949,16 +949,16 @@
 !
 !-&
 
-         XTARG  = SVTARG
-         XILLMN = SVILLM
-         XABCOR = SVABCO
-         XOBS   = SVOBS
+         xtarg  = svtarg
+         xillmn = svillm
+         xabcor = svabco
+         xobs   = svobs
 
-         DO I=1, ABATSZ
-            XABLK(I) = SVABLK(I)
-         END DO
+         do i=1, abatsz
+            xablk(i) = svablk(i)
+         end do
 
-      RETURN
-      END
+      return
+      end
 
 

@@ -1,6 +1,6 @@
 !$Procedure RDKER ( Read a kernel file )
 
-      SUBROUTINE RDKER ( KERNEL, LINE, NUMBER, EOF )
+      subroutine rdker ( kernel, line, number, eof )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         KERNEL
-      CHARACTER*(*)         LINE
-      INTEGER               NUMBER
-      LOGICAL               EOF
+      character*(*)         kernel
+      character*(*)         line
+      integer               number
+      logical               eof
 
 ! $ Brief_I/O
 !
@@ -293,10 +293,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local parameters
@@ -308,101 +308,101 @@
 !     for the following block of declarations. Admittedly this is
 !     bizarre, but it works.
 !
-      CHARACTER*(*)         DAT
-      PARAMETER           ( DAT = 'begindata' )
+      character*(*)         dat
+      parameter           ( dat = 'begindata' )
 
-      CHARACTER*(*)         TXT
-      PARAMETER           ( TXT = 'begintext' )
+      character*(*)         txt
+      parameter           ( txt = 'begintext' )
 
-      CHARACTER*(*)         BLANK
-      PARAMETER           ( BLANK = ' ' )
+      character*(*)         blank
+      parameter           ( blank = ' ' )
 
 !
 !     The ASCII decimal code for the tab character is 9.
 !
-      INTEGER               TABCDE
-      PARAMETER           ( TABCDE = 9 )
+      integer               tabcde
+      parameter           ( tabcde = 9 )
 
-      INTEGER               MRKLEN
-      PARAMETER           ( MRKLEN = 10 )
+      integer               mrklen
+      parameter           ( mrklen = 10 )
 
-      INTEGER               BSLASH
-      PARAMETER           ( BSLASH = 92 )
+      integer               bslash
+      parameter           ( bslash = 92 )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               FILSIZ
-      PARAMETER           ( FILSIZ = 255 )
+      integer               filsiz
+      parameter           ( filsiz = 255 )
 
-      INTEGER               INTEXT
-      PARAMETER           ( INTEXT = 1 )
+      integer               intext
+      parameter           ( intext = 1 )
 
-      INTEGER               INDATA
-      PARAMETER           ( INDATA = INTEXT + 1 )
+      integer               indata
+      parameter           ( indata = intext + 1 )
 
-      INTEGER               ENDOFF
-      PARAMETER           ( ENDOFF = INDATA + 1 )
+      integer               endoff
+      parameter           ( endoff = indata + 1 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MRKLEN)    BEGDAT
-      CHARACTER*(MRKLEN)    BEGTXT
-      CHARACTER*(FILSIZ)    FILE
-      CHARACTER*(LNSIZE)    FIRST
+      character*(mrklen)    begdat
+      character*(mrklen)    begtxt
+      character*(filsiz)    file
+      character*(lnsize)    first
 
-      INTEGER               I
-      INTEGER               R
-      INTEGER               STATUS
-      INTEGER               LINNUM
+      integer               i
+      integer               r
+      integer               status
+      integer               linnum
 
-      LOGICAL               END
-      LOGICAL               FRSTIM
+      logical               end
+      logical               frstim
 
 !
 !     Save EVERYTHING.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FRSTIM / .TRUE. /
-      DATA                  FILE   / ' '    /
-      DATA                  LINNUM /  0     /
+      data                  frstim / .true. /
+      data                  file   / ' '    /
+      data                  linnum /  0     /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDKER' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'RDKER' )
+      end if
 
 !
 !     Calling RDKER directly is a serious breach of protocol.
 !     If RDKER is called, an error is signaled.
 !
 
-      CALL SETMSG ( 'RDKER: You have called an entry which '   // &
+      call setmsg ( 'RDKER: You have called an entry which '   // &
                     'performs no run-time function. This '     // &
                     'may indicate a bug. Please check the '    // &
                     'documentation for the subroutine RDKER.'     )
 
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      CALL CHKOUT ( 'RDKER' )
-      RETURN
+      call chkout ( 'RDKER' )
+      return
 
 
 
 !$Procedure RDKNEW ( Open and initialize a new kernel file )
 
-      ENTRY RDKNEW ( KERNEL )
+      entry rdknew ( kernel )
 
 ! $ Abstract
 !
@@ -574,35 +574,35 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDKNEW' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'RDKNEW' )
+      end if
 
 !
 !     Initialize the data delimiters if it hasn't been done already.
 !
-      IF ( FRSTIM ) THEN
+      if ( frstim ) then
 
-         BEGDAT = CHAR(BSLASH) // DAT
-         BEGTXT = CHAR(BSLASH) // TXT
+         begdat = char(bslash) // dat
+         begtxt = char(bslash) // txt
 
-         FRSTIM = .FALSE.
+         frstim = .false.
 
-      ELSE
+      else
 !
 !        Close the previous file, if it hasn't been closed already.
 !
-         CALL CLTEXT ( FILE )
+         call cltext ( file )
 
-      END IF
+      end if
 
 !
 !     Close the new file, too, in case they are the same. No sense
 !     burning up logical units.
 !
-      CALL CLTEXT ( KERNEL )
+      call cltext ( kernel )
 
 !
 !     Read the first line of the file. It can't possibly be a data
@@ -615,58 +615,58 @@
 !
 
 
-      CALL RDTEXT ( KERNEL, FIRST, END )
+      call rdtext ( kernel, first, end )
 
 
 !
 !     Replace any tab characters with blanks.
 !
-      R = RTRIM ( FIRST )
+      r = rtrim ( first )
 
-      DO I = 1, R
+      do i = 1, r
 
-         IF ( ICHAR(FIRST(I:I)) .EQ. TABCDE ) THEN
+         if ( ichar(first(i:i)) .eq. tabcde ) then
 
-            FIRST(I:I) = ' '
+            first(i:i) = ' '
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL LJUST ( FIRST, FIRST )
-      LINNUM =  1
+      call ljust ( first, first )
+      linnum =  1
 
 !
 !     The first line is enough to set the status for subsequent
 !     calls to RDKDAT.
 !
-      IF ( END ) THEN
+      if ( end ) then
 
-         STATUS = ENDOFF
-         CALL CLTEXT ( KERNEL )
+         status = endoff
+         call cltext ( kernel )
 
-      ELSE IF ( FIRST .EQ. BEGDAT ) THEN
-         STATUS = INDATA
+      else if ( first .eq. begdat ) then
+         status = indata
 
-      ELSE
-         STATUS = INTEXT
-      END IF
+      else
+         status = intext
+      end if
 
 !
 !     Save the name of the file for future reference.
 !
-      FILE = KERNEL
+      file = kernel
 
 
-      CALL CHKOUT ( 'RDKNEW' )
-      RETURN
+      call chkout ( 'RDKNEW' )
+      return
 
 
 
 !$Procedure RDKDAT ( Read the next data line from a kernel file )
 
-      ENTRY RDKDAT ( LINE, EOF )
+      entry rdkdat ( line, eof )
 
 ! $ Abstract
 !
@@ -858,21 +858,21 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDKDAT' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'RDKDAT' )
+      end if
 
 !
 !     If the previous call detected the end of the file,
 !     this one should do the same.
 !
-      IF ( STATUS .EQ. ENDOFF ) THEN
-         EOF = .TRUE.
-         CALL CHKOUT ( 'RDKDAT' )
-         RETURN
-      END IF
+      if ( status .eq. endoff ) then
+         eof = .true.
+         call chkout ( 'RDKDAT' )
+         return
+      end if
 
 !
 !     Well, at least we can try to read a line. Adjust the status as
@@ -883,59 +883,59 @@
 !     the line number of the last line read and can return this
 !     information from RDKLIN.
 !
-      LINE = BLANK
+      line = blank
 
-      DO WHILE ( ( .NOT. FAILED() )          .AND. &
-                 ( STATUS .EQ. INTEXT  .OR.  LINE .EQ. BLANK ) )
+      do while ( ( .not. failed() )          .and. &
+                 ( status .eq. intext  .or.  line .eq. blank ) )
 
 
-         CALL RDTEXT ( FILE, LINE, EOF )
+         call rdtext ( file, line, eof )
 
 
 !
 !        Replace any tab characters with blanks.
 !
-         R = RTRIM ( LINE )
+         r = rtrim ( line )
 
-         DO I = 1, R
+         do i = 1, r
 
-            IF (  ICHAR(LINE(I:I)) .EQ. TABCDE ) THEN
+            if (  ichar(line(i:i)) .eq. tabcde ) then
 
-               LINE(I:I) = ' '
+               line(i:i) = ' '
 
-            END IF
+            end if
 
-         END DO
-
-
-         CALL LJUST ( LINE, LINE )
-         LINNUM = LINNUM + 1
+         end do
 
 
-         IF ( EOF ) THEN
-            STATUS = ENDOFF
-            CALL CLTEXT ( FILE )
-            CALL CHKOUT ( 'RDKDAT' )
-            RETURN
-
-         ELSE IF ( LINE .EQ. BEGTXT ) THEN
-            STATUS = INTEXT
-
-         ELSE IF ( LINE .EQ. BEGDAT ) THEN
-            STATUS = INDATA
-            LINE   = BLANK
-         END IF
-
-      END DO
+         call ljust ( line, line )
+         linnum = linnum + 1
 
 
-      CALL CHKOUT ( 'RDKDAT' )
-      RETURN
+         if ( eof ) then
+            status = endoff
+            call cltext ( file )
+            call chkout ( 'RDKDAT' )
+            return
+
+         else if ( line .eq. begtxt ) then
+            status = intext
+
+         else if ( line .eq. begdat ) then
+            status = indata
+            line   = blank
+         end if
+
+      end do
+
+
+      call chkout ( 'RDKDAT' )
+      return
 
 
 !$Procedure RDKLIN ( Reading kernel at line number )
 
-      ENTRY      RDKLIN ( KERNEL, NUMBER )
+      entry      rdklin ( kernel, number )
 
 ! $ Abstract
 !
@@ -1068,8 +1068,8 @@
 !
 !     Not much to do here.  Just copy the information and return.
 !
-      KERNEL = FILE
-      NUMBER = LINNUM
+      kernel = file
+      number = linnum
 
-      RETURN
-      END
+      return
+      end

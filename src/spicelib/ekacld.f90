@@ -1,7 +1,7 @@
 !$Procedure EKACLD ( EK, add d.p. column to segment )
 
-      SUBROUTINE EKACLD (  HANDLE,  SEGNO,   COLUMN,  DVALS, &
-                           ENTSZS,  NLFLGS,  RCPTRS,  WKINDX  )
+      subroutine ekacld (  handle,  segno,   column,  dvals, &
+                           entszs,  nlflgs,  rcptrs,  wkindx  )
 
 ! $ Abstract
 !
@@ -17,20 +17,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekcoldsc.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      CHARACTER*(*)         COLUMN
-      DOUBLE PRECISION      DVALS  ( * )
-      INTEGER               ENTSZS ( * )
-      LOGICAL               NLFLGS ( * )
-      INTEGER               RCPTRS ( * )
-      INTEGER               WKINDX ( * )
+      integer               handle
+      integer               segno
+      character*(*)         column
+      double precision      dvals  ( * )
+      integer               entszs ( * )
+      logical               nlflgs ( * )
+      integer               rcptrs ( * )
+      integer               wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -463,94 +463,94 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CLASS
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               DTYPE
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               class
+      integer               coldsc ( cdscsz )
+      integer               dtype
+      integer               segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKACLD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKACLD' )
+      end if
 
 !
 !     Find the descriptors for the specified segment and column.
 !
-      CALL ZZEKSDSC ( HANDLE,  SEGNO,   SEGDSC          )
-      CALL ZZEKCDSC ( HANDLE,  SEGDSC,  COLUMN,  COLDSC )
+      call zzeksdsc ( handle,  segno,   segdsc          )
+      call zzekcdsc ( handle,  segdsc,  column,  coldsc )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKACLD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKACLD' )
+         return
+      end if
 
 !
 !     This column had better be of d.p. type.
 !
-      CLASS  =  COLDSC ( CLSIDX )
-      DTYPE  =  COLDSC ( TYPIDX )
+      class  =  coldsc ( clsidx )
+      dtype  =  coldsc ( typidx )
 
-      IF ( ( DTYPE .NE. DP ) .AND. ( DTYPE .NE. TIME )  ) THEN
+      if ( ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
 
-         CALL SETMSG ( 'Column # is of type #; EKACLD only works '  // &
+         call setmsg ( 'Column # is of type #; EKACLD only works '  // &
                        'with d.p. or TIME columns.'                  )
-         CALL ERRCH  ( '#',  COLUMN                                  )
-         CALL ERRINT ( '#',  DTYPE                                   )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                        )
-         CALL CHKOUT ( 'EKACLD'                                      )
-         RETURN
+         call errch  ( '#',  column                                  )
+         call errint ( '#',  dtype                                   )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                        )
+         call chkout ( 'EKACLD'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Hand off the task to the routine of the appropriate class.
 !
-      IF ( CLASS .EQ. 2 ) THEN
+      if ( class .eq. 2 ) then
 !
 !        Class 2 columns contain d.p. scalars.
 !
-         CALL ZZEKAC02 (  HANDLE,  SEGDSC,  COLDSC,  DVALS, &
-                                   NLFLGS,  RCPTRS,  WKINDX )
+         call zzekac02 (  handle,  segdsc,  coldsc,  dvals, &
+                                   nlflgs,  rcptrs,  wkindx )
 
 
-      ELSE IF ( CLASS .EQ. 5 ) THEN
+      else if ( class .eq. 5 ) then
 !
 !        Class 5 columns contain d.p. arrays.
 !
-         CALL ZZEKAC05 ( HANDLE, SEGDSC, COLDSC, DVALS, ENTSZS, NLFLGS )
+         call zzekac05 ( handle, segdsc, coldsc, dvals, entszs, nlflgs )
 
 
-      ELSE IF ( CLASS .EQ. 8 ) THEN
+      else if ( class .eq. 8 ) then
 !
 !        Class 8 columns contain fixed-count d.p. scalars.
 !
-         CALL ZZEKAC08 ( HANDLE, SEGDSC, COLDSC, DVALS, NLFLGS, WKINDX )
+         call zzekac08 ( handle, segdsc, coldsc, dvals, nlflgs, wkindx )
 
 
-      ELSE
+      else
 !
 !        This is an unsupported column class.
 !
-         CALL SETMSG ( 'Unsupported column class code # found in '   // &
+         call setmsg ( 'Unsupported column class code # found in '   // &
                        'descriptor for column #.'                      )
-         CALL ERRINT ( '#', CLASS                                      )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                           )
-         CALL CHKOUT ( 'EKACLD'                                        )
-         RETURN
+         call errint ( '#', class                                      )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                           )
+         call chkout ( 'EKACLD'                                        )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'EKACLD' )
-      RETURN
-      END
+      call chkout ( 'EKACLD' )
+      return
+      end

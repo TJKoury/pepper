@@ -1,6 +1,6 @@
 !$Procedure LNKILA ( LNK, insert list after node )
 
-      SUBROUTINE LNKILA ( PREV, LIST, POOL )
+      subroutine lnkila ( prev, list, pool )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               PREV
-      INTEGER               LIST
-      INTEGER               POOL ( 2,  LBPOOL : * )
+      integer               prev
+      integer               list
+      integer               pool ( 2,  lbpool : * )
 
 ! $ Brief_I/O
 !
@@ -201,23 +201,23 @@
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      INTEGER               SIZROW
-      PARAMETER           ( SIZROW =   1 )
+      integer               sizrow
+      parameter           ( sizrow =   1 )
 
-      INTEGER               SIZCOL
-      PARAMETER           ( SIZCOL =   0 )
+      integer               sizcol
+      parameter           ( sizcol =   0 )
 
-      INTEGER               NFRROW
-      PARAMETER           ( NFRROW =   2 )
+      integer               nfrrow
+      parameter           ( nfrrow =   2 )
 
-      INTEGER               NFRCOL
-      PARAMETER           ( NFRCOL =   0 )
+      integer               nfrcol
+      parameter           ( nfrcol =   0 )
 
-      INTEGER               FREROW
-      PARAMETER           ( FREROW =   1 )
+      integer               frerow
+      parameter           ( frerow =   1 )
 
-      INTEGER               FRECOL
-      PARAMETER           ( FRECOL =  -1 )
+      integer               frecol
+      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -233,27 +233,27 @@
 !
 !
 !
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  = 1 )
+      integer               forwrd
+      parameter           ( forwrd  = 1 )
 
-      INTEGER               BCKWRD
-      PARAMETER           ( BCKWRD  = 2 )
+      integer               bckwrd
+      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      INTEGER               FREE
-      PARAMETER           ( FREE   = 0 )
+      integer               free
+      parameter           ( free   = 0 )
 
 
 !
 !     Local variables
 !
-      INTEGER               NEXT
-      INTEGER               HEAD
-      INTEGER               TAIL
+      integer               next
+      integer               head
+      integer               tail
 
 
 !
@@ -263,63 +263,63 @@
 !
 !     If PREV is non-positive, return now.
 !
-      IF ( PREV .LE. 0 ) THEN
-         RETURN
-      END IF
+      if ( prev .le. 0 ) then
+         return
+      end if
 
 !
 !     At this point, PREV and LIST must be a valid node numbers, and
 !     both PREV and LIST must be allocated as well.
 !
-      IF (      ( PREV .GT. POOL(SIZROW,SIZCOL) ) &
-           .OR. ( LIST .LT. 1                   ) &
-           .OR. ( LIST .GT. POOL(SIZROW,SIZCOL) )  )  THEN
+      if (      ( prev .gt. pool(sizrow,sizcol) ) &
+           .or. ( list .lt. 1                   ) &
+           .or. ( list .gt. pool(sizrow,sizcol) )  )  then
 
-         CALL CHKIN  ( 'LNKILA'                                        )
-         CALL SETMSG ( 'PREV was #.  LIST was #. '                    // &
+         call chkin  ( 'LNKILA'                                        )
+         call setmsg ( 'PREV was #.  LIST was #. '                    // &
                        'Valid range is 1 to #.'                        )
-         CALL ERRINT ( '#', PREV                                       )
-         CALL ERRINT ( '#', LIST                                       )
-         CALL ERRINT ( '#', POOL(SIZROW, SIZCOL)                       )
-         CALL SIGERR ( 'SPICE(INVALIDNODE)'                            )
-         CALL CHKOUT ( 'LNKILA'                                        )
-         RETURN
+         call errint ( '#', prev                                       )
+         call errint ( '#', list                                       )
+         call errint ( '#', pool(sizrow, sizcol)                       )
+         call sigerr ( 'SPICE(INVALIDNODE)'                            )
+         call chkout ( 'LNKILA'                                        )
+         return
 
 
-      ELSE IF (       ( POOL(BCKWRD,PREV)  .EQ.  FREE ) &
-                .OR.  ( POOL(BCKWRD,LIST)  .EQ.  FREE )  ) THEN
+      else if (       ( pool(bckwrd,prev)  .eq.  free ) &
+                .or.  ( pool(bckwrd,list)  .eq.  free )  ) then
 
-         CALL CHKIN  ( 'LNKILA'                                        )
-         CALL SETMSG ( 'Node PREV: node number = #; '                 // &
+         call chkin  ( 'LNKILA'                                        )
+         call setmsg ( 'Node PREV: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
                        'Node LIST: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
                        '("FREE" is #)'                                 )
-         CALL ERRINT ( '#', PREV                                       )
-         CALL ERRINT ( '#', POOL(BCKWRD,PREV)                          )
-         CALL ERRINT ( '#', POOL(FORWRD,PREV)                          )
-         CALL ERRINT ( '#', LIST                                       )
-         CALL ERRINT ( '#', POOL(BCKWRD,LIST)                          )
-         CALL ERRINT ( '#', POOL(FORWRD,LIST)                          )
-         CALL ERRINT ( '#', FREE                                       )
-         CALL SIGERR ( 'SPICE(UNALLOCATEDNODE)'                        )
-         CALL CHKOUT ( 'LNKILA'                                        )
-         RETURN
+         call errint ( '#', prev                                       )
+         call errint ( '#', pool(bckwrd,prev)                          )
+         call errint ( '#', pool(forwrd,prev)                          )
+         call errint ( '#', list                                       )
+         call errint ( '#', pool(bckwrd,list)                          )
+         call errint ( '#', pool(forwrd,list)                          )
+         call errint ( '#', free                                       )
+         call sigerr ( 'SPICE(UNALLOCATEDNODE)'                        )
+         call chkout ( 'LNKILA'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the head and tail of the list containing LIST.
 !
-      HEAD = LIST
+      head = list
 
-      DO WHILE ( POOL(BCKWRD,HEAD) .GT. 0 )
-         HEAD = POOL(BCKWRD,HEAD)
-      END DO
+      do while ( pool(bckwrd,head) .gt. 0 )
+         head = pool(bckwrd,head)
+      end do
 
-      TAIL = -POOL(BCKWRD,HEAD)
+      tail = -pool(bckwrd,head)
 
 !
 !     Let NEXT be the forward pointer of PREV.
@@ -335,17 +335,17 @@
 !     In either case, the forward pointer of TAIL should be set
 !     to the forward pointer of PREV.
 !
-      NEXT                  =  POOL( FORWRD, PREV )
-      POOL( FORWRD, PREV )  =  HEAD
-      POOL( BCKWRD, HEAD )  =  PREV
+      next                  =  pool( forwrd, prev )
+      pool( forwrd, prev )  =  head
+      pool( bckwrd, head )  =  prev
 
-      IF ( NEXT .GT. 0 ) THEN
-         POOL( BCKWRD,  NEXT )  =   TAIL
-      ELSE
-         POOL( BCKWRD, -NEXT )  =  -TAIL
-      END IF
+      if ( next .gt. 0 ) then
+         pool( bckwrd,  next )  =   tail
+      else
+         pool( bckwrd, -next )  =  -tail
+      end if
 
-      POOL( FORWRD, TAIL )  =  NEXT
+      pool( forwrd, tail )  =  next
 
-      RETURN
-      END
+      return
+      end

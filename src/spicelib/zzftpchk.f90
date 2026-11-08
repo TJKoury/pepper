@@ -1,6 +1,6 @@
 !$Procedure ZZFTPCHK ( Private --- Check for FTP Errors )
 
-      SUBROUTINE ZZFTPCHK ( STRING, FTPERR )
+      subroutine zzftpchk ( string, ftperr )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzftprms.inc'
+      include              'zzftprms.inc'
 
-      CHARACTER*(*)         STRING
-      LOGICAL               FTPERR
+      character*(*)         string
+      logical               ftperr
 
 ! $ Brief_I/O
 !
@@ -213,52 +213,52 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               POS
-      INTEGER               RTRIM
+      integer               pos
+      integer               rtrim
 
 !
 !     Local Variables
 !
-      CHARACTER*(SIZDLM)    DELIM
-      CHARACTER*(SIZEXP)    FILSTR
-      CHARACTER*(SIZEND)    LFTBKT
-      CHARACTER*(SIZSTR)    MEMSTR
-      CHARACTER*(SIZEND)    RGTBKT
+      character*(sizdlm)    delim
+      character*(sizexp)    filstr
+      character*(sizend)    lftbkt
+      character*(sizstr)    memstr
+      character*(sizend)    rgtbkt
 
-      INTEGER               FSMIDX
-      INTEGER               LENGTH
-      INTEGER               MSFIDX
+      integer               fsmidx
+      integer               length
+      integer               msfidx
 
-      LOGICAL               FIRST
-      LOGICAL               ISTHER
+      logical               first
+      logical               isther
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  LFTBKT
-      SAVE                  MEMSTR
-      SAVE                  RGTBKT
+      save                  first
+      save                  lftbkt
+      save                  memstr
+      save                  rgtbkt
 
 !
 !     Data Statements
 !
-      DATA   FIRST        / .TRUE. /
+      data   first        / .true. /
 
 !
 !     On the first pass through, fetch a copy of the current FTP
 !     validation string.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZFTPSTR ( MEMSTR, LFTBKT, RGTBKT, DELIM )
+         call zzftpstr ( memstr, lftbkt, rgtbkt, delim )
 
 !
 !        Don't fetch the string on subsequent calls to this routine.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Extract the FTP validation string from the block of text that
@@ -269,12 +269,12 @@
 !     this case we may only validate the part of the substring near
 !     the head, for which we have enough room in FILSTR.
 !
-      CALL ZZRBRKST ( STRING, &
-                      LFTBKT ( 1:RTRIM(LFTBKT) ), &
-                      RGTBKT ( 1:RTRIM(RGTBKT) ), &
-                      FILSTR, &
-                      LENGTH, &
-                      ISTHER                      )
+      call zzrbrkst ( string, &
+                      lftbkt ( 1:rtrim(lftbkt) ), &
+                      rgtbkt ( 1:rtrim(rgtbkt) ), &
+                      filstr, &
+                      length, &
+                      isther                      )
 
 !
 !     Now check ISTHER to see if either LFTBKT or RGTBKT was present
@@ -282,9 +282,9 @@
 !     we must assume that this text is from a pre-FTP validation file,
 !     and as such do not return any indication of an error.
 !
-      IF ( .NOT. ISTHER ) THEN
+      if ( .not. isther ) then
 
-         FTPERR = .FALSE.
+         ftperr = .false.
 
 !
 !     If one of the brackets is present, then we may proceed with
@@ -293,31 +293,31 @@
 !     unable to extract a properly bracketed substring.  This is an
 !     error.
 !
-      ELSE IF ( LENGTH .LE. 0 ) THEN
+      else if ( length .le. 0 ) then
 
-         FTPERR = .TRUE.
+         ftperr = .true.
 
 !
 !     Now we make it to this ELSE statement only if ISTHER is TRUE, and
 !     LENGTH is a positive number.  Compare the contents of FILSTR
 !     and MEMSTR.
 !
-      ELSE
+      else
 
 !
 !        First determine if the data from the file is a subset of
 !        what is stored in memory.
 !
-         FSMIDX = POS (  MEMSTR,  FILSTR( 1:RTRIM(FILSTR) ),  1  )
+         fsmidx = pos (  memstr,  filstr( 1:rtrim(filstr) ),  1  )
 
 !
 !        In the event that FSMIDX is non-zero, we know that FILSTR
 !        is a substring of MEMSTR, and thus we have validated all the
 !        test clusters from the file.
 !
-         IF ( FSMIDX .NE. 0 ) THEN
+         if ( fsmidx .ne. 0 ) then
 
-            FTPERR = .FALSE.
+            ftperr = .false.
 
 !
 !        If FSMIDX is 0, then we do not yet know whether or not the
@@ -326,19 +326,19 @@
 !        toolkit is aware.  Check to see whether what's in memory
 !        is a substring of what's in FILSTR.
 !
-         ELSE
+         else
 
-            MSFIDX = POS (  FILSTR,  MEMSTR( 1:RTRIM(MEMSTR) ),  1  )
+            msfidx = pos (  filstr,  memstr( 1:rtrim(memstr) ),  1  )
 
 !
 !           If this comes back as zero, then we definitely have
 !           an FTP error. Set FTPERR appropriately.
 !
-            FTPERR = ( MSFIDX .EQ. 0 )
+            ftperr = ( msfidx .eq. 0 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

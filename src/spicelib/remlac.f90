@@ -1,6 +1,6 @@
 !$Procedure REMLAC ( Remove elements from a character array )
 
-      SUBROUTINE REMLAC ( NE, LOC, ARRAY, NA )
+      subroutine remlac ( ne, loc, array, na )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          NE
-      INTEGER          LOC
-      CHARACTER*(*)    ARRAY ( * )
-      INTEGER          NA
+      integer          ne
+      integer          loc
+      character*(*)    array ( * )
+      integer          na
 
 ! $ Brief_I/O
 !
@@ -178,24 +178,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'REMLAC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'REMLAC' )
+      end if
 
 
 !
@@ -204,24 +204,24 @@
 !     value of LOC is invalid, and an error is signaled.
 !
 
-      IF ( ( LOC .LT. 1 ) .OR. ( LOC .GT. NA ) ) THEN
+      if ( ( loc .lt. 1 ) .or. ( loc .gt. na ) ) then
 
-         CALL SETMSG ( 'Location was *.'     )
-         CALL ERRINT ( '*', LOC              )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
-         CALL CHKOUT ( 'REMLAC' )
-         RETURN
+         call setmsg ( 'Location was *.'     )
+         call errint ( '*', loc              )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
+         call chkout ( 'REMLAC' )
+         return
 
 !
 !     Don't try to remove non-existent elements.
 !
 
-      ELSE IF ( NE .GT. NA-LOC+1 ) THEN
+      else if ( ne .gt. na-loc+1 ) then
 
-         CALL SETMSG ( 'Trying to remove non-existent elements.' )
-         CALL SIGERR ( 'SPICE(NONEXISTELEMENTS)' )
-         CALL CHKOUT ( 'REMLAC' )
-         RETURN
+         call setmsg ( 'Trying to remove non-existent elements.' )
+         call sigerr ( 'SPICE(NONEXISTELEMENTS)' )
+         call chkout ( 'REMLAC' )
+         return
 
 
 !
@@ -229,26 +229,26 @@
 !     do not modify the array.
 !
 
-      ELSE IF ( NE .GT. 0 ) THEN
+      else if ( ne .gt. 0 ) then
 
 !
 !        Move the elements forward.
 !
-         DO I = LOC, NA - NE
-            ARRAY(I) = ARRAY(I+NE)
-         END DO
+         do i = loc, na - ne
+            array(i) = array(i+ne)
+         end do
 
 
 !
 !        Update the number of elements in the array.
 !
-         NA = NA - NE
+         na = na - ne
 
 
-      END IF
+      end if
 
 
 
-      CALL CHKOUT ( 'REMLAC' )
-      RETURN
-      END
+      call chkout ( 'REMLAC' )
+      return
+      end

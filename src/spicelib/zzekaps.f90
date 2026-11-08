@@ -1,6 +1,6 @@
 !$Procedure      ZZEKAPS ( EK, allocate page for segment )
 
-      SUBROUTINE ZZEKAPS ( HANDLE, SEGDSC, TYPE, NEW, P, BASE  )
+      subroutine zzekaps ( handle, segdsc, type, new, p, base  )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               TYPE
-      LOGICAL               NEW
-      INTEGER               P
-      INTEGER               BASE
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               type
+      logical               new
+      integer               p
+      integer               base
 
 ! $ Brief_I/O
 !
@@ -128,71 +128,71 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               IDX
-      INTEGER               TREE
+      integer               idx
+      integer               tree
 
 
 !
 !     Use discovery check-in.
 !
-      IF ( NEW ) THEN
+      if ( new ) then
 !
 !        We must allocate a new page.
 !
-         CALL ZZEKPGAN ( HANDLE, TYPE, P, BASE )
+         call zzekpgan ( handle, type, p, base )
 
-      ELSE
+      else
 !
 !        We can allocate a page from the free list if one is available.
 !        Otherwise take a new page.
 !
-         CALL ZZEKPGAL ( HANDLE, TYPE, P, BASE )
+         call zzekpgal ( handle, type, p, base )
 
-      END IF
+      end if
 
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Zero out the page's link count and forward pointer.
 !
-      CALL ZZEKSLNK ( HANDLE, TYPE, P, 0 )
-      CALL ZZEKSFWD ( HANDLE, TYPE, P, 0 )
+      call zzekslnk ( handle, type, p, 0 )
+      call zzeksfwd ( handle, type, p, 0 )
 
 !
 !     Update the segment's metadata.  For type 1 segments,
 !     the new page into the page tree of the appropriate data type.
 !
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 
-         TREE  =  SEGDSC ( CPTIDX )
-
-
-      ELSE IF ( TYPE .EQ. DP ) THEN
-
-         TREE  =  SEGDSC ( DPTIDX )
+         tree  =  segdsc ( cptidx )
 
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. dp ) then
+
+         tree  =  segdsc ( dptidx )
+
+
+      else if ( type .eq. int ) then
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, one of the allocation routines would have
 !        complained.
 !
-         TREE  =  SEGDSC ( IPTIDX )
+         tree  =  segdsc ( iptidx )
 
-      END IF
-
-
-      CALL ZZEKTRAP ( HANDLE, TREE, P, IDX )
+      end if
 
 
-      RETURN
-      END
+      call zzektrap ( handle, tree, p, idx )
+
+
+      return
+      end

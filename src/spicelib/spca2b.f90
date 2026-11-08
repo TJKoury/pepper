@@ -1,6 +1,6 @@
 !$Procedure SPCA2B ( SPK and CK, ASCII to binary )
 
-      SUBROUTINE SPCA2B ( TEXT, BINARY )
+      subroutine spca2b ( text, binary )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         TEXT
-      CHARACTER*(*)         BINARY
+      character*(*)         text
+      character*(*)         binary
 
 ! $ Brief_I/O
 !
@@ -167,42 +167,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         BMARK
-      PARAMETER           ( BMARK ='~NAIF/SPC BEGIN COMMENTS~')
+      character*(*)         bmark
+      parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
 
-      CHARACTER*(*)         EMARK
-      PARAMETER           ( EMARK ='~NAIF/SPC END COMMENTS~'  )
+      character*(*)         emark
+      parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
 !     Local variables
 !
-      INTEGER               UNIT
+      integer               unit
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCA2B' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCA2B' )
+      end if
 
 !
 !     Open the text file with read access.  SPCT2B will
 !     create the binary file and write the data and comments
 !     to it.  Then we close the text file, and we're done.
 !
-      CALL TXTOPR ( TEXT,   UNIT )
+      call txtopr ( text,   unit )
 
-      CALL SPCT2B ( UNIT, BINARY )
+      call spct2b ( unit, binary )
 
-      CLOSE       (         UNIT )
+      close       (         unit )
 
 
-      CALL CHKOUT ( 'SPCA2B' )
-      RETURN
-      END
+      call chkout ( 'SPCA2B' )
+      return
+      end

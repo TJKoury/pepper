@@ -1,6 +1,6 @@
 !$Procedure STLABX ( Stellar aberration, transmission case )
 
-      SUBROUTINE STLABX ( POBJ, VOBS, CORPOS )
+      subroutine stlabx ( pobj, vobs, corpos )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   POBJ   ( 3 )
-      DOUBLE PRECISION   VOBS   ( 3 )
-      DOUBLE PRECISION   CORPOS ( 3 )
+      double precision   pobj   ( 3 )
+      double precision   vobs   ( 3 )
+      double precision   corpos ( 3 )
 
 ! $ Brief_I/O
 !
@@ -313,21 +313,21 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      NEGVEL ( 3 )
+      double precision      negvel ( 3 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'STLABX' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'STLABX' )
+      end if
 
 !
 !     Obtain the negative of the observer's velocity.  This
@@ -335,10 +335,10 @@
 !     the inverse of the usual stellar aberration correction,
 !     which is exactly what we seek.
 !
-      CALL VMINUS ( VOBS, NEGVEL )
+      call vminus ( vobs, negvel )
 
-      CALL STELAB ( POBJ, NEGVEL, CORPOS )
+      call stelab ( pobj, negvel, corpos )
 
-      CALL CHKOUT ( 'STLABX' )
-      RETURN
-      END
+      call chkout ( 'STLABX' )
+      return
+      end

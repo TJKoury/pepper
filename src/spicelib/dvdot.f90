@@ -1,6 +1,6 @@
 !$Procedure DVDOT  ( Derivative of Vector Dot Product, 3-D )
 
-      DOUBLE PRECISION FUNCTION DVDOT ( S1, S2 )
+      double precision function dvdot ( s1, s2 )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   S1 ( 6 )
-      DOUBLE PRECISION   S2 ( 6 )
+      double precision   s1 ( 6 )
+      double precision   s2 ( 6 )
 
 ! $ Brief_I/O
 !
@@ -187,8 +187,8 @@
 !-&
 
 
-      DVDOT = S1(1)*S2(4) + S1(2)*S2(5) + S1(3)*S2(6) &
-            + S1(4)*S2(1) + S1(5)*S2(2) + S1(6)*S2(3)
+      dvdot = s1(1)*s2(4) + s1(2)*s2(5) + s1(3)*s2(6) &
+            + s1(4)*s2(1) + s1(5)*s2(2) + s1(6)*s2(3)
 
-      RETURN
-      END
+      return
+      end

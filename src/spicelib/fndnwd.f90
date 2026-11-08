@@ -1,6 +1,6 @@
 !$Procedure FNDNWD ( Find the next word after an index )
 
-      SUBROUTINE FNDNWD ( STRING, START, B, E )
+      subroutine fndnwd ( string, start, b, e )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      INTEGER          START
-      INTEGER          B
-      INTEGER          E
+      character*(*)    string
+      integer          start
+      integer          b
+      integer          e
 
 ! $ Brief_I/O
 !
@@ -151,78 +151,78 @@
 !
 !     Local Variables
 !
-      INTEGER               BLANK
-      INTEGER               L
-      INTEGER               I
-      INTEGER               N
-      INTEGER               SIZE
+      integer               blank
+      integer               l
+      integer               i
+      integer               n
+      integer               size
 
-      LOGICAL               LASTN
-      LOGICAL               THISB
+      logical               lastn
+      logical               thisb
 
 !
 !     Set up neede parameters and check obvious out-of-bound cases.
 !
-      BLANK = ICHAR(' ')
-      SIZE  = LEN(STRING)
+      blank = ichar(' ')
+      size  = len(string)
 
-      IF ( START .GT. SIZE ) THEN
-         B = 0
-         E = 0
-         RETURN
-      END IF
+      if ( start .gt. size ) then
+         b = 0
+         e = 0
+         return
+      end if
 
-      N = MAX(1,START)
-      L = N - 1
+      n = max(1,start)
+      l = n - 1
 
-      IF ( L .LE. 0 ) THEN
-         LASTN = .FALSE.
-      ELSE
-         LASTN = ICHAR( STRING(L:L) ) .NE. BLANK
-      END IF
+      if ( l .le. 0 ) then
+         lastn = .false.
+      else
+         lastn = ichar( string(l:l) ) .ne. blank
+      end if
 
-      THISB = ICHAR( STRING(N:N) ) .EQ. BLANK
+      thisb = ichar( string(n:n) ) .eq. blank
 
 !
 !     Search for the beginning of a word (the last character
 !     blank and the current non-blank).
 !
-      DO WHILE ( THISB .OR. LASTN )
+      do while ( thisb .or. lastn )
 
-         N = N + 1
+         n = n + 1
 
-         IF ( N .GT. SIZE ) THEN
-            B = 0
-            E = 0
-            RETURN
-         END IF
+         if ( n .gt. size ) then
+            b = 0
+            e = 0
+            return
+         end if
 
-         LASTN = .NOT.   THISB
-         THISB =  ICHAR( STRING(N:N) ) .EQ. BLANK
+         lastn = .not.   thisb
+         thisb =  ichar( string(n:n) ) .eq. blank
 
-      END DO
+      end do
 
 !
 !     If we get this far, we found the beginning of the
 !     string.  To find the end look for the next blank and
 !     back up one.
 !
-      B     =  N
+      b     =  n
 
-      DO I = N+1, SIZE
+      do i = n+1, size
 
-         IF ( ICHAR(STRING(I:I)) .EQ. BLANK ) THEN
-            E = I - 1
-            RETURN
-         END IF
+         if ( ichar(string(i:i)) .eq. blank ) then
+            e = i - 1
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     If we get this far, the word ends at the end of the
 !     string.
 !
-      E = SIZE
-      RETURN
+      e = size
+      return
 
-      END
+      end

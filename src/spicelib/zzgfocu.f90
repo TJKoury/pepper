@@ -1,8 +1,8 @@
 !$Procedure ZZGFOCU ( GF, occultation utilities )
 
-      SUBROUTINE ZZGFOCU ( OCCTYP, FRONT,  FSHAPE, FFRAME, &
-                           BACK,   BSHAPE, BFRAME, OBSRVR, &
-                           ABCORR, TIME,   OCSTAT          )
+      subroutine zzgfocu ( occtyp, front,  fshape, fframe, &
+                           back,   bshape, bframe, obsrvr, &
+                           abcorr, time,   ocstat          )
 
 ! $ Abstract
 !
@@ -30,25 +30,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsk.inc'
-      INCLUDE 'gf.inc'
-      INCLUDE 'zzabcorr.inc'
-      INCLUDE 'zzdsk.inc'
-      INCLUDE 'zzocced.inc'
+      include 'dsk.inc'
+      include 'gf.inc'
+      include 'zzabcorr.inc'
+      include 'zzdsk.inc'
+      include 'zzocced.inc'
 
-      CHARACTER*(*)         OCCTYP
-      CHARACTER*(*)         FRONT
-      CHARACTER*(*)         FSHAPE
-      CHARACTER*(*)         FFRAME
-      CHARACTER*(*)         BACK
-      CHARACTER*(*)         BSHAPE
-      CHARACTER*(*)         BFRAME
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      TIME
-      LOGICAL               OCSTAT
+      character*(*)         occtyp
+      character*(*)         front
+      character*(*)         fshape
+      character*(*)         fframe
+      character*(*)         back
+      character*(*)         bshape
+      character*(*)         bframe
+      character*(*)         obsrvr
+      character*(*)         abcorr
+      double precision      time
+      logical               ocstat
 
 ! $ Brief_I/O
 !
@@ -251,17 +251,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      dasine
+      double precision      halfpi
+      double precision      vnorm
+      double precision      vsep
 
-      INTEGER               ISRCHC
-      INTEGER               ZZOCCED
+      integer               isrchc
+      integer               zzocced
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 
 !
@@ -273,165 +273,165 @@
 !     at which target body may move, relative to the solar
 !     system barycenter.
 !
-      DOUBLE PRECISION      ALPHA
-      PARAMETER           ( ALPHA = 1.D-2 )
+      double precision      alpha
+      parameter           ( alpha = 1.d-2 )
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
-      DOUBLE PRECISION      ATOL
-      PARAMETER           ( ATOL  = 1.D-12 )
+      double precision      atol
+      parameter           ( atol  = 1.d-12 )
 
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               POSLEN
-      PARAMETER           ( POSLEN = 10 )
+      integer               poslen
+      parameter           ( poslen = 10 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FIXFRM
-      CHARACTER*(CVTLEN)    PNTDEF
-      CHARACTER*(POSLEN)    POSNAM
-      CHARACTER*(SHPLEN)    SHAPE
-      CHARACTER*(SHPLEN)    SHPSTR
-      CHARACTER*(SUBLEN)    SUBTYP
-      CHARACTER*(FRNMLN)    SVBFRM
-      CHARACTER*(MTHLEN)    SVBMTH
-      CHARACTER*(BDNMLN)    SVBNAM
-      CHARACTER*(SHPLEN)    SVBSHP
-      CHARACTER*(CORLEN)    SVCORR
-      CHARACTER*(FRNMLN)    SVFFRM
-      CHARACTER*(MTHLEN)    SVFMTH
-      CHARACTER*(BDNMLN)    SVFNAM
-      CHARACTER*(SHPLEN)    SVFSHP
-      CHARACTER*(BDNMLN)    SVONAM
-      CHARACTER*(OCLLN)     SVTYPE
-      CHARACTER*(OCLLN)     SVTYPS ( NOCTYP )
-      CHARACTER*(TMTLEN)    TRMTYP
+      character*(frnmln)    fixfrm
+      character*(cvtlen)    pntdef
+      character*(poslen)    posnam
+      character*(shplen)    shape
+      character*(shplen)    shpstr
+      character*(sublen)    subtyp
+      character*(frnmln)    svbfrm
+      character*(mthlen)    svbmth
+      character*(bdnmln)    svbnam
+      character*(shplen)    svbshp
+      character*(corlen)    svcorr
+      character*(frnmln)    svffrm
+      character*(mthlen)    svfmth
+      character*(bdnmln)    svfnam
+      character*(shplen)    svfshp
+      character*(bdnmln)    svonam
+      character*(oclln)     svtype
+      character*(oclln)     svtyps ( noctyp )
+      character*(tmtlen)    trmtyp
 
 
-      DOUBLE PRECISION      BCKFRT ( 3 )
-      DOUBLE PRECISION      BCKOBS ( 3 )
-      DOUBLE PRECISION      BCKPOS ( 3 )
-      DOUBLE PRECISION      BDIST
-      DOUBLE PRECISION      BSMAXS ( 3, 3 )
-      DOUBLE PRECISION      ETBCOR
-      DOUBLE PRECISION      ETFCOR
-      DOUBLE PRECISION      FDIST
-      DOUBLE PRECISION      FRTBCK ( 3 )
-      DOUBLE PRECISION      FRTOBS ( 3 )
-      DOUBLE PRECISION      FRTPOS ( 3 )
-      DOUBLE PRECISION      FSMAXS ( 3, 3 )
-      DOUBLE PRECISION      LTBACK
-      DOUBLE PRECISION      LTFRNT
-      DOUBLE PRECISION      MAXANG
-      DOUBLE PRECISION      MINANG
-      DOUBLE PRECISION      MTEMP  ( 3, 3 )
-      DOUBLE PRECISION      SVORIG ( 3 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      SRFVEC ( 3 )
-      DOUBLE PRECISION      SRAD
-      DOUBLE PRECISION      SVBRAD ( 3 )
-      DOUBLE PRECISION      SVFRAD ( 3 )
-      DOUBLE PRECISION      SVMNBR
-      DOUBLE PRECISION      SVMNFR
-      DOUBLE PRECISION      SVMXBR
-      DOUBLE PRECISION      SVMXFR
-      DOUBLE PRECISION      T2SEP
-      DOUBLE PRECISION      TDIST
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      TRGSEP
+      double precision      bckfrt ( 3 )
+      double precision      bckobs ( 3 )
+      double precision      bckpos ( 3 )
+      double precision      bdist
+      double precision      bsmaxs ( 3, 3 )
+      double precision      etbcor
+      double precision      etfcor
+      double precision      fdist
+      double precision      frtbck ( 3 )
+      double precision      frtobs ( 3 )
+      double precision      frtpos ( 3 )
+      double precision      fsmaxs ( 3, 3 )
+      double precision      ltback
+      double precision      ltfrnt
+      double precision      maxang
+      double precision      minang
+      double precision      mtemp  ( 3, 3 )
+      double precision      svorig ( 3 )
+      double precision      radii  ( 3 )
+      double precision      spoint ( 3 )
+      double precision      srfvec ( 3 )
+      double precision      srad
+      double precision      svbrad ( 3 )
+      double precision      svfrad ( 3 )
+      double precision      svmnbr
+      double precision      svmnfr
+      double precision      svmxbr
+      double precision      svmxfr
+      double precision      t2sep
+      double precision      tdist
+      double precision      trgepc
+      double precision      trgsep
 
-      INTEGER               CENTER
-      INTEGER               CLSSID
-      INTEGER               FFRMID
-      INTEGER               FRCLSS
-      INTEGER               I
-      INTEGER               IDBACK
-      INTEGER               IDFRNT
-      INTEGER               IDOBS
-      INTEGER               LOC
-      INTEGER               NSURF
-      INTEGER               OCCNUM
-      INTEGER               OCCODE
-      INTEGER               SRFLST ( MAXSRF )
-      INTEGER               SVBACK
-      INTEGER               SVFRNT
-      INTEGER               SVOBS
-      INTEGER               TRGID
+      integer               center
+      integer               clssid
+      integer               ffrmid
+      integer               frclss
+      integer               i
+      integer               idback
+      integer               idfrnt
+      integer               idobs
+      integer               loc
+      integer               nsurf
+      integer               occnum
+      integer               occode
+      integer               srflst ( maxsrf )
+      integer               svback
+      integer               svfrnt
+      integer               svobs
+      integer               trgid
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FOUND
-      LOGICAL               PNTOCC
-      LOGICAL               PRI
+      logical               attblk ( nabcor )
+      logical               found
+      logical               pntocc
+      logical               pri
 
-      INTEGER               NCALLS
-      SAVE                  NCALLS
+      integer               ncalls
+      save                  ncalls
 
 !
 !     Saved variables
 !
-      SAVE                  SVBACK
-      SAVE                  SVBFRM
-      SAVE                  SVBMTH
-      SAVE                  SVBNAM
-      SAVE                  SVBRAD
-      SAVE                  SVBSHP
-      SAVE                  SVCORR
-      SAVE                  SVFFRM
-      SAVE                  SVFMTH
-      SAVE                  SVFNAM
-      SAVE                  SVFRAD
-      SAVE                  SVFRNT
-      SAVE                  SVFSHP
-      SAVE                  SVMNBR
-      SAVE                  SVMNFR
-      SAVE                  SVMXBR
-      SAVE                  SVMXFR
-      SAVE                  SVOBS
-      SAVE                  SVONAM
-      SAVE                  SVORIG
-      SAVE                  SVTYPE
-      SAVE                  SVTYPS
+      save                  svback
+      save                  svbfrm
+      save                  svbmth
+      save                  svbnam
+      save                  svbrad
+      save                  svbshp
+      save                  svcorr
+      save                  svffrm
+      save                  svfmth
+      save                  svfnam
+      save                  svfrad
+      save                  svfrnt
+      save                  svfshp
+      save                  svmnbr
+      save                  svmnfr
+      save                  svmxbr
+      save                  svmxfr
+      save                  svobs
+      save                  svonam
+      save                  svorig
+      save                  svtype
+      save                  svtyps
 
 
-      DATA NCALLS / 0 /
+      data ncalls / 0 /
 
 !
 !     Initial values
 !
-      DATA                  SVORIG / 3 * 0.D0 /
+      data                  svorig / 3 * 0.d0 /
 
 !
 !     Below we initialize the list of occultation types.
 !
-      DATA                  SVTYPS / ANNULR, ANY, PARTL, FULL /
+      data                  svtyps / annulr, any, partl, full /
 
 !
 !     This routine should never be called directly.
 !
 
-      CALL CHKIN  ( 'ZZGFOCU' )
+      call chkin  ( 'ZZGFOCU' )
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'ZZGFOCU' )
-      RETURN
+      call chkout ( 'ZZGFOCU' )
+      return
 
 
 
 
 !$Procedure ZZGFOCIN ( GF, occultation initialization )
 
-      ENTRY ZZGFOCIN  ( OCCTYP, FRONT,  FSHAPE, FFRAME, &
-                        BACK,   BSHAPE, BFRAME, OBSRVR, &
-                        ABCORR                         )
+      entry zzgfocin  ( occtyp, front,  fshape, fframe, &
+                        back,   bshape, bframe, obsrvr, &
+                        abcorr                         )
 
 ! $ Abstract
 !
@@ -819,91 +819,91 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFOCIN' )
+      call chkin  ( 'ZZGFOCIN' )
 
 !
 !     Find NAIF IDs for FRONT, BACK, and OBSRVR.
 !
-      CALL BODS2C ( FRONT, IDFRNT, FOUND )
+      call bods2c ( front, idfrnt, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The front target object, ' &
+         call setmsg ( 'The front target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', FRONT                                 )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFOCIN'                                 )
-         RETURN
+         call errch  ( '#', front                                 )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFOCIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( BACK, IDBACK, FOUND )
+      call bods2c ( back, idback, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The back target object, ' &
+         call setmsg ( 'The back target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', BACK                                  )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFOCIN'                                 )
-         RETURN
+         call errch  ( '#', back                                  )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFOCIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, IDOBS, FOUND )
+      call bods2c ( obsrvr, idobs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFOCIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFOCIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the observer and both targets are distinct.
 !
-      IF (      ( IDFRNT .EQ. IDBACK ) &
-           .OR. ( IDFRNT .EQ. IDOBS  ) &
-           .OR. ( IDBACK .EQ. IDOBS  ) ) THEN
+      if (      ( idfrnt .eq. idback ) &
+           .or. ( idfrnt .eq. idobs  ) &
+           .or. ( idback .eq. idobs  ) ) then
 
-         CALL SETMSG ( 'The observer and both targets must be ' &
+         call setmsg ( 'The observer and both targets must be ' &
          //            'distinct objects, but are not: ' &
          //            'OBSRVR = #; FRONT = #; BACK = #.'      )
-         CALL ERRCH  ( '#', OBSRVR                             )
-         CALL ERRCH  ( '#', FRONT                              )
-         CALL ERRCH  ( '#', BACK                               )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'              )
-         CALL CHKOUT ( 'ZZGFOCIN'                              )
-         RETURN
+         call errch  ( '#', obsrvr                             )
+         call errch  ( '#', front                              )
+         call errch  ( '#', back                               )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'              )
+         call chkout ( 'ZZGFOCIN'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Save the objects' names. We'll need these if
 !     we need to call SINCPT.
 !
-      SVFNAM = FRONT
-      SVBNAM = BACK
-      SVONAM = OBSRVR
+      svfnam = front
+      svbnam = back
+      svonam = obsrvr
 
 !
 !     Store the ID codes, shape specifications, and body-fixed,
@@ -911,14 +911,14 @@
 !     The shape arguments must be parsed in case they contain
 !     DSK specifications.
 !
-      SVFRNT = IDFRNT
-      SVFFRM = FFRAME
+      svfrnt = idfrnt
+      svffrm = fframe
 
 
-      SVBACK = IDBACK
-      SVBFRM = BFRAME
+      svback = idback
+      svbfrm = bframe
 
-      SVOBS  = IDOBS
+      svobs  = idobs
 
 !
 !     Save the input shape strings. These will be examined later,
@@ -927,269 +927,269 @@
 !     stands for "method"---the name used in SPICE geometry
 !     APIs for this type of input string.
 !
-      SVFMTH = FSHAPE
-      SVBMTH = BSHAPE
+      svfmth = fshape
+      svbmth = bshape
 
 !
 !     Parse the front body shape string.
 !
-      IF (  EQSTR( FSHAPE, 'POINT' )  ) THEN
+      if (  eqstr( fshape, 'POINT' )  ) then
 
-         SVFSHP = PTSHAP
+         svfshp = ptshap
 
-      ELSE IF (  EQSTR( FSHAPE, 'ELLIPSOID' )  ) THEN
+      else if (  eqstr( fshape, 'ELLIPSOID' )  ) then
 
-         SVFSHP = EDSHAP
+         svfshp = edshap
 
-      ELSE
+      else
 
-         CALL ZZPRSMET ( IDFRNT, SVFMTH, MAXSRF, SHPSTR, SUBTYP, &
-                         PRI,    NSURF,  SRFLST, PNTDEF, TRMTYP )
+         call zzprsmet ( idfrnt, svfmth, maxsrf, shpstr, subtyp, &
+                         pri,    nsurf,  srflst, pntdef, trmtyp )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFOCIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFOCIN' )
+            return
+         end if
 
-         IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+         if (  eqstr( shpstr, 'DSK' )  ) then
 
-            SVFSHP = DSSHAP
+            svfshp = dsshap
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Front target shape from FSHAPE ' &
+            call setmsg ( 'Front target shape from FSHAPE ' &
             //            'string was <#>. Valid shapes are ' &
             //            'ELLIPSOID, POINT, and DSK.'       )
-            CALL ERRCH  ( '#', FSHAPE                        )
-            CALL SIGERR ( 'SPICE(INVALIDSHAPE)'              )
-            CALL CHKOUT ( 'ZZGFOCIN'                         )
-            RETURN
+            call errch  ( '#', fshape                        )
+            call sigerr ( 'SPICE(INVALIDSHAPE)'              )
+            call chkout ( 'ZZGFOCIN'                         )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 !
 !     Parse the back body shape string.
 !
-      IF (  EQSTR( BSHAPE, 'POINT' )  ) THEN
+      if (  eqstr( bshape, 'POINT' )  ) then
 
-         SVBSHP = PTSHAP
+         svbshp = ptshap
 
-      ELSE IF (  EQSTR( BSHAPE, 'ELLIPSOID' )  ) THEN
+      else if (  eqstr( bshape, 'ELLIPSOID' )  ) then
 
-         SVBSHP = EDSHAP
+         svbshp = edshap
 
-      ELSE
+      else
 
-         CALL ZZPRSMET ( IDFRNT, SVBMTH, MAXSRF, SHPSTR, SUBTYP, &
-                         PRI,    NSURF,  SRFLST, PNTDEF, TRMTYP )
+         call zzprsmet ( idfrnt, svbmth, maxsrf, shpstr, subtyp, &
+                         pri,    nsurf,  srflst, pntdef, trmtyp )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFOCIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFOCIN' )
+            return
+         end if
 
-         IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+         if (  eqstr( shpstr, 'DSK' )  ) then
 
-            SVBSHP = DSSHAP
+            svbshp = dsshap
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Back target shape from BSHAPE ' &
+            call setmsg ( 'Back target shape from BSHAPE ' &
             //            'string was <#>. Valid shapes are ' &
             //            'ELLIPSOID, POINT, and DSK.'       )
-            CALL ERRCH  ( '#', BSHAPE                        )
-            CALL SIGERR ( 'SPICE(INVALIDSHAPE)'              )
-            CALL CHKOUT ( 'ZZGFOCIN'                         )
-            RETURN
+            call errch  ( '#', bshape                        )
+            call sigerr ( 'SPICE(INVALIDSHAPE)'              )
+            call chkout ( 'ZZGFOCIN'                         )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check for invalid shape combinations.
 !
-      IF (       ( SVFSHP .EQ. PTSHAP ) &
-           .AND. ( SVBSHP .EQ. PTSHAP ) ) THEN
+      if (       ( svfshp .eq. ptshap ) &
+           .and. ( svbshp .eq. ptshap ) ) then
 
-         CALL SETMSG ( 'Both front and back objects have ' &
+         call setmsg ( 'Both front and back objects have ' &
          //            'POINT shape specifications; only ' &
          //            'one point shape is allowed. The ' &
          //            'other shape must be ELLIPSOID or ' &
          //            'DSK.'                             )
-         CALL SIGERR ( 'SPICE(INVALIDSHAPECOMBO)'         )
-         CALL CHKOUT ( 'ZZGFOCIN'                         )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'         )
+         call chkout ( 'ZZGFOCIN'                         )
+         return
 
-      ELSE IF (      (        ( SVFSHP .EQ. DSSHAP ) &
-                        .AND. ( SVBSHP .NE. PTSHAP ) ) &
-                .OR. (        ( SVBSHP .EQ. DSSHAP ) &
-                        .AND. ( SVFSHP .NE. PTSHAP ) )  ) THEN
+      else if (      (        ( svfshp .eq. dsshap ) &
+                        .and. ( svbshp .ne. ptshap ) ) &
+                .or. (        ( svbshp .eq. dsshap ) &
+                        .and. ( svfshp .ne. ptshap ) )  ) then
 
-         CALL SETMSG ( 'Front target shape from FSHAPE ' &
+         call setmsg ( 'Front target shape from FSHAPE ' &
          //            'string was <#>; back target shape ' &
          //            'from BSHAPE was <#>. When one shape ' &
          //            'is DSK, the other must be POINT.'   )
-         CALL ERRCH  ( '#', SVFSHP                          )
-         CALL ERRCH  ( '#', SVBSHP                          )
-         CALL SIGERR ( 'SPICE(INVALIDSHAPECOMBO)'           )
-         CALL CHKOUT ( 'ZZGFOCIN'                           )
-         RETURN
+         call errch  ( '#', svfshp                          )
+         call errch  ( '#', svbshp                          )
+         call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'           )
+         call chkout ( 'ZZGFOCIN'                           )
+         return
 
-       END IF
+       end if
 
 !
 !     Save a single upper-case character representing the occultation
 !     type string.
 !
-      CALL LJUST ( OCCTYP, SVTYPE )
-      CALL UCASE ( SVTYPE, SVTYPE )
+      call ljust ( occtyp, svtype )
+      call ucase ( svtype, svtype )
 
 !
 !     Check the occultation type.
 !
-      OCCNUM = ISRCHC ( SVTYPE, NOCTYP, SVTYPS )
+      occnum = isrchc ( svtype, noctyp, svtyps )
 
-      IF ( OCCNUM .EQ. 0 ) THEN
+      if ( occnum .eq. 0 ) then
 
-         CALL SETMSG ( 'The occultation type # is not ' &
+         call setmsg ( 'The occultation type # is not ' &
          //            'recognized.  Supported types are: ' &
          //            '#, #, #,  #.'                      )
-         CALL ERRCH  ('#', OCCTYP                          )
+         call errch  ('#', occtyp                          )
 
-         DO I = 1, NOCTYP
-            CALL ERRCH  ('#', SVTYPS(I)                    )
-         END DO
+         do i = 1, noctyp
+            call errch  ('#', svtyps(i)                    )
+         end do
 
-         CALL SIGERR ('SPICE(INVALIDOCCTYPE)'              )
-         CALL CHKOUT ('ZZGFOCIN'                           )
-         RETURN
+         call sigerr ('SPICE(INVALIDOCCTYPE)'              )
+         call chkout ('ZZGFOCIN'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     If we have a point target, the occultation type must
 !     be 'ANY'.
 !
-      IF (  ( SVFSHP .EQ. PTSHAP ) .OR. ( SVBSHP .EQ. PTSHAP )  ) THEN
+      if (  ( svfshp .eq. ptshap ) .or. ( svbshp .eq. ptshap )  ) then
 
-         IF ( SVTYPE .NE. ANY ) THEN
+         if ( svtype .ne. any ) then
 
-            CALL SETMSG ( 'Occultation type # is not allowed when ' &
+            call setmsg ( 'Occultation type # is not allowed when ' &
             //            'either target body is modeled as a ' &
             //            'point. Set OCCTYP to ANY for use with ' &
             //            'point targets.'                         )
-            CALL ERRCH  ( '#',  OCCTYP                             )
-            CALL SIGERR ( 'SPICE(BADTYPESHAPECOMBO)'               )
-            CALL CHKOUT ( 'ZZGFOCIN'                               )
-            RETURN
+            call errch  ( '#',  occtyp                             )
+            call sigerr ( 'SPICE(BADTYPESHAPECOMBO)'               )
+            call chkout ( 'ZZGFOCIN'                               )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( ABCORR, ATTBLK )
+      call zzvalcor ( abcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFOCIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFOCIN' )
+         return
+      end if
 
 !
 !     Create a local aberration correction string without
 !     a stellar aberration correction specifier.
 !
-      IF ( ATTBLK(GEOIDX) ) THEN
+      if ( attblk(geoidx) ) then
 
-         SVCORR = 'NONE'
+         svcorr = 'NONE'
 
-      ELSE
+      else
 !
 !        The correction string specified either Newtonian or converged
 !        light time correction.
 !
-         IF ( ATTBLK(XMTIDX) ) THEN
-            SVCORR = 'X'
-         ELSE
-            SVCORR = ' '
-         END IF
+         if ( attblk(xmtidx) ) then
+            svcorr = 'X'
+         else
+            svcorr = ' '
+         end if
 
-         IF ( ATTBLK(CNVIDX) ) THEN
-            CALL SUFFIX ( 'CN', 0, SVCORR )
-         ELSE
-            CALL SUFFIX ( 'LT', 0, SVCORR )
-         END IF
+         if ( attblk(cnvidx) ) then
+            call suffix ( 'CN', 0, svcorr )
+         else
+            call suffix ( 'LT', 0, svcorr )
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the front and back targets' shapes, frames
 !     and radii.
 !
-      DO I = 1, 2
+      do i = 1, 2
 
-         IF ( I .EQ. 1 ) THEN
+         if ( i .eq. 1 ) then
 
-            POSNAM = 'front'
-            FIXFRM = FFRAME
-            TRGID  = IDFRNT
-            SHAPE  = SVFSHP
+            posnam = 'front'
+            fixfrm = fframe
+            trgid  = idfrnt
+            shape  = svfshp
 
-         ELSE
+         else
 
-            POSNAM = 'back'
-            FIXFRM = BFRAME
-            TRGID  = IDBACK
-            SHAPE  = SVBSHP
+            posnam = 'back'
+            fixfrm = bframe
+            trgid  = idback
+            shape  = svbshp
 
-         END IF
+         end if
 
-         IF ( SHAPE .EQ. EDSHAP ) THEN
+         if ( shape .eq. edshap ) then
 !
 !           Fetch and check the radii.
 !
-            CALL ZZGFTREB ( TRGID, RADII )
+            call zzgftreb ( trgid, radii )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFOCIN' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFOCIN' )
+               return
+            end if
 
 !
 !           Checks of radii have been completed.
 !
-            IF ( I .EQ. 1 ) THEN
+            if ( i .eq. 1 ) then
 
-               CALL MOVED ( RADII,  3,  SVFRAD )
+               call moved ( radii,  3,  svfrad )
 !
 !              Select smallest and largest semi-axis lengths of body
 !              for later tests.
 !
-               CALL MINAD ( SVFRAD, 3,  SVMNFR, LOC )
-               CALL MAXAD ( SVFRAD, 3,  SVMXFR, LOC )
+               call minad ( svfrad, 3,  svmnfr, loc )
+               call maxad ( svfrad, 3,  svmxfr, loc )
 
-            ELSE
+            else
 
-               CALL MOVED ( RADII,  3,  SVBRAD )
+               call moved ( radii,  3,  svbrad )
 
-               CALL MINAD ( SVBRAD, 3,  SVMNBR, LOC )
-               CALL MAXAD ( SVBRAD, 3,  SVMXBR, LOC )
+               call minad ( svbrad, 3,  svmnbr, loc )
+               call maxad ( svbrad, 3,  svmxbr, loc )
 
-            END IF
+            end if
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFOCIN' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFOCIN' )
+               return
+            end if
 
-         END IF
+         end if
 !
 !        We've performed radii checks for an ellipsoidal target.
 !        Minimum and maximum bounding radii are set, if the target
@@ -1198,95 +1198,95 @@
 !
 !        Check body-fixed frame for extended targets.
 !
-         IF (  ( SHAPE .EQ. EDSHAP ) .OR. ( SHAPE .EQ. DSSHAP )  ) THEN
+         if (  ( shape .eq. edshap ) .or. ( shape .eq. dsshap )  ) then
 !
 !           The target is ellipsoidal or is modeled using DSK data;
 !           there must be a target body-fixed frame associated with
 !           this body.
 !
-            IF ( FIXFRM .EQ. ' ' ) THEN
+            if ( fixfrm .eq. ' ' ) then
 
-               CALL SETMSG ( 'The # target shape is represented ' &
+               call setmsg ( 'The # target shape is represented ' &
                //            'by an ellipsoid or by DSK data, ' &
               //             'but the associated ' &
                //            'body-fixed frame name is blank.' )
-               CALL ERRCH  ( '#',  POSNAM                      )
-               CALL SIGERR ( 'SPICE(INVALIDFRAME)'             )
-               CALL CHKOUT ( 'ZZGFOCIN'                        )
-               RETURN
+               call errch  ( '#',  posnam                      )
+               call sigerr ( 'SPICE(INVALIDFRAME)'             )
+               call chkout ( 'ZZGFOCIN'                        )
+               return
 
-            ELSE
+            else
 !
 !              Look up the target's body-fixed frame ID code.
 !
-               CALL NAMFRM ( FIXFRM, FFRMID )
+               call namfrm ( fixfrm, ffrmid )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZGFOCIN' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZGFOCIN' )
+                  return
+               end if
 
-               IF ( FFRMID .EQ. 0 ) THEN
+               if ( ffrmid .eq. 0 ) then
 
-                  CALL SETMSG ( 'The # target''s body-fixed frame ' &
+                  call setmsg ( 'The # target''s body-fixed frame ' &
                   //            'name # is not recognized.'        )
-                  CALL ERRCH  ( '#',  POSNAM                       )
-                  CALL ERRCH  ( '#',  FIXFRM                       )
-                  CALL SIGERR ( 'SPICE(INVALIDFRAME)'              )
-                  CALL CHKOUT ( 'ZZGFOCIN'                         )
-                  RETURN
+                  call errch  ( '#',  posnam                       )
+                  call errch  ( '#',  fixfrm                       )
+                  call sigerr ( 'SPICE(INVALIDFRAME)'              )
+                  call chkout ( 'ZZGFOCIN'                         )
+                  return
 
-               END IF
+               end if
 
 !
 !              Obtain the center of the frame and verify it's the
 !              Ith target.
 !
-               CALL FRINFO ( FFRMID, CENTER, FRCLSS, CLSSID, FOUND )
+               call frinfo ( ffrmid, center, frclss, clssid, found )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZGFOCIN' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZGFOCIN' )
+                  return
+               end if
 
-               IF ( .NOT. FOUND ) THEN
+               if ( .not. found ) then
 !
 !                 Since we mapped the frame name to an ID code, we
 !                 expect to find the frame info. So control should
 !                 never reach this point.
 !
-                  CALL SETMSG ( 'Frame ID found for # body-fixed ' &
+                  call setmsg ( 'Frame ID found for # body-fixed ' &
                   //            'frame # but FRINFO couldn''t ' &
                   //            'find frame info.'                 )
-                  CALL ERRCH  ( '#',  POSNAM                       )
-                  CALL ERRCH  ( '#',  FIXFRM                       )
-                  CALL SIGERR ( 'SPICE(BUG)'                       )
-                  CALL CHKOUT ( 'ZZGFOCIN'                         )
-                  RETURN
+                  call errch  ( '#',  posnam                       )
+                  call errch  ( '#',  fixfrm                       )
+                  call sigerr ( 'SPICE(BUG)'                       )
+                  call chkout ( 'ZZGFOCIN'                         )
+                  return
 
-               END IF
+               end if
 
-               IF ( CENTER .NE. TRGID ) THEN
+               if ( center .ne. trgid ) then
 !
 !                 The body-fixed frame for the current target
 !                 isn't actually centered on the body.
 !
-                  CALL SETMSG ( 'Supposed body-fixed frame # for ' &
+                  call setmsg ( 'Supposed body-fixed frame # for ' &
                   //            '# target # is actually centered ' &
                   //            'on body #.'                       )
-                  CALL ERRCH  ( '#',  FIXFRM                       )
-                  CALL ERRCH  ( '#',  POSNAM                       )
-                  CALL ERRINT ( '#',  TRGID                        )
-                  CALL ERRINT ( '#',  CENTER                       )
-                  CALL SIGERR ( 'SPICE(INVALIDFRAME)'              )
-                  CALL CHKOUT ( 'ZZGFOCIN'                         )
-                  RETURN
+                  call errch  ( '#',  fixfrm                       )
+                  call errch  ( '#',  posnam                       )
+                  call errint ( '#',  trgid                        )
+                  call errint ( '#',  center                       )
+                  call sigerr ( 'SPICE(INVALIDFRAME)'              )
+                  call chkout ( 'ZZGFOCIN'                         )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        We've performed frame checks for an extended target.
 !
@@ -1294,75 +1294,75 @@
 !        Obtain radii of inner and outer bounding spheres for
 !        DSK targets.
 !
-         IF ( SHAPE .EQ. DSSHAP ) THEN
+         if ( shape .eq. dsshap ) then
 !
 !           Note that TRGID and FFRMID refer to the current
 !           target (out of two); "FFRMID" means "fixed frame ID."
 !
-            CALL ZZSUDSKI ( TRGID, NSURF, SRFLST, FFRMID )
+            call zzsudski ( trgid, nsurf, srflst, ffrmid )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFOCIN' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFOCIN' )
+               return
+            end if
 
-            IF ( I .EQ. 1 ) THEN
+            if ( i .eq. 1 ) then
 
-               CALL ZZMINRAD ( SVMNFR )
-               CALL ZZMAXRAD ( SVMXFR )
-            ELSE
-               CALL ZZMINRAD ( SVMNBR )
-               CALL ZZMAXRAD ( SVMXBR )
-            END IF
+               call zzminrad ( svmnfr )
+               call zzmaxrad ( svmxfr )
+            else
+               call zzminrad ( svmnbr )
+               call zzmaxrad ( svmxbr )
+            end if
 
-         END IF
+         end if
 
 !
 !        Initialize bounding radii and body-fixed frame
 !        names for point targets.
 !
-         IF ( SHAPE .EQ. PTSHAP ) THEN
+         if ( shape .eq. ptshap ) then
 !
 !           Zero out radius values for this target; set the
 !           frame to blank.
 !
-            IF ( I .EQ. 1 ) THEN
+            if ( i .eq. 1 ) then
 
-               CALL CLEARD ( 3, SVFRAD )
+               call cleard ( 3, svfrad )
 
-               SVMNFR = 0.D0
-               SVMXFR = 0.D0
-               SVFFRM = ' '
+               svmnfr = 0.d0
+               svmxfr = 0.d0
+               svffrm = ' '
 
-            ELSE
+            else
 
-               CALL CLEARD ( 3, SVBRAD )
+               call cleard ( 3, svbrad )
 
-               SVMNBR = 0.D0
-               SVMXBR = 0.D0
-               SVBFRM = ' '
+               svmnbr = 0.d0
+               svmxbr = 0.d0
+               svbfrm = ' '
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        We've performed shape, and if applicable, frame and radii
 !        checks for the Ith target. Bounding radii have been obtained
 !        for extended targets.
 !
-      END DO
+      end do
 !
 !     We've performed shape, and if applicable, frame and radii
 !     checks for both targets.
 !
-      CALL CHKOUT ( 'ZZGFOCIN' )
-      RETURN
+      call chkout ( 'ZZGFOCIN' )
+      return
 
 
 
 !$Procedure ZZGFOCST ( GF, "in occultation?"  )
 
-      ENTRY ZZGFOCST ( TIME, OCSTAT )
+      entry zzgfocst ( time, ocstat )
 
 ! $ Abstract
 !
@@ -1496,38 +1496,38 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFOCST' )
+      call chkin  ( 'ZZGFOCST' )
 
 !
 !     Initialize the state output.
 !
-      OCSTAT = .FALSE.
+      ocstat = .false.
 
 !
 !     Get the apparent positions of FRONT and BACK as seen from the
 !     observer.
 !
-      CALL SPKEZP ( SVFRNT,  TIME,   'J2000',  SVCORR, &
-                    SVOBS,   FRTPOS, LTFRNT           )
+      call spkezp ( svfrnt,  time,   'J2000',  svcorr, &
+                    svobs,   frtpos, ltfrnt           )
 
-      CALL SPKEZP ( SVBACK,  TIME,   'J2000',  SVCORR, &
-                    SVOBS,   BCKPOS, LTBACK           )
+      call spkezp ( svback,  time,   'J2000',  svcorr, &
+                    svobs,   bckpos, ltback           )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFOCST' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFOCST' )
+         return
+      end if
 
 !
 !     Handle the cases of one and two extended targets
 !     separately.
 !
-      IF (       ( SVBSHP .EQ. EDSHAP ) &
-           .AND. ( SVFSHP .EQ. EDSHAP )  ) THEN
+      if (       ( svbshp .eq. edshap ) &
+           .and. ( svfshp .eq. edshap )  ) then
 !
 !        The caller has selected a test for a partial, annular or full
 !        occultation using ellipsoidal shape models.
@@ -1535,111 +1535,111 @@
 !        Look up the axes of each target body in the J2000 frame at the
 !        light time corrected epoch for that body.
 !
-         CALL ZZCOREPC ( SVCORR,  TIME,   LTBACK, ETBCOR )
+         call zzcorepc ( svcorr,  time,   ltback, etbcor )
 
-         CALL PXFORM   ( SVBFRM, 'J2000', ETBCOR, MTEMP  )
+         call pxform   ( svbfrm, 'J2000', etbcor, mtemp  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFOCST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFOCST' )
+            return
+         end if
 !
 !        Scale the columns of MTEMP by the axis lengths of the back
 !        target.
 !
-         DO I = 1, 3
-            CALL VSCL ( SVBRAD(I), MTEMP(1,I), BSMAXS(1,I) )
-         END DO
+         do i = 1, 3
+            call vscl ( svbrad(i), mtemp(1,i), bsmaxs(1,i) )
+         end do
 
 
-         CALL ZZCOREPC ( SVCORR,  TIME,   LTFRNT, ETFCOR )
-         CALL PXFORM   ( SVFFRM, 'J2000', ETFCOR, MTEMP  )
+         call zzcorepc ( svcorr,  time,   ltfrnt, etfcor )
+         call pxform   ( svffrm, 'J2000', etfcor, mtemp  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFOCST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFOCST' )
+            return
+         end if
 !
 !        Scale the columns of MTEMP by the axis lengths of the second
 !        target.
 !
-         DO I = 1, 3
-            CALL VSCL ( SVFRAD(I), MTEMP(1,I), FSMAXS(1,I) )
-         END DO
+         do i = 1, 3
+            call vscl ( svfrad(i), mtemp(1,i), fsmaxs(1,i) )
+         end do
 
 !
 !        Classify the occultation state of BACK by FRONT as seen from
 !        the observer.
 !
-         OCCODE = ZZOCCED ( SVORIG, BCKPOS, BSMAXS, FRTPOS, FSMAXS )
+         occode = zzocced ( svorig, bckpos, bsmaxs, frtpos, fsmaxs )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFOCST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFOCST' )
+            return
+         end if
 
 
-         IF ( OCCODE .EQ. NOOCC ) THEN
+         if ( occode .eq. noocc ) then
 !
 !           Neither body occults the other.
 !
-            OCSTAT = .FALSE.
+            ocstat = .false.
 
 
-         ELSE IF (       ( SVTYPE .EQ. ANY ) &
-                   .AND. ( OCCODE .LT. 0   ) ) THEN
+         else if (       ( svtype .eq. any ) &
+                   .and. ( occode .lt. 0   ) ) then
 !
 !           The "of" body (target 1) is at least partially occulted by
 !           the BY object.
 !
-            OCSTAT = .TRUE.
+            ocstat = .true.
 
 
-         ELSE IF (       ( SVTYPE .EQ.  FULL   ) &
-                   .AND. ( OCCODE .EQ.  TOTAL1 ) ) THEN
+         else if (       ( svtype .eq.  full   ) &
+                   .and. ( occode .eq.  total1 ) ) then
 !
 !           The BACK body is in total occultation.
 !
 
-            OCSTAT = .TRUE.
+            ocstat = .true.
 
 
-         ELSE IF (       ( SVTYPE .EQ. ANNULR ) &
-                   .AND. ( OCCODE .EQ. ANNLR1 ) ) THEN
+         else if (       ( svtype .eq. annulr ) &
+                   .and. ( occode .eq. annlr1 ) ) then
 !
 !           The  BACK body is in annular occultation.
 !
-            OCSTAT = .TRUE.
+            ocstat = .true.
 
 
-         ELSE IF (       ( SVTYPE .EQ. PARTL  ) &
-                   .AND. ( OCCODE .EQ. PARTL1 ) ) THEN
+         else if (       ( svtype .eq. partl  ) &
+                   .and. ( occode .eq. partl1 ) ) then
 !
 !           The BACK body is partially occulted.
 !
-            OCSTAT = .TRUE.
+            ocstat = .true.
 
 
-         ELSE
+         else
 !
 !           The occultation state doesn't match the requested state.
 !
-            OCSTAT = .FALSE.
+            ocstat = .false.
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'ZZGFOCST' )
-         RETURN
+         call chkout ( 'ZZGFOCST' )
+         return
 
 
-      ELSE IF (     (       ( SVFSHP .EQ. EDSHAP ) &
-                      .AND. ( SVBSHP .EQ. PTSHAP ) ) &
-               .OR. (       ( SVFSHP .EQ. DSSHAP ) &
-                      .AND. ( SVBSHP .EQ. PTSHAP ) ) &
-               .OR. (       ( SVFSHP .EQ. PTSHAP ) &
-                      .AND. ( SVBSHP .EQ. EDSHAP ) ) &
-               .OR. (       ( SVFSHP .EQ. PTSHAP ) &
-                      .AND. ( SVBSHP .EQ. DSSHAP ) )  ) THEN
+      else if (     (       ( svfshp .eq. edshap ) &
+                      .and. ( svbshp .eq. ptshap ) ) &
+               .or. (       ( svfshp .eq. dsshap ) &
+                      .and. ( svbshp .eq. ptshap ) ) &
+               .or. (       ( svfshp .eq. ptshap ) &
+                      .and. ( svbshp .eq. edshap ) ) &
+               .or. (       ( svfshp .eq. ptshap ) &
+                      .and. ( svbshp .eq. dsshap ) )  ) then
 !
 !        One of the targets is modeled as a point; the other is
 !        modeled as an ellipsoid or a DSK shape.
@@ -1650,7 +1650,7 @@
 !        We'll set the logical flag PNTOCC to .TRUE. to indicate a
 !        point occultation.
 !
-         PNTOCC = SVBSHP .EQ. PTSHAP
+         pntocc = svbshp .eq. ptshap
 
 !
 !        We're going to start out by doing some error checking.
@@ -1660,84 +1660,84 @@
 !        Let BDIST, FDIST be the distances from the observer
 !        to the back and front targets, respectively.
 !
-         BDIST  =  VNORM ( BCKPOS )
-         FDIST  =  VNORM ( FRTPOS )
+         bdist  =  vnorm ( bckpos )
+         fdist  =  vnorm ( frtpos )
 
 !
 !        Find the vector from BACK to FRONT.  We'll use this later,
 !        but we want it now in order to make sure that BACK doesn't
 !        intersect FRONT.
 !
-         CALL VSUB ( FRTPOS, BCKPOS, BCKFRT )
+         call vsub ( frtpos, bckpos, bckfrt )
 
 
-         IF ( PNTOCC ) THEN
+         if ( pntocc ) then
 !
 !           The front target is an extended shape.
 !
-            IF ( FDIST .LE. SVMNFR ) THEN
+            if ( fdist .le. svmnfr ) then
 !
 !              The observer is INSIDE the front target. We
 !              treat this as an error.
 !
-               CALL SETMSG ( 'Observer is inside front target body.' )
-               CALL SIGERR ( 'SPICE(NOTDISJOINT)'                    )
-               CALL CHKOUT ( 'ZZGFOCST'                              )
-               RETURN
+               call setmsg ( 'Observer is inside front target body.' )
+               call sigerr ( 'SPICE(NOTDISJOINT)'                    )
+               call chkout ( 'ZZGFOCST'                              )
+               return
 
-            ELSE IF ( BDIST .EQ. 0.D0 ) THEN
+            else if ( bdist .eq. 0.d0 ) then
 
-               CALL SETMSG ( 'Back target coincides with observer.'  )
-               CALL SIGERR ( 'SPICE(NOTDISJOINT)'                    )
-               CALL CHKOUT ( 'ZZGFOCST'                              )
-               RETURN
+               call setmsg ( 'Back target coincides with observer.'  )
+               call sigerr ( 'SPICE(NOTDISJOINT)'                    )
+               call chkout ( 'ZZGFOCST'                              )
+               return
 
-            ELSE IF ( VNORM(BCKFRT) .LE. SVMNFR ) THEN
+            else if ( vnorm(bckfrt) .le. svmnfr ) then
 
-               CALL SETMSG ( 'BACK target is inside FRONT target.' )
-               CALL SIGERR ( 'SPICE(NOTDISJOINT)'                  )
-               CALL CHKOUT ( 'ZZGFOCST'                            )
-               RETURN
+               call setmsg ( 'BACK target is inside FRONT target.' )
+               call sigerr ( 'SPICE(NOTDISJOINT)'                  )
+               call chkout ( 'ZZGFOCST'                            )
+               return
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The back target is an extended shape.
 !
-            IF ( BDIST .LE. SVMNBR ) THEN
+            if ( bdist .le. svmnbr ) then
 !
 !              The observer is INSIDE the back target. We
 !              treat this as an error.
 !
-               CALL SETMSG ( 'Observer is inside back target body.' )
-               CALL SIGERR ( 'SPICE(NOTDISJOINT)'                   )
-               CALL CHKOUT ( 'ZZGFOCST'                             )
-               RETURN
+               call setmsg ( 'Observer is inside back target body.' )
+               call sigerr ( 'SPICE(NOTDISJOINT)'                   )
+               call chkout ( 'ZZGFOCST'                             )
+               return
 
-            ELSE IF ( FDIST .EQ. 0.D0 ) THEN
+            else if ( fdist .eq. 0.d0 ) then
 
-               CALL SETMSG ( 'Front target coincides with observer.'  )
-               CALL SIGERR ( 'SPICE(NOTDISJOINT)'                     )
-               CALL CHKOUT ( 'ZZGFOCST'                               )
-               RETURN
+               call setmsg ( 'Front target coincides with observer.'  )
+               call sigerr ( 'SPICE(NOTDISJOINT)'                     )
+               call chkout ( 'ZZGFOCST'                               )
+               return
 
-            ELSE IF ( VNORM(BCKFRT) .LE. SVMNBR ) THEN
+            else if ( vnorm(bckfrt) .le. svmnbr ) then
 
-               CALL SETMSG ( 'FRONT target is inside BACK target.' )
-               CALL SIGERR ( 'SPICE(NOTDISJOINT)'                  )
-               CALL CHKOUT ( 'ZZGFOCST'                            )
-               RETURN
+               call setmsg ( 'FRONT target is inside BACK target.' )
+               call sigerr ( 'SPICE(NOTDISJOINT)'                  )
+               call chkout ( 'ZZGFOCST'                            )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Find angular separation of the target centers as
 !        seen by the observer.
 !
-         TRGSEP = VSEP ( BCKPOS, FRTPOS )
+         trgsep = vsep ( bckpos, frtpos )
 
 !
 !        Find angular radius of the outer bounding sphere of the
@@ -1763,66 +1763,66 @@
 !        Perform the test only if the observer is outside the
 !        outer bounding sphere of the extended target.
 !
-         IF ( PNTOCC ) THEN
+         if ( pntocc ) then
 
-            SRAD  = (1+ALPHA) * SVMXFR
-            TDIST = FDIST
-         ELSE
-            SRAD  = (1+ALPHA) * SVMXBR
-            TDIST = BDIST
-         END IF
+            srad  = (1+alpha) * svmxfr
+            tdist = fdist
+         else
+            srad  = (1+alpha) * svmxbr
+            tdist = bdist
+         end if
 
-         IF ( SRAD .LT. TDIST ) THEN
+         if ( srad .lt. tdist ) then
 
-            MAXANG = DASINE ( SRAD / TDIST,  ATOL )
+            maxang = dasine ( srad / tdist,  atol )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFOCST' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFOCST' )
+               return
+            end if
 
-            IF ( TRGSEP .GT. MAXANG ) THEN
+            if ( trgsep .gt. maxang ) then
 !
 !              No occultation is possible.
 !
-               OCSTAT = .FALSE.
+               ocstat = .false.
 
-               CALL CHKOUT ( 'ZZGFOCST' )
-               RETURN
+               call chkout ( 'ZZGFOCST' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        We'll need the negatives of the observer-target vectors in
 !        several places later, so compute them now.
 !
-         CALL VMINUS ( FRTPOS, FRTOBS )
-         CALL VMINUS ( BCKPOS, BCKOBS )
+         call vminus ( frtpos, frtobs )
+         call vminus ( bckpos, bckobs )
 
 !
 !        Now check for an occulted state assuming a spherical extended
 !        body with radius equal to the minimum semi-axis. Again,
 !        adjust the sphere for our light time error.
 !
-         IF ( PNTOCC ) THEN
-            MINANG = DASINE ( (1-ALPHA)*SVMNFR / FDIST, ATOL )
-         ELSE
-            MINANG = DASINE ( (1-ALPHA)*SVMNBR / BDIST, ATOL )
-         END IF
+         if ( pntocc ) then
+            minang = dasine ( (1-alpha)*svmnfr / fdist, atol )
+         else
+            minang = dasine ( (1-alpha)*svmnbr / bdist, atol )
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFOCST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFOCST' )
+            return
+         end if
 
 
-         IF ( TRGSEP .LT. MINANG ) THEN
+         if ( trgsep .lt. minang ) then
 !
 !           The targets must overlap as seen from the observer.
 !
-            IF ( PNTOCC ) THEN
+            if ( pntocc ) then
 !
 !              Examine the angle between the vector from FRONT to the
 !              observer and the vector from FRONT to BACK.  If that
@@ -1831,55 +1831,55 @@
 !              find the position of FRONT and BACK relative to each
 !              other.
 !
-               CALL VMINUS  ( BCKFRT, FRTBCK )
+               call vminus  ( bckfrt, frtbck )
 
-               T2SEP = VSEP ( FRTOBS, FRTBCK )
+               t2sep = vsep ( frtobs, frtbck )
 
-               IF (  T2SEP  .GT.  ( HALFPI() - MINANG )  ) THEN
+               if (  t2sep  .gt.  ( halfpi() - minang )  ) then
 !
 !                 There must be an occultation.
 !
-                  OCSTAT = .TRUE.
+                  ocstat = .true.
 
-               ELSE
+               else
 !
 !                 There can't be an occultation: the "back" object
 !                 is actually in transit across the "front" object.
 !
-                  OCSTAT = .FALSE.
+                  ocstat = .false.
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We're looking for a point transit condition.
 !
-               T2SEP = VSEP ( BCKOBS, BCKFRT )
+               t2sep = vsep ( bckobs, bckfrt )
 
-               IF (  T2SEP  .LT.  ( HALFPI() - MINANG )  ) THEN
+               if (  t2sep  .lt.  ( halfpi() - minang )  ) then
 !
 !                 There must be a transit.
 !
-                  OCSTAT = .TRUE.
+                  ocstat = .true.
 
-               ELSE
+               else
 !
 !                 There can't be a transit: the "back" object
 !                 actually occults the "front" object.
 !
-                  OCSTAT = .FALSE.
+                  ocstat = .false.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           OCSTAT has been set.
 !
-            CALL CHKOUT ( 'ZZGFOCST' )
-            RETURN
+            call chkout ( 'ZZGFOCST' )
+            return
 
-         END IF
+         end if
 
 !
 !        If we've reached this point, we have a situation where we
@@ -1887,23 +1887,23 @@
 !        we'll see whether the observer-point target vector intersects
 !        the extended body.
 !
-         IF ( PNTOCC ) THEN
+         if ( pntocc ) then
 !
 !           The front body is the extended one.
 !
-            NCALLS = NCALLS + 1
+            ncalls = ncalls + 1
 
-            CALL SINCPT ( SVFMTH, SVFNAM,  TIME,    SVFFRM, &
-                          SVCORR, SVONAM,  'J2000', BCKPOS, &
-                          SPOINT, TRGEPC,  SRFVEC,  FOUND )
+            call sincpt ( svfmth, svfnam,  time,    svffrm, &
+                          svcorr, svonam,  'J2000', bckpos, &
+                          spoint, trgepc,  srfvec,  found )
 
 
-            IF ( FAILED()) THEN
-               CALL CHKOUT ( 'ZZGFOCST' )
-               RETURN
-            END IF
+            if ( failed()) then
+               call chkout ( 'ZZGFOCST' )
+               return
+            end if
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              There's an intercept. If the distance from the observer
 !              to the intercept is less than the distance from the
@@ -1911,30 +1911,30 @@
 !              occulted; otherwise there's a point transit, which is
 !              not considered an occultation in this case.
 !
-               OCSTAT  =  VNORM(SRFVEC) .LT. BDIST
+               ocstat  =  vnorm(srfvec) .lt. bdist
 
-            ELSE
+            else
 !
 !              There's no overlap and hence no occultation.
 !
-               OCSTAT = .FALSE.
+               ocstat = .false.
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The back body is the extended one.
 !
-            CALL SINCPT ( SVBMTH, SVBNAM,  TIME,    SVBFRM, &
-                          SVCORR, SVONAM,  'J2000', FRTPOS, &
-                          SPOINT, TRGEPC,  SRFVEC,  FOUND )
+            call sincpt ( svbmth, svbnam,  time,    svbfrm, &
+                          svcorr, svonam,  'J2000', frtpos, &
+                          spoint, trgepc,  srfvec,  found )
 
-            IF ( FAILED()) THEN
-               CALL CHKOUT ( 'ZZGFOCST' )
-               RETURN
-            END IF
+            if ( failed()) then
+               call chkout ( 'ZZGFOCST' )
+               return
+            end if
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              There's an intercept. If the distance from the observer
 !              to the intercept is greater than the distance from the
@@ -1943,35 +1943,35 @@
 !              point occultation, which is not considered a transit in
 !              this case.
 !
-               OCSTAT  =  VNORM(SRFVEC) .GT. FDIST
+               ocstat  =  vnorm(srfvec) .gt. fdist
 
-            ELSE
+            else
 !
 !              There's no overlap and hence no occultation.
 !
-               OCSTAT = .FALSE.
+               ocstat = .false.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Bad combination of shapes. We expect this situation to have
 !        been caught at initialization time, but make this check for
 !        safety.
 !
-         CALL SETMSG ( 'The combination of shapes of front and ' &
+         call setmsg ( 'The combination of shapes of front and ' &
          //            'back targets is not supported: front ' &
          //            'shape = #; back shape = #.'             )
-         CALL ERRCH  ( '#', SVFSHP                              )
-         CALL ERRCH  ( '#', SVBSHP                              )
-         CALL SIGERR ( 'SPICE(INVALIDSHAPECOMBO)'               )
-         CALL CHKOUT ( 'ZZGFOCST'                               )
-         RETURN
+         call errch  ( '#', svfshp                              )
+         call errch  ( '#', svbshp                              )
+         call sigerr ( 'SPICE(INVALIDSHAPECOMBO)'               )
+         call chkout ( 'ZZGFOCST'                               )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFOCST' )
-      RETURN
-      END
+      call chkout ( 'ZZGFOCST' )
+      return
+      end

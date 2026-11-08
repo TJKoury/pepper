@@ -48,27 +48,27 @@
 !
 !     Size of encoded integer:
 !
-      INTEGER               ENCSIZ
-      PARAMETER           ( ENCSIZ = 5 )
+      integer               encsiz
+      parameter           ( encsiz = 5 )
 
 !
 !     Usable page size:
 !
-      INTEGER               CPSIZE
-      PARAMETER           ( CPSIZE = 1014 )
+      integer               cpsize
+      parameter           ( cpsize = 1014 )
 
 !
 !     Location of character forward pointer:
 !
-      INTEGER               CFPIDX
-      PARAMETER           ( CFPIDX = CPSIZE + 1)
+      integer               cfpidx
+      parameter           ( cfpidx = cpsize + 1)
 
 
 !
 !     Location of character link count:
 !
-      INTEGER               CLCIDX
-      PARAMETER           ( CLCIDX = CFPIDX + ENCSIZ )
+      integer               clcidx
+      parameter           ( clcidx = cfpidx + encsiz )
 
 
 !
@@ -76,21 +76,21 @@
 !
 !     Usable page size:
 !
-      INTEGER               DPSIZE
-      PARAMETER           ( DPSIZE = 126 )
+      integer               dpsize
+      parameter           ( dpsize = 126 )
 
 !
 !     Location of d.p. forward pointer:
 !
-      INTEGER               DFPIDX
-      PARAMETER           ( DFPIDX = DPSIZE + 1)
+      integer               dfpidx
+      parameter           ( dfpidx = dpsize + 1)
 
 
 !
 !     Location of d.p. link count:
 !
-      INTEGER               DLCIDX
-      PARAMETER           ( DLCIDX = DFPIDX + 1 )
+      integer               dlcidx
+      parameter           ( dlcidx = dfpidx + 1 )
 
 
 !
@@ -98,21 +98,21 @@
 !
 !     Usable page size:
 !
-      INTEGER               IPSIZE
-      PARAMETER           ( IPSIZE = 254 )
+      integer               ipsize
+      parameter           ( ipsize = 254 )
 
 !
 !     Location of integer forward pointer:
 !
-      INTEGER               IFPIDX
-      PARAMETER           ( IFPIDX = IPSIZE + 1)
+      integer               ifpidx
+      parameter           ( ifpidx = ipsize + 1)
 
 
 !
 !     Location of integer link count:
 !
-      INTEGER               ILCIDX
-      PARAMETER           ( ILCIDX = IFPIDX + 1 )
+      integer               ilcidx
+      parameter           ( ilcidx = ifpidx + 1 )
 
 
 !

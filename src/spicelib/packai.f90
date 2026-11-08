@@ -1,8 +1,8 @@
 !$Procedure PACKAI ( Pack an integer array )
 
-      SUBROUTINE PACKAI ( IN, &
-                          PACK,   NPACK, &
-                          MAXOUT, NOUT,   OUT )
+      subroutine packai ( in, &
+                          pack,   npack, &
+                          maxout, nout,   out )
 
 ! $ Abstract
 !
@@ -22,15 +22,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          IN      ( * )
-      INTEGER          PACK    ( * )
-      INTEGER          NPACK
-      INTEGER          MAXOUT
+      integer          in      ( * )
+      integer          pack    ( * )
+      integer          npack
+      integer          maxout
 
-      INTEGER          NOUT
-      INTEGER          OUT     ( * )
+      integer          nout
+      integer          out     ( * )
 
 ! $ Brief_I/O
 !
@@ -193,58 +193,58 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PACKAI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PACKAI' )
+      end if
 
 
 !
 !     First, determine how many items to transfer.
 !
-      NOUT = MIN ( NPACK, MAXOUT )
+      nout = min ( npack, maxout )
 
 
 !
 !     Check to see if PACK contains valid array indices.
 !
-      DO I = 1, NOUT
+      do i = 1, nout
 
-         IF ( PACK (I) .LT. 1 ) THEN
-            CALL SETMSG ( 'Element number * contains index *.' )
-            CALL ERRINT ( '*', I                )
-            CALL ERRINT ( '*', PACK(I)          )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
-            CALL CHKOUT ( 'PACKAI' )
-            RETURN
-         END IF
+         if ( pack (i) .lt. 1 ) then
+            call setmsg ( 'Element number * contains index *.' )
+            call errint ( '*', i                )
+            call errint ( '*', pack(i)          )
+            call sigerr ( 'SPICE(INVALIDINDEX)' )
+            call chkout ( 'PACKAI' )
+            return
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Transfer them. Just like it says in the header.
 !
-      DO I = 1, NOUT
-         OUT(I) = IN(PACK(I))
-      END DO
+      do i = 1, nout
+         out(i) = in(pack(i))
+      end do
 
 
 
-      CALL CHKOUT ( 'PACKAI' )
-      RETURN
-      END
+      call chkout ( 'PACKAI' )
+      return
+      end

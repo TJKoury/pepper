@@ -1,6 +1,6 @@
 !$Procedure  ZZCNQUAD ( Solve quadratic equation for cone intercept )
 
-      SUBROUTINE ZZCNQUAD ( A, B, C, UB, N, R1, R2 )
+      subroutine zzcnquad ( a, b, c, ub, n, r1, r2 )
 
 ! $ Abstract
 !
@@ -24,15 +24,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      UB
-      INTEGER               N
-      DOUBLE PRECISION      R1
-      DOUBLE PRECISION      R2
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      ub
+      integer               n
+      double precision      r1
+      double precision      r2
 
 ! $ Brief_I/O
 !
@@ -151,129 +151,129 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      TOUCHD
+      double precision      dpmax
+      double precision      touchd
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      SMALL
-      PARAMETER           ( SMALL = 1.D-8 )
+      double precision      small
+      parameter           ( small = 1.d-8 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      COEFFS ( 3 )
-      DOUBLE PRECISION      INV1
-      DOUBLE PRECISION      INV2
-      DOUBLE PRECISION      INVUB
-      DOUBLE PRECISION      MAXMAG
+      double precision      coeffs ( 3 )
+      double precision      inv1
+      double precision      inv2
+      double precision      invub
+      double precision      maxmag
 
-      INTEGER               I
-      INTEGER               MAXIX
-      INTEGER               NX
+      integer               i
+      integer               maxix
+      integer               nx
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved values
 !
-      SAVE                  FIRST
-      SAVE                  INVUB
+      save                  first
+      save                  invub
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
-      DATA                  INVUB / -1.D0  /
+      data                  first / .true. /
+      data                  invub / -1.d0  /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZCNQUAD' )
+      call chkin ( 'ZZCNQUAD' )
 
 !
 !     On the first pass, set the upper bound for the reciprocal
 !     solution.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         INVUB = SQRT( DPMAX() ) / 200.D0
+         invub = sqrt( dpmax() ) / 200.d0
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Handle the degenerate cases first.
 !
-      IF ( ( A .EQ. 0.D0 ) .AND. ( B .EQ. 0.D0 )  ) THEN
+      if ( ( a .eq. 0.d0 ) .and. ( b .eq. 0.d0 )  ) then
 
-         R1 = 0.D0
-         R2 = 0.D0
+         r1 = 0.d0
+         r2 = 0.d0
 
-         IF ( C .EQ. 0.D0 ) THEN
+         if ( c .eq. 0.d0 ) then
 
-            N = -1
-         ELSE
-            N = -2
-         END IF
+            n = -1
+         else
+            n = -2
+         end if
 
-         CALL CHKOUT ( 'ZZCNQUAD' )
-         RETURN
+         call chkout ( 'ZZCNQUAD' )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the input coefficients.
 !
-      MAXMAG = MAX( ABS(A), ABS(B), ABS(C) )
+      maxmag = max( abs(a), abs(b), abs(c) )
 
-      COEFFS(1) = TOUCHD(  A / MAXMAG )
-      COEFFS(2) = TOUCHD(  B / MAXMAG )
-      COEFFS(3) = TOUCHD(  C / MAXMAG )
+      coeffs(1) = touchd(  a / maxmag )
+      coeffs(2) = touchd(  b / maxmag )
+      coeffs(3) = touchd(  c / maxmag )
 
 !
 !     Identify the coefficient of largest magnitude.
 !
-      MAXIX = 1
+      maxix = 1
 
-      DO I = 2, 3
+      do i = 2, 3
 
-         IF ( ABS(COEFFS(I)) .GT. ABS(COEFFS(MAXIX)) ) THEN
+         if ( abs(coeffs(i)) .gt. abs(coeffs(maxix)) ) then
 !
 !           Record the index of the maximum magnitude.
 !
-            MAXIX  = I
+            maxix  = i
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Make sure the value of maximum magnitude is +/- 1.
 !
-      COEFFS(MAXIX) = SIGN( 1.D0, COEFFS(MAXIX) )
+      coeffs(maxix) = sign( 1.d0, coeffs(maxix) )
 
 !
 !     Find roots in a manner suited to the coefficients we have.
 !
-      IF (       (  ABS( COEFFS(1) ) .GE.  SMALL  ) &
-           .OR.  (       COEFFS(1)   .EQ.  0.D0   )  ) THEN
+      if (       (  abs( coeffs(1) ) .ge.  small  ) &
+           .or.  (       coeffs(1)   .eq.  0.d0   )  ) then
 !
 !        This is a numerically well-behaved case. Delegate the
 !        job to ZZBQUAD.
 !
-         CALL ZZBQUAD ( COEFFS(1), COEFFS(2), COEFFS(3), UB, &
-                        N,         NX,        R1,        R2  )
+         call zzbquad ( coeffs(1), coeffs(2), coeffs(3), ub, &
+                        n,         nx,        r1,        r2  )
 
 
 
-      ELSE IF (  ABS( COEFFS(3) ) .GE.  SMALL  ) THEN
+      else if (  abs( coeffs(3) ) .ge.  small  ) then
 
 !
 !        The zero-order coefficient has magnitude >= SMALL.
@@ -309,102 +309,102 @@
 !        magnitude restriction imposed by UB. We set the upper bound
 !        to a value that ZZBQUAD will allow.
 !
-         CALL ZZBQUAD ( COEFFS(3), COEFFS(2), COEFFS(1), INVUB, &
-                        N,         NX,        INV1,      INV2  )
+         call zzbquad ( coeffs(3), coeffs(2), coeffs(1), invub, &
+                        n,         nx,        inv1,      inv2  )
 
-         IF ( N .EQ. 1 ) THEN
+         if ( n .eq. 1 ) then
 !
 !           We have one real root. Make sure we can invert it.
 !
-            IF (  ABS( INV1 * UB )  .GE.  1.D0  ) THEN
+            if (  abs( inv1 * ub )  .ge.  1.d0  ) then
 !
 !
 !              |1/INV1| <= UB
 !
 !
-               R1 = 1.D0 / INV1
+               r1 = 1.d0 / inv1
 
-            ELSE
+            else
 !
 !              There are no real roots having magnitude within the
 !              bound.
 !
-               N  = 0
+               n  = 0
 
-            END IF
+            end if
 
 !
 !           There is no second root.
 !
-            R2 = 0.D0
+            r2 = 0.d0
 
-         ELSE IF ( N .EQ. 2 ) THEN
+         else if ( n .eq. 2 ) then
 !
 !           We have two real roots. The one of larger magnitude is
 !           the second one. The reciprocal of this root will be
 !           the smaller root of the original equation, as long
 !           as the reciprocal is within bounds.
 !
-            IF (  ABS( INV2 * UB )  .GE.  1.D0  ) THEN
+            if (  abs( inv2 * ub )  .ge.  1.d0  ) then
 !
 !
 !              |1/INV2| <= UB
 !
 !
-               R1 = 1.D0 / INV2
+               r1 = 1.d0 / inv2
 
 !
 !              Proceed to the first root of the transformed equation.
 !
-               IF (  ABS( INV1 * UB )  .GE.  1.D0  ) THEN
+               if (  abs( inv1 * ub )  .ge.  1.d0  ) then
 !
 !
 !                 |1/INV1| <= UB
 !
 !
-                  R2 = 1.D0 / INV1
+                  r2 = 1.d0 / inv1
 
-               ELSE
+               else
 !
 !                 Only the second root qualifies for inversion.
 !
-                  N  = 1
+                  n  = 1
 
-                  R2 = 0.D0
+                  r2 = 0.d0
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              The reciprocal of the larger root is too big; the
 !              reciprocal of the smaller root will be even larger.
 !              There are no real roots having magnitude within the
 !              bound.
 !
-               N  = 0
+               n  = 0
 
-               R1 = 0.D0
-               R2 = 0.D0
+               r1 = 0.d0
+               r2 = 0.d0
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           We have no viable roots of the transformed equation, so
 !           we have no viable roots of the original one.
 !
-            N  = 0
+            n  = 0
 
-            R1 = 0.D0
-            R2 = 0.D0
+            r1 = 0.d0
+            r2 = 0.d0
 
-         END IF
+         end if
 
 
 
-      ELSE
+      else
 
 !
 !        The linear coefficient B has the greatest magnitude, which
@@ -413,13 +413,13 @@
 !
 !        It will be convenient to make B equal to 1; do this now.
 !
-         IF ( B .LT. 0.D0 ) THEN
+         if ( b .lt. 0.d0 ) then
 
-            COEFFS(1) = -COEFFS(1)
-            COEFFS(2) = -COEFFS(2)
-            COEFFS(3) = -COEFFS(3)
+            coeffs(1) = -coeffs(1)
+            coeffs(2) = -coeffs(2)
+            coeffs(3) = -coeffs(3)
 
-         END IF
+         end if
 
 !
 !        In this case we use a low-order Taylor expansion about
@@ -484,29 +484,29 @@
 !           |c - 1/a| ~= |1/a| > 1.e8
 !
 
-         N  = 0
-         R1 = 0.D0
-         R2 = 0.D0
+         n  = 0
+         r1 = 0.d0
+         r2 = 0.d0
 
-         IF ( ABS( COEFFS(3) ) .LE. UB ) THEN
+         if ( abs( coeffs(3) ) .le. ub ) then
 
-            R1 = -COEFFS(3)
+            r1 = -coeffs(3)
 
-            N  = 1
+            n  = 1
 
-            IF (        ABS( COEFFS(1)*COEFFS(3) - 1.D0 ) &
-                  .LT.  ABS( COEFFS(1)*UB               )  ) THEN
+            if (        abs( coeffs(1)*coeffs(3) - 1.d0 ) &
+                  .lt.  abs( coeffs(1)*ub               )  ) then
 
-               R2 = COEFFS(3) - 1.D0/COEFFS(1)
+               r2 = coeffs(3) - 1.d0/coeffs(1)
 
-               N  = 2
+               n  = 2
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZCNQUAD' )
-      RETURN
-      END
+      call chkout ( 'ZZCNQUAD' )
+      return
+      end

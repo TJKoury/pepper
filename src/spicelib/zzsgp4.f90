@@ -1,6 +1,6 @@
 !$Procedure ZZSGP4 ( SGP4 wrapper )
 
-      SUBROUTINE ZZSGP4 ( GEOPHS, ELEMS, OPMODE, T, STATE )
+      subroutine zzsgp4 ( geophs, elems, opmode, t, state )
 
 ! $ Abstract
 !
@@ -16,15 +16,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsgp4.inc'
+      include 'zzsgp4.inc'
 
-      DOUBLE PRECISION         GEOPHS    ( 8 )
-      DOUBLE PRECISION         ELEMS     ( 10 )
-      INTEGER                  OPMODE
-      DOUBLE PRECISION         T
-      DOUBLE PRECISION         STATE     ( 6 )
+      double precision         geophs    ( 8 )
+      double precision         elems     ( 10 )
+      integer                  opmode
+      double precision         t
+      double precision         state     ( 6 )
 
 ! $ Brief_I/O
 !
@@ -431,397 +431,397 @@
 !     Local Variables
 !
 
-      DOUBLE PRECISION         A
-      DOUBLE PRECISION         ALTA
-      DOUBLE PRECISION         ALTP
-      DOUBLE PRECISION         ARGPDOT
-      DOUBLE PRECISION         AYCOF
-      DOUBLE PRECISION         CC1
-      DOUBLE PRECISION         CC4
-      DOUBLE PRECISION         CC5
-      DOUBLE PRECISION         CON41
-      DOUBLE PRECISION         ETA
-      DOUBLE PRECISION         INCLO
-      DOUBLE PRECISION         MDOT
-      DOUBLE PRECISION         NODEDOT
-      DOUBLE PRECISION         OMGCOF
-      DOUBLE PRECISION         SINMAO
-      DOUBLE PRECISION         T2COF
-      DOUBLE PRECISION         T3COF
-      DOUBLE PRECISION         T4COF
-      DOUBLE PRECISION         T5COF
-      DOUBLE PRECISION         X1MTH2
-      DOUBLE PRECISION         X7THM1
-      DOUBLE PRECISION         XLCOF
-      DOUBLE PRECISION         XMCOF
-      DOUBLE PRECISION         XNODCF
+      double precision         a
+      double precision         alta
+      double precision         altp
+      double precision         argpdot
+      double precision         aycof
+      double precision         cc1
+      double precision         cc4
+      double precision         cc5
+      double precision         con41
+      double precision         eta
+      double precision         inclo
+      double precision         mdot
+      double precision         nodedot
+      double precision         omgcof
+      double precision         sinmao
+      double precision         t2cof
+      double precision         t3cof
+      double precision         t4cof
+      double precision         t5cof
+      double precision         x1mth2
+      double precision         x7thm1
+      double precision         xlcof
+      double precision         xmcof
+      double precision         xnodcf
 
 !
 !     DS values
 !
 
-      DOUBLE PRECISION         E3
-      DOUBLE PRECISION         EE2
-      DOUBLE PRECISION         PEO
-      DOUBLE PRECISION         PGHO
-      DOUBLE PRECISION         PHO
-      DOUBLE PRECISION         PINCO
-      DOUBLE PRECISION         PLO
-      DOUBLE PRECISION         GSTO
-      DOUBLE PRECISION         XFACT
-      DOUBLE PRECISION         XGH2
-      DOUBLE PRECISION         XGH3
-      DOUBLE PRECISION         XGH4
-      DOUBLE PRECISION         XH2
-      DOUBLE PRECISION         XH3
-      DOUBLE PRECISION         XI2
-      DOUBLE PRECISION         XI3
-      DOUBLE PRECISION         XL2
-      DOUBLE PRECISION         XL3
-      DOUBLE PRECISION         XL4
-      DOUBLE PRECISION         XLAMO
-      DOUBLE PRECISION         ZMOL
-      DOUBLE PRECISION         ZMOS
-      DOUBLE PRECISION         ATIME
-      DOUBLE PRECISION         XLI
-      DOUBLE PRECISION         XNI
+      double precision         e3
+      double precision         ee2
+      double precision         peo
+      double precision         pgho
+      double precision         pho
+      double precision         pinco
+      double precision         plo
+      double precision         gsto
+      double precision         xfact
+      double precision         xgh2
+      double precision         xgh3
+      double precision         xgh4
+      double precision         xh2
+      double precision         xh3
+      double precision         xi2
+      double precision         xi3
+      double precision         xl2
+      double precision         xl3
+      double precision         xl4
+      double precision         xlamo
+      double precision         zmol
+      double precision         zmos
+      double precision         atime
+      double precision         xli
+      double precision         xni
 
-      DOUBLE PRECISION         AINV
-      DOUBLE PRECISION         AM
-      DOUBLE PRECISION         AO
-      DOUBLE PRECISION         ARGPM
-      DOUBLE PRECISION         ARGPO
-      DOUBLE PRECISION         ARGPP
-      DOUBLE PRECISION         AXNL
-      DOUBLE PRECISION         AYNL
-      DOUBLE PRECISION         BETAL
-      DOUBLE PRECISION         BSTAR
-      DOUBLE PRECISION         CC1SQ
-      DOUBLE PRECISION         CC2
-      DOUBLE PRECISION         CC3
-      DOUBLE PRECISION         CNOD
-      DOUBLE PRECISION         CNODM
-      DOUBLE PRECISION         COEF
-      DOUBLE PRECISION         COEF1
-      DOUBLE PRECISION         CON42
-      DOUBLE PRECISION         COS2U
-      DOUBLE PRECISION         COSEO1
-      DOUBLE PRECISION         COSI
-      DOUBLE PRECISION         COSIM
-      DOUBLE PRECISION         COSIO
-      DOUBLE PRECISION         COSIO2
-      DOUBLE PRECISION         COSIO4
-      DOUBLE PRECISION         COSIP
-      DOUBLE PRECISION         COSISQ
-      DOUBLE PRECISION         COSOMM
-      DOUBLE PRECISION         COSSU
-      DOUBLE PRECISION         COSU
-      DOUBLE PRECISION         D2
-      DOUBLE PRECISION         D2201
-      DOUBLE PRECISION         D2211
-      DOUBLE PRECISION         D3
-      DOUBLE PRECISION         D3210
-      DOUBLE PRECISION         D3222
-      DOUBLE PRECISION         D4
-      DOUBLE PRECISION         D4410
-      DOUBLE PRECISION         D4422
-      DOUBLE PRECISION         D5220
-      DOUBLE PRECISION         D5232
-      DOUBLE PRECISION         D5421
-      DOUBLE PRECISION         D5433
-      DOUBLE PRECISION         DAY
-      DOUBLE PRECISION         DEDT
-      DOUBLE PRECISION         DEL1
-      DOUBLE PRECISION         DEL2
-      DOUBLE PRECISION         DEL3
-      DOUBLE PRECISION         DELM
-      DOUBLE PRECISION         DELMO
-      DOUBLE PRECISION         DELOMG
-      DOUBLE PRECISION         DIDT
-      DOUBLE PRECISION         DMDT
-      DOUBLE PRECISION         DNDT
-      DOUBLE PRECISION         DNODT
-      DOUBLE PRECISION         DOMDT
-      DOUBLE PRECISION         ECCM
-      DOUBLE PRECISION         ECCO
-      DOUBLE PRECISION         ECCP
-      DOUBLE PRECISION         ECCSQ
-      DOUBLE PRECISION         ECOSE
-      DOUBLE PRECISION         EETA
-      DOUBLE PRECISION         EL2
-      DOUBLE PRECISION         EMSQ
-      DOUBLE PRECISION         EO1
-      DOUBLE PRECISION         EPOCH
-      DOUBLE PRECISION         ER
-      DOUBLE PRECISION         ESINE
-      DOUBLE PRECISION         ETASQ
-      DOUBLE PRECISION         GAM
-      DOUBLE PRECISION         INCLM
-      DOUBLE PRECISION         J2
-      DOUBLE PRECISION         J3
-      DOUBLE PRECISION         J3OJ2
-      DOUBLE PRECISION         J4
-      DOUBLE PRECISION         KPS
-      DOUBLE PRECISION         MM
-      DOUBLE PRECISION         MO
-      DOUBLE PRECISION         MP
-      DOUBLE PRECISION         MR
-      DOUBLE PRECISION         MV
-      DOUBLE PRECISION         NO
-      DOUBLE PRECISION         NODEM
-      DOUBLE PRECISION         NODEO
-      DOUBLE PRECISION         NODEP
-      DOUBLE PRECISION         OMEOSQ
-      DOUBLE PRECISION         OMGADF
-      DOUBLE PRECISION         PERIGE
-      DOUBLE PRECISION         PINVSQ
-      DOUBLE PRECISION         PL
-      DOUBLE PRECISION         POSQ
-      DOUBLE PRECISION         PSISQ
-      DOUBLE PRECISION         QZMS24
-      DOUBLE PRECISION         QZMS2T
-      DOUBLE PRECISION         RDOTL
-      DOUBLE PRECISION         RL
-      DOUBLE PRECISION         RP
-      DOUBLE PRECISION         RTEMSQ
-      DOUBLE PRECISION         RTEOSQ
-      DOUBLE PRECISION         RVDOT
-      DOUBLE PRECISION         RVDOTL
-      DOUBLE PRECISION         S1
-      DOUBLE PRECISION         S2
-      DOUBLE PRECISION         S3
-      DOUBLE PRECISION         S4
-      DOUBLE PRECISION         S5
-      DOUBLE PRECISION         S6
-      DOUBLE PRECISION         S7
-      DOUBLE PRECISION         SE2
-      DOUBLE PRECISION         SE3
-      DOUBLE PRECISION         SFOUR
-      DOUBLE PRECISION         SGH2
-      DOUBLE PRECISION         SGH3
-      DOUBLE PRECISION         SGH4
-      DOUBLE PRECISION         SH2
-      DOUBLE PRECISION         SH3
-      DOUBLE PRECISION         SI2
-      DOUBLE PRECISION         SI3
-      DOUBLE PRECISION         SIN2U
-      DOUBLE PRECISION         SINEO1
-      DOUBLE PRECISION         SINI
-      DOUBLE PRECISION         SINIM
-      DOUBLE PRECISION         SINIO
-      DOUBLE PRECISION         SINIP
-      DOUBLE PRECISION         SINOMM
-      DOUBLE PRECISION         SINSU
-      DOUBLE PRECISION         SINU
-      DOUBLE PRECISION         SL2
-      DOUBLE PRECISION         SL3
-      DOUBLE PRECISION         SL4
-      DOUBLE PRECISION         SNOD
-      DOUBLE PRECISION         SNODM
-      DOUBLE PRECISION         SS
-      DOUBLE PRECISION         SS1
-      DOUBLE PRECISION         SS2
-      DOUBLE PRECISION         SS3
-      DOUBLE PRECISION         SS4
-      DOUBLE PRECISION         SS5
-      DOUBLE PRECISION         SS6
-      DOUBLE PRECISION         SS7
-      DOUBLE PRECISION         SU
-      DOUBLE PRECISION         SZ1
-      DOUBLE PRECISION         SZ11
-      DOUBLE PRECISION         SZ12
-      DOUBLE PRECISION         SZ13
-      DOUBLE PRECISION         SZ2
-      DOUBLE PRECISION         SZ21
-      DOUBLE PRECISION         SZ22
-      DOUBLE PRECISION         SZ23
-      DOUBLE PRECISION         SZ3
-      DOUBLE PRECISION         SZ31
-      DOUBLE PRECISION         SZ32
-      DOUBLE PRECISION         SZ33
-      DOUBLE PRECISION         T2
-      DOUBLE PRECISION         T3
-      DOUBLE PRECISION         T4
-      DOUBLE PRECISION         TC
-      DOUBLE PRECISION         TEM5
-      DOUBLE PRECISION         TEMP
-      DOUBLE PRECISION         TEMP1
-      DOUBLE PRECISION         TEMP2
-      DOUBLE PRECISION         TEMP3
-      DOUBLE PRECISION         TEMP4
-      DOUBLE PRECISION         TEMPA
-      DOUBLE PRECISION         TEMPE
-      DOUBLE PRECISION         TEMPL
-      DOUBLE PRECISION         TSI
-      DOUBLE PRECISION         TUMIN
-      DOUBLE PRECISION         TVEC   ( 8 )
-      DOUBLE PRECISION         TZERO
-      DOUBLE PRECISION         U
-      DOUBLE PRECISION         UX
-      DOUBLE PRECISION         UY
-      DOUBLE PRECISION         UZ
-      DOUBLE PRECISION         VX
-      DOUBLE PRECISION         VY
-      DOUBLE PRECISION         VZ
-      DOUBLE PRECISION         X2O3
-      DOUBLE PRECISION         XHDOT1
-      DOUBLE PRECISION         XINC
-      DOUBLE PRECISION         XINCP
-      DOUBLE PRECISION         XKE
-      DOUBLE PRECISION         XL
-      DOUBLE PRECISION         XLM
-      DOUBLE PRECISION         XMDF
-      DOUBLE PRECISION         XMX
-      DOUBLE PRECISION         XMY
-      DOUBLE PRECISION         XN
-      DOUBLE PRECISION         XNODDF
-      DOUBLE PRECISION         XNODE
-      DOUBLE PRECISION         XPIDOT
-      DOUBLE PRECISION         Z1
-      DOUBLE PRECISION         Z11
-      DOUBLE PRECISION         Z12
-      DOUBLE PRECISION         Z13
-      DOUBLE PRECISION         Z2
-      DOUBLE PRECISION         Z21
-      DOUBLE PRECISION         Z22
-      DOUBLE PRECISION         Z23
-      DOUBLE PRECISION         Z3
-      DOUBLE PRECISION         Z31
-      DOUBLE PRECISION         Z32
-      DOUBLE PRECISION         Z33
+      double precision         ainv
+      double precision         am
+      double precision         ao
+      double precision         argpm
+      double precision         argpo
+      double precision         argpp
+      double precision         axnl
+      double precision         aynl
+      double precision         betal
+      double precision         bstar
+      double precision         cc1sq
+      double precision         cc2
+      double precision         cc3
+      double precision         cnod
+      double precision         cnodm
+      double precision         coef
+      double precision         coef1
+      double precision         con42
+      double precision         cos2u
+      double precision         coseo1
+      double precision         cosi
+      double precision         cosim
+      double precision         cosio
+      double precision         cosio2
+      double precision         cosio4
+      double precision         cosip
+      double precision         cosisq
+      double precision         cosomm
+      double precision         cossu
+      double precision         cosu
+      double precision         d2
+      double precision         d2201
+      double precision         d2211
+      double precision         d3
+      double precision         d3210
+      double precision         d3222
+      double precision         d4
+      double precision         d4410
+      double precision         d4422
+      double precision         d5220
+      double precision         d5232
+      double precision         d5421
+      double precision         d5433
+      double precision         day
+      double precision         dedt
+      double precision         del1
+      double precision         del2
+      double precision         del3
+      double precision         delm
+      double precision         delmo
+      double precision         delomg
+      double precision         didt
+      double precision         dmdt
+      double precision         dndt
+      double precision         dnodt
+      double precision         domdt
+      double precision         eccm
+      double precision         ecco
+      double precision         eccp
+      double precision         eccsq
+      double precision         ecose
+      double precision         eeta
+      double precision         el2
+      double precision         emsq
+      double precision         eo1
+      double precision         epoch
+      double precision         er
+      double precision         esine
+      double precision         etasq
+      double precision         gam
+      double precision         inclm
+      double precision         j2
+      double precision         j3
+      double precision         j3oj2
+      double precision         j4
+      double precision         kps
+      double precision         mm
+      double precision         mo
+      double precision         mp
+      double precision         mr
+      double precision         mv
+      double precision         no
+      double precision         nodem
+      double precision         nodeo
+      double precision         nodep
+      double precision         omeosq
+      double precision         omgadf
+      double precision         perige
+      double precision         pinvsq
+      double precision         pl
+      double precision         posq
+      double precision         psisq
+      double precision         qzms24
+      double precision         qzms2t
+      double precision         rdotl
+      double precision         rl
+      double precision         rp
+      double precision         rtemsq
+      double precision         rteosq
+      double precision         rvdot
+      double precision         rvdotl
+      double precision         s1
+      double precision         s2
+      double precision         s3
+      double precision         s4
+      double precision         s5
+      double precision         s6
+      double precision         s7
+      double precision         se2
+      double precision         se3
+      double precision         sfour
+      double precision         sgh2
+      double precision         sgh3
+      double precision         sgh4
+      double precision         sh2
+      double precision         sh3
+      double precision         si2
+      double precision         si3
+      double precision         sin2u
+      double precision         sineo1
+      double precision         sini
+      double precision         sinim
+      double precision         sinio
+      double precision         sinip
+      double precision         sinomm
+      double precision         sinsu
+      double precision         sinu
+      double precision         sl2
+      double precision         sl3
+      double precision         sl4
+      double precision         snod
+      double precision         snodm
+      double precision         ss
+      double precision         ss1
+      double precision         ss2
+      double precision         ss3
+      double precision         ss4
+      double precision         ss5
+      double precision         ss6
+      double precision         ss7
+      double precision         su
+      double precision         sz1
+      double precision         sz11
+      double precision         sz12
+      double precision         sz13
+      double precision         sz2
+      double precision         sz21
+      double precision         sz22
+      double precision         sz23
+      double precision         sz3
+      double precision         sz31
+      double precision         sz32
+      double precision         sz33
+      double precision         t2
+      double precision         t3
+      double precision         t4
+      double precision         tc
+      double precision         tem5
+      double precision         temp
+      double precision         temp1
+      double precision         temp2
+      double precision         temp3
+      double precision         temp4
+      double precision         tempa
+      double precision         tempe
+      double precision         templ
+      double precision         tsi
+      double precision         tumin
+      double precision         tvec   ( 8 )
+      double precision         tzero
+      double precision         u
+      double precision         ux
+      double precision         uy
+      double precision         uz
+      double precision         vx
+      double precision         vy
+      double precision         vz
+      double precision         x2o3
+      double precision         xhdot1
+      double precision         xinc
+      double precision         xincp
+      double precision         xke
+      double precision         xl
+      double precision         xlm
+      double precision         xmdf
+      double precision         xmx
+      double precision         xmy
+      double precision         xn
+      double precision         xnoddf
+      double precision         xnode
+      double precision         xpidot
+      double precision         z1
+      double precision         z11
+      double precision         z12
+      double precision         z13
+      double precision         z2
+      double precision         z21
+      double precision         z22
+      double precision         z23
+      double precision         z3
+      double precision         z31
+      double precision         z32
+      double precision         z33
 
-      INTEGER                  ITER
-      INTEGER                  SVMODE
-      INTEGER                  IREZ
+      integer                  iter
+      integer                  svmode
+      integer                  irez
 
-      LOGICAL                  DOINIT
-      LOGICAL                  DOSIMP
-      LOGICAL                  DODEEP
+      logical                  doinit
+      logical                  dosimp
+      logical                  dodeep
 
 !
 !     SPICELIB routines.
 !
 
-      DOUBLE PRECISION         PI
-      DOUBLE PRECISION         TWOPI
+      double precision         pi
+      double precision         twopi
 
-      LOGICAL                  FAILED
-      LOGICAL                  RETURN
+      logical                  failed
+      logical                  return
 
-      SAVE                     A
-      SAVE                     ALTA
-      SAVE                     ALTP
-      SAVE                     ARGPDOT
-      SAVE                     ARGPO
-      SAVE                     ATIME
-      SAVE                     AYCOF
-      SAVE                     BSTAR
-      SAVE                     CC1
-      SAVE                     CC4
-      SAVE                     CC5
-      SAVE                     CON41
-      SAVE                     D2
-      SAVE                     D2201
-      SAVE                     D2211
-      SAVE                     D3
-      SAVE                     D3210
-      SAVE                     D3222
-      SAVE                     D4
-      SAVE                     D4410
-      SAVE                     D4422
-      SAVE                     D5220
-      SAVE                     D5232
-      SAVE                     D5421
-      SAVE                     D5433
-      SAVE                     DEDT
-      SAVE                     DEL1
-      SAVE                     DEL2
-      SAVE                     DEL3
-      SAVE                     DELMO
-      SAVE                     DIDT
-      SAVE                     DMDT
-      SAVE                     DNODT
-      SAVE                     DODEEP
-      SAVE                     DOMDT
-      SAVE                     DOSIMP
-      SAVE                     E3
-      SAVE                     ECCO
-      SAVE                     EE2
-      SAVE                     ER
-      SAVE                     ETA
-      SAVE                     GSTO
-      SAVE                     INCLO
-      SAVE                     IREZ
-      SAVE                     J2
-      SAVE                     J3OJ2
-      SAVE                     MDOT
-      SAVE                     MO
-      SAVE                     NO
-      SAVE                     NODEDOT
-      SAVE                     NODEO
-      SAVE                     OMGCOF
-      SAVE                     PEO
-      SAVE                     PGHO
-      SAVE                     PHO
-      SAVE                     PINCO
-      SAVE                     PLO
-      SAVE                     SE2
-      SAVE                     SE3
-      SAVE                     SGH2
-      SAVE                     SGH3
-      SAVE                     SGH4
-      SAVE                     SH2
-      SAVE                     SH3
-      SAVE                     SI2
-      SAVE                     SI3
-      SAVE                     SINMAO
-      SAVE                     SL2
-      SAVE                     SL3
-      SAVE                     SL4
-      SAVE                     SVMODE
-      SAVE                     T2COF
-      SAVE                     T3COF
-      SAVE                     T4COF
-      SAVE                     T5COF
-      SAVE                     X1MTH2
-      SAVE                     X7THM1
-      SAVE                     XFACT
-      SAVE                     XGH2
-      SAVE                     XGH3
-      SAVE                     XGH4
-      SAVE                     XH2
-      SAVE                     XH3
-      SAVE                     XI2
-      SAVE                     XI3
-      SAVE                     XKE
-      SAVE                     XL2
-      SAVE                     XL3
-      SAVE                     XL4
-      SAVE                     XLAMO
-      SAVE                     XLCOF
-      SAVE                     XLI
-      SAVE                     XMCOF
-      SAVE                     XNI
-      SAVE                     XNODCF
-      SAVE                     ZMOL
-      SAVE                     ZMOS
+      save                     a
+      save                     alta
+      save                     altp
+      save                     argpdot
+      save                     argpo
+      save                     atime
+      save                     aycof
+      save                     bstar
+      save                     cc1
+      save                     cc4
+      save                     cc5
+      save                     con41
+      save                     d2
+      save                     d2201
+      save                     d2211
+      save                     d3
+      save                     d3210
+      save                     d3222
+      save                     d4
+      save                     d4410
+      save                     d4422
+      save                     d5220
+      save                     d5232
+      save                     d5421
+      save                     d5433
+      save                     dedt
+      save                     del1
+      save                     del2
+      save                     del3
+      save                     delmo
+      save                     didt
+      save                     dmdt
+      save                     dnodt
+      save                     dodeep
+      save                     domdt
+      save                     dosimp
+      save                     e3
+      save                     ecco
+      save                     ee2
+      save                     er
+      save                     eta
+      save                     gsto
+      save                     inclo
+      save                     irez
+      save                     j2
+      save                     j3oj2
+      save                     mdot
+      save                     mo
+      save                     no
+      save                     nodedot
+      save                     nodeo
+      save                     omgcof
+      save                     peo
+      save                     pgho
+      save                     pho
+      save                     pinco
+      save                     plo
+      save                     se2
+      save                     se3
+      save                     sgh2
+      save                     sgh3
+      save                     sgh4
+      save                     sh2
+      save                     sh3
+      save                     si2
+      save                     si3
+      save                     sinmao
+      save                     sl2
+      save                     sl3
+      save                     sl4
+      save                     svmode
+      save                     t2cof
+      save                     t3cof
+      save                     t4cof
+      save                     t5cof
+      save                     x1mth2
+      save                     x7thm1
+      save                     xfact
+      save                     xgh2
+      save                     xgh3
+      save                     xgh4
+      save                     xh2
+      save                     xh3
+      save                     xi2
+      save                     xi3
+      save                     xke
+      save                     xl2
+      save                     xl3
+      save                     xl4
+      save                     xlamo
+      save                     xlcof
+      save                     xli
+      save                     xmcof
+      save                     xni
+      save                     xnodcf
+      save                     zmol
+      save                     zmos
 
-      CALL CHKIN  ( 'ZZSGP4' )
-      CALL SETMSG ( 'The routine ZZSGP4 is an umbrella for ' &
+      call chkin  ( 'ZZSGP4' )
+      call setmsg ( 'The routine ZZSGP4 is an umbrella for ' &
       //            'the SGP4 initializer and propagator entry ' &
       //            'points. Do not call ZZSGP4. It is ' &
       //            'likely that a programming error has ' &
       //            'been made.' )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)'  )
-      CALL CHKOUT ( 'ZZSGP4' )
+      call sigerr ( 'SPICE(BOGUSENTRY)'  )
+      call chkout ( 'ZZSGP4' )
 
-      RETURN
+      return
 
 
 
 !$Procedure XXSGP4I ( SGP4 initializer )
 
-      ENTRY XXSGP4I ( GEOPHS, ELEMS, OPMODE )
+      entry xxsgp4i ( geophs, elems, opmode )
 
 ! $ Abstract
 !
@@ -1041,18 +1041,18 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'XXSGP4I' )
+      call chkin ( 'XXSGP4I' )
 
 !
 !     Initialize.
 !
-      DODEEP = .FALSE.
-      DOSIMP = .FALSE.
-      SVMODE = OPMODE
+      dodeep = .false.
+      dosimp = .false.
+      svmode = opmode
 
 !
 !     This code block replaces the call:
@@ -1071,13 +1071,13 @@
 !        no     = xno
 !        nodeo  = xnodeo
 
-      BSTAR = ELEMS ( KBSTAR )
-      INCLO = ELEMS ( KINCL  )
-      NODEO = ELEMS ( KNODE0 )
-      ECCO  = ELEMS ( KECC   )
-      ARGPO = ELEMS ( KOMEGA )
-      MO    = ELEMS ( KMO    )
-      NO    = ELEMS ( KNO    )
+      bstar = elems ( kbstar )
+      inclo = elems ( kincl  )
+      nodeo = elems ( knode0 )
+      ecco  = elems ( kecc   )
+      argpo = elems ( komega )
+      mo    = elems ( kmo    )
+      no    = elems ( kno    )
 
 !
 !       Remember that sgp4 uses units of days from 0 jan 1950
@@ -1095,14 +1095,14 @@
 !     reference.
 !
 
-      TVEC(1) = ELEMS ( KEPOCH )
-      CALL TTRANS ( 'TDB', 'JDUTC', TVEC )
-      EPOCH = TVEC(1) - 2433281.5D0
+      tvec(1) = elems ( kepoch )
+      call ttrans ( 'TDB', 'JDUTC', tvec )
+      epoch = tvec(1) - 2433281.5d0
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'XXSGP4I' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'XXSGP4I' )
+         return
+      end if
 
 !
 !     This code block replaces the call:
@@ -1111,31 +1111,31 @@
 !     .                  mu, radiusearthkm, xke,
 !     .                  j2, j3, j4, j3oj2 )
 !
-      J2    = GEOPHS(K_J2)
-      J3    = GEOPHS(K_J3)
-      J4    = GEOPHS(K_J4)
-      ER    = GEOPHS(K_ER)
-      XKE   = GEOPHS(K_KE)
-      TUMIN = 1.D0/GEOPHS(K_KE)
-      J3OJ2 = J3/J2
+      j2    = geophs(k_j2)
+      j3    = geophs(k_j3)
+      j4    = geophs(k_j4)
+      er    = geophs(k_er)
+      xke   = geophs(k_ke)
+      tumin = 1.d0/geophs(k_ke)
+      j3oj2 = j3/j2
 
 !
 !     The following assignment and IF block is taken
 !     from TWOLINE2RVSGP4.
 !
-      A = (NO*TUMIN)**(-2.0D0/3.0D0)
+      a = (no*tumin)**(-2.0d0/3.0d0)
 
-      IF (DABS(ECCO-1.0D0) .GT. 0.000001D0) THEN
-         ALTP= (A*(1.0D0-ECCO))-1.0D0
-         ALTA= (A*(1.0D0+ECCO))-1.0D0
-      ELSE
-         ALTA= 999999.9D0
-         ALTP= 2.0D0* (4.0D0/(NO*NO)**(1.0D0/3.0D0))
-      END IF
+      if (dabs(ecco-1.0d0) .gt. 0.000001d0) then
+         altp= (a*(1.0d0-ecco))-1.0d0
+         alta= (a*(1.0d0+ecco))-1.0d0
+      else
+         alta= 999999.9d0
+         altp= 2.0d0* (4.0d0/(no*no)**(1.0d0/3.0d0))
+      end if
 
-      SS     = 78.0D0/ER + 1.0D0
-      QZMS2T = ((120.0D0-78.0D0)/ER) ** 4
-      X2O3   =  2.0D0 / 3.0D0
+      ss     = 78.0d0/er + 1.0d0
+      qzms2t = ((120.0d0-78.0d0)/er) ** 4
+      x2o3   =  2.0d0 / 3.0d0
 
 !
 !     sgp4fix divisor for divide by zero check on inclination
@@ -1143,225 +1143,225 @@
 !     it to 1.5D-12, so the threshold was changed to 1.5D-12 for
 !     consistency.
 !
-        TEMP4 =   1.5D-12
-        TZERO = 0.0D0
-        DOINIT= .TRUE.
+        temp4 =   1.5d-12
+        tzero = 0.0d0
+        doinit= .true.
 
-        CALL ZZINIL( GEOPHS, OPMODE, ECCO,  EPOCH, INCLO,  NO, &
-                     AINV,   AO,     CON41, CON42, COSIO,  COSIO2, &
-                     ECCSQ,  OMEOSQ, POSQ,  RP,    RTEOSQ, SINIO, &
-                     GSTO )
+        call zzinil( geophs, opmode, ecco,  epoch, inclo,  no, &
+                     ainv,   ao,     con41, con42, cosio,  cosio2, &
+                     eccsq,  omeosq, posq,  rp,    rteosq, sinio, &
+                     gsto )
 
-        IF ( FAILED() ) THEN
-           CALL CHKOUT ( 'XXSGP4I' )
-           RETURN
-        END IF
+        if ( failed() ) then
+           call chkout ( 'XXSGP4I' )
+           return
+        end if
 
 
 !
 !       Check RP for a reasonable value. The propagator may not
 !       calculate correct state values for RP < 1.
 !
-        IF (RP .LT. 1.0D0) THEN
+        if (rp .lt. 1.0d0) then
 
-           CALL SETMSG ( 'TLE elements suborbital.'     )
-           CALL SIGERR ( 'SPICE(SUBORBITAL)'            )
-           CALL CHKOUT ( 'XXSGP4I'                      )
-           RETURN
+           call setmsg ( 'TLE elements suborbital.'     )
+           call sigerr ( 'SPICE(SUBORBITAL)'            )
+           call chkout ( 'XXSGP4I'                      )
+           return
 
-        END IF
+        end if
 
 !
 !       If nodeo and No are gtr 0
 !
-        IF( (OMEOSQ .GE. 0.0D0) .OR. (NO .GE. 0.0D0) ) THEN
+        if( (omeosq .ge. 0.0d0) .or. (no .ge. 0.0d0) ) then
 
-            DOSIMP = .FALSE.
+            dosimp = .false.
 
-            IF (RP .LT. (220.0D0/ER+1.0D0)) THEN
-                DOSIMP = .TRUE.
-            END IF
+            if (rp .lt. (220.0d0/er+1.0d0)) then
+                dosimp = .true.
+            end if
 
-            SFOUR  = SS
-            QZMS24 = QZMS2T
-            PERIGE = (RP-1.0D0)*ER
+            sfour  = ss
+            qzms24 = qzms2t
+            perige = (rp-1.0d0)*er
 
 !
 !           For perigees below 156 km, S and Qoms2t are altered.
 !
-            IF(PERIGE .LT. 156.0D0) THEN
-                SFOUR = PERIGE-78.0D0
+            if(perige .lt. 156.0d0) then
+                sfour = perige-78.0d0
 
-                IF(PERIGE .LE. 98.0D0) THEN
-                    SFOUR = 20.0D0
-                END IF
+                if(perige .le. 98.0d0) then
+                    sfour = 20.0d0
+                end if
 
-                QZMS24 = ( (120.0D0-SFOUR)/ER )**4
-                SFOUR  = SFOUR/ER + 1.0D0
+                qzms24 = ( (120.0d0-sfour)/er )**4
+                sfour  = sfour/er + 1.0d0
 
-            END IF
+            end if
 
-            PINVSQ = 1.0D0/POSQ
+            pinvsq = 1.0d0/posq
 
-            TSI    = 1.0D0/(AO-SFOUR)
-            ETA    = AO*ECCO*TSI
-            ETASQ  = ETA*ETA
-            EETA   = ECCO*ETA
-            PSISQ  = DABS(1.0D0-ETASQ)
-            COEF   = QZMS24*TSI**4
-            COEF1  = COEF/PSISQ**3.5D0
-            CC2    = COEF1*NO* (AO* (1.0D0+1.5D0*ETASQ+EETA* &
-                     (4.0D0+ETASQ) )+0.375D0* &
-               J2*TSI/PSISQ*CON41*(8.0D0+3.0D0*ETASQ*(8.0D0+ETASQ)))
-            CC1    = BSTAR*CC2
-            CC3    = 0.0D0
+            tsi    = 1.0d0/(ao-sfour)
+            eta    = ao*ecco*tsi
+            etasq  = eta*eta
+            eeta   = ecco*eta
+            psisq  = dabs(1.0d0-etasq)
+            coef   = qzms24*tsi**4
+            coef1  = coef/psisq**3.5d0
+            cc2    = coef1*no* (ao* (1.0d0+1.5d0*etasq+eeta* &
+                     (4.0d0+etasq) )+0.375d0* &
+               j2*tsi/psisq*con41*(8.0d0+3.0d0*etasq*(8.0d0+etasq)))
+            cc1    = bstar*cc2
+            cc3    = 0.0d0
 
-            IF(ECCO .GT. 1.0D-4) THEN
-                CC3 = -2.0D0*COEF*TSI*J3OJ2*NO*SINIO/ECCO
-            END IF
+            if(ecco .gt. 1.0d-4) then
+                cc3 = -2.0d0*coef*tsi*j3oj2*no*sinio/ecco
+            end if
 
-            X1MTH2 = 1.0D0-COSIO2
-            CC4    = 2.0D0*NO*COEF1*AO*OMEOSQ*(ETA*(2.0D0+0.5D0*ETASQ) &
-                    +ECCO*(0.5D0 + 2.0D0*ETASQ) - J2*TSI / (AO*PSISQ)* &
-                    (-3.0D0*CON41*(1.0D0-2.0D0* &
-             EETA+ETASQ*(1.5D0-0.5D0*EETA))+0.75D0*X1MTH2*(2.0D0*ETASQ &
-             -EETA*(1.0D0+ETASQ))*DCOS(2.0D0*ARGPO)))
-            CC5    = 2.0D0*COEF1*AO*OMEOSQ* (1.0D0 + 2.75D0* &
-                     (ETASQ + EETA) + EETA*ETASQ )
-            COSIO4 = COSIO2*COSIO2
-            TEMP1  = 1.5D0*J2*PINVSQ*NO
-            TEMP2  = 0.5D0*TEMP1*J2*PINVSQ
-            TEMP3  = -0.46875D0*J4*PINVSQ*PINVSQ*NO
-            MDOT   = NO + 0.5D0*TEMP1*RTEOSQ*CON41 + 0.0625D0*TEMP2* &
-                     RTEOSQ*(13.0D0 - 78.0D0*COSIO2 + 137.0D0*COSIO4)
-            ARGPDOT= -0.5D0*TEMP1*CON42 + 0.0625D0*TEMP2* &
-                     (7.0D0 - 114.0D0*COSIO2 + &
-              395.0D0*COSIO4)+TEMP3*(3.0D0-36.0D0*COSIO2+49.0D0*COSIO4)
-            XHDOT1 = -TEMP1*COSIO
-            NODEDOT = XHDOT1+(0.5D0*TEMP2*(4.0D0-19.0D0*COSIO2)+ &
-                       2.0D0*TEMP3*(3.0D0 - 7.0D0*COSIO2))*COSIO
-            XPIDOT = ARGPDOT+NODEDOT
-            OMGCOF = BSTAR*CC3*DCOS(ARGPO)
-            XMCOF  = 0.0D0
+            x1mth2 = 1.0d0-cosio2
+            cc4    = 2.0d0*no*coef1*ao*omeosq*(eta*(2.0d0+0.5d0*etasq) &
+                    +ecco*(0.5d0 + 2.0d0*etasq) - j2*tsi / (ao*psisq)* &
+                    (-3.0d0*con41*(1.0d0-2.0d0* &
+             eeta+etasq*(1.5d0-0.5d0*eeta))+0.75d0*x1mth2*(2.0d0*etasq &
+             -eeta*(1.0d0+etasq))*dcos(2.0d0*argpo)))
+            cc5    = 2.0d0*coef1*ao*omeosq* (1.0d0 + 2.75d0* &
+                     (etasq + eeta) + eeta*etasq )
+            cosio4 = cosio2*cosio2
+            temp1  = 1.5d0*j2*pinvsq*no
+            temp2  = 0.5d0*temp1*j2*pinvsq
+            temp3  = -0.46875d0*j4*pinvsq*pinvsq*no
+            mdot   = no + 0.5d0*temp1*rteosq*con41 + 0.0625d0*temp2* &
+                     rteosq*(13.0d0 - 78.0d0*cosio2 + 137.0d0*cosio4)
+            argpdot= -0.5d0*temp1*con42 + 0.0625d0*temp2* &
+                     (7.0d0 - 114.0d0*cosio2 + &
+              395.0d0*cosio4)+temp3*(3.0d0-36.0d0*cosio2+49.0d0*cosio4)
+            xhdot1 = -temp1*cosio
+            nodedot = xhdot1+(0.5d0*temp2*(4.0d0-19.0d0*cosio2)+ &
+                       2.0d0*temp3*(3.0d0 - 7.0d0*cosio2))*cosio
+            xpidot = argpdot+nodedot
+            omgcof = bstar*cc3*dcos(argpo)
+            xmcof  = 0.0d0
 
-            IF(ECCO .GT. 1.0D-4) THEN
-                XMCOF = -X2O3*COEF*BSTAR/EETA
-            END IF
+            if(ecco .gt. 1.0d-4) then
+                xmcof = -x2o3*coef*bstar/eeta
+            end if
 
-            XNODCF = 3.5D0*OMEOSQ*XHDOT1*CC1
-            T2COF  = 1.5D0*CC1
+            xnodcf = 3.5d0*omeosq*xhdot1*cc1
+            t2cof  = 1.5d0*cc1
 
 !
 !           sgp4fix for divide by zero with xinco = 180 deg.
 !
-            IF (DABS(COSIO+1.D0).GT. 1.5D-12) THEN
-                XLCOF  = -0.25D0*J3OJ2*SINIO* &
-                         (3.0D0+5.0D0*COSIO)/(1.0D0+COSIO)
-            ELSE
-                XLCOF  = -0.25D0*J3OJ2*SINIO* &
-                         (3.0D0+5.0D0*COSIO)/TEMP4
-            END IF
+            if (dabs(cosio+1.d0).gt. 1.5d-12) then
+                xlcof  = -0.25d0*j3oj2*sinio* &
+                         (3.0d0+5.0d0*cosio)/(1.0d0+cosio)
+            else
+                xlcof  = -0.25d0*j3oj2*sinio* &
+                         (3.0d0+5.0d0*cosio)/temp4
+            end if
 
-            AYCOF  = -0.5D0*J3OJ2*SINIO
-            DELMO  = (1.0D0+ETA*DCOS(MO))**3
-            SINMAO = DSIN(MO)
-            X7THM1 = 7.0D0*COSIO2-1.0D0
+            aycof  = -0.5d0*j3oj2*sinio
+            delmo  = (1.0d0+eta*dcos(mo))**3
+            sinmao = dsin(mo)
+            x7thm1 = 7.0d0*cosio2-1.0d0
 
 !
 !           Deep Space Initialization
 !
-            IF ((TWOPI()/NO) .GE. 225.0D0) THEN
+            if ((twopi()/no) .ge. 225.0d0) then
 
-                DODEEP = .TRUE.
-                DOSIMP = .TRUE.
-                TC     = 0.0D0
-                INCLM  = INCLO
+                dodeep = .true.
+                dosimp = .true.
+                tc     = 0.0d0
+                inclm  = inclo
 
 !
 !               Common.
 !
-                CALL ZZDSCM ( EPOCH, ECCO, ARGPO, TC, INCLO, &
-                        NODEO,  NO, &
-                        SNODM,  CNODM, SINIM, COSIM, SINOMM, COSOMM, &
-                        DAY,    E3,    EE2,   ECCM,  EMSQ,   GAM, &
-                        PEO,    PGHO,  PHO,   PINCO, PLO, &
-                        RTEMSQ, SE2,   SE3,   SGH2,  SGH3,   SGH4, &
-                        SH2,    SH3,   SI2,   SI3,   SL2,    SL3, &
-                        SL4,    S1,    S2,    S3,    S4,     S5, &
-                        S6,     S7,    SS1,   SS2,   SS3,    SS4, &
-                        SS5,    SS6,   SS7,   SZ1,   SZ2,    SZ3, &
-                        SZ11,   SZ12,  SZ13,  SZ21,  SZ22,   SZ23, &
-                        SZ31,   SZ32,  SZ33,  XGH2,  XGH3,   XGH4, &
-                        XH2,    XH3,   XI2,   XI3,   XL2,    XL3, &
-                        XL4,    XN,    Z1,    Z2,    Z3,     Z11, &
-                        Z12,    Z13,   Z21,   Z22,   Z23,    Z31, &
-                        Z32,    Z33,   ZMOL,  ZMOS )
+                call zzdscm ( epoch, ecco, argpo, tc, inclo, &
+                        nodeo,  no, &
+                        snodm,  cnodm, sinim, cosim, sinomm, cosomm, &
+                        day,    e3,    ee2,   eccm,  emsq,   gam, &
+                        peo,    pgho,  pho,   pinco, plo, &
+                        rtemsq, se2,   se3,   sgh2,  sgh3,   sgh4, &
+                        sh2,    sh3,   si2,   si3,   sl2,    sl3, &
+                        sl4,    s1,    s2,    s3,    s4,     s5, &
+                        s6,     s7,    ss1,   ss2,   ss3,    ss4, &
+                        ss5,    ss6,   ss7,   sz1,   sz2,    sz3, &
+                        sz11,   sz12,  sz13,  sz21,  sz22,   sz23, &
+                        sz31,   sz32,  sz33,  xgh2,  xgh3,   xgh4, &
+                        xh2,    xh3,   xi2,   xi3,   xl2,    xl3, &
+                        xl4,    xn,    z1,    z2,    z3,     z11, &
+                        z12,    z13,   z21,   z22,   z23,    z31, &
+                        z32,    z33,   zmol,  zmos )
 
 !
 !               Long period perturbations.
 !
-                CALL ZZDSPR( OPMODE, E3, EE2, PEO, PGHO, PHO, &
-                        PINCO, &
-                        PLO,  SE2,   SE3,   SGH2, SGH3, SGH4, &
-                        SH2,  SH3,   SI2,   SI3,  SL2,  SL3, &
-                        SL4,  TZERO, XGH2,  XGH3, XGH4, XH2, &
-                        XH3,  XI2,   XI3,   XL2,  XL3,  XL4, &
-                        ZMOL, ZMOS,  INCLM, DOINIT, &
-                        ECCO, INCLO, NODEO, ARGPO, MO )
+                call zzdspr( opmode, e3, ee2, peo, pgho, pho, &
+                        pinco, &
+                        plo,  se2,   se3,   sgh2, sgh3, sgh4, &
+                        sh2,  sh3,   si2,   si3,  sl2,  sl3, &
+                        sl4,  tzero, xgh2,  xgh3, xgh4, xh2, &
+                        xh3,  xi2,   xi3,   xl2,  xl3,  xl4, &
+                        zmol, zmos,  inclm, doinit, &
+                        ecco, inclo, nodeo, argpo, mo )
 
-                ARGPM  = 0.0D0
-                NODEM  = 0.0D0
-                MM     = 0.0D0
+                argpm  = 0.0d0
+                nodem  = 0.0d0
+                mm     = 0.0d0
 
 !
 !               Initialization
 !
-                CALL ZZDSIN ( GEOPHS, &
-                         COSIM,  EMSQ,  ARGPO, S1,    S2,    S3, &
-                         S4,     S5,    SINIM, SS1,   SS2,   SS3, &
-                         SS4,    SS5,   SZ1,   SZ3,   SZ11,  SZ13, &
-                         SZ21,   SZ23,  SZ31,  SZ33,  TZERO, TC, &
-                         GSTO,   MO,    MDOT,  NO,    NODEO, NODEDOT, &
-                         XPIDOT, Z1,    Z3,    Z11,   Z13,   Z21, &
-                         Z23,    Z31,   Z33,   ECCO,  ECCSQ, &
-                         ECCM,   ARGPM, INCLM, MM,    XN,    NODEM, &
-                         IREZ,   ATIME, D2201, D2211, D3210, D3222, &
-                         D4410,  D4422, D5220, D5232, D5421, D5433, &
-                         DEDT,   DIDT,  DMDT,  DNDT,  DNODT, DOMDT, &
-                         DEL1,   DEL2,  DEL3,  XFACT, XLAMO, XLI, &
-                         XNI )
+                call zzdsin ( geophs, &
+                         cosim,  emsq,  argpo, s1,    s2,    s3, &
+                         s4,     s5,    sinim, ss1,   ss2,   ss3, &
+                         ss4,    ss5,   sz1,   sz3,   sz11,  sz13, &
+                         sz21,   sz23,  sz31,  sz33,  tzero, tc, &
+                         gsto,   mo,    mdot,  no,    nodeo, nodedot, &
+                         xpidot, z1,    z3,    z11,   z13,   z21, &
+                         z23,    z31,   z33,   ecco,  eccsq, &
+                         eccm,   argpm, inclm, mm,    xn,    nodem, &
+                         irez,   atime, d2201, d2211, d3210, d3222, &
+                         d4410,  d4422, d5220, d5232, d5421, d5433, &
+                         dedt,   didt,  dmdt,  dndt,  dnodt, domdt, &
+                         del1,   del2,  del3,  xfact, xlamo, xli, &
+                         xni )
 
-            END IF
+            end if
 
 !
 !           Set variables if not deep space or rp < 220
 !
-            IF ( .NOT. DOSIMP ) THEN
-               CC1SQ = CC1*CC1
-               D2    = 4.0D0*AO*TSI*CC1SQ
-               TEMP  = D2*TSI*CC1 / 3.0D0
-               D3    = (17.0D0*AO + SFour) * TEMP
-               D4    = 0.5D0*TEMP*AO*TSI* &
-                        (221.0D0*AO + 31.0D0*SFour)*CC1
-               T3COF = D2 + 2.0D0*CC1SQ
-               T4COF = 0.25D0* (3.0D0*D3+CC1*(12.0D0*D2+10.0D0*CC1SQ) )
-               T5COF = 0.2D0* (3.0D0*D4 + 12.0D0*CC1*D3 + 6.0D0*D2*D2 + &
-                        15.0D0*CC1SQ* (2.0D0*D2 + CC1SQ) )
+            if ( .not. dosimp ) then
+               cc1sq = cc1*cc1
+               d2    = 4.0d0*ao*tsi*cc1sq
+               temp  = d2*tsi*cc1 / 3.0d0
+               d3    = (17.0d0*ao + sfour) * temp
+               d4    = 0.5d0*temp*ao*tsi* &
+                        (221.0d0*ao + 31.0d0*sfour)*cc1
+               t3cof = d2 + 2.0d0*cc1sq
+               t4cof = 0.25d0* (3.0d0*d3+cc1*(12.0d0*d2+10.0d0*cc1sq) )
+               t5cof = 0.2d0* (3.0d0*d4 + 12.0d0*cc1*d3 + 6.0d0*d2*d2 + &
+                        15.0d0*cc1sq* (2.0d0*d2 + cc1sq) )
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      DOINIT = .FALSE.
+      doinit = .false.
 
-      CALL CHKOUT ( 'XXSGP4I' )
-      RETURN
+      call chkout ( 'XXSGP4I' )
+      return
 
 
 
 !$Procedure XXSGP4E ( SGP4 evaluator )
 
-      ENTRY XXSGP4E ( T, STATE )
+      entry xxsgp4e ( t, state )
 
 ! $ Abstract
 !
@@ -1522,20 +1522,20 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'XXSGP4E' )
+      call chkin ( 'XXSGP4E' )
 
 !
 !     Local constants. Keep compiler ok for warnings on
 !     uninitialized variables
 !
-      X2O3   = 2.0D0/3.0D0
-      MR     = 0.0D0
-      COSEO1 = 1.0D0
-      SINEO1 = 0.0D0
+      x2o3   = 2.0d0/3.0d0
+      mr     = 0.0d0
+      coseo1 = 1.0d0
+      sineo1 = 0.0d0
 
 !
 !     Set mathematical constants.
@@ -1554,311 +1554,311 @@
 !     the old check used 1.0D0 + cos(pi-1.0D-9), but then compared it to
 !     1.5D-12, so the threshold was changed to 1.5D-12 for consistency.
 !
-      TEMP4 =  1.5D-12
-      KPS   =  ER * XKE/60.0D0
+      temp4 =  1.5d-12
+      kps   =  er * xke/60.0d0
 
 !
 !     UPDATE FOR SECULAR GRAVITY AND ATMOSPHERIC DRAG
 !
-      XMDF   = MO + MDOT*T
-      OMGADF = ARGPO + ARGPDOT*T
-      XNODDF = NODEO + NODEDOT*T
-      ARGPM  = OMGADF
-      MM     = XMDF
-      T2     = T*T
-      NODEM  = XNODDF + XNODCF*T2
-      TEMPA  = 1.0D0 - CC1*T
-      TEMPE  = BSTAR*CC4*T
-      TEMPL  = T2COF*T2
+      xmdf   = mo + mdot*t
+      omgadf = argpo + argpdot*t
+      xnoddf = nodeo + nodedot*t
+      argpm  = omgadf
+      mm     = xmdf
+      t2     = t*t
+      nodem  = xnoddf + xnodcf*t2
+      tempa  = 1.0d0 - cc1*t
+      tempe  = bstar*cc4*t
+      templ  = t2cof*t2
 
 
-      IF ( .NOT. DOSIMP ) THEN
+      if ( .not. dosimp ) then
 
-         DELOMG = OMGCOF*T
-         DELM   = XMCOF*(( 1.0D0+ETA*DCOS(XMDF) )**3-DELMO)
-         TEMP   = DELOMG + DELM
-         MM     = XMDF + TEMP
-         ARGPM  = OMGADF - TEMP
-         T3     = T2*T
-         T4     = T3*T
-         TEMPA  = TEMPA - D2*T2 - D3*T3 - D4*T4
-         TEMPE  = TEMPE + BSTAR*CC5*(DSIN(MM) - SINMAO)
-         TEMPL  = TEMPL + T3COF*T3 + T4*(T4COF + T*T5COF)
+         delomg = omgcof*t
+         delm   = xmcof*(( 1.0d0+eta*dcos(xmdf) )**3-delmo)
+         temp   = delomg + delm
+         mm     = xmdf + temp
+         argpm  = omgadf - temp
+         t3     = t2*t
+         t4     = t3*t
+         tempa  = tempa - d2*t2 - d3*t3 - d4*t4
+         tempe  = tempe + bstar*cc5*(dsin(mm) - sinmao)
+         templ  = templ + t3cof*t3 + t4*(t4cof + t*t5cof)
 
-      END IF
+      end if
 
-      XN    = NO
-      ECCM  = ECCO
-      INCLM = INCLO
+      xn    = no
+      eccm  = ecco
+      inclm = inclo
 
-      IF (DODEEP) THEN
-         TC     = T
+      if (dodeep) then
+         tc     = t
 
-         CALL ZZDSPC (  IREZ,  D2201, D2211,   D3210, D3222, D4410, &
-                        D4422, D5220, D5232,   D5421, D5433, DEDT, &
-                        DEL1,  DEL2,  DEL3,    DIDT,  DMDT,  DNODT, &
-                        DOMDT, ARGPO, ARGPDOT, T,     TC,    GSTO, &
-                        XFACT, XLAMO, NO,      ATIME, ECCM, &
-                        ARGPM, INCLM, XLI,     MM,    XNI, &
-                        NODEM, DNDT,  XN  )
+         call zzdspc (  irez,  d2201, d2211,   d3210, d3222, d4410, &
+                        d4422, d5220, d5232,   d5421, d5433, dedt, &
+                        del1,  del2,  del3,    didt,  dmdt,  dnodt, &
+                        domdt, argpo, argpdot, t,     tc,    gsto, &
+                        xfact, xlamo, no,      atime, eccm, &
+                        argpm, inclm, xli,     mm,    xni, &
+                        nodem, dndt,  xn  )
 
-      END IF
+      end if
 
 !
 !     Mean motion less than 0.0.
 !
-      IF(XN .LE. 0.0D0) THEN
+      if(xn .le. 0.0d0) then
 
-         CALL SETMSG ( 'Mean motion less-than zero. ' &
+         call setmsg ( 'Mean motion less-than zero. ' &
           //           'This error may indicate a bad TLE set.'     )
-         CALL SIGERR ( 'SPICE(BADMEANMOTION)'                       )
-         CALL CHKOUT ( 'XXSGP4E'                                    )
-         RETURN
+         call sigerr ( 'SPICE(BADMEANMOTION)'                       )
+         call chkout ( 'XXSGP4E'                                    )
+         return
 
-      END IF
+      end if
 
-      AM   = (XKE/XN)**X2O3*TEMPA**2
-      XN   = XKE/AM**1.5D0
-      ECCM = ECCM-TEMPE
+      am   = (xke/xn)**x2o3*tempa**2
+      xn   = xke/am**1.5d0
+      eccm = eccm-tempe
 
 !
 !     Fix tolerance for error recognition. Vallado code used
 !     a lower limit of -0.001. This value apparently prevents
 !     an error signal due to roundoff error.
 !
-      IF (ECCM .GE. 1.0D0 .OR. ECCM .LT. -0.001D0) THEN
+      if (eccm .ge. 1.0d0 .or. eccm .lt. -0.001d0) then
 
-         CALL SETMSG ( 'Mean eccentricity value, #, beyond ' &
+         call setmsg ( 'Mean eccentricity value, #, beyond ' &
           //           'allowed bounds [-0.001,1.0). This ' &
           //           'error may indicate a bad TLE set.'          )
-         CALL ERRDP  ( '#', Eccm                                    )
-         CALL SIGERR ( 'SPICE(BADMECCENTRICITY)'                     )
-         CALL CHKOUT ( 'XXSGP4E'                                    )
-         RETURN
+         call errdp  ( '#', eccm                                    )
+         call sigerr ( 'SPICE(BADMECCENTRICITY)'                     )
+         call chkout ( 'XXSGP4E'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( AM .LT. 0.95D0 ) THEN
+      if ( am .lt. 0.95d0 ) then
 
-         CALL SETMSG ( 'Mean semi-major axis value, #, below allowed ' &
+         call setmsg ( 'Mean semi-major axis value, #, below allowed ' &
           //           'minimum of 0.95. This error may indicate ' &
           //           'a bad TLE set or a decayed orbit.'          )
-         CALL ERRDP  ( '#', Eccm                                    )
-         CALL SIGERR ( 'SPICE(BADMSEMIMAJOR)'                        )
-         CALL CHKOUT ( 'XXSGP4E'                                    )
-         RETURN
+         call errdp  ( '#', eccm                                    )
+         call sigerr ( 'SPICE(BADMSEMIMAJOR)'                        )
+         call chkout ( 'XXSGP4E'                                    )
+         return
 
-      END IF
+      end if
 
 
 !
 !     sgp4fix change test condition for eccentricity
 !
-      IF (ECCM .LT. 1.0D-6) ECCM = 1.0D-6
+      if (eccm .lt. 1.0d-6) eccm = 1.0d-6
 
-      MM     = MM+NO*TEMPL
-      XLM    = MM+ARGPM+NODEM
-      EMSQ   = ECCM*ECCM
-      TEMP   = 1.0D0 - EMSQ
-      NODEM  = DMOD( NODEM, TWOPI())
-      ARGPM  = DMOD( ARGPM, TWOPI())
-      XLM    = DMOD( XLM,   TWOPI())
-      MM     = DMOD( XLM - ARGPM - NODEM, TWOPI())
+      mm     = mm+no*templ
+      xlm    = mm+argpm+nodem
+      emsq   = eccm*eccm
+      temp   = 1.0d0 - emsq
+      nodem  = dmod( nodem, twopi())
+      argpm  = dmod( argpm, twopi())
+      xlm    = dmod( xlm,   twopi())
+      mm     = dmod( xlm - argpm - nodem, twopi())
 
 !
 !     Compute extra mean quantities
 !
-      SINIM  = DSIN(INCLM)
-      COSIM  = DCOS(INCLM)
+      sinim  = dsin(inclm)
+      cosim  = dcos(inclm)
 
 !
 !     Add lunar-solar periodics
 !
-      ECCP   = ECCM
-      XINCP  = INCLM
-      ARGPP  = ARGPM
-      NODEP  = NODEM
-      MP     = MM
-      SINIP  = SINIM
-      COSIP  = COSIM
+      eccp   = eccm
+      xincp  = inclm
+      argpp  = argpm
+      nodep  = nodem
+      mp     = mm
+      sinip  = sinim
+      cosip  = cosim
 
 !
 !     Use deep space perturbation if indicated.
 !
 
-      IF (DODEEP) THEN
+      if (dodeep) then
 
-         CALL ZZDSPR ( SVMODE, E3,  EE2,   PEO,    PGHO, PHO, PINCO, &
-                       PLO,  SE2,   SE3,   SGH2,   SGH3, SGH4, &
-                       SH2,  SH3,   SI2,   SI3,    SL2,  SL3, &
-                       SL4,  T,     XGH2,  XGH3,   XGH4, XH2, &
-                       XH3,  XI2,   XI3,   XL2,    XL3,  XL4, &
-                       ZMOL, ZMOS,  INCLO, .FALSE., &
-                       ECCP, XINCP, NODEP, ARGPP, MP )
+         call zzdspr ( svmode, e3,  ee2,   peo,    pgho, pho, pinco, &
+                       plo,  se2,   se3,   sgh2,   sgh3, sgh4, &
+                       sh2,  sh3,   si2,   si3,    sl2,  sl3, &
+                       sl4,  t,     xgh2,  xgh3,   xgh4, xh2, &
+                       xh3,  xi2,   xi3,   xl2,    xl3,  xl4, &
+                       zmol, zmos,  inclo, .false., &
+                       eccp, xincp, nodep, argpp, mp )
 
-         IF(XINCP .LT. 0.0D0) THEN
-            XINCP  = -XINCP
-            NODEP  = NODEP + PI()
-            ARGPP  = ARGPP - PI()
-         END IF
+         if(xincp .lt. 0.0d0) then
+            xincp  = -xincp
+            nodep  = nodep + pi()
+            argpp  = argpp - pi()
+         end if
 
-         IF ( (ECCP .LT. 0.0D0) .OR. &
-              (ECCP .GT. 1.0D0) ) THEN
+         if ( (eccp .lt. 0.0d0) .or. &
+              (eccp .gt. 1.0d0) ) then
 
-            CALL SETMSG ( 'Perturbed eccentricity value, #, beyond ' &
+            call setmsg ( 'Perturbed eccentricity value, #, beyond ' &
              //           'allowed bounds [0,1]. This error may ' &
              //           'indicate a bad TLE set.'                )
-            CALL ERRDP  ( '#', ECCP                                )
-            CALL SIGERR ( 'SPICE(BADPECCENTRICITY)'                )
-            CALL CHKOUT ( 'XXSGP4E'                                )
-            RETURN
+            call errdp  ( '#', eccp                                )
+            call sigerr ( 'SPICE(BADPECCENTRICITY)'                )
+            call chkout ( 'XXSGP4E'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Update for long period periodics if a deep space trajectory.
 !
 
-      IF (DODEEP) THEN
+      if (dodeep) then
 
-          SINIP =  DSIN(XINCP)
-          COSIP =  DCOS(XINCP)
-          AYCOF = -0.5D0*J3OJ2*SINIP
+          sinip =  dsin(xincp)
+          cosip =  dcos(xincp)
+          aycof = -0.5d0*j3oj2*sinip
 
 !
 !         sgp4fix for divide by zero with xincp = 180 deg
 !
 
-          IF (DABS(COSIP+1.D0).GT. 1.5D-12) THEN
-             XLCOF  = -0.25D0*J3OJ2*SINIP* &
-                       (3.0D0+5.0D0*COSIP)/(1.0D0+COSIP)
-          ELSE
-             XLCOF  = -0.25D0*J3OJ2*SINIP* &
-                       (3.0D0+5.0D0*COSIP)/TEMP4
-          END IF
+          if (dabs(cosip+1.d0).gt. 1.5d-12) then
+             xlcof  = -0.25d0*j3oj2*sinip* &
+                       (3.0d0+5.0d0*cosip)/(1.0d0+cosip)
+          else
+             xlcof  = -0.25d0*j3oj2*sinip* &
+                       (3.0d0+5.0d0*cosip)/temp4
+          end if
 
-      END IF
+      end if
 
-      AXNL = ECCP*DCOS(ARGPP)
-      TEMP = 1.0D0 / (AM*(1.0D0-ECCP*ECCP))
-      AYNL = ECCP*DSIN(ARGPP) + TEMP*AYCOF
-      XL   = MP + ARGPP + NODEP + TEMP*XLCOF*AXNL
+      axnl = eccp*dcos(argpp)
+      temp = 1.0d0 / (am*(1.0d0-eccp*eccp))
+      aynl = eccp*dsin(argpp) + temp*aycof
+      xl   = mp + argpp + nodep + temp*xlcof*axnl
 
 !
 !     Solve Kepler's equation.
 !
-      U    = DMOD(XL-NODEP,TWOPI())
-      EO1  = U
-      ITER = 0
+      u    = dmod(xl-nodep,twopi())
+      eo1  = u
+      iter = 0
 
 !
 !     sgp4fix for Kepler iteration the following iteration needs
 !     better limits on corrections
 !
 
-      TEMP = 9999.9D0
+      temp = 9999.9d0
 
-      DO WHILE ((TEMP.GE.1.0D-12).AND.(ITER.LT.10))
+      do while ((temp.ge.1.0d-12).and.(iter.lt.10))
 
-         ITER  = ITER+1
-         SINEO1= DSIN(EO1)
-         COSEO1= DCOS(EO1)
-         TEM5  = 1.0D0 - COSEO1*AXNL - SINEO1*AYNL
-         TEM5  = (U - AYNL*COSEO1 + AXNL*SINEO1 - EO1) / TEM5
-         TEMP  = DABS(TEM5)
+         iter  = iter+1
+         sineo1= dsin(eo1)
+         coseo1= dcos(eo1)
+         tem5  = 1.0d0 - coseo1*axnl - sineo1*aynl
+         tem5  = (u - aynl*coseo1 + axnl*sineo1 - eo1) / tem5
+         temp  = dabs(tem5)
 
 !
 !        Stop excessive correction.
 !
-         IF(TEMP.GT.1.0D0) TEM5=TEM5/TEMP
+         if(temp.gt.1.0d0) tem5=tem5/temp
 
-         EO1   = EO1+TEM5
+         eo1   = eo1+tem5
 
-      END DO
+      end do
 
 !
 !     Short period preliminary quantities.
 !
-      ECOSE = AXNL*COSEO1+AYNL*SINEO1
-      ESINE = AXNL*SINEO1-AYNL*COSEO1
-      EL2   = AXNL*AXNL+AYNL*AYNL
-      PL    = AM*(1.0D0-EL2)
+      ecose = axnl*coseo1+aynl*sineo1
+      esine = axnl*sineo1-aynl*coseo1
+      el2   = axnl*axnl+aynl*aynl
+      pl    = am*(1.0d0-el2)
 
 !
 !     Error check for semi-latus rectum < 0.0
 !
-      IF ( PL .LT. 0.0D0 ) THEN
+      if ( pl .lt. 0.0d0 ) then
 
-         CALL SETMSG ( 'Semi-latus rectum less-than zero.'          )
-         CALL SIGERR ( 'SPICE(BADSEMILATUS)'                        )
-         CALL CHKOUT ( 'XXSGP4E'                                    )
-         RETURN
+         call setmsg ( 'Semi-latus rectum less-than zero.'          )
+         call sigerr ( 'SPICE(BADSEMILATUS)'                        )
+         call chkout ( 'XXSGP4E'                                    )
+         return
 
-      END IF
+      end if
 
-      RL    = AM*(1.0D0-ECOSE)
-      RDOTL = DSQRT(AM)*ESINE/RL
-      RVDOTL= DSQRT(PL)/RL
-      BETAL = DSQRT(1.0D0-EL2)
-      TEMP  = ESINE/(1.0D0+BETAL)
-      SINU  = AM/RL*(SINEO1-AYNL-AXNL*TEMP)
-      COSU  = AM/RL*(COSEO1-AXNL+AYNL*TEMP)
-      SU    = DATAN2(SINU,COSU)
-      SIN2U = (COSU+COSU)*SINU
-      COS2U = 1.0D0-2.0D0*SINU*SINU
-      TEMP  = 1.0D0/PL
-      TEMP1 = 0.5D0*J2*TEMP
-      TEMP2 = TEMP1*TEMP
+      rl    = am*(1.0d0-ecose)
+      rdotl = dsqrt(am)*esine/rl
+      rvdotl= dsqrt(pl)/rl
+      betal = dsqrt(1.0d0-el2)
+      temp  = esine/(1.0d0+betal)
+      sinu  = am/rl*(sineo1-aynl-axnl*temp)
+      cosu  = am/rl*(coseo1-axnl+aynl*temp)
+      su    = datan2(sinu,cosu)
+      sin2u = (cosu+cosu)*sinu
+      cos2u = 1.0d0-2.0d0*sinu*sinu
+      temp  = 1.0d0/pl
+      temp1 = 0.5d0*j2*temp
+      temp2 = temp1*temp
 
 !
 !     Update for short period periodics if a deep space trajectory.
 !
-      IF (DODEEP) THEN
-          COSISQ = COSIP*COSIP
-          CON41  = 3.0D0*COSISQ - 1.0D0
-          X1MTH2 = 1.0D0 - COSISQ
-          X7THM1 = 7.0D0*COSISQ - 1.0D0
-      END IF
+      if (dodeep) then
+          cosisq = cosip*cosip
+          con41  = 3.0d0*cosisq - 1.0d0
+          x1mth2 = 1.0d0 - cosisq
+          x7thm1 = 7.0d0*cosisq - 1.0d0
+      end if
 
-      MR    = RL*(1.0D0 - 1.5D0*TEMP2*BETAL*CON41) + &
-                 0.5D0*TEMP1*X1MTH2*COS2U
-      SU    = SU - 0.25D0*TEMP2*X7THM1*SIN2U
-      XNODE = NODEP + 1.5D0*TEMP2*COSIP*SIN2U
-      XINC  = XINCP + 1.5D0*TEMP2*COSIP*SINIP*COS2U
-      MV    = RDOTL - XN*TEMP1*X1MTH2*SIN2U / XKE
-      RVDOT = RVDOTL + XN*TEMP1* (X1MTH2*COS2U+1.5D0*CON41) / XKE
+      mr    = rl*(1.0d0 - 1.5d0*temp2*betal*con41) + &
+                 0.5d0*temp1*x1mth2*cos2u
+      su    = su - 0.25d0*temp2*x7thm1*sin2u
+      xnode = nodep + 1.5d0*temp2*cosip*sin2u
+      xinc  = xincp + 1.5d0*temp2*cosip*sinip*cos2u
+      mv    = rdotl - xn*temp1*x1mth2*sin2u / xke
+      rvdot = rvdotl + xn*temp1* (x1mth2*cos2u+1.5d0*con41) / xke
 
 !
 !     Orientation vectors.
 !
 
-      SINSU=  DSIN(SU)
-      COSSU=  DCOS(SU)
-      SNOD =  DSIN(XNODE)
-      CNOD =  DCOS(XNODE)
-      SINI =  DSIN(XINC)
-      COSI =  DCOS(XINC)
-      XMX  = -SNOD*COSI
-      XMY  =  CNOD*COSI
-      UX   =  XMX*SINSU + CNOD*COSSU
-      UY   =  XMY*SINSU + SNOD*COSSU
-      UZ   =  SINI*SINSU
-      VX   =  XMX*COSSU - CNOD*SINSU
-      VY   =  XMY*COSSU - SNOD*SINSU
-      VZ   =  SINI*COSSU
+      sinsu=  dsin(su)
+      cossu=  dcos(su)
+      snod =  dsin(xnode)
+      cnod =  dcos(xnode)
+      sini =  dsin(xinc)
+      cosi =  dcos(xinc)
+      xmx  = -snod*cosi
+      xmy  =  cnod*cosi
+      ux   =  xmx*sinsu + cnod*cossu
+      uy   =  xmy*sinsu + snod*cossu
+      uz   =  sini*sinsu
+      vx   =  xmx*cossu - cnod*sinsu
+      vy   =  xmy*cossu - snod*sinsu
+      vz   =  sini*cossu
 
 !
 !     Position and velocity.
 !
 
-      STATE(1) = MR*UX * ER
-      STATE(2) = MR*UY * ER
-      STATE(3) = MR*UZ * ER
-      STATE(4) = (MV*UX + RVDOT*VX) * KPS
-      STATE(5) = (MV*UY + RVDOT*VY) * KPS
-      STATE(6) = (MV*UZ + RVDOT*VZ) * KPS
+      state(1) = mr*ux * er
+      state(2) = mr*uy * er
+      state(3) = mr*uz * er
+      state(4) = (mv*ux + rvdot*vx) * kps
+      state(5) = (mv*uy + rvdot*vy) * kps
+      state(6) = (mv*uz + rvdot*vz) * kps
 
 !
 !     sgp4fix for decaying satellites
@@ -1866,18 +1866,18 @@
 !     Place this test here to ensure evaluation of STATE.
 !     The result may be physically invalid.
 !
-      IF (MR .LT. 1.0D0) THEN
+      if (mr .lt. 1.0d0) then
 
-         CALL SETMSG ( 'Satellite has decayed.' )
-         CALL SIGERR ( 'SPICE(ORBITDECAY)'      )
-         CALL CHKOUT ( 'XXSGP4E'                 )
-         RETURN
+         call setmsg ( 'Satellite has decayed.' )
+         call sigerr ( 'SPICE(ORBITDECAY)'      )
+         call chkout ( 'XXSGP4E'                 )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'XXSGP4E' )
+      call chkout ( 'XXSGP4E' )
 
-      RETURN
+      return
 
-      END
+      end
 

@@ -1,6 +1,6 @@
 !$Procedure DSKSRF ( DSK, get surface IDs for body )
 
-      SUBROUTINE DSKSRF ( DSKFNM, BODYID, SRFIDS )
+      subroutine dsksrf ( dskfnm, bodyid, srfids )
 
 ! $ Abstract
 !
@@ -23,17 +23,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         DSKFNM
-      INTEGER               BODYID
-      INTEGER               SRFIDS ( LBCELL : * )
+      character*(*)         dskfnm
+      integer               bodyid
+      integer               srfids ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -245,67 +245,67 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
-      INTEGER               SIZEI
+      integer               cardi
+      integer               sizei
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               TOKLEN
-      PARAMETER           ( TOKLEN = 4 )
+      integer               toklen
+      parameter           ( toklen = 4 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TOKLEN)    ARCH
-      CHARACTER*(TOKLEN)    KERTYP
+      character*(toklen)    arch
+      character*(toklen)    kertyp
 
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      double precision      dskdsc ( dskdsz )
 
-      INTEGER               BID
-      INTEGER               DLADSC ( DLADSZ )
-      INTEGER               HANDLE
-      INTEGER               NXTDSC ( DLADSZ )
-      INTEGER               SID
+      integer               bid
+      integer               dladsc ( dladsz )
+      integer               handle
+      integer               nxtdsc ( dladsz )
+      integer               sid
 
-      LOGICAL               FOUND
+      logical               found
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKSRF' )
+      call chkin ( 'DSKSRF' )
 
 !
 !     See whether GETFAT thinks we've got a DSK file.
 !
-      CALL GETFAT ( DSKFNM, ARCH, KERTYP )
+      call getfat ( dskfnm, arch, kertyp )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKSRF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKSRF' )
+         return
+      end if
 
-      IF ( ARCH .EQ. 'XFR' ) THEN
+      if ( arch .eq. 'XFR' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary DSK file to be readable ' &
          //            'by this routine. If the input file is an ' &
          //            'DSK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         CALL ERRCH  ( '#',  DSKFNM                                )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                      )
-         CALL CHKOUT ( 'DSKSRF'                                    )
-         RETURN
+         call errch  ( '#',  dskfnm                                )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
+         call chkout ( 'DSKSRF'                                    )
+         return
 
-      ELSE IF ( ARCH .NE. 'DAS' ) THEN
+      else if ( arch .ne. 'DAS' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary DSK file to be readable ' &
          //            'by this routine. Binary DSK files have ' &
          //            'DAS architecture. If you expected the ' &
@@ -314,15 +314,15 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  DSKFNM                                )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDARCHTYPE)'                    )
-         CALL CHKOUT ( 'DSKSRF'                                    )
-         RETURN
+         call errch  ( '#',  dskfnm                                )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
+         call chkout ( 'DSKSRF'                                    )
+         return
 
-      ELSE IF ( KERTYP .NE. 'DSK' ) THEN
+      else if ( kertyp .ne. 'DSK' ) then
 
-         CALL SETMSG ( 'Input file # has file type #. The file ' &
+         call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary DSK file to be readable ' &
          //            'by this routine. If you expected the ' &
          //            'file to be a binary DSK file, the problem ' &
@@ -330,42 +330,42 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  DSKFNM                                )
-         CALL ERRCH  ( '#',  KERTYP                                )
-         CALL SIGERR ( 'SPICE(INVALIDFILETYPE)'                    )
-         CALL CHKOUT ( 'DSKSRF'                                    )
-         RETURN
+         call errch  ( '#',  dskfnm                                )
+         call errch  ( '#',  kertyp                                )
+         call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
+         call chkout ( 'DSKSRF'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Open the DSK for read access; start a forward search.
 !
-      CALL DASOPR ( DSKFNM, HANDLE )
-      CALL DLABFS ( HANDLE, NXTDSC, FOUND )
+      call dasopr ( dskfnm, handle )
+      call dlabfs ( handle, nxtdsc, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKSRF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKSRF' )
+         return
+      end if
 
-      DO WHILE (  FOUND  .AND.  ( .NOT. FAILED() )  )
+      do while (  found  .and.  ( .not. failed() )  )
 !
 !        Get the DSK descriptor of the current segment.
 !        This is where we'll find the body ID code.
 !
-         CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
+         call movei ( nxtdsc, dladsz, dladsc )
 
-         CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+         call dskgd ( handle, dladsc, dskdsc )
 !
 !        The body ID is at location CTRIDX ("center index")
 !        of the DSK descriptor.
 !
-         BID = NINT( DSKDSC(CTRIDX) )
+         bid = nint( dskdsc(ctridx) )
 
-         IF ( BID .EQ. BODYID ) THEN
+         if ( bid .eq. bodyid ) then
 
-            SID = NINT( DSKDSC(SRFIDX) )
+            sid = nint( dskdsc(srfidx) )
 !
 !           Append, rather than insert, the new ID. We'll turn the cell
 !           into a set at the end of the loop.
@@ -375,38 +375,38 @@
 !           out-of-room error, because we would lose the ability to
 !           close the file.
 !
-            IF ( CARDI(SRFIDS) .EQ. SIZEI(SRFIDS) ) THEN
+            if ( cardi(srfids) .eq. sizei(srfids) ) then
 !
 !              We're going to signal an error. Close the DSK first.
 !
-               CALL DSKCLS ( HANDLE, .FALSE. )
+               call dskcls ( handle, .false. )
 
-               CALL SETMSG ( 'Cannot append surface ID # to ' &
+               call setmsg ( 'Cannot append surface ID # to ' &
                //            'cell while reading DSK file #. ' &
                //            'Cell size is #.'                 )
-               CALL ERRINT ( '#', SID                          )
-               CALL ERRCH  ( '#', DSKFNM                       )
-               CALL ERRINT ( '#', SIZEI( SRFIDS )              )
-               CALL SIGERR ( 'SPICE(CELLTOOSMALL)'             )
-               CALL CHKOUT ( 'DSKSRF'                          )
-               RETURN
+               call errint ( '#', sid                          )
+               call errch  ( '#', dskfnm                       )
+               call errint ( '#', sizei( srfids )              )
+               call sigerr ( 'SPICE(CELLTOOSMALL)'             )
+               call chkout ( 'DSKSRF'                          )
+               return
 
-            END IF
+            end if
 
-            CALL APPNDI ( SID, SRFIDS )
+            call appndi ( sid, srfids )
 
-         END IF
+         end if
 !
 !        Fetch the DLA descriptor of the next segment.
 !
-         CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
+         call dlafns ( handle, dladsc, nxtdsc, found )
 
-      END DO
+      end do
 
-      CALL VALIDI ( SIZEI(SRFIDS), CARDI(SRFIDS), SRFIDS )
+      call validi ( sizei(srfids), cardi(srfids), srfids )
 
-      CALL DASCLS ( HANDLE )
+      call dascls ( handle )
 
-      CALL CHKOUT ( 'DSKSRF' )
-      RETURN
-      END
+      call chkout ( 'DSKSRF' )
+      return
+      end

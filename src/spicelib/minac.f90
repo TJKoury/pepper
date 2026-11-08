@@ -1,6 +1,6 @@
 !$Procedure MINAC  ( Minimum element of array, character )
 
-      SUBROUTINE MINAC ( ARRAY, NDIM, MINVAL, LOC )
+      subroutine minac ( array, ndim, minval, loc )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)   ARRAY ( * )
-      INTEGER         NDIM
-      CHARACTER*(*)   MINVAL
-      INTEGER         LOC
+      character*(*)   array ( * )
+      integer         ndim
+      character*(*)   minval
+      integer         loc
 
 ! $ Brief_I/O
 !
@@ -135,23 +135,23 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      IF (NDIM .LE. 0) THEN
-         LOC = 0
-         RETURN
-      END IF
+      if (ndim .le. 0) then
+         loc = 0
+         return
+      end if
 
-      MINVAL = ARRAY(1)
-      LOC = 1
+      minval = array(1)
+      loc = 1
 
-      DO I = 2, NDIM
-         IF (LLT (ARRAY(I), MINVAL)) THEN
-            MINVAL = ARRAY(I)
-            LOC = I
-         END IF
-      END DO
+      do i = 2, ndim
+         if (llt (array(i), minval)) then
+            minval = array(i)
+            loc = i
+         end if
+      end do
 
-      RETURN
-      END
+      return
+      end

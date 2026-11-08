@@ -39,35 +39,35 @@
 !     are used to test whether a value of any type is null.
 !
 !
-      INTEGER               EQ
-      PARAMETER           ( EQ     =         1 )
+      integer               eq
+      parameter           ( eq     =         1 )
 
-      INTEGER               GE
-      PARAMETER           ( GE     =  EQ  +  1 )
+      integer               ge
+      parameter           ( ge     =  eq  +  1 )
 
-      INTEGER               GT
-      PARAMETER           ( GT     =  GE  +  1 )
+      integer               gt
+      parameter           ( gt     =  ge  +  1 )
 
-      INTEGER               LE
-      PARAMETER           ( LE     =  GT  +  1 )
+      integer               le
+      parameter           ( le     =  gt  +  1 )
 
-      INTEGER               LT
-      PARAMETER           ( LT     =  LE  +  1 )
+      integer               lt
+      parameter           ( lt     =  le  +  1 )
 
-      INTEGER               NE
-      PARAMETER           ( NE     =  LT  +  1 )
+      integer               ne
+      parameter           ( ne     =  lt  +  1 )
 
-      INTEGER               LIKE
-      PARAMETER           ( LIKE   =  NE     +  1 )
+      integer               like
+      parameter           ( like   =  ne     +  1 )
 
-      INTEGER               UNLIKE
-      PARAMETER           ( UNLIKE =  LIKE   +  1 )
+      integer               unlike
+      parameter           ( unlike =  like   +  1 )
 
-      INTEGER               ISNULL
-      PARAMETER           ( ISNULL =  UNLIKE +  1 )
+      integer               isnull
+      parameter           ( isnull =  unlike +  1 )
 
-      INTEGER               NOTNUL
-      PARAMETER           ( NOTNUL =  ISNULL +  1 )
+      integer               notnul
+      parameter           ( notnul =  isnull +  1 )
 
 !
 !     End Include Section:  EK Operator Codes

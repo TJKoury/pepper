@@ -1,8 +1,8 @@
 !$Procedure      ZZEKJSRT ( EK, join row set union sort )
 
-      SUBROUTINE ZZEKJSRT ( NJRS,    UBASES,  NORDER,  OTABS, &
-                            OCOLS,   OELTS,   SENSES,  STHAN, &
-                            STSDSC,  STDTPT,  DTPOOL,  DTDSCS,  ORDBAS )
+      subroutine zzekjsrt ( njrs,    ubases,  norder,  otabs, &
+                            ocols,   oelts,   senses,  sthan, &
+                            stsdsc,  stdtpt,  dtpool,  dtdscs,  ordbas )
 
 ! $ Abstract
 !
@@ -20,34 +20,34 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekjrs.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekjrs.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               NJRS
-      INTEGER               UBASES ( * )
-      INTEGER               NORDER
-      INTEGER               OTABS  ( * )
-      INTEGER               OCOLS  ( * )
-      INTEGER               OELTS  ( * )
-      INTEGER               SENSES ( * )
-      INTEGER               STHAN  ( * )
-      INTEGER               STSDSC ( SDSCSZ, * )
-      INTEGER               STDTPT ( * )
-      INTEGER               DTPOOL ( 2,      LBPOOL : * )
-      INTEGER               DTDSCS ( CDSCSZ,          * )
-      INTEGER               ORDBAS
+      integer               njrs
+      integer               ubases ( * )
+      integer               norder
+      integer               otabs  ( * )
+      integer               ocols  ( * )
+      integer               oelts  ( * )
+      integer               senses ( * )
+      integer               sthan  ( * )
+      integer               stsdsc ( sdscsz, * )
+      integer               stdtpt ( * )
+      integer               dtpool ( 2,      lbpool : * )
+      integer               dtdscs ( cdscsz,          * )
+      integer               ordbas
 
 ! $ Brief_I/O
 !
@@ -267,82 +267,82 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LNKNXT
-      LOGICAL               RETURN
+      integer               lnknxt
+      logical               return
 
 !
 !     Other functions
 !
-      LOGICAL               ZZEKVCMP
+      logical               zzekvcmp
 
 !
 !     Other local parameters
 !
-      INTEGER               INISUB
-      PARAMETER           ( INISUB = 32 )
+      integer               inisub
+      parameter           ( inisub = 32 )
 
-      INTEGER               LIMIT1
-      PARAMETER           ( LIMIT1 = 250000 )
+      integer               limit1
+      parameter           ( limit1 = 250000 )
 
 !
 !     Local variables
 !
-      CHARACTER*(INISUB)    C1
-      CHARACTER*(INISUB)    C2
-      CHARACTER*(INISUB)    CDAT   ( LIMIT1 )
-      CHARACTER*1           NF     ( LIMIT1 )
+      character*(inisub)    c1
+      character*(inisub)    c2
+      character*(inisub)    cdat   ( limit1 )
+      character*1           nf     ( limit1 )
 
-      DOUBLE PRECISION      D1
-      DOUBLE PRECISION      D2
-      DOUBLE PRECISION      DDAT   ( LIMIT1 )
+      double precision      d1
+      double precision      d2
+      double precision      ddat   ( limit1 )
 
-      INTEGER               ADDRJ
-      INTEGER               ADDRJG
-      INTEGER               CPRIME
-      INTEGER               COLPTR
-      INTEGER               CVLEN
-      INTEGER               DTYPE
-      INTEGER               ELTIDX
-      INTEGER               GAP
-      INTEGER               HANDLE
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I
-      INTEGER               IDAT   ( LIMIT1 )
-      INTEGER               J
-      INTEGER               JG
-      INTEGER               NR
-      INTEGER               NRLOC
-      INTEGER               NROWS
-      INTEGER               NTAB
-      INTEGER               ORDVEC ( LIMIT1 )
-      INTEGER               PRVBAS
-      INTEGER               ROW
-      INTEGER               RJ
-      INTEGER               RJG
-      INTEGER               ROWVEC ( MAXTAB + 1 )
-      INTEGER               RVECJ  ( MAXTAB + 1 )
-      INTEGER               RVECJG ( MAXTAB + 1 )
-      INTEGER               RVSIZE
-      INTEGER               RWVBAS
-      INTEGER               SEG
-      INTEGER               SEGVEC ( MAXTAB )
-      INTEGER               SGVBAS
-      INTEGER               SVECJ  ( MAXTAB )
-      INTEGER               SVECJG ( MAXTAB )
-      INTEGER               SVSIZE
-      INTEGER               TABLOC
-      INTEGER               TPRIME
+      integer               addrj
+      integer               addrjg
+      integer               cprime
+      integer               colptr
+      integer               cvlen
+      integer               dtype
+      integer               eltidx
+      integer               gap
+      integer               handle
+      integer               i1
+      integer               i2
+      integer               i
+      integer               idat   ( limit1 )
+      integer               j
+      integer               jg
+      integer               nr
+      integer               nrloc
+      integer               nrows
+      integer               ntab
+      integer               ordvec ( limit1 )
+      integer               prvbas
+      integer               row
+      integer               rj
+      integer               rjg
+      integer               rowvec ( maxtab + 1 )
+      integer               rvecj  ( maxtab + 1 )
+      integer               rvecjg ( maxtab + 1 )
+      integer               rvsize
+      integer               rwvbas
+      integer               seg
+      integer               segvec ( maxtab )
+      integer               sgvbas
+      integer               svecj  ( maxtab )
+      integer               svecjg ( maxtab )
+      integer               svsize
+      integer               tabloc
+      integer               tprime
 
-      LOGICAL               BRUTE
-      LOGICAL               FOUND
-      LOGICAL               JLE
-      LOGICAL               N1
-      LOGICAL               N2
-      LOGICAL               NFJ
-      LOGICAL               NFJG
-      LOGICAL               NULL
-      LOGICAL               TRUNC
+      logical               brute
+      logical               found
+      logical               jle
+      logical               n1
+      logical               n2
+      logical               nfj
+      logical               nfjg
+      logical               null
+      logical               trunc
 
 !
 !     Saved variables
@@ -351,24 +351,24 @@
 !     memory errors under Cygwin and in shared object libraries
 !     under various Unix systems.
 !
-      SAVE                  CDAT
-      SAVE                  DDAT
-      SAVE                  IDAT
-      SAVE                  NF
-      SAVE                  ORDVEC
+      save                  cdat
+      save                  ddat
+      save                  idat
+      save                  nf
+      save                  ordvec
 
 !
 !     Statement functions
 !
-      LOGICAL               INTEQ
-      LOGICAL               DPEQ
-      LOGICAL               CHREQ
-      LOGICAL               INTGE
-      LOGICAL               INTLE
-      LOGICAL               DPGE
-      LOGICAL               DPLE
-      LOGICAL               CHRGE
-      LOGICAL               CHRLE
+      logical               inteq
+      logical               dpeq
+      logical               chreq
+      logical               intge
+      logical               intle
+      logical               dpge
+      logical               dple
+      logical               chrge
+      logical               chrle
 
 !
 !
@@ -379,17 +379,17 @@
 !     the two entries are equal.
 !
 
-      INTEQ ( N1, N2, I1, I2 ) =            ( N1   .AND.    N2  )  .OR. &
-                                    (       (.NOT. (N1 .OR. N2) ) &
-                                      .AND. ( I1 .EQ. I2        )  )
+      inteq ( n1, n2, i1, i2 ) =            ( n1   .and.    n2  )  .or. &
+                                    (       (.not. (n1 .or. n2) ) &
+                                      .and. ( i1 .eq. i2        )  )
 
-      DPEQ  ( N1, N2, D1, D2 ) =            ( N1   .AND.    N2  )  .OR. &
-                                    (       (.NOT. (N1 .OR. N2) ) &
-                                      .AND. ( D1 .EQ. D2        )  )
+      dpeq  ( n1, n2, d1, d2 ) =            ( n1   .and.    n2  )  .or. &
+                                    (       (.not. (n1 .or. n2) ) &
+                                      .and. ( d1 .eq. d2        )  )
 
-      CHREQ ( N1, N2, C1, C2 ) =            ( N1   .AND.    N2  )  .OR. &
-                                    (       (.NOT. (N1 .OR. N2) ) &
-                                      .AND. ( C1 .EQ. C2        )  )
+      chreq ( n1, n2, c1, c2 ) =            ( n1   .and.    n2  )  .or. &
+                                    (       (.not. (n1 .or. n2) ) &
+                                      .and. ( c1 .eq. c2        )  )
 
 
 !
@@ -401,62 +401,62 @@
 !     to the corresponding initial substring of length INISUB of the
 !     second entry.
 !
-      INTGE  ( N1, N2, I1, I2 ) = &
+      intge  ( n1, n2, i1, i2 ) = &
 
-           N2  .OR.  (       ( .NOT. ( N1 .OR. N2 )  ) &
-                       .AND. (         I1 .GE. I2    )    )
+           n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
+                       .and. (         i1 .ge. i2    )    )
 
-      INTLE  ( N1, N2, I1, I2 ) = &
+      intle  ( n1, n2, i1, i2 ) = &
 
-           N1  .OR.  (       ( .NOT. ( N1 .OR. N2 )  ) &
-                       .AND. (         I1 .LE. I2    )    )
-
-
-
-      DPGE  ( N1, N2, D1, D2 ) = &
-
-           N2  .OR.  (       ( .NOT. ( N1 .OR. N2 )  ) &
-                       .AND. (         D1 .GE. D2    )    )
-
-      DPLE  ( N1, N2, D1, D2 ) = &
-
-           N1  .OR.  (       ( .NOT. ( N1 .OR. N2 )  ) &
-                       .AND. (         D1 .LE. D2    )    )
+           n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
+                       .and. (         i1 .le. i2    )    )
 
 
-      CHRGE ( N1, N2, C1, C2 ) = &
 
-           N2  .OR.  (       ( .NOT. ( N1 .OR. N2 )  ) &
-                       .AND. (         C1 .GE. C2    )    )
+      dpge  ( n1, n2, d1, d2 ) = &
 
-      CHRLE ( N1, N2, C1, C2 ) = &
+           n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
+                       .and. (         d1 .ge. d2    )    )
 
-           N1  .OR.  (       ( .NOT. ( N1 .OR. N2 )  ) &
-                       .AND. (         C1 .LE. C2    )    )
+      dple  ( n1, n2, d1, d2 ) = &
+
+           n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
+                       .and. (         d1 .le. d2    )    )
+
+
+      chrge ( n1, n2, c1, c2 ) = &
+
+           n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
+                       .and. (         c1 .ge. c2    )    )
+
+      chrle ( n1, n2, c1, c2 ) = &
+
+           n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
+                       .and. (         c1 .le. c2    )    )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKJSRT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKJSRT' )
+      end if
 
 !
 !     If there are no order-by columns, that's an error.
 !
-      IF ( NORDER .LT. 1 ) THEN
+      if ( norder .lt. 1 ) then
 
-         CALL SETMSG ( 'Number of order-by columns must be '      // &
+         call setmsg ( 'Number of order-by columns must be '      // &
                        'positive but was #.'                       )
-         CALL ERRINT ( '#',  NORDER                                )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-         CALL CHKOUT ( 'ZZEKJSRT'                                  )
-         RETURN
+         call errint ( '#',  norder                                )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+         call chkout ( 'ZZEKJSRT'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     We split the sorting job up into two cases:
@@ -474,29 +474,29 @@
 !
 !     Find out how many rows are in the join row set union.
 !
-      NROWS = 0
+      nrows = 0
 
-      DO I = 1, NJRS
+      do i = 1, njrs
 
-         NRLOC  =  UBASES(I) + JRCIDX
+         nrloc  =  ubases(i) + jrcidx
 
-         CALL ZZEKSRD ( NRLOC, NRLOC, NR )
+         call zzeksrd ( nrloc, nrloc, nr )
 
-         NROWS  =  NROWS     + NR
+         nrows  =  nrows     + nr
 
-      END DO
+      end do
 
 !
 !     Get the number of tables in the cartesian product represented
 !     by the join row set union.  The number of tables in the first
 !     join row set suffices.
 !
-      TABLOC = UBASES(1) + JTCIDX
+      tabloc = ubases(1) + jtcidx
 
-      CALL ZZEKSRD ( TABLOC, TABLOC, NTAB )
+      call zzeksrd ( tabloc, tabloc, ntab )
 
-      SVSIZE = NTAB
-      RVSIZE = NTAB + 1
+      svsize = ntab
+      rvsize = ntab + 1
 
 !
 !     We can get the data types of the order-by columns from the
@@ -504,23 +504,23 @@
 !     Initialize addressing in the join row set union so we can look up
 !     the locations of these vectors.
 !
-      CALL ZZEKVSET ( NJRS,      UBASES                 )
-      CALL ZZEKVCAL ( 1,         RWVBAS,         SGVBAS )
-      CALL ZZEKSRD  ( SGVBAS+1,  SGVBAS+SVSIZE,  SEGVEC )
+      call zzekvset ( njrs,      ubases                 )
+      call zzekvcal ( 1,         rwvbas,         sgvbas )
+      call zzeksrd  ( sgvbas+1,  sgvbas+svsize,  segvec )
 
-      TPRIME  =  OTABS(1)
-      CPRIME  =  OCOLS(1)
-      SEG     =  SEGVEC( TPRIME )
-      COLPTR  =  STDTPT( SEG    )
+      tprime  =  otabs(1)
+      cprime  =  ocols(1)
+      seg     =  segvec( tprime )
+      colptr  =  stdtpt( seg    )
 
-      DO I = 2, CPRIME
-         COLPTR = LNKNXT( COLPTR, DTPOOL )
-      END DO
+      do i = 2, cprime
+         colptr = lnknxt( colptr, dtpool )
+      end do
 
-      DTYPE = DTDSCS( TYPIDX, COLPTR )
+      dtype = dtdscs( typidx, colptr )
 
 
-      IF ( NROWS .LE. LIMIT1 ) THEN
+      if ( nrows .le. limit1 ) then
 !
 !        Case 1.
 !
@@ -548,177 +548,177 @@
 !        Read the primary column data.  Keep track of whether we've
 !        truncated any strings.
 !
-         TRUNC  = .FALSE.
-         PRVBAS = -1
+         trunc  = .false.
+         prvbas = -1
 
-         DO I = 1, NROWS
-
-
-            CALL ZZEKVCAL ( I, RWVBAS, SGVBAS )
+         do i = 1, nrows
 
 
-            IF (  ( I .EQ. 1 ) .OR. ( SGVBAS .NE. PRVBAS )  ) THEN
-
-               CALL ZZEKSRD  ( SGVBAS+1,  SGVBAS+SVSIZE,  SEGVEC )
-
-               SEG     =  SEGVEC( TPRIME )
-               HANDLE  =  STHAN ( SEG    )
-               COLPTR  =  STDTPT( SEG    )
-
-               DO J = 2, CPRIME
-                  COLPTR = LNKNXT( COLPTR, DTPOOL )
-               END DO
-
-            END IF
+            call zzekvcal ( i, rwvbas, sgvbas )
 
 
-            CALL ZZEKSRD  ( RWVBAS+1,  RWVBAS+RVSIZE,  ROWVEC )
+            if (  ( i .eq. 1 ) .or. ( sgvbas .ne. prvbas )  ) then
 
-            ROW     =  ROWVEC( TPRIME )
-            ELTIDX  =  OELTS ( CPRIME )
+               call zzeksrd  ( sgvbas+1,  sgvbas+svsize,  segvec )
 
+               seg     =  segvec( tprime )
+               handle  =  sthan ( seg    )
+               colptr  =  stdtpt( seg    )
 
-            IF ( DTYPE .EQ. CHR ) THEN
+               do j = 2, cprime
+                  colptr = lnknxt( colptr, dtpool )
+               end do
 
-               CALL ZZEKRSC ( HANDLE, &
-                              STSDSC(1,SEG), &
-                              DTDSCS(1,COLPTR), &
-                              ROW, &
-                              ELTIDX, &
-                              CVLEN, &
-                              CDAT(I), &
-                              NULL, &
-                              FOUND            )
+            end if
 
 
-               IF ( .NOT. FOUND ) THEN
+            call zzeksrd  ( rwvbas+1,  rwvbas+rvsize,  rowvec )
 
-                  CALL SETMSG ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
+            row     =  rowvec( tprime )
+            eltidx  =  oelts ( cprime )
+
+
+            if ( dtype .eq. chr ) then
+
+               call zzekrsc ( handle, &
+                              stsdsc(1,seg), &
+                              dtdscs(1,colptr), &
+                              row, &
+                              eltidx, &
+                              cvlen, &
+                              cdat(i), &
+                              null, &
+                              found            )
+
+
+               if ( .not. found ) then
+
+                  call setmsg ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
                                 '= #; ELT = #; column entry elt '   // &
                                 'was not found.'                    )
-                  CALL ERRHAN ( '#',  HANDLE                        )
-                  CALL ERRINT ( '#',  SEG                           )
-                  CALL ERRINT ( '#',  ROW                           )
-                  CALL ERRINT ( '#',  DTDSCS(ORDIDX,COLPTR)         )
-                  CALL ERRINT ( '#',  ELTIDX                        )
-                  CALL SIGERR ( 'SPICE(BUG)'                        )
-                  CALL CHKOUT ( 'ZZEKJSRT'                          )
-                  RETURN
+                  call errhan ( '#',  handle                        )
+                  call errint ( '#',  seg                           )
+                  call errint ( '#',  row                           )
+                  call errint ( '#',  dtdscs(ordidx,colptr)         )
+                  call errint ( '#',  eltidx                        )
+                  call sigerr ( 'SPICE(BUG)'                        )
+                  call chkout ( 'ZZEKJSRT'                          )
+                  return
 
-               END IF
+               end if
 
-               TRUNC = TRUNC .OR. ( CVLEN  .GT.  INISUB )
-
-
-            ELSE IF (  ( DTYPE .EQ. DP ) .OR. ( DTYPE .EQ. TIME ) ) THEN
-
-               CALL ZZEKRSD ( HANDLE, &
-                              STSDSC(1,SEG), &
-                              DTDSCS(1,COLPTR), &
-                              ROW, &
-                              ELTIDX, &
-                              DDAT(I), &
-                              NULL, &
-                              FOUND              )
+               trunc = trunc .or. ( cvlen  .gt.  inisub )
 
 
-               IF ( .NOT. FOUND ) THEN
+            else if (  ( dtype .eq. dp ) .or. ( dtype .eq. time ) ) then
 
-                  CALL SETMSG ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
+               call zzekrsd ( handle, &
+                              stsdsc(1,seg), &
+                              dtdscs(1,colptr), &
+                              row, &
+                              eltidx, &
+                              ddat(i), &
+                              null, &
+                              found              )
+
+
+               if ( .not. found ) then
+
+                  call setmsg ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
                                 '= #; ELT = #; column entry elt '   // &
                                 'was not found.'                    )
-                  CALL ERRHAN ( '#',  HANDLE                        )
-                  CALL ERRINT ( '#',  SEG                           )
-                  CALL ERRINT ( '#',  ROW                           )
-                  CALL ERRINT ( '#',  DTDSCS(ORDIDX,COLPTR)         )
-                  CALL ERRINT ( '#',  ELTIDX                        )
-                  CALL SIGERR ( 'SPICE(BUG)'                        )
-                  CALL CHKOUT ( 'ZZEKJSRT'                          )
-                  RETURN
+                  call errhan ( '#',  handle                        )
+                  call errint ( '#',  seg                           )
+                  call errint ( '#',  row                           )
+                  call errint ( '#',  dtdscs(ordidx,colptr)         )
+                  call errint ( '#',  eltidx                        )
+                  call sigerr ( 'SPICE(BUG)'                        )
+                  call chkout ( 'ZZEKJSRT'                          )
+                  return
 
-               END IF
-
-
-
-            ELSE IF (  DTYPE .EQ. INT ) THEN
-
-               CALL ZZEKRSI ( HANDLE, &
-                              STSDSC(1,SEG), &
-                              DTDSCS(1,COLPTR), &
-                              ROW, &
-                              ELTIDX, &
-                              IDAT(I), &
-                              NULL, &
-                              FOUND             )
+               end if
 
 
-               IF ( .NOT. FOUND ) THEN
 
-                  CALL SETMSG ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
+            else if (  dtype .eq. int ) then
+
+               call zzekrsi ( handle, &
+                              stsdsc(1,seg), &
+                              dtdscs(1,colptr), &
+                              row, &
+                              eltidx, &
+                              idat(i), &
+                              null, &
+                              found             )
+
+
+               if ( .not. found ) then
+
+                  call setmsg ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
                                 '= #; ELT = #; column entry elt '   // &
                                 'was not found.'                    )
-                  CALL ERRHAN ( '#',  HANDLE                        )
-                  CALL ERRINT ( '#',  SEG                           )
-                  CALL ERRINT ( '#',  ROW                           )
-                  CALL ERRINT ( '#',  DTDSCS(ORDIDX,COLPTR)         )
-                  CALL ERRINT ( '#',  ELTIDX                        )
-                  CALL SIGERR ( 'SPICE(BUG)'                        )
-                  CALL CHKOUT ( 'ZZEKJSRT'                          )
-                  RETURN
+                  call errhan ( '#',  handle                        )
+                  call errint ( '#',  seg                           )
+                  call errint ( '#',  row                           )
+                  call errint ( '#',  dtdscs(ordidx,colptr)         )
+                  call errint ( '#',  eltidx                        )
+                  call sigerr ( 'SPICE(BUG)'                        )
+                  call chkout ( 'ZZEKJSRT'                          )
+                  return
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              We must have a bogus column descriptor.
 !
-               CALL SETMSG ( 'Unrecognized data type # for first ' // &
+               call setmsg ( 'Unrecognized data type # for first ' // &
                              'column.'                              )
-               CALL ERRINT ( '#', DTYPE                             )
-               CALL SIGERR ( 'SPICE(INVALIDTYPE)'                   )
-               CALL CHKOUT ( 'ZZEKJSRT'                             )
-               RETURN
+               call errint ( '#', dtype                             )
+               call sigerr ( 'SPICE(INVALIDTYPE)'                   )
+               call chkout ( 'ZZEKJSRT'                             )
+               return
 
-            END IF
+            end if
 
 !
 !           Set the character null flag for the current column entry.
 !
-            IF ( NULL ) THEN
-               NF(I)  =  CTRUE
-            ELSE
-               NF(I)  =  CFALSE
-            END IF
+            if ( null ) then
+               nf(i)  =  ctrue
+            else
+               nf(i)  =  cfalse
+            end if
 
 
-            PRVBAS  =  SGVBAS
+            prvbas  =  sgvbas
 
-         END DO
+         end do
 
 !
 !        Initialize the order vector.
 !
-         DO I = 1, NROWS
-            ORDVEC(I) = I
-         END DO
+         do i = 1, nrows
+            ordvec(i) = i
+         end do
 
 !
 !        At this point, we've read in the data for the primary order-by
 !        column, and also have set the null flag array for the column.
 !        We're ready to proceed with our sort.
 !
-         GAP = NROWS / 2
+         gap = nrows / 2
 
-         DO WHILE ( GAP .GT. 0 )
+         do while ( gap .gt. 0 )
 
-            DO I = GAP+1, NROWS
+            do i = gap+1, nrows
 
-               J = I - GAP
+               j = i - gap
 
-               DO WHILE ( J .GT. 0 )
+               do while ( j .gt. 0 )
 
-                  JG = J + GAP
+                  jg = j + gap
 !
 !                 Compare the Jth and JGth rows of the row set.  The
 !                 logical JLE is TRUE when the Jth element is less than
@@ -731,199 +731,199 @@
 !                 Set the data array indices of the Jth and JGth
 !                 elements, as indicated by the order vector.
 !
-                  RJ    =   ORDVEC(J)
-                  RJG   =   ORDVEC(JG)
+                  rj    =   ordvec(j)
+                  rjg   =   ordvec(jg)
 
-                  NFJ   =   NF(RJ )  .EQ. CTRUE
-                  NFJG  =   NF(RJG)  .EQ. CTRUE
+                  nfj   =   nf(rj )  .eq. ctrue
+                  nfjg  =   nf(rjg)  .eq. ctrue
 
 !
 !                 Start out hoping for the best:  that we won't have
 !                 to do a brute-force comparison.
 !
-                  BRUTE = .FALSE.
+                  brute = .false.
 
 
-                  IF ( DTYPE .EQ. INT ) THEN
+                  if ( dtype .eq. int ) then
 
-                     IF ( NORDER .EQ. 1 ) THEN
+                     if ( norder .eq. 1 ) then
 !
 !                       We can make a decision based on the data in
 !                       memory.
 !
-                        IF ( SENSES(1) .EQ. EQASND ) THEN
+                        if ( senses(1) .eq. eqasnd ) then
 
-                           JLE = INTLE( NFJ, NFJG, IDAT(RJ), IDAT(RJG) )
-                        ELSE
-                           JLE = INTGE( NFJ, NFJG, IDAT(RJ), IDAT(RJG) )
-                        END IF
+                           jle = intle( nfj, nfjg, idat(rj), idat(rjg) )
+                        else
+                           jle = intge( nfj, nfjg, idat(rj), idat(rjg) )
+                        end if
 
 
-                     ELSE IF ( .NOT. INTEQ ( NFJ,      NFJG, &
-                                             IDAT(RJ), IDAT(RJG) ) )THEN
+                     else if ( .not. inteq ( nfj,      nfjg, &
+                                             idat(rj), idat(rjg) ) )then
 !
 !                       If the items we're comparing are unequal, we can
 !                       still make a decision.
 !
-                        IF ( SENSES(1) .EQ. EQASND ) THEN
+                        if ( senses(1) .eq. eqasnd ) then
 
-                           JLE = INTLE( NFJ, NFJG, IDAT(RJ), IDAT(RJG) )
-                        ELSE
-                           JLE = INTGE( NFJ, NFJG, IDAT(RJ), IDAT(RJG) )
-                        END IF
+                           jle = intle( nfj, nfjg, idat(rj), idat(rjg) )
+                        else
+                           jle = intge( nfj, nfjg, idat(rj), idat(rjg) )
+                        end if
 
 
-                     ELSE
+                     else
 !
 !                       Otherwise, we'll have to look at values in the
 !                       other order-by columns.  Get the segment and
 !                       row vectors to be compared.
 !
-                        BRUTE  =  .TRUE.
+                        brute  =  .true.
 
-                     END IF
+                     end if
 
 
 
-                  ELSE IF (     ( DTYPE .EQ. DP   ) &
-                           .OR. ( DTYPE .EQ. TIME )  ) THEN
+                  else if (     ( dtype .eq. dp   ) &
+                           .or. ( dtype .eq. time )  ) then
 
 !
 !                    The D.P. case parallels the integer case.
 !
-                     IF ( NORDER .EQ. 1 ) THEN
+                     if ( norder .eq. 1 ) then
 
-                        IF ( SENSES(1) .EQ. EQASND ) THEN
+                        if ( senses(1) .eq. eqasnd ) then
 
-                           JLE = DPLE( NFJ, NFJG, DDAT(RJ), DDAT(RJG) )
-                        ELSE
-                           JLE = DPGE( NFJ, NFJG, DDAT(RJ), DDAT(RJG) )
-                        END IF
-
-
-                     ELSE IF ( .NOT. DPEQ ( NFJ,      NFJG, &
-                                            DDAT(RJ), DDAT(RJG) )  )THEN
-
-                        IF ( SENSES(1) .EQ. EQASND ) THEN
-
-                           JLE = DPLE( NFJ, NFJG, DDAT(RJ), DDAT(RJG) )
-                        ELSE
-                           JLE = DPGE( NFJ, NFJG, DDAT(RJ), DDAT(RJG) )
-                        END IF
+                           jle = dple( nfj, nfjg, ddat(rj), ddat(rjg) )
+                        else
+                           jle = dpge( nfj, nfjg, ddat(rj), ddat(rjg) )
+                        end if
 
 
-                     ELSE
+                     else if ( .not. dpeq ( nfj,      nfjg, &
+                                            ddat(rj), ddat(rjg) )  )then
+
+                        if ( senses(1) .eq. eqasnd ) then
+
+                           jle = dple( nfj, nfjg, ddat(rj), ddat(rjg) )
+                        else
+                           jle = dpge( nfj, nfjg, ddat(rj), ddat(rjg) )
+                        end if
+
+
+                     else
 !
 !                       Otherwise, we'll have to look at values in the
 !                       other order-by columns.  Get the segment and
 !                       row vectors to be compared.
 !
-                        BRUTE  =  .TRUE.
+                        brute  =  .true.
 
-                     END IF
+                     end if
 
 
-                  ELSE
+                  else
 
 !
 !                    In the character case where there is one order-by
 !                    column, equality is a problem unless no truncation
 !                    occurred.
 !
-                     IF ( ( NORDER .EQ. 1 ) .AND. ( .NOT. TRUNC ) ) THEN
+                     if ( ( norder .eq. 1 ) .and. ( .not. trunc ) ) then
 
-                        IF ( SENSES(1) .EQ. EQASND ) THEN
+                        if ( senses(1) .eq. eqasnd ) then
 
-                           JLE = CHRLE( NFJ, NFJG, CDAT(RJ), CDAT(RJG) )
-                        ELSE
-                           JLE = CHRGE( NFJ, NFJG, CDAT(RJ), CDAT(RJG) )
-                        END IF
+                           jle = chrle( nfj, nfjg, cdat(rj), cdat(rjg) )
+                        else
+                           jle = chrge( nfj, nfjg, cdat(rj), cdat(rjg) )
+                        end if
 
 
-                     ELSE IF ( .NOT. CHREQ ( NFJ,      NFJG, &
-                                             CDAT(RJ), CDAT(RJG) ) )THEN
+                     else if ( .not. chreq ( nfj,      nfjg, &
+                                             cdat(rj), cdat(rjg) ) )then
 !
 !                       If the items we're comparing are unequal, we can
 !                       still make a decision.
 !
-                        IF ( SENSES(1) .EQ. EQASND ) THEN
+                        if ( senses(1) .eq. eqasnd ) then
 
-                           JLE = CHRLE( NFJ, NFJG, CDAT(RJ), CDAT(RJG) )
-                        ELSE
-                           JLE = CHRGE( NFJ, NFJG, CDAT(RJ), CDAT(RJG) )
-                        END IF
+                           jle = chrle( nfj, nfjg, cdat(rj), cdat(rjg) )
+                        else
+                           jle = chrge( nfj, nfjg, cdat(rj), cdat(rjg) )
+                        end if
 
 
-                     ELSE
+                     else
 !
 !                       Otherwise, we'll have to look at values in the
 !                       other order-by columns.  Get the segment and
 !                       row vectors to be compared.
 !
-                        BRUTE  =  .TRUE.
+                        brute  =  .true.
 
-                     END IF
-
-
-                  END IF
+                     end if
 
 
-                  IF ( BRUTE ) THEN
+                  end if
 
-                     CALL ZZEKVCAL  ( RJ,       RWVBAS,        SGVBAS )
-                     CALL ZZEKSRD   ( SGVBAS+1, SGVBAS+SVSIZE, SVECJ  )
-                     CALL ZZEKSRD   ( RWVBAS+1, RWVBAS+RVSIZE, RVECJ  )
 
-                     CALL ZZEKVCAL  ( RJG,      RWVBAS,        SGVBAS )
-                     CALL ZZEKSRD   ( SGVBAS+1, SGVBAS+SVSIZE, SVECJG )
-                     CALL ZZEKSRD   ( RWVBAS+1, RWVBAS+RVSIZE, RVECJG )
+                  if ( brute ) then
 
-                     JLE = ZZEKVCMP ( LE,       NORDER,        OTABS, &
-                                      OCOLS,    OELTS,         SENSES, &
-                                      STHAN,    STSDSC,        STDTPT, &
-                                      DTPOOL,   DTDSCS,        SVECJ, &
-                                      RVECJ,    SVECJG,        RVECJG )
-                  END IF
+                     call zzekvcal  ( rj,       rwvbas,        sgvbas )
+                     call zzeksrd   ( sgvbas+1, sgvbas+svsize, svecj  )
+                     call zzeksrd   ( rwvbas+1, rwvbas+rvsize, rvecj  )
+
+                     call zzekvcal  ( rjg,      rwvbas,        sgvbas )
+                     call zzeksrd   ( sgvbas+1, sgvbas+svsize, svecjg )
+                     call zzeksrd   ( rwvbas+1, rwvbas+rvsize, rvecjg )
+
+                     jle = zzekvcmp ( le,       norder,        otabs, &
+                                      ocols,    oelts,         senses, &
+                                      sthan,    stsdsc,        stdtpt, &
+                                      dtpool,   dtdscs,        svecj, &
+                                      rvecj,    svecjg,        rvecjg )
+                  end if
 
 !
 !                 At this point, JLE is set.
 !
-                  IF ( JLE ) THEN
+                  if ( jle ) then
 
-                     J = 0
+                     j = 0
 
-                  ELSE
+                  else
 !
 !                    Swap the Jth and JGth elements of the order vector.
 !
-                     CALL SWAPI ( ORDVEC(J), ORDVEC(JG) )
+                     call swapi ( ordvec(j), ordvec(jg) )
 
-                  END IF
+                  end if
 
-                  J = J - GAP
+                  j = j - gap
 
-               END DO
+               end do
 
-            END DO
+            end do
 
 !
 !           The following division guarantees loop termination, even
 !           if a DAS error occurs.
 !
-            GAP = GAP / 2
+            gap = gap / 2
 
-         END DO
+         end do
 
 !
 !        We've sorted the row numbers in Case 1.  Push the order vector
 !        onto the scratch area stack.
 !
-         CALL ZZEKSTOP ( ORDBAS )
+         call zzekstop ( ordbas )
 
-         CALL ZZEKSPSH ( NROWS, ORDVEC )
+         call zzekspsh ( nrows, ordvec )
 
 
-      ELSE
+      else
 
 !
 !        Case 2.
@@ -931,11 +931,11 @@
 !        Well, we really have a lot of data.  Don't try to read it into
 !        memory.  Build the order vector in the scratch area.
 !
-         CALL ZZEKSTOP ( ORDBAS )
+         call zzekstop ( ordbas )
 
-         DO I = 1, NROWS
-            CALL ZZEKSPSH ( 1, I )
-         END DO
+         do i = 1, nrows
+            call zzekspsh ( 1, i )
+         end do
 
 !
 !        Re-order the order vector elements to reflect the order of the
@@ -943,76 +943,76 @@
 !        swaps the elements of the order vector instead of the rows
 !        themselves.
 !
-         GAP = NROWS / 2
+         gap = nrows / 2
 
-         DO WHILE ( GAP .GT. 0 )
+         do while ( gap .gt. 0 )
 
-            DO I = GAP+1, NROWS
+            do i = gap+1, nrows
 
-               J = I - GAP
+               j = i - gap
 
-               DO WHILE ( J .GT. 0 )
+               do while ( j .gt. 0 )
 
-                  JG = J + GAP
+                  jg = j + gap
 !
 !                 Set the indices of the Jth and JGth
 !                 row vectors, as indicated by the order vector.
 !
-                  CALL ZZEKSRD ( ORDBAS+J,  ORDBAS+J,  RJ  )
-                  CALL ZZEKSRD ( ORDBAS+JG, ORDBAS+JG, RJG )
+                  call zzeksrd ( ordbas+j,  ordbas+j,  rj  )
+                  call zzeksrd ( ordbas+jg, ordbas+jg, rjg )
 
 !
 !                 Compare the two row vectors.
 !
-                  CALL ZZEKVCAL  ( RJ,       RWVBAS,        SGVBAS )
-                  CALL ZZEKSRD   ( SGVBAS+1, SGVBAS+SVSIZE, SVECJ  )
-                  CALL ZZEKSRD   ( RWVBAS+1, RWVBAS+RVSIZE, RVECJ  )
+                  call zzekvcal  ( rj,       rwvbas,        sgvbas )
+                  call zzeksrd   ( sgvbas+1, sgvbas+svsize, svecj  )
+                  call zzeksrd   ( rwvbas+1, rwvbas+rvsize, rvecj  )
 
-                  CALL ZZEKVCAL  ( RJG,      RWVBAS,        SGVBAS )
-                  CALL ZZEKSRD   ( SGVBAS+1, SGVBAS+SVSIZE, SVECJG )
-                  CALL ZZEKSRD   ( RWVBAS+1, RWVBAS+RVSIZE, RVECJG )
+                  call zzekvcal  ( rjg,      rwvbas,        sgvbas )
+                  call zzeksrd   ( sgvbas+1, sgvbas+svsize, svecjg )
+                  call zzeksrd   ( rwvbas+1, rwvbas+rvsize, rvecjg )
 
-                  IF (  ZZEKVCMP ( LE,       NORDER,   OTABS, &
-                                   OCOLS,    OELTS,    SENSES, &
-                                   STHAN,    STSDSC,   STDTPT, &
-                                   DTPOOL,   DTDSCS,   SVECJ, &
-                                   RVECJ,    SVECJG,   RVECJG )  ) THEN
-                     J = 0
+                  if (  zzekvcmp ( le,       norder,   otabs, &
+                                   ocols,    oelts,    senses, &
+                                   sthan,    stsdsc,   stdtpt, &
+                                   dtpool,   dtdscs,   svecj, &
+                                   rvecj,    svecjg,   rvecjg )  ) then
+                     j = 0
 
-                  ELSE
+                  else
 !
 !                    Swap the order vector's Jth and JGth elements.
 !
-                     ADDRJ  =  ORDBAS+J
-                     ADDRJG =  ORDBAS+JG
+                     addrj  =  ordbas+j
+                     addrjg =  ordbas+jg
 
-                     CALL ZZEKSUPD ( ADDRJ,  ADDRJ,  RJG )
-                     CALL ZZEKSUPD ( ADDRJG, ADDRJG, RJ  )
+                     call zzeksupd ( addrj,  addrj,  rjg )
+                     call zzeksupd ( addrjg, addrjg, rj  )
 
-                  END IF
+                  end if
 
-                  J = J - GAP
+                  j = j - gap
 
-               END DO
+               end do
 
-            END DO
+            end do
 
 !
 !           The following division guarantees loop termination, even
 !           if a DAS error occurs.
 !
-            GAP = GAP / 2
+            gap = gap / 2
 
-         END DO
+         end do
 !
 !        We've sorted the row numbers for case (2).
 !
 
-      END IF
+      end if
 !
 !     We've sorted the row numbers, no matter how many there were.
 !
 
-      CALL CHKOUT ( 'ZZEKJSRT' )
-      RETURN
-      END
+      call chkout ( 'ZZEKJSRT' )
+      return
+      end

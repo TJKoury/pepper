@@ -1,6 +1,6 @@
 !$Procedure LX4NUM (Scan for a number)
 
-      SUBROUTINE LX4NUM ( STRING, FIRST, LAST, NCHAR )
+      subroutine lx4num ( string, first, last, nchar )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               NCHAR
+      character*(*)         string
+      integer               first
+      integer               last
+      integer               nchar
 
 ! $ Brief_I/O
 !
@@ -151,62 +151,62 @@
 !-&
 
 
-      INTEGER               F
-      INTEGER               I
-      INTEGER               L
-      INTEGER               N
-      INTEGER               TEMP
+      integer               f
+      integer               i
+      integer               l
+      integer               n
+      integer               temp
 
-      LAST  = FIRST - 1
-      L     = LEN ( STRING )
+      last  = first - 1
+      l     = len ( string )
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      IF ( FIRST .LT. 1 .OR. FIRST .GT. L ) THEN
-         NCHAR = 0
-         RETURN
-      END IF
+      if ( first .lt. 1 .or. first .gt. l ) then
+         nchar = 0
+         return
+      end if
 !
 !     If this is a number, it must begin with a decimal number
 !     substring.
 !
-      CALL LX4DEC ( STRING, FIRST, LAST, NCHAR )
+      call lx4dec ( string, first, last, nchar )
 
-      IF ( NCHAR .GT. 0 .AND. LAST .LT. L ) THEN
+      if ( nchar .gt. 0 .and. last .lt. l ) then
 
-         F = LAST + 1
-         I = ICHAR ( STRING(F:F) )
+         f = last + 1
+         i = ichar ( string(f:f) )
 !
 !        See if we have an exponent.
 !
-         IF (      I .EQ. ICHAR('e') &
-              .OR. I .EQ. ICHAR('E') &
-              .OR. I .EQ. ICHAR('D') &
-              .OR. I .EQ. ICHAR('d') ) THEN
+         if (      i .eq. ichar('e') &
+              .or. i .eq. ichar('E') &
+              .or. i .eq. ichar('D') &
+              .or. i .eq. ichar('d') ) then
 !
 !           Starting after the exponent character see
 !           if we have a signed integer.
 !
-            F = F + 1
+            f = f + 1
 
-            CALL LX4SGN ( STRING, F, TEMP, N )
+            call lx4sgn ( string, f, temp, n )
 !
 !           If there was a signed integer, N will be bigger than
 !           zero and TEMP will point to the last character of
 !           the number.  Otherwise we just fall through and leave
 !           LAST and NCHAR alone.
 !
-            IF ( N .GT. 0 ) THEN
+            if ( n .gt. 0 ) then
 
-               LAST  = TEMP
-               NCHAR = LAST + 1 - FIRST
+               last  = temp
+               nchar = last + 1 - first
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

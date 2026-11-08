@@ -1,6 +1,6 @@
 !$Procedure SWAPD ( Swap double precision values )
 
-      SUBROUTINE SWAPD ( A, B )
+      subroutine swapd ( a, b )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   A
-      DOUBLE PRECISION   B
+      double precision   a
+      double precision   b
 
 ! $ Brief_I/O
 !
@@ -113,16 +113,16 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION TEMP
+      double precision temp
 
 
 
 !
 !     What is there to say?
 !
-      TEMP = A
-      A    = B
-      B    = TEMP
+      temp = a
+      a    = b
+      b    = temp
 
-      RETURN
-      END
+      return
+      end

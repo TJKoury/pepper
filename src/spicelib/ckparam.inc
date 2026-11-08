@@ -49,11 +49,11 @@
 !     Number of quaternion components and number of quaternion and
 !     angular rate components together.
 !
-      INTEGER               QSIZ
-      PARAMETER           ( QSIZ   = 4 )
+      integer               qsiz
+      parameter           ( qsiz   = 4 )
 
-      INTEGER               QAVSIZ
-      PARAMETER           ( QAVSIZ = 7 )
+      integer               qavsiz
+      parameter           ( qavsiz = 7 )
 
 !
 !     CK Type 1 parameters:
@@ -63,11 +63,11 @@
 !     CK1RSZ   maximum size of a record passed between CKR01
 !              and CKE01.
 !
-      INTEGER               CK1DTP
-      PARAMETER           ( CK1DTP = 1 )
+      integer               ck1dtp
+      parameter           ( ck1dtp = 1 )
 
-      INTEGER               CK1RSZ
-      PARAMETER           ( CK1RSZ = 8 )
+      integer               ck1rsz
+      parameter           ( ck1rsz = 8 )
 
 !
 !     CK Type 2 parameters:
@@ -77,11 +77,11 @@
 !     CK2RSZ   maximum size of a record passed between CKR02
 !              and CKE02.
 !
-      INTEGER               CK2DTP
-      PARAMETER           ( CK2DTP = 2 )
+      integer               ck2dtp
+      parameter           ( ck2dtp = 2 )
 
-      INTEGER               CK2RSZ
-      PARAMETER           ( CK2RSZ = 10 )
+      integer               ck2rsz
+      parameter           ( ck2rsz = 10 )
 
 
 !
@@ -92,11 +92,11 @@
 !     CK3RSZ   maximum size of a record passed between CKR03
 !              and CKE03.
 !
-      INTEGER               CK3DTP
-      PARAMETER           ( CK3DTP = 3 )
+      integer               ck3dtp
+      parameter           ( ck3dtp = 3 )
 
-      INTEGER               CK3RSZ
-      PARAMETER           ( CK3RSZ = 17 )
+      integer               ck3rsz
+      parameter           ( ck3rsz = 17 )
 
 !
 !     CK Type 4 parameters:
@@ -124,20 +124,20 @@
 !
 !                 CK4RSZ = ( CK4MXD + 1 ) * QAVSIZ + CK4SFT
 !
-      INTEGER               CK4DTP
-      PARAMETER           ( CK4DTP = 4 )
+      integer               ck4dtp
+      parameter           ( ck4dtp = 4 )
 
-      DOUBLE PRECISION      CK4PCD
-      PARAMETER           ( CK4PCD = 128.D0 )
+      double precision      ck4pcd
+      parameter           ( ck4pcd = 128.d0 )
 
-      INTEGER               CK4MXD
-      PARAMETER           ( CK4MXD = 18 )
+      integer               ck4mxd
+      parameter           ( ck4mxd = 18 )
 
-      INTEGER               CK4SFT
-      PARAMETER           ( CK4SFT = 10 )
+      integer               ck4sft
+      parameter           ( ck4sft = 10 )
 
-      INTEGER               CK4RSZ
-      PARAMETER           ( CK4RSZ = ( CK4MXD + 1 ) * QAVSIZ + CK4SFT )
+      integer               ck4rsz
+      parameter           ( ck4rsz = ( ck4mxd + 1 ) * qavsiz + ck4sft )
 
 !
 !     CK Type 5 parameters:
@@ -163,20 +163,20 @@
 !
 !                 CK5RSZ = ( CK5MXD + 1 ) * CK5MXP + CK5MET
 !
-      INTEGER               CK5DTP
-      PARAMETER           ( CK5DTP = 5 )
+      integer               ck5dtp
+      parameter           ( ck5dtp = 5 )
 
-      INTEGER               CK5MXD
-      PARAMETER           ( CK5MXD = 23 )
+      integer               ck5mxd
+      parameter           ( ck5mxd = 23 )
 
-      INTEGER               CK5MET
-      PARAMETER           ( CK5MET =  4 )
+      integer               ck5met
+      parameter           ( ck5met =  4 )
 
-      INTEGER               CK5MXP
-      PARAMETER           ( CK5MXP = 14 )
+      integer               ck5mxp
+      parameter           ( ck5mxp = 14 )
 
-      INTEGER               CK5RSZ
-      PARAMETER           ( CK5RSZ = (CK5MXD + 1) * CK5MXP  +  CK5MET )
+      integer               ck5rsz
+      parameter           ( ck5rsz = (ck5mxd + 1) * ck5mxp  +  ck5met )
 
 
 !
@@ -210,25 +210,25 @@
 !              requires half the window size used by subtype 3 for a
 !              given polynomial degree.
 !
-      INTEGER               CK6DTP
-      PARAMETER           ( CK6DTP =  6 )
+      integer               ck6dtp
+      parameter           ( ck6dtp =  6 )
 
-      INTEGER               CK6MXD
-      PARAMETER           ( CK6MXD = 23 )
+      integer               ck6mxd
+      parameter           ( ck6mxd = 23 )
 
-      INTEGER               CK6MET
-      PARAMETER           ( CK6MET =  4 )
+      integer               ck6met
+      parameter           ( ck6met =  4 )
 
 !
 !     The parameter CK6PS3 must be in sync with C06PS3 defined in
 !     ck06.inc.
 !
-      INTEGER               CK6PS3
-      PARAMETER           ( CK6PS3 = 7 )
+      integer               ck6ps3
+      parameter           ( ck6ps3 = 7 )
 
-      INTEGER               CK6RSZ
-      PARAMETER           ( CK6RSZ =   ( CK6MXD + 1 ) * ( CK6PS3 + 1 ) &
-                                     +   CK6MET                        )
+      integer               ck6rsz
+      parameter           ( ck6rsz =   ( ck6mxd + 1 ) * ( ck6ps3 + 1 ) &
+                                     +   ck6met                        )
 
 !
 !
@@ -236,6 +236,6 @@
 !     must be set to the maximum of all CKxRSZ parameters (currently
 !     CK5RSZ.)
 !
-      INTEGER               CKMRSZ
-      PARAMETER           ( CKMRSZ = CK5RSZ )
+      integer               ckmrsz
+      parameter           ( ckmrsz = ck5rsz )
 

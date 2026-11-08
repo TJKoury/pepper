@@ -1,6 +1,6 @@
 !$Procedure WNVALD ( Validate a DP window )
 
-      SUBROUTINE WNVALD ( SIZE, N, WINDOW )
+      subroutine wnvald ( size, n, window )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               SIZE
-      INTEGER               N
-      DOUBLE PRECISION      WINDOW ( LBCELL:* )
+      integer               size
+      integer               n
+      double precision      window ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -247,41 +247,41 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ODD
-      LOGICAL               RETURN
+      logical               odd
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      INTEGER               I
+      double precision      left
+      double precision      right
+      integer               i
 
 !
 !     Setting up error processing.
 !
-      IF ( RETURN () ) RETURN
-      CALL CHKIN ( 'WNVALD' )
+      if ( return () ) return
+      call chkin ( 'WNVALD' )
 
 !
 !     First, some error checks. The number of endpoints must be even,
 !     and smaller than the reported size of the window.
 !
-      IF ( ODD ( N ) ) THEN
+      if ( odd ( n ) ) then
 
-         CALL SETMSG ( 'WNVALD: Unmatched endpoints' )
-         CALL SIGERR ( 'SPICE(UNMATCHENDPTS)' )
-         CALL CHKOUT ( 'WNVALD' )
-         RETURN
+         call setmsg ( 'WNVALD: Unmatched endpoints' )
+         call sigerr ( 'SPICE(UNMATCHENDPTS)' )
+         call chkout ( 'WNVALD' )
+         return
 
-      ELSE IF ( N .GT. SIZE ) THEN
+      else if ( n .gt. size ) then
 
-         CALL SETMSG ( 'WNVALD: Inconsistent value for SIZE.' )
-         CALL SIGERR ( 'SPICE(WINDOWTOOSMALL)' )
-         CALL CHKOUT ( 'WNVALD' )
-         RETURN
+         call setmsg ( 'WNVALD: Inconsistent value for SIZE.' )
+         call sigerr ( 'SPICE(WINDOWTOOSMALL)' )
+         call chkout ( 'WNVALD' )
+         return
 
-      END IF
+      end if
 
 !
 !     Taking the easy way out, we will simply insert each new interval
@@ -292,30 +292,30 @@
 !     the corresponding left endpoint. This is a boo-boo, and should be
 !     reported.
 !
-      CALL SSIZED ( SIZE, WINDOW )
-      CALL SCARDD (    0, WINDOW )
+      call ssized ( size, window )
+      call scardd (    0, window )
 
-      I = 1
+      i = 1
 
-      DO WHILE  ( I .LT. N )
+      do while  ( i .lt. n )
 
-         LEFT  = WINDOW(I)
-         RIGHT = WINDOW(I+1)
+         left  = window(i)
+         right = window(i+1)
 
-         IF ( LEFT .GT. RIGHT ) THEN
-           CALL SETMSG ( 'WNVALD: Left endpoint may not exceed ' // &
+         if ( left .gt. right ) then
+           call setmsg ( 'WNVALD: Left endpoint may not exceed ' // &
                          'right endpoint.'                        )
-           CALL SIGERR ( 'SPICE(BADENDPOINTS)'                    )
-           CALL CHKOUT ( 'WNVALD'                                 )
-           RETURN
-         END IF
+           call sigerr ( 'SPICE(BADENDPOINTS)'                    )
+           call chkout ( 'WNVALD'                                 )
+           return
+         end if
 
-         CALL WNINSD ( LEFT, RIGHT, WINDOW )
-         I = I + 2
+         call wninsd ( left, right, window )
+         i = i + 2
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'WNVALD' )
+      call chkout ( 'WNVALD' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,11 +1,11 @@
 !$Procedure ZZDDHINI ( Private --- DDH Initialize Structures )
 
-      SUBROUTINE ZZDDHINI ( NATBFF, &
-                            SUPBFF, &
-                            NUMSUP, &
-                            STRAMH, &
-                            STRARC, &
-                            STRBFF  )
+      subroutine zzddhini ( natbff, &
+                            supbff, &
+                            numsup, &
+                            stramh, &
+                            strarc, &
+                            strbff  )
 
 ! $ Abstract
 !
@@ -25,16 +25,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               NATBFF
-      INTEGER               SUPBFF ( * )
-      INTEGER               NUMSUP
-      CHARACTER*(*)         STRAMH ( * )
-      CHARACTER*(*)         STRARC ( * )
-      CHARACTER*(*)         STRBFF ( * )
+      integer               natbff
+      integer               supbff ( * )
+      integer               numsup
+      character*(*)         stramh ( * )
+      character*(*)         strarc ( * )
+      character*(*)         strbff ( * )
 
 ! $ Brief_I/O
 !
@@ -132,123 +132,123 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
+      integer               isrchc
+      logical               return
 
 !
 !     Local Variables.
 !
-      CHARACTER*(STRLEN)    LINSTR
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(strlen)    linstr
+      character*(strsiz)    tmpstr
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               DONE
+      logical               done
 
 !
 !     Standard SPICE error handling with discovery check in/out.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Populate the STR### arrays.
 !
-      DO I = 1, NUMAMH
-         CALL ZZDDHGSD ( 'METHOD', I, STRAMH(I) )
-      END DO
+      do i = 1, numamh
+         call zzddhgsd ( 'METHOD', i, stramh(i) )
+      end do
 
-      DO I = 1, NUMARC
-         CALL ZZDDHGSD ( 'ARCH', I, STRARC(I) )
-      END DO
+      do i = 1, numarc
+         call zzddhgsd ( 'ARCH', i, strarc(i) )
+      end do
 
-      DO I = 1, NUMBFF
-         CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-      END DO
+      do i = 1, numbff
+         call zzddhgsd ( 'BFF', i, strbff(i) )
+      end do
 
 !
 !     Get the native binary file format.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', TMPSTR )
-      CALL UCASE    ( TMPSTR,        TMPSTR )
+      call zzplatfm ( 'FILE_FORMAT', tmpstr )
+      call ucase    ( tmpstr,        tmpstr )
 
-      NATBFF = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+      natbff = isrchc ( tmpstr, numbff, strbff )
 
-      IF ( NATBFF .EQ. 0 ) THEN
+      if ( natbff .eq. 0 ) then
 
-         CALL CHKIN  ( 'ZZDDHINI'                                   )
-         CALL SETMSG ( 'The binary file format, ''#'', is not ' &
+         call chkin  ( 'ZZDDHINI'                                   )
+         call setmsg ( 'The binary file format, ''#'', is not ' &
          //            'supported by this version of the toolkit. ' &
          //            'This is a serious problem, contact NAIF.'   )
-         CALL ERRCH  ( '#', TMPSTR                                  )
-         CALL SIGERR ( 'SPICE(BUG)'                                 )
-         CALL CHKOUT ( 'ZZDDHINI'                                   )
-         RETURN
+         call errch  ( '#', tmpstr                                  )
+         call sigerr ( 'SPICE(BUG)'                                 )
+         call chkout ( 'ZZDDHINI'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Now fetch the list of supported binary file formats.
 !
-      CALL ZZPLATFM ( 'READS_BFF', LINSTR )
+      call zzplatfm ( 'READS_BFF', linstr )
 
 !
 !     Parse the wordlist that is sitting in LINSTR.
 !
-      I = 0
-      DONE = .FALSE.
+      i = 0
+      done = .false.
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 
 !
 !        Increment the counter and pop the next word
 !        off.
 !
-         I = I + 1
-         CALL NEXTWD ( LINSTR, TMPSTR, LINSTR )
+         i = i + 1
+         call nextwd ( linstr, tmpstr, linstr )
 
 !
 !        See if we're done.
 !
-         DONE = ( I .GT. NUMBFF ) .OR. ( TMPSTR .EQ. ' ' )
+         done = ( i .gt. numbff ) .or. ( tmpstr .eq. ' ' )
 
 !
 !        If we're not done, then convert this string to the
 !        appropriate integer code.
 !
-         IF ( .NOT. DONE ) THEN
+         if ( .not. done ) then
 
-            SUPBFF(I) = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+            supbff(i) = isrchc ( tmpstr, numbff, strbff )
 
 !
 !           Check to see if the binary file format listed
 !           is properly supported.
 !
-            IF ( SUPBFF(I) .EQ. 0 ) THEN
+            if ( supbff(i) .eq. 0 ) then
 
-               CALL CHKIN  ( 'ZZDDHINI'                             )
-               CALL SETMSG ( 'The binary file format, ''#'', is ' &
+               call chkin  ( 'ZZDDHINI'                             )
+               call setmsg ( 'The binary file format, ''#'', is ' &
                //            'not supported by this version of ' &
                //            'the toolkit. This is a serious ' &
                //            'problem, contact NAIF.            '   )
-               CALL ERRCH  ( '#', TMPSTR                            )
-               CALL SIGERR ( 'SPICE(BUG)'                           )
-               CALL CHKOUT ( 'ZZDDHINI'                             )
-               RETURN
+               call errch  ( '#', tmpstr                            )
+               call sigerr ( 'SPICE(BUG)'                           )
+               call chkout ( 'ZZDDHINI'                             )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Now setup NUMSUP.  Given the way the WHILE loop above executes,
 !     we need to subtract one from I to get the number of entries added
 !     to SUPBFF.  This smacks of kludge... but it works.
 !
-      NUMSUP = I - 1
+      numsup = i - 1
 
-      RETURN
-      END
+      return
+      end

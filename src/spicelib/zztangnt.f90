@@ -1,8 +1,8 @@
 !$Procedure ZZTANGNT ( DSK, find target tangent rays in half-plane )
 
-      SUBROUTINE ZZTANGNT ( CURVE,  SRCRAD, SHAPE,  TRGCDE, NSURF, &
-                            SRFLST, FIXFID, ET,     PLNVEC, AXIS, &
-                            SCHSTP, SOLTOL, RESULT, POINTS        )
+      subroutine zztangnt ( curve,  srcrad, shape,  trgcde, nsurf, &
+                            srflst, fixfid, et,     plnvec, axis, &
+                            schstp, soltol, result, points        )
 
 ! $ Abstract
 !
@@ -32,27 +32,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzdsk.inc'
+      include 'zzdsk.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               CURVE
-      DOUBLE PRECISION      SRCRAD
-      INTEGER               SHAPE
-      INTEGER               TRGCDE
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      INTEGER               FIXFID
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      PLNVEC ( 3 )
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      SCHSTP
-      DOUBLE PRECISION      SOLTOL
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
-      DOUBLE PRECISION      POINTS ( 3, * )
+      integer               curve
+      double precision      srcrad
+      integer               shape
+      integer               trgcde
+      integer               nsurf
+      integer               srflst ( * )
+      integer               fixfid
+      double precision      et
+      double precision      plnvec ( 3 )
+      double precision      axis   ( 3 )
+      double precision      schstp
+      double precision      soltol
+      double precision      result ( lbcell : * )
+      double precision      points ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -323,74 +323,74 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORM
+      double precision      dasine
+      double precision      pi
+      double precision      vnorm
 
-      INTEGER               CARDD
+      integer               cardd
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     EXTERNAL routines
 !
-      EXTERNAL              ZZTANSTA
-      EXTERNAL              GFSTEP
-      EXTERNAL              GFREFN
+      external              zztansta
+      external              gfstep
+      external              gfrefn
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D-12 )
+      double precision      margin
+      parameter           ( margin = 1.d-12 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALPHA
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      MINDST
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      REFVEC ( 3 )
+      double precision      alpha
+      double precision      start
+      double precision      finish
+      double precision      maxrad
+      double precision      mindst
+      double precision      r
+      double precision      refvec ( 3 )
 
-      INTEGER               I
-      INTEGER               N
+      integer               i
+      integer               n
 
-      LOGICAL               CSTEP
-      LOGICAL               ENDFLG ( 2 )
+      logical               cstep
+      logical               endflg ( 2 )
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZTANGNT' )
+      call chkin ( 'ZZTANGNT' )
 
 !
 !     Empty the result window.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 !
 !     Rotate the plane definition vector by pi about AXIS if
 !     we're generating penumbral terminator points.
 !
-      IF ( CURVE .EQ. PNMBRL ) THEN
+      if ( curve .eq. pnmbrl ) then
 
-         CALL VROTV ( PLNVEC, AXIS, PI(), REFVEC )
-      ELSE
-         CALL VEQU  ( PLNVEC,             REFVEC )
-      END IF
+         call vrotv ( plnvec, axis, pi(), refvec )
+      else
+         call vequ  ( plnvec,             refvec )
+      end if
 
 !
 !     Prepare the tangent finding utilities.
 !
-      CALL ZZTANINI ( CURVE,  SRCRAD, SHAPE,  TRGCDE, NSURF, SRFLST, &
-                      FIXFID, ET,     REFVEC, AXIS                  )
+      call zztanini ( curve,  srcrad, shape,  trgcde, nsurf, srflst, &
+                      fixfid, et,     refvec, axis                  )
 !
 !     Fetch a maximum bounding radius for the target.
 !
@@ -400,99 +400,99 @@
 !        ZZSUELIN
 !        ZZSUDSKI
 !
-      CALL ZZMAXRAD ( MAXRAD )
+      call zzmaxrad ( maxrad )
 
 !
 !     Scale up MAXRAD slightly to ensure bracketing.
 !
-      MAXRAD = MAXRAD * 1.001D0
+      maxrad = maxrad * 1.001d0
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZTANGNT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZTANGNT' )
+         return
+      end if
 
-      IF ( MAXRAD .LE. 0.D0 ) THEN
+      if ( maxrad .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Target maximum radius # is non-positive.' )
-         CALL ERRDP  ( '#',  MAXRAD                               )
-         CALL SIGERR ( 'SPICE(INVALIDRADIUS)'                     )
-         CALL CHKOUT ( 'ZZTANGNT'                                 )
-         RETURN
+         call setmsg ( 'Target maximum radius # is non-positive.' )
+         call errdp  ( '#',  maxrad                               )
+         call sigerr ( 'SPICE(INVALIDRADIUS)'                     )
+         call chkout ( 'ZZTANGNT'                                 )
+         return
 
-      END IF
+      end if
 
 
 
-      IF ( CURVE .EQ. LMBCRV ) THEN
+      if ( curve .eq. lmbcrv ) then
 !
 !        We're looking for limb points.
 !
 !        Set the initial ray-axis separation.
 !
-         START  = 0.D0
+         start  = 0.d0
 !
 !        If the vertex is outside of the bounding sphere,
 !        set the initial angle to the supplement of
 !        the angular radius of the target, based on
 !        its maximum radius.
 !
-         R      = VNORM( AXIS )
-         MINDST = MAXRAD * ( 1.D0 + MARGIN )
+         r      = vnorm( axis )
+         mindst = maxrad * ( 1.d0 + margin )
 
-         IF ( R .GT. MINDST ) THEN
+         if ( r .gt. mindst ) then
 
-            START = PI() -  DASINE( MAXRAD/R, MARGIN )
+            start = pi() -  dasine( maxrad/r, margin )
 
-        END IF
+        end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZTANGNT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZTANGNT' )
+            return
+         end if
 !
 !        Set the final ray-axis separation.
 !
-         FINISH = PI()
+         finish = pi()
 
 
-      ELSE
+      else
 !
 !        For the terminator cases, check for an invalid source radius.
 !
-         IF ( SRCRAD .LE. 0.D0 ) THEN
+         if ( srcrad .le. 0.d0 ) then
 
-            CALL SETMSG ( 'Source radius # is non-positive.' )
-            CALL ERRDP  ( '#',  SRCRAD                       )
-            CALL SIGERR ( 'SPICE(INVALIDRADIUS)'             )
-            CALL CHKOUT ( 'ZZTANGNT'                         )
-            RETURN
+            call setmsg ( 'Source radius # is non-positive.' )
+            call errdp  ( '#',  srcrad                       )
+            call sigerr ( 'SPICE(INVALIDRADIUS)'             )
+            call chkout ( 'ZZTANGNT'                         )
+            return
 
-         END IF
+         end if
 
 !
 !        Make sure the source and outer bounding sphere of the
 !        target don't intersect.
 !
-         R = VNORM( AXIS )
+         r = vnorm( axis )
 
-         IF ( (SRCRAD + MAXRAD) .GT. R ) THEN
+         if ( (srcrad + maxrad) .gt. r ) then
 
-            CALL SETMSG ( 'Source radius # and target maximum ' &
+            call setmsg ( 'Source radius # and target maximum ' &
             //            'radius # sum to #; distance between ' &
             //            'source and target centers is #. Source ' &
             //            'and target are too close together.'     )
-            CALL ERRDP  ( '#',  SRCRAD                             )
-            CALL ERRDP  ( '#',  MAXRAD                             )
-            CALL ERRDP  ( '#',  R                                  )
-            CALL SIGERR ( 'SPICE(OBJECTSTOOCLOSE)'                 )
-            CALL CHKOUT ( 'ZZTANGNT'                               )
-            RETURN
+            call errdp  ( '#',  srcrad                             )
+            call errdp  ( '#',  maxrad                             )
+            call errdp  ( '#',  r                                  )
+            call sigerr ( 'SPICE(OBJECTSTOOCLOSE)'                 )
+            call chkout ( 'ZZTANGNT'                               )
+            return
 
-         END IF
+         end if
 
 
-         IF ( CURVE .EQ. UMBRAL ) THEN
+         if ( curve .eq. umbral ) then
 !
 !           We'll search for a point on the umbral terminator.
 !
@@ -510,25 +510,25 @@
 !           The following equation is valid regardless of whether
 !           or not SRCRAD > MAXRAD.
 !
-            START = PI() + DASINE( (SRCRAD-MAXRAD)/R, MARGIN )
+            start = pi() + dasine( (srcrad-maxrad)/r, margin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZTANGNT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZTANGNT' )
+               return
+            end if
 
 !
 !           Set the final ray-axis separation.
 !
-            FINISH = PI() +  DASINE( SRCRAD/R, MARGIN )
+            finish = pi() +  dasine( srcrad/r, margin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZTANGNT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZTANGNT' )
+               return
+            end if
 
 
-         ELSE IF ( CURVE .EQ. PNMBRL ) THEN
+         else if ( curve .eq. pnmbrl ) then
 !
 !           We'll search for a point on the umbral terminator.
 !
@@ -549,36 +549,36 @@
 !           distance belonging to the triangle having a vertex
 !           at the center of the source.
 !
-            ALPHA = SRCRAD / ( SRCRAD + MAXRAD )
+            alpha = srcrad / ( srcrad + maxrad )
 
-            START = PI() -  DASINE( SRCRAD / (ALPHA*R), MARGIN )
+            start = pi() -  dasine( srcrad / (alpha*r), margin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZTANGNT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZTANGNT' )
+               return
+            end if
 
 !
 !           We stop looking when the ray intersects the target center.
 !
-            FINISH = PI() - DASINE( SRCRAD / R, MARGIN )
+            finish = pi() - dasine( srcrad / r, margin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZTANGNT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZTANGNT' )
+               return
+            end if
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Input curve code # was not recognized.' )
-            CALL ERRINT ( '#', CURVE                               )
-            CALL SIGERR ( 'SPICE(BUG)'                             )
-            CALL CHKOUT ( 'ZZTANGNT'                               )
-            RETURN
+            call setmsg ( 'Input curve code # was not recognized.' )
+            call errint ( '#', curve                               )
+            call sigerr ( 'SPICE(BUG)'                             )
+            call chkout ( 'ZZTANGNT'                               )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Search for ray occultations. The endpoints of the occultation
@@ -588,16 +588,16 @@
 !     The initial and final values START and FINISH have been set
 !     above.
 !
-      CSTEP  = .TRUE.
+      cstep  = .true.
 
-      CALL ZZTANSLV ( ZZTANSTA, GFSTEP, GFREFN, &
-                      CSTEP,    SCHSTP, START,  FINISH, &
-                      SOLTOL,   RESULT, POINTS, ENDFLG )
+      call zztanslv ( zztansta, gfstep, gfrefn, &
+                      cstep,    schstp, start,  finish, &
+                      soltol,   result, points, endflg )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZTANGNT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZTANGNT' )
+         return
+      end if
 
 !
 !     If the first endpoint of RESULT is the interval start but is not
@@ -605,43 +605,43 @@
 !     becomes a cell rather than a window. We must delete the
 !     corresponding point from the POINTS array as well.
 !
-      IF ( CARDD(RESULT) .GT. 0 ) THEN
+      if ( cardd(result) .gt. 0 ) then
 
-         IF ( ( RESULT(1) .EQ. START ) .AND. ( .NOT. ENDFLG(1) ) ) THEN
+         if ( ( result(1) .eq. start ) .and. ( .not. endflg(1) ) ) then
 
-            N = CARDD( RESULT )
+            n = cardd( result )
 
-            DO I = 2, N
+            do i = 2, n
 
-               RESULT(I-1) = RESULT(I)
+               result(i-1) = result(i)
 
-               CALL VEQU ( POINTS(1,I), POINTS(1,I-1) )
+               call vequ ( points(1,i), points(1,i-1) )
 
-            END DO
+            end do
 
-            CALL SCARDD ( N-1, RESULT )
+            call scardd ( n-1, result )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the final endpoint of RESULT is not a transition, delete
 !     it as well. In this case decrementing the cardinality of
 !     RESULT suffices.
 !
-      N = CARDD(RESULT)
+      n = cardd(result)
 
-      IF ( N .GT. 0 ) THEN
+      if ( n .gt. 0 ) then
 
-         IF ( ( RESULT(N) .EQ. FINISH ) .AND. ( .NOT. ENDFLG(2) ) ) THEN
+         if ( ( result(n) .eq. finish ) .and. ( .not. endflg(2) ) ) then
 
-            CALL SCARDD ( N-1, RESULT )
+            call scardd ( n-1, result )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZTANGNT' )
-      RETURN
-      END
+      call chkout ( 'ZZTANGNT' )
+      return
+      end

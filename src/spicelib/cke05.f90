@@ -1,6 +1,6 @@
 !$Procedure CKE05 ( C-Kernel, evaluate, type 5 )
 
-      SUBROUTINE CKE05 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      subroutine cke05 ( needav, record, cmat, av, clkout )
 
 ! $ Abstract
 !
@@ -16,17 +16,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ck05.inc'
-      INCLUDE 'ckparam.inc'
+      include 'ck05.inc'
+      include 'ckparam.inc'
 
 
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      CMAT     ( 3, 3 )
-      DOUBLE PRECISION      AV       ( 3 )
-      DOUBLE PRECISION      CLKOUT
+      logical               needav
+      double precision      record   ( * )
+      double precision      cmat     ( 3, 3 )
+      double precision      av       ( 3 )
+      double precision      clkout
 
 ! $ Brief_I/O
 !
@@ -382,12 +382,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      LGRINT
-      DOUBLE PRECISION      VDISTG
-      DOUBLE PRECISION      VDOTG
-      DOUBLE PRECISION      VNORMG
+      double precision      lgrint
+      double precision      vdistg
+      double precision      vdotg
+      double precision      vnormg
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -396,114 +396,114 @@
 !
 !     Index of evaluation epoch in record:
 !
-      INTEGER               EPCIDX
-      PARAMETER           ( EPCIDX = 1 )
+      integer               epcidx
+      parameter           ( epcidx = 1 )
 
 !
 !     Index of subtype code in record:
 !
-      INTEGER               SBTIDX
-      PARAMETER           ( SBTIDX = 2 )
+      integer               sbtidx
+      parameter           ( sbtidx = 2 )
 
 !
 !     Index of packet count in record:
 !
-      INTEGER               CNTIDX
-      PARAMETER           ( CNTIDX = 3 )
+      integer               cntidx
+      parameter           ( cntidx = 3 )
 
 !
 !     Index at which packets start; packet base:
 !
-      INTEGER               PKTIDX
-      PARAMETER           ( PKTIDX = 5 )
+      integer               pktidx
+      parameter           ( pktidx = 5 )
 
-      INTEGER               PKTBAS
-      PARAMETER           ( PKTBAS = PKTIDX - 1 )
+      integer               pktbas
+      parameter           ( pktbas = pktidx - 1 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DQ     ( 0 : 3 )
-      DOUBLE PRECISION      DS     ( 0 : 3 )
-      DOUBLE PRECISION      LOCREC ( CKMRSZ )
-      DOUBLE PRECISION      MAGS
-      DOUBLE PRECISION      Q      ( 0 : 3 )
-      DOUBLE PRECISION      QNEG   ( 0 : 3 )
-      DOUBLE PRECISION      RADTRM ( 0 : 3 )
-      DOUBLE PRECISION      RATE
-      DOUBLE PRECISION      SCLDDQ ( 0 : 3 )
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      STATE  ( 8 )
-      DOUBLE PRECISION      VBUFF  ( 6 )
-      DOUBLE PRECISION      WORK   ( CKMRSZ * 2,  2 )
+      double precision      dq     ( 0 : 3 )
+      double precision      ds     ( 0 : 3 )
+      double precision      locrec ( ckmrsz )
+      double precision      mags
+      double precision      q      ( 0 : 3 )
+      double precision      qneg   ( 0 : 3 )
+      double precision      radtrm ( 0 : 3 )
+      double precision      rate
+      double precision      sclddq ( 0 : 3 )
+      double precision      sclkdp
+      double precision      state  ( 8 )
+      double precision      vbuff  ( 6 )
+      double precision      work   ( ckmrsz * 2,  2 )
 
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               J
-      INTEGER               N
-      INTEGER               NEWPTR
-      INTEGER               PACKSZ
-      INTEGER               PRVPTR
-      INTEGER               SUBTYP
-      INTEGER               TO
-      INTEGER               UB
-      INTEGER               XSTART
-      INTEGER               YSTART
+      integer               from
+      integer               i
+      integer               j
+      integer               n
+      integer               newptr
+      integer               packsz
+      integer               prvptr
+      integer               subtyp
+      integer               to
+      integer               ub
+      integer               xstart
+      integer               ystart
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKE05' )
+      call chkin ( 'CKE05' )
 
 !
 !     Capture the subtype from the record and set the packet size
 !     accordingly.
 !
-      SUBTYP =  NINT( RECORD(SBTIDX) )
+      subtyp =  nint( record(sbtidx) )
 
 
-      IF ( SUBTYP .EQ. C05TP0 ) THEN
+      if ( subtyp .eq. c05tp0 ) then
 
-         PACKSZ = C05PS0
+         packsz = c05ps0
 
-      ELSE IF ( SUBTYP .EQ. C05TP1 ) THEN
+      else if ( subtyp .eq. c05tp1 ) then
 
-         PACKSZ = C05PS1
+         packsz = c05ps1
 
-      ELSE IF ( SUBTYP .EQ. C05TP2 ) THEN
+      else if ( subtyp .eq. c05tp2 ) then
 
-         PACKSZ = C05PS2
+         packsz = c05ps2
 
-      ELSE IF ( SUBTYP .EQ. C05TP3 ) THEN
+      else if ( subtyp .eq. c05tp3 ) then
 
-         PACKSZ = C05PS3
+         packsz = c05ps3
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unexpected CK type 5 subtype # found in ' // &
+         call setmsg ( 'Unexpected CK type 5 subtype # found in ' // &
                        'type 5 segment.'                          )
-         CALL ERRINT ( '#',  SUBTYP                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( 'CKE05'                                    )
-         RETURN
+         call errint ( '#',  subtyp                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( 'CKE05'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the packet count and epoch.
 !
-      N       =  NINT( RECORD(CNTIDX) )
-      SCLKDP  =        RECORD(EPCIDX)
+      n       =  nint( record(cntidx) )
+      sclkdp  =        record(epcidx)
 
 !
 !     Get the nominal clock rate.
 !
-      RATE = RECORD(4)
+      rate = record(4)
 
 !
 !     Adjust quaternion "signs" as necessary to minimize distance
@@ -511,7 +511,7 @@
 !     only for subtypes that don't store quaternion derivatives
 !     (these are the Lagrange subtypes).
 !
-      IF (  ( SUBTYP .EQ. C05TP1 ) .OR. ( SUBTYP .EQ. C05TP3 )  ) THEN
+      if (  ( subtyp .eq. c05tp1 ) .or. ( subtyp .eq. c05tp3 )  ) then
 !
 !        For these subtypes, only the quaternions themselves need be
 !        adjusted.
@@ -519,34 +519,34 @@
 !        PRVPTR is the index of the "previous" quaternion---the one to
 !        which the successor and its negative will be compared.
 !
-         PRVPTR = PKTIDX
+         prvptr = pktidx
 
-         DO I = 2, N
+         do i = 2, n
 !
 !           NEWPTR points to the quaternion ahead of the one
 !           pointed to by PRVPTR.
 !
-            NEWPTR = PKTIDX + PACKSZ*(I-1)
+            newptr = pktidx + packsz*(i-1)
 
-            CALL VMINUG ( RECORD(NEWPTR), 4,  QNEG )
+            call vminug ( record(newptr), 4,  qneg )
 
 !
 !           Replace the Ith quaternion with QNEG if QNEG is closer
 !           than the current quaternion to the previous quaternion.
 !
-            IF (     VDISTG( RECORD(PRVPTR), QNEG,           4 ) &
-                .LT. VDISTG( RECORD(PRVPTR), RECORD(NEWPTR), 4 ) ) THEN
+            if (     vdistg( record(prvptr), qneg,           4 ) &
+                .lt. vdistg( record(prvptr), record(newptr), 4 ) ) then
 
-               CALL MOVED ( QNEG, 4, RECORD( NEWPTR ) )
+               call moved ( qneg, 4, record( newptr ) )
 
-            END IF
+            end if
 
-            PRVPTR = NEWPTR
+            prvptr = newptr
 
-         END DO
+         end do
 
 
-      ELSE
+      else
 !
 !        For the Hermite types, if the quaternions need to be adjusted,
 !        we have an error condition.
@@ -554,24 +554,24 @@
 !        PRVPTR is the index of the "previous" quaternion---the one to
 !        which the successor and its negative will be compared.
 !
-         PRVPTR = PKTIDX
+         prvptr = pktidx
 
-         DO I = 2, N
+         do i = 2, n
 !
 !           NEWPTR points to the quaternion ahead of the one
 !           pointed to by PRVPTR.
 !
-            NEWPTR = PKTIDX + PACKSZ*(I-1)
+            newptr = pktidx + packsz*(i-1)
 
-            CALL VMINUG ( RECORD(NEWPTR), 4,  QNEG )
+            call vminug ( record(newptr), 4,  qneg )
 !
 !           Replace the Ith quaternion with QNEG if QNEG is closer
 !           than the current quaternion to the previous quaternion.
 !
-            IF (     VDISTG( RECORD(PRVPTR), QNEG,           4 ) &
-                .LT. VDISTG( RECORD(PRVPTR), RECORD(NEWPTR), 4 ) ) THEN
+            if (     vdistg( record(prvptr), qneg,           4 ) &
+                .lt. vdistg( record(prvptr), record(newptr), 4 ) ) then
 
-               CALL SETMSG ( 'Quaternion sign error: quaternion at ' &
+               call setmsg ( 'Quaternion sign error: quaternion at ' &
                //            'index # in the input record is farther ' &
                //            'than its negative from the preceding ' &
                //            'quaternion in the record. Quaternion ' &
@@ -582,30 +582,30 @@
                //            'if applicable, their derivatives, ' &
                //            'must be adjusted before they are ' &
                //            'passed to this routine.'                 )
-               CALL ERRINT ( '#', I                                    )
-               CALL ERRDP  ( '#', RECORD(NEWPTR  )                     )
-               CALL ERRDP  ( '#', RECORD(NEWPTR+1)                     )
-               CALL ERRDP  ( '#', RECORD(NEWPTR+2)                     )
-               CALL ERRDP  ( '#', RECORD(NEWPTR+3)                     )
-               CALL ERRDP  ( '#', RECORD(PRVPTR  )                     )
-               CALL ERRDP  ( '#', RECORD(PRVPTR+1)                     )
-               CALL ERRDP  ( '#', RECORD(PRVPTR+2)                     )
-               CALL ERRDP  ( '#', RECORD(PRVPTR+3)                     )
-               CALL SIGERR ( 'SPICE(BADQUATSIGN)'                      )
-               CALL CHKOUT ( 'CKE05'                                   )
-               RETURN
+               call errint ( '#', i                                    )
+               call errdp  ( '#', record(newptr  )                     )
+               call errdp  ( '#', record(newptr+1)                     )
+               call errdp  ( '#', record(newptr+2)                     )
+               call errdp  ( '#', record(newptr+3)                     )
+               call errdp  ( '#', record(prvptr  )                     )
+               call errdp  ( '#', record(prvptr+1)                     )
+               call errdp  ( '#', record(prvptr+2)                     )
+               call errdp  ( '#', record(prvptr+3)                     )
+               call sigerr ( 'SPICE(BADQUATSIGN)'                      )
+               call chkout ( 'CKE05'                                   )
+               return
 
-            END IF
+            end if
 
-            PRVPTR = NEWPTR
+            prvptr = newptr
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 
 
-      IF ( SUBTYP .EQ. C05TP1 ) THEN
+      if ( subtyp .eq. c05tp1 ) then
 !
 !        We perform Lagrange interpolation on each quaternion
 !        component, and obtain quaternion derivatives from the
@@ -619,51 +619,51 @@
 !        storage and does no harm.  (See the header of LGRINT for a
 !        description of its work space usage.)
 !
-         N   =  NINT( RECORD(CNTIDX) )
+         n   =  nint( record(cntidx) )
 
-         CALL XPSGIP ( PACKSZ, N, RECORD(PKTIDX) )
+         call xpsgip ( packsz, n, record(pktidx) )
 
 !
 !        We interpolate each state component in turn.
 !
-         XSTART   =   PKTIDX   +  N * PACKSZ
+         xstart   =   pktidx   +  n * packsz
 
-         DO I = 1, PACKSZ
+         do i = 1, packsz
 
-            YSTART    =   PKTIDX  +  N * (I-1)
+            ystart    =   pktidx  +  n * (i-1)
 
 
-            CALL LGRIND ( N, &
-                          RECORD(XSTART), &
-                          RECORD(YSTART), &
-                          WORK, &
-                          SCLKDP, &
-                          STATE(I), &
-                          STATE(I+4)  )
+            call lgrind ( n, &
+                          record(xstart), &
+                          record(ystart), &
+                          work, &
+                          sclkdp, &
+                          state(i), &
+                          state(i+4)  )
 
-         END DO
+         end do
 
 !
 !        The output quaternion is a unitized version of the
 !        interpolated state.
 !
-         MAGS = VNORMG( STATE, 4 )
+         mags = vnormg( state, 4 )
 
 
-         IF ( MAGS .EQ. 0.D0 ) THEN
+         if ( mags .eq. 0.d0 ) then
 
-            CALL SETMSG ( 'Quaternion magnitude at SCLK # was zero.' )
-            CALL ERRDP  ( '#',  SCLKDP                               )
-            CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                      )
-            CALL CHKOUT ( 'CKE05'                                    )
-            RETURN
+            call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
+            call errdp  ( '#',  sclkdp                               )
+            call sigerr ( 'SPICE(DIVIDEBYZERO)'                      )
+            call chkout ( 'CKE05'                                    )
+            return
 
-         END IF
+         end if
 
-         CALL VSCLG ( 1.D0/MAGS, STATE, 4, Q )
+         call vsclg ( 1.d0/mags, state, 4, q )
 
 
-         IF ( NEEDAV ) THEN
+         if ( needav ) then
 !
 !           Find the time derivative of the unit quaternion:
 !           Letting S represent the quaternion portion of STATE, we
@@ -681,30 +681,30 @@
 !                          ||S||            ||S||
 !
 !
-            CALL MOVED ( STATE(5), 4, DS )
+            call moved ( state(5), 4, ds )
 
-            CALL VSCLG ( 1.D0          / MAGS,  DS, 4,  SCLDDQ )
-            CALL VSCLG ( VDOTG(Q,DS,4) / MAGS,  Q,  4,  RADTRM )
+            call vsclg ( 1.d0          / mags,  ds, 4,  sclddq )
+            call vsclg ( vdotg(q,ds,4) / mags,  q,  4,  radtrm )
 
-            CALL VSUBG ( SCLDDQ, RADTRM, 4, DQ )
+            call vsubg ( sclddq, radtrm, 4, dq )
 !
 !           Derive angular velocity from Q and dQ/dt:
 !
-            CALL QDQ2AV ( Q, DQ, AV )
+            call qdq2av ( q, dq, av )
 
 !
 !           Scale the AV from radians/tick to radians/second.
 !
-            CALL VSCLIP ( 1.D0/RATE, AV )
+            call vsclip ( 1.d0/rate, av )
 
-         END IF
+         end if
 
 !
 !        Q and if required AV have been assigned.
 !
 
 
-      ELSE IF ( SUBTYP .EQ. C05TP3 ) THEN
+      else if ( subtyp .eq. c05tp3 ) then
 !
 !        This is the easiest case:  we perform Lagrange interpolation
 !        on each quaternion or angular velocity component.
@@ -716,52 +716,52 @@
 !        storage and does no harm.  (See the header of LGRINT for a
 !        description of its work space usage.)
 !
-         N   =  NINT( RECORD(CNTIDX) )
+         n   =  nint( record(cntidx) )
 
-         CALL XPSGIP ( PACKSZ, N, RECORD(PKTIDX) )
+         call xpsgip ( packsz, n, record(pktidx) )
 
 !
 !        We interpolate each state component in turn.
 !
-         XSTART  =  PKTIDX   +  N * PACKSZ
+         xstart  =  pktidx   +  n * packsz
 
-         IF ( NEEDAV ) THEN
-            UB  =  PACKSZ
-         ELSE
-            UB  =  4
-         END IF
+         if ( needav ) then
+            ub  =  packsz
+         else
+            ub  =  4
+         end if
 
-         DO I = 1, UB
+         do i = 1, ub
 
-            YSTART    =   PKTIDX  +  N * (I-1)
+            ystart    =   pktidx  +  n * (i-1)
 
-            STATE(I)  =   LGRINT ( N, &
-                                   RECORD(XSTART), &
-                                   RECORD(YSTART), &
-                                   LOCREC, &
-                                   SCLKDP          )
-         END DO
+            state(i)  =   lgrint ( n, &
+                                   record(xstart), &
+                                   record(ystart), &
+                                   locrec, &
+                                   sclkdp          )
+         end do
 
 !
 !        The output quaternion is a unitized version of the
 !        interpolated state.
 !
-         CALL VHATG ( STATE, 4, Q )
+         call vhatg ( state, 4, q )
 
 
-         IF ( NEEDAV ) THEN
+         if ( needav ) then
 !
 !           The angular velocity already is in units of radians/second.
 !
-            CALL VEQU ( STATE(5), AV )
+            call vequ ( state(5), av )
 
-         END IF
+         end if
 
 !
 !        Q and if required AV have been assigned.
 !
 
-      ELSE
+      else
 !
 !        We have a Hermite-style subtype.  Whether it's subtype 0
 !        or 2, we perform Hermite interpolation on the quaternions.
@@ -769,11 +769,11 @@
 !        We interpolate each quaternion component in turn.  Attitude and
 !        angular velocity are interpolated separately.
 !
-         XSTART   =   PKTIDX  +  PACKSZ * N
+         xstart   =   pktidx  +  packsz * n
 
-         DO I = 1, 4
+         do i = 1, 4
 
-            DO J = 1, N
+            do j = 1, n
 !
 !              For the Jth input packet, copy the Ith position and
 !              velocity components into the local record buffer RECORD.
@@ -784,50 +784,50 @@
 !              the units of the quaternion derivatives from radians/sec
 !              to radians/tick.
 !
-               FROM         = PKTBAS + PACKSZ*(J-1) + I
-               TO           =              2 * J    - 1
+               from         = pktbas + packsz*(j-1) + i
+               to           =              2 * j    - 1
 
-               LOCREC(TO  ) = RECORD ( FROM     )
-               LOCREC(TO+1) = RECORD ( FROM + 4 ) * RATE
+               locrec(to  ) = record ( from     )
+               locrec(to+1) = record ( from + 4 ) * rate
 
-            END DO
+            end do
 
 !
 !           Interpolate the Ith quaternion and quaternion derivative
 !           components.
 !
-            CALL HRMINT ( N, &
-                          RECORD(XSTART), &
-                          LOCREC, &
-                          SCLKDP, &
-                          WORK, &
-                          STATE(I  ), &
-                          STATE(I+4)      )
+            call hrmint ( n, &
+                          record(xstart), &
+                          locrec, &
+                          sclkdp, &
+                          work, &
+                          state(i  ), &
+                          state(i+4)      )
 
-         END DO
+         end do
 
 !
 !        The output quaternion is a unitized version of the
 !        interpolated state.
 !
-         MAGS = VNORMG( STATE, 4 )
+         mags = vnormg( state, 4 )
 
-         IF ( MAGS .EQ. 0.D0 ) THEN
+         if ( mags .eq. 0.d0 ) then
 
-            CALL SETMSG ( 'Quaternion magnitude at SCLK # was zero.' )
-            CALL ERRDP  ( '#',  SCLKDP                               )
-            CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                      )
-            CALL CHKOUT ( 'CKE05'                                    )
-            RETURN
+            call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
+            call errdp  ( '#',  sclkdp                               )
+            call sigerr ( 'SPICE(DIVIDEBYZERO)'                      )
+            call chkout ( 'CKE05'                                    )
+            return
 
-         END IF
+         end if
 
-         CALL VSCLG ( 1.D0/MAGS, STATE, 4, Q )
+         call vsclg ( 1.d0/mags, state, 4, q )
 
 
-         IF ( NEEDAV ) THEN
+         if ( needav ) then
 
-            IF ( SUBTYP .EQ. C05TP0 ) THEN
+            if ( subtyp .eq. c05tp0 ) then
 !
 !              Find the time derivative of the unit quaternion:
 !              Letting S represent the quaternion portion of STATE, we
@@ -845,23 +845,23 @@
 !                             ||S||            ||S||
 !
 !
-               CALL MOVED ( STATE(5), 4, DS )
+               call moved ( state(5), 4, ds )
 
-               CALL VSCLG ( 1.D0          / MAGS,  DS, 4,  SCLDDQ )
-               CALL VSCLG ( VDOTG(Q,DS,4) / MAGS,  Q,  4,  RADTRM )
+               call vsclg ( 1.d0          / mags,  ds, 4,  sclddq )
+               call vsclg ( vdotg(q,ds,4) / mags,  q,  4,  radtrm )
 
-               CALL VSUBG ( SCLDDQ, RADTRM, 4, DQ )
+               call vsubg ( sclddq, radtrm, 4, dq )
 !
 !              Derive angular velocity from Q and dQ/dt:
 !
-               CALL QDQ2AV ( Q, DQ, AV )
+               call qdq2av ( q, dq, av )
 
 !
 !              Scale the AV from radians/tick to radians/second.
 !
-               CALL VSCLIP ( 1.D0/RATE, AV )
+               call vsclip ( 1.d0/rate, av )
 
-            ELSE
+            else
 !
 !              This is subtype 2; we perform Hermite interpolation on
 !              the angular velocity and its derivative.
@@ -869,9 +869,9 @@
 !              Now interpolate angular velocity, using separate angular
 !              velocity data and angular acceleration.
 !
-               DO I = 1, 3
+               do i = 1, 3
 
-                  DO J = 1, N
+                  do j = 1, n
 !
 !                    For the Jth input packet, copy the Ith position
 !                    and velocity components into the local record
@@ -880,13 +880,13 @@
 !                    from radians/sec**2 to radians/(sec*tick) before
 !                    interpolating.
 !
-                     FROM         = PKTBAS + PACKSZ*(J-1) +  8  +  I
-                     TO           =              2 * J    -  1
+                     from         = pktbas + packsz*(j-1) +  8  +  i
+                     to           =              2 * j    -  1
 
-                     LOCREC(TO  ) = RECORD ( FROM     )
-                     LOCREC(TO+1) = RECORD ( FROM + 3 ) * RATE
+                     locrec(to  ) = record ( from     )
+                     locrec(to+1) = record ( from + 3 ) * rate
 
-                  END DO
+                  end do
 
 !
 !                 Interpolate the Ith angular velocity and angular
@@ -894,14 +894,14 @@
 !                 capture the result in a temporary buffer, then
 !                 transfer the velocity to the output argument AV.
 !
-                  CALL HRMINT ( N, &
-                                RECORD(XSTART), &
-                                LOCREC, &
-                                SCLKDP, &
-                                WORK, &
-                                VBUFF(I  ), &
-                                VBUFF(I+3)     )
-               END DO
+                  call hrmint ( n, &
+                                record(xstart), &
+                                locrec, &
+                                sclkdp, &
+                                work, &
+                                vbuff(i  ), &
+                                vbuff(i+3)     )
+               end do
 
 !
 !              Fill in the angular velocity in the output angular
@@ -911,18 +911,18 @@
 !              The angular velocity is already in units of
 !              radians/second.
 !
-               CALL VEQU ( VBUFF, AV )
+               call vequ ( vbuff, av )
 
-            END IF
+            end if
 !
 !           We've handled the type 0 and type 2 cases.
 !
-         END IF
+         end if
 !
 !        We've computed the angular velocity AV for the Hermite
 !        subtypes, if a.v. was requested.
 !
-      END IF
+      end if
 !
 !     We've handled all four subtypes.
 !
@@ -931,11 +931,11 @@
 !
 !     Produce a C-matrix from the interpolated quaternion. Set CLKOUT.
 !
-      CALL Q2M ( Q, CMAT )
+      call q2m ( q, cmat )
 
-      CLKOUT = RECORD(EPCIDX)
+      clkout = record(epcidx)
 
 
-      CALL CHKOUT ( 'CKE05' )
-      RETURN
-      END
+      call chkout ( 'CKE05' )
+      return
+      end

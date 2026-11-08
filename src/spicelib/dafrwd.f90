@@ -1,14 +1,14 @@
 !$Procedure DAFRWD ( DAF, read, write double precision )
 
-      SUBROUTINE DAFRWD ( HANDLE, &
-                          RECNO, &
-                          BEGIN, &
-                          END, &
-                          DREC, &
-                          DATA, &
-                          FOUND, &
-                          READS, &
-                          REQS     )
+      subroutine dafrwd ( handle, &
+                          recno, &
+                          begin, &
+                          end, &
+                          drec, &
+                          data, &
+                          found, &
+                          reads, &
+                          reqs     )
 
 ! $ Abstract
 !
@@ -25,20 +25,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      INTEGER               BEGIN
-      INTEGER               END
-      DOUBLE PRECISION      DREC     ( 128 )
-      DOUBLE PRECISION      DATA     (  *  )
-      LOGICAL               FOUND
-      INTEGER               READS
-      INTEGER               REQS
+      integer               handle
+      integer               recno
+      integer               begin
+      integer               end
+      double precision      drec     ( 128 )
+      double precision      data     (  *  )
+      logical               found
+      integer               reads
+      integer               reqs
 
-      INTEGER               RBSIZE
-      PARAMETER           ( RBSIZE = 100 )
+      integer               rbsize
+      parameter           ( rbsize = 100 )
 
 ! $ Brief_I/O
 !
@@ -278,65 +278,65 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
+      integer               intmax
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               RDSIZE
-      PARAMETER           ( RDSIZE = 128 * RBSIZE )
+      integer               rdsize
+      parameter           ( rdsize = 128 * rbsize )
 
-      INTEGER               UNIT
-      INTEGER               IOSTAT
+      integer               unit
+      integer               iostat
 
-      INTEGER               BUFLOC
-      LOGICAL               DONE
-      LOGICAL               STORED
+      integer               bufloc
+      logical               done
+      logical               stored
 
-      INTEGER               B
-      INTEGER               COUNT
-      INTEGER               E
-      INTEGER               RBHAN    (      RBSIZE )
-      INTEGER               RBREC    (      RBSIZE )
-      INTEGER               RBREQ    (      RBSIZE )
-      DOUBLE PRECISION      RBDAT    ( 128, RBSIZE )
-      INTEGER               RBNBR
-      INTEGER               NREAD
-      INTEGER               NREQ
-      INTEGER               MINVAL
+      integer               b
+      integer               count
+      integer               e
+      integer               rbhan    (      rbsize )
+      integer               rbrec    (      rbsize )
+      integer               rbreq    (      rbsize )
+      double precision      rbdat    ( 128, rbsize )
+      integer               rbnbr
+      integer               nread
+      integer               nreq
+      integer               minval
 
-      INTEGER               ND
-      INTEGER               NI
+      integer               nd
+      integer               ni
 
-      LOGICAL               LOCFND
-      LOGICAL               NATIVE
+      logical               locfnd
+      logical               native
 
 !
 !     Saved variables
 !
-      SAVE                  RBHAN
-      SAVE                  RBREC
-      SAVE                  RBREQ
-      SAVE                  RBDAT
-      SAVE                  RBNBR
+      save                  rbhan
+      save                  rbrec
+      save                  rbreq
+      save                  rbdat
+      save                  rbnbr
 
-      SAVE                  NREAD
-      SAVE                  NREQ
+      save                  nread
+      save                  nreq
 
 !
 !     Initial values
 !
-      DATA                  RBHAN   / RBSIZE * 0    /
-      DATA                  RBREC   / RBSIZE * 0    /
-      DATA                  RBREQ   / RBSIZE * 0    /
-      DATA                  RBDAT   / RDSIZE * 0.D0 /
-      DATA                  RBNBR   /          1    /
+      data                  rbhan   / rbsize * 0    /
+      data                  rbrec   / rbsize * 0    /
+      data                  rbreq   / rbsize * 0    /
+      data                  rbdat   / rdsize * 0.d0 /
+      data                  rbnbr   /          1    /
 
-      DATA                  NREAD   /          0    /
-      DATA                  NREQ    /          0    /
+      data                  nread   /          0    /
+      data                  nreq    /          0    /
 
 
 !
@@ -373,22 +373,22 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'DAFRWD' )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'DAFRWD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'DAFRWD' )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'DAFRWD' )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DAFGDR ( DAF, get double precision record )
 
-      ENTRY DAFGDR ( HANDLE, RECNO, BEGIN, END, DATA, FOUND )
+      entry dafgdr ( handle, recno, begin, end, data, found )
 
 ! $ Abstract
 !
@@ -550,14 +550,14 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Assume that the record will be found until proven otherwise.
 !
-      FOUND  = .TRUE.
+      found  = .true.
 
 !
 !     First, find the record.
@@ -566,19 +566,19 @@
 !     a buffered record, determine the location of that record
 !     within the buffer.
 !
-      BUFLOC = 0
-      DONE   = .FALSE.
-      STORED = .FALSE.
+      bufloc = 0
+      done   = .false.
+      stored = .false.
 
-      DO WHILE ( .NOT. DONE )
-         BUFLOC = BUFLOC + 1
+      do while ( .not. done )
+         bufloc = bufloc + 1
 
-         STORED = (       HANDLE .EQ. RBHAN(BUFLOC) &
-                    .AND. RECNO  .EQ. RBREC(BUFLOC) )
+         stored = (       handle .eq. rbhan(bufloc) &
+                    .and. recno  .eq. rbrec(bufloc) )
 
-         DONE   = (       STORED &
-                    .OR.  BUFLOC .EQ. RBNBR )
-      END DO
+         done   = (       stored &
+                    .or.  bufloc .eq. rbnbr )
+      end do
 
 !
 !     If not, determine the location of the least recently requested
@@ -589,49 +589,49 @@
 !     buffer entry in case the entry was corrupted by a partial read.
 !     Otherwise, increment the number of reads performed so far.
 !
-      IF ( .NOT. STORED ) THEN
+      if ( .not. stored ) then
 
-         CALL MINAI ( RBREQ, RBNBR, MINVAL, BUFLOC )
+         call minai ( rbreq, rbnbr, minval, bufloc )
 
-         CALL ZZDAFGDR ( HANDLE, RECNO, RBDAT(1,BUFLOC), LOCFND )
+         call zzdafgdr ( handle, recno, rbdat(1,bufloc), locfnd )
 
 !
 !        If the call to ZZDAFGDR failed, or the record was not found,
 !        then clean up.
 !
-         IF ( ( FAILED() ) .OR. ( .NOT. LOCFND ) ) THEN
-            FOUND         = .FALSE.
-            RBHAN(BUFLOC) = 0
-            RBREC(BUFLOC) = 0
-            RBREQ(BUFLOC) = 0
-         ELSE
+         if ( ( failed() ) .or. ( .not. locfnd ) ) then
+            found         = .false.
+            rbhan(bufloc) = 0
+            rbrec(bufloc) = 0
+            rbreq(bufloc) = 0
+         else
 
-            IF ( NREAD .LT. INTMAX() ) THEN
-               NREAD = NREAD + 1
-            END IF
+            if ( nread .lt. intmax() ) then
+               nread = nread + 1
+            end if
 
-            RBHAN(BUFLOC) = HANDLE
-            RBREC(BUFLOC) = RECNO
+            rbhan(bufloc) = handle
+            rbrec(bufloc) = recno
 
-            IF ( RBNBR .LT. RBSIZE ) THEN
-               RBNBR = RBNBR + 1
-            END IF
+            if ( rbnbr .lt. rbsize ) then
+               rbnbr = rbnbr + 1
+            end if
 
-         END IF
-      END IF
+         end if
+      end if
 
 !
 !     Whether previously stored or just read, the record is now in
 !     the buffer. Return the specified portion directly, and increment
 !     the corresponding request number.
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         B     = MAX(1,BEGIN)
-         E     = MIN(128,END)
-         COUNT = E-B+1
+         b     = max(1,begin)
+         e     = min(128,end)
+         count = e-b+1
 
-         CALL MOVED ( RBDAT(B,BUFLOC), COUNT, DATA )
+         call moved ( rbdat(b,bufloc), count, data )
 
 !
 !        Increment the request counter in such a way that integer
@@ -639,18 +639,18 @@
 !        handle manager halves RBREQ if adding 1 to NREQ would
 !        cause its value to exceed INTMAX.
 !
-         CALL ZZDDHRCM ( RBNBR, RBREQ, NREQ )
-         RBREQ(BUFLOC) = NREQ
+         call zzddhrcm ( rbnbr, rbreq, nreq )
+         rbreq(bufloc) = nreq
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure DAFGSR ( DAF, get summary/descriptor record )
 
-      ENTRY DAFGSR ( HANDLE, RECNO, BEGIN, END, DATA, FOUND )
+      entry dafgsr ( handle, recno, begin, end, data, found )
 
 ! $ Abstract
 !
@@ -823,14 +823,14 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Assume that the record will be found until proven otherwise.
 !
-      FOUND  = .TRUE.
+      found  = .true.
 
 !
 !     First, find the record.
@@ -839,19 +839,19 @@
 !     a buffered record, determine the location of that record
 !     within the buffer.
 !
-      BUFLOC = 0
-      DONE   = .FALSE.
-      STORED = .FALSE.
+      bufloc = 0
+      done   = .false.
+      stored = .false.
 
-      DO WHILE ( .NOT. DONE )
-         BUFLOC = BUFLOC + 1
+      do while ( .not. done )
+         bufloc = bufloc + 1
 
-         STORED = (       HANDLE .EQ. RBHAN(BUFLOC) &
-                    .AND. RECNO  .EQ. RBREC(BUFLOC) )
+         stored = (       handle .eq. rbhan(bufloc) &
+                    .and. recno  .eq. rbrec(bufloc) )
 
-         DONE   = (       STORED &
-                    .OR.  BUFLOC .EQ. RBNBR )
-      END DO
+         done   = (       stored &
+                    .or.  bufloc .eq. rbnbr )
+      end do
 
 !
 !     If not, determine the location of the least recently requested
@@ -862,52 +862,52 @@
 !     buffer entry in case the entry was corrupted by a partial read.
 !     Otherwise, increment the number of reads performed so far.
 !
-      IF ( .NOT. STORED ) THEN
+      if ( .not. stored ) then
 
-         CALL MINAI ( RBREQ, RBNBR, MINVAL, BUFLOC )
+         call minai ( rbreq, rbnbr, minval, bufloc )
 
-         CALL DAFHSF ( HANDLE, ND, NI )
+         call dafhsf ( handle, nd, ni )
 
-         CALL ZZDAFGSR ( HANDLE,          RECNO, ND, NI, &
-                         RBDAT(1,BUFLOC), LOCFND         )
+         call zzdafgsr ( handle,          recno, nd, ni, &
+                         rbdat(1,bufloc), locfnd         )
 
 !
 !        If the call to ZZDAFGSR or DAFHSF failed, or the record
 !        was not found, then clean up.
 !
-         IF ( ( FAILED() ) .OR. ( .NOT. LOCFND ) ) THEN
-            FOUND         = .FALSE.
-            RBHAN(BUFLOC) = 0
-            RBREC(BUFLOC) = 0
-            RBREQ(BUFLOC) = 0
-         ELSE
+         if ( ( failed() ) .or. ( .not. locfnd ) ) then
+            found         = .false.
+            rbhan(bufloc) = 0
+            rbrec(bufloc) = 0
+            rbreq(bufloc) = 0
+         else
 
-            IF ( NREAD .LT. INTMAX() ) THEN
-               NREAD = NREAD + 1
-            END IF
+            if ( nread .lt. intmax() ) then
+               nread = nread + 1
+            end if
 
-            RBHAN(BUFLOC) = HANDLE
-            RBREC(BUFLOC) = RECNO
+            rbhan(bufloc) = handle
+            rbrec(bufloc) = recno
 
-            IF ( RBNBR .LT. RBSIZE ) THEN
-               RBNBR = RBNBR + 1
-            END IF
+            if ( rbnbr .lt. rbsize ) then
+               rbnbr = rbnbr + 1
+            end if
 
-         END IF
-      END IF
+         end if
+      end if
 
 !
 !     Whether previously stored or just read, the record is now in
 !     the buffer. Return the specified portion directly, and increment
 !     the corresponding request number.
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         B     = MAX(1,BEGIN)
-         E     = MIN(128,END)
-         COUNT = E-B+1
+         b     = max(1,begin)
+         e     = min(128,end)
+         count = e-b+1
 
-         CALL MOVED ( RBDAT(B,BUFLOC), COUNT, DATA )
+         call moved ( rbdat(b,bufloc), count, data )
 
 !
 !        Increment the request counter in such a way that integer
@@ -915,19 +915,19 @@
 !        handle manager halves RBREQ if adding 1 to NREQ would
 !        cause its value to exceed INTMAX.
 !
-         CALL ZZDDHRCM ( RBNBR, RBREQ, NREQ )
-         RBREQ(BUFLOC) = NREQ
+         call zzddhrcm ( rbnbr, rbreq, nreq )
+         rbreq(bufloc) = nreq
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DAFRDR ( DAF, read double precision record )
 
-      ENTRY DAFRDR ( HANDLE, RECNO, BEGIN, END, DATA, FOUND )
+      entry dafrdr ( handle, recno, begin, end, data, found )
 
 ! $ Abstract
 !
@@ -1202,34 +1202,34 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Assume that the record will be found until proven otherwise.
 !
-      FOUND  = .TRUE.
+      found  = .true.
 
 !
 !     First check to see if HANDLE is associated with a DAF of the
 !     native binary file format.
 !
-      CALL ZZDDHISN ( HANDLE, NATIVE, LOCFND )
+      call zzddhisn ( handle, native, locfnd )
 
-      IF ( LOCFND .AND. ( .NOT. NATIVE ) ) THEN
+      if ( locfnd .and. ( .not. native ) ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
-         CALL CHKIN  ( 'DAFRDR'                                 )
-         CALL SETMSG ( 'The binary file format for file ''#'' ' &
+         call chkin  ( 'DAFRDR'                                 )
+         call setmsg ( 'The binary file format for file ''#'' ' &
          //            'is not native. This routine operates ' &
          //            'only on files of the native format.'    )
-         CALL ERRHAN ( '#', HANDLE                              )
-         CALL SIGERR ( 'SPICE(UNSUPPORTEDBFF)'                  )
-         CALL CHKOUT ( 'DAFRDR'                                 )
-         RETURN
-      END IF
+         call errhan ( '#', handle                              )
+         call sigerr ( 'SPICE(UNSUPPORTEDBFF)'                  )
+         call chkout ( 'DAFRDR'                                 )
+         return
+      end if
 
 !
 !     Now, find the record.
@@ -1238,19 +1238,19 @@
 !     a buffered record, determine the location of that record
 !     within the buffer.
 !
-      BUFLOC = 0
-      DONE   = .FALSE.
-      STORED = .FALSE.
+      bufloc = 0
+      done   = .false.
+      stored = .false.
 
-      DO WHILE ( .NOT. DONE )
-         BUFLOC = BUFLOC + 1
+      do while ( .not. done )
+         bufloc = bufloc + 1
 
-         STORED = (       HANDLE .EQ. RBHAN(BUFLOC) &
-                    .AND. RECNO  .EQ. RBREC(BUFLOC) )
+         stored = (       handle .eq. rbhan(bufloc) &
+                    .and. recno  .eq. rbrec(bufloc) )
 
-         DONE   = (       STORED &
-                    .OR.  BUFLOC .EQ. RBNBR )
-      END DO
+         done   = (       stored &
+                    .or.  bufloc .eq. rbnbr )
+      end do
 
 !
 !     If not, determine the location of the least recently requested
@@ -1261,49 +1261,49 @@
 !     buffer entry in case the entry was corrupted by a partial read.
 !     Otherwise, increment the number of reads performed so far.
 !
-      IF ( .NOT. STORED ) THEN
+      if ( .not. stored ) then
 
-         CALL MINAI ( RBREQ, RBNBR, MINVAL, BUFLOC )
+         call minai ( rbreq, rbnbr, minval, bufloc )
 
-         CALL ZZDAFGDR ( HANDLE, RECNO, RBDAT(1, BUFLOC), LOCFND )
+         call zzdafgdr ( handle, recno, rbdat(1, bufloc), locfnd )
 
 !
 !        If the call to ZZDAFGDR failed, or the record was not found,
 !        then clean up.
 !
-         IF ( ( FAILED() ) .OR. ( .NOT. LOCFND ) ) THEN
-            FOUND         = .FALSE.
-            RBHAN(BUFLOC) = 0
-            RBREC(BUFLOC) = 0
-            RBREQ(BUFLOC) = 0
-         ELSE
+         if ( ( failed() ) .or. ( .not. locfnd ) ) then
+            found         = .false.
+            rbhan(bufloc) = 0
+            rbrec(bufloc) = 0
+            rbreq(bufloc) = 0
+         else
 
-            IF ( NREAD .LT. INTMAX() ) THEN
-               NREAD = NREAD + 1
-            END IF
+            if ( nread .lt. intmax() ) then
+               nread = nread + 1
+            end if
 
-            RBHAN(BUFLOC) = HANDLE
-            RBREC(BUFLOC) = RECNO
+            rbhan(bufloc) = handle
+            rbrec(bufloc) = recno
 
-            IF ( RBNBR .LT. RBSIZE ) THEN
-               RBNBR = RBNBR + 1
-            END IF
+            if ( rbnbr .lt. rbsize ) then
+               rbnbr = rbnbr + 1
+            end if
 
-         END IF
-      END IF
+         end if
+      end if
 
 !
 !     Whether previously stored or just read, the record is now in
 !     the buffer. Return the specified portion directly, and increment
 !     the corresponding request number.
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         B     = MAX(1,BEGIN)
-         E     = MIN(128,END)
-         COUNT = E-B+1
+         b     = max(1,begin)
+         e     = min(128,end)
+         count = e-b+1
 
-         CALL MOVED ( RBDAT(B,BUFLOC), COUNT, DATA )
+         call moved ( rbdat(b,bufloc), count, data )
 
 !
 !        Increment the request counter in such a way that integer
@@ -1311,19 +1311,19 @@
 !        handle manager halves RBREQ if adding 1 to NREQ would
 !        cause its value to exceed INTMAX.
 !
-         CALL ZZDDHRCM ( RBNBR, RBREQ, NREQ )
-         RBREQ(BUFLOC) = NREQ
+         call zzddhrcm ( rbnbr, rbreq, nreq )
+         rbreq(bufloc) = nreq
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DAFWDR ( DAF, write double precision record )
 
-      ENTRY DAFWDR ( HANDLE, RECNO, DREC )
+      entry dafwdr ( handle, recno, drec )
 
 ! $ Abstract
 !
@@ -1475,84 +1475,84 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFWDR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFWDR' )
+      end if
 
 !
 !     No fair writing to a read-only file!
 !
-      IF ( HANDLE .GE. 0 ) THEN
-         CALL SETMSG ( 'Attempt was made to write to a read-only file.')
-         CALL SIGERR ( 'SPICE(DAFILLEGWRITE)' )
+      if ( handle .ge. 0 ) then
+         call setmsg ( 'Attempt was made to write to a read-only file.')
+         call sigerr ( 'SPICE(DAFILLEGWRITE)' )
 
-         CALL CHKOUT ( 'DAFWDR' )
-         RETURN
-      END IF
+         call chkout ( 'DAFWDR' )
+         return
+      end if
 
 !
 !     If the specified handle and record number match those of
 !     a buffered record, determine the location of that record
 !     within the buffer.
 !
-      BUFLOC = 0
-      DONE   = .FALSE.
-      STORED = .FALSE.
+      bufloc = 0
+      done   = .false.
+      stored = .false.
 
-      DO WHILE ( .NOT. DONE )
-         BUFLOC = BUFLOC + 1
+      do while ( .not. done )
+         bufloc = bufloc + 1
 
-         STORED = (       HANDLE .EQ. RBHAN(BUFLOC) &
-                    .AND. RECNO  .EQ. RBREC(BUFLOC) )
+         stored = (       handle .eq. rbhan(bufloc) &
+                    .and. recno  .eq. rbrec(bufloc) )
 
-         DONE   = (       STORED &
-                    .OR.  BUFLOC .EQ. RBSIZE )
-      END DO
+         done   = (       stored &
+                    .or.  bufloc .eq. rbsize )
+      end do
 
 !
 !     Get the unit number for the file, and write the record.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAF', .false., unit )
 
-      WRITE (UNIT, &
-             REC=RECNO, &
-             IOSTAT=IOSTAT) DREC
+      write (unit, &
+             rec=recno, &
+             iostat=iostat) drec
 
 !
 !     If the record was buffered, replace it---with the input
 !     record if the write was successful, or with zeros if it
 !     was not.
 !
-      IF ( STORED ) THEN
-         IF ( IOSTAT .EQ. 0 ) THEN
-            CALL MOVED  ( DREC, 128, RBDAT(1,BUFLOC) )
-         ELSE
-            RBHAN(BUFLOC) = 0
-            RBREC(BUFLOC) = 0
-            RBREQ(BUFLOC) = 0
-         END IF
-      END IF
+      if ( stored ) then
+         if ( iostat .eq. 0 ) then
+            call moved  ( drec, 128, rbdat(1,bufloc) )
+         else
+            rbhan(bufloc) = 0
+            rbrec(bufloc) = 0
+            rbreq(bufloc) = 0
+         end if
+      end if
 
 !
 !     Declare an error if the write failed.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL SETMSG ( 'Double precision write failed. Value of '     // &
+      if ( iostat .ne. 0 ) then
+         call setmsg ( 'Double precision write failed. Value of '     // &
                        'IOSTAT was #' )
-         CALL ERRINT ( '#', IOSTAT )
-         CALL SIGERR ( 'SPICE(DAFDPWRITEFAIL)' )
-      END IF
+         call errint ( '#', iostat )
+         call sigerr ( 'SPICE(DAFDPWRITEFAIL)' )
+      end if
 
-      CALL CHKOUT ( 'DAFWDR' )
-      RETURN
+      call chkout ( 'DAFWDR' )
+      return
 
 
 
 !$Procedure DAFNRR ( DAF number of reads, requests )
 
-      ENTRY DAFNRR ( READS, REQS )
+      entry dafnrr ( reads, reqs )
 
 ! $ Abstract
 !
@@ -1685,8 +1685,8 @@
 !-&
 
 
-      READS = NREAD
-      REQS  = NREQ
+      reads = nread
+      reqs  = nreq
 
-      RETURN
-      END
+      return
+      end

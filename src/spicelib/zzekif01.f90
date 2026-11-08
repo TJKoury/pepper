@@ -1,6 +1,6 @@
 !$Procedure ZZEKIF01 ( EK, initialize type 1 segment for fast load )
 
-      SUBROUTINE ZZEKIF01 ( HANDLE, SEGNO, RCPTRS )
+      subroutine zzekif01 ( handle, segno, rcptrs )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RCPTRS ( * )
+      integer               handle
+      integer               segno
+      integer               rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -113,55 +113,55 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NCOLS
-      INTEGER               NPAGE
-      INTEGER               NR
-      INTEGER               NROWS
-      INTEGER               NRP
-      INTEGER               P
-      INTEGER               PBASE
-      INTEGER               RECNO
-      INTEGER               REMAIN
-      INTEGER               RPSIZE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               TOP
+      integer               base
+      integer               i
+      integer               j
+      integer               ncols
+      integer               npage
+      integer               nr
+      integer               nrows
+      integer               nrp
+      integer               p
+      integer               pbase
+      integer               recno
+      integer               remain
+      integer               rpsize
+      integer               segdsc ( sdscsz )
+      integer               top
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKIF01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKIF01' )
+      end if
 
 !
 !     Read in the segment descriptor.
 !
-      CALL ZZEKSDSC (  HANDLE,  SEGNO,  SEGDSC )
+      call zzeksdsc (  handle,  segno,  segdsc )
 
-      NCOLS  =  SEGDSC(NCIDX)
-      NROWS  =  SEGDSC(NRIDX)
+      ncols  =  segdsc(ncidx)
+      nrows  =  segdsc(nridx)
 
 !
 !     Empty the EK scratch area stack.
 !
-      CALL ZZEKSTOP ( TOP )
-      CALL ZZEKSDEC ( TOP )
+      call zzekstop ( top )
+      call zzeksdec ( top )
 
 !
 !     Push the handle and segment number onto the stack.
 !
-      CALL ZZEKSPSH ( 1, HANDLE )
-      CALL ZZEKSPSH ( 1, SEGNO  )
+      call zzekspsh ( 1, handle )
+      call zzekspsh ( 1, segno  )
 
 !
 !     The segment will require a record pointer structure for each row
@@ -173,46 +173,46 @@
 !     We also compute the number of pages we'll need to hold the
 !     pointers.
 !
-      RPSIZE  =    DPTBAS + NCOLS
-      NRP     =    IPSIZE / RPSIZE
-      NPAGE   =  ( NROWS + NRP - 1 ) / NRP
+      rpsize  =    dptbas + ncols
+      nrp     =    ipsize / rpsize
+      npage   =  ( nrows + nrp - 1 ) / nrp
 
 !
 !     We'll compute addresses of record pointers a pageful at a time.
 !
-      REMAIN  =  NROWS
-      RECNO   =  0
+      remain  =  nrows
+      recno   =  0
 
-      DO I = 1, NPAGE
+      do i = 1, npage
 !
 !        Allocate a page to hold the record pointers.  A page from
 !        the free list is acceptable, hence the argument .FALSE.
 !        passed to ZZEKAPS.
 !
-         CALL ZZEKAPS  ( HANDLE, SEGDSC, INT, .FALSE., P, PBASE )
+         call zzekaps  ( handle, segdsc, int, .false., p, pbase )
 
 !
 !        NR is the number of record pointers we'll eventually write to
 !        this page.
 !
-         NR  =  MIN ( NRP, REMAIN )
+         nr  =  min ( nrp, remain )
 
-         DO J = 1, NR
+         do j = 1, nr
 !
 !           Record the base address of the current record pointer
 !           in the record pointer array.
 !
-            BASE                =  (J-1) * RPSIZE
-            RCPTRS ( RECNO+J )  =  PBASE + BASE
+            base                =  (j-1) * rpsize
+            rcptrs ( recno+j )  =  pbase + base
 
-         END DO
+         end do
 
-         RECNO   =  RECNO   +  NR
-         REMAIN  =  REMAIN  -  NR
+         recno   =  recno   +  nr
+         remain  =  remain  -  nr
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZEKIF01' )
-      RETURN
-      END
+      call chkout ( 'ZZEKIF01' )
+      return
+      end

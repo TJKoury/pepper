@@ -1,6 +1,6 @@
 !$Procedure UDF ( Dummy function for UDFUNS )
 
-      SUBROUTINE UDF ( X, VALUE )
+      subroutine udf ( x, value )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      VALUE
+      double precision      x
+      double precision      value
 
 ! $ Brief_I/O
 !
@@ -94,9 +94,9 @@
 !-&
 
 
-      X     = X     + 0.D0
-      VALUE = VALUE + 0.D0
+      x     = x     + 0.d0
+      value = value + 0.d0
 
-      RETURN
+      return
 
-      END
+      end

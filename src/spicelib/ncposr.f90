@@ -1,6 +1,6 @@
 !$Procedure NCPOSR (NOT character position, reverse)
 
-      INTEGER FUNCTION NCPOSR ( STR, CHARS, START )
+      integer function ncposr ( str, chars, start )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR
-      CHARACTER*(*)         CHARS
-      INTEGER               START
+      character*(*)         str
+      character*(*)         chars
+      integer               start
 
 ! $ Brief_I/O
 !
@@ -170,29 +170,29 @@
 !
 !     Local variables
 !
-      LOGICAL               FOUND
-      INTEGER               LENSTR
-      INTEGER               B
+      logical               found
+      integer               lenstr
+      integer               b
 
 
-      LENSTR = LEN ( STR )
+      lenstr = len ( str )
 
-      B      = MIN(LENSTR,START)
-      FOUND  = .FALSE.
-      NCPOSR = 0
+      b      = min(lenstr,start)
+      found  = .false.
+      ncposr = 0
 
-      DO WHILE ( .NOT. FOUND )
+      do while ( .not. found )
 
-         IF ( B .LE. 0 ) THEN
-            RETURN
-         ELSE IF ( INDEX( CHARS, STR(B:B) ) .EQ. 0 ) THEN
-            NCPOSR = B
-            RETURN
-         ELSE
-            B = B - 1
-         END IF
+         if ( b .le. 0 ) then
+            return
+         else if ( index( chars, str(b:b) ) .eq. 0 ) then
+            ncposr = b
+            return
+         else
+            b = b - 1
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

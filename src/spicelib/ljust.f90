@@ -1,6 +1,6 @@
 !$Procedure LJUST ( Left justify a character string )
 
-      SUBROUTINE LJUST ( INPUT, OUTPUT )
+      subroutine ljust ( input, output )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    INPUT
-      CHARACTER*(*)    OUTPUT
+      character*(*)    input
+      character*(*)    output
 
 ! $ Brief_I/O
 !
@@ -117,11 +117,11 @@
 !
 !     Local variables
 !
-      INTEGER               LI
-      INTEGER               LO
-      INTEGER               I
-      INTEGER               J
-      INTEGER               POS
+      integer               li
+      integer               lo
+      integer               i
+      integer               j
+      integer               pos
 
 
 !
@@ -129,63 +129,63 @@
 !     input string is already left-justified. There is nothing to do
 !     but to assign the input string to the output string.
 !
-      IF ( INPUT(1:1) .NE. ' ' ) THEN
+      if ( input(1:1) .ne. ' ' ) then
 
-         OUTPUT = INPUT
+         output = input
 
-      ELSE
+      else
 
 !
 !        Get the first non-blank character. Start OUTPUT at that point.
 !
-         LI = LEN    ( INPUT )
-         LO = LEN    ( OUTPUT)
+         li = len    ( input )
+         lo = len    ( output)
 
-         J  = 1
+         j  = 1
 
 !
 !        Set I equal to position of first non-blank character of INPUT.
 !
-         I   = 0
-         POS = 1
+         i   = 0
+         pos = 1
 
-         DO WHILE ( I .EQ. 0 .AND. POS .LE. LI )
+         do while ( i .eq. 0 .and. pos .le. li )
 
-            IF ( INPUT(POS:POS) .NE. ' ' )  THEN
-               I    =  POS
-            ELSE
-               POS  =  POS + 1
-            END IF
+            if ( input(pos:pos) .ne. ' ' )  then
+               i    =  pos
+            else
+               pos  =  pos + 1
+            end if
 
-         END DO
+         end do
 
 !
 !        Did we find a non-blank character? If not, the input string is
 !        blank. Set output to blank.
 !
-         IF ( I .EQ. 0 ) THEN
+         if ( i .eq. 0 ) then
 
-            OUTPUT = ' '
+            output = ' '
 
-         ELSE
+         else
 
 !
 !           I is now the index of the first non-blank character of
 !           INPUT.
 !
-            DO WHILE  ( ( I .LE. LI ) .AND. ( J .LE. LO ) )
-               OUTPUT(J:J) = INPUT(I:I)
-               J           = J + 1
-               I           = I + 1
-            END DO
+            do while  ( ( i .le. li ) .and. ( j .le. lo ) )
+               output(j:j) = input(i:i)
+               j           = j + 1
+               i           = i + 1
+            end do
 
-            IF ( J .LE. LO ) THEN
-               OUTPUT(J:) = ' '
-            END IF
+            if ( j .le. lo ) then
+               output(j:) = ' '
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure ZZPRSCOR ( Parse aberration correction )
 
-      SUBROUTINE ZZPRSCOR ( ABCORR, ATTBLK )
-      IMPLICIT NONE
+      subroutine zzprscor ( abcorr, attblk )
+      implicit none
 
 ! $ Abstract
 !
@@ -24,10 +24,10 @@
 !
 ! $ Declarations
 
-      CHARACTER*(*)         ABCORR
-      LOGICAL               ATTBLK ( * )
+      character*(*)         abcorr
+      logical               attblk ( * )
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
 ! $ Brief_I/O
 !
@@ -162,38 +162,38 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      LOGICAL               RETURN
+      integer               bsrchc
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    CORLST ( NABCOR )
-      CHARACTER*(CORLEN)    TMPCOR
+      character*(corlen)    corlst ( nabcor )
+      character*(corlen)    tmpcor
 
-      INTEGER               I
-      INTEGER               LOC
-      INTEGER               ORDVEC ( NABCOR )
+      integer               i
+      integer               loc
+      integer               ordvec ( nabcor )
 
-      LOGICAL               CONV   ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               GEO    ( NABCOR )
-      LOGICAL               LT     ( NABCOR )
-      LOGICAL               REL    ( NABCOR )
-      LOGICAL               STL    ( NABCOR )
-      LOGICAL               XMIT   ( NABCOR )
+      logical               conv   ( nabcor )
+      logical               first
+      logical               geo    ( nabcor )
+      logical               lt     ( nabcor )
+      logical               rel    ( nabcor )
+      logical               stl    ( nabcor )
+      logical               xmit   ( nabcor )
 
 !
 !     Saved variables
 !
-      SAVE                  CONV
-      SAVE                  CORLST
-      SAVE                  FIRST
-      SAVE                  GEO
-      SAVE                  LT
-      SAVE                  REL
-      SAVE                  STL
-      SAVE                  XMIT
+      save                  conv
+      save                  corlst
+      save                  first
+      save                  geo
+      save                  lt
+      save                  rel
+      save                  stl
+      save                  xmit
 
 !
 !     Initial values
@@ -205,38 +205,38 @@
 !     in this data statement:  the strings and associated values
 !     are ordered at run time.
 !
-      DATA &
+      data &
       ( &
-         CORLST(I), GEO(I), LT(I),   STL(I),  CONV(I), XMIT(I), REL(I), &
-         I= 1, NABCOR &
+         corlst(i), geo(i), lt(i),   stl(i),  conv(i), xmit(i), rel(i), &
+         i= 1, nabcor &
       ) / &
-       'CN',      .FALSE., .TRUE.,  .FALSE., .TRUE.,  .FALSE., .FALSE., &
-       'CN+S',    .FALSE., .TRUE.,  .TRUE.,  .TRUE.,  .FALSE., .FALSE., &
-       'LT',      .FALSE., .TRUE.,  .FALSE., .FALSE., .FALSE., .FALSE., &
-       'LT+S',    .FALSE., .TRUE.,  .TRUE.,  .FALSE., .FALSE., .FALSE., &
-       'NONE',    .TRUE.,  .FALSE., .FALSE., .FALSE., .FALSE., .FALSE., &
-       'RL',      .FALSE., .TRUE.,  .FALSE., .FALSE., .FALSE., .TRUE., &
-       'RL+S',    .FALSE., .TRUE.,  .TRUE.,  .FALSE., .FALSE., .TRUE., &
-       'S',       .FALSE., .FALSE., .TRUE.,  .FALSE., .FALSE., .FALSE., &
-       'XCN',     .FALSE., .TRUE.,  .FALSE., .TRUE.,  .TRUE.,  .FALSE., &
-       'XCN+S',   .FALSE., .TRUE.,  .TRUE.,  .TRUE.,  .TRUE.,  .FALSE., &
-       'XLT',     .FALSE., .TRUE.,  .FALSE., .FALSE., .TRUE.,  .FALSE., &
-       'XLT+S',   .FALSE., .TRUE.,  .TRUE.,  .FALSE., .TRUE.,  .FALSE., &
-       'XRL',     .FALSE., .TRUE.,  .FALSE., .FALSE., .TRUE.,  .TRUE., &
-       'XRL+S',   .FALSE., .TRUE.,  .TRUE.,  .FALSE., .TRUE.,  .TRUE., &
-       'XS',      .FALSE., .FALSE., .TRUE.,  .FALSE., .TRUE.,  .FALSE. &
+       'CN',      .false., .true.,  .false., .true.,  .false., .false., &
+       'CN+S',    .false., .true.,  .true.,  .true.,  .false., .false., &
+       'LT',      .false., .true.,  .false., .false., .false., .false., &
+       'LT+S',    .false., .true.,  .true.,  .false., .false., .false., &
+       'NONE',    .true.,  .false., .false., .false., .false., .false., &
+       'RL',      .false., .true.,  .false., .false., .false., .true., &
+       'RL+S',    .false., .true.,  .true.,  .false., .false., .true., &
+       'S',       .false., .false., .true.,  .false., .false., .false., &
+       'XCN',     .false., .true.,  .false., .true.,  .true.,  .false., &
+       'XCN+S',   .false., .true.,  .true.,  .true.,  .true.,  .false., &
+       'XLT',     .false., .true.,  .false., .false., .true.,  .false., &
+       'XLT+S',   .false., .true.,  .true.,  .false., .true.,  .false., &
+       'XRL',     .false., .true.,  .false., .false., .true.,  .true., &
+       'XRL+S',   .false., .true.,  .true.,  .false., .true.,  .true., &
+       'XS',      .false., .false., .true.,  .false., .true.,  .false. &
         /
 
 
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        The first time this routine is called, we sort the
 !        aberration correction strings and the associated flag
@@ -245,60 +245,60 @@
 !
 !        Find the sorted order of the aberration correction strings.
 !
-         CALL ORDERC ( CORLST, NABCOR, ORDVEC )
+         call orderc ( corlst, nabcor, ordvec )
 
 !
 !        Put the aberration correction strings and the associated
 !        arrays into increasing order.
 !
-         CALL REORDC ( ORDVEC, NABCOR, CORLST )
+         call reordc ( ordvec, nabcor, corlst )
 
-         CALL REORDL ( ORDVEC, NABCOR, GEO    )
-         CALL REORDL ( ORDVEC, NABCOR, LT     )
-         CALL REORDL ( ORDVEC, NABCOR, STL    )
-         CALL REORDL ( ORDVEC, NABCOR, CONV   )
-         CALL REORDL ( ORDVEC, NABCOR, XMIT   )
-         CALL REORDL ( ORDVEC, NABCOR, REL    )
+         call reordl ( ordvec, nabcor, geo    )
+         call reordl ( ordvec, nabcor, lt     )
+         call reordl ( ordvec, nabcor, stl    )
+         call reordl ( ordvec, nabcor, conv   )
+         call reordl ( ordvec, nabcor, xmit   )
+         call reordl ( ordvec, nabcor, rel    )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Obtain a blank-free, upper-case copy of the aberration
 !     correction string.
 !
-      CALL LJUCRS ( 0, ABCORR, TMPCOR )
+      call ljucrs ( 0, abcorr, tmpcor )
 
 !
 !     Search the list for the aberration correction string.
 !
-      LOC = BSRCHC ( TMPCOR, NABCOR, CORLST )
+      loc = bsrchc ( tmpcor, nabcor, corlst )
 
-      IF ( LOC .EQ. 0 ) THEN
+      if ( loc .eq. 0 ) then
 
-         CALL CHKIN  ( 'ZZPRSCOR' )
-         CALL SETMSG ( 'Aberration correction specification # is not '// &
+         call chkin  ( 'ZZPRSCOR' )
+         call setmsg ( 'Aberration correction specification # is not '// &
                        'recognized.'                                  )
-         CALL ERRCH  ( '#',  ABCORR                                   )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                         )
-         CALL CHKOUT ( 'ZZPRSCOR'                                     )
-         RETURN
+         call errch  ( '#',  abcorr                                   )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                         )
+         call chkout ( 'ZZPRSCOR'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the output flags.
 !
-      ATTBLK( GEOIDX )  =  GEO   ( LOC )
-      ATTBLK( LTIDX  )  =  LT    ( LOC )
-      ATTBLK( STLIDX )  =  STL   ( LOC )
-      ATTBLK( CNVIDX )  =  CONV  ( LOC )
-      ATTBLK( XMTIDX )  =  XMIT  ( LOC )
-      ATTBLK( RELIDX )  =  REL   ( LOC )
+      attblk( geoidx )  =  geo   ( loc )
+      attblk( ltidx  )  =  lt    ( loc )
+      attblk( stlidx )  =  stl   ( loc )
+      attblk( cnvidx )  =  conv  ( loc )
+      attblk( xmtidx )  =  xmit  ( loc )
+      attblk( relidx )  =  rel   ( loc )
 
-      RETURN
-      END
+      return
+      end
 
 
 

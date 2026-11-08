@@ -1,10 +1,10 @@
 !$Procedure EKQMGR  ( EK, query manager )
 
-      SUBROUTINE EKQMGR (  CINDEX,  ELMENT,  EQRYC,   EQRYD,   EQRYI, &
-                           FNAME,   ROW,     SELIDX,  COLUMN,  HANDLE, &
-                           N,       TABLE,   ATTDSC,  CCOUNT,  FOUND, &
-                           NELT,    NMROWS,  SEMERR,  ERRMSG,  CDATA, &
-                           DDATA,   IDATA,   NULL                     )
+      subroutine ekqmgr (  cindex,  elment,  eqryc,   eqryd,   eqryi, &
+                           fname,   row,     selidx,  column,  handle, &
+                           n,       table,   attdsc,  ccount,  found, &
+                           nelt,    nmrows,  semerr,  errmsg,  cdata, &
+                           ddata,   idata,   null                     )
 
 ! $ Abstract
 !
@@ -22,59 +22,59 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE  'ekattdsc.inc'
-      INCLUDE  'ekbool.inc'
-      INCLUDE  'ekcnamsz.inc'
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'ekjrs.inc'
-      INCLUDE  'ekopcd.inc'
-      INCLUDE  'ekqlimit.inc'
-      INCLUDE  'ekquery.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektnamsz.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekattdsc.inc'
+      include  'ekbool.inc'
+      include  'ekcnamsz.inc'
+      include  'ekcoldsc.inc'
+      include  'ekjrs.inc'
+      include  'ekopcd.inc'
+      include  'ekqlimit.inc'
+      include  'ekquery.inc'
+      include  'eksegdsc.inc'
+      include  'ektnamsz.inc'
+      include  'ektype.inc'
 
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE =   20 )
+      integer               ftsize
+      parameter           ( ftsize =   20 )
 
-      INTEGER               STSIZE
-      PARAMETER           ( STSIZE =  200 )
+      integer               stsize
+      parameter           ( stsize =  200 )
 
-      INTEGER               MXTBLD
-      PARAMETER           ( MXTBLD =  100 )
+      integer               mxtbld
+      parameter           ( mxtbld =  100 )
 
-      INTEGER               MXCLLD
-      PARAMETER           ( MXCLLD =  500 )
+      integer               mxclld
+      parameter           ( mxclld =  500 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
 
-      INTEGER               CINDEX
-      INTEGER               ELMENT
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD  ( * )
-      INTEGER               EQRYI  ( LBCELL : * )
-      CHARACTER*(*)         FNAME
-      INTEGER               ROW
-      INTEGER               SELIDX
-      CHARACTER*(*)         COLUMN
-      INTEGER               HANDLE
-      INTEGER               N
-      CHARACTER*(*)         TABLE
-      INTEGER               ATTDSC ( ADSCSZ )
-      INTEGER               CCOUNT
-      LOGICAL               FOUND
-      INTEGER               NELT
-      INTEGER               NMROWS
-      LOGICAL               SEMERR
-      CHARACTER*(*)         ERRMSG
-      CHARACTER*(*)         CDATA
-      DOUBLE PRECISION      DDATA
-      INTEGER               IDATA
-      LOGICAL               NULL
+      integer               cindex
+      integer               elment
+      character*(*)         eqryc
+      double precision      eqryd  ( * )
+      integer               eqryi  ( lbcell : * )
+      character*(*)         fname
+      integer               row
+      integer               selidx
+      character*(*)         column
+      integer               handle
+      integer               n
+      character*(*)         table
+      integer               attdsc ( adscsz )
+      integer               ccount
+      logical               found
+      integer               nelt
+      integer               nmrows
+      logical               semerr
+      character*(*)         errmsg
+      character*(*)         cdata
+      double precision      ddata
+      integer               idata
+      logical               null
 
 ! $ Brief_I/O
 !
@@ -619,21 +619,21 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               ISRCHC
+      integer               cardc
+      integer               isrchc
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               EKNSEG
-      INTEGER               ZZEKESIZ
+      integer               eknseg
+      integer               zzekesiz
 
-      LOGICAL               ZZEKRMCH
-      LOGICAL               ZZEKVMCH
+      logical               zzekrmch
+      logical               zzekvmch
 
 !
 !     Linked list functions:
@@ -643,9 +643,9 @@
 !        Return number of free nodes
 !
 !
-      INTEGER               LNKNXT
-      INTEGER               LNKTL
-      INTEGER               LNKNFN
+      integer               lnknxt
+      integer               lnktl
+      integer               lnknfn
 
 
 !
@@ -655,42 +655,42 @@
 !
 !     Maximum number of constraints allowed in a single query:
 !
-      INTEGER               MAXSEG
-      PARAMETER           ( MAXSEG = STSIZE )
+      integer               maxseg
+      parameter           ( maxseg = stsize )
 
-      INTEGER               CTSIZE
-      PARAMETER           ( CTSIZE = MXCLLD )
+      integer               ctsize
+      parameter           ( ctsize = mxclld )
 
-      INTEGER               DTSIZE
-      PARAMETER           ( DTSIZE = MAXSEG * MXCLLD / 10 )
+      integer               dtsize
+      parameter           ( dtsize = maxseg * mxclld / 10 )
 
 
 !
 !     Miscellaneous parameters
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               NIL
-      PARAMETER           ( NIL    =  0 )
+      integer               nil
+      parameter           ( nil    =  0 )
 
 !
 !     Number of data types
 !
-      INTEGER               NTYPES
-      PARAMETER           ( NTYPES = 4 )
+      integer               ntypes
+      parameter           ( ntypes = 4 )
 
 !
 !     Length of strings used for data type names.
 !
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN = 4 )
+      integer               typlen
+      parameter           ( typlen = 4 )
 
 !
 !     Length of status strings.
 !
-      INTEGER               SHORT
-      PARAMETER           ( SHORT = 80 )
+      integer               short
+      parameter           ( short = 80 )
 
 
 !
@@ -716,9 +716,9 @@
 !
 !        FTHEAD is the head node of the file list.
 !
-      INTEGER               FTPOOL ( 2,  LBPOOL : FTSIZE )
-      INTEGER               FTHAN  (              FTSIZE )
-      INTEGER               FTHEAD
+      integer               ftpool ( 2,  lbpool : ftsize )
+      integer               fthan  (              ftsize )
+      integer               fthead
 
 
 !
@@ -759,14 +759,14 @@
 !        TBHEAD is the head node of the table list.
 !
 !
-      INTEGER               TBPOOL ( 2,  LBPOOL : MXTBLD )
-      INTEGER               TBSTPT (              MXTBLD )
-      INTEGER               TBNCOL (              MXTBLD )
-      CHARACTER*(TNAMSZ)    TBNAMS (              MXTBLD )
-      INTEGER               TBCTPT (              MXTBLD )
-      INTEGER               TBFILS ( FTSIZE,      MXTBLD )
-      INTEGER               TBFLSZ (              MXTBLD )
-      INTEGER               TBHEAD
+      integer               tbpool ( 2,  lbpool : mxtbld )
+      integer               tbstpt (              mxtbld )
+      integer               tbncol (              mxtbld )
+      character*(tnamsz)    tbnams (              mxtbld )
+      integer               tbctpt (              mxtbld )
+      integer               tbfils ( ftsize,      mxtbld )
+      integer               tbflsz (              mxtbld )
+      integer               tbhead
 
 
 !
@@ -805,13 +805,13 @@
 !
 !
 !
-      INTEGER               STPOOL ( 2, LBPOOL : MAXSEG )
-      INTEGER               STHAN  (             MAXSEG )
-      INTEGER               STSIDX (             MAXSEG )
-      INTEGER               STDSCS ( SDSCSZ,     MAXSEG )
-      INTEGER               STNROW (             MAXSEG )
-      INTEGER               STNCOL (             MAXSEG )
-      INTEGER               STDTPT (             MAXSEG )
+      integer               stpool ( 2, lbpool : maxseg )
+      integer               sthan  (             maxseg )
+      integer               stsidx (             maxseg )
+      integer               stdscs ( sdscsz,     maxseg )
+      integer               stnrow (             maxseg )
+      integer               stncol (             maxseg )
+      integer               stdtpt (             maxseg )
 
 !
 !     The column descriptor table contains a column descriptor for
@@ -825,8 +825,8 @@
 !
 !     The space in the table is organized as a doubly linked list.
 !
-      INTEGER               DTPOOL ( 2,       LBPOOL:DTSIZE )
-      INTEGER               DTDSCS ( CDSCSZ,  DTSIZE        )
+      integer               dtpool ( 2,       lbpool:dtsize )
+      integer               dtdscs ( cdscsz,  dtsize        )
 
 !
 !     The column attribute table contains attribute information for
@@ -865,175 +865,175 @@
 !        columns they correspond to may contain null values.
 !
 !
-      INTEGER               CTPOOL ( 2,       LBPOOL : CTSIZE )
-      CHARACTER*(CNAMSZ)    CTNAMS (                   CTSIZE )
-      INTEGER               CTCLAS (                   CTSIZE )
-      INTEGER               CTTYPS (                   CTSIZE )
-      INTEGER               CTLENS (                   CTSIZE )
-      LOGICAL               CTFIXD (                   CTSIZE )
-      INTEGER               CTSIZS (                   CTSIZE )
-      LOGICAL               CTINDX (                   CTSIZE )
-      LOGICAL               CTNULL (                   CTSIZE )
+      integer               ctpool ( 2,       lbpool : ctsize )
+      character*(cnamsz)    ctnams (                   ctsize )
+      integer               ctclas (                   ctsize )
+      integer               cttyps (                   ctsize )
+      integer               ctlens (                   ctsize )
+      logical               ctfixd (                   ctsize )
+      integer               ctsizs (                   ctsize )
+      logical               ctindx (                   ctsize )
+      logical               ctnull (                   ctsize )
 
 
 !
 !
 !     Other local variables
 !
-      CHARACTER*(TYPLEN)    CHTYPE ( NTYPES )
-      CHARACTER*(CNAMSZ)    CNAMS  ( MXCLLD )
-      CHARACTER*(CNAMSZ)    CNMSET ( LBCELL : MXCLLD )
-      CHARACTER*(CNAMSZ)    COLNAM
-      CHARACTER*(TNAMSZ)    FRMALS ( MAXTAB )
-      CHARACTER*(TNAMSZ)    FRMTAB ( MAXTAB )
-      CHARACTER*(CNAMSZ)    LCNAME
-      CHARACTER*(TNAMSZ)    LTNAME
-      CHARACTER*(SHORT)     PROBLM
-      CHARACTER*(CNAMSZ)    RCNAME
-      CHARACTER*(TNAMSZ)    RTNAME
-      CHARACTER*(SHORT)     STATE
-      CHARACTER*(TNAMSZ)    TABNAM
-      CHARACTER*(TNAMSZ)    TABVEC ( LBCELL : MAXTAB )
+      character*(typlen)    chtype ( ntypes )
+      character*(cnamsz)    cnams  ( mxclld )
+      character*(cnamsz)    cnmset ( lbcell : mxclld )
+      character*(cnamsz)    colnam
+      character*(tnamsz)    frmals ( maxtab )
+      character*(tnamsz)    frmtab ( maxtab )
+      character*(cnamsz)    lcname
+      character*(tnamsz)    ltname
+      character*(short)     problm
+      character*(cnamsz)    rcname
+      character*(tnamsz)    rtname
+      character*(short)     state
+      character*(tnamsz)    tabnam
+      character*(tnamsz)    tabvec ( lbcell : maxtab )
 
-      DOUBLE PRECISION      DVALS  ( MAXCON )
+      double precision      dvals  ( maxcon )
 
-      INTEGER               BEGIDX
-      INTEGER               CBEGS  ( MAXCON )
-      INTEGER               CDSCRS ( CDSCSZ,  MXCLLD )
-      INTEGER               CENDS  ( MAXCON )
-      INTEGER               CJBEG
-      INTEGER               CJEND
-      INTEGER               CJROWS
-      INTEGER               CJSIZE
-      INTEGER               CNSTYP ( MAXCON )
-      INTEGER               COL
-      INTEGER               COLPTR
-      INTEGER               CONJ
-      INTEGER               CVLEN
-      INTEGER               CTNEW
-      INTEGER               DELSEG
-      INTEGER               DTNEW
-      INTEGER               DTYPE  ( MAXCON )
-      INTEGER               ENDIDX
-      INTEGER               I
-      INTEGER               IVALS  ( MAXCON )
-      INTEGER               J
-      INTEGER               JBASE1
-      INTEGER               JBASE2
-      INTEGER               JSIZE
-      INTEGER               K
-      INTEGER               KEY
-      INTEGER               KEYDSC ( CDSCSZ )
-      INTEGER               L
-      INTEGER               LCIDX  ( MAXCON )
-      INTEGER               LELTS  ( MAXCON )
-      INTEGER               LDSCRS ( CDSCSZ, MAXCON )
-      INTEGER               LTBIDX ( MAXCON )
-      INTEGER               LXBEG
-      INTEGER               LXEND
-      INTEGER               NACT
-      INTEGER               NCOLS
-      INTEGER               NCONJ
-      INTEGER               NEW
-      INTEGER               NEXT
-      INTEGER               NMATCH
-      INTEGER               NORDER
-      INTEGER               NPCOL
-      INTEGER               NSEG
-      INTEGER               NSEL
-      INTEGER               NSV
-      INTEGER               NTAB
-      INTEGER               OCOLS  ( MAXORD )
-      INTEGER               OELTS  ( MAXORD )
-      INTEGER               OPS    ( MAXCON )
-      INTEGER               ORDBAS
-      INTEGER               OTABS  ( MAXORD )
-      INTEGER               PTROFF
-      INTEGER               R
-      INTEGER               RBAS   ( MXJOIN )
-      INTEGER               RCIDX  ( MAXCON )
-      INTEGER               RDSCRS ( CDSCSZ, MAXCON )
-      INTEGER               RELTS  ( MAXCON )
-      INTEGER               RESBAS
-      INTEGER               ROWIDX
-      INTEGER               ROWVEC ( MAXTAB )
-      INTEGER               RSIZE  ( MXJRS  )
-      INTEGER               RTBIDX ( MAXCON )
-      INTEGER               RTOTAL
-      INTEGER               RWVBAS
-      INTEGER               SELCOL ( MAXSEL )
-      INTEGER               SELCTP ( MAXSEL )
-      INTEGER               SELTAB ( MAXSEL )
-      INTEGER               SEG
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               SEGVEC ( MAXTAB )
-      INTEGER               SENSE  ( MAXORD )
-      INTEGER               SGVBAS
-      INTEGER               SIZES  ( MAXCON )
-      INTEGER               STNEW
-      INTEGER               T
-      INTEGER               TAB
-      INTEGER               TABIDX
-      INTEGER               TBCURR
-      INTEGER               TOP
-      INTEGER               TPTVEC ( LBCELL : MAXTAB )
-      INTEGER               UBASE  ( MXJRS )
-      INTEGER               UNROWS
-      INTEGER               USIZE
+      integer               begidx
+      integer               cbegs  ( maxcon )
+      integer               cdscrs ( cdscsz,  mxclld )
+      integer               cends  ( maxcon )
+      integer               cjbeg
+      integer               cjend
+      integer               cjrows
+      integer               cjsize
+      integer               cnstyp ( maxcon )
+      integer               col
+      integer               colptr
+      integer               conj
+      integer               cvlen
+      integer               ctnew
+      integer               delseg
+      integer               dtnew
+      integer               dtype  ( maxcon )
+      integer               endidx
+      integer               i
+      integer               ivals  ( maxcon )
+      integer               j
+      integer               jbase1
+      integer               jbase2
+      integer               jsize
+      integer               k
+      integer               key
+      integer               keydsc ( cdscsz )
+      integer               l
+      integer               lcidx  ( maxcon )
+      integer               lelts  ( maxcon )
+      integer               ldscrs ( cdscsz, maxcon )
+      integer               ltbidx ( maxcon )
+      integer               lxbeg
+      integer               lxend
+      integer               nact
+      integer               ncols
+      integer               nconj
+      integer               new
+      integer               next
+      integer               nmatch
+      integer               norder
+      integer               npcol
+      integer               nseg
+      integer               nsel
+      integer               nsv
+      integer               ntab
+      integer               ocols  ( maxord )
+      integer               oelts  ( maxord )
+      integer               ops    ( maxcon )
+      integer               ordbas
+      integer               otabs  ( maxord )
+      integer               ptroff
+      integer               r
+      integer               rbas   ( mxjoin )
+      integer               rcidx  ( maxcon )
+      integer               rdscrs ( cdscsz, maxcon )
+      integer               relts  ( maxcon )
+      integer               resbas
+      integer               rowidx
+      integer               rowvec ( maxtab )
+      integer               rsize  ( mxjrs  )
+      integer               rtbidx ( maxcon )
+      integer               rtotal
+      integer               rwvbas
+      integer               selcol ( maxsel )
+      integer               selctp ( maxsel )
+      integer               seltab ( maxsel )
+      integer               seg
+      integer               segdsc ( sdscsz )
+      integer               segvec ( maxtab )
+      integer               sense  ( maxord )
+      integer               sgvbas
+      integer               sizes  ( maxcon )
+      integer               stnew
+      integer               t
+      integer               tab
+      integer               tabidx
+      integer               tbcurr
+      integer               top
+      integer               tptvec ( lbcell : maxtab )
+      integer               ubase  ( mxjrs )
+      integer               unrows
+      integer               usize
 
-      LOGICAL               ACTIVC ( MAXCON )
-      LOGICAL               ACTIVV ( MAXCON )
-      LOGICAL               ATTMCH
-      LOGICAL               CMTCH
-      LOGICAL               DOSORT
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               INDEXD
-      LOGICAL               KEYFND
-      LOGICAL               NULSOK
-      LOGICAL               PRESNT
-      LOGICAL               SORTED
-      LOGICAL               VMTCH
+      logical               activc ( maxcon )
+      logical               activv ( maxcon )
+      logical               attmch
+      logical               cmtch
+      logical               dosort
+      logical               first
+      logical               fnd
+      logical               indexd
+      logical               keyfnd
+      logical               nulsok
+      logical               presnt
+      logical               sorted
+      logical               vmtch
 
 !
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !
 !     Initial values
 !
-      DATA                  LELTS  /  MAXCON * 1 /
-      DATA                  OELTS  /  MAXORD * 1 /
-      DATA                  RELTS  /  MAXCON * 1 /
+      data                  lelts  /  maxcon * 1 /
+      data                  oelts  /  maxord * 1 /
+      data                  relts  /  maxcon * 1 /
 
-      DATA                  CHTYPE / 'CHR', 'DP', 'INT', 'TIME' /
+      data                  chtype / 'CHR', 'DP', 'INT', 'TIME' /
 
-      DATA                  FTHEAD /  0       /
-      DATA                  TBHEAD /  0       /
+      data                  fthead /  0       /
+      data                  tbhead /  0       /
 
-      DATA                  FIRST  / .TRUE.   /
+      data                  first  / .true.   /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKQMGR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKQMGR' )
+      end if
 
 !
 !     Never come here.
 !
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      CALL CHKOUT ( 'EKQMGR' )
-      RETURN
+      call chkout ( 'EKQMGR' )
+      return
 
 
 
@@ -1043,7 +1043,7 @@
 
 !$Procedure EKLEF ( EK, load event file )
 
-      ENTRY EKLEF ( FNAME, HANDLE )
+      entry eklef ( fname, handle )
 
 ! $ Abstract
 !
@@ -1458,11 +1458,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKLEF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKLEF' )
+      end if
 
 !
 !     Here's a brief overview of what follows:
@@ -1512,66 +1512,66 @@
 !     On the first pass through this routine, initialize the tables,
 !     if it hasn't been done yet.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     Open the EK file for read access.  Bail out now if this doesn't
 !     work.  This retreat will protect the various tables from
 !     corruption.
 !
-      CALL EKOPR ( FNAME, HANDLE )
+      call ekopr ( fname, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKLEF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKLEF' )
+         return
+      end if
 
 !
 !     Check to see whether the named EK has already been loaded.
 !     If so, we've added another link to the EK, which must be
 !     removed.
 !
-      I = FTHEAD
+      i = fthead
 
-      DO WHILE ( I .GT. 0 )
+      do while ( i .gt. 0 )
 
-         IF ( HANDLE .EQ. FTHAN(I) ) THEN
+         if ( handle .eq. fthan(i) ) then
 !
 !           The last call we made to EKOPR added another link to
 !           the EK file.  Remove this link.
 !
-            CALL DASCLS ( HANDLE )
+            call dascls ( handle )
 
-            CALL CHKOUT ( 'EKLEF' )
-            RETURN
+            call chkout ( 'EKLEF' )
+            return
 
-         END IF
+         end if
 
-         I = LNKNXT ( I, FTPOOL )
+         i = lnknxt ( i, ftpool )
 
-      END DO
+      end do
 
 !
 !     Nothing doing unless the architecture is correct.  This file
 !     should be a paged DAS EK.
 !
-      CALL ZZEKPGCH ( HANDLE, 'READ' )
+      call zzekpgch ( handle, 'READ' )
 
 !
 !     Before getting too involved with this new EK file, let's check it
@@ -1581,55 +1581,55 @@
 !     Make sure there's enough room in the file table.
 !
 
-      IF (  LNKNFN(FTPOOL) .EQ. 0 ) THEN
+      if (  lnknfn(ftpool) .eq. 0 ) then
 !
 !        Sorry, there are no free file table entries left.
 !
 !        We close the EK AFTER setting the long error message.
 !
-         CALL SETMSG ( 'The EK file # could not be loaded; the '      // &
+         call setmsg ( 'The EK file # could not be loaded; the '      // &
                        'maximum number of loaded EKs has already '    // &
                        'been reached.'                                 )
-         CALL ERRHAN ( '#', HANDLE                                     )
-         CALL EKCLS  ( HANDLE                                          )
-         CALL SIGERR ( 'SPICE(EKFILETABLEFULL)'                        )
-         CALL CHKOUT ( 'EKLEF'                                         )
-         RETURN
+         call errhan ( '#', handle                                     )
+         call ekcls  ( handle                                          )
+         call sigerr ( 'SPICE(EKFILETABLEFULL)'                        )
+         call chkout ( 'EKLEF'                                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Find out how many segments are in the new kernel, and make
 !     sure there's enough room in the segment table.
 !
-      NSEG = EKNSEG ( HANDLE )
+      nseg = eknseg ( handle )
 
-      IF ( NSEG .GT. LNKNFN(STPOOL) ) THEN
+      if ( nseg .gt. lnknfn(stpool) ) then
 !
 !        There are too many segments for the amount of space we've got
 !        left.
 !
 !        We close the EK AFTER setting the long error message.
 !
-         CALL SETMSG ( 'The EK file # could not be loaded; the '      // &
+         call setmsg ( 'The EK file # could not be loaded; the '      // &
                        'maximum number of loaded segments has '       // &
                        'already been reached.'                         )
-         CALL ERRHAN ( '#', HANDLE                                     )
-         CALL EKCLS  ( HANDLE                                          )
-         CALL SIGERR ( 'SPICE(EKSEGTABLEFULL)'                         )
-         CALL CHKOUT ( 'EKLEF'                                         )
-         RETURN
+         call errhan ( '#', handle                                     )
+         call ekcls  ( handle                                          )
+         call sigerr ( 'SPICE(EKSEGTABLEFULL)'                         )
+         call chkout ( 'EKLEF'                                         )
+         return
 
-      ELSE IF ( NSEG .LT. 1 ) THEN
+      else if ( nseg .lt. 1 ) then
 
-         CALL SETMSG ( 'The EK file # contains no segments.'           )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL EKCLS  ( HANDLE                                          )
-         CALL SIGERR ( 'SPICE(EKNOSEGMENTS)'                           )
-         CALL CHKOUT ( 'EKLEF'                                         )
-         RETURN
+         call setmsg ( 'The EK file # contains no segments.'           )
+         call errhan ( '#',  handle                                    )
+         call ekcls  ( handle                                          )
+         call sigerr ( 'SPICE(EKNOSEGMENTS)'                           )
+         call chkout ( 'EKLEF'                                         )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -1638,74 +1638,74 @@
 !     tables, and we'll update the table list if new tables are
 !     introduced in this file.
 !
-      SEG    =   1
-      STATE  =  'LOAD_FILE_TABLE'
+      seg    =   1
+      state  =  'LOAD_FILE_TABLE'
 
-      DO WHILE ( STATE .NE. 'DONE' )
+      do while ( state .ne. 'DONE' )
 
 
-         IF ( STATE .EQ. 'LOAD_FILE_TABLE' ) THEN
+         if ( state .eq. 'LOAD_FILE_TABLE' ) then
 !
 !           Allocate a file table entry and link the new entry in before
 !           the current head of the list.  Update the list head pointer.
 !           Record the file handle in the new file table entry.
 !
-            CALL LNKAN  ( FTPOOL, NEW            )
-            CALL LNKILB ( NEW,    FTHEAD, FTPOOL )
+            call lnkan  ( ftpool, new            )
+            call lnkilb ( new,    fthead, ftpool )
 
-            FTHEAD         =   NEW
-            FTHAN ( NEW )  =   HANDLE
+            fthead         =   new
+            fthan ( new )  =   handle
 
-            STATE          =  'SUMMARIZE_SEGMENT'
+            state          =  'SUMMARIZE_SEGMENT'
 
 
 
-         ELSE IF ( STATE .EQ. 'SUMMARIZE_SEGMENT' ) THEN
+         else if ( state .eq. 'SUMMARIZE_SEGMENT' ) then
 !
 !           Get the summary information for this segment.
 !
-            CALL ZZEKSINF (  HANDLE,  SEG,     TABNAM, &
-                             SEGDSC,  CNAMS,   CDSCRS  )
+            call zzeksinf (  handle,  seg,     tabnam, &
+                             segdsc,  cnams,   cdscrs  )
 
-            NCOLS  =  SEGDSC(NCIDX)
+            ncols  =  segdsc(ncidx)
 
 !
 !           Before going further, check the segment for duplicate
 !           column names.  Bail out if we find any.
 !
-            CALL SSIZEC ( MXCLLD,        CNMSET    )
-            CALL MOVEC  ( CNAMS,  NCOLS, CNMSET(1) )
-            CALL VALIDC ( MXCLLD, NCOLS, CNMSET    )
+            call ssizec ( mxclld,        cnmset    )
+            call movec  ( cnams,  ncols, cnmset(1) )
+            call validc ( mxclld, ncols, cnmset    )
 
-            IF ( CARDC(CNMSET) .LT. NCOLS ) THEN
+            if ( cardc(cnmset) .lt. ncols ) then
 
-               STATE   =  'ABORT'
-               PROBLM  =  'DUPLICATE_COLUMN_NAMES'
+               state   =  'ABORT'
+               problm  =  'DUPLICATE_COLUMN_NAMES'
 
-            ELSE
+            else
 
-               STATE   =  'FIND_TABLE'
+               state   =  'FIND_TABLE'
 
-            END IF
+            end if
 
 
 
-         ELSE IF ( STATE .EQ. 'FIND_TABLE' ) THEN
+         else if ( state .eq. 'FIND_TABLE' ) then
 !
 !           Traverse the table list, checking for a match.
 !
-            TBCURR  =  TBHEAD
-            PRESNT  =  .FALSE.
+            tbcurr  =  tbhead
+            presnt  =  .false.
 
-            DO WHILE (  ( TBCURR .GT. 0 ) .AND. ( .NOT. PRESNT ) )
+            do while (  ( tbcurr .gt. 0 ) .and. ( .not. presnt ) )
 
-               IF ( TABNAM .EQ. TBNAMS(TBCURR) ) THEN
-                  PRESNT =  .TRUE.
-               ELSE
-                  TBCURR      =  LNKNXT ( TBCURR, TBPOOL )
-               END IF
+               if ( tabnam .eq. tbnams(tbcurr) ) then
+                  presnt =  .true.
+               else
+                  tbcurr      =  lnknxt ( tbcurr, tbpool )
+               end if
 
-            END DO
+            end do
 
 !
 !           If TABNAM is the name of a table we know about, go on to
@@ -1713,53 +1713,53 @@
 !           If we didn't find TABNAM, we have a new table.  Make a table
 !           list entry for it.
 !
-            IF ( PRESNT ) THEN
+            if ( presnt ) then
 !
 !              Before going further, make sure the number of columns
 !              in the segment matches the number of columns in the
 !              parent table.
 !
-               IF ( NCOLS .NE. TBNCOL(TBCURR) ) THEN
+               if ( ncols .ne. tbncol(tbcurr) ) then
 
-                  NPCOL  =  TBNCOL(TBCURR)
-                  STATE  = 'ABORT'
-                  PROBLM = 'COLUMN_NUMBER_MISMATCH'
+                  npcol  =  tbncol(tbcurr)
+                  state  = 'ABORT'
+                  problm = 'COLUMN_NUMBER_MISMATCH'
 
-               ELSE
+               else
 !
 !                 Add the current file to the list of files containing
 !                 the current table.
 !
-                  TBFILS ( 1, TBCURR )  =  HANDLE
-                  TBFLSZ (    TBCURR )  =  TBFLSZ(TBCURR) + 1
+                  tbfils ( 1, tbcurr )  =  handle
+                  tbflsz (    tbcurr )  =  tbflsz(tbcurr) + 1
 
-                  STATE = 'MAKE_SEGMENT_TABLE_ENTRY'
+                  state = 'MAKE_SEGMENT_TABLE_ENTRY'
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              This segment belongs to a new table.
 !
-               STATE = 'MAKE_TABLE_LIST_ENTRY'
+               state = 'MAKE_TABLE_LIST_ENTRY'
 
-            END IF
+            end if
 
 
 
-         ELSE IF ( STATE .EQ. 'MAKE_TABLE_LIST_ENTRY' ) THEN
+         else if ( state .eq. 'MAKE_TABLE_LIST_ENTRY' ) then
 !
 !           Allocate a table list entry, if we can.
 !
 
-            IF ( LNKNFN(TBPOOL) .EQ. 0 ) THEN
+            if ( lnknfn(tbpool) .eq. 0 ) then
 !
 !              Oops, we're out of room.
 !
-               STATE   =  'ABORT'
-               PROBLM  =  'TABLE_LIST_FULL'
+               state   =  'ABORT'
+               problm  =  'TABLE_LIST_FULL'
 
-            ELSE
+            else
 !
 !              We have an entry; link it to the tail of the table list.
 !              For consistency with the case in which the table entry
@@ -1768,43 +1768,43 @@
 !              If this is the first table in the table list, set the
 !              table head pointer.
 !
-               CALL LNKAN  ( TBPOOL, TBCURR  )
+               call lnkan  ( tbpool, tbcurr  )
 
-               IF ( TBHEAD .LE. 0 ) THEN
-                  TBHEAD  =  TBCURR
-               ELSE
-                  CALL LNKILB ( TBHEAD, TBCURR, TBPOOL )
-               END IF
+               if ( tbhead .le. 0 ) then
+                  tbhead  =  tbcurr
+               else
+                  call lnkilb ( tbhead, tbcurr, tbpool )
+               end if
 
 !
 !              Fill in the table name.
 !
-               TBNAMS ( TBCURR )   =  TABNAM
+               tbnams ( tbcurr )   =  tabnam
 !
 !              Since this table is new, the file list for this table
 !              contains only the handle of the current EK.
 !
-               TBFILS ( 1, TBCURR ) = HANDLE
-               TBFLSZ (    TBCURR ) = 1
+               tbfils ( 1, tbcurr ) = handle
+               tbflsz (    tbcurr ) = 1
 
 !
 !              Initialize the column count, column table pointer, and
 !              segment list pointer for this table.
 !
-               TBNCOL(TBCURR)   =  NCOLS
-               TBCTPT(TBCURR)   =  0
-               TBSTPT(TBCURR)   =  0
+               tbncol(tbcurr)   =  ncols
+               tbctpt(tbcurr)   =  0
+               tbstpt(tbcurr)   =  0
 
 !
 !              Go on to add a segment table entry for the current
 !              segment.
 !
-               STATE  =  'MAKE_SEGMENT_TABLE_ENTRY'
+               state  =  'MAKE_SEGMENT_TABLE_ENTRY'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. 'MAKE_SEGMENT_TABLE_ENTRY' ) THEN
+         else if ( state .eq. 'MAKE_SEGMENT_TABLE_ENTRY' ) then
 !
 !           Add the data for the current segment to the segment
 !           table.
@@ -1812,48 +1812,48 @@
 !           Allocate a segment table entry.  We've already verified
 !           that there's enough room.
 !
-            CALL LNKAN ( STPOOL, STNEW )
+            call lnkan ( stpool, stnew )
 
 !
 !           Link this segment table entry to the tail of the segment
 !           list for the parent table, or, if the tail is NIL, just set
 !           the segment list pointer to the current segment node.
 !
-            IF ( TBSTPT(TBCURR) .LE. 0 ) THEN
+            if ( tbstpt(tbcurr) .le. 0 ) then
 
-               TBSTPT(TBCURR)  =  STNEW
+               tbstpt(tbcurr)  =  stnew
 
-            ELSE
+            else
 
-               CALL LNKILB ( TBSTPT(TBCURR), STNEW, STPOOL )
+               call lnkilb ( tbstpt(tbcurr), stnew, stpool )
 
-            END IF
+            end if
 
 !
 !           At this point, we can fill in all elements of the segment
 !           table entry except for the pointers into the column table
 !           and the column base addresses.
 !
-            STHAN (STNEW)   =  HANDLE
-            STSIDX(STNEW)   =  SEG
-            STNROW(STNEW)   =  SEGDSC(NRIDX)
-            STNCOL(STNEW)   =  SEGDSC(NCIDX)
-            STDTPT(STNEW)   =  0
+            sthan (stnew)   =  handle
+            stsidx(stnew)   =  seg
+            stnrow(stnew)   =  segdsc(nridx)
+            stncol(stnew)   =  segdsc(ncidx)
+            stdtpt(stnew)   =  0
 
-            CALL MOVEI ( SEGDSC, SDSCSZ, STDSCS(1,STNEW) )
+            call movei ( segdsc, sdscsz, stdscs(1,stnew) )
 
 !
 !           The next step is to set up the column attributes and
 !           descriptors.
 !
-            STATE  =  'MAKE_COLUMN_TABLE_ENTRIES'
+            state  =  'MAKE_COLUMN_TABLE_ENTRIES'
 
 
 
-         ELSE IF ( STATE .EQ. 'MAKE_COLUMN_TABLE_ENTRIES' ) THEN
+         else if ( state .eq. 'MAKE_COLUMN_TABLE_ENTRIES' ) then
 
 
-            IF ( PRESNT ) THEN
+            if ( presnt ) then
 !
 !              If the current table was present before loading the
 !              current segment, we must make sure that the attributes
@@ -1869,16 +1869,16 @@
 !              check the list of column names for the current segment,
 !              looking for a match.
 !
-               J   =   TBCTPT ( TBCURR )
+               j   =   tbctpt ( tbcurr )
 
-               DO WHILE (       ( J     .GT.  0       ) &
-                          .AND. ( STATE .NE. 'ABORT'  )   )
-
-
-                  K  =  ISRCHC ( CTNAMS(J), NCOLS, CNAMS )
+               do while (       ( j     .gt.  0       ) &
+                          .and. ( state .ne. 'ABORT'  )   )
 
 
-                  IF ( K .GT. 0 ) THEN
+                  k  =  isrchc ( ctnams(j), ncols, cnams )
+
+
+                  if ( k .gt. 0 ) then
 !
 !                    We have a name match.  At this point, we must
 !                    check that the column's other attributes---data
@@ -1886,18 +1886,18 @@
 !                    indexed---match as well.  It's an error if they
 !                    don't.
 !
-                     INDEXD = CDSCRS(IXTIDX,K) .NE. IFALSE
-                     NULSOK = CDSCRS(NFLIDX,K) .NE. IFALSE
-                     ATTMCH = &
-                                ( CDSCRS(CLSIDX, K) .EQ.  CTCLAS(J) ) &
-                          .AND. ( CDSCRS(TYPIDX, K) .EQ.  CTTYPS(J) ) &
-                          .AND. ( CDSCRS(LENIDX, K) .EQ.  CTLENS(J) ) &
-                          .AND. ( CDSCRS(SIZIDX, K) .EQ.  CTSIZS(J) ) &
-                          .AND. ( INDEXD            .EQV. CTINDX(J) ) &
-                          .AND. ( NULSOK            .EQV. CTNULL(J) )
+                     indexd = cdscrs(ixtidx,k) .ne. ifalse
+                     nulsok = cdscrs(nflidx,k) .ne. ifalse
+                     attmch = &
+                                ( cdscrs(clsidx, k) .eq.  ctclas(j) ) &
+                          .and. ( cdscrs(typidx, k) .eq.  cttyps(j) ) &
+                          .and. ( cdscrs(lenidx, k) .eq.  ctlens(j) ) &
+                          .and. ( cdscrs(sizidx, k) .eq.  ctsizs(j) ) &
+                          .and. ( indexd            .eqv. ctindx(j) ) &
+                          .and. ( nulsok            .eqv. ctnull(j) )
 
 
-                     IF ( ATTMCH ) THEN
+                     if ( attmch ) then
 !
 !                       Great, the attributes match.  Actually, the
 !                       addition of the current segment can *change*
@@ -1911,45 +1911,45 @@
 !                       in the descriptor table.  We'll need to
 !                       allocate a descriptor table entry first.
 !
-                        IF ( LNKNFN( DTPOOL ) .EQ. 0 ) THEN
+                        if ( lnknfn( dtpool ) .eq. 0 ) then
 !
 !                          No free nodes left in the descriptor table.
 !
-                           STATE  = 'ABORT'
-                           PROBLM = 'DESCRIPTOR_TABLE_FULL'
+                           state  = 'ABORT'
+                           problm = 'DESCRIPTOR_TABLE_FULL'
 
-                        ELSE
+                        else
 !
 !                          A free node is available.  Link it in
 !                          at the tail of the descriptor list for
 !                          the current segment.
 !
-                           CALL LNKAN  ( DTPOOL, DTNEW )
+                           call lnkan  ( dtpool, dtnew )
 
-                           IF ( STDTPT(STNEW) .LE. 0 ) THEN
+                           if ( stdtpt(stnew) .le. 0 ) then
 
-                              STDTPT(STNEW) = DTNEW
+                              stdtpt(stnew) = dtnew
 
-                           ELSE
+                           else
 
-                              CALL LNKILB (STDTPT(STNEW), DTNEW, DTPOOL)
+                              call lnkilb (stdtpt(stnew), dtnew, dtpool)
 
-                           END IF
+                           end if
 
 !
 !                          Fill in the descriptor.
 !
-                           CALL MOVEI (  CDSCRS(1,K), &
-                                         CDSCSZ, &
-                                         DTDSCS(1,DTNEW)  )
+                           call movei (  cdscrs(1,k), &
+                                         cdscsz, &
+                                         dtdscs(1,dtnew)  )
 
-                        END IF
+                        end if
 !
 !                       We filled in a descriptor table entry, or
 !                       else we ran out of room.
 !
 
-                     ELSE
+                     else
 !
 !                       Seriously bad news.  Someone's tried to
 !                       load an EK containing a column with
@@ -1957,42 +1957,42 @@
 !                       loaded column of the same name in the
 !                       current table.
 !
-                        COLNAM  =   CTNAMS(J)
-                        STATE   =  'ABORT'
-                        PROBLM  =  'MISMATCHED_COLUMN_ATTRIBUTES'
+                        colnam  =   ctnams(j)
+                        state   =  'ABORT'
+                        problm  =  'MISMATCHED_COLUMN_ATTRIBUTES'
 
-                     END IF
+                     end if
 
 
-                  ELSE
+                  else
 !
 !                    No name match; the current column from the current
 !                    table is not present in the segment we're looking
 !                    at.
 !
-                     COLNAM  =   CTNAMS(J)
-                     STATE   =  'ABORT'
-                     PROBLM  =  'MISSING_COLUMN'
+                     colnam  =   ctnams(j)
+                     state   =  'ABORT'
+                     problm  =  'MISSING_COLUMN'
 
-                  END IF
+                  end if
 !
 !                 The current column matched one in the column list
 !                 for the current table, or else we have a problem.
 !
 !                 Advance to the next column in the table's column list.
 !
-                  IF ( STATE .NE. 'ABORT' ) THEN
-                     J  =  LNKNXT ( J, CTPOOL )
-                  END IF
+                  if ( state .ne. 'ABORT' ) then
+                     j  =  lnknxt ( j, ctpool )
+                  end if
 
-               END DO
+               end do
 !
 !              We've made descriptor table entries for each column in
 !              the current segment, or else we have an error.
 !
 
 
-            ELSE
+            else
 !
 !              We need to set up the column attribute entries for
 !              the new table introduced by loading this segment.  We
@@ -2000,144 +2000,144 @@
 !              segment.  We *don't* have to check the consistency of
 !              the attributes of the columns.
 !
-               K  =  1
+               k  =  1
 
-               DO WHILE (  (K .LE. NCOLS) .AND. (STATE .NE. 'ABORT')  )
+               do while (  (k .le. ncols) .and. (state .ne. 'ABORT')  )
 !
 !                 Allocate a new entry in the column attribute table and
 !                 link it to the tail of the column list for the
 !                 current table.  If the column list is empty, update
 !                 the list head.
 !
-                  IF (  LNKNFN(CTPOOL) .EQ. 0 ) THEN
+                  if (  lnknfn(ctpool) .eq. 0 ) then
 !
 !                    There's no more space to store attribute
 !                    descriptors.
 !
-                     STATE  =  'ABORT'
-                     PROBLM =  'ATTRIBUTE_TABLE_FULL'
+                     state  =  'ABORT'
+                     problm =  'ATTRIBUTE_TABLE_FULL'
 
-                  ELSE
+                  else
 
-                     CALL LNKAN  ( CTPOOL, CTNEW )
+                     call lnkan  ( ctpool, ctnew )
 
-                     IF  ( TBCTPT(TBCURR) .LE. 0 ) THEN
+                     if  ( tbctpt(tbcurr) .le. 0 ) then
 
-                        TBCTPT(TBCURR)  =  CTNEW
+                        tbctpt(tbcurr)  =  ctnew
 
-                     ELSE
+                     else
 
-                        CALL LNKILB ( TBCTPT(TBCURR), CTNEW, CTPOOL )
+                        call lnkilb ( tbctpt(tbcurr), ctnew, ctpool )
 
-                     END IF
+                     end if
 
 !
 !                    Fill in the new column attribute entry with the
 !                    attributes for this column.
 !
-                     CTNAMS(CTNEW)  =  CNAMS (       K)
-                     CTCLAS(CTNEW)  =  CDSCRS(CLSIDX,K)
-                     CTTYPS(CTNEW)  =  CDSCRS(TYPIDX,K)
-                     CTLENS(CTNEW)  =  CDSCRS(LENIDX,K)
-                     CTSIZS(CTNEW)  =  CDSCRS(SIZIDX,K)
-                     CTINDX(CTNEW)  =  CDSCRS(IXTIDX,K) .NE. IFALSE
-                     CTFIXD(CTNEW)  =  CDSCRS(SIZIDX,K) .NE. IFALSE
-                     CTNULL(CTNEW)  =  CDSCRS(NFLIDX,K) .NE. IFALSE
+                     ctnams(ctnew)  =  cnams (       k)
+                     ctclas(ctnew)  =  cdscrs(clsidx,k)
+                     cttyps(ctnew)  =  cdscrs(typidx,k)
+                     ctlens(ctnew)  =  cdscrs(lenidx,k)
+                     ctsizs(ctnew)  =  cdscrs(sizidx,k)
+                     ctindx(ctnew)  =  cdscrs(ixtidx,k) .ne. ifalse
+                     ctfixd(ctnew)  =  cdscrs(sizidx,k) .ne. ifalse
+                     ctnull(ctnew)  =  cdscrs(nflidx,k) .ne. ifalse
 
 !
 !                    Store the column descriptor for this column
 !                    in the descriptor table.  We'll need to
 !                    allocate a descriptor table entry first.
 !
-                     IF ( LNKNFN( DTPOOL ) .EQ. 0 ) THEN
+                     if ( lnknfn( dtpool ) .eq. 0 ) then
 !
 !                       No free nodes left in the descriptor table.
 !
-                        STATE  = 'ABORT'
-                        PROBLM = 'DESCRIPTOR_TABLE_FULL'
+                        state  = 'ABORT'
+                        problm = 'DESCRIPTOR_TABLE_FULL'
 
-                     ELSE
+                     else
 !
 !                       A free node is available.  Link it in at the
 !                       tail of the descriptor list for the current
 !                       segment.
 !
-                        CALL LNKAN  ( DTPOOL, DTNEW )
+                        call lnkan  ( dtpool, dtnew )
 
-                        IF ( STDTPT(STNEW) .LE. 0 ) THEN
+                        if ( stdtpt(stnew) .le. 0 ) then
 
-                           STDTPT(STNEW) = DTNEW
+                           stdtpt(stnew) = dtnew
 
-                        ELSE
+                        else
 
-                           CALL LNKILB ( STDTPT(STNEW), DTNEW, DTPOOL )
+                           call lnkilb ( stdtpt(stnew), dtnew, dtpool )
 
-                        END IF
+                        end if
 
 !
 !                       Fill in the descriptor.
 !
-                        CALL MOVEI (  CDSCRS(1,K), &
-                                      CDSCSZ, &
-                                      DTDSCS(1,DTNEW)  )
+                        call movei (  cdscrs(1,k), &
+                                      cdscsz, &
+                                      dtdscs(1,dtnew)  )
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 !
 !                 We created attribute and descriptor entries for the
 !                 current column, or we encountered an error.
 !
-                  IF ( STATE .NE. 'ABORT' ) THEN
+                  if ( state .ne. 'ABORT' ) then
 !
 !                    Consider the next column.
 !
-                     K  =  K + 1
+                     k  =  k + 1
 
-                  END IF
+                  end if
 
 
-               END DO
+               end do
 !
 !              We created attribute and descriptor entries for every
 !              column in the current segment, or we encountered an
 !              error.
 !
 
-            END IF
+            end if
 !
 !           We've processed the current segment in the new file, or
 !           else we have an error condition.
 !
 
-            IF ( STATE .NE. 'ABORT' ) THEN
+            if ( state .ne. 'ABORT' ) then
 !
 !              We're ready to look at the next segment in the new file.
 !
-               STATE  =  'NEXT_SEGMENT'
+               state  =  'NEXT_SEGMENT'
 
-            END IF
-
-
-
-         ELSE IF ( STATE .EQ. 'NEXT_SEGMENT' ) THEN
+            end if
 
 
-            IF ( SEG .LT. NSEG ) THEN
 
-               SEG    =   SEG + 1
-               STATE  =   'SUMMARIZE_SEGMENT'
+         else if ( state .eq. 'NEXT_SEGMENT' ) then
 
-            ELSE
+
+            if ( seg .lt. nseg ) then
+
+               seg    =   seg + 1
+               state  =   'SUMMARIZE_SEGMENT'
+
+            else
 !
 !              We're done with all of the segments.
 !
-               STATE  =  'DONE'
+               state  =  'DONE'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. 'ABORT' ) THEN
+         else if ( state .eq. 'ABORT' ) then
 !
 !           We must clean up all the data structure additions we made to
 !           accommodate the new file.
@@ -2150,24 +2150,24 @@
 !           head of the list.
 !
 
-            FTHEAD  =  LNKNXT ( NEW, FTPOOL )
+            fthead  =  lnknxt ( new, ftpool )
 
 
-            IF ( FTHEAD .LT. 0 ) THEN
+            if ( fthead .lt. 0 ) then
 !
 !              There are no files left.  Clean up the whole shebang.
 !
-               CALL LNKINI ( FTSIZE, FTPOOL )
-               CALL LNKINI ( STSIZE, STPOOL )
-               CALL LNKINI ( DTSIZE, DTPOOL )
-               CALL LNKINI ( CTSIZE, CTPOOL )
-               CALL LNKINI ( MXTBLD, TBPOOL )
+               call lnkini ( ftsize, ftpool )
+               call lnkini ( stsize, stpool )
+               call lnkini ( dtsize, dtpool )
+               call lnkini ( ctsize, ctpool )
+               call lnkini ( mxtbld, tbpool )
 
-               FTHEAD  =  0
-               TBHEAD  =  0
+               fthead  =  0
+               tbhead  =  0
 
 
-            ELSE
+            else
 !
 !              If we arrived here, the file we're unloading is not the
 !              only loaded file.
@@ -2177,7 +2177,7 @@
 !              node, so we can call the `free sublist' routine to get
 !              rid of it.
 !
-               CALL LNKFSL ( NEW, NEW, FTPOOL )
+               call lnkfsl ( new, new, ftpool )
 
 !
 !              It's time to clean up the table list, segment table,
@@ -2189,36 +2189,36 @@
 !              for any table becomes empty, we remove the entry for that
 !              table from the table list.
 !
-               TBCURR = TBHEAD
+               tbcurr = tbhead
 
-               DO WHILE ( TBCURR .GT. 0 )
+               do while ( tbcurr .gt. 0 )
 !
 !                 See whether the current table is in the file we're
 !                 unloading.
 !
-                  I  =  1
+                  i  =  1
 
-                  DO WHILE (       ( I .LE.  TBFLSZ(TBCURR) ) &
-                             .AND. (   .NOT. FND            )  )
+                  do while (       ( i .le.  tbflsz(tbcurr) ) &
+                             .and. (   .not. fnd            )  )
 
-                     IF ( TBFILS(I,TBCURR) .EQ. HANDLE ) THEN
+                     if ( tbfils(i,tbcurr) .eq. handle ) then
 !
 !                       This table is affected by unloading the file.
 !
-                        FND  =  .TRUE.
+                        fnd  =  .true.
 
-                     ELSE
+                     else
 !
 !                       Look at the next file handle.
 !
-                        I    =   I + 1
+                        i    =   i + 1
 
-                     END IF
+                     end if
 
-                  END DO
+                  end do
 
 
-                  IF ( FND ) THEN
+                  if ( fnd ) then
 !
 !                    Update the information for the current table to
 !                    reflect the unloading of the specified EK.
@@ -2227,23 +2227,23 @@
 !                    the list of file handles associated with this
 !                    table.  Compress this handle out of the list.
 !
-                     DO J  =  I,   TBFLSZ(TBCURR) - 1
+                     do j  =  i,   tbflsz(tbcurr) - 1
 
-                        TBFILS( J, TBCURR )  =  TBFILS( J+1, TBCURR )
+                        tbfils( j, tbcurr )  =  tbfils( j+1, tbcurr )
 
-                     END DO
+                     end do
 
-                     TBFLSZ(TBCURR)  =  TBFLSZ(TBCURR) - 1
+                     tbflsz(tbcurr)  =  tbflsz(tbcurr) - 1
 
 !
 !                    Traverse the segment list for this table, looking
 !                    for segments in the specified EK.
 !
-                     DELSEG  =  TBSTPT ( TBCURR )
+                     delseg  =  tbstpt ( tbcurr )
 
-                     DO WHILE ( DELSEG .GT. 0 )
+                     do while ( delseg .gt. 0 )
 
-                        IF ( STHAN(DELSEG) .EQ. HANDLE ) THEN
+                        if ( sthan(delseg) .eq. handle ) then
 !
 !                          This segment is aboard the sinking ship.  Put
 !                          it out of its misery.
@@ -2252,12 +2252,12 @@
 !                          These descriptors are linked together, so we
 !                          can free all of them in one shot.
 !
-                           J  =  STDTPT ( DELSEG )
+                           j  =  stdtpt ( delseg )
 
-                           IF ( J .GT. 0 ) THEN
-                              K  =  LNKTL  ( J,    DTPOOL )
-                              CALL LNKFSL  ( J, K, DTPOOL )
-                           END IF
+                           if ( j .gt. 0 ) then
+                              k  =  lnktl  ( j,    dtpool )
+                              call lnkfsl  ( j, k, dtpool )
+                           end if
 
 !
 !                          Now we can delete the segment table entry
@@ -2265,15 +2265,15 @@
 !                          updating the segment list pointer in the
 !                          parent table's table list entry.
 !
-                           IF ( DELSEG .EQ. TBSTPT(TBCURR) ) THEN
+                           if ( delseg .eq. tbstpt(tbcurr) ) then
 
-                              TBSTPT(TBCURR) =  LNKNXT( DELSEG, STPOOL )
+                              tbstpt(tbcurr) =  lnknxt( delseg, stpool )
 
-                           END IF
+                           end if
 
 
-                           NEXT = LNKNXT ( DELSEG,         STPOOL )
-                           CALL LNKFSL   ( DELSEG, DELSEG, STPOOL )
+                           next = lnknxt ( delseg,         stpool )
+                           call lnkfsl   ( delseg, delseg, stpool )
 
 !
 !                          The segment we just freed may have been the
@@ -2281,16 +2281,16 @@
 !                          with this possibility later, below the end of
 !                          the current loop.
 !
-                           DELSEG  = NEXT
+                           delseg  = next
 
-                        ELSE
+                        else
 
-                           DELSEG  = LNKNXT ( DELSEG, STPOOL )
+                           delseg  = lnknxt ( delseg, stpool )
 
-                        END IF
+                        end if
 
 
-                     END DO
+                     end do
 
 !
 !                    We've examined all of the segments in the current
@@ -2306,7 +2306,7 @@
 !                    may need to update the head-of-list pointer for the
 !                    table list.
 !
-                     IF ( TBSTPT(TBCURR) .LE. 0 ) THEN
+                     if ( tbstpt(tbcurr) .le. 0 ) then
 !
 !                       There are no loaded segments left for this
 !                       table.
@@ -2319,70 +2319,70 @@
 !                       can free them in one shot.  Don't crash if the
 !                       column attribute list is empty.
 !
-                        J  =  TBCTPT ( TBCURR )
+                        j  =  tbctpt ( tbcurr )
 
-                        IF ( J .GT. 0 ) THEN
+                        if ( j .gt. 0 ) then
 
-                           K  =  LNKTL  ( J,    CTPOOL )
-                           CALL LNKFSL  ( J, K, CTPOOL )
+                           k  =  lnktl  ( j,    ctpool )
+                           call lnkfsl  ( j, k, ctpool )
 
-                        END IF
+                        end if
 
 
-                        IF ( TBCURR .EQ. TBHEAD ) THEN
+                        if ( tbcurr .eq. tbhead ) then
 !
 !                          The entry for this table is at the head of
 !                          the table list.  Update the head of the list.
 !
-                           TBHEAD  =  LNKNXT ( TBCURR, TBPOOL )
-                           NEXT    =  TBHEAD
+                           tbhead  =  lnknxt ( tbcurr, tbpool )
+                           next    =  tbhead
 
-                        ELSE
+                        else
 
-                           NEXT    =  LNKNXT ( TBCURR, TBPOOL )
+                           next    =  lnknxt ( tbcurr, tbpool )
 
-                        END IF
+                        end if
 
 !
 !                       Make the entry for this table go away.
 !
-                        CALL LNKFSL ( TBCURR, TBCURR, TBPOOL )
+                        call lnkfsl ( tbcurr, tbcurr, tbpool )
 
 !
 !                       Look at the next table.
 !
-                        TBCURR  =  NEXT
+                        tbcurr  =  next
 
 
-                     ELSE
+                     else
 !
 !                       We're done with the current table.  Look at the
 !                       next one.
 !
-                        TBCURR = LNKNXT ( TBCURR, TBPOOL )
+                        tbcurr = lnknxt ( tbcurr, tbpool )
 
-                     END IF
+                     end if
 !
 !                    We've cleaned up the table entry for the current
 !                    table, if it was necessary to do so.
 !
 
-                  ELSE
+                  else
 !
 !                    The current table is not affected by unloading this
 !                    file.  Examine the next table.
 !
-                     TBCURR = LNKNXT ( TBCURR, TBPOOL )
+                     tbcurr = lnknxt ( tbcurr, tbpool )
 
-                  END IF
+                  end if
 
 !
 !                 We've processed the current table.
 !
-               END DO
+               end do
 
 
-            END IF
+            end if
 
 !
 !           We've cleaned up after the aborted partial load.
@@ -2390,114 +2390,114 @@
 !           Now that the mess has been arranged, tell the user what the
 !           problem was.
 !
-            IF ( PROBLM .EQ. 'TABLE_LIST_FULL' ) THEN
+            if ( problm .eq. 'TABLE_LIST_FULL' ) then
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the '// &
+               call setmsg ( 'The EK file # could not be loaded; the '// &
                              'maximum number of distinct tables has ' // &
                              'already been reached.'                   )
-               CALL ERRHAN ( '#', HANDLE                               )
-               CALL SIGERR ( 'SPICE(EKTABLELISTFULL)'                  )
+               call errhan ( '#', handle                               )
+               call sigerr ( 'SPICE(EKTABLELISTFULL)'                  )
 
 
-            ELSE IF ( PROBLM .EQ. 'DUPLICATE_COLUMN_NAMES' ) THEN
+            else if ( problm .eq. 'DUPLICATE_COLUMN_NAMES' ) then
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the '// &
+               call setmsg ( 'The EK file # could not be loaded; the '// &
                              'segment # contains duplicate column '   // &
                              'names in table #.'                       )
-               CALL ERRHAN ( '#',      HANDLE                          )
-               CALL ERRINT ( '#',      SEG                             )
-               CALL ERRCH  ( '#',      TABNAM                          )
-               CALL SIGERR ( 'SPICE(EKCOLNUMMISMATCH)'                 )
+               call errhan ( '#',      handle                          )
+               call errint ( '#',      seg                             )
+               call errch  ( '#',      tabnam                          )
+               call sigerr ( 'SPICE(EKCOLNUMMISMATCH)'                 )
 
 
-            ELSE IF ( PROBLM .EQ. 'COLUMN_NUMBER_MISMATCH' ) THEN
+            else if ( problm .eq. 'COLUMN_NUMBER_MISMATCH' ) then
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the '// &
+               call setmsg ( 'The EK file # could not be loaded; the '// &
                              'number of columns (#) in segment # '    // &
                              'does not match the number of columns '  // &
                              '(#) in the parent table #.'              )
-               CALL ERRHAN ( '#',      HANDLE                          )
-               CALL ERRINT ( '#',      NCOLS                           )
-               CALL ERRINT ( '#',      SEG                             )
-               CALL ERRINT ( '#',      NPCOL                           )
-               CALL ERRCH  ( '#',      TABNAM                          )
-               CALL SIGERR ( 'SPICE(EKCOLNUMMISMATCH)'                 )
+               call errhan ( '#',      handle                          )
+               call errint ( '#',      ncols                           )
+               call errint ( '#',      seg                             )
+               call errint ( '#',      npcol                           )
+               call errch  ( '#',      tabnam                          )
+               call sigerr ( 'SPICE(EKCOLNUMMISMATCH)'                 )
 
 
-            ELSE IF ( PROBLM .EQ. 'MISMATCHED_COLUMN_ATTRIBUTES' ) THEN
+            else if ( problm .eq. 'MISMATCHED_COLUMN_ATTRIBUTES' ) then
 
-               CALL SETMSG ( 'EK file # contains a column '           // &
+               call setmsg ( 'EK file # contains a column '           // &
                              'whose attributes conflict with a '      // &
                              'loaded column.  The offending '         // &
                              'column name is #; the column is '       // &
                              'in segment #* of the file.'              )
-               CALL ERRHAN ( '#',  HANDLE                              )
-               CALL ERRCH  ( '#',  COLNAM                              )
-               CALL ERRINT ( '*',  SEG                                 )
-               CALL SIGERR ( 'SPICE(BADATTRIBUTES)'                    )
+               call errhan ( '#',  handle                              )
+               call errch  ( '#',  colnam                              )
+               call errint ( '*',  seg                                 )
+               call sigerr ( 'SPICE(BADATTRIBUTES)'                    )
 
 
-            ELSE IF ( PROBLM .EQ. 'DESCRIPTOR_TABLE_FULL' ) THEN
+            else if ( problm .eq. 'DESCRIPTOR_TABLE_FULL' ) then
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the' // &
+               call setmsg ( 'The EK file # could not be loaded; the' // &
                               'maximum allowed number of loaded '     // &
                               'columns already been reached.'          )
-               CALL ERRHAN ( '#',      HANDLE                          )
-               CALL SIGERR ( 'SPICE(COLDESCTABLEFULL)'                 )
+               call errhan ( '#',      handle                          )
+               call sigerr ( 'SPICE(COLDESCTABLEFULL)'                 )
 
 
-            ELSE IF ( PROBLM .EQ. 'ATTRIBUTE_TABLE_FULL' ) THEN
+            else if ( problm .eq. 'ATTRIBUTE_TABLE_FULL' ) then
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the '// &
+               call setmsg ( 'The EK file # could not be loaded; the '// &
                              'maximum number of columns having'       // &
                              'distinct attributes has already been '  // &
                              'reached.'                                )
-               CALL ERRHAN ( '#',      HANDLE                          )
-               CALL SIGERR ( 'SPICE(EKCOLATTRTABLEFULL)'               )
+               call errhan ( '#',      handle                          )
+               call sigerr ( 'SPICE(EKCOLATTRTABLEFULL)'               )
 
 
-            ELSE IF ( PROBLM .EQ. 'MISSING_COLUMN' ) THEN
+            else if ( problm .eq. 'MISSING_COLUMN' ) then
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the '// &
+               call setmsg ( 'The EK file # could not be loaded; the '// &
                              'column # in already loaded table # is ' // &
                              'not present in segment # in the EK file.')
-               CALL ERRHAN ( '#',      HANDLE                          )
-               CALL ERRCH  ( '#',      COLNAM                          )
-               CALL ERRCH  ( '#',      TABNAM                          )
-               CALL ERRINT ( '#',      SEG                             )
-               CALL SIGERR ( 'SPICE(EKMISSINGCOLUMN)'                  )
+               call errhan ( '#',      handle                          )
+               call errch  ( '#',      colnam                          )
+               call errch  ( '#',      tabnam                          )
+               call errint ( '#',      seg                             )
+               call sigerr ( 'SPICE(EKMISSINGCOLUMN)'                  )
 
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'The EK file # could not be loaded; the '// &
+               call setmsg ( 'The EK file # could not be loaded; the '// &
                              'problem "#" occurred while attempting ' // &
                              'to load the file.  By way, there is a ' // &
                              'bug in EKLEF if you see this message.'   )
-               CALL ERRHAN ( '#',      HANDLE                          )
-               CALL ERRCH  ( '#',      PROBLM                          )
-               CALL SIGERR ( 'SPICE(BUG)'                              )
+               call errhan ( '#',      handle                          )
+               call errch  ( '#',      problm                          )
+               call sigerr ( 'SPICE(BUG)'                              )
 
-            END IF
-
-
-            CALL EKCLS  (  HANDLE )
-
-            CALL CHKOUT ( 'EKLEF' )
-            RETURN
-
-         END IF
+            end if
 
 
-      END DO
+            call ekcls  (  handle )
+
+            call chkout ( 'EKLEF' )
+            return
+
+         end if
+
+
+      end do
 !
 !     At this point, we've made the file table, table list, segment
 !     table, column descriptor table, and column attribute table updates
 !     necessary to reflect the presence of the new file.
 !
 
-      CALL CHKOUT ( 'EKLEF' )
-      RETURN
+      call chkout ( 'EKLEF' )
+      return
 
 
 
@@ -2508,7 +2508,7 @@
 
 !$Procedure EKUEF  ( EK, unload event file )
 
-      ENTRY EKUEF ( HANDLE )
+      entry ekuef ( handle )
 
 ! $ Abstract
 !
@@ -2752,55 +2752,55 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKUEF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKUEF' )
+      end if
 
 !
 !     On the first pass through this routine, initialize the tables,
 !     if it hasn't been done yet.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     Check to see whether the named EK has been loaded.  Do nothing
 !     if not.
 !
-      I    =   FTHEAD
-      FND  =  .FALSE.
+      i    =   fthead
+      fnd  =  .false.
 
-      DO WHILE (  ( I .GT. 0 ) .AND. ( .NOT. FND )  )
+      do while (  ( i .gt. 0 ) .and. ( .not. fnd )  )
 
-         IF ( HANDLE .EQ. FTHAN(I) ) THEN
-            FND  =  .TRUE.
-         ELSE
-            I    =  LNKNXT ( I, FTPOOL )
-         END IF
+         if ( handle .eq. fthan(i) ) then
+            fnd  =  .true.
+         else
+            i    =  lnknxt ( i, ftpool )
+         end if
 
-      END DO
+      end do
 
-      IF ( .NOT. FND ) THEN
-         CALL CHKOUT ( 'EKUEF' )
-         RETURN
-      END IF
+      if ( .not. fnd ) then
+         call chkout ( 'EKUEF' )
+         return
+      end if
 
 !
 !     If we got to here, HANDLE points to a loaded EK file.  It's
@@ -2809,38 +2809,38 @@
 !
 !     The file table is first.
 !
-      IF ( I .EQ. FTHEAD ) THEN
+      if ( i .eq. fthead ) then
 !
 !        The file is at the head of the list.  If the file has a
 !        successor, that file is now at the head of the list.
 !
-         FTHEAD  =  LNKNXT ( I, FTPOOL )
+         fthead  =  lnknxt ( i, ftpool )
 
-         IF ( FTHEAD .LT. 0 ) THEN
+         if ( fthead .lt. 0 ) then
 !
 !           There are no files left.  Clean up the whole shebang.
 !
-            CALL LNKINI ( FTSIZE, FTPOOL )
-            CALL LNKINI ( STSIZE, STPOOL )
-            CALL LNKINI ( DTSIZE, DTPOOL )
-            CALL LNKINI ( CTSIZE, CTPOOL )
-            CALL LNKINI ( MXTBLD, TBPOOL )
+            call lnkini ( ftsize, ftpool )
+            call lnkini ( stsize, stpool )
+            call lnkini ( dtsize, dtpool )
+            call lnkini ( ctsize, ctpool )
+            call lnkini ( mxtbld, tbpool )
 
-            FTHEAD  =  0
-            TBHEAD  =  0
+            fthead  =  0
+            tbhead  =  0
 
 !
 !           Close the EK file, to keep the DAS system's bookkeeping
 !           up to date.
 !
-            CALL EKCLS  ( HANDLE )
+            call ekcls  ( handle )
 
-            CALL CHKOUT ( 'EKUEF' )
-            RETURN
+            call chkout ( 'EKUEF' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we arrived here, the file we're unloading is not the only
@@ -2850,7 +2850,7 @@
 !     regarded as a sublist that starts and ends with the Ith node,
 !     so we can call the `free sublist' routine to get rid of it.
 !
-      CALL LNKFSL ( I, I, FTPOOL )
+      call lnkfsl ( i, i, ftpool )
 
 !
 !     It's time to clean up the table list, segment table, column
@@ -2861,34 +2861,34 @@
 !     unloading.  If the segment list for any table becomes empty, we
 !     remove the entry for that table from the table list.
 !
-      TBCURR = TBHEAD
+      tbcurr = tbhead
 
-      DO WHILE ( TBCURR .GT. 0 )
+      do while ( tbcurr .gt. 0 )
 !
 !        See whether the current table is in the file we're unloading.
 !
-            I  =  1
+            i  =  1
 
-            DO WHILE (  ( I .LE. TBFLSZ(TBCURR) ) .AND. ( .NOT. FND )  )
+            do while (  ( i .le. tbflsz(tbcurr) ) .and. ( .not. fnd )  )
 
-            IF ( TBFILS(I,TBCURR) .EQ. HANDLE ) THEN
+            if ( tbfils(i,tbcurr) .eq. handle ) then
 !
 !              This table is affected by unloading the file.
 !
-               FND  =  .TRUE.
+               fnd  =  .true.
 
-            ELSE
+            else
 !
 !              Look at the next file handle.
 !
-               I    =   I + 1
+               i    =   i + 1
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 
-         IF ( FND ) THEN
+         if ( fnd ) then
 !
 !           Update the information for the current table to reflect
 !           the unloading of the specified EK.
@@ -2897,23 +2897,23 @@
 !           list of file handles associated with this table.  Compress
 !           this handle out of the list.
 !
-            DO J  =  I,   TBFLSZ(TBCURR) - 1
+            do j  =  i,   tbflsz(tbcurr) - 1
 
-               TBFILS( J, TBCURR )  =  TBFILS( J+1, TBCURR )
+               tbfils( j, tbcurr )  =  tbfils( j+1, tbcurr )
 
-            END DO
+            end do
 
-            TBFLSZ(TBCURR)  =  TBFLSZ(TBCURR) - 1
+            tbflsz(tbcurr)  =  tbflsz(tbcurr) - 1
 
 !
 !           Traverse the segment list for this table, looking
 !           for segments in the specified EK.
 !
-            SEG  =  TBSTPT ( TBCURR )
+            seg  =  tbstpt ( tbcurr )
 
-            DO WHILE ( SEG .GT. 0 )
+            do while ( seg .gt. 0 )
 
-               IF ( STHAN(SEG) .EQ. HANDLE ) THEN
+               if ( sthan(seg) .eq. handle ) then
 !
 !                 This segment is aboard the sinking ship.  Put it
 !                 out of its misery.
@@ -2923,38 +2923,38 @@
 !                 all of them in one shot.  Don't crash if the column
 !                 descriptor list is empty.
 !
-                  J  =  STDTPT ( SEG )
+                  j  =  stdtpt ( seg )
 
-                  IF ( J .GT. 0 ) THEN
-                     K  =  LNKTL  ( J,    DTPOOL )
-                     CALL LNKFSL  ( J, K, DTPOOL )
-                  END IF
+                  if ( j .gt. 0 ) then
+                     k  =  lnktl  ( j,    dtpool )
+                     call lnkfsl  ( j, k, dtpool )
+                  end if
 
 !
 !                 Now we can delete the segment table entry itself.
 !                 This deletion may necessitate updating the segment
 !                 list pointer in the parent table's table list entry.
 !
-                  IF ( SEG .EQ. TBSTPT(TBCURR) ) THEN
+                  if ( seg .eq. tbstpt(tbcurr) ) then
 
-                     TBSTPT(TBCURR)  =  LNKNXT( SEG, STPOOL )
+                     tbstpt(tbcurr)  =  lnknxt( seg, stpool )
 
-                  END IF
-
-
-                  NEXT = LNKNXT ( SEG,      STPOOL )
-                  CALL LNKFSL   ( SEG, SEG, STPOOL )
-
-                  SEG  = NEXT
-
-               ELSE
-
-                  SEG  = LNKNXT ( SEG, STPOOL )
-
-               END IF
+                  end if
 
 
-            END DO
+                  next = lnknxt ( seg,      stpool )
+                  call lnkfsl   ( seg, seg, stpool )
+
+                  seg  = next
+
+               else
+
+                  seg  = lnknxt ( seg, stpool )
+
+               end if
+
+
+            end do
 
 !
 !           We've examined all of the segments in the current table.
@@ -2967,7 +2967,7 @@
 !           not unloading the last loaded file.  However, we may need to
 !           update the head-of-list pointer for the table list.
 !
-            IF ( TBSTPT(TBCURR) .LE. 0 ) THEN
+            if ( tbstpt(tbcurr) .le. 0 ) then
 !
 !              There are no loaded segments left for this table.
 !
@@ -2978,72 +2978,72 @@
 !              The column attribute entries are linked, so we can free
 !              them in one shot.
 !
-               J  =  TBCTPT ( TBCURR )
+               j  =  tbctpt ( tbcurr )
 
-               IF ( J .GT. 0 ) THEN
-                  K  =  LNKTL  ( J,    CTPOOL )
-                  CALL LNKFSL  ( J, K, CTPOOL )
-               END IF
+               if ( j .gt. 0 ) then
+                  k  =  lnktl  ( j,    ctpool )
+                  call lnkfsl  ( j, k, ctpool )
+               end if
 
 
-               IF ( TBCURR .EQ. TBHEAD ) THEN
+               if ( tbcurr .eq. tbhead ) then
 !
 !                 The entry for this table is at the head of the
 !                 table list.  Update the head of the list.
 !
-                  TBHEAD  =  LNKNXT ( TBCURR, TBPOOL )
-                  NEXT    =  TBHEAD
+                  tbhead  =  lnknxt ( tbcurr, tbpool )
+                  next    =  tbhead
 
-               ELSE
+               else
 
-                  NEXT    =  LNKNXT ( TBCURR, TBPOOL )
+                  next    =  lnknxt ( tbcurr, tbpool )
 
-               END IF
+               end if
 
 !
 !              Make the entry for this table go away.
 !
-               CALL LNKFSL ( TBCURR, TBCURR, TBPOOL )
+               call lnkfsl ( tbcurr, tbcurr, tbpool )
 
 !
 !              The successor of the current node is the next node to
 !              examine.
 !
-               TBCURR  =  NEXT
+               tbcurr  =  next
 
 
-            ELSE
+            else
 !
 !              We're done with the current table.  Look at the next one.
 !
-               TBCURR = LNKNXT ( TBCURR, TBPOOL )
+               tbcurr = lnknxt ( tbcurr, tbpool )
 
-            END IF
+            end if
 !
 !           We've cleaned up the table entry for the current table,
 !           if it was necessary to do so.
 !
 
-         ELSE
+         else
 !
 !           The current table is not affected by unloading this file.
 !           Examine the next table.
 !
-            TBCURR = LNKNXT ( TBCURR, TBPOOL )
+            tbcurr = lnknxt ( tbcurr, tbpool )
 
-         END IF
+         end if
 !
 !        We've processed the current table.
 !
-      END DO
+      end do
 
 !
 !     Don't forget to unload the EK file from the DAS system.
 !
-      CALL EKCLS  ( HANDLE )
+      call ekcls  ( handle )
 
-      CALL CHKOUT ( 'EKUEF' )
-      RETURN
+      call chkout ( 'EKUEF' )
+      return
 
 
 
@@ -3053,7 +3053,7 @@
 
 !$Procedure EKNTAB  ( EK, return number of loaded tables )
 
-      ENTRY EKNTAB ( N )
+      entry ekntab ( n )
 
 ! $ Abstract
 !
@@ -3225,28 +3225,28 @@
 !-&
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 !
 !     Return the number of loaded tables.
 !
-      N  =   MXTBLD - LNKNFN( TBPOOL )
-      RETURN
+      n  =   mxtbld - lnknfn( tbpool )
+      return
 
 
 
@@ -3255,7 +3255,7 @@
 
 !$Procedure EKTNAM  ( EK, return name of loaded table )
 
-      ENTRY EKTNAM ( N, TABLE )
+      entry ektnam ( n, table )
 
 ! $ Abstract
 !
@@ -3483,69 +3483,69 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKTNAM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKTNAM' )
+      end if
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      IF ( FTHEAD .LE. 0 ) THEN
-         CALL SETMSG ( 'No E-kernels are currently loaded.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'               )
-         CALL CHKOUT ( 'EKTNAM'                             )
-         RETURN
-      END IF
+      if ( fthead .le. 0 ) then
+         call setmsg ( 'No E-kernels are currently loaded.' )
+         call sigerr ( 'SPICE(NOLOADEDFILES)'               )
+         call chkout ( 'EKTNAM'                             )
+         return
+      end if
 
 
-      TBCURR  =  TBHEAD
-      FND     =  .FALSE.
-      I       =  0
+      tbcurr  =  tbhead
+      fnd     =  .false.
+      i       =  0
 
-      DO WHILE (  ( TBCURR .GT. 0 ) .AND. ( .NOT. FND )  )
+      do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd )  )
 
-         I   =  I + 1
+         i   =  i + 1
 
-         IF ( I .EQ. N ) THEN
-            FND     =  .TRUE.
-            TABLE   =   TBNAMS(TBCURR)
-         ELSE
-            TBCURR  =   LNKNXT ( TBCURR, TBPOOL )
-         END IF
+         if ( i .eq. n ) then
+            fnd     =  .true.
+            table   =   tbnams(tbcurr)
+         else
+            tbcurr  =   lnknxt ( tbcurr, tbpool )
+         end if
 
-      END DO
+      end do
 
-      IF ( .NOT. FND ) THEN
-         CALL SETMSG ( 'The index # does not correspond to a loaded ' // &
+      if ( .not. fnd ) then
+         call setmsg ( 'The index # does not correspond to a loaded ' // &
                        'table.'                                        )
-         CALL ERRINT ( '#',  N                                         )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                           )
-      END IF
+         call errint ( '#',  n                                         )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                           )
+      end if
 
 
-      CALL CHKOUT ( 'EKTNAM' )
-      RETURN
+      call chkout ( 'EKTNAM' )
+      return
 
 
 
@@ -3557,7 +3557,7 @@
 
 !$Procedure EKCCNT ( EK, column count )
 
-      ENTRY EKCCNT ( TABLE, CCOUNT )
+      entry ekccnt ( table, ccount )
 
 ! $ Abstract
 !
@@ -3925,78 +3925,78 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKCCNT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKCCNT' )
+      end if
 
 !
 !     On the first pass through this routine, initialize the tables,
 !     if it hasn't been done yet.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 
 !
 !     Find the table.  If there's no match, the number of loaded columns
 !     is zero.
 !
-      TBCURR   =  TBHEAD
-      FND      =  .FALSE.
+      tbcurr   =  tbhead
+      fnd      =  .false.
 
-      DO WHILE (  ( TBCURR .GT. 0 ) .AND. ( .NOT. FND )  )
+      do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd )  )
 
-         IF (  EQSTR( TABLE, TBNAMS(TBCURR) )  ) THEN
-            FND     =  .TRUE.
-         ELSE
-            TBCURR  =  LNKNXT ( TBCURR, TBPOOL )
-         END IF
+         if (  eqstr( table, tbnams(tbcurr) )  ) then
+            fnd     =  .true.
+         else
+            tbcurr  =  lnknxt ( tbcurr, tbpool )
+         end if
 
-      END DO
+      end do
 
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CCOUNT = 0
-         CALL SETMSG ( 'The table # is not currently loaded.' )
-         CALL ERRCH  ( '#',  TABLE                            )
-         CALL SIGERR ( 'SPICE(TABLENOTLOADED)'                )
-         CALL CHKOUT ( 'EKCCNT'                               )
-         RETURN
+         ccount = 0
+         call setmsg ( 'The table # is not currently loaded.' )
+         call errch  ( '#',  table                            )
+         call sigerr ( 'SPICE(TABLENOTLOADED)'                )
+         call chkout ( 'EKCCNT'                               )
+         return
 
-      ELSE
+      else
 !
 !        Count the columns in the attribute table for the current table.
 !
-         CCOUNT  =  0
-         COL     =  TBCTPT ( TBCURR )
+         ccount  =  0
+         col     =  tbctpt ( tbcurr )
 
-         DO WHILE ( COL .GT. 0 )
-            CCOUNT  =  CCOUNT + 1
-            COL     =  LNKNXT ( COL, CTPOOL )
-         END DO
+         do while ( col .gt. 0 )
+            ccount  =  ccount + 1
+            col     =  lnknxt ( col, ctpool )
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'EKCCNT' )
-      RETURN
+      call chkout ( 'EKCCNT' )
+      return
 
 
 
@@ -4006,7 +4006,7 @@
 
 !$Procedure EKCII  ( EK, column info by index )
 
-      ENTRY EKCII ( TABLE, CINDEX,  COLUMN,  ATTDSC )
+      entry ekcii ( table, cindex,  column,  attdsc )
 
 ! $ Abstract
 !
@@ -4404,120 +4404,120 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKCII' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKCII' )
+      end if
 
 !
 !     On the first pass through this routine, initialize the tables,
 !     if it hasn't been done yet.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 
 !
 !     Find the table.  If there's no match, the number of loaded columns
 !     is zero.
 !
-      TBCURR   =  TBHEAD
-      FND      =  .FALSE.
+      tbcurr   =  tbhead
+      fnd      =  .false.
 
-      DO WHILE (  ( TBCURR .GT. 0 ) .AND. ( .NOT. FND )  )
+      do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd )  )
 
-         IF (  EQSTR( TABLE, TBNAMS(TBCURR) )  ) THEN
-            FND     =  .TRUE.
-         ELSE
-            TBCURR  =  LNKNXT ( TBCURR, TBPOOL )
-         END IF
+         if (  eqstr( table, tbnams(tbcurr) )  ) then
+            fnd     =  .true.
+         else
+            tbcurr  =  lnknxt ( tbcurr, tbpool )
+         end if
 
-      END DO
+      end do
 
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The table # is not currently loaded.' )
-         CALL ERRCH  ( '#',  TABLE                            )
-         CALL SIGERR ( 'SPICE(TABLENOTLOADED)'                )
-         CALL CHKOUT ( 'EKCII'                                )
-         RETURN
+         call setmsg ( 'The table # is not currently loaded.' )
+         call errch  ( '#',  table                            )
+         call sigerr ( 'SPICE(TABLENOTLOADED)'                )
+         call chkout ( 'EKCII'                                )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Locate the named column in the column attribute table.
 !
-      I    =  0
-      COL  =  TBCTPT ( TBCURR )
+      i    =  0
+      col  =  tbctpt ( tbcurr )
 
-      DO WHILE (  ( COL .GT. 0 )  .AND. ( I .LT. CINDEX )  )
+      do while (  ( col .gt. 0 )  .and. ( i .lt. cindex )  )
 
-         I  =  I + 1
+         i  =  i + 1
 
-         IF ( I .EQ. CINDEX ) THEN
+         if ( i .eq. cindex ) then
 !
 !           We've found the column.  Set the output arguments using
 !           its attributes.
 !
-            COLUMN    = CTNAMS(COL)
+            column    = ctnams(col)
 
-            ATTDSC(1) = CTCLAS(COL)
-            ATTDSC(2) = CTTYPS(COL)
-            ATTDSC(3) = CTLENS(COL)
-            ATTDSC(4) = CTSIZS(COL)
+            attdsc(1) = ctclas(col)
+            attdsc(2) = cttyps(col)
+            attdsc(3) = ctlens(col)
+            attdsc(4) = ctsizs(col)
 
-            IF ( CTINDX(COL) ) THEN
-               ATTDSC(5) = ITRUE
-            ELSE
-               ATTDSC(5) = IFALSE
-            END IF
+            if ( ctindx(col) ) then
+               attdsc(5) = itrue
+            else
+               attdsc(5) = ifalse
+            end if
 
-            IF ( CTNULL(COL) ) THEN
-               ATTDSC(6) = ITRUE
-            ELSE
-               ATTDSC(6) = IFALSE
-            END IF
+            if ( ctnull(col) ) then
+               attdsc(6) = itrue
+            else
+               attdsc(6) = ifalse
+            end if
 
-            CALL CHKOUT ( 'EKCII' )
-            RETURN
-         ELSE
-            COL = LNKNXT ( COL, CTPOOL )
-         END IF
+            call chkout ( 'EKCII' )
+            return
+         else
+            col = lnknxt ( col, ctpool )
+         end if
 
-      END DO
+      end do
 
 !
 !     We end up here if we ran out of columns before finding the
 !     CINDEXth one, or if CINDEX was non-positive.
 !
-      CALL SETMSG ( 'Column indices for table # range from # to #; ' // &
+      call setmsg ( 'Column indices for table # range from # to #; ' // &
                     'requested index was #.'                           )
-      CALL ERRCH  ( '#',  TABNAM                                       )
-      CALL ERRINT ( '#',  MAX( 1, I )                                  )
-      CALL ERRINT ( '#',  I                                            )
-      CALL ERRINT ( '#',  CINDEX                                       )
-      CALL SIGERR ( 'SPICE(INVALIDINDEX)'                              )
+      call errch  ( '#',  tabnam                                       )
+      call errint ( '#',  max( 1, i )                                  )
+      call errint ( '#',  i                                            )
+      call errint ( '#',  cindex                                       )
+      call sigerr ( 'SPICE(INVALIDINDEX)'                              )
 
-      CALL CHKOUT ( 'EKCII' )
-      RETURN
+      call chkout ( 'EKCII' )
+      return
 
 
 
@@ -4532,7 +4532,7 @@
 
 !$Procedure EKSRCH ( EK, search for events )
 
-      ENTRY EKSRCH ( EQRYI, EQRYC, EQRYD, NMROWS, SEMERR, ERRMSG )
+      entry eksrch ( eqryi, eqryc, eqryd, nmrows, semerr, errmsg )
 
 ! $ Abstract
 !
@@ -4690,48 +4690,48 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKSRCH' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKSRCH' )
+      end if
 
 !
 !     There nothing to search if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      IF ( FTHEAD .LE. 0 ) THEN
-         CALL SETMSG ( 'No E-kernels are currently loaded.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'               )
-         CALL CHKOUT ( 'EKSRCH'                             )
-         RETURN
-      END IF
+      if ( fthead .le. 0 ) then
+         call setmsg ( 'No E-kernels are currently loaded.' )
+         call sigerr ( 'SPICE(NOLOADEDFILES)'               )
+         call chkout ( 'EKSRCH'                             )
+         return
+      end if
 
 !
 !     No error to begin with.
 !
-      SEMERR  =  .FALSE.
-      ERRMSG  =   ' '
-      NMROWS  =   0
+      semerr  =  .false.
+      errmsg  =   ' '
+      nmrows  =   0
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         CALL LNKINI ( FTSIZE, FTPOOL )
-         CALL LNKINI ( STSIZE, STPOOL )
-         CALL LNKINI ( DTSIZE, DTPOOL )
-         CALL LNKINI ( CTSIZE, CTPOOL )
-         CALL LNKINI ( MXTBLD, TBPOOL )
+         call lnkini ( ftsize, ftpool )
+         call lnkini ( stsize, stpool )
+         call lnkini ( dtsize, dtpool )
+         call lnkini ( ctsize, ctpool )
+         call lnkini ( mxtbld, tbpool )
 
-         FTHEAD = 0
-         TBHEAD = 0
+         fthead = 0
+         tbhead = 0
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     Read some of our favorite things from the query.  We need:
@@ -4741,81 +4741,81 @@
 !        - the order-by column count
 !        - the table and alias list
 !
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',        NTAB   )
-      CALL ZZEKREQI ( EQRYI, 'NUM_SELECT_COLS',   NSEL   )
-      CALL ZZEKREQI ( EQRYI, 'NUM_ORDERBY_COLS',  NORDER )
+      call zzekreqi ( eqryi, 'NUM_TABLES',        ntab   )
+      call zzekreqi ( eqryi, 'NUM_SELECT_COLS',   nsel   )
+      call zzekreqi ( eqryi, 'NUM_ORDERBY_COLS',  norder )
 
-      DO I = 1, NTAB
-         CALL ZZEKQTAB ( EQRYI, EQRYC, I, FRMTAB(I), FRMALS(I) )
-      END DO
+      do i = 1, ntab
+         call zzekqtab ( eqryi, eqryc, i, frmtab(i), frmals(i) )
+      end do
 
 !
 !     Initialize the table vectors.  Also initialize a vector of column
 !     list pointers.
 !
-      CALL SSIZEC ( MAXTAB, TABVEC )
-      CALL SSIZEI ( MAXTAB, TPTVEC )
+      call ssizec ( maxtab, tabvec )
+      call ssizei ( maxtab, tptvec )
 
 !
 !     Fill in the FROM table vector and corresponding column pointer
 !     vector.  It's an error if a table referenced in the FROM clause
 !     can't be found.
 !
-      DO I = 1, NTAB
+      do i = 1, ntab
 !
 !        Find the table list entry for this table name.
 !
-         TBCURR  =  TBHEAD
-         FND     = .FALSE.
+         tbcurr  =  tbhead
+         fnd     = .false.
 
-         DO WHILE (  ( TBCURR .GT. 0 ) .AND. ( .NOT. FND ) )
+         do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd ) )
 
-            IF ( TBNAMS(TBCURR) .EQ. FRMTAB(I) ) THEN
+            if ( tbnams(tbcurr) .eq. frmtab(i) ) then
 !
 !              We've found the table list entry for the Ith table.
 !
-               CALL APPNDC ( FRMTAB(I), TABVEC )
-               CALL APPNDI ( TBCURR,    TPTVEC )
-               FND     = .TRUE.
-            ELSE
-               TBCURR  =  LNKNXT ( TBCURR, TBPOOL )
-            END IF
+               call appndc ( frmtab(i), tabvec )
+               call appndi ( tbcurr,    tptvec )
+               fnd     = .true.
+            else
+               tbcurr  =  lnknxt ( tbcurr, tbpool )
+            end if
 
-         END DO
+         end do
 
-         IF ( .NOT. FND ) THEN
-            CALL SETMSG ( 'The table # is not currently loaded.' )
-            CALL ERRCH  ( '#',   FRMTAB(I)                       )
-            CALL SIGERR ( 'SPICE(INVALIDTABLENAME)'              )
-            CALL CHKOUT ( 'EKSRCH'                               )
-            RETURN
-         END IF
+         if ( .not. fnd ) then
+            call setmsg ( 'The table # is not currently loaded.' )
+            call errch  ( '#',   frmtab(i)                       )
+            call sigerr ( 'SPICE(INVALIDTABLENAME)'              )
+            call chkout ( 'EKSRCH'                               )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Since this is a new search, re-initialize the stack in the EK
 !     scratch area.  Also initialize our total segment list count.
 !
-      CALL ZZEKSTOP ( TOP )
-      CALL ZZEKSDEC ( TOP )
+      call zzekstop ( top )
+      call zzeksdec ( top )
 
 !
 !     Initialize the size of the join row set union for the current
 !     query.  At this point, no matching rows have been found.
 !
-      USIZE  =  0
-      UNROWS =  0
+      usize  =  0
+      unrows =  0
 
 !
 !     Get the number of conjunctions and the sizes of the conjunctions.
 !
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONJUNCTIONS',  NCONJ  )
-      CALL CLEARI   ( MAXCON, SIZES )
+      call zzekreqi ( eqryi, 'NUM_CONJUNCTIONS',  nconj  )
+      call cleari   ( maxcon, sizes )
 
-      DO I = 1, NCONJ
-         CALL ZZEKQCNJ ( EQRYI, I, SIZES(I) )
-      END DO
+      do i = 1, nconj
+         call zzekqcnj ( eqryi, i, sizes(i) )
+      end do
 
 !
 !     For each conjunction of constraints, we'll build a join row
@@ -4827,9 +4827,9 @@
 !     constraints.  Therefore, we always make at least one pass
 !     through the loop below.
 !
-      CJEND = 0
+      cjend = 0
 
-      DO CONJ  =  1,  MAX( 1, NCONJ )
+      do conj  =  1,  max( 1, nconj )
 !
 !        Our objective is to build a join row set representing the table
 !        defined by the FROM columns and the input constraints.  To do
@@ -4843,28 +4843,28 @@
 !        We'll start out by recording the FROM table indices and column
 !        list indices of columns listed in the constraints.
 !
-         IF ( NCONJ .EQ. 0 ) THEN
-            CJSIZE  =  0
-         ELSE
-            CJSIZE  =  SIZES(CONJ)
-         END IF
+         if ( nconj .eq. 0 ) then
+            cjsize  =  0
+         else
+            cjsize  =  sizes(conj)
+         end if
 
-         CJBEG  =  CJEND + 1
-         CJEND  =  CJEND + CJSIZE
+         cjbeg  =  cjend + 1
+         cjend  =  cjend + cjsize
 
-         DO I  =  1, CJSIZE
+         do i  =  1, cjsize
 
-            CALL ZZEKQCON ( EQRYI,     EQRYC,      EQRYD,     CJBEG+I-1, &
-                            CNSTYP(I), &
-                            LTNAME,    LTBIDX(I),  LCNAME,    LCIDX(I), &
-                            OPS(I), &
-                            RTNAME,    RTBIDX(I),  RCNAME,    RCIDX(I), &
-                            DTYPE(I), &
-                            CBEGS(I),  CENDS(I),   DVALS(I),  IVALS(I) )
-         END DO
+            call zzekqcon ( eqryi,     eqryc,      eqryd,     cjbeg+i-1, &
+                            cnstyp(i), &
+                            ltname,    ltbidx(i),  lcname,    lcidx(i), &
+                            ops(i), &
+                            rtname,    rtbidx(i),  rcname,    rcidx(i), &
+                            dtype(i), &
+                            cbegs(i),  cends(i),   dvals(i),  ivals(i) )
+         end do
 
 
-         DO T = 1, NTAB
+         do t = 1, ntab
 !
 !           We will build a trivial (one-table) join row set for the
 !           current table.
@@ -4872,62 +4872,62 @@
 !           Initialize the join row set.  Retain the base address.  We
 !           can fill in the table count right away; the count is 1.
 !
-            CALL ZZEKSTOP ( RBAS(T) )
+            call zzekstop ( rbas(t) )
 
-            DO I = 1, JSCIDX
-               CALL ZZEKSPSH ( 1, 0 )
-            END DO
+            do i = 1, jscidx
+               call zzekspsh ( 1, 0 )
+            end do
 
-            CALL ZZEKSUPD ( RBAS(T)+JTCIDX, RBAS(T)+JTCIDX, 1 )
+            call zzeksupd ( rbas(t)+jtcidx, rbas(t)+jtcidx, 1 )
 
 !
 !           Count the loaded segments for the current table.  We'll
 !           leave enough room in the join row set for each segment.
 !
-            TAB = TPTVEC(T)
-            I   = TBSTPT(TAB)
-            NSV = 0
+            tab = tptvec(t)
+            i   = tbstpt(tab)
+            nsv = 0
 
-            DO WHILE ( I .GT. 0 )
+            do while ( i .gt. 0 )
 
-               CALL ZZEKSPSH ( 1, 0 )
+               call zzekspsh ( 1, 0 )
 
-               NSV  =  NSV + 1
-               I    =  LNKNXT ( I, STPOOL )
+               nsv  =  nsv + 1
+               i    =  lnknxt ( i, stpool )
 
-            END DO
+            end do
 
 !
 !           Save room for the row vector base addresses and counts.
 !
-            DO I = 1, 2*NSV
-               CALL ZZEKSPSH ( 1, 0 )
-            END DO
+            do i = 1, 2*nsv
+               call zzekspsh ( 1, 0 )
+            end do
 
 !
 !           At this point, we can set the segment vector count in the
 !           join row set.
 !
-            CALL ZZEKSUPD ( RBAS(T)+JSCIDX, RBAS(T)+JSCIDX, NSV )
+            call zzeksupd ( rbas(t)+jscidx, rbas(t)+jscidx, nsv )
 
 !
 !           Find the matching rows in the segments belonging to the
 !           current table.
 !
-            SEG     =  TBSTPT(TAB)
-            NSEG    =  0
-            RTOTAL  =  0
+            seg     =  tbstpt(tab)
+            nseg    =  0
+            rtotal  =  0
 
-            DO WHILE ( SEG .GT. 0 )
+            do while ( seg .gt. 0 )
 
-               NSEG = NSEG + 1
+               nseg = nseg + 1
 !
 !              The segment vector for this segment is trivial:  it's
 !              just the segment's index in the segment table.
 !
-               SGVBAS  =  RBAS(T) + JSVBAS + ( NSEG - 1 )
+               sgvbas  =  rbas(t) + jsvbas + ( nseg - 1 )
 
-               CALL ZZEKSUPD ( SGVBAS+1, SGVBAS+1, SEG )
+               call zzeksupd ( sgvbas+1, sgvbas+1, seg )
 
 !
 !              Label as `inactive' any constraints that don't apply to
@@ -4936,12 +4936,12 @@
 !              We'll keep track of column and value constraints
 !              separately.
 !
-               DO I = 1, CJSIZE
+               do i = 1, cjsize
 !
 !                 Each constraint is active to start with.
 !
-                  ACTIVC(I) = CNSTYP(I) .EQ. EQCOL
-                  ACTIVV(I) = CNSTYP(I) .EQ. EQVAL
+                  activc(i) = cnstyp(i) .eq. eqcol
+                  activv(i) = cnstyp(i) .eq. eqval
 
 !
 !                 The parent table of the LHS column must be the Tth
@@ -4953,26 +4953,26 @@
 !                 the right belongs to the same FROM table as the
 !                 column on the left.
 !
-                  IF ( LTBIDX(I) .NE. T ) THEN
+                  if ( ltbidx(i) .ne. t ) then
 
-                     ACTIVC(I) = .FALSE.
-                     ACTIVV(I) = .FALSE.
+                     activc(i) = .false.
+                     activv(i) = .false.
 
 
-                  ELSE IF ( CNSTYP(I) .EQ. EQCOL ) THEN
+                  else if ( cnstyp(i) .eq. eqcol ) then
 
-                     IF ( LTBIDX(I) .NE. RTBIDX(I) ) THEN
+                     if ( ltbidx(i) .ne. rtbidx(i) ) then
 !
 !                       This is a join constraint; disable it.
 !
-                        ACTIVC(I) = .FALSE.
+                        activc(i) = .false.
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 
 
-               END DO
+               end do
 
 
 
@@ -4985,59 +4985,59 @@
 !              constraint will be placed in elements LDSCRS(*,I), if
 !              the Ith constraint is active.
 !
-               CALL CLEARI ( CDSCSZ*MAXCON, LDSCRS )
+               call cleari ( cdscsz*maxcon, ldscrs )
 
-               DO I = 1, CJSIZE
+               do i = 1, cjsize
 
-                  IF ( ACTIVV(I) ) THEN
+                  if ( activv(i) ) then
 !
 !                     Look up the column descriptor for this
 !                     constraint.
 !
-                     J  =  STDTPT(SEG)
+                     j  =  stdtpt(seg)
 
-                     DO K = 2, LCIDX(I)
-                        J  = LNKNXT(J,DTPOOL)
-                     END DO
+                     do k = 2, lcidx(i)
+                        j  = lnknxt(j,dtpool)
+                     end do
 
-                     CALL MOVEI ( DTDSCS(1,J), CDSCSZ, LDSCRS(1,I) )
+                     call movei ( dtdscs(1,j), cdscsz, ldscrs(1,i) )
 
-                  END IF
+                  end if
 
-               END DO
+               end do
 
 
-               CALL ZZEKKEY ( STHAN (SEG),     STDSCS(1,SEG), &
-                              STNROW(SEG),     CJSIZE, &
-                              LCIDX,           LDSCRS, &
-                              OPS,             DTYPE, &
-                              EQRYC,           CBEGS, &
-                              CENDS,           DVALS, &
-                              IVALS,           ACTIVV, &
-                              KEY,             KEYDSC, &
-                              BEGIDX,          ENDIDX, &
-                              KEYFND                        )
+               call zzekkey ( sthan (seg),     stdscs(1,seg), &
+                              stnrow(seg),     cjsize, &
+                              lcidx,           ldscrs, &
+                              ops,             dtype, &
+                              eqryc,           cbegs, &
+                              cends,           dvals, &
+                              ivals,           activv, &
+                              key,             keydsc, &
+                              begidx,          endidx, &
+                              keyfnd                        )
 
 !
 !              ZZEKKEY has updated ACTIVV to reflect the application
 !              of constraints that were used to determine BEGIDX and
 !              ENDIDX.
 !
-               IF ( KEYFND ) THEN
+               if ( keyfnd ) then
 
-                  INDEXD  =  .TRUE.
+                  indexd  =  .true.
 
-               ELSE
+               else
 !
 !                 A key column could not be determined from the
 !                 active constraints.  We'll use the first column of
 !                 the segment as the key column.
 !
-                  INDEXD  =  .FALSE.
-                  BEGIDX  =   1
-                  ENDIDX  =   STNROW(SEG)
+                  indexd  =  .false.
+                  begidx  =   1
+                  endidx  =   stnrow(seg)
 
-               END IF
+               end if
 
 !
 !              Whether or not we have any matching rows, we'll need
@@ -5045,10 +5045,10 @@
 !              join row set base for the pointer to the row vectors.
 !              The row vector count follows this pointer.
 !
-               PTROFF = JSVBAS  +  NSV  +  (NSEG - 1) * 2   +   1
+               ptroff = jsvbas  +  nsv  +  (nseg - 1) * 2   +   1
 
 
-               IF ( ENDIDX .GE. BEGIDX ) THEN
+               if ( endidx .ge. begidx ) then
 !
 !                 Initialize the count of matching rows for this
 !                 segment.  The current stack top is the base address
@@ -5057,11 +5057,11 @@
 !                 Also compute the base address of the segment vector
 !                 for the current segment.
 !
-                  NMATCH = 0
-                  CALL ZZEKSTOP ( RWVBAS )
+                  nmatch = 0
+                  call zzekstop ( rwvbas )
 
-                  CALL ZZEKSUPD ( RBAS(T)+PTROFF, &
-                                  RBAS(T)+PTROFF,   RWVBAS-RBAS(T) )
+                  call zzeksupd ( rbas(t)+ptroff, &
+                                  rbas(t)+ptroff,   rwvbas-rbas(t) )
 
 !
 !                 Count the active constraints.  While we're at it,
@@ -5070,81 +5070,81 @@
 !                 on the left hand sides and right hand sides of
 !                 these constraints.
 !
-                  CALL CLEARI ( CDSCSZ*MAXCON, LDSCRS )
-                  CALL CLEARI ( CDSCSZ*MAXCON, RDSCRS )
-                  NACT = 0
+                  call cleari ( cdscsz*maxcon, ldscrs )
+                  call cleari ( cdscsz*maxcon, rdscrs )
+                  nact = 0
 
-                  DO I = 1, CJSIZE
+                  do i = 1, cjsize
 
-                     IF ( ACTIVC(I) .OR. ACTIVV(I) ) THEN
+                     if ( activc(i) .or. activv(i) ) then
 
-                        NACT = NACT + 1
+                        nact = nact + 1
 !
 !                       Look up the column descriptor for this
 !                       constraint.
 
-                        J  =  STDTPT(SEG)
+                        j  =  stdtpt(seg)
 
-                        DO K = 2, LCIDX(I)
-                           J  = LNKNXT(J,DTPOOL)
-                        END DO
+                        do k = 2, lcidx(i)
+                           j  = lnknxt(j,dtpool)
+                        end do
 
-                        CALL MOVEI(DTDSCS(1,J), CDSCSZ, LDSCRS(1,I) )
-
-
-                        J  =  STDTPT(SEG)
-
-                        DO K = 2, RCIDX(I)
-                           J  = LNKNXT(J,DTPOOL)
-                        END DO
-
-                        CALL MOVEI(DTDSCS(1,J), CDSCSZ, RDSCRS(1,I) )
-
-                     END IF
-
-                  END DO
+                        call movei(dtdscs(1,j), cdscsz, ldscrs(1,i) )
 
 
-                  IF ( NACT .GT. 0 ) THEN
+                        j  =  stdtpt(seg)
+
+                        do k = 2, rcidx(i)
+                           j  = lnknxt(j,dtpool)
+                        end do
+
+                        call movei(dtdscs(1,j), cdscsz, rdscrs(1,i) )
+
+                     end if
+
+                  end do
+
+
+                  if ( nact .gt. 0 ) then
 !
 !                    There are still active constraints left, so
 !                    proceed linearly through the remaining rows,
 !                    testing each one against these constraints. Add
 !                    matching rows to the current join row set.
 !
-                     DO R = BEGIDX, ENDIDX
+                     do r = begidx, endidx
 
 
-                        IF ( INDEXD ) THEN
+                        if ( indexd ) then
 
-                           CALL ZZEKIXLK ( STHAN(SEG), &
-                                           KEYDSC, &
-                                           R, &
-                                           ROWIDX )
-                        ELSE
+                           call zzekixlk ( sthan(seg), &
+                                           keydsc, &
+                                           r, &
+                                           rowidx )
+                        else
 !
 !                          Look up the record pointer for row R.
 !
-                           CALL ZZEKRPLK ( STHAN(SEG), &
-                                           STDSCS(1,SEG), &
-                                           R, &
-                                           ROWIDX  )
-                        END IF
+                           call zzekrplk ( sthan(seg), &
+                                           stdscs(1,seg), &
+                                           r, &
+                                           rowidx  )
+                        end if
 
 !
 !                       Test the row against both value and column
 !                       constraints.  For now, we supply an array
 !                       of default column entry element indices.
 !
-                        VMTCH = ZZEKRMCH ( CJSIZE,     ACTIVV, &
-                                           STHAN(SEG), STDSCS(1,SEG), &
-                                           LDSCRS,     ROWIDX, &
-                                           LELTS,      OPS, &
-                                           DTYPE,      EQRYC, &
-                                           CBEGS,      CENDS, &
-                                           DVALS,      IVALS     )
+                        vmtch = zzekrmch ( cjsize,     activv, &
+                                           sthan(seg), stdscs(1,seg), &
+                                           ldscrs,     rowidx, &
+                                           lelts,      ops, &
+                                           dtype,      eqryc, &
+                                           cbegs,      cends, &
+                                           dvals,      ivals     )
 
-                        CMTCH = .TRUE.
+                        cmtch = .true.
 
 !
 !                       Note that ZZEKVMCH expects a set of inputs
@@ -5153,26 +5153,26 @@
 !                       column comparison constraints to ZZEKVMCH
 !                       one at a time.
 !
-                        DO J = 1, CJSIZE
+                        do j = 1, cjsize
 
-                           CMTCH =       CMTCH &
-                                   .AND. ZZEKVMCH ( 1, &
-                                                    ACTIVC(J), &
-                                                    STHAN(SEG), &
-                                                    STDSCS(1,SEG), &
-                                                    LDSCRS(1,J), &
-                                                    ROWIDX, &
+                           cmtch =       cmtch &
+                                   .and. zzekvmch ( 1, &
+                                                    activc(j), &
+                                                    sthan(seg), &
+                                                    stdscs(1,seg), &
+                                                    ldscrs(1,j), &
+                                                    rowidx, &
                                                     1, &
-                                                    OPS(J), &
-                                                    STHAN(SEG), &
-                                                    STDSCS(1,SEG), &
-                                                    RDSCRS(1,J), &
-                                                    ROWIDX, &
+                                                    ops(j), &
+                                                    sthan(seg), &
+                                                    stdscs(1,seg), &
+                                                    rdscrs(1,j), &
+                                                    rowidx, &
                                                     1            )
-                        END DO
+                        end do
 
 
-                        IF ( CMTCH .AND. VMTCH ) THEN
+                        if ( cmtch .and. vmtch ) then
 !
 !                          Push the `augmented row vector' for the
 !                          current row onto the stack.  In this case,
@@ -5181,93 +5181,93 @@
 !                          followed by the base address of the parent
 !                          segment vector.
 !
-                           NMATCH = NMATCH + 1
+                           nmatch = nmatch + 1
 
-                           CALL ZZEKSPSH ( 1, ROWIDX         )
-                           CALL ZZEKSPSH ( 1, SGVBAS-RBAS(T) )
+                           call zzekspsh ( 1, rowidx         )
+                           call zzekspsh ( 1, sgvbas-rbas(t) )
 
-                        END IF
+                        end if
 
-                     END DO
+                     end do
 
 
-                  ELSE
+                  else
 !
 !                    All the rows indicated by BEGIDX and ENDIDX
 !                    match the constraints.  This code section should
 !                    be upgraded to transfer the row numbers in
 !                    chunks.
 !
-                     NMATCH  =  ENDIDX - BEGIDX + 1
+                     nmatch  =  endidx - begidx + 1
 
 
-                     DO R = BEGIDX, ENDIDX
+                     do r = begidx, endidx
 
-                        IF ( INDEXD ) THEN
+                        if ( indexd ) then
 !
 !                          Look up the record pointer for row R
 !                          from the column index.
 !
-                           CALL ZZEKIXLK ( STHAN(SEG), &
-                                           KEYDSC, &
-                                           R, &
-                                           ROWIDX )
-                        ELSE
+                           call zzekixlk ( sthan(seg), &
+                                           keydsc, &
+                                           r, &
+                                           rowidx )
+                        else
 !
 !                          Look up the record pointer for row R.
 !
-                           CALL ZZEKRPLK ( STHAN(SEG), &
-                                           STDSCS(1,SEG), &
-                                           R, &
-                                           ROWIDX  )
-                        END IF
+                           call zzekrplk ( sthan(seg), &
+                                           stdscs(1,seg), &
+                                           r, &
+                                           rowidx  )
+                        end if
 
 
-                        CALL ZZEKSPSH ( 1, ROWIDX         )
-                        CALL ZZEKSPSH ( 1, SGVBAS-RBAS(T) )
+                        call zzekspsh ( 1, rowidx         )
+                        call zzekspsh ( 1, sgvbas-rbas(t) )
 
-                     END DO
+                     end do
 
-                  END IF
+                  end if
 
 !
 !                 Fill in the row count for this segment in the join row
 !                 set.
 !
-                  CALL ZZEKSUPD ( RBAS(T)+PTROFF+1, &
-                                  RBAS(T)+PTROFF+1, NMATCH )
+                  call zzeksupd ( rbas(t)+ptroff+1, &
+                                  rbas(t)+ptroff+1, nmatch )
 
-               END IF
+               end if
 
 !
 !              Take a look at the next segment.  Update the total count
 !              of matching rows for this table.
 !
-               SEG    = LNKNXT ( SEG, STPOOL )
-               RTOTAL = RTOTAL + NMATCH
+               seg    = lnknxt ( seg, stpool )
+               rtotal = rtotal + nmatch
 
-            END DO
+            end do
 
 !
 !           Fill in the size and count information for the join row set.
 !
-            CALL ZZEKSTOP ( TOP )
-            RSIZE(T)  =  TOP - RBAS(T)
+            call zzekstop ( top )
+            rsize(t)  =  top - rbas(t)
 
-            CALL ZZEKSUPD ( RBAS(T)+JSZIDX, RBAS(T)+JSZIDX, RSIZE(T) )
-            CALL ZZEKSUPD ( RBAS(T)+JRCIDX, RBAS(T)+JRCIDX, RTOTAL   )
+            call zzeksupd ( rbas(t)+jszidx, rbas(t)+jszidx, rsize(t) )
+            call zzeksupd ( rbas(t)+jrcidx, rbas(t)+jrcidx, rtotal   )
 
 !
 !           Compress out any empty segment vectors from the join row
 !           set.
 !
-            CALL ZZEKJSQZ ( RBAS(T) )
+            call zzekjsqz ( rbas(t) )
 
 !
 !           At this point, we've filled in the entire join row set for
 !           table T.
 !
-         END DO
+         end do
 
 !
 !        Join the trivial join row sets, producing a final join row set
@@ -5276,61 +5276,61 @@
 !        row set union.
 !
 !
-         RESBAS = RBAS(1)
+         resbas = rbas(1)
 
-         DO T = 2, NTAB
+         do t = 2, ntab
 !
 !           Arm the join constraints!  Turn on the constraints that
 !           have the Tth table on the one side, and tables
 !           1, 2, ... , T on the other.
 !
-            DO I = 1, CJSIZE
+            do i = 1, cjsize
 
-               ACTIVC(I)  =  .FALSE.
+               activc(i)  =  .false.
 
-               IF ( CNSTYP(I) .EQ. EQCOL ) THEN
+               if ( cnstyp(i) .eq. eqcol ) then
 
-                  L  =  LTBIDX(I)
-                  R  =  RTBIDX(I)
+                  l  =  ltbidx(i)
+                  r  =  rtbidx(i)
 
-                  IF (      ( L .GE. 1           ) &
-                      .AND. ( L .LE. T           ) &
-                      .AND. ( R .GE. 1           ) &
-                      .AND. ( R .LE. T           ) &
-                      .AND. ( L .NE. R           ) &
-                      .AND. (      ( R .EQ. T ) &
-                              .OR. ( L .EQ. T )  )  )  THEN
+                  if (      ( l .ge. 1           ) &
+                      .and. ( l .le. t           ) &
+                      .and. ( r .ge. 1           ) &
+                      .and. ( r .le. t           ) &
+                      .and. ( l .ne. r           ) &
+                      .and. (      ( r .eq. t ) &
+                              .or. ( l .eq. t )  )  )  then
 
-                     ACTIVC(I)  =  .TRUE.
+                     activc(i)  =  .true.
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           The base address of the first join row set is the base
 !           address of the result of the previous join.  The first time
 !           through, the base of the join row set for table 1 is used.
 !
-            IF ( T .EQ. 2 ) THEN
-               JBASE1  =  RBAS( 1 )
-            ELSE
-               JBASE1  =  RESBAS
-            END IF
+            if ( t .eq. 2 ) then
+               jbase1  =  rbas( 1 )
+            else
+               jbase1  =  resbas
+            end if
 
-            JBASE2  = RBAS( T )
+            jbase2  = rbas( t )
 
-            CALL ZZEKJOIN (  JBASE1,   JBASE2,   CJSIZE,  ACTIVC, &
-                             LTBIDX,   LCIDX,    LELTS,   OPS, &
-                             RTBIDX,   RCIDX,    RELTS,   STHAN, &
-                             STDSCS,   STDTPT,   DTPOOL,  DTDSCS, &
-                             RESBAS,   JSIZE                       )
+            call zzekjoin (  jbase1,   jbase2,   cjsize,  activc, &
+                             ltbidx,   lcidx,    lelts,   ops, &
+                             rtbidx,   rcidx,    relts,   sthan, &
+                             stdscs,   stdtpt,   dtpool,  dtdscs, &
+                             resbas,   jsize                       )
 
-            CALL ZZEKJSQZ ( RESBAS )
+            call zzekjsqz ( resbas )
 
-         END DO
+         end do
 
 !
 !        At this point, we've found the matching rows for the current
@@ -5339,35 +5339,35 @@
 !        the final join row set.  Update the total number of matching
 !        rows in the join row set union.
 !
-         USIZE         =  USIZE  + 1
-         UBASE(USIZE)  =  RESBAS
+         usize         =  usize  + 1
+         ubase(usize)  =  resbas
 
-         CALL ZZEKSRD ( RESBAS+JRCIDX, RESBAS+JRCIDX, CJROWS )
+         call zzeksrd ( resbas+jrcidx, resbas+jrcidx, cjrows )
 
-         UNROWS        =  UNROWS + CJROWS
+         unrows        =  unrows + cjrows
 
 !
 !        Remove redundant row vectors from the join row set union.
 !        These row vectors may arise in the execution of queries whose
 !        WHERE clauses contain multiple conjunctions.
 !
-         CALL ZZEKWEED ( USIZE, UBASE, UNROWS )
+         call zzekweed ( usize, ubase, unrows )
 
 !
 !        Initialize the addressing function for the current join row
 !        set union.
 !
-         IF ( USIZE .GT. 0 ) THEN
-            CALL ZZEKVSET ( USIZE, UBASE )
-         END IF
+         if ( usize .gt. 0 ) then
+            call zzekvset ( usize, ubase )
+         end if
 
-      END DO
+      end do
 
 !
 !     At this point, we've formed the join row set union that
 !     represents the set of row vectors matching the entire query.
 !
-      NMROWS  =  UNROWS
+      nmrows  =  unrows
 
 !
 !     Get the tables and columns of from the SELECT clause.  For
@@ -5375,67 +5375,67 @@
 !     of that table.  For each column, we need the column table
 !     index.
 !
-      DO I = 1, NSEL
+      do i = 1, nsel
 
-         CALL ZZEKQSEL ( EQRYI,  EQRYC,  I,      LXBEG,  LXEND, &
-                         TABNAM, TABIDX, COLNAM, K             )
+         call zzekqsel ( eqryi,  eqryc,  i,      lxbeg,  lxend, &
+                         tabnam, tabidx, colnam, k             )
 
 !
 !        Locate the column's attribute information.  Retain the column's
 !        index within the parent table's column list.
 !
-         TAB     =  TPTVEC( TABIDX )
-         J       =  TBCTPT(TAB)
-         COL     =  0
-         FND     =  .FALSE.
+         tab     =  tptvec( tabidx )
+         j       =  tbctpt(tab)
+         col     =  0
+         fnd     =  .false.
 
-         DO WHILE (  ( J .GT. 0 ) .AND. ( .NOT. FND )  )
+         do while (  ( j .gt. 0 ) .and. ( .not. fnd )  )
 
-            COL = COL + 1
+            col = col + 1
 
-            IF ( CTNAMS(J) .EQ. COLNAM ) THEN
-               FND  =  .TRUE.
-            ELSE
-               J    =  LNKNXT( J, CTPOOL )
-            END IF
+            if ( ctnams(j) .eq. colnam ) then
+               fnd  =  .true.
+            else
+               j    =  lnknxt( j, ctpool )
+            end if
 
-         END DO
+         end do
 
-         IF ( .NOT. FND ) THEN
-            CALL SETMSG ( '# is not name of a column in FROM table #.' )
-            CALL ERRCH  ( '#', COLNAM                                  )
-            CALL ERRINT ( '#', TABIDX                                  )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'EKSRCH'                                     )
-            RETURN
-         END IF
+         if ( .not. fnd ) then
+            call setmsg ( '# is not name of a column in FROM table #.' )
+            call errch  ( '#', colnam                                  )
+            call errint ( '#', tabidx                                  )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'EKSRCH'                                     )
+            return
+         end if
 
-         SELCTP(I)  =  J
-         SELCOL(I)  =  COL
-         SELTAB(I)  =  TABIDX
+         selctp(i)  =  j
+         selcol(i)  =  col
+         seltab(i)  =  tabidx
 
-      END DO
+      end do
 
 !
 !     Enable sorting of the matching row vectors, if necessary.  The
 !     first fetch request will invoke the sort.
 !
-      DOSORT  =  ( NORDER .GT. 0 ) .AND. ( NMROWS .GT. 0 )
-      SORTED  =  .FALSE.
+      dosort  =  ( norder .gt. 0 ) .and. ( nmrows .gt. 0 )
+      sorted  =  .false.
 
-      IF ( DOSORT ) THEN
+      if ( dosort ) then
 
-         DO I = 1, NORDER
+         do i = 1, norder
 
-            CALL ZZEKQORD (  EQRYI,     EQRYC,   I,         TABNAM, &
-                             OTABS(I),  COLNAM,  OCOLS(I),  SENSE(I)  )
-         END DO
+            call zzekqord (  eqryi,     eqryc,   i,         tabnam, &
+                             otabs(i),  colnam,  ocols(i),  sense(i)  )
+         end do
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'EKSRCH' )
-      RETURN
+      call chkout ( 'EKSRCH' )
+      return
 
 
 
@@ -5445,7 +5445,7 @@
 
 !$Procedure EKNELT  ( EK, get number of elements in column entry )
 
-      ENTRY EKNELT ( SELIDX, ROW, NELT )
+      entry eknelt ( selidx, row, nelt )
 
 ! $ Abstract
 !
@@ -5947,97 +5947,97 @@
 !
 !     Use discovery check-in for speed.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     The request doesn't make sense if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      IF ( FTHEAD .LE. 0 ) THEN
-         CALL CHKIN  ( 'EKNELT'                             )
-         CALL SETMSG ( 'No E-kernels are currently loaded.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'               )
-         CALL CHKOUT ( 'EKNELT'                             )
-         RETURN
-      END IF
+      if ( fthead .le. 0 ) then
+         call chkin  ( 'EKNELT'                             )
+         call setmsg ( 'No E-kernels are currently loaded.' )
+         call sigerr ( 'SPICE(NOLOADEDFILES)'               )
+         call chkout ( 'EKNELT'                             )
+         return
+      end if
 
 !
 !     The row number must be valid, or we can't proceed.
 !
-      IF (  ( ROW .LT. 1 ) .OR. ( ROW .GT. UNROWS )  ) THEN
+      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
 
-         CALL CHKIN  ( 'EKNELT'                                        )
-         CALL SETMSG ( 'Row indices for query result range from 1 to '// &
+         call chkin  ( 'EKNELT'                                        )
+         call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
-         CALL ERRINT ( '#',  UNROWS                                    )
-         CALL ERRINT ( '#',  ROW                                       )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                           )
-         CALL CHKOUT ( 'EKNELT'                                        )
-         RETURN
+         call errint ( '#',  unrows                                    )
+         call errint ( '#',  row                                       )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                           )
+         call chkout ( 'EKNELT'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      IF (  ( SELIDX .LT. 1 ) .OR. ( SELIDX .GT. NSEL )  ) THEN
-         CALL CHKIN  ( 'EKNELT'                                   )
-         CALL SETMSG ( 'The SELECT column index # is out of the ' // &
+      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+         call chkin  ( 'EKNELT'                                   )
+         call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
-         CALL ERRINT ( '#', SELIDX                                )
-         CALL ERRINT ( '#', NTAB                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                      )
-         CALL CHKOUT ( 'EKNELT'                                   )
-         RETURN
-      END IF
+         call errint ( '#', selidx                                )
+         call errint ( '#', ntab                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                      )
+         call chkout ( 'EKNELT'                                   )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, and if it needs to be done, sort the
 !     matching row vectors.
 !
-      IF ( DOSORT ) THEN
+      if ( dosort ) then
 
-         CALL ZZEKJSRT ( USIZE,   UBASE,   NORDER,  OTABS, &
-                         OCOLS,   OELTS,   SENSE,   STHAN, &
-                         STDSCS,  STDTPT,  DTPOOL,  DTDSCS,  ORDBAS  )
+         call zzekjsrt ( usize,   ubase,   norder,  otabs, &
+                         ocols,   oelts,   sense,   sthan, &
+                         stdscs,  stdtpt,  dtpool,  dtdscs,  ordbas  )
 
-         DOSORT  =  .FALSE.
-         SORTED  =  .TRUE.
-      END IF
+         dosort  =  .false.
+         sorted  =  .true.
+      end if
 
 !
 !     Look up the segment vector and row vector for the current row.
 !
-      IF ( SORTED ) THEN
-         CALL ZZEKSRD  ( ORDBAS+ROW,  ORDBAS+ROW,  I      )
-         CALL ZZEKVCAL ( I,           RWVBAS,      SGVBAS )
-      ELSE
-         CALL ZZEKVCAL ( ROW,         RWVBAS,      SGVBAS )
-      END IF
+      if ( sorted ) then
+         call zzeksrd  ( ordbas+row,  ordbas+row,  i      )
+         call zzekvcal ( i,           rwvbas,      sgvbas )
+      else
+         call zzekvcal ( row,         rwvbas,      sgvbas )
+      end if
 
-      CALL ZZEKSRD  ( RWVBAS+1, RWVBAS+NTAB, ROWVEC )
-      CALL ZZEKSRD  ( SGVBAS+1, SGVBAS+NTAB, SEGVEC )
+      call zzeksrd  ( rwvbas+1, rwvbas+ntab, rowvec )
+      call zzeksrd  ( sgvbas+1, sgvbas+ntab, segvec )
 
-      TABIDX  =  SELTAB(SELIDX)
-      ROWIDX  =  ROWVEC(TABIDX)
-      SEG     =  SEGVEC(TABIDX)
-      COL     =  SELCOL(SELIDX)
+      tabidx  =  seltab(selidx)
+      rowidx  =  rowvec(tabidx)
+      seg     =  segvec(tabidx)
+      col     =  selcol(selidx)
 
-      COLPTR = STDTPT(SEG)
+      colptr = stdtpt(seg)
 
-      DO I = 2, COL
-         COLPTR = LNKNXT( COLPTR, DTPOOL )
-      END DO
+      do i = 2, col
+         colptr = lnknxt( colptr, dtpool )
+      end do
 
-      NELT  =  ZZEKESIZ (  STHAN (   SEG   ), &
-                           STDSCS(1, SEG   ), &
-                           DTDSCS(1, COLPTR), &
-                           ROWIDX             )
+      nelt  =  zzekesiz (  sthan (   seg   ), &
+                           stdscs(1, seg   ), &
+                           dtdscs(1, colptr), &
+                           rowidx             )
 
 
-      RETURN
+      return
 
 
 
@@ -6045,7 +6045,7 @@
 
 !$Procedure EKGC  ( EK, get event data, character )
 
-      ENTRY EKGC ( SELIDX, ROW, ELMENT, CDATA, NULL, FOUND )
+      entry ekgc ( selidx, row, elment, cdata, null, found )
 
 ! $ Abstract
 !
@@ -6714,147 +6714,147 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKGC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKGC' )
+      end if
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      IF ( FTHEAD .LE. 0 ) THEN
-         CALL SETMSG ( 'No E-kernels are currently loaded.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'               )
-         CALL CHKOUT ( 'EKGC'                               )
-         RETURN
-      END IF
+      if ( fthead .le. 0 ) then
+         call setmsg ( 'No E-kernels are currently loaded.' )
+         call sigerr ( 'SPICE(NOLOADEDFILES)'               )
+         call chkout ( 'EKGC'                               )
+         return
+      end if
 
 !
 !     The row number must be valid, or we can't proceed.
 !
-      IF (  ( ROW .LT. 1 ) .OR. ( ROW .GT. UNROWS )  ) THEN
+      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
 
-         CALL SETMSG ( 'Row indices for query result range from 1 to '// &
+         call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
-         CALL ERRINT ( '#',  UNROWS                                    )
-         CALL ERRINT ( '#',  ROW                                       )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                           )
-         CALL CHKOUT ( 'EKGC'                                          )
-         RETURN
+         call errint ( '#',  unrows                                    )
+         call errint ( '#',  row                                       )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                           )
+         call chkout ( 'EKGC'                                          )
+         return
 
-      END IF
+      end if
 
 !
 !     The element index must be positive.
 !
-      IF (  ELMENT .LT. 1 ) THEN
-         CALL SETMSG ( 'ELMENT must be positive but was #.' )
-         CALL ERRINT ( '#',  ELMENT                         )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'EKGC'                               )
-         RETURN
-      END IF
+      if (  elment .lt. 1 ) then
+         call setmsg ( 'ELMENT must be positive but was #.' )
+         call errint ( '#',  elment                         )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'EKGC'                               )
+         return
+      end if
 
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      IF (  ( SELIDX .LT. 1 ) .OR. ( SELIDX .GT. NSEL )  ) THEN
-         CALL SETMSG ( 'The SELECT column index # is out of the ' // &
+      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+         call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
-         CALL ERRINT ( '#', SELIDX                                )
-         CALL ERRINT ( '#', NTAB                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                      )
-         CALL CHKOUT ( 'EKGC'                                     )
-         RETURN
-      END IF
+         call errint ( '#', selidx                                )
+         call errint ( '#', ntab                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                      )
+         call chkout ( 'EKGC'                                     )
+         return
+      end if
 
 !
 !     COL is the column's index within the parent
 !     table's column list.
 !
-      TABIDX  =  SELTAB( SELIDX )
-      COL     =  SELCOL( SELIDX )
-      COLPTR  =  SELCTP( SELIDX )
-      TAB     =  TPTVEC( TABIDX )
+      tabidx  =  seltab( selidx )
+      col     =  selcol( selidx )
+      colptr  =  selctp( selidx )
+      tab     =  tptvec( tabidx )
 
 !
 !     Make sure the column has character type.
 !
-      IF (  CTTYPS(COLPTR) .NE. CHR ) THEN
+      if (  cttyps(colptr) .ne. chr ) then
 
-         CALL SETMSG ( 'Column # has data type #.'      )
-         CALL ERRCH  ( '#', CTNAMS( COLPTR )            )
-         CALL ERRCH  ( '#', CHTYPE( CTTYPS(COLPTR) )    )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'             )
-         CALL CHKOUT ( 'EKGC'                           )
-         RETURN
+         call setmsg ( 'Column # has data type #.'      )
+         call errch  ( '#', ctnams( colptr )            )
+         call errch  ( '#', chtype( cttyps(colptr) )    )
+         call sigerr ( 'SPICE(INVALIDTYPE)'             )
+         call chkout ( 'EKGC'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     If it hasn't been done yet, and if it needs to be done, sort the
 !     matching row vectors.
 !
-      IF ( DOSORT ) THEN
+      if ( dosort ) then
 
-         CALL ZZEKJSRT ( USIZE,   UBASE,   NORDER,  OTABS, &
-                         OCOLS,   OELTS,   SENSE,   STHAN, &
-                         STDSCS,  STDTPT,  DTPOOL,  DTDSCS,  ORDBAS  )
+         call zzekjsrt ( usize,   ubase,   norder,  otabs, &
+                         ocols,   oelts,   sense,   sthan, &
+                         stdscs,  stdtpt,  dtpool,  dtdscs,  ordbas  )
 
-         DOSORT  =  .FALSE.
-         SORTED  =  .TRUE.
-      END IF
+         dosort  =  .false.
+         sorted  =  .true.
+      end if
 
 !
 !     Look up the segment vector and row vector for the current row.
 !
-      IF ( SORTED ) THEN
-         CALL ZZEKSRD  ( ORDBAS+ROW,  ORDBAS+ROW,  I      )
-         CALL ZZEKVCAL ( I,           RWVBAS,      SGVBAS )
-      ELSE
-         CALL ZZEKVCAL ( ROW,         RWVBAS,      SGVBAS )
-      END IF
+      if ( sorted ) then
+         call zzeksrd  ( ordbas+row,  ordbas+row,  i      )
+         call zzekvcal ( i,           rwvbas,      sgvbas )
+      else
+         call zzekvcal ( row,         rwvbas,      sgvbas )
+      end if
 
-      CALL ZZEKSRD  ( RWVBAS+1, RWVBAS+NTAB, ROWVEC )
-      CALL ZZEKSRD  ( SGVBAS+1, SGVBAS+NTAB, SEGVEC )
+      call zzeksrd  ( rwvbas+1, rwvbas+ntab, rowvec )
+      call zzeksrd  ( sgvbas+1, sgvbas+ntab, segvec )
 
 !
 !     Identify the segment containing the column entry of interest.
 !     Obtain the column descriptor for the column.
 !
-      ROWIDX  =  ROWVEC(TABIDX)
-      SEG     =  SEGVEC(TABIDX)
+      rowidx  =  rowvec(tabidx)
+      seg     =  segvec(tabidx)
 
-      J       =  STDTPT(SEG)
+      j       =  stdtpt(seg)
 
-      DO I = 2, COL
-         J = LNKNXT( J, DTPOOL )
-      END DO
+      do i = 2, col
+         j = lnknxt( j, dtpool )
+      end do
 
 !
 !     Look up the element.
 !
-      CALL ZZEKRSC ( STHAN(SEG), &
-                     STDSCS(1,SEG), &
-                     DTDSCS(1,J), &
-                     ROWIDX, &
-                     ELMENT , &
-                     CVLEN, &
-                     CDATA, &
-                     NULL, &
-                     FOUND         )
+      call zzekrsc ( sthan(seg), &
+                     stdscs(1,seg), &
+                     dtdscs(1,j), &
+                     rowidx, &
+                     elment , &
+                     cvlen, &
+                     cdata, &
+                     null, &
+                     found         )
 
 
 
-      CALL CHKOUT ( 'EKGC' )
-      RETURN
+      call chkout ( 'EKGC' )
+      return
 
 
 
@@ -6863,7 +6863,7 @@
 
 !$Procedure EKGD  ( EK, get event data, double precision )
 
-      ENTRY EKGD ( SELIDX, ROW, ELMENT, DDATA, NULL, FOUND )
+      entry ekgd ( selidx, row, elment, ddata, null, found )
 
 ! $ Abstract
 !
@@ -7699,146 +7699,146 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKGD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKGD' )
+      end if
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      IF ( FTHEAD .LE. 0 ) THEN
-         CALL SETMSG ( 'No E-kernels are currently loaded.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'               )
-         CALL CHKOUT ( 'EKGD'                               )
-         RETURN
-      END IF
+      if ( fthead .le. 0 ) then
+         call setmsg ( 'No E-kernels are currently loaded.' )
+         call sigerr ( 'SPICE(NOLOADEDFILES)'               )
+         call chkout ( 'EKGD'                               )
+         return
+      end if
 
 !
 !     The row number must be valid, or we can't proceed.
 !
-      IF (  ( ROW .LT. 1 ) .OR. ( ROW .GT. UNROWS )  ) THEN
+      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
 
-         CALL SETMSG ( 'Row indices for query result range from 1 to '// &
+         call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
-         CALL ERRINT ( '#',  UNROWS                                    )
-         CALL ERRINT ( '#',  ROW                                       )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                           )
-         CALL CHKOUT ( 'EKGD'                                          )
-         RETURN
+         call errint ( '#',  unrows                                    )
+         call errint ( '#',  row                                       )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                           )
+         call chkout ( 'EKGD'                                          )
+         return
 
-      END IF
+      end if
 
 !
 !     The element index must be positive.
 !
-      IF (  ELMENT .LT. 1 ) THEN
-         CALL SETMSG ( 'ELMENT must be positive but was #.' )
-         CALL ERRINT ( '#',  ELMENT                         )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'EKGD'                               )
-         RETURN
-      END IF
+      if (  elment .lt. 1 ) then
+         call setmsg ( 'ELMENT must be positive but was #.' )
+         call errint ( '#',  elment                         )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'EKGD'                               )
+         return
+      end if
 
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      IF (  ( SELIDX .LT. 1 ) .OR. ( SELIDX .GT. NSEL )  ) THEN
-         CALL SETMSG ( 'The SELECT column index # is out of the ' // &
+      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+         call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
-         CALL ERRINT ( '#', SELIDX                                )
-         CALL ERRINT ( '#', NTAB                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                      )
-         CALL CHKOUT ( 'EKGD'                                     )
-         RETURN
-      END IF
+         call errint ( '#', selidx                                )
+         call errint ( '#', ntab                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                      )
+         call chkout ( 'EKGD'                                     )
+         return
+      end if
 
 !
 !     COL is the column's index within the parent
 !     table's column list.
 !
-      TABIDX  =  SELTAB( SELIDX )
-      COL     =  SELCOL( SELIDX )
-      COLPTR  =  SELCTP( SELIDX )
-      TAB     =  TPTVEC( TABIDX )
+      tabidx  =  seltab( selidx )
+      col     =  selcol( selidx )
+      colptr  =  selctp( selidx )
+      tab     =  tptvec( tabidx )
 
 !
 !     Make sure the column has double precision or `time' type.
 !
-      IF (       ( CTTYPS(COLPTR) .NE. DP   ) &
-           .AND. ( CTTYPS(COLPTR) .NE. TIME )  ) THEN
+      if (       ( cttyps(colptr) .ne. dp   ) &
+           .and. ( cttyps(colptr) .ne. time )  ) then
 
-         CALL SETMSG ( 'Column # has data type #.'    )
-         CALL ERRCH  ( '#', CTNAMS( COLPTR )          )
-         CALL ERRCH  ( '#', CHTYPE( CTTYPS(COLPTR) )  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'           )
-         CALL CHKOUT ( 'EKGD'                         )
-         RETURN
+         call setmsg ( 'Column # has data type #.'    )
+         call errch  ( '#', ctnams( colptr )          )
+         call errch  ( '#', chtype( cttyps(colptr) )  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'           )
+         call chkout ( 'EKGD'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     If it hasn't been done yet, and if it needs to be done, sort the
 !     matching row vectors.
 !
-      IF ( DOSORT ) THEN
+      if ( dosort ) then
 
-         CALL ZZEKJSRT ( USIZE,   UBASE,   NORDER,  OTABS, &
-                         OCOLS,   OELTS,   SENSE,   STHAN, &
-                         STDSCS,  STDTPT,  DTPOOL,  DTDSCS,  ORDBAS  )
+         call zzekjsrt ( usize,   ubase,   norder,  otabs, &
+                         ocols,   oelts,   sense,   sthan, &
+                         stdscs,  stdtpt,  dtpool,  dtdscs,  ordbas  )
 
-         DOSORT  =  .FALSE.
-         SORTED  =  .TRUE.
-      END IF
+         dosort  =  .false.
+         sorted  =  .true.
+      end if
 
 !
 !     Look up the segment vector and row vector for the current row.
 !
-      IF ( SORTED ) THEN
-         CALL ZZEKSRD  ( ORDBAS+ROW,  ORDBAS+ROW,  I      )
-         CALL ZZEKVCAL ( I,           RWVBAS,      SGVBAS )
-      ELSE
-         CALL ZZEKVCAL ( ROW,         RWVBAS,      SGVBAS )
-      END IF
+      if ( sorted ) then
+         call zzeksrd  ( ordbas+row,  ordbas+row,  i      )
+         call zzekvcal ( i,           rwvbas,      sgvbas )
+      else
+         call zzekvcal ( row,         rwvbas,      sgvbas )
+      end if
 
-      CALL ZZEKSRD  ( RWVBAS+1, RWVBAS+NTAB, ROWVEC )
-      CALL ZZEKSRD  ( SGVBAS+1, SGVBAS+NTAB, SEGVEC )
+      call zzeksrd  ( rwvbas+1, rwvbas+ntab, rowvec )
+      call zzeksrd  ( sgvbas+1, sgvbas+ntab, segvec )
 
 !
 !     Identify the segment containing the column entry of interest.
 !     Obtain the column descriptor for the column.
 !
-      ROWIDX  =  ROWVEC(TABIDX)
-      SEG     =  SEGVEC(TABIDX)
+      rowidx  =  rowvec(tabidx)
+      seg     =  segvec(tabidx)
 
-      J       =  STDTPT(SEG)
+      j       =  stdtpt(seg)
 
-      DO I = 2, COL
-         J = LNKNXT( J, DTPOOL )
-      END DO
+      do i = 2, col
+         j = lnknxt( j, dtpool )
+      end do
 
 !
 !     Look up the element.
 !
-      CALL ZZEKRSD ( STHAN (   SEG), &
-                     STDSCS(1, SEG), &
-                     DTDSCS(1, J  ), &
-                     ROWIDX, &
-                     ELMENT , &
-                     DDATA, &
-                     NULL, &
-                     FOUND          )
+      call zzekrsd ( sthan (   seg), &
+                     stdscs(1, seg), &
+                     dtdscs(1, j  ), &
+                     rowidx, &
+                     elment , &
+                     ddata, &
+                     null, &
+                     found          )
 
 
-      CALL CHKOUT ( 'EKGD' )
-      RETURN
+      call chkout ( 'EKGD' )
+      return
 
 
 
@@ -7848,7 +7848,7 @@
 
 !$Procedure EKGI  ( EK, get event data, integer )
 
-      ENTRY EKGI ( SELIDX, ROW, ELMENT, IDATA, NULL, FOUND )
+      entry ekgi ( selidx, row, elment, idata, null, found )
 
 ! $ Abstract
 !
@@ -8507,143 +8507,143 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKGI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKGI' )
+      end if
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      IF ( FTHEAD .LE. 0 ) THEN
-         CALL SETMSG ( 'No E-kernels are currently loaded.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDFILES)'               )
-         CALL CHKOUT ( 'EKGI'                               )
-         RETURN
-      END IF
+      if ( fthead .le. 0 ) then
+         call setmsg ( 'No E-kernels are currently loaded.' )
+         call sigerr ( 'SPICE(NOLOADEDFILES)'               )
+         call chkout ( 'EKGI'                               )
+         return
+      end if
 
 !
 !     The row number must be valid, or we can't proceed.
 !
-      IF (  ( ROW .LT. 1 ) .OR. ( ROW .GT. UNROWS )  ) THEN
+      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
 
-         CALL SETMSG ( 'Row indices for query result range from 1 to '// &
+         call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
-         CALL ERRINT ( '#',  UNROWS                                    )
-         CALL ERRINT ( '#',  ROW                                       )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                           )
-         CALL CHKOUT ( 'EKGI'                                          )
-         RETURN
+         call errint ( '#',  unrows                                    )
+         call errint ( '#',  row                                       )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                           )
+         call chkout ( 'EKGI'                                          )
+         return
 
-      END IF
+      end if
 
 !
 !     The element index must be positive.
 !
-      IF (  ELMENT .LT. 1 ) THEN
-         CALL SETMSG ( 'ELMENT must be positive but was #.' )
-         CALL ERRINT ( '#',  ELMENT                         )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'EKGI'                               )
-         RETURN
-      END IF
+      if (  elment .lt. 1 ) then
+         call setmsg ( 'ELMENT must be positive but was #.' )
+         call errint ( '#',  elment                         )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'EKGI'                               )
+         return
+      end if
 
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      IF (  ( SELIDX .LT. 1 ) .OR. ( SELIDX .GT. NSEL )  ) THEN
-         CALL SETMSG ( 'The SELECT column index # is out of the ' // &
+      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+         call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
-         CALL ERRINT ( '#', SELIDX                                )
-         CALL ERRINT ( '#', NTAB                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                      )
-         CALL CHKOUT ( 'EKGI'                                     )
-         RETURN
-      END IF
+         call errint ( '#', selidx                                )
+         call errint ( '#', ntab                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                      )
+         call chkout ( 'EKGI'                                     )
+         return
+      end if
 
 !
 !     COL is the column's index within the parent
 !     table's column list.
 !
-      TABIDX  =  SELTAB( SELIDX )
-      COL     =  SELCOL( SELIDX )
-      COLPTR  =  SELCTP( SELIDX )
-      TAB     =  TPTVEC( TABIDX )
+      tabidx  =  seltab( selidx )
+      col     =  selcol( selidx )
+      colptr  =  selctp( selidx )
+      tab     =  tptvec( tabidx )
 
 !
 !     Make sure the column has integer type.
 !
-      IF ( CTTYPS(COLPTR) .NE. INT ) THEN
+      if ( cttyps(colptr) .ne. int ) then
 
-         CALL SETMSG ( 'Column # has data type #.'    )
-         CALL ERRCH  ( '#', CTNAMS( COLPTR )          )
-         CALL ERRCH  ( '#', CHTYPE( CTTYPS(COLPTR) )  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'           )
-         CALL CHKOUT ( 'EKGI'                         )
-         RETURN
+         call setmsg ( 'Column # has data type #.'    )
+         call errch  ( '#', ctnams( colptr )          )
+         call errch  ( '#', chtype( cttyps(colptr) )  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'           )
+         call chkout ( 'EKGI'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     If it hasn't been done yet, and if it needs to be done, sort the
 !     matching row vectors.
 !
-      IF ( DOSORT ) THEN
+      if ( dosort ) then
 
-         CALL ZZEKJSRT ( USIZE,   UBASE,   NORDER,  OTABS, &
-                         OCOLS,   OELTS,   SENSE,   STHAN, &
-                         STDSCS,  STDTPT,  DTPOOL,  DTDSCS,  ORDBAS  )
+         call zzekjsrt ( usize,   ubase,   norder,  otabs, &
+                         ocols,   oelts,   sense,   sthan, &
+                         stdscs,  stdtpt,  dtpool,  dtdscs,  ordbas  )
 
-         DOSORT  =  .FALSE.
-         SORTED  =  .TRUE.
-      END IF
+         dosort  =  .false.
+         sorted  =  .true.
+      end if
 
 !
 !     Look up the segment vector and row vector for the current row.
 !
-      IF ( SORTED ) THEN
-         CALL ZZEKSRD  ( ORDBAS+ROW,  ORDBAS+ROW,  I      )
-         CALL ZZEKVCAL ( I,           RWVBAS,      SGVBAS )
-      ELSE
-         CALL ZZEKVCAL ( ROW,         RWVBAS,      SGVBAS )
-      END IF
+      if ( sorted ) then
+         call zzeksrd  ( ordbas+row,  ordbas+row,  i      )
+         call zzekvcal ( i,           rwvbas,      sgvbas )
+      else
+         call zzekvcal ( row,         rwvbas,      sgvbas )
+      end if
 
-      CALL ZZEKSRD  ( RWVBAS+1, RWVBAS+NTAB, ROWVEC )
-      CALL ZZEKSRD  ( SGVBAS+1, SGVBAS+NTAB, SEGVEC )
+      call zzeksrd  ( rwvbas+1, rwvbas+ntab, rowvec )
+      call zzeksrd  ( sgvbas+1, sgvbas+ntab, segvec )
 
 !
 !     Identify the segment containing the column entry of interest.
 !     Obtain the column descriptor for the column.
 !
-      ROWIDX  =  ROWVEC(TABIDX)
-      SEG     =  SEGVEC(TABIDX)
+      rowidx  =  rowvec(tabidx)
+      seg     =  segvec(tabidx)
 
-      J       =  STDTPT(SEG)
+      j       =  stdtpt(seg)
 
-      DO I = 2, COL
-         J = LNKNXT( J, DTPOOL )
-      END DO
+      do i = 2, col
+         j = lnknxt( j, dtpool )
+      end do
 
 !
 !     Look up the element.
 !
-      CALL ZZEKRSI ( STHAN (   SEG), &
-                     STDSCS(1, SEG), &
-                     DTDSCS(1, J  ), &
-                     ROWIDX, &
-                     ELMENT , &
-                     IDATA, &
-                     NULL, &
-                     FOUND           )
+      call zzekrsi ( sthan (   seg), &
+                     stdscs(1, seg), &
+                     dtdscs(1, j  ), &
+                     rowidx, &
+                     elment , &
+                     idata, &
+                     null, &
+                     found           )
 
 
-      CALL CHKOUT ( 'EKGI' )
-      RETURN
-      END
+      call chkout ( 'EKGI' )
+      return
+      end

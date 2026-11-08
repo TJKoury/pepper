@@ -1,6 +1,6 @@
 !$Procedure WNELMD ( Element of a DP window )
 
-      LOGICAL FUNCTION WNELMD ( POINT, WINDOW )
+      logical function wnelmd ( point, window )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      POINT
-      DOUBLE PRECISION      WINDOW      ( LBCELL:* )
+      double precision      point
+      double precision      window      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -143,50 +143,50 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
+      integer               card
+      integer               i
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         WNELMD = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNELMD' )
-      END IF
+      if ( return () ) then
+         wnelmd = .false.
+         return
+      else
+         call chkin ( 'WNELMD' )
+      end if
 
 
 !
 !     How many endpoints in the window?
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Check the point against every interval in the window. Quit if
 !     we find an interval that contains it. Inefficient, but it works.
 !
-      DO I = 1, CARD, 2
+      do i = 1, card, 2
 
-         IF ( POINT .GE. WINDOW(I)  .AND. POINT .LE. WINDOW(I+1) ) THEN
-            WNELMD = .TRUE.
-            CALL CHKOUT ( 'WNELMD' )
-            RETURN
-         END IF
+         if ( point .ge. window(i)  .and. point .le. window(i+1) ) then
+            wnelmd = .true.
+            call chkout ( 'WNELMD' )
+            return
+         end if
 
-      END DO
+      end do
 
-      WNELMD = .FALSE.
+      wnelmd = .false.
 
 
-      CALL CHKOUT ( 'WNELMD' )
-      RETURN
-      END
+      call chkout ( 'WNELMD' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure KPSOLV ( Solve Kepler's Equation --- Vector Form )
 
-      DOUBLE PRECISION FUNCTION KPSOLV ( EVEC )
+      double precision function kpsolv ( evec )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      EVEC ( 2 )
+      double precision      evec ( 2 )
 
 ! $ Brief_I/O
 !
@@ -133,55 +133,55 @@
 !     sufficient on computers have 64 bit double precision
 !     numbers.
 !
-      INTEGER               MXNEWT
-      PARAMETER           ( MXNEWT = 5 )
+      integer               mxnewt
+      parameter           ( mxnewt = 5 )
 
 
-      DOUBLE PRECISION      COSX
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      ECC2
-      DOUBLE PRECISION      H
-      DOUBLE PRECISION      K
-      DOUBLE PRECISION      SINX
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      XL
-      DOUBLE PRECISION      XM
-      DOUBLE PRECISION      XU
-      DOUBLE PRECISION      Y0
-      DOUBLE PRECISION      YPX
-      DOUBLE PRECISION      YX
-      DOUBLE PRECISION      YXM
+      double precision      cosx
+      double precision      ecc
+      double precision      ecc2
+      double precision      h
+      double precision      k
+      double precision      sinx
+      double precision      x
+      double precision      xl
+      double precision      xm
+      double precision      xu
+      double precision      y0
+      double precision      ypx
+      double precision      yx
+      double precision      yxm
 
-      INTEGER               I
-      INTEGER               MAXIT
+      integer               i
+      integer               maxit
 
 !
 !     We give the function an initial value, just in case
 !     we exit without solving Kepler's equation.
 !
-      KPSOLV = 0.0D0
+      kpsolv = 0.0d0
 
-      H      = EVEC(1)
-      K      = EVEC(2)
+      h      = evec(1)
+      k      = evec(2)
 
-      ECC2   = H*H + K*K
+      ecc2   = h*h + k*k
 
-      IF ( ECC2 .GE. 1.0D0 ) THEN
+      if ( ecc2 .ge. 1.0d0 ) then
 
-         CALL CHKIN  ( 'KPSOLV' )
-         CALL SETMSG ( 'The magnitude of the vector EVEC = ( #, ' &
+         call chkin  ( 'KPSOLV' )
+         call setmsg ( 'The magnitude of the vector EVEC = ( #, ' &
          //            '# ) must be less than 1.  However, the ' &
          //            'magnitude of this vector is #.' )
 
-         CALL ERRDP  ( '#', H           )
-         CALL ERRDP  ( '#', K           )
-         CALL ERRDP  ( '#', DSQRT(ECC2) )
+         call errdp  ( '#', h           )
+         call errdp  ( '#', k           )
+         call errdp  ( '#', dsqrt(ecc2) )
 
-         CALL SIGERR ( 'SPICE(EVECOUTOFRANGE)'  )
-         CALL CHKOUT ( 'KPSOLV' )
-         RETURN
+         call sigerr ( 'SPICE(EVECOUTOFRANGE)'  )
+         call chkout ( 'KPSOLV' )
+         return
 
-      END IF
+      end if
 
 !
 !     We first approximate the equation 0 = X - H * COS(X) - K * SIN(X)
@@ -202,68 +202,68 @@
 !     much in the way of computations.
 !
 
-      Y0  = -H
-      XM  =  0.0D0
-      ECC =  DSQRT(ECC2)
+      y0  = -h
+      xm  =  0.0d0
+      ecc =  dsqrt(ecc2)
 
-      IF      ( Y0 .GT. 0.0D0 ) THEN
+      if      ( y0 .gt. 0.0d0 ) then
 
-         XU  =  0.0D0
-         XL  = -ECC
+         xu  =  0.0d0
+         xl  = -ecc
 
-      ELSE IF ( Y0 .LT. 0.0D0 ) THEN
+      else if ( y0 .lt. 0.0d0 ) then
 
-         XU =  ECC
-         XL =  0.0D0
+         xu =  ecc
+         xl =  0.0d0
 
-      ELSE
+      else
 
-         KPSOLV = 0.0D0
-         RETURN
+         kpsolv = 0.0d0
+         return
 
-      END IF
+      end if
 !
 !     Iterate until we are assured of being in a region where
 !     Newton's method will converge quickly.  The formula
 !     below was empirically determined to give good results.
 !
-      MAXIT = MIN(32, MAX( 1, NINT(1.0D0/(1.0D0-ECC)) ) )
+      maxit = min(32, max( 1, nint(1.0d0/(1.0d0-ecc)) ) )
 
-      DO I = 1, MAXIT
+      do i = 1, maxit
 
 !
 !        Compute the next midpoint.  We bracket XM by XL and XU just in
 !        case some kind of strange rounding occurs in the computation
 !        of the midpoint.
 !
-         XM     = MAX( XL, MIN( XU, 0.5D0*(XL + XU) ) )
+         xm     = max( xl, min( xu, 0.5d0*(xl + xu) ) )
 
 !
 !        Compute Y at the midpoint of XU and XL
 !
-         YXM = XM - H*COS(XM) - K*SIN(XM)
+         yxm = xm - h*cos(xm) - k*sin(xm)
 !
 !        Determine the new upper and lower bounds.
 !
-         IF ( YXM .GT. 0.0D0 ) THEN
-            XU = XM
-         ELSE
-            XL = XM
-         END IF
+         if ( yxm .gt. 0.0d0 ) then
+            xu = xm
+         else
+            xl = xm
+         end if
 
 
-      END DO
+      end do
 
 !
 !     We've bisected into a region where we can now get rapid
 !     convergence using Newton's method.
 !
-      X   = XM
+      x   = xm
 
-      DO I = 1, MXNEWT
+      do i = 1, mxnewt
 
-         COSX = DCOS(X)
-         SINX = DSIN(X)
+         cosx = dcos(x)
+         sinx = dsin(x)
 !
 !        Compute Y and Y' at X.  Use these to get the next
 !        iteration for X.
@@ -277,13 +277,13 @@
 !        of EVEC.  Thus on average the check is a waste of
 !        time and we don't bother with it.
 !
-         YX   = X     - H*COSX - K*SINX
-         YPX  = 1.0D0 + H*SINX - K*COSX
-         X    = X     - YX/YPX
+         yx   = x     - h*cosx - k*sinx
+         ypx  = 1.0d0 + h*sinx - k*cosx
+         x    = x     - yx/ypx
 
-      END DO
+      end do
 
-      KPSOLV = X
+      kpsolv = x
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPHREC ( Spherical to rectangular coordinates )
 
-      SUBROUTINE SPHREC ( R, COLAT, SLON, RECTAN  )
+      subroutine sphrec ( r, colat, slon, rectan  )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   R
-      DOUBLE PRECISION   COLAT
-      DOUBLE PRECISION   SLON
-      DOUBLE PRECISION   RECTAN ( 3 )
+      double precision   r
+      double precision   colat
+      double precision   slon
+      double precision   rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -384,24 +384,24 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
-      DOUBLE PRECISION Z
+      double precision x
+      double precision y
+      double precision z
 
 !
 !     Convert to rectangular coordinates, storing in the results in
 !     temporary variables
 !
-      X = R * DCOS(SLON) * DSIN(COLAT)
-      Y = R * DSIN(SLON) * DSIN(COLAT)
-      Z = R * DCOS(COLAT)
+      x = r * dcos(slon) * dsin(colat)
+      y = r * dsin(slon) * dsin(colat)
+      z = r * dcos(colat)
 
 !
 !     Move the results to the output variables
 !
-      RECTAN(1) = X
-      RECTAN(2) = Y
-      RECTAN(3) = Z
+      rectan(1) = x
+      rectan(2) = y
+      rectan(3) = z
 
-      RETURN
-      END
+      return
+      end

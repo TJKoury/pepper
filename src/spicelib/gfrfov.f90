@@ -1,7 +1,7 @@
 !$Procedure GFRFOV ( GF, is ray in FOV? )
 
-      SUBROUTINE GFRFOV ( INST,   RAYDIR, RFRAME, ABCORR, &
-                          OBSRVR, STEP,   CNFINE, RESULT )
+      subroutine gfrfov ( inst,   raydir, rframe, abcorr, &
+                          obsrvr, step,   cnfine, result )
 
 ! $ Abstract
 !
@@ -32,22 +32,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         INST
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      CHARACTER*(*)         RFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         inst
+      double precision      raydir ( 3 )
+      character*(*)         rframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -866,9 +866,9 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZED
+      integer               sized
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     External routines
@@ -876,18 +876,18 @@
 !
 !     Interrupt handler:
 !
-      LOGICAL               GFBAIL
-      EXTERNAL              GFBAIL
+      logical               gfbail
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work:
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
@@ -896,29 +896,29 @@
 !
 !     Geometric quantity  bail switch:
 !
-      LOGICAL               BAIL
-      PARAMETER           ( BAIL   = .FALSE. )
+      logical               bail
+      parameter           ( bail   = .false. )
 
 !
 !     Progress report switch:
 !
-      LOGICAL               RPT
-      PARAMETER           ( RPT    = .FALSE. )
+      logical               rpt
+      parameter           ( rpt    = .false. )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFRFOV' )
+      call chkin  ( 'GFRFOV' )
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -930,43 +930,43 @@
 !
 !     Check the result window's size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size must be at least 2 ' &
+         call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
-         CALL ERRINT ( '#',  SIZED(RESULT)                     )
-         CALL SIGERR ( 'SPICE(WINDOWTOOSMALL)'                 )
-         CALL CHKOUT ( 'GFRFOV'                                )
-         RETURN
+         call errint ( '#',  sized(result)                     )
+         call sigerr ( 'SPICE(WINDOWTOOSMALL)'                 )
+         call chkout ( 'GFRFOV'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Look for solutions.
 !
-      CALL GFFOVE ( INST,   RYSHAP, RAYDIR, ' ',    RFRAME, ABCORR, &
-                    OBSRVR, TOL,    GFSTEP, GFREFN, RPT,    GFREPI, &
-                    GFREPU, GFREPF, BAIL,   GFBAIL, CNFINE, RESULT )
+      call gffove ( inst,   ryshap, raydir, ' ',    rframe, abcorr, &
+                    obsrvr, tol,    gfstep, gfrefn, rpt,    gfrepi, &
+                    gfrepu, gfrepf, bail,   gfbail, cnfine, result )
 
-      CALL CHKOUT ( 'GFRFOV' )
-      RETURN
-      END
+      call chkout ( 'GFRFOV' )
+      return
+      end

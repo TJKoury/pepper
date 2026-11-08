@@ -1,6 +1,6 @@
 !$Procedure SYSETI ( Set the value associated with a symbol )
 
-      SUBROUTINE SYSETI ( NAME, VALUE, TABSYM, TABPTR, TABVAL )
+      subroutine syseti ( name, value, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      INTEGER               VALUE
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      INTEGER               TABVAL     ( LBCELL:* )
+      character*(*)         name
+      integer               value
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      integer               tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -183,50 +183,50 @@
 !     SPICELIB functions
 !
 
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SIZEC
-      INTEGER               SIZEI
-      INTEGER               SUMAI
+      integer               cardc
+      integer               cardi
+      integer               lstlec
+      logical               return
+      integer               sizec
+      integer               sizei
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NPTR
-      INTEGER               NVAL
+      integer               nsym
+      integer               nptr
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      INTEGER               DIMVAL
-      LOGICAL               OLDSYM
+      integer               locsym
+      integer               locval
+      integer               dimval
+      logical               oldsym
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYSETI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYSETI' )
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NPTR = CARDI ( TABPTR )
-      NVAL = CARDI ( TABVAL )
+      nsym = cardc ( tabsym )
+      nptr = cardi ( tabptr )
+      nval = cardi ( tabval )
 
 !
 !     Where does this symbol belong? Is it already in the table?
 !
-      LOCSYM = LSTLEC ( NAME, NSYM, TABSYM(1) )
-      OLDSYM = ( LOCSYM .NE. 0  .AND.  TABSYM(LOCSYM) .EQ. NAME )
+      locsym = lstlec ( name, nsym, tabsym(1) )
+      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
 
 !
 !     If it's already in the table, there's no chance of overflow.
@@ -234,67 +234,67 @@
 !     values, replacing that with the new value. And set the dimension
 !     to one.
 !
-      IF ( OLDSYM ) THEN
+      if ( oldsym ) then
 
-         LOCVAL = SUMAI  ( TABPTR(1), LOCSYM-1 ) + 1
-         DIMVAL = TABPTR(LOCSYM)
+         locval = sumai  ( tabptr(1), locsym-1 ) + 1
+         dimval = tabptr(locsym)
 
-         IF ( DIMVAL .GT. 1 ) THEN
-            CALL REMLAI ( DIMVAL-1, LOCVAL, TABVAL(1), NVAL )
-            CALL SCARDI ( NVAL, TABVAL )
-         END IF
+         if ( dimval .gt. 1 ) then
+            call remlai ( dimval-1, locval, tabval(1), nval )
+            call scardi ( nval, tabval )
+         end if
 
-         TABPTR(LOCSYM) = 1
-         TABVAL(LOCVAL) = VALUE
+         tabptr(locsym) = 1
+         tabval(locval) = value
 
 !
 !     Otherwise, we can't proceed unless we know that we have enough
 !     room for one extra addition in all three tables.
 !
-      ELSE IF ( NSYM .GE. SIZEC ( TABSYM ) ) THEN
+      else if ( nsym .ge. sizec ( tabsym ) ) then
 
-            CALL SETMSG ( 'SYSETI: Addition of the new symbol # '     // &
+            call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the name table.' )
-            CALL ERRCH  ( '#', NAME )
-            CALL SIGERR ( 'SPICE(NAMETABLEFULL)' )
+            call errch  ( '#', name )
+            call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-      ELSE IF ( NPTR .GE. SIZEI ( TABPTR ) ) THEN
+      else if ( nptr .ge. sizei ( tabptr ) ) then
 
-            CALL SETMSG ( 'SYSETI: Addition of the new symbol # '     // &
+            call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the pointer table.' )
-            CALL ERRCH  ( '#', NAME )
-            CALL SIGERR ( 'SPICE(POINTERTABLEFULL)' )
+            call errch  ( '#', name )
+            call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-      ELSE IF ( NVAL .GE. SIZEI ( TABVAL ) ) THEN
+      else if ( nval .ge. sizei ( tabval ) ) then
 
-            CALL SETMSG ( 'SYSETI: Addition of the new symbol # '     // &
+            call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the value table.' )
-            CALL ERRCH  ( '#', NAME )
-            CALL SIGERR ( 'SPICE(VALUETABLEFULL)' )
+            call errch  ( '#', name )
+            call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
 
 !
 !     If there's room, add the new name to the name table. Give the
 !     symbol dimension one, and put the value in the right place.
 !
-      ELSE
+      else
 
-         CALL INSLAC ( NAME, 1, LOCSYM+1, TABSYM(1), NSYM )
-         CALL SCARDC ( NSYM, TABSYM )
+         call inslac ( name, 1, locsym+1, tabsym(1), nsym )
+         call scardc ( nsym, tabsym )
 
-         CALL INSLAI ( 1, 1, LOCSYM+1, TABPTR(1), NPTR )
-         CALL SCARDI ( NPTR, TABPTR )
+         call inslai ( 1, 1, locsym+1, tabptr(1), nptr )
+         call scardi ( nptr, tabptr )
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM ) + 1
+         locval = sumai ( tabptr(1), locsym ) + 1
 
-         CALL INSLAI ( VALUE, 1, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDI ( NVAL, TABVAL )
+         call inslai ( value, 1, locval, tabval(1), nval )
+         call scardi ( nval, tabval )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYSETI' )
-      RETURN
-      END
+      call chkout ( 'SYSETI' )
+      return
+      end

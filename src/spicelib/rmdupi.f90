@@ -1,6 +1,6 @@
 !$Procedure RMDUPI ( Remove duplicates from an integer array )
 
-      SUBROUTINE RMDUPI ( NELT, ARRAY )
+      subroutine rmdupi ( nelt, array )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          NELT
-      INTEGER          ARRAY   (*)
+      integer          nelt
+      integer          array   (*)
 
 ! $ Brief_I/O
 !
@@ -131,40 +131,40 @@
 !
 !     Local variables
 !
-      INTEGER          I
-      INTEGER          J
+      integer          i
+      integer          j
 
 
 
 !
 !     Proceed only if the array actually contains more than one element.
 !
-      IF ( NELT .GT. 1 ) THEN
+      if ( nelt .gt. 1 ) then
 
 !
 !        Sort the array in place.
 !
-         CALL SHELLI ( NELT, ARRAY )
+         call shelli ( nelt, array )
 
 !
 !        Drop duplicate entries. Compare adjacent entries, and move
 !        duplicates forward. (Duplicates are now adjacent, because of
 !        sorting.)
 !
-         J = 1
+         j = 1
 
-         DO I = 2, NELT
+         do i = 2, nelt
 
-            IF ( ARRAY(I) .NE. ARRAY(I-1) ) THEN
-               J        = J + 1
-               ARRAY(J) = ARRAY(I)
-            END IF
+            if ( array(i) .ne. array(i-1) ) then
+               j        = j + 1
+               array(j) = array(i)
+            end if
 
-        END DO
+        end do
 
-        NELT = J
+        nelt = j
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

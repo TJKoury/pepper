@@ -1,6 +1,6 @@
 !$Procedure DPSTR ( Double Precision Number to Character )
 
-      SUBROUTINE DPSTR ( X, SIGDIG, STRING )
+      subroutine dpstr ( x, sigdig, string )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION X
-      INTEGER          SIGDIG
-      CHARACTER*(*)    STRING
+      double precision x
+      integer          sigdig
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -261,74 +261,74 @@
 !
 !     Maximum number of allowed significant digits.
 !
-      INTEGER               MOSTDG
-      PARAMETER           ( MOSTDG = 14 )
+      integer               mostdg
+      parameter           ( mostdg = 14 )
 
 !
 !     Local variables
 !
-      INTEGER               MAXPOW
-      PARAMETER           ( MAXPOW = 17 )
+      integer               maxpow
+      parameter           ( maxpow = 17 )
 
-      DOUBLE PRECISION      POWER (0:MAXPOW)
-      DOUBLE PRECISION      IPOWER(0:MAXPOW)
+      double precision      power (0:maxpow)
+      double precision      ipower(0:maxpow)
 
-      CHARACTER*(1)         DIGITS(0:9)
-      DOUBLE PRECISION      VALUES(0:9)
+      character*(1)         digits(0:9)
+      double precision      values(0:9)
 
-      INTEGER               MAXEXP
-      PARAMETER           ( MAXEXP = 40 )
+      integer               maxexp
+      parameter           ( maxexp = 40 )
 
-      CHARACTER*(2)         VAXEXP(0:40)
-
-
-
-      DOUBLE PRECISION      COPY
-      INTEGER               POSTN
-      INTEGER               EXPONT
-      INTEGER               MAXSIG
-
-      DOUBLE PRECISION      EXP10
-
-      INTEGER               I
-      INTEGER               K
-      INTEGER               LAST
-
-      CHARACTER*(20)        EXPC
-      CHARACTER*(28)        ZERO
+      character*(2)         vaxexp(0:40)
 
 
-      CHARACTER*(32)        NUMSTR
 
-      SAVE                  POWER
-      SAVE                  IPOWER
-      SAVE                  DIGITS
-      SAVE                  VALUES
-      SAVE                  VAXEXP
+      double precision      copy
+      integer               postn
+      integer               expont
+      integer               maxsig
 
-      DATA             POWER        /  1.0D0, &
-                                       1.0D1,  1.0D2,  1.0D3,  1.0D4, &
-                                       1.0D5,  1.0D6,  1.0D7,  1.0D8, &
-                                       1.0D9,  1.0D10, 1.0D11, 1.0D12, &
-                                       1.0D13, 1.0D14, 1.0D15, 1.0D16, &
-                                       1.0D17                          /
+      double precision      exp10
 
-      DATA             IPOWER       /1.0D0, &
-                                     1.0D-1,  1.0D-2,  1.0D-3,  1.0D-4, &
-                                     1.0D-5,  1.0D-6,  1.0D-7,  1.0D-8, &
-                                     1.0D-9,  1.0D-10, 1.0D-11, 1.0D-12, &
-                                     1.0D-13, 1.0D-14, 1.0D-15, 1.0D-16, &
-                                     1.0D-17                          /
+      integer               i
+      integer               k
+      integer               last
 
-      DATA             DIGITS       /  '0', '1', '2', '3', '4', &
+      character*(20)        expc
+      character*(28)        zero
+
+
+      character*(32)        numstr
+
+      save                  power
+      save                  ipower
+      save                  digits
+      save                  values
+      save                  vaxexp
+
+      data             power        /  1.0d0, &
+                                       1.0d1,  1.0d2,  1.0d3,  1.0d4, &
+                                       1.0d5,  1.0d6,  1.0d7,  1.0d8, &
+                                       1.0d9,  1.0d10, 1.0d11, 1.0d12, &
+                                       1.0d13, 1.0d14, 1.0d15, 1.0d16, &
+                                       1.0d17                          /
+
+      data             ipower       /1.0d0, &
+                                     1.0d-1,  1.0d-2,  1.0d-3,  1.0d-4, &
+                                     1.0d-5,  1.0d-6,  1.0d-7,  1.0d-8, &
+                                     1.0d-9,  1.0d-10, 1.0d-11, 1.0d-12, &
+                                     1.0d-13, 1.0d-14, 1.0d-15, 1.0d-16, &
+                                     1.0d-17                          /
+
+      data             digits       /  '0', '1', '2', '3', '4', &
                                        '5', '6', '7', '8', '9'    /
 
-      DATA             VALUES       /   0.0D0 ,  1.0D0 ,  2.0D0 , &
-                                        3.0D0 ,  4.0D0 ,  5.0D0 , &
-                                        6.0D0 ,  7.0D0 ,  8.0D0 , &
-                                        9.0D0                     /
+      data             values       /   0.0d0 ,  1.0d0 ,  2.0d0 , &
+                                        3.0d0 ,  4.0d0 ,  5.0d0 , &
+                                        6.0d0 ,  7.0d0 ,  8.0d0 , &
+                                        9.0d0                     /
 
-      DATA             VAXEXP       / '00', '01', '02', '03', '04', &
+      data             vaxexp       / '00', '01', '02', '03', '04', &
                                       '05', '06', '07', '08', '09', &
                                       '10', '11', '12', '13', '14', &
                                       '15', '16', '17', '18', '19', &
@@ -342,58 +342,58 @@
 !     Transfer X to the local variable COPY and leave X alone for the
 !     rest of the routine.
 !
-      COPY   = X
+      copy   = x
 
 !
 !     Wipe out anything sitting in NUMSTR
 !
-      NUMSTR = ' '
+      numstr = ' '
 
 !
 !     At least 1 significant digit is required.  The most allowed is 14.
 !     MAXSIG is the integer in this range that is closest to SIGDIG.
 !
-      MAXSIG = MIN ( MOSTDG, MAX( 1, SIGDIG ) )
+      maxsig = min ( mostdg, max( 1, sigdig ) )
 
 !
 !     Examine COPY to see if its positive, zero, or negative.
 !     This determines whether we need a minus sign and where the
 !     decimal point needs to go in the output string.
 !
-      IF      ( COPY .LT. 0 ) THEN
+      if      ( copy .lt. 0 ) then
 
-         NUMSTR(1:1) = '-'
-         COPY        =  - COPY
-         POSTN       =  2
-         NUMSTR(3:3) = '.'
+         numstr(1:1) = '-'
+         copy        =  - copy
+         postn       =  2
+         numstr(3:3) = '.'
 
-      ELSE IF ( COPY .GT. 0 ) THEN
+      else if ( copy .gt. 0 ) then
 
-         NUMSTR(1:1) = ' '
-         POSTN       =  2
-         NUMSTR(3:3) = '.'
+         numstr(1:1) = ' '
+         postn       =  2
+         numstr(3:3) = '.'
 
-      ELSE
-         ZERO        = ' 0.0000000000000000000000000'
-         NUMSTR      = ZERO(1:MAXSIG+2) // 'E+00'
+      else
+         zero        = ' 0.0000000000000000000000000'
+         numstr      = zero(1:maxsig+2) // 'E+00'
 
-         STRING = NUMSTR
-         RETURN
+         string = numstr
+         return
 
-      END IF
+      end if
 
 
 !
 !     We need a first guess at the exponent string.  Compute the LOG
 !     base 10 of COPY
 !
-      EXP10  = DLOG10(COPY)
+      exp10  = dlog10(copy)
 
 
 !
 !     Scale our copy of the input into the range 1 to 10.
 !
-      IF ( EXP10 .LT. 0 ) THEN
+      if ( exp10 .lt. 0 ) then
 
 !
 !        In this case the exponent will be negative.  We want the
@@ -401,80 +401,80 @@
 !        INT function gives the INTEGER closest to EXP10 between EXP10
 !        and zero.  As a result we have to subtract 1 from INT(EXP10).
 !
-         EXPONT =  INT(EXP10) - 1
-         K      = -EXPONT
+         expont =  int(exp10) - 1
+         k      = -expont
 
-         DO WHILE ( K .GT. 16 )
-            COPY = COPY * 1.0D16
-            K    = K - 16
-         END DO
+         do while ( k .gt. 16 )
+            copy = copy * 1.0d16
+            k    = k - 16
+         end do
 
-         IF ( K .NE. 0 ) THEN
-            COPY = COPY * POWER(K)
-         END IF
-
-
-      ELSE
-
-         EXPONT = INT ( EXP10 )
-         K      = EXPONT
-
-         DO WHILE ( K .GT. 16 )
-            COPY = COPY * 1.0D-16
-            K    = K - 16
-         END DO
-
-         IF ( K .NE. 0 ) THEN
-            COPY = COPY * IPOWER(K)
-         END IF
+         if ( k .ne. 0 ) then
+            copy = copy * power(k)
+         end if
 
 
-      END IF
+      else
+
+         expont = int ( exp10 )
+         k      = expont
+
+         do while ( k .gt. 16 )
+            copy = copy * 1.0d-16
+            k    = k - 16
+         end do
+
+         if ( k .ne. 0 ) then
+            copy = copy * ipower(k)
+         end if
+
+
+      end if
 
 
 
 !
 !     Round off the last significant digit.
 !
-      COPY   = (DNINT( COPY*POWER(MAXSIG-1)) + 0.125D0 ) &
-             * IPOWER(MAXSIG-1)
+      copy   = (dnint( copy*power(maxsig-1)) + 0.125d0 ) &
+             * ipower(maxsig-1)
 
 !
 !     We might have accidentally made copy as big as 10 by the
 !     round off process.  If we did we need to divide by 10 and add 1
 !     to the exponent value.  (COPY must always remain between 0 and 10)
 !
-      IF ( COPY .GE. 10.0D0 ) THEN
-         COPY   = COPY * 1.0D-1
-         EXPONT = EXPONT + 1
-      END IF
+      if ( copy .ge. 10.0d0 ) then
+         copy   = copy * 1.0d-1
+         expont = expont + 1
+      end if
 !
 !     Get the first digit of the decimal expansion of X.
 !
-      I                   = INT ( COPY )
-      NUMSTR(POSTN:POSTN) = DIGITS(I)
+      i                   = int ( copy )
+      numstr(postn:postn) = digits(i)
 
-      COPY                = ( COPY - VALUES(I) ) * 10.0D0
+      copy                = ( copy - values(i) ) * 10.0d0
 
 !
 !     Set the string pointer to the next position and compute the
 !     position of the last significant digit
 !
-      POSTN               = POSTN + 2
-      LAST                = POSTN + MAXSIG - 1
+      postn               = postn + 2
+      last                = postn + maxsig - 1
 
 !
 !     Fetch digits until we fill in the last available slot for
 !     significant digits.
 !
-      DO WHILE ( POSTN  .LT. LAST )
+      do while ( postn  .lt. last )
 
-         I                   = INT ( COPY )
-         NUMSTR(POSTN:POSTN) = DIGITS(I)
-         COPY                = ( COPY - VALUES(I) ) * 10.0D0
-         POSTN               = POSTN + 1
+         i                   = int ( copy )
+         numstr(postn:postn) = digits(i)
+         copy                = ( copy - values(i) ) * 10.0d0
+         postn               = postn + 1
 
-      END DO
+      end do
 
 !
 !     Tack on the exponent to the output. Note that the rather odd
@@ -483,34 +483,34 @@
 !
 !     First get the exponent symbol and sign of the exponent.
 !
-      IF   ( EXPONT .GE. 0  ) THEN
+      if   ( expont .ge. 0  ) then
 
-         NUMSTR(POSTN:) = 'E+'
+         numstr(postn:) = 'E+'
 
-      ELSE
+      else
 
-         EXPONT         = - EXPONT
-         NUMSTR(POSTN:) = 'E-'
+         expont         = - expont
+         numstr(postn:) = 'E-'
 
-      END IF
+      end if
 
-      POSTN = POSTN + 2
+      postn = postn + 2
 
 !
 !     Now get the numeric representation.
 !
-      IF ( EXPONT .LE. 40 ) THEN
-         EXPC  = VAXEXP ( EXPONT )
-      ELSE
-         CALL INTSTR ( EXPONT, EXPC )
-      END IF
+      if ( expont .le. 40 ) then
+         expc  = vaxexp ( expont )
+      else
+         call intstr ( expont, expc )
+      end if
 
-      NUMSTR(POSTN:) = EXPC
-      STRING         = NUMSTR
+      numstr(postn:) = expc
+      string         = numstr
 
 !
 !     That's all folks.
 !
-      RETURN
+      return
 
-      END
+      end

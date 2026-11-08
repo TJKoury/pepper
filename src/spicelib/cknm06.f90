@@ -1,6 +1,6 @@
 !$Procedure CKNM06 ( C-kernel, number of mini-segments, type 06 )
 
-      SUBROUTINE CKNM06 ( HANDLE, DESCR, NMINI )
+      subroutine cknm06 ( handle, descr, nmini )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               NMINI
+      integer               handle
+      double precision      descr   ( * )
+      integer               nmini
 
 ! $ Brief_I/O
 !
@@ -444,8 +444,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -459,32 +459,32 @@
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
 !
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE  = 6 )
+      integer               dtype
+      parameter           ( dtype  = 6 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DPDATA ( 1  )
+      double precision      dc     ( nd )
+      double precision      dpdata ( 1  )
 
-      INTEGER               IC     ( NI )
+      integer               ic     ( ni )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKNM06' )
+      call chkin ( 'CKNM06' )
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -507,33 +507,33 @@
 !        IC(6)  Final address of segment data
 !
 !
-      CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      call dafus ( descr, nd, ni, dc, ic )
 
 !
 !     If this segment is not of data type 6, then signal an error.
 !
-      IF ( IC( 3 ) .NE. DTYPE ) THEN
+      if ( ic( 3 ) .ne. dtype ) then
 
-         CALL SETMSG ( 'Data type of the segment should be 6: Passed ' &
+         call setmsg ( 'Data type of the segment should be 6: Passed ' &
          //            'descriptor shows type = #.'                   )
-         CALL ERRINT ( '#', IC( 3 )                                   )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                       )
-         CALL CHKOUT ( 'CKNM06'                                       )
-         RETURN
-      END IF
+         call errint ( '#', ic( 3 )                                   )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         call chkout ( 'CKNM06'                                       )
+         return
+      end if
 
 !
 !     The number of mini-segments is the final word in the segment.
 !
-      CALL DAFGDA ( HANDLE, IC(6), IC(6), DPDATA )
+      call dafgda ( handle, ic(6), ic(6), dpdata )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKNM06' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKNM06' )
+         return
+      end if
 
-      NMINI = NINT ( DPDATA(1) )
+      nmini = nint ( dpdata(1) )
 
-      CALL CHKOUT ( 'CKNM06' )
-      RETURN
-      END
+      call chkout ( 'CKNM06' )
+      return
+      end

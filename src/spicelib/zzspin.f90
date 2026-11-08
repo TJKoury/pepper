@@ -1,9 +1,9 @@
 !$Procedure ZZSPIN ( Separation quantity initializer )
 
-      SUBROUTINE ZZSPIN ( TARG1,  SHAPE1, FRAME1, &
-                          TARG2,  SHAPE2, FRAME2, &
-                          OBSRVR, ABCORR, &
-                          BODS,   FRAMES, MXRAD, OBS )
+      subroutine zzspin ( targ1,  shape1, frame1, &
+                          targ2,  shape2, frame2, &
+                          obsrvr, abcorr, &
+                          bods,   frames, mxrad, obs )
 
 ! $ Abstract
 !
@@ -21,22 +21,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         TARG1
-      CHARACTER*(*)         SHAPE1
-      CHARACTER*(*)         FRAME1
-      CHARACTER*(*)         TARG2
-      CHARACTER*(*)         SHAPE2
-      CHARACTER*(*)         FRAME2
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         ABCORR
-      INTEGER               BODS   (2)
-      INTEGER               FRAMES (2)
-      DOUBLE PRECISION      MXRAD  (2)
-      INTEGER               OBS
+      character*(*)         targ1
+      character*(*)         shape1
+      character*(*)         frame1
+      character*(*)         targ2
+      character*(*)         shape2
+      character*(*)         frame2
+      character*(*)         obsrvr
+      character*(*)         abcorr
+      integer               bods   (2)
+      integer               frames (2)
+      double precision      mxrad  (2)
+      integer               obs
 
 ! $ Brief_I/O
 !
@@ -254,260 +254,260 @@
 !
 !     SPICELIB functions.
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               FOUND
+      logical               failed
+      logical               return
+      logical               found
 
 !
 !     Local parameters
 !
-      INTEGER               SHAPLN
-      PARAMETER           ( SHAPLN = 6 )
+      integer               shapln
+      parameter           ( shapln = 6 )
 
 
 !
 !     Local Variables
 !
-      CHARACTER*(SHAPLN)    SHAP1
-      CHARACTER*(SHAPLN)    SHAP2
+      character*(shapln)    shap1
+      character*(shapln)    shap2
 
-      DOUBLE PRECISION      AXES1 (3)
-      DOUBLE PRECISION      AXES2 (3)
+      double precision      axes1 (3)
+      double precision      axes2 (3)
 
-      INTEGER               CLASS
-      INTEGER               CLSSID
-      INTEGER               CTR1
-      INTEGER               CTR2
-      INTEGER               SHP1
-      INTEGER               SHP2
+      integer               class
+      integer               clssid
+      integer               ctr1
+      integer               ctr2
+      integer               shp1
+      integer               shp2
 
-      LOGICAL               ATTBLK ( NABCOR )
+      logical               attblk ( nabcor )
 
 !
 !     Below we initialize the list of shape names.
 !
-      INTEGER               SPSHPN
-      PARAMETER           ( SPSHPN = 2 )
+      integer               spshpn
+      parameter           ( spshpn = 2 )
 
-      CHARACTER*(32)        SVSHAP ( SPSHPN )
+      character*(32)        svshap ( spshpn )
 
 !
 !     Define integer ID parameters for the shape names in
 !     SVSHAP.
 !
-      INTEGER               POINT
-      PARAMETER           ( POINT = 1 )
+      integer               point
+      parameter           ( point = 1 )
 
-      INTEGER               SPHERE
-      PARAMETER           ( SPHERE = 2 )
+      integer               sphere
+      parameter           ( sphere = 2 )
 
-      SAVE                  SVSHAP
+      save                  svshap
 
-      DATA                  SVSHAP / 'POINT', &
+      data                  svshap / 'POINT', &
                                      'SPHERE' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN( 'ZZSPIN' )
+      call chkin( 'ZZSPIN' )
 
 !
 !     FRAMES argument not currently used.
 !
-      FRAMES(1) = -1
-      FRAMES(2) = -1
+      frames(1) = -1
+      frames(2) = -1
 
-      CALL BODS2C ( TARG1, BODS(1), FOUND )
+      call bods2c ( targ1, bods(1), found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG( 'The object name for target 1, ' &
+         call setmsg( 'The object name for target 1, ' &
             //         '''#'', is not a recognized name for an ' &
             //         'ephemeris object. The cause of this ' &
             //         'problem may be that you need an updated ' &
             //         'version of the SPICE Toolkit.'        )
-         CALL ERRCH ( '#', TARG1                              )
-         CALL SIGERR( 'SPICE(IDCODENOTFOUND)'                 )
-         CALL CHKOUT( 'ZZSPIN'                                   )
-         RETURN
+         call errch ( '#', targ1                              )
+         call sigerr( 'SPICE(IDCODENOTFOUND)'                 )
+         call chkout( 'ZZSPIN'                                   )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( TARG2, BODS(2), FOUND )
+      call bods2c ( targ2, bods(2), found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG( 'The object name for target 2, ' &
+         call setmsg( 'The object name for target 2, ' &
             //         '''#'', is not a recognized name for an ' &
             //         'ephemeris object. The cause of this ' &
             //         'problem may be that you need an updated ' &
             //         'version of the SPICE Toolkit.'        )
-         CALL ERRCH ( '#', TARG2                              )
-         CALL SIGERR( 'SPICE(IDCODENOTFOUND)'                 )
-         CALL CHKOUT( 'ZZSPIN'                                )
-         RETURN
+         call errch ( '#', targ2                              )
+         call sigerr( 'SPICE(IDCODENOTFOUND)'                 )
+         call chkout( 'ZZSPIN'                                )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, OBS, FOUND )
+      call bods2c ( obsrvr, obs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The object name for the observer, ' &
+         call setmsg ( 'The object name for the observer, ' &
             //            '''#'', is not a recognized name for an ' &
             //            'ephemeris object. The cause of this ' &
             //            'problem may be that you need an updated ' &
             //            'version of the SPICE Toolkit.'          )
-         CALL ERRCH  ( '#', OBSRVR                                 )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                     )
-         CALL CHKOUT ( 'ZZSPIN'                                    )
-         RETURN
+         call errch  ( '#', obsrvr                                 )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                     )
+         call chkout ( 'ZZSPIN'                                    )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Confirm the three bodies have unique IDs.
 !
-      IF      (       ( OBS     .EQ. BODS(1) ) &
-                 .OR. ( OBS     .EQ. BODS(2) ) &
-                 .OR. ( BODS(1) .EQ. BODS(2)) ) THEN
+      if      (       ( obs     .eq. bods(1) ) &
+                 .or. ( obs     .eq. bods(2) ) &
+                 .or. ( bods(1) .eq. bods(2)) ) then
 
-         CALL SETMSG( 'All three objects associated ' &
+         call setmsg( 'All three objects associated ' &
             //        'with an ANGULAR SEPARATION calculation ' &
             //        'must be distinct. The objects whose angular ' &
             //        'separation is of interest were # and #. ' &
             //        'The observer was #.'                       )
-         CALL ERRINT( '#', BODS(1)                                )
-         CALL ERRINT( '#', BODS(2)                                )
-         CALL ERRINT( '#', OBS                                    )
-         CALL SIGERR( 'SPICE(BODIESNOTDISTINCT)'                  )
-         CALL CHKOUT( 'ZZSPIN'                                    )
-         RETURN
+         call errint( '#', bods(1)                                )
+         call errint( '#', bods(2)                                )
+         call errint( '#', obs                                    )
+         call sigerr( 'SPICE(BODIESNOTDISTINCT)'                  )
+         call chkout( 'ZZSPIN'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( ABCORR, ATTBLK )
+      call zzvalcor ( abcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSPIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSPIN' )
+         return
+      end if
 
 
 !
 !     Check first shape.
 !
-      CALL LJUCRS ( 1, SHAPE1, SHAP1 )
+      call ljucrs ( 1, shape1, shap1 )
 
 !
 !     If we pass the error check, then SHAPE1 exists in SVSHAP.
 !
-      SHP1 = ISRCHC( SHAP1, SPSHPN, SVSHAP)
+      shp1 = isrchc( shap1, spshpn, svshap)
 
-      IF ( SHP1 .EQ. 0 ) THEN
+      if ( shp1 .eq. 0 ) then
 
-         CALL SETMSG ( 'The body shape, # is not recognized.  ' &
+         call setmsg ( 'The body shape, # is not recognized.  ' &
             //         'Supported quantities are: ' &
             //         'POINT, SPHERE.'                      )
-         CALL ERRCH  ( '#', SHAP1                            )
-         CALL SIGERR ( 'SPICE(NOTRECOGNIZED)'                )
-         CALL CHKOUT ( 'ZZSPIN'                              )
-         RETURN
+         call errch  ( '#', shap1                            )
+         call sigerr ( 'SPICE(NOTRECOGNIZED)'                )
+         call chkout ( 'ZZSPIN'                              )
+         return
 
-      ELSE IF ( SHP1 .EQ. POINT ) THEN
+      else if ( shp1 .eq. point ) then
 
-         MXRAD(1) = 0.D0
+         mxrad(1) = 0.d0
 
-      ELSE IF ( SHP1 .EQ. SPHERE ) THEN
+      else if ( shp1 .eq. sphere ) then
 
-         CALL ZZGFTREB( BODS(1), AXES1 )
+         call zzgftreb( bods(1), axes1 )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT( 'ZZSPIN' )
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout( 'ZZSPIN' )
+            return
+         end if
 
-         MXRAD(1) = MAX( AXES1(1), AXES1(2), AXES1(3) )
+         mxrad(1) = max( axes1(1), axes1(2), axes1(3) )
 
-      ELSE
+      else
 
 !
 !        This code executes only if someone adds a new shape
 !        name to SVSHAP then fails to update the SHP1 condition
 !        block to respond to the name. Fortran needs SWITCH...CASE.
 !
-         CALL SETMSG ('Encountered uncoded shape ID for #. '     // &
+         call setmsg ('Encountered uncoded shape ID for #. '     // &
                       'This indicates a bug. Please contact NAIF.')
-         CALL ERRCH  ('#', SHAP1                                  )
-         CALL SIGERR ('SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZSPIN'                                   )
-         RETURN
+         call errch  ('#', shap1                                  )
+         call sigerr ('SPICE(BUG)'                                )
+         call chkout ( 'ZZSPIN'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Check second shape.
 !
-      CALL LJUCRS ( 1, SHAPE2, SHAP2 )
+      call ljucrs ( 1, shape2, shap2 )
 
 !
 !     If we pass the error check, then SHAPE2 exists in SVSHAP.
 !
-      SHP2 = ISRCHC( SHAP2, SPSHPN, SVSHAP)
+      shp2 = isrchc( shap2, spshpn, svshap)
 
-      IF ( SHP2 .EQ. 0 ) THEN
+      if ( shp2 .eq. 0 ) then
 
-         CALL SETMSG ( 'The body shape, # is not '                 // &
+         call setmsg ( 'The body shape, # is not '                 // &
                        'recognized.  Supported quantities are: '   // &
                        'POINT, SPHERE.'                             )
-         CALL ERRCH ( '#', SHAP2                                    )
-         CALL SIGERR( 'SPICE(NOTRECOGNIZED)'                        )
-         CALL CHKOUT( 'ZZSPIN'                                      )
-         RETURN
+         call errch ( '#', shap2                                    )
+         call sigerr( 'SPICE(NOTRECOGNIZED)'                        )
+         call chkout( 'ZZSPIN'                                      )
+         return
 
-      ELSE IF ( SHP2 .EQ. POINT ) THEN
+      else if ( shp2 .eq. point ) then
 
-         MXRAD(2) = 0.D0
+         mxrad(2) = 0.d0
 
-      ELSE IF ( SHP2 .EQ. SPHERE ) THEN
+      else if ( shp2 .eq. sphere ) then
 
-         CALL ZZGFTREB( BODS(2), AXES2 )
+         call zzgftreb( bods(2), axes2 )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT( 'ZZSPIN' )
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout( 'ZZSPIN' )
+            return
+         end if
 
-         MXRAD(2) = MAX( AXES2(1), AXES2(2), AXES2(3) )
+         mxrad(2) = max( axes2(1), axes2(2), axes2(3) )
 
-      ELSE
+      else
 
 !
 !        This code executes only if someone adds a new shape
 !        name to SVSHAP then fails to update the SHP2 condition
 !        block to respond to the name. Fortran needs SWITCH...CASE.
 !
-         CALL SETMSG ('Encountered uncoded shape ID for #. '     // &
+         call setmsg ('Encountered uncoded shape ID for #. '     // &
                       'This indicates a bug. Please contact NAIF.')
-         CALL ERRCH  ('#', SHAP2                                  )
-         CALL SIGERR ('SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZSPIN'                                   )
-         RETURN
+         call errch  ('#', shap2                                  )
+         call sigerr ('SPICE(BUG)'                                )
+         call chkout ( 'ZZSPIN'                                   )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -520,75 +520,75 @@
 !     This check does not apply to POINT or SPHERE shapes.
 !
 
-      IF ( (SHP1 .NE. POINT)  .AND. (SHP1 .NE. SPHERE) ) THEN
+      if ( (shp1 .ne. point)  .and. (shp1 .ne. sphere) ) then
 
-         CALL NAMFRM ( FRAME1, FRAMES(1) )
+         call namfrm ( frame1, frames(1) )
 
-         CALL FRINFO ( FRAMES(1), CTR1, CLASS, CLSSID, FOUND )
+         call frinfo ( frames(1), ctr1, class, clssid, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Frame system did not recognize frame #.' )
-            CALL ERRCH  ( '#', FRAME1                               )
-            CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-            CALL CHKOUT ( 'ZZSPIN'                                  )
-            RETURN
+            call setmsg ( 'Frame system did not recognize frame #.' )
+            call errch  ( '#', frame1                               )
+            call sigerr ( 'SPICE(NOFRAME)'                          )
+            call chkout ( 'ZZSPIN'                                  )
+            return
 
-         END IF
+         end if
 
-         IF ( BODS(1) .NE. CTR1 ) THEN
+         if ( bods(1) .ne. ctr1 ) then
 
-            CALL SETMSG ( 'The reference frame #1 associated with ' // &
+            call setmsg ( 'The reference frame #1 associated with ' // &
                       'target body #2 is not centered on #2. The '  // &
                       'frame must be centered on the target body.' )
 
-            CALL ERRCH  ( '#1', FRAME1                     )
-            CALL ERRCH  ( '#2', TARG1                      )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'            )
-            CALL CHKOUT ( 'ZZSPIN'                         )
-            RETURN
+            call errch  ( '#1', frame1                     )
+            call errch  ( '#2', targ1                      )
+            call sigerr ( 'SPICE(INVALIDFRAME)'            )
+            call chkout ( 'ZZSPIN'                         )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( (SHP2 .NE. POINT)  .AND. (SHP2 .NE. SPHERE) ) THEN
+      if ( (shp2 .ne. point)  .and. (shp2 .ne. sphere) ) then
 
-         CALL NAMFRM ( FRAME2, FRAMES(2) )
+         call namfrm ( frame2, frames(2) )
 
-         CALL FRINFO ( FRAMES(2), CTR2, CLASS, CLSSID, FOUND )
+         call frinfo ( frames(2), ctr2, class, clssid, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Frame system did not recognize frame #.' )
-            CALL ERRCH  ( '#', FRAME2                               )
-            CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-            CALL CHKOUT ( 'ZZSPIN'                                  )
-            RETURN
+            call setmsg ( 'Frame system did not recognize frame #.' )
+            call errch  ( '#', frame2                               )
+            call sigerr ( 'SPICE(NOFRAME)'                          )
+            call chkout ( 'ZZSPIN'                                  )
+            return
 
-         END IF
+         end if
 
-         IF ( BODS(2) .NE. CTR2 ) THEN
+         if ( bods(2) .ne. ctr2 ) then
 
-            CALL SETMSG ( 'The reference frame #1 associated with ' // &
+            call setmsg ( 'The reference frame #1 associated with ' // &
                       'target body #2 is not centered on #2. The '  // &
                       'frame must be centered on the target body.' )
 
-            CALL ERRCH  ( '#1', FRAME2                     )
-            CALL ERRCH  ( '#2', TARG2                      )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'            )
-            CALL CHKOUT ( 'ZZSPIN'                         )
-            RETURN
+            call errch  ( '#1', frame2                     )
+            call errch  ( '#2', targ2                      )
+            call sigerr ( 'SPICE(INVALIDFRAME)'            )
+            call chkout ( 'ZZSPIN'                         )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Done. Check out. Return.
 !
 
-      CALL CHKOUT ('ZZSPIN')
-      RETURN
-      END
+      call chkout ('ZZSPIN')
+      return
+      end

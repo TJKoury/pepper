@@ -1,6 +1,6 @@
 !$Procedure ZZCVSTAT ( Constant velocity state )
 
-      SUBROUTINE ZZCVSTAT ( ET, REF, CENTER, STATE )
+      subroutine zzcvstat ( et, ref, center, state )
 
 ! $ Abstract
 !
@@ -21,12 +21,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      INTEGER               CENTER
-      DOUBLE PRECISION      STATE ( 6 )
+      double precision      et
+      character*(*)         ref
+      integer               center
+      double precision      state ( 6 )
 
 ! $ Brief_I/O
 !
@@ -108,43 +108,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    SVREF
+      character*(frnmln)    svref
 
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      SVET
-      DOUBLE PRECISION      SVSTAT ( 6 )
-      DOUBLE PRECISION      XSTATE ( 6 )
-      DOUBLE PRECISION      XF     ( 6, 6 )
+      double precision      delta
+      double precision      svet
+      double precision      svstat ( 6 )
+      double precision      xstate ( 6 )
+      double precision      xf     ( 6, 6 )
 
-      INTEGER               SVCTR
+      integer               svctr
 
 !
 !     Saved variables
 !
-      SAVE                  SVCTR
-      SAVE                  SVET
-      SAVE                  SVREF
-      SAVE                  SVSTAT
+      save                  svctr
+      save                  svet
+      save                  svref
+      save                  svstat
 
 !
 !     This routine should never be called.
 !
-      CALL CHKIN  ( 'ZZCVSTAT'          )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZCVSTAT'          )
-      RETURN
+      call chkin  ( 'ZZCVSTAT'          )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZCVSTAT'          )
+      return
 
 
 
@@ -152,7 +152,7 @@
 
 !$Procedure ZZCVXSTA ( Constant velocity state, fetch state )
 
-      ENTRY ZZCVXSTA ( ET, REF, CENTER, STATE )
+      entry zzcvxsta ( et, ref, center, state )
 
 ! $ Abstract
 !
@@ -302,41 +302,41 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZCVXSTA' )
+      call chkin ( 'ZZCVXSTA' )
 
 !
 !     Extrapolate the saved state to the input time.
 !
-      DELTA = ET - SVET
+      delta = et - svet
 
-      CALL VLCOM ( 1.D0, SVSTAT(1), DELTA, SVSTAT(4), XSTATE )
+      call vlcom ( 1.d0, svstat(1), delta, svstat(4), xstate )
 
-      CALL VEQU  ( SVSTAT(4), XSTATE(4) )
+      call vequ  ( svstat(4), xstate(4) )
 
 !
 !     Convert the extrapolated state to the requested frame
 !     at ET.
 !
-      CALL SXFORM ( SVREF, REF, ET, XF )
+      call sxform ( svref, ref, et, xf )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZCVXSTA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZCVXSTA' )
+         return
+      end if
 
-      CALL MXVG ( XF, XSTATE, 6, 6,  STATE )
+      call mxvg ( xf, xstate, 6, 6,  state )
 
 !
 !     Set the output center of motion argument as well.
 !
-      CENTER = SVCTR
+      center = svctr
 
-      CALL CHKOUT ( 'ZZCVXSTA' )
-      RETURN
+      call chkout ( 'ZZCVXSTA' )
+      return
 
 
 
@@ -346,7 +346,7 @@
 
 !$Procedure ZZCVSSTA ( Constant velocity state, store parameters )
 
-      ENTRY ZZCVSSTA ( STATE, CENTER, ET, REF )
+      entry zzcvssta ( state, center, et, ref )
 
 ! $ Abstract
 !
@@ -448,9 +448,9 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     No SPICE errors are detected here, so we don't check in.
@@ -458,14 +458,14 @@
 !
 !     Save all inputs.
 !
-      CALL MOVED ( STATE, 6, SVSTAT )
+      call moved ( state, 6, svstat )
 
-      SVCTR = CENTER
-      SVET  = ET
-      SVREF = REF
+      svctr = center
+      svet  = et
+      svref = ref
 
-      RETURN
-      END
+      return
+      end
 
 
 

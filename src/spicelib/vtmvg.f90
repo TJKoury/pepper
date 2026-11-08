@@ -1,6 +1,6 @@
 !$Procedure VTMVG  ( Vector transpose times matrix times vector )
 
-      DOUBLE PRECISION FUNCTION VTMVG ( V1, MATRIX, V2, NROW, NCOL )
+      double precision function vtmvg ( v1, matrix, v2, nrow, ncol )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NROW
-      INTEGER               NCOL
-      DOUBLE PRECISION      V1      ( NROW       )
-      DOUBLE PRECISION      MATRIX  ( NROW, NCOL )
-      DOUBLE PRECISION      V2      (       NCOL )
+      integer               nrow
+      integer               ncol
+      double precision      v1      ( nrow       )
+      double precision      matrix  ( nrow, ncol )
+      double precision      v2      (       ncol )
 
 ! $ Brief_I/O
 !
@@ -152,18 +152,18 @@
 !
 !     Local variables
 !
-      INTEGER               K
-      INTEGER               L
+      integer               k
+      integer               l
 
 !
 !  Perform the multiplication
 !
-      VTMVG = 0.D0
-      DO K = 1, NROW
-         DO L = 1, NCOL
-            VTMVG = VTMVG + V1(K)*MATRIX(K,L)*V2(L)
-         END DO
-      END DO
+      vtmvg = 0.d0
+      do k = 1, nrow
+         do l = 1, ncol
+            vtmvg = vtmvg + v1(k)*matrix(k,l)*v2(l)
+         end do
+      end do
 
-      RETURN
-      END
+      return
+      end

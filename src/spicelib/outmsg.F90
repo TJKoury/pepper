@@ -1,6 +1,6 @@
 !$Procedure OUTMSG ( Output Error Messages )
 
-      SUBROUTINE OUTMSG ( LIST )
+      subroutine outmsg ( list )
 
 ! $ Abstract
 !
@@ -16,28 +16,28 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
+      include 'errhnd.inc'
 
-      CHARACTER*(*)           LIST
+      character*(*)           list
 
-      INTEGER                FILEN
+      integer                filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER            ( FILEN  = 128 )
+      parameter            ( filen  = 128 )
 #else
-      PARAMETER            ( FILEN  = 255 )
+      parameter            ( filen  = 255 )
 #endif
 
-      INTEGER                LL
+      integer                ll
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER            ( LL     =  78 )
+      parameter            ( ll     =  78 )
 #else
-      PARAMETER            ( LL     =  80 )
+      parameter            ( ll     =  80 )
 #endif
 
-      INTEGER                NAMLEN
-      PARAMETER            ( NAMLEN = 32 )
+      integer                namlen
+      parameter            ( namlen = 32 )
 
 ! $ Brief_I/O
 !
@@ -478,11 +478,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
-      INTEGER               RTRIM
-      INTEGER               WDCNT
+      integer               lastnb
+      integer               rtrim
+      integer               wdcnt
 
-      LOGICAL               MSGSEL
+      logical               msgsel
 
 !
 !     Local parameters
@@ -491,86 +491,86 @@
 !
 !     These parameters are system-independent.
 !
-      CHARACTER*(*)         BORCHR
-      PARAMETER           ( BORCHR = '=' )
+      character*(*)         borchr
+      parameter           ( borchr = '=' )
 
-      INTEGER               DEFLEN
-      PARAMETER           ( DEFLEN =   4 )
+      integer               deflen
+      parameter           ( deflen =   4 )
 
-      INTEGER               ENDLEN
-      PARAMETER           ( ENDLEN =   1 )
+      integer               endlen
+      parameter           ( endlen =   1 )
 
-      INTEGER               MAXWRD
-      PARAMETER           ( MAXWRD =   5 )
+      integer               maxwrd
+      parameter           ( maxwrd =   5 )
 
-      INTEGER               WORDLN
-      PARAMETER           ( WORDLN =   9 )
+      integer               wordln
+      parameter           ( wordln =   9 )
 
-      INTEGER               STRLEN
-      PARAMETER           ( STRLEN =   3 )
+      integer               strlen
+      parameter           ( strlen =   3 )
 
-      INTEGER               VERLEN
-      PARAMETER           ( VERLEN =  80 )
+      integer               verlen
+      parameter           ( verlen =  80 )
 
-      INTEGER               XLEN
-      PARAMETER           ( XLEN   =  80 )
+      integer               xlen
+      parameter           ( xlen   =  80 )
 
-      INTEGER               TMPLEN
-      PARAMETER           ( TMPLEN = SMSGLN + XLEN )
+      integer               tmplen
+      parameter           ( tmplen = smsgln + xlen )
 !
 !     Local variables
 !
-      CHARACTER*(LL)        BORDER
-      CHARACTER*(LL)        DEFMSG ( DEFLEN )
-      CHARACTER*(FILEN)     DEVICE
-      CHARACTER*(LL)        LINE
-      CHARACTER*(LMSGLN)    LMSG
-      CHARACTER*(NAMLEN)    NAME
-      CHARACTER*(LMSGLN)    OUTWRD
-      CHARACTER*(SMSGLN)    SMSG
-      CHARACTER*(TMPLEN)    TMPMSG
-      CHARACTER*(WORDLN)    UPWORD
-      CHARACTER*(VERLEN)    VERSN
-      CHARACTER*(WORDLN)    WORDS  ( MAXWRD )
-      CHARACTER*(XLEN)      XMSG
+      character*(ll)        border
+      character*(ll)        defmsg ( deflen )
+      character*(filen)     device
+      character*(ll)        line
+      character*(lmsgln)    lmsg
+      character*(namlen)    name
+      character*(lmsgln)    outwrd
+      character*(smsgln)    smsg
+      character*(tmplen)    tmpmsg
+      character*(wordln)    upword
+      character*(verlen)    versn
+      character*(wordln)    words  ( maxwrd )
+      character*(xlen)      xmsg
 
-      INTEGER               DEPTH
-      INTEGER               I
-      INTEGER               INDEX
-      INTEGER               LENGTH
-      INTEGER               NUMWRD
-      INTEGER               REMAIN
-      INTEGER               START
-      INTEGER               WRDLEN
+      integer               depth
+      integer               i
+      integer               index
+      integer               length
+      integer               numwrd
+      integer               remain
+      integer               start
+      integer               wrdlen
 
-      LOGICAL               DFAULT
-      LOGICAL               EXPL
-      LOGICAL               FIRST
-      LOGICAL               LONG
-      LOGICAL               OUTPUT
-      LOGICAL               SHORT
-      LOGICAL               TRACE
+      logical               dfault
+      logical               expl
+      logical               first
+      logical               long
+      logical               output
+      logical               short
+      logical               trace
 
 !
 !     Saved variables
 !
-      SAVE                  DEFMSG
-      SAVE                  FIRST
-      SAVE                  BORDER
+      save                  defmsg
+      save                  first
+      save                  border
 
 !
 !     Initial Values:
 !
-      DATA DEFMSG(1)( 1:40) /'Oh, by the way:  The SPICELIB error hand'/
-      DATA DEFMSG(1)(41:LL) /'ling actions are USER-TAILORABLE.  You'  /
-      DATA DEFMSG(2)( 1:40) /'can choose whether the Toolkit aborts or'/
-      DATA DEFMSG(2)(41:LL) /' continues when errors occur, which   '  /
-      DATA DEFMSG(3)( 1:40) /'error messages to output, and where to s'/
-      DATA DEFMSG(3)(41:LL) /'end the output.  Please read the ERROR'  /
-      DATA DEFMSG(4)( 1:40) /'"Required Reading" file, or see the rout'/
-      DATA DEFMSG(4)(41:LL) /'ines ERRACT, ERRDEV, and ERRPRT.      '  /
+      data defmsg(1)( 1:40) /'Oh, by the way:  The SPICELIB error hand'/
+      data defmsg(1)(41:ll) /'ling actions are USER-TAILORABLE.  You'  /
+      data defmsg(2)( 1:40) /'can choose whether the Toolkit aborts or'/
+      data defmsg(2)(41:ll) /' continues when errors occur, which   '  /
+      data defmsg(3)( 1:40) /'error messages to output, and where to s'/
+      data defmsg(3)(41:ll) /'end the output.  Please read the ERROR'  /
+      data defmsg(4)( 1:40) /'"Required Reading" file, or see the rout'/
+      data defmsg(4)(41:ll) /'ines ERRACT, ERRDEV, and ERRPRT.      '  /
 
-      DATA FIRST / .TRUE. /
+      data first / .true. /
 
 !
 !     Executable Code:
@@ -579,25 +579,25 @@
 !
 !     The first time through, set up the output borders.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST      = .FALSE.
+         first      = .false.
 
-         DO I = 1, LL
-            BORDER (I:I) = BORCHR
-         END DO
+         do i = 1, ll
+            border (i:i) = borchr
+         end do
 
-      END IF
+      end if
 
 !
 !     No messages are to be output which are not specified
 !     in LIST:
 !
-      SHORT  = .FALSE.
-      EXPL   = .FALSE.
-      LONG   = .FALSE.
-      TRACE  = .FALSE.
-      DFAULT = .FALSE.
+      short  = .false.
+      expl   = .false.
+      long   = .false.
+      trace  = .false.
+      dfault = .false.
 
 
 !     We parse the list of message types, and set local flags
@@ -605,33 +605,33 @@
 !     a word we don't recognize in the list, we signal an error
 !     and continue parsing the list.
 !
-      CALL LPARSE ( LIST,  ',' ,  MAXWRD,  NUMWRD, WORDS )
+      call lparse ( list,  ',' ,  maxwrd,  numwrd, words )
 
-      DO I = 1, NUMWRD
+      do i = 1, numwrd
 
-         CALL UCASE ( WORDS(I), UPWORD )
+         call ucase ( words(i), upword )
 
-         IF ( UPWORD  .EQ. 'SHORT' ) THEN
+         if ( upword  .eq. 'SHORT' ) then
 
-            SHORT  =  .TRUE.
+            short  =  .true.
 
-         ELSE IF ( UPWORD  .EQ. 'EXPLAIN'   ) THEN
+         else if ( upword  .eq. 'EXPLAIN'   ) then
 
-            EXPL   =  .TRUE.
+            expl   =  .true.
 
-         ELSE IF ( UPWORD  .EQ. 'LONG'      ) THEN
+         else if ( upword  .eq. 'LONG'      ) then
 
-            LONG   =  .TRUE.
+            long   =  .true.
 
-         ELSE IF ( UPWORD  .EQ. 'TRACEBACK' ) THEN
+         else if ( upword  .eq. 'TRACEBACK' ) then
 
-            TRACE  =  .TRUE.
+            trace  =  .true.
 
-         ELSE IF ( UPWORD  .EQ. 'DEFAULT'   ) THEN
+         else if ( upword  .eq. 'DEFAULT'   ) then
 
-            DFAULT =  .TRUE.
+            dfault =  .true.
 
-         ELSE
+         else
 !
 !           Unrecognized word!  This is an error...
 !
@@ -640,17 +640,17 @@
 !           result if this routine calls SIGERR.  So we output
 !           the error message directly:
 !
-            CALL GETDEV ( DEVICE )
+            call getdev ( device )
 
-            CALL WRLINE ( DEVICE,  'SPICE(INVALIDLISTITEM)'            )
-            CALL WRLINE ( DEVICE,  ' '                                 )
-            CALL WRLINE ( DEVICE,  'OUTMSG:  An invalid message type ' &
+            call wrline ( device,  'SPICE(INVALIDLISTITEM)'            )
+            call wrline ( device,  ' '                                 )
+            call wrline ( device,  'OUTMSG:  An invalid message type ' &
             //                     'was specified in the type list. '  )
-            CALL WRLINE ( DEVICE,  'The invalid message type was ' &
-            //                      WORDS(I)                           )
-         END IF
+            call wrline ( device,  'The invalid message type was ' &
+            //                      words(i)                           )
+         end if
 
-      END DO
+      end do
 
 !
 !     LIST has been parsed.
@@ -662,14 +662,14 @@
 !
 !     We get the default error output device:
 !
-      CALL GETDEV ( DEVICE )
+      call getdev ( device )
 
-      OUTPUT =        (  SHORT   .AND.  MSGSEL ( 'SHORT'     )  ) &
-                .OR.  (  EXPL    .AND.  MSGSEL ( 'EXPLAIN'   )  ) &
-                .OR.  (  LONG    .AND.  MSGSEL ( 'LONG'      )  ) &
-                .OR.  (  TRACE   .AND.  MSGSEL ( 'TRACEBACK' )  ) &
-                .OR.  (  DFAULT  .AND.  MSGSEL ( 'DEFAULT'   )  ) &
-                .AND. (  DEVICE  .NE.   'NULL'                  )
+      output =        (  short   .and.  msgsel ( 'SHORT'     )  ) &
+                .or.  (  expl    .and.  msgsel ( 'EXPLAIN'   )  ) &
+                .or.  (  long    .and.  msgsel ( 'LONG'      )  ) &
+                .or.  (  trace   .and.  msgsel ( 'TRACEBACK' )  ) &
+                .or.  (  dfault  .and.  msgsel ( 'DEFAULT'   )  ) &
+                .and. (  device  .ne.   'NULL'                  )
 
 !
 !     We go ahead and output those messages that have been specified
@@ -681,26 +681,26 @@
 !
 !     If there's nothing to output, we can leave now.
 !
-      IF ( .NOT. OUTPUT ) THEN
-         RETURN
-      END IF
+      if ( .not. output ) then
+         return
+      end if
 
 !
 !     Write the starting border: skip a line, write the border,
 !     skip a line.
 !
-      CALL WRLINE ( DEVICE, ' '    )
-      CALL WRLINE ( DEVICE, BORDER )
-      CALL WRLINE ( DEVICE, ' '    )
+      call wrline ( device, ' '    )
+      call wrline ( device, border )
+      call wrline ( device, ' '    )
 !
 !     Output the toolkit version and skip a line.
 !
-      CALL TKVRSN ( 'TOOLKIT', VERSN )
+      call tkvrsn ( 'TOOLKIT', versn )
 
-      LINE = 'Toolkit version: ' // VERSN
+      line = 'Toolkit version: ' // versn
 
-      CALL WRLINE ( DEVICE, LINE )
-      CALL WRLINE ( DEVICE, ' '  )
+      call wrline ( device, line )
+      call wrline ( device, ' '  )
 !
 !     Next, we output the messages specified in the list
 !     that have been enabled.
@@ -709,82 +709,82 @@
 !     explanation.  If both are to be output, they are
 !     concatenated into a single message.
 !
-      IF  (        (  SHORT .AND. MSGSEL ( 'SHORT'   )  ) &
-            .AND.  (  EXPL  .AND. MSGSEL ( 'EXPLAIN' )  )   ) THEN
+      if  (        (  short .and. msgsel ( 'SHORT'   )  ) &
+            .and.  (  expl  .and. msgsel ( 'EXPLAIN' )  )   ) then
 
 !
 !        Extract the short message from global storage; then get
 !        the corresponding explanation.
 !
-         CALL GETSMS ( SMSG       )
-         CALL EXPLN  ( SMSG, XMSG )
+         call getsms ( smsg       )
+         call expln  ( smsg, xmsg )
 
-         TMPMSG  =  SMSG( :RTRIM(SMSG) )  // ' -- '// XMSG
+         tmpmsg  =  smsg( :rtrim(smsg) )  // ' -- '// xmsg
 
-         CALL WRLINE ( DEVICE, TMPMSG )
-         CALL WRLINE ( DEVICE, ' '    )
+         call wrline ( device, tmpmsg )
+         call wrline ( device, ' '    )
 
-      ELSE IF  (  SHORT .AND. MSGSEL ( 'SHORT'   )  )  THEN
+      else if  (  short .and. msgsel ( 'SHORT'   )  )  then
 !
 !        Output the short error message without the explanation.
 !
-         CALL GETSMS ( SMSG )
+         call getsms ( smsg )
 
-         CALL WRLINE ( DEVICE, SMSG  )
-         CALL WRLINE ( DEVICE, ' '   )
+         call wrline ( device, smsg  )
+         call wrline ( device, ' '   )
 
-      ELSE IF (  EXPL .AND. MSGSEL ( 'EXPLAIN' )  )  THEN
+      else if (  expl .and. msgsel ( 'EXPLAIN' )  )  then
 !
 !        Obtain the explanatory text for the short error
 !        message and output it:
 !
-         CALL GETSMS ( SMSG       )
-         CALL EXPLN  ( SMSG, XMSG )
+         call getsms ( smsg       )
+         call expln  ( smsg, xmsg )
 
-         CALL WRLINE ( DEVICE, XMSG )
-         CALL WRLINE ( DEVICE, ' '  )
+         call wrline ( device, xmsg )
+         call wrline ( device, ' '  )
 
-      END IF
+      end if
 
-      IF (  LONG .AND. MSGSEL ( 'LONG' )  ) THEN
+      if (  long .and. msgsel ( 'LONG' )  ) then
 !
 !        Extract the long message from global storage and
 !        output it:
 !
-         CALL GETLMS  (  LMSG  )
+         call getlms  (  lmsg  )
 !
 !        Get the number of words in the error message.
 !
-         NUMWRD = WDCNT ( LMSG )
-         LINE   = ' '
-         START  = 1
+         numwrd = wdcnt ( lmsg )
+         line   = ' '
+         start  = 1
 !
 !        Format the words into output lines and display them as
 !        needed.
 !
-         DO I = 1, NUMWRD
+         do i = 1, numwrd
 
-            CALL NEXTWD ( LMSG, OUTWRD, LMSG )
+            call nextwd ( lmsg, outwrd, lmsg )
 
-            WRDLEN = RTRIM ( OUTWRD )
+            wrdlen = rtrim ( outwrd )
 
-            IF ( START + WRDLEN .LE. LL ) THEN
+            if ( start + wrdlen .le. ll ) then
 
-              LINE(START: ) = OUTWRD
-              START         = START + WRDLEN + 1
+              line(start: ) = outwrd
+              start         = start + wrdlen + 1
 
-            ELSE
+            else
 
-               IF ( WRDLEN .LE. LL ) THEN
+               if ( wrdlen .le. ll ) then
 !
 !                 We had a short word, so just write the line and
 !                 continue.
 !
-                  CALL WRLINE  ( DEVICE, LINE )
-                  START = WRDLEN + 2
-                  LINE  = OUTWRD
+                  call wrline  ( device, line )
+                  start = wrdlen + 2
+                  line  = outwrd
 
-               ELSE
+               else
 !
 !                 We got a very long word here, so we break it up and
 !                 write it out. We fit as much of it as we an into line
@@ -795,11 +795,11 @@
 !                 trailing space, otherwise the line is blank. If line
 !                 is empty, we have all of the space available.
 !
-                  IF ( START .GT. 1 ) THEN
-                     REMAIN = LL - START
-                  ELSE
-                    REMAIN = LL
-                  END IF
+                  if ( start .gt. 1 ) then
+                     remain = ll - start
+                  else
+                    remain = ll
+                  end if
 !
 !                 Now we stuff bits of the word into the output line
 !                 until we're done, i.e., until we have a word part
@@ -809,76 +809,76 @@
 !                 write it and then begin stuffing the long word into
 !                 output lines.
 !
-                  IF ( REMAIN .LT. 10 ) THEN
+                  if ( remain .lt. 10 ) then
 
-                     CALL WRLINE  ( DEVICE, LINE )
-                     LINE   = ' '
-                     REMAIN = LL
-                     START  = 1
+                     call wrline  ( device, line )
+                     line   = ' '
+                     remain = ll
+                     start  = 1
 
-                  END IF
+                  end if
 !
 !                 Stuff the word a chunk at a time into output lines
 !                 and write them. After writing a line, we clear the
 !                 part of the long word that we just wrote, left
 !                 justifying the remaining part before proceeding.
 !
-                  DO WHILE ( WRDLEN .GT. LL )
+                  do while ( wrdlen .gt. ll )
 
-                     LINE(START:) = OUTWRD(1:REMAIN)
-                     CALL WRLINE ( DEVICE, LINE )
+                     line(start:) = outwrd(1:remain)
+                     call wrline ( device, line )
 
-                     OUTWRD(1:REMAIN) = ' '
+                     outwrd(1:remain) = ' '
 
-                     CALL LJUST ( OUTWRD, OUTWRD )
+                     call ljust ( outwrd, outwrd )
 
-                     LINE   = ' '
-                     WRDLEN = WRDLEN - REMAIN
-                     REMAIN = LL
-                     START  = 1
+                     line   = ' '
+                     wrdlen = wrdlen - remain
+                     remain = ll
+                     start  = 1
 
-                  END DO
+                  end do
 !
 !                 If we had a part of the long word left, get set up to
 !                 append more words from the error message to the output
 !                 line. If we finished the word, WRDLEN .EQ. 0, then
 !                 START and LINE have already been initialized.
 !
-                  IF ( WRDLEN .GT. 0 ) THEN
-                     START = WRDLEN + 2
-                     LINE  = OUTWRD
-                  END IF
+                  if ( wrdlen .gt. 0 ) then
+                     start = wrdlen + 2
+                     line  = outwrd
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        We may need to write the remaining part of a line.
 !
-         IF ( LINE .NE. ' ' ) THEN
-            CALL WRLINE  (  DEVICE, LINE )
-         END IF
+         if ( line .ne. ' ' ) then
+            call wrline  (  device, line )
+         end if
 
-         CALL WRLINE  (  DEVICE, ' ' )
+         call wrline  (  device, ' ' )
 
-      END IF
+      end if
 
 
-      IF (  TRACE .AND. MSGSEL ( 'TRACEBACK' )  ) THEN
+      if (  trace .and. msgsel ( 'TRACEBACK' )  ) then
 !
 !        Extract the traceback from global storage and
 !        output it:
 !
-         CALL TRCDEP ( DEPTH )
+         call trcdep ( depth )
 
-         IF ( DEPTH .GT. 0 ) THEN
+         if ( depth .gt. 0 ) then
 !
 !           We know we'll be outputting some trace information.
 !           So, write a line telling the reader what's coming.
 !
-            CALL WRLINE ( DEVICE, 'A traceback follows.  The '  // &
+            call wrline ( device, 'A traceback follows.  The '  // &
                                   'name of the highest level '  // &
                                   'module is first.'          )
 !
@@ -886,10 +886,10 @@
 !           representation, we stuff them into output lines and
 !           write the lines out when they are full.
 !
-            LINE    =   ' '
-            REMAIN  =   LL
+            line    =   ' '
+            remain  =   ll
 
-            DO INDEX = 1, DEPTH
+            do index = 1, depth
 !
 !              For each module name in the traceback representation,
 !              retrieve module name and stuff it into one or more
@@ -899,48 +899,48 @@
 !              indicate calling order by a ' --> ' delimiter; e.g.
 !              "A calls B" is indicated by 'A --> B'.
 !
-               CALL TRCNAM ( INDEX, NAME )
+               call trcnam ( index, name )
 
-               LENGTH = LASTNB ( NAME )
+               length = lastnb ( name )
 !
 !              If it's the first name, just put it into the output
 !              line, otherwise, add the call order sign and put the
 !              name into the output line.
 !
-               IF ( INDEX .EQ. 1 ) THEN
-                  CALL SUFFIX ( NAME, 0,  LINE )
-                  REMAIN = REMAIN - LENGTH
-               ELSE
+               if ( index .eq. 1 ) then
+                  call suffix ( name, 0,  line )
+                  remain = remain - length
+               else
 !
 !                 Add the calling order indicator, if it will fit.
 !                 If not, write the line and put the indicator as
 !                 the first thing on the next line.
 !
-                  IF( REMAIN .GE. 4 ) THEN
-                     CALL SUFFIX ( '-->', 1,  LINE )
-                     REMAIN = REMAIN - 4
-                  ELSE
-                     CALL WRLINE ( DEVICE, LINE )
-                     LINE = '-->'
-                     REMAIN = LL - 3
-                  END IF
+                  if( remain .ge. 4 ) then
+                     call suffix ( '-->', 1,  line )
+                     remain = remain - 4
+                  else
+                     call wrline ( device, line )
+                     line = '-->'
+                     remain = ll - 3
+                  end if
 !
 !                 The name fits or it doesn't. If it does, just add
 !                 it, if it doesn't, write it, then make the name
 !                 the first thing on the next line.
 !
-                  IF( REMAIN .GE. LENGTH ) THEN
-                     CALL SUFFIX ( NAME, 1,  LINE )
-                     REMAIN = REMAIN - LENGTH - 1
-                  ELSE
-                     CALL WRLINE ( DEVICE, LINE )
-                     LINE = NAME
-                     REMAIN = LL - LENGTH
-                  END IF
+                  if( remain .ge. length ) then
+                     call suffix ( name, 1,  line )
+                     remain = remain - length - 1
+                  else
+                     call wrline ( device, line )
+                     line = name
+                     remain = ll - length
+                  end if
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           At this point, no more names are left in the
@@ -948,31 +948,31 @@
 !           names, or part of a long name.  If it does,
 !           we now write it out.
 !
-            IF ( LINE .NE. ' ' ) THEN
-               CALL WRLINE ( DEVICE, LINE )
-            END IF
+            if ( line .ne. ' ' ) then
+               call wrline ( device, line )
+            end if
 
-            CALL WRLINE  ( DEVICE, ' '  )
+            call wrline  ( device, ' '  )
 
-         END IF
+         end if
 !
 !        At this point, either we have output the trace
 !        representation, or the trace representation was
 !        empty.
 !
-      END IF
+      end if
 
-      IF (  DFAULT  .AND. MSGSEL ( 'DEFAULT' )  ) THEN
+      if (  dfault  .and. msgsel ( 'DEFAULT' )  ) then
 !
 !        Output the default message:
 !
-         DO I = 1, DEFLEN
-            CALL WRLINE  ( DEVICE, DEFMSG (I) )
-         END DO
+         do i = 1, deflen
+            call wrline  ( device, defmsg (i) )
+         end do
 
-         CALL WRLINE  ( DEVICE, ' '  )
+         call wrline  ( device, ' '  )
 
-      END IF
+      end if
 
 !
 !     At this point, we've output all of the enabled messages
@@ -981,7 +981,7 @@
 !
 !     Write the ending border out:
 !
-      CALL WRLINE ( DEVICE, BORDER )
+      call wrline ( device, border )
 
-      RETURN
-      END
+      return
+      end

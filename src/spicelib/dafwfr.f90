@@ -1,6 +1,6 @@
 !$Procedure DAFWFR ( DAF write file record )
 
-      SUBROUTINE DAFWFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      subroutine dafwfr ( handle, nd, ni, ifname, fward, bward, free )
 
 ! $ Abstract
 !
@@ -16,15 +16,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               ND
-      INTEGER               NI
-      CHARACTER*(*)         IFNAME
-      INTEGER               FWARD
-      INTEGER               BWARD
-      INTEGER               FREE
+      integer               handle
+      integer               nd
+      integer               ni
+      character*(*)         ifname
+      integer               fward
+      integer               bward
+      integer               free
 
 ! $ Brief_I/O
 !
@@ -242,20 +242,20 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               FMTLEN
-      PARAMETER           ( FMTLEN =  8 )
+      integer               fmtlen
+      parameter           ( fmtlen =  8 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =  8 )
+      integer               idwlen
+      parameter           ( idwlen =  8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
 !
 !     The parameter TAILEN determines the tail length of a DAF file
@@ -289,61 +289,61 @@
 !     1 byte characters, and a DAF record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      INTEGER               TAILEN
-      PARAMETER           ( TAILEN = 928 )
+      integer               tailen
+      parameter           ( tailen = 928 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FMTLEN)    FORMAT
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFN
-      CHARACTER*(IFNLEN)    LOCIFN
-      CHARACTER*(TAILEN)    TAIL
+      character*(fmtlen)    format
+      character*(idwlen)    idword
+      character*(ifnlen)    ifn
+      character*(ifnlen)    locifn
+      character*(tailen)    tail
 
-      INTEGER               IOSTAT
-      INTEGER               LOCFDR
-      INTEGER               LOCFFA
-      INTEGER               LOCLDR
-      INTEGER               LOCND
-      INTEGER               LOCNI
-      INTEGER               UNIT
+      integer               iostat
+      integer               locfdr
+      integer               locffa
+      integer               locldr
+      integer               locnd
+      integer               locni
+      integer               unit
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFWFR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFWFR' )
+      end if
 
 !
 !     Do some initializations
 !
-      IDWORD = ' '
+      idword = ' '
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
 !     with write access. If the call fails, check out and return.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DAFWFR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DAFWFR' )
+         return
+      end if
 
 !
 !     Get the logical unit for the file, as we know we have a valid DAF
 !     handle with the correct access method.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAF', .false., unit )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFWFR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFWFR' )
+         return
+      end if
 
 !
 !     In order to maintain the integrity of the file ID word, the
@@ -352,57 +352,57 @@
 !     buffers. The values of the LOCxxx variables are simply
 !     ignored, since the caller passes new values in for updates.
 !
-      READ ( UNIT, REC=1, IOSTAT=IOSTAT) IDWORD, &
-                                         LOCND, &
-                                         LOCNI, &
-                                         LOCIFN, &
-                                         LOCFDR, &
-                                         LOCLDR, &
-                                         LOCFFA, &
-                                         FORMAT, &
-                                         TAIL
+      read ( unit, rec=1, iostat=iostat) idword, &
+                                         locnd, &
+                                         locni, &
+                                         locifn, &
+                                         locfdr, &
+                                         locldr, &
+                                         locffa, &
+                                         format, &
+                                         tail
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Attempt to read the file record failed for'   // &
+         call setmsg ( 'Attempt to read the file record failed for'   // &
                        ' file ''#''. IOSTAT = #'                      )
-         CALL ERRFNM ( '#', UNIT                                      )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL SIGERR ( 'SPICE(DAFREADFAIL)'                           )
-         CALL CHKOUT ( 'DAFWFR'                                       )
-         RETURN
+         call errfnm ( '#', unit                                      )
+         call errint ( '#', iostat                                    )
+         call sigerr ( 'SPICE(DAFREADFAIL)'                           )
+         call chkout ( 'DAFWFR'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the value of the internal filename before writing. This is to
 !     guarantee that its length is ok.
 !
-      IFN = IFNAME
+      ifn = ifname
 
-      WRITE (UNIT, &
-             REC=1, &
-             IOSTAT=IOSTAT) IDWORD, &
-                            ND, &
-                            NI, &
-                            IFN, &
-                            FWARD, &
-                            BWARD, &
-                            FREE, &
-                            FORMAT, &
-                            TAIL
+      write (unit, &
+             rec=1, &
+             iostat=iostat) idword, &
+                            nd, &
+                            ni, &
+                            ifn, &
+                            fward, &
+                            bward, &
+                            free, &
+                            format, &
+                            tail
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'File record write failed. Value of IOSTAT ' // &
+         call setmsg ( 'File record write failed. Value of IOSTAT ' // &
                        'was #' )
-         CALL ERRINT ( '#', IOSTAT )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)' )
-         CALL CHKOUT ( 'DAFWFR' )
-         RETURN
+         call errint ( '#', iostat )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)' )
+         call chkout ( 'DAFWFR' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFWFR' )
-      RETURN
-      END
+      call chkout ( 'DAFWFR' )
+      return
+      end

@@ -1,10 +1,10 @@
 !$Procedure ZZMKSPIN ( Make spatial index of plates )
 
-      SUBROUTINE ZZMKSPIN ( NP,     PLATES, VRTCES, VOXSCL, CGSCAL, &
-                            MAXPTR, MXCELL, MAXVXL, CELLS,  NVOX, &
-                            VOXSIZ, VOXORI, NVXTOT, NVXPTR, VXPTR, &
-                            NVXLST, VXLIST, EXTENT, CGRPTR         )
-      IMPLICIT NONE
+      subroutine zzmkspin ( np,     plates, vrtces, voxscl, cgscal, &
+                            maxptr, mxcell, maxvxl, cells,  nvox, &
+                            voxsiz, voxori, nvxtot, nvxptr, vxptr, &
+                            nvxlst, vxlist, extent, cgrptr         )
+      implicit none
 
 ! $ Abstract
 !
@@ -24,27 +24,27 @@
 !
 ! $ Declarations
 
-      INCLUDE               'dsk02.inc'
+      include               'dsk02.inc'
 
-      INTEGER               NP
-      INTEGER               PLATES ( 3, * )
-      DOUBLE PRECISION      VRTCES ( 3, * )
-      DOUBLE PRECISION      VOXSCL
-      INTEGER               CGSCAL
-      INTEGER               MAXPTR
-      INTEGER               MXCELL
-      INTEGER               MAXVXL
-      INTEGER               CELLS   ( 2, MXCELL )
-      INTEGER               NVOX   ( 3 )
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      VOXORI ( 3 )
-      INTEGER               NVXTOT
-      INTEGER               NVXPTR
-      INTEGER               VXPTR  ( * )
-      INTEGER               NVXLST
-      INTEGER               VXLIST ( * )
-      DOUBLE PRECISION      EXTENT ( 6 )
-      INTEGER               CGRPTR ( * )
+      integer               np
+      integer               plates ( 3, * )
+      double precision      vrtces ( 3, * )
+      double precision      voxscl
+      integer               cgscal
+      integer               maxptr
+      integer               mxcell
+      integer               maxvxl
+      integer               cells   ( 2, mxcell )
+      integer               nvox   ( 3 )
+      double precision      voxsiz
+      double precision      voxori ( 3 )
+      integer               nvxtot
+      integer               nvxptr
+      integer               vxptr  ( * )
+      integer               nvxlst
+      integer               vxlist ( * )
+      double precision      extent ( 6 )
+      integer               cgrptr ( * )
 
 ! $ Brief_I/O
 !
@@ -297,17 +297,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
+      double precision      brcktd
+      double precision      dpmax
+      double precision      dpmin
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Other functions
 !
-      INTEGER               ZZVOX2ID
+      integer               zzvox2id
 
 !
 !     Local parameters
@@ -317,69 +317,69 @@
 !     Fraction of voxel edge length used a tolerance for plate
 !     inclusion in voxels:
 !
-      DOUBLE PRECISION      TOL
-      PARAMETER           ( TOL  = 1.D-3 )
+      double precision      tol
+      parameter           ( tol  = 1.d-3 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      AVEXT
-      DOUBLE PRECISION      BXMAX
-      DOUBLE PRECISION      BXMIN
-      DOUBLE PRECISION      BYMAX
-      DOUBLE PRECISION      BYMIN
-      DOUBLE PRECISION      BZMAX
-      DOUBLE PRECISION      BZMIN
-      DOUBLE PRECISION      CVXSIZ
-      DOUBLE PRECISION      MDLTOL
-      DOUBLE PRECISION      VMOD   ( 3 )
-      DOUBLE PRECISION      XEXTNT ( 6 )
-      DOUBLE PRECISION      XMAX
-      DOUBLE PRECISION      XMIN
-      DOUBLE PRECISION      XP     ( 3 )
-      DOUBLE PRECISION      XVMAX
-      DOUBLE PRECISION      XVMIN
-      DOUBLE PRECISION      YMAX
-      DOUBLE PRECISION      YMIN
-      DOUBLE PRECISION      YP     ( 3 )
-      DOUBLE PRECISION      YVMAX
-      DOUBLE PRECISION      YVMIN
-      DOUBLE PRECISION      ZMAX
-      DOUBLE PRECISION      ZMIN
-      DOUBLE PRECISION      ZP     ( 3 )
-      DOUBLE PRECISION      ZVMAX
-      DOUBLE PRECISION      ZVMIN
+      double precision      avext
+      double precision      bxmax
+      double precision      bxmin
+      double precision      bymax
+      double precision      bymin
+      double precision      bzmax
+      double precision      bzmin
+      double precision      cvxsiz
+      double precision      mdltol
+      double precision      vmod   ( 3 )
+      double precision      xextnt ( 6 )
+      double precision      xmax
+      double precision      xmin
+      double precision      xp     ( 3 )
+      double precision      xvmax
+      double precision      xvmin
+      double precision      ymax
+      double precision      ymin
+      double precision      yp     ( 3 )
+      double precision      yvmax
+      double precision      yvmin
+      double precision      zmax
+      double precision      zmin
+      double precision      zp     ( 3 )
+      double precision      zvmax
+      double precision      zvmin
 
-      INTEGER               CGOF1D
-      INTEGER               CGOFF  ( 3 )
-      INTEGER               CGRDIM ( 3 )
-      INTEGER               CGXYZ  ( 3 )
-      INTEGER               CVID
-      INTEGER               GXMAX
-      INTEGER               GXMIN
-      INTEGER               GYMAX
-      INTEGER               GYMIN
-      INTEGER               GZMAX
-      INTEGER               GZMIN
-      INTEGER               I
-      INTEGER               IX
-      INTEGER               IXPTR
-      INTEGER               IY
-      INTEGER               IZ
-      INTEGER               J
-      INTEGER               NCELL
-      INTEGER               NCGFLG
-      INTEGER               NPCG
-      INTEGER               NX
-      INTEGER               NY
-      INTEGER               NZ
-      INTEGER               Q
-      INTEGER               R
-      INTEGER               TO
-      INTEGER               VIXYZ  ( 3 )
-      INTEGER               VCOORD ( 3 )
+      integer               cgof1d
+      integer               cgoff  ( 3 )
+      integer               cgrdim ( 3 )
+      integer               cgxyz  ( 3 )
+      integer               cvid
+      integer               gxmax
+      integer               gxmin
+      integer               gymax
+      integer               gymin
+      integer               gzmax
+      integer               gzmin
+      integer               i
+      integer               ix
+      integer               ixptr
+      integer               iy
+      integer               iz
+      integer               j
+      integer               ncell
+      integer               ncgflg
+      integer               npcg
+      integer               nx
+      integer               ny
+      integer               nz
+      integer               q
+      integer               r
+      integer               to
+      integer               vixyz  ( 3 )
+      integer               vcoord ( 3 )
 
-      LOGICAL               INBOX
+      logical               inbox
 
 !
 !     Saved variables
@@ -388,31 +388,31 @@
 !     Required for f2c use on Linux, all local variables
 !     to static.
 !
-      SAVE
+      save
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZMKSPIN' )
+      call chkin ( 'ZZMKSPIN' )
 
 !
 !     Check NP.
 !
-      IF (  ( NP .LT. 1 ) .OR. ( NP .GT. MAXPLT )  ) THEN
+      if (  ( np .lt. 1 ) .or. ( np .gt. maxplt )  ) then
 
-         CALL SETMSG ( 'Plate count NP = #; count must ' &
+         call setmsg ( 'Plate count NP = #; count must ' &
          //            'be in the range 1:#.'            )
-         CALL ERRINT ( '#',  NP                          )
-         CALL ERRINT ( '#',  MAXPLT                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'          )
-         CALL CHKOUT ( 'ZZMKSPIN'                        )
-         RETURN
+         call errint ( '#',  np                          )
+         call errint ( '#',  maxplt                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
+         call chkout ( 'ZZMKSPIN'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the coarse voxel scale is positive. We'll
@@ -420,120 +420,120 @@
 !     require computations that can't be done if the coarse
 !     scale is zero.
 !
-      IF ( CGSCAL .LT. 1 ) THEN
+      if ( cgscal .lt. 1 ) then
 
-         CALL SETMSG ( 'Coarse voxel scale = #; scale must ' &
+         call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be positive.'                       )
-         CALL ERRINT ( '#',  CGSCAL                         )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'             )
-         CALL CHKOUT ( 'ZZMKSPIN'                           )
-         RETURN
+         call errint ( '#',  cgscal                         )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'             )
+         call chkout ( 'ZZMKSPIN'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the average extents of all plates and the
 !     overall model extent. The extents have model units; in
 !     other words km.
 !
-      AVEXT = 0.D0
+      avext = 0.d0
 
-      XMIN =  DPMAX()
-      XMAX =  DPMIN()
-      YMIN =  DPMAX()
-      YMAX =  DPMIN()
-      ZMIN =  DPMAX()
-      ZMAX =  DPMIN()
+      xmin =  dpmax()
+      xmax =  dpmin()
+      ymin =  dpmax()
+      ymax =  dpmin()
+      zmin =  dpmax()
+      zmax =  dpmin()
 
-      DO I = 1, NP
+      do i = 1, np
 
-         BXMIN = DPMAX()
-         BXMAX = DPMIN()
-         BYMIN = DPMAX()
-         BYMAX = DPMIN()
-         BZMIN = DPMAX()
-         BZMAX = DPMIN()
+         bxmin = dpmax()
+         bxmax = dpmin()
+         bymin = dpmax()
+         bymax = dpmin()
+         bzmin = dpmax()
+         bzmax = dpmin()
 
-         XP(1) = VRTCES( 1, PLATES(1,I) )
-         XP(2) = VRTCES( 1, PLATES(2,I) )
-         XP(3) = VRTCES( 1, PLATES(3,I) )
+         xp(1) = vrtces( 1, plates(1,i) )
+         xp(2) = vrtces( 1, plates(2,i) )
+         xp(3) = vrtces( 1, plates(3,i) )
 
-         YP(1) = VRTCES( 2, PLATES(1,I) )
-         YP(2) = VRTCES( 2, PLATES(2,I) )
-         YP(3) = VRTCES( 2, PLATES(3,I) )
+         yp(1) = vrtces( 2, plates(1,i) )
+         yp(2) = vrtces( 2, plates(2,i) )
+         yp(3) = vrtces( 2, plates(3,i) )
 
-         ZP(1) = VRTCES( 3, PLATES(1,I) )
-         ZP(2) = VRTCES( 3, PLATES(2,I) )
-         ZP(3) = VRTCES( 3, PLATES(3,I) )
+         zp(1) = vrtces( 3, plates(1,i) )
+         zp(2) = vrtces( 3, plates(2,i) )
+         zp(3) = vrtces( 3, plates(3,i) )
 
-         DO J = 1, 3
+         do j = 1, 3
 !
 !           Determine plate extents.
 !
-            BXMIN = DMIN1( BXMIN, XP(J) )
-            BXMAX = DMAX1( BXMAX, XP(J) )
+            bxmin = dmin1( bxmin, xp(j) )
+            bxmax = dmax1( bxmax, xp(j) )
 
-            BYMIN = DMIN1( BYMIN, YP(J) )
-            BYMAX = DMAX1( BYMAX, YP(J) )
+            bymin = dmin1( bymin, yp(j) )
+            bymax = dmax1( bymax, yp(j) )
 
-            BZMIN = DMIN1( BZMIN, ZP(J) )
-            BZMAX = DMAX1( BZMAX, ZP(J) )
+            bzmin = dmin1( bzmin, zp(j) )
+            bzmax = dmax1( bzmax, zp(j) )
 
 !
 !           Determine model extent.
 !
-            XMIN = DMIN1 ( XMIN, BXMIN )
-            XMAX = DMAX1 ( XMAX, BXMAX )
+            xmin = dmin1 ( xmin, bxmin )
+            xmax = dmax1 ( xmax, bxmax )
 
-            YMIN = DMIN1 ( YMIN, BYMIN )
-            YMAX = DMAX1 ( YMAX, BYMAX )
+            ymin = dmin1 ( ymin, bymin )
+            ymax = dmax1 ( ymax, bymax )
 
-            ZMIN = DMIN1 ( ZMIN, BZMIN )
-            ZMAX = DMAX1 ( ZMAX, BZMAX )
+            zmin = dmin1 ( zmin, bzmin )
+            zmax = dmax1 ( zmax, bzmax )
 
-         END DO
+         end do
 
-         EXTENT(1) = XMIN
-         EXTENT(2) = XMAX
-         EXTENT(3) = YMIN
-         EXTENT(4) = YMAX
-         EXTENT(5) = ZMIN
-         EXTENT(6) = ZMAX
+         extent(1) = xmin
+         extent(2) = xmax
+         extent(3) = ymin
+         extent(4) = ymax
+         extent(5) = zmin
+         extent(6) = zmax
 
 !
 !        Calculate the cumulative extent of all plates for
 !        each degree of freedom.
 !
-         AVEXT = AVEXT + DABS(BXMAX-BXMIN) + &
-                         DABS(BYMAX-BYMIN) + &
-                         DABS(BZMAX-BZMIN)
+         avext = avext + dabs(bxmax-bxmin) + &
+                         dabs(bymax-bymin) + &
+                         dabs(bzmax-bzmin)
 
-      END DO
+      end do
 
 !
 !     Calculate the average extent of all plates for
 !     and the voxel size, i.e the length of one side
 !     of a voxel cube.
 !
-      AVEXT  = AVEXT / DBLE(3*NP)
-      VOXSIZ = VOXSCL * AVEXT
-      MDLTOL = VOXSIZ * TOL
+      avext  = avext / dble(3*np)
+      voxsiz = voxscl * avext
+      mdltol = voxsiz * tol
 
 !
 !     Produce a set of vertex extents, extended by MDLTOL,
 !     to be used later.
 !
-      DO I = 1, 5, 2
+      do i = 1, 5, 2
 
-         XEXTNT(I)   = EXTENT(I)   - MDLTOL
-         XEXTNT(I+1) = EXTENT(I+1) + MDLTOL
+         xextnt(i)   = extent(i)   - mdltol
+         xextnt(i+1) = extent(i+1) + mdltol
 
-      END DO
+      end do
 
 !
 !     Determine the size of the coarse voxels.
 !
-      CVXSIZ = VOXSIZ * CGSCAL
+      cvxsiz = voxsiz * cgscal
 
 !
 !     Determine the minima and maxima of the body centered
@@ -543,179 +543,179 @@
 !     with length 1 along each edge in voxel space,
 !     CVXSIZ along an edge in model space.
 !
-      XVMIN = XMIN / CVXSIZ
-      YVMIN = YMIN / CVXSIZ
-      ZVMIN = ZMIN / CVXSIZ
-      XVMAX = XMAX / CVXSIZ
-      YVMAX = YMAX / CVXSIZ
-      ZVMAX = ZMAX / CVXSIZ
+      xvmin = xmin / cvxsiz
+      yvmin = ymin / cvxsiz
+      zvmin = zmin / cvxsiz
+      xvmax = xmax / cvxsiz
+      yvmax = ymax / cvxsiz
+      zvmax = zmax / cvxsiz
 
 !
 !     Extend the coarse voxel grid by at least 1/2
 !     coarse voxel length along each degree of freedom.
 !
-      XVMIN = DNINT ( XVMIN - 1.D0 )
-      YVMIN = DNINT ( YVMIN - 1.D0 )
-      ZVMIN = DNINT ( ZVMIN - 1.D0 )
-      XVMAX = DNINT ( XVMAX + 1.D0 )
-      YVMAX = DNINT ( YVMAX + 1.D0 )
-      ZVMAX = DNINT ( ZVMAX + 1.D0 )
+      xvmin = dnint ( xvmin - 1.d0 )
+      yvmin = dnint ( yvmin - 1.d0 )
+      zvmin = dnint ( zvmin - 1.d0 )
+      xvmax = dnint ( xvmax + 1.d0 )
+      yvmax = dnint ( yvmax + 1.d0 )
+      zvmax = dnint ( zvmax + 1.d0 )
 
 !
 !     Calculate the coarse voxel grid origin in model units.
 !
-      VOXORI(1) = XVMIN * CVXSIZ
-      VOXORI(2) = YVMIN * CVXSIZ
-      VOXORI(3) = ZVMIN * CVXSIZ
+      voxori(1) = xvmin * cvxsiz
+      voxori(2) = yvmin * cvxsiz
+      voxori(3) = zvmin * cvxsiz
 
 !
 !     Calculate the dimension of the voxel grid in
 !     units of (regular) voxels.
 !
-      NX = NINT( XVMAX - XVMIN ) * CGSCAL
-      NY = NINT( YVMAX - YVMIN ) * CGSCAL
-      NZ = NINT( ZVMAX - ZVMIN ) * CGSCAL
+      nx = nint( xvmax - xvmin ) * cgscal
+      ny = nint( yvmax - yvmin ) * cgscal
+      nz = nint( zvmax - zvmin ) * cgscal
 
-      NVOX(1) = NX
-      NVOX(2) = NY
-      NVOX(3) = NZ
+      nvox(1) = nx
+      nvox(2) = ny
+      nvox(3) = nz
 
-      NVXTOT = NX*NY*NZ
+      nvxtot = nx*ny*nz
 !
 !     Make sure the number of voxels NVXTOT is within range.
 !
-      IF ( NVXTOT .GT. MAXVOX ) THEN
+      if ( nvxtot .gt. maxvox ) then
 
-         CALL SETMSG ( 'Fine voxel count NVXTOT = #; count must ' &
+         call setmsg ( 'Fine voxel count NVXTOT = #; count must ' &
          //            'be in the range 1:#.'                    )
-         CALL ERRINT ( '#',  NVXTOT                              )
-         CALL ERRINT ( '#',  MAXVOX                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'ZZMKSPIN'                                )
-         RETURN
+         call errint ( '#',  nvxtot                              )
+         call errint ( '#',  maxvox                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
+         call chkout ( 'ZZMKSPIN'                                )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the coarse voxel scale. It must be at least 1, and its
 !     cube must not exceed the fine voxel count.
 !
-      IF (      ( CGSCAL .LT. 1                ) &
-           .OR. ( CGSCAL .GT. NVXTOT**(1.D0/3) )  ) THEN
+      if (      ( cgscal .lt. 1                ) &
+           .or. ( cgscal .gt. nvxtot**(1.d0/3) )  ) then
 
-         CALL SETMSG ( 'Coarse voxel scale = #; scale must ' &
+         call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be in the range 1:NVXTOT**3, where ' &
          //            'NVXTOT is the total fine voxel count. ' &
          //            'In this case, NVXTOT = #.'               )
-         CALL ERRINT ( '#',  CGSCAL                              )
-         CALL ERRINT ( '#',  NVXTOT                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'ZZMKSPIN'                                )
-         RETURN
+         call errint ( '#',  cgscal                              )
+         call errint ( '#',  nvxtot                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
+         call chkout ( 'ZZMKSPIN'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     The cube of the coarse scale must divide the total voxel count
 !     evenly. This is a consistency check: the code that derives the
 !     voxel grid dimensions should ensure this condition is met.
 !
-      Q = NVXTOT /   (CGSCAL**3)
-      R = NVXTOT - Q*(CGSCAL**3)
+      q = nvxtot /   (cgscal**3)
+      r = nvxtot - q*(cgscal**3)
 
-      IF ( R .NE. 0 ) THEN
+      if ( r .ne. 0 ) then
 
-         CALL SETMSG ( 'Coarse voxel scale = #; the cube of ' &
+         call setmsg ( 'Coarse voxel scale = #; the cube of ' &
          //            'the scale must divide NVXTOT evenly, ' &
          //            'where NVXTOT is the total  fine voxel ' &
          //            'count. In this case, NVXTOT = #.'        )
-         CALL ERRINT ( '#',  CGSCAL                              )
-         CALL ERRINT ( '#',  NVXTOT                              )
-         CALL SIGERR ( 'SPICE(INCOMPATIBLESCALE)'                )
-         CALL CHKOUT ( 'ZZMKSPIN'                                )
-         RETURN
+         call errint ( '#',  cgscal                              )
+         call errint ( '#',  nvxtot                              )
+         call sigerr ( 'SPICE(INCOMPATIBLESCALE)'                )
+         call chkout ( 'ZZMKSPIN'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the number of coarse voxels.
 !
-      NPCG   = CGSCAL ** 3
+      npcg   = cgscal ** 3
 
-      NCGFLG = NVXTOT / NPCG
+      ncgflg = nvxtot / npcg
 
-      IF ( NCGFLG .GT. MAXCGR ) THEN
+      if ( ncgflg .gt. maxcgr ) then
 
-         CALL SETMSG ( 'Number of coarse voxels # exceeds ' &
+         call setmsg ( 'Number of coarse voxels # exceeds ' &
          //            'limit #. Increase coarse voxel scale, ' &
          //            'fine voxel scale, or both.'            )
-         CALL ERRINT ( '#', NCGFLG                             )
-         CALL ERRINT ( '#', MAXCGR                             )
-         CALL SIGERR ( 'SPICE(COARSEGRIDOVERFLOW)'             )
-         CALL CHKOUT ( 'ZZMKSPIN'                              )
-         RETURN
+         call errint ( '#', ncgflg                             )
+         call errint ( '#', maxcgr                             )
+         call sigerr ( 'SPICE(COARSEGRIDOVERFLOW)'             )
+         call chkout ( 'ZZMKSPIN'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Enumerate all voxels that each plate might intersect.
 !
-      CALL ZZINILNK ( MAXPTR, MXCELL, NCELL, VXPTR, CELLS )
+      call zzinilnk ( maxptr, mxcell, ncell, vxptr, cells )
 
 !
 !     Set the dimensions of the coarse grid.
 !
-      CGRDIM(1) = NX / CGSCAL
-      CGRDIM(2) = NY / CGSCAL
-      CGRDIM(3) = NZ / CGSCAL
+      cgrdim(1) = nx / cgscal
+      cgrdim(2) = ny / cgscal
+      cgrdim(3) = nz / cgscal
 
-      CALL CLEARI ( NCGFLG, CGRPTR )
+      call cleari ( ncgflg, cgrptr )
 
 
 !
 !     TO points to the first free location in the VXPTR array.
 !
-      TO = 1
+      to = 1
 
-      DO I = 1, NP
+      do i = 1, np
 !
 !        Find the extents of the Ith plate, where the extents
 !        are expanded by TOL in each direction. We truncate
 !        the expanded box at a distance of MDLTOL beyond the
 !        extents of the vertex set, if necessary.
 !
-         XP(1) = VRTCES( 1, PLATES(1,I) )
-         XP(2) = VRTCES( 1, PLATES(2,I) )
-         XP(3) = VRTCES( 1, PLATES(3,I) )
+         xp(1) = vrtces( 1, plates(1,i) )
+         xp(2) = vrtces( 1, plates(2,i) )
+         xp(3) = vrtces( 1, plates(3,i) )
 
-         YP(1) = VRTCES( 2, PLATES(1,I) )
-         YP(2) = VRTCES( 2, PLATES(2,I) )
-         YP(3) = VRTCES( 2, PLATES(3,I) )
+         yp(1) = vrtces( 2, plates(1,i) )
+         yp(2) = vrtces( 2, plates(2,i) )
+         yp(3) = vrtces( 2, plates(3,i) )
 
-         ZP(1) = VRTCES( 3, PLATES(1,I) )
-         ZP(2) = VRTCES( 3, PLATES(2,I) )
-         ZP(3) = VRTCES( 3, PLATES(3,I) )
+         zp(1) = vrtces( 3, plates(1,i) )
+         zp(2) = vrtces( 3, plates(2,i) )
+         zp(3) = vrtces( 3, plates(3,i) )
 
 
 
-         BXMIN = BRCKTD( MIN( XP(1), XP(2), XP(3) ) - MDLTOL, &
-                         XEXTNT(1),  XEXTNT(2)                )
+         bxmin = brcktd( min( xp(1), xp(2), xp(3) ) - mdltol, &
+                         xextnt(1),  xextnt(2)                )
 
-         BXMAX = BRCKTD( MAX( XP(1), XP(2), XP(3) ) + MDLTOL, &
-                         XEXTNT(1),  XEXTNT(2)                )
+         bxmax = brcktd( max( xp(1), xp(2), xp(3) ) + mdltol, &
+                         xextnt(1),  xextnt(2)                )
 
-         BYMIN = BRCKTD( MIN( YP(1), YP(2), YP(3) ) - MDLTOL, &
-                         XEXTNT(3),  XEXTNT(4)                )
+         bymin = brcktd( min( yp(1), yp(2), yp(3) ) - mdltol, &
+                         xextnt(3),  xextnt(4)                )
 
-         BYMAX = BRCKTD( MAX( YP(1), YP(2), YP(3) ) + MDLTOL, &
-                         XEXTNT(3),  XEXTNT(4)                )
+         bymax = brcktd( max( yp(1), yp(2), yp(3) ) + mdltol, &
+                         xextnt(3),  xextnt(4)                )
 
-         BZMIN = BRCKTD( MIN( ZP(1), ZP(2), ZP(3) ) - MDLTOL, &
-                         XEXTNT(5),  XEXTNT(6)                )
+         bzmin = brcktd( min( zp(1), zp(2), zp(3) ) - mdltol, &
+                         xextnt(5),  xextnt(6)                )
 
-         BZMAX = BRCKTD( MAX( ZP(1), ZP(2), ZP(3) ) + MDLTOL, &
-                         XEXTNT(5),  XEXTNT(6)                )
+         bzmax = brcktd( max( zp(1), zp(2), zp(3) ) + mdltol, &
+                         xextnt(5),  xextnt(6)                )
 
 !
 !        Find the range of voxel coordinates that contain the bounding
@@ -724,80 +724,80 @@
 !
 !        Start with the corner having minimum coordinates:
 !
-         CALL VPACK ( BXMIN, BYMIN, BZMIN, VMOD )
+         call vpack ( bxmin, bymin, bzmin, vmod )
 
-         CALL ZZGETVOX ( VOXSIZ, VOXORI, NVOX, VMOD, INBOX, VCOORD )
+         call zzgetvox ( voxsiz, voxori, nvox, vmod, inbox, vcoord )
 
-         IF ( .NOT. INBOX ) THEN
+         if ( .not. inbox ) then
 !
 !           A corner of the bounding box lies outside the voxel grid.
 !           This should never occur.
 !
-            CALL SETMSG ( 'BUG: bounding box of plate is outside of ' &
+            call setmsg ( 'BUG: bounding box of plate is outside of ' &
             //            'voxel grid. Input coordinates were ' &
             //            '(#, #, #). Plate ID = #.'                  )
-            CALL ERRDP  ( '#', VMOD(1)                                )
-            CALL ERRDP  ( '#', VMOD(2)                                )
-            CALL ERRDP  ( '#', VMOD(3)                                )
-            CALL ERRINT ( '#', I                                      )
-            CALL SIGERR ( 'SPICE(BUG)'                                )
-            CALL CHKOUT ( 'ZZMKSPIN'                                  )
-            RETURN
+            call errdp  ( '#', vmod(1)                                )
+            call errdp  ( '#', vmod(2)                                )
+            call errdp  ( '#', vmod(3)                                )
+            call errint ( '#', i                                      )
+            call sigerr ( 'SPICE(BUG)'                                )
+            call chkout ( 'ZZMKSPIN'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Unpack minimum voxel coordinates from VCOORD.
 !
-         GXMIN = VCOORD(1)
-         GYMIN = VCOORD(2)
-         GZMIN = VCOORD(3)
+         gxmin = vcoord(1)
+         gymin = vcoord(2)
+         gzmin = vcoord(3)
 
 !
 !        Now handle the corner having maximum coordinates:
 !
-         CALL VPACK ( BXMAX, BYMAX, BZMAX, VMOD )
+         call vpack ( bxmax, bymax, bzmax, vmod )
 
-         CALL ZZGETVOX ( VOXSIZ, VOXORI, NVOX, VMOD, INBOX, VCOORD )
+         call zzgetvox ( voxsiz, voxori, nvox, vmod, inbox, vcoord )
 
-         IF ( .NOT. INBOX ) THEN
+         if ( .not. inbox ) then
 !
 !           A corner of the bounding box lies outside the voxel grid.
 !           This should never occur.
 !
-            CALL SETMSG ( 'BUG: bounding box of plate is outside of ' &
+            call setmsg ( 'BUG: bounding box of plate is outside of ' &
             //            'voxel grid. Input coordinates were ' &
             //            '(#, #, #). Plate ID = #.'                  )
-            CALL ERRDP  ( '#', VMOD(1)                                )
-            CALL ERRDP  ( '#', VMOD(2)                                )
-            CALL ERRDP  ( '#', VMOD(3)                                )
-            CALL ERRINT ( '#', I                                      )
-            CALL SIGERR ( 'SPICE(BUG)'                                )
-            CALL CHKOUT ( 'ZZMKSPIN'                                  )
-            RETURN
+            call errdp  ( '#', vmod(1)                                )
+            call errdp  ( '#', vmod(2)                                )
+            call errdp  ( '#', vmod(3)                                )
+            call errint ( '#', i                                      )
+            call sigerr ( 'SPICE(BUG)'                                )
+            call chkout ( 'ZZMKSPIN'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Unpack maximum voxel coordinates from VCOORD.
 !
-         GXMAX = VCOORD(1)
-         GYMAX = VCOORD(2)
-         GZMAX = VCOORD(3)
+         gxmax = vcoord(1)
+         gymax = vcoord(2)
+         gzmax = vcoord(3)
 
 !
 !        Determine voxels that the bounding box of the plate
 !        intersects.
 !
-         DO IZ = GZMIN, GZMAX
+         do iz = gzmin, gzmax
 
-             DO IY = GYMIN, GYMAX
+             do iy = gymin, gymax
 
-                 DO IX = GXMIN, GXMAX
+                 do ix = gxmin, gxmax
 
-                    VIXYZ(1) = IX
-                    VIXYZ(2) = IY
-                    VIXYZ(3) = IZ
+                    vixyz(1) = ix
+                    vixyz(2) = iy
+                    vixyz(3) = iz
 !
 !                   Find the coarse voxel containing this voxel, and
 !                   compute the offset of this voxel within the coarse
@@ -808,51 +808,51 @@
 !                   coordinates VIXYZ) from the start of the coarse
 !                   voxel.
 !
-                    CALL ZZVOXCVO ( VIXYZ, NVOX,  CGSCAL, &
-                                    CGXYZ, CGOFF, CGOF1D  )
+                    call zzvoxcvo ( vixyz, nvox,  cgscal, &
+                                    cgxyz, cgoff, cgof1d  )
 
-                    IF ( FAILED() ) THEN
-                       CALL CHKOUT ( 'ZZMKSPIN' )
-                       RETURN
-                    END IF
+                    if ( failed() ) then
+                       call chkout ( 'ZZMKSPIN' )
+                       return
+                    end if
 
-                    CVID = ZZVOX2ID ( CGXYZ, CGRDIM )
+                    cvid = zzvox2id ( cgxyz, cgrdim )
 
-                    IF ( CGRPTR(CVID) .EQ. 0 ) THEN
+                    if ( cgrptr(cvid) .eq. 0 ) then
 !
 !                      The coarse voxel at index CVID is empty so far.
 !                      Allocate CGSCAL pointers for it in the VXPTR
 !                      array; make the coarse voxel point to the first
 !                      element of this sub-array.
 !
-                       CGRPTR(CVID) = TO
-                       TO           = TO + NPCG
+                       cgrptr(cvid) = to
+                       to           = to + npcg
 
-                    END IF
+                    end if
 !
 !                   Let IXPTR be the index in the VXPTR array of the
 !                   pointer for the current voxel.
 !
-                    IXPTR = ( CGRPTR(CVID) - 1 )  +  CGOF1D
+                    ixptr = ( cgrptr(cvid) - 1 )  +  cgof1d
 
-                    CALL ZZADDLNK ( IXPTR,  I,     MAXPTR, &
-                                    MXCELL, VXPTR, NCELL, CELLS )
+                    call zzaddlnk ( ixptr,  i,     maxptr, &
+                                    mxcell, vxptr, ncell, cells )
 
-                    IF ( FAILED() ) THEN
-                       CALL CHKOUT ( 'ZZMKSPIN' )
-                       RETURN
-                    END IF
+                    if ( failed() ) then
+                       call chkout ( 'ZZMKSPIN' )
+                       return
+                    end if
 
 
-                 END DO
+                 end do
 
-              END DO
+              end do
 
-          END DO
+          end do
 
-      END DO
+      end do
 
-      NVXPTR = TO - 1
+      nvxptr = to - 1
 
 !
 !     Generate two linked lists mapping voxel ID to the plates enclosed
@@ -874,10 +874,10 @@
 !             The N elements following VXLIST( VXPTR(VOX_ID) ),
 !             contain the IDs of those plates within the voxel.
 !
-      CALL ZZUNTNGL ( NVXPTR, MXCELL, CELLS, &
-                      MAXVXL, VXPTR,  NVXLST, VXLIST )
+      call zzuntngl ( nvxptr, mxcell, cells, &
+                      maxvxl, vxptr,  nvxlst, vxlist )
 
 
-      CALL CHKOUT ( 'ZZMKSPIN' )
-      RETURN
-      END
+      call chkout ( 'ZZMKSPIN' )
+      return
+      end

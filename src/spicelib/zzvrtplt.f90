@@ -1,8 +1,8 @@
 !$Procedure  ZZVRTPLT  ( create vertex-plate mapping )
 
-      SUBROUTINE ZZVRTPLT ( NV,    NP,     PLATES, CELLSZ, MAXLST, &
-                            CELLS, VRTPTR, NLIST,  PLTLST          )
-      IMPLICIT NONE
+      subroutine zzvrtplt ( nv,    np,     plates, cellsz, maxlst, &
+                            cells, vrtptr, nlist,  pltlst          )
+      implicit none
 
 ! $ Abstract
 !
@@ -25,17 +25,17 @@
 !
 ! $ Declarations
 
-      INCLUDE              'dsk02.inc'
+      include              'dsk02.inc'
 
-      INTEGER               NV
-      INTEGER               NP
-      INTEGER               PLATES ( 3, * )
-      INTEGER               CELLSZ
-      INTEGER               MAXLST
-      INTEGER               CELLS  ( 2, CELLSZ )
-      INTEGER               VRTPTR ( * )
-      INTEGER               NLIST
-      INTEGER               PLTLST ( * )
+      integer               nv
+      integer               np
+      integer               plates ( 3, * )
+      integer               cellsz
+      integer               maxlst
+      integer               cells  ( 2, cellsz )
+      integer               vrtptr ( * )
+      integer               nlist
+      integer               pltlst ( * )
 
 ! $ Brief_I/O
 !
@@ -217,111 +217,111 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables.
 !
 
-      LOGICAL               RETURN
+      logical               return
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NCELL
+      integer               i
+      integer               j
+      integer               ncell
 
 
-      SAVE
+      save
 
 !
 !     Standard SPICELIB error handling.
 !
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZVRTPLT' )
+      call chkin  ( 'ZZVRTPLT' )
 
 
-      IF ( NV .LT. 1 ) THEN
+      if ( nv .lt. 1 ) then
 
-         CALL SETMSG ( 'Vertex count NV = #; count must be positive.' &
+         call setmsg ( 'Vertex count NV = #; count must be positive.' &
          //            'be positive.'                                )
-         CALL ERRINT ( '#',  NV                                      )
-         CALL SIGERR ( 'SPICE(BADVERTEXCOUNT)'                       )
-         CALL CHKOUT ( 'ZZVRTPLT'                                    )
-         RETURN
+         call errint ( '#',  nv                                      )
+         call sigerr ( 'SPICE(BADVERTEXCOUNT)'                       )
+         call chkout ( 'ZZVRTPLT'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( NP .LT. 1 ) THEN
+      if ( np .lt. 1 ) then
 
-         CALL SETMSG ( 'Plate count NP = #; count must be positive.' &
+         call setmsg ( 'Plate count NP = #; count must be positive.' &
          //            'be positive.'                                )
-         CALL ERRINT ( '#',  NP                                      )
-         CALL SIGERR ( 'SPICE(BADPLATECOUNT)'                        )
-         CALL CHKOUT ( 'ZZVRTPLT'                                    )
-         RETURN
+         call errint ( '#',  np                                      )
+         call sigerr ( 'SPICE(BADPLATECOUNT)'                        )
+         call chkout ( 'ZZVRTPLT'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( CELLSZ .LT. 3*NP ) THEN
+      if ( cellsz .lt. 3*np ) then
 
-         CALL SETMSG ( 'Cell array size CELLSZ = #; size must be ' &
+         call setmsg ( 'Cell array size CELLSZ = #; size must be ' &
          //            '>= 3*NP. NP is the plate count #.'         )
-         CALL ERRINT ( '#',  CELLSZ                                )
-         CALL ERRINT ( '#',  NP                                    )
-         CALL SIGERR ( 'SPICE(CELLARRAYTOOSMALL)'                  )
-         CALL CHKOUT ( 'ZZVRTPLT'                                  )
-         RETURN
+         call errint ( '#',  cellsz                                )
+         call errint ( '#',  np                                    )
+         call sigerr ( 'SPICE(CELLARRAYTOOSMALL)'                  )
+         call chkout ( 'ZZVRTPLT'                                  )
+         return
 
-      END IF
+      end if
 
-      IF ( MAXLST .LT. (NV+3*NP) ) THEN
+      if ( maxlst .lt. (nv+3*np) ) then
 
-         CALL SETMSG ( 'Plate list array size MAXPLT = #; size ' &
+         call setmsg ( 'Plate list array size MAXPLT = #; size ' &
          //            'must be >= 3*NP + NV, which is #. (NV = ' &
          //            'vertex count, NP = plate count.)'        )
-         CALL ERRINT ( '#',  MAXLST                              )
-         CALL ERRINT ( '#',  3*NP + NV                           )
-         CALL SIGERR ( 'SPICE(PLATELISTTOOSMALL)'                )
-         CALL CHKOUT ( 'ZZVRTPLT'                                )
-         RETURN
+         call errint ( '#',  maxlst                              )
+         call errint ( '#',  3*np + nv                           )
+         call sigerr ( 'SPICE(PLATELISTTOOSMALL)'                )
+         call chkout ( 'ZZVRTPLT'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize pointer and cell structure.
 !
-      CALL ZZINILNK ( NV, CELLSZ, NCELL, VRTPTR, CELLS )
+      call zzinilnk ( nv, cellsz, ncell, vrtptr, cells )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZVRTPLT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZVRTPLT' )
+         return
+      end if
 
 !
 !     Loop over all plate IDS. Add each plate/vertex
 !     combination to the linked list.
 !
-      DO I = 1, NP
+      do i = 1, np
 
-         DO J = 1, 3
+         do j = 1, 3
 !
 !           AVAL = PLATES(J,I), vertex J of plate ID I.
 !           BVAL = I, plate ID value I.
 !
-            CALL ZZADDLNK ( PLATES(J,I), I,     NV,   CELLSZ, &
-                            VRTPTR,      NCELL, CELLS        )
+            call zzaddlnk ( plates(j,i), i,     nv,   cellsz, &
+                            vrtptr,      ncell, cells        )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZVRTPLT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZVRTPLT' )
+               return
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Generate two linked lists mapping vertex ID to the plates
@@ -344,12 +344,12 @@
 !             contain the IDs of those plates which have the vertex
 !             as a member.
 !
-      CALL ZZUNTNGL ( NV,     CELLSZ, CELLS, &
-                      MAXLST, VRTPTR, NLIST, PLTLST )
+      call zzuntngl ( nv,     cellsz, cells, &
+                      maxlst, vrtptr, nlist, pltlst )
 
 !
 !     Standard SPICE error handling.
 !
-      CALL CHKOUT ( 'ZZVRTPLT' )
-      RETURN
-      END
+      call chkout ( 'ZZVRTPLT' )
+      return
+      end

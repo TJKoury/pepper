@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTR1S ( EK tree, one-shot load )
 
-      SUBROUTINE ZZEKTR1S ( HANDLE, TREE, SIZE, VALUES )
+      subroutine zzektr1s ( handle, tree, size, values )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               SIZE
-      INTEGER               VALUES  ( * )
+      integer               handle
+      integer               tree
+      integer               size
+      integer               values  ( * )
 
 ! $ Brief_I/O
 !
@@ -137,78 +137,78 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRBS
-      INTEGER               ZZEKTRSZ
+      integer               zzektrbs
+      integer               zzektrsz
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               BASIDX
-      INTEGER               BIGSIZ
-      INTEGER               CHILD
-      INTEGER               D
-      INTEGER               DIV
-      INTEGER               I
-      INTEGER               KEY
-      INTEGER               KIDBAS
-      INTEGER               LEVEL
-      INTEGER               MAXSIZ
-      INTEGER               N
-      INTEGER               NBIG
-      INTEGER               NEXT
-      INTEGER               NKEYS
-      INTEGER               NKIDS
-      INTEGER               NNODES
-      INTEGER               NODE
-      INTEGER               NPRED
-      INTEGER               NSMALL
-      INTEGER               PAGE  ( PGSIZI )
-      INTEGER               Q
-      INTEGER               REQSIZ
-      INTEGER               S
-      INTEGER               STLSIZ ( TRMXDP )
-      INTEGER               STNBIG ( TRMXDP )
-      INTEGER               STNEXT ( TRMXDP )
-      INTEGER               STNKEY ( TRMXDP )
-      INTEGER               STNODE ( TRMXDP )
-      INTEGER               STNBAS ( TRMXDP )
-      INTEGER               SUBD
-      INTEGER               SUBSIZ
-      INTEGER               TOTNOD
-      INTEGER               TSIZE
+      integer               base
+      integer               basidx
+      integer               bigsiz
+      integer               child
+      integer               d
+      integer               div
+      integer               i
+      integer               key
+      integer               kidbas
+      integer               level
+      integer               maxsiz
+      integer               n
+      integer               nbig
+      integer               next
+      integer               nkeys
+      integer               nkids
+      integer               nnodes
+      integer               node
+      integer               npred
+      integer               nsmall
+      integer               page  ( pgsizi )
+      integer               q
+      integer               reqsiz
+      integer               s
+      integer               stlsiz ( trmxdp )
+      integer               stnbig ( trmxdp )
+      integer               stnext ( trmxdp )
+      integer               stnkey ( trmxdp )
+      integer               stnode ( trmxdp )
+      integer               stnbas ( trmxdp )
+      integer               subd
+      integer               subsiz
+      integer               totnod
+      integer               tsize
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKTR1S' )
+      call chkin ( 'ZZEKTR1S' )
 
 !
 !     Make sure the input tree is empty.
 !
-      TSIZE  =  ZZEKTRSZ ( HANDLE, TREE )
+      tsize  =  zzektrsz ( handle, tree )
 
-      IF ( TSIZE .GT. 0 ) THEN
+      if ( tsize .gt. 0 ) then
 
-         CALL SETMSG ( 'Tree has size #; should be empty.' // &
+         call setmsg ( 'Tree has size #; should be empty.' // &
                        'EK = #; TREE = #.'                 )
-         CALL ERRINT ( '#',  TSIZE                         )
-         CALL ERRHAN ( '#',  HANDLE                        )
-         CALL ERRINT ( '#',  TREE                          )
-         CALL SIGERR ( 'SPICE(NONEMPTYTREE)'               )
-         CALL CHKOUT ( 'ZZEKTR1S'                          )
-         RETURN
+         call errint ( '#',  tsize                         )
+         call errhan ( '#',  handle                        )
+         call errint ( '#',  tree                          )
+         call sigerr ( 'SPICE(NONEMPTYTREE)'               )
+         call chkout ( 'ZZEKTR1S'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the tree depth required.  The largest tree of a given
@@ -250,19 +250,19 @@
 !     is greater than or equal to SIZE.
 !
 
-      TSIZE  =  MXKEYR
-      D      =  1
-      S      =  1
+      tsize  =  mxkeyr
+      d      =  1
+      s      =  1
 
-      DO WHILE ( TSIZE .LT. SIZE )
+      do while ( tsize .lt. size )
 
-         D  =  D  +  1
+         d  =  d  +  1
 
-         IF ( D .EQ. 2 ) THEN
+         if ( d .eq. 2 ) then
 
-            S  =  MXKEYR
+            s  =  mxkeyr
 
-         ELSE
+         else
 !
 !           For computational purposes, the relationship
 !
@@ -271,30 +271,30 @@
 !           is handy.
 !
 !
-            S  =  MXKIDR  +  MXKIDC * S
+            s  =  mxkidr  +  mxkidc * s
 
-         END IF
+         end if
 
-         TSIZE   =   MXKEYR  +  S * MXKEYC
+         tsize   =   mxkeyr  +  s * mxkeyc
 
-      END DO
+      end do
 
 !
 !     If the tree must be deeper than we expected, we've a problem.
 !
-      IF ( D .GT. TRMXDP ) THEN
+      if ( d .gt. trmxdp ) then
 
-         CALL SETMSG ( 'Tree has depth #; max supported depth is #.' // &
+         call setmsg ( 'Tree has depth #; max supported depth is #.' // &
                        'EK = #; TREE = #.'                           )
-         CALL ERRINT ( '#',  D                                       )
-         CALL ERRINT ( '#',  TRMXDP                                  )
-         CALL ERRHAN ( '#',  HANDLE                                  )
-         CALL ERRINT ( '#',  TREE                                    )
-         CALL SIGERR ( 'SPICE(COUNTTOOLARGE)'                        )
-         CALL CHKOUT ( 'ZZEKTR1S'                                    )
-         RETURN
+         call errint ( '#',  d                                       )
+         call errint ( '#',  trmxdp                                  )
+         call errhan ( '#',  handle                                  )
+         call errint ( '#',  tree                                    )
+         call sigerr ( 'SPICE(COUNTTOOLARGE)'                        )
+         call chkout ( 'ZZEKTR1S'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     The basic error checks are done.  At this point, we can build the
@@ -327,18 +327,18 @@
 !        Base index of node                   STNBAS
 !
 !
-      NODE              =  TREE
-      SUBSIZ            =  SIZE
-      NEXT              =  1
-      LEVEL             =  1
-      BASIDX            =  0
+      node              =  tree
+      subsiz            =  size
+      next              =  1
+      level             =  1
+      basidx            =  0
 
-      DO WHILE ( LEVEL .GT. 0 )
+      do while ( level .gt. 0 )
 !
 !        At this point, LEVEL, NEXT, NODE, SUBSIZ and BASIDX are set.
 !
 
-         IF ( NEXT .EQ. 1 ) THEN
+         if ( next .eq. 1 ) then
 !
 !           This node has not been visited yet.  We'll fill in this
 !           node before proceeding to fill in its descendants.  The
@@ -354,28 +354,28 @@
 !           not a leaf node, the number of subtrees must be between
 !           MNKIDC and MXKIDC.
 !
-            IF ( LEVEL .EQ. 1 ) THEN
+            if ( level .eq. 1 ) then
 !
 !              We're working on the root.  The number of subtrees is
 !              anywhere between 0 and MXKIDR, inclusive.  We'll create
 !              a tree with the minimum number of subtrees of the root.
 !
-               IF ( D .GT. 1 ) THEN
+               if ( d .gt. 1 ) then
 !
 !                 We'll find the number of subtrees of maximum size
 !                 that we would need to hold the non-root keys of the
 !                 tree.  We'll then determine the actual required sizes
 !                 of these subtrees.
 !
-                  SUBD    =  D - 1
+                  subd    =  d - 1
 
-                  NNODES  =  0
+                  nnodes  =  0
 
-                  DO I = 1, SUBD
-                     NNODES =  MXKIDC * NNODES  +  1
-                  END DO
+                  do i = 1, subd
+                     nnodes =  mxkidc * nnodes  +  1
+                  end do
 
-                  MAXSIZ  =  NNODES * MXKEYC
+                  maxsiz  =  nnodes * mxkeyc
 
 !
 !                 If we had NKIDS subtrees of size MAXSIZ, NKIDS
@@ -392,23 +392,23 @@
 !                 We'll compute this value of NKIDS.
 !
 !
-                  Q       =  SUBSIZ + 1
-                  DIV     =  MAXSIZ + 1
-                  NKIDS  =  ( Q + DIV - 1 )  / DIV
+                  q       =  subsiz + 1
+                  div     =  maxsiz + 1
+                  nkids  =  ( q + div - 1 )  / div
 
 !
 !                 The minimum number of keys we must store in child
 !                 nodes is the number of keys in the tree, minus those
 !                 that can be accommodated in the root:
 !
-                  N       =   SUBSIZ - ( NKIDS - 1 )
+                  n       =   subsiz - ( nkids - 1 )
 
 !
 !                 Now we can figure out how large the subtrees would
 !                 have to be in order to hold N keys, if all subtrees
 !                 had the same size.
 !
-                  BIGSIZ  =  ( N + NKIDS - 1 ) / NKIDS
+                  bigsiz  =  ( n + nkids - 1 ) / nkids
 
 !
 !                 We may have more capacity than we need if all subtrees
@@ -418,77 +418,77 @@
 !                 smaller).  The first NBIG subtrees will have the
 !                 larger size.
 !
-                  NSMALL  =  ( NKIDS * BIGSIZ ) - N
-                  NBIG    =    NKIDS - NSMALL
+                  nsmall  =  ( nkids * bigsiz ) - n
+                  nbig    =    nkids - nsmall
 
-                  NKEYS   =  NKIDS  -  1
+                  nkeys   =  nkids  -  1
 
 
-               ELSE
+               else
 !
 !                 All keys are in the root.
 !
-                  NKEYS   =  SIZE
-                  NKIDS   =  0
+                  nkeys   =  size
+                  nkids   =  0
 
-               END IF
+               end if
 
 !
 !              Read in the root page.
 !
-               CALL ZZEKPGRI ( HANDLE, TREE, PAGE )
+               call zzekpgri ( handle, tree, page )
 
 !
 !              We have enough information to fill in the root node.
 !              We'll allocate nodes for the immediate children.
 !              There is one key `between' each child pointer.
 !
-               DO I = 1, NKEYS
+               do i = 1, nkeys
 !
 !                 The Ith key may be found by considering the number
 !                 of keys in the subtree between the Ith key and its
 !                 predecessor in the root.
 !
-                  IF ( I .EQ. 1 ) THEN
-                     NPRED = 0
-                  ELSE
-                     NPRED = PAGE( TRKEYR+I-1 )
-                  END IF
+                  if ( i .eq. 1 ) then
+                     npred = 0
+                  else
+                     npred = page( trkeyr+i-1 )
+                  end if
 
-                  IF ( D .GT. 1 ) THEN
+                  if ( d .gt. 1 ) then
 !
 !                    The tree contains subtrees.
 !
-                     IF ( I .LE. NBIG ) THEN
-                        KEY   =  NPRED  + BIGSIZ + 1
-                     ELSE
-                        KEY   =  NPRED  + BIGSIZ
-                     END IF
+                     if ( i .le. nbig ) then
+                        key   =  npred  + bigsiz + 1
+                     else
+                        key   =  npred  + bigsiz
+                     end if
 
-                  ELSE
+                  else
 
-                     KEY  =  I
+                     key  =  i
 
-                  END IF
+                  end if
 
-                  PAGE ( TRKEYR + I ) =  KEY
-                  PAGE ( TRDATR + I ) =  VALUES ( KEY )
+                  page ( trkeyr + i ) =  key
+                  page ( trdatr + i ) =  values ( key )
 
-               END DO
+               end do
 
 
-               TOTNOD  =  1
+               totnod  =  1
 
-               DO I = 1, NKIDS
+               do i = 1, nkids
 !
 !                 Allocate a node for the Ith child.  Store pointers
 !                 to these nodes.
 !
-                  CALL ZZEKPGAL ( HANDLE, INT, CHILD, BASE )
-                  PAGE ( TRKIDR + I )  =  CHILD
-                  TOTNOD               =  TOTNOD + 1
+                  call zzekpgal ( handle, int, child, base )
+                  page ( trkidr + i )  =  child
+                  totnod               =  totnod + 1
 
-               END DO
+               end do
 
 !
 !              Fill in the root's metadata.  There is one item that
@@ -496,22 +496,22 @@
 !              nodes in the tree.  We know the rest of the information
 !              now.
 !
-               PAGE ( TRNKEY )  =  SIZE
-               PAGE ( TRDPTH )  =  D
-               PAGE ( TRKEYR )  =  NKEYS
-               PAGE ( TRNNOD )  =  0
+               page ( trnkey )  =  size
+               page ( trdpth )  =  d
+               page ( trkeyr )  =  nkeys
+               page ( trnnod )  =  0
 
 !
 !              Write out the root.
 !
-               CALL ZZEKPGWI ( HANDLE, TREE, PAGE )
+               call zzekpgwi ( handle, tree, page )
 
 
-            ELSE IF ( LEVEL .LT. D ) THEN
+            else if ( level .lt. d ) then
 !
 !              The current node is a non-leaf child node.
 !
-               CALL CLEARI ( PGSIZI, PAGE )
+               call cleari ( pgsizi, page )
 !
 !              The tree headed by this node has depth D-LEVEL+1 and
 !              must hold SUBSIZ keys.  We must figure out the size
@@ -525,22 +525,22 @@
 !                 SUBSIZ  -  MNKEYC
 !
 !
-               N       =  SUBSIZ - MNKEYC
-               REQSIZ  =  ( N + MNKEYC - 1 )  /  MNKEYC
+               n       =  subsiz - mnkeyc
+               reqsiz  =  ( n + mnkeyc - 1 )  /  mnkeyc
 
 !
 !              Compute the maximum allowable number of keys in
 !              a subtree.
 !
-               SUBD    =  D - LEVEL
+               subd    =  d - level
 
-               NNODES  =  0
+               nnodes  =  0
 
-               DO I = 1, SUBD
-                  NNODES =  MXKIDC * NNODES  +  1
-               END DO
+               do i = 1, subd
+                  nnodes =  mxkidc * nnodes  +  1
+               end do
 
-               MAXSIZ  =  NNODES * MXKEYC
+               maxsiz  =  nnodes * mxkeyc
 
 !
 !              If the number REQSIZ we came up with is a valid size,
@@ -550,16 +550,16 @@
 !              since the smallest possible number of subtrees is
 !              MNKIDC.
 !
-               IF ( REQSIZ .LE. MAXSIZ ) THEN
+               if ( reqsiz .le. maxsiz ) then
 !
 !                 Decide how many large and small subtrees we need.
 !
-                  NKIDS   =  MNKIDC
-                  BIGSIZ  =  REQSIZ
-                  NSMALL  =  BIGSIZ * NKIDS  -  N
-                  NBIG    =  NKIDS  -  NSMALL
+                  nkids   =  mnkidc
+                  bigsiz  =  reqsiz
+                  nsmall  =  bigsiz * nkids  -  n
+                  nbig    =  nkids  -  nsmall
 
-               ELSE
+               else
 !
 !
 !                 See how many subtrees of size MAXSIZ it would take
@@ -578,9 +578,9 @@
 !                 that the above quantity is greater than or equal
 !                 to SUBSIZ.
 !
-                  Q      =  SUBSIZ + 1
-                  DIV    =  MAXSIZ + 1
-                  NKIDS  =  ( Q + DIV - 1 )  / DIV
+                  q      =  subsiz + 1
+                  div    =  maxsiz + 1
+                  nkids  =  ( q + div - 1 )  / div
 
 !
 !                 We know that NKIDS subtrees of size MAXSIZ, plus
@@ -601,230 +601,230 @@
 !                    BIGSIZ * NKIDS  >  SUBSIZ - NKIDS + 1
 !                                    -
 !
-                  Q       =  SUBSIZ - NKIDS + 1
-                  DIV     =  NKIDS
-                  BIGSIZ  =  ( Q + DIV - 1 )  / DIV
+                  q       =  subsiz - nkids + 1
+                  div     =  nkids
+                  bigsiz  =  ( q + div - 1 )  / div
 
-                  NSMALL  =  BIGSIZ * NKIDS  -  Q
-                  NBIG    =  NKIDS  -  NSMALL
+                  nsmall  =  bigsiz * nkids  -  q
+                  nbig    =  nkids  -  nsmall
 
-               END IF
+               end if
 
 !
 !              Fill in the keys for the current node.
 !
-               NKEYS   =  NKIDS  -  1
+               nkeys   =  nkids  -  1
 
-               DO I = 1, NKEYS
+               do i = 1, nkeys
 !
 !                 The Ith key may be found by considering the number
 !                 of keys in the subtree between the Ith key and its
 !                 predecessor in the current node.
 !
-                  IF ( I .EQ. 1 ) THEN
-                     NPRED = BASIDX
-                  ELSE
-                     NPRED = BASIDX + PAGE( TRKEYC+I-1 )
-                  END IF
+                  if ( i .eq. 1 ) then
+                     npred = basidx
+                  else
+                     npred = basidx + page( trkeyc+i-1 )
+                  end if
 
-                  IF ( I .LE. NBIG ) THEN
-                     KEY   =  NPRED  + BIGSIZ + 1
-                  ELSE
-                     KEY   =  NPRED  + BIGSIZ
-                  END IF
+                  if ( i .le. nbig ) then
+                     key   =  npred  + bigsiz + 1
+                  else
+                     key   =  npred  + bigsiz
+                  end if
 
-                  PAGE ( TRKEYC + I ) =  KEY - BASIDX
-                  PAGE ( TRDATC + I ) =  VALUES ( KEY )
+                  page ( trkeyc + i ) =  key - basidx
+                  page ( trdatc + i ) =  values ( key )
 
-               END DO
+               end do
 
 
-               DO I = 1, NKIDS
+               do i = 1, nkids
 !
 !                 Allocate a node for the Ith child.  Store pointers
 !                 to these nodes.
 !
-                  CALL ZZEKPGAL ( HANDLE, INT, CHILD, BASE )
+                  call zzekpgal ( handle, int, child, base )
 
-                  PAGE ( TRKIDC + I )  =  CHILD
-                  TOTNOD               =  TOTNOD + 1
+                  page ( trkidc + i )  =  child
+                  totnod               =  totnod + 1
 
-               END DO
+               end do
 
 !
 !              We can now fill in the metadata for the current node.
 !
-               PAGE ( TRNKC )  =  NKEYS
+               page ( trnkc )  =  nkeys
 
-               CALL ZZEKPGWI ( HANDLE, NODE, PAGE )
+               call zzekpgwi ( handle, node, page )
 
-            END IF
+            end if
 
 !
 !           Unless the current node is a leaf node, prepare to visit
 !           the first child of the current node.
 !
-            IF ( LEVEL .LT. D ) THEN
+            if ( level .lt. d ) then
 !
 !              Push our current state.
 !
-               STNODE ( LEVEL )  = NODE
-               STNKEY ( LEVEL )  = NKEYS
-               STLSIZ ( LEVEL )  = BIGSIZ
-               STNBIG ( LEVEL )  = NBIG
-               STNEXT ( LEVEL )  = 2
-               STNBAS ( LEVEL )  = BASIDX
+               stnode ( level )  = node
+               stnkey ( level )  = nkeys
+               stlsiz ( level )  = bigsiz
+               stnbig ( level )  = nbig
+               stnext ( level )  = 2
+               stnbas ( level )  = basidx
 
 !
 !              NEXT is already set to 1.  BASIDX is set, since the
 !              base index of the first child is that of the parent.
 !
-               IF ( LEVEL .EQ. 1 ) THEN
-                  KIDBAS  =  TRKIDR
-               ELSE
-                  KIDBAS  =  TRKIDC
-               END IF
+               if ( level .eq. 1 ) then
+                  kidbas  =  trkidr
+               else
+                  kidbas  =  trkidc
+               end if
 
-               LEVEL   =  LEVEL + 1
-               NODE    =  PAGE ( KIDBAS+1 )
-               SUBSIZ  =  BIGSIZ
+               level   =  level + 1
+               node    =  page ( kidbas+1 )
+               subsiz  =  bigsiz
 
 
-            ELSE IF ( LEVEL .GT. 1 ) THEN
+            else if ( level .gt. 1 ) then
 !
 !              The current node is a child leaf node.  There are no
 !              calculations to do; we simply assign keys and pointers,
 !              write out metadata, and pop our state.
 !
-               NKEYS  =  SUBSIZ
+               nkeys  =  subsiz
 
-               DO I = 1, NKEYS
+               do i = 1, nkeys
 
-                  KEY                 =  BASIDX + I
-                  PAGE ( TRKEYC + I ) =  I
-                  PAGE ( TRDATC + I ) =  VALUES ( KEY )
+                  key                 =  basidx + i
+                  page ( trkeyc + i ) =  i
+                  page ( trdatc + i ) =  values ( key )
 
-               END DO
+               end do
 
 !
 !              We can now fill in the metadata for the current node.
 !
-               PAGE ( TRNKC )  =  NKEYS
+               page ( trnkc )  =  nkeys
 
-               CALL ZZEKPGWI ( HANDLE, NODE, PAGE )
+               call zzekpgwi ( handle, node, page )
 
 !
 !              A leaf node is a subtree unto itself, and we're
 !              done with this subtree.  Pop our state.
 !
-               LEVEL  =  LEVEL - 1
+               level  =  level - 1
 
-               IF ( LEVEL .GE. 1 ) THEN
+               if ( level .ge. 1 ) then
 
-                  NODE    =  STNODE ( LEVEL )
-                  NKEYS   =  STNKEY ( LEVEL )
-                  BIGSIZ  =  STLSIZ ( LEVEL )
-                  NBIG    =  STNBIG ( LEVEL )
-                  NEXT    =  STNEXT ( LEVEL )
-                  BASIDX  =  STNBAS ( LEVEL )
-                  NKIDS   =  NKEYS + 1
+                  node    =  stnode ( level )
+                  nkeys   =  stnkey ( level )
+                  bigsiz  =  stlsiz ( level )
+                  nbig    =  stnbig ( level )
+                  next    =  stnext ( level )
+                  basidx  =  stnbas ( level )
+                  nkids   =  nkeys + 1
 
 !
 !                 Read in the current node.
 !
-                  CALL ZZEKPGRI ( HANDLE, NODE, PAGE )
+                  call zzekpgri ( handle, node, page )
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              The only node is the root.  Pop out.
 !
-               LEVEL  =  0
+               level  =  0
 
-            END IF
+            end if
 !
 !           We've decided which node to go to next at this point.
 !           At this point, LEVEL, NEXT, NODE, SUBSIZ and BASIDX are set.
 !
 
-         ELSE
+         else
 !
 !           The current node has been visited already.  Visit the
 !           next child, if there is one.
 !
-            IF ( NEXT .LE. NKIDS ) THEN
+            if ( next .le. nkids ) then
 !
 !              Prepare to visit the next child of the current node.
 !
-               STNEXT ( LEVEL )   =   NEXT  +  1
+               stnext ( level )   =   next  +  1
 
 
-               IF ( LEVEL .EQ. 1 ) THEN
-                  KIDBAS  =  TRKIDR
-               ELSE
-                  KIDBAS  =  TRKIDC
-               END IF
+               if ( level .eq. 1 ) then
+                  kidbas  =  trkidr
+               else
+                  kidbas  =  trkidc
+               end if
 
 
-               NODE    =  PAGE ( KIDBAS + NEXT )
+               node    =  page ( kidbas + next )
 
 
-               IF ( NEXT .LE. NBIG ) THEN
-                  SUBSIZ  =  STLSIZ(LEVEL)
-               ELSE
-                  SUBSIZ  =  STLSIZ(LEVEL) - 1
-               END IF
+               if ( next .le. nbig ) then
+                  subsiz  =  stlsiz(level)
+               else
+                  subsiz  =  stlsiz(level) - 1
+               end if
 
 
-               IF ( NEXT .LE. NBIG+1 ) THEN
+               if ( next .le. nbig+1 ) then
 
-                  BASIDX  =      STNBAS(LEVEL) &
-                             + ( NEXT-1 ) * STLSIZ(LEVEL) &
-                             + ( NEXT-1 )
+                  basidx  =      stnbas(level) &
+                             + ( next-1 ) * stlsiz(level) &
+                             + ( next-1 )
 
-               ELSE
+               else
 
-                  BASIDX  =      STNBAS(LEVEL) &
-                             +   NBIG           *   STLSIZ(LEVEL) &
-                             + ( NEXT-NBIG-1 )  * ( STLSIZ(LEVEL) - 1 ) &
-                             + ( NEXT-1 )
-               END IF
+                  basidx  =      stnbas(level) &
+                             +   nbig           *   stlsiz(level) &
+                             + ( next-nbig-1 )  * ( stlsiz(level) - 1 ) &
+                             + ( next-1 )
+               end if
 
-               LEVEL  =  LEVEL + 1
-               NEXT   =  1
+               level  =  level + 1
+               next   =  1
 
 !
 !              LEVEL, NEXT, NODE, SUBSIZ, and BASIDX are set.
 !
 
-            ELSE
+            else
 !
 !              We're done with the current subtree.  Pop the stack.
 !
-               LEVEL   =  LEVEL - 1
+               level   =  level - 1
 
-               IF ( LEVEL .GE. 1 ) THEN
+               if ( level .ge. 1 ) then
 
-                  NODE    =  STNODE ( LEVEL )
-                  NKEYS   =  STNKEY ( LEVEL )
-                  BIGSIZ  =  STLSIZ ( LEVEL )
-                  NBIG    =  STNBIG ( LEVEL )
-                  NEXT    =  STNEXT ( LEVEL )
-                  BASIDX  =  STNBAS ( LEVEL )
-                  NKIDS   =  NKEYS + 1
+                  node    =  stnode ( level )
+                  nkeys   =  stnkey ( level )
+                  bigsiz  =  stlsiz ( level )
+                  nbig    =  stnbig ( level )
+                  next    =  stnext ( level )
+                  basidx  =  stnbas ( level )
+                  nkids   =  nkeys + 1
 !
 !                 Read in the current node.
 !
-                  CALL ZZEKPGRI ( HANDLE, NODE, PAGE )
+                  call zzekpgri ( handle, node, page )
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
 !
 !        On this pass through the loop, we either---
@@ -839,17 +839,17 @@
 !        Each of these actions can be performed a finite number of
 !        times.  Therefore, we made progress toward loop termination.
 !
-      END DO
+      end do
 
 
 !
 !     The last chore is setting the total number of nodes in the root.
 !
-      BASE  = ZZEKTRBS ( TREE )
+      base  = zzektrbs ( tree )
 
-      CALL DASUDI ( HANDLE, BASE+TRNNOD, BASE+TRNNOD, TOTNOD )
+      call dasudi ( handle, base+trnnod, base+trnnod, totnod )
 
 
-      CALL CHKOUT ( 'ZZEKTR1S' )
-      RETURN
-      END
+      call chkout ( 'ZZEKTR1S' )
+      return
+      end

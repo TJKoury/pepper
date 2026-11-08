@@ -10,8 +10,8 @@
 !
 !     Architecture code:
 !
-      INTEGER               ARCHID
-      PARAMETER           ( ARCHID = 8 )
+      integer               archid
+      parameter           ( archid = 8 )
 
 !
 !     End Include Section:  EK Architecture Version Parameters

@@ -1,6 +1,6 @@
 !$Procedure SPKE12 ( S/P Kernel, evaluate, type 12 )
 
-      SUBROUTINE SPKE12 ( ET, RECORD, STATE )
+      subroutine spke12 ( et, record, state )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               MAXREC
-      PARAMETER           ( MAXREC = 129 )
+      integer               maxrec
+      parameter           ( maxrec = 129 )
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -171,86 +171,86 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX = 1 )
+      integer               sizidx
+      parameter           ( sizidx = 1 )
 
-      INTEGER               STRIDX
-      PARAMETER           ( STRIDX = SIZIDX + 1 )
+      integer               stridx
+      parameter           ( stridx = sizidx + 1 )
 
-      INTEGER               STPIDX
-      PARAMETER           ( STPIDX = STRIDX + 1 )
+      integer               stpidx
+      parameter           ( stpidx = stridx + 1 )
 
-      INTEGER               STAIDX
-      PARAMETER           ( STAIDX = STPIDX + 1 )
+      integer               staidx
+      parameter           ( staidx = stpidx + 1 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LOCREC ( MAXREC )
-      DOUBLE PRECISION      WORK   ( MAXREC * 2,  2 )
+      double precision      locrec ( maxrec )
+      double precision      work   ( maxrec * 2,  2 )
 
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               J
-      INTEGER               N
-      INTEGER               TO
-      INTEGER               XSTART
+      integer               from
+      integer               i
+      integer               j
+      integer               n
+      integer               to
+      integer               xstart
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKE12' )
+      call chkin ( 'SPKE12' )
 
 
-      N =  NINT( RECORD(SIZIDX) )
+      n =  nint( record(sizidx) )
 
 !
 !     We interpolate each state component in turn.
 !
-      XSTART   =   2  +  6 * N
+      xstart   =   2  +  6 * n
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         DO J = 1, N
+         do j = 1, n
 !
 !           For the Jth input state vector, copy the Ith position and
 !           velocity components into the local record buffer LOCREC.
 !
-            FROM         = STAIDX - 1 + 6*(J-1) + I
-            TO           = 2*J    - 1
+            from         = staidx - 1 + 6*(j-1) + i
+            to           = 2*j    - 1
 
-            LOCREC(TO  ) = RECORD ( FROM     )
-            LOCREC(TO+1) = RECORD ( FROM + 3 )
+            locrec(to  ) = record ( from     )
+            locrec(to+1) = record ( from + 3 )
 
-         END DO
+         end do
 
 !
 !        Interpolate the Ith position and velocity components of the
 !        state.
 !
-         CALL HRMESP ( N, &
-                       RECORD(STRIDX), &
-                       RECORD(STPIDX), &
-                       LOCREC, &
-                       ET, &
-                       WORK, &
-                       STATE(I  ), &
-                       STATE(I+3)      )
+         call hrmesp ( n, &
+                       record(stridx), &
+                       record(stpidx), &
+                       locrec, &
+                       et, &
+                       work, &
+                       state(i  ), &
+                       state(i+3)      )
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'SPKE12' )
-      RETURN
-      END
+      call chkout ( 'SPKE12' )
+      return
+      end

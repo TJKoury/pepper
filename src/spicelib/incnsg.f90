@@ -1,7 +1,7 @@
 !$Procedure INCNSG ( Intersection of cone and line segment )
 
-      SUBROUTINE INCNSG ( APEX,   AXIS,  ANGLE, ENDPT1, &
-                          ENDPT2, NXPTS, XPT1,  XPT2   )
+      subroutine incnsg ( apex,   axis,  angle, endpt1, &
+                          endpt2, nxpts, xpt1,  xpt2   )
 
 ! $ Abstract
 !
@@ -23,16 +23,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      APEX   ( 3 )
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      ENDPT1 ( 3 )
-      DOUBLE PRECISION      ENDPT2 ( 3 )
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT1   ( 3 )
-      DOUBLE PRECISION      XPT2   ( 3 )
+      double precision      apex   ( 3 )
+      double precision      axis   ( 3 )
+      double precision      angle
+      double precision      endpt1 ( 3 )
+      double precision      endpt2 ( 3 )
+      integer               nxpts
+      double precision      xpt1   ( 3 )
+      double precision      xpt2   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -263,99 +263,99 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
+      double precision      halfpi
+      double precision      pi
+      double precision      vdist
+      double precision      vdot
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      COSTOL
-      PARAMETER           ( COSTOL = 1.D-10 )
+      double precision      costol
+      parameter           ( costol = 1.d-10 )
 
-      DOUBLE PRECISION      HSPTOL
-      PARAMETER           ( HSPTOL = 1.D-14 )
+      double precision      hsptol
+      parameter           ( hsptol = 1.d-14 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   = 4 )
+      integer               ubpl
+      parameter           ( ubpl   = 4 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      AXMAG
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      CA2
-      DOUBLE PRECISION      COLAT
-      DOUBLE PRECISION      COSANG
-      DOUBLE PRECISION      COSERR
-      DOUBLE PRECISION      DIR    ( 3 )
-      DOUBLE PRECISION      DMAG
-      DOUBLE PRECISION      DP1
-      DOUBLE PRECISION      DP2
-      DOUBLE PRECISION      LOCANG
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXP   ( 3 )
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINP   ( 3 )
-      DOUBLE PRECISION      NRMPLN ( UBPL )
-      DOUBLE PRECISION      OFF1   ( 3 )
-      DOUBLE PRECISION      OFF2   ( 3 )
-      DOUBLE PRECISION      ORIGIN ( 3 )
-      DOUBLE PRECISION      PLNX   ( 3 )
-      DOUBLE PRECISION      S1
-      DOUBLE PRECISION      S2
-      DOUBLE PRECISION      UAXIS  ( 3 )
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      UOFF1  ( 3 )
-      DOUBLE PRECISION      UOFF2  ( 3 )
-      DOUBLE PRECISION      UUAX
-      DOUBLE PRECISION      UV1    ( 3 )
-      DOUBLE PRECISION      UV2    ( 3 )
-      DOUBLE PRECISION      V1     ( 3 )
-      DOUBLE PRECISION      V1MAG
-      DOUBLE PRECISION      V2     ( 3 )
-      DOUBLE PRECISION      V2MAG
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      VTEMP2 ( 3 )
-      DOUBLE PRECISION      W2
-      DOUBLE PRECISION      WU
-      DOUBLE PRECISION      WUAX
-      DOUBLE PRECISION      X      ( 3 )
-      DOUBLE PRECISION      XOFF1  ( 3 )
-      DOUBLE PRECISION      XOFF2  ( 3 )
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
-      DOUBLE PRECISION      Y      ( 3 )
-      DOUBLE PRECISION      Z      ( 3 )
+      double precision      a
+      double precision      axmag
+      double precision      b
+      double precision      c
+      double precision      ca2
+      double precision      colat
+      double precision      cosang
+      double precision      coserr
+      double precision      dir    ( 3 )
+      double precision      dmag
+      double precision      dp1
+      double precision      dp2
+      double precision      locang
+      double precision      maxlat
+      double precision      maxp   ( 3 )
+      double precision      minlat
+      double precision      minp   ( 3 )
+      double precision      nrmpln ( ubpl )
+      double precision      off1   ( 3 )
+      double precision      off2   ( 3 )
+      double precision      origin ( 3 )
+      double precision      plnx   ( 3 )
+      double precision      s1
+      double precision      s2
+      double precision      uaxis  ( 3 )
+      double precision      udir   ( 3 )
+      double precision      uoff1  ( 3 )
+      double precision      uoff2  ( 3 )
+      double precision      uuax
+      double precision      uv1    ( 3 )
+      double precision      uv2    ( 3 )
+      double precision      v1     ( 3 )
+      double precision      v1mag
+      double precision      v2     ( 3 )
+      double precision      v2mag
+      double precision      vtemp  ( 3 )
+      double precision      vtemp2 ( 3 )
+      double precision      w2
+      double precision      wu
+      double precision      wuax
+      double precision      x      ( 3 )
+      double precision      xoff1  ( 3 )
+      double precision      xoff2  ( 3 )
+      double precision      xform  ( 3, 3 )
+      double precision      y      ( 3 )
+      double precision      z      ( 3 )
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NPLNX
+      integer               i
+      integer               n
+      integer               nplnx
 
-      LOGICAL               IN1
-      LOGICAL               IN2
-      LOGICAL               ISBRCK
-      LOGICAL               NEG1
-      LOGICAL               NEG2
+      logical               in1
+      logical               in2
+      logical               isbrck
+      logical               neg1
+      logical               neg2
 
 !
 !     Saved values
 !
-      SAVE                  ORIGIN
-      SAVE                  Y
-      SAVE                  Z
+      save                  origin
+      save                  y
+      save                  z
 
 !
 !     Initial values
 !
-      DATA                  ORIGIN / 3 * 0.D0         /
-      DATA                  Y      / 0.D0, 1.D0, 0.D0 /
-      DATA                  Z      / 0.D0, 0.D0, 1.D0 /
+      data                  origin / 3 * 0.d0         /
+      data                  y      / 0.d0, 1.d0, 0.d0 /
+      data                  z      / 0.d0, 0.d0, 1.d0 /
 
 !
 !     Use quasi-discovery check-in. We'll check in before
@@ -363,106 +363,106 @@
 !     out afterward. When those code sections are skipped,
 !     we avoid traceback participation.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     No intersection was found so far.
 !
-      NXPTS = 0
+      nxpts = 0
 
 !
 !     The cone's axis vector must be non-zero.
 !
-      CALL UNORM ( AXIS, UAXIS, AXMAG )
+      call unorm ( axis, uaxis, axmag )
 
-      IF ( AXMAG .EQ. 0.D0 ) THEN
+      if ( axmag .eq. 0.d0 ) then
 
-         CALL CHKIN  ( 'INCNSG'                                       )
-         CALL SETMSG ( 'The cone''s axis vector must be non-zero ' &
+         call chkin  ( 'INCNSG'                                       )
+         call setmsg ( 'The cone''s axis vector must be non-zero ' &
          //            'but sadly, it failed to meet this criterion.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                            )
-         CALL CHKOUT ( 'INCNSG'                                       )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                            )
+         call chkout ( 'INCNSG'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     The cone's angular radius must be non-negative.
 !
-      IF ( ANGLE .LT. 0.D0 ) THEN
+      if ( angle .lt. 0.d0 ) then
 
-         CALL CHKIN  ( 'INCNSG'                             )
-         CALL SETMSG ( 'The cone''s angular radius must be ' &
+         call chkin  ( 'INCNSG'                             )
+         call setmsg ( 'The cone''s angular radius must be ' &
          //            ' non-negative but was # (radians).' )
-         CALL ERRDP  ( '#', ANGLE                           )
-         CALL SIGERR ( 'SPICE(INVALIDANGLE)'                )
-         CALL CHKOUT ( 'INCNSG'                             )
-         RETURN
+         call errdp  ( '#', angle                           )
+         call sigerr ( 'SPICE(INVALIDANGLE)'                )
+         call chkout ( 'INCNSG'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     The endpoints of the segment must be distinct. Check this after
 !     computing a unit direction vector for the line segment.
 !
-      CALL VSUB  ( ENDPT2, ENDPT1, DIR )
+      call vsub  ( endpt2, endpt1, dir )
 
-      CALL UNORM ( DIR, UDIR, DMAG )
+      call unorm ( dir, udir, dmag )
 
-      IF ( DMAG .EQ. 0.D0 ) THEN
+      if ( dmag .eq. 0.d0 ) then
 
-         CALL CHKIN  ( 'INCNSG'                              )
-         CALL SETMSG ( 'The distance between the segment''s ' &
+         call chkin  ( 'INCNSG'                              )
+         call setmsg ( 'The distance between the segment''s ' &
          //            'endpoints was zero. First endpoint: ' &
          //            '(# # #).'                            )
-         CALL ERRDP  ( '#', ENDPT1(1)                        )
-         CALL ERRDP  ( '#', ENDPT1(2)                        )
-         CALL ERRDP  ( '#', ENDPT1(3)                        )
-         CALL SIGERR ( 'SPICE(ENDPOINTSMATCH)'               )
-         CALL CHKOUT ( 'INCNSG'                              )
-         RETURN
+         call errdp  ( '#', endpt1(1)                        )
+         call errdp  ( '#', endpt1(2)                        )
+         call errdp  ( '#', endpt1(3)                        )
+         call sigerr ( 'SPICE(ENDPOINTSMATCH)'               )
+         call chkout ( 'INCNSG'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Store the cosine of the cone's angular radius. We'll treat all
 !     cases with COSANG equal to 0 as though the cone is actually a
 !     plane normal to the axis and containing the apex.
 !
-      COSANG = COS( ANGLE )
-      LOCANG = ANGLE
+      cosang = cos( angle )
+      locang = angle
 !
 !     We'll work with a local axis that has angular separation of
 !     no more than pi/2 from the nappe.
 !
-      IF ( COSANG .LT. 0.D0 ) THEN
+      if ( cosang .lt. 0.d0 ) then
 
-         COSANG   = - COSANG
-         LOCANG   =   PI() - ANGLE
+         cosang   = - cosang
+         locang   =   pi() - angle
 
-         UAXIS(1) = - UAXIS(1)
-         UAXIS(2) = - UAXIS(2)
-         UAXIS(3) = - UAXIS(3)
+         uaxis(1) = - uaxis(1)
+         uaxis(2) = - uaxis(2)
+         uaxis(3) = - uaxis(3)
 
-      END IF
+      end if
 
 !
 !     Compute the offsets of the endpoints of the segment from
 !     the cone's apex.
 !
-      CALL VSUB ( ENDPT1, APEX, OFF1 )
-      CALL VSUB ( ENDPT2, APEX, OFF2 )
+      call vsub ( endpt1, apex, off1 )
+      call vsub ( endpt2, apex, off2 )
 
 !
 !     Deal with some of the simple cases first.
 !
-      CALL VHAT ( OFF1, UOFF1 )
-      CALL VHAT ( OFF2, UOFF2 )
+      call vhat ( off1, uoff1 )
+      call vhat ( off2, uoff2 )
 
-      DP1  = VDOT( UOFF1, UAXIS )
-      DP2  = VDOT( UOFF2, UAXIS )
+      dp1  = vdot( uoff1, uaxis )
+      dp2  = vdot( uoff2, uaxis )
 
 !
 !     The given axis is inside the nappe defined by the angular radius.
@@ -470,32 +470,32 @@
 !     There's no intersection if both endpoints are in the interior of
 !     the nappe of the cone (since the nappe is convex).
 !
-      IN1  = DP1 .GE. COSANG
-      IN2  = DP2 .GE. COSANG
+      in1  = dp1 .ge. cosang
+      in2  = dp2 .ge. cosang
 !
 !     If the line segment lies on the far side of the plane that
 !     contains the apex and is orthogonal to the axis, there's no
 !     intersection.
 !
-      NEG1 = DP1 .LT. 0.D0
-      NEG2 = DP2 .LT. 0.D0
+      neg1 = dp1 .lt. 0.d0
+      neg2 = dp2 .lt. 0.d0
 
-      IF (      ( IN1  .AND. IN2  ) &
-           .OR. ( NEG1 .AND. NEG2 ) ) THEN
+      if (      ( in1  .and. in2  ) &
+           .or. ( neg1 .and. neg2 ) ) then
 !
 !        The segment is in the interior of the cone or
 !        on the far side of the plane.
 !
-         NXPTS = 0
+         nxpts = 0
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Here's where we handle the half-space case.
 !
-      IF ( ABS(COSANG) .LT. HSPTOL ) THEN
+      if ( abs(cosang) .lt. hsptol ) then
 !
 !        See whether the ray emanating from the first endpoint and
 !        having direction UDIR hits the plane normal to the axis and
@@ -504,35 +504,35 @@
 !        NVP2PL can signal an error only if the input axis is the
 !        zero vector. We've ensured that it isn't.
 !
-         CALL NVP2PL ( UAXIS,  APEX, NRMPLN )
-         CALL INRYPL ( ENDPT1, UDIR, NRMPLN, NPLNX, PLNX )
+         call nvp2pl ( uaxis,  apex, nrmpln )
+         call inrypl ( endpt1, udir, nrmpln, nplnx, plnx )
 
 !
 !        If the ray doesn't hit the plane, we're done. Otherwise,
 !        check the intercept.
 !
-         IF ( NPLNX .EQ. 1 ) THEN
+         if ( nplnx .eq. 1 ) then
 !
 !           The ray does hit the plane. If the intersection is on the
 !           line segment, we have a solution.
 !
-            IF ( VDIST(PLNX, ENDPT1) .LE. DMAG ) THEN
+            if ( vdist(plnx, endpt1) .le. dmag ) then
 !
 !              The intercept is not further along the ray than the
 !              second endpoint. It's a valid solution.
 !
-               NXPTS = 1
-               CALL VEQU ( PLNX, XPT1 )
+               nxpts = 1
+               call vequ ( plnx, xpt1 )
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        This is the end of the half-space case.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we've disposed of the trivial cases. We'll
@@ -616,20 +616,20 @@
 !
 !     Intermediate values:
 !
-      UUAX = VDOT( UDIR, UAXIS )
-      WUAX = VDOT( OFF1, UAXIS )
-      WU   = VDOT( OFF1, UDIR  )
-      W2   = VDOT( OFF1, OFF1  )
-      CA2  = COSANG * COSANG
+      uuax = vdot( udir, uaxis )
+      wuax = vdot( off1, uaxis )
+      wu   = vdot( off1, udir  )
+      w2   = vdot( off1, off1  )
+      ca2  = cosang * cosang
 
 !
 !     Quadratic coefficients:
 !
-      A    = ( UUAX * UUAX ) - CA2
+      a    = ( uuax * uuax ) - ca2
 
-      B    = 2 * (  ( WUAX * UUAX ) - ( CA2 * WU )  )
+      b    = 2 * (  ( wuax * uuax ) - ( ca2 * wu )  )
 
-      C    = ( WUAX * WUAX ) - ( W2 * CA2 )
+      c    = ( wuax * wuax ) - ( w2 * ca2 )
 
 !
 !     We're not interested in solutions that lie outside
@@ -639,40 +639,40 @@
 !     Solve the equation, using DMAG as an upper bound
 !     on the magnitude of the roots.
 !
-      CALL ZZCNQUAD ( A, B, C, DMAG, N, S1, S2 )
+      call zzcnquad ( a, b, c, dmag, n, s1, s2 )
 
 !
 !     Compute the possible intersection points and test them
 !     to make sure they really are solutions.
 !
-      IF ( N .GT. 0 ) THEN
+      if ( n .gt. 0 ) then
 !
 !        Start with the solution closest to the ray's vertex.
 !        Compute XPT1 and make sure it's on the correct nappe
 !        of the cone.
 !
-         IF ( S1 .GE. 0.D0 ) THEN
+         if ( s1 .ge. 0.d0 ) then
 
-            XPT1(1) = ENDPT1(1) + S1*UDIR(1)
-            XPT1(2) = ENDPT1(2) + S1*UDIR(2)
-            XPT1(3) = ENDPT1(3) + S1*UDIR(3)
+            xpt1(1) = endpt1(1) + s1*udir(1)
+            xpt1(2) = endpt1(2) + s1*udir(2)
+            xpt1(3) = endpt1(3) + s1*udir(3)
 
-            CALL VSUB  ( XPT1, APEX, V1 )
+            call vsub  ( xpt1, apex, v1 )
 
 !
 !           See whether V1 is on the cone.
 !
-            CALL UNORM ( V1, UV1, V1MAG )
+            call unorm ( v1, uv1, v1mag )
 
-            IF ( V1MAG .GT. 0.D0 ) THEN
+            if ( v1mag .gt. 0.d0 ) then
 
-               COSERR = ABS( VDOT(UV1,UAXIS) - COSANG )
-            ELSE
-               COSERR = 0.D0
-            END IF
+               coserr = abs( vdot(uv1,uaxis) - cosang )
+            else
+               coserr = 0.d0
+            end if
 
-            IF (      ( V1MAG  .EQ. 0.D0   ) &
-                 .OR. ( COSERR .LT. COSTOL ) ) THEN
+            if (      ( v1mag  .eq. 0.d0   ) &
+                 .or. ( coserr .lt. costol ) ) then
 !
 !              The root is on the cone (on the apex if V1MAG is zero).
 !
@@ -680,61 +680,61 @@
 !              not necessarily the final value of NXPTS; that
 !              depends on the validity of the second root.
 
-               NXPTS = 1
+               nxpts = 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         IF ( N .EQ. 2 ) THEN
+         if ( n .eq. 2 ) then
 !
 !           Check the second root.
 !
-            IF ( S2 .GE. 0.D0 ) THEN
+            if ( s2 .ge. 0.d0 ) then
 
-               XPT2(1) = ENDPT1(1) + S2*UDIR(1)
-               XPT2(2) = ENDPT1(2) + S2*UDIR(2)
-               XPT2(3) = ENDPT1(3) + S2*UDIR(3)
+               xpt2(1) = endpt1(1) + s2*udir(1)
+               xpt2(2) = endpt1(2) + s2*udir(2)
+               xpt2(3) = endpt1(3) + s2*udir(3)
 
-               CALL VSUB  ( XPT2, APEX, V2 )
+               call vsub  ( xpt2, apex, v2 )
 
 !
 !              See whether V2 is on the cone.
 !
-               CALL UNORM ( V2, UV2, V2MAG )
+               call unorm ( v2, uv2, v2mag )
 
-               IF ( V2MAG .GT. 0.D0 ) THEN
+               if ( v2mag .gt. 0.d0 ) then
 
-                  COSERR = ABS( VDOT(UV2,UAXIS) - COSANG )
-               ELSE
-                  COSERR = 0.D0
-               END IF
+                  coserr = abs( vdot(uv2,uaxis) - cosang )
+               else
+                  coserr = 0.d0
+               end if
 
-               IF (      ( V2MAG  .EQ. 0.D0   ) &
-                    .OR. ( COSERR .LT. COSTOL ) ) THEN
+               if (      ( v2mag  .eq. 0.d0   ) &
+                    .or. ( coserr .lt. costol ) ) then
 !
 !                 The root is on the cone (on the apex if V2MAG is
 !                 zero).
 !
 !                 We accept this root.
 !
-                  NXPTS = NXPTS + 1
+                  nxpts = nxpts + 1
 
-                  IF ( NXPTS .EQ. 1 ) THEN
+                  if ( nxpts .eq. 1 ) then
 !
 !                    This is the only valid root; overwrite XPT1.
 !
-                     CALL VEQU ( XPT2, XPT1 )
+                     call vequ ( xpt2, xpt1 )
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     We're not done yet. If we have fewer roots than we should, we'll
@@ -743,7 +743,7 @@
 !     If we have two roots, we're in good shape. Otherwise we must
 !     determine how many roots should be found.
 !
-      IF ( NXPTS .LT. 2 ) THEN
+      if ( nxpts .lt. 2 ) then
 !
 !        We must determine the expected number of roots, and if
 !        we didn't come up with them, we must find the roots
@@ -758,37 +758,37 @@
 !        If one endpoint is inside the cone and one is outside,
 !        we expect to have one root.
 !
-         IF (     ( IN1 .AND. ( .NOT. IN2 ) ) &
-             .OR. ( IN2 .AND. ( .NOT. IN1 ) )  ) THEN
+         if (     ( in1 .and. ( .not. in2 ) ) &
+             .or. ( in2 .and. ( .not. in1 ) )  ) then
 !
 !           There's supposed to be one root. If we found none, find one
 !           now.
 !
-            IF ( NXPTS .EQ. 0 ) THEN
+            if ( nxpts .eq. 0 ) then
 !
 !              ZZCXBRUT signals an error if the axis is the zero
 !              vector, but not otherwise. We've already ruled out this
 !              situation. Therefore, we don't check in before the
 !              following call.
 !
-               CALL ZZCXBRUT ( APEX,   UAXIS,  LOCANG, &
-                               ENDPT1, ENDPT2, XPT1,  ISBRCK )
+               call zzcxbrut ( apex,   uaxis,  locang, &
+                               endpt1, endpt2, xpt1,  isbrck )
 
-               IF ( ISBRCK ) THEN
+               if ( isbrck ) then
 !
 !                 As long as the root was bracketed, XPT1 is a
 !                 solution.
 !
-                  NXPTS = 1
+                  nxpts = 1
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 
-            CALL CHKIN ( 'INCNSG' )
+            call chkin ( 'INCNSG' )
 !
 !           Both endpoints are outside the cone. We could have zero to
 !           two roots. If the minimum angular separation of the segment
@@ -803,112 +803,112 @@
 !
 !           We'll count the roots we find, so we'll start at zero.
 !
-            NXPTS = 0
+            nxpts = 0
 
-            CALL FRAME ( UAXIS, X, Y )
+            call frame ( uaxis, x, y )
 
-            DO I = 1, 3
+            do i = 1, 3
 
-               XFORM(1,I) = X(I)
-               XFORM(2,I) = Y(I)
-               XFORM(3,I) = UAXIS(I)
+               xform(1,i) = x(i)
+               xform(2,i) = y(i)
+               xform(3,i) = uaxis(i)
 
-            END DO
+            end do
 
-            CALL MXV ( XFORM, OFF1, XOFF1 )
-            CALL MXV ( XFORM, OFF2, XOFF2 )
+            call mxv ( xform, off1, xoff1 )
+            call mxv ( xform, off2, xoff2 )
 
-            CALL ZZSGLATX ( XOFF1, XOFF2, MINLAT, MINP, MAXLAT, MAXP )
+            call zzsglatx ( xoff1, xoff2, minlat, minp, maxlat, maxp )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'INCNSG' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'INCNSG' )
+               return
+            end if
 
 !
 !           COLAT is the colatitude of the point of maximum latitude.
 !
-            COLAT = HALFPI() - MAXLAT
+            colat = halfpi() - maxlat
 
 
-            IF ( COLAT .LT. LOCANG ) THEN
+            if ( colat .lt. locang ) then
 !
 !              MAXP is inside the cone. There should be an intersection
 !              on the segment between XOFF1 and MAXP and another
 !              between MAXP and XOFF2.
 !
-               CALL ZZCXBRUT ( ORIGIN, Z,    LOCANG, &
-                               XOFF1,  MAXP, VTEMP,  ISBRCK )
+               call zzcxbrut ( origin, z,    locang, &
+                               xoff1,  maxp, vtemp,  isbrck )
 
-               IF ( ISBRCK ) THEN
+               if ( isbrck ) then
 !
 !                 Convert VTEMP to the original frame, then translate
 !                 it so that it's represented as an offset from the
 !                 origin.
 !
-                  CALL MTXV ( XFORM,  VTEMP, VTEMP2 )
-                  CALL VADD ( VTEMP2, APEX,  XPT1   )
+                  call mtxv ( xform,  vtemp, vtemp2 )
+                  call vadd ( vtemp2, apex,  xpt1   )
 
-                  NXPTS = 1
+                  nxpts = 1
 
-               END IF
+               end if
 
-               CALL ZZCXBRUT ( ORIGIN, Z,     LOCANG, &
-                               MAXP,   XOFF2, VTEMP,  ISBRCK )
+               call zzcxbrut ( origin, z,     locang, &
+                               maxp,   xoff2, vtemp,  isbrck )
 
-               IF ( ISBRCK ) THEN
+               if ( isbrck ) then
 !
 !                 Convert VTEMP to the original frame, then translate
 !                 it so that it's represented as an offset from the
 !                 origin.
 !
-                  CALL MTXV ( XFORM,  VTEMP, VTEMP2 )
-                  CALL VADD ( VTEMP2, APEX,  XPT2   )
+                  call mtxv ( xform,  vtemp, vtemp2 )
+                  call vadd ( vtemp2, apex,  xpt2   )
 
-                  IF ( NXPTS .EQ. 1 ) THEN
+                  if ( nxpts .eq. 1 ) then
 !
 !                    Both roots are valid.
 !
-                     NXPTS = 2
+                     nxpts = 2
 
-                  ELSE
+                  else
 !
 !                    The second root is the only valid root. Move it
 !                    into XPT1.
 !
-                     CALL VEQU ( XPT2, XPT1 )
+                     call vequ ( xpt2, xpt1 )
 
-                     NXPTS = 1
+                     nxpts = 1
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 
-            ELSE IF ( COLAT .EQ. LOCANG ) THEN
+            else if ( colat .eq. locang ) then
 !
 !              The root corresponds to a point of tangency of
 !              the segment and cone. This occurs at the point
 !              having maximum latitude: MAXP.
 !
-               CALL VEQU ( MAXP, XPT1 )
+               call vequ ( maxp, xpt1 )
 
-               NXPTS = 1
+               nxpts = 1
 
 !
 !           Note that if COLAT > LOCANG, there are no roots.
 !
-            END IF
+            end if
 
 
-            CALL CHKOUT ( 'INCNSG' )
+            call chkout ( 'INCNSG' )
 
-         END IF
+         end if
 !
 !        This is the end of portion of the "brute force" branch in
 !        which both endpoints are outside the cone.
 !
-      END IF
+      end if
 
 !
 !     NXPTS  has been set.
@@ -918,5 +918,5 @@
 !     If NXPTS is 2, then both XPT1 and XPT2 are set.
 !
 
-      RETURN
-      END
+      return
+      end

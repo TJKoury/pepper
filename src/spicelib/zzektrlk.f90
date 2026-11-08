@@ -1,7 +1,7 @@
 !$Procedure      ZZEKTRLK ( EK tree, locate key )
 
-      SUBROUTINE ZZEKTRLK ( HANDLE, TREE,   KEY,   IDX, &
-                            NODE,   NOFFST, LEVEL, VALUE  )
+      subroutine zzektrlk ( handle, tree,   key,   idx, &
+                            node,   noffst, level, value  )
 
 ! $ Abstract
 !
@@ -19,18 +19,18 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
-      INTEGER               IDX
-      INTEGER               NODE
-      INTEGER               NOFFST
-      INTEGER               LEVEL
-      INTEGER               VALUE
+      integer               handle
+      integer               tree
+      integer               key
+      integer               idx
+      integer               node
+      integer               noffst
+      integer               level
+      integer               value
 
 ! $ Brief_I/O
 !
@@ -154,110 +154,110 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLEI
+      integer               lstlei
 
 !
 !     Local parameters
 !
-      INTEGER               ACCLEN
-      PARAMETER           ( ACCLEN = 15 )
+      integer               acclen
+      parameter           ( acclen = 15 )
 
 !
 !     Local variables
 !
-      CHARACTER*(ACCLEN)    ACCESS
+      character*(acclen)    access
 
-      INTEGER               CHILD
-      INTEGER               DATBAS
-      INTEGER               DEPTH
-      INTEGER               MINUS
-      INTEGER               NEWKEY
-      INTEGER               OLDHAN
-      INTEGER               OLDIDX
-      INTEGER               OLDLVL
-      INTEGER               OLDMAX
-      INTEGER               OLDNOD
-      INTEGER               OLDNOF
-      INTEGER               OLDTRE
-      INTEGER               OLDKEY
-      INTEGER               OLDVAL
-      INTEGER               PAGE   ( PGSIZI )
-      INTEGER               PLUS
-      INTEGER               PREV
-      INTEGER               PRVKEY
-      INTEGER               TOTKEY
+      integer               child
+      integer               datbas
+      integer               depth
+      integer               minus
+      integer               newkey
+      integer               oldhan
+      integer               oldidx
+      integer               oldlvl
+      integer               oldmax
+      integer               oldnod
+      integer               oldnof
+      integer               oldtre
+      integer               oldkey
+      integer               oldval
+      integer               page   ( pgsizi )
+      integer               plus
+      integer               prev
+      integer               prvkey
+      integer               totkey
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               LEAF
-      LOGICAL               SAMKEY
-      LOGICAL               SAMTRE
-      LOGICAL               RDONLY
+      logical               first
+      logical               found
+      logical               leaf
+      logical               samkey
+      logical               samtre
+      logical               rdonly
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE.   /
+      data                  first  / .true.   /
 
-      DATA                  OLDHAN / 0        /
-      DATA                  OLDIDX / 0        /
-      DATA                  OLDKEY / 0        /
-      DATA                  OLDLVL / 0        /
-      DATA                  OLDMAX / 0        /
-      DATA                  OLDNOD / 0        /
-      DATA                  OLDNOF / 0        /
-      DATA                  OLDTRE / 0        /
-      DATA                  OLDVAL / 0        /
-      DATA                  PAGE   / PGSIZI * 0 /
+      data                  oldhan / 0        /
+      data                  oldidx / 0        /
+      data                  oldkey / 0        /
+      data                  oldlvl / 0        /
+      data                  oldmax / 0        /
+      data                  oldnod / 0        /
+      data                  oldnof / 0        /
+      data                  oldtre / 0        /
+      data                  oldval / 0        /
+      data                  page   / pgsizi * 0 /
 
 !
 !     Use discovery check-in in this puppy.
 !
 !     Nothing found to begin with.
 !
-      FOUND  =  .FALSE.
+      found  =  .false.
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Find out the access method for the current file.
 !
-         CALL DASHAM ( HANDLE, ACCESS )
+         call dasham ( handle, access )
 
-         RDONLY  =    ACCESS .EQ. 'READ'
-         SAMKEY  =    .FALSE.
-         SAMTRE  =    .FALSE.
-         LEAF    =    .FALSE.
-         FIRST   =    .FALSE.
+         rdonly  =    access .eq. 'READ'
+         samkey  =    .false.
+         samtre  =    .false.
+         leaf    =    .false.
+         first   =    .false.
 
-      ELSE
+      else
 !
 !        See whether we're looking at the same key, or at least
 !        the same tree, as last time.  Note that for the tree to
 !        be guaranteed to be the same, it must belong to a file open
 !        for read access only.
 !
-         IF ( HANDLE .NE. OLDHAN ) THEN
+         if ( handle .ne. oldhan ) then
 
-            CALL DASHAM ( HANDLE, ACCESS )
+            call dasham ( handle, access )
 
-            RDONLY  =    ACCESS .EQ. 'READ'
-            SAMTRE  =    .FALSE.
-            SAMKEY  =    .FALSE.
+            rdonly  =    access .eq. 'READ'
+            samtre  =    .false.
+            samkey  =    .false.
 
-         ELSE
+         else
 
-            SAMTRE  =  ( TREE  .EQ.  OLDTRE )  .AND.   RDONLY
-            SAMKEY  =  ( KEY   .EQ.  OLDKEY )  .AND.   SAMTRE
+            samtre  =  ( tree  .eq.  oldtre )  .and.   rdonly
+            samkey  =  ( key   .eq.  oldkey )  .and.   samtre
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we're lucky enough to be getting a request for the previously
@@ -265,161 +265,161 @@
 !     very close to the previously requested key, we still may make
 !     out pretty well.
 !
-      IF ( SAMKEY ) THEN
+      if ( samkey ) then
 !
 !        It's the same key as last time.
 !
-         IDX     =  OLDIDX
-         NODE    =  OLDNOD
-         NOFFST  =  OLDNOF
-         LEVEL   =  OLDLVL
-         VALUE   =  OLDVAL
+         idx     =  oldidx
+         node    =  oldnod
+         noffst  =  oldnof
+         level   =  oldlvl
+         value   =  oldval
 
-         RETURN
+         return
 
 
-      ELSE IF ( SAMTRE .AND. LEAF ) THEN
+      else if ( samtre .and. leaf ) then
 !
 !        Compute the margins around the old key.  Keys that fall within
 !        the interval defined by the old key and these margins are on
 !        the same page as the old key.
 !
-         PLUS   =  OLDMAX - OLDIDX
-         MINUS  =  OLDIDX - 1
+         plus   =  oldmax - oldidx
+         minus  =  oldidx - 1
 
 
-         IF (        (  KEY  .LE.  OLDKEY+PLUS   ) &
-               .AND. (  KEY  .GE.  OLDKEY-MINUS  )  ) THEN
+         if (        (  key  .le.  oldkey+plus   ) &
+               .and. (  key  .ge.  oldkey-minus  )  ) then
 !
 !           The requested key lies on the same page as the old key.
 !
-            LEVEL   =  OLDLVL
+            level   =  oldlvl
 
-            IF ( LEVEL .EQ. 1 ) THEN
-               DATBAS  =  TRDATR
-            ELSE
-               DATBAS  =  TRDATC
-            END IF
+            if ( level .eq. 1 ) then
+               datbas  =  trdatr
+            else
+               datbas  =  trdatc
+            end if
 
-            IDX     =  OLDIDX + ( KEY - OLDKEY )
-            NODE    =  OLDNOD
-            NOFFST  =  OLDNOF
-            VALUE   =  PAGE ( DATBAS + IDX )
+            idx     =  oldidx + ( key - oldkey )
+            node    =  oldnod
+            noffst  =  oldnof
+            value   =  page ( datbas + idx )
 
-            OLDIDX  =  IDX
-            OLDKEY  =  KEY
-            OLDVAL  =  VALUE
+            oldidx  =  idx
+            oldkey  =  key
+            oldval  =  value
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we arrived here, we have some actual work to do.
 !     Start out by looking at the root page.  Save the tree depth;
 !     we'll use this for error checking.
 !
-      CALL ZZEKPGRI ( HANDLE, TREE, PAGE )
+      call zzekpgri ( handle, tree, page )
 
-      DEPTH  =  PAGE ( TRDPTH )
-      LEVEL  =  1
+      depth  =  page ( trdpth )
+      level  =  1
 
 !
 !     Find out how many keys are in the tree.  If KEY is outside
 !     this range, we won't find it.
 !
-      TOTKEY  =  PAGE ( TRNKEY )
+      totkey  =  page ( trnkey )
 
-      IF (  ( KEY .LT. 1 )  .OR.  ( KEY .GT. TOTKEY )  ) THEN
+      if (  ( key .lt. 1 )  .or.  ( key .gt. totkey )  ) then
 
-         CALL CHKIN  ( 'ZZEKTRLK'                                      )
-         CALL SETMSG ( 'Key = #; valid range = 1:#. Tree = #, file = #')
-         CALL ERRINT ( '#',     KEY                                    )
-         CALL ERRINT ( '#',     TOTKEY                                 )
-         CALL ERRINT ( '#',     TREE                                   )
-         CALL ERRHAN ( '#',     HANDLE                                 )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'ZZEKTRLK'                                      )
-         RETURN
+         call chkin  ( 'ZZEKTRLK'                                      )
+         call setmsg ( 'Key = #; valid range = 1:#. Tree = #, file = #')
+         call errint ( '#',     key                                    )
+         call errint ( '#',     totkey                                 )
+         call errint ( '#',     tree                                   )
+         call errhan ( '#',     handle                                 )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'ZZEKTRLK'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the last key at this level that is less than or equal to
 !     the requested key.
 !
-      PREV   =  LSTLEI (  KEY,  PAGE(TRNKR),  PAGE(TRKEYR+1)  )
+      prev   =  lstlei (  key,  page(trnkr),  page(trkeyr+1)  )
 
-      IF ( PREV .GT. 0 ) THEN
-         PRVKEY =  PAGE(TRKEYR+PREV)
-      ELSE
-         PRVKEY =  0
-      END IF
+      if ( prev .gt. 0 ) then
+         prvkey =  page(trkeyr+prev)
+      else
+         prvkey =  0
+      end if
 
 !
 !     If we were lucky enough to get an exact match, set our outputs
 !     and return.  The key offset in the root is zero.
 !
-      IF ( PRVKEY .EQ. KEY ) THEN
+      if ( prvkey .eq. key ) then
 
-         NOFFST  =  0
-         IDX     =  PREV
-         NODE    =  TREE
-         VALUE   =  PAGE ( TRDATR + IDX )
+         noffst  =  0
+         idx     =  prev
+         node    =  tree
+         value   =  page ( trdatr + idx )
 
-         OLDHAN  =  HANDLE
-         OLDTRE  =  TREE
-         OLDKEY  =  KEY
-         OLDNOF  =  NOFFST
-         OLDNOD  =  NODE
-         OLDIDX  =  IDX
-         OLDLVL  =  LEVEL
-         OLDVAL  =  VALUE
-         OLDMAX  =  PAGE ( TRNKR )
+         oldhan  =  handle
+         oldtre  =  tree
+         oldkey  =  key
+         oldnof  =  noffst
+         oldnod  =  node
+         oldidx  =  idx
+         oldlvl  =  level
+         oldval  =  value
+         oldmax  =  page ( trnkr )
 
-         LEAF    =  LEVEL  .EQ.  DEPTH
+         leaf    =  level  .eq.  depth
 
 !
 !        The root has no parent or siblings, so these values
 !        remain set to zero.  The same is true of the parent keys.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Still here?  Traverse the pointer path until we find the key
 !     or run out of progeny.
 !
-      CHILD   =  PAGE ( TRKIDR + PREV + 1 )
-      NOFFST  =  PRVKEY
+      child   =  page ( trkidr + prev + 1 )
+      noffst  =  prvkey
 
 
-      DO WHILE (  ( CHILD .GT. 0 ) .AND. ( .NOT. FOUND )  )
+      do while (  ( child .gt. 0 ) .and. ( .not. found )  )
 !
 !        Look up the child node.
 !
-         CALL ZZEKPGRI ( HANDLE, CHILD, PAGE )
+         call zzekpgri ( handle, child, page )
 
-         LEVEL  =  LEVEL + 1
+         level  =  level + 1
 
 
-         IF ( LEVEL .GT. DEPTH ) THEN
+         if ( level .gt. depth ) then
 
-            CALL CHKIN  ( 'ZZEKTRLK'                                   )
-            CALL SETMSG ( 'Runaway node pointer chain.  Key = #; '// &
+            call chkin  ( 'ZZEKTRLK'                                   )
+            call setmsg ( 'Runaway node pointer chain.  Key = #; '// &
                           'valid range = 1:#. Tree = #, file = #'      )
-            CALL ERRINT ( '#',     KEY                                 )
-            CALL ERRINT ( '#',     TOTKEY                              )
-            CALL ERRINT ( '#',     TREE                                )
-            CALL ERRHAN ( '#',     HANDLE                              )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZEKTRLK'                                   )
-            RETURN
+            call errint ( '#',     key                                 )
+            call errint ( '#',     totkey                              )
+            call errint ( '#',     tree                                )
+            call errhan ( '#',     handle                              )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZEKTRLK'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Find the last key at this level that is less than or equal to
@@ -428,68 +428,68 @@
 !        current node, we must subtract from KEY the position of the
 !        node preceding the first key of this subtree.
 !
-         NEWKEY  =  KEY - NOFFST
-         PREV    =  LSTLEI (  NEWKEY,  PAGE(TRNKC),  PAGE(TRKEYC+1)  )
+         newkey  =  key - noffst
+         prev    =  lstlei (  newkey,  page(trnkc),  page(trkeyc+1)  )
 
-         IF ( PREV .GT. 0 ) THEN
-            PRVKEY =  PAGE(TRKEYC+PREV)
-         ELSE
-            PRVKEY =  0
-         END IF
+         if ( prev .gt. 0 ) then
+            prvkey =  page(trkeyc+prev)
+         else
+            prvkey =  0
+         end if
 
 !
 !        If we were lucky enough to get an exact match, set our outputs
 !        and return.  The key offset for the current node is stored
 !        in NOFFST.
 !
-         IF ( PRVKEY .EQ. NEWKEY ) THEN
+         if ( prvkey .eq. newkey ) then
 
-            FOUND   =  .TRUE.
-            IDX     =  PREV
-            NODE    =  CHILD
-            VALUE   =  PAGE ( TRDATC + IDX )
+            found   =  .true.
+            idx     =  prev
+            node    =  child
+            value   =  page ( trdatc + idx )
 
-            OLDHAN  =  HANDLE
-            OLDTRE  =  TREE
-            OLDKEY  =  KEY
-            OLDNOF  =  NOFFST
-            OLDNOD  =  NODE
-            OLDIDX  =  IDX
-            OLDLVL  =  LEVEL
-            OLDVAL  =  VALUE
-            OLDMAX  =  PAGE ( TRNKC )
+            oldhan  =  handle
+            oldtre  =  tree
+            oldkey  =  key
+            oldnof  =  noffst
+            oldnod  =  node
+            oldidx  =  idx
+            oldlvl  =  level
+            oldval  =  value
+            oldmax  =  page ( trnkc )
 
-            LEAF    =  LEVEL  .EQ.  DEPTH
+            leaf    =  level  .eq.  depth
 
-         ELSE
+         else
 
-            CHILD   =  PAGE ( TRKIDC + PREV + 1 )
-            NOFFST  =  PRVKEY + NOFFST
+            child   =  page ( trkidc + prev + 1 )
+            noffst  =  prvkey + noffst
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we found the key, our outputs are already set.  If not, we've
 !     got trouble.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL CHKIN  ( 'ZZEKTRLK'                                      )
-         CALL SETMSG ( 'Key #; valid range = 1:#. Tree = #, file = #.'// &
+         call chkin  ( 'ZZEKTRLK'                                      )
+         call setmsg ( 'Key #; valid range = 1:#. Tree = #, file = #.'// &
                        '  Key was not found.  This probably indicates'// &
                        ' a corrupted file or a bug in the EK code.'    )
-         CALL ERRINT ( '#',     KEY                                    )
-         CALL ERRINT ( '#',     TOTKEY                                 )
-         CALL ERRINT ( '#',     TREE                                   )
-         CALL ERRHAN ( '#',     HANDLE                                 )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZEKTRLK'                                      )
-         RETURN
+         call errint ( '#',     key                                    )
+         call errint ( '#',     totkey                                 )
+         call errint ( '#',     tree                                   )
+         call errhan ( '#',     handle                                 )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZEKTRLK'                                      )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

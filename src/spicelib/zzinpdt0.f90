@@ -1,6 +1,6 @@
 !$Procedure ZZINPDT0 ( DSK, in planetodetic element, w/o margin? )
 
-      SUBROUTINE ZZINPDT0 ( P, LON, BOUNDS, CORPAR, EXCLUD, INSIDE )
+      subroutine zzinpdt0 ( p, lon, bounds, corpar, exclud, inside )
 
 ! $ Abstract
 !
@@ -29,29 +29,29 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      P      ( 3 )
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      CORPAR ( * )
-      INTEGER               EXCLUD
-      LOGICAL               INSIDE
+      double precision      p      ( 3 )
+      double precision      lon
+      double precision      bounds ( 2, 3 )
+      double precision      corpar ( * )
+      integer               exclud
+      logical               inside
 
 
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
-      INTEGER               LONIDX
-      PARAMETER           ( LONIDX = 1 )
+      integer               lonidx
+      parameter           ( lonidx = 1 )
 
-      INTEGER               LATIDX
-      PARAMETER           ( LATIDX = 2 )
+      integer               latidx
+      parameter           ( latidx = 2 )
 
-      INTEGER               ALTIDX
-      PARAMETER           ( ALTIDX = 3 )
+      integer               altidx
+      parameter           ( altidx = 3 )
 
 ! $ Brief_I/O
 !
@@ -252,134 +252,134 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
+      double precision      halfpi
+      double precision      twopi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LOWER
-      PARAMETER           ( LOWER = 1 )
+      integer               lower
+      parameter           ( lower = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER = 2 )
+      integer               upper
+      parameter           ( upper = 2 )
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      INTEGER               LT
-      PARAMETER           ( LT = -1 )
+      integer               lt
+      parameter           ( lt = -1 )
 
-      INTEGER               EQ
-      PARAMETER           ( EQ =  0 )
+      integer               eq
+      parameter           ( eq =  0 )
 
-      INTEGER               GT
-      PARAMETER           ( GT =  1 )
+      integer               gt
+      parameter           ( gt =  1 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      EMAX
-      DOUBLE PRECISION      EMIN
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      LEVEL
-      DOUBLE PRECISION      LOCLON
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MAXALT
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      MINALT
-      DOUBLE PRECISION      PI2
-      DOUBLE PRECISION      PMAX
-      DOUBLE PRECISION      PMIN
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      RP
+      double precision      emax
+      double precision      emin
+      double precision      f
+      double precision      level
+      double precision      loclon
+      double precision      maxlat
+      double precision      maxlon
+      double precision      maxalt
+      double precision      minlat
+      double precision      minlon
+      double precision      minalt
+      double precision      pi2
+      double precision      pmax
+      double precision      pmin
+      double precision      re
+      double precision      rp
 
-      INTEGER               MAXREL
-      INTEGER               MINREL
+      integer               maxrel
+      integer               minrel
 
-      LOGICAL               FIRST
+      logical               first
 
 
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  PI2
+      save                  first
+      save                  pi2
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
-      DATA                  PI2   / -1.D0  /
+      data                  first / .true. /
+      data                  pi2   / -1.d0  /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZINPDT0' )
+      call chkin ( 'ZZINPDT0' )
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         PI2   = TWOPI()
-         FIRST = .FALSE.
+         pi2   = twopi()
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Unpack the shape parameters. Set the polar axis length for
 !     later use.
 !
-      RE = CORPAR(1)
-      F  = CORPAR(2)
-      RP = RE * ( 1.D0 - F )
+      re = corpar(1)
+      f  = corpar(2)
+      rp = re * ( 1.d0 - f )
 
 !
 !     Assume the point is outside to start. This allows us
 !     to skip setting INSIDE when we find a boundary test
 !     failure.
 !
-      INSIDE = .FALSE.
+      inside = .false.
 !
 !     Compare coordinates of the input point and the segment
 !     bounds. Deal with altitude last, since it involves the
 !     most work. We may be able to exit before performing the
 !     altitude tests.
 !
-      IF ( EXCLUD .NE. LATIDX ) THEN
+      if ( exclud .ne. latidx ) then
 !
 !        Compare the point's latitude to the segment's latitude bounds.
 !
-         MINLAT = MAX( BOUNDS(LOWER, LATIDX) - ANGMRG, -HALFPI() )
-         MAXLAT = MIN( BOUNDS(UPPER, LATIDX) + ANGMRG,  HALFPI() )
+         minlat = max( bounds(lower, latidx) - angmrg, -halfpi() )
+         maxlat = min( bounds(upper, latidx) + angmrg,  halfpi() )
 
-         CALL ZZPDCMPL ( RE, F, P, MINLAT, MINREL )
-         CALL ZZPDCMPL ( RE, F, P, MAXLAT, MAXREL )
+         call zzpdcmpl ( re, f, p, minlat, minrel )
+         call zzpdcmpl ( re, f, p, maxlat, maxrel )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZINPDT0' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZINPDT0' )
+            return
+         end if
 
 
-         IF (      ( MINREL .EQ. LT ) &
-              .OR. ( MAXREL .EQ. GT )  ) THEN
+         if (      ( minrel .eq. lt ) &
+              .or. ( maxrel .eq. gt )  ) then
 !
 !           The point's latitude is outside of the segment's range.
 !
-            CALL CHKOUT ( 'ZZINPDT0' )
-            RETURN
+            call chkout ( 'ZZINPDT0' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Move the longitude of the input point into the interval
@@ -388,69 +388,69 @@
 !
 !     if necessary and if possible.
 !
-      IF ( EXCLUD .NE. LONIDX ) THEN
+      if ( exclud .ne. lonidx ) then
 !
 !        Put the local longitude bounds in order, if necessary.
 !
-         CALL ZZNRMLON ( BOUNDS(LOWER,LONIDX),  BOUNDS(UPPER,LONIDX), &
-                         ANGMRG,       MINLON,  MAXLON               )
+         call zznrmlon ( bounds(lower,lonidx),  bounds(upper,lonidx), &
+                         angmrg,       minlon,  maxlon               )
 !
 !        Compare the point's longitude to the segment's longitude
 !        bounds.
 !
-         LOCLON = LON
+         loclon = lon
 
-         IF ( LON .LT. ( MINLON - LONALI ) ) THEN
+         if ( lon .lt. ( minlon - lonali ) ) then
 !
 !           If the point's longitude is less than the segment's
 !           longitude by more than a small margin, shift the longitude
 !           right by 2*pi.
 
-            LOCLON = LON + PI2
+            loclon = lon + pi2
 
-         ELSE IF ( LON .GT. ( MAXLON + LONALI ) ) THEN
+         else if ( lon .gt. ( maxlon + lonali ) ) then
 !
 !           If the point's longitude is greater than the segment's
 !           longitude by more than a small margin, shift the longitude
 !           left by 2*pi.
 
-            LOCLON = LON - PI2
+            loclon = lon - pi2
 
-         END IF
+         end if
 
 
-         IF (        ( LOCLON .LT. (MINLON-ANGMRG) ) &
-                .OR. ( LOCLON .GT. (MAXLON+ANGMRG) )  ) THEN
+         if (        ( loclon .lt. (minlon-angmrg) ) &
+                .or. ( loclon .gt. (maxlon+angmrg) )  ) then
 !
 !           The point's longitude, adjusted if necessary for
 !           comparison, is outside of the segment's range.
 !
-            CALL CHKOUT ( 'ZZINPDT0' )
-            RETURN
+            call chkout ( 'ZZINPDT0' )
+            return
 
-         END IF
+         end if
 
 
-      END IF
+      end if
 
-      IF ( EXCLUD .NE. ALTIDX ) THEN
+      if ( exclud .ne. altidx ) then
 !
 !        Extract altitude bounds from the segment descriptor.
 !
-         MINALT = BOUNDS(LOWER, ALTIDX)
-         MAXALT = BOUNDS(UPPER, ALTIDX)
+         minalt = bounds(lower, altidx)
+         maxalt = bounds(upper, altidx)
 !
 !        Find the semi-axes of the bounding spheroids.
 !
-         IF ( F .GE. 0.D0 ) THEN
+         if ( f .ge. 0.d0 ) then
 !
 !           This is the oblate case. Get the semi-axis lengths
 !           for the inner and outer bounding spheroids.
 !
-            CALL ZZELLBDS ( RE,   RP,   MAXALT, MINALT, &
-                            EMAX, PMAX, EMIN,   PMIN   )
+            call zzellbds ( re,   rp,   maxalt, minalt, &
+                            emax, pmax, emin,   pmin   )
 
-         ELSE
+         else
 !
 !           This is the prolate case. RP is the longer axis. Get the
 !           semi-axis lengths for the inner and outer bounding
@@ -459,10 +459,10 @@
 !           In this call, we'll store the radii associated with
 !           the longer axis in PMAX and PMIN.
 !
-            CALL ZZELLBDS ( RP,   RE,   MAXALT, MINALT, &
-                            PMAX, EMAX, PMIN,   EMIN   )
+            call zzellbds ( rp,   re,   maxalt, minalt, &
+                            pmax, emax, pmin,   emin   )
 
-         END IF
+         end if
 
 !
 !        Compute the input point's level surface parameters
@@ -471,39 +471,39 @@
 !        skipped if the first one shows the point is outside
 !        the outer ellipsoid.
 !
-         LEVEL = ( P(1)/EMAX )**2 + ( P(2)/EMAX )**2 + ( P(3)/PMAX )**2
+         level = ( p(1)/emax )**2 + ( p(2)/emax )**2 + ( p(3)/pmax )**2
 
-         IF ( LEVEL .GT. 1.D0 ) THEN
+         if ( level .gt. 1.d0 ) then
 !
 !           The point is outside of the outer bounding ellipsoid.
 !
-            CALL CHKOUT ( 'ZZINPDT0' )
-            RETURN
+            call chkout ( 'ZZINPDT0' )
+            return
 
-         END IF
+         end if
 
 
-         LEVEL = ( P(1)/EMIN )**2 + ( P(2)/EMIN )**2 + ( P(3)/PMIN )**2
+         level = ( p(1)/emin )**2 + ( p(2)/emin )**2 + ( p(3)/pmin )**2
 
-         IF ( LEVEL .LT. 1.D0 ) THEN
+         if ( level .lt. 1.d0 ) then
 !
 !           The point is inside the inner bounding ellipsoid, which
 !           implies it is outside of the segment's boundaries.
 !
-            CALL CHKOUT ( 'ZZINPDT0' )
-            RETURN
+            call chkout ( 'ZZINPDT0' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Getting to this point means the input point is inside
 !     the segment. Being on the boundary counts as inside.
 !
-      INSIDE = .TRUE.
+      inside = .true.
 
 
-      CALL CHKOUT ( 'ZZINPDT0' )
-      RETURN
-      END
+      call chkout ( 'ZZINPDT0' )
+      return
+      end

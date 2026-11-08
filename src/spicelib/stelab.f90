@@ -1,6 +1,6 @@
 !$Procedure STELAB     ( Stellar Aberration )
 
-      SUBROUTINE STELAB ( POBJ, VOBS, APPOBJ )
+      subroutine stelab ( pobj, vobs, appobj )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   POBJ   ( 3 )
-      DOUBLE PRECISION   VOBS   ( 3 )
-      DOUBLE PRECISION   APPOBJ ( 3 )
+      double precision   pobj   ( 3 )
+      double precision   vobs   ( 3 )
+      double precision   appobj ( 3 )
 
 ! $ Brief_I/O
 !
@@ -324,33 +324,33 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      LOGICAL               RETURN
+      double precision      clight
+      double precision      vdot
+      double precision      vnorm
+      logical               return
 
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      ONEBYC
-      DOUBLE PRECISION      U      ( 3 )
-      DOUBLE PRECISION      VBYC   ( 3 )
-      DOUBLE PRECISION      LENSQR
-      DOUBLE PRECISION      H      ( 3 )
-      DOUBLE PRECISION      SINPHI
-      DOUBLE PRECISION      PHI
+      double precision      onebyc
+      double precision      u      ( 3 )
+      double precision      vbyc   ( 3 )
+      double precision      lensqr
+      double precision      h      ( 3 )
+      double precision      sinphi
+      double precision      phi
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'STELAB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'STELAB' )
+      end if
 
 
 !
@@ -363,15 +363,15 @@
 !     Get a unit vector that points in the direction of the object
 !     ( u_obj ).
 !
-      CALL VHAT ( POBJ, U )
+      call vhat ( pobj, u )
 
 !
 !     Get the velocity vector scaled with respect to the speed of light
 !     ( v/c ).
 !
-      ONEBYC = 1.0D0 / CLIGHT()
+      onebyc = 1.0d0 / clight()
 
-      CALL VSCL  ( ONEBYC, VOBS, VBYC )
+      call vscl  ( onebyc, vobs, vbyc )
 
 !
 !     If the square of the length of the velocity vector is greater than
@@ -379,25 +379,25 @@
 !     equal to the speed of light. The observer speed is definitely out
 !     of range. Signal an error and check out.
 !
-      LENSQR = VDOT ( VBYC, VBYC )
+      lensqr = vdot ( vbyc, vbyc )
 
-      IF ( LENSQR .GE. 1.0D0 ) THEN
+      if ( lensqr .ge. 1.0d0 ) then
 
-         CALL SETMSG ( 'Velocity components of observer were:  '      // &
+         call setmsg ( 'Velocity components of observer were:  '      // &
                        'dx/dt = *, dy/dt = *, dz/dt = *.'              )
-         CALL ERRDP  ( '*', VOBS (1)            )
-         CALL ERRDP  ( '*', VOBS (2)            )
-         CALL ERRDP  ( '*', VOBS (3)            )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'STELAB'                 )
-         RETURN
+         call errdp  ( '*', vobs (1)            )
+         call errdp  ( '*', vobs (2)            )
+         call errdp  ( '*', vobs (3)            )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'STELAB'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute u_obj x (v/c)
 !
-      CALL VCRSS ( U, VBYC, H )
+      call vcrss ( u, vbyc, h )
 
 
 !
@@ -406,20 +406,20 @@
 !     required. Otherwise, rotate the position of the object by phi
 !     radians about H to obtain the apparent position.
 !
-      SINPHI  = VNORM ( H )
+      sinphi  = vnorm ( h )
 
-      IF ( SINPHI .NE. 0.D0 ) THEN
+      if ( sinphi .ne. 0.d0 ) then
 
-         PHI = DASIN ( SINPHI )
-         CALL  VROTV ( POBJ, H, PHI, APPOBJ )
+         phi = dasin ( sinphi )
+         call  vrotv ( pobj, h, phi, appobj )
 
-      ELSE
+      else
 
-         CALL MOVED ( POBJ, 3, APPOBJ )
+         call moved ( pobj, 3, appobj )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'STELAB' )
-      RETURN
-      END
+      call chkout ( 'STELAB' )
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure ZZSPKFLT ( SPK function, light time and rate )
 
-      SUBROUTINE ZZSPKFLT ( TRGSUB, ET,    REF, ABCORR, &
-                            STOBS,  STARG, LT,  DLT     )
+      subroutine zzspkflt ( trgsub, et,    ref, abcorr, &
+                            stobs,  starg, lt,  dlt     )
 
 ! $ Abstract
 !
@@ -25,18 +25,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      EXTERNAL              TRGSUB
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      STOBS  ( 6 )
-      DOUBLE PRECISION      STARG  ( 6 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      DLT
+      external              trgsub
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      double precision      stobs  ( 6 )
+      double precision      starg  ( 6 )
+      double precision      lt
+      double precision      dlt
 
 ! $ Brief_I/O
 !
@@ -344,111 +344,111 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      clight
+      double precision      touchd
+      double precision      vdot
+      double precision      vnorm
 
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'ZZSPKFLT' )
+      character*(*)         rname
+      parameter           ( rname  = 'ZZSPKFLT' )
 
 !
 !     TOL is the tolerance used for a division-by-zero test
 !     performed prior to computation of DLT.
 !
-      DOUBLE PRECISION      TOL
-      PARAMETER           ( TOL    = 1.D-10 )
+      double precision      tol
+      parameter           ( tol    = 1.d-10 )
 
 !
 !     Convergence limit:
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-17 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-17 )
 
 !
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR = 5 )
+      integer               maxitr
+      parameter           ( maxitr = 5 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    PRVCOR
+      character*(corlen)    prvcor
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      CTRSSB ( 6 )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      PRVLT
-      DOUBLE PRECISION      LTERR
-      DOUBLE PRECISION      SSBTRG ( 6 )
-      DOUBLE PRECISION      STTCTR ( 6 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      ctrssb ( 6 )
+      double precision      dist
+      double precision      epoch
+      double precision      prvlt
+      double precision      lterr
+      double precision      ssbtrg ( 6 )
+      double precision      sttctr ( 6 )
 
-      INTEGER               I
-      INTEGER               LTSIGN
-      INTEGER               NUMITR
-      INTEGER               REFID
-      INTEGER               TRGCTR
+      integer               i
+      integer               ltsign
+      integer               numitr
+      integer               refid
+      integer               trgctr
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               PASS1
-      LOGICAL               USECN
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               pass1
+      logical               usecn
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved variables
 !
-      SAVE                  PASS1
-      SAVE                  PRVCOR
-      SAVE                  USECN
-      SAVE                  USELT
-      SAVE                  XMIT
+      save                  pass1
+      save                  prvcor
+      save                  usecn
+      save                  uselt
+      save                  xmit
 
 !
 !     Initial values
 !
-      DATA                  PASS1   / .TRUE. /
-      DATA                  PRVCOR  / ' ' /
+      data                  pass1   / .true. /
+      data                  prvcor  / ' ' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 
-      IF (  PASS1  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  pass1  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -465,30 +465,30 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         XMIT    =  ATTBLK ( XMTIDX )
-         USELT   =  ATTBLK ( LTIDX )
-         USECN   =  ATTBLK ( CNVIDX )
-         USESTL  =  ATTBLK ( STLIDX )
+         xmit    =  attblk ( xmtidx )
+         uselt   =  attblk ( ltidx )
+         usecn   =  attblk ( cnvidx )
+         usestl  =  attblk ( stlidx )
 
-         PASS1   = .FALSE.
+         pass1   = .false.
 
-      END IF
+      end if
 
 !
 !     See if the reference frame is a recognized inertial frame.
 !
-      CALL IRFNUM ( REF, REFID )
+      call irfnum ( ref, refid )
 
-      IF ( REFID .EQ. 0 ) THEN
+      if ( refid .eq. 0 ) then
 
-         CALL SETMSG ( 'The requested frame ''#'' is not a ' &
+         call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )
-         CALL ERRCH  ( '#', REF                             )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'                )
-         CALL CHKOUT ( RNAME                                )
-         RETURN
+         call errch  ( '#', ref                             )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'                )
+         call chkout ( rname                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the geometric state of the target body with respect to
@@ -496,35 +496,35 @@
 !     observer to get the relative state. Use this to compute the
 !     one-way light time.
 !
-      CALL TRGSUB ( ET,     REF,    TRGCTR, STTCTR )
-      CALL SPKSSB ( TRGCTR, ET,     REF,    CTRSSB )
+      call trgsub ( et,     ref,    trgctr, sttctr )
+      call spkssb ( trgctr, et,     ref,    ctrssb )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      CALL VADDG  ( CTRSSB, STTCTR, 6,      SSBTRG )
-      CALL VSUBG  ( SSBTRG, STOBS,  6,      STARG  )
+      call vaddg  ( ctrssb, sttctr, 6,      ssbtrg )
+      call vsubg  ( ssbtrg, stobs,  6,      starg  )
 
-      DIST = VNORM(STARG)
-      LT   = DIST / CLIGHT()
+      dist = vnorm(starg)
+      lt   = dist / clight()
 
-      IF ( LT .EQ. 0.D0 ) THEN
+      if ( lt .eq. 0.d0 ) then
 !
 !        This can happen only if the observer and target are at the
 !        same position. We don't consider this an error, but we're not
 !        going to compute the light time derivative.
 !
-         DLT = 0
+         dlt = 0
 
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 
-      IF ( .NOT. USELT ) THEN
+      if ( .not. uselt ) then
 !
 !        This is a special case: we're not using light time
 !        corrections, so the derivative
@@ -532,15 +532,15 @@
 !
 !           (1/c) * d(VNORM(STARG))/dt
 !
-         DLT = VDOT( STARG, STARG(4) ) / ( DIST * CLIGHT() )
+         dlt = vdot( starg, starg(4) ) / ( dist * clight() )
 
 !
 !        LT and DLT are both set, so we can return.
 !
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 !
 !     To correct for light time, find the state of the target body
@@ -549,57 +549,57 @@
 !
 !     Determine the sign of the light time offset.
 !
-      IF ( XMIT ) THEN
-         LTSIGN =  1
-      ELSE
-         LTSIGN = -1
-      END IF
+      if ( xmit ) then
+         ltsign =  1
+      else
+         ltsign = -1
+      end if
 
 !
 !     Let NUMITR be the number of iterations we'll perform to
 !     compute the light time.
 !
-      IF ( USECN ) THEN
-         NUMITR = MAXITR
-      ELSE
-         NUMITR = 1
-      END IF
+      if ( usecn ) then
+         numitr = maxitr
+      else
+         numitr = 1
+      end if
 
-      I      = 0
-      LTERR  = 1.D0
+      i      = 0
+      lterr  = 1.d0
 
-      DO WHILE (        ( I     .LT. NUMITR ) &
-                  .AND. ( LTERR .GT. CNVLIM )  )
+      do while (        ( i     .lt. numitr ) &
+                  .and. ( lterr .gt. cnvlim )  )
 !
 !        LT was set either prior to this loop or
 !        during the previous loop iteration.
 !
-         EPOCH = TOUCHD(  ET  +  ( LTSIGN * LT )  )
+         epoch = touchd(  et  +  ( ltsign * lt )  )
 
-         CALL TRGSUB (         EPOCH,  REF, TRGCTR, STTCTR )
-         CALL SPKSSB ( TRGCTR, EPOCH,  REF,         CTRSSB )
+         call trgsub (         epoch,  ref, trgctr, sttctr )
+         call spkssb ( trgctr, epoch,  ref,         ctrssb )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL VADDG  ( CTRSSB, STTCTR, 6,           SSBTRG )
-         CALL VSUBG  ( SSBTRG, STOBS,  6,           STARG  )
+         call vaddg  ( ctrssb, sttctr, 6,           ssbtrg )
+         call vsubg  ( ssbtrg, stobs,  6,           starg  )
 
-         PRVLT = LT
-         LT    = TOUCHD(  VNORM ( STARG ) / CLIGHT()  )
+         prvlt = lt
+         lt    = touchd(  vnorm ( starg ) / clight()  )
 
 !
 !        LTERR is the magnitude of the change between the current
 !        estimate of light time and the previous estimate, relative to
 !        the previous light time corrected epoch.
 !
-         LTERR = TOUCHD(    ABS ( LT  - PRVLT      ) &
-                          / MAX ( 1.D0, ABS(EPOCH) )  )
-         I     = I + 1
+         lterr = touchd(    abs ( lt  - prvlt      ) &
+                          / max ( 1.d0, abs(epoch) )  )
+         i     = i + 1
 
-      END DO
+      end do
 
 !
 !     At this point, STARG contains the light time corrected
@@ -684,41 +684,41 @@
 !
 !
 !
-      A   =  1.D0 / ( CLIGHT()*VNORM(STARG) )
+      a   =  1.d0 / ( clight()*vnorm(starg) )
 
-      B   =  VDOT ( STARG, STARG(4)  )
+      b   =  vdot ( starg, starg(4)  )
 
-      C   =  VDOT ( STARG, SSBTRG(4) )
+      c   =  vdot ( starg, ssbtrg(4) )
 
 !
 !     For physically realistic target velocities, S*C*A cannot equal 1.
 !     We'll check for this case anyway.
 !
-      IF (  LTSIGN*C*A  .GT.  1.D0-TOL ) THEN
+      if (  ltsign*c*a  .gt.  1.d0-tol ) then
 
-         CALL SETMSG ( 'Target range rate magnitude is ' &
+         call setmsg ( 'Target range rate magnitude is ' &
       //               'approximately the speed of light. The ' &
       //               'light time derivative cannot be ' &
       //               'computed.'                            )
-         CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                  )
-         CALL CHKOUT ( RNAME                                  )
-         RETURN
+         call sigerr ( 'SPICE(DIVIDEBYZERO)'                  )
+         call chkout ( rname                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute DLT: the rate of change of light time.
 !
-      DLT = (A*B)/( 1.D0 - LTSIGN*C*A )
+      dlt = (a*b)/( 1.d0 - ltsign*c*a )
 
 !
 !     Overwrite the velocity portion of the output state
 !     with the light-time corrected velocity.
 !
-      CALL VLCOM ( 1.D0 + LTSIGN*DLT, SSBTRG(4), &
-                  -1.D0,              STOBS(4),   STARG(4) )
+      call vlcom ( 1.d0 + ltsign*dlt, ssbtrg(4), &
+                  -1.d0,              stobs(4),   starg(4) )
 
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

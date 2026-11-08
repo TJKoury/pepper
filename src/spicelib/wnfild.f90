@@ -1,6 +1,6 @@
 !$Procedure WNFILD ( Fill small gaps in a DP window )
 
-      SUBROUTINE WNFILD ( SMLGAP, WINDOW )
+      subroutine wnfild ( smlgap, window )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      SMLGAP
-      DOUBLE PRECISION      WINDOW  ( LBCELL:* )
+      double precision      smlgap
+      double precision      window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -275,30 +275,30 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
-      INTEGER               J
+      integer               card
+      integer               i
+      integer               j
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'WNFILD' )
+      call chkin ( 'WNFILD' )
 
 !
 !     Get the cardinality of the window. (The size is not important;
 !     this routine can't create any new intervals.)
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Step through the window, looking for the next right endpoint
@@ -307,28 +307,28 @@
 !     second interval. Keep this up until the last right endpoint has
 !     been reached. This remains the last right endpoint.
 !
-      IF ( CARD .GT. 0 ) THEN
+      if ( card .gt. 0 ) then
 
-         I = 2
-         J = 2
+         i = 2
+         j = 2
 
-         DO WHILE ( J .LT. CARD )
+         do while ( j .lt. card )
 
-            IF ( ( WINDOW(J) + SMLGAP )  .LT. WINDOW(J+1) ) THEN
-               WINDOW(I  ) = WINDOW(J  )
-               WINDOW(I+1) = WINDOW(J+1)
-               I           = I + 2
-            END IF
+            if ( ( window(j) + smlgap )  .lt. window(j+1) ) then
+               window(i  ) = window(j  )
+               window(i+1) = window(j+1)
+               i           = i + 2
+            end if
 
-            J = J + 2
+            j = j + 2
 
-         END DO
+         end do
 
-         WINDOW(I) = WINDOW(J)
-         CALL SCARDD ( I, WINDOW )
+         window(i) = window(j)
+         call scardd ( i, window )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'WNFILD' )
-      RETURN
-      END
+      call chkout ( 'WNFILD' )
+      return
+      end

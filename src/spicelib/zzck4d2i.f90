@@ -1,6 +1,6 @@
 !$Procedure ZZCK4D2I ( Unpack a set of integers from DP number )
 
-      SUBROUTINE ZZCK4D2I ( DPCOEF, NSETS, PARCOD, I )
+      subroutine zzck4d2i ( dpcoef, nsets, parcod, i )
 
 ! $ Abstract
 !
@@ -26,12 +26,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION        DPCOEF
-      INTEGER                 NSETS
-      DOUBLE PRECISION        PARCOD
-      INTEGER                 I      ( * )
+      double precision        dpcoef
+      integer                 nsets
+      double precision        parcod
+      integer                 i      ( * )
 
 
 ! $ Brief_I/O
@@ -112,25 +112,25 @@
 !
 !     Local variables.
 !
-      DOUBLE PRECISION        X
-      INTEGER                 K
+      double precision        x
+      integer                 k
 
 !
 !     Let's unpack it!
 !
-      X = PARCOD ** ( NSETS - 1 )
+      x = parcod ** ( nsets - 1 )
 
-      DO K = 0, NSETS - 1
+      do k = 0, nsets - 1
 
-         I( NSETS - K ) = DPCOEF / X
-         DPCOEF = DPCOEF - I( NSETS - K ) * X
-         X = X / PARCOD
+         i( nsets - k ) = dpcoef / x
+         dpcoef = dpcoef - i( nsets - k ) * x
+         x = x / parcod
 
-      END DO
+      end do
 
 !
 !     All done.
 !
-      RETURN
+      return
 
-      END
+      end

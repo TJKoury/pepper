@@ -1,6 +1,6 @@
 !$Procedure ZZTWOVXF ( Two states defining a frame transformation )
 
-      SUBROUTINE ZZTWOVXF ( AXDEF, INDEXA, PLNDEF, INDEXP, XFORM )
+      subroutine zztwovxf ( axdef, indexa, plndef, indexp, xform )
 
 ! $ Abstract
 !
@@ -26,11 +26,11 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION   AXDEF  ( 6 )
-      INTEGER            INDEXA
-      DOUBLE PRECISION   PLNDEF ( 6 )
-      INTEGER            INDEXP
-      DOUBLE PRECISION   XFORM  ( 6, 6 )
+      double precision   axdef  ( 6 )
+      integer            indexa
+      double precision   plndef ( 6 )
+      integer            indexp
+      double precision   xform  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -288,85 +288,85 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      TMPSTA ( 6 )
+      double precision      tmpsta ( 6 )
 
-      INTEGER               I
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               J
-      INTEGER               SEQNCE ( 5 )
+      integer               i
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               j
+      integer               seqnce ( 5 )
 
 !
 !     Saved variables
 !
-      SAVE                  SEQNCE
+      save                  seqnce
 
 !
 !     Initial values
 !
-      DATA                  SEQNCE  / 1, 2, 3, 1, 2 /
+      data                  seqnce  / 1, 2, 3, 1, 2 /
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZTWOVXF' )
+      call chkin ( 'ZZTWOVXF' )
 
 
 !
 !     Check for obvious bad inputs.
 !
-      IF (      ( MAX(INDEXP,INDEXA) .GT. 3 ) &
-           .OR. ( MIN(INDEXP,INDEXA) .LT. 1 ) ) THEN
+      if (      ( max(indexp,indexa) .gt. 3 ) &
+           .or. ( min(indexp,indexa) .lt. 1 ) ) then
 
-         CALL SETMSG ( 'The definition indices must lie in the range '// &
+         call setmsg ( 'The definition indices must lie in the range '// &
                        'from 1 to 3.  The value of INDEXA was #. '    // &
                        'The value of INDEXP was #. '                  )
-         CALL ERRINT ( '#', INDEXA       )
-         CALL ERRINT ( '#', INDEXP       )
-         CALL SIGERR ( 'SPICE(BADINDEX)' )
-         CALL CHKOUT ( 'ZZTWOVXF'        )
-         RETURN
+         call errint ( '#', indexa       )
+         call errint ( '#', indexp       )
+         call sigerr ( 'SPICE(BADINDEX)' )
+         call chkout ( 'ZZTWOVXF'        )
+         return
 
-      ELSE IF ( INDEXA .EQ. INDEXP ) THEN
+      else if ( indexa .eq. indexp ) then
 
-         CALL SETMSG ( 'The values of INDEXA and INDEXP were the '    // &
+         call setmsg ( 'The values of INDEXA and INDEXP were the '    // &
                        'same, namely #.  They are required to be '    // &
                        'different.'                                   )
-         CALL ERRINT ( '#', INDEXA             )
-         CALL SIGERR ( 'SPICE(UNDEFINEDFRAME)' )
-         CALL CHKOUT ( 'ZZTWOVXF'              )
-         RETURN
+         call errint ( '#', indexa             )
+         call sigerr ( 'SPICE(UNDEFINEDFRAME)' )
+         call chkout ( 'ZZTWOVXF'              )
+         return
 
-      END IF
+      end if
 
 !
 !     Get indices for right-handed axes:
 !
 !     First AXDEF ...
 !
-      I1 = INDEXA
+      i1 = indexa
 !
 !     ... then the other two.
 !
-      I2 = SEQNCE ( INDEXA + 1 )
-      I3 = SEQNCE ( INDEXA + 2 )
+      i2 = seqnce ( indexa + 1 )
+      i3 = seqnce ( indexa + 2 )
 
 !
 !     Column I1 of XFORM contains a unit vector parallel to AXDEF and
 !     the derivative of the unit vector.
 !
-      CALL DVHAT ( AXDEF, XFORM(1,I1) )
+      call dvhat ( axdef, xform(1,i1) )
 
 !
 !     Obtain columns I2 and I3 of XFORM using cross products.
@@ -376,18 +376,18 @@
 !
 !     Select column indices...
 !
-      IF ( INDEXP .EQ. I2 ) THEN
+      if ( indexp .eq. i2 ) then
 !
 !        We compute the third axis in the sequence, then the second.
 !
-         CALL DUCRSS ( AXDEF,        PLNDEF,        XFORM(1,I3) )
-         CALL DUCRSS ( XFORM(1,I3),  AXDEF,         TMPSTA      )
-         CALL MOVED  ( TMPSTA,       6,             XFORM(1,I2) )
-      ELSE
-         CALL DUCRSS ( PLNDEF,       AXDEF,         XFORM(1,I2) )
-         CALL DUCRSS ( AXDEF,        XFORM(1,I2),   TMPSTA      )
-         CALL MOVED  ( TMPSTA,       6,             XFORM(1,I3) )
-      END IF
+         call ducrss ( axdef,        plndef,        xform(1,i3) )
+         call ducrss ( xform(1,i3),  axdef,         tmpsta      )
+         call moved  ( tmpsta,       6,             xform(1,i2) )
+      else
+         call ducrss ( plndef,       axdef,         xform(1,i2) )
+         call ducrss ( axdef,        xform(1,i2),   tmpsta      )
+         call moved  ( tmpsta,       6,             xform(1,i3) )
+      end if
 
 !
 !     ...and compute the output frame's non-principal unit basis
@@ -400,19 +400,19 @@
 !     The upper right block is the 3x3 zero matrix.
 !     The lower right block matches the upper left block.
 !
-      CALL CLEARD ( 3,                XFORM(1,4) )
-      CALL CLEARD ( 3,                XFORM(1,5) )
-      CALL CLEARD ( 3,                XFORM(1,6) )
+      call cleard ( 3,                xform(1,4) )
+      call cleard ( 3,                xform(1,5) )
+      call cleard ( 3,                xform(1,6) )
 
-      DO J = 1, 3
+      do j = 1, 3
 
-         DO I = 1, 3
+         do i = 1, 3
 
-            XFORM(3+I,3+J) = XFORM(I,J)
+            xform(3+i,3+j) = xform(i,j)
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Finally, check to see that we actually got something non-zero in
@@ -420,17 +420,17 @@
 !     XFORM(1,I2) and XFORM(1,I3) (we need only check one of them since
 !     they are related by a cross product).
 !
-      IF (  VZERO ( XFORM(1,I2) )  ) THEN
+      if (  vzero ( xform(1,i2) )  ) then
 
-         CALL SETMSG ( 'The direction vectors associated with ' // &
+         call setmsg ( 'The direction vectors associated with ' // &
                        'states AXDEF and PLNDEF are '           // &
                        'linearly dependent.'                    )
-         CALL SIGERR ( 'SPICE(DEPENDENTVECTORS)'                )
-         CALL CHKOUT ( 'ZZTWOVXF'                               )
-         RETURN
+         call sigerr ( 'SPICE(DEPENDENTVECTORS)'                )
+         call chkout ( 'ZZTWOVXF'                               )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZTWOVXF' )
-      RETURN
-      END
+      call chkout ( 'ZZTWOVXF' )
+      return
+      end

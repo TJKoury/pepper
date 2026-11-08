@@ -1,6 +1,6 @@
 !$Procedure      ZZCK4I2D ( Pack set of integers into a single DP )
 
-      SUBROUTINE ZZCK4I2D ( I, NSETS, PARCOD, DPCOEF )
+      subroutine zzck4i2d ( i, nsets, parcod, dpcoef )
 
 ! $ Abstract
 !
@@ -26,12 +26,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER                 I      ( * )
-      INTEGER                 NSETS
-      DOUBLE PRECISION        PARCOD
-      DOUBLE PRECISION        DPCOEF
+      integer                 i      ( * )
+      integer                 nsets
+      double precision        parcod
+      double precision        dpcoef
 
 ! $ Brief_I/O
 !
@@ -119,25 +119,25 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION        X
-      INTEGER                 K
+      double precision        x
+      integer                 k
 
 !
 !     Let's pack it!
 !
-      DPCOEF = 0.D0
+      dpcoef = 0.d0
 
-      X = 1
+      x = 1
 
-      DO K = 1, NSETS, 1
+      do k = 1, nsets, 1
 
-         DPCOEF = DPCOEF + I( K ) * X
-         X = X * PARCOD
+         dpcoef = dpcoef + i( k ) * x
+         x = x * parcod
 
-      END DO
+      end do
 
 !
 !     All done.
 !
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure NPEDLN ( Nearest point on ellipsoid to line )
 
-      SUBROUTINE NPEDLN ( A, B, C, LINEPT, LINEDR, PNEAR, DIST )
+      subroutine npedln ( a, b, c, linept, linedr, pnear, dist )
 
 ! $ Abstract
 !
@@ -19,21 +19,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL = 9 )
+      integer               ubel
+      parameter           ( ubel = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL = 4 )
+      integer               ubpl
+      parameter           ( ubpl = 4 )
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      LINEPT ( 3 )
-      DOUBLE PRECISION      LINEDR ( 3 )
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      DIST
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      linept ( 3 )
+      double precision      linedr ( 3 )
+      double precision      pnear  ( 3 )
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -306,44 +306,44 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CANDPL ( UBPL )
-      DOUBLE PRECISION      CAND   ( UBEL )
-      DOUBLE PRECISION      OPPDIR (    3 )
-      DOUBLE PRECISION      PRJPL  ( UBPL )
-      DOUBLE PRECISION      MAG
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      PRJEL  ( UBEL )
-      DOUBLE PRECISION      PRJPT  (    3 )
-      DOUBLE PRECISION      PRJNPT (    3 )
-      DOUBLE PRECISION      PT     ( 3, 2 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SCLA
-      DOUBLE PRECISION      SCLB
-      DOUBLE PRECISION      SCLC
-      DOUBLE PRECISION      SCLPT  (    3 )
-      DOUBLE PRECISION      UDIR   (    3 )
+      double precision      candpl ( ubpl )
+      double precision      cand   ( ubel )
+      double precision      oppdir (    3 )
+      double precision      prjpl  ( ubpl )
+      double precision      mag
+      double precision      normal (    3 )
+      double precision      prjel  ( ubel )
+      double precision      prjpt  (    3 )
+      double precision      prjnpt (    3 )
+      double precision      pt     ( 3, 2 )
+      double precision      scale
+      double precision      scla
+      double precision      sclb
+      double precision      sclc
+      double precision      sclpt  (    3 )
+      double precision      udir   (    3 )
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               FOUND  (    2 )
-      LOGICAL               IFOUND
-      LOGICAL               XFOUND
+      logical               found  (    2 )
+      logical               ifound
+      logical               xfound
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'NPEDLN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'NPEDLN' )
+      end if
 
 !
 !     The algorithm used in this routine has two parts.  The first
@@ -430,31 +430,31 @@
 !
 !     We need a valid normal vector.
 !
-      CALL UNORM ( LINEDR, UDIR, MAG )
+      call unorm ( linedr, udir, mag )
 
-      IF ( MAG .EQ. 0 ) THEN
+      if ( mag .eq. 0 ) then
 
-         CALL SETMSG( 'Line direction vector is the zero vector. ' )
-         CALL SIGERR( 'SPICE(ZEROVECTOR)'                          )
-         CALL CHKOUT( 'NPEDLN'                                     )
-         RETURN
+         call setmsg( 'Line direction vector is the zero vector. ' )
+         call sigerr( 'SPICE(ZEROVECTOR)'                          )
+         call chkout( 'NPEDLN'                                     )
+         return
 
 !
 !     The ellipsoid's semi-axes must have positive length.
 !
-      ELSE IF (         ( A .LE. 0.D0 ) &
-                 .OR.   ( B .LE. 0.D0 ) &
-                 .OR.   ( C .LE. 0.D0 )   )   THEN
+      else if (         ( a .le. 0.d0 ) &
+                 .or.   ( b .le. 0.d0 ) &
+                 .or.   ( c .le. 0.d0 )   )   then
 
-         CALL SETMSG ( 'Semi-axes: A = #,  B = #,  C = #.'  )
-         CALL ERRDP  ( '#', A                               )
-         CALL ERRDP  ( '#', B                               )
-         CALL ERRDP  ( '#', C                               )
-         CALL SIGERR ( 'SPICE(INVALIDAXISLENGTH)'           )
-         CALL CHKOUT ( 'NPEDLN'                             )
-         RETURN
+         call setmsg ( 'Semi-axes: A = #,  B = #,  C = #.'  )
+         call errdp  ( '#', a                               )
+         call errdp  ( '#', b                               )
+         call errdp  ( '#', c                               )
+         call sigerr ( 'SPICE(INVALIDAXISLENGTH)'           )
+         call chkout ( 'NPEDLN'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the semi-axes lengths for better numerical behavior.
@@ -462,57 +462,57 @@
 !     underflow to zero, we have an error.  Otherwise, scale the
 !     point on the input line too.
 !
-      SCALE  =  MAX ( DABS(A), DABS(B), DABS(C) )
+      scale  =  max ( dabs(a), dabs(b), dabs(c) )
 
-      SCLA   =  A / SCALE
-      SCLB   =  B / SCALE
-      SCLC   =  C / SCALE
+      scla   =  a / scale
+      sclb   =  b / scale
+      sclc   =  c / scale
 
-      IF (       ( SCLA**2.D0  .EQ.  0.D0 ) &
-           .OR.  ( SCLB**2.D0  .EQ.  0.D0 ) &
-           .OR.  ( SCLC**2.D0  .EQ.  0.D0 )   )   THEN
+      if (       ( scla**2.d0  .eq.  0.d0 ) &
+           .or.  ( sclb**2.d0  .eq.  0.d0 ) &
+           .or.  ( sclc**2.d0  .eq.  0.d0 )   )   then
 
-         CALL SETMSG ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
-         CALL ERRDP  ( '#', A                                        )
-         CALL ERRDP  ( '#', B                                        )
-         CALL ERRDP  ( '#', C                                        )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                       )
-         CALL CHKOUT ( 'NPEDLN'                                      )
-         RETURN
+         call setmsg ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
+         call errdp  ( '#', a                                        )
+         call errdp  ( '#', b                                        )
+         call errdp  ( '#', c                                        )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                       )
+         call chkout ( 'NPEDLN'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale LINEPT.  Because SCALE might be a very small number,
 !     we avoid computing 1/SCALE; that's why we don't call VSCL here.
 !
-      SCLPT(1)  =  LINEPT(1) / SCALE
-      SCLPT(2)  =  LINEPT(2) / SCALE
-      SCLPT(3)  =  LINEPT(3) / SCALE
+      sclpt(1)  =  linept(1) / scale
+      sclpt(2)  =  linept(2) / scale
+      sclpt(3)  =  linept(3) / scale
 
 !
 !     Hand off the intersection case to SURFPT.  SURFPT determines
 !     whether rays intersect a body, so we treat the line as a pair
 !     of rays.
 !
-      CALL VMINUS ( UDIR, OPPDIR )
+      call vminus ( udir, oppdir )
 
-      CALL SURFPT ( SCLPT, UDIR,   SCLA, SCLB, SCLC, PT(1,1), FOUND(1) )
-      CALL SURFPT ( SCLPT, OPPDIR, SCLA, SCLB, SCLC, PT(1,2), FOUND(2) )
+      call surfpt ( sclpt, udir,   scla, sclb, sclc, pt(1,1), found(1) )
+      call surfpt ( sclpt, oppdir, scla, sclb, sclc, pt(1,2), found(2) )
 
-      DO I = 1, 2
+      do i = 1, 2
 
-         IF ( FOUND(I) ) THEN
+         if ( found(i) ) then
 
-            DIST  =  0.0D0
+            dist  =  0.0d0
 
-            CALL VSCL   ( SCALE,    PT(1,I),  PNEAR )
-            CALL CHKOUT ( 'NPEDLN'                  )
-            RETURN
+            call vscl   ( scale,    pt(1,i),  pnear )
+            call chkout ( 'NPEDLN'                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Getting here means the line doesn't intersect the ellipsoid.
@@ -524,27 +524,27 @@
 !     numerical problems can prevent the intersection from being found.
 !
 !
-      NORMAL(1)  =  UDIR(1) / SCLA**2
-      NORMAL(2)  =  UDIR(2) / SCLB**2
-      NORMAL(3)  =  UDIR(3) / SCLC**2
+      normal(1)  =  udir(1) / scla**2
+      normal(2)  =  udir(2) / sclb**2
+      normal(3)  =  udir(3) / sclc**2
 
-      CALL NVC2PL ( NORMAL, 0.D0, CANDPL )
+      call nvc2pl ( normal, 0.d0, candpl )
 
-      CALL INEDPL ( SCLA, SCLB, SCLC, CANDPL, CAND, XFOUND )
+      call inedpl ( scla, sclb, sclc, candpl, cand, xfound )
 
-      IF ( .NOT. XFOUND ) THEN
-         CALL SETMSG ( 'Candidate ellipse could not be found.'  )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                  )
-         CALL CHKOUT ( 'NPEDLN'                                 )
-         RETURN
-      END IF
+      if ( .not. xfound ) then
+         call setmsg ( 'Candidate ellipse could not be found.'  )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                  )
+         call chkout ( 'NPEDLN'                                 )
+         return
+      end if
 
 !
 !     Project the candidate ellipse onto a plane orthogonal to the
 !     line.  We'll call the plane PRJPL and the projected ellipse PRJEL.
 !
-      CALL NVC2PL ( UDIR,  0.D0,   PRJPL )
-      CALL PJELPL ( CAND,  PRJPL,  PRJEL )
+      call nvc2pl ( udir,  0.d0,   prjpl )
+      call pjelpl ( cand,  prjpl,  prjel )
 
 !
 !     Find the point on the line lying in the projection plane, and
@@ -553,13 +553,13 @@
 !     The distance between PRJPT and PRJNPT is DIST.
 !
 !
-      CALL VPRJP  ( SCLPT,   PRJPL,  PRJPT         )
-      CALL NPELPT ( PRJPT,   PRJEL,  PRJNPT,  DIST )
+      call vprjp  ( sclpt,   prjpl,  prjpt         )
+      call npelpt ( prjpt,   prjel,  prjnpt,  dist )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'NPEDLN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'NPEDLN' )
+         return
+      end if
 
 !
 !     Find the near point PNEAR on the ellipsoid by taking the inverse
@@ -571,23 +571,23 @@
 !     be calculable due to numerical problems (this can only happen
 !     when the input ellipsoid is extremely flat or needle-shaped).
 !
-      CALL VPRJPI ( PRJNPT, PRJPL, CANDPL, PNEAR, IFOUND )
+      call vprjpi ( prjnpt, prjpl, candpl, pnear, ifound )
 
-      IF ( .NOT. IFOUND ) THEN
-         CALL SETMSG ( 'Inverse projection could not be found.'  )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                   )
-         CALL CHKOUT ( 'NPEDLN'                                  )
-         RETURN
-      END IF
+      if ( .not. ifound ) then
+         call setmsg ( 'Inverse projection could not be found.'  )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                   )
+         call chkout ( 'NPEDLN'                                  )
+         return
+      end if
 
 !
 !     Undo the scaling.
 !
-      CALL VSCLIP ( SCALE, PNEAR )
+      call vsclip ( scale, pnear )
 
-      DIST = SCALE * DIST
+      dist = scale * dist
 
 
-      CALL CHKOUT ( 'NPEDLN' )
-      RETURN
-      END
+      call chkout ( 'NPEDLN' )
+      return
+      end

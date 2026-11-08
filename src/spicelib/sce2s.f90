@@ -1,6 +1,6 @@
 !$Procedure SCE2S ( ET to SCLK string )
 
-      SUBROUTINE SCE2S ( SC, ET, SCLKCH )
+      subroutine sce2s ( sc, et, sclkch )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               SC
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         SCLKCH
+      integer               sc
+      double precision      et
+      character*(*)         sclkch
 
 ! $ Brief_I/O
 !
@@ -299,29 +299,29 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SCLKDP
+      double precision      sclkdp
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCE2S' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SCE2S' )
+      end if
 
 !
 !     Convert ET to encoded SCLK, and then to an SCLK string.
 !
-      CALL SCE2T  ( SC, ET,     SCLKDP )
-      CALL SCDECD ( SC, SCLKDP, SCLKCH )
+      call sce2t  ( sc, et,     sclkdp )
+      call scdecd ( sc, sclkdp, sclkch )
 
-      CALL CHKOUT ( 'SCE2S' )
-      RETURN
-      END
+      call chkout ( 'SCE2S' )
+      return
+      end

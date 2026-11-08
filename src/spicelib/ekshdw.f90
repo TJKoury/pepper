@@ -1,6 +1,6 @@
 !$Procedure EKSHDW ( EK, return shadowing status <STUB> )
 
-      SUBROUTINE EKSHDW ( HANDLE, ISSHAD )
+      subroutine ekshdw ( handle, isshad )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      LOGICAL               ISSHAD
+      integer               handle
+      logical               isshad
 
 ! $ Brief_I/O
 !
@@ -102,9 +102,9 @@
 !-&
 
 
-      INTEGER                I
+      integer                i
 
-      I      =  HANDLE
-      ISSHAD = .FALSE.
-      RETURN
-      END
+      i      =  handle
+      isshad = .false.
+      return
+      end

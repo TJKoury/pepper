@@ -1,6 +1,6 @@
 !$Procedure ZZSPKGP1 ( S/P Kernel, geometric position )
 
-      SUBROUTINE ZZSPKGP1 ( TARG, ET, REF, OBS, POS, LT )
+      subroutine zzspkgp1 ( targ, et, ref, obs, pos, lt )
 
 ! $ Abstract
 !
@@ -21,17 +21,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ninert.inc'
-      INCLUDE               'zzctr.inc'
+      include               'ninert.inc'
+      include               'zzctr.inc'
 
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      INTEGER               OBS
-      DOUBLE PRECISION      POS ( 3 )
-      DOUBLE PRECISION      LT
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      integer               obs
+      double precision      pos ( 3 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -312,140 +312,140 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VNORM
+      double precision      clight
+      double precision      vnorm
 
-      INTEGER               FRSTNP
-      INTEGER               ISRCHI
+      integer               frstnp
+      integer               isrchi
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  =  'ZZSPKGP1' )
+      character*(*)         rname
+      parameter           ( rname  =  'ZZSPKGP1' )
 
 !
 !     CHLEN is the maximum length of a chain.  That is,
 !     it is the maximum number of bodies in the chain from
 !     the target or observer to the SSB.
 !
-      INTEGER               CHLEN
-      PARAMETER           ( CHLEN = 20 )
+      integer               chlen
+      parameter           ( chlen = 20 )
 
-      INTEGER               SSB
-      PARAMETER           ( SSB   =  0 )
+      integer               ssb
+      parameter           ( ssb   =  0 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(40)        IDENT
-      CHARACTER*(40)        TNAME
-      CHARACTER*(40)        ONAME
-      CHARACTER*(80)        TSTRING
+      character*(40)        ident
+      character*(40)        tname
+      character*(40)        oname
+      character*(80)        tstring
 
-      DOUBLE PRECISION      DESCR  ( 5        )
-      DOUBLE PRECISION      SOBS   ( 6        )
-      DOUBLE PRECISION      STARG  ( 6, CHLEN )
-      DOUBLE PRECISION      STEMP  ( 6        )
+      double precision      descr  ( 5        )
+      double precision      sobs   ( 6        )
+      double precision      starg  ( 6, chlen )
+      double precision      stemp  ( 6        )
 
-      DOUBLE PRECISION      PSXFRM ( 3, 3     )
-      DOUBLE PRECISION      ROT    ( 3, 3     )
-      DOUBLE PRECISION      VTEMP  ( 6        )
+      double precision      psxfrm ( 3, 3     )
+      double precision      rot    ( 3, 3     )
+      double precision      vtemp  ( 6        )
 
-      INTEGER               CFRAME
-      INTEGER               COBS
-      INTEGER               CTARG  (    CHLEN )
-      INTEGER               TFRAME (    CHLEN )
-      INTEGER               CTPOS
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               LEGS
-      INTEGER               NCT
-      INTEGER               REFID
-      INTEGER               TMPFRM
+      integer               cframe
+      integer               cobs
+      integer               ctarg  (    chlen )
+      integer               tframe (    chlen )
+      integer               ctpos
+      integer               handle
+      integer               i
+      integer               legs
+      integer               nct
+      integer               refid
+      integer               tmpfrm
 
-      LOGICAL               FOUND
-      LOGICAL               NOFRM
-      LOGICAL               ISINRT
+      logical               found
+      logical               nofrm
+      logical               isinrt
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVREF
-      INTEGER               SVREFI
+      integer               svctr1 ( ctrsiz )
+      character*(frnmln)    svref
+      integer               svrefi
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVREF
-      SAVE                  SVREFI
+      save                  svctr1
+      save                  svref
+      save                  svrefi
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     In-line Function Definitions
 !
-      ISINRT ( TMPFRM, CFRAME ) =       CFRAME .GT. 0 &
-                                  .AND. CFRAME .LE. NINERT &
-                                  .AND. TMPFRM .GT. 0 &
-                                  .AND. TMPFRM .LE. NINERT
+      isinrt ( tmpfrm, cframe ) =       cframe .gt. 0 &
+                                  .and. cframe .le. ninert &
+                                  .and. tmpfrm .gt. 0 &
+                                  .and. tmpfrm .le. ninert
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( RNAME )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( rname )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     We take care of the obvious case first.  It TARG and OBS are the
 !     same we can just fill in zero.
 !
-      IF ( TARG .EQ. OBS ) THEN
+      if ( targ .eq. obs ) then
 
-         LT = 0.0D0
+         lt = 0.0d0
 
-         CALL CLEARD ( 3, POS )
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call cleard ( 3, pos )
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -513,55 +513,55 @@
 !     up) and calls IRFNUM again to reset the 'DEFAULT's frame ID
 !     should it change between the calls.
 !
-      CALL ZZNAMFRM ( SVCTR1, SVREF, SVREFI, REF, REFID )
+      call zznamfrm ( svctr1, svref, svrefi, ref, refid )
 
-      IF ( REFID .EQ. 0 ) THEN
-         CALL IRFNUM ( REF, REFID )
-      END IF
+      if ( refid .eq. 0 ) then
+         call irfnum ( ref, refid )
+      end if
 
-      IF ( REFID .EQ. 0 ) THEN
+      if ( refid .eq. 0 ) then
 
-         IF (  FRSTNP(REF) .GT. 0 ) THEN
+         if (  frstnp(ref) .gt. 0 ) then
 
-            CALL SETMSG ( 'The string supplied to specify the ' &
+            call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame, (''#'') contains ' &
             //            'non-printing characters.  The two ' &
             //            'most common causes for this kind ' &
             //            'of error are: 1. an error in the ' &
             //            'call to ZZSPKGP1; 2. an ' &
             //            'uninitialized variable. ' )
-            CALL ERRCH  ( '#', REF )
+            call errch  ( '#', ref )
 
 
-         ELSE IF ( REF .EQ. ' ' ) THEN
+         else if ( ref .eq. ' ' ) then
 
-            CALL SETMSG ( 'The string supplied to specify the ' &
+            call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame is blank.  The most ' &
             //            'common cause for this kind of error ' &
             //            'is an uninitialized variable. ' )
 
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'The string supplied to specify the ' &
+            call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame was ''#''.  This ' &
             //            'frame is not recognized. Possible ' &
             //            'causes for this error are: 1. failure ' &
             //            'to load the frame definition into the ' &
             //            'kernel pool; 2. An out-of-date ' &
             //            'edition of the toolkit. ' )
-            CALL ERRCH  ( '#', REF )
+            call errch  ( '#', ref )
 
-         END IF
+         end if
 
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)' )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-      END IF
+      end if
 
 
 
@@ -582,50 +582,50 @@
 !     first elements:  TARG and the position of TARG relative
 !     to itself.
 !
-      I        =  1
-      CTARG(I) =  TARG
-      FOUND    = .TRUE.
+      i        =  1
+      ctarg(i) =  targ
+      found    = .true.
 
-      CALL CLEARD ( 6, STARG(1,I) )
+      call cleard ( 6, starg(1,i) )
 
-      DO WHILE (           FOUND &
-                  .AND.  ( I        .LT. CHLEN ) &
-                  .AND.  ( CTARG(I) .NE. OBS   ) &
-                  .AND.  ( CTARG(I) .NE. SSB   )  )
+      do while (           found &
+                  .and.  ( i        .lt. chlen ) &
+                  .and.  ( ctarg(i) .ne. obs   ) &
+                  .and.  ( ctarg(i) .ne. ssb   )  )
 
 !
 !        Find a file and segment that has position
 !        data for CTARG(I).
 !
-         CALL SPKSFS ( CTARG(I), ET, HANDLE, DESCR, IDENT, FOUND )
+         call spksfs ( ctarg(i), et, handle, descr, ident, found )
 
-         IF ( FOUND ) THEN
+         if ( found ) then
 !
 !           Get the position of CTARG(I) relative to some
 !           center of motion.  This new center goes in
 !           CTARG(I+1) and the position is called STEMP.
 !
-            I = I + 1
+            i = i + 1
 
-            CALL SPKPVN ( HANDLE,    DESCR,      ET, &
-                          TFRAME(I), STARG(1,I), CTARG(I) )
+            call spkpvn ( handle,    descr,      et, &
+                          tframe(i), starg(1,i), ctarg(i) )
 !
 !           Here's what we have.  STARG is the position of CTARG(I-1)
 !           relative to CTARG(I) in reference frame TFRAME(I)
 !
-         END IF
+         end if
 !
 !        If one of the routines above failed during
 !        execution, we just give up and check out.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-      END DO
+      end do
 
-      TFRAME(1) = TFRAME(2)
+      tframe(1) = tframe(2)
 !
 !     If the loop above ended because we ran out of
 !     room in the arrays CTARG and STARG, then we
@@ -638,33 +638,33 @@
 !     loss of precision, but it's better than other
 !     alternatives.
 !
-      IF ( I .EQ. CHLEN ) THEN
+      if ( i .eq. chlen ) then
 
-         DO WHILE (      FOUND &
-                   .AND. CTARG(CHLEN) .NE. SSB &
-                   .AND. CTARG(CHLEN) .NE. OBS )
+         do while (      found &
+                   .and. ctarg(chlen) .ne. ssb &
+                   .and. ctarg(chlen) .ne. obs )
 
 
 !
 !           Find a file and segment that has position
 !           data for CTARG(CHLEN).
 !
-            CALL SPKSFS ( CTARG(CHLEN), ET, HANDLE, DESCR, IDENT, FOUND)
+            call spksfs ( ctarg(chlen), et, handle, descr, ident, found)
 
-            IF ( FOUND ) THEN
+            if ( found ) then
 !
 !              Get the position of CTARG(CHLEN) relative to
 !              some center of motion.  The new center
 !              overwrites the old.  The position is called
 !              STEMP.
 !
-               CALL SPKPVN ( HANDLE, DESCR, ET, TMPFRM, STEMP, &
-                             CTARG(CHLEN))
+               call spkpvn ( handle, descr, et, tmpfrm, stemp, &
+                             ctarg(chlen))
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
 !
 !              Add STEMP to the position of TARG relative to
@@ -672,48 +672,48 @@
 !              relative to the new center.  Overwrite
 !              the last element of STARG.
 !
-               IF ( TFRAME(CHLEN) .EQ. TMPFRM ) THEN
+               if ( tframe(chlen) .eq. tmpfrm ) then
 
-                  CALL MOVED ( STARG(1,CHLEN), 3, VTEMP )
+                  call moved ( starg(1,chlen), 3, vtemp )
 
-               ELSE IF ( ISINRT ( TFRAME(CHLEN), TMPFRM ) ) THEN
+               else if ( isinrt ( tframe(chlen), tmpfrm ) ) then
 
-                  CALL IRFROT( TFRAME(CHLEN), TMPFRM,         ROT      )
-                  CALL MXV   ( ROT,           STARG(1,CHLEN), VTEMP(1) )
+                  call irfrot( tframe(chlen), tmpfrm,         rot      )
+                  call mxv   ( rot,           starg(1,chlen), vtemp(1) )
 
-               ELSE
+               else
 
-                  CALL ZZREFCH1( TFRAME(CHLEN), TMPFRM,   ET,   PSXFRM )
+                  call zzrefch1( tframe(chlen), tmpfrm,   et,   psxfrm )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( RNAME )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( rname )
+                     return
+                  end if
 
-                  CALL MXV   ( PSXFRM, STARG (1,CHLEN),       VTEMP  )
+                  call mxv   ( psxfrm, starg (1,chlen),       vtemp  )
 
-               END IF
+               end if
 
-               CALL VADD ( VTEMP,  STEMP, STARG(1,CHLEN) )
+               call vadd ( vtemp,  stemp, starg(1,chlen) )
 
-               TFRAME(CHLEN) = TMPFRM
+               tframe(chlen) = tmpfrm
 
-            END IF
+            end if
 
 !
 !           If one of the routines above failed during
 !           execution, we just give up and check out.
 !
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      NCT = I
+      nct = i
 !
 !     NCT is the number of elements in CTARG,
 !     the chain length.  We have in hand the following information
@@ -735,8 +735,8 @@
 !     Now follow the observer's chain.  Assign
 !     the first values for COBS and SOBS.
 !
-      COBS = OBS
-      CALL CLEARD ( 6, SOBS )
+      cobs = obs
+      call cleard ( 6, sobs )
 
 !
 !     Perhaps we have a common node already.
@@ -747,12 +747,12 @@
 !     node in CTARG if one is found.  It will
 !     be zero if COBS is not found in CTARG.
 !
-      IF ( CTARG(NCT) .EQ. COBS ) THEN
-         CTPOS  = NCT
-         CFRAME = TFRAME(CTPOS)
-      ELSE
-         CTPOS  = 0
-      END IF
+      if ( ctarg(nct) .eq. cobs ) then
+         ctpos  = nct
+         cframe = tframe(ctpos)
+      else
+         ctpos  = 0
+      end if
 
 !
 !     Repeat the same loop as above, but each time
@@ -767,47 +767,47 @@
 !     we need in that one center (COBS) and position
 !     (SOBS-position of the target relative to COBS).
 !
-      FOUND  = .TRUE.
-      NOFRM  = .TRUE.
-      LEGS   =  0
+      found  = .true.
+      nofrm  = .true.
+      legs   =  0
 
-      DO WHILE (           FOUND &
-                  .AND.  ( COBS  .NE. SSB ) &
-                  .AND.  ( CTPOS .EQ. 0   )  )
+      do while (           found &
+                  .and.  ( cobs  .ne. ssb ) &
+                  .and.  ( ctpos .eq. 0   )  )
 
 !
 !        Find a file and segment that has position
 !        data for COBS.
 !
-         CALL SPKSFS ( COBS, ET, HANDLE, DESCR, IDENT, FOUND )
+         call spksfs ( cobs, et, handle, descr, ident, found )
 
-         IF ( FOUND ) THEN
+         if ( found ) then
 !
 !           Get the position of COBS; call it STEMP.
 !           The center of motion of COBS becomes the
 !           new COBS.
 !
-            IF ( LEGS .EQ. 0 ) THEN
-               CALL SPKPVN ( HANDLE, DESCR, ET, TMPFRM, SOBS,  COBS )
-            ELSE
-               CALL SPKPVN ( HANDLE, DESCR, ET, TMPFRM, STEMP, COBS )
-            END IF
+            if ( legs .eq. 0 ) then
+               call spkpvn ( handle, descr, et, tmpfrm, sobs,  cobs )
+            else
+               call spkpvn ( handle, descr, et, tmpfrm, stemp, cobs )
+            end if
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            IF ( NOFRM ) THEN
-               NOFRM  = .FALSE.
-               CFRAME = TMPFRM
-            END IF
+            if ( nofrm ) then
+               nofrm  = .false.
+               cframe = tmpfrm
+            end if
 !
 !           Add STEMP to the position of OBS relative to
 !           the old COBS to get the position of OBS
 !           relative to the new COBS.
 !
-            IF ( CFRAME .EQ. TMPFRM ) THEN
+            if ( cframe .eq. tmpfrm ) then
 !
 !              On the first leg of the position of the observer, we
 !              don't have to add anything, the position of the
@@ -815,52 +815,52 @@
 !              the number of legs in the observer position is one or
 !              greater.
 !
-               IF ( LEGS .GT. 0 ) THEN
-                  CALL VADD ( SOBS,  STEMP, VTEMP )
-                  CALL VEQU ( VTEMP,        SOBS  )
-               END IF
+               if ( legs .gt. 0 ) then
+                  call vadd ( sobs,  stemp, vtemp )
+                  call vequ ( vtemp,        sobs  )
+               end if
 
-            ELSE IF ( ISINRT( CFRAME, TMPFRM ) ) THEN
+            else if ( isinrt( cframe, tmpfrm ) ) then
 
-               CALL IRFROT ( CFRAME, TMPFRM, ROT )
-               CALL MXV    ( ROT,    SOBS(1),   VTEMP(1)  )
-               CALL VADD   ( VTEMP,  STEMP,     SOBS      )
-               CFRAME = TMPFRM
+               call irfrot ( cframe, tmpfrm, rot )
+               call mxv    ( rot,    sobs(1),   vtemp(1)  )
+               call vadd   ( vtemp,  stemp,     sobs      )
+               cframe = tmpfrm
 
-            ELSE
+            else
 
-               CALL ZZREFCH1 ( CFRAME, TMPFRM, ET,   PSXFRM )
+               call zzrefch1 ( cframe, tmpfrm, et,   psxfrm )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( RNAME )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( rname )
+                  return
+               end if
 
-               CALL MXV    ( PSXFRM, SOBS,         VTEMP  )
-               CALL VADD   ( VTEMP,  STEMP,        SOBS   )
-               CFRAME = TMPFRM
+               call mxv    ( psxfrm, sobs,         vtemp  )
+               call vadd   ( vtemp,  stemp,        sobs   )
+               cframe = tmpfrm
 
-            END IF
+            end if
 
 !
 !           We now have one more leg of the path for OBS.  Set
 !           LEGS to reflect this.  Then see if the new center
 !           is a common node. If not, repeat the loop.
 !
-            LEGS  = LEGS + 1
-            CTPOS = ISRCHI ( COBS, NCT, CTARG )
+            legs  = legs + 1
+            ctpos = isrchi ( cobs, nct, ctarg )
 
-         END IF
+         end if
 
 !
 !        Check failed.  We don't want to loop indefinitely.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-      END DO
+      end do
 
 
 !
@@ -868,43 +868,43 @@
 !     have not found a common node though we have
 !     searched through all the available data.
 !
-      IF ( CTPOS .EQ. 0 ) THEN
+      if ( ctpos .eq. 0 ) then
 
-         CALL BODC2N ( TARG, TNAME,   FOUND )
+         call bodc2n ( targ, tname,   found )
 
-         IF ( FOUND ) THEN
-            CALL PREFIX ( '# (',  0,        TNAME )
-            CALL SUFFIX ( ')',    0,        TNAME )
-            CALL REPMI  ( TNAME, '#', TARG, TNAME )
-         ELSE
-            CALL INTSTR ( TARG, TNAME )
-         END IF
+         if ( found ) then
+            call prefix ( '# (',  0,        tname )
+            call suffix ( ')',    0,        tname )
+            call repmi  ( tname, '#', targ, tname )
+         else
+            call intstr ( targ, tname )
+         end if
 
 
-         CALL BODC2N ( OBS,  ONAME,   FOUND )
+         call bodc2n ( obs,  oname,   found )
 
-         IF ( FOUND ) THEN
-            CALL PREFIX ( '# (',  0,       ONAME )
-            CALL SUFFIX ( ')',    0,       ONAME )
-            CALL REPMI  ( ONAME, '#', OBS, ONAME )
-         ELSE
-            CALL INTSTR ( OBS, ONAME )
-         END IF
+         if ( found ) then
+            call prefix ( '# (',  0,       oname )
+            call suffix ( ')',    0,       oname )
+            call repmi  ( oname, '#', obs, oname )
+         else
+            call intstr ( obs, oname )
+         end if
 
-         CALL SETMSG ( 'Insufficient ephemeris data has been ' &
+         call setmsg ( 'Insufficient ephemeris data has been ' &
          //            'loaded to compute the position of TARG ' &
          //            'relative to OBS at the ephemeris epoch ' &
          //            '#. ' )
 
-         CALL ETCAL  (  ET,    TSTRING                                 )
-         CALL ERRCH  ( 'TARG', TNAME                                   )
-         CALL ERRCH  ( 'OBS',  ONAME                                   )
-         CALL ERRCH  ( '#',    TSTRING                                 )
-         CALL SIGERR ( 'SPICE(SPKINSUFFDATA)'                          )
-         CALL CHKOUT ( RNAME                                        )
-         RETURN
+         call etcal  (  et,    tstring                                 )
+         call errch  ( 'TARG', tname                                   )
+         call errch  ( 'OBS',  oname                                   )
+         call errch  ( '#',    tstring                                 )
+         call sigerr ( 'SPICE(SPKINSUFFDATA)'                          )
+         call chkout ( rname                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     If CTPOS is not zero, then we have reached a
@@ -943,40 +943,40 @@
 !
 !     Compute the position of the target relative to CTARG(CTPOS)
 !
-      IF ( CTPOS .EQ. 1 ) THEN
-         TFRAME(1) = CFRAME
-      END IF
+      if ( ctpos .eq. 1 ) then
+         tframe(1) = cframe
+      end if
 
-      DO I = 2, CTPOS-1
+      do i = 2, ctpos-1
 
-         IF ( TFRAME(I) .EQ. TFRAME(I+1) ) THEN
+         if ( tframe(i) .eq. tframe(i+1) ) then
 
-            CALL VADD  ( STARG(1,I), STARG(1,I+1),  STEMP        )
-            CALL MOVED ( STEMP,      3,             STARG(1,I+1) )
+            call vadd  ( starg(1,i), starg(1,i+1),  stemp        )
+            call moved ( stemp,      3,             starg(1,i+1) )
 
-         ELSE IF ( ISINRT ( TFRAME(I), TFRAME(I+1) ) ) THEN
+         else if ( isinrt ( tframe(i), tframe(i+1) ) ) then
 
-            CALL IRFROT ( TFRAME(I),  TFRAME(I+1),     ROT          )
-            CALL MXV    ( ROT,        STARG(1,I),      STEMP(1)     )
-            CALL VADD   ( STEMP,      STARG(1,I+1),    VTEMP        )
-            CALL MOVED  ( VTEMP,      3,               STARG(1,I+1) )
+            call irfrot ( tframe(i),  tframe(i+1),     rot          )
+            call mxv    ( rot,        starg(1,i),      stemp(1)     )
+            call vadd   ( stemp,      starg(1,i+1),    vtemp        )
+            call moved  ( vtemp,      3,               starg(1,i+1) )
 
-         ELSE
+         else
 
-            CALL ZZREFCH1 ( TFRAME(I),  TFRAME(I+1), ET,  PSXFRM       )
+            call zzrefch1 ( tframe(i),  tframe(i+1), et,  psxfrm       )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            CALL MXV    ( PSXFRM,     STARG(1,I),       STEMP        )
-            CALL VADD   ( STEMP,      STARG(1,I+1),     VTEMP        )
-            CALL MOVED  ( VTEMP,      3,                STARG(1,I+1) )
+            call mxv    ( psxfrm,     starg(1,i),       stemp        )
+            call vadd   ( stemp,      starg(1,i+1),     vtemp        )
+            call moved  ( vtemp,      3,                starg(1,i+1) )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
@@ -985,11 +985,11 @@
 !     faster to make logical checks than it is to compute
 !     frame transformations.
 !
-      IF ( TFRAME(CTPOS) .EQ. CFRAME ) THEN
+      if ( tframe(ctpos) .eq. cframe ) then
 
-         CALL VSUB   ( STARG(1,CTPOS), SOBS,  POS  )
+         call vsub   ( starg(1,ctpos), sobs,  pos  )
 
-      ELSE IF ( TFRAME(CTPOS) .EQ. REFID ) THEN
+      else if ( tframe(ctpos) .eq. refid ) then
 
 !
 !        If the last frame associated with the target is already
@@ -997,93 +997,93 @@
 !        the observer to that frame and then subtract the position
 !        of the observer from the position of the target.
 !
-         IF ( ISINRT( CFRAME, REFID ) ) THEN
+         if ( isinrt( cframe, refid ) ) then
 
-            CALL IRFROT ( CFRAME, REFID,   ROT      )
-            CALL MXV    ( ROT,    SOBS(1), STEMP(1) )
+            call irfrot ( cframe, refid,   rot      )
+            call mxv    ( rot,    sobs(1), stemp(1) )
 
-         ELSE
+         else
 
-            CALL ZZREFCH1 ( CFRAME, REFID, ET,  PSXFRM )
+            call zzrefch1 ( cframe, refid, et,  psxfrm )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            CALL MXV    ( PSXFRM, SOBS,       STEMP  )
+            call mxv    ( psxfrm, sobs,       stemp  )
 
-         END IF
+         end if
 
 !
 !        We've now transformed SOBS into the requested reference frame.
 !        Set CFRAME to reflect this.
 !
-         CFRAME = REFID
-         CALL VSUB  ( STARG(1,CTPOS), STEMP, POS )
+         cframe = refid
+         call vsub  ( starg(1,ctpos), stemp, pos )
 
 
-      ELSE IF ( ISINRT( TFRAME(CTPOS), CFRAME ) ) THEN
+      else if ( isinrt( tframe(ctpos), cframe ) ) then
 
 !
 !        If both frames are inertial we use IRFROT instead of
 !        ZZREFCH1 to get things into a common frame.
 !
-         CALL IRFROT ( TFRAME(CTPOS),  CFRAME,               ROT      )
-         CALL MXV    ( ROT,            STARG(1,CTPOS),       STEMP(1) )
-         CALL VSUB   ( STEMP,          SOBS,                 POS    )
+         call irfrot ( tframe(ctpos),  cframe,               rot      )
+         call mxv    ( rot,            starg(1,ctpos),       stemp(1) )
+         call vsub   ( stemp,          sobs,                 pos    )
 
-      ELSE
+      else
 !
 !        Use the more general routine ZZREFCH1 to make the
 !        transformation.
 !
-         CALL ZZREFCH1 ( TFRAME(CTPOS),  CFRAME,          ET,  PSXFRM )
+         call zzrefch1 ( tframe(ctpos),  cframe,          et,  psxfrm )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL MXV    ( PSXFRM,         STARG(1,CTPOS),       STEMP  )
-         CALL VSUB   ( STEMP,          SOBS,                 POS  )
+         call mxv    ( psxfrm,         starg(1,ctpos),       stemp  )
+         call vsub   ( stemp,          sobs,                 pos  )
 
-      END IF
+      end if
 
 !
 !     Finally, rotate as needed into the requested frame.
 !
-      IF      ( CFRAME .EQ. REFID ) THEN
+      if      ( cframe .eq. refid ) then
 
 !
 !        We don't have to do anything in this case.
 !
 
-      ELSE IF ( ISINRT ( CFRAME, REFID ) ) THEN
+      else if ( isinrt ( cframe, refid ) ) then
 !
 !        Since both frames are inertial, we use the more direct
 !        routine IRFROT to get the transformation to REFID.
 !
-         CALL IRFROT ( CFRAME,  REFID,    ROT          )
-         CALL MXV    ( ROT,     POS(1),   STEMP(1)     )
-         CALL MOVED  ( STEMP,        3,   POS          )
+         call irfrot ( cframe,  refid,    rot          )
+         call mxv    ( rot,     pos(1),   stemp(1)     )
+         call moved  ( stemp,        3,   pos          )
 
-      ELSE
+      else
 
-         CALL ZZREFCH1 ( CFRAME,  REFID, ET,  PSXFRM  )
+         call zzrefch1 ( cframe,  refid, et,  psxfrm  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL MXV    ( PSXFRM,  POS,        STEMP   )
-         CALL MOVED  ( STEMP,          3,   POS     )
+         call mxv    ( psxfrm,  pos,        stemp   )
+         call moved  ( stemp,          3,   pos     )
 
-      END IF
+      end if
 
-      LT = VNORM  ( POS ) / CLIGHT()
+      lt = vnorm  ( pos ) / clight()
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

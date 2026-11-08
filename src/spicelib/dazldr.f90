@@ -1,6 +1,6 @@
 !$Procedure DAZLDR ( Derivative of AZ/EL w.r.t. rectangular )
 
-      SUBROUTINE DAZLDR ( X, Y, Z, AZCCW, ELPLSZ, JACOBI )
+      subroutine dazldr ( x, y, z, azccw, elplsz, jacobi )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      Y
-      DOUBLE PRECISION      Z
-      LOGICAL               AZCCW
-      LOGICAL               ELPLSZ
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      x
+      double precision      y
+      double precision      z
+      logical               azccw
+      logical               elplsz
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -424,43 +424,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DAZLDR' )
+      call chkin ( 'DAZLDR' )
 
 !
 !     There is a singularity of the Jacobian matrix for points on
 !     the z-axis.
 !
-      IF ( ( X .EQ. 0 ) .AND. ( Y .EQ. 0 ) ) THEN
+      if ( ( x .eq. 0 ) .and. ( y .eq. 0 ) ) then
 
-         CALL SETMSG ( 'The Jacobian matrix of the transformation ' &
+         call setmsg ( 'The Jacobian matrix of the transformation ' &
          //            'from rectangular to azimuth/elevation ' &
          //            'coordinates is not defined for points on ' &
          //            'the z-axis.'                               )
-         CALL SIGERR ( 'SPICE(POINTONZAXIS)'                       )
-         CALL CHKOUT ( 'DAZLDR'                                    )
-         RETURN
+         call sigerr ( 'SPICE(POINTONZAXIS)'                       )
+         call chkout ( 'DAZLDR'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the Jacobian matrix of the transformation from latitudinal to
 !     rectangular coordinates at the input point
 !
-      CALL DLATDR ( X, Y, Z, JACOBI )
+      call dlatdr ( x, y, z, jacobi )
 
 !
 !     The matrix JACOBI is
@@ -481,22 +481,22 @@
 !     where azsnse (direl) are +1 when AZCCW (ELPLSZ) are
 !     .TRUE.
 !
-      IF ( .NOT. AZCCW ) THEN
+      if ( .not. azccw ) then
 
-         DO I = 1, 3
-            JACOBI(2,I) = -JACOBI(2,I)
-         END DO
+         do i = 1, 3
+            jacobi(2,i) = -jacobi(2,i)
+         end do
 
-      END IF
+      end if
 
-      IF ( .NOT. ELPLSZ ) THEN
+      if ( .not. elplsz ) then
 
-         DO I = 1, 3
-            JACOBI(3,I) = -JACOBI(3,I)
-         END DO
+         do i = 1, 3
+            jacobi(3,i) = -jacobi(3,i)
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAZLDR' )
-      RETURN
-      END
+      call chkout ( 'DAZLDR' )
+      return
+      end

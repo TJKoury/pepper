@@ -1,6 +1,6 @@
 !$Procedure SWAPAI ( Swap elements within an integer array )
 
-      SUBROUTINE SWAPAI ( N, LOCN, M, LOCM, ARRAY )
+      subroutine swapai ( n, locn, m, locm, array )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      INTEGER               LOCN
-      INTEGER               M
-      INTEGER               LOCM
-      INTEGER               ARRAY  ( * )
+      integer               n
+      integer               locn
+      integer               m
+      integer               locm
+      integer               array  ( * )
 
 ! $ Brief_I/O
 !
@@ -235,25 +235,25 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               NN
-      INTEGER               LN
-      INTEGER               NM
-      INTEGER               LM
+      integer               nn
+      integer               ln
+      integer               nm
+      integer               lm
 
-      INTEGER               DIRECT
-      INTEGER               EXTRA
+      integer               direct
+      integer               extra
 
-      CHARACTER*1           DIR
-      INTEGER               BEGSUB
-      INTEGER               NSUB
+      character*1           dir
+      integer               begsub
+      integer               nsub
 
-      INTEGER               I
+      integer               i
 
 
 
@@ -354,105 +354,105 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SWAPAI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SWAPAI' )
+      end if
 
 
 !
 !     Check to see if the inputs are valid.
 !
-      IF ( N .LT. 0 ) THEN
+      if ( n .lt. 0 ) then
 
-         CALL SETMSG ( 'Number of elements in the first group is *.' )
-         CALL ERRINT ( '*', N                   )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)' )
-         CALL CHKOUT ( 'SWAPAI' )
-         RETURN
+         call setmsg ( 'Number of elements in the first group is *.' )
+         call errint ( '*', n                   )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)' )
+         call chkout ( 'SWAPAI' )
+         return
 
-      ELSE IF ( M .LT. 0 ) THEN
+      else if ( m .lt. 0 ) then
 
-         CALL SETMSG ( 'Number of elements in the second group is *.' )
-         CALL ERRINT ( '*', M                   )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)' )
-         CALL CHKOUT ( 'SWAPAI' )
-         RETURN
+         call setmsg ( 'Number of elements in the second group is *.' )
+         call errint ( '*', m                   )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)' )
+         call chkout ( 'SWAPAI' )
+         return
 
-      ELSE IF ( LOCN .LT. 1 ) THEN
+      else if ( locn .lt. 1 ) then
 
-         CALL SETMSG ( 'Location of the first group is *.' )
-         CALL ERRINT ( '*', LOCN             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
-         CALL CHKOUT ( 'SWAPAI' )
-         RETURN
+         call setmsg ( 'Location of the first group is *.' )
+         call errint ( '*', locn             )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
+         call chkout ( 'SWAPAI' )
+         return
 
-      ELSE IF ( LOCM .LT. 1 ) THEN
+      else if ( locm .lt. 1 ) then
 
-         CALL SETMSG ( 'Location of the second group is *.' )
-         CALL ERRINT ( '*', LOCM             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
-         CALL CHKOUT ( 'SWAPAI' )
-         RETURN
+         call setmsg ( 'Location of the second group is *.' )
+         call errint ( '*', locm             )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
+         call chkout ( 'SWAPAI' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Make sure we have the groups in the right order.
 !
-      IF ( LOCN .LT. LOCM ) THEN
-         LN = LOCN
-         LM = LOCM
-         NN = N
-         NM = M
-      ELSE
-         LN = LOCM
-         LM = LOCN
-         NN = M
-         NM = N
-      END IF
+      if ( locn .lt. locm ) then
+         ln = locn
+         lm = locm
+         nn = n
+         nm = m
+      else
+         ln = locm
+         lm = locn
+         nn = m
+         nm = n
+      end if
 
 !
 !     The elements must be distinct.
 !
-      IF ( LM .LT. LN + NN ) THEN
-         CALL SETMSG ( 'Elements to be swapped are not distinct.' )
-         CALL SIGERR ( 'SPICE(NOTDISTINCT)' )
-         CALL CHKOUT ( 'SWAPAI' )
-         RETURN
-      END IF
+      if ( lm .lt. ln + nn ) then
+         call setmsg ( 'Elements to be swapped are not distinct.' )
+         call sigerr ( 'SPICE(NOTDISTINCT)' )
+         call chkout ( 'SWAPAI' )
+         return
+      end if
 
 !
 !     Direct exchange.
 !
-      DIRECT = MIN ( NN, NM )
+      direct = min ( nn, nm )
 
-      DO I = 0, DIRECT-1
-         CALL SWAPI ( ARRAY(LN+I), ARRAY(LM+I) )
-      END DO
+      do i = 0, direct-1
+         call swapi ( array(ln+i), array(lm+i) )
+      end do
 
 !
 !     Cycle.
 !
-      EXTRA = ABS ( NN - NM )
+      extra = abs ( nn - nm )
 
-      IF ( EXTRA .GT. 0 ) THEN
+      if ( extra .gt. 0 ) then
 
-         IF ( NN .LT. NM ) THEN
-            DIR = 'F'
-         ELSE
-            DIR = 'B'
-         END IF
+         if ( nn .lt. nm ) then
+            dir = 'F'
+         else
+            dir = 'B'
+         end if
 
-         BEGSUB = LN + DIRECT
-         NSUB   = (LM - LN) + (NM - DIRECT)
+         begsub = ln + direct
+         nsub   = (lm - ln) + (nm - direct)
 
-         CALL CYAIIP ( NSUB, DIR, EXTRA, ARRAY(BEGSUB) )
+         call cyaiip ( nsub, dir, extra, array(begsub) )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SWAPAI' )
-      RETURN
-      END
+      call chkout ( 'SWAPAI' )
+      return
+      end

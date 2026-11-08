@@ -1,6 +1,6 @@
 !$Procedure CYLLAT ( Cylindrical to latitudinal )
 
-      SUBROUTINE CYLLAT ( R, CLON, Z,  RADIUS, LON, LAT )
+      subroutine cyllat ( r, clon, z,  radius, lon, lat )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    R
-      DOUBLE PRECISION    CLON
-      DOUBLE PRECISION    Z
-      DOUBLE PRECISION    RADIUS
-      DOUBLE PRECISION    LON
-      DOUBLE PRECISION    LAT
+      double precision    r
+      double precision    clon
+      double precision    z
+      double precision    radius
+      double precision    lon
+      double precision    lat
 
 ! $ Brief_I/O
 !
@@ -405,39 +405,39 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION BIG
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
+      double precision big
+      double precision x
+      double precision y
 
-      DOUBLE PRECISION RHO
-      DOUBLE PRECISION LATTUD
+      double precision rho
+      double precision lattud
 
 !
 !     Convert the input cylindrical coordinates to latitudinal
 !     coordinates, storing in temporary variables.
 !
-      BIG = MAX( DABS(R), DABS(Z) )
+      big = max( dabs(r), dabs(z) )
 
-      IF ( BIG .GT. 0 ) THEN
-         X   = R/BIG
-         Y   = Z/BIG
-         RHO = BIG * DSQRT( X*X + Y*Y )
-      ELSE
-         RHO = 0.0D0
-      END IF
+      if ( big .gt. 0 ) then
+         x   = r/big
+         y   = z/big
+         rho = big * dsqrt( x*x + y*y )
+      else
+         rho = 0.0d0
+      end if
 
 
-      IF (RHO.EQ.0.D0) THEN
-         LATTUD = 0.D0
-      ELSE
-         LATTUD = DATAN2 (Z,R)
-      END IF
+      if (rho.eq.0.d0) then
+         lattud = 0.d0
+      else
+         lattud = datan2 (z,r)
+      end if
 !
 !     Move results to output variables
 !
-      LON    = CLON
-      RADIUS = RHO
-      LAT    = LATTUD
+      lon    = clon
+      radius = rho
+      lat    = lattud
 !
-      RETURN
-      END
+      return
+      end

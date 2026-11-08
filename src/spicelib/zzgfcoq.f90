@@ -1,9 +1,9 @@
 !$Procedure      ZZGFCOQ ( GF, return coordinate quantity )
 
-      SUBROUTINE ZZGFCOQ ( VECDEF, METHOD, TRGID, ET, &
-                           REF,    ABCORR, OBSID, DREF, &
-                           DVEC,   CRDSYS, CTRID, RE, &
-                           F,      CRDNAM, VALUE, FOUND )
+      subroutine zzgfcoq ( vecdef, method, trgid, et, &
+                           ref,    abcorr, obsid, dref, &
+                           dvec,   crdsys, ctrid, re, &
+                           f,      crdnam, value, found )
 
 ! $ Abstract
 !
@@ -29,27 +29,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
 
-      CHARACTER*(*)         VECDEF
-      CHARACTER*(*)         METHOD
-      INTEGER               TRGID
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBSID
-      CHARACTER*(*)         DREF
-      DOUBLE PRECISION      DVEC   ( 3 )
-      CHARACTER*(*)         CRDSYS
-      INTEGER               CTRID
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      CHARACTER*(*)         CRDNAM
-      DOUBLE PRECISION      VALUE
-      LOGICAL               FOUND
+      character*(*)         vecdef
+      character*(*)         method
+      integer               trgid
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      integer               obsid
+      character*(*)         dref
+      double precision      dvec   ( 3 )
+      character*(*)         crdsys
+      integer               ctrid
+      double precision      re
+      double precision      f
+      character*(*)         crdnam
+      double precision      value
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -407,76 +407,76 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               CRDLEN
-      PARAMETER           ( CRDLEN = 32 )
+      integer               crdlen
+      parameter           ( crdlen = 32 )
 
-      INTEGER               NSYS
-      PARAMETER           ( NSYS   = 7 )
+      integer               nsys
+      parameter           ( nsys   = 7 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CRDLEN)    CRDNMS ( 3, NSYS )
-      CHARACTER*(BDNMLN)    CTRNAM
-      CHARACTER*(BDNMLN)    OBSNAM
-      CHARACTER*(CRDLEN)    SYSNMS (    NSYS )
-      CHARACTER*(CRDLEN)    SYSNAM
-      CHARACTER*(BDNMLN)    TRGNAM
+      character*(crdlen)    crdnms ( 3, nsys )
+      character*(bdnmln)    ctrnam
+      character*(bdnmln)    obsnam
+      character*(crdlen)    sysnms (    nsys )
+      character*(crdlen)    sysnam
+      character*(bdnmln)    trgnam
 
-      DOUBLE PRECISION      COORDS ( 3 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      SRFVEC ( 3 )
+      double precision      coords ( 3 )
+      double precision      lt
+      double precision      pos    ( 3 )
+      double precision      trgepc
+      double precision      srfvec ( 3 )
 
-      INTEGER               CRDIDX
-      INTEGER               PRVCTR
-      INTEGER               PRVOBS
-      INTEGER               PRVTRG
-      INTEGER               SYSIDX
+      integer               crdidx
+      integer               prvctr
+      integer               prvobs
+      integer               prvtrg
+      integer               sysidx
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  CRDNMS
-      SAVE                  CTRNAM
-      SAVE                  FIRST
-      SAVE                  OBSNAM
-      SAVE                  PRVCTR
-      SAVE                  PRVOBS
-      SAVE                  PRVTRG
-      SAVE                  SYSNMS
-      SAVE                  TRGNAM
+      save                  crdnms
+      save                  ctrnam
+      save                  first
+      save                  obsnam
+      save                  prvctr
+      save                  prvobs
+      save                  prvtrg
+      save                  sysnms
+      save                  trgnam
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 !
 !     The Ith coordinate system in the array SYSNMS has coordinates
 !     in the Ith row of the array CRDNMS. This association must be
 !     preserved when this routine is updated.
 !
-      DATA                  SYSNMS /  RECSYS, &
-                                      LATSYS, &
-                                      RADSYS, &
-                                      SPHSYS, &
-                                      CYLSYS, &
-                                      GEOSYS, &
-                                      PGRSYS  /
+      data                  sysnms /  recsys, &
+                                      latsys, &
+                                      radsys, &
+                                      sphsys, &
+                                      cylsys, &
+                                      geosys, &
+                                      pgrsys  /
 
 !
 !     The order of the coordinate names in the Ith row of this array
@@ -485,74 +485,74 @@
 !     the Ith coordinate system in the array SYSNMS. Again, this
 !     order must be preserved.
 !
-      DATA                  CRDNMS /  XCRD,     YCRD,     ZCRD, &
-                                      RADCRD,   LONCRD,   LATCRD, &
-                                      RNGCRD,   RACRD,    DECCRD, &
-                                      RADCRD,   CLTCRD,   LONCRD, &
-                                      RADCRD,   LONCRD,   ZCRD, &
-                                      LONCRD,   LATCRD,   ALTCRD, &
-                                      LONCRD,   LATCRD,   ALTCRD  /
+      data                  crdnms /  xcrd,     ycrd,     zcrd, &
+                                      radcrd,   loncrd,   latcrd, &
+                                      rngcrd,   racrd,    deccrd, &
+                                      radcrd,   cltcrd,   loncrd, &
+                                      radcrd,   loncrd,   zcrd, &
+                                      loncrd,   latcrd,   altcrd, &
+                                      loncrd,   latcrd,   altcrd  /
 
-      DATA                  PRVCTR /  0 /
-      DATA                  PRVOBS /  0 /
-      DATA                  PRVTRG /  0 /
+      data                  prvctr /  0 /
+      data                  prvobs /  0 /
+      data                  prvtrg /  0 /
 
-      DATA                  OBSNAM / ' ' /
-      DATA                  TRGNAM / ' ' /
+      data                  obsnam / ' ' /
+      data                  trgnam / ' ' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFCOQ' )
+      call chkin ( 'ZZGFCOQ' )
 
 !
 !     No result was found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Find the index of the coordinate system name in the list of
 !     supported names.
 !
-      SYSIDX = ISRCHC ( CRDSYS, NSYS, SYSNMS )
+      sysidx = isrchc ( crdsys, nsys, sysnms )
 
-      IF ( SYSIDX .EQ. 0 ) THEN
+      if ( sysidx .eq. 0 ) then
 !
 !        We don't recognize this system name.
 !
-         CALL SETMSG ( 'The coordinate system # is not supported.' )
-         CALL ERRCH  ( '#',  CRDSYS                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                       )
-         CALL CHKOUT ( 'ZZGFCOQ'                                   )
-         RETURN
+         call setmsg ( 'The coordinate system # is not supported.' )
+         call errch  ( '#',  crdsys                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
+         call chkout ( 'ZZGFCOQ'                                   )
+         return
 
-      END IF
+      end if
 
-      SYSNAM = SYSNMS(SYSIDX)
+      sysnam = sysnms(sysidx)
 
 !
 !     Find the index of the coordinate name in the list of
 !     supported names.
 !
-      CRDIDX = ISRCHC ( CRDNAM, 3, CRDNMS(1,SYSIDX) )
+      crdidx = isrchc ( crdnam, 3, crdnms(1,sysidx) )
 
-      IF ( CRDIDX .EQ. 0 ) THEN
+      if ( crdidx .eq. 0 ) then
 !
 !        We don't recognize this coordinate name.
 !
-         CALL SETMSG ( 'The coordinate name # belonging to the '  // &
+         call setmsg ( 'The coordinate name # belonging to the '  // &
                        'coordinate system # is not recognized.'   )
-         CALL ERRCH  ( '#',  CRDNAM                               )
-         CALL ERRCH  ( '#',  CRDSYS                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( 'ZZGFCOQ'                                  )
-         RETURN
+         call errch  ( '#',  crdnam                               )
+         call errch  ( '#',  crdsys                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( 'ZZGFCOQ'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the target and observer names if these will be
@@ -560,144 +560,144 @@
 !     The RECPGR interface requires the frame center ID code
 !     as well.
 !
-      IF (      ( VECDEF .EQ. SOBDEF ) &
-           .OR. ( VECDEF .EQ. SINDEF ) &
-           .OR. ( SYSNAM .EQ. PGRSYS )  ) THEN
+      if (      ( vecdef .eq. sobdef ) &
+           .or. ( vecdef .eq. sindef ) &
+           .or. ( sysnam .eq. pgrsys )  ) then
 
-         IF (  FIRST  .OR. ( TRGID .NE. PRVTRG )  ) THEN
+         if (  first  .or. ( trgid .ne. prvtrg )  ) then
 
-            CALL BODC2S ( TRGID, TRGNAM )
+            call bodc2s ( trgid, trgnam )
 
-            PRVTRG = TRGID
+            prvtrg = trgid
 
-         END IF
+         end if
 
 
-         IF (  FIRST  .OR. ( OBSID .NE. PRVOBS )  ) THEN
+         if (  first  .or. ( obsid .ne. prvobs )  ) then
 
-            CALL BODC2S ( OBSID, OBSNAM )
+            call bodc2s ( obsid, obsnam )
 
-            PRVOBS = OBSID
+            prvobs = obsid
 
-         END IF
+         end if
 
-         IF (  FIRST  .OR. ( CTRID .NE. PRVCTR )  ) THEN
+         if (  first  .or. ( ctrid .ne. prvctr )  ) then
 
-            CALL BODC2S ( CTRID, CTRNAM )
+            call bodc2s ( ctrid, ctrnam )
 
-            PRVCTR = CTRID
+            prvctr = ctrid
 
-         END IF
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
-      IF ( VECDEF .EQ. POSDEF  ) THEN
+      if ( vecdef .eq. posdef  ) then
 !
 !        Find the observer-target position vector.
 !
-         CALL SPKEZP ( TRGID, ET, REF, ABCORR, OBSID, POS, LT )
+         call spkezp ( trgid, et, ref, abcorr, obsid, pos, lt )
 
 
-      ELSE IF ( VECDEF .EQ. SOBDEF ) THEN
+      else if ( vecdef .eq. sobdef ) then
 !
 !        The caller has requested a sub-observer point coordinate
 !        computation.
 !
-         CALL SUBPNT ( METHOD, TRGNAM, ET,  REF, &
-                       ABCORR, OBSNAM, POS, TRGEPC, SRFVEC )
+         call subpnt ( method, trgnam, et,  ref, &
+                       abcorr, obsnam, pos, trgepc, srfvec )
 
 
-      ELSE IF ( VECDEF .EQ. SINDEF ) THEN
+      else if ( vecdef .eq. sindef ) then
 !
 !        The caller has requested a surface intercept point coordinate
 !        computation.
 !
-         CALL SINCPT ( METHOD,  TRGNAM, ET,     REF, &
-                       ABCORR,  OBSNAM, DREF,   DVEC, &
-                       POS,     TRGEPC, SRFVEC, FOUND  )
+         call sincpt ( method,  trgnam, et,     ref, &
+                       abcorr,  obsnam, dref,   dvec, &
+                       pos,     trgepc, srfvec, found  )
 
 !
 !        Without an intercept, there's nothing left to do here.
 !
-         IF ( .NOT. FOUND ) THEN
-            CALL CHKOUT ( 'ZZGFCOQ' )
-            RETURN
-         END IF
+         if ( .not. found ) then
+            call chkout ( 'ZZGFCOQ' )
+            return
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The coordinate quantity # is not recognized.' )
-         CALL ERRCH  ( '#',  VECDEF                                   )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                          )
-         CALL CHKOUT ( 'ZZGFCOQ'                                      )
-         RETURN
+         call setmsg ( 'The coordinate quantity # is not recognized.' )
+         call errch  ( '#',  vecdef                                   )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
+         call chkout ( 'ZZGFCOQ'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     If we already encountered an error while trying to compute
 !     the vector of interest, return now.
 !
-      IF (  FAILED() ) THEN
-          CALL CHKOUT (  'ZZGFCOQ' )
-          RETURN
-      END IF
+      if (  failed() ) then
+          call chkout (  'ZZGFCOQ' )
+          return
+      end if
 
 !
 !     At this point we assume the vector whose coordinate is
 !     to be computed resides in POS. Convert POS to the
 !     specified coordinate system.
 !
-      IF ( SYSNAM .EQ. RECSYS ) THEN
+      if ( sysnam .eq. recsys ) then
 !
 !        No conversion needed for rectangular coordinates.
 !
-         CALL MOVED ( POS, 3, COORDS )
+         call moved ( pos, 3, coords )
 
 
-      ELSE IF ( SYSNAM .EQ. LATSYS ) THEN
+      else if ( sysnam .eq. latsys ) then
 
-         CALL RECLAT ( POS, COORDS(1), COORDS(2), COORDS(3) )
-
-
-      ELSE IF ( SYSNAM .EQ. RADSYS ) THEN
-
-         CALL RECRAD ( POS, COORDS(1), COORDS(2), COORDS(3) )
+         call reclat ( pos, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SYSNAM .EQ. SPHSYS ) THEN
+      else if ( sysnam .eq. radsys ) then
 
-         CALL RECSPH ( POS, COORDS(1), COORDS(2), COORDS(3) )
-
-
-      ELSE IF ( SYSNAM .EQ. CYLSYS ) THEN
-
-         CALL RECCYL ( POS, COORDS(1), COORDS(2), COORDS(3) )
+         call recrad ( pos, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SYSNAM .EQ. GEOSYS ) THEN
+      else if ( sysnam .eq. sphsys ) then
 
-         CALL RECGEO ( POS, RE, F, COORDS(1), COORDS(2), COORDS(3) )
+         call recsph ( pos, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SYSNAM .EQ. PGRSYS ) THEN
+      else if ( sysnam .eq. cylsys ) then
 
-         CALL RECPGR ( CTRNAM,    POS,       RE,       F, &
-                       COORDS(1), COORDS(2), COORDS(3)    )
+         call reccyl ( pos, coords(1), coords(2), coords(3) )
 
-      ELSE
+
+      else if ( sysnam .eq. geosys ) then
+
+         call recgeo ( pos, re, f, coords(1), coords(2), coords(3) )
+
+
+      else if ( sysnam .eq. pgrsys ) then
+
+         call recpgr ( ctrnam,    pos,       re,       f, &
+                       coords(1), coords(2), coords(3)    )
+
+      else
 !
 !        We should never arrive here.
 !
-         CALL SETMSG ( 'The coordinate system # is not supported.' )
-         CALL ERRCH  ( '#',  CRDSYS                                )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZGFCOQ'                                   )
-         RETURN
+         call setmsg ( 'The coordinate system # is not supported.' )
+         call errch  ( '#',  crdsys                                )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZGFCOQ'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the return value.
@@ -705,13 +705,13 @@
 !     CRDIDX indicates the index of the coordinate of interest
 !     in the list of coordinates for the input coordinate system.
 !
-      VALUE = COORDS(CRDIDX)
+      value = coords(crdidx)
 
 !
 !     Having made it this far means the result was found.
 !
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT  ( 'ZZGFCOQ' )
-      RETURN
-      END
+      call chkout  ( 'ZZGFCOQ' )
+      return
+      end

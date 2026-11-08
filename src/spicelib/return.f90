@@ -1,6 +1,6 @@
 !$Procedure RETURN ( Immediate Return Indicator )
 
-      LOGICAL FUNCTION RETURN ()
+      logical function return ()
 
 ! $ Abstract
 !
@@ -232,38 +232,38 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local Parameters
 !
 !     Define the mnemonic for the return action.
 !
-      INTEGER               IRETRN
-      PARAMETER           ( IRETRN = 3 )
+      integer               iretrn
+      parameter           ( iretrn = 3 )
 
 !
 !     Local Variables
 !
-      INTEGER               ACTION
+      integer               action
 
 !
 !     Immediate return is indicated only in 'RETURN' mode,
 !     when an error condition is in effect:
 !
-      IF ( .NOT. FAILED() ) THEN
+      if ( .not. failed() ) then
 
-         RETURN = .FALSE.
-         RETURN
+         return = .false.
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, we know a SPICE error condition exists.
 !
-      CALL GETACT ( ACTION )
+      call getact ( action )
 
-      RETURN  =  ACTION .EQ. IRETRN
+      return  =  action .eq. iretrn
 
-      RETURN
-      END
+      return
+      end

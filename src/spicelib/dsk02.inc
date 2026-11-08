@@ -90,32 +90,32 @@
 !           +-----------------+
 !
 !
-      INTEGER               IXNV
-      PARAMETER           ( IXNV   =          1 )
+      integer               ixnv
+      parameter           ( ixnv   =          1 )
 
-      INTEGER               IXNP
-      PARAMETER           ( IXNP   = IXNV   + 1 )
+      integer               ixnp
+      parameter           ( ixnp   = ixnv   + 1 )
 
-      INTEGER               IXNVXT
-      PARAMETER           ( IXNVXT = IXNP   + 1 )
+      integer               ixnvxt
+      parameter           ( ixnvxt = ixnp   + 1 )
 
-      INTEGER               IXVGRX
-      PARAMETER           ( IXVGRX = IXNVXT + 1 )
+      integer               ixvgrx
+      parameter           ( ixvgrx = ixnvxt + 1 )
 
-      INTEGER               IXCGSC
-      PARAMETER           ( IXCGSC = IXVGRX + 3 )
+      integer               ixcgsc
+      parameter           ( ixcgsc = ixvgrx + 3 )
 
-      INTEGER               IXVXPS
-      PARAMETER           ( IXVXPS = IXCGSC + 1 )
+      integer               ixvxps
+      parameter           ( ixvxps = ixcgsc + 1 )
 
-      INTEGER               IXVXLS
-      PARAMETER           ( IXVXLS = IXVXPS + 1 )
+      integer               ixvxls
+      parameter           ( ixvxls = ixvxps + 1 )
 
-      INTEGER               IXVTLS
-      PARAMETER           ( IXVTLS = IXVXLS + 1 )
+      integer               ixvtls
+      parameter           ( ixvtls = ixvxls + 1 )
 
-      INTEGER               IXPLAT
-      PARAMETER           ( IXPLAT = IXVTLS + 1 )
+      integer               ixplat
+      parameter           ( ixplat = ixvtls + 1 )
 
 !
 !        D.p. layout:
@@ -132,92 +132,92 @@
 !           | Vertices        |  3*NV elements
 !           +-----------------+
 !
-      INTEGER               IXDSCR
-      PARAMETER           ( IXDSCR = 1 )
+      integer               ixdscr
+      parameter           ( ixdscr = 1 )
 
 !
 !     This local parameter MUST be kept consistent with
 !     the parameter DSKDSZ which is declared in dskdsc.inc.
 !
-      INTEGER               DSCSZ2
-      PARAMETER           ( DSCSZ2 = 24 )
+      integer               dscsz2
+      parameter           ( dscsz2 = 24 )
 
-      INTEGER               IXVTBD
-      PARAMETER           ( IXVTBD = IXDSCR + DSCSZ2 )
+      integer               ixvtbd
+      parameter           ( ixvtbd = ixdscr + dscsz2 )
 
-      INTEGER               IXVXOR
-      PARAMETER           ( IXVXOR = IXVTBD + 6 )
+      integer               ixvxor
+      parameter           ( ixvxor = ixvtbd + 6 )
 
-      INTEGER               IXVXSZ
-      PARAMETER           ( IXVXSZ = IXVXOR + 3 )
+      integer               ixvxsz
+      parameter           ( ixvxsz = ixvxor + 3 )
 
-      INTEGER               IXVERT
-      PARAMETER           ( IXVERT = IXVXSZ + 1 )
+      integer               ixvert
+      parameter           ( ixvert = ixvxsz + 1 )
 
 
 
 !
 !     Integer item keyword parameters used by fetch routines:
 !
-      INTEGER               KWNV
-      PARAMETER           ( KWNV   = 1 )
+      integer               kwnv
+      parameter           ( kwnv   = 1 )
 
-      INTEGER               KWNP
-      PARAMETER           ( KWNP   = KWNV   + 1 )
+      integer               kwnp
+      parameter           ( kwnp   = kwnv   + 1 )
 
-      INTEGER               KWNVXT
-      PARAMETER           ( KWNVXT = KWNP   + 1 )
+      integer               kwnvxt
+      parameter           ( kwnvxt = kwnp   + 1 )
 
-      INTEGER               KWVGRX
-      PARAMETER           ( KWVGRX = KWNVXT + 1 )
+      integer               kwvgrx
+      parameter           ( kwvgrx = kwnvxt + 1 )
 
-      INTEGER               KWCGSC
-      PARAMETER           ( KWCGSC = KWVGRX + 1 )
+      integer               kwcgsc
+      parameter           ( kwcgsc = kwvgrx + 1 )
 
-      INTEGER               KWVXPS
-      PARAMETER           ( KWVXPS = KWCGSC + 1 )
+      integer               kwvxps
+      parameter           ( kwvxps = kwcgsc + 1 )
 
-      INTEGER               KWVXLS
-      PARAMETER           ( KWVXLS = KWVXPS + 1 )
+      integer               kwvxls
+      parameter           ( kwvxls = kwvxps + 1 )
 
-      INTEGER               KWVTLS
-      PARAMETER           ( KWVTLS = KWVXLS + 1 )
+      integer               kwvtls
+      parameter           ( kwvtls = kwvxls + 1 )
 
-      INTEGER               KWPLAT
-      PARAMETER           ( KWPLAT = KWVTLS + 1 )
+      integer               kwplat
+      parameter           ( kwplat = kwvtls + 1 )
 
-      INTEGER               KWVXPT
-      PARAMETER           ( KWVXPT = KWPLAT + 1 )
+      integer               kwvxpt
+      parameter           ( kwvxpt = kwplat + 1 )
 
-      INTEGER               KWVXPL
-      PARAMETER           ( KWVXPL = KWVXPT + 1 )
+      integer               kwvxpl
+      parameter           ( kwvxpl = kwvxpt + 1 )
 
-      INTEGER               KWVTPT
-      PARAMETER           ( KWVTPT = KWVXPL + 1 )
+      integer               kwvtpt
+      parameter           ( kwvtpt = kwvxpl + 1 )
 
-      INTEGER               KWVTPL
-      PARAMETER           ( KWVTPL = KWVTPT + 1 )
+      integer               kwvtpl
+      parameter           ( kwvtpl = kwvtpt + 1 )
 
-      INTEGER               KWCGPT
-      PARAMETER           ( KWCGPT = KWVTPL + 1 )
+      integer               kwcgpt
+      parameter           ( kwcgpt = kwvtpl + 1 )
 
 !
 !     Double precision item keyword parameters used by fetch routines:
 !
-      INTEGER               KWDSC
-      PARAMETER           ( KWDSC  = KWCGPT + 1 )
+      integer               kwdsc
+      parameter           ( kwdsc  = kwcgpt + 1 )
 
-      INTEGER               KWVTBD
-      PARAMETER           ( KWVTBD = KWDSC  + 1 )
+      integer               kwvtbd
+      parameter           ( kwvtbd = kwdsc  + 1 )
 
-      INTEGER               KWVXOR
-      PARAMETER           ( KWVXOR = KWVTBD + 1 )
+      integer               kwvxor
+      parameter           ( kwvxor = kwvtbd + 1 )
 
-      INTEGER               KWVXSZ
-      PARAMETER           ( KWVXSZ = KWVXOR + 1 )
+      integer               kwvxsz
+      parameter           ( kwvxsz = kwvxor + 1 )
 
-      INTEGER               KWVERT
-      PARAMETER           ( KWVERT = KWVXSZ + 1 )
+      integer               kwvert
+      parameter           ( kwvert = kwvxsz + 1 )
 
 !
 !     The parameters below formerly were declared in pltmax.inc.
@@ -238,15 +238,15 @@
 !     MAXVRT is the maximum number of vertices the triangular
 !            plate model software will support.
 !
-      INTEGER               MAXVRT
-      PARAMETER           ( MAXVRT = 16000002  )
+      integer               maxvrt
+      parameter           ( maxvrt = 16000002  )
 
 !
 !     MAXPLT is the maximum number of plates that the triangular
 !            plate model software will support.
 !
-      INTEGER               MAXPLT
-      PARAMETER           ( MAXPLT = 2*(MAXVRT - 2) )
+      integer               maxplt
+      parameter           ( maxplt = 2*(maxvrt - 2) )
 
 !
 !     MAXNPV is the maximum allowed number of vertices, not taking into
@@ -255,27 +255,27 @@
 !     Note that this value is not sufficient to create a vertex-plate
 !     mapping for a model of maximum plate count.
 !
-      INTEGER               MAXNPV
-      PARAMETER           ( MAXNPV = 3*MAXPLT/2 + 1 )
+      integer               maxnpv
+      parameter           ( maxnpv = 3*maxplt/2 + 1 )
 
 !
 !     MAXVOX is the maximum number of voxels.
 !
-      INTEGER               MAXVOX
-      PARAMETER           ( MAXVOX = 100000000 )
+      integer               maxvox
+      parameter           ( maxvox = 100000000 )
 
 !
 !     MAXCGR is the maximum size of the coarse voxel grid.
 !
-      INTEGER               MAXCGR
-      PARAMETER           ( MAXCGR = 100000 )
+      integer               maxcgr
+      parameter           ( maxcgr = 100000 )
 
 !
 !     MAXEDG is the maximum allowed number of vertex or plate
 !     neighbors a vertex may have.
 !
-      INTEGER               MAXEDG
-      PARAMETER           ( MAXEDG = 120 )
+      integer               maxedg
+      parameter           ( maxedg = 120 )
 
 
 
@@ -313,39 +313,39 @@
 !
 !     Grid extent:
 !
-      INTEGER               SIVGRX
-      PARAMETER           ( SIVGRX = 1 )
+      integer               sivgrx
+      parameter           ( sivgrx = 1 )
 !
 !     Coarse grid scale:
 !
-      INTEGER               SICGSC
-      PARAMETER           ( SICGSC = SIVGRX + 3 )
+      integer               sicgsc
+      parameter           ( sicgsc = sivgrx + 3 )
 !
 !     Voxel pointer count:
 !
-      INTEGER               SIVXNP
-      PARAMETER           ( SIVXNP = SICGSC + 1 )
+      integer               sivxnp
+      parameter           ( sivxnp = sicgsc + 1 )
 !
 !     Voxel-plate list count:
 !
-      INTEGER               SIVXNL
-      PARAMETER           ( SIVXNL = SIVXNP + 1 )
+      integer               sivxnl
+      parameter           ( sivxnl = sivxnp + 1 )
 !
 !     Vertex-plate list count:
 !
-      INTEGER               SIVTNL
-      PARAMETER           ( SIVTNL = SIVXNL + 1 )
+      integer               sivtnl
+      parameter           ( sivtnl = sivxnl + 1 )
 !
 !     Coarse grid pointers:
 !
-      INTEGER               SICGRD
-      PARAMETER           ( SICGRD = SIVTNL + 1 )
+      integer               sicgrd
+      parameter           ( sicgrd = sivtnl + 1 )
 
 !
 !     Size of fixed-size portion of integer component:
 !
-      INTEGER               IXIFIX
-      PARAMETER           ( IXIFIX = MAXCGR + 7 )
+      integer               ixifix
+      parameter           ( ixifix = maxcgr + 7 )
 
 
 !
@@ -366,24 +366,24 @@
 !
 !     Vertex bounds:
 !
-      INTEGER               SIVTBD
-      PARAMETER           ( SIVTBD = 1 )
+      integer               sivtbd
+      parameter           ( sivtbd = 1 )
 !
 !     Voxel grid origin:
 !
-      INTEGER               SIVXOR
-      PARAMETER           ( SIVXOR = SIVTBD + 6 )
+      integer               sivxor
+      parameter           ( sivxor = sivtbd + 6 )
 !
 !     Voxel size:
 !
-      INTEGER               SIVXSZ
-      PARAMETER           ( SIVXSZ = SIVXOR + 3 )
+      integer               sivxsz
+      parameter           ( sivxsz = sivxor + 3 )
 
 !
 !     Size of fixed-size portion of double precision component:
 !
-      INTEGER               IXDFIX
-      PARAMETER           ( IXDFIX = 10 )
+      integer               ixdfix
+      parameter           ( ixdfix = 10 )
 
 
 !
@@ -394,28 +394,28 @@
 !
 !     Maximum number of entries in voxel-plate pointer array:
 !
-      INTEGER               MAXVXP
-      PARAMETER           ( MAXVXP = MAXPLT / 2 )
+      integer               maxvxp
+      parameter           ( maxvxp = maxplt / 2 )
 
 !
 !     Maximum cell size:
 !
-      INTEGER               MAXCEL
-      PARAMETER           ( MAXCEL = 60000000 )
+      integer               maxcel
+      parameter           ( maxcel = 60000000 )
 
 !
 !     Maximum number of entries in voxel-plate list:
 !
-      INTEGER               MXNVLS
-      PARAMETER           ( MXNVLS = MAXCEL + MAXVXP/2 )
+      integer               mxnvls
+      parameter           ( mxnvls = maxcel + maxvxp/2 )
 
 !
 !     Spatial index integer component size:
 !
-      INTEGER               SPAISZ
-      PARAMETER           ( SPAISZ =   IXIFIX + MAXVXP &
-                                     + MXNVLS + MAXVRT &
-                                     + MAXNPV          )
+      integer               spaisz
+      parameter           ( spaisz =   ixifix + maxvxp &
+                                     + mxnvls + maxvrt &
+                                     + maxnpv          )
 
 
 !

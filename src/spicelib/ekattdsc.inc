@@ -12,8 +12,8 @@
 !
 !     Size of column attribute descriptor
 !
-      INTEGER               ADSCSZ
-      PARAMETER           ( ADSCSZ = 6 )
+      integer               adscsz
+      parameter           ( adscsz = 6 )
 
 
 !
@@ -24,8 +24,8 @@
 !     word `class' to distinguish this item from the column's data
 !     type.)
 !
-      INTEGER               ATTCLS
-      PARAMETER           ( ATTCLS = 1 )
+      integer               attcls
+      parameter           ( attcls = 1 )
 
 !
 !     ATTTYP is the index of the column's data type code (CHR, INT, DP,
@@ -33,40 +33,40 @@
 !     will frequently be convenient to look up the type directly.
 !
 !
-      INTEGER               ATTTYP
-      PARAMETER           ( ATTTYP = ATTCLS + 1 )
+      integer               atttyp
+      parameter           ( atttyp = attcls + 1 )
 
 !
 !     ATTLEN is the index of the column's string length value, if the
 !     column has character type.  A value of IFALSE in this element of
 !     the descriptor indicates that the strings have variable length.
 !
-      INTEGER               ATTLEN
-      PARAMETER           ( ATTLEN = ATTTYP + 1 )
+      integer               attlen
+      parameter           ( attlen = atttyp + 1 )
 
 !
 !     ATTSIZ is the index of the column's element size value.  This
 !     descriptor element is meaningful for columns with fixed-size
 !     entries.  For variable-sized columns, this value is IFALSE.
 !
-      INTEGER               ATTSIZ
-      PARAMETER           ( ATTSIZ = ATTLEN + 1 )
+      integer               attsiz
+      parameter           ( attsiz = attlen + 1 )
 
 !
 !     ATTIDX is the location of a flag that indicates whether the column
 !     is indexed.  The flag takes the value ITRUE if the column is
 !     indexed and otherwise takes the value IFALSE.
 !
-      INTEGER               ATTIDX
-      PARAMETER           ( ATTIDX = ATTSIZ + 1 )
+      integer               attidx
+      parameter           ( attidx = attsiz + 1 )
 
 !
 !     ATTNFL is the index of a flag indicating whether nulls are
 !     permitted in the column.  The value at location NFLIDX is
 !     ITRUE if nulls are permitted and IFALSE otherwise.
 !
-      INTEGER               ATTNFL
-      PARAMETER           ( ATTNFL = ATTIDX + 1 )
+      integer               attnfl
+      parameter           ( attnfl = attidx + 1 )
 
 !
 !     End Include Section:  EK Column Attribute Descriptor Parameters

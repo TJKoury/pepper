@@ -1,7 +1,7 @@
 !$Procedure   ZZEKRD05 ( EK, read class 5 column entry elements )
 
-      SUBROUTINE ZZEKRD05 ( HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                            BEG,     END,     DVALS,   ISNULL,  FOUND )
+      subroutine zzekrd05 ( handle,  segdsc,  coldsc,  recptr, &
+                            beg,     end,     dvals,   isnull,  found )
 
 ! $ Abstract
 !
@@ -20,21 +20,21 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               BEG
-      INTEGER               END
-      DOUBLE PRECISION      DVALS  ( * )
-      LOGICAL               ISNULL
-      LOGICAL               FOUND
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               beg
+      integer               end
+      double precision      dvals  ( * )
+      logical               isnull
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -173,32 +173,32 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DPNELT
+      double precision      dpnelt
 
-      INTEGER               BASE
-      INTEGER               COLIDX
-      INTEGER               DATPTR
-      INTEGER               MAXIDX
-      INTEGER               MINIDX
-      INTEGER               NCOLS
-      INTEGER               NELT
-      INTEGER               NREAD
-      INTEGER               P
-      INTEGER               PTEMP
-      INTEGER               PTRLOC
-      INTEGER               RECNO
-      INTEGER               REMAIN
-      INTEGER               START
+      integer               base
+      integer               colidx
+      integer               datptr
+      integer               maxidx
+      integer               minidx
+      integer               ncols
+      integer               nelt
+      integer               nread
+      integer               p
+      integer               ptemp
+      integer               ptrloc
+      integer               recno
+      integer               remain
+      integer               start
 
 !
 !     Use discovery check-in.
@@ -206,184 +206,184 @@
 !
 !     Make sure the column exists.
 !
-      NCOLS  =  SEGDSC ( NCIDX  )
-      COLIDX =  COLDSC ( ORDIDX )
+      ncols  =  segdsc ( ncidx  )
+      colidx =  coldsc ( ordidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKRD05'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKRD05'                              )
-         RETURN
+         call chkin  ( 'ZZEKRD05'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' )
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKRD05'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the data pointer location, and read the pointer.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF ( DATPTR .GT. 0 ) THEN
+      if ( datptr .gt. 0 ) then
 !
 !        The entry is non-null.
 !
-         ISNULL  =  .FALSE.
+         isnull  =  .false.
 
 !
 !        Get the element count.  Check for range specifications that
 !        can't be met.
 !
-         CALL DASRDD ( HANDLE, DATPTR, DATPTR, DPNELT )
+         call dasrdd ( handle, datptr, datptr, dpnelt )
 
-         NELT  =  NINT ( DPNELT )
+         nelt  =  nint ( dpnelt )
 
 
-         IF (  ( BEG .LT. 1 ) .OR. ( BEG .GT. NELT )  )  THEN
+         if (  ( beg .lt. 1 ) .or. ( beg .gt. nelt )  )  then
 
-            FOUND  =  .FALSE.
-            RETURN
+            found  =  .false.
+            return
 
-         ELSE IF (  ( END .LT. 1 ) .OR. ( END .GT. NELT )  )  THEN
+         else if (  ( end .lt. 1 ) .or. ( end .gt. nelt )  )  then
 
-            FOUND  =  .FALSE.
-            RETURN
+            found  =  .false.
+            return
 
-         ELSE IF ( END .LT. BEG ) THEN
+         else if ( end .lt. beg ) then
 
-            FOUND  =  .FALSE.
-            RETURN
+            found  =  .false.
+            return
 
-         END IF
+         end if
 
 !
 !        The request is valid, so read the data.  The first step is to
 !        locate the element at index BEG.
 !
-         CALL ZZEKPGPG ( DP, DATPTR, P, BASE )
+         call zzekpgpg ( dp, datptr, p, base )
 
-         MINIDX  =  1
-         MAXIDX  =  BASE   + DPSIZE - DATPTR
-         DATPTR  =  DATPTR + BEG
+         minidx  =  1
+         maxidx  =  base   + dpsize - datptr
+         datptr  =  datptr + beg
 
 
-         DO WHILE ( MAXIDX .LT. BEG )
+         do while ( maxidx .lt. beg )
 !
 !           Locate the page on which the element is continued.
 !
-            CALL ZZEKGFWD ( HANDLE, DP, P, PTEMP )
-            P = PTEMP
+            call zzekgfwd ( handle, dp, p, ptemp )
+            p = ptemp
 
-            CALL ZZEKPGBS ( DP,         P, BASE  )
+            call zzekpgbs ( dp,         p, base  )
 
 !
 !           Determine the highest-indexed element of the column entry
 !           located on the current page.
 !
-            MINIDX  =  MAXIDX  +   1
-            MAXIDX  =  MIN ( MAXIDX + DPSIZE, NELT )
+            minidx  =  maxidx  +   1
+            maxidx  =  min ( maxidx + dpsize, nelt )
 
 !
 !           The following assignment will set DATPTR to the correct
 !           value on the last pass through this loop.
 !
-            DATPTR  =  BASE    +   1   +  ( BEG - MINIDX )
+            datptr  =  base    +   1   +  ( beg - minidx )
 
-         END DO
+         end do
 
 !
 !        At this point, P is the page on which the element having index
 !        BEG is located.  BASE is the base address of this page.
 !        MAXIDX is the highest index of any element on the current page.
 !
-         REMAIN  =  END    -   BEG   +   1
-         START   =  1
+         remain  =  end    -   beg   +   1
+         start   =  1
 
 !
 !        Decide how many elements to read from the current page, and
 !        read them.
 !
-         NREAD   =  MIN ( REMAIN,  ( BASE + DPSIZE - DATPTR + 1 )  )
+         nread   =  min ( remain,  ( base + dpsize - datptr + 1 )  )
 
-         CALL DASRDD ( HANDLE, DATPTR, DATPTR+NREAD-1, DVALS(START) )
+         call dasrdd ( handle, datptr, datptr+nread-1, dvals(start) )
 
-         REMAIN  =  REMAIN  -  NREAD
+         remain  =  remain  -  nread
 
 
-         DO WHILE (  ( REMAIN .GT. 0 ) .AND.  ( .NOT. FAILED() )  )
+         do while (  ( remain .gt. 0 ) .and.  ( .not. failed() )  )
 !
 !           Locate the page on which the element is continued.
 !
-            CALL ZZEKGFWD ( HANDLE, DP, P, PTEMP )
-            P = PTEMP
+            call zzekgfwd ( handle, dp, p, ptemp )
+            p = ptemp
 
-            CALL ZZEKPGBS ( DP,         P, BASE  )
+            call zzekpgbs ( dp,         p, base  )
 
-            DATPTR  =  BASE   +  1
-            START   =  START  +  NREAD
-            NREAD   =  MIN ( REMAIN,  DPSIZE )
+            datptr  =  base   +  1
+            start   =  start  +  nread
+            nread   =  min ( remain,  dpsize )
 
-            CALL DASRDD ( HANDLE, DATPTR, DATPTR+NREAD-1, DVALS(START) )
+            call dasrdd ( handle, datptr, datptr+nread-1, dvals(start) )
 
-            REMAIN  =  REMAIN  -  NREAD
+            remain  =  remain  -  nread
 
-         END DO
-
-
-         FOUND =  .NOT. FAILED()
+         end do
 
 
-      ELSE IF ( DATPTR .EQ. NULL ) THEN
+         found =  .not. failed()
+
+
+      else if ( datptr .eq. null ) then
 !
 !        The value is null.
 !
-         ISNULL =  .TRUE.
-         FOUND  =  .TRUE.
+         isnull =  .true.
+         found  =  .true.
 
 
-      ELSE IF ( DATPTR .EQ. UNINIT ) THEN
+      else if ( datptr .eq. uninit ) then
 !
 !        The data value is absent.  This is an error.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKRD05'                                    )
-         CALL SETMSG ( 'Attempted to read uninitialized column '    // &
+         call chkin  ( 'ZZEKRD05'                                    )
+         call setmsg ( 'Attempted to read uninitialized column '    // &
                        'entry.  SEGNO = #; COLIDX = #; RECNO = #; ' // &
                        'EK = #'                                      )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                          )
-         CALL ERRINT ( '#',  COLIDX                                  )
-         CALL ERRINT ( '#',  RECNO                                   )
-         CALL ERRHAN ( '#',  HANDLE                                  )
-         CALL SIGERR ( 'SPICE(UNINITIALIZEDVALUE)'                   )
-         CALL CHKOUT ( 'ZZEKRD05'                                    )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                          )
+         call errint ( '#',  colidx                                  )
+         call errint ( '#',  recno                                   )
+         call errhan ( '#',  handle                                  )
+         call sigerr ( 'SPICE(UNINITIALIZEDVALUE)'                   )
+         call chkout ( 'ZZEKRD05'                                    )
+         return
 
 
-      ELSE
+      else
 !
 !        The data pointer is corrupted.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKRD05'                                )
-         CALL SETMSG ( 'Data pointer is corrupted. SEGNO = #; '  // &
+         call chkin  ( 'ZZEKRD05'                                )
+         call setmsg ( 'Data pointer is corrupted. SEGNO = #; '  // &
                        'COLIDX =  #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                      )
-         CALL ERRINT ( '#',  COLIDX                              )
-         CALL ERRINT ( '#',  RECNO                               )
-         CALL ERRHAN ( '#',  HANDLE                              )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKRD05'                                )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                      )
+         call errint ( '#',  colidx                              )
+         call errint ( '#',  recno                               )
+         call errhan ( '#',  handle                              )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKRD05'                                )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure REMOVC ( Remove an item from a character set )
 
-      SUBROUTINE REMOVC ( ITEM, A )
+      subroutine removc ( item, a )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         ITEM
-      CHARACTER*(*)         A       ( LBCELL:* )
+      character*(*)         item
+      character*(*)         a       ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -222,57 +222,57 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               BSRCHC
-      LOGICAL               RETURN
+      integer               cardc
+      integer               bsrchc
+      logical               return
 !
 !     Local variables
 !
-      INTEGER          CARD
-      INTEGER          LOC
-      LOGICAL          IN
-      INTEGER          I
+      integer          card
+      integer          loc
+      logical          in
+      integer          i
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'REMOVC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'REMOVC' )
+      end if
 !
 !     What is the cardinality of the set?
 !
-      CARD = CARDC ( A )
+      card = cardc ( a )
 
 !
 !     Determine the location (if any) of the item within the set.
 !
-      LOC = BSRCHC ( ITEM, CARD, A(1) )
+      loc = bsrchc ( item, card, a(1) )
 
 !
 !     Is the item in the set? If so, it needs to be removed.
 !
-      IN = ( LOC .GT. 0 )
+      in = ( loc .gt. 0 )
 
-      IF ( IN ) THEN
+      if ( in ) then
 
 !
 !        Move succeeding elements forward to take up the slack left
 !        by the departing element. And update the cardinality for
 !        future reference.
 !
-         DO I = LOC, CARD-1
-            A(I) = A(I+1)
-         END DO
+         do i = loc, card-1
+            a(i) = a(i+1)
+         end do
 
-         CALL SCARDC ( CARD-1, A )
+         call scardc ( card-1, a )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'REMOVC' )
-      RETURN
-      END
+      call chkout ( 'REMOVC' )
+      return
+      end

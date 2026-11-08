@@ -1,6 +1,6 @@
 !$Procedure DAFB2T ( DAF, binary to text )
 
-      SUBROUTINE DAFB2T ( BINARY, TEXT )
+      subroutine dafb2t ( binary, text )
 
 ! $ Abstract
 !
@@ -21,10 +21,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         BINARY
-      INTEGER               TEXT
+      character*(*)         binary
+      integer               text
 
 ! $ Brief_I/O
 !
@@ -274,76 +274,76 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BSIZE
-      PARAMETER           ( BSIZE = 100 )
+      integer               bsize
+      parameter           ( bsize = 100 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =  8 )
+      integer               idwlen
+      parameter           ( idwlen =  8 )
 
-      CHARACTER*(*)         QUOTE
-      PARAMETER           ( QUOTE = '''' )
+      character*(*)         quote
+      parameter           ( quote = '''' )
 
 !
 !     Local variables
 !
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(60)        IFNAME
-      CHARACTER*(1000)      NAME
+      character*(idwlen)    idword
+      character*(60)        ifname
+      character*(1000)      name
 
-      DOUBLE PRECISION      BUFFER   ( BSIZE )
-      DOUBLE PRECISION      DC       ( 125 )
-      DOUBLE PRECISION      SUM      ( 125 )
+      double precision      buffer   ( bsize )
+      double precision      dc       ( 125 )
+      double precision      sum      ( 125 )
 
-      INTEGER               BEGIN
-      INTEGER               BWARD
-      INTEGER               CHUNK
-      INTEGER               CSIZE
-      INTEGER               DAFLUN
-      INTEGER               END
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               IC       ( 250 )
-      INTEGER               IOSTAT
-      INTEGER               ISIZE
-      INTEGER               LSIZE
-      INTEGER               ND
-      INTEGER               NI
+      integer               begin
+      integer               bward
+      integer               chunk
+      integer               csize
+      integer               daflun
+      integer               end
+      integer               free
+      integer               fward
+      integer               handle
+      integer               i
+      integer               ic       ( 250 )
+      integer               iostat
+      integer               isize
+      integer               lsize
+      integer               nd
+      integer               ni
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFB2T' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFB2T' )
+      end if
 !
 !     Initialize the IDWORD.
 !
-      IDWORD = ' '
+      idword = ' '
 
 !
 !     Open the binary file for reading and read the ID word from the
 !     first record of the file.
 !
-      CALL DAFOPR ( BINARY, HANDLE )
+      call dafopr ( binary, handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFB2T' )
-         RETURN
+         call chkout ( 'DAFB2T' )
+         return
 
-      END IF
+      end if
 !
 !     At this point, we know that we have a DAF file, because we were
 !     able to successfully open it, so we will attempt to proceed with
@@ -353,99 +353,99 @@
 !     unit. We need to do this in order to accurately move the file
 !     ID word to the text file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., DAFLUN )
+      call zzddhhlu ( handle, 'DAF', .false., daflun )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFB2T' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFB2T' )
+         return
+      end if
 
-      READ ( DAFLUN, REC=1, IOSTAT=IOSTAT ) IDWORD
+      read ( daflun, rec=1, iostat=iostat ) idword
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Could not read ID word from file ''#''.' // &
+         call setmsg ( 'Could not read ID word from file ''#''.' // &
                        ' IOSTAT = #.'                             )
-         CALL ERRCH  ( '#', BINARY                                )
-         CALL ERRINT ( '#', IOSTAT                                )
-         CALL SIGERR ( 'SPICE(DAFREADFAIL)'                       )
-         CALL CHKOUT ( 'DAFB2T'                                   )
-         RETURN
+         call errch  ( '#', binary                                )
+         call errint ( '#', iostat                                )
+         call sigerr ( 'SPICE(DAFREADFAIL)'                       )
+         call chkout ( 'DAFB2T'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Get the contents of the file record. The ASCII file begins
 !     with the ID word which is followed by the summary format,
 !     which is followed by the internal file name.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFB2T' )
-         RETURN
+         call chkout ( 'DAFB2T' )
+         return
 
-      END IF
+      end if
 
-      WRITE (TEXT,*,IOSTAT=IOSTAT) QUOTE // IDWORD // QUOTE
+      write (text,*,iostat=iostat) quote // idword // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                )
-         CALL SETMSG ( 'The attempt to write to file ''#''' // &
+         call dafcls ( handle                                )
+         call setmsg ( 'The attempt to write to file ''#''' // &
                        ' failed. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', TEXT                             )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-         CALL CHKOUT ( 'DAFB2T'                              )
-         RETURN
+         call errfnm ( '#', text                             )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+         call chkout ( 'DAFB2T'                              )
+         return
 
-      END IF
+      end if
 
-      WRITE (TEXT,*,IOSTAT=IOSTAT) ND
+      write (text,*,iostat=iostat) nd
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                )
-         CALL SETMSG ( 'The attempt to write to file ''#''' // &
+         call dafcls ( handle                                )
+         call setmsg ( 'The attempt to write to file ''#''' // &
                        ' failed. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', TEXT                             )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-         CALL CHKOUT ( 'DAFB2T'                              )
-         RETURN
+         call errfnm ( '#', text                             )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+         call chkout ( 'DAFB2T'                              )
+         return
 
-      END IF
+      end if
 
-      WRITE (TEXT,*,IOSTAT=IOSTAT) NI
+      write (text,*,iostat=iostat) ni
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                )
-         CALL SETMSG ( 'The attempt to write to file ''#''' // &
+         call dafcls ( handle                                )
+         call setmsg ( 'The attempt to write to file ''#''' // &
                        ' failed. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', TEXT                             )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-         CALL CHKOUT ( 'DAFB2T'                              )
-         RETURN
+         call errfnm ( '#', text                             )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+         call chkout ( 'DAFB2T'                              )
+         return
 
-      END IF
+      end if
 
-      WRITE (TEXT,*,IOSTAT=IOSTAT) QUOTE //  IFNAME    // QUOTE
+      write (text,*,iostat=iostat) quote //  ifname    // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                )
-         CALL SETMSG ( 'The attempt to write to file ''#''' // &
+         call dafcls ( handle                                )
+         call setmsg ( 'The attempt to write to file ''#''' // &
                        ' failed. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', TEXT                             )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-         CALL CHKOUT ( 'DAFB2T'                              )
-         RETURN
+         call errfnm ( '#', text                             )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+         call chkout ( 'DAFB2T'                              )
+         return
 
-      END IF
+      end if
 !
 !     Each array is preceded by a '1', which indicates that more
 !     arrays are to come. The array itself begins with the name
@@ -456,223 +456,223 @@
 !
 !     Write the arrays in forward order.
 !
-      LSIZE = ND + (NI - 1) / 2 + 1
-      ISIZE = LSIZE * 8
+      lsize = nd + (ni - 1) / 2 + 1
+      isize = lsize * 8
 
-      CALL DAFBFS ( HANDLE )
-      CALL DAFFNA ( FOUND  )
+      call dafbfs ( handle )
+      call daffna ( found  )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DAFB2T' )
-         RETURN
+         call chkout ( 'DAFB2T' )
+         return
 
-      END IF
+      end if
 
-      DO WHILE ( FOUND )
+      do while ( found )
 
-         CALL DAFGS ( SUM  )
-         CALL DAFGN ( NAME )
-         CALL DAFUS ( SUM, ND, NI, DC, IC )
+         call dafgs ( sum  )
+         call dafgn ( name )
+         call dafus ( sum, nd, ni, dc, ic )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DAFB2T' )
-            RETURN
+            call chkout ( 'DAFB2T' )
+            return
 
-         END IF
+         end if
 
-         WRITE (TEXT,*,IOSTAT=IOSTAT) '1'
+         write (text,*,iostat=iostat) '1'
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                )
-            CALL SETMSG ( 'The attempt to write to file ''#''' // &
+            call dafcls ( handle                                )
+            call setmsg ( 'The attempt to write to file ''#''' // &
                           ' failed. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', TEXT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-            CALL CHKOUT ( 'DAFB2T'                              )
-            RETURN
+            call errfnm ( '#', text                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+            call chkout ( 'DAFB2T'                              )
+            return
 
-         END IF
+         end if
 
-         WRITE (TEXT,*,IOSTAT=IOSTAT) QUOTE // NAME( :ISIZE) // QUOTE
+         write (text,*,iostat=iostat) quote // name( :isize) // quote
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                )
-            CALL SETMSG ( 'The attempt to write to file ''#''' // &
+            call dafcls ( handle                                )
+            call setmsg ( 'The attempt to write to file ''#''' // &
                           ' failed. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', TEXT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-            CALL CHKOUT ( 'DAFB2T'                              )
-            RETURN
+            call errfnm ( '#', text                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+            call chkout ( 'DAFB2T'                              )
+            return
 
-         END IF
+         end if
 
-         WRITE (TEXT,*,IOSTAT=IOSTAT) ( DC(I), I = 1, ND     )
+         write (text,*,iostat=iostat) ( dc(i), i = 1, nd     )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                )
-            CALL SETMSG ( 'The attempt to write to file ''#''' // &
+            call dafcls ( handle                                )
+            call setmsg ( 'The attempt to write to file ''#''' // &
                           ' failed. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', TEXT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-            CALL CHKOUT ( 'DAFB2T'                              )
-            RETURN
+            call errfnm ( '#', text                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+            call chkout ( 'DAFB2T'                              )
+            return
 
-         END IF
+         end if
 
-         WRITE (TEXT,*,IOSTAT=IOSTAT) ( IC(I), I = 1, NI - 2 )
+         write (text,*,iostat=iostat) ( ic(i), i = 1, ni - 2 )
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                )
-            CALL SETMSG ( 'The attempt to write to file ''#''' // &
+            call dafcls ( handle                                )
+            call setmsg ( 'The attempt to write to file ''#''' // &
                           ' failed. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', TEXT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-            CALL CHKOUT ( 'DAFB2T'                              )
-            RETURN
+            call errfnm ( '#', text                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+            call chkout ( 'DAFB2T'                              )
+            return
 
-         END IF
+         end if
 
-         BEGIN = IC(NI-1)
-         END   = IC(NI  )
+         begin = ic(ni-1)
+         end   = ic(ni  )
 
-         DO WHILE ( BEGIN .LE. END )
+         do while ( begin .le. end )
 
-            CHUNK = MIN ( BEGIN + BSIZE - 1, END )
-            CSIZE =       CHUNK - BEGIN + 1
+            chunk = min ( begin + bsize - 1, end )
+            csize =       chunk - begin + 1
 
-            CALL DAFGDA ( HANDLE, BEGIN, CHUNK, BUFFER )
+            call dafgda ( handle, begin, chunk, buffer )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CALL CHKOUT ( 'DAFB2T' )
-               RETURN
+               call chkout ( 'DAFB2T' )
+               return
 
-            END IF
+            end if
 
-            WRITE (TEXT,*,IOSTAT=IOSTAT) CSIZE
+            write (text,*,iostat=iostat) csize
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL DAFCLS ( HANDLE                                )
-               CALL SETMSG ( 'The attempt to write to file ''#''' // &
+               call dafcls ( handle                                )
+               call setmsg ( 'The attempt to write to file ''#''' // &
                              ' failed. IOSTAT = #.'                )
-               CALL ERRFNM ( '#', TEXT                             )
-               CALL ERRINT ( '#', IOSTAT                           )
-               CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-               CALL CHKOUT ( 'DAFB2T'                              )
-               RETURN
+               call errfnm ( '#', text                             )
+               call errint ( '#', iostat                           )
+               call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+               call chkout ( 'DAFB2T'                              )
+               return
 
-            END IF
+            end if
 
-            WRITE (TEXT,*,IOSTAT=IOSTAT) ( BUFFER(I), I = 1, CSIZE )
+            write (text,*,iostat=iostat) ( buffer(i), i = 1, csize )
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL DAFCLS ( HANDLE                                )
-               CALL SETMSG ( 'The attempt to write to file ''#''' // &
+               call dafcls ( handle                                )
+               call setmsg ( 'The attempt to write to file ''#''' // &
                              ' failed. IOSTAT = #.'                )
-               CALL ERRFNM ( '#', TEXT                             )
-               CALL ERRINT ( '#', IOSTAT                           )
-               CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-               CALL CHKOUT ( 'DAFB2T'                              )
-               RETURN
+               call errfnm ( '#', text                             )
+               call errint ( '#', iostat                           )
+               call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+               call chkout ( 'DAFB2T'                              )
+               return
 
-            END IF
+            end if
 
-            BEGIN = BEGIN + BSIZE
+            begin = begin + bsize
 
-         END DO
+         end do
 
-         WRITE (TEXT,*,IOSTAT=IOSTAT) '0'
+         write (text,*,iostat=iostat) '0'
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                )
-            CALL SETMSG ( 'The attempt to write to file ''#''' // &
+            call dafcls ( handle                                )
+            call setmsg ( 'The attempt to write to file ''#''' // &
                           ' failed. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', TEXT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-            CALL CHKOUT ( 'DAFB2T'                              )
-            RETURN
+            call errfnm ( '#', text                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+            call chkout ( 'DAFB2T'                              )
+            return
 
-         END IF
+         end if
 
-         WRITE (TEXT,*,IOSTAT=IOSTAT) QUOTE // NAME( :ISIZE) // QUOTE
+         write (text,*,iostat=iostat) quote // name( :isize) // quote
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL DAFCLS ( HANDLE                                )
-            CALL SETMSG ( 'The attempt to write to file ''#''' // &
+            call dafcls ( handle                                )
+            call setmsg ( 'The attempt to write to file ''#''' // &
                           ' failed. IOSTAT = #.'                )
-            CALL ERRFNM ( '#', TEXT                             )
-            CALL ERRINT ( '#', IOSTAT                           )
-            CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-            CALL CHKOUT ( 'DAFB2T'                              )
-            RETURN
+            call errfnm ( '#', text                             )
+            call errint ( '#', iostat                           )
+            call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+            call chkout ( 'DAFB2T'                              )
+            return
 
-         END IF
+         end if
 
-         CALL DAFFNA ( FOUND )
+         call daffna ( found )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DAFB2T' )
-            RETURN
+            call chkout ( 'DAFB2T' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     A final '0' indicates that no arrays remain. The first shall be
 !     last: the internal file name brings up the rear.
 !
-      WRITE (TEXT,*,IOSTAT=IOSTAT) '0'
+      write (text,*,iostat=iostat) '0'
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                )
-         CALL SETMSG ( 'The attempt to write to file ''#''' // &
+         call dafcls ( handle                                )
+         call setmsg ( 'The attempt to write to file ''#''' // &
                        ' failed. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', TEXT                             )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-         CALL CHKOUT ( 'DAFB2T'                              )
-         RETURN
+         call errfnm ( '#', text                             )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+         call chkout ( 'DAFB2T'                              )
+         return
 
-      END IF
+      end if
 
-      WRITE (TEXT,*,IOSTAT=IOSTAT) QUOTE // IFNAME // QUOTE
+      write (text,*,iostat=iostat) quote // ifname // quote
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL DAFCLS ( HANDLE                                )
-         CALL SETMSG ( 'The attempt to write to file ''#''' // &
+         call dafcls ( handle                                )
+         call setmsg ( 'The attempt to write to file ''#''' // &
                        ' failed. IOSTAT = #.'                )
-         CALL ERRFNM ( '#', TEXT                             )
-         CALL ERRINT ( '#', IOSTAT                           )
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)'                 )
-         CALL CHKOUT ( 'DAFB2T'                              )
-         RETURN
+         call errfnm ( '#', text                             )
+         call errint ( '#', iostat                           )
+         call sigerr ( 'SPICE(DAFWRITEFAIL)'                 )
+         call chkout ( 'DAFB2T'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Close only the binary file.
 !
-      CALL DAFCLS ( HANDLE )
+      call dafcls ( handle )
 
-      CALL CHKOUT ( 'DAFB2T' )
-      RETURN
-      END
+      call chkout ( 'DAFB2T' )
+      return
+      end

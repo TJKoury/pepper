@@ -1,6 +1,6 @@
 !$Procedure SPKE17 ( Evaluate a type 17 SPK data record)
 
-      SUBROUTINE SPKE17 ( ET, RECIN, STATE )
+      subroutine spke17 ( et, recin, state )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECIN  ( * )
-      DOUBLE PRECISION      STATE  ( 6 )
+      double precision      et
+      double precision      recin  ( * )
+      double precision      state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -192,39 +192,39 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      RAPOLE
-      DOUBLE PRECISION      DECPOL
-      DOUBLE PRECISION      H
-      DOUBLE PRECISION      K
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      EPOCH
+      double precision      a
+      double precision      rapole
+      double precision      decpol
+      double precision      h
+      double precision      k
+      double precision      ecc
+      double precision      epoch
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKE17')
+      call chkin ( 'SPKE17')
 
 !
 !     Fetch the various entities from the input record, first the epoch.
 !
-      EPOCH  = RECIN(1)
-      A      = RECIN(2)
-      H      = RECIN(3)
-      K      = RECIN(4)
-      ECC    = DSQRT( H*H + K*K )
+      epoch  = recin(1)
+      a      = recin(2)
+      h      = recin(3)
+      k      = recin(4)
+      ecc    = dsqrt( h*h + k*k )
 
-      RAPOLE = RECIN(11)
-      DECPOL = RECIN(12)
+      rapole = recin(11)
+      decpol = recin(12)
 
 
 !
@@ -233,40 +233,40 @@
 !     going on in this routine so that the small amount of overhead
 !     here should not be significant.
 !
-      IF ( A .LE. 0 ) THEN
+      if ( a .le. 0 ) then
 
-         CALL SETMSG ( 'The semi-major axis supplied to the ' &
+         call setmsg ( 'The semi-major axis supplied to the ' &
          //            'SPK type 17 evaluator was non-positive.  This ' &
          //            'value must be positive. The value supplied was ' &
          //            '#.'                    )
-         CALL ERRDP  ( '#', A                  )
-         CALL SIGERR ( 'SPICE(BADSEMIAXIS)'    )
-         CALL CHKOUT ( 'SPKE17'                )
-         RETURN
+         call errdp  ( '#', a                  )
+         call sigerr ( 'SPICE(BADSEMIAXIS)'    )
+         call chkout ( 'SPKE17'                )
+         return
 
-      ELSE IF ( ECC .GT. 0.9D0 ) THEN
+      else if ( ecc .gt. 0.9d0 ) then
 
-         CALL SETMSG ( 'The eccentricity supplied for a type 17 ' &
+         call setmsg ( 'The eccentricity supplied for a type 17 ' &
          //            'segment is greater than 0.9.  It must be ' &
          //            'less than 0.9.' &
          //            'The value supplied ' &
          //            'to the type 17 evaluator was #. ' )
-         CALL ERRDP  ( '#',   ECC                )
-         CALL SIGERR ( 'SPICE(BADECCENTRICITY)'  )
-         CALL CHKOUT ( 'SPKE17'                  )
-         RETURN
+         call errdp  ( '#',   ecc                )
+         call sigerr ( 'SPICE(BADECCENTRICITY)'  )
+         call chkout ( 'SPKE17'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     That's all for here, just plug the elements into the routine
 !     knows how to evaluate the equinoctial elements.
 !
-      CALL EQNCPV ( ET, EPOCH, RECIN(2), RAPOLE, DECPOL, STATE )
+      call eqncpv ( et, epoch, recin(2), rapole, decpol, state )
 
 !
 !     That's all folks.  Check out and return.
 !
-      CALL CHKOUT('SPKE17')
-      RETURN
-      END
+      call chkout('SPKE17')
+      return
+      end

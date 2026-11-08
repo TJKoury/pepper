@@ -1,6 +1,6 @@
 !$Procedure DSKI02 ( DSK, fetch integer type 2 data )
 
-      SUBROUTINE DSKI02 ( HANDLE, DLADSC, ITEM, START, ROOM, N, VALUES )
+      subroutine dski02 ( handle, dladsc, item, start, room, n, values )
 
 ! $ Abstract
 !
@@ -20,19 +20,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               ITEM
-      INTEGER               START
-      INTEGER               ROOM
-      INTEGER               N
-      INTEGER               VALUES ( * )
+      integer               handle
+      integer               dladsc ( * )
+      integer               item
+      integer               start
+      integer               room
+      integer               n
+      integer               values ( * )
 
 ! $ Brief_I/O
 !
@@ -491,7 +491,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL              FAILED
+      logical              failed
 
 !
 !     Local parameters
@@ -500,48 +500,48 @@
 !     IBFSIZ is the size of an integer buffer used to
 !     read parameters from the segment.
 !
-      INTEGER               IBFSIZ
-      PARAMETER           ( IBFSIZ = 10 )
+      integer               ibfsiz
+      parameter           ( ibfsiz = 10 )
 
 !
 !     Local variables
 !
-      INTEGER               B
-      INTEGER               CGSCAL
-      INTEGER               E
-      INTEGER               IBASE
-      INTEGER               IBUFF  ( IBFSIZ )
-      INTEGER               NCGR
-      INTEGER               NP
-      INTEGER               NV
-      INTEGER               NVXTOT
-      INTEGER               PRVBAS
-      INTEGER               PRVHAN
-      INTEGER               SIZE
-      INTEGER               VOXNPL
-      INTEGER               VOXNPT
-      INTEGER               VTXNPL
+      integer               b
+      integer               cgscal
+      integer               e
+      integer               ibase
+      integer               ibuff  ( ibfsiz )
+      integer               ncgr
+      integer               np
+      integer               nv
+      integer               nvxtot
+      integer               prvbas
+      integer               prvhan
+      integer               size
+      integer               voxnpl
+      integer               voxnpt
+      integer               vtxnpl
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  CGSCAL
-      SAVE                  FIRST
-      SAVE                  NP
-      SAVE                  NV
-      SAVE                  NVXTOT
-      SAVE                  PRVBAS
-      SAVE                  PRVHAN
-      SAVE                  VOXNPL
-      SAVE                  VOXNPT
-      SAVE                  VTXNPL
+      save                  cgscal
+      save                  first
+      save                  np
+      save                  nv
+      save                  nvxtot
+      save                  prvbas
+      save                  prvhan
+      save                  voxnpl
+      save                  voxnpt
+      save                  vtxnpl
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 
 !
@@ -549,37 +549,37 @@
 !     however that this routine does not meet SPICE standards for
 !     discovery check-in eligibility.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Make sure we treat the input handle as new on the first pass.
 !        Set PRVHAN to an invalid handle value.
 !
-         PRVHAN = 0
+         prvhan = 0
 
 !
 !        Set the previous segment base integer address to an invalid
 !        value as well.
 !
-         PRVBAS = -1
+         prvbas = -1
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
-
-
-      IF ( ROOM .LE. 0 ) THEN
-
-         CALL CHKIN  ( 'DSKI02' )
-         CALL SETMSG ( 'ROOM was #; must be positive.' )
-         CALL ERRINT ( '#',  ROOM                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'        )
-         CALL CHKOUT ( 'DSKI02'                        )
-         RETURN
-
-      END IF
+      end if
 
 
-      IBASE  = DLADSC ( IBSIDX )
+      if ( room .le. 0 ) then
+
+         call chkin  ( 'DSKI02' )
+         call setmsg ( 'ROOM was #; must be positive.' )
+         call errint ( '#',  room                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'        )
+         call chkout ( 'DSKI02'                        )
+         return
+
+      end if
+
+
+      ibase  = dladsc ( ibsidx )
 !
 !     Either a new file or new segment in the same file will require
 !     looking up the segment parameters. To determine whether the
@@ -593,59 +593,59 @@
 !     but they can't share an integer base address with a type 2
 !     segment.
 !
-      IF (      ( HANDLE .NE. PRVHAN ) &
-           .OR. ( IBASE  .NE. PRVBAS )  ) THEN
+      if (      ( handle .ne. prvhan ) &
+           .or. ( ibase  .ne. prvbas )  ) then
 !
 !        Treat the input file and segment as new.
 !
 !        Read the integer parameters first.  These are located at the
 !        beginning of the integer component of the segment.
 !
-         CALL DASRDI ( HANDLE, IBASE+1, IBASE+IBFSIZ, IBUFF )
+         call dasrdi ( handle, ibase+1, ibase+ibfsiz, ibuff )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 !
 !        Check the coarse voxel scale.
 !
-         IF ( IBUFF(IXCGSC) .LT. 1 ) THEN
+         if ( ibuff(ixcgsc) .lt. 1 ) then
 
-            CALL CHKIN  ( 'DSKI02'                         )
-            CALL SETMSG ( 'Coarse voxel grid scale is #; ' // &
+            call chkin  ( 'DSKI02'                         )
+            call setmsg ( 'Coarse voxel grid scale is #; ' // &
                           'this scale should be an '       // &
                           'integer > 1'                    )
-            CALL ERRINT ( '#',  CGSCAL                     )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-            CALL CHKOUT ( 'DSKI02'                         )
-            RETURN
+            call errint ( '#',  cgscal                     )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+            call chkout ( 'DSKI02'                         )
+            return
 
-         END IF
+         end if
 
 !
 !        All checks have passed. We can safely store the segment
 !        parameters.
 !
-         NV     = IBUFF ( IXNV   )
-         NP     = IBUFF ( IXNP   )
-         NVXTOT = IBUFF ( IXNVXT )
-         CGSCAL = IBUFF ( IXCGSC )
-         VTXNPL = IBUFF ( IXVTLS )
-         VOXNPT = IBUFF ( IXVXPS )
-         VOXNPL = IBUFF ( IXVXLS )
+         nv     = ibuff ( ixnv   )
+         np     = ibuff ( ixnp   )
+         nvxtot = ibuff ( ixnvxt )
+         cgscal = ibuff ( ixcgsc )
+         vtxnpl = ibuff ( ixvtls )
+         voxnpt = ibuff ( ixvxps )
+         voxnpl = ibuff ( ixvxls )
 
 !
 !        Update the saved handle value.
 !
-         PRVHAN = HANDLE
+         prvhan = handle
 
 !
 !        Update the saved base integer address.
 !
-         PRVBAS = IBASE
+         prvbas = ibase
 
-      END IF
+      end if
 
 !
 !     Branch based on the item to be returned.
@@ -653,155 +653,155 @@
 !     Note that we haven't checked the validity of START; we'll do this
 !     after the IF block.
 !
-      IF ( ITEM .EQ. KWNV ) THEN
+      if ( item .eq. kwnv ) then
 !
 !        Return the number of vertices.
 !
-         N         = 1
-         VALUES(1) = NV
+         n         = 1
+         values(1) = nv
 
 !
 !        As long as START is valid, we can return. Otherwise,
 !        let control pass to the error handling block near
 !        the end of this routine.
 !
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
-      ELSE IF ( ITEM .EQ. KWNP ) THEN
+      else if ( item .eq. kwnp ) then
 !
 !        Return the number of plates.
 !
-         N         = 1
-         VALUES(1) = NP
+         n         = 1
+         values(1) = np
 
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
 
-      ELSE IF ( ITEM .EQ. KWNVXT ) THEN
+      else if ( item .eq. kwnvxt ) then
 !
 !        Return the total number of voxels.
 !
-         N         = 1
-         VALUES(1) = NVXTOT
+         n         = 1
+         values(1) = nvxtot
 
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
 
-      ELSE IF ( ITEM .EQ. KWVGRX ) THEN
+      else if ( item .eq. kwvgrx ) then
 !
 !        Return the voxel grid extents.
 !
-         SIZE = 3
-         B    = IBASE + IXVGRX + START - 1
+         size = 3
+         b    = ibase + ixvgrx + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWCGSC ) THEN
+      else if ( item .eq. kwcgsc ) then
 !
 !        Return the coarse voxel grid scale.
 !
-         N         = 1
-         VALUES(1) = CGSCAL
+         n         = 1
+         values(1) = cgscal
 
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
 
-      ELSE IF ( ITEM .EQ. KWVXPS ) THEN
+      else if ( item .eq. kwvxps ) then
 !
 !        Return the voxel-plate pointer list size.
 !
-         N         = 1
-         VALUES(1) = VOXNPT
+         n         = 1
+         values(1) = voxnpt
 
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
 
-      ELSE IF ( ITEM .EQ. KWVXLS ) THEN
+      else if ( item .eq. kwvxls ) then
 !
 !        Return the voxel-plate list size.
 !
-         N         = 1
-         VALUES(1) = VOXNPL
+         n         = 1
+         values(1) = voxnpl
 
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
 
-      ELSE IF ( ITEM .EQ. KWVTLS ) THEN
+      else if ( item .eq. kwvtls ) then
 !
 !        Return the vertex-plate list size.
 !
-         N         = 1
-         VALUES(1) = VTXNPL
+         n         = 1
+         values(1) = vtxnpl
 
-         IF ( START .EQ. 1 ) THEN
-            RETURN
-         END IF
+         if ( start .eq. 1 ) then
+            return
+         end if
 
 
-      ELSE IF ( ITEM .EQ. KWPLAT ) THEN
+      else if ( item .eq. kwplat ) then
 !
 !        Return plate data.  There are 3*NP values in all.  First
 !        locate the data.
 !
-         SIZE = 3*NP
-         B    = ( IBASE + IXPLAT ) + START - 1
+         size = 3*np
+         b    = ( ibase + ixplat ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVXPT )  THEN
+      else if ( item .eq. kwvxpt )  then
 !
 !        Return voxel pointer data.  There are VOXNPT values in all.
 !        First locate the data.
 !
-         SIZE = VOXNPT
-         B    = ( IBASE + IXPLAT + 3*NP ) + START - 1
+         size = voxnpt
+         b    = ( ibase + ixplat + 3*np ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVXPL )  THEN
+      else if ( item .eq. kwvxpl )  then
 !
 !        Return voxel-plate list data.  There are VOXNPL values in all.
 !        First locate the data.
 !
-         SIZE = VOXNPL
-         B    = ( IBASE + IXPLAT + 3*NP + VOXNPT ) + START - 1
+         size = voxnpl
+         b    = ( ibase + ixplat + 3*np + voxnpt ) + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVTPT )  THEN
+      else if ( item .eq. kwvtpt )  then
 !
 !        Return vertex-plate pointer data.  There are NV values in all.
 !        First locate the data.
 !
-         SIZE =    NV
-         B    =  ( IBASE + IXPLAT + 3*NP + VOXNPT + VOXNPL ) &
-                 + START - 1
+         size =    nv
+         b    =  ( ibase + ixplat + 3*np + voxnpt + voxnpl ) &
+                 + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWVTPL )  THEN
+      else if ( item .eq. kwvtpl )  then
 !
 !        Return vertex-plate list data.  There are VTXNPL values in
 !        all. First locate the data.
 !
-         SIZE = VTXNPL
+         size = vtxnpl
 
-         B =  ( IBASE + IXPLAT + 3*NP + VOXNPT + VOXNPL + NV ) &
-              + START - 1
+         b =  ( ibase + ixplat + 3*np + voxnpt + voxnpl + nv ) &
+              + start - 1
 
 
-      ELSE IF ( ITEM .EQ. KWCGPT )  THEN
+      else if ( item .eq. kwcgpt )  then
 !
 !        Compute the coarse grid size.
 !
-         NCGR = NVXTOT / (CGSCAL**3)
+         ncgr = nvxtot / (cgscal**3)
 
 !
 !        Return the coarse voxel grid occupancy pointers.  There are
@@ -810,51 +810,51 @@
 !
 !        values in all. First locate the data.
 !
-         SIZE = NCGR
+         size = ncgr
 
-         B =  (   IBASE  + IXPLAT + 3*NP   + VOXNPT &
-                + VOXNPL + NV     + VTXNPL          ) &
-                + START  - 1
+         b =  (   ibase  + ixplat + 3*np   + voxnpt &
+                + voxnpl + nv     + vtxnpl          ) &
+                + start  - 1
 
 
-      ELSE
+      else
 
-         CALL CHKIN  ( 'DSKI02'                                  )
-         CALL SETMSG ( 'Keyword parameter # was not recognized.' )
-         CALL ERRINT ( '#',  ITEM                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-         CALL CHKOUT ( 'DSKI02'                                  )
-         RETURN
+         call chkin  ( 'DSKI02'                                  )
+         call setmsg ( 'Keyword parameter # was not recognized.' )
+         call errint ( '#',  item                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+         call chkout ( 'DSKI02'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The valid range for START is 1:SIZE.
 !
-      IF (  ( START .LT. 1 ) .OR. ( START .GT. SIZE )  ) THEN
+      if (  ( start .lt. 1 ) .or. ( start .gt. size )  ) then
 
-         CALL CHKIN  ( 'DSKI02'                              )
-         CALL SETMSG ( 'START must be in the range defined ' // &
+         call chkin  ( 'DSKI02'                              )
+         call setmsg ( 'START must be in the range defined ' // &
                        'by the size of the data associated ' // &
                        'with the keyword parameter #, '      // &
                        'namely 1:#.  Actual value of START ' // &
                        'was #.'                              )
-         CALL ERRINT ( '#',  ITEM                            )
-         CALL ERRINT ( '#',  SIZE                            )
-         CALL ERRINT ( '#',  START                           )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'              )
-         CALL CHKOUT ( 'DSKI02'                              )
-         RETURN
+         call errint ( '#',  item                            )
+         call errint ( '#',  size                            )
+         call errint ( '#',  start                           )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
+         call chkout ( 'DSKI02'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the requested data.  We already have the start address B.
 !
-      N  =  MIN ( ROOM,  SIZE - START + 1 )
-      E  =  B + N - 1
+      n  =  min ( room,  size - start + 1 )
+      e  =  b + n - 1
 
-      CALL DASRDI ( HANDLE, B, E, VALUES )
+      call dasrdi ( handle, b, e, values )
 
-      RETURN
-      END
+      return
+      end

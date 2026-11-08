@@ -1,7 +1,7 @@
 !$Procedure ZZDAFGFR ( Private --- DAF Get File Record )
 
-      SUBROUTINE ZZDAFGFR ( HANDLE, IDWORD, ND,   NI,   IFNAME, &
-                            FWARD,  BWARD,  FREE, FOUND         )
+      subroutine zzdafgfr ( handle, idword, nd,   ni,   ifname, &
+                            fward,  bward,  free, found         )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         IDWORD
-      INTEGER               ND
-      INTEGER               NI
-      CHARACTER*(*)         IFNAME
-      INTEGER               FWARD
-      INTEGER               BWARD
-      INTEGER               FREE
-      LOGICAL               FOUND
+      integer               handle
+      character*(*)         idword
+      integer               nd
+      integer               ni
+      character*(*)         ifname
+      integer               fward
+      integer               bward
+      integer               free
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -159,139 +159,139 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Record Number of the file record in a DAF.
 !
-      INTEGER               FRLOCR
-      PARAMETER           ( FRLOCR =  1 )
+      integer               frlocr
+      parameter           ( frlocr =  1 )
 
 !
 !     Length of the IDWORD string.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =  8 )
+      integer               idwlen
+      parameter           ( idwlen =  8 )
 
 !
 !     Length of the internal filename string.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
 !
 !     Starting location in bytes of the internal filename in the
 !     file record.
 !
-      INTEGER               IFNSTR
-      PARAMETER           ( IFNSTR = 17 )
+      integer               ifnstr
+      parameter           ( ifnstr = 17 )
 
 !
 !     Size of an integer in bytes.
 !
-      INTEGER               INLEN
-      PARAMETER           ( INLEN  =  4 )
+      integer               inlen
+      parameter           ( inlen  =  4 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(CBFSIZ)    CHRBUF
-      CHARACTER*(FILEN)     FNAME
-      CHARACTER*(IDWLEN)    LOCIDW
-      CHARACTER*(IFNLEN)    LOCIFN
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(cbfsiz)    chrbuf
+      character*(filen)     fname
+      character*(idwlen)    locidw
+      character*(ifnlen)    locifn
+      character*(strsiz)    strbff ( numbff )
+      character*(strsiz)    tmpstr
 
-      INTEGER               CINDEX
-      INTEGER               I
-      INTEGER               IAMH
-      INTEGER               IARCH
-      INTEGER               IBFF
-      INTEGER               IOSTAT
-      INTEGER               LOCBWD
-      INTEGER               LOCFRE
-      INTEGER               LOCFWD
-      INTEGER               LOCND
-      INTEGER               LOCNI
-      INTEGER               LUN
-      INTEGER               NATBFF
+      integer               cindex
+      integer               i
+      integer               iamh
+      integer               iarch
+      integer               ibff
+      integer               iostat
+      integer               locbwd
+      integer               locfre
+      integer               locfwd
+      integer               locnd
+      integer               locni
+      integer               lun
+      integer               natbff
 
-      LOGICAL               FIRST
-      LOGICAL               LOCFND
+      logical               first
+      logical               locfnd
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  NATBFF
-      SAVE                  STRBFF
+      save                  first
+      save                  natbff
+      save                  strbff
 
 !
 !     Data Statements
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  NATBFF / 0      /
+      data                  first  / .true. /
+      data                  natbff / 0      /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDAFGFR' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDAFGFR' )
+      end if
 
 !
 !     Perform some initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Populate STRBFF, the buffer that contains the labels
 !        for each binary file format.
 !
-         DO I = 1, NUMBFF
-            CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-         END DO
+         do i = 1, numbff
+            call zzddhgsd ( 'BFF', i, strbff(i) )
+         end do
 
 !
 !        Fetch the native binary file format and determine its
 !        integer code.
 !
-         CALL ZZPLATFM ( 'FILE_FORMAT', TMPSTR )
-         CALL UCASE    ( TMPSTR,        TMPSTR )
+         call zzplatfm ( 'FILE_FORMAT', tmpstr )
+         call ucase    ( tmpstr,        tmpstr )
 
-         NATBFF = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+         natbff = isrchc ( tmpstr, numbff, strbff )
 
-         IF ( NATBFF .EQ. 0 ) THEN
+         if ( natbff .eq. 0 ) then
 
-            CALL SETMSG ( 'The binary file format, ''#'', is not ' &
+            call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
             //            'This is a serious problem, contact NAIF.'   )
-            CALL ERRCH  ( '#', TMPSTR                                  )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZDAFGFR'                                   )
-            RETURN
+            call errch  ( '#', tmpstr                                  )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZDAFGFR'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Do not perform initialization tasks again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Assume the data record will not be found, until it has been read
 !     from the file, and if necessary, successfully translated.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Retrieve information regarding the file from the handle manager.
@@ -299,127 +299,127 @@
 !     all values passed into handle manager entry points will have
 !     'DAF' as their architecture arguments.
 !
-      CALL ZZDDHNFO ( HANDLE, FNAME, IARCH, IBFF, IAMH, LOCFND )
+      call zzddhnfo ( handle, fname, iarch, ibff, iamh, locfnd )
 
-      IF ( .NOT. LOCFND ) THEN
-         CALL SETMSG ( 'Unable to locate file associated with ' &
+      if ( .not. locfnd ) then
+         call setmsg ( 'Unable to locate file associated with ' &
          //            'HANDLE, #.  The most likely cause of this ' &
          //            'is the file that you are trying to read ' &
          //            'has been closed.'                           )
-         CALL ERRINT ( '#', HANDLE                                  )
-         CALL SIGERR ( 'SPICE(HANDLENOTFOUND)'                      )
-         CALL CHKOUT ( 'ZZDAFGFR'                                   )
-         RETURN
-      END IF
+         call errint ( '#', handle                                  )
+         call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         call chkout ( 'ZZDAFGFR'                                   )
+         return
+      end if
 
 !
 !     Now get a logical unit for the handle.  Check FAILED() in
 !     case an error occurs.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., LUN )
+      call zzddhhlu ( handle, 'DAF', .false., lun )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZDAFGFR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZDAFGFR' )
+         return
+      end if
 
 !
 !     Branch based on whether the binary file format is native
 !     or not.  Only supported formats can be opened by ZZDDHOPN,
 !     so no check of IBFF is required.
 !
-      IF ( IBFF .EQ. NATBFF ) THEN
+      if ( ibff .eq. natbff ) then
 
 !
 !        In the native case, just read the components of the file
 !        record from the file.
 !
-         READ ( UNIT   = LUN, &
-                REC    = FRLOCR, &
-                IOSTAT = IOSTAT  ) LOCIDW, LOCND,  LOCNI, LOCIFN, &
-                                   LOCFWD, LOCBWD, LOCFRE
+         read ( unit   = lun, &
+                rec    = frlocr, &
+                iostat = iostat  ) locidw, locnd,  locni, locifn, &
+                                   locfwd, locbwd, locfre
 
 !
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL CHKOUT ( 'ZZDAFGFR' )
-            RETURN
-         END IF
+         if ( iostat .ne. 0 ) then
+            call chkout ( 'ZZDAFGFR' )
+            return
+         end if
 
 !
 !     Process the non-native binary file format case.
 !
-      ELSE
+      else
 
 !
 !        Read the data record as characters.
 !
-         READ ( UNIT   = LUN, &
-                REC    = FRLOCR, &
-                IOSTAT = IOSTAT  ) CHRBUF
+         read ( unit   = lun, &
+                rec    = frlocr, &
+                iostat = iostat  ) chrbuf
 
 !
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL CHKOUT ( 'ZZDAFGFR' )
-            RETURN
-         END IF
+         if ( iostat .ne. 0 ) then
+            call chkout ( 'ZZDAFGFR' )
+            return
+         end if
 
 !
 !        Assign the character components of the file record.
 !
-         LOCIDW = CHRBUF( 1      : IDWLEN            )
-         LOCIFN = CHRBUF( IFNSTR : (IFNSTR+IFNLEN-1) )
+         locidw = chrbuf( 1      : idwlen            )
+         locifn = chrbuf( ifnstr : (ifnstr+ifnlen-1) )
 
 !
 !        Convert the integer components.
 !
-         CINDEX = IDWLEN + 1
-         CALL ZZXLATEI ( IBFF, CHRBUF(CINDEX:CINDEX+INLEN-1), &
-                         1,    LOCND                          )
+         cindex = idwlen + 1
+         call zzxlatei ( ibff, chrbuf(cindex:cindex+inlen-1), &
+                         1,    locnd                          )
 
-         CINDEX = CINDEX + INLEN
-         CALL ZZXLATEI ( IBFF, CHRBUF(CINDEX:CINDEX+INLEN-1), &
-                         1,    LOCNI                          )
+         cindex = cindex + inlen
+         call zzxlatei ( ibff, chrbuf(cindex:cindex+inlen-1), &
+                         1,    locni                          )
 
-         CINDEX = IFNSTR + IFNLEN
-         CALL ZZXLATEI ( IBFF, CHRBUF(CINDEX:CINDEX+INLEN-1), &
-                         1,    LOCFWD                         )
+         cindex = ifnstr + ifnlen
+         call zzxlatei ( ibff, chrbuf(cindex:cindex+inlen-1), &
+                         1,    locfwd                         )
 
-         CINDEX = CINDEX + INLEN
-         CALL ZZXLATEI ( IBFF, CHRBUF(CINDEX:CINDEX+INLEN-1), &
-                         1,    LOCBWD                         )
+         cindex = cindex + inlen
+         call zzxlatei ( ibff, chrbuf(cindex:cindex+inlen-1), &
+                         1,    locbwd                         )
 
-         CINDEX = CINDEX + INLEN
-         CALL ZZXLATEI ( IBFF, CHRBUF(CINDEX:CINDEX+INLEN-1), &
-                         1,    LOCFRE                         )
+         cindex = cindex + inlen
+         call zzxlatei ( ibff, chrbuf(cindex:cindex+inlen-1), &
+                         1,    locfre                         )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDAFGFR' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDAFGFR' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Transfer the contents of the record to the output arguments
 !     and return to the caller.
 !
-      FOUND = .TRUE.
+      found = .true.
 
-      IDWORD = LOCIDW
-      ND     = LOCND
-      NI     = LOCNI
-      IFNAME = LOCIFN
-      FWARD  = LOCFWD
-      BWARD  = LOCBWD
-      FREE   = LOCFRE
+      idword = locidw
+      nd     = locnd
+      ni     = locni
+      ifname = locifn
+      fward  = locfwd
+      bward  = locbwd
+      free   = locfre
 
-      CALL CHKOUT( 'ZZDAFGFR' )
-      RETURN
+      call chkout( 'ZZDAFGFR' )
+      return
 
-      END
+      end

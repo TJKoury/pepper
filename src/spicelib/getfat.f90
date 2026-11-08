@@ -1,6 +1,6 @@
 !$Procedure GETFAT ( Get file architecture and type )
 
-      SUBROUTINE GETFAT ( FILE, ARCH, KERTYP )
+      subroutine getfat ( file, arch, kertyp )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      CHARACTER*(*)         FILE
-      CHARACTER*(*)         ARCH
-      CHARACTER*(*)         KERTYP
+      character*(*)         file
+      character*(*)         arch
+      character*(*)         kertyp
 
 ! $ Brief_I/O
 !
@@ -629,223 +629,223 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
 !
 !     Set the length of a SPICE kernel file ID word.
 !
-      INTEGER               IDLEN
-      PARAMETER           ( IDLEN = 12 )
+      integer               idlen
+      parameter           ( idlen = 12 )
 
-      INTEGER               FILSIZ
-      PARAMETER           ( FILSIZ = 255 )
+      integer               filsiz
+      parameter           ( filsiz = 255 )
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 !
 !     Set minimum and maximum values for the range of ASCII printing
 !     characters.
 !
-      INTEGER               MINPCH
-      PARAMETER           ( MINPCH = 32 )
+      integer               minpch
+      parameter           ( minpch = 32 )
 
-      INTEGER               MAXPCH
-      PARAMETER           ( MAXPCH = 126 )
+      integer               maxpch
+      parameter           ( maxpch = 126 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(WDSIZE)    FILARC
-      CHARACTER*(FILSIZ)    FNAME
-      CHARACTER*(IDLEN)     IDWORD
-      CHARACTER*(IDLEN)     TMPWRD
+      character*(wdsize)    filarc
+      character*(filsiz)    fname
+      character*(idlen)     idword
+      character*(idlen)     tmpwrd
 
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               INTAMN
-      INTEGER               INTARC
-      INTEGER               INTBFF
-      INTEGER               IOSTAT
-      INTEGER               NUMBER
+      integer               handle
+      integer               i
+      integer               intamn
+      integer               intarc
+      integer               intbff
+      integer               iostat
+      integer               number
 
-      LOGICAL               DIROPN
-      LOGICAL               EXIST
-      LOGICAL               FOUND
-      LOGICAL               OPENED
+      logical               diropn
+      logical               exist
+      logical               found
+      logical               opened
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'GETFAT' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin  ( 'GETFAT' )
+      end if
 
 !
 !     Initialize the temporary storage variables that we use.
 !
-      IDWORD = ' '
+      idword = ' '
 
 !
 !     If the filename we have is blank, signal an error and return.
 !
-      IF ( FILE .EQ. ' ' ) THEN
+      if ( file .eq. ' ' ) then
 
-         CALL SETMSG ( 'The file name is blank.' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'    )
-         CALL CHKOUT ( 'GETFAT'                  )
-         RETURN
+         call setmsg ( 'The file name is blank.' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'    )
+         call chkout ( 'GETFAT'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     See if this is a binary file that is currently open
 !     within the SPICE binary file management subsystem.  At
 !     the moment, as far as we know, the file is not opened.
 !
-      OPENED = .FALSE.
+      opened = .false.
 
-      CALL ZZDDHFNH ( FILE, HANDLE, FOUND )
+      call zzddhfnh ( file, handle, found )
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
 !
 !        If the file was recognized, we need to get the unit number
 !        associated with it.
 !
-         CALL ZZDDHNFO ( HANDLE, FNAME, INTARC, INTBFF, INTAMN, FOUND )
+         call zzddhnfo ( handle, fname, intarc, intbff, intamn, found )
 
 !
 !        Translate the architecture ID to a string and retrieve the
 !        logical unit to use with this file.
 !
-         CALL ZZDDHGSD ( 'ARCH', INTARC, FILARC )
-         CALL ZZDDHHLU ( HANDLE, FILARC, .FALSE., NUMBER )
+         call zzddhgsd ( 'ARCH', intarc, filarc )
+         call zzddhhlu ( handle, filarc, .false., number )
 
-         OPENED = .TRUE.
+         opened = .true.
 
-      ELSE
+      else
 
 !
 !        We'll do a bit of inquiring before we try opening anything.
 !
-         INQUIRE ( FILE   = FILE, &
-                   EXIST  = EXIST, &
-                   IOSTAT = IOSTAT, &
-                   OPENED = OPENED )
+         inquire ( file   = file, &
+                   exist  = exist, &
+                   iostat = iostat, &
+                   opened = opened )
 
 !
 !        Not too likely, but if the INQUIRE statement fails...
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'IOSTAT error in INQUIRE statement. IOSTAT ' &
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'IOSTAT error in INQUIRE statement. IOSTAT ' &
             //              '= #.'                                    )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL SIGERR ( 'SPICE(INQUIREERROR)'                       )
-            CALL CHKOUT ( 'GETFAT'                                    )
-            RETURN
-         END IF
+            call errint ( '#', iostat                                 )
+            call sigerr ( 'SPICE(INQUIREERROR)'                       )
+            call chkout ( 'GETFAT'                                    )
+            return
+         end if
 
 !
 !        Note: the following two tests MUST be performed in the order
 !        in which they appear, since in some environments files that do
 !        not exist are considered to be open.
 !
-         IF ( .NOT. EXIST ) THEN
+         if ( .not. exist ) then
 
-            CALL SETMSG ( 'The kernel file ''#'' does not exist.'   )
-            CALL ERRCH  ( '#', FILE                                 )
-            CALL SIGERR ( 'SPICE(FILENOTFOUND)'                     )
-            CALL CHKOUT ( 'GETFAT'                                  )
-            RETURN
+            call setmsg ( 'The kernel file ''#'' does not exist.'   )
+            call errch  ( '#', file                                 )
+            call sigerr ( 'SPICE(FILENOTFOUND)'                     )
+            call chkout ( 'GETFAT'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Reject open files not known to the handle manager subsystem.
 !
-         IF ( OPENED ) THEN
+         if ( opened ) then
 !
 !           Open files that are not opened within the SPICE
 !           binary file management subsystem are forbidden fruit.
 !           All we can do is signal an error letting the caller
 !           know that we are helpless in this case.
 !
-            CALL SETMSG ( 'The file ''#'' is already open.' )
-            CALL ERRCH  ( '#', FILE                         )
-            CALL SIGERR ( 'SPICE(EXTERNALOPEN)'             )
-            CALL CHKOUT ( 'GETFAT'                          )
-            RETURN
+            call setmsg ( 'The file ''#'' is already open.' )
+            call errch  ( '#', file                         )
+            call sigerr ( 'SPICE(EXTERNALOPEN)'             )
+            call chkout ( 'GETFAT'                          )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Open the file with a record length of RECL (the length of the
 !     DAF and DAS records). We assume, for now, that opening the file as
 !     a direct access file will work.
 !
-      DIROPN = .TRUE.
+      diropn = .true.
 
 !
 !     If the file is not already open (probably the case that
 !     happens most frequently) we try opening it for direct access
 !     and see if we can locate the idword.
 !
-      IF ( .NOT. OPENED ) THEN
+      if ( .not. opened ) then
 
-         CALL GETLUN ( NUMBER )
+         call getlun ( number )
 
-         OPEN ( UNIT               = NUMBER, &
-                FILE               = FILE, &
-                ACCESS             = 'DIRECT', &
-                RECL               = RECL, &
-                STATUS             = 'OLD', &
-                IOSTAT             = IOSTAT    )
+         open ( unit               = number, &
+                file               = file, &
+                access             = 'DIRECT', &
+                recl               = recl, &
+                status             = 'OLD', &
+                iostat             = iostat    )
 
 !
 !     If we had trouble opening the file, try opening it as a
 !     sequential file.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            DIROPN = .FALSE.
+            diropn = .false.
 
-            OPEN ( UNIT            = NUMBER, &
-                   FILE            = FILE, &
-                   ACCESS          = 'SEQUENTIAL', &
-                   STATUS          = 'OLD', &
-                   IOSTAT          = IOSTAT    )
+            open ( unit            = number, &
+                   file            = file, &
+                   access          = 'SEQUENTIAL', &
+                   status          = 'OLD', &
+                   iostat          = iostat    )
 
 !
 !        If we still have problems opening the file, we don't have a
 !        clue about the file architecture and type.
 !
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               ARCH   = '?'
-               KERTYP = '?'
-               CALL SETMSG ( 'Attempt to open the file ''#'' failed.' &
+               arch   = '?'
+               kertyp = '?'
+               call setmsg ( 'Attempt to open the file ''#'' failed.' &
                //           ' IOSTAT = #.'                          )
-               CALL ERRCH  ( '#', FILE                              )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(FILEOPENFAILED)'                )
-               CALL CHKOUT ( 'GETFAT'                               )
-               RETURN
+               call errch  ( '#', file                              )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(FILEOPENFAILED)'                )
+               call chkout ( 'GETFAT'                               )
+               return
 
-            END IF
+            end if
 
-         END IF
-      END IF
+         end if
+      end if
 
 !
 !     We opened the file successfully, so let's try to read from the
@@ -853,18 +853,18 @@
 !     statement, depending on whether the file was opened with direct
 !     access or sequential access.
 !
-      IF ( DIROPN ) THEN
+      if ( diropn ) then
 
-         READ ( NUMBER, REC=1, IOSTAT=IOSTAT ) TMPWRD
+         read ( number, rec=1, iostat=iostat ) tmpwrd
 
 !
 !        If we couldn't read from the file as a direct access file with
 !        a fixed record length, then try to open the file as a
 !        sequential file and read from it.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            IF ( OPENED ) THEN
+            if ( opened ) then
 
 !
 !              Something has gone wrong here.  The file was opened
@@ -875,18 +875,18 @@
 !              There's nothing we can do but abandon our quest to
 !              determine the type of the file.
 !
-               CALL SETMSG ( 'The file ''#'' is opened as a binary ' &
+               call setmsg ( 'The file ''#'' is opened as a binary ' &
                //            'SPICE kernel.  But it cannot be ' &
                //            'read using a direct access read. ' &
                //            'The value of IOSTAT returned by the ' &
                //            'attempted READ is #. '                 )
-               CALL ERRCH  ( '#', FILE                               )
-               CALL ERRINT ( '#', IOSTAT                             )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'                 )
-               CALL CHKOUT ( 'GETFAT'                                )
-               RETURN
+               call errch  ( '#', file                               )
+               call errint ( '#', iostat                             )
+               call sigerr ( 'SPICE(FILEREADFAILED)'                 )
+               call chkout ( 'GETFAT'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           If we reach this point, the file was opened locally
@@ -895,137 +895,137 @@
 !           we first need to close the file and then reopen it
 !           for sequential reading.
 !
-            CLOSE ( NUMBER )
+            close ( number )
 
-            OPEN ( UNIT   = NUMBER, &
-                   FILE   = FILE, &
-                   ACCESS = 'SEQUENTIAL', &
-                   STATUS = 'OLD', &
-                   IOSTAT = IOSTAT    )
+            open ( unit   = number, &
+                   file   = file, &
+                   access = 'SEQUENTIAL', &
+                   status = 'OLD', &
+                   iostat = iostat    )
 
 !
 !           If we could not open the file, we don't have a clue about
 !           the file architecture and type.
 !
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               ARCH   = '?'
-               KERTYP = '?'
-               CALL SETMSG ( 'Attempt to open the file ''#''' &
+               arch   = '?'
+               kertyp = '?'
+               call setmsg ( 'Attempt to open the file ''#''' &
                //            ' failed. IOSTAT = #.'           )
-               CALL ERRCH  ( '#', FILE                        )
-               CALL ERRINT ( '#', IOSTAT                      )
-               CALL SIGERR ( 'SPICE(FILEOPENFAILED)'          )
-               CALL CHKOUT ( 'GETFAT'                         )
-               RETURN
+               call errch  ( '#', file                        )
+               call errint ( '#', iostat                      )
+               call sigerr ( 'SPICE(FILEOPENFAILED)'          )
+               call chkout ( 'GETFAT'                         )
+               return
 
-            END IF
+            end if
 
 !
 !           Try to read from the file.
 !
-            READ ( NUMBER, FMT='(A)', IOSTAT=IOSTAT ) TMPWRD
+            read ( number, fmt='(A)', iostat=iostat ) tmpwrd
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         READ ( NUMBER, FMT='(A)', IOSTAT=IOSTAT ) TMPWRD
+         read ( number, fmt='(A)', iostat=iostat ) tmpwrd
 
-      END IF
+      end if
 
 !
 !     If we had an error while reading, we don't recognize this file.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         ARCH   = '?'
-         KERTYP = '?'
-         CLOSE       ( NUMBER                                      )
-         CALL SETMSG ( 'Attempt to read from file ''#'' failed.'  // &
+         arch   = '?'
+         kertyp = '?'
+         close       ( number                                      )
+         call setmsg ( 'Attempt to read from file ''#'' failed.'  // &
                        ' IOSTAT = #.'                              )
-         CALL ERRCH  ( '#', FILE                                   )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT ( 'GETFAT'                                    )
-         RETURN
+         call errch  ( '#', file                                   )
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout ( 'GETFAT'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Close the file (if we opened it here), as we do not need it
 !     to be open any more.
 !
-      IF ( .NOT. OPENED ) THEN
-         CLOSE ( NUMBER )
-      END IF
+      if ( .not. opened ) then
+         close ( number )
+      end if
 
 !
 !     At this point, we have a candidate for an ID word. To avoid
 !     difficulties with Fortran I/O and other things, we will now
 !     replace any non printing ASCII characters with blanks.
 !
-      DO I = 1, IDLEN
-         IF (      ( ICHAR(TMPWRD(I:I)) .LT. MINPCH ) &
-              .OR. ( ICHAR(TMPWRD(I:I)) .GT. MAXPCH ) ) THEN
-            TMPWRD(I:I) = ' '
-         END IF
-      END DO
+      do i = 1, idlen
+         if (      ( ichar(tmpwrd(i:i)) .lt. minpch ) &
+              .or. ( ichar(tmpwrd(i:i)) .gt. maxpch ) ) then
+            tmpwrd(i:i) = ' '
+         end if
+      end do
 
 !
 !     Identify the architecture and type, if we can.
 !
-      CALL LJUST  ( TMPWRD, TMPWRD         )
-      CALL UCASE  ( TMPWRD, TMPWRD         )
-      CALL NEXTWD ( TMPWRD, IDWORD, TMPWRD )
+      call ljust  ( tmpwrd, tmpwrd         )
+      call ucase  ( tmpwrd, tmpwrd         )
+      call nextwd ( tmpwrd, idword, tmpwrd )
 
-      IF ( IDWORD .EQ. 'DAFETF' ) THEN
+      if ( idword .eq. 'DAFETF' ) then
 
 !
 !        We have a DAF encoded transfer file.
 !
-         ARCH   = 'XFR'
-         KERTYP = 'DAF'
+         arch   = 'XFR'
+         kertyp = 'DAF'
 
-      ELSE IF ( IDWORD .EQ. 'DASETF') THEN
+      else if ( idword .eq. 'DASETF') then
 
 !
 !        We have a DAS encoded transfer file.
 !
-         ARCH   = 'XFR'
-         KERTYP = 'DAS'
+         arch   = 'XFR'
+         kertyp = 'DAS'
 
-      ELSE IF ( IDWORD(1:10) .EQ. '''NAIF/DAF''' ) THEN
+      else if ( idword(1:10) .eq. '''NAIF/DAF''' ) then
 
 !
 !        We have an old DAF decimal text file.
 !
-         ARCH   = 'DEC'
-         KERTYP = 'DAF'
+         arch   = 'DEC'
+         kertyp = 'DAF'
 
-      ELSE IF ( IDWORD(1:8) .EQ. 'NAIF/DAS' ) THEN
+      else if ( idword(1:8) .eq. 'NAIF/DAS' ) then
 
 !
 !        We have a pre release DAS binary file.
 !
-         ARCH   = 'DAS'
-         KERTYP = 'PRE'
+         arch   = 'DAS'
+         kertyp = 'PRE'
 
-      ELSE
+      else
 
 !
 !        Get the architecture and type from the ID word, if we can.
 !
-         CALL IDW2AT ( IDWORD(1:8), ARCH, KERTYP )
+         call idw2at ( idword(1:8), arch, kertyp )
 
-      END IF
+      end if
 
 !
 !     If the architecture is DAF and the type is unknown, '?', then we
 !     have either an SPK file, a CK file, or something we don't
 !     understand. Let's check it out.
 !
-      IF ( ( ARCH .EQ. 'DAF' ) .AND. ( KERTYP .EQ. '?' ) ) THEN
+      if ( ( arch .eq. 'DAF' ) .and. ( kertyp .eq. '?' ) ) then
 
 !
 !        We have a DAF file and we do not know what the type is. This
@@ -1038,13 +1038,13 @@
 !        Open the file and pass the handle to the private routine
 !        that deals with the dirty work.
 !
-         CALL DAFOPR ( FILE, HANDLE )
-         CALL ZZCKSPK( HANDLE, KERTYP )
-         CALL DAFCLS ( HANDLE )
+         call dafopr ( file, handle )
+         call zzckspk( handle, kertyp )
+         call dafcls ( handle )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'GETFAT' )
-      RETURN
+      call chkout ( 'GETFAT' )
+      return
 
-      END
+      end

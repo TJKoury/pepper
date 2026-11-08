@@ -1,6 +1,6 @@
 !$Procedure ASTRIP ( STRIP Ascii characters from a string )
 
-      SUBROUTINE ASTRIP ( INSTR, ASCIIB, ASCIIE, OUTSTR )
+      subroutine astrip ( instr, asciib, asciie, outstr )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    INSTR
-      CHARACTER*1      ASCIIB
-      CHARACTER*1      ASCIIE
-      CHARACTER*(*)    OUTSTR
+      character*(*)    instr
+      character*1      asciib
+      character*1      asciie
+      character*(*)    outstr
 
 ! $ Brief_I/O
 !
@@ -158,18 +158,18 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          LASTNB
+      integer          lastnb
 
 !
 !     Local Variables
 !
-      INTEGER          OUTLEN
-      INTEGER          LAST
-      INTEGER          LWRBND
-      INTEGER          UPRBND
-      INTEGER          I
-      INTEGER          J
-      INTEGER          K
+      integer          outlen
+      integer          last
+      integer          lwrbnd
+      integer          uprbnd
+      integer          i
+      integer          j
+      integer          k
 
 
 
@@ -177,18 +177,18 @@
 !     Find the length of the output string. We don't want to
 !     exceed it.
 !
-      OUTLEN = LEN ( OUTSTR )
+      outlen = len ( outstr )
 
 !
 !     Find the last non-blank character of the input string.
 !
-      LAST   = LASTNB ( INSTR )
+      last   = lastnb ( instr )
 
 !
 !     Get the numeric representation of ASCIIB and ASCIIE.
 !
-      LWRBND = ICHAR ( ASCIIB )
-      UPRBND = ICHAR ( ASCIIE )
+      lwrbnd = ichar ( asciib )
+      uprbnd = ichar ( asciie )
 
 !
 !     Step through INSTR (I) a character at a time, transferring
@@ -198,36 +198,36 @@
 !     If the end of OUTSTR is reached, stop transferring characters
 !     and return.
 !
-      J    = 0
+      j    = 0
 
-      DO I = 1, LAST
+      do i = 1, last
 
-         K = ICHAR ( INSTR(I:I) )
+         k = ichar ( instr(i:i) )
 
-         IF ( ( K .LT. LWRBND ) .OR. ( K .GT. UPRBND ) ) THEN
+         if ( ( k .lt. lwrbnd ) .or. ( k .gt. uprbnd ) ) then
 !
 !           The character is kept.  Note that if the user inputs
 !           ASCIIB and ASCIIE in the wrong order this test will
 !           always succeed so that the output string will be
 !           the same as the input string.
 !
-            J           = J + 1
-            OUTSTR(J:J) = INSTR(I:I)
+            j           = j + 1
+            outstr(j:j) = instr(i:i)
 
-            IF ( J .EQ. OUTLEN ) THEN
-               RETURN
-            END IF
+            if ( j .eq. outlen ) then
+               return
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Pad the output string with blanks.
 !
-      IF ( J .LT. OUTLEN ) THEN
-         OUTSTR(J+1: ) = ' '
-      END IF
+      if ( j .lt. outlen ) then
+         outstr(j+1: ) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

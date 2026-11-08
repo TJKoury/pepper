@@ -1,7 +1,7 @@
 !$Procedure M2EUL ( Matrix to Euler angles )
 
-      SUBROUTINE M2EUL (  R,  AXIS3,   AXIS2,   AXIS1, &
-                              ANGLE3,  ANGLE2,  ANGLE1  )
+      subroutine m2eul (  r,  axis3,   axis2,   axis1, &
+                              angle3,  angle2,  angle1  )
 
 ! $ Abstract
 !
@@ -21,17 +21,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      R      ( 3, 3 )
+      double precision      r      ( 3, 3 )
 
-      INTEGER               AXIS3
-      INTEGER               AXIS2
-      INTEGER               AXIS1
+      integer               axis3
+      integer               axis2
+      integer               axis1
 
-      DOUBLE PRECISION      ANGLE3
-      DOUBLE PRECISION      ANGLE2
-      DOUBLE PRECISION      ANGLE1
+      double precision      angle3
+      double precision      angle2
+      double precision      angle1
 
 ! $ Brief_I/O
 !
@@ -652,8 +652,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ISROT
-      LOGICAL               RETURN
+      logical               isrot
+      logical               return
 
 !
 !     Local parameters
@@ -669,46 +669,46 @@
 !     columns are the unitized columns of R.
 !
 !
-      DOUBLE PRECISION      NTOL
-      PARAMETER           ( NTOL = 0.1D0 )
+      double precision      ntol
+      parameter           ( ntol = 0.1d0 )
 
-      DOUBLE PRECISION      DTOL
-      PARAMETER           ( DTOL = 0.1D0 )
+      double precision      dtol
+      parameter           ( dtol = 0.1d0 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CHANGE ( 3, 3 )
-      DOUBLE PRECISION      SIGN
-      DOUBLE PRECISION      TMPMAT ( 3, 3 )
-      DOUBLE PRECISION      TMPROT ( 3, 3 )
+      double precision      change ( 3, 3 )
+      double precision      sign
+      double precision      tmpmat ( 3, 3 )
+      double precision      tmprot ( 3, 3 )
 
-      INTEGER               C
-      INTEGER               I
-      INTEGER               NEXT   ( 3 )
+      integer               c
+      integer               i
+      integer               next   ( 3 )
 
-      LOGICAL               DEGEN
+      logical               degen
 
 !
 !     Saved variables
 !
-      SAVE                  NEXT
+      save                  next
 
 !
 !     Initial values
 !
-      DATA  NEXT / 2, 3, 1 /
+      data  next / 2, 3, 1 /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'M2EUL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'M2EUL' )
+      end if
 
 !
 !     The first order of business is to screen out the goofy cases.
@@ -716,42 +716,42 @@
 !     Make sure the axis numbers are all right:  They must belong to
 !     the set {1, 2, 3}...
 !
-      IF (      (  ( AXIS3 .LT. 1 ) .OR. ( AXIS3 .GT. 3 )  ) &
-           .OR. (  ( AXIS2 .LT. 1 ) .OR. ( AXIS2 .GT. 3 )  ) &
-           .OR. (  ( AXIS1 .LT. 1 ) .OR. ( AXIS1 .GT. 3 )  )   ) THEN
+      if (      (  ( axis3 .lt. 1 ) .or. ( axis3 .gt. 3 )  ) &
+           .or. (  ( axis2 .lt. 1 ) .or. ( axis2 .gt. 3 )  ) &
+           .or. (  ( axis1 .lt. 1 ) .or. ( axis1 .gt. 3 )  )   ) then
 
-         CALL SETMSG ( 'Axis numbers are #,  #,  #. ' )
-         CALL ERRINT ( '#',  AXIS3                    )
-         CALL ERRINT ( '#',  AXIS2                    )
-         CALL ERRINT ( '#',  AXIS1                    )
-         CALL SIGERR ( 'SPICE(BADAXISNUMBERS)'        )
-         CALL CHKOUT ( 'M2EUL'                        )
-         RETURN
+         call setmsg ( 'Axis numbers are #,  #,  #. ' )
+         call errint ( '#',  axis3                    )
+         call errint ( '#',  axis2                    )
+         call errint ( '#',  axis1                    )
+         call sigerr ( 'SPICE(BADAXISNUMBERS)'        )
+         call chkout ( 'M2EUL'                        )
+         return
 
 !
 !     ...and the second axis number must differ from its neighbors.
 !
-      ELSE IF ( ( AXIS3 .EQ. AXIS2 ) .OR. ( AXIS1 .EQ. AXIS2 ) ) THEN
+      else if ( ( axis3 .eq. axis2 ) .or. ( axis1 .eq. axis2 ) ) then
 
-         CALL SETMSG ( 'Middle axis matches neighbor: # # #.' )
-         CALL ERRINT ( '#',  AXIS3                            )
-         CALL ERRINT ( '#',  AXIS2                            )
-         CALL ERRINT ( '#',  AXIS1                            )
-         CALL SIGERR ( 'SPICE(BADAXISNUMBERS)'                )
-         CALL CHKOUT ( 'M2EUL'                                )
-         RETURN
+         call setmsg ( 'Middle axis matches neighbor: # # #.' )
+         call errint ( '#',  axis3                            )
+         call errint ( '#',  axis2                            )
+         call errint ( '#',  axis1                            )
+         call sigerr ( 'SPICE(BADAXISNUMBERS)'                )
+         call chkout ( 'M2EUL'                                )
+         return
 
 !
 !     R must be a rotation matrix, or we may as well forget it.
 !
-      ELSE IF (  .NOT. ISROT ( R, NTOL, DTOL )  ) THEN
+      else if (  .not. isrot ( r, ntol, dtol )  ) then
 
-         CALL SETMSG ( 'Input matrix is not a rotation.' )
-         CALL SIGERR ( 'SPICE(NOTAROTATION)'             )
-         CALL CHKOUT ( 'M2EUL'                           )
-         RETURN
+         call setmsg ( 'Input matrix is not a rotation.' )
+         call sigerr ( 'SPICE(NOTAROTATION)'             )
+         call chkout ( 'M2EUL'                           )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -759,9 +759,9 @@
 !     point.  We take the liberty of working with TMPROT, a version
 !     of R that has unitized columns.
 !
-      DO I = 1, 3
-         CALL VHAT ( R(1,I), TMPROT(1,I) )
-      END DO
+      do i = 1, 3
+         call vhat ( r(1,i), tmprot(1,i) )
+      end do
 
 !
 !     We now proceed to recover the promised Euler angles from
@@ -812,7 +812,7 @@
 !
 
 
-      IF ( AXIS3 .EQ. AXIS1 ) THEN
+      if ( axis3 .eq. axis1 ) then
 
 !
 !        The axis order is a-b-a.  We're going to find a matrix CHANGE
@@ -839,31 +839,31 @@
 !        is just a little mapping that takes 1 to 2, 2 to 3, and 3 to
 !        1.
 !
-         IF ( AXIS2 .EQ. NEXT(AXIS3) ) THEN
-            SIGN =  1.D0
-         ELSE
-            SIGN = -1.D0
-         END IF
+         if ( axis2 .eq. next(axis3) ) then
+            sign =  1.d0
+         else
+            sign = -1.d0
+         end if
 
 !
 !        Since the axis indices sum to 6,
 !
-         C = 6 - AXIS3 - AXIS2
+         c = 6 - axis3 - axis2
 
 !
 !        Set up the entries of CHANGE:
 !
-         CALL CLEARD ( 9, CHANGE )
+         call cleard ( 9, change )
 
-         CHANGE ( AXIS3, 3 ) =         1.D0
-         CHANGE ( AXIS2, 1 ) =         1.D0
-         CHANGE ( C,     2 ) =  SIGN * 1.D0
+         change ( axis3, 3 ) =         1.d0
+         change ( axis2, 1 ) =         1.d0
+         change ( c,     2 ) =  sign * 1.d0
 
 !
 !        Transform TMPROT.
 !
-         CALL MXM  ( TMPROT,  CHANGE,  TMPMAT )
-         CALL MTXM ( CHANGE,  TMPMAT,  TMPROT )
+         call mxm  ( tmprot,  change,  tmpmat )
+         call mtxm ( change,  tmpmat,  tmprot )
 
 !
 !        Now we're ready to find the Euler angles, using a
@@ -913,11 +913,11 @@
 !        simultaneously because of round-off:
 !
 !
-         DEGEN =      (        (       TMPROT(1,3)    .EQ. 0.D0  ) &
-                         .AND. (       TMPROT(2,3)    .EQ. 0.D0  )  ) &
-                 .OR. (        (       TMPROT(3,1)    .EQ. 0.D0  ) &
-                         .AND. (       TMPROT(3,2)    .EQ. 0.D0  )  ) &
-                 .OR. (           ABS( TMPROT(3,3) )  .EQ. 1.D0     )
+         degen =      (        (       tmprot(1,3)    .eq. 0.d0  ) &
+                         .and. (       tmprot(2,3)    .eq. 0.d0  )  ) &
+                 .or. (        (       tmprot(3,1)    .eq. 0.d0  ) &
+                         .and. (       tmprot(3,2)    .eq. 0.d0  )  ) &
+                 .or. (           abs( tmprot(3,3) )  .eq. 1.d0     )
 
 
 !
@@ -927,25 +927,25 @@
 !                            -
 !        in choosing the signs of the ATAN2 arguments correctly.
 !
-         IF ( DEGEN ) THEN
+         if ( degen ) then
 
-            ANGLE3 = 0.D0
-            ANGLE2 = ACOS  (  TMPROT(3,3)                 )
-            ANGLE1 = ATAN2 (  TMPROT(1,2),   TMPROT(1,1)  )
+            angle3 = 0.d0
+            angle2 = acos  (  tmprot(3,3)                 )
+            angle1 = atan2 (  tmprot(1,2),   tmprot(1,1)  )
 
-         ELSE
+         else
 !
 !           The normal case.
 !
-            ANGLE3 = ATAN2 (  TMPROT(1,3),   TMPROT(2,3)  )
-            ANGLE2 = ACOS  (  TMPROT(3,3)                 )
-            ANGLE1 = ATAN2 (  TMPROT(3,1),  -TMPROT(3,2)  )
+            angle3 = atan2 (  tmprot(1,3),   tmprot(2,3)  )
+            angle2 = acos  (  tmprot(3,3)                 )
+            angle1 = atan2 (  tmprot(3,1),  -tmprot(3,2)  )
 
-         END IF
+         end if
 
 
 
-      ELSE
+      else
 
 !
 !        The axis order is c-b-a.  We're going to find a matrix CHANGE
@@ -974,26 +974,26 @@
 !        straightened out right now.  The variable NEXT is just a
 !        little mapping that takes 1 to 2, 2 to 3, and 3 to 1.
 !
-         IF ( AXIS2 .EQ. NEXT(AXIS3) ) THEN
-            SIGN =  1.D0
-         ELSE
-            SIGN = -1.D0
-         END IF
+         if ( axis2 .eq. next(axis3) ) then
+            sign =  1.d0
+         else
+            sign = -1.d0
+         end if
 
 !
 !        Set up the entries of CHANGE:
 !
-         CALL CLEARD ( 9, CHANGE )
+         call cleard ( 9, change )
 
-         CHANGE ( AXIS3, 1 ) =         1.D0
-         CHANGE ( AXIS2, 2 ) =         1.D0
-         CHANGE ( AXIS1, 3 ) =  SIGN * 1.D0
+         change ( axis3, 1 ) =         1.d0
+         change ( axis2, 2 ) =         1.d0
+         change ( axis1, 3 ) =  sign * 1.d0
 
 !
 !        Transform TMPROT.
 !
-         CALL MXM  ( TMPROT,  CHANGE,  TMPMAT )
-         CALL MTXM ( CHANGE,  TMPMAT,  TMPROT )
+         call mxm  ( tmprot,  change,  tmpmat )
+         call mtxm ( change,  tmpmat,  tmprot )
 
 !
 !        Now we're ready to find the Euler angles, using a
@@ -1045,11 +1045,11 @@
 !        simultaneously because of round-off:
 !
 !
-         DEGEN =      (        (       TMPROT(1,1)    .EQ. 0.D0  ) &
-                         .AND. (       TMPROT(1,2)    .EQ. 0.D0  )  ) &
-                 .OR. (        (       TMPROT(2,3)    .EQ. 0.D0  ) &
-                         .AND. (       TMPROT(3,3)    .EQ. 0.D0  )  ) &
-                 .OR. (           ABS( TMPROT(1,3) )  .EQ. 1.D0     )
+         degen =      (        (       tmprot(1,1)    .eq. 0.d0  ) &
+                         .and. (       tmprot(1,2)    .eq. 0.d0  )  ) &
+                 .or. (        (       tmprot(2,3)    .eq. 0.d0  ) &
+                         .and. (       tmprot(3,3)    .eq. 0.d0  )  ) &
+                 .or. (           abs( tmprot(1,3) )  .eq. 1.d0     )
 
 
 !
@@ -1059,24 +1059,24 @@
 !                            -
 !        in choosing the signs of the ATAN2 arguments correctly.
 !
-         IF ( DEGEN ) THEN
+         if ( degen ) then
 
-            ANGLE3 =          0.D0
-            ANGLE2 =          ASIN  ( -TMPROT(1,3)                 )
-            ANGLE1 = SIGN  *  ATAN2 ( -TMPROT(2,1),   TMPROT(2,2)  )
+            angle3 =          0.d0
+            angle2 =          asin  ( -tmprot(1,3)                 )
+            angle1 = sign  *  atan2 ( -tmprot(2,1),   tmprot(2,2)  )
 
-         ELSE
+         else
 !
 !           The normal case.
 !
-            ANGLE3 =          ATAN2 (  TMPROT(2,3),   TMPROT(3,3)  )
-            ANGLE2 =          ASIN  ( -TMPROT(1,3)                 )
-            ANGLE1 = SIGN  *  ATAN2 (  TMPROT(1,2),   TMPROT(1,1)  )
+            angle3 =          atan2 (  tmprot(2,3),   tmprot(3,3)  )
+            angle2 =          asin  ( -tmprot(1,3)                 )
+            angle1 = sign  *  atan2 (  tmprot(1,2),   tmprot(1,1)  )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'M2EUL' )
-      RETURN
-      END
+      call chkout ( 'M2EUL' )
+      return
+      end

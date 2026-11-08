@@ -1,6 +1,6 @@
 !$Procedure SPKE15 ( Evaluate a type 15 SPK data record)
 
-      SUBROUTINE SPKE15 ( ET, RECIN, STATE )
+      subroutine spke15 ( et, recin, state )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECIN  ( * )
-      DOUBLE PRECISION      STATE  ( 6 )
+      double precision      et
+      double precision      recin  ( * )
+      double precision      state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -265,94 +265,94 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPR
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      double precision      dpr
+      external              pi
+      double precision      pi
+      double precision      twopi
+      double precision      vdot
+      double precision      vsep
+      logical               return
+      logical               vzero
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      COSINC
-      DOUBLE PRECISION      DMDT
-      DOUBLE PRECISION      DNODE
-      DOUBLE PRECISION      DOT
-      DOUBLE PRECISION      DPERI
-      DOUBLE PRECISION      DT
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      GM
-      DOUBLE PRECISION      K2PI
-      DOUBLE PRECISION      MANOM
-      DOUBLE PRECISION      NEAR
-      DOUBLE PRECISION      OJ2
-      DOUBLE PRECISION      ONEME2
-      DOUBLE PRECISION      P
-      DOUBLE PRECISION      PA     ( 3 )
-      DOUBLE PRECISION      PV     ( 3 )
-      DOUBLE PRECISION      RPL
-      DOUBLE PRECISION      SPEED
-      DOUBLE PRECISION      STATE0 ( 6 )
-      DOUBLE PRECISION      TA
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      TMPSTA ( 6 )
-      DOUBLE PRECISION      TP     ( 3 )
-      DOUBLE PRECISION      Z
+      double precision      angle
+      double precision      cosinc
+      double precision      dmdt
+      double precision      dnode
+      double precision      dot
+      double precision      dperi
+      double precision      dt
+      double precision      ecc
+      double precision      epoch
+      double precision      gm
+      double precision      k2pi
+      double precision      manom
+      double precision      near
+      double precision      oj2
+      double precision      oneme2
+      double precision      p
+      double precision      pa     ( 3 )
+      double precision      pv     ( 3 )
+      double precision      rpl
+      double precision      speed
+      double precision      state0 ( 6 )
+      double precision      ta
+      double precision      theta
+      double precision      tmpsta ( 6 )
+      double precision      tp     ( 3 )
+      double precision      z
 
-      INTEGER               J2FLG
+      integer               j2flg
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKE15')
+      call chkin ( 'SPKE15')
 
 !
 !     Fetch the various entities from the input record, first the epoch.
 !
-      EPOCH  = RECIN(1)
+      epoch  = recin(1)
 
 !
 !     The trajectory pole vector.
 !
-      CALL VEQU ( RECIN(2), TP )
+      call vequ ( recin(2), tp )
 
 !
 !     The periapsis vector.
 !
-      CALL VEQU ( RECIN(5), PA )
+      call vequ ( recin(5), pa )
 
 !
 !     Semi-latus rectum ( P in the P/(1 + ECC*COS(Nu)  ),
 !     and eccentricity.
 !
-      P      = RECIN(8)
-      ECC    = RECIN(9)
+      p      = recin(8)
+      ecc    = recin(9)
 
 !
 !     J2 processing flag.
 !
-      J2FLG  = INT( RECIN(10) )
+      j2flg  = int( recin(10) )
 
 !
 !     Central body pole vector.
 !
-      CALL VEQU ( RECIN(11), PV )
+      call vequ ( recin(11), pv )
 
 !
 !     The central mass, J2 and radius of the central body.
 !
-      GM     = RECIN(14)
-      OJ2    = RECIN(15)
-      RPL    = RECIN(16)
+      gm     = recin(14)
+      oj2    = recin(15)
+      rpl    = recin(16)
 
 !
 !     Check all the inputs here for obvious failures.  Yes, perhaps
@@ -362,81 +362,81 @@
 !
 
 
-      IF ( P .LE. 0 ) THEN
+      if ( p .le. 0 ) then
 
-         CALL SETMSG ( 'The semi-latus rectum supplied to the ' &
+         call setmsg ( 'The semi-latus rectum supplied to the ' &
          //            'SPK type 15 evaluator was non-positive.  This ' &
          //            'value must be positive. The value supplied was ' &
          //            '#.'                    )
-         CALL ERRDP  ( '#', P                  )
-         CALL SIGERR ( 'SPICE(BADLATUSRECTUM)' )
-         CALL CHKOUT ( 'SPKE15'                )
-         RETURN
+         call errdp  ( '#', p                  )
+         call sigerr ( 'SPICE(BADLATUSRECTUM)' )
+         call chkout ( 'SPKE15'                )
+         return
 
-      ELSE IF ( ECC .LT. 0.0D0 ) THEN
+      else if ( ecc .lt. 0.0d0 ) then
 
-         CALL SETMSG ( 'The eccentricity supplied for a type 15 ' &
+         call setmsg ( 'The eccentricity supplied for a type 15 ' &
          //            'segment is negative.  It must be non-negative. ' &
          //            'The value supplied ' &
          //            'to the type 15 evaluator was #. ' )
-         CALL ERRDP  ( '#',   ECC                )
-         CALL SIGERR ( 'SPICE(BADECCENTRICITY)'  )
-         CALL CHKOUT ( 'SPKE15'                  )
-         RETURN
+         call errdp  ( '#',   ecc                )
+         call sigerr ( 'SPICE(BADECCENTRICITY)'  )
+         call chkout ( 'SPKE15'                  )
+         return
 
-      ELSE IF ( GM  .LE. 0.0D0 ) THEN
+      else if ( gm  .le. 0.0d0 ) then
 
-         CALL SETMSG ( 'The mass supplied for the central body ' &
+         call setmsg ( 'The mass supplied for the central body ' &
          //            'of a type 15 segment was non-positive. ' &
          //            'Masses must be positive.  The value ' &
          //            'supplied was #. '        )
-         CALL ERRDP  ( '#', GM                   )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEMASS)'  )
-         CALL CHKOUT ( 'SPKE15'                  )
-         RETURN
+         call errdp  ( '#', gm                   )
+         call sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
+         call chkout ( 'SPKE15'                  )
+         return
 
-      ELSE IF ( VZERO(TP) ) THEN
+      else if ( vzero(tp) ) then
 
-         CALL SETMSG ( 'The trajectory pole vector supplied to ' &
+         call setmsg ( 'The trajectory pole vector supplied to ' &
          //            'SPKE15 had length zero. The most likely ' &
          //            'cause of this problem is a corrupted SPK ' &
          //            '(ephemeris) file. ' )
-         CALL SIGERR ( 'SPICE(BADVECTOR)'   )
-         CALL CHKOUT ( 'SPKE15'             )
-         RETURN
+         call sigerr ( 'SPICE(BADVECTOR)'   )
+         call chkout ( 'SPKE15'             )
+         return
 
-      ELSE IF ( VZERO(PA) ) THEN
+      else if ( vzero(pa) ) then
 
-         CALL SETMSG ( 'The periapse vector supplied to SPKE15 ' &
+         call setmsg ( 'The periapse vector supplied to SPKE15 ' &
          //            'had length zero. The most likely cause ' &
          //            'of this problem is a corrupted SPK ' &
          //            '(ephemeris) file. ' )
-         CALL SIGERR ( 'SPICE(BADVECTOR)'   )
-         CALL CHKOUT ( 'SPKE15'             )
-         RETURN
+         call sigerr ( 'SPICE(BADVECTOR)'   )
+         call chkout ( 'SPKE15'             )
+         return
 
-      ELSE IF ( VZERO(PV) ) THEN
+      else if ( vzero(pv) ) then
 
-         CALL SETMSG ( 'The central pole vector supplied to ' &
+         call setmsg ( 'The central pole vector supplied to ' &
          //            'SPKE15 had length zero. The most likely ' &
          //            'cause of this problem is a corrupted SPK ' &
          //            '(ephemeris) file. ' )
-         CALL SIGERR ( 'SPICE(BADVECTOR)'   )
-         CALL CHKOUT ( 'SPKE15'             )
-         RETURN
+         call sigerr ( 'SPICE(BADVECTOR)'   )
+         call chkout ( 'SPKE15'             )
+         return
 
 
-      ELSE IF ( RPL .LT. 0.0D0 ) THEN
+      else if ( rpl .lt. 0.0d0 ) then
 
-         CALL SETMSG ( 'The central body radius was negative. ' &
+         call setmsg ( 'The central body radius was negative. ' &
          //            'It must be zero or positive.  The value ' &
          //            'supplied was #. '  )
-         CALL ERRDP  ( '#', RPL            )
-         CALL SIGERR ( 'SPICE(BADRADIUS)'  )
-         CALL CHKOUT ( 'SPKE15'            )
-         RETURN
+         call errdp  ( '#', rpl            )
+         call sigerr ( 'SPICE(BADRADIUS)'  )
+         call chkout ( 'SPKE15'            )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -444,47 +444,47 @@
 !     (It won't hurt to polish them up a bit here if they are already
 !      unit vectors.)
 !
-      CALL VHATIP ( PA )
-      CALL VHATIP ( TP )
-      CALL VHATIP ( PV )
+      call vhatip ( pa )
+      call vhatip ( tp )
+      call vhatip ( pv )
 
 !
 !     One final check.  Make sure the pole and periapse vectors are
 !     orthogonal. (We will use a very crude check but this should
 !     rule out any obvious errors.)
 !
-      DOT = VDOT ( PA, TP )
+      dot = vdot ( pa, tp )
 
-      IF ( ABS(DOT) .GT. 1.0D-5 ) THEN
+      if ( abs(dot) .gt. 1.0d-5 ) then
 
-         ANGLE = VSEP ( PA, TP ) * DPR()
+         angle = vsep ( pa, tp ) * dpr()
 
-         CALL SETMSG ( 'The periapsis and trajectory pole ' &
+         call setmsg ( 'The periapsis and trajectory pole ' &
          //            'vectors are not orthogonal. The angle' &
          //            'between them is # degrees. '         )
-         CALL ERRDP  ( '#',     ANGLE        )
-         CALL SIGERR ( 'SPICE(BADINITSTATE)' )
-         CALL CHKOUT ( 'SPKE15'              )
-         RETURN
+         call errdp  ( '#',     angle        )
+         call sigerr ( 'SPICE(BADINITSTATE)' )
+         call chkout ( 'SPKE15'              )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the distance and speed at periapse.
 !
-      NEAR  = P           / ( 1.0D0 + ECC)
-      SPEED = DSQRT(GM/P) * ( 1.0D0 + ECC )
+      near  = p           / ( 1.0d0 + ecc)
+      speed = dsqrt(gm/p) * ( 1.0d0 + ecc )
 
 !
 !     Next get the position at periapse ...
 !
-      CALL VSCL( NEAR, PA, STATE0 )
+      call vscl( near, pa, state0 )
 
 !
 !     ... and the velocity at periapsis.
 !
-      CALL VCRSS  ( TP,    PA, STATE0(4) )
-      CALL VSCLIP ( SPEED,     STATE0(4) )
+      call vcrss  ( tp,    pa, state0(4) )
+      call vsclip ( speed,     state0(4) )
 
 !
 !     Determine the elapsed time from periapse to the requested
@@ -515,8 +515,8 @@
 !     state and then if needed perform the precession of the line
 !     of nodes and apsides by simply precessing the resulting state.
 !
-      DT = ET - EPOCH
-      CALL PROP2B ( GM, STATE0, DT, STATE )
+      dt = et - epoch
+      call prop2b ( gm, state0, dt, state )
 
 !
 !     If called for, handle precession needed due to the J2 term.  Note
@@ -524,70 +524,70 @@
 !     in terms of the true anomaly.  This means we need the accumulated
 !     true anomaly in order to properly transform the state.
 !
-      IF (       ( J2FLG .NE. 3     ) &
-           .AND. ( OJ2   .NE. 0.0D0 ) &
-           .AND. ( ECC   .LT. 1.0D0 ) &
-           .AND. ( NEAR  .GT. RPL   )  ) THEN
+      if (       ( j2flg .ne. 3     ) &
+           .and. ( oj2   .ne. 0.0d0 ) &
+           .and. ( ecc   .lt. 1.0d0 ) &
+           .and. ( near  .gt. rpl   )  ) then
 
 !
 !        First compute the change in mean anomaly since periapsis.
 !
-         ONEME2 = 1.0D0 - ECC**2
-         DMDT   = ( ONEME2 / P ) * DSQRT( GM * ONEME2 / P )
-         MANOM  = DMDT*DT
+         oneme2 = 1.0d0 - ecc**2
+         dmdt   = ( oneme2 / p ) * dsqrt( gm * oneme2 / p )
+         manom  = dmdt*dt
 !
 !        Next compute the angle THETA such that THETA is between
 !        -pi and pi and such than MANOM = THETA + K*2*pi for
 !        some integer K.
 !
-         THETA  = MOD( MANOM, TWOPI() )
+         theta  = mod( manom, twopi() )
 
-         IF ( ABS(THETA).GT. PI() ) THEN
-            THETA = THETA - SIGN(TWOPI(),THETA)
-         END IF
+         if ( abs(theta).gt. pi() ) then
+            theta = theta - sign(twopi(),theta)
+         end if
 
-         K2PI   = MANOM - THETA
+         k2pi   = manom - theta
 !
 !        We can get the accumulated true anomaly from the propagated
 !        state theta and the accumulated mean anomaly prior to this
 !        orbit.
 !
-         TA     = VSEP ( PA, STATE )
-         TA     = SIGN ( TA, THETA )
-         TA     = TA  +  K2PI
+         ta     = vsep ( pa, state )
+         ta     = sign ( ta, theta )
+         ta     = ta  +  k2pi
 
 !
 !        Determine how far the line of nodes and periapsis have moved.
 !
-         COSINC = VDOT(PV,TP)
+         cosinc = vdot(pv,tp)
 
-         Z      = TA * 1.5D0 * OJ2 *(RPL/P)**2
-         DNODE  = -Z * COSINC
-         DPERI  =  Z * ( 2.5D0*COSINC**2 - 0.5D0 )
+         z      = ta * 1.5d0 * oj2 *(rpl/p)**2
+         dnode  = -z * cosinc
+         dperi  =  z * ( 2.5d0*cosinc**2 - 0.5d0 )
 
 !
 !        Precess the periapsis by rotating the state vector about the
 !        trajectory pole
 !
-         IF ( J2FLG .NE. 1 ) THEN
+         if ( j2flg .ne. 1 ) then
 
-            CALL VROTV ( STATE(1), TP, DPERI, TMPSTA(1) )
-            CALL VROTV ( STATE(4), TP, DPERI, TMPSTA(4) )
-            CALL MOVED ( TMPSTA,   6,         STATE     )
+            call vrotv ( state(1), tp, dperi, tmpsta(1) )
+            call vrotv ( state(4), tp, dperi, tmpsta(4) )
+            call moved ( tmpsta,   6,         state     )
 
-         END IF
+         end if
 
 !
 !        Regress the line of nodes by rotating the state
 !        about the pole of the central body.
 !
-         IF ( J2FLG .NE. 2 ) THEN
+         if ( j2flg .ne. 2 ) then
 
-            CALL VROTV ( STATE,    PV, DNODE, TMPSTA(1) )
-            CALL VROTV ( STATE(4), PV, DNODE, TMPSTA(4) )
-            CALL MOVED ( TMPSTA,   6,         STATE     )
+            call vrotv ( state,    pv, dnode, tmpsta(1) )
+            call vrotv ( state(4), pv, dnode, tmpsta(4) )
+            call moved ( tmpsta,   6,         state     )
 
-         END IF
+         end if
 
 !
 !        We could perform the rotations above in the other order,
@@ -595,11 +595,11 @@
 !        the line of apsides.
 !
 
-      END IF
+      end if
 
 !
 !     That's all folks.  Check out and return.
 !
-      CALL CHKOUT('SPKE15')
-      RETURN
-      END
+      call chkout('SPKE15')
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure PJELPL ( Project ellipse onto plane )
 
-      SUBROUTINE PJELPL ( ELIN, PLANE, ELOUT )
+      subroutine pjelpl ( elin, plane, elout )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL    =  9 )
+      integer               ubel
+      parameter           ( ubel    =  9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL    =  4 )
+      integer               ubpl
+      parameter           ( ubpl    =  4 )
 
-      DOUBLE PRECISION      ELIN  ( UBEL )
-      DOUBLE PRECISION      PLANE ( UBPL )
-      DOUBLE PRECISION      ELOUT ( UBEL )
+      double precision      elin  ( ubel )
+      double precision      plane ( ubpl )
+      double precision      elout ( ubel )
 
 ! $ Brief_I/O
 !
@@ -260,47 +260,47 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      PRJCTR ( 3 )
-      DOUBLE PRECISION      PRJVC1 ( 3 )
-      DOUBLE PRECISION      PRJVC2 ( 3 )
-      DOUBLE PRECISION      SMAJOR ( 3 )
-      DOUBLE PRECISION      SMINOR ( 3 )
+      double precision      center ( 3 )
+      double precision      const
+      double precision      normal ( 3 )
+      double precision      prjctr ( 3 )
+      double precision      prjvc1 ( 3 )
+      double precision      prjvc2 ( 3 )
+      double precision      smajor ( 3 )
+      double precision      sminor ( 3 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PJELPL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PJELPL' )
+      end if
 
 !
 !     Find generating vectors of the input ellipse.
 !
-      CALL EL2CGV ( ELIN, CENTER, SMAJOR, SMINOR )
+      call el2cgv ( elin, center, smajor, sminor )
 
 !
 !     Find a normal vector for the input plane.
 !
-      CALL PL2NVC ( PLANE, NORMAL, CONST )
+      call pl2nvc ( plane, normal, const )
 
 !
 !     Find the components of the semi-axes that are orthogonal to the
 !     input plane's normal vector.  The components are generating
 !     vectors for the projected plane.
 !
-      CALL VPERP ( SMAJOR,  NORMAL,  PRJVC1 )
-      CALL VPERP ( SMINOR,  NORMAL,  PRJVC2 )
+      call vperp ( smajor,  normal,  prjvc1 )
+      call vperp ( sminor,  normal,  prjvc2 )
 
 !
 !     Find the projection of the ellipse's center onto the input plane.
@@ -352,13 +352,13 @@
 !     as claimed.
 !
 !
-      CALL VPRJP  ( CENTER, PLANE,  PRJCTR )
+      call vprjp  ( center, plane,  prjctr )
 
 !
 !     Put together the projected ellipse.
 !
-      CALL CGV2EL ( PRJCTR, PRJVC1, PRJVC2, ELOUT )
+      call cgv2el ( prjctr, prjvc1, prjvc2, elout )
 
-      CALL CHKOUT ( 'PJELPL' )
-      RETURN
-      END
+      call chkout ( 'PJELPL' )
+      return
+      end

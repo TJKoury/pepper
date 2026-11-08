@@ -1,6 +1,6 @@
 !$Procedure DHFA ( Time derivative of half angle )
 
-      DOUBLE PRECISION FUNCTION DHFA ( STATE, BODYR)
+      double precision function dhfa ( state, bodyr)
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      STATE (6)
-      DOUBLE PRECISION      BODYR
+      double precision      state (6)
+      double precision      bodyr
 
 ! $ Brief_I/O
 !
@@ -304,91 +304,91 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      double precision      vdot
+      logical               return
+      logical               vzero
 
-      DOUBLE PRECISION      P     (3)
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RNGRAT
-      DOUBLE PRECISION      BASE
+      double precision      p     (3)
+      double precision      r
+      double precision      rngrat
+      double precision      base
 
-      IF ( RETURN () ) THEN
-         DHFA = 0.D0
-         RETURN
-      ELSE
-         CALL CHKIN( 'DHFA' )
-      END IF
+      if ( return () ) then
+         dhfa = 0.d0
+         return
+      else
+         call chkin( 'DHFA' )
+      end if
 
 !
 !     A zero body radius (point object) returns a zero for the
 !     derivative. A negative value indicates an error
 !     the caller should diagnose.
 !
-      IF ( BODYR .EQ. 0 ) THEN
+      if ( bodyr .eq. 0 ) then
 
-         DHFA = 0.D0
-         CALL CHKOUT( 'DHFA' )
-         RETURN
+         dhfa = 0.d0
+         call chkout( 'DHFA' )
+         return
 
-      ELSE IF ( BODYR .LT. 0 ) THEN
+      else if ( bodyr .lt. 0 ) then
 
-         DHFA = 0.D0
-         CALL SETMSG( 'Non physical case. The input body radius ' &
+         dhfa = 0.d0
+         call setmsg( 'Non physical case. The input body radius ' &
             //        'has a negative value.'                      )
-         CALL SIGERR( 'SPICE(BADRADIUS)'                           )
-         CALL CHKOUT( 'DHFA'                                       )
-         RETURN
+         call sigerr( 'SPICE(BADRADIUS)'                           )
+         call chkout( 'DHFA'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Normalize the position component of STATE. Store the unit vector
 !     in P.
 !
-      CALL UNORM( STATE(1), P, R)
+      call unorm( state(1), p, r)
 
-      IF ( VZERO(P) ) THEN
+      if ( vzero(p) ) then
 
-         DHFA = 0.D0
-         CALL SETMSG( 'The position component of the input state ' &
+         dhfa = 0.d0
+         call setmsg( 'The position component of the input state ' &
             //        'vector equals the zero vector.'             )
-         CALL SIGERR( 'SPICE(DEGENERATECASE)'                      )
-         CALL CHKOUT( 'DHFA'                                       )
-         RETURN
+         call sigerr( 'SPICE(DEGENERATECASE)'                      )
+         call chkout( 'DHFA'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Calculate the range rate.
 !
-      RNGRAT = VDOT( P, STATE(4) )
+      rngrat = vdot( p, state(4) )
 
 !
 !     Confirm R > BODYR.
 !
-      BASE = R**2 - BODYR**2
+      base = r**2 - bodyr**2
 
-      IF ( BASE .LE. 0 ) THEN
+      if ( base .le. 0 ) then
 
-         DHFA = 0.D0
-         CALL SETMSG( 'Invalid case. The body radius, #1, equals ' &
+         dhfa = 0.d0
+         call setmsg( 'Invalid case. The body radius, #1, equals ' &
             //        'or exceeds the range to the target, #2.'    )
-         CALL ERRDP ( '#1', BODYR                                  )
-         CALL ERRDP ( '#2', R                                      )
-         CALL SIGERR( 'SPICE(BADGEOMETRY)'                         )
-         CALL CHKOUT( 'DHFA'                                       )
-         RETURN
+         call errdp ( '#1', bodyr                                  )
+         call errdp ( '#2', r                                      )
+         call sigerr( 'SPICE(BADGEOMETRY)'                         )
+         call chkout( 'DHFA'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Now we safely take the square root of BASE.
 !
-      BASE = DSQRT( BASE )
-      DHFA = -(RNGRAT * BODYR)/(BASE * R)
+      base = dsqrt( base )
+      dhfa = -(rngrat * bodyr)/(base * r)
 
-      CALL CHKOUT( 'DHFA' )
-      RETURN
+      call chkout( 'DHFA' )
+      return
 
-      END
+      end

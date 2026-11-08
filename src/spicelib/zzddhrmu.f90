@@ -1,7 +1,7 @@
 !$Procedure ZZDDHRMU ( Private --- DDH Remove Unit )
 
-      SUBROUTINE ZZDDHRMU ( UINDEX, NFT,   UTCST, UTHAN, &
-                            UTLCK,  UTLUN, NUT           )
+      subroutine zzddhrmu ( uindex, nft,   utcst, uthan, &
+                            utlck,  utlun, nut           )
 
 ! $ Abstract
 !
@@ -21,18 +21,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzddhman.inc'
+      include               'zzddhman.inc'
 
-      INTEGER               UINDEX
-      INTEGER               NFT
+      integer               uindex
+      integer               nft
 
-      INTEGER               UTCST ( * )
-      INTEGER               UTHAN ( * )
-      LOGICAL               UTLCK ( * )
-      INTEGER               UTLUN ( * )
-      INTEGER               NUT
+      integer               utcst ( * )
+      integer               uthan ( * )
+      logical               utlck ( * )
+      integer               utlun ( * )
+      integer               nut
 
 ! $ Brief_I/O
 !
@@ -150,33 +150,33 @@
 !
 !     Local Variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     First check to see if NUT is 0.  If so, just return, as there
 !     are no rows to remove.
 !
-      IF ( NUT .EQ. 0 ) THEN
-         RETURN
-      END IF
+      if ( nut .eq. 0 ) then
+         return
+      end if
 
 !
 !     Check to see if we found the UINDEX in the unit table.
 !     If not, use discovery check-in, signal an error and return.
 !
-      IF ( ( UINDEX .GT. NUT ) .OR. ( UINDEX .LT. 1 ) ) THEN
+      if ( ( uindex .gt. nut ) .or. ( uindex .lt. 1 ) ) then
 
-         CALL CHKIN  ( 'ZZDDHRMU'                                     )
-         CALL SETMSG ( 'Attempt to remove row # from the unit table ' &
+         call chkin  ( 'ZZDDHRMU'                                     )
+         call setmsg ( 'Attempt to remove row # from the unit table ' &
          //            'failed because valid row indices range from ' &
          //            '1 to NUT.'                                    )
-         CALL ERRINT ( '#', UINDEX                                    )
-         CALL ERRINT ( '#', NUT                                       )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZDDHRMU'                                     )
-         RETURN
+         call errint ( '#', uindex                                    )
+         call errint ( '#', nut                                       )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
+         call chkout ( 'ZZDDHRMU'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     We have found the row we need to remove from the table.
@@ -184,41 +184,41 @@
 !     mark it as zero cost and reserve the unit.  We know this
 !     is the case when NFT is greater than or equal to NUT.
 !
-      IF ( NFT .GE. NUT ) THEN
+      if ( nft .ge. nut ) then
 
 !
 !        Zero the cost, clear the handle, and unlock the unit.
 !
-         UTCST(UINDEX) = 0
-         UTHAN(UINDEX) = 0
-         UTLCK(UINDEX) = .FALSE.
+         utcst(uindex) = 0
+         uthan(uindex) = 0
+         utlck(uindex) = .false.
 
 !
 !        Reserve the unit for the handle manager's usage and
 !        return.
 !
-         CALL RESLUN ( UTLUN(UINDEX) )
-         RETURN
+         call reslun ( utlun(uindex) )
+         return
 
-      END IF
+      end if
 
 !
 !     If we reach here, then we have to remove the row from the
 !     unit table and compress.
 !
-      DO I = UINDEX+1, NUT
+      do i = uindex+1, nut
 
-         UTCST(I-1) = UTCST(I)
-         UTHAN(I-1) = UTHAN(I)
-         UTLCK(I-1) = UTLCK(I)
-         UTLUN(I-1) = UTLUN(I)
+         utcst(i-1) = utcst(i)
+         uthan(i-1) = uthan(i)
+         utlck(i-1) = utlck(i)
+         utlun(i-1) = utlun(i)
 
-      END DO
+      end do
 
 !
 !     Decrement NUT.
 !
-      NUT = NUT - 1
+      nut = nut - 1
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DRDLAT ( Derivative of rectangular w.r.t. latitudinal )
 
-      SUBROUTINE DRDLAT ( R, LON, LAT, JACOBI )
+      subroutine drdlat ( r, lon, lat, jacobi )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      r
+      double precision      lon
+      double precision      lat
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -351,39 +351,39 @@
 !
 !     Local variables
 !
-      INTEGER               DX
-      PARAMETER           ( DX   = 1 )
+      integer               dx
+      parameter           ( dx   = 1 )
 
-      INTEGER               DY
-      PARAMETER           ( DY   = 2 )
+      integer               dy
+      parameter           ( dy   = 2 )
 
-      INTEGER               DZ
-      PARAMETER           ( DZ   = 3 )
+      integer               dz
+      parameter           ( dz   = 3 )
 
-      INTEGER               DR
-      PARAMETER           ( DR   = 1 )
+      integer               dr
+      parameter           ( dr   = 1 )
 
-      INTEGER               DLON
-      PARAMETER           ( DLON = 2 )
+      integer               dlon
+      parameter           ( dlon = 2 )
 
-      INTEGER               DLAT
-      PARAMETER           ( DLAT = 3 )
+      integer               dlat
+      parameter           ( dlat = 3 )
 
 
 !
 !     Construct the matrix directly.
 !
-      JACOBI (DX,DR)   =      DCOS( LON ) * DCOS( LAT )
-      JACOBI (DY,DR)   =      DSIN( LON ) * DCOS( LAT )
-      JACOBI (DZ,DR)   =                    DSIN( LAT )
+      jacobi (dx,dr)   =      dcos( lon ) * dcos( lat )
+      jacobi (dy,dr)   =      dsin( lon ) * dcos( lat )
+      jacobi (dz,dr)   =                    dsin( lat )
 
-      JACOBI (DX,DLON) = -R * DSIN( LON ) * DCOS( LAT )
-      JACOBI (DY,DLON) =  R * DCOS( LON ) * DCOS( LAT )
-      JACOBI (DZ,DLON) =  0.0D0
+      jacobi (dx,dlon) = -r * dsin( lon ) * dcos( lat )
+      jacobi (dy,dlon) =  r * dcos( lon ) * dcos( lat )
+      jacobi (dz,dlon) =  0.0d0
 
-      JACOBI (DX,DLAT) = -R * DCOS( LON ) * DSIN( LAT )
-      JACOBI (DY,DLAT) = -R * DSIN( LON ) * DSIN( LAT )
-      JACOBI (DZ,DLAT) =  R *               DCOS( LAT )
+      jacobi (dx,dlat) = -r * dcos( lon ) * dsin( lat )
+      jacobi (dy,dlat) = -r * dsin( lon ) * dsin( lat )
+      jacobi (dz,dlat) =  r *               dcos( lat )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DASAC ( DAS add comments )
 
-      SUBROUTINE DASAC ( HANDLE, N, BUFFER )
+      subroutine dasac ( handle, n, buffer )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               N
-      CHARACTER*(*)         BUFFER(*)
+      integer               handle
+      integer               n
+      character*(*)         buffer(*)
 
 ! $ Brief_I/O
 !
@@ -170,84 +170,84 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
 !     Length of a DAS character record, in characters.
 !
-      INTEGER               MXCREC
-      PARAMETER           ( MXCREC = 1024 )
+      integer               mxcrec
+      parameter           ( mxcrec = 1024 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      INTEGER               MAXPCH
-      PARAMETER           ( MAXPCH = 126 )
+      integer               maxpch
+      parameter           ( maxpch = 126 )
 
-      INTEGER               MINPCH
-      PARAMETER           ( MINPCH = 32 )
+      integer               minpch
+      parameter           ( minpch = 32 )
 !
 !     Decimal value for the DAS comment area end-of-line (EOL) marker.
 !
-      INTEGER               INTEOL
-      PARAMETER           ( INTEOL = 0 )
+      integer               inteol
+      parameter           ( inteol = 0 )
 !
 !     Length of a DAS file ID word.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 !
 !     Length of a DAS file internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     Local variables
 !
-      CHARACTER*(MXCREC)    CRECRD
-      CHARACTER*(1)         EOLMRK
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(mxcrec)    crecrd
+      character*(1)         eolmrk
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
 
-      INTEGER               CURPOS
-      INTEGER               DASLUN
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LENGTH
-      INTEGER               NCHARS
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NEWREC
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               RECNO
-      INTEGER               RINUSE
-      INTEGER               SPACE
+      integer               curpos
+      integer               daslun
+      integer               i
+      integer               j
+      integer               length
+      integer               nchars
+      integer               ncomc
+      integer               ncomr
+      integer               newrec
+      integer               nresvc
+      integer               nresvr
+      integer               recno
+      integer               rinuse
+      integer               space
 
-      LOGICAL               FIRST
+      logical               first
 !
 !     Saved variables
 !
-      SAVE EOLMRK
-      SAVE FIRST
+      save eolmrk
+      save first
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASAC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASAC' )
+      end if
 !
 !     The lines of text in BUFFER will be ``packed'' into DAS comment
 !     records: the significant portion of each comment line from BUFFER
@@ -260,50 +260,50 @@
 !     we need to initialize the character value for the end-of-line
 !     marker.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         EOLMRK = CHAR ( INTEOL )
+         first  = .false.
+         eolmrk = char ( inteol )
 
-      END IF
+      end if
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASAC' )
-         RETURN
+         call chkout ( 'DASAC' )
+         return
 
-      END IF
+      end if
 !
 !     Convert the DAS file handle to its corresponding Fortran logical
 !     unit number for reading and writing comment records.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., DASLUN )
+      call zzddhhlu ( handle, 'DAS', .false., daslun )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASAC' )
-         RETURN
+         call chkout ( 'DASAC' )
+         return
 
-      END IF
+      end if
 !
 !     Check for a nonpositive number of lines in the buffer.
 !
-      IF ( N .LE. 0 ) THEN
+      if ( n .le. 0 ) then
 
-         CALL SETMSG ( 'The number of comment lines to be added to'  // &
+         call setmsg ( 'The number of comment lines to be added to'  // &
                        ' the binary DAS file # was not positive: #.'  )
-         CALL ERRFNM ( '#', DASLUN                                    )
-         CALL ERRINT ( '#', N                                         )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                       )
-         CALL CHKOUT ( 'DASAC'                                        )
-         RETURN
+         call errfnm ( '#', daslun                                    )
+         call errint ( '#', n                                         )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                       )
+         call chkout ( 'DASAC'                                        )
+         return
 
-      END IF
+      end if
 !
 !     Count the number of characters in the buffer ignoring trailing
 !     blanks on nonblank lines and blank lines. The count will be
@@ -311,44 +311,44 @@
 !     count is used to determine the number of character records to be
 !     added to the binary DAS file attached to HANDLE.
 !
-      NCHARS = 0
+      nchars = 0
 
-      DO I = 1, N
+      do i = 1, n
 !
 !        Get the length of the significant portion of a comment line.
 !
-         LENGTH = LASTNB ( BUFFER(I) )
+         length = lastnb ( buffer(i) )
 !
 !        Scan the comment line for non printing characters.
 !
-         DO J = 1, LENGTH
+         do j = 1, length
 !
 !           Check to see that the characters in the buffer are all
 !           printing ASCII characters. The bounds for printing ASCII
 !           characters are given by MAXPCH and MINPCH, which are
 !           defined in the $ Local Parameters section of the header.
 !
-            IF ( ( ICHAR ( BUFFER(I)(J:J) ) .GT. MAXPCH ) .OR. &
-                 ( ICHAR ( BUFFER(I)(J:J) ) .LT. MINPCH )      ) THEN
+            if ( ( ichar ( buffer(i)(j:j) ) .gt. maxpch ) .or. &
+                 ( ichar ( buffer(i)(j:j) ) .lt. minpch )      ) then
 
-                  CALL SETMSG ( 'A nonprinting character was'      // &
+                  call setmsg ( 'A nonprinting character was'      // &
                                 ' encountered in the comment'      // &
                                 ' buffer. Value: #'                 )
-                  CALL ERRINT ( '#', ICHAR( BUFFER(I)(J:J) )        )
-                  CALL SIGERR ( 'SPICE(ILLEGALCHARACTER)'           )
-                  CALL CHKOUT ( 'DASAC'                             )
-                  RETURN
+                  call errint ( '#', ichar( buffer(i)(j:j) )        )
+                  call sigerr ( 'SPICE(ILLEGALCHARACTER)'           )
+                  call chkout ( 'DASAC'                             )
+                  return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Increment the number of characters by the length of the
 !        significant portion of the current line in the buffer.
 !
-         NCHARS = NCHARS + LENGTH
+         nchars = nchars + length
 
-      END DO
+      end do
 !
 !     We need to include the number of end of line markers in the
 !     number of characters, so add the number of comment lines to
@@ -356,23 +356,23 @@
 !     the contribution of any blank lines gets added to the character
 !     count.
 !
-      NCHARS = NCHARS + N
+      nchars = nchars + n
 !
 !     Get the current number of comment records and comment characters
 !     from the DAS file attached to HANDLE. We will also get back some
 !     extra stuff that we do not use.
 !
-      CALL DASRFR ( HANDLE, &
-                    IDWORD, IFNAME, &
-                    NRESVR, NRESVC, &
-                    NCOMR,  NCOMC   )
+      call dasrfr ( handle, &
+                    idword, ifname, &
+                    nresvr, nresvc, &
+                    ncomr,  ncomc   )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASAC' )
-         RETURN
+         call chkout ( 'DASAC' )
+         return
 
-      END IF
+      end if
 !
 !     Determine the amount of free space in the comment area. If
 !     there are some comment records allocated, the space available
@@ -380,45 +380,45 @@
 !     a comment record, minus the number of comment characters already
 !     used. Otherwise, the space available is zero.
 !
-      IF ( NCOMR .GT. 0 ) THEN
+      if ( ncomr .gt. 0 ) then
 
-         SPACE = NCOMR * MXCREC - NCOMC
+         space = ncomr * mxcrec - ncomc
 
-      ELSE
+      else
 
-         SPACE = 0
+         space = 0
 
-      END IF
+      end if
 !
 !     Determine the number of new comment records which are necessary
 !     to store all of the comments from the buffer.
 !
-      IF ( NCHARS .GT. SPACE ) THEN
+      if ( nchars .gt. space ) then
 !
 !        If there are more characters to store than available space
 !        we need at least one new record.
 !
-         NEWREC = 1  +  (  ( NCHARS - SPACE )  - 1  ) / MXCREC
+         newrec = 1  +  (  ( nchars - space )  - 1  ) / mxcrec
 
-      ELSE
+      else
 !
 !        Otherwise, we do not need any new records.
 !
-         NEWREC = 0
+         newrec = 0
 
-      END IF
+      end if
 !
 !     Now add the necessary number of comment records to the file,
 !     if we need to add any.
 !
-      IF ( NEWREC .GT. 0 ) THEN
+      if ( newrec .gt. 0 ) then
 
-         CALL DASACR ( HANDLE, NEWREC )
+         call dasacr ( handle, newrec )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DASAC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DASAC' )
+            return
+         end if
 
 !
 !        Update the value for the number of comment records to include
@@ -426,9 +426,9 @@
 !        the file record at the end of the routine to update the number
 !        comment characters, NCOMC.
 !
-         NCOMR = NCOMR + NEWREC
+         ncomr = ncomr + newrec
 
-      END IF
+      end if
 !
 !     At this point, we know that we have enough space to write all of
 !     the comments in BUFFER to the comment area. Either there was
@@ -440,7 +440,7 @@
 !     We begin by reading the last comment record if there is one.
 !     Otherwise we just initialize the appropriate variables.
 !
-      IF ( NCOMC .EQ. 0 ) THEN
+      if ( ncomc .eq. 0 ) then
 !
 !        If there are no comments in the comment area, then we need to
 !        skip the file record and the reserved records, if any. The
@@ -449,11 +449,11 @@
 !        We also initialize the current position in the comment record,
 !        and the comment record itself.
 !
-         RECNO  = 1 + NRESVR + 1
-         CURPOS = 1
-         CRECRD = ' '
+         recno  = 1 + nresvr + 1
+         curpos = 1
+         crecrd = ' '
 
-      ELSE
+      else
 !
 !        If there are comments in the comment area, then we need to skip
 !        the file record, the reserved records, if any, and any comment
@@ -463,57 +463,57 @@
 !        of comment records in use, and set RECNO appropriately. Then
 !        calculate the initial position and read in the comment record.
 !
-         RINUSE = 1 + NCOMC / MXCREC
-         RECNO  = 1 + NRESVR + RINUSE
-         CURPOS = NCOMC - MXCREC * ( RINUSE - 1 ) + 1
+         rinuse = 1 + ncomc / mxcrec
+         recno  = 1 + nresvr + rinuse
+         curpos = ncomc - mxcrec * ( rinuse - 1 ) + 1
 
-         CALL DASIOC ( 'READ', DASLUN, RECNO, CRECRD )
+         call dasioc ( 'READ', daslun, recno, crecrd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DASAC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DASAC' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     Begin ``packing'' the comments from the input buffer into the
 !     comment records, writing the comment records to the DAS file
 !     as they become filled.
 !
-      DO I = 1, N
+      do i = 1, n
 !
 !        Get the length of the significant portion of a comment line.
 !
-         LENGTH = LASTNB ( BUFFER(I) )
+         length = lastnb ( buffer(i) )
 !
 !        Process the comment line.
 !
-         DO J = 1, LENGTH
+         do j = 1, length
 !
 !           If we have filled the comment record while processing
 !           comment line BUFFER(I), write out the comment record,
 !           increment the record number, RECNO, and reset the values
 !           of the current position and the comment record.
 !
-            IF ( CURPOS .GT. MXCREC ) THEN
+            if ( curpos .gt. mxcrec ) then
 
-               CALL DASIOC ( 'WRITE', DASLUN, RECNO, CRECRD )
+               call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'DASAC' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'DASAC' )
+                  return
+               end if
 
-               RECNO  = RECNO + 1
-               CURPOS = 1
-               CRECRD = ' '
+               recno  = recno + 1
+               curpos = 1
+               crecrd = ' '
 
-            END IF
+            end if
 
-            CRECRD(CURPOS:CURPOS) = BUFFER(I)(J:J)
-            CURPOS                = CURPOS + 1
+            crecrd(curpos:curpos) = buffer(i)(j:j)
+            curpos                = curpos + 1
 
-         END DO
+         end do
 !
 !        Check to see if we happened to exactly fill the comment record
 !        when we finished processing comment line BUFFER(I). If we
@@ -522,56 +522,56 @@
 !        number, RECNO, and reset the values of the current position
 !        and the comment record.
 !
-         IF ( CURPOS .GT. MXCREC ) THEN
+         if ( curpos .gt. mxcrec ) then
 
-            CALL DASIOC ( 'WRITE', DASLUN, RECNO, CRECRD )
+            call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASAC' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASAC' )
+               return
+            end if
 
-            RECNO  = RECNO + 1
-            CURPOS = 1
-            CRECRD = ' '
+            recno  = recno + 1
+            curpos = 1
+            crecrd = ' '
 
-         END IF
+         end if
 !
 !        Append the end-of-line marker to the comment line that we just
 !        placed into the comment record.
 !
-         CRECRD(CURPOS:CURPOS) = EOLMRK
-         CURPOS                = CURPOS + 1
+         crecrd(curpos:curpos) = eolmrk
+         curpos                = curpos + 1
 
-      END DO
+      end do
 !
 !     We have now finished processing all of the comment lines in
 !     BUFFER, so we need write the current record to the file. This
 !     record will always contain something, so we always need to write
 !     it.
 !
-      CALL DASIOC ( 'WRITE', DASLUN, RECNO, CRECRD )
+      call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASAC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASAC' )
+         return
+      end if
 
 !
 !     And finally, we need to update the number of comment characters
 !     in the file record by adding NCHARS, and writing the file record.
 !
-      NCOMC = NCOMC + NCHARS
+      ncomc = ncomc + nchars
 
-      CALL DASWFR ( HANDLE, &
-                    IDWORD, IFNAME, &
-                    NRESVR, NRESVC, &
-                    NCOMR,  NCOMC  )
+      call daswfr ( handle, &
+                    idword, ifname, &
+                    nresvr, nresvc, &
+                    ncomr,  ncomc  )
 !
 !     Check out and leave DASAC. A test of FAILED should be done by
 !     the calling routine to catch an error that may occur during
 !     the call to DASWFR.
 !
-      CALL CHKOUT ( 'DASAC' )
-      RETURN
-      END
+      call chkout ( 'DASAC' )
+      return
+      end

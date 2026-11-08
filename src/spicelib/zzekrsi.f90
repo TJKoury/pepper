@@ -1,7 +1,7 @@
 !$Procedure   ZZEKRSI ( EK, read scalar, integer )
 
-      SUBROUTINE ZZEKRSI (  HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                            ELTIDX,  IVAL,    ISNULL,  FOUND  )
+      subroutine zzekrsi (  handle,  segdsc,  coldsc,  recptr, &
+                            eltidx,  ival,    isnull,  found  )
 
 ! $ Abstract
 !
@@ -18,21 +18,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               ELTIDX
-      INTEGER               IVAL
-      LOGICAL               ISNULL
-      LOGICAL               FOUND
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               eltidx
+      integer               ival
+      logical               isnull
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -152,110 +152,110 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      INTEGER               CLASS
-      INTEGER               DTYPE
-      INTEGER               RECNO
-      INTEGER               SEGNO
+      integer               class
+      integer               dtype
+      integer               recno
+      integer               segno
 
 !
 !     Use discovery check-in.
 !
 !     Nothing found to begin with.
 !
-      FOUND  =  .FALSE.
+      found  =  .false.
 
 !
 !     This column had better be of integer type.
 !
-      DTYPE  =  COLDSC(TYPIDX)
+      dtype  =  coldsc(typidx)
 
-      IF ( DTYPE .NE. INT ) THEN
+      if ( dtype .ne. int ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         SEGNO  =  SEGDSC   ( SNOIDX )
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         segno  =  segdsc   ( snoidx )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKRSI'                                       )
-         CALL SETMSG ( 'Column # is of type #; ZZEKRSI only works '   // &
+         call chkin  ( 'ZZEKRSI'                                       )
+         call setmsg ( 'Column # is of type #; ZZEKRSI only works '   // &
                        'with integer columns.  RECNO = #; SEGNO = '   // &
                        '#; EK = #.'                                    )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  DTYPE                                     )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                          )
-         CALL CHKOUT ( 'ZZEKRSI'                                       )
-         RETURN
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  dtype                                     )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                          )
+         call chkout ( 'ZZEKRSI'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Now it's time to read data from the file.  Call the low-level
 !     reader appropriate to the column's class.
 !
-      CLASS  =  COLDSC ( CLSIDX )
+      class  =  coldsc ( clsidx )
 
 
-      IF ( CLASS .EQ. 1 ) THEN
+      if ( class .eq. 1 ) then
 !
 !        Class 1 columns contain scalar, integer entries.
 !
-         CALL ZZEKRD01 ( HANDLE, SEGDSC, COLDSC, RECPTR, IVAL, ISNULL )
+         call zzekrd01 ( handle, segdsc, coldsc, recptr, ival, isnull )
 
-         FOUND  =  .TRUE.
+         found  =  .true.
 
 
-      ELSE IF ( CLASS .EQ. 4 ) THEN
+      else if ( class .eq. 4 ) then
 !
 !        Class 4 columns contain integer array entries.
 !
-         CALL ZZEKRD04 ( HANDLE,  SEGDSC,  COLDSC,  RECPTR, &
-                         ELTIDX,  ELTIDX,  IVAL,    ISNULL,  FOUND )
+         call zzekrd04 ( handle,  segdsc,  coldsc,  recptr, &
+                         eltidx,  eltidx,  ival,    isnull,  found )
 
 
-      ELSE IF ( CLASS .EQ. 7 ) THEN
+      else if ( class .eq. 7 ) then
 !
 !        Class 7 columns are fixed-count columns that contain scalar,
 !        integer entries.
 !
-         CALL ZZEKRD07 ( HANDLE, SEGDSC, COLDSC, RECPTR, IVAL, ISNULL )
+         call zzekrd07 ( handle, segdsc, coldsc, recptr, ival, isnull )
 
-         FOUND  =  .TRUE.
+         found  =  .true.
 
 
-      ELSE
+      else
 
 !
 !        This is an unsupported integer column class.
 !
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         SEGNO  =  SEGDSC   ( SNOIDX )
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         segno  =  segdsc   ( snoidx )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKRSI'                                       )
-         CALL SETMSG ( 'Class # from input column descriptor is not ' // &
+         call chkin  ( 'ZZEKRSI'                                       )
+         call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported integer class.  COLUMN = #; '     // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
-         CALL ERRINT ( '#',  CLASS                                     )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'ZZEKRSI'                                       )
-         RETURN
+         call errint ( '#',  class                                     )
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'ZZEKRSI'                                       )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

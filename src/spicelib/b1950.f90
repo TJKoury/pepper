@@ -1,6 +1,6 @@
 !$Procedure B1950 ( Besselian Date 1950.0 )
 
-      DOUBLE PRECISION FUNCTION B1950 ( )
+      double precision function b1950 ( )
 
 ! $ Abstract
 !
@@ -114,6 +114,6 @@
 !-&
 
 
-      B1950 = 2433282.42345905D0
-      RETURN
-      END
+      b1950 = 2433282.42345905d0
+      return
+      end

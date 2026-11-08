@@ -1,6 +1,6 @@
 !$Procedure      ZZEKDE04 ( EK, delete column entry, class 4 )
 
-      SUBROUTINE ZZEKDE04 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      subroutine zzekde04 ( handle, segdsc, coldsc, recptr )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
 
 ! $ Brief_I/O
 !
@@ -125,30 +125,30 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               DATPTR
-      INTEGER               NELTS
-      INTEGER               NEXT
-      INTEGER               NLINKS
-      INTEGER               NSEEN
-      INTEGER               P
-      INTEGER               PTRLOC
-      INTEGER               RECNO
+      integer               base
+      integer               datptr
+      integer               nelts
+      integer               next
+      integer               nlinks
+      integer               nseen
+      integer               p
+      integer               ptrloc
+      integer               recno
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKDE04' )
+      call chkin ( 'ZZEKDE04' )
 
 !
 !     Before trying to actually modify the file, do every error
@@ -157,12 +157,12 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKDE04' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKDE04' )
+         return
+      end if
 
 !
 !     Compute the data pointer location.  If the data pointer is
@@ -170,32 +170,32 @@
 !     the element is null, just set it to `uninitialized'.  The
 !     presence of actual data obligates us to clean up, however.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLDSC(ORDIDX)
+      ptrloc  =  recptr + dptbas + coldsc(ordidx)
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF ( DATPTR .GT. 0 ) THEN
+      if ( datptr .gt. 0 ) then
 !
 !        Get the element count for the entry.
 !
-         CALL DASRDI ( HANDLE, DATPTR, DATPTR, NELTS  )
+         call dasrdi ( handle, datptr, datptr, nelts  )
 
 !
 !        Set the data pointer to indicate the item is uninitialized.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, UNINIT )
+         call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 !
 !        Find the number of the page containing the column entry.
 !
-         CALL ZZEKPGPG ( INT, DATPTR, P, BASE )
+         call zzekpgpg ( int, datptr, p, base )
 
 !
 !        Look up the forward pointer.  This pointer will be valid
 !        if the column entry is continued on another page.
 !
-         CALL ZZEKGFWD ( HANDLE, INT, P, NEXT )
+         call zzekgfwd ( handle, int, p, next )
 
 !
 !        Get the link count for the current page.  If we have more
@@ -203,27 +203,27 @@
 !        we're down to one link, this deletion will finish off the
 !        page:  we'll deallocate it.
 !
-         CALL ZZEKGLNK ( HANDLE, INT, P, NLINKS )
+         call zzekglnk ( handle, int, p, nlinks )
 
-         IF ( NLINKS .GT. 1 ) THEN
+         if ( nlinks .gt. 1 ) then
 
-            CALL ZZEKSLNK ( HANDLE, INT, P, NLINKS-1 )
+            call zzekslnk ( handle, int, p, nlinks-1 )
 
-         ELSE
+         else
 !
 !           If we removed the last item from the page, we can delete
 !           the page.  ZZEKDPS adjusts the segment's metadata
 !           to reflect the deallocation.
 !
-            CALL ZZEKDPS  ( HANDLE, SEGDSC, INT, P )
+            call zzekdps  ( handle, segdsc, int, p )
 
-         END IF
-
-
-         NSEEN = MIN (  NELTS,  (BASE+IPSIZE-DATPTR)  )
+         end if
 
 
-         DO WHILE (  ( NSEEN .LT. NELTS ) .AND. ( .NOT. FAILED() )  )
+         nseen = min (  nelts,  (base+ipsize-datptr)  )
+
+
+         do while (  ( nseen .lt. nelts ) .and. ( .not. failed() )  )
 !
 !           The column entry is continued on the page indicated by
 !           NEXT.
@@ -233,61 +233,61 @@
 !           we're down to one link, this deletion will finish off the
 !           page:  we'll deallocate it.
 !
-            P  =  NEXT
+            p  =  next
 
-            CALL ZZEKGFWD ( HANDLE, INT, P, NEXT   )
-            CALL ZZEKGLNK ( HANDLE, INT, P, NLINKS )
+            call zzekgfwd ( handle, int, p, next   )
+            call zzekglnk ( handle, int, p, nlinks )
 
 
-            IF ( NLINKS .GT. 1 ) THEN
+            if ( nlinks .gt. 1 ) then
 
-               CALL ZZEKSLNK ( HANDLE, INT, P, NLINKS-1 )
+               call zzekslnk ( handle, int, p, nlinks-1 )
 
-            ELSE
+            else
 !
 !              If we removed the last item from the page, we can delete
 !              the page.  ZZEKDPS adjusts the segment's metadata
 !              to reflect the deallocation.
 !
-               CALL ZZEKDPS  ( HANDLE, SEGDSC, INT, P )
+               call zzekdps  ( handle, segdsc, int, p )
 
-            END IF
+            end if
 
-            NSEEN  =  MIN (  NELTS,  ( IPSIZE + NSEEN )  )
+            nseen  =  min (  nelts,  ( ipsize + nseen )  )
 
-         END DO
+         end do
 
 
-      ELSE IF ( DATPTR .EQ. NULL ) THEN
+      else if ( datptr .eq. null ) then
 !
 !        Mark the entry as `uninitialized'.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, UNINIT )
+         call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 
-      ELSE IF ( DATPTR .NE. UNINIT ) THEN
+      else if ( datptr .ne. uninit ) then
 !
 !        UNINIT was the last valid possibility.  The data pointer is
 !        corrupted.
 !
-         CALL SETMSG ( 'Data pointer is corrupted. SEGNO = #; '  // &
+         call setmsg ( 'Data pointer is corrupted. SEGNO = #; '  // &
                        'COLIDX =  #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                      )
-         CALL ERRINT ( '#',  COLDSC(ORDIDX)                      )
-         CALL ERRINT ( '#',  RECNO                               )
-         CALL ERRHAN ( '#',  HANDLE                              )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKDE04'                                )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                      )
+         call errint ( '#',  coldsc(ordidx)                      )
+         call errint ( '#',  recno                               )
+         call errhan ( '#',  handle                              )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKDE04'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the record's status to indicate that this record is updated.
 !
-      CALL DASUDI ( HANDLE, RECPTR+STAIDX, RECPTR+STAIDX, UPDATE )
+      call dasudi ( handle, recptr+staidx, recptr+staidx, update )
 
 
-      CALL CHKOUT ( 'ZZEKDE04' )
-      RETURN
-      END
+      call chkout ( 'ZZEKDE04' )
+      return
+      end

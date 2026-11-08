@@ -1,7 +1,7 @@
 !$Procedure SPKCPO ( SPK, constant position observer state )
 
-      SUBROUTINE SPKCPO ( TARGET, ET,     OUTREF, REFLOC, ABCORR, &
-                          OBSPOS, OBSCTR, OBSREF, STATE,  LT     )
+      subroutine spkcpo ( target, et,     outref, refloc, abcorr, &
+                          obspos, obsctr, obsref, state,  lt     )
 
 ! $ Abstract
 !
@@ -23,20 +23,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzabcorr.inc'
+      include               'zzabcorr.inc'
 
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         OUTREF
-      CHARACTER*(*)         REFLOC
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      CHARACTER*(*)         OBSCTR
-      CHARACTER*(*)         OBSREF
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      LT
+      character*(*)         target
+      double precision      et
+      character*(*)         outref
+      character*(*)         refloc
+      character*(*)         abcorr
+      double precision      obspos ( 3 )
+      character*(*)         obsctr
+      character*(*)         obsref
+      double precision      state  ( 6 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -1341,42 +1341,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      OBSEPC
-      DOUBLE PRECISION      OBSSTA ( 6 )
+      double precision      obsepc
+      double precision      obssta ( 6 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKCPO' )
+      call chkin ( 'SPKCPO' )
 
 !
 !     Create a state vector for the observer. The velocity
 !     portion of the state is zero.
 !
-      CALL VEQU   ( OBSPOS, OBSSTA    )
-      CALL CLEARD ( 3,      OBSSTA(4) )
+      call vequ   ( obspos, obssta    )
+      call cleard ( 3,      obssta(4) )
 
 !
 !     Set the observation epoch; the value is arbitrary, since
 !     the observer's velocity is zero.
 !
-      OBSEPC = 0.0D0
+      obsepc = 0.0d0
 
 !
 !     Compute the observer-target state vector.
 !
-      CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC, ABCORR, &
-                    OBSSTA, OBSEPC, OBSCTR, OBSREF, STATE,  LT )
+      call spkcvo ( target, et,     outref, refloc, abcorr, &
+                    obssta, obsepc, obsctr, obsref, state,  lt )
 
-      CALL CHKOUT ( 'SPKCPO' )
-      RETURN
-      END
+      call chkout ( 'SPKCPO' )
+      return
+      end

@@ -29,8 +29,8 @@
 !
 !     DAS integer address of DLA version code.
 !
-      INTEGER               VERIDX
-      PARAMETER           ( VERIDX = 1 )
+      integer               veridx
+      parameter           ( veridx = 1 )
 
 !
 !     Linked list parameters
@@ -68,17 +68,17 @@
 !     The acronyms "LLB" and "LLE" denote "linked list begin"
 !     and "linked list end" respectively.
 !
-      INTEGER               LLBIDX
-      PARAMETER           ( LLBIDX = VERIDX + 1 )
+      integer               llbidx
+      parameter           ( llbidx = veridx + 1 )
 
-      INTEGER               LLEIDX
-      PARAMETER           ( LLEIDX = LLBIDX + 1 )
+      integer               lleidx
+      parameter           ( lleidx = llbidx + 1 )
 
 !
 !     Null pointer parameter.
 !
-      INTEGER               NULPTR
-      PARAMETER           ( NULPTR = -1 )
+      integer               nulptr
+      parameter           ( nulptr = -1 )
 
 !
 !     Segment descriptor parameters
@@ -109,35 +109,35 @@
 !     Parameters defining offsets for segment descriptor elements
 !     follow.
 !
-      INTEGER               BWDIDX
-      PARAMETER           ( BWDIDX = 1 )
+      integer               bwdidx
+      parameter           ( bwdidx = 1 )
 
-      INTEGER               FWDIDX
-      PARAMETER           ( FWDIDX = BWDIDX + 1 )
+      integer               fwdidx
+      parameter           ( fwdidx = bwdidx + 1 )
 
-      INTEGER               IBSIDX
-      PARAMETER           ( IBSIDX = FWDIDX + 1 )
+      integer               ibsidx
+      parameter           ( ibsidx = fwdidx + 1 )
 
-      INTEGER               ISZIDX
-      PARAMETER           ( ISZIDX = IBSIDX + 1 )
+      integer               iszidx
+      parameter           ( iszidx = ibsidx + 1 )
 
-      INTEGER               DBSIDX
-      PARAMETER           ( DBSIDX = ISZIDX + 1 )
+      integer               dbsidx
+      parameter           ( dbsidx = iszidx + 1 )
 
-      INTEGER               DSZIDX
-      PARAMETER           ( DSZIDX = DBSIDX + 1 )
+      integer               dszidx
+      parameter           ( dszidx = dbsidx + 1 )
 
-      INTEGER               CBSIDX
-      PARAMETER           ( CBSIDX = DSZIDX + 1 )
+      integer               cbsidx
+      parameter           ( cbsidx = dszidx + 1 )
 
-      INTEGER               CSZIDX
-      PARAMETER           ( CSZIDX = CBSIDX + 1 )
+      integer               cszidx
+      parameter           ( cszidx = cbsidx + 1 )
 
 !
 !     Descriptor size:
 !
-      INTEGER               DLADSZ
-      PARAMETER           ( DLADSZ = CSZIDX )
+      integer               dladsz
+      parameter           ( dladsz = cszidx )
 
 
 !
@@ -147,14 +147,14 @@
 !     DLA format version.  (This number is expected to occur very
 !     rarely at integer address VERIDX in uninitialized DLA files.)
 !
-      INTEGER               FMTVER
-      PARAMETER           ( FMTVER = 1000000 )
+      integer               fmtver
+      parameter           ( fmtver = 1000000 )
 
 !
 !     Characters per DAS comment record.
 !
-      INTEGER               NCHREC
-      PARAMETER           ( NCHREC = 1024 )
+      integer               nchrec
+      parameter           ( nchrec = 1024 )
 
 
 !

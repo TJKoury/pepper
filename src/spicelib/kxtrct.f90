@@ -1,7 +1,7 @@
 !$Procedure KXTRCT ( Extract a substring starting with a keyword )
 
-      SUBROUTINE KXTRCT ( KEYWD,  TERMS, NTERMS, &
-                          WORDSQ, FOUND, SUBSTR  )
+      subroutine kxtrct ( keywd,  terms, nterms, &
+                          wordsq, found, substr  )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    KEYWD
-      CHARACTER*(*)    TERMS(*)
-      INTEGER          NTERMS
-      CHARACTER*(*)    WORDSQ
-      LOGICAL          FOUND
-      CHARACTER*(*)    SUBSTR
+      character*(*)    keywd
+      character*(*)    terms(*)
+      integer          nterms
+      character*(*)    wordsq
+      logical          found
+      character*(*)    substr
 
 ! $ Brief_I/O
 !
@@ -224,111 +224,111 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          WDINDX
-      INTEGER          NBLEN
-      INTEGER          ISRCHC
+      integer          wdindx
+      integer          nblen
+      integer          isrchc
 
 !
 !     Local variables
 !
-      INTEGER          POSITN
+      integer          positn
 
-      INTEGER          BERASE
-      INTEGER          EERASE
-      INTEGER          BEGSTR
-      INTEGER          ENDSTR
+      integer          berase
+      integer          eerase
+      integer          begstr
+      integer          endstr
 
-      INTEGER          START
-      INTEGER          B
-      INTEGER          E
-      INTEGER          DELIMS
+      integer          start
+      integer          b
+      integer          e
+      integer          delims
 
 !
 !     Locate the keyword within the string.
 !
-      POSITN  =  WDINDX ( WORDSQ, KEYWD )
+      positn  =  wdindx ( wordsq, keywd )
 
 !
 !     If the keyword wasn't found, set the outputs and head for home.
 !
-      IF ( POSITN .EQ. 0 ) THEN
-         FOUND  = .FALSE.
-         SUBSTR = ' '
-         RETURN
-      ELSE
-         FOUND  = .TRUE.
-      END IF
+      if ( positn .eq. 0 ) then
+         found  = .false.
+         substr = ' '
+         return
+      else
+         found  = .true.
+      end if
 
 !
 !     Set the begin erase marker to the start of the current word
 !     Set the end   erase marker to the end   of the current word
 !
-      BERASE  = POSITN
-      EERASE  = POSITN + NBLEN(KEYWD) - 1
-      START   = EERASE + 1
+      berase  = positn
+      eerase  = positn + nblen(keywd) - 1
+      start   = eerase + 1
 
 !
 !     Find the begin and end of the next word.
 !
-      CALL FNDNWD ( WORDSQ, START, B, E )
+      call fndnwd ( wordsq, start, b, e )
 
 !
 !     If there is a next word ( E came back non-zero ) see if its a
 !     terminator.
 !
-      IF ( E .NE. 0 ) THEN
-         DELIMS = ISRCHC( WORDSQ(B:E), NTERMS, TERMS )
-      END IF
+      if ( e .ne. 0 ) then
+         delims = isrchc( wordsq(b:e), nterms, terms )
+      end if
 
 !
 !     If we found a terminator, or were already at the end of the
 !     string, we are done.  Remove the keyword and put a blank in
 !     SUBSTR
 !
-      IF (      ( E      .EQ. 0 ) &
-           .OR. ( DELIMS .NE. 0 ) ) THEN
+      if (      ( e      .eq. 0 ) &
+           .or. ( delims .ne. 0 ) ) then
 
-         CALL SHIFTL ( WORDSQ(BERASE:), EERASE-BERASE+1, ' ', &
-                       WORDSQ(BERASE:)                        )
-         SUBSTR = ' '
-         RETURN
+         call shiftl ( wordsq(berase:), eerase-berase+1, ' ', &
+                       wordsq(berase:)                        )
+         substr = ' '
+         return
 
-      END IF
+      end if
 
 !
 !     Ok. If we made it this far,  we have at least one legitimate word
 !     following the keyword,  set the pointer for the start of the
 !     substring (to return) to the beginning of this word.
 !
-      BEGSTR = B
+      begstr = b
 
 !
 !     Now we just examine each word until we run out of string or we
 !     run into a terminator.
 !
-      DO WHILE ( (E .NE. 0) .AND. (DELIMS .EQ. 0) )
+      do while ( (e .ne. 0) .and. (delims .eq. 0) )
 
-         ENDSTR = E
-         EERASE = E
-         START  = E + 1
+         endstr = e
+         eerase = e
+         start  = e + 1
 
-         CALL FNDNWD ( WORDSQ, START, B, E )
+         call fndnwd ( wordsq, start, b, e )
 
-         IF ( E .NE. 0 ) THEN
-            DELIMS = ISRCHC ( WORDSQ(B:E), NTERMS, TERMS )
-         END IF
+         if ( e .ne. 0 ) then
+            delims = isrchc ( wordsq(b:e), nterms, terms )
+         end if
 
-      END DO
+      end do
 
 !
 !     That's it, load the substring variable and remove the keyword
 !     and words up to the terminator or end of the string --- whichever
 !     came first.
 !
-      SUBSTR = WORDSQ ( BEGSTR : ENDSTR )
+      substr = wordsq ( begstr : endstr )
 
-      CALL SHIFTL ( WORDSQ(BERASE:), EERASE-BERASE+1, ' ', &
-                    WORDSQ(BERASE:)                         )
+      call shiftl ( wordsq(berase:), eerase-berase+1, ' ', &
+                    wordsq(berase:)                         )
 
-      RETURN
-      END
+      return
+      end

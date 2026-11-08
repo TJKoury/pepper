@@ -1,6 +1,6 @@
 !$Procedure ERRDEV ( Get/Set Error Output Device Name )
 
-      SUBROUTINE ERRDEV ( OP, DEVICE )
+      subroutine errdev ( op, device )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)          OP
-      CHARACTER*(*)          DEVICE
+      character*(*)          op
+      character*(*)          device
 
-      INTEGER                FILEN
+      integer                filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER            ( FILEN = 128 )
+      parameter            ( filen = 128 )
 #else
-      PARAMETER            ( FILEN = 255 )
+      parameter            ( filen = 255 )
 #endif
 
 ! $ Brief_I/O
@@ -342,20 +342,20 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
 !
 !     Local Variables:
 !
 
-      CHARACTER*(FILEN)     UPNAM
-      CHARACTER*(FILEN)     LOCNAM
+      character*(filen)     upnam
+      character*(filen)     locnam
 
-      INTEGER               OPLEN
-      PARAMETER           ( OPLEN = 3 )
+      integer               oplen
+      parameter           ( oplen = 3 )
 
-      CHARACTER*(OPLEN)     UPOP
-      CHARACTER*(OPLEN)     LOCOP
+      character*(oplen)     upop
+      character*(oplen)     locop
 
 !
 !     Initial Values:
@@ -367,7 +367,7 @@
 !     Executable Code:
 !
 
-      CALL CHKIN ( 'ERRDEV' )
+      call chkin ( 'ERRDEV' )
 
 !
 !     We save the operation string as input, and get
@@ -375,14 +375,14 @@
 !
 
 
-      CALL LJUST ( OP,   UPOP )
-      CALL UCASE ( UPOP, UPOP )
+      call ljust ( op,   upop )
+      call ucase ( upop, upop )
 
-      IF ( UPOP  .EQ. 'GET' ) THEN
+      if ( upop  .eq. 'GET' ) then
 
-         CALL GETDEV ( DEVICE )
+         call getdev ( device )
 
-      ELSE IF ( UPOP  .EQ. 'SET' ) THEN
+      else if ( upop  .eq. 'SET' ) then
 
 
 !
@@ -391,61 +391,61 @@
 !        and get an upper case version:
 !
 
-         CALL LJUST ( DEVICE, UPNAM )
-         CALL UCASE ( UPNAM,  UPNAM )
+         call ljust ( device, upnam )
+         call ucase ( upnam,  upnam )
 
-         IF (   LASTNB( UPNAM )   .GT.   FILEN    )  THEN
+         if (   lastnb( upnam )   .gt.   filen    )  then
 
-            LOCNAM = DEVICE
+            locnam = device
 
-            CALL SETMSG ( 'ERRDEV:  Device name exceeds FILEN'        // &
+            call setmsg ( 'ERRDEV:  Device name exceeds FILEN'        // &
                           ' characters; device selection not updated.'// &
                           ' The first FILEN characters of the name'   // &
-                          ' were:  '//LOCNAM &
+                          ' were:  '//locnam &
                         )
 
-            CALL SIGERR ( 'SPICE(DEVICENAMETOOLONG)' )
+            call sigerr ( 'SPICE(DEVICENAMETOOLONG)' )
 
-            CALL CHKOUT ( 'ERRDEV' )
-            RETURN
+            call chkout ( 'ERRDEV' )
+            return
 
-         END IF
+         end if
 
 
-         IF (  ( UPNAM  .EQ. 'SCREEN' ) .OR. &
-               ( UPNAM  .EQ. 'NULL'   )        )  THEN
+         if (  ( upnam  .eq. 'SCREEN' ) .or. &
+               ( upnam  .eq. 'NULL'   )        )  then
 
 !
 !           Store upper case version of DEVICE:
 !
 
-            CALL PUTDEV ( UPNAM )
+            call putdev ( upnam )
 
-         ELSE
+         else
 
 !
 !           We assume we've got a file name...
 !           Store it as it was input.
 !
-            CALL PUTDEV ( DEVICE )
+            call putdev ( device )
 
-         END IF
+         end if
 
-      ELSE
+      else
 
 !
 !        An invalid value of OP was supplied.
 !
 
-         LOCOP = OP
+         locop = op
 
-         CALL SETMSG ( 'ERRDEV:  An invalid value of OP was supplied.'// &
-                       '  The value was: '  // LOCOP   )
+         call setmsg ( 'ERRDEV:  An invalid value of OP was supplied.'// &
+                       '  The value was: '  // locop   )
 
-         CALL SIGERR ( 'SPICE(INVALIDOPERATION)' )
+         call sigerr ( 'SPICE(INVALIDOPERATION)' )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ERRDEV' )
-      RETURN
-      END
+      call chkout ( 'ERRDEV' )
+      return
+      end

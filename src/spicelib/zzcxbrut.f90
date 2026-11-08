@@ -1,7 +1,7 @@
 !$Procedure  ZZCXBRUT ( Cone-segment intersection by brute force )
 
-      SUBROUTINE ZZCXBRUT ( APEX,   AXIS,   ANGLE, &
-                            ENDPT1, ENDPT2, XPT,   ISBRCK )
+      subroutine zzcxbrut ( apex,   axis,   angle, &
+                            endpt1, endpt2, xpt,   isbrck )
 
 ! $ Abstract
 !
@@ -29,15 +29,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      APEX   ( 3 )
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      ENDPT1 ( 3 )
-      DOUBLE PRECISION      ENDPT2 ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
-      LOGICAL               ISBRCK
+      double precision      apex   ( 3 )
+      double precision      axis   ( 3 )
+      double precision      angle
+      double precision      endpt1 ( 3 )
+      double precision      endpt2 ( 3 )
+      double precision      xpt    ( 3 )
+      logical               isbrck
 
 ! $ Brief_I/O
 !
@@ -156,170 +156,170 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
+      double precision      halfpi
+      double precision      pi
+      double precision      vdot
 
-      LOGICAL               RETURN
-      LOGICAL               STATE1
-      LOGICAL               STATE2
-      LOGICAL               VZERO
+      logical               return
+      logical               state1
+      logical               state2
+      logical               vzero
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-15 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-15 )
 
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR = 1000 )
+      integer               maxitr
+      parameter           ( maxitr = 1000 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      COSANG
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      DP
-      DOUBLE PRECISION      DP1
-      DOUBLE PRECISION      DP2
-      DOUBLE PRECISION      HIGH
-      DOUBLE PRECISION      LOCANG
-      DOUBLE PRECISION      LOCAXI ( 3 )
-      DOUBLE PRECISION      LOW
-      DOUBLE PRECISION      MIDPT
-      DOUBLE PRECISION      OFF1   ( 3 )
-      DOUBLE PRECISION      OFF2   ( 3 )
-      DOUBLE PRECISION      PRVDLT
-      DOUBLE PRECISION      SEG    ( 3 )
-      DOUBLE PRECISION      UOFF1  ( 3 )
-      DOUBLE PRECISION      UOFF2  ( 3 )
-      DOUBLE PRECISION      UX     ( 3 )
-      DOUBLE PRECISION      X      ( 3 )
+      double precision      cosang
+      double precision      delta
+      double precision      dp
+      double precision      dp1
+      double precision      dp2
+      double precision      high
+      double precision      locang
+      double precision      locaxi ( 3 )
+      double precision      low
+      double precision      midpt
+      double precision      off1   ( 3 )
+      double precision      off2   ( 3 )
+      double precision      prvdlt
+      double precision      seg    ( 3 )
+      double precision      uoff1  ( 3 )
+      double precision      uoff2  ( 3 )
+      double precision      ux     ( 3 )
+      double precision      x      ( 3 )
 
-      INTEGER               NITR
+      integer               nitr
 
-      LOGICAL               STATE
+      logical               state
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check the axis.
 !
-      IF ( VZERO(AXIS) ) THEN
+      if ( vzero(axis) ) then
 
-         CALL CHKIN  ( 'ZZCXBRUT'                     )
-         CALL SETMSG ( 'Cone axis is the zero vector' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'            )
-         CALL CHKOUT ( 'ZZCXBRUT'                     )
-         RETURN
+         call chkin  ( 'ZZCXBRUT'                     )
+         call setmsg ( 'Cone axis is the zero vector' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'            )
+         call chkout ( 'ZZCXBRUT'                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make a local version of the cone's axis and angle. The
 !     angle will be less than or equal to pi/2 radians.
 !
-      IF ( ANGLE .GT. HALFPI() ) THEN
+      if ( angle .gt. halfpi() ) then
 
-         LOCANG = PI() - ANGLE
-         CALL VMINUS ( AXIS, LOCAXI )
-      ELSE
-         LOCANG = ANGLE
-         CALL VEQU   ( AXIS, LOCAXI )
-      END IF
+         locang = pi() - angle
+         call vminus ( axis, locaxi )
+      else
+         locang = angle
+         call vequ   ( axis, locaxi )
+      end if
 
-      CALL VHATIP ( LOCAXI )
+      call vhatip ( locaxi )
 
-      COSANG = COS( LOCANG )
+      cosang = cos( locang )
 
 !
 !     Calculate the offsets of the endpoints from the apex,
 !     and get unit-length versions of these.
 !
-      CALL VSUB ( ENDPT1, APEX, OFF1 )
-      CALL VSUB ( ENDPT2, APEX, OFF2 )
+      call vsub ( endpt1, apex, off1 )
+      call vsub ( endpt2, apex, off2 )
 
-      CALL VHAT ( OFF1, UOFF1 )
-      CALL VHAT ( OFF2, UOFF2 )
+      call vhat ( off1, uoff1 )
+      call vhat ( off2, uoff2 )
 
 !
 !     Get the dot products of the unit offsets with the axis.
 !     These will serve as proxies for latitude.
 !
-      DP1 = VDOT( UOFF1, LOCAXI )
-      DP2 = VDOT( UOFF2, LOCAXI )
+      dp1 = vdot( uoff1, locaxi )
+      dp2 = vdot( uoff2, locaxi )
 
 !
 !     The "state" variables at the endpoints are .TRUE. if
 !     the endpoints are on or inside the cone.
 !
-      STATE1 = DP1 .GE. COSANG
-      STATE2 = DP2 .GE. COSANG
+      state1 = dp1 .ge. cosang
+      state2 = dp2 .ge. cosang
 
 !
 !     The intersection is supposed to be bracketed. Return
 !     if not, indicating the situation via ISBRCK.
 !
-      ISBRCK = STATE1 .NEQV. STATE2
+      isbrck = state1 .neqv. state2
 
-      IF ( .NOT. ISBRCK) THEN
-         RETURN
-      END IF
+      if ( .not. isbrck) then
+         return
+      end if
 
 !
 !     Prepare for a solution by bisection.
 !
-      CALL VSUB ( OFF2, OFF1, SEG )
+      call vsub ( off2, off1, seg )
 
-      LOW    = 0.D0
-      HIGH   = 1.D0
-      DELTA  = ABS( HIGH - LOW )
-      PRVDLT = 2.D0
-      NITR   = 0
+      low    = 0.d0
+      high   = 1.d0
+      delta  = abs( high - low )
+      prvdlt = 2.d0
+      nitr   = 0
 
-      DO WHILE (       ( DELTA .GT. CNVLIM ) &
-                 .AND. ( DELTA .LT. PRVDLT ) &
-                 .AND. ( NITR  .LT. MAXITR )  )
+      do while (       ( delta .gt. cnvlim ) &
+                 .and. ( delta .lt. prvdlt ) &
+                 .and. ( nitr  .lt. maxitr )  )
 
-         MIDPT = ( LOW + HIGH ) / 2
+         midpt = ( low + high ) / 2
 
-         CALL VLCOM ( 1.D0, OFF1, MIDPT, SEG, X )
+         call vlcom ( 1.d0, off1, midpt, seg, x )
 
-         CALL VHAT ( X, UX )
+         call vhat ( x, ux )
 
-         DP    = VDOT ( UX, LOCAXI )
+         dp    = vdot ( ux, locaxi )
 
-         STATE = DP .GE. COSANG
+         state = dp .ge. cosang
 
-         IF ( STATE .EQV. STATE1 ) THEN
+         if ( state .eqv. state1 ) then
 !
 !           There has been no state change between OFF1
 !           and XPT.
 !
-            LOW  = MIDPT
-         ELSE
-            HIGH = MIDPT
-         END IF
+            low  = midpt
+         else
+            high = midpt
+         end if
 
-         PRVDLT = DELTA
-         DELTA  = ABS( HIGH - LOW )
+         prvdlt = delta
+         delta  = abs( high - low )
 
-         NITR   = NITR + 1
+         nitr   = nitr + 1
 
-      END DO
+      end do
 !
 !     X is an offset from APEX. The solution is an offset from the
 !     origin.
 !
-      CALL VADD ( APEX, X, XPT )
+      call vadd ( apex, x, xpt )
 
-      RETURN
-      END
+      return
+      end
 
 
 

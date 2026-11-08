@@ -1,6 +1,6 @@
 !$Procedure CHCKID ( Check ID string )
 
-      SUBROUTINE CHCKID ( CLASS, MAXLEN, ID )
+      subroutine chckid ( class, maxlen, id )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         CLASS
-      INTEGER               MAXLEN
-      CHARACTER*(*)         ID
+      character*(*)         class
+      integer               maxlen
+      character*(*)         id
 
 ! $ Brief_I/O
 !
@@ -164,116 +164,116 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNP
-      INTEGER               LASTNB
-      LOGICAL               RETURN
+      integer               frstnp
+      integer               lastnb
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CHRCOD
-      INTEGER               I
-      INTEGER               L
+      integer               chrcod
+      integer               i
+      integer               l
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CHCKID' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CHCKID' )
+      end if
 
 !
 !     Check CLASS before trying to use it in an error message.
 !
-      I  =  FRSTNP( CLASS )
+      i  =  frstnp( class )
 
-      IF ( I .GT. 0 ) THEN
+      if ( i .gt. 0 ) then
 
-         CHRCOD = ICHAR( CLASS(I:I) )
+         chrcod = ichar( class(i:i) )
 
-         CALL SETMSG ( 'The class string ''#'' is invalid; '  // &
+         call setmsg ( 'The class string ''#'' is invalid; '  // &
                        'this string contains a non-printing ' // &
                        'character (ICHAR = #) at position #.'  )
-         CALL ERRCH  ( '#', CLASS                              )
-         CALL ERRINT ( '#', CHRCOD                             )
-         CALL ERRINT ( '#', I                                  )
-         CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-         CALL CHKOUT ( 'CHCKID'                                )
-         RETURN
+         call errch  ( '#', class                              )
+         call errint ( '#', chrcod                             )
+         call errint ( '#', i                                  )
+         call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+         call chkout ( 'CHCKID'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     MAXLEN must be a sensible value.
 !
-      IF ( MAXLEN .LT. 1 ) THEN
+      if ( maxlen .lt. 1 ) then
 
-         CALL SETMSG ( 'Non-blank length limit MAXLEN should be '  // &
+         call setmsg ( 'Non-blank length limit MAXLEN should be '  // &
                        'positive but was #.'                        )
-         CALL ERRINT ( '#',   MAXLEN                                )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'CHCKID'                                     )
-         RETURN
+         call errint ( '#',   maxlen                                )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+         call chkout ( 'CHCKID'                                     )
+         return
 
-      END IF
+      end if
 
 
-      L  =  LASTNB( ID )
+      l  =  lastnb( id )
 
 !
 !     The ID must not be too long.
 !
-      IF ( L .GT. MAXLEN ) THEN
+      if ( l .gt. maxlen ) then
 
-         CALL SETMSG ( 'The # ''#'' is invalid; the last non-blank '// &
+         call setmsg ( 'The # ''#'' is invalid; the last non-blank '// &
                        'character is located at position #; the '   // &
                        'maximum allowed length is #.'               )
 
-         IF ( CLASS .NE. ' ' ) THEN
-            CALL ERRCH ( '#', CLASS )
-         ELSE
-            CALL ERRCH ( '#', 'ID' )
-         END IF
+         if ( class .ne. ' ' ) then
+            call errch ( '#', class )
+         else
+            call errch ( '#', 'ID' )
+         end if
 
-         CALL ERRCH  ( '#', ID                  )
-         CALL ERRINT ( '#', L                   )
-         CALL ERRINT ( '#', MAXLEN              )
-         CALL SIGERR ( 'SPICE(IDSTRINGTOOLONG)' )
-         CALL CHKOUT ( 'CHCKID'                 )
-         RETURN
+         call errch  ( '#', id                  )
+         call errint ( '#', l                   )
+         call errint ( '#', maxlen              )
+         call sigerr ( 'SPICE(IDSTRINGTOOLONG)' )
+         call chkout ( 'CHCKID'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Look for non-printing characters in ID.
 !
-      I  = FRSTNP ( ID )
+      i  = frstnp ( id )
 
-      IF ( I .GT. 0 ) THEN
+      if ( i .gt. 0 ) then
 
-         CHRCOD = ICHAR( ID(I:I) )
+         chrcod = ichar( id(i:i) )
 
-         CALL SETMSG ( 'The # ''#'' is invalid; this string ' // &
+         call setmsg ( 'The # ''#'' is invalid; this string ' // &
                        'contains a non-printing character '   // &
                        '(ICHAR = #) at position #.'            )
 
-         IF ( CLASS .NE. ' ' ) THEN
-            CALL ERRCH ( '#', CLASS )
-         ELSE
-            CALL ERRCH ( '#', 'ID' )
-         END IF
+         if ( class .ne. ' ' ) then
+            call errch ( '#', class )
+         else
+            call errch ( '#', 'ID' )
+         end if
 
-         CALL ERRCH  ( '#', ID                    )
-         CALL ERRINT ( '#', CHRCOD                )
-         CALL ERRINT ( '#', I                     )
-         CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)' )
-         CALL CHKOUT ( 'CHCKID'                   )
-         RETURN
+         call errch  ( '#', id                    )
+         call errint ( '#', chrcod                )
+         call errint ( '#', i                     )
+         call sigerr ( 'SPICE(NONPRINTABLECHARS)' )
+         call chkout ( 'CHCKID'                   )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CHCKID' )
-      RETURN
-      END
+      call chkout ( 'CHCKID' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ETCAL ( Convert ET to Calendar format )
 
-      SUBROUTINE ETCAL ( ET, CALSTR )
+      subroutine etcal ( et, calstr )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         CALSTR
+      double precision      et
+      character*(*)         calstr
 
 ! $ Brief_I/O
 !
@@ -228,10 +228,10 @@
 !
 !     SPICELIB Functions.
 !
-      DOUBLE PRECISION      SPD
-      INTEGER               INTMAX
-      INTEGER               INTMIN
-      INTEGER               LSTLTI
+      double precision      spd
+      integer               intmax
+      integer               intmin
+      integer               lstlti
 
 
 
@@ -239,207 +239,207 @@
 !     We declare the variables that contain the number of days in
 !     400 years, 100 years, 4 years and 1 year.
 !
-      INTEGER               DP400Y
-      PARAMETER           ( DP400Y = 365*400 + 97 )
+      integer               dp400y
+      parameter           ( dp400y = 365*400 + 97 )
 
-      INTEGER               DP100Y
-      PARAMETER           ( DP100Y = 365*100 + 24 )
+      integer               dp100y
+      parameter           ( dp100y = 365*100 + 24 )
 
-      INTEGER               DP4Y
-      PARAMETER           ( DP4Y   = 365*4   + 1  )
+      integer               dp4y
+      parameter           ( dp4y   = 365*4   + 1  )
 
-      INTEGER               DP1Y
-      PARAMETER           ( DP1Y   = 365 )
+      integer               dp1y
+      parameter           ( dp1y   = 365 )
 
 
 !
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      INTEGER               JAN
-      PARAMETER           ( JAN = 31 )
+      integer               jan
+      parameter           ( jan = 31 )
 
-      INTEGER               FEB
-      PARAMETER           ( FEB = 28 )
+      integer               feb
+      parameter           ( feb = 28 )
 
-      INTEGER               MAR
-      PARAMETER           ( MAR = 31 )
+      integer               mar
+      parameter           ( mar = 31 )
 
-      INTEGER               APR
-      PARAMETER           ( APR = 30 )
+      integer               apr
+      parameter           ( apr = 30 )
 
-      INTEGER               MAY
-      PARAMETER           ( MAY = 31 )
+      integer               may
+      parameter           ( may = 31 )
 
-      INTEGER               JUN
-      PARAMETER           ( JUN = 30 )
+      integer               jun
+      parameter           ( jun = 30 )
 
-      INTEGER               JUL
-      PARAMETER           ( JUL = 31 )
+      integer               jul
+      parameter           ( jul = 31 )
 
-      INTEGER               AUG
-      PARAMETER           ( AUG = 31 )
+      integer               aug
+      parameter           ( aug = 31 )
 
-      INTEGER               SEP
-      PARAMETER           ( SEP = 30 )
+      integer               sep
+      parameter           ( sep = 30 )
 
-      INTEGER               OCT
-      PARAMETER           ( OCT = 31 )
+      integer               oct
+      parameter           ( oct = 31 )
 
-      INTEGER               NOV
-      PARAMETER           ( NOV = 30 )
+      integer               nov
+      parameter           ( nov = 30 )
 
-      INTEGER               DEC
-      PARAMETER           ( DEC = 31 )
+      integer               dec
+      parameter           ( dec = 31 )
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      INTEGER               JAN0
-      PARAMETER           ( JAN0 = 0  )
+      integer               jan0
+      parameter           ( jan0 = 0  )
 
-      INTEGER               FEB0
-      PARAMETER           ( FEB0 = JAN + JAN0 )
+      integer               feb0
+      parameter           ( feb0 = jan + jan0 )
 
-      INTEGER               MAR0
-      PARAMETER           ( MAR0 = FEB + FEB0 )
+      integer               mar0
+      parameter           ( mar0 = feb + feb0 )
 
-      INTEGER               APR0
-      PARAMETER           ( APR0 = MAR + MAR0 )
+      integer               apr0
+      parameter           ( apr0 = mar + mar0 )
 
-      INTEGER               MAY0
-      PARAMETER           ( MAY0 = APR + APR0 )
+      integer               may0
+      parameter           ( may0 = apr + apr0 )
 
-      INTEGER               JUN0
-      PARAMETER           ( JUN0 = MAY + MAY0 )
+      integer               jun0
+      parameter           ( jun0 = may + may0 )
 
-      INTEGER               JUL0
-      PARAMETER           ( JUL0 = JUN + JUN0 )
+      integer               jul0
+      parameter           ( jul0 = jun + jun0 )
 
-      INTEGER               AUG0
-      PARAMETER           ( AUG0 = JUL + JUL0 )
+      integer               aug0
+      parameter           ( aug0 = jul + jul0 )
 
-      INTEGER               SEP0
-      PARAMETER           ( SEP0 = AUG + AUG0 )
+      integer               sep0
+      parameter           ( sep0 = aug + aug0 )
 
-      INTEGER               OCT0
-      PARAMETER           ( OCT0 = SEP + SEP0 )
+      integer               oct0
+      parameter           ( oct0 = sep + sep0 )
 
-      INTEGER               NOV0
-      PARAMETER           ( NOV0 = OCT + OCT0 )
+      integer               nov0
+      parameter           ( nov0 = oct + oct0 )
 
-      INTEGER               DEC0
-      PARAMETER           ( DEC0 = NOV + NOV0 )
+      integer               dec0
+      parameter           ( dec0 = nov + nov0 )
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      INTEGER               JANL0
-      PARAMETER           ( JANL0 = JAN0  )
+      integer               janl0
+      parameter           ( janl0 = jan0  )
 
-      INTEGER               FEBL0
-      PARAMETER           ( FEBL0 = FEB0 )
+      integer               febl0
+      parameter           ( febl0 = feb0 )
 
-      INTEGER               MARL0
-      PARAMETER           ( MARL0 = MAR0 + 1 )
+      integer               marl0
+      parameter           ( marl0 = mar0 + 1 )
 
-      INTEGER               APRL0
-      PARAMETER           ( APRL0 = APR0 + 1 )
+      integer               aprl0
+      parameter           ( aprl0 = apr0 + 1 )
 
-      INTEGER               MAYL0
-      PARAMETER           ( MAYL0 = MAY0 + 1 )
+      integer               mayl0
+      parameter           ( mayl0 = may0 + 1 )
 
-      INTEGER               JUNL0
-      PARAMETER           ( JUNL0 = JUN0 + 1 )
+      integer               junl0
+      parameter           ( junl0 = jun0 + 1 )
 
-      INTEGER               JULL0
-      PARAMETER           ( JULL0 = JUL0 + 1 )
+      integer               jull0
+      parameter           ( jull0 = jul0 + 1 )
 
-      INTEGER               AUGL0
-      PARAMETER           ( AUGL0 = AUG0 + 1 )
+      integer               augl0
+      parameter           ( augl0 = aug0 + 1 )
 
-      INTEGER               SEPL0
-      PARAMETER           ( SEPL0 = SEP0 + 1 )
+      integer               sepl0
+      parameter           ( sepl0 = sep0 + 1 )
 
-      INTEGER               OCTL0
-      PARAMETER           ( OCTL0 = OCT0 + 1 )
+      integer               octl0
+      parameter           ( octl0 = oct0 + 1 )
 
-      INTEGER               NOVL0
-      PARAMETER           ( NOVL0 = NOV0 + 1 )
+      integer               novl0
+      parameter           ( novl0 = nov0 + 1 )
 
-      INTEGER               DECL0
-      PARAMETER           ( DECL0 = DEC0 + 1 )
+      integer               decl0
+      parameter           ( decl0 = dec0 + 1 )
 
-      INTEGER               STRSIZ
-      PARAMETER           ( STRSIZ = 16 )
+      integer               strsiz
+      parameter           ( strsiz = 16 )
 
-      INTEGER               LNGSIZ
-      PARAMETER           ( LNGSIZ = 180 )
+      integer               lngsiz
+      parameter           ( lngsiz = 180 )
 
 
 !
 !     The variables below hold the components of the output string
 !     before they are put together.
 !
-      CHARACTER*(STRSIZ)    ERA
-      CHARACTER*(STRSIZ)    YSTR
-      CHARACTER*(STRSIZ)    DSTR
-      CHARACTER*(STRSIZ)    HSTR
-      CHARACTER*(STRSIZ)    MSTR
-      CHARACTER*(STRSIZ)    SSTR
-      CHARACTER*(STRSIZ)    MESSGE
+      character*(strsiz)    era
+      character*(strsiz)    ystr
+      character*(strsiz)    dstr
+      character*(strsiz)    hstr
+      character*(strsiz)    mstr
+      character*(strsiz)    sstr
+      character*(strsiz)    messge
 
 !
 !     We will construct our string using the local variable DATE
 !     and transfer the results to the output CALSTR when we are
 !     done.
 !
-      CHARACTER*(LNGSIZ)    DATE
+      character*(lngsiz)    date
 
 !
 !     MONTHS contains 3-letter abbreviations for the months of the year
 !
-      CHARACTER*(3)         MONTHS ( 12 )
+      character*(3)         months ( 12 )
 
-      DOUBLE PRECISION      DMNINT
-      DOUBLE PRECISION      DMXINT
-      DOUBLE PRECISION      DP2000
-      DOUBLE PRECISION      FRAC
-      DOUBLE PRECISION      HALFD
-      DOUBLE PRECISION      MYDNOM
-      DOUBLE PRECISION      MYNUM
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      REMD
-      DOUBLE PRECISION      SECS
-      DOUBLE PRECISION      SECSPD
+      double precision      dmnint
+      double precision      dmxint
+      double precision      dp2000
+      double precision      frac
+      double precision      halfd
+      double precision      mydnom
+      double precision      mynum
+      double precision      q
+      double precision      remd
+      double precision      secs
+      double precision      secspd
 
-      INTEGER               BH
-      INTEGER               BM
-      INTEGER               DAY
-      INTEGER               DAYNUM
-      INTEGER               DN2000
-      INTEGER               DOFYR
-      INTEGER               DOY
-      INTEGER               DP0001
-      INTEGER               HOURS
-      INTEGER               IQ
-      INTEGER               LDAYS
-      INTEGER               MINS
-      INTEGER               MONTH
-      INTEGER               OFFSET
-      INTEGER               REM
-      INTEGER               TSECS
-      INTEGER               YDAYS
-      INTEGER               YEAR
-      INTEGER               YR1
-      INTEGER               YR100
-      INTEGER               YR4
-      INTEGER               YR400
+      integer               bh
+      integer               bm
+      integer               day
+      integer               daynum
+      integer               dn2000
+      integer               dofyr
+      integer               doy
+      integer               dp0001
+      integer               hours
+      integer               iq
+      integer               ldays
+      integer               mins
+      integer               month
+      integer               offset
+      integer               rem
+      integer               tsecs
+      integer               ydays
+      integer               year
+      integer               yr1
+      integer               yr100
+      integer               yr4
+      integer               yr400
 
-      LOGICAL               FIRST
-      LOGICAL               ADJUST
+      logical               first
+      logical               adjust
 
 !
 !     The array EXTRA contains the number of additional days that
@@ -447,32 +447,32 @@
 !     to a non-leap year).
 !
 
-      INTEGER               EXTRA  ( 12 )
-      INTEGER               DPBEGL ( 12 )
+      integer               extra  ( 12 )
+      integer               dpbegl ( 12 )
 
 !
 !     DPJAN0(I) gives the number of days that occur before the I'th
 !     month of a normal year.
 !
-      INTEGER               DPJAN0 ( 12 )
+      integer               dpjan0 ( 12 )
 
-      SAVE
+      save
 
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
-      DATA                  EXTRA   /  0,     0,     1,     1, &
+      data                  extra   /  0,     0,     1,     1, &
                                        1,     1,     1,     1, &
                                        1,     1,     1,     1    /
 
-      DATA                  DPJAN0  /  JAN0,  FEB0,  MAR0,  APR0, &
-                                       MAY0,  JUN0,  JUL0,  AUG0, &
-                                       SEP0,  OCT0,  NOV0,  DEC0 /
+      data                  dpjan0  /  jan0,  feb0,  mar0,  apr0, &
+                                       may0,  jun0,  jul0,  aug0, &
+                                       sep0,  oct0,  nov0,  dec0 /
 
-      DATA                  DPBEGL  /  JANL0, FEBL0, MARL0, APRL0, &
-                                       MAYL0, JUNL0, JULL0, AUGL0, &
-                                       SEPL0, OCTL0, NOVL0, DECL0 /
+      data                  dpbegl  /  janl0, febl0, marl0, aprl0, &
+                                       mayl0, junl0, jull0, augl0, &
+                                       sepl0, octl0, novl0, decl0 /
 
-      DATA                  MONTHS  / 'JAN',  'FEB', 'MAR', 'APR', &
+      data                  months  / 'JAN',  'FEB', 'MAR', 'APR', &
                                       'MAY',  'JUN', 'JUL', 'AUG', &
                                       'SEP',  'OCT', 'NOV', 'DEC' /
 
@@ -485,17 +485,17 @@
 !     The number of days elapsed since Jan 1, of year 1 A.D. to
 !     Jan 1 of YEAR is given by:
 !
-      YDAYS(YEAR) = 365*(YEAR-1) &
-                    +  ((YEAR-1)/4) &
-                    -  ((YEAR-1)/100) &
-                    +  ((YEAR-1)/400)
+      ydays(year) = 365*(year-1) &
+                    +  ((year-1)/4) &
+                    -  ((year-1)/100) &
+                    +  ((year-1)/400)
 
 !
 !     The number of leap days in a year is given by:
 !
-      LDAYS(YEAR) =   ( (YEAR/4  ) * 4   ) / YEAR &
-                    - ( (YEAR/100) * 100 ) / YEAR &
-                    + ( (YEAR/400) * 400 ) / YEAR
+      ldays(year) =   ( (year/4  ) * 4   ) / year &
+                    - ( (year/100) * 100 ) / year &
+                    + ( (year/400) * 400 ) / year
 
 !
 !     To compute the day of the year we
@@ -507,31 +507,31 @@
 !
 !        add on the number of days into the month
 !
-      DOY(YEAR,MONTH,DAY) =   DPJAN0 ( MONTH ) &
-                            + EXTRA  ( MONTH ) * LDAYS(YEAR) &
-                            + DAY
+      doy(year,month,day) =   dpjan0 ( month ) &
+                            + extra  ( month ) * ldays(year) &
+                            + day
 
 
 !
 !     The number of days since 1 Jan 1 A.D. is given by:
 !
-      DP0001(YEAR,MONTH,DAY) = YDAYS(YEAR) &
-                             + DOY  (YEAR, MONTH, DAY) &
+      dp0001(year,month,day) = ydays(year) &
+                             + doy  (year, month, day) &
                              - 1
 
 
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         HALFD  = SPD()/2.0D0
-         SECSPD = SPD()
-         DN2000 = DP0001 ( 2000, 1, 1 )
-         DMXINT = INTMAX()
-         DMNINT = INTMIN()
+         first  = .false.
+         halfd  = spd()/2.0d0
+         secspd = spd()
+         dn2000 = dp0001 ( 2000, 1, 1 )
+         dmxint = intmax()
+         dmnint = intmin()
 
-      END IF
+      end if
 !
 !     Now we "in-line" compute the following call.
 !
@@ -546,48 +546,48 @@
 !     We add on 0.0005 seconds so that the string produced will be
 !     rounded to the nearest millisecond.
 !
-      MYDNOM = SECSPD
-      MYNUM  = ET + HALFD
+      mydnom = secspd
+      mynum  = et + halfd
 
-      Q    = DINT ( MYNUM / MYDNOM )
-      REMD = MYNUM -    Q * MYDNOM
+      q    = dint ( mynum / mydnom )
+      remd = mynum -    q * mydnom
 
-      IF ( REMD .LT. 0.0D0 ) THEN
-         Q    = Q   - 1.0D0
-         REMD = REMD + MYDNOM
-      END IF
+      if ( remd .lt. 0.0d0 ) then
+         q    = q   - 1.0d0
+         remd = remd + mydnom
+      end if
 
-      SECS   = REMD
-      DP2000 = Q
+      secs   = remd
+      dp2000 = q
 
 !
 !     Do something about the problem when ET is vastly
 !     out of range.  (Day number outside MAX and MIN integer).
 !
-      IF      ( DP2000 + DN2000 .LT. DMNINT + 1) THEN
+      if      ( dp2000 + dn2000 .lt. dmnint + 1) then
 
-         DP2000 = DMNINT - DN2000 + 1
-         MESSGE = 'Epoch before '
-         SECS   = 0.0D0
+         dp2000 = dmnint - dn2000 + 1
+         messge = 'Epoch before '
+         secs   = 0.0d0
 
-      ELSE IF ( DP2000 + DN2000 .GT. DMXINT - 1 ) THEN
+      else if ( dp2000 + dn2000 .gt. dmxint - 1 ) then
 
-         DP2000 = DMXINT - DN2000 - 1
-         MESSGE = 'Epoch after '
-         SECS   = 0.0D0
+         dp2000 = dmxint - dn2000 - 1
+         messge = 'Epoch after '
+         secs   = 0.0d0
 
-      ELSE
+      else
 
-         MESSGE = ' '
+         messge = ' '
 
-      END IF
+      end if
 
 !
 !     Compute the number of days since 1 .A.D. Jan 1, 00:00:00.
 !     From the tests in the previous IF-ELSE IF-ELSE block this
 !     addition is guaranteed not to overflow.
 !
-      DAYNUM = INT( DP2000 + DBLE(DN2000) )
+      daynum = int( dp2000 + dble(dn2000) )
 
 !
 !     If the number of days is negative, we need to do a little
@@ -596,7 +596,7 @@
 !     be positive and then we subtract off the appropriate multiple
 !     of 400 years later.
 !
-      IF ( DAYNUM .LT. 0 ) THEN
+      if ( daynum .lt. 0 ) then
 
 !
 !        Since we can't make the call below and remain
@@ -604,24 +604,24 @@
 !
 !        call rmaini ( daynum, dp400y, offset, daynum )
 !
-         IQ   = DAYNUM / DP400Y
-         REM  = DAYNUM - DP400Y*IQ
+         iq   = daynum / dp400y
+         rem  = daynum - dp400y*iq
 
-         IF ( REM .LT. 0 ) THEN
-            IQ   = IQ   - 1
-            REM  = REM  + DP400Y
-         END IF
+         if ( rem .lt. 0 ) then
+            iq   = iq   - 1
+            rem  = rem  + dp400y
+         end if
 
-         OFFSET = IQ
-         DAYNUM = REM
+         offset = iq
+         daynum = rem
 
-         ADJUST = .TRUE.
+         adjust = .true.
 
-      ELSE
+      else
 
-         ADJUST = .FALSE.
+         adjust = .false.
 
-      END IF
+      end if
 
 !
 !     Next we compute the year.  Divide out multiples of 400, 100
@@ -633,55 +633,55 @@
 !                 DP100Y = 25*DP4Y   - 1
 !                 DP400Y =  4*DP100Y + 1
 !
-      YR400  =  DAYNUM / DP400Y
-      REM    =  DAYNUM - DP400Y*YR400
+      yr400  =  daynum / dp400y
+      rem    =  daynum - dp400y*yr400
 
-      YR100  =  MIN ( 3, REM   / DP100Y )
-      REM    =  REM    - YR100 * DP100Y
+      yr100  =  min ( 3, rem   / dp100y )
+      rem    =  rem    - yr100 * dp100y
 
-      YR4    =  MIN (24, REM / DP4Y )
-      REM    =  REM    - YR4 * DP4Y
+      yr4    =  min (24, rem / dp4y )
+      rem    =  rem    - yr4 * dp4y
 
-      YR1    =  MIN (3,  REM / DP1Y )
-      REM    =  REM    - YR1 * DP1Y
+      yr1    =  min (3,  rem / dp1y )
+      rem    =  rem    - yr1 * dp1y
 
-      DOFYR  =  REM    + 1
+      dofyr  =  rem    + 1
 
-      YEAR   = YR400*400 + YR100*100 + YR4*4 + YR1 + 1
+      year   = yr400*400 + yr100*100 + yr4*4 + yr1 + 1
 !
 !     Get the month, and day of month (depending upon whether
 !     we have a leap year or not).
 !
-      IF ( LDAYS(YEAR) .EQ. 0 ) THEN
-         MONTH  = LSTLTI ( DOFYR, 12, DPJAN0 )
-         DAY    = DOFYR - DPJAN0(MONTH)
-      ELSE
-         MONTH  = LSTLTI ( DOFYR, 12, DPBEGL )
-         DAY    = DOFYR - DPBEGL(MONTH)
-      END IF
+      if ( ldays(year) .eq. 0 ) then
+         month  = lstlti ( dofyr, 12, dpjan0 )
+         day    = dofyr - dpjan0(month)
+      else
+         month  = lstlti ( dofyr, 12, dpbegl )
+         day    = dofyr - dpbegl(month)
+      end if
 !
 !     If we had to adjust the year to make it positive, we now
 !     need to correct it and then convert it to a B.C. year.
 !
-      IF ( ADJUST ) THEN
+      if ( adjust ) then
 
-         YEAR   =  YEAR + OFFSET*400
-         YEAR   = -YEAR + 1
-         ERA    = ' B.C. '
+         year   =  year + offset*400
+         year   = -year + 1
+         era    = ' B.C. '
 
-      ELSE
+      else
 !
 !        If the year is less than 1000, we can't just write it
 !        out.  We need to add the era.  If we don't do this
 !        the dates look very confusing.
 !
-         IF ( YEAR .LT. 1000 ) THEN
-            ERA   = ' A.D. '
-         ELSE
-            ERA   = ' '
-         END IF
+         if ( year .lt. 1000 ) then
+            era   = ' A.D. '
+         else
+            era   = ' '
+         end if
 
-      END IF
+      end if
 !
 !     Convert Seconds to Hours, Minute and Seconds.
 !     We work with thousandths of a second in integer arithmetic
@@ -690,100 +690,100 @@
 !     or equal to zero so we'll have no problems with HOURS, MINS
 !     or SECS becoming negative.)
 !
-      TSECS  = INT(SECS*1000.0D0)
-      FRAC   = SECS - DBLE(TSECS)
+      tsecs  = int(secs*1000.0d0)
+      frac   = secs - dble(tsecs)
 
-      HOURS  = TSECS / 3600000
-      TSECS  = TSECS - 3600000 * HOURS
+      hours  = tsecs / 3600000
+      tsecs  = tsecs - 3600000 * hours
 
-      MINS   = TSECS / 60000
-      TSECS  = TSECS - 60000 * MINS
+      mins   = tsecs / 60000
+      tsecs  = tsecs - 60000 * mins
 
-      SECS   = DBLE ( TSECS ) / 1000.0D0
+      secs   = dble ( tsecs ) / 1000.0d0
 !
 !     We round seconds if we can do so without getting seconds to be
 !     bigger than 60.
 !
-      IF ( SECS + 0.0005D0 .LT. 60.0D0 ) THEN
-         SECS = SECS + 0.0005D0
-      END IF
+      if ( secs + 0.0005d0 .lt. 60.0d0 ) then
+         secs = secs + 0.0005d0
+      end if
 
 !
 !     Finally, get the components of our date string.
 !
-      CALL INTSTR ( YEAR,   YSTR )
-      IF ( DAY .GE. 10 ) THEN
-         CALL INTSTR ( DAY, DSTR )
-      ELSE
-         DSTR = '0'
-         CALL INTSTR( DAY, DSTR(2:) )
-      END IF
+      call intstr ( year,   ystr )
+      if ( day .ge. 10 ) then
+         call intstr ( day, dstr )
+      else
+         dstr = '0'
+         call intstr( day, dstr(2:) )
+      end if
 
 !
 !     We want to zero pad the hours minutes and seconds.
 !
-      IF ( HOURS .LT. 10 ) THEN
-         BH = 2
-      ELSE
-         BH = 1
-      END IF
+      if ( hours .lt. 10 ) then
+         bh = 2
+      else
+         bh = 1
+      end if
 
-      IF ( MINS .LT. 10 ) THEN
-         BM = 2
-      ELSE
-         BM = 1
-      END IF
+      if ( mins .lt. 10 ) then
+         bm = 2
+      else
+         bm = 1
+      end if
 
 
-      MSTR = '00'
-      HSTR = '00'
-      SSTR = ' '
+      mstr = '00'
+      hstr = '00'
+      sstr = ' '
 
 !
 !     Now construct the string components for hours, minutes and
 !     seconds.
 !
-      SECS = INT(SECS*1000.0D0) / 1000.0D0
+      secs = int(secs*1000.0d0) / 1000.0d0
 
-      CALL INTSTR ( HOURS,         HSTR(BH:) )
-      CALL INTSTR ( MINS,          MSTR(BM:) )
-      CALL DPSTRF ( SECS,  6, 'F', SSTR      )
+      call intstr ( hours,         hstr(bh:) )
+      call intstr ( mins,          mstr(bm:) )
+      call dpstrf ( secs,  6, 'F', sstr      )
 !
 !     The form of the output for SSTR has a leading blank followed by
 !     the first significant digit.  If a decimal point is in the
 !     third slot, then SSTR is of the form ' x.xxxxx'  and we need
 !     to insert a leading zero.
 !
-      IF ( SSTR(3:3) .EQ. '.' ) THEN
-         SSTR(1:1) = '0'
-      END IF
+      if ( sstr(3:3) .eq. '.' ) then
+         sstr(1:1) = '0'
+      end if
 !
 !     We don't want any leading spaces in SSTR, (HSTR and MSTR don't
 !     have leading spaces by construction.
 !
-      CALL LJUST ( SSTR, SSTR )
+      call ljust ( sstr, sstr )
 !
 !     Now form the date string, squeeze out extra spaces and
 !     left justify the whole thing.
 !
-      DATE = MESSGE &
-      //     YSTR &
-      //     ERA &
-      //     MONTHS(MONTH) &
+      date = messge &
+      //     ystr &
+      //     era &
+      //     months(month) &
       //     ' ' &
-      //     DSTR(1:3) &
+      //     dstr(1:3) &
       //     ' ' &
-      //     HSTR(1:2) &
+      //     hstr(1:2) &
       //     ':' &
-      //     MSTR(1:2) &
+      //     mstr(1:2) &
       //     ':' &
-      //     SSTR(1:6)
+      //     sstr(1:6)
 
 
-      CALL CMPRSS ( ' ', 1, DATE, DATE )
-      CALL LJUST  (         DATE, DATE )
+      call cmprss ( ' ', 1, date, date )
+      call ljust  (         date, date )
 
-      CALSTR = DATE
+      calstr = date
 
-      RETURN
-      END
+      return
+      end

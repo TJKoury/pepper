@@ -1,6 +1,6 @@
 !$Procedure CLIGHT ( C, Speed of light in a vacuum )
 
-      DOUBLE PRECISION FUNCTION CLIGHT ( )
+      double precision function clight ( )
 
 ! $ Abstract
 !
@@ -125,7 +125,7 @@
 !
 !     Just like it says.
 !
-      CLIGHT = 299792.458D0
+      clight = 299792.458d0
 
-      RETURN
-      END
+      return
+      end

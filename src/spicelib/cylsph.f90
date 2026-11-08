@@ -1,6 +1,6 @@
 !$Procedure CYLSPH ( Cylindrical to spherical )
 
-      SUBROUTINE CYLSPH ( R, CLON, Z,  RADIUS, COLAT, SLON )
+      subroutine cylsph ( r, clon, z,  radius, colat, slon )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    R
-      DOUBLE PRECISION    CLON
-      DOUBLE PRECISION    Z
-      DOUBLE PRECISION    RADIUS
-      DOUBLE PRECISION    COLAT
-      DOUBLE PRECISION    SLON
+      double precision    r
+      double precision    clon
+      double precision    z
+      double precision    radius
+      double precision    colat
+      double precision    slon
 
 ! $ Brief_I/O
 !
@@ -406,39 +406,39 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION BIG
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
+      double precision big
+      double precision x
+      double precision y
 
-      DOUBLE PRECISION RH
-      DOUBLE PRECISION TH
+      double precision rh
+      double precision th
 
 !
 !     Convert to spherical, storing in temporary variables
 !
-      BIG = MAX( DABS(R), DABS(Z) )
+      big = max( dabs(r), dabs(z) )
 
-      IF ( BIG .EQ. 0.0D0 ) THEN
+      if ( big .eq. 0.0d0 ) then
 
-         TH = 0.0D0
-         RH = 0.0D0
+         th = 0.0d0
+         rh = 0.0d0
 
-      ELSE
+      else
 
-         X  = R/BIG
-         Y  = Z/BIG
+         x  = r/big
+         y  = z/big
 
-         RH = BIG * DSQRT( X*X + Y*Y )
-         TH = DATAN2 (R,Z)
+         rh = big * dsqrt( x*x + y*y )
+         th = datan2 (r,z)
 
-      END IF
+      end if
 
 !
 !     Move the results to output variables
 !
-      SLON   = CLON
-      RADIUS = RH
-      COLAT  = TH
+      slon   = clon
+      radius = rh
+      colat  = th
 
-      RETURN
-      END
+      return
+      end

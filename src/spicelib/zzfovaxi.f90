@@ -1,6 +1,6 @@
 !$Procedure   ZZFOVAXI ( Generate an axis vector for polygonal FOV )
 
-      SUBROUTINE ZZFOVAXI ( INST, N, BOUNDS, AXIS )
+      subroutine zzfovaxi ( inst, n, bounds, axis )
 
 ! $ Abstract
 !
@@ -28,15 +28,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D-12 )
+      double precision      margin
+      parameter           ( margin = 1.d-12 )
 
-      CHARACTER*(*)         INST
-      INTEGER               N
-      DOUBLE PRECISION      BOUNDS ( 3, N )
-      DOUBLE PRECISION      AXIS   ( 3 )
+      character*(*)         inst
+      integer               n
+      double precision      bounds ( 3, n )
+      double precision      axis   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -216,12 +216,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VSEP
+      double precision      halfpi
+      double precision      vsep
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -230,54 +230,54 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CP     ( 3 )
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      V      ( 3 )
-      DOUBLE PRECISION      UVEC   ( 3 )
+      double precision      cp     ( 3 )
+      double precision      limit
+      double precision      sep
+      double precision      v      ( 3 )
+      double precision      uvec   ( 3 )
 
-      INTEGER               I
-      INTEGER               NEXT
+      integer               i
+      integer               next
 
-      LOGICAL               OK
+      logical               ok
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZFOVAXI' )
+      call chkin ( 'ZZFOVAXI' )
 
 !
 !     We must have at least 3 boundary vectors.
 !
-      IF ( N .LT. 3 ) THEN
+      if ( n .lt. 3 ) then
 
-         CALL SETMSG ( 'Polygonal FOV requires at least 3 ' &
+         call setmsg ( 'Polygonal FOV requires at least 3 ' &
          //            'boundary vectors but number ' &
          //            'supplied for # was #.'             )
-         CALL ERRCH  ( '#', INST                           )
-         CALL ERRINT ( '#', N                              )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'               )
-         CALL CHKOUT ( 'ZZFOVAXI'                          )
-         RETURN
+         call errch  ( '#', inst                           )
+         call errint ( '#', n                              )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'               )
+         call chkout ( 'ZZFOVAXI'                          )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check for linearly dependent consecutive boundary vectors.
 !
-      DO I = 1, N
+      do i = 1, n
 !
 !        Set the index of the next ray. When we get to the
 !        last boundary vector, the next ray is the first.
 !
-         IF ( I .EQ. N ) THEN
-            NEXT = 1
-         ELSE
-            NEXT = I + 1
-         END IF
+         if ( i .eq. n ) then
+            next = 1
+         else
+            next = i + 1
+         end if
 
 !
 !        Find the cross product of the first ray with the
@@ -285,90 +285,90 @@
 !        vectors, this could be an inward or outward normal,
 !        in the case the current face is is exterior.
 !
-         CALL VCRSS ( BOUNDS(1,I), BOUNDS(1,NEXT), CP )
+         call vcrss ( bounds(1,i), bounds(1,next), cp )
 
 !
 !        We insist on consecutive boundary vectors being
 !        linearly independent.
 !
-         IF ( VZERO(CP) ) THEN
+         if ( vzero(cp) ) then
 
-            CALL SETMSG ( 'Polygonal FOV must have linearly ' &
+            call setmsg ( 'Polygonal FOV must have linearly ' &
             //            'independent consecutive boundary ' &
             //            'but vectors at indices # and # ' &
             //            'have cross product equal to the ' &
             //            'zero vector. Instrument is #.'     )
-            CALL ERRINT ( '#', I                              )
-            CALL ERRINT ( '#', NEXT                           )
-            CALL ERRCH  ( '#', INST                           )
-            CALL SIGERR ( 'SPICE(DEGENERATECASE)'             )
-            CALL CHKOUT ( 'ZZFOVAXI'                          )
-            RETURN
+            call errint ( '#', i                              )
+            call errint ( '#', next                           )
+            call errch  ( '#', inst                           )
+            call sigerr ( 'SPICE(DEGENERATECASE)'             )
+            call chkout ( 'ZZFOVAXI'                          )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     First try the average of the FOV unit boundary vectors as
 !     a candidate axis. In many cases, this simple approach
 !     does the trick.
 !
-      CALL CLEARD ( 3, AXIS )
+      call cleard ( 3, axis )
 
-      DO I = 1, N
+      do i = 1, n
 
-         CALL VHAT ( BOUNDS(1,I), UVEC    )
-         CALL VADD ( UVEC,        AXIS, V )
-         CALL VEQU ( V,           AXIS    )
+         call vhat ( bounds(1,i), uvec    )
+         call vadd ( uvec,        axis, v )
+         call vequ ( v,           axis    )
 
-      END DO
+      end do
 
-      CALL VSCLIP ( 1.D0/N, AXIS )
+      call vsclip ( 1.d0/n, axis )
 
 !
 !     If each boundary vector has sufficiently small
 !     angular separation from AXIS, we're done.
 !
-      LIMIT = HALFPI() - MARGIN
+      limit = halfpi() - margin
 
-      OK    = .TRUE.
-      I     = 1
+      ok    = .true.
+      i     = 1
 
-      DO WHILE (  ( I .LE. N ) .AND.  OK  )
+      do while (  ( i .le. n ) .and.  ok  )
 
-         SEP = VSEP( BOUNDS(1,I), AXIS )
+         sep = vsep( bounds(1,i), axis )
 
-         IF ( SEP .GT.  LIMIT  ) THEN
-            OK = .FALSE.
-         ELSE
-            I  =  I + 1
-         END IF
+         if ( sep .gt.  limit  ) then
+            ok = .false.
+         else
+            i  =  i + 1
+         end if
 
-      END DO
+      end do
 
 
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 !
 !        See whether we can find an axis using a
 !        method based on finding a face of the convex
 !        hull of the FOV. ZZHULLAX signals an error
 !        if it doesn't succeed.
 !
-         CALL ZZHULLAX ( INST, N, BOUNDS, AXIS )
+         call zzhullax ( inst, n, bounds, axis )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZFOVAXI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZFOVAXI' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point AXIS is valid. Make the axis vector unit length.
 !
-      CALL VHATIP ( AXIS )
+      call vhatip ( axis )
 
-      CALL CHKOUT ( 'ZZFOVAXI' )
-      RETURN
-      END
+      call chkout ( 'ZZFOVAXI' )
+      return
+      end

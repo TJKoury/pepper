@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSRCP ( EK, set record companion pointer )
 
-      SUBROUTINE ZZEKSRCP ( HANDLE, RECPTR, RECNO )
+      subroutine zzeksrcp ( handle, recptr, recno )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekrecptr.inc'
+      include 'ekrecptr.inc'
 
-      INTEGER               HANDLE
-      INTEGER               RECPTR
-      INTEGER               RECNO
+      integer               handle
+      integer               recptr
+      integer               recno
 
 ! $ Brief_I/O
 !
@@ -104,12 +104,12 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               LOC
+      integer               loc
 
 !
 !     Use discovery check-in.
@@ -118,18 +118,18 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Compute the companion pointer and set the pointer.
 !
-      LOC  =  RECPTR + RCPIDX
+      loc  =  recptr + rcpidx
 
-      CALL DASUDI ( HANDLE, LOC, LOC, RECNO )
+      call dasudi ( handle, loc, loc, recno )
 
-      RETURN
-      END
+      return
+      end

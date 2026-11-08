@@ -1,6 +1,6 @@
 !$Procedure DSKCLS ( DSK, close file )
 
-      SUBROUTINE DSKCLS ( HANDLE, OPTMIZ )
+      subroutine dskcls ( handle, optmiz )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HANDLE
-      LOGICAL               OPTMIZ
+      integer               handle
+      logical               optmiz
 
 ! $ Brief_I/O
 !
@@ -143,36 +143,36 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               METHLN
-      PARAMETER           ( METHLN  = 10 )
+      integer               methln
+      parameter           ( methln  = 10 )
 
 !
 !     Local variables
 !
-      CHARACTER*(METHLN)    METHOD
+      character*(methln)    method
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKCLS' )
+      call chkin ( 'DSKCLS' )
 
-      IF ( OPTMIZ ) THEN
+      if ( optmiz ) then
 !
 !        Segregate the file to enable fast read access.  This is
 !        the "normal" way to close a DSK.  Segregating a large file
 !        can be slow, however.
 !
-         CALL DASCLS ( HANDLE )
+         call dascls ( handle )
 
-      ELSE
+      else
 !
 !        Close the file without first segregating it; this allows
 !        the caller to close the file quickly, but results in a
@@ -181,29 +181,29 @@
 !        Any buffered data to be written must be explicitly flushed
 !        to the file, if the file is open for write access.
 !
-         CALL DASHAM ( HANDLE, METHOD )
+         call dasham ( handle, method )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKCLS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKCLS' )
+            return
+         end if
 
-         IF ( METHOD .EQ. 'WRITE ' ) THEN
+         if ( method .eq. 'WRITE ' ) then
 !
 !           Write out any buffered records belonging to the
 !           indicated file.
 !
-            CALL DASWBR ( HANDLE )
+            call daswbr ( handle )
 
-         END IF
+         end if
 
 !
 !        Close the file without segregating records.
 !
-         CALL DASLLC ( HANDLE )
+         call dasllc ( handle )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DSKCLS' )
-      RETURN
-      END
+      call chkout ( 'DSKCLS' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure INSSUB ( Insert a substring )
 
-      SUBROUTINE INSSUB ( IN, SUB, LOC, OUT )
+      subroutine inssub ( in, sub, loc, out )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    IN
-      CHARACTER*(*)    SUB
-      INTEGER          LOC
-      CHARACTER*(*)    OUT
+      character*(*)    in
+      character*(*)    sub
+      integer          loc
+      character*(*)    out
 
 ! $ Brief_I/O
 !
@@ -235,18 +235,18 @@
 !
 !     Local Variables
 !
-      CHARACTER*(1)         CHR
+      character*(1)         chr
 
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               INLEN
-      INTEGER               NMOVE
-      INTEGER               OUTLEN
-      INTEGER               SUBEND
-      INTEGER               SUBLEN
-      INTEGER               TO
+      integer               from
+      integer               i
+      integer               inlen
+      integer               nmove
+      integer               outlen
+      integer               subend
+      integer               sublen
+      integer               to
 
-      LOGICAL               SAME
+      logical               same
 
 !
 !     Discovery check-in is used in this routine.
@@ -263,27 +263,27 @@
 !     Capture the lengths of the input, output, and substitution
 !     strings.
 !
-      INLEN   =  LEN ( IN  )
-      OUTLEN  =  LEN ( OUT )
-      SUBLEN  =  LEN ( SUB )
+      inlen   =  len ( in  )
+      outlen  =  len ( out )
+      sublen  =  len ( sub )
 
 !
 !     If insertion occurs before the beginning of the string
 !     or after INLEN + 1, signal an error.
 !
-      IF (  ( LOC .LT. 1 )  .OR.  ( LOC .GT. INLEN+1 )  ) THEN
+      if (  ( loc .lt. 1 )  .or.  ( loc .gt. inlen+1 )  ) then
 
-         CALL CHKIN  ( 'INSSUB'                                    )
-         CALL SETMSG ( 'Index at which the substring is to be ' &
+         call chkin  ( 'INSSUB'                                    )
+         call setmsg ( 'Index at which the substring is to be ' &
          //            'inserted is out of the valid range [1,#]. ' &
          //            'Requested index was *.'                    )
-         CALL ERRINT ( '#', INLEN + 1                              )
-         CALL ERRINT ( '*', LOC                                    )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-         CALL CHKOUT ( 'INSSUB'                                    )
-         RETURN
+         call errint ( '#', inlen + 1                              )
+         call errint ( '*', loc                                    )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+         call chkout ( 'INSSUB'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     If the insertion occurs after the end of the output string,
@@ -292,17 +292,17 @@
 !     is not needed in this cause and could cause a run-time error if
 !     OUT and IN refer to the same memory.
 !
-      SAME  =  OUT .EQ. IN
+      same  =  out .eq. in
 
-      IF ( LOC .GT. OUTLEN ) THEN
+      if ( loc .gt. outlen ) then
 
-         IF ( .NOT. SAME ) THEN
-            OUT = IN
-         END IF
+         if ( .not. same ) then
+            out = in
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 
 !
@@ -320,52 +320,52 @@
 !     The first part of the input string is copied without change
 !     to the output string, if this first part is non-empty.
 !
-      IF ( LOC .GT. 1 ) THEN
+      if ( loc .gt. 1 ) then
 !
 !        Again, do the assignment only if it's required.
 !
-         IF ( .NOT. SAME ) THEN
-            OUT(1 : LOC-1) = IN
-         END IF
+         if ( .not. same ) then
+            out(1 : loc-1) = in
+         end if
 
-      END IF
+      end if
 
 !
 !     The part following the new substring is shifted into place, if
 !     there's both something to move and a place to put it.  Move the
 !     rightmost characters first.
 !
-      SUBEND  =  LOC - 1 + SUBLEN
+      subend  =  loc - 1 + sublen
 
 
-      IF (        ( LOC    .LE. INLEN  ) &
-            .AND. ( SUBEND .LT. OUTLEN )  ) THEN
+      if (        ( loc    .le. inlen  ) &
+            .and. ( subend .lt. outlen )  ) then
 
 
-         NMOVE  =  MIN (  OUTLEN-SUBEND, INLEN-LOC+1  )
+         nmove  =  min (  outlen-subend, inlen-loc+1  )
 
-         DO I   =  NMOVE,  1,  -1
+         do i   =  nmove,  1,  -1
 
-            FROM         =  LOC    + I - 1
-            TO           =  SUBEND + I
-            CHR          =  IN(FROM:FROM)
-            OUT (TO:TO)  =  CHR
+            from         =  loc    + i - 1
+            to           =  subend + i
+            chr          =  in(from:from)
+            out (to:to)  =  chr
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     And the new word is dropped into the middle.
 !
-      OUT( LOC : MIN(SUBEND,OUTLEN) )  =  SUB
+      out( loc : min(subend,outlen) )  =  sub
 
 !
 !     Blank-pad the output string if necessary.
 !
-      IF ( OUTLEN .GT. INLEN+SUBLEN ) THEN
-         OUT( INLEN+SUBLEN+1 : ) = ' '
-      END IF
+      if ( outlen .gt. inlen+sublen ) then
+         out( inlen+sublen+1 : ) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

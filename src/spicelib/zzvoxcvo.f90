@@ -1,6 +1,6 @@
 !$Procedure  ZZVOXCVO ( Voxel to coarse voxel offset )
 
-      SUBROUTINE ZZVOXCVO ( VIXYZ, NVOX, CGRSCL, CGXYZ, CGOFF, CGOF1D )
+      subroutine zzvoxcvo ( vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
 
 ! $ Abstract
 !
@@ -23,14 +23,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               VIXYZ  ( 3 )
-      INTEGER               NVOX   ( 3 )
-      INTEGER               CGRSCL
-      INTEGER               CGXYZ  ( 3 )
-      INTEGER               CGOFF  ( 3 )
-      INTEGER               CGOF1D
+      integer               vixyz  ( 3 )
+      integer               nvox   ( 3 )
+      integer               cgrscl
+      integer               cgxyz  ( 3 )
+      integer               cgoff  ( 3 )
+      integer               cgof1d
 
 ! $ Brief_I/O
 !
@@ -127,99 +127,99 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( NVOX(I) .LT. 1 ) THEN
+         if ( nvox(i) .lt. 1 ) then
 
-            CALL CHKIN  ( 'ZZVOXCVO' )
+            call chkin  ( 'ZZVOXCVO' )
 
-            CALL SETMSG ( 'Voxel grid dimensions must be positive ' &
+            call setmsg ( 'Voxel grid dimensions must be positive ' &
             //            'but were # # #.'                        )
-            CALL ERRINT ( '#', NVOX(1)                             )
-            CALL ERRINT ( '#', NVOX(2)                             )
-            CALL ERRINT ( '#', NVOX(3)                             )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
+            call errint ( '#', nvox(1)                             )
+            call errint ( '#', nvox(2)                             )
+            call errint ( '#', nvox(3)                             )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
 
-            CALL CHKOUT ( 'ZZVOXCVO' )
-            RETURN
+            call chkout ( 'ZZVOXCVO' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( ( VIXYZ(I) .LT. 1 ) .OR. ( VIXYZ(I) .GT. NVOX(I) ) ) THEN
+         if ( ( vixyz(i) .lt. 1 ) .or. ( vixyz(i) .gt. nvox(i) ) ) then
 
-            CALL CHKIN  ( 'ZZVOXCVO' )
+            call chkin  ( 'ZZVOXCVO' )
 
-            CALL SETMSG ( 'Voxel grid coordinates must be inside ' &
+            call setmsg ( 'Voxel grid coordinates must be inside ' &
             //            'grid having dimensions # x # x # ' &
             //            'but were # # #.'                        )
-            CALL ERRINT ( '#', NVOX(1)                             )
-            CALL ERRINT ( '#', NVOX(2)                             )
-            CALL ERRINT ( '#', NVOX(3)                             )
-            CALL ERRINT ( '#', VIXYZ(1)                            )
-            CALL ERRINT ( '#', VIXYZ(2)                            )
-            CALL ERRINT ( '#', VIXYZ(3)                            )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
+            call errint ( '#', nvox(1)                             )
+            call errint ( '#', nvox(2)                             )
+            call errint ( '#', nvox(3)                             )
+            call errint ( '#', vixyz(1)                            )
+            call errint ( '#', vixyz(2)                            )
+            call errint ( '#', vixyz(3)                            )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
 
-            CALL CHKOUT ( 'ZZVOXCVO' )
-            RETURN
+            call chkout ( 'ZZVOXCVO' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      IF ( CGRSCL .LT. 1 ) THEN
+      if ( cgrscl .lt. 1 ) then
 
-         CALL CHKIN  ( 'ZZVOXCVO' )
+         call chkin  ( 'ZZVOXCVO' )
 
-         CALL SETMSG ( 'Coarse voxel grid scale must be positive ' &
+         call setmsg ( 'Coarse voxel grid scale must be positive ' &
          //            'but was #.'                               )
-         CALL ERRINT ( '#', NVOX(1)                               )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                   )
+         call errint ( '#', nvox(1)                               )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
 
-         CALL CHKOUT ( 'ZZVOXCVO' )
-         RETURN
+         call chkout ( 'ZZVOXCVO' )
+         return
 
-      END IF
+      end if
 
-      DO I = 1, 3
+      do i = 1, 3
 !
 !        Set the Ith coarse grid coordinate. Recall these coordinates
 !        are 1-based.
 !
-         CGXYZ(I) = ( ( VIXYZ(I) - 1 ) /  CGRSCL  )  +  1
+         cgxyz(i) = ( ( vixyz(i) - 1 ) /  cgrscl  )  +  1
 
 !
 !        Set the Ith coarse grid coordinate offset. These offsets
 !        are 1-based as well.
 !
-         CGOFF(I) =  VIXYZ(I)  -  CGRSCL*( CGXYZ(I) - 1 )
+         cgoff(i) =  vixyz(i)  -  cgrscl*( cgxyz(i) - 1 )
 
-      END DO
+      end do
 
 !
 !     Convert the coarse grid-relative offset to a relative
 !     ID. The ID is a one-dimensional offset.
 !
-      CGOF1D =    (CGOFF(3)-1) * CGRSCL * CGRSCL &
-                + (CGOFF(2)-1) * CGRSCL &
-                +  CGOFF(1)
+      cgof1d =    (cgoff(3)-1) * cgrscl * cgrscl &
+                + (cgoff(2)-1) * cgrscl &
+                +  cgoff(1)
 
-      END
+      end

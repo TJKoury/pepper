@@ -1,8 +1,8 @@
 !$Procedure ZZTANSLV ( Private --- tangent point solver )
 
-      SUBROUTINE ZZTANSLV ( UDCOND, UDSTEP, UDREFN, &
-                            CSTEP,  STEP,   START,  FINISH, &
-                            TOL,    RESULT, POINTS, ENDFLG  )
+      subroutine zztanslv ( udcond, udstep, udrefn, &
+                            cstep,  step,   start,  finish, &
+                            tol,    result, points, endflg  )
 
 ! $ Abstract
 !
@@ -26,22 +26,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      EXTERNAL              UDCOND
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      LOGICAL               CSTEP
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
-      DOUBLE PRECISION      POINTS ( 3, * )
-      LOGICAL               ENDFLG ( 2 )
+      external              udcond
+      external              udstep
+      external              udrefn
+      logical               cstep
+      double precision      step
+      double precision      start
+      double precision      finish
+      double precision      tol
+      double precision      result ( lbcell : * )
+      double precision      points ( 3, * )
+      logical               endflg ( 2 )
 
 ! $ Brief_I/O
 !
@@ -378,43 +378,43 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      TOUCHD
+      double precision      brcktd
+      double precision      touchd
 
-      INTEGER               SIZED
+      integer               sized
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(256)       CONTXT
+      character*(256)       contxt
 
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      CURX
-      DOUBLE PRECISION      MAXMAG
-      DOUBLE PRECISION      PRVPNT ( 3 )
-      DOUBLE PRECISION      SVDX
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      X1
-      DOUBLE PRECISION      X2
-      DOUBLE PRECISION      XSTEP
-      DOUBLE PRECISION      TRNSTN
-      DOUBLE PRECISION      XPOINT ( 3 )
+      double precision      begin
+      double precision      curx
+      double precision      maxmag
+      double precision      prvpnt ( 3 )
+      double precision      svdx
+      double precision      t
+      double precision      x1
+      double precision      x2
+      double precision      xstep
+      double precision      trnstn
+      double precision      xpoint ( 3 )
 
-      INTEGER               NLOOP
-      INTEGER               ROOM
-      INTEGER               TO
+      integer               nloop
+      integer               room
+      integer               to
 
-      LOGICAL               CURSTA
-      LOGICAL               INSTAT
-      LOGICAL               S
-      LOGICAL               STATE1
-      LOGICAL               STATE2
-      LOGICAL               SAVSTA
+      logical               cursta
+      logical               instat
+      logical               s
+      logical               state1
+      logical               state2
+      logical               savsta
 
-      LOGICAL               PRVSET
+      logical               prvset
 
 
 !
@@ -426,122 +426,122 @@
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      INTEGER               MXLOOP
-      PARAMETER           ( MXLOOP = 1000 )
+      integer               mxloop
+      parameter           ( mxloop = 1000 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZTANSLV' )
+      call chkin  ( 'ZZTANSLV' )
 
 
 !
 !     Check the convergence tolerance.
 !
-      IF ( TOL .LE. 0.D0 ) THEN
+      if ( tol .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be positive but was #.' )
-         CALL ERRDP  ( '#',  TOL                               )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'               )
-         CALL CHKOUT ( 'ZZTANSLV'                              )
-         RETURN
+         call setmsg ( 'Tolerance must be positive but was #.' )
+         call errdp  ( '#',  tol                               )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
+         call chkout ( 'ZZTANSLV'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that START is not greater than FINISH. Signal an
 !     error for START > FINISH.
 !
-      IF ( START .GT. FINISH ) THEN
+      if ( start .gt. finish ) then
 
-         CALL SETMSG ( 'Bad input interval: ' &
+         call setmsg ( 'Bad input interval: ' &
          //            'START = # > FINISH = #.' )
-         CALL ERRDP  ( '#', START                )
-         CALL ERRDP  ( '#', FINISH               )
-         CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)' )
-         CALL CHKOUT ( 'ZZTANSLV'                )
-         RETURN
+         call errdp  ( '#', start                )
+         call errdp  ( '#', finish               )
+         call sigerr ( 'SPICE(BOUNDSOUTOFORDER)' )
+         call chkout ( 'ZZTANSLV'                )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that TOL is not too small, i.e. that neither
 !     START + TOL nor START - TOL equals START.
 !
-      IF (  ( TOUCHD (START - TOL) .EQ. START ) &
-           .OR. &
-            ( TOUCHD (START + TOL) .EQ. START ) ) THEN
+      if (  ( touchd (start - tol) .eq. start ) &
+           .or. &
+            ( touchd (start + tol) .eq. start ) ) then
 
-         CALL SETMSG ('TOL has value #1. '                      // &
+         call setmsg ('TOL has value #1. '                      // &
                       'This value is too small to distinguish ' // &
                       'START - TOL or START + TOL from '        // &
                       'START, #2.'                               )
-         CALL ERRDP  ( '#1', TOL                                 )
-         CALL ERRDP  ( '#2', START                               )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'                 )
-         CALL CHKOUT ( 'ZZTANSLV'                                )
-         RETURN
+         call errdp  ( '#1', tol                                 )
+         call errdp  ( '#2', start                               )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'                 )
+         call chkout ( 'ZZTANSLV'                                )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Make sure that TOL is not too small, i.e. that neither
 !     FINISH + TOL nor FINISH - TOL equals FINISH.
 !
-      IF (  ( TOUCHD (FINISH - TOL) .EQ. FINISH ) &
-           .OR. &
-            ( TOUCHD (FINISH + TOL) .EQ. FINISH ) ) THEN
+      if (  ( touchd (finish - tol) .eq. finish ) &
+           .or. &
+            ( touchd (finish + tol) .eq. finish ) ) then
 
-         CALL SETMSG ('TOL has value #1. '                      // &
+         call setmsg ('TOL has value #1. '                      // &
                       'This value is too small to distinguish ' // &
                       'FINISH - TOL or FINISH + TOL from '      // &
                       'FINISH, #2.'                              )
-         CALL ERRDP  ( '#1', TOL                                 )
-         CALL ERRDP  ( '#2', FINISH                              )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'                 )
-         CALL CHKOUT ('ZZTANSLV'                                 )
-         RETURN
+         call errdp  ( '#1', tol                                 )
+         call errdp  ( '#2', finish                              )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'                 )
+         call chkout ('ZZTANSLV'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that STEP is not too small: it must be greater
 !     than TOL.
 !
-      IF ( CSTEP ) THEN
+      if ( cstep ) then
 
-         IF ( STEP .LE. 0.D0 ) THEN
+         if ( step .le. 0.d0 ) then
 
-            CALL SETMSG ( 'STEP has value #1. The search step ' &
+            call setmsg ( 'STEP has value #1. The search step ' &
             //            'must be positive.'                 )
-            CALL ERRDP  ( '#1', STEP                          )
-            CALL SIGERR ( 'SPICE(INVALIDCONSTSTEP)'           )
-            CALL CHKOUT ('ZZTANSLV'                           )
-            RETURN
+            call errdp  ( '#1', step                          )
+            call sigerr ( 'SPICE(INVALIDCONSTSTEP)'           )
+            call chkout ('ZZTANSLV'                           )
+            return
 
-         END IF
+         end if
 
-         MAXMAG = MAX( ABS(START), ABS(FINISH) )
+         maxmag = max( abs(start), abs(finish) )
 
 
-         IF ( TOUCHD(MAXMAG+STEP) .EQ. MAXMAG ) THEN
+         if ( touchd(maxmag+step) .eq. maxmag ) then
 
-            CALL SETMSG ( 'STEP has value #1. This value ' &
+            call setmsg ( 'STEP has value #1. This value ' &
             //            'is too small to guarantee that ' &
             //            'the search will advance.'        )
-            CALL ERRDP  ( '#1', STEP                        )
-            CALL SIGERR ( 'SPICE(INVALIDCONSTSTEP)'         )
-            CALL CHKOUT ('ZZTANSLV'                         )
-            RETURN
+            call errdp  ( '#1', step                        )
+            call sigerr ( 'SPICE(INVALIDCONSTSTEP)'         )
+            call chkout ('ZZTANSLV'                         )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     This algorithm determines those intervals when a given state is
@@ -562,27 +562,27 @@
 !     Initially the current X value is the beginning of the search
 !     interval.
 !
-      CURX   = START
+      curx   = start
 
-      TO     = 1
-      ROOM   = SIZED( RESULT )
-      PRVSET = .FALSE.
+      to     = 1
+      room   = sized( result )
+      prvset = .false.
 
 !
 !     Determine if the state at the current X value satisfies the
 !     constraint.
 !
-      CALL UDCOND ( CURX, CURSTA, XPOINT )
+      call udcond ( curx, cursta, xpoint )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT (  'ZZTANSLV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout (  'ZZTANSLV' )
+         return
+      end if
 
-      IF ( CURSTA ) THEN
-         CALL VEQU ( XPOINT, PRVPNT )
-         PRVSET = .TRUE.
-      END IF
+      if ( cursta ) then
+         call vequ ( xpoint, prvpnt )
+         prvset = .true.
+      end if
 
 !
 !     If the system is in the state of interest, record the initial
@@ -590,11 +590,11 @@
 !     used to store the starting point of an interval over which
 !     the state is .TRUE.
 !
-      IF ( CURSTA ) THEN
+      if ( cursta ) then
 
-         INSTAT    = .TRUE.
-         BEGIN     = CURX
-         ENDFLG(1) = .FALSE.
+         instat    = .true.
+         begin     = curx
+         endflg(1) = .false.
 
 !
 !        BEGIN will be the first element of RESULT, presuming
@@ -605,28 +605,28 @@
 !        We don't have to check ROOM yet because we're not
 !        inserting anything into POINTS.
 !
-         TO   = TO   + 1
-         ROOM = ROOM - 1
+         to   = to   + 1
+         room = room - 1
 
-      ELSE
+      else
 
-         INSTAT    = .FALSE.
-         ENDFLG(1) = .TRUE.
+         instat    = .false.
+         endflg(1) = .true.
 
-      END IF
+      end if
 
 !
 !     If the step size is constant, use the value supplied.
 !
-      IF ( CSTEP ) THEN
-         XSTEP = STEP
-      END IF
+      if ( cstep ) then
+         xstep = step
+      end if
 
 !
 !     Save the current X value and state.
 !
-      SVDX   = CURX
-      SAVSTA = CURSTA
+      svdx   = curx
+      savsta = cursta
 
 !
 !     Once initializations have been performed keep working
@@ -634,97 +634,97 @@
 !
 !     While the last X value precedes the end of the interval:
 !
-      DO WHILE ( SVDX .LT. FINISH )
+      do while ( svdx .lt. finish )
 !
 !        Attempt to bracket a state change.
 !
 !        Using the current window and internally stored information
 !        about the current state, select a new current X.
 !
-         IF ( .NOT. CSTEP ) THEN
+         if ( .not. cstep ) then
 
-            CALL UDSTEP ( CURX, XSTEP )
+            call udstep ( curx, xstep )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT (  'ZZTANSLV' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout (  'ZZTANSLV' )
+               return
+            end if
 
-         END IF
+         end if
 
 !
 !        Add the X step to the current X.  Make sure that the
 !        X does not move beyond the end of the search interval.
 !
-         CURX = MIN ( TOUCHD(CURX + XSTEP), FINISH )
+         curx = min ( touchd(curx + xstep), finish )
 
 !
 !        Compute the state at CURX.
 !
-         CALL UDCOND ( CURX, CURSTA, XPOINT )
+         call udcond ( curx, cursta, xpoint )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT (  'ZZTANSLV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout (  'ZZTANSLV' )
+            return
+         end if
 
-         IF ( CURSTA ) THEN
-            CALL VEQU ( XPOINT, PRVPNT )
-            PRVSET = .TRUE.
-         END IF
+         if ( cursta ) then
+            call vequ ( xpoint, prvpnt )
+            prvset = .true.
+         end if
 
 !
 !        While the state remains unchanged and the interval has not
 !        been completely searched ...
 !
-         DO WHILE (       ( SAVSTA .EQV. CURSTA ) &
-                    .AND. ( SVDX   .LT.  FINISH )  )
+         do while (       ( savsta .eqv. cursta ) &
+                    .and. ( svdx   .lt.  finish )  )
 !
 !           Save the current X and state.
 !
-            SVDX   = CURX
-            SAVSTA = CURSTA
+            svdx   = curx
+            savsta = cursta
 
 !
 !           Compute a new current X so that we will not step
 !           past the end of the interval.
 !
-            IF ( .NOT. CSTEP ) THEN
+            if ( .not. cstep ) then
 
-               CALL UDSTEP ( CURX, XSTEP )
+               call udstep ( curx, xstep )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT (  'ZZTANSLV' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout (  'ZZTANSLV' )
+                  return
+               end if
 
-            END IF
+            end if
 
 
-            CURX = MIN ( TOUCHD(CURX + XSTEP), FINISH )
+            curx = min ( touchd(curx + xstep), finish )
 !
 !           Compute the current state.
 !
-            CALL UDCOND ( CURX, CURSTA, XPOINT )
+            call udcond ( curx, cursta, xpoint )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZTANSLV' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZTANSLV' )
+               return
+            end if
 
-            IF ( CURSTA ) THEN
+            if ( cursta ) then
 !
 !              Save the associated vector for the X value CURX. In
 !              normal usage, XPOINT is a surface intercept point.
 !
-               CALL VEQU ( XPOINT, PRVPNT )
-               PRVSET = .TRUE.
+               call vequ ( xpoint, prvpnt )
+               prvset = .true.
 
-            END IF
+            end if
 !
 !           Loop back to see if the state has changed.
 !
-         END DO
+         end do
 !
 !        At this point, SVDX and CURX are the X-values at the previous
 !        and latest steps, respectively. SAVSTA and CURSTA are the
@@ -733,7 +733,7 @@
 !        If we have detected a state change and not merely run out
 !        of the search interval...
 !
-         IF ( SAVSTA .NEQV. CURSTA ) THEN
+         if ( savsta .neqv. cursta ) then
 !
 !           Call the previous state STATE1.
 !           Call the current state STATE2.
@@ -743,25 +743,25 @@
 !
 !           Save the current X.
 !
-            STATE1 = SAVSTA
-            STATE2 = CURSTA
-            X1     = SVDX
-            X2     = CURX
+            state1 = savsta
+            state2 = cursta
+            x1     = svdx
+            x2     = curx
 
 !
 !           Make sure that X1 is not greater than X2. Signal an
 !           error for X1 > X2.
 !
-            IF ( X1 .GT. X2 ) THEN
+            if ( x1 .gt. x2 ) then
 
-               CALL SETMSG ( 'Bad x interval result: X1 = # > X2 = #.' )
-               CALL ERRDP  ( '#',  X1                                  )
-               CALL ERRDP  ( '#',  X2                                  )
-               CALL SIGERR ( 'SPICE(INVALIDSTEP)'                      )
-               CALL CHKOUT ( 'ZZTANSLV'                                )
-               RETURN
+               call setmsg ( 'Bad x interval result: X1 = # > X2 = #.' )
+               call errdp  ( '#',  x1                                  )
+               call errdp  ( '#',  x2                                  )
+               call sigerr ( 'SPICE(INVALIDSTEP)'                      )
+               call chkout ( 'ZZTANSLV'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Update the saved X and state values to those on the
@@ -769,8 +769,8 @@
 !           values for the next bracketing step after a root is
 !           found.
 !
-            SVDX   = CURX
-            SAVSTA = CURSTA
+            svdx   = curx
+            savsta = cursta
 
 !
 !           X1 and X2 bracket the X value of transition. Squeeze this
@@ -780,11 +780,11 @@
 !           Loop while the difference between the X values X1 and X2
 !           exceeds a specified tolerance.
 !
-            NLOOP = 0
+            nloop = 0
 
-            DO WHILE ( TOUCHD (X2 - X1) .GT. TOL )
+            do while ( touchd (x2 - x1) .gt. tol )
 
-               NLOOP = NLOOP + 1
+               nloop = nloop + 1
 !
 !              This loop count error exists to catch pathologies
 !              in the refinement function. The default bisection
@@ -794,33 +794,33 @@
 !              compared to bisection. If not, the user should
 !              probably use bisection.
 !
-               IF ( NLOOP .GE. MXLOOP ) THEN
+               if ( nloop .ge. mxloop ) then
 
-                  CALL SETMSG ( 'Loop run exceeds maximum loop count. ' &
+                  call setmsg ( 'Loop run exceeds maximum loop count. ' &
                //               'Unable to converge to TOL value #1 ' &
                //               'within MXLOOP value #2 iterations.')
-                  CALL ERRDP  ( '#1', TOL              )
-                  CALL ERRINT ( '#2', MXLOOP           )
-                  CALL SIGERR ( 'SPICE(NOCONVERGENCE)' )
-                  CALL CHKOUT ( 'ZZTANSLV'             )
-                  RETURN
+                  call errdp  ( '#1', tol              )
+                  call errint ( '#2', mxloop           )
+                  call sigerr ( 'SPICE(NOCONVERGENCE)' )
+                  call chkout ( 'ZZTANSLV'             )
+                  return
 
-               END IF
+               end if
 
 !
 !              Select an X value T, between X1 and X2 (possibly based
 !              on the state values).
 !
-               CALL UDREFN ( X1, X2, STATE1, STATE2, T )
+               call udrefn ( x1, x2, state1, state2, t )
 
 !
 !              Check for an error signal. The default refinement
 !              routine, GFREFN, does not include error checks.
 !
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT (  'ZZTANSLV' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout (  'ZZTANSLV' )
+                  return
+               end if
 
 !
 !              Check whether T is between X1 and X2.  If
@@ -829,40 +829,40 @@
 !              point. Set X1 and X2 equal to T.
 !
 
-               T = BRCKTD ( T, X1, X2 )
+               t = brcktd ( t, x1, x2 )
 
-               IF ( T .EQ. X1 ) THEN
+               if ( t .eq. x1 ) then
 !
 !                 This assignment may break the invariant that
 !                 the state at X2 is STATE2. This is allowed
 !                 because we'll exit the loop immediately.
 !
-                  X2 = T
+                  x2 = t
 
-               ELSE IF ( T .EQ. X2 ) THEN
+               else if ( t .eq. x2 ) then
 !
 !                 This assignment may break the invariant that
 !                 the state at X1 is STATE1. This is allowed
 !                 because we'll exit the loop immediately.
 
-                  X1 = T
+                  x1 = t
 
-               ELSE
+               else
 !
 !                 Compute the state at X value T. If this state, S,
 !                 equals STATE1, set X1 to T, otherwise set X2 to T.
 !
-                  CALL UDCOND ( T, S, XPOINT )
+                  call udcond ( t, s, xpoint )
 
-                  IF ( S ) THEN
+                  if ( s ) then
 !
 !                    Save the latest point associated with a
 !                    .TRUE. state.
 !
-                     CALL VEQU ( XPOINT, PRVPNT )
-                     PRVSET = .TRUE.
+                     call vequ ( xpoint, prvpnt )
+                     prvset = .true.
 
-                  END IF
+                  end if
 
 !
 !                 Narrow the interval. Either increase X1 or decrease
@@ -870,33 +870,33 @@
 !                 the invariant that the state is STATE1 at X1 and
 !                 STATE2 at X2.
 !
-                  IF ( S .EQV. STATE1 ) THEN
+                  if ( s .eqv. state1 ) then
 
-                     X1 = T
+                     x1 = t
 
-                  ELSE
+                  else
 
-                     X2 = T
+                     x2 = t
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           Let TRNSTN be the midpoint of [X1, X2]. Record this
 !           abscissa value as marking the transition from STATE1 to
 !           STATE2.
 !
-            TRNSTN = BRCKTD( (X1 + X2)*0.5D0, X1, X2 )
+            trnstn = brcktd( (x1 + x2)*0.5d0, x1, x2 )
 
 !
 !           In state-of-interest or not? INSTAT indicates that STATE1
 !           was .TRUE. We record intervals where the state is .TRUE.
 !           when we detect the right hand endpoints of these intervals.
 !
-            IF ( INSTAT ) THEN
+            if ( instat ) then
 !
 !              We were in the state of interest. TRNSTN marks the point
 !              on the X-axis when the state changed to .FALSE. We need
@@ -906,87 +906,87 @@
 !              Add an interval starting at BEGIN and ending at TRNSTN
 !              to the result window.
 !
-               CONTXT = 'Adding interval [BEGIN,TRNSTN] to RESULT. ' &
+               contxt = 'Adding interval [BEGIN,TRNSTN] to RESULT. ' &
                //       'TRNSTN represents time of passage out of the ' &
                //       'state-of-interest.'
 
-               CALL ZZWNINSD ( BEGIN, TRNSTN, CONTXT, RESULT )
+               call zzwninsd ( begin, trnstn, contxt, result )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZTANSLV' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZTANSLV' )
+                  return
+               end if
 
-            ELSE
+            else
 !
 !              The previous state was .FALSE. As a result TRNSTN marks
 !              the point where the state becomes .TRUE. Note that we
 !              have transitioned to the state of interest and record
 !              the X-value at which the transition occurred.
 !
-               BEGIN = TRNSTN
+               begin = trnstn
 
-            END IF
+            end if
 
 !
 !           A transition occurred either from from in-state to
 !           out-of-state or the inverse. Reverse the value of the
 !           INSTAT flag to signify the transition event.
 !
-            INSTAT = .NOT. INSTAT
+            instat = .not. instat
 
 !
 !           For all state transitions, record the last point found
 !           by the state function.
 !
-            IF ( ROOM .GT. 0 ) THEN
+            if ( room .gt. 0 ) then
 !
 !              Add the last point found during the transition search to
 !              the POINTS array.
 !
-               IF ( PRVSET ) THEN
+               if ( prvset ) then
 
-                  CALL VEQU ( PRVPNT, POINTS(1,TO) )
+                  call vequ ( prvpnt, points(1,to) )
 
-                  TO     = TO   + 1
-                  ROOM   = ROOM - 1
-                  PRVSET = .FALSE.
+                  to     = to   + 1
+                  room   = room - 1
+                  prvset = .false.
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'PRVPNT should always be set when a ' &
+                  call setmsg ( 'PRVPNT should always be set when a ' &
                   //            'transition is detected. We found a ' &
                   //            'transition at #, but PRVSET ' &
                   //            'indicates we don''t have a previous ' &
                   //            'point saved.'                        )
-                  CALL ERRDP  ( '#', TRNSTN                           )
-                  CALL SIGERR ( 'SPICE(BUG)'                          )
-                  CALL CHKOUT ( 'ZZTANSLV'                            )
-                  RETURN
+                  call errdp  ( '#', trnstn                           )
+                  call sigerr ( 'SPICE(BUG)'                          )
+                  call chkout ( 'ZZTANSLV'                            )
+                  return
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              We ran out of room in the output point array. Note that
 !              this error can occur before the result window insertion
 !              fails, since that insertion takes place when the state
 !              becomes .FALSE.
 !
-               CALL SETMSG ( 'Out of room in the POINTS array. Room ' &
+               call setmsg ( 'Out of room in the POINTS array. Room ' &
                //            'is assumed to be adequate for SIZED(' &
                //            'RESULT) 3-vectors; this size is #.'    )
-               CALL ERRINT ( '#', SIZED(RESULT)                      )
-               CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'                  )
-               CALL CHKOUT ( 'ZZTANSLV'                              )
-               RETURN
+               call errint ( '#', sized(result)                      )
+               call sigerr ( 'SPICE(ARRAYTOOSMALL)'                  )
+               call chkout ( 'ZZTANSLV'                              )
+               return
 
-            END IF
+            end if
 !
 !           That's it for this detection of state change.
 !
-         END IF
+         end if
 !
 !        Continue if the search interval extends to the right
 !        of the latest step.
@@ -994,30 +994,30 @@
 !        SVDX and SAVSTA are already set to the values at the
 !        right side of the bracketing interval.
 !
-      END DO
+      end do
 
 !
 !     Check if in-state at this abscissa value (FINISH). INSTAT is the
 !     latest state value. If so record the interval.
 !
-      IF ( INSTAT ) THEN
+      if ( instat ) then
 !
 !        The state is .TRUE. at FINISH.
 !
 !        Add an interval starting at BEGIN and ending at FINISH to the
 !        window.
 !
-         CONTXT = 'Adding interval [BEGIN,FINISH] to RESULT. FINISH ' &
+         contxt = 'Adding interval [BEGIN,FINISH] to RESULT. FINISH ' &
          //       'represents end of the search interval.'
 
-         CALL ZZWNINSD ( BEGIN, FINISH, CONTXT, RESULT )
+         call zzwninsd ( begin, finish, contxt, result )
 
-         ENDFLG(2) = .FALSE.
-      ELSE
-         ENDFLG(2) = .TRUE.
-      END IF
+         endflg(2) = .false.
+      else
+         endflg(2) = .true.
+      end if
 
-      CALL CHKOUT (  'ZZTANSLV' )
-      RETURN
-      END
+      call chkout (  'ZZTANSLV' )
+      return
+      end
 

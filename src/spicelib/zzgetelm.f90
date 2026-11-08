@@ -1,6 +1,6 @@
 !$Procedure ZZGETELM ( Get the components from two-line elements)
 
-      SUBROUTINE ZZGETELM ( FRSTYR, LINES, EPOCH, ELEMS, OK, ERROR )
+      subroutine zzgetelm ( frstyr, lines, epoch, elems, ok, error )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               FRSTYR
-      CHARACTER*(*)         LINES ( 2 )
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      ELEMS ( * )
-      LOGICAL               OK
-      CHARACTER*(*)         ERROR
+      integer               frstyr
+      character*(*)         lines ( 2 )
+      double precision      epoch
+      double precision      elems ( * )
+      logical               ok
+      character*(*)         error
 
 ! $ Brief_I/O
 !
@@ -322,10 +322,10 @@
 !
 !     Spicelib functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
-      LOGICAL               RETURN
-      INTEGER               LASTNB
+      double precision      rpd
+      double precision      twopi
+      logical               return
+      integer               lastnb
 
 !
 !     An enumeration of the various components of the
@@ -342,261 +342,261 @@
 !        KNO
 !
 
-      INTEGER               START
-      PARAMETER           ( START = 0 )
+      integer               start
+      parameter           ( start = 0 )
 
-      INTEGER               KNDT20
-      PARAMETER           ( KNDT20 = START  + 1 )
+      integer               kndt20
+      parameter           ( kndt20 = start  + 1 )
 
-      INTEGER               KNDD60
-      PARAMETER           ( KNDD60 = KNDT20 + 1 )
+      integer               kndd60
+      parameter           ( kndd60 = kndt20 + 1 )
 
-      INTEGER               KBSTAR
-      PARAMETER           ( KBSTAR = KNDD60 + 1 )
+      integer               kbstar
+      parameter           ( kbstar = kndd60 + 1 )
 
-      INTEGER               KINCL
-      PARAMETER           ( KINCL  = KBSTAR + 1 )
+      integer               kincl
+      parameter           ( kincl  = kbstar + 1 )
 
-      INTEGER               KNODE0
-      PARAMETER           ( KNODE0 = KINCL  + 1 )
+      integer               knode0
+      parameter           ( knode0 = kincl  + 1 )
 
-      INTEGER               KECC
-      PARAMETER           ( KECC   = KNODE0 + 1 )
+      integer               kecc
+      parameter           ( kecc   = knode0 + 1 )
 
-      INTEGER               KOMEGA
-      PARAMETER           ( KOMEGA = KECC   + 1 )
+      integer               komega
+      parameter           ( komega = kecc   + 1 )
 
-      INTEGER               KMO
-      PARAMETER           ( KMO    = KOMEGA + 1 )
+      integer               kmo
+      parameter           ( kmo    = komega + 1 )
 
-      INTEGER               KNO
-      PARAMETER           ( KNO    = KMO    + 1 )
+      integer               kno
+      parameter           ( kno    = kmo    + 1 )
 
-      INTEGER               KEPOCH
-      PARAMETER           ( KEPOCH = KNO    + 1 )
+      integer               kepoch
+      parameter           ( kepoch = kno    + 1 )
 
-      INTEGER               NELEMS
-      PARAMETER           ( NELEMS = KEPOCH )
+      integer               nelems
+      parameter           ( nelems = kepoch )
 
 !
 !     Character string lengths
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 160 )
+      integer               lnsize
+      parameter           ( lnsize = 160 )
 
 !
 !     Maximum exponent (base 10)
 !
-      INTEGER               MAXP
-      PARAMETER           ( MAXP =     37     )
+      integer               maxp
+      parameter           ( maxp =     37     )
 
-      INTEGER               MINP
-      PARAMETER           ( MINP =  -MAXP     )
+      integer               minp
+      parameter           ( minp =  -maxp     )
 
 !
 !     Double precision constants.
 !
-      DOUBLE PRECISION      ONE
-      PARAMETER           ( ONE  =      1.0D0 )
+      double precision      one
+      parameter           ( one  =      1.0d0 )
 
-      DOUBLE PRECISION      TEN
-      PARAMETER           ( TEN  =     10.0D0 )
+      double precision      ten
+      parameter           ( ten  =     10.0d0 )
 
 !
 !     Minutes/day
 !
-      DOUBLE PRECISION      MNPDAY
-      PARAMETER           ( MNPDAY = 1440.0D0 )
+      double precision      mnpday
+      parameter           ( mnpday = 1440.0d0 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LNSIZE)    ERRPRS ( 13 )
-      CHARACTER*(LNSIZE)    TERM  ( 13 )
+      character*(lnsize)    errprs ( 13 )
+      character*(lnsize)    term  ( 13 )
 
-      CHARACTER*(WDSIZE)    CYEAR
-      CHARACTER*(WDSIZE)    CDAY
-      CHARACTER*(WDSIZE)    CNDT20
-      CHARACTER*(WDSIZE)    CNDD60
-      CHARACTER*(WDSIZE)    CIEXP
-      CHARACTER*(WDSIZE)    CBSTAR
-      CHARACTER*(WDSIZE)    CIBEXP
-      CHARACTER*(WDSIZE)    CINCL
-      CHARACTER*(WDSIZE)    CNODE0
-      CHARACTER*(WDSIZE)    CECC
-      CHARACTER*(WDSIZE)    COMEGA
-      CHARACTER*(WDSIZE)    CMO
-      CHARACTER*(WDSIZE)    CNO
+      character*(wdsize)    cyear
+      character*(wdsize)    cday
+      character*(wdsize)    cndt20
+      character*(wdsize)    cndd60
+      character*(wdsize)    ciexp
+      character*(wdsize)    cbstar
+      character*(wdsize)    cibexp
+      character*(wdsize)    cincl
+      character*(wdsize)    cnode0
+      character*(wdsize)    cecc
+      character*(wdsize)    comega
+      character*(wdsize)    cmo
+      character*(wdsize)    cno
 
-      DOUBLE PRECISION      BSTAR
-      DOUBLE PRECISION      DAY
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      INCL
-      DOUBLE PRECISION      MO
-      DOUBLE PRECISION      NDD60
-      DOUBLE PRECISION      NDT20
-      DOUBLE PRECISION      NO
-      DOUBLE PRECISION      NODE0
-      DOUBLE PRECISION      OMEGA
-      DOUBLE PRECISION      D2R
-      DOUBLE PRECISION      PI2
-      DOUBLE PRECISION      POWER  ( MINP:MAXP )
-      DOUBLE PRECISION      TVEC   ( 8 )
+      double precision      bstar
+      double precision      day
+      double precision      ecc
+      double precision      incl
+      double precision      mo
+      double precision      ndd60
+      double precision      ndt20
+      double precision      no
+      double precision      node0
+      double precision      omega
+      double precision      d2r
+      double precision      pi2
+      double precision      power  ( minp:maxp )
+      double precision      tvec   ( 8 )
 
 
 
-      INTEGER               BEXP
-      INTEGER               BEGYR
-      INTEGER               I
-      INTEGER               NEXP
-      INTEGER               PTR
-      INTEGER               YEAR
-      INTEGER               YR
-      INTEGER               K
+      integer               bexp
+      integer               begyr
+      integer               i
+      integer               nexp
+      integer               ptr
+      integer               year
+      integer               yr
+      integer               k
 
-      LOGICAL               FIRST
+      logical               first
 
-      SAVE
+      save
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGETELM' )
+      call chkin ( 'ZZGETELM' )
 
 !
 !     Initialize the error indicators and the elements to zero.
 !
-      OK               = .TRUE.
-      ERROR            = ' '
-      ELEMS ( KNDT20 ) = 0.D0
-      ELEMS ( KNDD60 ) = 0.D0
-      ELEMS ( KBSTAR ) = 0.D0
-      ELEMS ( KINCL  ) = 0.D0
-      ELEMS ( KNODE0 ) = 0.D0
-      ELEMS ( KECC   ) = 0.D0
-      ELEMS ( KOMEGA ) = 0.D0
-      ELEMS ( KMO    ) = 0.D0
-      ELEMS ( KNO    ) = 0.D0
-      ELEMS ( KEPOCH ) = 0.D0
-      EPOCH            = 0.D0
+      ok               = .true.
+      error            = ' '
+      elems ( kndt20 ) = 0.d0
+      elems ( kndd60 ) = 0.d0
+      elems ( kbstar ) = 0.d0
+      elems ( kincl  ) = 0.d0
+      elems ( knode0 ) = 0.d0
+      elems ( kecc   ) = 0.d0
+      elems ( komega ) = 0.d0
+      elems ( kmo    ) = 0.d0
+      elems ( kno    ) = 0.d0
+      elems ( kepoch ) = 0.d0
+      epoch            = 0.d0
 
 
 !
 !     First entry initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Define two constants. This initialization proves the most
 !        useful when processing thousands of TLE sets.
 !
-         D2R = RPD()
-         PI2 = TWOPI()
+         d2r = rpd()
+         pi2 = twopi()
 
-         FIRST    = .FALSE.
+         first    = .false.
 
-         POWER(0) =  ONE
+         power(0) =  one
 
-         DO I = 1, MAXP
-            POWER(I)  = TEN * POWER(I-1)
-            POWER(-I) = ONE / POWER(I  )
-         END DO
+         do i = 1, maxp
+            power(i)  = ten * power(i-1)
+            power(-i) = one / power(i  )
+         end do
 
-         TERM( 1) = '"YEAR" (characters 19 to 20 of the first line ' &
+         term( 1) = '"YEAR" (characters 19 to 20 of the first line ' &
          //         'of a two-line element set)'
 
-         TERM( 2) = '"DAY" (characters 21 to 32 of the first line o' &
+         term( 2) = '"DAY" (characters 21 to 32 of the first line o' &
          //         'f a two-line element set)'
 
-         TERM( 3) = '"NDT20" (characters 34 to 43 of the first line' &
+         term( 3) = '"NDT20" (characters 34 to 43 of the first line' &
          //         ' of a two-line element set)'
 
-         TERM( 4) = '"NDD60" (characters 45 to 45 of the first line' &
+         term( 4) = '"NDD60" (characters 45 to 45 of the first line' &
          //         ' of a two-line element set)'
 
-         TERM( 5) = '"IEXP" (characters 51 to 52 of the first line ' &
+         term( 5) = '"IEXP" (characters 51 to 52 of the first line ' &
          //         'of a two-line element set)'
 
-         TERM( 6) = '"BSTAR" (characters 54 to 54 of the first line' &
+         term( 6) = '"BSTAR" (characters 54 to 54 of the first line' &
          //         ' of a two-line element set)'
 
-         TERM( 7) = '"IBEXP" (characters 60 to 61 of the first line' &
+         term( 7) = '"IBEXP" (characters 60 to 61 of the first line' &
          //         ' of a two-line element set)'
 
-         TERM( 8) = '"INCL" (characters 9 to 16 of the second line o' &
+         term( 8) = '"INCL" (characters 9 to 16 of the second line o' &
          //         'f a two-line element set)'
 
-         TERM( 9) = '"NODE0" (characters 18 to 25 of the second line' &
+         term( 9) = '"NODE0" (characters 18 to 25 of the second line' &
          //         ' of a two-line element set)'
 
-         TERM(10) = '"ECC" (characters 27 to 33 of the second line o' &
+         term(10) = '"ECC" (characters 27 to 33 of the second line o' &
          //         'f a two-line element set)'
 
-         TERM(11) = '"OMEGA" (characters 35 to 42 of the second line' &
+         term(11) = '"OMEGA" (characters 35 to 42 of the second line' &
          //         ' of a two-line element set)'
 
-         TERM(12) = '"MO" (characters 44 to 51 of the second line of' &
+         term(12) = '"MO" (characters 44 to 51 of the second line of' &
          //         ' a two-line element set)'
 
-         TERM(13) = '"NO" (characters 53 to 63 of the second line of' &
+         term(13) = '"NO" (characters 53 to 63 of the second line of' &
          //         ' a two-line element set)'
 
-      END IF
+      end if
 
 !
 !     Ensure the vehicle IDs match in each line.
 !
-      IF ( LINES(1)(2:7) .NE. LINES(2)(2:7) ) THEN
+      if ( lines(1)(2:7) .ne. lines(2)(2:7) ) then
 
 !
 !        Vehicle IDs do not match. Flag an error.
 !
-         ERROR = 'Line 1 of the TLE pair tagged with vehicle ID #1,' &
+         error = 'Line 1 of the TLE pair tagged with vehicle ID #1,' &
             //   '  line 2 of TLE pair tagged with vehicle ID #2'
-         CALL REPMC ( ERROR, '#1', LINES(1)(2:7), ERROR )
-         CALL REPMC ( ERROR, '#2', LINES(2)(2:7), ERROR )
+         call repmc ( error, '#1', lines(1)(2:7), error )
+         call repmc ( error, '#2', lines(2)(2:7), error )
 
-         OK = .FALSE.
+         ok = .false.
 
-         CALL CHKOUT ( 'ZZGETELM' )
-         RETURN
-      END IF
+         call chkout ( 'ZZGETELM' )
+         return
+      end if
 
 !
 !    Check line format and length.
 !
-      DO K = 1, 2
+      do k = 1, 2
 
-         IF ( LASTNB( LINES(K) ) .NE. 68 .AND. &
-              LASTNB( LINES(K) ) .NE. 69 ) THEN
+         if ( lastnb( lines(k) ) .ne. 68 .and. &
+              lastnb( lines(k) ) .ne. 69 ) then
 
 !
 !          The TLE data line was not 68 or 69 characters long (ignoring
 !          trailing whitespace). Flag an error.
 !
-            ERROR = 'Line #1 of the TLE has incorrect data length.' &
+            error = 'Line #1 of the TLE has incorrect data length.' &
                //   ' Expected length 68 or 69 elements, ' &
                //   'actual length: #2. TLE line value: #3'
-            CALL REPMI ( ERROR, '#1', K                 , ERROR )
-            CALL REPMI ( ERROR, '#2', LASTNB( LINES(K) ), ERROR )
-            CALL REPMC ( ERROR, '#3', LINES(K)          , ERROR )
+            call repmi ( error, '#1', k                 , error )
+            call repmi ( error, '#2', lastnb( lines(k) ), error )
+            call repmc ( error, '#3', lines(k)          , error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
-         END IF
+            call chkout ( 'ZZGETELM' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     This isn't particularly pretty, but it is straight
@@ -626,172 +626,172 @@
 !     this data (as well as the code in THETAG) show that it's a lot
 !     easier to capture the year and day of year separately.
 !
-      CYEAR  = LINES(1)(19:20)
-      CDAY   = LINES(1)(21:32)
-      CNDT20 = LINES(1)(34:43)
-      CNDD60 = LINES(1)(45:45) // '.' // LINES(1)(46:50)
-      CIEXP  = LINES(1)(51:52)
-      CBSTAR = LINES(1)(54:54) // '.' // LINES(1)(55:59)
-      CIBEXP = LINES(1)(60:61)
+      cyear  = lines(1)(19:20)
+      cday   = lines(1)(21:32)
+      cndt20 = lines(1)(34:43)
+      cndd60 = lines(1)(45:45) // '.' // lines(1)(46:50)
+      ciexp  = lines(1)(51:52)
+      cbstar = lines(1)(54:54) // '.' // lines(1)(55:59)
+      cibexp = lines(1)(60:61)
 
-      CINCL  = LINES(2)( 9:16)
-      CNODE0 = LINES(2)(18:25)
-      CECC   = '0.'            // LINES(2)(27:33)
-      COMEGA = LINES(2)(35:42)
-      CMO    = LINES(2)(44:51)
-      CNO    = LINES(2)(53:63)
+      cincl  = lines(2)( 9:16)
+      cnode0 = lines(2)(18:25)
+      cecc   = '0.'            // lines(2)(27:33)
+      comega = lines(2)(35:42)
+      cmo    = lines(2)(44:51)
+      cno    = lines(2)(53:63)
 
 
 !
 !     Parse the numerical values from the data string.
 !
-      CALL NPARSI ( CYEAR,  YR,     ERRPRS(1),  PTR )
-      CALL NPARSD ( CDAY,   DAY,    ERRPRS(2),  PTR )
-      CALL NPARSD ( CNDT20, NDT20,  ERRPRS(3),  PTR )
-      CALL NPARSD ( CNDD60, NDD60,  ERRPRS(4),  PTR )
-      CALL NPARSI ( CIEXP,  NEXP,   ERRPRS(5),  PTR )
-      CALL NPARSD ( CBSTAR, BSTAR,  ERRPRS(6),  PTR )
-      CALL NPARSI ( CIBEXP, BEXP,   ERRPRS(7),  PTR )
-      CALL NPARSD ( CINCL,  INCL,   ERRPRS(8),  PTR )
-      CALL NPARSD ( CNODE0, NODE0,  ERRPRS(9),  PTR )
-      CALL NPARSD ( CECC,   ECC,    ERRPRS(10), PTR )
-      CALL NPARSD ( COMEGA, OMEGA,  ERRPRS(11), PTR )
-      CALL NPARSD ( CMO,    MO,     ERRPRS(12), PTR )
-      CALL NPARSD ( CNO,    NO,     ERRPRS(13), PTR )
+      call nparsi ( cyear,  yr,     errprs(1),  ptr )
+      call nparsd ( cday,   day,    errprs(2),  ptr )
+      call nparsd ( cndt20, ndt20,  errprs(3),  ptr )
+      call nparsd ( cndd60, ndd60,  errprs(4),  ptr )
+      call nparsi ( ciexp,  nexp,   errprs(5),  ptr )
+      call nparsd ( cbstar, bstar,  errprs(6),  ptr )
+      call nparsi ( cibexp, bexp,   errprs(7),  ptr )
+      call nparsd ( cincl,  incl,   errprs(8),  ptr )
+      call nparsd ( cnode0, node0,  errprs(9),  ptr )
+      call nparsd ( cecc,   ecc,    errprs(10), ptr )
+      call nparsd ( comega, omega,  errprs(11), ptr )
+      call nparsd ( cmo,    mo,     errprs(12), ptr )
+      call nparsd ( cno,    no,     errprs(13), ptr )
 
 !
 !     Check for parse errors.
 !
-      DO I = 1, 13
+      do i = 1, 13
 
-         IF ( ERRPRS(I) .NE. ' ' ) THEN
+         if ( errprs(i) .ne. ' ' ) then
 
 !
 !           Something could not parse. Set the error message then
 !           return.
 !
-            ERROR = 'An error occurred while trying to ' &
+            error = 'An error occurred while trying to ' &
             //      'parse the term #. The diagnostic was:  # '
-            CALL REPMC ( ERROR, '#', TERM(I)  , ERROR )
-            CALL REPMC ( ERROR, '#', ERRPRS(I), ERROR )
+            call repmc ( error, '#', term(i)  , error )
+            call repmc ( error, '#', errprs(i), error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
-         END IF
+            call chkout ( 'ZZGETELM' )
+            return
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Check for reasonable exponets; a single digit. These should
 !     probably be LE 0.
 !
-      IF ( ABS(NEXP) .GT. 9 ) THEN
+      if ( abs(nexp) .gt. 9 ) then
 
-            ERROR = 'NEXP (exponent) not a single digit. ' &
+            error = 'NEXP (exponent) not a single digit. ' &
                     //'Actual value #1'
-            CALL REPMI ( ERROR, '#1', NEXP, ERROR )
+            call repmi ( error, '#1', nexp, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
+            call chkout ( 'ZZGETELM' )
+            return
 
-         END IF
+         end if
 
-      IF ( ABS(BEXP) .GT. 9 ) THEN
+      if ( abs(bexp) .gt. 9 ) then
 
-            ERROR = 'BEXP (exponent) not a single digit. ' &
+            error = 'BEXP (exponent) not a single digit. ' &
                     //'Actual value #1'
-            CALL REPMI ( ERROR, '#1', BEXP, ERROR )
+            call repmi ( error, '#1', bexp, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
+            call chkout ( 'ZZGETELM' )
+            return
 
-      END IF
+      end if
 
 !
 !     Confirm correct bounds on angular values.
 !
 !     NODE0 - right ascension of the ascending node, [0,360)
 !
-      IF ( NODE0 .LT. 0.D0 .OR. NODE0 .GE. 360.D0 ) THEN
+      if ( node0 .lt. 0.d0 .or. node0 .ge. 360.d0 ) then
 
-            ERROR = 'NODE0 (RA acend node) expected bounds [0,360). ' &
+            error = 'NODE0 (RA acend node) expected bounds [0,360). ' &
                     //'Actual value #1'
-            CALL REPMD ( ERROR, '#1', NODE0, 4, ERROR )
+            call repmd ( error, '#1', node0, 4, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
+            call chkout ( 'ZZGETELM' )
+            return
 
-         END IF
+         end if
 
 !
 !     OMEAGA - argument of the periapsis, [0,360)
 !
-      IF ( OMEGA .LT. 0.D0 .OR. OMEGA .GE. 360.D0 ) THEN
+      if ( omega .lt. 0.d0 .or. omega .ge. 360.d0 ) then
 
-            ERROR = 'OMEGA (arg periap) expected bounds [0,360). ' &
+            error = 'OMEGA (arg periap) expected bounds [0,360). ' &
                     //'Actual value #1'
-            CALL REPMD ( ERROR, '#1', OMEGA, 4, ERROR )
+            call repmd ( error, '#1', omega, 4, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
-         END IF
+            call chkout ( 'ZZGETELM' )
+            return
+         end if
 
 !
 !     MO - mean anomoly, [0,360)
 !
-      IF ( MO .LT. 0.D0 .OR. MO .GE. 360.D0 ) THEN
+      if ( mo .lt. 0.d0 .or. mo .ge. 360.d0 ) then
 
-            ERROR = 'MO (mean anomoly) expected bounds [0,360). ' &
+            error = 'MO (mean anomoly) expected bounds [0,360). ' &
                     //'Actual value #1'
-            CALL REPMD ( ERROR, '#1', MO, 4, ERROR )
+            call repmd ( error, '#1', mo, 4, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
-         END IF
+            call chkout ( 'ZZGETELM' )
+            return
+         end if
 
 !
 !     INCL - inclination, [0,180]
 !
-      IF ( INCL .LT. 0.D0 .OR. INCL .GT. 180.D0 ) THEN
+      if ( incl .lt. 0.d0 .or. incl .gt. 180.d0 ) then
 
-            ERROR = 'INCL (inclination) expected bounds [0,180). ' &
+            error = 'INCL (inclination) expected bounds [0,180). ' &
                     //'Actual value #1'
-            CALL REPMD ( ERROR, '#1', INCL, 4, ERROR )
+            call repmd ( error, '#1', incl, 4, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
-         END IF
+            call chkout ( 'ZZGETELM' )
+            return
+         end if
 
 
 !
 !     NO - mean motion (0,20) (Earth orbiter).
 !
-      IF ( NO .GT. 20.D0 .OR. NO .LT. 0.D0 ) THEN
+      if ( no .gt. 20.d0 .or. no .lt. 0.d0 ) then
 
-            ERROR = 'NO (mean motion) expected bounds (0,20). ' &
+            error = 'NO (mean motion) expected bounds (0,20). ' &
                     //'Actual value #1'
-            CALL REPMD ( ERROR, '#1', NO, 4, ERROR )
+            call repmd ( error, '#1', no, 4, error )
 
-            OK = .FALSE.
+            ok = .false.
 
-            CALL CHKOUT ( 'ZZGETELM' )
-            RETURN
-         END IF
+            call chkout ( 'ZZGETELM' )
+            return
+         end if
 
 
 
@@ -799,23 +799,23 @@
 !
 !     Finish up the computation of NDD60 and BSTAR
 !
-      NDD60 = NDD60 * POWER(NEXP)
-      BSTAR = BSTAR * POWER(BEXP)
+      ndd60 = ndd60 * power(nexp)
+      bstar = bstar * power(bexp)
 
 !
 !     Convert everything from degrees to radians ...
 !
-      NODE0 = NODE0  * D2R
-      OMEGA = OMEGA  * D2R
-      MO    = MO     * D2R
-      INCL  = INCL   * D2R
+      node0 = node0  * d2r
+      omega = omega  * d2r
+      mo    = mo     * d2r
+      incl  = incl   * d2r
 
 !
 !     ... and from revolutions/day**n to radians/minutes**n
 !
-      NO    =  NO    * PI2/MNPDAY
-      NDT20 =  NDT20 * PI2/MNPDAY/MNPDAY
-      NDD60 =  NDD60 * PI2/MNPDAY/MNPDAY/MNPDAY
+      no    =  no    * pi2/mnpday
+      ndt20 =  ndt20 * pi2/mnpday/mnpday
+      ndd60 =  ndd60 * pi2/mnpday/mnpday/mnpday
 
 !
 !     Finally, we need to convert the input epoch to
@@ -823,39 +823,39 @@
 !     Add to YR the largest multiple of 100 that is
 !     less than or equal to FRSTYR
 !
-      BEGYR = (FRSTYR/100)*100
-      YEAR  = BEGYR + YR
+      begyr = (frstyr/100)*100
+      year  = begyr + yr
 
-      IF ( YEAR .LT. FRSTYR ) THEN
-         YEAR = YEAR + 100
-      END IF
+      if ( year .lt. frstyr ) then
+         year = year + 100
+      end if
 
 !
 !     Compute the epoch of the year and date.
 !
-      TVEC(1) = DBLE(YEAR)
-      TVEC(2) = DAY
+      tvec(1) = dble(year)
+      tvec(2) = day
 
-      CALL TTRANS ( 'YD.D', 'TDB', TVEC )
+      call ttrans ( 'YD.D', 'TDB', tvec )
 
-      EPOCH = TVEC(1)
+      epoch = tvec(1)
 
 !
 !     That's it.  Load ELEMS with the elements and ship them
 !     back to the calling routine.
 !
-      ELEMS ( KNDT20 ) = NDT20
-      ELEMS ( KNDD60 ) = NDD60
-      ELEMS ( KBSTAR ) = BSTAR
-      ELEMS ( KINCL  ) = INCL
-      ELEMS ( KNODE0 ) = NODE0
-      ELEMS ( KECC   ) = ECC
-      ELEMS ( KOMEGA ) = OMEGA
-      ELEMS ( KMO    ) = MO
-      ELEMS ( KNO    ) = NO
-      ELEMS ( KEPOCH ) = EPOCH
+      elems ( kndt20 ) = ndt20
+      elems ( kndd60 ) = ndd60
+      elems ( kbstar ) = bstar
+      elems ( kincl  ) = incl
+      elems ( knode0 ) = node0
+      elems ( kecc   ) = ecc
+      elems ( komega ) = omega
+      elems ( kmo    ) = mo
+      elems ( kno    ) = no
+      elems ( kepoch ) = epoch
 
-      CALL CHKOUT ( 'ZZGETELM' )
-      RETURN
-      END
+      call chkout ( 'ZZGETELM' )
+      return
+      end
 

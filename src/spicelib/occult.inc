@@ -83,26 +83,26 @@
 !
 
 
-      INTEGER               TOTAL1
-      PARAMETER           ( TOTAL1 = -3 )
+      integer               total1
+      parameter           ( total1 = -3 )
 
-      INTEGER               ANNLR1
-      PARAMETER           ( ANNLR1 = -2 )
+      integer               annlr1
+      parameter           ( annlr1 = -2 )
 
-      INTEGER               PARTL1
-      PARAMETER           ( PARTL1 = -1 )
+      integer               partl1
+      parameter           ( partl1 = -1 )
 
-      INTEGER               NOOCC
-      PARAMETER           ( NOOCC  =  0 )
+      integer               noocc
+      parameter           ( noocc  =  0 )
 
-      INTEGER               PARTL2
-      PARAMETER           ( PARTL2 =  1 )
+      integer               partl2
+      parameter           ( partl2 =  1 )
 
-      INTEGER               ANNLR2
-      PARAMETER           ( ANNLR2 =  2 )
+      integer               annlr2
+      parameter           ( annlr2 =  2 )
 
-      INTEGER               TOTAL2
-      PARAMETER           ( TOTAL2 =  3 )
+      integer               total2
+      parameter           ( total2 =  3 )
 
 !
 !     End include file occult.inc

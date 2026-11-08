@@ -1,6 +1,6 @@
 !$Procedure  ZZINGRD  ( is a voxel inside the grid? )
 
-       LOGICAL FUNCTION ZZINGRD ( NVOX, VOXEL )
+       logical function zzingrd ( nvox, voxel )
 
 ! $ Abstract
 !
@@ -21,10 +21,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT              NONE
+      implicit              none
 
-      INTEGER               NVOX  ( 3 )
-      INTEGER               VOXEL ( 3 )
+      integer               nvox  ( 3 )
+      integer               voxel ( 3 )
 
 ! $ Brief_I/O
 !
@@ -96,27 +96,27 @@
 !-&
 
 
-      INTEGER               I
+      integer               i
 
 
-      ZZINGRD = .FALSE.
+      zzingrd = .false.
 
 !
 !     Determine if voxel is outside the voxel grid
 !     in any direction.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF (      ( VOXEL(I) .LT. 1       ) &
-              .OR. ( VOXEL(I) .GT. NVOX(I) )  ) THEN
+         if (      ( voxel(i) .lt. 1       ) &
+              .or. ( voxel(i) .gt. nvox(i) )  ) then
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      ZZINGRD = .TRUE.
+      zzingrd = .true.
 
-      RETURN
-      END
+      return
+      end

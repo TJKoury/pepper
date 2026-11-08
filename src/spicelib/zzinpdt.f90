@@ -1,6 +1,6 @@
 !$Procedure ZZINPDT ( DSK, in planetodetic element? )
 
-      SUBROUTINE ZZINPDT ( P, BOUNDS, CORPAR, MARGIN, EXCLUD, INSIDE )
+      subroutine zzinpdt ( p, bounds, corpar, margin, exclud, inside )
 
 ! $ Abstract
 !
@@ -27,32 +27,32 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      P      ( 3 )
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               EXCLUD
-      LOGICAL               INSIDE
+      double precision      p      ( 3 )
+      double precision      bounds ( 2, 3 )
+      double precision      corpar ( * )
+      double precision      margin
+      integer               exclud
+      logical               inside
 
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
-      INTEGER               LONIDX
-      PARAMETER           ( LONIDX = 1 )
+      integer               lonidx
+      parameter           ( lonidx = 1 )
 
-      INTEGER               LATIDX
-      PARAMETER           ( LATIDX = 2 )
+      integer               latidx
+      parameter           ( latidx = 2 )
 
-      INTEGER               ALTIDX
-      PARAMETER           ( ALTIDX = 3 )
+      integer               altidx
+      parameter           ( altidx = 3 )
 
 
-      DOUBLE PRECISION      LATMRG
-      PARAMETER           ( LATMRG = 1.D-8 )
+      double precision      latmrg
+      parameter           ( latmrg = 1.d-8 )
 
 ! $ Brief_I/O
 !
@@ -275,12 +275,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
+      double precision      halfpi
+      double precision      pi
+      double precision      twopi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -289,33 +289,33 @@
 !
 !     Element boundary indices:
 !
-      INTEGER               WEST
-      PARAMETER           ( WEST   = 1 )
+      integer               west
+      parameter           ( west   = 1 )
 
-      INTEGER               EAST
-      PARAMETER           ( EAST   = 2 )
+      integer               east
+      parameter           ( east   = 2 )
 
-      INTEGER               SOUTH
-      PARAMETER           ( SOUTH  = 1 )
+      integer               south
+      parameter           ( south  = 1 )
 
-      INTEGER               NORTH
-      PARAMETER           ( NORTH  = 2 )
+      integer               north
+      parameter           ( north  = 2 )
 
-      INTEGER               LOWER
-      PARAMETER           ( LOWER  = 1 )
+      integer               lower
+      parameter           ( lower  = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER  = 2 )
+      integer               upper
+      parameter           ( upper  = 2 )
 
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      INTEGER               LT
-      PARAMETER           ( LT = -1 )
+      integer               lt
+      parameter           ( lt = -1 )
 
-      INTEGER               GT
-      PARAMETER           ( GT =  1 )
+      integer               gt
+      parameter           ( gt =  1 )
 
 !
 !     The code EQ can be returned by ZZPDCMPL, but we make no
@@ -326,115 +326,115 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALTBDS ( 2, 3 )
-      DOUBLE PRECISION      AMNALT
-      DOUBLE PRECISION      AMNLAT
-      DOUBLE PRECISION      AMNLON
-      DOUBLE PRECISION      AMXALT
-      DOUBLE PRECISION      AMXLAT
-      DOUBLE PRECISION      AMXLON
-      DOUBLE PRECISION      DLON
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      HPI
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LONMRG
-      DOUBLE PRECISION      MAXALT
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MINALT
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      PCNLAT
-      DOUBLE PRECISION      PI2
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RE
+      double precision      altbds ( 2, 3 )
+      double precision      amnalt
+      double precision      amnlat
+      double precision      amnlon
+      double precision      amxalt
+      double precision      amxlat
+      double precision      amxlon
+      double precision      dlon
+      double precision      f
+      double precision      hpi
+      double precision      lon
+      double precision      lonmrg
+      double precision      maxalt
+      double precision      maxlat
+      double precision      maxlon
+      double precision      minalt
+      double precision      minlat
+      double precision      minlon
+      double precision      pcnlat
+      double precision      pi2
+      double precision      r
+      double precision      re
 
-      INTEGER               RELMIN
-      INTEGER               RELMAX
+      integer               relmin
+      integer               relmax
 
-      LOGICAL               ALPASS
-      LOGICAL               FIRST
+      logical               alpass
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  ALTBDS
-      SAVE                  FIRST
-      SAVE                  HPI
-      SAVE                  PI2
+      save                  altbds
+      save                  first
+      save                  hpi
+      save                  pi2
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
-      DATA                  HPI   / -1.D0  /
+      data                  first / .true. /
+      data                  hpi   / -1.d0  /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZINPDT' )
+      call chkin ( 'ZZINPDT' )
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         HPI   = HALFPI()
-         PI2   = TWOPI()
+         hpi   = halfpi()
+         pi2   = twopi()
 !
 !        Initialize the local array used for altitude checks.
 !
-         ALTBDS( SOUTH, LATIDX ) =  - HALFPI()
-         ALTBDS( NORTH, LATIDX ) =    HALFPI()
-         ALTBDS( WEST,  LONIDX ) =  - PI()
-         ALTBDS( EAST,  LONIDX ) =    PI()
-         ALTBDS( LOWER, ALTIDX ) =    0.D0
-         ALTBDS( UPPER, ALTIDX ) =    0.D0
+         altbds( south, latidx ) =  - halfpi()
+         altbds( north, latidx ) =    halfpi()
+         altbds( west,  lonidx ) =  - pi()
+         altbds( east,  lonidx ) =    pi()
+         altbds( lower, altidx ) =    0.d0
+         altbds( upper, altidx ) =    0.d0
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 
-      IF (  ( EXCLUD .LT. 0 ) .OR. ( EXCLUD .GT. 3 )  ) THEN
+      if (  ( exclud .lt. 0 ) .or. ( exclud .gt. 3 )  ) then
 
-         CALL SETMSG ( 'EXCLUD must be in the range 0:3 but was #.' )
-         CALL ERRINT ( '#', EXCLUD                                  )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                     )
-         CALL CHKOUT ( 'ZZINPDT'                                    )
-         RETURN
+         call setmsg ( 'EXCLUD must be in the range 0:3 but was #.' )
+         call errint ( '#', exclud                                  )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                     )
+         call chkout ( 'ZZINPDT'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the planetocentric [sic] coordinates of the input point. The
 !     latitude we obtain will be planetocentric. To emphasize this, we
 !     use the name "PCNLAT."
 !
-      CALL RECLAT ( P, R, LON, PCNLAT )
+      call reclat ( p, r, lon, pcnlat )
 !
 !     RECLAT is error free, so we don't call FAILED() here.
 !
 
-      IF ( MARGIN .EQ. 0.D0 ) THEN
+      if ( margin .eq. 0.d0 ) then
 !
 !        ZZINPDT0 contains the logic required to determine whether
 !        the input point is contained in the element.
 !
-         CALL ZZINPDT0 ( P,      LON, &
-                         BOUNDS, CORPAR, EXCLUD, INSIDE )
+         call zzinpdt0 ( p,      lon, &
+                         bounds, corpar, exclud, inside )
 
-         CALL CHKOUT ( 'ZZINPDT' )
-         RETURN
+         call chkout ( 'ZZINPDT' )
+         return
 
-      ELSE IF ( MARGIN .LT. 0.D0 ) THEN
+      else if ( margin .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Margin must be non-negative but was #.' )
-         CALL ERRDP  ( '#', MARGIN                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZINPDT'                                )
-         RETURN
+         call setmsg ( 'Margin must be non-negative but was #.' )
+         call errdp  ( '#', margin                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZINPDT'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point a more detailed analysis is needed.
@@ -444,92 +444,92 @@
 !     to skip setting INSIDE when we find a boundary test
 !     failure.
 !
-      INSIDE = .FALSE.
+      inside = .false.
 
 !
 !     We'll use the shape parameters for latitude and altitude
 !     comparisons.
 !
-      RE = CORPAR(1)
-      F  = CORPAR(2)
+      re = corpar(1)
+      f  = corpar(2)
 
 !
 !     Get local copies of the coordinate bounds. Don't normalize the
 !     longitude bounds until we know we need them.
 !
-      MINLAT = BOUNDS( SOUTH, LATIDX )
-      MAXLAT = BOUNDS( NORTH, LATIDX )
+      minlat = bounds( south, latidx )
+      maxlat = bounds( north, latidx )
 
-      MINALT = BOUNDS( LOWER, ALTIDX )
-      MAXALT = BOUNDS( UPPER, ALTIDX )
+      minalt = bounds( lower, altidx )
+      maxalt = bounds( upper, altidx )
 
 !
 !     Compare coordinates to adjusted latitude boundaries.
 !
-      IF ( EXCLUD .NE. LATIDX ) THEN
+      if ( exclud .ne. latidx ) then
 !
 !        Create adjusted latitude bounds.
 !
-         AMNLAT = MAX( -HPI-ANGMRG, MINLAT - MARGIN )
-         AMXLAT = MIN(  HPI+ANGMRG, MAXLAT + MARGIN )
+         amnlat = max( -hpi-angmrg, minlat - margin )
+         amxlat = min(  hpi+angmrg, maxlat + margin )
 
 !
 !        Compare the latitude of the input point to the bounds.
 !
-         CALL ZZPDCMPL ( RE, F, P, AMNLAT, RELMIN )
-         CALL ZZPDCMPL ( RE, F, P, AMXLAT, RELMAX )
+         call zzpdcmpl ( re, f, p, amnlat, relmin )
+         call zzpdcmpl ( re, f, p, amxlat, relmax )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZINPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZINPDT' )
+            return
+         end if
 
 
-         IF ( ( RELMIN .EQ. LT ) .OR. ( RELMAX .EQ. GT ) ) THEN
+         if ( ( relmin .eq. lt ) .or. ( relmax .eq. gt ) ) then
 !
 !           The latitude of P is strictly outside of the element's
 !           latitude bounds.
 !
-            CALL CHKOUT ( 'ZZINPDT' )
-            RETURN
-         END IF
+            call chkout ( 'ZZINPDT' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Test the point for inclusion in the region between the bounding
 !     ellipsoids that act as proxies for altitude boundaries.
 !
-      IF ( EXCLUD .NE. ALTIDX ) THEN
+      if ( exclud .ne. altidx ) then
 !
 !        Extract altitude bounds from the segment descriptor.
 !
-         MINALT = BOUNDS(LOWER, ALTIDX)
-         MAXALT = BOUNDS(UPPER, ALTIDX)
+         minalt = bounds(lower, altidx)
+         maxalt = bounds(upper, altidx)
 !
 !        Adjust altitude bounds to account for the margin.
 !
-         AMNALT = MINALT  -  MARGIN * ABS(MINALT)
-         AMXALT = MAXALT  +  MARGIN * ABS(MAXALT)
+         amnalt = minalt  -  margin * abs(minalt)
+         amxalt = maxalt  +  margin * abs(maxalt)
 !
 !        Set up a "boundary" array so that we can use ZZINPDT0
 !        to do the altitude check for us. We'll exclude longitude
 !        tests; the latitude test is set up for an automatic pass
 !        (the latitude range of ALTBDS is [-pi/2, pi/2]).
 !
-         ALTBDS( LOWER, ALTIDX ) = AMNALT
-         ALTBDS( UPPER, ALTIDX ) = AMXALT
+         altbds( lower, altidx ) = amnalt
+         altbds( upper, altidx ) = amxalt
 
-         CALL ZZINPDT0 ( P, LON, ALTBDS, CORPAR, LONIDX, ALPASS )
+         call zzinpdt0 ( p, lon, altbds, corpar, lonidx, alpass )
 
-         IF ( .NOT. ALPASS ) THEN
+         if ( .not. alpass ) then
 
-            CALL CHKOUT ( 'ZZINPDT' )
-            RETURN
+            call chkout ( 'ZZINPDT' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, the input altitude and latitude are within the
@@ -539,22 +539,22 @@
 !     Perform longitude tests, unless they're excluded by the
 !     caller.
 !
-      IF ( EXCLUD .NE. LONIDX ) THEN
+      if ( exclud .ne. lonidx ) then
 !
 !        Start out by normalizing the element's longitude bounds.
 !
-         CALL ZZNRMLON ( BOUNDS(LOWER,LONIDX),  BOUNDS(UPPER,LONIDX), &
-                         ANGMRG,       MINLON,  MAXLON               )
+         call zznrmlon ( bounds(lower,lonidx),  bounds(upper,lonidx), &
+                         angmrg,       minlon,  maxlon               )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZINPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZINPDT' )
+            return
+         end if
 !
 !        Set the margin to be used for longitude interval
 !        inclusion tests.
 !
-         LONMRG = MAX( ABS(ANGMRG), ABS(MARGIN) )
+         lonmrg = max( abs(angmrg), abs(margin) )
 
 !
 !        We have a special case for segments that include the poles. If
@@ -567,16 +567,16 @@
 !        We use planetocentric latitude to determine whether the point
 !        is "close" to a pole.
 !
-         CALL ZZPDCMPL ( RE, F, P,  HPI-LATMRG, RELMAX )
-         CALL ZZPDCMPL ( RE, F, P, -HPI+LATMRG, RELMIN )
+         call zzpdcmpl ( re, f, p,  hpi-latmrg, relmax )
+         call zzpdcmpl ( re, f, p, -hpi+latmrg, relmin )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZINPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZINPDT' )
+            return
+         end if
 
-         IF (       ( RELMAX .NE. GT ) &
-              .AND. ( RELMIN .NE. LT )  ) THEN
+         if (       ( relmax .ne. gt ) &
+              .and. ( relmin .ne. lt )  ) then
 !
 !           This is the usual case: the latitude of the input point is
 !           bounded away from the poles.
@@ -595,59 +595,59 @@
 !           longitude margin. This substitution (for planetodetic
 !           latitude) is adequate for this purpose.
 !
-            DLON   =  LONMRG / MAX( ABS(COS(PCNLAT)), LATMRG )
+            dlon   =  lonmrg / max( abs(cos(pcnlat)), latmrg )
 
-            AMNLON = MINLON - DLON
-            AMXLON = MAXLON + DLON
+            amnlon = minlon - dlon
+            amxlon = maxlon + dlon
 
 !
 !           Now move the input point's longitude into range, if
 !           necessary, so we can make a valid comparison against
 !           the longitude bounds.
 !
-            IF ( LON .LT. AMNLON ) THEN
+            if ( lon .lt. amnlon ) then
 
-               IF (  LON  .LT. ( AMNLON - LONALI )  ) THEN
+               if (  lon  .lt. ( amnlon - lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
-                  LON = LON + PI2
+                  lon = lon + pi2
 
-               ELSE
+               else
 !
 !                 Consider LON to be a match with the lower bound.
 !
-                  LON = AMNLON
+                  lon = amnlon
 
-               END IF
+               end if
 
-            ELSE IF ( LON .GT. AMXLON ) THEN
+            else if ( lon .gt. amxlon ) then
 
-               IF (  LON  .GT. ( AMXLON + LONALI )  ) THEN
+               if (  lon  .gt. ( amxlon + lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
-                  LON = LON - PI2
+                  lon = lon - pi2
 
-               ELSE
+               else
 !
 !                 Consider LON to be a match with the upper bound.
 !
-                  LON = AMXLON
+                  lon = amxlon
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-            IF ( ( LON .LT. AMNLON ) .OR. ( LON .GT. AMXLON ) ) THEN
+            if ( ( lon .lt. amnlon ) .or. ( lon .gt. amxlon ) ) then
 
-               CALL CHKOUT ( 'ZZINPDT' )
-               RETURN
+               call chkout ( 'ZZINPDT' )
+               return
 
-            END IF
+            end if
 
-         ELSE
+         else
 
 !
 !           The latitude of the input point is close to one of the
@@ -681,17 +681,17 @@
 !           the point is close to the element. We consider the point to
 !           be in the expanded element.
 !
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     All tests that were commanded have been passed. The input
 !     point is considered to be contained in the expanded volume
 !     element.
 !
-      INSIDE = .TRUE.
+      inside = .true.
 
-      CALL CHKOUT ( 'ZZINPDT' )
-      RETURN
-      END
+      call chkout ( 'ZZINPDT' )
+      return
+      end

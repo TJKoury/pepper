@@ -1,6 +1,6 @@
 !$Procedure VMINUG ( Negate vector, "-V", general dimension )
 
-      SUBROUTINE VMINUG ( VIN, NDIM, VOUT )
+      subroutine vminug ( vin, ndim, vout )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   VIN   ( NDIM )
-      DOUBLE PRECISION   VOUT  ( NDIM )
+      integer            ndim
+      double precision   vin   ( ndim )
+      double precision   vout  ( ndim )
 
 ! $ Brief_I/O
 !
@@ -184,11 +184,11 @@
 !-&
 
 
-      INTEGER I
+      integer i
 !
-      DO I = 1, NDIM
-         VOUT(I) = -VIN(I)
-      END DO
+      do i = 1, ndim
+         vout(i) = -vin(i)
+      end do
 
-      RETURN
-      END
+      return
+      end

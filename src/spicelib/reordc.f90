@@ -1,6 +1,6 @@
 !$Procedure REORDC ( Reorder a character array )
 
-      SUBROUTINE REORDC ( IORDER, NDIM, ARRAY )
+      subroutine reordc ( iorder, ndim, array )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          IORDER ( * )
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY  ( * )
+      integer          iorder ( * )
+      integer          ndim
+      character*(*)    array  ( * )
 
 ! $ Brief_I/O
 !
@@ -231,20 +231,20 @@
 !
 !     Local variables
 !
-      INTEGER          START
-      INTEGER          INDEX
-      INTEGER          HOLD
+      integer          start
+      integer          index
+      integer          hold
 
-      INTEGER          C
-      CHARACTER*1      TEMP
+      integer          c
+      character*1      temp
 
 
 !
 !     If the array doesn't have at least two elements, don't bother.
 !
-      IF ( NDIM .LT. 2 ) THEN
-           RETURN
-      END IF
+      if ( ndim .lt. 2 ) then
+           return
+      end if
 
 !
 !     What follows is pretty much the same as for the other REORD
@@ -257,16 +257,16 @@
 !     looks messy as hell, but the same number of operations are
 !     involved (more or less).
 !
-      DO C = 1, LEN ( ARRAY(1) )
+      do c = 1, len ( array(1) )
 
 !
 !        START is the position in the order vector that begins the
 !        current cycle. When all the switches have been made, START
 !        will point to the end of the order vector.
 !
-         START = 1
+         start = 1
 
-         DO WHILE ( START .LT. NDIM )
+         do while ( start .lt. ndim )
 
 !
 !           Begin with the element of input vector specified by
@@ -277,9 +277,9 @@
 !           been moved, HOLD indicates the position of an available
 !           space within the array.
 !
-            INDEX = START
-            TEMP  = ARRAY(INDEX)(C:C)
-            HOLD  = IORDER(INDEX)
+            index = start
+            temp  = array(index)(c:c)
+            hold  = iorder(index)
 
 !
 !           As each slot in the output array is filled in, the sign
@@ -291,39 +291,39 @@
 !           Keep going until HOLD points to the first array element
 !           moved during the current cycle. This ends the cycle.
 !
-            DO WHILE ( HOLD .NE. START )
-               ARRAY(INDEX)(C:C)  =  ARRAY(HOLD)(C:C)
-               INDEX              =  HOLD
-               HOLD               =  IORDER(HOLD)
-               IORDER(INDEX)      = -IORDER(INDEX)
-            END DO
+            do while ( hold .ne. start )
+               array(index)(c:c)  =  array(hold)(c:c)
+               index              =  hold
+               hold               =  iorder(hold)
+               iorder(index)      = -iorder(index)
+            end do
 
 !
 !           The last element in the cycle is restored from TEMP.
 !
-            ARRAY(INDEX)(C:C) =  TEMP
-            IORDER(HOLD)      = -IORDER(HOLD)
+            array(index)(c:c) =  temp
+            iorder(hold)      = -iorder(hold)
 
 !
 !           Begin the next cycle at the next element in the order
 !           vector with a positive sign. (That is, the next one
 !           that hasn't been moved.)
 !
-            DO WHILE ( IORDER(START) .LT. 0  .AND.  START .LT. NDIM )
-               START = START + 1
-            END DO
+            do while ( iorder(start) .lt. 0  .and.  start .lt. ndim )
+               start = start + 1
+            end do
 
-         END DO
+         end do
 
 !
 !        Restore the original signs of the elements of the order
 !        vector, for the next go around.
 !
-         DO INDEX = 1, NDIM
-           IORDER(INDEX) = IABS ( IORDER(INDEX) )
-         END DO
+         do index = 1, ndim
+           iorder(index) = iabs ( iorder(index) )
+         end do
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

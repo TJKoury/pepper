@@ -1,6 +1,6 @@
 !$Procedure DASADD ( DAS, add data, double precision )
 
-      SUBROUTINE DASADD ( HANDLE, N, DATA )
+      subroutine dasadd ( handle, n, data )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               N
-      DOUBLE PRECISION      DATA   ( * )
+      integer               handle
+      integer               n
+      double precision      data   ( * )
 
 ! $ Brief_I/O
 !
@@ -329,78 +329,78 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               DP
-      PARAMETER           ( DP     =  2  )
+      integer               dp
+      parameter           ( dp     =  2  )
 
-      INTEGER               NWD
-      PARAMETER           ( NWD    = 128 )
+      integer               nwd
+      parameter           ( nwd    = 128 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RECORD ( NWD )
+      double precision      record ( nwd )
 
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               FREE
-      INTEGER               LASTD
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NUMDP
-      INTEGER               NWRITN
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               clbase
+      integer               clsize
+      integer               free
+      integer               lastd
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
+      integer               numdp
+      integer               nwritn
+      integer               recno
+      integer               wordno
 
 
 !
 !     Saved variables
 !
-      SAVE                  RECORD
+      save                  record
 
 !
 !     Initial values
 !
-      DATA                  RECORD / NWD * 0.D0 /
+      data                  record / nwd * 0.d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
-      CALL CHKIN ( 'DASADD' )
+      if ( return () ) then
+         return
+      end if
+      call chkin ( 'DASADD' )
 
 
 !
 !     Get the file summary for this DAS.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASADD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASADD' )
+         return
+      end if
 
-      LASTD  =  LASTLA(DP)
+      lastd  =  lastla(dp)
 
 !
 !     We will keep track of the location that we wish to write to
@@ -417,17 +417,17 @@
 !     double precision data in the file.  Otherwise, RECNO becomes the
 !     first record available for double precision data.
 !
-      IF ( LASTD .GE. 1 ) THEN
+      if ( lastd .ge. 1 ) then
 
-         CALL DASA2L ( HANDLE,  DP,      LASTD, &
-                       CLBASE,  CLSIZE,  RECNO,  WORDNO )
+         call dasa2l ( handle,  dp,      lastd, &
+                       clbase,  clsize,  recno,  wordno )
 
-      ELSE
+      else
 
-         RECNO   =  FREE
-         WORDNO  =  0
+         recno   =  free
+         wordno  =  0
 
-      END IF
+      end if
 
 !
 !     Set the number of double precision words already written.  Keep
@@ -437,9 +437,9 @@
 !     Note that if N is non-positive, the loop doesn't get exercised.
 !
 !
-      NWRITN  =  0
+      nwritn  =  0
 
-      DO WHILE (  ( NWRITN .LT. N ) .AND. ( .NOT. FAILED() )  )
+      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
 
 !
 !        Write as much data as we can (or need to) into the current
@@ -449,34 +449,34 @@
 !        Find out how many words to write into the current record.
 !        There may be no space left in the current record.
 !
-         NUMDP  =  MIN (  N - NWRITN,   NWD - WORDNO )
+         numdp  =  min (  n - nwritn,   nwd - wordno )
 
-         IF ( NUMDP .GT. 0 ) THEN
+         if ( numdp .gt. 0 ) then
 
 !
 !           Write NUMDP words into the current record.  If the record
 !           is new, write the entire record.  Otherwise, just update
 !           the part we're interested in.
 !
-            IF ( WORDNO .EQ. 0 ) THEN
+            if ( wordno .eq. 0 ) then
 
-               CALL MOVED  (  DATA(NWRITN+1),  NUMDP,   RECORD  )
-               CALL DASWRD (  HANDLE,          RECNO,   RECORD  )
+               call moved  (  data(nwritn+1),  numdp,   record  )
+               call daswrd (  handle,          recno,   record  )
 
-            ELSE
+            else
 
-               CALL DASURD (  HANDLE, &
-                              RECNO, &
-                              WORDNO + 1, &
-                              WORDNO + NUMDP, &
-                              DATA( NWRITN + 1 )   )
+               call dasurd (  handle, &
+                              recno, &
+                              wordno + 1, &
+                              wordno + numdp, &
+                              data( nwritn + 1 )   )
 
-            END IF
+            end if
 
-            NWRITN  =  NWRITN + NUMDP
-            WORDNO  =  WORDNO + NUMDP
+            nwritn  =  nwritn + numdp
+            wordno  =  wordno + numdp
 
-         ELSE
+         else
 
 !
 !           It's time to start on a new record.  If the record we
@@ -490,25 +490,25 @@
 !           We intentionally leave FREE at the value it had before
 !           we starting adding data to the file.
 !
-            IF ( RECNO .GE. FREE ) THEN
-               RECNO  =  RECNO + 1
-            ELSE
-               RECNO  =  FREE
-            END IF
+            if ( recno .ge. free ) then
+               recno  =  recno + 1
+            else
+               recno  =  free
+            end if
 
-            WORDNO = 0
+            wordno = 0
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Update the DAS file directories to reflect the addition of NWRITN
 !     double precision words.  DASCUD will also update the file summary
 !     accordingly.
 !
-      CALL DASCUD ( HANDLE, DP, NWRITN )
+      call dascud ( handle, dp, nwritn )
 
-      CALL CHKOUT ( 'DASADD' )
-      RETURN
-      END
+      call chkout ( 'DASADD' )
+      return
+      end

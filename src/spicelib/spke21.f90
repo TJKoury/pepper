@@ -1,6 +1,6 @@
 !$Procedure SPKE21 ( S/P Kernel, evaluate, type 21 )
 
-      SUBROUTINE SPKE21 ( ET, RECORD, STATE )
+      subroutine spke21 ( et, record, state )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk21.inc'
+      include 'spk21.inc'
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -151,7 +151,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -164,73 +164,73 @@
 !     roughly to the original memos written by Fred Krogh to explain
 !     how all this stuff really works.
 !
-      DOUBLE PRECISION      TL
-      DOUBLE PRECISION      G        ( MAXTRM )
+      double precision      tl
+      double precision      g        ( maxtrm )
 
-      DOUBLE PRECISION      REFPOS   (    3 )
-      DOUBLE PRECISION      REFVEL   (    3 )
+      double precision      refpos   (    3 )
+      double precision      refvel   (    3 )
 
-      DOUBLE PRECISION      DT       ( MAXTRM, 3 )
-      INTEGER               KQMAX1
-      INTEGER               KQ       (    3 )
+      double precision      dt       ( maxtrm, 3 )
+      integer               kqmax1
+      integer               kq       (    3 )
 
-      DOUBLE PRECISION      FC       ( MAXTRM )
+      double precision      fc       ( maxtrm )
 
 
-      DOUBLE PRECISION      SUM
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      TP
-      DOUBLE PRECISION      WC       ( MAXTRM-1 )
-      DOUBLE PRECISION      W        ( MAXTRM+2 )
+      double precision      sum
+      double precision      delta
+      double precision      tp
+      double precision      wc       ( maxtrm-1 )
+      double precision      w        ( maxtrm+2 )
 
-      INTEGER               MAXDIM
-      INTEGER               MQ2
-      INTEGER               KS1
-      INTEGER               KS
-      INTEGER               KQQ
-      INTEGER               I
-      INTEGER               J
-      INTEGER               JX
+      integer               maxdim
+      integer               mq2
+      integer               ks1
+      integer               ks
+      integer               kqq
+      integer               i
+      integer               j
+      integer               jx
 
 !
 !     Save everything between calls.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FC (  1 )    / 1.D0 /
+      data                  fc (  1 )    / 1.d0 /
 
 !
 !     Use discovery check-in.
 !
 !     If the RETURN function is set, don't even bother with this.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 !
 !     The first element of the input record is the dimension
 !     of the difference table MAXDIM.
 !
-      MAXDIM = NINT ( RECORD(1) )
+      maxdim = nint ( record(1) )
 
-      IF ( MAXDIM .GT. MAXTRM ) THEN
+      if ( maxdim .gt. maxtrm ) then
 
-         CALL CHKIN  ( 'SPKE21'                                )
-         CALL SETMSG ( 'The input record has a maximum table ' &
+         call chkin  ( 'SPKE21'                                )
+         call setmsg ( 'The input record has a maximum table ' &
          //            'dimension of #, while the maximum ' &
          //            'supported by this routine is #. It is ' &
          //            'possible that this problem is due to ' &
          //            'your SPICE Toolkit being out of date.' )
-         CALL ERRINT ( '#',  MAXDIM                            )
-         CALL ERRINT ( '#',  MAXTRM                            )
-         CALL SIGERR ( 'SPICE(DIFFLINETOOLARGE)'               )
-         CALL CHKOUT ( 'SPKE21'                                )
-         RETURN
+         call errint ( '#',  maxdim                            )
+         call errint ( '#',  maxtrm                            )
+         call sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
+         call chkout ( 'SPKE21'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Unpack the contents of the MDA array.
@@ -248,20 +248,20 @@
 !     For our purposes, NTE is always 3.
 !
 
-      CALL MOVED ( RECORD( 2),      1, TL )
-      CALL MOVED ( RECORD( 3), MAXDIM, G  )
+      call moved ( record( 2),      1, tl )
+      call moved ( record( 3), maxdim, g  )
 
 !
 !     Collect the reference position and velocity.
 !
-      REFPOS(1) =  RECORD(MAXDIM+3)
-      REFVEL(1) =  RECORD(MAXDIM+4)
+      refpos(1) =  record(maxdim+3)
+      refvel(1) =  record(maxdim+4)
 
-      REFPOS(2) =  RECORD(MAXDIM+5)
-      REFVEL(2) =  RECORD(MAXDIM+6)
+      refpos(2) =  record(maxdim+5)
+      refvel(2) =  record(maxdim+6)
 
-      REFPOS(3) =  RECORD(MAXDIM+7)
-      REFVEL(3) =  RECORD(MAXDIM+8)
+      refpos(3) =  record(maxdim+7)
+      refvel(3) =  record(maxdim+8)
 
 !
 !     Initializing the difference table is one aspect of this routine
@@ -270,22 +270,22 @@
 !     must transfer separately the portions of the table corresponding
 !     to each component.
 !
-      DO I = 1, 3
-         CALL MOVED ( RECORD(I*MAXDIM+9), MAXDIM, DT(1,I) )
-      END DO
+      do i = 1, 3
+         call moved ( record(i*maxdim+9), maxdim, dt(1,i) )
+      end do
 
-      KQMAX1    = INT ( RECORD(4*MAXDIM + 9 ) )
-      KQ(1)     = INT ( RECORD(4*MAXDIM + 10) )
-      KQ(2)     = INT ( RECORD(4*MAXDIM + 11) )
-      KQ(3)     = INT ( RECORD(4*MAXDIM + 12) )
+      kqmax1    = int ( record(4*maxdim + 9 ) )
+      kq(1)     = int ( record(4*maxdim + 10) )
+      kq(2)     = int ( record(4*maxdim + 11) )
+      kq(3)     = int ( record(4*maxdim + 12) )
 
 !
 !     Next we set up for the computation of the various differences
 !
-      DELTA     = ET     - TL
-      TP        = DELTA
-      MQ2       = KQMAX1 - 2
-      KS        = KQMAX1 - 1
+      delta     = et     - tl
+      tp        = delta
+      mq2       = kqmax1 - 2
+      ks        = kqmax1 - 1
 
 !
 !     This is clearly collecting some kind of coefficients.
@@ -298,34 +298,34 @@
 !     difference line's reference epoch. We then change it from DELTA
 !     by the components of the stepsize vector G.
 !
-      DO J = 1, MQ2
+      do j = 1, mq2
 !
 !        Make sure we're not about to attempt division by zero.
 !
-         IF ( G(J) .EQ. 0.D0 ) THEN
+         if ( g(j) .eq. 0.d0 ) then
 
-            CALL CHKIN  ( 'SPKE21'                             )
-            CALL SETMSG ( 'A  value of zero was found at ' &
+            call chkin  ( 'SPKE21'                             )
+            call setmsg ( 'A  value of zero was found at ' &
             //            'index # of the step size vector.'   )
-            CALL ERRINT ( '#',  J                              )
-            CALL SIGERR ( 'SPICE(ZEROSTEP)'                    )
-            CALL CHKOUT ( 'SPKE21'                             )
-            RETURN
+            call errint ( '#',  j                              )
+            call sigerr ( 'SPICE(ZEROSTEP)'                    )
+            call chkout ( 'SPKE21'                             )
+            return
 
-         END IF
+         end if
 
-         FC(J+1) = TP    / G(J)
-         WC(J)   = DELTA / G(J)
-         TP      = DELTA + G(J)
+         fc(j+1) = tp    / g(j)
+         wc(j)   = delta / g(j)
+         tp      = delta + g(j)
 
-      END DO
+      end do
 
 !
 !     Collect KQMAX1 reciprocals.
 !
-      DO J = 1, KQMAX1
-         W(J) = 1.0D0/DBLE(J)
-      END DO
+      do j = 1, kqmax1
+         w(j) = 1.0d0/dble(j)
+      end do
 
 !
 !     Compute the W(K) terms needed for the position interpolation
@@ -333,65 +333,65 @@
 !     starts out as KQMAX1-1 (the ``maximum integration'')
 !     is at least 2.
 !
-      JX  = 0
-      KS1 = KS - 1
+      jx  = 0
+      ks1 = ks - 1
 
-      DO WHILE ( KS .GE. 2 )
+      do while ( ks .ge. 2 )
 
-         JX  = JX+1
+         jx  = jx+1
 
-         DO  J = 1, JX
-            W(J+KS) = FC(J+1)*W(J+KS1) - WC(J)*W(J+KS)
-         END DO
+         do  j = 1, jx
+            w(j+ks) = fc(j+1)*w(j+ks1) - wc(j)*w(j+ks)
+         end do
 
-         KS  = KS1
-         KS1 = KS1 - 1
+         ks  = ks1
+         ks1 = ks1 - 1
 
-      END DO
+      end do
 
 !
 !     Perform position interpolation: (Note that KS = 1 right now.
 !     We don't know much more than that.)
 !
-      DO  I = 1, 3
+      do  i = 1, 3
 
-         KQQ = KQ(I)
-         SUM = 0.0D0
+         kqq = kq(i)
+         sum = 0.0d0
 
-         DO J = KQQ, 1, -1
-            SUM = SUM + DT(J,I)*W(J+KS)
-         END DO
+         do j = kqq, 1, -1
+            sum = sum + dt(j,i)*w(j+ks)
+         end do
 
-         STATE(I) = REFPOS(I)  +  DELTA * ( REFVEL(I) + DELTA*SUM )
+         state(i) = refpos(i)  +  delta * ( refvel(i) + delta*sum )
 
-      END DO
+      end do
 
 !
 !     Again we need to compute the W(K) coefficients that are
 !     going to be used in the velocity interpolation.
 !     (Note, at this point, KS = 1, KS1 = 0.)
 !
-      DO  J = 1, JX
-         W(J+KS) = FC(J+1)*W(J+KS1) - WC(J)*W(J+KS)
-      END DO
+      do  j = 1, jx
+         w(j+ks) = fc(j+1)*w(j+ks1) - wc(j)*w(j+ks)
+      end do
 
-      KS = KS - 1
+      ks = ks - 1
 
 !
 !     Perform velocity interpolation:
 !
-      DO  I = 1, 3
+      do  i = 1, 3
 
-         KQQ = KQ(I)
-         SUM = 0.0D0
+         kqq = kq(i)
+         sum = 0.0d0
 
-         DO J = KQQ, 1, -1
-            SUM = SUM + DT(J,I)*W(J+KS)
-         END DO
+         do j = kqq, 1, -1
+            sum = sum + dt(j,i)*w(j+ks)
+         end do
 
-         STATE(I+3) = REFVEL(I) + DELTA*SUM
+         state(i+3) = refvel(i) + delta*sum
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

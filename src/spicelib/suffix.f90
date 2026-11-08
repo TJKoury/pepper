@@ -1,6 +1,6 @@
 !$Procedure SUFFIX (Suffix a character string)
 
-      SUBROUTINE SUFFIX ( SUFF, SPACES, STRING )
+      subroutine suffix ( suff, spaces, string )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    SUFF
-      INTEGER          SPACES
-      CHARACTER*(*)    STRING
+      character*(*)    suff
+      integer          spaces
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -134,14 +134,14 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          LASTNB
+      integer          lastnb
 
 !
 !     Local variables
 !
-      INTEGER          L
-      INTEGER          SLEN
-      INTEGER          END
+      integer          l
+      integer          slen
+      integer          end
 
 
 
@@ -149,18 +149,18 @@
 !     SLEN is the allocated length of the string. L is the location of
 !     the last non-blank character of the prefix.
 !
-      SLEN = LEN    ( STRING )
-      L    = LASTNB ( STRING )
+      slen = len    ( string )
+      l    = lastnb ( string )
 
 !
 !     Put the suffix at the end of the string. The spaces will fill
 !     themselves in.
 !
-      END = L + MAX ( SPACES, 0 )
+      end = l + max ( spaces, 0 )
 
-      IF ( END .LT. SLEN ) THEN
-         STRING(END+1: ) = SUFF
-      END IF
+      if ( end .lt. slen ) then
+         string(end+1: ) = suff
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure GFREFN ( GF, default refinement estimator )
 
-      SUBROUTINE GFREFN ( T1, T2, S1, S2, T )
+      subroutine gfrefn ( t1, t2, s1, s2, t )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      T1
-      DOUBLE PRECISION      T2
-      LOGICAL               S1
-      LOGICAL               S2
-      DOUBLE PRECISION      T
+      double precision      t1
+      double precision      t2
+      logical               s1
+      logical               s2
+      double precision      t
 
 ! $ Brief_I/O
 !
@@ -142,17 +142,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
+      double precision      brcktd
 
 !
 !     Local variables.
 !
-      DOUBLE PRECISION      X
+      double precision      x
 
 
-      X = ( T1 * 0.5D0 ) + ( T2 * 0.5D0 )
+      x = ( t1 * 0.5d0 ) + ( t2 * 0.5d0 )
 
-      T = BRCKTD ( X, T1, T2 )
+      t = brcktd ( x, t1, t2 )
 
-      RETURN
-      END
+      return
+      end

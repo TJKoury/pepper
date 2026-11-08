@@ -1,6 +1,6 @@
 !$Procedure      ZZEKCNAM ( EK, get column name )
 
-      SUBROUTINE ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+      subroutine zzekcnam ( handle, coldsc, column )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               COLDSC ( CDSCSZ )
-      CHARACTER*(*)         COLUMN
+      integer               handle
+      integer               coldsc ( cdscsz )
+      character*(*)         column
 
 ! $ Brief_I/O
 !
@@ -96,7 +96,7 @@
 !
 !     Local variables
 !
-      INTEGER               NAMBAS
+      integer               nambas
 
 !
 !     Use discovery check-in.
@@ -104,10 +104,10 @@
 !
 !     Look up the name.
 !
-      NAMBAS = COLDSC( NAMIDX )
+      nambas = coldsc( namidx )
 
-      CALL DASRDC ( HANDLE,  NAMBAS+1,  NAMBAS+CNAMSZ, &
-                    1,       CNAMSZ,    COLUMN         )
+      call dasrdc ( handle,  nambas+1,  nambas+cnamsz, &
+                    1,       cnamsz,    column         )
 
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSFWD ( EK, set forward pointer for data page )
 
-      SUBROUTINE ZZEKSFWD ( HANDLE, TYPE, P, FWARD )
+      subroutine zzeksfwd ( handle, type, p, fward )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TYPE
-      INTEGER               P
-      INTEGER               FWARD
+      integer               handle
+      integer               type
+      integer               p
+      integer               fward
 
 ! $ Brief_I/O
 !
@@ -105,50 +105,50 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DPPTR
-      INTEGER               BASE
+      double precision      dpptr
+      integer               base
 
 !
 !     Use discovery check-in.
 !
 !     Look up the base address of the page.
 !
-      CALL ZZEKPGBS ( TYPE, P, BASE )
+      call zzekpgbs ( type, p, base )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 !
 !        Set the encoded count.
 !
-         CALL ZZEKSEI ( HANDLE, BASE+CFPIDX, FWARD )
+         call zzeksei ( handle, base+cfpidx, fward )
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 !
 !        Convert the input count to d.p. type.
 !
-         DPPTR  =  FWARD
+         dpptr  =  fward
 
-         CALL DASUDD ( HANDLE, BASE+DFPIDX, BASE+DFPIDX, DPPTR )
+         call dasudd ( handle, base+dfpidx, base+dfpidx, dpptr )
 
 
-      ELSE
+      else
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, ZZEKPGBS would have complained.
 !
-         CALL DASUDI ( HANDLE, BASE+IFPIDX, BASE+IFPIDX, FWARD )
+         call dasudi ( handle, base+ifpidx, base+ifpidx, fward )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

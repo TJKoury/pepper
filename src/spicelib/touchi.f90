@@ -1,6 +1,6 @@
 !$Procedure TOUCHI ( Touch a variable )
 
-      INTEGER FUNCTION TOUCHI ( INT )
+      integer function touchi ( int )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               INT
+      integer               int
 
 ! $ Brief_I/O
 !
@@ -121,6 +121,6 @@
 !-&
 
 
-      TOUCHI = INT
-      RETURN
-      END
+      touchi = int
+      return
+      end

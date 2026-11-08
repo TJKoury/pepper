@@ -1,6 +1,6 @@
 !$Procedure PCKR03 ( PCK, read record from type 3 segment )
 
-      SUBROUTINE PCKR03 ( HANDLE, DESCR, ET, RECORD )
+      subroutine pckr03 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -151,7 +151,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Parameters
@@ -159,33 +159,33 @@
 !     The number of constant values stored with a type 03 segment
 !     segment.
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 1  )
+      integer               nconst
+      parameter           ( nconst = 1  )
 !
 !     The beginning location in the output record for the non-constant
 !     segment data.
 !
-      INTEGER               BEGEL1
-      PARAMETER           ( BEGEL1 = NCONST + 1 )
+      integer               begel1
+      parameter           ( begel1 = nconst + 1 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      VALUE
+      double precision      value
 
-      INTEGER               ENDS
-      INTEGER               INDX
+      integer               ends
+      integer               indx
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKR03' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PCKR03' )
+      end if
 !
 !     Check the request time against the time bounds in the segment
 !     descriptor. In order to get the right data back from the generic
@@ -195,33 +195,33 @@
 !     time for the segment and the stop time for the segment,
 !     respectively.
 !
-      IF ( ( ET .LT. DESCR(1) )  .OR.  ( ET .GT. DESCR(2) ) )  THEN
+      if ( ( et .lt. descr(1) )  .or.  ( et .gt. descr(2) ) )  then
 
-         CALL SETMSG( 'Request time # is outside of descriptor'    // &
+         call setmsg( 'Request time # is outside of descriptor'    // &
                       ' bounds # : #.'                              )
-         CALL ERRDP ( '#',  ET                                      )
-         CALL ERRDP ( '#',  DESCR(1)                                )
-         CALL ERRDP ( '#',  DESCR(2)                                )
-         CALL SIGERR( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         CALL CHKOUT( 'PCKR03'                                      )
-         RETURN
+         call errdp ( '#',  et                                      )
+         call errdp ( '#',  descr(1)                                )
+         call errdp ( '#',  descr(2)                                )
+         call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
+         call chkout( 'PCKR03'                                      )
+         return
 
-      END IF
+      end if
 !
 !     Fetch the constants and store them in the first part of
 !     the output RECORD.
 !
-      CALL SGFCON ( HANDLE, DESCR, 1,  NCONST, RECORD(1) )
+      call sgfcon ( handle, descr, 1,  nconst, record(1) )
 !
 !     Locate the time in the file less than or equal to the input ET.
 !
-      CALL SGFRVI ( HANDLE, DESCR, ET, VALUE, INDX, FOUND )
+      call sgfrvi ( handle, descr, et, value, indx, found )
 !
 !     Fetch the data record.
 !
-      CALL SGFPKT ( HANDLE, DESCR, INDX, INDX, RECORD(BEGEL1), ENDS )
+      call sgfpkt ( handle, descr, indx, indx, record(begel1), ends )
 
-      CALL CHKOUT ( 'PCKR03' )
-      RETURN
+      call chkout ( 'PCKR03' )
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure DACOSH ( Double precision arc hyperbolic cosine )
 
-      DOUBLE PRECISION FUNCTION  DACOSH ( X )
+      double precision function  dacosh ( x )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   X
+      double precision   x
 
 ! $ Brief_I/O
 !
@@ -126,42 +126,42 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               RETURN
+      logical               return
 
 
 
 !
 !   Set up the error processing.
 !
-      IF ( RETURN() ) THEN
-         DACOSH = 0.0D0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DACOSH' )
-         DACOSH = 0.0D0
-      END IF
+      if ( return() ) then
+         dacosh = 0.0d0
+         return
+      else
+         call chkin ( 'DACOSH' )
+         dacosh = 0.0d0
+      end if
 
 !
 !  Check that X >= 1.
 !
 
-      IF ( X .LT. 1.D0 ) THEN
+      if ( x .lt. 1.d0 ) then
 
-         CALL SETMSG ( 'DACOSH: Invalid argument, X is less than one.' )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)' )
+         call setmsg ( 'DACOSH: Invalid argument, X is less than one.' )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)' )
 
-         CALL CHKOUT ( 'DACOSH' )
-         RETURN
-      END IF
+         call chkout ( 'DACOSH' )
+         return
+      end if
 !
 !  Abiding by the order implied by the parentheses in the expression
 !  (1.0D0/X)/X prevents floating point overflow that might occur for
 !  large values of X if the equivalent expression, 1.0D0/(X*X), were
 !  used.
 !
-      DACOSH = DLOG (X + X * DSQRT (1.0D0 - (1.0D0/X)/X) )
+      dacosh = dlog (x + x * dsqrt (1.0d0 - (1.0d0/x)/x) )
 
 
-      CALL CHKOUT ( 'DACOSH' )
-      RETURN
-      END
+      call chkout ( 'DACOSH' )
+      return
+      end

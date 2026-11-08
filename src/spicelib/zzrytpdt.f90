@@ -1,7 +1,7 @@
 !$Procedure ZZRYTPDT ( DSK, ray touches planetodetic element )
 
-      SUBROUTINE ZZRYTPDT ( VERTEX, RAYDIR, BOUNDS, &
-                            CORPAR, MARGIN, NXPTS,  XPT )
+      subroutine zzrytpdt ( vertex, raydir, bounds, &
+                            corpar, margin, nxpts,  xpt )
 
 ! $ Abstract
 !
@@ -35,26 +35,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT    ( 3 )
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      bounds ( 2, 3 )
+      double precision      corpar ( * )
+      double precision      margin
+      integer               nxpts
+      double precision      xpt    ( 3 )
 
-      INTEGER               LONIDX
-      PARAMETER           ( LONIDX = 1 )
+      integer               lonidx
+      parameter           ( lonidx = 1 )
 
-      INTEGER               LATIDX
-      PARAMETER           ( LATIDX = 2 )
+      integer               latidx
+      parameter           ( latidx = 2 )
 
-      INTEGER               ALTIDX
-      PARAMETER           ( ALTIDX = 3 )
+      integer               altidx
+      parameter           ( altidx = 3 )
 
 ! $ Brief_I/O
 !
@@ -207,17 +207,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      dpmax
+      double precision      halfpi
+      double precision      vdist
+      double precision      vdot
+      double precision      vnorm
+      double precision      vsep
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
-      LOGICAL               ZZPDPLTC
+      logical               failed
+      logical               return
+      logical               vzero
+      logical               zzpdpltc
 
 !
 !     Local parameters
@@ -226,242 +226,242 @@
 !
 !     Altitude expansion factor:
 !
-      DOUBLE PRECISION      RADFAC
-      PARAMETER           ( RADFAC = 1.1D0 )
+      double precision      radfac
+      parameter           ( radfac = 1.1d0 )
 
 
 !
 !     Element boundary indices:
 !
-      INTEGER               WEST
-      PARAMETER           ( WEST   = 1 )
+      integer               west
+      parameter           ( west   = 1 )
 
-      INTEGER               EAST
-      PARAMETER           ( EAST   = 2 )
+      integer               east
+      parameter           ( east   = 2 )
 
-      INTEGER               SOUTH
-      PARAMETER           ( SOUTH  = 1 )
+      integer               south
+      parameter           ( south  = 1 )
 
-      INTEGER               NORTH
-      PARAMETER           ( NORTH  = 2 )
+      integer               north
+      parameter           ( north  = 2 )
 
-      INTEGER               LOWER
-      PARAMETER           ( LOWER  = 1 )
+      integer               lower
+      parameter           ( lower  = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER  = 2 )
+      integer               upper
+      parameter           ( upper  = 2 )
 
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      AMNALT
-      DOUBLE PRECISION      AMXALT
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      APEX   ( 3 )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      EASTB  ( 3 )
-      DOUBLE PRECISION      EBACK  ( 3 )
-      DOUBLE PRECISION      EMAX
-      DOUBLE PRECISION      EMIN
-      DOUBLE PRECISION      ENDPT2 ( 3 )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      LONCOV
-      DOUBLE PRECISION      MAXALT
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      MINALT
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      MNDIST
-      DOUBLE PRECISION      NEGDIR ( 3 )
-      DOUBLE PRECISION      PMAX
-      DOUBLE PRECISION      PMIN
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      RP
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SRFX   ( 3 )
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      VTXANG
-      DOUBLE PRECISION      VTXLVL
-      DOUBLE PRECISION      VTXOFF ( 3 )
-      DOUBLE PRECISION      WBACK  ( 3 )
-      DOUBLE PRECISION      WESTB  ( 3 )
-      DOUBLE PRECISION      XPT2   ( 3 )
-      DOUBLE PRECISION      XINCPT
-      DOUBLE PRECISION      YINCPT
-      DOUBLE PRECISION      Z      ( 3 )
+      double precision      amnalt
+      double precision      amxalt
+      double precision      angle
+      double precision      apex   ( 3 )
+      double precision      dist
+      double precision      eastb  ( 3 )
+      double precision      eback  ( 3 )
+      double precision      emax
+      double precision      emin
+      double precision      endpt2 ( 3 )
+      double precision      f
+      double precision      loncov
+      double precision      maxalt
+      double precision      maxlat
+      double precision      maxlon
+      double precision      maxr
+      double precision      minalt
+      double precision      minlat
+      double precision      minlon
+      double precision      mndist
+      double precision      negdir ( 3 )
+      double precision      pmax
+      double precision      pmin
+      double precision      re
+      double precision      rp
+      double precision      s
+      double precision      srfx   ( 3 )
+      double precision      udir   ( 3 )
+      double precision      vtxang
+      double precision      vtxlvl
+      double precision      vtxoff ( 3 )
+      double precision      wback  ( 3 )
+      double precision      westb  ( 3 )
+      double precision      xpt2   ( 3 )
+      double precision      xincpt
+      double precision      yincpt
+      double precision      z      ( 3 )
 
-      INTEGER               NX
+      integer               nx
 
-      LOGICAL               FOUND
-      LOGICAL               INSIDE
-      LOGICAL               XIN
-      LOGICAL               XVAL1
-      LOGICAL               XVAL2
+      logical               found
+      logical               inside
+      logical               xin
+      logical               xval1
+      logical               xval2
 
 !
 !     Saved variables
 !
-      SAVE                  Z
+      save                  z
 
 !
 !     Initial values
 !
-      DATA                  Z      / 0.D0, 0.D0, 1.D0 /
+      data                  z      / 0.d0, 0.d0, 1.d0 /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZRYTPDT' )
+      call chkin ( 'ZZRYTPDT' )
 
 
-      IF ( MARGIN .LT. 0.D0 ) THEN
+      if ( margin .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Margin must be non-negative but was #.' )
-         CALL ERRDP  ( '#', MARGIN                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZRYTPDT'                               )
-         RETURN
+         call setmsg ( 'Margin must be non-negative but was #.' )
+         call errdp  ( '#', margin                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZRYTPDT'                               )
+         return
 
-      END IF
+      end if
 
-      IF ( VZERO(RAYDIR) ) THEN
+      if ( vzero(raydir) ) then
 
-         CALL SETMSG ( 'The ray''s direction was the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                         )
-         CALL CHKOUT ( 'ZZRYTPDT'                                  )
-         RETURN
+         call setmsg ( 'The ray''s direction was the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                         )
+         call chkout ( 'ZZRYTPDT'                                  )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Determine whether the vertex is inside the element.
 !
-      CALL ZZINPDT ( VERTEX, BOUNDS, CORPAR, MARGIN, NONE, INSIDE )
+      call zzinpdt ( vertex, bounds, corpar, margin, none, inside )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
-      IF ( INSIDE ) THEN
+      if ( inside ) then
 !
 !        We know the answer.
 !
-         NXPTS = 1
+         nxpts = 1
 
-         CALL VEQU ( VERTEX, XPT )
+         call vequ ( vertex, xpt )
 
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
+         call chkout ( 'ZZRYTPDT' )
+         return
 
-      END IF
+      end if
 
 !
 !     Get semi-axis lengths of the reference spheroid.
 !
-      RE = CORPAR(1)
-      F  = CORPAR(2)
-      RP = RE * ( 1.D0 - F )
+      re = corpar(1)
+      f  = corpar(2)
+      rp = re * ( 1.d0 - f )
 
 !
 !     Extract the segment's coordinate bounds into easily
 !     readable variables.
 !
-      MINALT = BOUNDS( LOWER, ALTIDX )
-      MAXALT = BOUNDS( UPPER, ALTIDX )
+      minalt = bounds( lower, altidx )
+      maxalt = bounds( upper, altidx )
 !
 !     Normalize the longitude bounds. After this step, the bounds will
 !     be in order and differ by no more than 2*pi.
 !
-      CALL ZZNRMLON( BOUNDS(WEST,LONIDX), BOUNDS(EAST,LONIDX), ANGMRG, &
-                     MINLON,              MAXLON                      )
+      call zznrmlon( bounds(west,lonidx), bounds(east,lonidx), angmrg, &
+                     minlon,              maxlon                      )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
-      MINLAT = BOUNDS( SOUTH, LATIDX )
-      MAXLAT = BOUNDS( NORTH, LATIDX )
+      minlat = bounds( south, latidx )
+      maxlat = bounds( north, latidx )
 
 !
 !     Compute adjusted altitude bounds, taking margin into
 !     account.
 !
-      AMNALT = MINALT  -  MARGIN * ABS(MINALT)
-      AMXALT = MAXALT  +  MARGIN * ABS(MAXALT)
+      amnalt = minalt  -  margin * abs(minalt)
+      amxalt = maxalt  +  margin * abs(maxalt)
 
 !
 !     Generate semi-axis lengths of inner and outer bounding
 !     ellipsoids.
 !
-      IF ( RE .GE. RP ) THEN
+      if ( re .ge. rp ) then
 !
 !        The reference spheroid is oblate.
 !
-         CALL ZZELLBDS ( RE,   RP,   AMXALT, AMNALT, &
-                         EMAX, PMAX, EMIN,   PMIN   )
+         call zzellbds ( re,   rp,   amxalt, amnalt, &
+                         emax, pmax, emin,   pmin   )
 
-      ELSE
+      else
 !
 !        The reference spheroid is prolate.
 !
-         CALL ZZELLBDS ( RP,   RE,   AMXALT, AMNALT, &
-                         PMAX, EMAX, PMIN,   EMIN   )
+         call zzellbds ( rp,   re,   amxalt, amnalt, &
+                         pmax, emax, pmin,   emin   )
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
 !
 !     The vertex is outside the element.
 !
 !     Indicate no intersection to start.
 !
-      NXPTS  = 0
+      nxpts  = 0
 !
 !     We'll use a unit length copy of the ray's direction vector.
 !
-      CALL VHAT ( RAYDIR, UDIR )
+      call vhat ( raydir, udir )
 !
 !     Initialize the distance to the closest solution. We'll keep track
 !     of this quantity in order to compare competing solutions.
 !
-      MNDIST = DPMAX()
+      mndist = dpmax()
 !
 !     Find the intersection of the ray and outer bounding ellipsoid, if
 !     possible. Often this intersection is the closest to the vertex.
 !     If the intersection exists and is on the boundary of the element,
 !     it's a winner.
 !
-      CALL SURFPT ( VERTEX, UDIR, EMAX, EMAX, PMAX, SRFX, FOUND )
+      call surfpt ( vertex, udir, emax, emax, pmax, srfx, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        There are no intersections. The ray cannot hit the volume
 !        element.
 !
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
+         call chkout ( 'ZZRYTPDT' )
+         return
 
-      END IF
+      end if
 
 !
 !     The ray hits the outer bounding ellipsoid. See whether
@@ -469,29 +469,29 @@
 !     the margin into account. Exclude the altitude coordinate
 !     from testing.
 !
-      CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, ALTIDX, XIN )
+      call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
-      IF ( XIN ) THEN
+      if ( xin ) then
 !
 !        This solution is a candidate.
 !
-         CALL VEQU ( SRFX, XPT )
-         NXPTS  = 1
+         call vequ ( srfx, xpt )
+         nxpts  = 1
 
 !
 !        Find the level surface parameter of the vertex relative
 !        to the adjusted outer bounding ellipsoid.
 !
-         VTXLVL =     ( VERTEX(1)/EMAX )**2 &
-                   +  ( VERTEX(2)/EMAX )**2 &
-                   +  ( VERTEX(3)/PMAX )**2
+         vtxlvl =     ( vertex(1)/emax )**2 &
+                   +  ( vertex(2)/emax )**2 &
+                   +  ( vertex(3)/pmax )**2
 
-         IF ( VTXLVL .GT. 1.D0 ) THEN
+         if ( vtxlvl .gt. 1.d0 ) then
 !
 !           The vertex is outside this ellipsoid, and the DSK segment
 !           lies within the ellipsoid.
@@ -499,18 +499,18 @@
 !           No other intersection can be closer to the vertex;
 !           we don't need to check the other surfaces.
 !
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
+            call chkout ( 'ZZRYTPDT' )
+            return
 
-         ELSE
+         else
 !
 !           We have a possible solution.
 !
-            MNDIST = VDIST( VERTEX, XPT )
+            mndist = vdist( vertex, xpt )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     So far there may be a candidate solution. We'll try the latitude
@@ -520,37 +520,37 @@
 !     need a far endpoint for the line segment on which to perform the
 !     test.
 !
-      MAXR = MAX ( EMAX, PMAX )
+      maxr = max ( emax, pmax )
 
-      S    = VNORM(VERTEX) + RADFAC * MAXR
+      s    = vnorm(vertex) + radfac * maxr
 
-      CALL VLCOM ( 1.D0, VERTEX, S, UDIR, ENDPT2 )
+      call vlcom ( 1.d0, vertex, s, udir, endpt2 )
 
 !
 !     Now try the upper latitude bound. We can skip this test
 !     if the upper bound is pi/2 radians.
 !
-      IF ( MAXLAT .LT. HALFPI() ) THEN
+      if ( maxlat .lt. halfpi() ) then
 !
 !        Let ANGLE be the angular separation of the surface of latitude
 !        MAXLAT and the +Z axis. Note that the surface might be the
 !        lower nappe of the cone.
 !
-         ANGLE = MAX ( 0.D0,  HALFPI() - MAXLAT )
+         angle = max ( 0.d0,  halfpi() - maxlat )
 
 !
 !        Compute the Z coordinate of the apex of the latitude cone.
 !
-         CALL ZZELNAXX ( RE, RP, MAXLAT, XINCPT, YINCPT )
+         call zzelnaxx ( re, rp, maxlat, xincpt, yincpt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZRYTPDT' )
+            return
+         end if
 
-         APEX(1) = 0.D0
-         APEX(2) = 0.D0
-         APEX(3) = YINCPT
+         apex(1) = 0.d0
+         apex(2) = 0.d0
+         apex(3) = yincpt
 
 !
 !        Find the offset of the ray's vertex from the cone's apex,
@@ -561,19 +561,19 @@
 !
 !        (The comparison will be done later.)
 !
-         CALL VSUB ( VERTEX, APEX, VTXOFF )
+         call vsub ( vertex, apex, vtxoff )
 
-         VTXANG = VSEP ( VTXOFF, Z )
+         vtxang = vsep ( vtxoff, z )
 
 !
 !        Check for intersection of the ray with the latitude cone.
 !
-         CALL INCNSG ( APEX, Z, ANGLE, VERTEX, ENDPT2, NX, SRFX, XPT2 )
+         call incnsg ( apex, z, angle, vertex, endpt2, nx, srfx, xpt2 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZRYTPDT' )
+            return
+         end if
 
 !
 !        Unlike the case of latitudinal coordinates, for planetodetic
@@ -596,79 +596,79 @@
 !
 !        Check all intercepts.
 !
-         IF ( NX .GT. 0 ) THEN
+         if ( nx .gt. 0 ) then
 !
 !           Check the first intercept.
 !
-            XVAL1 =  ZZPDPLTC( RE, F, SRFX, MAXLAT )
-            XVAL2 =  .FALSE.
+            xval1 =  zzpdpltc( re, f, srfx, maxlat )
+            xval2 =  .false.
 
-            IF ( NX .EQ. 2 ) THEN
+            if ( nx .eq. 2 ) then
 !
 !              Check the second intercept.
 !
-               XVAL2 =  ZZPDPLTC( RE, F, XPT2, MAXLAT )
+               xval2 =  zzpdpltc( re, f, xpt2, maxlat )
 
-            END IF
+            end if
 
-            IF ( XVAL1 .AND. ( .NOT. XVAL2 ) ) THEN
+            if ( xval1 .and. ( .not. xval2 ) ) then
 
-               NX = 1
+               nx = 1
 
-            ELSE IF (  XVAL2  .AND.  (.NOT. XVAL1 )  ) THEN
+            else if (  xval2  .and.  (.not. xval1 )  ) then
 !
 !              Only the second solution is valid. Overwrite
 !              the first.
 !
-               NX = 1
+               nx = 1
 
-               CALL VEQU( XPT2, SRFX )
+               call vequ( xpt2, srfx )
 
-            ELSE IF (  ( .NOT. XVAL1 )  .AND.  ( .NOT. XVAL2 )  ) THEN
+            else if (  ( .not. xval1 )  .and.  ( .not. xval2 )  ) then
 !
 !              Neither solution is valid.
 !
-               NX = 0
+               nx = 0
 
-            END IF
+            end if
 
-         END IF
-
-
+         end if
 
 
-         IF ( NX .GE. 1 ) THEN
+
+
+         if ( nx .ge. 1 ) then
 !
 !           The ray intercept SRFX lies on the upper latitude boundary.
 !
 !           See whether SRFX meets the longitude and proxy altitude
 !           constraints.
 !
-            CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, LATIDX, XIN )
+            call zzinpdt ( srfx, bounds, corpar, margin, latidx, xin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZRYTPDT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZRYTPDT' )
+               return
+            end if
 
 
-            IF ( XIN ) THEN
+            if ( xin ) then
 !
 !              SRFX is a candidate solution.
 !
-               DIST = VDIST( VERTEX, SRFX )
+               dist = vdist( vertex, srfx )
 
-               IF ( DIST .LT. MNDIST ) THEN
+               if ( dist .lt. mndist ) then
 
-                  CALL VEQU ( SRFX, XPT )
+                  call vequ ( srfx, xpt )
 
-                  NXPTS  = 1
+                  nxpts  = 1
 
 
-                  IF ( VTXANG .LT. ANGLE ) THEN
+                  if ( vtxang .lt. angle ) then
 
-                     IF (      ( MAXLAT    .LT. 0.D0 ) &
-                          .OR. ( VERTEX(3) .GT. 0.D0 )  ) THEN
+                     if (      ( maxlat    .lt. 0.d0 ) &
+                          .or. ( vertex(3) .gt. 0.d0 )  ) then
 !
 !                       If MAXLAT is negative, the vertex offset
 !                       being outside the cone is enough to
@@ -688,98 +688,98 @@
 !                       the volume element is on the other side of the
 !                       maximum latitude boundary.
 !
-                        CALL CHKOUT ( 'ZZRYTPDT' )
-                        RETURN
+                        call chkout ( 'ZZRYTPDT' )
+                        return
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 !
 !                 This is the best solution seen so far, but we
 !                 need to check the remaining boundaries.
 !
-                  MNDIST = DIST
+                  mndist = dist
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-            IF ( NX .EQ. 2 ) THEN
+            if ( nx .eq. 2 ) then
 !
 !              Check the second solution as well.
 !
-               CALL ZZINPDT ( XPT2,   BOUNDS, CORPAR, &
-                              MARGIN, LATIDX, XIN    )
+               call zzinpdt ( xpt2,   bounds, corpar, &
+                              margin, latidx, xin    )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZRYTPDT' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZRYTPDT' )
+                  return
+               end if
 
-               IF ( XIN ) THEN
+               if ( xin ) then
 !
 !                 XPT2 is a candidate solution.
 !
-                  DIST = VDIST( VERTEX, XPT2 )
+                  dist = vdist( vertex, xpt2 )
 
-                  IF ( DIST .LT. MNDIST ) THEN
+                  if ( dist .lt. mndist ) then
 
-                     CALL VEQU ( XPT2, XPT )
+                     call vequ ( xpt2, xpt )
 
-                     NXPTS  = 1
-                     MNDIST = DIST
+                     nxpts  = 1
+                     mndist = dist
 !
 !                    This is the best solution seen so far.
 !                    However, it's not necessarily the best
 !                    solution. So we continue.
 !
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 !
 !           We've handled the second root, if any.
 !
-         END IF
+         end if
 !
 !        We're done with the upper latitude boundary.
 !
-      END IF
+      end if
 
 !
 !     Try the lower latitude bound. We can skip this test if the lower
 !     bound is -pi/2 radians.
 !
-      IF (  MINLAT .GT. -HALFPI() ) THEN
+      if (  minlat .gt. -halfpi() ) then
 !
 !        Let ANGLE be the angular separation of the surface
 !        of latitude MINLAT and the +Z axis. Note that the
 !        surface might be the lower nappe of the cone.
 !
-         ANGLE = HALFPI() - MINLAT
+         angle = halfpi() - minlat
 
 
 !        Compute the Z coordinate of the apex of the latitude cone.
 !
-         CALL ZZELNAXX ( RE, RP, MINLAT, XINCPT, YINCPT )
+         call zzelnaxx ( re, rp, minlat, xincpt, yincpt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZRYTPDT' )
+            return
+         end if
 
-         APEX(1) = 0.D0
-         APEX(2) = 0.D0
-         APEX(3) = YINCPT
+         apex(1) = 0.d0
+         apex(2) = 0.d0
+         apex(3) = yincpt
 
-         CALL INCNSG ( APEX,   Z,  ANGLE, VERTEX, &
-                       ENDPT2, NX, SRFX,  XPT2    )
+         call incnsg ( apex,   z,  angle, vertex, &
+                       endpt2, nx, srfx,  xpt2    )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZRYTPDT' )
+            return
+         end if
 
 !
 !        Find the offset of the ray's vertex from the cone's apex,
@@ -790,83 +790,83 @@
 !
 !        (The comparison will be done later.)
 !
-         CALL VSUB ( VERTEX, APEX, VTXOFF )
+         call vsub ( vertex, apex, vtxoff )
 
-         VTXANG = VSEP ( VTXOFF, Z )
+         vtxang = vsep ( vtxoff, z )
 
 !
 !        Check whether the latitude of the intercept can be
 !        considered to match that of the cone.
 !
-         IF ( NX .GT. 0 ) THEN
+         if ( nx .gt. 0 ) then
 !
 !           Check the first intercept.
 !
-            XVAL1 =  ZZPDPLTC( RE, F, SRFX, MINLAT )
-            XVAL2 =  .FALSE.
+            xval1 =  zzpdpltc( re, f, srfx, minlat )
+            xval2 =  .false.
 
-            IF ( NX .EQ. 2 ) THEN
+            if ( nx .eq. 2 ) then
 !
 !              Check the second intercept.
 !
-               XVAL2 =  ZZPDPLTC( RE, F, XPT2, MINLAT )
+               xval2 =  zzpdpltc( re, f, xpt2, minlat )
 
-            END IF
+            end if
 
-            IF ( XVAL1 .AND. ( .NOT. XVAL2 ) ) THEN
+            if ( xval1 .and. ( .not. xval2 ) ) then
 
-               NX = 1
+               nx = 1
 
-            ELSE IF (  XVAL2  .AND.  (.NOT. XVAL1 )  ) THEN
+            else if (  xval2  .and.  (.not. xval1 )  ) then
 !
 !              Only the second solution is valid. Overwrite
 !              the first.
 !
-               NX = 1
+               nx = 1
 
-               CALL VEQU( XPT2, SRFX )
+               call vequ( xpt2, srfx )
 
-            ELSE IF (  ( .NOT. XVAL1 )  .AND.  ( .NOT. XVAL2 )  ) THEN
+            else if (  ( .not. xval1 )  .and.  ( .not. xval2 )  ) then
 !
 !              Neither solution is valid.
 !
-               NX = 0
+               nx = 0
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-         IF ( NX .GE. 1 ) THEN
+         if ( nx .ge. 1 ) then
 !
 !           The ray intercept SRFX lies on the lower latitude boundary.
 !
 !           See whether SRFX meets the longitude and proxy altitude
 !           constraints.
 !
-            CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, LATIDX, XIN )
+            call zzinpdt ( srfx, bounds, corpar, margin, latidx, xin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZRYTPDT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZRYTPDT' )
+               return
+            end if
 
-            IF ( XIN ) THEN
+            if ( xin ) then
 !
 !              SRFX is a candidate solution.
 !
-               DIST = VDIST( VERTEX, SRFX )
+               dist = vdist( vertex, srfx )
 
-               IF ( DIST .LT. MNDIST ) THEN
+               if ( dist .lt. mndist ) then
 
-                  CALL VEQU ( SRFX, XPT )
+                  call vequ ( srfx, xpt )
 
-                  NXPTS  = 1
+                  nxpts  = 1
 
-                  IF ( VTXANG .GT. ANGLE ) THEN
+                  if ( vtxang .gt. angle ) then
 
-                     IF (      ( MINLAT    .GT. 0.D0 ) &
-                          .OR. ( VERTEX(3) .LT. 0.D0 )  ) THEN
+                     if (      ( minlat    .gt. 0.d0 ) &
+                          .or. ( vertex(3) .lt. 0.d0 )  ) then
 !
 !                       If MINLAT is positive, the vertex offset
 !                       being outside the cone is enough to
@@ -886,75 +886,75 @@
 !                       the volume element is on the other side of the
 !                       minimum latitude boundary.
 !
-                        CALL CHKOUT ( 'ZZRYTPDT' )
-                        RETURN
+                        call chkout ( 'ZZRYTPDT' )
+                        return
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 !
 !                 This is the best solution seen so far, but we
 !                 need to check the remaining boundaries.
 
-                  MNDIST = DIST
+                  mndist = dist
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-            IF ( NX .EQ. 2 ) THEN
+            if ( nx .eq. 2 ) then
 !
 !              Check the second solution as well.
 !
-               CALL ZZINPDT ( XPT2,   BOUNDS, CORPAR, &
-                              MARGIN, LATIDX, XIN    )
+               call zzinpdt ( xpt2,   bounds, corpar, &
+                              margin, latidx, xin    )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZRYTPDT' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZRYTPDT' )
+                  return
+               end if
 
 
-               IF ( XIN ) THEN
+               if ( xin ) then
 !
 !                 XPT2 is a candidate solution.
 !
-                  DIST = VDIST( VERTEX, XPT2 )
+                  dist = vdist( vertex, xpt2 )
 
-                  IF ( DIST .LT. MNDIST ) THEN
+                  if ( dist .lt. mndist ) then
 
-                     CALL VEQU ( XPT2, XPT )
+                     call vequ ( xpt2, xpt )
 
-                     NXPTS  = 1
-                     MNDIST = DIST
+                     nxpts  = 1
+                     mndist = dist
 !
 !                    This is the best solution seen so far.
 !                    However, it's not necessarily the best
 !                    solution. So we continue.
 !
-                     CALL CHKOUT ( 'ZZRYTPDT' )
-                     RETURN
+                     call chkout ( 'ZZRYTPDT' )
+                     return
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        We're done with the lower latitude boundary.
 !
-      END IF
+      end if
 
 
 !
 !     Perform longitude boundary checks if the coverage is not
 !     2*pi radians. Note that MAXLON > MINLON at this point.
 !
-      LONCOV = MAXLON - MINLON
+      loncov = maxlon - minlon
 
-      IF ( COS(LONCOV) .LT. 1.D0 ) THEN
+      if ( cos(loncov) .lt. 1.d0 ) then
 !
 !        We have distinct longitude boundaries. Go to work.
 !
@@ -962,116 +962,116 @@
 !        Check the longitude boundaries. Try the plane of western
 !        longitude first.
 !
-         CALL VPACK ( SIN(MINLON), -COS(MINLON), 0.D0, WESTB )
+         call vpack ( sin(minlon), -cos(minlon), 0.d0, westb )
 
 
-         S = RADFAC * ( VNORM(VERTEX) + MAXR )
+         s = radfac * ( vnorm(vertex) + maxr )
 
 
-         CALL ZZINRYPL ( VERTEX, UDIR, WESTB, 0.D0, S, NX, SRFX )
+         call zzinrypl ( vertex, udir, westb, 0.d0, s, nx, srfx )
 
-         IF ( NX .EQ. 1 ) THEN
+         if ( nx .eq. 1 ) then
 !
 !           We have one point of intersection. Determine whether it's a
 !           candidate solution.  Don't use longitude in the following
 !           inclusion test. Note that we'll perform a separate check
 !           later in place of the longitude check.
 !
-            CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, LONIDX, XIN )
+            call zzinpdt ( srfx, bounds, corpar, margin, lonidx, xin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZRYTPDT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZRYTPDT' )
+               return
+            end if
 
 
-            IF ( XIN ) THEN
+            if ( xin ) then
 !
 !              Make sure the intercept is not too far on the
 !              "wrong" side of the Z axis.
 !
-               CALL UCRSS ( WESTB, Z, WBACK )
+               call ucrss ( westb, z, wback )
 
-               IF (  VDOT(SRFX, WBACK) .LT. (MARGIN*MAXR)  ) THEN
+               if (  vdot(srfx, wback) .lt. (margin*maxr)  ) then
 !
 !                 The intercept is either on the same side of the Z
 !                 axis as the west face of the segment, or is very
 !                 close to the Z axis.
 !
-                  DIST = VDIST( VERTEX, SRFX )
+                  dist = vdist( vertex, srfx )
 
-                  IF ( DIST .LT. MNDIST ) THEN
+                  if ( dist .lt. mndist ) then
 !
 !                    Record the intercept, distance, and surface index.
 !
-                     CALL VEQU ( SRFX, XPT )
+                     call vequ ( srfx, xpt )
 
-                     NXPTS  = 1
-                     MNDIST = DIST
+                     nxpts  = 1
+                     mndist = dist
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        We're done with the western boundary.
 !
 !
 !        Try the plane of eastern longitude next.
 !
-         CALL VPACK ( -SIN(MAXLON), COS(MAXLON), 0.D0, EASTB )
+         call vpack ( -sin(maxlon), cos(maxlon), 0.d0, eastb )
 
-         CALL ZZINRYPL ( VERTEX, UDIR, EASTB, 0.D0, S, NX, SRFX )
+         call zzinrypl ( vertex, udir, eastb, 0.d0, s, nx, srfx )
 
-         IF ( NX .EQ. 1 ) THEN
+         if ( nx .eq. 1 ) then
 !
 !           We have one point of intersection. Determine whether it's a
 !           candidate solution.
 !
-            CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, LONIDX, XIN )
+            call zzinpdt ( srfx, bounds, corpar, margin, lonidx, xin )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZRYTPDT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZRYTPDT' )
+               return
+            end if
 
 
-            IF ( XIN ) THEN
+            if ( xin ) then
 !
 !              Make sure the intercept is not too far on the "wrong"
 !              side of the Z axis.
 !
-               CALL UCRSS ( Z, EASTB, EBACK )
+               call ucrss ( z, eastb, eback )
 
-               IF (  VDOT(SRFX, EBACK) .LT. (MARGIN*MAXR)  ) THEN
+               if (  vdot(srfx, eback) .lt. (margin*maxr)  ) then
 !
 !                 The intercept is either on the same side of the Z
 !                 axis as the east face of the segment, or is very
 !                 close to the Z axis.
 !
-                  DIST = VDIST( VERTEX, SRFX )
+                  dist = vdist( vertex, srfx )
 
-                  IF ( DIST .LT. MNDIST ) THEN
+                  if ( dist .lt. mndist ) then
 !
 !                    Record the intercept, distance, and surface index.
 !
-                     CALL VEQU ( SRFX, XPT )
+                     call vequ ( srfx, xpt )
 
-                     NXPTS  = 1
-                     MNDIST = DIST
+                     nxpts  = 1
+                     mndist = dist
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     End of longitude boundary checks.
 !
@@ -1080,44 +1080,44 @@
 !     Find the intersection of the ray and lower bounding
 !     ellipsoid, if possible.
 !
-      CALL SURFPT ( VERTEX, UDIR, EMIN, EMIN, PMIN, SRFX, FOUND )
+      call surfpt ( vertex, udir, emin, emin, pmin, srfx, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        See whether this solution is in the element.
 !
-         CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, ALTIDX, XIN )
+         call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZRYTPDT' )
+            return
+         end if
 
 
-         IF ( XIN ) THEN
+         if ( xin ) then
 
-            DIST = VDIST( VERTEX, SRFX )
+            dist = vdist( vertex, srfx )
 
-            IF ( DIST .LT. MNDIST ) THEN
+            if ( dist .lt. mndist ) then
 !
 !              Record the intercept, distance, and surface index.
 !
-               CALL VEQU ( SRFX, XPT )
+               call vequ ( srfx, xpt )
 
-               NXPTS  = 1
-               MNDIST = DIST
+               nxpts  = 1
+               mndist = dist
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Unlike the outer ellipsoid, either intersection of the ray with
@@ -1125,49 +1125,49 @@
 !     case where the intersection farther from the ray's vertex is the
 !     correct one.
 !
-      CALL VMINUS( UDIR, NEGDIR )
+      call vminus( udir, negdir )
 
-      CALL SURFPT ( ENDPT2, NEGDIR, EMIN, EMIN, PMIN, SRFX, FOUND )
+      call surfpt ( endpt2, negdir, emin, emin, pmin, srfx, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZRYTPDT' )
-         RETURN
-      END IF
-
-
-      IF ( FOUND ) THEN
-
-         CALL ZZINPDT ( SRFX, BOUNDS, CORPAR, MARGIN, ALTIDX, XIN )
-
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZRYTPDT' )
-            RETURN
-         END IF
+      if ( failed() ) then
+         call chkout ( 'ZZRYTPDT' )
+         return
+      end if
 
 
-         IF ( XIN ) THEN
+      if ( found ) then
 
-            DIST = VDIST( VERTEX, SRFX )
+         call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
-            IF ( DIST .LT. MNDIST ) THEN
+         if ( failed() ) then
+            call chkout ( 'ZZRYTPDT' )
+            return
+         end if
+
+
+         if ( xin ) then
+
+            dist = vdist( vertex, srfx )
+
+            if ( dist .lt. mndist ) then
 !
 !              Record the intercept, distance, and surface index.
 !
-               CALL VEQU ( SRFX, XPT )
+               call vequ ( srfx, xpt )
 
-               NXPTS  = 1
+               nxpts  = 1
 !
 !              There's no need to update MNDIST at this point.
 !
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     NXPTS and XPT are set.
 !
-      CALL CHKOUT ( 'ZZRYTPDT' )
-      RETURN
-      END
+      call chkout ( 'ZZRYTPDT' )
+      return
+      end

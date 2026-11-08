@@ -1,6 +1,6 @@
 !$Procedure CYCLAI ( Cycle the elements of an integer array )
 
-      SUBROUTINE CYCLAI ( ARRAY, NELT, DIR, NCYCLE, OUT )
+      subroutine cyclai ( array, nelt, dir, ncycle, out )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               ARRAY    ( * )
-      INTEGER               NELT
-      CHARACTER*1           DIR
-      INTEGER               NCYCLE
-      INTEGER               OUT      ( * )
+      integer               array    ( * )
+      integer               nelt
+      character*1           dir
+      integer               ncycle
+      integer               out      ( * )
 
 ! $ Brief_I/O
 !
@@ -175,40 +175,40 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          GCD
-      LOGICAL          RETURN
+      integer          gcd
+      logical          return
 
 !
 !     Local variables
 !
-      INTEGER          LAST
-      INTEGER          TEMP
+      integer          last
+      integer          temp
 
-      INTEGER          G
-      INTEGER          I
-      INTEGER          J
-      INTEGER          K
-      INTEGER          L
-      INTEGER          M
+      integer          g
+      integer          i
+      integer          j
+      integer          k
+      integer          l
+      integer          m
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CYCLAI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CYCLAI' )
+      end if
 
 !
 !     Don't even screw around if there are no elements in the array.
 !
-      IF ( NELT .LT. 1 ) THEN
-         CALL CHKOUT ( 'CYCLAI' )
-         RETURN
-      END IF
+      if ( nelt .lt. 1 ) then
+         call chkout ( 'CYCLAI' )
+         return
+      end if
 
 
 !
@@ -217,37 +217,37 @@
 !     K + m*N for any integer m.  Thus we compute the value of the
 !     minimum forward right cycle that is equivalent to the inputs.
 !
-      IF (      ( DIR .EQ. 'B' ) &
-           .OR. ( DIR .EQ. 'b' ) ) THEN
+      if (      ( dir .eq. 'B' ) &
+           .or. ( dir .eq. 'b' ) ) then
 
-         K = MOD ( - NCYCLE, NELT )
+         k = mod ( - ncycle, nelt )
 
-      ELSE IF (      ( DIR .EQ. 'F' ) &
-                .OR. ( DIR .EQ. 'F' ) ) THEN
+      else if (      ( dir .eq. 'F' ) &
+                .or. ( dir .eq. 'F' ) ) then
 
-         K = MOD (   NCYCLE, NELT )
+         k = mod (   ncycle, nelt )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Cycling direction was *.' )
-         CALL ERRCH  ( '*', DIR )
-         CALL SIGERR ( 'SPICE(INVALIDDIRECTION)'  )
-         CALL CHKOUT ( 'CYCLAI' )
-         RETURN
+         call setmsg ( 'Cycling direction was *.' )
+         call errch  ( '*', dir )
+         call sigerr ( 'SPICE(INVALIDDIRECTION)'  )
+         call chkout ( 'CYCLAI' )
+         return
 
-      END IF
+      end if
 
 
-      IF ( K .LT. 0 ) THEN
-         K = K + NELT
+      if ( k .lt. 0 ) then
+         k = k + nelt
 
-      ELSE IF ( K .EQ. 0 ) THEN
+      else if ( k .eq. 0 ) then
 
-         CALL MOVEI ( ARRAY, NELT, OUT )
-         CALL CHKOUT ( 'CYCLAI' )
-         RETURN
+         call movei ( array, nelt, out )
+         call chkout ( 'CYCLAI' )
+         return
 
-      END IF
+      end if
 
 
 
@@ -256,31 +256,31 @@
 !     to cycle character strings in CYCLEC. We won't repeat the (rather
 !     lengthy) description here.
 !
-      G = GCD ( K, NELT )
-      M = NELT / G
+      g = gcd ( k, nelt )
+      m = nelt / g
 
-      DO I = 1, G
+      do i = 1, g
 
-         L    = I
-         LAST = ARRAY(L)
+         l    = i
+         last = array(l)
 
-         DO J = 1, M
+         do j = 1, m
 
-            L = L + K
+            l = l + k
 
-            IF ( L .GT. NELT ) THEN
-               L = L - NELT
-            END IF
+            if ( l .gt. nelt ) then
+               l = l - nelt
+            end if
 
-            TEMP    = ARRAY(L)
-            OUT(L)  = LAST
-            LAST    = TEMP
+            temp    = array(l)
+            out(l)  = last
+            last    = temp
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'CYCLAI' )
-      RETURN
-      END
+      call chkout ( 'CYCLAI' )
+      return
+      end

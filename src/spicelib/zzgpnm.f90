@@ -1,10 +1,10 @@
 !$Procedure      ZZGPNM ( Get position of a name )
 
-      SUBROUTINE ZZGPNM ( NAMLST, &
-                          NMPOOL, NAMES, DATLST, &
-                          DPPOOL, DPVALS, &
-                          CHPOOL, CHVALS, &
-                          VARNAM, FOUND,  LOOKAT, NAMEAT )
+      subroutine zzgpnm ( namlst, &
+                          nmpool, names, datlst, &
+                          dppool, dpvals, &
+                          chpool, chvals, &
+                          varnam, found,  lookat, nameat )
 
 
 ! $ Abstract
@@ -27,23 +27,23 @@
 ! $ Declarations
 
 
-      IMPLICIT NONE
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      implicit none
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               NAMLST     (           * )
-      INTEGER               NMPOOL     ( 2, LBPOOL:* )
-      CHARACTER*(*)         NAMES      (           * )
-      INTEGER               DATLST     (           * )
-      INTEGER               DPPOOL     ( 2, LBPOOL:* )
-      DOUBLE PRECISION      DPVALS     (           * )
-      INTEGER               CHPOOL     ( 2, LBPOOL:* )
-      CHARACTER*(*)         CHVALS     (           * )
+      integer               namlst     (           * )
+      integer               nmpool     ( 2, lbpool:* )
+      character*(*)         names      (           * )
+      integer               datlst     (           * )
+      integer               dppool     ( 2, lbpool:* )
+      double precision      dpvals     (           * )
+      integer               chpool     ( 2, lbpool:* )
+      character*(*)         chvals     (           * )
 
-      CHARACTER*(*)         VARNAM
-      LOGICAL               FOUND
-      INTEGER               LOOKAT
-      INTEGER               NAMEAT
+      character*(*)         varnam
+      logical               found
+      integer               lookat
+      integer               nameat
 
 ! $ Brief_I/O
 !
@@ -164,40 +164,40 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               LNKNFN
-      INTEGER               ZZHASH
-      LOGICAL               RETURN
+      integer               lnknfn
+      integer               zzhash
+      logical               return
 
 !
 !     Parameters
 !
-      INTEGER               PREV
-      PARAMETER           ( PREV = 2 )
+      integer               prev
+      parameter           ( prev = 2 )
 
-      INTEGER               NEXT
-      PARAMETER           ( NEXT = 1 )
+      integer               next
+      parameter           ( next = 1 )
 
 
 !
 !     Local Variables
 !
-      INTEGER               NODE
-      LOGICAL               FULL
+      integer               node
+      logical               full
 
-      INTEGER               HEAD
-      INTEGER               TAIL
+      integer               head
+      integer               tail
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGPNM' )
+      call chkin ( 'ZZGPNM' )
 
-      NAMEAT = 0
+      nameat = 0
 
 !
 !
@@ -206,73 +206,73 @@
 !     we will use the variable FOUND to indicate whether or
 !     not it was already present.
 !
-      LOOKAT =  ZZHASH ( VARNAM )
-      NODE   =  NAMLST ( LOOKAT )
-      FULL   =  LNKNFN ( NMPOOL ) .LE. 0
-      FOUND  = .FALSE.
+      lookat =  zzhash ( varnam )
+      node   =  namlst ( lookat )
+      full   =  lnknfn ( nmpool ) .le. 0
+      found  = .false.
 
 !
 !     See if this name (or one colliding with it in the
 !     hash scheme) has already been stored in the name list.
 !
-      IF ( NODE .GT. 0 ) THEN
+      if ( node .gt. 0 ) then
 
-         HEAD =  NODE
-         TAIL = -NMPOOL(PREV,HEAD)
+         head =  node
+         tail = -nmpool(prev,head)
 
-         DO WHILE ( NODE .GT. 0 .AND. .NOT. FOUND )
+         do while ( node .gt. 0 .and. .not. found )
 
-            FOUND  =  NAMES (NODE) .EQ. VARNAM
-            NAMEAT =  NODE
-            NODE   =  NMPOOL(NEXT,NODE)
+            found  =  names (node) .eq. varnam
+            nameat =  node
+            node   =  nmpool(next,node)
 
-         END DO
+         end do
 
-         IF (        .NOT. FOUND &
-               .AND. .NOT. FULL   ) THEN
+         if (        .not. found &
+               .and. .not. full   ) then
 
 !
 !           We didn't find this name on the conflict resolution
 !           list. Allocate a new slot for it.
 !
-            CALL LNKAN  ( NMPOOL, NODE         )
-            CALL LNKILA ( TAIL,   NODE, NMPOOL )
+            call lnkan  ( nmpool, node         )
+            call lnkila ( tail,   node, nmpool )
 
-            NAMES(NODE) =  VARNAM
-            NAMEAT      =  NODE
+            names(node) =  varnam
+            nameat      =  node
 
-         END IF
+         end if
 
-      ELSE IF ( .NOT. FULL ) THEN
+      else if ( .not. full ) then
 
 !
 !        Nothing like this variable name (in the hashing sense)
 !        has been loaded so far.  We need to allocate
 !        a name slot for this variable.
 !
-         CALL LNKAN ( NMPOOL, NODE )
+         call lnkan ( nmpool, node )
 
-         NAMLST(LOOKAT) =  NODE
-         NAMES (NODE  ) =  VARNAM
-         NAMEAT         =  NODE
+         namlst(lookat) =  node
+         names (node  ) =  varnam
+         nameat         =  node
 
-      END IF
+      end if
 
 !
 !     If the name pool was full and we didn't find this name
 !     we've got an error. Diagnose it and return.
 !
-      IF ( FULL .AND. .NOT. FOUND ) THEN
+      if ( full .and. .not. found ) then
 
-         CALL SETMSG ( 'The kernel pool does not have room ' &
+         call setmsg ( 'The kernel pool does not have room ' &
          //            'for any more variables.' )
-         CALL SIGERR ( 'SPICE(KERNELPOOLFULL)' )
-         CALL CHKOUT ( 'ZZGPNM' )
-         RETURN
+         call sigerr ( 'SPICE(KERNELPOOLFULL)' )
+         call chkout ( 'ZZGPNM' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGPNM' )
-      RETURN
+      call chkout ( 'ZZGPNM' )
+      return
 
-      END
+      end

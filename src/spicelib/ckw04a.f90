@@ -1,6 +1,6 @@
 !$Procedure CKW04A ( CK type 04: Add data to a segment )
 
-      SUBROUTINE CKW04A ( HANDLE, NPKTS, PKTSIZ, PKTDAT, SCLKDP )
+      subroutine ckw04a ( handle, npkts, pktsiz, pktdat, sclkdp )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ckparam.inc'
+      include               'ckparam.inc'
 
-      INTEGER               HANDLE
-      INTEGER               NPKTS
-      INTEGER               PKTSIZ( * )
-      DOUBLE PRECISION      PKTDAT( * )
-      DOUBLE PRECISION      SCLKDP( * )
+      integer               handle
+      integer               npkts
+      integer               pktsiz( * )
+      double precision      pktdat( * )
+      double precision      sclkdp( * )
 
 ! $ Brief_I/O
 !
@@ -468,7 +468,7 @@
 !
 !     Spicelib functions.
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters.
@@ -479,110 +479,110 @@
 !     have to be shifted to the left after numbers of coefficients
 !     were packed into a single integer.
 !
-      INTEGER               SHFTAD
-      PARAMETER           ( SHFTAD = 6 )
+      integer               shftad
+      parameter           ( shftad = 6 )
 
 !
 !     Local Variables.
 !
-      INTEGER               K
-      INTEGER               KK
-      INTEGER               NUMCFT ( QAVSIZ )
-      INTEGER               DISPLM
-      INTEGER               DISPM
+      integer               k
+      integer               kk
+      integer               numcft ( qavsiz )
+      integer               displm
+      integer               dispm
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKW04A' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'CKW04A' )
+      end if
 
 !
 !     First, check if the number of coefficient sets and epochs
 !     is positive and whether each packet is smaller than the
 !     maximum size of a record that CKPFS can handle.
 !
-      DO K = 1, NPKTS
+      do k = 1, npkts
 
-         IF ( PKTSIZ( K ) .LE. 0 ) THEN
+         if ( pktsiz( k ) .le. 0 ) then
 
-            CALL SETMSG ( 'The number of coefficient sets and '      // &
+            call setmsg ( 'The number of coefficient sets and '      // &
                           'epochs in the # data packet (record) '    // &
                           'to be added to the DAF segment '          // &
                           'in the file ''#'' was not positive. '     // &
                           'Its value was: #.'                        )
-            CALL ERRINT ( '#', K                                     )
-            CALL ERRHAN ( '#', HANDLE                                )
-            CALL ERRINT ( '#', PKTSIZ( K )                           )
-            CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                   )
-            CALL CHKOUT ( 'CKW04A'                                   )
-            RETURN
+            call errint ( '#', k                                     )
+            call errhan ( '#', handle                                )
+            call errint ( '#', pktsiz( k )                           )
+            call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+            call chkout ( 'CKW04A'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        We do .GE. comparison because a type 4 CK record passed
 !        inside CKPFS will have one more element -- time at which
 !        the pointing will be evaluated.
 !
-         IF ( PKTSIZ( K ) .GE. CK4RSZ ) THEN
+         if ( pktsiz( k ) .ge. ck4rsz ) then
 
-            CALL SETMSG ( 'The total size of the # data packet '     // &
+            call setmsg ( 'The total size of the # data packet '     // &
                           '(record) to be added to the DAF segment ' // &
                           'in the file ''#'' is greater than the '   // &
                           'maximum allowed type 4 record size #. '   // &
                           'Its value was: #.'                        )
-            CALL ERRINT ( '#', K                                     )
-            CALL ERRHAN ( '#', HANDLE                                )
-            CALL ERRINT ( '#', CK4RSZ - 1                            )
-            CALL ERRINT ( '#', PKTSIZ( K )                           )
-            CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                   )
-            CALL CHKOUT ( 'CKW04A'                                   )
-            RETURN
+            call errint ( '#', k                                     )
+            call errhan ( '#', handle                                )
+            call errint ( '#', ck4rsz - 1                            )
+            call errint ( '#', pktsiz( k )                           )
+            call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+            call chkout ( 'CKW04A'                                   )
+            return
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
-      DISPLM = 0
-      DISPM = 0
+      displm = 0
+      dispm = 0
 !
 !     The cycle below encodes groups of numbers of coefficients in
 !     data packets to single double precision numbers and shift
 !     data in packets to the left to decrease the data packet
 !     lengths.
 !
-      DO K = 1, NPKTS
+      do k = 1, npkts
 
 !
 !        Encode integer numbers of coefficients for each component
 !        to single double precision variable
 !
-         DO KK = 1, QAVSIZ
-            NUMCFT( KK ) = INT ( PKTDAT( KK + 2 + DISPLM ) )
-         END DO
+         do kk = 1, qavsiz
+            numcft( kk ) = int ( pktdat( kk + 2 + displm ) )
+         end do
 
-         CALL ZZCK4I2D ( NUMCFT, QAVSIZ, CK4PCD, PKTDAT( 3 + DISPM ) )
+         call zzck4i2d ( numcft, qavsiz, ck4pcd, pktdat( 3 + dispm ) )
 
 !
 !        Shift coefficients sets to the left to overwrite numbers of
 !        packets
 !
-         DO KK = 4, PKTSIZ( K )
-            PKTDAT( KK + DISPM ) = PKTDAT( KK + SHFTAD + DISPLM )
-         END DO
+         do kk = 4, pktsiz( k )
+            pktdat( kk + dispm ) = pktdat( kk + shftad + displm )
+         end do
 
 !
 !        Shift middle value and radii of interval
 !
-         PKTDAT( 1 + DISPM ) = PKTDAT( 1 + DISPLM )
-         PKTDAT( 2 + DISPM ) = PKTDAT( 2 + DISPLM )
+         pktdat( 1 + dispm ) = pktdat( 1 + displm )
+         pktdat( 2 + dispm ) = pktdat( 2 + displm )
 
-         DISPLM = DISPLM + PKTSIZ ( K )
+         displm = displm + pktsiz ( k )
 
 !
 !        Length of each data packet became less for 6 elements because
@@ -590,22 +590,22 @@
 !        numbers of polynomial coefficients, to one double precision
 !        number
 !
-         PKTSIZ( K ) = PKTSIZ( K ) - SHFTAD
-         DISPM = DISPM + PKTSIZ ( K )
+         pktsiz( k ) = pktsiz( k ) - shftad
+         dispm = dispm + pktsiz ( k )
 
-      END DO
+      end do
 
 !
 !     Add the data.
 !
-      CALL SGWVPK ( HANDLE, NPKTS, PKTSIZ, PKTDAT, NPKTS, SCLKDP )
+      call sgwvpk ( handle, npkts, pktsiz, pktdat, npkts, sclkdp )
 
 !
 !     No need to check FAILED() here, since all we do is check out.
 !     Leave it up to the caller.
 !
-      CALL CHKOUT ( 'CKW04A' )
+      call chkout ( 'CKW04A' )
 
-      RETURN
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure VSEPG ( Angular separation of vectors, general dimension )
 
-      DOUBLE PRECISION FUNCTION VSEPG ( V1, V2, NDIM )
+      double precision function vsepg ( v1, v2, ndim )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V1 ( * )
-      DOUBLE PRECISION   V2 ( * )
-      INTEGER            NDIM
+      double precision   v1 ( * )
+      double precision   v2 ( * )
+      integer            ndim
 
 ! $ Brief_I/O
 !
@@ -252,10 +252,10 @@
 !
 !     SPICELIB functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORMG
-      DOUBLE PRECISION      VDOTG
+      external              pi
+      double precision      pi
+      double precision      vnormg
+      double precision      vdotg
 
 !
 !     Local Variables
@@ -266,59 +266,59 @@
 !        Magnitude of either of the difference vectors: V1-V2 or
 !           V1-(-V2)
 !
-      DOUBLE PRECISION      DMAG1
-      DOUBLE PRECISION      DMAG2
-      DOUBLE PRECISION      R1
-      DOUBLE PRECISION      R2
-      DOUBLE PRECISION      MAGDIF
+      double precision      dmag1
+      double precision      dmag2
+      double precision      r1
+      double precision      r2
+      double precision      magdif
 
-      INTEGER               I
+      integer               i
 
 !
 !     Calculate the magnitudes of V1 and V2; if either is 0, VSEPG = 0
 !
-      DMAG1 = VNORMG ( V1, NDIM )
-      IF ( DMAG1 .EQ. 0.D0 ) THEN
-         VSEPG = 0.D0
-         RETURN
-      END IF
+      dmag1 = vnormg ( v1, ndim )
+      if ( dmag1 .eq. 0.d0 ) then
+         vsepg = 0.d0
+         return
+      end if
 
-      DMAG2 = VNORMG ( V2, NDIM )
-      IF ( DMAG2 .EQ. 0.D0 ) THEN
-         VSEPG = 0.D0
-         RETURN
-      END IF
+      dmag2 = vnormg ( v2, ndim )
+      if ( dmag2 .eq. 0.d0 ) then
+         vsepg = 0.d0
+         return
+      end if
 
 
-      IF      ( VDOTG (V1, V2, NDIM) .GT. 0 ) THEN
+      if      ( vdotg (v1, v2, ndim) .gt. 0 ) then
 
-         R1 = 1.0D0/DMAG1
-         R2 = 1.0D0/DMAG2
+         r1 = 1.0d0/dmag1
+         r2 = 1.0d0/dmag2
 
-         MAGDIF = 0.0D0
-         DO I = 1, NDIM
-            MAGDIF = MAGDIF + ( V1(I)*R1 - V2(I)*R2 )**2
-         END DO
-         MAGDIF = DSQRT(MAGDIF)
+         magdif = 0.0d0
+         do i = 1, ndim
+            magdif = magdif + ( v1(i)*r1 - v2(i)*r2 )**2
+         end do
+         magdif = dsqrt(magdif)
 
-         VSEPG = 2.0D0 * ASIN (0.5D0 * MAGDIF)
+         vsepg = 2.0d0 * asin (0.5d0 * magdif)
 
-      ELSE IF ( VDOTG (V1, V2, NDIM) .LT. 0 ) THEN
+      else if ( vdotg (v1, v2, ndim) .lt. 0 ) then
 
-         R1 = 1.0D0/DMAG1
-         R2 = 1.0D0/DMAG2
+         r1 = 1.0d0/dmag1
+         r2 = 1.0d0/dmag2
 
-         MAGDIF = 0.0D0
-         DO I = 1, NDIM
-            MAGDIF = MAGDIF + ( V1(I)*R1 + V2(I)*R2 )**2
-         END DO
-         MAGDIF = DSQRT(MAGDIF)
+         magdif = 0.0d0
+         do i = 1, ndim
+            magdif = magdif + ( v1(i)*r1 + v2(i)*r2 )**2
+         end do
+         magdif = dsqrt(magdif)
 
-         VSEPG = PI() - 2.0D0 * ASIN (0.5D0 * MAGDIF)
+         vsepg = pi() - 2.0d0 * asin (0.5d0 * magdif)
 
-      ELSE
-         VSEPG = PI() / 2.0D0
-      END IF
+      else
+         vsepg = pi() / 2.0d0
+      end if
 
-      RETURN
-      END
+      return
+      end

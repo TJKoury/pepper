@@ -1,7 +1,7 @@
 !$Procedure FOVRAY ( Is ray in FOV at time? )
 
-      SUBROUTINE FOVRAY ( INST,   RAYDIR, RFRAME, ABCORR, &
-                          OBSRVR, ET,     VISIBL        )
+      subroutine fovray ( inst,   raydir, rframe, abcorr, &
+                          obsrvr, et,     visibl        )
 
 ! $ Abstract
 !
@@ -27,17 +27,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
+      include               'gf.inc'
 
-      CHARACTER*(*)         INST
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      CHARACTER*(*)         RFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      ET
-      LOGICAL               VISIBL
+      character*(*)         inst
+      double precision      raydir ( 3 )
+      character*(*)         rframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      et
+      logical               visibl
 
 ! $ Brief_I/O
 !
@@ -447,17 +447,17 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'FOVRAY' )
+      call chkin  ( 'FOVRAY' )
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -469,18 +469,18 @@
 !
 !     Initialize the visibility calculation.
 !
-      CALL ZZGFFVIN ( INST,   RYSHAP, RAYDIR, ' ', &
-                      RFRAME, ABCORR, OBSRVR )
+      call zzgffvin ( inst,   ryshap, raydir, ' ', &
+                      rframe, abcorr, obsrvr )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'FOVRAY' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'FOVRAY' )
+         return
+      end if
 !
 !     Calculate the visibility state.
 !
-      CALL ZZGFFVST ( ET, VISIBL )
+      call zzgffvst ( et, visibl )
 
-      CALL CHKOUT ( 'FOVRAY' )
-      RETURN
-      END
+      call chkout ( 'FOVRAY' )
+      return
+      end

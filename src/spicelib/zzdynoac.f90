@@ -1,8 +1,8 @@
 !$Procedure ZZDYNOAC ( Fetch optional array, character frame variable )
 
-      SUBROUTINE ZZDYNOAC ( FRNAME, FRCODE, ITEM, &
-                            MAXN,   N,      VALUES, FOUND )
-      IMPLICIT NONE
+      subroutine zzdynoac ( frname, frcode, item, &
+                            maxn,   n,      values, found )
+      implicit none
 
 ! $ Abstract
 !
@@ -30,15 +30,15 @@
 !
 ! $ Declarations
 
-      INCLUDE 'zzdyn.inc'
+      include 'zzdyn.inc'
 
-      CHARACTER*(*)         FRNAME
-      INTEGER               FRCODE
-      CHARACTER*(*)         ITEM
-      INTEGER               MAXN
-      INTEGER               N
-      CHARACTER*(*)         VALUES  ( * )
-      LOGICAL               FOUND
+      character*(*)         frname
+      integer               frcode
+      character*(*)         item
+      integer               maxn
+      integer               n
+      character*(*)         values  ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -196,50 +196,50 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
+      integer               rtrim
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      CHARACTER*(*)         TEMPLT
-      PARAMETER           ( TEMPLT = 'FRAME_#_#' )
+      character*(*)         templt
+      parameter           ( templt = 'FRAME_#_#' )
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      INTEGER               TEMPLN
-      PARAMETER           ( TEMPLN = 7 )
+      integer               templn
+      parameter           ( templn = 7 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(KVNMLN)    CDESTR
-      CHARACTER*(1)         DTYPE
-      CHARACTER*(KVNMLN)    KVNAME
+      character*(kvnmln)    cdestr
+      character*(1)         dtype
+      character*(kvnmln)    kvname
 
-      INTEGER               CODELN
-      INTEGER               ITEMLN
-      INTEGER               NAMELN
-      INTEGER               REQNAM
-      INTEGER               REQNUM
+      integer               codeln
+      integer               itemln
+      integer               nameln
+      integer               reqnam
+      integer               reqnum
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDYNOAC' )
+      call chkin ( 'ZZDYNOAC' )
 
 !
 !     Nothing found yet.
 !
-      FOUND  = .FALSE.
+      found  = .false.
 
 !
 !     Prepare to check the name of the kernel variable we're about
@@ -247,12 +247,12 @@
 !
 !     Convert the frame code to a string.
 !
-      CALL INTSTR ( FRCODE, CDESTR )
+      call intstr ( frcode, cdestr )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZDYNOAC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZDYNOAC' )
+         return
+      end if
 
 !
 !     Get the lengths of the input frame code, name and item.
@@ -261,13 +261,13 @@
 !     the name is too long, proceed to look up the form of the
 !     kernel variable name based on the frame name.
 !
-      CODELN = RTRIM ( CDESTR )
-      NAMELN = RTRIM ( FRNAME )
-      ITEMLN = RTRIM ( ITEM   )
+      codeln = rtrim ( cdestr )
+      nameln = rtrim ( frname )
+      itemln = rtrim ( item   )
 
-      REQNUM = CODELN + ITEMLN + TEMPLN
+      reqnum = codeln + itemln + templn
 
-      IF ( REQNUM .LE. KVNMLN ) THEN
+      if ( reqnum .le. kvnmln ) then
 !
 !        First try looking for a kernel variable including the frame ID
 !        code.
@@ -276,80 +276,80 @@
 !
 !            'FRAME_#_#'
 !
-         CALL REPMI  ( TEMPLT, '#',   FRCODE, KVNAME )
-         CALL REPMC  ( KVNAME, '#',   ITEM,   KVNAME )
-         CALL DTPOOL ( KVNAME, FOUND, N,      DTYPE  )
+         call repmi  ( templt, '#',   frcode, kvname )
+         call repmc  ( kvname, '#',   item,   kvname )
+         call dtpool ( kvname, found, n,      dtype  )
 
-      ELSE
+      else
 !
 !        The ID-based name is too long. We can't find the variable if
 !        we can't look it up.
 !
-         FOUND = .FALSE.
+         found = .false.
 
-      END IF
+      end if
 
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        We need to look up the frame name-based kernel variable.
 !        Determine the length of the name of this variable; make
 !        sure it's not too long.
 !
-         REQNAM = NAMELN + ITEMLN + TEMPLN
+         reqnam = nameln + itemln + templn
 
-         IF (       ( REQNAM .GT. KVNMLN ) &
-              .AND. ( REQNUM .GT. KVNMLN ) ) THEN
+         if (       ( reqnam .gt. kvnmln ) &
+              .and. ( reqnum .gt. kvnmln ) ) then
 !
 !           Both forms of the name are too long.
 !
-            CALL SETMSG ( 'Kernel variable FRAME_#_# has length #; '// &
+            call setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
                           'kernel variable FRAME_#_# has length #; '// &
                           'maximum allowed length is #.  Neither '  // &
                           'variable could be searched for in the '  // &
                           'kernel pool due to these name length '   // &
                           'errors.'                                 )
-            CALL ERRINT ( '#',  FRCODE                              )
-            CALL ERRCH  ( '#',  ITEM                                )
-            CALL ERRINT ( '#',  REQNUM                              )
-            CALL ERRCH  ( '#',  FRNAME                              )
-            CALL ERRCH  ( '#',  ITEM                                )
-            CALL ERRINT ( '#',  REQNAM                              )
-            CALL ERRINT ( '#',  KVNMLN                              )
-            CALL SIGERR ( 'SPICE(VARNAMETOOLONG)'                   )
-            CALL CHKOUT ( 'ZZDYNOAC'                                )
-            RETURN
+            call errint ( '#',  frcode                              )
+            call errch  ( '#',  item                                )
+            call errint ( '#',  reqnum                              )
+            call errch  ( '#',  frname                              )
+            call errch  ( '#',  item                                )
+            call errint ( '#',  reqnam                              )
+            call errint ( '#',  kvnmln                              )
+            call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
+            call chkout ( 'ZZDYNOAC'                                )
+            return
 
 
-         ELSE IF  ( REQNAM .GT. KVNMLN ) THEN
+         else if  ( reqnam .gt. kvnmln ) then
 !
 !           We couldn't find the variable having the ID-based name,
 !           and the frame name-based variable name is too long to
 !           look up.
 !
-            CALL CHKOUT ( 'ZZDYNOAC' )
-            RETURN
+            call chkout ( 'ZZDYNOAC' )
+            return
 
-         END IF
+         end if
 
 !
 !        Now try looking for a kernel variable including the frame
 !        name.
 !
-         CALL REPMC  ( TEMPLT, '#',   FRNAME, KVNAME )
-         CALL REPMC  ( KVNAME, '#',   ITEM,   KVNAME )
-         CALL DTPOOL ( KVNAME, FOUND, N,      DTYPE  )
+         call repmc  ( templt, '#',   frname, kvname )
+         call repmc  ( kvname, '#',   item,   kvname )
+         call dtpool ( kvname, found, n,      dtype  )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 !
 !           The FOUND flag is set appropriately.
 !
-            CALL CHKOUT ( 'ZZDYNOAC' )
-            RETURN
+            call chkout ( 'ZZDYNOAC' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -360,60 +360,60 @@
 !     of the kernel variable in-line so we can create a more detailed
 !     error message if need be.
 !
-      IF ( DTYPE .EQ. 'N' ) THEN
+      if ( dtype .eq. 'N' ) then
 
-         CALL SETMSG ( 'The kernel variable # has used to define '  // &
+         call setmsg ( 'The kernel variable # has used to define '  // &
                        'frame # was expected to have character '    // &
                        'data type but in fact has numeric '         // &
                        'data type.  Usually this type of '          // &
                        'problem is due to an error in a frame '     // &
                        'definition provided in a frame kernel.'     )
-         CALL ERRCH  ( '#',  KVNAME                                 )
-         CALL ERRCH  ( '#',  FRNAME                                 )
-         CALL SIGERR ( 'SPICE(BADVARIABLETYPE)'                     )
-         CALL CHKOUT ( 'ZZDYNOAC'                                   )
-         RETURN
+         call errch  ( '#',  kvname                                 )
+         call errch  ( '#',  frname                                 )
+         call sigerr ( 'SPICE(BADVARIABLETYPE)'                     )
+         call chkout ( 'ZZDYNOAC'                                   )
+         return
 
-      END IF
+      end if
 
 
-      IF ( N .GT. MAXN ) THEN
+      if ( n .gt. maxn ) then
 
-         CALL SETMSG ( 'The kernel variable # has used to define '  // &
+         call setmsg ( 'The kernel variable # has used to define '  // &
                        'frame # was expected to have size not '     // &
                        'exceeding # but in fact has size #. '       // &
                        'Usually this type of '                      // &
                        'problem is due to an error in a frame '     // &
                        'definition provided in a frame kernel.'     )
-         CALL ERRCH  ( '#',  KVNAME                                 )
-         CALL ERRCH  ( '#',  FRNAME                                 )
-         CALL ERRINT ( '#',  MAXN                                   )
-         CALL ERRINT ( '#',  N                                      )
-         CALL SIGERR ( 'SPICE(BADVARIABLESIZE)'                     )
-         CALL CHKOUT ( 'ZZDYNOAC'                                   )
-         RETURN
+         call errch  ( '#',  kvname                                 )
+         call errch  ( '#',  frname                                 )
+         call errint ( '#',  maxn                                   )
+         call errint ( '#',  n                                      )
+         call sigerr ( 'SPICE(BADVARIABLESIZE)'                     )
+         call chkout ( 'ZZDYNOAC'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the kernel variable.
 !
-      CALL GCPOOL ( KVNAME, 1, MAXN, N, VALUES, FOUND )
+      call gcpool ( kvname, 1, maxn, n, values, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Variable # not found after DTPOOL ' // &
+         call setmsg ( 'Variable # not found after DTPOOL ' // &
                        'indicated it was present in pool.'  )
-         CALL ERRCH  ( '#',  KVNAME                         )
-         CALL SIGERR ( 'SPICE(BUG)'                         )
-         CALL CHKOUT ( 'ZZDYNOAC'                           )
-         RETURN
+         call errch  ( '#',  kvname                         )
+         call sigerr ( 'SPICE(BUG)'                         )
+         call chkout ( 'ZZDYNOAC'                           )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZDYNOAC' )
-      RETURN
-      END
+      call chkout ( 'ZZDYNOAC' )
+      return
+      end
 
 

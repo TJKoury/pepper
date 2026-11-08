@@ -1,6 +1,6 @@
 !$Procedure PCK03E ( PCK, end a type 3 segment )
 
-      SUBROUTINE PCK03E ( HANDLE )
+      subroutine pck03e ( handle )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -302,28 +302,28 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCK03E' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'PCK03E' )
+      end if
 
 !
 !     This is simple, just call the routine which ends a generic
 !     segment.
 !
-      CALL SGWES ( HANDLE )
+      call sgwes ( handle )
 
 !
 !     No need to check FAILED() since all we do is leave. The caller can
 !     check it.
 !
-      CALL CHKOUT ( 'PCK03E' )
-      RETURN
+      call chkout ( 'PCK03E' )
+      return
 
-      END
+      end

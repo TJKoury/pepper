@@ -1,6 +1,6 @@
 !$Procedure WNFETD ( Fetch an interval from a DP window )
 
-      SUBROUTINE WNFETD ( WINDOW, N, LEFT, RIGHT )
+      subroutine wnfetd ( window, n, left, right )
 
 ! $ Abstract
 !
@@ -16,15 +16,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      WINDOW      ( LBCELL:* )
-      INTEGER               N
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
+      double precision      window      ( lbcell:* )
+      integer               n
+      double precision      left
+      double precision      right
 
 ! $ Brief_I/O
 !
@@ -214,39 +214,39 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               END
+      integer               card
+      integer               end
 
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) RETURN
-      CALL CHKIN ( 'WNFETD' )
+      if ( return () ) return
+      call chkin ( 'WNFETD' )
 
 !
 !
 !     How many endpoints in the window? Enough? Normally, endpoints
 !     of the Nth interval are stored in elements 2N and 2N-1.
 !
-      CARD = CARDD ( WINDOW )
-      END  = 2*N
+      card = cardd ( window )
+      end  = 2*n
 
-      IF ( N .LT. 1  .OR.  CARD .LT. END ) THEN
-         CALL SETMSG ( 'WNFETD: No such interval.' )
-         CALL SIGERR ( 'SPICE(NOINTERVAL)' )
-      ELSE
-         LEFT  = WINDOW(END-1)
-         RIGHT = WINDOW(END  )
-      END IF
+      if ( n .lt. 1  .or.  card .lt. end ) then
+         call setmsg ( 'WNFETD: No such interval.' )
+         call sigerr ( 'SPICE(NOINTERVAL)' )
+      else
+         left  = window(end-1)
+         right = window(end  )
+      end if
 
-      CALL CHKOUT ( 'WNFETD' )
+      call chkout ( 'WNFETD' )
 
-      RETURN
-      END
+      return
+      end

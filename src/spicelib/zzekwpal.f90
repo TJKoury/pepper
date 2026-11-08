@@ -1,6 +1,6 @@
 !$Procedure     ZZEKWPAL ( EK, write paged array, logical )
 
-      SUBROUTINE ZZEKWPAL ( HANDLE, SEGDSC, NVALS, LVALS, P, BASE )
+      subroutine zzekwpal ( handle, segdsc, nvals, lvals, p, base )
 
 ! $ Abstract
 !
@@ -17,18 +17,18 @@
 ! $ Declarations
 
 
-      INCLUDE  'ekbool.inc'
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekbool.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               NVALS
-      LOGICAL               LVALS  ( * )
-      INTEGER               P
-      INTEGER               BASE
+      integer               handle
+      integer               segdsc ( * )
+      integer               nvals
+      logical               lvals  ( * )
+      integer               p
+      integer               base
 
 ! $ Brief_I/O
 !
@@ -126,33 +126,33 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(PGSIZC)    PAGE
+      character*(pgsizc)    page
 
-      INTEGER               FROM
-      INTEGER               NPAGE
-      INTEGER               TO
+      integer               from
+      integer               npage
+      integer               to
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKWPAL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKWPAL' )
+      end if
 
 !
 !     Decide how many pages are required to hold the array, and
 !     allocate that many new, contiguous pages.
 !
-      NPAGE  =  ( NVALS + CPSIZE - 1 ) / CPSIZE
+      npage  =  ( nvals + cpsize - 1 ) / cpsize
 
-      CALL ZZEKACPS ( HANDLE, SEGDSC, CHR, NPAGE, P, BASE )
+      call zzekacps ( handle, segdsc, chr, npage, p, base )
 
 !
 !     Write the input data out to the target file a page at a time.
@@ -161,24 +161,24 @@
 !     considering and TO to indicate the element of PAGE to write
 !     to.
 !
-      TO      =  1
-      PAGE    =  ' '
+      to      =  1
+      page    =  ' '
 
-      DO FROM = 1, NVALS
+      do from = 1, nvals
 
 !
 !        The Assignment.
 !
-         IF ( LVALS(FROM) ) THEN
-            PAGE( TO : TO ) =  CTRUE
-         ELSE
-            PAGE( TO : TO ) =  CFALSE
-         END IF
+         if ( lvals(from) ) then
+            page( to : to ) =  ctrue
+         else
+            page( to : to ) =  cfalse
+         end if
 
-         TO  =  TO + 1
+         to  =  to + 1
 
 
-         IF (  ( TO .GT. CPSIZE ) .OR. ( FROM .EQ. NVALS )  ) THEN
+         if (  ( to .gt. cpsize ) .or. ( from .eq. nvals )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the
@@ -186,24 +186,24 @@
 !
 !           Write out the data page.
 !
-            CALL ZZEKPGWC ( HANDLE, P, PAGE  )
+            call zzekpgwc ( handle, p, page  )
 
 !
 !           Set the link count.
 !
-            CALL ZZEKSLNK ( HANDLE, CHR, P, TO-1 )
+            call zzekslnk ( handle, chr, p, to-1 )
 
 !
 !           Next page.
 !
-            P   =  P + 1
-            TO  =  1
+            p   =  p + 1
+            to  =  1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZEKWPAL' )
-      RETURN
-      END
+      call chkout ( 'ZZEKWPAL' )
+      return
+      end

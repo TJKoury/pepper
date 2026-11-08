@@ -1,6 +1,6 @@
 !$Procedure DASRDD ( DAS, read data, double precision )
 
-      SUBROUTINE DASRDD ( HANDLE, FIRST, LAST, DATA )
+      subroutine dasrdd ( handle, first, last, data )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               FIRST
-      INTEGER               LAST
-      DOUBLE PRECISION      DATA   ( * )
+      integer               handle
+      integer               first
+      integer               last
+      double precision      data   ( * )
 
 ! $ Brief_I/O
 !
@@ -291,28 +291,28 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               NWD
-      PARAMETER           ( NWD   =  128 )
+      integer               nwd
+      parameter           ( nwd   =  128 )
 
-      INTEGER               DP
-      PARAMETER           ( DP     =  2  )
+      integer               dp
+      parameter           ( dp     =  2  )
 
 
 !
 !     Local variables
 !
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               N
-      INTEGER               NREAD
-      INTEGER               NUMDP
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               clbase
+      integer               clsize
+      integer               n
+      integer               nread
+      integer               numdp
+      integer               recno
+      integer               wordno
 
 
 
@@ -321,71 +321,71 @@
 !     number.  If FIRST is invalid, DASA2L will take care of the
 !     problem.
 !
-      CALL DASA2L ( HANDLE, DP, FIRST, CLBASE, CLSIZE, RECNO, WORDNO )
+      call dasa2l ( handle, dp, first, clbase, clsize, recno, wordno )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Decide how many double precision numbers to read.
 !
-      NUMDP = LAST - FIRST + 1
-      NREAD = 0
+      numdp = last - first + 1
+      nread = 0
 
 !
 !     Read as much data from record RECNO as necessary.
 !
-      N   =   MIN ( NUMDP,  NWD - WORDNO + 1 )
+      n   =   min ( numdp,  nwd - wordno + 1 )
 
-      CALL DASRRD ( HANDLE, RECNO, WORDNO, WORDNO + N-1, DATA )
+      call dasrrd ( handle, recno, wordno, wordno + n-1, data )
 
-      NREAD  =  N
-      RECNO  =  RECNO + 1
+      nread  =  n
+      recno  =  recno + 1
 
 !
 !     Read from as many additional records as necessary.
 !
-      DO WHILE ( NREAD .LT. NUMDP )
+      do while ( nread .lt. numdp )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 !
 !        At this point, RECNO is the correct number of the
 !        record to read from next.  CLBASE is the number
 !        of the first record of the cluster we're about
 !        to read from.
 !
-         IF (  RECNO  .LT.  ( CLBASE + CLSIZE )  ) THEN
+         if (  recno  .lt.  ( clbase + clsize )  ) then
 !
 !           We can continue reading from the current
 !           cluster.
 !
-            N  =  MIN ( NUMDP - NREAD,  NWD )
+            n  =  min ( numdp - nread,  nwd )
 
-            CALL DASRRD ( HANDLE, RECNO, 1, N, DATA(NREAD + 1) )
+            call dasrrd ( handle, recno, 1, n, data(nread + 1) )
 
-            NREAD   =   NREAD + N
-            RECNO   =   RECNO + 1
+            nread   =   nread + n
+            recno   =   recno + 1
 
-         ELSE
+         else
 !
 !           We must find the next double precision cluster to
 !           read from.  The first double precision number in this
 !           cluster has address FIRST + NREAD.
 !
-            CALL DASA2L ( HANDLE, &
-                          DP, &
-                          FIRST + NREAD, &
-                          CLBASE, &
-                          CLSIZE, &
-                          RECNO, &
-                          WORDNO  )
+            call dasa2l ( handle, &
+                          dp, &
+                          first + nread, &
+                          clbase, &
+                          clsize, &
+                          recno, &
+                          wordno  )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

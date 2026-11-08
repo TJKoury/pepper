@@ -1,6 +1,6 @@
 !$Procedure JYEAR ( Seconds per julian year )
 
-      DOUBLE PRECISION FUNCTION JYEAR ()
+      double precision function jyear ()
 
 ! $ Abstract
 !
@@ -92,7 +92,7 @@
 !-&
 
 
-      JYEAR = 31557600.0D0
+      jyear = 31557600.0d0
 
-      RETURN
-      END
+      return
+      end

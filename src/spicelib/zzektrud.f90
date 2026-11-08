@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRUD ( EK tree, unbalanced deletion )
 
-      SUBROUTINE ZZEKTRUD ( HANDLE, TREE, KEY, TRGKEY, UNDRFL )
+      subroutine zzektrud ( handle, tree, key, trgkey, undrfl )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
-      INTEGER               TRGKEY
-      LOGICAL               UNDRFL
+      integer               handle
+      integer               tree
+      integer               key
+      integer               trgkey
+      logical               undrfl
 
 ! $ Brief_I/O
 !
@@ -158,48 +158,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               DATPTR
-      INTEGER               DEPTH
-      INTEGER               I
-      INTEGER               KEYIDX
-      INTEGER               LEAF
-      INTEGER               LEVEL
-      INTEGER               LOFFST
-      INTEGER               LPAGE  ( PGSIZI )
-      INTEGER               LPIDX
-      INTEGER               LPIDX2
-      INTEGER               LPKEY
-      INTEGER               LPKEY2
-      INTEGER               LSIB
-      INTEGER               LSIB2
-      INTEGER               NKEYS
-      INTEGER               NLKEYS
-      INTEGER               NNODE
-      INTEGER               PARENT
-      INTEGER               PAREN2
-      INTEGER               PKEY
-      INTEGER               PKEY2
-      INTEGER               POFFS2
-      INTEGER               POFFST
-      INTEGER               PREV
-      INTEGER               ROOT
-      INTEGER               RPAGE  ( PGSIZI )
-      INTEGER               RPIDX
-      INTEGER               RPIDX2
-      INTEGER               RPKEY
-      INTEGER               RPKEY2
-      INTEGER               RSIB
-      INTEGER               RSIB2
-      INTEGER               TARGET
-      INTEGER               TNKEYS
-      INTEGER               TOFFST
-      INTEGER               TOTKEY
-      INTEGER               TPAGE  ( PGSIZI )
+      integer               datptr
+      integer               depth
+      integer               i
+      integer               keyidx
+      integer               leaf
+      integer               level
+      integer               loffst
+      integer               lpage  ( pgsizi )
+      integer               lpidx
+      integer               lpidx2
+      integer               lpkey
+      integer               lpkey2
+      integer               lsib
+      integer               lsib2
+      integer               nkeys
+      integer               nlkeys
+      integer               nnode
+      integer               parent
+      integer               paren2
+      integer               pkey
+      integer               pkey2
+      integer               poffs2
+      integer               poffst
+      integer               prev
+      integer               root
+      integer               rpage  ( pgsizi )
+      integer               rpidx
+      integer               rpidx2
+      integer               rpkey
+      integer               rpkey2
+      integer               rsib
+      integer               rsib2
+      integer               target
+      integer               tnkeys
+      integer               toffst
+      integer               totkey
+      integer               tpage  ( pgsizi )
 
 !
 !     Use discovery check-in.
@@ -208,42 +208,42 @@
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
 !
-      ROOT  =  TREE
+      root  =  tree
 
 !
 !     We always need to update the root page, so read it now.
 !
-      CALL ZZEKPGRI ( HANDLE, ROOT, RPAGE )
+      call zzekpgri ( handle, root, rpage )
 
 !
 !     The allowed range of keys is 1 to TOTKEY, where TOTKEY is the
 !     total number of keys already present.
 !
-      TOTKEY  =  RPAGE ( TRNKEY )
+      totkey  =  rpage ( trnkey )
 
-      IF (  ( KEY .LT. 1 ) .OR. ( KEY .GT. TOTKEY)  ) THEN
+      if (  ( key .lt. 1 ) .or. ( key .gt. totkey)  ) then
 
-         CALL CHKIN  ( 'ZZEKTRUD'                                )
-         CALL SETMSG ( 'Key = #. Valid range is 1:#.  File = #.' )
-         CALL ERRINT ( '#',     KEY                              )
-         CALL ERRINT ( '#',     TOTKEY                           )
-         CALL ERRHAN ( '#',     HANDLE                           )
-         CALL CHKOUT ( 'ZZEKTRUD'                                )
-         RETURN
+         call chkin  ( 'ZZEKTRUD'                                )
+         call setmsg ( 'Key = #. Valid range is 1:#.  File = #.' )
+         call errint ( '#',     key                              )
+         call errint ( '#',     totkey                           )
+         call errhan ( '#',     handle                           )
+         call chkout ( 'ZZEKTRUD'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the number of nodes in the tree.  Also save the tree's depth.
 !
-      NNODE  =  RPAGE ( TRNNOD )
-      DEPTH  =  RPAGE ( TRDPTH )
+      nnode  =  rpage ( trnnod )
+      depth  =  rpage ( trdpth )
 
 !
 !     Find the point at which the deletion is to occur.  When the
 !     tree contains only one node, no search is necessary.
 !
-      IF ( NNODE .EQ. 1 ) THEN
+      if ( nnode .eq. 1 ) then
 !
 !        This is the simplest case; all we need do is delete the
 !        key from the root node.
@@ -259,123 +259,123 @@
 !        In the root node, relative keys coincide with absolute keys,
 !        so the key value need not be adjusted.
 !
-         NKEYS             =  TOTKEY
-         RPAGE ( TRNKEY )  =  NKEYS  -  1
-         RPAGE ( TRNKR  )  =  NKEYS  -  1
+         nkeys             =  totkey
+         rpage ( trnkey )  =  nkeys  -  1
+         rpage ( trnkr  )  =  nkeys  -  1
 
 !
 !        Shift the keys, data pointer, and child pointers to the left
 !        of the deleted key.  Update the shifted keys.
 !
-         DO I = KEY, NKEYS-1
-            RPAGE ( TRKEYR+I )  =  RPAGE ( TRKEYR+I+1 ) - 1
-            RPAGE ( TRDATR+I )  =  RPAGE ( TRDATR+I+1 )
-         END DO
+         do i = key, nkeys-1
+            rpage ( trkeyr+i )  =  rpage ( trkeyr+i+1 ) - 1
+            rpage ( trdatr+i )  =  rpage ( trdatr+i+1 )
+         end do
 
-         DO I = KEY, NKEYS
-            RPAGE ( TRKIDR+I )  =  RPAGE ( TRKIDR+I+1 )
-         END DO
+         do i = key, nkeys
+            rpage ( trkidr+i )  =  rpage ( trkidr+i+1 )
+         end do
 
 !
 !        Zero out the freed entries.
 !
-         RPAGE ( TRKEYR + NKEYS   )  =  0
-         RPAGE ( TRDATR + NKEYS   )  =  0
-         RPAGE ( TRKIDR + NKEYS+1 )  =  0
+         rpage ( trkeyr + nkeys   )  =  0
+         rpage ( trdatr + nkeys   )  =  0
+         rpage ( trkidr + nkeys+1 )  =  0
 
 !
 !        Update the key count.
 !
-         NKEYS   =  NKEYS - 1
+         nkeys   =  nkeys - 1
 
 !
 !        Underflow never occurs in the root; the tree simply becomes
 !        empty if no keys are left.
 !
-         UNDRFL  =  .FALSE.
+         undrfl  =  .false.
 
 !
 !        The first key in the root will serve as the target key,
 !        as long as the root isn't empty.
 !
-         IF ( NKEYS .GT. 0 ) THEN
-            TRGKEY  =  RPAGE(TRKEYR+1)
-         ELSE
-            TRGKEY  =  0
-         END IF
+         if ( nkeys .gt. 0 ) then
+            trgkey  =  rpage(trkeyr+1)
+         else
+            trgkey  =  0
+         end if
 
 !
 !        Write the page back out, and we're all set.
 !
-         CALL ZZEKPGWI ( HANDLE, ROOT, RPAGE )
+         call zzekpgwi ( handle, root, rpage )
 
 
 
-      ELSE IF ( KEY .EQ. TOTKEY ) THEN
+      else if ( key .eq. totkey ) then
 !
 !        The deleted key is the last key in the tree.  This case
 !        is simple, because no remaining keys change as a result of
 !        this deletion.
 !
-         CALL ZZEKTRLK ( HANDLE,  TREE,    KEY,    KEYIDX, &
-                         TARGET,  TOFFST,  LEVEL,  DATPTR  )
+         call zzektrlk ( handle,  tree,    key,    keyidx, &
+                         target,  toffst,  level,  datptr  )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 
-         CALL ZZEKPGRI ( HANDLE, TARGET, TPAGE )
+         call zzekpgri ( handle, target, tpage )
 
-         NKEYS   =  TPAGE ( TRNKC )
+         nkeys   =  tpage ( trnkc )
 
 !
 !        Zero out the freed entries.
 !
-         TPAGE ( TRKEYC + NKEYS   )  =  0
-         TPAGE ( TRDATC + NKEYS   )  =  0
-         TPAGE ( TRKIDC + NKEYS+1 )  =  0
+         tpage ( trkeyc + nkeys   )  =  0
+         tpage ( trdatc + nkeys   )  =  0
+         tpage ( trkidc + nkeys+1 )  =  0
 
 !
 !        Update the key count for this node:
 !
-         TPAGE ( TRNKC  )  =  TPAGE ( TRNKC ) - 1
+         tpage ( trnkc  )  =  tpage ( trnkc ) - 1
 
 !
 !        Since the key we deleted has no successors, there's no need
 !        to adjust any other keys.  We must decrement the total
 !        node count in the root, however.
 !
-         RPAGE ( TRNKEY ) =  TOTKEY - 1
+         rpage ( trnkey ) =  totkey - 1
 
 !
 !        Underflow occurs when the node started out at the minimum
 !        key count.
 !
-         UNDRFL  =  NKEYS .EQ. MNKEYC
+         undrfl  =  nkeys .eq. mnkeyc
 
 !
 !        The first key in the target page is the target key.  Return
 !        an absolute key.
 !
-         TRGKEY  =  TPAGE(TRKEYC+1)  +  TOFFST
+         trgkey  =  tpage(trkeyc+1)  +  toffst
 
 !
 !        Write the affected pages back out.
 !
-         CALL ZZEKPGWI ( HANDLE, ROOT,   RPAGE )
-         CALL ZZEKPGWI ( HANDLE, TARGET, TPAGE )
+         call zzekpgwi ( handle, root,   rpage )
+         call zzekpgwi ( handle, target, tpage )
 
 
-      ELSE
+      else
 !
 !        Locate the item we wish to delete.
 !
-         CALL ZZEKTRLK ( HANDLE,  TREE,    KEY,    KEYIDX, &
-                         TARGET,  TOFFST,  LEVEL,  DATPTR )
+         call zzektrlk ( handle,  tree,    key,    keyidx, &
+                         target,  toffst,  level,  datptr )
 
 
-         IF ( LEVEL .EQ. DEPTH ) THEN
+         if ( level .eq. depth ) then
 !
 !           The node containing KEY is a leaf node, which is what we
 !           want.  Deletions always take place at leaf nodes.
@@ -387,40 +387,40 @@
 !           addressing method, we want to do this look-up while
 !           we're sure it will work.
 !
-            CALL ZZEKTRPI ( HANDLE, TREE,  KEY,  PARENT, PKEY,  POFFST, &
-                            LPIDX,  LPKEY, LSIB, RPIDX,  RPKEY, RSIB   )
+            call zzektrpi ( handle, tree,  key,  parent, pkey,  poffst, &
+                            lpidx,  lpkey, lsib, rpidx,  rpkey, rsib   )
 
-            IF ( FAILED() ) THEN
-               RETURN
-            END IF
+            if ( failed() ) then
+               return
+            end if
 
 !
 !           Read the target page.  Get the key count for this node.
 !
-            CALL ZZEKPGRI ( HANDLE, TARGET, TPAGE )
+            call zzekpgri ( handle, target, tpage )
 
-            TNKEYS = TPAGE ( TRNKC )
+            tnkeys = tpage ( trnkc )
 
 !
 !           Each node is allowed to underflow by 1 element.  If there
 !           is already a deficit, OK, that's it.
 !
-            IF ( TNKEYS .LT. MNKEYC ) THEN
+            if ( tnkeys .lt. mnkeyc ) then
 
-               CALL CHKIN  ( 'ZZEKTRUD'                            )
-               CALL SETMSG ( 'Node = #. Tree = #. File = #. Key ' // &
+               call chkin  ( 'ZZEKTRUD'                            )
+               call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
                              'count = #; max allowed, including ' // &
                              'overflow, is #.'                     )
-               CALL ERRINT ( '#',   TARGET                         )
-               CALL ERRINT ( '#',   TREE                           )
-               CALL ERRHAN ( '#',   HANDLE                         )
-               CALL ERRINT ( '#',   TNKEYS                         )
-               CALL ERRINT ( '#',   MXKEYC + 1                     )
-               CALL SIGERR ( 'SPICE(BUG)'                          )
-               CALL CHKOUT ( 'ZZEKTRUD'                            )
-               RETURN
+               call errint ( '#',   target                         )
+               call errint ( '#',   tree                           )
+               call errhan ( '#',   handle                         )
+               call errint ( '#',   tnkeys                         )
+               call errint ( '#',   mxkeyc + 1                     )
+               call sigerr ( 'SPICE(BUG)'                          )
+               call chkout ( 'ZZEKTRUD'                            )
+               return
 
-            END IF
+            end if
 
 !
 !           Shift the keys, data pointers, and child pointers starting
@@ -428,41 +428,41 @@
 !           leftmost elements first.  Update the shifted key values
 !           while we're at it.
 !
-            DO I = KEYIDX, TNKEYS-1
-               TPAGE (TRKEYC+I)  =  TPAGE (TRKEYC+I+1) - 1
-            END DO
+            do i = keyidx, tnkeys-1
+               tpage (trkeyc+i)  =  tpage (trkeyc+i+1) - 1
+            end do
 
-            DO I = KEYIDX, TNKEYS-1
-               TPAGE (TRDATC+I)  =  TPAGE (TRDATC+I+1)
-            END DO
+            do i = keyidx, tnkeys-1
+               tpage (trdatc+i)  =  tpage (trdatc+i+1)
+            end do
 
-            DO I = KEYIDX, TNKEYS
-               TPAGE (TRKIDC+I)  =  TPAGE (TRKIDC+I+1)
-            END DO
+            do i = keyidx, tnkeys
+               tpage (trkidc+i)  =  tpage (trkidc+i+1)
+            end do
 
 !
 !           Update the key count for the target node.
 !
-            TPAGE ( TRNKC ) =  TNKEYS - 1
+            tpage ( trnkc ) =  tnkeys - 1
 
 !
 !           Underflow occurs when the node started out at the minimum
 !           count.
 !
-            UNDRFL  =  TNKEYS .EQ. MNKEYC
+            undrfl  =  tnkeys .eq. mnkeyc
 
 !
 !           The first key in the target page is the target key.
 !
-            TRGKEY  =  TPAGE(TRKEYC+1)  +  TOFFST
+            trgkey  =  tpage(trkeyc+1)  +  toffst
 
 !
 !           Write the target page back out.
 !
-            CALL ZZEKPGWI ( HANDLE, TARGET, TPAGE )
+            call zzekpgwi ( handle, target, tpage )
 
 
-         ELSE
+         else
 !
 !           The node containing KEY is not a leaf node.  Therefore,
 !           KEY > 1 and KEY has a predecessor.  This predecessor
@@ -470,12 +470,12 @@
 !           a property of B*-trees, of which EK trees are a subclass.
 !           Find this predecessor.
 !
-            CALL ZZEKTRLK ( HANDLE,  TREE,    KEY-1,  PREV, &
-                            LEAF,    LOFFST,  LEVEL,  DATPTR  )
+            call zzektrlk ( handle,  tree,    key-1,  prev, &
+                            leaf,    loffst,  level,  datptr  )
 
-            IF ( FAILED() ) THEN
-               RETURN
-            END IF
+            if ( failed() ) then
+               return
+            end if
 
 !
 !           Since we'll have to update the ancestors of LEAF,
@@ -485,12 +485,12 @@
 !           addressing method, we want to do this look-up while
 !           we're sure it will work.
 !
-            CALL ZZEKTRPI ( HANDLE, TREE,  KEY-1, PARENT, PKEY,  POFFST, &
-                            LPIDX,  LPKEY, LSIB,  RPIDX,  RPKEY, RSIB  )
+            call zzektrpi ( handle, tree,  key-1, parent, pkey,  poffst, &
+                            lpidx,  lpkey, lsib,  rpidx,  rpkey, rsib  )
 
-            IF ( FAILED() ) THEN
-               RETURN
-            END IF
+            if ( failed() ) then
+               return
+            end if
 
 !
 !           Since deletions are allowed only in leaf nodes, we'll
@@ -502,22 +502,22 @@
 !           Moving the key's predecessor into the key's location is
 !           accomplished simply by transferring the data pointer.
 !
-            CALL ZZEKPGRI ( HANDLE, LEAF, LPAGE )
+            call zzekpgri ( handle, leaf, lpage )
 
 
-            IF ( TARGET .EQ. ROOT ) THEN
+            if ( target .eq. root ) then
 !
 !              The root page has already been read into RPAGE.
 !
-               RPAGE (TRDATR+KEYIDX)  =  LPAGE (TRDATC+PREV)
+               rpage (trdatr+keyidx)  =  lpage (trdatc+prev)
 
-            ELSE
+            else
 
-               CALL ZZEKPGRI ( HANDLE, TARGET, TPAGE )
+               call zzekpgri ( handle, target, tpage )
 
-               TPAGE (TRDATC+KEYIDX)  =  LPAGE (TRDATC+PREV)
+               tpage (trdatc+keyidx)  =  lpage (trdatc+prev)
 
-            END IF
+            end if
 
 !
 !           The keys and data pointers in the leaf must be shifted
@@ -525,117 +525,117 @@
 !           freed elements.  All child pointers are NIL and hence need
 !           not be shifted.
 !
-            NLKEYS = LPAGE ( TRNKC )
+            nlkeys = lpage ( trnkc )
 
-            DO I = PREV, NLKEYS-1
-               LPAGE (TRKEYC+I)  =  LPAGE (TRKEYC+I+1) - 1
-               LPAGE (TRDATC+I)  =  LPAGE (TRDATC+I+1)
-            END DO
+            do i = prev, nlkeys-1
+               lpage (trkeyc+i)  =  lpage (trkeyc+i+1) - 1
+               lpage (trdatc+i)  =  lpage (trdatc+i+1)
+            end do
 
 !
 !           Update the key count for the leaf node.
 !
-            LPAGE ( TRNKC ) =  NLKEYS - 1
+            lpage ( trnkc ) =  nlkeys - 1
 
 !
 !           Underflow occurs when the leaf node started out at the
 !           minimum count.
 !
-            UNDRFL  =  NLKEYS .EQ. MNKEYC
+            undrfl  =  nlkeys .eq. mnkeyc
 
 !
 !           The first key in the leaf page is the target key.
 !
-            TRGKEY  =  LPAGE(TRKEYC+1)  +  LOFFST
+            trgkey  =  lpage(trkeyc+1)  +  loffst
 
 !
 !           Write the leaf, and if necessary, the target page back out.
 !
-            CALL ZZEKPGWI ( HANDLE, LEAF, LPAGE )
+            call zzekpgwi ( handle, leaf, lpage )
 
-            IF ( TARGET .NE. ROOT ) THEN
-               CALL ZZEKPGWI ( HANDLE, TARGET, TPAGE )
-            END IF
+            if ( target .ne. root ) then
+               call zzekpgwi ( handle, target, tpage )
+            end if
 
 !
 !           The next step will be to update the ancestors of LEAF.
 !           For the purposes of this operation, LEAF is the target
 !           node.
 !
-            TARGET  =  LEAF
+            target  =  leaf
 
-         END IF
+         end if
 
 !
 !        We must update the affected keys in every ancestor of TARGET.
 !        We've already looked up information for the parent of
 !        TARGET.  See the note at the prior call to ZZEKTRPI.
 !
-         DO WHILE ( PARENT .NE. ROOT )
+         do while ( parent .ne. root )
 !
 !           Before going to work on the parent, get *its* parent's info.
 !           This is the last chance to do so.
 !
-            CALL ZZEKTRPI ( HANDLE, TREE,   PKEY,   PAREN2, &
-                            PKEY2,  POFFS2, LPIDX2, LPKEY2, &
-                            LSIB2,  RPIDX2, RPKEY2, RSIB2  )
+            call zzektrpi ( handle, tree,   pkey,   paren2, &
+                            pkey2,  poffs2, lpidx2, lpkey2, &
+                            lsib2,  rpidx2, rpkey2, rsib2  )
 
 !
 !           Read the parent node.  All keys from the right parent key
 !           onward get decremented.  Remember that there may be no
 !           right parent key.
 !
-            CALL ZZEKPGRI ( HANDLE, PARENT, TPAGE )
+            call zzekpgri ( handle, parent, tpage )
 
-            TNKEYS  =  TPAGE ( TRNKC  )
+            tnkeys  =  tpage ( trnkc  )
 
 
-            IF ( RPIDX .GT. 0 ) THEN
+            if ( rpidx .gt. 0 ) then
 
-               DO I = RPIDX, TNKEYS
-                  TPAGE(TRKEYC + I)  =  TPAGE(TRKEYC + I) - 1
-               END DO
+               do i = rpidx, tnkeys
+                  tpage(trkeyc + i)  =  tpage(trkeyc + i) - 1
+               end do
 
 !
 !              Write the updated page back out.
 !
-               CALL ZZEKPGWI ( HANDLE, PARENT, TPAGE )
+               call zzekpgwi ( handle, parent, tpage )
 
-            END IF
+            end if
 
-            PARENT = PAREN2
-            PKEY   = PKEY2
-            RPIDX  = RPIDX2
+            parent = paren2
+            pkey   = pkey2
+            rpidx  = rpidx2
 
-         END DO
+         end do
 
 !
 !        Update the keys in the root.  Recall that the root page has
 !        already been read into RPAGE.
 !
-         TNKEYS  =  RPAGE ( TRNKR )
+         tnkeys  =  rpage ( trnkr )
 
 
-         IF ( RPIDX .GT. 0 ) THEN
+         if ( rpidx .gt. 0 ) then
 
-            DO I = RPIDX, TNKEYS
-               RPAGE(TRKEYR + I)  =  RPAGE(TRKEYR + I) - 1
-            END DO
+            do i = rpidx, tnkeys
+               rpage(trkeyr + i)  =  rpage(trkeyr + i) - 1
+            end do
 
-         END IF
+         end if
 
 !
 !        Update the total key count for the tree.
 !
-         RPAGE ( TRNKEY )  =  TOTKEY - 1
+         rpage ( trnkey )  =  totkey - 1
 
 !
 !        Write the updated root page back out.
 !
-         CALL ZZEKPGWI ( HANDLE, ROOT, RPAGE )
+         call zzekpgwi ( handle, root, rpage )
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

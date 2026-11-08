@@ -1,6 +1,6 @@
 !$Procedure SCARDI ( Set the cardinality of an integer cell )
 
-      SUBROUTINE SCARDI ( CARD, CELL )
+      subroutine scardi ( card, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               CARD
-      INTEGER               CELL   ( LBCELL:* )
+      integer               card
+      integer               cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,33 +168,33 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCARDI' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SCARDI' )
+      end if
 
 !
 !     The cardinality may range from 0 to the size of the cell,
 !     inclusive.  Other values will be snubbed.
 !
-      IF (  ( CARD .LT. 0 )  .OR.  ( CARD .GT. CELL(-1) )  )  THEN
-         CALL SETMSG ( 'Attempt to set cardinality of cell '          // &
+      if (  ( card .lt. 0 )  .or.  ( card .gt. cell(-1) )  )  then
+         call setmsg ( 'Attempt to set cardinality of cell '          // &
                        'to invalid value.  The value was #.'  )
-         CALL ERRINT ( '#', CARD )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'SCARDI' )
-         RETURN
-      END IF
+         call errint ( '#', card )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'SCARDI' )
+         return
+      end if
 
 !
 !     Not much to this.
 !
-      CELL(0) = CARD
+      cell(0) = card
 
-      CALL CHKOUT ( 'SCARDI' )
-      RETURN
-      END
+      call chkout ( 'SCARDI' )
+      return
+      end

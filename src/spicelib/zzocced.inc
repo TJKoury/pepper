@@ -41,51 +41,51 @@
 !        -3                    Total occultation of first target by
 !                              second.
 !
-      INTEGER               TOTAL1
-      PARAMETER           ( TOTAL1 = -3 )
+      integer               total1
+      parameter           ( total1 = -3 )
 
 !
 !        -2                    Annular occultation of first target by
 !                              second.  The second target does not
 !                              block the limb of the first.
 !
-      INTEGER               ANNLR1
-      PARAMETER           ( ANNLR1 = -2 )
+      integer               annlr1
+      parameter           ( annlr1 = -2 )
 
 !
 !        -1                    Partial occultation of first target by
 !                              second target.
 !
-      INTEGER               PARTL1
-      PARAMETER           ( PARTL1 = -1 )
+      integer               partl1
+      parameter           ( partl1 = -1 )
 
 !
 !         0                    No occultation or transit:  both objects
 !                              are completely visible to the observer.
 !
-      INTEGER               NOOCC
-      PARAMETER           ( NOOCC  =  0 )
+      integer               noocc
+      parameter           ( noocc  =  0 )
 
 !
 !         1                    Partial occultation of second target by
 !                              first target.
 !
-      INTEGER               PARTL2
-      PARAMETER           ( PARTL2 =  1 )
+      integer               partl2
+      parameter           ( partl2 =  1 )
 
 !
 !         2                    Annular occultation of second target by
 !                              first.
 !
-      INTEGER               ANNLR2
-      PARAMETER           ( ANNLR2 =  2 )
+      integer               annlr2
+      parameter           ( annlr2 =  2 )
 
 !
 !         3                    Total occultation of second target by
 !                              first.
 !
-      INTEGER               TOTAL2
-      PARAMETER           ( TOTAL2 =  3 )
+      integer               total2
+      parameter           ( total2 =  3 )
 
 !
 !     End include file zzocced.inc

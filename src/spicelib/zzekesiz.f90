@@ -1,6 +1,6 @@
 !$Procedure ZZEKESIZ ( EK, element entry size )
 
-      INTEGER FUNCTION ZZEKESIZ ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      integer function zzekesiz ( handle, segdsc, coldsc, recptr )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'eksegdsc.inc'
+      include 'ekcoldsc.inc'
+      include 'ekcnamsz.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               COLDSC ( CDSCSZ )
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               recptr
+      integer               coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -111,24 +111,24 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
-      INTEGER               ZZEKSZ04
-      INTEGER               ZZEKSZ05
-      INTEGER               ZZEKSZ06
+      integer               zzekrp2n
+      integer               zzeksz04
+      integer               zzeksz05
+      integer               zzeksz06
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      INTEGER               CLASS
-      INTEGER               RECNO
-      INTEGER               SEGNO
+      integer               class
+      integer               recno
+      integer               segno
 
 !
 !     Initialize the function's return value.
 !
-      ZZEKESIZ  =  0
+      zzekesiz  =  0
 
 !
 !     Use discovery check-in.
@@ -137,78 +137,78 @@
 !     The first three classes are scalars.
 !
 !
-      CLASS  =  COLDSC ( CLSIDX )
+      class  =  coldsc ( clsidx )
 
-      IF ( CLASS .EQ. 1 ) THEN
+      if ( class .eq. 1 ) then
 
-         ZZEKESIZ  =  1
-
-
-      ELSE IF ( CLASS .EQ. 2 ) THEN
-
-         ZZEKESIZ  =  1
+         zzekesiz  =  1
 
 
-      ELSE IF ( CLASS .EQ. 3 ) THEN
+      else if ( class .eq. 2 ) then
 
-         ZZEKESIZ  =  1
-
-
-      ELSE IF ( CLASS .EQ. 4 ) THEN
-
-         ZZEKESIZ  =  ZZEKSZ04 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+         zzekesiz  =  1
 
 
-      ELSE IF ( CLASS .EQ. 5 ) THEN
+      else if ( class .eq. 3 ) then
 
-         ZZEKESIZ  =  ZZEKSZ05 ( HANDLE, SEGDSC, COLDSC, RECPTR )
-
-
-      ELSE IF ( CLASS .EQ. 6 ) THEN
-
-         ZZEKESIZ  =  ZZEKSZ06 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+         zzekesiz  =  1
 
 
-      ELSE IF ( CLASS .EQ. 7 ) THEN
+      else if ( class .eq. 4 ) then
 
-         ZZEKESIZ  =  1
-
-
-      ELSE IF ( CLASS .EQ. 8 ) THEN
-
-         ZZEKESIZ  =  1
+         zzekesiz  =  zzeksz04 ( handle, segdsc, coldsc, recptr )
 
 
-      ELSE IF ( CLASS .EQ. 9 ) THEN
+      else if ( class .eq. 5 ) then
 
-         ZZEKESIZ  =  1
+         zzekesiz  =  zzeksz05 ( handle, segdsc, coldsc, recptr )
 
 
-      ELSE
+      else if ( class .eq. 6 ) then
+
+         zzekesiz  =  zzeksz06 ( handle, segdsc, coldsc, recptr )
+
+
+      else if ( class .eq. 7 ) then
+
+         zzekesiz  =  1
+
+
+      else if ( class .eq. 8 ) then
+
+         zzekesiz  =  1
+
+
+      else if ( class .eq. 9 ) then
+
+         zzekesiz  =  1
+
+
+      else
 
 !
 !        This is an unsupported column class.
 !
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
-         SEGNO  =  SEGDSC ( SNOIDX )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
+         segno  =  segdsc ( snoidx )
 
-         CALL CHKIN  ( 'ZZEKESIZ'                                      )
-         CALL SETMSG ( 'Class # from input column descriptor is not ' // &
+         call chkin  ( 'ZZEKESIZ'                                      )
+         call setmsg ( 'Class # from input column descriptor is not ' // &
                        'a supported integer class.  COLUMN = #; '     // &
                        'RECNO = #; SEGNO = #; EK = #.'                 )
-         CALL ERRINT ( '#',  CLASS                                     )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL ERRINT ( '#',  SEGNO                                     )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'ZZEKESIZ'                                      )
-         RETURN
+         call errint ( '#',  class                                     )
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  recno                                     )
+         call errint ( '#',  segno                                     )
+         call errhan ( '#',  handle                                    )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'ZZEKESIZ'                                      )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

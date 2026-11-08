@@ -1,8 +1,8 @@
 !$Procedure      ZZEKENCD ( EK, encode query )
 
-      SUBROUTINE ZZEKENCD (  QUERY, &
-                             EQRYI,  EQRYC,   EQRYD, &
-                             ERROR,  ERRMSG,  ERRPTR  )
+      subroutine zzekencd (  query, &
+                             eqryi,  eqryc,   eqryd, &
+                             error,  errmsg,  errptr  )
 
 ! $ Abstract
 !
@@ -20,21 +20,21 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'ektype.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               EQRYI  ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD  ( * )
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
-      INTEGER               ERRPTR
+      character*(*)         query
+      integer               eqryi  ( lbcell : * )
+      character*(*)         eqryc
+      double precision      eqryd  ( * )
+      logical               error
+      character*(*)         errmsg
+      integer               errptr
 
 ! $ Brief_I/O
 !
@@ -130,7 +130,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -138,104 +138,104 @@
 !
 !     Storage limits:
 !
-      INTEGER               MAXCOL
-      PARAMETER           ( MAXCOL = 100 )
+      integer               maxcol
+      parameter           ( maxcol = 100 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXCLN)    CHRBUF
+      character*(maxcln)    chrbuf
 
-      DOUBLE PRECISION      NUMVLS ( MAXQNM )
+      double precision      numvls ( maxqnm )
 
-      INTEGER               CHBEGS ( MAXTOK )
-      INTEGER               CHENDS ( MAXTOK )
-      INTEGER               LXBEGS ( MAXTOK )
-      INTEGER               LXENDS ( MAXTOK )
-      INTEGER               NTOKEN
-      INTEGER               TOKENS ( MAXTOK )
-      INTEGER               VALUES ( MAXTOK )
+      integer               chbegs ( maxtok )
+      integer               chends ( maxtok )
+      integer               lxbegs ( maxtok )
+      integer               lxends ( maxtok )
+      integer               ntoken
+      integer               tokens ( maxtok )
+      integer               values ( maxtok )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKENCD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKENCD' )
+      end if
 
 !
 !     Initialize the encoded query each time, for safety.
 !
-      CALL ZZEKQINI ( EQIMIN, MAXQNM, EQRYI, EQRYC, EQRYD )
+      call zzekqini ( eqimin, maxqnm, eqryi, eqryc, eqryd )
 
 !
 !     Find the tokens in the input query.
 !
-      CALL ZZEKSCAN ( QUERY,  MAXTOK, MAXQNM, NTOKEN, TOKENS, &
-                      LXBEGS, LXENDS, VALUES, NUMVLS, CHRBUF, &
-                      CHBEGS, CHENDS, ERROR,  ERRMSG         )
+      call zzekscan ( query,  maxtok, maxqnm, ntoken, tokens, &
+                      lxbegs, lxends, values, numvls, chrbuf, &
+                      chbegs, chends, error,  errmsg         )
 
-      IF ( ERROR ) THEN
-         ERRPTR  = 1
-         CALL CHKOUT ( 'ZZEKENCD' )
-         RETURN
-      END IF
+      if ( error ) then
+         errptr  = 1
+         call chkout ( 'ZZEKENCD' )
+         return
+      end if
 
 
 !
 !     Now parse the query.
 !
-      CALL ZZEKPARS (  QUERY,   NTOKEN,  LXBEGS,  LXENDS, &
-                       TOKENS,  VALUES,  NUMVLS,  CHRBUF, &
-                       CHBEGS,  CHENDS,  EQRYI,   EQRYC, &
-                       EQRYD,   ERROR,   ERRMSG          )
+      call zzekpars (  query,   ntoken,  lxbegs,  lxends, &
+                       tokens,  values,  numvls,  chrbuf, &
+                       chbegs,  chends,  eqryi,   eqryc, &
+                       eqryd,   error,   errmsg          )
 
-      IF ( ERROR ) THEN
-         ERRPTR = 1
-         CALL CHKOUT ( 'ZZEKENCD' )
-         RETURN
-      END IF
+      if ( error ) then
+         errptr = 1
+         call chkout ( 'ZZEKENCD' )
+         return
+      end if
 
 
 !
 !     Resolve names.
 !
-      CALL ZZEKNRES ( QUERY, EQRYI, EQRYC, &
-                             ERROR, ERRMSG, ERRPTR )
+      call zzeknres ( query, eqryi, eqryc, &
+                             error, errmsg, errptr )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'ZZEKENCD' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'ZZEKENCD' )
+         return
+      end if
 
 
 !
 !     Resolve time values, if necessary.
 !
-      CALL ZZEKTRES ( QUERY, EQRYI,  EQRYC,  EQRYD, &
-                             ERROR,  ERRMSG, ERRPTR  )
+      call zzektres ( query, eqryi,  eqryc,  eqryd, &
+                             error,  errmsg, errptr  )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'ZZEKENCD' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'ZZEKENCD' )
+         return
+      end if
 
 
 !
 !     Perform semantic checks.
 !
-      CALL ZZEKSEMC ( QUERY, EQRYI, EQRYC, &
-                             ERROR, ERRMSG, ERRPTR )
+      call zzeksemc ( query, eqryi, eqryc, &
+                             error, errmsg, errptr )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'ZZEKENCD' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'ZZEKENCD' )
+         return
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKENCD' )
-      RETURN
-      END
+      call chkout ( 'ZZEKENCD' )
+      return
+      end

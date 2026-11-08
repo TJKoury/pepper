@@ -1,6 +1,6 @@
 !$Procedure SPKR21 ( Read SPK record from segment, type 21 )
 
-      SUBROUTINE SPKR21 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr21 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk21.inc'
+      include 'spk21.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -172,51 +172,51 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLTD
-      LOGICAL               RETURN
+      integer               lstltd
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA   ( BUFSIZ )
-      DOUBLE PRECISION      DC     ( 2 )
+      double precision      data   ( bufsiz )
+      double precision      dc     ( 2 )
 
-      INTEGER               BEGIN
-      INTEGER               DFLSIZ
-      INTEGER               END
-      INTEGER               I
-      INTEGER               IC     ( 6 )
-      INTEGER               MAXDIM
-      INTEGER               NDIR
-      INTEGER               NREC
-      INTEGER               OFF
-      INTEGER               OFFD
-      INTEGER               OFFE
-      INTEGER               OFFR
-      INTEGER               RECNO
+      integer               begin
+      integer               dflsiz
+      integer               end
+      integer               i
+      integer               ic     ( 6 )
+      integer               maxdim
+      integer               ndir
+      integer               nrec
+      integer               off
+      integer               offd
+      integer               offe
+      integer               offr
+      integer               recno
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKR21' )
+      call chkin ( 'SPKR21' )
 
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      BEGIN = IC(5)
-      END   = IC(6)
+      begin = ic(5)
+      end   = ic(6)
 
 !
 !     Get the number of records in the segment. From that, we can
@@ -233,40 +233,40 @@
 !
 !     We'll fetch the difference table dimension as well.
 !
-      CALL DAFGDA ( HANDLE, END-1, END, DATA )
+      call dafgda ( handle, end-1, end, data )
 
-      NREC   = NINT ( DATA(2) )
-      NDIR   = NREC / BUFSIZ
-      OFFD   = END  - NDIR - 2
-      OFFE   = OFFD - NREC
+      nrec   = nint ( data(2) )
+      ndir   = nrec / bufsiz
+      offd   = end  - ndir - 2
+      offe   = offd - nrec
 
-      MAXDIM = NINT ( DATA(1) )
+      maxdim = nint ( data(1) )
 
-      IF ( MAXDIM .GT. MAXTRM ) THEN
+      if ( maxdim .gt. maxtrm ) then
 
-         CALL SETMSG ( 'The input record has a maximum table ' &
+         call setmsg ( 'The input record has a maximum table ' &
          //            'dimension of #, while the maximum ' &
          //            'supported by this routine is #. It is ' &
          //            'possible that this problem is due to ' &
          //            'your SPICE Toolkit being out of date.' )
-         CALL ERRINT ( '#',  MAXDIM                            )
-         CALL ERRINT ( '#',  MAXTRM                            )
-         CALL SIGERR ( 'SPICE(DIFFLINETOOLARGE)'               )
-         CALL CHKOUT ( 'SPKR21'                                )
-         RETURN
+         call errint ( '#',  maxdim                            )
+         call errint ( '#',  maxtrm                            )
+         call sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
+         call chkout ( 'SPKR21'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     The difference line dimension per component is the
 !     first element of the output record.
 !
-      RECORD( 1 ) = MAXDIM
+      record( 1 ) = maxdim
 
 !
 !     Set the difference line size.
 !
-      DFLSIZ = ( 4 * MAXDIM ) + 11
+      dflsiz = ( 4 * maxdim ) + 11
 
 !
 !     What we want is the record number: once we have that, we can
@@ -277,18 +277,18 @@
 !     than or equal to ET. If there are BUFSIZ or fewer records, all
 !     the record epochs can be examined in a single group.
 !
-      IF ( NREC .LE. BUFSIZ ) THEN
+      if ( nrec .le. bufsiz ) then
 
-         CALL DAFGDA ( HANDLE, OFFE+1, OFFE+NREC, DATA )
-         RECNO = LSTLTD ( ET, NREC, DATA ) + 1
+         call dafgda ( handle, offe+1, offe+nrec, data )
+         recno = lstltd ( et, nrec, data ) + 1
 
-         OFFR = (BEGIN - 1) + (RECNO - 1) * DFLSIZ
-         CALL DAFGDA ( HANDLE, OFFR+1, OFFR+DFLSIZ, RECORD(2) )
+         offr = (begin - 1) + (recno - 1) * dflsiz
+         call dafgda ( handle, offr+1, offr+dflsiz, record(2) )
 
-         CALL CHKOUT ( 'SPKR21' )
-         RETURN
+         call chkout ( 'SPKR21' )
+         return
 
-      END IF
+      end if
 
 !
 !     Searching directories is a little more difficult.
@@ -298,42 +298,42 @@
 !     can grab the corresponding set of BUFSIZ record epochs, and
 !     search them.
 !
-      DO I = 1, NDIR
+      do i = 1, ndir
 
-         CALL DAFGDA ( HANDLE, OFFD+I, OFFD+I, DATA )
+         call dafgda ( handle, offd+i, offd+i, data )
 
-         IF ( DATA(1) .GE. ET ) THEN
+         if ( data(1) .ge. et ) then
 
-            OFF = OFFE + (I - 1) * BUFSIZ
-            CALL DAFGDA ( HANDLE, OFF+1, OFF+BUFSIZ, DATA )
+            off = offe + (i - 1) * bufsiz
+            call dafgda ( handle, off+1, off+bufsiz, data )
 
-            RECNO = ((I - 1) * BUFSIZ) + LSTLTD ( ET, BUFSIZ, DATA ) + 1
+            recno = ((i - 1) * bufsiz) + lstltd ( et, bufsiz, data ) + 1
 
-            OFFR = (BEGIN - 1) + (RECNO - 1) * DFLSIZ
-            CALL DAFGDA ( HANDLE, OFFR+1, OFFR+DFLSIZ, RECORD(2) )
+            offr = (begin - 1) + (recno - 1) * dflsiz
+            call dafgda ( handle, offr+1, offr+dflsiz, record(2) )
 
-            CALL CHKOUT ( 'SPKR21' )
-            RETURN
+            call chkout ( 'SPKR21' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If ET is greater than the final directory epoch, we want one
 !     of the final records.
 !
-      I = MOD ( NREC, BUFSIZ )
+      i = mod ( nrec, bufsiz )
 
-      CALL DAFGDA ( HANDLE, END-NDIR-I-1, END-NDIR-2, DATA )
+      call dafgda ( handle, end-ndir-i-1, end-ndir-2, data )
 
-      RECNO = (NDIR * BUFSIZ) + LSTLTD ( ET, I, DATA ) + 1
+      recno = (ndir * bufsiz) + lstltd ( et, i, data ) + 1
 
-      OFFR = (BEGIN - 1) + (RECNO - 1) * DFLSIZ
+      offr = (begin - 1) + (recno - 1) * dflsiz
 
-      CALL DAFGDA ( HANDLE, OFFR+1, OFFR+DFLSIZ, RECORD(2) )
+      call dafgda ( handle, offr+1, offr+dflsiz, record(2) )
 
 
-      CALL CHKOUT ( 'SPKR21' )
-      RETURN
-      END
+      call chkout ( 'SPKR21' )
+      return
+      end

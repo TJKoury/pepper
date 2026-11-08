@@ -1,7 +1,7 @@
 !$Procedure      ZZEKILLT ( EK, indirect, last element less than )
 
-      INTEGER FUNCTION ZZEKILLT (  HANDLE,  SEGDSC,  COLDSC,  NROWS, &
-                                   DTYPE,   CVAL,    DVAL,    IVAL  )
+      integer function zzekillt (  handle,  segdsc,  coldsc,  nrows, &
+                                   dtype,   cval,    dval,    ival  )
 
 ! $ Abstract
 !
@@ -23,19 +23,19 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               NROWS
-      INTEGER               DTYPE
-      CHARACTER*(*)         CVAL
-      DOUBLE PRECISION      DVAL
-      INTEGER               IVAL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               nrows
+      integer               dtype
+      character*(*)         cval
+      double precision      dval
+      integer               ival
 
 ! $ Brief_I/O
 !
@@ -147,93 +147,93 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DNUM
+      double precision      dnum
 
-      INTEGER               COLTYP
-      INTEGER               INUM
-      INTEGER               REC
+      integer               coltyp
+      integer               inum
+      integer               rec
 
 !
 !     Initialize the function's return value.
 !
-      ZZEKILLT  =  0
+      zzekillt  =  0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKILLT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKILLT' )
+      end if
 
 !
 !     Validate the number of rows in the column.
 !
-      IF ( NROWS .LT. 1 ) THEN
+      if ( nrows .lt. 1 ) then
 !
 !        There's nobody home---that is, there is nothing in the array
 !        to compare against.  Zero is the only sensible thing to return.
 !
-         ZZEKILLT = 0
-         CALL SETMSG ( 'Number of rows must be positive; was #.' )
-         CALL ERRINT ( '#',  NROWS                               )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                      )
-         CALL CHKOUT ( 'ZZEKILLT'                                )
-         RETURN
-      END IF
+         zzekillt = 0
+         call setmsg ( 'Number of rows must be positive; was #.' )
+         call errint ( '#',  nrows                               )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                      )
+         call chkout ( 'ZZEKILLT'                                )
+         return
+      end if
 
 !
 !     Hand off the problem to the LLT routine of the correct type.
 !
-      COLTYP  =  COLDSC ( TYPIDX )
+      coltyp  =  coldsc ( typidx )
 
-      IF ( COLTYP .EQ. CHR ) THEN
+      if ( coltyp .eq. chr ) then
 
-         CALL ZZEKLLTC ( HANDLE, SEGDSC, COLDSC, CVAL, ZZEKILLT, REC )
-
-
-      ELSE IF ( COLTYP .EQ. DP ) THEN
-
-         IF ( DTYPE .EQ. DP ) THEN
-            DNUM = DVAL
-         ELSE
-            DNUM = IVAL
-         END IF
-
-         CALL ZZEKLLTD ( HANDLE, SEGDSC, COLDSC, DNUM, ZZEKILLT, REC )
+         call zzeklltc ( handle, segdsc, coldsc, cval, zzekillt, rec )
 
 
-      ELSE IF ( COLTYP .EQ. TIME ) THEN
+      else if ( coltyp .eq. dp ) then
 
-         CALL ZZEKLLTD ( HANDLE, SEGDSC, COLDSC, DVAL, ZZEKILLT, REC )
+         if ( dtype .eq. dp ) then
+            dnum = dval
+         else
+            dnum = ival
+         end if
+
+         call zzeklltd ( handle, segdsc, coldsc, dnum, zzekillt, rec )
 
 
-      ELSE IF ( COLTYP .EQ. INT ) THEN
+      else if ( coltyp .eq. time ) then
 
-         IF ( DTYPE .EQ. DP ) THEN
-            INUM = NINT ( DVAL )
-         ELSE
-            INUM = IVAL
-         END IF
+         call zzeklltd ( handle, segdsc, coldsc, dval, zzekillt, rec )
 
-         CALL ZZEKLLTI ( HANDLE, SEGDSC, COLDSC, INUM, ZZEKILLT, REC )
 
-      ELSE
+      else if ( coltyp .eq. int ) then
 
-         CALL SETMSG ( 'The data type # is not supported.' )
-         CALL ERRINT ( '#',  COLTYP                        )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                )
-         CALL CHKOUT ( 'ZZEKILLT'                          )
-         RETURN
+         if ( dtype .eq. dp ) then
+            inum = nint ( dval )
+         else
+            inum = ival
+         end if
 
-      END IF
+         call zzekllti ( handle, segdsc, coldsc, inum, zzekillt, rec )
 
-      CALL CHKOUT ( 'ZZEKILLT' )
-      RETURN
-      END
+      else
+
+         call setmsg ( 'The data type # is not supported.' )
+         call errint ( '#',  coltyp                        )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                )
+         call chkout ( 'ZZEKILLT'                          )
+         return
+
+      end if
+
+      call chkout ( 'ZZEKILLT' )
+      return
+      end

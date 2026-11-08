@@ -1,6 +1,6 @@
 !$Procedure CPOS ( Character position )
 
-      INTEGER FUNCTION CPOS ( STR, CHARS, START )
+      integer function cpos ( str, chars, start )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR
-      CHARACTER*(*)         CHARS
-      INTEGER               START
+      character*(*)         str
+      character*(*)         chars
+      integer               start
 
 ! $ Brief_I/O
 !
@@ -183,29 +183,29 @@
 !     Local variables
 !
 
-      LOGICAL               FOUND
-      INTEGER               LENSTR
-      INTEGER               B
+      logical               found
+      integer               lenstr
+      integer               b
 
 
-      LENSTR = LEN ( STR )
+      lenstr = len ( str )
 
-      B      = MAX(1,START)
-      FOUND  = .FALSE.
-      CPOS   = 0
+      b      = max(1,start)
+      found  = .false.
+      cpos   = 0
 
-      DO WHILE ( .NOT. FOUND )
+      do while ( .not. found )
 
-         IF ( B .GT. LENSTR ) THEN
-            RETURN
-         ELSE IF ( INDEX( CHARS, STR(B:B) ) .NE. 0 ) THEN
-            CPOS = B
-            RETURN
-         ELSE
-            B    = B + 1
-         END IF
+         if ( b .gt. lenstr ) then
+            return
+         else if ( index( chars, str(b:b) ) .ne. 0 ) then
+            cpos = b
+            return
+         else
+            b    = b + 1
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

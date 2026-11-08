@@ -1,6 +1,6 @@
 !$Procedure DUCRSS ( Unit Normalized Cross Product and Derivative )
 
-      SUBROUTINE DUCRSS ( S1, S2, SOUT )
+      subroutine ducrss ( s1, s2, sout )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    S1   ( 6 )
-      DOUBLE PRECISION    S2   ( 6 )
-      DOUBLE PRECISION    SOUT ( 6 )
+      double precision    s1   ( 6 )
+      double precision    s2   ( 6 )
+      double precision    sout ( 6 )
 
 ! $ Brief_I/O
 !
@@ -316,11 +316,11 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      F1
-      DOUBLE PRECISION      F2
-      DOUBLE PRECISION      SCLS1  ( 6 )
-      DOUBLE PRECISION      SCLS2  ( 6 )
-      DOUBLE PRECISION      TMPSTA ( 6 )
+      double precision      f1
+      double precision      f2
+      double precision      scls1  ( 6 )
+      double precision      scls2  ( 6 )
+      double precision      tmpsta ( 6 )
 
 !
 !     Scale the components of the input states so the states have the
@@ -328,29 +328,29 @@
 !     components have absolute value equal to 1. Do not modify states
 !     that have all position components equal to zero.
 !
-      F1 = MAX( ABS(S1(1)), ABS(S1(2)), ABS(S1(3)) )
-      F2 = MAX( ABS(S2(1)), ABS(S2(2)), ABS(S2(3)) )
+      f1 = max( abs(s1(1)), abs(s1(2)), abs(s1(3)) )
+      f2 = max( abs(s2(1)), abs(s2(2)), abs(s2(3)) )
 
-      IF ( F1 .GT. 0.D0 ) THEN
+      if ( f1 .gt. 0.d0 ) then
 
-         CALL VSCLG ( 1.D0/F1, S1, 6, SCLS1 )
-      ELSE
-         CALL MOVED ( S1,          6, SCLS1 )
-      END IF
+         call vsclg ( 1.d0/f1, s1, 6, scls1 )
+      else
+         call moved ( s1,          6, scls1 )
+      end if
 
-      IF ( F2 .GT. 0.D0 ) THEN
+      if ( f2 .gt. 0.d0 ) then
 
-         CALL VSCLG ( 1.D0/F2, S2, 6, SCLS2 )
-      ELSE
-         CALL MOVED ( S2,          6, SCLS2 )
-      END IF
+         call vsclg ( 1.d0/f2, s2, 6, scls2 )
+      else
+         call moved ( s2,          6, scls2 )
+      end if
 
 !
 !     Not much to this.  Just get the cross product and its derivative.
 !     Using that, get the associated unit vector and its derivative.
 !
-      CALL DVCRSS ( SCLS1,  SCLS2, TMPSTA )
-      CALL DVHAT  ( TMPSTA,        SOUT   )
+      call dvcrss ( scls1,  scls2, tmpsta )
+      call dvhat  ( tmpsta,        sout   )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SYPSHC ( Push a value onto a particular symbol )
 
-      SUBROUTINE SYPSHC ( NAME, VALUE, TABSYM, TABPTR, TABVAL )
+      subroutine sypshc ( name, value, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         VALUE
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      CHARACTER*(*)         TABVAL     ( LBCELL:* )
+      character*(*)         name
+      character*(*)         value
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,82 +168,82 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SIZEC
-      INTEGER               SUMAI
+      integer               cardc
+      integer               lstlec
+      logical               return
+      integer               sizec
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NVAL
+      integer               nsym
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      LOGICAL               OLDSYM
+      integer               locsym
+      integer               locval
+      logical               oldsym
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYPSHC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYPSHC' )
+      end if
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NVAL = CARDC ( TABVAL )
+      nsym = cardc ( tabsym )
+      nval = cardc ( tabval )
 
 !
 !     Where does this symbol belong? Is it already in the table?
 !
-      LOCSYM = LSTLEC ( NAME, NSYM, TABSYM(1) )
-      OLDSYM = ( LOCSYM .NE. 0  .AND.  TABSYM(LOCSYM) .EQ. NAME )
+      locsym = lstlec ( name, nsym, tabsym(1) )
+      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
 
 !
 !     If it's not already in the table, use SET to create a brand new
 !     symbol.
 !
-      IF ( .NOT. OLDSYM ) THEN
+      if ( .not. oldsym ) then
 
-         CALL SYSETC ( NAME, VALUE, TABSYM, TABPTR, TABVAL )
+         call sysetc ( name, value, tabsym, tabptr, tabval )
 
 !
 !     If it is in the table, we can't proceed unless we know that we
 !     have enough room for one extra addition in the value table.
 !
-      ELSE IF (  NVAL .GE. SIZEC ( TABVAL ) ) THEN
+      else if (  nval .ge. sizec ( tabval ) ) then
 
-         CALL SETMSG ( 'SYPSHC: The addition of the value $ to the '  // &
+         call setmsg ( 'SYPSHC: The addition of the value $ to the '  // &
                        'symbol # causes an overflow in the value '    // &
                        'table.' )
-         CALL ERRCH  ( '$', VALUE )
-         CALL ERRCH  ( '#', NAME  )
-         CALL SIGERR ( 'SPICE(VALUETABLEFULL)' )
+         call errch  ( '$', value )
+         call errch  ( '#', name  )
+         call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
 
 !
 !     If there's room, add the new value to the value table. Add one
 !     to the dimension, and put the value in the right place.
 !
-      ELSE
+      else
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
+         locval = sumai ( tabptr(1), locsym-1 ) + 1
 
-         CALL INSLAC ( VALUE, 1, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDC ( NVAL, TABVAL )
+         call inslac ( value, 1, locval, tabval(1), nval )
+         call scardc ( nval, tabval )
 
-         TABPTR(LOCSYM) = TABPTR(LOCSYM) + 1
+         tabptr(locsym) = tabptr(locsym) + 1
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYPSHC' )
-      RETURN
-      END
+      call chkout ( 'SYPSHC' )
+      return
+      end

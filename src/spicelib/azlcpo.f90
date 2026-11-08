@@ -1,7 +1,7 @@
 !$Procedure AZLCPO ( AZ/EL, constant position observer state )
 
-      SUBROUTINE AZLCPO ( METHOD, TARGET, ET,     ABCORR, AZCCW, &
-                          ELPLSZ, OBSPOS, OBSCTR, OBSREF, AZLSTA, LT )
+      subroutine azlcpo ( method, target, et,     abcorr, azccw, &
+                          elplsz, obspos, obsctr, obsref, azlsta, lt )
 
 ! $ Abstract
 !
@@ -25,19 +25,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
-      LOGICAL               AZCCW
-      LOGICAL               ELPLSZ
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      CHARACTER*(*)         OBSCTR
-      CHARACTER*(*)         OBSREF
-      DOUBLE PRECISION      AZLSTA ( 6 )
-      DOUBLE PRECISION      LT
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         abcorr
+      logical               azccw
+      logical               elplsz
+      double precision      obspos ( 3 )
+      character*(*)         obsctr
+      character*(*)         obsref
+      double precision      azlsta ( 6 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -792,68 +792,68 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
+      double precision      pi
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         REFLOC
-      PARAMETER           ( REFLOC = 'OBSERVER' )
+      character*(*)         refloc
+      parameter           ( refloc = 'OBSERVER' )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
-      DOUBLE PRECISION      LHSTA  ( 6    )
-      DOUBLE PRECISION      NORMAL ( 3    )
-      DOUBLE PRECISION      OBSSPT ( 3    )
-      DOUBLE PRECISION      RADII  ( 3    )
-      DOUBLE PRECISION      STATE  ( 6    )
-      DOUBLE PRECISION      TMPMAT ( 3, 3 )
-      DOUBLE PRECISION      XFTOPO ( 3, 3 )
-      DOUBLE PRECISION      Z      ( 3    )
+      double precision      alt
+      double precision      jacobi ( 3, 3 )
+      double precision      lhsta  ( 6    )
+      double precision      normal ( 3    )
+      double precision      obsspt ( 3    )
+      double precision      radii  ( 3    )
+      double precision      state  ( 6    )
+      double precision      tmpmat ( 3, 3 )
+      double precision      xftopo ( 3, 3 )
+      double precision      z      ( 3    )
 
-      INTEGER               CENTER
-      INTEGER               CLSSID
-      INTEGER               FRCLSS
-      INTEGER               FXFCDE
-      INTEGER               OBSCDE
+      integer               center
+      integer               clssid
+      integer               frclss
+      integer               fxfcde
+      integer               obscde
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved variables
 !
-      SAVE                  Z
+      save                  z
 
 !
 !     Initial values
 !
-      DATA                  Z       / 0.00D0,   0.00D0,   1.00D0 /
+      data                  z       / 0.00d0,   0.00d0,   1.00d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'AZLCPO' )
+      call chkin ( 'AZLCPO' )
 
 !
 !     Get the center of motion ID code here, since it will be
 !     need later on several calls.
 !
-      CALL BODS2C ( OBSCTR, OBSCDE, FOUND )
+      call bods2c ( obsctr, obscde, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer''s center of motion, ' &
+         call setmsg ( 'The observer''s center of motion, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you did not load a ' &
@@ -861,60 +861,60 @@
          //            'assignments for this name, or that you ' &
          //            'need an updated version of the SPICE ' &
          //            'Toolkit.'                                 )
-         CALL ERRCH  ( '#', OBSCTR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'AZLCPO'                                   )
-         RETURN
+         call errch  ( '#', obsctr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'AZLCPO'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the attributes of the frame designated by OBSREF.
 !
-      CALL NAMFRM ( OBSREF, FXFCDE )
-      CALL FRINFO ( FXFCDE, CENTER, FRCLSS, CLSSID, FOUND )
+      call namfrm ( obsref, fxfcde )
+      call frinfo ( fxfcde, center, frclss, clssid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'AZLCPO' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'AZLCPO' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' &
+         call setmsg ( 'Reference frame # is not recognized by ' &
          //            'the SPICE frame subsystem. Possibly ' &
          //            'a required frame definition kernel has ' &
          //            'not been loaded.'                        )
-         CALL ERRCH  ( '#',  OBSREF                              )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'                     )
-         CALL CHKOUT ( 'AZLCPO'                                  )
-         RETURN
+         call errch  ( '#',  obsref                              )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'                     )
+         call chkout ( 'AZLCPO'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that OBSREF is centered at the observer's center of
 !     motion.
 !
-      IF ( CENTER .NE. OBSCDE ) THEN
+      if ( center .ne. obscde ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'observer''s center of motion #. The ID ' &
          //            'code of the frame center is #.'           )
-         CALL ERRCH  ( '#',  OBSREF                               )
-         CALL ERRCH  ( '#',  OBSCTR                               )
-         CALL ERRINT ( '#',  CENTER                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( 'AZLCPO'                                   )
-         RETURN
+         call errch  ( '#',  obsref                               )
+         call errch  ( '#',  obsctr                               )
+         call errint ( '#',  center                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( 'AZLCPO'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Construct the local topocentric reference frame. Check
 !     first the method to be used.
 !
-      IF ( EQSTR( METHOD, 'ELLIPSOID' )  ) THEN
+      if ( eqstr( method, 'ELLIPSOID' )  ) then
 
 !
 !        If the input observer position is on the Z-axis of the
@@ -939,43 +939,43 @@
 !
 !           - the +Y axis completes the right-handed frame.
 !
-         IF (       ( OBSPOS(1) .EQ. 0.0D0 ) &
-              .AND. ( OBSPOS(2) .EQ. 0.0D0 ) ) THEN
+         if (       ( obspos(1) .eq. 0.0d0 ) &
+              .and. ( obspos(2) .eq. 0.0d0 ) ) then
 
-            CALL IDENT ( XFTOPO )
+            call ident ( xftopo )
 
-            IF ( OBSPOS(3) .LT. 0.0D0 ) THEN
+            if ( obspos(3) .lt. 0.0d0 ) then
 
-               CALL ROTMAT ( XFTOPO, PI(), 1, TMPMAT )
-               CALL MOVED  ( TMPMAT, 9,       XFTOPO )
+               call rotmat ( xftopo, pi(), 1, tmpmat )
+               call moved  ( tmpmat, 9,       xftopo )
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           Get the radii of the observer center of motion from the
 !           kernel pool.
 !
-            CALL ZZGFTREB ( OBSCDE, RADII )
+            call zzgftreb ( obscde, radii )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'AZLCPO' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'AZLCPO' )
+               return
+            end if
 
 !
 !           The observer's position does not need to be located on
 !           the surface of the reference ellipsoid. Find the nearest
 !           point on the ellipsoid to the observer.
 !
-            CALL NEARPT ( OBSPOS, RADII(1), RADII(2), RADII(3), &
-                          OBSSPT, ALT                          )
+            call nearpt ( obspos, radii(1), radii(2), radii(3), &
+                          obsspt, alt                          )
 
 !
 !           Get the outward-pointing, unit normal vector from the point
 !           on the surface of the reference ellipsoid.
 !
-            CALL SURFNM ( RADII(1), RADII(2), RADII(3), OBSSPT, NORMAL )
+            call surfnm ( radii(1), radii(2), radii(3), obsspt, normal )
 
 !
 !           Construct the transformation matrix from the body-fixed
@@ -983,57 +983,57 @@
 !           motion and the local topocentric frame at the observer's
 !           location.
 !
-            CALL TWOVEC ( NORMAL, 3, Z, 1, XFTOPO )
+            call twovec ( normal, 3, z, 1, xftopo )
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The computation method # was not recognized. ' )
-         CALL ERRCH  ( '#',  METHOD                                    )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                          )
-         CALL CHKOUT ( 'AZLCPO'                                        )
-         RETURN
+         call setmsg ( 'The computation method # was not recognized. ' )
+         call errch  ( '#',  method                                    )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
+         call chkout ( 'AZLCPO'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the observer-target position vector. Use as OUTREF the
 !     same reference frame used for expressing the OBSPOS vector
 !     (OBSREF).
 !
-      CALL SPKCPO ( TARGET, ET,     OBSREF, REFLOC, ABCORR, &
-                    OBSPOS, OBSCTR, OBSREF, STATE,  LT     )
+      call spkcpo ( target, et,     obsref, refloc, abcorr, &
+                    obspos, obsctr, obsref, state,  lt     )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'AZLCPO' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'AZLCPO' )
+         return
+      end if
 
 !
 !     STATE is expressed with respect to the reference frame
 !     specified by OBSREF. Convert this vector from OBSREF frame
 !     to local-horizon frame.
 !
-      CALL MXV ( XFTOPO, STATE,    LHSTA    )
-      CALL MXV ( XFTOPO, STATE(4), LHSTA(4) )
+      call mxv ( xftopo, state,    lhsta    )
+      call mxv ( xftopo, state(4), lhsta(4) )
 
 !
 !     Convert LHSTA from rectangular to azimuth/elevation coordinates
 !
-      CALL RECAZL ( LHSTA,     AZCCW,     ELPLSZ, &
-                    AZLSTA(1), AZLSTA(2), AZLSTA(3) )
+      call recazl ( lhsta,     azccw,     elplsz, &
+                    azlsta(1), azlsta(2), azlsta(3) )
 
-      CALL DAZLDR ( LHSTA(1),  LHSTA(2),  LHSTA(3), &
-                    AZCCW,     ELPLSZ,    JACOBI    )
+      call dazldr ( lhsta(1),  lhsta(2),  lhsta(3), &
+                    azccw,     elplsz,    jacobi    )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'AZLCPO' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'AZLCPO' )
+         return
+      end if
 
-      CALL MXV ( JACOBI, LHSTA(4), AZLSTA(4) )
+      call mxv ( jacobi, lhsta(4), azlsta(4) )
 
-      CALL CHKOUT ( 'AZLCPO' )
-      RETURN
-      END
+      call chkout ( 'AZLCPO' )
+      return
+      end

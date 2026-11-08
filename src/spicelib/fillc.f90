@@ -1,6 +1,6 @@
 !$Procedure FILLC ( Fill a character array )
 
-      SUBROUTINE FILLC ( VALUE, NDIM, ARRAY )
+      subroutine fillc ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    VALUE
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY ( * )
+      character*(*)    value
+      integer          ndim
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -115,14 +115,14 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
 
-      DO I = 1, NDIM
-        ARRAY(I) = VALUE
-      END DO
+      do i = 1, ndim
+        array(i) = value
+      end do
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure  ZZEKGEI ( Private: EK, get encoded integer )
 
-      SUBROUTINE ZZEKGEI ( HANDLE, ADDRSS, IVAL )
+      subroutine zzekgei ( handle, addrss, ival )
 
 ! $ Abstract
 !
@@ -22,11 +22,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
+      include 'ekdatpag.inc'
 
-      INTEGER               HANDLE
-      INTEGER               ADDRSS
-      INTEGER               IVAL
+      integer               handle
+      integer               addrss
+      integer               ival
 
 ! $ Brief_I/O
 !
@@ -114,7 +114,7 @@
 !
 !     Local variables
 !
-      CHARACTER*(ENCSIZ)    CVAL
+      character*(encsiz)    cval
 
 
 !
@@ -124,12 +124,12 @@
 !     Read the encoded value.  The value is represented by a string of
 !     characters.
 !
-      CALL DASRDC ( HANDLE, ADDRSS, ADDRSS+ENCSIZ-1, 1, ENCSIZ, CVAL )
+      call dasrdc ( handle, addrss, addrss+encsiz-1, 1, encsiz, cval )
 
 !
 !     Decode the number.
 !
-      CALL PRTDEC ( CVAL, IVAL )
+      call prtdec ( cval, ival )
 
-      RETURN
-      END
+      return
+      end

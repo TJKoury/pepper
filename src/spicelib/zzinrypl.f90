@@ -1,8 +1,8 @@
 !$Procedure ZZINRYPL ( Simplified intersection of ray and plane )
 
-      SUBROUTINE ZZINRYPL ( VERTEX, UDIR, UPLNML, &
-                            CONST,  MAXD, NXPTS,  XPT )
-      IMPLICIT NONE
+      subroutine zzinrypl ( vertex, udir, uplnml, &
+                            const,  maxd, nxpts,  xpt )
+      implicit none
 
 ! $ Abstract
 !
@@ -23,13 +23,13 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      UPLNML ( 3 )
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      MAXD
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT    ( 3 )
+      double precision      vertex ( 3 )
+      double precision      udir   ( 3 )
+      double precision      uplnml ( 3 )
+      double precision      const
+      double precision      maxd
+      integer               nxpts
+      double precision      xpt    ( 3 )
 
 ! $ Brief_I/O
 !
@@ -152,63 +152,63 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DIRCON
-      DOUBLE PRECISION      H
-      DOUBLE PRECISION      LPAR
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      VTXCON
+      double precision      dircon
+      double precision      h
+      double precision      lpar
+      double precision      s
+      double precision      vtxcon
 
 !
 !     Start out indicating no intersection.
 !
-      NXPTS = 0
+      nxpts = 0
 
 !
 !     VTXCON is the plane constant of the ray's vertex.
 !
-      VTXCON = VDOT( VERTEX, UPLNML )
+      vtxcon = vdot( vertex, uplnml )
 !
 !     DIRCON is the length of the component of the ray's
 !     direction vector in the direction of UPLNML.
 !
-      DIRCON = VDOT( UDIR, UPLNML )
+      dircon = vdot( udir, uplnml )
 
 !
 !     Dispose of the easy non-intersection cases. (The ray
 !     lying in the plane is considered a non-intersection case,
 !     by the way.)
 !
-      IF ( ( VTXCON .GT. CONST ) .AND. ( DIRCON .GT. 0.D0 ) ) THEN
-         RETURN
-      END IF
+      if ( ( vtxcon .gt. const ) .and. ( dircon .gt. 0.d0 ) ) then
+         return
+      end if
 
-      IF ( ( VTXCON .LT. CONST ) .AND. ( DIRCON .LT. 0.D0 ) ) THEN
-         RETURN
-      END IF
+      if ( ( vtxcon .lt. const ) .and. ( dircon .lt. 0.d0 ) ) then
+         return
+      end if
 
 
-      IF ( VTXCON .EQ. CONST ) THEN
+      if ( vtxcon .eq. const ) then
 !
 !        The ray's vertex lies in the plane.
 !
-         IF ( DIRCON .NE. 0.D0 ) THEN
+         if ( dircon .ne. 0.d0 ) then
 !
 !           The ray does not lie in the plane. The
 !           intercept is the ray's vertex.
 !
-            NXPTS = 1
-            CALL VEQU ( VERTEX, XPT )
+            nxpts = 1
+            call vequ ( vertex, xpt )
 
-         END IF
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Let UPAR and UPERP be, respectively, the components of UDIR
@@ -217,8 +217,8 @@
 !     Compute the maximum allowed length of UPERP.
 !
 !
-      H     = ABS( VTXCON - CONST )
-      LPAR  = ABS( DIRCON )
+      h     = abs( vtxcon - const )
+      lpar  = abs( dircon )
 
 !
 !     To prevent overflow, we require
@@ -231,16 +231,16 @@
 !
 !        H  <=  MAXD * LPAR
 !
-      IF ( H .GT. (MAXD * LPAR) ) THEN
-         RETURN
-      END IF
+      if ( h .gt. (maxd * lpar) ) then
+         return
+      end if
 
 !
 !     For safety, return if we could have a divide-by-zero error.
 !
-      IF ( LPAR .EQ. 0.D0 ) THEN
-         RETURN
-      END IF
+      if ( lpar .eq. 0.d0 ) then
+         return
+      end if
 
 !
 !     Still being here means we can compute XPT, provided
@@ -253,12 +253,12 @@
 !
 !     We have also ruled out overflow in the computation below.
 !
-      S      = H / LPAR
+      s      = h / lpar
 
-      XPT(1) = VERTEX(1) + S*UDIR(1)
-      XPT(2) = VERTEX(2) + S*UDIR(2)
-      XPT(3) = VERTEX(3) + S*UDIR(3)
+      xpt(1) = vertex(1) + s*udir(1)
+      xpt(2) = vertex(2) + s*udir(2)
+      xpt(3) = vertex(3) + s*udir(3)
 
-      NXPTS  = 1
+      nxpts  = 1
 
-      END
+      end

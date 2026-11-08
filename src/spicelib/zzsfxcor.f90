@@ -1,10 +1,10 @@
 !$Procedure ZZSFXCOR ( Ray-surface intercept core algorithm )
 
-      SUBROUTINE ZZSFXCOR ( UDNEAR, UDMAXR, UDRAYX, TRGCDE, &
-                            ET,     ABCORR, USELT,  USECN, &
-                            USESTL, XMIT,   FIXREF, OBSCDE, &
-                            DFRCDE, DCLASS, DCENTR, DVEC, &
-                            SPOINT, TRGEPC, SRFVEC, FOUND  )
+      subroutine zzsfxcor ( udnear, udmaxr, udrayx, trgcde, &
+                            et,     abcorr, uselt,  usecn, &
+                            usestl, xmit,   fixref, obscde, &
+                            dfrcde, dclass, dcentr, dvec, &
+                            spoint, trgepc, srfvec, found  )
 
 ! $ Abstract
 !
@@ -34,32 +34,32 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'frmtyp.inc'
-      INCLUDE 'zzabcorr.inc'
+      include 'frmtyp.inc'
+      include 'zzabcorr.inc'
 
 
-      EXTERNAL              UDNEAR
-      EXTERNAL              UDMAXR
-      EXTERNAL              UDRAYX
-      INTEGER               TRGCDE
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
-      LOGICAL               USELT
-      LOGICAL               USECN
-      LOGICAL               USESTL
-      LOGICAL               XMIT
-      CHARACTER*(*)         FIXREF
-      INTEGER               OBSCDE
-      INTEGER               DFRCDE
-      INTEGER               DCLASS
-      INTEGER               DCENTR
-      DOUBLE PRECISION      DVEC    ( 3 )
-      DOUBLE PRECISION      SPOINT  ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      SRFVEC  ( 3 )
-      LOGICAL               FOUND
+      external              udnear
+      external              udmaxr
+      external              udrayx
+      integer               trgcde
+      double precision      et
+      character*(*)         abcorr
+      logical               uselt
+      logical               usecn
+      logical               usestl
+      logical               xmit
+      character*(*)         fixref
+      integer               obscde
+      integer               dfrcde
+      integer               dclass
+      integer               dcentr
+      double precision      dvec    ( 3 )
+      double precision      spoint  ( 3 )
+      double precision      trgepc
+      double precision      srfvec  ( 3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -497,22 +497,22 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      clight
+      double precision      dasine
+      double precision      touchd
+      double precision      vdist
+      double precision      vnorm
+      double precision      vsep
 
-      LOGICAL               FAILED
-      LOGICAL               VZERO
-      LOGICAL               RETURN
+      logical               failed
+      logical               vzero
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'ZZSFXCOR' )
+      character*(*)         rname
+      parameter           ( rname  = 'ZZSFXCOR' )
 
 
 !
@@ -520,168 +520,168 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-17 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-17 )
 
 !
 !     Round-off error limit for arc sine input:
 !
-      DOUBLE PRECISION      RNDTOL
-      PARAMETER           ( RNDTOL = 1.D-14 )
+      double precision      rndtol
+      parameter           ( rndtol = 1.d-14 )
 
 !
 !     Fraction of target body angular radius used to define
 !     region outside of which rays are immediately rejected
 !     as non-intersecting.
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.01D0 )
+      double precision      margin
+      parameter           ( margin = 1.01d0 )
 
 
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR =  10 )
+      integer               maxitr
+      parameter           ( maxitr =  10 )
 
 !
 !     Code for the frame J2000.
 !
-      INTEGER               J2CODE
-      PARAMETER           ( J2CODE = 1 )
+      integer               j2code
+      parameter           ( j2code = 1 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    LOCCOR
-      CHARACTER*(CORLEN)    PRVCOR
+      character*(corlen)    loccor
+      character*(corlen)    prvcor
 
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      ETDIFF
-      DOUBLE PRECISION      J2DIR  ( 3 )
-      DOUBLE PRECISION      J2EST  ( 3 )
-      DOUBLE PRECISION      J2GEOM ( 3 )
-      DOUBLE PRECISION      J2POS  ( 3 )
-      DOUBLE PRECISION      J2TMAT ( 3, 3 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTCENT
-      DOUBLE PRECISION      LTDIFF
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      NEGPOS ( 3 )
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      PREVET
-      DOUBLE PRECISION      PREVLT
-      DOUBLE PRECISION      R2JMAT ( 3, 3 )
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      RAYALT
-      DOUBLE PRECISION      REFEPC
-      DOUBLE PRECISION      REJECT
-      DOUBLE PRECISION      RELERR
-      DOUBLE PRECISION      RPOS   ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SRFLEN
-      DOUBLE PRECISION      SSBOST ( 6 )
-      DOUBLE PRECISION      SSBTST ( 6 )
-      DOUBLE PRECISION      STLDIR ( 3 )
-      DOUBLE PRECISION      STLERR ( 3 )
-      DOUBLE PRECISION      STLTMP ( 3 )
-      DOUBLE PRECISION      TPOS   ( 3 )
-      DOUBLE PRECISION      TRGDIR ( 3 )
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      double precision      dist
+      double precision      etdiff
+      double precision      j2dir  ( 3 )
+      double precision      j2est  ( 3 )
+      double precision      j2geom ( 3 )
+      double precision      j2pos  ( 3 )
+      double precision      j2tmat ( 3, 3 )
+      double precision      lt
+      double precision      ltcent
+      double precision      ltdiff
+      double precision      maxrad
+      double precision      negpos ( 3 )
+      double precision      obspos ( 3 )
+      double precision      pnear  ( 3 )
+      double precision      prevet
+      double precision      prevlt
+      double precision      r2jmat ( 3, 3 )
+      double precision      range
+      double precision      rayalt
+      double precision      refepc
+      double precision      reject
+      double precision      relerr
+      double precision      rpos   ( 3 )
+      double precision      s
+      double precision      srflen
+      double precision      ssbost ( 6 )
+      double precision      ssbtst ( 6 )
+      double precision      stldir ( 3 )
+      double precision      stlerr ( 3 )
+      double precision      stltmp ( 3 )
+      double precision      tpos   ( 3 )
+      double precision      trgdir ( 3 )
+      double precision      udir   ( 3 )
+      double precision      xform  ( 3, 3 )
 
-      INTEGER               I
-      INTEGER               NITR
+      integer               i
+      integer               nitr
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  LOCCOR
-      SAVE                  PRVCOR
+      save                  first
+      save                  loccor
+      save                  prvcor
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  PRVCOR / ' '    /
+      data                  first  / .true. /
+      data                  prvcor / ' '    /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Check for a zero ray direction vector.
 !
-      IF ( VZERO(DVEC) ) THEN
+      if ( vzero(dvec) ) then
 
-         CALL SETMSG ( 'Input ray direction was the zero vector; this ' &
+         call setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                             )
-         CALL CHKOUT ( RNAME                                           )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                             )
+         call chkout ( rname                                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.
 !     When light time correction is not used, setting S = 0
 !     allows us to seamlessly set TRGEPC equal to ET.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 
-         IF ( XMIT ) THEN
-            S   =  1.D0
-         ELSE
-            S   = -1.D0
-         END IF
+         if ( xmit ) then
+            s   =  1.d0
+         else
+            s   = -1.d0
+         end if
 
-      ELSE
-         S = 0.D0
-      END IF
+      else
+         s = 0.d0
+      end if
 
 
-      IF ( FIRST .OR. ( ABCORR .NE. PRVCOR ) ) THEN
+      if ( first .or. ( abcorr .ne. prvcor ) ) then
 !
 !        Construct aberration correction string without stellar
 !        aberration specification.
 !
-         IF ( USELT ) THEN
+         if ( uselt ) then
 
-            IF ( XMIT ) THEN
-               LOCCOR = 'X'
-            ELSE
-               LOCCOR = ' '
-            END IF
+            if ( xmit ) then
+               loccor = 'X'
+            else
+               loccor = ' '
+            end if
 
-            IF ( USECN ) THEN
+            if ( usecn ) then
 
-               CALL SUFFIX ( 'CN', 0, LOCCOR )
-            ELSE
-               CALL SUFFIX ( 'LT', 0, LOCCOR )
-            END IF
+               call suffix ( 'CN', 0, loccor )
+            else
+               call suffix ( 'LT', 0, loccor )
+            end if
 
-         ELSE
-            LOCCOR = 'NONE'
-         END IF
+         else
+            loccor = 'NONE'
+         end if
 
 
-         PRVCOR = ABCORR
-         FIRST  = .FALSE.
+         prvcor = abcorr
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     Determine the position of the observer in target
@@ -709,18 +709,18 @@
 !            point.
 !
 
-      CALL SPKEZP ( TRGCDE, ET, FIXREF, LOCCOR, OBSCDE, TPOS, LT )
+      call spkezp ( trgcde, et, fixref, loccor, obscde, tpos, lt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      CALL VMINUS ( TPOS, OBSPOS )
+      call vminus ( tpos, obspos )
 
 !
 !     We now need to convert the direction vector into the
@@ -729,7 +729,7 @@
 !     coefficient S has been set to give us the correct answer
 !     for each case.
 !
-      TRGEPC = ET  +  S*LT
+      trgepc = et  +  s*lt
 
 !
 !     Transform the direction vector from frame DREF to the body-fixed
@@ -740,22 +740,22 @@
 !     from frame DREF to J2000, then from J2000 to the target
 !     frame.
 !
-      IF ( DCLASS .EQ. INERTL ) THEN
+      if ( dclass .eq. inertl ) then
 !
 !        Inertial frames can be evaluated at any epoch.
 !
-         REFEPC = ET
+         refepc = et
 
 
-      ELSE IF ( .NOT. USELT ) THEN
+      else if ( .not. uselt ) then
 !
 !        We're not using light time corrections (converged or
 !        otherwise), so there's no time offset.
 !
-         REFEPC = ET
+         refepc = et
 
 
-      ELSE IF ( DCENTR .EQ. OBSCDE ) THEN
+      else if ( dcentr .eq. obscde ) then
 !
 !        If the center of frame DREF is the observer (which is
 !        usually the case if the observer is a spacecraft), then
@@ -764,24 +764,24 @@
 !        There's no offset between the center for frame DREF
 !        and the observer.
 !
-         REFEPC = ET
+         refepc = et
 
-      ELSE
+      else
 !
 !        Find the light time from the observer to the center of
 !        frame DREF.
 !
-         CALL SPKEZP ( DCENTR, ET, 'J2000', ABCORR, OBSCDE, &
-                       RPOS,   LTCENT                       )
+         call spkezp ( dcentr, et, 'J2000', abcorr, obscde, &
+                       rpos,   ltcent                       )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         REFEPC  =  ET  +  S * LTCENT
+         refepc  =  et  +  s * ltcent
 
-      END IF
+      end if
 
 !
 !     The epoch REFEPC associated with frame DREF has been set.
@@ -801,34 +801,34 @@
 !     other hand, so we don't have to recompute J2DIR. We need TRGDIR
 !     in all cases.
 !
-      CALL REFCHG ( DFRCDE, J2CODE, REFEPC, R2JMAT )
+      call refchg ( dfrcde, j2code, refepc, r2jmat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      CALL MXV ( R2JMAT, DVEC, J2DIR )
+      call mxv ( r2jmat, dvec, j2dir )
 
 !
 !     Save this version of J2DIR as J2GEOM. Later we'll
 !     modify J2DIR, if necessary, to account for stellar
 !     aberration.
 !
-      CALL VEQU ( J2DIR, J2GEOM )
+      call vequ ( j2dir, j2geom )
 
 !
 !     Map J2DIR (in the J2000 frame) to the target body-fixed
 !     frame.
 !
-      CALL PXFORM ( 'J2000', FIXREF,  TRGEPC,  J2TMAT )
+      call pxform ( 'J2000', fixref,  trgepc,  j2tmat )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      CALL MXV ( J2TMAT, J2DIR, TRGDIR )
+      call mxv ( j2tmat, j2dir, trgdir )
 
 !
 !     At this point,
@@ -842,12 +842,12 @@
 !     the solar system barycenter at ET. We'll use this in
 !     several places later.
 !
-      CALL SPKSSB ( OBSCDE, ET, 'J2000', SSBOST )
+      call spkssb ( obscde, et, 'J2000', ssbost )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     If we're using stellar aberration correction, at this point we'll
@@ -857,7 +857,7 @@
 !     by applying the inverse of the correction to the ray, we obtain
 !     the ray with which we must perform our intercept computation.
 !
-      IF ( USESTL ) THEN
+      if ( usestl ) then
 !
 !        We approximate the inverse stellar aberration correction by
 !        using the correction for the reverse transmission direction.
@@ -867,9 +867,9 @@
 !        We iterate our estimates until we have the desired level
 !        of convergence or reach the iteration limit.
 !
-         NITR = 5
+         nitr = 5
 
-         IF ( XMIT ) THEN
+         if ( xmit ) then
 !
 !           Use reception stellar aberration correction
 !           routine STELAB to generate a first estimate of
@@ -878,91 +878,91 @@
 !           of the transmission stellar aberration correction
 !           mapping to J2DIR.
 !
-            CALL STELAB ( J2DIR, SSBOST(4), STLDIR )
+            call stelab ( j2dir, ssbost(4), stldir )
 
 !
 !           Now improve our estimate.
 !
-            RELERR = 1.D0
-            I      = 1
+            relerr = 1.d0
+            i      = 1
 
-            DO WHILE ( ( I .LE. NITR ) .AND. ( RELERR .GT. CNVLIM ) )
+            do while ( ( i .le. nitr ) .and. ( relerr .gt. cnvlim ) )
 !
 !              Estimate the error in our previous approximation
 !              by applying the reception stellar aberration
 !              to STLDIR and finding the difference with J2DIR.
 !
-               CALL STLABX ( STLDIR, SSBOST(4), J2EST  )
-               CALL VSUB   ( J2DIR,  J2EST,     STLERR )
+               call stlabx ( stldir, ssbost(4), j2est  )
+               call vsub   ( j2dir,  j2est,     stlerr )
 
 !
 !              Adding the error in the reception mapping to STLDIR
 !              will give us an improved estimate of the inverse.
 !
-               CALL VADD ( STLERR, STLDIR, STLTMP )
-               CALL VEQU ( STLTMP,         STLDIR )
+               call vadd ( stlerr, stldir, stltmp )
+               call vequ ( stltmp,         stldir )
 
-               RELERR = VNORM(STLERR) / VNORM(STLDIR)
-               I      = I + 1
+               relerr = vnorm(stlerr) / vnorm(stldir)
+               i      = i + 1
 
-            END DO
+            end do
 
 !
 !           At this point we've found a good estimate of the
 !           direction vector under the inverse of the transmission
 !           stellar aberration correction mapping.
 !
-         ELSE
+         else
 !
 !           Use transmission stellar aberration correction
 !           routine STLABX to generate a first estimate of
 !           the direction vector after stellar aberration
 !           has been "removed."
 !
-            CALL STLABX ( J2DIR, SSBOST(4), STLDIR )
+            call stlabx ( j2dir, ssbost(4), stldir )
 
 !
 !           Now improve our estimate.
 !
-            RELERR = 1.D0
-            I      = 1
+            relerr = 1.d0
+            i      = 1
 
-            DO WHILE ( ( I .LE. NITR ) .AND. ( RELERR .GT. CNVLIM ) )
+            do while ( ( i .le. nitr ) .and. ( relerr .gt. cnvlim ) )
 !
 !              Estimate the error in our previous approximation
 !              by applying the reception stellar aberration
 !              to STLDIR and finding the difference with J2DIR.
 !
-               CALL STELAB ( STLDIR, SSBOST(4), J2EST  )
-               CALL VSUB   ( J2DIR,  J2EST,     STLERR )
+               call stelab ( stldir, ssbost(4), j2est  )
+               call vsub   ( j2dir,  j2est,     stlerr )
 
 !
 !              Adding the error in the reception mapping to STLDIR
 !              will give us an improved estimate of the inverse.
 !
-               CALL VADD ( STLERR, STLDIR, STLTMP )
-               CALL VEQU ( STLTMP,         STLDIR )
+               call vadd ( stlerr, stldir, stltmp )
+               call vequ ( stltmp,         stldir )
 
-               RELERR = VNORM(STLERR) / VNORM(STLDIR)
-               I      = I + 1
+               relerr = vnorm(stlerr) / vnorm(stldir)
+               i      = i + 1
 
-            END DO
+            end do
 
 !
 !           At this point we've found a good estimate of the
 !           direction vector under the inverse of the reception
 !           stellar aberration correction mapping.
 !
-         END IF
+         end if
 
 !
 !        Replace the J2000-relative ray direction with the corrected
 !        direction.
 !
-         CALL VEQU ( STLDIR,  J2DIR )
-         CALL MXV  ( J2TMAT,  J2DIR,   TRGDIR )
+         call vequ ( stldir,  j2dir )
+         call mxv  ( j2tmat,  j2dir,   trgdir )
 
-      END IF
+      end if
 
 !
 !     Find the surface intercept point and distance from observer to
@@ -980,77 +980,77 @@
 !     target radius), we're done. Let REJECT be the angular
 !     separation limit.
 !
-      CALL UDMAXR ( MAXRAD )
+      call udmaxr ( maxrad )
 
-      RANGE = VNORM( OBSPOS )
+      range = vnorm( obspos )
 
-      IF ( RANGE .EQ. 0.D0 ) THEN
+      if ( range .eq. 0.d0 ) then
 !
 !        We've already ensured that observer and target are
 !        distinct, so this should be a very unusual occurrence.
 !
-         CALL SETMSG ( 'Observer-target distance is zero. ' &
+         call setmsg ( 'Observer-target distance is zero. ' &
          //            'Observer ID is #; target ID is #.' )
-         CALL ERRINT ( '#', OBSCDE                         )
-         CALL ERRINT ( '#', TRGCDE                         )
-         CALL SIGERR ( 'SPICE(NOSEPARATION)'               )
-         CALL CHKOUT ( RNAME                               )
-         RETURN
+         call errint ( '#', obscde                         )
+         call errint ( '#', trgcde                         )
+         call sigerr ( 'SPICE(NOSEPARATION)'               )
+         call chkout ( rname                               )
+         return
 
-      END IF
+      end if
 
 
-      IF ( RANGE .GT. MARGIN*MAXRAD ) THEN
+      if ( range .gt. margin*maxrad ) then
 !
 !        Compute the arc sine with SPICE error checking.
 !
-         REJECT = DASINE ( MARGIN * MAXRAD / RANGE,  RNDTOL )
+         reject = dasine ( margin * maxrad / range,  rndtol )
 
-         CALL VMINUS ( OBSPOS, NEGPOS )
+         call vminus ( obspos, negpos )
 
-         IF (  VSEP( NEGPOS, TRGDIR )  .GT.  REJECT  ) THEN
+         if (  vsep( negpos, trgdir )  .gt.  reject  ) then
 !
 !           The angular separation of ray and target is too great
 !           for a solution to exist, even with a better light time
 !           estimate.
 !
-            CALL CHKOUT ( RNAME )
-            RETURN
+            call chkout ( rname )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Locate the intercept of the ray with the target; if there's no
 !     intercept, find the closest point on the target to the ray.
 !
-      CALL UDRAYX ( OBSPOS, TRGDIR, TRGEPC, SPOINT, FOUND )
+      call udrayx ( obspos, trgdir, trgepc, spoint, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     If we found an intercept, and if we're not using light time
 !     corrections, we're almost done now. We still need SRFVEC.
 !     SPOINT, TRGEPC, and FOUND have already been set.
 !
-      IF (  FOUND  .AND.  ( .NOT. USELT )  ) THEN
+      if (  found  .and.  ( .not. uselt )  ) then
 
-         CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+         call vsub ( spoint, obspos, srfvec )
 
-         CALL CHKOUT ( RNAME )
-         RETURN
+         call chkout ( rname )
+         return
 
-      END IF
+      end if
 
 !
 !     From this point onward, we're dealing with a case calling for
 !     light time and possibly stellar aberration corrections.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        If there's no intercept, we're probably done. However, we need
 !        to guard against the possibility that the ray does intersect
@@ -1064,91 +1064,91 @@
 !        If we're using converged Newtonian corrections, we iterate
 !        this procedure up to three times.
 !
-         IF ( USECN ) THEN
-            NITR = 3
-         ELSE
-            NITR = 1
-         END IF
+         if ( usecn ) then
+            nitr = 3
+         else
+            nitr = 1
+         end if
 
-         I = 1
+         i = 1
 
-         DO WHILE (  ( I .LE. NITR ) .AND. ( .NOT. FOUND )  )
+         do while (  ( i .le. nitr ) .and. ( .not. found )  )
 
-            CALL UDNEAR ( OBSPOS, TRGDIR, ET, PNEAR, RAYALT )
+            call udnear ( obspos, trgdir, et, pnear, rayalt )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            LT =  VDIST ( OBSPOS, PNEAR ) / CLIGHT()
+            lt =  vdist ( obspos, pnear ) / clight()
 
 !
 !           Use the new light time estimate to repeat the intercept
 !           computation.
 !
-            TRGEPC  =  ET  +  S*LT
+            trgepc  =  et  +  s*lt
 
 !
 !           Get the J2000-relative state of the target relative to
 !           the solar system barycenter at the target epoch.
 !
-            CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+            call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 !
 !           Find the position of the observer relative to the target.
 !           Convert this vector from the J2000 frame to the target
 !           frame at TRGEPC.
 !
-            CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
-            CALL PXFORM ( 'J2000', FIXREF, TRGEPC, XFORM )
+            call vsub   ( ssbost,  ssbtst, j2pos         )
+            call pxform ( 'J2000', fixref, trgepc, xform )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 !
 !           Convert the observer's position relative to the target
 !           from the J2000 frame to the target frame at the target
 !           epoch.
 !
-            CALL MXV ( XFORM, J2POS, OBSPOS )
+            call mxv ( xform, j2pos, obspos )
 
 !
 !           Convert the ray's direction vector from the J2000 frame
 !           to the target frame at the target epoch.
 !
-            CALL MXV ( XFORM, J2DIR, TRGDIR )
+            call mxv ( xform, j2dir, trgdir )
 
 !
 !           Repeat the intercept computation.
 !
-            CALL UDRAYX ( OBSPOS, TRGDIR, TRGEPC, SPOINT, FOUND )
+            call udrayx ( obspos, trgdir, trgepc, spoint, found )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
-            I = I + 1
+            i = i + 1
 
-         END DO
+         end do
 
 !
 !        If there's still no intercept, we're done.
 !
-         IF ( .NOT. FOUND ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( .not. found ) then
+            call chkout ( rname )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Making it to this point means we've got an intersection, given
@@ -1160,40 +1160,40 @@
 !     our computation of the target position and orientation using
 !     the new light time value.
 !
-      IF ( USECN ) THEN
-         NITR = MAXITR
-      ELSE
-         NITR = 1
-      END IF
+      if ( usecn ) then
+         nitr = maxitr
+      else
+         nitr = 1
+      end if
 
 !
 !     Compute new light time estimate and new target epoch.
 !
-      DIST  =   VDIST ( OBSPOS, SPOINT )
-      LT     =  DIST / CLIGHT()
-      TRGEPC =  ET  +  S * LT
+      dist  =   vdist ( obspos, spoint )
+      lt     =  dist / clight()
+      trgepc =  et  +  s * lt
 
-      PREVLT = 0.D0
-      PREVET = TRGEPC
+      prevlt = 0.d0
+      prevet = trgepc
 
-      I      = 0
-      LTDIFF = 1.D0
-      ETDIFF = 1.D0
+      i      = 0
+      ltdiff = 1.d0
+      etdiff = 1.d0
 
-      DO WHILE (       ( I      .LT.   NITR                ) &
-                 .AND. ( LTDIFF .GT. ( CNVLIM * ABS(LT) )  ) &
-                 .AND. ( ETDIFF .GT.   0.D0                )  )
+      do while (       ( i      .lt.   nitr                ) &
+                 .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
+                 .and. ( etdiff .gt.   0.d0                )  )
 
 !
 !        Get the J2000-relative state of the target relative to
 !        the solar system barycenter at the target epoch.
 !
-         CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+         call spkssb ( trgcde, trgepc, 'J2000', ssbtst )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Find the position of the observer relative to the target.
@@ -1203,36 +1203,36 @@
 !        Note that SSBOST contains the J2000-relative state of the
 !        observer relative to the solar system barycenter at ET.
 !
-         CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
-         CALL PXFORM ( 'J2000', FIXREF, TRGEPC, XFORM )
+         call vsub   ( ssbost,  ssbtst, j2pos         )
+         call pxform ( 'J2000', fixref, trgepc, xform )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        Convert the observer's position relative to the target from
 !        the J2000 frame to the target frame at the target epoch.
 !
-         CALL MXV    ( XFORM,  J2POS, OBSPOS )
-         CALL VMINUS ( OBSPOS, NEGPOS )
+         call mxv    ( xform,  j2pos, obspos )
+         call vminus ( obspos, negpos )
 
 !
 !        Convert the ray's direction vector from the J2000 frame
 !        to the target frame at the target epoch.
 !
-         CALL MXV ( XFORM, J2DIR, TRGDIR )
+         call mxv ( xform, j2dir, trgdir )
 
 !
 !        Repeat the intercept computation.
 !
-         CALL UDRAYX ( OBSPOS, TRGDIR, TRGEPC, SPOINT, FOUND )
+         call udrayx ( obspos, trgdir, trgepc, spoint, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        If there's no intercept, try to get an estimate of the
@@ -1246,39 +1246,39 @@
 !        aberration corrections, so we can't get to this case unless
 !        we have near-intercept geometry.
 !
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            IF ( I .LT. ( NITR-1 ) ) THEN
+            if ( i .lt. ( nitr-1 ) ) then
 !
 !              SPOINT is the nearest point to the ellipsoid on the
 !              line containing the ray.
 !
-               CALL UDNEAR ( OBSPOS, TRGDIR, ET, PNEAR, RAYALT )
+               call udnear ( obspos, trgdir, et, pnear, rayalt )
 
-               CALL NPLNPT ( OBSPOS, TRGDIR, PNEAR, SPOINT, RAYALT )
+               call nplnpt ( obspos, trgdir, pnear, spoint, rayalt )
 
-            ELSE
+            else
 !
 !              We're not going to find an intercept.
 !
-               CALL CHKOUT ( RNAME )
-               RETURN
+               call chkout ( rname )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Compute the distance between intercept and observer.
 !
-         DIST    =   VDIST ( OBSPOS, SPOINT )
+         dist    =   vdist ( obspos, spoint )
 
 !
 !        Compute a new light time estimate and a new target epoch.
 !
-         LT      =  DIST / CLIGHT()
+         lt      =  dist / clight()
 
-         TRGEPC  =  ET  +  S * LT
+         trgepc  =  et  +  s * lt
 
 !
 !        We use the d.p. identity function TOUCHD to force the compiler
@@ -1290,13 +1290,13 @@
 !        the problem, because that variable can be optimized out of
 !        existence.
 !
-         LTDIFF  =   ABS( TOUCHD(LT     - PREVLT) )
-         ETDIFF  =   ABS( TOUCHD(TRGEPC - PREVET) )
-         PREVLT  =   LT
-         PREVET  =   TRGEPC
-         I       =   I + 1
+         ltdiff  =   abs( touchd(lt     - prevlt) )
+         etdiff  =   abs( touchd(trgepc - prevet) )
+         prevlt  =   lt
+         prevet  =   trgepc
+         i       =   i + 1
 
-      END DO
+      end do
 
 !
 !     FOUND, SPOINT, TRGEPC, and OBSPOS have been set at this point.
@@ -1307,8 +1307,8 @@
 !     the J2000 frame. We use XFORM, which is computed in the loop
 !     above, to convert J2GEOM to FIXREF, evaluated at TRGEPC.
 !
-      CALL MXV    ( XFORM, J2GEOM, UDIR )
-      CALL VHATIP ( UDIR )
+      call mxv    ( xform, j2geom, udir )
+      call vhatip ( udir )
 
 !
 !     Let SRFLEN be the length of SRFVEC; we CAN get this
@@ -1316,13 +1316,13 @@
 !     aberration correction (as implemented in SPICE)
 !     doesn't change the length of the vector SPOINT-OBSPOS.
 !
-      SRFLEN = VDIST ( SPOINT, OBSPOS )
+      srflen = vdist ( spoint, obspos )
 
 !
 !     Scale UDIR to obtain the desired value of SRFVEC.
 !
-      CALL VSCL ( SRFLEN, UDIR, SRFVEC )
+      call vscl ( srflen, udir, srfvec )
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

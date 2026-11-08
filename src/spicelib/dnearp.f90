@@ -1,6 +1,6 @@
 !$Procedure DNEARP ( Derivative of near point )
 
-      SUBROUTINE DNEARP ( STATE, A, B, C, DNEAR, DALT, FOUND )
+      subroutine dnearp ( state, a, b, c, dnear, dalt, found )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      STATE ( 6 )
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      DNEAR ( 6 )
-      DOUBLE PRECISION      DALT  ( 2 )
-      LOGICAL               FOUND
+      double precision      state ( 6 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      dnear ( 6 )
+      double precision      dalt  ( 2 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -455,8 +455,8 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 
 !
@@ -466,47 +466,47 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DNEARP' )
+      call chkin ( 'DNEARP' )
 
 !
 !     Until we have reason to believe otherwise, we set FOUND to TRUE.
 !
-      FOUND = .TRUE.
+      found = .true.
 
 !
 !     First we need to compute the near point.
 !
-      CALL NEARPT ( STATE, A, B, C, DNEAR, DALT )
+      call nearpt ( state, a, b, c, dnear, dalt )
 
 !
 !     Make sure nothing went bump in the dark innards of NEARPT.
 !
-      IF ( FAILED() ) THEN
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'DNEARP' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         found = .false.
+         call chkout ( 'DNEARP' )
+         return
+      end if
 
 !
 !     Calculate the derivative of the near point and altitude.
 !
 
-      CALL ZZDNPT ( STATE, DNEAR, A, B, C, DNEAR(4), DALT(2), FOUND )
+      call zzdnpt ( state, dnear, a, b, c, dnear(4), dalt(2), found )
 
 !
 !     Check error status. Bail out if failure in call.
 !
-      IF ( FAILED() ) THEN
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'DNEARP' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         found = .false.
+         call chkout ( 'DNEARP' )
+         return
+      end if
 
-      CALL CHKOUT ( 'DNEARP' )
+      call chkout ( 'DNEARP' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure CONVRT ( Convert Units )
 
-      SUBROUTINE CONVRT ( X, IN, OUT, Y )
+      subroutine convrt ( x, in, out, y )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION X
-      CHARACTER*(*)    IN
-      CHARACTER*(*)    OUT
-      DOUBLE PRECISION Y
+      double precision x
+      character*(*)    in
+      character*(*)    out
+      double precision y
 
 ! $ Brief_I/O
 !
@@ -210,79 +210,79 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
-      INTEGER          ISRCHC
-      DOUBLE PRECISION DPR
+      logical          return
+      integer          isrchc
+      double precision dpr
 
 !
 !     Local variables
 !
-      CHARACTER*16     INU
-      CHARACTER*16     OUTU
+      character*16     inu
+      character*16     outu
 
 
 
-      INTEGER          I
-      INTEGER          J
-      DOUBLE PRECISION TEMP
+      integer          i
+      integer          j
+      double precision temp
 
-      DOUBLE PRECISION SECPJY
-      PARAMETER      ( SECPJY =  86400.0D0 * 365.25D0      )
+      double precision secpjy
+      parameter      ( secpjy =  86400.0d0 * 365.25d0      )
 
-      DOUBLE PRECISION SECPTY
-      PARAMETER      ( SECPTY =  86400.0D0 * 365.2421988D0 )
+      double precision secpty
+      parameter      ( secpty =  86400.0d0 * 365.2421988d0 )
 
-      DOUBLE PRECISION LTYEAR
-      PARAMETER      ( LTYEAR = 86400.0D0 * 365.25D0 * 299792458.0D0)
+      double precision ltyear
+      parameter      ( ltyear = 86400.0d0 * 365.25d0 * 299792458.0d0)
 
-      DOUBLE PRECISION DPM
-      PARAMETER      ( DPM  = 1.0D0  /   60.0D0      )
+      double precision dpm
+      parameter      ( dpm  = 1.0d0  /   60.0d0      )
 
-      DOUBLE PRECISION DPS
-      PARAMETER      ( DPS  = 1.0D0  / 3600.0D0      )
+      double precision dps
+      parameter      ( dps  = 1.0d0  / 3600.0d0      )
 
-      DOUBLE PRECISION DPSA
-      PARAMETER      ( DPSA = 15.0D0 / 3600.0D0      )
+      double precision dpsa
+      parameter      ( dpsa = 15.0d0 / 3600.0d0      )
 
-      DOUBLE PRECISION AU
-      PARAMETER      ( AU   = 1.4959787061368887D11  )
+      double precision au
+      parameter      ( au   = 1.4959787061368887d11  )
 !
 !     1.0d0 divided by the sin of 1 arc second
 !
-      DOUBLE PRECISION SCALE
-      PARAMETER      ( SCALE = 2.0626480624790438D+05 )
+      double precision scale
+      parameter      ( scale = 2.0626480624790438d+05 )
 
 
-      DOUBLE PRECISION PARSEC
-      PARAMETER      ( PARSEC = AU * SCALE )
+      double precision parsec
+      parameter      ( parsec = au * scale )
 
-      INTEGER          ANG
-      PARAMETER      ( ANG  = 0         )
+      integer          ang
+      parameter      ( ang  = 0         )
 
-      INTEGER          DIST
-      PARAMETER      ( DIST = ANG  + 7  )
+      integer          dist
+      parameter      ( dist = ang  + 7  )
 
-      INTEGER          TME
-      PARAMETER      ( TME  = DIST + 17 )
+      integer          tme
+      parameter      ( tme  = dist + 17 )
 
-      INTEGER          TOTAL
-      PARAMETER      ( TOTAL = TME + 7  )
+      integer          total
+      parameter      ( total = tme + 7  )
 
-      CHARACTER*16     UNITS  (TOTAL)
-      SAVE             UNITS
+      character*16     units  (total)
+      save             units
 
-      DOUBLE PRECISION CNVRTN (TOTAL)
-      SAVE             CNVRTN
+      double precision cnvrtn (total)
+      save             cnvrtn
 
-      CHARACTER*8      TYPE   (TOTAL)
-      SAVE             TYPE
+      character*8      type   (total)
+      save             type
 
-      LOGICAL          FIRST
-      SAVE             FIRST
+      logical          first
+      save             first
 
 
 
-      DATA             FIRST / .TRUE. /
+      data             first / .true. /
 
 !
 !     Angular Conversions:
@@ -296,33 +296,33 @@
 !                 ()   Degrees/MINUTEANGLE
 !                 ()   Degrees/SECONDANGLE
 !
-      DATA UNITS  (ANG + 1)  / 'RADIANS'     /
-      DATA UNITS  (ANG + 2)  / 'DEGREES'     /
-      DATA UNITS  (ANG + 3)  / 'ARCMINUTES'  /
-      DATA UNITS  (ANG + 4)  / 'ARCSECONDS'  /
-      DATA UNITS  (ANG + 5)  / 'HOURANGLE'   /
-      DATA UNITS  (ANG + 6)  / 'MINUTEANGLE' /
-      DATA UNITS  (ANG + 7)  / 'SECONDANGLE' /
+      data units  (ang + 1)  / 'RADIANS'     /
+      data units  (ang + 2)  / 'DEGREES'     /
+      data units  (ang + 3)  / 'ARCMINUTES'  /
+      data units  (ang + 4)  / 'ARCSECONDS'  /
+      data units  (ang + 5)  / 'HOURANGLE'   /
+      data units  (ang + 6)  / 'MINUTEANGLE' /
+      data units  (ang + 7)  / 'SECONDANGLE' /
 !
 !     DATA CNVRTN (ANG + 1)  /      DPR()   /
 !
 !     This value will be loaded using the SPICELIB function DPR()
 !     on the first execution of this routine.
 !
-      DATA CNVRTN (ANG + 2)  /    1.0D0   /
-      DATA CNVRTN (ANG + 3)  /      DPM   /
-      DATA CNVRTN (ANG + 4)  /      DPS   /
-      DATA CNVRTN (ANG + 5)  / 15.000D0   /
-      DATA CNVRTN (ANG + 6)  /  0.250D0   /
-      DATA CNVRTN (ANG + 7)  /  DPSA      /
+      data cnvrtn (ang + 2)  /    1.0d0   /
+      data cnvrtn (ang + 3)  /      dpm   /
+      data cnvrtn (ang + 4)  /      dps   /
+      data cnvrtn (ang + 5)  / 15.000d0   /
+      data cnvrtn (ang + 6)  /  0.250d0   /
+      data cnvrtn (ang + 7)  /  dpsa      /
 
-      DATA TYPE   (ANG + 1)  / 'ANGLE'    /
-      DATA TYPE   (ANG + 2)  / 'ANGLE'    /
-      DATA TYPE   (ANG + 3)  / 'ANGLE'    /
-      DATA TYPE   (ANG + 4)  / 'ANGLE'    /
-      DATA TYPE   (ANG + 5)  / 'ANGLE'    /
-      DATA TYPE   (ANG + 6)  / 'ANGLE'    /
-      DATA TYPE   (ANG + 7)  / 'ANGLE'    /
+      data type   (ang + 1)  / 'ANGLE'    /
+      data type   (ang + 2)  / 'ANGLE'    /
+      data type   (ang + 3)  / 'ANGLE'    /
+      data type   (ang + 4)  / 'ANGLE'    /
+      data type   (ang + 5)  / 'ANGLE'    /
+      data type   (ang + 6)  / 'ANGLE'    /
+      data type   (ang + 7)  / 'ANGLE'    /
 !
 !     Distance Conversions ( 8 through 17 )
 !
@@ -337,38 +337,38 @@
 !                 (+  9) Meters/cm
 !                 (+ 10) Meters/mm
 !
-      DATA UNITS (DIST + 1)  / 'METERS'               /
-      DATA UNITS (DIST + 2)  / 'KM'                   /
-      DATA UNITS (DIST + 3)  / 'CM'                   /
-      DATA UNITS (DIST + 4)  / 'MM'                   /
-      DATA UNITS (DIST + 5)  / 'LIGHTSECS'            /
-      DATA UNITS (DIST + 6)  / 'AU'                   /
-      DATA UNITS (DIST + 7)  / 'M'                    /
-      DATA UNITS (DIST + 8)  / 'KILOMETERS'           /
-      DATA UNITS (DIST + 9)  / 'CENTIMETERS'          /
-      DATA UNITS (DIST + 10) / 'MILLIMETERS'          /
+      data units (dist + 1)  / 'METERS'               /
+      data units (dist + 2)  / 'KM'                   /
+      data units (dist + 3)  / 'CM'                   /
+      data units (dist + 4)  / 'MM'                   /
+      data units (dist + 5)  / 'LIGHTSECS'            /
+      data units (dist + 6)  / 'AU'                   /
+      data units (dist + 7)  / 'M'                    /
+      data units (dist + 8)  / 'KILOMETERS'           /
+      data units (dist + 9)  / 'CENTIMETERS'          /
+      data units (dist + 10) / 'MILLIMETERS'          /
 
-      DATA CNVRTN(DIST + 1)  / 1.00D0                 /
-      DATA CNVRTN(DIST + 2)  / 1000.0D0               /
-      DATA CNVRTN(DIST + 3)  / 0.01D0                 /
-      DATA CNVRTN(DIST + 4)  / 0.001D0                /
-      DATA CNVRTN(DIST + 5)  / 299792458.0D0        /
-      DATA CNVRTN(DIST + 6)  / AU                     /
-      DATA CNVRTN(DIST + 7)  / 1.00D0                 /
-      DATA CNVRTN(DIST + 8)  / 1000.0D0               /
-      DATA CNVRTN(DIST + 9)  / 0.01D0                 /
-      DATA CNVRTN(DIST + 10) / 0.001D0                /
+      data cnvrtn(dist + 1)  / 1.00d0                 /
+      data cnvrtn(dist + 2)  / 1000.0d0               /
+      data cnvrtn(dist + 3)  / 0.01d0                 /
+      data cnvrtn(dist + 4)  / 0.001d0                /
+      data cnvrtn(dist + 5)  / 299792458.0d0        /
+      data cnvrtn(dist + 6)  / au                     /
+      data cnvrtn(dist + 7)  / 1.00d0                 /
+      data cnvrtn(dist + 8)  / 1000.0d0               /
+      data cnvrtn(dist + 9)  / 0.01d0                 /
+      data cnvrtn(dist + 10) / 0.001d0                /
 
-      DATA TYPE  (DIST + 1)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 2)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 3)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 4)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 5)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 6)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 7)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 8)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 9)  / 'DISTANCE'             /
-      DATA TYPE  (DIST + 10) / 'DISTANCE'             /
+      data type  (dist + 1)  / 'DISTANCE'             /
+      data type  (dist + 2)  / 'DISTANCE'             /
+      data type  (dist + 3)  / 'DISTANCE'             /
+      data type  (dist + 4)  / 'DISTANCE'             /
+      data type  (dist + 5)  / 'DISTANCE'             /
+      data type  (dist + 6)  / 'DISTANCE'             /
+      data type  (dist + 7)  / 'DISTANCE'             /
+      data type  (dist + 8)  / 'DISTANCE'             /
+      data type  (dist + 9)  / 'DISTANCE'             /
+      data type  (dist + 10) / 'DISTANCE'             /
 
 !
 !     Distance Conversions
@@ -379,23 +379,23 @@
 !                 (+ 14) Meters/Nautical Mile
 !                 (+ 15) Meters/Yard
 !
-      DATA UNITS (DIST + 11) / 'FEET'            /
-      DATA UNITS (DIST + 12) / 'INCHES'          /
-      DATA UNITS (DIST + 13) / 'STATUTE_MILES'   /
-      DATA UNITS (DIST + 14) / 'NAUTICAL_MILES'  /
-      DATA UNITS (DIST + 15) / 'YARDS'           /
+      data units (dist + 11) / 'FEET'            /
+      data units (dist + 12) / 'INCHES'          /
+      data units (dist + 13) / 'STATUTE_MILES'   /
+      data units (dist + 14) / 'NAUTICAL_MILES'  /
+      data units (dist + 15) / 'YARDS'           /
 
-      DATA CNVRTN(DIST + 11) / 0.3048D0          /
-      DATA CNVRTN(DIST + 12) / 0.0254D0          /
-      DATA CNVRTN(DIST + 13) / 1609.344D0       /
-      DATA CNVRTN(DIST + 14) / 1852.0D0         /
-      DATA CNVRTN(DIST + 15) / 0.9144D0          /
+      data cnvrtn(dist + 11) / 0.3048d0          /
+      data cnvrtn(dist + 12) / 0.0254d0          /
+      data cnvrtn(dist + 13) / 1609.344d0       /
+      data cnvrtn(dist + 14) / 1852.0d0         /
+      data cnvrtn(dist + 15) / 0.9144d0          /
 
-      DATA TYPE  (DIST + 11) / 'DISTANCE'        /
-      DATA TYPE  (DIST + 12) / 'DISTANCE'        /
-      DATA TYPE  (DIST + 13) / 'DISTANCE'        /
-      DATA TYPE  (DIST + 14) / 'DISTANCE'        /
-      DATA TYPE  (DIST + 15) / 'DISTANCE'        /
+      data type  (dist + 11) / 'DISTANCE'        /
+      data type  (dist + 12) / 'DISTANCE'        /
+      data type  (dist + 13) / 'DISTANCE'        /
+      data type  (dist + 14) / 'DISTANCE'        /
+      data type  (dist + 15) / 'DISTANCE'        /
 
 !
 !     Distance Conversions
@@ -403,14 +403,14 @@
 !                 (+ 16) Meters/LightYear
 !                 (+ 17) Meters/Parsec
 !
-      DATA UNITS (DIST + 16) / 'LIGHTYEARS'            /
-      DATA UNITS (DIST + 17) / 'PARSECS'               /
+      data units (dist + 16) / 'LIGHTYEARS'            /
+      data units (dist + 17) / 'PARSECS'               /
 
-      DATA CNVRTN(DIST + 16) / LTYEAR                  /
-      DATA CNVRTN(DIST + 17) / PARSEC                  /
+      data cnvrtn(dist + 16) / ltyear                  /
+      data cnvrtn(dist + 17) / parsec                  /
 
-      DATA TYPE  (DIST + 16) / 'DISTANCE'              /
-      DATA TYPE  (DIST + 17) / 'DISTANCE'              /
+      data type  (dist + 16) / 'DISTANCE'              /
+      data type  (dist + 17) / 'DISTANCE'              /
 
 !
 !     Time Conversions
@@ -423,117 +423,117 @@
 !                 (+ 6 ) Seconds / Tropical year
 !                 (+ 7 ) Seconds / year          --- same as Julian year
 !
-      DATA UNITS ( TME + 1 ) / 'SECONDS'        /
-      DATA UNITS ( TME + 2 ) / 'MINUTES'        /
-      DATA UNITS ( TME + 3 ) / 'HOURS'          /
-      DATA UNITS ( TME + 4 ) / 'DAYS'           /
-      DATA UNITS ( TME + 5 ) / 'JULIAN_YEARS'   /
-      DATA UNITS ( TME + 6 ) / 'TROPICAL_YEARS' /
-      DATA UNITS ( TME + 7 ) / 'YEARS'          /
+      data units ( tme + 1 ) / 'SECONDS'        /
+      data units ( tme + 2 ) / 'MINUTES'        /
+      data units ( tme + 3 ) / 'HOURS'          /
+      data units ( tme + 4 ) / 'DAYS'           /
+      data units ( tme + 5 ) / 'JULIAN_YEARS'   /
+      data units ( tme + 6 ) / 'TROPICAL_YEARS' /
+      data units ( tme + 7 ) / 'YEARS'          /
 
-      DATA CNVRTN( TME + 1 ) /     1.0D0        /
-      DATA CNVRTN( TME + 2 ) /    60.0D0        /
-      DATA CNVRTN( TME + 3 ) /  3600.0D0        /
-      DATA CNVRTN( TME + 4 ) / 86400.0D0        /
-      DATA CNVRTN( TME + 5 ) / SECPJY           /
-      DATA CNVRTN( TME + 6 ) / SECPTY           /
-      DATA CNVRTN( TME + 7 ) / SECPJY           /
+      data cnvrtn( tme + 1 ) /     1.0d0        /
+      data cnvrtn( tme + 2 ) /    60.0d0        /
+      data cnvrtn( tme + 3 ) /  3600.0d0        /
+      data cnvrtn( tme + 4 ) / 86400.0d0        /
+      data cnvrtn( tme + 5 ) / secpjy           /
+      data cnvrtn( tme + 6 ) / secpty           /
+      data cnvrtn( tme + 7 ) / secpjy           /
 
-      DATA TYPE  ( TME + 1 ) / 'TIME'           /
-      DATA TYPE  ( TME + 2 ) / 'TIME'           /
-      DATA TYPE  ( TME + 3 ) / 'TIME'           /
-      DATA TYPE  ( TME + 4 ) / 'TIME'           /
-      DATA TYPE  ( TME + 5 ) / 'TIME'           /
-      DATA TYPE  ( TME + 6 ) / 'TIME'           /
-      DATA TYPE  ( TME + 7 ) / 'TIME'           /
+      data type  ( tme + 1 ) / 'TIME'           /
+      data type  ( tme + 2 ) / 'TIME'           /
+      data type  ( tme + 3 ) / 'TIME'           /
+      data type  ( tme + 4 ) / 'TIME'           /
+      data type  ( tme + 5 ) / 'TIME'           /
+      data type  ( tme + 6 ) / 'TIME'           /
+      data type  ( tme + 7 ) / 'TIME'           /
 
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN() ) RETURN
-      CALL CHKIN ( 'CONVRT' )
+      if ( return() ) return
+      call chkin ( 'CONVRT' )
 
 
 
-      IF ( FIRST ) THEN
-         CNVRTN( ANG + 1 ) =  DPR()
-         FIRST             = .FALSE.
-      END IF
+      if ( first ) then
+         cnvrtn( ang + 1 ) =  dpr()
+         first             = .false.
+      end if
 
 
-      CALL UCASE ( IN,  INU  )
-      CALL UCASE ( OUT, OUTU )
+      call ucase ( in,  inu  )
+      call ucase ( out, outu )
 
-      I    = ISRCHC( INU,  TOTAL, UNITS )
-      J    = ISRCHC( OUTU, TOTAL, UNITS )
+      i    = isrchc( inu,  total, units )
+      j    = isrchc( outu, total, units )
 
-      IF (      ( I .EQ. 0 ) &
-           .OR. ( J.EQ. 0 ) ) THEN
+      if (      ( i .eq. 0 ) &
+           .or. ( j.eq. 0 ) ) then
 
-         IF (       ( I .EQ. 0 ) &
-              .AND. ( J .EQ. 0 ) ) THEN
+         if (       ( i .eq. 0 ) &
+              .and. ( j .eq. 0 ) ) then
 
 
-            CALL SETMSG ('CONVRT: Neither the input units ' // INU  // &
-                         'nor the output units '            // OUTU // &
+            call setmsg ('CONVRT: Neither the input units ' // inu  // &
+                         'nor the output units '            // outu // &
                          'were recognized.' &
                         )
 
-            CALL SIGERR ('SPICE(UNITSNOTREC)')
+            call sigerr ('SPICE(UNITSNOTREC)')
 
-            CALL CHKOUT ( 'CONVRT' )
-            RETURN
+            call chkout ( 'CONVRT' )
+            return
 
-         ELSE IF ( I .EQ. 0 ) THEN
+         else if ( i .eq. 0 ) then
 
-            CALL SETMSG ('CONVRT: Input units '// INU // &
+            call setmsg ('CONVRT: Input units '// inu // &
                          ' were not recognized' &
                         )
 
-            CALL SIGERR ('SPICE(UNITSNOTREC)')
+            call sigerr ('SPICE(UNITSNOTREC)')
 
-            CALL CHKOUT ( 'CONVRT' )
-            RETURN
+            call chkout ( 'CONVRT' )
+            return
 
-         ELSE IF ( J .EQ. 0 ) THEN
+         else if ( j .eq. 0 ) then
 
-            CALL SETMSG ('CONVRT: Output units '// OUTU // &
+            call setmsg ('CONVRT: Output units '// outu // &
                          ' were not recognized' &
                         )
 
-            CALL SIGERR ('SPICE(UNITSNOTREC)')
+            call sigerr ('SPICE(UNITSNOTREC)')
 
-            CALL CHKOUT ( 'CONVRT' )
-            RETURN
+            call chkout ( 'CONVRT' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      IF ( TYPE(I) .NE. TYPE(J) ) THEN
+      if ( type(i) .ne. type(j) ) then
 
-         CALL SETMSG ('CONVRT: Incompatible units. '   // &
+         call setmsg ('CONVRT: Incompatible units. '   // &
                       'You are attempting to convert ' // &
-                      INU  // 'type: ' // TYPE(I)      // &
+                      inu  // 'type: ' // type(i)      // &
                       ' to '                           // &
-                      OUTU // 'type: ' // TYPE(J)      // &
+                      outu // 'type: ' // type(j)      // &
                       '.' &
                      )
 
-         CALL SIGERR ('SPICE(INCOMPATIBLEUNITS)')
+         call sigerr ('SPICE(INCOMPATIBLEUNITS)')
 
-         CALL CHKOUT ( 'CONVRT' )
-         RETURN
+         call chkout ( 'CONVRT' )
+         return
 
-      END IF
-
-
-      TEMP = X    * CNVRTN ( I )
-      Y    = TEMP / CNVRTN ( J )
+      end if
 
 
-      CALL CHKOUT ( 'CONVRT' )
-      RETURN
+      temp = x    * cnvrtn ( i )
+      y    = temp / cnvrtn ( j )
 
-      END
+
+      call chkout ( 'CONVRT' )
+      return
+
+      end

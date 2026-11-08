@@ -1,8 +1,8 @@
 !$Procedure ZZDSKBUN ( DSK, buffered unprioritized normal vector )
 
-      SUBROUTINE ZZDSKBUN ( BODYID, NSURF,  SRFLST, ET,     FIXFID, &
-                            NSEG,   HANBUF, DLABUF, DSKBUF, OFFBUF, &
-                            CTRBUF, RADBUF, POINT,  NORMAL         )
+      subroutine zzdskbun ( bodyid, nsurf,  srflst, et,     fixfid, &
+                            nseg,   hanbuf, dlabuf, dskbuf, offbuf, &
+                            ctrbuf, radbuf, point,  normal         )
 
 ! $ Abstract
 !
@@ -35,27 +35,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsktol.inc'
-      INCLUDE 'zzctr.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsktol.inc'
+      include 'zzctr.inc'
 
-      INTEGER               BODYID
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      ET
-      INTEGER               FIXFID
-      INTEGER               NSEG
-      INTEGER               HANBUF ( * )
-      INTEGER               DLABUF ( DLADSZ, * )
-      DOUBLE PRECISION      DSKBUF ( DSKDSZ, * )
-      DOUBLE PRECISION      OFFBUF ( 3,      * )
-      DOUBLE PRECISION      CTRBUF ( 3,      * )
-      DOUBLE PRECISION      RADBUF ( * )
-      DOUBLE PRECISION      POINT  ( 3 )
-      DOUBLE PRECISION      NORMAL ( 3 )
+      integer               bodyid
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      et
+      integer               fixfid
+      integer               nseg
+      integer               hanbuf ( * )
+      integer               dlabuf ( dladsz, * )
+      double precision      dskbuf ( dskdsz, * )
+      double precision      offbuf ( 3,      * )
+      double precision      ctrbuf ( 3,      * )
+      double precision      radbuf ( * )
+      double precision      point  ( 3 )
+      double precision      normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -238,51 +238,51 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
+      double precision      vdist
 
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MAXHIT
-      PARAMETER           ( MAXHIT = 1000 )
+      integer               maxhit
+      parameter           ( maxhit = 1000 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      SEGPT  ( 3 )
-      DOUBLE PRECISION      SGMARG
-      DOUBLE PRECISION      SGXBUF ( 3, 3, MAXHIT )
-      DOUBLE PRECISION      VERTS  ( 3, 3 )
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      double precision      dist
+      double precision      segpt  ( 3 )
+      double precision      sgmarg
+      double precision      sgxbuf ( 3, 3, maxhit )
+      double precision      verts  ( 3, 3 )
+      double precision      vtemp  ( 3 )
+      double precision      xform  ( 3, 3 )
 
-      INTEGER               CORSYS
-      INTEGER               DTYPE
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NHIT
-      INTEGER               PLATE  ( 3 )
-      INTEGER               PLID
-      INTEGER               PRVFRM
-      INTEGER               SEGFID
-      INTEGER               SGHIT  ( MAXHIT )
-      INTEGER               SURFCE
-      INTEGER               WINNER
+      integer               corsys
+      integer               dtype
+      integer               i
+      integer               j
+      integer               nhit
+      integer               plate  ( 3 )
+      integer               plid
+      integer               prvfrm
+      integer               segfid
+      integer               sghit  ( maxhit )
+      integer               surfce
+      integer               winner
 
-      LOGICAL               BODYOK
-      LOGICAL               DONE
-      LOGICAL               INSIDE
-      LOGICAL               MULTFR
-      LOGICAL               SURFOK
-      LOGICAL               TIMEOK
-      LOGICAL               XFND
+      logical               bodyok
+      logical               done
+      logical               inside
+      logical               multfr
+      logical               surfok
+      logical               timeok
+      logical               xfnd
 
 !
 !     Saved variables
@@ -292,43 +292,43 @@
 !     Initial values
 !
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKBUN' )
+      call chkin ( 'ZZDSKBUN' )
 
 !
 !     Check the incoming segment count.
 !
-      IF ( NSEG .LE. 0 ) THEN
+      if ( nseg .le. 0 ) then
 
-         CALL SETMSG ( 'Input segment list was empty. This may ' &
+         call setmsg ( 'Input segment list was empty. This may ' &
          //            'be due to no DSKs containing data for ' &
          //            'body # having been loaded.'            )
-         CALL ERRINT ( '#',  BODYID                            )
-         CALL SIGERR ( 'SPICE(NODSKSEGMENTS)'                  )
-         CALL CHKOUT ( 'ZZDSKBUN'                              )
-         RETURN
+         call errint ( '#',  bodyid                            )
+         call sigerr ( 'SPICE(NODSKSEGMENTS)'                  )
+         call chkout ( 'ZZDSKBUN'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the segment margin from the tolerance database.
 !
-      CALL DSKGTL ( KEYSGR, SGMARG )
+      call dskgtl ( keysgr, sgmarg )
 
 !
 !     Indicate we haven't yet seen a segment frame different
 !     from the one designated by FIXFID.
 !
-      MULTFR = .FALSE.
+      multfr = .false.
 
 !
 !     Make a local copy of the point. We'll update this copy
 !     later if need be.
 !
-      CALL VEQU ( POINT, SEGPT )
+      call vequ ( point, segpt )
 
 !
 !     By default, each segment in the input list must be checked
@@ -339,48 +339,48 @@
 !     of their bounding spheres. Only those segments whose bounding
 !     spheres contain the point are examined further.
 !
-      NHIT   = 0
-      PRVFRM = 0
+      nhit   = 0
+      prvfrm = 0
 
-      DO I = 1, NSEG
+      do i = 1, nseg
 !
 !        BODYOK indicates whether the input body ID matches that
 !        of the current segment.
 !
-         SURFOK = .FALSE.
-         TIMEOK = .FALSE.
+         surfok = .false.
+         timeok = .false.
 
-         BODYOK = BODYID .EQ. NINT( DSKBUF(CTRIDX,I) )
+         bodyok = bodyid .eq. nint( dskbuf(ctridx,i) )
 
 
-         IF ( BODYOK ) THEN
+         if ( bodyok ) then
 !
 !           See whether the current segment contains a surface we're
 !           supposed to consider. If the surface list is empty, we
 !           consider all surfaces. Otherwise, the surface of the
 !           segment must be on the surface list in order to qualify.
 !
-            J = 0
+            j = 0
 
-            IF ( NSURF .GT. 0 ) THEN
+            if ( nsurf .gt. 0 ) then
 
-               SURFCE = NINT( DSKBUF(SRFIDX,I) )
-               J      = ISRCHI( SURFCE, NSURF, SRFLST )
+               surfce = nint( dskbuf(srfidx,i) )
+               j      = isrchi( surfce, nsurf, srflst )
 
-            END IF
+            end if
 
-            SURFOK = ( NSURF .EQ. 0 ) .OR. ( J .GT. 0 )
+            surfok = ( nsurf .eq. 0 ) .or. ( j .gt. 0 )
 
 !
 !           See whether the segment covers the input epoch.
 !
-            TIMEOK =        ( ET .GE. DSKBUF(BTMIDX,I) ) &
-                      .AND. ( ET .LE. DSKBUF(ETMIDX,I) )
+            timeok =        ( et .ge. dskbuf(btmidx,i) ) &
+                      .and. ( et .le. dskbuf(etmidx,i) )
 
-         END IF
+         end if
 
 
-         IF ( BODYOK .AND. SURFOK .AND. TIMEOK  ) THEN
+         if ( bodyok .and. surfok .and. timeok  ) then
 !
 !           This segment is to be considered.
 !
@@ -391,17 +391,17 @@
 !           Get the segment's frame ID. Get the transformation from the
 !           input frame to the output frame if needed.
 
-            SEGFID = NINT( DSKBUF(FRMIDX,I) )
+            segfid = nint( dskbuf(frmidx,i) )
 
 
-            IF ( SEGFID .NE. FIXFID ) THEN
+            if ( segfid .ne. fixfid ) then
 !
 !              We have a segment that uses a different frame
 !              from that specified by FIXFID.
 !
-               MULTFR = .TRUE.
+               multfr = .true.
 
-               IF ( SEGFID .NE. PRVFRM ) THEN
+               if ( segfid .ne. prvfrm ) then
 !
 !                 The frame of the current segment doesn't match
 !                 that of the previous segment, so we'll need
@@ -411,12 +411,12 @@
 !                 Otherwise, XFORM already contains the correct
 !                 transformation.
 !
-                  CALL REFCHG ( FIXFID, SEGFID, ET, XFORM )
+                  call refchg ( fixfid, segfid, et, xform )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'ZZDSKBUN' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'ZZDSKBUN' )
+                     return
+                  end if
 
 !
 !                 Transform the local copy of the point to the segment's
@@ -424,133 +424,133 @@
 !                 that it represents an offset relative to center of
 !                 the segment's frame.
 !
-                  CALL MXV  ( XFORM, POINT,  SEGPT  )
+                  call mxv  ( xform, point,  segpt  )
 
 !
 !                 The direction of the buffered offset is from the body
 !                 to the segment frame's center. The offset is
 !                 expressed in the segment's frame.
 !
-                  CALL VSUB ( SEGPT, OFFBUF(1,I), VTEMP )
-                  CALL VEQU ( VTEMP,              SEGPT )
+                  call vsub ( segpt, offbuf(1,i), vtemp )
+                  call vequ ( vtemp,              segpt )
 
-               END IF
+               end if
 
 
-            ELSE IF ( MULTFR ) THEN
+            else if ( multfr ) then
 !
 !              The input and segment frames are the same for this
 !              segment, but the current value of SEGPT needs to be
 !              reset.
 !
-               CALL VEQU ( POINT, SEGPT )
+               call vequ ( point, segpt )
 
-            END IF
+            end if
 
 !
 !           Find the distance of the point from the "center" of the
 !           segment's coverage volume.
 !
-            DIST = VDIST ( CTRBUF(1,I), SEGPT )
+            dist = vdist ( ctrbuf(1,i), segpt )
 
 
-            IF ( DIST .LE. RADBUF(I) ) THEN
+            if ( dist .le. radbuf(i) ) then
 !
 !              The point is inside or on the bounding surface. We'll
 !              check the boundary of the segment for an intersection.
 !
-               CORSYS = NINT( DSKBUF(SYSIDX,I) )
+               corsys = nint( dskbuf(sysidx,i) )
 
-               IF ( CORSYS .EQ. LATSYS ) THEN
+               if ( corsys .eq. latsys ) then
 
-                  CALL ZZINLAT ( SEGPT,  DSKBUF(MN1IDX,I), &
-                                 SGMARG, 0,                INSIDE )
+                  call zzinlat ( segpt,  dskbuf(mn1idx,i), &
+                                 sgmarg, 0,                inside )
 
-               ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+               else if ( corsys .eq. recsys ) then
 
-                  CALL ZZINREC ( SEGPT,  DSKBUF(MN1IDX,I), &
-                                 SGMARG, 0,                INSIDE )
+                  call zzinrec ( segpt,  dskbuf(mn1idx,i), &
+                                 sgmarg, 0,                inside )
 
-               ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+               else if ( corsys .eq. pdtsys ) then
 
-                  CALL ZZINPDT ( SEGPT,             DSKBUF(MN1IDX,I), &
-                                 DSKBUF(PARIDX, I), SGMARG, &
-                                 0,                 INSIDE           )
-               ELSE
+                  call zzinpdt ( segpt,             dskbuf(mn1idx,i), &
+                                 dskbuf(paridx, i), sgmarg, &
+                                 0,                 inside           )
+               else
 
-                  CALL SETMSG( 'Coordinate system # is not supported.' )
-                  CALL ERRINT( '#', CORSYS                             )
-                  CALL SIGERR( 'SPICE(BADCOORDSYS)'                    )
-                  CALL CHKOUT( 'ZZDSKBUN'                              )
-                  RETURN
+                  call setmsg( 'Coordinate system # is not supported.' )
+                  call errint( '#', corsys                             )
+                  call sigerr( 'SPICE(BADCOORDSYS)'                    )
+                  call chkout( 'ZZDSKBUN'                              )
+                  return
 
-               END IF
+               end if
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'ZZDSKBUN' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'ZZDSKBUN' )
+                  return
+               end if
 
 
-               IF ( INSIDE ) THEN
+               if ( inside ) then
 !
 !                 The point in inside the region enclosed by the
 !                 boundary of this segment. Save the index of the
 !                 segment in the "hit list."
 !
-                  IF ( NHIT .EQ. MAXHIT ) THEN
+                  if ( nhit .eq. maxhit ) then
 
-                     CALL SETMSG ( 'Too many segments contain the ' &
+                     call setmsg ( 'Too many segments contain the ' &
                      //            'input point. Buffer size is #.'  )
-                     CALL ERRINT ( '#', MAXHIT                       )
-                     CALL SIGERR ( 'SPICE(TOOMANYHITS)'              )
-                     CALL CHKOUT ( 'ZZDSKBUN'                        )
-                     RETURN
+                     call errint ( '#', maxhit                       )
+                     call sigerr ( 'SPICE(TOOMANYHITS)'              )
+                     call chkout ( 'ZZDSKBUN'                        )
+                     return
 
-                  END IF
+                  end if
 
-                  NHIT           = NHIT + 1
-                  SGHIT ( NHIT ) = I
+                  nhit           = nhit + 1
+                  sghit ( nhit ) = i
 !
 !                 Save the frame transformation for this segment.
 !
-                  CALL MOVED ( XFORM, 9, SGXBUF(1,1,NHIT) )
+                  call moved ( xform, 9, sgxbuf(1,1,nhit) )
 
-               END IF
+               end if
 
 
-            END IF
+            end if
 !
 !           The current segment matched the input criteria.
 !
 !           Update the saved segment frame ID to that of the segment
 !           we just examined.
 !
-            PRVFRM = SEGFID
+            prvfrm = segfid
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     We have an error if no segments were hit. None of that
 !     "not found" nonsense here.
 !
-      IF ( NHIT .EQ. 0 ) THEN
+      if ( nhit .eq. 0 ) then
 
-         CALL SETMSG ( 'Input point (# # #) in frame # does not ' &
+         call setmsg ( 'Input point (# # #) in frame # does not ' &
          //            'lie inside any segment for the ' &
          //            'specified body (#) and surfaces.'        )
-         CALL ERRDP  ( '#', POINT(1)                             )
-         CALL ERRDP  ( '#', POINT(2)                             )
-         CALL ERRDP  ( '#', POINT(3)                             )
-         CALL ERRINT ( '#', FIXFID                               )
-         CALL ERRINT ( '#', BODYID                               )
-         CALL SIGERR ( 'SPICE(POINTNOTINSEGMENT)'                )
-         CALL CHKOUT ( 'ZZDSKBUN' )
-         RETURN
+         call errdp  ( '#', point(1)                             )
+         call errdp  ( '#', point(2)                             )
+         call errdp  ( '#', point(3)                             )
+         call errint ( '#', fixfid                               )
+         call errint ( '#', bodyid                               )
+         call sigerr ( 'SPICE(POINTNOTINSEGMENT)'                )
+         call chkout ( 'ZZDSKBUN' )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -558,173 +558,173 @@
 !     surface on which the input point is located, we compute the
 !     normal vector and terminate the search.
 !
-      I      = 1
-      DONE   = .FALSE.
-      WINNER = 0
-      PRVFRM = 0
+      i      = 1
+      done   = .false.
+      winner = 0
+      prvfrm = 0
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 !
 !        I is the index in the hit list of the segment
 !        we're considering. J is the index of that segment
 !        in the parallel input arrays.
 !
-         J = SGHIT (I)
+         j = sghit (i)
 
 
-         SEGFID = NINT( DSKBUF(FRMIDX,J) )
+         segfid = nint( dskbuf(frmidx,j) )
 
-         IF ( SEGFID .NE. FIXFID ) THEN
+         if ( segfid .ne. fixfid ) then
 
-            IF ( SEGFID .NE. PRVFRM ) THEN
+            if ( segfid .ne. prvfrm ) then
 !
 !              Transform and shift the input point.
 !
 !              Here I is an index in the hit list and J is
 !              an index in the input arrays.
 !
-               CALL MOVED ( SGXBUF(1,1,I), 9, XFORM )
+               call moved ( sgxbuf(1,1,i), 9, xform )
 
-               CALL MXV  ( XFORM, POINT, SEGPT )
+               call mxv  ( xform, point, segpt )
 
-               CALL VSUB ( SEGPT, OFFBUF(1,J), VTEMP )
-               CALL VEQU ( VTEMP,              SEGPT )
+               call vsub ( segpt, offbuf(1,j), vtemp )
+               call vequ ( vtemp,              segpt )
 
-            END IF
+            end if
 
-         ELSE IF ( MULTFR ) THEN
+         else if ( multfr ) then
 
-            CALL VEQU ( POINT, SEGPT )
+            call vequ ( point, segpt )
 
-         END IF
+         end if
 
 !
 !        If the point lies on the surface described by the
 !        current segment, find the outward unit normal
 !        vector at the point.
 !
-         DTYPE = NINT( DSKBUF(TYPIDX,J) )
-         XFND  = .FALSE.
+         dtype = nint( dskbuf(typidx,j) )
+         xfnd  = .false.
 
-         IF ( DTYPE .EQ. 2 ) THEN
+         if ( dtype .eq. 2 ) then
 !
 !           Find the plate on which the point lies, if any.
 !
-            CALL ZZPTPL02 ( HANBUF(J), DLABUF(1,J), DSKBUF(1,J), SEGPT, &
-                            PLID,      PLATE,       VERTS,       XFND  )
+            call zzptpl02 ( hanbuf(j), dlabuf(1,j), dskbuf(1,j), segpt, &
+                            plid,      plate,       verts,       xfnd  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'ZZDSKBUN' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'ZZDSKBUN' )
+               return
+            end if
 
-            IF ( XFND ) THEN
+            if ( xfnd ) then
 !
 !              Find the unit outward normal at SEGPT. We must
 !              convert the output of PLTNRM to unit length.
 !
-               CALL PLTNRM ( VERTS(1,1), VERTS(1,2), VERTS(1,3), &
-                             NORMAL                              )
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'ZZDSKBUN' )
-                  RETURN
-               END IF
+               call pltnrm ( verts(1,1), verts(1,2), verts(1,3), &
+                             normal                              )
+               if ( failed() ) then
+                  call chkout( 'ZZDSKBUN' )
+                  return
+               end if
 
-               CALL VHATIP ( NORMAL )
+               call vhatip ( normal )
 !
 !              WINNER is the index in the hit list of the current
 !              segment.
 !
-               WINNER = I
-               DONE   = .TRUE.
+               winner = i
+               done   = .true.
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Segment type is #; this type is not ' &
+            call setmsg ( 'Segment type is #; this type is not ' &
             //            'currently supported.'                )
-            CALL ERRINT ( '#', DTYPE                            )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                 )
-            CALL CHKOUT ( 'ZZDSKBUN'                            )
-            RETURN
+            call errint ( '#', dtype                            )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                 )
+            call chkout ( 'ZZDSKBUN'                            )
+            return
 
-         END IF
-
-
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'ZZDSKBUN' )
-            RETURN
-         END IF
+         end if
 
 
+         if ( failed() ) then
+            call chkout( 'ZZDSKBUN' )
+            return
+         end if
 
-         IF ( .NOT. DONE ) THEN
 
-            IF ( I .EQ. NHIT ) THEN
+
+         if ( .not. done ) then
+
+            if ( i .eq. nhit ) then
 !
 !              We've looked at all of the segments.
 !
-               DONE = .TRUE.
+               done = .true.
 
-            ELSE
+            else
 !
 !              Consider the next segment.
 !
-               I = I + 1
+               i = i + 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we have an result, it may be represented in a frame
 !     other than the input point frame. Transform it back to the
 !     input frame, if need be.
 !
-      IF ( XFND ) THEN
+      if ( xfnd ) then
 !
 !        J is the index in the input arrays of the "winning" segment.
 !
-         J      = SGHIT ( WINNER )
+         j      = sghit ( winner )
 
-         SEGFID = NINT( DSKBUF(FRMIDX,J) )
+         segfid = nint( dskbuf(frmidx,j) )
 
-         IF ( SEGFID .NE. FIXFID ) THEN
+         if ( segfid .ne. fixfid ) then
 !
 !           The segment frame and input frame differ. The normal
 !           vector must be converted back to the input frame.
 !
-            CALL MOVED( SGXBUF(1,1,WINNER), 9, XFORM )
+            call moved( sgxbuf(1,1,winner), 9, xform )
 
-            CALL MTXV ( XFORM, NORMAL, VTEMP  )
-            CALL VEQU ( VTEMP,         NORMAL )
+            call mtxv ( xform, normal, vtemp  )
+            call vequ ( vtemp,         normal )
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        The input point was not legitimate; otherwise we
 !        would have found a solution.
 !
-         CALL SETMSG ( 'Input point (# # #) in frame # does not ' &
+         call setmsg ( 'Input point (# # #) in frame # does not ' &
          //            'lie on the surface contained in any ' &
          //            'segment for the specified body (#) ' &
          //            'and surfaces.'                           )
-         CALL ERRDP  ( '#', POINT(1)                             )
-         CALL ERRDP  ( '#', POINT(2)                             )
-         CALL ERRDP  ( '#', POINT(3)                             )
-         CALL ERRINT ( '#', FIXFID                               )
-         CALL ERRINT ( '#', BODYID                               )
-         CALL SIGERR ( 'SPICE(POINTOFFSURFACE)'                  )
-         CALL CHKOUT ( 'ZZDSKBUN' )
-         RETURN
+         call errdp  ( '#', point(1)                             )
+         call errdp  ( '#', point(2)                             )
+         call errdp  ( '#', point(3)                             )
+         call errint ( '#', fixfid                               )
+         call errint ( '#', bodyid                               )
+         call sigerr ( 'SPICE(POINTOFFSURFACE)'                  )
+         call chkout ( 'ZZDSKBUN' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDSKBUN' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKBUN' )
+      return
+      end

@@ -83,44 +83,44 @@
 !
 !     Maximum number of children allowed in a child node:
 !
-      INTEGER               MXKIDC
-      PARAMETER           ( MXKIDC = 63 )
+      integer               mxkidc
+      parameter           ( mxkidc = 63 )
 
 !
 !     Maximum number of keys allowed in a child node:
 !
-      INTEGER               MXKEYC
-      PARAMETER           ( MXKEYC = MXKIDC - 1 )
+      integer               mxkeyc
+      parameter           ( mxkeyc = mxkidc - 1 )
 
 !
 !     Minimum number of children allowed in a child node:
 !
-      INTEGER               MNKIDC
-      PARAMETER           ( MNKIDC =  ( 2*MXKIDC + 1 ) / 3  )
+      integer               mnkidc
+      parameter           ( mnkidc =  ( 2*mxkidc + 1 ) / 3  )
 
 !
 !     Minimum number of keys allowed in a child node:
 !
-      INTEGER               MNKEYC
-      PARAMETER           ( MNKEYC =  MNKIDC - 1  )
+      integer               mnkeyc
+      parameter           ( mnkeyc =  mnkidc - 1  )
 
 !
 !     Maximum number of children allowed in the root node:
 !
-      INTEGER               MXKIDR
-      PARAMETER           ( MXKIDR =   2 * ( (2*MXKIDC - 2)/3 )  +  1  )
+      integer               mxkidr
+      parameter           ( mxkidr =   2 * ( (2*mxkidc - 2)/3 )  +  1  )
 
 !
 !     Maximum number of keys allowed in the root node:
 !
-      INTEGER               MXKEYR
-      PARAMETER           ( MXKEYR =   MXKIDR - 1   )
+      integer               mxkeyr
+      parameter           ( mxkeyr =   mxkidr - 1   )
 
 !
 !     Minimum number of children allowed in the root node:
 !
-      INTEGER               MNKIDR
-      PARAMETER           ( MNKIDR =  2   )
+      integer               mnkidr
+      parameter           ( mnkidr =  2   )
 
 
 !
@@ -135,63 +135,63 @@
 !
 !     Location of version code:
 !
-      INTEGER               TRTYPE
-      PARAMETER           ( TRTYPE = 1 )
+      integer               trtype
+      parameter           ( trtype = 1 )
 
 !
 !     Version code:
 !
-      INTEGER               TRVERS
-      PARAMETER           ( TRVERS = 1 )
+      integer               trvers
+      parameter           ( trvers = 1 )
 
 !
 !     Location of node count:
 !
-      INTEGER               TRNNOD
-      PARAMETER           ( TRNNOD = TRTYPE + 1 )
+      integer               trnnod
+      parameter           ( trnnod = trtype + 1 )
 
 !
 !     Location of total key count for the tree:
 !
-      INTEGER               TRNKEY
-      PARAMETER           ( TRNKEY = TRNNOD + 1 )
+      integer               trnkey
+      parameter           ( trnkey = trnnod + 1 )
 
 !
 !     Location of tree depth:
 !
-      INTEGER               TRDPTH
-      PARAMETER           ( TRDPTH = TRNKEY + 1 )
+      integer               trdpth
+      parameter           ( trdpth = trnkey + 1 )
 
 !
 !     Location of count of keys in root node:
 !
-      INTEGER               TRNKR
-      PARAMETER           ( TRNKR  = TRDPTH + 1 )
+      integer               trnkr
+      parameter           ( trnkr  = trdpth + 1 )
 
 !
 !     Base address of keys in the root node:
 !
-      INTEGER               TRKEYR
-      PARAMETER           ( TRKEYR = TRNKR )
+      integer               trkeyr
+      parameter           ( trkeyr = trnkr )
 
 !
 !     Base address of child pointers in root node:
 !
-      INTEGER               TRKIDR
-      PARAMETER           ( TRKIDR = TRKEYR + MXKEYR + 1 )
+      integer               trkidr
+      parameter           ( trkidr = trkeyr + mxkeyr + 1 )
 
 !
 !     Base address of data pointers in the root node (allow room for
 !     overflow):
 !
-      INTEGER               TRDATR
-      PARAMETER           ( TRDATR = TRKIDR + MXKIDR + 1 )
+      integer               trdatr
+      parameter           ( trdatr = trkidr + mxkidr + 1 )
 
 !
 !     Size of root node:
 !
-      INTEGER               TRSIZR
-      PARAMETER           ( TRSIZR = TRDATR + MXKEYR + 1 )
+      integer               trsizr
+      parameter           ( trsizr = trdatr + mxkeyr + 1 )
 
 
 
@@ -201,33 +201,33 @@
 !
 !     Location of number of keys in node:
 !
-      INTEGER               TRNKC
-      PARAMETER           ( TRNKC  =  1 )
+      integer               trnkc
+      parameter           ( trnkc  =  1 )
 
 !
 !     Base address of keys in child nodes:
 !
-      INTEGER               TRKEYC
-      PARAMETER           ( TRKEYC = TRNKC )
+      integer               trkeyc
+      parameter           ( trkeyc = trnkc )
 
 !
 !     Base address of child pointers in child nodes:
 !
-      INTEGER               TRKIDC
-      PARAMETER           ( TRKIDC = TRKEYC + MXKEYC + 1 )
+      integer               trkidc
+      parameter           ( trkidc = trkeyc + mxkeyc + 1 )
 
 !
 !     Base address of data pointers in child nodes (allow room
 !     for overflow):
 !
-      INTEGER               TRDATC
-      PARAMETER           ( TRDATC = TRKIDC + MXKIDC + 1 )
+      integer               trdatc
+      parameter           ( trdatc = trkidc + mxkidc + 1 )
 
 !
 !     Size of child node:
 !
-      INTEGER               TRSIZC
-      PARAMETER           ( TRSIZC = TRDATC + MXKEYC + 1 )
+      integer               trsizc
+      parameter           ( trsizc = trdatc + mxkeyc + 1 )
 
 !
 !     A number of EK tree routines must declare stacks of fixed
@@ -246,8 +246,8 @@
 !     This formula yields a capacity of over 1 billion keys for a
 !     tree of depth 6.
 !
-      INTEGER               TRMXDP
-      PARAMETER           ( TRMXDP = 10 )
+      integer               trmxdp
+      parameter           ( trmxdp = 10 )
 
 !
 !     End Include Section:  EK Tree Parameters

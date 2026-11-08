@@ -1,6 +1,6 @@
 !$Procedure GFSTOL ( GF, set a tolerance value for GF )
 
-      SUBROUTINE GFSTOL ( VALUE )
+      subroutine gfstol ( value )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzholdd.inc'
+      include               'zzholdd.inc'
 
-      DOUBLE PRECISION      VALUE
+      double precision      value
 
 ! $ Brief_I/O
 !
@@ -303,20 +303,20 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
 
-      LOGICAL               OK
+      logical               ok
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     This routine wraps a call to ZZHOLDD with the appropriate ID and
@@ -327,21 +327,21 @@
 !     Check tolerance value.
 !
 
-      IF ( VALUE .LE. 0.D0 ) THEN
+      if ( value .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'GFSTOL'                              )
-         CALL SETMSG ( 'Convergence tolerance must be ' &
+         call chkin  ( 'GFSTOL'                              )
+         call setmsg ( 'Convergence tolerance must be ' &
                     // 'greater-than zero. Input VALUE = #.' )
-         CALL ERRDP  ( '#', VALUE                            )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'             )
-         CALL CHKOUT ( 'GFSTOL'                              )
-         RETURN
+         call errdp  ( '#', value                            )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'             )
+         call chkout ( 'GFSTOL'                              )
+         return
 
-      ELSE
+      else
 
-         CALL ZZHOLDD ( ZZPUT, GF_TOL, OK, VALUE )
+         call zzholdd ( zzput, gf_tol, ok, value )
 
-      END IF
+      end if
 
 
-      END
+      end

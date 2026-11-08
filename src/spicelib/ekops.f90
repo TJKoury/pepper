@@ -1,6 +1,6 @@
 !$Procedure EKOPS ( EK, open scratch file )
 
-      SUBROUTINE EKOPS ( HANDLE )
+      subroutine ekops ( handle )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekfilpar.inc'
+      include 'ektype.inc'
+      include 'ekfilpar.inc'
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -453,62 +453,62 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               P
+      integer               base
+      integer               p
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKOPS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKOPS' )
+      end if
 
-      CALL DASOPS ( HANDLE )
+      call dasops ( handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKOPS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKOPS' )
+         return
+      end if
 
 !
 !     Initialize the file for paged access.  The EK architecture
 !     code is automatically set by the paging initialization routine.
 !
-      CALL ZZEKPGIN ( HANDLE )
+      call zzekpgin ( handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKOPS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKOPS' )
+         return
+      end if
 
 !
 !     Allocate the first integer page for the file's metadata.  We
 !     don't need to examine the page number; it's 1.
 !
-      CALL ZZEKPGAN ( HANDLE, INT, P, BASE )
+      call zzekpgan ( handle, int, p, base )
 
 !
 !     Initialize a new tree.  This tree will point to the file's
 !     segments.
 !
-      CALL ZZEKTRIT ( HANDLE, P )
+      call zzektrit ( handle, p )
 
 !
 !     Save the segment pointer's root page number.
 !
-      CALL DASUDI ( HANDLE, BASE+SGTIDX, BASE+SGTIDX, P )
+      call dasudi ( handle, base+sgtidx, base+sgtidx, p )
 
 !
 !     That's it.  We're ready to add data to the file.
 !
-      CALL CHKOUT ( 'EKOPS' )
-      RETURN
-      END
+      call chkout ( 'EKOPS' )
+      return
+      end

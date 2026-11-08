@@ -1,6 +1,6 @@
 !$Procedure APPNDI ( Append an item to an integer cell )
 
-      SUBROUTINE APPNDI ( ITEM, CELL )
+      subroutine appndi ( item, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               ITEM
-      INTEGER               CELL ( LBCELL:* )
+      integer               item
+      integer               cell ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -221,24 +221,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDI
-      INTEGER               SIZEI
+      logical               return
+      integer               cardi
+      integer               sizei
 
 !
 !     Local variables
 !
-      INTEGER               NWCARD
+      integer               nwcard
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'APPNDI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'APPNDI' )
+      end if
 
 !
 !     Check to see if the cell can accommodate the addition of a
@@ -247,24 +247,24 @@
 !     addition of a new item, signal an error.
 !
 
-      NWCARD = CARDI (CELL) + 1
+      nwcard = cardi (cell) + 1
 
-      IF (  ( NWCARD )  .LE.  ( SIZEI (CELL) )  ) THEN
+      if (  ( nwcard )  .le.  ( sizei (cell) )  ) then
 
-         CELL (NWCARD) = ITEM
-         CALL SCARDI ( NWCARD, CELL )
+         cell (nwcard) = item
+         call scardi ( nwcard, cell )
 
-      ELSE
+      else
 
-        CALL SETMSG ( 'The cell cannot accommodate the '          // &
+        call setmsg ( 'The cell cannot accommodate the '          // &
                       'addition of the element *. '                )
 
-        CALL ERRINT ( '*', ITEM )
-        CALL SIGERR ( 'SPICE(CELLTOOSMALL)' )
+        call errint ( '*', item )
+        call sigerr ( 'SPICE(CELLTOOSMALL)' )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'APPNDI' )
-      RETURN
-      END
+      call chkout ( 'APPNDI' )
+      return
+      end

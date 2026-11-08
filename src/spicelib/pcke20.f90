@@ -1,6 +1,6 @@
 !$Procedure PCKE20 ( PCK, evaluate record, type 20 )
 
-      SUBROUTINE PCKE20 ( ET, RECORD, EULANG )
+      subroutine pcke20 ( et, record, eulang )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      EULANG   ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      eulang   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -244,29 +244,29 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
-      LOGICAL               RETURN
+      double precision      twopi
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PCKE20' )
+      call chkin ( 'PCKE20' )
 
 !
 !     Call evaluation routine to get Euler angles
 !     phi, delta, w.
 !
-      CALL SPKE20 ( ET, RECORD, EULANG )
+      call spke20 ( et, record, eulang )
 
 !
 !     Map the third angle into the range (-2pi, 2pi).
 !
-      EULANG(3) = MOD ( EULANG(3), TWOPI() )
+      eulang(3) = mod ( eulang(3), twopi() )
 
-      CALL CHKOUT ( 'PCKE20' )
-      RETURN
-      END
+      call chkout ( 'PCKE20' )
+      return
+      end

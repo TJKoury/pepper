@@ -1,6 +1,6 @@
 !$Procedure BODVRD ( Return d.p. values from the kernel pool )
 
-      SUBROUTINE BODVRD ( BODYNM, ITEM, MAXN, DIM, VALUES )
+      subroutine bodvrd ( bodynm, item, maxn, dim, values )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         BODYNM
-      CHARACTER*(*)         ITEM
-      INTEGER               MAXN
-      INTEGER               DIM
-      DOUBLE PRECISION      VALUES  ( * )
+      character*(*)         bodynm
+      character*(*)         item
+      integer               maxn
+      integer               dim
+      double precision      values  ( * )
 
 ! $ Brief_I/O
 !
@@ -343,167 +343,167 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               CDELEN
-      PARAMETER           ( CDELEN = 16 )
+      integer               cdelen
+      parameter           ( cdelen = 16 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 32 )
+      integer               namlen
+      parameter           ( namlen = 32 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(CDELEN)    CODE
-      CHARACTER*1           TYPE
-      CHARACTER*(NAMLEN)    VARNAM
+      character*(cdelen)    code
+      character*1           type
+      character*(namlen)    varnam
 
-      INTEGER               BODYID
+      integer               bodyid
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVBDNM
-      INTEGER               SVBDID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svbdnm
+      integer               svbdid
+      logical               svfnd1
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVBDNM
-      SAVE                  SVBDID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svbdnm
+      save                  svbdid
+      save                  svfnd1
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-        RETURN
-      ELSE
-        CALL CHKIN ( 'BODVRD' )
-      END IF
+      if ( return () ) then
+        return
+      else
+        call chkin ( 'BODVRD' )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Translate the input name to an ID code.
 !
-      CALL ZZBODS2C ( SVCTR1, SVBDNM, SVBDID, SVFND1, &
-                      BODYNM, BODYID, FOUND    )
+      call zzbods2c ( svctr1, svbdnm, svbdid, svfnd1, &
+                      bodynm, bodyid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The body name # could not be translated ' // &
+         call setmsg ( 'The body name # could not be translated ' // &
                        'to a NAIF ID code.  The cause of this '   // &
                        'problem may be that you need an updated ' // &
                        'version of the SPICE Toolkit.'            )
-         CALL ERRCH  ( '#', BODYNM                                )
-         CALL SIGERR ( 'SPICE(NOTRANSLATION)'                     )
-         CALL CHKOUT ( 'BODVRD'                                   )
-         RETURN
+         call errch  ( '#', bodynm                                )
+         call sigerr ( 'SPICE(NOTRANSLATION)'                     )
+         call chkout ( 'BODVRD'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Construct the variable name from BODY and ITEM.
 !
-      VARNAM = 'BODY'
+      varnam = 'BODY'
 
-      CALL INTSTR ( BODYID,    CODE   )
-      CALL SUFFIX ( CODE,   0, VARNAM )
-      CALL SUFFIX ( '_',    0, VARNAM )
-      CALL SUFFIX ( ITEM,   0, VARNAM )
+      call intstr ( bodyid,    code   )
+      call suffix ( code,   0, varnam )
+      call suffix ( '_',    0, varnam )
+      call suffix ( item,   0, varnam )
 
 !
 !     Make sure the item is present in the kernel pool.
 !
-      CALL DTPOOL ( VARNAM, FOUND, DIM, TYPE )
+      call dtpool ( varnam, found, dim, type )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The variable # could not be found in the ' // &
+         call setmsg ( 'The variable # could not be found in the ' // &
                        'kernel pool.'                              )
-         CALL ERRCH  ( '#', VARNAM                                 )
-         CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)'                  )
-         CALL CHKOUT ( 'BODVRD'                                    )
-         RETURN
+         call errch  ( '#', varnam                                 )
+         call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                  )
+         call chkout ( 'BODVRD'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the item's data type is numeric.
 !
-      IF ( TYPE .NE. 'N' ) THEN
+      if ( type .ne. 'N' ) then
 
-         CALL SETMSG ( 'The data associated with variable # ' // &
+         call setmsg ( 'The data associated with variable # ' // &
                        'are not of numeric type.'             )
-         CALL ERRCH  ( '#', VARNAM                            )
-         CALL SIGERR ( 'SPICE(TYPEMISMATCH)'                  )
-         CALL CHKOUT ( 'BODVRD'                               )
-         RETURN
+         call errch  ( '#', varnam                            )
+         call sigerr ( 'SPICE(TYPEMISMATCH)'                  )
+         call chkout ( 'BODVRD'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure there's enough room in the array VALUES to hold
 !     the requested data.
 !
-      IF ( MAXN .LT. DIM ) THEN
+      if ( maxn .lt. dim ) then
 
-         CALL SETMSG ( 'The data array associated with variable # ' // &
+         call setmsg ( 'The data array associated with variable # ' // &
                        'has dimension #, which is larger than the ' // &
                        'available space # in the output array.'    )
-         CALL ERRCH  ( '#', VARNAM                                 )
-         CALL ERRINT ( '#', DIM                                    )
-         CALL ERRINT ( '#', MAXN                                   )
-         CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'                      )
-         CALL CHKOUT ( 'BODVRD'                                    )
-         RETURN
+         call errch  ( '#', varnam                                 )
+         call errint ( '#', dim                                    )
+         call errint ( '#', maxn                                   )
+         call sigerr ( 'SPICE(ARRAYTOOSMALL)'                      )
+         call chkout ( 'BODVRD'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Grab the values.  We know at this point they're present in
 !     the kernel pool, so we don't check the FOUND flag.
 !
-      CALL GDPOOL ( VARNAM, 1, MAXN, DIM, VALUES, FOUND )
+      call gdpool ( varnam, 1, maxn, dim, values, found )
 
-      CALL CHKOUT ( 'BODVRD' )
-      RETURN
-      END
+      call chkout ( 'BODVRD' )
+      return
+      end

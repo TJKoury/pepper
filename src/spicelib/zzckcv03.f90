@@ -1,7 +1,7 @@
 !$Procedure ZZCKCV03 ( Private --- C-kernel segment coverage, type 03 )
 
-      SUBROUTINE ZZCKCV03 ( HANDLE,  ARRBEG,  ARREND, &
-                            SCLKID,  TOL,     TIMSYS,  SCHEDL  )
+      subroutine zzckcv03 ( handle,  arrbeg,  arrend, &
+                            sclkid,  tol,     timsys,  schedl  )
 
 ! $ Abstract
 !
@@ -24,18 +24,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               HANDLE
-      INTEGER               ARRBEG
-      INTEGER               ARREND
-      INTEGER               SCLKID
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      SCHEDL ( LBCELL:* )
+      integer               handle
+      integer               arrbeg
+      integer               arrend
+      integer               sclkid
+      double precision      tol
+      character*(*)         timsys
+      double precision      schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -159,92 +159,92 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      BUFFER ( 2 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      TICK
+      double precision      begin
+      double precision      buffer ( 2 )
+      double precision      et
+      double precision      finish
+      double precision      start
+      double precision      tick
 
-      INTEGER               INTAT
-      INTEGER               INTBEG
-      INTEGER               INVLS
-      INTEGER               LSTINT
-      INTEGER               LSTTIK
-      INTEGER               NDIR
-      INTEGER               NREC
-      INTEGER               RSIZE
-      INTEGER               TICKAT
+      integer               intat
+      integer               intbeg
+      integer               invls
+      integer               lstint
+      integer               lsttik
+      integer               ndir
+      integer               nrec
+      integer               rsize
+      integer               tickat
 
-      INTEGER               NAVSLN
-      INTEGER               AVSLN
-      INTEGER               SEGLEN
+      integer               navsln
+      integer               avsln
+      integer               seglen
 
-      LOGICAL               BAIL
-      LOGICAL               ISTDB
+      logical               bail
+      logical               istdb
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZCKCV03' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZCKCV03' )
+      end if
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZCKCV03'                                     )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZCKCV03'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set a logical flag indicating whether the time systm is SCLK.
 !
-      ISTDB  = EQSTR ( TIMSYS, 'TDB' )
+      istdb  = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-            CALL CHKOUT ( 'ZZCKCV03'                                )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+            call chkout ( 'ZZCKCV03'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Get the number of intervals and pointing instances ( records )
 !     in this segment, and from that determine the number of respective
 !     directory epochs.
 !
-      CALL DAFGDA ( HANDLE, ARREND - 1, ARREND, BUFFER )
+      call dafgda ( handle, arrend - 1, arrend, buffer )
 
-      INVLS  = NINT ( BUFFER ( 1 ) )
-      NREC   = NINT ( BUFFER ( 2 ) )
-      NDIR   = (NREC-1)/ 100
+      invls  = nint ( buffer ( 1 ) )
+      nrec   = nint ( buffer ( 2 ) )
+      ndir   = (nrec-1)/ 100
 
 !
 !     Determine the size of the pointing packets.  This is dependent
@@ -253,37 +253,37 @@
 !
 !     Assume a record size of 4, i.e. no angular rate data.
 !
-      NAVSLN = 5*NREC + NDIR + INVLS + (INVLS-1)/100 + 2
+      navsln = 5*nrec + ndir + invls + (invls-1)/100 + 2
 
 !
 !     Assume a record size of 7, i.e. angular rate data.
 !
-      AVSLN = 8*NREC + NDIR + INVLS + (INVLS-1)/100 + 2
+      avsln = 8*nrec + ndir + invls + (invls-1)/100 + 2
 
 !
 !     Compute the actual length of the segment.
 !
-      SEGLEN = ARREND - ARRBEG + 1
+      seglen = arrend - arrbeg + 1
 
-      IF ( SEGLEN .EQ. NAVSLN ) THEN
-         RSIZE = 4
-      ELSE IF ( SEGLEN .EQ. AVSLN ) THEN
-         RSIZE = 7
-      ELSE
-         CALL SETMSG ( 'The requested segment in file # reports a ' &
+      if ( seglen .eq. navsln ) then
+         rsize = 4
+      else if ( seglen .eq. avsln ) then
+         rsize = 7
+      else
+         call setmsg ( 'The requested segment in file # reports a ' &
          //            'length of # d.p. numbers, but the metadata ' &
          //            'in the segment indicates the length must ' &
          //            'either be # (no angular rate data) or # ' &
          //            '(angular rate data). Perhaps the segment ' &
          //            'is not type 3?'                              )
-         CALL ERRHAN ( '#', HANDLE                                   )
-         CALL ERRINT ( '#', SEGLEN                                   )
-         CALL ERRINT ( '#', NAVSLN                                   )
-         CALL ERRINT ( '#', AVSLN                                    )
-         CALL SIGERR ( 'SPICE(BADCK3SEGMENT)'                        )
-         CALL CHKOUT ( 'ZZCKCV03'                                    )
-         RETURN
-      END IF
+         call errhan ( '#', handle                                   )
+         call errint ( '#', seglen                                   )
+         call errint ( '#', navsln                                   )
+         call errint ( '#', avsln                                    )
+         call sigerr ( 'SPICE(BADCK3SEGMENT)'                        )
+         call chkout ( 'ZZCKCV03'                                    )
+         return
+      end if
 
 !
 !     Recall that the segment is layed out as:
@@ -320,52 +320,52 @@
 !       +------------------------+
 !
 
-      TICKAT = ARRBEG + RSIZE*NREC
-      LSTTIK = TICKAT + NREC - 1
-      INTBEG = ARRBEG + RSIZE*NREC + NREC + NDIR
-      INTAT  = INTBEG
-      LSTINT = INTBEG + INVLS - 1
+      tickat = arrbeg + rsize*nrec
+      lsttik = tickat + nrec - 1
+      intbeg = arrbeg + rsize*nrec + nrec + ndir
+      intat  = intbeg
+      lstint = intbeg + invls - 1
 
-      CALL DAFGDA ( HANDLE, INTAT,  INTAT,   START )
-      CALL DAFGDA ( HANDLE, TICKAT, TICKAT,  TICK  )
+      call dafgda ( handle, intat,  intat,   start )
+      call dafgda ( handle, tickat, tickat,  tick  )
 
-      DO WHILE ( TICK .LT. START .AND. TICKAT .LT. LSTTIK )
-         TICKAT = TICKAT + 1
-         CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK )
-      END DO
+      do while ( tick .lt. start .and. tickat .lt. lsttik )
+         tickat = tickat + 1
+         call dafgda ( handle, tickat, tickat, tick )
+      end do
 
 !
 !     If we did not find a TICK at least as big as START, we can
 !     just return now.
 !
-      IF ( TICK .LT. START ) THEN
-         CALL CHKOUT ( 'ZZCKCV03' )
-         RETURN
-      END IF
+      if ( tick .lt. start ) then
+         call chkout ( 'ZZCKCV03' )
+         return
+      end if
 
 
-      BAIL = .FALSE.
+      bail = .false.
 
-      DO WHILE (       ( INTAT  .LE.  LSTINT ) &
-                 .AND. ( TICKAT .LE.  LSTTIK ) &
-                 .AND. (        .NOT. BAIL   )  )
+      do while (       ( intat  .le.  lstint ) &
+                 .and. ( tickat .le.  lsttik ) &
+                 .and. (        .not. bail   )  )
 !
 !        At this point, we have an interval that begins at START
 !        and ends at FINISH (unless of course we never found a "good"
 !        TICK to start with.)
 !
-         BEGIN  = START
+         begin  = start
 
 !
 !        If the start of the interval was the start of the LAST
 !        interval available, we can short cut the remainder of the
 !        reads.
 !
-         IF ( INTAT .EQ. LSTINT ) THEN
+         if ( intat .eq. lstint ) then
 
-            CALL DAFGDA ( HANDLE, LSTTIK, LSTTIK, FINISH )
+            call dafgda ( handle, lsttik, lsttik, finish )
 
-            BAIL = .TRUE.
+            bail = .true.
 !
 !           The routine will return at the end of this loop
 !           iteration.  But first, we may have to update BEGIN
@@ -374,24 +374,24 @@
 !           We'll carry out these tasks at the end of this IF block.
 !
 
-         ELSE
+         else
 
 !
 !           This is the expected case.  Get the start of the next
 !           interval.
 !
-            INTAT  = INTAT  + 1
-            CALL DAFGDA ( HANDLE, INTAT, INTAT, START )
+            intat  = intat  + 1
+            call dafgda ( handle, intat, intat, start )
 
 !
 !           Read forward from the last tick until we reach the
 !           START of the next interval or until we run out of TICKS.
 !
-            DO WHILE ( TICK .LT. START .AND. TICKAT .LT. LSTTIK )
-               FINISH = TICK
-               TICKAT = TICKAT + 1
-               CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK  )
-            END DO
+            do while ( tick .lt. start .and. tickat .lt. lsttik )
+               finish = tick
+               tickat = tickat + 1
+               call dafgda ( handle, tickat, tickat, tick  )
+            end do
 
 !
 !           A structurally correct CK-3 segment should never allow the
@@ -399,43 +399,43 @@
 !           police the writers of C-kernels.  The only way to get into
 !           the block below is if TICKAT .EQ. LSTTIK
 !
-            IF ( TICK .LT. START ) THEN
-               FINISH = TICK
-               TICKAT = TICKAT + 1
-            END IF
+            if ( tick .lt. start ) then
+               finish = tick
+               tickat = tickat + 1
+            end if
 
-         END IF
+         end if
 
 !
 !        Adjust the interval using the tolerance.
 !
-         IF ( TOL .GT. 0.D0 ) THEN
+         if ( tol .gt. 0.d0 ) then
 
-            BEGIN   =  MAX( BEGIN  - TOL, 0.D0 )
-            FINISH  =       FINISH + TOL
+            begin   =  max( begin  - tol, 0.d0 )
+            finish  =       finish + tol
 
-         END IF
+         end if
 
 !
 !        Convert the time to TDB if necessary.
 !
-         IF ( ISTDB ) THEN
+         if ( istdb ) then
 
-            CALL SCT2E ( SCLKID, BEGIN,  ET )
-            BEGIN  = ET
+            call sct2e ( sclkid, begin,  et )
+            begin  = et
 
-            CALL SCT2E ( SCLKID, FINISH, ET )
-            FINISH = ET
+            call sct2e ( sclkid, finish, et )
+            finish = et
 
-         END IF
+         end if
 
 !
 !        Insert the interval into the window.
 !
-         CALL WNINSD ( BEGIN, FINISH, SCHEDL )
+         call wninsd ( begin, finish, schedl )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZCKCV03' )
-      RETURN
-      END
+      call chkout ( 'ZZCKCV03' )
+      return
+      end

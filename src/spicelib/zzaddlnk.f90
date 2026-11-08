@@ -1,8 +1,8 @@
 !$Procedure      ZZADDLNK ( Add a new AB cell to an AB structure )
 
-      SUBROUTINE ZZADDLNK ( AVAL,   BVAL,  MAXA, &
-                            CELLSZ, PNTRS, NCELL, CELLS )
-      IMPLICIT NONE
+      subroutine zzaddlnk ( aval,   bval,  maxa, &
+                            cellsz, pntrs, ncell, cells )
+      implicit none
 
 ! $ Abstract
 !
@@ -23,13 +23,13 @@
 !
 ! $ Declarations
 
-      INTEGER               AVAL
-      INTEGER               BVAL
-      INTEGER               MAXA
-      INTEGER               CELLSZ
-      INTEGER               PNTRS  ( * )
-      INTEGER               NCELL
-      INTEGER               CELLS  ( 2, * )
+      integer               aval
+      integer               bval
+      integer               maxa
+      integer               cellsz
+      integer               pntrs  ( * )
+      integer               ncell
+      integer               cells  ( 2, * )
 
 ! $ Brief_I/O
 !
@@ -205,59 +205,59 @@
 !
 !     SPICE functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Standard RETURN test.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZADDLNK' )
+      call chkin  ( 'ZZADDLNK' )
 
 !
 !     Test the pointer array index AVAL.
 !
-      IF ( ( AVAL .LT. 1 ) .OR. ( AVAL .GT. MAXA ) ) THEN
+      if ( ( aval .lt. 1 ) .or. ( aval .gt. maxa ) ) then
 
-         CALL SETMSG ( 'Index AVAL is out of range. AVAL = #1; ' &
+         call setmsg ( 'Index AVAL is out of range. AVAL = #1; ' &
          //            'valid range is 1:#2.'                   )
-         CALL ERRINT ( '#1', AVAL                               )
-         CALL ERRINT ( '#2', MAXA                               )
-         CALL SIGERR ( 'SPICE(AVALOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'ZZADDLNK'                               )
-         RETURN
+         call errint ( '#1', aval                               )
+         call errint ( '#2', maxa                               )
+         call sigerr ( 'SPICE(AVALOUTOFRANGE)'                  )
+         call chkout ( 'ZZADDLNK'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Increment the cell counter.
 !
-      NCELL = NCELL + 1
+      ncell = ncell + 1
 
-      IF ( NCELL .GT. CELLSZ ) THEN
+      if ( ncell .gt. cellsz ) then
 
-         CALL SETMSG ( 'NCELL larger than cell array. ' &
+         call setmsg ( 'NCELL larger than cell array. ' &
          //            'Cell index = #1. Array size = #2.' )
-         CALL ERRINT ( '#1', NCELL                         )
-         CALL ERRINT ( '#2', CELLSZ                        )
-         CALL SIGERR ( 'SPICE(CELLARRAYTOOSMALL)'          )
-         CALL CHKOUT ( 'ZZADDLNK'                          )
-         RETURN
+         call errint ( '#1', ncell                         )
+         call errint ( '#2', cellsz                        )
+         call sigerr ( 'SPICE(CELLARRAYTOOSMALL)'          )
+         call chkout ( 'ZZADDLNK'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Update the cell address of the last occurrence of the A-value,
 !     if any. If none, PNTRS(AVAL) has value -1.
 !
-      CELLS(1,NCELL) = BVAL
-      CELLS(2,NCELL) = PNTRS(AVAL)
+      cells(1,ncell) = bval
+      cells(2,ncell) = pntrs(aval)
 
-      PNTRS(AVAL)    = NCELL
+      pntrs(aval)    = ncell
 
-      CALL CHKOUT ( 'ZZADDLNK' )
-      RETURN
-      END
+      call chkout ( 'ZZADDLNK' )
+      return
+      end

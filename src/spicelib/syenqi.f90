@@ -1,6 +1,6 @@
 !$Procedure SYENQI ( Enqueue a value onto a symbol )
 
-      SUBROUTINE SYENQI ( NAME, VALUE, TABSYM, TABPTR, TABVAL )
+      subroutine syenqi ( name, value, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      INTEGER               VALUE
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      INTEGER               TABVAL     ( LBCELL:* )
+      character*(*)         name
+      integer               value
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      integer               tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -171,84 +171,84 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SIZEI
-      INTEGER               SUMAI
+      integer               cardc
+      integer               cardi
+      integer               lstlec
+      logical               return
+      integer               sizei
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NVAL
+      integer               nsym
+      integer               nval
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      LOGICAL               OLDSYM
+      integer               locsym
+      integer               locval
+      logical               oldsym
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYENQI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYENQI' )
+      end if
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NVAL = CARDI ( TABVAL )
+      nsym = cardc ( tabsym )
+      nval = cardi ( tabval )
 
 !
 !     Where does this symbol belong? Is it already in the table?
 !
-      LOCSYM = LSTLEC ( NAME, NSYM, TABSYM(1) )
-      OLDSYM = ( LOCSYM .NE. 0  .AND.  TABSYM(LOCSYM) .EQ. NAME )
+      locsym = lstlec ( name, nsym, tabsym(1) )
+      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
 
 !
 !     If it's not already in the table, use SET to create a brand new
 !     symbol.
 !
-      IF ( .NOT. OLDSYM ) THEN
+      if ( .not. oldsym ) then
 
-         CALL SYSETI ( NAME, VALUE, TABSYM, TABPTR, TABVAL )
+         call syseti ( name, value, tabsym, tabptr, tabval )
 
 !
 !     If it is in the table, we can't proceed unless we know that we
 !     have enough room for one extra addition in the value table.
 !
-      ELSE IF (  NVAL .GE. SIZEI ( TABVAL ) ) THEN
+      else if (  nval .ge. sizei ( tabval ) ) then
 
-         CALL SETMSG ( 'SYENQI: The addition of the value $ to the '  // &
+         call setmsg ( 'SYENQI: The addition of the value $ to the '  // &
                        'symbol # causes an overflow in the value '    // &
                        'table.' )
-         CALL ERRINT ( '$', VALUE )
-         CALL ERRCH  ( '#', NAME  )
-         CALL SIGERR ( 'SPICE(VALUETABLEFULL)' )
+         call errint ( '$', value )
+         call errch  ( '#', name  )
+         call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
 
 !
 !     If there's room, add the new value to the value table. Add one
 !     to the dimension, and put the value in the right place.
 !
-      ELSE
+      else
 
-         LOCVAL = SUMAI ( TABPTR(1), LOCSYM ) + 1
+         locval = sumai ( tabptr(1), locsym ) + 1
 
-         CALL INSLAI ( VALUE, 1, LOCVAL, TABVAL(1), NVAL )
-         CALL SCARDI ( NVAL, TABVAL )
+         call inslai ( value, 1, locval, tabval(1), nval )
+         call scardi ( nval, tabval )
 
-         TABPTR(LOCSYM) = TABPTR(LOCSYM) + 1
+         tabptr(locsym) = tabptr(locsym) + 1
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYENQI' )
-      RETURN
-      END
+      call chkout ( 'SYENQI' )
+      return
+      end

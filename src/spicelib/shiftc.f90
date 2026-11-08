@@ -1,6 +1,6 @@
 !$Procedure SHIFTC ( Shift a character string )
 
-      SUBROUTINE SHIFTC ( IN, DIR, NSHIFT, FILLC, OUT )
+      subroutine shiftc ( in, dir, nshift, fillc, out )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)      IN
-      CHARACTER*1        DIR
-      INTEGER            NSHIFT
-      CHARACTER*1        FILLC
-      CHARACTER*(*)      OUT
+      character*(*)      in
+      character*1        dir
+      integer            nshift
+      character*1        fillc
+      character*(*)      out
 
 ! $ Brief_I/O
 !
@@ -153,48 +153,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SHIFTC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SHIFTC' )
+      end if
 
 
 !
 !     Hand off to one of the other routines.
 !
-      IF ( DIR .EQ. 'L' .OR. DIR .EQ. 'l' ) THEN
+      if ( dir .eq. 'L' .or. dir .eq. 'l' ) then
 
-         IF ( NSHIFT .GE. 0 ) THEN
-            CALL SHIFTL ( IN, NSHIFT, FILLC, OUT )
+         if ( nshift .ge. 0 ) then
+            call shiftl ( in, nshift, fillc, out )
 
-         ELSE
-            CALL SHIFTR ( IN, -NSHIFT, FILLC, OUT )
-         END IF
+         else
+            call shiftr ( in, -nshift, fillc, out )
+         end if
 
-      ELSE IF ( DIR .EQ. 'R' .OR. DIR .EQ. 'r' ) THEN
+      else if ( dir .eq. 'R' .or. dir .eq. 'r' ) then
 
-         IF ( NSHIFT .GE. 0 ) THEN
-            CALL SHIFTR ( IN, NSHIFT, FILLC, OUT )
+         if ( nshift .ge. 0 ) then
+            call shiftr ( in, nshift, fillc, out )
 
-         ELSE
-            CALL SHIFTL ( IN, -NSHIFT, FILLC, OUT )
-         END IF
+         else
+            call shiftl ( in, -nshift, fillc, out )
+         end if
 
-      ELSE
-         CALL SETMSG ( 'Shift direction (#) must be L, l, R, or r.' )
-         CALL ERRCH  ( '#', DIR )
+      else
+         call setmsg ( 'Shift direction (#) must be L, l, R, or r.' )
+         call errch  ( '#', dir )
 
-         CALL SIGERR ( 'SPICE(ILLEGSHIFTDIR)' )
-      END IF
+         call sigerr ( 'SPICE(ILLEGSHIFTDIR)' )
+      end if
 
-      CALL CHKOUT ( 'SHIFTC' )
-      RETURN
-      END
+      call chkout ( 'SHIFTC' )
+      return
+      end

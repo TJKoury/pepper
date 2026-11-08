@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRLS ( EK tree, linear search )
 
-      INTEGER FUNCTION ZZEKTRLS ( HANDLE, TREE, IVAL )
+      integer function zzektrls ( handle, tree, ival )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               IVAL
+      integer               handle
+      integer               tree
+      integer               ival
 
 ! $ Brief_I/O
 !
@@ -101,30 +101,30 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRSZ
+      integer               zzektrsz
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               N
-      INTEGER               VALUE
+      integer               i
+      integer               n
+      integer               value
 
 !
 !     Use discovery check-in.
 !
-      ZZEKTRLS  =  0
-      N         =  ZZEKTRSZ ( HANDLE, TREE )
+      zzektrls  =  0
+      n         =  zzektrsz ( handle, tree )
 
-      DO I = 1, N
+      do i = 1, n
 
-         CALL ZZEKTRDP ( HANDLE, TREE, I, VALUE )
+         call zzektrdp ( handle, tree, i, value )
 
-         IF ( IVAL .EQ. VALUE ) THEN
-            ZZEKTRLS = I
-            RETURN
-         END IF
+         if ( ival .eq. value ) then
+            zzektrls = i
+            return
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

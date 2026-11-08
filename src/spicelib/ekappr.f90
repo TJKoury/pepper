@@ -1,6 +1,6 @@
 !$Procedure EKAPPR ( EK, append record onto segment )
 
-      SUBROUTINE EKAPPR ( HANDLE, SEGNO, RECNO )
+      subroutine ekappr ( handle, segno, recno )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'ekpage.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RECNO
+      integer               handle
+      integer               segno
+      integer               recno
 
 ! $ Brief_I/O
 !
@@ -407,25 +407,25 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               MBASE
-      INTEGER               MP
-      INTEGER               NREC
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               mbase
+      integer               mp
+      integer               nrec
+      integer               segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKAPPR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKAPPR' )
+      end if
 
 !
 !     Before trying to actually write anything, do every error
@@ -434,40 +434,40 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKAPPR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKAPPR' )
+         return
+      end if
 
 !
 !     Look up the integer metadata page and page base for the segment.
 !     Given the base address, we can read the pertinent metadata in
 !     one shot.
 !
-      CALL ZZEKMLOC ( HANDLE,  SEGNO,  MP,  MBASE  )
+      call zzekmloc ( handle,  segno,  mp,  mbase  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKAPPR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKAPPR' )
+         return
+      end if
 
-      CALL DASRDI ( HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC )
+      call dasrdi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 !
 !     Obtain the number of records already present.
 !
-      NREC   =  SEGDSC ( NRIDX )
+      nrec   =  segdsc ( nridx )
 
 !
 !     Insert the new record at the end of the segment.
 !
-      RECNO  =  NREC + 1
+      recno  =  nrec + 1
 
-      CALL EKINSR ( HANDLE, SEGNO, RECNO )
+      call ekinsr ( handle, segno, recno )
 
 
-      CALL CHKOUT ( 'EKAPPR' )
-      RETURN
-      END
+      call chkout ( 'EKAPPR' )
+      return
+      end

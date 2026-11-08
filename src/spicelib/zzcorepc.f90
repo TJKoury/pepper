@@ -1,7 +1,7 @@
 !$Procedure ZZCOREPC ( Correct epoch for aberration )
 
-      SUBROUTINE ZZCOREPC ( ABCORR, ET, LT, ETCORR )
-      IMPLICIT NONE
+      subroutine zzcorepc ( abcorr, et, lt, etcorr )
+      implicit none
 
 ! $ Abstract
 !
@@ -25,12 +25,12 @@
 !
 ! $ Declarations
 
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      ETCORR
+      character*(*)         abcorr
+      double precision      et
+      double precision      lt
+      double precision      etcorr
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
 ! $ Brief_I/O
 !
@@ -152,7 +152,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -161,53 +161,53 @@
 !
 !     Local variables
 !
-      LOGICAL               CORBLK ( ABATSZ )
+      logical               corblk ( abatsz )
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZCOREPC' )
+      call chkin ( 'ZZCOREPC' )
 
 !
 !     Parse the aberration correction string.  Obtain a correction
 !     attribute block.
 !
-      CALL ZZPRSCOR ( ABCORR, CORBLK )
+      call zzprscor ( abcorr, corblk )
 
 
-      IF ( CORBLK(LTIDX) ) THEN
+      if ( corblk(ltidx) ) then
 !
 !        Light time corrections are used.  The output epoch
 !        must be adjusted according to whether the correction
 !        is for received or transmitted radiation.
 !
-         IF ( CORBLK(XMTIDX) ) THEN
+         if ( corblk(xmtidx) ) then
 !
 !           This is the transmission case.
 !
-            ETCORR = ET + LT
+            etcorr = et + lt
 
-         ELSE
+         else
 !
 !           This is the reception case.
 !
-            ETCORR = ET - LT
+            etcorr = et - lt
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Light time corrections are not used.
 !
-         ETCORR = ET
+         etcorr = et
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZCOREPC' )
-      RETURN
-      END
+      call chkout ( 'ZZCOREPC' )
+      return
+      end
 
 
 

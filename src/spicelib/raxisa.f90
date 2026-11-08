@@ -1,6 +1,6 @@
 !$Procedure RAXISA ( Rotation axis of a matrix )
 
-      SUBROUTINE RAXISA ( MATRIX, AXIS, ANGLE )
+      subroutine raxisa ( matrix, axis, angle )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    MATRIX ( 3, 3 )
-      DOUBLE PRECISION    AXIS   (    3 )
-      DOUBLE PRECISION    ANGLE
+      double precision    matrix ( 3, 3 )
+      double precision    axis   (    3 )
+      double precision    angle
 
 ! $ Brief_I/O
 !
@@ -412,41 +412,41 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      double precision      vnorm
+      logical               failed
+      logical               return
+      logical               vzero
 
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
+      external              pi
+      double precision      pi
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      Q ( 0: 3 )
+      double precision      q ( 0: 3 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RAXISA' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'RAXISA' )
+      end if
 
 !
 !     Construct the quaternion corresponding to the input rotation
 !     matrix
 !
-      CALL M2Q ( MATRIX, Q )
+      call m2q ( matrix, q )
 
 !
 !     Check FAILED and return if an error has occurred.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'RAXISA' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'RAXISA' )
+         return
+      end if
 
 !
 !     The quaternion we've just constructed is of the form:
@@ -456,28 +456,28 @@
 !     We take a few precautions to handle the case of an identity
 !     rotation.
 !
-      IF ( VZERO(Q(1)) ) THEN
+      if ( vzero(q(1)) ) then
 
-         ANGLE = 0
-         AXIS(1) = 0.0D0
-         AXIS(2) = 0.0D0
-         AXIS(3) = 1.0D0
+         angle = 0
+         axis(1) = 0.0d0
+         axis(2) = 0.0d0
+         axis(3) = 1.0d0
 
-      ELSE IF ( Q(0) .EQ. 0.0D0 ) THEN
+      else if ( q(0) .eq. 0.0d0 ) then
 
-         ANGLE   = PI()
-         AXIS(1) = Q(1)
-         AXIS(2) = Q(2)
-         AXIS(3) = Q(3)
+         angle   = pi()
+         axis(1) = q(1)
+         axis(2) = q(2)
+         axis(3) = q(3)
 
-      ELSE
+      else
 
-         CALL VHAT ( Q(1), AXIS )
-         ANGLE = 2.D0 * DATAN2 ( VNORM(Q(1)), Q(0) )
+         call vhat ( q(1), axis )
+         angle = 2.d0 * datan2 ( vnorm(q(1)), q(0) )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'RAXISA' )
-      RETURN
+      call chkout ( 'RAXISA' )
+      return
 
-      END
+      end

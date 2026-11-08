@@ -1,6 +1,6 @@
 !$Procedure MATCHI ( Match string against wildcard template )
 
-      LOGICAL FUNCTION  MATCHI ( STRING, TEMPL, WSTR, WCHR )
+      logical function  matchi ( string, templ, wstr, wchr )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      CHARACTER*(*)    TEMPL
-      CHARACTER*1      WSTR
-      CHARACTER*1      WCHR
+      character*(*)    string
+      character*(*)    templ
+      character*1      wstr
+      character*1      wchr
 
 ! $ Brief_I/O
 !
@@ -158,69 +158,69 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
-      LOGICAL               NECHR
-      LOGICAL               SAMCHI
-      LOGICAL               SAMCH
+      integer               frstnb
+      integer               lastnb
+      logical               nechr
+      logical               samchi
+      logical               samch
 
 
 !
 !     Local Variables
 !
-      INTEGER               SFIRST
-      INTEGER               TFIRST
-      INTEGER               SLAST
-      INTEGER               TLAST
+      integer               sfirst
+      integer               tfirst
+      integer               slast
+      integer               tlast
 
-      INTEGER               SLEN
-      INTEGER               TLEN
+      integer               slen
+      integer               tlen
 
-      INTEGER               SCUR
-      INTEGER               TCUR
+      integer               scur
+      integer               tcur
 
-      INTEGER               LEFT
-      INTEGER               RIGHT
+      integer               left
+      integer               right
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
-      LOGICAL               NOSUBM
+      logical               nosubm
 
 !
 !     Give the function an initial value of .FALSE.
 !
-      MATCHI = .FALSE.
+      matchi = .false.
 
 !
 !     First let's get everybody's measurements.
 !
-      SFIRST = FRSTNB ( STRING )
-      SLAST  = LASTNB ( STRING )
-      TFIRST = FRSTNB ( TEMPL  )
-      TLAST  = LASTNB ( TEMPL  )
+      sfirst = frstnb ( string )
+      slast  = lastnb ( string )
+      tfirst = frstnb ( templ  )
+      tlast  = lastnb ( templ  )
 
-      TLEN   = TLAST - TFIRST + 1
-      SLEN   = SLAST - SFIRST + 1
+      tlen   = tlast - tfirst + 1
+      slen   = slast - sfirst + 1
 
-      SCUR   = MAX ( 1, SFIRST )
-      TCUR   = TFIRST
+      scur   = max ( 1, sfirst )
+      tcur   = tfirst
 
 
 !
 !     A blank template matches a blank string, and nothing else.
 !
-      IF ( ( TLAST .EQ. 0 ) .AND. ( SLAST .EQ. 0 ) ) THEN
+      if ( ( tlast .eq. 0 ) .and. ( slast .eq. 0 ) ) then
 
-         MATCHI = .TRUE.
-         RETURN
+         matchi = .true.
+         return
 
-      ELSE IF ( TLAST .EQ. 0 ) THEN
+      else if ( tlast .eq. 0 ) then
 
-         MATCHI = .FALSE.
-         RETURN
+         matchi = .false.
+         return
 
-      END IF
+      end if
 
 
 !
@@ -228,24 +228,24 @@
 !     up to the first occurrence of a wild string.
 !
 
-      DO WHILE (       ( TCUR             .LE. TLAST ) &
-                 .AND. ( SCUR             .LE. SLAST ) &
-                 .AND. ( .NOT. SAMCH( TEMPL,TCUR, WSTR,1) ) )
+      do while (       ( tcur             .le. tlast ) &
+                 .and. ( scur             .le. slast ) &
+                 .and. ( .not. samch( templ,tcur, wstr,1) ) )
 
-         IF ( NECHR ( TEMPL(TCUR:TCUR) ,    STRING(SCUR:SCUR) ) &
-              .AND. ( TEMPL(TCUR:TCUR) .NE. WCHR              ) ) THEN
+         if ( nechr ( templ(tcur:tcur) ,    string(scur:scur) ) &
+              .and. ( templ(tcur:tcur) .ne. wchr              ) ) then
 
-            MATCHI = .FALSE.
-            RETURN
+            matchi = .false.
+            return
 
-         ELSE
+         else
 
-            TCUR = TCUR + 1
-            SCUR = SCUR + 1
+            tcur = tcur + 1
+            scur = scur + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     There are a three ways we could have finished the loop above
@@ -254,25 +254,25 @@
 !     Case 1.  Both the string and template ran out of characters at
 !     the same time without running into a wild string in the template.
 !
-      IF (       ( TCUR .GT. TLAST ) &
-           .AND. ( SCUR .GT. SLAST ) ) THEN
+      if (       ( tcur .gt. tlast ) &
+           .and. ( scur .gt. slast ) ) then
 
-         MATCHI = .TRUE.
-         RETURN
+         matchi = .true.
+         return
 
-      END IF
+      end if
 
 !
 !     Case 2. The template ran out of characters while there were still
 !     characters remaining in the in the string.  No match.
 !
-      IF (       ( TCUR .GT. TLAST ) &
-           .AND. ( SCUR .LE. SLAST ) ) THEN
+      if (       ( tcur .gt. tlast ) &
+           .and. ( scur .le. slast ) ) then
 
-         MATCHI = .FALSE.
-         RETURN
+         matchi = .false.
+         return
 
-      END IF
+      end if
 
 !
 !     Case 3. The string ran out of characters while non-wild characters
@@ -282,18 +282,18 @@
 !     remain.  If so, we DO NOT have a match.  On the other hand if
 !     only wild string characters remain we DO have a match.
 !
-      IF (       ( TCUR .LE. TLAST ) &
-           .AND. ( SCUR .GT. SLAST ) ) THEN
+      if (       ( tcur .le. tlast ) &
+           .and. ( scur .gt. slast ) ) then
 
-         MATCHI = .TRUE.
+         matchi = .true.
 
-         DO I = TCUR, TLAST
-            MATCHI = MATCHI .AND. ( TEMPL(I:I) .EQ. WSTR )
-         END DO
+         do i = tcur, tlast
+            matchi = matchi .and. ( templ(i:i) .eq. wstr )
+         end do
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     OK. There is only one way that you can get to this point.
@@ -304,19 +304,19 @@
 !     template. (If there isn't one, we have a match.)
 !
 
-      DO WHILE (       ( TCUR             .LE. TLAST ) &
-                 .AND. ( SAMCH ( TEMPL,TCUR, WSTR,1 )  ) )
+      do while (       ( tcur             .le. tlast ) &
+                 .and. ( samch ( templ,tcur, wstr,1 )  ) )
 
-         TCUR = TCUR + 1
+         tcur = tcur + 1
 
-      END DO
+      end do
 
-      IF ( TCUR .GT. TLAST ) THEN
+      if ( tcur .gt. tlast ) then
 
-         MATCHI = .TRUE.
-         RETURN
+         matchi = .true.
+         return
 
-      END IF
+      end if
 
 !
 !     Still here? Ok. We have a non-wild-string character at TCUR. Call
@@ -324,116 +324,116 @@
 !     length substring of TEMPL (starting at left) that does not have
 !     a wild string character.
 !
-      LEFT = TCUR
+      left = tcur
 
-      DO WHILE (       ( TCUR             .LE.   TLAST   ) &
-                 .AND. ( .NOT. SAMCH(TEMPL,TCUR, WSTR,1) ) )
+      do while (       ( tcur             .le.   tlast   ) &
+                 .and. ( .not. samch(templ,tcur, wstr,1) ) )
 
-         TCUR = TCUR + 1
+         tcur = tcur + 1
 
-      END DO
+      end do
 
-      RIGHT = TCUR - 1
+      right = tcur - 1
 
 
-      DO WHILE ( LEFT .LE. TLAST )
+      do while ( left .le. tlast )
 
 !
 !        First see if there is enough room left in the string to
 !        match TEMPL(LEFT:RIGHT)
 !
-         IF ( SLAST - SCUR .LT. RIGHT - LEFT ) THEN
+         if ( slast - scur .lt. right - left ) then
 
-            MATCHI = .FALSE.
-            RETURN
+            matchi = .false.
+            return
 
-         END IF
+         end if
 
 !
 !        The substring TEMPL(LEFT:RIGHT) might be the end of the
 !        string.  In such a case the ends of STRING must match
 !        exactly with the end of TEMPL.
 !
-         IF ( RIGHT .EQ. TLAST ) THEN
+         if ( right .eq. tlast ) then
 
-            I = SLAST
-            J = TLAST
+            i = slast
+            j = tlast
 
-            DO WHILE ( J .GE. LEFT )
+            do while ( j .ge. left )
 
-               IF (      SAMCH (TEMPL,J, WCHR,  1 ) &
-                    .OR. SAMCHI(TEMPL,J, STRING,I )  ) THEN
+               if (      samch (templ,j, wchr,  1 ) &
+                    .or. samchi(templ,j, string,i )  ) then
 
-                  J = J - 1
-                  I = I - 1
+                  j = j - 1
+                  i = i - 1
 
-               ELSE
+               else
 
-                  MATCHI = .FALSE.
-                  RETURN
+                  matchi = .false.
+                  return
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           If we made it through the loop, we've got a match.
 !
-            MATCHI = .TRUE.
-            RETURN
-         ELSE
+            matchi = .true.
+            return
+         else
 
 !
 !           In this case TEMPL(LEFT:RIGHT) is in between wild string
 !           characters.  Try to find a substring at or to the right
 !           of SCUR in STRING that matches TEMPL(LEFT:RIGHT)
 !
-            NOSUBM = .TRUE.
+            nosubm = .true.
 
-            DO WHILE ( NOSUBM )
+            do while ( nosubm )
 
-               I = SCUR
-               J = LEFT
+               i = scur
+               j = left
 
-               DO WHILE (     ( J           .LE. RIGHT           ) &
-                         .AND.(      SAMCHI( STRING,I, TEMPL,J ) &
-                                .OR. SAMCH ( WCHR,  1, TEMPL,J ) ) )
+               do while (     ( j           .le. right           ) &
+                         .and.(      samchi( string,i, templ,j ) &
+                                .or. samch ( wchr,  1, templ,j ) ) )
 
-                  I = I + 1
-                  J = J + 1
+                  i = i + 1
+                  j = j + 1
 
-               END DO
+               end do
 
 !
 !              If J made it past RIGHT, we have a substring match
 !
-               IF ( J .GT. RIGHT ) THEN
+               if ( j .gt. right ) then
 
-                  SCUR   = I
-                  NOSUBM = .FALSE.
+                  scur   = i
+                  nosubm = .false.
 
 !
 !              Otherwise, try the substring starting 1 to the right
 !              of where our last try began.
 !
-               ELSE
+               else
 
-                  SCUR = SCUR + 1
+                  scur = scur + 1
 
 !
 !                 Make sure there's room to even attempt a match.
 !
-                  IF ( SLAST - SCUR .LT. RIGHT - LEFT ) THEN
+                  if ( slast - scur .lt. right - left ) then
 
-                     MATCHI = .FALSE.
-                     RETURN
+                     matchi = .false.
+                     return
 
-                  END IF
+                  end if
 
-               END IF
-            END DO
+               end if
+            end do
 
-         END IF
+         end if
 
 !
 !        If you have reached this point there must be something left
@@ -441,23 +441,23 @@
 !        string character.  Hunt for the next substring that doesn't
 !        contain a wild string character.
 !
-         DO WHILE (       ( TCUR             .LE. TLAST ) &
-                    .AND.   SAMCH ( TEMPL,TCUR,  WSTR,1) )
+         do while (       ( tcur             .le. tlast ) &
+                    .and.   samch ( templ,tcur,  wstr,1) )
 
-            TCUR = TCUR + 1
+            tcur = tcur + 1
 
-         END DO
+         end do
 
-         IF ( TCUR .GT. TLAST ) THEN
+         if ( tcur .gt. tlast ) then
 
 !
 !           All that was left was wild string characters.  We've
 !           got a match.
 !
-            MATCHI = .TRUE.
-            RETURN
+            matchi = .true.
+            return
 
-         END IF
+         end if
 
 !
 !        Still here? Ok. We have a non-wild-string character at TCUR.
@@ -465,17 +465,17 @@
 !        maximum length substring of TEMPL (starting at left) that
 !        does not have a wild string character.
 !
-         LEFT = TCUR
+         left = tcur
 
-         DO WHILE (       ( TCUR             .LE. TLAST ) &
-                    .AND. ( .NOT. SAMCH( TEMPL,TCUR, WSTR,1 ) ) )
+         do while (       ( tcur             .le. tlast ) &
+                    .and. ( .not. samch( templ,tcur, wstr,1 ) ) )
 
-            TCUR = TCUR + 1
+            tcur = tcur + 1
 
-         END DO
+         end do
 
-         RIGHT = TCUR - 1
+         right = tcur - 1
 
-      END DO
+      end do
 
-      END
+      end

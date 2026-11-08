@@ -1,8 +1,8 @@
 !$Procedure DSKB02 ( DSK, fetch type 2 bookkeeping data )
 
-      SUBROUTINE DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT, &
-                          VTXBDS, VOXSIZ, VOXORI, VGREXT, &
-                          CGSCAL, VTXNPL, VOXNPT, VOXNPL          )
+      subroutine dskb02 ( handle, dladsc, nv,     np,     nvxtot, &
+                          vtxbds, voxsiz, voxori, vgrext, &
+                          cgscal, vtxnpl, voxnpt, voxnpl          )
 
 ! $ Abstract
 !
@@ -21,25 +21,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               NV
-      INTEGER               NP
-      INTEGER               NVXTOT
-      DOUBLE PRECISION      VTXBDS ( 2, 3 )
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      VOXORI ( 3 )
-      INTEGER               VGREXT ( 3 )
-      INTEGER               CGSCAL
-      INTEGER               VTXNPL
-      INTEGER               VOXNPT
-      INTEGER               VOXNPL
+      integer               handle
+      integer               dladsc ( * )
+      integer               nv
+      integer               np
+      integer               nvxtot
+      double precision      vtxbds ( 2, 3 )
+      double precision      voxsiz
+      double precision      voxori ( 3 )
+      integer               vgrext ( 3 )
+      integer               cgscal
+      integer               vtxnpl
+      integer               voxnpt
+      integer               voxnpl
 
 ! $ Brief_I/O
 !
@@ -337,70 +337,70 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               DBFSIZ
-      PARAMETER           ( DBFSIZ = 10 )
+      integer               dbfsiz
+      parameter           ( dbfsiz = 10 )
 
-      INTEGER               IBFSIZ
-      PARAMETER           ( IBFSIZ = 10 )
+      integer               ibfsiz
+      parameter           ( ibfsiz = 10 )
 
-      INTEGER               VTBSIZ
-      PARAMETER           ( VTBSIZ = 6 )
+      integer               vtbsiz
+      parameter           ( vtbsiz = 6 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DBUFF  ( DBFSIZ )
+      double precision      dbuff  ( dbfsiz )
 
-      INTEGER               B
-      INTEGER               E
-      INTEGER               DPBASE
-      INTEGER               IBASE
-      INTEGER               IBUFF  ( IBFSIZ )
+      integer               b
+      integer               e
+      integer               dpbase
+      integer               ibase
+      integer               ibuff  ( ibfsiz )
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKB02' )
+      call chkin ( 'DSKB02' )
 
-      DPBASE = DLADSC ( DBSIDX )
-      IBASE  = DLADSC ( IBSIDX )
+      dpbase = dladsc ( dbsidx )
+      ibase  = dladsc ( ibsidx )
 
 !
 !     Read the integer parameters first.  These are located at the
 !     beginning of the integer component of the segment.
 !
-      CALL DASRDI ( HANDLE, IBASE+1, IBASE+IBFSIZ, IBUFF )
+      call dasrdi ( handle, ibase+1, ibase+ibfsiz, ibuff )
 
-      NV     = IBUFF ( IXNV   )
-      NP     = IBUFF ( IXNP   )
-      NVXTOT = IBUFF ( IXNVXT )
-      CGSCAL = IBUFF ( IXCGSC )
-      VOXNPT = IBUFF ( IXVXPS )
-      VOXNPL = IBUFF ( IXVXLS )
-      VTXNPL = IBUFF ( IXVTLS )
+      nv     = ibuff ( ixnv   )
+      np     = ibuff ( ixnp   )
+      nvxtot = ibuff ( ixnvxt )
+      cgscal = ibuff ( ixcgsc )
+      voxnpt = ibuff ( ixvxps )
+      voxnpl = ibuff ( ixvxls )
+      vtxnpl = ibuff ( ixvtls )
 
-      CALL MOVEI ( IBUFF(IXVGRX), 3, VGREXT )
+      call movei ( ibuff(ixvgrx), 3, vgrext )
 
 !
 !     Read the d.p. parameters.
 !
-      B = DPBASE + IXVTBD
-      E = DPBASE + IXVTBD + DBFSIZ - 1
+      b = dpbase + ixvtbd
+      e = dpbase + ixvtbd + dbfsiz - 1
 
-      CALL DASRDD( HANDLE, B, E, DBUFF )
+      call dasrdd( handle, b, e, dbuff )
 
-      CALL MOVED ( DBUFF,   VTBSIZ,  VTXBDS )
-      CALL VEQU  ( DBUFF(VTBSIZ+1),  VOXORI )
+      call moved ( dbuff,   vtbsiz,  vtxbds )
+      call vequ  ( dbuff(vtbsiz+1),  voxori )
 
-      VOXSIZ = DBUFF ( IXVXSZ - DSKDSZ )
+      voxsiz = dbuff ( ixvxsz - dskdsz )
 
-      CALL CHKOUT ( 'DSKB02' )
-      RETURN
-      END
+      call chkout ( 'DSKB02' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKE08 ( S/P Kernel, evaluate, type 8 )
 
-      SUBROUTINE SPKE08 ( ET, RECORD, STATE )
+      subroutine spke08 ( et, record, state )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spkrec.inc'
+      include 'spkrec.inc'
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD ( * )
-      DOUBLE PRECISION      STATE  ( 6 )
+      double precision      et
+      double precision      record ( * )
+      double precision      state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -187,8 +187,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      LGRESP
-      LOGICAL               RETURN
+      double precision      lgresp
+      logical               return
 
 !
 !     Local parameters
@@ -196,8 +196,8 @@
 !
 !     Size of a state vector:
 !
-      INTEGER               STATSZ
-      PARAMETER           ( STATSZ = 6 )
+      integer               statsz
+      parameter           ( statsz = 6 )
 
 !
 !     Indices of input record elements:
@@ -207,27 +207,27 @@
 !        -- step size
 !        -- start of state information
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX = 1 )
+      integer               sizidx
+      parameter           ( sizidx = 1 )
 
-      INTEGER               BEGIDX
-      PARAMETER           ( BEGIDX = 2 )
+      integer               begidx
+      parameter           ( begidx = 2 )
 
-      INTEGER               STPIDX
-      PARAMETER           ( STPIDX = 3 )
+      integer               stpidx
+      parameter           ( stpidx = 3 )
 
-      INTEGER               STAIDX
-      PARAMETER           ( STAIDX = 4 )
+      integer               staidx
+      parameter           ( staidx = 4 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LOCREC ( MAXREC )
-      DOUBLE PRECISION      WORK   ( MAXREC )
+      double precision      locrec ( maxrec )
+      double precision      work   ( maxrec )
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               YSTART
+      integer               i
+      integer               n
+      integer               ystart
 
 !
 !     Saved values
@@ -235,8 +235,8 @@
 !     Save arrays to prevent stack overflow problems on some
 !     platforms.
 !
-      SAVE                  LOCREC
-      SAVE                  WORK
+      save                  locrec
+      save                  work
 
 !
 !     Initial values
@@ -244,38 +244,38 @@
 !
 !     Initialize the workspace array to suppress compiler warnings.
 !
-      DATA                  WORK / MAXREC * 0.D0 /
+      data                  work / maxrec * 0.d0 /
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     We'll transpose the state information in the input record
 !     so that contiguous pieces of it can be shoved directly into the
 !     interpolation routine LGRESP.
 !
-      N   =  NINT( RECORD(SIZIDX) )
+      n   =  nint( record(sizidx) )
 
-      CALL XPOSEG ( RECORD(STAIDX), STATSZ, N, LOCREC )
+      call xposeg ( record(staidx), statsz, n, locrec )
 
 !
 !     We interpolate each state component in turn.
 !
-      DO I = 1, STATSZ
+      do i = 1, statsz
 
-         YSTART    =   1  +  ( (I-1) * N )
+         ystart    =   1  +  ( (i-1) * n )
 
-         STATE(I)  =   LGRESP ( N, &
-                                RECORD(BEGIDX), &
-                                RECORD(STPIDX), &
-                                LOCREC(YSTART), &
-                                WORK, &
-                                ET              )
-      END DO
+         state(i)  =   lgresp ( n, &
+                                record(begidx), &
+                                record(stpidx), &
+                                locrec(ystart), &
+                                work, &
+                                et              )
+      end do
 
-      RETURN
-      END
+      return
+      end

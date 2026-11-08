@@ -1,6 +1,6 @@
 !$Procedure DLABNS ( DLA, begin new segment )
 
-      SUBROUTINE DLABNS ( HANDLE )
+      subroutine dlabns ( handle )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -386,60 +386,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               FSTIDX
-      PARAMETER           ( FSTIDX = 1 )
+      integer               fstidx
+      parameter           ( fstidx = 1 )
 
-      INTEGER               LSTIDX
-      PARAMETER           ( LSTIDX = 2 )
+      integer               lstidx
+      parameter           ( lstidx = 2 )
 
 !
 !     Local variables
 !
-      INTEGER               ADDR
-      INTEGER               SGPTRS ( 2 )
-      INTEGER               DESCR  ( DLADSZ )
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               THIS
+      integer               addr
+      integer               sgptrs ( 2 )
+      integer               descr  ( dladsz )
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               this
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DLABNS' )
+      call chkin ( 'DLABNS' )
 
 !
 !     Make sure the input handle refers to a DAS file that
 !     is open for write access.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DLABNS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DLABNS' )
+         return
+      end if
 
 !
 !     Look up the pointers to the first and last DLA segment
 !     descriptors in the file.  If no segments are present,
 !     the pointers will contain the value NULPTR.
 !
-      CALL DASRDI ( HANDLE, LLBIDX, LLEIDX, SGPTRS )
+      call dasrdi ( handle, llbidx, lleidx, sgptrs )
 
 !
 !     Find the last DAS logical addresses in use for each data type.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
 !
 !     Initialize a DLA descriptor with null values.  If this
@@ -449,9 +449,9 @@
 !     due to the initialization of the file's last segment pointer
 !     to NULPTR.
 !
-      CALL FILLI ( NULPTR, DLADSZ, DESCR )
+      call filli ( nulptr, dladsz, descr )
 
-      DESCR(BWDIDX) = SGPTRS(LSTIDX)
+      descr(bwdidx) = sgptrs(lstidx)
 
 !
 !     Set the descriptor's component base addresses now.  The
@@ -465,44 +465,44 @@
 !     For the integer address, add on the size of the descriptor
 !     we're about to write.
 !
-      DESCR(IBSIDX) = LASTI + DLADSZ
-      DESCR(DBSIDX) = LASTD
-      DESCR(CBSIDX) = LASTC
+      descr(ibsidx) = lasti + dladsz
+      descr(dbsidx) = lastd
+      descr(cbsidx) = lastc
 
 !
 !     Append the descriptor to the file.
 !
-      CALL DASADI ( HANDLE, DLADSZ, DESCR )
+      call dasadi ( handle, dladsz, descr )
 
 !
 !     THIS is the pointer to the current descriptor.
 !
-      THIS = LASTI + 1
+      this = lasti + 1
 
 !
 !     If this is not the first segment, the forward pointer of the
 !     previous descriptor must be updated to point to this descriptor.
 !
-      IF ( SGPTRS(LSTIDX) .NE. NULPTR ) THEN
+      if ( sgptrs(lstidx) .ne. nulptr ) then
 
-         ADDR = SGPTRS(LSTIDX) + FWDIDX - 1
+         addr = sgptrs(lstidx) + fwdidx - 1
 
-         CALL DASUDI ( HANDLE, ADDR, ADDR, THIS )
+         call dasudi ( handle, addr, addr, this )
 
-      END IF
+      end if
 
 !
 !     Update the segment list pointers in the file. The begin pointer
 !     must be updated only if it's null.  The end pointer will point to
 !     this segment.
 !
-      IF ( SGPTRS(FSTIDX) .EQ. NULPTR ) THEN
+      if ( sgptrs(fstidx) .eq. nulptr ) then
 
-         CALL DASUDI ( HANDLE, LLBIDX, LLBIDX, THIS )
+         call dasudi ( handle, llbidx, llbidx, this )
 
-      END IF
+      end if
 
-      CALL DASUDI ( HANDLE, LLEIDX, LLEIDX, THIS )
+      call dasudi ( handle, lleidx, lleidx, this )
 
 !
 !     Leave the file open.  The segment is now ready to be
@@ -510,6 +510,6 @@
 !     DASADI should be used to append data to the segment.
 !
 
-      CALL CHKOUT ( 'DLABNS' )
-      RETURN
-      END
+      call chkout ( 'DLABNS' )
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure DXTRCT (Extract Double Precision Values From A String)
 
-      SUBROUTINE DXTRCT ( KEYWD,   MAXWDS ,  STRING, &
-                          NFOUND,  PARSED,   VALUES   )
+      subroutine dxtrct ( keywd,   maxwds ,  string, &
+                          nfound,  parsed,   values   )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)      KEYWD
-      INTEGER            MAXWDS
-      CHARACTER*(*)      STRING
-      INTEGER            NFOUND
-      INTEGER            PARSED
-      DOUBLE PRECISION   VALUES ( * )
+      character*(*)      keywd
+      integer            maxwds
+      character*(*)      string
+      integer            nfound
+      integer            parsed
+      double precision   values ( * )
 
 ! $ Brief_I/O
 !
@@ -226,110 +226,110 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          LASTNB
-      INTEGER          WDINDX
-      INTEGER          NBLEN
+      integer          lastnb
+      integer          wdindx
+      integer          nblen
 
 !
 !     Local variables
 !
-      INTEGER          LENGTH
-      INTEGER          POSITN
+      integer          length
+      integer          positn
 
-      INTEGER          BERASE
-      INTEGER          EERASE
-      INTEGER          FALLBK
+      integer          berase
+      integer          eerase
+      integer          fallbk
 
-      INTEGER          START
-      INTEGER          I
-      INTEGER          J
+      integer          start
+      integer          i
+      integer          j
 
 
-      DOUBLE PRECISION X
-      CHARACTER*80     ERROR
-      INTEGER          PNTR
+      double precision x
+      character*80     error
+      integer          pntr
 
 !
 !     No keywords or numbers have been located yet.
 !
-      NFOUND  =  0
-      PARSED  =  0
+      nfound  =  0
+      parsed  =  0
 
 !
 !     Locate the keyword within the string and get the length of the
 !     string.
 !
-      POSITN  =  WDINDX ( STRING, KEYWD )
-      LENGTH  =  LASTNB ( STRING      )
+      positn  =  wdindx ( string, keywd )
+      length  =  lastnb ( string      )
 
-      IF ( POSITN .EQ. 0 ) THEN
-         NFOUND = -1
-         PARSED =  0
-         RETURN
-      END IF
+      if ( positn .eq. 0 ) then
+         nfound = -1
+         parsed =  0
+         return
+      end if
 
 !
 !     Set the begin erase marker to the start of the current word
 !     Set the end   erase marker to the end   of the current word
 !
-      BERASE  = POSITN
-      EERASE  = POSITN + NBLEN(KEYWD) - 1
+      berase  = positn
+      eerase  = positn + nblen(keywd) - 1
 
-      START   = EERASE + 1
+      start   = eerase + 1
 
-      IF ( START .LT. LENGTH ) THEN
+      if ( start .lt. length ) then
 
 !
 !        Locate the next word and try to parse it ...
 !
-         CALL FNDNWD ( STRING,      START, I,     J    )
-         CALL NPARSD ( STRING(I:J), X,     ERROR, PNTR )
+         call fndnwd ( string,      start, i,     j    )
+         call nparsd ( string(i:j), x,     error, pntr )
 
-         IF ( ERROR .EQ. ' ' ) THEN
+         if ( error .eq. ' ' ) then
 !
 !           ...  mark its starting position as a possible starting
 !           point for deletion if we run out of room for parsed numbers.
 !
-            FALLBK         = I
-            EERASE         = J
-            START          = J      + 1
-            NFOUND         = NFOUND + 1
-            PARSED         = PARSED + 1
-            VALUES(PARSED) = X
-         END IF
+            fallbk         = i
+            eerase         = j
+            start          = j      + 1
+            nfound         = nfound + 1
+            parsed         = parsed + 1
+            values(parsed) = x
+         end if
 
-      ELSE
+      else
 
-         STRING(BERASE: )  = ' '
-         RETURN
+         string(berase: )  = ' '
+         return
 
-      END IF
+      end if
 
 
 !
 !     Now find all of the succeeding numeric words until we run out of
 !     numeric words or string to look at.
 !
-      DO WHILE (       ( START .LT. LENGTH ) &
-                 .AND. ( ERROR .EQ. ' '    ) )
+      do while (       ( start .lt. length ) &
+                 .and. ( error .eq. ' '    ) )
 
 !
 !        Find the next word and try to parse it as a number.
 !
-         CALL FNDNWD ( STRING,      START, I,     J       )
-         CALL NPARSD ( STRING(I:J), X,     ERROR, PNTR )
+         call fndnwd ( string,      start, i,     j       )
+         call nparsd ( string(i:j), x,     error, pntr )
 
-         IF ( ERROR .EQ. ' ' ) THEN
+         if ( error .eq. ' ' ) then
 
 !
 !           It's a number! Congratulations!
 !
-            NFOUND = NFOUND + 1
+            nfound = nfound + 1
 
 !
 !           If there is room ...
 !
-            IF ( NFOUND .LE. MAXWDS ) THEN
+            if ( nfound .le. maxwds ) then
 
 !
 !              1.  Increment the counter PARSED.
@@ -337,45 +337,45 @@
 !              3.  Set the pointer for the end of the erase
 !                   region to be the end of this word.
 !
-               PARSED         = PARSED + 1
-               VALUES(PARSED) = X
-               EERASE         = J
+               parsed         = parsed + 1
+               values(parsed) = x
+               eerase         = j
 
-            ELSE
+            else
 
 !
 !              Set the pointer of the begin erase region to be the
 !              the pointer set up just for this occasion.
 !
-               BERASE = FALLBK
+               berase = fallbk
 
-            END IF
+            end if
 
 !
 !           Set the place to begin looking for the next word to be
 !           at the first character following the end of the current
 !           word.
 !
-            START = J + 1
+            start = j + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Remove the parsed words from the string.
 !
-      I = BERASE
-      J = EERASE + 1
+      i = berase
+      j = eerase + 1
 
-      DO WHILE ( J .LE. LENGTH )
-         STRING(I:I) = STRING(J:J)
-         I           = I + 1
-         J           = J + 1
-      END DO
+      do while ( j .le. length )
+         string(i:i) = string(j:j)
+         i           = i + 1
+         j           = j + 1
+      end do
 
-      STRING(I:) = ' '
+      string(i:) = ' '
 
-      RETURN
+      return
 
-      END
+      end

@@ -1,10 +1,10 @@
 !$Procedure ZZSCUP01 ( Private, SCLK database update, type 01 )
 
-      SUBROUTINE ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, &
-                            DPFREE, DPBUFF, IFREE,  INTBUF, SCBASE, &
-                            PRVSC,  NFIELD, DELCDE, TIMSYS, NCOEFF, &
-                            NPART,  COFBAS, STRBAS, ENDBAS, MODBAS, &
-                            OFFBAS                                 )
+      subroutine zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, &
+                            dpfree, dpbuff, ifree,  intbuf, scbase, &
+                            prvsc,  nfield, delcde, timsys, ncoeff, &
+                            npart,  cofbas, strbas, endbas, modbas, &
+                            offbas                                 )
 
 ! $ Abstract
 !
@@ -26,31 +26,31 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsc01.inc'
+      include 'zzsc01.inc'
 
-      INTEGER               SC
-      INTEGER               POLCTR
-      INTEGER               HDSCLK ( * )
-      INTEGER               SCPOOL ( LBSNGL : * )
-      INTEGER               CLKLST ( * )
-      INTEGER               DPFREE
-      DOUBLE PRECISION      DPBUFF ( * )
-      INTEGER               IFREE
-      INTEGER               INTBUF ( * )
-      INTEGER               SCBASE ( * )
-      INTEGER               PRVSC
-      INTEGER               NFIELD
-      INTEGER               DELCDE
-      INTEGER               TIMSYS
-      INTEGER               NCOEFF
-      INTEGER               NPART
-      INTEGER               COFBAS
-      INTEGER               STRBAS
-      INTEGER               ENDBAS
-      INTEGER               MODBAS
-      INTEGER               OFFBAS
+      integer               sc
+      integer               polctr
+      integer               hdsclk ( * )
+      integer               scpool ( lbsngl : * )
+      integer               clklst ( * )
+      integer               dpfree
+      double precision      dpbuff ( * )
+      integer               ifree
+      integer               intbuf ( * )
+      integer               scbase ( * )
+      integer               prvsc
+      integer               nfield
+      integer               delcde
+      integer               timsys
+      integer               ncoeff
+      integer               npart
+      integer               cofbas
+      integer               strbas
+      integer               endbas
+      integer               modbas
+      integer               offbas
 
 ! $ Brief_I/O
 !
@@ -381,108 +381,108 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IBASE
-      INTEGER               SCLKAT
+      integer               ibase
+      integer               sclkat
 
-      LOGICAL               SAMCLK
-      LOGICAL               UPDATE
+      logical               samclk
+      logical               update
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSCUP01' )
+      call chkin ( 'ZZSCUP01' )
 !
 !     Reinitialize local database if the kernel pool has been
 !     updated. The call below syncs POLCTR.
 !
-      CALL ZZPCTRCK ( POLCTR, UPDATE )
+      call zzpctrck ( polctr, update )
 
-      IF ( UPDATE ) THEN
+      if ( update ) then
 !
 !        Initialize local data structures.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, &
-                         DPFREE, IFREE,  PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, &
+                         dpfree, ifree,  prvsc )
 
-         SAMCLK = .FALSE.
-      ELSE
-         SAMCLK = ( SC .NE. 0 ) .AND. ( SC .EQ. PRVSC )
-      END IF
+         samclk = .false.
+      else
+         samclk = ( sc .ne. 0 ) .and. ( sc .eq. prvsc )
+      end if
 
 !
 !     Set the output arguments only if the clock has changed or if
 !     a kernel pool update has occurred.
 !
-      IF ( .NOT. SAMCLK )  THEN
+      if ( .not. samclk )  then
 !
 !        Look up the input clock. If the clock's information is not
 !        buffered, try to look up the information from the kernel pool.
 !
-         CALL ZZHSICHK ( HDSCLK, SCPOOL, CLKLST, SC, SCLKAT )
+         call zzhsichk ( hdsclk, scpool, clklst, sc, sclkat )
 
-         IF ( SCLKAT .EQ. 0 ) THEN
+         if ( sclkat .eq. 0 ) then
 !
 !           This clock is unknown to the SC01 subsystem. Try to look up
 !           the clock's specification from the kernel pool.
 !
-            CALL ZZSCAD01 ( SC,     HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                            DPBUFF, IFREE,  INTBUF, SCBASE, SCLKAT )
+            call zzscad01 ( sc,     hdsclk, scpool, clklst, dpfree, &
+                            dpbuff, ifree,  intbuf, scbase, sclkat )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              ZZSCAD01 will have initialized the type 01 SCLK
 !              database; there's no need to do it again. Initialize
 !              the SCLK integer parameters.
 !
-               NFIELD = 0
-               DELCDE = 0
-               TIMSYS = 0
-               NCOEFF = 0
-               NPART  = 0
+               nfield = 0
+               delcde = 0
+               timsys = 0
+               ncoeff = 0
+               npart  = 0
 
 !
 !              Indicate valid data for the previous were not obtained.
 !
-               PRVSC = 0
+               prvsc = 0
 
-               CALL CHKOUT ( 'ZZSCUP01' )
-               RETURN
+               call chkout ( 'ZZSCUP01' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        IBASE is the base address in the integer buffer of the integer
 !        data for this clock.
 !
-         IBASE = SCBASE( SCLKAT )
+         ibase = scbase( sclkat )
 
 !
 !        Set integer SCLK parameters to the correct values for
 !        the clock designated by SC.
 !
-         NFIELD = INTBUF( IBASE+IXNFLD )
-         DELCDE = INTBUF( IBASE+IXDLIM )
-         TIMSYS = INTBUF( IBASE+IXTSYS )
-         NCOEFF = INTBUF( IBASE+IXNCOF )
-         NPART  = INTBUF( IBASE+IXNPRT )
-         COFBAS = INTBUF( IBASE+IXBCOF )
-         STRBAS = INTBUF( IBASE+IXBSTR )
-         ENDBAS = INTBUF( IBASE+IXBEND )
-         MODBAS = INTBUF( IBASE+IXBMOD )
-         OFFBAS = INTBUF( IBASE+IXBOFF )
+         nfield = intbuf( ibase+ixnfld )
+         delcde = intbuf( ibase+ixdlim )
+         timsys = intbuf( ibase+ixtsys )
+         ncoeff = intbuf( ibase+ixncof )
+         npart  = intbuf( ibase+ixnprt )
+         cofbas = intbuf( ibase+ixbcof )
+         strbas = intbuf( ibase+ixbstr )
+         endbas = intbuf( ibase+ixbend )
+         modbas = intbuf( ibase+ixbmod )
+         offbas = intbuf( ibase+ixboff )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZSCUP01' )
-      RETURN
-      END
+      call chkout ( 'ZZSCUP01' )
+      return
+      end

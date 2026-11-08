@@ -1,6 +1,6 @@
 !$Procedure DSKP02 ( DSK, fetch type 2 plate data )
 
-      SUBROUTINE DSKP02 ( HANDLE, DLADSC, START, ROOM, N, PLATES )
+      subroutine dskp02 ( handle, dladsc, start, room, n, plates )
 
 ! $ Abstract
 !
@@ -19,18 +19,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               START
-      INTEGER               ROOM
-      INTEGER               N
-      INTEGER               PLATES ( 3, * )
+      integer               handle
+      integer               dladsc ( * )
+      integer               start
+      integer               room
+      integer               n
+      integer               plates ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -381,61 +381,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      double precision      dskdsc ( dskdsz )
 
-      INTEGER               LCROOM
-      INTEGER               LCSTRT
-      INTEGER               NP
-      INTEGER               NV
-      INTEGER               UNIT
+      integer               lcroom
+      integer               lcstrt
+      integer               np
+      integer               nv
+      integer               unit
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKP02' )
+      call chkin ( 'DSKP02' )
 
 !
 !     Look up the DSK descriptor for this segment.
 !
-      CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      call dskgd ( handle, dladsc, dskdsc )
 
 !
 !     Get the plate model size parameters for this segment.
 !     Note that we get a segment data type check for free from
 !     DSKZ02.
 !
-      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      call dskz02 ( handle, dladsc, nv, np )
 
 !
 !     Check START.
 !
-      IF (  ( START .LT. 1 ) .OR. ( START .GT. NP )  ) THEN
+      if (  ( start .lt. 1 ) .or. ( start .gt. np )  ) then
 
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+         call zzddhhlu ( handle, 'DAS', .false., unit )
 
-         CALL SETMSG ( 'Segment in DSK file # with DAS base ' &
+         call setmsg ( 'Segment in DSK file # with DAS base ' &
          //            'addresses INT = #, DP = #, CHR = # ' &
          //            'contains # plates, so START must ' &
          //            'be in the range 1:#; actual value ' &
          //            'was #.'                              )
-         CALL ERRFNM ( '#', UNIT                             )
-         CALL ERRINT ( '#', DLADSC(IBSIDX)                   )
-         CALL ERRINT ( '#', DLADSC(DBSIDX)                   )
-         CALL ERRINT ( '#', DLADSC(CBSIDX)                   )
-         CALL ERRINT ( '#', NP                               )
-         CALL ERRINT ( '#', NP                               )
-         CALL ERRINT ( '#', START                            )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'              )
-         CALL CHKOUT ( 'DSKP02'                              )
-         RETURN
+         call errfnm ( '#', unit                             )
+         call errint ( '#', dladsc(ibsidx)                   )
+         call errint ( '#', dladsc(dbsidx)                   )
+         call errint ( '#', dladsc(cbsidx)                   )
+         call errint ( '#', np                               )
+         call errint ( '#', np                               )
+         call errint ( '#', start                            )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
+         call chkout ( 'DSKP02'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Note that the start and room arguments of DSKI02 apply
@@ -443,17 +443,17 @@
 !     inputs to make them compatible with this lower-level
 !     interface.
 !
-      LCSTRT = 3 * ( START - 1 ) + 1
-      LCROOM = 3 * ROOM
+      lcstrt = 3 * ( start - 1 ) + 1
+      lcroom = 3 * room
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, &
-                    LCSTRT, LCROOM, N,      PLATES )
+      call dski02 ( handle, dladsc, kwplat, &
+                    lcstrt, lcroom, n,      plates )
 
 !
 !     Change the output count from one of integers to one of plates.
 !
-      N = N / 3
+      n = n / 3
 
-      CALL CHKOUT ( 'DSKP02' )
-      RETURN
-      END
+      call chkout ( 'DSKP02' )
+      return
+      end

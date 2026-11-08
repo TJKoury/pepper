@@ -1,6 +1,6 @@
 !$Procedure   ZZEKWEQI ( Private: EK, write to encoded query, integer )
 
-      SUBROUTINE ZZEKWEQI ( NAME, VALUE, EQRYI )
+      subroutine zzekweqi ( name, value, eqryi )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
+      include 'ekquery.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      INTEGER               VALUE
-      INTEGER               EQRYI ( LBCELL : * )
+      character*(*)         name
+      integer               value
+      integer               eqryi ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -120,49 +120,49 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
 !
 !     Local parameters
 !
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 32 )
+      integer               namlen
+      parameter           ( namlen = 32 )
 
-      INTEGER               MAXNAM
-      PARAMETER           ( MAXNAM = 15 )
+      integer               maxnam
+      parameter           ( maxnam = 15 )
 !
 !     Local variables
 !
-      CHARACTER*(NAMLEN)    NAMLST ( MAXNAM )
-      CHARACTER*(NAMLEN)    TMPNAM
+      character*(namlen)    namlst ( maxnam )
+      character*(namlen)    tmpnam
 
-      INTEGER               I
-      INTEGER               NAMIDX ( MAXNAM )
+      integer               i
+      integer               namidx ( maxnam )
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA  (   NAMLST(I),          NAMIDX(I),   I = 1, MAXNAM  )  / &
-                 'ARCHITECTURE',      EQARCH, &
-                 'INITIALIZED',       EQINIT, &
-                 'PARSED',            EQPARS, &
-                 'NAMES_RESOLVED',    EQNRES, &
-                 'TIMES_RESOLVED',    EQTRES, &
-                 'SEM_CHECKED',       EQSCHK, &
-                 'NUM_TABLES',        EQNTAB, &
-                 'NUM_CONJUNCTIONS',  EQNCNJ, &
-                 'NUM_CONSTRAINTS',   EQNCNS, &
-                 'NUM_SELECT_COLS',   EQNSEL, &
-                 'NUM_ORDERBY_COLS',  EQNORD, &
-                 'NUM_BUF_SIZE',      EQNSIZ, &
-                 'FREE_NUM',          EQNPTR, &
-                 'CHR_BUF_SIZE',      EQCSIZ, &
-                 'FREE_CHR',          EQCPTR                       /
+      data  (   namlst(i),          namidx(i),   i = 1, maxnam  )  / &
+                 'ARCHITECTURE',      eqarch, &
+                 'INITIALIZED',       eqinit, &
+                 'PARSED',            eqpars, &
+                 'NAMES_RESOLVED',    eqnres, &
+                 'TIMES_RESOLVED',    eqtres, &
+                 'SEM_CHECKED',       eqschk, &
+                 'NUM_TABLES',        eqntab, &
+                 'NUM_CONJUNCTIONS',  eqncnj, &
+                 'NUM_CONSTRAINTS',   eqncns, &
+                 'NUM_SELECT_COLS',   eqnsel, &
+                 'NUM_ORDERBY_COLS',  eqnord, &
+                 'NUM_BUF_SIZE',      eqnsiz, &
+                 'FREE_NUM',          eqnptr, &
+                 'CHR_BUF_SIZE',      eqcsiz, &
+                 'FREE_CHR',          eqcptr                       /
 
 
 !
@@ -171,26 +171,26 @@
 !
 !     Find the location of the named item.
 !
-      CALL LJUST ( NAME,   TMPNAM )
-      CALL UCASE ( TMPNAM, TMPNAM )
+      call ljust ( name,   tmpnam )
+      call ucase ( tmpnam, tmpnam )
 
-      I  =  ISRCHC ( TMPNAM, MAXNAM, NAMLST )
+      i  =  isrchc ( tmpnam, maxnam, namlst )
 
-      IF ( I .EQ. 0 ) THEN
+      if ( i .eq. 0 ) then
 
-         CALL CHKIN  ( 'ZZEKWEQI'           )
-         CALL SETMSG ( 'Item # not found.'  )
-         CALL ERRCH  ( '#',  NAME           )
-         CALL SIGERR ( 'SPICE(INVALIDNAME)' )
-         CALL CHKOUT ( 'ZZEKWEQI'           )
-         RETURN
+         call chkin  ( 'ZZEKWEQI'           )
+         call setmsg ( 'Item # not found.'  )
+         call errch  ( '#',  name           )
+         call sigerr ( 'SPICE(INVALIDNAME)' )
+         call chkout ( 'ZZEKWEQI'           )
+         return
 
-      END IF
+      end if
 
 !
 !     Do the deed.
 !
-      EQRYI( NAMIDX(I) ) = VALUE
+      eqryi( namidx(i) ) = value
 
-      RETURN
-      END
+      return
+      end

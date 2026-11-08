@@ -1,6 +1,6 @@
 !$Procedure ODD ( Is a number odd? )
 
-      LOGICAL FUNCTION  ODD ( IVAL )
+      logical function  odd ( ival )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          IVAL
+      integer          ival
 
 ! $ Brief_I/O
 !
@@ -127,7 +127,7 @@
 !
 !     Self-explanatory.
 !
-      ODD = ( MOD (IVAL,2) .NE. 0 )
+      odd = ( mod (ival,2) .ne. 0 )
 
-      RETURN
-      END
+      return
+      end

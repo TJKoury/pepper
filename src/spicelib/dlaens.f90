@@ -1,6 +1,6 @@
 !$Procedure DLAENS ( DLA, end new segment )
 
-      SUBROUTINE DLAENS ( HANDLE )
+      subroutine dlaens ( handle )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -381,7 +381,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -390,20 +390,20 @@
 !
 !     Local variables
 !
-      INTEGER               DESCR  ( DLADSZ )
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               THIS
+      integer               descr  ( dladsz )
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               this
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DLAENS' )
+      call chkin ( 'DLAENS' )
 !
 !     Now that the segment has been written, our only task is
 !     to update the corresponding segment descriptor to reflect
@@ -412,32 +412,32 @@
 !     Look up the pointer to the last DLA segment descriptor in the
 !     file.  Then look up the segment descriptor itself.
 !
-      CALL DASRDI ( HANDLE, LLEIDX, LLEIDX,        THIS  )
-      CALL DASRDI ( HANDLE, THIS,   THIS+DLADSZ-1, DESCR )
+      call dasrdi ( handle, lleidx, lleidx,        this  )
+      call dasrdi ( handle, this,   this+dladsz-1, descr )
 
 !
 !     Find the last DAS logical addresses in use for each data type.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
 !
 !     Set the component sizes in the descriptor. The sizes are easily
 !     computed from the last addresses in use and the component base
 !     addresses already stored in the segment descriptor.
 !
-      DESCR ( ISZIDX ) = LASTI - DESCR(IBSIDX )
-      DESCR ( DSZIDX ) = LASTD - DESCR(DBSIDX )
-      DESCR ( CSZIDX ) = LASTC - DESCR(CBSIDX )
+      descr ( iszidx ) = lasti - descr(ibsidx )
+      descr ( dszidx ) = lastd - descr(dbsidx )
+      descr ( cszidx ) = lastc - descr(cbsidx )
 
 !
 !     Update the descriptor in the file.
 !
-      CALL DASUDI ( HANDLE, THIS, THIS+DLADSZ-1, DESCR )
+      call dasudi ( handle, this, this+dladsz-1, descr )
 
 !
 !     Leave the file open.  The file is now ready for the
 !     addition of a new segment.
 !
-      CALL CHKOUT ( 'DLAENS' )
-      RETURN
-      END
+      call chkout ( 'DLAENS' )
+      return
+      end

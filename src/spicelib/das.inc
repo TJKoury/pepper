@@ -46,8 +46,8 @@
 !        other declarations that conflict with some of those in DAS
 !        routines.
 !
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE  = 5000 )
+      integer               ftsize
+      parameter           ( ftsize  = 5000 )
 
 !
 !     Capacity of DAS data records:
@@ -59,14 +59,14 @@
 !     These parameters are named to enhance ease of maintenance of
 !     the code; the values should not be changed.
 
-      INTEGER               NWD
-      PARAMETER           ( NWD     =  128 )
+      integer               nwd
+      parameter           ( nwd     =  128 )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI     =  256 )
+      integer               nwi
+      parameter           ( nwi     =  256 )
 
-      INTEGER               NWC
-      PARAMETER           ( NWC     = 1024 )
+      integer               nwc
+      parameter           ( nwc     = 1024 )
 
 !
 !     DAS data type specifiers used in all DAS routines that require
@@ -80,14 +80,14 @@
 !              parameters are used in all DAS routines that require a
 !              data type specifier.
 !
-      INTEGER               CHARDT
-      PARAMETER           ( CHARDT  =  1   )
+      integer               chardt
+      parameter           ( chardt  =  1   )
 
-      INTEGER               DPDT
-      PARAMETER           ( DPDT    =  2   )
+      integer               dpdt
+      parameter           ( dpdt    =  2   )
 
-      INTEGER               INTDT
-      PARAMETER           ( INTDT   =  3   )
+      integer               intdt
+      parameter           ( intdt   =  3   )
 
 !
 !     End of include file das.inc

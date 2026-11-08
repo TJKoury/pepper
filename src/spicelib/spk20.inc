@@ -41,8 +41,8 @@
 !                       MAXREC = 3 * ( MAXDEG + 3 )
 !
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 50 )
+      integer               maxdeg
+      parameter           ( maxdeg = 50 )
 
 
 !
@@ -72,8 +72,8 @@
 !     Tolerance scale for coverage gap at the endpoints
 !     of the segment coverage interval:
 !
-      DOUBLE PRECISION      TOLSCL
-      PARAMETER           ( TOLSCL = 1.D-13 )
+      double precision      tolscl
+      parameter           ( tolscl = 1.d-13 )
 
 !
 !     End of include file spk20.inc.

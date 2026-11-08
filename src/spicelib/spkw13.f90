@@ -1,8 +1,8 @@
 !$Procedure SPKW13 ( Write SPK segment, type 13 )
 
-      SUBROUTINE SPKW13 (  HANDLE,  BODY,    CENTER,  FRAME, &
-                           FIRST,   LAST,    SEGID,   DEGREE, &
-                           N,       STATES,  EPOCHS           )
+      subroutine spkw13 (  handle,  body,    center,  frame, &
+                           first,   last,    segid,   degree, &
+                           n,       states,  epochs           )
 
 ! $ Abstract
 !
@@ -22,22 +22,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      INTEGER               DEGREE
-      INTEGER               N
-      DOUBLE PRECISION      STATES ( 6, * )
-      DOUBLE PRECISION      EPOCHS (    * )
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      integer               degree
+      integer               n
+      double precision      states ( 6, * )
+      double precision      epochs (    * )
 
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 27 )
+      integer               maxdeg
+      parameter           ( maxdeg = 27 )
 
 ! $ Brief_I/O
 !
@@ -409,222 +409,222 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               EVEN
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               even
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
-
-!
-!     Local variables
-!
-      INTEGER               DSCSIZ
-      PARAMETER           ( DSCSIZ  =   5 )
-
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE   =  13 )
-
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ  = 100 )
-
-      INTEGER               STATSZ
-      PARAMETER           ( STATSZ  =   6 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DESCR  ( DSCSIZ )
-      DOUBLE PRECISION      MAXTIM
+      integer               dscsiz
+      parameter           ( dscsiz  =   5 )
 
-      INTEGER               CHRCOD
-      INTEGER               I
-      INTEGER               REFCOD
-      INTEGER               WINSIZ
+      integer               dtype
+      parameter           ( dtype   =  13 )
+
+      integer               dirsiz
+      parameter           ( dirsiz  = 100 )
+
+      integer               statsz
+      parameter           ( statsz  =   6 )
+
+!
+!     Local variables
+!
+      double precision      descr  ( dscsiz )
+      double precision      maxtim
+
+      integer               chrcod
+      integer               i
+      integer               refcod
+      integer               winsiz
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKW13' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKW13' )
+      end if
 
 !
 !     Set the window size corresponding to the input degree.  This
 !     size will be used in various places below.
 !
-      WINSIZ  =  ( DEGREE + 1 ) / 2
+      winsiz  =  ( degree + 1 ) / 2
 
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL NAMFRM ( FRAME, REFCOD )
+      call namfrm ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'SPKW13'                                    )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'SPKW13'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Check to see if the segment identifier is too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' // &
+         call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SPKW13'                                  )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SPKW13'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         CHRCOD = ICHAR( SEGID(I:I) )
+         chrcod = ichar( segid(i:i) )
 
-         IF ( ( CHRCOD .LT. FPRINT ) .OR. ( CHRCOD .GT. LPRINT ) ) THEN
+         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains '  // &
+            call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'SPKW13'                                )
-            RETURN
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'SPKW13'                                )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Make sure that the degree of the interpolating polynomials is
 !     in range.
 !
-      IF (  ( DEGREE .LT. 1 ) .OR. ( DEGREE .GT. MAXDEG )  )  THEN
+      if (  ( degree .lt. 1 ) .or. ( degree .gt. maxdeg )  )  then
 
-         CALL SETMSG ( 'The interpolating polynomials have degree #; '// &
+         call setmsg ( 'The interpolating polynomials have degree #; '// &
                        'the valid degree range is [1, #]'              )
-         CALL ERRINT ( '#', DEGREE                                     )
-         CALL ERRINT ( '#', MAXDEG                                     )
-         CALL SIGERR ( 'SPICE(INVALIDDEGREE)'                          )
-         CALL CHKOUT ( 'SPKW13'                                        )
-         RETURN
+         call errint ( '#', degree                                     )
+         call errint ( '#', maxdeg                                     )
+         call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         call chkout ( 'SPKW13'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the degree of the interpolating polynomials is odd.
 !
-      IF (  EVEN( DEGREE )  )  THEN
+      if (  even( degree )  )  then
 
-         CALL SETMSG ( 'The interpolating polynomials have degree #; '// &
+         call setmsg ( 'The interpolating polynomials have degree #; '// &
                        'for SPK type 13, the degree must be odd.'      )
-         CALL ERRINT ( '#', DEGREE                                     )
-         CALL SIGERR ( 'SPICE(INVALIDDEGREE)'                          )
-         CALL CHKOUT ( 'SPKW13'                                        )
-         RETURN
+         call errint ( '#', degree                                     )
+         call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         call chkout ( 'SPKW13'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the number of states is sufficient to define a
 !     polynomial whose degree is DEGREE.
 !
-      IF ( N .LT. WINSIZ ) THEN
+      if ( n .lt. winsiz ) then
 
-         CALL SETMSG ( 'At least # states are required to define a '  // &
+         call setmsg ( 'At least # states are required to define a '  // &
                        'Hermite polynomial of degree #.  Number of '  // &
                        'states supplied:  #'                           )
-         CALL ERRINT ( '#', WINSIZ                                     )
-         CALL ERRINT ( '#', DEGREE                                     )
-         CALL ERRINT ( '#', N                                          )
-         CALL SIGERR ( 'SPICE(TOOFEWSTATES)'                           )
-         CALL CHKOUT ( 'SPKW13'                                        )
-         RETURN
+         call errint ( '#', winsiz                                     )
+         call errint ( '#', degree                                     )
+         call errint ( '#', n                                          )
+         call sigerr ( 'SPICE(TOOFEWSTATES)'                           )
+         call chkout ( 'SPKW13'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     The segment stop time should be greater then the begin time.
 !
-      IF ( FIRST .GE. LAST ) THEN
+      if ( first .ge. last ) then
 
-         CALL SETMSG ( 'The segment start time: # is greater then ' // &
+         call setmsg ( 'The segment start time: # is greater then ' // &
                        'the segment end time: #'                   )
-         CALL ERRDP  ( '#', FIRST                                  )
-         CALL ERRDP  ( '#', LAST                                   )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'SPKW13'                                    )
-         RETURN
+         call errdp  ( '#', first                                  )
+         call errdp  ( '#', last                                   )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'SPKW13'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the epochs form a strictly increasing sequence.
 !
-      MAXTIM = EPOCHS(1)
+      maxtim = epochs(1)
 
-      DO I = 2, N
+      do i = 2, n
 
-         IF ( EPOCHS(I) .LE. MAXTIM ) THEN
+         if ( epochs(i) .le. maxtim ) then
 
-            CALL SETMSG ( 'EPOCH # having index # is not greater '    // &
+            call setmsg ( 'EPOCH # having index # is not greater '    // &
                           'than its predecessor #.'                   )
-            CALL ERRDP  ( '#',  EPOCHS(I)                             )
-            CALL ERRINT ( '#',  I                                     )
-            CALL ERRDP  ( '#',  EPOCHS(I-1)                           )
-            CALL SIGERR ( 'SPICE(TIMESOUTOFORDER)'                    )
-            CALL CHKOUT ( 'SPKW13'                                    )
-            RETURN
-         ELSE
-            MAXTIM = EPOCHS(I)
-         END IF
+            call errdp  ( '#',  epochs(i)                             )
+            call errint ( '#',  i                                     )
+            call errdp  ( '#',  epochs(i-1)                           )
+            call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            call chkout ( 'SPKW13'                                    )
+            return
+         else
+            maxtim = epochs(i)
+         end if
 
-      END DO
+      end do
 
 !
 !     Make sure that the span of the input epochs includes the interval
 !     defined by the segment descriptor.
 !
-      IF (  EPOCHS(1) .GT. FIRST ) THEN
+      if (  epochs(1) .gt. first ) then
 
-         CALL SETMSG ( 'Segment start time # precedes first epoch #.' )
-         CALL ERRDP  ( '#',  FIRST                                    )
-         CALL ERRDP  ( '#',  EPOCHS(1)                                )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                         )
-         CALL CHKOUT ( 'SPKW13'                                       )
-         RETURN
+         call setmsg ( 'Segment start time # precedes first epoch #.' )
+         call errdp  ( '#',  first                                    )
+         call errdp  ( '#',  epochs(1)                                )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         call chkout ( 'SPKW13'                                       )
+         return
 
-      ELSE IF (  EPOCHS(N) .LT. LAST ) THEN
+      else if (  epochs(n) .lt. last ) then
 
-         CALL SETMSG ( 'Segment end time # follows last epoch #.'     )
-         CALL ERRDP  ( '#',  LAST                                     )
-         CALL ERRDP  ( '#',  EPOCHS(N)                                )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                         )
-         CALL CHKOUT ( 'SPKW13'                                       )
-         RETURN
+         call setmsg ( 'Segment end time # follows last epoch #.'     )
+         call errdp  ( '#',  last                                     )
+         call errdp  ( '#',  epochs(n)                                )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         call chkout ( 'SPKW13'                                       )
+         return
 
-      END IF
+      end if
 
 
 
@@ -634,17 +634,17 @@
 !
 !     Create the segment descriptor.
 !
-      CALL SPKPDS ( BODY, CENTER, FRAME, DTYPE, FIRST, LAST, DESCR )
+      call spkpds ( body, center, frame, dtype, first, last, descr )
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW13' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW13' )
+         return
+      end if
 
 
 !
@@ -687,24 +687,24 @@
 !
 !
 
-      CALL DAFADA ( STATES,  N*STATSZ )
-      CALL DAFADA ( EPOCHS,  N        )
+      call dafada ( states,  n*statsz )
+      call dafada ( epochs,  n        )
 
-      DO I = 1,   (N-1) / DIRSIZ
-         CALL DAFADA (  EPOCHS( DIRSIZ*I ),  1  )
-      END DO
+      do i = 1,   (n-1) / dirsiz
+         call dafada (  epochs( dirsiz*i ),  1  )
+      end do
 
-      CALL DAFADA ( DBLE( WINSIZ - 1),  1 )
-      CALL DAFADA ( DBLE( N         ),  1 )
+      call dafada ( dble( winsiz - 1),  1 )
+      call dafada ( dble( n         ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.
 !
-      IF ( .NOT. FAILED() ) THEN
-         CALL DAFENA
-      END IF
+      if ( .not. failed() ) then
+         call dafena
+      end if
 
 
-      CALL CHKOUT ( 'SPKW13' )
-      RETURN
-      END
+      call chkout ( 'SPKW13' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SSIZEI ( Set the size of an integer cell )
 
-      SUBROUTINE SSIZEI ( SIZE, CELL )
+      subroutine ssizei ( size, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER          SIZE
-      INTEGER          CELL   ( LBCELL:* )
+      integer          size
+      integer          cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,43 +168,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SSIZEI' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SSIZEI' )
+      end if
 
 !
 !     The size must be non-negative.  Other values will be snubbed.
 !
-      IF (  SIZE .LT. 0  )  THEN
-         CALL SETMSG ( 'Attempt to set size of cell to invalid '      // &
+      if (  size .lt. 0  )  then
+         call setmsg ( 'Attempt to set size of cell to invalid '      // &
                        'value.  The value was #.'  )
-         CALL ERRINT ( '#', SIZE )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'SSIZEI' )
-         RETURN
-      END IF
+         call errint ( '#', size )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'SSIZEI' )
+         return
+      end if
 
 !
 !     Not much to this.
 !
-      CELL(-1) = SIZE
-      CELL( 0) = 0
+      cell(-1) = size
+      cell( 0) = 0
 
-      DO I = LBCELL, -2
-         CELL(I) = 0
-      END DO
+      do i = lbcell, -2
+         cell(i) = 0
+      end do
 
-      CALL CHKOUT ( 'SSIZEI' )
-      RETURN
-      END
+      call chkout ( 'SSIZEI' )
+      return
+      end

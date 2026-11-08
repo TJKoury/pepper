@@ -1,7 +1,7 @@
 !$Procedure CKR01 ( C-kernel, read pointing record, data type 1 )
 
-      SUBROUTINE CKR01 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV, &
-                         RECORD, FOUND                       )
+      subroutine ckr01 ( handle, descr, sclkdp, tol, needav, &
+                         record, found                       )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( * )
-      LOGICAL               FOUND
+      integer               handle
+      double precision      descr  ( * )
+      double precision      sclkdp
+      double precision      tol
+      logical               needav
+      double precision      record ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -344,9 +344,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               LSTLED
-      INTEGER               LSTCLD
+      logical               return
+      integer               lstled
+      integer               lstcld
 
 !
 !     Local parameters
@@ -370,56 +370,56 @@
 !                   operates on.
 !
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               NDC
-      PARAMETER           ( NDC    = 2 )
+      integer               ndc
+      parameter           ( ndc    = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC    = 6 )
+      integer               nic
+      parameter           ( nic    = 6 )
 
-      INTEGER               QSIZ
-      PARAMETER           ( QSIZ   = 4 )
+      integer               qsiz
+      parameter           ( qsiz   = 4 )
 
-      INTEGER               QAVSIZ
-      PARAMETER           ( QAVSIZ = 7 )
+      integer               qavsiz
+      parameter           ( qavsiz = 7 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE =  1 )
+      integer               dtype
+      parameter           ( dtype =  1 )
 
 !
 !     Local variables
 !
-      INTEGER               ICD    ( NIC )
-      INTEGER               BEG
-      INTEGER               END
-      INTEGER               NREC
-      INTEGER               NDIR
-      INTEGER               PSIZ
-      INTEGER               GROUP
-      INTEGER               DIRLOC
-      INTEGER               REMAIN
-      INTEGER               SKIP
-      INTEGER               GRPNDX
-      INTEGER               I
-      INTEGER               N
+      integer               icd    ( nic )
+      integer               beg
+      integer               end
+      integer               nrec
+      integer               ndir
+      integer               psiz
+      integer               group
+      integer               dirloc
+      integer               remain
+      integer               skip
+      integer               grpndx
+      integer               i
+      integer               n
 
-      DOUBLE PRECISION      DCD    ( NDC )
-      DOUBLE PRECISION      BUFFER ( DIRSIZ )
+      double precision      dcd    ( ndc )
+      double precision      buffer ( dirsiz )
 
-      LOGICAL               FND
+      logical               fnd
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKR01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKR01' )
+      end if
 
 !
 !     To minimize the number of file reads performed during the search,
@@ -438,7 +438,7 @@
 !
 !     Start off with FOUND set to FALSE.
 !
-      FOUND = .FALSE.
+      found = .false.
 !
 !     We need to look at a few of the descriptor components.
 !
@@ -454,20 +454,20 @@
 !        ICD(5)  Initial address of segment data
 !        ICD(6)  Final address of segment data
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 !
 !     Check to make sure that the segment is type 1.
 !
-      IF ( ICD( 3 ) .NE. DTYPE ) THEN
+      if ( icd( 3 ) .ne. dtype ) then
 
-         CALL SETMSG ( 'The segment is not a type 1 segment.  ' // &
+         call setmsg ( 'The segment is not a type 1 segment.  ' // &
                        'Type is #'                                 )
-         CALL ERRINT ( '#', ICD(3)                                 )
-         CALL SIGERR ( 'SPICE(WRONGDATATYPE)'                      )
-         CALL CHKOUT ( 'CKR01'                                     )
-         RETURN
+         call errint ( '#', icd(3)                                 )
+         call sigerr ( 'SPICE(WRONGDATATYPE)'                      )
+         call chkout ( 'CKR01'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     The size of the record returned depends on whether or not the
@@ -476,40 +476,40 @@
 !     This is a convenient place to check if the need for angular
 !     velocity data matches the availability.
 !
-      IF ( ICD( 4 ) .EQ. 1 ) THEN
+      if ( icd( 4 ) .eq. 1 ) then
 
-         PSIZ = QAVSIZ
+         psiz = qavsiz
 
-      ELSE
+      else
 
-         PSIZ = QSIZ
+         psiz = qsiz
 
-         IF ( NEEDAV ) THEN
+         if ( needav ) then
 
-            CALL SETMSG ( 'Segment does not contain angular velocity '// &
+            call setmsg ( 'Segment does not contain angular velocity '// &
                           'data.'           )
-            CALL SIGERR ( 'SPICE(NOAVDATA)' )
-            CALL CHKOUT ( 'CKR01'           )
-            RETURN
+            call sigerr ( 'SPICE(NOAVDATA)' )
+            call chkout ( 'CKR01'           )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The beginning and ending addresses of the segment are in the
 !     descriptor.
 !
-      BEG = ICD( 5 )
-      END = ICD( 6 )
+      beg = icd( 5 )
+      end = icd( 6 )
 
 !
 !     Get the number of records in this segment, and from that determine
 !     the number of directory epochs.
 !
-      CALL DAFGDA ( HANDLE, END, END, BUFFER )
-      NREC = INT( BUFFER(1) )
-      NDIR = ( NREC - 1 )/DIRSIZ
+      call dafgda ( handle, end, end, buffer )
+      nrec = int( buffer(1) )
+      ndir = ( nrec - 1 )/dirsiz
 
 !
 !     The directory epochs narrow down the search to a group of DIRSIZ
@@ -519,10 +519,10 @@
 !
 !     There is only one group if there are no directory epochs.
 !
-      IF ( NDIR .EQ. 0 ) THEN
-         GROUP = 1
+      if ( ndir .eq. 0 ) then
+         group = 1
 
-      ELSE
+      else
 !
 !        Compute the location of the first directory epoch.  From the
 !        beginning of the segment, need to go through all of the
@@ -530,25 +530,25 @@
 !        the SCLKDP times (NREC more) to get to the first SCLK
 !        directory.
 !
-         DIRLOC = BEG + ( PSIZ + 1 ) * NREC
+         dirloc = beg + ( psiz + 1 ) * nrec
 
 !
 !        Locate the first directory epoch greater than SCLKDP. Read in
 !        as many as DIRSIZ directory epochs at a time for comparison.
 !
-         FND    = .FALSE.
-         REMAIN =  NDIR
-         GROUP  =  0
+         fnd    = .false.
+         remain =  ndir
+         group  =  0
 
-         DO WHILE ( .NOT. FND )
+         do while ( .not. fnd )
 !
 !           The number of records to read in the buffer.
 !
-            N = MIN( REMAIN, DIRSIZ )
+            n = min( remain, dirsiz )
 
-            CALL DAFGDA ( HANDLE, DIRLOC, DIRLOC + N - 1, BUFFER )
+            call dafgda ( handle, dirloc, dirloc + n - 1, buffer )
 
-            REMAIN = REMAIN - N
+            remain = remain - n
 
 !
 !           If we find the first directory time greater than or equal
@@ -560,32 +560,32 @@
 !
 !           Otherwise keep looking.
 !
-            I = LSTLED( SCLKDP, N, BUFFER )
+            i = lstled( sclkdp, n, buffer )
 
-            IF ( I .LT. N ) THEN
-               GROUP =  GROUP + I + 1
-               FND   = .TRUE.
+            if ( i .lt. n ) then
+               group =  group + i + 1
+               fnd   = .true.
 
-            ELSE IF ( REMAIN .EQ. 0 ) THEN
-               GROUP =  NDIR + 1
-               FND   = .TRUE.
+            else if ( remain .eq. 0 ) then
+               group =  ndir + 1
+               fnd   = .true.
 
-            ELSE
-               DIRLOC = DIRLOC + N
-               GROUP  = GROUP  + N
+            else
+               dirloc = dirloc + n
+               group  = group  + n
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Now we know which group of DIRSIZ (or less) times to look at.
 !     Out of the NREC SCLKDP times, the number that we should skip over
 !     to get to the proper group is DIRSIZ*( GROUP - 1 ).
 !
-      SKIP = DIRSIZ*( GROUP - 1 )
+      skip = dirsiz*( group - 1 )
 
 !
 !     From this we can compute the index into the segment of the group
@@ -593,50 +593,50 @@
 !     PSIZ*NREC pointing numbers to get to the first SCLKDP time.
 !     Then we skip over the number just computed above.
 !
-      GRPNDX = BEG + (NREC * PSIZ) + SKIP
+      grpndx = beg + (nrec * psiz) + skip
 
 !
 !     The number of times that we have to look at may be less than
 !     DIRSIZ.  However many there are, go ahead and read them into the
 !     buffer.
 !
-      N = MIN( DIRSIZ, NREC - SKIP )
+      n = min( dirsiz, nrec - skip )
 
-      CALL DAFGDA ( HANDLE, GRPNDX, GRPNDX + N - 1, BUFFER )
+      call dafgda ( handle, grpndx, grpndx + n - 1, buffer )
 
 !
 !     Find the time in the group closest to the input time, and see
 !     if it's within tolerance.
 !
-      I = LSTCLD( SCLKDP, N, BUFFER )
+      i = lstcld( sclkdp, n, buffer )
 
-      IF ( ABS( SCLKDP - BUFFER( I ) ) .GT. TOL ) THEN
+      if ( abs( sclkdp - buffer( i ) ) .gt. tol ) then
 
-         CALL CHKOUT ( 'CKR01' )
-         RETURN
+         call chkout ( 'CKR01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Now we know the exact record that we want.
 !
 !     RECORD( 1 ) holds CLKOUT.
 !
-      FOUND       = .TRUE.
-      RECORD( 1 ) =  BUFFER( I )
+      found       = .true.
+      record( 1 ) =  buffer( i )
 
 !
 !     We need the Ith pointing record out of this group of DIRSIZ.
 !     This group of DIRSIZ is SKIP records into the beginning
 !     of the segment. And each record is PSIZ big.
 !
-      N = BEG + PSIZ*( SKIP + I - 1 )
+      n = beg + psiz*( skip + i - 1 )
 
-      CALL DAFGDA ( HANDLE, N, N + PSIZ - 1, RECORD( 2 ) )
+      call dafgda ( handle, n, n + psiz - 1, record( 2 ) )
 
 !
 !     That is all.
 !
-      CALL CHKOUT ( 'CKR01' )
-      RETURN
-      END
+      call chkout ( 'CKR01' )
+      return
+      end

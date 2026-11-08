@@ -1,6 +1,6 @@
 !$Procedure TIPBOD ( Transformation, inertial position to bodyfixed )
 
-      SUBROUTINE TIPBOD ( REF, BODY, ET, TIPM )
+      subroutine tipbod ( ref, body, et, tipm )
 
 ! $ Abstract
 !
@@ -23,12 +23,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         REF
-      INTEGER               BODY
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      TIPM   ( 3, 3 )
+      character*(*)         ref
+      integer               body
+      double precision      et
+      double precision      tipm   ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -420,43 +420,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TSIPM   ( 6, 6 )
+      double precision      tsipm   ( 6, 6 )
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 !
 !     Standard SPICE Error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'TIPBOD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'TIPBOD' )
+      end if
 
 !
 !     Get 6x6 state transformation from TISBOD. If succeeded, pull out
 !     left-top 3x3 matrix.
 !
-      CALL TISBOD ( REF, BODY, ET, TSIPM )
+      call tisbod ( ref, body, et, tsipm )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'TIPBOD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'TIPBOD' )
+         return
+      end if
 
-      DO  I = 1, 3
-         DO   J  = 1, 3
-            TIPM  ( I, J ) = TSIPM  ( I, J )
-         END DO
-      END DO
+      do  i = 1, 3
+         do   j  = 1, 3
+            tipm  ( i, j ) = tsipm  ( i, j )
+         end do
+      end do
 
-      CALL CHKOUT ( 'TIPBOD' )
-      RETURN
-      END
+      call chkout ( 'TIPBOD' )
+      return
+      end

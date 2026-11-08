@@ -1,7 +1,7 @@
 !$Procedure      ZZOCCED ( Occultation of ellipsoidal bodies )
 
-      INTEGER FUNCTION ZZOCCED ( VIEWPT, &
-                                 CENTR1, SEMAX1, CENTR2, SEMAX2 )
+      integer function zzocced ( viewpt, &
+                                 centr1, semax1, centr2, semax2 )
 
 ! $ Abstract
 !
@@ -19,21 +19,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzocced.inc'
+      include 'zzocced.inc'
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL   = 9 )
+      integer               ubel
+      parameter           ( ubel   = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   = 4 )
+      integer               ubpl
+      parameter           ( ubpl   = 4 )
 
-      DOUBLE PRECISION      VIEWPT ( 3 )
-      DOUBLE PRECISION      CENTR1 ( 3 )
-      DOUBLE PRECISION      SEMAX1 ( 3, 3 )
-      DOUBLE PRECISION      CENTR2 ( 3 )
-      DOUBLE PRECISION      SEMAX2 ( 3, 3 )
+      double precision      viewpt ( 3 )
+      double precision      centr1 ( 3 )
+      double precision      semax1 ( 3, 3 )
+      double precision      centr2 ( 3 )
+      double precision      semax2 ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -296,17 +296,17 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      DET
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      dasine
+      double precision      det
+      double precision      halfpi
+      double precision      pi
+      double precision      vdist
+      double precision      vnorm
+      double precision      vsep
 
-      LOGICAL               FAILED
-      LOGICAL               ISROT
-      LOGICAL               RETURN
+      logical               failed
+      logical               isrot
+      logical               return
 
 !
 !     Local parameters
@@ -315,91 +315,91 @@
 !     Tolerance value for determinant of a rotation matrix.  The
 !     determinant must differ from 1 by no more than DTOL.
 !
-      DOUBLE PRECISION      DTOL
-      PARAMETER           ( DTOL  = 1.D-12 )
+      double precision      dtol
+      parameter           ( dtol  = 1.d-12 )
 
 !
 !     Tolerance value for norms of columns of a rotation matrix.  The
 !     norms must differ from 1 by no more than NTOL.
 !
-      DOUBLE PRECISION      NTOL
-      PARAMETER           ( NTOL  = 1.D-14 )
+      double precision      ntol
+      parameter           ( ntol  = 1.d-14 )
 
 !
 !     Tolerance value for argument of arcsine.  The argument should
 !     have absolute value no greater than 1 + ATOL.
 !
-      DOUBLE PRECISION      ATOL
-      PARAMETER           ( ATOL  = 1.D-12 )
+      double precision      atol
+      parameter           ( atol  = 1.d-12 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ANGCMP
-      DOUBLE PRECISION      BIGCTR ( 3 )
-      DOUBLE PRECISION      BIGR
-      DOUBLE PRECISION      CTRS   ( 3, 2 )
-      DOUBLE PRECISION      DIST   ( 2 )
-      DOUBLE PRECISION      INVRAY ( 3 )
-      DOUBLE PRECISION      LEVEL
-      DOUBLE PRECISION      LIMB   ( UBEL )
-      DOUBLE PRECISION      LMBCTR ( 3 )
-      DOUBLE PRECISION      LMBMAJ ( 3 )
-      DOUBLE PRECISION      LMBMIN ( 3 )
-      DOUBLE PRECISION      LPLANE ( UBPL )
-      DOUBLE PRECISION      LNORML ( 3 )
-      DOUBLE PRECISION      MAJLEN
-      DOUBLE PRECISION      MAXANG ( 2 )
-      DOUBLE PRECISION      MAXPT  ( 3 )
-      DOUBLE PRECISION      MAXRAD ( 2 )
-      DOUBLE PRECISION      MAXSEP
-      DOUBLE PRECISION      MINANG ( 2 )
-      DOUBLE PRECISION      MINLEN
-      DOUBLE PRECISION      MINPT  ( 3 )
-      DOUBLE PRECISION      MINRAD ( 2 )
-      DOUBLE PRECISION      MINSEP
-      DOUBLE PRECISION      MINVEC ( 3 )
-      DOUBLE PRECISION      R      ( 3, 2 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      RMAT   ( 3, 3, 2 )
-      DOUBLE PRECISION      SCLMAT ( 3, 3 )
-      DOUBLE PRECISION      SCLROT ( 3, 3 )
-      DOUBLE PRECISION      SMLCTR ( 3 )
-      DOUBLE PRECISION      SMLDIR ( 3 )
-      DOUBLE PRECISION      SMLMAJ ( 3 )
-      DOUBLE PRECISION      SMLMAT ( 3, 3 )
-      DOUBLE PRECISION      SMLMIN ( 3 )
-      DOUBLE PRECISION      SMLVU  ( 3 )
-      DOUBLE PRECISION      T12POS ( 3 )
-      DOUBLE PRECISION      T1OPOS ( 3 )
-      DOUBLE PRECISION      T2SEP
-      DOUBLE PRECISION      TILT
-      DOUBLE PRECISION      TMPCTR ( 3 )
-      DOUBLE PRECISION      TMPMAJ ( 3 )
-      DOUBLE PRECISION      TMPMIN ( 3 )
-      DOUBLE PRECISION      TPOS   ( 3, 2 )
-      DOUBLE PRECISION      TRGSEP
-      DOUBLE PRECISION      TTDIST
-      DOUBLE PRECISION      UASIZE
-      DOUBLE PRECISION      UBDIST
-      DOUBLE PRECISION      VIEW   ( 3 )
-      DOUBLE PRECISION      VPH
-      DOUBLE PRECISION      VPPROJ ( 3 )
-      DOUBLE PRECISION      XASEP
-      DOUBLE PRECISION      XDIST  ( 2 )
-      DOUBLE PRECISION      XLIMB  ( UBEL )
-      DOUBLE PRECISION      XR     ( 3, 3 )
-      DOUBLE PRECISION      XSMLVU ( 3 )
-      DOUBLE PRECISION      XTPOS  ( 3, 2 )
-      DOUBLE PRECISION      XVIEW  ( 3 )
-      DOUBLE PRECISION      XVWTRG ( 3 )
+      double precision      angcmp
+      double precision      bigctr ( 3 )
+      double precision      bigr
+      double precision      ctrs   ( 3, 2 )
+      double precision      dist   ( 2 )
+      double precision      invray ( 3 )
+      double precision      level
+      double precision      limb   ( ubel )
+      double precision      lmbctr ( 3 )
+      double precision      lmbmaj ( 3 )
+      double precision      lmbmin ( 3 )
+      double precision      lplane ( ubpl )
+      double precision      lnorml ( 3 )
+      double precision      majlen
+      double precision      maxang ( 2 )
+      double precision      maxpt  ( 3 )
+      double precision      maxrad ( 2 )
+      double precision      maxsep
+      double precision      minang ( 2 )
+      double precision      minlen
+      double precision      minpt  ( 3 )
+      double precision      minrad ( 2 )
+      double precision      minsep
+      double precision      minvec ( 3 )
+      double precision      r      ( 3, 2 )
+      double precision      raydir ( 3 )
+      double precision      rmat   ( 3, 3, 2 )
+      double precision      sclmat ( 3, 3 )
+      double precision      sclrot ( 3, 3 )
+      double precision      smlctr ( 3 )
+      double precision      smldir ( 3 )
+      double precision      smlmaj ( 3 )
+      double precision      smlmat ( 3, 3 )
+      double precision      smlmin ( 3 )
+      double precision      smlvu  ( 3 )
+      double precision      t12pos ( 3 )
+      double precision      t1opos ( 3 )
+      double precision      t2sep
+      double precision      tilt
+      double precision      tmpctr ( 3 )
+      double precision      tmpmaj ( 3 )
+      double precision      tmpmin ( 3 )
+      double precision      tpos   ( 3, 2 )
+      double precision      trgsep
+      double precision      ttdist
+      double precision      uasize
+      double precision      ubdist
+      double precision      view   ( 3 )
+      double precision      vph
+      double precision      vpproj ( 3 )
+      double precision      xasep
+      double precision      xdist  ( 2 )
+      double precision      xlimb  ( ubel )
+      double precision      xr     ( 3, 3 )
+      double precision      xsmlvu ( 3 )
+      double precision      xtpos  ( 3, 2 )
+      double precision      xview  ( 3 )
+      double precision      xvwtrg ( 3 )
 
-      INTEGER               BIGIDX
-      INTEGER               FRTIDX
-      INTEGER               I
-      INTEGER               S
-      INTEGER               SMLIDX
-      LOGICAL               SFRONT
+      integer               bigidx
+      integer               frtidx
+      integer               i
+      integer               s
+      integer               smlidx
+      logical               sfront
 
 !
 !     Overview
@@ -541,171 +541,171 @@
 !
 !     Set an initial function value.
 !
-      ZZOCCED = NOOCC
+      zzocced = noocc
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZOCCED' )
+      call chkin ( 'ZZOCCED' )
 
 !
 !     Extract the radii of the targets from the semi-axis vectors.
 !     At the same time, create rotation matrices that map vectors
 !     from the principal axis frames of the targets to the base frame.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         CALL UNORM ( SEMAX1(1,I), RMAT(1,I,1), R(I,1) )
-         CALL UNORM ( SEMAX2(1,I), RMAT(1,I,2), R(I,2) )
+         call unorm ( semax1(1,i), rmat(1,i,1), r(i,1) )
+         call unorm ( semax2(1,i), rmat(1,i,2), r(i,2) )
 
-      END DO
+      end do
 
 !
 !     Find the minimum and maximum radii of both targets.
 !
-      DO I = 1, 2
-         MINRAD(I) = MIN ( R(1,I), R(2,I), R(3,I) )
-         MAXRAD(I) = MAX ( R(1,I), R(2,I), R(3,I) )
-      END DO
+      do i = 1, 2
+         minrad(i) = min ( r(1,i), r(2,i), r(3,i) )
+         maxrad(i) = max ( r(1,i), r(2,i), r(3,i) )
+      end do
 
 !
 !     Make sure the input target radii are positive.  We'll actually do
 !     a more stringent test later, but we must prevent divide-by-zero
 !     errors at this point.
 !
-      IF (  ( MINRAD(1) .LE. 0.D0 ) .OR. ( MINRAD(2) .LE. 0.D0 )  ) THEN
+      if (  ( minrad(1) .le. 0.d0 ) .or. ( minrad(2) .le. 0.d0 )  ) then
 
-         CALL SETMSG ( 'Minimum radii of bodies 1 and 2 are #, #. ' // &
+         call setmsg ( 'Minimum radii of bodies 1 and 2 are #, #. ' // &
                        'Target radii must be positive.'             )
-         CALL ERRDP  ( '#',  MINRAD(1)                              )
-         CALL ERRDP  ( '#',  MINRAD(2)                              )
-         CALL SIGERR ( 'SPICE(BADAXISLENGTH)'                       )
-         CALL CHKOUT ( 'ZZOCCED'                                    )
-         RETURN
+         call errdp  ( '#',  minrad(1)                              )
+         call errdp  ( '#',  minrad(2)                              )
+         call sigerr ( 'SPICE(BADAXISLENGTH)'                       )
+         call chkout ( 'ZZOCCED'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute view point-to-target vectors and ranges for both
 !     target bodies.
 !
-      CALL VEQU ( CENTR1, CTRS(1,1) )
-      CALL VEQU ( CENTR2, CTRS(1,2) )
+      call vequ ( centr1, ctrs(1,1) )
+      call vequ ( centr2, ctrs(1,2) )
 
-      DO I = 1, 2
+      do i = 1, 2
 
-         CALL VSUB ( CTRS(1,I), VIEWPT, TPOS(1,I) )
+         call vsub ( ctrs(1,i), viewpt, tpos(1,i) )
 
-         DIST(I) = VNORM( TPOS(1,I) )
+         dist(i) = vnorm( tpos(1,i) )
 
 
-         IF ( DIST(I) .EQ. 0.D0 ) THEN
+         if ( dist(i) .eq. 0.d0 ) then
 
-            CALL SETMSG ( 'Center of object # coincides with ' // &
+            call setmsg ( 'Center of object # coincides with ' // &
                           'the viewing point.'                 )
-            CALL ERRINT ( '#',  I                              )
-            CALL SIGERR ( 'SPICE(NOTDISJOINT)'                 )
-            CALL CHKOUT ( 'ZZOCCED'                            )
-            RETURN
+            call errint ( '#',  i                              )
+            call sigerr ( 'SPICE(NOTDISJOINT)'                 )
+            call chkout ( 'ZZOCCED'                            )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Now check the semi-axis matrices.  We'll create new matrices
 !     from these inputs by scaling the columns of each to unit length.
 !     the resulting matrices are supposed to be rotations.
 !
-      DO I = 1, 2
+      do i = 1, 2
 
-         IF (  .NOT.  ISROT ( RMAT(1,1,I), NTOL, DTOL )  ) THEN
+         if (  .not.  isrot ( rmat(1,1,i), ntol, dtol )  ) then
 
-            CALL SETMSG ( 'Matrix derived by unitizing columns '  // &
+            call setmsg ( 'Matrix derived by unitizing columns '  // &
                           'of semi-axis matrix SEMAX# is not a '  // &
                           'rotation matrix.  The determinant of ' // &
                           'this matrix is #.'                     )
-            CALL ERRINT ( '#',  I                                 )
-            CALL ERRDP  ( '#',  DET ( RMAT(1,1,I) )               )
-            CALL SIGERR ( 'SPICE(NOTAROTATION)'                   )
-            CALL CHKOUT ( 'ZZOCCED'                               )
-            RETURN
+            call errint ( '#',  i                                 )
+            call errdp  ( '#',  det ( rmat(1,1,i) )               )
+            call sigerr ( 'SPICE(NOTAROTATION)'                   )
+            call chkout ( 'ZZOCCED'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Find the position of the second target relative to the first.
 !
-      CALL VSUB ( TPOS(1,2), TPOS(1,1), T12POS )
+      call vsub ( tpos(1,2), tpos(1,1), t12pos )
 
-      TTDIST = VNORM ( T12POS )
+      ttdist = vnorm ( t12pos )
 
 !
 !     Make sure the targets are non-intersecting.
 !
-      IF (  TTDIST  .LE.  ( MINRAD(1) + MINRAD(2) )  ) THEN
+      if (  ttdist  .le.  ( minrad(1) + minrad(2) )  ) then
 
-         CALL SETMSG ( 'Targets must be non-intersecting, but  '     // &
+         call setmsg ( 'Targets must be non-intersecting, but  '     // &
                        'spheres inscribed in the targets intersect.' )
-         CALL SIGERR ( 'SPICE(NOTDISJOINT)'                          )
-         CALL CHKOUT ( 'ZZOCCED'                                     )
-         RETURN
+         call sigerr ( 'SPICE(NOTDISJOINT)'                          )
+         call chkout ( 'ZZOCCED'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the viewing point is outside of both target
 !     ellipsoids.
 !
-      DO I = 1, 2
+      do i = 1, 2
 !
 !        Transform the Ith target position into the frame of the
 !        Ith target.
 !
-         CALL MTXV ( RMAT(1,1,I), TPOS(1,I), XTPOS(1,I) )
+         call mtxv ( rmat(1,1,i), tpos(1,i), xtpos(1,i) )
 
 !
 !        The viewpoint position is the negative of the target position.
 !        Since we're squaring the terms involving the target position,
 !        we omit the minus signs.
 !
-         LEVEL =    ( XTPOS(1,I) / R(1,I) )**2 &
-                 +  ( XTPOS(2,I) / R(2,I) )**2 &
-                 +  ( XTPOS(3,I) / R(3,I) )**2
+         level =    ( xtpos(1,i) / r(1,i) )**2 &
+                 +  ( xtpos(2,i) / r(2,i) )**2 &
+                 +  ( xtpos(3,i) / r(3,i) )**2
 
-         IF ( LEVEL .LT. 1.D0 ) THEN
+         if ( level .lt. 1.d0 ) then
 
-            CALL SETMSG ( 'Viewpoint is inside target #; level ' // &
+            call setmsg ( 'Viewpoint is inside target #; level ' // &
                           'surface parameter = #.'               )
-            CALL ERRINT ( '#',  I                                )
-            CALL ERRDP  ( '#',  LEVEL                            )
-            CALL SIGERR ( 'SPICE(NOTDISJOINT)'                   )
-            CALL CHKOUT ( 'ZZOCCED'                              )
-            RETURN
+            call errint ( '#',  i                                )
+            call errdp  ( '#',  level                            )
+            call sigerr ( 'SPICE(NOTDISJOINT)'                   )
+            call chkout ( 'ZZOCCED'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Find the minimum and maximum angular radii of both targets.  Note
 !     that the distances used as denominators are guaranteed to be
 !     positive at this point.
 !
-      DO I = 1, 2
+      do i = 1, 2
 
-         MINANG(I) = DASINE ( MINRAD(I)/DIST(I), ATOL )
+         minang(i) = dasine ( minrad(i)/dist(i), atol )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZOCCED' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZOCCED' )
+            return
+         end if
 
 !
 !        The situation is a bit more complicated for the maximum
@@ -713,19 +713,19 @@
 !        ellipsoids but inside one or both maximum bounding spheres.
 !        We handle that special case separately.
 !
-         IF ( DIST(I) .GE. MAXRAD(I) ) THEN
+         if ( dist(i) .ge. maxrad(i) ) then
 !
 !           The viewing point is outside the sphere; we use the sphere
 !           to define the maximum angular radius.
 !
-            MAXANG(I) = DASINE ( MAXRAD(I)/DIST(I), ATOL )
+            maxang(i) = dasine ( maxrad(i)/dist(i), atol )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZOCCED' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZOCCED' )
+               return
+            end if
 
-         ELSE
+         else
 !
 !           The viewing point is outside the Ith ellipsoid but inside
 !           the nominal bounding sphere.  We can't use the sphere to
@@ -761,33 +761,33 @@
 !           relative to the center of the Ith target, in the principal
 !           axis frame of the Ith target.
 !
-            CALL VMINUS ( XTPOS(1,I), XVWTRG )
+            call vminus ( xtpos(1,i), xvwtrg )
 
-            CALL EDLIMB ( R(1,I), R(2,I), R(3,I), XVWTRG, LIMB )
+            call edlimb ( r(1,i), r(2,i), r(3,i), xvwtrg, limb )
 
 !
 !           Extract the limb's center and semi-axis vectors.
 !
-            CALL EL2CGV ( LIMB, LMBCTR, LMBMAJ, LMBMIN )
+            call el2cgv ( limb, lmbctr, lmbmaj, lmbmin )
 
 !
 !           Create the limb plane.
 !
-            CALL PSV2PL ( LMBCTR, LMBMAJ, LMBMIN, LPLANE )
+            call psv2pl ( lmbctr, lmbmaj, lmbmin, lplane )
 
 !
 !           Project the viewing point onto the limb plane.  Find
 !           the height of the viewing point relative to this plane.
 !
-            CALL VPRJP ( XVWTRG, LPLANE, VPPROJ )
+            call vprjp ( xvwtrg, lplane, vpproj )
 
-            VPH = VDIST ( XVWTRG, VPPROJ )
+            vph = vdist ( xvwtrg, vpproj )
 
 !
 !           Find an upper bound on the distance of any limb point from
 !           VPPROJ.
 !
-            UBDIST = VDIST ( VPPROJ, LMBCTR )  +  VNORM ( LMBMAJ )
+            ubdist = vdist ( vpproj, lmbctr )  +  vnorm ( lmbmaj )
 
 !
 !           Find the angular size of the maximum bounding cone.  We
@@ -796,14 +796,14 @@
 !           zero, which gives us a degenerate cone of angular radius
 !           pi/2.
 !
-            MAXANG(I) = ATAN2 ( UBDIST, VPH )
+            maxang(i) = atan2 ( ubdist, vph )
 
-         END IF
+         end if
 !
 !        At this point MAXANG(I) and MINANG(I) are both set for the
 !        Ith ellipsoid.
 !
-      END DO
+      end do
 
 
 
@@ -811,20 +811,20 @@
 !     Find the angular separation of the centers of the targets
 !     seen by the observer.
 !
-      TRGSEP = VSEP ( TPOS(1,1), TPOS(1,2) )
+      trgsep = vsep ( tpos(1,1), tpos(1,2) )
 
 !
 !     If bounding cones defined by the maximum radii don't intersect,
 !     we're done.
 !
-      IF (  TRGSEP  .GT. ( MAXANG(1) + MAXANG(2) )  ) THEN
+      if (  trgsep  .gt. ( maxang(1) + maxang(2) )  ) then
 
-         ZZOCCED = NOOCC
+         zzocced = noocc
 
-         CALL CHKOUT ( 'ZZOCCED' )
-         RETURN
+         call chkout ( 'ZZOCCED' )
+         return
 
-      END IF
+      end if
 
 !
 !     Use the maximum angular sizes to determine which ellipsoid
@@ -835,16 +835,16 @@
 !     the ellipsoid of larger angular size. This choice is made to
 !     improve efficiency.
 !
-      IF (  MAXANG(1)  .GT.  MAXANG(2)  ) THEN
-         BIGIDX  =  1
-      ELSE
-         BIGIDX  =  2
-      END IF
+      if (  maxang(1)  .gt.  maxang(2)  ) then
+         bigidx  =  1
+      else
+         bigidx  =  2
+      end if
 
 !
 !     The other index is SMLIDX.
 !
-      SMLIDX = 3 - BIGIDX
+      smlidx = 3 - bigidx
 
 !
 !     We're ready to see whether an occultation condition exists.
@@ -857,7 +857,7 @@
 !     (of course they always intersect at their common vertex), we're
 !     guaranteed some sort of occultation.  Check for this case.
 !
-      IF (  ( MINANG(1) + MINANG(2) )  .GT.  TRGSEP  ) THEN
+      if (  ( minang(1) + minang(2) )  .gt.  trgsep  ) then
 !
 !        The minimum bounding cones do overlap. Determine which target
 !        is "in front" of the other.  We do this determining which
@@ -873,7 +873,7 @@
 !
 !        Let T1OPOS be the vector from the first target to the observer.
 !
-         CALL VMINUS ( TPOS(1,1), T1OPOS )
+         call vminus ( tpos(1,1), t1opos )
 
 !
 !        ANGCMP is the angle between a vector from the first target's
@@ -881,33 +881,33 @@
 !        orthogonal to the vector from the first target's center to the
 !        observer.
 !
-         ANGCMP = HALFPI() - MINANG(1)
+         angcmp = halfpi() - minang(1)
 
 !
 !        T2SEP is the angle between the vector from the first target's
 !        center to the observer and the vector from the first target
 !        to the second target.
 !
-         T2SEP  =  VSEP ( T1OPOS, T12POS )
+         t2sep  =  vsep ( t1opos, t12pos )
 
 
-         IF ( T2SEP .LT. ANGCMP ) THEN
+         if ( t2sep .lt. angcmp ) then
 !
 !           The second target is "in front" of the first.
 !
-            FRTIDX =  2
+            frtidx =  2
 
 !
 !           Set the sign of the return code.
 !
-            S      = -1
+            s      = -1
 
-         ELSE
+         else
 
-            FRTIDX =  1
-            S      =  1
+            frtidx =  1
+            s      =  1
 
-         END IF
+         end if
 
 !
 !        Now classify the occultation.  If the minimum sphere
@@ -915,32 +915,32 @@
 !        angular size of the rear target plus the angular separation
 !        of the target centers, the occultation is total.
 !
-         DO I = 1, 2
+         do i = 1, 2
 !
 !           (The subscript 3-I used below is 2 if I is 1 and vice
 !           versa.)
 !
-            IF (  MINANG(I)  .GE.  ( MAXANG(3-I) + TRGSEP )  ) THEN
+            if (  minang(i)  .ge.  ( maxang(3-i) + trgsep )  ) then
 !
 !              If target I is in front, it totally occults the other
 !              target.  Otherwise, the other target is in annular
 !              transit across target I.
 !
-               IF ( FRTIDX .EQ. I ) THEN
-                  ZZOCCED = S * TOTAL2
-               ELSE
-                  ZZOCCED = S * ANNLR2
-               END IF
+               if ( frtidx .eq. i ) then
+                  zzocced = s * total2
+               else
+                  zzocced = s * annlr2
+               end if
 
 !
 !              We've found the occultation type, so we're done.
 !
-               CALL CHKOUT ( 'ZZOCCED' )
-               RETURN
+               call chkout ( 'ZZOCCED' )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        If the angular size of the minimum sphere of *each* target
@@ -950,23 +950,23 @@
 !        is also guaranteed that neither target is totally blocked
 !        by the other.
 !
-         IF (       (  ( MINANG(1) + TRGSEP ) .GT. MAXANG(2)  ) &
-              .AND. (  ( MINANG(2) + TRGSEP ) .GT. MAXANG(1)  )   ) THEN
+         if (       (  ( minang(1) + trgsep ) .gt. maxang(2)  ) &
+              .and. (  ( minang(2) + trgsep ) .gt. maxang(1)  )   ) then
 !
 !           The occultation code is +/- PARTL2, depending on whether
 !           the first target is in front.
 !
-            ZZOCCED = S * PARTL2
+            zzocced = s * partl2
 
-            CALL CHKOUT ( 'ZZOCCED' )
-            RETURN
+            call chkout ( 'ZZOCCED' )
+            return
 
-         END IF
+         end if
 !
 !        If we get to this point, we were unable to classify the
 !        occultation using bounding cones alone.
 !
-      END IF
+      end if
 
 !
 !     This is the end of the case of overlapping minimum bounding
@@ -991,30 +991,30 @@
 !     into the principal axis frame of the smaller ellipsoid first.
 !     Let SMLMAT be the rotation matrix that effects this mapping.
 !
-      CALL XPOSE ( RMAT(1,1,SMLIDX),  SMLMAT )
+      call xpose ( rmat(1,1,smlidx),  smlmat )
 
 !
 !     Apply SMLMAT to the vector from the center of the smaller
 !     ellipsoid to the viewing point.
 !
-      CALL VSUB ( VIEWPT, CTRS(1,SMLIDX), SMLVU )
+      call vsub ( viewpt, ctrs(1,smlidx), smlvu )
 
-      CALL MXV  ( SMLMAT, SMLVU,          VIEW  )
+      call mxv  ( smlmat, smlvu,          view  )
 
 !
 !     Find the limb of the smaller ellipsoid as seen from VIEW.
 !
-      CALL EDLIMB ( R(1,SMLIDX), R(2,SMLIDX), R(3,SMLIDX), VIEW, LIMB )
+      call edlimb ( r(1,smlidx), r(2,smlidx), r(3,smlidx), view, limb )
 
 !
 !     Unpack the limb and map it from the principal axis frame of the
 !     small ellipsoid back into the original frame.
 !
-      CALL EL2CGV ( LIMB, TMPCTR, TMPMAJ, TMPMIN )
+      call el2cgv ( limb, tmpctr, tmpmaj, tmpmin )
 
-      CALL MTXV   ( SMLMAT, TMPCTR, SMLCTR )
-      CALL MTXV   ( SMLMAT, TMPMAJ, SMLMAJ )
-      CALL MTXV   ( SMLMAT, TMPMIN, SMLMIN )
+      call mtxv   ( smlmat, tmpctr, smlctr )
+      call mtxv   ( smlmat, tmpmaj, smlmaj )
+      call mtxv   ( smlmat, tmpmin, smlmin )
 
 !
 !     At this point SMLCTR is the position of the center of the limb
@@ -1022,8 +1022,8 @@
 !     this center relative to the origin; we use the vector SMLCTR for
 !     this.
 !
-      CALL VADD ( CTRS(1,SMLIDX), SMLCTR, TMPCTR )
-      CALL VEQU ( TMPCTR,                 SMLCTR )
+      call vadd ( ctrs(1,smlidx), smlctr, tmpctr )
+      call vequ ( tmpctr,                 smlctr )
 
 !
 !     Create the transformation matrix that maps the larger ellipsoid
@@ -1033,11 +1033,11 @@
 !     components by the reciprocals of the respective semi-axis
 !     lengths of the large ellipsoid.
 !
-      CALL CLEARD ( 9, SCLMAT )
+      call cleard ( 9, sclmat )
 
-      SCLMAT(1,1) = 1.D0 / R(1,BIGIDX)
-      SCLMAT(2,2) = 1.D0 / R(2,BIGIDX)
-      SCLMAT(3,3) = 1.D0 / R(3,BIGIDX)
+      sclmat(1,1) = 1.d0 / r(1,bigidx)
+      sclmat(2,2) = 1.d0 / r(2,bigidx)
+      sclmat(3,3) = 1.d0 / r(3,bigidx)
 
 !
 !     Compose the row-scaling matrix SCLMAT with the frame
@@ -1047,8 +1047,8 @@
 !
 !     We use one matrix SCLROT to perform these composed operations.
 !
-      CALL XPOSE ( RMAT(1,1,BIGIDX),  XR          )
-      CALL MXM   ( SCLMAT,            XR,  SCLROT )
+      call xpose ( rmat(1,1,bigidx),  xr          )
+      call mxm   ( sclmat,            xr,  sclrot )
 
 !
 !     Transform the viewing point, the large ellipsoid's center vector,
@@ -1057,65 +1057,65 @@
 !
 !     Map the viewing point to XVIEW.
 !
-      CALL MXV ( SCLROT, VIEWPT, XVIEW  )
+      call mxv ( sclrot, viewpt, xview  )
 
 !
 !     Map the center of the large ellipsoid to BIGCTR.
 !
-      CALL MXV ( SCLROT, CTRS(1,BIGIDX), BIGCTR )
+      call mxv ( sclrot, ctrs(1,bigidx), bigctr )
 
 !
 !     Map the limb vectors of the smaller ellipsoid.
 !
-      CALL MXV  ( SCLROT, SMLCTR, TMPCTR )
-      CALL VEQU ( TMPCTR,         SMLCTR )
+      call mxv  ( sclrot, smlctr, tmpctr )
+      call vequ ( tmpctr,         smlctr )
 
-      CALL MXV  ( SCLROT, SMLMAJ, TMPMAJ )
-      CALL MXV  ( SCLROT, SMLMIN, TMPMIN )
+      call mxv  ( sclrot, smlmaj, tmpmaj )
+      call mxv  ( sclrot, smlmin, tmpmin )
 
 !
 !     Find the semi-axes of the transformed limb of the smaller
 !     ellipsoid. Pack these vectors into the transformed limb data
 !     structure XLIMB.
 !
-      CALL SAELGV ( TMPMAJ, TMPMIN, SMLMAJ, SMLMIN )
-      CALL CGV2EL ( SMLCTR, SMLMAJ, SMLMIN, XLIMB  )
+      call saelgv ( tmpmaj, tmpmin, smlmaj, smlmin )
+      call cgv2el ( smlctr, smlmaj, smlmin, xlimb  )
 
 !
 !     Find the direction vector of the ray from the viewing point
 !     to the transformed center of the large ellipsoid.
 !
-      CALL VSUB ( BIGCTR, XVIEW, RAYDIR )
+      call vsub ( bigctr, xview, raydir )
 
 !
 !     Find the angular separation of the ray and the transformed
 !     limb of the small ellipsoid.  The output MINPT is the limb
 !     point at which the minimum angular separation is attained.
 !
-      CALL ZZASRYEL ( 'MIN', XLIMB, XVIEW, RAYDIR, MINSEP, MINPT )
+      call zzasryel ( 'MIN', xlimb, xview, raydir, minsep, minpt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZOCCED' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZOCCED' )
+         return
+      end if
 
 !
 !     Find the angular radius of the unit sphere centered at
 !     BIGCTR, as seen from XVIEW.
 !
-      BIGR = VNORM ( RAYDIR )
+      bigr = vnorm ( raydir )
 
 !
 !     Although previous error checks should ensure that BIGR is
 !     greater than or equal to 1, we'll use a safe arcsine
 !     computation.
 !
-      UASIZE = DASINE ( 1.D0/BIGR, ATOL )
+      uasize = dasine ( 1.d0/bigr, atol )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZOCCED' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZOCCED' )
+         return
+      end if
 
 !
 !     At this point, UASIZE is the angular size of the unit sphere
@@ -1124,16 +1124,16 @@
 !     center of the unit sphere and the transformed limb of the
 !     smaller ellipsoid.
 !
-      IF ( MINSEP .GT. UASIZE ) THEN
+      if ( minsep .gt. uasize ) then
 !
 !        There's no overlap.
 !
-         ZZOCCED = NOOCC
+         zzocced = noocc
 
-         CALL CHKOUT ( 'ZZOCCED' )
-         RETURN
+         call chkout ( 'ZZOCCED' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's an overlap; now we must classify it. We know the limb
@@ -1143,12 +1143,12 @@
 !
 !     Find the vector from the center of the sphere to MINPT.
 !
-      CALL VSUB ( MINPT, BIGCTR, MINVEC )
+      call vsub ( minpt, bigctr, minvec )
 
 !
 !     Get the inverse of the ray's direction vector.
 !
-      CALL VMINUS ( RAYDIR, INVRAY )
+      call vminus ( raydir, invray )
 
 !
 !     Now we can apply the criterion from the spherical occultation
@@ -1158,28 +1158,28 @@
 !
 !     Set the sign S used later to set the return code as well.
 !
-      IF (  VSEP(MINVEC, INVRAY)  .LE.  ( HALFPI() - UASIZE )  ) THEN
+      if (  vsep(minvec, invray)  .le.  ( halfpi() - uasize )  ) then
 !
 !        MINPT is in front.
 !
-         SFRONT = .TRUE.
-      ELSE
-         SFRONT = .FALSE.
-      END IF
+         sfront = .true.
+      else
+         sfront = .false.
+      end if
 
 
-      IF (      (          SFRONT   .AND.  ( SMLIDX .EQ. 1 )  ) &
-           .OR. (  ( .NOT. SFRONT ) .AND.  ( SMLIDX .EQ. 2 )  )  ) THEN
+      if (      (          sfront   .and.  ( smlidx .eq. 1 )  ) &
+           .or. (  ( .not. sfront ) .and.  ( smlidx .eq. 2 )  )  ) then
 !
 !        The first target is in front.
 !
-         S  =  1
-      ELSE
-         S  = -1
-      END IF
+         s  =  1
+      else
+         s  = -1
+      end if
 
 
-      IF ( MINSEP .LE. -UASIZE ) THEN
+      if ( minsep .le. -uasize ) then
 !
 !        Arriving here implies that the "smaller" ellipsoid actually
 !        appears larger than the other.  Recall that our determination
@@ -1191,25 +1191,25 @@
 !        either totally occulted by the smaller ellipsoid or is in
 !        annular transit across it.
 !
-         IF ( SFRONT ) THEN
+         if ( sfront ) then
 !
 !           The point of minimum angular separation on the limb of the
 !           smaller ellipsoid is in front: we have a total occultation
 !           of the larger ellipsoid.
 !
-            ZZOCCED =  S * TOTAL2
+            zzocced =  s * total2
 
-         ELSE
+         else
 !
 !           We have an annular transit of the larger ellipsoid
 !           across the smaller one.
 !
-            ZZOCCED =  S * ANNLR2
+            zzocced =  s * annlr2
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        We know that some type of occultation exists. We know the
 !        unit sphere is *neither* totally occulted by the other
@@ -1241,19 +1241,19 @@
 !        not preserve distances, so we must re-compute the distance
 !        from the viewing point to the center of the small ellipsoid.
 !
-         CALL VSUB ( XVIEW, SMLCTR, XSMLVU )
+         call vsub ( xview, smlctr, xsmlvu )
 
-         XDIST(SMLIDX) = VNORM ( XSMLVU )
+         xdist(smlidx) = vnorm ( xsmlvu )
 
 !
 !        Compute angular radii of bounding cones for the transformed
 !        limb of the small ellipsoid.  First, capture the semi-axis
 !        lengths of the limb.
 !
-         MAJLEN = VNORM( SMLMAJ )
-         MINLEN = VNORM( SMLMIN )
+         majlen = vnorm( smlmaj )
+         minlen = vnorm( smlmin )
 
-         IF ( XDIST(SMLIDX) .GE. MAJLEN ) THEN
+         if ( xdist(smlidx) .ge. majlen ) then
 !
 !           The viewing point is outside a sphere of radius MAJLEN
 !           centered at the limb's center.  We use this sphere to
@@ -1262,14 +1262,14 @@
 !           ellipsoid, but it's guaranteed to block the small
 !           ellipsoid.
 !
-            MAXANG(SMLIDX) = DASINE ( MAJLEN/XDIST(SMLIDX), ATOL )
+            maxang(smlidx) = dasine ( majlen/xdist(smlidx), atol )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZOCCED' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZOCCED' )
+               return
+            end if
 
-         ELSE
+         else
 !
 !           We create a maximum bounding cone using the same technique
 !           we used above for the original, untransformed targets.  In
@@ -1278,21 +1278,21 @@
 !
 !           Create the limb plane.
 !
-            CALL PSV2PL ( SMLCTR, SMLMAJ, SMLMIN, LPLANE )
+            call psv2pl ( smlctr, smlmaj, smlmin, lplane )
 
 !
 !           Project the viewing point onto the limb plane.  Find
 !           the height of the viewing point relative to this plane.
 !
-            CALL VPRJP ( XVIEW, LPLANE, VPPROJ )
+            call vprjp ( xview, lplane, vpproj )
 
-            VPH = VDIST ( XVIEW, VPPROJ )
+            vph = vdist ( xview, vpproj )
 
 !
 !           Find an upper bound on the distance of any limb point from
 !           VPPROJ.
 !
-            UBDIST = VDIST ( VPPROJ, SMLCTR )  +  MAJLEN
+            ubdist = vdist ( vpproj, smlctr )  +  majlen
 
 !
 !           Find the angular size of the maximum bounding cone.  We
@@ -1301,9 +1301,9 @@
 !           zero, which gives us a degenerate cone of angular radius
 !           pi/2.
 !
-            MAXANG(SMLIDX) = ATAN2 ( UBDIST, VPH )
+            maxang(smlidx) = atan2 ( ubdist, vph )
 
-         END IF
+         end if
 
 !
 !        Now find the minimum bounding cone.  The situation is slightly
@@ -1330,18 +1330,18 @@
 !
 !        Start out by constructing a normal to the limb plane.
 !
-         CALL UCRSS ( SMLMAJ, SMLMIN, LNORML )
+         call ucrss ( smlmaj, smlmin, lnorml )
 
 !
 !        Choose a value of TILT not exceeding pi/2.
 !
-         TILT = VSEP ( LNORML, XSMLVU )
+         tilt = vsep ( lnorml, xsmlvu )
 
-         IF ( TILT .GT. HALFPI() ) THEN
+         if ( tilt .gt. halfpi() ) then
 
-            TILT = PI() - TILT
+            tilt = pi() - tilt
 
-         END IF
+         end if
 
 !
 !        Now we have a right triangle whose base is the distance from
@@ -1352,61 +1352,61 @@
 !        associated with the viewing point.  This is the angular
 !        radius of our minimum bounding cone.
 !
-         MINANG(SMLIDX)  = ATAN2 ( COS(TILT)*MINLEN, &
-                                   SIN(TILT)*MINLEN + XDIST(SMLIDX) )
+         minang(smlidx)  = atan2 ( cos(tilt)*minlen, &
+                                   sin(tilt)*minlen + xdist(smlidx) )
 
 !
 !        Compute angular separation of the transformed centers.
 !
-         CALL VSUB ( SMLCTR, XVIEW, SMLDIR )
+         call vsub ( smlctr, xview, smldir )
 
-         XASEP  =  VSEP ( RAYDIR, SMLDIR )
+         xasep  =  vsep ( raydir, smldir )
 
 !
 !        Test for inclusion of the maximum bounding cone of the small
 !        ellipsoid in the circumscribing cone of the sphere.
 !
-         IF (  ( XASEP + MAXANG(SMLIDX) )  .LE.  UASIZE  ) THEN
+         if (  ( xasep + maxang(smlidx) )  .le.  uasize  ) then
 !
 !           The small ellipsoid is either in total occultation or
 !           in annular transit across the sphere.
 !
-            IF ( SFRONT ) THEN
+            if ( sfront ) then
 !
 !              MINPT is in front of the sphere. We have an annular
 !              transit of the small ellipsoid across the small one.
 !
-               ZZOCCED =  S * ANNLR2
+               zzocced =  s * annlr2
 
-            ELSE
+            else
 !
 !              MINPT is behind the sphere.  We have a total
 !              occultation of the small ellipsoid.
 !
-               ZZOCCED =  S * TOTAL2
+               zzocced =  s * total2
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'ZZOCCED' )
-            RETURN
+            call chkout ( 'ZZOCCED' )
+            return
 
-         END IF
+         end if
 
 !
 !        Test for non-containment of the minimum bounding cone of the
 !        small ellipsoid by the circumscribing cone of the sphere.
 !
-         IF (  ( XASEP + MINANG(SMLIDX) )  .GT.  UASIZE  ) THEN
+         if (  ( xasep + minang(smlidx) )  .gt.  uasize  ) then
 !
 !           The small ellipsoid is either in partial occultation or
 !           in partial transit across the sphere.
 !
-            ZZOCCED = S * PARTL2
+            zzocced = s * partl2
 
-            CALL CHKOUT ( 'ZZOCCED' )
-            RETURN
+            call chkout ( 'ZZOCCED' )
+            return
 
-         END IF
+         end if
 
 !
 !        Arriving at this point means we've been unable to classify
@@ -1415,15 +1415,15 @@
 !        emanating from the viewing point and passing through the
 !        center of the sphere.
 !
-         CALL ZZASRYEL ( 'MAX', XLIMB, XVIEW, RAYDIR, MAXSEP, MAXPT )
+         call zzasryel ( 'MAX', xlimb, xview, raydir, maxsep, maxpt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZOCCED' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZOCCED' )
+            return
+         end if
 
 
-         IF ( ABS(MAXSEP) .LE. UASIZE ) THEN
+         if ( abs(maxsep) .le. uasize ) then
 !
 !           Whether the ray from the viewing point to the center
 !           of the unit sphere does nor does not penetrate the plane
@@ -1434,24 +1434,24 @@
 !           The small ellipsoid is either in total occultation or
 !           in annular transit across the sphere.
 !
-            IF ( SFRONT ) THEN
+            if ( sfront ) then
 !
 !              MINPT is in front of the sphere. We have an annular
 !              transit of the small ellipsoid across the smaller.
 !
-               ZZOCCED =  S * ANNLR2
+               zzocced =  s * annlr2
 
-            ELSE
+            else
 !
 !              MINPT is behind the sphere.  We have a total
 !              occultation of the small ellipsoid.
 !
-               ZZOCCED =  S * TOTAL2
+               zzocced =  s * total2
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           Whether the ray from the viewing point to the center
 !           of the unit sphere does nor does not penetrate the plane
@@ -1462,9 +1462,9 @@
 !           The small ellipsoid is either in partial occultation or
 !           in partial transit across the sphere.
 !
-            ZZOCCED = S * PARTL2
+            zzocced = s * partl2
 
-         END IF
+         end if
 !
 !        We've classified the occultation in the case where the
 !        maximum angular separation of the ray and limb had to be
@@ -1474,12 +1474,12 @@
 !        overlap, but the unit sphere is *neither* totally occulted by
 !        the other ellipsoid nor in annular transit across it.
 !
-      END IF
+      end if
 !
 !     ZZOCCED has been set.
 !
 
-      CALL CHKOUT ( 'ZZOCCED' )
-      RETURN
-      END
+      call chkout ( 'ZZOCCED' )
+      return
+      end
 

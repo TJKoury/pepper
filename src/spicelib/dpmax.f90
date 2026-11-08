@@ -1,6 +1,6 @@
 !$Procedure DPMAX ( Largest DP number )
 
-      DOUBLE PRECISION FUNCTION DPMAX ( )
+      double precision function dpmax ( )
 
 ! $ Abstract
 !
@@ -416,7 +416,7 @@
 !     HP-UX 9000/750, FORTRAN/9000 Series 700 computers
 !     PC/Linux, Fort77
 !
-      DPMAX = 1.79769313486231D+308
+      dpmax = 1.79769313486231d+308
 
-      RETURN
-      END
+      return
+      end

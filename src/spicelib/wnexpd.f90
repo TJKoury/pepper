@@ -1,6 +1,6 @@
 !$Procedure WNEXPD ( Expand the intervals of a DP window )
 
-      SUBROUTINE WNEXPD ( LEFT, RIGHT, WINDOW )
+      subroutine wnexpd ( left, right, window )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      DOUBLE PRECISION      WINDOW  ( LBCELL:* )
+      double precision      left
+      double precision      right
+      double precision      window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -154,61 +154,61 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               GONE
-      INTEGER               I
-      INTEGER               J
+      integer               card
+      integer               gone
+      integer               i
+      integer               j
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNEXPD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'WNEXPD' )
+      end if
 
 !
 !     Get the cardinality of the window. (The size is not important;
 !     this routine can't create any new intervals.)
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Expand the intervals individually. We'll take care of
 !     overlaps later on. Negative expansion may cause some
 !     intervals to disappear.
 !
-      GONE = 0
+      gone = 0
 
-      DO I = 1, CARD, 2
-         WINDOW(I-GONE  ) = WINDOW(I)   - LEFT
-         WINDOW(I-GONE+1) = WINDOW(I+1) + RIGHT
+      do i = 1, card, 2
+         window(i-gone  ) = window(i)   - left
+         window(i-gone+1) = window(i+1) + right
 
-         IF ( WINDOW(I-GONE) .GT. WINDOW(I-GONE+1) ) THEN
-            GONE = GONE + 2
-         END IF
-      END DO
+         if ( window(i-gone) .gt. window(i-gone+1) ) then
+            gone = gone + 2
+         end if
+      end do
 
 !
 !     Proceed only if at least one interval remains. (If there were
 !     no intervals to begin with, we skip the previous loop and come
 !     here without delay. Do not pass GO, do not collect $200.)
 !
-      CARD = CARD - GONE
+      card = card - gone
 
-      IF ( CARD .EQ. 0 ) THEN
-         CALL SCARDD ( 0, WINDOW )
-         CALL CHKOUT ( 'WNEXPD'  )
-         RETURN
-      END IF
+      if ( card .eq. 0 ) then
+         call scardd ( 0, window )
+         call chkout ( 'WNEXPD'  )
+         return
+      end if
 
 !
 !     None of the intervals can have extended to completely contain
@@ -222,24 +222,24 @@
 !     interval. Keep this up until the last right endpoint has been
 !     reached. This remains the last right endpoint.
 !
-      I = 2
-      J = 2
+      i = 2
+      j = 2
 
-      DO WHILE ( J .LT. CARD )
+      do while ( j .lt. card )
 
-         IF ( WINDOW(J) .LT. WINDOW(J+1) ) THEN
-            WINDOW(I  ) = WINDOW(J  )
-            WINDOW(I+1) = WINDOW(J+1)
-            I           = I + 2
-         END IF
+         if ( window(j) .lt. window(j+1) ) then
+            window(i  ) = window(j  )
+            window(i+1) = window(j+1)
+            i           = i + 2
+         end if
 
-         J = J + 2
+         j = j + 2
 
-      END DO
+      end do
 
-      WINDOW(I) = WINDOW(J)
-      CALL SCARDD ( I, WINDOW )
+      window(i) = window(j)
+      call scardd ( i, window )
 
-      CALL CHKOUT ( 'WNEXPD' )
-      RETURN
-      END
+      call chkout ( 'WNEXPD' )
+      return
+      end

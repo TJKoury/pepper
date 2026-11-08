@@ -1,6 +1,6 @@
 !$Procedure ENCHAR ( Encode a character string )
 
-      SUBROUTINE ENCHAR ( NUMBER, STRING )
+      subroutine enchar ( number, string )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NUMBER
-      CHARACTER*(*)      STRING
+      integer            number
+      character*(*)      string
 
-      INTEGER            MINLEN
-      PARAMETER        ( MINLEN = 5 )
+      integer            minlen
+      parameter        ( minlen = 5 )
 
 ! $ Brief_I/O
 !
@@ -161,67 +161,67 @@
 !
 !     SPICELIB functions
 !
-      INTEGER            CHBASE
-      LOGICAL            RETURN
+      integer            chbase
+      logical            return
 
 !
 !     Local variables
 !
-      INTEGER            BASE
-      INTEGER            NUM
-      INTEGER            REMAIN
-      INTEGER            I
+      integer            base
+      integer            num
+      integer            remain
+      integer            i
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
+      if ( return () ) then
+         return
 
-      ELSE IF ( LEN ( STRING ) .LT. MINLEN ) THEN
-         CALL CHKIN  ( 'ENCHAR' )
-         CALL SIGERR ( 'SPICE(INSUFFLEN)' )
-         CALL CHKOUT ( 'ENCHAR' )
-         RETURN
+      else if ( len ( string ) .lt. minlen ) then
+         call chkin  ( 'ENCHAR' )
+         call sigerr ( 'SPICE(INSUFFLEN)' )
+         call chkout ( 'ENCHAR' )
+         return
 
-      ELSE IF ( NUMBER .LT. 0 ) THEN
-         CALL CHKIN  ( 'ENCHAR' )
-         CALL SIGERR ( 'SPICE(OUTOFRANGE)' )
-         CALL CHKOUT ( 'ENCHAR' )
-         RETURN
-      END IF
+      else if ( number .lt. 0 ) then
+         call chkin  ( 'ENCHAR' )
+         call sigerr ( 'SPICE(OUTOFRANGE)' )
+         call chkout ( 'ENCHAR' )
+         return
+      end if
 
 !
 !     Generate the digits from right to left.
 !
-      BASE = CHBASE()
-      NUM  = NUMBER
+      base = chbase()
+      num  = number
 
-      DO I = MINLEN, 1, -1
+      do i = minlen, 1, -1
 
-         REMAIN      = MOD ( NUM, BASE )
-         STRING(I:I) = CHAR ( REMAIN )
-         NUM         = NUM / BASE
+         remain      = mod ( num, base )
+         string(i:i) = char ( remain )
+         num         = num / base
 
-      END DO
+      end do
 
 !
 !     More error handling.
 !
-      IF ( NUM .GT. 0 ) THEN
-         CALL CHKIN  ( 'ENCHAR' )
-         CALL SIGERR ( 'SPICE(OUTOFRANGE)' )
-         CALL CHKOUT ( 'ENCHAR' )
-      END IF
+      if ( num .gt. 0 ) then
+         call chkin  ( 'ENCHAR' )
+         call sigerr ( 'SPICE(OUTOFRANGE)' )
+         call chkout ( 'ENCHAR' )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DECHAR ( Decode a character string )
 
-      ENTRY DECHAR ( STRING, NUMBER )
+      entry dechar ( string, number )
 
 ! $ Abstract
 !
@@ -353,26 +353,26 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
+      if ( return () ) then
+         return
 
-      ELSE IF ( LEN ( STRING ) .LT. MINLEN ) THEN
-         CALL CHKIN  ( 'DECHAR' )
-         CALL SIGERR ( 'SPICE(INSUFFLEN)' )
-         CALL CHKOUT ( 'DECHAR' )
-         RETURN
-      END IF
+      else if ( len ( string ) .lt. minlen ) then
+         call chkin  ( 'DECHAR' )
+         call sigerr ( 'SPICE(INSUFFLEN)' )
+         call chkout ( 'DECHAR' )
+         return
+      end if
 
 !
 !     Sum the products of the 'digits' and the corresponding powers
 !     of NDCHAR, just like any other base conversion.
 !
-      BASE   = CHBASE()
-      NUMBER = 0
+      base   = chbase()
+      number = 0
 
-      DO I = 1, MINLEN
-         NUMBER = BASE*NUMBER + ICHAR ( STRING(I:I) )
-      END DO
+      do i = 1, minlen
+         number = base*number + ichar ( string(i:i) )
+      end do
 
-      RETURN
-      END
+      return
+      end

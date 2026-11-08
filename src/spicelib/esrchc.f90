@@ -1,6 +1,6 @@
 !$Procedure ESRCHC ( Equivalence search, character )
 
-      INTEGER FUNCTION ESRCHC ( VALUE, NDIM, ARRAY )
+      integer function esrchc ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    VALUE
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY ( * )
+      character*(*)    value
+      integer          ndim
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -134,27 +134,27 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
+      logical               eqstr
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
 !
 !     Just like ISRCHC.
 !
-      ESRCHC = 0
+      esrchc = 0
 
-      DO I = 1, NDIM
+      do i = 1, ndim
 
-         IF ( EQSTR ( ARRAY(I), VALUE ) ) THEN
-            ESRCHC = I
-            RETURN
-         END IF
+         if ( eqstr ( array(i), value ) ) then
+            esrchc = i
+            return
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

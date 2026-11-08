@@ -1,6 +1,6 @@
 !$Procedure ZZHOLDD ( Private --- hold a scalar DP )
 
-      SUBROUTINE ZZHOLDD ( OP, ID, OK, VALUE )
+      subroutine zzholdd ( op, id, ok, value )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzholdd.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               OP
-      INTEGER               ID
-      LOGICAL               OK
-      DOUBLE PRECISION      VALUE
+      integer               op
+      integer               id
+      logical               ok
+      double precision      value
 
 ! $ Brief_I/O
 !
@@ -240,75 +240,75 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BRCKTI
+      integer               brckti
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
 
-      DOUBLE PRECISION      SVALUE  (NID)
-      LOGICAL               INIT
-      LOGICAL               FIRST   (NID)
-      INTEGER               I
+      double precision      svalue  (nid)
+      logical               init
+      logical               first   (nid)
+      integer               i
 
-      SAVE                  SVALUE
-      SAVE                  FIRST
-      SAVE                  INIT
+      save                  svalue
+      save                  first
+      save                  init
 
-      DATA                  INIT  / .TRUE. /
+      data                  init  / .true. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         VALUE = 0.D0
-         OK    = .FALSE.
-         RETURN
-      END IF
+      if ( return() ) then
+         value = 0.d0
+         ok    = .false.
+         return
+      end if
 
 
 !
 !     Confirm a proper ID value.
 !
-      IF ( BRCKTI(ID, 1, NID) .NE. ID ) THEN
+      if ( brckti(id, 1, nid) .ne. id ) then
 
-         VALUE = 0.D0
-         OK    = .FALSE.
+         value = 0.d0
+         ok    = .false.
 
-         CALL CHKIN  ( 'ZZHOLDD'                               )
-         CALL SETMSG ( 'ID value unknown. ID value #1 ' &
+         call chkin  ( 'ZZHOLDD'                               )
+         call setmsg ( 'ID value unknown. ID value #1 ' &
                //      'not an element of [1, #2]. Confirm' &
                //      'the ID value exists in the zzholdd.inc ' &
                //      'parameter file.'                       )
-         CALL ERRINT ( '#1', ID                                )
-         CALL ERRINT ( '#2', NID                               )
-         CALL SIGERR ( 'SPICE(UNKNOWNID)'                      )
-         CALL CHKOUT ( 'ZZHOLDD'                               )
-         RETURN
+         call errint ( '#1', id                                )
+         call errint ( '#2', nid                               )
+         call sigerr ( 'SPICE(UNKNOWNID)'                      )
+         call chkout ( 'ZZHOLDD'                               )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Initialize the FIRST array; perform once per program run.
 !
-      IF ( INIT ) THEN
+      if ( init ) then
 
-         DO I = 1, NID
-            FIRST( I ) = .TRUE.
-         END DO
+         do i = 1, nid
+            first( i ) = .true.
+         end do
 
-         INIT = .FALSE.
+         init = .false.
 
-      END IF
+      end if
 
 
 !
 !     Perform the operation as described by OP.
 !
-      IF ( OP .EQ. ZZGET ) THEN
+      if ( op .eq. zzget ) then
 
 !
 !        Attempt to retrieve a stored double precision value for ID.
@@ -320,61 +320,61 @@
 !            OK as false.
 !
 
-         IF ( FIRST( ID ) ) THEN
+         if ( first( id ) ) then
 
-            VALUE = 0.D0
-            OK    = .FALSE.
+            value = 0.d0
+            ok    = .false.
 
-         ELSE
+         else
 
 !
 !           Return the stored value.
 !
-            VALUE = SVALUE( ID )
-            OK    = .TRUE.
+            value = svalue( id )
+            ok    = .true.
 
-         END IF
+         end if
 
 
-      ELSE IF ( OP .EQ. ZZPUT ) THEN
+      else if ( op .eq. zzput ) then
 
 !
 !        Store a value for later use. Set FIRST to false
 !        so subsequent get calls will work.
 !
-         IF ( FIRST( ID ) ) THEN
+         if ( first( id ) ) then
 
-            FIRST( ID ) = .FALSE.
+            first( id ) = .false.
 
-         END IF
+         end if
 
-         SVALUE( ID ) = VALUE
+         svalue( id ) = value
 
-      ELSE IF ( OP .EQ. ZZRESET ) THEN
+      else if ( op .eq. zzreset ) then
 
 !
 !        Reset FIRST( ID ) forcing a put before a get.
 !
-         FIRST( ID ) = .TRUE.
+         first( id ) = .true.
 
-      ELSE
+      else
 
 !
 !        Unknown value for 'OP'. Signal an error.
 !
-         VALUE = 0.D0
-         OK    = .FALSE.
+         value = 0.d0
+         ok    = .false.
 
-         CALL CHKIN  ( 'ZZHOLDD'                          )
-         CALL SETMSG ( 'Unknown operation. Confirm the OP ' &
+         call chkin  ( 'ZZHOLDD'                          )
+         call setmsg ( 'Unknown operation. Confirm the OP ' &
                //      'value # exists in the zzholdd.inc ' &
                //      'parameter file.'                  )
-         CALL ERRINT ( '#', OP                            )
-         CALL SIGERR ( 'SPICE(UNKNOWNOP)'                 )
-         CALL CHKOUT ( 'ZZHOLDD'                          )
-         RETURN
+         call errint ( '#', op                            )
+         call sigerr ( 'SPICE(UNKNOWNOP)'                 )
+         call chkout ( 'ZZHOLDD'                          )
+         return
 
-      END IF
+      end if
 
-      END
+      end
 

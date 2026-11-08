@@ -1,6 +1,6 @@
 !$Procedure ZZSEGBOX (Bounding box for DSK segment volume element)
 
-      SUBROUTINE ZZSEGBOX ( DSKDSC, BOXCTR, MAXR )
+      subroutine zzsegbox ( dskdsc, boxctr, maxr )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'dskdsc.inc'
+      include 'dskdsc.inc'
 
-      DOUBLE PRECISION      DSKDSC ( * )
-      DOUBLE PRECISION      BOXCTR ( 3 )
-      DOUBLE PRECISION      MAXR
+      double precision      dskdsc ( * )
+      double precision      boxctr ( 3 )
+      double precision      maxr
 
 ! $ Brief_I/O
 !
@@ -117,53 +117,53 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      L1
-      DOUBLE PRECISION      L2
-      DOUBLE PRECISION      L3
+      double precision      l1
+      double precision      l2
+      double precision      l3
 
-      INTEGER               CORSYS
-
-
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
-
-      CALL CHKIN ( 'ZZSEGBOX' )
+      integer               corsys
 
 
-      CORSYS = NINT( DSKDSC(SYSIDX) )
+      if ( return() ) then
+         return
+      end if
 
-      IF ( CORSYS .EQ. LATSYS ) THEN
+      call chkin ( 'ZZSEGBOX' )
 
-         CALL ZZLATBOX ( DSKDSC(MN1IDX), BOXCTR, L1, &
-                         L2,             L3,     MAXR )
 
-      ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      corsys = nint( dskdsc(sysidx) )
 
-         CALL ZZRECBOX ( DSKDSC(MN1IDX), BOXCTR, L1, &
-                         L2,             L3,     MAXR )
+      if ( corsys .eq. latsys ) then
 
-      ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+         call zzlatbox ( dskdsc(mn1idx), boxctr, l1, &
+                         l2,             l3,     maxr )
 
-         CALL ZZPDTBOX ( DSKDSC(MN1IDX), DSKDSC(PARIDX), BOXCTR, &
-                         L1,             L2,             L3, &
-                         MAXR                                   )
+      else if ( corsys .eq. recsys ) then
 
-      ELSE
+         call zzrecbox ( dskdsc(mn1idx), boxctr, l1, &
+                         l2,             l3,     maxr )
 
-         CALL SETMSG ( 'Coordinate system # is not supported.' )
-         CALL ERRINT ( '#',  CORSYS                            )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                   )
-         CALL CHKOUT ( 'ZZSEGBOX'                              )
-         RETURN
+      else if ( corsys .eq. pdtsys ) then
 
-      END IF
+         call zzpdtbox ( dskdsc(mn1idx), dskdsc(paridx), boxctr, &
+                         l1,             l2,             l3, &
+                         maxr                                   )
 
-      CALL CHKOUT ( 'ZZSEGBOX' )
-      RETURN
-      END
+      else
+
+         call setmsg ( 'Coordinate system # is not supported.' )
+         call errint ( '#',  corsys                            )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
+         call chkout ( 'ZZSEGBOX'                              )
+         return
+
+      end if
+
+      call chkout ( 'ZZSEGBOX' )
+      return
+      end

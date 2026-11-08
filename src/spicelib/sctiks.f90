@@ -1,6 +1,6 @@
 !$Procedure SCTIKS ( Convert spacecraft clock string to ticks. )
 
-      SUBROUTINE SCTIKS ( SC, CLKSTR, TICKS )
+      subroutine sctiks ( sc, clkstr, ticks )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               SC
-      CHARACTER*(*)         CLKSTR
-      DOUBLE PRECISION      TICKS
+      integer               sc
+      character*(*)         clkstr
+      double precision      ticks
 
 ! $ Brief_I/O
 !
@@ -293,44 +293,44 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SCTYPE
-      LOGICAL               RETURN
+      integer               sctype
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               TYPE
+      integer               type
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCTIKS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SCTIKS' )
+      end if
 
 !
 !     If the spacecraft clock type is supported by NAIF then
 !     call TIKSnn to perform the conversion.
 !
 
-      TYPE = SCTYPE ( SC )
+      type = sctype ( sc )
 
-      IF ( TYPE .EQ. 1 )  THEN
-         CALL SCTK01 ( SC, CLKSTR, TICKS )
-      ELSE
-         CALL SETMSG ( 'Clock type # is not supported.' )
-         CALL ERRINT ( '#', TYPE                        )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
-         CALL CHKOUT ( 'SCTIKS'                         )
-         RETURN
+      if ( type .eq. 1 )  then
+         call sctk01 ( sc, clkstr, ticks )
+      else
+         call setmsg ( 'Clock type # is not supported.' )
+         call errint ( '#', type                        )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'            )
+         call chkout ( 'SCTIKS'                         )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SCTIKS' )
+      call chkout ( 'SCTIKS' )
 
-      RETURN
-      END
+      return
+      end

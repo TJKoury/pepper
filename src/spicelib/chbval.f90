@@ -1,6 +1,6 @@
 !$Procedure CHBVAL ( Value of a Chebyshev polynomial expansion )
 
-      SUBROUTINE CHBVAL ( CP, DEGP, X2S, X, P )
+      subroutine chbval ( cp, degp, x2s, x, p )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   CP  ( * )
-      INTEGER            DEGP
-      DOUBLE PRECISION   X2S ( 2 )
-      DOUBLE PRECISION   X
-      DOUBLE PRECISION   P
+      double precision   cp  ( * )
+      integer            degp
+      double precision   x2s ( 2 )
+      double precision   x
+      double precision   p
 
 ! $ Brief_I/O
 !
@@ -274,31 +274,31 @@
 !
 !     Local variables
 !
-      INTEGER          J
-      DOUBLE PRECISION W(3)
-      DOUBLE PRECISION S
-      DOUBLE PRECISION S2
+      integer          j
+      double precision w(3)
+      double precision s
+      double precision s2
 
 !
 !     Transform X to S and initialize temporary variables.
 !
-      S     = (X-X2S(1)) / X2S(2)
-      S2    = 2.0D0 * S
-      J     = DEGP  + 1
-      W(1)  = 0.D0
-      W(2)  = 0.D0
+      s     = (x-x2s(1)) / x2s(2)
+      s2    = 2.0d0 * s
+      j     = degp  + 1
+      w(1)  = 0.d0
+      w(2)  = 0.d0
 
 !
 !     Evaluate the polynomial using recursion.
 !
-      DO WHILE ( J .GT. 1 )
-         W(3) = W (2)
-         W(2) = W (1)
-         W(1) = CP(J) + (S2*W(2) - W(3))
-         J    = J - 1
-      END DO
+      do while ( j .gt. 1 )
+         w(3) = w (2)
+         w(2) = w (1)
+         w(1) = cp(j) + (s2*w(2) - w(3))
+         j    = j - 1
+      end do
 
-      P     = (S*W(1)-W(2)) + CP(1)
+      p     = (s*w(1)-w(2)) + cp(1)
 
-      RETURN
-      END
+      return
+      end

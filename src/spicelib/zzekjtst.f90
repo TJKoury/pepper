@@ -1,10 +1,10 @@
 !$Procedure  ZZEKJTST  ( Test join candidates )
 
-      SUBROUTINE ZZEKJTST ( SEGVEC,  JBASE1,  NT1,     RB1,     NR1, &
-                            JBASE2,  NT2,     RB2,     NR2,     NJCNST, &
-                            ACTIVE,  CPIDX1,  CLIDX1,  ELTS1,   OPS, &
-                            CPIDX2,  CLIDX2,  ELTS2,   STHAN,   STSDSC, &
-                            STDTPT,  DTPOOL,  DTDSCS,  FOUND,   ROWVEC )
+      subroutine zzekjtst ( segvec,  jbase1,  nt1,     rb1,     nr1, &
+                            jbase2,  nt2,     rb2,     nr2,     njcnst, &
+                            active,  cpidx1,  clidx1,  elts1,   ops, &
+                            cpidx2,  clidx2,  elts2,   sthan,   stsdsc, &
+                            stdtpt,  dtpool,  dtdscs,  found,   rowvec )
 
 ! $ Abstract
 !
@@ -26,41 +26,41 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekjrs.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'eksegdsc.inc'
+      include 'ekcoldsc.inc'
+      include 'ekjrs.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               SEGVEC ( * )
-      INTEGER               JBASE1
-      INTEGER               NT1
-      INTEGER               RB1
-      INTEGER               NR1
-      INTEGER               JBASE2
-      INTEGER               NT2
-      INTEGER               RB2
-      INTEGER               NR2
-      INTEGER               NJCNST
-      LOGICAL               ACTIVE ( * )
-      INTEGER               CPIDX1 ( * )
-      INTEGER               CLIDX1 ( * )
-      INTEGER               ELTS1  ( * )
-      INTEGER               OPS    ( * )
-      INTEGER               CPIDX2 ( * )
-      INTEGER               CLIDX2 ( * )
-      INTEGER               ELTS2  ( * )
-      INTEGER               STHAN  ( * )
-      INTEGER               STSDSC ( SDSCSZ,          * )
-      INTEGER               STDTPT ( * )
-      INTEGER               DTPOOL ( 2,      LBPOOL : * )
-      INTEGER               DTDSCS ( CDSCSZ,          * )
-      LOGICAL               FOUND
-      INTEGER               ROWVEC ( * )
+      integer               segvec ( * )
+      integer               jbase1
+      integer               nt1
+      integer               rb1
+      integer               nr1
+      integer               jbase2
+      integer               nt2
+      integer               rb2
+      integer               nr2
+      integer               njcnst
+      logical               active ( * )
+      integer               cpidx1 ( * )
+      integer               clidx1 ( * )
+      integer               elts1  ( * )
+      integer               ops    ( * )
+      integer               cpidx2 ( * )
+      integer               clidx2 ( * )
+      integer               elts2  ( * )
+      integer               sthan  ( * )
+      integer               stsdsc ( sdscsz,          * )
+      integer               stdtpt ( * )
+      integer               dtpool ( 2,      lbpool : * )
+      integer               dtdscs ( cdscsz,          * )
+      logical               found
+      integer               rowvec ( * )
 
 ! $ Brief_I/O
 !
@@ -173,108 +173,108 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LNKNXT
-      LOGICAL               RETURN
+      integer               lnknxt
+      logical               return
 
 !
 !     Other functions
 !
-      LOGICAL               ZZEKRCMP
-      LOGICAL               ZZEKVMCH
+      logical               zzekrcmp
+      logical               zzekvmch
 
 !
 !     Local parameters
 !
-      INTEGER               EQUI
-      PARAMETER           ( EQUI   = 1 )
+      integer               equi
+      parameter           ( equi   = 1 )
 
-      INTEGER               NONEQ
-      PARAMETER           ( NONEQ  = 2 )
+      integer               noneq
+      parameter           ( noneq  = 2 )
 
-      INTEGER               NOLUCK
-      PARAMETER           ( NOLUCK = 3 )
+      integer               noluck
+      parameter           ( noluck = 3 )
 
-      INTEGER               EMPTY
-      PARAMETER           ( EMPTY  = 4 )
+      integer               empty
+      parameter           ( empty  = 4 )
 
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
-      INTEGER               BASE
-      INTEGER               CASE
-      INTEGER               CNSTR
-      INTEGER               DTPTR
-      INTEGER               I
-      INTEGER               J
-      INTEGER               JBASE
-      INTEGER               K
-      INTEGER               LBASE
-      INTEGER               LCOL
-      INTEGER               LCUR
-      INTEGER               LDSCRS ( CDSCSZ, MXJCON )
-      INTEGER               LELT
-      INTEGER               LELTS  (         MXJCON )
-      INTEGER               LHANS  (         MXJCON )
-      LOGICAL               LOCACT (         MXJCON )
-      INTEGER               LOVBAS
-      INTEGER               LPTR
-      INTEGER               LROW
-      INTEGER               LROWS  (         MXJCON )
-      INTEGER               LRVIDX
-      INTEGER               LSDSC  ( SDSCSZ, MXJCON )
-      INTEGER               LSEG
-      INTEGER               LTAB
-      INTEGER               MINIRV ( 2 )
-      INTEGER               OFFSET
-      INTEGER               NR
-      INTEGER               NT
-      INTEGER               NT3
-      INTEGER               RB
-      INTEGER               RBASE
-      INTEGER               RCOL
-      INTEGER               RDSCRS ( CDSCSZ, MXJCON )
-      INTEGER               RELT
-      INTEGER               RELTS  (         MXJCON )
-      INTEGER               RHANS  (         MXJCON )
-      INTEGER               ROVBAS
-      INTEGER               RPTR
-      INTEGER               RROW
-      INTEGER               RROWS  (         MXJCON )
-      INTEGER               RRVIDX
-      INTEGER               RSDSC  ( SDSCSZ, MXJCON )
-      INTEGER               RSEG
-      INTEGER               RTAB
-      INTEGER               SVBAS1
-      INTEGER               SVBAS2
-      INTEGER               SVCP1  ( MXJCON )
-      INTEGER               SVCP2  ( MXJCON )
-      INTEGER               SVOPS  ( MXJCON )
-      INTEGER               SVNCON
-      INTEGER               SVNR1
-      INTEGER               SVNR2
-      INTEGER               SVNT1
-      INTEGER               SVNT2
-      INTEGER               SVRB1
-      INTEGER               SVRB2
-      INTEGER               TAB
-      INTEGER               TOP
+      integer               addrss
+      integer               base
+      integer               case
+      integer               cnstr
+      integer               dtptr
+      integer               i
+      integer               j
+      integer               jbase
+      integer               k
+      integer               lbase
+      integer               lcol
+      integer               lcur
+      integer               ldscrs ( cdscsz, mxjcon )
+      integer               lelt
+      integer               lelts  (         mxjcon )
+      integer               lhans  (         mxjcon )
+      logical               locact (         mxjcon )
+      integer               lovbas
+      integer               lptr
+      integer               lrow
+      integer               lrows  (         mxjcon )
+      integer               lrvidx
+      integer               lsdsc  ( sdscsz, mxjcon )
+      integer               lseg
+      integer               ltab
+      integer               minirv ( 2 )
+      integer               offset
+      integer               nr
+      integer               nt
+      integer               nt3
+      integer               rb
+      integer               rbase
+      integer               rcol
+      integer               rdscrs ( cdscsz, mxjcon )
+      integer               relt
+      integer               relts  (         mxjcon )
+      integer               rhans  (         mxjcon )
+      integer               rovbas
+      integer               rptr
+      integer               rrow
+      integer               rrows  (         mxjcon )
+      integer               rrvidx
+      integer               rsdsc  ( sdscsz, mxjcon )
+      integer               rseg
+      integer               rtab
+      integer               svbas1
+      integer               svbas2
+      integer               svcp1  ( mxjcon )
+      integer               svcp2  ( mxjcon )
+      integer               svops  ( mxjcon )
+      integer               svncon
+      integer               svnr1
+      integer               svnr2
+      integer               svnt1
+      integer               svnt2
+      integer               svrb1
+      integer               svrb2
+      integer               tab
+      integer               top
 
-      LOGICAL               DONE
-      LOGICAL               FND
-      LOGICAL               LSMALL
+      logical               done
+      logical               fnd
+      logical               lsmall
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 
-      CALL CHKIN  ( 'ZZEKJTST'          )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZEKJTST'          )
+      call chkin  ( 'ZZEKJTST'          )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZEKJTST'          )
 
-      RETURN
+      return
 
 
 
@@ -285,11 +285,11 @@
 
 !$Procedure  ZZEKJPRP  ( Prepare join condition test )
 
-      ENTRY ZZEKJPRP ( SEGVEC,  JBASE1,  NT1,     RB1,     NR1, &
-                       JBASE2,  NT2,     RB2,     NR2,     NJCNST, &
-                       ACTIVE,  CPIDX1,  CLIDX1,  ELTS1,   OPS, &
-                       CPIDX2,  CLIDX2,  ELTS2,   STHAN,   STSDSC, &
-                       STDTPT,  DTPOOL,  DTDSCS                    )
+      entry zzekjprp ( segvec,  jbase1,  nt1,     rb1,     nr1, &
+                       jbase2,  nt2,     rb2,     nr2,     njcnst, &
+                       active,  cpidx1,  clidx1,  elts1,   ops, &
+                       cpidx2,  clidx2,  elts2,   sthan,   stsdsc, &
+                       stdtpt,  dtpool,  dtdscs                    )
 
 ! $ Abstract
 !
@@ -560,11 +560,11 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKJPRP' )
+      call chkin ( 'ZZEKJPRP' )
 
 !
 !     We don't validate the inputs; these must be checked by ZZEKJOIN,
@@ -573,61 +573,61 @@
 !     Not much preparation is required if either input row count is
 !     zero, since the cartesian product will be zero.
 !
-      IF (  ( NR1 .EQ. 0 )  .OR.  ( NR2 .EQ. 0 )  ) THEN
+      if (  ( nr1 .eq. 0 )  .or.  ( nr2 .eq. 0 )  ) then
 
-         CASE = EMPTY
+         case = empty
 
-         CALL CHKOUT ( 'ZZEKJPRP' )
-         RETURN
+         call chkout ( 'ZZEKJPRP' )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the table count and segment vector count for the output join
 !     row set.
 !
-      NT3  =  NT1  +  NT2
+      nt3  =  nt1  +  nt2
 
 
 !
 !     Create handle, segment base, and column descriptor
 !     arrays for both sides of each active relational constraint.
 !
-      DO J = 1, NJCNST
+      do j = 1, njcnst
 
-         IF ( ACTIVE(J) ) THEN
+         if ( active(j) ) then
 
-            LTAB     =  CPIDX1( J    )
-            RTAB     =  CPIDX2( J    )
-            LSEG     =  SEGVEC( LTAB )
-            RSEG     =  SEGVEC( RTAB )
-            LHANS(J) =  STHAN ( LSEG )
-            RHANS(J) =  STHAN ( RSEG )
+            ltab     =  cpidx1( j    )
+            rtab     =  cpidx2( j    )
+            lseg     =  segvec( ltab )
+            rseg     =  segvec( rtab )
+            lhans(j) =  sthan ( lseg )
+            rhans(j) =  sthan ( rseg )
 
-            CALL MOVEI ( STSDSC(1,LSEG), SDSCSZ, LSDSC(1,J) )
-            CALL MOVEI ( STSDSC(1,RSEG), SDSCSZ, RSDSC(1,J) )
+            call movei ( stsdsc(1,lseg), sdscsz, lsdsc(1,j) )
+            call movei ( stsdsc(1,rseg), sdscsz, rsdsc(1,j) )
 
-            DTPTR   =  STDTPT(LSEG)
+            dtptr   =  stdtpt(lseg)
 
-            DO K = 2, CLIDX1(J)
-               DTPTR  =  LNKNXT( DTPTR, DTPOOL )
-            END DO
+            do k = 2, clidx1(j)
+               dtptr  =  lnknxt( dtptr, dtpool )
+            end do
 
-            CALL MOVEI ( DTDSCS(1,DTPTR), CDSCSZ,  LDSCRS(1,J) )
-
-
-            DTPTR   =  STDTPT(RSEG)
-
-            DO K = 2, CLIDX2(J)
-               DTPTR  =  LNKNXT( DTPTR, DTPOOL )
-            END DO
+            call movei ( dtdscs(1,dtptr), cdscsz,  ldscrs(1,j) )
 
 
-            CALL MOVEI ( DTDSCS(1,DTPTR), CDSCSZ, RDSCRS(1,J) )
+            dtptr   =  stdtpt(rseg)
 
-         END IF
+            do k = 2, clidx2(j)
+               dtptr  =  lnknxt( dtptr, dtpool )
+            end do
 
-      END DO
+
+            call movei ( dtdscs(1,dtptr), cdscsz, rdscrs(1,j) )
+
+         end if
+
+      end do
 
 
 !
@@ -657,60 +657,60 @@
 !     equi-join constraint.
 !
 
-      CASE  =  NOLUCK
+      case  =  noluck
 
-      J     =  1
-      FND   =  .FALSE.
+      j     =  1
+      fnd   =  .false.
 
-      DO WHILE (  ( J .LE. NJCNST )  .AND.  ( .NOT. FND )  )
+      do while (  ( j .le. njcnst )  .and.  ( .not. fnd )  )
 
-         IF (  ACTIVE(J)  .AND.  ( OPS(J) .EQ. EQ )  ) THEN
+         if (  active(j)  .and.  ( ops(j) .eq. eq )  ) then
 !
 !           Good deal, we've got an equi-join constraint.  Save the
 !           index of this constraint.
 !
-            CASE    =  EQUI
-            CNSTR   =  J
-            FND     =  .TRUE.
-         ELSE
-            J       =  J + 1
-         END IF
+            case    =  equi
+            cnstr   =  j
+            fnd     =  .true.
+         else
+            j       =  j + 1
+         end if
 
-      END DO
+      end do
 
 
-      IF ( CASE .EQ. NOLUCK ) THEN
+      if ( case .eq. noluck ) then
 
-         J     =  1
-         FND   =  .FALSE.
+         j     =  1
+         fnd   =  .false.
 
-         DO WHILE (  ( J .LE. NJCNST )  .AND.  ( .NOT. FND )  )
+         do while (  ( j .le. njcnst )  .and.  ( .not. fnd )  )
 
-            IF ( ACTIVE(J) ) THEN
+            if ( active(j) ) then
 
-               IF (      ( OPS(J) .EQ. LT ) &
-                    .OR. ( OPS(J) .EQ. LE ) &
-                    .OR. ( OPS(J) .EQ. GE ) &
-                    .OR. ( OPS(J) .EQ. GT ) ) THEN
+               if (      ( ops(j) .eq. lt ) &
+                    .or. ( ops(j) .eq. le ) &
+                    .or. ( ops(j) .eq. ge ) &
+                    .or. ( ops(j) .eq. gt ) ) then
 !
 !                 We've got a non-equi-join constraint.  Save the
 !                 index of this constraint.
 !
-                  CASE    =  NONEQ
-                  CNSTR   =  J
-                  FND     =  .TRUE.
+                  case    =  noneq
+                  cnstr   =  j
+                  fnd     =  .true.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-            IF ( .NOT. FND ) THEN
-               J  =  J  +  1
-            END IF
+            if ( .not. fnd ) then
+               j  =  j  +  1
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 
 !
@@ -719,7 +719,7 @@
 !     set of input rows vectors, using the keys defined by the
 !     join constraint.
 !
-      IF ( CASE .NE. NOLUCK ) THEN
+      if ( case .ne. noluck ) then
 
 !
 !        Produce an order vector for the column on the left side of
@@ -730,11 +730,11 @@
 !        join row set include file for a picture of the data structure
 !        we're creating.
 !
-         CALL ZZEKSTOP ( LBASE )
+         call zzekstop ( lbase )
 
-         LTAB  =  CPIDX1(CNSTR)
-         LCOL  =  CLIDX1(CNSTR)
-         LELT  =  ELTS1 (CNSTR)
+         ltab  =  cpidx1(cnstr)
+         lcol  =  clidx1(cnstr)
+         lelt  =  elts1 (cnstr)
 
 !
 !        Set JBASE to the base address of the join row set containing
@@ -745,74 +745,74 @@
 !        set, we'll adjust TAB to indicate position relative to the set
 !        of tables defining the second join row set.
 !
-         IF ( LTAB .LE. NT1 ) THEN
-            JBASE  =  JBASE1
-            NT     =  NT1
-            NR     =  NR1
-            RB     =  RB1
-            TAB    =  LTAB
-         ELSE
-            JBASE  =  JBASE2
-            NT     =  NT2
-            NR     =  NR2
-            RB     =  RB2
-            TAB    =  LTAB   -  NT1
-         END IF
+         if ( ltab .le. nt1 ) then
+            jbase  =  jbase1
+            nt     =  nt1
+            nr     =  nr1
+            rb     =  rb1
+            tab    =  ltab
+         else
+            jbase  =  jbase2
+            nt     =  nt2
+            nr     =  nr2
+            rb     =  rb2
+            tab    =  ltab   -  nt1
+         end if
 
 !
 !        Save the dimensions and base addresses we'll need later.
 !
-         SVBAS1 =  JBASE
-         SVNT1  =  NT
-         SVRB1  =  RB
-         SVNR1  =  NR
+         svbas1 =  jbase
+         svnt1  =  nt
+         svrb1  =  rb
+         svnr1  =  nr
 
-         CALL ZZEKSPSH (  1,    0            )
-         CALL ZZEKSPSH (  1,    NR           )
-         CALL ZZEKSPSH (  1,    1            )
-         CALL ZZEKSPSH (  1,    1            )
-         CALL ZZEKSPSH (  1,    SEGVEC(LTAB) )
-         CALL ZZEKSPSH (  1,    7            )
-         CALL ZZEKSPSH (  1,    NR           )
+         call zzekspsh (  1,    0            )
+         call zzekspsh (  1,    nr           )
+         call zzekspsh (  1,    1            )
+         call zzekspsh (  1,    1            )
+         call zzekspsh (  1,    segvec(ltab) )
+         call zzekspsh (  1,    7            )
+         call zzekspsh (  1,    nr           )
 
-         DO I = 1, NR
+         do i = 1, nr
 !
 !           Grab the row pointer in position TAB from the Ith row
 !           vector from the join row set containing the parent table
 !           of the LHS constraint column.
 !
-            BASE = JBASE  + RB  + (I-1)*(NT+1)
+            base = jbase  + rb  + (i-1)*(nt+1)
 
-            CALL ZZEKSRD ( BASE+TAB, BASE+TAB, MINIRV )
+            call zzeksrd ( base+tab, base+tab, minirv )
 !
 !           Fill in the segment vector pointer for the new very
 !           narrow row vector.
 !
-            MINIRV(2) = JSVBAS
+            minirv(2) = jsvbas
 !
 !           Append to the join row set under construction.
 !
-            CALL ZZEKSPSH ( 2, MINIRV )
+            call zzekspsh ( 2, minirv )
 
-         END DO
+         end do
 
-         CALL ZZEKSTOP ( TOP )
-         CALL ZZEKSUPD ( LBASE+JSZIDX,  LBASE+JSZIDX,  TOP-LBASE )
+         call zzekstop ( top )
+         call zzeksupd ( lbase+jszidx,  lbase+jszidx,  top-lbase )
 
-         CALL ZZEKJSRT (  1,       LBASE,   1,       1, &
-                          LCOL,    LELT,    EQASND,  STHAN, &
-                          STSDSC,  STDTPT,  DTPOOL,  DTDSCS,  LOVBAS  )
+         call zzekjsrt (  1,       lbase,   1,       1, &
+                          lcol,    lelt,    eqasnd,  sthan, &
+                          stsdsc,  stdtpt,  dtpool,  dtdscs,  lovbas  )
 
 
 !
 !        Produce an order vector for the column on the right side of
 !        the CNSTR constraint.
 !
-         CALL ZZEKSTOP ( RBASE )
+         call zzekstop ( rbase )
 
-         RTAB  =  CPIDX2(CNSTR)
-         RCOL  =  CLIDX2(CNSTR)
-         RELT  =  ELTS2 (CNSTR)
+         rtab  =  cpidx2(cnstr)
+         rcol  =  clidx2(cnstr)
+         relt  =  elts2 (cnstr)
 
 !
 !        Set JBASE to the base address of the join row set containing
@@ -823,133 +823,133 @@
 !        set, we'll adjust TAB to indicate position relative to the set
 !        of tables defining the second join row set.
 !
-         IF ( RTAB .LE. NT1 ) THEN
-            JBASE  =  JBASE1
-            NT     =  NT1
-            NR     =  NR1
-            RB     =  RB1
-            TAB    =  RTAB
-         ELSE
-            JBASE  =  JBASE2
-            NT     =  NT2
-            NR     =  NR2
-            RB     =  RB2
-            TAB    =  RTAB   -  NT1
-         END IF
+         if ( rtab .le. nt1 ) then
+            jbase  =  jbase1
+            nt     =  nt1
+            nr     =  nr1
+            rb     =  rb1
+            tab    =  rtab
+         else
+            jbase  =  jbase2
+            nt     =  nt2
+            nr     =  nr2
+            rb     =  rb2
+            tab    =  rtab   -  nt1
+         end if
 
 !
 !        Save the dimensions and base addresses we'll need later.
 !
-         SVBAS2 =  JBASE
-         SVNT2  =  NT
-         SVRB2  =  RB
-         SVNR2  =  NR
+         svbas2 =  jbase
+         svnt2  =  nt
+         svrb2  =  rb
+         svnr2  =  nr
 
-         CALL ZZEKSPSH (  1,    0             )
-         CALL ZZEKSPSH (  1,    NR            )
-         CALL ZZEKSPSH (  1,    1             )
-         CALL ZZEKSPSH (  1,    1             )
-         CALL ZZEKSPSH (  1,    SEGVEC(RTAB)  )
-         CALL ZZEKSPSH (  1,    7             )
-         CALL ZZEKSPSH (  1,    NR            )
+         call zzekspsh (  1,    0             )
+         call zzekspsh (  1,    nr            )
+         call zzekspsh (  1,    1             )
+         call zzekspsh (  1,    1             )
+         call zzekspsh (  1,    segvec(rtab)  )
+         call zzekspsh (  1,    7             )
+         call zzekspsh (  1,    nr            )
 
-         DO I = 1, NR
+         do i = 1, nr
 !
 !           Grab the row pointer in position TAB from the Ith row
 !           vector from the join row set containing the parent table
 !           of the RHS constraint column.
 !
-            BASE = JBASE + RB + (I-1)*(NT+1)
+            base = jbase + rb + (i-1)*(nt+1)
 
-            CALL ZZEKSRD ( BASE+TAB, BASE+TAB, MINIRV )
+            call zzeksrd ( base+tab, base+tab, minirv )
 !
 !           Fill in the segment vector pointer for the new very
 !           narrow row vector.
 !
-            MINIRV(2) = JSVBAS
+            minirv(2) = jsvbas
 !
 !           Append to the join row set under construction.
 !
-            CALL ZZEKSPSH ( 2, MINIRV )
+            call zzekspsh ( 2, minirv )
 
-         END DO
+         end do
 
-         CALL ZZEKSTOP ( TOP )
-         CALL ZZEKSUPD ( RBASE+JSZIDX,  RBASE+JSZIDX,  TOP-RBASE )
+         call zzekstop ( top )
+         call zzeksupd ( rbase+jszidx,  rbase+jszidx,  top-rbase )
 
-         CALL ZZEKJSRT (  1,       RBASE,   1,       1, &
-                          RCOL,    RELT,    EQASND,  STHAN, &
-                          STSDSC,  STDTPT,  DTPOOL,  DTDSCS,  ROVBAS  )
+         call zzekjsrt (  1,       rbase,   1,       1, &
+                          rcol,    relt,    eqasnd,  sthan, &
+                          stsdsc,  stdtpt,  dtpool,  dtdscs,  rovbas  )
 
 !
 !        Keep a local copy of the active constraint flags, deactivating
 !        the distinguished one.
 !
-         DO I = 1, NJCNST
-            LOCACT(I) = ACTIVE(I)
-         END DO
+         do i = 1, njcnst
+            locact(i) = active(i)
+         end do
 
-         LOCACT(CNSTR) = .FALSE.
+         locact(cnstr) = .false.
 
 
-      ELSE
+      else
 !
 !        This is the `no luck' case.  Save all of the constraints.
 !
-         DO I = 1, NJCNST
-            LOCACT(I) = ACTIVE(I)
-         END DO
+         do i = 1, njcnst
+            locact(i) = active(i)
+         end do
 
 !
 !        Save the counts pertaining to the input join row sets.
 !
-         SVNT1  =  NT1
-         SVNT2  =  NT2
-         SVNR1  =  NR1
-         SVNR2  =  NR2
-         SVRB1  =  RB1
-         SVRB2  =  RB2
-         SVBAS1 =  JBASE1
-         SVBAS2 =  JBASE2
+         svnt1  =  nt1
+         svnt2  =  nt2
+         svnr1  =  nr1
+         svnr2  =  nr2
+         svrb1  =  rb1
+         svrb2  =  rb2
+         svbas1 =  jbase1
+         svbas2 =  jbase2
 
-      END IF
+      end if
 
 !
 !     In the non-equi-join case, record whether the join constraint
 !     requires the left side to be less than, or less than or equal to,
 !     the right side.
 !
-      IF ( CASE .EQ. NONEQ ) THEN
-         LSMALL  =  ( OPS(CNSTR) .EQ. LT ) .OR. ( OPS(CNSTR) .EQ. LE )
-      END IF
+      if ( case .eq. noneq ) then
+         lsmall  =  ( ops(cnstr) .eq. lt ) .or. ( ops(cnstr) .eq. le )
+      end if
 
 !
 !     Keep our own copy of the relational constraints, except for the
 !     column indices, which are used only in this routine.
 !
-      SVNCON =  NJCNST
+      svncon =  njcnst
 
-      DO I = 1, SVNCON
+      do i = 1, svncon
 
-         SVCP1(I) = CPIDX1(I)
-         SVOPS(I) = OPS(I)
-         SVCP2(I) = CPIDX2(I)
+         svcp1(i) = cpidx1(i)
+         svops(i) = ops(i)
+         svcp2(i) = cpidx2(i)
 
-      END DO
+      end do
 
 !
 !     Initialize the pointers we'll use to keep track of the
 !     row vectors we'll be comparing.  Initialize the DONE flag
 !     as well.
 !
-      LPTR  = 1
-      LCUR  = 1
-      RPTR  = 1
-      DONE  = .FALSE.
+      lptr  = 1
+      lcur  = 1
+      rptr  = 1
+      done  = .false.
 
 
-      CALL CHKOUT ( 'ZZEKJPRP' )
-      RETURN
+      call chkout ( 'ZZEKJPRP' )
+      return
 
 
 
@@ -959,7 +959,7 @@
 
 !$Procedure  ZZEKJNXT  ( Return next join row vector )
 
-      ENTRY ZZEKJNXT ( FOUND, ROWVEC )
+      entry zzekjnxt ( found, rowvec )
 
 ! $ Abstract
 !
@@ -1077,20 +1077,20 @@
 !
 !     No row vector found to start with.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     The action we take depends on the join constraint situation.
 !     Handle the "empty" case first.
 !
-      IF ( CASE .EQ. EMPTY ) THEN
+      if ( case .eq. empty ) then
 
-         RETURN
+         return
 
-      ELSE IF ( CASE .EQ. EQUI ) THEN
+      else if ( case .eq. equi ) then
 
 
-         DO WHILE (  ( .NOT. DONE )  .AND.  ( .NOT. FOUND )  )
+         do while (  ( .not. done )  .and.  ( .not. found )  )
 !
 !           At this point, LCUR and RPTR should point to the current
 !           pair of order vector entries to use.  We should always have
@@ -1110,167 +1110,167 @@
 !           numbers in the join columns for each order vector in our
 !           mini-join row sets that we created for sorting.
 !
-            CALL ZZEKSRD ( LOVBAS+LCUR,  LOVBAS+LCUR,  LRVIDX )
-            CALL ZZEKSRD ( ROVBAS+RPTR,  ROVBAS+RPTR,  RRVIDX )
+            call zzeksrd ( lovbas+lcur,  lovbas+lcur,  lrvidx )
+            call zzeksrd ( rovbas+rptr,  rovbas+rptr,  rrvidx )
 
-            ADDRSS  =  LBASE   +   7   +   2*(LRVIDX-1) + 1
-            CALL ZZEKSRD ( ADDRSS, ADDRSS, LROW )
+            addrss  =  lbase   +   7   +   2*(lrvidx-1) + 1
+            call zzeksrd ( addrss, addrss, lrow )
 
-            ADDRSS  =  RBASE   +   7   +   2*(RRVIDX-1) + 1
-            CALL ZZEKSRD ( ADDRSS, ADDRSS, RROW )
+            addrss  =  rbase   +   7   +   2*(rrvidx-1) + 1
+            call zzeksrd ( addrss, addrss, rrow )
 
 !
 !           Compare column entries, and advance the pointers as
 !           required.
 !
-            IF (  ZZEKRCMP( LT, &
+            if (  zzekrcmp( lt, &
                             1, &
-                            LHANS (    CNSTR ), &
-                            LSDSC ( 1, CNSTR ), &
-                            LDSCRS( 1, CNSTR ), &
-                            LROW, &
-                            LELT, &
-                            RHANS (    CNSTR ), &
-                            RSDSC ( 1, CNSTR ), &
-                            RDSCRS( 1, CNSTR ), &
-                            RROW, &
-                            RELT               )  ) THEN
+                            lhans (    cnstr ), &
+                            lsdsc ( 1, cnstr ), &
+                            ldscrs( 1, cnstr ), &
+                            lrow, &
+                            lelt, &
+                            rhans (    cnstr ), &
+                            rsdsc ( 1, cnstr ), &
+                            rdscrs( 1, cnstr ), &
+                            rrow, &
+                            relt               )  ) then
 !
 !
 !              The `left' key entry is smaller.  Advance the bottom
 !              pointer on the left side.
 !
-               IF ( LPTR .LT. SVNR1 ) THEN
-                  LPTR  =  LPTR + 1
-                  LCUR  =  LPTR
-               ELSE
-                  DONE  =  .TRUE.
-               END IF
+               if ( lptr .lt. svnr1 ) then
+                  lptr  =  lptr + 1
+                  lcur  =  lptr
+               else
+                  done  =  .true.
+               end if
 
 
 
-            ELSE IF (  ZZEKRCMP( EQ, &
+            else if (  zzekrcmp( eq, &
                                  1, &
-                                 LHANS (    CNSTR ), &
-                                 LSDSC ( 1, CNSTR ), &
-                                 LDSCRS( 1, CNSTR ), &
-                                 LROW, &
-                                 LELT, &
-                                 RHANS (    CNSTR ), &
-                                 RSDSC ( 1, CNSTR ), &
-                                 RDSCRS( 1, CNSTR ), &
-                                 RROW, &
-                                 RELT               )  ) THEN
+                                 lhans (    cnstr ), &
+                                 lsdsc ( 1, cnstr ), &
+                                 ldscrs( 1, cnstr ), &
+                                 lrow, &
+                                 lelt, &
+                                 rhans (    cnstr ), &
+                                 rsdsc ( 1, cnstr ), &
+                                 rdscrs( 1, cnstr ), &
+                                 rrow, &
+                                 relt               )  ) then
 !
 !
 !              The `left' key entry is equal.  Form a composite
 !              row vector and test it against the full set of active
 !              constraints.
 !
-               IF ( SVCP1(CNSTR) .LE. SVNT1 ) THEN
+               if ( svcp1(cnstr) .le. svnt1 ) then
 !
 !                 The parent table of the column on the LHS of our
 !                 equi-join constraint belongs to the first join
 !                 row set.
 !
-                  J  =  1
-                  K  =  SVNT1 + 1
+                  j  =  1
+                  k  =  svnt1 + 1
 
-               ELSE
+               else
 
-                  J  =  SVNT2 + 1
-                  K  =  1
+                  j  =  svnt2 + 1
+                  k  =  1
 
-               END IF
+               end if
 
 
-               OFFSET  =  SVRB1  +  ( LRVIDX - 1 ) * ( SVNT1 + 1 )
+               offset  =  svrb1  +  ( lrvidx - 1 ) * ( svnt1 + 1 )
 
-               CALL ZZEKSRD ( SVBAS1+OFFSET+1, &
-                              SVBAS1+OFFSET+SVNT1, ROWVEC(J) )
+               call zzeksrd ( svbas1+offset+1, &
+                              svbas1+offset+svnt1, rowvec(j) )
 
-               OFFSET  =  SVRB2  +  ( RRVIDX - 1 ) * ( SVNT2 + 1 )
+               offset  =  svrb2  +  ( rrvidx - 1 ) * ( svnt2 + 1 )
 
-               CALL ZZEKSRD ( SVBAS2+OFFSET+1, &
-                              SVBAS2+OFFSET+SVNT2,  ROWVEC(K) )
+               call zzeksrd ( svbas2+offset+1, &
+                              svbas2+offset+svnt2,  rowvec(k) )
 
 !
 !              Create row arrays for both sides of each active
 !              relational constraint.
 !
-               DO J = 1, SVNCON
+               do j = 1, svncon
 
-                  IF ( LOCACT(J) ) THEN
-                     LTAB      =  SVCP1( J    )
-                     RTAB      =  SVCP2( J    )
-                     LROWS(J)  =  ROWVEC( LTAB )
-                     RROWS(J)  =  ROWVEC( RTAB )
-                  END IF
+                  if ( locact(j) ) then
+                     ltab      =  svcp1( j    )
+                     rtab      =  svcp2( j    )
+                     lrows(j)  =  rowvec( ltab )
+                     rrows(j)  =  rowvec( rtab )
+                  end if
 
-               END DO
+               end do
 
-               FOUND = ZZEKVMCH ( SVNCON, LOCACT, &
-                                  LHANS,  LSDSC,  LDSCRS, LROWS, LELTS, &
-                                  SVOPS, &
-                                  RHANS,  RSDSC,  RDSCRS, RROWS, RELTS )
+               found = zzekvmch ( svncon, locact, &
+                                  lhans,  lsdsc,  ldscrs, lrows, lelts, &
+                                  svops, &
+                                  rhans,  rsdsc,  rdscrs, rrows, relts )
 
 !
 !              Update the pointers.
 !
-               IF ( LCUR .LT. SVNR1 ) THEN
+               if ( lcur .lt. svnr1 ) then
 
-                  LCUR  =  LCUR + 1
+                  lcur  =  lcur + 1
 
 
-               ELSE IF (        ( LCUR .EQ. SVNR1 ) &
-                          .AND. ( RPTR .LT. SVNR2 )  ) THEN
+               else if (        ( lcur .eq. svnr1 ) &
+                          .and. ( rptr .lt. svnr2 )  ) then
 !
 !                 We've compared every left hand entry from RPTR
 !                 upwards to the right hand entry.  Time to work on
 !                 the next right hand entry.
 !
-                  RPTR  =  RPTR + 1
-                  LCUR  =  LPTR
+                  rptr  =  rptr + 1
+                  lcur  =  lptr
 
-               ELSE
+               else
 !
 !                 LCUR and RPTR point to the last entries in their
 !                 respective row sets.
 !
-                  DONE  =  .TRUE.
+                  done  =  .true.
 
-               END IF
+               end if
 
 
 
-            ELSE
+            else
 !
 !              The current left key entry is greater than that
 !              on the right.  It's time to look at the next entry
 !              on the right, if possible.
 !
-               IF ( RPTR .LT. SVNR2 ) THEN
-                  RPTR  =  RPTR + 1
-                  LCUR  =  LPTR
-               ELSE
-                  DONE  =  .TRUE.
-               END IF
+               if ( rptr .lt. svnr2 ) then
+                  rptr  =  rptr + 1
+                  lcur  =  lptr
+               else
+                  done  =  .true.
+               end if
 
-            END IF
+            end if
 
 !
 !           At this point, we've advanced at least one of LPTR, RPTR,
 !           or LCUR, or else we've set DONE to .TRUE.
 !
-         END DO
+         end do
 
 
 
-      ELSE IF ( CASE .EQ. NONEQ ) THEN
+      else if ( case .eq. noneq ) then
 !
 !        This is the non-equi-join case.
 !
-         DO WHILE (  ( .NOT. DONE )  .AND.  ( .NOT. FOUND )  )
+         do while (  ( .not. done )  .and.  ( .not. found )  )
 !
 !           At this point, LPTR and RPTR should point to the current
 !           pair of order vector entries to use.  We should always have
@@ -1287,180 +1287,180 @@
 !           numbers in the join columns for each order vector in our
 !           mini-join row sets that we created for sorting.
 !
-            CALL ZZEKSRD ( LOVBAS+LPTR,  LOVBAS+LPTR,  LRVIDX )
-            CALL ZZEKSRD ( ROVBAS+RPTR,  ROVBAS+RPTR,  RRVIDX )
+            call zzeksrd ( lovbas+lptr,  lovbas+lptr,  lrvidx )
+            call zzeksrd ( rovbas+rptr,  rovbas+rptr,  rrvidx )
 
-            ADDRSS  =  LBASE   +   7   +   2*(LRVIDX-1) + 1
-            CALL ZZEKSRD ( ADDRSS, ADDRSS, LROW )
+            addrss  =  lbase   +   7   +   2*(lrvidx-1) + 1
+            call zzeksrd ( addrss, addrss, lrow )
 
-            ADDRSS  =  RBASE   +   7   +   2*(RRVIDX-1) + 1
-            CALL ZZEKSRD ( ADDRSS, ADDRSS, RROW )
+            addrss  =  rbase   +   7   +   2*(rrvidx-1) + 1
+            call zzeksrd ( addrss, addrss, rrow )
 
 !
 !           Compare column entries, and advance the pointers as
 !           required.
 !
-            IF (  ZZEKRCMP( SVOPS(CNSTR), &
+            if (  zzekrcmp( svops(cnstr), &
                             1, &
-                            LHANS (    CNSTR ), &
-                            LSDSC ( 1, CNSTR ), &
-                            LDSCRS( 1, CNSTR ), &
-                            LROW, &
-                            LELT, &
-                            RHANS (    CNSTR ), &
-                            RSDSC ( 1, CNSTR ), &
-                            RDSCRS( 1, CNSTR ), &
-                            RROW, &
-                            RELT               )  ) THEN
+                            lhans (    cnstr ), &
+                            lsdsc ( 1, cnstr ), &
+                            ldscrs( 1, cnstr ), &
+                            lrow, &
+                            lelt, &
+                            rhans (    cnstr ), &
+                            rsdsc ( 1, cnstr ), &
+                            rdscrs( 1, cnstr ), &
+                            rrow, &
+                            relt               )  ) then
 !
 !
 !              This pair of row vectors satisfies the join constraint.
 !              Form a composite row vector and test it against the full
 !              set of active constraints.
 !
-               IF ( SVCP1(CNSTR) .LE. SVNT1 ) THEN
+               if ( svcp1(cnstr) .le. svnt1 ) then
 !
 !                 The parent table of the column on the LHS of our
 !                 equi-join constraint belongs to the first join
 !                 row set.
 !
-                  J  =  1
-                  K  =  SVNT1 + 1
+                  j  =  1
+                  k  =  svnt1 + 1
 
-               ELSE
+               else
 
-                  J  =  SVNT2 + 1
-                  K  =  1
+                  j  =  svnt2 + 1
+                  k  =  1
 
-               END IF
+               end if
 
 
-               OFFSET  =  SVRB1  +  ( LRVIDX - 1 ) * ( SVNT1 + 1 )
+               offset  =  svrb1  +  ( lrvidx - 1 ) * ( svnt1 + 1 )
 
-               CALL ZZEKSRD ( SVBAS1+OFFSET+1, &
-                              SVBAS1+OFFSET+SVNT1, ROWVEC(J) )
+               call zzeksrd ( svbas1+offset+1, &
+                              svbas1+offset+svnt1, rowvec(j) )
 
-               OFFSET  =  SVRB2  +  ( RRVIDX - 1 ) * ( SVNT2 + 1 )
+               offset  =  svrb2  +  ( rrvidx - 1 ) * ( svnt2 + 1 )
 
-               CALL ZZEKSRD ( SVBAS2+OFFSET+1, &
-                              SVBAS2+OFFSET+SVNT2,  ROWVEC(K) )
+               call zzeksrd ( svbas2+offset+1, &
+                              svbas2+offset+svnt2,  rowvec(k) )
 
 
 !
 !              Create row arrays for both sides of each active
 !              relational constraint.
 !
-               DO J = 1, SVNCON
+               do j = 1, svncon
 
-                  IF ( LOCACT(J) ) THEN
-                     LTAB      =  SVCP1( J    )
-                     RTAB      =  SVCP2( J    )
-                     LROWS(J)  =  ROWVEC( LTAB )
-                     RROWS(J)  =  ROWVEC( RTAB )
-                  END IF
+                  if ( locact(j) ) then
+                     ltab      =  svcp1( j    )
+                     rtab      =  svcp2( j    )
+                     lrows(j)  =  rowvec( ltab )
+                     rrows(j)  =  rowvec( rtab )
+                  end if
 
-               END DO
-
-
-               FOUND = ZZEKVMCH ( SVNCON, LOCACT, &
-                                  LHANS,  LSDSC,  LDSCRS, LROWS, LELTS, &
-                                  SVOPS, &
-                                  RHANS,  RSDSC,  RDSCRS, RROWS, RELTS )
+               end do
 
 
-               IF ( LSMALL ) THEN
+               found = zzekvmch ( svncon, locact, &
+                                  lhans,  lsdsc,  ldscrs, lrows, lelts, &
+                                  svops, &
+                                  rhans,  rsdsc,  rdscrs, rrows, relts )
+
+
+               if ( lsmall ) then
 !
 !                 The `left' key entry is smaller.  All higher-indexed
 !                 rows on the right side also satisfy the join
 !                 constraint, combined with the current left hand side.
 !
-                  IF ( RPTR .LT. SVNR2 ) THEN
+                  if ( rptr .lt. svnr2 ) then
 
-                     RPTR  =  RPTR + 1
+                     rptr  =  rptr + 1
 
-                  ELSE IF ( LPTR .LT. SVNR1 ) THEN
+                  else if ( lptr .lt. svnr1 ) then
 
-                     LPTR  =  LPTR + 1
-                     RPTR  =  1
+                     lptr  =  lptr + 1
+                     rptr  =  1
 
-                  ELSE
+                  else
 
-                     DONE  =  .TRUE.
+                     done  =  .true.
 
-                  END IF
+                  end if
 
 
-               ELSE
+               else
 !
 !                 The `right' key entry is smaller.  All higher-indexed
 !                 rows on the left side also satisfy the join
 !                 constraint, combined with the current right hand side.
 !
-                  IF ( LPTR .LT. SVNR1 ) THEN
+                  if ( lptr .lt. svnr1 ) then
 
-                     LPTR  =  LPTR + 1
+                     lptr  =  lptr + 1
 
-                  ELSE IF ( RPTR .LT. SVNR2 ) THEN
+                  else if ( rptr .lt. svnr2 ) then
 
-                     RPTR  =  RPTR + 1
-                     LPTR  =  1
+                     rptr  =  rptr + 1
+                     lptr  =  1
 
-                  ELSE
+                  else
 
-                     DONE  =  .TRUE.
+                     done  =  .true.
 
-                  END IF
+                  end if
 
 
-               END IF
+               end if
 !
 !              We incremented LPTR or RPTR, or else we set DONE to
 !              .TRUE.
 !
 
 
-            ELSE
+            else
 !
 !              The constraint was not met by the rows under
 !              consideration.
 !
-               IF ( LSMALL ) THEN
+               if ( lsmall ) then
 !
 !                 If the right side can be incremented, there's a
 !                 chance of a match.
 !
-                  IF ( RPTR .LT. SVNR2 ) THEN
-                     RPTR  =  RPTR + 1
-                  ELSE
-                     DONE  =  .TRUE.
-                  END IF
+                  if ( rptr .lt. svnr2 ) then
+                     rptr  =  rptr + 1
+                  else
+                     done  =  .true.
+                  end if
 
 
-               ELSE
+               else
 !
 !                 If the left side can be incremented, there's a
 !                 chance of a match.
 !
-                  IF ( LPTR .LT. SVNR1 ) THEN
-                     LPTR  =  LPTR + 1
-                  ELSE
-                     DONE  =  .TRUE.
-                  END IF
+                  if ( lptr .lt. svnr1 ) then
+                     lptr  =  lptr + 1
+                  else
+                     done  =  .true.
+                  end if
 
-               END IF
+               end if
 !
 !              We incremented LPTR or RPTR, or else we set DONE to
 !              .TRUE.
 !
 
-            END IF
+            end if
 
 
-         END DO
+         end do
 
 
 
-      ELSE
+      else
 
 !
 !        We have no order vectors to help us out, so we just loop
@@ -1469,62 +1469,62 @@
 !        continuation of our search when we drop back into the loop
 !        on a subsequent call.
 !
-         DO WHILE ( LPTR .LE. SVNR1 )
+         do while ( lptr .le. svnr1 )
 
 
-            DO WHILE ( RPTR .LE. SVNR2 )
+            do while ( rptr .le. svnr2 )
 !
 !              Form a composite row vector and test it against the full
 !              set of active constraints.
 !
-               OFFSET  =  SVRB1  +  ( LPTR - 1 ) * ( SVNT1 + 1 )
+               offset  =  svrb1  +  ( lptr - 1 ) * ( svnt1 + 1 )
 
-               CALL ZZEKSRD ( SVBAS1+OFFSET+1, &
-                              SVBAS1+OFFSET+SVNT1, ROWVEC  )
+               call zzeksrd ( svbas1+offset+1, &
+                              svbas1+offset+svnt1, rowvec  )
 
-               OFFSET  =  SVRB2  +  ( RPTR - 1 ) * ( SVNT2 + 1 )
+               offset  =  svrb2  +  ( rptr - 1 ) * ( svnt2 + 1 )
 
-               CALL ZZEKSRD ( SVBAS2+OFFSET+1, &
-                              SVBAS2+OFFSET+SVNT2,  ROWVEC(SVNT1+1) )
+               call zzeksrd ( svbas2+offset+1, &
+                              svbas2+offset+svnt2,  rowvec(svnt1+1) )
 
 !
 !              Create row arrays for both sides of each active
 !              relational constraint.
 !
-               DO J = 1, SVNCON
+               do j = 1, svncon
 
-                  IF ( LOCACT(J) ) THEN
-                     LTAB      =  SVCP1( J    )
-                     RTAB      =  SVCP2( J    )
-                     LROWS(J)  =  ROWVEC( LTAB )
-                     RROWS(J)  =  ROWVEC( RTAB )
-                  END IF
+                  if ( locact(j) ) then
+                     ltab      =  svcp1( j    )
+                     rtab      =  svcp2( j    )
+                     lrows(j)  =  rowvec( ltab )
+                     rrows(j)  =  rowvec( rtab )
+                  end if
 
-               END DO
+               end do
 
-               FOUND = ZZEKVMCH ( SVNCON, LOCACT, &
-                                  LHANS,  LSDSC,  LDSCRS, LROWS, LELTS, &
-                                  SVOPS, &
-                                  RHANS,  RSDSC,  RDSCRS, RROWS, RELTS )
+               found = zzekvmch ( svncon, locact, &
+                                  lhans,  lsdsc,  ldscrs, lrows, lelts, &
+                                  svops, &
+                                  rhans,  rsdsc,  rdscrs, rrows, relts )
 
-               RPTR   =  RPTR + 1
+               rptr   =  rptr + 1
 
-               IF ( FOUND ) THEN
-                  RETURN
-               END IF
-
-
-            END DO
+               if ( found ) then
+                  return
+               end if
 
 
-            LPTR  =  LPTR + 1
-            RPTR  =  1
-
-         END DO
+            end do
 
 
-      END IF
+            lptr  =  lptr + 1
+            rptr  =  1
+
+         end do
 
 
-      RETURN
-      END
+      end if
+
+
+      return
+      end

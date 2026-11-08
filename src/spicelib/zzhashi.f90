@@ -1,6 +1,6 @@
 !$Procedure ZZHASHI ( Private---integer hash function )
 
-      INTEGER FUNCTION ZZHASHI ( N, M )
+      integer function zzhashi ( n, m )
 
 ! $ Abstract
 !
@@ -20,10 +20,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      INTEGER               M
+      integer               n
+      integer               m
 
 ! $ Brief_I/O
 !
@@ -97,26 +97,26 @@
 !
 !     Check divisor.
 !
-      IF ( M .LE. 0 ) THEN
+      if ( m .le. 0 ) then
 
-         ZZHASHI = 0
+         zzhashi = 0
 
-         CALL CHKIN  ( 'ZZHASHI'                                     )
-         CALL SETMSG ( 'The input hash function divisor was not '    // &
+         call chkin  ( 'ZZHASHI'                                     )
+         call setmsg ( 'The input hash function divisor was not '    // &
                        'a positive number. It was #.'                )
-         CALL ERRINT ( '#', M                                        )
-         CALL SIGERR ( 'SPICE(INVALIDDIVISOR)'                       )
-         CALL CHKOUT ( 'ZZHASHI'                                     )
-         RETURN
+         call errint ( '#', m                                        )
+         call sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
+         call chkout ( 'ZZHASHI'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Use simple division method -- h(k) = k mod m.
 !
-      ZZHASHI = MOD(ABS(N),M) + 1
+      zzhashi = mod(abs(n),m) + 1
 
-      RETURN
-      END
+      return
+      end
 
 

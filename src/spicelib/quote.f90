@@ -1,6 +1,6 @@
 !$Procedure QUOTE ( Enclose in quotes )
 
-      SUBROUTINE QUOTE ( IN, LEFT, RIGHT, OUT )
+      subroutine quote ( in, left, right, out )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    IN
-      CHARACTER*1      LEFT
-      CHARACTER*1      RIGHT
-      CHARACTER*(*)    OUT
+      character*(*)    in
+      character*1      left
+      character*1      right
+      character*(*)    out
 
 ! $ Brief_I/O
 !
@@ -134,23 +134,23 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          FRSTNB
-      INTEGER          LASTNB
+      integer          frstnb
+      integer          lastnb
 
 
 
 !
 !     Check for blank string first.
 !
-      IF ( IN .EQ. ' ' ) THEN
-         OUT = LEFT
-         CALL SUFFIX ( RIGHT, 1, OUT )
+      if ( in .eq. ' ' ) then
+         out = left
+         call suffix ( right, 1, out )
 
-      ELSE
-         OUT = IN(FRSTNB(IN) : LASTNB(IN))
-         CALL PREFIX ( LEFT,  0, OUT )
-         CALL SUFFIX ( RIGHT, 0, OUT )
-      END IF
+      else
+         out = in(frstnb(in) : lastnb(in))
+         call prefix ( left,  0, out )
+         call suffix ( right, 0, out )
+      end if
 
-      RETURN
-      END
+      return
+      end

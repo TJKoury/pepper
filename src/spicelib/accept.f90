@@ -1,6 +1,6 @@
 !$Procedure ACCEPT ( Accept New Long Error Message )
 
-      LOGICAL FUNCTION ACCEPT ( OK )
+      logical function accept ( ok )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               OK
+      logical               ok
 
 ! $ Brief_I/O
 !
@@ -135,7 +135,7 @@
 !
 
 
-      LOGICAL               ALLOWD
+      logical               allowd
 
 
 !
@@ -143,16 +143,16 @@
 !
 
 
-      LOGICAL               SAVOK
+      logical               savok
 
-      SAVE                  SAVOK
+      save                  savok
 
 
 !
 !     Initial Values:
 !
 
-      DATA       SAVOK  /  .TRUE.  /
+      data       savok  /  .true.  /
 
 !
 !     Executable Code:
@@ -160,18 +160,18 @@
 
 
 
-      SAVOK  =  OK
+      savok  =  ok
 
-      ACCEPT = .FALSE.
+      accept = .false.
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ALLOWD    (Are Changes of Long Error Message Allowed?)
 
-       ENTRY  ALLOWD ()
+       entry  allowd ()
 
 ! $ Abstract
 !
@@ -297,7 +297,7 @@
 !     Executable Code:
 !
 
-      ALLOWD = SAVOK
+      allowd = savok
 
 
-      END
+      end

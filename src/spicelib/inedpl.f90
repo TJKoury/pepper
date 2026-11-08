@@ -1,6 +1,6 @@
 !$Procedure INEDPL ( Intersection of ellipsoid and plane )
 
-      SUBROUTINE INEDPL ( A, B, C, PLANE, ELLIPS, FOUND )
+      subroutine inedpl ( a, b, c, plane, ellips, found )
 
 ! $ Abstract
 !
@@ -20,20 +20,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL = 9 )
+      integer               ubel
+      parameter           ( ubel = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL = 4 )
+      integer               ubpl
+      parameter           ( ubpl = 4 )
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      DOUBLE PRECISION      ELLIPS ( UBEL )
-      LOGICAL               FOUND
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      plane  ( ubpl )
+      double precision      ellips ( ubel )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -417,75 +417,75 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      VNORM
+      double precision      brcktd
+      double precision      vnorm
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      DPLANE ( UBPL )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      DSTORT ( 3 )
-      DOUBLE PRECISION      INVDST ( 3 )
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      POINT  ( 3 )
-      DOUBLE PRECISION      RCIRCL
-      DOUBLE PRECISION      SPAN1  ( 3 )
-      DOUBLE PRECISION      SPAN2  ( 3 )
-      DOUBLE PRECISION      VEC1   ( 3 )
-      DOUBLE PRECISION      VEC2   ( 3 )
+      double precision      center ( 3 )
+      double precision      const
+      double precision      dplane ( ubpl )
+      double precision      dist
+      double precision      dstort ( 3 )
+      double precision      invdst ( 3 )
+      double precision      maxrad
+      double precision      normal ( 3 )
+      double precision      point  ( 3 )
+      double precision      rcircl
+      double precision      span1  ( 3 )
+      double precision      span2  ( 3 )
+      double precision      vec1   ( 3 )
+      double precision      vec2   ( 3 )
 
-      INTEGER               I
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'INEDPL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'INEDPL' )
+      end if
 
 !
 !     We don't want to worry about flat ellipsoids:
 !
-      IF (         ( A .LE. 0.0D0 ) &
-            .OR.   ( B .LE. 0.0D0 ) &
-            .OR.   ( C .LE. 0.0D0 )   )   THEN
+      if (         ( a .le. 0.0d0 ) &
+            .or.   ( b .le. 0.0d0 ) &
+            .or.   ( c .le. 0.0d0 )   )   then
 
-         FOUND = .FALSE.
+         found = .false.
 
-         CALL SETMSG ( 'Semi-axes: A = #,  B = #,  C = #.'  )
-         CALL ERRDP  ( '#', A                               )
-         CALL ERRDP  ( '#', B                               )
-         CALL ERRDP  ( '#', C                               )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'              )
-         CALL CHKOUT ( 'INEDPL'                             )
-         RETURN
+         call setmsg ( 'Semi-axes: A = #,  B = #,  C = #.'  )
+         call errdp  ( '#', a                               )
+         call errdp  ( '#', b                               )
+         call errdp  ( '#', c                               )
+         call sigerr ( 'SPICE(DEGENERATECASE)'              )
+         call chkout ( 'INEDPL'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Check input plane for zero normal vector.
 !
-      CALL PL2NVC ( PLANE, NORMAL, CONST )
+      call pl2nvc ( plane, normal, const )
 
-      IF ( VZERO(NORMAL) ) THEN
+      if ( vzero(normal) ) then
 
-         CALL SETMSG ( 'Normal vector of the input ' // &
+         call setmsg ( 'Normal vector of the input ' // &
                        'PLANE is the zero vector.'   )
-         CALL SIGERR ( 'SPICE(INVALIDPLANE)'         )
-         CALL CHKOUT ( 'INEDPL'                      )
-         RETURN
+         call sigerr ( 'SPICE(INVALIDPLANE)'         )
+         call chkout ( 'INEDPL'                      )
+         return
 
-      END IF
+      end if
 
 !
 !     This algorithm is partitioned into a series of steps:
@@ -521,17 +521,17 @@
 !     to the origin, so its norm gives the distance of the plane
 !     from the origin.
 !
-      CALL PL2PSV  ( PLANE, POINT, SPAN1, SPAN2 )
+      call pl2psv  ( plane, point, span1, span2 )
 
-      MAXRAD = MAX ( DABS(A), DABS(B), DABS(C) )
+      maxrad = max ( dabs(a), dabs(b), dabs(c) )
 
-      IF ( VNORM (POINT) .GT. MAXRAD ) THEN
+      if ( vnorm (point) .gt. maxrad ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'INEDPL' )
-         RETURN
+         found = .false.
+         call chkout ( 'INEDPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     The distortion matrix and its inverse are
@@ -545,13 +545,13 @@
 !     We declare them with length three, since we are going to make
 !     use of the diagonal elements only.
 !
-      DSTORT(1) = 1.0D0 / A
-      DSTORT(2) = 1.0D0 / B
-      DSTORT(3) = 1.0D0 / C
+      dstort(1) = 1.0d0 / a
+      dstort(2) = 1.0d0 / b
+      dstort(3) = 1.0d0 / c
 
-      INVDST(1) =  A
-      INVDST(2) =  B
-      INVDST(3) =  C
+      invdst(1) =  a
+      invdst(2) =  b
+      invdst(3) =  c
 
 !
 !     Apply the distortion mapping to the input plane.  Applying
@@ -559,15 +559,15 @@
 !     define the input plane yields a point and two spanning vectors
 !     that define the distorted plane.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         POINT(I)  =  DSTORT(I)  *  POINT(I)
-         SPAN1(I)  =  DSTORT(I)  *  SPAN1(I)
-         SPAN2(I)  =  DSTORT(I)  *  SPAN2(I)
+         point(i)  =  dstort(i)  *  point(i)
+         span1(i)  =  dstort(i)  *  span1(i)
+         span2(i)  =  dstort(i)  *  span2(i)
 
-      END DO
+      end do
 
-      CALL PSV2PL ( POINT,   SPAN1,  SPAN2,  DPLANE )
+      call psv2pl ( point,   span1,  span2,  dplane )
 
 !
 !     Step 2:
@@ -594,26 +594,26 @@
 !     the center and these scaled vectors define the intersection
 !     circle.
 !
-      CALL PL2PSV  ( DPLANE, CENTER, VEC1, VEC2 )
+      call pl2psv  ( dplane, center, vec1, vec2 )
 
-      DIST = VNORM ( CENTER )
+      dist = vnorm ( center )
 
-      IF ( DIST .GT. 1.0D0 ) THEN
+      if ( dist .gt. 1.0d0 ) then
 
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'INEDPL' )
-         RETURN
+         found = .false.
+         call chkout ( 'INEDPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the generating vectors by the radius of the intersection
 !     circle.
 !
-      RCIRCL =  DSQRT (  BRCKTD ( 1.0D0 - DIST**2,  0.0D0,  1.0D0  )  )
+      rcircl =  dsqrt (  brcktd ( 1.0d0 - dist**2,  0.0d0,  1.0d0  )  )
 
-      CALL VSCLIP ( RCIRCL, VEC1 )
-      CALL VSCLIP ( RCIRCL, VEC2 )
+      call vsclip ( rcircl, vec1 )
+      call vsclip ( rcircl, vec2 )
 
 !
 !     Step 3:
@@ -621,20 +621,20 @@
 !     Apply the inverse distortion to the intersection circle to find
 !     the actual intersection ellipse.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         CENTER(I)  =  INVDST(I)  *  CENTER(I)
-         VEC1(I)    =  INVDST(I)  *  VEC1(I)
-         VEC2(I)    =  INVDST(I)  *  VEC2(I)
+         center(i)  =  invdst(i)  *  center(i)
+         vec1(i)    =  invdst(i)  *  vec1(i)
+         vec2(i)    =  invdst(i)  *  vec2(i)
 
-      END DO
+      end do
 !
 !     Make an ellipse from the center and generating vectors.
 !
-      CALL CGV2EL ( CENTER, VEC1, VEC2, ELLIPS )
+      call cgv2el ( center, vec1, vec2, ellips )
 
-      FOUND  = .TRUE.
+      found  = .true.
 
-      CALL CHKOUT ( 'INEDPL' )
-      RETURN
-      END
+      call chkout ( 'INEDPL' )
+      return
+      end

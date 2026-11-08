@@ -1,6 +1,6 @@
 !$Procedure WRKVAR ( Write a variable to a kernel file )
 
-      SUBROUTINE WRKVAR ( UNIT, NAME, DIRCTV, TABSYM, TABPTR, TABVAL )
+      subroutine wrkvar ( unit, name, dirctv, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               UNIT
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         DIRCTV
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
+      integer               unit
+      character*(*)         name
+      character*(*)         dirctv
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -161,111 +161,111 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SYDIMD
-      LOGICAL               RETURN
+      integer               sydimd
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*1           BLANK
-      PARAMETER           ( BLANK = ' '    )
+      character*1           blank
+      parameter           ( blank = ' '    )
 
-      CHARACTER*1           LPAREN
-      PARAMETER           ( LPAREN = '('   )
+      character*1           lparen
+      parameter           ( lparen = '('   )
 
-      CHARACTER*3           RPAREN
-      PARAMETER           ( RPAREN = '  )' )
+      character*3           rparen
+      parameter           ( rparen = '  )' )
 
-      CHARACTER*2           COMMA
-      PARAMETER           ( COMMA  = ','   )
+      character*2           comma
+      parameter           ( comma  = ','   )
 
-      INTEGER               VARLEN
-      INTEGER               MARGIN
-      INTEGER               VARDIM
+      integer               varlen
+      integer               margin
+      integer               vardim
 
-      CHARACTER*132         LINE
-      DOUBLE PRECISION      DVALUE
+      character*132         line
+      double precision      dvalue
 
-      LOGICAL               FOUND
-      INTEGER               IOSTAT
-      INTEGER               I
+      logical               found
+      integer               iostat
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WRKVAR' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'WRKVAR' )
+      end if
 
 
 !
 !     Preliminary measurements.
 !
-      VARLEN = LEN ( TABSYM(1) )
-      MARGIN = VARLEN + 6
-      VARDIM = SYDIMD ( NAME, TABSYM, TABPTR, TABVAL )
+      varlen = len ( tabsym(1) )
+      margin = varlen + 6
+      vardim = sydimd ( name, tabsym, tabptr, tabval )
 
 !
 !     One value per line.
 !
-      DO I = 1, VARDIM
+      do i = 1, vardim
 
-         CALL SYNTHD ( NAME, I, TABSYM, TABPTR, TABVAL, DVALUE, FOUND )
+         call synthd ( name, i, tabsym, tabptr, tabval, dvalue, found )
 
 !
 !        The first line contains the variable name, the directive,
 !        an optional left parenthesis, and the first value. The values
 !        of a multi-dimensional variable are separated by commas.
 !
-         IF ( I .EQ. 1 ) THEN
+         if ( i .eq. 1 ) then
 
-            CALL LJUST ( NAME,   LINE                    )
-            CALL RJUST ( DIRCTV, LINE(MARGIN-4:MARGIN-3) )
+            call ljust ( name,   line                    )
+            call rjust ( dirctv, line(margin-4:margin-3) )
 
-            IF ( VARDIM .GT. 1 ) THEN
+            if ( vardim .gt. 1 ) then
 
-               LINE(MARGIN-1:MARGIN-1) = LPAREN
-               WRITE (UNIT,*,IOSTAT=IOSTAT) LINE(1:MARGIN), DVALUE, &
-                                            COMMA
+               line(margin-1:margin-1) = lparen
+               write (unit,*,iostat=iostat) line(1:margin), dvalue, &
+                                            comma
 
-            ELSE
+            else
 
-               WRITE (UNIT,*,IOSTAT=IOSTAT) LINE(1:MARGIN), DVALUE
+               write (unit,*,iostat=iostat) line(1:margin), dvalue
 
-            END IF
+            end if
 
 
 !
 !        The last line of a multi-dimensional variable ends with a
 !        right parenthesis.
 !
-         ELSE IF ( I .GT. 1  .AND.  I .EQ. VARDIM ) THEN
+         else if ( i .gt. 1  .and.  i .eq. vardim ) then
 
-            LINE = ' '
-            WRITE (UNIT,*,IOSTAT=IOSTAT) LINE(1:MARGIN), DVALUE, RPAREN
+            line = ' '
+            write (unit,*,iostat=iostat) line(1:margin), dvalue, rparen
 
-         ELSE
+         else
 
-            LINE = ' '
-            WRITE (UNIT,*,IOSTAT=IOSTAT) LINE(1:MARGIN), DVALUE, COMMA
+            line = ' '
+            write (unit,*,iostat=iostat) line(1:margin), dvalue, comma
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      IF ( IOSTAT .NE. 0 ) THEN
-         CALL IOERR ( 'writing a variable to the output kernel file', &
+      if ( iostat .ne. 0 ) then
+         call ioerr ( 'writing a variable to the output kernel file', &
                       ' ', &
-                      IOSTAT                                          )
+                      iostat                                          )
 
-         CALL SIGERR ( 'SPICE(WRITEERROR)' )
+         call sigerr ( 'SPICE(WRITEERROR)' )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'WRKVAR' )
-      RETURN
-      END
+      call chkout ( 'WRKVAR' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure COPYD ( Copy a double precision cell )
 
-      SUBROUTINE COPYD ( CELL, COPY )
+      subroutine copyd ( cell, copy )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION   CELL     ( LBCELL:* )
-      DOUBLE PRECISION   COPY     ( LBCELL:* )
+      double precision   cell     ( lbcell:* )
+      double precision   copy     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -131,58 +131,58 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          SIZED
-      INTEGER          CARDD
-      LOGICAL          RETURN
+      integer          sized
+      integer          cardd
+      logical          return
 
 !
 !     Local variables
 !
-      INTEGER          SIZE
-      INTEGER          CARD
-      INTEGER          MOVED
-      INTEGER          I
+      integer          size
+      integer          card
+      integer          moved
+      integer          i
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN() ) RETURN
-      CALL CHKIN ( 'COPYD' )
+      if ( return() ) return
+      call chkin ( 'COPYD' )
 
 
 !
 !     We need the cardinality of the input cell, and the size of
 !     the output cell.
 !
-      CARD = CARDD ( CELL )
-      SIZE = SIZED ( COPY )
+      card = cardd ( cell )
+      size = sized ( copy )
 
 !
 !     Start moving the elements, one by one. Stop if the output
 !     cell fills up.
 !
-      MOVED = MIN ( CARD, SIZE )
+      moved = min ( card, size )
 
-      DO I = 1, MOVED
-         COPY(I) = CELL(I)
-      END DO
+      do i = 1, moved
+         copy(i) = cell(i)
+      end do
 
 !
 !     Set the cardinality of the output cell. Report any excess.
 !
-      CALL SCARDD ( MOVED, COPY )
+      call scardd ( moved, copy )
 
 
-      IF ( CARD .GT. SIZE ) THEN
+      if ( card .gt. size ) then
 
-         CALL EXCESS ( CARD - SIZE, 'cell' )
-         CALL SIGERR ( 'SPICE(CELLTOOSMALL)' )
-         CALL CHKOUT ( 'COPYD' )
-         RETURN
+         call excess ( card - size, 'cell' )
+         call sigerr ( 'SPICE(CELLTOOSMALL)' )
+         call chkout ( 'COPYD' )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'COPYD' )
-      RETURN
-      END
+      call chkout ( 'COPYD' )
+      return
+      end

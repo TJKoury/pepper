@@ -1,6 +1,6 @@
 !$Procedure DAFRWA ( DAF, record/word to address )
 
-      SUBROUTINE DAFRWA ( RECNO, WORDNO, ADDR )
+      subroutine dafrwa ( recno, wordno, addr )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               RECNO
-      INTEGER               WORDNO
-      INTEGER               ADDR
+      integer               recno
+      integer               wordno
+      integer               addr
 
 ! $ Brief_I/O
 !
@@ -118,37 +118,37 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
+      if ( return () ) then
+         return
 
-      ELSE IF ( RECNO .LE. 0  .OR.  WORDNO .LE. 0 ) THEN
-         CALL CHKIN  ( 'DAFRWA'                           )
-         CALL SETMSG ( 'No address for record #, word #.' )
-         CALL ERRINT ( '#', RECNO                         )
-         CALL ERRINT ( '#', WORDNO                        )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHADDR)'             )
-         CALL CHKOUT ( 'DAFRWA'                           )
-         RETURN
-      END IF
+      else if ( recno .le. 0  .or.  wordno .le. 0 ) then
+         call chkin  ( 'DAFRWA'                           )
+         call setmsg ( 'No address for record #, word #.' )
+         call errint ( '#', recno                         )
+         call errint ( '#', wordno                        )
+         call sigerr ( 'SPICE(DAFNOSUCHADDR)'             )
+         call chkout ( 'DAFRWA'                           )
+         return
+      end if
 
 !
 !     If the record and word numbers are legal, the computation is
 !     straightforward.
 !
-      ADDR = WORDNO + ( RECNO - 1 ) * 128
+      addr = wordno + ( recno - 1 ) * 128
 
-      RETURN
+      return
 
 
 
 !$Procedure DAFARW ( DAF, address to record/word )
 
-      ENTRY DAFARW ( ADDR, RECNO, WORDNO )
+      entry dafarw ( addr, recno, wordno )
 
 ! $ Abstract
 !
@@ -264,23 +264,23 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
+      if ( return () ) then
+         return
 
-      ELSE IF ( ADDR .LE. 0 ) THEN
-         CALL CHKIN  ( 'DAFARW'                         )
-         CALL SETMSG ( 'No record, word for address #.' )
-         CALL ERRINT ( '#', ADDR                        )
-         CALL SIGERR ( 'SPICE(DAFNOSUCHADDR)'           )
-         CALL CHKOUT ( 'DAFARW'                         )
-         RETURN
-      END IF
+      else if ( addr .le. 0 ) then
+         call chkin  ( 'DAFARW'                         )
+         call setmsg ( 'No record, word for address #.' )
+         call errint ( '#', addr                        )
+         call sigerr ( 'SPICE(DAFNOSUCHADDR)'           )
+         call chkout ( 'DAFARW'                         )
+         return
+      end if
 
 !
 !     If the address is legal, the computation is straightforward.
 !
-      RECNO  =        ( ADDR  - 1 ) / 128 + 1
-      WORDNO = ADDR - ( RECNO - 1 ) * 128
+      recno  =        ( addr  - 1 ) / 128 + 1
+      wordno = addr - ( recno - 1 ) * 128
 
-      RETURN
-      END
+      return
+      end

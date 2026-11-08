@@ -1,6 +1,6 @@
 !$Procedure SAMSBI (Same substrings, case insensitive)
 
-      LOGICAL FUNCTION SAMSBI ( STR1, B1, E1,  STR2, B2, E2 )
+      logical function samsbi ( str1, b1, e1,  str2, b2, e2 )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR1
-      INTEGER               B1
-      INTEGER               E1
-      CHARACTER*(*)         STR2
-      INTEGER               B2
-      INTEGER               E2
+      character*(*)         str1
+      integer               b1
+      integer               e1
+      character*(*)         str2
+      integer               b2
+      integer               e2
 
 ! $ Brief_I/O
 !
@@ -190,37 +190,37 @@
 !-&
 
 
-      LOGICAL               NECHR
+      logical               nechr
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 
-      IF (      ( E1      .LT. B1           ) &
-           .OR. ( E2      .LT. B2           ) &
-           .OR. ( B1      .LT. 1            ) &
-           .OR. ( B2      .LT. 1            ) &
-           .OR. ( E1      .GT. LEN(STR1)    ) &
-           .OR. ( E2      .GT. LEN(STR2)    ) &
-           .OR. ( E1 - B1 .NE. E2 - B2      )  ) THEN
+      if (      ( e1      .lt. b1           ) &
+           .or. ( e2      .lt. b2           ) &
+           .or. ( b1      .lt. 1            ) &
+           .or. ( b2      .lt. 1            ) &
+           .or. ( e1      .gt. len(str1)    ) &
+           .or. ( e2      .gt. len(str2)    ) &
+           .or. ( e1 - b1 .ne. e2 - b2      )  ) then
 
-         SAMSBI = .FALSE.
-         RETURN
+         samsbi = .false.
+         return
 
-      END IF
+      end if
 
-      J      =  B2
-      SAMSBI = .FALSE.
+      j      =  b2
+      samsbi = .false.
 
-      DO I = B1, E1
-         IF ( NECHR( STR1(I:I), STR2(J:J) ) ) THEN
-            RETURN
-         END IF
-         J = J + 1
-      END DO
+      do i = b1, e1
+         if ( nechr( str1(i:i), str2(j:j) ) ) then
+            return
+         end if
+         j = j + 1
+      end do
 
-      SAMSBI = .TRUE.
+      samsbi = .true.
 
-      RETURN
-      END
+      return
+      end

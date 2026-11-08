@@ -1,6 +1,6 @@
 !$Procedure DET  ( Determinant of a double precision 3x3 matrix )
 
-      DOUBLE PRECISION FUNCTION  DET ( M1 )
+      double precision function  det ( m1 )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    M1 ( 3,3 )
+      double precision    m1 ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -159,9 +159,9 @@
 !-&
 
 
-      DET =   M1(1,1) * ( M1(2,2)*M1(3,3) - M1(2,3)*M1(3,2) ) &
-            - M1(1,2) * ( M1(2,1)*M1(3,3) - M1(2,3)*M1(3,1) ) &
-            + M1(1,3) * ( M1(2,1)*M1(3,2) - M1(2,2)*M1(3,1) )
+      det =   m1(1,1) * ( m1(2,2)*m1(3,3) - m1(2,3)*m1(3,2) ) &
+            - m1(1,2) * ( m1(2,1)*m1(3,3) - m1(2,3)*m1(3,1) ) &
+            + m1(1,3) * ( m1(2,1)*m1(3,2) - m1(2,2)*m1(3,1) )
 
-      RETURN
-      END
+      return
+      end

@@ -1,9 +1,9 @@
 !$Procedure ZZDSKSEL ( DSK, segment selection callback umbrella )
 
-      LOGICAL FUNCTION ZZDSKSEL ( SURFID, NSURF,  SRFLST, &
-                                  BODYID, DCLASS, CORSYS, CORPAR, &
-                                  COR1,   COR2,   FRAMID, POS, &
-                                  ET,     HANDLE, DLADSC, DSKDSC )
+      logical function zzdsksel ( surfid, nsurf,  srflst, &
+                                  bodyid, dclass, corsys, corpar, &
+                                  cor1,   cor2,   framid, pos, &
+                                  et,     handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -30,26 +30,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsk.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dsk.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               SURFID
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      INTEGER               BODYID
-      INTEGER               DCLASS
-      INTEGER               CORSYS
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      COR1
-      DOUBLE PRECISION      COR2
-      INTEGER               FRAMID
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      ET
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      DOUBLE PRECISION      DSKDSC ( * )
+      integer               surfid
+      integer               nsurf
+      integer               srflst ( * )
+      integer               bodyid
+      integer               dclass
+      integer               corsys
+      double precision      corpar ( * )
+      double precision      cor1
+      double precision      cor2
+      integer               framid
+      double precision      pos    ( 3 )
+      double precision      et
+      integer               handle
+      integer               dladsc ( * )
+      double precision      dskdsc ( * )
 
 ! $ Brief_I/O
 !
@@ -240,114 +240,114 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
+      double precision      twopi
 
-      INTEGER               BSRCHI
-      INTEGER               TOUCHI
+      integer               bsrchi
+      integer               touchi
 
-      LOGICAL               ZZDSKBDC
-      LOGICAL               ZZDSKCIT
-      LOGICAL               ZZDSKMMC
-      LOGICAL               ZZDSKMRC
-      LOGICAL               ZZDSKMSC
-      LOGICAL               ZZDSKNOT
-      LOGICAL               ZZDSKSBD
-      LOGICAL               ZZDSKSIT
-      LOGICAL               ZZDSKSRC
-      LOGICAL               ZZDSKUMC
-      LOGICAL               ZZDSKUSC
+      logical               zzdskbdc
+      logical               zzdskcit
+      logical               zzdskmmc
+      logical               zzdskmrc
+      logical               zzdskmsc
+      logical               zzdsknot
+      logical               zzdsksbd
+      logical               zzdsksit
+      logical               zzdsksrc
+      logical               zzdskumc
+      logical               zzdskusc
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D-12 )
+      double precision      margin
+      parameter           ( margin = 1.d-12 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      CO1MAX
-      DOUBLE PRECISION      CO1MIN
-      DOUBLE PRECISION      CO2MAX
-      DOUBLE PRECISION      CO2MIN
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LOCCOR ( 1 )
-      DOUBLE PRECISION      LOCPOS ( 3 )
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      PI2
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      RMAT   ( 3, 3 )
-      DOUBLE PRECISION      SAVCO1
-      DOUBLE PRECISION      SAVCO2
-      DOUBLE PRECISION      SAVET
-      DOUBLE PRECISION      SAVPAR ( NSYPAR )
-      DOUBLE PRECISION      SAVPOS ( 3 )
-      DOUBLE PRECISION      SCALE
+      double precision      alt
+      double precision      co1max
+      double precision      co1min
+      double precision      co2max
+      double precision      co2min
+      double precision      f
+      double precision      lat
+      double precision      loccor ( 1 )
+      double precision      locpos ( 3 )
+      double precision      lon
+      double precision      pi2
+      double precision      r
+      double precision      re
+      double precision      rmat   ( 3, 3 )
+      double precision      savco1
+      double precision      savco2
+      double precision      savet
+      double precision      savpar ( nsypar )
+      double precision      savpos ( 3 )
+      double precision      scale
 
-      INTEGER               I
-      INTEGER               SAVBID
-      INTEGER               SAVCLS
-      INTEGER               SAVFID
-      INTEGER               SAVNSF
-      INTEGER               SAVSRF ( MAXSRF )
-      INTEGER               SAVSYS
-      INTEGER               SAVTRG
-      INTEGER               SEGFID
-      INTEGER               SEGSYS
-      INTEGER               SURF
+      integer               i
+      integer               savbid
+      integer               savcls
+      integer               savfid
+      integer               savnsf
+      integer               savsrf ( maxsrf )
+      integer               savsys
+      integer               savtrg
+      integer               segfid
+      integer               segsys
+      integer               surf
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  PI2
-      SAVE                  SAVBID
-      SAVE                  SAVCLS
-      SAVE                  SAVCO1
-      SAVE                  SAVCO2
-      SAVE                  SAVET
-      SAVE                  SAVFID
-      SAVE                  SAVNSF
-      SAVE                  SAVPAR
-      SAVE                  SAVPOS
-      SAVE                  SAVSRF
-      SAVE                  SAVSYS
-      SAVE                  SAVTRG
+      save                  first
+      save                  pi2
+      save                  savbid
+      save                  savcls
+      save                  savco1
+      save                  savco2
+      save                  savet
+      save                  savfid
+      save                  savnsf
+      save                  savpar
+      save                  savpos
+      save                  savsrf
+      save                  savsys
+      save                  savtrg
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Set return value.
 !
-      ZZDSKSEL = .FALSE.
+      zzdsksel = .false.
 
 !
 !     The following no-op calls are used to suppress compiler
 !     warnings.
 !
-      I = TOUCHI ( HANDLE )
-      I = TOUCHI ( CORSYS )
-      I = TOUCHI ( DLADSC )
-      I = TOUCHI ( FRAMID )
+      i = touchi ( handle )
+      i = touchi ( corsys )
+      i = touchi ( dladsc )
+      i = touchi ( framid )
 
-      CALL CHKIN  ( 'ZZDSKSEL' )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZDSKSEL' )
-      RETURN
+      call chkin  ( 'ZZDSKSEL' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZDSKSEL' )
+      return
 
 
 
 !$Procedure ZZDSKSBD ( DSK, set body ID )
 
-      ENTRY ZZDSKSBD ( BODYID )
+      entry zzdsksbd ( bodyid )
 
 ! $ Abstract
 !
@@ -450,20 +450,20 @@
 !     particular meaning and is not meant to be used by
 !     the caller. This setting suppresses compiler warnings.
 !
-      ZZDSKSBD = .FALSE.
+      zzdsksbd = .false.
 !
 !     Save input value.
 !
-      SAVBID = BODYID
+      savbid = bodyid
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZDSKBDC ( DSK, check segment's body ID )
 
-      ENTRY ZZDSKBDC ( HANDLE, DLADSC, DSKDSC )
+      entry zzdskbdc ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -575,16 +575,16 @@
 !
 !     The body ID is the only DSK segment attribute that must match.
 !
-      ZZDSKBDC = NINT( DSKDSC(CTRIDX) ) .EQ. SAVBID
+      zzdskbdc = nint( dskdsc(ctridx) ) .eq. savbid
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZDSKNOT ( DSK, match nothing )
 
-      ENTRY ZZDSKNOT ( HANDLE, DLADSC, DSKDSC )
+      entry zzdsknot ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -694,9 +694,9 @@
 !
 !     Whatever's in this segment, it doesn't match.
 !
-      ZZDSKNOT = .FALSE.
+      zzdsknot = .false.
 
-      RETURN
+      return
 
 
 
@@ -704,7 +704,7 @@
 
 !$Procedure ZZDSKSIT ( DSK, set body ID, surfaces, and time )
 
-      ENTRY ZZDSKSIT ( BODYID, NSURF, SRFLST, ET )
+      entry zzdsksit ( bodyid, nsurf, srflst, et )
 
 ! $ Abstract
 !
@@ -821,36 +821,36 @@
 !
 !     Set return value.
 !
-      ZZDSKSIT = .FALSE.
+      zzdsksit = .false.
 !
 !     Save input values.
 !
-      SAVBID = BODYID
-      SAVET  = ET
+      savbid = bodyid
+      savet  = et
 
-      IF ( NSURF .GT. MAXSRF ) THEN
+      if ( nsurf .gt. maxsrf ) then
 
-         CALL CHKIN ( 'ZZDSKSIT' )
+         call chkin ( 'ZZDSKSIT' )
 
-         CALL SETMSG ( 'Maximum allowed surface ID count is #; ' &
+         call setmsg ( 'Maximum allowed surface ID count is #; ' &
          //            'input count was #.'                     )
-         CALL ERRINT ( '#', MAXSRF                              )
-         CALL ERRINT ( '#', NSURF                               )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZDSKSIT' )
-         RETURN
+         call errint ( '#', maxsrf                              )
+         call errint ( '#', nsurf                               )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZDSKSIT' )
+         return
 
-      END IF
+      end if
 
-      SAVNSF = NSURF
+      savnsf = nsurf
 
-      DO I = 1, NSURF
-         SAVSRF(I) = SRFLST(I)
-      END DO
+      do i = 1, nsurf
+         savsrf(i) = srflst(i)
+      end do
 
-      CALL SHELLI ( NSURF, SAVSRF )
+      call shelli ( nsurf, savsrf )
 
-      RETURN
+      return
 
 
 
@@ -859,7 +859,7 @@
 
 !$Procedure ZZDSKCIT ( DSK, check body ID, surface, and time )
 
-      ENTRY ZZDSKCIT ( HANDLE, DLADSC, DSKDSC )
+      entry zzdskcit ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -973,36 +973,36 @@
 !     Currently, we don't need to access the DSK file in order
 !     to make this test, but the required inputs are available.
 !
-      ZZDSKCIT = .FALSE.
+      zzdskcit = .false.
 
-      IF ( SAVBID  .EQ. NINT( DSKDSC(CTRIDX) )  ) THEN
+      if ( savbid  .eq. nint( dskdsc(ctridx) )  ) then
 
-         IF (      ( SAVET .GE. DSKDSC(BTMIDX) ) &
-             .AND. ( SAVET .LE. DSKDSC(ETMIDX) )  ) THEN
+         if (      ( savet .ge. dskdsc(btmidx) ) &
+             .and. ( savet .le. dskdsc(etmidx) )  ) then
 
-            IF ( SAVNSF .LT. 1 ) THEN
+            if ( savnsf .lt. 1 ) then
 !
 !              There are no surface ID constraints; we have
 !              a match.
 !
-               ZZDSKCIT = .TRUE.
+               zzdskcit = .true.
 
-            ELSE
+            else
 !
 !              We have a match if and only if the surface ID of this
 !              segment is on the list of allowed surface IDs.
 !
-               SURF     = NINT( DSKDSC(SRFIDX) )
+               surf     = nint( dskdsc(srfidx) )
 
-               ZZDSKCIT = BSRCHI( SURF, SAVNSF, SAVSRF ) .GT. 0
+               zzdskcit = bsrchi( surf, savnsf, savsrf ) .gt. 0
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
@@ -1011,7 +1011,7 @@
 
 !$Procedure ZZDSKUSC ( DSK, set body ID, coordinates, and time )
 
-      ENTRY ZZDSKUSC ( BODYID, ET, COR1, COR2 )
+      entry zzdskusc ( bodyid, et, cor1, cor2 )
 
 ! $ Abstract
 !
@@ -1128,14 +1128,14 @@
 !-&
 
 
-      ZZDSKUSC = .FALSE.
+      zzdskusc = .false.
 
-      SAVBID = BODYID
-      SAVET  = ET
-      SAVCO1 = COR1
-      SAVCO2 = COR2
+      savbid = bodyid
+      savet  = et
+      savco1 = cor1
+      savco2 = cor2
 
-      RETURN
+      return
 
 
 
@@ -1143,7 +1143,7 @@
 
 !$Procedure ZZDSKUMC ( DSK, check body ID, coordinates, and time )
 
-      ENTRY ZZDSKUMC ( HANDLE, DLADSC, DSKDSC )
+      entry zzdskumc ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -1262,22 +1262,22 @@
 !
 !     We don't have a match to begin with.
 !
-      ZZDSKUMC = .FALSE.
+      zzdskumc = .false.
 
-      IF ( FIRST ) THEN
-         PI2   = TWOPI()
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         pi2   = twopi()
+         first = .false.
+      end if
 
 !
 !     Check the body ID first.
 !
-      IF ( SAVBID  .EQ. NINT( DSKDSC(CTRIDX) )  ) THEN
+      if ( savbid  .eq. nint( dskdsc(ctridx) )  ) then
 !
 !        The body ID matches; check the time coverage.
 !
-         IF (      ( SAVET .GE. DSKDSC(BTMIDX) ) &
-             .AND. ( SAVET .LE. DSKDSC(ETMIDX) )  ) THEN
+         if (      ( savet .ge. dskdsc(btmidx) ) &
+             .and. ( savet .le. dskdsc(etmidx) )  ) then
 !
 !           Check the coordinates. Note that we don't
 !           know whether the frame and coordinates are
@@ -1287,87 +1287,87 @@
 !           is a longitude, since we may need to adjust it to
 !           get it into the range of the segment.
 !
-            SEGSYS = NINT( DSKDSC(SYSIDX) )
+            segsys = nint( dskdsc(sysidx) )
 !
 !           Make a local copy of the first coordinate.
 !
-            LOCCOR(1) = SAVCO1
+            loccor(1) = savco1
 
-            IF (      ( SEGSYS .EQ. LATSYS ) &
-                 .OR. ( SEGSYS .EQ. PDTSYS ) ) THEN
+            if (      ( segsys .eq. latsys ) &
+                 .or. ( segsys .eq. pdtsys ) ) then
 !
 !              Adjust segment bounds using a small margin.
 !
-               CO1MIN = DSKDSC( MN1IDX ) - MARGIN
-               CO1MAX = DSKDSC( MX1IDX ) + MARGIN
-               CO2MIN = DSKDSC( MN2IDX ) - MARGIN
-               CO2MAX = DSKDSC( MX2IDX ) + MARGIN
+               co1min = dskdsc( mn1idx ) - margin
+               co1max = dskdsc( mx1idx ) + margin
+               co2min = dskdsc( mn2idx ) - margin
+               co2max = dskdsc( mx2idx ) + margin
 !
 !              Move longitude into range.
 !
-               IF ( LOCCOR(1) .LT. CO1MIN ) THEN
+               if ( loccor(1) .lt. co1min ) then
 
-                  LOCCOR(1) = LOCCOR(1) + PI2
+                  loccor(1) = loccor(1) + pi2
 
-               ELSE IF ( LOCCOR(1) .GT. CO1MAX ) THEN
+               else if ( loccor(1) .gt. co1max ) then
 
-                  LOCCOR(1) = LOCCOR(1) - PI2
+                  loccor(1) = loccor(1) - pi2
 
-               END IF
+               end if
 
-            ELSE
+            else
 
-               SCALE  = ( 1.D0 + MARGIN )
+               scale  = ( 1.d0 + margin )
 
-               CO1MIN = DSKDSC( MN1IDX ) - SCALE * ABS( DSKDSC(MN1IDX) )
-               CO1MAX = DSKDSC( MX1IDX ) + SCALE * ABS( DSKDSC(MX1IDX) )
-               CO2MIN = DSKDSC( MN2IDX ) - SCALE * ABS( DSKDSC(MN2IDX) )
-               CO2MAX = DSKDSC( MX2IDX ) + SCALE * ABS( DSKDSC(MX2IDX) )
+               co1min = dskdsc( mn1idx ) - scale * abs( dskdsc(mn1idx) )
+               co1max = dskdsc( mx1idx ) + scale * abs( dskdsc(mx1idx) )
+               co2min = dskdsc( mn2idx ) - scale * abs( dskdsc(mn2idx) )
+               co2max = dskdsc( mx2idx ) + scale * abs( dskdsc(mx2idx) )
 
-            END IF
+            end if
 
 !
 !           Check the first coordinate against the segment's
 !           corresponding coverage range.
 !
-            IF (     ( LOCCOR(1) .LT. CO1MIN ) &
-                .OR. ( LOCCOR(1) .GT. CO1MAX ) ) THEN
+            if (     ( loccor(1) .lt. co1min ) &
+                .or. ( loccor(1) .gt. co1max ) ) then
 !
 !              The first input coordinate is not covered by this
 !              segment.
 !
-               RETURN
+               return
 
-            END IF
+            end if
 
 !
 !           Compare the second coordinate against the segment's
 !           corresponding coverage range.
 !
-            IF (     ( SAVCO2 .LT. CO2MIN ) &
-                .OR. ( SAVCO2 .GT. CO2MAX ) ) THEN
+            if (     ( savco2 .lt. co2min ) &
+                .or. ( savco2 .gt. co2max ) ) then
 !
 !              The second input coordinate is not covered by this
 !              segment.
 !
-               RETURN
+               return
 
-            END IF
+            end if
 
 !
 !           At this point we have a match.
 !
-            ZZDSKUMC = .TRUE.
+            zzdskumc = .true.
 
-         END IF
+         end if
 !
 !        This is the end of the time check block.
 !
-      END IF
+      end if
 !
 !     This is the end of the surface ID check block.
 !
-      RETURN
+      return
 
 
 
@@ -1375,8 +1375,8 @@
 
 !$Procedure ZZDSKMSC ( DSK, setup matched attribute search )
 
-      ENTRY ZZDSKMSC ( BODYID, SURFID, FRAMID, CORSYS, &
-                       CORPAR, ET,     COR1,   COR2   )
+      entry zzdskmsc ( bodyid, surfid, framid, corsys, &
+                       corpar, et,     cor1,   cor2   )
 
 ! $ Abstract
 !
@@ -1517,20 +1517,20 @@
 !-&
 
 
-      ZZDSKMSC = .FALSE.
+      zzdskmsc = .false.
 
-      SAVTRG = BODYID
-      SAVBID = SURFID
-      SAVFID = FRAMID
-      SAVSYS = CORSYS
+      savtrg = bodyid
+      savbid = surfid
+      savfid = framid
+      savsys = corsys
 
-      CALL MOVED ( CORPAR, NSYPAR, SAVPAR )
+      call moved ( corpar, nsypar, savpar )
 
-      SAVET  = ET
-      SAVCO1 = COR1
-      SAVCO2 = COR2
+      savet  = et
+      savco1 = cor1
+      savco2 = cor2
 
-      RETURN
+      return
 
 
 
@@ -1539,7 +1539,7 @@
 
 !$Procedure ZZDSKMMC ( DSK, matched segment attribute comparison )
 
-      ENTRY ZZDSKMMC ( HANDLE, DLADSC, DSKDSC )
+      entry zzdskmmc ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -1671,142 +1671,142 @@
 !
 !     We don't have a match to begin with.
 !
-      ZZDSKMMC = .FALSE.
+      zzdskmmc = .false.
 
-      IF ( FIRST ) THEN
-         PI2   = TWOPI()
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         pi2   = twopi()
+         first = .false.
+      end if
 
 !
 !     Check the target ID.
 !
-      IF ( SAVTRG  .NE. NINT( DSKDSC(CTRIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savtrg  .ne. nint( dskdsc(ctridx) )  ) then
+         return
+      end if
 
 !
 !     Check the surface ID.
 !
-      IF ( SAVBID  .NE. NINT( DSKDSC(SRFIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savbid  .ne. nint( dskdsc(srfidx) )  ) then
+         return
+      end if
 
 !
 !     Check the frame ID.
 !
-      IF ( SAVFID  .NE. NINT( DSKDSC(FRMIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savfid  .ne. nint( dskdsc(frmidx) )  ) then
+         return
+      end if
 
 !
 !     Check the coordinate system.
 !
-      IF ( SAVSYS  .NE. NINT( DSKDSC(SYSIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savsys  .ne. nint( dskdsc(sysidx) )  ) then
+         return
+      end if
 
 !
 !     If the system is planetodetic, check the reference
 !     ellipsoid parameters.
 !
-      IF ( SAVSYS .EQ. PDTSYS ) THEN
+      if ( savsys .eq. pdtsys ) then
 
 
-         IF (  ABS( SAVPAR(1) - DSKDSC(PARIDX)   ) .GT. MARGIN ) THEN
-            RETURN
-         END IF
+         if (  abs( savpar(1) - dskdsc(paridx)   ) .gt. margin ) then
+            return
+         end if
 
-         IF (  ABS( SAVPAR(2) - DSKDSC(PARIDX+1) ) .GT. MARGIN ) THEN
-            RETURN
-         END IF
+         if (  abs( savpar(2) - dskdsc(paridx+1) ) .gt. margin ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     The segment attributes match; check the time coverage.
 !
-      IF (      ( SAVET .GE. DSKDSC(BTMIDX) ) &
-          .AND. ( SAVET .LE. DSKDSC(ETMIDX) )  ) THEN
+      if (      ( savet .ge. dskdsc(btmidx) ) &
+          .and. ( savet .le. dskdsc(etmidx) )  ) then
 !
 !        Check the coordinates.
 !
-         SEGSYS = NINT( DSKDSC(SYSIDX) )
+         segsys = nint( dskdsc(sysidx) )
 !
 !        Make a local copy of the first coordinate.
 !
-         LOCCOR(1) = SAVCO1
+         loccor(1) = savco1
 
-         IF (      ( SEGSYS .EQ. LATSYS ) &
-              .OR. ( SEGSYS .EQ. PDTSYS ) ) THEN
+         if (      ( segsys .eq. latsys ) &
+              .or. ( segsys .eq. pdtsys ) ) then
 !
 !           Adjust segment bounds using a small margin.
 !
-            CO1MIN = DSKDSC( MN1IDX ) - MARGIN
-            CO1MAX = DSKDSC( MX1IDX ) + MARGIN
-            CO2MIN = DSKDSC( MN2IDX ) - MARGIN
-            CO2MAX = DSKDSC( MX2IDX ) + MARGIN
+            co1min = dskdsc( mn1idx ) - margin
+            co1max = dskdsc( mx1idx ) + margin
+            co2min = dskdsc( mn2idx ) - margin
+            co2max = dskdsc( mx2idx ) + margin
 
 !
 !           Move longitude into range.
 !
-            IF ( LOCCOR(1) .LT. CO1MIN ) THEN
+            if ( loccor(1) .lt. co1min ) then
 
-               LOCCOR(1) = LOCCOR(1) + PI2
+               loccor(1) = loccor(1) + pi2
 
-            ELSE IF ( LOCCOR(1) .GT. CO1MAX ) THEN
+            else if ( loccor(1) .gt. co1max ) then
 
-               LOCCOR(1) = LOCCOR(1) - PI2
+               loccor(1) = loccor(1) - pi2
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            SCALE  = ( 1.D0 + MARGIN )
+            scale  = ( 1.d0 + margin )
 
-            CO1MIN = DSKDSC( MN1IDX ) - SCALE * ABS( DSKDSC(MN1IDX) )
-            CO1MAX = DSKDSC( MX1IDX ) + SCALE * ABS( DSKDSC(MX1IDX) )
-            CO2MIN = DSKDSC( MN2IDX ) - SCALE * ABS( DSKDSC(MN2IDX) )
-            CO2MAX = DSKDSC( MX2IDX ) + SCALE * ABS( DSKDSC(MX2IDX) )
+            co1min = dskdsc( mn1idx ) - scale * abs( dskdsc(mn1idx) )
+            co1max = dskdsc( mx1idx ) + scale * abs( dskdsc(mx1idx) )
+            co2min = dskdsc( mn2idx ) - scale * abs( dskdsc(mn2idx) )
+            co2max = dskdsc( mx2idx ) + scale * abs( dskdsc(mx2idx) )
 
-         END IF
+         end if
 
 !
 !        Check the first coordinate against the segment's
 !        corresponding coverage range.
 !
-         IF (     ( LOCCOR(1) .LT. CO1MIN ) &
-             .OR. ( LOCCOR(1) .GT. CO1MAX ) ) THEN
+         if (     ( loccor(1) .lt. co1min ) &
+             .or. ( loccor(1) .gt. co1max ) ) then
 !
 !           The first input coordinate is not covered by this
 !           segment.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        Compare the second coordinate against the segment's
 !        corresponding coverage range.
 !
-         IF (     ( SAVCO2 .LT. CO2MIN ) &
-             .OR. ( SAVCO2 .GT. CO2MAX ) ) THEN
+         if (     ( savco2 .lt. co2min ) &
+             .or. ( savco2 .gt. co2max ) ) then
 !
 !           The second input coordinate is not covered by this
 !           segment.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        At this point we have a match.
 !
-         ZZDSKMMC = .TRUE.
+         zzdskmmc = .true.
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
@@ -1816,7 +1816,7 @@
 
 !$Procedure ZZDSKSRC ( DSK, setup rectangular coordinate search )
 
-      ENTRY ZZDSKSRC ( SURFID, BODYID, DCLASS, ET, FRAMID, POS )
+      entry zzdsksrc ( surfid, bodyid, dclass, et, framid, pos )
 
 ! $ Abstract
 !
@@ -1950,23 +1950,23 @@
 !
 !-&
 
-      ZZDSKSRC = .FALSE.
+      zzdsksrc = .false.
 
-      SAVBID = SURFID
-      SAVTRG = BODYID
-      SAVCLS = DCLASS
-      SAVET  = ET
-      SAVFID = FRAMID
-      CALL VEQU ( POS, SAVPOS )
+      savbid = surfid
+      savtrg = bodyid
+      savcls = dclass
+      savet  = et
+      savfid = framid
+      call vequ ( pos, savpos )
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZDSKMRC ( DSK, rectangular coordinate comparison )
 
-      ENTRY ZZDSKMRC ( HANDLE, DLADSC, DSKDSC )
+      entry zzdskmrc ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -2099,42 +2099,42 @@
 !
 !     We don't have a match to begin with.
 !
-      ZZDSKMRC = .FALSE.
+      zzdskmrc = .false.
 
-      IF ( FIRST ) THEN
-         PI2   = TWOPI()
-         FIRST = .FALSE.
-      END IF
+      if ( first ) then
+         pi2   = twopi()
+         first = .false.
+      end if
 
 
 !     Check the surface ID.
 !
-      IF ( SAVBID  .NE. NINT( DSKDSC(SRFIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savbid  .ne. nint( dskdsc(srfidx) )  ) then
+         return
+      end if
 
 !
 !     Reject any segment whose target (center) ID doesn't match
 !     the request ID.
 !
-      IF ( SAVTRG  .NE. NINT( DSKDSC(CTRIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savtrg  .ne. nint( dskdsc(ctridx) )  ) then
+         return
+      end if
 
 !
 !     Check the time coverage.
 !
-      IF (      ( SAVET .LT. DSKDSC(BTMIDX) ) &
-           .OR. ( SAVET .GT. DSKDSC(ETMIDX) )  ) THEN
-         RETURN
-      END IF
+      if (      ( savet .lt. dskdsc(btmidx) ) &
+           .or. ( savet .gt. dskdsc(etmidx) )  ) then
+         return
+      end if
 
 !
 !     Check the data class.
 !
-      IF ( SAVCLS  .NE. NINT( DSKDSC(CLSIDX) )  ) THEN
-         RETURN
-      END IF
+      if ( savcls  .ne. nint( dskdsc(clsidx) )  ) then
+         return
+      end if
 
 
 !
@@ -2142,127 +2142,127 @@
 !     In order to determine this, we need to transform the vector
 !     into the frame of the segment, if the frames differ.
 !
-      SEGFID = NINT ( DSKDSC(FRMIDX) )
+      segfid = nint ( dskdsc(frmidx) )
 
-      IF ( SAVFID .EQ. SEGFID ) THEN
+      if ( savfid .eq. segfid ) then
 !
 !        The request frame and segment frame match. Just copy
 !        the saved vector.
 !
-         CALL VEQU ( SAVPOS, LOCPOS )
+         call vequ ( savpos, locpos )
 
-      ELSE
+      else
 !
 !        Transform the saved vector to the frame of the
 !        segment. The transformation epoch is the saved
 !        value of ET.
 !
-         CALL REFCHG ( SAVFID, SEGFID, SAVET, RMAT   )
-         CALL MXV    ( RMAT,   SAVPOS,        LOCPOS )
+         call refchg ( savfid, segfid, savet, rmat   )
+         call mxv    ( rmat,   savpos,        locpos )
 
-      END IF
+      end if
 
 
 !     We do need to know whether the first coordinate is a longitude,
 !     since we may need to adjust it to get it into the range of the
 !     segment.
 !
-      SEGSYS = NINT( DSKDSC(SYSIDX) )
+      segsys = nint( dskdsc(sysidx) )
 
-      IF (      ( SEGSYS .EQ. LATSYS ) &
-           .OR. ( SEGSYS .EQ. PDTSYS ) ) THEN
+      if (      ( segsys .eq. latsys ) &
+           .or. ( segsys .eq. pdtsys ) ) then
 !
 !        Find the latitude and longitude of the input point, expressed
 !        in the coordinate system of this segment.
 !
-         IF ( SEGSYS .EQ. LATSYS ) THEN
+         if ( segsys .eq. latsys ) then
 
-            CALL RECLAT ( LOCPOS, R, LON, LAT )
+            call reclat ( locpos, r, lon, lat )
 
-         ELSE IF ( SEGSYS .EQ. PDTSYS ) THEN
+         else if ( segsys .eq. pdtsys ) then
 
-            RE = DSKDSC(PARIDX  )
-            F  = DSKDSC(PARIDX+1)
+            re = dskdsc(paridx  )
+            f  = dskdsc(paridx+1)
 
-            CALL RECGEO ( LOCPOS, RE, F, LON, LAT, ALT )
+            call recgeo ( locpos, re, f, lon, lat, alt )
 
-         ELSE
+         else
 
-            CALL CHKIN  ( 'ZZDSKMRC'                      )
-            CALL SETMSG ( 'Backstop error (0): this code ' &
+            call chkin  ( 'ZZDSKMRC'                      )
+            call setmsg ( 'Backstop error (0): this code ' &
             //            'should be unreachable.'        )
-            CALL SIGERR ( 'SPICE(BUG)'                    )
-            CALL CHKOUT ( 'ZZDSKMRC'                      )
-            RETURN
+            call sigerr ( 'SPICE(BUG)'                    )
+            call chkout ( 'ZZDSKMRC'                      )
+            return
 
-         END IF
+         end if
 
 !
 !        Adjust segment bounds using a small margin.
 !
-         CO1MIN = DSKDSC( MN1IDX ) - MARGIN
-         CO1MAX = DSKDSC( MX1IDX ) + MARGIN
-         CO2MIN = DSKDSC( MN2IDX ) - MARGIN
-         CO2MAX = DSKDSC( MX2IDX ) + MARGIN
+         co1min = dskdsc( mn1idx ) - margin
+         co1max = dskdsc( mx1idx ) + margin
+         co2min = dskdsc( mn2idx ) - margin
+         co2max = dskdsc( mx2idx ) + margin
 
 !        Move longitude into range.
 !
-         IF ( LON .LT. CO1MIN ) THEN
+         if ( lon .lt. co1min ) then
 
-            LON = LON + PI2
+            lon = lon + pi2
 
-         ELSE IF ( LON .GT. CO1MAX ) THEN
+         else if ( lon .gt. co1max ) then
 
-            LON = LON - PI2
+            lon = lon - pi2
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL CHKIN  ( 'ZZDSKMRC'                        )
-         CALL SETMSG ( 'Only planetocentric and planeto' &
+         call chkin  ( 'ZZDSKMRC'                        )
+         call setmsg ( 'Only planetocentric and planeto' &
          //            'detic coordinates are supported ' &
          //            'by this entry point. Segment ' &
          //            'coordinate system was #.'        )
-         CALL ERRINT ( '#',  SEGSYS                      )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'             )
-         CALL CHKOUT ( 'ZZDSKMRC'                        )
-         RETURN
+         call errint ( '#',  segsys                      )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'             )
+         call chkout ( 'ZZDSKMRC'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the first coordinate against the segment's
 !     corresponding coverage range.
 !
-      IF (     ( LON .LT. CO1MIN ) &
-          .OR. ( LON .GT. CO1MAX ) ) THEN
+      if (     ( lon .lt. co1min ) &
+          .or. ( lon .gt. co1max ) ) then
 !
 !        The first input coordinate is not covered by this
 !        segment.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Compare the second coordinate against the segment's
 !     corresponding coverage range.
 !
-      IF (     ( LAT .LT. CO2MIN ) &
-          .OR. ( LAT .GT. CO2MAX ) ) THEN
+      if (     ( lat .lt. co2min ) &
+          .or. ( lat .gt. co2max ) ) then
 !
 !        The second input coordinate is not covered by this
 !        segment.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we have a match.
 !
-      ZZDSKMRC = .TRUE.
+      zzdskmrc = .true.
 
-      RETURN
-      END
+      return
+      end

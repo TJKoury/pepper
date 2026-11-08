@@ -1,6 +1,6 @@
 !$Procedure ELEMD ( Element of a double precision set )
 
-      LOGICAL FUNCTION ELEMD ( ITEM, A )
+      logical function elemd ( item, a )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER                   LBCELL
-      PARAMETER               ( LBCELL = -5 )
+      integer                   lbcell
+      parameter               ( lbcell = -5 )
 
-      DOUBLE PRECISION ITEM
-      DOUBLE PRECISION A      ( LBCELL:* )
+      double precision item
+      double precision a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -215,26 +215,26 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHD
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               bsrchd
+      integer               cardd
+      logical               return
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         ELEMD = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ELEMD' )
-      END IF
+      if ( return() ) then
+         elemd = .false.
+         return
+      else
+         call chkin ( 'ELEMD' )
+      end if
 
 !
 !     Just a binary search.
 !
-      ELEMD = ( BSRCHD ( ITEM, CARDD ( A ), A(1) ) .NE. 0 )
+      elemd = ( bsrchd ( item, cardd ( a ), a(1) ) .ne. 0 )
 
-      CALL CHKOUT ( 'ELEMD' )
-      RETURN
-      END
+      call chkout ( 'ELEMD' )
+      return
+      end

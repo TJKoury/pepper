@@ -1,7 +1,7 @@
 !$Procedure      ZZEKUE01 ( EK, update column entry, class 1 )
 
-      SUBROUTINE ZZEKUE01 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  IVAL,    ISNULL  )
+      subroutine zzekue01 (  handle,  segdsc,  coldsc, &
+                             recptr,  ival,    isnull  )
 
 ! $ Abstract
 !
@@ -18,21 +18,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               IVAL
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               ival
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -141,110 +141,110 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               DATPTR
-      INTEGER               IDXTYP
-      INTEGER               NLINKS
-      INTEGER               P
-      INTEGER               PBASE
-      INTEGER               PTRLOC
-      INTEGER               RECNO
+      integer               datptr
+      integer               idxtyp
+      integer               nlinks
+      integer               p
+      integer               pbase
+      integer               ptrloc
+      integer               recno
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKUE01' )
+      call chkin ( 'ZZEKUE01' )
 
 !
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKUE01' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKUE01' )
+         return
+      end if
 
 !
 !     Compute the data pointer location.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLDSC(ORDIDX)
+      ptrloc  =  recptr + dptbas + coldsc(ordidx)
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF ( DATPTR .GT. 0 ) THEN
+      if ( datptr .gt. 0 ) then
 !
 !        The column entry is non-null.  Determine whether the column is
 !        indexed.
 !
-         IDXTYP  =  COLDSC(IXTIDX)
+         idxtyp  =  coldsc(ixtidx)
 
-         IF ( IDXTYP .EQ. 1 ) THEN
+         if ( idxtyp .eq. 1 ) then
 !
 !           The column has a type 1 index.  Delete the index entry
 !           for this column.  Create an index entry for the new value.
 !
-            CALL ZZEKIXDL ( HANDLE,  SEGDSC,  COLDSC,  RECPTR )
+            call zzekixdl ( handle,  segdsc,  coldsc,  recptr )
 
-            CALL ZZEKIII1 ( HANDLE,  SEGDSC,  COLDSC,  IVAL, &
-                            RECPTR,  ISNULL                   )
+            call zzekiii1 ( handle,  segdsc,  coldsc,  ival, &
+                            recptr,  isnull                   )
 
-         ELSE IF ( IDXTYP .NE. IFALSE ) THEN
+         else if ( idxtyp .ne. ifalse ) then
 
-            CALL SETMSG ( 'Column having index # in segment # has '   // &
+            call setmsg ( 'Column having index # in segment # has '   // &
                           'index type #.'                             )
-            CALL ERRINT ( '#',  COLDSC(ORDIDX)                        )
-            CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-            CALL ERRINT ( '#',  IDXTYP                                )
-            CALL SIGERR ( 'SPICE(INVALIDTYPE)'                        )
-            CALL CHKOUT ( 'ZZEKUE01'                                  )
-            RETURN
+            call errint ( '#',  coldsc(ordidx)                        )
+            call errint ( '#',  segdsc(snoidx)                        )
+            call errint ( '#',  idxtyp                                )
+            call sigerr ( 'SPICE(INVALIDTYPE)'                        )
+            call chkout ( 'ZZEKUE01'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        If the new value is null, set the data pointer to indicate a
 !        null value.  Otherwise, overwrite the old value with the new
 !        one.
 !
-         IF ( ISNULL ) THEN
+         if ( isnull ) then
 !
 !           The data location used by the previous value is no longer
 !           needed, so we have one less link to this page.
 !
-            CALL ZZEKPGPG ( INT,    DATPTR, P,      PBASE    )
-            CALL ZZEKGLNK ( HANDLE, INT,    P,      NLINKS   )
-            CALL ZZEKSLNK ( HANDLE, INT,    P,      NLINKS-1 )
+            call zzekpgpg ( int,    datptr, p,      pbase    )
+            call zzekglnk ( handle, int,    p,      nlinks   )
+            call zzekslnk ( handle, int,    p,      nlinks-1 )
 
-            CALL DASUDI   ( HANDLE, PTRLOC, PTRLOC, NULL     )
+            call dasudi   ( handle, ptrloc, ptrloc, null     )
 
-         ELSE
+         else
 !
 !           No link counts change; we just have a new value.
 !
-            CALL DASUDI ( HANDLE, DATPTR, DATPTR, IVAL )
+            call dasudi ( handle, datptr, datptr, ival )
 
-         END IF
+         end if
 
 
 
-      ELSE IF ( DATPTR .EQ. NULL ) THEN
+      else if ( datptr .eq. null ) then
 !
 !        If the new entry is null too, there's nothing to do.
 !        We don't have to adjust link counts or indexes.
@@ -253,30 +253,30 @@
 !        since no space was reserved for the old one.  The column
 !        index entry must be cleaned up, if the column is indexed.
 !
-         IF ( .NOT. ISNULL ) THEN
+         if ( .not. isnull ) then
 
-            IDXTYP  =  COLDSC(IXTIDX)
+            idxtyp  =  coldsc(ixtidx)
 
-            IF ( IDXTYP .EQ. 1 ) THEN
+            if ( idxtyp .eq. 1 ) then
 !
 !              The column has a type 1 index.  Delete the index entry
 !              for this column.
 !
-               CALL ZZEKIXDL ( HANDLE, SEGDSC, COLDSC, RECPTR )
+               call zzekixdl ( handle, segdsc, coldsc, recptr )
 
 
-            ELSE IF ( IDXTYP .NE. IFALSE ) THEN
+            else if ( idxtyp .ne. ifalse ) then
 
-               CALL SETMSG ( 'Column having index # in segment # has '// &
+               call setmsg ( 'Column having index # in segment # has '// &
                              'index type #.'                          )
-               CALL ERRINT ( '#',  COLDSC(ORDIDX)                     )
-               CALL ERRINT ( '#',  SEGDSC(SNOIDX)                     )
-               CALL ERRINT ( '#',  IDXTYP                             )
-               CALL SIGERR ( 'SPICE(INVALIDTYPE)'                     )
-               CALL CHKOUT ( 'ZZEKUE01'                               )
-               RETURN
+               call errint ( '#',  coldsc(ordidx)                     )
+               call errint ( '#',  segdsc(snoidx)                     )
+               call errint ( '#',  idxtyp                             )
+               call sigerr ( 'SPICE(INVALIDTYPE)'                     )
+               call chkout ( 'ZZEKUE01'                               )
+               return
 
-            END IF
+            end if
 
 !
 !           We don't need to decrement the link count for this page.
@@ -284,40 +284,40 @@
 !           data pointer to indicate an uninitialized value, so the
 !           data addition routine doesn't choke.
 !
-            CALL DASUDI   ( HANDLE,   PTRLOC,  PTRLOC,  UNINIT )
+            call dasudi   ( handle,   ptrloc,  ptrloc,  uninit )
 
-            CALL ZZEKAD01 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  IVAL,    ISNULL  )
+            call zzekad01 (  handle,  segdsc,  coldsc, &
+                             recptr,  ival,    isnull  )
 
-         END IF
+         end if
 
 
-      ELSE IF (      ( DATPTR .EQ. UNINIT ) &
-                .OR. ( DATPTR .EQ. NOBACK )  ) THEN
+      else if (      ( datptr .eq. uninit ) &
+                .or. ( datptr .eq. noback )  ) then
 !
 !        There is no current column entry.  Just add a new entry.
 !
-         CALL ZZEKAD01 ( HANDLE, SEGDSC, COLDSC, RECPTR, IVAL, ISNULL )
+         call zzekad01 ( handle, segdsc, coldsc, recptr, ival, isnull )
 
 
-      ELSE
+      else
 !
 !        The data pointer is corrupted.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL SETMSG ( 'Data pointer is corrupted. SEGNO = #; '  // &
+         call setmsg ( 'Data pointer is corrupted. SEGNO = #; '  // &
                        'COLIDX =  #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                      )
-         CALL ERRINT ( '#',  COLDSC(ORDIDX)                      )
-         CALL ERRINT ( '#',  RECNO                               )
-         CALL ERRHAN ( '#',  HANDLE                              )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKUE01'                                )
-         RETURN
+         call errint ( '#',  segdsc(snoidx)                      )
+         call errint ( '#',  coldsc(ordidx)                      )
+         call errint ( '#',  recno                               )
+         call errhan ( '#',  handle                              )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKUE01'                                )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZEKUE01' )
-      RETURN
-      END
+      call chkout ( 'ZZEKUE01' )
+      return
+      end

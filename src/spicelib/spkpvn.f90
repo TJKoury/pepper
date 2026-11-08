@@ -1,6 +1,6 @@
 !$Procedure SPKPVN ( S/P Kernel, position and velocity in native frame )
 
-      SUBROUTINE SPKPVN ( HANDLE, DESCR, ET, REF, STATE, CENTER )
+      subroutine spkpvn ( handle, descr, et, ref, state, center )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spkrec.inc'
+      include 'spkrec.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      INTEGER               REF
-      DOUBLE PRECISION      STATE    ( 6 )
-      INTEGER               CENTER
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      integer               ref
+      double precision      state    ( 6 )
+      integer               center
 
 ! $ Brief_I/O
 !
@@ -244,8 +244,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Some local space is needed in which to return records, and
@@ -253,37 +253,37 @@
 !
 
 
-      DOUBLE PRECISION      RECORD   ( MAXREC )
+      double precision      record   ( maxrec )
 
-      DOUBLE PRECISION      DC       (      2 )
-      INTEGER               IC       (      6 )
-      INTEGER               RECSIZ
-      INTEGER               TYPE
+      double precision      dc       (      2 )
+      integer               ic       (      6 )
+      integer               recsiz
+      integer               type
 
 !
 !     Local Parameters
 !
-      INTEGER               NSTATE
-      PARAMETER           ( NSTATE = 6 )
+      integer               nstate
+      parameter           ( nstate = 6 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKPVN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKPVN' )
+      end if
 
 !
 !     Unpacking the segment descriptor will tell us the center,
 !     reference frame, and data type for this segment.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      CENTER = IC(2)
-      REF    = IC(3)
-      TYPE   = IC(4)
+      center = ic(2)
+      ref    = ic(3)
+      type   = ic(4)
 
 !
 !     Each data type has a pair of routines to read and evaluate
@@ -293,17 +293,17 @@
 !     By the time we have more than 100 data types, we should be
 !     allowed to use longer variable names.
 !
-      IF ( TYPE .EQ. 01 ) THEN
-         CALL SPKR01 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE01 (                ET, RECORD, STATE  )
+      if ( type .eq. 01 ) then
+         call spkr01 ( handle, descr, et, record         )
+         call spke01 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 02 ) THEN
-         CALL SPKR02 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE02 (                ET, RECORD, STATE  )
+      else if ( type .eq. 02 ) then
+         call spkr02 ( handle, descr, et, record         )
+         call spke02 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 03 ) THEN
-         CALL SPKR03 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE03 (                ET, RECORD, STATE  )
+      else if ( type .eq. 03 ) then
+         call spkr03 ( handle, descr, et, record         )
+         call spke03 (                et, record, state  )
 
 
 !
@@ -313,102 +313,102 @@
 !         CALL SPKR04 ( HANDLE, DESCR, ET, RECORD         )
 !         CALL SPKE04 (                ET, RECORD, STATE  )
 
-      ELSE IF ( TYPE .EQ. 05 ) THEN
-         CALL SPKR05 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE05 (                ET, RECORD, STATE  )
+      else if ( type .eq. 05 ) then
+         call spkr05 ( handle, descr, et, record         )
+         call spke05 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 08 ) THEN
-         CALL SPKR08 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE08 (                ET, RECORD, STATE  )
+      else if ( type .eq. 08 ) then
+         call spkr08 ( handle, descr, et, record         )
+         call spke08 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 09 ) THEN
-         CALL SPKR09 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE09 (                ET, RECORD, STATE  )
+      else if ( type .eq. 09 ) then
+         call spkr09 ( handle, descr, et, record         )
+         call spke09 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 10 ) THEN
-         CALL SPKR10 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE10 (                ET, RECORD, STATE  )
+      else if ( type .eq. 10 ) then
+         call spkr10 ( handle, descr, et, record         )
+         call spke10 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 12 ) THEN
-         CALL SPKR12 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE12 (                ET, RECORD, STATE  )
+      else if ( type .eq. 12 ) then
+         call spkr12 ( handle, descr, et, record         )
+         call spke12 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 13 ) THEN
-         CALL SPKR13 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE13 (                ET, RECORD, STATE  )
+      else if ( type .eq. 13 ) then
+         call spkr13 ( handle, descr, et, record         )
+         call spke13 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 14 ) THEN
+      else if ( type .eq. 14 ) then
 !
 !        Fetch the number of Chebyshev coefficients, compute the record
 !        size needed, and signal an error if there is not enough storage
 !        in RECORD. The number of coefficients is the first constant
 !        value in the generic segment.
 !
-         CALL SGFCON ( HANDLE, DESCR, 1, 1, RECORD(1) )
+         call sgfcon ( handle, descr, 1, 1, record(1) )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKPVN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKPVN' )
+            return
+         end if
 
-         RECSIZ = NSTATE * INT(RECORD(1)) + 3
+         recsiz = nstate * int(record(1)) + 3
 
-         IF ( RECSIZ .GT. MAXREC ) THEN
+         if ( recsiz .gt. maxrec ) then
 
-            CALL SETMSG ( 'Storage for # double precision numbers' &
+            call setmsg ( 'Storage for # double precision numbers' &
             //            ' is needed for an SPK data record and' &
             //            ' only # locations were available. Update' &
             //            ' the parameter MAXREC in the subroutine' &
             //            ' SPKPVN and notify the NAIF group of this' &
             //            ' problem.'                                )
-            CALL ERRINT ( '#', RECSIZ                                )
-            CALL ERRINT ( '#', MAXREC                                )
-            CALL SIGERR ( 'SPICE(SPKRECTOOLARGE)'                    )
-            CALL CHKOUT ( 'SPKPVN'                                    )
-            RETURN
+            call errint ( '#', recsiz                                )
+            call errint ( '#', maxrec                                )
+            call sigerr ( 'SPICE(SPKRECTOOLARGE)'                    )
+            call chkout ( 'SPKPVN'                                    )
+            return
 
-         END IF
+         end if
 
-         CALL SPKR14 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE14 (                ET, RECORD, STATE  )
+         call spkr14 ( handle, descr, et, record         )
+         call spke14 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 15 ) THEN
-         CALL SPKR15 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE15 (                ET, RECORD, STATE  )
+      else if ( type .eq. 15 ) then
+         call spkr15 ( handle, descr, et, record         )
+         call spke15 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 17 ) THEN
-         CALL SPKR17 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE17 (                ET, RECORD, STATE  )
+      else if ( type .eq. 17 ) then
+         call spkr17 ( handle, descr, et, record         )
+         call spke17 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 18 ) THEN
-         CALL SPKR18 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE18 (                ET, RECORD, STATE  )
+      else if ( type .eq. 18 ) then
+         call spkr18 ( handle, descr, et, record         )
+         call spke18 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 19) THEN
-         CALL SPKR19 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE19 (                ET, RECORD, STATE  )
+      else if ( type .eq. 19) then
+         call spkr19 ( handle, descr, et, record         )
+         call spke19 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 20) THEN
-         CALL SPKR20 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE20 (                ET, RECORD, STATE  )
+      else if ( type .eq. 20) then
+         call spkr20 ( handle, descr, et, record         )
+         call spke20 (                et, record, state  )
 
-      ELSE IF ( TYPE .EQ. 21) THEN
-         CALL SPKR21 ( HANDLE, DESCR, ET, RECORD         )
-         CALL SPKE21 (                ET, RECORD, STATE  )
+      else if ( type .eq. 21) then
+         call spkr21 ( handle, descr, et, record         )
+         call spke21 (                et, record, state  )
 
-      ELSE
-         CALL SETMSG ( 'SPK type # is not supported in your ' &
+      else
+         call setmsg ( 'SPK type # is not supported in your ' &
          //            'version of the SPICE library.  You will ' &
          //            'need to upgrade your version of the ' &
          //            'library to make use of ephemerides that ' &
          //            'contain this SPK data type. ' )
-         CALL ERRINT ( '#', TYPE               )
-         CALL SIGERR ( 'SPICE(SPKTYPENOTSUPP)' )
-         CALL CHKOUT ( 'SPKPVN'                 )
-         RETURN
-      END IF
+         call errint ( '#', type               )
+         call sigerr ( 'SPICE(SPKTYPENOTSUPP)' )
+         call chkout ( 'SPKPVN'                 )
+         return
+      end if
 
 
-      CALL CHKOUT ( 'SPKPVN' )
-      RETURN
-      END
+      call chkout ( 'SPKPVN' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure COPYC ( Copy a character cell )
 
-      SUBROUTINE COPYC ( CELL, COPY )
+      subroutine copyc ( cell, copy )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)      CELL     ( LBCELL:* )
-      CHARACTER*(*)      COPY     ( LBCELL:* )
+      character*(*)      cell     ( lbcell:* )
+      character*(*)      copy     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -138,33 +138,33 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          SIZEC
-      INTEGER          CARDC
-      LOGICAL          RETURN
-      INTEGER          LASTPC
+      integer          sizec
+      integer          cardc
+      logical          return
+      integer          lastpc
 !
 !     Local variables
 !
-      INTEGER          SIZE
-      INTEGER          CARD
-      INTEGER          MOVED
-      INTEGER          I
-      LOGICAL          TRUNC
-      INTEGER          REQLEN
+      integer          size
+      integer          card
+      integer          moved
+      integer          i
+      logical          trunc
+      integer          reqlen
 
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN() ) RETURN
-      CALL CHKIN ( 'COPYC' )
+      if ( return() ) return
+      call chkin ( 'COPYC' )
 
 !
 !     We need the cardinality of the input cell, and the size of
 !     the output cell.
 !
-      CARD = CARDC ( CELL )
-      SIZE = SIZEC ( COPY )
+      card = cardc ( cell )
+      size = sizec ( copy )
 
 !
 !     Start moving the elements, one by one. Stop if the output
@@ -172,67 +172,67 @@
 !     the size and cardinality values.  Truncation indicator
 !     starts at .FALSE.
 !
-      TRUNC  = .FALSE.
-      REQLEN = 0
+      trunc  = .false.
+      reqlen = 0
 
-      MOVED  =  MIN ( CARD, SIZE )
+      moved  =  min ( card, size )
 
-      DO I = 1, MOVED
-         COPY(I) = CELL(I)
+      do i = 1, moved
+         copy(i) = cell(i)
 !
 !        Test for truncation:
 !
-         IF ( COPY(I) .NE. CELL(I) ) THEN
-            TRUNC   = .TRUE.
-            REQLEN  = MAX ( REQLEN, LASTPC( CELL(I) ) )
-         END IF
+         if ( copy(i) .ne. cell(i) ) then
+            trunc   = .true.
+            reqlen  = max ( reqlen, lastpc( cell(i) ) )
+         end if
 
-      END DO
+      end do
 
-      DO I = LBCELL, -2
-         COPY(I) = CELL(I)
+      do i = lbcell, -2
+         copy(i) = cell(i)
 !
 !        Test for truncation:
 !
-         IF ( COPY(I) .NE. CELL(I) ) THEN
-            TRUNC   = .TRUE.
-            REQLEN  = MAX ( REQLEN, LASTPC( CELL(I) ) )
-         END IF
+         if ( copy(i) .ne. cell(i) ) then
+            trunc   = .true.
+            reqlen  = max ( reqlen, lastpc( cell(i) ) )
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the cardinality of the output cell.
 !
-      CALL SCARDC ( MOVED, COPY )
+      call scardc ( moved, copy )
 
 !
 !     We've got an error if the output cell was too small.
 !
-      IF ( SIZE .LT. CARD ) THEN
-         CALL EXCESS (  CARD - SIZE,  'cell' )
-         CALL SIGERR ( 'SPICE(CELLTOOSMALL)' )
-         CALL CHKOUT ( 'COPYC' )
-         RETURN
-      END IF
+      if ( size .lt. card ) then
+         call excess (  card - size,  'cell' )
+         call sigerr ( 'SPICE(CELLTOOSMALL)' )
+         call chkout ( 'COPYC' )
+         return
+      end if
 
 !
 !     We also have an error if the output set elements are not long
 !     enough.
 !
-      IF (  TRUNC  ) THEN
+      if (  trunc  ) then
 
-         CALL SETMSG ( 'Length of output cell is #.  Length required' // &
+         call setmsg ( 'Length of output cell is #.  Length required' // &
                        ' to contain result is #.'  )
 
-         CALL ERRINT ( '#', LEN( COPY(LBCELL) )  )
-         CALL ERRINT ( '#', REQLEN  )
-         CALL SIGERR ( 'SPICE(ELEMENTSTOOSHORT)' )
+         call errint ( '#', len( copy(lbcell) )  )
+         call errint ( '#', reqlen  )
+         call sigerr ( 'SPICE(ELEMENTSTOOSHORT)' )
 
-         CALL CHKOUT ( 'COPYC' )
-         RETURN
+         call chkout ( 'COPYC' )
+         return
 
-      END IF
-      CALL CHKOUT ( 'COPYC' )
-      RETURN
-      END
+      end if
+      call chkout ( 'COPYC' )
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure    ZZGFRPWK ( Geometry finder report work done on a task )
 
-      SUBROUTINE ZZGFRPWK ( UNIT,   TOTAL, WAIT, &
-                            TCHECK, BEGIN, END, INCR )
+      subroutine zzgfrpwk ( unit,   total, wait, &
+                            tcheck, begin, end, incr )
 
 ! $ Abstract
 !
@@ -20,17 +20,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzgf.inc'
+      include               'zzgf.inc'
 
-      INTEGER               UNIT
-      DOUBLE PRECISION      TOTAL
-      DOUBLE PRECISION      WAIT
-      INTEGER               TCHECK
-      CHARACTER*(*)         BEGIN
-      CHARACTER*(*)         END
-      DOUBLE PRECISION      INCR
+      integer               unit
+      double precision      total
+      double precision      wait
+      integer               tcheck
+      character*(*)         begin
+      character*(*)         end
+      double precision      incr
 
 ! $ Brief_I/O
 !
@@ -191,74 +191,74 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      BRCKTD
-      INTEGER               RTRIM
-      LOGICAL               RETURN
+      double precision      brcktd
+      integer               rtrim
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*10          PRCENT
-      CHARACTER*(MXENDM)    FINISH
-      CHARACTER*(MXBEGM)    START
-      CHARACTER*(MXMSG)     MESSGE
+      character*10          prcent
+      character*(mxendm)    finish
+      character*(mxbegm)    start
+      character*(mxmsg)     messge
 
-      DOUBLE PRECISION      CURSEC
-      DOUBLE PRECISION      DONE
-      DOUBLE PRECISION      ENTIRE
-      DOUBLE PRECISION      FRACTN
-      DOUBLE PRECISION      SVINCR
-      DOUBLE PRECISION      LSTSEC
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      TVEC ( 6 )
+      double precision      cursec
+      double precision      done
+      double precision      entire
+      double precision      fractn
+      double precision      svincr
+      double precision      lstsec
+      double precision      step
+      double precision      tvec ( 6 )
 
-      INTEGER               CALLS
-      INTEGER               CHECK
-      INTEGER               LS
-      INTEGER               STDOUT
-      INTEGER               SVUNIT
+      integer               calls
+      integer               check
+      integer               ls
+      integer               stdout
+      integer               svunit
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  CALLS
-      SAVE                  CHECK
-      SAVE                  DONE
-      SAVE                  ENTIRE
-      SAVE                  FINISH
-      SAVE                  FIRST
-      SAVE                  LS
-      SAVE                  LSTSEC
-      SAVE                  START
-      SAVE                  STDOUT
-      SAVE                  STEP
-      SAVE                  SVINCR
-      SAVE                  SVUNIT
+      save                  calls
+      save                  check
+      save                  done
+      save                  entire
+      save                  finish
+      save                  first
+      save                  ls
+      save                  lstsec
+      save                  start
+      save                  stdout
+      save                  step
+      save                  svincr
+      save                  svunit
 
 !
 !     Initial values
 !
-      DATA                  CALLS  / 0       /
-      DATA                  CHECK  / 1       /
-      DATA                  DONE   / 0.D0    /
-      DATA                  ENTIRE / 0.D0    /
-      DATA                  FINISH / ' '     /
-      DATA                  FIRST  / .TRUE.  /
-      DATA                  LS     / 1       /
-      DATA                  LSTSEC / 0.D0    /
-      DATA                  START  / ' '     /
-      DATA                  STDOUT / 6       /
-      DATA                  STEP   / 0.D0    /
-      DATA                  SVINCR / 0.D0    /
-      DATA                  SVUNIT / 6       /
+      data                  calls  / 0       /
+      data                  check  / 1       /
+      data                  done   / 0.d0    /
+      data                  entire / 0.d0    /
+      data                  finish / ' '     /
+      data                  first  / .true.  /
+      data                  ls     / 1       /
+      data                  lstsec / 0.d0    /
+      data                  start  / ' '     /
+      data                  stdout / 6       /
+      data                  step   / 0.d0    /
+      data                  svincr / 0.d0    /
+      data                  svunit / 6       /
 
 
-      CALL CHKIN  ( 'ZZGFRPWK'          )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZGFRPWK'          )
-      RETURN
+      call chkin  ( 'ZZGFRPWK'          )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZGFRPWK'          )
+      return
 
 
 
@@ -266,7 +266,7 @@
 
 !$Procedure ZZGFTSWK ( Geometry finder total sum of work to be done. )
 
-      ENTRY ZZGFTSWK ( TOTAL, WAIT, TCHECK, BEGIN, END )
+      entry zzgftswk ( total, wait, tcheck, begin, end )
 
 ! $ Abstract
 !
@@ -418,90 +418,90 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFTSWK' )
+      call chkin  ( 'ZZGFTSWK' )
 
 !
 !     On the first pass, obtain the logical unit for
 !     standard output.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL STDIO ( 'STDOUT', STDOUT )
+         call stdio ( 'STDOUT', stdout )
 
 !
 !        The output unit is STDOUT unless the caller
 !        sets it to something else.
 !
-         SVUNIT = STDOUT
+         svunit = stdout
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     Save the inputs and set the amount of work done to 0
 !
-      ENTIRE = TOTAL
-      STEP   = MIN ( 3600.0D0, MAX( 0.0D0, WAIT ) )
-      CHECK  = MAX ( 1, TCHECK )
+      entire = total
+      step   = min ( 3600.0d0, max( 0.0d0, wait ) )
+      check  = max ( 1, tcheck )
 
-      START  = BEGIN
-      FINISH = END
+      start  = begin
+      finish = end
 
-      DONE   = 0.0D0
+      done   = 0.0d0
 
 !
 !     Set the timer.
 !
-      CALL ZZCPUTIM ( TVEC )
+      call zzcputim ( tvec )
 
-      LSTSEC = TVEC(4)*3600.0D0 + TVEC(5)*60.0D0 + TVEC(6)
+      lstsec = tvec(4)*3600.0d0 + tvec(5)*60.0d0 + tvec(6)
 
 !
 !     Set the increment counter
 !
-      CALLS  = 0
+      calls  = 0
 
 !
 !     Compose the output message.
 !
-      LS            = RTRIM ( START  )
-      MESSGE        = START ( 1 : LS )  // &
+      ls            = rtrim ( start  )
+      messge        = start ( 1 : ls )  // &
                       ' '               // &
                       '  0.00%'         // &
                       ' '               // &
-                      FINISH
+                      finish
 
 !
 !     Display a blank line, make sure we don't overwrite anything
 !     at the bottom of the screen. The display the message.
 !
-      IF ( SVUNIT .EQ. STDOUT ) THEN
+      if ( svunit .eq. stdout ) then
 
-         CALL ZZGFDSPS ( 1, MESSGE, 'A', 0 )
+         call zzgfdsps ( 1, messge, 'A', 0 )
 
-      ELSE
+      else
 !
 !        Write the message without special carriage control.
 !
-         CALL WRITLN ( ' ',    SVUNIT )
-         CALL WRITLN ( ' ',    SVUNIT )
-         CALL WRITLN ( MESSGE, SVUNIT )
+         call writln ( ' ',    svunit )
+         call writln ( ' ',    svunit )
+         call writln ( messge, svunit )
 
-      END IF
+      end if
 
-      CALL CHKOUT  ( 'ZZGFTSWK' )
-      RETURN
+      call chkout  ( 'ZZGFTSWK' )
+      return
 
 
 
 !$Procedure ZZGFWKIN ( Geometry finder work finished increment )
 
-      ENTRY ZZGFWKIN ( INCR )
+      entry zzgfwkin ( incr )
 
 ! $ Abstract
 !
@@ -588,73 +588,73 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFWKIN' )
+      call chkin  ( 'ZZGFWKIN' )
 
-      SVINCR = INCR
-      DONE   = DONE  + INCR
-      CALLS  = CALLS + 1
+      svincr = incr
+      done   = done  + incr
+      calls  = calls + 1
 
-      IF ( ENTIRE .EQ. 0 ) THEN
-         CALL CHKOUT  ( 'ZZGFWKIN' )
-         RETURN
-      END IF
+      if ( entire .eq. 0 ) then
+         call chkout  ( 'ZZGFWKIN' )
+         return
+      end if
 
-      IF ( CALLS .GE. CHECK ) THEN
+      if ( calls .ge. check ) then
 
-         CALLS  = 0
+         calls  = 0
 
-         CALL ZZCPUTIM ( TVEC )
+         call zzcputim ( tvec )
 
-         CURSEC = TVEC(4)*3600.0D0 + TVEC(5)*60.0D0 + TVEC(6)
+         cursec = tvec(4)*3600.0d0 + tvec(5)*60.0d0 + tvec(6)
 
 
-         IF ( DABS( CURSEC - LSTSEC ) .GE. STEP ) THEN
+         if ( dabs( cursec - lstsec ) .ge. step ) then
 
-            LSTSEC = CURSEC
+            lstsec = cursec
 !
 !           Report how much work has been done.
 !
-            FRACTN = BRCKTD ( ( DONE/ENTIRE )*100.0D0,  0.D0,  100.D0 )
+            fractn = brcktd ( ( done/entire )*100.0d0,  0.d0,  100.d0 )
 
-            CALL DPFMT ( FRACTN, 'xxx.xx', PRCENT )
+            call dpfmt ( fractn, 'xxx.xx', prcent )
 
-            PRCENT(7:7) = '%'
+            prcent(7:7) = '%'
 
-            MESSGE        = START  (1:LS)  // &
+            messge        = start  (1:ls)  // &
                             ' '            // &
-                            PRCENT (1:7)   // &
+                            prcent (1:7)   // &
                             ' '            // &
-                            FINISH(1:RTRIM(FINISH))
+                            finish(1:rtrim(finish))
 
 
-            IF ( SVUNIT .EQ. STDOUT ) THEN
+            if ( svunit .eq. stdout ) then
 
-               CALL ZZGFDSPS ( 0, MESSGE, 'A', 0 )
+               call zzgfdsps ( 0, messge, 'A', 0 )
 
-            ELSE
+            else
 !
 !              Write the message without special carriage control.
 !
-               CALL WRITLN ( MESSGE, SVUNIT )
+               call writln ( messge, svunit )
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT  ( 'ZZGFWKIN' )
-      RETURN
+      call chkout  ( 'ZZGFWKIN' )
+      return
 
 
 
 !$Procedure ZZGFWKAD ( Geometry finder work reporting adjustment )
 
-      ENTRY ZZGFWKAD ( WAIT, TCHECK, BEGIN, END )
+      entry zzgfwkad ( wait, tcheck, begin, end )
 
 ! $ Abstract
 !
@@ -811,12 +811,12 @@
 !
 !-&
 
-      STEP   = MIN  ( 3600.0D0,  MAX( 0.D0, WAIT ) )
-      CHECK  = MAX  ( 1, TCHECK )
-      START  = BEGIN
-      FINISH = END
+      step   = min  ( 3600.0d0,  max( 0.d0, wait ) )
+      check  = max  ( 1, tcheck )
+      start  = begin
+      finish = end
 
-      RETURN
+      return
 
 
 
@@ -825,7 +825,7 @@
 
 !$Procedure ZZGFWUN ( Geometry finder set work report output unit )
 
-      ENTRY ZZGFWKUN ( UNIT )
+      entry zzgfwkun ( unit )
 
 ! $ Abstract
 !
@@ -921,17 +921,17 @@
 !     On the first pass, obtain the logical unit for
 !     standard output.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL STDIO ( 'STDOUT', STDOUT )
+         call stdio ( 'STDOUT', stdout )
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
-      SVUNIT = UNIT
+      svunit = unit
 
-      RETURN
+      return
 
 
 
@@ -939,7 +939,7 @@
 
 !$Procedure ZZGFWKMO ( Geometry finder work reporting monitor )
 
-      ENTRY ZZGFWKMO ( UNIT, TOTAL, WAIT, TCHECK, BEGIN, END, INCR )
+      entry zzgfwkmo ( unit, total, wait, tcheck, begin, end, incr )
 
 ! $ Abstract
 !
@@ -1051,13 +1051,13 @@
 !
 !-&
 
-      UNIT   = SVUNIT
-      TOTAL  = ENTIRE
-      WAIT   = STEP
-      TCHECK = CHECK
-      BEGIN  = START
-      END    = FINISH
-      INCR   = SVINCR
+      unit   = svunit
+      total  = entire
+      wait   = step
+      tcheck = check
+      begin  = start
+      end    = finish
+      incr   = svincr
 
-      RETURN
-      END
+      return
+      end

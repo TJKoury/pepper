@@ -42,14 +42,14 @@
 !
 !-&
 
-      INTEGER               MAXFRM
-      PARAMETER           ( MAXFRM =  1013 )
+      integer               maxfrm
+      parameter           ( maxfrm =  1013 )
 
-      INTEGER               MAXBAS
-      PARAMETER           ( MAXBAS =  15000 )
+      integer               maxbas
+      parameter           ( maxbas =  15000 )
 
-      INTEGER               LBSNGL
-      PARAMETER           ( LBSNGL =  -5 )
+      integer               lbsngl
+      parameter           ( lbsngl =  -5 )
 
 !
 !     End of INCLUDE file zzswtchf.inc

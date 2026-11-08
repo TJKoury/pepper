@@ -1,7 +1,7 @@
 !$Procedure ZZEKLLTD ( EK, last less than, d.p. )
 
-      SUBROUTINE ZZEKLLTD (  HANDLE,  SEGDSC,  COLDSC, &
-                             DKEY,    PRVLOC,  PRVPTR  )
+      subroutine zzeklltd (  handle,  segdsc,  coldsc, &
+                             dkey,    prvloc,  prvptr  )
 
 ! $ Abstract
 !
@@ -20,19 +20,19 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      DOUBLE PRECISION      DKEY
-      INTEGER               PRVLOC
-      INTEGER               PRVPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      double precision      dkey
+      integer               prvloc
+      integer               prvptr
 
 ! $ Brief_I/O
 !
@@ -143,155 +143,155 @@
 !
 !     Non-SPICELIB functions
 !
-      LOGICAL               ZZEKSCMP
+      logical               zzekscmp
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      INTEGER               BEGIN
-      INTEGER               BEGPTR
-      INTEGER               DTYPE
-      INTEGER               END
-      INTEGER               ENDPTR
-      INTEGER               MIDDLE
-      INTEGER               MIDPTR
-      INTEGER               NROWS
+      integer               begin
+      integer               begptr
+      integer               dtype
+      integer               end
+      integer               endptr
+      integer               middle
+      integer               midptr
+      integer               nrows
 
-      LOGICAL               INDEXD
+      logical               indexd
 
 !
 !     Use discovery check-in.
 !
 !     If the column's not indexed, we have no business being here.
 !
-      INDEXD  =  COLDSC(IXTIDX) .NE. IFALSE
+      indexd  =  coldsc(ixtidx) .ne. ifalse
 
-      IF ( .NOT. INDEXD ) THEN
+      if ( .not. indexd ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKLLTD'                 )
-         CALL SETMSG ( 'Column # is not indexed.' )
-         CALL ERRCH  ( '#',  COLUMN               )
-         CALL SIGERR ( 'SPICE(NOTINDEXED)'        )
-         CALL CHKOUT ( 'ZZEKLLTD'                 )
-         RETURN
+         call chkin  ( 'ZZEKLLTD'                 )
+         call setmsg ( 'Column # is not indexed.' )
+         call errch  ( '#',  column               )
+         call sigerr ( 'SPICE(NOTINDEXED)'        )
+         call chkout ( 'ZZEKLLTD'                 )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the column's data type.
 !
-      DTYPE  =  COLDSC(TYPIDX)
+      dtype  =  coldsc(typidx)
 
-      IF (  ( DTYPE .NE. DP ) .AND. ( DTYPE .NE. TIME )  ) THEN
+      if (  ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL CHKIN  ( 'ZZEKLLTD'                                      )
-         CALL SETMSG ( 'Column # should be DP or TIME but has type #.' )
-         CALL ERRCH  ( '#',  COLUMN                                    )
-         CALL ERRINT ( '#',  DTYPE                                     )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                            )
-         CALL CHKOUT ( 'ZZEKLLTD'                                      )
-         RETURN
+         call chkin  ( 'ZZEKLLTD'                                      )
+         call setmsg ( 'Column # should be DP or TIME but has type #.' )
+         call errch  ( '#',  column                                    )
+         call errint ( '#',  dtype                                     )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                            )
+         call chkout ( 'ZZEKLLTD'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Handle the case of an empty segment gracefully.
 !
-      NROWS  =  SEGDSC(NRIDX)
+      nrows  =  segdsc(nridx)
 
-      IF ( NROWS .EQ. 0 ) THEN
+      if ( nrows .eq. 0 ) then
 
-         PRVLOC = 0
-         PRVPTR = 0
+         prvloc = 0
+         prvptr = 0
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     The algorithm used here is very like unto that used in LSTLTD.
 !
-      BEGIN   =   1
-      END     =   NROWS
+      begin   =   1
+      end     =   nrows
 
 !
 !     Get the record pointers BEGPTR and ENDPTR of the least and
 !     greatest elements in the column.
 !
-      CALL ZZEKIXLK ( HANDLE, COLDSC, BEGIN, BEGPTR )
-      CALL ZZEKIXLK ( HANDLE, COLDSC, END,   ENDPTR )
+      call zzekixlk ( handle, coldsc, begin, begptr )
+      call zzekixlk ( handle, coldsc, end,   endptr )
 
 
-      IF  (  ZZEKSCMP ( GE,      HANDLE,  SEGDSC, &
-                        COLDSC,  BEGPTR,  1,       DP, &
-                        ' ',     DKEY,    0,      .FALSE. )  ) THEN
+      if  (  zzekscmp ( ge,      handle,  segdsc, &
+                        coldsc,  begptr,  1,       dp, &
+                        ' ',     dkey,    0,      .false. )  ) then
 !
 !        The smallest entry of the column is greater than or equal to
 !        the input value of the same data type, so none of the entries
 !        are less than the input value.
 !
-         PRVLOC = 0
-         PRVPTR = 0
+         prvloc = 0
+         prvptr = 0
 
 
-      ELSE IF (  ZZEKSCMP ( LT,      HANDLE,  SEGDSC, &
-                            COLDSC,  ENDPTR,  1,      DP, &
-                            ' ',     DKEY,    0,     .FALSE. )  ) THEN
+      else if (  zzekscmp ( lt,      handle,  segdsc, &
+                            coldsc,  endptr,  1,      dp, &
+                            ' ',     dkey,    0,     .false. )  ) then
 !
 !        The last element of the array is less than the input value of
 !        the same data type, so it's the last item less than the input
 !        value.
 !
-         PRVLOC = NROWS
+         prvloc = nrows
 
-         CALL ZZEKIXLK ( HANDLE, COLDSC, PRVLOC, PRVPTR )
+         call zzekixlk ( handle, coldsc, prvloc, prvptr )
 
 
-      ELSE
+      else
 !
 !        The input value lies between some pair of column entries.
 !        The value is greater than the smallest column entry and
 !        less than or equal to the greatest entry.
 !
-         DO WHILE ( END .GT. BEGIN+1 )
+         do while ( end .gt. begin+1 )
 !
 !           Find the address of the element whose ordinal position
 !           is halfway between BEGIN and END.
 !
-            MIDDLE   =  ( BEGIN  + END )  / 2
+            middle   =  ( begin  + end )  / 2
 
-            CALL ZZEKIXLK ( HANDLE, COLDSC, MIDDLE, MIDPTR )
+            call zzekixlk ( handle, coldsc, middle, midptr )
 
 
-            IF (  ZZEKSCMP ( LT,      HANDLE,  SEGDSC, &
-                             COLDSC,  MIDPTR,  1,      DP, &
-                             ' ',     DKEY,    0,     .FALSE. )  ) THEN
+            if (  zzekscmp ( lt,      handle,  segdsc, &
+                             coldsc,  midptr,  1,      dp, &
+                             ' ',     dkey,    0,     .false. )  ) then
 !
 !              The middle value is less than the input value of the
 !              same data type.
 !
-               BEGIN = MIDDLE
-            ELSE
-               END   = MIDDLE
-            END IF
+               begin = middle
+            else
+               end   = middle
+            end if
 !
 !           The input value is greater than the element having ordinal
 !           position BEGIN and less than or equal to the element having
 !           ordinal position END.
 !
-         END DO
+         end do
 
-         PRVLOC = BEGIN
-         CALL ZZEKIXLK ( HANDLE, COLDSC, PRVLOC, PRVPTR )
+         prvloc = begin
+         call zzekixlk ( handle, coldsc, prvloc, prvptr )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure TPICTR ( Create a Time Format Picture )
 
-      SUBROUTINE TPICTR ( SAMPLE, PICTUR, OK, ERRMSG )
+      subroutine tpictr ( sample, pictur, ok, errmsg )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         SAMPLE
-      CHARACTER*(*)         PICTUR
-      LOGICAL               OK
-      CHARACTER*(*)         ERRMSG
+      character*(*)         sample
+      character*(*)         pictur
+      logical               ok
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -242,35 +242,35 @@
 !
 !     Local variables
 !
-      CHARACTER*(5)         TYPE
-      CHARACTER*(8)         MODIFY   ( 5 )
+      character*(5)         type
+      character*(8)         modify   ( 5 )
 
-      DOUBLE PRECISION      TVEC     ( 10 )
+      double precision      tvec     ( 10 )
 
-      INTEGER               NTVEC
+      integer               ntvec
 
-      LOGICAL               MODS
-      LOGICAL               SUCCES
-      LOGICAL               YABBRV
+      logical               mods
+      logical               succes
+      logical               yabbrv
 
 !
 !     This routine is really just a front for one aspect of
 !     the routine TPARTV.
 !
-      ERRMSG  = ' '
+      errmsg  = ' '
 
-      CALL TPARTV ( SAMPLE, &
-                    TVEC,   NTVEC, TYPE, &
-                    MODIFY, MODS,  YABBRV, SUCCES, &
-                    PICTUR, ERRMSG )
+      call tpartv ( sample, &
+                    tvec,   ntvec, type, &
+                    modify, mods,  yabbrv, succes, &
+                    pictur, errmsg )
 
 
-      IF ( PICTUR .EQ. ' ' ) THEN
-         OK = .FALSE.
-      ELSE
-         OK    = .TRUE.
-         ERRMSG = ' '
-      END IF
+      if ( pictur .eq. ' ' ) then
+         ok = .false.
+      else
+         ok    = .true.
+         errmsg = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

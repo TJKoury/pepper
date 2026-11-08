@@ -1,6 +1,6 @@
 !$Procedure DASRDI ( DAS, read data, integer )
 
-      SUBROUTINE DASRDI ( HANDLE, FIRST, LAST, DATA )
+      subroutine dasrdi ( handle, first, last, data )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               DATA   ( * )
+      integer               handle
+      integer               first
+      integer               last
+      integer               data   ( * )
 
 ! $ Brief_I/O
 !
@@ -281,27 +281,27 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               NWI
-      PARAMETER           ( NWI    =  256 )
+      integer               nwi
+      parameter           ( nwi    =  256 )
 
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
 !
 !     Local variables
 !
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               N
-      INTEGER               NREAD
-      INTEGER               NUMINT
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               clbase
+      integer               clsize
+      integer               n
+      integer               nread
+      integer               numint
+      integer               recno
+      integer               wordno
 
 
 
@@ -309,36 +309,36 @@
 !     Find out the physical location of the first integer.  If FIRST
 !     is invalid, DASA2L will take care of the problem.
 !
-      CALL DASA2L ( HANDLE, INT, FIRST, CLBASE, CLSIZE, RECNO, WORDNO )
+      call dasa2l ( handle, int, first, clbase, clsize, recno, wordno )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Decide how many integers to read.
 !
-      NUMINT = LAST - FIRST + 1
-      NREAD  = 0
+      numint = last - first + 1
+      nread  = 0
 
 !
 !     Read as much data from record RECNO as necessary.
 !
-      N  =  MIN ( NUMINT,  NWI - WORDNO + 1 )
+      n  =  min ( numint,  nwi - wordno + 1 )
 
-      CALL DASRRI ( HANDLE, RECNO, WORDNO, WORDNO + N-1, DATA )
+      call dasrri ( handle, recno, wordno, wordno + n-1, data )
 
-      NREAD  =  N
-      RECNO  =  RECNO + 1
+      nread  =  n
+      recno  =  recno + 1
 
 !
 !     Read from as many additional records as necessary.
 !
-      DO WHILE ( NREAD .LT. NUMINT )
+      do while ( nread .lt. numint )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 !
 !        At this point, RECNO is the correct number of the
@@ -346,35 +346,35 @@
 !        of the first record of the cluster we're about
 !        to read from.
 !
-         IF (  RECNO  .LT.  ( CLBASE + CLSIZE )  ) THEN
+         if (  recno  .lt.  ( clbase + clsize )  ) then
 !
 !           We can continue reading from the current
 !           cluster.
 !
-            N  =  MIN ( NUMINT - NREAD,  NWI )
+            n  =  min ( numint - nread,  nwi )
 
-            CALL DASRRI ( HANDLE, RECNO, 1, N, DATA(NREAD + 1) )
+            call dasrri ( handle, recno, 1, n, data(nread + 1) )
 
-            NREAD   =   NREAD + N
-            RECNO   =   RECNO + 1
+            nread   =   nread + n
+            recno   =   recno + 1
 
-         ELSE
+         else
 !
 !           We must find the next integer cluster to
 !           read from.  The first integer in this
 !           cluster has address FIRST + NREAD.
 !
-            CALL DASA2L ( HANDLE, &
-                          INT, &
-                          FIRST + NREAD, &
-                          CLBASE, &
-                          CLSIZE, &
-                          RECNO, &
-                          WORDNO  )
+            call dasa2l ( handle, &
+                          int, &
+                          first + nread, &
+                          clbase, &
+                          clsize, &
+                          recno, &
+                          wordno  )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

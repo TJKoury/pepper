@@ -10,26 +10,26 @@
 !
 !     Integer code indicating `true':
 !
-      INTEGER               ITRUE
-      PARAMETER           ( ITRUE  =  1 )
+      integer               itrue
+      parameter           ( itrue  =  1 )
 
 !
 !     Integer code indicating `false':
 !
-      INTEGER               IFALSE
-      PARAMETER           ( IFALSE = -1 )
+      integer               ifalse
+      parameter           ( ifalse = -1 )
 
 !
 !     Character code indicating `true':
 !
-      CHARACTER*(*)         CTRUE
-      PARAMETER           ( CTRUE  = 'T' )
+      character*(*)         ctrue
+      parameter           ( ctrue  = 'T' )
 
 !
 !     Character code indicating `false':
 !
-      CHARACTER*(*)         CFALSE
-      PARAMETER           ( CFALSE = 'F' )
+      character*(*)         cfalse
+      parameter           ( cfalse = 'F' )
 
 !
 !     End Include Section:  EK Boolean Enumerated Type

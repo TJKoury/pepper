@@ -1,6 +1,6 @@
 !$Procedure LNKFSL ( LNK, free sublist of a list  )
 
-      SUBROUTINE LNKFSL ( HEAD, TAIL, POOL )
+      subroutine lnkfsl ( head, tail, pool )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               HEAD
-      INTEGER               TAIL
-      INTEGER               POOL ( 2,  LBPOOL : * )
+      integer               head
+      integer               tail
+      integer               pool ( 2,  lbpool : * )
 
 ! $ Brief_I/O
 !
@@ -174,23 +174,23 @@
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      INTEGER               SIZROW
-      PARAMETER           ( SIZROW =   1 )
+      integer               sizrow
+      parameter           ( sizrow =   1 )
 
-      INTEGER               SIZCOL
-      PARAMETER           ( SIZCOL =   0 )
+      integer               sizcol
+      parameter           ( sizcol =   0 )
 
-      INTEGER               NFRROW
-      PARAMETER           ( NFRROW =   2 )
+      integer               nfrrow
+      parameter           ( nfrrow =   2 )
 
-      INTEGER               NFRCOL
-      PARAMETER           ( NFRCOL =   0 )
+      integer               nfrcol
+      parameter           ( nfrcol =   0 )
 
-      INTEGER               FREROW
-      PARAMETER           ( FREROW =   1 )
+      integer               frerow
+      parameter           ( frerow =   1 )
 
-      INTEGER               FRECOL
-      PARAMETER           ( FRECOL =  -1 )
+      integer               frecol
+      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -206,102 +206,102 @@
 !
 !
 !
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  = 1 )
+      integer               forwrd
+      parameter           ( forwrd  = 1 )
 
-      INTEGER               BCKWRD
-      PARAMETER           ( BCKWRD  = 2 )
+      integer               bckwrd
+      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      INTEGER               FREE
-      PARAMETER           ( FREE   = 0 )
+      integer               free
+      parameter           ( free   = 0 )
 
 
 
 !
 !     Local variables
 !
-      INTEGER               COUNT
-      INTEGER               NEXT
-      INTEGER               NODE
-      INTEGER               PREV
+      integer               count
+      integer               next
+      integer               node
+      integer               prev
 
 
 !
 !     HEAD and TAIL must be valid node numbers.  These nodes
 !     must be allocated as well.
 !
-      IF (      ( HEAD .LT. 1                   ) &
-           .OR. ( HEAD .GT. POOL(SIZROW,SIZCOL) ) &
-           .OR. ( TAIL .LT. 1                   ) &
-           .OR. ( TAIL .GT. POOL(SIZROW,SIZCOL) )  )  THEN
+      if (      ( head .lt. 1                   ) &
+           .or. ( head .gt. pool(sizrow,sizcol) ) &
+           .or. ( tail .lt. 1                   ) &
+           .or. ( tail .gt. pool(sizrow,sizcol) )  )  then
 
-         CALL CHKIN  ( 'LNKFSL'                                        )
-         CALL SETMSG ( 'HEAD was #.  TAIL was #. '                    // &
+         call chkin  ( 'LNKFSL'                                        )
+         call setmsg ( 'HEAD was #.  TAIL was #. '                    // &
                        'Valid range is 1 to #.'                        )
-         CALL ERRINT ( '#', HEAD                                       )
-         CALL ERRINT ( '#', TAIL                                       )
-         CALL ERRINT ( '#', POOL(SIZROW, SIZCOL)                       )
-         CALL SIGERR ( 'SPICE(INVALIDNODE)'                            )
-         CALL CHKOUT ( 'LNKFSL'                                        )
-         RETURN
+         call errint ( '#', head                                       )
+         call errint ( '#', tail                                       )
+         call errint ( '#', pool(sizrow, sizcol)                       )
+         call sigerr ( 'SPICE(INVALIDNODE)'                            )
+         call chkout ( 'LNKFSL'                                        )
+         return
 
 
-      ELSE IF (       ( POOL(BCKWRD,HEAD)  .EQ.  FREE ) &
-                .OR.  ( POOL(BCKWRD,TAIL)  .EQ.  FREE )  ) THEN
+      else if (       ( pool(bckwrd,head)  .eq.  free ) &
+                .or.  ( pool(bckwrd,tail)  .eq.  free )  ) then
 
-         CALL CHKIN  ( 'LNKFSL'                                        )
-         CALL SETMSG ( 'Node HEAD: node number = #; '                 // &
+         call chkin  ( 'LNKFSL'                                        )
+         call setmsg ( 'Node HEAD: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
                        'Node TAIL: node number = #; '                 // &
                        'backward pointer = #;  '                      // &
                        'forward pointer = #. '                        // &
                        '("FREE" is #)'                                 )
-         CALL ERRINT ( '#', HEAD                                       )
-         CALL ERRINT ( '#', POOL(BCKWRD,HEAD)                          )
-         CALL ERRINT ( '#', POOL(FORWRD,HEAD)                          )
-         CALL ERRINT ( '#', TAIL                                       )
-         CALL ERRINT ( '#', POOL(BCKWRD,TAIL)                          )
-         CALL ERRINT ( '#', POOL(FORWRD,TAIL)                          )
-         CALL ERRINT ( '#', FREE                                       )
-         CALL SIGERR ( 'SPICE(UNALLOCATEDNODE)'                        )
-         CALL CHKOUT ( 'LNKFSL'                                        )
-         RETURN
+         call errint ( '#', head                                       )
+         call errint ( '#', pool(bckwrd,head)                          )
+         call errint ( '#', pool(forwrd,head)                          )
+         call errint ( '#', tail                                       )
+         call errint ( '#', pool(bckwrd,tail)                          )
+         call errint ( '#', pool(forwrd,tail)                          )
+         call errint ( '#', free                                       )
+         call sigerr ( 'SPICE(UNALLOCATEDNODE)'                        )
+         call chkout ( 'LNKFSL'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Starting at HEAD, search forward, looking for TAIL (apologies to
 !     ZZ Top).  Count the nodes in the sublist, while we're at it.
 !
-      COUNT = 1
-      NODE  = HEAD
+      count = 1
+      node  = head
 
-      DO WHILE (  ( NODE .NE. TAIL ) .AND. ( NODE .GT. 0 )  )
-         COUNT  =  COUNT + 1
-         NODE   =  POOL ( FORWRD, NODE )
-      END DO
+      do while (  ( node .ne. tail ) .and. ( node .gt. 0 )  )
+         count  =  count + 1
+         node   =  pool ( forwrd, node )
+      end do
 
 !
 !     If we didn't find TAIL, that's an error.
 !
-      IF ( NODE .NE. TAIL ) THEN
+      if ( node .ne. tail ) then
 
-         CALL CHKIN  ( 'LNKFSL'                                        )
-         CALL SETMSG ( 'Node # cannot be found by forward '           // &
+         call chkin  ( 'LNKFSL'                                        )
+         call setmsg ( 'Node # cannot be found by forward '           // &
                        'traversal, starting at node #.'                )
-         CALL ERRINT ( '#', TAIL                                       )
-         CALL ERRINT ( '#', HEAD                                       )
-         CALL SIGERR ( 'SPICE(INVALIDSUBLIST)'                         )
-         CALL CHKOUT ( 'LNKFSL'                                        )
-         RETURN
+         call errint ( '#', tail                                       )
+         call errint ( '#', head                                       )
+         call sigerr ( 'SPICE(INVALIDSUBLIST)'                         )
+         call chkout ( 'LNKFSL'                                        )
+         return
 
-      END IF
+      end if
 !
 !     We reached TAIL.  Extract the sublist between HEAD and TAIL
 !     inclusive.
@@ -310,15 +310,15 @@
 !
 !     Find the predecessor of HEAD and the successor of TAIL.
 !
-      PREV = POOL ( BCKWRD, HEAD )
-      NEXT = POOL ( FORWRD, TAIL )
+      prev = pool ( bckwrd, head )
+      next = pool ( forwrd, tail )
 
 !
 !     If the input list did not start with HEAD, then we must update
 !     the forward pointer of the tail node, as well as the backward
 !     pointer of the head node, of the sublist that preceded HEAD.
 !
-      IF ( PREV .GT. 0 ) THEN
+      if ( prev .gt. 0 ) then
 !
 !        Update the forward pointer of PREV with the forward pointer of
 !        TAIL.
@@ -331,23 +331,23 @@
 !        HEAD will become the tail of the main list after the sublist
 !        ranging from HEAD to TAIL is removed.
 !
-         POOL ( FORWRD, PREV )   =   NEXT
+         pool ( forwrd, prev )   =   next
 
 !
 !        If TAIL is the tail of the input list, we must update the
 !        backward pointer of the head of the input list to point to
 !        the negative of the new tail of the list, which now is PREV.
 !
-         IF ( NEXT .LE. 0 ) THEN
+         if ( next .le. 0 ) then
 !
 !           In this case, we can read off the number of the head
 !           node from NEXT:  it is just -NEXT.
 !
-            POOL ( BCKWRD, -NEXT )  =  -PREV
+            pool ( bckwrd, -next )  =  -prev
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The portion of the input list that preceded HEAD (if such
@@ -360,7 +360,7 @@
 !     the backward pointer of the head node, as well as the forward
 !     pointer of the tail node, of the sublist that followed TAIL.
 !
-      IF ( NEXT .GT. 0 ) THEN
+      if ( next .gt. 0 ) then
 !
 !        Update the backward pointer of NEXT with the backward pointer
 !        of HEAD.
@@ -373,23 +373,23 @@
 !        will become the head of the main list after the sublist
 !        ranging from HEAD to TAIL is removed.
 !
-         POOL ( BCKWRD, NEXT )   =  PREV
+         pool ( bckwrd, next )   =  prev
 
 !
 !        If HEAD is the head of the input list, we must update the
 !        forward pointer of the tail of the input list to point to
 !        the negative of the new head of the list, which now is NEXT.
 !
-         IF ( PREV .LE. 0 ) THEN
+         if ( prev .le. 0 ) then
 !
 !           In this case, we can read off the number of the tail
 !           node from PREV:  it is just -PREV.
 !
-            POOL ( FORWRD, -PREV )  =  -NEXT
+            pool ( forwrd, -prev )  =  -next
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     The portion of the input list that followed TAIL (if such
 !     portion existed) has now been taken care of.
@@ -398,20 +398,20 @@
 !
 !     Set the backward pointers of the freed nodes to FREE.
 !
-      NODE = HEAD
+      node = head
 
-      DO WHILE ( NODE .NE. NEXT )
-         POOL(BCKWRD,NODE) = FREE
-         NODE              = POOL(FORWRD,NODE)
-      END DO
+      do while ( node .ne. next )
+         pool(bckwrd,node) = free
+         node              = pool(forwrd,node)
+      end do
 
 !
 !     Return the sublist to the free list.  Update the free node
 !     count.
 !
-      POOL ( FORWRD, TAIL   )  =  POOL ( FREROW, FRECOL )
-      POOL ( FREROW, FRECOL )  =  HEAD
-      POOL ( NFRROW, NFRCOL )  =  POOL ( NFRROW, NFRCOL )  +  COUNT
+      pool ( forwrd, tail   )  =  pool ( frerow, frecol )
+      pool ( frerow, frecol )  =  head
+      pool ( nfrrow, nfrcol )  =  pool ( nfrrow, nfrcol )  +  count
 
-      RETURN
-      END
+      return
+      end

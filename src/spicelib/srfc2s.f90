@@ -1,6 +1,6 @@
 !$Procedure SRFC2S ( Surface and body ID codes to surface string )
 
-      SUBROUTINE SRFC2S ( CODE, BODYID, SRFSTR, ISNAME )
+      subroutine srfc2s ( code, bodyid, srfstr, isname )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               CODE
-      INTEGER               BODYID
-      CHARACTER*(*)         SRFSTR
-      LOGICAL               ISNAME
+      integer               code
+      integer               bodyid
+      character*(*)         srfstr
+      logical               isname
 
 ! $ Brief_I/O
 !
@@ -315,36 +315,36 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SRFC2S' )
+      call chkin ( 'SRFC2S' )
 
 !
 !     Try to translate the input codes to a known surface name.
 !
-      CALL ZZSRFC2N ( CODE, BODYID, SRFSTR, ISNAME )
+      call zzsrfc2n ( code, bodyid, srfstr, isname )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFC2S' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFC2S' )
+         return
+      end if
 
 !
 !     If there is no matching name, convert the surface ID code to a
 !     string representation.
 !
-      IF ( .NOT. ISNAME ) THEN
+      if ( .not. isname ) then
 
-         CALL INTSTR ( CODE, SRFSTR )
+         call intstr ( code, srfstr )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SRFC2S' )
-      RETURN
-      END
+      call chkout ( 'SRFC2S' )
+      return
+      end

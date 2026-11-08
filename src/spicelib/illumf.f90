@@ -1,8 +1,8 @@
 !$Procedure ILLUMF ( Illumination angles, general source, return flags )
 
-      SUBROUTINE ILLUMF ( METHOD, TARGET, ILUSRC, ET,     FIXREF, &
-                          ABCORR, OBSRVR, SPOINT, TRGEPC, SRFVEC, &
-                          PHASE,  INCDNC, EMISSN, VISIBL, LIT    )
+      subroutine illumf ( method, target, ilusrc, et,     fixref, &
+                          abcorr, obsrvr, spoint, trgepc, srfvec, &
+                          phase,  incdnc, emissn, visibl, lit    )
 
 ! $ Abstract
 !
@@ -34,30 +34,30 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'dsk.inc'
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
-      INCLUDE               'zzdsk.inc'
+      include               'dsk.inc'
+      include               'gf.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
+      include               'zzdsk.inc'
 
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILUSRC
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      SRFVEC ( 3 )
-      DOUBLE PRECISION      PHASE
-      DOUBLE PRECISION      INCDNC
-      DOUBLE PRECISION      EMISSN
-      LOGICAL               VISIBL
-      LOGICAL               LIT
+      character*(*)         method
+      character*(*)         target
+      character*(*)         ilusrc
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      double precision      trgepc
+      double precision      srfvec ( 3 )
+      double precision      phase
+      double precision      incdnc
+      double precision      emissn
+      logical               visibl
+      logical               lit
 
 ! $ Brief_I/O
 !
@@ -1210,143 +1210,143 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VSEP
+      double precision      halfpi
+      double precision      vsep
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  =  'ILLUMF' )
+      character*(*)         rname
+      parameter           ( rname  =  'ILLUMF' )
 
 
-      DOUBLE PRECISION      TOLSCL
-      PARAMETER           ( TOLSCL = 1.D-10 )
+      double precision      tolscl
+      parameter           ( tolscl = 1.d-10 )
 
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(CVTLEN)    PNTDEF
-      CHARACTER*(MTHLEN)    PRVMTH
-      CHARACTER*(CORLEN)    PRVCOR
-      CHARACTER*(SHPLEN)    SHPSTR
-      CHARACTER*(SUBLEN)    SUBTYP
-      CHARACTER*(TMTLEN)    TRMSTR
+      character*(cvtlen)    pntdef
+      character*(mthlen)    prvmth
+      character*(corlen)    prvcor
+      character*(shplen)    shpstr
+      character*(sublen)    subtyp
+      character*(tmtlen)    trmstr
 
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTI
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      DOUBLE PRECISION      OPSTAT ( 6 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      TISTAT ( 6 )
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
+      double precision      lt
+      double precision      lti
+      double precision      maxrad
+      double precision      normal ( 3 )
+      double precision      obspos ( 3 )
+      double precision      opstat ( 6 )
+      double precision      radii  ( 3 )
+      double precision      s
+      double precision      scale
+      double precision      tistat ( 6 )
+      double precision      vertex ( 3 )
+      double precision      xpt    ( 3 )
 
-      INTEGER               CENTER
-      INTEGER               FIXFID
-      INTEGER               NSURF
-      INTEGER               OBSCDE
-      INTEGER               SHAPE
-      INTEGER               SRFLST ( MAXSRF )
-      INTEGER               SVNSRF
-      INTEGER               TRGCDE
-      INTEGER               TYPE
-      INTEGER               TYPEID
+      integer               center
+      integer               fixfid
+      integer               nsurf
+      integer               obscde
+      integer               shape
+      integer               srflst ( maxsrf )
+      integer               svnsrf
+      integer               trgcde
+      integer               type
+      integer               typeid
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FIRST
-      LOGICAL               FND
-      LOGICAL               FOUND
-      LOGICAL               PRI
-      LOGICAL               SURFUP
-      LOGICAL               USELT
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               first
+      logical               fnd
+      logical               found
+      logical               pri
+      logical               surfup
+      logical               uselt
+      logical               xmit
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsc
+      logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVFREF
-      INTEGER               SVREFC
+      integer               svctr3 ( ctrsiz )
+      character*(frnmln)    svfref
+      integer               svrefc
 
 !
 !     Saved surface name/ID item declarations.
 !
-      INTEGER               SVCTR4 ( CTRSIZ )
+      integer               svctr4 ( ctrsiz )
 
 !
 !     Saved variables
 !
-      SAVE                  CENTER
-      SAVE                  FIRST
-      SAVE                  NSURF
-      SAVE                  PRI
-      SAVE                  PRVCOR
-      SAVE                  PRVMTH
-      SAVE                  SHAPE
-      SAVE                  SRFLST
-      SAVE                  TRGCDE
-      SAVE                  USELT
-      SAVE                  XMIT
+      save                  center
+      save                  first
+      save                  nsurf
+      save                  pri
+      save                  prvcor
+      save                  prvmth
+      save                  shape
+      save                  srflst
+      save                  trgcde
+      save                  uselt
+      save                  xmit
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVFREF
-      SAVE                  SVREFC
+      save                  svctr3
+      save                  svfref
+      save                  svrefc
 
 !
 !     Saved surface name/ID items.
 !
-      SAVE                  SVCTR4
+      save                  svctr4
 
 
 
@@ -1359,49 +1359,49 @@
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE.      /
-      DATA                  PRI     / .FALSE.     /
-      DATA                  NSURF   / 0           /
-      DATA                  PRVCOR  / ' '         /
-      DATA                  PRVMTH  / ' '         /
-      DATA                  SHAPE   / 0           /
+      data                  first   / .true.      /
+      data                  pri     / .false.     /
+      data                  nsurf   / 0           /
+      data                  prvcor  / ' '         /
+      data                  prvmth  / ' '         /
+      data                  shape   / 0           /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 !
 !     Counter initialization is done separately.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
 
-      END IF
+      end if
 
 !
 !     If necessary, parse the aberration correction flag.
 !
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 
 !        Set logical flags indicating the attributes of the requested
@@ -1419,46 +1419,46 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         XMIT    =  ATTBLK ( XMTIDX )
-         USELT   =  ATTBLK ( LTIDX  )
+         xmit    =  attblk ( xmtidx )
+         uselt   =  attblk ( ltidx  )
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 !
 !        We do NOT set FIRST to .FALSE. here, since we're not
 !        yet done with it.
 !
-      END IF
+      end if
 
 !
 !     Get the target ID code here, since it will be needed
 !     for the initialization calls below.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check whether the surface name/ID mapping has been updated.
 !
-      CALL ZZSRFTRK ( SVCTR4, SURFUP )
+      call zzsrftrk ( svctr4, surfup )
 
 !
 !     If necessary, parse the method specification. PRVMTH
@@ -1466,7 +1466,7 @@
 !     valid values. PRVMTH records the last valid value of
 !     METHOD; ELIPSD is the corresponding shape flag.
 !
-      IF ( FIRST  .OR.  SURFUP  .OR.  ( METHOD .NE. PRVMTH ) ) THEN
+      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -1474,7 +1474,7 @@
 !        failure occurs in this branch. Once success is assured, we can
 !        record the current method in the previous method string.
 !
-         PRVMTH = ' '
+         prvmth = ' '
 
 !
 !        Parse the method string. If the string is valid, the
@@ -1484,145 +1484,145 @@
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         CALL ZZPRSMET ( TRGCDE, METHOD, MAXSRF, SHPSTR, SUBTYP, &
-                         PRI,    NSURF,  SRFLST, PNTDEF, TRMSTR )
+         call zzprsmet ( trgcde, method, maxsrf, shpstr, subtyp, &
+                         pri,    nsurf,  srflst, pntdef, trmstr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 
-         IF (  EQSTR( SHPSTR, 'ELLIPSOID' )  ) THEN
+         if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
-            SHAPE = ELLSHP
+            shape = ellshp
 
-         ELSE IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+         else if (  eqstr( shpstr, 'DSK' )  ) then
 
-            SHAPE = DSKSHP
+            shape = dskshp
 
-         ELSE
+         else
 !
 !           This is a backstop check.
 !
-            CALL SETMSG ( 'Returned shape value from method ' &
+            call setmsg ( 'Returned shape value from method ' &
             //            'string was <#>.'                  )
-            CALL ERRCH  ( '#', SHPSTR                        )
-            CALL SIGERR ( 'SPICE(BUG)'                       )
-            CALL CHKOUT ( RNAME                              )
-            RETURN
+            call errch  ( '#', shpstr                        )
+            call sigerr ( 'SPICE(BUG)'                       )
+            call chkout ( rname                              )
+            return
 
-         END IF
+         end if
 
 !
 !        There should be no subtype specification in the method
 !        string.
 !
-         IF ( SUBTYP .NE. ' ' ) THEN
+         if ( subtyp .ne. ' ' ) then
 
-            CALL SETMSG ( 'Spurious sub-observer point type <#> ' &
+            call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
             //            'The sub-observer type is valid in ' &
             //            'the method strings for SUBPNT and ' &
             //            'SUBSLR, but is not applicable for ILLUMF.' )
-            CALL ERRCH  ( '#', SUBTYP                                 )
-            CALL ERRCH  ( '#', METHOD                                 )
-            CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                      )
-            CALL CHKOUT ( RNAME                                       )
-            RETURN
+            call errch  ( '#', subtyp                                 )
+            call errch  ( '#', method                                 )
+            call sigerr ( 'SPICE(INVALIDMETHOD)'                      )
+            call chkout ( rname                                       )
+            return
 
-         END IF
+         end if
 
-         PRVMTH = METHOD
+         prvmth = method
 
-      END IF
+      end if
 
 !
 !     We're done with all tasks that must be executed on the first
 !     pass.
 !
-      FIRST = .FALSE.
+      first = .false.
 
 !
 !     Obtain integer codes for the observer and
 !     illumination source.
 !
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, fnd    )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the observer and target body codes. If they are equal,
 !     signal an error.
 !
-      IF ( OBSCDE .EQ. TRGCDE ) THEN
+      if ( obscde .eq. trgcde ) then
 
-         CALL SETMSG ( 'In computing illumination angles, ' &
+         call setmsg ( 'In computing illumination angles, ' &
          //            'the observing body and target body are the ' &
          //            'same. Both are #.'                          )
-         CALL ERRCH  ( '#',  OBSRVR                                 )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                   )
-         CALL CHKOUT ( RNAME                                        )
-         RETURN
+         call errch  ( '#',  obsrvr                                 )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                   )
+         call chkout ( rname                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the attributes of the frame designated by FIXREF.
 !
-      CALL ZZNAMFRM ( SVCTR3, SVFREF, SVREFC, FIXREF, FIXFID )
+      call zznamfrm ( svctr3, svfref, svrefc, fixref, fixfid )
 
-      CALL FRINFO ( FIXFID, CENTER, TYPE, TYPEID, FND )
+      call frinfo ( fixfid, center, type, typeid, fnd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+         call setmsg ( 'Reference frame # is not recognized by ' // &
                        'the SPICE frame subsystem. Possibly '    // &
                        'a required frame definition kernel has ' // &
                        'not been loaded.'                        )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-         CALL CHKOUT ( RNAME                                     )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call sigerr ( 'SPICE(NOFRAME)'                          )
+         call chkout ( rname                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      IF ( CENTER .NE. TRGCDE ) THEN
+      if ( center .ne. trgcde ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
          //            'center is #.'                             )
-         CALL ERRCH  ( '#',  FIXREF                               )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL ERRINT ( '#',  CENTER                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( RNAME                                      )
-         RETURN
+         call errch  ( '#',  fixref                               )
+         call errch  ( '#',  target                               )
+         call errint ( '#',  center                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( rname                                      )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -1630,17 +1630,17 @@
 !     When light time correction is not used, setting S = 0
 !     allows us to seamlessly set TRGEPC equal to ET.
 !
-      IF ( USELT ) THEN
+      if ( uselt ) then
 
-         IF ( XMIT ) THEN
-            S = 1.D0
-         ELSE
-            S = -1.D0
-         END IF
+         if ( xmit ) then
+            s = 1.d0
+         else
+            s = -1.d0
+         end if
 
-      ELSE
-         S =  0.D0
-      END IF
+      else
+         s =  0.d0
+      end if
 
 !
 !     Look up the state of the surface point relative to the observer.
@@ -1649,20 +1649,20 @@
 !     center of the frame; we indicate this by setting the input
 !     argument REFLOC to 'TARGET'.
 !
-      CALL SPKCPT ( SPOINT,   TARGET, FIXREF, ET,     FIXREF, &
-                    'TARGET', ABCORR, OBSRVR, OPSTAT, LT     )
+      call spkcpt ( spoint,   target, fixref, et,     fixref, &
+                    'TARGET', abcorr, obsrvr, opstat, lt     )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     TRGEPC is the epoch associated with the surface point. Below,
 !     since S is set to 0.D0 if no aberration corrections are used, we
 !     require no logical branch.
 !
-      TRGEPC = ET  +  ( S * LT )
+      trgepc = et  +  ( s * lt )
 
 !
 !     Now find the state of the illumination source as seen by
@@ -1672,76 +1672,76 @@
 !     with the frame's center;  we indicate this by setting the input
 !     argument REFLOC to 'OBSERVER'.
 !
-      CALL SPKCPO ( ILUSRC, TRGEPC, FIXREF, 'OBSERVER', ABCORR, &
-                    SPOINT, TARGET, FIXREF, TISTAT,     LTI     )
+      call spkcpo ( ilusrc, trgepc, fixref, 'OBSERVER', abcorr, &
+                    spoint, target, fixref, tistat,     lti     )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     We'll need the negative of the observer-surface point position
 !     for the following angle computation. Set the output SRFVEC while
 !     we're at it.
 !
-      CALL VEQU   ( OPSTAT, SRFVEC )
-      CALL VMINUS ( SRFVEC, OBSPOS )
+      call vequ   ( opstat, srfvec )
+      call vminus ( srfvec, obspos )
 
 !
 !     Find the surface normal at SPOINT. This computation depends
 !     on target body shape model.
 !
-      IF ( SHAPE .EQ. ELLSHP ) THEN
+      if ( shape .eq. ellshp ) then
 !
 !        We'll need the radii of the target body.
 !
-         CALL ZZGFTREB ( TRGCDE, RADII )
+         call zzgftreb ( trgcde, radii )
 
-         CALL SURFNM ( RADII(1), RADII(2), RADII(3), SPOINT, NORMAL )
+         call surfnm ( radii(1), radii(2), radii(3), spoint, normal )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-      ELSE IF ( SHAPE .EQ. DSKSHP ) THEN
+      else if ( shape .eq. dskshp ) then
 !
 !        Initialize the normal vector algorithm to use a DSK model
 !        for the surface of the target body. This initialization is
 !        required to enable later use of ZZRAYSFX and ZZMAXRAD.
 !
-         SVNSRF = 0
+         svnsrf = 0
 
-         CALL ZZSUDSKI ( TRGCDE, SVNSRF, SRFLST, FIXFID )
+         call zzsudski ( trgcde, svnsrf, srflst, fixfid )
 
 !
 !        Compute the outward unit normal at SPOINT on the surface
 !        defined by the designated DSK data.
 !
-         CALL ZZSBFNRM ( TRGCDE, SVNSRF, SRFLST, TRGEPC, &
-                         FIXFID, SPOINT, NORMAL         )
+         call zzsbfnrm ( trgcde, svnsrf, srflst, trgepc, &
+                         fixfid, spoint, normal         )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
-         CALL VHATIP ( NORMAL )
+         call vhatip ( normal )
 
-      ELSE
+      else
 !
 !        We've already checked the computation method input argument,
 !        so we don't expect to arrive here. This code is present for
 !        safety.
 !
-         CALL SETMSG ( 'The computation method # was not recognized. ' )
-         CALL ERRCH  ( '#',  METHOD                                    )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                          )
-         CALL CHKOUT ( RNAME                                           )
-         RETURN
+         call setmsg ( 'The computation method # was not recognized. ' )
+         call errch  ( '#',  method                                    )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                          )
+         call chkout ( rname                                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Check for errors before calling math routines.
@@ -1751,9 +1751,9 @@
 !     Find the illumination angles. VSEP will give us angular
 !     separation in radians.
 !
-      PHASE   =  VSEP ( OBSPOS, TISTAT )
-      INCDNC  =  VSEP ( NORMAL, TISTAT )
-      EMISSN  =  VSEP ( NORMAL, OBSPOS )
+      phase   =  vsep ( obspos, tistat )
+      incdnc  =  vsep ( normal, tistat )
+      emissn  =  vsep ( normal, obspos )
 
 !
 !     Set the visibility and illumination flags.
@@ -1761,18 +1761,18 @@
 !
 !     Set default values of VISIBL and LIT.
 !
-      VISIBL = EMISSN .LE. HALFPI()
-      LIT    = INCDNC .LE. HALFPI()
+      visibl = emissn .le. halfpi()
+      lit    = incdnc .le. halfpi()
 
 
-      IF ( SHAPE .EQ. DSKSHP ) THEN
+      if ( shape .eq. dskshp ) then
 !
 !        There is a possibility that the surface-observer vector
 !        or the surface-illumination source vector intersects the
 !        surface. This is possible only if these vectors have
 !        positive elevation.
 
-         IF ( LIT .OR. VISIBL ) THEN
+         if ( lit .or. visibl ) then
 !
 !           We need to check for self-occultation of at least one of
 !           the lines-of-sight from surface to observer or illumination
@@ -1785,55 +1785,55 @@
 !
 !           Obtain an upper bound on the target body radius.
 !
-            CALL ZZMAXRAD ( MAXRAD )
+            call zzmaxrad ( maxrad )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( RNAME )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( rname )
+               return
+            end if
 
 !
 !           Compute an offset that can be used to produce a point
 !           slightly above the surface point, and compute the "raised"
 !           point. NORMAL is a unit vector here.
 !
-            SCALE = TOLSCL * MAXRAD
+            scale = tolscl * maxrad
 
 
-            CALL VLCOM ( 1.D0, SPOINT, SCALE, NORMAL, VERTEX )
+            call vlcom ( 1.d0, spoint, scale, normal, vertex )
 
 
-            IF ( VISIBL ) THEN
+            if ( visibl ) then
 !
 !              Find the surface intercept, if any, of a ray emanating
 !              from VERTEX and pointing toward the observer.
 !
-               CALL ZZRAYSFX ( VERTEX, OBSPOS, TRGEPC, XPT, FOUND )
+               call zzraysfx ( vertex, obspos, trgepc, xpt, found )
 
-               VISIBL = .NOT. FOUND
+               visibl = .not. found
 
-            END IF
+            end if
 
 
-            IF ( LIT ) THEN
+            if ( lit ) then
 !
 !              Find the surface intercept, if any, of a ray emanating
 !              from VERTEX and pointing toward the illumination source.
 !
-               CALL ZZRAYSFX ( VERTEX, TISTAT, TRGEPC, XPT, FOUND )
+               call zzraysfx ( vertex, tistat, trgepc, xpt, found )
 
-               LIT =  .NOT. FOUND
+               lit =  .not. found
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     TRGEPC and SRVFEC were already set before the illumination
 !     angle computation.
 !
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure IDENT ( Return the 3x3 identity matrix )
 
-      SUBROUTINE IDENT ( MATRIX )
+      subroutine ident ( matrix )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MATRIX ( 3, 3 )
+      double precision      matrix ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -191,17 +191,17 @@
 !-&
 
 
-      MATRIX ( 1, 1 ) = 1.0D0
-      MATRIX ( 2, 1 ) = 0.0D0
-      MATRIX ( 3, 1 ) = 0.0D0
+      matrix ( 1, 1 ) = 1.0d0
+      matrix ( 2, 1 ) = 0.0d0
+      matrix ( 3, 1 ) = 0.0d0
 
-      MATRIX ( 1, 2 ) = 0.0D0
-      MATRIX ( 2, 2 ) = 1.0D0
-      MATRIX ( 3, 2 ) = 0.0D0
+      matrix ( 1, 2 ) = 0.0d0
+      matrix ( 2, 2 ) = 1.0d0
+      matrix ( 3, 2 ) = 0.0d0
 
-      MATRIX ( 1, 3 ) = 0.0D0
-      MATRIX ( 2, 3 ) = 0.0D0
-      MATRIX ( 3, 3 ) = 1.0D0
+      matrix ( 1, 3 ) = 0.0d0
+      matrix ( 2, 3 ) = 0.0d0
+      matrix ( 3, 3 ) = 1.0d0
 
-      RETURN
-      END
+      return
+      end

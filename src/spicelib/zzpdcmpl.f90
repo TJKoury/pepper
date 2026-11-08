@@ -1,6 +1,6 @@
 !$Procedure ZZPDCMPL (Planetodetic coordinates, compare latitudes )
 
-      SUBROUTINE ZZPDCMPL ( RE, F, P, LAT, REL )
+      subroutine zzpdcmpl ( re, f, p, lat, rel )
 
 ! $ Abstract
 !
@@ -26,22 +26,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      P   ( 3 )
-      DOUBLE PRECISION      LAT
-      INTEGER               REL
+      double precision      re
+      double precision      f
+      double precision      p   ( 3 )
+      double precision      lat
+      integer               rel
 
-      INTEGER               LT
-      PARAMETER           ( LT = -1 )
+      integer               lt
+      parameter           ( lt = -1 )
 
-      INTEGER               EQ
-      PARAMETER           ( EQ =  0 )
+      integer               eq
+      parameter           ( eq =  0 )
 
-      INTEGER               GT
-      PARAMETER           ( GT =  1 )
+      integer               gt
+      parameter           ( gt =  1 )
 
 ! $ Brief_I/O
 !
@@ -160,39 +160,39 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
+      double precision      halfpi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      APEX   ( 3 )
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      OFFPCL
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RP
-      DOUBLE PRECISION      XINCPT
-      DOUBLE PRECISION      YINCPT
+      double precision      apex   ( 3 )
+      double precision      lon
+      double precision      offpcl
+      double precision      offset ( 3 )
+      double precision      r
+      double precision      rp
+      double precision      xincpt
+      double precision      yincpt
 
 !
 !     Saved variables
 !
-      SAVE                  APEX
+      save                  apex
 
 !
 !     Initial values
 !
-      DATA                  APEX / 3  *  0.D0       /
+      data                  apex / 3  *  0.d0       /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZPDCMPL' )
+      call chkin ( 'ZZPDCMPL' )
 
 !
 !     Treat points on the Z axis as a special case. The
@@ -200,87 +200,87 @@
 !     round-off errors that will lead to false results for
 !     this case.
 !
-      IF (  ( P(1) .EQ. 0.D0 ) .AND. ( P(2) .EQ. 0.D0 )  ) THEN
+      if (  ( p(1) .eq. 0.d0 ) .and. ( p(2) .eq. 0.d0 )  ) then
 
-         IF ( P(3) .GT. 0.D0 ) THEN
+         if ( p(3) .gt. 0.d0 ) then
 
-            IF ( LAT .EQ. HALFPI() ) THEN
+            if ( lat .eq. halfpi() ) then
 
-               REL = EQ
-            ELSE
-               REL = GT
-            END IF
+               rel = eq
+            else
+               rel = gt
+            end if
 
-         ELSE IF ( P(3) .EQ. 0.D0 ) THEN
+         else if ( p(3) .eq. 0.d0 ) then
 !
 !           We consider the latitude of P to be zero.
 !
-            IF ( LAT .GT. 0.D0 ) THEN
+            if ( lat .gt. 0.d0 ) then
 
-               REL = LT
+               rel = lt
 
-            ELSE IF ( LAT .EQ. 0.D0 ) THEN
+            else if ( lat .eq. 0.d0 ) then
 
-               REL = EQ
-            ELSE
-               REL = GT
-            END IF
+               rel = eq
+            else
+               rel = gt
+            end if
 
-         ELSE
+         else
 !
 !           P(3) < 0.
 !
-            IF ( LAT .EQ. -HALFPI() ) THEN
+            if ( lat .eq. -halfpi() ) then
 
-               REL = EQ
-            ELSE
-               REL = LT
-            END IF
+               rel = eq
+            else
+               rel = lt
+            end if
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'ZZPDCMPL' )
-         RETURN
+         call chkout ( 'ZZPDCMPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     Latitude zero is a special case. The planetodetic latitude of the
 !     input point has the same sign as the Z component of the point.
 !
-      RP = RE * ( 1.D0 - F )
+      rp = re * ( 1.d0 - f )
 !
 !     Get the y-intercept of the latitude cone for LAT. Note that a
 !     result is defined for LAT = +/- pi/2.
 !
-      CALL ZZELNAXX ( RE, RP, LAT, XINCPT, YINCPT )
+      call zzelnaxx ( re, rp, lat, xincpt, yincpt )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZPDCMPL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZPDCMPL' )
+         return
+      end if
 
 !
 !     Ideally YINCPT is zero if and only if LAT is zero.
 !     We'll group these conditions together.
 !
-      IF (  ( LAT .EQ. 0.D0 ) .OR. ( YINCPT .EQ. 0.D0 )  ) THEN
+      if (  ( lat .eq. 0.d0 ) .or. ( yincpt .eq. 0.d0 )  ) then
 
-         IF ( P(3) .GT. 0.D0 ) THEN
+         if ( p(3) .gt. 0.d0 ) then
 
-            REL = GT
+            rel = gt
 
-         ELSE IF ( P(3) .EQ. 0.D0 ) THEN
+         else if ( p(3) .eq. 0.d0 ) then
 
-            REL = EQ
-         ELSE
-            REL = LT
-         END IF
+            rel = eq
+         else
+            rel = lt
+         end if
 
-         CALL CHKOUT ( 'ZZPDCMPL' )
-         RETURN
+         call chkout ( 'ZZPDCMPL' )
+         return
 
-      END IF
+      end if
 
 !
 !     This is the normal case.
@@ -288,34 +288,34 @@
 !     Find the offset of the point from the latitude cone's apex.
 !     Create a unit-length copy of the offset vector.
 !
-      APEX(3) = YINCPT
+      apex(3) = yincpt
 
-      CALL VSUB ( P, APEX, OFFSET )
+      call vsub ( p, apex, offset )
 
 !     We'll use the planetocentric [sic] latitude of the offset
 !     vector for comparison.
 !
-      CALL RECLAT ( OFFSET, R, LON, OFFPCL )
+      call reclat ( offset, r, lon, offpcl )
 
 
-      IF ( LAT .GT. 0.D0 ) THEN
+      if ( lat .gt. 0.d0 ) then
 
-         IF ( YINCPT .GT. 0 ) THEN
+         if ( yincpt .gt. 0 ) then
 !
 !           This is the prolate case.
 !
-            IF ( OFFPCL .GT. LAT ) THEN
+            if ( offpcl .gt. lat ) then
 
-               REL = GT
+               rel = gt
 
-            ELSE IF ( OFFPCL .EQ. LAT ) THEN
+            else if ( offpcl .eq. lat ) then
 
-               REL = EQ
-            ELSE
-               REL = LT
-            END IF
+               rel = eq
+            else
+               rel = lt
+            end if
 
-         ELSE
+         else
 !
 !           YINCPT = 0 was handled previously, so YINCPT < 0.
 !
@@ -325,83 +325,83 @@
 !           the input point is above the X-Y plane in order for the
 !           GT or EQ relations to hold.
 !
-            IF ( P(3) .GT. 0.D0 ) THEN
+            if ( p(3) .gt. 0.d0 ) then
 
-               IF ( OFFPCL .GT. LAT ) THEN
+               if ( offpcl .gt. lat ) then
 
-                  REL = GT
+                  rel = gt
 
-               ELSE IF ( OFFPCL .EQ. LAT ) THEN
+               else if ( offpcl .eq. lat ) then
 
-                  REL = EQ
-               ELSE
-                  REL = LT
-               END IF
+                  rel = eq
+               else
+                  rel = lt
+               end if
 
-            ELSE
+            else
 !
 !              The input latitude is positive, while the point
 !              is on or below the X-Y plane.
 !
-               REL = LT
+               rel = lt
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        LAT < 0, since the case LAT = 0 has already been handled.
 !
-         IF ( YINCPT .LT. 0.D0 ) THEN
+         if ( yincpt .lt. 0.d0 ) then
 !
 !           This is the prolate case.
 !
-            IF ( OFFPCL .GT. LAT ) THEN
+            if ( offpcl .gt. lat ) then
 
-               REL = GT
+               rel = gt
 
-            ELSE IF ( OFFPCL .EQ. LAT ) THEN
+            else if ( offpcl .eq. lat ) then
 
-               REL = EQ
-            ELSE
-               REL = LT
-            END IF
+               rel = eq
+            else
+               rel = lt
+            end if
 
-         ELSE
+         else
 !
 !           YINCPT > 0, since the case YINCPT = 0 was handled
 !           previously.
 !
 !           This is the oblate case.
 !
-            IF ( P(3) .LT. 0.D0 ) THEN
+            if ( p(3) .lt. 0.d0 ) then
 
-               IF ( OFFPCL .GT. LAT ) THEN
+               if ( offpcl .gt. lat ) then
 
-                  REL = GT
+                  rel = gt
 
-               ELSE IF ( OFFPCL .EQ. LAT ) THEN
+               else if ( offpcl .eq. lat ) then
 
-                  REL = EQ
-               ELSE
-                  REL = LT
-               END IF
+                  rel = eq
+               else
+                  rel = lt
+               end if
 
-            ELSE
+            else
 !
 !              The input latitude is negative, while the point
 !              is on or above the X-Y plane.
 !
-               REL = GT
+               rel = gt
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZPDCMPL' )
-      RETURN
-      END
+      call chkout ( 'ZZPDCMPL' )
+      return
+      end

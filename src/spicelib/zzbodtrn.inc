@@ -61,21 +61,21 @@
 !
 !     Maximum size of a NAME string
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  =  36 )
+      integer               maxl
+      parameter           ( maxl  =  36 )
 
 !
 !     Maximum number of additional names that may be added via the
 !     ZZBODDEF interface.
 !
-      INTEGER               MAXP
-      PARAMETER           ( MAXP  =  150 )
+      integer               maxp
+      parameter           ( maxp  =  150 )
 
 !
 !     Count of default SPICE mapping assignments.
 !
-      INTEGER               NPERM
-      PARAMETER           ( NPERM = 692 )
+      integer               nperm
+      parameter           ( nperm = 692 )
 
 !
 !     Size of the lists and hashes storing the built-in and
@@ -83,8 +83,8 @@
 !     this size is the set to the first prime number greater than
 !     ( MAXP + NPERM ).
 !
-      INTEGER               MAXE
-      PARAMETER           ( MAXE  = 853 )
+      integer               maxe
+      parameter           ( maxe  = 853 )
 
 !
 !     Size of the lists and hashes storing the POOL-defined name/ID
@@ -93,6 +93,6 @@
 !     is set to the first prime number less than MAXLIN defined in
 !     the POOL umbrella routine.
 !
-      INTEGER               NROOM
-      PARAMETER           ( NROOM = 14983 )
+      integer               nroom
+      parameter           ( nroom = 14983 )
 

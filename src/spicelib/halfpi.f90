@@ -1,6 +1,6 @@
 !$Procedure HALFPI ( Half the value of pi )
 
-      DOUBLE PRECISION FUNCTION HALFPI ( )
+      double precision function halfpi ( )
 
 ! $ Abstract
 !
@@ -132,23 +132,23 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VALUE
-      SAVE                  VALUE
+      double precision      value
+      save                  value
 
 !
 !     Initial values
 !
-      DATA                  VALUE      / 0.D0 /
+      data                  value      / 0.d0 /
 
 
 !
 !     What is there to say?
 !
-      IF ( VALUE .EQ. 0.D0 ) THEN
-         VALUE = ACOS ( -1.D0 ) * 0.5D0
-      END IF
+      if ( value .eq. 0.d0 ) then
+         value = acos ( -1.d0 ) * 0.5d0
+      end if
 
-      HALFPI = VALUE
+      halfpi = value
 
-      RETURN
-      END
+      return
+      end

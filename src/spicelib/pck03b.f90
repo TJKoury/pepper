@@ -1,8 +1,8 @@
 !$Procedure PCK03B ( PCK, begin a type 3 segment )
 
-      SUBROUTINE PCK03B ( HANDLE, &
-                          SEGID,  BODY,  FRAME, &
-                          FIRST,  LAST,  CHBDEG  )
+      subroutine pck03b ( handle, &
+                          segid,  body,  frame, &
+                          first,  last,  chbdeg  )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         SEGID
-      INTEGER               BODY
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      INTEGER               CHBDEG
+      integer               handle
+      character*(*)         segid
+      integer               body
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      integer               chbdeg
 
 ! $ Brief_I/O
 !
@@ -351,89 +351,89 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local Parameters
 !
 !     DAF ND and NI values for PCK files.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 5 )
+      integer               ni
+      parameter           ( ni = 5 )
 !
 !     Length of an PCK descriptor.
 !
-      INTEGER               NDESCR
-      PARAMETER           ( NDESCR =  ND + (NI+1)/2 )
+      integer               ndescr
+      parameter           ( ndescr =  nd + (ni+1)/2 )
 !
 !     Number of Euler angles.
 !
-      INTEGER               NEANGS
-      PARAMETER           ( NEANGS = 6 )
+      integer               neangs
+      parameter           ( neangs = 6 )
 !
 !     The type of this segment.
 !
-      INTEGER               TYPE
-      PARAMETER           ( TYPE = 03 )
+      integer               type
+      parameter           ( type = 03 )
 !
 !     The number of constants.
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 1 )
+      integer               nconst
+      parameter           ( nconst = 1 )
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DESCR ( NDESCR )
-      DOUBLE PRECISION      DCOEFF
+      double precision      descr ( ndescr )
+      double precision      dcoeff
 
-      INTEGER               NCOEFF
-      INTEGER               PKTSIZ
+      integer               ncoeff
+      integer               pktsiz
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCK03B' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'PCK03B' )
+      end if
 !
 !     First, check the degree of the polynomial to be sure that it is
 !     not negative.
 !
-      IF ( CHBDEG .LT. 0 ) THEN
+      if ( chbdeg .lt. 0 ) then
 
-         CALL SETMSG ( 'The degree of the Chebyshev Polynomial'  // &
+         call setmsg ( 'The degree of the Chebyshev Polynomial'  // &
                        ' was negative, #. The degree of the'     // &
                        ' polynomial must be greater than or'     // &
                        ' equal to zero.'                          )
-         CALL ERRINT ( '#', CHBDEG                                )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                   )
-         CALL CHKOUT ( 'PCK03B'                                   )
-         RETURN
+         call errint ( '#', chbdeg                                )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+         call chkout ( 'PCK03B'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Create a descriptor for the segment we are about to write.
 !
-      CALL PCKPDS ( BODY, FRAME, TYPE, FIRST, LAST, DESCR )
+      call pckpds ( body, frame, type, first, last, descr )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'PCK03B' )
-         RETURN
+         call chkout ( 'PCK03B' )
+         return
 
-      END IF
+      end if
 
 !
 !     We've got a valid descriptor, so compute a few things and begin
 !     the segment.
 !
-      NCOEFF = CHBDEG + 1
-      PKTSIZ = NEANGS * NCOEFF + 2
-      DCOEFF = DBLE ( NCOEFF )
+      ncoeff = chbdeg + 1
+      pktsiz = neangs * ncoeff + 2
+      dcoeff = dble ( ncoeff )
 !
 !     For this data type, we want to use an explicit reference value
 !     index where the reference epochs are in increasing order. We also
@@ -442,10 +442,10 @@
 !     epoch. These characteristics are prescribed by the mnemonic EXPLE.
 !     See the include file 'sgparam.inc' for more details.
 !
-      CALL SGBWFS ( HANDLE, DESCR,  SEGID,  NCONST, &
-                            DCOEFF, PKTSIZ, EXPLE   )
+      call sgbwfs ( handle, descr,  segid,  nconst, &
+                            dcoeff, pktsiz, exple   )
 
-      CALL CHKOUT ( 'PCK03B' )
-      RETURN
+      call chkout ( 'PCK03B' )
+      return
 
-      END
+      end

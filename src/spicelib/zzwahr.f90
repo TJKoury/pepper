@@ -1,6 +1,6 @@
 !$Procedure      ZZWAHR ( SPICELIB private version of Newhalls' WAHR )
 
-      SUBROUTINE ZZWAHR ( ET, DVNUT )
+      subroutine zzwahr ( et, dvnut )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      DVNUT(4)
+      implicit none
+      double precision      et
+      double precision      dvnut(4)
 
 ! $ Brief_I/O
 !
@@ -129,9 +129,9 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      SPD
+      double precision      pi
+      double precision      twopi
+      double precision      spd
 
 !
 !     Parameters
@@ -139,11 +139,11 @@
 !     NTERM is the number of SIN and COSINE terms used in the
 !     computation of Delta Psi and Delta epsilon
 !
-      INTEGER               NTERM
-      PARAMETER           ( NTERM = 106 )
+      integer               nterm
+      parameter           ( nterm = 106 )
 
-      DOUBLE PRECISION      ZERO
-      PARAMETER           ( ZERO  = 0.0D0 )
+      double precision      zero
+      parameter           ( zero  = 0.0d0 )
 
 !
 !     The parameters below stand for
@@ -162,99 +162,99 @@
 !     to degrees, degrees/day, degrees/(0.0001 days)**2 and
 !     degrees/(0.0001 days)**3.
 !
-      DOUBLE PRECISION      REV
-      PARAMETER           ( REV   = 360.0D0           )
+      double precision      rev
+      parameter           ( rev   = 360.0d0           )
 
-      DOUBLE PRECISION      DEG
-      PARAMETER           ( DEG   = 1.0D0             )
+      double precision      deg
+      parameter           ( deg   = 1.0d0             )
 
-      DOUBLE PRECISION      MIN
-      PARAMETER           ( MIN   = 1.0D0 / 60.0D0    )
+      double precision      min
+      parameter           ( min   = 1.0d0 / 60.0d0    )
 
-      DOUBLE PRECISION      SEC
-      PARAMETER           ( SEC   = 1.0D0 / 3600.0D0  )
+      double precision      sec
+      parameter           ( sec   = 1.0d0 / 3600.0d0  )
 
-      DOUBLE PRECISION      CENT1
-      PARAMETER           ( CENT1 = 36525.0D0         )
+      double precision      cent1
+      parameter           ( cent1 = 36525.0d0         )
 
-      DOUBLE PRECISION      CENT2
-      PARAMETER           ( CENT2 = CENT1*CENT1*1.0D-8 )
+      double precision      cent2
+      parameter           ( cent2 = cent1*cent1*1.0d-8 )
 
-      DOUBLE PRECISION      CENT3
-      PARAMETER           ( CENT3 = CENT1*CENT2*1.0D-4 )
+      double precision      cent3
+      parameter           ( cent3 = cent1*cent2*1.0d-4 )
 
 
 !
 !     The next set of parameters is an enumeration of the various
 !     angles needed in the computation of nutations.
 !
-      INTEGER               L
-      PARAMETER           ( L      = 1 )
+      integer               l
+      parameter           ( l      = 1 )
 
-      INTEGER               LP
-      PARAMETER           ( LP     = L      + 1 )
+      integer               lp
+      parameter           ( lp     = l      + 1 )
 
-      INTEGER               F
-      PARAMETER           ( F      = LP     + 1 )
+      integer               f
+      parameter           ( f      = lp     + 1 )
 
-      INTEGER               D
-      PARAMETER           ( D      = F      + 1 )
+      integer               d
+      parameter           ( d      = f      + 1 )
 
-      INTEGER               MG
-      PARAMETER           ( MG     = D      + 1 )
+      integer               mg
+      parameter           ( mg     = d      + 1 )
 
 !
 !     Local Variables.
 !
-      DOUBLE PRECISION      CE
-      DOUBLE PRECISION      CL
-      DOUBLE PRECISION      COSANG
-      DOUBLE PRECISION      ANGLE(5)
-      DOUBLE PRECISION      ANGRT(5)
-      DOUBLE PRECISION      ARG
-      DOUBLE PRECISION      ARGRT
-      DOUBLE PRECISION      DD
-      DOUBLE PRECISION      DD2
-      DOUBLE PRECISION      DDDJ
-      DOUBLE PRECISION      DJ
-      DOUBLE PRECISION      DPI
-      DOUBLE PRECISION      DTWOPI
-      DOUBLE PRECISION      FACTR
-      DOUBLE PRECISION      ONEDAY
-      DOUBLE PRECISION      RADIAN
-      DOUBLE PRECISION      RASEC
-      DOUBLE PRECISION      SINANG
-      DOUBLE PRECISION      T
+      double precision      ce
+      double precision      cl
+      double precision      cosang
+      double precision      angle(5)
+      double precision      angrt(5)
+      double precision      arg
+      double precision      argrt
+      double precision      dd
+      double precision      dd2
+      double precision      dddj
+      double precision      dj
+      double precision      dpi
+      double precision      dtwopi
+      double precision      factr
+      double precision      oneday
+      double precision      radian
+      double precision      rasec
+      double precision      sinang
+      double precision      t
 
-      DOUBLE PRECISION      D0
-      DOUBLE PRECISION      D1
-      DOUBLE PRECISION      D2
-      DOUBLE PRECISION      D3
-      DOUBLE PRECISION      F0
-      DOUBLE PRECISION      F1
-      DOUBLE PRECISION      F2
-      DOUBLE PRECISION      F3
-      DOUBLE PRECISION      L0
-      DOUBLE PRECISION      L1
-      DOUBLE PRECISION      L2
-      DOUBLE PRECISION      L3
-      DOUBLE PRECISION      LP0
-      DOUBLE PRECISION      LP1
-      DOUBLE PRECISION      LP2
-      DOUBLE PRECISION      LP3
-      DOUBLE PRECISION      MG0
-      DOUBLE PRECISION      MG1
-      DOUBLE PRECISION      MG2
-      DOUBLE PRECISION      MG3
+      double precision      d0
+      double precision      d1
+      double precision      d2
+      double precision      d3
+      double precision      f0
+      double precision      f1
+      double precision      f2
+      double precision      f3
+      double precision      l0
+      double precision      l1
+      double precision      l2
+      double precision      l3
+      double precision      lp0
+      double precision      lp1
+      double precision      lp2
+      double precision      lp3
+      double precision      mg0
+      double precision      mg1
+      double precision      mg2
+      double precision      mg3
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               MATRIX(9,NTERM)
+      integer               i
+      integer               j
+      integer               matrix(9,nterm)
 
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 !
 !     Below are the coefficients for the various periods of the
 !     nutation model.  There does not appear to be any particular reason
@@ -265,7 +265,7 @@
 !             943.2,  182.6,  365.3,  121.7,  365.2,  177.8,  205.9,
 !             173.3,  182.6,  386.0,   91.3,  346.6
 !
-      DATA ((MATRIX(I,J),I=1,9),J=1,19)/ &
+      data ((matrix(i,j),i=1,9),j=1,19)/ &
             0,     0,     0,     0,     1, -171996, -1742, 92025,    89, &
             0,     0,     0,     0,     2,    2062,     2,  -895,     5, &
            -2,     0,     2,     0,     1,      46,     0,   -24,     0, &
@@ -291,7 +291,7 @@
 !              409.2, 388.3, 117.5,  13.7,  27.6,  13.6,   9.1,  31.8,
 !               27.1,  14.8,  27.7
 !
-      DATA ((MATRIX(I,J),I=1,9),J=20,38)/ &
+      data ((matrix(i,j),i=1,9),j=20,38)/ &
            -2,     0,     0,     2,     1,      -6,     0,     3,     0, &
             0,    -1,     2,    -2,     1,      -5,     0,     3,     0, &
             2,     0,     0,    -2,     1,       4,     0,    -2,     0, &
@@ -315,7 +315,7 @@
 !     Periods: 27.4, 9.6,  9.1,  7.1, 13.8, 23.9, 6.9, 13.6, 27.0, 32.0,
 !              31.7, 9.5, 34.8, 13.2, 14.2,  5.6, 9.6, 12.8, 14.8
 !
-      DATA ((MATRIX(I,J),I=1,9),J=39,57)/ &
+      data ((matrix(i,j),i=1,9),j=39,57)/ &
            -1,     0,     0,     0,     1,     -58,    -1,    32,     0, &
            -1,     0,     2,     2,     2,     -59,     0,    26,     0, &
             1,     0,     2,     0,     1,     -51,     0,    27,     0, &
@@ -340,7 +340,7 @@
 !     Periods: 7.1, 23.9, 14.7, 29.8, 6.9, 15.4, 26.9, 29.5, 25.6, 9.1,
 !              9.4,  9.8, 13.7,  5.5, 7.2,  8.9, 32.6, 13.8, 27.8
 
-      DATA ((MATRIX(I,J),I=1,9),J=58,76)/ &
+      data ((matrix(i,j),i=1,9),j=58,76)/ &
             0,     0,     2,     2,     1,      -7,     0,     3,     0, &
             1,     0,     2,    -2,     1,       6,     0,    -3,     0, &
             0,     0,     0,    -2,     1,      -5,     0,     3,     0, &
@@ -365,7 +365,7 @@
 !      Periods: 9.2,  9.3, 27.3, 10.1, 14.6,  5.8, 15.9, 22.5,  5.6,
 !               7.3,  9.1, 29.3, 12.8,  4.7,  9.6, 12.7,  8.7, 23.8,
 !              13.1
-      DATA ((MATRIX(I,J),I=1,9),J=77,95)/ &
+      data ((matrix(i,j),i=1,9),j=77,95)/ &
             3,     0,     0,     0,     0,       2,     0,     0,     0, &
             0,     0,     2,     1,     2,       2,     0,    -1,     0, &
            -1,     0,     0,     0,     2,       1,     0,    -1,     0, &
@@ -389,7 +389,7 @@
 !
 !     Periods: 35.0, 13.6, 25.4, 14.2, 9.5, 14.2, 34.7, 32.8, 7.1, 4.8,
 !              27.3
-      DATA ((MATRIX(I,J),I=1,9),J=96,NTERM)/ &
+      data ((matrix(i,j),i=1,9),j=96,nterm)/ &
            -1,    -1,     0,     2,     1,       1,     0,     0,     0, &
             0,     0,    -2,     0,     1,      -1,     0,     0,     0, &
             0,     0,     2,    -1,     2,      -1,     0,     0,     0, &
@@ -403,15 +403,15 @@
             0,     1,     0,     1,     0,       1,     0,     0,     0/
 
 
-      IF (FIRST) THEN
+      if (first) then
 
-         FIRST  = .FALSE.
-         DPI    = PI()
-         DTWOPI = TWOPI()
-         RADIAN =  180.0D0 / DPI
-         RASEC  = 3600.0D0 * RADIAN
-         FACTR  =    1.0D4 * RASEC
-         ONEDAY = SPD()
+         first  = .false.
+         dpi    = pi()
+         dtwopi = twopi()
+         radian =  180.0d0 / dpi
+         rasec  = 3600.0d0 * radian
+         factr  =    1.0d4 * rasec
+         oneday = spd()
 
 
 
@@ -429,11 +429,11 @@
 !           L2      degrees/(0.0001 days)**2
 !           L3      degrees/(0.0001 days)**3
 !
-         L0 =                134.0D0*DEG + 57.0D0*MIN + 46.733D0*SEC
-         L1 =(1325.0D0*REV + 198.0D0*DEG + 52.0D0*MIN +  2.633D0*SEC) &
-                             / CENT1
-         L2 =   31.310D0*SEC / CENT2
-         L3 =    0.064D0*SEC / CENT3
+         l0 =                134.0d0*deg + 57.0d0*min + 46.733d0*sec
+         l1 =(1325.0d0*rev + 198.0d0*deg + 52.0d0*min +  2.633d0*sec) &
+                             / cent1
+         l2 =   31.310d0*sec / cent2
+         l3 =    0.064d0*sec / cent3
 
 
 
@@ -447,11 +447,11 @@
 !           LP2      degrees/(0.0001 days)**2
 !           LP3      degrees/(0.0001 days)**3
 !
-         LP0 =               357.0D0*DEG + 31.0D0*MIN + 39.804D0*SEC
-         LP1 = (99.0D0*REV + 359.0D0*DEG +  3.0D0*MIN +  1.224D0*SEC) &
-                              / CENT1
-         LP2 =   -0.577D0*SEC / CENT2
-         LP3 =   -0.012D0*SEC / CENT3
+         lp0 =               357.0d0*deg + 31.0d0*min + 39.804d0*sec
+         lp1 = (99.0d0*rev + 359.0d0*deg +  3.0d0*min +  1.224d0*sec) &
+                              / cent1
+         lp2 =   -0.577d0*sec / cent2
+         lp3 =   -0.012d0*sec / cent3
 
 
 !
@@ -464,11 +464,11 @@
 !           F2      degrees/(0.0001 days)**2
 !           F3      degrees/(0.0001 days)**3
 !
-         F0 =                 93.0D0*DEG + 16.0D0*MIN + 18.877D0*SEC
-         F1 = (1342.0D0*REV + 82.0D0*DEG +  1.0D0*MIN +  3.137D0*SEC) &
-                              / CENT1
-         F2 =   -13.257D0*SEC / CENT2
-         F3 =     0.011D0*SEC / CENT3
+         f0 =                 93.0d0*deg + 16.0d0*min + 18.877d0*sec
+         f1 = (1342.0d0*rev + 82.0d0*deg +  1.0d0*min +  3.137d0*sec) &
+                              / cent1
+         f2 =   -13.257d0*sec / cent2
+         f3 =     0.011d0*sec / cent3
 
 !
 !        D0 through D3 are the coefficients for D---the mean longitude
@@ -480,11 +480,11 @@
 !           D2      degrees/(0.0001 days)**2
 !           D3      degrees/(0.0001 days)**3
 !
-         D0 =                297.0D0*DEG + 51.0D0*MIN +  1.307D0*SEC
-         D1 =(1236.0D0*REV + 307.0D0*DEG +  6.0D0*MIN + 41.328D0*SEC) &
-                             / CENT1
-         D2 =   -6.891D0*SEC / CENT2
-         D3 =    0.019D0*SEC / CENT3
+         d0 =                297.0d0*deg + 51.0d0*min +  1.307d0*sec
+         d1 =(1236.0d0*rev + 307.0d0*deg +  6.0d0*min + 41.328d0*sec) &
+                             / cent1
+         d2 =   -6.891d0*sec / cent2
+         d3 =    0.019d0*sec / cent3
 
 !
 !        MG0 through MG3 are the coefficients for Omega---the longitude
@@ -505,105 +505,105 @@
 !           MG2      degrees/(0.0001 days)**2
 !           MG3      degrees/(0.0001 days)**3
 !
-         MG0 =               125.0D0*DEG + 2.0D0*MIN + 40.280D0*SEC
-         MG1 =-( 5.0D0*REV + 134.0D0*DEG + 8.0D0*MIN + 10.539D0*SEC) &
-                              / CENT1
-         MG2 =    7.455D0*SEC / CENT2
-         MG3 =    0.008D0*SEC / CENT3
+         mg0 =               125.0d0*deg + 2.0d0*min + 40.280d0*sec
+         mg1 =-( 5.0d0*rev + 134.0d0*deg + 8.0d0*min + 10.539d0*sec) &
+                              / cent1
+         mg2 =    7.455d0*sec / cent2
+         mg3 =    0.008d0*sec / cent3
 
 
 
-      END IF
+      end if
 
 !
 !     Compute all of the various time components.  DJ is the delta
 !     in the Julian date from the J2000 epoch.
 !
-      DJ   = ET/ONEDAY
-      DD   = DJ/1.0D4
-      DDDJ = DD/1.0D4
-      DD2  = DD*DD
-      T    = DJ/365250.D0
+      dj   = et/oneday
+      dd   = dj/1.0d4
+      dddj = dd/1.0d4
+      dd2  = dd*dd
+      t    = dj/365250.d0
 
 !
 !     Now compute all of the various angles and their rates
 !     at the current epoch
 !
-      ANGLE(L)  = L0   +  DJ*L1   +  (L2  + DD*L3 )*DD2
-      ANGLE(LP) = LP0  +  DJ*LP1  +  (LP2 + DD*LP3)*DD2
-      ANGLE(F)  = F0   +  DJ*F1   +  (F2  + DD*F3 )*DD2
-      ANGLE(D)  = D0   +  DJ*D1   +  (D2  + DD*D3 )*DD2
-      ANGLE(MG) = MG0  +  DJ*MG1  +  (MG2 + DD*MG3)*DD2
+      angle(l)  = l0   +  dj*l1   +  (l2  + dd*l3 )*dd2
+      angle(lp) = lp0  +  dj*lp1  +  (lp2 + dd*lp3)*dd2
+      angle(f)  = f0   +  dj*f1   +  (f2  + dd*f3 )*dd2
+      angle(d)  = d0   +  dj*d1   +  (d2  + dd*d3 )*dd2
+      angle(mg) = mg0  +  dj*mg1  +  (mg2 + dd*mg3)*dd2
 
-      ANGRT(L ) = L1   +  DDDJ * (2.0D0*L2  + 3.0D0*DD*L3 )
-      ANGRT(LP) = LP1  +  DDDJ * (2.0D0*LP2 + 3.0D0*DD*LP3)
-      ANGRT(F ) = F1   +  DDDJ * (2.0D0*F2  + 3.0D0*DD*F3 )
-      ANGRT(D ) = D1   +  DDDJ * (2.0D0*D2  + 3.0D0*DD*D3 )
-      ANGRT(MG) = MG1  +  DDDJ * (2.0D0*MG2 + 3.0D0*DD*MG3)
+      angrt(l ) = l1   +  dddj * (2.0d0*l2  + 3.0d0*dd*l3 )
+      angrt(lp) = lp1  +  dddj * (2.0d0*lp2 + 3.0d0*dd*lp3)
+      angrt(f ) = f1   +  dddj * (2.0d0*f2  + 3.0d0*dd*f3 )
+      angrt(d ) = d1   +  dddj * (2.0d0*d2  + 3.0d0*dd*d3 )
+      angrt(mg) = mg1  +  dddj * (2.0d0*mg2 + 3.0d0*dd*mg3)
 
 !
 !     Wrap all of the angles and rates to range from 0 to 360, then
 !     convert to radians.
 !
-      DO J = 1,5
-         ANGLE(J) = DMOD(ANGLE(J), 360.D0)
-         ANGRT(J) = DMOD(ANGRT(J), 360.D0)
+      do j = 1,5
+         angle(j) = dmod(angle(j), 360.d0)
+         angrt(j) = dmod(angrt(j), 360.d0)
 
-         ANGLE(J) = ANGLE(J)/RADIAN
-         ANGRT(J) = ANGRT(J)/RADIAN
-      END DO
+         angle(j) = angle(j)/radian
+         angrt(j) = angrt(j)/radian
+      end do
 !
 !     Zero out the components of the nutation array
 !
-      DO J = 1,4
-         DVNUT(J) = ZERO
-      END DO
+      do j = 1,4
+         dvnut(j) = zero
+      end do
 !
 !     Now we accumulate the various terms of Delta Psi and Delta
 !     epsilon as expressed on page 115 of the Green Book
 !     (Explanatory Supplement to the Astronomical Almanac).
 !
-      DO I = 1,NTERM
+      do i = 1,nterm
 
-         ARG   = ZERO
-         ARGRT = ZERO
+         arg   = zero
+         argrt = zero
 
-         DO J = 1,5
-            IF ( MATRIX(J,I) .NE. 0 ) THEN
-               ARG   = ARG   + MATRIX(J,I)*ANGLE(J)
-               ARGRT = ARGRT + MATRIX(J,I)*ANGRT(J)
-               ARG   = MOD(ARG, DTWOPI)
-            END IF
-         END DO
+         do j = 1,5
+            if ( matrix(j,i) .ne. 0 ) then
+               arg   = arg   + matrix(j,i)*angle(j)
+               argrt = argrt + matrix(j,i)*angrt(j)
+               arg   = mod(arg, dtwopi)
+            end if
+         end do
 
-         CL = MATRIX(6,I)
+         cl = matrix(6,i)
 
-         IF ( MATRIX(7,I) .NE. 0 ) THEN
-            CL = CL + MATRIX(7,I)*T
-         END IF
+         if ( matrix(7,i) .ne. 0 ) then
+            cl = cl + matrix(7,i)*t
+         end if
 
-         CE = MATRIX(8,I)
+         ce = matrix(8,i)
 
-         IF ( MATRIX(9,I) .NE. 0 ) THEN
-            CE = CE + MATRIX(9,I)*T
-         END IF
+         if ( matrix(9,i) .ne. 0 ) then
+            ce = ce + matrix(9,i)*t
+         end if
 
-         COSANG   = DCOS(ARG)
-         SINANG   = DSIN(ARG)
+         cosang   = dcos(arg)
+         sinang   = dsin(arg)
 
-         DVNUT(1) = DVNUT(1) + CL*SINANG/FACTR
-         DVNUT(2) = DVNUT(2) + CE*COSANG/FACTR
-         DVNUT(3) = DVNUT(3) + CL*COSANG*ARGRT/FACTR
-         DVNUT(4) = DVNUT(4) - CE*SINANG*ARGRT/FACTR
+         dvnut(1) = dvnut(1) + cl*sinang/factr
+         dvnut(2) = dvnut(2) + ce*cosang/factr
+         dvnut(3) = dvnut(3) + cl*cosang*argrt/factr
+         dvnut(4) = dvnut(4) - ce*sinang*argrt/factr
 
-      END DO
+      end do
 
 !
 !     Finally convert DVNUT(3) and DVNUT(4) to radians/second
 !
-      DVNUT(3) = DVNUT(3)/ONEDAY
-      DVNUT(4) = DVNUT(4)/ONEDAY
+      dvnut(3) = dvnut(3)/oneday
+      dvnut(4) = dvnut(4)/oneday
 
 
-      RETURN
-      END
+      return
+      end

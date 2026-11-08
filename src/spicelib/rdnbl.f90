@@ -1,6 +1,6 @@
 !$Procedure RDNBL ( Read non-blank line )
 
-      SUBROUTINE RDNBL ( FILE, LINE, EOF )
+      subroutine rdnbl ( file, line, eof )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)       FILE
-      CHARACTER*(*)       LINE
-      LOGICAL             EOF
+      character*(*)       file
+      character*(*)       line
+      logical             eof
 
 ! $ Brief_I/O
 !
@@ -158,42 +158,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDNBL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'RDNBL' )
+      end if
 
 !
 !     Return as soon as a non-blank line is found. Otherwise, keep
 !     looking until either the end of the file is reached or RDTEXT
 !     manages to fail.
 !
-      CALL RDTEXT ( FILE, LINE, EOF )
+      call rdtext ( file, line, eof )
 
-      DO WHILE ( ( .NOT. EOF )  .AND.  ( .NOT. FAILED() ) )
+      do while ( ( .not. eof )  .and.  ( .not. failed() ) )
 
-         IF ( LINE .NE. ' ' ) THEN
-            CALL CHKOUT ( 'RDNBL' )
-            RETURN
+         if ( line .ne. ' ' ) then
+            call chkout ( 'RDNBL' )
+            return
 
-         ELSE
-            CALL RDTEXT ( FILE, LINE, EOF )
-         END IF
+         else
+            call rdtext ( file, line, eof )
+         end if
 
-      END DO
+      end do
 
 !
 !     Didn't find anything?
 !
-      LINE = ' '
+      line = ' '
 
-      CALL CHKOUT ( 'RDNBL' )
-      RETURN
-      END
+      call chkout ( 'RDNBL' )
+      return
+      end

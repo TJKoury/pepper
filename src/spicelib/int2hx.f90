@@ -1,6 +1,6 @@
 !$Procedure INT2HX  ( Integer to signed hexadecimal string )
 
-      SUBROUTINE INT2HX ( NUMBER, STRING, LENGTH )
+      subroutine int2hx ( number, string, length )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NUMBER
-      CHARACTER*(*)         STRING
-      INTEGER               LENGTH
+      integer               number
+      character*(*)         string
+      integer               length
 
 ! $ Brief_I/O
 !
@@ -202,32 +202,32 @@
 !
 !     Local Parameters
 !
-      INTEGER               BASE
-      PARAMETER           ( BASE   = 16 )
+      integer               base
+      parameter           ( base   = 16 )
 
-      INTEGER               MAXDIG
-      PARAMETER           ( MAXDIG = 16 )
+      integer               maxdig
+      parameter           ( maxdig = 16 )
 
-      INTEGER               STRLEN
-      PARAMETER           ( STRLEN = 255 )
+      integer               strlen
+      parameter           ( strlen = 255 )
 !
 !     Local variables
 !
-      CHARACTER*(1)         DIGITS(0:MAXDIG-1)
-      CHARACTER*(STRLEN)    TMPSTR
+      character*(1)         digits(0:maxdig-1)
+      character*(strlen)    tmpstr
 
-      INTEGER               BEGIN
-      INTEGER               ITEMP
-      INTEGER               REMNDR
-      INTEGER               RESULT
+      integer               begin
+      integer               itemp
+      integer               remndr
+      integer               result
 !
 !     Saved variables
 !
-      SAVE                  DIGITS
+      save                  digits
 !
 !     Local variables
 !
-      DATA                  DIGITS / &
+      data                  digits / &
                                      '0', '1', '2', '3', &
                                      '4', '5', '6', '7', &
                                      '8', '9', 'A', 'B', &
@@ -246,7 +246,7 @@
 !     Make a copy of the input so that it will not be changed by this
 !     routine.
 !
-      ITEMP = NUMBER
+      itemp = number
 !
 !     We need to do different things for the cases where the integer to
 !     be converted is positive, negative, or zero. ( Actually, the
@@ -267,53 +267,53 @@
 !     calculation of the length of the hexadecimal character string at
 !     the end of the routine.
 !
-      BEGIN = STRLEN + 1
+      begin = strlen + 1
 
-      IF ( ITEMP .LT. 0 ) THEN
+      if ( itemp .lt. 0 ) then
 !
 !        Collect all of the digits in the string. We know we're done
 !        when the value of ITEMP is equal to zero, thanks to the fact
 !        that integer arithmetic operations are exact.
 !
-         DO WHILE ( ITEMP .NE. 0 )
+         do while ( itemp .ne. 0 )
 
-            BEGIN               = BEGIN - 1
-            RESULT              = ITEMP / BASE
-            REMNDR              = RESULT * BASE - ITEMP
-            ITEMP               = RESULT
-            TMPSTR(BEGIN:BEGIN) = DIGITS(REMNDR)
+            begin               = begin - 1
+            result              = itemp / base
+            remndr              = result * base - itemp
+            itemp               = result
+            tmpstr(begin:begin) = digits(remndr)
 
-         END DO
+         end do
 !
 !        Put the minus sign in place.
 !
-         BEGIN               = BEGIN - 1
-         TMPSTR(BEGIN:BEGIN) = '-'
+         begin               = begin - 1
+         tmpstr(begin:begin) = '-'
 
-      ELSE IF ( ITEMP .GT. 0 ) THEN
+      else if ( itemp .gt. 0 ) then
 !
 !        Collect all of the digits in the string. We know we're done
 !        when the value of ITEMP is equal to zero, thanks to the fact
 !        that integer arithmetic operations are exact.
 !
-         DO WHILE ( ITEMP .NE. 0 )
+         do while ( itemp .ne. 0 )
 
-            BEGIN               = BEGIN - 1
-            RESULT              = ITEMP / BASE
-            REMNDR              = ITEMP - RESULT * BASE
-            ITEMP               = RESULT
-            TMPSTR(BEGIN:BEGIN) = DIGITS(REMNDR)
+            begin               = begin - 1
+            result              = itemp / base
+            remndr              = itemp - result * base
+            itemp               = result
+            tmpstr(begin:begin) = digits(remndr)
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        Treat zero as a special case, because it's easier.
 !
-         BEGIN               = BEGIN - 1
-         TMPSTR(BEGIN:BEGIN) = DIGITS(0)
+         begin               = begin - 1
+         tmpstr(begin:begin) = digits(0)
 
-      END IF
+      end if
 !
 !     Set the value of the output string before returning. Let the
 !     Fortran string assignment deal with the left justification, and
@@ -321,12 +321,12 @@
 !     long enough to contain all of the characters in the string
 !     that was produced.
 !
-      STRING = TMPSTR(BEGIN:)
+      string = tmpstr(begin:)
 !
 !     Also, set the value for the length of the hexadecimal string
 !     before returning.
 !
-      LENGTH = STRLEN - BEGIN + 1
+      length = strlen - begin + 1
 
-      RETURN
-      END
+      return
+      end

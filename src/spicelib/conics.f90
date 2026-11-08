@@ -1,6 +1,6 @@
 !$Procedure CONICS ( Determine state from conic elements )
 
-      SUBROUTINE CONICS ( ELTS, ET, STATE )
+      subroutine conics ( elts, et, state )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ELTS    ( 8 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      STATE   ( 6 )
+      double precision      elts    ( 8 )
+      double precision      et
+      double precision      state   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -235,40 +235,40 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      DOUBLE PRECISION      TWOPI
+      logical               return
+      double precision      twopi
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RP
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      INC
-      DOUBLE PRECISION      LNODE
-      DOUBLE PRECISION      ARGP
-      DOUBLE PRECISION      M0
-      DOUBLE PRECISION      T0
-      DOUBLE PRECISION      MU
-      DOUBLE PRECISION      N
-      DOUBLE PRECISION      PERIOD
+      double precision      rp
+      double precision      ecc
+      double precision      inc
+      double precision      lnode
+      double precision      argp
+      double precision      m0
+      double precision      t0
+      double precision      mu
+      double precision      n
+      double precision      period
 
-      DOUBLE PRECISION      AINVRS
-      DOUBLE PRECISION      DT
+      double precision      ainvrs
+      double precision      dt
 
-      DOUBLE PRECISION      COSI
-      DOUBLE PRECISION      SINI
-      DOUBLE PRECISION      COSN
-      DOUBLE PRECISION      SINN
-      DOUBLE PRECISION      COSW
-      DOUBLE PRECISION      SINW
+      double precision      cosi
+      double precision      sini
+      double precision      cosn
+      double precision      sinn
+      double precision      cosw
+      double precision      sinw
 
-      DOUBLE PRECISION      SNCI
-      DOUBLE PRECISION      CNCI
+      double precision      snci
+      double precision      cnci
 
-      DOUBLE PRECISION      BASISP     ( 3 )
-      DOUBLE PRECISION      BASISQ     ( 3 )
-      DOUBLE PRECISION      PSTATE     ( 6 )
-      DOUBLE PRECISION      V
+      double precision      basisp     ( 3 )
+      double precision      basisq     ( 3 )
+      double precision      pstate     ( 6 )
+      double precision      v
 
 
 
@@ -293,82 +293,82 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CONICS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CONICS' )
+      end if
 
 
 !
 !     Unpack the element vector.
 !
-      RP     = ELTS(1)
-      ECC    = ELTS(2)
-      INC    = ELTS(3)
-      LNODE  = ELTS(4)
-      ARGP   = ELTS(5)
-      M0     = ELTS(6)
-      T0     = ELTS(7)
-      MU     = ELTS(8)
+      rp     = elts(1)
+      ecc    = elts(2)
+      inc    = elts(3)
+      lnode  = elts(4)
+      argp   = elts(5)
+      m0     = elts(6)
+      t0     = elts(7)
+      mu     = elts(8)
 
 
 !
 !     Handle all of the exceptions first.
 !
 
-      IF ( ECC .LT. 0 ) THEN
-         CALL SETMSG ( 'The eccentricity supplied was negative. Only '// &
+      if ( ecc .lt. 0 ) then
+         call setmsg ( 'The eccentricity supplied was negative. Only '// &
                        'positive values are meaningful.  The value '  // &
                        'was #'                  )
-         CALL ERRDP  ( '#', ECC                 )
-         CALL SIGERR ( 'SPICE(BADECCENTRICITY)' )
-         CALL CHKOUT ( 'CONICS'                 )
-         RETURN
-      END IF
+         call errdp  ( '#', ecc                 )
+         call sigerr ( 'SPICE(BADECCENTRICITY)' )
+         call chkout ( 'CONICS'                 )
+         return
+      end if
 
-      IF ( RP .LE. 0 ) THEN
-         CALL SETMSG ( 'The value of periapse range supplied was '    // &
+      if ( rp .le. 0 ) then
+         call setmsg ( 'The value of periapse range supplied was '    // &
                        'non-positive.  Only positive values are '     // &
                        'allowed.  The value supplied was #. '         )
-         CALL ERRDP  ( '#', RP                                        )
-         CALL SIGERR ( 'SPICE(BADPERIAPSEVALUE)'                      )
-         CALL CHKOUT ( 'CONICS'                                       )
-         RETURN
-      END IF
+         call errdp  ( '#', rp                                        )
+         call sigerr ( 'SPICE(BADPERIAPSEVALUE)'                      )
+         call chkout ( 'CONICS'                                       )
+         return
+      end if
 
 
-      IF ( MU .LE. 0 ) THEN
-         CALL SETMSG ( 'The value of GM supplied was '                // &
+      if ( mu .le. 0 ) then
+         call setmsg ( 'The value of GM supplied was '                // &
                        'non-positive.  Only positive values are '     // &
                        'allowed.  The value supplied was #. '         )
-         CALL ERRDP  ( '#', MU                                        )
-         CALL SIGERR ( 'SPICE(BADGM)'                                 )
-         CALL CHKOUT ( 'CONICS' )
-         RETURN
-      END IF
+         call errdp  ( '#', mu                                        )
+         call sigerr ( 'SPICE(BADGM)'                                 )
+         call chkout ( 'CONICS' )
+         return
+      end if
 
 !
 !     First construct the orthonormal basis vectors that span the orbit
 !     plane.
 !
-      COSI      =  DCOS ( INC   )
-      SINI      =  DSIN ( INC   )
-      COSN      =  DCOS ( LNODE )
-      SINN      =  DSIN ( LNODE )
-      COSW      =  DCOS ( ARGP  )
-      SINW      =  DSIN ( ARGP  )
+      cosi      =  dcos ( inc   )
+      sini      =  dsin ( inc   )
+      cosn      =  dcos ( lnode )
+      sinn      =  dsin ( lnode )
+      cosw      =  dcos ( argp  )
+      sinw      =  dsin ( argp  )
 
-      SNCI      =  SINN * COSI
-      CNCI      =  COSN * COSI
+      snci      =  sinn * cosi
+      cnci      =  cosn * cosi
 
-      BASISP(1) =  COSN * COSW  -  SNCI * SINW
-      BASISP(2) =  SINN * COSW  +  CNCI * SINW
-      BASISP(3) =  SINI * SINW
+      basisp(1) =  cosn * cosw  -  snci * sinw
+      basisp(2) =  sinn * cosw  +  cnci * sinw
+      basisp(3) =  sini * sinw
 
-      BASISQ(1) = -COSN * SINW  -  SNCI * COSW
-      BASISQ(2) = -SINN * SINW  +  CNCI * COSW
-      BASISQ(3) =  SINI * COSW
+      basisq(1) = -cosn * sinw  -  snci * cosw
+      basisq(2) = -sinn * sinw  +  cnci * cosw
+      basisq(3) =  sini * cosw
 
 !
 !     Next construct the state at periapse.
@@ -387,16 +387,16 @@
 !
 !     so that:
 !
-      V = DSQRT( MU*(1.0D0 + ECC) / RP )
+      v = dsqrt( mu*(1.0d0 + ecc) / rp )
 
-      CALL VSCL( RP, BASISP, PSTATE(1) )
-      CALL VSCL( V,  BASISQ, PSTATE(4) )
+      call vscl( rp, basisp, pstate(1) )
+      call vscl( v,  basisq, pstate(4) )
 
 !
 !     Finally compute DT the elapsed time since the epoch of periapse.
 !     Ellipses first, since they are the most common.
 !
-      IF ( ECC .LT. 1.D0 ) THEN
+      if ( ecc .lt. 1.d0 ) then
 
 !
 !        Recall that:
@@ -404,9 +404,9 @@
 !        N ( mean motion ) is given by DSQRT( MU / A**3 ).
 !        But since, A = RP / ( 1 - ECC ) ...
 !
-         AINVRS = (1.0D0 - ECC)   / RP
-         N      = SQRT(MU*AINVRS) * AINVRS
-         PERIOD = TWOPI()         / N
+         ainvrs = (1.0d0 - ecc)   / rp
+         n      = sqrt(mu*ainvrs) * ainvrs
+         period = twopi()         / n
 
 !
 !        In general the mean anomaly is given by
@@ -423,12 +423,12 @@
 !        is given by ET - T0 + M0/N.  Finally, since elliptic orbits are
 !        periodic, we can mod this value by the period of the orbit.
 !
-         DT = MOD ( ET - T0 + M0/N, PERIOD )
+         dt = mod ( et - t0 + m0/n, period )
 
 !
 !     Hyperbolas next.
 !
-      ELSE IF ( ECC .GT. 1 ) THEN
+      else if ( ecc .gt. 1 ) then
 
 
 !
@@ -437,25 +437,25 @@
 !        N ( mean motion ) is given by DSQRT( MU / |A**3| ).
 !        But since, |A| = RP / ( ECC - 1 ) ...
 !
-         AINVRS = (ECC - 1.0D0)    / RP
-         N      = DSQRT(MU*AINVRS) * AINVRS
-         DT     = ET - T0          + M0/N
+         ainvrs = (ecc - 1.0d0)    / rp
+         n      = dsqrt(mu*ainvrs) * ainvrs
+         dt     = et - t0          + m0/n
 
 !
 !     Finally, parabolas.
 !
-      ELSE
+      else
 
-         N  = DSQRT( MU / (2.0D0*RP) ) / RP
-         DT = ET - T0                + M0/N
+         n  = dsqrt( mu / (2.0d0*rp) ) / rp
+         dt = et - t0                + m0/n
 
-      END IF
+      end if
 
 !
 !     Now let PROP2B do the work of propagating the state.
 !
-      CALL PROP2B ( MU, PSTATE, DT, STATE )
+      call prop2b ( mu, pstate, dt, state )
 
-      CALL CHKOUT ( 'CONICS' )
-      RETURN
-      END
+      call chkout ( 'CONICS' )
+      return
+      end

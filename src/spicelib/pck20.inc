@@ -36,8 +36,8 @@
 !                    increased, and comments describing the record size
 !                    must be changed.
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 50 )
+      integer               maxdeg
+      parameter           ( maxdeg = 50 )
 
 
 !
@@ -69,15 +69,15 @@
 !     Absolute tolerance for coverage gap at endpoints
 !     of segment coverage interval, in seconds:
 !
-      DOUBLE PRECISION      DTOL
-      PARAMETER           ( DTOL   = 1.D-4  )
+      double precision      dtol
+      parameter           ( dtol   = 1.d-4  )
 
 !
 !     Relative tolerance for coverage gap at endpoints
 !     of segment coverage interval:
 !
-      DOUBLE PRECISION      TOLSCL
-      PARAMETER           ( TOLSCL = 1.D-12 )
+      double precision      tolscl
+      parameter           ( tolscl = 1.d-12 )
 
 
 !

@@ -1,6 +1,6 @@
 !$Procedure UDDC ( Derivative of function less than zero, df(x)/dx < 0 )
 
-      SUBROUTINE UDDC ( UDFUNC, X, DX, ISDECR )
+      subroutine uddc ( udfunc, x, dx, isdecr )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      DX
-      LOGICAL               ISDECR
+      double precision      x
+      double precision      dx
+      logical               isdecr
 
 ! $ Brief_I/O
 !
@@ -157,35 +157,35 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DERIV
+      double precision      deriv
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'UDDC' )
+      call chkin ( 'UDDC' )
 
-      ISDECR = .FALSE.
+      isdecr = .false.
 
 !
 !     Numerically calculate the derivative of UDFUNC at X.
 !
-      CALL UDDF ( UDFUNC, X, DX, DERIV )
+      call uddf ( udfunc, x, dx, deriv )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'UDDC' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'UDDC' )
+         return
+      end if
 
-      ISDECR = DERIV .LT. 0.D0
+      isdecr = deriv .lt. 0.d0
 
-      CALL CHKOUT ( 'UDDC' )
-      RETURN
+      call chkout ( 'UDDC' )
+      return
 
-      END
+      end

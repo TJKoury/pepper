@@ -1,6 +1,6 @@
 !$Procedure SGFREF ( Generic Segments: Fetch references )
 
-      SUBROUTINE SGFREF ( HANDLE, DESCR, FIRST, LAST, VALUES )
+      subroutine sgfref ( handle, descr, first, last, values )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      INTEGER               FIRST
-      INTEGER               LAST
-      DOUBLE PRECISION      VALUES ( * )
+      integer               handle
+      double precision      descr  ( * )
+      integer               first
+      integer               last
+      double precision      values ( * )
 
 ! $ Brief_I/O
 !
@@ -143,136 +143,136 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Include the mnemonic values for the generic segment declarations.
 !
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BUFFER ( 2 )
+      double precision      buffer ( 2 )
 
-      INTEGER               B
-      INTEGER               BASE
-      INTEGER               E
-      INTEGER               I
-      INTEGER               MYNREF
-      INTEGER               MYREFT
+      integer               b
+      integer               base
+      integer               e
+      integer               i
+      integer               mynref
+      integer               myreft
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGFREF' )
+      call chkin ( 'SGFREF' )
 !
 !     Perform the needed initialization
 !
-      CALL SGMETA ( HANDLE, DESCR, REFBAS, BASE   )
-      CALL SGMETA ( HANDLE, DESCR, RDRTYP, MYREFT )
-      CALL SGMETA ( HANDLE, DESCR, NREF,   MYNREF )
+      call sgmeta ( handle, descr, refbas, base   )
+      call sgmeta ( handle, descr, rdrtyp, myreft )
+      call sgmeta ( handle, descr, nref,   mynref )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGFREF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGFREF' )
+         return
+      end if
 
 !
 !     Perform checks on the inputs for reasonableness.
 !
-      IF ( ( FIRST .LT. 1 ) .OR. ( LAST .GT. MYNREF) ) THEN
+      if ( ( first .lt. 1 ) .or. ( last .gt. mynref) ) then
 
-         CALL SETMSG ( 'The range of reference items requested' &
+         call setmsg ( 'The range of reference items requested' &
          //            ' extends beyond the available range of' &
          //            ' reference items.  The reference data is' &
          //            ' available' &
          //            ' for indexes 1 to #.  You''ve requested' &
          //            ' data from # to #.'                        )
-         CALL ERRINT ( '#', MYNREF                                 )
-         CALL ERRINT ( '#', FIRST                                  )
-         CALL ERRINT ( '#', LAST                                   )
-         CALL SIGERR ( 'SPICE(REQUESTOUTOFBOUNDS)'                 )
-         CALL CHKOUT ( 'SGFREF'                                    )
-         RETURN
+         call errint ( '#', mynref                                 )
+         call errint ( '#', first                                  )
+         call errint ( '#', last                                   )
+         call sigerr ( 'SPICE(REQUESTOUTOFBOUNDS)'                 )
+         call chkout ( 'SGFREF'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( LAST .LT. FIRST ) THEN
+      if ( last .lt. first ) then
 
-         CALL SETMSG ( 'The last reference item requested, #, is' &
+         call setmsg ( 'The last reference item requested, #, is' &
          //            ' before the first reference item' &
          //            ' requested, #.'                            )
-         CALL ERRINT ( '#', LAST                                   )
-         CALL ERRINT ( '#', FIRST                                  )
-         CALL SIGERR ( 'SPICE(REQUESTOUTOFORDER)'                  )
-         CALL CHKOUT ( 'SGFREF'                                    )
-         RETURN
+         call errint ( '#', last                                   )
+         call errint ( '#', first                                  )
+         call sigerr ( 'SPICE(REQUESTOUTOFORDER)'                  )
+         call chkout ( 'SGFREF'                                    )
+         return
 
-      END IF
+      end if
 !
 !     Ok.  We are ready to go. If the reference type is recognized
 !     fetch the requested data.
 !
-      IF ( MYREFT .EQ. IMPLE ) THEN
+      if ( myreft .eq. imple ) then
 !
 !        The reference values are implied in this case. Read the
 !        reference base value and step. If we fail, check out and
 !        return; we don't want to try and comput anything with bogus
 !        data.
 !
-         B = BASE + 1
-         E = BASE + 2
+         b = base + 1
+         e = base + 2
 
-         CALL DAFGDA ( HANDLE, B, E, BUFFER )
+         call dafgda ( handle, b, e, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGFREF' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGFREF' )
+            return
+         end if
 !
 !        Now simply compute the reference values using the implicit
 !        model for them.
 !
-         DO I = FIRST, LAST
+         do i = first, last
 
-            VALUES(I) = BUFFER(1) + DINT ( DBLE(I-1) * BUFFER(2) )
+            values(i) = buffer(1) + dint ( dble(i-1) * buffer(2) )
 
-         END DO
+         end do
 
-      ELSE IF ( MYREFT .EQ. IMPCLS ) THEN
+      else if ( myreft .eq. impcls ) then
 !
 !        The reference values are implied in this case. Read the
 !        reference base value and step. If we fail, check out and
 !        return; we don't want to try and comput anything with bogus
 !        data.
 !
-         B = BASE + 1
-         E = BASE + 2
+         b = base + 1
+         e = base + 2
 
-         CALL DAFGDA ( HANDLE, B, E, BUFFER )
+         call dafgda ( handle, b, e, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGFREF' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGFREF' )
+            return
+         end if
 !
 !        Now simply compute the reference values using the implicit
 !        model for them.
 !
-         DO I = FIRST, LAST
+         do i = first, last
 
-            VALUES(I) = BUFFER(1) + DINT ( DBLE(I-1) * BUFFER(2) )
+            values(i) = buffer(1) + dint ( dble(i-1) * buffer(2) )
 
-         END DO
+         end do
 
-      ELSE IF (      MYREFT .EQ. EXPLE &
-                .OR. MYREFT .EQ. EXPLT &
-                .OR. MYREFT .EQ. EXPCLS ) THEN
+      else if (      myreft .eq. exple &
+                .or. myreft .eq. explt &
+                .or. myreft .eq. expcls ) then
 !
 !        In this case the reference values are actually stored
 !        in the file.  This is even easier than the last case.
@@ -280,14 +280,14 @@
 !        failure here, since all we do after the attempt to read is
 !        checkout and return anyway.
 !
-         B = BASE + FIRST
-         E = BASE + LAST
+         b = base + first
+         e = base + last
 
-         CALL DAFGDA ( HANDLE, B, E, VALUES )
+         call dafgda ( handle, b, e, values )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The generic DAF segment you attempted' &
+         call setmsg ( 'The generic DAF segment you attempted' &
          //            ' to read has an unsupported reference' &
          //            ' directory structure. The integer code' &
          //            ' given for this structure is #. The' &
@@ -296,14 +296,14 @@
          //            ' updated. Contact your system' &
          //            ' administrator or NAIF for a toolkit' &
          //            ' update. '                                 )
-         CALL ERRINT ( '#', MYREFT                                 )
-         CALL SIGERR ( 'SPICE(UNKNOWNREFDIR)'                      )
-         CALL CHKOUT ( 'SGFREF'                                    )
-         RETURN
+         call errint ( '#', myreft                                 )
+         call sigerr ( 'SPICE(UNKNOWNREFDIR)'                      )
+         call chkout ( 'SGFREF'                                    )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SGFREF' )
-      RETURN
+      call chkout ( 'SGFREF' )
+      return
 
-      END
+      end

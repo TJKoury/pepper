@@ -1,6 +1,6 @@
 !$Procedure DACOSN (arc cosine of bracketed argument)
 
-      DOUBLE PRECISION FUNCTION DACOSN ( ARG, TOL )
+      double precision function dacosn ( arg, tol )
 
 ! $ Abstract
 !
@@ -24,10 +24,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   ARG
-      DOUBLE PRECISION   TOL
+      double precision   arg
+      double precision   tol
 
 ! $ Brief_I/O
 !
@@ -126,41 +126,41 @@
 !     Bracket ARG.
 !
 
-      DACOSN      =  ACOS ( MAX ( - 1.D0, MIN ( 1.D0, ARG ) ) )
+      dacosn      =  acos ( max ( - 1.d0, min ( 1.d0, arg ) ) )
 
 !
 !     Check that tolerance is non negative.
 !
 
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL CHKIN  ( 'DACOSN'                           )
-         CALL SETMSG ( 'TOL was #; must be non-negative.' )
-         CALL ERRDP  ( '#',  TOL                          )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'           )
-         CALL CHKOUT ( 'DACOSN'                           )
-         RETURN
+         call chkin  ( 'DACOSN'                           )
+         call setmsg ( 'TOL was #; must be non-negative.' )
+         call errdp  ( '#',  tol                          )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'           )
+         call chkout ( 'DACOSN'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Check to see if |ARG| is within TOL of 1.D0. Signal error if
 !     appropriate.
 !
 
-      IF  ( ( ABS ( ARG ) - TOL ) .GT. 1.D0) THEN
+      if  ( ( abs ( arg ) - tol ) .gt. 1.d0) then
 
-         CALL CHKIN  ( 'DACOSN'                           )
-         CALL SETMSG ( 'The |argument| specified was greater '// &
+         call chkin  ( 'DACOSN'                           )
+         call setmsg ( 'The |argument| specified was greater '// &
                        'than 1.D0 by more than #. The value '// &
                        'of the argument is #. '           )
-         CALL ERRDP  ( '#',  TOL                          )
-         CALL ERRDP  ( '#',  ARG                          )
-         CALL SIGERR ( 'SPICE(INPUTOUTOFBOUNDS)'          )
-         CALL CHKOUT ( 'DACOSN'                           )
-         RETURN
+         call errdp  ( '#',  tol                          )
+         call errdp  ( '#',  arg                          )
+         call sigerr ( 'SPICE(INPUTOUTOFBOUNDS)'          )
+         call chkout ( 'DACOSN'                           )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

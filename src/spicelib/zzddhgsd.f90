@@ -1,6 +1,6 @@
 !$Procedure ZZDDHGSD ( Private --- DDH Get String Definitions )
 
-      SUBROUTINE ZZDDHGSD ( CLASS, ID, LABEL )
+      subroutine zzddhgsd ( class, id, label )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      CHARACTER*(*)         CLASS
-      INTEGER               ID
-      CHARACTER*(*)         LABEL
+      character*(*)         class
+      integer               id
+      character*(*)         label
 
 ! $ Brief_I/O
 !
@@ -108,101 +108,101 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
 !
 !     Local Parameters
 !
-      INTEGER               LOCSIZ
-      PARAMETER           ( LOCSIZ = 8 )
+      integer               locsiz
+      parameter           ( locsiz = 8 )
 
 !
 !     Number of classes of label/ID pairs of which this routine is
 !     aware.
 !
-      INTEGER               NUMCLS
-      PARAMETER           ( NUMCLS = 3 )
+      integer               numcls
+      parameter           ( numcls = 3 )
 
 !
 !     Integer codes for the currently supported classes.
 !
-      INTEGER               METHOD
-      PARAMETER           ( METHOD = 1 )
+      integer               method
+      parameter           ( method = 1 )
 
-      INTEGER               ARCH
-      PARAMETER           ( ARCH   = METHOD + 1 )
+      integer               arch
+      parameter           ( arch   = method + 1 )
 
-      INTEGER               BFF
-      PARAMETER           ( BFF    = ARCH   + 1 )
+      integer               bff
+      parameter           ( bff    = arch   + 1 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(LOCSIZ)    CLSLST ( NUMCLS )
-      CHARACTER*(STRSIZ)    STRAMH ( NUMAMH )
-      CHARACTER*(STRSIZ)    STRARC ( NUMARC )
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
-      CHARACTER*(LOCSIZ)    TMPSTR
+      character*(locsiz)    clslst ( numcls )
+      character*(strsiz)    stramh ( numamh )
+      character*(strsiz)    strarc ( numarc )
+      character*(strsiz)    strbff ( numbff )
+      character*(locsiz)    tmpstr
 
-      INTEGER               CLSID
+      integer               clsid
 
 !
 !     Saved Variables
 !
-      SAVE                  CLSLST
-      SAVE                  STRAMH
-      SAVE                  STRARC
-      SAVE                  STRBFF
+      save                  clslst
+      save                  stramh
+      save                  strarc
+      save                  strbff
 
 !
 !     Data Statements
 !
-      DATA                  CLSLST / 'METHOD', 'ARCH', 'BFF' /
+      data                  clslst / 'METHOD', 'ARCH', 'BFF' /
 
-      DATA                  STRAMH / 'READ',     'WRITE', &
+      data                  stramh / 'READ',     'WRITE', &
                                      'SCRATCH',  'NEW'       /
 
-      DATA                  STRARC / 'DAF',      'DAS'       /
+      data                  strarc / 'DAF',      'DAS'       /
 
-      DATA                  STRBFF / 'BIG-IEEE', 'LTL-IEEE', &
+      data                  strbff / 'BIG-IEEE', 'LTL-IEEE', &
                                      'VAX-GFLT', 'VAX-DFLT'  /
 
 !
 !     Left justify and convert the input to upper case.
 !
-      CALL LJUST ( CLASS,  TMPSTR )
-      CALL UCASE ( TMPSTR, TMPSTR )
+      call ljust ( class,  tmpstr )
+      call ucase ( tmpstr, tmpstr )
 
-      CLSID = ISRCHC ( TMPSTR, NUMCLS, CLSLST )
+      clsid = isrchc ( tmpstr, numcls, clslst )
 
 !
 !     Initialize LABEL to the default response.
 !
-      LABEL = ' '
+      label = ' '
 
 !
 !     Branch on CLSID and return the appropriate label as requested
 !     by ID.
 !
-      IF      (       ( CLSID .EQ. METHOD ) &
-                .AND. (    ID .GE. 1      ) &
-                .AND. (    ID .LE. NUMAMH ) ) THEN
+      if      (       ( clsid .eq. method ) &
+                .and. (    id .ge. 1      ) &
+                .and. (    id .le. numamh ) ) then
 
-         LABEL = STRAMH ( ID )
+         label = stramh ( id )
 
-      ELSE IF (       ( CLSID .EQ. ARCH   ) &
-                .AND. (    ID .GE. 1      ) &
-                .AND. (    ID .LE. NUMARC ) ) THEN
+      else if (       ( clsid .eq. arch   ) &
+                .and. (    id .ge. 1      ) &
+                .and. (    id .le. numarc ) ) then
 
-         LABEL = STRARC ( ID )
+         label = strarc ( id )
 
-      ELSE IF (       ( CLSID .EQ. BFF    ) &
-                .AND. (    ID .GE. 1      ) &
-                .AND. (    ID .LE. NUMBFF ) ) THEN
+      else if (       ( clsid .eq. bff    ) &
+                .and. (    id .ge. 1      ) &
+                .and. (    id .le. numbff ) ) then
 
-         LABEL = STRBFF ( ID )
+         label = strbff ( id )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

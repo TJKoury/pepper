@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSCDP ( EK, set column data pointer )
 
-      SUBROUTINE ZZEKSCDP ( HANDLE, SEGDSC, COLDSC, RECPTR, DATPTR )
+      subroutine zzekscdp ( handle, segdsc, coldsc, recptr, datptr )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ekrecptr.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ekrecptr.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      INTEGER               DATPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      integer               datptr
 
 ! $ Brief_I/O
 !
@@ -122,20 +122,20 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               COLIDX
-      INTEGER               NCOLS
-      INTEGER               PTRLOC
-      INTEGER               RECNO
+      integer               colidx
+      integer               ncols
+      integer               ptrloc
+      integer               recno
 
 !
 !     Use discovery check-in.
@@ -144,42 +144,42 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Make sure the column exists.
 !
-      NCOLS  =  SEGDSC ( NCIDX  )
-      COLIDX =  COLDSC ( ORDIDX )
+      ncols  =  segdsc ( ncidx  )
+      colidx =  coldsc ( ordidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKSCDP'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' // &
+         call chkin  ( 'ZZEKSCDP'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' // &
                        'SEGNO = #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                    )
-         CALL ERRINT ( '#',  RECNO                             )
-         CALL ERRHAN ( '#',  HANDLE                            )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKSCDP'                              )
-         RETURN
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call errint ( '#',  segdsc(snoidx)                    )
+         call errint ( '#',  recno                             )
+         call errhan ( '#',  handle                            )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKSCDP'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the data pointer location, and set the pointer.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
-      CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasudi ( handle, ptrloc, ptrloc, datptr )
 
-      RETURN
-      END
+      return
+      end

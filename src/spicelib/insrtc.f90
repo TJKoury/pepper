@@ -1,6 +1,6 @@
 !$Procedure INSRTC ( Insert an item into a character set )
 
-      SUBROUTINE INSRTC ( ITEM, A )
+      subroutine insrtc ( item, a )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         ITEM
-      CHARACTER*(*)         A        ( LBCELL:* )
+      character*(*)         item
+      character*(*)         a        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -247,37 +247,37 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               LSTLEC
-      INTEGER               SIZEC
+      integer               cardc
+      integer               lstlec
+      integer               sizec
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
-      INTEGER               LAST
-      INTEGER               SIZE
-      INTEGER               SLEN
+      integer               card
+      integer               i
+      integer               last
+      integer               size
+      integer               slen
 
-      LOGICAL               IN
+      logical               in
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'INSRTC' )
+      call chkin ( 'INSRTC' )
 
 !
 !     What are the size and cardinality of the set?
 !
-      SIZE = SIZEC ( A )
-      CARD = CARDC ( A )
+      size = sizec ( a )
+      card = cardc ( a )
 
 !
 !     When we insert an item into the set, any trailing characters
@@ -289,52 +289,52 @@
 !     whose length doesn't exceed the string length of the set's
 !     members.
 !
-      SLEN = MIN (  LEN(ITEM),  LEN( A(1) )  )
+      slen = min (  len(item),  len( a(1) )  )
 
 !
 !     Find the last element of the set which would come before the
 !     input item. This will be the item itself, if it is already an
 !     element of the set.
 !
-      LAST = LSTLEC ( ITEM(:SLEN),  CARD,  A(1) )
+      last = lstlec ( item(:slen),  card,  a(1) )
 
 !
 !     Is the item already in the set? If not, it needs to be inserted.
 !
-      IF ( LAST .GT. 0 ) THEN
-         IN  =  A(LAST) .EQ. ITEM(:SLEN)
-      ELSE
-         IN  =  .FALSE.
-      END IF
+      if ( last .gt. 0 ) then
+         in  =  a(last) .eq. item(:slen)
+      else
+         in  =  .false.
+      end if
 
-      IF ( .NOT. IN ) THEN
+      if ( .not. in ) then
 !
 !        If there is room in the set for the new element, then move
 !        the succeeding elements back to make room. And update the
 !        cardinality for future reference.
 !
-         IF ( CARD .LT. SIZE ) THEN
+         if ( card .lt. size ) then
 
-            DO I = CARD, LAST+1, -1
-               A(I+1) = A(I)
-            END DO
+            do i = card, last+1, -1
+               a(i+1) = a(i)
+            end do
 
-            A(LAST+1) = ITEM(:SLEN)
+            a(last+1) = item(:slen)
 
-            CALL SCARDC ( CARD+1, A )
+            call scardc ( card+1, a )
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'An element could not be inserted '   // &
+            call setmsg ( 'An element could not be inserted '   // &
                           'into the set due to lack of space; ' // &
                           'set size is #.'                      )
-            CALL ERRINT ( '#', SIZE                             )
-            CALL SIGERR ( 'SPICE(SETEXCESS)'                    )
+            call errint ( '#', size                             )
+            call sigerr ( 'SPICE(SETEXCESS)'                    )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'INSRTC' )
-      RETURN
-      END
+      call chkout ( 'INSRTC' )
+      return
+      end

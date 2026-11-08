@@ -1,6 +1,6 @@
 !$Procedure UDDF ( First derivative of a function, df(x)/dx )
 
-      SUBROUTINE UDDF ( UDFUNC, X, DX, DERIV )
+      subroutine uddf ( udfunc, x, dx, deriv )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      DX
-      DOUBLE PRECISION      DERIV
+      double precision      x
+      double precision      dx
+      double precision      deriv
 
 ! $ Brief_I/O
 !
@@ -291,22 +291,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local Variables
 !
-      INTEGER               N
-      DOUBLE PRECISION      DFDX  (1)
-      DOUBLE PRECISION      UDVAL (2)
+      integer               n
+      double precision      dfdx  (1)
+      double precision      udval (2)
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'UDDF' )
+      call chkin  ( 'UDDF' )
 
 !
 !     Apply a three-point estimation of the derivative for
@@ -314,39 +314,39 @@
 !
 !     The QDERIV call returns a single value in the DFDX array.
 !
-      N  = 1
+      n  = 1
 
 !
 !     Evaluate the scalar function at the interval boundaries.
 !     Check for a FAILED event.
 !
-      CALL UDFUNC ( X-DX, UDVAL(1) )
+      call udfunc ( x-dx, udval(1) )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'UDDF' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'UDDF' )
+         return
+      end if
 
-      CALL UDFUNC ( X+DX, UDVAL(2) )
+      call udfunc ( x+dx, udval(2) )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'UDDF' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'UDDF' )
+         return
+      end if
 
 !
 !     Estimate the derivative at X.
 !
-      CALL QDERIV ( N, UDVAL(1), UDVAL(2), DX, DFDX )
+      call qderiv ( n, udval(1), udval(2), dx, dfdx )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'UDDF' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'UDDF' )
+         return
+      end if
 
-      DERIV = DFDX(1)
+      deriv = dfdx(1)
 
-      CALL CHKOUT ( 'UDDF' )
-      RETURN
+      call chkout ( 'UDDF' )
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure EKBSEG ( EK, start new segment )
 
-      SUBROUTINE EKBSEG ( HANDLE, TABNAM, NCOLS, CNAMES, DECLS, SEGNO )
+      subroutine ekbseg ( handle, tabnam, ncols, cnames, decls, segno )
 
 ! $ Abstract
 !
@@ -16,26 +16,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekfilpar.inc'
-      INCLUDE 'ekglimit.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekcnamsz.inc'
+      include 'ekdatpag.inc'
+      include 'ekfilpar.inc'
+      include 'ekglimit.inc'
+      include 'ekpage.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektnamsz.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         TABNAM
-      INTEGER               NCOLS
-      CHARACTER*(*)         CNAMES ( * )
-      CHARACTER*(*)         DECLS  ( * )
-      INTEGER               SEGNO
+      integer               handle
+      character*(*)         tabnam
+      integer               ncols
+      character*(*)         cnames ( * )
+      character*(*)         decls  ( * )
+      integer               segno
 
 ! $ Brief_I/O
 !
@@ -447,60 +447,60 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKSTYP
+      integer               zzekstyp
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               MXSPEC
-      PARAMETER           ( MXSPEC = 512 )
+      integer               mxspec
+      parameter           ( mxspec = 512 )
 
-      INTEGER               NAMLIM
-      PARAMETER           ( NAMLIM = 32 )
+      integer               namlim
+      parameter           ( namlim = 32 )
 
 !
 !     Local variables
 !
-      INTEGER               CDSCRS ( CDSCSZ, MXCLSG )
-      INTEGER               I
-      INTEGER               IDEND
-      INTEGER               IDSPEC ( LBCELL : MXSPEC )
-      INTEGER               NCHARS
-      INTEGER               STYPE
+      integer               cdscrs ( cdscsz, mxclsg )
+      integer               i
+      integer               idend
+      integer               idspec ( lbcell : mxspec )
+      integer               nchars
+      integer               stype
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  IDSPEC
+      save                  first
+      save                  idspec
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKBSEG' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKBSEG' )
+      end if
 
 !
 !     Before trying to actually write anything, do every error
@@ -509,141 +509,141 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKBSEG' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKBSEG' )
+         return
+      end if
 
 !
 !     Get the default identifier specification the first time through.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL SSIZEI ( MXSPEC, IDSPEC )
-         CALL LXDFID (         IDSPEC )
-         FIRST = .FALSE.
+         call ssizei ( mxspec, idspec )
+         call lxdfid (         idspec )
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     The table name must not be too long, and all of its characters
 !     must be printable (it's ok for it to unprintable).
 !
-      CALL CHCKID ( 'EK table name', NAMLIM, TABNAM )
+      call chckid ( 'EK table name', namlim, tabnam )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKBSEG' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKBSEG' )
+         return
+      end if
 
 !
 !     Make sure the table name satisfies all of our restrictions on
 !     allowed characters.
 !
-      CALL LXIDNT ( IDSPEC, TABNAM, 1, IDEND, NCHARS )
+      call lxidnt ( idspec, tabnam, 1, idend, nchars )
 
-      IF ( ( NCHARS .EQ. 0 ) .OR. ( NCHARS .LT. LASTNB(TABNAM))  ) THEN
+      if ( ( nchars .eq. 0 ) .or. ( nchars .lt. lastnb(tabnam))  ) then
 
-         CALL SETMSG ( 'Table name <#> violates syntax rules.' )
-         CALL ERRCH  ( '#', TABNAM                             )
-         CALL SIGERR ( 'SPICE(INVALIDNAME)'                    )
-         CALL CHKOUT ( 'EKBSEG'                                )
-         RETURN
+         call setmsg ( 'Table name <#> violates syntax rules.' )
+         call errch  ( '#', tabnam                             )
+         call sigerr ( 'SPICE(INVALIDNAME)'                    )
+         call chkout ( 'EKBSEG'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check out NCOLS.
 !
-      IF (  ( NCOLS .LT. 1 ) .OR. ( NCOLS .GT. MXCLSG )  ) THEN
+      if (  ( ncols .lt. 1 ) .or. ( ncols .gt. mxclsg )  ) then
 
-         CALL SETMSG ( 'Number of columns must be in range 1:#, was #.')
-         CALL ERRINT ( '#',  MXCLSG                                    )
-         CALL ERRINT ( '#',  NCOLS                                     )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                           )
-         CALL CHKOUT ( 'EKBSEG'                                        )
-         RETURN
+         call setmsg ( 'Number of columns must be in range 1:#, was #.')
+         call errint ( '#',  mxclsg                                    )
+         call errint ( '#',  ncols                                     )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
+         call chkout ( 'EKBSEG'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the column names for length and printability.
 !
-      DO I = 1, NCOLS
+      do i = 1, ncols
 
-         CALL CHCKID ( 'EK column name', CNAMSZ, CNAMES(I) )
+         call chckid ( 'EK column name', cnamsz, cnames(i) )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'EKBSEG' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'EKBSEG' )
+            return
+         end if
 
 !
 !        Make sure each column name satisfies all of our restrictions on
 !        allowed characters.
 !
-         CALL LXIDNT ( IDSPEC, CNAMES(I), 1, IDEND, NCHARS )
+         call lxidnt ( idspec, cnames(i), 1, idend, nchars )
 
-         IF (       ( NCHARS .EQ. 0                    ) &
-               .OR. ( NCHARS .LT. LASTNB( CNAMES(I) )  )   ) THEN
+         if (       ( nchars .eq. 0                    ) &
+               .or. ( nchars .lt. lastnb( cnames(i) )  )   ) then
 
-            CALL SETMSG ( 'Column name <#> violates syntax rules.' )
-            CALL ERRCH  ( '#', CNAMES(I)                           )
-            CALL SIGERR ( 'SPICE(INVALIDNAME)'                     )
-            CALL CHKOUT ( 'EKBSEG'                                 )
-            RETURN
+            call setmsg ( 'Column name <#> violates syntax rules.' )
+            call errch  ( '#', cnames(i)                           )
+            call sigerr ( 'SPICE(INVALIDNAME)'                     )
+            call chkout ( 'EKBSEG'                                 )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Parse the column declarations before proceeding.
 !
-      DO I = 1, NCOLS
+      do i = 1, ncols
 !
 !        Parse the declaration of the Ith column.  The descriptor is
 !        returned with all elements other than pointers initialized.
 !
-         CALL ZZEKPDEC ( DECLS(I), CDSCRS(1,I) )
+         call zzekpdec ( decls(i), cdscrs(1,i) )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'EKBSEG' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'EKBSEG' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Determine the segment type.
 !
-      STYPE  =  ZZEKSTYP ( NCOLS, CDSCRS )
+      stype  =  zzekstyp ( ncols, cdscrs )
 
 
 !
 !     Create the segment metadata according to the segment's type.
 !
-      IF ( STYPE .EQ. 1 ) THEN
+      if ( stype .eq. 1 ) then
 
-         CALL ZZEKBS01 ( HANDLE, TABNAM, NCOLS, CNAMES, CDSCRS, SEGNO )
+         call zzekbs01 ( handle, tabnam, ncols, cnames, cdscrs, segno )
 
-      ELSE IF ( STYPE .EQ. 2 ) THEN
+      else if ( stype .eq. 2 ) then
 
-         CALL ZZEKBS02 ( HANDLE, TABNAM, NCOLS, CNAMES, CDSCRS, SEGNO )
+         call zzekbs02 ( handle, tabnam, ncols, cnames, cdscrs, segno )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Segment type # is not currently supported.' )
-         CALL ERRINT ( '#', STYPE                                   )
-         CALL SIGERR ( 'SPICE(BUG)'                                 )
-         CALL CHKOUT ( 'EKBSEG'                                     )
-         RETURN
+         call setmsg ( 'Segment type # is not currently supported.' )
+         call errint ( '#', stype                                   )
+         call sigerr ( 'SPICE(BUG)'                                 )
+         call chkout ( 'EKBSEG'                                     )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'EKBSEG' )
-      RETURN
-      END
+      call chkout ( 'EKBSEG' )
+      return
+      end

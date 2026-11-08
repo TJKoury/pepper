@@ -1,6 +1,6 @@
 !$Procedure SMSGNI  ( Same Sign Integer Numbers )
 
-      LOGICAL FUNCTION SMSGNI ( X, Y )
+      logical function smsgni ( x, y )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          X
-      INTEGER          Y
+      integer          x
+      integer          y
 
 ! $ Brief_I/O
 !
@@ -125,9 +125,9 @@
 !-&
 
 
-      SMSGNI = (      (( X .GT. 0 ) .AND. ( Y .GT. 0 )) &
-                 .OR. (( X .LT. 0 ) .AND. ( Y .LT. 0 )) &
+      smsgni = (      (( x .gt. 0 ) .and. ( y .gt. 0 )) &
+                 .or. (( x .lt. 0 ) .and. ( y .lt. 0 )) &
                )
 
-      RETURN
-      END
+      return
+      end

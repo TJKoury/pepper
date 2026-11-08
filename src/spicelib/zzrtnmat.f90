@@ -1,6 +1,6 @@
 !$Procedure ZZRTNMAT ( RTN transformation matrix )
 
-      SUBROUTINE ZZRTNMAT ( V, M )
+      subroutine zzrtnmat ( v, m )
 
 ! $ Abstract
 !
@@ -20,10 +20,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V ( 3 )
-      DOUBLE PRECISION      M ( 3, 3 )
+      double precision      v ( 3 )
+      double precision      m ( 3, 3 )
 
 
 ! $ Brief_I/O
@@ -147,7 +147,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
@@ -156,87 +156,87 @@
 !     descriptive names EAST for the "tangential"
 !     direction and NORTH for the "normal" direction.
 !
-      DOUBLE PRECISION      EAST   ( 3 )
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      NORTH  ( 3 )
-      DOUBLE PRECISION      RAD    ( 3 )
-      DOUBLE PRECISION      VLON   ( 3 )
-      DOUBLE PRECISION      Z ( 3 )
+      double precision      east   ( 3 )
+      double precision      lon
+      double precision      north  ( 3 )
+      double precision      rad    ( 3 )
+      double precision      vlon   ( 3 )
+      double precision      z ( 3 )
 
-      INTEGER               I
+      integer               i
 
 !
 !     Saved variables
 !
-      SAVE                  Z
+      save                  z
 
 !
 !     Initial values
 !
-      DATA                  Z / 0.D0, 0.D0, 1.D0 /
+      data                  z / 0.d0, 0.d0, 1.d0 /
 
 !
 !     Use discovery check-in. Just test the RETURN status.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 
-      IF (  ( V(1) .EQ. 0.D0 ) .AND. ( V(2) .EQ. 0.D0 )  ) THEN
+      if (  ( v(1) .eq. 0.d0 ) .and. ( v(2) .eq. 0.d0 )  ) then
 
-         CALL CLEARD ( 9, M )
+         call cleard ( 9, m )
 
-         CALL CHKIN  ( 'ZZRTNMAT'                              )
-         CALL SETMSG ( 'Input vector (# # #) lies on Z-axis; ' &
+         call chkin  ( 'ZZRTNMAT'                              )
+         call setmsg ( 'Input vector (# # #) lies on Z-axis; ' &
          //            'tangential and normal directions are ' &
          //            'undefined.'                            )
-         CALL ERRDP  ( '#', V(1)                               )
-         CALL ERRDP  ( '#', V(2)                               )
-         CALL ERRDP  ( '#', V(3)                               )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                 )
-         CALL CHKOUT ( 'ZZRTNMAT'                              )
-         RETURN
+         call errdp  ( '#', v(1)                               )
+         call errdp  ( '#', v(2)                               )
+         call errdp  ( '#', v(3)                               )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                 )
+         call chkout ( 'ZZRTNMAT'                              )
+         return
 
-      ELSE
+      else
 !
 !        The two-argument arctangent function gives us a
 !        robust way of determining the longitude of V, even
 !        when the magnitude of V is very small.
 !
-         LON = DATAN2 ( V(2), V(1) )
+         lon = datan2 ( v(2), v(1) )
 
 !
 !        Let VLON be a unit vector in the x-y plane whose
 !        longitude is LON.
 !
-         VLON(1) = COS( LON )
-         VLON(2) = SIN( LON )
-         VLON(3) = 0.D0
+         vlon(1) = cos( lon )
+         vlon(2) = sin( lon )
+         vlon(3) = 0.d0
 
 !
 !        We can compute the East and North vectors
 !        without much loss of precision, since VLON is
 !        orthogonal to Z and EAST is orthogonal to V.
 !
-         CALL UCRSS ( Z, VLON, EAST  )
-         CALL UCRSS ( V, EAST, NORTH )
+         call ucrss ( z, vlon, east  )
+         call ucrss ( v, east, north )
 
-         CALL VHAT  ( V, RAD )
+         call vhat  ( v, rad )
 
 !
 !        The rows of M are the basis vectors of
 !        the radial/East/North frame:
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            M(1,I) = RAD  (I)
-            M(2,I) = EAST (I)
-            M(3,I) = NORTH(I)
+            m(1,i) = rad  (i)
+            m(2,i) = east (i)
+            m(3,i) = north(i)
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      END
+      end
 

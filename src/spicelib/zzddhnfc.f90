@@ -1,6 +1,6 @@
 !$Procedure ZZDDHNFC ( DDH, return native BFF format code )
 
-      SUBROUTINE ZZDDHNFC ( NATBFF )
+      subroutine zzddhnfc ( natbff )
 
 ! $ Abstract
 !
@@ -24,10 +24,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INCLUDE 'zzddhman.inc'
+      implicit none
+      include 'zzddhman.inc'
 
-      INTEGER               NATBFF
+      integer               natbff
 
 ! $ Brief_I/O
 !
@@ -99,86 +99,86 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
+      integer               isrchc
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(strsiz)    strbff ( numbff )
+      character*(strsiz)    tmpstr
 
-      INTEGER               I
-      INTEGER               SAVBFF
+      integer               i
+      integer               savbff
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  SAVBFF
-      SAVE                  STRBFF
+      save                  first
+      save                  savbff
+      save                  strbff
 
 !
 !     Initial values
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 
 !
 !     This routine checks in on the first pass only.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL CHKIN ( 'ZZDDHNFC' )
+         call chkin ( 'ZZDDHNFC' )
 
 !
 !        Populate STRBFF, the buffer that contains the labels
 !        for each binary file format.
 !
-         DO I = 1, NUMBFF
-            CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-         END DO
+         do i = 1, numbff
+            call zzddhgsd ( 'BFF', i, strbff(i) )
+         end do
 
 !
 !        Fetch the native binary file format and determine its
 !        integer code.
 !
-         CALL ZZPLATFM ( 'FILE_FORMAT', TMPSTR )
-         CALL UCASE    ( TMPSTR,        TMPSTR )
+         call zzplatfm ( 'FILE_FORMAT', tmpstr )
+         call ucase    ( tmpstr,        tmpstr )
 
-         SAVBFF = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+         savbff = isrchc ( tmpstr, numbff, strbff )
 
-         IF ( SAVBFF .EQ. 0 ) THEN
+         if ( savbff .eq. 0 ) then
 
-            CALL SETMSG ( 'The binary file format, ''#'', is not ' &
+            call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
             //            'This is a serious problem, contact NAIF.'   )
-            CALL ERRCH  ( '#', TMPSTR                                  )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZDDHNFC'                                   )
-            RETURN
+            call errch  ( '#', tmpstr                                  )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZDDHNFC'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Do not perform initialization tasks again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-         CALL CHKOUT ( 'ZZDDHNFC' )
+         call chkout ( 'ZZDDHNFC' )
 
-      END IF
+      end if
 
 
-      NATBFF = SAVBFF
+      natbff = savbff
 
-      RETURN
-      END
+      return
+      end
 

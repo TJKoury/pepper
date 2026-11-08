@@ -1,6 +1,6 @@
 !$Procedure      ZZSIZEOK ( Determine if the size of a segment is ok )
 
-      SUBROUTINE ZZSIZEOK ( SIZE, PSIZE, DSIZE, OFFSET, OK, N )
+      subroutine zzsizeok ( size, psize, dsize, offset, ok, n )
 
 ! $ Abstract
 !
@@ -30,13 +30,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INTEGER               SIZE
-      INTEGER               PSIZE
-      INTEGER               DSIZE
-      INTEGER               OFFSET
-      LOGICAL               OK
-      INTEGER               N
+      implicit none
+      integer               size
+      integer               psize
+      integer               dsize
+      integer               offset
+      logical               ok
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -164,45 +164,45 @@
 !     and  OFFSET*PSIZE <= SIZE mod(PSIZE*DSIZE+1)
 !
 
-      INTEGER               Q
-      INTEGER               PD1
-      INTEGER               R
-      INTEGER               A
+      integer               q
+      integer               pd1
+      integer               r
+      integer               a
 
 
 !
 !     Handle the exceptional case first.
 !
-      IF (       SIZE .LE. 0 &
-           .OR. DSIZE .LE. 0 &
-           .OR. PSIZE .LE. 0 ) THEN
-         N  = 0
-         OK = .FALSE.
-         RETURN
-      END IF
+      if (       size .le. 0 &
+           .or. dsize .le. 0 &
+           .or. psize .le. 0 ) then
+         n  = 0
+         ok = .false.
+         return
+      end if
 
-      PD1 = PSIZE*DSIZE + 1
+      pd1 = psize*dsize + 1
 
-      CALL RMAINI ( SIZE, PD1, Q, A )
+      call rmaini ( size, pd1, q, a )
 
-      IF ( OFFSET*PSIZE .GT. A ) THEN
-         N  = 0
-         OK = .FALSE.
-         RETURN
-      END IF
+      if ( offset*psize .gt. a ) then
+         n  = 0
+         ok = .false.
+         return
+      end if
 
-      IF ( A .EQ. (A/PSIZE)*PSIZE ) THEN
+      if ( a .eq. (a/psize)*psize ) then
 
-         R  = A/PSIZE
-         N  = DSIZE*Q + R
-         OK = .TRUE.
+         r  = a/psize
+         n  = dsize*q + r
+         ok = .true.
 
-      ELSE
+      else
 
-         OK = .FALSE.
-         N  =  0
+         ok = .false.
+         n  =  0
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

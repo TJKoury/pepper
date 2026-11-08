@@ -1,6 +1,6 @@
 !$Procedure OPSGNI  ( Opposite Sign Integers )
 
-      LOGICAL FUNCTION OPSGNI  ( X, Y )
+      logical function opsgni  ( x, y )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          X
-      INTEGER          Y
+      integer          x
+      integer          y
 
 ! $ Brief_I/O
 !
@@ -133,9 +133,9 @@
 !-&
 
 
-      OPSGNI = (      (( X .GT. 0 ) .AND. ( Y .LT. 0 )) &
-                 .OR. (( X .LT. 0 ) .AND. ( Y .GT. 0 )) &
+      opsgni = (      (( x .gt. 0 ) .and. ( y .lt. 0 )) &
+                 .or. (( x .lt. 0 ) .and. ( y .gt. 0 )) &
                )
 
-      RETURN
-      END
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure ZZGFILU ( GF, illumination angle utilities )
 
-      SUBROUTINE ZZGFILU ( METHOD, ANGTYP, TARGET, ILLUM, FIXREF, &
-                           ABCORR, OBSRVR, SPOINT, ET,    UDFUNC, &
-                           DECRES, ANGLE                          )
+      subroutine zzgfilu ( method, angtyp, target, illum, fixref, &
+                           abcorr, obsrvr, spoint, et,    udfunc, &
+                           decres, angle                          )
 
 ! $ Abstract
 !
@@ -29,22 +29,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         ANGTYP
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILLUM
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      ET
-      EXTERNAL              UDFUNC
-      LOGICAL               DECRES
-      DOUBLE PRECISION      ANGLE
+      character*(*)         method
+      character*(*)         angtyp
+      character*(*)         target
+      character*(*)         illum
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      double precision      et
+      external              udfunc
+      logical               decres
+      double precision      angle
 
 ! $ Brief_I/O
 !
@@ -175,114 +175,114 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ESRCHC
+      integer               esrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               MTHLEN
-      PARAMETER           ( MTHLEN = 200 )
+      integer               mthlen
+      parameter           ( mthlen = 200 )
 
 !
 !     Indices of illumination angles in the ANGLES
 !     array:
 !
-      INTEGER               PHSIDX
-      PARAMETER           ( PHSIDX = 1 )
+      integer               phsidx
+      parameter           ( phsidx = 1 )
 
-      INTEGER               INCIDX
-      PARAMETER           ( INCIDX = 2 )
+      integer               incidx
+      parameter           ( incidx = 2 )
 
-      INTEGER               EMTIDX
-      PARAMETER           ( EMTIDX = 3 )
+      integer               emtidx
+      parameter           ( emtidx = 3 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 50 )
+      integer               namlen
+      parameter           ( namlen = 50 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(NAMLEN)    ANGNMS ( 3 )
-      CHARACTER*(CORLEN)    SVCORR
-      CHARACTER*(BDNMLN)    SVINAM
-      CHARACTER*(MTHLEN)    SVMETH
-      CHARACTER*(BDNMLN)    SVONAM
-      CHARACTER*(FRNMLN)    SVREF
-      CHARACTER*(BDNMLN)    SVTNAM
+      character*(namlen)    angnms ( 3 )
+      character*(corlen)    svcorr
+      character*(bdnmln)    svinam
+      character*(mthlen)    svmeth
+      character*(bdnmln)    svonam
+      character*(frnmln)    svref
+      character*(bdnmln)    svtnam
 
-      DOUBLE PRECISION      ANGLES ( 3 )
-      DOUBLE PRECISION      EMISTA ( 2 )
-      DOUBLE PRECISION      ETTARG
-      DOUBLE PRECISION      INCSTA ( 2 )
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      PHSSTA ( 2 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      RATE
-      DOUBLE PRECISION      SRFVEC ( 3 )
-      DOUBLE PRECISION      SVNRML ( 3 )
-      DOUBLE PRECISION      SVSSPT ( 3 )
+      double precision      angles ( 3 )
+      double precision      emista ( 2 )
+      double precision      ettarg
+      double precision      incsta ( 2 )
+      double precision      normal ( 3 )
+      double precision      phssta ( 2 )
+      double precision      radii  ( 3 )
+      double precision      rate
+      double precision      srfvec ( 3 )
+      double precision      svnrml ( 3 )
+      double precision      svsspt ( 3 )
 
-      INTEGER               N
-      INTEGER               FXFCDE
-      INTEGER               FXCLSS
-      INTEGER               FXTYID
-      INTEGER               FXCENT
-      INTEGER               SVAIDX
-      INTEGER               SVOBS
-      INTEGER               SVILUM
-      INTEGER               SVTARG
+      integer               n
+      integer               fxfcde
+      integer               fxclss
+      integer               fxtyid
+      integer               fxcent
+      integer               svaidx
+      integer               svobs
+      integer               svilum
+      integer               svtarg
 
-      LOGICAL               FOUND
-      LOGICAL               SVABLK ( NABCOR )
+      logical               found
+      logical               svablk ( nabcor )
 
 !
 !     Saved Variables
 !
-      SAVE                  ANGNMS
-      SAVE                  SVABLK
-      SAVE                  SVAIDX
-      SAVE                  SVCORR
-      SAVE                  SVILUM
-      SAVE                  SVINAM
-      SAVE                  SVMETH
-      SAVE                  SVNRML
-      SAVE                  SVOBS
-      SAVE                  SVONAM
-      SAVE                  SVREF
-      SAVE                  SVSSPT
-      SAVE                  SVTARG
-      SAVE                  SVTNAM
+      save                  angnms
+      save                  svablk
+      save                  svaidx
+      save                  svcorr
+      save                  svilum
+      save                  svinam
+      save                  svmeth
+      save                  svnrml
+      save                  svobs
+      save                  svonam
+      save                  svref
+      save                  svsspt
+      save                  svtarg
+      save                  svtnam
 
 !
 !     Initial values
 !
-      DATA                  ANGNMS / 'PHASE', &
+      data                  angnms / 'PHASE', &
                                      'INCIDENCE', &
                                      'EMISSION'   /
 
 !
 !     This routine should never be called directly.
 !
-      CALL CHKIN  ( 'ZZGFILU'           )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZGFILU'           )
-      RETURN
+      call chkin  ( 'ZZGFILU'           )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZGFILU'           )
+      return
 
 
 
 !$Procedure ZZGFILIN ( GF, illumination angle utility initialization )
 
-      ENTRY ZZGFILIN ( METHOD, ANGTYP, TARGET, ILLUM, &
-                       FIXREF, ABCORR, OBSRVR, SPOINT )
+      entry zzgfilin ( method, angtyp, target, illum, &
+                       fixref, abcorr, obsrvr, spoint )
 
 ! $ Abstract
 !
@@ -518,205 +518,205 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFILIN' )
+      call chkin ( 'ZZGFILIN' )
 
 !
 !     Find NAIF IDs for TARGET, OBSRVR, and ILLUM.
 !
-      CALL BODS2C ( TARGET, SVTARG, FOUND )
+      call bods2c ( target, svtarg, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target object, ' &
+         call setmsg ( 'The target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFILIN'                                 )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFILIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, SVOBS, FOUND )
+      call bods2c ( obsrvr, svobs, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFILIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFILIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( ILLUM, SVILUM, FOUND )
+      call bods2c ( illum, svilum, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The illumination source, ' &
+         call setmsg ( 'The illumination source, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', ILLUM                                 )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFILIN'                                 )
-         RETURN
+         call errch  ( '#', illum                                 )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFILIN'                                 )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Make sure the observer and target are distinct.
 !
-      IF ( SVTARG .EQ. SVOBS ) THEN
+      if ( svtarg .eq. svobs ) then
 
-         CALL SETMSG ( 'The observer and target must be ' &
+         call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
          //            'OBSRVR = #; TARGET = #.'           )
-         CALL ERRCH  ( '#', OBSRVR                         )
-         CALL ERRCH  ( '#', TARGET                         )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'          )
-         CALL CHKOUT ( 'ZZGFILIN'                          )
-         RETURN
+         call errch  ( '#', obsrvr                         )
+         call errch  ( '#', target                         )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
+         call chkout ( 'ZZGFILIN'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the target and illumination source are distinct.
 !
-      IF ( SVTARG .EQ. SVILUM ) THEN
+      if ( svtarg .eq. svilum ) then
 
-         CALL SETMSG ( 'The target and illumination source must ' &
+         call setmsg ( 'The target and illumination source must ' &
          //            'be distinct objects, but are not: ' &
          //            'TARGET = #; ILLUM = #.'                   )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL ERRCH  ( '#', ILLUM                                 )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                 )
-         CALL CHKOUT ( 'ZZGFILIN'                                 )
-         RETURN
+         call errch  ( '#', target                                )
+         call errch  ( '#', illum                                 )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'                 )
+         call chkout ( 'ZZGFILIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Save the observer, target, and illumination source names.
 !
-      SVONAM = OBSRVR
-      SVTNAM = TARGET
-      SVINAM = ILLUM
+      svonam = obsrvr
+      svtnam = target
+      svinam = illum
 
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
-      CALL CMPRSS ( ' ', 0, ABCORR, SVCORR )
-      CALL UCASE  ( SVCORR,         SVCORR )
+      call cmprss ( ' ', 0, abcorr, svcorr )
+      call ucase  ( svcorr,         svcorr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( SVCORR, SVABLK )
+      call zzvalcor ( svcorr, svablk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
 !
 !     Reject transmission corrections.
 !
-      IF ( SVABLK(XMTIDX) ) THEN
+      if ( svablk(xmtidx) ) then
 
-         CALL SETMSG ( 'Aberration correction was #; ' &
+         call setmsg ( 'Aberration correction was #; ' &
          //            'transmission corrections are not ' &
          //            'allowed by this routine.'        )
-         CALL ERRCH  ( '#',  ABCORR                      )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'             )
-         CALL CHKOUT ( 'ZZGFILIN'                        )
-         RETURN
+         call errch  ( '#',  abcorr                      )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'             )
+         call chkout ( 'ZZGFILIN'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the radii for the target body.
 !
-      CALL BODVRD ( TARGET, 'RADII', 3, N, RADII )
+      call bodvrd ( target, 'RADII', 3, n, radii )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
 !
 !     Find the surface normal at the surface point. Create a
 !     body-fixed state vector for the normal.
 !
-      CALL SURFNM ( RADII(1), RADII(2), RADII(3), SPOINT, NORMAL )
+      call surfnm ( radii(1), radii(2), radii(3), spoint, normal )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
-      CALL VEQU ( NORMAL, SVNRML )
+      call vequ ( normal, svnrml )
 
 !
 !     Save the surface point in the body-fixed reference frame.
 !
-      CALL VEQU ( SPOINT, SVSSPT)
+      call vequ ( spoint, svsspt)
 
 !
 !     Save a left-justified, upper case copy of the computation method
 !     for the illumination angles.
 !
-      CALL LJUST ( METHOD, SVMETH )
-      CALL UCASE ( SVMETH, SVMETH )
+      call ljust ( method, svmeth )
+      call ucase ( svmeth, svmeth )
 
-      IF ( SVMETH .NE. 'ELLIPSOID' ) THEN
+      if ( svmeth .ne. 'ELLIPSOID' ) then
 
-         CALL SETMSG ( 'The only supported computation method ' &
+         call setmsg ( 'The only supported computation method ' &
          //            'is ELLIPSOID; the input method was #.' )
-         CALL ERRCH  ( '#',  METHOD                            )
-         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                  )
-         CALL CHKOUT ( 'ZZGFILIN'                              )
-         RETURN
+         call errch  ( '#',  method                            )
+         call sigerr ( 'SPICE(INVALIDMETHOD)'                  )
+         call chkout ( 'ZZGFILIN'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Save a left-justified, upper case copy of the reference frame
 !     name.
 !
-      CALL LJUST ( FIXREF, SVREF )
-      CALL UCASE ( SVREF,  SVREF )
+      call ljust ( fixref, svref )
+      call ucase ( svref,  svref )
 
 !
 !     Look up the frame attributes; make sure the frame is centered
@@ -725,63 +725,63 @@
 !
 !     Determine the attributes of the frame designated by FIXREF.
 !
-      CALL NAMFRM ( FIXREF, FXFCDE )
+      call namfrm ( fixref, fxfcde )
 
-      CALL FRINFO ( FXFCDE, FXCENT, FXCLSS, FXTYID, FOUND )
+      call frinfo ( fxfcde, fxcent, fxclss, fxtyid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILIN' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+         call setmsg ( 'Reference frame # is not recognized by ' // &
                        'the SPICE frame subsystem. Possibly '    // &
                        'a required frame definition kernel has ' // &
                        'not been loaded.'                        )
-         CALL ERRCH  ( '#',  FIXREF                              )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'                     )
-         CALL CHKOUT ( 'ZZGFILIN'                                )
-         RETURN
+         call errch  ( '#',  fixref                              )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'                     )
+         call chkout ( 'ZZGFILIN'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      IF ( FXCENT .NE. SVTARG ) THEN
+      if ( fxcent .ne. svtarg ) then
 
-         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
          //            'center is #.'                             )
-         CALL ERRCH  ( '#',  FIXREF                               )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL ERRINT ( '#',  FXCENT                               )
-         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-         CALL CHKOUT ( 'ZZGFILIN'                                 )
-         RETURN
+         call errch  ( '#',  fixref                               )
+         call errch  ( '#',  target                               )
+         call errint ( '#',  fxcent                               )
+         call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+         call chkout ( 'ZZGFILIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Save the index of the angle type.
 !
-      SVAIDX = ESRCHC ( ANGTYP, 3, ANGNMS )
+      svaidx = esrchc ( angtyp, 3, angnms )
 
-      IF ( SVAIDX .EQ. 0 ) THEN
+      if ( svaidx .eq. 0 ) then
 
-         CALL SETMSG ( 'Illumination angle type # is not recognized.' )
-         CALL ERRCH  ( '#',  ANGTYP                                   )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                          )
-         CALL CHKOUT ( 'ZZGFILIN'                                     )
-         RETURN
+         call setmsg ( 'Illumination angle type # is not recognized.' )
+         call errch  ( '#',  angtyp                                   )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
+         call chkout ( 'ZZGFILIN'                                     )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZGFILIN' )
-      RETURN
+      call chkout ( 'ZZGFILIN' )
+      return
 
 
 
@@ -789,7 +789,7 @@
 
 !$Procedure ZZGFILDC ( GF, is illumination angle decreasing? )
 
-      ENTRY ZZGFILDC ( UDFUNC, ET, DECRES )
+      entry zzgfildc ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -912,59 +912,59 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFILDC' )
+      call chkin ( 'ZZGFILDC' )
 
 !
 !     Compute the rates of change of all of the illumination angles.
 !
-      CALL ZZILUSTA ( SVMETH, SVTNAM, SVINAM, ET, &
-                      SVREF,  SVCORR, SVONAM, SVSSPT, &
-                      SVNRML, PHSSTA, INCSTA, EMISTA  )
+      call zzilusta ( svmeth, svtnam, svinam, et, &
+                      svref,  svcorr, svonam, svsspt, &
+                      svnrml, phssta, incsta, emista  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILDC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILDC' )
+         return
+      end if
 
-      IF ( SVAIDX .EQ. PHSIDX ) THEN
+      if ( svaidx .eq. phsidx ) then
 
-         RATE = PHSSTA(2)
+         rate = phssta(2)
 
-      ELSE IF ( SVAIDX .EQ. INCIDX ) THEN
+      else if ( svaidx .eq. incidx ) then
 
-         RATE = INCSTA(2)
+         rate = incsta(2)
 
-      ELSE IF ( SVAIDX .EQ. EMTIDX ) THEN
+      else if ( svaidx .eq. emtidx ) then
 
-         RATE = EMISTA(2)
+         rate = emista(2)
 
-      ELSE
+      else
 !
 !        We should never get here.
 !
-         CALL SETMSG ( 'Unexpected value of SVAIDX: #.' )
-         CALL ERRINT ( '#',  SVAIDX                     )
-         CALL SIGERR ( 'SPICE(BUG)'                     )
+         call setmsg ( 'Unexpected value of SVAIDX: #.' )
+         call errint ( '#',  svaidx                     )
+         call sigerr ( 'SPICE(BUG)'                     )
 
-      END IF
+      end if
 !
 !     The observer-target illumination angle is decreasing if and only
 !     the derivative of the angle with respect to time is negative.
 !
-      DECRES  =  RATE  .LT.  0.D0
+      decres  =  rate  .lt.  0.d0
 
-      CALL CHKOUT ( 'ZZGFILDC' )
-      RETURN
+      call chkout ( 'ZZGFILDC' )
+      return
 
 
 
 !$Procedure ZZGFILGQ ( GF, get illumination angle )
 
-      ENTRY ZZGFILGQ ( ET, ANGLE )
+      entry zzgfilgq ( et, angle )
 
 ! $ Abstract
 !
@@ -1073,23 +1073,23 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFILGQ' )
+      call chkin ( 'ZZGFILGQ' )
 
-      CALL ILLUMG ( SVMETH, SVTNAM,    SVINAM,    ET,      SVREF, &
-                    SVCORR, SVONAM,    SVSSPT,    ETTARG, &
-                    SRFVEC, ANGLES(1), ANGLES(2), ANGLES(3)       )
+      call illumg ( svmeth, svtnam,    svinam,    et,      svref, &
+                    svcorr, svonam,    svsspt,    ettarg, &
+                    srfvec, angles(1), angles(2), angles(3)       )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFILGQ' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFILGQ' )
+         return
+      end if
 
-      ANGLE = ANGLES( SVAIDX )
+      angle = angles( svaidx )
 
-      CALL CHKOUT ( 'ZZGFILGQ' )
-      RETURN
-      END
+      call chkout ( 'ZZGFILGQ' )
+      return
+      end

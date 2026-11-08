@@ -1,6 +1,6 @@
 !$Procedure GETMSG ( Get Error Message )
 
-      SUBROUTINE GETMSG ( OPTION, MSG )
+      subroutine getmsg ( option, msg )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)          OPTION
-      CHARACTER*(*)          MSG
+      character*(*)          option
+      character*(*)          msg
 
 ! $ Brief_I/O
 !
@@ -199,20 +199,20 @@
 !     Length of short error message:
 !
 
-      INTEGER               SHRTLN
-      PARAMETER           ( SHRTLN = 25 )
+      integer               shrtln
+      parameter           ( shrtln = 25 )
 
-      CHARACTER*(SHRTLN)    SHRTMS
+      character*(shrtln)    shrtms
 
 !
 !     Upper case version of the option:
 !
 
-      INTEGER               OPTLEN
-      PARAMETER           ( OPTLEN = 10 )
+      integer               optlen
+      parameter           ( optlen = 10 )
 
-      CHARACTER*(OPTLEN)    UPOPT
-      CHARACTER*(OPTLEN)    LOCOPT
+      character*(optlen)    upopt
+      character*(optlen)    locopt
 
 !
 !     Heeeeeeeeeeeeeeeeeeeeer's the code!
@@ -225,55 +225,55 @@
 !     string just in case we need to echo it in
 !     an error message.
 !
-      CALL LJUST ( OPTION, UPOPT )
-      CALL UCASE ( UPOPT,  UPOPT )
+      call ljust ( option, upopt )
+      call ucase ( upopt,  upopt )
 
-      IF ( UPOPT .EQ. 'SHORT' ) THEN
+      if ( upopt .eq. 'SHORT' ) then
 
 !
 !        Retrieve short message:
 !
-         CALL GETSMS ( MSG )
+         call getsms ( msg )
 
 
-      ELSE IF ( UPOPT .EQ. 'EXPLAIN' ) THEN
+      else if ( upopt .eq. 'EXPLAIN' ) then
 
 !
 !        Get current short message; then get explanation
 !        corresponding to current short error message:
 !
 
-         CALL GETSMS  ( SHRTMS )
-         CALL EXPLN   ( SHRTMS, MSG )
+         call getsms  ( shrtms )
+         call expln   ( shrtms, msg )
 
 
-      ELSE IF ( UPOPT .EQ. 'LONG' ) THEN
+      else if ( upopt .eq. 'LONG' ) then
 
 !
 !        Grab long error message:
 !
-         CALL GETLMS  ( MSG )
+         call getlms  ( msg )
 
-      ELSE
+      else
 
 !
 !        Invalid value of OPTION!!  Signal error, and set long
 !        error message as well:
 !
-         LOCOPT  =  OPTION
+         locopt  =  option
 
-         CALL SETMSG ( &
+         call setmsg ( &
                       'GETMSG: An invalid value of OPTION was'        // &
                       ' input.  Valid choices are ''SHORT'','         // &
                       '       ''EXPLAIN'', or ''LONG''.  The value'   // &
                       ' that was input was:  '                        // &
-                       LOCOPT                                      )
+                       locopt                                      )
 
-         CALL SIGERR ( 'SPICE(INVALIDMSGTYPE)' )
-
-
-
-      END IF
+         call sigerr ( 'SPICE(INVALIDMSGTYPE)' )
 
 
-      END
+
+      end if
+
+
+      end

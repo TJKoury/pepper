@@ -1,6 +1,6 @@
 !$Procedure RECLAT ( Rectangular to latitudinal coordinates )
 
-      SUBROUTINE RECLAT ( RECTAN, RADIUS, LON, LAT )
+      subroutine reclat ( rectan, radius, lon, lat )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RECTAN ( 3 )
-      DOUBLE PRECISION   RADIUS
-      DOUBLE PRECISION   LON
-      DOUBLE PRECISION   LAT
+      double precision   rectan ( 3 )
+      double precision   radius
+      double precision   lon
+      double precision   lat
 
 ! $ Brief_I/O
 !
@@ -381,40 +381,40 @@
 !
 !     Local variables.
 !
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
-      DOUBLE PRECISION Z
-      DOUBLE PRECISION BIG
+      double precision x
+      double precision y
+      double precision z
+      double precision big
 
 !
 !     Store rectangular coordinates in temporary variables
 !
-      BIG = MAX ( DABS(RECTAN(1)), DABS(RECTAN(2)), DABS(RECTAN(3)) )
+      big = max ( dabs(rectan(1)), dabs(rectan(2)), dabs(rectan(3)) )
 
-      IF ( BIG .GT. 0 ) THEN
+      if ( big .gt. 0 ) then
 
-         X      = RECTAN(1) / BIG
-         Y      = RECTAN(2) / BIG
-         Z      = RECTAN(3) / BIG
+         x      = rectan(1) / big
+         y      = rectan(2) / big
+         z      = rectan(3) / big
 
-         RADIUS = BIG * DSQRT (X*X + Y*Y + Z*Z)
+         radius = big * dsqrt (x*x + y*y + z*z)
 
-         LAT    = DATAN2 ( Z, DSQRT(X*X + Y*Y) )
+         lat    = datan2 ( z, dsqrt(x*x + y*y) )
 
-         X      = RECTAN(1)
-         Y      = RECTAN(2)
+         x      = rectan(1)
+         y      = rectan(2)
 
-         IF (X.EQ.0.D0 .AND. Y.EQ.0.D0) THEN
-            LON = 0.D0
-         ELSE
-            LON = DATAN2 (Y,X)
-         END IF
+         if (x.eq.0.d0 .and. y.eq.0.d0) then
+            lon = 0.d0
+         else
+            lon = datan2 (y,x)
+         end if
 
-      ELSE
-         RADIUS = 0.0D0
-         LAT    = 0.D0
-         LON   = 0.D0
-      END IF
+      else
+         radius = 0.0d0
+         lat    = 0.d0
+         lon   = 0.d0
+      end if
 
-      RETURN
-      END
+      return
+      end

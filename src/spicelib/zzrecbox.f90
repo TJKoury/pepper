@@ -1,6 +1,6 @@
 !$Procedure ZZRECBOX (Bounding box for rectangular volume element)
 
-      SUBROUTINE ZZRECBOX ( BOUNDS, CENTER, LX, LY, LZ, RADIUS )
+      subroutine zzrecbox ( bounds, center, lx, ly, lz, radius )
 
 ! $ Abstract
 !
@@ -26,14 +26,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      LX
-      DOUBLE PRECISION      LY
-      DOUBLE PRECISION      LZ
-      DOUBLE PRECISION      RADIUS
+      double precision      bounds ( 2, 3 )
+      double precision      center ( 3 )
+      double precision      lx
+      double precision      ly
+      double precision      lz
+      double precision      radius
 
 ! $ Brief_I/O
 !
@@ -124,9 +124,9 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -134,76 +134,76 @@
 !
 !     Element boundary indices:
 !
-      INTEGER               LOWER
-      PARAMETER           ( LOWER  = 1 )
+      integer               lower
+      parameter           ( lower  = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER  = 2 )
+      integer               upper
+      parameter           ( upper  = 2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DIAG   ( 3 )
-      DOUBLE PRECISION      L      ( 3 )
-      DOUBLE PRECISION      MAXCOR ( 3 )
-      DOUBLE PRECISION      MINCOR ( 3 )
+      double precision      diag   ( 3 )
+      double precision      l      ( 3 )
+      double precision      maxcor ( 3 )
+      double precision      mincor ( 3 )
 
-      INTEGER               I
+      integer               i
 
 !
 !     This routine uses discovery check-in. We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Get local copies of the bounds of the volume element.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         MINCOR(I) = BOUNDS(LOWER,I)
-         MAXCOR(I) = BOUNDS(UPPER,I)
-         L(I)      = MAXCOR(I) - MINCOR(I)
+         mincor(i) = bounds(lower,i)
+         maxcor(i) = bounds(upper,i)
+         l(i)      = maxcor(i) - mincor(i)
 
-         IF ( L(I) .LE. 0.D0 ) THEN
+         if ( l(i) .le. 0.d0 ) then
 
-            CALL CHKIN  ( 'ZZRECBOX'                               )
-            CALL SETMSG ( 'Coordinate # bounds were #:#; bounds ' &
+            call chkin  ( 'ZZRECBOX'                               )
+            call setmsg ( 'Coordinate # bounds were #:#; bounds ' &
             //            'must be strictly increasing.'           )
-            CALL ERRINT ( '#',  I                                  )
-            CALL ERRDP  ( '#',  MINCOR(I)                          )
-            CALL ERRDP  ( '#',  MAXCOR(I)                          )
-            CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)'                )
-            CALL CHKOUT ( 'ZZRECBOX'                               )
-            RETURN
+            call errint ( '#',  i                                  )
+            call errdp  ( '#',  mincor(i)                          )
+            call errdp  ( '#',  maxcor(i)                          )
+            call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                )
+            call chkout ( 'ZZRECBOX'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Set output box dimensions.
 !
-      LX = L(1)
-      LY = L(2)
-      LZ = L(3)
+      lx = l(1)
+      ly = l(2)
+      lz = l(3)
 
 !
 !     Compute the coordinates of the center of the box.
 !
-      DO I = 1, 3
-         CENTER(I) = MINCOR(I) + ( L(I)/2 )
-      END DO
+      do i = 1, 3
+         center(i) = mincor(i) + ( l(i)/2 )
+      end do
 
 !
 !     The radius is the distance from the center of the box
 !     to any corner.
 !
-      CALL VPACK ( LX/2, LY/2, LZ/2, DIAG )
+      call vpack ( lx/2, ly/2, lz/2, diag )
 
-      RADIUS = VNORM( DIAG )
+      radius = vnorm( diag )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure RECAZL ( Rectangular coordinates to AZ/EL )
 
-      SUBROUTINE RECAZL ( RECTAN, AZCCW, ELPLSZ, RANGE, AZ, EL )
+      subroutine recazl ( rectan, azccw, elplsz, range, az, el )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RECTAN ( 3 )
-      LOGICAL            AZCCW
-      LOGICAL            ELPLSZ
-      DOUBLE PRECISION   RANGE
-      DOUBLE PRECISION   AZ
-      DOUBLE PRECISION   EL
+      double precision   rectan ( 3 )
+      logical            azccw
+      logical            elplsz
+      double precision   range
+      double precision   az
+      double precision   el
 
 ! $ Brief_I/O
 !
@@ -540,7 +540,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
+      double precision      twopi
 
 !
 !     Call the subroutine RECRAD to convert the rectangular coordinates
@@ -557,13 +557,13 @@
 !     The range of AZ in the following call is that of RA.
 !     The range of EL is that of DEC.
 !
-      CALL RECRAD ( RECTAN, RANGE, AZ, EL )
+      call recrad ( rectan, range, az, el )
 
 !
 !     If AZCCW is set to .FALSE. the azimuth is measured clockwise from
 !     the +X axis about the +Z axis.
 !
-      IF ( .NOT. AZCCW ) THEN
+      if ( .not. azccw ) then
 !
 !        Azimuth increases in the clockwise direction.
 !
@@ -571,7 +571,7 @@
 !        zero to 2*pi. The value of AZ returned from RECRAD is never
 !        negative, but it may be zero.
 !
-         IF ( AZ .GT. 0.D0 ) THEN
+         if ( az .gt. 0.d0 ) then
 !
 !            Replace AZ with its 2*pi complement.
 !
@@ -582,27 +582,27 @@
 !            Although we expect the result to always be non-negative,
 !            we take no chances.
 !
-             AZ = MAX( TWOPI() - AZ, 0.D0 )
+             az = max( twopi() - az, 0.d0 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If ELPLSZ is set to .FALSE. the elevation is measured positive
 !     from the XY plane toward the -Z axis.
 !
-      IF ( .NOT. ELPLSZ ) THEN
+      if ( .not. elplsz ) then
 !
 !        Negate only non-zero values of EL. Avoid creating
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         IF ( EL .NE. 0.D0 ) THEN
-            EL = -EL
-         END IF
+         if ( el .ne. 0.d0 ) then
+            el = -el
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

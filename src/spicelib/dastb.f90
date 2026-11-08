@@ -1,6 +1,6 @@
 !$Procedure DASTB ( DAS, convert transfer file to binary file )
 
-      SUBROUTINE DASTB ( XFRLUN, BINFIL )
+      subroutine dastb ( xfrlun, binfil )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               XFRLUN
-      CHARACTER*(*)         BINFIL
+      integer               xfrlun
+      character*(*)         binfil
 
 ! $ Brief_I/O
 !
@@ -239,8 +239,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local Parameters
 !
@@ -253,118 +253,118 @@
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'  )
 !
-      CHARACTER*(*)         BEGCOM
-      PARAMETER           ( BEGCOM = 'BEGIN_COMMENT_BLOCK'    )
+      character*(*)         begcom
+      parameter           ( begcom = 'BEGIN_COMMENT_BLOCK'    )
 
-      CHARACTER*(*)         ENDCOM
-      PARAMETER           ( ENDCOM = 'END_COMMENT_BLOCK'      )
+      character*(*)         endcom
+      parameter           ( endcom = 'END_COMMENT_BLOCK'      )
 
-      CHARACTER*(*)         BCBLK
-      PARAMETER           ( BCBLK  = 'BEGIN_CHARACTER_BLOCK'  )
+      character*(*)         bcblk
+      parameter           ( bcblk  = 'BEGIN_CHARACTER_BLOCK'  )
 
-      CHARACTER*(*)         ECBLK
-      PARAMETER           ( ECBLK  = 'END_CHARACTER_BLOCK'    )
+      character*(*)         ecblk
+      parameter           ( ecblk  = 'END_CHARACTER_BLOCK'    )
 
-      CHARACTER*(*)         BDBLK
-      PARAMETER           ( BDBLK  = 'BEGIN_DP_BLOCK'         )
+      character*(*)         bdblk
+      parameter           ( bdblk  = 'BEGIN_DP_BLOCK'         )
 
-      CHARACTER*(*)         EDBLK
-      PARAMETER           ( EDBLK  = 'END_DP_BLOCK'           )
+      character*(*)         edblk
+      parameter           ( edblk  = 'END_DP_BLOCK'           )
 
-      CHARACTER*(*)         BIBLK
-      PARAMETER           ( BIBLK  = 'BEGIN_INTEGER_BLOCK'    )
+      character*(*)         biblk
+      parameter           ( biblk  = 'BEGIN_INTEGER_BLOCK'    )
 
-      CHARACTER*(*)         EIBLK
-      PARAMETER           ( EIBLK  = 'END_INTEGER_BLOCK'      )
+      character*(*)         eiblk
+      parameter           ( eiblk  = 'END_INTEGER_BLOCK'      )
 
-      CHARACTER*(*)         TCMBLK
-      PARAMETER           ( TCMBLK = 'TOTAL_COMMENT_BLOCKS'   )
+      character*(*)         tcmblk
+      parameter           ( tcmblk = 'TOTAL_COMMENT_BLOCKS'   )
 
-      CHARACTER*(*)         TCBLKS
-      PARAMETER           ( TCBLKS = 'TOTAL_CHARACTER_BLOCKS' )
+      character*(*)         tcblks
+      parameter           ( tcblks = 'TOTAL_CHARACTER_BLOCKS' )
 
-      CHARACTER*(*)         TDBLKS
-      PARAMETER           ( TDBLKS = 'TOTAL_DP_BLOCKS'        )
+      character*(*)         tdblks
+      parameter           ( tdblks = 'TOTAL_DP_BLOCKS'        )
 
-      CHARACTER*(*)         TIBLKS
-      PARAMETER           ( TIBLKS = 'TOTAL_INTEGER_BLOCKS'   )
+      character*(*)         tiblks
+      parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'   )
 
-      INTEGER               CBFLEN
-      PARAMETER           ( CBFLEN = 4                        )
+      integer               cbflen
+      parameter           ( cbflen = 4                        )
 
-      INTEGER               CRLEN
-      PARAMETER           ( CRLEN  = 1024                     )
+      integer               crlen
+      parameter           ( crlen  = 1024                     )
 
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 255                      )
+      integer               linlen
+      parameter           ( linlen = 255                      )
 
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN = 320                      )
+      integer               errlen
+      parameter           ( errlen = 320                      )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8                        )
+      integer               idwlen
+      parameter           ( idwlen = 8                        )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60                       )
+      integer               ifnlen
+      parameter           ( ifnlen = 60                       )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 1024                     )
+      integer               bufsiz
+      parameter           ( bufsiz = 1024                     )
 
-      INTEGER               BCBPOS
-      PARAMETER           ( BCBPOS = 1                        )
+      integer               bcbpos
+      parameter           ( bcbpos = 1                        )
 
-      INTEGER               ECBPOS
-      PARAMETER           ( ECBPOS = CBFLEN                   )
+      integer               ecbpos
+      parameter           ( ecbpos = cbflen                   )
 !
 !     Local variables
 !
-      CHARACTER*(CBFLEN)    CBUFFR(BUFSIZ)
-      CHARACTER*(CRLEN)     CRECRD
-      CHARACTER*(ERRLEN)    ERRMSG
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
-      CHARACTER*(LINLEN)    LINE
-      CHARACTER*(LINLEN)    REST
-      CHARACTER*(IDWLEN)    TARCH
-      CHARACTER*(IDWLEN)    TTYPE
-      CHARACTER*(LINLEN)    WORD
+      character*(cbflen)    cbuffr(bufsiz)
+      character*(crlen)     crecrd
+      character*(errlen)    errmsg
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
+      character*(linlen)    line
+      character*(linlen)    rest
+      character*(idwlen)    tarch
+      character*(idwlen)    ttype
+      character*(linlen)    word
 
-      DOUBLE PRECISION      DBUFFR(BUFSIZ)
+      double precision      dbuffr(bufsiz)
 
-      INTEGER               BCOUNT
-      INTEGER               BINDEX
-      INTEGER               BLKCNT
-      INTEGER               DASLUN
-      INTEGER               DTACNT
-      INTEGER               ECOUNT
-      INTEGER               EINDEX
-      INTEGER               ERRPTR
-      INTEGER               HANDLE
-      INTEGER               IBUFFR(BUFSIZ)
-      INTEGER               IOSTAT
-      INTEGER               NCDATA
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NDDATA
-      INTEGER               NIDATA
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NUMBLK
-      INTEGER               NUMDTA
-      INTEGER               NUMLFT
-      INTEGER               RECNO
-      INTEGER               TCOUNT
+      integer               bcount
+      integer               bindex
+      integer               blkcnt
+      integer               daslun
+      integer               dtacnt
+      integer               ecount
+      integer               eindex
+      integer               errptr
+      integer               handle
+      integer               ibuffr(bufsiz)
+      integer               iostat
+      integer               ncdata
+      integer               ncomc
+      integer               ncomr
+      integer               nddata
+      integer               nidata
+      integer               nresvc
+      integer               nresvr
+      integer               numblk
+      integer               numdta
+      integer               numlft
+      integer               recno
+      integer               tcount
 
-      LOGICAL               INBLK
-      LOGICAL               MORE
+      logical               inblk
+      logical               more
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASTB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASTB' )
+      end if
 !
 !     A DAS transfer file contains in an encoded form all of the data
 !     from the original binary DAS file. This includes the reserved
@@ -506,158 +506,158 @@
 !     error occurs, set an appropriate error message and signal the
 !     error.
 !
-      IDWORD = ' '
-      READ (XFRLUN,*,IOSTAT=IOSTAT) IDWORD
+      idword = ' '
+      read (xfrlun,*,iostat=iostat) idword
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error reading the file ID word from the'  // &
+         call setmsg ( 'Error reading the file ID word from the'  // &
                        ' DAS transfer file: #. IOSTAT = #.'        )
-         CALL ERRFNM ( '#', XFRLUN                                 )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT ( 'DASTB'                                     )
-         RETURN
+         call errfnm ( '#', xfrlun                                 )
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout ( 'DASTB'                                     )
+         return
 
-      END IF
+      end if
 !
 !     Check the DAS ID word. When checking the ID word all we care about
 !     is that we are attempting to convert a DAS file. So, split the
 !     ID word into its architecture and type and check the architecture.
 !
-      CALL IDW2AT ( IDWORD, TARCH, TTYPE )
+      call idw2at ( idword, tarch, ttype )
 
-      IF ( TARCH .NE. 'DAS' ) THEN
+      if ( tarch .ne. 'DAS' ) then
 
-         CALL SETMSG ( 'File architecture was not ''DAS'' for' // &
+         call setmsg ( 'File architecture was not ''DAS'' for' // &
                        ' file #.'                               )
-         CALL ERRFNM ( '#', XFRLUN                              )
-         CALL SIGERR ( 'SPICE(NOTADASFILE)'                     )
-         CALL CHKOUT ( 'DASTB'                                  )
-         RETURN
+         call errfnm ( '#', xfrlun                              )
+         call sigerr ( 'SPICE(NOTADASFILE)'                     )
+         call chkout ( 'DASTB'                                  )
+         return
 
-      END IF
+      end if
 !
 !     Read the internal filename for the DAS file.
 !
-      IFNAME = ' '
-      READ (XFRLUN,*,IOSTAT=IOSTAT) IFNAME
+      ifname = ' '
+      read (xfrlun,*,iostat=iostat) ifname
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Error reading the internal filename from' // &
+         call setmsg ( 'Error reading the internal filename from' // &
                        ' the DAS transfer file: #. IOSTAT = #.'    )
-         CALL ERRFNM ( '#', XFRLUN                                 )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-         CALL CHKOUT ( 'DASTB'                                     )
-         RETURN
+         call errfnm ( '#', xfrlun                                 )
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         call chkout ( 'DASTB'                                     )
+         return
 
-      END IF
+      end if
 !
 !     Open a new binary DAS file and write its file record.
 !
-      CALL DASONW ( BINFIL, TTYPE, IFNAME, 0, HANDLE )
+      call dasonw ( binfil, ttype, ifname, 0, handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while opening the new DAS file,
 !        then check out and return.
 !
-         CALL CHKOUT ( 'DASTB' )
-         RETURN
+         call chkout ( 'DASTB' )
+         return
 
-      END IF
+      end if
 !
 !     Write the initial file record to the newly opened DAS file. This
 !     call will overwrite the ID word set when we opened the file with
 !     the ID word from the DAS transfer file. We got to this point, so
 !     we know that the ID word was a good one.
 !
-      NCOMR  = 0
-      NCOMC  = 0
-      NRESVR = 0
-      NRESVC = 0
-      CALL DASWFR ( HANDLE, &
-                    IDWORD, IFNAME, &
-                    NRESVR, NRESVC, &
-                    NCOMR,  NCOMC   )
+      ncomr  = 0
+      ncomc  = 0
+      nresvr = 0
+      nresvc = 0
+      call daswfr ( handle, &
+                    idword, ifname, &
+                    nresvr, nresvc, &
+                    ncomr,  ncomc   )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If an error occurred while writing the DAS file record,
 !        attempt to close the binary file, then check out and return.
 !
-         CALL DASCLS ( HANDLE  )
-         CALL CHKOUT ( 'DASTB' )
-         RETURN
+         call dascls ( handle  )
+         call chkout ( 'DASTB' )
+         return
 
-      END IF
+      end if
 !
 !     Read and decode the number of reserved records and reserved
 !     characters.
 !
-      CALL RDENCI ( XFRLUN, 1, NRESVR )
-      CALL RDENCI ( XFRLUN, 1, NRESVC )
+      call rdenci ( xfrlun, 1, nresvr )
+      call rdenci ( xfrlun, 1, nresvc )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASTB' )
-         RETURN
+         call chkout ( 'DASTB' )
+         return
 
-      END IF
+      end if
 !
 !     Check to be sure that the number of reserved records and the
 !     number of reserved characters are not being used. The DAS
 !     reserved record area is not currently implemented, so nobody
 !     should be using it.
 !
-      IF ( NRESVC .NE. 0 ) THEN
+      if ( nresvc .ne. 0 ) then
 !
 !        Close the file, signal the error, and exit.
 !
-         CALL DASCLS ( HANDLE                                        )
-         CALL SETMSG ( 'The number of reserved characters was'      // &
+         call dascls ( handle                                        )
+         call setmsg ( 'The number of reserved characters was'      // &
                        ' nonzero (#) in file: #, but the DAS'       // &
                        ' reserved record area has NOT been'         // &
                        ' implemented yet!'                           )
-         CALL ERRINT ( '#', NRESVC                                   )
-         CALL ERRFNM ( '#', XFRLUN                                   )
-         CALL SIGERR ( 'SPICE(BADDASFILE)'                           )
-         CALL CHKOUT ( 'DASTB' )
-         RETURN
+         call errint ( '#', nresvc                                   )
+         call errfnm ( '#', xfrlun                                   )
+         call sigerr ( 'SPICE(BADDASFILE)'                           )
+         call chkout ( 'DASTB' )
+         return
 
-      END IF
+      end if
 
-      IF ( NRESVR .NE. 0 ) THEN
+      if ( nresvr .ne. 0 ) then
 !
 !        Close the file, signal the error, and exit.
 !
-         CALL DASCLS ( HANDLE                                        )
-         CALL SETMSG ( 'The number of reserved records was'         // &
+         call dascls ( handle                                        )
+         call setmsg ( 'The number of reserved records was'         // &
                        ' nonzero (#) in file: #, but the DAS'       // &
                        ' reserved record area has NOT been'         // &
                        ' implemented yet!'                           )
-         CALL ERRINT ( '#', NRESVR                                   )
-         CALL ERRFNM ( '#', XFRLUN                                   )
-         CALL SIGERR ( 'SPICE(BADDASFILE)'                           )
-         CALL CHKOUT ( 'DASTB' )
-         RETURN
+         call errint ( '#', nresvr                                   )
+         call errfnm ( '#', xfrlun                                   )
+         call sigerr ( 'SPICE(BADDASFILE)'                           )
+         call chkout ( 'DASTB' )
+         return
 
-      END IF
+      end if
 !
 !     Read and decode the number of comment records and comment
 !     characters.
 !
-      CALL RDENCI ( XFRLUN, 1, NCOMR )
-      CALL RDENCI ( XFRLUN, 1, NCOMC )
+      call rdenci ( xfrlun, 1, ncomr )
+      call rdenci ( xfrlun, 1, ncomc )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASTB' )
-         RETURN
+         call chkout ( 'DASTB' )
+         return
 
-      END IF
+      end if
 !
 !     Begin converting the DAS transfer file into an equivalent
 !     binary DAS file here.
@@ -677,7 +677,7 @@
 !
 !     The comments, if there are any.
 !
-      IF ( NCOMC .GT. 0 ) THEN
+      if ( ncomc .gt. 0 ) then
 !
 !        We assume that the condition NCOMC > 0 and NCOMR <= 0
 !        cannot occur.
@@ -686,33 +686,33 @@
 !        so just add the comments. But first, convert the DAS file
 !        handle into its equivalent logical unit.
 !
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., DASLUN )
+         call zzddhhlu ( handle, 'DAS', .false., daslun )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           If an error occurred, attempt to close the binary file,
 !           then check out and return.
 !
-            CALL DASCLS ( HANDLE  )
-            CALL CHKOUT ( 'DASTB' )
-            RETURN
+            call dascls ( handle  )
+            call chkout ( 'DASTB' )
+            return
 
-         END IF
+         end if
 !
 !        Allocate the necessary comment records.
 !
-         CALL DASACR ( HANDLE, NCOMR )
+         call dasacr ( handle, ncomr )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           If an error occurred, attempt to close the binary file,
 !           then checkout and return.
 !
-            CALL DASCLS ( HANDLE  )
-            CALL CHKOUT ( 'DASTB' )
-            RETURN
+            call dascls ( handle  )
+            call chkout ( 'DASTB' )
+            return
 
-         END IF
+         end if
 !
 !        Initialize a few things: the block counter, the data
 !        counter, and the starting record position. The starting
@@ -720,398 +720,398 @@
 !        record. We will increment the record number before we
 !        write anything.
 !
-         BLKCNT = 0
-         DTACNT = 0
-         RECNO  = 1 + NRESVR
+         blkcnt = 0
+         dtacnt = 0
+         recno  = 1 + nresvr
 !
 !        We currently have more to process.
 !
-         MORE  = .TRUE.
+         more  = .true.
 !
 !        We are currently not processing a comment block.
 !
-         INBLK = .FALSE.
+         inblk = .false.
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            CRECRD = ' '
+            crecrd = ' '
 
-            READ (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE
+            read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              If an error occurred while reading from the DAS transfer
 !              file close the binary file, set an appropriate error
 !              message, then check out and return.
 !
-               CALL DASCLS ( HANDLE                              )
-               CALL SETMSG ( 'Error reading from the DAS'       // &
+               call dascls ( handle                              )
+               call setmsg ( 'Error reading from the DAS'       // &
                              ' transfer file #. IOSTAT = #.'     )
-               CALL ERRFNM ( '#', XFRLUN                         )
-               CALL ERRINT ( '#', IOSTAT                         )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'             )
-               CALL CHKOUT ( 'DASTB'                             )
-               RETURN
+               call errfnm ( '#', xfrlun                         )
+               call errint ( '#', iostat                         )
+               call sigerr ( 'SPICE(FILEREADFAILED)'             )
+               call chkout ( 'DASTB'                             )
+               return
 
-            END IF
+            end if
 !
 !           At this point, we should be beginning a comment block,
 !           ending a comment block, or scanning for the total number
 !           of comment blocks. So look for the appropriate keyword.
 !
-            CALL NEXTWD ( LINE, WORD, REST )
+            call nextwd ( line, word, rest )
 
-            IF ( WORD .EQ. BEGCOM ) THEN
+            if ( word .eq. begcom ) then
 !
 !              Get the comment block index.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Begin comment block error, could'   // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Begin comment block error, could'   // &
                                 ' not parse block number. Error: #'  // &
                                 ' File: #'                            )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of characters in the block.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Begin comment block error, could'   // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Begin comment block error, could'   // &
                                 ' not parse the data count for'      // &
                                 ' block: #. Error: # File: #'         )
-                  CALL ERRINT ( '#', BINDEX                           )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errint ( '#', bindex                           )
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we are inside a comment block, so set
 !              the in block flag, INBLK, to .TRUE. and increment the
 !              block counter.
 !
-               INBLK  = .TRUE.
-               BLKCNT = BLKCNT + 1
+               inblk  = .true.
+               blkcnt = blkcnt + 1
 
-            ELSE IF ( WORD .EQ. ENDCOM ) THEN
+            else if ( word .eq. endcom ) then
 !
 !              Get the data block index.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, EINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, eindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the end comment
 !                 block index, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'End comment block error, could'     // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'End comment block error, could'     // &
                                 ' not parse block number. Error: #'  // &
                                 ' File: #'                            )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of characters in the DAS array.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, ECOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, ecount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'End comment block error, could'   // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'End comment block error, could'   // &
                                 ' not parse the data count for '   // &
                                 ' block: #. Error: # File: #'       )
-                  CALL ERRINT ( '#', EINDEX                         )
-                  CALL ERRCH  ( '#', ERRMSG                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errint ( '#', eindex                         )
+                  call errch  ( '#', errmsg                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               IF ( EINDEX .NE. BINDEX ) THEN
+               if ( eindex .ne. bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'Comment block index mismatch:'    // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'Comment block index mismatch:'    // &
                                 ' Beginning index: #; Ending'      // &
                                 ' index: #. File: #'                )
-                  CALL ERRINT ( '#', BINDEX                         )
-                  CALL ERRINT ( '#', EINDEX                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errint ( '#', bindex                         )
+                  call errint ( '#', eindex                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending comment data
 !              counts match.
 !
-               IF ( ECOUNT .NE. BCOUNT ) THEN
+               if ( ecount .ne. bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Comment block count mismatch:'   // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Comment block count mismatch:'   // &
                                 ' Beginning count: #;'            // &
                                 ' Ending count: #. File: #'        )
-                  CALL ERRINT ( '#', BCOUNT                        )
-                  CALL ERRINT ( '#', ECOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', bcount                        )
+                  call errint ( '#', ecount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully ended the
 !              processing of a comment block, so set the in block
 !              flag INBLK, to .FALSE..
 !
-               INBLK = .FALSE.
+               inblk = .false.
 
-            ELSE IF ( WORD .EQ. TCMBLK ) THEN
+            else if ( word .eq. tcmblk ) then
 !
 !              We have the total comment blocks keyword to parse, so
 !              get the total number of comment blocks processed.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, NUMBLK, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, numblk, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                               )
-                  CALL SETMSG ( 'Comment block count error, could'  // &
+                  call dascls ( handle                               )
+                  call setmsg ( 'Comment block count error, could'  // &
                                 ' not parse the total number of'    // &
                                 ' character blocks: #. File: #'      )
-                  CALL ERRCH  ( '#', ERRMSG                          )
-                  CALL ERRFNM ( '#', XFRLUN                          )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  CALL CHKOUT ( 'DASTB'                              )
-                  RETURN
+                  call errch  ( '#', errmsg                          )
+                  call errfnm ( '#', xfrlun                          )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
+                  call chkout ( 'DASTB'                              )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the total count of comment characters.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, TCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, tcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the comment
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                           )
-                  CALL SETMSG ( 'Comment count error, could'    // &
+                  call dascls ( handle                           )
+                  call setmsg ( 'Comment count error, could'    // &
                                 ' not parse the total count.'   // &
                                 ' Error: # File: #'              )
-                  CALL ERRCH  ( '#', ERRMSG                      )
-                  CALL ERRFNM ( '#', XFRLUN                      )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  CALL CHKOUT ( 'DASTB'                          )
-                  RETURN
+                  call errch  ( '#', errmsg                      )
+                  call errfnm ( '#', xfrlun                      )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
+                  call chkout ( 'DASTB'                          )
+                  return
 
-               END IF
+               end if
 !
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               IF ( BLKCNT .NE. NUMBLK ) THEN
+               if ( blkcnt .ne. numblk ) then
 !
 !                 If the computed number of comment blocks and the
 !                 number of comment blocks from the text file do
 !                 not match, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'The number of comment data'         // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'The number of comment data'         // &
                                 ' blocks processed (#) was not'      // &
                                 ' equal to the number of comment'    // &
                                 ' data blocks placed in the DAS'     // &
                                 ' text file (#). File: #'             )
-                  CALL ERRINT ( '#', BLKCNT                           )
-                  CALL ERRINT ( '#', NUMBLK                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errint ( '#', blkcnt                           )
+                  call errint ( '#', numblk                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the total count and the computed count
 !              match.
 !
-               IF ( TCOUNT .NE. DTACNT ) THEN
+               if ( tcount .ne. dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Comment count mismatch:'         // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Comment count mismatch:'         // &
                                 ' computed count: #;'             // &
                                 ' expected count: #. File: #'      )
-                  CALL ERRINT ( '#', DTACNT                        )
-                  CALL ERRINT ( '#', TCOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', dtacnt                        )
+                  call errint ( '#', tcount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully processed the
 !              entire DAS comment area in the text file, so there is
 !              no more comment data.
 !
-               MORE = .FALSE.
+               more = .false.
 
-            ELSE
+            else
 !
 !              We got an unknown keyword of some sort, so set an
 !              appropriate error message, close the DAS file, and
 !              return.
 !
-               CALL DASCLS ( HANDLE                                    )
-               CALL SETMSG ( 'Unknown keyword ''#'' encountered'      // &
+               call dascls ( handle                                    )
+               call setmsg ( 'Unknown keyword ''#'' encountered'      // &
                              ' while processing the DAS transfer'     // &
                              ' file #.'                                )
-               CALL ERRCH  ( '#', WORD                                 )
-               CALL ERRFNM ( '#', XFRLUN                               )
-               CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'               )
-               CALL CHKOUT ( 'DASTB'                                   )
-               RETURN
+               call errch  ( '#', word                                 )
+               call errfnm ( '#', xfrlun                               )
+               call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
+               call chkout ( 'DASTB'                                   )
+               return
 
-            END IF
+            end if
 !
 !           If we have begun a block, then process it. Otherwise, we
 !           have ended a block.
 !
-            IF ( INBLK ) THEN
+            if ( inblk ) then
 !
 !              Increment the record number by one for each comment
 !              data block we process, because each block contains a
 !              comment record.
 !
-               RECNO = RECNO + 1
+               recno = recno + 1
 !
 !              Set the count of comment characters yet to be decoded and
 !              placed in the binary DAS file.
 !
-               NUMLFT = BCOUNT
+               numlft = bcount
 
-               DO WHILE ( NUMLFT .GT. 0 )
+               do while ( numlft .gt. 0 )
 !
 !                 Now read and decode the data in the current
 !                 comment data block, placing the data in the
 !                 comment area of the binary DAS file.
 !
-                  IF ( NUMLFT .GE. CRLEN ) THEN
+                  if ( numlft .ge. crlen ) then
 
-                     NUMDTA = CRLEN
+                     numdta = crlen
 
-                  ELSE
+                  else
 
-                     NUMDTA = NUMLFT
+                     numdta = numlft
 
-                  END IF
+                  end if
 !
 !                 Read and decode a record of encoded comment data
 !                 from the text file.
 !
-                  CALL RDENCC ( XFRLUN, NUMDTA, CRECRD )
+                  call rdencc ( xfrlun, numdta, crecrd )
 !
 !                 Write the comment data to the comment area in the
 !                 binary DAS file.
 !
-                  CALL DASIOC ( 'WRITE', DASLUN, RECNO, CRECRD )
+                  call dasioc ( 'WRITE', daslun, recno, crecrd )
 
-                  IF ( FAILED() ) THEN
+                  if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
 !                    binary file, then checkout and return.
 !
-                     CALL DASCLS ( HANDLE  )
-                     CALL CHKOUT ( 'DASTB' )
-                     RETURN
+                     call dascls ( handle  )
+                     call chkout ( 'DASTB' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Decrement the counter for the amount of data
 !                 remaining to be moved from the current comment
 !                 block, NUMLFT.
 !
-                  NUMLFT = NUMLFT - NUMDTA
+                  numlft = numlft - numdta
 !
 !                 Increment the counter for the amount of data that
 !                 has been successfully moved into the comment area
 !                 of the binary DAS file.
 !
-                  DTACNT = DTACNT + NUMDTA
+                  dtacnt = dtacnt + numdta
 
-               END DO
+               end do
 !
 !              At this point, we have finished reading in an entire
 !              comment block.
 !
-            END IF
+            end if
 !
 !           If we got to here, we have successfully written a comment
 !           block to the binary file.
 !
-         END DO
+         end do
 !
 !        At this point, we will have successfully written the entire
 !        comment area to the binary DAS file, if there was a comment
@@ -1120,345 +1120,345 @@
 !        Write the file record to the DAS file, to update the number
 !        of comment characters.
 !
-         CALL DASWFR ( HANDLE, &
-                       IDWORD, IFNAME, &
-                       NRESVR, NRESVC, &
-                       NCOMR,  NCOMC   )
+         call daswfr ( handle, &
+                       idword, ifname, &
+                       nresvr, nresvc, &
+                       ncomr,  ncomc   )
 
-      END IF
+      end if
 !
 !     Read the data counts from the DAS transfer file. These will be
 !     useful in determining which data types to expect in the text file
 !     when converting back to binary.
 !
-      CALL RDENCI ( XFRLUN, 1, NCDATA )
-      CALL RDENCI ( XFRLUN, 1, NDDATA )
-      CALL RDENCI ( XFRLUN, 1, NIDATA )
+      call rdenci ( xfrlun, 1, ncdata )
+      call rdenci ( xfrlun, 1, nddata )
+      call rdenci ( xfrlun, 1, nidata )
 !
 !     Process the character data array, if there is some character data.
 !
-      IF ( NCDATA .GT. 0 ) THEN
+      if ( ncdata .gt. 0 ) then
 !
 !        Initialize a few things: the block counter, and the data
 !        counter.
 !
-         BLKCNT = 0
-         DTACNT = 0
+         blkcnt = 0
+         dtacnt = 0
 !
 !        We currently have more to process.
 !
-         MORE  = .TRUE.
+         more  = .true.
 !
 !        We are currently not processing a data block.
 !
-         INBLK = .FALSE.
+         inblk = .false.
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            READ (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE
+            read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
 !              message, then check out and return.
 !
-               CALL DASCLS ( HANDLE                              )
-               CALL SETMSG ( 'Error reading from the DAS'       // &
+               call dascls ( handle                              )
+               call setmsg ( 'Error reading from the DAS'       // &
                              ' transfer file #. IOSTAT = #.'     )
-               CALL ERRFNM ( '#', XFRLUN                         )
-               CALL ERRINT ( '#', IOSTAT                         )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'             )
-               CALL CHKOUT ( 'DASTB'                             )
-               RETURN
+               call errfnm ( '#', xfrlun                         )
+               call errint ( '#', iostat                         )
+               call sigerr ( 'SPICE(FILEREADFAILED)'             )
+               call chkout ( 'DASTB'                             )
+               return
 
-            END IF
+            end if
 !
 !           At this point, we should be beginning a data block, ending a
 !           data block, or scanning for the total number of data blocks.
 !           So look for the appropriate keyword.
 !
-            CALL NEXTWD ( LINE, WORD, REST )
+            call nextwd ( line, word, rest )
 
-            IF ( WORD .EQ. BCBLK ) THEN
+            if ( word .eq. bcblk ) then
 !
 !              Get the block number.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'Begin character block error,'     // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'Begin character block error,'     // &
                                 ' could not parse block number.'   // &
                                 ' Error: # File: #'                 )
-                  CALL ERRCH  ( '#', ERRMSG                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errch  ( '#', errmsg                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of characters in the block.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                               )
-                  CALL SETMSG ( 'Begin character block error,'      // &
+                  call dascls ( handle                               )
+                  call setmsg ( 'Begin character block error,'      // &
                                 ' could not parse the data count'   // &
                                 ' for block: #. Error: # File: #'    )
-                  CALL ERRINT ( '#', BINDEX                          )
-                  CALL ERRCH  ( '#', ERRMSG                          )
-                  CALL ERRFNM ( '#', XFRLUN                          )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  CALL CHKOUT ( 'DASTB'                              )
-                  RETURN
+                  call errint ( '#', bindex                          )
+                  call errch  ( '#', errmsg                          )
+                  call errfnm ( '#', xfrlun                          )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
+                  call chkout ( 'DASTB'                              )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we are inside a data block, so set
 !              the in block flag, INBLK, to .TRUE. and increment the
 !              data block counter.
 !
-               INBLK  = .TRUE.
-               BLKCNT = BLKCNT + 1
+               inblk  = .true.
+               blkcnt = blkcnt + 1
 
-            ELSE IF ( WORD .EQ. ECBLK ) THEN
+            else if ( word .eq. ecblk ) then
 !
 !              Get the data block index.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, EINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, eindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'End character block error,'       // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'End character block error,'       // &
                                 ' could not parse block number.'   // &
                                 ' Error: # File: #'                 )
-                  CALL ERRCH  ( '#', ERRMSG                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errch  ( '#', errmsg                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of characters in the DAS array.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, ECOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, ecount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'End character block error, could' // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'End character block error, could' // &
                                 ' not parse the data count for'    // &
                                 ' block: #. Error: # File: #'       )
-                  CALL ERRINT ( '#', EINDEX                         )
-                  CALL ERRCH  ( '#', ERRMSG                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errint ( '#', eindex                         )
+                  call errch  ( '#', errmsg                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               IF ( EINDEX .NE. BINDEX ) THEN
+               if ( eindex .ne. bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'Character block index mismatch:'  // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'Character block index mismatch:'  // &
                                 ' Beginning index: #; Ending'      // &
                                 ' index: #. File: #'                )
-                  CALL ERRINT ( '#', BINDEX                         )
-                  CALL ERRINT ( '#', EINDEX                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errint ( '#', bindex                         )
+                  call errint ( '#', eindex                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array data
 !              counts match.
 !
-               IF ( ECOUNT .NE. BCOUNT ) THEN
+               if ( ecount .ne. bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Character block count mismatch:' // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Character block count mismatch:' // &
                                 ' Beginning count: #;'            // &
                                 ' Ending count: #. File: #'        )
-                  CALL ERRINT ( '#', BCOUNT                        )
-                  CALL ERRINT ( '#', ECOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', bcount                        )
+                  call errint ( '#', ecount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully ended the
 !              processing of a data block, so set the in block flag,
 !              INBLK, to  .FALSE..
 !
-               INBLK = .FALSE.
+               inblk = .false.
 
-            ELSE IF ( WORD .EQ. TCBLKS ) THEN
+            else if ( word .eq. tcblks ) then
 !
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, NUMBLK, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, numblk, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Block count error, could not parse' // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Block count error, could not parse' // &
                                 ' the total number of character'     // &
                                 ' blocks: #. File: #'                 )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the total count of characters.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, TCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, tcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the character
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                           )
-                  CALL SETMSG ( 'Character count error, could'  // &
+                  call dascls ( handle                           )
+                  call setmsg ( 'Character count error, could'  // &
                                 ' not parse the total count.'   // &
                                 ' Error: # File: #'              )
-                  CALL ERRCH  ( '#', ERRMSG                      )
-                  CALL ERRFNM ( '#', XFRLUN                      )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  CALL CHKOUT ( 'DASTB'                          )
-                  RETURN
+                  call errch  ( '#', errmsg                      )
+                  call errfnm ( '#', xfrlun                      )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
+                  call chkout ( 'DASTB'                          )
+                  return
 
-               END IF
+               end if
 !
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               IF ( BLKCNT .NE. NUMBLK ) THEN
+               if ( blkcnt .ne. numblk ) then
 !
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
 !                 the binary file, set an appropriate error message,
 !                 then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'The number of character data'       // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'The number of character data'       // &
                                 ' blocks processed (#) was not'      // &
                                 ' equal to the number of character'  // &
                                 ' data blocks placed in the DAS'     // &
                                 ' transfer file (#). File: #'         )
-                  CALL ERRINT ( '#', BLKCNT                           )
-                  CALL ERRINT ( '#', NUMBLK                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errint ( '#', blkcnt                           )
+                  call errint ( '#', numblk                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the total count and the computed count
 !              match.
 !
-               IF ( TCOUNT .NE. DTACNT ) THEN
+               if ( tcount .ne. dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Character count mismatch:'       // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Character count mismatch:'       // &
                                 ' computed count: #;'             // &
                                 ' expected count: #. File: #'      )
-                  CALL ERRINT ( '#', DTACNT                        )
-                  CALL ERRINT ( '#', TCOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', dtacnt                        )
+                  call errint ( '#', tcount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully processed the
 !              entire character data portion of the DAS transfer file,
 !              so there is no more character data.
 !
-               MORE = .FALSE.
+               more = .false.
 
-            ELSE
+            else
 !
 !              We got an unknown keyword of some sort, so set an
 !              appropriate error message, close the DAS file, and
 !              return.
 !
-               CALL DASCLS ( HANDLE                                    )
-               CALL SETMSG ( 'Unknown keyword ''#'' encountered'      // &
+               call dascls ( handle                                    )
+               call setmsg ( 'Unknown keyword ''#'' encountered'      // &
                              ' while processing the DAS transfer'     // &
                              ' file #.'                                )
-               CALL ERRCH  ( '#', WORD                                 )
-               CALL ERRFNM ( '#', XFRLUN                               )
-               CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'               )
-               CALL CHKOUT ( 'DASTB'                                   )
-               RETURN
+               call errch  ( '#', word                                 )
+               call errfnm ( '#', xfrlun                               )
+               call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
+               call chkout ( 'DASTB'                                   )
+               return
 
-            END IF
+            end if
 !
 !           If we have begun a block, then process it. Otherwise, we
 !           have ended a block.
 !
-            IF ( INBLK ) THEN
+            if ( inblk ) then
 !
 !              Read and decode the data in the current DAS character
 !              array data block.
@@ -1466,406 +1466,406 @@
 !              Set the count of characters yet to be decoded and placed
 !              in the binary DAS file.
 !
-               NUMLFT = BCOUNT
+               numlft = bcount
 
-               DO WHILE ( NUMLFT .GT. 0 )
+               do while ( numlft .gt. 0 )
 !
 !                 Now read and decode the data in the current
 !                 character data block, placing the data in the
 !                 character array in the binary DAS file.
 !
-                  IF ( NUMLFT .GE. ( BUFSIZ * CBFLEN ) ) THEN
+                  if ( numlft .ge. ( bufsiz * cbflen ) ) then
 
-                     NUMDTA = BUFSIZ * CBFLEN
+                     numdta = bufsiz * cbflen
 
-                  ELSE
+                  else
 
-                     NUMDTA = NUMLFT
+                     numdta = numlft
 
-                  END IF
+                  end if
 !
 !                 Read and decode a buffer of encoded character data
 !                 from the text file.
 !
-                  CALL RDENCC ( XFRLUN, NUMDTA, CBUFFR )
+                  call rdencc ( xfrlun, numdta, cbuffr )
 !
 !                 Write the character data to the DAS character
 !                 array in the binary DAS file.
 !
-                  CALL DASADC ( HANDLE, NUMDTA, &
-                                BCBPOS, ECBPOS, &
-                                CBUFFR          )
+                  call dasadc ( handle, numdta, &
+                                bcbpos, ecbpos, &
+                                cbuffr          )
 
-                  IF ( FAILED() ) THEN
+                  if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
 !                    binary file, then checkout and return.
 !
-                     CALL DASCLS ( HANDLE  )
-                     CALL CHKOUT ( 'DASTB' )
-                     RETURN
+                     call dascls ( handle  )
+                     call chkout ( 'DASTB' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Decrement the counter for the amount of data
 !                 remaining to be moved from the current data block,
 !                 NUMLFT.
 !
-                  NUMLFT = NUMLFT - NUMDTA
+                  numlft = numlft - numdta
 !
 !                 Increment the counter for the amount of data that
 !                 has been successfully moved into the current array
 !                 in the binary DAS file.
 !
-                  DTACNT = DTACNT + NUMDTA
+                  dtacnt = dtacnt + numdta
 !
 !                 At this point, we have either finished reading in an
 !                 entire data block, or we have more data to read in
 !                 the current data block.
 !
-               END DO
+               end do
 
-            END IF
+            end if
 !
 !           If we got to here, we have successfully written a data
 !           block to the binary file.
 !
-         END DO
+         end do
 !
 !        At this point, we will have successfully written the entire
 !        character data array to the binary DAS file, if there was
 !        any character data to be written.
 
-      END IF
+      end if
 !
 !     Process the double precision data array, if there is some
 !     double precision data.
 !
-      IF ( NDDATA .GT. 0 ) THEN
+      if ( nddata .gt. 0 ) then
 !
 !        Initialize a few things: the block counter, and the data
 !        counter.
 !
-         BLKCNT = 0
-         DTACNT = 0
+         blkcnt = 0
+         dtacnt = 0
 !
 !        We currently have more to process.
 !
-         MORE  = .TRUE.
+         more  = .true.
 !
 !        We are currently not processing a data block.
 !
-         INBLK = .FALSE.
+         inblk = .false.
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            READ (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE
+            read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
 !              message, then check out and return.
 !
-               CALL DASCLS ( HANDLE                              )
-               CALL SETMSG ( 'Error reading from the DAS'       // &
+               call dascls ( handle                              )
+               call setmsg ( 'Error reading from the DAS'       // &
                              ' transfer file #. IOSTAT = #.'     )
-               CALL ERRFNM ( '#', XFRLUN                         )
-               CALL ERRINT ( '#', IOSTAT                         )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'             )
-               CALL CHKOUT ( 'DASTB'                             )
-               RETURN
+               call errfnm ( '#', xfrlun                         )
+               call errint ( '#', iostat                         )
+               call sigerr ( 'SPICE(FILEREADFAILED)'             )
+               call chkout ( 'DASTB'                             )
+               return
 
-            END IF
+            end if
 !
 !           At this point, we should be beginning a data block, ending a
 !           data block, or scanning for the total number of data blocks.
 !           So look for the appropriate keyword.
 !
-            CALL NEXTWD ( LINE, WORD, REST )
+            call nextwd ( line, word, rest )
 
-            IF ( WORD .EQ. BDBLK ) THEN
+            if ( word .eq. bdblk ) then
 !
 !              Get the block number.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                            )
-                  CALL SETMSG ( 'Begin double precision block'   // &
+                  call dascls ( handle                            )
+                  call setmsg ( 'Begin double precision block'   // &
                                 ' error, could not parse block'  // &
                                 ' number. Error: # File: #'       )
-                  CALL ERRCH  ( '#', ERRMSG                       )
-                  CALL ERRFNM ( '#', XFRLUN                       )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'       )
-                  CALL CHKOUT ( 'DASTB'                           )
-                  RETURN
+                  call errch  ( '#', errmsg                       )
+                  call errfnm ( '#', xfrlun                       )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'       )
+                  call chkout ( 'DASTB'                           )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of double precision numbers in the block.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                            )
-                  CALL SETMSG ( 'Begin double precision block'   // &
+                  call dascls ( handle                            )
+                  call setmsg ( 'Begin double precision block'   // &
                                 ' error, could not parse the'    // &
                                 ' data count for block: #.'      // &
                                 ' Error: # File: #'               )
-                  CALL ERRINT ( '#', BINDEX                       )
-                  CALL ERRCH  ( '#', ERRMSG                       )
-                  CALL ERRFNM ( '#', XFRLUN                       )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'       )
-                  CALL CHKOUT ( 'DASTB'                           )
-                  RETURN
+                  call errint ( '#', bindex                       )
+                  call errch  ( '#', errmsg                       )
+                  call errfnm ( '#', xfrlun                       )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'       )
+                  call chkout ( 'DASTB'                           )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we are inside a data block, so set
 !              the in block flag, INBLK, to .TRUE. and increment the
 !              data block counter.
 !
-               INBLK  = .TRUE.
-               BLKCNT = BLKCNT + 1
+               inblk  = .true.
+               blkcnt = blkcnt + 1
 
-            ELSE IF ( WORD .EQ. EDBLK ) THEN
+            else if ( word .eq. edblk ) then
 !
 !              Get the data block index.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, EINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, eindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                               )
-                  CALL SETMSG ( 'End double precision block'        // &
+                  call dascls ( handle                               )
+                  call setmsg ( 'End double precision block'        // &
                                 ' error, could not parse block'     // &
                                 ' number. Error: # File: #'          )
-                  CALL ERRCH  ( '#', ERRMSG                          )
-                  CALL ERRFNM ( '#', XFRLUN                          )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  CALL CHKOUT ( 'DASTB'                              )
-                  RETURN
+                  call errch  ( '#', errmsg                          )
+                  call errfnm ( '#', xfrlun                          )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
+                  call chkout ( 'DASTB'                              )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of double precision numbers in the block.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, ECOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, ecount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                           )
-                  CALL SETMSG ( 'End double precision block'    // &
+                  call dascls ( handle                           )
+                  call setmsg ( 'End double precision block'    // &
                                 ' error, could not parse the'   // &
                                 ' data count for block: #.'     // &
                                 ' Error: # File: #'              )
-                  CALL ERRINT ( '#', EINDEX                      )
-                  CALL ERRCH  ( '#', ERRMSG                      )
-                  CALL ERRFNM ( '#', XFRLUN                      )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  CALL CHKOUT ( 'DASTB'                          )
-                  RETURN
+                  call errint ( '#', eindex                      )
+                  call errch  ( '#', errmsg                      )
+                  call errfnm ( '#', xfrlun                      )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
+                  call chkout ( 'DASTB'                          )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               IF ( EINDEX .NE. BINDEX ) THEN
+               if ( eindex .ne. bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'Double precision block index'     // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'Double precision block index'     // &
                                 ' mismatch: Beginning index: #;'   // &
                                 ' Ending index: #. File: #'         )
-                  CALL ERRINT ( '#', BINDEX                         )
-                  CALL ERRINT ( '#', EINDEX                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errint ( '#', bindex                         )
+                  call errint ( '#', eindex                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array data
 !              counts match.
 !
-               IF ( ECOUNT .NE. BCOUNT ) THEN
+               if ( ecount .ne. bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Double precision block count'    // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Double precision block count'    // &
                                 ' mismatch: Beginning count: #;'  // &
                                 ' Ending count: #. File: #'        )
-                  CALL ERRINT ( '#', BCOUNT                        )
-                  CALL ERRINT ( '#', ECOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', bcount                        )
+                  call errint ( '#', ecount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully ended the
 !              processing of a data block, so set the in block flag,
 !              INBLK, to  .FALSE..
 !
-               INBLK = .FALSE.
+               inblk = .false.
 
-            ELSE IF ( WORD .EQ. TDBLKS ) THEN
+            else if ( word .eq. tdblks ) then
 !
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, NUMBLK, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, numblk, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Block count error, could not parse' // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Block count error, could not parse' // &
                                 ' the total number of double'        // &
                                 ' precision data blocks: #. File: #'  )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the total count of double precision numbers.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, TCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, tcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the double
 !                 precision data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                           )
-                  CALL SETMSG ( 'Double precision count error,' // &
+                  call dascls ( handle                           )
+                  call setmsg ( 'Double precision count error,' // &
                                 ' could not parse the total'    // &
                                 ' count. Error: # File: #'       )
-                  CALL ERRCH  ( '#', ERRMSG                      )
-                  CALL ERRFNM ( '#', XFRLUN                      )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  CALL CHKOUT ( 'DASTB'                          )
-                  RETURN
+                  call errch  ( '#', errmsg                      )
+                  call errfnm ( '#', xfrlun                      )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
+                  call chkout ( 'DASTB'                          )
+                  return
 
-               END IF
+               end if
 !
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               IF ( BLKCNT .NE. NUMBLK ) THEN
+               if ( blkcnt .ne. numblk ) then
 !
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
 !                 the binary file, set an appropriate error message,
 !                 then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'The number of double precision'     // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'The number of double precision'     // &
                                 ' data blocks processed (#) was'     // &
                                 ' not equal to the number of'        // &
                                 ' double precision data blocks'      // &
                                 ' placed in the DAS transfer file'   // &
                                 ' (#). File: #'                       )
-                  CALL ERRINT ( '#', BLKCNT                           )
-                  CALL ERRINT ( '#', NUMBLK                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errint ( '#', blkcnt                           )
+                  call errint ( '#', numblk                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the total count and the computed count
 !              match.
 !
-               IF ( TCOUNT .NE. DTACNT ) THEN
+               if ( tcount .ne. dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                               )
-                  CALL SETMSG ( 'Double precision count mismatch:'  // &
+                  call dascls ( handle                               )
+                  call setmsg ( 'Double precision count mismatch:'  // &
                                 ' computed count: #;'               // &
                                 ' expected count: #. File: #'        )
-                  CALL ERRINT ( '#', DTACNT                          )
-                  CALL ERRINT ( '#', TCOUNT                          )
-                  CALL ERRFNM ( '#', XFRLUN                          )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  CALL CHKOUT ( 'DASTB'                              )
-                  RETURN
+                  call errint ( '#', dtacnt                          )
+                  call errint ( '#', tcount                          )
+                  call errfnm ( '#', xfrlun                          )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
+                  call chkout ( 'DASTB'                              )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully processed the
 !              entire DAS double precision data portion of the text
 !              file, so there is no more double precision data.
 !
-               MORE = .FALSE.
+               more = .false.
 
-            ELSE
+            else
 !
 !              We got an unknown keyword of some sort, so set an
 !              appropriate error message, close the DAS file, and
 !              return.
 !
-               CALL DASCLS ( HANDLE                                    )
-               CALL SETMSG ( 'Unknown keyword ''#'' encountered'      // &
+               call dascls ( handle                                    )
+               call setmsg ( 'Unknown keyword ''#'' encountered'      // &
                              ' while processing the DAS transfer'     // &
                              '  file #.'                               )
-               CALL ERRCH  ( '#', WORD                                 )
-               CALL ERRFNM ( '#', XFRLUN                               )
-               CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'               )
-               CALL CHKOUT ( 'DASTB'                                   )
-               RETURN
+               call errch  ( '#', word                                 )
+               call errfnm ( '#', xfrlun                               )
+               call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
+               call chkout ( 'DASTB'                                   )
+               return
 
-            END IF
+            end if
 !
 !           If we have begun a block, then process it. Otherwise, we
 !           have ended a block.
 
-            IF ( INBLK ) THEN
+            if ( inblk ) then
 !
 !              Read and decode the data in the current DAS double
 !              precision array data block.
@@ -1873,400 +1873,400 @@
 !              Set the count of double precision numbers yet to be
 !              decoded and placed in the binary DAS file.
 !
-               NUMLFT = BCOUNT
+               numlft = bcount
 
-               DO WHILE ( NUMLFT .GT. 0 )
+               do while ( numlft .gt. 0 )
 !
 !                 Now read and decode the data in the current double
 !                 precision data block, placing the data in the double
 !                 precision array in the binary DAS file.
 !
-                  IF ( NUMLFT .GE. BUFSIZ ) THEN
+                  if ( numlft .ge. bufsiz ) then
 
-                     NUMDTA = BUFSIZ
+                     numdta = bufsiz
 
-                  ELSE
+                  else
 
-                     NUMDTA = NUMLFT
+                     numdta = numlft
 
-                  END IF
+                  end if
 !
 !                 Read and decode a buffer of encoded double precision
 !                 data from the text file.
 !
-                  CALL RDENCD ( XFRLUN, NUMDTA, DBUFFR )
+                  call rdencd ( xfrlun, numdta, dbuffr )
 !
 !                 Write the double precision data to the DAS double
 !                 precision array in the binary DAS file.
 !
-                  CALL DASADD ( HANDLE, NUMDTA, DBUFFR )
+                  call dasadd ( handle, numdta, dbuffr )
 
-                  IF ( FAILED() ) THEN
+                  if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
 !                    binary file, then checkout and return.
 !
-                     CALL DASCLS ( HANDLE  )
-                     CALL CHKOUT ( 'DASTB' )
-                     RETURN
+                     call dascls ( handle  )
+                     call chkout ( 'DASTB' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Decrement the counter for the amount of data
 !                 remaining to be moved from the current data block,
 !                 NUMLFT.
 !
-                  NUMLFT = NUMLFT - NUMDTA
+                  numlft = numlft - numdta
 !
 !                 Increment the counter for the amount of data that
 !                 has been successfully moved into the current array
 !                 in the binary DAS file.
 !
-                  DTACNT = DTACNT + NUMDTA
+                  dtacnt = dtacnt + numdta
 !
 !                 At this point, we have either finished reading in an
 !                 entire data block, or there is still some data
 !                 remaining to be read.
 !
-               END DO
+               end do
 
-            END IF
+            end if
 !
 !           If we got to here, we have successfully written a data
 !           block to the binary file.
 !
-         END DO
+         end do
 !
 !        At this point, we will have successfully written the entire
 !        double precision data array to the binary DAS file, if there
 !        was any double precision data to be written.
 
-      END IF
+      end if
 !
 !     Process the integer data array, if there is some integer data.
 !
-      IF ( NIDATA .GT. 0 ) THEN
+      if ( nidata .gt. 0 ) then
 !
 !        Initialize a few things: the block counter, and the data
 !        counter.
 !
-         BLKCNT = 0
-         DTACNT = 0
+         blkcnt = 0
+         dtacnt = 0
 !
 !        We currently have more to process.
 !
-         MORE  = .TRUE.
+         more  = .true.
 !
 !        We are currently not processing a data block.
 !
-         INBLK = .FALSE.
+         inblk = .false.
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            READ (XFRLUN,FMT='(A)',IOSTAT=IOSTAT) LINE
+            read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
 !              message, then check out and return.
 !
-               CALL DASCLS ( HANDLE                              )
-               CALL SETMSG ( 'Error reading from the DAS'       // &
+               call dascls ( handle                              )
+               call setmsg ( 'Error reading from the DAS'       // &
                              ' transfer file #. IOSTAT = #.'     )
-               CALL ERRFNM ( '#', XFRLUN                         )
-               CALL ERRINT ( '#', IOSTAT                         )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'             )
-               CALL CHKOUT ( 'DASTB'                             )
-               RETURN
+               call errfnm ( '#', xfrlun                         )
+               call errint ( '#', iostat                         )
+               call sigerr ( 'SPICE(FILEREADFAILED)'             )
+               call chkout ( 'DASTB'                             )
+               return
 
-            END IF
+            end if
 !
 !           At this point, we should be beginning a data block, ending a
 !           data block, or scanning for the total number of data blocks.
 !           So look for the appropriate keyword.
 !
-            CALL NEXTWD ( LINE, WORD, REST )
+            call nextwd ( line, word, rest )
 
-            IF ( WORD .EQ. BIBLK ) THEN
+            if ( word .eq. biblk ) then
 !
 !              Get the block number.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Begin integer block error, could'   // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Begin integer block error, could'   // &
                                 ' not parse block number. Error: #'  // &
                                 ' File: #'                            )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of integers in the block.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, BCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, bcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Begin integer block error, could'   // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Begin integer block error, could'   // &
                                 ' not parse the data count for '     // &
                                 ' block: #. Error: # File: #'         )
-                  CALL ERRINT ( '#', BINDEX                           )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errint ( '#', bindex                           )
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we are inside a data block, so set
 !              the in block flag, INBLK, to .TRUE. and increment the
 !              data block counter.
 !
-               INBLK  = .TRUE.
-               BLKCNT = BLKCNT + 1
+               inblk  = .true.
+               blkcnt = blkcnt + 1
 
-            ELSE IF ( WORD .EQ. EIBLK ) THEN
+            else if ( word .eq. eiblk ) then
 !
 !              Get the data block index.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, EINDEX, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, eindex, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'End integer block error, could'   // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'End integer block error, could'   // &
                                 ' not parse block number.'         // &
                                 ' Error: # File: #'                 )
-                  CALL ERRCH  ( '#', ERRMSG                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errch  ( '#', errmsg                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the count of integers in the block.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, ECOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, ecount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
 !                 error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                              )
-                  CALL SETMSG ( 'End integer block error, could'   // &
+                  call dascls ( handle                              )
+                  call setmsg ( 'End integer block error, could'   // &
                                 ' not parse the data count for'    // &
                                 ' block: #.Error: # File: #'        )
-                  CALL ERRINT ( '#', EINDEX                         )
-                  CALL ERRCH  ( '#', ERRMSG                         )
-                  CALL ERRFNM ( '#', XFRLUN                         )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'         )
-                  CALL CHKOUT ( 'DASTB'                             )
-                  RETURN
+                  call errint ( '#', eindex                         )
+                  call errch  ( '#', errmsg                         )
+                  call errfnm ( '#', xfrlun                         )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'         )
+                  call chkout ( 'DASTB'                             )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               IF ( EINDEX .NE. BINDEX ) THEN
+               if ( eindex .ne. bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Integer block index mismatch:'   // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Integer block index mismatch:'   // &
                                 ' Beginning index: #; Ending'     // &
                                 ' index: #. File: #'               )
-                  CALL ERRINT ( '#', BINDEX                        )
-                  CALL ERRINT ( '#', EINDEX                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', bindex                        )
+                  call errint ( '#', eindex                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the beginning and ending array data
 !              counts match.
 !
-               IF ( ECOUNT .NE. BCOUNT ) THEN
+               if ( ecount .ne. bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Integer block count mismatch:'   // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Integer block count mismatch:'   // &
                                 ' Beginning count: #;'            // &
                                 ' Ending count: #. File: #'        )
-                  CALL ERRINT ( '#', BCOUNT                        )
-                  CALL ERRINT ( '#', ECOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', bcount                        )
+                  call errint ( '#', ecount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully ended the
 !              processing of a data block, so set the in block flag,
 !              INBLK, to .FALSE..
 !
-               INBLK = .FALSE.
+               inblk = .false.
 
-            ELSE IF ( WORD .EQ. TIBLKS ) THEN
+            else if ( word .eq. tiblks ) then
 !
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, NUMBLK, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, numblk, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
 !                 error  message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                                )
-                  CALL SETMSG ( 'Block count error, could not'       // &
+                  call dascls ( handle                                )
+                  call setmsg ( 'Block count error, could not'       // &
                                 ' parse the total number of'         // &
                                 ' integer data blocks: #. File: #'    )
-                  CALL ERRCH  ( '#', ERRMSG                           )
-                  CALL ERRFNM ( '#', XFRLUN                           )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'           )
-                  CALL CHKOUT ( 'DASTB'                               )
-                  RETURN
+                  call errch  ( '#', errmsg                           )
+                  call errfnm ( '#', xfrlun                           )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'           )
+                  call chkout ( 'DASTB'                               )
+                  return
 
-               END IF
+               end if
 !
 !              Parse the total count of integers.
 !
-               CALL NEXTWD ( REST, WORD, REST             )
-               CALL NPARSI ( WORD, TCOUNT, ERRMSG, ERRPTR )
+               call nextwd ( rest, word, rest             )
+               call nparsi ( word, tcount, errmsg, errptr )
 
-               IF ( ERRMSG .NE. ' ' ) THEN
+               if ( errmsg .ne. ' ' ) then
 !
 !                 If an error occurred while parsing the integer
 !                 data count, close the binary file, set an
 !                 appropriate error message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                           )
-                  CALL SETMSG ( 'Integer count error, could'    // &
+                  call dascls ( handle                           )
+                  call setmsg ( 'Integer count error, could'    // &
                                 ' not parse the total count.'   // &
                                 ' Error: # File: #'              )
-                  CALL ERRCH  ( '#', ERRMSG                      )
-                  CALL ERRFNM ( '#', XFRLUN                      )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'      )
-                  CALL CHKOUT ( 'DASTB'                          )
-                  RETURN
+                  call errch  ( '#', errmsg                      )
+                  call errfnm ( '#', xfrlun                      )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'      )
+                  call chkout ( 'DASTB'                          )
+                  return
 
-               END IF
+               end if
 !
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               IF ( BLKCNT .NE. NUMBLK ) THEN
+               if ( blkcnt .ne. numblk ) then
 !
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
 !                 the binary file, set an appropriate error message,
 !                 then check out and return.
 !
-                  CALL DASCLS ( HANDLE                               )
-                  CALL SETMSG ( 'The number of integer data'        // &
+                  call dascls ( handle                               )
+                  call setmsg ( 'The number of integer data'        // &
                                 ' blocks processed (#) was not'     // &
                                 ' equal to the number of integer'   // &
                                 ' data blocks placed in the DAS'    // &
                                 ' transfer file (#). File: #'        )
-                  CALL ERRINT ( '#', BLKCNT                          )
-                  CALL ERRINT ( '#', NUMBLK                          )
-                  CALL ERRFNM ( '#', XFRLUN                          )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'          )
-                  CALL CHKOUT ( 'DASTB'                              )
-                  RETURN
+                  call errint ( '#', blkcnt                          )
+                  call errint ( '#', numblk                          )
+                  call errfnm ( '#', xfrlun                          )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'          )
+                  call chkout ( 'DASTB'                              )
+                  return
 
-               END IF
+               end if
 !
 !              Check to see if the total count and the computed count
 !              match.
 !
-               IF ( TCOUNT .NE. DTACNT ) THEN
+               if ( tcount .ne. dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
 !                 message, then check out and return.
 !
-                  CALL DASCLS ( HANDLE                             )
-                  CALL SETMSG ( 'Integer count mismatch:'         // &
+                  call dascls ( handle                             )
+                  call setmsg ( 'Integer count mismatch:'         // &
                                 ' computed count: #;'             // &
                                 ' expected count: #. File: #'      )
-                  CALL ERRINT ( '#', DTACNT                        )
-                  CALL ERRINT ( '#', TCOUNT                        )
-                  CALL ERRFNM ( '#', XFRLUN                        )
-                  CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'        )
-                  CALL CHKOUT ( 'DASTB'                            )
-                  RETURN
+                  call errint ( '#', dtacnt                        )
+                  call errint ( '#', tcount                        )
+                  call errfnm ( '#', xfrlun                        )
+                  call sigerr ( 'SPICE(BADDASTRANSFERFILE)'        )
+                  call chkout ( 'DASTB'                            )
+                  return
 
-               END IF
+               end if
 !
 !              If we got to here, we have successfully processed the
 !              entire DAS integer data portion of the text file, so
 !              there is no more integer data.
 !
-               MORE = .FALSE.
+               more = .false.
 
-            ELSE
+            else
 !
 !              We got an unknown keyword of some sort, so set an
 !              appropriate error message, close the DAS file, and
 !              return.
 !
-               CALL DASCLS ( HANDLE                                    )
-               CALL SETMSG ( 'Unknown keyword ''#'' encountered'      // &
+               call dascls ( handle                                    )
+               call setmsg ( 'Unknown keyword ''#'' encountered'      // &
                              ' while processing the DAS transfer'     // &
                              '  file #.'                               )
-               CALL ERRCH  ( '#', WORD                                 )
-               CALL ERRFNM ( '#', XFRLUN                               )
-               CALL SIGERR ( 'SPICE(BADDASTRANSFERFILE)'               )
-               CALL CHKOUT ( 'DASTB'                                   )
-               RETURN
+               call errch  ( '#', word                                 )
+               call errfnm ( '#', xfrlun                               )
+               call sigerr ( 'SPICE(BADDASTRANSFERFILE)'               )
+               call chkout ( 'DASTB'                                   )
+               return
 
-            END IF
+            end if
 !
 !           If we have begun a block, then process it. Otherwise, we
 !           have ended a block.
 
-            IF ( INBLK ) THEN
+            if ( inblk ) then
 !
 !              Read and decode the data in the current DAS integer
 !              array data block.
@@ -2274,80 +2274,80 @@
 !              Set the count of integers yet to be decoded and placed
 !              in the binary DAS file.
 !
-               NUMLFT = BCOUNT
+               numlft = bcount
 
-               DO WHILE ( NUMLFT .GT. 0 )
+               do while ( numlft .gt. 0 )
 !
 !                 Now read and decode the data in the current
 !                 integer data block, placing the data in the
 !                 integer precision array in the binary DAS file.
 !
-                  IF ( NUMLFT .GE. BUFSIZ ) THEN
+                  if ( numlft .ge. bufsiz ) then
 
-                     NUMDTA = BUFSIZ
+                     numdta = bufsiz
 
-                  ELSE
+                  else
 
-                     NUMDTA = NUMLFT
+                     numdta = numlft
 
-                  END IF
+                  end if
 !
 !                 Read and decode a buffer of encoded integer data
 !                 from the text file.
 !
-                  CALL RDENCI ( XFRLUN, NUMDTA, IBUFFR )
+                  call rdenci ( xfrlun, numdta, ibuffr )
 !
 !                 Write the integer data to the DAS integer array in
 !                 the binary DAS file.
 !
-                  CALL DASADI ( HANDLE, NUMDTA, IBUFFR )
+                  call dasadi ( handle, numdta, ibuffr )
 
-                  IF ( FAILED() ) THEN
+                  if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
 !                    binary file, then checkout and return.
 !
-                     CALL DASCLS ( HANDLE  )
-                     CALL CHKOUT ( 'DASTB' )
-                     RETURN
+                     call dascls ( handle  )
+                     call chkout ( 'DASTB' )
+                     return
 
-                  END IF
+                  end if
 !
 !                 Decrement the counter for the amount of data
 !                 remaining to be moved from the current data block,
 !                 NUMLFT.
 !
-                  NUMLFT = NUMLFT - NUMDTA
+                  numlft = numlft - numdta
 !
 !                 Increment the counter for the amount of data that
 !                 has been successfully moved into the current array
 !                 in the binary DAS file.
 !
-                  DTACNT = DTACNT + NUMDTA
+                  dtacnt = dtacnt + numdta
 !
 !                 At this point, we have either finished reading in an
 !                 entire data block, or there is still data remaining
 !                 to be read.
 !
-               END DO
+               end do
 
-            END IF
+            end if
 !
 !           If we got to here, we have successfully written a data
 !           block to the binary file.
 !
-         END DO
+         end do
 !
 !        At this point, we will have successfully written the entire
 !        integer data array to the binary DAS file, if there was any
 !        integer data to be written.
 
-      END IF
+      end if
 !
 !     Close only the binary file.
 !
-      CALL DASCLS ( HANDLE )
+      call dascls ( handle )
 
-      CALL CHKOUT ( 'DASTB' )
-      RETURN
-      END
+      call chkout ( 'DASTB' )
+      return
+      end

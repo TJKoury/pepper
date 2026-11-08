@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRBS ( EK tree, base address )
 
-      INTEGER FUNCTION ZZEKTRBS ( NODE )
+      integer function zzektrbs ( node )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektype.inc'
+      include 'ektype.inc'
 
-      INTEGER               NODE
+      integer               node
 
 ! $ Brief_I/O
 !
@@ -84,7 +84,7 @@
 !
 !     Just use the mapping supplied by the paging system.
 !
-      CALL ZZEKPGBS ( INT, NODE, ZZEKTRBS )
+      call zzekpgbs ( int, node, zzektrbs )
 
-      RETURN
-      END
+      return
+      end

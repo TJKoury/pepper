@@ -1,6 +1,6 @@
 !$Procedure DASRDC ( DAS, read data, character )
 
-      SUBROUTINE DASRDC ( HANDLE, FIRST, LAST, BPOS, EPOS, DATA )
+      subroutine dasrdc ( handle, first, last, bpos, epos, data )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               BPOS
-      INTEGER               EPOS
-      CHARACTER*(*)         DATA   ( * )
+      integer               handle
+      integer               first
+      integer               last
+      integer               bpos
+      integer               epos
+      character*(*)         data   ( * )
 
 ! $ Brief_I/O
 !
@@ -403,140 +403,140 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC =  1024 )
+      integer               nwc
+      parameter           ( nwc =  1024 )
 
-      INTEGER               CHAR
-      PARAMETER           ( CHAR   =  1  )
+      integer               char
+      parameter           ( char   =  1  )
 
 
 
 !
 !     Local variables
 !
-      INTEGER               CHR
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               ELT
-      INTEGER               L
-      INTEGER               N
-      INTEGER               NMOVE
-      INTEGER               NMOVED
-      INTEGER               NREAD
-      INTEGER               NUMCHR
-      INTEGER               RECNO
-      INTEGER               RCPOS
-      INTEGER               WORDNO
+      integer               chr
+      integer               clbase
+      integer               clsize
+      integer               elt
+      integer               l
+      integer               n
+      integer               nmove
+      integer               nmoved
+      integer               nread
+      integer               numchr
+      integer               recno
+      integer               rcpos
+      integer               wordno
 
 
 
 !
 !     Make sure BPOS and EPOS are ok; stop here if not.
 !
-      IF (      ( BPOS .LT. 1              ) &
-           .OR. ( EPOS .LT. 1              ) &
-           .OR. ( BPOS .GT. LEN( DATA(1) ) ) &
-           .OR. ( EPOS .GT. LEN( DATA(1) ) )  )  THEN
+      if (      ( bpos .lt. 1              ) &
+           .or. ( epos .lt. 1              ) &
+           .or. ( bpos .gt. len( data(1) ) ) &
+           .or. ( epos .gt. len( data(1) ) )  )  then
 
-         CALL CHKIN  ( 'DASRDC'                                        )
-         CALL SETMSG ( 'Substring bounds must be in range [1,#]. '    // &
+         call chkin  ( 'DASRDC'                                        )
+         call setmsg ( 'Substring bounds must be in range [1,#]. '    // &
                        'Actual range [BPOS,EPOS] was [#,#].'           )
-         CALL ERRINT ( '#',  LEN(DATA(1))                              )
-         CALL ERRINT ( '#',  BPOS                                      )
-         CALL ERRINT ( '#',  EPOS                                      )
-         CALL SIGERR ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         CALL CHKOUT ( 'DASRDC'                                        )
-         RETURN
+         call errint ( '#',  len(data(1))                              )
+         call errint ( '#',  bpos                                      )
+         call errint ( '#',  epos                                      )
+         call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
+         call chkout ( 'DASRDC'                                        )
+         return
 
 
-      ELSE IF ( EPOS .LT. BPOS ) THEN
+      else if ( epos .lt. bpos ) then
 
-         CALL CHKIN  ( 'DASRDC'                                        )
-         CALL SETMSG ( 'Substring upper bound must not be less than ' // &
+         call chkin  ( 'DASRDC'                                        )
+         call setmsg ( 'Substring upper bound must not be less than ' // &
                        'lower bound.  Actual range [BPOS,EPOS] was '  // &
                        '[#,#].'                                        )
-         CALL ERRINT ( '#',  BPOS                                      )
-         CALL ERRINT ( '#',  EPOS                                      )
-         CALL SIGERR ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         CALL CHKOUT ( 'DASRDC'                                        )
-         RETURN
+         call errint ( '#',  bpos                                      )
+         call errint ( '#',  epos                                      )
+         call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
+         call chkout ( 'DASRDC'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Find out the physical location of the first character to read.  If
 !     FIRST is out of range, DASA2L will cause an error to be signaled.
 !
-      CALL DASA2L ( HANDLE, CHAR, FIRST, CLBASE, CLSIZE, RECNO, WORDNO )
+      call dasa2l ( handle, char, first, clbase, clsize, recno, wordno )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Get the length of the elements of DATA.  Count the total number
 !     of characters to read.
 !
-      L       =  EPOS - BPOS  + 1
-      N       =  LAST - FIRST + 1
-      NREAD   =  0
+      l       =  epos - bpos  + 1
+      n       =  last - first + 1
+      nread   =  0
 
 !
 !     Read as much data from record RECNO as is necessary and possible.
 !
-      NUMCHR  =  MIN ( N,  NWC - WORDNO + 1 )
+      numchr  =  min ( n,  nwc - wordno + 1 )
 
-      ELT     =  1
-      CHR     =  BPOS
-      NMOVED  =  0
-      RCPOS   =  WORDNO
+      elt     =  1
+      chr     =  bpos
+      nmoved  =  0
+      rcpos   =  wordno
 
 
-      DO WHILE ( NMOVED .LT. NUMCHR )
+      do while ( nmoved .lt. numchr )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
-         IF ( CHR .GT. EPOS ) THEN
-            ELT = ELT + 1
-            CHR = BPOS
-         END IF
+         if ( chr .gt. epos ) then
+            elt = elt + 1
+            chr = bpos
+         end if
 !
 !        Find out how many characters to move from the current record
 !        to the current array element.
 !
-         NMOVE   =  MIN (  NUMCHR - NMOVED,   EPOS - CHR + 1  )
+         nmove   =  min (  numchr - nmoved,   epos - chr + 1  )
 
-         CALL DASRRC (  HANDLE, &
-                        RECNO, &
-                        RCPOS, &
-                        RCPOS + NMOVE - 1, &
-                        DATA(ELT) ( CHR  :  CHR + NMOVE - 1 )   )
+         call dasrrc (  handle, &
+                        recno, &
+                        rcpos, &
+                        rcpos + nmove - 1, &
+                        data(elt) ( chr  :  chr + nmove - 1 )   )
 
-         NMOVED  =  NMOVED + NMOVE
-         RCPOS   =  RCPOS  + NMOVE
-         CHR     =  CHR    + NMOVE
+         nmoved  =  nmoved + nmove
+         rcpos   =  rcpos  + nmove
+         chr     =  chr    + nmove
 
-      END DO
+      end do
 
-      NREAD  =  NUMCHR
-      RECNO  =  RECNO + 1
+      nread  =  numchr
+      recno  =  recno + 1
 
 !
 !     Read from as many additional records as necessary.
 !
 
-      DO WHILE ( NREAD .LT. N )
+      do while ( nread .lt. n )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 !
 !        At this point, RECNO is the correct number of the
@@ -545,61 +545,61 @@
 !        to read from.
 !
 !
-         IF (  RECNO  .LT.  ( CLBASE + CLSIZE )  ) THEN
+         if (  recno  .lt.  ( clbase + clsize )  ) then
 !
 !           We can continue reading from the current cluster.  Find
 !           out how many elements to read from the current record,
 !           and read them.
 !
-            NUMCHR  =  MIN ( N - NREAD,  NWC )
-            NMOVED  =  0
-            RCPOS   =  1
+            numchr  =  min ( n - nread,  nwc )
+            nmoved  =  0
+            rcpos   =  1
 
-            DO WHILE ( ( NMOVED .LT. NUMCHR ) .AND. ( .NOT. FAILED() ) )
+            do while ( ( nmoved .lt. numchr ) .and. ( .not. failed() ) )
 
-               IF ( CHR .GT. EPOS ) THEN
-                  ELT = ELT + 1
-                  CHR = BPOS
-               END IF
+               if ( chr .gt. epos ) then
+                  elt = elt + 1
+                  chr = bpos
+               end if
 !
 !              Find out how many characters to move from the current
 !              record to the current array element.
 !
-               NMOVE   =  MIN (  NUMCHR - NMOVED,   EPOS - CHR + 1  )
+               nmove   =  min (  numchr - nmoved,   epos - chr + 1  )
 
-               CALL DASRRC (  HANDLE, &
-                              RECNO, &
-                              RCPOS, &
-                              RCPOS + NMOVE - 1, &
-                              DATA(ELT) ( CHR  :  CHR + NMOVE - 1 )   )
+               call dasrrc (  handle, &
+                              recno, &
+                              rcpos, &
+                              rcpos + nmove - 1, &
+                              data(elt) ( chr  :  chr + nmove - 1 )   )
 
-               NMOVED  =  NMOVED + NMOVE
-               RCPOS   =  RCPOS  + NMOVE
-               CHR     =  CHR    + NMOVE
+               nmoved  =  nmoved + nmove
+               rcpos   =  rcpos  + nmove
+               chr     =  chr    + nmove
 
-            END DO
+            end do
 
-            NREAD   =   NREAD + NUMCHR
-            RECNO   =   RECNO + 1
+            nread   =   nread + numchr
+            recno   =   recno + 1
 
 
-         ELSE
+         else
 !
 !           We must find the next character cluster to
 !           read from.  The first character in this
 !           cluster has address FIRST + NREAD.
 !
-            CALL DASA2L ( HANDLE, &
-                          CHAR, &
-                          FIRST + NREAD, &
-                          CLBASE, &
-                          CLSIZE, &
-                          RECNO, &
-                          WORDNO  )
+            call dasa2l ( handle, &
+                          char, &
+                          first + nread, &
+                          clbase, &
+                          clsize, &
+                          recno, &
+                          wordno  )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAC06 ( EK, add class 6 column to segment )
 
-      SUBROUTINE ZZEKAC06 (  HANDLE,  SEGDSC,  COLDSC, &
-                             CVALS,   ENTSZS,  NLFLGS )
+      subroutine zzekac06 (  handle,  segdsc,  coldsc, &
+                             cvals,   entszs,  nlflgs )
 
 ! $ Abstract
 !
@@ -18,21 +18,21 @@
 ! $ Declarations
 
 
-      INCLUDE  'ekbool.inc'
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'ekcnamsz.inc'
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'ekrecptr.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekbool.inc'
+      include  'ekcoldsc.inc'
+      include  'ekcnamsz.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'ekrecptr.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      CHARACTER*(*)         CVALS  ( * )
-      INTEGER               ENTSZS ( * )
-      LOGICAL               NLFLGS ( * )
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      character*(*)         cvals  ( * )
+      integer               entszs ( * )
+      logical               nlflgs ( * )
 
 ! $ Brief_I/O
 !
@@ -197,173 +197,173 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = CPSIZE )
+      integer               bufsiz
+      parameter           ( bufsiz = cpsize )
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
-      CHARACTER*(PGSIZC)    PAGE
+      character*(cnamsz)    column
+      character*(pgsizc)    page
 
-      INTEGER               ADRBUF ( BUFSIZ )
-      INTEGER               BUFPTR
-      INTEGER               CLASS
-      INTEGER               COLIDX
-      INTEGER               CP
-      INTEGER               CURCHR
-      INTEGER               CURSIZ
-      INTEGER               CVLEN
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               L
-      INTEGER               N
-      INTEGER               NCHARS
-      INTEGER               NDATA
-      INTEGER               NLINK
-      INTEGER               NROWS
-      INTEGER               NULPTR
-      INTEGER               NW
-      INTEGER               NWRITE
-      INTEGER               P
-      INTEGER               P2
-      INTEGER               PADLEN
-      INTEGER               PBASE
-      INTEGER               REMAIN
-      INTEGER               ROOM
-      INTEGER               ROW
-      INTEGER               SIZE
-      INTEGER               STRLEN
-      INTEGER               TO
+      integer               adrbuf ( bufsiz )
+      integer               bufptr
+      integer               class
+      integer               colidx
+      integer               cp
+      integer               curchr
+      integer               cursiz
+      integer               cvlen
+      integer               from
+      integer               i
+      integer               l
+      integer               n
+      integer               nchars
+      integer               ndata
+      integer               nlink
+      integer               nrows
+      integer               nulptr
+      integer               nw
+      integer               nwrite
+      integer               p
+      integer               p2
+      integer               padlen
+      integer               pbase
+      integer               remain
+      integer               room
+      integer               row
+      integer               size
+      integer               strlen
+      integer               to
 
-      LOGICAL               CNTINU
-      LOGICAL               FIXSIZ
-      LOGICAL               NEWENT
-      LOGICAL               NEWREQ
-      LOGICAL               NULLOK
-      LOGICAL               PAD
+      logical               cntinu
+      logical               fixsiz
+      logical               newent
+      logical               newreq
+      logical               nullok
+      logical               pad
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKAC06' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKAC06' )
+      end if
 
 !
 !     Grab the column's attributes.
 !
-      CLASS  =  COLDSC( CLSIDX )
-      NULPTR =  COLDSC( NFLIDX )
-      COLIDX =  COLDSC( ORDIDX )
-      SIZE   =  COLDSC( SIZIDX )
-      STRLEN =  COLDSC( LENIDX )
+      class  =  coldsc( clsidx )
+      nulptr =  coldsc( nflidx )
+      colidx =  coldsc( ordidx )
+      size   =  coldsc( sizidx )
+      strlen =  coldsc( lenidx )
 
-      NULLOK =  NULPTR .NE. IFALSE
-      FIXSIZ =  SIZE   .NE. IFALSE
+      nullok =  nulptr .ne. ifalse
+      fixsiz =  size   .ne. ifalse
 
 !
 !     This column had better be class 6.
 !
-      IF ( CLASS .NE. 6 ) THEN
+      if ( class .ne. 6 ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Column class code # found in descriptor for ' // &
+         call setmsg ( 'Column class code # found in descriptor for ' // &
                        'column #.  Class should be 6.'                 )
-         CALL ERRINT ( '#', CLASS                                      )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'ZZEKAC06'                                      )
-         RETURN
+         call errint ( '#', class                                      )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'ZZEKAC06'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Push the column's ordinal index on the stack.  This allows us
 !     to identify the column the addresses belong to.
 !
-      CALL ZZEKSPSH ( 1, COLIDX )
+      call zzekspsh ( 1, colidx )
 
 !
 !     Find the number of rows in the segment.
 !
-      NROWS   =  SEGDSC ( NRIDX )
+      nrows   =  segdsc ( nridx )
 
 !
 !     Record the number of data values to write.
 !
-      IF ( NULLOK ) THEN
+      if ( nullok ) then
 !
 !        Sum the sizes of the non-null column entries; these are the
 !        ones that will take up space.
 !
-         NDATA  =  0
+         ndata  =  0
 
-         DO I = 1, NROWS
+         do i = 1, nrows
 
-            IF ( .NOT. NLFLGS(I) ) THEN
+            if ( .not. nlflgs(i) ) then
 
-               IF ( FIXSIZ ) THEN
-                  NDATA  =  NDATA   +  STRLEN * SIZE
-               ELSE
-                  NDATA  =  NDATA   +  STRLEN * ENTSZS(I)
-               END IF
+               if ( fixsiz ) then
+                  ndata  =  ndata   +  strlen * size
+               else
+                  ndata  =  ndata   +  strlen * entszs(i)
+               end if
 
-            END IF
+            end if
 
-         END DO
-
-
-      ELSE
+         end do
 
 
-         IF ( FIXSIZ ) THEN
-
-            NDATA  =  NROWS * STRLEN * SIZE
-
-         ELSE
-
-            NDATA  =  0
-
-            DO I = 1, NROWS
-               NDATA  =  NDATA   +  STRLEN * ENTSZS(I)
-            END DO
-
-         END IF
+      else
 
 
-      END IF
+         if ( fixsiz ) then
+
+            ndata  =  nrows * strlen * size
+
+         else
+
+            ndata  =  0
+
+            do i = 1, nrows
+               ndata  =  ndata   +  strlen * entszs(i)
+            end do
+
+         end if
 
 
-      IF ( NDATA .GT. 0 ) THEN
+      end if
+
+
+      if ( ndata .gt. 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
 !
-         CALL ZZEKAPS  ( HANDLE, SEGDSC, CHR, .FALSE., P, PBASE )
-         PAGE  =  ' '
+         call zzekaps  ( handle, segdsc, chr, .false., p, pbase )
+         page  =  ' '
 
 !
 !        Decide now whether we will need to pad the input entry
 !        elements with trailing blanks, and if so how much padding
 !        we'll need.
 !
-         CVLEN   =  MIN (  LEN( CVALS(1) ),  STRLEN  )
-         PAD     =  CVLEN  .LT.  STRLEN
+         cvlen   =  min (  len( cvals(1) ),  strlen  )
+         pad     =  cvlen  .lt.  strlen
 
-         IF ( PAD ) THEN
-            PADLEN  =  STRLEN - CVLEN
-         END IF
+         if ( pad ) then
+            padlen  =  strlen - cvlen
+         end if
 
-      END IF
+      end if
 
 !
 !     Write the input data out to the target file a page at a time.
@@ -382,49 +382,49 @@
 !     current input string of the character which we'll read next.
 !
 
-      REMAIN  =  NDATA
-      FROM    =  1
-      TO      =  1
-      BUFPTR  =  1
-      ROW     =  1
-      CP      =  1
-      N       =  0
-      NCHARS  =  0
-      NLINK   =  0
-      NEWENT  =  .TRUE.
+      remain  =  ndata
+      from    =  1
+      to      =  1
+      bufptr  =  1
+      row     =  1
+      cp      =  1
+      n       =  0
+      nchars  =  0
+      nlink   =  0
+      newent  =  .true.
 
 
-      DO WHILE ( ROW .LE. NROWS )
+      do while ( row .le. nrows )
 !
 !        NEWREQ is set to TRUE if we discover that the next column
 !        entry must start on a new page.
 !
-         NEWREQ  =  .FALSE.
+         newreq  =  .false.
 
 !
 !        FROM and TO are expected to be properly set at this point.
 !
 
-         IF (  NULLOK  .AND.  ( NLFLGS(ROW) )  ) THEN
+         if (  nullok  .and.  ( nlflgs(row) )  ) then
 
-            IF ( FIXSIZ ) THEN
-               CURSIZ  =  SIZE
-            ELSE
-               CURSIZ  =  ENTSZS(ROW)
-            END IF
+            if ( fixsiz ) then
+               cursiz  =  size
+            else
+               cursiz  =  entszs(row)
+            end if
 
-            FROM           =  FROM   +  CURSIZ
-            ADRBUF(BUFPTR) =  NULL
-            BUFPTR         =  BUFPTR +  1
-            ROW            =  ROW    +  1
-            CNTINU         =  .FALSE.
-            NEWENT         =  .TRUE.
-
-
-         ELSE
+            from           =  from   +  cursiz
+            adrbuf(bufptr) =  null
+            bufptr         =  bufptr +  1
+            row            =  row    +  1
+            cntinu         =  .false.
+            newent         =  .true.
 
 
-            IF ( NEWENT ) THEN
+         else
+
+
+            if ( newent ) then
 !
 !              We're about to write out a new column entry.  We must
 !              insert the element count into the page before writing the
@@ -434,27 +434,27 @@
 !              At this point, we're guaranteed at least ENCSIZ+1 free
 !              spaces in the current page.
 !
-               IF ( FIXSIZ ) THEN
-                  CURSIZ  =  SIZE
-               ELSE
-                  CURSIZ  =  ENTSZS(ROW)
-               END IF
+               if ( fixsiz ) then
+                  cursiz  =  size
+               else
+                  cursiz  =  entszs(row)
+               end if
 
-               CURCHR         =  CURSIZ *  STRLEN
-               NCHARS         =  0
-               CP             =  1
+               curchr         =  cursiz *  strlen
+               nchars         =  0
+               cp             =  1
 
-               ADRBUF(BUFPTR) =  TO     +  PBASE
-               BUFPTR         =  BUFPTR + 1
+               adrbuf(bufptr) =  to     +  pbase
+               bufptr         =  bufptr + 1
 
-               CALL PRTENC (  CURSIZ,  PAGE( TO : TO+ENCSIZ-1 )  )
+               call prtenc (  cursiz,  page( to : to+encsiz-1 )  )
 
-               TO             =  TO     + ENCSIZ
-               N              =  N      + ENCSIZ
-               NLINK          =  NLINK  + 1
-               NEWENT         =  .FALSE.
+               to             =  to     + encsiz
+               n              =  n      + encsiz
+               nlink          =  nlink  + 1
+               newent         =  .false.
 
-            END IF
+            end if
 
 !
 !           At this point, there's at least one free space in the
@@ -462,11 +462,11 @@
 !           write.  Transfer as much as possible of the current
 !           column entry to the current page.
 !
-            ROOM     =  CPSIZE - N
-            NWRITE   =  MIN ( CURCHR-NCHARS, ROOM )
-            NW       =  NWRITE
+            room     =  cpsize - n
+            nwrite   =  min ( curchr-nchars, room )
+            nw       =  nwrite
 
-            DO WHILE ( NW .GT. 0 )
+            do while ( nw .gt. 0 )
 !
 !              At this point, we're guaranteed that
 !
@@ -474,13 +474,13 @@
 !                 TO      <   CPSIZE
 !                 FROM is set correctly.
 !
-               IF ( PAD ) THEN
+               if ( pad ) then
 !
 !                 The input strings must be padded with blanks up to
 !                 a length of STRLEN characters.  The number of blanks
 !                 used to pad the input is PADLEN.
 !
-                  IF ( CP .LT. CVLEN ) THEN
+                  if ( cp .lt. cvlen ) then
 !
 !                    Compute the number of `actual' characters of data
 !                    left in the current input string.
@@ -488,32 +488,32 @@
 !                    Transfer the characters we have room for from the
 !                    current input string to the current page.
 !
-                     L                    =  CVLEN - CP + 1
-                     L                    =  MIN ( L, NW  )
+                     l                    =  cvlen - cp + 1
+                     l                    =  min ( l, nw  )
 
-                     PAGE( TO : TO+L-1 )  =  CVALS(FROM)( CP : CP+L-1 )
-                     CP                   =  CP  + L
-                     NW                   =  NW  - L
-                     TO                   =  TO  + L
+                     page( to : to+l-1 )  =  cvals(from)( cp : cp+l-1 )
+                     cp                   =  cp  + l
+                     nw                   =  nw  - l
+                     to                   =  to  + l
 
-                  ELSE
+                  else
 !
 !                    The input character pointer is in the `pad' zone.
 !                    Let L be the length of padding that is required
 !                    and can fit in the page.
 !
-                     L                    =  STRLEN - CP + 1
-                     L                    =  MIN ( L, NW )
+                     l                    =  strlen - cp + 1
+                     l                    =  min ( l, nw )
 
-                     PAGE( TO : TO+L-1 )  =  ' '
-                     CP                   =  CP  + L
-                     NW                   =  NW  - L
-                     TO                   =  TO  + L
+                     page( to : to+l-1 )  =  ' '
+                     cp                   =  cp  + l
+                     nw                   =  nw  - l
+                     to                   =  to  + l
 
-                  END IF
+                  end if
 
 
-               ELSE
+               else
 !
 !                 The input data doesn't require padding.
 !
@@ -523,47 +523,47 @@
 !                 Transfer the characters we have room for from the
 !                 current input string to the current page.
 !
-                  L                    =  STRLEN - CP + 1
-                  L                    =  MIN ( L, NW )
+                  l                    =  strlen - cp + 1
+                  l                    =  min ( l, nw )
 
-                  PAGE( TO : TO+L-1 )  =  CVALS(FROM)( CP : CP+L-1 )
-                  CP                   =  CP + L
-                  NW                   =  NW - L
-                  TO                   =  TO + L
+                  page( to : to+l-1 )  =  cvals(from)( cp : cp+l-1 )
+                  cp                   =  cp + l
+                  nw                   =  nw - l
+                  to                   =  to + l
 
-               END IF
+               end if
 
 !
 !              If the input pointer is beyond the end of the declared
 !              length of the target column's strings STRLEN, it's time
 !              to look at the next input string.
 !
-               IF ( CP .GT. STRLEN ) THEN
-                  FROM  =  FROM + 1
-                  CP    =  1
-               END IF
+               if ( cp .gt. strlen ) then
+                  from  =  from + 1
+                  cp    =  1
+               end if
 
-            END DO
+            end do
 
 !
 !           We've written NWRITE characters to the current page.  FROM,
 !           TO, and CP are set.
 !
-            N         =  N       +  NWRITE
-            REMAIN    =  REMAIN  -  NWRITE
-            NCHARS    =  NCHARS  +  NWRITE
+            n         =  n       +  nwrite
+            remain    =  remain  -  nwrite
+            nchars    =  nchars  +  nwrite
 
 !
 !           Decide whether we must continue the current entry on another
 !           data page.
 !
-            CNTINU  =  ( NCHARS .LT. CURCHR ) .AND. ( N .EQ. CPSIZE )
+            cntinu  =  ( nchars .lt. curchr ) .and. ( n .eq. cpsize )
 
 !
 !           If we've finished writing out a column entry, get ready
 !           to write the next one.
 !
-            IF ( NCHARS .EQ. CURCHR ) THEN
+            if ( nchars .eq. curchr ) then
 !
 !              The current character is the last of the current column
 !              entry.
@@ -573,17 +573,17 @@
 !              we must have enough room for the element count and at
 !              least one character of data.
 !
-               IF ( REMAIN .GT. 0 ) THEN
-                  NEWREQ   =   N  .GT. ( CPSIZE - ENCSIZ - 1 )
-               END IF
+               if ( remain .gt. 0 ) then
+                  newreq   =   n  .gt. ( cpsize - encsiz - 1 )
+               end if
 
-               ROW     =   ROW   +  1
-               NEWENT  =  .TRUE.
+               row     =   row   +  1
+               newent  =  .true.
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
 !
 !        At this point, CNTINU indicates whether we need to continue
@@ -591,68 +591,68 @@
 !        the entry, CNTINU is .FALSE.
 !
 
-         IF (  ( BUFPTR .GT. BUFSIZ ) .OR. ( ROW .GT. NROWS )  ) THEN
+         if (  ( bufptr .gt. bufsiz ) .or. ( row .gt. nrows )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.
 !
-            CALL ZZEKSPSH ( BUFPTR-1, ADRBUF )
-            BUFPTR  =  1
+            call zzekspsh ( bufptr-1, adrbuf )
+            bufptr  =  1
 
-         END IF
+         end if
 
 
-         IF (         CNTINU &
-             .OR.     NEWREQ &
-             .OR. ( ( ROW .GT. NROWS ) .AND. ( NDATA .GT. 0 ) )  ) THEN
+         if (         cntinu &
+             .or.     newreq &
+             .or. ( ( row .gt. nrows ) .and. ( ndata .gt. 0 ) )  ) then
 !
 !           It's time to write out the current page.  First set the link
 !           count.
 !
-            CALL PRTENC (  NLINK,  PAGE ( CLCIDX : CLCIDX+ENCSIZ-1 )  )
+            call prtenc (  nlink,  page ( clcidx : clcidx+encsiz-1 )  )
 
 !
 !           Write out the data page.
 !
-            CALL ZZEKPGWC ( HANDLE, P, PAGE  )
+            call zzekpgwc ( handle, p, page  )
 
 !
 !           If there's more data to write, allocate another page.
 !
-            IF ( REMAIN .GT. 0 ) THEN
+            if ( remain .gt. 0 ) then
 
-               CALL ZZEKAPS ( HANDLE, SEGDSC, CHR, .FALSE., P2, PBASE )
-               PAGE   = ' '
+               call zzekaps ( handle, segdsc, chr, .false., p2, pbase )
+               page   = ' '
 
-               N      =  0
-               NLINK  =  0
-               TO     =  1
+               n      =  0
+               nlink  =  0
+               to     =  1
 
 !
 !              If we're continuing an element from the previous page,
 !              link the previous page to the current one.
 !
-               IF ( CNTINU ) THEN
-                  CALL ZZEKSFWD ( HANDLE, CHR, P, P2 )
-               END IF
+               if ( cntinu ) then
+                  call zzeksfwd ( handle, chr, p, p2 )
+               end if
 
-               P   =  P2
+               p   =  p2
 
-            END IF
+            end if
 !
 !           We've allocated a new data page if we needed one.
 !
 
-         END IF
+         end if
 !
 !        We've written out the last completed data page.
 !
 
-      END DO
+      end do
 !
 !     We've processed all entries of the input array.
 !
 
-      CALL CHKOUT ( 'ZZEKAC06' )
-      RETURN
-      END
+      call chkout ( 'ZZEKAC06' )
+      return
+      end

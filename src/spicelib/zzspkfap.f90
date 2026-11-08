@@ -1,7 +1,7 @@
 !$Procedure ZZSPKFAP ( SPK function, apparent inertial state )
 
-      SUBROUTINE ZZSPKFAP ( TRGSUB, ET,     REF,   ABCORR, &
-                            STOBS,  ACCOBS, STARG, LT,     DLT )
+      subroutine zzspkfap ( trgsub, et,     ref,   abcorr, &
+                            stobs,  accobs, starg, lt,     dlt )
 
 ! $ Abstract
 !
@@ -27,19 +27,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      EXTERNAL              TRGSUB
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      STOBS  ( 6 )
-      DOUBLE PRECISION      ACCOBS ( 3 )
-      DOUBLE PRECISION      STARG  ( 6 )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      DLT
+      external              trgsub
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      double precision      stobs  ( 6 )
+      double precision      accobs ( 3 )
+      double precision      starg  ( 6 )
+      double precision      lt
+      double precision      dlt
 
 ! $ Brief_I/O
 !
@@ -376,74 +376,74 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         RNAME
-      PARAMETER           ( RNAME  = 'ZZSPKFAP' )
+      character*(*)         rname
+      parameter           ( rname  = 'ZZSPKFAP' )
 
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    PRVCOR
+      character*(corlen)    prvcor
 
-      DOUBLE PRECISION      CORPOS ( 3 )
-      DOUBLE PRECISION      CORVEL ( 3 )
-      DOUBLE PRECISION      DPCORR ( 3 )
-      DOUBLE PRECISION      PCORR  ( 3 )
+      double precision      corpos ( 3 )
+      double precision      corvel ( 3 )
+      double precision      dpcorr ( 3 )
+      double precision      pcorr  ( 3 )
 
-      INTEGER               REFID
+      integer               refid
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               PASS1
-      LOGICAL               USELT
-      LOGICAL               USESTL
-      LOGICAL               XMIT
+      logical               attblk ( nabcor )
+      logical               pass1
+      logical               uselt
+      logical               usestl
+      logical               xmit
 
 !
 !     Saved variables
 !
-      SAVE                  PASS1
-      SAVE                  PRVCOR
-      SAVE                  USELT
-      SAVE                  USESTL
-      SAVE                  XMIT
+      save                  pass1
+      save                  prvcor
+      save                  uselt
+      save                  usestl
+      save                  xmit
 
 !
 !     Initial values
 !
-      DATA                  PASS1   / .TRUE. /
-      DATA                  PRVCOR  / ' ' /
+      data                  pass1   / .true. /
+      data                  prvcor  / ' ' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( RNAME )
+      call chkin ( rname )
 
 
-      IF (  PASS1  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  pass1  .or.  ( abcorr .ne. prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( RNAME )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( rname )
+            return
+         end if
 
 !
 !        The aberration correction flag is recognized; save it.
 !
-         PRVCOR = ABCORR
+         prvcor = abcorr
 
 !
 !        Set logical flags indicating the attributes of the requested
@@ -460,70 +460,70 @@
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         XMIT    =  ATTBLK ( XMTIDX )
-         USELT   =  ATTBLK ( LTIDX  )
-         USESTL  =  ATTBLK ( STLIDX )
+         xmit    =  attblk ( xmtidx )
+         uselt   =  attblk ( ltidx  )
+         usestl  =  attblk ( stlidx )
 
-         PASS1   = .FALSE.
+         pass1   = .false.
 
-      END IF
+      end if
 
 !
 !     See if the reference frame is a recognized inertial frame.
 !
-      CALL IRFNUM ( REF, REFID )
+      call irfnum ( ref, refid )
 
-      IF ( REFID .EQ. 0 ) THEN
+      if ( refid .eq. 0 ) then
 
-         CALL SETMSG ( 'The requested frame ''#'' is not a ' &
+         call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )
-         CALL ERRCH  ( '#', REF                             )
-         CALL SIGERR ( 'SPICE(BADFRAME)'                    )
-         CALL CHKOUT ( RNAME                                )
-         RETURN
+         call errch  ( '#', ref                             )
+         call sigerr ( 'SPICE(BADFRAME)'                    )
+         call chkout ( rname                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the state of the target relative to the observer,
 !     optionally corrected for light time.
 !
-      CALL ZZSPKFLT ( TRGSUB, ET,    REF, ABCORR, &
-                      STOBS,  STARG, LT,  DLT     )
+      call zzspkflt ( trgsub, et,    ref, abcorr, &
+                      stobs,  starg, lt,  dlt     )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     If stellar aberration corrections are not needed, we're
 !     already done.
 !
-      IF ( .NOT. USESTL ) THEN
-         CALL CHKOUT ( RNAME )
-         RETURN
-      END IF
+      if ( .not. usestl ) then
+         call chkout ( rname )
+         return
+      end if
 
 !
 !     Get the stellar aberration correction and its time derivative.
 !
-      CALL ZZSTELAB ( XMIT, ACCOBS, STOBS(4), STARG, PCORR, DPCORR )
+      call zzstelab ( xmit, accobs, stobs(4), starg, pcorr, dpcorr )
 
 !
 !     Adding the stellar aberration correction to the light
 !     time-corrected target position yields the position corrected for
 !     both light time and stellar aberration.
 !
-      CALL VADD ( PCORR,  STARG, CORPOS )
-      CALL VEQU ( CORPOS, STARG         )
+      call vadd ( pcorr,  starg, corpos )
+      call vequ ( corpos, starg         )
 
 !
 !     Velocity is treated in an analogous manner.
 !
-      CALL VADD ( DPCORR, STARG(4), CORVEL )
-      CALL VEQU ( CORVEL, STARG(4)         )
+      call vadd ( dpcorr, starg(4), corvel )
+      call vequ ( corvel, starg(4)         )
 
-      CALL CHKOUT ( RNAME )
-      RETURN
-      END
+      call chkout ( rname )
+      return
+      end

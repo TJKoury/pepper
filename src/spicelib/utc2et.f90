@@ -1,6 +1,6 @@
 !$Procedure UTC2ET ( UTC to Ephemeris Time )
 
-      SUBROUTINE UTC2ET ( UTCSTR, ET )
+      subroutine utc2et ( utcstr, et )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)       UTCSTR
-      DOUBLE PRECISION    ET
+      character*(*)       utcstr
+      double precision    et
 
 ! $ Brief_I/O
 !
@@ -334,195 +334,195 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Parameters
 !
-      INTEGER               ERA
-      PARAMETER           ( ERA    =  1 )
+      integer               era
+      parameter           ( era    =  1 )
 
-      INTEGER               WDAY
-      PARAMETER           ( WDAY   = ERA    + 1 )
+      integer               wday
+      parameter           ( wday   = era    + 1 )
 
-      INTEGER               ZONE
-      PARAMETER           ( ZONE   = WDAY   + 1 )
+      integer               zone
+      parameter           ( zone   = wday   + 1 )
 
-      INTEGER               AMPM
-      PARAMETER           ( AMPM   = ZONE   + 1 )
+      integer               ampm
+      parameter           ( ampm   = zone   + 1 )
 
-      INTEGER               SYSTEM
-      PARAMETER           ( SYSTEM = AMPM   + 1 )
+      integer               system
+      parameter           ( system = ampm   + 1 )
 
 !
 !     Local variables
 !
 
-      INTEGER               LONGLN
-      PARAMETER           ( LONGLN = 480 )
+      integer               longln
+      parameter           ( longln = 480 )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
-
-
-      CHARACTER*(LNSIZE)    PICTUR
-      CHARACTER*(LONGLN)    ERROR
-
-      INTEGER               SMWDSZ
-      PARAMETER           ( SMWDSZ = 8 )
-
-      CHARACTER*(SMWDSZ)    TYPE
-      CHARACTER*(SMWDSZ)    MODIFY ( 5 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
 
-      DOUBLE PRECISION      TVEC   ( 10 )
-      INTEGER               NTVEC
-      INTEGER               YEAR
+      character*(lnsize)    pictur
+      character*(longln)    error
+
+      integer               smwdsz
+      parameter           ( smwdsz = 8 )
+
+      character*(smwdsz)    type
+      character*(smwdsz)    modify ( 5 )
 
 
-      LOGICAL               SUCCES
-      LOGICAL               OK
-      LOGICAL               MODS
-      LOGICAL               YABBRV
+      double precision      tvec   ( 10 )
+      integer               ntvec
+      integer               year
+
+
+      logical               succes
+      logical               ok
+      logical               mods
+      logical               yabbrv
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'UTC2ET' )
+      call chkin ( 'UTC2ET' )
 !
 !     So far we have no errors, the type of input is unknown.
 !
-      ERROR  = ' '
-      TYPE   = ' '
+      error  = ' '
+      type   = ' '
 
 !
 !     First parse the string and perform the various tests on
 !     the validity of its components.
 !
-      CALL TPARTV ( UTCSTR, &
-                    TVEC,   NTVEC, TYPE, &
-                    MODIFY, MODS,  YABBRV, SUCCES, &
-                    PICTUR, ERROR )
+      call tpartv ( utcstr, &
+                    tvec,   ntvec, type, &
+                    modify, mods,  yabbrv, succes, &
+                    pictur, error )
 
-      IF ( .NOT. SUCCES ) THEN
-         CALL SETMSG ( ERROR )
-         CALL SIGERR ( 'SPICE(INVALIDTIMESTRING)' )
-         CALL CHKOUT ( 'UTC2ET' )
-         RETURN
-      END IF
+      if ( .not. succes ) then
+         call setmsg ( error )
+         call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
+         call chkout ( 'UTC2ET' )
+         return
+      end if
 
 !
 !     We are not going to allow most of the modifiers in strings.
 !
-      IF ( MODS ) THEN
+      if ( mods ) then
 
-         IF (       MODIFY(SYSTEM) .NE. ' ' &
-              .AND. MODIFY(SYSTEM) .NE. 'UTC' ) THEN
+         if (       modify(system) .ne. ' ' &
+              .and. modify(system) .ne. 'UTC' ) then
 
-            ERROR = 'UTC2ET does not support the specification ' &
+            error = 'UTC2ET does not support the specification ' &
             //      'of a time system in a string.  The time ' &
             //      'system # was specified. Try the routine STR2ET.'
-            CALL REPMC  ( ERROR, '#', MODIFY(SYSTEM), ERROR )
+            call repmc  ( error, '#', modify(system), error )
 
-            CALL SETMSG ( ERROR )
-            CALL SIGERR ( 'SPICE(INVALIDTIMESTRING)' )
-            CALL CHKOUT ( 'UTC2ET' )
-            RETURN
+            call setmsg ( error )
+            call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
+            call chkout ( 'UTC2ET' )
+            return
 
-         ELSE IF ( MODIFY(ZONE) .NE. ' ' ) THEN
+         else if ( modify(zone) .ne. ' ' ) then
 
-            ERROR = 'UTC2ET does not support the specification ' &
+            error = 'UTC2ET does not support the specification ' &
             //      'of a time zone in a time string.  The time ' &
             //      'zone ''#'' was specified. Try the routine STR2ET.'
-            CALL REPMC  ( ERROR, '#', MODIFY(ZONE), ERROR )
-            CALL SETMSG ( ERROR )
-            CALL SIGERR ( 'SPICE(INVALIDTIMESTRING)' )
-            CALL CHKOUT ( 'UTC2ET' )
-            RETURN
+            call repmc  ( error, '#', modify(zone), error )
+            call setmsg ( error )
+            call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
+            call chkout ( 'UTC2ET' )
+            return
 
-         ELSE IF ( MODIFY(AMPM) .NE. ' ' ) THEN
+         else if ( modify(ampm) .ne. ' ' ) then
 
-            ERROR = 'UTC2ET does not support the AM/PM ' &
+            error = 'UTC2ET does not support the AM/PM ' &
             //      'conventions for time strings. Try the ' &
             //      'routine STR2ET.'
-            CALL SETMSG ( ERROR )
-            CALL SIGERR ( 'SPICE(INVALIDTIMESTRING)' )
-            CALL CHKOUT ( 'UTC2ET' )
-            RETURN
+            call setmsg ( error )
+            call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
+            call chkout ( 'UTC2ET' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If parsing the time string went well, we let TTRANS handle
 !     the problem of transforming the time vector to TDB.
 !
-      IF ( TYPE .EQ. 'YMD' .OR. TYPE .EQ. 'YD') THEN
+      if ( type .eq. 'YMD' .or. type .eq. 'YD') then
 !
 !        Check the components of the time vector for reasonableness.
 !
-         CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
+         call tcheck ( tvec, type, mods, modify, ok, error )
 
-         IF ( .NOT. OK ) THEN
-            CALL SETMSG ( ERROR )
-            CALL SIGERR ( 'SPICE(INVALIDTIMESTRING)' )
-         END IF
+         if ( .not. ok ) then
+            call setmsg ( error )
+            call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
+         end if
 
 !
 !        Fix up the year as needed.
 !
-         YEAR   = NINT( TVEC(1) )
+         year   = nint( tvec(1) )
 
-         IF ( MODIFY(ERA) .EQ. 'B.C.' ) THEN
+         if ( modify(era) .eq. 'B.C.' ) then
 
-            YEAR = 1 - YEAR
+            year = 1 - year
 
-         ELSE IF ( MODIFY(ERA) .EQ. 'A.D.' ) THEN
+         else if ( modify(era) .eq. 'A.D.' ) then
 !
 !           Do nothing.
 !
-         ELSE IF ( YEAR .LT. 100 ) THEN
+         else if ( year .lt. 100 ) then
 
-            CALL TEXPYR ( YEAR )
+            call texpyr ( year )
 
-         END IF
+         end if
 
-         TVEC(1) = DBLE(YEAR)
+         tvec(1) = dble(year)
 !
 !        We are ready for launch, convert the time vector.
 !
-         CALL TTRANS ( TYPE, 'TDB', TVEC )
-         ET = TVEC(1)
+         call ttrans ( type, 'TDB', tvec )
+         et = tvec(1)
 
-      ELSE IF ( TYPE .EQ. 'JD' ) THEN
+      else if ( type .eq. 'JD' ) then
 
-         CALL TTRANS ( 'JDUTC', 'TDB', TVEC )
-         ET = TVEC(1)
+         call ttrans ( 'JDUTC', 'TDB', tvec )
+         et = tvec(1)
 
-      ELSE
+      else
 !
 !        The only way to get here is if we got some unexpected
 !        type of time string. Signal an error.
 !
-         CALL SETMSG ( '# time strings are not handled by ' &
+         call setmsg ( '# time strings are not handled by ' &
          //            'UTC2ET. ' )
-         CALL ERRCH  ( '#', TYPE )
-         CALL SIGERR ( 'SPICE(INVALIDTIMESTRING)' )
-         CALL CHKOUT ( 'UTC2ET' )
-         RETURN
+         call errch  ( '#', type )
+         call sigerr ( 'SPICE(INVALIDTIMESTRING)' )
+         call chkout ( 'UTC2ET' )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'UTC2ET' )
-      RETURN
+      call chkout ( 'UTC2ET' )
+      return
 
-      END
+      end

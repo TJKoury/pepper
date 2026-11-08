@@ -1,6 +1,6 @@
 !$Procedure      ZZEKRBCK ( EK, record backup <STUB> )
 
-      SUBROUTINE ZZEKRBCK ( ACTION, HANDLE, SEGDSC, COLDSC, RECNO )
+      subroutine zzekrbck ( action, handle, segdsc, coldsc, recno )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekglimit.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekglimit.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      CHARACTER*(*)         ACTION
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECNO
+      character*(*)         action
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recno
 
 ! $ Brief_I/O
 !
@@ -214,14 +214,14 @@
 !
 !-&
 
-      CHARACTER*(1)         TMPCHR
-      INTEGER               I
+      character*(1)         tmpchr
+      integer               i
 
-      TMPCHR = ACTION(1:1)
-      I      = HANDLE
-      I      = SEGDSC(1)
-      I      = COLDSC(1)
-      I      = RECNO
+      tmpchr = action(1:1)
+      i      = handle
+      i      = segdsc(1)
+      i      = coldsc(1)
+      i      = recno
 
-      RETURN
-      END
+      return
+      end

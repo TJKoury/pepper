@@ -1,6 +1,6 @@
 !$Procedure VDISTG ( Vector distance, general dimension )
 
-      DOUBLE PRECISION FUNCTION VDISTG ( V1, V2, NDIM )
+      double precision function vdistg ( v1, v2, ndim )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V1   ( * )
-      DOUBLE PRECISION      V2   ( * )
-      INTEGER               NDIM
+      double precision      v1   ( * )
+      double precision      v2   ( * )
+      integer               ndim
 
 ! $ Brief_I/O
 !
@@ -152,8 +152,8 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SCALE
-      INTEGER               I
+      double precision      scale
+      integer               i
 
 !
 !     We find the norm of a scaled version of the difference vector,
@@ -168,29 +168,29 @@
 !
 !     Find the scale factor.
 !
-      SCALE = 0.D0
+      scale = 0.d0
 
-      DO I = 1, NDIM
-         SCALE = MAX (  SCALE,  DABS ( V1(I) - V2(I) )  )
-      END DO
+      do i = 1, ndim
+         scale = max (  scale,  dabs ( v1(i) - v2(i) )  )
+      end do
 
 
-      IF ( SCALE .EQ. 0.D0 ) THEN
+      if ( scale .eq. 0.d0 ) then
 
-         VDISTG = 0.D0
-         RETURN
+         vdistg = 0.d0
+         return
 
-      ELSE
+      else
 
-         VDISTG = 0.D0
+         vdistg = 0.d0
 
-         DO I = 1, NDIM
-            VDISTG = VDISTG  +  (  ( V1(I) - V2(I) ) / SCALE  ) ** 2
-         END DO
+         do i = 1, ndim
+            vdistg = vdistg  +  (  ( v1(i) - v2(i) ) / scale  ) ** 2
+         end do
 
-         VDISTG = SCALE  *  SQRT ( VDISTG )
+         vdistg = scale  *  sqrt ( vdistg )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

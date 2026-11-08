@@ -1,6 +1,6 @@
 !$Procedure NBWID ( Non-blank width of a character array )
 
-      INTEGER FUNCTION NBWID ( ARRAY, NELT )
+      integer function nbwid ( array, nelt )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ARRAY   ( * )
-      INTEGER               NELT
+      character*(*)         array   ( * )
+      integer               nelt
 
 ! $ Brief_I/O
 !
@@ -131,54 +131,54 @@
 !
 !     Local variables
 !
-      INTEGER               STRLEN
-      INTEGER               I
-      INTEGER               J
+      integer               strlen
+      integer               i
+      integer               j
 
 
 !
 !     Nonsense case: no elements.
 !
-      IF ( NELT .LT. 1 ) THEN
+      if ( nelt .lt. 1 ) then
 
-         NBWID = 0
+         nbwid = 0
 
 !
 !     Get the length of the individual elements of the string.
 !     So far, we have no maximum width, because we haven't examined
 !     any elements.
 !
-      ELSE
+      else
 
-         STRLEN = LEN ( ARRAY(1) )
-         NBWID  = 0
-         I      = 0
+         strlen = len ( array(1) )
+         nbwid  = 0
+         i      = 0
 
 !
 !        Continue until the end of the array is reached, or until
 !        a string with no trailing blanks is found.
 !
-         DO WHILE ( I .LT. NELT  .AND.  NBWID .LT. STRLEN )
+         do while ( i .lt. nelt  .and.  nbwid .lt. strlen )
 
 !
 !           Search no further than the current value of NBWID.
 !
-            I = I + 1
-            J = STRLEN
+            i = i + 1
+            j = strlen
 
-            DO WHILE ( J .GT. NBWID  .AND.  ARRAY(I)(J:J) .EQ. ' ' )
-               J = J - 1
-            END DO
+            do while ( j .gt. nbwid  .and.  array(i)(j:j) .eq. ' ' )
+               j = j - 1
+            end do
 
 !
 !           NBWID only increases if this string was wider than all
 !           previous strings.
 !
-            NBWID = MAX ( NBWID, J )
+            nbwid = max ( nbwid, j )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

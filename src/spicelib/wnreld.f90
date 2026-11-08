@@ -1,6 +1,6 @@
 !$Procedure WNRELD ( Compare two DP windows )
 
-      LOGICAL FUNCTION  WNRELD ( A, OP, B )
+      logical function  wnreld ( a, op, b )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      A        ( LBCELL:* )
-      CHARACTER*(*)         OP
-      DOUBLE PRECISION      B        ( LBCELL:* )
+      double precision      a        ( lbcell:* )
+      character*(*)         op
+      double precision      b        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -258,118 +258,118 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDD
-      LOGICAL               WNINCD
+      logical               return
+      integer               cardd
+      logical               wnincd
 
 !
 !     Local variables
 !
-      INTEGER               ACARD
-      INTEGER               BCARD
-      LOGICAL               EQUAL
-      LOGICAL               SUBSET
-      INTEGER               I
+      integer               acard
+      integer               bcard
+      logical               equal
+      logical               subset
+      integer               i
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         WNRELD = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNRELD' )
-         WNRELD = .FALSE.
-      END IF
+      if ( return () ) then
+         wnreld = .false.
+         return
+      else
+         call chkin ( 'WNRELD' )
+         wnreld = .false.
+      end if
 
 !
 !     Find the cardinality of the input windows.
 !
-      ACARD  = CARDD ( A )
-      BCARD  = CARDD ( B )
+      acard  = cardd ( a )
+      bcard  = cardd ( b )
 
 !
 !     A and B are equal if they contain exactly the same intervals.
 !     We need to know this for nearly every relationship, so find out
 !     before going any further.
 !
-         IF ( ACARD .NE. BCARD ) THEN
-            EQUAL = .FALSE.
+         if ( acard .ne. bcard ) then
+            equal = .false.
 
-         ELSE
-            EQUAL = .TRUE.
+         else
+            equal = .true.
 
-            DO I = 1, ACARD
-               EQUAL = EQUAL .AND. ( A(I) .EQ. B(I) )
-            END DO
-         END IF
+            do i = 1, acard
+               equal = equal .and. ( a(i) .eq. b(i) )
+            end do
+         end if
 
 !
 !     Simple equality and inequality are trivial at this point.
 !
-      IF ( OP .EQ. '=' ) THEN
+      if ( op .eq. '=' ) then
 
-         WNRELD = EQUAL
+         wnreld = equal
 
-      ELSE IF ( OP .EQ. '<>' ) THEN
+      else if ( op .eq. '<>' ) then
 
-         WNRELD = .NOT. EQUAL
+         wnreld = .not. equal
 
 !
 !     Subsets are a little trickier. A is a subset of B if every
 !     interval in A is included in B. In addition, A is a proper
 !     subset if A and B are not equal.
 !
-      ELSE IF ( OP .EQ. '<='  .OR.  OP .EQ. '<' ) THEN
+      else if ( op .eq. '<='  .or.  op .eq. '<' ) then
 
-         SUBSET = .TRUE.
+         subset = .true.
 
-         DO I = 1, ACARD, 2
-            SUBSET = SUBSET .AND. ( WNINCD ( A(I), A(I+1), B ) )
-         END DO
+         do i = 1, acard, 2
+            subset = subset .and. ( wnincd ( a(i), a(i+1), b ) )
+         end do
 
-         IF ( OP .EQ. '<=' ) THEN
-            WNRELD = SUBSET
+         if ( op .eq. '<=' ) then
+            wnreld = subset
 
-         ELSE
-            WNRELD = SUBSET .AND. ( .NOT. EQUAL )
-         END IF
+         else
+            wnreld = subset .and. ( .not. equal )
+         end if
 
 !
 !     A and B change places here...
 !
-      ELSE IF ( OP .EQ. '>='  .OR.  OP .EQ. '>' ) THEN
+      else if ( op .eq. '>='  .or.  op .eq. '>' ) then
 
-         SUBSET = .TRUE.
+         subset = .true.
 
-         DO I = 1, BCARD, 2
-            SUBSET = SUBSET .AND. ( WNINCD ( B(I), B(I+1), A ) )
-         END DO
+         do i = 1, bcard, 2
+            subset = subset .and. ( wnincd ( b(i), b(i+1), a ) )
+         end do
 
-         IF ( OP .EQ. '>=' ) THEN
-            WNRELD = SUBSET
+         if ( op .eq. '>=' ) then
+            wnreld = subset
 
-         ELSE
-            WNRELD = SUBSET .AND. ( .NOT. EQUAL )
-         END IF
+         else
+            wnreld = subset .and. ( .not. equal )
+         end if
 
 !
 !     An unrecognized operator always fails.
 !
-      ELSE
+      else
 
-         CALL SETMSG ( 'Relational operator, *, is not '         // &
+         call setmsg ( 'Relational operator, *, is not '         // &
                        'recognized.'                              )
-         CALL ERRCH  ( '*', OP                   )
-         CALL SIGERR ( 'SPICE(INVALIDOPERATION)' )
-         CALL CHKOUT ( 'WNRELD' )
-         RETURN
+         call errch  ( '*', op                   )
+         call sigerr ( 'SPICE(INVALIDOPERATION)' )
+         call chkout ( 'WNRELD' )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'WNRELD' )
-      RETURN
-      END
+      call chkout ( 'WNRELD' )
+      return
+      end

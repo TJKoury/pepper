@@ -8,20 +8,20 @@
 !
 !     Data array base address:
 !
-      INTEGER               DBIX08
-      PARAMETER           ( DBIX08 = 1 )
+      integer               dbix08
+      parameter           ( dbix08 = 1 )
 
 !
 !     Null flag array base address:
 !
-      INTEGER               NFIX08
-      PARAMETER           ( NFIX08 = 2 )
+      integer               nfix08
+      parameter           ( nfix08 = 2 )
 
 !
 !     Size of class 8 metadata array:
 !
-      INTEGER               MDSZ08
-      PARAMETER           ( MDSZ08 = 2 )
+      integer               mdsz08
+      parameter           ( mdsz08 = 2 )
 
 !
 !     End Include Section:  EK Column Class 8 Parameters

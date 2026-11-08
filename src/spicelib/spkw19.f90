@@ -1,9 +1,9 @@
 !$Procedure SPKW19 ( Write SPK segment, type 19 )
 
-      SUBROUTINE SPKW19 ( HANDLE,  BODY,    CENTER,  FRAME, &
-                          FIRST,   LAST,    SEGID,   NINTVL, &
-                          NPKTS,   SUBTPS,  DEGRES,  PACKTS, &
-                          EPOCHS,  IVLBDS,  SELLST          )
+      subroutine spkw19 ( handle,  body,    center,  frame, &
+                          first,   last,    segid,   nintvl, &
+                          npkts,   subtps,  degres,  packts, &
+                          epochs,  ivlbds,  sellst          )
 
 ! $ Abstract
 !
@@ -24,27 +24,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk19.inc'
-      INCLUDE 'spkrec.inc'
+      include 'spk19.inc'
+      include 'spkrec.inc'
 
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      INTEGER               NINTVL
-      INTEGER               NPKTS  ( * )
-      INTEGER               SUBTPS ( * )
-      INTEGER               DEGRES ( * )
-      DOUBLE PRECISION      PACKTS ( * )
-      DOUBLE PRECISION      EPOCHS ( * )
-      DOUBLE PRECISION      IVLBDS ( * )
-      LOGICAL               SELLST
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      integer               nintvl
+      integer               npkts  ( * )
+      integer               subtps ( * )
+      integer               degres ( * )
+      double precision      packts ( * )
+      double precision      epochs ( * )
+      double precision      ivlbds ( * )
+      logical               sellst
 
 ! $ Brief_I/O
 !
@@ -378,179 +378,179 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               ODD
-      LOGICAL               RETURN
+      logical               failed
+      logical               odd
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN =  40 )
+      integer               sidlen
+      parameter           ( sidlen =  40 )
 
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT =  32 )
+      integer               fprint
+      parameter           ( fprint =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT = 126 )
+      integer               lprint
+      parameter           ( lprint = 126 )
 
-      INTEGER               ND
-      PARAMETER           ( ND     =   2 )
+      integer               nd
+      parameter           ( nd     =   2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     =   6 )
+      integer               ni
+      parameter           ( ni     =   6 )
 
-      INTEGER               DSCSIZ
-      PARAMETER           ( DSCSIZ =   5 )
+      integer               dscsiz
+      parameter           ( dscsiz =   5 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE  =  19 )
+      integer               dtype
+      parameter           ( dtype  =  19 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DESCR  ( DSCSIZ )
+      double precision      dc     ( nd )
+      double precision      descr  ( dscsiz )
 
 
-      INTEGER               BEPIX
-      INTEGER               CHRCOD
-      INTEGER               EEPIX
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               ISEL
-      INTEGER               J
-      INTEGER               K
-      INTEGER               MINISZ
-      INTEGER               NDIR
-      INTEGER               PKTBEG
-      INTEGER               PKTDSZ
-      INTEGER               PKTEND
-      INTEGER               PKTSIZ
-      INTEGER               PKTSZS ( 0 : S19NST-1 )
-      INTEGER               REFCOD
-      INTEGER               SEGBEG
-      INTEGER               SEGEND
-      INTEGER               SUBTYP
-      INTEGER               WINSIZ
+      integer               bepix
+      integer               chrcod
+      integer               eepix
+      integer               i
+      integer               ic     ( ni )
+      integer               isel
+      integer               j
+      integer               k
+      integer               minisz
+      integer               ndir
+      integer               pktbeg
+      integer               pktdsz
+      integer               pktend
+      integer               pktsiz
+      integer               pktszs ( 0 : s19nst-1 )
+      integer               refcod
+      integer               segbeg
+      integer               segend
+      integer               subtyp
+      integer               winsiz
 
 !
 !     Saved values
 !
-      SAVE                  PKTSZS
+      save                  pktszs
 
 !
 !     Initial values
 !
-      DATA                  PKTSZS  /  S19PS0, S19PS1, S19PS2 /
+      data                  pktszs  /  s19ps0, s19ps1, s19ps2 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKW19' )
+      call chkin ( 'SPKW19' )
 
 !
 !     Start with a parameter compatibility check.
 !
-      IF ( MAXREC .LT. MAXRSZ ) THEN
+      if ( maxrec .lt. maxrsz ) then
 
-         CALL SETMSG ( 'SPK type 19 record size may be as ' &
+         call setmsg ( 'SPK type 19 record size may be as ' &
          //            'large as #, but SPKPVN record size ' &
          //            'is #.'                              )
-         CALL ERRINT ( '#',  MAXRSZ                         )
-         CALL ERRINT ( '#',  MAXREC                         )
-         CALL SIGERR ( 'SPICE(BUG0)'                        )
-         CALL CHKOUT ( 'SPKW19'                             )
-         RETURN
+         call errint ( '#',  maxrsz                         )
+         call errint ( '#',  maxrec                         )
+         call sigerr ( 'SPICE(BUG0)'                        )
+         call chkout ( 'SPKW19'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the segment descriptor bounds are
 !     correctly ordered.
 !
-      IF ( LAST .LT. FIRST ) THEN
+      if ( last .lt. first ) then
 
-         CALL SETMSG ( 'Segment start time is #; stop time is #; ' &
+         call setmsg ( 'Segment start time is #; stop time is #; ' &
          //            'bounds must be in nondecreasing order.'    )
-         CALL ERRDP  ( '#', FIRST                                  )
-         CALL ERRDP  ( '#', LAST                                   )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'SPKW19'                                    )
-         RETURN
+         call errdp  ( '#', first                                  )
+         call errdp  ( '#', last                                   )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'SPKW19'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL NAMFRM ( FRAME, REFCOD )
+      call namfrm ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'SPKW19'                                  )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'SPKW19'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Check to see if the segment identifier is too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' &
+         call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                   )
-         CALL CHKOUT ( 'SPKW19'                                )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                   )
+         call chkout ( 'SPKW19'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         CHRCOD = ICHAR( SEGID(I:I) )
+         chrcod = ichar( segid(i:i) )
 
-         IF ( ( CHRCOD .LT. FPRINT ) .OR. ( CHRCOD .GT. LPRINT ) ) THEN
+         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains ' &
+            call setmsg ( 'The segment identifier contains ' &
             //            'nonprintable characters'         )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'        )
-            CALL CHKOUT ( 'SPKW19'                          )
-            RETURN
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'        )
+            call chkout ( 'SPKW19'                          )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     The mini-segment/interval count must be positive.
 !
-      IF ( NINTVL .LT. 1 ) THEN
+      if ( nintvl .lt. 1 ) then
 
-         CALL SETMSG ( 'Mini-segment/interval count was #; ' &
+         call setmsg ( 'Mini-segment/interval count was #; ' &
          //            'this count must be positive.'       )
-         CALL ERRINT ( '#', NINTVL                          )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                )
-         CALL CHKOUT ( 'SPKW19'                             )
-         RETURN
+         call errint ( '#', nintvl                          )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                )
+         call chkout ( 'SPKW19'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the interval bounds form a strictly
@@ -558,35 +558,35 @@
 !
 !     Note that there are NINTVL+1 bounds.
 !
-      DO I = 1, NINTVL
+      do i = 1, nintvl
 
-         IF ( IVLBDS(I) .GE. IVLBDS(I+1) ) THEN
+         if ( ivlbds(i) .ge. ivlbds(i+1) ) then
 
-            CALL SETMSG ( 'Interval bounds at indices # and # ' &
+            call setmsg ( 'Interval bounds at indices # and # ' &
             //            'are # and # respectively. The ' &
             //            'difference is #. The bounds are ' &
             //            'required to be strictly increasing.' )
-            CALL ERRINT ( '#', I                                )
-            CALL ERRINT ( '#', I+1                              )
-            CALL ERRDP  ( '#', IVLBDS(I)                        )
-            CALL ERRDP  ( '#', IVLBDS(I+1)                      )
-            CALL ERRDP  ( '#', IVLBDS(I+1) - IVLBDS(I)          )
-            CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)'             )
-            CALL CHKOUT ( 'SPKW19'                              )
-            RETURN
+            call errint ( '#', i                                )
+            call errint ( '#', i+1                              )
+            call errdp  ( '#', ivlbds(i)                        )
+            call errdp  ( '#', ivlbds(i+1)                      )
+            call errdp  ( '#', ivlbds(i+1) - ivlbds(i)          )
+            call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'             )
+            call chkout ( 'SPKW19'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Make sure the time span of the descriptor doesn't extend
 !     beyond the span of the interval bounds.
 !
-      IF (      ( FIRST .LT. IVLBDS(1       ) ) &
-           .OR. ( LAST  .GT. IVLBDS(NINTVL+1) ) ) THEN
+      if (      ( first .lt. ivlbds(1       ) ) &
+           .or. ( last  .gt. ivlbds(nintvl+1) ) ) then
 
-         CALL SETMSG ( 'First interval start time is #; ' &
+         call setmsg ( 'First interval start time is #; ' &
          //            'segment start time is #; segment ' &
          //            'stop time is #; last interval stop ' &
          //            'time is #. This sequence of times ' &
@@ -594,15 +594,15 @@
          //            'segment coverage must be contained ' &
          //            'within the union of the interpolation ' &
          //            'intervals.'                            )
-         CALL ERRDP  ( '#', IVLBDS(1)                          )
-         CALL ERRDP  ( '#', FIRST                              )
-         CALL ERRDP  ( '#', LAST                               )
-         CALL ERRDP  ( '#', IVLBDS(NINTVL+1)                   )
-         CALL SIGERR ( 'SPICE(COVERAGEGAP)'                    )
-         CALL CHKOUT ( 'SPKW19'                                )
-         RETURN
+         call errdp  ( '#', ivlbds(1)                          )
+         call errdp  ( '#', first                              )
+         call errdp  ( '#', last                               )
+         call errdp  ( '#', ivlbds(nintvl+1)                   )
+         call sigerr ( 'SPICE(COVERAGEGAP)'                    )
+         call chkout ( 'SPKW19'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the input data before writing to the file.
@@ -614,13 +614,13 @@
 !     Initialize the mini-segment packet array indices,
 !     and those of the mini-segment epoch array as well.
 !
-      PKTBEG = 0
-      PKTEND = 0
+      pktbeg = 0
+      pktend = 0
 
-      BEPIX  = 0
-      EEPIX  = 0
+      bepix  = 0
+      eepix  = 0
 
-      DO I = 1, NINTVL
+      do i = 1, nintvl
 !
 !        First, just make sure the packet count for the current
 !        mini-segment is at least two. This check reduces our chances
@@ -628,83 +628,83 @@
 !
 !        Check the number of packets.
 !
-         IF ( NPKTS(I) .LT. 2 ) THEN
+         if ( npkts(i) .lt. 2 ) then
 
-            CALL SETMSG ( 'At least 2 packets are required ' &
+            call setmsg ( 'At least 2 packets are required ' &
             //            'for SPK type 19. Number of packets ' &
             //            'supplied was # in mini-segment at index #.' )
-            CALL ERRINT ( '#', NPKTS(I)                                )
-            CALL ERRINT ( '#', I                                       )
-            CALL SIGERR ( 'SPICE(TOOFEWPACKETS)'                       )
-            CALL CHKOUT ( 'SPKW19'                                     )
-            RETURN
+            call errint ( '#', npkts(i)                                )
+            call errint ( '#', i                                       )
+            call sigerr ( 'SPICE(TOOFEWPACKETS)'                       )
+            call chkout ( 'SPKW19'                                     )
+            return
 
-         END IF
+         end if
 
 !
 !        Set the packet size, which is a function of the subtype. Also
 !        set the window size. First check the subtype, which will be
 !        used as an array index.
 !
-         SUBTYP = SUBTPS(I)
+         subtyp = subtps(i)
 
-         IF (  ( SUBTYP .LT. 0 ) .OR. ( SUBTYP .GT. S19NST-1 ) ) THEN
+         if (  ( subtyp .lt. 0 ) .or. ( subtyp .gt. s19nst-1 ) ) then
 
-            CALL SETMSG ( 'Unexpected SPK type 19 subtype # ' &
+            call setmsg ( 'Unexpected SPK type 19 subtype # ' &
             //            'found in mini-segment #.'          )
-            CALL ERRINT ( '#',  SUBTYP                        )
-            CALL ERRINT ( '#',  I                             )
-            CALL SIGERR ( 'SPICE(INVALIDSUBTYPE)'             )
-            CALL CHKOUT ( 'SPKW19'                            )
-            RETURN
+            call errint ( '#',  subtyp                        )
+            call errint ( '#',  i                             )
+            call sigerr ( 'SPICE(INVALIDSUBTYPE)'             )
+            call chkout ( 'SPKW19'                            )
+            return
 
-         END IF
+         end if
 
-         PKTSIZ = PKTSZS ( SUBTYP )
+         pktsiz = pktszs ( subtyp )
 
-         IF ( SUBTYP .EQ. S19TP0 ) THEN
+         if ( subtyp .eq. s19tp0 ) then
 
-            WINSIZ = ( DEGRES(I) + 1 ) / 2
+            winsiz = ( degres(i) + 1 ) / 2
 
-         ELSE IF ( SUBTYP .EQ. S19TP1 ) THEN
+         else if ( subtyp .eq. s19tp1 ) then
 
-            WINSIZ =   DEGRES(I) + 1
+            winsiz =   degres(i) + 1
 
-         ELSE IF ( SUBTYP .EQ. S19TP2 ) THEN
+         else if ( subtyp .eq. s19tp2 ) then
 
-            WINSIZ = ( DEGRES(I) + 1 ) / 2
+            winsiz = ( degres(i) + 1 ) / 2
 
-         ELSE
-            CALL SETMSG ( 'Subtype = #; not expected.' )
-            CALL ERRINT ( '#', SUBTYP                  )
-            CALL SIGERR ( 'SPICE(BUG1)'                )
-         END IF
+         else
+            call setmsg ( 'Subtype = #; not expected.' )
+            call errint ( '#', subtyp                  )
+            call sigerr ( 'SPICE(BUG1)'                )
+         end if
 
 !
 !        Make sure that the degree of the interpolating polynomials is
 !        in range.
 !
-         IF (      ( DEGRES(I) .LT. 1      ) &
-              .OR. ( DEGRES(I) .GT. MAXDEG )  )  THEN
+         if (      ( degres(i) .lt. 1      ) &
+              .or. ( degres(i) .gt. maxdeg )  )  then
 
-            CALL SETMSG ( 'The interpolating polynomials of ' &
+            call setmsg ( 'The interpolating polynomials of ' &
             //            'mini-segment # have degree #; the ' &
             //            'valid degree range is [1, #]'      )
-            CALL ERRINT ( '#', I                              )
-            CALL ERRINT ( '#', DEGRES(I)                      )
-            CALL ERRINT ( '#', MAXDEG                         )
-            CALL SIGERR ( 'SPICE(INVALIDDEGREE)'              )
-            CALL CHKOUT ( 'SPKW19'                            )
-            RETURN
+            call errint ( '#', i                              )
+            call errint ( '#', degres(i)                      )
+            call errint ( '#', maxdeg                         )
+            call sigerr ( 'SPICE(INVALIDDEGREE)'              )
+            call chkout ( 'SPKW19'                            )
+            return
 
-         END IF
+         end if
 
 !
 !        Make sure that the window size is even.
 !
-         IF (   ODD( WINSIZ )   )  THEN
+         if (   odd( winsiz )   )  then
 
-            CALL SETMSG ( 'The interpolating polynomials of ' &
+            call setmsg ( 'The interpolating polynomials of ' &
             //            'mini-segment # have window size # ' &
             //            'and degree # for SPK type 19. ' &
             //            'The mini-segment subtype is #. ' &
@@ -712,15 +712,15 @@
             //            'mod 4 for subtype 0 (Hermite ' &
             //            'interpolation) and be odd for subtype ' &
             //            '1 (Lagrange interpolation).'          )
-            CALL ERRINT ( '#', I                                 )
-            CALL ERRINT ( '#', WINSIZ                            )
-            CALL ERRINT ( '#', DEGRES(I)                         )
-            CALL ERRINT ( '#', SUBTPS(I)                         )
-            CALL SIGERR ( 'SPICE(BADWINDOWSIZE)'                 )
-            CALL CHKOUT ( 'SPKW19'                               )
-            RETURN
+            call errint ( '#', i                                 )
+            call errint ( '#', winsiz                            )
+            call errint ( '#', degres(i)                         )
+            call errint ( '#', subtps(i)                         )
+            call sigerr ( 'SPICE(BADWINDOWSIZE)'                 )
+            call chkout ( 'SPKW19'                               )
+            return
 
-         END IF
+         end if
 
 
 !
@@ -731,61 +731,61 @@
 !        of the Ith mini-segment. We'll call the begin and end
 !        epoch indices BEPIX and EEPIX respectively.
 !
-         BEPIX  =  EEPIX + 1
-         EEPIX  =  BEPIX - 1 +  NPKTS(I)
+         bepix  =  eepix + 1
+         eepix  =  bepix - 1 +  npkts(i)
 
-         DO J = 1, NPKTS(I) - 1
+         do j = 1, npkts(i) - 1
 
-            K = BEPIX + J - 1
+            k = bepix + j - 1
 
-            IF ( EPOCHS(K) .GE. EPOCHS(K+1) ) THEN
+            if ( epochs(k) .ge. epochs(k+1) ) then
 
-               CALL SETMSG ( 'In mini-segment #, epoch # having ' &
+               call setmsg ( 'In mini-segment #, epoch # having ' &
                //            'index # in array EPOCHS and index # ' &
                //            'in the mini-segment is greater than ' &
                //            'or equal to its successor #.'         )
-               CALL ERRINT ( '#',  I                                )
-               CALL ERRDP  ( '#',  EPOCHS(K  )                      )
-               CALL ERRINT ( '#',  K                                )
-               CALL ERRINT ( '#',  J                                )
-               CALL ERRDP  ( '#',  EPOCHS(K+1)                      )
-               CALL SIGERR ( 'SPICE(TIMESOUTOFORDER)'               )
-               CALL CHKOUT ( 'SPKW19'                               )
-               RETURN
+               call errint ( '#',  i                                )
+               call errdp  ( '#',  epochs(k  )                      )
+               call errint ( '#',  k                                )
+               call errint ( '#',  j                                )
+               call errdp  ( '#',  epochs(k+1)                      )
+               call sigerr ( 'SPICE(TIMESOUTOFORDER)'               )
+               call chkout ( 'SPKW19'                               )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Make sure that the span of the input epochs of the Ith
 !        mini-segment includes the Ith interpolation interval.
 !
-         IF (  EPOCHS(BEPIX) .GT. IVLBDS(I) ) THEN
+         if (  epochs(bepix) .gt. ivlbds(i) ) then
 
-            CALL SETMSG ( 'Interpolation interval # start time # ' &
+            call setmsg ( 'Interpolation interval # start time # ' &
             //            'precedes mini-segment''s first epoch #.' )
-            CALL ERRINT ( '#',  I                                   )
-            CALL ERRDP  ( '#',  IVLBDS(I)                           )
-            CALL ERRDP  ( '#',  EPOCHS(BEPIX)                       )
-            CALL SIGERR ( 'SPICE(BOUNDSDISAGREE)'                   )
-            CALL CHKOUT ( 'SPKW19'                                  )
-            RETURN
+            call errint ( '#',  i                                   )
+            call errdp  ( '#',  ivlbds(i)                           )
+            call errdp  ( '#',  epochs(bepix)                       )
+            call sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
+            call chkout ( 'SPKW19'                                  )
+            return
 
-         ELSE IF (  EPOCHS(EEPIX) .LT. IVLBDS(I+1) ) THEN
+         else if (  epochs(eepix) .lt. ivlbds(i+1) ) then
 
-            CALL SETMSG ( 'Interpolation interval # end time # ' &
+            call setmsg ( 'Interpolation interval # end time # ' &
             //            'exceeds mini-segment''s last epoch #.'   )
-            CALL ERRINT ( '#',  I                                   )
-            CALL ERRDP  ( '#',  IVLBDS(I+1)                         )
-            CALL ERRDP  ( '#',  EPOCHS(EEPIX)                       )
-            CALL SIGERR ( 'SPICE(BOUNDSDISAGREE)'                   )
-            CALL CHKOUT ( 'SPKW19'                                  )
-            RETURN
+            call errint ( '#',  i                                   )
+            call errdp  ( '#',  ivlbds(i+1)                         )
+            call errdp  ( '#',  epochs(eepix)                       )
+            call sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
+            call chkout ( 'SPKW19'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we made it this far, we're ready to start writing the segment.
@@ -874,64 +874,64 @@
 !     Create the segment descriptor. We don't use SPKPDS because
 !     that routine doesn't allow creation of a singleton segment.
 !
-      IC(1) = BODY
-      IC(2) = CENTER
-      IC(3) = REFCOD
-      IC(4) = DTYPE
+      ic(1) = body
+      ic(2) = center
+      ic(3) = refcod
+      ic(4) = dtype
 
-      DC(1) = FIRST
-      DC(2) = LAST
+      dc(1) = first
+      dc(2) = last
 
-      CALL DAFPS  ( ND, NI, DC, IC, DESCR )
+      call dafps  ( nd, ni, dc, ic, descr )
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW19' )
+         return
+      end if
 
 !
 !     Re-initialize the mini-segment packet array indices,
 !     and those of the mini-segment epoch array as well.
 !
-      PKTBEG = 0
-      PKTEND = 0
+      pktbeg = 0
+      pktend = 0
 
-      BEPIX  = 0
-      EEPIX  = 0
+      bepix  = 0
+      eepix  = 0
 
 !
 !     Write data for each mini-segment to the file.
 !
-      DO I = 1, NINTVL
+      do i = 1, nintvl
 !
 !        Set the packet size, which is a function of the subtype.
 !
-         SUBTYP = SUBTPS ( I )
+         subtyp = subtps ( i )
 
-         PKTSIZ = PKTSZS ( SUBTYP )
+         pktsiz = pktszs ( subtyp )
 
-         IF ( SUBTYP .EQ. S19TP0 ) THEN
+         if ( subtyp .eq. s19tp0 ) then
 
-            WINSIZ = ( DEGRES(I) + 1 ) / 2
+            winsiz = ( degres(i) + 1 ) / 2
 
-         ELSE IF ( SUBTYP .EQ. S19TP1 ) THEN
+         else if ( subtyp .eq. s19tp1 ) then
 
-            WINSIZ =   DEGRES(I) + 1
+            winsiz =   degres(i) + 1
 
-         ELSE IF ( SUBTYP .EQ. S19TP2 ) THEN
+         else if ( subtyp .eq. s19tp2 ) then
 
-            WINSIZ = ( DEGRES(I) + 1 ) / 2
+            winsiz = ( degres(i) + 1 ) / 2
 
-         ELSE
-            CALL SETMSG ( 'Subtype = #; not expected.' )
-            CALL ERRINT ( '#', SUBTYP                  )
-            CALL SIGERR ( 'SPICE(BUG2)'                )
-         END IF
+         else
+            call setmsg ( 'Subtype = #; not expected.' )
+            call errint ( '#', subtyp                  )
+            call sigerr ( 'SPICE(BUG2)'                )
+         end if
 
 !
 !        Now that we have the packet size, we can compute
@@ -939,64 +939,64 @@
 !        be the total count of packet data entries for this
 !        mini-segment.
 !
-         PKTDSZ =  NPKTS(I) * PKTSIZ
+         pktdsz =  npkts(i) * pktsiz
 
-         PKTBEG = PKTEND  +  1
-         PKTEND = PKTBEG  -  1  +  PKTDSZ
+         pktbeg = pktend  +  1
+         pktend = pktbeg  -  1  +  pktdsz
 
 !
 !        At this point, we're read to start writing the
 !        current mini-segment to the file. Start with the
 !        packet data.
 !
-         CALL DAFADA ( PACKTS(PKTBEG), PKTDSZ )
+         call dafada ( packts(pktbeg), pktdsz )
 
 !
 !        Write the epochs for this mini-segment.
 !
-         BEPIX = EEPIX + 1
-         EEPIX = BEPIX - 1 + NPKTS(I)
+         bepix = eepix + 1
+         eepix = bepix - 1 + npkts(i)
 
-         CALL DAFADA ( EPOCHS(BEPIX), NPKTS(I) )
+         call dafada ( epochs(bepix), npkts(i) )
 
 !
 !        Compute the number of epoch directories for the
 !        current mini-segment.
 !
-         NDIR = ( NPKTS(I) - 1 ) / DIRSIZ
+         ndir = ( npkts(i) - 1 ) / dirsiz
 
 !
 !        Write the epoch directories to the segment.
 !
-         DO J = 1, NDIR
+         do j = 1, ndir
 
-            K = BEPIX  -  1  +  ( J * DIRSIZ )
+            k = bepix  -  1  +  ( j * dirsiz )
 
-            CALL DAFADA ( EPOCHS(K), 1 )
+            call dafada ( epochs(k), 1 )
 
-         END DO
+         end do
 
 !
 !        Write the mini-segment's subtype, window size, and packet
 !        count to the segment.
 !
-         CALL DAFADA ( DBLE( SUBTPS(I) ),  1 )
-         CALL DAFADA ( DBLE( WINSIZ    ),  1 )
-         CALL DAFADA ( DBLE( NPKTS(I)  ),  1 )
+         call dafada ( dble( subtps(i) ),  1 )
+         call dafada ( dble( winsiz    ),  1 )
+         call dafada ( dble( npkts(i)  ),  1 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKW19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKW19' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     We've finished writing the mini-segments.
 !
 !     Next write the interpolation interval bounds.
 !
-      CALL DAFADA ( IVLBDS, NINTVL+1 )
+      call dafada ( ivlbds, nintvl+1 )
 
 !
 !     Create and write directories for the interval
@@ -1005,11 +1005,11 @@
 !     The directory count is the interval bound count
 !     (N+1), minus 1, divided by the directory size.
 !
-      NDIR = NINTVL / DIRSIZ
+      ndir = nintvl / dirsiz
 
-      DO I = 1, NDIR
-         CALL DAFADA (  IVLBDS( DIRSIZ*I ),  1  )
-      END DO
+      do i = 1, ndir
+         call dafada (  ivlbds( dirsiz*i ),  1  )
+      end do
 
 !
 !     Now we compute and write the start/stop pointers
@@ -1020,13 +1020,13 @@
 !     to the first DAF address in the segment has
 !     value 1.
 !
-      SEGEND = 0
+      segend = 0
 
-      DO I = 1, NINTVL
+      do i = 1, nintvl
 !
 !        Set the packet size, which is a function of the subtype.
 !
-         PKTSIZ = PKTSZS ( SUBTPS(I) )
+         pktsiz = pktszs ( subtps(i) )
 
 !
 !        In order to compute the end pointer of the current
@@ -1043,13 +1043,13 @@
 !                    +  ( n_packets - 1 ) / DIRSIZ
 !                    +  3
 !
-         MINISZ =       NPKTS(I) * ( PKTSIZ + 1 ) &
-                    + ( NPKTS(I) - 1 ) / DIRSIZ &
+         minisz =       npkts(i) * ( pktsiz + 1 ) &
+                    + ( npkts(i) - 1 ) / dirsiz &
                     +   3
 
 
-         SEGBEG = SEGEND + 1
-         SEGEND = SEGBEG + MINISZ - 1
+         segbeg = segend + 1
+         segend = segbeg + minisz - 1
 
 !
 !        Write the mini-segment begin pointer.
@@ -1057,39 +1057,39 @@
 !        After the loop terminates, the final end pointer, incremented
 !        by 1, will be written.
 !
-         CALL DAFADA ( DBLE(SEGBEG), 1 )
+         call dafada ( dble(segbeg), 1 )
 
-      END DO
+      end do
 
 !
 !     Write the last mini-segment end pointer, incremented by one.
 !     SEGEND was computed on the last iteration of the above loop.
 !
-      CALL DAFADA ( DBLE(SEGEND+1), 1 )
+      call dafada ( dble(segend+1), 1 )
 
 !
 !     Write out the interval selection flag. The input
 !     boolean value is represented by a numeric constant.
 !
-      IF ( SELLST ) THEN
+      if ( sellst ) then
 
-         ISEL = ITRUE
-      ELSE
-         ISEL = IFALSE
-      END IF
+         isel = itrue
+      else
+         isel = ifalse
+      end if
 
-      CALL DAFADA ( DBLE( ISEL ),  1 )
+      call dafada ( dble( isel ),  1 )
 
 !
 !     Write the mini-segment/interpolation interval count.
 !
-      CALL DAFADA ( DBLE(NINTVL), 1 )
+      call dafada ( dble(nintvl), 1 )
 
 !
 !     End the segment.
 !
-      CALL DAFENA
+      call dafena
 
-      CALL CHKOUT ( 'SPKW19' )
-      RETURN
-      END
+      call chkout ( 'SPKW19' )
+      return
+      end

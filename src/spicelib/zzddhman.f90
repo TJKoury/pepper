@@ -1,8 +1,8 @@
 !$Procedure ZZDDHMAN ( Private --- DAF/DAS Handle Manager )
 
-      SUBROUTINE ZZDDHMAN ( LOCK,   ARCH,   FNAME,  METHOD, &
-                            HANDLE, UNIT,   INTAMH, INTARC, &
-                            INTBFF, NATIVE, FOUND,  KILL    )
+      subroutine zzddhman ( lock,   arch,   fname,  method, &
+                            handle, unit,   intamh, intarc, &
+                            intbff, native, found,  kill    )
 
 ! $ Abstract
 !
@@ -25,22 +25,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      LOGICAL               LOCK
-      CHARACTER*(*)         ARCH
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         METHOD
-      INTEGER               HANDLE
-      INTEGER               UNIT
-      INTEGER               INTAMH
-      INTEGER               INTARC
-      INTEGER               INTBFF
-      LOGICAL               NATIVE
-      LOGICAL               FOUND
-      LOGICAL               KILL
+      logical               lock
+      character*(*)         arch
+      character*(*)         fname
+      character*(*)         method
+      integer               handle
+      integer               unit
+      integer               intamh
+      integer               intarc
+      integer               intbff
+      logical               native
+      logical               found
+      logical               kill
 
 ! $ Brief_I/O
 !
@@ -187,53 +187,53 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               BSRCHI
-      INTEGER               ISRCHC
-      INTEGER               ISRCHI
-      INTEGER               RTRIM
-      INTEGER               ZZDDHCLU
+      integer               bsrchi
+      integer               isrchc
+      integer               isrchi
+      integer               rtrim
+      integer               zzddhclu
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
 !
-      CHARACTER*(FILEN)     LOCFNM
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(filen)     locfnm
+      character*(strsiz)    tmpstr
 
-      DOUBLE PRECISION      MNM
+      double precision      mnm
 
-      INTEGER               ACCMET
-      INTEGER               BFF
-      INTEGER               FILARC
-      INTEGER               I
-      INTEGER               INQHAN
-      INTEGER               IOSTAT
-      INTEGER               LCHAR
-      INTEGER               LOCKED
-      INTEGER               LOCLUN
-      INTEGER               SUPIDX
+      integer               accmet
+      integer               bff
+      integer               filarc
+      integer               i
+      integer               inqhan
+      integer               iostat
+      integer               lchar
+      integer               locked
+      integer               loclun
+      integer               supidx
 
-      LOGICAL               ERROR
-      LOGICAL               INQEXT
-      LOGICAL               INQOPN
-      LOGICAL               LOCFND
-      LOGICAL               PLATOK
+      logical               error
+      logical               inqext
+      logical               inqopn
+      logical               locfnd
+      logical               platok
 
 !
 !     This logical allows initialization code to execute.
 !
-      LOGICAL               FIRST
-      LOGICAL               OPNFST
+      logical               first
+      logical               opnfst
 
 !
 !     These strings store the labels for the parameters defined
 !     in the include file and retrieved by ZZDDHINI.
 !
-      CHARACTER*(STRSIZ)    STRAMH ( NUMAMH )
-      CHARACTER*(STRSIZ)    STRARC ( NUMARC )
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
+      character*(strsiz)    stramh ( numamh )
+      character*(strsiz)    strarc ( numarc )
+      character*(strsiz)    strbff ( numbff )
 
 !
 !     The file table consists of a set of arrays which serve as
@@ -263,18 +263,18 @@
 !     fashion, FTABS is guaranteed to be a sorted list.  We will use
 !     this fact to improve handle lookups in the file table.
 !
-      INTEGER               NFT
+      integer               nft
 
-      INTEGER               FTABS  ( FTSIZE )
-      INTEGER               FTAMH  ( FTSIZE )
-      INTEGER               FTARC  ( FTSIZE )
-      INTEGER               FTBFF  ( FTSIZE )
-      INTEGER               FTHAN  ( FTSIZE )
-      CHARACTER*(FILEN)     FTNAM  ( FTSIZE )
-      INTEGER               FTRTM  ( FTSIZE )
-      DOUBLE PRECISION      FTMNM  ( FTSIZE )
+      integer               ftabs  ( ftsize )
+      integer               ftamh  ( ftsize )
+      integer               ftarc  ( ftsize )
+      integer               ftbff  ( ftsize )
+      integer               fthan  ( ftsize )
+      character*(filen)     ftnam  ( ftsize )
+      integer               ftrtm  ( ftsize )
+      double precision      ftmnm  ( ftsize )
 
-      INTEGER               FINDEX
+      integer               findex
 
 !
 !     NEXT stores the next handle to be used for file access.  This
@@ -282,7 +282,7 @@
 !     incremented just before entries in the file table are made.
 !     It begins as zero valued.
 !
-      INTEGER               NEXT
+      integer               next
 
 !
 !     The unit table consists of a set of arrays which serve as
@@ -306,93 +306,93 @@
 !     may not exceed UTSIZE.  UINDEX refers to a unit of interest
 !     within the table.
 !
-      INTEGER               NUT
+      integer               nut
 
-      INTEGER               UTCST ( UTSIZE )
-      INTEGER               UTHAN ( UTSIZE )
-      LOGICAL               UTLCK ( UTSIZE )
-      INTEGER               UTLUN ( UTSIZE )
+      integer               utcst ( utsize )
+      integer               uthan ( utsize )
+      logical               utlck ( utsize )
+      integer               utlun ( utsize )
 
-      INTEGER               UINDEX
+      integer               uindex
 
 !
 !     The following stores the native binary file format, a list of
 !     codes for supported binary formats, and the number of entries
 !     in SUPBFF.
 !
-      INTEGER               NATBFF
-      INTEGER               SUPBFF ( NUMBFF )
-      INTEGER               NUMSUP
+      integer               natbff
+      integer               supbff ( numbff )
+      integer               numsup
 
 !
 !     Request counter used to determine cost.
 !
-      INTEGER               REQCNT
+      integer               reqcnt
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  OPNFST
+      save                  first
+      save                  opnfst
 
-      SAVE                  STRAMH
-      SAVE                  STRARC
-      SAVE                  STRBFF
+      save                  stramh
+      save                  strarc
+      save                  strbff
 
-      SAVE                  NFT
-      SAVE                  FTABS
-      SAVE                  FTAMH
-      SAVE                  FTARC
-      SAVE                  FTBFF
-      SAVE                  FTHAN
-      SAVE                  FTNAM
-      SAVE                  FTRTM
-      SAVE                  FTMNM
+      save                  nft
+      save                  ftabs
+      save                  ftamh
+      save                  ftarc
+      save                  ftbff
+      save                  fthan
+      save                  ftnam
+      save                  ftrtm
+      save                  ftmnm
 
-      SAVE                  NEXT
+      save                  next
 
-      SAVE                  NUT
-      SAVE                  UTCST
-      SAVE                  UTHAN
-      SAVE                  UTLCK
-      SAVE                  UTLUN
+      save                  nut
+      save                  utcst
+      save                  uthan
+      save                  utlck
+      save                  utlun
 
-      SAVE                  NATBFF
-      SAVE                  SUPBFF
-      SAVE                  NUMSUP
+      save                  natbff
+      save                  supbff
+      save                  numsup
 
-      SAVE                  REQCNT
+      save                  reqcnt
 
 
 !
 !     Data Statements
 !
-      DATA                  FIRST  / .TRUE.                  /
-      DATA                  OPNFST / .TRUE.                  /
-      DATA                  NFT    / 0                       /
-      DATA                  NEXT   / 0                       /
-      DATA                  NUT    / 0                       /
-      DATA                  REQCNT / 0                       /
+      data                  first  / .true.                  /
+      data                  opnfst / .true.                  /
+      data                  nft    / 0                       /
+      data                  next   / 0                       /
+      data                  nut    / 0                       /
+      data                  reqcnt / 0                       /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'ZZDDHMAN' )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'ZZDDHMAN' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin  ( 'ZZDDHMAN' )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'ZZDDHMAN' )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZDDHOPN ( Private --- Load file )
 
-      ENTRY ZZDDHOPN ( FNAME, METHOD, ARCH, HANDLE )
+      entry zzddhopn ( fname, method, arch, handle )
 
 ! $ Abstract
 !
@@ -587,318 +587,318 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHOPN' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHOPN' )
+      end if
 
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED() to handle the unlikely event that
 !        ZZDDHINI signaled SPICE(BUG).
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDDHOPN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDDHOPN' )
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     On first pass, perform any runtime environment checks.
 !
-      IF ( OPNFST ) THEN
+      if ( opnfst ) then
 
-         CALL ZZPLTCHK ( PLATOK )
+         call zzpltchk ( platok )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDDHOPN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDDHOPN' )
+            return
+         end if
 
 !
 !        Clear OPNFST, since we've performed the diagnostics.
 !
-         OPNFST = .FALSE.
+         opnfst = .false.
 
-      END IF
+      end if
 
 !
 !     Initialize the value of HANDLE to 0.  In the event an error
 !     is signaled this invalid value will be returned to the caller
 !     for safety.
 !
-      HANDLE = 0
+      handle = 0
 
 !
 !     Left justify FNAME to compress off any leading spaces.
 !
-      CALL LJUST ( FNAME, LOCFNM )
+      call ljust ( fname, locfnm )
 
 !
 !     Translate the value of the requested access method to the
 !     corresponding integer code.
 !
-      TMPSTR = METHOD
-      CALL UCASE ( TMPSTR, TMPSTR )
-      ACCMET = ISRCHC ( TMPSTR, NUMAMH, STRAMH )
+      tmpstr = method
+      call ucase ( tmpstr, tmpstr )
+      accmet = isrchc ( tmpstr, numamh, stramh )
 
 !
 !     Check if the code was located.
 !
-      IF ( ACCMET .EQ. 0 ) THEN
+      if ( accmet .eq. 0 ) then
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         CALL SETMSG ( 'The attempt to load file, ''#'', with access ' &
+         call setmsg ( 'The attempt to load file, ''#'', with access ' &
          //            'method, ''#'', failed because this access ' &
          //            'method is unsupported.'                        )
-         CALL ERRCH  ( '#', LOCFNM                                     )
-         CALL ERRCH  ( '#', METHOD                                     )
-         CALL SIGERR ( 'SPICE(UNSUPPORTEDMETHOD)'                      )
-         CALL CHKOUT ( 'ZZDDHOPN'                                      )
-         RETURN
+         call errch  ( '#', locfnm                                     )
+         call errch  ( '#', method                                     )
+         call sigerr ( 'SPICE(UNSUPPORTEDMETHOD)'                      )
+         call chkout ( 'ZZDDHOPN'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Translate the value of the requested file architecture to
 !     the appropriate integer code.
 !
-      TMPSTR = ARCH
-      CALL UCASE ( TMPSTR, TMPSTR )
-      FILARC = ISRCHC ( TMPSTR, NUMARC, STRARC )
+      tmpstr = arch
+      call ucase ( tmpstr, tmpstr )
+      filarc = isrchc ( tmpstr, numarc, strarc )
 
 !
 !     Check if the code was located.
 !
-      IF ( FILARC .EQ. 0 ) THEN
+      if ( filarc .eq. 0 ) then
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         CALL SETMSG ( 'The attempt to load file, ''#'', with ' &
+         call setmsg ( 'The attempt to load file, ''#'', with ' &
          //            'architecture, ''#'', failed because this ' &
          //            'file architecture is unsupported.'             )
-         CALL ERRCH  ( '#', LOCFNM                                     )
-         CALL ERRCH  ( '#', ARCH                                       )
-         CALL SIGERR ( 'SPICE(UNSUPPORTEDARCH)'                        )
-         CALL CHKOUT ( 'ZZDDHOPN'                                      )
-         RETURN
+         call errch  ( '#', locfnm                                     )
+         call errch  ( '#', arch                                       )
+         call sigerr ( 'SPICE(UNSUPPORTEDARCH)'                        )
+         call chkout ( 'ZZDDHOPN'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Perform any preliminary checks that must be done before
 !     fetching a logical unit from the unit table.  This requires
 !     branching based on ACCMET's value.
 !
-      IF ( ACCMET .EQ. SCRTCH ) THEN
+      if ( accmet .eq. scrtch ) then
 
 !
 !        Check to see if there are enough units available for locking
 !        in the unit table.  If not, signal an error as all files
 !        open with SCRTCH access must be locked to their units.
 !
-         LOCKED = ZZDDHCLU ( UTLCK, NUT )
+         locked = zzddhclu ( utlck, nut )
 
-         IF ( LOCKED .GE. (UTSIZE - RSVUNT) ) THEN
+         if ( locked .ge. (utsize - rsvunt) ) then
 
 !
 !           Recall HANDLE was initialized to 0, and this invalid
 !           value is returned to the caller.
 !
-            CALL SETMSG ( 'The maximum number of units are locked ' &
+            call setmsg ( 'The maximum number of units are locked ' &
             //            'to handles.  As such, there is no room ' &
             //            'to open the requested scratch file.'     )
-            CALL SIGERR ( 'SPICE(UTFULL)'                           )
-            CALL CHKOUT ( 'ZZDDHOPN'                                )
-            RETURN
+            call sigerr ( 'SPICE(UTFULL)'                           )
+            call chkout ( 'ZZDDHOPN'                                )
+            return
 
-         END IF
+         end if
 
 !
 !     The NEW, READ, and WRITE access methods perform the same
 !     checks on LOCFNM.
 !
-      ELSE IF ( ( ACCMET .EQ. NEW   ) .OR. &
-                ( ACCMET .EQ. READ  ) .OR. &
-                ( ACCMET .EQ. WRITE )      ) THEN
+      else if ( ( accmet .eq. new   ) .or. &
+                ( accmet .eq. read  ) .or. &
+                ( accmet .eq. write )      ) then
 
 !
 !        Check for a non-blank file name.
 !
-         IF ( LOCFNM .EQ. ' ' ) THEN
+         if ( locfnm .eq. ' ' ) then
 
 !
 !           Recall HANDLE was initialized to 0, and this invalid
 !           value is returned to the caller.
 !
-            CALL SETMSG ( 'The attempt to load the file has failed, ' &
+            call setmsg ( 'The attempt to load the file has failed, ' &
             //            'because the filename is blank.'            )
-            CALL SIGERR ( 'SPICE(BLANKFILENAME)'                      )
-            CALL CHKOUT ( 'ZZDDHOPN'                                  )
-            RETURN
+            call sigerr ( 'SPICE(BLANKFILENAME)'                      )
+            call chkout ( 'ZZDDHOPN'                                  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      MNM = 0.D0
+      mnm = 0.d0
 
 !
 !     In the READ or WRITE cases verify that LOCFNM is not already
 !     in the file table.
 !
-      IF ( ( ACCMET .EQ. READ  ) .OR. &
-           ( ACCMET .EQ. WRITE )      ) THEN
+      if ( ( accmet .eq. read  ) .or. &
+           ( accmet .eq. write )      ) then
 
 !
 !        Check to see if the file associated with LOCFNM is already in
 !        the file table.
 !
-         CALL ZZDDHF2H ( LOCFNM,  FTABS,  FTAMH,  FTARC, FTBFF, &
-                         FTHAN,   FTNAM,  FTRTM,  FTMNM, NFT,   UTCST, &
-                         UTHAN,   UTLCK,  UTLUN,  NUT,   INQEXT, &
-                         INQOPN,  INQHAN, LOCFND, MNM                 )
+         call zzddhf2h ( locfnm,  ftabs,  ftamh,  ftarc, ftbff, &
+                         fthan,   ftnam,  ftrtm,  ftmnm, nft,   utcst, &
+                         uthan,   utlck,  utlun,  nut,   inqext, &
+                         inqopn,  inqhan, locfnd, mnm                 )
 
 !
 !        First, check FAILED(), and return if anything has gone awry.
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDDHOPN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDDHOPN' )
+            return
+         end if
 
 !
 !        Now perform some simple sanity checks before preparing to
 !        load the file.  First check to see if the file exists, it must
 !        if we are going to open it with ACCMET set to READ or WRITE.
 !
-         IF ( .NOT. INQEXT ) THEN
+         if ( .not. inqext ) then
 
 !
 !           Recall HANDLE was initialized to 0, and this invalid
 !           value is returned to the caller.
 !
-            CALL SETMSG ( 'The file ''#'' does not exist.' )
-            CALL ERRCH  ( '#', LOCFNM                      )
-            CALL SIGERR ( 'SPICE(FILENOTFOUND)'            )
-            CALL CHKOUT ( 'ZZDDHOPN'                       )
-            RETURN
+            call setmsg ( 'The file ''#'' does not exist.' )
+            call errch  ( '#', locfnm                      )
+            call sigerr ( 'SPICE(FILENOTFOUND)'            )
+            call chkout ( 'ZZDDHOPN'                       )
+            return
 
-         END IF
+         end if
 
 !
 !        Now if the file was not found in the file table, and it is
 !        attached to a unit, this presents a problem.
 !
-         IF ( ( .NOT. LOCFND ) .AND. ( INQOPN ) ) THEN
+         if ( ( .not. locfnd ) .and. ( inqopn ) ) then
 
 !
 !           Get the unit to include in the error message.
 !
-            INQUIRE ( FILE   = LOCFNM, &
-                      NUMBER = LOCLUN, &
-                      IOSTAT = IOSTAT  )
+            inquire ( file   = locfnm, &
+                      number = loclun, &
+                      iostat = iostat  )
 
 !
 !           Since we performed a very similar INQUIRE statement in
 !           ZZDDHF2H, a non-zero IOSTAT value indicates a severe error.
 !
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
 !              value is returned to the caller.
 !
-               CALL SETMSG ( 'INQUIRE failed.' )
-               CALL SIGERR ( 'SPICE(BUG)'      )
-               CALL CHKOUT ( 'ZZDDHOPN'        )
-               RETURN
+               call setmsg ( 'INQUIRE failed.' )
+               call sigerr ( 'SPICE(BUG)'      )
+               call chkout ( 'ZZDDHOPN'        )
+               return
 
-            END IF
+            end if
 
 !
 !           Signal the error. Recall HANDLE was initialized to 0, and
 !           this invalid value is returned to the caller.
 !
-            CALL SETMSG ( 'The file ''#'' is already connected to ' &
+            call setmsg ( 'The file ''#'' is already connected to ' &
             //            'unit #.'                                 )
-            CALL ERRCH  ( '#', LOCFNM                               )
-            CALL ERRINT ( '#', LOCLUN                               )
-            CALL SIGERR ( 'SPICE(IMPROPEROPEN)'                     )
-            CALL CHKOUT ( 'ZZDDHOPN'                                )
-            RETURN
+            call errch  ( '#', locfnm                               )
+            call errint ( '#', loclun                               )
+            call sigerr ( 'SPICE(IMPROPEROPEN)'                     )
+            call chkout ( 'ZZDDHOPN'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Lastly check to see if the file in the file table, and
 !        perform the appropriate sanity checks.
 !
-         IF ( LOCFND ) THEN
+         if ( locfnd ) then
 
-            FINDEX = BSRCHI ( ABS(INQHAN), NFT, FTABS )
+            findex = bsrchi ( abs(inqhan), nft, ftabs )
 
 !
 !           Check to see if the requested architecture does not match
 !           that of the entry in the file table.
 !
-            IF ( FILARC .NE. FTARC(FINDEX) ) THEN
+            if ( filarc .ne. ftarc(findex) ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
 !              value is returned to the caller.
 !
-               CALL SETMSG ( 'The attempt to load file ''#'' as a # ' &
+               call setmsg ( 'The attempt to load file ''#'' as a # ' &
                //            'has failed because it is already loaded ' &
                //            'as a #.'                                 )
-               CALL ERRCH  ( '#', LOCFNM                               )
-               CALL ERRCH  ( '#', STRARC(FILARC)                       )
-               CALL ERRCH  ( '#', STRARC(FTARC(FINDEX))                )
-               CALL SIGERR ( 'SPICE(FILARCMISMATCH)'                   )
-               CALL CHKOUT ( 'ZZDDHOPN'                                )
-               RETURN
+               call errch  ( '#', locfnm                               )
+               call errch  ( '#', strarc(filarc)                       )
+               call errch  ( '#', strarc(ftarc(findex))                )
+               call sigerr ( 'SPICE(FILARCMISMATCH)'                   )
+               call chkout ( 'ZZDDHOPN'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Check to see if the access method is anything other
 !           than READ.  If so, signal the appropriate error.
 !           Note: this is only for READ.
 !
-            IF ( ACCMET .NE. READ ) THEN
+            if ( accmet .ne. read ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
 !              value is returned to the caller.
 !
-               CALL SETMSG ( 'File ''#'' already loaded.' )
-               CALL ERRCH  ( '#', LOCFNM                  )
-               CALL SIGERR ( 'SPICE(FILEOPENCONFLICT)'    )
-               CALL CHKOUT ( 'ZZDDHOPN'                   )
-               RETURN
+               call setmsg ( 'File ''#'' already loaded.' )
+               call errch  ( '#', locfnm                  )
+               call sigerr ( 'SPICE(FILEOPENCONFLICT)'    )
+               call chkout ( 'ZZDDHOPN'                   )
+               return
 
-            END IF
+            end if
 
 !
 !           If we reach here, then we have a file that exists
@@ -906,102 +906,102 @@
 !           for READ access.  Check to make certain it is not
 !           already loaded with another method.
 !
-            IF ( ACCMET .NE. FTAMH(FINDEX) ) THEN
+            if ( accmet .ne. ftamh(findex) ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
 !              value is returned to the caller.
 !
-               CALL SETMSG ( 'Unable to load file ''#'' for # ' &
+               call setmsg ( 'Unable to load file ''#'' for # ' &
                //            'access.  It is already loaded with ' &
                //            'the conflicting access #.'           )
-               CALL ERRCH  ( '#', LOCFNM                           )
-               CALL ERRCH  ( '#', STRAMH(ACCMET)                   )
-               CALL ERRCH  ( '#', STRAMH(FTAMH(FINDEX))            )
-               CALL SIGERR ( 'SPICE(RWCONFLICT)'                   )
-               CALL CHKOUT ( 'ZZDDHOPN'                            )
-               RETURN
+               call errch  ( '#', locfnm                           )
+               call errch  ( '#', stramh(accmet)                   )
+               call errch  ( '#', stramh(ftamh(findex))            )
+               call sigerr ( 'SPICE(RWCONFLICT)'                   )
+               call chkout ( 'ZZDDHOPN'                            )
+               return
 
-            END IF
+            end if
 
 !
 !           If we make it this far, the file is in the file table
 !           and all the sanity checks have passed. Return to the
 !           caller as this is effectively a no-op.
 !
-            HANDLE = FTHAN ( FINDEX )
+            handle = fthan ( findex )
 
-            CALL CHKOUT( 'ZZDDHOPN' )
-            RETURN
+            call chkout( 'ZZDDHOPN' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now check to see if there is room in the file table for this
 !     new file.
 !
-      IF ( NFT .EQ. FTSIZE ) THEN
+      if ( nft .eq. ftsize ) then
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         CALL SETMSG ( 'The file table is full, with # entries. ' &
+         call setmsg ( 'The file table is full, with # entries. ' &
          //            'As a result, the file ''#'' could not be ' &
          //            'loaded.'                                   )
-         CALL ERRINT ( '#', NFT                                    )
-         CALL ERRCH  ( '#', LOCFNM                                 )
-         CALL SIGERR ( 'SPICE(FTFULL)'                             )
-         CALL CHKOUT ( 'ZZDDHOPN'                                  )
-         RETURN
+         call errint ( '#', nft                                    )
+         call errch  ( '#', locfnm                                 )
+         call sigerr ( 'SPICE(FTFULL)'                             )
+         call chkout ( 'ZZDDHOPN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     We are about to attempt a HANDLE to LUN connection, increment
 !     the request counter.
 !
-      CALL ZZDDHRCM ( NUT, UTCST, REQCNT )
+      call zzddhrcm ( nut, utcst, reqcnt )
 
 !
 !     Free up a logical unit in the UNIT table for our usage.
 !
-      CALL ZZDDHGTU ( UTCST, UTHAN, UTLCK, UTLUN, NUT, UINDEX )
+      call zzddhgtu ( utcst, uthan, utlck, utlun, nut, uindex )
 
 !
 !     Check FAILED() since ZZDDHGTU may have invoked GETLUN.
 !     Recall HANDLE was initialized to 0, and this invalid
 !     value is returned to the caller.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZDDHOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZDDHOPN' )
+         return
+      end if
 
 !
 !     Trim up the filename.
 !
-      IF ( ACCMET .NE. SCRTCH ) THEN
-         LCHAR = RTRIM ( LOCFNM )
-      END IF
+      if ( accmet .ne. scrtch ) then
+         lchar = rtrim ( locfnm )
+      end if
 
 !
 !     If we have made it this far, then we're ready to perform the
 !     appropriate open.  First get the handle ready.
 !
-      NEXT = NEXT + 1
+      next = next + 1
 
 !
 !     Determine the sign of the new handle based on the requested
 !     METHOD.
 !
-      IF ( ACCMET .EQ. READ ) THEN
-         UTHAN ( UINDEX ) = NEXT
-      ELSE
-         UTHAN ( UINDEX ) = -NEXT
-      END IF
+      if ( accmet .eq. read ) then
+         uthan ( uindex ) = next
+      else
+         uthan ( uindex ) = -next
+      end if
 
 !
 !     The code that follows is structured a little strangely.  This
@@ -1050,164 +1050,164 @@
 !
 !     Perform the OPEN.  Branch on the appropriate access method.
 !
-      IF ( ACCMET .EQ. SCRTCH ) THEN
+      if ( accmet .eq. scrtch ) then
 
-         OPEN ( UNIT   = UTLUN(UINDEX), &
-                ACCESS = 'DIRECT', &
-                RECL   = RECL, &
-                STATUS = 'SCRATCH', &
-                IOSTAT = IOSTAT           )
+         open ( unit   = utlun(uindex), &
+                access = 'DIRECT', &
+                recl   = recl, &
+                status = 'SCRATCH', &
+                iostat = iostat           )
 
-         BFF = NATBFF
+         bff = natbff
 
-      ELSE IF ( ACCMET .EQ. NEW ) THEN
+      else if ( accmet .eq. new ) then
 
-         OPEN ( UNIT   = UTLUN(UINDEX), &
-                FILE   = LOCFNM(1:LCHAR), &
-                ACCESS = 'DIRECT', &
-                RECL   = RECL, &
-                STATUS = 'NEW', &
-                IOSTAT = IOSTAT           )
+         open ( unit   = utlun(uindex), &
+                file   = locfnm(1:lchar), &
+                access = 'DIRECT', &
+                recl   = recl, &
+                status = 'NEW', &
+                iostat = iostat           )
 
-         BFF = NATBFF
+         bff = natbff
 
-      ELSE IF ( ACCMET .EQ. READ ) THEN
+      else if ( accmet .eq. read ) then
 
-         OPEN ( UNIT   = UTLUN(UINDEX), &
-                FILE   = LOCFNM(1:LCHAR), &
-                ACCESS = 'DIRECT', &
-                RECL   = RECL, &
-                STATUS = 'OLD', &
-                IOSTAT = IOSTAT           )
+         open ( unit   = utlun(uindex), &
+                file   = locfnm(1:lchar), &
+                access = 'DIRECT', &
+                recl   = recl, &
+                status = 'OLD', &
+                iostat = iostat           )
 
-      ELSE IF ( ACCMET .EQ. WRITE ) THEN
+      else if ( accmet .eq. write ) then
 
-         OPEN ( UNIT   = UTLUN(UINDEX), &
-                FILE   = LOCFNM(1:LCHAR), &
-                ACCESS = 'DIRECT', &
-                RECL   = RECL, &
-                STATUS = 'OLD', &
-                IOSTAT = IOSTAT           )
+         open ( unit   = utlun(uindex), &
+                file   = locfnm(1:lchar), &
+                access = 'DIRECT', &
+                recl   = recl, &
+                status = 'OLD', &
+                iostat = iostat           )
 
-      END IF
+      end if
 
 !
 !     Verify that IOSTAT is non-zero.
 !
-      ERROR = ( IOSTAT .NE. 0 )
+      error = ( iostat .ne. 0 )
 
 !
 !     Partially process the error.
 !
-      IF ( ERROR ) THEN
+      if ( error ) then
 
 !
 !        Now signal the error, but delay cleaning up and checking
 !        out until leaving this IF block.
 !
-         IF ( ACCMET .EQ. SCRTCH ) THEN
-            CALL SETMSG ( 'Attempt to open scratch file failed. ' &
+         if ( accmet .eq. scrtch ) then
+            call setmsg ( 'Attempt to open scratch file failed. ' &
             //            'IOSTAT was #.'                         )
-         ELSE IF ( ACCMET .EQ. NEW ) THEN
-            CALL SETMSG ( 'Attempt to create new file, ''$'' ' &
+         else if ( accmet .eq. new ) then
+            call setmsg ( 'Attempt to create new file, ''$'' ' &
             //            'failed. IOSTAT was #.'                 )
-         ELSE
-            CALL SETMSG ( 'Attempt to open file, ''$'' for % ' &
+         else
+            call setmsg ( 'Attempt to open file, ''$'' for % ' &
             //            'access failed. IOSTAT was #.'          )
-         END IF
+         end if
 
-         CALL ERRCH  ( '$', LOCFNM                                )
-         CALL ERRCH  ( '%', STRAMH ( ACCMET )                     )
-         CALL ERRINT ( '#', IOSTAT                                )
-         CALL SIGERR ( 'SPICE(FILEOPENFAIL)'                      )
+         call errch  ( '$', locfnm                                )
+         call errch  ( '%', stramh ( accmet )                     )
+         call errint ( '#', iostat                                )
+         call sigerr ( 'SPICE(FILEOPENFAIL)'                      )
 
 !
 !     If no IOSTAT based error has occurred as a result of the OPEN
 !     statement, then perform any remaining checks or I/O operations
 !     that are necessary to support loading the file.
 !
-      ELSE IF ( ACCMET .EQ. SCRTCH ) THEN
+      else if ( accmet .eq. scrtch ) then
 
 !
 !        Inquire on the logical unit to produce the file name for
 !        the scratch file.  Set the initial value of LOCFNM, in case
 !        the INQUIRE does not replace it.
 !
-         LOCFNM = '# SCRATCH FILE'
-         CALL REPMC ( LOCFNM, '#', STRARC(FILARC), LOCFNM )
+         locfnm = '# SCRATCH FILE'
+         call repmc ( locfnm, '#', strarc(filarc), locfnm )
 
-         INQUIRE ( UNIT   = UTLUN(UINDEX), &
-                   NAME   = LOCFNM, &
-                   IOSTAT = IOSTAT         )
+         inquire ( unit   = utlun(uindex), &
+                   name   = locfnm, &
+                   iostat = iostat         )
 
 !
 !        In the event that this INQUIRE failed, replace the value
 !        stored in LOCFNM with the initial value.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            LOCFNM = '# SCRATCH FILE'
-            CALL REPMC ( LOCFNM, '#', STRARC(FILARC), LOCFNM )
+            locfnm = '# SCRATCH FILE'
+            call repmc ( locfnm, '#', strarc(filarc), locfnm )
 
-         END IF
+         end if
 
 !
 !        Store the RTRIM value of this filename in LCHAR.
 !
-         LCHAR = RTRIM ( LOCFNM )
+         lchar = rtrim ( locfnm )
 
-      ELSE IF ( ( ACCMET .EQ. READ  ) .OR. &
-                ( ACCMET .EQ. WRITE )      ) THEN
+      else if ( ( accmet .eq. read  ) .or. &
+                ( accmet .eq. write )      ) then
 
 !
 !        Check for FTP errors, verify that FILARC is appropriate,
 !        and determine the binary file format of the preexisting
 !        file LOCFNM.
 !
-         CALL ZZDDHPPF ( UTLUN(UINDEX), FILARC, BFF )
+         call zzddhppf ( utlun(uindex), filarc, bff )
 
 !
 !        Set ERROR.
 !
-         ERROR = FAILED()
+         error = failed()
 
 !
 !        If no error has occurred, verify that BFF is among the
 !        list of supported format ID codes for the requested access
 !        method.
 !
-         IF ( .NOT. ERROR ) THEN
+         if ( .not. error ) then
 
 !
 !           This platform supports reading from files whose
 !           format codes are listed in SUPBFF.
 !
-            IF ( ACCMET .EQ. READ ) THEN
+            if ( accmet .eq. read ) then
 
-               SUPIDX = ISRCHI ( BFF, NUMSUP, SUPBFF )
+               supidx = isrchi ( bff, numsup, supbff )
 
-               IF ( SUPIDX .EQ. 0 ) THEN
+               if ( supidx .eq. 0 ) then
 
 !
 !                 Delay clean up and check out.
 !
-                  ERROR = .TRUE.
+                  error = .true.
 
-                  IF ( BFF .EQ. 0 ) THEN
+                  if ( bff .eq. 0 ) then
 
-                     CALL SETMSG ( 'Attempt to open file, ''#'', for ' &
+                     call setmsg ( 'Attempt to open file, ''#'', for ' &
                      //            'read access has failed.  This ' &
                      //            'file utilizes an unknown binary ' &
                      //            'file format.  This error may ' &
                      //            'result from attempting to open a ' &
                      //            'corrupt file or one of an ' &
                      //            'unknown type.'                     )
-                     CALL ERRCH  ( '#', LOCFNM                         )
-                     CALL SIGERR ( 'SPICE(UNSUPPORTEDBFF)'             )
+                     call errch  ( '#', locfnm                         )
+                     call sigerr ( 'SPICE(UNSUPPORTEDBFF)'             )
 
-                  ELSE
+                  else
 
-                     CALL SETMSG ( 'Attempt to open file, ''#'', for ' &
+                     call setmsg ( 'Attempt to open file, ''#'', for ' &
                      //            'read access has failed.  The ' &
                      //            'non-native binary file format ' &
                      //            '''#'' is not currently supported ' &
@@ -1216,42 +1216,42 @@
                      //            'convert it to the native format. ' &
                      //            'See the Convert User''s Guide ' &
                      //            'for details.'                      )
-                     CALL ERRCH  ( '#', LOCFNM                         )
-                     CALL ERRCH  ( '#', STRBFF(BFF)                    )
-                     CALL SIGERR ( 'SPICE(UNSUPPORTEDBFF)'             )
+                     call errch  ( '#', locfnm                         )
+                     call errch  ( '#', strbff(bff)                    )
+                     call sigerr ( 'SPICE(UNSUPPORTEDBFF)'             )
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 !
 !           This platform only supports writing to files whose
 !           binary formats are native.
 !
-            ELSE
+            else
 
 !
 !              Delay clean up and check out.
 !
-               IF ( BFF .EQ. 0 ) THEN
+               if ( bff .eq. 0 ) then
 
-                  ERROR = .TRUE.
+                  error = .true.
 
-                  CALL SETMSG ( 'Attempt to open file, ''#'', for ' &
+                  call setmsg ( 'Attempt to open file, ''#'', for ' &
                   //            'write access has failed.  This ' &
                   //            'file utilizes an unknown binary ' &
                   //            'file format.  This error may ' &
                   //            'result from attempting to open a ' &
                   //            'corrupt file or one of an unknown ' &
                   //            'type.'                              )
-                  CALL ERRCH  ( '#', LOCFNM                          )
-                  CALL SIGERR ( 'SPICE(UNSUPPORTEDBFF)'              )
+                  call errch  ( '#', locfnm                          )
+                  call sigerr ( 'SPICE(UNSUPPORTEDBFF)'              )
 
-               ELSE IF ( BFF .NE. NATBFF ) THEN
+               else if ( bff .ne. natbff ) then
 
-                  ERROR = .TRUE.
+                  error = .true.
 
-                  CALL SETMSG ( 'Attempt to open file, ''#'', for ' &
+                  call setmsg ( 'Attempt to open file, ''#'', for ' &
                   //            'write access has failed.  This ' &
                   //            'file utilizes the non-native ' &
                   //            'binary file format ''#''.  At ' &
@@ -1260,110 +1260,110 @@
                   //            'supported for write access.  See ' &
                   //            'the Convert User''s Guide for ' &
                   //            'details.'                          )
-                  CALL ERRCH  ( '#', LOCFNM                         )
-                  CALL ERRCH  ( '#', STRBFF(BFF)                    )
-                  CALL ERRCH  ( '#', STRBFF(NATBFF)                 )
-                  CALL SIGERR ( 'SPICE(UNSUPPORTEDBFF)'             )
+                  call errch  ( '#', locfnm                         )
+                  call errch  ( '#', strbff(bff)                    )
+                  call errch  ( '#', strbff(natbff)                 )
+                  call sigerr ( 'SPICE(UNSUPPORTEDBFF)'             )
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If an error has occurred as a result of opening the file or
 !     examining its contents, clean up and check out.
 !
-      IF ( ERROR ) THEN
+      if ( error ) then
 
 !
 !        Close the unit we were using.  Remember to delete the file
 !        if it was a 'new' one.
 !
-         IF ( ACCMET .EQ. NEW ) THEN
-            CLOSE ( UNIT = UTLUN(UINDEX), STATUS = 'DELETE' )
-         ELSE
-            CLOSE ( UNIT = UTLUN(UINDEX) )
-         END IF
+         if ( accmet .eq. new ) then
+            close ( unit = utlun(uindex), status = 'DELETE' )
+         else
+            close ( unit = utlun(uindex) )
+         end if
 
 !
 !        Remove the unit from the unit table, since this UNIT
 !        is no longer in use.
 !
-         CALL ZZDDHRMU ( UINDEX, NFT, UTCST, UTHAN, UTLCK, UTLUN, NUT )
+         call zzddhrmu ( uindex, nft, utcst, uthan, utlck, utlun, nut )
 
 !
 !        Decrement NEXT since this handle was never assigned to
 !        a file.
 !
-         NEXT = NEXT - 1
+         next = next - 1
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
 !        value is returned to the caller.
 !
-         CALL CHKOUT ( 'ZZDDHOPN' )
-         RETURN
+         call chkout ( 'ZZDDHOPN' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Finish filling out the unit table.
 !
-      UTCST ( UINDEX ) = REQCNT
+      utcst ( uindex ) = reqcnt
 
 !
 !     Only scratch files get the units locked to handles, this is
 !     because they only exist as long as they have a unit.
 !
-      UTLCK ( UINDEX ) = ACCMET .EQ. SCRTCH
+      utlck ( uindex ) = accmet .eq. scrtch
 
 !
 !     Now fill out the file table.
 !
-      NFT = NFT + 1
+      nft = nft + 1
 
 !
 !     Use the absolute value of the handle used to index the file
 !     table.
 !
-      FTABS ( NFT ) = IABS ( UTHAN( UINDEX ) )
+      ftabs ( nft ) = iabs ( uthan( uindex ) )
 
 !
 !     Assign access method, file architecture, and native binary file
 !     format to the appropriate columns.
 !
-      FTAMH ( NFT ) = ACCMET
-      FTARC ( NFT ) = FILARC
-      FTBFF ( NFT ) = BFF
+      ftamh ( nft ) = accmet
+      ftarc ( nft ) = filarc
+      ftbff ( nft ) = bff
 
 !
 !     Assign the handle, filename, RTRIM ( FTNAM(NFT) ) as FTRTM, and
 !     unique DP number as FTMNM.
 !
-      FTHAN ( NFT ) = UTHAN ( UINDEX )
-      FTNAM ( NFT ) = LOCFNM(1:LCHAR)
-      FTRTM ( NFT ) = LCHAR
-      FTMNM ( NFT ) = MNM
+      fthan ( nft ) = uthan ( uindex )
+      ftnam ( nft ) = locfnm(1:lchar)
+      ftrtm ( nft ) = lchar
+      ftmnm ( nft ) = mnm
 
 !
 !     Assign HANDLE the value of the new handle.
 !
-      HANDLE = FTHAN( NFT )
+      handle = fthan( nft )
 
-      CALL CHKOUT ( 'ZZDDHOPN' )
-      RETURN
+      call chkout ( 'ZZDDHOPN' )
+      return
 
 
 
 
 !$Procedure ZZDDHCLS ( Private --- Close file )
 
-      ENTRY ZZDDHCLS ( HANDLE, ARCH, KILL )
+      entry zzddhcls ( handle, arch, kill )
 
 ! $ Abstract
 !
@@ -1509,166 +1509,166 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHCLS' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHCLS' )
+      end if
 
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED() only to trap the possibility of ZZDDHINI
 !        signaling SPICE(BUG).
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDDHCLS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDDHCLS' )
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Find the file in the handle table.
 !
-      FINDEX = BSRCHI ( ABS(HANDLE), NFT, FTABS )
+      findex = bsrchi ( abs(handle), nft, ftabs )
 
 !
 !     Check to see whether we found the handle or not.
 !
-      IF ( FINDEX .EQ. 0 ) THEN
-         CALL CHKOUT ( 'ZZDDHCLS' )
-         RETURN
-      ELSE IF ( FTHAN(FINDEX) .NE. HANDLE ) THEN
-         CALL CHKOUT ( 'ZZDDHCLS' )
-         RETURN
-      END IF
+      if ( findex .eq. 0 ) then
+         call chkout ( 'ZZDDHCLS' )
+         return
+      else if ( fthan(findex) .ne. handle ) then
+         call chkout ( 'ZZDDHCLS' )
+         return
+      end if
 
 !
 !     Before actually closing the file, check the input architecture
 !     matches that listed in the file table for this handle.  This is
 !     to prevent one architecture's code from stepping on another's.
 !
-      TMPSTR = ARCH
-      CALL UCASE ( TMPSTR, TMPSTR )
-      FILARC = ISRCHC ( TMPSTR, NUMARC, STRARC )
+      tmpstr = arch
+      call ucase ( tmpstr, tmpstr )
+      filarc = isrchc ( tmpstr, numarc, strarc )
 
 !
 !     Check to see if FILARC matches the code stored in the FTARC
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      IF ( FILARC .NE. FTARC(FINDEX) ) THEN
+      if ( filarc .ne. ftarc(findex) ) then
 
-         CALL SETMSG ( 'Logical unit associated with # file $, ' &
+         call setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be closed by routines in ' &
          //            'in the % system.'                         )
-         CALL ERRCH  ( '#', STRARC( FTARC(FINDEX) )               )
-         CALL ERRCH  ( '%', TMPSTR                                )
-         CALL ERRCH  ( '$', FTNAM(FINDEX)                         )
-         CALL SIGERR ( 'SPICE(FILARCMISMATCH)'                    )
-         CALL CHKOUT ( 'ZZDDHCLS'                                 )
-         RETURN
+         call errch  ( '#', strarc( ftarc(findex) )               )
+         call errch  ( '%', tmpstr                                )
+         call errch  ( '$', ftnam(findex)                         )
+         call sigerr ( 'SPICE(FILARCMISMATCH)'                    )
+         call chkout ( 'ZZDDHCLS'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that if KILL is set, the file is accessible for
 !     WRITE.
 !
-      IF ( ( KILL ) .AND. ( FTAMH(FINDEX) .EQ. READ ) ) THEN
+      if ( ( kill ) .and. ( ftamh(findex) .eq. read ) ) then
 
-         CALL SETMSG ( '# file $ is open for READ access.  Attempt ' &
+         call setmsg ( '# file $ is open for READ access.  Attempt ' &
          //            'to close and delete file has failed. '       )
-         CALL ERRCH  ( '#', STRARC( FTARC(FINDEX) )                  )
-         CALL ERRCH  ( '#', FTNAM(FINDEX)                            )
-         CALL SIGERR ( 'SPICE(INVALIDACCESS)'                        )
-         CALL CHKOUT ( 'ZZDDHCLS'                                    )
-         RETURN
+         call errch  ( '#', strarc( ftarc(findex) )                  )
+         call errch  ( '#', ftnam(findex)                            )
+         call sigerr ( 'SPICE(INVALIDACCESS)'                        )
+         call chkout ( 'ZZDDHCLS'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Buffer the access method for HANDLE, since we may need it
 !     when deciding which close to perform.
 !
-      ACCMET = FTAMH (FINDEX)
+      accmet = ftamh (findex)
 
 !
 !     If we reach here, we need to remove the row FINDEX from
 !     the file table.
 !
-      DO I = FINDEX+1, NFT
+      do i = findex+1, nft
 
-         FTABS(I-1) = FTABS(I)
-         FTAMH(I-1) = FTAMH(I)
-         FTARC(I-1) = FTARC(I)
-         FTBFF(I-1) = FTBFF(I)
-         FTHAN(I-1) = FTHAN(I)
-         FTNAM(I-1) = FTNAM(I)
-         FTRTM(I-1) = FTRTM(I)
-         FTMNM(I-1) = FTMNM(I)
+         ftabs(i-1) = ftabs(i)
+         ftamh(i-1) = ftamh(i)
+         ftarc(i-1) = ftarc(i)
+         ftbff(i-1) = ftbff(i)
+         fthan(i-1) = fthan(i)
+         ftnam(i-1) = ftnam(i)
+         ftrtm(i-1) = ftrtm(i)
+         ftmnm(i-1) = ftmnm(i)
 
-      END DO
+      end do
 
-      NFT = NFT - 1
+      nft = nft - 1
 
 !
 !     Locate HANDLE in the unit table.
 !
-      UINDEX = ISRCHI ( HANDLE, NUT, UTHAN )
+      uindex = isrchi ( handle, nut, uthan )
 
-      IF ( UINDEX .NE. 0 ) THEN
+      if ( uindex .ne. 0 ) then
 
 !
 !        Close the unit.
 !
-         IF ( ( KILL ) .AND. ( ACCMET .NE. SCRTCH ) ) THEN
-            CLOSE ( UNIT = UTLUN(UINDEX), STATUS = 'DELETE' )
-         ELSE
-            CLOSE ( UNIT = UTLUN(UINDEX) )
-         END IF
+         if ( ( kill ) .and. ( accmet .ne. scrtch ) ) then
+            close ( unit = utlun(uindex), status = 'DELETE' )
+         else
+            close ( unit = utlun(uindex) )
+         end if
 
 !
 !        Remove its entry from the unit table.
 !
-         CALL ZZDDHRMU ( UINDEX, NFT, UTCST, UTHAN, UTLCK, UTLUN, NUT )
+         call zzddhrmu ( uindex, nft, utcst, uthan, utlck, utlun, nut )
 
-      ELSE
+      else
 
 !
 !        First, check to see if KILL is set, if it is signal an error
 !        since we are unable to delete the file.
 !
-         IF ( ( KILL ) .AND. ( ACCMET .NE. SCRTCH ) ) THEN
+         if ( ( kill ) .and. ( accmet .ne. scrtch ) ) then
 
-            CALL SETMSG ( 'File successfully closed.  Unable to ' &
+            call setmsg ( 'File successfully closed.  Unable to ' &
             //            'delete file as requested.  File not ' &
             //            'currently present in the UNIT table. ' )
-            CALL SIGERR ( 'SPICE(FILENOTCONNECTED)'               )
-            CALL CHKOUT ( 'ZZDDHCLS'                              )
-            RETURN
+            call sigerr ( 'SPICE(FILENOTCONNECTED)'               )
+            call chkout ( 'ZZDDHCLS'                              )
+            return
 
-         END IF
+         end if
 
 !
 !        If we were unable to find the HANDLE in the unit table,
 !        check to see if we have to clean up the UNIT table.
 !
-         IF ( NFT .LT. NUT ) THEN
+         if ( nft .lt. nut ) then
 
-            UINDEX = ISRCHI ( 0, NUT, UTHAN )
+            uindex = isrchi ( 0, nut, uthan )
 
 !
 !           Now check to see if we located a zero valued handle.
@@ -1676,50 +1676,50 @@
 !           since we have more LUNs listed in the unit table than
 !           files in the file table.
 !
-            IF ( UINDEX .EQ. 0 ) THEN
-               CALL SETMSG ( 'There are less files in the file table ' &
+            if ( uindex .eq. 0 ) then
+               call setmsg ( 'There are less files in the file table ' &
                //            'than units in the unit table, and no ' &
                //            'row with a zero-valued handle can be ' &
                //            'found.  This should never occur.'        )
-               CALL SIGERR ( 'SPICE(BUG)'                              )
-               CALL CHKOUT ( 'ZZDDHCLS'                                )
-               RETURN
-            END IF
+               call sigerr ( 'SPICE(BUG)'                              )
+               call chkout ( 'ZZDDHCLS'                                )
+               return
+            end if
 
 !
 !           Free the unit.
 !
-            CALL FRELUN ( UTLUN(UINDEX) )
+            call frelun ( utlun(uindex) )
 
 !
 !           Compress the table.
 !
-            DO I = (UINDEX + 1), NUT
+            do i = (uindex + 1), nut
 
-               UTCST(I-1) = UTCST(I)
-               UTHAN(I-1) = UTHAN(I)
-               UTLCK(I-1) = UTLCK(I)
-               UTLUN(I-1) = UTLUN(I)
+               utcst(i-1) = utcst(i)
+               uthan(i-1) = uthan(i)
+               utlck(i-1) = utlck(i)
+               utlun(i-1) = utlun(i)
 
-            END DO
+            end do
 
 !
 !           Decrement NUT.
 !
-            NUT = NUT - 1
+            nut = nut - 1
 
-         END IF
-      END IF
+         end if
+      end if
 
-      CALL CHKOUT ( 'ZZDDHCLS' )
-      RETURN
+      call chkout ( 'ZZDDHCLS' )
+      return
 
 
 
 
 !$Procedure ZZDDHHLU ( Private --- Handle to Logical Unit )
 
-      ENTRY ZZDDHHLU ( HANDLE, ARCH, LOCK, UNIT )
+      entry zzddhhlu ( handle, arch, lock, unit )
 
 ! $ Abstract
 !
@@ -1844,164 +1844,164 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHHLU' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHHLU' )
+      end if
 
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED() only to trap the possibility of ZZDDHINI
 !        signaling SPICE(BUG).
 !
-         IF ( FAILED() ) THEN
-            UNIT = 0
-            CALL CHKOUT ( 'ZZDDHHLU' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            unit = 0
+            call chkout ( 'ZZDDHHLU' )
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Locate HANDLE in the file table.
 !
-      FINDEX = BSRCHI ( ABS(HANDLE), NFT, FTABS )
+      findex = bsrchi ( abs(handle), nft, ftabs )
 
-      IF ( FINDEX .EQ. 0 ) THEN
-         ERROR = .TRUE.
-      ELSE IF ( FTHAN(FINDEX) .NE. HANDLE ) THEN
-         ERROR = .TRUE.
-      ELSE
-         ERROR = .FALSE.
-      END IF
+      if ( findex .eq. 0 ) then
+         error = .true.
+      else if ( fthan(findex) .ne. handle ) then
+         error = .true.
+      else
+         error = .false.
+      end if
 
-      IF ( ERROR ) THEN
+      if ( error ) then
 
-         UNIT = 0
+         unit = 0
 
-         CALL SETMSG ( 'There is no file loaded with handle = #' )
-         CALL ERRINT ( '#', HANDLE                               )
-         CALL SIGERR ( 'SPICE(NOSUCHHANDLE)'                     )
-         CALL CHKOUT ( 'ZZDDHHLU'                                )
-         RETURN
-      END IF
+         call setmsg ( 'There is no file loaded with handle = #' )
+         call errint ( '#', handle                               )
+         call sigerr ( 'SPICE(NOSUCHHANDLE)'                     )
+         call chkout ( 'ZZDDHHLU'                                )
+         return
+      end if
 
 !
 !     Before actually fetching the unit, check the input architecture
 !     matches that listed in the file table for this handle.  This is
 !     to prevent one architectures code from stepping on another's.
 !
-      TMPSTR = ARCH
-      CALL UCASE ( TMPSTR, TMPSTR )
-      FILARC = ISRCHC ( TMPSTR, NUMARC, STRARC )
+      tmpstr = arch
+      call ucase ( tmpstr, tmpstr )
+      filarc = isrchc ( tmpstr, numarc, strarc )
 
 !
 !     Check to see if FILARC matches the code stored in the FTARC
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      IF ( FILARC .NE. FTARC(FINDEX) ) THEN
+      if ( filarc .ne. ftarc(findex) ) then
 
-         UNIT = 0
+         unit = 0
 
-         CALL SETMSG ( 'Logical unit associated with # file $, ' &
+         call setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be unlocked by routines in ' &
          //            'in the % system.'                         )
-         CALL ERRCH  ( '#', STRARC( FTARC(FINDEX) )               )
-         CALL ERRCH  ( '%', TMPSTR                                )
-         CALL ERRCH  ( '$', FTNAM(FINDEX)                         )
-         CALL SIGERR ( 'SPICE(FILARCMISMATCH)'                    )
-         CALL CHKOUT ( 'ZZDDHHLU'                                 )
-         RETURN
+         call errch  ( '#', strarc( ftarc(findex) )               )
+         call errch  ( '%', tmpstr                                )
+         call errch  ( '$', ftnam(findex)                         )
+         call sigerr ( 'SPICE(FILARCMISMATCH)'                    )
+         call chkout ( 'ZZDDHHLU'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     If we make it this far, then we will be processing a handle
 !     to logical unit request.  Increment REQCNT.
 !
-      CALL ZZDDHRCM ( NUT, UTCST, REQCNT )
+      call zzddhrcm ( nut, utcst, reqcnt )
 
 !
 !     Now check to see if the handle is already present in the
 !     unit table.
 !
-      UINDEX = ISRCHI ( HANDLE, NUT, UTHAN )
+      uindex = isrchi ( handle, nut, uthan )
 
 !
 !     Check to see if we didn't locate the HANDLE in the table.
 !     If we didn't, open the file associated with HANDLE again,
 !     and get it into the unit table.
 !
-      IF ( UINDEX .EQ. 0 ) THEN
+      if ( uindex .eq. 0 ) then
 
 !
 !        We need a unit from the unit table, get one.
 !
-         CALL ZZDDHGTU ( UTCST, UTHAN, UTLCK, UTLUN, NUT, UINDEX )
+         call zzddhgtu ( utcst, uthan, utlck, utlun, nut, uindex )
 
 !
 !        Check FAILED, since ZZDDHGTU may have invoked GETLUN.
 !
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            UNIT = 0
+            unit = 0
 
-            CALL CHKOUT ( 'ZZDDHHLU' )
-            RETURN
-         END IF
+            call chkout ( 'ZZDDHHLU' )
+            return
+         end if
 
 !
 !        Re-attach the file to a logical unit.  Branch based on the
 !        access method stored in the file table.
 !
-         IF ( ( FTAMH(FINDEX) .EQ. NEW   ) .OR. &
-              ( FTAMH(FINDEX) .EQ. WRITE )      ) THEN
+         if ( ( ftamh(findex) .eq. new   ) .or. &
+              ( ftamh(findex) .eq. write )      ) then
 
-            OPEN ( UNIT   = UTLUN(UINDEX), &
-                   FILE   = FTNAM(FINDEX)(1:FTRTM(FINDEX)), &
-                   ACCESS = 'DIRECT', &
-                   RECL   = RECL, &
-                   STATUS = 'OLD', &
-                   IOSTAT = IOSTAT           )
+            open ( unit   = utlun(uindex), &
+                   file   = ftnam(findex)(1:ftrtm(findex)), &
+                   access = 'DIRECT', &
+                   recl   = recl, &
+                   status = 'OLD', &
+                   iostat = iostat           )
 
-         ELSE IF ( FTAMH(FINDEX) .EQ. READ ) THEN
+         else if ( ftamh(findex) .eq. read ) then
 
-            OPEN ( UNIT   = UTLUN(UINDEX), &
-                   FILE   = FTNAM(FINDEX)(1:FTRTM(FINDEX)), &
-                   ACCESS = 'DIRECT', &
-                   RECL   = RECL, &
-                   STATUS = 'OLD', &
-                   IOSTAT = IOSTAT           )
+            open ( unit   = utlun(uindex), &
+                   file   = ftnam(findex)(1:ftrtm(findex)), &
+                   access = 'DIRECT', &
+                   recl   = recl, &
+                   status = 'OLD', &
+                   iostat = iostat           )
 
-         ELSE
+         else
 
-            UNIT = 0
+            unit = 0
 
-            CALL SETMSG ( 'Invalid access method. This error ' &
+            call setmsg ( 'Invalid access method. This error ' &
             //            'should never be signaled.'          )
-            CALL SIGERR ( 'SPICE(BUG)'                         )
-            CALL CHKOUT ( 'ZZDDHHLU'                           )
-            RETURN
-         END IF
+            call sigerr ( 'SPICE(BUG)'                         )
+            call chkout ( 'ZZDDHHLU'                           )
+            return
+         end if
 
 !
 !        Check IOSTAT for troubles.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
 !
 !           The re-open was unsuccessful, leave the entry in the file
@@ -2011,31 +2011,31 @@
 !           know the unit will remain since we have not decreased
 !           the entries in the file table.
 !
-            CALL ZZDDHRMU ( UINDEX, NFT,   UTCST, UTHAN, &
-                            UTLCK,  UTLUN, NUT           )
+            call zzddhrmu ( uindex, nft,   utcst, uthan, &
+                            utlck,  utlun, nut           )
 
 !
 !           Now signal the error.
 !
-            UNIT = 0
+            unit = 0
 
-            CALL SETMSG ( 'Attempt to reconnect logical unit to ' &
+            call setmsg ( 'Attempt to reconnect logical unit to ' &
             //            'file ''#'' failed. IOSTAT was #.'      )
-            CALL ERRCH  ( '#', FTNAM(FINDEX)                      )
-            CALL ERRINT ( '#', IOSTAT                             )
-            CALL SIGERR ( 'SPICE(FILEOPENFAIL)'                   )
-            CALL CHKOUT ( 'ZZDDHHLU'                              )
-            RETURN
+            call errch  ( '#', ftnam(findex)                      )
+            call errint ( '#', iostat                             )
+            call sigerr ( 'SPICE(FILEOPENFAIL)'                   )
+            call chkout ( 'ZZDDHHLU'                              )
+            return
 
-         END IF
+         end if
 
 !
 !        Lastly populate the unit table values.
 !
-         UTHAN(UINDEX) = FTHAN(FINDEX)
-         UTLCK(UINDEX) = .FALSE.
+         uthan(uindex) = fthan(findex)
+         utlck(uindex) = .false.
 
-      END IF
+      end if
 
 !
 !     At this point UINDEX points to the row in the unit table that
@@ -2043,48 +2043,48 @@
 !     row with the new value of REQCNT, and then set the lock row to
 !     TRUE if a lock request was made.
 !
-      UTCST(UINDEX) = REQCNT
+      utcst(uindex) = reqcnt
 
-      IF ( LOCK .AND. (.NOT. UTLCK(UINDEX)) ) THEN
+      if ( lock .and. (.not. utlck(uindex)) ) then
 
 !
 !        First check to see if we have enough lockable units
 !        left in the unit table.
 !
-         LOCKED = ZZDDHCLU ( UTLCK, NUT )
+         locked = zzddhclu ( utlck, nut )
 
-         IF ( LOCKED .GE. ( UTSIZE - RSVUNT - SCRUNT ) ) THEN
+         if ( locked .ge. ( utsize - rsvunt - scrunt ) ) then
 
-            UNIT = 0
+            unit = 0
 
-            CALL SETMSG ( 'Unable to lock handle for file ''#'' ' &
+            call setmsg ( 'Unable to lock handle for file ''#'' ' &
             //            'to a logical unit.  There are no rows ' &
             //            'available for locking in the unit table.' )
-            CALL ERRCH  ( '#', FTNAM(FINDEX)                         )
-            CALL SIGERR ( 'SPICE(HLULOCKFAILED)'                     )
-            CALL CHKOUT ( 'ZZDDHHLU'                                 )
-            RETURN
+            call errch  ( '#', ftnam(findex)                         )
+            call sigerr ( 'SPICE(HLULOCKFAILED)'                     )
+            call chkout ( 'ZZDDHHLU'                                 )
+            return
 
-         END IF
+         end if
 
-         UTLCK(UINDEX) = .TRUE.
+         utlck(uindex) = .true.
 
-      END IF
+      end if
 
 !
 !     Set the value of UNIT and return.
 !
-      UNIT = UTLUN(UINDEX)
+      unit = utlun(uindex)
 
-      CALL CHKOUT ( 'ZZDDHHLU' )
-      RETURN
+      call chkout ( 'ZZDDHHLU' )
+      return
 
 
 
 
 !$Procedure ZZDDHUNL ( Private --- Unlock Logical Unit from Handle )
 
-      ENTRY ZZDDHUNL ( HANDLE, ARCH )
+      entry zzddhunl ( handle, arch )
 
 ! $ Abstract
 !
@@ -2192,142 +2192,142 @@
 !
 !     Standard SPICE discovery error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED() only to trap the possibility of ZZDDHINI
 !        signaling SPICE(BUG).  No check out is performed, see the
 !        $Restrictions section of the entry point header for details.
 !
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 !
 !     Prevent the user from locating zero handle rows.  This is not
 !     really necessary since zero handle rows in the unit table are
 !     empty and awaiting connections.  The state of the UTLCK is
 !     not significant.
 !
-      IF ( HANDLE .EQ. 0 ) THEN
-         RETURN
-      END IF
+      if ( handle .eq. 0 ) then
+         return
+      end if
 
 !
 !     Look up the handle in the unit table.
 !
-      UINDEX = ISRCHI ( HANDLE, NUT, UTHAN )
+      uindex = isrchi ( handle, nut, uthan )
 
 !
 !     Now check the results of the lookup.  If HANDLE was not found
 !     in the unit table or the unit was not locked, just return as
 !     there is nothing to do.
 !
-      IF ( UINDEX .EQ. 0 ) THEN
-         RETURN
-      ELSE IF ( .NOT. UTLCK(UINDEX) ) THEN
-         RETURN
-      END IF
+      if ( uindex .eq. 0 ) then
+         return
+      else if ( .not. utlck(uindex) ) then
+         return
+      end if
 
 !
 !     Now look up the handle in the table. Remember FTABS is a sorted
 !     list in increasing order.
 !
-      FINDEX = BSRCHI ( ABS(HANDLE), NFT, FTABS )
+      findex = bsrchi ( abs(handle), nft, ftabs )
 
 !
 !     Check to see if HANDLE is in the file table.  We know it has
 !     to be since it is in the unit table if we make it this far.
 !     These checks are just for safety's sake.
 !
-      IF ( FINDEX .EQ. 0 ) THEN
+      if ( findex .eq. 0 ) then
 
-         CALL CHKIN  ( 'ZZDDHUNL'                                  )
-         CALL SETMSG ( 'HANDLE # was not found in the file table ' &
+         call chkin  ( 'ZZDDHUNL'                                  )
+         call setmsg ( 'HANDLE # was not found in the file table ' &
          //            'but was located in the unit table.  This ' &
          //            'error should never occur.'                 )
-         CALL ERRINT ( '#', HANDLE                                 )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZDDHUNL'                                  )
-         RETURN
+         call errint ( '#', handle                                 )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZDDHUNL'                                  )
+         return
 
-      ELSE IF ( FTHAN(FINDEX) .NE. HANDLE ) THEN
+      else if ( fthan(findex) .ne. handle ) then
 
-         CALL CHKIN  ( 'ZZDDHUNL'                                  )
-         CALL SETMSG ( 'HANDLE # was not found in the file table ' &
+         call chkin  ( 'ZZDDHUNL'                                  )
+         call setmsg ( 'HANDLE # was not found in the file table ' &
          //            'but was located in the unit table.  This ' &
          //            'error should never occur.'                 )
-         CALL ERRINT ( '#', HANDLE                                 )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZDDHUNL'                                  )
-         RETURN
+         call errint ( '#', handle                                 )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZDDHUNL'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Before actually unlocking the unit, check the input architecture
 !     matches that listed in the file table for this handle.  This is
 !     to prevent one architectures code from stepping on another's.
 !
-      TMPSTR = ARCH
-      CALL UCASE ( TMPSTR, TMPSTR )
-      FILARC = ISRCHC ( TMPSTR, NUMARC, STRARC )
+      tmpstr = arch
+      call ucase ( tmpstr, tmpstr )
+      filarc = isrchc ( tmpstr, numarc, strarc )
 
 !
 !     Check to see if FILARC matches the code stored in the FTARC
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      IF ( FILARC .NE. FTARC(FINDEX) ) THEN
+      if ( filarc .ne. ftarc(findex) ) then
 
-         CALL CHKIN  ( 'ZZDDHUNL'                                 )
-         CALL SETMSG ( 'Logical unit associated with # file $, ' &
+         call chkin  ( 'ZZDDHUNL'                                 )
+         call setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be unlocked by routines in ' &
          //            'in the % system.'                         )
-         CALL ERRCH  ( '#', STRARC( FTARC(FINDEX) )               )
-         CALL ERRCH  ( '%', TMPSTR                                )
-         CALL ERRCH  ( '$', FTNAM(FINDEX)                         )
-         CALL SIGERR ( 'SPICE(FILARCMISMATCH)'                    )
-         CALL CHKOUT ( 'ZZDDHUNL'                                 )
-         RETURN
+         call errch  ( '#', strarc( ftarc(findex) )               )
+         call errch  ( '%', tmpstr                                )
+         call errch  ( '$', ftnam(findex)                         )
+         call sigerr ( 'SPICE(FILARCMISMATCH)'                    )
+         call chkout ( 'ZZDDHUNL'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Lastly, check to see if the access method for HANDLE indicates
 !     scratch access.  If it is, just return, since scratch files
 !     can not have their units unlocked.
 !
-      IF ( FTAMH(FINDEX) .EQ. SCRTCH ) THEN
-         RETURN
-      END IF
+      if ( ftamh(findex) .eq. scrtch ) then
+         return
+      end if
 
-      UTLCK(UINDEX) = .FALSE.
+      utlck(uindex) = .false.
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZDDHNFO ( Private --- Get information about a Handle )
 
-      ENTRY ZZDDHNFO ( HANDLE, FNAME, INTARC, INTBFF, INTAMH, FOUND )
+      entry zzddhnfo ( handle, fname, intarc, intbff, intamh, found )
 
 ! $ Abstract
 !
@@ -2457,10 +2457,10 @@
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED(), and return on failure.  We are not checking
@@ -2468,62 +2468,62 @@
 !        the possibility of ZZDDHINI signaling SPICE(BUG).  See
 !        $Restrictions for details.
 !
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Look up the handle in the table.  Remember FTABS is sorted
 !     listed in increasing order.
 !
-      FINDEX = BSRCHI ( ABS(HANDLE), NFT, FTABS )
+      findex = bsrchi ( abs(handle), nft, ftabs )
 
 !
 !     Check to see if HANDLE is in the handle table.  Remember that
 !     we are indexing the table using the absolute value of handle.
 !     So include a check to see that HANDLE is FTHAN(FINDEX).
 !
-      IF ( FINDEX .EQ. 0 ) THEN
-         FNAME  = ' '
-         INTARC = 0
-         INTBFF = 0
-         INTAMH = 0
-         FOUND  = .FALSE.
-         RETURN
-      ELSE IF ( FTHAN(FINDEX) .NE. HANDLE ) THEN
-         FNAME  = ' '
-         INTARC = 0
-         INTBFF = 0
-         INTAMH = 0
-         FOUND  = .FALSE.
-         RETURN
-      END IF
+      if ( findex .eq. 0 ) then
+         fname  = ' '
+         intarc = 0
+         intbff = 0
+         intamh = 0
+         found  = .false.
+         return
+      else if ( fthan(findex) .ne. handle ) then
+         fname  = ' '
+         intarc = 0
+         intbff = 0
+         intamh = 0
+         found  = .false.
+         return
+      end if
 
 !
 !     If we make it this far, then we have a handle that is in
 !     the handle table at row FINDEX.
 !
-      FOUND  = .TRUE.
-      FNAME  = FTNAM(FINDEX) ( 1:FTRTM(FINDEX) )
-      INTARC = FTARC(FINDEX)
-      INTBFF = FTBFF(FINDEX)
-      INTAMH = FTAMH(FINDEX)
+      found  = .true.
+      fname  = ftnam(findex) ( 1:ftrtm(findex) )
+      intarc = ftarc(findex)
+      intbff = ftbff(findex)
+      intamh = ftamh(findex)
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZDDHISN ( Private --- Is Handle Native? )
 
-      ENTRY ZZDDHISN ( HANDLE, NATIVE, FOUND )
+      entry zzddhisn ( handle, native, found )
 
 ! $ Abstract
 !
@@ -2625,10 +2625,10 @@
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED(), and return on failure.  We are not checking
@@ -2636,44 +2636,44 @@
 !        the possibility of ZZDDHINI signaling SPICE(BUG).  See
 !        $Restrictions for details.
 !
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Look up the handle in the table. Remember FTABS is sorted
 !     listed in increasing order.
 !
-      FINDEX = BSRCHI ( ABS(HANDLE), NFT, FTABS )
+      findex = bsrchi ( abs(handle), nft, ftabs )
 
 !
 !     Check to see if HANDLE is in the handle table.  Remember
 !     that we are indexing the table using the absolute value of
 !     handle.  So include a check to see that HANDLE is FTHAN(FINDEX).
 !
-      IF ( FINDEX .EQ. 0 ) THEN
-         FOUND = .FALSE.
-         RETURN
-      ELSE IF ( FTHAN(FINDEX) .NE. HANDLE ) THEN
-         FOUND = .FALSE.
-         RETURN
-      END IF
+      if ( findex .eq. 0 ) then
+         found = .false.
+         return
+      else if ( fthan(findex) .ne. handle ) then
+         found = .false.
+         return
+      end if
 
 !
 !     If we make it this far, then we have found HANDLE in the file
 !     table.  Set NATIVE appropriately and FOUND to TRUE.
 !
-      NATIVE = NATBFF .EQ. FTBFF(FINDEX)
-      FOUND  = .TRUE.
+      native = natbff .eq. ftbff(findex)
+      found  = .true.
 
-      RETURN
+      return
 
 
 
@@ -2681,7 +2681,7 @@
 
 !$Procedure ZZDDHFNH ( Private --- Filename to Handle )
 
-      ENTRY ZZDDHFNH ( FNAME, HANDLE, FOUND )
+      entry zzddhfnh ( fname, handle, found )
 
 ! $ Abstract
 !
@@ -2777,70 +2777,70 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHFNH' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHFNH' )
+      end if
 
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED() only to trap the possibility of ZZDDHINI
 !        signaling SPICE(BUG).
 !
-         IF ( FAILED() ) THEN
-            HANDLE = 0
-            CALL CHKOUT ( 'ZZDDHFNH' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            handle = 0
+            call chkout ( 'ZZDDHFNH' )
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Left justify FNAME to trim any leading white space.
 !
-      CALL LJUST ( FNAME, LOCFNM )
+      call ljust ( fname, locfnm )
 
 !
 !     Look up FNAME in the handle table.
 !
-      CALL ZZDDHF2H ( LOCFNM,  FTABS,  FTAMH, FTARC, FTBFF, &
-                      FTHAN,   FTNAM,  FTRTM, FTMNM, NFT,   UTCST, &
-                      UTHAN,   UTLCK,  UTLUN, NUT,   INQEXT, &
-                      INQOPN,  INQHAN, FOUND, MNM                 )
+      call zzddhf2h ( locfnm,  ftabs,  ftamh, ftarc, ftbff, &
+                      fthan,   ftnam,  ftrtm, ftmnm, nft,   utcst, &
+                      uthan,   utlck,  utlun, nut,   inqext, &
+                      inqopn,  inqhan, found, mnm                 )
 
 !
 !     Check found and set HANDLE if we have got one.  No need to
 !     check FAILED() since ZZDDHF2H returns FOUND set to FALSE on
 !     error.
 !
-      IF ( FOUND ) THEN
-         HANDLE = INQHAN
-      ELSE
-         HANDLE = 0
-      END IF
+      if ( found ) then
+         handle = inqhan
+      else
+         handle = 0
+      end if
 
-      CALL CHKOUT ( 'ZZDDHFNH' )
-      RETURN
+      call chkout ( 'ZZDDHFNH' )
+      return
 
 
 
 
 !$Procedure ZZDDHLUH ( Private --- Logical Unit to Handle )
 
-      ENTRY ZZDDHLUH ( UNIT, HANDLE, FOUND )
+      entry zzddhluh ( unit, handle, found )
 
 ! $ Abstract
 !
@@ -2938,10 +2938,10 @@
 !
 !     Do the initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED(), and return on failure.  We are not checking
@@ -2949,39 +2949,39 @@
 !        the possibility of ZZDDHINI signaling SPICE(BUG).  See
 !        $Restrictions for details.
 !
-         IF ( FAILED() ) THEN
-            HANDLE = 0
-            RETURN
-         END IF
+         if ( failed() ) then
+            handle = 0
+            return
+         end if
 
 !
 !        Clear FIRST since we've done the initialization.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Look up the unit in the table.
 !
-      UINDEX = ISRCHI ( UNIT, NUT, UTLUN )
+      uindex = isrchi ( unit, nut, utlun )
 
-      IF ( UINDEX .EQ. 0 ) THEN
-         HANDLE = 0
-         FOUND  = .FALSE.
-         RETURN
-      ELSE IF ( UTHAN(UINDEX) .EQ. 0 ) THEN
-         HANDLE = 0
-         FOUND  = .FALSE.
-         RETURN
-      END IF
+      if ( uindex .eq. 0 ) then
+         handle = 0
+         found  = .false.
+         return
+      else if ( uthan(uindex) .eq. 0 ) then
+         handle = 0
+         found  = .false.
+         return
+      end if
 
 !
 !     We've got a handle, store the value and return.
 !
-      HANDLE = UTHAN(UINDEX)
-      FOUND  = .TRUE.
+      handle = uthan(uindex)
+      found  = .true.
 
-      RETURN
+      return
 
-      END
+      end

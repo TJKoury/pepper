@@ -1,6 +1,6 @@
 !$Procedure ROTMAT ( Rotate a matrix )
 
-      SUBROUTINE ROTMAT ( M1, ANGLE, IAXIS, MOUT )
+      subroutine rotmat ( m1, angle, iaxis, mout )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   M1    ( 3,3 )
-      DOUBLE PRECISION   ANGLE
-      INTEGER            IAXIS
-      DOUBLE PRECISION   MOUT  ( 3,3 )
+      double precision   m1    ( 3,3 )
+      double precision   angle
+      integer            iaxis
+      double precision   mout  ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -159,48 +159,48 @@
 !-&
 
 
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      C
+      double precision      s
+      double precision      c
 
-      INTEGER               TEMP
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               I
+      integer               temp
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               i
 
-      DOUBLE PRECISION      PRODM   (3,3)
+      double precision      prodm   (3,3)
 
-      INTEGER               INDEXS  (5)
-      SAVE                  INDEXS
+      integer               indexs  (5)
+      save                  indexs
 
-      DATA                  INDEXS  / 3, 1, 2, 3, 1 /
+      data                  indexs  / 3, 1, 2, 3, 1 /
 !
 !  Get the sine and cosine of ANGLE
 !
-      S = DSIN(ANGLE)
-      C = DCOS(ANGLE)
+      s = dsin(angle)
+      c = dcos(angle)
 !
 !  Get indices for axes. The first index is for the axis of rotation.
 !  The next two axes follow in right hand order (XYZ).  First get the
 !  non-negative value of IAXIS mod 3 .
 !
-      TEMP = MOD ( MOD(IAXIS,3) + 3, 3 )
+      temp = mod ( mod(iaxis,3) + 3, 3 )
 
-      I1   = INDEXS( TEMP + 1 )
-      I2   = INDEXS( TEMP + 2 )
-      I3   = INDEXS( TEMP + 3 )
+      i1   = indexs( temp + 1 )
+      i2   = indexs( temp + 2 )
+      i3   = indexs( temp + 3 )
 !
 !  Calculate the output matrix column by column
 !
-      DO I=1,3
-         PRODM(I1,I) =  M1(I1,I)
-         PRODM(I2,I) =            C*M1(I2,I) + S*M1(I3,I)
-         PRODM(I3,I) =           -S*M1(I2,I) + C*M1(I3,I)
-      END DO
+      do i=1,3
+         prodm(i1,i) =  m1(i1,i)
+         prodm(i2,i) =            c*m1(i2,i) + s*m1(i3,i)
+         prodm(i3,i) =           -s*m1(i2,i) + c*m1(i3,i)
+      end do
 !
 !  Move the buffered matrix into MOUT.
 !
-      CALL MOVED (PRODM, 9, MOUT)
+      call moved (prodm, 9, mout)
 !
-      RETURN
-      END
+      return
+      end

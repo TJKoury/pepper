@@ -97,50 +97,50 @@
 !      WGS gravitational constants IDs.
 !
 
-      INTEGER                       NGRAVS
-      PARAMETER                   ( NGRAVS = 3 )
+      integer                       ngravs
+      parameter                   ( ngravs = 3 )
 
-      INTEGER                       NGRAVC
-      PARAMETER                   ( NGRAVC = 8 )
+      integer                       ngravc
+      parameter                   ( ngravc = 8 )
 
 
-      INTEGER                       WGS721
-      PARAMETER                   ( WGS721 = 1 )
+      integer                       wgs721
+      parameter                   ( wgs721 = 1 )
 
-      INTEGER                       WGS72
-      PARAMETER                   ( WGS72  = 2 )
+      integer                       wgs72
+      parameter                   ( wgs72  = 2 )
 
-      INTEGER                       WGS84
-      PARAMETER                   ( WGS84  = 3 )
+      integer                       wgs84
+      parameter                   ( wgs84  = 3 )
 
 
 !
 !      Gravitational constant indices.
 !
 
-      INTEGER                       P_RAD
-      PARAMETER                   ( P_RAD =  1 )
+      integer                       p_rad
+      parameter                   ( p_rad =  1 )
 
-      INTEGER                       P_XKE
-      PARAMETER                   ( P_XKE =  2 )
+      integer                       p_xke
+      parameter                   ( p_xke =  2 )
 
-      INTEGER                       P_MU
-      PARAMETER                   ( P_MU =   3 )
+      integer                       p_mu
+      parameter                   ( p_mu =   3 )
 
-      INTEGER                       P_TUMN
-      PARAMETER                   ( P_TUMN = 4 )
+      integer                       p_tumn
+      parameter                   ( p_tumn = 4 )
 
-      INTEGER                       P_J2
-      PARAMETER                   ( P_J2 =   5 )
+      integer                       p_j2
+      parameter                   ( p_j2 =   5 )
 
-      INTEGER                       P_J3
-      PARAMETER                   ( P_J3 =   6 )
+      integer                       p_j3
+      parameter                   ( p_j3 =   6 )
 
-      INTEGER                       P_J4
-      PARAMETER                   ( P_J4 =   7 )
+      integer                       p_j4
+      parameter                   ( p_j4 =   7 )
 
-      INTEGER                       P_J3J2
-      PARAMETER                   ( P_J3J2 = 8 )
+      integer                       p_j3j2
+      parameter                   ( p_j3j2 = 8 )
 
 
 !
@@ -160,42 +160,42 @@
 !     K_AE  --- index of distance units/earth radius
 !
 
-      INTEGER                       K_J2
-      PARAMETER                   ( K_J2 = 1 )
+      integer                       k_j2
+      parameter                   ( k_j2 = 1 )
 
-      INTEGER                       K_J3
-      PARAMETER                   ( K_J3 = 2 )
+      integer                       k_j3
+      parameter                   ( k_j3 = 2 )
 
-      INTEGER                       K_J4
-      PARAMETER                   ( K_J4 = 3 )
+      integer                       k_j4
+      parameter                   ( k_j4 = 3 )
 
-      INTEGER                       K_KE
-      PARAMETER                   ( K_KE = 4 )
+      integer                       k_ke
+      parameter                   ( k_ke = 4 )
 
-      INTEGER                       K_QO
-      PARAMETER                   ( K_QO = 5 )
+      integer                       k_qo
+      parameter                   ( k_qo = 5 )
 
-      INTEGER                       K_SO
-      PARAMETER                   ( K_SO = 6 )
+      integer                       k_so
+      parameter                   ( k_so = 6 )
 
-      INTEGER                       K_ER
-      PARAMETER                   ( K_ER = 7 )
+      integer                       k_er
+      parameter                   ( k_er = 7 )
 
-      INTEGER                       K_AE
-      PARAMETER                   ( K_AE = 8 )
+      integer                       k_ae
+      parameter                   ( k_ae = 8 )
 
-      INTEGER                       NGEO
-      PARAMETER                   ( NGEO = K_AE )
+      integer                       ngeo
+      parameter                   ( ngeo = k_ae )
 
 !
 !     Operation mode values, OPMODE.
 !
 
-      INTEGER                       AFSPC
-      PARAMETER                   ( AFSPC  = 1 )
+      integer                       afspc
+      parameter                   ( afspc  = 1 )
 
-      INTEGER                       IMPRVD
-      PARAMETER                   ( IMPRVD = 2 )
+      integer                       imprvd
+      parameter                   ( imprvd = 2 )
 
 !
 !     An enumeration of the various components of the
@@ -212,37 +212,37 @@
 !     KNO     --- location of NO
 !
 
-      INTEGER                       KNDT20
-      PARAMETER                   ( KNDT20 = 1 )
+      integer                       kndt20
+      parameter                   ( kndt20 = 1 )
 
-      INTEGER                       KNDD60
-      PARAMETER                   ( KNDD60 = 2 )
+      integer                       kndd60
+      parameter                   ( kndd60 = 2 )
 
-      INTEGER                       KBSTAR
-      PARAMETER                   ( KBSTAR = 3 )
+      integer                       kbstar
+      parameter                   ( kbstar = 3 )
 
-      INTEGER                       KINCL
-      PARAMETER                   ( KINCL  = 4 )
+      integer                       kincl
+      parameter                   ( kincl  = 4 )
 
-      INTEGER                       KNODE0
-      PARAMETER                   ( KNODE0 = 5 )
+      integer                       knode0
+      parameter                   ( knode0 = 5 )
 
-      INTEGER                       KECC
-      PARAMETER                   ( KECC   = 6 )
+      integer                       kecc
+      parameter                   ( kecc   = 6 )
 
-      INTEGER                       KOMEGA
-      PARAMETER                   ( KOMEGA = 7 )
+      integer                       komega
+      parameter                   ( komega = 7 )
 
-      INTEGER                       KMO
-      PARAMETER                   ( KMO    = 8 )
+      integer                       kmo
+      parameter                   ( kmo    = 8 )
 
-      INTEGER                       KNO
-      PARAMETER                   ( KNO    = 9 )
+      integer                       kno
+      parameter                   ( kno    = 9 )
 
-      INTEGER                       KEPOCH
-      PARAMETER                   ( KEPOCH = 10 )
+      integer                       kepoch
+      parameter                   ( kepoch = 10 )
 
-      INTEGER                       NELEMS
-      PARAMETER                   ( NELEMS = KEPOCH )
+      integer                       nelems
+      parameter                   ( nelems = kepoch )
 
 

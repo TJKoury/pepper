@@ -1,7 +1,7 @@
 !$Procedure SPHSD ( Spherical surface distance )
 
-      DOUBLE PRECISION FUNCTION SPHSD ( RADIUS, LON1, LAT1, &
-                                                LON2, LAT2  )
+      double precision function sphsd ( radius, lon1, lat1, &
+                                                lon2, lat2  )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      RADIUS
-      DOUBLE PRECISION      LON1
-      DOUBLE PRECISION      LAT1
-      DOUBLE PRECISION      LON2
-      DOUBLE PRECISION      LAT2
+      double precision      radius
+      double precision      lon1
+      double precision      lat1
+      double precision      lon2
+      double precision      lat2
 
 ! $ Brief_I/O
 !
@@ -199,40 +199,40 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
+      double precision      brcktd
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SL1SL2
-      DOUBLE PRECISION      COSANG
+      double precision      sl1sl2
+      double precision      cosang
 
 
 !
 !     Check RETURN but do not check in unless an error is detected.
 !
-      IF ( RETURN() ) THEN
-         SPHSD = 0.0D0
-         RETURN
-      END IF
+      if ( return() ) then
+         sphsd = 0.0d0
+         return
+      end if
 
 !
 !     Make sure that RADIUS is ok; check in only if it isn't.
 !
-      IF ( RADIUS .LT. 0 ) THEN
+      if ( radius .lt. 0 ) then
 
-         SPHSD = 0.D0
+         sphsd = 0.d0
 
-         CALL CHKIN  ( 'SPHSD'                  )
-         CALL SETMSG ( 'Radius was #.'          )
-         CALL ERRDP  ( '#', RADIUS              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SPHSD'                  )
-         RETURN
+         call chkin  ( 'SPHSD'                  )
+         call setmsg ( 'Radius was #.'          )
+         call errdp  ( '#', radius              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SPHSD'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The usual equation for the distance between points, measured
@@ -258,13 +258,13 @@
 !     round-off error doesn't take it out of the domain of arc
 !     cosine...
 !
-      SL1SL2  =      SIN ( LAT1 ) * SIN ( LAT2 )
+      sl1sl2  =      sin ( lat1 ) * sin ( lat2 )
 
-      COSANG  =      COS ( LON1 - LON2 ) &
-                 * ( COS ( LAT1 - LAT2 )  -  SL1SL2 ) &
-                 +   SL1SL2
+      cosang  =      cos ( lon1 - lon2 ) &
+                 * ( cos ( lat1 - lat2 )  -  sl1sl2 ) &
+                 +   sl1sl2
 
-      SPHSD   =      RADIUS * ACOS ( BRCKTD ( COSANG, -1.D0, 1.D0 ) )
+      sphsd   =      radius * acos ( brcktd ( cosang, -1.d0, 1.d0 ) )
 
-      RETURN
-      END
+      return
+      end

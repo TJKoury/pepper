@@ -1,8 +1,8 @@
 !$Procedure      ZZEKNRML ( EK, normalize WHERE clause )
 
-      SUBROUTINE ZZEKNRML ( QUERY,   NTOKEN,  LXBEGS,  LXENDS,  TOKENS, &
-                            VALUES,  NUMVLS,  CHRBUF,  CHBEGS,  CHENDS, &
-                            EQRYI,   EQRYC,   EQRYD,   ERROR,   PRSERR )
+      subroutine zzeknrml ( query,   ntoken,  lxbegs,  lxends,  tokens, &
+                            values,  numvls,  chrbuf,  chbegs,  chends, &
+                            eqryi,   eqryc,   eqryd,   error,   prserr )
 
 ! $ Abstract
 !
@@ -19,31 +19,31 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekkeyw.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektokn.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekkeyw.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'ektokn.inc'
+      include 'ektype.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               NTOKEN
-      INTEGER               LXBEGS ( * )
-      INTEGER               LXENDS ( * )
-      INTEGER               TOKENS ( * )
-      INTEGER               VALUES ( * )
-      DOUBLE PRECISION      NUMVLS ( * )
-      CHARACTER*(*)         CHRBUF
-      INTEGER               CHBEGS ( * )
-      INTEGER               CHENDS ( * )
-      INTEGER               EQRYI  ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD  ( * )
-      LOGICAL               ERROR
-      CHARACTER*(*)         PRSERR
+      character*(*)         query
+      integer               ntoken
+      integer               lxbegs ( * )
+      integer               lxends ( * )
+      integer               tokens ( * )
+      integer               values ( * )
+      double precision      numvls ( * )
+      character*(*)         chrbuf
+      integer               chbegs ( * )
+      integer               chends ( * )
+      integer               eqryi  ( lbcell : * )
+      character*(*)         eqryc
+      double precision      eqryd  ( * )
+      logical               error
+      character*(*)         prserr
 
 ! $ Brief_I/O
 !
@@ -328,22 +328,22 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
-      INTEGER               ISRCHI
-      INTEGER               LNKHL
-      INTEGER               LNKNFN
-      INTEGER               LNKNXT
-      INTEGER               LNKPRV
-      INTEGER               LNKTL
+      integer               cardi
+      integer               isrchi
+      integer               lnkhl
+      integer               lnknfn
+      integer               lnknxt
+      integer               lnkprv
+      integer               lnktl
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !
 !     Local parameters
 !
-      INTEGER               NIL
-      PARAMETER           ( NIL   =  0 )
+      integer               nil
+      parameter           ( nil   =  0 )
 
 !
 !     Data structure bounds:
@@ -353,30 +353,30 @@
 !     MAXREL is the maximum number of relations that can be handled
 !     by this routine.
 !
-      INTEGER               MAXREL
-      PARAMETER           ( MAXREL =   10*MAXTOK  )
+      integer               maxrel
+      parameter           ( maxrel =   10*maxtok  )
 
 !
 !     MAXMET is the maximum number of meta-tokens making up any
 !     expression.
 !
-      INTEGER               MAXMET
-      PARAMETER           ( MAXMET =   10*MAXTOK )
+      integer               maxmet
+      parameter           ( maxmet =   10*maxtok )
 
 !
 !     LBPOOL is the lower bound of the second index of a linked list
 !     pool array.
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
 !
 !
 !     Stack parameters:
 !
 !
-      INTEGER               MAXSTK
-      PARAMETER           ( MAXSTK = 500 )
+      integer               maxstk
+      parameter           ( maxstk = 500 )
 
 
 !
@@ -386,103 +386,103 @@
 !     NLOGOP is the number of recognized logical operators.  These
 !     are AND, OR, and NOT.
 !
-      INTEGER               NLOGOP
-      PARAMETER           ( NLOGOP =  3 )
+      integer               nlogop
+      parameter           ( nlogop =  3 )
 
 !
 !     NRELOP is the number of arithmetic and character comparison
 !     operators.
 !
-      INTEGER               NRELOP
-      PARAMETER           ( NRELOP = 8 )
+      integer               nrelop
+      parameter           ( nrelop = 8 )
 
 !
 !
 !     Meta-token codes, excluding codes for relational operators:
 !
-      INTEGER               RGROUP
-      PARAMETER           ( RGROUP = -1 )
+      integer               rgroup
+      parameter           ( rgroup = -1 )
 
-      INTEGER               LGROUP
-      PARAMETER           ( LGROUP = RGROUP - 1 )
+      integer               lgroup
+      parameter           ( lgroup = rgroup - 1 )
 
-      INTEGER               BTWEEN
-      PARAMETER           ( BTWEEN = LGROUP - 1 )
+      integer               btween
+      parameter           ( btween = lgroup - 1 )
 
-      INTEGER               NOTBTW
-      PARAMETER           ( NOTBTW = BTWEEN - 1 )
+      integer               notbtw
+      parameter           ( notbtw = btween - 1 )
 
-      INTEGER               BTWEXP
-      PARAMETER           ( BTWEXP = NOTBTW - 1 )
+      integer               btwexp
+      parameter           ( btwexp = notbtw - 1 )
 
-      INTEGER               NAME
-      PARAMETER           ( NAME   = BTWEXP - 1 )
+      integer               name
+      parameter           ( name   = btwexp - 1 )
 
-      INTEGER               IDENT
-      PARAMETER           ( IDENT  = NAME   - 1 )
+      integer               ident
+      parameter           ( ident  = name   - 1 )
 
-      INTEGER               VALUE
-      PARAMETER           ( VALUE  = IDENT  - 1 )
+      integer               value
+      parameter           ( value  = ident  - 1 )
 
-      INTEGER               PERIOD
-      PARAMETER           ( PERIOD = VALUE  - 1 )
+      integer               period
+      parameter           ( period = value  - 1 )
 
-      INTEGER               AND
-      PARAMETER           ( AND    = PERIOD - 1 )
+      integer               and
+      parameter           ( and    = period - 1 )
 
-      INTEGER               OR
-      PARAMETER           ( OR     = AND    - 1 )
+      integer               or
+      parameter           ( or     = and    - 1 )
 
-      INTEGER               NOT
-      PARAMETER           ( NOT    = OR     - 1 )
+      integer               not
+      parameter           ( not    = or     - 1 )
 
-      INTEGER               EXPR
-      PARAMETER           ( EXPR   = NOT    - 1 )
+      integer               expr
+      parameter           ( expr   = not    - 1 )
 
 !
 !     Number of keywords that can terminate a WHERE clause.
 !
-      INTEGER               NENDKW
-      PARAMETER           ( NENDKW = 3 )
+      integer               nendkw
+      parameter           ( nendkw = 3 )
 
 !
 !
 !     State parameters:
 !
-      INTEGER               PUSH
-      PARAMETER           ( PUSH   =          0 )
+      integer               push
+      parameter           ( push   =          0 )
 
-      INTEGER               POP
-      PARAMETER           ( POP    = PUSH   + 1 )
+      integer               pop
+      parameter           ( pop    = push   + 1 )
 
-      INTEGER               PARSE
-      PARAMETER           ( PARSE  = POP    + 1 )
+      integer               parse
+      parameter           ( parse  = pop    + 1 )
 
-      INTEGER               REDUCD
-      PARAMETER           ( REDUCD = PARSE  + 1 )
+      integer               reducd
+      parameter           ( reducd = parse  + 1 )
 
-      INTEGER               TERM
-      PARAMETER           ( TERM   = REDUCD + 1 )
+      integer               term
+      parameter           ( term   = reducd + 1 )
 
 
 !
 !
 !     'Pop condition' codes:
 !
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
-      INTEGER               REDUCE
-      PARAMETER           ( REDUCE = 1 )
+      integer               reduce
+      parameter           ( reduce = 1 )
 
-      INTEGER               ENDGRP
-      PARAMETER           ( ENDGRP = REDUCE + 1 )
+      integer               endgrp
+      parameter           ( endgrp = reduce + 1 )
 
 !
 !     Token descriptor size:
 !
-      INTEGER               DSCSIZ
-      PARAMETER           ( DSCSIZ = EQVDSZ + 1 )
+      integer               dscsiz
+      parameter           ( dscsiz = eqvdsz + 1 )
 
 !
 !     Local variables
@@ -500,11 +500,11 @@
 !     pointers are contained in the CJPTRS array.  The pointers are
 !     linked via entries in the double linked list pool CJPOOL.
 !
-      INTEGER               RELS   ( 3,  MAXREL          )
-      INTEGER               RLPOOL ( 2,  LBPOOL : MAXREL )
+      integer               rels   ( 3,  maxrel          )
+      integer               rlpool ( 2,  lbpool : maxrel )
 
-      INTEGER               CJPOOL ( 2,  LBPOOL : MAXREL )
-      INTEGER               CJPTRS (              MAXREL )
+      integer               cjpool ( 2,  lbpool : maxrel )
+      integer               cjptrs (              maxrel )
 
 !
 !     Each normalized expression is a disjunction of conjunctions.  Each
@@ -513,8 +513,8 @@
 !     is the parallel array used to associate each node of a disjunction
 !     with the head node of a conjunction list in CJPOOL.
 !
-      INTEGER               DJPOOL ( 2,  LBPOOL : MAXREL )
-      INTEGER               DJPTRS (              MAXREL )
+      integer               djpool ( 2,  lbpool : maxrel )
+      integer               djptrs (              maxrel )
 
 !
 !     Meta-tokens are groups of tokens that comprise syntactic units
@@ -532,9 +532,9 @@
 !     normalized expression.  In the latter case, the pointer is the
 !     head node of a list in the disjunction table.
 !
-      INTEGER               MTPOOL ( 2,  LBPOOL : MAXTOK )
-      INTEGER               MTCODE (              MAXTOK )
-      INTEGER               MTEXPR (              MAXTOK )
+      integer               mtpool ( 2,  lbpool : maxtok )
+      integer               mtcode (              maxtok )
+      integer               mtexpr (              maxtok )
 
 !
 !     Stack variables
@@ -551,230 +551,230 @@
 !        The two events that can cause the state to be popped are
 !        the execution of a reduction and encountering a right grouper.
 !
-      INTEGER               MSTART ( MAXSTK )
-      INTEGER               POPCND ( MAXSTK )
-      INTEGER               NMETA
+      integer               mstart ( maxstk )
+      integer               popcnd ( maxstk )
+      integer               nmeta
 
 !
 !
 !     Other local variables
 !
-      INTEGER               B
-      INTEGER               CJ(4)
-      INTEGER               CJNODE
-      INTEGER               COLPTR
-      INTEGER               DJ(2)
-      INTEGER               DJNODE
-      INTEGER               DJTAIL
-      INTEGER               DSPOOL ( 2, LBPOOL : MAXREL )
-      INTEGER               DSCBUF ( DSCSIZ,     MAXREL )
-      INTEGER               E
-      INTEGER               ENDKW  ( NENDKW )
-      INTEGER               ENDLOC
-      INTEGER               EXPRHD
-      INTEGER               FIRST
-      INTEGER               FOURTH
-      INTEGER               HEAD1
-      INTEGER               HEAD2
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               LEVEL
-      INTEGER               LXB
-      INTEGER               LXE
-      INTEGER               METAHD
-      INTEGER               NCONJ
-      INTEGER               NEWCJ
-      INTEGER               NEWDJ
-      INTEGER               NEWREL
-      INTEGER               NEXT
-      INTEGER               NODE
-      INTEGER               NRELS
-      INTEGER               OP
-      INTEGER               PREV
-      INTEGER               REL(4)
-      INTEGER               RELPTR
-      INTEGER               RELSET ( LBCELL : MAXREL )
-      INTEGER               RETCND
-      INTEGER               RHSPTR
-      INTEGER               SECOND
-      INTEGER               SKIP
-      INTEGER               SIZES  ( MAXCON )
-      INTEGER               START
-      INTEGER               STATE
-      INTEGER               TABPTR
-      INTEGER               TAIL
-      INTEGER               THIRD
-      INTEGER               TYPE
-      INTEGER               WHRBEG
-      INTEGER               WHREND
-      INTEGER               WHRSIZ
-      INTEGER               CMPCDE ( NRELOP     )
-      INTEGER               CMPNEG ( NRELOP     )
-      INTEGER               CMPOPS ( NRELOP - 1 )
-      INTEGER               LOGCDE ( NLOGOP     )
-      INTEGER               LOGOPS ( NLOGOP     )
+      integer               b
+      integer               cj(4)
+      integer               cjnode
+      integer               colptr
+      integer               dj(2)
+      integer               djnode
+      integer               djtail
+      integer               dspool ( 2, lbpool : maxrel )
+      integer               dscbuf ( dscsiz,     maxrel )
+      integer               e
+      integer               endkw  ( nendkw )
+      integer               endloc
+      integer               exprhd
+      integer               first
+      integer               fourth
+      integer               head1
+      integer               head2
+      integer               i
+      integer               j
+      integer               k
+      integer               level
+      integer               lxb
+      integer               lxe
+      integer               metahd
+      integer               nconj
+      integer               newcj
+      integer               newdj
+      integer               newrel
+      integer               next
+      integer               node
+      integer               nrels
+      integer               op
+      integer               prev
+      integer               rel(4)
+      integer               relptr
+      integer               relset ( lbcell : maxrel )
+      integer               retcnd
+      integer               rhsptr
+      integer               second
+      integer               skip
+      integer               sizes  ( maxcon )
+      integer               start
+      integer               state
+      integer               tabptr
+      integer               tail
+      integer               third
+      integer               type
+      integer               whrbeg
+      integer               whrend
+      integer               whrsiz
+      integer               cmpcde ( nrelop     )
+      integer               cmpneg ( nrelop     )
+      integer               cmpops ( nrelop - 1 )
+      integer               logcde ( nlogop     )
+      integer               logops ( nlogop     )
 
-      LOGICAL               DONOW
-      LOGICAL               FND
-      LOGICAL               QUAL
+      logical               donow
+      logical               fnd
+      logical               qual
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !
 !     Initial values
 !
-      DATA  (  LOGOPS(I), LOGCDE(I),  I = 1, NLOGOP )    / &
+      data  (  logops(i), logcde(i),  i = 1, nlogop )    / &
 
-               KWAND,   AND, &
-               KWOR,    OR, &
-               KWNOT,   NOT   /
+               kwand,   and, &
+               kwor,    or, &
+               kwnot,   not   /
 
 !
 !     Note:  there is no "UNLIKE" keyword, but there is an UNLIKE
 !     operator, which is the complement of the LIKE operator.
 !
-      DATA  (  CMPOPS(I), CMPCDE(I), CMPNEG(I), I = 1, NRELOP-1 )    / &
+      data  (  cmpops(i), cmpcde(i), cmpneg(i), i = 1, nrelop-1 )    / &
 
-               KWEQ,      EQ,       NE, &
-               KWGE,      GE,       LT, &
-               KWGT,      GT,       LE, &
-               KWLE,      LE,       GT, &
-               KWLT,      LT,       GE, &
-               KWNE,      NE,       EQ, &
-               KWLIKE,    LIKE,     UNLIKE      /
+               kweq,      eq,       ne, &
+               kwge,      ge,       lt, &
+               kwgt,      gt,       le, &
+               kwle,      le,       gt, &
+               kwlt,      lt,       ge, &
+               kwne,      ne,       eq, &
+               kwlike,    like,     unlike      /
 
-      DATA     CMPCDE(NRELOP), CMPNEG(NRELOP)   / &
-                          UNLIKE,   LIKE        /
+      data     cmpcde(nrelop), cmpneg(nrelop)   / &
+                          unlike,   like        /
 
 
-      DATA     ENDKW   /  KWFROM, KWORDR, KWSEL /
+      data     endkw   /  kwfrom, kwordr, kwsel /
 
 !
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKNRML' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKNRML' )
+      end if
 
 !
 !     No error at this point.
 !
-      ERROR  = .FALSE.
-      PRSERR = ' '
+      error  = .false.
+      prserr = ' '
 
-      IF ( NTOKEN .GT. MAXTOK ) THEN
-         ERROR  = .TRUE.
-         PRSERR = 'Too many tokens in query; max allowed is #.'
-         CALL REPMI  ( PRSERR, '#', MAXTOK, PRSERR )
-         CALL CHKOUT ( 'ZZEKNRML'                  )
-         RETURN
-      END IF
+      if ( ntoken .gt. maxtok ) then
+         error  = .true.
+         prserr = 'Too many tokens in query; max allowed is #.'
+         call repmi  ( prserr, '#', maxtok, prserr )
+         call chkout ( 'ZZEKNRML'                  )
+         return
+      end if
 
 !
 !     Find out the start and end indices of the tokens comprising the
 !     WHERE clause.  If there are no tokens in the WHERE clause, we may
 !     as well go home.
 !
-      CALL ZZEKTLOC ( TKKEY,   KWWHER,  NTOKEN,  TOKENS,  VALUES, &
-                      WHRBEG,  FND                                )
+      call zzektloc ( tkkey,   kwwher,  ntoken,  tokens,  values, &
+                      whrbeg,  fnd                                )
 
-      WHRBEG  =  WHRBEG + 1
+      whrbeg  =  whrbeg + 1
 
-      IF ( .NOT. FND ) THEN
-         ERROR   =  .TRUE.
-         PRSERR  =  'Missing WHERE keyword.'
-         CALL CHKOUT ( 'ZZEKNRML' )
-         RETURN
-      END IF
+      if ( .not. fnd ) then
+         error   =  .true.
+         prserr  =  'Missing WHERE keyword.'
+         call chkout ( 'ZZEKNRML' )
+         return
+      end if
 
 !
 !     The WHERE clause is terminated by the end of the query or by
 !     the first keyword of the set {SELECT, FROM, ORDER} that follows
 !     the WHERE keyword.
 !
-      WHREND  =  NTOKEN
+      whrend  =  ntoken
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         CALL ZZEKTLOC ( TKKEY,   ENDKW(I),  NTOKEN,  TOKENS,  VALUES, &
-                         ENDLOC,  FND                                 )
+         call zzektloc ( tkkey,   endkw(i),  ntoken,  tokens,  values, &
+                         endloc,  fnd                                 )
 
-         IF ( FND ) THEN
+         if ( fnd ) then
 
-            IF (       ( ENDLOC .LT. WHREND ) &
-                 .AND. ( ENDLOC .GT. WHRBEG )  ) THEN
+            if (       ( endloc .lt. whrend ) &
+                 .and. ( endloc .gt. whrbeg )  ) then
 
-               WHREND  =  ENDLOC-1
-            END IF
+               whrend  =  endloc-1
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      WHRSIZ  =  WHREND  -  WHRBEG  +  1
+      whrsiz  =  whrend  -  whrbeg  +  1
 
-      IF ( WHRSIZ .EQ. 0 ) THEN
-         ERROR   =  .TRUE.
-         PRSERR  =  'Empty WHERE clause.'
-         CALL CHKOUT ( 'ZZEKNRML' )
-         RETURN
-      END IF
+      if ( whrsiz .eq. 0 ) then
+         error   =  .true.
+         prserr  =  'Empty WHERE clause.'
+         call chkout ( 'ZZEKNRML' )
+         return
+      end if
 
 !
 !     Initialize the pools.
 !
-      CALL LNKINI ( MAXREL, RLPOOL )
-      CALL LNKINI ( MAXREL, CJPOOL )
-      CALL LNKINI ( MAXREL, DJPOOL )
-      CALL LNKINI ( MAXTOK, MTPOOL )
-      CALL LNKINI ( MAXREL, DSPOOL )
+      call lnkini ( maxrel, rlpool )
+      call lnkini ( maxrel, cjpool )
+      call lnkini ( maxrel, djpool )
+      call lnkini ( maxtok, mtpool )
+      call lnkini ( maxrel, dspool )
 
 !
 !     Loop through our token list and classify the tokens.  Initialize
 !     the meta-token list.
 !
-      NMETA  =  0
-      TAIL   =  NIL
+      nmeta  =  0
+      tail   =  nil
 
-      I      =  WHRBEG
+      i      =  whrbeg
 
-      DO WHILE ( I .LE. WHREND )
+      do while ( i .le. whrend )
 !
 !        Allocate a node and link it in at the tail of the meta-token
 !        list.
 !
-         CALL LNKAN  ( MTPOOL, NODE         )
-         CALL LNKILA ( TAIL,   NODE, MTPOOL )
-         TAIL         = NODE
+         call lnkan  ( mtpool, node         )
+         call lnkila ( tail,   node, mtpool )
+         tail         = node
 
 !
 !        Each meta-token's expression pointer points to its original
 !        token index, by default.
 !
-         MTEXPR(NODE) = I
+         mtexpr(node) = i
 
 
-         IF ( TOKENS(I) .EQ. TKLPAR  ) THEN
+         if ( tokens(i) .eq. tklpar  ) then
 
-            MTCODE(NODE) = LGROUP
-
-
-         ELSE IF ( TOKENS(I) .EQ. TKRPAR ) THEN
-
-            MTCODE(NODE) = RGROUP
+            mtcode(node) = lgroup
 
 
-         ELSE IF (       ( TOKENS(I) .EQ. TKINT  ) &
-                   .OR.  ( TOKENS(I) .EQ. TKDP   )  ) THEN
+         else if ( tokens(i) .eq. tkrpar ) then
+
+            mtcode(node) = rgroup
+
+
+         else if (       ( tokens(i) .eq. tkint  ) &
+                   .or.  ( tokens(i) .eq. tkdp   )  ) then
 !
 !           Numeric values must be added to the encoded query.  We
 !           allocate a descriptor from the descriptor pool for
@@ -783,282 +783,282 @@
 !           allocation should be safe, since we've checked the total
 !           number of tokens in the query.
 !
-            MTCODE(NODE) = VALUE
+            mtcode(node) = value
 
-            CALL LNKAN ( DSPOOL, MTEXPR(NODE) )
+            call lnkan ( dspool, mtexpr(node) )
 
-            IF ( TOKENS(I) .EQ. TKINT ) THEN
-               TYPE = INT
-            ELSE
-               TYPE = DP
-            END IF
+            if ( tokens(i) .eq. tkint ) then
+               type = int
+            else
+               type = dp
+            end if
 
-            CALL ZZEKINQN ( NUMVLS(VALUES(I)), &
-                            TYPE, &
-                            LXBEGS(I), &
-                            LXENDS(I), &
-                            EQRYI, &
-                            EQRYD, &
-                            DSCBUF( 1, MTEXPR(NODE) )  )
+            call zzekinqn ( numvls(values(i)), &
+                            type, &
+                            lxbegs(i), &
+                            lxends(i), &
+                            eqryi, &
+                            eqryd, &
+                            dscbuf( 1, mtexpr(node) )  )
 
 !
 !           Set the descriptor to indicate that it represents a value.
 !
-            DSCBUF( DSCSIZ, MTEXPR(NODE) )  =  VALUE
+            dscbuf( dscsiz, mtexpr(node) )  =  value
 
 
-         ELSE IF ( TOKENS(I) .EQ. TKQSTR ) THEN
+         else if ( tokens(i) .eq. tkqstr ) then
 !
 !           The treatment of strings is analogous to that of numbers.
 !
-            MTCODE(NODE) = VALUE
+            mtcode(node) = value
 
-            CALL LNKAN ( DSPOOL, MTEXPR(NODE) )
+            call lnkan ( dspool, mtexpr(node) )
 
-            B  =  CHBEGS( VALUES(I) )
-            E  =  CHENDS( VALUES(I) )
+            b  =  chbegs( values(i) )
+            e  =  chends( values(i) )
 
-            CALL ZZEKINQC (  CHRBUF(B:E), &
-                             E - B + 1, &
-                             LXBEGS(I), &
-                             LXENDS(I), &
-                             EQRYI, &
-                             EQRYC, &
-                             DSCBUF( 1, MTEXPR(NODE) )  )
+            call zzekinqc (  chrbuf(b:e), &
+                             e - b + 1, &
+                             lxbegs(i), &
+                             lxends(i), &
+                             eqryi, &
+                             eqryc, &
+                             dscbuf( 1, mtexpr(node) )  )
 
 !
 !           Set the descriptor to indicate that it represents a value.
 !
-            DSCBUF( DSCSIZ, MTEXPR(NODE) )  =  VALUE
+            dscbuf( dscsiz, mtexpr(node) )  =  value
 
 
-         ELSE IF ( TOKENS(I) .EQ. TKID ) THEN
+         else if ( tokens(i) .eq. tkid ) then
 !
 !           Identifiers must be added to the encoded query.  We
 !           allocate a descriptor from the descriptor pool for
 !           each identifier.  The expression pointer for the
 !           identifier points to the descriptor.
 !
-            MTCODE(NODE) = IDENT
+            mtcode(node) = ident
 
-            CALL LNKAN ( DSPOOL, MTEXPR(NODE) )
+            call lnkan ( dspool, mtexpr(node) )
 
-            B  =  CHBEGS( VALUES(I) )
-            E  =  CHENDS( VALUES(I) )
+            b  =  chbegs( values(i) )
+            e  =  chends( values(i) )
 
-            CALL ZZEKINQC (  CHRBUF(B:E), &
-                             E - B + 1, &
-                             LXBEGS(I), &
-                             LXENDS(I), &
-                             EQRYI, &
-                             EQRYC, &
-                             DSCBUF( 1, MTEXPR(NODE) )  )
+            call zzekinqc (  chrbuf(b:e), &
+                             e - b + 1, &
+                             lxbegs(i), &
+                             lxends(i), &
+                             eqryi, &
+                             eqryc, &
+                             dscbuf( 1, mtexpr(node) )  )
 
 !
 !           Set the descriptor to indicate that it represents an
 !           identifier.
 !
-            DSCBUF( DSCSIZ, MTEXPR(NODE) )  =  IDENT
+            dscbuf( dscsiz, mtexpr(node) )  =  ident
 
 
-         ELSE IF ( TOKENS(I) .EQ. TKDOT ) THEN
+         else if ( tokens(i) .eq. tkdot ) then
 
-            MTCODE(NODE) = PERIOD
+            mtcode(node) = period
 
 
-         ELSE IF ( TOKENS(I) .EQ. TKKEY  ) THEN
+         else if ( tokens(i) .eq. tkkey  ) then
 !
 !           We have a keyword.  Identify it and locate the corresponding
 !           code.
 !
-            J  =  ISRCHI ( VALUES(I), NLOGOP,   LOGOPS )
-            K  =  ISRCHI ( VALUES(I), NRELOP-1, CMPOPS )
+            j  =  isrchi ( values(i), nlogop,   logops )
+            k  =  isrchi ( values(i), nrelop-1, cmpops )
 
 
-            IF ( J .GT. 0 ) THEN
+            if ( j .gt. 0 ) then
 !
 !              We have a logical operator, unless we have the NOT LIKE
 !               or NOT BETWEEN sequence.
 !
-               IF ( LOGCDE(J) .NE. NOT ) THEN
+               if ( logcde(j) .ne. not ) then
 
-                  MTCODE(NODE) = LOGCDE(J)
+                  mtcode(node) = logcde(j)
 
-               ELSE
+               else
 
-                  IF ( I .LE. WHREND ) THEN
+                  if ( i .le. whrend ) then
 
-                     IF (       ( TOKENS(I+1) .EQ. TKKEY  ) &
-                          .AND. ( VALUES(I+1) .EQ. KWLIKE )  ) THEN
+                     if (       ( tokens(i+1) .eq. tkkey  ) &
+                          .and. ( values(i+1) .eq. kwlike )  ) then
 !
 !                       Replace the NOT LIKE sequence with the
 !                       UNLIKE operator.  Skip over the LIKE token.
 !
-                        MTCODE(NODE)  =  UNLIKE
-                        I             =  I + 1
+                        mtcode(node)  =  unlike
+                        i             =  i + 1
 
-                     ELSE IF (       ( TOKENS(I+1) .EQ. TKKEY  ) &
-                               .AND. ( VALUES(I+1) .EQ. KWBETW )  ) THEN
+                     else if (       ( tokens(i+1) .eq. tkkey  ) &
+                               .and. ( values(i+1) .eq. kwbetw )  ) then
 !
 !                       Replace the NOT BETWEEN sequence with the
 !                       NOTBTW operator.  Skip over the BETWEEN token.
 !
-                        MTCODE(NODE)  =  NOTBTW
-                        I             =  I + 1
+                        mtcode(node)  =  notbtw
+                        i             =  i + 1
 
-                     ELSE
-                        MTCODE(NODE)  =  NOT
-                     END IF
+                     else
+                        mtcode(node)  =  not
+                     end if
 
-                  ELSE
-                     MTCODE(NODE) = NOT
-                  END IF
+                  else
+                     mtcode(node) = not
+                  end if
 
-               END IF
-
-
-            ELSE IF ( K .GT. 0 ) THEN
-               MTCODE(NODE) = CMPCDE(K)
+               end if
 
 
-            ELSE IF ( VALUES(I) .EQ. KWBETW ) THEN
-               MTCODE(NODE) = BTWEEN
+            else if ( k .gt. 0 ) then
+               mtcode(node) = cmpcde(k)
 
 
-            ELSE IF ( VALUES(I) .EQ. KWIS ) THEN
+            else if ( values(i) .eq. kwbetw ) then
+               mtcode(node) = btween
+
+
+            else if ( values(i) .eq. kwis ) then
 !
 !              The token IS translates to EQ; the token sequence
 !              IS NOT translates to NE.
 !
-               IF ( I .LT. WHREND ) THEN
+               if ( i .lt. whrend ) then
 
-                  IF (       ( TOKENS(I+1) .EQ. TKKEY ) &
-                       .AND. ( VALUES(I+1) .EQ. KWNOT )  ) THEN
+                  if (       ( tokens(i+1) .eq. tkkey ) &
+                       .and. ( values(i+1) .eq. kwnot )  ) then
 !
 !                    We have an IS NOT sequence.  Skip over the NOT
 !                    token; indicate the sequence with a single NE
 !                    meta-token.
 !
-                     MTCODE(NODE) = NE
-                     I            = I + 1
-                  ELSE
-                     MTCODE(NODE) = EQ
-                  END IF
+                     mtcode(node) = ne
+                     i            = i + 1
+                  else
+                     mtcode(node) = eq
+                  end if
 
-               ELSE
-                  MTCODE(NODE) = EQ
-               END IF
+               else
+                  mtcode(node) = eq
+               end if
 
 
-            ELSE IF ( VALUES(I) .EQ. KWNULL ) THEN
+            else if ( values(i) .eq. kwnull ) then
 !
 !              The expression pointer for null values is NIL.
 !
-               MTCODE(NODE) = VALUE
-               MTEXPR(NODE) = NIL
+               mtcode(node) = value
+               mtexpr(node) = nil
 
-            ELSE
+            else
 !
 !              Sorry, that was the last chance for valid keywords.
 !
-               LXB     =  LXBEGS(I)
-               LXE     =  LXENDS(I)
-               ERROR   =  .TRUE.
-               PRSERR  =  'Unexpected keyword # found at location #.'
-               CALL REPMC  ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
-               CALL REPMI  ( PRSERR, '#', LXB,            PRSERR )
-               CALL CHKOUT ( 'ZZEKNRML'                          )
-               RETURN
+               lxb     =  lxbegs(i)
+               lxe     =  lxends(i)
+               error   =  .true.
+               prserr  =  'Unexpected keyword # found at location #.'
+               call repmc  ( prserr, '#', query(lxb:lxe), prserr )
+               call repmi  ( prserr, '#', lxb,            prserr )
+               call chkout ( 'ZZEKNRML'                          )
+               return
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           Sorry, that was the last chance, period.
 !
-            LXB     =  LXBEGS(I)
-            LXE     =  LXENDS(I)
-            ERROR   =  .TRUE.
-            PRSERR  =  'Unexpected token # found at location #.'
-            CALL REPMC  ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
-            CALL REPMI  ( PRSERR, '#', LXB,            PRSERR )
-            CALL CHKOUT ( 'ZZEKNRML'                          )
-            RETURN
+            lxb     =  lxbegs(i)
+            lxe     =  lxends(i)
+            error   =  .true.
+            prserr  =  'Unexpected token # found at location #.'
+            call repmc  ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi  ( prserr, '#', lxb,            prserr )
+            call chkout ( 'ZZEKNRML'                          )
+            return
 
-         END IF
+         end if
 !
 !        At this point, we've classified the Ith token.  MTCODE(NODE)
 !        is the meta-token code for this token.
 !
-         I     = I     + 1
-         NMETA = NMETA + 1
+         i     = i     + 1
+         nmeta = nmeta + 1
 
-      END DO
+      end do
 
 !
 !     Initialize the head of the meta-token list.
 !
-      METAHD = LNKHL( TAIL, MTPOOL )
+      metahd = lnkhl( tail, mtpool )
 
 !
 !     Filter out extraneous parentheses around column names or
 !     values.
 !
-      NODE = METAHD
+      node = metahd
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (      ( MTCODE(NODE) .EQ. NAME  ) &
-              .OR. ( MTCODE(NODE) .EQ. VALUE )  )  THEN
+         if (      ( mtcode(node) .eq. name  ) &
+              .or. ( mtcode(node) .eq. value )  )  then
 !
 !           If the current metatoken is bracketed by parentheses,
 !           remove them and update the metatoken count accordingly.
 !
-            PREV  =  LNKPRV( NODE, MTPOOL )
-            NEXT  =  LNKNXT( NODE, MTPOOL )
+            prev  =  lnkprv( node, mtpool )
+            next  =  lnknxt( node, mtpool )
 
-            IF (  ( PREV .GT. 0 ) .AND. ( NEXT .GT. 0 )  ) THEN
+            if (  ( prev .gt. 0 ) .and. ( next .gt. 0 )  ) then
 
-               IF (       ( MTCODE( PREV ) .EQ. LGROUP ) &
-                    .AND. ( MTCODE( NEXT ) .EQ. RGROUP )   ) THEN
+               if (       ( mtcode( prev ) .eq. lgroup ) &
+                    .and. ( mtcode( next ) .eq. rgroup )   ) then
 
-                  CALL LNKFSL ( PREV, PREV, MTPOOL )
-                  CALL LNKFSL ( NEXT, NEXT, MTPOOL )
-                  METAHD  =   LNKHL ( NODE, MTPOOL )
-                  NMETA   =   NMETA - 2
+                  call lnkfsl ( prev, prev, mtpool )
+                  call lnkfsl ( next, next, mtpool )
+                  metahd  =   lnkhl ( node, mtpool )
+                  nmeta   =   nmeta - 2
 !
 !                 We don't advance the current token in this case
 !                 because there may be more parentheses to remove.
 !
-               ELSE
+               else
 !
 !                 This token is not bracketed by parentheses; look at
 !                 the next metatoken.
 !
-                  NODE  =  NEXT
+                  node  =  next
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              This token is not bracketed by tokens on both sides; look
 !              at the next metatoken.  It's ok for the next token to be
 !              NIL.
 !
-               NODE  =  NEXT
+               node  =  next
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The current token is not a name or value; look at the next
 !           token.
 !
-            NODE  =  LNKNXT( NODE, MTPOOL )
+            node  =  lnknxt( node, mtpool )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
@@ -1087,28 +1087,28 @@
 !     array.
 !
 
-      IF ( WHRSIZ .LT. 3 ) THEN
+      if ( whrsiz .lt. 3 ) then
 
-         ERROR  = .TRUE.
-         PRSERR = 'Too few tokens in WHERE clause.'
-         CALL CHKOUT ( 'ZZEKNRML' )
-         RETURN
+         error  = .true.
+         prserr = 'Too few tokens in WHERE clause.'
+         call chkout ( 'ZZEKNRML' )
+         return
 
-      ELSE
+      else
 
-         LEVEL          =  1
-         MSTART(LEVEL)  =  METAHD
-         POPCND(LEVEL)  =  NONE
-         STATE          =  PARSE
+         level          =  1
+         mstart(level)  =  metahd
+         popcnd(level)  =  none
+         state          =  parse
 
-      END IF
-
-
-
-      DO WHILE ( STATE .NE. TERM )
+      end if
 
 
-         IF ( STATE .EQ. PARSE ) THEN
+
+      do while ( state .ne. term )
+
+
+         if ( state .eq. parse ) then
 !
 !           If the input query is valid, we're looking at the leftmost
 !           meta-token of an expression that matches the right-hand
@@ -1131,47 +1131,47 @@
 !           and FOURTH have the obvious meanings; some of these may
 !           be 0.
 !
-            FIRST   =  MSTART ( LEVEL )
+            first   =  mstart ( level )
 
-            IF ( FIRST .GT. 0 ) THEN
-               SECOND  =  LNKNXT ( FIRST,  MTPOOL )
-            ELSE
-               SECOND  =  NIL
-            END IF
+            if ( first .gt. 0 ) then
+               second  =  lnknxt ( first,  mtpool )
+            else
+               second  =  nil
+            end if
 
-            IF ( SECOND .GT. 0 ) THEN
-               THIRD   =  LNKNXT ( SECOND, MTPOOL )
-            ELSE
-               THIRD   =  NIL
-            END IF
+            if ( second .gt. 0 ) then
+               third   =  lnknxt ( second, mtpool )
+            else
+               third   =  nil
+            end if
 
-            IF ( THIRD .GT. 0 ) THEN
-               FOURTH  =  LNKNXT ( THIRD,  MTPOOL )
-            ELSE
-               FOURTH  =  NIL
-            END IF
+            if ( third .gt. 0 ) then
+               fourth  =  lnknxt ( third,  mtpool )
+            else
+               fourth  =  nil
+            end if
 
 
 
-            IF ( FIRST .LE. 0 ) THEN
+            if ( first .le. 0 ) then
 !
 !              This never happens to good commands.
 !
-               ERROR  = .TRUE.
-               PRSERR = 'WHERE clause ran out of tokens '            // &
+               error  = .true.
+               prserr = 'WHERE clause ran out of tokens '            // &
                         'unexpectedly.  This may be due to an '      // &
                         'extra left parenthesis.'
-               CALL CHKOUT ( 'ZZEKNRML' )
-               RETURN
+               call chkout ( 'ZZEKNRML' )
+               return
 
-            END IF
+            end if
 
 !
 !           We have at least one meta-token to work with.  We'll
 !           take different actions depending on its type.
 !
 
-            IF ( MTCODE(FIRST) .EQ. IDENT ) THEN
+            if ( mtcode(first) .eq. ident ) then
 !
 !              This is a simple case to deal with:  in valid queries,
 !              we have either the sequence
@@ -1192,81 +1192,81 @@
 !              the list of descriptors via the MTEXPR pointer.
 !
 !
-               IF ( THIRD .GT. 0 ) THEN
+               if ( third .gt. 0 ) then
 !
 !                 We can look at the following two tokens.
 !
-                  IF (       ( MTCODE(SECOND) .EQ. PERIOD ) &
-                       .AND. ( MTCODE(THIRD)  .EQ. IDENT  )  ) THEN
+                  if (       ( mtcode(second) .eq. period ) &
+                       .and. ( mtcode(third)  .eq. ident  )  ) then
 
-                     QUAL  =  .TRUE.
-                  ELSE
-                     QUAL  =  .FALSE.
-                  END IF
+                     qual  =  .true.
+                  else
+                     qual  =  .false.
+                  end if
 
-               ELSE
+               else
 !
 !                 There aren't enough tokens for this name to be
 !                 qualified.
 !
-                  QUAL  =  .FALSE.
+                  qual  =  .false.
 
-               END IF
+               end if
 
 
-               IF ( QUAL ) THEN
+               if ( qual ) then
 !
 !                 We have a fully qualified column name.  Hook up the
 !                 table and column name descriptors.
 !
-                  TABPTR  =  MTEXPR(FIRST)
-                  COLPTR  =  MTEXPR(THIRD)
+                  tabptr  =  mtexpr(first)
+                  colptr  =  mtexpr(third)
 
-                  CALL LNKILA ( TABPTR, COLPTR, DSPOOL )
+                  call lnkila ( tabptr, colptr, dspool )
 
 !
 !                 Reduce the expression to a <name> metatoken.
 !
-                  MTCODE(FIRST)  =  NAME
+                  mtcode(first)  =  name
 
-                  CALL LNKFSL( SECOND, THIRD, MTPOOL )
+                  call lnkfsl( second, third, mtpool )
 
-                  NMETA          =  NMETA - 2
+                  nmeta          =  nmeta - 2
 
-               ELSE
+               else
 !
 !                 We have an unqualified column name.  Allocate a table
 !                 descriptor.  Set the table descriptor to indicate a
 !                 null character descriptor.  Link this descriptor in
 !                 before the column descriptor.
 !
-                  CALL LNKAN ( DSPOOL, TABPTR )
+                  call lnkan ( dspool, tabptr )
 
-                  CALL CLEARI ( DSCSIZ, DSCBUF(1,TABPTR) )
-                  DSCBUF(EQCTYP,TABPTR)  =  CHR
-                  DSCBUF(DSCSIZ,TABPTR)  =  IDENT
+                  call cleari ( dscsiz, dscbuf(1,tabptr) )
+                  dscbuf(eqctyp,tabptr)  =  chr
+                  dscbuf(dscsiz,tabptr)  =  ident
 
-                  COLPTR  =  MTEXPR(FIRST)
+                  colptr  =  mtexpr(first)
 
-                  CALL LNKILA ( TABPTR, COLPTR, DSPOOL )
+                  call lnkila ( tabptr, colptr, dspool )
 
 !
 !                 Reduce the expression to a <name> metatoken.
 !                 The reduction doesn't change the number of metatokens.
 !
-                  MTEXPR(FIRST)  =  TABPTR
-                  MTCODE(FIRST)  =  NAME
+                  mtexpr(first)  =  tabptr
+                  mtcode(first)  =  name
 
-               END IF
+               end if
 
 !
 !              Decide the next state.
 !
-               STATE  =  REDUCD
+               state  =  reducd
 
 
 
-            ELSE IF ( MTCODE(FIRST) .EQ. VALUE ) THEN
+            else if ( mtcode(first) .eq. value ) then
 !
 !              If the query is valid, the sequence of meta-tokens
 !              should be one of
@@ -1277,44 +1277,44 @@
 !              Both of these reduce to the symbol <BETWEEN expr>.
 !
 !
-               IF (  THIRD .LE. 0 ) THEN
+               if (  third .le. 0 ) then
 
-                  ERROR  = .TRUE.
-                  PRSERR = 'Tokens were missing from comparison '   // &
+                  error  = .true.
+                  prserr = 'Tokens were missing from comparison '   // &
                            'relation.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 
 !
 !              Null values are not allowed in BETWEEN expressions.
 !
-               IF (      ( MTEXPR(FIRST) .EQ. NIL ) &
-                    .OR. ( MTEXPR(THIRD) .EQ. NIL )  )  THEN
+               if (      ( mtexpr(first) .eq. nil ) &
+                    .or. ( mtexpr(third) .eq. nil )  )  then
 
-                  ERROR  = .TRUE.
-                  PRSERR = 'NULL values are not allowed in BETWEEN ' // &
+                  error  = .true.
+                  prserr = 'NULL values are not allowed in BETWEEN ' // &
                            'or NOT BETWEEN clauses.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 
 
-               IF ( MTCODE(THIRD)  .EQ. IDENT ) THEN
+               if ( mtcode(third)  .eq. ident ) then
 !
 !                 We'll need to reduce the IDENT before proceeding.
 !
-                  START   =  THIRD
-                  RETCND  =  REDUCE
-                  STATE   =  PUSH
+                  start   =  third
+                  retcnd  =  reduce
+                  state   =  push
 
 
-               ELSE IF (      (       MTCODE(SECOND) .EQ. AND      ) &
-                        .AND. (     ( MTCODE(THIRD)  .EQ. NAME  ) &
-                               .OR. ( MTCODE(THIRD)  .EQ. VALUE )  )   ) &
-               THEN
+               else if (      (       mtcode(second) .eq. and      ) &
+                        .and. (     ( mtcode(third)  .eq. name  ) &
+                               .or. ( mtcode(third)  .eq. value )  )   ) &
+               then
 !
 !                 This sequence of tokens, when seen in the PARSE
 !                 state, is a set of value bounds for a BETWEEN or
@@ -1334,51 +1334,51 @@
 !
 !                 Hook up the name or value descriptors.
 !
-                  CALL LNKILB ( MTEXPR(FIRST), MTEXPR(THIRD), DSPOOL )
+                  call lnkilb ( mtexpr(first), mtexpr(third), dspool )
 
-                  MTCODE(FIRST)  =  BTWEXP
+                  mtcode(first)  =  btwexp
 
-                  CALL LNKFSL ( SECOND, THIRD, MTPOOL )
+                  call lnkfsl ( second, third, mtpool )
 
-                  NMETA          =  NMETA - 2
+                  nmeta          =  nmeta - 2
 
 !
 !                 Decide the next state.
 !
-                  STATE  =  REDUCD
+                  state  =  reducd
 
 
-               ELSE IF ( MTCODE(SECOND) .GT. 0 ) THEN
+               else if ( mtcode(second) .gt. 0 ) then
 !
 !                 The third meta-token is in the wrong place at the
 !                 wrong time.
 !
-                  ERROR  =  .TRUE.
-                  PRSERR =  'Token sequence must be followed '      // &
+                  error  =  .true.
+                  prserr =  'Token sequence must be followed '      // &
                             'by a value.'
 
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
 
-               ELSE
+               else
 !
 !                 The second meta-token is supposed to be the AND token,
 !                 but it's actually something else.
 !
-                  ERROR  =  .TRUE.
-                  PRSERR =  'Token must be followed by the AND ' // &
+                  error  =  .true.
+                  prserr =  'Token must be followed by the AND ' // &
                             'operator.'
 
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
-
-
+               end if
 
 
-            ELSE IF ( MTCODE(FIRST) .EQ. NAME ) THEN
+
+
+            else if ( mtcode(first) .eq. name ) then
 !
 !              If the query is valid, the sequence of meta-tokens
 !              should be any of
@@ -1410,30 +1410,30 @@
 !              There must be at least three meta-tokens here.
 !
 !
-               IF (  THIRD .LE. 0 ) THEN
+               if (  third .le. 0 ) then
 
-                  ERROR  = .TRUE.
-                  PRSERR = 'Tokens were missing from comparison '   // &
+                  error  = .true.
+                  prserr = 'Tokens were missing from comparison '   // &
                            'relation.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 
 
-               IF ( MTCODE(THIRD)  .EQ. IDENT ) THEN
+               if ( mtcode(third)  .eq. ident ) then
 !
 !                 We'll need to reduce the IDENT before proceeding.
 !
-                  START   =  THIRD
-                  RETCND  =  REDUCE
-                  STATE   =  PUSH
+                  start   =  third
+                  retcnd  =  reduce
+                  state   =  push
 
 
-               ELSE IF (      (       MTCODE(SECOND) .EQ. AND      ) &
-                        .AND. (     ( MTCODE(THIRD)  .EQ. NAME  ) &
-                               .OR. ( MTCODE(THIRD)  .EQ. VALUE )  )   ) &
-               THEN
+               else if (      (       mtcode(second) .eq. and      ) &
+                        .and. (     ( mtcode(third)  .eq. name  ) &
+                               .or. ( mtcode(third)  .eq. value )  )   ) &
+               then
 !
 !                 This sequence of tokens, when seen in the PARSE
 !                 state, is a set of value bounds for a BETWEEN or
@@ -1453,39 +1453,39 @@
 !
 !                 Null values are not allowed in BETWEEN expressions.
 !
-                  IF (      ( MTEXPR(FIRST) .EQ. NIL ) &
-                       .OR. ( MTEXPR(THIRD) .EQ. NIL )  )  THEN
+                  if (      ( mtexpr(first) .eq. nil ) &
+                       .or. ( mtexpr(third) .eq. nil )  )  then
 
-                     ERROR  = .TRUE.
-                     PRSERR = 'NULL values are not allowed in ' // &
+                     error  = .true.
+                     prserr = 'NULL values are not allowed in ' // &
                               'BETWEEN or NOT BETWEEN clauses.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
+                     call chkout ( 'ZZEKNRML' )
+                     return
 
-                  END IF
+                  end if
 
 !
 !                 Hook up the name or value descriptors.
 !
-                  CALL LNKILB ( MTEXPR(FIRST), MTEXPR(THIRD), DSPOOL )
+                  call lnkilb ( mtexpr(first), mtexpr(third), dspool )
 
-                  MTCODE(FIRST)  =  BTWEXP
+                  mtcode(first)  =  btwexp
 
-                  CALL LNKFSL ( SECOND, THIRD, MTPOOL )
+                  call lnkfsl ( second, third, mtpool )
 
-                  NMETA          =  NMETA - 2
+                  nmeta          =  nmeta - 2
 
 !
 !                 Decide the next state.
 !
-                  STATE  =  REDUCD
+                  state  =  reducd
 
 
 
-               ELSE IF (      (        MTCODE(SECOND) .GT. 0       ) &
-                        .AND. (      ( MTCODE(THIRD)  .EQ. NAME  ) &
-                                .OR. ( MTCODE(THIRD)  .EQ. VALUE ) )   ) &
-               THEN
+               else if (      (        mtcode(second) .gt. 0       ) &
+                        .and. (      ( mtcode(third)  .eq. name  ) &
+                                .or. ( mtcode(third)  .eq. value ) )   ) &
+               then
 !
 !                 Positive meta-token codes denote comparison
 !                 operators.
@@ -1496,72 +1496,72 @@
 !                 is store the expression in the relation table,
 !                 and free the second and third meta-tokens.
 !
-                  IF ( LNKNFN(RLPOOL) .LT. 1 ) THEN
-                     ERROR  = .TRUE.
-                     PRSERR = 'Relation table is full.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
-                  END IF
+                  if ( lnknfn(rlpool) .lt. 1 ) then
+                     error  = .true.
+                     prserr = 'Relation table is full.'
+                     call chkout ( 'ZZEKNRML' )
+                     return
+                  end if
 
-                  CALL LNKAN ( RLPOOL, NEWREL )
+                  call lnkan ( rlpool, newrel )
 
-                  RELS(1,NEWREL) = MTEXPR(FIRST )
-                  RELS(2,NEWREL) = MTCODE(SECOND)
-                  RELS(3,NEWREL) = MTEXPR(THIRD )
+                  rels(1,newrel) = mtexpr(first )
+                  rels(2,newrel) = mtcode(second)
+                  rels(3,newrel) = mtexpr(third )
 
 
-                  CALL LNKFSL ( SECOND, THIRD, MTPOOL )
-                  NMETA  =  NMETA - 2
+                  call lnkfsl ( second, third, mtpool )
+                  nmeta  =  nmeta - 2
 
 !
 !                 Now allocate an entry in the conjunction pool
 !                 and make this entry point to the relation table
 !                 entry.
 !
-                  IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                     ERROR  = .TRUE.
-                     PRSERR = 'Conjunction table is full.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
-                  END IF
+                  if ( lnknfn(cjpool) .lt. 1 ) then
+                     error  = .true.
+                     prserr = 'Conjunction table is full.'
+                     call chkout ( 'ZZEKNRML' )
+                     return
+                  end if
 
-                  CALL LNKAN ( CJPOOL, NEWCJ )
+                  call lnkan ( cjpool, newcj )
 
 
-                  CJPTRS(NEWCJ)  =  NEWREL
+                  cjptrs(newcj)  =  newrel
 
 !
 !                 Now allocate an entry in the disjunction pool
 !                 and make this entry point to the conjunction pool
 !                 entry.
 !
-                  IF ( LNKNFN(DJPOOL) .LT. 1 ) THEN
-                     ERROR  = .TRUE.
-                     PRSERR = 'Disjunction table is full.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
-                  END IF
+                  if ( lnknfn(djpool) .lt. 1 ) then
+                     error  = .true.
+                     prserr = 'Disjunction table is full.'
+                     call chkout ( 'ZZEKNRML' )
+                     return
+                  end if
 
-                  CALL LNKAN ( DJPOOL, NEWDJ )
+                  call lnkan ( djpool, newdj )
 
-                  DJPTRS(NEWDJ)  =  NEWCJ
+                  djptrs(newdj)  =  newcj
 
 !
 !                 Change the type of the first meta-token to EXPR and
 !                 have that meta-token point to this table entry.  Bag
 !                 the other two meta-tokens.
 !
-                  MTCODE(FIRST)  =  EXPR
-                  MTEXPR(FIRST)  =  NEWDJ
+                  mtcode(first)  =  expr
+                  mtexpr(first)  =  newdj
 
 !
 !                 Decide the next state.
 !
-                  STATE  =  REDUCD
+                  state  =  reducd
 
 
-               ELSE IF (      ( MTCODE(SECOND) .EQ. BTWEEN ) &
-                         .OR. ( MTCODE(SECOND) .EQ. NOTBTW )  ) THEN
+               else if (      ( mtcode(second) .eq. btween ) &
+                         .or. ( mtcode(second) .eq. notbtw )  ) then
 !
 !                 If the command is syntactically correct, the
 !                 meta-token sequence should be one of:
@@ -1574,8 +1574,8 @@
 !                    <name>  <NOT BETWEEN>  <name>
 !
 !
-                  IF (       ( MTCODE(SECOND) .EQ. BTWEEN ) &
-                       .AND. ( MTCODE(THIRD)  .EQ. BTWEXP )  ) THEN
+                  if (       ( mtcode(second) .eq. btween ) &
+                       .and. ( mtcode(third)  .eq. btwexp )  ) then
 !
 !                    It's a BETWEEN comparison.  We treat this as a
 !                    disjunction of conjunctions of comparison
@@ -1590,13 +1590,13 @@
 !                    where item1 and item2 are specified by the
 !                    descriptors belonging to the third meta-token.
 !
-                     DO I = 1, 4
+                     do i = 1, 4
 
-                        IF (  ( I .EQ. 1 ) .OR. ( I .EQ. 3 )  ) THEN
+                        if (  ( i .eq. 1 ) .or. ( i .eq. 3 )  ) then
 
-                           K  =  MTEXPR(THIRD)
+                           k  =  mtexpr(third)
 
-                        ELSE
+                        else
 !
 !                          We need the descriptor pointer for the RHS
 !                          item.  This descriptor is linked to the tail
@@ -1604,101 +1604,101 @@
 !                          number of nodes to skip over depends on
 !                          whether the LHS item is a name or value.
 !
-                           K  =  MTEXPR(THIRD)
+                           k  =  mtexpr(third)
 
-                           IF ( DSCBUF(DSCSIZ,K) .EQ. IDENT ) THEN
-                              SKIP = 1
-                           ELSE
-                              SKIP = 0
-                           END IF
+                           if ( dscbuf(dscsiz,k) .eq. ident ) then
+                              skip = 1
+                           else
+                              skip = 0
+                           end if
 
-                           DO J = 1, SKIP + 1
-                              K  =  LNKNXT( K, DSPOOL )
-                           END DO
+                           do j = 1, skip + 1
+                              k  =  lnknxt( k, dspool )
+                           end do
 
-                        END IF
-
-
-                        IF ( LNKNFN(RLPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Relation table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
-
-                        CALL LNKAN ( RLPOOL, REL(I) )
+                        end if
 
 
-                        RELS( 1, REL(I) ) = MTEXPR(FIRST)
+                        if ( lnknfn(rlpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Relation table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
 
-                        IF ( ( I .EQ. 1 ) .OR. ( I .EQ. 4 )  ) THEN
-                           RELS( 2, REL(I) ) = GE
-                        ELSE
-                           RELS( 2, REL(I) ) = LE
-                        END IF
-
-                        RELS( 3, REL(I) ) = K
+                        call lnkan ( rlpool, rel(i) )
 
 
-                        IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Conjunction table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
+                        rels( 1, rel(i) ) = mtexpr(first)
 
-                        CALL LNKAN ( CJPOOL, CJ(I) )
+                        if ( ( i .eq. 1 ) .or. ( i .eq. 4 )  ) then
+                           rels( 2, rel(i) ) = ge
+                        else
+                           rels( 2, rel(i) ) = le
+                        end if
 
-                        CJPTRS(CJ(I))  =  REL(I)
+                        rels( 3, rel(i) ) = k
 
-                     END DO
+
+                        if ( lnknfn(cjpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Conjunction table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
+
+                        call lnkan ( cjpool, cj(i) )
+
+                        cjptrs(cj(i))  =  rel(i)
+
+                     end do
 
 !
 !                    Link the conjunction nodes to form the two
 !                    conjunctions shown above.
 !
-                     CALL LNKILA ( CJ(1), CJ(2), CJPOOL )
-                     CALL LNKILA ( CJ(3), CJ(4), CJPOOL )
+                     call lnkila ( cj(1), cj(2), cjpool )
+                     call lnkila ( cj(3), cj(4), cjpool )
 
 !
 !                    Allocate disjunction pool entries and make them
 !                    point to the two respective conjunctions.
 !
-                     DO I = 1, 2
+                     do i = 1, 2
 
-                        IF ( LNKNFN(DJPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Disjunction table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
+                        if ( lnknfn(djpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Disjunction table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
 
-                        CALL LNKAN ( DJPOOL, DJ(I) )
-                        DJPTRS(DJ(I))  =  CJ( 2*I - 1 )
+                        call lnkan ( djpool, dj(i) )
+                        djptrs(dj(i))  =  cj( 2*i - 1 )
 
-                     END DO
+                     end do
 
 !
 !                    Finally, link the disjunction pool entries, and
 !                    create an <expression> meta-token.  Free the unused
 !                    meta-tokens.
 !
-                     CALL LNKILA ( DJ(1), DJ(2), DJPOOL )
+                     call lnkila ( dj(1), dj(2), djpool )
 
-                     MTCODE(FIRST)  =  EXPR
-                     MTEXPR(FIRST)  =  DJ(1)
+                     mtcode(first)  =  expr
+                     mtexpr(first)  =  dj(1)
 
-                     CALL LNKFSL ( SECOND, THIRD, MTPOOL )
-                     NMETA  =  NMETA - 2
+                     call lnkfsl ( second, third, mtpool )
+                     nmeta  =  nmeta - 2
 
 !
 !                    Decide the next state.
 !
-                     STATE  =  REDUCD
+                     state  =  reducd
 
 
-                  ELSE IF (       ( MTCODE(SECOND) .EQ. NOTBTW ) &
-                            .AND. ( MTCODE(THIRD)  .EQ. BTWEXP )  ) THEN
+                  else if (       ( mtcode(second) .eq. notbtw ) &
+                            .and. ( mtcode(third)  .eq. btwexp )  ) then
 !
 !                    It's a NOT BETWEEN comparison.  We treat
 !                    this as a disjunction of conjunctions of comparison
@@ -1717,13 +1717,13 @@
 !                    The actions here are closely analogous to those
 !                    for the BETWEEN case.
 !
-                     DO I = 1, 4
+                     do i = 1, 4
 
-                        IF (  ( I .EQ. 1 ) .OR. ( I .EQ. 3 )  ) THEN
+                        if (  ( i .eq. 1 ) .or. ( i .eq. 3 )  ) then
 
-                           K  =  MTEXPR(THIRD)
+                           k  =  mtexpr(third)
 
-                        ELSE
+                        else
 !
 !                          We need the descriptor pointer for the RHS
 !                          item.  This descriptor is linked to the tail
@@ -1731,151 +1731,151 @@
 !                          number of nodes to skip over depends on
 !                          whether the LHS item is a name or value.
 !
-                           K  =  MTEXPR(THIRD)
+                           k  =  mtexpr(third)
 
-                           IF ( DSCBUF(DSCSIZ,K) .EQ. IDENT ) THEN
-                              SKIP = 1
-                           ELSE
-                              SKIP = 0
-                           END IF
+                           if ( dscbuf(dscsiz,k) .eq. ident ) then
+                              skip = 1
+                           else
+                              skip = 0
+                           end if
 
-                           DO J = 1, SKIP + 1
-                              K  =  LNKNXT( K, DSPOOL )
-                           END DO
+                           do j = 1, skip + 1
+                              k  =  lnknxt( k, dspool )
+                           end do
 
-                        END IF
-
-
-                        IF ( LNKNFN(RLPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Relation table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
-
-                        CALL LNKAN ( RLPOOL, REL(I) )
+                        end if
 
 
-                        RELS( 1, REL(I) ) = MTEXPR(FIRST)
+                        if ( lnknfn(rlpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Relation table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
 
-                        IF ( I .LE. 2 ) THEN
-                           RELS( 2, REL(I) ) = LT
-                        ELSE
-                           RELS( 2, REL(I) ) = GT
-                        END IF
-
-                        RELS( 3, REL(I) ) = K
+                        call lnkan ( rlpool, rel(i) )
 
 
-                        IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Conjunction table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
+                        rels( 1, rel(i) ) = mtexpr(first)
 
-                        CALL LNKAN ( CJPOOL, CJ(I) )
+                        if ( i .le. 2 ) then
+                           rels( 2, rel(i) ) = lt
+                        else
+                           rels( 2, rel(i) ) = gt
+                        end if
 
-                        CJPTRS(CJ(I))  =  REL(I)
+                        rels( 3, rel(i) ) = k
 
-                     END DO
+
+                        if ( lnknfn(cjpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Conjunction table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
+
+                        call lnkan ( cjpool, cj(i) )
+
+                        cjptrs(cj(i))  =  rel(i)
+
+                     end do
 
 !
 !                    Link the conjunction nodes to form the two
 !                    conjunctions shown above.
 !
-                     CALL LNKILA ( CJ(1), CJ(2), CJPOOL )
-                     CALL LNKILA ( CJ(3), CJ(4), CJPOOL )
+                     call lnkila ( cj(1), cj(2), cjpool )
+                     call lnkila ( cj(3), cj(4), cjpool )
 
 !
 !                    Allocate disjunction pool entries and make them
 !                    point to the two respective conjunctions.
 !
-                     DO I = 1, 2
+                     do i = 1, 2
 
-                        IF ( LNKNFN(DJPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Disjunction table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
+                        if ( lnknfn(djpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Disjunction table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
 
-                        CALL LNKAN ( DJPOOL, DJ(I) )
-                        DJPTRS(DJ(I))  =  CJ( 2*I - 1 )
+                        call lnkan ( djpool, dj(i) )
+                        djptrs(dj(i))  =  cj( 2*i - 1 )
 
-                     END DO
+                     end do
 
 !
 !                    Finally, link the disjunction pool entries, and
 !                    create an <expression> meta-token.  Free the unused
 !                    meta-tokens.
 !
-                     CALL LNKILA ( DJ(1), DJ(2), DJPOOL )
+                     call lnkila ( dj(1), dj(2), djpool )
 
-                     MTCODE(FIRST)  =  EXPR
-                     MTEXPR(FIRST)  =  DJ(1)
+                     mtcode(first)  =  expr
+                     mtexpr(first)  =  dj(1)
 
-                     CALL LNKFSL ( SECOND, THIRD, MTPOOL )
-                     NMETA  =  NMETA - 2
+                     call lnkfsl ( second, third, mtpool )
+                     nmeta  =  nmeta - 2
 !
 !                    Decide the next state.
 !
-                     STATE  =  REDUCD
+                     state  =  reducd
 
 
-                  ELSE IF (      ( MTCODE(THIRD) .EQ. NAME  ) &
-                            .OR. ( MTCODE(THIRD) .EQ. VALUE )  )  THEN
+                  else if (      ( mtcode(third) .eq. name  ) &
+                            .or. ( mtcode(third) .eq. value )  )  then
 !
 !                    If the third meta-token is anything other than
 !                    <BETWEEN expr>, we'll have to parse the portion of
 !                    the query following the BETWEEN keyword before
 !                    reducing the <BETWEEN> or <NOT BETWEEN> expression.
 !
-                     START   =  THIRD
-                     RETCND  =  REDUCE
-                     STATE   =  PUSH
+                     start   =  third
+                     retcnd  =  reduce
+                     state   =  push
 
-                  ELSE
+                  else
 
-                     ERROR  =  .TRUE.
-                     PRSERR = 'Token following BETWEEN operator is ' // &
+                     error  =  .true.
+                     prserr = 'Token following BETWEEN operator is ' // &
                               'invalid.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
+                     call chkout ( 'ZZEKNRML' )
+                     return
 
-                  END IF
+                  end if
 
 
-               ELSE IF ( MTCODE(SECOND) .GT. 0 ) THEN
+               else if ( mtcode(second) .gt. 0 ) then
 !
 !                 The third meta-token is in the wrong place at the
 !                 wrong time.
 !
-                  ERROR  =  .TRUE.
-                  PRSERR =  'Token sequence must be followed '      // &
+                  error  =  .true.
+                  prserr =  'Token sequence must be followed '      // &
                             'by a value.'
 
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
 
-               ELSE
+               else
 !
 !                 The second meta-token is supposed to be a comparison
 !                 operator, but it's actually something else.
 !
-                  ERROR  =  .TRUE.
-                  PRSERR =  'Token must be followed by a '          // &
+                  error  =  .true.
+                  prserr =  'Token must be followed by a '          // &
                             'comparison operator.'
 
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 
 
 
-            ELSE IF ( MTCODE(FIRST) .EQ. EXPR ) THEN
+            else if ( mtcode(first) .eq. expr ) then
 !
 !              If the query is valid, the sequence of meta-tokens
 !              should be one of
@@ -1893,87 +1893,87 @@
 !                 <expression>   AND  NOT
 !                 <expression>   AND  (
 !
-               IF ( SECOND .LE. 0 ) THEN
+               if ( second .le. 0 ) then
 !
 !                 This is the last state we pass through
 !                 before exiting the loop.  However, some syntax errors
 !                 can get us here as well.
 !
-                  IF (  ( LEVEL .GT. 1 ) .OR. ( NMETA .GT. 1 )  ) THEN
+                  if (  ( level .gt. 1 ) .or. ( nmeta .gt. 1 )  ) then
 
-                     ERROR  = .TRUE.
-                     PRSERR = 'More tokens expected.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
+                     error  = .true.
+                     prserr = 'More tokens expected.'
+                     call chkout ( 'ZZEKNRML' )
+                     return
 
-                  END IF
+                  end if
 
-                  STATE = TERM
+                  state = term
 
 
-               ELSE IF ( MTCODE(SECOND) .EQ. RGROUP ) THEN
+               else if ( mtcode(second) .eq. rgroup ) then
 !
 !                 We've reached the end of a `parenthesized'
 !                 expression.
 !
-                  IF (       ( LEVEL         .GT. 1      ) &
-                       .AND. ( POPCND(LEVEL) .EQ. ENDGRP )  ) THEN
+                  if (       ( level         .gt. 1      ) &
+                       .and. ( popcnd(level) .eq. endgrp )  ) then
 !
 !                    Time to pop the state.
 !
-                     STATE = POP
+                     state = pop
 
-                  ELSE
+                  else
 !
 !                    There should not be a right grouper here.
 !
-                     ERROR  =  .TRUE.
-                     PRSERR = 'Unexpected right parenthesis '      // &
+                     error  =  .true.
+                     prserr = 'Unexpected right parenthesis '      // &
                               'found.'
-                     CALL CHKOUT ( 'ZZEKNRML' )
-                     RETURN
+                     call chkout ( 'ZZEKNRML' )
+                     return
 
-                  END IF
+                  end if
 
 
 !
 !              In all other cases, there must be at least three
 !              meta-tokens here.  Make sure there are.
 !
-               ELSE IF ( THIRD .LE. 0 ) THEN
+               else if ( third .le. 0 ) then
 
-                  ERROR  =  .TRUE.
-                  PRSERR =  'More tokens expected.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  error  =  .true.
+                  prserr =  'More tokens expected.'
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
 !
 !              Take care of the cases that will require reducing a sub-
 !              expression before reducing the current expression.
 !
-               ELSE IF (      ( MTCODE(THIRD) .EQ. IDENT  ) &
-                         .OR. ( MTCODE(THIRD) .EQ. NAME   ) &
-                         .OR. ( MTCODE(THIRD) .EQ. NOT    )  ) THEN
+               else if (      ( mtcode(third) .eq. ident  ) &
+                         .or. ( mtcode(third) .eq. name   ) &
+                         .or. ( mtcode(third) .eq. not    )  ) then
 
-                  START   =  THIRD
-                  RETCND  =  REDUCE
-                  STATE   =  PUSH
+                  start   =  third
+                  retcnd  =  reduce
+                  state   =  push
 
 
-               ELSE IF ( MTCODE(THIRD) .EQ. LGROUP ) THEN
+               else if ( mtcode(third) .eq. lgroup ) then
 !
 !                 We'll have to push our state before continuing.
 !
-                  START   =  FOURTH
-                  RETCND  =  ENDGRP
-                  STATE   =  PUSH
+                  start   =  fourth
+                  retcnd  =  endgrp
+                  state   =  push
 
 !
 !              Now continue with the interesting cases.
 !
-               ELSE IF (       ( MTCODE(FIRST)  .EQ. EXPR ) &
-                         .AND. ( MTCODE(SECOND) .EQ. OR   ) &
-                         .AND. ( MTCODE(THIRD)  .EQ. EXPR )  )  THEN
+               else if (       ( mtcode(first)  .eq. expr ) &
+                         .and. ( mtcode(second) .eq. or   ) &
+                         .and. ( mtcode(third)  .eq. expr )  )  then
 !
 !                 We have a disjunction of two normalized
 !                 expressions.  We're not ready to perform a
@@ -1981,40 +1981,40 @@
 !                 a higher priority operator, namely AND, on the
 !                 right of the second expression.
 !
-                  DONOW = .TRUE.
+                  donow = .true.
 
-                  IF ( FOURTH .GT. 0 ) THEN
+                  if ( fourth .gt. 0 ) then
 
-                     IF ( MTCODE(FOURTH) .EQ. AND ) THEN
+                     if ( mtcode(fourth) .eq. and ) then
 !
 !                       The third token is already spoken for:
 !                       the expression involving the operator
 !                       to its right must be processed first.
 !
-                        DONOW = .FALSE.
+                        donow = .false.
 
-                     END IF
+                     end if
 
-                  END IF
+                  end if
 
-                  IF ( DONOW ) THEN
+                  if ( donow ) then
 !
 !                    This is an easy case to handle:
 !                    we can form the resulting normalized
 !                    expression by just linking together the two
 !                    lists in the disjunction table.
 !
-                     DJ(1) = MTEXPR(FIRST)
-                     DJ(2) = MTEXPR(THIRD)
+                     dj(1) = mtexpr(first)
+                     dj(2) = mtexpr(third)
 
-                     CALL LNKILB ( DJ(1), DJ(2), DJPOOL )
+                     call lnkilb ( dj(1), dj(2), djpool )
 !
 !                    The first meta-token will point to the resulting
 !                    normalized expression; we'll discard the other
 !                    two meta-tokens.
 !
-                     CALL LNKFSL ( SECOND, THIRD, MTPOOL )
-                     NMETA = NMETA - 2
+                     call lnkfsl ( second, third, mtpool )
+                     nmeta = nmeta - 2
 
 !
 !                    MTEXPR(FIRST) and MTCODE(FIRST) are already
@@ -2022,9 +2022,9 @@
 !                    our next state.  The next state defaults to
 !                    PARSE; the other possibility is POP.
 !
-                     STATE  =  REDUCD
+                     state  =  reducd
 
-                  ELSE
+                  else
 !
 !                    We'll have to reduce the expression on the right
 !                    of the third meta-token before coming back to
@@ -2033,11 +2033,11 @@
 !                    The condition that must be met in order to pop our
 !                    state will be that we've performed a reduction.
 !
-                     RETCND = REDUCE
-                     START  = THIRD
-                     STATE  = PUSH
+                     retcnd = reduce
+                     start  = third
+                     state  = push
 
-                  END IF
+                  end if
 !
 !                 Either we've reduced an OR expression, in which case
 !                 the state has been set to PARSE or POP, or we've
@@ -2046,9 +2046,9 @@
 !                 state has been set to PUSH.
 !
 
-               ELSE IF (       ( MTCODE(FIRST)  .EQ. EXPR ) &
-                         .AND. ( MTCODE(SECOND) .EQ. AND  ) &
-                         .AND. ( MTCODE(THIRD)  .EQ. EXPR )  )  THEN
+               else if (       ( mtcode(first)  .eq. expr ) &
+                         .and. ( mtcode(second) .eq. and  ) &
+                         .and. ( mtcode(third)  .eq. expr )  )  then
 !
 !                 We have the conjunction of two normalized
 !                 expressions.  This case requires application of
@@ -2095,102 +2095,102 @@
 !                 meta-tokens FIRST and THIRD.
 !
 !
-                  DJ(1)    = MTEXPR(FIRST)
-                  DJTAIL = NIL
+                  dj(1)    = mtexpr(first)
+                  djtail = nil
 
-                  DO WHILE ( DJ(1) .GT. 0 )
+                  do while ( dj(1) .gt. 0 )
 
-                     DJ(2) = MTEXPR(THIRD)
+                     dj(2) = mtexpr(third)
 
-                     DO WHILE ( DJ(2) .GT. 0 )
+                     do while ( dj(2) .gt. 0 )
 !
 !                       Allocate a new disjunction table entry,
 !                       and create a new conjunction that represents
 !                       the conjunction of the conjunction lists
 !                       pointed to by DJ(1) and DJ(2).
 !
-                        IF ( LNKNFN(DJPOOL) .LT. 1 ) THEN
-                           ERROR  = .TRUE.
-                           PRSERR = 'Disjunction table is full.'
-                           CALL CHKOUT ( 'ZZEKNRML' )
-                           RETURN
-                        END IF
+                        if ( lnknfn(djpool) .lt. 1 ) then
+                           error  = .true.
+                           prserr = 'Disjunction table is full.'
+                           call chkout ( 'ZZEKNRML' )
+                           return
+                        end if
 
-                        CALL LNKAN ( DJPOOL, NEWDJ )
+                        call lnkan ( djpool, newdj )
 
 !
 !                       Make copies of the conjunction lists pointed
 !                       to by DJ(1) and DJ(2).
 !
-                        CJ(1) = DJPTRS(DJ(1))
-                        TAIL  = NIL
+                        cj(1) = djptrs(dj(1))
+                        tail  = nil
 
-                        DO WHILE ( CJ(1) .GT. 0 )
+                        do while ( cj(1) .gt. 0 )
 
-                           IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                              ERROR  = .TRUE.
-                              PRSERR = 'Conjunction table is full.'
-                              CALL CHKOUT ( 'ZZEKNRML' )
-                              RETURN
-                           END IF
+                           if ( lnknfn(cjpool) .lt. 1 ) then
+                              error  = .true.
+                              prserr = 'Conjunction table is full.'
+                              call chkout ( 'ZZEKNRML' )
+                              return
+                           end if
 
-                           CALL LNKAN  (  CJPOOL, NEWCJ          )
-                           CALL LNKILA (  TAIL,   NEWCJ, CJPOOL  )
-                           TAIL         = NEWCJ
-                           CJPTRS(TAIL) = CJPTRS(CJ(1))
+                           call lnkan  (  cjpool, newcj          )
+                           call lnkila (  tail,   newcj, cjpool  )
+                           tail         = newcj
+                           cjptrs(tail) = cjptrs(cj(1))
 
-                           CJ(1)        = LNKNXT ( CJ(1), CJPOOL )
+                           cj(1)        = lnknxt ( cj(1), cjpool )
 
-                        END DO
+                        end do
 
-                        HEAD1 = LNKHL( TAIL, CJPOOL )
+                        head1 = lnkhl( tail, cjpool )
 
 
-                        CJ(2) = DJPTRS(DJ(2))
-                        TAIL  = NIL
+                        cj(2) = djptrs(dj(2))
+                        tail  = nil
 
-                        DO WHILE ( CJ(2) .GT. 0 )
+                        do while ( cj(2) .gt. 0 )
 
-                           IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                              ERROR  = .TRUE.
-                              PRSERR = 'Conjunction table is full.'
-                              CALL CHKOUT ( 'ZZEKNRML' )
-                              RETURN
-                           END IF
+                           if ( lnknfn(cjpool) .lt. 1 ) then
+                              error  = .true.
+                              prserr = 'Conjunction table is full.'
+                              call chkout ( 'ZZEKNRML' )
+                              return
+                           end if
 
-                           CALL LNKAN  (  CJPOOL, NEWCJ          )
-                           CALL LNKILA (  TAIL,   NEWCJ, CJPOOL  )
-                           TAIL         = NEWCJ
-                           CJPTRS(TAIL) = CJPTRS(CJ(2))
+                           call lnkan  (  cjpool, newcj          )
+                           call lnkila (  tail,   newcj, cjpool  )
+                           tail         = newcj
+                           cjptrs(tail) = cjptrs(cj(2))
 
-                           CJ(2)        = LNKNXT ( CJ(2), CJPOOL )
+                           cj(2)        = lnknxt ( cj(2), cjpool )
 
-                        END DO
+                        end do
 
-                        HEAD2 = LNKHL( TAIL, CJPOOL )
+                        head2 = lnkhl( tail, cjpool )
 
 !
 !                       Now link these copies and make NEWDJ point to
 !                       the resulting list.
 !
-                        CALL LNKILB ( HEAD1, HEAD2, CJPOOL )
+                        call lnkilb ( head1, head2, cjpool )
 
-                        DJPTRS(NEWDJ) = HEAD1
+                        djptrs(newdj) = head1
 
 !
 !                       Link NEWDJ in at the tail of the disjunction
 !                       list.
 !
-                        CALL LNKILA  ( DJTAIL, NEWDJ, DJPOOL )
-                        DJTAIL = NEWDJ
+                        call lnkila  ( djtail, newdj, djpool )
+                        djtail = newdj
 
-                        DJ(2)  = LNKNXT ( DJ(2),   DJPOOL )
+                        dj(2)  = lnknxt ( dj(2),   djpool )
 
-                     END DO
+                     end do
 
-                     DJ(1) = LNKNXT ( DJ(1), DJPOOL )
+                     dj(1) = lnknxt ( dj(1), djpool )
 
-                  END DO
+                  end do
 
 !
 !                 We've now created the new normalized expression that
@@ -2202,65 +2202,65 @@
 !                 original expressions.  We can save a little work
 !                 by linking those entries before freeing them.
 !
-                  CALL LNKILB ( MTEXPR(FIRST), MTEXPR(THIRD), DJPOOL )
+                  call lnkilb ( mtexpr(first), mtexpr(third), djpool )
 
-                  DJNODE = MTEXPR(FIRST)
+                  djnode = mtexpr(first)
 
-                  DO WHILE ( DJNODE .GT. 0 )
+                  do while ( djnode .gt. 0 )
 !
 !                    Free the conjunction list pointed to by DJNODE.
 !
-                     CJNODE = DJPTRS(DJNODE)
+                     cjnode = djptrs(djnode)
 
-                     CALL LNKFSL (  CJNODE, &
-                                    LNKTL(CJNODE,CJPOOL), &
-                                    CJPOOL                )
+                     call lnkfsl (  cjnode, &
+                                    lnktl(cjnode,cjpool), &
+                                    cjpool                )
 
-                     DJNODE = LNKNXT( DJNODE, DJPOOL )
+                     djnode = lnknxt( djnode, djpool )
 
-                  END DO
+                  end do
 !
 !                 Free the disjunction list that starts with
 !                 MTEXPR(FIRST).
 !
-                  CALL LNKFSL (  MTEXPR(FIRST), &
-                                 LNKTL( MTEXPR(FIRST), DJPOOL ), &
-                                 DJPOOL                          )
+                  call lnkfsl (  mtexpr(first), &
+                                 lnktl( mtexpr(first), djpool ), &
+                                 djpool                          )
 
 !
 !                 NEWDJ is the tail node of the list of disjunctions
 !                 we've just finished.  The first meta-token should
 !                 point to the head of this disjunction list.
 !
-                  MTEXPR(FIRST)  =  LNKHL ( NEWDJ, DJPOOL )
+                  mtexpr(first)  =  lnkhl ( newdj, djpool )
 
 !
 !                 We no longer need the other two meta-tokens.
 !
-                  CALL LNKFSL ( SECOND, THIRD, MTPOOL )
-                  NMETA = NMETA - 2
+                  call lnkfsl ( second, third, mtpool )
+                  nmeta = nmeta - 2
 
 !
 !                 Decide the next state.
 !
-                  STATE  =  REDUCD
+                  state  =  reducd
 
-               ELSE
+               else
 !
 !                 There are no other valid cases in which the first
 !                 meta-token is an expression.
 !
-                  ERROR  =  .TRUE.
-                  PRSERR =  'Unexpected token found following '       // &
+                  error  =  .true.
+                  prserr =  'Unexpected token found following '       // &
                             'valid expression.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 
 
 
-            ELSE IF ( MTCODE(FIRST) .EQ. NOT ) THEN
+            else if ( mtcode(first) .eq. not ) then
 !
 !              There are four valid token sequences that we could
 !              see here:
@@ -2271,33 +2271,33 @@
 !                 NOT  NOT
 !                 NOT  (
 !
-               IF ( SECOND .LE. 0 ) THEN
+               if ( second .le. 0 ) then
 
-                  ERROR  = .TRUE.
-                  PRSERR = 'Tokens were missing from logical '        // &
+                  error  = .true.
+                  prserr = 'Tokens were missing from logical '        // &
                            'expression.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               ELSE IF ( MTCODE(SECOND) .EQ. LGROUP ) THEN
+               else if ( mtcode(second) .eq. lgroup ) then
 !
 !                 We'll have to push our state before continuing.
 !
-                  START   =  THIRD
-                  RETCND  =  ENDGRP
-                  STATE   =  PUSH
+                  start   =  third
+                  retcnd  =  endgrp
+                  state   =  push
 
 
-               ELSE IF (      ( MTCODE(SECOND) .EQ. NOT   ) &
-                         .OR. ( MTCODE(SECOND) .EQ. IDENT ) &
-                         .OR. ( MTCODE(SECOND) .EQ. NAME  )  )  THEN
+               else if (      ( mtcode(second) .eq. not   ) &
+                         .or. ( mtcode(second) .eq. ident ) &
+                         .or. ( mtcode(second) .eq. name  )  )  then
 
-                  START   =  SECOND
-                  RETCND  =  REDUCE
-                  STATE   =  PUSH
+                  start   =  second
+                  retcnd  =  reduce
+                  state   =  push
 
 
-               ELSE IF ( MTCODE(SECOND) .EQ. EXPR ) THEN
+               else if ( mtcode(second) .eq. expr ) then
 !
 !                 We have the negation of a normalized expression. Since
 !                 the NOT operator has higher precedence than any other,
@@ -2343,55 +2343,55 @@
 !                 The pointer EXPRHD will denote the head of the
 !                 combined normalized expression.
 !
-                  DJNODE = MTEXPR(SECOND)
+                  djnode = mtexpr(second)
 
-                  CJNODE = DJPTRS(DJNODE)
-                  TAIL   = NIL
+                  cjnode = djptrs(djnode)
+                  tail   = nil
 
-                  DO WHILE ( CJNODE .GT. 0 )
+                  do while ( cjnode .gt. 0 )
 !
 !                    Create a new singleton disjunction list
 !                    that points to the relation pointed to by
 !                    CJNODE.
 !
-                     IF ( LNKNFN(DJPOOL) .LT. 1 ) THEN
-                        ERROR  = .TRUE.
-                        PRSERR = 'Disjunction table is full.'
-                        CALL CHKOUT ( 'ZZEKNRML' )
-                        RETURN
-                     END IF
+                     if ( lnknfn(djpool) .lt. 1 ) then
+                        error  = .true.
+                        prserr = 'Disjunction table is full.'
+                        call chkout ( 'ZZEKNRML' )
+                        return
+                     end if
 
-                     CALL LNKAN ( DJPOOL, NEWDJ )
+                     call lnkan ( djpool, newdj )
 
-                     IF ( LNKNFN(CJPOOL) .LT. 1  ) THEN
-                        ERROR  = .TRUE.
-                        PRSERR = 'Conjunction table is full.'
-                        CALL CHKOUT ( 'ZZEKNRML' )
-                        RETURN
-                     END IF
+                     if ( lnknfn(cjpool) .lt. 1  ) then
+                        error  = .true.
+                        prserr = 'Conjunction table is full.'
+                        call chkout ( 'ZZEKNRML' )
+                        return
+                     end if
 
-                     CALL LNKAN ( CJPOOL, NEWCJ )
+                     call lnkan ( cjpool, newcj )
 
-                     CJPTRS(NEWCJ) = CJPTRS(CJNODE)
-                     DJPTRS(NEWDJ) = NEWCJ
+                     cjptrs(newcj) = cjptrs(cjnode)
+                     djptrs(newdj) = newcj
 !
 !                    Now link the new singleton disjunction list in
 !                    at the tail of the disjunction list that
 !                    parallels the conjunction list we're currently
 !                    traversing.
 !
-                     CALL LNKILA ( TAIL, NEWDJ, DJPOOL )
-                     TAIL   = NEWDJ
+                     call lnkila ( tail, newdj, djpool )
+                     tail   = newdj
 
-                     CJNODE = LNKNXT ( CJNODE, CJPOOL )
+                     cjnode = lnknxt ( cjnode, cjpool )
 
-                  END DO
+                  end do
 
 !
 !                 Keep track of the head of the new normalized
 !                 expression.
 !
-                  EXPRHD = LNKHL ( TAIL, DJPOOL )
+                  exprhd = lnkhl ( tail, djpool )
 
 !
 !                 Now, for every remaining conjunction in the original
@@ -2402,48 +2402,48 @@
 !                 just yet.
 !
 !
-                  DJNODE = LNKNXT ( DJNODE, DJPOOL )
+                  djnode = lnknxt ( djnode, djpool )
 
-                  DO WHILE ( DJNODE .GT. 0 )
+                  do while ( djnode .gt. 0 )
 !
 !                    Loop through our existing cumulative
 !                    expression and the latest conjunction, forming
 !                    all pairwise conjunctions.
 !
-                     DJ(1)    = EXPRHD
-                     DJTAIL = NIL
+                     dj(1)    = exprhd
+                     djtail = nil
 
-                     DO WHILE ( DJ(1) .GT. 0 )
+                     do while ( dj(1) .gt. 0 )
 
-                        CJ(2) = DJPTRS(DJNODE)
+                        cj(2) = djptrs(djnode)
 
-                        DO WHILE ( CJ(2) .GT. 0 )
+                        do while ( cj(2) .gt. 0 )
 !
 !                          Make a copy of the conjunction list pointed
 !                          to by DJPTRS(DJ(1)).
 !
-                           CJNODE = DJPTRS(DJ(1))
-                           TAIL   = NIL
+                           cjnode = djptrs(dj(1))
+                           tail   = nil
 
-                           DO WHILE ( CJNODE .GT. 0 )
+                           do while ( cjnode .gt. 0 )
 
-                              IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                                 ERROR  = .TRUE.
-                                 PRSERR = 'Conjunction table is full.'
-                                 CALL CHKOUT ( 'ZZEKNRML' )
-                                 RETURN
-                              END IF
+                              if ( lnknfn(cjpool) .lt. 1 ) then
+                                 error  = .true.
+                                 prserr = 'Conjunction table is full.'
+                                 call chkout ( 'ZZEKNRML' )
+                                 return
+                              end if
 
-                              CALL LNKAN  ( CJPOOL, NEWCJ         )
-                              CALL LNKILA ( TAIL,   NEWCJ, CJPOOL )
+                              call lnkan  ( cjpool, newcj         )
+                              call lnkila ( tail,   newcj, cjpool )
 
-                              CJPTRS(NEWCJ)  = CJPTRS(CJNODE)
-                              TAIL           = NEWCJ
-                              CJNODE         = LNKNXT ( CJNODE, CJPOOL )
+                              cjptrs(newcj)  = cjptrs(cjnode)
+                              tail           = newcj
+                              cjnode         = lnknxt ( cjnode, cjpool )
 
-                           END DO
+                           end do
 
-                           CJ(1) = LNKHL ( TAIL, CJPOOL )
+                           cj(1) = lnkhl ( tail, cjpool )
 
 !
 !                          Allocate a new conjunction table entry for
@@ -2452,74 +2452,74 @@
 !                          new disjunction table entry to point to this
 !                          new conjunction.
 !
-                           IF ( LNKNFN(CJPOOL) .LT. 1 ) THEN
-                              ERROR  = .TRUE.
-                              PRSERR = 'Conjunction table is full.'
-                              CALL CHKOUT ( 'ZZEKNRML' )
-                              RETURN
-                           END IF
+                           if ( lnknfn(cjpool) .lt. 1 ) then
+                              error  = .true.
+                              prserr = 'Conjunction table is full.'
+                              call chkout ( 'ZZEKNRML' )
+                              return
+                           end if
 
-                           CALL LNKAN ( CJPOOL, NEWCJ )
-                           CJPTRS(NEWCJ)  =  CJPTRS(CJ(2))
+                           call lnkan ( cjpool, newcj )
+                           cjptrs(newcj)  =  cjptrs(cj(2))
 
-                           IF ( LNKNFN(DJPOOL) .LT. 1  ) THEN
-                              ERROR  = .TRUE.
-                              PRSERR = 'Disjunction table is full.'
-                              CALL CHKOUT ( 'ZZEKNRML' )
-                              RETURN
-                           END IF
+                           if ( lnknfn(djpool) .lt. 1  ) then
+                              error  = .true.
+                              prserr = 'Disjunction table is full.'
+                              call chkout ( 'ZZEKNRML' )
+                              return
+                           end if
 
-                           CALL LNKAN ( DJPOOL, NEWDJ )
+                           call lnkan ( djpool, newdj )
 
 !
 !                          Hook everything up.
 !
-                           CALL LNKILB ( CJ(1), NEWCJ, CJPOOL )
+                           call lnkilb ( cj(1), newcj, cjpool )
 
-                           DJPTRS(NEWDJ) =  CJ(1)
+                           djptrs(newdj) =  cj(1)
 
-                           CALL LNKILA ( DJTAIL, NEWDJ, DJPOOL )
-                           DJTAIL        =  NEWDJ
+                           call lnkila ( djtail, newdj, djpool )
+                           djtail        =  newdj
 
-                           CJ(2)         =  LNKNXT ( CJ(2), CJPOOL )
+                           cj(2)         =  lnknxt ( cj(2), cjpool )
 
-                        END DO
+                        end do
 
-                        DJ(1)    = LNKNXT ( DJ(1), DJPOOL )
+                        dj(1)    = lnknxt ( dj(1), djpool )
 
-                     END DO
+                     end do
 
 !
 !                    Before going on, clean up the conjunction and
 !                    disjunction pool entries used by our last
 !                    version of the cumulative expression.
 !
-                     DJ(1) = EXPRHD
+                     dj(1) = exprhd
 
-                     DO WHILE ( DJ(1) .GT. 0 )
+                     do while ( dj(1) .gt. 0 )
 
-                        CJ(1) = DJPTRS(DJ(1))
-                        CJ(2) = LNKTL ( CJ(1), CJPOOL )
+                        cj(1) = djptrs(dj(1))
+                        cj(2) = lnktl ( cj(1), cjpool )
 
-                        CALL LNKFSL ( CJ(1), CJ(2), CJPOOL )
+                        call lnkfsl ( cj(1), cj(2), cjpool )
 
-                        DJ(1) = LNKNXT ( DJ(1), DJPOOL )
+                        dj(1) = lnknxt ( dj(1), djpool )
 
-                     END DO
+                     end do
 
-                     CALL LNKFSL (  EXPRHD, &
-                                    LNKTL( EXPRHD, DJPOOL ), &
-                                    DJPOOL                    )
+                     call lnkfsl (  exprhd, &
+                                    lnktl( exprhd, djpool ), &
+                                    djpool                    )
 
 !
 !                    Set EXPRHD to be the head of our updated,
 !                    cumulative expression.  Start to work on the
 !                    next conjunction.
 !
-                     EXPRHD = LNKHL  ( DJTAIL, DJPOOL )
-                     DJNODE = LNKNXT ( DJNODE, DJPOOL )
+                     exprhd = lnkhl  ( djtail, djpool )
+                     djnode = lnknxt ( djnode, djpool )
 
-                  END DO
+                  end do
 
 !
 !                 EXPRHD now points to a new expression that will
@@ -2531,73 +2531,73 @@
 !                 of relations to be negated, then negate each relation
 !                 in the set.
 !
-                  CALL SSIZEI ( MAXREL, RELSET )
+                  call ssizei ( maxrel, relset )
 
-                  DJNODE = MTEXPR(SECOND)
-
-
-                  DO WHILE ( DJNODE .GT. 0 )
-
-                     CJNODE = DJPTRS(DJNODE)
-
-                     DO WHILE ( CJNODE .GT. 0 )
-
-                        RELPTR = CJPTRS(CJNODE)
-                        CALL INSRTI ( RELPTR, RELSET )
-
-                        CJNODE = LNKNXT( CJNODE, CJPOOL )
-
-                     END DO
-
-                     DJNODE = LNKNXT ( DJNODE, DJPOOL )
-
-                  END DO
+                  djnode = mtexpr(second)
 
 
-                  DO I = 1, CARDI(RELSET)
+                  do while ( djnode .gt. 0 )
 
-                     RELPTR          =  RELSET( I )
-                     J               =  ISRCHI( RELS(2,RELPTR), &
-                                                NRELOP, &
-                                                CMPCDE         )
-                     RELS(2,RELPTR)  =  CMPNEG( J )
+                     cjnode = djptrs(djnode)
 
-                  END DO
+                     do while ( cjnode .gt. 0 )
+
+                        relptr = cjptrs(cjnode)
+                        call insrti ( relptr, relset )
+
+                        cjnode = lnknxt( cjnode, cjpool )
+
+                     end do
+
+                     djnode = lnknxt ( djnode, djpool )
+
+                  end do
+
+
+                  do i = 1, cardi(relset)
+
+                     relptr          =  relset( i )
+                     j               =  isrchi( rels(2,relptr), &
+                                                nrelop, &
+                                                cmpcde         )
+                     rels(2,relptr)  =  cmpneg( j )
+
+                  end do
 
 !
 !                 Set the pointer of the first meta-token to point
 !                 to our normalized expression, and change the
 !                 meta-token's code to <expr>.
 !
-                  MTEXPR(FIRST) = EXPRHD
-                  MTCODE(FIRST) = EXPR
+                  mtexpr(first) = exprhd
+                  mtcode(first) = expr
 
 !
 !                 Get rid of the second meta-token, and determine the
 !                 next state.
 !
-                  CALL LNKFSL ( SECOND, SECOND, MTPOOL )
-                  NMETA  =  NMETA - 1
+                  call lnkfsl ( second, second, mtpool )
+                  nmeta  =  nmeta - 1
 
-                  STATE  =  REDUCD
+                  state  =  reducd
 
 
-               ELSE
+               else
 !
 !                 The second token is invalid in this context.
 !
-                  ERROR  = .TRUE.
-                  PRSERR = 'Token following NOT operator was invalid.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  error  = .true.
+                  prserr = 'Token following NOT operator was invalid.'
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 !
 !              This is the end of the NOT case.
 !
 
 
-            ELSE IF ( MTCODE(FIRST) .EQ. LGROUP ) THEN
+            else if ( mtcode(first) .eq. lgroup ) then
 !
 !              We're looking at the start of a `parenthesized'
 !              sub-expression.
@@ -2606,67 +2606,67 @@
 !              SECOND.  The condition for popping our state will be
 !              that we encounter a right grouper.
 !
-               RETCND = ENDGRP
-               START  = SECOND
-               STATE  = PUSH
+               retcnd = endgrp
+               start  = second
+               state  = push
 
 
-            ELSE
+            else
 !
 !              Only a syntax error could get us here.
 !
-               ERROR  =  .TRUE.
-               PRSERR = 'Unexpected token found.'
-               CALL CHKOUT ( 'ZZEKNRML' )
-               RETURN
+               error  =  .true.
+               prserr = 'Unexpected token found.'
+               call chkout ( 'ZZEKNRML' )
+               return
 
-            END IF
+            end if
 
 !
 !           This is the end of the code for the PARSE state.  We've
 !           determined the next parsing state at this point.
 !
 
-         ELSE IF ( STATE .EQ. REDUCD ) THEN
+         else if ( state .eq. reducd ) then
 !
 !           A reduction has been done.  Decide the next state.
 !
-            STATE  =  REDUCD
+            state  =  reducd
 
-            IF ( POPCND(LEVEL) .EQ. REDUCE ) THEN
-               STATE         = POP
-            ELSE
-               MSTART(LEVEL) = FIRST
-               STATE         = PARSE
-            END IF
+            if ( popcnd(level) .eq. reduce ) then
+               state         = pop
+            else
+               mstart(level) = first
+               state         = parse
+            end if
 
 
 
-         ELSE IF ( STATE .EQ. PUSH ) THEN
+         else if ( state .eq. push ) then
 !
 !           Increment the stack level, and save the current
 !           starting point and pop condition.
 !
-            LEVEL  =  LEVEL + 1
+            level  =  level + 1
 
-            IF ( LEVEL .GT. MAXSTK ) THEN
-               ERROR          = .TRUE.
-               PRSERR         = 'Stack is full'
-               STATE          =  TERM
-            ELSE
-               MSTART(LEVEL)  =  START
-               POPCND(LEVEL)  =  RETCND
-               STATE          =  PARSE
-            END IF
+            if ( level .gt. maxstk ) then
+               error          = .true.
+               prserr         = 'Stack is full'
+               state          =  term
+            else
+               mstart(level)  =  start
+               popcnd(level)  =  retcnd
+               state          =  parse
+            end if
 
 
-         ELSE IF ( STATE .EQ. POP ) THEN
+         else if ( state .eq. pop ) then
 !
 !           If we can, pop the state.
 !
-            IF ( LEVEL .GT. 1 ) THEN
+            if ( level .gt. 1 ) then
 
-               IF ( POPCND(LEVEL) .EQ. ENDGRP ) THEN
+               if ( popcnd(level) .eq. endgrp ) then
 !
 !                 If we're popping the state because we encountered a
 !                 right grouper, we have a meta-token sequence that
@@ -2681,41 +2681,41 @@
 !                 update the starting token at the next lower level, if
 !                 the left grouper was the starting token.
 !
-                  PREV   =  LNKPRV ( FIRST, MTPOOL )
+                  prev   =  lnkprv ( first, mtpool )
 
-                  IF ( MSTART(LEVEL-1) .EQ. PREV ) THEN
-                     MSTART(LEVEL-1) = FIRST
-                  END IF
+                  if ( mstart(level-1) .eq. prev ) then
+                     mstart(level-1) = first
+                  end if
 
-                  IF ( METAHD .EQ. PREV ) THEN
-                     METAHD = FIRST
-                  END IF
+                  if ( metahd .eq. prev ) then
+                     metahd = first
+                  end if
 
-                  CALL LNKFSL ( PREV,   PREV,   MTPOOL )
-                  CALL LNKFSL ( SECOND, SECOND, MTPOOL )
+                  call lnkfsl ( prev,   prev,   mtpool )
+                  call lnkfsl ( second, second, mtpool )
 
-                  NMETA  =  NMETA - 2
+                  nmeta  =  nmeta - 2
 
-               END IF
+               end if
 
-               LEVEL = LEVEL - 1
-               STATE = PARSE
+               level = level - 1
+               state = parse
 
-            ELSE
-               ERROR  =  .TRUE.
-               PRSERR =  'Syntax error:  badly formed WHERE clause.'
-               CALL CHKOUT ( 'ZZEKNRML' )
-               RETURN
-            END IF
+            else
+               error  =  .true.
+               prserr =  'Syntax error:  badly formed WHERE clause.'
+               call chkout ( 'ZZEKNRML' )
+               return
+            end if
 
 
-         END IF
+         end if
 
 !
 !        We've considered all states.
 !
 
-      END DO
+      end do
 
 
 !
@@ -2726,25 +2726,25 @@
 !     query.  We'll also update the count of constraints, the count of
 !     conjunctions, and we'll add a list of conjunction sizes.
 !
-      DJNODE = MTEXPR(FIRST)
-      NCONJ  = 0
-      NRELS  = 0
+      djnode = mtexpr(first)
+      nconj  = 0
+      nrels  = 0
 
-      DO WHILE ( DJNODE .GT. 0 )
+      do while ( djnode .gt. 0 )
 
-         NCONJ         =  NCONJ + 1
-         SIZES(NCONJ)  =  0
-         CJNODE        =  DJPTRS(DJNODE)
+         nconj         =  nconj + 1
+         sizes(nconj)  =  0
+         cjnode        =  djptrs(djnode)
 
-         DO WHILE ( CJNODE .GT. 0 )
+         do while ( cjnode .gt. 0 )
 
-            NRELS          =  NRELS        + 1
-            SIZES (NCONJ)  =  SIZES(NCONJ) + 1
-            RELPTR         =  CJPTRS(CJNODE)
+            nrels          =  nrels        + 1
+            sizes (nconj)  =  sizes(nconj) + 1
+            relptr         =  cjptrs(cjnode)
 
-            TABPTR         =  RELS(1,RELPTR)
-            OP             =  RELS(2,RELPTR)
-            RHSPTR         =  RELS(3,RELPTR)
+            tabptr         =  rels(1,relptr)
+            op             =  rels(2,relptr)
+            rhsptr         =  rels(3,relptr)
 
 !
 !           Add a constraint descriptor to the encoded query.  The
@@ -2754,152 +2754,152 @@
 !           First, save space for the constraint type.  We'll fill this
 !           in after finding out what's on the right hand side.
 !
-            CALL APPNDI ( 0, EQRYI )
-            K  =  CARDI ( EQRYI )
+            call appndi ( 0, eqryi )
+            k  =  cardi ( eqryi )
 
 !
 !           Next, add name descriptors for the table and column on
 !           the left-hand side.  These descriptors are linked and
 !           pointed to by NAMPTR.
 !
-            DO I = 1, EQVDSZ
-               CALL APPNDI (  DSCBUF( I, TABPTR ),  EQRYI  )
-            END DO
+            do i = 1, eqvdsz
+               call appndi (  dscbuf( i, tabptr ),  eqryi  )
+            end do
 
-            COLPTR  =  LNKNXT( TABPTR, DSPOOL )
+            colptr  =  lnknxt( tabptr, dspool )
 
-            DO I = 1, EQVDSZ
-               CALL APPNDI (  DSCBUF( I, COLPTR ),  EQRYI  )
-            END DO
+            do i = 1, eqvdsz
+               call appndi (  dscbuf( i, colptr ),  eqryi  )
+            end do
 
 !
 !           What happens next depends on whether the query has a null
 !           value on the right hand side.  This is indicated by the
 !           relation's value pointer being NIL.
 !
-            IF ( RHSPTR .EQ. NIL ) THEN
+            if ( rhsptr .eq. nil ) then
 !
 !              For constraints involving null values, we change the
 !              operator to ISNULL or NOTNUL as appropriate.
 !
-               IF ( OP .EQ. EQ ) THEN
-                  OP  =  ISNULL
+               if ( op .eq. eq ) then
+                  op  =  isnull
 
-               ELSE IF ( OP .EQ. NE ) THEN
-                  OP  =  NOTNUL
+               else if ( op .eq. ne ) then
+                  op  =  notnul
 
-               ELSE
+               else
 
-                  ERROR  =  .TRUE.
-                  PRSERR =  'NULL values can only be used with the ' // &
+                  error  =  .true.
+                  prserr =  'NULL values can only be used with the ' // &
                             'operators "IS NULL", "NOT NULL", '      // &
                             'or equivalents.'
-                  CALL CHKOUT ( 'ZZEKNRML' )
-                  RETURN
+                  call chkout ( 'ZZEKNRML' )
+                  return
 
-               END IF
+               end if
 
 !
 !              Set the operator code.
 !
-               CALL APPNDI ( OP, EQRYI )
+               call appndi ( op, eqryi )
 
 !
 !              Pad the constraint descriptor up to the full length.
 !
-               DO I = 1, 2*EQVDSZ
-                  CALL APPNDI ( 0, EQRYI )
-               END DO
+               do i = 1, 2*eqvdsz
+                  call appndi ( 0, eqryi )
+               end do
 
 !
 !              Set the descriptor's type by updating the reserved
 !              location.
 !
-               EQRYI(K)  =  EQVAL
+               eqryi(k)  =  eqval
 
 
-            ELSE
+            else
 !
 !              For `normal' constraints, that is, constraints that don't
 !              involve null values, we set the operator code, then
 !              fill in the information describing the RHS of the
 !              constraint.
 !
-               CALL APPNDI ( OP, EQRYI )
+               call appndi ( op, eqryi )
 
-               IF (  DSCBUF( DSCSIZ, RHSPTR ) .EQ. VALUE ) THEN
+               if (  dscbuf( dscsiz, rhsptr ) .eq. value ) then
 !
 !                 The RHS contains a value.  Append the descriptor
 !                 for the value, then pad the constraint descriptor.
 !
-                  DO I = 1, EQVDSZ
-                     CALL APPNDI (  DSCBUF( I, RHSPTR ),  EQRYI  )
-                  END DO
+                  do i = 1, eqvdsz
+                     call appndi (  dscbuf( i, rhsptr ),  eqryi  )
+                  end do
 
-                  DO I = 1, EQVDSZ
-                     CALL APPNDI (  0,  EQRYI  )
-                  END DO
+                  do i = 1, eqvdsz
+                     call appndi (  0,  eqryi  )
+                  end do
 
 !
 !                 Set the descriptor's type by updating the reserved
 !                 location.
 !
-                  EQRYI(K)  =  EQVAL
+                  eqryi(k)  =  eqval
 
 
-               ELSE
+               else
 !
 !                 The RHS contains a column name.  Append the
 !                 descriptors for the table and column.
 !
-                  DO I = 1, EQVDSZ
-                     CALL APPNDI (  DSCBUF( I, RHSPTR ),  EQRYI  )
-                  END DO
+                  do i = 1, eqvdsz
+                     call appndi (  dscbuf( i, rhsptr ),  eqryi  )
+                  end do
 
-                  COLPTR  =  LNKNXT( RHSPTR, DSPOOL )
+                  colptr  =  lnknxt( rhsptr, dspool )
 
-                  DO I = 1, EQVDSZ
-                     CALL APPNDI (  DSCBUF( I, COLPTR ),  EQRYI  )
-                  END DO
+                  do i = 1, eqvdsz
+                     call appndi (  dscbuf( i, colptr ),  eqryi  )
+                  end do
 
 !
 !                 Set the descriptor's type by updating the reserved
 !                 location.
 !
-                  EQRYI(K)  =  EQCOL
+                  eqryi(k)  =  eqcol
 
-               END IF
+               end if
 
-            END IF
+            end if
 !
 !           We've updated the encoded query to reflect the current
 !           constraint relation.
 !
-            CJNODE = LNKNXT ( CJNODE, CJPOOL )
+            cjnode = lnknxt ( cjnode, cjpool )
 
-         END DO
+         end do
 !
 !        We've set the array element SIZES(NCONJ).
 !
-         DJNODE = LNKNXT ( DJNODE, DJPOOL )
+         djnode = lnknxt ( djnode, djpool )
 
-      END DO
+      end do
 
 !
 !     Set the counts of constraints and conjunctions in the encoded
 !     query.
 !
-      CALL ZZEKWEQI ( 'NUM_CONSTRAINTS',  NRELS, EQRYI )
-      CALL ZZEKWEQI ( 'NUM_CONJUNCTIONS', NCONJ, EQRYI )
+      call zzekweqi ( 'NUM_CONSTRAINTS',  nrels, eqryi )
+      call zzekweqi ( 'NUM_CONJUNCTIONS', nconj, eqryi )
 
 !
 !     Add the conjunction size list to the encoded query.
 !
-      DO I = 1, NCONJ
-         CALL APPNDI ( SIZES(I), EQRYI )
-      END DO
+      do i = 1, nconj
+         call appndi ( sizes(i), eqryi )
+      end do
 
 
-      CALL CHKOUT ( 'ZZEKNRML' )
-      RETURN
-      END
+      call chkout ( 'ZZEKNRML' )
+      return
+      end

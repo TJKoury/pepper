@@ -1,6 +1,6 @@
 !$Procedure INTMIN ( Smallest integer number )
 
-      INTEGER FUNCTION INTMIN ()
+      integer function intmin ()
 
 ! $ Abstract
 !
@@ -17,7 +17,7 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Brief_I/O
 !
@@ -436,9 +436,9 @@
 !
 
 !
-      INTMIN = -2147483647 -1
+      intmin = -2147483647 -1
 
 
 
-      RETURN
-      END
+      return
+      end

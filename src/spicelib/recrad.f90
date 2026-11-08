@@ -1,6 +1,6 @@
 !$Procedure RECRAD ( Rectangular coordinates to RA and DEC )
 
-      SUBROUTINE RECRAD ( RECTAN, RANGE, RA, DEC )
+      subroutine recrad ( rectan, range, ra, dec )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RECTAN ( 3 )
-      DOUBLE PRECISION   RANGE
-      DOUBLE PRECISION   RA
-      DOUBLE PRECISION   DEC
+      double precision   rectan ( 3 )
+      double precision   range
+      double precision   ra
+      double precision   dec
 
 ! $ Brief_I/O
 !
@@ -168,7 +168,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
+      double precision      twopi
 
 !
 !     Call the subroutine RECLAT to convert the rectangular coordinates
@@ -178,13 +178,13 @@
 !     two pi radians, whenever RA is negative two pi must be added to
 !     it.
 !
-      CALL RECLAT ( RECTAN, RANGE, RA, DEC )
+      call reclat ( rectan, range, ra, dec )
 
 
-      IF ( RA .LT. 0 ) THEN
-         RA = RA + TWOPI()
-      END IF
+      if ( ra .lt. 0 ) then
+         ra = ra + twopi()
+      end if
 
 
-      RETURN
-      END
+      return
+      end

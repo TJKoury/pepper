@@ -1,6 +1,6 @@
 !$Procedure SRFS2C ( Surface and body strings to surface ID code )
 
-      SUBROUTINE SRFS2C ( SRFSTR, BODSTR, CODE, FOUND )
+      subroutine srfs2c ( srfstr, bodstr, code, found )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         SRFSTR
-      CHARACTER*(*)         BODSTR
-      INTEGER               CODE
-      LOGICAL               FOUND
+      character*(*)         srfstr
+      character*(*)         bodstr
+      integer               code
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -365,60 +365,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 80 )
+      integer               msglen
+      parameter           ( msglen = 80 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    ERRMSG
+      character*(msglen)    errmsg
 
-      INTEGER               BODYID
-      INTEGER               PTR
+      integer               bodyid
+      integer               ptr
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SRFS2C' )
+      call chkin ( 'SRFS2C' )
 
 !
 !     No result has been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Obtain a body ID string.
 !
-      CALL BODS2C ( BODSTR, BODYID, FOUND )
+      call bods2c ( bodstr, bodyid, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFS2C' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFS2C' )
+         return
+      end if
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        We have the body ID.
 !
 !        Try to translate the input name to a known surface ID code.
 !
-         CALL ZZSRFN2C ( SRFSTR, BODYID, CODE, FOUND )
+         call zzsrfn2c ( srfstr, bodyid, code, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SRFS2C' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SRFS2C' )
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 !
 !           The surface string could not be mapped to an ID code.
 !
@@ -426,19 +426,19 @@
 !           integer, for example, '999'.  If so, find the equivalent
 !           datum of INTEGER type.
 !
-            CALL NPARSI ( SRFSTR, CODE, ERRMSG, PTR )
+            call nparsi ( srfstr, code, errmsg, ptr )
 !
 !           If the string parsed as an integer, PTR is zero;
 !           otherwise it's non-zero.
 !
-            FOUND = PTR .EQ. 0
+            found = ptr .eq. 0
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     CODE and FOUND are set.
 !
-      CALL  CHKOUT ( 'SRFS2C' )
-      RETURN
-      END
+      call  chkout ( 'SRFS2C' )
+      return
+      end

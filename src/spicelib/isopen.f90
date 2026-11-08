@@ -1,6 +1,6 @@
 !$Procedure ISOPEN ( Is a file currently open? )
 
-      LOGICAL FUNCTION ISOPEN ( FILE )
+      logical function isopen ( file )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    FILE
+      character*(*)    file
 
 ! $ Brief_I/O
 !
@@ -113,73 +113,73 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
-      LOGICAL               EXISTS
-      LOGICAL               MYOPEN
+      logical               exists
+      logical               myopen
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         ISOPEN = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ISOPEN' )
-      END IF
+      if ( return () ) then
+         isopen = .false.
+         return
+      else
+         call chkin ( 'ISOPEN' )
+      end if
 
 !
 !     First we test to see if the filename is blank.
 !
-      IF ( FILE .EQ. ' ' ) THEN
+      if ( file .eq. ' ' ) then
 
-         ISOPEN = .FALSE.
-         CALL SETMSG ( 'The file name is blank. ' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'     )
-         CALL CHKOUT ( 'ISOPEN'                   )
-         RETURN
+         isopen = .false.
+         call setmsg ( 'The file name is blank. ' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'     )
+         call chkout ( 'ISOPEN'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     So simple, it defies explanation.
 !
-      INQUIRE ( FILE   = FILE, &
-                EXIST  = EXISTS, &
-                OPENED = MYOPEN, &
-                IOSTAT = IOSTAT  )
+      inquire ( file   = file, &
+                exist  = exists, &
+                opened = myopen, &
+                iostat = iostat  )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         ISOPEN = .FALSE.
-         CALL SETMSG ( 'Value of IOSTAT was *.' )
-         CALL ERRINT ( '*', IOSTAT              )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'   )
-         CALL CHKOUT ( 'ISOPEN'                 )
-         RETURN
+         isopen = .false.
+         call setmsg ( 'Value of IOSTAT was *.' )
+         call errint ( '*', iostat              )
+         call sigerr ( 'SPICE(INQUIREFAILED)'   )
+         call chkout ( 'ISOPEN'                 )
+         return
 
-      END IF
+      end if
 !
 !     A file cannot be open if it does not exist. We do actually need to
 !     check this because some operating environments return .TRUE. for
 !     the value of OPENED if a file does not exist.
 !
-      IF ( .NOT. EXISTS ) THEN
+      if ( .not. exists ) then
 
-         MYOPEN = .FALSE.
+         myopen = .false.
 
-      END IF
+      end if
 !
 !     Set the function value, check out, and return.
 !
 
-      ISOPEN = MYOPEN
+      isopen = myopen
 
-      CALL CHKOUT ( 'ISOPEN' )
-      RETURN
-      END
+      call chkout ( 'ISOPEN' )
+      return
+      end

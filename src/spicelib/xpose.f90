@@ -1,6 +1,6 @@
 !$Procedure XPOSE ( Transpose a matrix, 3x3 )
 
-      SUBROUTINE XPOSE ( M1, MOUT )
+      subroutine xpose ( m1, mout )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  M1   ( 3,3 )
-      DOUBLE PRECISION  MOUT ( 3,3 )
+      double precision  m1   ( 3,3 )
+      double precision  mout ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -180,29 +180,29 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION TEMP
+      double precision temp
 
 !
 !  Move the three diagonal elements from M1 to MOUT
 !
-      MOUT(1,1) = M1(1,1)
-      MOUT(2,2) = M1(2,2)
-      MOUT(3,3) = M1(3,3)
+      mout(1,1) = m1(1,1)
+      mout(2,2) = m1(2,2)
+      mout(3,3) = m1(3,3)
 
 !
 !  Switch the three pairs of off-diagonal elements
 !
-      TEMP = M1(1,2)
-      MOUT(1,2) = M1(2,1)
-      MOUT(2,1) = TEMP
+      temp = m1(1,2)
+      mout(1,2) = m1(2,1)
+      mout(2,1) = temp
 
-      TEMP = M1(1,3)
-      MOUT(1,3) = M1(3,1)
-      MOUT(3,1) = TEMP
+      temp = m1(1,3)
+      mout(1,3) = m1(3,1)
+      mout(3,1) = temp
 
-      TEMP = M1(2,3)
-      MOUT(2,3) = M1(3,2)
-      MOUT(3,2) = TEMP
+      temp = m1(2,3)
+      mout(2,3) = m1(3,2)
+      mout(3,2) = temp
 
-      RETURN
-      END
+      return
+      end

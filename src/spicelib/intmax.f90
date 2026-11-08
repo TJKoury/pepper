@@ -1,6 +1,6 @@
 !$Procedure INTMAX ( Largest integer number )
 
-      INTEGER FUNCTION INTMAX ()
+      integer function intmax ()
 
 ! $ Abstract
 !
@@ -17,7 +17,7 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Brief_I/O
 !
@@ -436,7 +436,7 @@
 !     PC/Linux,         Fort77
 !     Apple OS X G77,   Absoft OS X F77
 !
-      INTMAX = 2147483647
+      intmax = 2147483647
 
-      RETURN
-      END
+      return
+      end

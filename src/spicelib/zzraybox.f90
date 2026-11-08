@@ -1,6 +1,6 @@
 !$Procedure ZZRAYBOX ( Ray-box intercept )
 
-      SUBROUTINE ZZRAYBOX ( VERTEX, RAYDIR, BOXORI, EXTENT, XPT, FOUND )
+      subroutine zzraybox ( vertex, raydir, boxori, extent, xpt, found )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      BOXORI ( 3 )
-      DOUBLE PRECISION      EXTENT ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
-      LOGICAL               FOUND
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      boxori ( 3 )
+      double precision      extent ( 3 )
+      double precision      xpt    ( 3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -124,149 +124,149 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      INTEGER               LEFT
-      PARAMETER           ( LEFT   = 1 )
+      integer               left
+      parameter           ( left   = 1 )
 
-      INTEGER               MIDDLE
-      PARAMETER           ( MIDDLE = 2 )
+      integer               middle
+      parameter           ( middle = 2 )
 
-      INTEGER               RIGHT
-      PARAMETER           ( RIGHT  = 3 )
+      integer               right
+      parameter           ( right  = 3 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      MAXT
-      DOUBLE PRECISION      NEAR   ( 3 )
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      PLNDST ( 3 )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      SPHXPT ( 3 )
-      DOUBLE PRECISION      SPHVTX ( 3 )
-      DOUBLE PRECISION      T      ( 3 )
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      VTEMP  ( 3 )
+      double precision      center ( 3 )
+      double precision      limit
+      double precision      maxt
+      double precision      near   ( 3 )
+      double precision      offset ( 3 )
+      double precision      plndst ( 3 )
+      double precision      r
+      double precision      sphxpt ( 3 )
+      double precision      sphvtx ( 3 )
+      double precision      t      ( 3 )
+      double precision      udir   ( 3 )
+      double precision      vtemp  ( 3 )
 
-      INTEGER               SECTOR ( 3 )
-      INTEGER               I
-      INTEGER               MAXIDX
+      integer               sector ( 3 )
+      integer               i
+      integer               maxidx
 
-      LOGICAL               SPHFND
+      logical               sphfnd
 
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     No intercept has been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Check for a zero ray direction vector.
 !
-      IF ( VZERO(RAYDIR) ) THEN
+      if ( vzero(raydir) ) then
 
-         CALL CHKIN  ( 'ZZRAYBOX'                                      )
-         CALL SETMSG ( 'Input ray direction was the zero vector; this ' &
+         call chkin  ( 'ZZRAYBOX'                                      )
+         call setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                             )
-         CALL CHKOUT ( 'ZZRAYBOX'                                      )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                             )
+         call chkout ( 'ZZRAYBOX'                                      )
+         return
 
-      END IF
+      end if
 
-      CALL VHAT ( RAYDIR, UDIR )
+      call vhat ( raydir, udir )
 
 !
 !     Check the box extents.
 !
-      IF (  MIN( EXTENT(1), EXTENT(2), EXTENT(3) ) .LE. 0.D0 ) THEN
+      if (  min( extent(1), extent(2), extent(3) ) .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZRAYBOX'                                    )
-         CALL SETMSG ( 'All box extents should be strictly positive ' &
+         call chkin  ( 'ZZRAYBOX'                                    )
+         call setmsg ( 'All box extents should be strictly positive ' &
          //            'but the extents were #, #, #.'               )
-         CALL ERRDP  ( '#',  EXTENT(1)                               )
-         CALL ERRDP  ( '#',  EXTENT(2)                               )
-         CALL ERRDP  ( '#',  EXTENT(3)                               )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                      )
-         CALL CHKOUT ( 'ZZRAYBOX'                                    )
-         RETURN
+         call errdp  ( '#',  extent(1)                               )
+         call errdp  ( '#',  extent(2)                               )
+         call errdp  ( '#',  extent(3)                               )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                      )
+         call chkout ( 'ZZRAYBOX'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the coordinates of the center of the box, and compute
 !     the offset of the ray's vertex from the center.
 !
-      DO I = 1, 3
-         CENTER(I) = BOXORI(I) + EXTENT(I)/2
-      END DO
+      do i = 1, 3
+         center(i) = boxori(i) + extent(i)/2
+      end do
 
-      CALL VSUB  ( VERTEX, CENTER, OFFSET )
+      call vsub  ( vertex, center, offset )
 
 !
 !     If the ray's vertex is inside the box, we consider the
 !     vertex to be the intercept.
 !
-      IF (       ( ABS( OFFSET(1) ) .LE. EXTENT(1)/2 ) &
-           .AND. ( ABS( OFFSET(2) ) .LE. EXTENT(2)/2 ) &
-           .AND. ( ABS( OFFSET(3) ) .LE. EXTENT(3)/2 )  ) THEN
+      if (       ( abs( offset(1) ) .le. extent(1)/2 ) &
+           .and. ( abs( offset(2) ) .le. extent(2)/2 ) &
+           .and. ( abs( offset(3) ) .le. extent(3)/2 )  ) then
 
-         CALL VEQU ( VERTEX, XPT )
-         FOUND = .TRUE.
+         call vequ ( vertex, xpt )
+         found = .true.
 
-         RETURN
+         return
 
-      END IF
+      end if
 !
 !     Compute the intercept of the ray on the surface of a bounding
 !     sphere that contains the box. Let R be the radius of this sphere.
 !
-      R = 0.5D0 * (1.D0 + 1.D-3) * VNORM( EXTENT )
+      r = 0.5d0 * (1.d0 + 1.d-3) * vnorm( extent )
 
-      IF ( VNORM(OFFSET) .LT. R ) THEN
+      if ( vnorm(offset) .lt. r ) then
 !
 !        The vertex is already inside the bounding sphere.
 !
-         CALL VEQU ( OFFSET, SPHXPT )
+         call vequ ( offset, sphxpt )
 
-      ELSE
+      else
 
-         CALL SURFPT ( OFFSET, UDIR, R, R, R, SPHXPT, SPHFND )
+         call surfpt ( offset, udir, r, r, r, sphxpt, sphfnd )
 
-         IF ( .NOT. SPHFND ) THEN
+         if ( .not. sphfnd ) then
 !
 !           The ray misses the bounding sphere.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Shift the sphere intercept so as to be relative to the
 !     box's origin. From this point on, we'll treat BOXORI
 !     as the origin of the reference frame.
 !
-      DO I = 1, 3
-         SPHVTX(I) = SPHXPT(I) + CENTER(I) - BOXORI(I)
-      END DO
+      do i = 1, 3
+         sphvtx(i) = sphxpt(i) + center(i) - boxori(i)
+      end do
 
 !
 !     Classify the position of the vertex relative to the planes
@@ -275,24 +275,24 @@
 !     less than the lower bound for that coordinate, between
 !     the bounds, or greater than the upper bound.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( SPHVTX(I) .LT. 0.D0 ) THEN
+         if ( sphvtx(i) .lt. 0.d0 ) then
 
-            SECTOR(I) = LEFT
-            NEAR(I)   = 0.D0
+            sector(i) = left
+            near(i)   = 0.d0
 
-         ELSE IF ( SPHVTX(I) .GT. EXTENT(I) ) THEN
+         else if ( sphvtx(i) .gt. extent(i) ) then
 
-            SECTOR(I) = RIGHT
-            NEAR(I)   = EXTENT(I)
+            sector(i) = right
+            near(i)   = extent(i)
 
-         ELSE
-            SECTOR(I) = MIDDLE
-            NEAR(I)   = 0.D0
-         END IF
+         else
+            sector(i) = middle
+            near(i)   = 0.d0
+         end if
 
-      END DO
+      end do
 
 !
 !     At this point, SPHVTX is a point on the ray that is outside,
@@ -315,101 +315,101 @@
 !     there's an intercept, it occurs at the point on the ray
 !     corresponding to the maximum value of T.
 !
-      MAXIDX =  1
-      MAXT   = -1.D0
+      maxidx =  1
+      maxt   = -1.d0
 
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         T(I) = -1.D0
+         t(i) = -1.d0
 
-         IF ( SECTOR(I) .NE. MIDDLE ) THEN
+         if ( sector(i) .ne. middle ) then
 
-            PLNDST(I) = NEAR(I) - SPHVTX(I)
+            plndst(i) = near(i) - sphvtx(i)
 
 !
 !           Prepare for a "safe" division.
 !
-            LIMIT = 2 * R * ABS( UDIR(I) )
+            limit = 2 * r * abs( udir(i) )
 
-            IF ( ABS( PLNDST(I) ) .GT. LIMIT ) THEN
+            if ( abs( plndst(i) ) .gt. limit ) then
 !
 !              The ray can't get to the nearest bounding plane
 !              before exiting the bounding sphere. No intersection
 !              is possible.
 !
-               RETURN
+               return
 
-            END IF
+            end if
 !
 !           The magnitude of the following quotient is bounded by 2R.
 !
-            T(I) = PLNDST(I) / UDIR(I)
+            t(i) = plndst(i) / udir(i)
 
-            IF ( T(I) .LT. 0.D0 ) THEN
+            if ( t(i) .lt. 0.d0 ) then
 !
 !              This component of the ray is going in the wrong
 !              direction. No intersection is possible.
 !
-               RETURN
+               return
 
-            END IF
+            end if
 
-            IF ( T(I) .GT. MAXT ) THEN
+            if ( t(i) .gt. maxt ) then
 
-               MAXIDX = I
-               MAXT   = T(I)
+               maxidx = i
+               maxt   = t(i)
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     We should have a positive value of T for at least one
 !     coordinate. However, if we don't, there's no intersection.
 !
-      IF ( MAXT .LT. 0.D0 ) THEN
-         RETURN
-      END IF
+      if ( maxt .lt. 0.d0 ) then
+         return
+      end if
 
 !
 !     Compute the candidate intercept. Note that we're now working
 !     in a frame centered at the box origin.
 !
-      CALL VLCOM ( 1.D0, SPHVTX, MAXT, UDIR, XPT )
+      call vlcom ( 1.d0, sphvtx, maxt, udir, xpt )
 
 !
 !     Decide whether XPT is actually on the surface of the box.
 !     Sharpen XPT as part of the process.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( I .EQ. MAXIDX ) THEN
+         if ( i .eq. maxidx ) then
 !
 !           XPT is supposed to lie exactly on the bounding plane
 !           orthogonal to the Ith axis and nearest to SPHVTX.
 !
-            XPT(I) = NEAR(I)
+            xpt(i) = near(i)
 
-         ELSE
+         else
 
-            IF ( SECTOR(I) .EQ. MIDDLE ) THEN
+            if ( sector(i) .eq. middle ) then
 !
 !              The Ith component of the vertex is between the
 !              bounding planes for the Ith coordinate. If the
 !              Ith component of XPT is outside these bounds,
 !              the ray misses the box.
 !
-               IF (      ( XPT(I) .LT. 0.D0      ) &
-                    .OR. ( XPT(I) .GT. EXTENT(I) ) ) THEN
+               if (      ( xpt(i) .lt. 0.d0      ) &
+                    .or. ( xpt(i) .gt. extent(i) ) ) then
 
-                  RETURN
+                  return
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              The Ith component of the vertex SPHVTX is outside of the
 !              bounding planes for the Ith coordinate. Since T(MAXIDX)
@@ -419,65 +419,65 @@
 !              plane farthest from SPHVTX(I), no intersection can
 !              exist.
 !
-               IF ( SECTOR(I) .EQ. LEFT ) THEN
+               if ( sector(i) .eq. left ) then
 !
 !                 Sharpen the Ith component of XPT.
 !
-                  XPT(I) = MAX( XPT(I), 0.D0 )
+                  xpt(i) = max( xpt(i), 0.d0 )
 
-                  IF ( XPT(I) .GT. EXTENT(I) ) THEN
+                  if ( xpt(i) .gt. extent(i) ) then
 !
 !                    The ray hits the MAXIDX face too far away from
 !                    SPHVTX(I). There's no intersection with the box.
 !
-                     RETURN
+                     return
 
-                  END IF
+                  end if
 
 
-               ELSE
+               else
 !
 !                 SECTOR(I) .EQ. RIGHT
 !
 !                 Sharpen the Ith component of XPT.
 !
-                  XPT(I) = MIN( XPT(I), EXTENT(I) )
+                  xpt(i) = min( xpt(i), extent(i) )
 
-                  IF ( XPT(I) .LT. 0.D0 ) THEN
+                  if ( xpt(i) .lt. 0.d0 ) then
 !
 !                    The ray hits the MAXIDX face too far away from
 !                    SPHVTX(I). There's no intersection with the box.
 !
-                     RETURN
+                     return
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !              End of block in which the Ith component of XPT is
 !              either sharpened or found to be off the surface of the
 !              box. This block deals with the components other than
 !              MAXIDX.
 !
-            END IF
+            end if
 !
 !           End of block in which the Ith component of XPT is either
 !           sharpened or found to be off the surface of the box. This
 !           block deals with all components.
 !
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     End of loop in which XPT is either sharpened or found to be off
 !     the surface of the box. Getting here means XPT is valid.
 !
 !     Shift XPT to the input reference frame.
 !
-      CALL VADD ( XPT,   BOXORI, VTEMP )
-      CALL VEQU ( VTEMP,         XPT   )
+      call vadd ( xpt,   boxori, vtemp )
+      call vequ ( vtemp,         xpt   )
 
-      FOUND = .TRUE.
+      found = .true.
 
-      RETURN
-      END
+      return
+      end

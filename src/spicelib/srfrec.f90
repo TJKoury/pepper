@@ -1,6 +1,6 @@
 !$Procedure SRFREC ( Surface to rectangular coordinates )
 
-      SUBROUTINE SRFREC ( BODY, LON, LAT, RECTAN )
+      subroutine srfrec ( body, lon, lat, rectan )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      RECTAN ( 3 )
+      integer               body
+      double precision      lon
+      double precision      lat
+      double precision      rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -308,46 +308,46 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      UVEC   ( 3 )
+      double precision      radii  ( 3 )
+      double precision      uvec   ( 3 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SRFREC' )
+      call chkin ( 'SRFREC' )
 
 !
 !     Look up the body's radii.
 !
-      CALL ZZGFTREB ( BODY, RADII )
+      call zzgftreb ( body, radii )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFREC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFREC' )
+         return
+      end if
 
 !
 !     Find the unit vector pointing from the body center to the
 !     input surface point.
 !
-      CALL LATREC ( 1.D0, LON, LAT, UVEC )
+      call latrec ( 1.d0, lon, lat, uvec )
 
 !
 !     Find out where the ray defined by this vector intersects the
 !     surface.  This intercept is the point we're looking for.
 !
-      CALL EDPNT ( UVEC, RADII(1), RADII(2), RADII(3), RECTAN )
+      call edpnt ( uvec, radii(1), radii(2), radii(3), rectan )
 
-      CALL CHKOUT ( 'SRFREC' )
-      RETURN
-      END
+      call chkout ( 'SRFREC' )
+      return
+      end

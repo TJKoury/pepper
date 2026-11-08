@@ -1,6 +1,6 @@
 !$Procedure TPARSE ( Parse a UTC time string )
 
-      SUBROUTINE TPARSE ( STRING, SP2000, ERRMSG )
+      subroutine tparse ( string, sp2000, errmsg )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)      STRING
-      DOUBLE PRECISION   SP2000
-      CHARACTER*(*)      ERRMSG
+      character*(*)      string
+      double precision   sp2000
+      character*(*)      errmsg
 
 ! $ Brief_I/O
 !
@@ -542,215 +542,215 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
+      double precision      j2000
+      double precision      spd
 
 !
 !     Parameters
 !
-      INTEGER               ERA
-      PARAMETER           ( ERA    =  1 )
+      integer               era
+      parameter           ( era    =  1 )
 
-      INTEGER               WDAY
-      PARAMETER           ( WDAY   = ERA    + 1 )
+      integer               wday
+      parameter           ( wday   = era    + 1 )
 
-      INTEGER               ZONE
-      PARAMETER           ( ZONE   = WDAY   + 1 )
+      integer               zone
+      parameter           ( zone   = wday   + 1 )
 
-      INTEGER               AMPM
-      PARAMETER           ( AMPM   = ZONE   + 1 )
+      integer               ampm
+      parameter           ( ampm   = zone   + 1 )
 
-      INTEGER               SYSTEM
-      PARAMETER           ( SYSTEM = AMPM   + 1 )
+      integer               system
+      parameter           ( system = ampm   + 1 )
 
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
 !
 !     Local variables
 !
-      CHARACTER*(5)         TYPE
-      CHARACTER*(8)         MODIFY   ( 5 )
+      character*(5)         type
+      character*(8)         modify   ( 5 )
 
-      CHARACTER*(LNSIZE)    PICTUR
+      character*(lnsize)    pictur
 
-      DOUBLE PRECISION      TVEC     ( 10 )
+      double precision      tvec     ( 10 )
 
-      INTEGER               DAY
-      INTEGER               MONTH
-      INTEGER               NTVEC
-      INTEGER               Q
-      INTEGER               TEMP
-      INTEGER               YEAR
+      integer               day
+      integer               month
+      integer               ntvec
+      integer               q
+      integer               temp
+      integer               year
 
-      LOGICAL               ADJUST
-      LOGICAL               MODS
-      LOGICAL               OK
-      LOGICAL               SUCCES
-      LOGICAL               YABBRV
+      logical               adjust
+      logical               mods
+      logical               ok
+      logical               succes
+      logical               yabbrv
 
 !
 !     All the work of taking apart the string is handled
 !     by TPARTV.
 !
-      ERRMSG  = ' '
-      SUCCES = .TRUE.
+      errmsg  = ' '
+      succes = .true.
 
-      CALL TPARTV ( STRING, &
-                    TVEC,   NTVEC, TYPE, &
-                    MODIFY, MODS,  YABBRV, SUCCES, &
-                    PICTUR, ERRMSG )
+      call tpartv ( string, &
+                    tvec,   ntvec, type, &
+                    modify, mods,  yabbrv, succes, &
+                    pictur, errmsg )
 
-      IF ( .NOT. SUCCES ) THEN
-         RETURN
-      END IF
+      if ( .not. succes ) then
+         return
+      end if
 
 !
 !     We are not going to support all of the various
 !     time string modifiers that can be parsed.
 !
-      IF ( MODS ) THEN
+      if ( mods ) then
 
-         IF ( MODIFY(SYSTEM) .NE. ' ' ) THEN
+         if ( modify(system) .ne. ' ' ) then
 
-            ERRMSG = 'TPARSE does not support the specification ' &
+            errmsg = 'TPARSE does not support the specification ' &
             //      'of a time system in a string.  The time ' &
             //      'system # was specified. '
-            CALL REPMC ( ERRMSG, '#', MODIFY(SYSTEM), ERRMSG )
-            RETURN
+            call repmc ( errmsg, '#', modify(system), errmsg )
+            return
 
-         ELSE IF ( MODIFY(ZONE) .NE. ' ' ) THEN
+         else if ( modify(zone) .ne. ' ' ) then
 
-            ERRMSG = 'TPARSE does not support the specification ' &
+            errmsg = 'TPARSE does not support the specification ' &
             //      'of a time zone in a time string.  The time ' &
             //      'zone ''#'' was specified. '
-            CALL REPMC ( ERRMSG, '#', MODIFY(ZONE), ERRMSG )
-            RETURN
+            call repmc ( errmsg, '#', modify(zone), errmsg )
+            return
 
-         ELSE IF ( MODIFY(AMPM) .NE. ' ' ) THEN
+         else if ( modify(ampm) .ne. ' ' ) then
 
-            ERRMSG = 'TPARSE does not support the AM/PM ' &
+            errmsg = 'TPARSE does not support the AM/PM ' &
             //      'conventions for time strings. '
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 
-      IF ( TYPE .EQ. 'JD' ) THEN
+      if ( type .eq. 'JD' ) then
 !
 !        Nothing to do but convert TVEC(1).
 !
 
-         SP2000 = (TVEC(1)-J2000()) * SPD()
+         sp2000 = (tvec(1)-j2000()) * spd()
 
-      ELSE IF ( TYPE .EQ. 'YMD' .OR. TYPE .EQ. 'YD' ) THEN
+      else if ( type .eq. 'YMD' .or. type .eq. 'YD' ) then
 
 
-         CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERRMSG )
+         call tcheck ( tvec, type, mods, modify, ok, errmsg )
 
-         IF ( .NOT. OK ) THEN
-            RETURN
-         END IF
+         if ( .not. ok ) then
+            return
+         end if
 !
 !        If we have day of year format, we move it into the
 !        month-day of month format.
 !
-         IF ( TYPE .EQ. 'YD' ) THEN
-            TVEC(6) = TVEC(5)
-            TVEC(5) = TVEC(4)
-            TVEC(4) = TVEC(3)
-            TVEC(3) = TVEC(2)
-            TVEC(2) = 1.0D0
-         END IF
+         if ( type .eq. 'YD' ) then
+            tvec(6) = tvec(5)
+            tvec(5) = tvec(4)
+            tvec(4) = tvec(3)
+            tvec(3) = tvec(2)
+            tvec(2) = 1.0d0
+         end if
 !
 !        Get the year month and day as integers.
 !
-         YEAR   = NINT( TVEC(1) )
-         MONTH  = NINT( TVEC(2) )
-         DAY    = NINT( TVEC(3) )
+         year   = nint( tvec(1) )
+         month  = nint( tvec(2) )
+         day    = nint( tvec(3) )
 !
 !        Fix up the year as needed.
 !
-         IF ( MODIFY(ERA) .EQ. 'B.C.' ) THEN
+         if ( modify(era) .eq. 'B.C.' ) then
 
-            YEAR = 1 - YEAR
+            year = 1 - year
 
-         ELSE IF ( MODIFY(ERA) .EQ. 'A.D.' ) THEN
+         else if ( modify(era) .eq. 'A.D.' ) then
 !
 !           Do nothing.
 !
-         ELSE IF ( YEAR .LT. 100 ) THEN
+         else if ( year .lt. 100 ) then
 
-            CALL TEXPYR ( YEAR )
+            call texpyr ( year )
 
-         END IF
+         end if
 
 !
 !        Apply the Muller-Wimberly formula and then tack on
 !        the seconds.
 !
-         IF ( YEAR .LT. 1 ) THEN
+         if ( year .lt. 1 ) then
 !
 !           The Muller-Wimberly formula doesn't work for years
 !           less than 0.  So we boost the year by an appropriate
 !           multiple of 400 and then subtract the appropriate
 !           number of days later.
 !
-            ADJUST = .TRUE.
-            TEMP   =  YEAR
+            adjust = .true.
+            temp   =  year
 
-            CALL RMAINI ( TEMP, 400, Q, YEAR )
+            call rmaini ( temp, 400, q, year )
 
-            YEAR = YEAR  + 400
-            Q    = Q-1
+            year = year  + 400
+            q    = q-1
 
-         ELSE
+         else
 
-            ADJUST = .FALSE.
+            adjust = .false.
 
-         END IF
+         end if
 
 
-         DAY    = 367*YEAR - 7*(YEAR+(MONTH+9)/12)/4 &
-                           - 3*((YEAR+(MONTH-9)/7)/100+1)/4 &
-                           + 275*MONTH/9 + DAY - 730516
+         day    = 367*year - 7*(year+(month+9)/12)/4 &
+                           - 3*((year+(month-9)/7)/100+1)/4 &
+                           + 275*month/9 + day - 730516
 
-         IF ( ADJUST ) THEN
+         if ( adjust ) then
 !
 !           Adjust DAY by the appropriate multiple of 400 years.
 !
-            DAY = DAY + Q*(400*365 + 97)
+            day = day + q*(400*365 + 97)
 
-         END IF
+         end if
 
-         SP2000 =  ( DBLE (DAY) - 0.5D0 ) * SPD() &
-                  +  3600.0D0 * TVEC(4) &
-                  +    60.0D0 * TVEC(5) &
-                  +             TVEC(6)
+         sp2000 =  ( dble (day) - 0.5d0 ) * spd() &
+                  +  3600.0d0 * tvec(4) &
+                  +    60.0d0 * tvec(5) &
+                  +             tvec(6)
 
-      ELSE
+      else
 !
 !        We've already covered all the bases we are planning to
 !        cover in this routine.  Any other case is regarded as an
 !        error.
 !
 
-         ERRMSG = 'The only type of time strings that are handled ' &
+         errmsg = 'The only type of time strings that are handled ' &
          //      'by TPARSE are ''JD'', ''YMD'' and ''YD'' ' &
          //      '(year day-of-year).  You''ve entered a string ' &
          //      'of the type #. '
 
-         CALL REPMC ( ERRMSG, '#', TYPE, ERRMSG )
+         call repmc ( errmsg, '#', type, errmsg )
 
 
-      END IF
+      end if
 
 
 
-      RETURN
+      return
 
-      END
+      end

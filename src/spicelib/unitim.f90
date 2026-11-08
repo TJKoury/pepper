@@ -1,6 +1,6 @@
 !$Procedure UNITIM ( Uniform time scale transformation )
 
-      DOUBLE PRECISION FUNCTION UNITIM ( EPOCH, INSYS, OUTSYS )
+      double precision function unitim ( epoch, insys, outsys )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      DOUBLE PRECISION      EPOCH
-      CHARACTER*(*)         INSYS
-      CHARACTER*(*)         OUTSYS
+      double precision      epoch
+      character*(*)         insys
+      character*(*)         outsys
 
 ! $ Brief_I/O
 !
@@ -198,14 +198,14 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
+      double precision      j2000
+      double precision      spd
 
-      LOGICAL               ELEMC
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               SETC
-      LOGICAL               SOMFLS
+      logical               elemc
+      logical               failed
+      logical               return
+      logical               setc
+      logical               somfls
 
 !
 !     Local parameters
@@ -214,132 +214,132 @@
 !
 !     LBCELL is the bottom slot of a cell.
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 !
 !     NEEDED is the number of kernel pool variables needed by this
 !     routine.
 !
-      INTEGER               NEEDED
-      PARAMETER           ( NEEDED = 4 )
+      integer               needed
+      parameter           ( needed = 4 )
 
 !
 !     LNGVAR is the length of the longest kernel pool variable name
 !     that is used by this routine.
 !
-      INTEGER               LNGVAR
-      PARAMETER           ( LNGVAR = 16 )
+      integer               lngvar
+      parameter           ( lngvar = 16 )
 
 !
 !     MISLEN is the length required by the MISSED array of strings
 !     used for error messages.
 !
-      INTEGER               MISLEN
-      PARAMETER           ( MISLEN = 20 )
+      integer               mislen
+      parameter           ( mislen = 20 )
 !
 !     TYPLEN is the maximum length allowed for names of uniform
 !     time types.
 !
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN = 8 )
+      integer               typlen
+      parameter           ( typlen = 8 )
 
 !
 !     NTDT is the number of time types based on terrestrial dynamical
 !     time (TDT).
 !
-      INTEGER               NTDT
-      PARAMETER           ( NTDT   = 5 )
+      integer               ntdt
+      parameter           ( ntdt   = 5 )
 
 !
 !     NTDB is the number of time types base on barycentric dynamical
 !     time (TDB).
 !
-      INTEGER               NTDB
-      PARAMETER           ( NTDB   = 4 )
+      integer               ntdb
+      parameter           ( ntdb   = 4 )
 
 
 !
 !     NRECOG is the total number of recognized types.
 !
-      INTEGER               NRECOG
-      PARAMETER           ( NRECOG = NTDB + NTDT )
+      integer               nrecog
+      parameter           ( nrecog = ntdb + ntdt )
 
 !
 !     Constant shift between GPS time system and TAI time system.
 !
-      DOUBLE PRECISION      GPSTAI
-      PARAMETER           ( GPSTAI = 19.D0 )
+      double precision      gpstai
+      parameter           ( gpstai = 19.d0 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         BSLASH
-      CHARACTER*(LNGVAR)    VARS   ( NEEDED )
-      CHARACTER*(MISLEN)    MISSED ( NEEDED )
-      CHARACTER*(TYPLEN)    MYIN
-      CHARACTER*(TYPLEN)    MYOUT
-      CHARACTER*(TYPLEN)    RECOG  ( LBCELL : NRECOG    )
-      CHARACTER*(TYPLEN)    TYPES  ( LBCELL : 2         )
-      CHARACTER*(TYPLEN)    TYPTDB ( LBCELL : NTDB      )
-      CHARACTER*(TYPLEN)    TYPTDT ( LBCELL : NTDT      )
+      character*(1)         bslash
+      character*(lngvar)    vars   ( needed )
+      character*(mislen)    missed ( needed )
+      character*(typlen)    myin
+      character*(typlen)    myout
+      character*(typlen)    recog  ( lbcell : nrecog    )
+      character*(typlen)    types  ( lbcell : 2         )
+      character*(typlen)    typtdb ( lbcell : ntdb      )
+      character*(typlen)    typtdt ( lbcell : ntdt      )
 
-      DOUBLE PRECISION      DTA
-      DOUBLE PRECISION      EB
-      DOUBLE PRECISION      JD2000
-      DOUBLE PRECISION      K
-      DOUBLE PRECISION      M     ( 0:1 )
-      DOUBLE PRECISION      MYTIME
-      DOUBLE PRECISION      SECSPD
-      DOUBLE PRECISION      TDB
-      DOUBLE PRECISION      TDT
+      double precision      dta
+      double precision      eb
+      double precision      jd2000
+      double precision      k
+      double precision      m     ( 0:1 )
+      double precision      mytime
+      double precision      secspd
+      double precision      tdb
+      double precision      tdt
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               USRCTR ( CTRSIZ )
+      integer               i
+      integer               n
+      integer               usrctr ( ctrsiz )
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND    ( NEEDED )
-      LOGICAL               INTDB
-      LOGICAL               INTDT
-      LOGICAL               NODATA
-      LOGICAL               OUTTDB
-      LOGICAL               OUTTDT
-      LOGICAL               UPDATE
+      logical               first
+      logical               found    ( needed )
+      logical               intdb
+      logical               intdt
+      logical               nodata
+      logical               outtdb
+      logical               outtdt
+      logical               update
 
 
 !
 !     Saved variables
 !
-      SAVE                  BSLASH
-      SAVE                  DTA
-      SAVE                  EB
-      SAVE                  FIRST
-      SAVE                  JD2000
-      SAVE                  K
-      SAVE                  M
-      SAVE                  MISSED
-      SAVE                  NODATA
-      SAVE                  RECOG
-      SAVE                  SECSPD
-      SAVE                  TYPTDB
-      SAVE                  TYPTDT
-      SAVE                  VARS
-      SAVE                  USRCTR
+      save                  bslash
+      save                  dta
+      save                  eb
+      save                  first
+      save                  jd2000
+      save                  k
+      save                  m
+      save                  missed
+      save                  nodata
+      save                  recog
+      save                  secspd
+      save                  typtdb
+      save                  typtdt
+      save                  vars
+      save                  usrctr
 
 !
 !     Initial values
 !
-      DATA                  FIRST    / .TRUE. /
+      data                  first    / .true. /
 
-      DATA                  MISSED   / 'DELTET/DELTA_T_A, #', &
+      data                  missed   / 'DELTET/DELTA_T_A, #', &
                                        'DELTET/K, #', &
                                        'DELTET/EB, #', &
                                        'DELTET/M, #'           /
 
-      DATA                  NODATA   / .TRUE. /
+      data                  nodata   / .true. /
 
-      DATA                  VARS     / 'DELTET/DELTA_T_A', &
+      data                  vars     / 'DELTET/DELTA_T_A', &
                                        'DELTET/K', &
                                        'DELTET/EB', &
                                        'DELTET/M'              /
@@ -347,93 +347,93 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         UNITIM = 0.0D0
-         RETURN
-      END IF
+      if ( return () ) then
+         unitim = 0.0d0
+         return
+      end if
 
-      CALL CHKIN ( 'UNITIM' )
+      call chkin ( 'UNITIM' )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 !
 !        Initialize the backslash character.  We use this for error
 !        message construction.
 !
-         BSLASH = CHAR(92)
+         bslash = char(92)
 
 !
 !        Set up the parameters that we are going to need often.
 !
-         SECSPD  = SPD()
-         JD2000  = J2000()
+         secspd  = spd()
+         jd2000  = j2000()
 
 !
 !        Initialize the sets that we will use.
 !
-         TYPTDT(1) = 'JDTDT'
-         TYPTDT(2) = 'TAI'
-         TYPTDT(3) = 'TDT'
-         TYPTDT(4) = 'GPS'
-         TYPTDT(5) = 'TT'
+         typtdt(1) = 'JDTDT'
+         typtdt(2) = 'TAI'
+         typtdt(3) = 'TDT'
+         typtdt(4) = 'GPS'
+         typtdt(5) = 'TT'
 
-         TYPTDB(1) = 'ET'
-         TYPTDB(2) = 'JDTDB'
-         TYPTDB(3) = 'JED'
-         TYPTDB(4) = 'TDB'
+         typtdb(1) = 'ET'
+         typtdb(2) = 'JDTDB'
+         typtdb(3) = 'JED'
+         typtdb(4) = 'TDB'
 
-         CALL VALIDC ( NTDT,    NTDT,   TYPTDT )
-         CALL VALIDC ( NTDB,    NTDB,   TYPTDB )
+         call validc ( ntdt,    ntdt,   typtdt )
+         call validc ( ntdb,    ntdb,   typtdb )
 
-         CALL SSIZEC ( NTDT  +  NTDB,   RECOG  )
-         CALL UNIONC ( TYPTDT,  TYPTDB, RECOG  )
+         call ssizec ( ntdt  +  ntdb,   recog  )
+         call unionc ( typtdt,  typtdb, recog  )
 
 !
 !        Initialize the local POOL counter to user value.
 !
-         CALL ZZCTRUIN( USRCTR )
+         call zzctruin( usrctr )
 
 !
 !        Set up the kernel pool watchers
 !
-         CALL SWPOOL ( 'UNITIM', NEEDED, VARS )
+         call swpool ( 'UNITIM', needed, vars )
 
-      END IF
+      end if
 
 !
 !     Check to see if any of the kernel items required by this
 !     routine have been updated since the last call to this
 !     entry point.
 !
-      CALL ZZCVPOOL ( 'UNITIM', USRCTR, UPDATE )
+      call zzcvpool ( 'UNITIM', usrctr, update )
 
-      IF ( UPDATE .OR. NODATA ) THEN
+      if ( update .or. nodata ) then
 !
 !        Fetch all of the time parameters from the kernel pool.
 !
-         CALL GDPOOL ( 'DELTET/DELTA_T_A', 1, 1, N, DTA,  FOUND(1) )
-         CALL GDPOOL ( 'DELTET/K',         1, 1, N, K,    FOUND(2) )
-         CALL GDPOOL ( 'DELTET/EB',        1, 1, N, EB,   FOUND(3) )
-         CALL GDPOOL ( 'DELTET/M',         1, 2, N, M,    FOUND(4) )
+         call gdpool ( 'DELTET/DELTA_T_A', 1, 1, n, dta,  found(1) )
+         call gdpool ( 'DELTET/K',         1, 1, n, k,    found(2) )
+         call gdpool ( 'DELTET/EB',        1, 1, n, eb,   found(3) )
+         call gdpool ( 'DELTET/M',         1, 2, n, m,    found(4) )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            NODATA = .TRUE.
-            UNITIM = 0.D0
+            nodata = .true.
+            unitim = 0.d0
 
-            CALL CHKOUT ( 'UNITIM' )
-            RETURN
+            call chkout ( 'UNITIM' )
+            return
 
-         END IF
+         end if
 
 !
 !        If anything wasn't found, it's an error dude.
 !
-         IF ( SOMFLS ( FOUND, NEEDED ) ) THEN
+         if ( somfls ( found, needed ) ) then
 
-            NODATA = .TRUE.
+            nodata = .true.
 
 !
 !           If we didn't get all of the things we needed for time
@@ -441,99 +441,99 @@
 !           subsequent calls to this routine will never have the
 !           needed data.
 !
-            CALL SWPOOL ( 'UNITIM', NEEDED, VARS )
+            call swpool ( 'UNITIM', needed, vars )
 
-            CALL SETMSG ( 'The following variables, needed to convert'// &
+            call setmsg ( 'The following variables, needed to convert'// &
                           ' between the input uniform time scales, '  // &
                           'were not found in the kernel pool: # '     // &
                           'Your program may have failed to load a '   // &
                           'leapseconds kernel. Other possible '       // &
                           'causes of this problem include loading an '// &
                           'invalid leapseconds kernel---one that '    // &
-                          'lacks an initial '// BSLASH //'begindata ' // &
+                          'lacks an initial '// bslash //'begindata ' // &
                           'marker or final newline character, or is ' // &
                           'otherwise corrupted---or deleting previous'// &
                           'ly loaded kernel pool variables via calls '// &
                           'to routines that clear the kernel pool. '  )
 
-            DO I = 1, NEEDED
-               IF ( .NOT. FOUND(I) ) THEN
-                  CALL ERRCH ( '#', MISSED(I) )
-               END IF
-            END DO
+            do i = 1, needed
+               if ( .not. found(i) ) then
+                  call errch ( '#', missed(i) )
+               end if
+            end do
 
-            CALL ERRCH  ( ', #', '.' )
-            CALL SIGERR ( 'SPICE(MISSINGTIMEINFO)' )
+            call errch  ( ', #', '.' )
+            call sigerr ( 'SPICE(MISSINGTIMEINFO)' )
 
-            CALL CHKOUT ( 'UNITIM' )
-            UNITIM = EPOCH
+            call chkout ( 'UNITIM' )
+            unitim = epoch
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        At this point the kernel data checks are done.
 !
-         NODATA = .FALSE.
+         nodata = .false.
 
-      END IF
+      end if
 
 !
 !     Normalize the IN and OUT scale variables
 !
-      CALL UCASE  ( INSYS,  MYIN  )
-      CALL UCASE  ( OUTSYS, MYOUT )
+      call ucase  ( insys,  myin  )
+      call ucase  ( outsys, myout )
 
-      CALL SSIZEC ( 2,      TYPES )
-      CALL INSRTC ( MYIN,   TYPES )
-      CALL INSRTC ( MYOUT,  TYPES )
+      call ssizec ( 2,      types )
+      call insrtc ( myin,   types )
+      call insrtc ( myout,  types )
 
 !
 !     We will work with a local copy of EPOCH.
 !
-      MYTIME = EPOCH
+      mytime = epoch
 
 !
 !     First make sure both types are recognized.
 !
-      IF      ( .NOT. SETC ( TYPES, '<', RECOG ) ) THEN
+      if      ( .not. setc ( types, '<', recog ) ) then
 
-         CALL SETMSG ( 'The time types recognized by UNITIM are: '   // &
+         call setmsg ( 'The time types recognized by UNITIM are: '   // &
                    'TAI, GPS, TT, TDT, JDTDT, TDB, ET, JED, JDTDB. ' // &
                    'At least one of the inputs (#, #) was not in '   // &
                    'the list of recognized types. '               )
 
-         CALL ERRCH  ( '#', MYIN            )
-         CALL ERRCH  ( '#', MYOUT           )
-         CALL SIGERR ( 'SPICE(BADTIMETYPE)' )
-         CALL CHKOUT ( 'UNITIM'             )
+         call errch  ( '#', myin            )
+         call errch  ( '#', myout           )
+         call sigerr ( 'SPICE(BADTIMETYPE)' )
+         call chkout ( 'UNITIM'             )
 
-         UNITIM = EPOCH
-         RETURN
+         unitim = epoch
+         return
 
-      END IF
+      end if
 
 !
 !     If the input and output types are the same, just copy the input
 !     epoch to the output and call it quits.
 !
-      IF ( MYIN .EQ. MYOUT ) THEN
+      if ( myin .eq. myout ) then
 
-         UNITIM = MYTIME
+         unitim = mytime
 
-         CALL CHKOUT ( 'UNITIM' )
-         RETURN
-      END IF
+         call chkout ( 'UNITIM' )
+         return
+      end if
 
 
 !
 !     Determine the base types of the input and output types.
 !
-      INTDT  = ELEMC ( MYIN,  TYPTDT )
-      OUTTDT = ELEMC ( MYOUT, TYPTDT )
-      INTDB  = .NOT. INTDT
-      OUTTDB = .NOT. OUTTDT
+      intdt  = elemc ( myin,  typtdt )
+      outtdt = elemc ( myout, typtdt )
+      intdb  = .not. intdt
+      outtdb = .not. outtdt
 
 !
 !     The two types, TDT and TDB, will be used as the fundamental
@@ -544,27 +544,27 @@
 !        ET means TDB; TT means TDT.
 !
 !
-      IF      ( MYIN .EQ. 'TAI'   ) THEN
+      if      ( myin .eq. 'TAI'   ) then
 
-         MYTIME = MYTIME + DTA
+         mytime = mytime + dta
 
-      ELSE IF ( MYIN .EQ. 'GPS' ) THEN
+      else if ( myin .eq. 'GPS' ) then
 
-         MYTIME = MYTIME + (DTA + GPSTAI)
+         mytime = mytime + (dta + gpstai)
 
-      ELSE IF ( MYIN .EQ. 'JDTDT' ) THEN
+      else if ( myin .eq. 'JDTDT' ) then
 
-         MYTIME = ( MYTIME - JD2000 ) * SECSPD
+         mytime = ( mytime - jd2000 ) * secspd
 
-      ELSE IF ( MYIN .EQ. 'JED'   ) THEN
+      else if ( myin .eq. 'JED'   ) then
 
-         MYTIME = ( MYTIME - JD2000 ) * SECSPD
+         mytime = ( mytime - jd2000 ) * secspd
 
-      ELSE IF ( MYIN .EQ. 'JDTDB' ) THEN
+      else if ( myin .eq. 'JDTDB' ) then
 
-         MYTIME = ( MYTIME - JD2000 ) * SECSPD
+         mytime = ( mytime - jd2000 ) * secspd
 
-      END IF
+      end if
 
 !
 !     At this point, MYTIME has been converted from its input
@@ -573,15 +573,15 @@
 !     Next change type from TDB to TDT or vice versa, if
 !     required.  (The time is already in TDT or TDB).
 !
-      IF      ( INTDT .AND. OUTTDB ) THEN
+      if      ( intdt .and. outtdb ) then
 
-         TDT    = MYTIME
-         TDB    = TDT + K*SIN(           M(0) + M(1)*TDT &
-                               + EB*SIN( M(0) + M(1)*TDT ) )
+         tdt    = mytime
+         tdb    = tdt + k*sin(           m(0) + m(1)*tdt &
+                               + eb*sin( m(0) + m(1)*tdt ) )
 
-         MYTIME = TDB
+         mytime = tdb
 
-      ELSE IF ( INTDB .AND. OUTTDT ) THEN
+      else if ( intdb .and. outtdt ) then
 
 !
 !        What we have to do here is invert the formula used to get
@@ -705,47 +705,47 @@
 !        solution for TDT
 !
 
-         TDB = MYTIME
-         TDT = TDB
+         tdb = mytime
+         tdt = tdb
 
-         DO I = 1, 3
+         do i = 1, 3
 
-            TDT = TDB - K*SIN(           M(0) + M(1)*TDT &
-                               + EB*SIN( M(0) + M(1)*TDT ))
-         END DO
+            tdt = tdb - k*sin(           m(0) + m(1)*tdt &
+                               + eb*sin( m(0) + m(1)*tdt ))
+         end do
 
-         MYTIME = TDT
+         mytime = tdt
 
-      END IF
+      end if
 
 !
 !     Now MYTIME is in the base type of the requested output.
 !     If further conversion is required, we do it here.
 !
-      IF      ( MYOUT .EQ. 'TAI'   ) THEN
+      if      ( myout .eq. 'TAI'   ) then
 
-         MYTIME = MYTIME - DTA
+         mytime = mytime - dta
 
-       ELSE IF ( MYOUT .EQ. 'GPS' ) THEN
+       else if ( myout .eq. 'GPS' ) then
 
-         MYTIME = MYTIME - (DTA + GPSTAI)
+         mytime = mytime - (dta + gpstai)
 
-      ELSE IF ( MYOUT .EQ. 'JDTDT' ) THEN
+      else if ( myout .eq. 'JDTDT' ) then
 
-         MYTIME = MYTIME/SECSPD + JD2000
+         mytime = mytime/secspd + jd2000
 
-      ELSE IF ( MYOUT .EQ. 'JED'   ) THEN
+      else if ( myout .eq. 'JED'   ) then
 
-         MYTIME = MYTIME/SECSPD + JD2000
+         mytime = mytime/secspd + jd2000
 
-      ELSE IF ( MYOUT .EQ. 'JDTDB' ) THEN
+      else if ( myout .eq. 'JDTDB' ) then
 
-         MYTIME = MYTIME/SECSPD + JD2000
+         mytime = mytime/secspd + jd2000
 
-      END IF
+      end if
 
-      UNITIM = MYTIME
+      unitim = mytime
 
-      CALL CHKOUT ( 'UNITIM' )
-      RETURN
-      END
+      call chkout ( 'UNITIM' )
+      return
+      end

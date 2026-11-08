@@ -1,6 +1,6 @@
 !$Procedure SPD ( Seconds per day )
 
-      DOUBLE PRECISION FUNCTION SPD ( )
+      double precision function spd ( )
 
 ! $ Abstract
 !
@@ -96,7 +96,7 @@
 !
 !     Just like it says.
 !
-      SPD = 86400.D0
+      spd = 86400.d0
 
-      RETURN
-      END
+      return
+      end

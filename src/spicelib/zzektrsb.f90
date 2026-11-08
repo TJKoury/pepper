@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRSB ( EK tree, identify siblings )
 
-      SUBROUTINE ZZEKTRSB ( HANDLE, TREE, KEY, LSIB, LKEY, RSIB, RKEY )
+      subroutine zzektrsb ( handle, tree, key, lsib, lkey, rsib, rkey )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
-      INTEGER               LSIB
-      INTEGER               LKEY
-      INTEGER               RSIB
-      INTEGER               RKEY
+      integer               handle
+      integer               tree
+      integer               key
+      integer               lsib
+      integer               lkey
+      integer               rsib
+      integer               rkey
 
 ! $ Brief_I/O
 !
@@ -123,56 +123,56 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Other functions
 !
-      INTEGER               ZZEKTRBS
+      integer               zzektrbs
 
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
-      INTEGER               BASE
-      INTEGER               KEYBAS
-      INTEGER               KIDBAS
-      INTEGER               LOFFST
-      INTEGER               LLPIDX
-      INTEGER               LPIDX
-      INTEGER               LPKEY
-      INTEGER               NKBAS
-      INTEGER               PARENT
-      INTEGER               PKEY
-      INTEGER               POFFST
-      INTEGER               ROFFST
-      INTEGER               RPIDX
-      INTEGER               RPKEY
+      integer               addrss
+      integer               base
+      integer               keybas
+      integer               kidbas
+      integer               loffst
+      integer               llpidx
+      integer               lpidx
+      integer               lpkey
+      integer               nkbas
+      integer               parent
+      integer               pkey
+      integer               poffst
+      integer               roffst
+      integer               rpidx
+      integer               rpkey
 
 !
 !     Start out by looking up the parent node.  We get LSIB
 !     and RSIB for free.
 !
-      CALL ZZEKTRPI ( HANDLE, TREE,   KEY,  PARENT, PKEY,  POFFST, &
-                      LPIDX,  LPKEY,  LSIB, RPIDX,  RPKEY, RSIB   )
+      call zzektrpi ( handle, tree,   key,  parent, pkey,  poffst, &
+                      lpidx,  lpkey,  lsib, rpidx,  rpkey, rsib   )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Set the base addresses for the child pointers and keys,
 !     based on whether the parent is the root.
 !
-      IF ( PARENT .EQ. TREE ) THEN
-         KEYBAS = TRKEYR
-         KIDBAS = TRKIDR
-         NKBAS  = TRNKR
-      ELSE
-         KEYBAS = TRKEYC
-         KIDBAS = TRKIDC
-         NKBAS  = TRNKC
-      END IF
+      if ( parent .eq. tree ) then
+         keybas = trkeyr
+         kidbas = trkidr
+         nkbas  = trnkr
+      else
+         keybas = trkeyc
+         kidbas = trkidc
+         nkbas  = trnkc
+      end if
 
 !
 !     We need to find absolute keys in each sibling that exists.
@@ -180,32 +180,32 @@
 !     That offset is the value of the parent key preceding each node,
 !     plus the parent's offset.
 !
-      IF ( LPIDX .GT. 1 ) THEN
+      if ( lpidx .gt. 1 ) then
 !
 !        The left parent key has a predecessor.  This predecessor is
 !        the immediate predecessor of the left sibling node.
 !
-         LLPIDX  =  LPIDX  -  1
-         BASE    =  ZZEKTRBS ( PARENT )
-         ADDRSS  =  BASE   +  KEYBAS  +  LLPIDX
+         llpidx  =  lpidx  -  1
+         base    =  zzektrbs ( parent )
+         addrss  =  base   +  keybas  +  llpidx
 
-         CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, LOFFST )
+         call dasrdi ( handle, addrss, addrss, loffst )
 
-         LOFFST  =  LOFFST + POFFST
+         loffst  =  loffst + poffst
 
 !
 !        Get the first key from the left sibling.  Convert the key
 !        to an absolute key.
 !
-         BASE    =  ZZEKTRBS ( LSIB )
-         ADDRSS  =  BASE + TRKEYC + 1
+         base    =  zzektrbs ( lsib )
+         addrss  =  base + trkeyc + 1
 
-         CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, LKEY )
+         call dasrdi ( handle, addrss, addrss, lkey )
 
-         LKEY    =  LKEY + LOFFST
+         lkey    =  lkey + loffst
 
 
-      ELSE IF ( LPIDX .EQ. 1 ) THEN
+      else if ( lpidx .eq. 1 ) then
 !
 !        The left parent key is the first key.  The left sibling has
 !        no predecessor.
@@ -213,57 +213,57 @@
 !        Get the first key from the left sibling.  Convert the key
 !        to an absolute key.
 !
-         BASE    =  ZZEKTRBS ( LSIB )
-         ADDRSS  =  BASE + TRKEYC + 1
+         base    =  zzektrbs ( lsib )
+         addrss  =  base + trkeyc + 1
 
-         CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, LKEY )
+         call dasrdi ( handle, addrss, addrss, lkey )
 
-         LKEY    =  LKEY + POFFST
+         lkey    =  lkey + poffst
 
 
-      ELSE
+      else
 !
 !        There's no left sibling.  Set the left sibling's key to a
 !        value that won't be mistaken for a valid one.
 !
-         LKEY    =  0
+         lkey    =  0
 
-      END IF
+      end if
 
 !
 !     LKEY is set.  It's time to produce an absolute key for the
 !     right sibling.
 !
-      IF ( RPIDX .GT. 0 ) THEN
+      if ( rpidx .gt. 0 ) then
 !
 !        The right parent key exists.  This key is the
 !        immediate predecessor of the right sibling node.
 !
-         ROFFST  =  RPKEY  +  POFFST
+         roffst  =  rpkey  +  poffst
 
 !
 !        Get the first key from the right sibling.  Convert the key
 !        to an absolute key.
 !
-         BASE    =  ZZEKTRBS ( RSIB )
-         ADDRSS  =  BASE + TRKEYC + 1
+         base    =  zzektrbs ( rsib )
+         addrss  =  base + trkeyc + 1
 
-         CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, RKEY )
+         call dasrdi ( handle, addrss, addrss, rkey )
 
-         RKEY    =  RKEY + ROFFST
+         rkey    =  rkey + roffst
 
 
-      ELSE
+      else
 !
 !        There's no right sibling.  Set the right sibling's key to a
 !        value that won't be mistaken for a valid one.
 !
-         RKEY    =  0
+         rkey    =  0
 
-      END IF
+      end if
 !
 !     All outputs are set.
 !
 
-      RETURN
-      END
+      return
+      end

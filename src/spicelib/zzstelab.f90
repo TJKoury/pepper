@@ -1,6 +1,6 @@
 !$Procedure ZZSTELAB ( Private --- stellar aberration correction )
 
-      SUBROUTINE ZZSTELAB ( XMIT, ACCOBS, VOBS, STARG, SCORR, DSCORR )
+      subroutine zzstelab ( xmit, accobs, vobs, starg, scorr, dscorr )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               XMIT
-      DOUBLE PRECISION      ACCOBS ( 3 )
-      DOUBLE PRECISION      VOBS   ( 3 )
-      DOUBLE PRECISION      STARG  ( 6 )
-      DOUBLE PRECISION      SCORR  ( 3 )
-      DOUBLE PRECISION      DSCORR ( 3 )
+      logical               xmit
+      double precision      accobs ( 3 )
+      double precision      vobs   ( 3 )
+      double precision      starg  ( 6 )
+      double precision      scorr  ( 3 )
+      double precision      dscorr ( 3 )
 
 ! $ Brief_I/O
 !
@@ -176,12 +176,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      clight
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -193,54 +193,54 @@
 !     computed analytically. When sin(PHI) is less than SEPLIM, the
 !     velocity must be computed numerically.
 !
-      DOUBLE PRECISION      SEPLIM
-      PARAMETER           ( SEPLIM = 1.D-6 )
+      double precision      seplim
+      parameter           ( seplim = 1.d-6 )
 
 !
 !     Let TDELTA be the time interval, measured in seconds,
 !     used for numerical differentiation of the stellar
 !     aberration correction, when this is necessary.
 !
-      DOUBLE PRECISION      TDELTA
-      PARAMETER           ( TDELTA = 1.D0 )
+      double precision      tdelta
+      parameter           ( tdelta = 1.d0 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      DPHI
-      DOUBLE PRECISION      DPTMAG
-      DOUBLE PRECISION      DRHAT  ( 3 )
-      DOUBLE PRECISION      DVP    ( 3 )
-      DOUBLE PRECISION      DVPHAT ( 3 )
-      DOUBLE PRECISION      EPTARG ( 3 )
-      DOUBLE PRECISION      EVOBS  ( 3 )
-      DOUBLE PRECISION      LCACC  ( 3 )
-      DOUBLE PRECISION      LCVOBS ( 3 )
-      DOUBLE PRECISION      PTARG  ( 3 )
-      DOUBLE PRECISION      PTGMAG
-      DOUBLE PRECISION      RHAT   ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SAOFF  ( 3, 2 )
-      DOUBLE PRECISION      SGN
-      DOUBLE PRECISION      SRHAT  ( 6 )
-      DOUBLE PRECISION      SVP    ( 6 )
-      DOUBLE PRECISION      SVPHAT ( 6 )
-      DOUBLE PRECISION      TERM1  ( 3 )
-      DOUBLE PRECISION      TERM2  ( 3 )
-      DOUBLE PRECISION      TERM3  ( 3 )
-      DOUBLE PRECISION      VP     ( 3 )
-      DOUBLE PRECISION      VPHAT  ( 3 )
-      DOUBLE PRECISION      VTARG  ( 3 )
+      double precision      c
+      double precision      dphi
+      double precision      dptmag
+      double precision      drhat  ( 3 )
+      double precision      dvp    ( 3 )
+      double precision      dvphat ( 3 )
+      double precision      eptarg ( 3 )
+      double precision      evobs  ( 3 )
+      double precision      lcacc  ( 3 )
+      double precision      lcvobs ( 3 )
+      double precision      ptarg  ( 3 )
+      double precision      ptgmag
+      double precision      rhat   ( 3 )
+      double precision      s
+      double precision      saoff  ( 3, 2 )
+      double precision      sgn
+      double precision      srhat  ( 6 )
+      double precision      svp    ( 6 )
+      double precision      svphat ( 6 )
+      double precision      term1  ( 3 )
+      double precision      term2  ( 3 )
+      double precision      term3  ( 3 )
+      double precision      vp     ( 3 )
+      double precision      vphat  ( 3 )
+      double precision      vtarg  ( 3 )
 
-      INTEGER               I
+      integer               i
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     In the discussion below, the dot product of vectors X and Y
@@ -360,24 +360,24 @@
 !        VP
 !        DPTMAG
 !
-      IF ( XMIT ) THEN
-         CALL VMINUS ( VOBS,   LCVOBS )
-         CALL VMINUS ( ACCOBS, LCACC  )
-      ELSE
-         CALL VEQU   ( VOBS,   LCVOBS )
-         CALL VEQU   ( ACCOBS, LCACC  )
-      END IF
+      if ( xmit ) then
+         call vminus ( vobs,   lcvobs )
+         call vminus ( accobs, lcacc  )
+      else
+         call vequ   ( vobs,   lcvobs )
+         call vequ   ( accobs, lcacc  )
+      end if
 
-      CALL VEQU  ( STARG,      PTARG )
-      CALL VEQU  ( STARG(4),   VTARG )
+      call vequ  ( starg,      ptarg )
+      call vequ  ( starg(4),   vtarg )
 
-      CALL DVHAT ( STARG,      SRHAT )
-      CALL VEQU  ( SRHAT,      RHAT  )
-      CALL VEQU  ( SRHAT(4),   DRHAT )
+      call dvhat ( starg,      srhat )
+      call vequ  ( srhat,      rhat  )
+      call vequ  ( srhat(4),   drhat )
 
-      CALL VPERP ( LCVOBS, RHAT, VP    )
+      call vperp ( lcvobs, rhat, vp    )
 
-      DPTMAG = VDOT ( VTARG, RHAT )
+      dptmag = vdot ( vtarg, rhat )
 
 !
 !     Compute sin(phi) and cos(phi), which we'll call S and C
@@ -385,39 +385,39 @@
 !     realistic inputs (for which ||VOBS|| << CLIGHT), so the
 !     cosine term is positive.
 !
-      S = VNORM(VP) / CLIGHT()
+      s = vnorm(vp) / clight()
 
-      C = SQRT (  MAX( 0.D0,  1 - S*S )  )
+      c = sqrt (  max( 0.d0,  1 - s*s )  )
 
-      IF ( C .EQ. 0.D0 ) THEN
+      if ( c .eq. 0.d0 ) then
 !
 !        C will be used as a divisor later (in the computation
 !        of DPHI), so we'll put a stop to the problem here.
 !
-         CALL CHKIN  ( 'ZZSTELAB'                               )
-         CALL SETMSG ( 'Cosine of the aberration angle is 0; ' &
+         call chkin  ( 'ZZSTELAB'                               )
+         call setmsg ( 'Cosine of the aberration angle is 0; ' &
          //            'this cannot occur for realistic ' &
          //            'observer velocities. This case can ' &
          //            'arise due to uninitialized inputs. ' &
          //            'This cosine value is used as a divisor ' &
          //            'in a later computation, so it must not ' &
          //            'be equal to zero.'                      )
-        CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                     )
-        CALL CHKOUT ( 'ZZSTELAB'                                )
-        RETURN
+        call sigerr ( 'SPICE(DIVIDEBYZERO)'                     )
+        call chkout ( 'ZZSTELAB'                                )
+        return
 
-      END IF
+      end if
 
 !
 !     Compute the unit vector VPHAT and the stellar
 !     aberration correction. We avoid relying on
 !     VHAT's exception handling for the zero vector.
 !
-      IF ( VZERO(VP) ) THEN
-         CALL CLEARD ( 3,  VPHAT )
-      ELSE
-         CALL VHAT   ( VP, VPHAT )
-      END IF
+      if ( vzero(vp) ) then
+         call cleard ( 3,  vphat )
+      else
+         call vhat   ( vp, vphat )
+      end if
 
 !
 !     Now we can use equation (9) to obtain the stellar
@@ -428,10 +428,10 @@
 !           ( sin(phi)*VPHAT + (cos(phi)-1)*RHAT ) * ||PTARG||
 !
 !
-      PTGMAG = VNORM( PTARG )
+      ptgmag = vnorm( ptarg )
 
-      CALL VLCOM ( PTGMAG * S,           VPHAT, &
-                   PTGMAG * (C - 1.D0),  RHAT,   SCORR )
+      call vlcom ( ptgmag * s,           vphat, &
+                   ptgmag * (c - 1.d0),  rhat,   scorr )
 
 
 !
@@ -442,7 +442,7 @@
 !     Note that S is non-negative by construction, so we don't
 !     need to use the absolute value of S here.
 !
-      IF ( S .GE. SEPLIM ) THEN
+      if ( s .ge. seplim ) then
 !
 !        This is the analytic case.
 !
@@ -454,21 +454,21 @@
 !            = ACCOBS - (  ( <VOBS,DRHAT> + <ACCOBS, RHAT> )*RHAT
 !                        +   <VOBS,RHAT>  * DRHAT                 )
 !
-         CALL VLCOM3 ( 1.D0,                                      LCACC, &
-                       -VDOT(LCVOBS, DRHAT) - VDOT(LCACC, RHAT),  RHAT, &
-                       -VDOT(LCVOBS, RHAT ),                      DRHAT, &
-                       DVP                                             )
+         call vlcom3 ( 1.d0,                                      lcacc, &
+                       -vdot(lcvobs, drhat) - vdot(lcacc, rhat),  rhat, &
+                       -vdot(lcvobs, rhat ),                      drhat, &
+                       dvp                                             )
 
-         CALL VHAT ( VP, VPHAT )
+         call vhat ( vp, vphat )
 
 !
 !        Now we can compute DVPHAT, the derivative of VPHAT:
 !
-         CALL VEQU  ( VP,        SVP    )
-         CALL VEQU  ( DVP,       SVP(4) )
+         call vequ  ( vp,        svp    )
+         call vequ  ( dvp,       svp(4) )
 
-         CALL DVHAT ( SVP,       SVPHAT )
-         CALL VEQU  ( SVPHAT(4), DVPHAT )
+         call dvhat ( svp,       svphat )
+         call vequ  ( svphat(4), dvphat )
 
 !
 !        Compute the DPHI, the time derivative of PHI, using equation 8:
@@ -476,7 +476,7 @@
 !           d(phi)/dt = (1/cos(phi)) * (1/c) * <DVP, VPHAT>
 !
 !
-         DPHI = ( 1.D0 / ( C * CLIGHT() ) ) * VDOT( DVP, VPHAT )
+         dphi = ( 1.d0 / ( c * clight() ) ) * vdot( dvp, vphat )
 
 !
 !        At long last we've assembled all of the "ingredients" required
@@ -495,34 +495,34 @@
 !                +  ( sin(phi)*VPHAT + (cos(phi)-1)*RHAT ) * DPTMAG
 !
 !
-         CALL VLCOM  ( S,             DVPHAT, &
-                       C * DPHI,      VPHAT,  TERM1 )
+         call vlcom  ( s,             dvphat, &
+                       c * dphi,      vphat,  term1 )
 
-         CALL VLCOM  ( C - 1.D0,      DRHAT, &
-                       (-S) * DPHI,   RHAT,   TERM2 )
+         call vlcom  ( c - 1.d0,      drhat, &
+                       (-s) * dphi,   rhat,   term2 )
 
-         CALL VADD   ( TERM1,  TERM2, TERM3 )
+         call vadd   ( term1,  term2, term3 )
 
-         CALL VLCOM3 ( PTGMAG,                TERM3, &
-                       DPTMAG * S,            VPHAT, &
-                       DPTMAG * (C - 1.D0),   RHAT,    DSCORR )
+         call vlcom3 ( ptgmag,                term3, &
+                       dptmag * s,            vphat, &
+                       dptmag * (c - 1.d0),   rhat,    dscorr )
 
 
-      ELSE
+      else
 !
 !        This is the numeric case. We're going to differentiate
 !        the stellar aberration correction offset vector using
 !        a quadratic estimate.
 !
-         DO I = 1, 2
+         do i = 1, 2
 !
 !           Set the sign of the time offset.
 !
-            IF ( I .EQ. 1 ) THEN
-               SGN = -1.D0
-            ELSE
-               SGN =  1.D0
-            END IF
+            if ( i .eq. 1 ) then
+               sgn = -1.d0
+            else
+               sgn =  1.d0
+            end if
 
 !
 !           Estimate the observer's velocity relative to the
@@ -530,15 +530,15 @@
 !           the local copies of the input velocity and acceleration
 !           to make a linear estimate.
 !
-            CALL VLCOM ( 1.D0,        LCVOBS, &
-                         SGN*TDELTA,  LCACC,     EVOBS )
+            call vlcom ( 1.d0,        lcvobs, &
+                         sgn*tdelta,  lcacc,     evobs )
 
 !
 !           Estimate the observer-target vector. We use the
 !           observer-target state velocity to make a linear estimate.
 !
-            CALL VLCOM ( 1.D0,        STARG, &
-                         SGN*TDELTA,  STARG(4),  EPTARG )
+            call vlcom ( 1.d0,        starg, &
+                         sgn*tdelta,  starg(4),  eptarg )
 
 !
 !           Let RHAT be the unit observer-target position.
@@ -547,42 +547,42 @@
 !           this vector VP. Also compute the unit vector in
 !           the direction of VP.
 !
-            CALL VHAT  ( EPTARG,  RHAT     )
-            CALL VPERP ( EVOBS,   RHAT, VP )
+            call vhat  ( eptarg,  rhat     )
+            call vperp ( evobs,   rhat, vp )
 
-            IF ( VZERO(VP) ) THEN
-               CALL CLEARD ( 3,  VPHAT )
-            ELSE
-               CALL VHAT   ( VP, VPHAT )
-            END IF
+            if ( vzero(vp) ) then
+               call cleard ( 3,  vphat )
+            else
+               call vhat   ( vp, vphat )
+            end if
 
 !
 !           Compute the sine and cosine of the correction
 !           angle.
 !
-            S = VNORM(VP) / CLIGHT()
+            s = vnorm(vp) / clight()
 
-            C = SQRT (  MAX( 0.D0,  1 - S*S )  )
+            c = sqrt (  max( 0.d0,  1 - s*s )  )
 
 !
 !           Compute the vector offset of the correction.
 !
-            PTGMAG = VNORM( EPTARG )
+            ptgmag = vnorm( eptarg )
 
-            CALL VLCOM ( PTGMAG * S,           VPHAT, &
-                         PTGMAG * (C - 1.D0),  RHAT,   SAOFF(1,I) )
-         END DO
+            call vlcom ( ptgmag * s,           vphat, &
+                         ptgmag * (c - 1.d0),  rhat,   saoff(1,i) )
+         end do
 
 !
 !        Now compute the derivative.
 !
-         CALL QDERIV ( 3, SAOFF(1,1), SAOFF(1,2), TDELTA, DSCORR )
+         call qderiv ( 3, saoff(1,1), saoff(1,2), tdelta, dscorr )
 
-      END IF
+      end if
 
 !
 !     At this point the correction offset SCORR and its derivative
 !     with respect to time DSCORR are both set.
 !
-      END
+      end
 

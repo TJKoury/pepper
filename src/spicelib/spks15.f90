@@ -1,6 +1,6 @@
 !$Procedure SPKS15 ( S/P Kernel, subset, type 15 )
 
-      SUBROUTINE SPKS15 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks15 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -145,48 +145,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               NITEMS
-      PARAMETER           ( NITEMS = 16 )
+      integer               nitems
+      parameter           ( nitems = 16 )
 
-      DOUBLE PRECISION      DATA     ( NITEMS )
+      double precision      data     ( nitems )
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS15' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS15' )
+      end if
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      IF (  BEGIN  .GT.  END  ) THEN
-         CALL CHKOUT ( 'SPKS15' )
-         RETURN
-      END IF
+      if (  begin  .gt.  end  ) then
+         call chkout ( 'SPKS15' )
+         return
+      end if
 
 
 !
 !     This couldn't be much easier.  First copy the entire
 !     type 15 segment out of the file.
 !
-      CALL DAFGDA ( HANDLE, BADDR, EADDR, DATA )
+      call dafgda ( handle, baddr, eaddr, data )
 
 !
 !     Now write the data into the output file.
 !
-      CALL DAFADA ( DATA, NITEMS )
+      call dafada ( data, nitems )
 
 
-      CALL CHKOUT ( 'SPKS15' )
-      RETURN
-      END
+      call chkout ( 'SPKS15' )
+      return
+      end

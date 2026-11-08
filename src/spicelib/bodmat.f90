@@ -1,6 +1,6 @@
 !$Procedure BODMAT ( Return transformation matrix for a body )
 
-      SUBROUTINE BODMAT ( BODY, ET, TIPM )
+      subroutine bodmat ( body, et, tipm )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      TIPM   ( 3,3 )
+      integer               body
+      double precision      et
+      double precision      tipm   ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -352,43 +352,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TSIPM   ( 6, 6 )
+      double precision      tsipm   ( 6, 6 )
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 !
 !     Standard SPICE Error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'BODMAT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'BODMAT' )
+      end if
 
 !
 !     Get 6x6 state transformation from TISBOD. If succeeded, pull out
 !     left-top 3x3 matrix.
 !
-      CALL TISBOD ( 'J2000', BODY, ET, TSIPM )
+      call tisbod ( 'J2000', body, et, tsipm )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'BODMAT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'BODMAT' )
+         return
+      end if
 
-      DO  I = 1, 3
-         DO   J  = 1, 3
-            TIPM  ( I, J ) = TSIPM  ( I, J )
-         END DO
-      END DO
+      do  i = 1, 3
+         do   j  = 1, 3
+            tipm  ( i, j ) = tsipm  ( i, j )
+         end do
+      end do
 
-      CALL CHKOUT ( 'BODMAT' )
-      RETURN
-      END
+      call chkout ( 'BODMAT' )
+      return
+      end

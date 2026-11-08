@@ -1,6 +1,6 @@
 !$Procedure DLATDR ( Derivative of latitudinal w.r.t. rectangular )
 
-      SUBROUTINE DLATDR ( X, Y, Z, JACOBI )
+      subroutine dlatdr ( x, y, z, jacobi )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      Y
-      DOUBLE PRECISION      Z
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      x
+      double precision      y
+      double precision      z
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -340,40 +340,40 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RECTAN  ( 3 )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      LONG
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      INJACB  ( 3, 3 )
+      double precision      rectan  ( 3 )
+      double precision      r
+      double precision      long
+      double precision      lat
+      double precision      injacb  ( 3, 3 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DLATDR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DLATDR' )
+      end if
 
 !
 !     There is a singularity of the Jacobian for points on the z-axis.
 !
-      IF ( ( X .EQ. 0 ) .AND. ( Y .EQ. 0 ) ) THEN
+      if ( ( x .eq. 0 ) .and. ( y .eq. 0 ) ) then
 
-         CALL SETMSG ( 'The Jacobian of the transformation from '     // &
+         call setmsg ( 'The Jacobian of the transformation from '     // &
                        'rectangular to latitudinal coordinates '      // &
                        'is not defined for points on the z-axis.'      )
-         CALL SIGERR ( 'SPICE(POINTONZAXIS)'                           )
-         CALL CHKOUT ( 'DLATDR'                                        )
-         RETURN
+         call sigerr ( 'SPICE(POINTONZAXIS)'                           )
+         call chkout ( 'DLATDR'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     We will get the Jacobian of the transformation from rectangular
@@ -381,25 +381,25 @@
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      CALL VPACK  ( X, Y, Z, RECTAN )
+      call vpack  ( x, y, z, rectan )
 
 !
 !     Convert from rectangular to latitudinal coordinates.
 !
-      CALL RECLAT ( RECTAN, R, LONG, LAT  )
+      call reclat ( rectan, r, long, lat  )
 
 !
 !     Get the Jacobian of the transformation from latitudinal to
 !     rectangular coordinates at R, LONG, LAT.
 !
-      CALL DRDLAT ( R, LONG, LAT, INJACB )
+      call drdlat ( r, long, lat, injacb )
 
 !
 !     Now invert INJACB to get the Jacobian of the transformation from
 !     rectangular to latitudinal coordinates.
 !
-      CALL INVORT ( INJACB, JACOBI )
+      call invort ( injacb, jacobi )
 
-      CALL CHKOUT ( 'DLATDR' )
-      RETURN
-      END
+      call chkout ( 'DLATDR' )
+      return
+      end

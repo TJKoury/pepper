@@ -1,6 +1,6 @@
 !$Procedure DASEC  ( DAS extract comments )
 
-      SUBROUTINE DASEC ( HANDLE, BUFSIZ, N, BUFFER, DONE )
+      subroutine dasec ( handle, bufsiz, n, buffer, done )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'das.inc'
+      include 'das.inc'
 
-      INTEGER               HANDLE
-      INTEGER               BUFSIZ
-      INTEGER               N
-      CHARACTER*(*)         BUFFER(*)
-      LOGICAL               DONE
+      integer               handle
+      integer               bufsiz
+      integer               n
+      character*(*)         buffer(*)
+      logical               done
 
 ! $ Brief_I/O
 !
@@ -344,10 +344,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
@@ -355,195 +355,195 @@
 !
 !     Length of a DAS character record, in characters.
 !
-      INTEGER               MXCREC
-      PARAMETER           ( MXCREC = 1024 )
+      integer               mxcrec
+      parameter           ( mxcrec = 1024 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      INTEGER               MAXPCH
-      PARAMETER           ( MAXPCH = 126 )
+      integer               maxpch
+      parameter           ( maxpch = 126 )
 
-      INTEGER               MINPCH
-      PARAMETER           ( MINPCH = 32 )
+      integer               minpch
+      parameter           ( minpch = 32 )
 !
 !     Decimal value for the DAS comment area end-of-line (EOL) marker.
 !
-      INTEGER               INTEOL
-      PARAMETER           ( INTEOL = 0 )
+      integer               inteol
+      parameter           ( inteol = 0 )
 !
 !     Maximum length of a filename.
 !
-      INTEGER               FNMLEN
-      PARAMETER           ( FNMLEN = 128 )
+      integer               fnmlen
+      parameter           ( fnmlen = 128 )
 !
 !     Length of a DAS file ID word.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 !
 !     Length of a DAS file internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     Local variables
 !
-      CHARACTER*(1)         CH
-      CHARACTER*(MXCREC)    CRECRD
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(1)         ch
+      character*(mxcrec)    crecrd
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
 
-      INTEGER               CURPOS
-      INTEGER               DASLUN
-      INTEGER               I
-      INTEGER               INDEX
-      INTEGER               J
-      INTEGER               K
-      INTEGER               LINLEN
-      INTEGER               NCHARS
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NUMCOM
-      INTEGER               RECNO
+      integer               curpos
+      integer               daslun
+      integer               i
+      integer               index
+      integer               j
+      integer               k
+      integer               linlen
+      integer               nchars
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
+      integer               numcom
+      integer               recno
 !
 !     The file table declarations for keeping track of which files
 !     are currently in the process of having comments extracted.
 !
-      INTEGER               FILCNT(FTSIZE)
-      INTEGER               FILCHR(FTSIZE)
-      INTEGER               FILHAN(FTSIZE)
-      INTEGER               LSTHAN
-      INTEGER               LSTPOS(FTSIZE)
-      INTEGER               LSTREC(FTSIZE)
-      INTEGER               NFILES
+      integer               filcnt(ftsize)
+      integer               filchr(ftsize)
+      integer               filhan(ftsize)
+      integer               lsthan
+      integer               lstpos(ftsize)
+      integer               lstrec(ftsize)
+      integer               nfiles
 
-      LOGICAL               EOL
-      LOGICAL               FIRST
+      logical               eol
+      logical               first
 !
 !     Saved variables
 !
-      SAVE CRECRD
+      save crecrd
 !
 !     Save all of the file table information.
 !
-      SAVE FILCNT
-      SAVE FILCHR
-      SAVE FILHAN
-      SAVE LSTHAN
-      SAVE LSTPOS
-      SAVE LSTREC
-      SAVE NFILES
+      save filcnt
+      save filchr
+      save filhan
+      save lsthan
+      save lstpos
+      save lstrec
+      save nfiles
 
-      SAVE FIRST
+      save first
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASEC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASEC' )
+      end if
 !
 !     If this is the first time that this routine has been called,
 !     we need to initialize the character value of the end-of-line
 !     marker, and the file table variables.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         NFILES = 0
-         LSTHAN = -1
+         first  = .false.
+         nfiles = 0
+         lsthan = -1
 
-         DO I = 1, FTSIZE
+         do i = 1, ftsize
 
-            FILCNT(I) = 0
-            FILCHR(I) = 0
-            FILHAN(I) = 0
-            LSTREC(I) = 0
-            LSTPOS(I) = 0
+            filcnt(i) = 0
+            filchr(i) = 0
+            filhan(i) = 0
+            lstrec(i) = 0
+            lstpos(i) = 0
 
-         END DO
+         end do
 
-      END IF
+      end if
 !
 !     Verify that the DAS file attached to HANDLE is opened for reading
 !     by calling the routine to signal an invalid access mode on a
 !     handle.
 !
-      CALL DASSIH ( HANDLE, 'READ' )
+      call dassih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASEC' )
-         RETURN
+         call chkout ( 'DASEC' )
+         return
 
-      END IF
+      end if
 !
 !     Check for a nonpositive BUFFER size.
 !
-      IF ( BUFSIZ .LE. 0 ) THEN
+      if ( bufsiz .le. 0 ) then
 
-         CALL SETMSG ( 'The output buffer size was not positive: #.' )
-         CALL ERRINT ( '#', BUFSIZ                                   )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                      )
-         CALL CHKOUT ( 'DASEC'                                       )
-         RETURN
+         call setmsg ( 'The output buffer size was not positive: #.' )
+         call errint ( '#', bufsiz                                   )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         call chkout ( 'DASEC'                                       )
+         return
 
-      END IF
+      end if
 !
 !     Convert the DAS file handle to its corresponding Fortran logical
 !     unit number for reading the comment records.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., DASLUN )
+      call zzddhhlu ( handle, 'DAS', .false., daslun )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASEC' )
-         RETURN
+         call chkout ( 'DASEC' )
+         return
 
-      END IF
+      end if
 !
 !     Get the length of a single character string in the buffer.
 !
-      LINLEN = LEN ( BUFFER(1) )
+      linlen = len ( buffer(1) )
 !
 !     If we have extracted comments from at least one file and we
 !     didn't finish, get the index for that file in the file table.
 !
-      IF ( NFILES .GT. 0 ) THEN
+      if ( nfiles .gt. 0 ) then
 
-         INDEX = ISRCHI ( HANDLE, NFILES, FILHAN )
+         index = isrchi ( handle, nfiles, filhan )
 
-      ELSE
+      else
 
-         INDEX = 0
+         index = 0
 
-      END IF
+      end if
 !
 !     Check to see if we found HANDLE in the file handle table. If
 !     we did, INDEX will be > 0.
 !
-      IF ( INDEX .GT. 0 ) THEN
+      if ( index .gt. 0 ) then
 !
 !        Set the record number and the starting position accordingly,
 !        i.e., where we left off when we last read from that file.
 !
-         RECNO  = LSTREC(INDEX)
-         CURPOS = LSTPOS(INDEX)
-         NCHARS = FILCHR(INDEX)
-         NCOMC  = FILCNT(INDEX)
+         recno  = lstrec(index)
+         curpos = lstpos(index)
+         nchars = filchr(index)
+         ncomc  = filcnt(index)
 
-      ELSE
+      else
 !
 !        We have not yet read any comments from this file, so start at
 !        the start. To get to the first comment record, we need to skip
@@ -555,153 +555,153 @@
 !        characters from the DAS file attached to HANDLE. We will also
 !        get back some extra stuff that we do not use.
 !
-         CALL DASRFR ( HANDLE, &
-                       IDWORD, IFNAME, &
-                       NRESVR, NRESVC, &
-                       NCOMR,  NCOMC   )
+         call dasrfr ( handle, &
+                       idword, ifname, &
+                       nresvr, nresvc, &
+                       ncomr,  ncomc   )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DASEC' )
-            RETURN
+            call chkout ( 'DASEC' )
+            return
 
-         END IF
+         end if
 !
 !        If the number of comment characters, NCOMC, is equal to zero,
 !        then we have no comments to read, so set the number of comments
 !        to zero, set DONE to .TRUE., check out,  and return.
 !
-         IF ( NCOMC .EQ. 0 ) THEN
+         if ( ncomc .eq. 0 ) then
 
-            N    = 0
-            DONE = .TRUE.
-            CALL CHKOUT ( 'DASEC' )
-            RETURN
+            n    = 0
+            done = .true.
+            call chkout ( 'DASEC' )
+            return
 
-         END IF
+         end if
 
-         RECNO  = 1 + NRESVR + 1
-         CURPOS = 1
-         NCHARS = 0
+         recno  = 1 + nresvr + 1
+         curpos = 1
+         nchars = 0
 
-      END IF
+      end if
 !
 !     Begin reading the comment area into the buffer.
 !
-      IF ( HANDLE .NE. LSTHAN ) THEN
+      if ( handle .ne. lsthan ) then
 !
 !        If the current DAS handle is not the same as the handle on
 !        the last call, then we need to read in the appropriate record
 !        from the DAS file comment area. Otherwise the record was saved,
 !        so we don't need to read it in.
 !
-         CALL DASIOC ( 'READ', DASLUN, RECNO, CRECRD )
+         call dasioc ( 'READ', daslun, recno, crecrd )
 
-      END IF
+      end if
 !
 !     Initialize the BUFFER line counter, I, and the line position
 !     counter, J.
 !
-      I = 1
-      J = 1
+      i = 1
+      j = 1
 
-      DONE = .FALSE.
-      DO WHILE ( ( I .LE. BUFSIZ ) .AND. ( .NOT. DONE ) )
+      done = .false.
+      do while ( ( i .le. bufsiz ) .and. ( .not. done ) )
 
-         EOL = .FALSE.
-         DO WHILE ( .NOT. EOL )
+         eol = .false.
+         do while ( .not. eol )
 
-            NCHARS = NCHARS + 1
-            CH     = CRECRD(CURPOS:CURPOS)
+            nchars = nchars + 1
+            ch     = crecrd(curpos:curpos)
 
-            IF ( ICHAR( CH ) .EQ. INTEOL ) THEN
+            if ( ichar( ch ) .eq. inteol ) then
 
-               EOL           = .TRUE.
+               eol           = .true.
 
-               IF ( J .LE. LINLEN ) THEN
+               if ( j .le. linlen ) then
 
-                  BUFFER(I)(J:) = ' '
+                  buffer(i)(j:) = ' '
 
-               END IF
+               end if
 
-            ELSE
+            else
 
-               IF ( J .LE. LINLEN ) THEN
+               if ( j .le. linlen ) then
 
-                  BUFFER(I)(J:J) = CH
-                  J              = J + 1
+                  buffer(i)(j:j) = ch
+                  j              = j + 1
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'The output buffer line length (#)'  // &
+                  call setmsg ( 'The output buffer line length (#)'  // &
                                 ' was not long enough to contain'    // &
                                 ' a comment line with length #.'      )
-                  CALL ERRINT ( '#', LINLEN                           )
-                  CALL ERRINT ( '#', I                                )
-                  CALL SIGERR ( 'SPICE(COMMENTTOOLONG)'               )
-                  CALL CHKOUT ( 'DASEC'                               )
-                  RETURN
+                  call errint ( '#', linlen                           )
+                  call errint ( '#', i                                )
+                  call sigerr ( 'SPICE(COMMENTTOOLONG)'               )
+                  call chkout ( 'DASEC'                               )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 !
 !           If we have reached the end of the current comment record,
 !           read in the next one and reset the current position.
 !           Otherwise, just increment the current position.
 !
-            IF ( CURPOS .EQ. MXCREC ) THEN
+            if ( curpos .eq. mxcrec ) then
 
-               RECNO = RECNO + 1
-               CALL DASIOC ( 'READ', DASLUN, RECNO, CRECRD )
-               CURPOS = 1
+               recno = recno + 1
+               call dasioc ( 'READ', daslun, recno, crecrd )
+               curpos = 1
 
-            ELSE
+            else
 
-               CURPOS = CURPOS + 1
+               curpos = curpos + 1
 
-            END IF
+            end if
 !
 !           Check to make sure that it is safe to continue, i.e.,
 !           that the number of comment characters we have processed
 !           has not exceeded the number of comment characters in the
 !           comment area of the DAS file.
 !
-            IF ( NCHARS .GT. NCOMC ) THEN
+            if ( nchars .gt. ncomc ) then
 
-               CALL SETMSG ( 'Count of comment characters (#)'     // &
+               call setmsg ( 'Count of comment characters (#)'     // &
                              ' exceeds the number of comment'      // &
                              ' characters (#) in the DAS file #.'   )
-               CALL ERRINT ( '#',NCHARS                             )
-               CALL ERRINT ( '#',NCOMC                              )
-               CALL ERRFNM ( '#',DASLUN                             )
-               CALL SIGERR ( 'SPICE(BADDASCOMMENTAREA)'             )
-               CALL CHKOUT ( 'DASEC'                                )
-               RETURN
+               call errint ( '#',nchars                             )
+               call errint ( '#',ncomc                              )
+               call errfnm ( '#',daslun                             )
+               call sigerr ( 'SPICE(BADDASCOMMENTAREA)'             )
+               call chkout ( 'DASEC'                                )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        We have just completed a comment line, so we save the comment
 !        number, increment the buffer line counter, I, and reset the
 !        buffer line position counter, J.
 !
-         NUMCOM = I
-         I      = I + 1
-         J      = 1
+         numcom = i
+         i      = i + 1
+         j      = 1
 !
 !        Check for the end of the comments.
 !
-         IF ( NCHARS .EQ. NCOMC ) THEN
+         if ( nchars .eq. ncomc ) then
 !
 !           If we have reached the end of the comments, signaled
 !           by having processed all of the comment characters, NCOMC,
 !           then we are done. So, set DONE to .TRUE. and remove the
 !           entry for this file from the file table.
 !
-            DONE   = .TRUE.
-            LSTHAN = -1
+            done   = .true.
+            lsthan = -1
 !
 !           0 <= INDEX <= NFILES, and we only want to remove things
 !           from the file table if:
@@ -713,79 +713,79 @@
 !           So, if INDEX > 0, we know that there are files in the file
 !           table, and that we are currently reading from one of them.
 !
-            IF ( INDEX .GT. 0 ) THEN
+            if ( index .gt. 0 ) then
 
-               DO K = INDEX, NFILES - 1
+               do k = index, nfiles - 1
 
-                  FILCNT(K) = FILCNT(K+1)
-                  FILCHR(K) = FILCHR(K+1)
-                  FILHAN(K) = FILHAN(K+1)
-                  LSTREC(K) = LSTREC(K+1)
-                  LSTPOS(K) = LSTPOS(K+1)
+                  filcnt(k) = filcnt(k+1)
+                  filchr(k) = filchr(k+1)
+                  filhan(k) = filhan(k+1)
+                  lstrec(k) = lstrec(k+1)
+                  lstpos(k) = lstpos(k+1)
 
-               END DO
+               end do
 
-               NFILES = NFILES - 1
+               nfiles = nfiles - 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Set the number of comment lines in the buffer
 !
-      N = NUMCOM
+      n = numcom
 !
 !     At this point, we have either filled the buffer or we have
 !     finished reading in the comment area. Find out what has
 !     happened and act accordingly.
 !
-      IF ( .NOT. DONE ) THEN
+      if ( .not. done ) then
 !
 !        If we are not done, then we have filled the buffer, so save
 !        everything that needs to be saved in the file table before
 !        exiting.
 !
-         IF ( INDEX .EQ. 0 ) THEN
+         if ( index .eq. 0 ) then
 !
 !           This was the first time that the comment area of this file
 !           has been read, so add it to the file table and save all of
 !           its information if there is room in the file table.
 !
-            IF ( NFILES .GE. FTSIZE ) THEN
+            if ( nfiles .ge. ftsize ) then
 
-               CALL SETMSG ( 'The file table is full with # files,'  // &
+               call setmsg ( 'The file table is full with # files,'  // &
                              ' and another file could not be added.'  )
-               CALL ERRINT ( '#',FTSIZE                               )
-               CALL SIGERR ( 'SPICE(FILETABLEFULL)'                   )
-               CALL CHKOUT ( 'DASEC'                                  )
-               RETURN
+               call errint ( '#',ftsize                               )
+               call sigerr ( 'SPICE(FILETABLEFULL)'                   )
+               call chkout ( 'DASEC'                                  )
+               return
 
-            END IF
+            end if
 
-            NFILES         = NFILES + 1
-            FILCNT(NFILES) = NCOMC
-            FILCHR(NFILES) = NCHARS
-            FILHAN(NFILES) = HANDLE
-            LSTREC(NFILES) = RECNO
-            LSTPOS(NFILES) = CURPOS
-            LSTHAN         = HANDLE
+            nfiles         = nfiles + 1
+            filcnt(nfiles) = ncomc
+            filchr(nfiles) = nchars
+            filhan(nfiles) = handle
+            lstrec(nfiles) = recno
+            lstpos(nfiles) = curpos
+            lsthan         = handle
 
-         ELSE
+         else
 !
 !           The comment area of this file is already in the file table,
 !           so just update its information.
 !
-            FILCHR(INDEX) = NCHARS
-            LSTREC(INDEX) = RECNO
-            LSTPOS(INDEX) = CURPOS
-            LSTHAN        = HANDLE
+            filchr(index) = nchars
+            lstrec(index) = recno
+            lstpos(index) = curpos
+            lsthan        = handle
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DASEC' )
-      RETURN
-      END
+      call chkout ( 'DASEC' )
+      return
+      end

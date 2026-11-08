@@ -1,6 +1,6 @@
 !$Procedure ZZFTPSTR ( Private --- Fetch FTP Validation String )
 
-      SUBROUTINE ZZFTPSTR ( TSTCOM, LEND, REND, DELIM )
+      subroutine zzftpstr ( tstcom, lend, rend, delim )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzftprms.inc'
+      include              'zzftprms.inc'
 
-      CHARACTER*(*)         TSTCOM
-      CHARACTER*(*)         LEND
-      CHARACTER*(*)         REND
-      CHARACTER*(*)         DELIM
+      character*(*)         tstcom
+      character*(*)         lend
+      character*(*)         rend
+      character*(*)         delim
 
 ! $ Brief_I/O
 !
@@ -227,91 +227,91 @@
 !     Maximum size of an individual test cluster component
 !     including the ':'.
 !
-      INTEGER               SIZTSQ
-      PARAMETER           ( SIZTSQ = 5 )
+      integer               siztsq
+      parameter           ( siztsq = 5 )
 
 !
 !     Integer codes of characters appearing in test clusters.
 !
-      INTEGER               INT000
-      PARAMETER           ( INT000 = 0 )
+      integer               int000
+      parameter           ( int000 = 0 )
 
-      INTEGER               INT010
-      PARAMETER           ( INT010 = 10 )
+      integer               int010
+      parameter           ( int010 = 10 )
 
-      INTEGER               INT013
-      PARAMETER           ( INT013 = 13 )
+      integer               int013
+      parameter           ( int013 = 13 )
 
-      INTEGER               INT016
-      PARAMETER           ( INT016 = 16 )
+      integer               int016
+      parameter           ( int016 = 16 )
 
-      INTEGER               INT129
-      PARAMETER           ( INT129 = 129 )
+      integer               int129
+      parameter           ( int129 = 129 )
 
-      INTEGER               INT206
-      PARAMETER           ( INT206 = 206 )
+      integer               int206
+      parameter           ( int206 = 206 )
 
 !
 !
 !     Local Variables
 !
-      CHARACTER*(SIZDLM)    LOCDLM
-      CHARACTER*(SIZEND)    LOCLND
-      CHARACTER*(SIZEND)    LOCRND
-      CHARACTER*(SIZSTR)    LOCSTR
-      CHARACTER*(SIZTSQ)    TESTSQ ( NUMTST )
+      character*(sizdlm)    locdlm
+      character*(sizend)    loclnd
+      character*(sizend)    locrnd
+      character*(sizstr)    locstr
+      character*(siztsq)    testsq ( numtst )
 
 !
 !     Non-printing character values.
 !
-      CHARACTER*(1)         ASC000
-      CHARACTER*(1)         ASC010
-      CHARACTER*(1)         ASC013
-      CHARACTER*(1)         ASC016
-      CHARACTER*(1)         ASC129
-      CHARACTER*(1)         ASC206
+      character*(1)         asc000
+      character*(1)         asc010
+      character*(1)         asc013
+      character*(1)         asc016
+      character*(1)         asc129
+      character*(1)         asc206
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  LOCDLM
-      SAVE                  LOCLND
-      SAVE                  LOCRND
-      SAVE                  LOCSTR
+      save                  first
+      save                  locdlm
+      save                  loclnd
+      save                  locrnd
+      save                  locstr
 
 !
 !     Data Statements
 !
-      DATA   FIRST       / .TRUE.   /
+      data   first       / .true.   /
 
 !
 !     Set up the components of the FTP validation string that
 !     are not supposed to change for forward and backward
 !     compatibility.
 !
-      DATA   LOCDLM      / ':'      /
-      DATA   LOCLND      / 'FTPSTR' /
-      DATA   LOCRND      / 'ENDFTP' /
+      data   locdlm      / ':'      /
+      data   loclnd      / 'FTPSTR' /
+      data   locrnd      / 'ENDFTP' /
 
 !
 !     On the first invocation initialize the string values.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Convert the integer parameters to their non-printing ASCII
 !        equivalents.
 !
-         ASC000 = CHAR( INT000 )
-         ASC010 = CHAR( INT010 )
-         ASC013 = CHAR( INT013 )
-         ASC016 = CHAR( INT016 )
-         ASC129 = CHAR( INT129 )
-         ASC206 = CHAR( INT206 )
+         asc000 = char( int000 )
+         asc010 = char( int010 )
+         asc013 = char( int013 )
+         asc016 = char( int016 )
+         asc129 = char( int129 )
+         asc206 = char( int206 )
 
 !
 !        Now build the individual components of the test clusters.
@@ -324,32 +324,32 @@
 !
 !        Cluster #1 : <CR> - <13> - Macintosh Line Terminator
 !
-         TESTSQ(1) = LOCDLM // ASC013 // LOCDLM
+         testsq(1) = locdlm // asc013 // locdlm
 
 !
 !        Cluster #2 : <LF> - <10> - Unix Line Terminator
 !
-         TESTSQ(2) = ASC010 // LOCDLM
+         testsq(2) = asc010 // locdlm
 
 !
 !        Cluster #3 : <CR><LF> - <10><13> - Microsoft Line Terminator
 !
-         TESTSQ(3) = ASC013 // ASC010 // LOCDLM
+         testsq(3) = asc013 // asc010 // locdlm
 
 !
 !        Cluster #4 : <13><0>
 !
-         TESTSQ(4) = ASC013 // ASC000 // LOCDLM
+         testsq(4) = asc013 // asc000 // locdlm
 
 !
 !        Cluster #5 : <129> - Macintosh Permutation of Parity Codes
 !
-         TESTSQ(5) = ASC129 // LOCDLM
+         testsq(5) = asc129 // locdlm
 
 !
 !        Cluster #6 : <16><206>
 !
-         TESTSQ(6) = ASC016 // ASC206 // LOCDLM
+         testsq(6) = asc016 // asc206 // locdlm
 
 !
 !        Sample cluster addition code follows
@@ -363,32 +363,32 @@
 !        Now build the local copy of TSTCOM, LOCSTR. First clear the
 !        uninitialized contents.
 !
-         LOCSTR = ' '
+         locstr = ' '
 
-         DO I = 1, NUMTST
+         do i = 1, numtst
 
 !
 !           Append TESTSQ(I) to LOCSTR to properly construct the
 !           test component of the FTP validation string.
 !
-            CALL SUFFIX ( TESTSQ(I), 0, LOCSTR )
+            call suffix ( testsq(i), 0, locstr )
 
-         END DO
+         end do
 
 !
 !        Prevent execution of this initialization code after first pass.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 !
 !     Copy the local copies of the FTP string components to the
 !     arguments passed in from the caller.
 !
-      TSTCOM = LOCSTR
-      LEND   = LOCLND
-      REND   = LOCRND
-      DELIM  = LOCDLM
+      tstcom = locstr
+      lend   = loclnd
+      rend   = locrnd
+      delim  = locdlm
 
-      RETURN
-      END
+      return
+      end

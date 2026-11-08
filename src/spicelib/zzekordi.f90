@@ -1,6 +1,6 @@
 !$Procedure      ZZEKORDI ( Order of an integer EK column )
 
-      SUBROUTINE ZZEKORDI ( IVALS, NULLOK, NLFLGS, NVALS, IORDER )
+      subroutine zzekordi ( ivals, nullok, nlflgs, nvals, iorder )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      INTEGER               IVALS  ( * )
-      LOGICAL               NULLOK
-      LOGICAL               NLFLGS ( * )
-      INTEGER               NVALS
-      INTEGER               IORDER ( * )
+      integer               ivals  ( * )
+      logical               nullok
+      logical               nlflgs ( * )
+      integer               nvals
+      integer               iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -168,89 +168,89 @@
 !
 !     Local variables
 !
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               I4
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               i4
 
-      INTEGER               GAP
-      INTEGER               I
-      INTEGER               J
-      INTEGER               JG
+      integer               gap
+      integer               i
+      integer               j
+      integer               jg
 
-      LOGICAL               N1
-      LOGICAL               N2
-      LOGICAL               OK
+      logical               n1
+      logical               n2
+      logical               ok
 
 
 !
 !     Statement functions
 !
-      LOGICAL               CMP1
-      LOGICAL               CMP2
-      LOGICAL               CMP3
-      LOGICAL               CMP4
-      LOGICAL               LE
+      logical               cmp1
+      logical               cmp2
+      logical               cmp3
+      logical               cmp4
+      logical               le
 
 
-      CMP1 ( I1, I2, I3, I4 )          =          ( I1 .LT. I2 ) &
-                                          .OR. (  ( I1 .EQ. I2 ) .AND. &
-                                                  ( I3 .LT. I4 )       )
+      cmp1 ( i1, i2, i3, i4 )          =          ( i1 .lt. i2 ) &
+                                          .or. (  ( i1 .eq. i2 ) .and. &
+                                                  ( i3 .lt. i4 )       )
 
 
-      CMP2 ( I3, I4, N1, N2 )          =       ( N1 .AND. .NOT. N2  ) &
-                                          .OR. (      ( N1 .AND. N2 ) &
-                                                .AND. ( I3 .LT. I4  ) )
+      cmp2 ( i3, i4, n1, n2 )          =       ( n1 .and. .not. n2  ) &
+                                          .or. (      ( n1 .and. n2 ) &
+                                                .and. ( i3 .lt. i4  ) )
 
 
-      CMP3 ( I1, I2, I3, I4, N1, N2 )  =        ( .NOT. ( N1 .OR. N2 ) ) &
-                                         .AND. CMP1 (  I1, I2, I3, I4  )
+      cmp3 ( i1, i2, i3, i4, n1, n2 )  =        ( .not. ( n1 .or. n2 ) ) &
+                                         .and. cmp1 (  i1, i2, i3, i4  )
 
 
-      CMP4 ( I1, I2, I3, I4, N1, N2 )  = CMP2 ( I3, I4, N1, N2 ) &
-                                         .OR. &
-                                         CMP3 ( I1, I2, I3, I4, N1, N2 )
+      cmp4 ( i1, i2, i3, i4, n1, n2 )  = cmp2 ( i3, i4, n1, n2 ) &
+                                         .or. &
+                                         cmp3 ( i1, i2, i3, i4, n1, n2 )
 
 
-      LE (  I1,  I2, I3, I4, OK,   N1,   N2  )  = &
+      le (  i1,  i2, i3, i4, ok,   n1,   n2  )  = &
 
-              (  (.NOT. OK ) .AND.  CMP1 ( I1, I2, I3, I4 )          ) &
-        .OR.  (  (      OK ) .AND.  CMP4 ( I1, I2, I3, I4, N1, N2 )  )
+              (  (.not. ok ) .and.  cmp1 ( i1, i2, i3, i4 )          ) &
+        .or.  (  (      ok ) .and.  cmp4 ( i1, i2, i3, i4, n1, n2 )  )
 
 
 
 !
 !     Begin with the initial ordering.
 !
-      DO I = 1, NVALS
-         IORDER(I) = I
-      END DO
+      do i = 1, nvals
+         iorder(i) = i
+      end do
 
 !
 !     Find the smallest element, then the next smallest, and so on.
 !     This uses the Shell Sort algorithm, but swaps the elements of
 !     the order vector instead of the array itself.
 !
-      GAP = NVALS / 2
+      gap = nvals / 2
 
-      DO WHILE ( GAP .GT. 0 )
+      do while ( gap .gt. 0 )
 
-         DO I = GAP+1, NVALS
+         do i = gap+1, nvals
 
 
-            J = I - GAP
+            j = i - gap
 
-            DO WHILE ( J .GT. 0 )
+            do while ( j .gt. 0 )
 
-               JG = J + GAP
+               jg = j + gap
 
-               IF (   LE (   IVALS ( IORDER(J)  ), &
-                             IVALS ( IORDER(JG) ), &
-                             IORDER(J), &
-                             IORDER(JG), &
-                             NULLOK, &
-                             NLFLGS( IORDER(J)  ), &
-                             NLFLGS( IORDER(JG) )   )    ) THEN
+               if (   le (   ivals ( iorder(j)  ), &
+                             ivals ( iorder(jg) ), &
+                             iorder(j), &
+                             iorder(jg), &
+                             nullok, &
+                             nlflgs( iorder(j)  ), &
+                             nlflgs( iorder(jg) )   )    ) then
 !
 !                 Getting here means that
 !
@@ -258,24 +258,24 @@
 !
 !                 according to our order relation.
 !
-                  J = 0
+                  j = 0
 
-               ELSE
+               else
 
-                  CALL SWAPI ( IORDER(J), IORDER(JG) )
+                  call swapi ( iorder(j), iorder(jg) )
 
-               END IF
+               end if
 
-               J = J - GAP
+               j = j - gap
 
-            END DO
+            end do
 
 
-         END DO
+         end do
 
-         GAP = GAP / 2
+         gap = gap / 2
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

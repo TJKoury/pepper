@@ -1,6 +1,6 @@
 !$Procedure DASADC ( DAS, add data, character )
 
-      SUBROUTINE DASADC ( HANDLE, N, BPOS, EPOS, DATA )
+      subroutine dasadc ( handle, n, bpos, epos, data )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               N
-      INTEGER               BPOS
-      INTEGER               EPOS
-      CHARACTER*(*)         DATA   ( * )
+      integer               handle
+      integer               n
+      integer               bpos
+      integer               epos
+      character*(*)         data   ( * )
 
 ! $ Brief_I/O
 !
@@ -419,113 +419,113 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               CHAR
-      PARAMETER           ( CHAR   =  1  )
+      integer               char
+      parameter           ( char   =  1  )
 
-      INTEGER               NWC
-      PARAMETER           ( NWC    = 1024 )
+      integer               nwc
+      parameter           ( nwc    = 1024 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NWC)       RECORD
+      character*(nwc)       record
 
-      INTEGER               CHR
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               ELT
-      INTEGER               FREE
-      INTEGER               LASTC
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NMOVE
-      INTEGER               NMOVED
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NUMCHR
-      INTEGER               NWRITN
-      INTEGER               RCPOS
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               chr
+      integer               clbase
+      integer               clsize
+      integer               elt
+      integer               free
+      integer               lastc
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               ncomc
+      integer               ncomr
+      integer               nmove
+      integer               nmoved
+      integer               nresvc
+      integer               nresvr
+      integer               numchr
+      integer               nwritn
+      integer               rcpos
+      integer               recno
+      integer               wordno
 
 !
 !     Saved variables
 !
-      SAVE                  RECORD
+      save                  record
 
 !
 !     Initial values
 !
-      DATA                  RECORD / ' ' /
+      data                  record / ' ' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
-      CALL CHKIN ( 'DASADC' )
+      if ( return () ) then
+         return
+      end if
+      call chkin ( 'DASADC' )
 
 
 !
 !     Make sure BPOS and EPOS are OK; stop here if not.
 !
-      IF (      ( BPOS .LT. 1              ) &
-           .OR. ( EPOS .LT. 1              ) &
-           .OR. ( BPOS .GT. LEN( DATA(1) ) ) &
-           .OR. ( EPOS .GT. LEN( DATA(1) ) )  )  THEN
+      if (      ( bpos .lt. 1              ) &
+           .or. ( epos .lt. 1              ) &
+           .or. ( bpos .gt. len( data(1) ) ) &
+           .or. ( epos .gt. len( data(1) ) )  )  then
 
-         CALL SETMSG ( 'Substring bounds must be in range [1,#]. '    // &
+         call setmsg ( 'Substring bounds must be in range [1,#]. '    // &
                        'Actual range [BPOS,EPOS] was [#,#].'           )
-         CALL ERRINT ( '#',  LEN(DATA(1))                              )
-         CALL ERRINT ( '#',  BPOS                                      )
-         CALL ERRINT ( '#',  EPOS                                      )
-         CALL SIGERR ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         CALL CHKOUT ( 'DASADC'                                        )
-         RETURN
+         call errint ( '#',  len(data(1))                              )
+         call errint ( '#',  bpos                                      )
+         call errint ( '#',  epos                                      )
+         call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
+         call chkout ( 'DASADC'                                        )
+         return
 
 
-      ELSE IF ( EPOS .LT. BPOS ) THEN
+      else if ( epos .lt. bpos ) then
 
-         CALL SETMSG ( 'Substring upper bound must not be less than ' // &
+         call setmsg ( 'Substring upper bound must not be less than ' // &
                        'lower bound.  Actual range [BPOS,EPOS] was '  // &
                        '[#,#].'                                        )
-         CALL ERRINT ( '#',  BPOS                                      )
-         CALL ERRINT ( '#',  EPOS                                      )
-         CALL SIGERR ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
-         CALL CHKOUT ( 'DASADC'                                        )
-         RETURN
+         call errint ( '#',  bpos                                      )
+         call errint ( '#',  epos                                      )
+         call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
+         call chkout ( 'DASADC'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the file summary for this DAS.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASADC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASADC' )
+         return
+      end if
 
-      LASTC  =  LASTLA(CHAR)
+      lastc  =  lastla(char)
 
 !
 !     We will keep track of the location that we wish to write to
@@ -542,16 +542,16 @@
 !     the file.  Otherwise, RECNO becomes the first record available for
 !     character data.
 !
-      IF ( LASTC .GE. 1 ) THEN
+      if ( lastc .ge. 1 ) then
 
-         CALL DASA2L ( HANDLE,  CHAR,    LASTC, &
-                       CLBASE,  CLSIZE,  RECNO,  WORDNO )
-      ELSE
+         call dasa2l ( handle,  char,    lastc, &
+                       clbase,  clsize,  recno,  wordno )
+      else
 
-         RECNO   =  FREE
-         WORDNO  =  0
+         recno   =  free
+         wordno  =  0
 
-      END IF
+      end if
 
 !
 !     Set the number of character words already written.  Keep
@@ -564,11 +564,11 @@
 !     Also initialize the array element index and position of the
 !     character to be moved next.
 !
-      NWRITN  =  0
-      ELT     =  1
-      CHR     =  BPOS
+      nwritn  =  0
+      elt     =  1
+      chr     =  bpos
 
-      DO WHILE (  ( NWRITN .LT. N ) .AND. ( .NOT. FAILED() )  )
+      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
 
 !
 !        Write as much data as we can (or need to) into the current
@@ -578,9 +578,9 @@
 !        Find out how many words to write into the current record.
 !        There may be no space left in the current record.
 !
-         NUMCHR  =  MIN (  N - NWRITN,   NWC - WORDNO )
+         numchr  =  min (  n - nwritn,   nwc - wordno )
 
-         IF ( NUMCHR .GT. 0 ) THEN
+         if ( numchr .gt. 0 ) then
 
 !
 !           Write NUMCHR words into the current record.  If the record
@@ -593,57 +593,57 @@
 !
 !           So far, we haven't moved any characters.
 !
-            NMOVED = 0
-            RCPOS  = WORDNO
+            nmoved = 0
+            rcpos  = wordno
 
-            DO WHILE ( NMOVED .LT. NUMCHR )
+            do while ( nmoved .lt. numchr )
 
 !
 !              Find out how many characters in the current array
 !              element we should move.
 !
-               IF ( CHR .GT. EPOS ) THEN
-                  ELT = ELT + 1
-                  CHR = BPOS
-               END IF
+               if ( chr .gt. epos ) then
+                  elt = elt + 1
+                  chr = bpos
+               end if
 
-               NMOVE  =  MIN (  NUMCHR - NMOVED,   EPOS - CHR + 1  )
+               nmove  =  min (  numchr - nmoved,   epos - chr + 1  )
 
-               RECORD( RCPOS+1 : RCPOS+NMOVE )   =   DATA(ELT) (CHR:)
+               record( rcpos+1 : rcpos+nmove )   =   data(elt) (chr:)
 
-               NMOVED =  NMOVED + NMOVE
-               RCPOS  =  RCPOS  + NMOVE
-               CHR    =  CHR    + NMOVE
+               nmoved =  nmoved + nmove
+               rcpos  =  rcpos  + nmove
+               chr    =  chr    + nmove
 
-            END DO
+            end do
 
 !
 !           Now we can write or update the file with RECORD.
 !
-            IF ( WORDNO .EQ. 0 ) THEN
+            if ( wordno .eq. 0 ) then
 !
 !              The record has not yet been written, so write out the
 !              entire record.
 !
-               CALL DASWRC (  HANDLE,  RECNO,  RECORD  )
+               call daswrc (  handle,  recno,  record  )
 
-            ELSE
+            else
 !
 !              Update elements WORDNO+1 through WORDNO+NUMCHR.
 !
-               CALL DASURC (  HANDLE, &
-                              RECNO, &
-                              WORDNO + 1, &
-                              WORDNO + NUMCHR, &
-                              RECORD ( WORDNO+1 : WORDNO+NUMCHR )  )
+               call dasurc (  handle, &
+                              recno, &
+                              wordno + 1, &
+                              wordno + numchr, &
+                              record ( wordno+1 : wordno+numchr )  )
 
-            END IF
+            end if
 
 
-            NWRITN  =  NWRITN + NUMCHR
-            WORDNO  =  WORDNO + NUMCHR
+            nwritn  =  nwritn + numchr
+            wordno  =  wordno + numchr
 
-         ELSE
+         else
 
 !
 !           It's time to start on a new record.  If the record we
@@ -657,25 +657,25 @@
 !           We intentionally leave FREE at the value it had before
 !           we starting adding data to the file.
 !
-            IF ( RECNO .GE. FREE ) THEN
-               RECNO  =  RECNO + 1
-            ELSE
-               RECNO  =  FREE
-            END IF
+            if ( recno .ge. free ) then
+               recno  =  recno + 1
+            else
+               recno  =  free
+            end if
 
-            WORDNO = 0
+            wordno = 0
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Update the DAS file directories to reflect the addition of NWRITN
 !     character words.  DASCUD will also update the file summary
 !     accordingly.
 !
-      CALL DASCUD ( HANDLE, CHAR, NWRITN )
+      call dascud ( handle, char, nwritn )
 
-      CALL CHKOUT ( 'DASADC' )
-      RETURN
-      END
+      call chkout ( 'DASADC' )
+      return
+      end

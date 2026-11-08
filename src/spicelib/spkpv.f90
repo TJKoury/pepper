@@ -1,6 +1,6 @@
 !$Procedure SPKPV ( S/P Kernel, position and velocity )
 
-      SUBROUTINE SPKPV ( HANDLE, DESCR, ET, REF, STATE, CENTER )
+      subroutine spkpv ( handle, descr, et, ref, state, center )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      STATE    ( 6 )
-      INTEGER               CENTER
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      character*(*)         ref
+      double precision      state    ( 6 )
+      integer               center
 
 ! $ Brief_I/O
 !
@@ -202,7 +202,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters.
@@ -211,97 +211,97 @@
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Some local space is needed in which to return records, and
 !     into which to unpack the segment descriptor.
 !
-      INTEGER               IRF
-      INTEGER               IRFREQ
-      INTEGER               IC         (    6 )
-      DOUBLE PRECISION      DC         (    2 )
-      DOUBLE PRECISION      XFORM      ( 6, 6 )
-      DOUBLE PRECISION      TSTATE     ( 6    )
+      integer               irf
+      integer               irfreq
+      integer               ic         (    6 )
+      double precision      dc         (    2 )
+      double precision      xform      ( 6, 6 )
+      double precision      tstate     ( 6    )
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVREF
-      INTEGER               SVIRFR
+      integer               svctr1 ( ctrsiz )
+      character*(frnmln)    svref
+      integer               svirfr
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVREF
-      SAVE                  SVIRFR
+      save                  svctr1
+      save                  svref
+      save                  svirfr
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKPV' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKPV' )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      CENTER = IC(2)
-      IRF    = IC(3)
+      center = ic(2)
+      irf    = ic(3)
 
 !
 !     Rotate the raw state from its native frame to the one requested
 !     by the user only if the two frames differ.
 !
-      CALL ZZNAMFRM ( SVCTR1, SVREF, SVIRFR, REF, IRFREQ )
+      call zznamfrm ( svctr1, svref, svirfr, ref, irfreq )
 
-      IF ( IRFREQ .EQ. 0 ) THEN
+      if ( irfreq .eq. 0 ) then
 
-         CALL SETMSG ( 'No support for frame #.' )
-         CALL ERRCH  ( '#', REF                  )
-         CALL SIGERR ( 'SPICE(SPKREFNOTSUPP)'    )
+         call setmsg ( 'No support for frame #.' )
+         call errch  ( '#', ref                  )
+         call sigerr ( 'SPICE(SPKREFNOTSUPP)'    )
 
-      ELSE IF ( IRFREQ .NE. IRF ) THEN
+      else if ( irfreq .ne. irf ) then
 
-         CALL SPKPVN ( HANDLE, DESCR,  ET, IRF, TSTATE, CENTER )
-         CALL FRMCHG ( IRF,    IRFREQ, ET,              XFORM  )
-         CALL MXVG   ( XFORM,  TSTATE,  6, 6,           STATE  )
+         call spkpvn ( handle, descr,  et, irf, tstate, center )
+         call frmchg ( irf,    irfreq, et,              xform  )
+         call mxvg   ( xform,  tstate,  6, 6,           state  )
 
-      ELSE
+      else
 
-         CALL SPKPVN ( HANDLE, DESCR, ET, IRF, STATE, CENTER )
+         call spkpvn ( handle, descr, et, irf, state, center )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SPKPV' )
-      RETURN
-      END
+      call chkout ( 'SPKPV' )
+      return
+      end

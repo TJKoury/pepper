@@ -1,6 +1,6 @@
 !$Procedure ISROT ( Indicate whether a matrix is a rotation matrix )
 
-      LOGICAL FUNCTION ISROT ( M, NTOL, DTOL )
+      logical function isrot ( m, ntol, dtol )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      M    ( 3, 3 )
-      DOUBLE PRECISION      NTOL
-      DOUBLE PRECISION      DTOL
+      double precision      m    ( 3, 3 )
+      double precision      ntol
+      double precision      dtol
 
 ! $ Brief_I/O
 !
@@ -200,58 +200,58 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DET
+      double precision      brcktd
+      double precision      det
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      N1
-      DOUBLE PRECISION      N2
-      DOUBLE PRECISION      N3
-      DOUBLE PRECISION      UNIT ( 3, 3 )
+      double precision      d
+      double precision      n1
+      double precision      n2
+      double precision      n3
+      double precision      unit ( 3, 3 )
 
-      LOGICAL               DETOK
-      LOGICAL               NORMOK
+      logical               detok
+      logical               normok
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         ISROT = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ISROT' )
-      END IF
+      if ( return () ) then
+         isrot = .false.
+         return
+      else
+         call chkin ( 'ISROT' )
+      end if
 
 !
 !     Tolerances must be non-negative.
 !
-      IF ( NTOL .LT. 0.D0 ) THEN
+      if ( ntol .lt. 0.d0 ) then
 
-         ISROT = .FALSE.
+         isrot = .false.
 
-         CALL SETMSG ( 'NTOL should be non-negative; it is #.' )
-         CALL ERRDP  ( '#',  NTOL                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                )
-         CALL CHKOUT ( 'ISROT'                                 )
-         RETURN
+         call setmsg ( 'NTOL should be non-negative; it is #.' )
+         call errdp  ( '#',  ntol                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
+         call chkout ( 'ISROT'                                 )
+         return
 
-      ELSE IF ( DTOL .LT. 0.D0 ) THEN
+      else if ( dtol .lt. 0.d0 ) then
 
-         ISROT = .FALSE.
+         isrot = .false.
 
-         CALL SETMSG ( 'DTOL should be non-negative; it is #.' )
-         CALL ERRDP  ( '#',  DTOL                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'ISROT'                  )
-         RETURN
+         call setmsg ( 'DTOL should be non-negative; it is #.' )
+         call errdp  ( '#',  dtol                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'ISROT'                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The columns of M must resemble unit vectors.  If the norms are
@@ -262,26 +262,26 @@
 !     of the matrix UNIT, computed below, whose columns are the
 !     unitized columns of M.
 !
-      CALL UNORM (  M(1,1),  UNIT(1,1),  N1  )
-      CALL UNORM (  M(1,2),  UNIT(1,2),  N2  )
-      CALL UNORM (  M(1,3),  UNIT(1,3),  N3  )
+      call unorm (  m(1,1),  unit(1,1),  n1  )
+      call unorm (  m(1,2),  unit(1,2),  n2  )
+      call unorm (  m(1,3),  unit(1,3),  n3  )
 
-      D      =  DET ( UNIT )
-
-
-      NORMOK =       ( N1 .EQ. BRCKTD ( N1, 1.D0 - NTOL, 1.D0 + NTOL ) ) &
-               .AND. ( N2 .EQ. BRCKTD ( N2, 1.D0 - NTOL, 1.D0 + NTOL ) ) &
-               .AND. ( N3 .EQ. BRCKTD ( N3, 1.D0 - NTOL, 1.D0 + NTOL ) )
-
-      DETOK  =         D  .EQ. BRCKTD ( D,  1.D0 - DTOL, 1.D0 + DTOL )
+      d      =  det ( unit )
 
 
-      IF ( NORMOK .AND. DETOK ) THEN
-         ISROT = .TRUE.
-      ELSE
-         ISROT = .FALSE.
-      END IF
+      normok =       ( n1 .eq. brcktd ( n1, 1.d0 - ntol, 1.d0 + ntol ) ) &
+               .and. ( n2 .eq. brcktd ( n2, 1.d0 - ntol, 1.d0 + ntol ) ) &
+               .and. ( n3 .eq. brcktd ( n3, 1.d0 - ntol, 1.d0 + ntol ) )
 
-      CALL CHKOUT ( 'ISROT' )
-      RETURN
-      END
+      detok  =         d  .eq. brcktd ( d,  1.d0 - dtol, 1.d0 + dtol )
+
+
+      if ( normok .and. detok ) then
+         isrot = .true.
+      else
+         isrot = .false.
+      end if
+
+      call chkout ( 'ISROT' )
+      return
+      end

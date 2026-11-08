@@ -1,6 +1,6 @@
 !$Procedure SPKR12 ( Read SPK record from segment, type 12 )
 
-      SUBROUTINE SPKR12 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr12 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -16,15 +16,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               MAXREC
-      PARAMETER           ( MAXREC  = 129 )
+      integer               maxrec
+      parameter           ( maxrec  = 129 )
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( * )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( * )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -166,22 +166,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKR12' )
+      call chkin ( 'SPKR12' )
 
 !
 !     The type 8 reader knows how to obtain a type 12 record.
 !
-      CALL SPKR08 ( HANDLE, DESCR, ET, RECORD )
+      call spkr08 ( handle, descr, et, record )
 
-      CALL CHKOUT ( 'SPKR12' )
-      RETURN
-      END
+      call chkout ( 'SPKR12' )
+      return
+      end

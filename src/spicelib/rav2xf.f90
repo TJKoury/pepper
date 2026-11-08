@@ -1,6 +1,6 @@
 !$Procedure RAV2XF ( Rotation and angular velocity to transform )
 
-      SUBROUTINE RAV2XF ( ROT, AV, XFORM )
+      subroutine rav2xf ( rot, av, xform )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ROT    ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3    )
-      DOUBLE PRECISION      XFORM  ( 6, 6 )
+      double precision      rot    ( 3, 3 )
+      double precision      av     ( 3    )
+      double precision      xform  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -321,11 +321,11 @@
 !-&
 
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
-      DOUBLE PRECISION      OMEGAT ( 3, 3 )
-      DOUBLE PRECISION      DROTDT ( 3, 3 )
+      double precision      omegat ( 3, 3 )
+      double precision      drotdt ( 3, 3 )
 
 !
 !     A state transformation matrix XFORM has the following form
@@ -344,13 +344,13 @@
 !     rotation.  From this we can immediately fill in most of the
 !     state transformation matrix.
 !
-      DO I = 1, 3
-         DO J = 1,3
-            XFORM(I,  J  ) = ROT(I,J)
-            XFORM(I+3,J+3) = ROT(I,J)
-            XFORM(I,  J+3) = 0.0D0
-         END DO
-      END DO
+      do i = 1, 3
+         do j = 1,3
+            xform(i,  j  ) = rot(i,j)
+            xform(i+3,j+3) = rot(i,j)
+            xform(i,  j+3) = 0.0d0
+         end do
+      end do
 
 !
 !     Now for the rest.
@@ -390,25 +390,25 @@
 !     From this discussion we can see that we need OMEGA transpose.
 !     Here it is.
 !
-      OMEGAT(1,1) =  0.0D0
-      OMEGAT(2,1) = -AV(3)
-      OMEGAT(3,1) =  AV(2)
+      omegat(1,1) =  0.0d0
+      omegat(2,1) = -av(3)
+      omegat(3,1) =  av(2)
 
-      OMEGAT(1,2) =  AV(3)
-      OMEGAT(2,2) =  0.0D0
-      OMEGAT(3,2) = -AV(1)
+      omegat(1,2) =  av(3)
+      omegat(2,2) =  0.0d0
+      omegat(3,2) = -av(1)
 
-      OMEGAT(1,3) = -AV(2)
-      OMEGAT(2,3) =  AV(1)
-      OMEGAT(3,3) =  0.0D0
+      omegat(1,3) = -av(2)
+      omegat(2,3) =  av(1)
+      omegat(3,3) =  0.0d0
 
-      CALL MXM ( ROT, OMEGAT, DROTDT )
+      call mxm ( rot, omegat, drotdt )
 
-      DO I = 1, 3
-         DO J = 1,3
-            XFORM(I+3,J) = DROTDT(I,J)
-         END DO
-      END DO
+      do i = 1, 3
+         do j = 1,3
+            xform(i+3,j) = drotdt(i,j)
+         end do
+      end do
 
-      RETURN
-      END
+      return
+      end

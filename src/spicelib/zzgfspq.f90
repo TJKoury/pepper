@@ -1,7 +1,7 @@
 !$Procedure ZZGFSPQ ( GF, separation quantity )
 
-      SUBROUTINE ZZGFSPQ ( ET, TARG1, TARG2, R1, R2, &
-                           OBS, ABCORR, REF, VALUE )
+      subroutine zzgfspq ( et, targ1, targ2, r1, r2, &
+                           obs, abcorr, ref, value )
 
 ! $ Abstract
 !
@@ -22,16 +22,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      ET
-      INTEGER               TARG1
-      INTEGER               TARG2
-      DOUBLE PRECISION      R1
-      DOUBLE PRECISION      R2
-      INTEGER               OBS
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      VALUE
+      implicit none
+      double precision      et
+      integer               targ1
+      integer               targ2
+      double precision      r1
+      double precision      r2
+      integer               obs
+      character*(*)         abcorr
+      character*(*)         ref
+      double precision      value
 
 
 ! $ Brief_I/O
@@ -194,125 +194,125 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      double precision      dasine
+      double precision      halfpi
+      double precision      vnorm
+      double precision      vsep
+      logical               failed
+      logical               return
 
 
 !
 !     Local Variables.
 !
-      DOUBLE PRECISION      ANG1
-      DOUBLE PRECISION      ANG2
-      DOUBLE PRECISION      PV1    ( 3 )
-      DOUBLE PRECISION      PV2    ( 3 )
-      DOUBLE PRECISION      RANGE1
-      DOUBLE PRECISION      RANGE2
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      LT
+      double precision      ang1
+      double precision      ang2
+      double precision      pv1    ( 3 )
+      double precision      pv2    ( 3 )
+      double precision      range1
+      double precision      range2
+      double precision      theta
+      double precision      lt
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      DOUBLE PRECISION      ATOL
-      PARAMETER           ( ATOL  = 1.D-12 )
+      double precision      atol
+      parameter           ( atol  = 1.d-12 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN( 'ZZGFSPQ' )
+      call chkin( 'ZZGFSPQ' )
 
 !
 !     First check for bad inputs.
 !
-      IF ( R1 .LT. 0.D0 .OR. R2 .LT. 0.D0 ) THEN
+      if ( r1 .lt. 0.d0 .or. r2 .lt. 0.d0 ) then
 
-         CALL SETMSG  ('A negative radius for a body was ' &
+         call setmsg  ('A negative radius for a body was ' &
          //            'encountered. The radius for body # was given ' &
          //            'as #, the radius of body # was given as #. ')
 
-         CALL ERRINT  ('#', TARG1         )
-         CALL ERRDP   ('#', R1            )
-         CALL ERRINT  ('#', TARG2         )
-         CALL ERRDP   ('#', R2            )
-         CALL SIGERR  ('SPICE(BADRADIUS)' )
-         CALL CHKOUT  ('ZZGFSPQ'          )
-         RETURN
-      END IF
+         call errint  ('#', targ1         )
+         call errdp   ('#', r1            )
+         call errint  ('#', targ2         )
+         call errdp   ('#', r2            )
+         call sigerr  ('SPICE(BADRADIUS)' )
+         call chkout  ('ZZGFSPQ'          )
+         return
+      end if
 
 
 !
 !     Get the state of the TARG1, TARG2 objects relative to OBS.
 !
-      CALL SPKEZP ( TARG1, ET, REF, ABCORR,  OBS, PV1, LT )
+      call spkezp ( targ1, et, ref, abcorr,  obs, pv1, lt )
 
-      IF  (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFSPQ' )
-         RETURN
-      END IF
+      if  (  failed() ) then
+         call chkout ( 'ZZGFSPQ' )
+         return
+      end if
 
 
-       CALL SPKEZP ( TARG2, ET, REF, ABCORR, OBS, PV2, LT )
+       call spkezp ( targ2, et, ref, abcorr, obs, pv2, lt )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFSPQ' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout ( 'ZZGFSPQ' )
+         return
+      end if
 
 !
 !     Compute the range to the objects of interest.
 !
-      RANGE1 = VNORM( PV1 )
-      RANGE2 = VNORM( PV2 )
+      range1 = vnorm( pv1 )
+      range2 = vnorm( pv2 )
 
 !
 !     Compute the apparent angular radii as seen from OBS.
 !
-      IF ( RANGE1 .GT. R1 ) THEN
+      if ( range1 .gt. r1 ) then
 
-         ANG1 = DASINE( R1/RANGE1, ATOL )
+         ang1 = dasine( r1/range1, atol )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFSPQ' )
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout ( 'ZZGFSPQ' )
+            return
+         end if
 
-      ELSE
+      else
 
-         ANG1 = HALFPI ()
+         ang1 = halfpi ()
 
-      END IF
+      end if
 
-      IF ( RANGE2 .GT. R2 ) THEN
+      if ( range2 .gt. r2 ) then
 
-         ANG2 = DASINE ( R2/RANGE2, ATOL )
+         ang2 = dasine ( r2/range2, atol )
 
-         IF (  FAILED() ) THEN
-            CALL CHKOUT ('ZZGFSPQ')
-            RETURN
-         END IF
+         if (  failed() ) then
+            call chkout ('ZZGFSPQ')
+            return
+         end if
 
-      ELSE
+      else
 
-         ANG2 = HALFPI()
+         ang2 = halfpi()
 
-      END IF
+      end if
 
 !
 !     Finally compute the apparent separation.
 !
-      THETA = VSEP ( PV1, PV2 )
-      VALUE = THETA - ANG1 - ANG2
+      theta = vsep ( pv1, pv2 )
+      value = theta - ang1 - ang2
 
-      CALL CHKOUT ('ZZGFSPQ')
-      RETURN
-      END
+      call chkout ('ZZGFSPQ')
+      return
+      end

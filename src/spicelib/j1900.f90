@@ -1,6 +1,6 @@
 !$Procedure J1900 ( Julian Date of 1900.0 JAN 0.5 )
 
-      DOUBLE PRECISION FUNCTION J1900 ( )
+      double precision function j1900 ( )
 
 ! $ Abstract
 !
@@ -95,7 +95,7 @@
 !-&
 
 
-      J1900 = 2415020.0D0
+      j1900 = 2415020.0d0
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKS02 ( S/P Kernel, subset, type 2 )
 
-      SUBROUTINE SPKS02 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks02 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -145,32 +145,32 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA    ( 50 )
-      DOUBLE PRECISION      INIT
-      DOUBLE PRECISION      INTLEN
+      double precision      data    ( 50 )
+      double precision      init
+      double precision      intlen
 
-      INTEGER               RECSIZ
-      INTEGER               NREC
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               REMAIN
-      INTEGER               ADDR
-      INTEGER               MOVE
+      integer               recsiz
+      integer               nrec
+      integer               first
+      integer               last
+      integer               remain
+      integer               addr
+      integer               move
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS02' )
+      end if
 
 !
 !     The segment is made up of a number of logical records, each
@@ -182,42 +182,42 @@
 !     located at the end of the segment, along with the size of each
 !     logical record and the total number of records.
 !
-      CALL DAFGDA ( HANDLE, EADDR-3, EADDR, DATA )
+      call dafgda ( handle, eaddr-3, eaddr, data )
 
-      INIT   =      DATA( 1 )
-      INTLEN =      DATA( 2 )
-      RECSIZ = INT( DATA( 3 ) )
-      NREC   = INT( DATA( 4 ) )
+      init   =      data( 1 )
+      intlen =      data( 2 )
+      recsiz = int( data( 3 ) )
+      nrec   = int( data( 4 ) )
 
-      FIRST = INT( (BEGIN - INIT) / INTLEN ) + 1
-      FIRST = MIN( FIRST, NREC )
+      first = int( (begin - init) / intlen ) + 1
+      first = min( first, nrec )
 
-      LAST = INT( (END - INIT) / INTLEN ) + 1
-      LAST = MIN( LAST, NREC )
+      last = int( (end - init) / intlen ) + 1
+      last = min( last, nrec )
 
 !
 !     The number of records to be moved.
 !
-      NREC = LAST - FIRST + 1
+      nrec = last - first + 1
 
 !
 !     We're going to move the data in chunks of 50 d.p. words.  Compute
 !     the number of words left to move, the address of the beginning
 !     of the records to move, and the number to move this time.
 !
-      REMAIN = NREC * RECSIZ
-      ADDR   = BADDR + ( FIRST - 1 )*RECSIZ
-      MOVE   = MIN( 50, REMAIN )
+      remain = nrec * recsiz
+      addr   = baddr + ( first - 1 )*recsiz
+      move   = min( 50, remain )
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 
-         CALL DAFGDA ( HANDLE, ADDR, ADDR + MOVE - 1, DATA )
-         CALL DAFADA ( DATA, MOVE )
-         REMAIN = REMAIN - MOVE
-         ADDR   = ADDR   + MOVE
-         MOVE   = MIN( 50, REMAIN )
+         call dafgda ( handle, addr, addr + move - 1, data )
+         call dafada ( data, move )
+         remain = remain - move
+         addr   = addr   + move
+         move   = min( 50, remain )
 
-      END DO
+      end do
 
 !
 !     That's all the records we have to move. But there are still four
@@ -231,14 +231,14 @@
 !     INIT and NREC will probably be different for the new segment (in
 !     fact, NREC has already been changed), the other two will not.
 !
-      INIT = INIT + ( FIRST - 1 )*INTLEN
+      init = init + ( first - 1 )*intlen
 
-      DATA( 1 ) = INIT
-      DATA( 2 ) = INTLEN
-      DATA( 3 ) = DBLE( RECSIZ )
-      DATA( 4 ) = DBLE( NREC   )
-      CALL DAFADA ( DATA, 4 )
+      data( 1 ) = init
+      data( 2 ) = intlen
+      data( 3 ) = dble( recsiz )
+      data( 4 ) = dble( nrec   )
+      call dafada ( data, 4 )
 
-      CALL CHKOUT ( 'SPKS02' )
-      RETURN
-      END
+      call chkout ( 'SPKS02' )
+      return
+      end

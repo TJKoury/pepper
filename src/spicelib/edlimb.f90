@@ -1,6 +1,6 @@
 !$Procedure EDLIMB   ( Ellipsoid Limb )
 
-      SUBROUTINE EDLIMB ( A, B, C, VIEWPT, LIMB )
+      subroutine edlimb ( a, b, c, viewpt, limb )
 
 ! $ Abstract
 !
@@ -20,16 +20,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL   =    9 )
+      integer               ubel
+      parameter           ( ubel   =    9 )
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      VIEWPT (    3 )
-      DOUBLE PRECISION      LIMB   ( UBEL )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      viewpt (    3 )
+      double precision      limb   ( ubel )
 
 ! $ Brief_I/O
 !
@@ -415,59 +415,59 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   =    4 )
+      integer               ubpl
+      parameter           ( ubpl   =    4 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LEVEL
-      DOUBLE PRECISION      LPLANE ( UBPL )
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SCLA
-      DOUBLE PRECISION      SCLA2
-      DOUBLE PRECISION      SCLB
-      DOUBLE PRECISION      SCLB2
-      DOUBLE PRECISION      SCLC
-      DOUBLE PRECISION      SCLC2
-      DOUBLE PRECISION      TMPEL  ( UBEL )
-      DOUBLE PRECISION      V      (    3 )
+      double precision      level
+      double precision      lplane ( ubpl )
+      double precision      normal (    3 )
+      double precision      scale
+      double precision      scla
+      double precision      scla2
+      double precision      sclb
+      double precision      sclb2
+      double precision      sclc
+      double precision      sclc2
+      double precision      tmpel  ( ubel )
+      double precision      v      (    3 )
 
-      LOGICAL               FOUND
+      logical               found
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EDLIMB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EDLIMB' )
+      end if
 
 !
 !     The semi-axes must have positive length.
 !
-      IF (       ( A .LE. 0.D0 ) &
-           .OR.  ( B .LE. 0.D0 ) &
-           .OR.  ( C .LE. 0.D0 )   )   THEN
+      if (       ( a .le. 0.d0 ) &
+           .or.  ( b .le. 0.d0 ) &
+           .or.  ( c .le. 0.d0 )   )   then
 
-         CALL SETMSG ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
-         CALL ERRDP  ( '#', A                                      )
-         CALL ERRDP  ( '#', B                                      )
-         CALL ERRDP  ( '#', C                                      )
-         CALL SIGERR ( 'SPICE(INVALIDAXISLENGTH)'                  )
-         CALL CHKOUT ( 'EDLIMB'                                    )
-         RETURN
+         call setmsg ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
+         call errdp  ( '#', a                                      )
+         call errdp  ( '#', b                                      )
+         call errdp  ( '#', c                                      )
+         call sigerr ( 'SPICE(INVALIDAXISLENGTH)'                  )
+         call chkout ( 'EDLIMB'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the semi-axes lengths for better numerical behavior.
@@ -475,49 +475,49 @@
 !     underflow to zero, we cannot continue the computation. Otherwise,
 !     scale the viewing point too.
 !
-      SCALE  =  MAX ( DABS(A), DABS(B), DABS(C) )
+      scale  =  max ( dabs(a), dabs(b), dabs(c) )
 
-      SCLA   =  A / SCALE
-      SCLB   =  B / SCALE
-      SCLC   =  C / SCALE
+      scla   =  a / scale
+      sclb   =  b / scale
+      sclc   =  c / scale
 
-      SCLA2  =  SCLA**2
-      SCLB2  =  SCLB**2
-      SCLC2  =  SCLC**2
+      scla2  =  scla**2
+      sclb2  =  sclb**2
+      sclc2  =  sclc**2
 
-      IF (       ( SCLA2  .EQ.  0.D0 ) &
-           .OR.  ( SCLB2  .EQ.  0.D0 ) &
-           .OR.  ( SCLC2  .EQ.  0.D0 )   )   THEN
+      if (       ( scla2  .eq.  0.d0 ) &
+           .or.  ( sclb2  .eq.  0.d0 ) &
+           .or.  ( sclc2  .eq.  0.d0 )   )   then
 
-         CALL SETMSG ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
-         CALL ERRDP  ( '#', A                                        )
-         CALL ERRDP  ( '#', B                                        )
-         CALL ERRDP  ( '#', C                                        )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                       )
-         CALL CHKOUT ( 'EDLIMB'                                      )
-         RETURN
+         call setmsg ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
+         call errdp  ( '#', a                                        )
+         call errdp  ( '#', b                                        )
+         call errdp  ( '#', c                                        )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                       )
+         call chkout ( 'EDLIMB'                                      )
+         return
 
-      END IF
+      end if
 
-      CALL VSCL ( 1.0D0 / SCALE, VIEWPT, V )
+      call vscl ( 1.0d0 / scale, viewpt, v )
 
 !
 !     The viewing point must be outside of the ellipsoid.  LEVEL is the
 !     constant of the level surface that V lies on.  The ellipsoid
 !     itself is the level surface corresponding to LEVEL = 1.
 !
-      LEVEL   =     ( V(1)**2 / SCLA2 ) &
-                 +  ( V(2)**2 / SCLB2 ) &
-                 +  ( V(3)**2 / SCLC2 )
+      level   =     ( v(1)**2 / scla2 ) &
+                 +  ( v(2)**2 / sclb2 ) &
+                 +  ( v(3)**2 / sclc2 )
 
-      IF ( LEVEL .LT. 1.D0 ) THEN
+      if ( level .lt. 1.d0 ) then
 
-         CALL SETMSG ( 'Viewing point is inside the ellipsoid.' )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                  )
-         CALL CHKOUT ( 'EDLIMB'                                 )
-         RETURN
+         call setmsg ( 'Viewing point is inside the ellipsoid.' )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                  )
+         call chkout ( 'EDLIMB'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Find a normal vector for the limb plane.
@@ -578,36 +578,36 @@
 !     Put together a SPICE plane, LPLANE, that represents the limb
 !     plane.
 !
-      NORMAL(1)  =  V(1) / SCLA2
-      NORMAL(2)  =  V(2) / SCLB2
-      NORMAL(3)  =  V(3) / SCLC2
+      normal(1)  =  v(1) / scla2
+      normal(2)  =  v(2) / sclb2
+      normal(3)  =  v(3) / sclc2
 
-      CALL NVC2PL ( NORMAL, 1.0D0, LPLANE )
+      call nvc2pl ( normal, 1.0d0, lplane )
 
 !
 !     Find the limb by intersecting the limb plane with the ellipsoid.
 !
-      CALL INEDPL ( SCLA,  SCLB,  SCLC,  LPLANE,  LIMB,  FOUND )
+      call inedpl ( scla,  sclb,  sclc,  lplane,  limb,  found )
 
 !
 !     FOUND should be true unless we've encountered numerical problems.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Ellipsoid shape and viewing geometry are too '// &
+         call setmsg ( 'Ellipsoid shape and viewing geometry are too '// &
                        'extreme; the limb was not found. '             )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                         )
-         CALL CHKOUT ( 'EDLIMB'                                        )
-         RETURN
+         call sigerr ( 'SPICE(DEGENERATECASE)'                         )
+         call chkout ( 'EDLIMB'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Undo the scaling before returning the limb.
 !
-      CALL VSCLG ( SCALE, LIMB, UBEL, TMPEL )
-      CALL MOVED ( TMPEL, UBEL,       LIMB  )
+      call vsclg ( scale, limb, ubel, tmpel )
+      call moved ( tmpel, ubel,       limb  )
 
-      CALL CHKOUT ( 'EDLIMB' )
-      RETURN
-      END
+      call chkout ( 'EDLIMB' )
+      return
+      end

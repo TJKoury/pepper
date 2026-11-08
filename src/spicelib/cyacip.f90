@@ -1,6 +1,6 @@
 !$Procedure CYACIP ( Cycle the elements of a character array )
 
-      SUBROUTINE CYACIP ( NELT, DIR, NCYCLE, ARRAY )
+      subroutine cyacip ( nelt, dir, ncycle, array )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NELT
-      CHARACTER*1           DIR
-      INTEGER               NCYCLE
-      CHARACTER*(*)         ARRAY    ( * )
+      integer               nelt
+      character*1           dir
+      integer               ncycle
+      character*(*)         array    ( * )
 
 ! $ Brief_I/O
 !
@@ -145,45 +145,45 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
-      INTEGER          GCD
-      INTEGER          NBWID
+      logical          return
+      integer          gcd
+      integer          nbwid
 
 !
 !     Local variables
 !
-      INTEGER          OUTLEN
-      INTEGER          WIDEST
+      integer          outlen
+      integer          widest
 
-      CHARACTER*1      LAST
-      CHARACTER*1      TEMP
+      character*1      last
+      character*1      temp
 
-      INTEGER          C
-      INTEGER          G
-      INTEGER          I
-      INTEGER          J
-      INTEGER          K
-      INTEGER          L
-      INTEGER          M
+      integer          c
+      integer          g
+      integer          i
+      integer          j
+      integer          k
+      integer          l
+      integer          m
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CYACIP' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CYACIP' )
+      end if
 
 !
 !     Don't even screw around if there are no elements in the array.
 !
-      IF ( NELT .LT. 1 ) THEN
-         CALL CHKOUT ( 'CYACIP' )
-         RETURN
-      END IF
+      if ( nelt .lt. 1 ) then
+         call chkout ( 'CYACIP' )
+         return
+      end if
 
 !
 !     A backward cycle is the same as a forward cycle by the opposite
@@ -192,38 +192,38 @@
 !     minimum forward right cycle that is equivalent to the inputs.
 !     If the cycling direction is not recognized, signal an error.
 !
-      IF (          ( DIR .EQ. 'B' ) &
-               .OR. ( DIR .EQ. 'b' ) ) THEN
+      if (          ( dir .eq. 'B' ) &
+               .or. ( dir .eq. 'b' ) ) then
 
-         K = MOD ( - NCYCLE, NELT )
+         k = mod ( - ncycle, nelt )
 
-      ELSE IF (      ( DIR .EQ. 'F' ) &
-                .OR. ( DIR .EQ. 'f' ) ) THEN
+      else if (      ( dir .eq. 'F' ) &
+                .or. ( dir .eq. 'f' ) ) then
 
-         K = MOD (   NCYCLE, NELT )
+         k = mod (   ncycle, nelt )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Cycling direction was *.' )
-         CALL ERRCH  ( '*', DIR )
-         CALL SIGERR ( 'SPICE(INVALIDDIRECTION)'  )
-         CALL CHKOUT ( 'CYACIP' )
-         RETURN
+         call setmsg ( 'Cycling direction was *.' )
+         call errch  ( '*', dir )
+         call sigerr ( 'SPICE(INVALIDDIRECTION)'  )
+         call chkout ( 'CYACIP' )
+         return
 
-      END IF
+      end if
 
 
 
-      IF ( K .LT. 0 ) THEN
+      if ( k .lt. 0 ) then
 
-         K = K + NELT
+         k = k + nelt
 
-      ELSE IF ( K .EQ. 0 ) THEN
+      else if ( k .eq. 0 ) then
 
-         CALL CHKOUT ( 'CYACIP' )
-         RETURN
+         call chkout ( 'CYACIP' )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -243,55 +243,55 @@
 !     And don't overwrite the elements of the output array, if they
 !     happen to be shorter than those in the input array.
 !
-      OUTLEN = LEN   ( ARRAY(1)       )
-      WIDEST = NBWID ( ARRAY,  NELT   )
+      outlen = len   ( array(1)       )
+      widest = nbwid ( array,  nelt   )
 
 !
 !     The greatest common divisor need only be computed once.
 !
-      G = GCD ( K, NELT )
-      M = NELT / G
+      g = gcd ( k, nelt )
+      m = nelt / g
 
 !
 !     To make this a non-character routine, remove all references to C.
 !
-      DO C = 1, WIDEST
+      do c = 1, widest
 
-         DO I = 1, G
+         do i = 1, g
 
-            L    = I
-            LAST = ARRAY(L)(C:C)
+            l    = i
+            last = array(l)(c:c)
 
-            DO J = 1, M
+            do j = 1, m
 
-               L = L + K
+               l = l + k
 
-               IF ( L .GT. NELT ) THEN
-                  L = L - NELT
-               END IF
+               if ( l .gt. nelt ) then
+                  l = l - nelt
+               end if
 
-               TEMP          = ARRAY(L)(C:C)
-               ARRAY(L)(C:C) = LAST
-               LAST          = TEMP
+               temp          = array(l)(c:c)
+               array(l)(c:c) = last
+               last          = temp
 
-            END DO
+            end do
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     If needed, pad the output array with blanks.
 !
-      IF ( OUTLEN .GT. WIDEST ) THEN
+      if ( outlen .gt. widest ) then
 
-         DO I = 1, NELT
-            ARRAY(I)(WIDEST+1: ) = ' '
-         END DO
+         do i = 1, nelt
+            array(i)(widest+1: ) = ' '
+         end do
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'CYACIP' )
-      RETURN
-      END
+      call chkout ( 'CYACIP' )
+      return
+      end

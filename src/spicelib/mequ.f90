@@ -1,6 +1,6 @@
 !$Procedure MEQU ( Matrix equal to another, 3x3 )
 
-      SUBROUTINE MEQU ( M1, MOUT )
+      subroutine mequ ( m1, mout )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   M1   ( 3, 3 )
-      DOUBLE PRECISION   MOUT ( 3, 3 )
+      double precision   m1   ( 3, 3 )
+      double precision   mout ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -152,7 +152,7 @@
 !-&
 
 
-      CALL MOVED (M1, 9, MOUT)
+      call moved (m1, 9, mout)
 
-      RETURN
-      END
+      return
+      end

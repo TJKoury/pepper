@@ -1,6 +1,6 @@
 !$Procedure LSTLTC ( Last character element less than )
 
-      INTEGER FUNCTION  LSTLTC ( STRING, N, ARRAY )
+      integer function  lstltc ( string, n, array )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      INTEGER          N
-      CHARACTER*(*)    ARRAY ( * )
+      character*(*)    string
+      integer          n
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -196,67 +196,67 @@
 !
 !     Local variables
 !
-      INTEGER          J
+      integer          j
 
-      INTEGER          BEGIN
-      INTEGER          END
-      INTEGER          MIDDLE
-      INTEGER          ITEMS
+      integer          begin
+      integer          end
+      integer          middle
+      integer          items
 
 
 
-      ITEMS = N
+      items = n
 
-      BEGIN = 1
-      END   = N
+      begin = 1
+      end   = n
 
-      IF      ( N .LE. 0            ) THEN
+      if      ( n .le. 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
 !        to compare against.  Zero is the only sensible thing to return
 !
-         LSTLTC = 0
+         lstltc = 0
 
-      ELSE IF ( LLE(STRING, ARRAY(BEGIN)) ) THEN
+      else if ( lle(string, array(begin)) ) then
 
 !
 !        None of the array elements are less than STRING
 !
-         LSTLTC = 0
+         lstltc = 0
 
-      ELSE IF ( LLT(ARRAY(END), STRING) ) THEN
+      else if ( llt(array(end), string) ) then
 
 !
 !        STRING is greater than all elements of the array.  Thus the las
 !        element of the array is the last item less than STRING.
 !
-         LSTLTC = END
+         lstltc = end
 
-      ELSE
+      else
 
 !
 !        STRING lies between some pair of elements of the array
 !
 
-         DO WHILE ( ITEMS .GT. 2 )
+         do while ( items .gt. 2 )
 
-            J        = ITEMS/2
-            MIDDLE   = BEGIN + J
+            j        = items/2
+            middle   = begin + j
 
-            IF ( LLT(ARRAY(MIDDLE), STRING) ) THEN
-               BEGIN = MIDDLE
-            ELSE
-               END   = MIDDLE
-            END IF
+            if ( llt(array(middle), string) ) then
+               begin = middle
+            else
+               end   = middle
+            end if
 
-            ITEMS    = 1 + (END - BEGIN)
-         END DO
+            items    = 1 + (end - begin)
+         end do
 
 
-         LSTLTC = BEGIN
+         lstltc = begin
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

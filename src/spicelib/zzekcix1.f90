@@ -1,6 +1,6 @@
 !$Procedure      ZZEKCIX1 ( EK, create index, type 1 )
 
-      SUBROUTINE ZZEKCIX1 ( HANDLE, COLDSC )
+      subroutine zzekcix1 ( handle, coldsc )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
+      include 'ekcoldsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               COLDSC ( CDSCSZ )
+      integer               handle
+      integer               coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -103,17 +103,17 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKCIX1' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKCIX1' )
+      end if
 
 !
 !     Before trying to actually write anything, do every error
@@ -122,22 +122,22 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKCIX1' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKCIX1' )
+         return
+      end if
 
 !
 !     An empty type 1 segment is just an empty B*-tree.  The root
 !     page number of the tree serves as the index pointer.
 !
-      COLDSC(IXTIDX)  =  1
+      coldsc(ixtidx)  =  1
 
-      CALL ZZEKTRIT ( HANDLE, COLDSC(IXPIDX) )
+      call zzektrit ( handle, coldsc(ixpidx) )
 
 
-      CALL CHKOUT ( 'ZZEKCIX1' )
-      RETURN
-      END
+      call chkout ( 'ZZEKCIX1' )
+      return
+      end

@@ -1,9 +1,9 @@
 !$Procedure TPARTV ( Time string ---parse to a time vector)
 
-      SUBROUTINE TPARTV ( STRING, &
-                          TVEC,   NTVEC, TYPE, &
-                          MODIFY, MODS,  YABBRV, SUCCES, &
-                          PICTUR, ERROR )
+      subroutine tpartv ( string, &
+                          tvec,   ntvec, type, &
+                          modify, mods,  yabbrv, succes, &
+                          pictur, error )
 
 ! $ Abstract
 !
@@ -22,18 +22,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      DOUBLE PRECISION      TVEC   ( * )
-      INTEGER               NTVEC
-      CHARACTER*(*)         TYPE
-      CHARACTER*(*)         MODIFY ( * )
-      LOGICAL               MODS
-      LOGICAL               YABBRV
-      LOGICAL               SUCCES
-      CHARACTER*(*)         PICTUR
-      CHARACTER*(*)         ERROR
+      character*(*)         string
+      double precision      tvec   ( * )
+      integer               ntvec
+      character*(*)         type
+      character*(*)         modify ( * )
+      logical               mods
+      logical               yabbrv
+      logical               succes
+      character*(*)         pictur
+      character*(*)         error
 
 ! $ Brief_I/O
 !
@@ -563,26 +563,26 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               BSRCHC
-      INTEGER               ISRCHC
-      INTEGER               INTMAX
-      INTEGER               RTRIM
+      integer               bsrchc
+      integer               isrchc
+      integer               intmax
+      integer               rtrim
 
 !
 !     Private Functions
 !
-      LOGICAL               ZZTOKNS
-      LOGICAL               ZZCMBT
-      LOGICAL               ZZREMT
-      LOGICAL               ZZSUBT
-      LOGICAL               ZZREPT
-      LOGICAL               ZZNOTE
-      LOGICAL               ZZIST
-      LOGICAL               ZZISPT
-      LOGICAL               ZZVALT
-      LOGICAL               ZZGREP
-      LOGICAL               ZZTPATS
-      LOGICAL               ZZUNPCK
+      logical               zztokns
+      logical               zzcmbt
+      logical               zzremt
+      logical               zzsubt
+      logical               zzrept
+      logical               zznote
+      logical               zzist
+      logical               zzispt
+      logical               zzvalt
+      logical               zzgrep
+      logical               zztpats
+      logical               zzunpck
 
 !
 !     Parameters
@@ -595,101 +595,101 @@
 !     SYSTEM
 !
 
-      INTEGER               ERA
-      PARAMETER           ( ERA    =  1 )
+      integer               era
+      parameter           ( era    =  1 )
 
-      INTEGER               WDAY
-      PARAMETER           ( WDAY   = ERA    + 1 )
+      integer               wday
+      parameter           ( wday   = era    + 1 )
 
-      INTEGER               ZONE
-      PARAMETER           ( ZONE   = WDAY   + 1 )
+      integer               zone
+      parameter           ( zone   = wday   + 1 )
 
-      INTEGER               AMPM
-      PARAMETER           ( AMPM   = ZONE   + 1 )
+      integer               ampm
+      parameter           ( ampm   = zone   + 1 )
 
-      INTEGER               SYSTEM
-      PARAMETER           ( SYSTEM = AMPM   + 1 )
+      integer               system
+      parameter           ( system = ampm   + 1 )
 
-      INTEGER               NMODS
-      PARAMETER           ( NMODS = SYSTEM )
+      integer               nmods
+      parameter           ( nmods = system )
 
-      INTEGER               BEGS ( NMODS )
-      INTEGER               ENDS ( NMODS )
+      integer               begs ( nmods )
+      integer               ends ( nmods )
 
 
-      LOGICAL               HAVERA
-      LOGICAL               HAVWDY
-      LOGICAL               HAVZON
-      LOGICAL               HAVAPM
-      LOGICAL               HAVSYS
+      logical               havera
+      logical               havwdy
+      logical               havzon
+      logical               havapm
+      logical               havsys
 !
 !     Local Variables.
 !
 !     The number of known time patterns NKNOWN comes from the include
 !     file timepars.inc
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 12 )
+      integer               wdsize
+      parameter           ( wdsize = 12 )
 
-      INTEGER               ROOM
-      PARAMETER           ( ROOM = 300 )
+      integer               room
+      parameter           ( room = 300 )
 
-      INTEGER               NKNOWN
-      CHARACTER*(WDSIZE)    KNOWN ( ROOM )
-      CHARACTER*(WDSIZE)    MEANNG( ROOM )
-      CHARACTER*(WDSIZE)    REP
+      integer               nknown
+      character*(wdsize)    known ( room )
+      character*(wdsize)    meanng( room )
+      character*(wdsize)    rep
 
 
 !
 !     Time Zone Variables
 !
-      INTEGER               ZSIZE
-      PARAMETER           ( ZSIZE = 3 )
+      integer               zsize
+      parameter           ( zsize = 3 )
 
-      INTEGER               OSIZE
-      PARAMETER           ( OSIZE = 6 )
+      integer               osize
+      parameter           ( osize = 6 )
 
-      INTEGER               NZONES
-      PARAMETER           ( NZONES = 8 )
+      integer               nzones
+      parameter           ( nzones = 8 )
 
-      CHARACTER*(ZSIZE)     ZONES ( NZONES )
-      CHARACTER*(OSIZE)     OFFSET( NZONES )
-      CHARACTER*(1)         DELIM ( 3 )
-
-
-
-      INTEGER               B
-      INTEGER               B1
-      INTEGER               B2
-      INTEGER               E
-      INTEGER               E1
-      INTEGER               E2
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               MAPTO
-      INTEGER               TO
-      INTEGER               USE
-      INTEGER               R
+      character*(zsize)     zones ( nzones )
+      character*(osize)     offset( nzones )
+      character*(1)         delim ( 3 )
 
 
 
+      integer               b
+      integer               b1
+      integer               b2
+      integer               e
+      integer               e1
+      integer               e2
+      integer               from
+      integer               i
+      integer               mapto
+      integer               to
+      integer               use
+      integer               r
 
-      LOGICAL               RESOLV
-      LOGICAL               L2R
-      LOGICAL               R2L
 
-      LOGICAL               FIRST
 
-      SAVE
 
-      DATA                  FIRST   / .TRUE. /
+      logical               resolv
+      logical               l2r
+      logical               r2l
 
-      DATA                  ZONES   / 'EST',    'EDT', &
+      logical               first
+
+      save
+
+      data                  first   / .true. /
+
+      data                  zones   / 'EST',    'EDT', &
                                       'CST',    'CDT', &
                                       'MST',    'MDT', &
                                       'PST',    'PDT'  /
 
-      DATA                  OFFSET  / 'UTC-5',  'UTC-4', &
+      data                  offset  / 'UTC-5',  'UTC-4', &
                                       'UTC-6',  'UTC-5', &
                                       'UTC-7',  'UTC-6', &
                                       'UTC-8',  'UTC-7'  /
@@ -700,44 +700,44 @@
 !
 !     So far there are no modifiers to the time string.
 !
-      MODS   = .FALSE.
-      YABBRV = .FALSE.
+      mods   = .false.
+      yabbrv = .false.
 
-      DO I = 1, NMODS
-         MODIFY(I) = ' '
-      END DO
+      do i = 1, nmods
+         modify(i) = ' '
+      end do
 
 !
 !     On the first call to this routine we load the built in
 !     representation patterns.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         IF ( ZZTPATS( ROOM, NKNOWN, KNOWN, MEANNG ) ) THEN
-            FIRST = .FALSE.
-         ELSE
-            PICTUR = ' '
-            SUCCES = .FALSE.
-            ERROR  = 'There is an incompatibility between ZZTPATS ' &
+         if ( zztpats( room, nknown, known, meanng ) ) then
+            first = .false.
+         else
+            pictur = ' '
+            succes = .false.
+            error  = 'There is an incompatibility between ZZTPATS ' &
             //       'and the room allocated for KNOWN in TPARTV.'
-            RETURN
-         END IF
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     First step is to tokenize the string.  The new representation
 !     is maintained in ZZTIME.  We'll get it later if we need it.
 !
-      RESOLV = ZZTOKNS ( STRING, ERROR )
+      resolv = zztokns ( string, error )
 
-      IF ( .NOT. RESOLV ) THEN
-         SUCCES = .FALSE.
-         NTVEC  =  0
-         TYPE   = ' '
-         PICTUR = ' '
-         RETURN
-      END IF
+      if ( .not. resolv ) then
+         succes = .false.
+         ntvec  =  0
+         type   = ' '
+         pictur = ' '
+         return
+      end if
 
 !
 !     The result of tokenizing the string will be a representation
@@ -863,50 +863,50 @@
 !     into problems later on.  We may introduce some new components
 !     in the process.
 !
-      L2R = .TRUE.
-      R2L = .NOT. L2R
+      l2r = .true.
+      r2l = .not. l2r
 
-      IF ( ZZCMBT ( 'Oi', 'z', L2R ) ) THEN
+      if ( zzcmbt ( 'Oi', 'z', l2r ) ) then
 
-         RESOLV = ZZCMBT( 'z:i', 'Z', L2R )
-         RESOLV = ZZSUBT( 'z',   'Z', L2R )
+         resolv = zzcmbt( 'z:i', 'Z', l2r )
+         resolv = zzsubt( 'z',   'Z', l2r )
 
-      END IF
+      end if
 
-      IF ( ZZCMBT ( 'oi', 'z', L2R ) ) THEN
+      if ( zzcmbt ( 'oi', 'z', l2r ) ) then
 
-         RESOLV = ZZCMBT( 'z:i', 'Z', L2R )
-         RESOLV = ZZSUBT( 'z',   'Z', L2R )
+         resolv = zzcmbt( 'z:i', 'Z', l2r )
+         resolv = zzsubt( 'z',   'Z', l2r )
 
-      END IF
+      end if
 
 !
 !     Next we resolve any months, or weekdays that are followed
 !     by periods.
 !
-      RESOLV = ZZREPT ( 'm.', 'm*', L2R )
-      RESOLV = ZZREPT ( 'w.', 'w*', L2R )
-      RESOLV = ZZREPT ( 'w,', 'w*', L2R )
+      resolv = zzrept ( 'm.', 'm*', l2r )
+      resolv = zzrept ( 'w.', 'w*', l2r )
+      resolv = zzrept ( 'w,', 'w*', l2r )
 
 !
 !     Now convert the right most integer-decimal-point pair to the
 !     number representation.
 !
-      IF      ( ZZCMBT ( 'i.i', 'n', R2L ) ) THEN
+      if      ( zzcmbt ( 'i.i', 'n', r2l ) ) then
 !
 !        We aren't going to do anything here.  We are simply
 !        using the IF-THEN...ELSE IF ... ENDIF  to make sure
 !        we only replace one decimal place.
 !
-      ELSE IF ( ZZCMBT ( 'i.', 'n',  R2L  ) ) THEN
+      else if ( zzcmbt ( 'i.', 'n',  r2l  ) ) then
 !
 !        Same as the previous comment.
 !
-      END IF
+      end if
 !
 !     Remove any white space from the tokenization.
 !
-      RESOLV = ZZREMT ( 'b' )
+      resolv = zzremt ( 'b' )
 
 !
 !     User Custom Formats (this still needs a modicum of work).
@@ -941,47 +941,47 @@
 !     ----------------------------------------------------------------
 !     ================================================================
 !
-      IF ( ZZIST ( 'j' ) ) THEN
+      if ( zzist ( 'j' ) ) then
 !
 !        This is some form of Julian Date. Handle this case
 !        right here and return.
 !
-         RESOLV = ZZREPT ( '[s]', '*s*', L2R )
-         MODS   = MODS .OR. ZZNOTE ( 's', B, E )
+         resolv = zzrept ( '[s]', '*s*', l2r )
+         mods   = mods .or. zznote ( 's', b, e )
 
-         IF ( MODS ) THEN
-            CALL UCASE ( STRING(B:E), MODIFY(SYSTEM) )
-         END IF
+         if ( mods ) then
+            call ucase ( string(b:e), modify(system) )
+         end if
 
-         RESOLV = ZZREPT ( '[j]', '*j*', L2R )
-         RESOLV = ZZREMT ( 'j' )
+         resolv = zzrept ( '[j]', '*j*', l2r )
+         resolv = zzremt ( 'j' )
 
-         IF ( .NOT. ZZIST ( 'n' ) ) THEN
-            RESOLV = ZZSUBT( 'i', 'n', L2R )
-         END IF
+         if ( .not. zzist ( 'n' ) ) then
+            resolv = zzsubt( 'i', 'n', l2r )
+         end if
 
-         RESOLV = ZZCMBT ( '-n',  'n', L2R )
-         RESOLV = ZZSUBT ( 'n',   'J', L2R )
+         resolv = zzcmbt ( '-n',  'n', l2r )
+         resolv = zzsubt ( 'n',   'J', l2r )
 
 
 !
 !        We let ZZUNPK handle the parsing or diagnosis of any problems.
 !
-         SUCCES = ZZUNPCK ( STRING, YABBRV, &
-                            TVEC,   NTVEC, TYPE, PICTUR, ERROR )
+         succes = zzunpck ( string, yabbrv, &
+                            tvec,   ntvec, type, pictur, error )
 
-         IF ( INDEX( PICTUR, 'JULIAND.' ) .GT. 0 ) THEN
-            CALL SUFFIX ( '::RND', 1, PICTUR )
-         END IF
+         if ( index( pictur, 'JULIAND.' ) .gt. 0 ) then
+            call suffix ( '::RND', 1, pictur )
+         end if
 
-         IF ( MODIFY(SYSTEM) .NE. ' ' ) THEN
-            CALL SUFFIX ( '::',           1, PICTUR  )
-            CALL SUFFIX ( MODIFY(SYSTEM), 0, PICTUR  )
-         END IF
+         if ( modify(system) .ne. ' ' ) then
+            call suffix ( '::',           1, pictur  )
+            call suffix ( modify(system), 0, pictur  )
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 
 
@@ -993,25 +993,25 @@
 !
 !     Replace any integers greater than 1000 by Y.
 !
-      B      = 1000
-      E      = INTMAX()
-      RESOLV = ZZVALT ( STRING, B, E, 'Y' )
+      b      = 1000
+      e      = intmax()
+      resolv = zzvalt ( string, b, e, 'Y' )
 
 !
 !     If the ISO time delimiter 't' is present we don't perform
 !     any further simplifications.
 !
-      IF ( ZZIST ( 't' ) ) THEN
+      if ( zzist ( 't' ) ) then
 
-         RESOLV = ZZGREP ( REP )
-         USE    = BSRCHC ( REP, NKNOWN, KNOWN )
+         resolv = zzgrep ( rep )
+         use    = bsrchc ( rep, nknown, known )
 
-         IF ( USE .NE. 0 ) THEN
+         if ( use .ne. 0 ) then
 
-            RESOLV = ZZREPT  ( KNOWN(USE), MEANNG(USE), L2R )
+            resolv = zzrept  ( known(use), meanng(use), l2r )
 
-            SUCCES = ZZUNPCK ( STRING, YABBRV, &
-                               TVEC,   NTVEC, TYPE, PICTUR, ERROR)
+            succes = zzunpck ( string, yabbrv, &
+                               tvec,   ntvec, type, pictur, error)
 
 !
 !           If you tag an ISO as A.D., other logic in the Time
@@ -1021,37 +1021,37 @@
 !            MODIFY(ERA) = 'A.D.'
 !
 
-            IF ( INDEX ( PICTUR, '.#' ) .NE.0 ) THEN
-               CALL SUFFIX ( '::RND', 1, PICTUR )
-            END IF
+            if ( index ( pictur, '.#' ) .ne.0 ) then
+               call suffix ( '::RND', 1, pictur )
+            end if
 
-            IF ( MODIFY(ZONE) .NE. ' ' ) THEN
-               CALL SUFFIX ( '::',         1, PICTUR )
-               CALL SUFFIX ( MODIFY(ZONE), 0, PICTUR )
-            END IF
+            if ( modify(zone) .ne. ' ' ) then
+               call suffix ( '::',         1, pictur )
+               call suffix ( modify(zone), 0, pictur )
+            end if
 
-            IF ( MODIFY(SYSTEM) .NE. ' ' ) THEN
-               CALL SUFFIX ( '::',           1, PICTUR )
-               CALL SUFFIX ( MODIFY(SYSTEM), 0, PICTUR )
-            END IF
+            if ( modify(system) .ne. ' ' ) then
+               call suffix ( '::',           1, pictur )
+               call suffix ( modify(system), 0, pictur )
+            end if
 
-         ELSE
+         else
 
-            SUCCES = .FALSE.
-            NTVEC  =  0
-            MODS   = .FALSE.
-            TYPE   = ' '
-            PICTUR = ' '
+            succes = .false.
+            ntvec  =  0
+            mods   = .false.
+            type   = ' '
+            pictur = ' '
 
-            ERROR  = 'The input string uses the ISO  "T" ' &
+            error  = 'The input string uses the ISO  "T" ' &
             //       'date/time delimiter but does not match any ' &
             //       'of the accepted ISO formats. '
 
-         END IF
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     If we reach this point, either we didn't have any custom
@@ -1063,206 +1063,206 @@
 !     the 3-digit back to 'i'.  (Note 3-digit means value between
 !     100 and 999.  003 is not regarded as a 3 digit number).
 !
-      B      = 100
-      E      = 1000
-      RESOLV = ZZVALT ( STRING, B, E, 'I' )
-      YABBRV = ZZREPT ( '''i', '*Y',  L2R )
+      b      = 100
+      e      = 1000
+      resolv = zzvalt ( string, b, e, 'I' )
+      yabbrv = zzrept ( '''i', '*Y',  l2r )
 
-      DO WHILE ( ZZSUBT ( 'I', 'i', L2R ) )
-         B = B+1
-      END DO
+      do while ( zzsubt ( 'I', 'i', l2r ) )
+         b = b+1
+      end do
 
 
 
 !
 !     Resolve the system, and other text components.
 !
-      RESOLV = ZZREPT ( '[e]', '*e*', L2R )
-      RESOLV = ZZREPT ( '[w]', '*w*', L2R )
-      RESOLV = ZZREPT ( '[N]', '*N*', L2R )
-      RESOLV = ZZREPT ( '[Z]', '*Z*', L2R )
-      RESOLV = ZZREPT ( '[s]', '*s*', L2R )
-      RESOLV = ZZSUBT ( 'ie',  'Ye',  L2R )
+      resolv = zzrept ( '[e]', '*e*', l2r )
+      resolv = zzrept ( '[w]', '*w*', l2r )
+      resolv = zzrept ( '[N]', '*N*', l2r )
+      resolv = zzrept ( '[Z]', '*Z*', l2r )
+      resolv = zzrept ( '[s]', '*s*', l2r )
+      resolv = zzsubt ( 'ie',  'Ye',  l2r )
 !
 !     Note the positions of ERA, WEEKDAY, TIME-ZONE, AMPM marker
 !     and time SYSTEM.
 !
 
-      HAVERA = ZZNOTE ( 'e', BEGS(ERA),    ENDS(ERA)    )
-      HAVWDY = ZZNOTE ( 'w', BEGS(WDAY),   ENDS(WDAY)   )
-      HAVZON = ZZNOTE ( 'Z', BEGS(ZONE),   ENDS(ZONE)   )
-      HAVAPM = ZZNOTE ( 'N', BEGS(AMPM),   ENDS(AMPM)   )
-      HAVSYS = ZZNOTE ( 's', BEGS(SYSTEM), ENDS(SYSTEM) )
+      havera = zznote ( 'e', begs(era),    ends(era)    )
+      havwdy = zznote ( 'w', begs(wday),   ends(wday)   )
+      havzon = zznote ( 'Z', begs(zone),   ends(zone)   )
+      havapm = zznote ( 'N', begs(ampm),   ends(ampm)   )
+      havsys = zznote ( 's', begs(system), ends(system) )
 
-      MODS   = HAVERA .OR. HAVWDY .OR. HAVZON .OR. HAVAPM .OR. HAVSYS
+      mods   = havera .or. havwdy .or. havzon .or. havapm .or. havsys
 
-      IF ( MODS ) THEN
+      if ( mods ) then
 
-         DO I = 1, NMODS
-            IF ( BEGS(I) .NE. 0 ) THEN
-               CALL UCASE( STRING(BEGS(I):ENDS(I)),MODIFY(I))
-            END IF
-         END DO
+         do i = 1, nmods
+            if ( begs(i) .ne. 0 ) then
+               call ucase( string(begs(i):ends(i)),modify(i))
+            end if
+         end do
 
-         IF ( HAVERA ) THEN
-            IF ( MODIFY(ERA)(1:1) .EQ. 'A' ) THEN
-               MODIFY(ERA) = 'A.D.'
-            ELSE
-               MODIFY(ERA) = 'B.C.'
-            END IF
-         END IF
+         if ( havera ) then
+            if ( modify(era)(1:1) .eq. 'A' ) then
+               modify(era) = 'A.D.'
+            else
+               modify(era) = 'B.C.'
+            end if
+         end if
 
-         IF ( HAVAPM ) THEN
-            IF ( MODIFY(AMPM)(1:1) .EQ. 'A' ) THEN
-               MODIFY(AMPM) = 'A.M.'
-            ELSE
-               MODIFY(AMPM) = 'P.M.'
-            END IF
-         END IF
+         if ( havapm ) then
+            if ( modify(ampm)(1:1) .eq. 'A' ) then
+               modify(ampm) = 'A.M.'
+            else
+               modify(ampm) = 'P.M.'
+            end if
+         end if
 
-         MODIFY(WDAY)(4:) = ' '
+         modify(wday)(4:) = ' '
 
-         IF ( HAVZON ) THEN
+         if ( havzon ) then
 
-            MAPTO = ISRCHC ( MODIFY(ZONE), NZONES, ZONES )
+            mapto = isrchc ( modify(zone), nzones, zones )
 
-            IF ( MAPTO .NE. 0 ) THEN
-               MODIFY(ZONE) = OFFSET(MAPTO)
-            END IF
+            if ( mapto .ne. 0 ) then
+               modify(zone) = offset(mapto)
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Try our built in formats without any further substitution.
 !
-      RESOLV = ZZGREP ( REP )
-      USE    = BSRCHC ( REP, NKNOWN, KNOWN )
+      resolv = zzgrep ( rep )
+      use    = bsrchc ( rep, nknown, known )
 
-      IF ( USE .GT. 0 ) THEN
+      if ( use .gt. 0 ) then
 
-         RESOLV = ZZREPT  ( KNOWN(USE),   MEANNG(USE), L2R   )
-         SUCCES = ZZUNPCK ( STRING, YABBRV, &
-                            TVEC,   NTVEC, TYPE, PICTUR, ERROR )
+         resolv = zzrept  ( known(use),   meanng(use), l2r   )
+         succes = zzunpck ( string, yabbrv, &
+                            tvec,   ntvec, type, pictur, error )
 
-         IF ( INDEX ( PICTUR, '.#' ) .NE.0 ) THEN
-            CALL SUFFIX ( '::RND', 1, PICTUR )
-         END IF
+         if ( index ( pictur, '.#' ) .ne.0 ) then
+            call suffix ( '::RND', 1, pictur )
+         end if
 
-         IF ( MODIFY(ZONE) .NE. ' ' ) THEN
-            CALL SUFFIX ( '::',         1, PICTUR )
-            CALL SUFFIX ( MODIFY(ZONE), 0, PICTUR )
-         END IF
+         if ( modify(zone) .ne. ' ' ) then
+            call suffix ( '::',         1, pictur )
+            call suffix ( modify(zone), 0, pictur )
+         end if
 
-         IF ( MODIFY(SYSTEM) .NE. ' ' ) THEN
-            CALL SUFFIX ( '::',           1, PICTUR )
-            CALL SUFFIX ( MODIFY(SYSTEM), 0, PICTUR )
-         END IF
+         if ( modify(system) .ne. ' ' ) then
+            call suffix ( '::',           1, pictur )
+            call suffix ( modify(system), 0, pictur )
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 !
 !     Make sure we don't have a pair of successive delimiters
 !     or a delimiter at either end of the input string.
 !
-      IF (  ZZISPT ( ',/-:d.', FROM, TO ) ) THEN
+      if (  zzispt ( ',/-:d.', from, to ) ) then
 
-         SUCCES = .FALSE.
-         NTVEC  =  0
-         TYPE   = ' '
+         succes = .false.
+         ntvec  =  0
+         type   = ' '
 
 
-         ERROR = STRING
-         CALL ZZINSSUB ( ERROR, '>', TO+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', FROM, ERROR )
-         CALL PREFIX ( 'There are two successive delimiters <#> ' &
+         error = string
+         call zzinssub ( error, '>', to+1, error )
+         call zzinssub ( error, '<', from, error )
+         call prefix ( 'There are two successive delimiters <#> ' &
          //            'in the input string.  This is an ' &
          //            'ambiguous input. '' ', &
-                        0, ERROR)
-         CALL REPMC  ( ERROR, '#', STRING(FROM:TO), ERROR )
-         CALL SUFFIX ( '''', 0, ERROR )
-         PICTUR = ' '
-         RETURN
+                        0, error)
+         call repmc  ( error, '#', string(from:to), error )
+         call suffix ( '''', 0, error )
+         pictur = ' '
+         return
 
-      END IF
+      end if
 
 !
 !     A delimiter hanging at either end of the string shall be
 !     regarded as an error.
 !
-      RESOLV = ZZGREP ( REP )
-      R      = RTRIM  ( REP )
+      resolv = zzgrep ( rep )
+      r      = rtrim  ( rep )
 
-      IF ( INDEX( ',/-:.', REP(1:1) ) .GT. 0 ) THEN
+      if ( index( ',/-:.', rep(1:1) ) .gt. 0 ) then
 
-         RESOLV = ZZSUBT ( REP(1:1), 'Q', L2R )
-         RESOLV = .FALSE.
+         resolv = zzsubt ( rep(1:1), 'Q', l2r )
+         resolv = .false.
 
-      ELSE IF ( INDEX( ',/-:.', REP(R:R) ) .GT. 0 ) THEN
+      else if ( index( ',/-:.', rep(r:r) ) .gt. 0 ) then
 
-         RESOLV = ZZSUBT ( REP(R:R), 'Q', L2R )
-         RESOLV = .FALSE.
+         resolv = zzsubt ( rep(r:r), 'Q', l2r )
+         resolv = .false.
 
-      END IF
+      end if
 
-      IF ( .NOT. RESOLV ) THEN
+      if ( .not. resolv ) then
 
-         RESOLV = ZZNOTE ( 'Q', FROM, TO )
-         ERROR  = STRING
-         CALL ZZINSSUB ( ERROR, '>', TO+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', FROM, ERROR )
-         CALL PREFIX ( 'An unexpected delimiter (''#'') was ' &
+         resolv = zznote ( 'Q', from, to )
+         error  = string
+         call zzinssub ( error, '>', to+1, error )
+         call zzinssub ( error, '<', from, error )
+         call prefix ( 'An unexpected delimiter (''#'') was ' &
          //            'encountered in the input string. '' ', &
-                             0, ERROR )
-         CALL SUFFIX ( '''', 0, ERROR )
-         CALL REPMC  ( ERROR, '#', STRING(FROM:TO), ERROR )
-         PICTUR = ' '
-         SUCCES = .FALSE.
-         RETURN
-      END IF
+                             0, error )
+         call suffix ( '''', 0, error )
+         call repmc  ( error, '#', string(from:to), error )
+         pictur = ' '
+         succes = .false.
+         return
+      end if
 !
 !     We probably made it unscathed through the check above.
 !     Remove delimiters ',', '/', and '-' and retry the built-in
 !     patterns.
 !
-      DELIM(1) = ','
-      DELIM(2) = '-'
-      DELIM(3) = '/'
+      delim(1) = ','
+      delim(2) = '-'
+      delim(3) = '/'
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         RESOLV = ZZREMT ( DELIM(I) )
+         resolv = zzremt ( delim(i) )
 
-         RESOLV = ZZGREP ( REP )
-         USE    = BSRCHC ( REP, NKNOWN, KNOWN )
+         resolv = zzgrep ( rep )
+         use    = bsrchc ( rep, nknown, known )
 
-         IF ( USE .GT. 0 ) THEN
+         if ( use .gt. 0 ) then
 
-            RESOLV = ZZREPT  ( KNOWN(USE),   MEANNG(USE), L2R   )
-            SUCCES = ZZUNPCK ( STRING, YABBRV, &
-                               TVEC,   NTVEC, TYPE, PICTUR, ERROR )
+            resolv = zzrept  ( known(use),   meanng(use), l2r   )
+            succes = zzunpck ( string, yabbrv, &
+                               tvec,   ntvec, type, pictur, error )
 
-            IF ( INDEX ( PICTUR, '.#' ) .NE.0 ) THEN
-               CALL SUFFIX ( '::RND', 1, PICTUR )
-            END IF
+            if ( index ( pictur, '.#' ) .ne.0 ) then
+               call suffix ( '::RND', 1, pictur )
+            end if
 
-            IF ( MODIFY(ZONE) .NE. ' ' ) THEN
-               CALL SUFFIX ( '::',         1, PICTUR )
-               CALL SUFFIX ( MODIFY(ZONE), 0, PICTUR )
-            END IF
+            if ( modify(zone) .ne. ' ' ) then
+               call suffix ( '::',         1, pictur )
+               call suffix ( modify(zone), 0, pictur )
+            end if
 
-            IF ( MODIFY(SYSTEM) .NE. ' ' ) THEN
-               CALL SUFFIX ( '::',           1, PICTUR )
-               CALL SUFFIX ( MODIFY(SYSTEM), 0, PICTUR )
-            END IF
+            if ( modify(system) .ne. ' ' ) then
+               call suffix ( '::',           1, pictur )
+               call suffix ( modify(system), 0, pictur )
+            end if
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we make it to this point, we must have a pretty funky
@@ -1270,92 +1270,92 @@
 !     check them now
 !
 
-      IF      ( ZZNOTE ( 'e', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 's', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 'Z', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 'w', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 'N', B, E ) ) THEN
-      END IF
+      if      ( zznote ( 'e', b, e ) ) then
+      else if ( zznote ( 's', b, e ) ) then
+      else if ( zznote ( 'Z', b, e ) ) then
+      else if ( zznote ( 'w', b, e ) ) then
+      else if ( zznote ( 'N', b, e ) ) then
+      end if
 !
 !     If B is non-zero the item in question is a duplicate
 !     modifier.
 !
-      IF ( B .GT. 0 ) THEN
-         SUCCES = .FALSE.
-         NTVEC  =  0
-         TYPE   = ' '
-         ERROR  =  STRING
+      if ( b .gt. 0 ) then
+         succes = .false.
+         ntvec  =  0
+         type   = ' '
+         error  =  string
 
-         CALL ZZINSSUB ( ERROR, '>', E+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', B,   ERROR )
-         CALL PREFIX ( 'The substring "#" is a duplicate ' &
+         call zzinssub ( error, '>', e+1, error )
+         call zzinssub ( error, '<', b,   error )
+         call prefix ( 'The substring "#" is a duplicate ' &
          //            'modifier of the input string: '' ', &
-                               0,               ERROR )
-         CALL SUFFIX ( '''',   0,               ERROR )
-         CALL REPMC  ( ERROR, '#', STRING(B:E), ERROR )
-         PICTUR = ' '
-         RETURN
-      END IF
+                               0,               error )
+         call suffix ( '''',   0,               error )
+         call repmc  ( error, '#', string(b:e), error )
+         pictur = ' '
+         return
+      end if
 !
 !     Look for unresolved markers
 !
-      IF      ( ZZNOTE ( '[', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( ']', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 'O', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 'o', B, E ) ) THEN
-      ELSE IF ( ZZNOTE ( 'z', B, E ) ) THEN
-      END IF
+      if      ( zznote ( '[', b, e ) ) then
+      else if ( zznote ( ']', b, e ) ) then
+      else if ( zznote ( 'O', b, e ) ) then
+      else if ( zznote ( 'o', b, e ) ) then
+      else if ( zznote ( 'z', b, e ) ) then
+      end if
 
-      IF ( B .GT. 0 ) THEN
+      if ( b .gt. 0 ) then
 
-         SUCCES = .FALSE.
-         NTVEC  =  0
-         TYPE   = ' '
-         ERROR  =  STRING
+         succes = .false.
+         ntvec  =  0
+         type   = ' '
+         error  =  string
 
-         CALL ZZINSSUB ( ERROR, '>', E+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', B,   ERROR )
-         CALL PREFIX ( 'The substring "#" could not ' &
+         call zzinssub ( error, '>', e+1, error )
+         call zzinssub ( error, '<', b,   error )
+         call prefix ( 'The substring "#" could not ' &
          //            'be resolved in the input string: '' ', &
-                               0,               ERROR )
-         CALL SUFFIX ( '''',   0,               ERROR )
-         CALL REPMC  ( ERROR, '#', STRING(B:E), ERROR )
-         PICTUR = ' '
-         RETURN
+                               0,               error )
+         call suffix ( '''',   0,               error )
+         call repmc  ( error, '#', string(b:e), error )
+         pictur = ' '
+         return
 
-      END IF
+      end if
 
-      IF ( ZZIST ( 'm' ) .AND. ZZIST ( 'd' ) ) THEN
+      if ( zzist ( 'm' ) .and. zzist ( 'd' ) ) then
 
-         SUCCES = .FALSE.
-         NTVEC  =  0
-         TYPE   = ' '
-         ERROR  = STRING
-         RESOLV = ZZNOTE ( 'm', B1, E1 )
-         RESOLV = ZZNOTE ( 'd', B2, E2 )
+         succes = .false.
+         ntvec  =  0
+         type   = ' '
+         error  = string
+         resolv = zznote ( 'm', b1, e1 )
+         resolv = zznote ( 'd', b2, e2 )
 
-         B     = MAX(B1, B2)
-         E     = MAX(E1, E2)
+         b     = max(b1, b2)
+         e     = max(e1, e2)
 
-         CALL ZZINSSUB ( ERROR, '>', E+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', B, ERROR )
+         call zzinssub ( error, '>', e+1, error )
+         call zzinssub ( error, '<', b, error )
 
-         B     = MIN(B1, B2)
-         E     = MIN(E1, E2)
+         b     = min(b1, b2)
+         e     = min(e1, e2)
 
-         CALL ZZINSSUB ( ERROR, '>', E+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', B, ERROR )
+         call zzinssub ( error, '>', e+1, error )
+         call zzinssub ( error, '<', b, error )
 
-         CALL PREFIX ( 'Both a month "#" and day of year ' &
+         call prefix ( 'Both a month "#" and day of year ' &
          //            'delimiter "#" appear in the input ' &
-         //            'string: '' ', 0, ERROR )
-         CALL SUFFIX ( '''',          0, ERROR )
-         CALL REPMC  ( ERROR, '#', STRING(B1:E1), ERROR )
-         CALL REPMC  ( ERROR, '#', STRING(B2:E2), ERROR )
-         PICTUR = ' '
-         RETURN
+         //            'string: '' ', 0, error )
+         call suffix ( '''',          0, error )
+         call repmc  ( error, '#', string(b1:e1), error )
+         call repmc  ( error, '#', string(b2:e2), error )
+         pictur = ' '
+         return
 
-      END IF
+      end if
 
 
 
@@ -1363,61 +1363,61 @@
 !     Make the remaining obvious substitutions for hours,
 !     minutes, and seconds
 !
-      IF      ( ZZREPT ( 'i:i:i:n', 'D*H*M*S', R2L ) ) THEN
-      ELSE IF ( ZZREPT ( 'i:i:i:i', 'D*H*M*S', R2L ) ) THEN
-      ELSE IF ( ZZREPT ( 'i:i:n',   'H*M*S',   R2L ) ) THEN
-      ELSE IF ( ZZREPT ( 'i:i:i',   'H*M*S',   R2L ) ) THEN
-      ELSE IF ( ZZREPT ( 'i:n',     'H*M',     R2L ) ) THEN
-      ELSE IF ( ZZREPT ( 'i:i',     'H*M',     R2L ) ) THEN
-      END IF
+      if      ( zzrept ( 'i:i:i:n', 'D*H*M*S', r2l ) ) then
+      else if ( zzrept ( 'i:i:i:i', 'D*H*M*S', r2l ) ) then
+      else if ( zzrept ( 'i:i:n',   'H*M*S',   r2l ) ) then
+      else if ( zzrept ( 'i:i:i',   'H*M*S',   r2l ) ) then
+      else if ( zzrept ( 'i:n',     'H*M',     r2l ) ) then
+      else if ( zzrept ( 'i:i',     'H*M',     r2l ) ) then
+      end if
 
-      RESOLV = ZZREMT ( ':' )
+      resolv = zzremt ( ':' )
 !
 !     Handle the obvious substitutions of an integer next to
 !     a Month.
 !
-      IF      ( ZZSUBT ( '<miiH', 'mDY', L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( '<mi',   'mD',  L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'Siim>', 'SYDm',L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'im>',   'Dm',  L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'miY>',  'mDY', L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'Ymi',   'YmD', L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'Smi',   'SmD', L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'Mmi',   'MmD', L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'imY',   'DmY', L2R ) ) THEN
-      ELSE IF ( ZZSUBT ( 'imH',   'DmH', L2R ) ) THEN
-      ELSE IF ( ZZREPT ( 'Yid',   'Yy*', L2R ) ) THEN
-      ELSE IF ( ZZREPT ( 'iYd',   'yY*', L2R ) ) THEN
-      ELSE IF ( ZZREPT ( 'Ydi',   'Y*y', L2R ) ) THEN
-      END IF
+      if      ( zzsubt ( '<miiH', 'mDY', l2r ) ) then
+      else if ( zzsubt ( '<mi',   'mD',  l2r ) ) then
+      else if ( zzsubt ( 'Siim>', 'SYDm',l2r ) ) then
+      else if ( zzsubt ( 'im>',   'Dm',  l2r ) ) then
+      else if ( zzsubt ( 'miY>',  'mDY', l2r ) ) then
+      else if ( zzsubt ( 'Ymi',   'YmD', l2r ) ) then
+      else if ( zzsubt ( 'Smi',   'SmD', l2r ) ) then
+      else if ( zzsubt ( 'Mmi',   'MmD', l2r ) ) then
+      else if ( zzsubt ( 'imY',   'DmY', l2r ) ) then
+      else if ( zzsubt ( 'imH',   'DmH', l2r ) ) then
+      else if ( zzrept ( 'Yid',   'Yy*', l2r ) ) then
+      else if ( zzrept ( 'iYd',   'yY*', l2r ) ) then
+      else if ( zzrept ( 'Ydi',   'Y*y', l2r ) ) then
+      end if
 
 !
 !     That's it we let ZZUNPCK handle the problem of diagnosing
 !     or decoding the current representation.
 !
 
-      SUCCES = ZZUNPCK ( STRING, YABBRV, &
-                         TVEC,   NTVEC, TYPE, PICTUR, ERROR )
+      succes = zzunpck ( string, yabbrv, &
+                         tvec,   ntvec, type, pictur, error )
 
-      IF ( PICTUR .NE. ' ' ) THEN
+      if ( pictur .ne. ' ' ) then
 
-         IF ( INDEX ( PICTUR, '.#' ) .NE.0 ) THEN
-            CALL SUFFIX ( '::RND', 1, PICTUR )
-         END IF
+         if ( index ( pictur, '.#' ) .ne.0 ) then
+            call suffix ( '::RND', 1, pictur )
+         end if
 
-         IF ( MODIFY(ZONE) .NE. ' ' ) THEN
-            CALL SUFFIX ( '::',         1, PICTUR )
-            CALL SUFFIX ( MODIFY(ZONE), 0, PICTUR )
-         END IF
+         if ( modify(zone) .ne. ' ' ) then
+            call suffix ( '::',         1, pictur )
+            call suffix ( modify(zone), 0, pictur )
+         end if
 
-         IF ( MODIFY(SYSTEM) .NE. ' ' ) THEN
-            CALL SUFFIX ( '::',           1, PICTUR )
-            CALL SUFFIX ( MODIFY(SYSTEM), 0, PICTUR )
-         END IF
+         if ( modify(system) .ne. ' ' ) then
+            call suffix ( '::',           1, pictur )
+            call suffix ( modify(system), 0, pictur )
+         end if
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
-      END
+      end

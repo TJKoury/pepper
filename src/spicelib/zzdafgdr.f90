@@ -1,6 +1,6 @@
 !$Procedure ZZDAFGDR ( Private --- DAF Get Data Record )
 
-      SUBROUTINE ZZDAFGDR ( HANDLE, RECNO, DPREC, FOUND )
+      subroutine zzdafgdr ( handle, recno, dprec, found )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      DOUBLE PRECISION      DPREC  ( * )
-      LOGICAL               FOUND
+      integer               handle
+      integer               recno
+      double precision      dprec  ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -120,100 +120,100 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
 !
-      CHARACTER*(CBFSIZ)    CHRBUF
-      CHARACTER*(FILEN)     FNAME
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(cbfsiz)    chrbuf
+      character*(filen)     fname
+      character*(strsiz)    strbff ( numbff )
+      character*(strsiz)    tmpstr
 
-      DOUBLE PRECISION      DPBUF  ( 128 )
+      double precision      dpbuf  ( 128 )
 
-      INTEGER               I
-      INTEGER               IAMH
-      INTEGER               IARCH
-      INTEGER               IBFF
-      INTEGER               IOSTAT
-      INTEGER               LUN
-      INTEGER               NATBFF
+      integer               i
+      integer               iamh
+      integer               iarch
+      integer               ibff
+      integer               iostat
+      integer               lun
+      integer               natbff
 
-      LOGICAL               FIRST
-      LOGICAL               LOCFND
+      logical               first
+      logical               locfnd
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  NATBFF
-      SAVE                  STRBFF
+      save                  first
+      save                  natbff
+      save                  strbff
 
 !
 !     Data Statements
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  NATBFF / 0      /
+      data                  first  / .true. /
+      data                  natbff / 0      /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDAFGDR' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDAFGDR' )
+      end if
 
 !
 !     Perform some initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Populate STRBFF, the buffer that contains the labels
 !        for each binary file format.
 !
-         DO I = 1, NUMBFF
-            CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-         END DO
+         do i = 1, numbff
+            call zzddhgsd ( 'BFF', i, strbff(i) )
+         end do
 
 !
 !        Fetch the native binary file format and determine its
 !        integer code.
 !
-         CALL ZZPLATFM ( 'FILE_FORMAT', TMPSTR )
-         CALL UCASE    ( TMPSTR,        TMPSTR )
+         call zzplatfm ( 'FILE_FORMAT', tmpstr )
+         call ucase    ( tmpstr,        tmpstr )
 
-         NATBFF = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+         natbff = isrchc ( tmpstr, numbff, strbff )
 
-         IF ( NATBFF .EQ. 0 ) THEN
+         if ( natbff .eq. 0 ) then
 
-            CALL SETMSG ( 'The binary file format, ''#'', is not ' &
+            call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
             //            'This is a serious problem, contact NAIF.'   )
-            CALL ERRCH  ( '#', TMPSTR                                  )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZDAFGDR'                                   )
-            RETURN
+            call errch  ( '#', tmpstr                                  )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZDAFGDR'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Do not perform initialization tasks again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Assume the data record will not be found, until it has been read
 !     from the file, and if necessary, successfully translated.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Retrieve information regarding the file from the handle manager.
@@ -221,74 +221,74 @@
 !     all values passed into handle manager entry points will have
 !     'DAF' as their architecture arguments.
 !
-      CALL ZZDDHNFO ( HANDLE, FNAME, IARCH, IBFF, IAMH, LOCFND )
+      call zzddhnfo ( handle, fname, iarch, ibff, iamh, locfnd )
 
-      IF ( .NOT. LOCFND ) THEN
-         CALL SETMSG ( 'Unable to locate file associated with ' &
+      if ( .not. locfnd ) then
+         call setmsg ( 'Unable to locate file associated with ' &
          //            'HANDLE, #.  The most likely cause of this ' &
          //            'is the file that you are trying to read ' &
          //            'has been closed.'                           )
-         CALL ERRINT ( '#', HANDLE                                  )
-         CALL SIGERR ( 'SPICE(HANDLENOTFOUND)'                      )
-         CALL CHKOUT ( 'ZZDAFGDR'                                   )
-         RETURN
-      END IF
+         call errint ( '#', handle                                  )
+         call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         call chkout ( 'ZZDAFGDR'                                   )
+         return
+      end if
 
 !
 !     Now get a logical unit for the handle.  Check FAILED() in
 !     case an error occurs.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., LUN )
+      call zzddhhlu ( handle, 'DAF', .false., lun )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZDAFGDR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZDAFGDR' )
+         return
+      end if
 
 !
 !     Branch based on whether the binary file format is native
 !     or not.  Only supported formats can be opened by ZZDDHOPN,
 !     so no check of IBFF is required.
 !
-      IF ( IBFF .EQ. NATBFF ) THEN
+      if ( ibff .eq. natbff ) then
 
 !
 !        In the native case, just read the double precision
 !        numbers from the file.
 !
-         READ ( UNIT   = LUN, &
-                REC    = RECNO, &
-                IOSTAT = IOSTAT ) ( DPBUF(I), I = 1, 128 )
+         read ( unit   = lun, &
+                rec    = recno, &
+                iostat = iostat ) ( dpbuf(i), i = 1, 128 )
 
 !
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL CHKOUT ( 'ZZDAFGDR' )
-            RETURN
-         END IF
+         if ( iostat .ne. 0 ) then
+            call chkout ( 'ZZDAFGDR' )
+            return
+         end if
 
 !
 !     Process the non-native binary file format case.
 !
-      ELSE
+      else
 
 !
 !        Read the data record as characters.
 !
-         READ ( UNIT   = LUN, &
-                REC    = RECNO, &
-                IOSTAT = IOSTAT ) CHRBUF
+         read ( unit   = lun, &
+                rec    = recno, &
+                iostat = iostat ) chrbuf
 
 !
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL CHKOUT ( 'ZZDAFGDR' )
-            RETURN
-         END IF
+         if ( iostat .ne. 0 ) then
+            call chkout ( 'ZZDAFGDR' )
+            return
+         end if
 
 !
 !        Translate the data record.  Assume (improperly in the
@@ -299,23 +299,23 @@
 !        the future, updates may be necessary to prevent
 !        processing of garbage data.
 !
-         CALL ZZXLATED ( IBFF, CHRBUF, 128, DPBUF )
+         call zzxlated ( ibff, chrbuf, 128, dpbuf )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDAFGDR' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDAFGDR' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Transfer the DPs to the output argument and return
 !     to the caller.
 !
-      FOUND = .TRUE.
-      CALL MOVED ( DPBUF, 128, DPREC )
+      found = .true.
+      call moved ( dpbuf, 128, dprec )
 
-      CALL CHKOUT( 'ZZDAFGDR' )
-      RETURN
+      call chkout( 'ZZDAFGDR' )
+      return
 
-      END
+      end

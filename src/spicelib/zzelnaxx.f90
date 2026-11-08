@@ -1,6 +1,6 @@
 !$Procedure ZZELNAXX ( ellipse normal axis intercepts )
 
-      SUBROUTINE ZZELNAXX ( A, B, LAT, XXPT, YXPT )
+      subroutine zzelnaxx ( a, b, lat, xxpt, yxpt )
 
 ! $ Abstract
 !
@@ -25,13 +25,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      XXPT
-      DOUBLE PRECISION      YXPT
+      double precision      a
+      double precision      b
+      double precision      lat
+      double precision      xxpt
+      double precision      yxpt
 
 ! $ Brief_I/O
 !
@@ -203,31 +203,31 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      EPT    ( 3 )
-      DOUBLE PRECISION      NORMAL ( 3 )
+      double precision      ept    ( 3 )
+      double precision      normal ( 3 )
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF (  ( A .LE. 0.D0 ) .OR. ( B .LE. 0.D0 )  ) THEN
+      if (  ( a .le. 0.d0 ) .or. ( b .le. 0.d0 )  ) then
 
-         CALL CHKIN  ( 'ZZELNAXX'                             )
-         CALL SETMSG ( 'Semi-axis lengths were A = #; B = #. ' &
+         call chkin  ( 'ZZELNAXX'                             )
+         call setmsg ( 'Semi-axis lengths were A = #; B = #. ' &
          //            'Both must be positive.'               )
-         CALL ERRDP  ( '#',  A                                )
-         CALL ERRDP  ( '#',  B                                )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEAXIS)'               )
-         CALL CHKOUT ( 'ZZELNAXX'                             )
-         RETURN
+         call errdp  ( '#',  a                                )
+         call errdp  ( '#',  b                                )
+         call sigerr ( 'SPICE(NONPOSITIVEAXIS)'               )
+         call chkout ( 'ZZELNAXX'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the point lying on the positive X portion of the ellipsoid
@@ -238,20 +238,20 @@
 !     order to take advantage of existing code. The third coordinates
 !     of all participating vectors will be zero.
 !
-      NORMAL(1) = COS( LAT )
-      NORMAL(2) = SIN( LAT )
-      NORMAL(3) = 0.D0
+      normal(1) = cos( lat )
+      normal(2) = sin( lat )
+      normal(3) = 0.d0
 
-      CALL EDNMPT ( A, B, B, NORMAL, EPT )
+      call ednmpt ( a, b, b, normal, ept )
 
 !
 !     Compute the X-axis and Y-axis intercepts of the line
 !     passing through EPT and parallel to a normal vector
 !     at EPT. Refer to the Particulars above for details.
 !
-      XXPT = (  1.D0 - ( (B/A)**2 )  ) * EPT(1)
+      xxpt = (  1.d0 - ( (b/a)**2 )  ) * ept(1)
 
-      YXPT = (  1.D0 - ( (A/B)**2 )  ) * EPT(2)
+      yxpt = (  1.d0 - ( (a/b)**2 )  ) * ept(2)
 
-      RETURN
-      END
+      return
+      end

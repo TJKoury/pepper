@@ -1,6 +1,6 @@
 !$Procedure EKINSR ( EK, insert record into segment )
 
-      SUBROUTINE EKINSR ( HANDLE, SEGNO, RECNO )
+      subroutine ekinsr ( handle, segno, recno )
 
 ! $ Abstract
 !
@@ -18,18 +18,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekpage.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RECNO
+      integer               handle
+      integer               segno
+      integer               recno
 
 ! $ Brief_I/O
 !
@@ -268,38 +268,38 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               LASTP
-      INTEGER               LASTW
-      INTEGER               MBASE
-      INTEGER               MP
-      INTEGER               NCOLS
-      INTEGER               NLINKS
-      INTEGER               NREC
-      INTEGER               P
-      INTEGER               RECBAS
-      INTEGER               RECPTR ( IPSIZE )
-      INTEGER               ROOM
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               SIZE
+      integer               base
+      integer               coldsc ( cdscsz )
+      integer               lastp
+      integer               lastw
+      integer               mbase
+      integer               mp
+      integer               ncols
+      integer               nlinks
+      integer               nrec
+      integer               p
+      integer               recbas
+      integer               recptr ( ipsize )
+      integer               room
+      integer               segdsc ( sdscsz )
+      integer               size
 
-      LOGICAL               ISSHAD
+      logical               isshad
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKINSR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKINSR' )
+      end if
 
 !
 !     Before trying to actually write anything, do every error
@@ -308,77 +308,77 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKINSR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKINSR' )
+         return
+      end if
 
 !
 !     Look up the integer metadata page and page base for the segment.
 !     Given the base address, we can read the pertinent metadata in
 !     one shot.
 !
-      CALL ZZEKMLOC ( HANDLE,  SEGNO,  MP,  MBASE  )
+      call zzekmloc ( handle,  segno,  mp,  mbase  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKINSR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKINSR' )
+         return
+      end if
 
-      CALL DASRDI ( HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC )
+      call dasrdi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 !
 !     We'll need to know how many columns the segment has in order to
 !     compute the size of the record pointer.  The record pointer
 !     contains DPTBAS items plus two elements for each column.
 !
-      NCOLS  =  SEGDSC ( NCIDX )
-      SIZE   =  DPTBAS + NCOLS
+      ncols  =  segdsc ( ncidx )
+      size   =  dptbas + ncols
 
 !
 !     We're assuming the record pointer can fit on an integer page.
 !     If this is not the case, we've got a bug.
 !
-      IF ( SIZE .GT. IPSIZE ) THEN
+      if ( size .gt. ipsize ) then
 
-         CALL SETMSG ( 'Record pointer requires # integer words; '  // &
+         call setmsg ( 'Record pointer requires # integer words; '  // &
                        'EK software assumes size is <= #.  This is '// &
                        'an EK software bug.  Contact NAIF.'          )
-         CALL ERRINT ( '#',  SIZE                                    )
-         CALL ERRINT ( '#',  IPSIZE                                  )
-         CALL SIGERR ( 'SPICE(BUG)'                                  )
-         CALL CHKOUT ( 'EKINSR'                                      )
-         RETURN
+         call errint ( '#',  size                                    )
+         call errint ( '#',  ipsize                                  )
+         call sigerr ( 'SPICE(BUG)'                                  )
+         call chkout ( 'EKINSR'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the number of records already present.  RECNO must not
 !     exceed this count by more than 1.
 !
-      NREC  =  SEGDSC ( NRIDX )
+      nrec  =  segdsc ( nridx )
 
-      IF (  ( RECNO .LT. 1 ) .OR. ( RECNO .GT. NREC+1 )  ) THEN
+      if (  ( recno .lt. 1 ) .or. ( recno .gt. nrec+1 )  ) then
 
-         CALL SETMSG ( 'Record number = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  RECNO                              )
-         CALL ERRINT ( '#',  NREC+1                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                    )
-         CALL CHKOUT ( 'EKINSR'                                 )
-         RETURN
+         call setmsg ( 'Record number = #; valid range is 1:#.' )
+         call errint ( '#',  recno                              )
+         call errint ( '#',  nrec+1                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                    )
+         call chkout ( 'EKINSR'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the last integer data page and the last word in use in that
 !     page.  If there's enough room, we can store the record pointer
 !     in the current page.
 !
-      LASTP  =  SEGDSC ( LIPIDX )
-      LASTW  =  SEGDSC ( LIWIDX )
-      ROOM   =  IPSIZE - LASTW
+      lastp  =  segdsc ( lipidx )
+      lastw  =  segdsc ( liwidx )
+      room   =  ipsize - lastw
 
 !
 !     Initialize the record pointer:  set the record's status and
@@ -386,69 +386,69 @@
 !     determine the status, we must know whether the parent file is
 !     shadowed.
 !
-      CALL CLEARI ( IPSIZE,                RECPTR )
-      CALL FILLI  ( UNINIT, IPSIZE-DPTBAS, RECPTR )
+      call cleari ( ipsize,                recptr )
+      call filli  ( uninit, ipsize-dptbas, recptr )
 
-      CALL EKSHDW ( HANDLE, ISSHAD )
+      call ekshdw ( handle, isshad )
 
-      IF ( ISSHAD ) THEN
-         RECPTR ( STAIDX )  =  NEW
-      ELSE
-         RECPTR ( STAIDX )  =  OLD
-      END IF
+      if ( isshad ) then
+         recptr ( staidx )  =  new
+      else
+         recptr ( staidx )  =  old
+      end if
 
 !
 !     Find a place to write the record pointer.
 !
-      IF ( SIZE .LE. ROOM ) THEN
+      if ( size .le. room ) then
 !
 !        Just write the record pointer into the current integer page.
 !
-         CALL ZZEKPGBS ( INT, LASTP, BASE )
+         call zzekpgbs ( int, lastp, base )
 
-         RECBAS = BASE + LASTW
+         recbas = base + lastw
 
-         CALL DASUDI ( HANDLE, RECBAS+1, RECBAS+SIZE, RECPTR )
+         call dasudi ( handle, recbas+1, recbas+size, recptr )
 
 !
 !        Update the page's metadata to reflect the addition.  The
 !        page gains a link.
 !
-         CALL DASRDI ( HANDLE, BASE+ILCIDX, BASE+ILCIDX, NLINKS   )
-         CALL DASUDI ( HANDLE, BASE+ILCIDX, BASE+ILCIDX, NLINKS+1 )
+         call dasrdi ( handle, base+ilcidx, base+ilcidx, nlinks   )
+         call dasudi ( handle, base+ilcidx, base+ilcidx, nlinks+1 )
 
 !
 !        The last integer word in use has changed too.
 !
-         SEGDSC ( LIWIDX )  =  SEGDSC ( LIWIDX ) + SIZE
+         segdsc ( liwidx )  =  segdsc ( liwidx ) + size
 
 
-      ELSE
+      else
 !
 !        Allocate an integer page.
 !
-         CALL ZZEKAPS  ( HANDLE, SEGDSC, INT, .FALSE., P, RECBAS )
+         call zzekaps  ( handle, segdsc, int, .false., p, recbas )
 
 !
 !        Write out the record pointer.
 !
-         CALL DASUDI ( HANDLE, RECBAS+1, RECBAS+SIZE, RECPTR )
+         call dasudi ( handle, recbas+1, recbas+size, recptr )
 
 !
 !        Update the page's metadata to reflect the addition.  The
 !        page starts out with one link.
 !
-         CALL DASUDI ( HANDLE, RECBAS+ILCIDX, RECBAS+ILCIDX, 1 )
+         call dasudi ( handle, recbas+ilcidx, recbas+ilcidx, 1 )
 
 !
 !        Update the segment's metadata to reflect the addition of a
 !        data page.  The last page in use is the one we just wrote to.
 !        The last word in use is the last word of the record pointer.
 !
-         SEGDSC ( LIPIDX )  =  P
-         SEGDSC ( LIWIDX )  =  SIZE
+         segdsc ( lipidx )  =  p
+         segdsc ( liwidx )  =  size
 
-      END IF
+      end if
 
 !
 !     Update the segment's metadata to reflect the addition of the
@@ -456,9 +456,9 @@
 !     the data record tree at index RECNO.  The record count gets
 !     incremented.
 !
-      CALL ZZEKTRIN ( HANDLE,  SEGDSC(RTIDX),  RECNO,  RECBAS )
+      call zzektrin ( handle,  segdsc(rtidx),  recno,  recbas )
 
-      SEGDSC ( NRIDX )  =  SEGDSC ( NRIDX ) + 1
+      segdsc ( nridx )  =  segdsc ( nridx ) + 1
 
 !
 !     If the segment is shadowed but no backup segment exists yet, we
@@ -466,14 +466,14 @@
 !     Note that for data additions, the input argument COLDSC is
 !     ignored.
 !
-      CALL ZZEKRBCK ( 'ADD', HANDLE, SEGDSC, COLDSC, RECNO )
+      call zzekrbck ( 'ADD', handle, segdsc, coldsc, recno )
 
 !
 !     Write out the updated segment descriptor.
 !
-      CALL DASUDI ( HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC )
+      call dasudi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 
-      CALL CHKOUT ( 'EKINSR' )
-      RETURN
-      END
+      call chkout ( 'EKINSR' )
+      return
+      end

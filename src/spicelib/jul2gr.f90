@@ -1,6 +1,6 @@
 !$Procedure JUL2GR (Julian to Gregorian Calendar)
 
-      SUBROUTINE JUL2GR (  YEAR, MONTH, DAY, DOY )
+      subroutine jul2gr (  year, month, day, doy )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               YEAR
-      INTEGER               MONTH
-      INTEGER               DAY
-      INTEGER               DOY
+      integer               year
+      integer               month
+      integer               day
+      integer               doy
 
 ! $ Brief_I/O
 !
@@ -218,20 +218,20 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               LSTLTI
+      integer               lstlti
 
 !
 !     Local (in-line) Functions
 !
-      INTEGER               DIVBLE
-      INTEGER               GDOY
-      INTEGER               GDP001
-      INTEGER               GLDAYS
-      INTEGER               GYDAYS
-      INTEGER               JDOY
-      INTEGER               JDP001
-      INTEGER               JLDAYS
-      INTEGER               JYDAYS
+      integer               divble
+      integer               gdoy
+      integer               gdp001
+      integer               gldays
+      integer               gydays
+      integer               jdoy
+      integer               jdp001
+      integer               jldays
+      integer               jydays
 
 !
 !     Local parameters
@@ -239,233 +239,233 @@
 !     We declare the variables that contain the number of days in
 !     400 years (Gregorian), 100 years (Gregorian), 4 years and 1 year.
 !
-      INTEGER               DP400Y
-      PARAMETER           ( DP400Y = 365*400 + 97 )
+      integer               dp400y
+      parameter           ( dp400y = 365*400 + 97 )
 
-      INTEGER               DP100Y
-      PARAMETER           ( DP100Y = 365*100 + 24 )
+      integer               dp100y
+      parameter           ( dp100y = 365*100 + 24 )
 
-      INTEGER               DP4Y
-      PARAMETER           ( DP4Y   = 365*4   + 1  )
+      integer               dp4y
+      parameter           ( dp4y   = 365*4   + 1  )
 
-      INTEGER               DP1Y
-      PARAMETER           ( DP1Y   = 365 )
+      integer               dp1y
+      parameter           ( dp1y   = 365 )
 
 
 !
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      INTEGER               JAN
-      PARAMETER           ( JAN = 31 )
+      integer               jan
+      parameter           ( jan = 31 )
 
-      INTEGER               FEB
-      PARAMETER           ( FEB = 28 )
+      integer               feb
+      parameter           ( feb = 28 )
 
-      INTEGER               MAR
-      PARAMETER           ( MAR = 31 )
+      integer               mar
+      parameter           ( mar = 31 )
 
-      INTEGER               APR
-      PARAMETER           ( APR = 30 )
+      integer               apr
+      parameter           ( apr = 30 )
 
-      INTEGER               MAY
-      PARAMETER           ( MAY = 31 )
+      integer               may
+      parameter           ( may = 31 )
 
-      INTEGER               JUN
-      PARAMETER           ( JUN = 30 )
+      integer               jun
+      parameter           ( jun = 30 )
 
-      INTEGER               JUL
-      PARAMETER           ( JUL = 31 )
+      integer               jul
+      parameter           ( jul = 31 )
 
-      INTEGER               AUG
-      PARAMETER           ( AUG = 31 )
+      integer               aug
+      parameter           ( aug = 31 )
 
-      INTEGER               SEP
-      PARAMETER           ( SEP = 30 )
+      integer               sep
+      parameter           ( sep = 30 )
 
-      INTEGER               OCT
-      PARAMETER           ( OCT = 31 )
+      integer               oct
+      parameter           ( oct = 31 )
 
-      INTEGER               NOV
-      PARAMETER           ( NOV = 30 )
+      integer               nov
+      parameter           ( nov = 30 )
 
-      INTEGER               DEC
-      PARAMETER           ( DEC = 31 )
+      integer               dec
+      parameter           ( dec = 31 )
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      INTEGER               JAN0
-      PARAMETER           ( JAN0 = 0  )
+      integer               jan0
+      parameter           ( jan0 = 0  )
 
-      INTEGER               FEB0
-      PARAMETER           ( FEB0 = JAN + JAN0 )
+      integer               feb0
+      parameter           ( feb0 = jan + jan0 )
 
-      INTEGER               MAR0
-      PARAMETER           ( MAR0 = FEB + FEB0 )
+      integer               mar0
+      parameter           ( mar0 = feb + feb0 )
 
-      INTEGER               APR0
-      PARAMETER           ( APR0 = MAR + MAR0 )
+      integer               apr0
+      parameter           ( apr0 = mar + mar0 )
 
-      INTEGER               MAY0
-      PARAMETER           ( MAY0 = APR + APR0 )
+      integer               may0
+      parameter           ( may0 = apr + apr0 )
 
-      INTEGER               JUN0
-      PARAMETER           ( JUN0 = MAY + MAY0 )
+      integer               jun0
+      parameter           ( jun0 = may + may0 )
 
-      INTEGER               JUL0
-      PARAMETER           ( JUL0 = JUN + JUN0 )
+      integer               jul0
+      parameter           ( jul0 = jun + jun0 )
 
-      INTEGER               AUG0
-      PARAMETER           ( AUG0 = JUL + JUL0 )
+      integer               aug0
+      parameter           ( aug0 = jul + jul0 )
 
-      INTEGER               SEP0
-      PARAMETER           ( SEP0 = AUG + AUG0 )
+      integer               sep0
+      parameter           ( sep0 = aug + aug0 )
 
-      INTEGER               OCT0
-      PARAMETER           ( OCT0 = SEP + SEP0 )
+      integer               oct0
+      parameter           ( oct0 = sep + sep0 )
 
-      INTEGER               NOV0
-      PARAMETER           ( NOV0 = OCT + OCT0 )
+      integer               nov0
+      parameter           ( nov0 = oct + oct0 )
 
-      INTEGER               DEC0
-      PARAMETER           ( DEC0 = NOV + NOV0 )
+      integer               dec0
+      parameter           ( dec0 = nov + nov0 )
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      INTEGER               JANL0
-      PARAMETER           ( JANL0 = JAN0  )
+      integer               janl0
+      parameter           ( janl0 = jan0  )
 
-      INTEGER               FEBL0
-      PARAMETER           ( FEBL0 = FEB0 )
+      integer               febl0
+      parameter           ( febl0 = feb0 )
 
-      INTEGER               MARL0
-      PARAMETER           ( MARL0 = MAR0 + 1 )
+      integer               marl0
+      parameter           ( marl0 = mar0 + 1 )
 
-      INTEGER               APRL0
-      PARAMETER           ( APRL0 = APR0 + 1 )
+      integer               aprl0
+      parameter           ( aprl0 = apr0 + 1 )
 
-      INTEGER               MAYL0
-      PARAMETER           ( MAYL0 = MAY0 + 1 )
+      integer               mayl0
+      parameter           ( mayl0 = may0 + 1 )
 
-      INTEGER               JUNL0
-      PARAMETER           ( JUNL0 = JUN0 + 1 )
+      integer               junl0
+      parameter           ( junl0 = jun0 + 1 )
 
-      INTEGER               JULL0
-      PARAMETER           ( JULL0 = JUL0 + 1 )
+      integer               jull0
+      parameter           ( jull0 = jul0 + 1 )
 
-      INTEGER               AUGL0
-      PARAMETER           ( AUGL0 = AUG0 + 1 )
+      integer               augl0
+      parameter           ( augl0 = aug0 + 1 )
 
-      INTEGER               SEPL0
-      PARAMETER           ( SEPL0 = SEP0 + 1 )
+      integer               sepl0
+      parameter           ( sepl0 = sep0 + 1 )
 
-      INTEGER               OCTL0
-      PARAMETER           ( OCTL0 = OCT0 + 1 )
+      integer               octl0
+      parameter           ( octl0 = oct0 + 1 )
 
-      INTEGER               NOVL0
-      PARAMETER           ( NOVL0 = NOV0 + 1 )
+      integer               novl0
+      parameter           ( novl0 = nov0 + 1 )
 
-      INTEGER               DECL0
-      PARAMETER           ( DECL0 = DEC0 + 1 )
+      integer               decl0
+      parameter           ( decl0 = dec0 + 1 )
 
 
 !
 !     Local variables
 !
-      INTEGER               DAYG
-      INTEGER               DAYJ
-      INTEGER               DOFYR
-      INTEGER               DY
-      INTEGER               M
-      INTEGER               M100
-      INTEGER               M4
-      INTEGER               M400
-      INTEGER               MON
-      INTEGER               OFFSET
-      INTEGER               OFFSTG
-      INTEGER               OFFSTJ
-      INTEGER               RDAYG
-      INTEGER               RDAYJ
-      INTEGER               TMPDAY
-      INTEGER               TMPYR
-      INTEGER               YR
-      INTEGER               YROFF
+      integer               dayg
+      integer               dayj
+      integer               dofyr
+      integer               dy
+      integer               m
+      integer               m100
+      integer               m4
+      integer               m400
+      integer               mon
+      integer               offset
+      integer               offstg
+      integer               offstj
+      integer               rdayg
+      integer               rdayj
+      integer               tmpday
+      integer               tmpyr
+      integer               yr
+      integer               yroff
 
 !
 !     The array EXTRA contains the number of additional days that
 !     appear before the first of a month during a leap year (as opposed
 !     to a non-leap year).
 !
-      INTEGER               EXTRA  ( 12 )
-      INTEGER               DPBEGL ( 12 )
+      integer               extra  ( 12 )
+      integer               dpbegl ( 12 )
 
 !
 !     DPJAN0(I) gives the number of days that occur before the I'th
 !     month of a normal year.
 !
-      INTEGER               DPJAN0 ( 12 )
+      integer               dpjan0 ( 12 )
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
-      DATA                  EXTRA   /  0,     0,     1,     1, &
+      data                  extra   /  0,     0,     1,     1, &
                                        1,     1,     1,     1, &
                                        1,     1,     1,     1    /
 
-      DATA                  DPJAN0  /  JAN0,  FEB0,  MAR0,  APR0, &
-                                       MAY0,  JUN0,  JUL0,  AUG0, &
-                                       SEP0,  OCT0,  NOV0,  DEC0 /
+      data                  dpjan0  /  jan0,  feb0,  mar0,  apr0, &
+                                       may0,  jun0,  jul0,  aug0, &
+                                       sep0,  oct0,  nov0,  dec0 /
 
-      DATA                  DPBEGL  /  JANL0, FEBL0, MARL0, APRL0, &
-                                       MAYL0, JUNL0, JULL0, AUGL0, &
-                                       SEPL0, OCTL0, NOVL0, DECL0 /
+      data                  dpbegl  /  janl0, febl0, marl0, aprl0, &
+                                       mayl0, junl0, jull0, augl0, &
+                                       sepl0, octl0, novl0, decl0 /
 !
 !     Definitions of statement functions.
 !
 !     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
 !     to Jan 1 of YR is given by:
 !
-      GYDAYS(YR) = 365*( YR-1) &
-                   +   ((YR-1)/4) &
-                   -   ((YR-1)/100) &
-                   +   ((YR-1)/400)
+      gydays(yr) = 365*( yr-1) &
+                   +   ((yr-1)/4) &
+                   -   ((yr-1)/100) &
+                   +   ((yr-1)/400)
 
 !
 !     The number of days elapsed since Julian Jan 1, of year 1 A.D.
 !     to Jan 1 of YR is given by:
 !
-      JYDAYS(YR) = 365*(YR-1) &
-                   +  ((YR-1)/4)
+      jydays(yr) = 365*(yr-1) &
+                   +  ((yr-1)/4)
 
 !
 !     Return 1 if YR is divisible by M, otherwise return 0.
 !
-      DIVBLE(YR,M) = MAX ( 0, 1 + ((IABS(YR)/M)*M) - IABS(YR) )
+      divble(yr,m) = max ( 0, 1 + ((iabs(yr)/m)*m) - iabs(yr) )
 
 !
 !     The number of leap days in a Gregorian year is given by:
 !
-      GLDAYS(YR) = DIVBLE( YR, 4   ) &
-                 - DIVBLE( YR, 100 ) &
-                 + DIVBLE( YR, 400 )
+      gldays(yr) = divble( yr, 4   ) &
+                 - divble( yr, 100 ) &
+                 + divble( yr, 400 )
 
 !
 !     The number of leap days in a Julian year is given by:
 !
-      JLDAYS(YR) = DIVBLE( YR, 4   )
+      jldays(yr) = divble( yr, 4   )
 
 !
 !     To compute the day of the year we
@@ -477,26 +477,26 @@
 !
 !        add on the number of days into the month
 !
-      GDOY(YR,MON,DY) = DPJAN0 ( MON ) &
-                      + EXTRA  ( MON ) * GLDAYS(YR) &
-                      + DY
+      gdoy(yr,mon,dy) = dpjan0 ( mon ) &
+                      + extra  ( mon ) * gldays(yr) &
+                      + dy
 
-      JDOY(YR,MON,DY) = DPJAN0 ( MON ) &
-                      + EXTRA  ( MON ) * JLDAYS(YR) &
-                      + DY
+      jdoy(yr,mon,dy) = dpjan0 ( mon ) &
+                      + extra  ( mon ) * jldays(yr) &
+                      + dy
 
 !
 !     The number of days since 1 Jan 1 A.D. (Gregorian) is given by:
 !
-      GDP001(YR,MON,DY) = GYDAYS(YR) &
-                        + GDOY  (YR, MON, DY) &
+      gdp001(yr,mon,dy) = gydays(yr) &
+                        + gdoy  (yr, mon, dy) &
                         - 1
 
 !
 !     The number of days since 1 Jan 1 A.D. (Julianis given by:
 !
-      JDP001(YR,MON,DY) = JYDAYS(YR) &
-                        + JDOY  (YR, MON, DY) &
+      jdp001(yr,mon,dy) = jydays(yr) &
+                        + jdoy  (yr, mon, dy) &
                         - 1
 
 !
@@ -512,50 +512,50 @@
 !     OFFSTJ and OFFSTG are just the offset from one count of days
 !     to the other.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-         RDAYG  = GDP001 ( 1582, 10, 15 )
-         RDAYJ  = JDP001 ( 1582, 10,  5 )
-         OFFSTJ = RDAYJ - RDAYG
-         OFFSTG = RDAYG - RDAYJ
+         rdayg  = gdp001 ( 1582, 10, 15 )
+         rdayj  = jdp001 ( 1582, 10,  5 )
+         offstj = rdayj - rdayg
+         offstg = rdayg - rdayj
 
-      END IF
+      end if
 
 !
 !     Make local copies of the year, month and day.  Then get the
 !     YEARs into a positive range.
 !
-      CALL RMAINI ( MONTH-1, 12, YROFF, MON )
+      call rmaini ( month-1, 12, yroff, mon )
 
-      YR  = YEAR + YROFF
-      MON = MON + 1
-      DY  = DAY
+      yr  = year + yroff
+      mon = mon + 1
+      dy  = day
 
-      IF ( YR .LE. 0 ) THEN
+      if ( yr .le. 0 ) then
 
-         CALL RMAINI ( YR, 4, M4, TMPYR )
-         YR = TMPYR
+         call rmaini ( yr, 4, m4, tmpyr )
+         yr = tmpyr
 
-         IF ( YR .EQ. 0 ) THEN
-            YR = YR + 4
-            M4   = M4   - 1
-         END IF
+         if ( yr .eq. 0 ) then
+            yr = yr + 4
+            m4   = m4   - 1
+         end if
 
-         OFFSET = M4 * DP4Y
+         offset = m4 * dp4y
 
-      ELSE
+      else
 
-         OFFSET = 0
+         offset = 0
 
-      END IF
+      end if
 
 !
 !     First get the day number (Julian) for the input
 !     year month and day.
 !
-      DAYJ = JDP001 ( YR, MON, DY  ) + OFFSET
+      dayj = jdp001 ( yr, mon, dy  ) + offset
 
 !
 !     This day is DAYJ - RDAYJ days after 1582 Oct 5 on the
@@ -564,56 +564,56 @@
 !     So the Gregorian day number is DAYJ - RDAYJ + RDAYG
 !     which is the same as DAYJ + OFFSTG.
 !
-      DAYG = DAYJ + OFFSTG
+      dayg = dayj + offstg
 !
 !     Now that we have the Gregorian day number it's a fairly
 !     straight forward task to get the year, month and day
 !     on the Gregorian calendar.
 !
 
-      CALL RMAINI ( DAYG, DP400Y, M400, TMPDAY )
-      DAYG = TMPDAY
+      call rmaini ( dayg, dp400y, m400, tmpday )
+      dayg = tmpday
 
-      M100 = MIN ( 3, DAYG/DP100Y )
-      DAYG = DAYG -   M100*DP100Y
+      m100 = min ( 3, dayg/dp100y )
+      dayg = dayg -   m100*dp100y
 
-      M4   = MIN ( 24, DAYG/DP4Y  )
-      DAYG = DAYG  -     M4*DP4Y
+      m4   = min ( 24, dayg/dp4y  )
+      dayg = dayg  -     m4*dp4y
 
-      M    = MIN (  3, DAYG/DP1Y )
-      DAYG = DAYG   -     M*DP1Y
+      m    = min (  3, dayg/dp1y )
+      dayg = dayg   -     m*dp1y
 
 
-      DOFYR  = DAYG + 1
-      YR     = 400 * M400 &
-             + 100 * M100 &
-             +   4 * M4 &
-             +       M &
+      dofyr  = dayg + 1
+      yr     = 400 * m400 &
+             + 100 * m100 &
+             +   4 * m4 &
+             +       m &
              +       1
 
 !
 !     Now look up the month number and compute the day of the month.
 !     How we do this depends on whether or not this is a leap year.
 !
-      IF ( GLDAYS(YR) .EQ. 0 ) THEN
-         MON  = LSTLTI ( DOFYR, 12, DPJAN0 )
-         DY   = DOFYR  -            DPJAN0(MON)
-      ELSE
-         MON  = LSTLTI ( DOFYR, 12, DPBEGL )
-         DY   = DOFYR  -            DPBEGL(MON)
-      END IF
+      if ( gldays(yr) .eq. 0 ) then
+         mon  = lstlti ( dofyr, 12, dpjan0 )
+         dy   = dofyr  -            dpjan0(mon)
+      else
+         mon  = lstlti ( dofyr, 12, dpbegl )
+         dy   = dofyr  -            dpbegl(mon)
+      end if
 
-      YEAR  = YR
-      MONTH = MON
-      DAY   = DY
-      DOY   = DOFYR
+      year  = yr
+      month = mon
+      day   = dy
+      doy   = dofyr
 
-      RETURN
+      return
 
 
 !$Procedure GR2JUL (Gregorian to Julian Calendar)
 
-      ENTRY GR2JUL (  YEAR, MONTH, DAY, DOY )
+      entry gr2jul (  year, month, day, doy )
 
 ! $ Abstract
 !
@@ -808,49 +808,49 @@
 !     OFFSTJ and OFFSTG are just the offset from one count of days
 !     to the other.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-         RDAYG  = GDP001 ( 1582, 10, 15 )
-         RDAYJ  = JDP001 ( 1582, 10,  5 )
-         OFFSTJ = RDAYJ - RDAYG
-         OFFSTG = RDAYG - RDAYJ
+         rdayg  = gdp001 ( 1582, 10, 15 )
+         rdayj  = jdp001 ( 1582, 10,  5 )
+         offstj = rdayj - rdayg
+         offstg = rdayg - rdayj
 
-      END IF
+      end if
 !
 !     Make Local Copies of YEAR, MONTH and DAY and get YEAR into
 !     a positive range.
 !
-      CALL RMAINI ( MONTH-1, 12, YROFF, MON )
+      call rmaini ( month-1, 12, yroff, mon )
 
-      YR  = YEAR + YROFF
-      MON = MON  + 1
-      DY  = DAY
+      yr  = year + yroff
+      mon = mon  + 1
+      dy  = day
 
-      IF ( YR .LE. 0 ) THEN
+      if ( yr .le. 0 ) then
 
-         CALL RMAINI ( YR, 400, M400, TMPYR )
-         YR = TMPYR
+         call rmaini ( yr, 400, m400, tmpyr )
+         yr = tmpyr
 
-         IF ( YR .EQ. 0 ) THEN
-            YR   = YR + 400
-            M400 = M400 - 1
-         END IF
+         if ( yr .eq. 0 ) then
+            yr   = yr + 400
+            m400 = m400 - 1
+         end if
 
-         OFFSET = M400 * DP400Y
+         offset = m400 * dp400y
 
-      ELSE
+      else
 
-         OFFSET = 0
+         offset = 0
 
-      END IF
+      end if
 
 !
 !     First get the day number (Gregorian) for the input
 !     year month and day.
 !
-      DAYG = GDP001 ( YR, MON, DY  ) + OFFSET
+      dayg = gdp001 ( yr, mon, dy  ) + offset
 
 !
 !     This day is DAYG - RDAYG days after 1582 Oct 15 on the
@@ -859,41 +859,41 @@
 !     So the Julian day number is DAYG - RDAYG + RDAYJ
 !     which is the same as DAYG + OFFSTJ.
 !
-      DAYJ = DAYG + OFFSTJ
+      dayj = dayg + offstj
 !
 !     Now that we have the Julian day number it's a fairly
 !     straight forward task to get the year, month and day
 !     on the Julian calendar.
 !
 
-      CALL RMAINI ( DAYJ, DP4Y,  M4,  TMPDAY )
-      DAYJ = TMPDAY
+      call rmaini ( dayj, dp4y,  m4,  tmpday )
+      dayj = tmpday
 
-      M    = MIN ( 3, DAYJ/DP1Y )
-      DAYJ = DAYJ -      M*DP1Y
+      m    = min ( 3, dayj/dp1y )
+      dayj = dayj -      m*dp1y
 
 
-      DOFYR  = DAYJ + 1
-      YR     = 4 * M4 &
-             +     M &
+      dofyr  = dayj + 1
+      yr     = 4 * m4 &
+             +     m &
              +     1
 
 !
 !     Now look up the month number and compute the day of the month.
 !     How we do this depends on whether or not this is a leap year.
 !
-      IF ( JLDAYS(YR) .EQ. 0 ) THEN
-         MON  = LSTLTI ( DOFYR, 12, DPJAN0 )
-         DY   = DOFYR  -            DPJAN0(MON)
-      ELSE
-         MON  = LSTLTI ( DOFYR, 12, DPBEGL )
-         DY   = DOFYR  -            DPBEGL(MON)
-      END IF
+      if ( jldays(yr) .eq. 0 ) then
+         mon  = lstlti ( dofyr, 12, dpjan0 )
+         dy   = dofyr  -            dpjan0(mon)
+      else
+         mon  = lstlti ( dofyr, 12, dpbegl )
+         dy   = dofyr  -            dpbegl(mon)
+      end if
 
-      YEAR    = YR
-      MONTH   = MON
-      DAY     = DY
-      DOY     = DOFYR
+      year    = yr
+      month   = mon
+      day     = dy
+      doy     = dofyr
 
-      RETURN
-      END
+      return
+      end

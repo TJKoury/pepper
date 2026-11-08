@@ -1,6 +1,6 @@
 !$Procedure DAFRA ( DAF, Re-order arrays )
 
-      SUBROUTINE DAFRA ( HANDLE, IORDER, N )
+      subroutine dafra ( handle, iorder, n )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               IORDER ( * )
-      INTEGER               N
+      integer               handle
+      integer               iorder ( * )
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -173,91 +173,91 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               ISORDV
-      LOGICAL               RETURN
+      logical               failed
+      logical               isordv
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 1000 )
+      integer               namlen
+      parameter           ( namlen = 1000 )
 
-      INTEGER               SUMLEN
-      PARAMETER           ( SUMLEN =  128 )
+      integer               sumlen
+      parameter           ( sumlen =  128 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NAMLEN)    HOLDN
-      CHARACTER*(NAMLEN)    TEMPN
+      character*(namlen)    holdn
+      character*(namlen)    tempn
 
-      DOUBLE PRECISION      HOLDS    ( SUMLEN )
-      DOUBLE PRECISION      TEMPS    ( SUMLEN )
+      double precision      holds    ( sumlen )
+      double precision      temps    ( sumlen )
 
-      INTEGER               HOLD
-      INTEGER               I
-      INTEGER               INDEX
-      INTEGER               START
-      INTEGER               TOTAL
+      integer               hold
+      integer               i
+      integer               index
+      integer               start
+      integer               total
 
-      LOGICAL               FOUND
+      logical               found
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFRA' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFRA' )
+      end if
 
 !
 !     If the order vector has fewer than two elements, don't bother.
 !
-      IF ( N .LT. 2 ) THEN
-        CALL CHKOUT ( 'DAFRA' )
-        RETURN
-      END IF
+      if ( n .lt. 2 ) then
+        call chkout ( 'DAFRA' )
+        return
+      end if
 
 !
 !     If IORDER is not an order vector, complain.
 !
-      IF ( .NOT. ISORDV ( IORDER, N ) ) THEN
-         CALL SETMSG ( 'Sorry, IORDER is not an order vector.' )
-         CALL SIGERR ( 'SPICE(DISORDER)' )
-         CALL CHKOUT ( 'DAFRA' )
-         RETURN
-      END IF
+      if ( .not. isordv ( iorder, n ) ) then
+         call setmsg ( 'Sorry, IORDER is not an order vector.' )
+         call sigerr ( 'SPICE(DISORDER)' )
+         call chkout ( 'DAFRA' )
+         return
+      end if
 
 !
 !     If the number of arrays to be moved exceeds the number of
 !     arrays in the file, complain.
 !
-      TOTAL = 0
+      total = 0
 
-      CALL DAFBFS ( HANDLE )
-      CALL DAFFNA ( FOUND  )
+      call dafbfs ( handle )
+      call daffna ( found  )
 
-      DO WHILE ( FOUND  .AND.  ( .NOT. FAILED() ) )
-         TOTAL = TOTAL + 1
-         CALL DAFFNA ( FOUND )
-      END DO
+      do while ( found  .and.  ( .not. failed() ) )
+         total = total + 1
+         call daffna ( found )
+      end do
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFRA' )
-         RETURN
+      if ( failed() ) then
+         call chkout ( 'DAFRA' )
+         return
 
-      ELSE IF ( TOTAL .LT. N ) THEN
-         CALL SETMSG ( 'N (#) exceeds number of arrays (#).' )
-         CALL ERRINT ( '#', N )
-         CALL ERRINT ( '#', TOTAL )
-         CALL SIGERR ( 'SPICE(DISARRAY)' )
-         CALL CHKOUT ( 'DAFRA' )
-         RETURN
-      END IF
+      else if ( total .lt. n ) then
+         call setmsg ( 'N (#) exceeds number of arrays (#).' )
+         call errint ( '#', n )
+         call errint ( '#', total )
+         call sigerr ( 'SPICE(DISARRAY)' )
+         call chkout ( 'DAFRA' )
+         return
+      end if
 
 
 
@@ -277,26 +277,26 @@
 !           guy who began the current cycle; and one to hold the guy
 !           being moved from location HOLD to location INDEX.
 !
-      START = 1
+      start = 1
 
-      DO WHILE ( ( START .LT. N )  .AND.  ( .NOT. FAILED() ) )
+      do while ( ( start .lt. n )  .and.  ( .not. failed() ) )
 
 !
 !        Start the cycle. One guy (pair of summary and name record)
 !        has to sit out (in HOLDS and HOLDN) until the end of the cycle
 !        is reached.
 !
-         INDEX = START
-         HOLD  = IORDER(INDEX)
+         index = start
+         hold  = iorder(index)
 
-         CALL DAFBFS ( HANDLE )
+         call dafbfs ( handle )
 
-         DO I = 1, INDEX
-            CALL DAFFNA ( FOUND )
-         END DO
+         do i = 1, index
+            call daffna ( found )
+         end do
 
-         CALL DAFGS ( HOLDS )
-         CALL DAFGN ( HOLDN )
+         call dafgs ( holds )
+         call dafgn ( holdn )
 
 !
 !        Move guys from HOLD to INDEX; then update HOLD (to point
@@ -306,76 +306,76 @@
 !        Keep going until HOLD points to the first guy moved during
 !        the current cycle. This ends the cycle.
 !
-         DO WHILE ( HOLD .NE. START )
+         do while ( hold .ne. start )
 
 !
 !           Get the guy in position HOLD.
 !
-            CALL DAFBFS ( HANDLE )
+            call dafbfs ( handle )
 
-            DO I = 1, HOLD
-               CALL DAFFNA ( FOUND )
-            END DO
+            do i = 1, hold
+               call daffna ( found )
+            end do
 
-            CALL DAFGS ( TEMPS )
-            CALL DAFGN ( TEMPN )
+            call dafgs ( temps )
+            call dafgn ( tempn )
 
 !
 !           Move him to position INDEX. (Note that DAFWS is used to
 !           update the summary instead of DAFRS, because the addresses
 !           are actually being changed.)
 !
-            CALL DAFBFS ( HANDLE )
+            call dafbfs ( handle )
 
-            DO I = 1, INDEX
-               CALL DAFFNA ( FOUND )
-            END DO
+            do i = 1, index
+               call daffna ( found )
+            end do
 
-            CALL DAFWS ( TEMPS )
-            CALL DAFRN ( TEMPN )
+            call dafws ( temps )
+            call dafrn ( tempn )
 
 !
 !           Update HOLD and INDEX.
 !
-            INDEX              =  HOLD
-            HOLD               =  IORDER(HOLD)
-            IORDER(INDEX)      = -IORDER(INDEX)
+            index              =  hold
+            hold               =  iorder(hold)
+            iorder(index)      = -iorder(index)
 
-         END DO
+         end do
 
 !
 !        The last element in the cycle is restored from TEMP.
 !
-         CALL DAFBFS ( HANDLE )
+         call dafbfs ( handle )
 
-         DO I = 1, INDEX
-            CALL DAFFNA ( FOUND )
-         END DO
+         do i = 1, index
+            call daffna ( found )
+         end do
 
-         CALL DAFWS ( HOLDS )
-         CALL DAFRN ( HOLDN )
+         call dafws ( holds )
+         call dafrn ( holdn )
 
-         IORDER(HOLD) = -IORDER(HOLD)
+         iorder(hold) = -iorder(hold)
 
 !
 !        Begin the next cycle at the next element in the order
 !        vector with a positive sign. (That is, the next one
 !        that hasn't been moved.)
 !
-         DO WHILE ( IORDER(START) .LT. 0  .AND.  START .LT. N )
-            START = START + 1
-         END DO
+         do while ( iorder(start) .lt. 0  .and.  start .lt. n )
+            start = start + 1
+         end do
 
-      END DO
+      end do
 
 !
 !     Restore the original signs of the elements of the order
 !     vector, for the next go around.
 !
-      DO INDEX = 1, N
-        IORDER(INDEX) = IABS ( IORDER(INDEX) )
-      END DO
+      do index = 1, n
+        iorder(index) = iabs ( iorder(index) )
+      end do
 
-      CALL CHKOUT ( 'DAFRA' )
-      RETURN
-      END
+      call chkout ( 'DAFRA' )
+      return
+      end

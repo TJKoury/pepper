@@ -1,6 +1,6 @@
 !$Procedure SPKR02 ( SPK, read record from segment, type 2 )
 
-      SUBROUTINE SPKR02 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr02 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -191,41 +191,41 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      DC       (   2 )
-      DOUBLE PRECISION      INIT
-      DOUBLE PRECISION      INTLEN
+      double precision      dc       (   2 )
+      double precision      init
+      double precision      intlen
 
-      INTEGER               IC       (   6 )
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               RECSIZ
-      INTEGER               NREC
-      INTEGER               RECNO
-      INTEGER               RECADR
+      integer               ic       (   6 )
+      integer               begin
+      integer               end
+      integer               recsiz
+      integer               nrec
+      integer               recno
+      integer               recadr
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKR02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKR02' )
+      end if
 
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      BEGIN = IC( 5 )
-      END   = IC( 6 )
+      begin = ic( 5 )
+      end   = ic( 6 )
 
 !
 !     The segment is made up of a number of logical records, each
@@ -237,27 +237,27 @@
 !     are located at the end of the segment, along with the size of
 !     each logical record and the total number of records.
 !
-      CALL DAFGDA ( HANDLE, END-3, END, RECORD )
+      call dafgda ( handle, end-3, end, record )
 
-      INIT   = RECORD( 1 )
-      INTLEN = RECORD( 2 )
-      RECSIZ = INT( RECORD( 3 ) )
-      NREC   = INT( RECORD( 4 ) )
+      init   = record( 1 )
+      intlen = record( 2 )
+      recsiz = int( record( 3 ) )
+      nrec   = int( record( 4 ) )
 
-      RECNO = INT( (ET - INIT) / INTLEN ) + 1
-      RECNO = MIN( RECNO, NREC )
+      recno = int( (et - init) / intlen ) + 1
+      recno = min( recno, nrec )
 
 !
 !     Compute the address of the desired record.
 !
-      RECADR = ( RECNO - 1 )*RECSIZ + BEGIN
+      recadr = ( recno - 1 )*recsiz + begin
 
 !
 !     Along with the record, return the size of the record.
 !
-      RECORD( 1 ) = RECORD( 3 )
-      CALL DAFGDA ( HANDLE, RECADR, RECADR + RECSIZ - 1, RECORD( 2 ) )
+      record( 1 ) = record( 3 )
+      call dafgda ( handle, recadr, recadr + recsiz - 1, record( 2 ) )
 
-      CALL CHKOUT ( 'SPKR02' )
-      RETURN
-      END
+      call chkout ( 'SPKR02' )
+      return
+      end

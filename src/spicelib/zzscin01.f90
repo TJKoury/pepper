@@ -1,7 +1,7 @@
 !$Procedure ZZSCIN01 ( Private, SCLK database initialization, type 01 )
 
-      SUBROUTINE ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, &
-                            DPFREE, IFREE,  PRVSC  )
+      subroutine zzscin01 ( hdsclk, scpool, clklst, &
+                            dpfree, ifree,  prvsc  )
 
 ! $ Abstract
 !
@@ -21,16 +21,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsc01.inc'
+      include 'zzsc01.inc'
 
-      INTEGER               HDSCLK ( * )
-      INTEGER               SCPOOL ( LBSNGL : * )
-      INTEGER               CLKLST ( * )
-      INTEGER               DPFREE
-      INTEGER               IFREE
-      INTEGER               PRVSC
+      integer               hdsclk ( * )
+      integer               scpool ( lbsngl : * )
+      integer               clklst ( * )
+      integer               dpfree
+      integer               ifree
+      integer               prvsc
 
 ! $ Brief_I/O
 !
@@ -137,12 +137,12 @@
 !     ZZHSIINI won't signal an error as long as the parameter MXNCLK
 !     is positive, so we don't check FAILED here.
 !
-      CALL ZZHSIINI ( MXNCLK, HDSCLK, SCPOOL )
-      CALL CLEARI   ( MXNCLK, CLKLST         )
+      call zzhsiini ( mxnclk, hdsclk, scpool )
+      call cleari   ( mxnclk, clklst         )
 
-      DPFREE = 1
-      IFREE  = 1
-      PRVSC  = 0
+      dpfree = 1
+      ifree  = 1
+      prvsc  = 0
 
-      RETURN
-      END
+      return
+      end

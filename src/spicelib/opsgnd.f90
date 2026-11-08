@@ -1,6 +1,6 @@
 !$Procedure OPSGND ( Opposite Sign Double Precision Numbers )
 
-      LOGICAL FUNCTION OPSGND  ( X, Y )
+      logical function opsgnd  ( x, y )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   X
-      DOUBLE PRECISION   Y
+      double precision   x
+      double precision   y
 
 ! $ Brief_I/O
 !
@@ -129,9 +129,9 @@
 !-&
 
 
-      OPSGND = (      (( X .GT. 0 ) .AND. ( Y .LT. 0 )) &
-                 .OR. (( X .LT. 0 ) .AND. ( Y .GT. 0 )) &
+      opsgnd = (      (( x .gt. 0 ) .and. ( y .lt. 0 )) &
+                 .or. (( x .lt. 0 ) .and. ( y .gt. 0 )) &
                )
 
-      RETURN
-      END
+      return
+      end

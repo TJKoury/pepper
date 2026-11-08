@@ -1,6 +1,6 @@
 !$Procedure TIMDEF ( Time Software Defaults )
 
-      SUBROUTINE TIMDEF ( ACTION, ITEM, VALUE )
+      subroutine timdef ( action, item, value )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ACTION
-      CHARACTER*(*)         ITEM
-      CHARACTER*(*)         VALUE
+      character*(*)         action
+      character*(*)         item
+      character*(*)         value
 
 ! $ Brief_I/O
 !
@@ -265,69 +265,69 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
+      integer               isrchc
+      logical               return
 
 !
 !     Local Variables.
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 16 )
+      integer               wdsize
+      parameter           ( wdsize = 16 )
 
-      INTEGER               NZONES
-      PARAMETER           ( NZONES = 8 )
+      integer               nzones
+      parameter           ( nzones = 8 )
 
-      CHARACTER*(WDSIZE)    DEFZON
-      CHARACTER*(WDSIZE)    DEFSYS
-      CHARACTER*(WDSIZE)    DEFCAL
+      character*(wdsize)    defzon
+      character*(wdsize)    defsys
+      character*(wdsize)    defcal
 
-      CHARACTER*(WDSIZE)    ZONES  ( NZONES )
-      CHARACTER*(WDSIZE)    TRNSLT ( NZONES )
+      character*(wdsize)    zones  ( nzones )
+      character*(wdsize)    trnslt ( nzones )
 
-      CHARACTER*(WDSIZE)    MYACTN
-      CHARACTER*(WDSIZE)    MYITEM
-      CHARACTER*(WDSIZE)    MYVAL
+      character*(wdsize)    myactn
+      character*(wdsize)    myitem
+      character*(wdsize)    myval
 
-      INTEGER               LAST
-      INTEGER               ZONE
+      integer               last
+      integer               zone
 
-      DOUBLE PRECISION      HOFF
-      DOUBLE PRECISION      MOFF
+      double precision      hoff
+      double precision      moff
 
-      LOGICAL               SUCCES
+      logical               succes
 
-      SAVE
+      save
 
-      DATA                  DEFSYS / 'UTC'       /
-      DATA                  DEFZON / ' '         /
-      DATA                  DEFCAL / 'GREGORIAN' /
+      data                  defsys / 'UTC'       /
+      data                  defzon / ' '         /
+      data                  defcal / 'GREGORIAN' /
 
-      DATA                  ZONES   / 'EST',    'EDT', &
+      data                  zones   / 'EST',    'EDT', &
                                       'CST',    'CDT', &
                                       'MST',    'MDT', &
                                       'PST',    'PDT'  /
 
-      DATA                  TRNSLT  / 'UTC-5',  'UTC-4', &
+      data                  trnslt  / 'UTC-5',  'UTC-4', &
                                       'UTC-6',  'UTC-5', &
                                       'UTC-7',  'UTC-6', &
                                       'UTC-8',  'UTC-7'  /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'TIMDEF' )
+      call chkin ( 'TIMDEF' )
 
 !
 !     Normalize the input.
 !
-      CALL LJUST ( ACTION, MYACTN )
-      CALL UCASE ( MYACTN, MYACTN )
+      call ljust ( action, myactn )
+      call ucase ( myactn, myactn )
 
-      CALL LJUST ( ITEM,   MYITEM )
-      CALL UCASE ( MYITEM, MYITEM )
+      call ljust ( item,   myitem )
+      call ucase ( myitem, myitem )
 
 !
 !     Admittedly, the decision making below is not very elegant.
@@ -335,56 +335,56 @@
 !     to mind at the moment and allows us to give quite specific
 !     diagnostic messages easily.
 !
-      IF ( MYACTN .EQ. 'SET' ) THEN
+      if ( myactn .eq. 'SET' ) then
 
-         CALL LJUST ( VALUE,  MYVAL  )
-         CALL UCASE ( MYVAL,  MYVAL  )
+         call ljust ( value,  myval  )
+         call ucase ( myval,  myval  )
 
-         IF      ( MYITEM .EQ. 'SYSTEM' ) THEN
+         if      ( myitem .eq. 'SYSTEM' ) then
 
 !
 !           Recognize only the know time systems. Note, 'UTC' not
 !           actually a time system, more a time representation.
 !
-            IF (       (MYVAL .EQ. 'TDB') &
-                  .OR. (MYVAL .EQ. 'TDT') &
-                  .OR. (MYVAL .EQ. 'TT') &
-                  .OR. (MYVAL .EQ. 'UTC') ) THEN
+            if (       (myval .eq. 'TDB') &
+                  .or. (myval .eq. 'TDT') &
+                  .or. (myval .eq. 'TT') &
+                  .or. (myval .eq. 'UTC') ) then
 
-               DEFZON = ' '
-               DEFSYS = MYVAL
+               defzon = ' '
+               defsys = myval
 
-            ELSE
-               CALL SETMSG ( 'The default value assigned to the ' &
+            else
+               call setmsg ( 'The default value assigned to the ' &
                //            'time system must be one of ''UTC'', ' &
                //            '''TDT'', ''TT'', or ''TDB''. The value ' &
                //            'supplied was ''#''. ' )
 
-               CALL ERRCH  ( '#', VALUE )
-               CALL SIGERR ( 'SPICE(BADDEFAULTVALUE)'  )
-               CALL CHKOUT ( 'TIMDEF' )
-               RETURN
-            END IF
+               call errch  ( '#', value )
+               call sigerr ( 'SPICE(BADDEFAULTVALUE)'  )
+               call chkout ( 'TIMDEF' )
+               return
+            end if
 
 
-         ELSE IF ( MYITEM .EQ. 'ZONE' ) THEN
+         else if ( myitem .eq. 'ZONE' ) then
 
-            ZONE = ISRCHC ( MYVAL, NZONES, ZONES )
+            zone = isrchc ( myval, nzones, zones )
 
 !
 !           If MYVAL was one of the recognized time zones, we
 !           translate it to the UTC offset form.
 !
-            IF ( ZONE .GT. 0 ) THEN
-               MYVAL = TRNSLT ( ZONE )
-            END IF
+            if ( zone .gt. 0 ) then
+               myval = trnslt ( zone )
+            end if
 
-            CALL PREFIX  ( '::',  0, MYVAL                    )
-            CALL ZZUTCPM ( MYVAL, 1, HOFF, MOFF, LAST, SUCCES )
+            call prefix  ( '::',  0, myval                    )
+            call zzutcpm ( myval, 1, hoff, moff, last, succes )
 
-            IF ( .NOT. SUCCES ) THEN
+            if ( .not. succes ) then
 
-               CALL SETMSG ( 'The input value for a time zone ' &
+               call setmsg ( 'The input value for a time zone ' &
                //            '"#" was not recognized as known ' &
                //            'time zone and could not be parsed ' &
                //            'according to the pattern ' &
@@ -393,97 +393,97 @@
                //            '''CDT'', ''MST'', ''MDT'', ' &
                //            '''PST'', and ''PDT''. ' )
 
-               CALL ERRCH  ( '#', VALUE               )
-               CALL SIGERR ( 'SPICE(BADDEFAULTVALUE)' )
-               CALL CHKOUT ( 'TIMDEF'                 )
-               RETURN
+               call errch  ( '#', value               )
+               call sigerr ( 'SPICE(BADDEFAULTVALUE)' )
+               call chkout ( 'TIMDEF'                 )
+               return
 
-            END IF
+            end if
 
 
-            DEFZON = MYVAL(3:)
-            DEFSYS = ' '
+            defzon = myval(3:)
+            defsys = ' '
 
-         ELSE IF ( MYITEM .EQ. 'CALENDAR' )  THEN
+         else if ( myitem .eq. 'CALENDAR' )  then
 
-            IF (       MYVAL .EQ. 'JULIAN' &
-                  .OR. MYVAL .EQ. 'GREGORIAN' &
-                  .OR. MYVAL .EQ. 'MIXED'   ) THEN
+            if (       myval .eq. 'JULIAN' &
+                  .or. myval .eq. 'GREGORIAN' &
+                  .or. myval .eq. 'MIXED'   ) then
 
-               DEFCAL = MYVAL
+               defcal = myval
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'The input value for ''#'' is not a ' &
+               call setmsg ( 'The input value for ''#'' is not a ' &
                //            'recognized calendar type.  The ' &
                //            'recognized calendars are ' &
                //            '''GREGORIAN'', ''JULIAN'', and ' &
                //            '''MIXED''. ' )
-               CALL ERRCH  ( '#', VALUE    )
-               CALL SIGERR ( 'SPICE(BADDEFAULTVALUE)' )
-               CALL CHKOUT ( 'TIMDEF'                 )
-               RETURN
+               call errch  ( '#', value    )
+               call sigerr ( 'SPICE(BADDEFAULTVALUE)' )
+               call chkout ( 'TIMDEF'                 )
+               return
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'The specified item ''#'' is not a ' &
+            call setmsg ( 'The specified item ''#'' is not a ' &
             //            'recognized time default item.  The ' &
             //            'items that you may "SET" via the ' &
             //            'routine TIMDEF are ''CALENDAR'', ' &
             //            '''SYSTEM'', or ''ZONE'' ' )
 
 
-            CALL ERRCH  ( '#', ITEM            )
-            CALL SIGERR ( 'SPICE(BADTIMEITEM)' )
-            CALL CHKOUT ( 'TIMDEF'             )
-            RETURN
+            call errch  ( '#', item            )
+            call sigerr ( 'SPICE(BADTIMEITEM)' )
+            call chkout ( 'TIMDEF'             )
+            return
 
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'TIMDEF' )
-         RETURN
+         call chkout ( 'TIMDEF' )
+         return
 
-      ELSE IF ( MYACTN .EQ. 'GET' ) THEN
+      else if ( myactn .eq. 'GET' ) then
 
-         IF      ( MYITEM .EQ. 'CALENDAR' ) THEN
-            VALUE = DEFCAL
-         ELSE IF ( MYITEM .EQ. 'SYSTEM'   ) THEN
-            VALUE = DEFSYS
-         ELSE IF ( MYITEM .EQ. 'ZONE'     ) THEN
-            VALUE = DEFZON
-         ELSE
+         if      ( myitem .eq. 'CALENDAR' ) then
+            value = defcal
+         else if ( myitem .eq. 'SYSTEM'   ) then
+            value = defsys
+         else if ( myitem .eq. 'ZONE'     ) then
+            value = defzon
+         else
 
-            CALL SETMSG ( 'The specified item ''#'' is not a ' &
+            call setmsg ( 'The specified item ''#'' is not a ' &
             //            'recognized time default item.  The ' &
             //            'items that you may "SET" via the ' &
             //            'routine TIMDEF are ''CALENDAR'', ' &
             //            '''SYSTEM'', or ''ZONE'' ' )
-            CALL ERRCH  ( '#', ITEM )
-            CALL SIGERR ( 'SPICE(BADTIMEITEM)' )
-            CALL CHKOUT ( 'TIMDEF' )
-            RETURN
+            call errch  ( '#', item )
+            call sigerr ( 'SPICE(BADTIMEITEM)' )
+            call chkout ( 'TIMDEF' )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The action specified to TIMDEF was ' &
+         call setmsg ( 'The action specified to TIMDEF was ' &
          //            '''#''.  This is not a recognized action. ' &
          //            'The recognized actions are ''SET'' and ' &
          //            '''GET''. ' )
 
-         CALL ERRCH  ( '#', ACTION )
-         CALL SIGERR ( 'SPICE(BADACTION)' )
-         CALL CHKOUT ( 'TIMDEF' )
-         RETURN
+         call errch  ( '#', action )
+         call sigerr ( 'SPICE(BADACTION)' )
+         call chkout ( 'TIMDEF' )
+         return
 
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'TIMDEF' )
-      RETURN
-      END
+      call chkout ( 'TIMDEF' )
+      return
+      end

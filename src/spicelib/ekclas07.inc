@@ -8,20 +8,20 @@
 !
 !     Data array base address:
 !
-      INTEGER               DBIX07
-      PARAMETER           ( DBIX07 = 1 )
+      integer               dbix07
+      parameter           ( dbix07 = 1 )
 
 !
 !     Null flag array base address:
 !
-      INTEGER               NFIX07
-      PARAMETER           ( NFIX07 = 2 )
+      integer               nfix07
+      parameter           ( nfix07 = 2 )
 
 !
 !     Size of class 7 metadata array:
 !
-      INTEGER               MDSZ07
-      PARAMETER           ( MDSZ07 = 2 )
+      integer               mdsz07
+      parameter           ( mdsz07 = 2 )
 
 !
 !     End Include Section:  EK Column Class 7 Parameters

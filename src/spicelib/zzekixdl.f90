@@ -1,6 +1,6 @@
 !$Procedure     ZZEKIXDL ( EK, delete record from index )
 
-      SUBROUTINE ZZEKIXDL ( HANDLE, SEGDSC, COLDSC, RECPTR )
+      subroutine zzekixdl ( handle, segdsc, coldsc, recptr )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
 
 ! $ Brief_I/O
 !
@@ -109,83 +109,83 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               IDX
-      INTEGER               IDXTYP
-      INTEGER               RECNO
-      INTEGER               TREE
+      integer               idx
+      integer               idxtyp
+      integer               recno
+      integer               tree
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKIXDL' )
+      call chkin ( 'ZZEKIXDL' )
 
 
-      IDXTYP  =  COLDSC ( IXTIDX )
+      idxtyp  =  coldsc ( ixtidx )
 
-      IF ( IDXTYP .NE. IFALSE ) THEN
+      if ( idxtyp .ne. ifalse ) then
 !
 !        This column is indexed.
 !
 !        Some entry in the index points to RECPTR.  Find the entry
 !        and delete it.
 !
-         CALL ZZEKFRX ( HANDLE, SEGDSC, COLDSC, RECPTR, IDX )
+         call zzekfrx ( handle, segdsc, coldsc, recptr, idx )
 
 
-         IF ( IDXTYP .EQ. 1 ) THEN
+         if ( idxtyp .eq. 1 ) then
 !
 !           For type 1 indexes, the index pointer is the root node of
 !           a B*-tree.  Just use the tree deletion routine.
 !
-            TREE  = COLDSC ( IXPIDX )
+            tree  = coldsc ( ixpidx )
 
-            CALL ZZEKTRDL ( HANDLE, TREE, IDX )
+            call zzektrdl ( handle, tree, idx )
 
-         ELSE
+         else
 !
 !           Sorry, no other types of indexes are supported.
 !
-            CALL SETMSG ( 'The index type # is not supported.' )
-            CALL ERRINT ( '#',   IDXTYP                        )
-            CALL SIGERR ( 'SPICE(INVALIDTYPE)'                 )
-            CALL CHKOUT ( 'ZZEKIXDL'                           )
-            RETURN
+            call setmsg ( 'The index type # is not supported.' )
+            call errint ( '#',   idxtyp                        )
+            call sigerr ( 'SPICE(INVALIDTYPE)'                 )
+            call chkout ( 'ZZEKIXDL'                           )
+            return
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        This routine should not have been called if the column in
 !        question is not indexed.
 !
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL SETMSG ( 'Column was not indexed. File = #; ' // &
+         call setmsg ( 'Column was not indexed. File = #; ' // &
                        'RECNO = #; COLIDX = #.'              )
-         CALL ERRHAN ( '#',  HANDLE                          )
-         CALL ERRINT ( '#',  RECNO                           )
-         CALL ERRINT ( '#',  COLDSC(ORDIDX)                  )
-         CALL SIGERR ( 'SPICE(BUG)'                          )
-         CALL CHKOUT ( 'ZZEKIXDL'                            )
-         RETURN
+         call errhan ( '#',  handle                          )
+         call errint ( '#',  recno                           )
+         call errint ( '#',  coldsc(ordidx)                  )
+         call sigerr ( 'SPICE(BUG)'                          )
+         call chkout ( 'ZZEKIXDL'                            )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZEKIXDL' )
-      RETURN
-      END
+      call chkout ( 'ZZEKIXDL' )
+      return
+      end

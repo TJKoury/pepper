@@ -80,14 +80,14 @@
 !
 !     Surface ID code:
 !
-      INTEGER               SRFIDX
-      PARAMETER           ( SRFIDX = 1 )
+      integer               srfidx
+      parameter           ( srfidx = 1 )
 
 !
 !     Central ephemeris object NAIF ID:
 !
-      INTEGER               CTRIDX
-      PARAMETER           ( CTRIDX = SRFIDX + 1 )
+      integer               ctridx
+      parameter           ( ctridx = srfidx + 1 )
 
 !
 !     Data class:
@@ -95,74 +95,74 @@
 !     The "data class" is a code indicating the category of
 !     data contained in the segment.
 !
-      INTEGER               CLSIDX
-      PARAMETER           ( CLSIDX = CTRIDX + 1 )
+      integer               clsidx
+      parameter           ( clsidx = ctridx + 1 )
 
 !
 !     Data type:
 !
-      INTEGER               TYPIDX
-      PARAMETER           ( TYPIDX = CLSIDX + 1 )
+      integer               typidx
+      parameter           ( typidx = clsidx + 1 )
 
 !
 !     Frame ID:
 !
-      INTEGER               FRMIDX
-      PARAMETER           ( FRMIDX = TYPIDX + 1 )
+      integer               frmidx
+      parameter           ( frmidx = typidx + 1 )
 
 !
 !     Coordinate system code:
 !
-      INTEGER               SYSIDX
-      PARAMETER           ( SYSIDX = FRMIDX + 1 )
+      integer               sysidx
+      parameter           ( sysidx = frmidx + 1 )
 
 !
 !     Coordinate system parameter start index:
 !
-      INTEGER               PARIDX
-      PARAMETER           ( PARIDX = SYSIDX + 1 )
+      integer               paridx
+      parameter           ( paridx = sysidx + 1 )
 
 !
 !     Number of coordinate system parameters:
 !
-      INTEGER               NSYPAR
-      PARAMETER           ( NSYPAR = 10 )
+      integer               nsypar
+      parameter           ( nsypar = 10 )
 
 !
 !     Ranges for coordinate bounds:
 !
-      INTEGER               MN1IDX
-      PARAMETER           ( MN1IDX = PARIDX + NSYPAR )
+      integer               mn1idx
+      parameter           ( mn1idx = paridx + nsypar )
 
-      INTEGER               MX1IDX
-      PARAMETER           ( MX1IDX = MN1IDX + 1 )
+      integer               mx1idx
+      parameter           ( mx1idx = mn1idx + 1 )
 
-      INTEGER               MN2IDX
-      PARAMETER           ( MN2IDX = MX1IDX + 1 )
+      integer               mn2idx
+      parameter           ( mn2idx = mx1idx + 1 )
 
-      INTEGER               MX2IDX
-      PARAMETER           ( MX2IDX = MN2IDX + 1 )
+      integer               mx2idx
+      parameter           ( mx2idx = mn2idx + 1 )
 
-      INTEGER               MN3IDX
-      PARAMETER           ( MN3IDX = MX2IDX + 1 )
+      integer               mn3idx
+      parameter           ( mn3idx = mx2idx + 1 )
 
-      INTEGER               MX3IDX
-      PARAMETER           ( MX3IDX = MN3IDX + 1 )
+      integer               mx3idx
+      parameter           ( mx3idx = mn3idx + 1 )
 
 !
 !     Coverage time bounds:
 !
-      INTEGER               BTMIDX
-      PARAMETER           ( BTMIDX = MX3IDX + 1 )
+      integer               btmidx
+      parameter           ( btmidx = mx3idx + 1 )
 
-      INTEGER               ETMIDX
-      PARAMETER           ( ETMIDX = BTMIDX + 1 )
+      integer               etmidx
+      parameter           ( etmidx = btmidx + 1 )
 
 !
 !     Descriptor size (24):
 !
-      INTEGER               DSKDSZ
-      PARAMETER           ( DSKDSZ = ETMIDX )
+      integer               dskdsz
+      parameter           ( dskdsz = etmidx )
 
 
 
@@ -176,16 +176,16 @@
 !                maps each planetodetic longitude and latitude pair to
 !                a unique altitude.
 !
-      INTEGER               SVFCLS
-      PARAMETER           ( SVFCLS = 1 )
+      integer               svfcls
+      parameter           ( svfcls = 1 )
 !
 !        Class 2 indicates a general surface. Surfaces that
 !                have multiple points for a given pair of domain
 !                coordinates---for example, multiple radii for a given
 !                latitude and longitude---belong to class 2.
 !
-      INTEGER               GENCLS
-      PARAMETER           ( GENCLS = 2 )
+      integer               gencls
+      parameter           ( gencls = 2 )
 
 !
 !
@@ -201,8 +201,8 @@
 !        coordinate is radius.
 !
 !
-      INTEGER               LATSYS
-      PARAMETER           ( LATSYS = 1 )
+      integer               latsys
+      parameter           ( latsys = 1 )
 
 
 !
@@ -213,8 +213,8 @@
 !        orthogonal coordinate is Z.
 !
 !
-      INTEGER               CYLSYS
-      PARAMETER           ( CYLSYS = 2 )
+      integer               cylsys
+      parameter           ( cylsys = 2 )
 
 
 !
@@ -225,8 +225,8 @@
 !        orthogonal coordinate is Z.
 !
 !
-      INTEGER               RECSYS
-      PARAMETER           ( RECSYS = 3 )
+      integer               recsys
+      parameter           ( recsys = 3 )
 
 
 !
@@ -237,8 +237,8 @@
 !        latitude. The third, orthogonal coordinate is altitude.
 !
 !
-      INTEGER               PDTSYS
-      PARAMETER           ( PDTSYS = 4 )
+      integer               pdtsys
+      parameter           ( pdtsys = 4 )
 
 
 

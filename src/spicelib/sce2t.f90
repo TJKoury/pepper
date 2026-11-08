@@ -1,6 +1,6 @@
 !$Procedure SCE2T ( ET to discrete SCLK ticks )
 
-      SUBROUTINE SCE2T ( SC, ET, SCLKDP )
+      subroutine sce2t ( sc, et, sclkdp )
 
 ! $ Abstract
 !
@@ -23,11 +23,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               SC
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      SCLKDP
+      integer               sc
+      double precision      et
+      double precision      sclkdp
 
 ! $ Brief_I/O
 !
@@ -267,38 +267,38 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
-      INTEGER               SCTYPE
+      integer               sctype
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCE2T' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SCE2T' )
+      end if
 
 !
 !     Just hand off the conversion to the appropriate routine.
 !
-      IF (  SCTYPE ( SC )  .EQ.  1  ) THEN
+      if (  sctype ( sc )  .eq.  1  ) then
 
-         CALL SCET01 ( SC, ET, SCLKDP )
+         call scet01 ( sc, et, sclkdp )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Clock type # is not supported.' )
-         CALL ERRINT ( '#', SCTYPE ( SC )               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
-         CALL CHKOUT ( 'SCE2T'                          )
-         RETURN
+         call setmsg ( 'Clock type # is not supported.' )
+         call errint ( '#', sctype ( sc )               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'            )
+         call chkout ( 'SCE2T'                          )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SCE2T' )
-      RETURN
-      END
+      call chkout ( 'SCE2T' )
+      return
+      end

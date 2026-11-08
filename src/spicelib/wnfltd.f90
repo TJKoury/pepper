@@ -1,6 +1,6 @@
 !$Procedure WNFLTD ( Filter small intervals from a DP window )
 
-      SUBROUTINE WNFLTD ( SMLINT, WINDOW )
+      subroutine wnfltd ( smlint, window )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      SMLINT
-      DOUBLE PRECISION      WINDOW  ( LBCELL:* )
+      double precision      smlint
+      double precision      window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -260,55 +260,55 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               cardd
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
-      INTEGER               J
+      integer               card
+      integer               i
+      integer               j
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'WNFLTD' )
+      call chkin ( 'WNFLTD' )
 
 !
 !     Get the cardinality of the window. (The size is not important;
 !     this routine can't create any new intervals.)
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Step through the window, looking for the next interval big
 !     enough to get stuck in the filter. Keep this up until the last
 !     interval has been checked.
 !
-      I = 0
-      J = 2
+      i = 0
+      j = 2
 
-      DO WHILE ( J .LE. CARD )
+      do while ( j .le. card )
 
-         IF ( ( WINDOW(J) - WINDOW(J-1) ) .GT. SMLINT ) THEN
+         if ( ( window(j) - window(j-1) ) .gt. smlint ) then
 
-            I           = I + 2
-            WINDOW(I-1) = WINDOW(J-1)
-            WINDOW(I  ) = WINDOW(J  )
+            i           = i + 2
+            window(i-1) = window(j-1)
+            window(i  ) = window(j  )
 
-         END IF
+         end if
 
-         J = J + 2
+         j = j + 2
 
-      END DO
+      end do
 
-      CALL SCARDD ( I, WINDOW )
+      call scardd ( i, window )
 
-      CALL CHKOUT ( 'WNFLTD' )
-      RETURN
-      END
+      call chkout ( 'WNFLTD' )
+      return
+      end

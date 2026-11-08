@@ -1,6 +1,6 @@
 !$Procedure RTRIM ( Right trim )
 
-      INTEGER FUNCTION RTRIM ( STRING )
+      integer function rtrim ( string )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -133,12 +133,12 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
 !
 !     `Just do it'.
 !
-      RTRIM = MAX ( 1, LASTNB (STRING) )
+      rtrim = max ( 1, lastnb (string) )
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure   ZZEPRCSS   ( Earth precession, 1976 IAU model )
 
-      SUBROUTINE ZZEPRCSS ( ET, PRECM )
-      IMPLICIT NONE
+      subroutine zzeprcss ( et, precm )
+      implicit none
 
 ! $ Abstract
 !
@@ -20,8 +20,8 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      PRECM ( 3, 3 )
+      double precision      et
+      double precision      precm ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -141,47 +141,47 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
+      double precision      jyear
+      double precision      rpd
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      ZETA1
-      PARAMETER           ( ZETA1  = 2306.2181D0 )
+      double precision      zeta1
+      parameter           ( zeta1  = 2306.2181d0 )
 
-      DOUBLE PRECISION      ZETA2
-      PARAMETER           ( ZETA2  = 0.30188D0   )
+      double precision      zeta2
+      parameter           ( zeta2  = 0.30188d0   )
 
-      DOUBLE PRECISION      ZETA3
-      PARAMETER           ( ZETA3  = 0.017998D0  )
+      double precision      zeta3
+      parameter           ( zeta3  = 0.017998d0  )
 
-      DOUBLE PRECISION      Z1
-      PARAMETER           ( Z1     = 2306.2181D0 )
+      double precision      z1
+      parameter           ( z1     = 2306.2181d0 )
 
-      DOUBLE PRECISION      Z2
-      PARAMETER           ( Z2     = 1.09468D0   )
+      double precision      z2
+      parameter           ( z2     = 1.09468d0   )
 
-      DOUBLE PRECISION      Z3
-      PARAMETER           ( Z3     = 0.018203D0  )
+      double precision      z3
+      parameter           ( z3     = 0.018203d0  )
 
-      DOUBLE PRECISION      THETA1
-      PARAMETER           ( THETA1 = 2004.3109D0 )
+      double precision      theta1
+      parameter           ( theta1 = 2004.3109d0 )
 
-      DOUBLE PRECISION      THETA2
-      PARAMETER           ( THETA2 = -0.42665D0 )
+      double precision      theta2
+      parameter           ( theta2 = -0.42665d0 )
 
-      DOUBLE PRECISION      THETA3
-      PARAMETER           ( THETA3 = -0.041833D0 )
+      double precision      theta3
+      parameter           ( theta3 = -0.041833d0 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      ZETA
-      DOUBLE PRECISION      Z
-      DOUBLE PRECISION      THETA
+      double precision      scale
+      double precision      t
+      double precision      zeta
+      double precision      z
+      double precision      theta
 
 
 !
@@ -194,16 +194,16 @@
 !     angles in units of arcseconds prior to scaling.  After scaling,
 !     the angles are in units of radians.
 !
-      T      =  ET    / ( JYEAR() * 100.D0 )
-      SCALE  =  RPD() / 3600.D0
+      t      =  et    / ( jyear() * 100.d0 )
+      scale  =  rpd() / 3600.d0
 
-      ZETA   =  T  * (  ZETA1  + T*( ZETA2  + T*ZETA3  )  ) * SCALE
-      Z      =  T  * (  Z1     + T*( Z2     + T*Z3     )  ) * SCALE
-      THETA  =  T  * (  THETA1 + T*( THETA2 + T*THETA3 )  ) * SCALE
+      zeta   =  t  * (  zeta1  + t*( zeta2  + t*zeta3  )  ) * scale
+      z      =  t  * (  z1     + t*( z2     + t*z3     )  ) * scale
+      theta  =  t  * (  theta1 + t*( theta2 + t*theta3 )  ) * scale
 
 !
 !     Now compute the precession matrix.
 !
-      CALL EUL2M  ( -Z, THETA, -ZETA, 3, 2, 3, PRECM )
+      call eul2m  ( -z, theta, -zeta, 3, 2, 3, precm )
 
-      END
+      end

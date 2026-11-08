@@ -1,6 +1,6 @@
 !$Procedure POSR ( Position of substring, reverse search)
 
-      INTEGER FUNCTION POSR ( STR, SUBSTR, START )
+      integer function posr ( str, substr, start )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR
-      CHARACTER*(*)         SUBSTR
-      INTEGER               START
+      character*(*)         str
+      character*(*)         substr
+      integer               start
 
 ! $ Brief_I/O
 !
@@ -170,39 +170,39 @@
 !
 !     Local variables
 !
-      LOGICAL               FOUND
-      INTEGER               LENSTR
-      INTEGER               OFFSET
-      INTEGER               FCHNCE
-      INTEGER               B
+      logical               found
+      integer               lenstr
+      integer               offset
+      integer               fchnce
+      integer               b
 
 !
 !     Let's find out how big every body is.
 !
-      LENSTR = LEN   ( STR                    )
-      OFFSET = MAX   ( 0,  LEN ( SUBSTR ) - 1 )
-      FCHNCE = LENSTR - OFFSET
+      lenstr = len   ( str                    )
+      offset = max   ( 0,  len ( substr ) - 1 )
+      fchnce = lenstr - offset
 
 !
 !     Look for the string until we run find it or run out of room to
 !     look.
 !
-      B      = MIN(FCHNCE,START)
-      FOUND  = .FALSE.
-      POSR   = 0
+      b      = min(fchnce,start)
+      found  = .false.
+      posr   = 0
 
-      DO WHILE ( .NOT. FOUND )
+      do while ( .not. found )
 
-         IF ( B .LE. 0 ) THEN
-            RETURN
-         ELSE IF ( STR(B:B+OFFSET) .EQ. SUBSTR ) THEN
-            POSR = B
-            RETURN
-         ELSE
-            B    = B - 1
-         END IF
+         if ( b .le. 0 ) then
+            return
+         else if ( str(b:b+offset) .eq. substr ) then
+            posr = b
+            return
+         else
+            b    = b - 1
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

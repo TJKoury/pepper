@@ -1,6 +1,6 @@
 !$Procedure DSKV02 ( DSK, fetch type 2 vertex data )
 
-      SUBROUTINE DSKV02 ( HANDLE, DLADSC, START, ROOM, N, VRTCES )
+      subroutine dskv02 ( handle, dladsc, start, room, n, vrtces )
 
 ! $ Abstract
 !
@@ -19,18 +19,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               START
-      INTEGER               ROOM
-      INTEGER               N
-      DOUBLE PRECISION      VRTCES ( 3, * )
+      integer               handle
+      integer               dladsc ( * )
+      integer               start
+      integer               room
+      integer               n
+      double precision      vrtces ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -391,61 +391,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      double precision      dskdsc ( dskdsz )
 
-      INTEGER               LCROOM
-      INTEGER               LCSTRT
-      INTEGER               NP
-      INTEGER               NV
-      INTEGER               UNIT
+      integer               lcroom
+      integer               lcstrt
+      integer               np
+      integer               nv
+      integer               unit
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKV02' )
+      call chkin ( 'DSKV02' )
 
 !
 !     Look up the DSK descriptor for this segment.
 !
-      CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      call dskgd ( handle, dladsc, dskdsc )
 
 !
 !     Get the plate model size parameters for this segment.
 !     Note that we get a segment data type check for free from
 !     DSKZ02.
 !
-      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      call dskz02 ( handle, dladsc, nv, np )
 
 !
 !     Check START.
 !
-      IF (  ( START .LT. 1 ) .OR. ( START .GT. NV )  ) THEN
+      if (  ( start .lt. 1 ) .or. ( start .gt. nv )  ) then
 
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+         call zzddhhlu ( handle, 'DAS', .false., unit )
 
-         CALL SETMSG ( 'Segment in DSK file # with DAS base ' &
+         call setmsg ( 'Segment in DSK file # with DAS base ' &
          //            'addresses INT = #, DP = #, CHR = # ' &
          //            'contains # vertices, so START must ' &
          //            'be in the range 1:#; actual value ' &
          //            'was #.'                              )
-         CALL ERRFNM ( '#', UNIT                             )
-         CALL ERRINT ( '#', DLADSC(IBSIDX)                   )
-         CALL ERRINT ( '#', DLADSC(DBSIDX)                   )
-         CALL ERRINT ( '#', DLADSC(CBSIDX)                   )
-         CALL ERRINT ( '#', NV                               )
-         CALL ERRINT ( '#', NV                               )
-         CALL ERRINT ( '#', START                            )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'              )
-         CALL CHKOUT ( 'DSKV02'                              )
-         RETURN
+         call errfnm ( '#', unit                             )
+         call errint ( '#', dladsc(ibsidx)                   )
+         call errint ( '#', dladsc(dbsidx)                   )
+         call errint ( '#', dladsc(cbsidx)                   )
+         call errint ( '#', nv                               )
+         call errint ( '#', nv                               )
+         call errint ( '#', start                            )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
+         call chkout ( 'DSKV02'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Note that the start and room arguments of DSKD02 apply
@@ -453,18 +453,18 @@
 !     inputs to make them compatible with this lower-level
 !     interface.
 !
-      LCSTRT = 3 * ( START - 1 ) + 1
-      LCROOM = 3 * ROOM
+      lcstrt = 3 * ( start - 1 ) + 1
+      lcroom = 3 * room
 
-      CALL DSKD02 ( HANDLE, DLADSC, KWVERT, &
-                    LCSTRT, LCROOM, N,      VRTCES )
+      call dskd02 ( handle, dladsc, kwvert, &
+                    lcstrt, lcroom, n,      vrtces )
 
 !
 !     Change the output count from one of d.p. numbers to one of
 !     vertices.
 !
-      N = N / 3
+      n = n / 3
 
-      CALL CHKOUT ( 'DSKV02' )
-      RETURN
-      END
+      call chkout ( 'DSKV02' )
+      return
+      end

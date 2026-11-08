@@ -1,6 +1,6 @@
 !$Procedure ZZDDHIVF ( Private --- DDH Identify VAX DAF File Format )
 
-      SUBROUTINE ZZDDHIVF ( NSUM, BFF, FOUND )
+      subroutine zzddhivf ( nsum, bff, found )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      CHARACTER*(*)         NSUM
-      INTEGER               BFF
-      LOGICAL               FOUND
+      character*(*)         nsum
+      integer               bff
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -228,15 +228,15 @@
 !
 !     Local Variables
 !
-      CHARACTER*(1)         CARG
+      character*(1)         carg
 
-      INTEGER               LEADER
-      INTEGER               TRAILR
+      integer               leader
+      integer               trailr
 
 !
 !     Statement Functions
 !
-      INTEGER               ZZICHR
+      integer               zzichr
 
 !
 !     Statement Function Definitions
@@ -253,9 +253,9 @@
 #endif
 !
 #if defined(SPICE_COMPILER_INTEL)
-      ZZICHR(CARG) = ICHAR(CARG)
+      zzichr(carg) = ichar(carg)
 #else
-      ZZICHR(CARG) = ICHAR(CARG) - MAX( -1, MIN(0,ICHAR(CARG)) )*256
+      zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
 #endif
 
 !
@@ -387,42 +387,42 @@
 !
 !     Convert the first and second characters in NSUM to integers.
 !
-      LEADER = ZZICHR( NSUM(1:1) )
-      TRAILR = ZZICHR( NSUM(2:2) )
+      leader = zzichr( nsum(1:1) )
+      trailr = zzichr( nsum(2:2) )
 
 !
 !     Shift the trailing 4 bits off LEADER.
 !
-      LEADER = LEADER / 16
+      leader = leader / 16
 
 !
 !     Subtract the leading bits off TRAILR.
 !
-      TRAILR = TRAILR - ( 16 * (TRAILR / 16) )
+      trailr = trailr - ( 16 * (trailr / 16) )
 
 !
 !     Now determine what file we are looking at.
 !
-      IF ( ( LEADER .EQ. 8 ) .AND. ( TRAILR .EQ. 0 ) ) THEN
+      if ( ( leader .eq. 8 ) .and. ( trailr .eq. 0 ) ) then
 
-         FOUND = .TRUE.
-         BFF   = VAXDFL
+         found = .true.
+         bff   = vaxdfl
 
-      ELSE IF ( TRAILR .NE. 0 ) THEN
+      else if ( trailr .ne. 0 ) then
 
-         FOUND = .TRUE.
-         BFF   = VAXDFL
+         found = .true.
+         bff   = vaxdfl
 
-      ELSE IF ( ( LEADER .LT. 8 ) .AND. ( TRAILR .EQ. 0 ) ) THEN
+      else if ( ( leader .lt. 8 ) .and. ( trailr .eq. 0 ) ) then
 
-         FOUND = .TRUE.
-         BFF   = VAXGFL
+         found = .true.
+         bff   = vaxgfl
 
-      ELSE
+      else
 
-         FOUND = .FALSE.
+         found = .false.
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

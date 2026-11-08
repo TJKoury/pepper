@@ -1,6 +1,6 @@
 !$Procedure VPRJPI ( Vector projection onto plane, inverted )
 
-      SUBROUTINE VPRJPI ( VIN, PROJPL, INVPL, VOUT, FOUND )
+      subroutine vprjpi ( vin, projpl, invpl, vout, found )
 
 ! $ Abstract
 !
@@ -20,16 +20,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   =    4 )
+      integer               ubpl
+      parameter           ( ubpl   =    4 )
 
-      DOUBLE PRECISION      VIN    (    3 )
-      DOUBLE PRECISION      PROJPL ( UBPL )
-      DOUBLE PRECISION      INVPL  ( UBPL )
-      DOUBLE PRECISION      VOUT   (    3 )
-      LOGICAL               FOUND
+      double precision      vin    (    3 )
+      double precision      projpl ( ubpl )
+      double precision      invpl  ( ubpl )
+      double precision      vout   (    3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -225,12 +225,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      dpmax
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               APPROX
-      LOGICAL               RETURN
+      logical               approx
+      logical               return
 
 
 !
@@ -247,73 +247,73 @@
 !
 !     BOUND is chosen somewhat arbitrarily....
 !
-      DOUBLE PRECISION      BOUND
-      PARAMETER           ( BOUND = 10.D0 )
+      double precision      bound
+      parameter           ( bound = 10.d0 )
 
 !
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      DOUBLE PRECISION      MAGTOL
-      PARAMETER           ( MAGTOL = 1.D-14 )
+      double precision      magtol
+      parameter           ( magtol = 1.d-14 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      INVC
-      DOUBLE PRECISION      INVN  ( 3 )
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      MULT
-      DOUBLE PRECISION      NUMER
-      DOUBLE PRECISION      PROJC
-      DOUBLE PRECISION      PROJN ( 3 )
+      double precision      denom
+      double precision      invc
+      double precision      invn  ( 3 )
+      double precision      limit
+      double precision      mult
+      double precision      numer
+      double precision      projc
+      double precision      projn ( 3 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Unpack the planes.
 !
-      CALL PL2NVC ( PROJPL, PROJN, PROJC )
-      CALL PL2NVC ( INVPL,  INVN,  INVC  )
+      call pl2nvc ( projpl, projn, projc )
+      call pl2nvc ( invpl,  invn,  invc  )
 
 !
 !     Check the normal vectors obtained from the planes.
 !
 !     Each normal vector returned by PL2NVC should be a unit vector.
 !
-      IF (  .NOT.  APPROX( VNORM(PROJN), 1.D0, MAGTOL )  ) THEN
+      if (  .not.  approx( vnorm(projn), 1.d0, magtol )  ) then
 
-         CALL CHKIN  ( 'VPRJPI' )
-         CALL SETMSG ( 'Normal vector of plane containing input ' &
+         call chkin  ( 'VPRJPI' )
+         call setmsg ( 'Normal vector of plane containing input ' &
          //            'point does not have unit length; the ' &
          //            'difference of the length from 1 is #. ' &
          //            'The input plane is invalid. '             )
-         CALL ERRDP  ( '#',  VNORM(PROJN) - 1.D0                  )
-         CALL SIGERR ( 'SPICE(NONUNITNORMAL)'                     )
-         CALL CHKOUT ( 'VPRJPI' )
-         RETURN
+         call errdp  ( '#',  vnorm(projn) - 1.d0                  )
+         call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
+         call chkout ( 'VPRJPI' )
+         return
 
-      END IF
+      end if
 
-      IF (  .NOT.  APPROX( VNORM(INVN), 1.D0, MAGTOL )  ) THEN
+      if (  .not.  approx( vnorm(invn), 1.d0, magtol )  ) then
 
-         CALL CHKIN  ( 'VPRJPI' )
-         CALL SETMSG ( 'Normal vector of plane containing output ' &
+         call chkin  ( 'VPRJPI' )
+         call setmsg ( 'Normal vector of plane containing output ' &
          //            'point does not have unit length; the ' &
          //            'difference of the length from 1 is #. ' &
          //            'The output plane is invalid. '            )
-         CALL ERRDP  ( '#',  VNORM(INVN) - 1.D0                   )
-         CALL SIGERR ( 'SPICE(NONUNITNORMAL)'                     )
-         CALL CHKOUT ( 'VPRJPI' )
-         RETURN
+         call errdp  ( '#',  vnorm(invn) - 1.d0                   )
+         call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
+         call chkout ( 'VPRJPI' )
+         return
 
-      END IF
+      end if
 
 !
 !     We'll first discuss the computation of VOUT in the nominal case,
@@ -355,8 +355,8 @@
 !
 !     Compute the numerator and denominator of the right side of (2).
 !
-      NUMER  =  INVC - VDOT ( VIN,   INVN )
-      DENOM  =         VDOT ( PROJN, INVN )
+      numer  =  invc - vdot ( vin,   invn )
+      denom  =         vdot ( projn, invn )
 
 !
 !     If the magnitude of the denominator is greater than the absolute
@@ -381,29 +381,29 @@
 !     the computation using NUMER causes underflow to be signaled
 !     on some systems.
 !
-      IF ( ABS(NUMER) .LT. 1.D0 ) THEN
-         LIMIT  =           BOUND / DPMAX()
-      ELSE
-         LIMIT  =  ABS (  ( BOUND / DPMAX() ) * NUMER  )
-      END IF
+      if ( abs(numer) .lt. 1.d0 ) then
+         limit  =           bound / dpmax()
+      else
+         limit  =  abs (  ( bound / dpmax() ) * numer  )
+      end if
 
-      IF (  ABS (DENOM) .GT. LIMIT  ) THEN
+      if (  abs (denom) .gt. limit  ) then
 !
 !        We can find VOUT after all.
 !
-         MULT = NUMER / DENOM
+         mult = numer / denom
 
-         CALL VLCOM ( 1.0D0, VIN, MULT, PROJN, VOUT )
+         call vlcom ( 1.0d0, vin, mult, projn, vout )
 
-         FOUND = .TRUE.
+         found = .true.
 
-      ELSE
+      else
 !
 !        No dice.
 !
-         FOUND = .FALSE.
+         found = .false.
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

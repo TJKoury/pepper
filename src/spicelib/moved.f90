@@ -1,6 +1,6 @@
 !$Procedure MOVED ( Move a double precision array to another )
 
-      SUBROUTINE MOVED ( ARRFRM, NDIM, ARRTO )
+      subroutine moved ( arrfrm, ndim, arrto )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ARRFRM ( * )
-      INTEGER               NDIM
-      DOUBLE PRECISION      ARRTO  ( * )
+      double precision      arrfrm ( * )
+      integer               ndim
+      double precision      arrto  ( * )
 
 ! $ Brief_I/O
 !
@@ -239,8 +239,8 @@
 
 
 
-      CALL MOVEI ( ARRFRM, 2*NDIM, ARRTO )
+      call movei ( arrfrm, 2*ndim, arrto )
 
 
-      RETURN
-      END
+      return
+      end

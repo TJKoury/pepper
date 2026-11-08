@@ -1,6 +1,6 @@
 !$Procedure XF2RAV ( Transform to rotation and angular velocity)
 
-      SUBROUTINE XF2RAV ( XFORM, ROT, AV )
+      subroutine xf2rav ( xform, rot, av )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      XFORM  ( 6, 6 )
-      DOUBLE PRECISION      ROT    ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3    )
+      double precision      xform  ( 6, 6 )
+      double precision      rot    ( 3, 3 )
+      double precision      av     ( 3    )
 
 ! $ Brief_I/O
 !
@@ -243,11 +243,11 @@
 !-&
 
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
-      DOUBLE PRECISION      DRDT  ( 3, 3 )
-      DOUBLE PRECISION      OMEGA ( 3, 3 )
+      double precision      drdt  ( 3, 3 )
+      double precision      omega ( 3, 3 )
 
 
 !
@@ -267,12 +267,12 @@
 !     rotation.  From this we can immediately read the rotation and
 !     its derivative.
 !
-      DO I = 1, 3
-         DO J = 1,3
-            ROT (I,J) = XFORM(I,  J)
-            DRDT(I,J) = XFORM(I+3,J)
-         END DO
-      END DO
+      do i = 1, 3
+         do j = 1,3
+            rot (i,j) = xform(i,  j)
+            drdt(i,j) = xform(i+3,j)
+         end do
+      end do
 
 !
 !     Recall that ROT is a transformation that converts positions
@@ -308,7 +308,7 @@
 !
 !
 !
-      CALL MTXM ( DRDT, ROT, OMEGA )
+      call mtxm ( drdt, rot, omega )
 
 !
 !     Recall that OMEGA has the form
@@ -322,9 +322,9 @@
 !        | -AV(2)   AV(1)   0    |
 !        |_                     _|
 !
-      AV(1) = OMEGA(3,2)
-      AV(2) = OMEGA(1,3)
-      AV(3) = OMEGA(2,1)
+      av(1) = omega(3,2)
+      av(2) = omega(1,3)
+      av(3) = omega(2,1)
 
-      RETURN
-      END
+      return
+      end

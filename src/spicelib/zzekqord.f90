@@ -1,7 +1,7 @@
 !$Procedure  ZZEKQORD ( Private: EK, read order-by columns from query )
 
-      SUBROUTINE ZZEKQORD ( EQRYI,  EQRYC, N, TABLE, TABIDX, COLUMN, &
-                            COLIDX, SENSE                            )
+      subroutine zzekqord ( eqryi,  eqryc, n, table, tabidx, column, &
+                            colidx, sense                            )
 
 ! $ Abstract
 !
@@ -23,20 +23,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekbool.inc'
+      include 'ekquery.inc'
+      include 'ekbool.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      INTEGER               N
-      CHARACTER*(*)         TABLE
-      INTEGER               TABIDX
-      CHARACTER*(*)         COLUMN
-      INTEGER               COLIDX
-      INTEGER               SENSE
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      integer               n
+      character*(*)         table
+      integer               tabidx
+      character*(*)         column
+      integer               colidx
+      integer               sense
 
 ! $ Brief_I/O
 !
@@ -155,65 +155,65 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               BUFLEN
-      INTEGER               CB
-      INTEGER               CE
-      INTEGER               IPARSE
-      INTEGER               NCNJ
-      INTEGER               NCNS
-      INTEGER               NORD
-      INTEGER               NTAB
-      INTEGER               RESOLV
-      INTEGER               TB
-      INTEGER               TE
+      integer               base
+      integer               buflen
+      integer               cb
+      integer               ce
+      integer               iparse
+      integer               ncnj
+      integer               ncns
+      integer               nord
+      integer               ntab
+      integer               resolv
+      integer               tb
+      integer               te
 
 
 !
 !     Use discovery check-in.
 !
 
-      CALL ZZEKREQI ( EQRYI, 'PARSED', IPARSE )
+      call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IPARSE .EQ. IFALSE ) THEN
+      if ( iparse .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKQORD'                                )
-         CALL SETMSG ( 'Encoded query has not yet been parsed.'  )
-         CALL SIGERR ( 'SPICE(UNPARSEDQUERY)'                    )
-         CALL CHKOUT ( 'ZZEKQORD'                                )
-         RETURN
+         call chkin  ( 'ZZEKQORD'                                )
+         call setmsg ( 'Encoded query has not yet been parsed.'  )
+         call sigerr ( 'SPICE(UNPARSEDQUERY)'                    )
+         call chkout ( 'ZZEKQORD'                                )
+         return
 
-      END IF
-
-
-      CALL ZZEKREQI ( EQRYI,  'NUM_ORDERBY_COLS',   NORD   )
-
-      IF (  ( N .LT. 1 ) .OR. ( N .GT. NORD )  ) THEN
-
-         CALL CHKIN  ( 'ZZEKQORD'                                  )
-         CALL SETMSG ( 'Column index # is out of valid range 1:#.' )
-         CALL ERRINT ( '#',  N                                     )
-         CALL ERRINT ( '#',  NORD                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-         CALL CHKOUT ( 'ZZEKQORD'                                  )
-         RETURN
-
-      END IF
+      end if
 
 
-      CALL ZZEKREQI ( EQRYI,  'NUM_TABLES',         NTAB   )
-      CALL ZZEKREQI ( EQRYI,  'NUM_CONJUNCTIONS',   NCNJ   )
-      CALL ZZEKREQI ( EQRYI,  'NUM_CONSTRAINTS',    NCNS   )
-      CALL ZZEKREQI ( EQRYI,  'CHR_BUF_SIZE',       BUFLEN )
+      call zzekreqi ( eqryi,  'NUM_ORDERBY_COLS',   nord   )
+
+      if (  ( n .lt. 1 ) .or. ( n .gt. nord )  ) then
+
+         call chkin  ( 'ZZEKQORD'                                  )
+         call setmsg ( 'Column index # is out of valid range 1:#.' )
+         call errint ( '#',  n                                     )
+         call errint ( '#',  nord                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+         call chkout ( 'ZZEKQORD'                                  )
+         return
+
+      end if
+
+
+      call zzekreqi ( eqryi,  'NUM_TABLES',         ntab   )
+      call zzekreqi ( eqryi,  'NUM_CONJUNCTIONS',   ncnj   )
+      call zzekreqi ( eqryi,  'NUM_CONSTRAINTS',    ncns   )
+      call zzekreqi ( eqryi,  'CHR_BUF_SIZE',       buflen )
 
 !
 !     Get the Nth table and column from the query.  The table
@@ -221,110 +221,110 @@
 !     conjunction size list, and the constraint descriptors, as
 !     well as the (N-1) previous order-by column descriptors.
 !
-      BASE   =        EQVBAS &
-                  +   NTAB * 2 * EQVDSZ &
-                  +   NCNJ &
-                  +   NCNS     * EQCDSZ &
-                  +   (N-1)    * EQODSZ
+      base   =        eqvbas &
+                  +   ntab * 2 * eqvdsz &
+                  +   ncnj &
+                  +   ncns     * eqcdsz &
+                  +   (n-1)    * eqodsz
 
 
 !
 !     Pick up the column name first.
 !
-      CB     =  EQRYI ( BASE + EQVDSZ + EQBSTR )
-      CE     =  EQRYI ( BASE + EQVDSZ + EQESTR )
+      cb     =  eqryi ( base + eqvdsz + eqbstr )
+      ce     =  eqryi ( base + eqvdsz + eqestr )
 
-      IF (       ( CB .GT. 0      ) &
-           .AND. ( CE .GT. 0      ) &
-           .AND. ( CB .LE. BUFLEN ) &
-           .AND. ( CE .LE. BUFLEN ) &
-           .AND. ( CB .LE. CE     )  ) THEN
+      if (       ( cb .gt. 0      ) &
+           .and. ( ce .gt. 0      ) &
+           .and. ( cb .le. buflen ) &
+           .and. ( ce .le. buflen ) &
+           .and. ( cb .le. ce     )  ) then
 
-         COLUMN = EQRYC(CB:CE)
+         column = eqryc(cb:ce)
 
-      ELSE
+      else
 !
 !        We should never see invalid pointers in a parsed, encoded
 !        query, but let's not take chances.
 !
-         CALL CHKIN  ( 'ZZEKQORD'                                )
-         CALL SETMSG ( 'Invalid string bounds #:# for column #.' )
-         CALL ERRINT ( '#',  CB                                  )
-         CALL ERRINT ( '#',  CE                                  )
-         CALL ERRINT ( '#',  N                                   )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKQORD'                                )
-         RETURN
+         call chkin  ( 'ZZEKQORD'                                )
+         call setmsg ( 'Invalid string bounds #:# for column #.' )
+         call errint ( '#',  cb                                  )
+         call errint ( '#',  ce                                  )
+         call errint ( '#',  n                                   )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKQORD'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Same deal for the qualifying table or alias, except that the begin
 !     pointer is set to zero if there's no name.
 !
-      TB     =  EQRYI ( BASE + EQBSTR )
-      TE     =  EQRYI ( BASE + EQESTR )
+      tb     =  eqryi ( base + eqbstr )
+      te     =  eqryi ( base + eqestr )
 
-      IF ( TB .GT. 0 ) THEN
+      if ( tb .gt. 0 ) then
 
-         IF (       ( TE .GT. 0      ) &
-              .AND. ( TB .LE. BUFLEN ) &
-              .AND. ( TE .LE. BUFLEN ) &
-              .AND. ( TB .LE. TE     )  ) THEN
+         if (       ( te .gt. 0      ) &
+              .and. ( tb .le. buflen ) &
+              .and. ( te .le. buflen ) &
+              .and. ( tb .le. te     )  ) then
 
-            TABLE  = EQRYC(TB:TE)
+            table  = eqryc(tb:te)
 
-         ELSE
+         else
 !
 !           If the first pointer is non-zero, both pointers should have
 !           been valid.
 !
-            CALL CHKIN  ( 'ZZEKQORD'                                   )
-            CALL SETMSG ( 'Invalid string bounds #:# for the table '  // &
+            call chkin  ( 'ZZEKQORD'                                   )
+            call setmsg ( 'Invalid string bounds #:# for the table '  // &
                           'qualifying column #.'                       )
-            CALL ERRINT ( '#',  TB                                     )
-            CALL ERRINT ( '#',  TE                                     )
-            CALL ERRINT ( '#',  N                                      )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZEKQORD'                                   )
-            RETURN
+            call errint ( '#',  tb                                     )
+            call errint ( '#',  te                                     )
+            call errint ( '#',  n                                      )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZEKQORD'                                   )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        No table was supplied.
 !
-         TABLE  =  ' '
+         table  =  ' '
 
-      END IF
+      end if
 
 
 !
 !     Set the order sense.
 !
-      SENSE  =  EQRYI ( BASE + EQODIR )
+      sense  =  eqryi ( base + eqodir )
 
 !
 !     If names have been resolved already, we can determine the index
 !     of the table to which the specified order-by column belongs.
 !
-      CALL ZZEKREQI ( EQRYI,  'NAMES_RESOLVED',   RESOLV )
+      call zzekreqi ( eqryi,  'NAMES_RESOLVED',   resolv )
 
-      IF ( RESOLV .EQ. ITRUE ) THEN
+      if ( resolv .eq. itrue ) then
 !
 !        The qualifying table's index in the FROM clause is available.
 !        So is the index of the column within the table.
 !
-         TABIDX  =  EQRYI( BASE + EQTORD              )
-         COLIDX  =  EQRYI( BASE + EQOCOL - 1 + EQCIDX )
+         tabidx  =  eqryi( base + eqtord              )
+         colidx  =  eqryi( base + eqocol - 1 + eqcidx )
 
-      ELSE
+      else
 
-         TABIDX  =  0
-         COLIDX  =  0
+         tabidx  =  0
+         colidx  =  0
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,19 +1,19 @@
 !$Procedure ZZDSIN ( SGP4 deep space initialization )
 
-      SUBROUTINE ZZDSIN (GEOPHS, &
-                         COSIM,  EMSQ,  ARGPO, S1,    S2,    S3, &
-                         S4,     S5,    SINIM, SS1,   SS2,   SS3, &
-                         SS4,    SS5,   SZ1,   SZ3,   SZ11,  SZ13, &
-                         SZ21,   SZ23,  SZ31,  SZ33,  T,     TC, &
-                         GSTO,   MO,    MDOT,  NO,    NODEO, NODEDOT, &
-                         XPIDOT, Z1,    Z3,    Z11,   Z13,   Z21, &
-                         Z23,    Z31,   Z33,   ECCO,  ECCSQ, &
-                         ECCM,   ARGPM, INCLM, MM,    XN,    NODEM, &
-                         IREZ,   ATIME, D2201, D2211, D3210, D3222, &
-                         D4410,  D4422, D5220, D5232, D5421, D5433, &
-                         DEDT,   DIDT,  DMDT,  DNDT,  DNODT, DOMDT, &
-                         DEL1,   DEL2,  DEL3,  XFACT, XLAMO, XLI, &
-                         XNI )
+      subroutine zzdsin (geophs, &
+                         cosim,  emsq,  argpo, s1,    s2,    s3, &
+                         s4,     s5,    sinim, ss1,   ss2,   ss3, &
+                         ss4,    ss5,   sz1,   sz3,   sz11,  sz13, &
+                         sz21,   sz23,  sz31,  sz33,  t,     tc, &
+                         gsto,   mo,    mdot,  no,    nodeo, nodedot, &
+                         xpidot, z1,    z3,    z11,   z13,   z21, &
+                         z23,    z31,   z33,   ecco,  eccsq, &
+                         eccm,   argpm, inclm, mm,    xn,    nodem, &
+                         irez,   atime, d2201, d2211, d3210, d3222, &
+                         d4410,  d4422, d5220, d5232, d5421, d5433, &
+                         dedt,   didt,  dmdt,  dndt,  dnodt, domdt, &
+                         del1,   del2,  del3,  xfact, xlamo, xli, &
+                         xni )
 
 ! $ Abstract
 !
@@ -31,84 +31,84 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsgp4.inc'
+      include 'zzsgp4.inc'
 
-      DOUBLE PRECISION         ARGPM
-      DOUBLE PRECISION         ARGPO
-      DOUBLE PRECISION         ATIME
-      DOUBLE PRECISION         COSIM
-      DOUBLE PRECISION         D2201
-      DOUBLE PRECISION         D2211
-      DOUBLE PRECISION         D3210
-      DOUBLE PRECISION         D3222
-      DOUBLE PRECISION         D4410
-      DOUBLE PRECISION         D4422
-      DOUBLE PRECISION         D5220
-      DOUBLE PRECISION         D5232
-      DOUBLE PRECISION         D5421
-      DOUBLE PRECISION         D5433
-      DOUBLE PRECISION         DEDT
-      DOUBLE PRECISION         DEL1
-      DOUBLE PRECISION         DEL2
-      DOUBLE PRECISION         DEL3
-      DOUBLE PRECISION         DIDT
-      DOUBLE PRECISION         DMDT
-      DOUBLE PRECISION         DNDT
-      DOUBLE PRECISION         DNODT
-      DOUBLE PRECISION         DOMDT
-      DOUBLE PRECISION         ECCM
-      DOUBLE PRECISION         ECCO
-      DOUBLE PRECISION         ECCSQ
-      DOUBLE PRECISION         EMSQ
-      DOUBLE PRECISION         GEOPHS    ( 8 )
-      DOUBLE PRECISION         GSTO
-      DOUBLE PRECISION         INCLM
-      DOUBLE PRECISION         MDOT
-      DOUBLE PRECISION         MM
-      DOUBLE PRECISION         MO
-      DOUBLE PRECISION         NO
-      DOUBLE PRECISION         NODEDOT
-      DOUBLE PRECISION         NODEM
-      DOUBLE PRECISION         NODEO
-      DOUBLE PRECISION         S1
-      DOUBLE PRECISION         S2
-      DOUBLE PRECISION         S3
-      DOUBLE PRECISION         S4
-      DOUBLE PRECISION         S5
-      DOUBLE PRECISION         SINIM
-      DOUBLE PRECISION         SS1
-      DOUBLE PRECISION         SS2
-      DOUBLE PRECISION         SS3
-      DOUBLE PRECISION         SS4
-      DOUBLE PRECISION         SS5
-      DOUBLE PRECISION         SZ1
-      DOUBLE PRECISION         SZ11
-      DOUBLE PRECISION         SZ13
-      DOUBLE PRECISION         SZ21
-      DOUBLE PRECISION         SZ23
-      DOUBLE PRECISION         SZ3
-      DOUBLE PRECISION         SZ31
-      DOUBLE PRECISION         SZ33
-      DOUBLE PRECISION         T
-      DOUBLE PRECISION         TC
-      DOUBLE PRECISION         XFACT
-      DOUBLE PRECISION         XLAMO
-      DOUBLE PRECISION         XLI
-      DOUBLE PRECISION         XN
-      DOUBLE PRECISION         XNI
-      DOUBLE PRECISION         XPIDOT
-      DOUBLE PRECISION         Z1
-      DOUBLE PRECISION         Z11
-      DOUBLE PRECISION         Z13
-      DOUBLE PRECISION         Z21
-      DOUBLE PRECISION         Z23
-      DOUBLE PRECISION         Z3
-      DOUBLE PRECISION         Z31
-      DOUBLE PRECISION         Z33
+      double precision         argpm
+      double precision         argpo
+      double precision         atime
+      double precision         cosim
+      double precision         d2201
+      double precision         d2211
+      double precision         d3210
+      double precision         d3222
+      double precision         d4410
+      double precision         d4422
+      double precision         d5220
+      double precision         d5232
+      double precision         d5421
+      double precision         d5433
+      double precision         dedt
+      double precision         del1
+      double precision         del2
+      double precision         del3
+      double precision         didt
+      double precision         dmdt
+      double precision         dndt
+      double precision         dnodt
+      double precision         domdt
+      double precision         eccm
+      double precision         ecco
+      double precision         eccsq
+      double precision         emsq
+      double precision         geophs    ( 8 )
+      double precision         gsto
+      double precision         inclm
+      double precision         mdot
+      double precision         mm
+      double precision         mo
+      double precision         no
+      double precision         nodedot
+      double precision         nodem
+      double precision         nodeo
+      double precision         s1
+      double precision         s2
+      double precision         s3
+      double precision         s4
+      double precision         s5
+      double precision         sinim
+      double precision         ss1
+      double precision         ss2
+      double precision         ss3
+      double precision         ss4
+      double precision         ss5
+      double precision         sz1
+      double precision         sz11
+      double precision         sz13
+      double precision         sz21
+      double precision         sz23
+      double precision         sz3
+      double precision         sz31
+      double precision         sz33
+      double precision         t
+      double precision         tc
+      double precision         xfact
+      double precision         xlamo
+      double precision         xli
+      double precision         xn
+      double precision         xni
+      double precision         xpidot
+      double precision         z1
+      double precision         z11
+      double precision         z13
+      double precision         z21
+      double precision         z23
+      double precision         z3
+      double precision         z31
+      double precision         z33
 
-      INTEGER                  IREZ
+      integer                  irez
 
 ! $ Brief_I/O
 !
@@ -366,102 +366,102 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION         AINV2
-      DOUBLE PRECISION         AONV
-      DOUBLE PRECISION         COSISQ
-      DOUBLE PRECISION         EMO
-      DOUBLE PRECISION         EMSQO
-      DOUBLE PRECISION         EOC
-      DOUBLE PRECISION         F220
-      DOUBLE PRECISION         F221
-      DOUBLE PRECISION         F311
-      DOUBLE PRECISION         F321
-      DOUBLE PRECISION         F322
-      DOUBLE PRECISION         F330
-      DOUBLE PRECISION         F441
-      DOUBLE PRECISION         F442
-      DOUBLE PRECISION         F522
-      DOUBLE PRECISION         F523
-      DOUBLE PRECISION         F542
-      DOUBLE PRECISION         F543
-      DOUBLE PRECISION         G200
-      DOUBLE PRECISION         G201
-      DOUBLE PRECISION         G211
-      DOUBLE PRECISION         G300
-      DOUBLE PRECISION         G310
-      DOUBLE PRECISION         G322
-      DOUBLE PRECISION         G410
-      DOUBLE PRECISION         G422
-      DOUBLE PRECISION         G520
-      DOUBLE PRECISION         G521
-      DOUBLE PRECISION         G532
-      DOUBLE PRECISION         G533
-      DOUBLE PRECISION         Q22
-      DOUBLE PRECISION         Q31
-      DOUBLE PRECISION         Q33
-      DOUBLE PRECISION         ROOT22
-      DOUBLE PRECISION         ROOT32
-      DOUBLE PRECISION         ROOT44
-      DOUBLE PRECISION         ROOT52
-      DOUBLE PRECISION         ROOT54
-      DOUBLE PRECISION         RPTIM
-      DOUBLE PRECISION         SES
-      DOUBLE PRECISION         SGHL
-      DOUBLE PRECISION         SGHS
-      DOUBLE PRECISION         SGS
-      DOUBLE PRECISION         SHL
-      DOUBLE PRECISION         SHS
-      DOUBLE PRECISION         SINI2
-      DOUBLE PRECISION         SIS
-      DOUBLE PRECISION         SLS
-      DOUBLE PRECISION         TEMP
-      DOUBLE PRECISION         TEMP1
-      DOUBLE PRECISION         THETA
-      DOUBLE PRECISION         X2O3
-      DOUBLE PRECISION         XKE
-      DOUBLE PRECISION         XNO2
-      DOUBLE PRECISION         ZNL
-      DOUBLE PRECISION         ZNS
+      double precision         ainv2
+      double precision         aonv
+      double precision         cosisq
+      double precision         emo
+      double precision         emsqo
+      double precision         eoc
+      double precision         f220
+      double precision         f221
+      double precision         f311
+      double precision         f321
+      double precision         f322
+      double precision         f330
+      double precision         f441
+      double precision         f442
+      double precision         f522
+      double precision         f523
+      double precision         f542
+      double precision         f543
+      double precision         g200
+      double precision         g201
+      double precision         g211
+      double precision         g300
+      double precision         g310
+      double precision         g322
+      double precision         g410
+      double precision         g422
+      double precision         g520
+      double precision         g521
+      double precision         g532
+      double precision         g533
+      double precision         q22
+      double precision         q31
+      double precision         q33
+      double precision         root22
+      double precision         root32
+      double precision         root44
+      double precision         root52
+      double precision         root54
+      double precision         rptim
+      double precision         ses
+      double precision         sghl
+      double precision         sghs
+      double precision         sgs
+      double precision         shl
+      double precision         shs
+      double precision         sini2
+      double precision         sis
+      double precision         sls
+      double precision         temp
+      double precision         temp1
+      double precision         theta
+      double precision         x2o3
+      double precision         xke
+      double precision         xno2
+      double precision         znl
+      double precision         zns
 
 
 
 !
 !     SPICELIB routines.
 !
-      DOUBLE PRECISION         PI
-      DOUBLE PRECISION         TWOPI
-      LOGICAL                  RETURN
+      double precision         pi
+      double precision         twopi
+      logical                  return
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSIN' )
+      call chkin ( 'ZZDSIN' )
 
 !
 !     Constants
 !
-      Q22    = 1.7891679D-6
-      Q31    = 2.1460748D-6
-      Q33    = 2.2123015D-7
-      ROOT22 = 1.7891679D-6
-      ROOT44 = 7.3636953D-9
-      ROOT54 = 2.1765803D-9
+      q22    = 1.7891679d-6
+      q31    = 2.1460748d-6
+      q33    = 2.2123015d-7
+      root22 = 1.7891679d-6
+      root44 = 7.3636953d-9
+      root54 = 2.1765803d-9
 
 !
 !     This equates to 7.29211514668855e-5 rad/sec
 !
-      RPTim  = 4.37526908801129966D-3
+      rptim  = 4.37526908801129966d-3
 
-      Root32 = 3.7393792D-7
-      Root52 = 1.1428639D-7
-      X2o3   = 2.0D0 / 3.0D0
-      ZNL    = 1.5835218D-4
-      ZNS    = 1.19459D-5
+      root32 = 3.7393792d-7
+      root52 = 1.1428639d-7
+      x2o3   = 2.0d0 / 3.0d0
+      znl    = 1.5835218d-4
+      zns    = 1.19459d-5
 
 !
 !     This code block replaces the call:
@@ -472,83 +472,83 @@
 !     .                  mu, radiusearthkm, xke,
 !     .                  j2, j3, j4, j3oj2 )
 !
-      XKE   = GEOPHS(K_KE)
+      xke   = geophs(k_ke)
 
 !
 !     DEEP SPACE INITIALIZATION
 !
-      IREZ = 0
-      IF ( (XN.LT.0.0052359877D0)  .AND. &
-           (XN.GT.0.0034906585D0) ) THEN
-         IREZ = 1
-      END IF
+      irez = 0
+      if ( (xn.lt.0.0052359877d0)  .and. &
+           (xn.gt.0.0034906585d0) ) then
+         irez = 1
+      end if
 
-      IF ( (XN   .GE. 8.26D-3) .AND. &
-           (XN   .LE. 9.24D-3) .AND. &
-           (ECCM .GE. 0.5D0)  )THEN
-         IREZ = 2
-      END IF
+      if ( (xn   .ge. 8.26d-3) .and. &
+           (xn   .le. 9.24d-3) .and. &
+           (eccm .ge. 0.5d0)  )then
+         irez = 2
+      end if
 
 !
 !     DO SOLAR TERMS
 !
-      SES  =  SS1*ZNS*SS5
-      SIS  =  SS2*ZNS*(SZ11 + SZ13)
-      SLS  = -ZNS*SS3*(SZ1 + SZ3 - 14.0D0 - 6.0D0*EMSQ)
-      SGHS =  SS4*ZNS*(SZ31 + SZ33 - 6.0D0)
-      SHS  = -ZNS*SS2*(SZ21 + SZ23)
+      ses  =  ss1*zns*ss5
+      sis  =  ss2*zns*(sz11 + sz13)
+      sls  = -zns*ss3*(sz1 + sz3 - 14.0d0 - 6.0d0*emsq)
+      sghs =  ss4*zns*(sz31 + sz33 - 6.0d0)
+      shs  = -zns*ss2*(sz21 + sz23)
 
 !
 !       sgp4fix for 180 deg incl
 !
-        IF ( (INCLM .LT. 5.2359877D-2) .OR. &
-             (INCLM .GT. PI()-5.2359877D-2) ) THEN
-            SHS = 0.0D0
-        END IF
+        if ( (inclm .lt. 5.2359877d-2) .or. &
+             (inclm .gt. pi()-5.2359877d-2) ) then
+            shs = 0.0d0
+        end if
 
-        IF (SINIM.NE.0.0D0) THEN
-            SHS = SHS/SINIM
-        END IF
+        if (sinim.ne.0.0d0) then
+            shs = shs/sinim
+        end if
 
-        SGS  = SGHS - COSIM*SHS
+        sgs  = sghs - cosim*shs
 
 !
 !       DO LUNAR TERMS
 !
-        DEDT = SES + S1*ZNL*S5
-        DIDT = SIS + S2*ZNL*(Z11 + Z13)
-        DMDT = SLS - ZNL*S3*(Z1 + Z3 - 14.0D0 - 6.0D0*EMSQ)
-        SGHL = S4*ZNL*(Z31 + Z33 - 6.0D0)
-        SHL  = -ZNL*S2*(Z21 + Z23)
+        dedt = ses + s1*znl*s5
+        didt = sis + s2*znl*(z11 + z13)
+        dmdt = sls - znl*s3*(z1 + z3 - 14.0d0 - 6.0d0*emsq)
+        sghl = s4*znl*(z31 + z33 - 6.0d0)
+        shl  = -znl*s2*(z21 + z23)
 
 !
 !       sgp4fix for 180 deg incl
 !
 
-        IF ( (INCLM .LT. 5.2359877D-2 ) .OR. &
-             (INCLM .GT. PI()-5.2359877D-2)) THEN
-            SHL = 0.0D0
-        END IF
+        if ( (inclm .lt. 5.2359877d-2 ) .or. &
+             (inclm .gt. pi()-5.2359877d-2)) then
+            shl = 0.0d0
+        end if
 
-        DOMDT= SGS+SGHL
-        DNODT= SHS
+        domdt= sgs+sghl
+        dnodt= shs
 
-        IF (SINIM .NE. 0.0D0) THEN
-            DOMDT = DOMDT-COSIM/SINIM*SHL
-            DNODT = DNODT+SHL/SINIM
-        END IF
+        if (sinim .ne. 0.0d0) then
+            domdt = domdt-cosim/sinim*shl
+            dnodt = dnodt+shl/sinim
+        end if
 
 !
 !       CALCULATE DEEP SPACE RESONANCE EFFECTS
 !
-        DNDT  = 0.0D0
-        THETA = DMOD(GSTO + TC*RPTIM, TWOPI() )
-        ECCM  = ECCM + DEDT*T
-        EMSQ  = ECCM**2
-        INCLM = INCLM + DIDT*T
-        ARGPM = ARGPM + DOMDT*T
-        NODEM = NODEM + DNODT*T
-        MM    = MM + DMDT*T
+        dndt  = 0.0d0
+        theta = dmod(gsto + tc*rptim, twopi() )
+        eccm  = eccm + dedt*t
+        emsq  = eccm**2
+        inclm = inclm + didt*t
+        argpm = argpm + domdt*t
+        nodem = nodem + dnodt*t
+        mm    = mm + dmdt*t
 
 !
 !   sgp4fix for negative inclinations
@@ -564,161 +564,161 @@
 !
 !       Initialize the resonance terms
 !
-         IF (IREZ .NE. 0) THEN
+         if (irez .ne. 0) then
 
-            AONV = (XN/XKE)**X2O3
+            aonv = (xn/xke)**x2o3
 
 !
 !           GEOPOTENTIAL RESONANCE FOR 12 HOUR ORBITS
 !
-            IF (IREZ .EQ. 2) THEN
+            if (irez .eq. 2) then
 
-               COSISQ = COSIM*COSIM
-               EMO    = ECCM
-               EMSQO  = EMSQ
-               ECCM   = ECCO
-               EMSQ   = ECCSQ
-               EOC    = ECCM*EMSQ
-               G201   = -0.306D0-(ECCM-0.64D0)*0.440D0
+               cosisq = cosim*cosim
+               emo    = eccm
+               emsqo  = emsq
+               eccm   = ecco
+               emsq   = eccsq
+               eoc    = eccm*emsq
+               g201   = -0.306d0-(eccm-0.64d0)*0.440d0
 
-               IF (ECCM.LE.0.65D0) THEN
+               if (eccm.le.0.65d0) then
 
-                  G211 =   3.616D0 -  13.2470D0*ECCM + &
-                              16.2900D0*EMSQ
-                  G310 = -19.302D0 + 117.3900D0*ECCM - &
-                              228.4190D0*EMSQ + 156.591D0*EOC
-                  G322 = -18.9068D0+ 109.7927D0*ECCM - &
-                              214.6334D0*EMSQ + 146.5816D0*EOC
-                  G410 = -41.122D0 + 242.6940D0*ECCM - &
-                              471.0940D0*EMSQ + 313.953D0*EOC
-                  G422 =-146.407D0 + 841.8800D0*ECCM - &
-                              1629.014D0*EMSQ + 1083.435D0*EOC
-                  G520 =-532.114D0 + 3017.977D0*ECCM - &
-                              5740.032D0*EMSQ + 3708.276D0*EOC
+                  g211 =   3.616d0 -  13.2470d0*eccm + &
+                              16.2900d0*emsq
+                  g310 = -19.302d0 + 117.3900d0*eccm - &
+                              228.4190d0*emsq + 156.591d0*eoc
+                  g322 = -18.9068d0+ 109.7927d0*eccm - &
+                              214.6334d0*emsq + 146.5816d0*eoc
+                  g410 = -41.122d0 + 242.6940d0*eccm - &
+                              471.0940d0*emsq + 313.953d0*eoc
+                  g422 =-146.407d0 + 841.8800d0*eccm - &
+                              1629.014d0*emsq + 1083.435d0*eoc
+                  g520 =-532.114d0 + 3017.977d0*eccm - &
+                              5740.032d0*emsq + 3708.276d0*eoc
 
-               ELSE
+               else
 
-                  G211 =  -72.099D0 +  331.819D0*ECCM - &
-                              508.738D0*EMSQ + 266.724D0*EOC
-                  G310 = -346.844D0 + 1582.851D0*ECCM - &
-                              2415.925D0*EMSQ + 1246.113D0*EOC
-                  G322 = -342.585D0 + 1554.908D0*ECCM - &
-                              2366.899D0*EMSQ + 1215.972D0*EOC
-                  G410 =-1052.797D0 + 4758.686D0*ECCM - &
-                              7193.992D0*EMSQ + 3651.957D0*EOC
-                  G422 =-3581.690D0 + 16178.11D0*ECCM - &
-                              24462.77D0*EMSQ + 12422.52D0*EOC
+                  g211 =  -72.099d0 +  331.819d0*eccm - &
+                              508.738d0*emsq + 266.724d0*eoc
+                  g310 = -346.844d0 + 1582.851d0*eccm - &
+                              2415.925d0*emsq + 1246.113d0*eoc
+                  g322 = -342.585d0 + 1554.908d0*eccm - &
+                              2366.899d0*emsq + 1215.972d0*eoc
+                  g410 =-1052.797d0 + 4758.686d0*eccm - &
+                              7193.992d0*emsq + 3651.957d0*eoc
+                  g422 =-3581.690d0 + 16178.11d0*eccm - &
+                              24462.77d0*emsq + 12422.52d0*eoc
 
-                  IF (ECCM.GT.0.715D0) THEN
-                     G520 =-5149.66D0 + 29936.92D0*ECCM - &
-                              54087.36D0*EMSQ + 31324.56D0*EOC
-                  ELSE
-                     G520 = 1464.74D0 -  4664.75D0*ECCM + &
-                              3763.64D0*EMSQ
-                  END IF
+                  if (eccm.gt.0.715d0) then
+                     g520 =-5149.66d0 + 29936.92d0*eccm - &
+                              54087.36d0*emsq + 31324.56d0*eoc
+                  else
+                     g520 = 1464.74d0 -  4664.75d0*eccm + &
+                              3763.64d0*emsq
+                  end if
 
-               END IF
+               end if
 
-            IF (ECCM.LT.0.7D0) THEN
+            if (eccm.lt.0.7d0) then
 
-                G533 = -919.22770D0 + 4988.6100D0*ECCM-9064.7700D0*EMSQ &
-                     + 5542.21D0*EOC
-                G521 = -822.71072D0 + 4568.6173D0*ECCM-8491.4146D0*EMSQ &
-                     + 5337.524D0*EOC
-                G532 = -853.66600D0 + 4690.2500D0*ECCM-8624.7700D0*EMSQ &
-                     + 5341.4D0*EOC
+                g533 = -919.22770d0 + 4988.6100d0*eccm-9064.7700d0*emsq &
+                     + 5542.21d0*eoc
+                g521 = -822.71072d0 + 4568.6173d0*eccm-8491.4146d0*emsq &
+                     + 5337.524d0*eoc
+                g532 = -853.66600d0 + 4690.2500d0*eccm-8624.7700d0*emsq &
+                     + 5341.4d0*eoc
 
-            ELSE
+            else
 
-                G533 =-37995.780D0 + 161616.52D0*ECCM-229838.20D0*EMSQ+ &
-                    109377.94D0*EOC
-                G521 =-51752.104D0 + 218913.95D0*ECCM-309468.16D0*EMSQ+ &
-                    146349.42D0*EOC
-                G532 =-40023.880D0 + 170470.89D0*ECCM-242699.48D0*EMSQ+ &
-                    115605.82D0*EOC
+                g533 =-37995.780d0 + 161616.52d0*eccm-229838.20d0*emsq+ &
+                    109377.94d0*eoc
+                g521 =-51752.104d0 + 218913.95d0*eccm-309468.16d0*emsq+ &
+                    146349.42d0*eoc
+                g532 =-40023.880d0 + 170470.89d0*eccm-242699.48d0*emsq+ &
+                    115605.82d0*eoc
 
-            END IF
+            end if
 
-            SINI2 =  SINIM*SINIM
-            F220  =  0.75D0* (1.0D0+2.0D0*COSIM+COSISQ)
-            F221  =  1.5D0*SINI2
-            F321  =  1.875D0*SINIM * (1.0D0-2.0D0*COSIM-3.0D0*COSISQ)
-            F322  = -1.875D0*SINIM * (1.0D0+2.0D0*COSIM-3.0D0*COSISQ)
-            F441  = 35.0D0*SINI2*F220
-            F442  = 39.3750D0*SINI2*SINI2
-            F522  =  9.84375D0*SINIM * (SINI2* (1.0D0-2.0D0*COSIM- &
-                     5.0D0*COSISQ)+0.33333333D0 * (-2.0D0+4.0D0*COSIM+ &
-                     6.0D0*COSISQ) )
-            F523  =  SINIM * (4.92187512D0*SINI2 * (-2.0D0-4.0D0*COSIM+ &
-                     10.0D0*COSISQ) + 6.56250012D0* &
-                     (1.0D0+2.0D0*COSIM-3.0D0*COSISQ))
-            F542  =  29.53125D0*SINIM * (2.0D0-8.0D0*COSIM+COSISQ* &
-                     (-12.0D0+8.0D0*COSIM+10.0D0*COSISQ) )
-            F543  = 29.53125D0*SINIM * (-2.0D0-8.0D0*COSIM+COSISQ* &
-                     (12.0D0+8.0D0*COSIM-10.0D0*COSISQ) )
+            sini2 =  sinim*sinim
+            f220  =  0.75d0* (1.0d0+2.0d0*cosim+cosisq)
+            f221  =  1.5d0*sini2
+            f321  =  1.875d0*sinim * (1.0d0-2.0d0*cosim-3.0d0*cosisq)
+            f322  = -1.875d0*sinim * (1.0d0+2.0d0*cosim-3.0d0*cosisq)
+            f441  = 35.0d0*sini2*f220
+            f442  = 39.3750d0*sini2*sini2
+            f522  =  9.84375d0*sinim * (sini2* (1.0d0-2.0d0*cosim- &
+                     5.0d0*cosisq)+0.33333333d0 * (-2.0d0+4.0d0*cosim+ &
+                     6.0d0*cosisq) )
+            f523  =  sinim * (4.92187512d0*sini2 * (-2.0d0-4.0d0*cosim+ &
+                     10.0d0*cosisq) + 6.56250012d0* &
+                     (1.0d0+2.0d0*cosim-3.0d0*cosisq))
+            f542  =  29.53125d0*sinim * (2.0d0-8.0d0*cosim+cosisq* &
+                     (-12.0d0+8.0d0*cosim+10.0d0*cosisq) )
+            f543  = 29.53125d0*sinim * (-2.0d0-8.0d0*cosim+cosisq* &
+                     (12.0d0+8.0d0*cosim-10.0d0*cosisq) )
 
-            XNO2   =  XN * XN
-            AINV2  =  AONV * AONV
-            TEMP1  =  3.0D0*XNO2*AINV2
-            TEMP   =  TEMP1*ROOT22
-            D2201  =  TEMP*F220*G201
-            D2211  =  TEMP*F221*G211
-            TEMP1  =  TEMP1*AONV
-            TEMP   =  TEMP1*ROOT32
-            D3210  =  TEMP*F321*G310
-            D3222  =  TEMP*F322*G322
-            TEMP1  =  TEMP1*AONV
-            TEMP   =  2.0D0*TEMP1*ROOT44
-            D4410  =  TEMP*F441*G410
-            D4422  =  TEMP*F442*G422
-            TEMP1  =  TEMP1*AONV
-            TEMP   =  TEMP1*ROOT52
-            D5220  =  TEMP*F522*G520
-            D5232  =  TEMP*F523*G532
-            TEMP   =  2.0D0*TEMP1*ROOT54
-            D5421  =  TEMP*F542*G521
-            D5433  =  TEMP*F543*G533
-            XLAMO  =  DMOD(MO+NODEO+NODEO-THETA-THETA, TWOPI())
-            XFACT  = MDOT + DMDT + 2.0D0 * (NODEDOT+DNODT-RPTIM) - NO
+            xno2   =  xn * xn
+            ainv2  =  aonv * aonv
+            temp1  =  3.0d0*xno2*ainv2
+            temp   =  temp1*root22
+            d2201  =  temp*f220*g201
+            d2211  =  temp*f221*g211
+            temp1  =  temp1*aonv
+            temp   =  temp1*root32
+            d3210  =  temp*f321*g310
+            d3222  =  temp*f322*g322
+            temp1  =  temp1*aonv
+            temp   =  2.0d0*temp1*root44
+            d4410  =  temp*f441*g410
+            d4422  =  temp*f442*g422
+            temp1  =  temp1*aonv
+            temp   =  temp1*root52
+            d5220  =  temp*f522*g520
+            d5232  =  temp*f523*g532
+            temp   =  2.0d0*temp1*root54
+            d5421  =  temp*f542*g521
+            d5433  =  temp*f543*g533
+            xlamo  =  dmod(mo+nodeo+nodeo-theta-theta, twopi())
+            xfact  = mdot + dmdt + 2.0d0 * (nodedot+dnodt-rptim) - no
 
-            ECCM = EMO
-            EMSQ = EMSQO
+            eccm = emo
+            emsq = emsqo
 
-         END IF
+         end if
 
-         IF (IREZ .EQ. 1) THEN
+         if (irez .eq. 1) then
 
 !
 !           SYNCHRONOUS RESONANCE TERMS
 !
-            G200  = 1.0D0 + EMSQ * (-2.5D0+0.8125D0*EMSQ)
-            G310  = 1.0D0 + 2.0D0*EMSQ
-            G300  = 1.0D0 + EMSQ * (-6.0D0+6.60937D0*EMSQ)
-            F220  = 0.75D0 * (1.0D0+COSIM) * (1.0D0+COSIM)
-            F311  = 0.9375D0*SINIM*SINIM* &
-                     (1.0D0+3.0D0*COSIM) - 0.75D0*(1.0D0+COSIM)
-            F330  = 1.0D0+COSIM
-            F330  = 1.875D0*F330*F330*F330
-            DEL1  = 3.0D0*XN*XN*AONV*AONV
-            DEL2  = 2.0D0*DEL1*F220*G200*Q22
-            DEL3  = 3.0D0*DEL1*F330*G300*Q33*AONV
-            DEL1  = DEL1*F311*G310*Q31*AONV
-            XLAMO = DMOD(MO+NODEO+ARGPO-THETA, TWOPI())
-            XFACT = MDOT + XPIDOT - RPTIM + DMDT + DOMDT + DNODT - NO
+            g200  = 1.0d0 + emsq * (-2.5d0+0.8125d0*emsq)
+            g310  = 1.0d0 + 2.0d0*emsq
+            g300  = 1.0d0 + emsq * (-6.0d0+6.60937d0*emsq)
+            f220  = 0.75d0 * (1.0d0+cosim) * (1.0d0+cosim)
+            f311  = 0.9375d0*sinim*sinim* &
+                     (1.0d0+3.0d0*cosim) - 0.75d0*(1.0d0+cosim)
+            f330  = 1.0d0+cosim
+            f330  = 1.875d0*f330*f330*f330
+            del1  = 3.0d0*xn*xn*aonv*aonv
+            del2  = 2.0d0*del1*f220*g200*q22
+            del3  = 3.0d0*del1*f330*g300*q33*aonv
+            del1  = del1*f311*g310*q31*aonv
+            xlamo = dmod(mo+nodeo+argpo-theta, twopi())
+            xfact = mdot + xpidot - rptim + dmdt + domdt + dnodt - no
 
-         END IF
+         end if
 
 !
 !        FOR SGP4, INITIALIZE THE INTEGRATOR
 !
-         XLI   = XLAMO
-         XNI   = NO
-         ATIME = 0.0D0
-         XN    = NO + DNDT
+         xli   = xlamo
+         xni   = no
+         atime = 0.0d0
+         xn    = no + dndt
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDSIN' )
+      call chkout ( 'ZZDSIN' )
 
-      RETURN
-      END
+      return
+      end

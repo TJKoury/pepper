@@ -1,6 +1,6 @@
 !$Procedure ZZDDHPPF ( Private --- DDH Prepare Preexisting File )
 
-      SUBROUTINE ZZDDHPPF ( UNIT, ARCH, BFF )
+      subroutine zzddhppf ( unit, arch, bff )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
-      INCLUDE              'zzftprms.inc'
+      include              'zzddhman.inc'
+      include              'zzftprms.inc'
 
-      INTEGER               UNIT
-      INTEGER               ARCH
-      INTEGER               BFF
+      integer               unit
+      integer               arch
+      integer               bff
 
 ! $ Brief_I/O
 !
@@ -317,132 +317,132 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      INTEGER               POS
+      integer               isrchc
+      integer               pos
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Number of characters to be read in from a record.
 !
-      INTEGER               NUMCHR
-      PARAMETER           ( NUMCHR = 1000 )
+      integer               numchr
+      parameter           ( numchr = 1000 )
 
 !
 !     Bounding indices for the window that brackets the FTP
 !     error detection string in the file record.
 !
-      INTEGER               FTPSTR
-      PARAMETER           ( FTPSTR = 500 )
+      integer               ftpstr
+      parameter           ( ftpstr = 500 )
 
-      INTEGER               FTPEND
-      PARAMETER           ( FTPEND = 1000 )
+      integer               ftpend
+      parameter           ( ftpend = 1000 )
 
 !
 !     Index of the start of the binary file format identification
 !     string in DAF binaries.
 !
-      INTEGER               DAFBFF
-      PARAMETER           ( DAFBFF = 89 )
+      integer               dafbff
+      parameter           ( dafbff = 89 )
 
 !
 !     Index of the start of the binary file format identification
 !     string in DAS binaries.
 !
-      INTEGER               DASBFF
-      PARAMETER           ( DASBFF = 85 )
+      integer               dasbff
+      parameter           ( dasbff = 85 )
 
 !
 !     Size of the binary format identification string.
 !
-      INTEGER               BFFSIZ
-      PARAMETER           ( BFFSIZ = 8 )
+      integer               bffsiz
+      parameter           ( bffsiz = 8 )
 
 !
 !     Index of the first byte of NI in the DAF file record.
 !
-      INTEGER               NIPOS
-      PARAMETER           ( NIPOS = 13 )
+      integer               nipos
+      parameter           ( nipos = 13 )
 
 !
 !     Index of the first byte of NSUM in the DAF descriptor record.
 !
-      INTEGER               NSMPOS
-      PARAMETER           ( NSMPOS = 17 )
+      integer               nsmpos
+      parameter           ( nsmpos = 17 )
 
 !
 !     Index of the first byte of FDREC in the DAF file record.
 !
-      INTEGER               FDRPOS
-      PARAMETER           ( FDRPOS = 77 )
+      integer               fdrpos
+      parameter           ( fdrpos = 77 )
 
 !
 !     Integer code such that CHAR(INTNUL) produces the NULL character.
 !
-      INTEGER               INTNUL
-      PARAMETER           ( INTNUL = 0 )
+      integer               intnul
+      parameter           ( intnul = 0 )
 
 !
 !     IDW2AT Output Argument Lengths.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 4 )
+      integer               idwlen
+      parameter           ( idwlen = 4 )
 
 !
 !     NULLID is the index of the extended STRBFF "NULL" string ID.
 !
-      INTEGER               NULLID
-      PARAMETER           ( NULLID = NUMBFF+1 )
+      integer               nullid
+      parameter           ( nullid = numbff+1 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(1)         CARG
-      CHARACTER*(NUMCHR)    CHRREC
-      CHARACTER*(BFFSIZ)    BFFIDW
-      CHARACTER*(IDWLEN)    FILARC
-      CHARACTER*(IDWLEN)    FILTYP
-      CHARACTER*(SIZDLM)    FTPDLM
-      CHARACTER*(SIZEND)    FTPLFT
-      CHARACTER*(SIZSTR)    FTPMEM
-      CHARACTER*(SIZEND)    FTPRGT
-      CHARACTER*(1)         NULL
-      CHARACTER*(STRSIZ)    STRARC ( NUMARC )
-      CHARACTER*(STRSIZ)    STRBFF ( NULLID )
+      character*(1)         carg
+      character*(numchr)    chrrec
+      character*(bffsiz)    bffidw
+      character*(idwlen)    filarc
+      character*(idwlen)    filtyp
+      character*(sizdlm)    ftpdlm
+      character*(sizend)    ftplft
+      character*(sizstr)    ftpmem
+      character*(sizend)    ftprgt
+      character*(1)         null
+      character*(strsiz)    strarc ( numarc )
+      character*(strsiz)    strbff ( nullid )
 
-      INTEGER               FDREC
-      INTEGER               FTPPOS
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               TSTARC
+      integer               fdrec
+      integer               ftppos
+      integer               i
+      integer               iostat
+      integer               tstarc
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               FTPERR
+      logical               first
+      logical               found
+      logical               ftperr
 
 !
 !     Statement Functions
 !
-      INTEGER               ZZICHR
+      integer               zzichr
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  FTPDLM
-      SAVE                  FTPLFT
-      SAVE                  FTPMEM
-      SAVE                  FTPRGT
-      SAVE                  NULL
-      SAVE                  STRARC
-      SAVE                  STRBFF
+      save                  first
+      save                  ftpdlm
+      save                  ftplft
+      save                  ftpmem
+      save                  ftprgt
+      save                  null
+      save                  strarc
+      save                  strbff
 
 !
 !     Data Statements
 !
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 !
 !     Statement Function Definitions
@@ -459,19 +459,19 @@
 #endif
 !
 #if defined(SPICE_COMPILER_INTEL)
-      ZZICHR(CARG) = ICHAR(CARG)
+      zzichr(carg) = ichar(carg)
 #else
-      ZZICHR(CARG) = ICHAR(CARG) - MAX( -1, MIN(0,ICHAR(CARG)) )*256
+      zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
 #endif
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHPPF' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHPPF' )
+      end if
 
 !
 !     If this is the first time into the routine, populate local
@@ -479,151 +479,151 @@
 !     BFF parameters, the names of the ARCH parameters, and the
 !     local copy of the FTP string.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Construct and store the NULL valued byte.
 !
-         NULL = CHAR(INTNUL)
+         null = char(intnul)
 
 !
 !        Retrieve the BFF and ARCH names.
 !
-         DO I = 1, NUMBFF
-            CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-         END DO
+         do i = 1, numbff
+            call zzddhgsd ( 'BFF', i, strbff(i) )
+         end do
 
-         DO I = 1, NUMARC
-            CALL ZZDDHGSD ( 'ARCH', I, STRARC(I) )
-         END DO
+         do i = 1, numarc
+            call zzddhgsd ( 'ARCH', i, strarc(i) )
+         end do
 
 !
 !        Extend STRBFF to include the null BFFID.  This addresses
 !        the N0051 Sun Solaris Native C toolkit binary files.
 !
-         DO I = 1, BFFSIZ
-            STRBFF(NULLID) (I:I) = NULL
-         END DO
+         do i = 1, bffsiz
+            strbff(nullid) (i:i) = null
+         end do
 
 !
 !        Fetch the FTP string.
 !
-         CALL ZZFTPSTR ( FTPMEM, FTPLFT, FTPRGT, FTPDLM )
+         call zzftpstr ( ftpmem, ftplft, ftprgt, ftpdlm )
 
 !
 !        Set FIRST to FALSE so we will not reassign any of these values.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get the simple consistency checks out of the way first.  Is
 !     the input ARCH value valid?
 !
-      IF ( ( ARCH .LE. 0 ) .OR. ( ARCH .GT. NUMARC ) ) THEN
+      if ( ( arch .le. 0 ) .or. ( arch .gt. numarc ) ) then
 
-         BFF = 0
+         bff = 0
 
-         CALL SETMSG ( 'The integer code, ''#'' indicating the file ' &
+         call setmsg ( 'The integer code, ''#'' indicating the file ' &
          //            'architecture to examine is out of range.'     )
-         CALL ERRINT ( '#', ARCH                                      )
-         CALL SIGERR ( 'SPICE(UNKNOWNFILARC)'                         )
-         CALL CHKOUT ( 'ZZDDHPPF'                                     )
-         RETURN
+         call errint ( '#', arch                                      )
+         call sigerr ( 'SPICE(UNKNOWNFILARC)'                         )
+         call chkout ( 'ZZDDHPPF'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the first record from the file as a string of NUMCHR
 !     characters.
 !
-      READ ( UNIT, REC=1, IOSTAT=IOSTAT ) CHRREC
+      read ( unit, rec=1, iostat=iostat ) chrrec
 
 !
 !     Check for read failure.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         BFF = 0
+         bff = 0
 
-         CALL SETMSG ( 'Error reading the file record from the ' &
+         call setmsg ( 'Error reading the file record from the ' &
          //            'binary DAF file ''#''.  IOSTAT = #.'     )
-         CALL ERRFNM ( '#', UNIT                                 )
-         CALL ERRINT ( '#', IOSTAT                               )
-         CALL SIGERR ( 'SPICE(FILEREADFAILED)'                   )
-         CALL CHKOUT ( 'ZZDDHPPF'                                )
-         RETURN
+         call errfnm ( '#', unit                                 )
+         call errint ( '#', iostat                               )
+         call sigerr ( 'SPICE(FILEREADFAILED)'                   )
+         call chkout ( 'ZZDDHPPF'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     First check the ID word from the input file.
 !
-      CALL IDW2AT ( CHRREC(1:8), FILARC, FILTYP )
+      call idw2at ( chrrec(1:8), filarc, filtyp )
 
 !
 !     Now locate FILARC in the STRARC array.
 !
-      TSTARC = ISRCHC ( FILARC, NUMARC, STRARC )
+      tstarc = isrchc ( filarc, numarc, strarc )
 
 !
 !     If FILARC was not found, signal an appropriate error.
 !
-      IF ( TSTARC .EQ. 0 ) THEN
+      if ( tstarc .eq. 0 ) then
 
-         BFF = 0
+         bff = 0
 
-         CALL SETMSG ( 'The file, #, has a unidentified file ' &
+         call setmsg ( 'The file, #, has a unidentified file ' &
          //            'architecture.  Check that this file ' &
          //            'is a properly created binary SPICE ' &
          //            'kernel.'                               )
-         CALL ERRFNM ( '#', UNIT                               )
-         CALL SIGERR ( 'SPICE(UNKNOWNFILARC)'                  )
-         CALL CHKOUT ( 'ZZDDHPPF'                              )
-         RETURN
+         call errfnm ( '#', unit                               )
+         call sigerr ( 'SPICE(UNKNOWNFILARC)'                  )
+         call chkout ( 'ZZDDHPPF'                              )
+         return
 
 !
 !     Otherwise we have an architecture mismatch error, if
 !     FILARC does not agree with ARCH.
 !
-      ELSE IF ( TSTARC .NE. ARCH ) THEN
+      else if ( tstarc .ne. arch ) then
 
-         BFF = 0
+         bff = 0
 
-         CALL SETMSG ( 'A request to load the # file, $, has ' &
+         call setmsg ( 'A request to load the # file, $, has ' &
          //            'been made by the % system.  This operation ' &
          //            'is not permitted.'                           )
-         CALL ERRCH  ( '#', STRARC(TSTARC)                           )
-         CALL ERRFNM ( '$', UNIT                                     )
-         CALL ERRCH  ( '%', STRARC(ARCH)                             )
-         CALL SIGERR ( 'SPICE(FILARCHMISMATCH)'                      )
-         CALL CHKOUT ( 'ZZDDHPPF'                                    )
-         RETURN
+         call errch  ( '#', strarc(tstarc)                           )
+         call errfnm ( '$', unit                                     )
+         call errch  ( '%', strarc(arch)                             )
+         call sigerr ( 'SPICE(FILARCHMISMATCH)'                      )
+         call chkout ( 'ZZDDHPPF'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check for possible FTP transfer errors.
 !
-      CALL ZZFTPCHK ( CHRREC(FTPSTR:FTPEND), FTPERR )
+      call zzftpchk ( chrrec(ftpstr:ftpend), ftperr )
 
-      IF ( FTPERR ) THEN
+      if ( ftperr ) then
 
-         BFF = 0
+         bff = 0
 
-         CALL SETMSG ( 'FTP transfer error detected.  This ' &
+         call setmsg ( 'FTP transfer error detected.  This ' &
          //            'binary $, ''#'', has most likely been ' &
          //            'corrupted by an ASCII mode FTP transfer. ' &
          //            'Obtain the file using IMAGE or BINARY ' &
          //            'transfer mode from the source.'            )
-         CALL ERRCH  ( '$', STRARC(TSTARC)                         )
-         CALL ERRFNM ( '#', UNIT                                   )
-         CALL SIGERR ( 'SPICE(FTPXFERERROR)'                       )
-         CALL CHKOUT ( 'ZZDDHPPF'                                  )
-         RETURN
+         call errch  ( '$', strarc(tstarc)                         )
+         call errfnm ( '#', unit                                   )
+         call sigerr ( 'SPICE(FTPXFERERROR)'                       )
+         call chkout ( 'ZZDDHPPF'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Now this search is redundant, but the presence of the
@@ -632,85 +632,85 @@
 !     and we can expect to locate the binary file format
 !     identification string.
 !
-      FTPPOS = POS ( CHRREC(500:1000), FTPLFT, 1 )
+      ftppos = pos ( chrrec(500:1000), ftplft, 1 )
 
 !
 !     Check to see if we found FTPLFT.  If so extract the binary
 !     file format ID word from the file record.
 !
-      IF ( FTPPOS .NE. 0 ) THEN
+      if ( ftppos .ne. 0 ) then
 
 !
 !        Extract BFFIDW from CHRREC.
 !
-         IF ( ARCH .EQ. DAF ) THEN
-            BFFIDW = CHRREC ( DAFBFF : (DAFBFF+BFFSIZ-1) )
-         ELSE IF ( ARCH .EQ. DAS ) THEN
-            BFFIDW = CHRREC ( DASBFF : (DASBFF+BFFSIZ-1) )
-         END IF
+         if ( arch .eq. daf ) then
+            bffidw = chrrec ( dafbff : (dafbff+bffsiz-1) )
+         else if ( arch .eq. das ) then
+            bffidw = chrrec ( dasbff : (dasbff+bffsiz-1) )
+         end if
 
 !
 !        See if we can find BFFIDW in the STRBFF list.
 !
-         BFF = ISRCHC ( BFFIDW, NUMBFF + 1, STRBFF )
+         bff = isrchc ( bffidw, numbff + 1, strbff )
 
 !
 !        Check to see if BFF is 0, if it is, signal an error since
 !        this indicates an unrecognized BFF.
 !
-         IF ( BFF .EQ. 0 ) THEN
+         if ( bff .eq. 0 ) then
 
-            CALL SETMSG ( 'The file ''#'' utilizes the binary file ' &
+            call setmsg ( 'The file ''#'' utilizes the binary file ' &
             //            'format ''#''.  This format is currently ' &
             //            'unknown to this toolkit.  A toolkit ' &
             //            'update may be in order.'                  )
-            CALL ERRFNM ( '#', UNIT                                  )
-            CALL ERRCH  ( '#', BFFIDW                                )
-            CALL SIGERR ( 'SPICE(UNKNOWNBFF)'                        )
-            CALL CHKOUT ( 'ZZDDHPPF'                                 )
-            RETURN
+            call errfnm ( '#', unit                                  )
+            call errch  ( '#', bffidw                                )
+            call sigerr ( 'SPICE(UNKNOWNBFF)'                        )
+            call chkout ( 'ZZDDHPPF'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        See if we have a NULLID situation, if not check out and
 !        return as swe have identified the BFF.
 !
-         IF ( BFF .NE. NULLID ) THEN
-            CALL CHKOUT ( 'ZZDDHPPF' )
-            RETURN
-         END IF
+         if ( bff .ne. nullid ) then
+            call chkout ( 'ZZDDHPPF' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     There is no FTP string, if the file is a DAS, we have to
 !     assume it is of the native architecture.
 !
-      IF ( ARCH .EQ. DAS ) THEN
+      if ( arch .eq. das ) then
 
-         CALL ZZPLATFM ( 'FILE_FORMAT', BFFIDW )
-         CALL UCASE    ( BFFIDW,        BFFIDW )
+         call zzplatfm ( 'FILE_FORMAT', bffidw )
+         call ucase    ( bffidw,        bffidw )
 
-         BFF = ISRCHC ( BFFIDW, NUMBFF, STRBFF )
+         bff = isrchc ( bffidw, numbff, strbff )
 
-         IF ( BFF .EQ. 0 ) THEN
+         if ( bff .eq. 0 ) then
 
-            CALL SETMSG ( 'The native architecture for this ' &
+            call setmsg ( 'The native architecture for this ' &
             //            'platform is unknown to this version of ' &
             //            'the toolkit. This is a severe problem ' &
             //            'that should never occur, please contact ' &
             //            'NAIF.'                                    )
-            CALL SIGERR ( 'SPICE(BUG)'                               )
-            CALL CHKOUT ( 'ZZDDHPPF'                                 )
-            RETURN
+            call sigerr ( 'SPICE(BUG)'                               )
+            call chkout ( 'ZZDDHPPF'                                 )
+            return
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'ZZDDHPPF' )
-         RETURN
+         call chkout ( 'ZZDDHPPF' )
+         return
 
-      END IF
+      end if
 
 !
 !     If we reach this point, then we are either dealing with
@@ -746,117 +746,117 @@
 !
 !     where VAL is some non-zero value.
 !
-      IF ( ( CHRREC(     NIPOS:NIPOS     ) .EQ. NULL ) .AND. &
-           ( CHRREC( (NIPOS+1):(NIPOS+1) ) .EQ. NULL ) .AND. &
-           ( CHRREC( (NIPOS+2):(NIPOS+2) ) .EQ. NULL ) .AND. &
-           ( CHRREC( (NIPOS+3):(NIPOS+3) ) .NE. NULL )       ) THEN
+      if ( ( chrrec(     nipos:nipos     ) .eq. null ) .and. &
+           ( chrrec( (nipos+1):(nipos+1) ) .eq. null ) .and. &
+           ( chrrec( (nipos+2):(nipos+2) ) .eq. null ) .and. &
+           ( chrrec( (nipos+3):(nipos+3) ) .ne. null )       ) then
 
-         BFF = BIGI3E
+         bff = bigi3e
 
-      ELSE IF ( ( CHRREC(     NIPOS:NIPOS     ) .NE. NULL ) .AND. &
-                ( CHRREC( (NIPOS+1):(NIPOS+1) ) .EQ. NULL ) .AND. &
-                ( CHRREC( (NIPOS+2):(NIPOS+2) ) .EQ. NULL ) .AND. &
-                ( CHRREC( (NIPOS+3):(NIPOS+3) ) .EQ. NULL )       ) THEN
+      else if ( ( chrrec(     nipos:nipos     ) .ne. null ) .and. &
+                ( chrrec( (nipos+1):(nipos+1) ) .eq. null ) .and. &
+                ( chrrec( (nipos+2):(nipos+2) ) .eq. null ) .and. &
+                ( chrrec( (nipos+3):(nipos+3) ) .eq. null )       ) then
 
 !
 !        At this point we know we are dealing with a little endian
 !        file.  Locate the first descriptor record.
 !
-         FDREC = ZZICHR( CHRREC(     FDRPOS:FDRPOS     ) )
-         FDREC = ZZICHR( CHRREC( (FDRPOS+1):(FDRPOS+1) ) )*16   + FDREC
-         FDREC = ZZICHR( CHRREC( (FDRPOS+2):(FDRPOS+2) ) )*256  + FDREC
-         FDREC = ZZICHR( CHRREC( (FDRPOS+3):(FDRPOS+3) ) )*4096 + FDREC
+         fdrec = zzichr( chrrec(     fdrpos:fdrpos     ) )
+         fdrec = zzichr( chrrec( (fdrpos+1):(fdrpos+1) ) )*16   + fdrec
+         fdrec = zzichr( chrrec( (fdrpos+2):(fdrpos+2) ) )*256  + fdrec
+         fdrec = zzichr( chrrec( (fdrpos+3):(fdrpos+3) ) )*4096 + fdrec
 
 !
 !        Read the record into CHRREC.
 !
-         READ ( UNIT, REC=FDREC, IOSTAT=IOSTAT ) CHRREC
+         read ( unit, rec=fdrec, iostat=iostat ) chrrec
 
 !
 !        Check for read failure.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            BFF = 0
+            bff = 0
 
-            CALL SETMSG ( 'Error reading a descriptor record from ' &
+            call setmsg ( 'Error reading a descriptor record from ' &
             //            'the binary DAF file ''#''.  IOSTAT = #.' )
-            CALL ERRFNM ( '#', UNIT                                 )
-            CALL ERRINT ( '#', IOSTAT                               )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                   )
-            CALL CHKOUT ( 'ZZDDHPPF'                                )
-            RETURN
+            call errfnm ( '#', unit                                 )
+            call errint ( '#', iostat                               )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                   )
+            call chkout ( 'ZZDDHPPF'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Now examine the NSUM DP in this record to determine the
 !        architecture.
 !
-         IF ( ( CHRREC(     NSMPOS:NSMPOS )     .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+1):(NSMPOS+1) ) .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+2):(NSMPOS+2) ) .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+3):(NSMPOS+3) ) .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+4):(NSMPOS+4) ) .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+5):(NSMPOS+5) ) .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+6):(NSMPOS+6) ) .EQ. NULL ) .AND. &
-              ( CHRREC( (NSMPOS+7):(NSMPOS+7) ) .EQ. NULL )       ) THEN
+         if ( ( chrrec(     nsmpos:nsmpos )     .eq. null ) .and. &
+              ( chrrec( (nsmpos+1):(nsmpos+1) ) .eq. null ) .and. &
+              ( chrrec( (nsmpos+2):(nsmpos+2) ) .eq. null ) .and. &
+              ( chrrec( (nsmpos+3):(nsmpos+3) ) .eq. null ) .and. &
+              ( chrrec( (nsmpos+4):(nsmpos+4) ) .eq. null ) .and. &
+              ( chrrec( (nsmpos+5):(nsmpos+5) ) .eq. null ) .and. &
+              ( chrrec( (nsmpos+6):(nsmpos+6) ) .eq. null ) .and. &
+              ( chrrec( (nsmpos+7):(nsmpos+7) ) .eq. null )       ) then
 
 !
 !           In this case we have an empty DAF, and can not distinguish
 !           between little endian formats.  Signal an error and return.
 !
-            BFF = 0
+            bff = 0
 
-            CALL SETMSG ( 'The DAF, ''#'', appears to contain no ' &
+            call setmsg ( 'The DAF, ''#'', appears to contain no ' &
             //            'data.  As such, its binary file format ' &
             //            'can not be determined which prevents ' &
             //            'it from being loaded.'                   )
-            CALL ERRFNM ( '#', UNIT                                 )
-            CALL SIGERR ( 'SPICE(UNKNOWNBFF)'                       )
-            CALL CHKOUT ( 'ZZDDHPPF'                                )
-            RETURN
+            call errfnm ( '#', unit                                 )
+            call sigerr ( 'SPICE(UNKNOWNBFF)'                       )
+            call chkout ( 'ZZDDHPPF'                                )
+            return
 
-         ELSE IF ( ( CHRREC(     NSMPOS:NSMPOS     ) .EQ. NULL ) .AND. &
-                   ( CHRREC( (NSMPOS+1):(NSMPOS+1) ) .EQ. NULL ) .AND. &
-                   ( CHRREC( (NSMPOS+2):(NSMPOS+2) ) .EQ. NULL ) .AND. &
-                   ( CHRREC( (NSMPOS+3):(NSMPOS+3) ) .EQ. NULL )  ) THEN
+         else if ( ( chrrec(     nsmpos:nsmpos     ) .eq. null ) .and. &
+                   ( chrrec( (nsmpos+1):(nsmpos+1) ) .eq. null ) .and. &
+                   ( chrrec( (nsmpos+2):(nsmpos+2) ) .eq. null ) .and. &
+                   ( chrrec( (nsmpos+3):(nsmpos+3) ) .eq. null )  ) then
 
 !
 !           In this case the file is little endian IEEE.  Set BFF.
 !
-            BFF = LTLI3E
+            bff = ltli3e
 
-         ELSE
+         else
 
 !
 !           We are probably looking at a VAX file.  Find out which
 !           format.
 !
-            CALL ZZDDHIVF ( CHRREC(NSMPOS:(NSMPOS+7)), BFF, FOUND )
+            call zzddhivf ( chrrec(nsmpos:(nsmpos+7)), bff, found )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               BFF = 0
+               bff = 0
 
-               CALL SETMSG ( 'Unable to determine the binary file ' &
+               call setmsg ( 'Unable to determine the binary file ' &
                //            'format of DAF ''#''.'                 )
-               CALL ERRFNM ( '#', UNIT                              )
-               CALL SIGERR ( 'SPICE(UNKNOWNBFF)'                    )
-               CALL CHKOUT ( 'ZZDDHPPF'                             )
-               RETURN
+               call errfnm ( '#', unit                              )
+               call sigerr ( 'SPICE(UNKNOWNBFF)'                    )
+               call chkout ( 'ZZDDHPPF'                             )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         BFF = 0
+         bff = 0
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDDHPPF' )
-      RETURN
+      call chkout ( 'ZZDDHPPF' )
+      return
 
-      END
+      end

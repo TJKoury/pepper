@@ -1,14 +1,14 @@
 !$Procedure ZZDAFNFR ( Private --- DAF write New File Record )
 
-      SUBROUTINE ZZDAFNFR ( LUN, &
-                            IDWORD, &
-                            ND, &
-                            NI, &
-                            IFNAME, &
-                            FWARD, &
-                            BWARD, &
-                            FREE, &
-                            FORMAT  )
+      subroutine zzdafnfr ( lun, &
+                            idword, &
+                            nd, &
+                            ni, &
+                            ifname, &
+                            fward, &
+                            bward, &
+                            free, &
+                            format  )
 
 ! $ Abstract
 !
@@ -25,19 +25,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzftprms.inc'
+      include              'zzftprms.inc'
 
-      INTEGER               LUN
-      CHARACTER*(*)         IDWORD
-      INTEGER               ND
-      INTEGER               NI
-      CHARACTER*(*)         IFNAME
-      INTEGER               FWARD
-      INTEGER               BWARD
-      INTEGER               FREE
-      CHARACTER*(*)         FORMAT
+      integer               lun
+      character*(*)         idword
+      integer               nd
+      integer               ni
+      character*(*)         ifname
+      integer               fward
+      integer               bward
+      integer               free
+      character*(*)         format
 
 
 ! $ Brief_I/O
@@ -150,8 +150,8 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
+      integer               rtrim
+      logical               return
 
 !
 !     Local Parameters
@@ -161,8 +161,8 @@
 !     first character of FTPSTR to keep FTPSTR at character
 !     700 in a 1024 byte record.
 !
-      INTEGER               PREFTP
-      PARAMETER           ( PREFTP = 603 )
+      integer               preftp
+      parameter           ( preftp = 603 )
 
 !
 !     Amount of space measured in characters necessary to
@@ -173,91 +173,91 @@
 !     characters, so this may require modification for
 !     non-standard platforms.
 !
-      INTEGER               PSTFTP
-      PARAMETER           ( PSTFTP = 297 )
+      integer               pstftp
+      parameter           ( pstftp = 297 )
 
 !
 !     Lengths of internal file name, ID word, and format word.
 !
-      INTEGER               FMTLEN
-      PARAMETER           ( FMTLEN = 8 )
+      integer               fmtlen
+      parameter           ( fmtlen = 8 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(1)         NULLCH
-      CHARACTER*(FMTLEN)    LOCFMT
-      CHARACTER*(IDWLEN)    LOCIDW
-      CHARACTER*(IFNLEN)    LOCIFN
-      CHARACTER*(PREFTP)    PRENUL
-      CHARACTER*(PSTFTP)    PSTNUL
-      CHARACTER*(SIZDLM)    DELIM
-      CHARACTER*(SIZEND)    LFTBKT
-      CHARACTER*(SIZEND)    RGTBKT
-      CHARACTER*(SIZFTP)    FTPSTR
-      CHARACTER*(SIZSTR)    TSTSTR
+      character*(1)         nullch
+      character*(fmtlen)    locfmt
+      character*(idwlen)    locidw
+      character*(ifnlen)    locifn
+      character*(preftp)    prenul
+      character*(pstftp)    pstnul
+      character*(sizdlm)    delim
+      character*(sizend)    lftbkt
+      character*(sizend)    rgtbkt
+      character*(sizftp)    ftpstr
+      character*(sizstr)    tststr
 
-      INTEGER               I
-      INTEGER               IOSTAT
+      integer               i
+      integer               iostat
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved Variables
 !
-      SAVE                FIRST
-      SAVE                FTPSTR
-      SAVE                PRENUL
-      SAVE                PSTNUL
+      save                first
+      save                ftpstr
+      save                prenul
+      save                pstnul
 
 !
 !     Data Statements
 !
-      DATA   FIRST        / .TRUE. /
+      data   first        / .true. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDAFNFR')
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDAFNFR')
+      end if
 
 !
 !     On the first pass, format the PRENUL and PSTNUL strings,
 !     and build FTPSTR from its components.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Store NULL into NULLCH.
 !
-         NULLCH = CHAR(0)
+         nullch = char(0)
 
 !
 !        Set all of the characters of PRENUL to nulls.
 !
-         DO I = 1, PREFTP
+         do i = 1, preftp
 
-            PRENUL (I:I) = NULLCH
+            prenul (i:i) = nullch
 
-         END DO
+         end do
 
 !
 !        Set all of the characters of PSTNUL to nulls.
 !
-         DO I = 1, PSTFTP
+         do i = 1, pstftp
 
-            PSTNUL (I:I) = NULLCH
+            pstnul (i:i) = nullch
 
-         END DO
+         end do
 
 !
 !        Build FTPSTR from its components that come back from
@@ -275,67 +275,67 @@
 !        which are assembled into the FTP string as it appears in
 !        the DAF file record.
 !
-         CALL ZZFTPSTR ( TSTSTR, LFTBKT, RGTBKT, DELIM )
+         call zzftpstr ( tststr, lftbkt, rgtbkt, delim )
 
-         FTPSTR = LFTBKT( 1:RTRIM(LFTBKT) )                          // &
-                  TSTSTR( 1:RTRIM(TSTSTR) )                          // &
-                  RGTBKT( 1:RTRIM(RGTBKT) )
+         ftpstr = lftbkt( 1:rtrim(lftbkt) )                          // &
+                  tststr( 1:rtrim(tststr) )                          // &
+                  rgtbkt( 1:rtrim(rgtbkt) )
 
 !
 !        Stop this block from executing except on the first pass.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Make local copies of each of the string arguments.  This way we
 !     maintain the proper sizes for each of the string objects, in
 !     the event larger or smaller strings are passed in.
 !
-      LOCIDW = IDWORD
-      LOCIFN = IFNAME
-      LOCFMT = FORMAT
+      locidw = idword
+      locifn = ifname
+      locfmt = format
 
 !
 !     Write the file record components out to the first record of the
 !     file.
 !
-      WRITE ( UNIT = LUN, REC=1, IOSTAT=IOSTAT ) LOCIDW, &
-                                                 ND, &
-                                                 NI, &
-                                                 LOCIFN, &
-                                                 FWARD, &
-                                                 BWARD, &
-                                                 FREE, &
-                                                 LOCFMT, &
-                                                 PRENUL, &
-                                                 FTPSTR, &
-                                                 PSTNUL
+      write ( unit = lun, rec=1, iostat=iostat ) locidw, &
+                                                 nd, &
+                                                 ni, &
+                                                 locifn, &
+                                                 fward, &
+                                                 bward, &
+                                                 free, &
+                                                 locfmt, &
+                                                 prenul, &
+                                                 ftpstr, &
+                                                 pstnul
 !
 !     Check IOSTAT for errors.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
 !
 !        Since we are unable to write to the file record, make
 !        certain the output file is destroyed.
 !
-         CALL SETMSG ( 'Attempt to write file ''#'' failed. '   // &
+         call setmsg ( 'Attempt to write file ''#'' failed. '   // &
                        'Value of IOSTAT was #. The file has '   // &
                        'been deleted.'                           )
-         CALL ERRFNM ( '#', LUN                                  )
-         CALL ERRINT ( '#', IOSTAT                               )
+         call errfnm ( '#', lun                                  )
+         call errint ( '#', iostat                               )
 
-         CLOSE ( UNIT = LUN, STATUS = 'DELETE' )
+         close ( unit = lun, status = 'DELETE' )
 
-         CALL SIGERR ( 'SPICE(DAFWRITEFAIL)' )
-         CALL CHKOUT ( 'ZZDAFNFR'            )
-         RETURN
+         call sigerr ( 'SPICE(DAFWRITEFAIL)' )
+         call chkout ( 'ZZDAFNFR'            )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDAFNFR' )
+      call chkout ( 'ZZDAFNFR' )
 
-      RETURN
-      END
+      return
+      end

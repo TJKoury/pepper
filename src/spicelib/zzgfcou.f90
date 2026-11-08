@@ -1,8 +1,8 @@
 !$Procedure ZZGFCOU ( GF, coordinate utility package )
 
-      SUBROUTINE ZZGFCOU ( VECDEF, METHOD, TARGET, ET,     REF, &
-                           ABCORR, OBSRVR, DREF,   DVEC,   CRDSYS, &
-                           CRDNAM, DECRES, CRDVAL, CRDFND, UDFUNC )
+      subroutine zzgfcou ( vecdef, method, target, et,     ref, &
+                           abcorr, obsrvr, dref,   dvec,   crdsys, &
+                           crdnam, decres, crdval, crdfnd, udfunc )
 
 ! $ Abstract
 !
@@ -32,26 +32,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
-      INCLUDE               'zzabcorr.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
+      include               'zzabcorr.inc'
 
-      CHARACTER*(*)         VECDEF
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         DREF
-      DOUBLE PRECISION      DVEC   ( 3 )
-      CHARACTER*(*)         CRDSYS
-      CHARACTER*(*)         CRDNAM
-      LOGICAL               DECRES
-      DOUBLE PRECISION      CRDVAL
-      LOGICAL               CRDFND
+      character*(*)         vecdef
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         dref
+      double precision      dvec   ( 3 )
+      character*(*)         crdsys
+      character*(*)         crdnam
+      logical               decres
+      double precision      crdval
+      logical               crdfnd
 
 ! $ Brief_I/O
 !
@@ -239,19 +239,19 @@
 !-&
 
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
+      double precision      pi
 
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               BODFND
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               bodfnd
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -260,124 +260,124 @@
 !
 !     Length of an aberration correction name string.
 !
-      INTEGER               ABCLEN
-      PARAMETER           ( ABCLEN = 20 )
+      integer               abclen
+      parameter           ( abclen = 20 )
 
 !
 !     Length of a reference frame name.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Length of a body name.
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
 !
 !     Length of a coordinate system name.
 !
-      INTEGER               SYSLEN
-      PARAMETER           ( SYSLEN = 32 )
+      integer               syslen
+      parameter           ( syslen = 32 )
 
 !
 !     Length of a vector definition name.
 !
-      INTEGER               VDFLEN
-      PARAMETER           ( VDFLEN = 32 )
+      integer               vdflen
+      parameter           ( vdflen = 32 )
 
 !
 !     Number of recognized coordinate systems.
 !
-      INTEGER               NSYS
-      PARAMETER           ( NSYS   = 7 )
+      integer               nsys
+      parameter           ( nsys   = 7 )
 
 !
 !     Maximum length of a coordinate name.
 !
-      INTEGER               CRDLEN
-      PARAMETER           ( CRDLEN = 32 )
+      integer               crdlen
+      parameter           ( crdlen = 32 )
 
 !
 !     Maximum length of computation method name.
 !
-      INTEGER               METLEN
-      PARAMETER           ( METLEN = 200 )
+      integer               metlen
+      parameter           ( metlen = 200 )
 
 !
 !     Time string length.
 !
-      INTEGER               TIMLEN
-      PARAMETER           ( TIMLEN = 40 )
+      integer               timlen
+      parameter           ( timlen = 40 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(CRDLEN)    CRDNMS ( 3, NSYS )
-      CHARACTER*(ABCLEN)    SVCORR
-      CHARACTER*(CRDLEN)    SVCRD
-      CHARACTER*(SYSLEN)    SVCSYS
-      CHARACTER*(FRNMLN)    SVDREF
-      CHARACTER*(METLEN)    SVMETH
-      CHARACTER*(BDNMLN)    SVRCNM
-      CHARACTER*(FRNMLN)    SVREF
-      CHARACTER*(VDFLEN)    SVVDEF
-      CHARACTER*(SYSLEN)    SYSNMS ( NSYS )
-      CHARACTER*(TIMLEN)    TIMSTR
+      character*(crdlen)    crdnms ( 3, nsys )
+      character*(abclen)    svcorr
+      character*(crdlen)    svcrd
+      character*(syslen)    svcsys
+      character*(frnmln)    svdref
+      character*(metlen)    svmeth
+      character*(bdnmln)    svrcnm
+      character*(frnmln)    svref
+      character*(vdflen)    svvdef
+      character*(syslen)    sysnms ( nsys )
+      character*(timlen)    timstr
 
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      COORDS ( 3 )
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      SVDVEC ( 3 )
-      DOUBLE PRECISION      SVF
-      DOUBLE PRECISION      SVRADI ( 3 )
-      DOUBLE PRECISION      SVRE
-      DOUBLE PRECISION      VALUE
-      DOUBLE PRECISION      Y      ( 3 )
+      double precision      alt
+      double precision      coords ( 3 )
+      double precision      lat
+      double precision      lon
+      double precision      state  ( 6 )
+      double precision      svdvec ( 3 )
+      double precision      svf
+      double precision      svradi ( 3 )
+      double precision      svre
+      double precision      value
+      double precision      y      ( 3 )
 
-      INTEGER               CDSIGN ( 3 )
-      INTEGER               CLASS
-      INTEGER               CLSSID
-      INTEGER               FRCODE
-      INTEGER               SVCIDX
-      INTEGER               SVDCTR
-      INTEGER               SVOBS
-      INTEGER               SVRCTR
-      INTEGER               SVSENS
-      INTEGER               SVTARG
-      INTEGER               SYSIDX
+      integer               cdsign ( 3 )
+      integer               class
+      integer               clssid
+      integer               frcode
+      integer               svcidx
+      integer               svdctr
+      integer               svobs
+      integer               svrctr
+      integer               svsens
+      integer               svtarg
+      integer               sysidx
 
-      LOGICAL               ATTBLK ( ABATSZ )
-      LOGICAL               FOUND
+      logical               attblk ( abatsz )
+      logical               found
 
 
 !
 !     Saved Variables
 !
-      SAVE                  CRDNMS
-      SAVE                  SVCIDX
-      SAVE                  SVCORR
-      SAVE                  SVCRD
-      SAVE                  SVCSYS
-      SAVE                  SVDCTR
-      SAVE                  SVDREF
-      SAVE                  SVDVEC
-      SAVE                  SVF
-      SAVE                  SVMETH
-      SAVE                  SVOBS
-      SAVE                  SVRADI
-      SAVE                  SVRCNM
-      SAVE                  SVRCTR
-      SAVE                  SVRE
-      SAVE                  SVREF
-      SAVE                  SVSENS
-      SAVE                  SVTARG
-      SAVE                  SVVDEF
-      SAVE                  SYSNMS
-      SAVE                  Y
+      save                  crdnms
+      save                  svcidx
+      save                  svcorr
+      save                  svcrd
+      save                  svcsys
+      save                  svdctr
+      save                  svdref
+      save                  svdvec
+      save                  svf
+      save                  svmeth
+      save                  svobs
+      save                  svradi
+      save                  svrcnm
+      save                  svrctr
+      save                  svre
+      save                  svref
+      save                  svsens
+      save                  svtarg
+      save                  svvdef
+      save                  sysnms
+      save                  y
 
 !
 !     Initial values
@@ -390,13 +390,13 @@
 !     in the Ith row of the array CRDNMS. This association must be
 !     preserved when this routine is updated.
 !
-      DATA                  SYSNMS /  RECSYS, &
-                                      LATSYS, &
-                                      RADSYS, &
-                                      SPHSYS, &
-                                      CYLSYS, &
-                                      GEOSYS, &
-                                      PGRSYS  /
+      data                  sysnms /  recsys, &
+                                      latsys, &
+                                      radsys, &
+                                      sphsys, &
+                                      cylsys, &
+                                      geosys, &
+                                      pgrsys  /
 
 !
 !     Names of coordinate triples for the supported coordinate
@@ -408,37 +408,37 @@
 !     the Ith coordinate system in the array SYSNMS. Again, this
 !     order must be preserved.
 !
-      DATA                  CRDNMS /  XCRD,     YCRD,     ZCRD, &
-                                      RADCRD,   LONCRD,   LATCRD, &
-                                      RNGCRD,   RACRD,    DECCRD, &
-                                      RADCRD,   CLTCRD,   LONCRD, &
-                                      RADCRD,   LONCRD,   ZCRD, &
-                                      LONCRD,   LATCRD,   ALTCRD, &
-                                      LONCRD,   LATCRD,   ALTCRD  /
+      data                  crdnms /  xcrd,     ycrd,     zcrd, &
+                                      radcrd,   loncrd,   latcrd, &
+                                      rngcrd,   racrd,    deccrd, &
+                                      radcrd,   cltcrd,   loncrd, &
+                                      radcrd,   loncrd,   zcrd, &
+                                      loncrd,   latcrd,   altcrd, &
+                                      loncrd,   latcrd,   altcrd  /
 
 
-      DATA                  Y      /  0.D0, 1.D0, 0.D0 /
+      data                  y      /  0.d0, 1.d0, 0.d0 /
 
 
 !
 !     This routine should never be called.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCOU'           )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZGFCOU'           )
-      RETURN
+      call chkin  ( 'ZZGFCOU'           )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZGFCOU'           )
+      return
 
 
 
 
 !$Procedure ZZGFCOIN ( GF, coordinate search initialization )
 
-      ENTRY ZZGFCOIN ( VECDEF, METHOD, TARGET, REF,    ABCORR, OBSRVR, &
-                       DREF,   DVEC,   CRDSYS, CRDNAM )
+      entry zzgfcoin ( vecdef, method, target, ref,    abcorr, obsrvr, &
+                       dref,   dvec,   crdsys, crdnam )
 
 ! $ Abstract
 !
@@ -825,169 +825,169 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFCOIN' )
+      call chkin ( 'ZZGFCOIN' )
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
 !
-      CALL BODS2C ( TARGET, SVTARG, FOUND )
+      call bods2c ( target, svtarg, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target object, ' &
+         call setmsg ( 'The target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFCOIN'                                 )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFCOIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, SVOBS, FOUND )
+      call bods2c ( obsrvr, svobs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFCOIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFCOIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the observer and target are distinct.
 !
-      IF ( SVTARG .EQ. SVOBS ) THEN
+      if ( svtarg .eq. svobs ) then
 
-         CALL SETMSG ( 'The observer and target must be ' &
+         call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
          //            'OBSRVR = #; TARGET = #.'           )
-         CALL ERRCH  ( '#', OBSRVR                         )
-         CALL ERRCH  ( '#', TARGET                         )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'          )
-         CALL CHKOUT ( 'ZZGFCOIN'                          )
-         RETURN
+         call errch  ( '#', obsrvr                         )
+         call errch  ( '#', target                         )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
+         call chkout ( 'ZZGFCOIN'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
-      CALL CMPRSS ( ' ', 0, ABCORR, SVCORR )
-      CALL UCASE  ( SVCORR,         SVCORR )
+      call cmprss ( ' ', 0, abcorr, svcorr )
+      call ucase  ( svcorr,         svcorr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( SVCORR, ATTBLK )
+      call zzvalcor ( svcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFCOIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFCOIN' )
+         return
+      end if
 
 !
 !     Store a compressed, upper case, left-justified copy of VECDEF.
 !
-      CALL LJUST ( VECDEF,          SVVDEF )
-      CALL CMPRSS ( ' ', 1, SVVDEF, SVVDEF )
-      CALL UCASE ( SVVDEF,          SVVDEF )
+      call ljust ( vecdef,          svvdef )
+      call cmprss ( ' ', 1, svvdef, svvdef )
+      call ucase ( svvdef,          svvdef )
 
 !
 !     Check SVVDEF.
 !
-      IF (       ( SVVDEF .NE. POSDEF ) &
-           .AND. ( SVVDEF .NE. SOBDEF ) &
-           .AND. ( SVVDEF .NE. SINDEF ) ) THEN
+      if (       ( svvdef .ne. posdef ) &
+           .and. ( svvdef .ne. sobdef ) &
+           .and. ( svvdef .ne. sindef ) ) then
 
 !
 !        We don't recognize this vector definition.
 !
-         CALL SETMSG ( 'The vector definition # is not supported.' )
-         CALL ERRCH  ( '#',  VECDEF                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                       )
-         CALL CHKOUT ( 'ZZGFCOIN'                                  )
-         RETURN
+         call setmsg ( 'The vector definition # is not supported.' )
+         call errch  ( '#',  vecdef                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
+         call chkout ( 'ZZGFCOIN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Store a compressed, upper case, left-justified copy of CRDSYS.
 !
-      CALL LJUST ( CRDSYS,          SVCSYS )
-      CALL CMPRSS ( ' ', 0, SVCSYS, SVCSYS )
-      CALL UCASE ( SVCSYS,          SVCSYS )
+      call ljust ( crdsys,          svcsys )
+      call cmprss ( ' ', 0, svcsys, svcsys )
+      call ucase ( svcsys,          svcsys )
 
-      SYSIDX = ISRCHC ( SVCSYS, NSYS, SYSNMS )
+      sysidx = isrchc ( svcsys, nsys, sysnms )
 
-      IF ( SYSIDX .EQ. 0 ) THEN
+      if ( sysidx .eq. 0 ) then
 !
 !        We don't recognize this system name.
 !
-         CALL SETMSG ( 'The coordinate system # is not supported.' )
-         CALL ERRCH  ( '#',  CRDSYS                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                       )
-         CALL CHKOUT ( 'ZZGFCOIN'                                  )
-         RETURN
+         call setmsg ( 'The coordinate system # is not supported.' )
+         call errch  ( '#',  crdsys                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
+         call chkout ( 'ZZGFCOIN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Store a compressed, upper case, left-justified copy of CRDNAM.
 !
-      CALL LJUST  ( CRDNAM,        SVCRD )
-      CALL CMPRSS ( ' ', 1, SVCRD, SVCRD )
-      CALL UCASE  ( SVCRD,         SVCRD )
+      call ljust  ( crdnam,        svcrd )
+      call cmprss ( ' ', 1, svcrd, svcrd )
+      call ucase  ( svcrd,         svcrd )
 
 !
 !     Find and save the index of the coordinate name in the list of
 !     supported names.
 !
-      SVCIDX = ISRCHC ( SVCRD, 3, CRDNMS(1,SYSIDX) )
+      svcidx = isrchc ( svcrd, 3, crdnms(1,sysidx) )
 
-      IF ( SVCIDX .EQ. 0 ) THEN
+      if ( svcidx .eq. 0 ) then
 !
 !        We don't recognize this coordinate name.
 !
-         CALL SETMSG ( 'The coordinate name # belonging to the '  // &
+         call setmsg ( 'The coordinate name # belonging to the '  // &
                        'coordinate system # is not recognized.'   )
-         CALL ERRCH  ( '#',  CRDNAM                               )
-         CALL ERRCH  ( '#',  CRDSYS                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( 'ZZGFCOIN'                                 )
-         RETURN
+         call errch  ( '#',  crdnam                               )
+         call errch  ( '#',  crdsys                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( 'ZZGFCOIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Store an upper case, left-justified copy of REF.
 !
-      CALL LJUST ( REF,   SVREF )
-      CALL UCASE ( SVREF, SVREF )
+      call ljust ( ref,   svref )
+      call ucase ( svref, svref )
 
 !
 !     The remaining work is a function of the vector definition
 !     and the coordinate system.
 !
-      IF (      ( SVVDEF .EQ. SOBDEF ) &
-           .OR. ( SVVDEF .EQ. SINDEF ) &
-           .OR. ( SVCSYS .EQ. GEOSYS ) &
-           .OR. ( SVCSYS .EQ. PGRSYS )  ) THEN
+      if (      ( svvdef .eq. sobdef ) &
+           .or. ( svvdef .eq. sindef ) &
+           .or. ( svcsys .eq. geosys ) &
+           .or. ( svcsys .eq. pgrsys )  ) then
 
 !
 !        The coordinate is defined using a sub-observer point or
@@ -996,50 +996,50 @@
 !        need the center of the input reference frame and the
 !        radii associated with this center.
 !
-         CALL NAMFRM ( SVREF, FRCODE )
+         call namfrm ( svref, frcode )
 
 !
 !        Save the frame REF's center ID in SVRCTR.
 !
-         CALL FRINFO ( FRCODE, SVRCTR, CLASS, CLSSID, FOUND )
+         call frinfo ( frcode, svrctr, class, clssid, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Frame system did not recognize frame #.' )
-            CALL ERRCH  ( '#', REF                                  )
-            CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-            CALL CHKOUT ( 'ZZGFCOIN'                                )
-            RETURN
+            call setmsg ( 'Frame system did not recognize frame #.' )
+            call errch  ( '#', ref                                  )
+            call sigerr ( 'SPICE(NOFRAME)'                          )
+            call chkout ( 'ZZGFCOIN'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        For sub-observer point and surface intercept vector
 !        definitions, make sure the input frame's center is
 !        the target body.
 !
-         IF (      ( VECDEF .EQ. SOBDEF ) &
-              .OR. ( VECDEF .EQ. SINDEF )  ) THEN
+         if (      ( vecdef .eq. sobdef ) &
+              .or. ( vecdef .eq. sindef )  ) then
 
-            IF ( SVRCTR .NE. SVTARG ) THEN
+            if ( svrctr .ne. svtarg ) then
 
-               CALL SETMSG ( 'Vector definition method is #, ' &
+               call setmsg ( 'Vector definition method is #, ' &
                //            'but input reference frame # ' &
                //            'has center #. For this vector ' &
                //            'definition, the frame must be ' &
                //            'centered on the target body #.' )
 
-               CALL ERRCH  ( '#',  VECDEF                     )
-               CALL ERRCH  ( '#',  REF                        )
-               CALL ERRINT ( '#',  SVRCTR                     )
-               CALL ERRCH  ( '#',  TARGET                     )
-               CALL SIGERR ( 'SPICE(INVALIDFRAME)'            )
-               CALL CHKOUT ( 'ZZGFCOIN'                       )
-               RETURN
+               call errch  ( '#',  vecdef                     )
+               call errch  ( '#',  ref                        )
+               call errint ( '#',  svrctr                     )
+               call errch  ( '#',  target                     )
+               call sigerr ( 'SPICE(INVALIDFRAME)'            )
+               call chkout ( 'ZZGFCOIN'                       )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        At this point, we know the frame REF is centered on the
@@ -1051,51 +1051,51 @@
 !        Ensure the radii data exists. If not, return an error message
 !        with useful information.
 !
-         IF ( .NOT. BODFND( SVRCTR, 'RADII' ) ) THEN
+         if ( .not. bodfnd( svrctr, 'RADII' ) ) then
 
-            IF ( ( SVCSYS .EQ. GEOSYS ) .OR. ( SVCSYS .EQ. PGRSYS ) ) &
-            THEN
+            if ( ( svcsys .eq. geosys ) .or. ( svcsys .eq. pgrsys ) ) &
+            then
 
-               CALL SETMSG ( 'No RADII data in kernel pool for frame ' &
+               call setmsg ( 'No RADII data in kernel pool for frame ' &
                   //         '''#'' center body #. Geodetic and ' &
                   //         'planetographic coordinates require a ' &
                   //         'reference frame centered on a finite ' &
                   //         'body. Confirm the proper input frame. ' &
                   //         'Bodies {0,..,9} represent barycenters ' &
                   //         'and so lack physical properties.' )
-               CALL ERRCH  ( '#',  REF                               )
-               CALL ERRINT ( '#',  SVRCTR                            )
-               CALL SIGERR ( 'SPICE(BADFRAME)'                       )
-               CALL CHKOUT ( 'ZZGFCOIN'                              )
+               call errch  ( '#',  ref                               )
+               call errint ( '#',  svrctr                            )
+               call sigerr ( 'SPICE(BADFRAME)'                       )
+               call chkout ( 'ZZGFCOIN'                              )
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'No RADII data in kernel pool for frame ' &
+               call setmsg ( 'No RADII data in kernel pool for frame ' &
                   //         '''#'' center body #. Confirm the ' &
                   //         'proper input frame. Bodies {0,..,9} ' &
                   //         'represent barycenters and so lack ' &
                   //         'physical properties.'                 )
-               CALL ERRCH  ( '#',  REF                              )
-               CALL ERRINT ( '#',  SVRCTR                           )
-               CALL SIGERR ( 'SPICE(BADFRAME)'                      )
-               CALL CHKOUT ( 'ZZGFCOIN'                             )
+               call errch  ( '#',  ref                              )
+               call errint ( '#',  svrctr                           )
+               call sigerr ( 'SPICE(BADFRAME)'                      )
+               call chkout ( 'ZZGFCOIN'                             )
 
-            END IF
+            end if
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 
 !
 !        We know the kernel pool contains data for body SVRCTR.
 !
-         CALL ZZGFTREB ( SVRCTR, SVRADI )
+         call zzgftreb ( svrctr, svradi )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFCOIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFCOIN' )
+            return
+         end if
 
 !
 !        For geodetic and planetographic coordinates, we need to save
@@ -1106,65 +1106,65 @@
 !        which are not allowed with geodetic or planetographic
 !        coordinates.
 !
-         IF ( ( SVCSYS .EQ. GEOSYS ) .OR. ( SVCSYS .EQ. PGRSYS ) ) THEN
+         if ( ( svcsys .eq. geosys ) .or. ( svcsys .eq. pgrsys ) ) then
 
-            IF ( SVRADI(1) .NE. SVRADI(2) ) THEN
+            if ( svradi(1) .ne. svradi(2) ) then
 
-               CALL SETMSG ( 'Central body # of reference frame # ' &
+               call setmsg ( 'Central body # of reference frame # ' &
                //            'has radii # # #. Unequal equatorial ' &
                //            'ellipsoid radii are not supported for ' &
                //            '# coordinates. '                       )
-               CALL ERRINT ( '#', SVRCTR                             )
-               CALL ERRCH  ( '#', REF                                )
-               CALL ERRDP  ( '#', SVRADI(1)                          )
-               CALL ERRDP  ( '#', SVRADI(2)                          )
-               CALL ERRDP  ( '#', SVRADI(3)                          )
-               CALL ERRCH  ( '#', CRDSYS                             )
-               CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                   )
-               CALL CHKOUT ( 'ZZGFCOIN'                              )
-               RETURN
+               call errint ( '#', svrctr                             )
+               call errch  ( '#', ref                                )
+               call errdp  ( '#', svradi(1)                          )
+               call errdp  ( '#', svradi(2)                          )
+               call errdp  ( '#', svradi(3)                          )
+               call errch  ( '#', crdsys                             )
+               call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
+               call chkout ( 'ZZGFCOIN'                              )
+               return
 
-            END IF
+            end if
 
 !
 !           Save the equatorial radius of the central body.
 !
-            SVRE = SVRADI(1)
+            svre = svradi(1)
 
 !
 !           Save the flattening coefficient of the central body. Note
 !           that we've ensured the denominator is non-zero.
 !
-            SVF  =  ( SVRADI(1) - SVRADI(3) ) / SVRADI(1)
+            svf  =  ( svradi(1) - svradi(3) ) / svradi(1)
 
-         ELSE
+         else
 
-            SVRE = 0.D0
-            SVF  = 0.D0
+            svre = 0.d0
+            svf  = 0.d0
 
-         END IF
+         end if
 
 !
 !        Save the computation method, if required.
 !
-         IF (      ( VECDEF .EQ. SOBDEF ) &
-              .OR. ( VECDEF .EQ. SINDEF )  ) THEN
+         if (      ( vecdef .eq. sobdef ) &
+              .or. ( vecdef .eq. sindef )  ) then
 !
 !           The coordinate is defined using a sub-observer point or
 !           a surface intercept point.
 !
 !           Store an upper case, left-justified copy of METHOD.
 !
-            CALL LJUST ( METHOD, SVMETH )
-            CALL UCASE ( SVMETH, SVMETH )
+            call ljust ( method, svmeth )
+            call ucase ( svmeth, svmeth )
 
-         ELSE
+         else
 !
 !           Simply initialize SVMETH with a blank string.
 !
-            SVMETH = ' '
+            svmeth = ' '
 
-         END IF
+         end if
 
 !
 !        If we're using planetographic coordinates, we'll need the
@@ -1172,91 +1172,91 @@
 !        coordinates are associated is the center of REF. Find the
 !        longitude of the +Y axis.
 !
-         IF ( SVCSYS .EQ. PGRSYS ) THEN
+         if ( svcsys .eq. pgrsys ) then
 
-            CALL BODC2S ( SVRCTR, SVRCNM )
+            call bodc2s ( svrctr, svrcnm )
 
-            CALL RECPGR ( SVRCNM, Y, SVRE, SVF, LON, LAT, ALT )
+            call recpgr ( svrcnm, y, svre, svf, lon, lat, alt )
 
 !
 !           Planetographic longitude ranges from 0 to 2*pi, so
 !           longitudes corresponding to positive Y values are
 !           in the range pi to 2*pi.
 !
-            IF ( LON .GT. PI() ) THEN
-               SVSENS =  -1
-            ELSE
-               SVSENS =   1
-            END IF
+            if ( lon .gt. pi() ) then
+               svsens =  -1
+            else
+               svsens =   1
+            end if
 
-         ELSE
+         else
 
-            SVSENS = 0
+            svsens = 0
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If we're using a surface intercept vector definition, we'll
 !     need to check and store the variables associated with the
 !     ray.
 !
-      IF ( SVVDEF .EQ. SINDEF ) THEN
+      if ( svvdef .eq. sindef ) then
 
-         IF ( VZERO(DVEC) ) THEN
+         if ( vzero(dvec) ) then
 
-            CALL SETMSG ( 'Ray''s direction vector is the zero ' &
+            call setmsg ( 'Ray''s direction vector is the zero ' &
             //            'vector. This variable might be ' &
             //            'uninitialized.'                      )
-            CALL SIGERR ( 'SPICE(ZEROVECTOR)'                   )
+            call sigerr ( 'SPICE(ZEROVECTOR)'                   )
 
-         END IF
+         end if
 
 !
 !        Save DVEC and DREF.
 !
-         CALL MOVED  ( DVEC, 3, SVDVEC )
+         call moved  ( dvec, 3, svdvec )
 
-         SVDREF = DREF
+         svdref = dref
 
 !
 !        Save the center of DREF.
 !
-         CALL NAMFRM ( SVDREF, FRCODE )
+         call namfrm ( svdref, frcode )
 
-         CALL FRINFO ( FRCODE, SVDCTR, CLASS, CLSSID, FOUND )
+         call frinfo ( frcode, svdctr, class, clssid, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Frame system did not recognize frame #.' )
-            CALL ERRCH  ( '#', DREF                                 )
-            CALL SIGERR ( 'SPICE(NOFRAME)'                          )
-            CALL CHKOUT ( 'ZZGFCOIN'                                )
-            RETURN
+            call setmsg ( 'Frame system did not recognize frame #.' )
+            call errch  ( '#', dref                                 )
+            call sigerr ( 'SPICE(NOFRAME)'                          )
+            call chkout ( 'ZZGFCOIN'                                )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Simply give initial values to SVDREF, SVDCTR, and SVDVEC.
 !
-         SVDREF = ' '
-         SVDCTR = 0
+         svdref = ' '
+         svdctr = 0
 
-         CALL CLEARD ( 3, SVDVEC )
+         call cleard ( 3, svdvec )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFCOIN' )
-      RETURN
+      call chkout ( 'ZZGFCOIN' )
+      return
 
 
 
 
 !$Procedure ZZGFCOG ( GF, get coordinate )
 
-      ENTRY ZZGFCOG ( ET, CRDVAL )
+      entry zzgfcog ( et, crdval )
 
 ! $ Abstract
 !
@@ -1363,38 +1363,38 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'ZZGFCOG' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'ZZGFCOG' )
+      end if
 
-      CALL ZZGFCOQ ( SVVDEF, SVMETH, SVTARG, ET,     SVREF, &
-                     SVCORR, SVOBS,  SVDREF, SVDVEC, SVCSYS, &
-                     SVRCTR, SVRE,   SVF,    SVCRD,  CRDVAL, FOUND )
+      call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
+                     svcorr, svobs,  svdref, svdvec, svcsys, &
+                     svrctr, svre,   svf,    svcrd,  crdval, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ETCAL  ( ET, TIMSTR )
+         call etcal  ( et, timstr )
 
-         CALL SETMSG ( 'Coordinate # could not be computed at # TDB' )
-         CALL ERRCH  ( '#', SVCRD                                    )
-         CALL ERRCH  ( '#', TIMSTR                                   )
-         CALL SIGERR ( 'SPICE(NOTCOMPUTABLE)'                        )
-         CALL CHKOUT ( 'ZZGFCOG'                                     )
-         RETURN
+         call setmsg ( 'Coordinate # could not be computed at # TDB' )
+         call errch  ( '#', svcrd                                    )
+         call errch  ( '#', timstr                                   )
+         call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
+         call chkout ( 'ZZGFCOG'                                     )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT  ( 'ZZGFCOG' )
-      RETURN
+      call chkout  ( 'ZZGFCOG' )
+      return
 
 
 
 
 !$Procedure ZZGFCODC ( GF, is coordinate decreasing? )
 
-      ENTRY ZZGFCODC ( UDFUNC, ET, DECRES )
+      entry zzgfcodc ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -1535,51 +1535,51 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCODC' )
+      call chkin  ( 'ZZGFCODC' )
 
 !
 !     Fetch the state from which the coordinate is derived. If the
 !     state can't be computed, we consider the coordinate to be
 !     "not decreasing."
 !
-      CALL ZZGFCOST ( SVVDEF, SVMETH, SVTARG, ET,     SVREF,  SVCORR, &
-                      SVOBS,  SVDREF, SVDCTR, SVDVEC, SVRADI, STATE, &
-                      FOUND                                          )
+      call zzgfcost ( svvdef, svmeth, svtarg, et,     svref,  svcorr, &
+                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+                      found                                          )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         DECRES = .FALSE.
+         decres = .false.
 
-         CALL ETCAL  ( ET, TIMSTR )
+         call etcal  ( et, timstr )
 
-         CALL SETMSG ( 'Coordinate # could not be computed at # TDB' )
-         CALL ERRCH  ( '#', SVCRD                                    )
-         CALL ERRCH  ( '#', TIMSTR                                   )
-         CALL SIGERR ( 'SPICE(NOTCOMPUTABLE)'                        )
-         CALL CHKOUT ( 'ZZGFCODC'                                    )
-         RETURN
+         call setmsg ( 'Coordinate # could not be computed at # TDB' )
+         call errch  ( '#', svcrd                                    )
+         call errch  ( '#', timstr                                   )
+         call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
+         call chkout ( 'ZZGFCODC'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the proxy for the derivative with respect to time of the
 !     coordinate. This proxy gives us the sign of the derivative, which
 !     is all we need to determine whether the coordinate is decreasing.
 !
-      CALL ZZGFCPRX ( STATE, SVCSYS, SVRE, SVF, SVSENS, CDSIGN )
+      call zzgfcprx ( state, svcsys, svre, svf, svsens, cdsign )
 
 !
 !     The quantity is decreasing if and only if the derivative
 !     is negative. This is indicated by a "sign" of -1.
 !
-      DECRES  =  CDSIGN(SVCIDX) .EQ. -1
+      decres  =  cdsign(svcidx) .eq. -1
 
-      CALL CHKOUT  ( 'ZZGFCODC' )
-      RETURN
+      call chkout  ( 'ZZGFCODC' )
+      return
 
 
 
@@ -1587,7 +1587,7 @@
 
 !$Procedure ZZGFCOEX ( GF, does coordinate state exist? )
 
-      ENTRY ZZGFCOEX ( UDFUNC, ET, CRDFND )
+      entry zzgfcoex ( udfunc, et, crdfnd )
 
 ! $ Abstract
 !
@@ -1709,22 +1709,22 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCOEX' )
+      call chkin  ( 'ZZGFCOEX' )
 
 !
 !     Simply attempt to compute the state. The returned found flag
 !     is the result.
 !
-      CALL ZZGFCOST ( SVVDEF, SVMETH, SVTARG, ET,     SVREF,  SVCORR, &
-                      SVOBS,  SVDREF, SVDCTR, SVDVEC, SVRADI, STATE, &
-                      CRDFND                                          )
+      call zzgfcost ( svvdef, svmeth, svtarg, et,     svref,  svcorr, &
+                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+                      crdfnd                                          )
 
-      CALL CHKOUT  ( 'ZZGFCOEX' )
-      RETURN
+      call chkout  ( 'ZZGFCOEX' )
+      return
 
 
 
@@ -1732,7 +1732,7 @@
 
 !$Procedure ZZGFCOCG ( GF, get cosine of coordinate )
 
-      ENTRY ZZGFCOCG ( ET, CRDVAL )
+      entry zzgfcocg ( et, crdval )
 
 ! $ Abstract
 !
@@ -1837,33 +1837,33 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCOCG' )
+      call chkin  ( 'ZZGFCOCG' )
 
-      CALL ZZGFCOQ ( SVVDEF, SVMETH, SVTARG, ET,     SVREF, &
-                     SVCORR, SVOBS,  SVDREF, SVDVEC, SVCSYS, &
-                     SVRCTR, SVRE,   SVF,    SVCRD,  VALUE, FOUND )
+      call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
+                     svcorr, svobs,  svdref, svdvec, svcsys, &
+                     svrctr, svre,   svf,    svcrd,  value, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ETCAL  ( ET, TIMSTR )
+         call etcal  ( et, timstr )
 
-         CALL SETMSG ( 'Coordinate # could not be computed at # TDB' )
-         CALL ERRCH  ( '#', SVCRD                                    )
-         CALL ERRCH  ( '#', TIMSTR                                   )
-         CALL SIGERR ( 'SPICE(NOTCOMPUTABLE)'                        )
-         CALL CHKOUT ( 'ZZGFCOCG'                                    )
-         RETURN
+         call setmsg ( 'Coordinate # could not be computed at # TDB' )
+         call errch  ( '#', svcrd                                    )
+         call errch  ( '#', timstr                                   )
+         call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
+         call chkout ( 'ZZGFCOCG'                                    )
+         return
 
-      END IF
+      end if
 
-      CRDVAL = COS ( VALUE )
+      crdval = cos ( value )
 
-      CALL CHKOUT  ( 'ZZGFCOCG' )
-      RETURN
+      call chkout  ( 'ZZGFCOCG' )
+      return
 
 
 
@@ -1872,7 +1872,7 @@
 
 !$Procedure ZZGFCOSG ( GF, get sine of coordinate )
 
-      ENTRY ZZGFCOSG ( ET, CRDVAL )
+      entry zzgfcosg ( et, crdval )
 
 ! $ Abstract
 !
@@ -1974,33 +1974,33 @@
 !-&
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCOSG' )
+      call chkin  ( 'ZZGFCOSG' )
 
-      CALL ZZGFCOQ ( SVVDEF, SVMETH, SVTARG, ET,     SVREF, &
-                     SVCORR, SVOBS,  SVDREF, SVDVEC, SVCSYS, &
-                     SVRCTR, SVRE,   SVF,    SVCRD,  VALUE, FOUND )
+      call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
+                     svcorr, svobs,  svdref, svdvec, svcsys, &
+                     svrctr, svre,   svf,    svcrd,  value, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL ETCAL  ( ET, TIMSTR )
+         call etcal  ( et, timstr )
 
-         CALL SETMSG ( 'Coordinate # could not be computed at # TDB' )
-         CALL ERRCH  ( '#', SVCRD                                    )
-         CALL ERRCH  ( '#', TIMSTR                                   )
-         CALL SIGERR ( 'SPICE(NOTCOMPUTABLE)'                        )
-         CALL CHKOUT ( 'ZZGFCOSG'                                    )
-         RETURN
+         call setmsg ( 'Coordinate # could not be computed at # TDB' )
+         call errch  ( '#', svcrd                                    )
+         call errch  ( '#', timstr                                   )
+         call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
+         call chkout ( 'ZZGFCOSG'                                    )
+         return
 
-      END IF
+      end if
 
-      CRDVAL = SIN ( VALUE )
+      crdval = sin ( value )
 
-      CALL CHKOUT ( 'ZZGFCOSG' )
-      RETURN
+      call chkout ( 'ZZGFCOSG' )
+      return
 
 
 
@@ -2008,7 +2008,7 @@
 
 !$Procedure ZZGFCOCD ( GF, is cosine of coordinate decreasing? )
 
-      ENTRY ZZGFCOCD ( UDFUNC, ET, DECRES )
+      entry zzgfcocd ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -2149,11 +2149,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCOCD' )
+      call chkin  ( 'ZZGFCOCD' )
 
 !
 !     The derivative of cosine of the coordinate Q is
@@ -2164,107 +2164,107 @@
 !     state vector from whose position component Q is
 !     derived.
 !
-      CALL ZZGFCOST ( SVVDEF, SVMETH, SVTARG, ET,     SVREF,  SVCORR, &
-                      SVOBS,  SVDREF, SVDCTR, SVDVEC, SVRADI, STATE, &
-                      FOUND                                          )
+      call zzgfcost ( svvdef, svmeth, svtarg, et,     svref,  svcorr, &
+                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+                      found                                          )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         DECRES = .FALSE.
+         decres = .false.
 
-         CALL ETCAL  ( ET, TIMSTR )
+         call etcal  ( et, timstr )
 
-         CALL SETMSG ( 'Coordinate # could not be computed at # TDB' )
-         CALL ERRCH  ( '#', SVCRD                                    )
-         CALL ERRCH  ( '#', TIMSTR                                   )
-         CALL SIGERR ( 'SPICE(NOTCOMPUTABLE)'                        )
-         CALL CHKOUT ( 'ZZGFCOCD'                                    )
-         RETURN
+         call setmsg ( 'Coordinate # could not be computed at # TDB' )
+         call errch  ( '#', svcrd                                    )
+         call errch  ( '#', timstr                                   )
+         call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
+         call chkout ( 'ZZGFCOCD'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we assume the state whose coordinate is to be
 !     computed resides in STATE. Convert the position portion of STATE
 !     to the specified coordinate system.
 !
-      IF ( SVCSYS .EQ. RECSYS ) THEN
+      if ( svcsys .eq. recsys ) then
 !
 !        No conversion needed for rectangular coordinates.
 !
-         CALL MOVED ( STATE, 3, COORDS )
+         call moved ( state, 3, coords )
 
 
-      ELSE IF ( SVCSYS .EQ. LATSYS ) THEN
+      else if ( svcsys .eq. latsys ) then
 
-         CALL RECLAT ( STATE, COORDS(1), COORDS(2), COORDS(3) )
-
-
-      ELSE IF ( SVCSYS .EQ. RADSYS ) THEN
-
-         CALL RECRAD ( STATE, COORDS(1), COORDS(2), COORDS(3) )
+         call reclat ( state, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SVCSYS .EQ. SPHSYS ) THEN
+      else if ( svcsys .eq. radsys ) then
 
-         CALL RECSPH ( STATE, COORDS(1), COORDS(2), COORDS(3) )
-
-
-      ELSE IF ( SVCSYS .EQ. CYLSYS ) THEN
-
-         CALL RECCYL ( STATE, COORDS(1), COORDS(2), COORDS(3) )
+         call recrad ( state, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SVCSYS .EQ. GEOSYS ) THEN
+      else if ( svcsys .eq. sphsys ) then
 
-         CALL RECGEO ( STATE,     SVRE,      SVF, &
-                       COORDS(1), COORDS(2), COORDS(3) )
+         call recsph ( state, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SVCSYS .EQ. PGRSYS ) THEN
+      else if ( svcsys .eq. cylsys ) then
 
-         CALL RECPGR ( SVRCNM,    STATE,     SVRE,     SVF, &
-                       COORDS(1), COORDS(2), COORDS(3)     )
+         call reccyl ( state, coords(1), coords(2), coords(3) )
 
-      ELSE
+
+      else if ( svcsys .eq. geosys ) then
+
+         call recgeo ( state,     svre,      svf, &
+                       coords(1), coords(2), coords(3) )
+
+
+      else if ( svcsys .eq. pgrsys ) then
+
+         call recpgr ( svrcnm,    state,     svre,     svf, &
+                       coords(1), coords(2), coords(3)     )
+
+      else
 !
 !        We should never arrive here.
 !
-         CALL SETMSG ( 'The coordinate system # is not supported.' )
-         CALL ERRCH  ( '#',  CRDSYS                                )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZGFCOCD'                                  )
-         RETURN
+         call setmsg ( 'The coordinate system # is not supported.' )
+         call errch  ( '#',  crdsys                                )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZGFCOCD'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Pick off the coordinate value.
 !
-      VALUE = COORDS( SVCIDX )
+      value = coords( svcidx )
 
 !
 !     Compute the proxy for the derivative with respect to time of the
 !     coordinate. This proxy gives us the sign of the derivative, which
 !     is all we need to determine whether the coordinate is decreasing.
 !
-      CALL ZZGFCPRX ( STATE, SVCSYS, SVRE, SVF, SVSENS, CDSIGN )
+      call zzgfcprx ( state, svcsys, svre, svf, svsens, cdsign )
 
 !
 !     The derivative of the coordinate is negative if the "sign" is -1.
 !
-      DECRES  =  ( - SIN(VALUE) * CDSIGN(SVCIDX) )  .LT.  0.D0
+      decres  =  ( - sin(value) * cdsign(svcidx) )  .lt.  0.d0
 
 
-      CALL CHKOUT  ( 'ZZGFCOCD' )
-      RETURN
+      call chkout  ( 'ZZGFCOCD' )
+      return
 
 
 
 
 !$Procedure ZZGFCOSD ( GF, is sine of coordinate decreasing? )
 
-      ENTRY ZZGFCOSD ( UDFUNC, ET, DECRES )
+      entry zzgfcosd ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -2404,11 +2404,11 @@
 !     Standard SPICE error handling.
 !
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFCOSD' )
+      call chkin  ( 'ZZGFCOSD' )
 
 !
 !     The derivative of the sine of the coordinate Q is
@@ -2418,100 +2418,100 @@
 !     Look up the individual terms. Start with the Cartesian state
 !     vector from whose position component Q is derived.
 !
-      CALL ZZGFCOST ( SVVDEF, SVMETH, SVTARG, ET,     SVREF,  SVCORR, &
-                      SVOBS,  SVDREF, SVDCTR, SVDVEC, SVRADI, STATE, &
-                      FOUND                                          )
+      call zzgfcost ( svvdef, svmeth, svtarg, et,     svref,  svcorr, &
+                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+                      found                                          )
 
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         DECRES = .FALSE.
+         decres = .false.
 
-         CALL ETCAL  ( ET, TIMSTR )
+         call etcal  ( et, timstr )
 
-         CALL SETMSG ( 'Coordinate # could not be computed at # TDB' )
-         CALL ERRCH  ( '#', SVCRD                                    )
-         CALL ERRCH  ( '#', TIMSTR                                   )
-         CALL SIGERR ( 'SPICE(NOTCOMPUTABLE)'                        )
-         CALL CHKOUT ( 'ZZGFCOSD'                                    )
-         RETURN
+         call setmsg ( 'Coordinate # could not be computed at # TDB' )
+         call errch  ( '#', svcrd                                    )
+         call errch  ( '#', timstr                                   )
+         call sigerr ( 'SPICE(NOTCOMPUTABLE)'                        )
+         call chkout ( 'ZZGFCOSD'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we assume the state whose coordinate is to be
 !     computed resides in STATE. Convert the position portion of STATE
 !     to the specified coordinate system.
 !
-      IF ( SVCSYS .EQ. RECSYS ) THEN
+      if ( svcsys .eq. recsys ) then
 !
 !        No conversion needed for rectangular coordinates.
 !
-         CALL MOVED ( STATE, 3, COORDS )
+         call moved ( state, 3, coords )
 
 
-      ELSE IF ( SVCSYS .EQ. LATSYS ) THEN
+      else if ( svcsys .eq. latsys ) then
 
-         CALL RECLAT ( STATE, COORDS(1), COORDS(2), COORDS(3) )
-
-
-      ELSE IF ( SVCSYS .EQ. RADSYS ) THEN
-
-         CALL RECRAD ( STATE, COORDS(1), COORDS(2), COORDS(3) )
+         call reclat ( state, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SVCSYS .EQ. SPHSYS ) THEN
+      else if ( svcsys .eq. radsys ) then
 
-         CALL RECSPH ( STATE, COORDS(1), COORDS(2), COORDS(3) )
-
-
-      ELSE IF ( SVCSYS .EQ. CYLSYS ) THEN
-
-         CALL RECCYL ( STATE, COORDS(1), COORDS(2), COORDS(3) )
+         call recrad ( state, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SVCSYS .EQ. GEOSYS ) THEN
+      else if ( svcsys .eq. sphsys ) then
 
-         CALL RECGEO ( STATE,     SVRE,      SVF, &
-                       COORDS(1), COORDS(2), COORDS(3) )
+         call recsph ( state, coords(1), coords(2), coords(3) )
 
 
-      ELSE IF ( SVCSYS .EQ. PGRSYS ) THEN
+      else if ( svcsys .eq. cylsys ) then
 
-         CALL RECPGR ( SVRCNM,    STATE,     SVRE,     SVF, &
-                       COORDS(1), COORDS(2), COORDS(3)     )
+         call reccyl ( state, coords(1), coords(2), coords(3) )
 
-      ELSE
+
+      else if ( svcsys .eq. geosys ) then
+
+         call recgeo ( state,     svre,      svf, &
+                       coords(1), coords(2), coords(3) )
+
+
+      else if ( svcsys .eq. pgrsys ) then
+
+         call recpgr ( svrcnm,    state,     svre,     svf, &
+                       coords(1), coords(2), coords(3)     )
+
+      else
 !
 !        We should never arrive here.
 !
-         CALL SETMSG ( 'The coordinate system # is not supported.' )
-         CALL ERRCH  ( '#',  CRDSYS                                )
-         CALL SIGERR ( 'SPICE(BUG)'                                )
-         CALL CHKOUT ( 'ZZGFCOSD'                                  )
-         RETURN
+         call setmsg ( 'The coordinate system # is not supported.' )
+         call errch  ( '#',  crdsys                                )
+         call sigerr ( 'SPICE(BUG)'                                )
+         call chkout ( 'ZZGFCOSD'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Pick off the coordinate value.
 !
-      VALUE = COORDS( SVCIDX )
+      value = coords( svcidx )
 
 !
 !     Compute the proxy for the derivative with respect to time of the
 !     coordinate. This proxy gives us the sign of the derivative, which
 !     is all we need to determine whether the coordinate is decreasing.
 !
-      CALL ZZGFCPRX ( STATE, SVCSYS, SVRE, SVF, SVSENS, CDSIGN )
+      call zzgfcprx ( state, svcsys, svre, svf, svsens, cdsign )
 
 !
 !     The derivative of the coordinate is negative if the "sign" is -1.
 !
-      DECRES  =  ( COS(VALUE) * CDSIGN(SVCIDX) )  .LT.  0.D0
+      decres  =  ( cos(value) * cdsign(svcidx) )  .lt.  0.d0
 
-      CALL CHKOUT  ( 'ZZGFCOSD' )
-      RETURN
+      call chkout  ( 'ZZGFCOSD' )
+      return
 
 
-      END
+      end

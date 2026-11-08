@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRDP ( EK tree, return data pointer )
 
-      SUBROUTINE ZZEKTRDP ( HANDLE, TREE, KEY, PTR )
+      subroutine zzektrdp ( handle, tree, key, ptr )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 ! $ Declarations
 
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
-      INTEGER               PTR
+      integer               handle
+      integer               tree
+      integer               key
+      integer               ptr
 
 ! $ Brief_I/O
 !
@@ -112,16 +112,16 @@
 !
 !     Local variables
 !
-      INTEGER               IDX
-      INTEGER               NODE
-      INTEGER               NOFFST
-      INTEGER               LEVEL
+      integer               idx
+      integer               node
+      integer               noffst
+      integer               level
 
 !
 !     Use discovery check-in in this puppy.
 !
-      CALL ZZEKTRLK ( HANDLE, TREE,   KEY,   IDX, &
-                      NODE,   NOFFST, LEVEL, PTR  )
+      call zzektrlk ( handle, tree,   key,   idx, &
+                      node,   noffst, level, ptr  )
 
-      RETURN
-      END
+      return
+      end

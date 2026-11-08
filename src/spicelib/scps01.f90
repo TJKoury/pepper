@@ -1,6 +1,6 @@
 !$Procedure SCPS01 ( Convert type 1 SCLK string to ticks )
 
-      SUBROUTINE SCPS01 ( SC, CLKSTR, ERROR, MSG, TICKS )
+      subroutine scps01 ( sc, clkstr, error, msg, ticks )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sclk.inc'
+      include               'sclk.inc'
 
-      INTEGER               SC
-      CHARACTER*(*)         CLKSTR
-      LOGICAL               ERROR
-      CHARACTER*(*)         MSG
-      DOUBLE PRECISION      TICKS
+      integer               sc
+      character*(*)         clkstr
+      logical               error
+      character*(*)         msg
+      double precision      ticks
 
 ! $ Brief_I/O
 !
@@ -320,70 +320,70 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN =    240 )
+      integer               errlen
+      parameter           ( errlen =    240 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN =     60 )
+      integer               namlen
+      parameter           ( namlen =     60 )
 
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN =    320 )
+      integer               msglen
+      parameter           ( msglen =    320 )
 
-      INTEGER               INITSC
-      PARAMETER           ( INITSC =      0 )
+      integer               initsc
+      parameter           ( initsc =      0 )
 
-      DOUBLE PRECISION      INITID
-      PARAMETER           ( INITID = -1.D20 )
+      double precision      initid
+      parameter           ( initid = -1.d20 )
 
 !
 !     Following are parameters for the indices within the
 !     array NAMLST of the kernel variable names.
 !
 
-      INTEGER               NFLIDX
-      PARAMETER           ( NFLIDX = 1 )
+      integer               nflidx
+      parameter           ( nflidx = 1 )
 
-      INTEGER               OFFIDX
-      PARAMETER           ( OFFIDX = NFLIDX + 1 )
+      integer               offidx
+      parameter           ( offidx = nflidx + 1 )
 
-      INTEGER               MODIDX
-      PARAMETER           ( MODIDX = OFFIDX + 1 )
+      integer               modidx
+      parameter           ( modidx = offidx + 1 )
 
-      INTEGER               NKITEM
-      PARAMETER           ( NKITEM = MODIDX )
+      integer               nkitem
+      parameter           ( nkitem = modidx )
 
 !
 !     Local variables
 !
-      CHARACTER*(DPLEN)     CMP    ( MXNFLD )
-      CHARACTER*(ERRLEN)    STRERR
-      CHARACTER*(NAMLEN)    NAMLST ( NKITEM )
+      character*(dplen)     cmp    ( mxnfld )
+      character*(errlen)    strerr
+      character*(namlen)    namlst ( nkitem )
 
-      DOUBLE PRECISION      CMPTKS ( MXNFLD )
-      DOUBLE PRECISION      CMPVAL ( MXNFLD )
-      DOUBLE PRECISION      MODULI ( MXNFLD )
-      DOUBLE PRECISION      OFFSET ( MXNFLD )
+      double precision      cmptks ( mxnfld )
+      double precision      cmpval ( mxnfld )
+      double precision      moduli ( mxnfld )
+      double precision      offset ( mxnfld )
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NFIELD
-      INTEGER               PNTR
+      integer               i
+      integer               n
+      integer               nfield
+      integer               pntr
 
 
 !
 !     Save everything
 !
-      SAVE
+      save
 
 
 
-      DATA NAMLST / 'SCLK01_N_FIELDS', &
+      data namlst / 'SCLK01_N_FIELDS', &
                     'SCLK01_OFFSETS', &
                     'SCLK01_MODULI'        /
 
@@ -392,18 +392,18 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCPS01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SCPS01' )
+      end if
 
 !
 !     Start off with the error flag and message set for a regular
 !     SPICE error.
 !
-      ERROR = .TRUE.
-      MSG   = 'SPICELIB error detected.'
+      error = .true.
+      msg   = 'SPICELIB error detected.'
 
 !
 !     Our first piece of business is to look up all of the data
@@ -416,41 +416,41 @@
 !        -  The offsets for each clock field.
 !
 
-      CALL SCLI01 ( NAMLST(NFLIDX), SC, MXNFLD, N, NFIELD )
-      CALL SCLD01 ( NAMLST(MODIDX), SC, MXNFLD, N, MODULI )
-      CALL SCLD01 ( NAMLST(OFFIDX), SC, MXNFLD, N, OFFSET )
+      call scli01 ( namlst(nflidx), sc, mxnfld, n, nfield )
+      call scld01 ( namlst(modidx), sc, mxnfld, n, moduli )
+      call scld01 ( namlst(offidx), sc, mxnfld, n, offset )
 
 !
 !     Don't try to continue if we had a lookup error.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SCPS01' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SCPS01' )
+         return
+      end if
 
 !
 !     If our clock string is blank, we can stop now.
 !
-      IF ( CLKSTR .EQ. ' ' ) THEN
+      if ( clkstr .eq. ' ' ) then
 
-         MSG =  'Non partition part of the input clock string is ' // &
+         msg =  'Non partition part of the input clock string is ' // &
                 'blank.'
 
-         ERROR = .TRUE.
+         error = .true.
 
-         CALL CHKOUT ( 'SCPS01' )
-         RETURN
+         call chkout ( 'SCPS01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine how many ticks is each field is worth.
 !
-      CMPTKS( NFIELD ) = 1.D0
+      cmptks( nfield ) = 1.d0
 
-      DO  I = NFIELD-1, 1, -1
-         CMPTKS(I) = CMPTKS(I+1) * MODULI(I+1)
-      END DO
+      do  i = nfield-1, 1, -1
+         cmptks(i) = cmptks(i+1) * moduli(i+1)
+      end do
 
 !
 !     Parse the clock components from the input string. There should
@@ -458,54 +458,54 @@
 !     a clock string, we'll let LPARSM take up to MXNFLD components and
 !     then test for an error.
 !
-      CALL LPARSM ( CLKSTR, DELIMS, MXNFLD, N, CMP )
+      call lparsm ( clkstr, delims, mxnfld, n, cmp )
 
 !
 !     If the string has too many fields for the specified spacecraft
 !     then signal an error.
 !
-      IF  ( N .GT. NFIELD )  THEN
+      if  ( n .gt. nfield )  then
 
-         ERROR = .TRUE.
+         error = .true.
 
-         MSG = 'Input clock string # has # fields; maximum for this ' // &
+         msg = 'Input clock string # has # fields; maximum for this ' // &
                'spacecraft clock is #.'
 
-         CALL REPMC ( MSG, '#', CLKSTR, MSG )
-         CALL REPMI ( MSG, '#', N,      MSG )
-         CALL REPMI ( MSG, '#', NFIELD, MSG )
+         call repmc ( msg, '#', clkstr, msg )
+         call repmi ( msg, '#', n,      msg )
+         call repmi ( msg, '#', nfield, msg )
 
-         CALL CHKOUT ( 'SCPS01' )
-         RETURN
+         call chkout ( 'SCPS01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert each of the components into numbers.  Error if any
 !     of the conversions screw up.
 !
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( CMP(I) .EQ. ' ' )  THEN
-            CMPVAL(I) = OFFSET(I)
-         ELSE
-            CALL NPARSD ( CMP(I), CMPVAL(I), STRERR, PNTR )
-         END IF
+         if ( cmp(i) .eq. ' ' )  then
+            cmpval(i) = offset(i)
+         else
+            call nparsd ( cmp(i), cmpval(i), strerr, pntr )
+         end if
 
-         IF ( STRERR .NE. ' ' ) THEN
+         if ( strerr .ne. ' ' ) then
 
-            ERROR = .TRUE.
+            error = .true.
 
-            MSG = 'Could not parse SCLK component # from ' // &
+            msg = 'Could not parse SCLK component # from ' // &
                   '# as a number.'
 
-            CALL REPMC ( MSG, '#', CMP(I), MSG )
-            CALL REPMC ( MSG, '#', CLKSTR, MSG )
+            call repmc ( msg, '#', cmp(i), msg )
+            call repmc ( msg, '#', clkstr, msg )
 
-            CALL CHKOUT ( 'SCPS01' )
-            RETURN
+            call chkout ( 'SCPS01' )
+            return
 
-         END IF
+         end if
 
 !
 !        Subtract off the offset value so that we can do base ten
@@ -513,41 +513,41 @@
 !        as a result of the subtraction, then that component must
 !        have been invalid.
 !
-         CMPVAL(I) = CMPVAL(I) - OFFSET(I)
+         cmpval(i) = cmpval(i) - offset(i)
 
-         IF  ( ANINT( CMPVAL(I) ) .LT. 0.D0  )   THEN
+         if  ( anint( cmpval(i) ) .lt. 0.d0  )   then
 
-            ERROR = .TRUE.
+            error = .true.
 
-            MSG = 'Component number #, # in the SCLK string ' // &
+            msg = 'Component number #, # in the SCLK string ' // &
                   ' # is invalid.'
 
-            CALL REPMI ( MSG, '#', I,      MSG )
-            CALL REPMC ( MSG, '#', CMP(I), MSG )
-            CALL REPMC ( MSG, '#', CLKSTR, MSG )
+            call repmi ( msg, '#', i,      msg )
+            call repmc ( msg, '#', cmp(i), msg )
+            call repmc ( msg, '#', clkstr, msg )
 
-            CALL CHKOUT ( 'SCPS01' )
-            RETURN
+            call chkout ( 'SCPS01' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Convert to ticks by multiplying the value of each component by
 !     the number of ticks each component count represents, and then
 !     add up the results.
 !
-      TICKS = 0.D0
+      ticks = 0.d0
 
-      DO I = 1, N
-         TICKS = TICKS + CMPVAL(I)*CMPTKS(I)
-      END DO
+      do i = 1, n
+         ticks = ticks + cmpval(i)*cmptks(i)
+      end do
 
-      ERROR = .FALSE.
+      error = .false.
 
-      MSG   = ' '
+      msg   = ' '
 
-      CALL CHKOUT ( 'SCPS01' )
-      RETURN
-      END
+      call chkout ( 'SCPS01' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure REPMD  ( Replace marker with double precision number )
 
-      SUBROUTINE REPMD ( IN, MARKER, VALUE, SIGDIG, OUT )
+      subroutine repmd ( in, marker, value, sigdig, out )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         IN
-      CHARACTER*(*)         MARKER
-      DOUBLE PRECISION      VALUE
-      INTEGER               SIGDIG
-      CHARACTER*(*)         OUT
+      character*(*)         in
+      character*(*)         marker
+      double precision      value
+      integer               sigdig
+      character*(*)         out
 
-      INTEGER               MAXLDP
-      PARAMETER           ( MAXLDP = 23 )
+      integer               maxldp
+      parameter           ( maxldp = 23 )
 
 ! $ Brief_I/O
 !
@@ -287,71 +287,71 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               lastnb
 
 !
 !     Local variables
 !
 !
-      CHARACTER*(MAXLDP)    SUBSTR
+      character*(maxldp)    substr
 
-      INTEGER               MRKNBF
-      INTEGER               MRKNBL
+      integer               mrknbf
+      integer               mrknbl
 
-      INTEGER               MRKPSB
-      INTEGER               MRKPSE
+      integer               mrkpsb
+      integer               mrkpse
 
-      INTEGER               SUBNBF
-      INTEGER               SUBNBL
+      integer               subnbf
+      integer               subnbl
 
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      IF  ( MARKER .EQ. ' ' ) THEN
+      if  ( marker .eq. ' ' ) then
 
-         OUT = IN
-         RETURN
+         out = in
+         return
 
-      END IF
+      end if
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      MRKNBF = FRSTNB(MARKER)
-      MRKNBL = LASTNB(MARKER)
+      mrknbf = frstnb(marker)
+      mrknbl = lastnb(marker)
 
-      MRKPSB = INDEX ( IN, MARKER ( MRKNBF : MRKNBL )  )
+      mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      IF  ( MRKPSB .EQ. 0 ) THEN
+      if  ( mrkpsb .eq. 0 ) then
 
-         OUT = IN
-         RETURN
+         out = in
+         return
 
-      END IF
+      end if
 
-      MRKPSE = MRKPSB + MRKNBL - MRKNBF
+      mrkpse = mrkpsb + mrknbl - mrknbf
 
 !
 !     Okay, MARKER is non-blank and has been found. Convert the
 !     number to text, and substitute the text for the marker.
 !
-      CALL DPSTR  ( VALUE, SIGDIG, SUBSTR )
+      call dpstr  ( value, sigdig, substr )
 
-      SUBNBF = FRSTNB(SUBSTR)
-      SUBNBL = LASTNB(SUBSTR)
+      subnbf = frstnb(substr)
+      subnbl = lastnb(substr)
 
-      IF ( SUBNBF .NE. 0 .AND. SUBNBL .NE. 0 ) THEN
+      if ( subnbf .ne. 0 .and. subnbl .ne. 0 ) then
 
-         CALL ZZREPSUB ( IN, &
-                         MRKPSB, &
-                         MRKPSE, &
-                         SUBSTR( SUBNBF:SUBNBL ), &
-                         OUT  )
+         call zzrepsub ( in, &
+                         mrkpsb, &
+                         mrkpse, &
+                         substr( subnbf:subnbl ), &
+                         out  )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

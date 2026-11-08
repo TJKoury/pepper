@@ -1,6 +1,6 @@
 !$Procedure VNORM ( Vector norm, 3 dimensions )
 
-      DOUBLE PRECISION FUNCTION VNORM ( V1 )
+      double precision function vnorm ( v1 )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  V1 ( 3 )
+      double precision  v1 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -176,12 +176,12 @@
 !-&
 
 
-      DOUBLE PRECISION V1MAX
+      double precision v1max
 
 !
 !  Determine the maximum component of the vector.
 !
-      V1MAX = MAX (DABS(V1(1)), DABS(V1(2)), DABS(V1(3)))
+      v1max = max (dabs(v1(1)), dabs(v1(2)), dabs(v1(3)))
 
 !
 !  If the vector is zero, return zero; otherwise normalize first.
@@ -189,13 +189,13 @@
 !  or underflow.  In the cases where such is not a problem it not worth
 !  it to optimize further.
 !
-      IF (V1MAX.EQ.0.D0) THEN
-         VNORM = 0.D0
-      ELSE
-         VNORM = V1MAX * DSQRT (  (V1(1)/V1MAX)**2 &
-                                + (V1(2)/V1MAX)**2 &
-                                + (V1(3)/V1MAX)**2)
-      END IF
+      if (v1max.eq.0.d0) then
+         vnorm = 0.d0
+      else
+         vnorm = v1max * dsqrt (  (v1(1)/v1max)**2 &
+                                + (v1(2)/v1max)**2 &
+                                + (v1(3)/v1max)**2)
+      end if
 !
-      RETURN
-      END
+      return
+      end

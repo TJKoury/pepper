@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRAP ( EK tree, append item )
 
-      SUBROUTINE ZZEKTRAP ( HANDLE, TREE, VALUE, KEY )
+      subroutine zzektrap ( handle, tree, value, key )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 ! $ Declarations
 
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               VALUE
-      INTEGER               KEY
+      integer               handle
+      integer               tree
+      integer               value
+      integer               key
 
 ! $ Brief_I/O
 !
@@ -115,10 +115,10 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRSZ
+      integer               zzektrsz
 
-      KEY  =  ZZEKTRSZ ( HANDLE, TREE )   +   1
+      key  =  zzektrsz ( handle, tree )   +   1
 
-      CALL ZZEKTRIN ( HANDLE, TREE, KEY, VALUE )
+      call zzektrin ( handle, tree, key, value )
 
-      END
+      end

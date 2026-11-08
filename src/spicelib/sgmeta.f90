@@ -1,6 +1,6 @@
 !$Procedure SGMETA ( Generic segments: Fetch meta data value )
 
-      SUBROUTINE SGMETA ( HANDLE, DESCR, MNEMON, VALUE )
+      subroutine sgmeta ( handle, descr, mnemon, value )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      INTEGER               MNEMON
-      INTEGER               VALUE
+      integer               handle
+      double precision      descr  ( * )
+      integer               mnemon
+      integer               value
 
 ! $ Brief_I/O
 !
@@ -233,61 +233,61 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Include the mnemonic values for the generic segment declarations.
 !
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
 !
 !     Local Variables
 !
-      INTEGER               AMETAS
-      INTEGER               BEGIN
-      INTEGER               BEGMTA
-      INTEGER               BEGM1
-      INTEGER               END
-      INTEGER               ENDMTA
-      INTEGER               I
-      INTEGER               IOFFST
-      INTEGER               LSTBEG
-      INTEGER               LSTHAN
-      INTEGER               META   ( MXMETA )
-      INTEGER               METASZ
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NIOVR2
+      integer               ametas
+      integer               begin
+      integer               begmta
+      integer               begm1
+      integer               end
+      integer               endmta
+      integer               i
+      integer               ioffst
+      integer               lstbeg
+      integer               lsthan
+      integer               meta   ( mxmeta )
+      integer               metasz
+      integer               nd
+      integer               ni
+      integer               niovr2
 
-      DOUBLE PRECISION      DMTASZ
-      DOUBLE PRECISION      XMETA  ( MXMETA )
+      double precision      dmtasz
+      double precision      xmeta  ( mxmeta )
 
-      DOUBLE PRECISION      DTEMP  (      2 )
-      INTEGER               ITEMP  (      4 )
+      double precision      dtemp  (      2 )
+      integer               itemp  (      4 )
 
-      EQUIVALENCE         ( DTEMP, ITEMP )
+      equivalence         ( dtemp, itemp )
 
-      LOGICAL               NIEVEN
+      logical               nieven
 
-      SAVE                  LSTBEG
-      SAVE                  LSTHAN
-      SAVE                  META
-      SAVE                  METASZ
-      SAVE                  NIEVEN
-      SAVE                  IOFFST
+      save                  lstbeg
+      save                  lsthan
+      save                  meta
+      save                  metasz
+      save                  nieven
+      save                  ioffst
 
-      DATA                  LSTBEG  / -1 /
-      DATA                  LSTHAN  /  0 /
+      data                  lstbeg  / -1 /
+      data                  lsthan  /  0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Handle the case when we are looking at the same file and segment
@@ -296,27 +296,27 @@
 !     worry about the first time through, since LSTHAN and LSTBEG are
 !     set to values that are bogus for actual DAF files.
 !
-      IF ( HANDLE .EQ. LSTHAN ) THEN
+      if ( handle .eq. lsthan ) then
 
 !
 !        Get the begin and end values from the descriptor. They are
 !        located in the last two "integer" positions of the descriptor.
 !
-         IF ( NIEVEN ) THEN
-            CALL MOVED ( DESCR(IOFFST), 1, DTEMP )
-            BEGIN = ITEMP(1)
-            END   = ITEMP(2)
-         ELSE
-            CALL MOVED ( DESCR(IOFFST), 2, DTEMP )
-            BEGIN = ITEMP(2)
-            END   = ITEMP(3)
-         END IF
+         if ( nieven ) then
+            call moved ( descr(ioffst), 1, dtemp )
+            begin = itemp(1)
+            end   = itemp(2)
+         else
+            call moved ( descr(ioffst), 2, dtemp )
+            begin = itemp(2)
+            end   = itemp(3)
+         end if
 
 !
 !        Check the segment start address. This will tell us whether we
 !        are looking at the same segment.
 !
-         IF ( LSTBEG .EQ. BEGIN ) THEN
+         if ( lstbeg .eq. begin ) then
 
 !
 !        The only acceptable integer mnemonics at this point are 1
@@ -324,32 +324,32 @@
 !        should signal the SPICE(UNKNOWNMETAITEM) error, since the
 !        current segment has no knowledge of these values.
 !
-            IF (   ( MNEMON .LE. 0      )       .OR. &
-                 ( ( MNEMON .GT. METASZ ) .AND. &
-                   ( MNEMON .NE. NMETA  ) )           ) THEN
+            if (   ( mnemon .le. 0      )       .or. &
+                 ( ( mnemon .gt. metasz ) .and. &
+                   ( mnemon .ne. nmeta  ) )           ) then
 
-               CALL CHKIN ( 'SGMETA' )
-               VALUE = -1
-               CALL SETMSG ( 'The item requested, #, is not one of the' &
+               call chkin ( 'SGMETA' )
+               value = -1
+               call setmsg ( 'The item requested, #, is not one of the' &
                //            ' recognized meta data items associated' &
                //            ' with this generic segment.'             )
-               CALL ERRINT ( '#',   MNEMON                             )
-               CALL SIGERR ( 'SPICE(UNKNOWNMETAITEM)'                  )
-               CALL CHKOUT ( 'SGMETA'                                  )
-               RETURN
+               call errint ( '#',   mnemon                             )
+               call sigerr ( 'SPICE(UNKNOWNMETAITEM)'                  )
+               call chkout ( 'SGMETA'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           Set the value for the desired meta data item and return.
 !
-            VALUE = META ( MNEMON )
+            value = meta ( mnemon )
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point we are going to have to load the meta data.  If
@@ -358,80 +358,80 @@
 !     we need to fetch them.  First check in.
 !
 
-      CALL CHKIN ( 'SGMETA' )
+      call chkin ( 'SGMETA' )
 
-      IF ( HANDLE .NE. LSTHAN ) THEN
+      if ( handle .ne. lsthan ) then
 
-         CALL DAFHSF ( HANDLE, ND,  NI )
+         call dafhsf ( handle, nd,  ni )
 
-         IF ( FAILED () ) THEN
-            CALL CHKOUT ( 'SGMETA' )
-            RETURN
-         END IF
+         if ( failed () ) then
+            call chkout ( 'SGMETA' )
+            return
+         end if
 
-         NIOVR2 = NI / 2
+         niovr2 = ni / 2
 
-         NIEVEN = ( 2 * NIOVR2 ) .EQ. NI
+         nieven = ( 2 * niovr2 ) .eq. ni
 
-         IOFFST = ND + NIOVR2
-         LSTHAN = HANDLE
+         ioffst = nd + niovr2
+         lsthan = handle
 
 !
 !        Get the begin and end values from the descriptor. They are
 !        located in the last two "integer" positions of the descriptor.
 !
-         IF ( NIEVEN ) THEN
-            CALL MOVED ( DESCR(IOFFST), 1, DTEMP )
-            BEGIN = ITEMP(1)
-            END   = ITEMP(2)
-         ELSE
-            CALL MOVED ( DESCR(IOFFST), 2, DTEMP )
-            BEGIN = ITEMP(2)
-            END   = ITEMP(3)
-         END IF
+         if ( nieven ) then
+            call moved ( descr(ioffst), 1, dtemp )
+            begin = itemp(1)
+            end   = itemp(2)
+         else
+            call moved ( descr(ioffst), 2, dtemp )
+            begin = itemp(2)
+            end   = itemp(3)
+         end if
 
-      END IF
+      end if
 
 !
 !     Save the new begin address. Remember we have either just computed
 !     this from the IF block above, or we computed it in the very
 !     first IF block.
 !
-      LSTBEG = BEGIN
+      lstbeg = begin
 
 !
 !     Compute the begin address of the meta data and compute the
 !     end address of the number we will be collecting.
 !
-      CALL DAFGDA ( HANDLE, END, END, DMTASZ )
+      call dafgda ( handle, end, end, dmtasz )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'SGMETA' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'SGMETA' )
+         return
+      end if
 
-      METASZ = NINT ( DMTASZ )
+      metasz = nint ( dmtasz )
 !
 !     Store the actual meta size in AMETAS, in case METASZ ends up
 !     being modified to conform to our current understanding of
 !     meta data items.
 !
-      AMETAS = METASZ
+      ametas = metasz
 
 !
 !     Check to see if METASZ is an unacceptable value.
 !
-      IF ( METASZ .LT. MNMETA ) THEN
+      if ( metasz .lt. mnmeta ) then
 
-         VALUE = -1
-         CALL SETMSG ( 'This segment reports that it has # meta ' &
+         value = -1
+         call setmsg ( 'This segment reports that it has # meta ' &
          //            'data items. Every generic segment must ' &
          //            'have at least #.'                          )
-         CALL ERRINT ( '#',   METASZ                               )
-         CALL ERRINT ( '#',   MNMETA                               )
-         CALL SIGERR ( 'SPICE(INVALIDMETADATA)'                    )
-         CALL CHKOUT ( 'SGMETA'                                    )
-         RETURN
+         call errint ( '#',   metasz                               )
+         call errint ( '#',   mnmeta                               )
+         call sigerr ( 'SPICE(INVALIDMETADATA)'                    )
+         call chkout ( 'SGMETA'                                    )
+         return
 
 !
 !     If it is not, we may need to fix a few things to work around some
@@ -442,10 +442,10 @@
 !     meta data size by 1. The number of meta data items is always
 !     after all of the meta data items, so we can do this.
 !
-      ELSE IF ( METASZ .EQ. 15 ) THEN
+      else if ( metasz .eq. 15 ) then
 
-         METASZ = METASZ + 1
-         AMETAS = METASZ
+         metasz = metasz + 1
+         ametas = metasz
 
 !
 !     If not check to see if METASZ is greater than the known MXMETA.
@@ -453,37 +453,37 @@
 !     some newer version of the toolkit.  Load what meta data we
 !     currently know about as laid out in sgparam.inc.
 !
-      ELSE IF ( METASZ .GT. MXMETA ) THEN
+      else if ( metasz .gt. mxmeta ) then
 
 !
 !        Leave AMETAS alone, since we need to know how far back
 !        into the DAF file to begin reading.
 !
-          METASZ = MXMETA
+          metasz = mxmeta
 
-      END IF
+      end if
 
 !
 !     The address computations that follow are precisely the same
 !     as the previous version of the file, except when AMETAS is not
 !     METASZ.  This only happens when METASZ is greater than MXMETA.
 !
-      BEGMTA = END - AMETAS + 1
-      ENDMTA = BEGMTA + METASZ - 1
+      begmta = end - ametas + 1
+      endmta = begmta + metasz - 1
 
-      CALL DAFGDA ( HANDLE, BEGMTA, ENDMTA, XMETA )
+      call dafgda ( handle, begmta, endmta, xmeta )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'SGMETA' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'SGMETA' )
+         return
+      end if
 
 !
 !     Convert all of the meta data values into integers.
 !
-      DO I = 1, METASZ
-         META(I) = NINT ( XMETA(I) )
-      END DO
+      do i = 1, metasz
+         meta(i) = nint ( xmeta(i) )
+      end do
 
 !
 !     The kludge continues... NMETA and MXMETA are ALWAYS the same
@@ -491,23 +491,23 @@
 !     value, META(METASZ-1), and the end value, META(NMETA), so we zero
 !     them out.
 !
-      META(NMETA) = METASZ
+      meta(nmeta) = metasz
 
-      DO I = METASZ, MXMETA-1
-         META(I) = 0
-      END DO
+      do i = metasz, mxmeta-1
+         meta(i) = 0
+      end do
 
 !
 !     Adjust the bases so that the N'th item of a partition is at
 !     address META(PARTITION_BASE) + N
 !
-      BEGM1          = BEGIN - 1
-      META( CONBAS ) = META( CONBAS ) + BEGM1
-      META( REFBAS ) = META( REFBAS ) + BEGM1
-      META( RDRBAS ) = META( RDRBAS ) + BEGM1
-      META( PDRBAS ) = META( PDRBAS ) + BEGM1
-      META( PKTBAS ) = META( PKTBAS ) + BEGM1
-      META( RSVBAS ) = META( RSVBAS ) + BEGM1
+      begm1          = begin - 1
+      meta( conbas ) = meta( conbas ) + begm1
+      meta( refbas ) = meta( refbas ) + begm1
+      meta( rdrbas ) = meta( rdrbas ) + begm1
+      meta( pdrbas ) = meta( pdrbas ) + begm1
+      meta( pktbas ) = meta( pktbas ) + begm1
+      meta( rsvbas ) = meta( rsvbas ) + begm1
 
 !
 !     The only acceptable integer mnemonics at this point are 1 through
@@ -515,27 +515,27 @@
 !     the SPICE(UNKNOWNMETAITEM) error, since the current segment has
 !     no knowledge of these values.
 !
-      IF (   ( MNEMON .LE. 0      )       .OR. &
-           ( ( MNEMON .GT. METASZ ) .AND. &
-             ( MNEMON .NE. NMETA  ) )           ) THEN
+      if (   ( mnemon .le. 0      )       .or. &
+           ( ( mnemon .gt. metasz ) .and. &
+             ( mnemon .ne. nmeta  ) )           ) then
 
-         VALUE = -1
-         CALL SETMSG ( 'The item requested, #, is not one of the' &
+         value = -1
+         call setmsg ( 'The item requested, #, is not one of the' &
          //            ' recognized meta data items associated' &
          //            ' with this generic segment.'               )
-         CALL ERRINT ( '#',   MNEMON                               )
-         CALL SIGERR ( 'SPICE(UNKNOWNMETAITEM)'                    )
-         CALL CHKOUT ( 'SGMETA'                                    )
-         RETURN
+         call errint ( '#',   mnemon                               )
+         call sigerr ( 'SPICE(UNKNOWNMETAITEM)'                    )
+         call chkout ( 'SGMETA'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the value for the desired meta data item, check out if we
 !     need to, and return.
 !
-      VALUE = META ( MNEMON )
+      value = meta ( mnemon )
 
-      CALL CHKOUT ( 'SGMETA' )
-      RETURN
-      END
+      call chkout ( 'SGMETA' )
+      return
+      end

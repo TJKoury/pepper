@@ -1,6 +1,6 @@
 !$Procedure INVSTM ( Inverse of state transformation matrix )
 
-      SUBROUTINE INVSTM ( MAT, INVMAT )
+      subroutine invstm ( mat, invmat )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MAT    ( 6, 6 )
-      DOUBLE PRECISION      INVMAT ( 6, 6 )
+      double precision      mat    ( 6, 6 )
+      double precision      invmat ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -267,21 +267,21 @@
 !
 !     Local parameters
 !
-      INTEGER               NROWS
-      PARAMETER           ( NROWS = 6 )
+      integer               nrows
+      parameter           ( nrows = 6 )
 
-      INTEGER               NCOLS
-      PARAMETER           ( NCOLS = 6 )
+      integer               ncols
+      parameter           ( ncols = 6 )
 
-      INTEGER               BLOCK
-      PARAMETER           ( BLOCK = 3 )
+      integer               block
+      parameter           ( block = 3 )
 
 
 !
 !     Not much to this. Just call the more general routine XPOSBL.
 !
-      CALL XPOSBL ( MAT, NROWS, NCOLS, BLOCK, INVMAT )
+      call xposbl ( mat, nrows, ncols, block, invmat )
 
 
-      RETURN
-      END
+      return
+      end

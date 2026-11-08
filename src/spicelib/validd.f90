@@ -1,6 +1,6 @@
 !$Procedure VALIDD ( Validate a double precision set )
 
-      SUBROUTINE VALIDD ( SIZE, N, A )
+      subroutine validd ( size, n, a )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER            SIZE
-      INTEGER            N
-      DOUBLE PRECISION   A       ( LBCELL:* )
+      integer            size
+      integer            n
+      double precision   a       ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -174,50 +174,50 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CARD
+      integer               card
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'VALIDD' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'VALIDD' )
+      end if
 
 !
 !     Is the set size big enough?
 !
-      IF ( N .GT. SIZE ) THEN
+      if ( n .gt. size ) then
 
-         CALL SETMSG ( 'Size of un-validated set is too small.  '     // &
+         call setmsg ( 'Size of un-validated set is too small.  '     // &
                        'Size is #, size required is #. ' )
 
-         CALL ERRINT ( '#', SIZE )
-         CALL ERRINT ( '#', N    )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'VALIDD' )
-         RETURN
-      END IF
+         call errint ( '#', size )
+         call errint ( '#', n    )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'VALIDD' )
+         return
+      end if
 
 !
 !     Just like it says above. Order the array, and remove duplicates.
 !
-      CARD = N
-      CALL RMDUPD ( CARD, A(1) )
+      card = n
+      call rmdupd ( card, a(1) )
 
 !
 !     Set the size and cardinality of the input set.
 !
-      CALL SSIZED ( SIZE, A )
-      CALL SCARDD ( CARD, A )
+      call ssized ( size, a )
+      call scardd ( card, a )
 
-      CALL CHKOUT( 'VALIDD' )
-      RETURN
-      END
+      call chkout( 'VALIDD' )
+      return
+      end

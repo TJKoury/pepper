@@ -1,9 +1,9 @@
 !$Procedure GFPOSC (GF, observer-target vector coordinate search )
 
-      SUBROUTINE GFPOSC ( TARGET, FRAME,  ABCORR, OBSRVR, &
-                          CRDSYS, COORD,  RELATE, REFVAL, &
-                          ADJUST, STEP,   CNFINE, MW, &
-                          NW,     WORK,   RESULT )
+      subroutine gfposc ( target, frame,  abcorr, obsrvr, &
+                          crdsys, coord,  relate, refval, &
+                          adjust, step,   cnfine, mw, &
+                          nw,     work,   result )
 
 ! $ Abstract
 !
@@ -27,31 +27,31 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
+      include               'zzabcorr.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         FRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         CRDSYS
-      CHARACTER*(*)         COORD
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         target
+      character*(*)         frame
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         crdsys
+      character*(*)         coord
+      character*(*)         relate
+      double precision      refval
+      double precision      adjust
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1853,189 +1853,189 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               GFBAIL
-      INTEGER               SIZED
-      LOGICAL               EVEN
+      logical               return
+      logical               gfbail
+      integer               sized
+      logical               even
 
-      EXTERNAL              GFBAIL
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               QNPARS
-      PARAMETER           ( QNPARS = 10 )
+      integer               qnpars
+      parameter           ( qnpars = 10 )
 
-      LOGICAL               NOBAIL
-      PARAMETER           ( NOBAIL = .FALSE. )
+      logical               nobail
+      parameter           ( nobail = .false. )
 
-      LOGICAL               NORPT
-      PARAMETER           ( NORPT  = .FALSE. )
+      logical               norpt
+      parameter           ( norpt  = .false. )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      CHARACTER*(LNSIZE)    QCPARS ( QNPARS )
-      CHARACTER*(LNSIZE)    QPNAMS ( QNPARS )
-      CHARACTER*(LNSIZE)    DREF
+      character*(lnsize)    qcpars ( qnpars )
+      character*(lnsize)    qpnams ( qnpars )
+      character*(lnsize)    dref
 
-      DOUBLE PRECISION      QDPARS ( QNPARS )
-      DOUBLE PRECISION      DVEC   ( 3 )
+      double precision      qdpars ( qnpars )
+      double precision      dvec   ( 3 )
 
-      INTEGER               QIPARS ( QNPARS )
+      integer               qipars ( qnpars )
 
-      LOGICAL               QLPARS ( QNPARS )
+      logical               qlpars ( qnpars )
 
 !
 !     Define no-use values for DVEC and DREF
 !
-      DATA                  DVEC  / 0.D0, 0.D0, 0.D0 /
-      DATA                  DREF  / ' '  /
+      data                  dvec  / 0.d0, 0.d0, 0.d0 /
+      data                  dref  / ' '  /
 
 
-      SAVE                  DVEC
-      SAVE                  DREF
+      save                  dvec
+      save                  dref
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check into the error subsystem.
 !
-      CALL CHKIN ( 'GFPOSC' )
+      call chkin ( 'GFPOSC' )
 
 !
 !     Confirm minimum window sizes.
 !
-      IF ( MW .LT. 2 .OR. .NOT. EVEN(MW) ) THEN
+      if ( mw .lt. 2 .or. .not. even(mw) ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
-         CALL ERRINT ( '#',  MW                                    )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFPOSC'                                    )
-         RETURN
+         call errint ( '#',  mw                                    )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFPOSC'                                    )
+         return
 
-      END IF
+      end if
 
 
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2.'                               )
-         CALL ERRINT ( '#', SIZED(RESULT)                          )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFPOSC'                                    )
-         RETURN
+         call errint ( '#', sized(result)                          )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFPOSC'                                    )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Set up a call to GFEVNT specific to the observer-target
 !     coordinate search.
 !
-      QPNAMS(1) = 'TARGET'
-      QCPARS(1) =  TARGET
+      qpnams(1) = 'TARGET'
+      qcpars(1) =  target
 
-      QPNAMS(2) = 'OBSERVER'
-      QCPARS(2) =  OBSRVR
+      qpnams(2) = 'OBSERVER'
+      qcpars(2) =  obsrvr
 
-      QPNAMS(3) = 'ABCORR'
-      QCPARS(3) =  ABCORR
+      qpnams(3) = 'ABCORR'
+      qcpars(3) =  abcorr
 
-      QPNAMS(4) = 'COORDINATE SYSTEM'
-      QCPARS(4) =  CRDSYS
+      qpnams(4) = 'COORDINATE SYSTEM'
+      qcpars(4) =  crdsys
 
-      QPNAMS(5) = 'COORDINATE'
-      QCPARS(5) =  COORD
+      qpnams(5) = 'COORDINATE'
+      qcpars(5) =  coord
 
-      QPNAMS(6) = 'REFERENCE FRAME'
-      QCPARS(6) =  FRAME
+      qpnams(6) = 'REFERENCE FRAME'
+      qcpars(6) =  frame
 
-      QPNAMS(7) = 'VECTOR DEFINITION'
-      QCPARS(7) =  POSDEF
+      qpnams(7) = 'VECTOR DEFINITION'
+      qcpars(7) =  posdef
 
-      QPNAMS(8) = 'METHOD'
-      QCPARS(8) = ' '
+      qpnams(8) = 'METHOD'
+      qcpars(8) = ' '
 
-      QPNAMS(9) = 'DREF'
-      QCPARS(9) =  DREF
+      qpnams(9) = 'DREF'
+      qcpars(9) =  dref
 
-      QPNAMS(10) = 'DVEC'
-      QDPARS(1)  = DVEC(1)
-      QDPARS(2)  = DVEC(2)
-      QDPARS(3)  = DVEC(3)
+      qpnams(10) = 'DVEC'
+      qdpars(1)  = dvec(1)
+      qdpars(2)  = dvec(2)
+      qdpars(3)  = dvec(3)
 
 !
 !     Initialize QCPARS(10) since GFEVNT will try to
 !     left-justify it and convert it to upper case.
 !
-      QCPARS(10) = ' '
+      qcpars(10) = ' '
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Initialize the RESULT window to empty.
 !
-      CALL SCARDD ( 0, RESULT)
+      call scardd ( 0, result)
 
 !
 !     Look for solutions.
 !
 !     Progress report and interrupt options are set to .FALSE.
 !
-      CALL GFEVNT ( GFSTEP,   GFREFN,  'COORDINATE', &
-                    QNPARS,   QPNAMS,   QCPARS, &
-                    QDPARS,   QIPARS,   QLPARS, &
-                    RELATE,   REFVAL,   TOL, &
-                    ADJUST,   CNFINE,   NORPT, &
-                    GFREPI,   GFREPU,   GFREPF, &
-                    MW,       NW,       WORK, &
-                    NOBAIL,   GFBAIL,   RESULT )
+      call gfevnt ( gfstep,   gfrefn,  'COORDINATE', &
+                    qnpars,   qpnams,   qcpars, &
+                    qdpars,   qipars,   qlpars, &
+                    relate,   refval,   tol, &
+                    adjust,   cnfine,   norpt, &
+                    gfrepi,   gfrepu,   gfrepf, &
+                    mw,       nw,       work, &
+                    nobail,   gfbail,   result )
 
 
-      CALL CHKOUT ( 'GFPOSC' )
-      RETURN
+      call chkout ( 'GFPOSC' )
+      return
 
-      END
+      end

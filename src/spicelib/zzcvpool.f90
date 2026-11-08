@@ -1,6 +1,6 @@
 !$Procedure ZZCVPOOL ( Private---Check variable update, with counter )
 
-      SUBROUTINE ZZCVPOOL ( AGENT, USRCTR, UPDATE )
+      subroutine zzcvpool ( agent, usrctr, update )
 
 ! $ Abstract
 !
@@ -24,13 +24,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzctr.inc'
+      include              'zzctr.inc'
 
-      CHARACTER*(*)         AGENT
-      INTEGER               USRCTR    ( CTRSIZ )
-      LOGICAL               UPDATE
+      character*(*)         agent
+      integer               usrctr    ( ctrsiz )
+      logical               update
 
 ! $ Brief_I/O
 !
@@ -206,33 +206,33 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Check/update counter.
 !
-      CALL ZZPCTRCK ( USRCTR, UPDATE )
+      call zzpctrck ( usrctr, update )
 
 !
 !     If counter was updated, check in and call CVPOOL.
 !
-      IF ( UPDATE ) THEN
+      if ( update ) then
 
-         CALL CHKIN  ( 'ZZCVPOOL' )
+         call chkin  ( 'ZZCVPOOL' )
 
-         CALL CVPOOL ( AGENT, UPDATE )
+         call cvpool ( agent, update )
 
-         CALL CHKOUT ( 'ZZCVPOOL' )
+         call chkout ( 'ZZCVPOOL' )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

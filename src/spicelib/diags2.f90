@@ -1,6 +1,6 @@
 !$Procedure DIAGS2   ( Diagonalize symmetric 2x2 matrix )
 
-      SUBROUTINE DIAGS2 ( SYMMAT, DIAG, ROTATE )
+      subroutine diags2 ( symmat, diag, rotate )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      SYMMAT ( 2, 2 )
-      DOUBLE PRECISION      DIAG   ( 2, 2 )
-      DOUBLE PRECISION      ROTATE ( 2, 2 )
+      double precision      symmat ( 2, 2 )
+      double precision      diag   ( 2, 2 )
+      double precision      rotate ( 2, 2 )
 
 ! $ Brief_I/O
 !
@@ -313,63 +313,63 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      EIGVEC ( 2 )
-      DOUBLE PRECISION      IDENT  ( 2, 2 )
-      DOUBLE PRECISION      ROOT1  ( 2 )
-      DOUBLE PRECISION      ROOT2  ( 2 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      TMPD
-      DOUBLE PRECISION      TMPV   ( 2 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      eigvec ( 2 )
+      double precision      ident  ( 2, 2 )
+      double precision      root1  ( 2 )
+      double precision      root2  ( 2 )
+      double precision      scale
+      double precision      tmpd
+      double precision      tmpv   ( 2 )
 
 !
 !     Saved variables
 !
-      SAVE                  IDENT
+      save                  ident
 
 !
 !     Initial values
 !
-      DATA IDENT /  1.D0, 0.D0, &
-                    0.D0, 1.D0  /
+      data ident /  1.d0, 0.d0, &
+                    0.d0, 1.d0  /
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DIAGS2' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DIAGS2' )
+      end if
 
 !
 !     We check for the case of a diagonal input matrix, since
 !     eigenvector determination is simplified by ruling out this
 !     case.
 
-      IF  ( SYMMAT(1,2) .EQ. 0.D0 ) THEN
+      if  ( symmat(1,2) .eq. 0.d0 ) then
 
-         CALL MOVED  ( IDENT,  4, ROTATE )
-         CALL MOVED  ( SYMMAT, 4, DIAG   )
+         call moved  ( ident,  4, rotate )
+         call moved  ( symmat, 4, diag   )
 !
 !        Explicitly zero out the (2,1) entry of DIAG, since DIAG is
 !        guaranteed to be diagonal.
 !
-         DIAG(2,1) = 0.D0
+         diag(2,1) = 0.d0
 
-         CALL CHKOUT ( 'DIAGS2' )
-         RETURN
+         call chkout ( 'DIAGS2' )
+         return
 
-      END IF
+      end if
 
 !
 !     Getting here means there's some actual work to do.  We start out
@@ -378,13 +378,13 @@
 !     SYMMAT.  We're guaranteed that SCALE is non-zero, since the 0
 !     matrix is diagonal.
 !
-      SCALE  =  MAX (  DABS( SYMMAT(1,1) ), &
-                       DABS( SYMMAT(1,2) ), &
-                       DABS( SYMMAT(2,2) )   )
+      scale  =  max (  dabs( symmat(1,1) ), &
+                       dabs( symmat(1,2) ), &
+                       dabs( symmat(2,2) )   )
 
-      A      =  SYMMAT(1,1) / SCALE
-      B      =  SYMMAT(1,2) / SCALE
-      C      =  SYMMAT(2,2) / SCALE
+      a      =  symmat(1,1) / scale
+      b      =  symmat(1,2) / scale
+      c      =  symmat(2,2) / scale
 
 !
 !     Compute the eigenvalues of the scaled version of SYMMAT.  The
@@ -398,16 +398,16 @@
 !          x   -  ( A + C ) x  +  ( AC - B )  =   0.
 !
 !
-      CALL RQUAD (  1.D0,  -(A + C),   A*C - B**2,   ROOT1,   ROOT2   )
+      call rquad (  1.d0,  -(a + c),   a*c - b**2,   root1,   root2   )
 
 !
 !     ROOT1 is the root corresponding to the positive discriminant term;
 !     this is guaranteed by RQUAD.
 !
-      DIAG(1,1) = ROOT1(1)
-      DIAG(2,1) = 0.D0
-      DIAG(1,2) = 0.D0
-      DIAG(2,2) = ROOT2(1)
+      diag(1,1) = root1(1)
+      diag(2,1) = 0.d0
+      diag(1,2) = 0.d0
+      diag(2,2) = root2(1)
 
 !
 !     Our next job is to find an eigenvector corresponding to the
@@ -459,15 +459,15 @@
 !        of x = '1'.
 !
 
-      IF (  DABS( DIAG(1,1) - A ) .GE. DABS( DIAG(1,1) - C )  ) THEN
+      if (  dabs( diag(1,1) - a ) .ge. dabs( diag(1,1) - c )  ) then
 !
 !        In this case, the second eigenvector component EIGVEC(2)
 !        should be larger than |B|; we explain why in detail below.
 !        We use the MAX function below to guard against reversal of the
 !        inequality due to round-off error.
 !
-         EIGVEC(1)  =  B
-         EIGVEC(2)  =  MAX (   DIAG(1,1) - A,   ABS(B)   )
+         eigvec(1)  =  b
+         eigvec(2)  =  max (   diag(1,1) - a,   abs(b)   )
 
 !
 !        Recall that DIAG(1,1) is an eigenvalue of the scaled version
@@ -515,25 +515,25 @@
 !
 !        Unitize the eigenvector.
 !
-         CALL VHATG ( EIGVEC, 2, TMPV   )
-         CALL MOVED ( TMPV,   2, EIGVEC )
+         call vhatg ( eigvec, 2, tmpv   )
+         call moved ( tmpv,   2, eigvec )
 
-         ROTATE(1,1)  =  EIGVEC(2)
-         ROTATE(2,1)  = -EIGVEC(1)
-         ROTATE(1,2)  =  EIGVEC(1)
-         ROTATE(2,2)  =  EIGVEC(2)
+         rotate(1,1)  =  eigvec(2)
+         rotate(2,1)  = -eigvec(1)
+         rotate(1,2)  =  eigvec(1)
+         rotate(2,2)  =  eigvec(2)
 
 !
 !        Swap DIAG(1,1) and DIAG(2,2).
 !
-         TMPD         =  DIAG(2,2)
-         DIAG(2,2)    =  DIAG(1,1)
-         DIAG(1,1)    =  TMPD
+         tmpd         =  diag(2,2)
+         diag(2,2)    =  diag(1,1)
+         diag(1,1)    =  tmpd
 
-      ELSE
+      else
 
-         EIGVEC(1)  =  MAX (  DIAG(1,1) - C,   ABS(B)  )
-         EIGVEC(2)  =  B
+         eigvec(1)  =  max (  diag(1,1) - c,   abs(b)  )
+         eigvec(2)  =  b
 
 !
 !        The x-component of EIGVEC is positive and has magnitude
@@ -545,22 +545,22 @@
 !
 !        Unitize the eigenvector.
 !
-         CALL VHATG ( EIGVEC, 2, TMPV   )
-         CALL MOVED ( TMPV,   2, EIGVEC )
+         call vhatg ( eigvec, 2, tmpv   )
+         call moved ( tmpv,   2, eigvec )
 
-         ROTATE(1,1)  =  EIGVEC(1)
-         ROTATE(2,1)  =  EIGVEC(2)
-         ROTATE(1,2)  = -EIGVEC(2)
-         ROTATE(2,2)  =  EIGVEC(1)
+         rotate(1,1)  =  eigvec(1)
+         rotate(2,1)  =  eigvec(2)
+         rotate(1,2)  = -eigvec(2)
+         rotate(2,2)  =  eigvec(1)
 
-      END IF
+      end if
 
 !
 !     We must scale the eigenvalues.
 !
-      DIAG(1,1)  =  DIAG(1,1)  *  SCALE
-      DIAG(2,2)  =  DIAG(2,2)  *  SCALE
+      diag(1,1)  =  diag(1,1)  *  scale
+      diag(2,2)  =  diag(2,2)  *  scale
 
-      CALL CHKOUT ( 'DIAGS2' )
-      RETURN
-      END
+      call chkout ( 'DIAGS2' )
+      return
+      end

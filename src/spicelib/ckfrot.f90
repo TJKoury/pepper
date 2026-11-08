@@ -1,6 +1,6 @@
 !$Procedure CKFROT ( CK frame, find position rotation )
 
-      SUBROUTINE CKFROT ( INST, ET, ROTATE, REF, FOUND )
+      subroutine ckfrot ( inst, et, rotate, ref, found )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               INST
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      ROTATE  ( 3, 3 )
-      INTEGER               REF
-      LOGICAL               FOUND
+      integer               inst
+      double precision      et
+      double precision      rotate  ( 3, 3 )
+      integer               ref
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -341,9 +341,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
-      LOGICAL               ZZSCLK
+      logical               return
+      logical               failed
+      logical               zzsclk
 
 !
 !     Local parameters
@@ -367,87 +367,87 @@
 !                   a name and a summary have the same length in bytes.)
 !
 
-      INTEGER               NDC
-      PARAMETER           ( NDC = 2 )
+      integer               ndc
+      parameter           ( ndc = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC = 6 )
+      integer               nic
+      parameter           ( nic = 6 )
 
-      INTEGER               NC
-      PARAMETER           ( NC = NDC + ( NIC + 1 )/2 )
+      integer               nc
+      parameter           ( nc = ndc + ( nic + 1 )/2 )
 
-      INTEGER               IDLEN
-      PARAMETER           ( IDLEN = NC * 8 )
+      integer               idlen
+      parameter           ( idlen = nc * 8 )
 
 !
 !     Local variables
 !
-      INTEGER               HANDLE
-      INTEGER               ICD      ( NIC  )
-      INTEGER               SCLKID
+      integer               handle
+      integer               icd      ( nic  )
+      integer               sclkid
 
-      DOUBLE PRECISION      AV       ( 3    )
-      DOUBLE PRECISION      CLKOUT
-      DOUBLE PRECISION      DESCR    ( NC   )
-      DOUBLE PRECISION      DCD      ( NDC  )
-      DOUBLE PRECISION      ROT      ( 3, 3 )
-      DOUBLE PRECISION      TIME
-      DOUBLE PRECISION      TOL
+      double precision      av       ( 3    )
+      double precision      clkout
+      double precision      descr    ( nc   )
+      double precision      dcd      ( ndc  )
+      double precision      rot      ( 3, 3 )
+      double precision      time
+      double precision      tol
 
-      CHARACTER*(IDLEN)     SEGID
+      character*(idlen)     segid
 
-      LOGICAL               NEEDAV
-      LOGICAL               SFND
-      LOGICAL               PFND
-      LOGICAL               HAVE
+      logical               needav
+      logical               sfnd
+      logical               pfnd
+      logical               have
 
 !
 !     Set FOUND to .FALSE. right now in case we end up
 !     returning before doing any work.
 !
-      FOUND = .FALSE.
-      REF   =  0
+      found = .false.
+      ref   =  0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKFROT' )
+      call chkin ( 'CKFROT' )
 
 !
 !     We don't need angular velocity data.
 !     Assume the segment won't be found until it really is.
 !
-      NEEDAV = .FALSE.
-      TOL    =  0.0D0
+      needav = .false.
+      tol    =  0.0d0
 
 !
 !     Begin a search for this instrument and time, and get the first
 !     applicable segment.
 !
-      CALL CKHAVE ( HAVE )
-      CALL CKMETA ( INST,  'SCLK', SCLKID )
+      call ckhave ( have )
+      call ckmeta ( inst,  'SCLK', sclkid )
 
-      IF ( .NOT. HAVE ) THEN
-         CALL CHKOUT ( 'CKFROT' )
-         RETURN
-      ELSE IF ( .NOT. ZZSCLK ( INST, SCLKID ) ) THEN
-         CALL CHKOUT ( 'CKFROT' )
-         RETURN
-      END IF
+      if ( .not. have ) then
+         call chkout ( 'CKFROT' )
+         return
+      else if ( .not. zzsclk ( inst, sclkid ) ) then
+         call chkout ( 'CKFROT' )
+         return
+      end if
 
 !
 !     Initialize SFND here in case an error occurs before CKSNS can
 !     set its value.
 !
-      SFND = .FALSE.
+      sfnd = .false.
 
-      CALL SCE2C  ( SCLKID, ET,            TIME   )
-      CALL CKBSS  ( INST,   TIME,   TOL,   NEEDAV )
-      CALL CKSNS  ( HANDLE, DESCR,  SEGID, SFND   )
+      call sce2c  ( sclkid, et,            time   )
+      call ckbss  ( inst,   time,   tol,   needav )
+      call cksns  ( handle, descr,  segid, sfnd   )
 
 !
 !     Keep trying candidate segments until a segment can produce a
@@ -457,36 +457,36 @@
 !     Check FAILED to prevent an infinite loop if an error is detected
 !     by a SPICELIB routine and the error handling is not set to abort.
 !
-      DO WHILE ( SFND .AND. ( .NOT. FAILED () ) )
+      do while ( sfnd .and. ( .not. failed () ) )
 
-         CALL CKPFS ( HANDLE, DESCR, TIME,   TOL, NEEDAV, &
-                      ROT,    AV,    CLKOUT, PFND          )
+         call ckpfs ( handle, descr, time,   tol, needav, &
+                      rot,    av,    clkout, pfnd          )
 
-         IF ( PFND ) THEN
+         if ( pfnd ) then
 !
 !           Found one. Fetch the ID code of the reference frame
 !           from the descriptor.
 !
-            CALL DAFUS  ( DESCR, NDC, NIC, DCD, ICD )
-            REF   =  ICD( 2 )
-            FOUND = .TRUE.
+            call dafus  ( descr, ndc, nic, dcd, icd )
+            ref   =  icd( 2 )
+            found = .true.
 !
 !           We now have the rotation matrix from
 !           REF to INS. We invert ROT to get the rotation
 !           from INST to REF.
 !
-            CALL XPOSE ( ROT, ROTATE )
+            call xpose ( rot, rotate )
 
-            CALL CHKOUT ( 'CKFROT' )
-            RETURN
+            call chkout ( 'CKFROT' )
+            return
 
-         END IF
+         end if
 
-         CALL CKSNS ( HANDLE, DESCR, SEGID, SFND )
+         call cksns ( handle, descr, segid, sfnd )
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'CKFROT' )
-      RETURN
-      END
+      call chkout ( 'CKFROT' )
+      return
+      end

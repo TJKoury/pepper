@@ -1,6 +1,6 @@
 !$Procedure ELEMI ( Element of an integer set )
 
-      LOGICAL FUNCTION ELEMI ( ITEM, A )
+      logical function elemi ( item, a )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          LBCELL
-      PARAMETER      ( LBCELL = -5 )
+      integer          lbcell
+      parameter      ( lbcell = -5 )
 
-      INTEGER          ITEM
-      INTEGER          A      ( LBCELL:* )
+      integer          item
+      integer          a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -211,25 +211,25 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHI
-      INTEGER               CARDI
-      LOGICAL               RETURN
+      integer               bsrchi
+      integer               cardi
+      logical               return
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         ELEMI = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ELEMI' )
-      END IF
+      if ( return() ) then
+         elemi = .false.
+         return
+      else
+         call chkin ( 'ELEMI' )
+      end if
 !
 !     Just a binary search.
 !
-      ELEMI = ( BSRCHI ( ITEM, CARDI ( A ), A(1) ) .NE. 0 )
+      elemi = ( bsrchi ( item, cardi ( a ), a(1) ) .ne. 0 )
 
-      CALL CHKOUT ( 'ELEMI' )
-      RETURN
-      END
+      call chkout ( 'ELEMI' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure LCASE ( Convert to lowercase )
 
-      SUBROUTINE LCASE ( IN, OUT )
+      subroutine lcase ( in, out )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    IN
-      CHARACTER*(*)    OUT
+      character*(*)    in
+      character*(*)    out
 
 ! $ Brief_I/O
 !
@@ -126,52 +126,52 @@
 !
 !     Local variables
 !
-      INTEGER          I
-      INTEGER          ICH
+      integer          i
+      integer          ich
 !
 !     Saved variables
 !
-      INTEGER          SHIFT
-      INTEGER          UPPERA
-      INTEGER          UPPERZ
+      integer          shift
+      integer          uppera
+      integer          upperz
 
-      LOGICAL          FIRST
+      logical          first
 
-      SAVE             FIRST
-      SAVE             SHIFT
-      SAVE             UPPERA
-      SAVE             UPPERZ
+      save             first
+      save             shift
+      save             uppera
+      save             upperz
 !
 !     Initial Data
 !
-      DATA             FIRST / .TRUE. /
+      data             first / .true. /
 !
 !     Do some set up stuff the first time through so that we do not
 !     need to reinitialize the boundary values used for comparisons
 !     and the shift on each call.
 !
-      IF ( FIRST ) THEN
-         FIRST  = .FALSE.
-         UPPERA = ICHAR ('A')
-         UPPERZ = ICHAR ('Z')
-         SHIFT  = ICHAR ('a') - UPPERA
-      END IF
+      if ( first ) then
+         first  = .false.
+         uppera = ichar ('A')
+         upperz = ichar ('Z')
+         shift  = ichar ('a') - uppera
+      end if
 
 !
 !     Move the string from IN to OUT. Step through OUT one character
 !     at a time, translating letters between 'A' and 'Z' to lowercase.
 !
-      OUT   = IN
+      out   = in
 
-      DO I = 1, LEN (OUT)
+      do i = 1, len (out)
 
-         ICH = ICHAR( OUT(I:I) )
+         ich = ichar( out(i:i) )
 
-         IF ( ( ICH .GE. UPPERA ) .AND. ( ICH .LE. UPPERZ ) ) THEN
-            OUT(I:I) = CHAR ( ICH + SHIFT )
-         END IF
+         if ( ( ich .ge. uppera ) .and. ( ich .le. upperz ) ) then
+            out(i:i) = char ( ich + shift )
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

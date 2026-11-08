@@ -1,6 +1,6 @@
 !$Procedure SOMTRU ( Some entries true? )
 
-      LOGICAL FUNCTION SOMTRU ( LOGCLS, N )
+      logical function somtru ( logcls, n )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               LOGCLS ( * )
-      INTEGER               N
+      logical               logcls ( * )
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -121,24 +121,24 @@
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Just do it.
 !
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( LOGCLS(I) ) THEN
+         if ( logcls(i) ) then
 
-            SOMTRU = .TRUE.
-            RETURN
+            somtru = .true.
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      SOMTRU = .FALSE.
-      RETURN
+      somtru = .false.
+      return
 
 
-      END
+      end

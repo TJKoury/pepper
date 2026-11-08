@@ -1,6 +1,6 @@
 !$Procedure CHBASE ( Character set base )
 
-      INTEGER FUNCTION CHBASE ()
+      integer function chbase ()
 
 ! $ Abstract
 !
@@ -17,7 +17,7 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Brief_I/O
 !
@@ -404,10 +404,10 @@
 #endif
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      CHBASE = 256
+      chbase = 256
 #else
-      CHBASE = 128
+      chbase = 128
 #endif
 
-      RETURN
-      END
+      return
+      end

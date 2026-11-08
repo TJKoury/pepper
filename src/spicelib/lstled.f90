@@ -1,6 +1,6 @@
 !$Procedure LSTLED ( Last double precision element less than or equal)
 
-      INTEGER FUNCTION  LSTLED ( X, N, ARRAY )
+      integer function  lstled ( x, n, array )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   X
-      INTEGER            N
-      DOUBLE PRECISION   ARRAY ( * )
+      double precision   x
+      integer            n
+      double precision   array ( * )
 
 ! $ Brief_I/O
 !
@@ -171,65 +171,65 @@
 !
 !     Local variables
 !
-      INTEGER          J
+      integer          j
 
-      INTEGER          BEGIN
-      INTEGER          END
-      INTEGER          MIDDLE
-      INTEGER          ITEMS
+      integer          begin
+      integer          end
+      integer          middle
+      integer          items
 
-      ITEMS = N
+      items = n
 
-      BEGIN = 1
-      END   = N
+      begin = 1
+      end   = n
 
-      IF      ( N .LE. 0            ) THEN
+      if      ( n .le. 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
 !        to compare against.  Zero is the only sensible thing to return.
 !
-         LSTLED = 0
+         lstled = 0
 
-      ELSE IF ( X .LT. ARRAY(BEGIN) ) THEN
+      else if ( x .lt. array(begin) ) then
 
 !
 !        None of the array elements are less than or equal to X
 !
-         LSTLED = 0
+         lstled = 0
 
-      ELSE IF ( X .GE. ARRAY(END)   ) THEN
+      else if ( x .ge. array(end)   ) then
 
 !
 !        X is greater than or equal to all elements of the array.  Thus
 !        the last element of the array is the last item less than or
 !        equal to X.
 !
-         LSTLED = END
+         lstled = end
 
-      ELSE
+      else
 
 !
 !        X lies between some pair of elements of the array
 !
 
-         DO WHILE ( ITEMS .GT. 2 )
+         do while ( items .gt. 2 )
 
-            J        = ITEMS/2
-            MIDDLE   = BEGIN + J
+            j        = items/2
+            middle   = begin + j
 
-            IF ( ARRAY(MIDDLE) .LE. X ) THEN
-               BEGIN = MIDDLE
-            ELSE
-               END   = MIDDLE
-            END IF
+            if ( array(middle) .le. x ) then
+               begin = middle
+            else
+               end   = middle
+            end if
 
-            ITEMS    = 1 + (END - BEGIN)
-         END DO
+            items    = 1 + (end - begin)
+         end do
 
-         LSTLED = BEGIN
+         lstled = begin
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

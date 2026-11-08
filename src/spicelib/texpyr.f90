@@ -1,6 +1,6 @@
 !$Procedure TEXPYR ( Time --- Expand year )
 
-      SUBROUTINE TEXPYR ( YEAR )
+      subroutine texpyr ( year )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               YEAR
+      integer               year
 
 ! $ Brief_I/O
 !
@@ -239,31 +239,31 @@
 !-&
 
 
-      INTEGER               CENTRY
-      INTEGER               LBOUND
-      SAVE
+      integer               centry
+      integer               lbound
+      save
 
-      DATA                  CENTRY  / 1900 /
-      DATA                  LBOUND  / 1969 /
+      data                  centry  / 1900 /
+      data                  lbound  / 1969 /
 
-      IF ( YEAR .GE. 100 .OR. YEAR .LT. 0 ) THEN
-         RETURN
-      END IF
+      if ( year .ge. 100 .or. year .lt. 0 ) then
+         return
+      end if
 
-      YEAR = YEAR + CENTRY
+      year = year + centry
 
-      IF ( YEAR .LT. LBOUND ) THEN
-         YEAR = YEAR + 100
-      END IF
+      if ( year .lt. lbound ) then
+         year = year + 100
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure TSETYR ( Time --- set year expansion boundaries )
 
-      ENTRY TSETYR ( YEAR )
+      entry tsetyr ( year )
 
 ! $ Abstract
 !
@@ -467,12 +467,12 @@
 !-&
 
 
-      IF ( YEAR .GT. 0 ) THEN
+      if ( year .gt. 0 ) then
 
-         CENTRY = ( YEAR/100 ) * 100
-         LBOUND =   YEAR
+         centry = ( year/100 ) * 100
+         lbound =   year
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

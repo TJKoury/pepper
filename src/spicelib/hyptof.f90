@@ -1,6 +1,6 @@
 !$Procedure HYPTOF ( Hyperbolic time of flight )
 
-      SUBROUTINE HYPTOF ( MA, ECC, F )
+      subroutine hyptof ( ma, ecc, f )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MA
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      F
+      double precision      ma
+      double precision      ecc
+      double precision      f
 
 ! $ Brief_I/O
 !
@@ -151,63 +151,63 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DCBRT
+      double precision      dpmax
+      double precision      dcbrt
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               COUNT
-      INTEGER               MCOUNT
+      integer               count
+      integer               mcount
 
-      DOUBLE PRECISION      MAXLOG
+      double precision      maxlog
 
-      DOUBLE PRECISION      M
+      double precision      m
 
-      DOUBLE PRECISION      LOWER
-      DOUBLE PRECISION      MIDDLE
-      DOUBLE PRECISION      MIDVAL
-      DOUBLE PRECISION      UPPER
+      double precision      lower
+      double precision      middle
+      double precision      midval
+      double precision      upper
 
-      DOUBLE PRECISION      DIFF
-      DOUBLE PRECISION      LASTDF
+      double precision      diff
+      double precision      lastdf
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  MAXLOG
+      save                  first
+      save                  maxlog
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'HYPTOF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'HYPTOF' )
+      end if
 
-      IF ( FIRST ) THEN
-         FIRST  = .FALSE.
-         MAXLOG = LOG ( DPMAX() )
-      END IF
+      if ( first ) then
+         first  = .false.
+         maxlog = log ( dpmax() )
+      end if
 
-      IF ( ECC .LT. 1.D0 ) THEN
-         CALL SIGERR ( 'SPICE(WRONGCONIC)' )
-         CALL CHKOUT ( 'HYPTOF'            )
-         RETURN
-      END IF
+      if ( ecc .lt. 1.d0 ) then
+         call sigerr ( 'SPICE(WRONGCONIC)' )
+         call chkout ( 'HYPTOF'            )
+         return
+      end if
 
 !
 !     For reasons of numerical stability, we have to intercept cases
@@ -220,13 +220,13 @@
 !     the solution to MA = e sinh(F) - F by negating F if MA is
 !     less than 0.
 !
-      IF ( MA .EQ. 0.D0 ) THEN
-         F = 0.D0
-         CALL CHKOUT ( 'HYPTOF' )
-         RETURN
-      ELSE
-         M = ABS ( MA )
-      END IF
+      if ( ma .eq. 0.d0 ) then
+         f = 0.d0
+         call chkout ( 'HYPTOF' )
+         return
+      else
+         m = abs ( ma )
+      end if
 
 
 !
@@ -317,9 +317,9 @@
 !     approximately LOG( DPMAX() / e ) = LOG(DPMAX()) - LOG(e) .
 !
 !
-      LOWER = LOG ( (M/ECC)  +  DSQRT( 1.0D0 + (M/ECC)**2 ) )
-      UPPER = MIN ( DCBRT(6.0D0*M/ECC), MAXLOG - LOG (ECC ) )
-      UPPER = MAX ( LOWER, UPPER )
+      lower = log ( (m/ecc)  +  dsqrt( 1.0d0 + (m/ecc)**2 ) )
+      upper = min ( dcbrt(6.0d0*m/ecc), maxlog - log (ecc ) )
+      upper = max ( lower, upper )
 !
 !     Perform some simple checks first to avoid problems with
 !     convergence of the loop below.  If LOWER is zero, then
@@ -331,71 +331,71 @@
 !
 !     Now we simply perform bisection to locate the root.
 !
-      MIDDLE = MAX( LOWER, MIN( UPPER, 0.5D0*UPPER + 0.5D0*LOWER ) )
-      MIDVAL = ECC * SINH(MIDDLE) - MIDDLE - M
+      middle = max( lower, min( upper, 0.5d0*upper + 0.5d0*lower ) )
+      midval = ecc * sinh(middle) - middle - m
 
-      DIFF   = UPPER - LOWER
+      diff   = upper - lower
 !
 !     Finally pick a reasonable upper bound on the number of loop
 !     iterations we shall need to perform.
 !
-      MCOUNT = 100
-      COUNT  = 0
-      DO WHILE ( DIFF .GT. 0.0D0 .AND. COUNT .LT. MCOUNT )
+      mcount = 100
+      count  = 0
+      do while ( diff .gt. 0.0d0 .and. count .lt. mcount )
 
 !
 !        Move one of the endpoints to the middle.
 !
-         IF ( MIDVAL .GT. 0.0D0 ) THEN
+         if ( midval .gt. 0.0d0 ) then
 
-            UPPER = MIDDLE
+            upper = middle
 
-         ELSE IF ( MIDVAL .LT. 0.0D0 ) THEN
+         else if ( midval .lt. 0.0d0 ) then
 
-            LOWER = MIDDLE
+            lower = middle
 
-         ELSE
+         else
 
-            LOWER = MIDDLE
-            UPPER = MIDDLE
+            lower = middle
+            upper = middle
 
-         END IF
+         end if
 
 !
 !        Compute the next middle point.
 !
-         MIDDLE = MAX( LOWER, MIN( UPPER, 0.5D0*UPPER + 0.5D0*LOWER ) )
-         LASTDF = DIFF
-         COUNT  = COUNT + 1
+         middle = max( lower, min( upper, 0.5d0*upper + 0.5d0*lower ) )
+         lastdf = diff
+         count  = count + 1
 
 !
 !        If we are on an endpoint, we are ready to call it quits.
 !
-         IF (      ( MIDDLE .EQ. LOWER ) &
-              .OR. ( MIDDLE .EQ. UPPER ) ) THEN
+         if (      ( middle .eq. lower ) &
+              .or. ( middle .eq. upper ) ) then
 
-            DIFF   = 0.0D0
+            diff   = 0.0d0
 
-         ELSE
+         else
 
-            DIFF   = UPPER - LOWER
-            MIDVAL = ECC * SINH ( MIDDLE ) - MIDDLE - M
+            diff   = upper - lower
+            midval = ecc * sinh ( middle ) - middle - m
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
 !
 !     Restore the proper sign, if necessary.
 !
-      IF ( MA .LT. 0 ) THEN
-         F = - MIDDLE
-      ELSE
-         F =   MIDDLE
-      END IF
+      if ( ma .lt. 0 ) then
+         f = - middle
+      else
+         f =   middle
+      end if
 
 
-      CALL CHKOUT ( 'HYPTOF' )
-      RETURN
-      END
+      call chkout ( 'HYPTOF' )
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure ZZSRFTRN ( Surface name/ID mapping umbrella )
 
-      SUBROUTINE ZZSRFTRN ( BODYID, SRFNAM, SURFID, &
-                            USRCTR, FOUND,  UPDATE )
+      subroutine zzsrftrn ( bodyid, srfnam, surfid, &
+                            usrctr, found,  update )
 
 ! $ Abstract
 !
@@ -27,18 +27,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'srftrn.inc'
-      INCLUDE 'zzctr.inc'
-      INCLUDE 'zzsrftrn.inc'
+      include 'srftrn.inc'
+      include 'zzctr.inc'
+      include 'zzsrftrn.inc'
 
-      INTEGER               BODYID
-      CHARACTER*(*)         SRFNAM
-      INTEGER               SURFID
-      INTEGER               USRCTR ( 2 )
-      LOGICAL               FOUND
-      LOGICAL               UPDATE
+      integer               bodyid
+      character*(*)         srfnam
+      integer               surfid
+      integer               usrctr ( 2 )
+      logical               found
+      logical               update
 
 ! $ Brief_I/O
 !
@@ -155,11 +155,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ZZHASH2
-      INTEGER               ZZHASHI
+      integer               zzhash2
+      integer               zzhashi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -167,11 +167,11 @@
 !
 !     Hash control area items.
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX =   0 )
+      integer               sizidx
+      parameter           ( sizidx =   0 )
 
-      INTEGER               FREIDX
-      PARAMETER           ( FREIDX =  -1 )
+      integer               freidx
+      parameter           ( freidx =  -1 )
 
 !
 !     Local variables
@@ -353,10 +353,10 @@
 !        Input surface IDs:           KERSID
 !        Input body IDs:              KERBID
 !
-      INTEGER               KERSID ( MXNSRF )
-      INTEGER               KERBID ( MXNSRF )
-      CHARACTER*(SFNMLN)    KERNAM ( MXNSRF )
-      INTEGER               NKVAR
+      integer               kersid ( mxnsrf )
+      integer               kerbid ( mxnsrf )
+      character*(sfnmln)    kernam ( mxnsrf )
+      integer               nkvar
 !
 !        Normalized names:            NRMNAM
 !
@@ -364,7 +364,7 @@
 !     string containing the associated body ID.
 !
 
-      CHARACTER*(SFNMLN)    NORNAM ( MXNSRF )
+      character*(sfnmln)    nornam ( mxnsrf )
 
 !
 !
@@ -376,9 +376,9 @@
 !        Surface ID name pointers:    SIDIDX
 !
 !
-      INTEGER               SIDHLS ( NROOM )
-      INTEGER               SIDPOL ( LBSNGL : NROOM )
-      INTEGER               SIDIDX ( NROOM )
+      integer               sidhls ( nroom )
+      integer               sidpol ( lbsngl : nroom )
+      integer               sididx ( nroom )
 
 
 !        Surface Name table
@@ -389,67 +389,67 @@
 !        Surface name ID pointers:    SNMIDP
 !
 !
-      INTEGER               SNMHLS ( NROOM )
-      INTEGER               SNMPOL ( LBSNGL : NROOM )
-      INTEGER               SNMIDX ( NROOM )
+      integer               snmhls ( nroom )
+      integer               snmpol ( lbsngl : nroom )
+      integer               snmidx ( nroom )
 
 
 !
 !     Other local declarations:
 !
-      CHARACTER*(SFNMLN)    NSRFNM
-      CHARACTER*(SFNMLN)    SQSHNM
+      character*(sfnmln)    nsrfnm
+      character*(sfnmln)    sqshnm
 
-      INTEGER               ITEMAT
-      INTEGER               LOOKAT
-      INTEGER               NODE
+      integer               itemat
+      integer               lookat
+      integer               node
 
 !
 !     POLCTR tracks the state of the kernel pool.
 !     SRFCTR tracks the state of the surface mapping
 !     kernel variables.
 !
-      INTEGER               POLCTR ( CTRSIZ )
-      INTEGER               SRFCTR ( CTRSIZ )
+      integer               polctr ( ctrsiz )
+      integer               srfctr ( ctrsiz )
 
-      LOGICAL               EXTKER
-      LOGICAL               PASS1
-      LOGICAL               LUPDTE
+      logical               extker
+      logical               pass1
+      logical               lupdte
 
 !
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 
 !
 !     Initial values
 !
-      DATA                  EXTKER / .FALSE.    /
-      DATA                  POLCTR / CTRSIZ * 0 /
-      DATA                  SRFCTR / CTRSIZ * 0 /
-      DATA                  PASS1  / .TRUE.     /
+      data                  extker / .false.    /
+      data                  polctr / ctrsiz * 0 /
+      data                  srfctr / ctrsiz * 0 /
+      data                  pass1  / .true.     /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZSRFTRN'                                    )
-      CALL SETMSG ( 'ZZSRFTRN is an umbrella routine. It should ' &
+      call chkin  ( 'ZZSRFTRN'                                    )
+      call setmsg ( 'ZZSRFTRN is an umbrella routine. It should ' &
       //            'never be called directly.'                   )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)'                           )
-      CALL CHKOUT ( 'ZZSRFTRN'                                    )
-      RETURN
+      call sigerr ( 'SPICE(BOGUSENTRY)'                           )
+      call chkout ( 'ZZSRFTRN'                                    )
+      return
 
 
 
 
 !$Procedure ZZSRFN2C ( Surface name to ID code mapping )
 
-      ENTRY ZZSRFN2C ( SRFNAM, BODYID, SURFID, FOUND )
+      entry zzsrfn2c ( srfnam, bodyid, surfid, found )
 
 ! $ Abstract
 !
@@ -593,19 +593,19 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSRFN2C' )
+      call chkin ( 'ZZSRFN2C' )
 
 !
 !     No result has been found.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize the surface kernel variable update counter
 !        and the local pool counter. Note that this routine
@@ -613,115 +613,115 @@
 !        with respect to the kernel pool. Hence the different
 !        initializations.
 !
-         CALL ZZCTRSIN ( SRFCTR )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzctrsin ( srfctr )
+         call zzctruin ( polctr )
 
 !
 !        Initialize local data structures. The first instance of this
 !        call also sets a watch on the surface mapping kernel
 !        variables.
 !
-         CALL ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                         EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                         SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+         call zzsrfker ( kernam, nornam, kersid, kerbid, &
+                         extker, nkvar,  snmhls, snmpol, &
+                         snmidx, sidhls, sidpol, sididx )
 !
 !        Sync POLCTR with the kernel pool counter.
 !
-         CALL ZZCVPOOL ( 'ZZSRFTRN', POLCTR, LUPDTE )
+         call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSRFN2C' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSRFN2C' )
+            return
+         end if
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Determine whether the data structures need to be updated
 !     due to a change in the kernel pool contents.
 !
-      CALL ZZCVPOOL ( 'ZZSRFTRN', POLCTR, LUPDTE )
+      call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-      IF ( LUPDTE ) THEN
+      if ( lupdte ) then
 !
 !        Conservatively increment the ZZSRFTRN state counter in
 !        expectation of successful update.
 !
-         CALL ZZCTRINC ( SRFCTR )
+         call zzctrinc ( srfctr )
 !
 !        Initialize local data structures.
 !
-         CALL ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                         EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                         SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+         call zzsrfker ( kernam, nornam, kersid, kerbid, &
+                         extker, nkvar,  snmhls, snmpol, &
+                         snmidx, sidhls, sidpol, sididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSRFN2C' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSRFN2C' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     No translation can be done if the surface mapping variables
 !     are not in the pool.
 !
-      IF ( .NOT. EXTKER ) THEN
-         CALL CHKOUT ( 'ZZSRFN2C' )
-         RETURN
-      END IF
+      if ( .not. extker ) then
+         call chkout ( 'ZZSRFN2C' )
+         return
+      end if
 
 !
 !     Get a "normalized" copy of the input name: left-justified,
 !     compressed, upper case.
 !
-      CALL LJUCRS ( 1, SRFNAM, NSRFNM )
+      call ljucrs ( 1, srfnam, nsrfnm )
 
 !
 !     Get a "squished" version of the above name: a version
 !     containing no blanks.
 !
-      CALL CMPRSS ( ' ', 0, NSRFNM, SQSHNM )
+      call cmprss ( ' ', 0, nsrfnm, sqshnm )
 
 !
 !     Find the hash value of the squished input name.
 !
-      LOOKAT = ZZHASH2( SQSHNM, SNMPOL(SIZIDX) )
-      NODE   = SNMHLS ( LOOKAT )
+      lookat = zzhash2( sqshnm, snmpol(sizidx) )
+      node   = snmhls ( lookat )
 
-      FOUND = .FALSE.
+      found = .false.
 
-      IF ( NODE .GT. 0 ) THEN
+      if ( node .gt. 0 ) then
 !
 !        Start at the head node and check each normalized name saved
 !           for this hash value until we find a name and body ID that
 !           match or run out of items in the collision list.
 !
-         DO WHILE (  ( NODE .GT. 0 ) .AND. ( .NOT. FOUND )  )
+         do while (  ( node .gt. 0 ) .and. ( .not. found )  )
 
-            FOUND  =       ( NSRFNM  .EQ. NORNAM( SNMIDX(NODE) ) ) &
-                     .AND. ( BODYID  .EQ. KERBID( SNMIDX(NODE) ) )
+            found  =       ( nsrfnm  .eq. nornam( snmidx(node) ) ) &
+                     .and. ( bodyid  .eq. kerbid( snmidx(node) ) )
 
-            ITEMAT = NODE
-            NODE   = SNMPOL ( NODE )
+            itemat = node
+            node   = snmpol ( node )
 
-         END DO
+         end do
 !
 !        ITEMAT is the value of the last node checked, or
 !        0 if the list is empty.
 !
-      END IF
+      end if
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         SURFID = KERSID( SNMIDX(ITEMAT) )
+         surfid = kersid( snmidx(itemat) )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZSRFN2C' )
-      RETURN
+      call chkout ( 'ZZSRFN2C' )
+      return
 
 
 
@@ -729,7 +729,7 @@
 
 !$Procedure ZZSRFC2N ( Surface ID code to name mapping )
 
-      ENTRY ZZSRFC2N ( SURFID, BODYID, SRFNAM, FOUND )
+      entry zzsrfc2n ( surfid, bodyid, srfnam, found )
 
 ! $ Abstract
 !
@@ -879,19 +879,19 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSRFC2N' )
+      call chkin ( 'ZZSRFC2N' )
 
 !
 !     No result has been found.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize the surface kernel variable update counter
 !        and the local pool counter. Note that this routine
@@ -899,105 +899,105 @@
 !        with respect to the kernel pool. Hence the different
 !        initializations.
 !
-         CALL ZZCTRSIN ( SRFCTR )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzctrsin ( srfctr )
+         call zzctruin ( polctr )
 
 !
 !        Initialize local data structures. The first instance of this
 !        call also sets a watch on the surface mapping kernel
 !        variables.
 !
-         CALL ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                         EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                         SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+         call zzsrfker ( kernam, nornam, kersid, kerbid, &
+                         extker, nkvar,  snmhls, snmpol, &
+                         snmidx, sidhls, sidpol, sididx )
 !
 !        Sync SRFCTR with the kernel pool counter.
 !
-         CALL ZZCVPOOL ( 'ZZSRFTRN', POLCTR, LUPDTE )
+         call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSRFC2N' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSRFC2N' )
+            return
+         end if
 
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Determine whether the data structures need to be updated
 !     due to a change in the kernel pool contents.
 !
-      CALL ZZCVPOOL ( 'ZZSRFTRN', POLCTR, LUPDTE )
+      call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-      IF ( LUPDTE ) THEN
+      if ( lupdte ) then
 !
 !        Conservatively increment the ZZSRFTRN state counter in
 !        expectation of successful update.
 !
-         CALL ZZCTRINC ( SRFCTR )
+         call zzctrinc ( srfctr )
 
 !
 !        Initialize local data structures.
 !
-         CALL ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                         EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                         SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+         call zzsrfker ( kernam, nornam, kersid, kerbid, &
+                         extker, nkvar,  snmhls, snmpol, &
+                         snmidx, sidhls, sidpol, sididx )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSRFC2N' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSRFC2N' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     No translation can be done if the surface mapping variables
 !     are not in the pool.
 !
-      IF ( .NOT. EXTKER ) THEN
-         CALL CHKOUT ( 'ZZSRFC2N' )
-         RETURN
-      END IF
+      if ( .not. extker ) then
+         call chkout ( 'ZZSRFC2N' )
+         return
+      end if
 
 !
 !     Find the hash value of the squished input name.
 !
-      LOOKAT = ZZHASHI( SURFID, SIDPOL(SIZIDX) )
-      NODE   = SIDHLS ( LOOKAT )
+      lookat = zzhashi( surfid, sidpol(sizidx) )
+      node   = sidhls ( lookat )
 
-      FOUND  = .FALSE.
+      found  = .false.
 
-      IF ( NODE .GT. 0 ) THEN
+      if ( node .gt. 0 ) then
 !
 !        Start at the head node and check each normalized name saved
 !           for this hash value until we find a name and body ID that
 !           match or run out of items in the collision list.
 !
-         DO WHILE (  ( NODE .GT. 0 ) .AND. ( .NOT. FOUND )  )
+         do while (  ( node .gt. 0 ) .and. ( .not. found )  )
 
-            FOUND  =       ( SURFID  .EQ. KERSID( SIDIDX(NODE) ) ) &
-                     .AND. ( BODYID  .EQ. KERBID( SIDIDX(NODE) ) )
+            found  =       ( surfid  .eq. kersid( sididx(node) ) ) &
+                     .and. ( bodyid  .eq. kerbid( sididx(node) ) )
 
-            ITEMAT = NODE
-            NODE   = SIDPOL ( NODE )
+            itemat = node
+            node   = sidpol ( node )
 
-         END DO
+         end do
 !
 !        ITEMAT is the value of the last node checked, or
 !        0 if the list is empty.
 !
-      END IF
+      end if
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         SRFNAM = KERNAM( SIDIDX(ITEMAT) )
+         srfnam = kernam( sididx(itemat) )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZSRFC2N' )
-      RETURN
+      call chkout ( 'ZZSRFC2N' )
+      return
 
 
 
@@ -1006,7 +1006,7 @@
 
 !$Procedure ZZSRFTRK ( Surface mapping tracker )
 
-      ENTRY ZZSRFTRK ( USRCTR, UPDATE )
+      entry zzsrftrk ( usrctr, update )
 
 ! $ Abstract
 !
@@ -1150,16 +1150,16 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Check in because ZZSRFKER can fail.
 !
-         CALL CHKIN ( 'ZZSRFTRK' )
+         call chkin ( 'ZZSRFTRK' )
 !
 !        Initialize the surface kernel variable update counter
 !        and the local pool counter. Note that this routine
@@ -1167,72 +1167,72 @@
 !        with respect to the kernel pool. Hence the different
 !        initializations.
 !
-         CALL ZZCTRSIN ( SRFCTR )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzctrsin ( srfctr )
+         call zzctruin ( polctr )
 
 !
 !        Initialize local data structures. The first instance of this
 !        call also sets a watch on the surface mapping kernel
 !        variables.
 !
-         CALL ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                         EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                         SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+         call zzsrfker ( kernam, nornam, kersid, kerbid, &
+                         extker, nkvar,  snmhls, snmpol, &
+                         snmidx, sidhls, sidpol, sididx )
 !
 !        Sync SRFCTR with the kernel pool counter.
 !
-         CALL ZZCVPOOL ( 'ZZSRFTRN', POLCTR, LUPDTE )
+         call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 !
 !        Check out here since this routine doesn't check out
 !        before its normal exit.
 !
-         CALL CHKOUT ( 'ZZSRFTRK' )
+         call chkout ( 'ZZSRFTRK' )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Check for updates to the kernel pool variables.
 !
-      CALL ZZCVPOOL ( 'ZZSRFTRN', POLCTR, LUPDTE )
+      call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
-      IF ( LUPDTE ) THEN
+      if ( lupdte ) then
 !
 !        Check in because ZZSRFKER can fail.
 !
-         CALL CHKIN ( 'ZZSRFTRK' )
+         call chkin ( 'ZZSRFTRK' )
 
 !
 !        Conservatively increment the ZZSRFTRN state counter in
 !        expectation of successful update.
 !
-         CALL ZZCTRINC ( SRFCTR )
+         call zzctrinc ( srfctr )
 
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         CALL ZZSRFKER ( KERNAM, NORNAM, KERSID, KERBID, &
-                         EXTKER, NKVAR,  SNMHLS, SNMPOL, &
-                         SNMIDX, SIDHLS, SIDPOL, SIDIDX )
+         call zzsrfker ( kernam, nornam, kersid, kerbid, &
+                         extker, nkvar,  snmhls, snmpol, &
+                         snmidx, sidhls, sidpol, sididx )
 
-         CALL CHKOUT ( 'ZZSRFTRK' )
+         call chkout ( 'ZZSRFTRK' )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
+         if ( failed() ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the input counter against the ZZSRFTRN counter;
 !     sync the user counter.
 !
-      CALL ZZCTRCHK ( SRFCTR, USRCTR, UPDATE )
+      call zzctrchk ( srfctr, usrctr, update )
 
-      RETURN
-      END
+      return
+      end

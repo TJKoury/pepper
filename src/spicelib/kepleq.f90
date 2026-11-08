@@ -1,6 +1,6 @@
 !$Procedure KEPLEQ ( Solve Kepler's Equation --- Equinoctial Form )
 
-      DOUBLE PRECISION FUNCTION KEPLEQ (ML,H,K)
+      double precision function kepleq (ml,h,k)
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  ML
-      DOUBLE PRECISION  H
-      DOUBLE PRECISION  K
+      double precision  ml
+      double precision  h
+      double precision  k
 
 ! $ Brief_I/O
 !
@@ -129,38 +129,38 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      KPSOLV
+      double precision      kpsolv
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      EVEC ( 2 )
-      DOUBLE PRECISION      E2
+      double precision      evec ( 2 )
+      double precision      e2
 
 !
 !     Make sure that H and K are in the expected range.
 !
-      E2 = H*H + K*K
+      e2 = h*h + k*k
 
-      IF ( E2 .GE. 0.81D0 ) THEN
+      if ( e2 .ge. 0.81d0 ) then
 
-         KEPLEQ = 0.0D0
-         CALL CHKIN  ( 'KEPLEQ' )
-         CALL SETMSG ( 'The values of H and K supplied to KEPLEQ ' &
+         kepleq = 0.0d0
+         call chkin  ( 'KEPLEQ' )
+         call setmsg ( 'The values of H and K supplied to KEPLEQ ' &
          //            'must satisfy the inequality H*H + K*K < ' &
          //            'ECC**2 where ECC is the eccentricity ' &
          //            'threshold of 0.9.  The values of H and K ' &
          //            'are: # and # respectively. H*H + K*K = ' &
          //            '#. ' )
 
-         CALL ERRDP  ( '#', H  )
-         CALL ERRDP  ( '#', K  )
-         CALL ERRDP  ( '#', E2 )
-         CALL SIGERR ( 'SPICE(ECCOUTOFBOUNDS)' )
-         CALL CHKOUT ( 'KEPLEQ' )
-         RETURN
+         call errdp  ( '#', h  )
+         call errdp  ( '#', k  )
+         call errdp  ( '#', e2 )
+         call sigerr ( 'SPICE(ECCOUTOFBOUNDS)' )
+         call chkout ( 'KEPLEQ' )
+         return
 
-      END IF
+      end if
 
 !
 !     Instead of solving the equation
@@ -217,9 +217,9 @@
 !     the equation X - < EVEC, UVEC(X) >
 !
 
-      EVEC(1) = -H*DCOS(ML) + K*DSIN(ML)
-      EVEC(2) =  H*DSIN(ML) + K*DCOS(ML)
-      KEPLEQ  =  ML         + KPSOLV( EVEC )
+      evec(1) = -h*dcos(ml) + k*dsin(ml)
+      evec(2) =  h*dsin(ml) + k*dcos(ml)
+      kepleq  =  ml         + kpsolv( evec )
 
-      RETURN
-      END
+      return
+      end

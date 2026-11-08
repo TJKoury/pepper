@@ -40,8 +40,8 @@
 !-&
 
 
-      INTEGER               MAXREC
-      PARAMETER           ( MAXREC = 198 )
+      integer               maxrec
+      parameter           ( maxrec = 198 )
 
 
 !

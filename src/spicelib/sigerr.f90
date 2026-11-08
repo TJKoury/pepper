@@ -1,6 +1,6 @@
 !$Procedure SIGERR ( Signal Error Condition )
 
-      SUBROUTINE SIGERR ( MSG )
+      subroutine sigerr ( msg )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)                 MSG
+      character*(*)                 msg
 
 ! $ Brief_I/O
 !
@@ -315,9 +315,9 @@
 !     SPICELIB functions:
 !
 
-      LOGICAL               FAILED
-      LOGICAL               SETERR
-      LOGICAL               ACCEPT
+      logical               failed
+      logical               seterr
+      logical               accept
 
 !
 !     Local Parameters
@@ -325,42 +325,42 @@
 !     Define mnemonics for the integer action codes used by the error
 !     handling. See ERRACT for the character string equivalents used.
 !
-      INTEGER               IABRT
-      PARAMETER           ( IABRT =          1 )
+      integer               iabrt
+      parameter           ( iabrt =          1 )
 
-      INTEGER               IREPRT
-      PARAMETER           ( IREPRT = IABRT + 1 )
+      integer               ireprt
+      parameter           ( ireprt = iabrt + 1 )
 
-      INTEGER               IRETRN
-      PARAMETER           ( IRETRN = IREPRT + 1 )
+      integer               iretrn
+      parameter           ( iretrn = ireprt + 1 )
 
-      INTEGER               IIGNOR
-      PARAMETER           ( IIGNOR = IRETRN + 1 )
+      integer               iignor
+      parameter           ( iignor = iretrn + 1 )
 
-      INTEGER               IDEFLT
-      PARAMETER           ( IDEFLT = IIGNOR + 1 )
+      integer               ideflt
+      parameter           ( ideflt = iignor + 1 )
 !
 !     Length for output messages default settings.
 !
-      INTEGER               DEFLEN
-      PARAMETER           ( DEFLEN = 40)
+      integer               deflen
+      parameter           ( deflen = 40)
 !
 !     Local Variables:
 !
-      CHARACTER*(DEFLEN)    DEFMSG
-      CHARACTER*(DEFLEN)    ERRMSG
+      character*(deflen)    defmsg
+      character*(deflen)    errmsg
 
-      INTEGER               ACTION
+      integer               action
 
-      LOGICAL               STAT
-      SAVE
+      logical               stat
+      save
 !
 !     Initial Values
 !
 !     Define the default error message strings for OUTMSG.
 !
-      DATA       DEFMSG / 'SHORT, EXPLAIN, LONG, TRACEBACK, DEFAULT' /
-      DATA       ERRMSG / 'SHORT, EXPLAIN, LONG, TRACEBACK'          /
+      data       defmsg / 'SHORT, EXPLAIN, LONG, TRACEBACK, DEFAULT' /
+      data       errmsg / 'SHORT, EXPLAIN, LONG, TRACEBACK'          /
 !
 !     We must first check whether the error indicated by
 !     MSG is one we're supposed to ignore...
@@ -378,11 +378,11 @@
 !         a call to RESET.
 !
 
-      CALL GETACT ( ACTION )
+      call getact ( action )
 
-      IF ( ACTION .NE. IIGNOR ) THEN
+      if ( action .ne. iignor ) then
 
-         IF ( ( ACTION .NE. IRETRN ) .OR. ( .NOT. FAILED() ) ) THEN
+         if ( ( action .ne. iretrn ) .or. ( .not. failed() ) ) then
 !
 !           This one's for real.  Indicate an error condition, and
 !           store the short error message.
@@ -391,13 +391,13 @@
 !           reference sets the toolkit error status.  STAT
 !           doesn't have any meaning.
 !
-            STAT = SETERR ( .TRUE. )
+            stat = seterr ( .true. )
 
-            CALL PUTSMS ( MSG )
+            call putsms ( msg )
 !
 !           Create a frozen copy of the traceback:
 !
-            CALL FREEZE
+            call freeze
 
 !
 !           Now we output the error data that are available at this
@@ -415,49 +415,49 @@
 !           if the error action is DEFAULT.  In that case, the
 !           default message selection applies.
 !
-            IF (  ACTION .NE. IDEFLT ) THEN
+            if (  action .ne. ideflt ) then
 
-               CALL OUTMSG ( ERRMSG )
+               call outmsg ( errmsg )
 
-            ELSE
+            else
 
-               CALL OUTMSG ( DEFMSG )
+               call outmsg ( defmsg )
 
-            END IF
+            end if
 
-            IF (  ACTION .EQ. IRETRN )  THEN
+            if (  action .eq. iretrn )  then
 !
 !              Don't accept new long error messages or updates
 !              to current long error message:
 !              (STAT has no meaning).
 !
-               STAT  =  ACCEPT ( .FALSE. )
+               stat  =  accept ( .false. )
 
-            ELSE
+            else
 
-               STAT  =  ACCEPT ( .TRUE. )
+               stat  =  accept ( .true. )
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            STAT  =  ACCEPT ( .FALSE. )
+            stat  =  accept ( .false. )
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We could be in ABORT or DEFAULT mode.
 !
 
-      IF ( ( ACTION .EQ. IDEFLT ) .OR. ( ACTION .EQ. IABRT ) ) THEN
+      if ( ( action .eq. ideflt ) .or. ( action .eq. iabrt ) ) then
 
-         CALL BYEBYE ( 'FAILURE' )
+         call byebye ( 'FAILURE' )
 
-      END IF
+      end if
 
 !
 !     That's all, folks!
 !
-      RETURN
-      END
+      return
+      end

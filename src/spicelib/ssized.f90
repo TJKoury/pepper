@@ -1,6 +1,6 @@
 !$Procedure SSIZED ( Set the size of a double precision cell )
 
-      SUBROUTINE SSIZED ( SIZE, CELL )
+      subroutine ssized ( size, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER          SIZE
-      DOUBLE PRECISION CELL   ( LBCELL:* )
+      integer          size
+      double precision cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,45 +168,45 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SSIZED' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SSIZED' )
+      end if
 
 !
 !     The size must be non-negative.  Other values will be snubbed.
 !
-      IF (  SIZE .LT. 0  )  THEN
-         CALL SETMSG ( 'Attempt to set size of cell to invalid '      // &
+      if (  size .lt. 0  )  then
+         call setmsg ( 'Attempt to set size of cell to invalid '      // &
                        'value.  The value was #.'  )
-         CALL ERRINT ( '#', SIZE )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'SSIZED' )
-         RETURN
-      END IF
+         call errint ( '#', size )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'SSIZED' )
+         return
+      end if
 
 !
 !     Not much to this.
 !
-      CELL(-1) = DBLE ( SIZE )
-      CELL( 0) = 0.0D0
+      cell(-1) = dble ( size )
+      cell( 0) = 0.0d0
 
-      DO I = LBCELL, -2
-         CELL(I) = 0.0D0
-      END DO
+      do i = lbcell, -2
+         cell(i) = 0.0d0
+      end do
 
 
-      CALL CHKOUT ( 'SSIZED' )
-      RETURN
-      END
+      call chkout ( 'SSIZED' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure EKOPW ( EK, open file for writing )
 
-      SUBROUTINE EKOPW ( FNAME, HANDLE )
+      subroutine ekopw ( fname, handle )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FNAME
-      INTEGER               HANDLE
+      character*(*)         fname
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -441,35 +441,35 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKOPW' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKOPW' )
+      end if
 
 !
 !     Open the file as a DAS file.
 !
-      CALL DASOPW ( FNAME, HANDLE )
+      call dasopw ( fname, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKOPW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKOPW' )
+         return
+      end if
 
 !
 !     Nothing doing unless the architecture is correct.  This file
 !     should be a paged DAS EK.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
 
-      CALL CHKOUT ( 'EKOPW' )
-      RETURN
-      END
+      call chkout ( 'EKOPW' )
+      return
+      end

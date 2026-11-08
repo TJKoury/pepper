@@ -1,6 +1,6 @@
 !$Procedure VNORMG ( Vector norm, general dimension )
 
-      DOUBLE PRECISION FUNCTION VNORMG ( V1, NDIM )
+      double precision function vnormg ( v1, ndim )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   V1   ( NDIM )
+      integer            ndim
+      double precision   v1   ( ndim )
 
 ! $ Brief_I/O
 !
@@ -175,43 +175,43 @@
 !
 !     Local variables.
 !
-      INTEGER               I
-      DOUBLE PRECISION      V1MAX
-      DOUBLE PRECISION      A
+      integer               i
+      double precision      v1max
+      double precision      a
 
 !
 !  Determine the maximum component of the vector.
 !
-      V1MAX = 0.D0
+      v1max = 0.d0
 
-      DO I=1,NDIM
+      do i=1,ndim
 
-         IF ( DABS(V1(I)) .GT. V1MAX ) &
-            V1MAX = DABS(V1(I))
+         if ( dabs(v1(i)) .gt. v1max ) &
+            v1max = dabs(v1(i))
 
-      END DO
+      end do
 !
 !  If the vector is zero, return zero; otherwise normalize first.
 !  Normalizing helps in the cases where squaring would cause overflow
 !  or underflow.  In the cases where such is not a problem it not worth
 !  it to optimize further.
 !
-      IF ( V1MAX .EQ. 0.D0 ) THEN
+      if ( v1max .eq. 0.d0 ) then
 
-         VNORMG = 0.D0
+         vnormg = 0.d0
 
-      ELSE
+      else
 
-         VNORMG = 0.D0
+         vnormg = 0.d0
 
-         DO I = 1, NDIM
-            A      = V1(I)  / V1MAX
-            VNORMG = VNORMG + A*A
-         END DO
+         do i = 1, ndim
+            a      = v1(i)  / v1max
+            vnormg = vnormg + a*a
+         end do
 
-         VNORMG = V1MAX * DSQRT (VNORMG)
+         vnormg = v1max * dsqrt (vnormg)
 
-      END IF
+      end if
 !
-      RETURN
-      END
+      return
+      end

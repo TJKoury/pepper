@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAD01 ( EK, add data to class 1 column )
 
-      SUBROUTINE ZZEKAD01 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  IVAL,    ISNULL  )
+      subroutine zzekad01 (  handle,  segdsc,  coldsc, &
+                             recptr,  ival,    isnull  )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      INTEGER               RECPTR
-      INTEGER               IVAL
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      integer               recptr
+      integer               ival
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -146,203 +146,203 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      INTEGER               COLIDX
-      INTEGER               DATPTR
-      INTEGER               ITYPE
-      INTEGER               LASTW
-      INTEGER               MBASE
-      INTEGER               NCOLS
-      INTEGER               NLINKS
-      INTEGER               P
-      INTEGER               PBASE
-      INTEGER               PTRLOC
-      INTEGER               RECNO
+      integer               colidx
+      integer               datptr
+      integer               itype
+      integer               lastw
+      integer               mbase
+      integer               ncols
+      integer               nlinks
+      integer               p
+      integer               pbase
+      integer               ptrloc
+      integer               recno
 
 !
 !     Use discovery check-in.
 !
 !     Make sure the column exists.
 !
-      NCOLS   =  SEGDSC ( NCIDX  )
-      COLIDX  =  COLDSC ( ORDIDX )
+      ncols   =  segdsc ( ncidx  )
+      colidx  =  coldsc ( ordidx )
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         CALL CHKIN  ( 'ZZEKAD01'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKAD01'                              )
-         RETURN
+         call chkin  ( 'ZZEKAD01'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' )
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKAD01'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      IF (  ISNULL  .AND.  ( COLDSC(NFLIDX) .NE. ITRUE )  ) THEN
+      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKAD01'                                  )
-         CALL SETMSG ( 'Column having index # in segment # does '  // &
+         call chkin  ( 'ZZEKAD01'                                  )
+         call setmsg ( 'Column having index # in segment # does '  // &
                        'not allow nulls, but a null value was '    // &
                        'supplied for the element in record #.'     )
-         CALL ERRINT ( '#',  COLIDX                                )
-         CALL ERRINT ( '#',  RECNO                                 )
-         CALL SIGERR ( 'SPICE(BADATTRIBUTE)'                       )
-         CALL CHKOUT ( 'ZZEKAD01'                                  )
-         RETURN
+         call errint ( '#',  colidx                                )
+         call errint ( '#',  recno                                 )
+         call sigerr ( 'SPICE(BADATTRIBUTE)'                       )
+         call chkout ( 'ZZEKAD01'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the data pointer location.  Check the data pointer to
 !     make sure the column entry we're writing to is uninitialized.
 !
-      PTRLOC  =  RECPTR + DPTBAS + COLIDX
+      ptrloc  =  recptr + dptbas + colidx
 
-      CALL DASRDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
+      call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      IF (  ( DATPTR .NE. UNINIT ) .AND. ( DATPTR .NE. NOBACK )  ) THEN
+      if (  ( datptr .ne. uninit ) .and. ( datptr .ne. noback )  ) then
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKAD01'                                  )
-         CALL SETMSG ( 'Column having index # in segment # has '   // &
+         call chkin  ( 'ZZEKAD01'                                  )
+         call setmsg ( 'Column having index # in segment # has '   // &
                        'non-empty element in record #.'            )
-         CALL ERRINT ( '#',  COLIDX                                )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-         CALL ERRINT ( '#',  RECNO                                 )
-         CALL SIGERR ( 'SPICE(NONEMPTYENTRY)'                      )
-         CALL CHKOUT ( 'ZZEKAD01'                                  )
-         RETURN
+         call errint ( '#',  colidx                                )
+         call errint ( '#',  segdsc(snoidx)                        )
+         call errint ( '#',  recno                                 )
+         call sigerr ( 'SPICE(NONEMPTYENTRY)'                      )
+         call chkout ( 'ZZEKAD01'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the data value.
 !
-      IF ( ISNULL ) THEN
+      if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
 !        metadata are not affected.
 !
-         CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, NULL )
+         call dasudi ( handle, ptrloc, ptrloc, null )
 
 
-      ELSE
+      else
 !
 !        Decide where to write the data value.  If there's room left
 !        in the last integer data page, append the value there.
 !
-         LASTW  =  SEGDSC ( LIWIDX )
+         lastw  =  segdsc ( liwidx )
 
 
-         IF ( LASTW .LT. IPSIZE ) THEN
+         if ( lastw .lt. ipsize ) then
 !
 !           There's room in the current page.  Set the data pointer
 !           and count, and write the value out to the first free
 !           location.
 !
-            P       =   SEGDSC(LIPIDX)
+            p       =   segdsc(lipidx)
 
-            CALL ZZEKPGBS ( INT,  P,  PBASE )
+            call zzekpgbs ( int,  p,  pbase )
 
-            DATPTR  =   PBASE + LASTW + 1
+            datptr  =   pbase + lastw + 1
 
-            CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, DATPTR )
-            CALL DASUDI ( HANDLE, DATPTR, DATPTR, IVAL   )
+            call dasudi ( handle, ptrloc, ptrloc, datptr )
+            call dasudi ( handle, datptr, datptr, ival   )
 
 !
 !           The page containing the data item gains a link.
 !
-            CALL ZZEKGLNK ( HANDLE, INT, P, NLINKS   )
-            CALL ZZEKSLNK ( HANDLE, INT, P, NLINKS+1 )
+            call zzekglnk ( handle, int, p, nlinks   )
+            call zzekslnk ( handle, int, p, nlinks+1 )
 
 !
 !           The last integer word in use must be updated.
 !
-            SEGDSC ( LIWIDX )  =  LASTW + 1
+            segdsc ( liwidx )  =  lastw + 1
 
 
-         ELSE
+         else
 !
 !           Allocate a data page.  Write the data value into the
 !           first word of the new page.
 !
-            CALL ZZEKAPS  ( HANDLE, SEGDSC,  INT,    .FALSE., P, PBASE )
-            CALL DASUDI   ( HANDLE, PBASE+1, PBASE+1, IVAL             )
+            call zzekaps  ( handle, segdsc,  int,    .false., p, pbase )
+            call dasudi   ( handle, pbase+1, pbase+1, ival             )
 
 !
 !           The page containing the data item now has one link.
 !
-            CALL ZZEKSLNK ( HANDLE, INT, P, 1 )
+            call zzekslnk ( handle, int, p, 1 )
 
 !
 !           The last integer page and word in use must be updated.
 !
-            SEGDSC ( LIPIDX )  =  P
-            SEGDSC ( LIWIDX )  =  1
+            segdsc ( lipidx )  =  p
+            segdsc ( liwidx )  =  1
 
 !
 !           The record pointer must point to this data item.
 !
-            CALL DASUDI ( HANDLE, PTRLOC, PTRLOC, PBASE+1 )
+            call dasudi ( handle, ptrloc, ptrloc, pbase+1 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Write out the updated segment descriptor.
 !
-      MBASE  =  SEGDSC(IMDIDX)
+      mbase  =  segdsc(imdidx)
 
-      CALL DASUDI ( HANDLE, MBASE+1, MBASE+SDSCSZ, SEGDSC )
+      call dasudi ( handle, mbase+1, mbase+sdscsz, segdsc )
 
 !
 !     If the column is indexed, we must update the index to account
 !     for the new element.
 !
-      ITYPE  =  COLDSC(IXTIDX)
+      itype  =  coldsc(ixtidx)
 
-      IF ( ITYPE .NE. IFALSE ) THEN
+      if ( itype .ne. ifalse ) then
 !
 !        The column is indexed.
 !
-         IF ( ITYPE .EQ. 1 ) THEN
+         if ( itype .eq. 1 ) then
 !
 !           The column has a type 1 index.  Insert the record pointer
 !           of the current element at the appropriate location.
 !
-            CALL ZZEKIII1 (  HANDLE,  SEGDSC,  COLDSC, &
-                             IVAL,    RECPTR,  ISNULL  )
+            call zzekiii1 (  handle,  segdsc,  coldsc, &
+                             ival,    recptr,  isnull  )
 
-         ELSE
+         else
 
-            CALL CHKIN  ( 'ZZEKAD01'                                  )
-            CALL SETMSG ( 'Column having index # in segment # has '   // &
+            call chkin  ( 'ZZEKAD01'                                  )
+            call setmsg ( 'Column having index # in segment # has '   // &
                           'index type #.'                             )
-            CALL ERRINT ( '#',  COLIDX                                )
-            CALL ERRINT ( '#',  SEGDSC(SNOIDX)                        )
-            CALL ERRINT ( '#',  ITYPE                                 )
-            CALL SIGERR ( 'SPICE(INVALIDTYPE)'                        )
-            CALL CHKOUT ( 'ZZEKAD01'                                  )
-            RETURN
+            call errint ( '#',  colidx                                )
+            call errint ( '#',  segdsc(snoidx)                        )
+            call errint ( '#',  itype                                 )
+            call sigerr ( 'SPICE(INVALIDTYPE)'                        )
+            call chkout ( 'ZZEKAD01'                                  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

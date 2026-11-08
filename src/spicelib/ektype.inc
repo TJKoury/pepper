@@ -14,20 +14,20 @@
 !
 !     Character type:
 !
-      INTEGER               CHR
-      PARAMETER           ( CHR  = 1 )
+      integer               chr
+      parameter           ( chr  = 1 )
 
 !
 !     Double precision type:
 !
-      INTEGER               DP
-      PARAMETER           ( DP   = 2 )
+      integer               dp
+      parameter           ( dp   = 2 )
 
 !
 !     Integer type:
 !
-      INTEGER               INT
-      PARAMETER           ( INT  = 3 )
+      integer               int
+      parameter           ( int  = 3 )
 
 !
 !     `Time' type:
@@ -39,8 +39,8 @@
 !     has a special role in the EK specification and code, time values
 !     are identified as a type distinct from double precision numbers.
 !
-      INTEGER               TIME
-      PARAMETER           ( TIME = 4 )
+      integer               time
+      parameter           ( time = 4 )
 
 !
 !     End Include Section:  EK Data Types

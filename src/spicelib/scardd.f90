@@ -1,6 +1,6 @@
 !$Procedure SCARDD ( Set the cardinality of a double precision cell )
 
-      SUBROUTINE SCARDD ( CARD, CELL )
+      subroutine scardd ( card, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER          CARD
-      DOUBLE PRECISION CELL   ( LBCELL:* )
+      integer          card
+      double precision cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,34 +168,34 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCARDD' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SCARDD' )
+      end if
 
 !
 !     The cardinality may range from 0 to the size of the cell,
 !     inclusive.  Other values will be snubbed.
 !
-      IF (  ( CARD .LT. 0 ) .OR. ( CARD .GT. INT( CELL(-1) ) )  )  THEN
-         CALL SETMSG ( 'Attempt to set cardinality of cell '          // &
+      if (  ( card .lt. 0 ) .or. ( card .gt. int( cell(-1) ) )  )  then
+         call setmsg ( 'Attempt to set cardinality of cell '          // &
                        'to invalid value.  The value was #.'  )
-         CALL ERRINT ( '#', CARD )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'SCARDD' )
-         RETURN
-      END IF
+         call errint ( '#', card )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'SCARDD' )
+         return
+      end if
 
 
 !
 !     Not much to this.
 !
-      CELL(0) = DBLE ( CARD )
+      cell(0) = dble ( card )
 
-      CALL CHKOUT ( 'SCARDD' )
-      RETURN
-      END
+      call chkout ( 'SCARDD' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZXLATEI ( Private --- Translate Integers )
 
-      SUBROUTINE ZZXLATEI ( INBFF, INPUT, SPACE, OUTPUT )
+      subroutine zzxlatei ( inbff, input, space, output )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               INBFF
-      CHARACTER*(*)         INPUT
-      INTEGER               SPACE
-      INTEGER               OUTPUT ( * )
+      integer               inbff
+      character*(*)         input
+      integer               space
+      integer               output ( * )
 
 
 ! $ Brief_I/O
@@ -259,10 +259,10 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMIN
-      INTEGER               ISRCHC
+      integer               intmin
+      integer               isrchc
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Parameters
@@ -270,53 +270,53 @@
 !
 !     These parameters are used for arithmetic shifting.
 !
-      INTEGER               SHFT8
-      PARAMETER           ( SHFT8  = 2**8  )
+      integer               shft8
+      parameter           ( shft8  = 2**8  )
 
-      INTEGER               SHFT16
-      PARAMETER           ( SHFT16 = 2**16 )
+      integer               shft16
+      parameter           ( shft16 = 2**16 )
 
-      INTEGER               SHFT24
-      PARAMETER           ( SHFT24 = 2**24 )
+      integer               shft24
+      parameter           ( shft24 = 2**24 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(1)         CARG
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(1)         carg
+      character*(strsiz)    strbff ( numbff )
+      character*(strsiz)    tmpstr
 
-      INTEGER               BIGINT
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LENIPT
-      INTEGER               NATBFF
-      INTEGER               NUMINT
-      INTEGER               OSIGN
-      INTEGER               SMLINT
-      INTEGER               VALUE
+      integer               bigint
+      integer               i
+      integer               j
+      integer               lenipt
+      integer               natbff
+      integer               numint
+      integer               osign
+      integer               smlint
+      integer               value
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Statement Functions
 !
-      INTEGER               ZZICHR
+      integer               zzichr
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  NATBFF
-      SAVE                  STRBFF
-      SAVE                  SMLINT
-      SAVE                  BIGINT
+      save                  first
+      save                  natbff
+      save                  strbff
+      save                  smlint
+      save                  bigint
 
 !
 !     Data Statements
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  NATBFF / 0      /
+      data                  first  / .true. /
+      data                  natbff / 0      /
 
 !
 !     Statement Function Definitions
@@ -333,108 +333,108 @@
 #endif
 !
 #if defined(SPICE_COMPILER_INTEL)
-      ZZICHR(CARG) = ICHAR(CARG)
+      zzichr(carg) = ichar(carg)
 #else
-      ZZICHR(CARG) = ICHAR(CARG) - MAX( -1, MIN(0,ICHAR(CARG)) )*256
+      zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
 #endif
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZXLATEI' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZXLATEI' )
+      end if
 
 !
 !     Perform some initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Populate STRBFF with the appropriate binary file
 !        format labels.
 !
-         DO I = 1, NUMBFF
-            CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-         END DO
+         do i = 1, numbff
+            call zzddhgsd ( 'BFF', i, strbff(i) )
+         end do
 
 !
 !        Fetch the native binary file format.
 !
-         CALL ZZPLATFM ( 'FILE_FORMAT', TMPSTR )
-         CALL UCASE    ( TMPSTR,        TMPSTR )
+         call zzplatfm ( 'FILE_FORMAT', tmpstr )
+         call ucase    ( tmpstr,        tmpstr )
 
-         NATBFF = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+         natbff = isrchc ( tmpstr, numbff, strbff )
 
-         IF ( NATBFF .EQ. 0 ) THEN
+         if ( natbff .eq. 0 ) then
 
-            CALL SETMSG ( 'The binary file format, ''#'', is not ' &
+            call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
             //            'This is a serious problem, contact NAIF.'   )
-            CALL ERRCH  ( '#', TMPSTR                                  )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZXLATEI'                                   )
-            RETURN
+            call errch  ( '#', tmpstr                                  )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZXLATEI'                                   )
+            return
 
-         END IF
+         end if
 
 
 !
 !        Store the largest value a 32-bit integer can actually
 !        hold.
 !
-         BIGINT = 2147483647
+         bigint = 2147483647
 
 !
 !        Prepare the smallest value a 32-bit integer can actually
 !        store, regardless of what INTMIN returns.
 !
-         SMLINT = INTMIN()
+         smlint = intmin()
 
 !
 !        Set SMLINT to the appropriate value if INTMIN is too large.
 !
-         IF ( SMLINT .EQ. -2147483647 ) THEN
-            SMLINT = SMLINT - 1
-         END IF
+         if ( smlint .eq. -2147483647 ) then
+            smlint = smlint - 1
+         end if
 
 !
 !        Do not perform initialization tasks again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Check to see if INBFF is valid.  This should never occur if this
 !     routine is called properly.
 !
-      IF ( ( INBFF .LT. 1 ) .OR. ( INBFF .GT. NUMBFF ) ) THEN
+      if ( ( inbff .lt. 1 ) .or. ( inbff .gt. numbff ) ) then
 
-         CALL SETMSG ( 'The integer code used to indicate the ' &
+         call setmsg ( 'The integer code used to indicate the ' &
          //            'binary file format of the input integers, ' &
          //            '#, is out of range.  This error should ' &
          //            'never occur.'                               )
-         CALL ERRINT ( '#', INBFF                                   )
-         CALL SIGERR ( 'SPICE(BUG)'                                 )
-         CALL CHKOUT ( 'ZZXLATEI'                                   )
-         RETURN
+         call errint ( '#', inbff                                   )
+         call sigerr ( 'SPICE(BUG)'                                 )
+         call chkout ( 'ZZXLATEI'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Retrieve the length of the input string.
 !
-      LENIPT = LEN(INPUT)
+      lenipt = len(input)
 
 !
 !     Now branch based on the value of NATBFF.
 !
-      IF ( NATBFF .EQ. BIGI3E ) THEN
+      if ( natbff .eq. bigi3e ) then
 
-         IF ( INBFF .EQ. LTLI3E ) THEN
+         if ( inbff .eq. ltli3e ) then
 
 !
 !           Check to see that the length of the input string is
@@ -443,55 +443,55 @@
 !           1-byte and integers are 4-bytes.  So the length of INPUT
 !           must be a multiple of 4.
 !
-            NUMINT = LENIPT / 4
+            numint = lenipt / 4
 
-            IF ( LENIPT - ( NUMINT*4 ) .NE. 0 ) THEN
+            if ( lenipt - ( numint*4 ) .ne. 0 ) then
 
-               CALL SETMSG ( 'The input string that is to be ' &
+               call setmsg ( 'The input string that is to be ' &
                //            'translated from the binary format ' &
                //            '# to format # has a length that is ' &
                //            'not a multiple of 4 bytes.  This ' &
                //            'error should never occur.'           )
-               CALL ERRCH  ( '#', STRBFF(INBFF)                    )
-               CALL ERRCH  ( '#', STRBFF(NATBFF)                   )
-               CALL SIGERR ( 'SPICE(BUG)'                          )
-               CALL CHKOUT ( 'ZZXLATEI'                            )
-               RETURN
+               call errch  ( '#', strbff(inbff)                    )
+               call errch  ( '#', strbff(natbff)                   )
+               call sigerr ( 'SPICE(BUG)'                          )
+               call chkout ( 'ZZXLATEI'                            )
+               return
 
-            END IF
+            end if
 
 !
 !           Verify there is enough room to store the results of
 !           the translation.
 !
-            IF ( NUMINT .GT. SPACE ) THEN
+            if ( numint .gt. space ) then
 
-               CALL SETMSG ( 'The caller specified that # integers ' &
+               call setmsg ( 'The caller specified that # integers ' &
                //            'are to be translated from binary ' &
                //            'format # to #.  However there is only ' &
                //            'room to hold # integers in the output ' &
                //            'array.  This error should never occur.' )
-               CALL ERRINT ( '#', NUMINT                              )
-               CALL ERRCH  ( '#', STRBFF(INBFF)                       )
-               CALL ERRCH  ( '#', STRBFF(NATBFF)                      )
-               CALL ERRINT ( '#', SPACE                               )
-               CALL SIGERR ( 'SPICE(BUG)'                             )
-               CALL CHKOUT ( 'ZZXLATEI'                               )
-               RETURN
+               call errint ( '#', numint                              )
+               call errch  ( '#', strbff(inbff)                       )
+               call errch  ( '#', strbff(natbff)                      )
+               call errint ( '#', space                               )
+               call sigerr ( 'SPICE(BUG)'                             )
+               call chkout ( 'ZZXLATEI'                               )
+               return
 
-            END IF
+            end if
 
 !
 !           Start looping over each 4 character package in INPUT and
 !           converting them to integers.
 !
-            DO I = 1, NUMINT
+            do i = 1, numint
 
 !
 !              Compute the substring index of the first character
 !              in INPUT for this integer.
 !
-               J = -3 + 4*I
+               j = -3 + 4*i
 
 !
 !              Now arrange the bytes properly.  Since these characters
@@ -522,37 +522,37 @@
 !              in a special way, since the sign bit can not be shifted
 !              into place through simple multiplication.
 !
-               VALUE     = ZZICHR( INPUT(J:J) )
-               OUTPUT(I) = VALUE
+               value     = zzichr( input(j:j) )
+               output(i) = value
 
-               VALUE     = ZZICHR( INPUT((J+1):(J+1)) )
-               VALUE     = VALUE*SHFT8
-               OUTPUT(I) = OUTPUT(I)+VALUE
+               value     = zzichr( input((j+1):(j+1)) )
+               value     = value*shft8
+               output(i) = output(i)+value
 
-               VALUE     = ZZICHR( INPUT((J+2):(J+2)) )
-               VALUE     = VALUE*SHFT16
-               OUTPUT(I) = OUTPUT(I)+VALUE
+               value     = zzichr( input((j+2):(j+2)) )
+               value     = value*shft16
+               output(i) = output(i)+value
 
-               VALUE     = ZZICHR( INPUT((J+3):(J+3)) )
+               value     = zzichr( input((j+3):(j+3)) )
 
 !
 !              In order to properly install the last byte,
 !              the sign bit needs to be managed separately.
-               OSIGN = VALUE / 128
+               osign = value / 128
 
 !
 !              Strip the sign bit if necessary.
 !
-               IF ( OSIGN .EQ. 1 ) THEN
-                  VALUE = VALUE - 128
-               END IF
+               if ( osign .eq. 1 ) then
+                  value = value - 128
+               end if
 
 !
 !              Shift the non-sign bits out to their appropriate
 !              positions and combine them with OUTPUT(I).
 !
-               VALUE     = VALUE*SHFT24
-               OUTPUT(I) = OUTPUT(I)+VALUE
+               value     = value*shft24
+               output(i) = output(i)+value
 
 !
 !              Install the sign bit.  At the moment in OUTPUT(I)
@@ -584,35 +584,35 @@
 !              which is the desired quantity.  Note, 0 must be
 !              treated as a special case.
 !
-               IF ( OSIGN .EQ. 1 ) THEN
-                  IF ( OUTPUT(I) .EQ. 0 ) THEN
-                     OUTPUT(I) = SMLINT
-                  ELSE
-                     OUTPUT(I) = BIGINT-OUTPUT(I)
-                     OUTPUT(I) = OUTPUT(I) + 1
-                     OUTPUT(I) = -OUTPUT(I)
-                  END IF
-               END IF
+               if ( osign .eq. 1 ) then
+                  if ( output(i) .eq. 0 ) then
+                     output(i) = smlint
+                  else
+                     output(i) = bigint-output(i)
+                     output(i) = output(i) + 1
+                     output(i) = -output(i)
+                  end if
+               end if
 
-            END DO
+            end do
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Unable to translate integers from ' &
+            call setmsg ( 'Unable to translate integers from ' &
             //            'binary file format # to #.  This error ' &
             //            'should never occur and is indicative ' &
             //            'of a bug.  Contact NAIF.'                )
-            CALL ERRCH  ( '#', STRBFF(INBFF)                        )
-            CALL ERRCH  ( '#', STRBFF(NATBFF)                       )
-            CALL SIGERR ( 'SPICE(BUG)'                              )
-            CALL CHKOUT ( 'ZZXLATEI'                                )
-            RETURN
+            call errch  ( '#', strbff(inbff)                        )
+            call errch  ( '#', strbff(natbff)                       )
+            call sigerr ( 'SPICE(BUG)'                              )
+            call chkout ( 'ZZXLATEI'                                )
+            return
 
-         END IF
+         end if
 
-      ELSE IF ( NATBFF .EQ. LTLI3E ) THEN
+      else if ( natbff .eq. ltli3e ) then
 
-         IF ( INBFF .EQ. BIGI3E ) THEN
+         if ( inbff .eq. bigi3e ) then
 
 !
 !           Check to see that the length of the input string is
@@ -621,55 +621,55 @@
 !           1-byte and integers are 4-bytes.  So the length of INPUT
 !           must be a multiple of 4.
 !
-            NUMINT = LENIPT / 4
+            numint = lenipt / 4
 
-            IF ( LENIPT - ( NUMINT*4 ) .NE. 0 ) THEN
+            if ( lenipt - ( numint*4 ) .ne. 0 ) then
 
-               CALL SETMSG ( 'The input string that is to be ' &
+               call setmsg ( 'The input string that is to be ' &
                //            'translated from the binary format ' &
                //            '# to format # has a length that is ' &
                //            'not a multiple of 4 bytes.  This ' &
                //            'error should never occur.'           )
-               CALL ERRCH  ( '#', STRBFF(INBFF)                    )
-               CALL ERRCH  ( '#', STRBFF(NATBFF)                   )
-               CALL SIGERR ( 'SPICE(BUG)'                          )
-               CALL CHKOUT ( 'ZZXLATEI'                            )
-               RETURN
+               call errch  ( '#', strbff(inbff)                    )
+               call errch  ( '#', strbff(natbff)                   )
+               call sigerr ( 'SPICE(BUG)'                          )
+               call chkout ( 'ZZXLATEI'                            )
+               return
 
-            END IF
+            end if
 
 !
 !           Verify there is enough room to store the results of
 !           the translation.
 !
-            IF ( NUMINT .GT. SPACE ) THEN
+            if ( numint .gt. space ) then
 
-               CALL SETMSG ( 'The caller specified that # integers ' &
+               call setmsg ( 'The caller specified that # integers ' &
                //            'are to be translated from binary ' &
                //            'format # to #.  However there is only ' &
                //            'room to hold # integers in the output ' &
                //            'array.  This error should never occur.' )
-               CALL ERRINT ( '#', NUMINT                              )
-               CALL ERRCH  ( '#', STRBFF(INBFF)                       )
-               CALL ERRCH  ( '#', STRBFF(NATBFF)                      )
-               CALL ERRINT ( '#', SPACE                               )
-               CALL SIGERR ( 'SPICE(BUG)'                             )
-               CALL CHKOUT ( 'ZZXLATEI'                               )
-               RETURN
+               call errint ( '#', numint                              )
+               call errch  ( '#', strbff(inbff)                       )
+               call errch  ( '#', strbff(natbff)                      )
+               call errint ( '#', space                               )
+               call sigerr ( 'SPICE(BUG)'                             )
+               call chkout ( 'ZZXLATEI'                               )
+               return
 
-            END IF
+            end if
 
 !
 !           Start looping over each 4 character package in INPUT and
 !           converting them to integers.
 !
-            DO I = 1, NUMINT
+            do i = 1, numint
 
 !
 !              Compute the substring index of the first character
 !              in INPUT for this integer.
 !
-               J = -3 + 4*I
+               j = -3 + 4*i
 
 !
 !              Now arrange the bytes properly.  Since these characters
@@ -700,38 +700,38 @@
 !              in a special way, since the sign bit can not be shifted
 !              into place through simple multiplication.
 !
-               VALUE     = ZZICHR( INPUT((J+3):(J+3)) )
-               OUTPUT(I) = VALUE
+               value     = zzichr( input((j+3):(j+3)) )
+               output(i) = value
 
-               VALUE     = ZZICHR( INPUT((J+2):(J+2)) )
-               VALUE     = VALUE*SHFT8
-               OUTPUT(I) = OUTPUT(I)+VALUE
+               value     = zzichr( input((j+2):(j+2)) )
+               value     = value*shft8
+               output(i) = output(i)+value
 
-               VALUE     = ZZICHR( INPUT((J+1):(J+1)) )
-               VALUE     = VALUE*SHFT16
-               OUTPUT(I) = OUTPUT(I)+VALUE
+               value     = zzichr( input((j+1):(j+1)) )
+               value     = value*shft16
+               output(i) = output(i)+value
 
-               VALUE     = ZZICHR( INPUT(J:J) )
+               value     = zzichr( input(j:j) )
 
 !
 !              In order to properly install the last byte,
 !              the sign bit needs to be managed separately.
 !
-               OSIGN = VALUE / 128
+               osign = value / 128
 
 !
 !              Strip the sign bit if necessary.
 !
-               IF ( OSIGN .EQ. 1 ) THEN
-                  VALUE = VALUE - 128
-               END IF
+               if ( osign .eq. 1 ) then
+                  value = value - 128
+               end if
 
 !
 !              Shift the non-sign bits out to their appropriate
 !              positions and combine them with OUTPUT(I).
 !
-               VALUE     = VALUE*SHFT24
-               OUTPUT(I) = OUTPUT(I)+VALUE
+               value     = value*shft24
+               output(i) = output(i)+value
 
 !
 !              Install the sign bit.  At the moment in OUTPUT(I)
@@ -763,51 +763,51 @@
 !              which is the desired quantity.  Note, 0 must be
 !              treated as a special case.
 !
-               IF ( OSIGN .EQ. 1 ) THEN
-                  IF ( OUTPUT(I) .EQ. 0 ) THEN
-                     OUTPUT(I) = SMLINT
-                  ELSE
-                     OUTPUT(I) = BIGINT-OUTPUT(I)
-                     OUTPUT(I) = OUTPUT(I) + 1
-                     OUTPUT(I) = -OUTPUT(I)
-                  END IF
-               END IF
+               if ( osign .eq. 1 ) then
+                  if ( output(i) .eq. 0 ) then
+                     output(i) = smlint
+                  else
+                     output(i) = bigint-output(i)
+                     output(i) = output(i) + 1
+                     output(i) = -output(i)
+                  end if
+               end if
 
-            END DO
+            end do
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Unable to translate integers from ' &
+            call setmsg ( 'Unable to translate integers from ' &
             //            'binary file format # to #.  This error ' &
             //            'should never occur and is indicative ' &
             //            'of a bug.  Contact NAIF.'                )
-            CALL ERRCH  ( '#', STRBFF(INBFF)                        )
-            CALL ERRCH  ( '#', STRBFF(NATBFF)                       )
-            CALL SIGERR ( 'SPICE(BUG)'                              )
-            CALL CHKOUT ( 'ZZXLATEI'                                )
-            RETURN
+            call errch  ( '#', strbff(inbff)                        )
+            call errch  ( '#', strbff(natbff)                       )
+            call sigerr ( 'SPICE(BUG)'                              )
+            call chkout ( 'ZZXLATEI'                                )
+            return
 
-         END IF
+         end if
 
 !
 !     The native binary file format on this platform is not supported
 !     for the conversion of integers.  This is a bug, as this branch
 !     of code should never be reached in normal operation.
 !
-      ELSE
+      else
 
-         CALL SETMSG ( 'The native binary file format of this ' &
+         call setmsg ( 'The native binary file format of this ' &
          //            'toolkit build, #, is not currently supported ' &
          //            'for translation of integers from non-native ' &
          //            'formats.'                                      )
-         CALL ERRCH  ( '#', STRBFF(NATBFF)                             )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZXLATEI'                                      )
-         RETURN
+         call errch  ( '#', strbff(natbff)                             )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZXLATEI'                                      )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZXLATEI' )
-      RETURN
+      call chkout ( 'ZZXLATEI' )
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure   ZZEKQINI ( Private: EK, initialize encoded query )
 
-      SUBROUTINE ZZEKQINI ( ISIZE, DSIZE, EQRYI, EQRYC, EQRYD )
+      subroutine zzekqini ( isize, dsize, eqryi, eqryc, eqryd )
 
 ! $ Abstract
 !
@@ -21,18 +21,18 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekbool.inc'
+      include 'ekquery.inc'
+      include 'ekqlimit.inc'
+      include 'ekbool.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               ISIZE
-      INTEGER               DSIZE
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD ( * )
+      integer               isize
+      integer               dsize
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      double precision      eqryd ( * )
 
 ! $ Brief_I/O
 !
@@ -134,7 +134,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -142,122 +142,122 @@
 !
 !     Minimum upper bound for the integer cell of an encoded query:
 !
-      INTEGER               MNISIZ
-      PARAMETER           ( MNISIZ =     EQVBAS &
-                                      +  MAXTAB * EQVDSZ * 2 &
-                                      +  MAXCON * EQCDSZ &
-                                      +  MAXCON &
-                                      +  MAXORD * EQODSZ &
-                                      +  MAXSEL * EQSDSZ )
+      integer               mnisiz
+      parameter           ( mnisiz =     eqvbas &
+                                      +  maxtab * eqvdsz * 2 &
+                                      +  maxcon * eqcdsz &
+                                      +  maxcon &
+                                      +  maxord * eqodsz &
+                                      +  maxsel * eqsdsz )
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKQINI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKQINI' )
+      end if
 
 
 !
 !     Check sizes:
 !
-      IF ( ISIZE .LT. MNISIZ ) THEN
+      if ( isize .lt. mnisiz ) then
 
-         CALL SETMSG ( 'Size of integer component of encoded query ' // &
+         call setmsg ( 'Size of integer component of encoded query ' // &
                        'is #; at least # elements are required.'      )
-         CALL ERRINT ( '#',   ISIZE                                   )
-         CALL ERRINT ( '#',   MNISIZ                                  )
-         CALL SIGERR ( 'SPICE(CELLTOOSMALL)'                          )
-         CALL CHKOUT ('ZZEKQINI'                                      )
-         RETURN
+         call errint ( '#',   isize                                   )
+         call errint ( '#',   mnisiz                                  )
+         call sigerr ( 'SPICE(CELLTOOSMALL)'                          )
+         call chkout ('ZZEKQINI'                                      )
+         return
 
-      END IF
+      end if
 
 
-      IF ( DSIZE .LT. MAXQNM ) THEN
+      if ( dsize .lt. maxqnm ) then
 
-         CALL SETMSG ( 'Size of d.p. component of encoded query ' // &
+         call setmsg ( 'Size of d.p. component of encoded query ' // &
                        'is #; at least # elements are required.'      )
-         CALL ERRINT ( '#',   DSIZE                                   )
-         CALL ERRINT ( '#',   MAXQNM                                  )
-         CALL SIGERR ( 'SPICE(CELLTOOSMALL)'                          )
-         CALL CHKOUT ('ZZEKQINI'                                      )
-         RETURN
+         call errint ( '#',   dsize                                   )
+         call errint ( '#',   maxqnm                                  )
+         call sigerr ( 'SPICE(CELLTOOSMALL)'                          )
+         call chkout ('ZZEKQINI'                                      )
+         return
 
-      END IF
+      end if
 
 
-      IF ( LEN(EQRYC) .LT. MAXCLN ) THEN
+      if ( len(eqryc) .lt. maxcln ) then
 
-         CALL SETMSG ( 'Size of character component of encoded query '// &
+         call setmsg ( 'Size of character component of encoded query '// &
                        'is #; a length of at least # characters is '  // &
                        'required.'                                    )
-         CALL ERRINT ( '#',   LEN(EQRYC)                              )
-         CALL ERRINT ( '#',   MAXCLN                                  )
-         CALL SIGERR ( 'SPICE(STRINGTOOSHORT)'                        )
-         CALL CHKOUT ('ZZEKQINI'                                      )
-         RETURN
+         call errint ( '#',   len(eqryc)                              )
+         call errint ( '#',   maxcln                                  )
+         call sigerr ( 'SPICE(STRINGTOOSHORT)'                        )
+         call chkout ('ZZEKQINI'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the integer cell, the d.p. array, and the string.
 !
-      CALL SSIZEI ( ISIZE, EQRYI )
-      CALL CLEARD ( DSIZE, EQRYD )
-      EQRYC = ' '
+      call ssizei ( isize, eqryi )
+      call cleard ( dsize, eqryd )
+      eqryc = ' '
 
 !
 !     Append enough elements to the integer cell to contain the
 !     fixed-size portion of the encoded query:
 !
-      DO I = 1, EQVBAS
-         CALL APPNDI ( 0, EQRYI )
-      END DO
+      do i = 1, eqvbas
+         call appndi ( 0, eqryi )
+      end do
 
 !
 !     Clear out the fixed-size portion of the integer cell.
 !
-      CALL CLEARI ( EQVBAS, EQRYI(1) )
+      call cleari ( eqvbas, eqryi(1) )
 
 !
 !     Fill in the architecture version.
 !
-      EQRYI( EQARCH )  =  1
+      eqryi( eqarch )  =  1
 
 !
 !     Set the parse completion and name and time resolution flags to
 !     indicate `not done':
 !
-      EQRYI(EQPARS)    =  IFALSE
-      EQRYI(EQNRES)    =  IFALSE
-      EQRYI(EQTRES)    =  IFALSE
+      eqryi(eqpars)    =  ifalse
+      eqryi(eqnres)    =  ifalse
+      eqryi(eqtres)    =  ifalse
 
 !
 !     Set the buffer sizes:
 !
-      EQRYI(EQCSIZ)    =  LEN(EQRYC)
-      EQRYI(EQNSIZ)    =  DSIZE
+      eqryi(eqcsiz)    =  len(eqryc)
+      eqryi(eqnsiz)    =  dsize
 
 !
 !     Set the free pointers:
 !
-      EQRYI(EQNPTR)    =  1
-      EQRYI(EQCPTR)    =  1
+      eqryi(eqnptr)    =  1
+      eqryi(eqcptr)    =  1
 
 !
 !     Indicate that initialization has been done:
 !
-      EQRYI(EQINIT)    =  ITRUE
+      eqryi(eqinit)    =  itrue
 
-      CALL CHKOUT ( 'ZZEKQINI' )
-      RETURN
-      END
+      call chkout ( 'ZZEKQINI' )
+      return
+      end

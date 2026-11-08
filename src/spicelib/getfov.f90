@@ -1,12 +1,12 @@
 !$Procedure GETFOV ( Get instrument FOV parameters )
 
-      SUBROUTINE GETFOV ( INSTID, &
-                          ROOM, &
-                          SHAPE, &
-                          FRAME, &
-                          BSIGHT, &
-                          N, &
-                          BOUNDS  )
+      subroutine getfov ( instid, &
+                          room, &
+                          shape, &
+                          frame, &
+                          bsight, &
+                          n, &
+                          bounds  )
 
 ! $ Abstract
 !
@@ -24,18 +24,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MINCOS
-      PARAMETER           ( MINCOS = 1.0D-15 )
+      double precision      mincos
+      parameter           ( mincos = 1.0d-15 )
 
-      INTEGER               INSTID
-      INTEGER               ROOM
-      CHARACTER*(*)         SHAPE
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      BSIGHT ( 3    )
-      INTEGER               N
-      DOUBLE PRECISION      BOUNDS ( 3, * )
+      integer               instid
+      integer               room
+      character*(*)         shape
+      character*(*)         frame
+      double precision      bsight ( 3    )
+      integer               n
+      double precision      bounds ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -673,13 +673,13 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      INTEGER               BSRCHC
-      INTEGER               RTRIM
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      double precision      vnorm
+      integer               bsrchc
+      integer               rtrim
+      logical               eqstr
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -688,81 +688,81 @@
 !
 !     Keyword Name Length.
 !
-      INTEGER               KWDNLN
-      PARAMETER           ( KWDNLN = 32 )
+      integer               kwdnln
+      parameter           ( kwdnln = 32 )
 
 !
 !     Maximum Number of Normal Vectors.
 !
-      INTEGER               MAXNML
-      PARAMETER           ( MAXNML =  4 )
+      integer               maxnml
+      parameter           ( maxnml =  4 )
 
 !
 !     Number of CORNER Shapes Supported.
 !
-      INTEGER               NSHAPS
-      PARAMETER           ( NSHAPS =  4 )
+      integer               nshaps
+      parameter           ( nshaps =  4 )
 
 !
 !     Number of ANGLE Shapes Supported.
 !
-      INTEGER               NUMASP
-      PARAMETER           ( NUMASP =  3 )
+      integer               numasp
+      parameter           ( numasp =  3 )
 
 !
 !     Maximum Length of String Data from the kernel pool.
 !
-      INTEGER               VALLEN
-      PARAMETER           ( VALLEN = 80 )
+      integer               vallen
+      parameter           ( vallen = 80 )
 
 !
 !     Local variables
 !
-      CHARACTER*(KWDNLN)    ANGSHP ( NUMASP )
-      CHARACTER*(VALLEN)    ANGUNT
-      CHARACTER*(KWDNLN)    KWAUNT
-      CHARACTER*(KWDNLN)    KWBORE
-      CHARACTER*(KWDNLN)    KWBOUN
-      CHARACTER*(KWDNLN)    KWCANG
-      CHARACTER*(KWDNLN)    KWFRAM
-      CHARACTER*(KWDNLN)    KWORD
-      CHARACTER*(KWDNLN)    KWRANG
-      CHARACTER*(KWDNLN)    KWRVEC
-      CHARACTER*(KWDNLN)    KWSHAP
-      CHARACTER*(KWDNLN)    KWSPEC
-      CHARACTER*(KWDNLN)    SHAPID ( NSHAPS )
-      CHARACTER*(VALLEN)    SPEC
-      CHARACTER*(1)         TYPE
+      character*(kwdnln)    angshp ( numasp )
+      character*(vallen)    angunt
+      character*(kwdnln)    kwaunt
+      character*(kwdnln)    kwbore
+      character*(kwdnln)    kwboun
+      character*(kwdnln)    kwcang
+      character*(kwdnln)    kwfram
+      character*(kwdnln)    kword
+      character*(kwdnln)    kwrang
+      character*(kwdnln)    kwrvec
+      character*(kwdnln)    kwshap
+      character*(kwdnln)    kwspec
+      character*(kwdnln)    shapid ( nshaps )
+      character*(vallen)    spec
+      character*(1)         type
 
-      DOUBLE PRECISION      B      ( 3 )
-      DOUBLE PRECISION      B1     ( 3 )
-      DOUBLE PRECISION      B2     ( 3 )
-      DOUBLE PRECISION      BMAG
-      DOUBLE PRECISION      COSCAN
-      DOUBLE PRECISION      COSRAN
-      DOUBLE PRECISION      CRSANG
-      DOUBLE PRECISION      NORMAL ( 3, MAXNML )
-      DOUBLE PRECISION      REFANG
-      DOUBLE PRECISION      REFVEC ( 3 )
-      DOUBLE PRECISION      SINCAN
-      DOUBLE PRECISION      SINRAN
-      DOUBLE PRECISION      TMPANG
-      DOUBLE PRECISION      TMPVEC ( 3 )
-      DOUBLE PRECISION      VMAG
+      double precision      b      ( 3 )
+      double precision      b1     ( 3 )
+      double precision      b2     ( 3 )
+      double precision      bmag
+      double precision      coscan
+      double precision      cosran
+      double precision      crsang
+      double precision      normal ( 3, maxnml )
+      double precision      refang
+      double precision      refvec ( 3 )
+      double precision      sincan
+      double precision      sinran
+      double precision      tmpang
+      double precision      tmpvec ( 3 )
+      double precision      vmag
 
-      INTEGER               I
-      INTEGER               MXCMP
+      integer               i
+      integer               mxcmp
 
-      LOGICAL               FOUND
+      logical               found
 
-      SAVE                  SHAPID
-      SAVE                  ANGSHP
+      save                  shapid
+      save                  angshp
 
 !
 !     Allowed values of shape identifier. Note that these must be
 !     supplied in ascending order
 !
-      DATA  ( SHAPID (I), I =  1, NSHAPS ) &
+      data  ( shapid (i), i =  1, nshaps ) &
            / &
            'CIRCLE', &
            'ELLIPSE', &
@@ -775,7 +775,7 @@
 !     specification.  Note that these must be supplied in ascending
 !     order.
 !
-      DATA  ( ANGSHP (I), I =  1, NUMASP ) &
+      data  ( angshp (i), i =  1, numasp ) &
            / &
            'CIRCLE', &
            'ELLIPSE', &
@@ -785,417 +785,417 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GETFOV' )
+      call chkin ( 'GETFOV' )
 
-      KWBOUN = 'INS#_FOV_BOUNDARY'
-      KWBORE = 'INS#_BORESIGHT'
-      KWSHAP = 'INS#_FOV_SHAPE'
-      KWFRAM = 'INS#_FOV_FRAME'
-      KWSPEC = 'INS#_FOV_CLASS_SPEC'
-      KWRVEC = 'INS#_FOV_REF_VECTOR'
-      KWRANG = 'INS#_FOV_REF_ANGLE'
-      KWCANG = 'INS#_FOV_CROSS_ANGLE'
-      KWAUNT = 'INS#_FOV_ANGLE_UNITS'
+      kwboun = 'INS#_FOV_BOUNDARY'
+      kwbore = 'INS#_BORESIGHT'
+      kwshap = 'INS#_FOV_SHAPE'
+      kwfram = 'INS#_FOV_FRAME'
+      kwspec = 'INS#_FOV_CLASS_SPEC'
+      kwrvec = 'INS#_FOV_REF_VECTOR'
+      kwrang = 'INS#_FOV_REF_ANGLE'
+      kwcang = 'INS#_FOV_CROSS_ANGLE'
+      kwaunt = 'INS#_FOV_ANGLE_UNITS'
 
-      MXCMP  = 3*ROOM
+      mxcmp  = 3*room
 
 !
 !     Look for the frame keyword and get frame name if found,
 !     complain if not.
 !
-      CALL REPMI  ( KWFRAM, '#',    INSTID, KWORD )
-      CALL GCPOOL ( KWORD, 1, 1, I, FRAME,  FOUND )
+      call repmi  ( kwfram, '#',    instid, kword )
+      call gcpool ( kword, 1, 1, i, frame,  found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The variable, ''#'', specifying the frame ' &
+         call setmsg ( 'The variable, ''#'', specifying the frame ' &
          //            'which instrument # FOV components are ' &
          //            'defined relative to was not found in the ' &
          //            'kernel pool. Check whether IK file for ' &
          //            'the instrument was loaded into the program ' &
          //            'and whether this variable is specified in ' &
          //            'that file.'                                  )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                    )
-         CALL ERRINT ( '#', INSTID                                   )
-         CALL SIGERR ( 'SPICE(FRAMEMISSING)'                         )
-         CALL CHKOUT ( 'GETFOV'                                      )
-         RETURN
+         call errch  ( '#', kword(1:rtrim(kword))                    )
+         call errint ( '#', instid                                   )
+         call sigerr ( 'SPICE(FRAMEMISSING)'                         )
+         call chkout ( 'GETFOV'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Look for the shape keyword and get shape identifier if found,
 !     complain if not.
 !
-      CALL REPMI  ( KWSHAP, '#', INSTID, KWORD )
-      CALL GCPOOL ( KWORD, 1, 1, I, SHAPE, FOUND )
+      call repmi  ( kwshap, '#', instid, kword )
+      call gcpool ( kword, 1, 1, i, shape, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The variable, ''#'', specifying the shape ' &
+         call setmsg ( 'The variable, ''#'', specifying the shape ' &
          //            'of the instrument # FOV was not found in the ' &
          //            'kernel pool. Check whether IK file for ' &
          //            'the instrument was loaded into the program ' &
          //            'and whether this variable is specified in ' &
          //            'that file.' )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                      )
-         CALL ERRINT ( '#', INSTID                                     )
-         CALL SIGERR ( 'SPICE(SHAPEMISSING)'                           )
-         CALL CHKOUT ( 'GETFOV'                                        )
-         RETURN
+         call errch  ( '#', kword(1:rtrim(kword))                      )
+         call errint ( '#', instid                                     )
+         call sigerr ( 'SPICE(SHAPEMISSING)'                           )
+         call chkout ( 'GETFOV'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Create an upper case, left justified value for SHAPE.  This will
 !     provide the desired case-insensitivity to the keyword value.
 !
-      CALL UCASE ( SHAPE, SHAPE )
-      CALL LJUST ( SHAPE, SHAPE )
+      call ucase ( shape, shape )
+      call ljust ( shape, shape )
 
 !
 !     Check whether shape identified that we got is one from the list
 !     of supported, complain if not.
 !
-      IF ( BSRCHC( SHAPE(1:RTRIM(SHAPE)), NSHAPS, SHAPID ) .EQ. 0) THEN
+      if ( bsrchc( shape(1:rtrim(shape)), nshaps, shapid ) .eq. 0) then
 
-         CALL SETMSG ( 'The FOV shape, ''#'', specified in the ' &
+         call setmsg ( 'The FOV shape, ''#'', specified in the ' &
          //            'keyword, ''#'', for the instrument # ' &
          //            'is not supported. See GETFOV subroutine ' &
          //            'header for the list of supported instrument ' &
          //            'FOV shapes.' )
-         CALL ERRCH  ( '#', SHAPE(1:RTRIM(SHAPE))                     )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                     )
-         CALL ERRINT ( '#', INSTID                                    )
-         CALL SIGERR ( 'SPICE(SHAPENOTSUPPORTED)'                     )
-         CALL CHKOUT ( 'GETFOV'                                       )
-         RETURN
+         call errch  ( '#', shape(1:rtrim(shape))                     )
+         call errch  ( '#', kword(1:rtrim(kword))                     )
+         call errint ( '#', instid                                    )
+         call sigerr ( 'SPICE(SHAPENOTSUPPORTED)'                     )
+         call chkout ( 'GETFOV'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Look for the boresight keyword and get boresight vector if found,
 !     complain if not.
 !
-      CALL REPMI  ( KWBORE, '#',    INSTID, KWORD )
-      CALL DTPOOL ( KWORD,   FOUND, I,      TYPE )
+      call repmi  ( kwbore, '#',    instid, kword )
+      call dtpool ( kword,   found, i,      type )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+         call setmsg ( 'The variable, ''#'', specifying the ' &
          //            'boresight of the instrument # was not found ' &
          //            'in the kernel pool. Check whether IK file ' &
          //            'for the instrument was loaded into the ' &
          //            'program and whether this variable is ' &
          //            'specified in that file.'                      )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                     )
-         CALL ERRINT ( '#', INSTID                                    )
-         CALL SIGERR ( 'SPICE(BORESIGHTMISSING)'                      )
-         CALL CHKOUT ( 'GETFOV'                                       )
-         RETURN
+         call errch  ( '#', kword(1:rtrim(kword))                     )
+         call errint ( '#', instid                                    )
+         call sigerr ( 'SPICE(BORESIGHTMISSING)'                      )
+         call chkout ( 'GETFOV'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Check whether boresight specified by three coordinates;
 !     complain if not.
 !
-      IF ( I .NE. 3 ) THEN
+      if ( i .ne. 3 ) then
 
-         CALL SETMSG ( 'The number of the boresight vector ' &
+         call setmsg ( 'The number of the boresight vector ' &
          //            'components specified in the ''#'' ' &
          //            'variable is not 3, it is #. Correct it ' &
          //            'in the corresponding IK file to be a ' &
          //            '3-dimensional vector. '                      )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                    )
-         CALL ERRINT ( '#', I                                        )
-         CALL SIGERR ( 'SPICE(BADBORESIGHTSPEC)'                     )
-         CALL CHKOUT ( 'GETFOV'                                      )
-         RETURN
+         call errch  ( '#', kword(1:rtrim(kword))                    )
+         call errint ( '#', i                                        )
+         call sigerr ( 'SPICE(BADBORESIGHTSPEC)'                     )
+         call chkout ( 'GETFOV'                                      )
+         return
 
-      ELSE IF ( TYPE .NE. 'N' ) THEN
+      else if ( type .ne. 'N' ) then
 
-         CALL SETMSG ( 'The boresight vector, stored in the ''#'' ' &
+         call setmsg ( 'The boresight vector, stored in the ''#'' ' &
          //            'variable, has not been stored as a vector ' &
          //            'of three numbers.  It has been stored as a ' &
          //            'vector of three strings. '                   )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                    )
-         CALL SIGERR ( 'SPICE(BADBORESIGHTSPEC)'                     )
-         CALL CHKOUT ( 'GETFOV'                                      )
-         RETURN
+         call errch  ( '#', kword(1:rtrim(kword))                    )
+         call sigerr ( 'SPICE(BADBORESIGHTSPEC)'                     )
+         call chkout ( 'GETFOV'                                      )
+         return
 
-      END IF
+      end if
 
-      CALL GDPOOL ( KWORD, 1, 3, I, BSIGHT, FOUND )
+      call gdpool ( kword, 1, 3, i, bsight, found )
 
 !
 !     Check whether boresight is a zero vector; complain if it is.
 !
-      IF ( VZERO(BSIGHT) ) THEN
+      if ( vzero(bsight) ) then
 
-         CALL SETMSG ( 'The boresight vector, stored in the ''#'' ' &
+         call setmsg ( 'The boresight vector, stored in the ''#'' ' &
          //            'variable, is the zero vector.'               )
-         CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                    )
-         CALL SIGERR ( 'SPICE(ZEROBORESIGHT)'                        )
-         CALL CHKOUT ( 'GETFOV'                                      )
-         RETURN
+         call errch  ( '#', kword(1:rtrim(kword))                    )
+         call sigerr ( 'SPICE(ZEROBORESIGHT)'                        )
+         call chkout ( 'GETFOV'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we have gotten all the specification independent
 !     information.  Now check for the presence of the FOV class
 !     specification keyword.  If it's absent, we default to CORNERS.
 !
-      SPEC = 'CORNERS'
+      spec = 'CORNERS'
 
-      CALL REPMI  ( KWSPEC, '#',    INSTID, KWORD )
-      CALL GCPOOL ( KWORD, 1, 1, I, SPEC,   FOUND )
+      call repmi  ( kwspec, '#',    instid, kword )
+      call gcpool ( kword, 1, 1, i, spec,   found )
 
-      IF ( EQSTR('CORNERS', SPEC) ) THEN
+      if ( eqstr('CORNERS', spec) ) then
 
 !
 !        Look for the FOV boundary vectors, check whether output array
 !        is big enough to hold them; complain if not.
 !
-         CALL REPMI  ( KWBOUN, '#', INSTID, KWORD )
-         CALL DTPOOL ( KWORD, FOUND, N, TYPE )
+         call repmi  ( kwboun, '#', instid, kword )
+         call dtpool ( kword, found, n, type )
 
-         IF ( .NOT. FOUND ) THEN
-            CALL SUFFIX ( '_CORNERS', 0, KWORD )
-            CALL DTPOOL ( KWORD, FOUND, N, TYPE )
-         END IF
+         if ( .not. found ) then
+            call suffix ( '_CORNERS', 0, kword )
+            call dtpool ( kword, found, n, type )
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL REPMI  ( KWBOUN, '#', INSTID, KWORD )
-            CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+            call repmi  ( kwboun, '#', instid, kword )
+            call setmsg ( 'The variable, ''#'', specifying the ' &
             //            'boundary vectors of the instrument # ' &
             //            'FOV was not found in the kernel pool. ' &
             //            'Check whether IK file for the instrument ' &
             //            'was loaded into the program and whether ' &
             //            'this variable is specified in that file.'  )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                  )
-            CALL ERRINT ( '#', INSTID                                 )
-            CALL SIGERR ( 'SPICE(BOUNDARYMISSING)'                    )
-            CALL CHKOUT ( 'GETFOV'                                    )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))                  )
+            call errint ( '#', instid                                 )
+            call sigerr ( 'SPICE(BOUNDARYMISSING)'                    )
+            call chkout ( 'GETFOV'                                    )
+            return
 
-         END IF
+         end if
 
 !
 !        Check whether we have enough room to get all boundary vectors,
 !        complain if not.
 !
-         IF ( N .GT. MXCMP ) THEN
+         if ( n .gt. mxcmp ) then
 
-            CALL SETMSG ( 'The number of boundary vector components ' &
+            call setmsg ( 'The number of boundary vector components ' &
             //            'specified in the ''#'' pool variable is ' &
             //            'bigger than room to hold them in output ' &
             //            'array specified by the ROOM input ' &
             //            'variable of the GETFOV subroutine.'        )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                  )
-            CALL SIGERR ( 'SPICE(BOUNDARYTOOBIG)'                     )
-            CALL CHKOUT ( 'GETFOV'                                    )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))                  )
+            call sigerr ( 'SPICE(BOUNDARYTOOBIG)'                     )
+            call chkout ( 'GETFOV'                                    )
+            return
 
-         END IF
+         end if
 
 !
 !        Check whether number of boundary components can be divided by 3
 !        without reminder.
 !
-         IF ( MOD( N, 3 ) .NE. 0 ) THEN
+         if ( mod( n, 3 ) .ne. 0 ) then
 
-            CALL SETMSG ( 'The boundary vector components ' &
+            call setmsg ( 'The boundary vector components ' &
             //            'specified in the ''#'' pool variable do  ' &
             //            'not represent a set of 3-dimensional ' &
             //            'vectors. Number of components assigned ' &
             //            'to the variable cannot be divided by 3 ' &
             //            'without reminder. '                        )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                  )
-            CALL SIGERR ( 'SPICE(BADBOUNDARY)'                        )
-            CALL CHKOUT ( 'GETFOV'                                    )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))                  )
+            call sigerr ( 'SPICE(BADBOUNDARY)'                        )
+            call chkout ( 'GETFOV'                                    )
+            return
 
-         END IF
+         end if
 
 !
 !        Boundaries are OK. Get them.
 !
-         CALL GDPOOL ( KWORD, 1, MXCMP, N, BOUNDS, FOUND )
+         call gdpool ( kword, 1, mxcmp, n, bounds, found )
 
-         N = N/3
+         n = n/3
 
-         IF      ( SHAPE .EQ. 'CIRCLE'      .AND. N .NE. 1 ) THEN
+         if      ( shape .eq. 'CIRCLE'      .and. n .ne. 1 ) then
 
-            CALL SETMSG ( 'The boundary is specified to be ' &
+            call setmsg ( 'The boundary is specified to be ' &
             //            'circular, and as such, the values ' &
             //            'associated with keyword, ''#'', ' &
             //            'should contain one vector.  There ' &
             //            'are #.'                              )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))            )
-            CALL ERRINT ( '#', N                                )
-            CALL SIGERR ( 'SPICE(BADBOUNDARY)'                  )
-            CALL CHKOUT ( 'GETFOV'                              )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))            )
+            call errint ( '#', n                                )
+            call sigerr ( 'SPICE(BADBOUNDARY)'                  )
+            call chkout ( 'GETFOV'                              )
+            return
 
-         ELSE IF ( SHAPE .EQ. 'ELLIPSE'     .AND. N .NE. 2 ) THEN
+         else if ( shape .eq. 'ELLIPSE'     .and. n .ne. 2 ) then
 
-            CALL SETMSG ( 'The boundary is specified to be ' &
+            call setmsg ( 'The boundary is specified to be ' &
             //            'elliptical, and as such, the values ' &
             //            'associated with keyword, ''#'', ' &
             //            'should contain two vectors.  There ' &
             //            'are #.'                               )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))             )
-            CALL ERRINT ( '#', N                                 )
-            CALL SIGERR ( 'SPICE(BADBOUNDARY)'                   )
-            CALL CHKOUT ( 'GETFOV'                               )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))             )
+            call errint ( '#', n                                 )
+            call sigerr ( 'SPICE(BADBOUNDARY)'                   )
+            call chkout ( 'GETFOV'                               )
+            return
 
-         ELSE IF ( SHAPE .EQ. 'RECTANGLE' .AND. N .NE. 4 ) THEN
+         else if ( shape .eq. 'RECTANGLE' .and. n .ne. 4 ) then
 
-            CALL SETMSG ( 'The boundary is specified to be ' &
+            call setmsg ( 'The boundary is specified to be ' &
             //            'rectangular, and as such, the values ' &
             //            'associated with keyword, ''#'', ' &
             //            'should contain four vectors.  There ' &
             //            'are #.'                                )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))              )
-            CALL ERRINT ( '#', N                                  )
-            CALL SIGERR ( 'SPICE(BADBOUNDARY)'                    )
-            CALL CHKOUT ( 'GETFOV'                                )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))              )
+            call errint ( '#', n                                  )
+            call sigerr ( 'SPICE(BADBOUNDARY)'                    )
+            call chkout ( 'GETFOV'                                )
+            return
 
-         ELSE IF ( SHAPE .EQ. 'POLYGON' .AND. N .LT. 3 ) THEN
+         else if ( shape .eq. 'POLYGON' .and. n .lt. 3 ) then
 
-            CALL SETMSG ( 'The boundary is specified to be ' &
+            call setmsg ( 'The boundary is specified to be ' &
             //            'polygonal, and as such, the values ' &
             //            'associated with keyword, ''#'', ' &
             //            'should contain at least three ' &
             //            'vectors.  There are #.'              )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))            )
-            CALL ERRINT ( '#', N                                )
-            CALL SIGERR ( 'SPICE(BADBOUNDARY)'                  )
-            CALL CHKOUT ( 'GETFOV'                              )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))            )
+            call errint ( '#', n                                )
+            call sigerr ( 'SPICE(BADBOUNDARY)'                  )
+            call chkout ( 'GETFOV'                              )
+            return
 
-         END IF
+         end if
 
 !
 !     Now check to see if the FOV specification is ANGLES and
 !     compute the boundary corner vectors.
 !
-      ELSE IF ( EQSTR('ANGLES', SPEC) ) THEN
+      else if ( eqstr('ANGLES', spec) ) then
 
 !
 !        Check whether shape identified that we got is one from the list
 !        of supported shapes for the ANGLE specification; complain
 !        if not.
 !
-         IF (BSRCHC(SHAPE(1:RTRIM(SHAPE)), NUMASP, ANGSHP) .EQ. 0) THEN
+         if (bsrchc(shape(1:rtrim(shape)), numasp, angshp) .eq. 0) then
 
-            CALL SETMSG ( 'The FOV shape, ''#'', specified in the ' &
+            call setmsg ( 'The FOV shape, ''#'', specified in the ' &
             //            'keyword, ''#'', for the instrument # ' &
             //            'is not supported for the ANGLES ' &
             //            'specification.'                          )
-            CALL ERRCH  ( '#', SHAPE(1:RTRIM(SHAPE))                )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                )
-            CALL ERRINT ( '#', INSTID                               )
-            CALL SIGERR ( 'SPICE(SHAPENOTSUPPORTED)'                )
-            CALL CHKOUT ( 'GETFOV'                                  )
-            RETURN
+            call errch  ( '#', shape(1:rtrim(shape))                )
+            call errch  ( '#', kword(1:rtrim(kword))                )
+            call errint ( '#', instid                               )
+            call sigerr ( 'SPICE(SHAPENOTSUPPORTED)'                )
+            call chkout ( 'GETFOV'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Now fetch all of the elements independent of shape from the
 !        ANGLES specification.  Start by looking for the reference
 !        vector keyword.  If found, fetch it otherwise complain.
 !
-         CALL REPMI  ( KWRVEC, '#',    INSTID, KWORD )
-         CALL DTPOOL ( KWORD,   FOUND, I,      TYPE )
+         call repmi  ( kwrvec, '#',    instid, kword )
+         call dtpool ( kword,   found, i,      type )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+            call setmsg ( 'The variable, ''#'', specifying the ' &
             //            'FOV reference vector of the instrument ' &
             //            '# was not found in the kernel pool. ' &
             //            'Check whether IK file for the instrument ' &
             //            'was loaded into the program and whether ' &
             //            'this variable is specified in that file.'  )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                  )
-            CALL ERRINT ( '#', INSTID                                 )
-            CALL SIGERR ( 'SPICE(REFVECTORMISSING)'                   )
-            CALL CHKOUT ( 'GETFOV'                                    )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))                  )
+            call errint ( '#', instid                                 )
+            call sigerr ( 'SPICE(REFVECTORMISSING)'                   )
+            call chkout ( 'GETFOV'                                    )
+            return
 
-         END IF
+         end if
 
 !
 !        Now check whether reference vector is specified by three
 !        coordinates; complain if not.
 !
-         IF ( I .NE. 3 ) THEN
+         if ( i .ne. 3 ) then
 
-            CALL SETMSG ( 'The number of the reference vector ' &
+            call setmsg ( 'The number of the reference vector ' &
             //            'components specified in the ''#'' ' &
             //            'keyword is not 3, it is #. Check the ' &
             //            'corresponding IK FOV definition for ' &
             //            'errors.'                               )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))              )
-            CALL ERRINT ( '#', I                                  )
-            CALL SIGERR ( 'SPICE(BADREFVECTORSPEC)'               )
-            CALL CHKOUT ( 'GETFOV'                                )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))              )
+            call errint ( '#', i                                  )
+            call sigerr ( 'SPICE(BADREFVECTORSPEC)'               )
+            call chkout ( 'GETFOV'                                )
+            return
 
-         ELSE IF ( TYPE .NE. 'N' ) THEN
+         else if ( type .ne. 'N' ) then
 
-            CALL SETMSG ( 'The reference vector, stored in ''#'', ' &
+            call setmsg ( 'The reference vector, stored in ''#'', ' &
             //            'has not been stored as a vector of ' &
             //            'three numbers.  It has been stored as ' &
             //            'a vector of three strings. '             )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                )
-            CALL SIGERR ( 'SPICE(BADREFVECTORSPEC)'                 )
-            CALL CHKOUT ( 'GETFOV'                                  )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))                )
+            call sigerr ( 'SPICE(BADREFVECTORSPEC)'                 )
+            call chkout ( 'GETFOV'                                  )
+            return
 
-         END IF
+         end if
 
-         CALL GDPOOL ( KWORD, 1, 3, I, REFVEC, FOUND )
+         call gdpool ( kword, 1, 3, i, refvec, found )
 
 !
 !        We require that the reference vector is not parallel
 !        to the boresight vector. Use NORMAL(1,1) to temporarily
 !        store the result of the cross product.
 !
-         CALL VCRSS ( BSIGHT, REFVEC, NORMAL(1,1) )
+         call vcrss ( bsight, refvec, normal(1,1) )
 
-         IF ( VNORM ( NORMAL(1,1) ) .EQ. 0.0D0 ) THEN
+         if ( vnorm ( normal(1,1) ) .eq. 0.0d0 ) then
 
-            CALL SETMSG ( 'The reference vector, stored in ''#'', ' &
+            call setmsg ( 'The reference vector, stored in ''#'', ' &
             //            'is parallel to the instrument boresight ' &
             //            'vector.  This is not allowed by the ' &
             //            'ANGLES FOV specification.'                )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                 )
-            CALL SIGERR ( 'SPICE(BADREFVECTORSPEC)'                  )
-            CALL CHKOUT ( 'GETFOV'                                   )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))                 )
+            call sigerr ( 'SPICE(BADREFVECTORSPEC)'                  )
+            call chkout ( 'GETFOV'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Retrieve the reference angle from the kernel pool.
 !
-         CALL REPMI  ( KWRANG, '#',    INSTID, KWORD )
-         CALL GDPOOL ( KWORD, 1, 1, I, REFANG, FOUND )
+         call repmi  ( kwrang, '#',    instid, kword )
+         call gdpool ( kword, 1, 1, i, refang, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+            call setmsg ( 'The variable, ''#'', specifying the ' &
             //            'reference angle which describes ' &
             //            'instrument # FOV angular extent was ' &
             //            'not found in the kernel pool. Check ' &
@@ -1203,23 +1203,23 @@
             //            'was loaded into the program and ' &
             //            'whether this variable is specified ' &
             //            'in that file.'                        )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))             )
-            CALL ERRINT ( '#', INSTID                            )
-            CALL SIGERR ( 'SPICE(REFANGLEMISSING)'               )
-            CALL CHKOUT ( 'GETFOV'                               )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))             )
+            call errint ( '#', instid                            )
+            call sigerr ( 'SPICE(REFANGLEMISSING)'               )
+            call chkout ( 'GETFOV'                               )
+            return
 
-         END IF
+         end if
 
 !
 !        Retrieve the angle units from the kernel pool.
 !
-         CALL REPMI  ( KWAUNT, '#',    INSTID, KWORD )
-         CALL GCPOOL ( KWORD, 1, 1, I, ANGUNT, FOUND )
+         call repmi  ( kwaunt, '#',    instid, kword )
+         call gcpool ( kword, 1, 1, i, angunt, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+            call setmsg ( 'The variable, ''#'', specifying the ' &
             //            'angular units in which instrument # ' &
             //            'FOV extent is defined was not found ' &
             //            'in the kernel pool. Check whether ' &
@@ -1227,136 +1227,136 @@
             //            'loaded into the program and whether ' &
             //            'this variable is specified in that ' &
             //            'file.'                                )
-            CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))             )
-            CALL ERRINT ( '#', INSTID                            )
-            CALL SIGERR ( 'SPICE(UNITSMISSING)'                  )
-            CALL CHKOUT ( 'GETFOV'                               )
-            RETURN
+            call errch  ( '#', kword(1:rtrim(kword))             )
+            call errint ( '#', instid                            )
+            call sigerr ( 'SPICE(UNITSMISSING)'                  )
+            call chkout ( 'GETFOV'                               )
+            return
 
-         END IF
+         end if
 
 !
 !        Convert the reference angle to radians.
 !
-         CALL CONVRT ( REFANG, ANGUNT, 'RADIANS', TMPANG )
+         call convrt ( refang, angunt, 'RADIANS', tmpang )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'GETFOV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'GETFOV' )
+            return
+         end if
 
-         REFANG = TMPANG
+         refang = tmpang
 
 !
 !        Branch to shape specific code.
 !
-         IF ( SHAPE .EQ. 'CIRCLE' ) THEN
+         if ( shape .eq. 'CIRCLE' ) then
 
 !
 !           First check to see that the caller left enough room
 !           to store the required number of boundary corner
 !           vectors.
 !
-            IF ( ROOM .LT. 1 ) THEN
-               CALL SETMSG ( 'The FOV shape for instrument # ' &
+            if ( room .lt. 1 ) then
+               call setmsg ( 'The FOV shape for instrument # ' &
                //            'is specified to be circular.  ' &
                //            'There should be room for at ' &
                //            'least one boundary vector.  There ' &
                //            'is room for #. '                    )
-               CALL ERRINT ( '#', INSTID                          )
-               CALL ERRINT ( '#', ROOM                            )
-               CALL SIGERR ( 'SPICE(BOUNDARYTOOBIG)'              )
-               CALL CHKOUT ( 'GETFOV'                             )
-               RETURN
-            END IF
+               call errint ( '#', instid                          )
+               call errint ( '#', room                            )
+               call sigerr ( 'SPICE(BOUNDARYTOOBIG)'              )
+               call chkout ( 'GETFOV'                             )
+               return
+            end if
 
 !
 !           The plan to compute the boundary corner vector is to
 !           rotate the BSIGHT by REFANG towards REFVEC.  To do
 !           this first compute the axis we need to rotate about.
 !
-            CALL VCRSS ( BSIGHT, REFVEC, NORMAL(1,1) )
+            call vcrss ( bsight, refvec, normal(1,1) )
 
 !
 !           Now rotate by REFANG about NORMAL(1,1) using the routine
 !           VROTV.
 !
-            CALL VROTV ( BSIGHT, NORMAL(1,1), REFANG, BOUNDS(1,1) )
+            call vrotv ( bsight, normal(1,1), refang, bounds(1,1) )
 
 !
 !           Lastly, since we computed a single boundary corner vector,
 !           set N = 1.
 !
-            N = 1
+            n = 1
 
-         ELSE IF ( SHAPE .EQ. 'ELLIPSE' ) THEN
+         else if ( shape .eq. 'ELLIPSE' ) then
 
 !
 !           The elliptical case requires the additional cross angle
 !           keyword's presence in the kernel pool. Attempt to
 !           retrieve it.
 !
-            CALL REPMI  ( KWCANG, '#',    INSTID, KWORD )
-            CALL GDPOOL ( KWORD, 1, 1, I, CRSANG, FOUND )
+            call repmi  ( kwcang, '#',    instid, kword )
+            call gdpool ( kword, 1, 1, i, crsang, found )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+               call setmsg ( 'The variable, ''#'', specifying the ' &
                //            'cross angle which describes instrument ' &
                //            '# FOV angular extent was not found in ' &
                //            'the kernel pool. Check whether IK file ' &
                //            'for the instrument was loaded into the ' &
                //            'program and whether this variable is ' &
                //            'specified in that file.'                 )
-               CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                )
-               CALL ERRINT ( '#', INSTID                               )
-               CALL SIGERR ( 'SPICE(CROSSANGLEMISSING)'                )
-               CALL CHKOUT ( 'GETFOV'                                  )
-               RETURN
+               call errch  ( '#', kword(1:rtrim(kword))                )
+               call errint ( '#', instid                               )
+               call sigerr ( 'SPICE(CROSSANGLEMISSING)'                )
+               call chkout ( 'GETFOV'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           Convert the cross angle to radians.
 !
-            CALL CONVRT ( CRSANG, ANGUNT, 'RADIANS', TMPANG )
+            call convrt ( crsang, angunt, 'RADIANS', tmpang )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'GETFOV' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'GETFOV' )
+               return
+            end if
 
-            CRSANG = TMPANG
+            crsang = tmpang
 !
 !           Now check to see that the caller left enough room
 !           to store the required number of boundary corner
 !           vectors.
 !
-            IF ( ROOM .LT. 2 ) THEN
-               CALL SETMSG ( 'The FOV shape for instrument # ' &
+            if ( room .lt. 2 ) then
+               call setmsg ( 'The FOV shape for instrument # ' &
                //            'is specified to be elliptical.  ' &
                //            'There should be room for at ' &
                //            'least two boundary vectors.  There ' &
                //            'is room for #. '                     )
-               CALL ERRINT ( '#', INSTID                           )
-               CALL ERRINT ( '#', ROOM                             )
-               CALL SIGERR ( 'SPICE(BOUNDARYTOOBIG)'               )
-               CALL CHKOUT ( 'GETFOV'                              )
-               RETURN
-            END IF
+               call errint ( '#', instid                           )
+               call errint ( '#', room                             )
+               call sigerr ( 'SPICE(BOUNDARYTOOBIG)'               )
+               call chkout ( 'GETFOV'                              )
+               return
+            end if
 
 !
 !           The plan to compute the first boundary corner vector is
 !           to rotate the BSIGHT by REFANG towards REFVEC.  To
 !           do this first compute the axis we need to rotate about.
 !
-            CALL VCRSS ( BSIGHT, REFVEC, NORMAL(1,1) )
+            call vcrss ( bsight, refvec, normal(1,1) )
 
 !
 !           Now rotate by REFANG about NORMAL(1,1) using the routine
 !           VROTV.
 !
-            CALL VROTV ( BSIGHT, NORMAL(1,1), REFANG, BOUNDS(1,1) )
+            call vrotv ( bsight, normal(1,1), refang, bounds(1,1) )
 
 !
 !           At this point we have one boundary vector.  We need the
@@ -1365,75 +1365,75 @@
 !           This will give us boundary corner vectors listed in a
 !           counter-clockwise fashion about the boresight.
 !
-            CALL VCRSS ( BSIGHT, NORMAL(1,1), TMPVEC      )
-            CALL VEQU  ( TMPVEC,              NORMAL(1,2) )
+            call vcrss ( bsight, normal(1,1), tmpvec      )
+            call vequ  ( tmpvec,              normal(1,2) )
 !
 !           Now rotate BSIGHT by CRSANG about the NORMAL(1,2) using
 !           the routine VROTV.
 !
-            CALL VROTV ( BSIGHT, NORMAL(1,2), CRSANG, BOUNDS(1,2) )
+            call vrotv ( bsight, normal(1,2), crsang, bounds(1,2) )
 
 !
 !           Lastly, since we computed two boundary corner vectors,
 !           set N = 2.
 !
-            N = 2
+            n = 2
 
-         ELSE IF ( SHAPE .EQ. 'RECTANGLE' ) THEN
+         else if ( shape .eq. 'RECTANGLE' ) then
 
 !
 !           The rectangular case requires the additional cross angle
 !           keyword's presence in the kernel pool. Attempt to
 !           retrieve it.
 !
-            CALL REPMI  ( KWCANG, '#',    INSTID, KWORD )
-            CALL GDPOOL ( KWORD, 1, 1, I, CRSANG, FOUND )
+            call repmi  ( kwcang, '#',    instid, kword )
+            call gdpool ( kword, 1, 1, i, crsang, found )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               CALL SETMSG ( 'The variable, ''#'', specifying the ' &
+               call setmsg ( 'The variable, ''#'', specifying the ' &
                //            'cross angle which describes instrument ' &
                //            '# FOV angular extent was not found in ' &
                //            'the kernel pool. Check whether IK file ' &
                //            'for the instrument was loaded into the ' &
                //            'program and whether this variable is ' &
                //            'specified in that file.'                 )
-               CALL ERRCH  ( '#', KWORD(1:RTRIM(KWORD))                )
-               CALL ERRINT ( '#', INSTID                               )
-               CALL SIGERR ( 'SPICE(CROSSANGLEMISSING)'                )
-               CALL CHKOUT ( 'GETFOV'                                  )
-               RETURN
+               call errch  ( '#', kword(1:rtrim(kword))                )
+               call errint ( '#', instid                               )
+               call sigerr ( 'SPICE(CROSSANGLEMISSING)'                )
+               call chkout ( 'GETFOV'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           Convert the cross angle to radians.
 !
-            CALL CONVRT ( CRSANG, ANGUNT, 'RADIANS', TMPANG )
+            call convrt ( crsang, angunt, 'RADIANS', tmpang )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'GETFOV' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'GETFOV' )
+               return
+            end if
 
-            CRSANG = TMPANG
+            crsang = tmpang
 !
 !           Now check to see that the caller left enough room
 !           to store the required number of boundary corner
 !           vectors.
 !
-            IF ( ROOM .LT. 4 ) THEN
-               CALL SETMSG ( 'The FOV shape for instrument # ' &
+            if ( room .lt. 4 ) then
+               call setmsg ( 'The FOV shape for instrument # ' &
                //            'is specified to be rectangular.  ' &
                //            'There should be room for at ' &
                //            'least four boundary vectors.  There ' &
                //            'is room for #. '                      )
-               CALL ERRINT ( '#', INSTID                            )
-               CALL ERRINT ( '#', ROOM                              )
-               CALL SIGERR ( 'SPICE(BOUNDARYTOOBIG)'                )
-               CALL CHKOUT ( 'GETFOV'                               )
-               RETURN
-            END IF
+               call errint ( '#', instid                            )
+               call errint ( '#', room                              )
+               call sigerr ( 'SPICE(BOUNDARYTOOBIG)'                )
+               call chkout ( 'GETFOV'                               )
+               return
+            end if
 
 !
 !           Here's the general strategy laid out in simple terms:
@@ -1469,25 +1469,25 @@
 !
 !           Start with step (1).
 !
-            CALL UNORM ( BSIGHT, B, BMAG )
+            call unorm ( bsight, b, bmag )
 
 !
 !           Now proceed to (2). Since we already know that REFVEC
 !           and BSIGHT are not parallel, the following yields a
 !           non-zero vector:
 !
-            CALL VPERP ( REFVEC, BSIGHT, B1 )
+            call vperp ( refvec, bsight, b1 )
 
 !
 !           Unitize B1.
 !
-            CALL VHAT  ( B1,     TMPVEC )
-            CALL VEQU  ( TMPVEC, B1     )
+            call vhat  ( b1,     tmpvec )
+            call vequ  ( tmpvec, b1     )
 
 !
 !           Step (3), compute B2 by crossing B and B1.
 !
-            CALL VCRSS ( B, B1, B2 )
+            call vcrss ( b, b1, b2 )
 
 !
 !           Before proceeding onto step (4), verify that the
@@ -1496,13 +1496,13 @@
 !           Signal an error if both are not positive numbers.
 !           Use MINCOS as a tolerance.
 !
-            COSRAN = DCOS ( REFANG )
-            COSCAN = DCOS ( CRSANG )
+            cosran = dcos ( refang )
+            coscan = dcos ( crsang )
 
-            IF ( ( COSRAN .LT. MINCOS ) .OR. &
-                 ( COSCAN .LT. MINCOS )      ) THEN
+            if ( ( cosran .lt. mincos ) .or. &
+                 ( coscan .lt. mincos )      ) then
 
-               CALL SETMSG ( 'The angular extents specified ' &
+               call setmsg ( 'The angular extents specified ' &
                //            'in the FOV definition for ' &
                //            'instrument # result in degenerate ' &
                //            'or improper boundary corner ' &
@@ -1513,83 +1513,83 @@
                //            'side plane that it defines being ' &
                //            'equal to or greater than 90 ' &
                //            'degrees.'                            )
-               CALL ERRINT ( '#', INSTID                           )
-               CALL SIGERR ( 'SPICE(BADBOUNDARY)'                  )
-               CALL CHKOUT ( 'GETFOV'                              )
-               RETURN
+               call errint ( '#', instid                           )
+               call sigerr ( 'SPICE(BADBOUNDARY)'                  )
+               call chkout ( 'GETFOV'                              )
+               return
 
-            END IF
+            end if
 
 !
 !           Compute the NORMAL vectors to complete step (4).
 !
-            SINRAN = DSIN ( REFANG )
-            SINCAN = DSIN ( CRSANG )
+            sinran = dsin ( refang )
+            sincan = dsin ( crsang )
 
-            CALL VLCOM ( -COSRAN, B1, SINRAN, B, NORMAL(1,1) )
-            CALL VLCOM ( -COSCAN, B2, SINCAN, B, NORMAL(1,2) )
-            CALL VLCOM (  COSRAN, B1, SINRAN, B, NORMAL(1,3) )
-            CALL VLCOM (  COSCAN, B2, SINCAN, B, NORMAL(1,4) )
+            call vlcom ( -cosran, b1, sinran, b, normal(1,1) )
+            call vlcom ( -coscan, b2, sincan, b, normal(1,2) )
+            call vlcom (  cosran, b1, sinran, b, normal(1,3) )
+            call vlcom (  coscan, b2, sincan, b, normal(1,4) )
 
 !
 !           We are almost finished. Compute the boundary corner
 !           vectors completing step (5).
 !
-            CALL VCRSS ( NORMAL(1,1), NORMAL(1,2), BOUNDS(1,1) )
-            CALL VCRSS ( NORMAL(1,2), NORMAL(1,3), BOUNDS(1,2) )
-            CALL VCRSS ( NORMAL(1,3), NORMAL(1,4), BOUNDS(1,3) )
-            CALL VCRSS ( NORMAL(1,4), NORMAL(1,1), BOUNDS(1,4) )
+            call vcrss ( normal(1,1), normal(1,2), bounds(1,1) )
+            call vcrss ( normal(1,2), normal(1,3), bounds(1,2) )
+            call vcrss ( normal(1,3), normal(1,4), bounds(1,3) )
+            call vcrss ( normal(1,4), normal(1,1), bounds(1,4) )
 
 !
 !           Step (6), normalize the boundary corner vectors
 !           and scale by BMAG, the magnitude of BSIGHT.
 !
-            DO I = 1, 4
+            do i = 1, 4
 
-               CALL UNORM ( BOUNDS(1,I),  TMPVEC,  VMAG        )
-               CALL VSCL  ( BMAG,         TMPVEC,  BOUNDS(1,I) )
+               call unorm ( bounds(1,i),  tmpvec,  vmag        )
+               call vscl  ( bmag,         tmpvec,  bounds(1,i) )
 
-            END DO
+            end do
 
 !
 !           Lastly since we are returning 4 boundary corner vectors,
 !           set N = 4.
 !
-            N = 4
+            n = 4
 
-         ELSE
+         else
 
 !
 !           If we end up here something is terribly wrong with
 !           this module or SPICE in general.
 !
-            CALL SETMSG ( 'This error is never supposed to ' &
+            call setmsg ( 'This error is never supposed to ' &
             //            'occur. We have an undefined shape ' &
             //            'for the ANGLES specification that ' &
             //            'passed the shape check.'            )
-            CALL SIGERR ( 'SPICE(BUG)'                         )
-            CALL CHKOUT ( 'GETFOV'                             )
-            RETURN
+            call sigerr ( 'SPICE(BUG)'                         )
+            call chkout ( 'GETFOV'                             )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The FOV class specification is set to ''#'' ' &
+         call setmsg ( 'The FOV class specification is set to ''#'' ' &
          //            'which is currently unsupported. See the ' &
          //            'GETFOV subroutine header for more ' &
          //            'information.'                                 )
-         CALL ERRCH  ( '#', SPEC                                      )
-         CALL SIGERR ( 'SPICE(UNSUPPORTEDSPEC)'                       )
-         CALL CHKOUT ( 'GETFOV'                                       )
-         RETURN
+         call errch  ( '#', spec                                      )
+         call sigerr ( 'SPICE(UNSUPPORTEDSPEC)'                       )
+         call chkout ( 'GETFOV'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Standard SPICE error handling.
 !
-      CALL CHKOUT ( 'GETFOV' )
-      RETURN
+      call chkout ( 'GETFOV' )
+      return
 
-      END
+      end

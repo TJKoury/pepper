@@ -1,6 +1,6 @@
 !$Procedure OSCELT ( Determine conic elements from state )
 
-      SUBROUTINE OSCELT ( STATE, ET, MU, ELTS )
+      subroutine oscelt ( state, et, mu, elts )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      MU
-      DOUBLE PRECISION      ELTS   ( 8 )
+      double precision      state  ( 6 )
+      double precision      et
+      double precision      mu
+      double precision      elts   ( 8 )
 
 ! $ Brief_I/O
 !
@@ -574,84 +574,84 @@
 !
 !     External functions
 !
-      EXTERNAL              PI
+      external              pi
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DACOSH
-      DOUBLE PRECISION      EXACT
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
+      double precision      dacosh
+      double precision      exact
+      double precision      pi
+      double precision      twopi
+      double precision      vnorm
+      double precision      vdot
+      double precision      vsep
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      CLOSE
-      PARAMETER           ( CLOSE = 1.D-10 )
+      double precision      close
+      parameter           ( close = 1.d-10 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ARGP
-      DOUBLE PRECISION      COSEA
-      DOUBLE PRECISION      COSHF
-      DOUBLE PRECISION      E      ( 3 )
-      DOUBLE PRECISION      EA
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      H      ( 3 )
-      DOUBLE PRECISION      INC
-      DOUBLE PRECISION      LNODE
-      DOUBLE PRECISION      M0
-      DOUBLE PRECISION      N      ( 3 )
-      DOUBLE PRECISION      NU
-      DOUBLE PRECISION      P
-      DOUBLE PRECISION      PERIX  ( 3 )
-      DOUBLE PRECISION      PERIY  ( 3 )
-      DOUBLE PRECISION      R      ( 3 )
-      DOUBLE PRECISION      RMAG
-      DOUBLE PRECISION      RP
-      DOUBLE PRECISION      SINEA
-      DOUBLE PRECISION      V      ( 3 )
-      DOUBLE PRECISION      VMAG
-      DOUBLE PRECISION      XPROD  ( 3 )
-      DOUBLE PRECISION      ZVEC   ( 3 )
+      double precision      argp
+      double precision      cosea
+      double precision      coshf
+      double precision      e      ( 3 )
+      double precision      ea
+      double precision      ecc
+      double precision      h      ( 3 )
+      double precision      inc
+      double precision      lnode
+      double precision      m0
+      double precision      n      ( 3 )
+      double precision      nu
+      double precision      p
+      double precision      perix  ( 3 )
+      double precision      periy  ( 3 )
+      double precision      r      ( 3 )
+      double precision      rmag
+      double precision      rp
+      double precision      sinea
+      double precision      v      ( 3 )
+      double precision      vmag
+      double precision      xprod  ( 3 )
+      double precision      zvec   ( 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  ZVEC
+      save                  zvec
 
 !
 !     Initial values
 !
-      DATA                  ZVEC / 0.D0, 0.D0, 1.D0 /
+      data                  zvec / 0.d0, 0.d0, 1.d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'OSCELT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'OSCELT' )
+      end if
 
 
-      IF ( MU .LE. 0.0D0 ) THEN
+      if ( mu .le. 0.0d0 ) then
 
-         CALL SETMSG ( 'MU = #; non-positive gravitational parameter' )
-         CALL ERRDP  ( '#',  MU                                       )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEMASS)'                       )
-         CALL CHKOUT ( 'OSCELT'                                       )
-         RETURN
+         call setmsg ( 'MU = #; non-positive gravitational parameter' )
+         call errdp  ( '#',  mu                                       )
+         call sigerr ( 'SPICE(NONPOSITIVEMASS)'                       )
+         call chkout ( 'OSCELT'                                       )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -682,57 +682,57 @@
 !                        e = (1/mu)( (v  - mu/r) r  -  <r,v> v )
 !                        -                       -      - -  -
 !
-      CALL VEQU ( STATE(1), R )
-      CALL VEQU ( STATE(4), V )
+      call vequ ( state(1), r )
+      call vequ ( state(4), v )
 
 !
 !     Check for non-physical cases. Probably due to user
 !     input error
 !
-      IF ( VZERO(R) ) THEN
+      if ( vzero(r) ) then
 
-         CALL SETMSG ( 'Zero vector for input position vector.' )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                  )
-         CALL CHKOUT ( 'OSCELT'                                 )
-         RETURN
+         call setmsg ( 'Zero vector for input position vector.' )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                  )
+         call chkout ( 'OSCELT'                                 )
+         return
 
-      END IF
+      end if
 
-      IF ( VZERO(V) ) THEN
+      if ( vzero(v) ) then
 
-         CALL SETMSG ( 'Zero vector for input velocity vector.' )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                  )
-         CALL CHKOUT ( 'OSCELT'                                 )
-         RETURN
+         call setmsg ( 'Zero vector for input velocity vector.' )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                  )
+         call chkout ( 'OSCELT'                                 )
+         return
 
-      END IF
+      end if
 
 
-      RMAG   =  VNORM(R)
-      VMAG   =  VNORM(V)
+      rmag   =  vnorm(r)
+      vmag   =  vnorm(v)
 
-      CALL VCRSS ( R, V, H )
+      call vcrss ( r, v, h )
 
 !
 !     If the specific angular momentum vector is the zero vector,
 !     we have a degenerate orbit and cannot proceed.
 !
-      IF ( VZERO(H) ) THEN
+      if ( vzero(h) ) then
 
-         CALL SETMSG ( 'Input position and velocity are too close '  // &
+         call setmsg ( 'Input position and velocity are too close '  // &
                        'to parallel; the specific angular momentum ' // &
                        'vector is zero.'                              )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                        )
-         CALL CHKOUT ( 'OSCELT'                                       )
-         RETURN
+         call sigerr ( 'SPICE(DEGENERATECASE)'                        )
+         call chkout ( 'OSCELT'                                       )
+         return
 
-      END IF
+      end if
 
 
-      CALL VPACK  ( -H(2), H(1), 0.D0, N )
+      call vpack  ( -h(2), h(1), 0.d0, n )
 
-      CALL VLCOM  ( VMAG**2 - MU/RMAG,  R,  -VDOT(R,V),  V,  E )
-      CALL VSCLIP ( 1.D0/MU, E )
+      call vlcom  ( vmag**2 - mu/rmag,  r,  -vdot(r,v),  v,  e )
+      call vsclip ( 1.d0/mu, e )
 
 
 !
@@ -747,10 +747,10 @@
 !     specific angular momentum of the orbiting object.
 !
 
-      ECC = EXACT ( VNORM ( E ), 1.D0, CLOSE )
+      ecc = exact ( vnorm ( e ), 1.d0, close )
 
-      P   = VDOT  ( H,H ) / MU
-      RP  = P / (1.D0 + ECC)
+      p   = vdot  ( h,h ) / mu
+      rp  = p / (1.d0 + ecc)
 
 !
 !     Next, the orientation of the orbit.
@@ -763,16 +763,16 @@
 !     vector becomes undefined.
 !
 
-      INC = VSEP ( H, ZVEC )
+      inc = vsep ( h, zvec )
 
-      IF ( ABS ( INC - 0.D0 ) .LT. CLOSE ) THEN
-         INC = 0.D0
-         CALL VPACK ( 1.D0, 0.D0, 0.D0, N )
+      if ( abs ( inc - 0.d0 ) .lt. close ) then
+         inc = 0.d0
+         call vpack ( 1.d0, 0.d0, 0.d0, n )
 
-      ELSE IF ( ABS ( INC - PI() ) .LT. CLOSE ) THEN
-         INC = PI()
-         CALL VPACK ( 1.D0, 0.D0, 0.D0, N )
-      END IF
+      else if ( abs ( inc - pi() ) .lt. close ) then
+         inc = pi()
+         call vpack ( 1.d0, 0.d0, 0.d0, n )
+      end if
 
 !
 !                                                              ^
@@ -780,11 +780,11 @@
 !     (the x-axis) and the node vector, n.
 !                                       -
 !
-      LNODE = ATAN2 ( N(2), N(1) )
+      lnode = atan2 ( n(2), n(1) )
 
-      IF ( LNODE .LT. 0.D0 ) THEN
-         LNODE = LNODE + TWOPI()
-      END IF
+      if ( lnode .lt. 0.d0 ) then
+         lnode = lnode + twopi()
+      end if
 
 !
 !     The argument of periapsis is the angle between the node vector
@@ -793,45 +793,45 @@
 !     circular orbits.
 !
 !
-      IF ( ECC .EQ. 0.D0 ) THEN
+      if ( ecc .eq. 0.d0 ) then
 
-         ARGP = 0.D0
+         argp = 0.d0
 
-      ELSE
+      else
 
 !
 !        Set the magnitude of ARGP; we'll determine the sign next.
 !
-         ARGP = VSEP ( N, E )
+         argp = vsep ( n, e )
 
 
-         IF ( ARGP .NE. 0.D0 ) THEN
+         if ( argp .ne. 0.d0 ) then
 
-            IF (  ( INC .EQ. 0.D0 ) .OR. ( INC .EQ. PI() )  ) THEN
+            if (  ( inc .eq. 0.d0 ) .or. ( inc .eq. pi() )  ) then
 !
 !              The quadrant of ARGP is determined by the component of E
 !              in the direction H x N.
 !
-               CALL UCRSS ( H, N, XPROD )
+               call ucrss ( h, n, xprod )
 
-               IF (  VDOT( E, XPROD ) .LT. 0.D0 ) THEN
+               if (  vdot( e, xprod ) .lt. 0.d0 ) then
 
-                  ARGP = TWOPI() - ARGP
+                  argp = twopi() - argp
 
-               END IF
+               end if
 
-            ELSE IF ( E(3) .LT. 0.D0 ) THEN
+            else if ( e(3) .lt. 0.d0 ) then
 !
 !              The periapsis is below the reference plane;  the argument
 !              of periapsis must be greater than 180 degrees.
 !
-               ARGP = TWOPI() - ARGP
+               argp = twopi() - argp
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     And finally, the position of the object within the orbit.
@@ -844,20 +844,20 @@
 !     We express the position in the perifocal frame in order to
 !     extract nu.
 !
-      IF ( ECC .EQ. 0.D0 ) THEN
+      if ( ecc .eq. 0.d0 ) then
 !
 !        In this case, the argument of periapse is set to zero,
 !        so the nu is measured from N.
 !
-         CALL VHAT  ( N, PERIX )
+         call vhat  ( n, perix )
 
-      ELSE
-         CALL VHAT  ( E, PERIX )
-      END IF
+      else
+         call vhat  ( e, perix )
+      end if
 
-      CALL UCRSS ( H, PERIX, PERIY )
+      call ucrss ( h, perix, periy )
 
-      NU = ATAN2 ( VDOT(R,PERIY), VDOT(R,PERIX) )
+      nu = atan2 ( vdot(r,periy), vdot(r,perix) )
 
 
 !
@@ -888,13 +888,13 @@
 !     For elliptic orbits, the mean anomaly should be in [0,2*pi].
 !
 
-      IF ( ECC .LT. 1.D0 ) THEN
+      if ( ecc .lt. 1.d0 ) then
 !
 !        For improved numerical performance, we compute both the
 !        sine and cosine of the eccentric anomaly, then let ATAN2
 !        find the eccentric anomaly.
 !
-         COSEA  = ( ECC + COS(NU) )  /  ( 1.D0 + ECC*COS(NU) )
+         cosea  = ( ecc + cos(nu) )  /  ( 1.d0 + ecc*cos(nu) )
 
 !
 !        Here we use the relationships (here b is the length
@@ -907,48 +907,48 @@
 !                    = (r/rp) \/ (1-e) / (1+e)  sin(nu)
 !
 !
-         SINEA  = (RMAG/RP) * SQRT( (1.D0-ECC) / (1.D0+ECC) ) * SIN(NU)
+         sinea  = (rmag/rp) * sqrt( (1.d0-ecc) / (1.d0+ecc) ) * sin(nu)
 
-         EA     =  ATAN2 ( SINEA, COSEA )
+         ea     =  atan2 ( sinea, cosea )
 
-         M0     =  SIGN ( EA - ECC*SIN(EA),  NU )
+         m0     =  sign ( ea - ecc*sin(ea),  nu )
 
-         IF ( M0 .LT. 0.D0 ) THEN
+         if ( m0 .lt. 0.d0 ) then
 
-            M0 = M0 + TWOPI()
+            m0 = m0 + twopi()
 
-         END IF
-
-
-      ELSE IF ( ECC .GT. 1.D0 ) THEN
-
-         COSHF = (ECC + COS(NU)) / (1.D0 + ECC*COS(NU))
-
-         EA    =  DACOSH (  MAX ( 1.D0, COSHF )  )
-
-         M0    =  SIGN( ECC*SINH(EA) - EA,  NU )
+         end if
 
 
-      ELSE
+      else if ( ecc .gt. 1.d0 ) then
 
-         EA = TAN(NU/2.D0)
-         M0 = SIGN ( EA + EA**3/3.D0,  NU )
+         coshf = (ecc + cos(nu)) / (1.d0 + ecc*cos(nu))
 
-      END IF
+         ea    =  dacosh (  max ( 1.d0, coshf )  )
+
+         m0    =  sign( ecc*sinh(ea) - ea,  nu )
+
+
+      else
+
+         ea = tan(nu/2.d0)
+         m0 = sign ( ea + ea**3/3.d0,  nu )
+
+      end if
 
 !
 !     Return the elements as a vector, suitable for input to CONICS.
 !
-      ELTS(1) = RP
-      ELTS(2) = ECC
-      ELTS(3) = INC
-      ELTS(4) = LNODE
-      ELTS(5) = ARGP
-      ELTS(6) = M0
-      ELTS(7) = ET
-      ELTS(8) = MU
+      elts(1) = rp
+      elts(2) = ecc
+      elts(3) = inc
+      elts(4) = lnode
+      elts(5) = argp
+      elts(6) = m0
+      elts(7) = et
+      elts(8) = mu
 
 
-      CALL CHKOUT ( 'OSCELT' )
-      RETURN
-      END
+      call chkout ( 'OSCELT' )
+      return
+      end

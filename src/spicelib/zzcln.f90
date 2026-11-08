@@ -1,7 +1,7 @@
 !$Procedure      ZZCLN ( Private --- clean up )
 
-      SUBROUTINE ZZCLN ( LOOKAT, NAMEAT, &
-                         NAMLST, DATLST, NMPOOL, CHPOOL, DPPOOL )
+      subroutine zzcln ( lookat, nameat, &
+                         namlst, datlst, nmpool, chpool, dppool )
 
 ! $ Abstract
 !
@@ -23,17 +23,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      implicit none
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               LOOKAT
-      INTEGER               NAMEAT
-      INTEGER               NAMLST ( * )
-      INTEGER               DATLST ( * )
-      INTEGER               NMPOOL ( 2, LBPOOL:* )
-      INTEGER               CHPOOL ( 2, LBPOOL:* )
-      INTEGER               DPPOOL ( 2, LBPOOL:* )
+      integer               lookat
+      integer               nameat
+      integer               namlst ( * )
+      integer               datlst ( * )
+      integer               nmpool ( 2, lbpool:* )
+      integer               chpool ( 2, lbpool:* )
+      integer               dppool ( 2, lbpool:* )
 
 
 ! $ Brief_I/O
@@ -139,15 +139,15 @@
 !
 !     Local Parameters and Variables
 !
-      INTEGER               NEXT
-      PARAMETER           ( NEXT   = 1 )
+      integer               next
+      parameter           ( next   = 1 )
 
-      INTEGER               PREV
-      PARAMETER           ( PREV   = 2 )
+      integer               prev
+      parameter           ( prev   = 2 )
 
 
-      INTEGER               HEAD
-      INTEGER               TAIL
+      integer               head
+      integer               tail
 !
 !     First perform the clean up function. This variable
 !     has been corrupted so there's no point in hanging
@@ -155,46 +155,46 @@
 !
 !     First remove the data...
 !
-      CALL CHKIN ( 'ZZCLN' )
+      call chkin ( 'ZZCLN' )
 
-      HEAD = DATLST( NAMEAT )
+      head = datlst( nameat )
 
-      IF      ( HEAD .LT. 0 ) THEN
+      if      ( head .lt. 0 ) then
 
-         HEAD = -HEAD
-         TAIL = -CHPOOL(PREV,HEAD)
-         CALL LNKFSL ( HEAD, TAIL, CHPOOL )
+         head = -head
+         tail = -chpool(prev,head)
+         call lnkfsl ( head, tail, chpool )
 
-      ELSE IF ( HEAD .GT. 0 ) THEN
+      else if ( head .gt. 0 ) then
 
-         TAIL = -DPPOOL(PREV,HEAD)
-         CALL LNKFSL ( HEAD, TAIL, DPPOOL )
+         tail = -dppool(prev,head)
+         call lnkfsl ( head, tail, dppool )
 
-      END IF
+      end if
 !
 !     Remove the sub-list head from the data list.
 !
-      DATLST ( NAMEAT ) = 0
+      datlst ( nameat ) = 0
 !
 !     If this was a singleton list remove the pointer to
 !     the head of the list.
 !
-      HEAD =  NAMLST(LOOKAT)
-      TAIL = -NMPOOL(PREV,HEAD)
+      head =  namlst(lookat)
+      tail = -nmpool(prev,head)
 
-      IF ( HEAD .EQ. TAIL ) THEN
-         NAMLST(LOOKAT) = 0
-      ELSE IF ( NAMLST(LOOKAT) .EQ. NAMEAT ) THEN
-         NAMLST(LOOKAT) = NMPOOL(NEXT,NAMEAT)
-      END IF
+      if ( head .eq. tail ) then
+         namlst(lookat) = 0
+      else if ( namlst(lookat) .eq. nameat ) then
+         namlst(lookat) = nmpool(next,nameat)
+      end if
 !
 !     Finally free up this node in the NMPOOL.
 !
-      HEAD = NAMEAT
-      TAIL = NAMEAT
+      head = nameat
+      tail = nameat
 
-      CALL LNKFSL ( HEAD, TAIL, NMPOOL )
+      call lnkfsl ( head, tail, nmpool )
 
-      CALL CHKOUT ('ZZCLN' )
-      RETURN
-      END
+      call chkout ('ZZCLN' )
+      return
+      end

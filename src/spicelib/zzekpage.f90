@@ -1,7 +1,7 @@
 !$Procedure  ZZEKPAGE ( Private: Manage EK DAS paging system )
 
-      SUBROUTINE ZZEKPAGE (  HANDLE,  TYPE,   ADDRSS,  STAT,  P, &
-                             PAGEC,   PAGED,  PAGEI,   BASE,  VALUE  )
+      subroutine zzekpage (  handle,  type,   addrss,  stat,  p, &
+                             pagec,   paged,  pagei,   base,  value  )
 
 ! $ Abstract
 !
@@ -22,20 +22,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekarch.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekarch.inc'
+      include 'ekpage.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TYPE
-      INTEGER               ADDRSS
-      CHARACTER*(*)         STAT
-      INTEGER               P
-      CHARACTER*(*)         PAGEC
-      DOUBLE PRECISION      PAGED ( * )
-      INTEGER               PAGEI ( * )
-      INTEGER               BASE
-      INTEGER               VALUE
+      integer               handle
+      integer               type
+      integer               addrss
+      character*(*)         stat
+      integer               p
+      character*(*)         pagec
+      double precision      paged ( * )
+      integer               pagei ( * )
+      integer               base
+      integer               value
 
 ! $ Brief_I/O
 !
@@ -134,8 +134,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
+      logical               eqstr
+      logical               failed
 
 !
 !     Local variables
@@ -144,37 +144,37 @@
 !     Note:  the integer fill buffer should be as large as the maximum
 !     of the integer page size and the metadata area size.
 !
-      CHARACTER*(PGSIZC)    CFILL
-      CHARACTER*(5)         ENCPAG
+      character*(pgsizc)    cfill
+      character*(5)         encpag
 
-      DOUBLE PRECISION      DFILL  ( PGSIZD )
-      DOUBLE PRECISION      DPPTR
+      double precision      dfill  ( pgsizd )
+      double precision      dpptr
 
-      INTEGER               ADDR
-      INTEGER               E
-      INTEGER               FORWRD
-      INTEGER               FREEC
-      INTEGER               FREED
-      INTEGER               FREEI
-      INTEGER               IFILL  ( PGSIZI )
-      INTEGER               L
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               NFREEC
-      INTEGER               NFREED
-      INTEGER               NFREEI
-      INTEGER               NPC
-      INTEGER               NPD
-      INTEGER               NPI
+      integer               addr
+      integer               e
+      integer               forwrd
+      integer               freec
+      integer               freed
+      integer               freei
+      integer               ifill  ( pgsizi )
+      integer               l
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               nfreec
+      integer               nfreed
+      integer               nfreei
+      integer               npc
+      integer               npd
+      integer               npi
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      RETURN
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      return
 
 
 
@@ -183,7 +183,7 @@
 
 !$Procedure  ZZEKPGIN ( Private: Initialize DAS for paged access )
 
-      ENTRY ZZEKPGIN ( HANDLE )
+      entry zzekpgin ( handle )
 
 ! $ Abstract
 !
@@ -282,74 +282,74 @@
 !
 !-&
 
-      CALL CHKIN ( 'ZZEKPGIN' )
+      call chkin ( 'ZZEKPGIN' )
 
 !
 !     The file must be open for write access.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKPGIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKPGIN' )
+         return
+      end if
 
 !
 !     Find out which addresses are already in use.  A file containing
 !     data cannot be initialized.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
-      IF (      ( LASTC .GT. 0 ) &
-           .OR. ( LASTD .GT. 0 ) &
-           .OR. ( LASTI .GT. 0 ) ) THEN
+      if (      ( lastc .gt. 0 ) &
+           .or. ( lastd .gt. 0 ) &
+           .or. ( lasti .gt. 0 ) ) then
 
-         CALL SETMSG ( 'File # contains data; LASTC = #; LASTD = #; '// &
+         call setmsg ( 'File # contains data; LASTC = #; LASTD = #; '// &
                        'LASTI = #.'                                  )
-         CALL ERRHAN ( '#',  HANDLE                                  )
-         CALL ERRINT ( '#',  LASTC                                   )
-         CALL ERRINT ( '#',  LASTD                                   )
-         CALL ERRINT ( '#',  LASTI                                   )
-         CALL SIGERR ( 'SPICE(DASNOTEMPTY)'                          )
-         CALL CHKOUT ( 'ZZEKPGIN'                                    )
-         RETURN
+         call errhan ( '#',  handle                                  )
+         call errint ( '#',  lastc                                   )
+         call errint ( '#',  lastd                                   )
+         call errint ( '#',  lasti                                   )
+         call sigerr ( 'SPICE(DASNOTEMPTY)'                          )
+         call chkout ( 'ZZEKPGIN'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize our fill buffers.
 !
-      CALL FILLC ( ' ',   1,       CFILL )
-      CALL FILLD ( 0.D0,  PGSIZD,  DFILL )
-      CALL FILLI ( 0,     PGSIZI,  IFILL )
+      call fillc ( ' ',   1,       cfill )
+      call filld ( 0.d0,  pgsizd,  dfill )
+      call filli ( 0,     pgsizi,  ifill )
 
 !
 !     Initialize enough integer addresses to hold the metadata area.
 !
-      CALL DASADI ( HANDLE, PGBASI, IFILL )
+      call dasadi ( handle, pgbasi, ifill )
 
 !
 !     Set the architecture code.
 !
-      CALL DASUDI ( HANDLE, EPARCH, EPARCH, ARCHID )
+      call dasudi ( handle, eparch, eparch, archid )
 
 !
 !     Set the page sizes and base addresses.
 !
-      CALL DASUDI ( HANDLE, EPPSZC, EPPSZC, PGSIZC )
-      CALL DASUDI ( HANDLE, EPPSZD, EPPSZD, PGSIZD )
-      CALL DASUDI ( HANDLE, EPPSZI, EPPSZI, PGSIZI )
+      call dasudi ( handle, eppszc, eppszc, pgsizc )
+      call dasudi ( handle, eppszd, eppszd, pgsizd )
+      call dasudi ( handle, eppszi, eppszi, pgsizi )
 
-      CALL DASUDI ( HANDLE, EPBASC, EPBASC, PGBASC )
-      CALL DASUDI ( HANDLE, EPBASD, EPBASD, PGBASD )
-      CALL DASUDI ( HANDLE, EPBASI, EPBASI, PGBASI )
+      call dasudi ( handle, epbasc, epbasc, pgbasc )
+      call dasudi ( handle, epbasd, epbasd, pgbasd )
+      call dasudi ( handle, epbasi, epbasi, pgbasi )
 
 !
 !     Since the integer fill value is zero, and since zero is
 !     interpreted as null pointer, all pointers are initialized.
 !
-      CALL CHKOUT ( 'ZZEKPGIN' )
-      RETURN
+      call chkout ( 'ZZEKPGIN' )
+      return
 
 
 
@@ -357,7 +357,7 @@
 
 !$Procedure  ZZEKPGAN ( Private: EK, allocate new page )
 
-      ENTRY ZZEKPGAN ( HANDLE, TYPE, P, BASE )
+      entry zzekpgan ( handle, type, p, base )
 
 ! $ Abstract
 !
@@ -467,79 +467,79 @@
 !
 !-&
 
-      CALL CHKIN ( 'ZZEKPGAN' )
+      call chkin ( 'ZZEKPGAN' )
 
 !
 !     Validate the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKPGAN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKPGAN' )
+         return
+      end if
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 !
 !        The new page follows the last character address.
 !
-         CALL DASADC ( HANDLE, PGSIZC, 1, PGSIZC, CFILL )
+         call dasadc ( handle, pgsizc, 1, pgsizc, cfill )
 
 !
 !        Update the character page count.
 !
-         CALL DASRDI ( HANDLE, EPNPC, EPNPC, NPC   )
-         CALL DASUDI ( HANDLE, EPNPC, EPNPC, NPC+1 )
+         call dasrdi ( handle, epnpc, epnpc, npc   )
+         call dasudi ( handle, epnpc, epnpc, npc+1 )
 
 !
 !        Set the page number and base address.
 !
-         P     =  NPC + 1
-         BASE  =  NPC * PGSIZC
+         p     =  npc + 1
+         base  =  npc * pgsizc
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 
-         CALL DASADD ( HANDLE, PGSIZD, DFILL )
+         call dasadd ( handle, pgsizd, dfill )
 
-         CALL DASRDI ( HANDLE, EPNPD, EPNPD, NPD   )
-         CALL DASUDI ( HANDLE, EPNPD, EPNPD, NPD+1 )
+         call dasrdi ( handle, epnpd, epnpd, npd   )
+         call dasudi ( handle, epnpd, epnpd, npd+1 )
 
-         P     =  NPD + 1
-         BASE  =  NPD * PGSIZD
-
-
-      ELSE IF ( TYPE .EQ. INT ) THEN
-
-         CALL DASADI ( HANDLE, PGSIZI, IFILL )
-
-         CALL DASRDI ( HANDLE, EPNPI, EPNPI, NPI   )
-         CALL DASUDI ( HANDLE, EPNPI, EPNPI, NPI+1 )
-
-         P     =  NPI + 1
-         BASE  =  NPI * PGSIZI  +  PGBASI
+         p     =  npd + 1
+         base  =  npd * pgsizd
 
 
-      ELSE
+      else if ( type .eq. int ) then
 
-         CALL SETMSG ( 'The data type code # was not recognized.' )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKPGAN'                                 )
-         RETURN
+         call dasadi ( handle, pgsizi, ifill )
 
-      END IF
+         call dasrdi ( handle, epnpi, epnpi, npi   )
+         call dasudi ( handle, epnpi, epnpi, npi+1 )
 
-      CALL CHKOUT ( 'ZZEKPGAN' )
-      RETURN
+         p     =  npi + 1
+         base  =  npi * pgsizi  +  pgbasi
+
+
+      else
+
+         call setmsg ( 'The data type code # was not recognized.' )
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                       )
+         call chkout ( 'ZZEKPGAN'                                 )
+         return
+
+      end if
+
+      call chkout ( 'ZZEKPGAN' )
+      return
 
 
 
 
 !$Procedure  ZZEKPGAL ( Private: EK, allocate page )
 
-      ENTRY ZZEKPGAL ( HANDLE, TYPE, P, BASE )
+      entry zzekpgal ( handle, type, p, base )
 
 ! $ Abstract
 !
@@ -644,196 +644,196 @@
 !-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
 !
 !-&
-      CALL CHKIN ( 'ZZEKPGAL' )
+      call chkin ( 'ZZEKPGAL' )
 
 !
 !     Validate the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKPGAL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKPGAL' )
+         return
+      end if
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 !
 !        If the character free list is non-empty, take a page from
 !        that list.
 !
-         CALL DASRDI ( HANDLE, EPFPC, EPFPC, FREEC )
+         call dasrdi ( handle, epfpc, epfpc, freec )
 
 
-         IF ( FREEC .GT. 0 ) THEN
+         if ( freec .gt. 0 ) then
 !
 !           We'll return the first free page.
 !
-            P       =     FREEC
+            p       =     freec
 !
 !           The new head of the list is the successor of FREEC, if
 !           any.  Obtain the forward pointer from the page.
 !
-            ADDR  =   ( FREEC - 1 ) * PGSIZC  + 1
+            addr  =   ( freec - 1 ) * pgsizc  + 1
 
-            CALL DASRDC ( HANDLE,  ADDR,  ADDR+4,  1,  5,  ENCPAG )
-            CALL PRTDEC ( ENCPAG,  FORWRD  )
+            call dasrdc ( handle,  addr,  addr+4,  1,  5,  encpag )
+            call prtdec ( encpag,  forwrd  )
 
-            FREEC =   FORWRD
+            freec =   forwrd
 
 !
 !           Decrement the free page count, and write the free pointer
 !           back to the file.
 !
-            CALL DASRDI ( HANDLE, EPNFPC, EPNFPC, NFREEC   )
-            CALL DASUDI ( HANDLE, EPNFPC, EPNFPC, NFREEC-1 )
-            CALL DASUDI ( HANDLE, EPFPC,  EPFPC,  FREEC    )
+            call dasrdi ( handle, epnfpc, epnfpc, nfreec   )
+            call dasudi ( handle, epnfpc, epnfpc, nfreec-1 )
+            call dasudi ( handle, epfpc,  epfpc,  freec    )
 
 !
 !           Set base address.
 !
-            BASE  =  (P-1) * PGSIZC
+            base  =  (p-1) * pgsizc
 
 
-         ELSE
+         else
 !
 !           The new page follows the last character address.
 !
-            CALL DASADC ( HANDLE, PGSIZC, 1, PGSIZC, CFILL )
+            call dasadc ( handle, pgsizc, 1, pgsizc, cfill )
 
 !
 !           Update the character page count.
 !
-            CALL DASRDI ( HANDLE, EPNPC, EPNPC, NPC   )
-            CALL DASUDI ( HANDLE, EPNPC, EPNPC, NPC+1 )
+            call dasrdi ( handle, epnpc, epnpc, npc   )
+            call dasudi ( handle, epnpc, epnpc, npc+1 )
 
 !
 !           Set the page number and base address.
 !
-            P     =  NPC + 1
-            BASE  =  NPC * PGSIZC
+            p     =  npc + 1
+            base  =  npc * pgsizc
 
-         END IF
+         end if
 
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 !
 !        If the d.p. free list is non-empty, take a page from
 !        that list.
 !
-         CALL DASRDI ( HANDLE, EPFPD, EPFPD, FREED )
+         call dasrdi ( handle, epfpd, epfpd, freed )
 
 
-         IF ( FREED .GT. 0 ) THEN
+         if ( freed .gt. 0 ) then
 !
 !           We'll return the first free page.
 !
-            P       =     FREED
+            p       =     freed
 !
 !           The new head of the list is the successor of FREED, if
 !           any.  Obtain the forward pointer from the page.
 !
-            ADDR  =   ( FREED - 1 ) * PGSIZD   +  1
+            addr  =   ( freed - 1 ) * pgsizd   +  1
 
-            CALL DASRDD ( HANDLE, ADDR, ADDR, DPPTR )
-            FREED =   NINT(DPPTR)
+            call dasrdd ( handle, addr, addr, dpptr )
+            freed =   nint(dpptr)
 
 !
 !           Decrement the free page count, and write the free pointer
 !           back to the file.
 !
-            CALL DASRDI ( HANDLE, EPNFPD, EPNFPD, NFREED   )
-            CALL DASUDI ( HANDLE, EPNFPD, EPNFPD, NFREED-1 )
-            CALL DASUDI ( HANDLE, EPFPD,  EPFPD,  FREED    )
+            call dasrdi ( handle, epnfpd, epnfpd, nfreed   )
+            call dasudi ( handle, epnfpd, epnfpd, nfreed-1 )
+            call dasudi ( handle, epfpd,  epfpd,  freed    )
 
 !
 !           Set base address.
 !
-            BASE  =  (P-1) * PGSIZD
+            base  =  (p-1) * pgsizd
 
 
-         ELSE
+         else
 !
 !           The new page follows the last d.p. address.
 !
-            CALL DASADD ( HANDLE, PGSIZD, DFILL )
+            call dasadd ( handle, pgsizd, dfill )
 
 !
 !           Update the d.p. page count.
 !
-            CALL DASRDI ( HANDLE, EPNPD, EPNPD, NPD   )
-            CALL DASUDI ( HANDLE, EPNPD, EPNPD, NPD+1 )
+            call dasrdi ( handle, epnpd, epnpd, npd   )
+            call dasudi ( handle, epnpd, epnpd, npd+1 )
 
 !
 !           Set the page number and base address.
 !
-            P     =  NPD + 1
-            BASE  =  NPD * PGSIZD
+            p     =  npd + 1
+            base  =  npd * pgsizd
 
-         END IF
+         end if
 
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. int ) then
 !
 !        If the integer free list is non-empty, take a page from
 !        that list.
 !
-         CALL DASRDI ( HANDLE, EPFPI, EPFPI, FREEI )
+         call dasrdi ( handle, epfpi, epfpi, freei )
 
 
-         IF ( FREEI .GT. 0 ) THEN
+         if ( freei .gt. 0 ) then
 !
 !           We'll return the first free page.
 !
-            P     =     FREEI
+            p     =     freei
 !
 !           The new head of the list is the successor of FREEI, if
 !           any.  Obtain the forward pointer from the page.
 !
-            ADDR  =   ( FREEI - 1 ) * PGSIZI   +   PGBASI  +  1
+            addr  =   ( freei - 1 ) * pgsizi   +   pgbasi  +  1
 
-            CALL DASRDI ( HANDLE, ADDR, ADDR, FREEI )
+            call dasrdi ( handle, addr, addr, freei )
 
 !
 !           Decrement the free page count, and write the free pointer
 !           back to the file.
 !
-            CALL DASRDI ( HANDLE, EPNFPI, EPNFPI, NFREEI   )
-            CALL DASUDI ( HANDLE, EPNFPI, EPNFPI, NFREEI-1 )
-            CALL DASUDI ( HANDLE, EPFPI,  EPFPI,  FREEI    )
+            call dasrdi ( handle, epnfpi, epnfpi, nfreei   )
+            call dasudi ( handle, epnfpi, epnfpi, nfreei-1 )
+            call dasudi ( handle, epfpi,  epfpi,  freei    )
 
 !
 !           Set base address.
 !
-            BASE  =  (P-1) * PGSIZI  +  PGBASI
+            base  =  (p-1) * pgsizi  +  pgbasi
 
 
-         ELSE
+         else
 
-            CALL DASADI ( HANDLE, PGSIZI, IFILL )
+            call dasadi ( handle, pgsizi, ifill )
 
-            CALL DASRDI ( HANDLE, EPNPI, EPNPI, NPI   )
-            CALL DASUDI ( HANDLE, EPNPI, EPNPI, NPI+1 )
+            call dasrdi ( handle, epnpi, epnpi, npi   )
+            call dasudi ( handle, epnpi, epnpi, npi+1 )
 
-            P     =  NPI + 1
-            BASE  =  NPI * PGSIZI  +  PGBASI
+            p     =  npi + 1
+            base  =  npi * pgsizi  +  pgbasi
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The data type code # was not recognized.' )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKPGAL'                                 )
-         RETURN
+         call setmsg ( 'The data type code # was not recognized.' )
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                       )
+         call chkout ( 'ZZEKPGAL'                                 )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZEKPGAL' )
-      RETURN
+      call chkout ( 'ZZEKPGAL' )
+      return
 
 
 
@@ -842,7 +842,7 @@
 
 !$Procedure  ZZEKPGFR ( Private: EK, free page )
 
-      ENTRY ZZEKPGFR ( HANDLE, TYPE, P )
+      entry zzekpgfr ( handle, type, p )
 
 ! $ Abstract
 !
@@ -945,161 +945,161 @@
 !-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
 !
 !-&
-      CALL CHKIN ( 'ZZEKPGFR' )
+      call chkin ( 'ZZEKPGFR' )
 
 !
 !     Check the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKPGFR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKPGFR' )
+         return
+      end if
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 !
 !        Validate the page number.  Find out how many pages are
 !        out there.
 !
-         CALL DASRDI ( HANDLE, EPNPC, EPNPC, NPC )
+         call dasrdi ( handle, epnpc, epnpc, npc )
 
-         IF (  ( P .LT. 1 ) .OR. ( P .GT. NPC )  ) THEN
+         if (  ( p .lt. 1 ) .or. ( p .gt. npc )  ) then
 
-            CALL SETMSG ( 'Attempt to free non-existent CHR page. ' // &
+            call setmsg ( 'Attempt to free non-existent CHR page. ' // &
                           'Page number = #; valid range is 1:#'     )
-            CALL ERRINT ( '#',  P                                   )
-            CALL ERRINT ( '#',  NPC                                 )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-            CALL CHKOUT ( 'ZZEKPGFR'                                )
-            RETURN
+            call errint ( '#',  p                                   )
+            call errint ( '#',  npc                                 )
+            call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+            call chkout ( 'ZZEKPGFR'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Get the current character free pointer and free page count.
 !
-         CALL DASRDI ( HANDLE, EPFPC,  EPFPC,  FREEC  )
-         CALL DASRDI ( HANDLE, EPNFPC, EPNFPC, NFREEC )
+         call dasrdi ( handle, epfpc,  epfpc,  freec  )
+         call dasrdi ( handle, epnfpc, epnfpc, nfreec )
 
 !
 !        Insert into the freed page a pointer to the head of the
 !        free list.
 !
-         CALL PRTENC ( FREEC, ENCPAG )
-         ADDR  =  (P-1)*PGSIZC + 1
+         call prtenc ( freec, encpag )
+         addr  =  (p-1)*pgsizc + 1
 
-         CALL DASUDC ( HANDLE, ADDR, ADDR+4, 1, 5, ENCPAG )
+         call dasudc ( handle, addr, addr+4, 1, 5, encpag )
 
 !
 !        Update the current character free pointer and free page count.
 !
-         CALL DASUDI ( HANDLE, EPFPC,  EPFPC,  P        )
-         CALL DASUDI ( HANDLE, EPNFPC, EPNFPC, NFREEC+1 )
+         call dasudi ( handle, epfpc,  epfpc,  p        )
+         call dasudi ( handle, epnfpc, epnfpc, nfreec+1 )
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 !
 !        Validate the page number.  Find out how many pages are
 !        out there.
 !
-         CALL DASRDI ( HANDLE, EPNPD, EPNPD, NPD )
+         call dasrdi ( handle, epnpd, epnpd, npd )
 
-         IF (  ( P .LT. 1 ) .OR. ( P .GT. NPD )  ) THEN
+         if (  ( p .lt. 1 ) .or. ( p .gt. npd )  ) then
 
-            CALL SETMSG ( 'Attempt to free non-existent DP page. ' // &
+            call setmsg ( 'Attempt to free non-existent DP page. ' // &
                           'Page number = #; valid range is 1:#'     )
-            CALL ERRINT ( '#',  P                                   )
-            CALL ERRINT ( '#',  NPD                                 )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-            CALL CHKOUT ( 'ZZEKPGFR'                                )
-            RETURN
+            call errint ( '#',  p                                   )
+            call errint ( '#',  npd                                 )
+            call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+            call chkout ( 'ZZEKPGFR'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Get the current d.p. free pointer and free page count.
 !
-         CALL DASRDI ( HANDLE, EPFPD,  EPFPD,  FREED  )
-         CALL DASRDI ( HANDLE, EPNFPD, EPNFPD, NFREED )
+         call dasrdi ( handle, epfpd,  epfpd,  freed  )
+         call dasrdi ( handle, epnfpd, epnfpd, nfreed )
 
 !
 !        Insert into the freed page a pointer to the head of the
 !        free list.
 !
-         ADDR  =  (P-1)*PGSIZD + 1
+         addr  =  (p-1)*pgsizd + 1
 
-         CALL DASUDD ( HANDLE, ADDR, ADDR, DBLE(FREED) )
+         call dasudd ( handle, addr, addr, dble(freed) )
 
 !
 !        Update the current d.p. free pointer and free page count.
 !
-         CALL DASUDI ( HANDLE, EPFPD,  EPFPD,  P        )
-         CALL DASUDI ( HANDLE, EPNFPD, EPNFPD, NFREED+1 )
+         call dasudi ( handle, epfpd,  epfpd,  p        )
+         call dasudi ( handle, epnfpd, epnfpd, nfreed+1 )
 
 
 
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. int ) then
 !
 !        Validate the page number.  Find out how many pages are
 !        out there.
 !
-         CALL DASRDI ( HANDLE, EPNPI, EPNPI, NPI )
+         call dasrdi ( handle, epnpi, epnpi, npi )
 
-         IF (  ( P .LT. 1 ) .OR. ( P .GT. NPI )  ) THEN
+         if (  ( p .lt. 1 ) .or. ( p .gt. npi )  ) then
 
-            CALL SETMSG ( 'Attempt to free non-existent INT page. ' // &
+            call setmsg ( 'Attempt to free non-existent INT page. ' // &
                           'Page number = #; valid range is 1:#'     )
-            CALL ERRINT ( '#',  P                                   )
-            CALL ERRINT ( '#',  NPI                                 )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-            CALL CHKOUT ( 'ZZEKPGFR'                                )
-            RETURN
+            call errint ( '#',  p                                   )
+            call errint ( '#',  npi                                 )
+            call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+            call chkout ( 'ZZEKPGFR'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Get the current integer free pointer and free page count.
 !
-         CALL DASRDI ( HANDLE, EPFPI,  EPFPI,  FREEI  )
-         CALL DASRDI ( HANDLE, EPNFPI, EPNFPI, NFREEI )
+         call dasrdi ( handle, epfpi,  epfpi,  freei  )
+         call dasrdi ( handle, epnfpi, epnfpi, nfreei )
 
 !
 !        Insert into the freed page a pointer to the head of the
 !        free list.
 !
-         ADDR  =  (P-1)*PGSIZI  +  PGBASI  +  1
+         addr  =  (p-1)*pgsizi  +  pgbasi  +  1
 
-         CALL DASUDI ( HANDLE, ADDR, ADDR, FREEI )
+         call dasudi ( handle, addr, addr, freei )
 
 !
 !        Update the current integer free pointer and free page count.
 !
-         CALL DASUDI ( HANDLE, EPFPI,  EPFPI,  P        )
-         CALL DASUDI ( HANDLE, EPNFPI, EPNFPI, NFREEI+1 )
+         call dasudi ( handle, epfpi,  epfpi,  p        )
+         call dasudi ( handle, epnfpi, epnfpi, nfreei+1 )
 
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The data type code # was not recognized.' )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKPGFR'                                 )
-         RETURN
+         call setmsg ( 'The data type code # was not recognized.' )
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                       )
+         call chkout ( 'ZZEKPGFR'                                 )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZEKPGFR' )
-      RETURN
+      call chkout ( 'ZZEKPGFR' )
+      return
 
 
 
 
 !$Procedure  ZZEKPGRC ( Private: EK, read character page )
 
-      ENTRY ZZEKPGRC ( HANDLE, P, PAGEC )
+      entry zzekpgrc ( handle, p, pagec )
 
 ! $ Abstract
 !
@@ -1202,39 +1202,39 @@
 !
 !     Find out how many character pages are in use.
 !
-      CALL DASRDI ( HANDLE, EPNPC, EPNPC, NPC )
+      call dasrdi ( handle, epnpc, epnpc, npc )
 
-      IF (  ( P .LT. 1 )  .OR.  ( P .GT. NPC )  ) THEN
+      if (  ( p .lt. 1 )  .or.  ( p .gt. npc )  ) then
 
-         CALL CHKIN  ( 'ZZEKPGRC'                           )
-         CALL SETMSG ( 'CHR page = #; valid range is [1:#]' )
-         CALL ERRINT ( '#', P                               )
-         CALL ERRINT ( '#', NPC                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'ZZEKPGRC'                           )
-         RETURN
+         call chkin  ( 'ZZEKPGRC'                           )
+         call setmsg ( 'CHR page = #; valid range is [1:#]' )
+         call errint ( '#', p                               )
+         call errint ( '#', npc                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'ZZEKPGRC'                           )
+         return
 
-      END IF
+      end if
 
-      L      =   LEN( PAGEC )
-      E      =   MIN( L, PGSIZC )
+      l      =   len( pagec )
+      e      =   min( l, pgsizc )
 
-      ADDR   =   (P-1)*PGSIZC + 1
+      addr   =   (p-1)*pgsizc + 1
 
-      CALL DASRDC ( HANDLE, ADDR, ADDR+PGSIZC-1, 1, E, PAGEC )
+      call dasrdc ( handle, addr, addr+pgsizc-1, 1, e, pagec )
 
-      IF ( L .GT. E ) THEN
-         PAGEC ( E+1: ) = ' '
-      END IF
+      if ( l .gt. e ) then
+         pagec ( e+1: ) = ' '
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure  ZZEKPGRD ( Private: EK, read d.p. page )
 
-      ENTRY ZZEKPGRD ( HANDLE, P, PAGED )
+      entry zzekpgrd ( handle, p, paged )
 
 ! $ Abstract
 !
@@ -1332,25 +1332,25 @@
 !
 !     Find out how many d.p. pages are in use.
 !
-      CALL DASRDI ( HANDLE, EPNPD, EPNPD, NPD )
+      call dasrdi ( handle, epnpd, epnpd, npd )
 
-      IF (  ( P .LT. 1 )  .OR.  ( P .GT. NPD )  ) THEN
+      if (  ( p .lt. 1 )  .or.  ( p .gt. npd )  ) then
 
-         CALL CHKIN  ( 'ZZEKPGRD'                           )
-         CALL SETMSG ( 'DP page = #; valid range is [1:#]'  )
-         CALL ERRINT ( '#', P                               )
-         CALL ERRINT ( '#', NPD                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'ZZEKPGRD'                           )
-         RETURN
+         call chkin  ( 'ZZEKPGRD'                           )
+         call setmsg ( 'DP page = #; valid range is [1:#]'  )
+         call errint ( '#', p                               )
+         call errint ( '#', npd                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'ZZEKPGRD'                           )
+         return
 
-      END IF
+      end if
 
-      ADDR   =   (P-1)*PGSIZD + 1
+      addr   =   (p-1)*pgsizd + 1
 
-      CALL DASRDD ( HANDLE, ADDR, ADDR+PGSIZD-1, PAGED )
+      call dasrdd ( handle, addr, addr+pgsizd-1, paged )
 
-      RETURN
+      return
 
 
 
@@ -1358,7 +1358,7 @@
 
 !$Procedure  ZZEKPGRI ( Private: EK, read integer page )
 
-      ENTRY ZZEKPGRI ( HANDLE, P, PAGEI )
+      entry zzekpgri ( handle, p, pagei )
 
 ! $ Abstract
 !
@@ -1456,25 +1456,25 @@
 !
 !     Find out how many integer pages are in use.
 !
-      CALL DASRDI ( HANDLE, EPNPI, EPNPI, NPI )
+      call dasrdi ( handle, epnpi, epnpi, npi )
 
-      IF (  ( P .LT. 1 )  .OR.  ( P .GT. NPI )  ) THEN
+      if (  ( p .lt. 1 )  .or.  ( p .gt. npi )  ) then
 
-         CALL CHKIN  ( 'ZZEKPGRI'                           )
-         CALL SETMSG ( 'INT page = #; valid range is [1:#]' )
-         CALL ERRINT ( '#', P                               )
-         CALL ERRINT ( '#', NPI                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'ZZEKPGRI'                           )
-         RETURN
+         call chkin  ( 'ZZEKPGRI'                           )
+         call setmsg ( 'INT page = #; valid range is [1:#]' )
+         call errint ( '#', p                               )
+         call errint ( '#', npi                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'ZZEKPGRI'                           )
+         return
 
-      END IF
+      end if
 
-      ADDR   =   PGBASI  +  (P-1)*PGSIZI + 1
+      addr   =   pgbasi  +  (p-1)*pgsizi + 1
 
-      CALL DASRDI ( HANDLE, ADDR, ADDR+PGSIZI-1, PAGEI )
+      call dasrdi ( handle, addr, addr+pgsizi-1, pagei )
 
-      RETURN
+      return
 
 
 
@@ -1483,7 +1483,7 @@
 
 !$Procedure  ZZEKPGWC ( Private: EK, write character page )
 
-      ENTRY ZZEKPGWC ( HANDLE, P, PAGEC )
+      entry zzekpgwc ( handle, p, pagec )
 
 ! $ Abstract
 !
@@ -1589,50 +1589,50 @@
 !
 !     Validate the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Find out how many character pages are in use.
 !
-      CALL DASRDI ( HANDLE, EPNPC, EPNPC, NPC )
+      call dasrdi ( handle, epnpc, epnpc, npc )
 
-      IF (  ( P .LT. 1 )  .OR.  ( P .GT. NPC )  ) THEN
+      if (  ( p .lt. 1 )  .or.  ( p .gt. npc )  ) then
 
-         CALL CHKIN  ( 'ZZEKPGWC'                           )
-         CALL SETMSG ( 'CHR page = #; valid range is [1:#]' )
-         CALL ERRINT ( '#', P                               )
-         CALL ERRINT ( '#', NPC                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'ZZEKPGWC'                           )
-         RETURN
+         call chkin  ( 'ZZEKPGWC'                           )
+         call setmsg ( 'CHR page = #; valid range is [1:#]' )
+         call errint ( '#', p                               )
+         call errint ( '#', npc                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'ZZEKPGWC'                           )
+         return
 
-      END IF
-
-
-      L  =  LEN( PAGEC )
-
-      IF ( L .LT. PGSIZC ) THEN
-
-         CALL CHKIN  ( 'ZZEKPGWC'                                    )
-         CALL SETMSG ( 'Input CHR page size = #; valid size is [#:]' )
-         CALL ERRINT ( '#', L                                        )
-         CALL ERRINT ( '#', PGSIZC                                   )
-         CALL SIGERR ( 'SPICE(STRINGTOOSHORT)'                       )
-         CALL CHKOUT ( 'ZZEKPGWC'                                    )
-         RETURN
-
-      END IF
+      end if
 
 
-      ADDR   =   (P-1)*PGSIZC + 1
+      l  =  len( pagec )
 
-      CALL DASUDC ( HANDLE, ADDR, ADDR+PGSIZC-1, 1, PGSIZC, PAGEC )
+      if ( l .lt. pgsizc ) then
 
-      RETURN
+         call chkin  ( 'ZZEKPGWC'                                    )
+         call setmsg ( 'Input CHR page size = #; valid size is [#:]' )
+         call errint ( '#', l                                        )
+         call errint ( '#', pgsizc                                   )
+         call sigerr ( 'SPICE(STRINGTOOSHORT)'                       )
+         call chkout ( 'ZZEKPGWC'                                    )
+         return
+
+      end if
+
+
+      addr   =   (p-1)*pgsizc + 1
+
+      call dasudc ( handle, addr, addr+pgsizc-1, 1, pgsizc, pagec )
+
+      return
 
 
 
@@ -1640,7 +1640,7 @@
 
 !$Procedure  ZZEKPGWD ( Private: EK, write d.p. page )
 
-      ENTRY ZZEKPGWD ( HANDLE, P, PAGED )
+      entry zzekpgwd ( handle, p, paged )
 
 ! $ Abstract
 !
@@ -1744,35 +1744,35 @@
 !
 !     Validate the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Find out how many d.p. pages are in use.
 !
-      CALL DASRDI ( HANDLE, EPNPD, EPNPD, NPD )
+      call dasrdi ( handle, epnpd, epnpd, npd )
 
-      IF (  ( P .LT. 1 )  .OR.  ( P .GT. NPD )  ) THEN
+      if (  ( p .lt. 1 )  .or.  ( p .gt. npd )  ) then
 
-         CALL CHKIN  ( 'ZZEKPGWD'                           )
-         CALL SETMSG ( 'DP page = #; valid range is [1:#]'  )
-         CALL ERRINT ( '#', P                               )
-         CALL ERRINT ( '#', NPD                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'ZZEKPGWD'                           )
-         RETURN
+         call chkin  ( 'ZZEKPGWD'                           )
+         call setmsg ( 'DP page = #; valid range is [1:#]'  )
+         call errint ( '#', p                               )
+         call errint ( '#', npd                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'ZZEKPGWD'                           )
+         return
 
-      END IF
+      end if
 
 
-      ADDR   =  (P-1)*PGSIZD + 1
+      addr   =  (p-1)*pgsizd + 1
 
-      CALL DASUDD ( HANDLE, ADDR, ADDR+PGSIZD-1, PAGED )
+      call dasudd ( handle, addr, addr+pgsizd-1, paged )
 
-      RETURN
+      return
 
 
 
@@ -1781,7 +1781,7 @@
 
 !$Procedure  ZZEKPGWI ( Private: EK, write integer page )
 
-      ENTRY ZZEKPGWI ( HANDLE, P, PAGEI )
+      entry zzekpgwi ( handle, p, pagei )
 
 ! $ Abstract
 !
@@ -1884,35 +1884,35 @@
 !
 !     Validate the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Find out how many integer pages are in use.
 !
-      CALL DASRDI ( HANDLE, EPNPI, EPNPI, NPI )
+      call dasrdi ( handle, epnpi, epnpi, npi )
 
-      IF (  ( P .LT. 1 )  .OR.  ( P .GT. NPI )  ) THEN
+      if (  ( p .lt. 1 )  .or.  ( p .gt. npi )  ) then
 
-         CALL CHKIN  ( 'ZZEKPGWI'                           )
-         CALL SETMSG ( 'INT page = #; valid range is [1:#]' )
-         CALL ERRINT ( '#', P                               )
-         CALL ERRINT ( '#', NPI                             )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                )
-         CALL CHKOUT ( 'ZZEKPGWI'                           )
-         RETURN
+         call chkin  ( 'ZZEKPGWI'                           )
+         call setmsg ( 'INT page = #; valid range is [1:#]' )
+         call errint ( '#', p                               )
+         call errint ( '#', npi                             )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                )
+         call chkout ( 'ZZEKPGWI'                           )
+         return
 
-      END IF
+      end if
 
 
-      ADDR   =   PGBASI + (P-1)*PGSIZI + 1
+      addr   =   pgbasi + (p-1)*pgsizi + 1
 
-      CALL DASUDI ( HANDLE, ADDR, ADDR+PGSIZI-1, PAGEI )
+      call dasudi ( handle, addr, addr+pgsizi-1, pagei )
 
-      RETURN
+      return
 
 
 
@@ -1921,7 +1921,7 @@
 
 !$Procedure  ZZEKPGBS ( Private: EK, map page to base address )
 
-      ENTRY ZZEKPGBS ( TYPE, P, BASE )
+      entry zzekpgbs ( type, p, base )
 
 ! $ Abstract
 !
@@ -2013,32 +2013,32 @@
 !
 !-&
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 
-         BASE  =   ( P - 1 ) * PGSIZC
-
-
-      ELSE IF ( TYPE .EQ. DP ) THEN
-
-         BASE  =   ( P - 1 ) * PGSIZD
+         base  =   ( p - 1 ) * pgsizc
 
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. dp ) then
 
-         BASE  =   ( P - 1 ) * PGSIZI   +   PGBASI
+         base  =   ( p - 1 ) * pgsizd
 
-      ELSE
 
-         CALL CHKIN  ( 'ZZEKPGBS'                                 )
-         CALL SETMSG ( 'The data type code # was not recognized.' )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKPGBS'                                 )
-         RETURN
+      else if ( type .eq. int ) then
 
-      END IF
+         base  =   ( p - 1 ) * pgsizi   +   pgbasi
 
-      RETURN
+      else
+
+         call chkin  ( 'ZZEKPGBS'                                 )
+         call setmsg ( 'The data type code # was not recognized.' )
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                       )
+         call chkout ( 'ZZEKPGBS'                                 )
+         return
+
+      end if
+
+      return
 
 
 
@@ -2047,7 +2047,7 @@
 
 !$Procedure  ZZEKPGPG ( Private: EK, map address to page )
 
-      ENTRY ZZEKPGPG ( TYPE, ADDRSS, P, BASE )
+      entry zzekpgpg ( type, addrss, p, base )
 
 ! $ Abstract
 !
@@ -2153,42 +2153,42 @@
 
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 
-         P     =   ( ADDRSS  + PGSIZC - 1 ) / PGSIZC
-         BASE  =   ( P - 1 ) * PGSIZC
-
-
-      ELSE IF ( TYPE .EQ. DP ) THEN
-
-         P     =   ( ADDRSS  + PGSIZD - 1 ) / PGSIZD
-         BASE  =   ( P - 1 ) * PGSIZD
+         p     =   ( addrss  + pgsizc - 1 ) / pgsizc
+         base  =   ( p - 1 ) * pgsizc
 
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. dp ) then
 
-         P     =   ( ( ADDRSS-PGBASI )  +   PGSIZI - 1 ) / PGSIZI
-         BASE  =   ( P - 1 ) * PGSIZI   +   PGBASI
+         p     =   ( addrss  + pgsizd - 1 ) / pgsizd
+         base  =   ( p - 1 ) * pgsizd
 
-      ELSE
 
-         CALL CHKIN  ( 'ZZEKPGPG'                                 )
-         CALL SETMSG ( 'The data type code # was not recognized.' )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                       )
-         CALL CHKOUT ( 'ZZEKPGPG'                                 )
-         RETURN
+      else if ( type .eq. int ) then
 
-      END IF
+         p     =   ( ( addrss-pgbasi )  +   pgsizi - 1 ) / pgsizi
+         base  =   ( p - 1 ) * pgsizi   +   pgbasi
 
-      RETURN
+      else
+
+         call chkin  ( 'ZZEKPGPG'                                 )
+         call setmsg ( 'The data type code # was not recognized.' )
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                       )
+         call chkout ( 'ZZEKPGPG'                                 )
+         return
+
+      end if
+
+      return
 
 
 
 
 !$Procedure  ZZEKPGST ( Private: EK, return paging statistics )
 
-      ENTRY ZZEKPGST ( HANDLE, STAT, VALUE )
+      entry zzekpgst ( handle, stat, value )
 
 ! $ Abstract
 !
@@ -2297,49 +2297,49 @@
 !-&
 
 
-      CALL CHKIN ( 'ZZEKPGST' )
+      call chkin ( 'ZZEKPGST' )
 
 
-      IF (  EQSTR( STAT, 'N_C_ALLOC' )  ) THEN
+      if (  eqstr( stat, 'N_C_ALLOC' )  ) then
 
-         CALL DASRDI ( HANDLE, EPNPC, EPNPC, VALUE   )
-
-
-      ELSE IF (  EQSTR( STAT, 'N_D_ALLOC' )  ) THEN
-
-         CALL DASRDI ( HANDLE, EPNPD, EPNPD, VALUE   )
+         call dasrdi ( handle, epnpc, epnpc, value   )
 
 
-      ELSE IF (  EQSTR( STAT, 'N_I_ALLOC' )  ) THEN
+      else if (  eqstr( stat, 'N_D_ALLOC' )  ) then
 
-         CALL DASRDI ( HANDLE, EPNPI, EPNPI, VALUE   )
-
-
-      ELSE IF (  EQSTR( STAT, 'N_C_FREE' )  ) THEN
-
-         CALL DASRDI ( HANDLE, EPNFPC, EPNFPC, VALUE   )
+         call dasrdi ( handle, epnpd, epnpd, value   )
 
 
-      ELSE IF (  EQSTR( STAT, 'N_D_FREE' )  ) THEN
+      else if (  eqstr( stat, 'N_I_ALLOC' )  ) then
 
-         CALL DASRDI ( HANDLE, EPNFPD, EPNFPD, VALUE   )
+         call dasrdi ( handle, epnpi, epnpi, value   )
 
 
-      ELSE IF (  EQSTR( STAT, 'N_I_FREE' )  ) THEN
+      else if (  eqstr( stat, 'N_C_FREE' )  ) then
 
-         CALL DASRDI ( HANDLE, EPNFPI, EPNFPI, VALUE   )
+         call dasrdi ( handle, epnfpc, epnfpc, value   )
 
-      ELSE
 
-         CALL SETMSG ( 'Statistic # is not supported.' )
-         CALL ERRCH  ( '#',  STAT                      )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'          )
-         CALL CHKOUT ( 'ZZEKPGST'                      )
-         RETURN
+      else if (  eqstr( stat, 'N_D_FREE' )  ) then
 
-      END IF
+         call dasrdi ( handle, epnfpd, epnfpd, value   )
 
-      CALL CHKOUT ( 'ZZEKPGST' )
-      RETURN
 
-      END
+      else if (  eqstr( stat, 'N_I_FREE' )  ) then
+
+         call dasrdi ( handle, epnfpi, epnfpi, value   )
+
+      else
+
+         call setmsg ( 'Statistic # is not supported.' )
+         call errch  ( '#',  stat                      )
+         call sigerr ( 'SPICE(INVALIDOPTION)'          )
+         call chkout ( 'ZZEKPGST'                      )
+         return
+
+      end if
+
+      call chkout ( 'ZZEKPGST' )
+      return
+
+      end

@@ -1,6 +1,6 @@
 !$Procedure SCARDC ( Set the cardinality of a character cell )
 
-      SUBROUTINE SCARDC ( CARD, CELL )
+      subroutine scardc ( card, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               CARD
-      CHARACTER*(*)         CELL   ( LBCELL:* )
+      integer               card
+      character*(*)         cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,43 +168,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               SIZE
+      integer               size
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SCARDC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SCARDC' )
+      end if
 
 !
 !     The cardinality may range from 0 to the size of the cell,
 !     inclusive.  Other values will be snubbed.
 !
 
-      CALL DECHAR ( CELL(-1), SIZE )
+      call dechar ( cell(-1), size )
 
-      IF (  ( CARD .LT. 0 )  .OR.  ( CARD .GT. SIZE )  )  THEN
-         CALL SETMSG ( 'Attempt to set cardinality of cell '          // &
+      if (  ( card .lt. 0 )  .or.  ( card .gt. size )  )  then
+         call setmsg ( 'Attempt to set cardinality of cell '          // &
                        'to invalid value.  The value was #.'  )
-         CALL ERRINT ( '#', CARD )
-         CALL SIGERR ( 'SPICE(INVALIDCARDINALITY)' )
-         CALL CHKOUT ( 'SCARDC' )
-         RETURN
-      END IF
+         call errint ( '#', card )
+         call sigerr ( 'SPICE(INVALIDCARDINALITY)' )
+         call chkout ( 'SCARDC' )
+         return
+      end if
 
 
 !
 !     Not much to this.
 !
-      CALL ENCHAR ( CARD, CELL(0) )
+      call enchar ( card, cell(0) )
 
-      CALL CHKOUT( 'SCARDC' )
-      RETURN
-      END
+      call chkout( 'SCARDC' )
+      return
+      end

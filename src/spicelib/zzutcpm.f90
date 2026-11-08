@@ -1,6 +1,6 @@
 !$Procedure      ZZUTCPM ( UTC Plus or Minus Parse )
 
-      SUBROUTINE ZZUTCPM ( STRING, START, HOFF, MOFF, LAST, SUCCES )
+      subroutine zzutcpm ( string, start, hoff, moff, last, succes )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         STRING
-      INTEGER               START
-      DOUBLE PRECISION      HOFF
-      DOUBLE PRECISION      MOFF
-      INTEGER               LAST
-      LOGICAL               SUCCES
+      implicit none
+      character*(*)         string
+      integer               start
+      double precision      hoff
+      double precision      moff
+      integer               last
+      logical               succes
 
 ! $ Brief_I/O
 !
@@ -115,25 +115,25 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               SAMCH
+      logical               samch
 !
 !     Local Variables
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      CHARACTER*(LNSIZE)    ERROR
+      character*(lnsize)    error
 
-      INTEGER               NEED
-      INTEGER               LENGTH
-      INTEGER               SIGNAT
-      INTEGER               UNSAT
-      INTEGER               UNSTO
-      INTEGER               NCHAR
-      INTEGER               PTR
+      integer               need
+      integer               length
+      integer               signat
+      integer               unsat
+      integer               unsto
+      integer               nchar
+      integer               ptr
 
-      DOUBLE PRECISION      SIGN
-      DOUBLE PRECISION      X
+      double precision      sign
+      double precision      x
 
 !
 !     This is a special purpose routine.  The input string must have
@@ -141,76 +141,76 @@
 !     goes wrong, we just bail out and leave HOFF and MOFF right at
 !     zero.
 !
-      HOFF   =  0.0D0
-      MOFF   =  0.0D0
-      LAST   =  START - 1
-      SUCCES = .FALSE.
+      hoff   =  0.0d0
+      moff   =  0.0d0
+      last   =  start - 1
+      succes = .false.
 
 !
 !     Note that NEED   = START + LEN('::UTC+x') - 1
 !               SIGNAT = START + LEN('::UTC+' ) - 1
 !
-      LENGTH = LEN(STRING)
-      NEED   = START + 6
-      SIGNAT = START + 5
-      UNSAT  = NEED
+      length = len(string)
+      need   = start + 6
+      signat = start + 5
+      unsat  = need
 
-      IF ( LENGTH .LT. NEED ) THEN
-         RETURN
-      END IF
+      if ( length .lt. need ) then
+         return
+      end if
 
-      IF       ( ICHAR(STRING(SIGNAT:SIGNAT)) .EQ. ICHAR('+') ) THEN
-         SIGN =  1.0D0
-      ELSE IF  ( ICHAR(STRING(SIGNAT:SIGNAT)) .EQ. ICHAR('-') ) THEN
-         SIGN = -1.0D0
-      ELSE
-         RETURN
-      END IF
+      if       ( ichar(string(signat:signat)) .eq. ichar('+') ) then
+         sign =  1.0d0
+      else if  ( ichar(string(signat:signat)) .eq. ichar('-') ) then
+         sign = -1.0d0
+      else
+         return
+      end if
 !
 !     So far everything looks fine, "lex" the string starting at
 !     SIGNAT + 1 for an unsigned integer.
 !
-      CALL LX4UNS ( STRING, UNSAT, UNSTO, NCHAR )
+      call lx4uns ( string, unsat, unsto, nchar )
 
-      IF ( NCHAR .GT. 0 .AND. NCHAR .LT. 3 ) THEN
-         CALL NPARSD ( STRING(UNSAT:UNSTO), X, ERROR, PTR )
+      if ( nchar .gt. 0 .and. nchar .lt. 3 ) then
+         call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         IF ( X .GE. 13.0D0 ) THEN
-            RETURN
-         END IF
+         if ( x .ge. 13.0d0 ) then
+            return
+         end if
 
-         LAST = UNSTO
-         HOFF = SIGN * X
+         last = unsto
+         hoff = sign * x
 
-      ELSE
-         RETURN
-      END IF
+      else
+         return
+      end if
 !
 !     If we're still in the game at this point, we have at least
 !     an hour offset, see if there is a minutes portion to the
 !     time zone.
 !
-      SUCCES = .TRUE.
+      succes = .true.
 
-      IF ( SAMCH( STRING, UNSTO+1, ':', 1 ) ) THEN
-         UNSAT = UNSTO + 2
-      ELSE
-         RETURN
-      END IF
+      if ( samch( string, unsto+1, ':', 1 ) ) then
+         unsat = unsto + 2
+      else
+         return
+      end if
 
-      CALL LX4UNS ( STRING, UNSAT, UNSTO, NCHAR )
+      call lx4uns ( string, unsat, unsto, nchar )
 
-      IF ( NCHAR .GT. 0 .AND. NCHAR .LT. 3 ) THEN
-         CALL NPARSD ( STRING(UNSAT:UNSTO), X, ERROR, PTR )
+      if ( nchar .gt. 0 .and. nchar .lt. 3 ) then
+         call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         IF ( X .GT. 59.0D0 ) THEN
-            RETURN
-         END IF
+         if ( x .gt. 59.0d0 ) then
+            return
+         end if
 
-         LAST = UNSTO
-         MOFF = SIGN*X
+         last = unsto
+         moff = sign*x
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

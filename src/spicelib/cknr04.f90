@@ -1,6 +1,6 @@
 !$Procedure CKNR04 ( C-kernel, number of records, data type 4 )
 
-      SUBROUTINE CKNR04 ( HANDLE, DESCR, NREC )
+      subroutine cknr04 ( handle, descr, nrec )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ckparam.inc'
+      include               'ckparam.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               NREC
+      integer               handle
+      double precision      descr   ( * )
+      integer               nrec
 
 ! $ Brief_I/O
 !
@@ -216,60 +216,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NDC
-      PARAMETER           ( NDC = 2 )
+      integer               ndc
+      parameter           ( ndc = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC = 6 )
+      integer               nic
+      parameter           ( nic = 6 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DCD    ( NDC )
+      double precision      dcd    ( ndc )
 
-      INTEGER               ICD    ( NIC )
+      integer               icd    ( nic )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKNR04' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKNR04' )
+      end if
 
 !
 !     Check whether our segment is of the type 4 by unpacking
 !     descriptor and checking value of its third integer component.
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
-      IF ( ICD( 3 ) .NE. CK4DTP ) THEN
-         CALL SETMSG ( 'Data type of the segment should be 4: '      // &
+      if ( icd( 3 ) .ne. ck4dtp ) then
+         call setmsg ( 'Data type of the segment should be 4: '      // &
                        'Passed descriptor shows type = #.'           )
-         CALL ERRINT ( '#', ICD ( 3 )                                )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                      )
-         CALL CHKOUT ( 'CKNR04'                                      )
-         RETURN
-      END IF
+         call errint ( '#', icd ( 3 )                                )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                      )
+         call chkout ( 'CKNR04'                                      )
+         return
+      end if
 
 !
 !     The number of records (packets) can be obtained by a call to
 !     SGMETA. This number is a meta item 12 (see sgparam.inc for
 !     details.)
 !
-      CALL SGMETA ( HANDLE, DESCR, 12, NREC )
+      call sgmeta ( handle, descr, 12, nrec )
 
 !
 !     All done.
 !
-      CALL CHKOUT ( 'CKNR04' )
+      call chkout ( 'CKNR04' )
 
-      RETURN
+      return
 
-      END
+      end

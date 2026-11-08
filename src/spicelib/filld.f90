@@ -1,6 +1,6 @@
 !$Procedure FILLD ( Fill a double precision array )
 
-      SUBROUTINE FILLD ( VALUE, NDIM, ARRAY )
+      subroutine filld ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VALUE
-      INTEGER               NDIM
-      DOUBLE PRECISION      ARRAY ( * )
+      double precision      value
+      integer               ndim
+      double precision      array ( * )
 
 ! $ Brief_I/O
 !
@@ -163,13 +163,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-        ARRAY(I) = VALUE
-      END DO
+      do i = 1, ndim
+        array(i) = value
+      end do
 
 
-      RETURN
-      END
+      return
+      end

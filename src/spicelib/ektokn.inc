@@ -22,38 +22,38 @@
 !        <end of query>
 !
 !
-      INTEGER               TKKEY
-      PARAMETER           ( TKKEY  = 1 )
+      integer               tkkey
+      parameter           ( tkkey  = 1 )
 
-      INTEGER               TKID
-      PARAMETER           ( TKID   = TKKEY + 1 )
+      integer               tkid
+      parameter           ( tkid   = tkkey + 1 )
 
-      INTEGER               TKINT
-      PARAMETER           ( TKINT  = TKID + 1 )
+      integer               tkint
+      parameter           ( tkint  = tkid + 1 )
 
-      INTEGER               TKDP
-      PARAMETER           ( TKDP   = TKINT + 1 )
+      integer               tkdp
+      parameter           ( tkdp   = tkint + 1 )
 
-      INTEGER               TKQSTR
-      PARAMETER           ( TKQSTR = TKDP + 1 )
+      integer               tkqstr
+      parameter           ( tkqstr = tkdp + 1 )
 
-      INTEGER               TKLPAR
-      PARAMETER           ( TKLPAR = TKQSTR + 1 )
+      integer               tklpar
+      parameter           ( tklpar = tkqstr + 1 )
 
-      INTEGER               TKRPAR
-      PARAMETER           ( TKRPAR = TKLPAR + 1 )
+      integer               tkrpar
+      parameter           ( tkrpar = tklpar + 1 )
 
-      INTEGER               TKCOMA
-      PARAMETER           ( TKCOMA = TKRPAR + 1 )
+      integer               tkcoma
+      parameter           ( tkcoma = tkrpar + 1 )
 
-      INTEGER               TKDOT
-      PARAMETER           ( TKDOT  = TKCOMA + 1 )
+      integer               tkdot
+      parameter           ( tkdot  = tkcoma + 1 )
 
-      INTEGER               TKSTAR
-      PARAMETER           ( TKSTAR = TKDOT  + 1 )
+      integer               tkstar
+      parameter           ( tkstar = tkdot  + 1 )
 
-      INTEGER               TKEOQ
-      PARAMETER           ( TKEOQ  = TKSTAR + 1 )
+      integer               tkeoq
+      parameter           ( tkeoq  = tkstar + 1 )
 
 !
 !     End Include Section:  EK Token Code Parameters

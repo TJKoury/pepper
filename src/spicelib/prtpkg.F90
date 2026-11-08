@@ -1,6 +1,6 @@
 !$Procedure PRTPKG ( Declare Arguments for Error Message Routines )
 
-      LOGICAL FUNCTION PRTPKG ( SHORT, LONG, EXPL, TRACE, DFAULT, TYPE )
+      logical function prtpkg ( short, long, expl, trace, dfault, type )
 
 ! $ Abstract
 !
@@ -17,20 +17,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               SHORT
-      LOGICAL               EXPL
-      LOGICAL               LONG
-      LOGICAL               TRACE
-      LOGICAL               DFAULT
-      CHARACTER*(*)         TYPE
+      logical               short
+      logical               expl
+      logical               long
+      logical               trace
+      logical               dfault
+      character*(*)         type
 
-       INTEGER               FILEN
+       integer               filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-       PARAMETER           ( FILEN = 128 )
+       parameter           ( filen = 128 )
 #else
-       PARAMETER           ( FILEN = 255 )
+       parameter           ( filen = 255 )
 #endif
 
 ! $ Brief_I/O
@@ -315,58 +315,58 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               SETPRT
-      LOGICAL               MSGSEL
+      logical               setprt
+      logical               msgsel
 
 !
 !     Local variables:
 !
-      CHARACTER*(FILEN)     DEVICE
+      character*(filen)     device
 
-      CHARACTER*(10)        LTYPE
-      CHARACTER*(10)        LOCTYP
+      character*(10)        ltype
+      character*(10)        loctyp
 
 !
 !     Saved variables:
 !
-      LOGICAL               SVSHRT
-      LOGICAL               SVEXPL
-      LOGICAL               SVLONG
-      LOGICAL               SVTRAC
-      LOGICAL               SVDFLT
+      logical               svshrt
+      logical               svexpl
+      logical               svlong
+      logical               svtrac
+      logical               svdflt
 
-      SAVE                  SVSHRT
-      SAVE                  SVEXPL
-      SAVE                  SVLONG
-      SAVE                  SVTRAC
-      SAVE                  SVDFLT
+      save                  svshrt
+      save                  svexpl
+      save                  svlong
+      save                  svtrac
+      save                  svdflt
 
 !
 !     Initial values:
 !
-      DATA     SVSHRT   / .TRUE. /
-      DATA     SVEXPL   / .TRUE. /
-      DATA     SVLONG   / .TRUE. /
-      DATA     SVTRAC   / .TRUE. /
-      DATA     SVDFLT   / .TRUE. /
+      data     svshrt   / .true. /
+      data     svexpl   / .true. /
+      data     svlong   / .true. /
+      data     svtrac   / .true. /
+      data     svdflt   / .true. /
 
 !
 !     Executable Code:
 !
 
-      CALL GETDEV ( DEVICE )
+      call getdev ( device )
 
-      CALL WRLINE ( DEVICE, &
+      call wrline ( device, &
                     'PRTPKG:  You have called an entry point which' // &
                     ' has no run-time function; this may indicate'  // &
                     ' a program bug.  Please check the PRTPKG'      // &
                     ' documentation.  ' )
 
-      CALL WRLINE ( DEVICE, 'SPICE(BOGUSENTRY)' )
+      call wrline ( device, 'SPICE(BOGUSENTRY)' )
 
-      PRTPKG = .FALSE.
+      prtpkg = .false.
 
-      RETURN
+      return
 
 
 
@@ -375,7 +375,7 @@
 
 !$Procedure SETPRT ( Store Error Message Types to be Output )
 
-      ENTRY SETPRT ( SHORT, EXPL, LONG, TRACE, DFAULT )
+      entry setprt ( short, expl, long, trace, dfault )
 
 ! $ Abstract
 !
@@ -560,58 +560,58 @@
 !
 
 
-      IF   (  SHORT  )    THEN
-         SVSHRT = .TRUE.
-      ELSE
-         SVSHRT = .FALSE.
-      END IF
+      if   (  short  )    then
+         svshrt = .true.
+      else
+         svshrt = .false.
+      end if
 
 
 
-      IF   (  EXPL   )    THEN
-         SVEXPL = .TRUE.
-      ELSE
-         SVEXPL = .FALSE.
-      END IF
+      if   (  expl   )    then
+         svexpl = .true.
+      else
+         svexpl = .false.
+      end if
 
 
 
-      IF   (  LONG   )    THEN
-         SVLONG = .TRUE.
-      ELSE
-         SVLONG = .FALSE.
-      END IF
+      if   (  long   )    then
+         svlong = .true.
+      else
+         svlong = .false.
+      end if
 
 
 
-      IF   (  TRACE  )    THEN
-         SVTRAC = .TRUE.
-      ELSE
-         SVTRAC = .FALSE.
-      END IF
+      if   (  trace  )    then
+         svtrac = .true.
+      else
+         svtrac = .false.
+      end if
 
-      IF   (  DFAULT  )    THEN
-         SVDFLT = .TRUE.
-      ELSE
-         SVDFLT = .FALSE.
-      END IF
+      if   (  dfault  )    then
+         svdflt = .true.
+      else
+         svdflt = .false.
+      end if
 
 
 !
 !     We assign a value to SETPRT, but this value is
 !     not meaningful...
 !
-      SETPRT = .TRUE.
+      setprt = .true.
 
 
-      RETURN
+      return
 
 
 
 
 !$Procedure MSGSEL  ( Is This Message Type Selected for Output? )
 
-      ENTRY  MSGSEL ( TYPE )
+      entry  msgsel ( type )
 
 ! $ Abstract
 !
@@ -772,31 +772,31 @@
 !     Executable Code:
 !
 
-      CALL LJUST ( TYPE,  LTYPE )
-      CALL UCASE ( LTYPE, LTYPE )
+      call ljust ( type,  ltype )
+      call ucase ( ltype, ltype )
 
 
-      IF ( LTYPE  .EQ. 'SHORT' ) THEN
+      if ( ltype  .eq. 'SHORT' ) then
 
-         MSGSEL = SVSHRT
+         msgsel = svshrt
 
-      ELSE IF ( LTYPE  .EQ. 'EXPLAIN' ) THEN
+      else if ( ltype  .eq. 'EXPLAIN' ) then
 
-         MSGSEL = SVEXPL
+         msgsel = svexpl
 
-      ELSE IF ( LTYPE  .EQ. 'LONG' ) THEN
+      else if ( ltype  .eq. 'LONG' ) then
 
-         MSGSEL = SVLONG
+         msgsel = svlong
 
-      ELSE IF ( LTYPE  .EQ. 'TRACEBACK' ) THEN
+      else if ( ltype  .eq. 'TRACEBACK' ) then
 
-         MSGSEL = SVTRAC
+         msgsel = svtrac
 
-      ELSE IF ( LTYPE  .EQ. 'DEFAULT' ) THEN
+      else if ( ltype  .eq. 'DEFAULT' ) then
 
-         MSGSEL = SVDFLT
+         msgsel = svdflt
 
-      ELSE
+      else
 
 !
 !        Bad value of type!  We have a special case here; to
@@ -804,13 +804,13 @@
 !        rather than call SIGERR.
 !
 
-         CALL GETDEV ( DEVICE )
+         call getdev ( device )
 
-         CALL WRLINE ( DEVICE,  'SPICE(INVALIDMSGTYPE)' )
+         call wrline ( device,  'SPICE(INVALIDMSGTYPE)' )
 
-         CALL WRLINE ( DEVICE, ' ' )
+         call wrline ( device, ' ' )
 
-         LOCTYP = TYPE
+         loctyp = type
 
 !
 !        Note:  What looks like a typo below isn't; there's
@@ -818,12 +818,12 @@
 !        the "word" 'specifiedwas'.
 !
 
-         CALL WRLINE ( DEVICE, &
+         call wrline ( device, &
          'MSGSEL:  An invalid error message type was supplied as' // &
-         ' input; the type specifiedwas:  ' // LOCTYP &
+         ' input; the type specifiedwas:  ' // loctyp &
                       )
 
 
-      END IF
+      end if
 
-      END
+      end

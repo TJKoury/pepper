@@ -1,6 +1,6 @@
 !$Procedure MOVEC  ( Move a character array to another )
 
-      SUBROUTINE MOVEC ( ARRFRM, NDIM, ARRTO )
+      subroutine movec ( arrfrm, ndim, arrto )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)   ARRFRM ( * )
-      INTEGER         NDIM
-      CHARACTER*(*)   ARRTO  ( * )
+      character*(*)   arrfrm ( * )
+      integer         ndim
+      character*(*)   arrto  ( * )
 
 ! $ Brief_I/O
 !
@@ -138,13 +138,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-        ARRTO(I) = ARRFRM(I)
-      END DO
+      do i = 1, ndim
+        arrto(i) = arrfrm(i)
+      end do
 
 
-      RETURN
-      END
+      return
+      end

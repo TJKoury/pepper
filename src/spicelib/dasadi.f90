@@ -1,6 +1,6 @@
 !$Procedure DASADI ( DAS, add data, integer )
 
-      SUBROUTINE DASADI ( HANDLE, N, DATA )
+      subroutine dasadi ( handle, n, data )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               N
-      INTEGER               DATA   ( * )
+      integer               handle
+      integer               n
+      integer               data   ( * )
 
 ! $ Brief_I/O
 !
@@ -318,76 +318,76 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI    = 256 )
+      integer               nwi
+      parameter           ( nwi    = 256 )
 
 !
 !     Local variables
 !
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               FREE
-      INTEGER               LASTI
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NUMINT
-      INTEGER               NWRITN
-      INTEGER               RECNO
-      INTEGER               RECORD ( NWI )
-      INTEGER               WORDNO
+      integer               clbase
+      integer               clsize
+      integer               free
+      integer               lasti
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
+      integer               numint
+      integer               nwritn
+      integer               recno
+      integer               record ( nwi )
+      integer               wordno
 
 !
 !     Saved variables
 !
-      SAVE                  RECORD
+      save                  record
 
 !
 !     Initial values
 !
-      DATA                  RECORD / NWI * 0 /
+      data                  record / nwi * 0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASADI' )
+      call chkin ( 'DASADI' )
 
 !
 !     Get the file summary for this DAS.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASADI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASADI' )
+         return
+      end if
 
-      LASTI  =  LASTLA(INT)
+      lasti  =  lastla(int)
 
 !
 !     We will keep track of the location that we wish to write to
@@ -404,16 +404,16 @@
 !     data in the file.  Otherwise, RECNO becomes the first record
 !     available for integer data.
 !
-      IF ( LASTI .GE. 1 ) THEN
+      if ( lasti .ge. 1 ) then
 
-         CALL DASA2L ( HANDLE,  INT,     LASTI, &
-                       CLBASE,  CLSIZE,  RECNO,  WORDNO )
-      ELSE
+         call dasa2l ( handle,  int,     lasti, &
+                       clbase,  clsize,  recno,  wordno )
+      else
 
-         RECNO   =  FREE
-         WORDNO  =  0
+         recno   =  free
+         wordno  =  0
 
-      END IF
+      end if
 
 !
 !     Set the number of integer words already written.  Keep
@@ -423,9 +423,9 @@
 !     Note that if N is non-positive, the loop doesn't get exercised.
 !
 !
-      NWRITN  =  0
+      nwritn  =  0
 
-      DO WHILE  (  ( NWRITN .LT. N ) .AND. ( .NOT. FAILED() )  )
+      do while  (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
 !
 !        Write as much data as we can (or need to) into the current
 !        record.  We assume that RECNO, WORDNO, and NWRITN have been
@@ -434,34 +434,34 @@
 !        Find out how many words to write into the current record.
 !        There may be no space left in the current record.
 !
-         NUMINT  =  MIN (  N - NWRITN,   NWI - WORDNO )
+         numint  =  min (  n - nwritn,   nwi - wordno )
 
-         IF ( NUMINT .GT. 0 ) THEN
+         if ( numint .gt. 0 ) then
 !
 !           Write NUMINT words into the current record.  If the record
 !           is new, write the entire record.  Otherwise, just update
 !           the part we're interested in.
 !
-            IF ( WORDNO .EQ. 0 ) THEN
+            if ( wordno .eq. 0 ) then
 
-               CALL MOVEI  (  DATA(NWRITN+1),  NUMINT,  RECORD  )
-               CALL DASWRI (  HANDLE,          RECNO,   RECORD  )
+               call movei  (  data(nwritn+1),  numint,  record  )
+               call daswri (  handle,          recno,   record  )
 
-            ELSE
+            else
 
-               CALL DASURI (  HANDLE, &
-                              RECNO, &
-                              WORDNO + 1, &
-                              WORDNO + NUMINT, &
-                              DATA(NWRITN + 1)  )
+               call dasuri (  handle, &
+                              recno, &
+                              wordno + 1, &
+                              wordno + numint, &
+                              data(nwritn + 1)  )
 
-            END IF
+            end if
 
 
-            NWRITN  =  NWRITN + NUMINT
-            WORDNO  =  WORDNO + NUMINT
+            nwritn  =  nwritn + numint
+            wordno  =  wordno + numint
 
-         ELSE
+         else
 !
 !           It's time to start on a new record.  If the record we
 !           just finished writing to (or just attempted writing to,
@@ -474,25 +474,25 @@
 !           We intentionally leave FREE at the value it had before
 !           we starting adding data to the file.
 !
-            IF ( RECNO .GE. FREE ) THEN
-               RECNO  =  RECNO + 1
-            ELSE
-               RECNO  =  FREE
-            END IF
+            if ( recno .ge. free ) then
+               recno  =  recno + 1
+            else
+               recno  =  free
+            end if
 
-            WORDNO = 0
+            wordno = 0
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Update the DAS file directories to reflect the addition of NWRITN
 !     integer words.  DASCUD will also update the file summary
 !     accordingly.
 !
-      CALL DASCUD ( HANDLE, INT, NWRITN )
+      call dascud ( handle, int, nwritn )
 
-      CALL CHKOUT ( 'DASADI' )
-      RETURN
-      END
+      call chkout ( 'DASADI' )
+      return
+      end

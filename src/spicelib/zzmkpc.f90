@@ -1,6 +1,6 @@
 !$Procedure      ZZMKPC ( Make a time format picture mark )
 
-      SUBROUTINE ZZMKPC ( PICTUR, B, E, MARK, PATTRN )
+      subroutine zzmkpc ( pictur, b, e, mark, pattrn )
 
 ! $ Abstract
 !
@@ -21,12 +21,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         PICTUR
-      INTEGER               B
-      INTEGER               E
-      CHARACTER*(*)         MARK
-      CHARACTER*(*)         PATTRN
+      implicit none
+      character*(*)         pictur
+      integer               b
+      integer               e
+      character*(*)         mark
+      character*(*)         pattrn
 
 
 ! $ Brief_I/O
@@ -103,67 +103,67 @@
 !
 !
 !-&
-      INTEGER               LASTNB
+      integer               lastnb
 
-      INTEGER               MAXPLC
-      PARAMETER           ( MAXPLC = 14 )
+      integer               maxplc
+      parameter           ( maxplc = 14 )
 
-      INTEGER               MAXSIZ
-      PARAMETER           ( MAXSIZ = MAXPLC + 12 )
+      integer               maxsiz
+      parameter           ( maxsiz = maxplc + 12 )
 
-      CHARACTER*(MAXPLC)    PLACES
-      CHARACTER*(MAXSIZ)    MYMARK
+      character*(maxplc)    places
+      character*(maxsiz)    mymark
 
-      INTEGER               LPAT
-      INTEGER               LMRK
-      INTEGER               POINT
-      INTEGER               USE
-      INTEGER               LAST
+      integer               lpat
+      integer               lmrk
+      integer               point
+      integer               use
+      integer               last
 
 
-      PLACES = '##############'
+      places = '##############'
 !
 !     Construct the replacement marker.  First the unmodified
 !     portion of the marker.  (We use LAST as the pointer to the
 !     last valid character of the marker).
 !
-      LMRK   = LASTNB(MARK)
-      LPAT   = LEN   (PATTRN)
-      MYMARK = MARK
-      LAST   = LMRK
+      lmrk   = lastnb(mark)
+      lpat   = len   (pattrn)
+      mymark = mark
+      last   = lmrk
 !
 !     Is there a decimal point in the pattern?
 !
-      POINT  = INDEX(PATTRN, '.')
+      point  = index(pattrn, '.')
 
-      IF ( POINT .GT. 0 ) THEN
+      if ( point .gt. 0 ) then
 !
 !        We've got a decimal point.  We have to at least put this
 !        into the marker.
 !
-         LAST              = LAST + 1
-         MYMARK(LAST:LAST) = '.'
+         last              = last + 1
+         mymark(last:last) = '.'
 !
 !        If the decimal point is not at the end of the pattern, we
 !        will need to add some #'s to the marker (but not more than
 !        MAXPLC of them).
 !
-         IF ( POINT .LT. LPAT ) THEN
+         if ( point .lt. lpat ) then
 
-            USE             = MIN ( MAXPLC, LPAT - POINT )
-            MYMARK(LAST+1:) = PLACES(1:USE)
-            LAST            = LAST + USE
+            use             = min ( maxplc, lpat - point )
+            mymark(last+1:) = places(1:use)
+            last            = last + use
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We now let REPSUB do the work of replacing the substring
 !     PICTUR(B:E) with the marker we've constructed.
 !
-      CALL ZZREPSUB ( PICTUR, B, E, MYMARK(1:LAST), PICTUR )
+      call zzrepsub ( pictur, b, e, mymark(1:last), pictur )
 
 
-      RETURN
+      return
 
-      END
+      end

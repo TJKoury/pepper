@@ -1,12 +1,12 @@
 !$Procedure ZZDSPC ( SGP4 deep space routine )
 
-      SUBROUTINE ZZDSPC( IREZ,  D2201, D2211, D3210,   D3222, &
-                         D4410, D4422, D5220, D5232,   D5421, D5433, &
-                         DEDT,  DEL1,  DEL2,  DEL3,    DIDT,  DMDT, &
-                         DNODT, DOMDT, ARGPO, ARGPDOT, T,     TC, &
-                         GSTO,  XFACT, XLAMO, NO,      ATIME, ECCM, &
-                         ARGPM, INCLM, XLI,   MM,      XNI,   NODEM, &
-                         DNDT,  XN  )
+      subroutine zzdspc( irez,  d2201, d2211, d3210,   d3222, &
+                         d4410, d4422, d5220, d5232,   d5421, d5433, &
+                         dedt,  del1,  del2,  del3,    didt,  dmdt, &
+                         dnodt, domdt, argpo, argpdot, t,     tc, &
+                         gsto,  xfact, xlamo, no,      atime, eccm, &
+                         argpm, inclm, xli,   mm,      xni,   nodem, &
+                         dndt,  xn  )
 
 ! $ Abstract
 !
@@ -26,46 +26,46 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER                  IREZ
+      integer                  irez
 
-      DOUBLE PRECISION         D2201
-      DOUBLE PRECISION         D2211
-      DOUBLE PRECISION         D3210
-      DOUBLE PRECISION         D3222
-      DOUBLE PRECISION         D4410
-      DOUBLE PRECISION         D4422
-      DOUBLE PRECISION         D5220
-      DOUBLE PRECISION         D5232
-      DOUBLE PRECISION         D5421
-      DOUBLE PRECISION         D5433
-      DOUBLE PRECISION         DEDT
-      DOUBLE PRECISION         DEL1
-      DOUBLE PRECISION         DEL2
-      DOUBLE PRECISION         DEL3
-      DOUBLE PRECISION         DIDT
-      DOUBLE PRECISION         DMDT
-      DOUBLE PRECISION         DNODT
-      DOUBLE PRECISION         DOMDT
-      DOUBLE PRECISION         ARGPO
-      DOUBLE PRECISION         ARGPDOT
-      DOUBLE PRECISION         T
-      DOUBLE PRECISION         TC
-      DOUBLE PRECISION         GSTO
-      DOUBLE PRECISION         XFACT
-      DOUBLE PRECISION         XLAMO
-      DOUBLE PRECISION         NO
-      DOUBLE PRECISION         ATIME
-      DOUBLE PRECISION         ECCM
-      DOUBLE PRECISION         ARGPM
-      DOUBLE PRECISION         INCLM
-      DOUBLE PRECISION         XLI
-      DOUBLE PRECISION         MM
-      DOUBLE PRECISION         XNI
-      DOUBLE PRECISION         NODEM
-      DOUBLE PRECISION         DNDT
-      DOUBLE PRECISION         XN
+      double precision         d2201
+      double precision         d2211
+      double precision         d3210
+      double precision         d3222
+      double precision         d4410
+      double precision         d4422
+      double precision         d5220
+      double precision         d5232
+      double precision         d5421
+      double precision         d5433
+      double precision         dedt
+      double precision         del1
+      double precision         del2
+      double precision         del3
+      double precision         didt
+      double precision         dmdt
+      double precision         dnodt
+      double precision         domdt
+      double precision         argpo
+      double precision         argpdot
+      double precision         t
+      double precision         tc
+      double precision         gsto
+      double precision         xfact
+      double precision         xlamo
+      double precision         no
+      double precision         atime
+      double precision         eccm
+      double precision         argpm
+      double precision         inclm
+      double precision         xli
+      double precision         mm
+      double precision         xni
+      double precision         nodem
+      double precision         dndt
+      double precision         xn
 
 ! $ Brief_I/O
 !
@@ -249,75 +249,75 @@
 !     Local Variables
 !
 
-      DOUBLE PRECISION         DELT
-      DOUBLE PRECISION         FASX2
-      DOUBLE PRECISION         FASX4
-      DOUBLE PRECISION         FASX6
-      DOUBLE PRECISION         FT
-      DOUBLE PRECISION         G22
-      DOUBLE PRECISION         G32
-      DOUBLE PRECISION         G44
-      DOUBLE PRECISION         G52
-      DOUBLE PRECISION         G54
-      DOUBLE PRECISION         RPTIM
-      DOUBLE PRECISION         STEP2
-      DOUBLE PRECISION         STEPN
-      DOUBLE PRECISION         STEPP
-      DOUBLE PRECISION         THETA
-      DOUBLE PRECISION         X2LI
-      DOUBLE PRECISION         X2OMI
-      DOUBLE PRECISION         XL
-      DOUBLE PRECISION         XLDOT
-      DOUBLE PRECISION         XNDDT
-      DOUBLE PRECISION         XNDT
-      DOUBLE PRECISION         XOMI
+      double precision         delt
+      double precision         fasx2
+      double precision         fasx4
+      double precision         fasx6
+      double precision         ft
+      double precision         g22
+      double precision         g32
+      double precision         g44
+      double precision         g52
+      double precision         g54
+      double precision         rptim
+      double precision         step2
+      double precision         stepn
+      double precision         stepp
+      double precision         theta
+      double precision         x2li
+      double precision         x2omi
+      double precision         xl
+      double precision         xldot
+      double precision         xnddt
+      double precision         xndt
+      double precision         xomi
 
-      INTEGER                  IRET
-      INTEGER                  IRETN
+      integer                  iret
+      integer                  iretn
 
 
 !
 !     SPICELIB routines.
 !
-      DOUBLE PRECISION         TWOPI
-      LOGICAL                  RETURN
+      double precision         twopi
+      logical                  return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSPC' )
+      call chkin ( 'ZZDSPC' )
 
 !
 !     Constants
 !
-      FASX2 = 0.13130908D0
-      FASX4 = 2.8843198D0
-      FASX6 = 0.37448087D0
-      G22   = 5.7686396D0
-      G32   = 0.95240898D0
-      G44   = 1.8014998D0
-      G52   = 1.0508330D0
-      G54   = 4.4108898D0
-      RPTIM = 4.37526908801129966D-3
-      STEPP =    720.0D0
-      STEPN =   -720.0D0
-      STEP2 = 259200.0D0
+      fasx2 = 0.13130908d0
+      fasx4 = 2.8843198d0
+      fasx6 = 0.37448087d0
+      g22   = 5.7686396d0
+      g32   = 0.95240898d0
+      g44   = 1.8014998d0
+      g52   = 1.0508330d0
+      g54   = 4.4108898d0
+      rptim = 4.37526908801129966d-3
+      stepp =    720.0d0
+      stepn =   -720.0d0
+      step2 = 259200.0d0
 
 !
 !     Calculate deep space resonance effects.
 !
-      DNDT  = 0.0D0
-      THETA = DMOD(GSTO + TC*RPTIM,TWOPI())
-      ECCM  = ECCM + DEDT*T
+      dndt  = 0.0d0
+      theta = dmod(gsto + tc*rptim,twopi())
+      eccm  = eccm + dedt*t
 
-      INCLM = INCLM + DIDT*T
-      ARGPM = ARGPM + DOMDT*T
-      NODEM = NODEM + DNODT*T
-      MM    = MM + DMDT*T
+      inclm = inclm + didt*t
+      argpm = argpm + domdt*t
+      nodem = nodem + dnodt*t
+      mm    = mm + dmdt*t
 
 !
 !   sgp4fix for negative inclinations
@@ -343,9 +343,9 @@
 !
 !     Just in case - should be set in loops if used.
 !
-      FT    = 0.0D0
+      ft    = 0.0d0
 
-      IF (IREZ .ne. 0) THEN
+      if (irez .ne. 0) then
 
 !
 !     UPDATE RESONANCES : NUMERICAL (EULER-MACLAURIN) INTEGRATION
@@ -356,84 +356,84 @@
 !
 !        sgp4fix streamline check
 !
-         IF ( (    ATIME .EQ. 0.0D0) .OR. &
-              (T * ATIME .LE. 0.0D0) .OR. &
-              (  DABS(T) .LT. DABS(ATIME))  ) THEN
-            ATIME  = 0.0D0
-            XNI    = NO
-            XLI    = XLAMO
-         END IF
+         if ( (    atime .eq. 0.0d0) .or. &
+              (t * atime .le. 0.0d0) .or. &
+              (  dabs(t) .lt. dabs(atime))  ) then
+            atime  = 0.0d0
+            xni    = no
+            xli    = xlamo
+         end if
 
 !
 !        sgp4fix move check outside loop
 !
-         IF (T .GT. 0.0D0) THEN
-            DELT = STEPP
-         ELSE
-            DELT = STEPN
-         END IF
+         if (t .gt. 0.0d0) then
+            delt = stepp
+         else
+            delt = stepn
+         end if
 
 !
 !        ADDED FOR DO LOOP
 !
-         IRETN = 381
+         iretn = 381
 
 !
 !        ADDED FOR LOOP
 !
-         IRET  =   0
+         iret  =   0
 
-         DO WHILE (IRETN.EQ.381)
+         do while (iretn.eq.381)
 
 !
 !           DOT TERMS CALCULATED
 !
 !           NEAR - SYNCHRONOUS RESONANCE TERMS
 !
-            IF (IREZ .NE. 2) THEN
+            if (irez .ne. 2) then
 
-               XNDT  = DEL1*DSIN(XLI-FASX2) + &
-                        DEL2*DSIN(2.0D0*(XLI-FASX4)) + &
-                        DEL3*DSIN(3.0D0*(XLI-FASX6))
-               XLDOT = XNI + XFACT
-               XNDDT = DEL1*DCOS(XLI-FASX2) + &
-                  2.0D0*DEL2*DCOS(2.0D0*(XLI-FASX4)) + &
-                  3.0D0*DEL3*DCOS(3.0D0*(XLI-FASX6))
-               XNDDT = XNDDT*XLDOT
+               xndt  = del1*dsin(xli-fasx2) + &
+                        del2*dsin(2.0d0*(xli-fasx4)) + &
+                        del3*dsin(3.0d0*(xli-fasx6))
+               xldot = xni + xfact
+               xnddt = del1*dcos(xli-fasx2) + &
+                  2.0d0*del2*dcos(2.0d0*(xli-fasx4)) + &
+                  3.0d0*del3*dcos(3.0d0*(xli-fasx6))
+               xnddt = xnddt*xldot
 
-            ELSE
+            else
 
 !
 !              NEAR - HALF-DAY RESONANCE TERMS
 !
 
-               XOMI = ARGPO + ARGPDOT*ATIME
-               X2OMI= XOMI + XOMI
-               X2LI = XLI + XLI
-               XNDT = D2201*DSIN(X2OMI+XLI-G22) + &
-                       D2211*DSIN(XLI-G22) + &
-                       D3210*DSIN( XOMI+XLI-G32) + &
-                       D3222*DSIN(-XOMI+XLI-G32) + &
-                       D4410*DSIN(X2OMI+X2LI-G44)+ &
-                       D4422*DSIN(X2LI-G44)+ &
-                       D5220*DSIN( XOMI+XLI-G52) + &
-                       D5232*DSIN(-XOMI+XLI-G52) + &
-                       D5421*DSIN( XOMI+X2LI-G54)+ &
-                       D5433*DSIN(-XOMI+X2LI-G54)
-               XLDOT = XNI+XFACT
-               XNDDT = D2201*DCOS(X2OMI+XLI-G22) + &
-                        D2211*DCOS(XLI-G22)+ &
-                        D3210*DCOS( XOMI+XLI-G32) + &
-                        D3222*DCOS(-XOMI+XLI-G32) + &
-                        D5220*DCOS( XOMI+XLI-G52) + &
-                        D5232*DCOS(-XOMI+XLI-G52) + &
-                        2.0D0*(D4410*DCOS(X2OMI+X2LI-G44) + &
-                        D4422*DCOS(X2LI-G44) + &
-                        D5421*DCOS( XOMI+X2LI-G54) + &
-                        D5433*DCOS(-XOMI+X2LI-G54))
-               XNDDT = XNDDT*XLDOT
+               xomi = argpo + argpdot*atime
+               x2omi= xomi + xomi
+               x2li = xli + xli
+               xndt = d2201*dsin(x2omi+xli-g22) + &
+                       d2211*dsin(xli-g22) + &
+                       d3210*dsin( xomi+xli-g32) + &
+                       d3222*dsin(-xomi+xli-g32) + &
+                       d4410*dsin(x2omi+x2li-g44)+ &
+                       d4422*dsin(x2li-g44)+ &
+                       d5220*dsin( xomi+xli-g52) + &
+                       d5232*dsin(-xomi+xli-g52) + &
+                       d5421*dsin( xomi+x2li-g54)+ &
+                       d5433*dsin(-xomi+x2li-g54)
+               xldot = xni+xfact
+               xnddt = d2201*dcos(x2omi+xli-g22) + &
+                        d2211*dcos(xli-g22)+ &
+                        d3210*dcos( xomi+xli-g32) + &
+                        d3222*dcos(-xomi+xli-g32) + &
+                        d5220*dcos( xomi+xli-g52) + &
+                        d5232*dcos(-xomi+xli-g52) + &
+                        2.0d0*(d4410*dcos(x2omi+x2li-g44) + &
+                        d4422*dcos(x2li-g44) + &
+                        d5421*dcos( xomi+x2li-g54) + &
+                        d5433*dcos(-xomi+x2li-g54))
+               xnddt = xnddt*xldot
 
-            END IF
+            end if
 
 !
 !           INTEGRATOR
@@ -441,38 +441,38 @@
 !           sgp4fix move end checks to end of routine
 !
 
-            IF (DABS(T-ATIME).GE.STEPP) THEN
-               IRET  = 0
-               IRETN = 381
-            ELSE
-               FT    = T-ATIME
-               IRETN = 0
-            END IF
+            if (dabs(t-atime).ge.stepp) then
+               iret  = 0
+               iretn = 381
+            else
+               ft    = t-atime
+               iretn = 0
+            end if
 
-            IF (IRETN.EQ.381) THEN
-               XLI   = XLI + XLDOT*DELT + XNDT*STEP2
-               XNI   = XNI + XNDT*DELT + XNDDT*STEP2
-               ATIME = ATIME + DELT
-            END IF
+            if (iretn.eq.381) then
+               xli   = xli + xldot*delt + xndt*step2
+               xni   = xni + xndt*delt + xnddt*step2
+               atime = atime + delt
+            end if
 
-         END DO
+         end do
 
-         XN = XNI + XNDT*FT  + XNDDT*FT*FT*0.5D0
-         XL = XLI + XLDOT*FT + XNDT*FT*FT*0.5D0
+         xn = xni + xndt*ft  + xnddt*ft*ft*0.5d0
+         xl = xli + xldot*ft + xndt*ft*ft*0.5d0
 
-         IF(IREZ .NE. 1) THEN
-            MM   = XL-2.0D0*NODEM+2.0D0*THETA
-            DNDT = XN-NO
-         ELSE
-            MM   = XL-NODEM-ARGPM+THETA
-            DNDT = XN-NO
-         END IF
+         if(irez .ne. 1) then
+            mm   = xl-2.0d0*nodem+2.0d0*theta
+            dndt = xn-no
+         else
+            mm   = xl-nodem-argpm+theta
+            dndt = xn-no
+         end if
 
-         XN = NO + DNDT
+         xn = no + dndt
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDSPC' )
+      call chkout ( 'ZZDSPC' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure      ZZEKSCMP ( EK, scalar value comparison )
 
-      LOGICAL FUNCTION ZZEKSCMP ( OP, &
-                                  HANDLE, SEGDSC, COLDSC, ROW,   ELTIDX, &
-                                  DTYPE,  CVAL,   DVAL,   IVAL,  NULL  )
+      logical function zzekscmp ( op, &
+                                  handle, segdsc, coldsc, row,   eltidx, &
+                                  dtype,  cval,   dval,   ival,  null  )
 
 ! $ Abstract
 !
@@ -19,26 +19,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekwild.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
+      include 'ekwild.inc'
 
-      INTEGER               OP
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               ROW
-      INTEGER               ELTIDX
-      INTEGER               DTYPE
-      CHARACTER*(*)         CVAL
-      DOUBLE PRECISION      DVAL
-      INTEGER               IVAL
-      LOGICAL               NULL
+      integer               op
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               row
+      integer               eltidx
+      integer               dtype
+      character*(*)         cval
+      double precision      dval
+      integer               ival
+      logical               null
 
 
 ! $ Brief_I/O
@@ -248,26 +248,26 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               MATCHI
+      logical               failed
+      logical               matchi
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXSTR)    ELTC
+      character*(maxstr)    eltc
 
-      DOUBLE PRECISION      ELTD
-      DOUBLE PRECISION      NUMVAL
+      double precision      eltd
+      double precision      numval
 
-      INTEGER               CMPLEN
-      INTEGER               CVLEN
-      INTEGER               COLTYP
-      INTEGER               ELTI
-      INTEGER               REL
-      INTEGER               STRLEN
+      integer               cmplen
+      integer               cvlen
+      integer               coltyp
+      integer               elti
+      integer               rel
+      integer               strlen
 
-      LOGICAL               ENULL
-      LOGICAL               FOUND
+      logical               enull
+      logical               found
 
 
 !
@@ -277,318 +277,318 @@
 !
 !     The function value defaults to .FALSE.
 !
-      ZZEKSCMP = .FALSE.
+      zzekscmp = .false.
 
 !
 !     Look up the specified column element.
 !
-      COLTYP   =  COLDSC(TYPIDX)
+      coltyp   =  coldsc(typidx)
 
-      IF ( COLTYP .EQ. CHR ) THEN
+      if ( coltyp .eq. chr ) then
 !
 !        We'll use at most the first MAXSTR characters of the input
 !        string.
 !
-         CVLEN = MIN ( LEN(CVAL), MAXSTR )
+         cvlen = min ( len(cval), maxstr )
 
 !
 !        Fetch the column entry to be compared. Note that ROW
 !        is a polymorphic identifier. See ZZEKRSC for details
 !        on how ROW is used.
 !
-         CALL ZZEKRSC (  HANDLE,  SEGDSC,  COLDSC,  ROW, &
-                         ELTIDX,  STRLEN,  ELTC,    ENULL, FOUND )
+         call zzekrsc (  handle,  segdsc,  coldsc,  row, &
+                         eltidx,  strlen,  eltc,    enull, found )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           Don't check out here because we haven't checked in.
 !
-            RETURN
-         END IF
+            return
+         end if
 
 !
 !        Let CMPLEN be the string length to use in comparisons.
 !
-         IF (  FOUND  .AND.  ( .NOT. ENULL )  ) THEN
+         if (  found  .and.  ( .not. enull )  ) then
 
-            CMPLEN = MIN ( STRLEN, MAXSTR )
-         ELSE
-            CMPLEN = 0
-         END IF
+            cmplen = min ( strlen, maxstr )
+         else
+            cmplen = 0
+         end if
 
-      ELSE IF ( ( COLTYP .EQ. DP ) .OR. ( COLTYP .EQ. TIME )  ) THEN
+      else if ( ( coltyp .eq. dp ) .or. ( coltyp .eq. time )  ) then
 
-         CALL ZZEKRSD (  HANDLE,  SEGDSC,  COLDSC, ROW, &
-                         ELTIDX,  ELTD,    ENULL,  FOUND )
-
-
-      ELSE IF ( COLTYP .EQ. INT ) THEN
-
-         CALL ZZEKRSI (  HANDLE,  SEGDSC,  COLDSC, ROW, &
-                         ELTIDX,  ELTI,    ENULL,  FOUND )
+         call zzekrsd (  handle,  segdsc,  coldsc, row, &
+                         eltidx,  eltd,    enull,  found )
 
 
-      ELSE
+      else if ( coltyp .eq. int ) then
 
-         CALL CHKIN  ( 'ZZEKSCMP'                         )
-         CALL SETMSG ( 'Data type code # not recognized.' )
-         CALL ERRINT ( '#',  COLTYP                       )
-         CALL SIGERR ( 'SPICE(INVALIDDATATYPE)'           )
-         CALL CHKOUT ( 'ZZEKSCMP'                         )
-         RETURN
-
-      END IF
+         call zzekrsi (  handle,  segdsc,  coldsc, row, &
+                         eltidx,  elti,    enull,  found )
 
 
-      IF ( .NOT. FOUND ) THEN
+      else
 
-         CALL CHKIN  ( 'ZZEKSCMP'                                  )
-         CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
+         call chkin  ( 'ZZEKSCMP'                         )
+         call setmsg ( 'Data type code # not recognized.' )
+         call errint ( '#',  coltyp                       )
+         call sigerr ( 'SPICE(INVALIDDATATYPE)'           )
+         call chkout ( 'ZZEKSCMP'                         )
+         return
+
+      end if
+
+
+      if ( .not. found ) then
+
+         call chkin  ( 'ZZEKSCMP'                                  )
+         call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
                        'Column entry element was not found.'       )
-         CALL ERRHAN ( '#',  HANDLE                                )
-         CALL ERRINT ( '#',  COLDSC(ORDIDX)                        )
-         CALL ERRINT ( '#',  ROW                                   )
-         CALL ERRINT ( '#',  ELTIDX                                )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-         CALL CHKOUT ( 'ZZEKSCMP'                                  )
-         RETURN
+         call errhan ( '#',  handle                                )
+         call errint ( '#',  coldsc(ordidx)                        )
+         call errint ( '#',  row                                   )
+         call errint ( '#',  eltidx                                )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+         call chkout ( 'ZZEKSCMP'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Handle the ISNULL and NOTNUL operators, if perchance we see them.
 !
-      IF ( OP .EQ. ISNULL ) THEN
+      if ( op .eq. isnull ) then
 
-         ZZEKSCMP  =  ENULL
-         RETURN
+         zzekscmp  =  enull
+         return
 
-      ELSE IF ( OP .EQ. NOTNUL ) THEN
+      else if ( op .eq. notnul ) then
 
-         ZZEKSCMP  =  .NOT. ENULL
-         RETURN
+         zzekscmp  =  .not. enull
+         return
 
-      END IF
+      end if
 
 !
 !     Find the order relation that applies to the input values.
 !
 !     Null values precede all others.
 !
-      IF ( ENULL )  THEN
+      if ( enull )  then
 
-         IF ( NULL ) THEN
-            REL  =  EQ
-         ELSE
-            REL  =  LT
-         END IF
-
-
-      ELSE IF ( NULL ) THEN
-
-         IF ( ENULL ) THEN
-            REL  =  EQ
-         ELSE
-            REL  =  GT
-         END IF
+         if ( null ) then
+            rel  =  eq
+         else
+            rel  =  lt
+         end if
 
 
-      ELSE
+      else if ( null ) then
+
+         if ( enull ) then
+            rel  =  eq
+         else
+            rel  =  gt
+         end if
+
+
+      else
 !
 !
 !        Compare the value we looked up with the input scalar value.
 !
-         IF (  COLTYP .EQ. CHR ) THEN
+         if (  coltyp .eq. chr ) then
 
-            IF ( DTYPE .NE. CHR ) THEN
+            if ( dtype .ne. chr ) then
 
-               CALL CHKIN  ( 'ZZEKSCMP'                          )
-               CALL SETMSG ( 'Column type is #; value type is #.')
-               CALL ERRINT ( '#', COLTYP                         )
-               CALL ERRINT ( '#', DTYPE                          )
-               CALL SIGERR ( 'SPICE(BUG)'                        )
-               CALL CHKOUT ( 'ZZEKSCMP'                          )
-               RETURN
+               call chkin  ( 'ZZEKSCMP'                          )
+               call setmsg ( 'Column type is #; value type is #.')
+               call errint ( '#', coltyp                         )
+               call errint ( '#', dtype                          )
+               call sigerr ( 'SPICE(BUG)'                        )
+               call chkout ( 'ZZEKSCMP'                          )
+               return
 
-            END IF
+            end if
 
-            IF (  LLT ( ELTC(:CMPLEN), CVAL(:CVLEN) )  )THEN
-               REL = LT
-            ELSE IF (  LGT ( ELTC(:CMPLEN), CVAL(:CVLEN) )  ) THEN
-               REL = GT
-            ELSE
-               REL = EQ
-            END IF
-
-
-         ELSE IF ( COLTYP .EQ. TIME ) THEN
-
-            IF (  ( DTYPE .NE. TIME ) .AND. ( DTYPE .NE. DP )  ) THEN
-
-               CALL CHKIN  ( 'ZZEKSCMP'                          )
-               CALL SETMSG ( 'Column type is #; value type is #.')
-               CALL ERRINT ( '#', COLTYP                         )
-               CALL ERRINT ( '#', DTYPE                          )
-               CALL SIGERR ( 'SPICE(BUG)'                        )
-               CALL CHKOUT ( 'ZZEKSCMP'                          )
-               RETURN
-
-            END IF
-
-            IF ( ELTD .LT. DVAL ) THEN
-               REL = LT
-            ELSE IF ( ELTD .GT. DVAL ) THEN
-               REL = GT
-            ELSE
-               REL = EQ
-            END IF
+            if (  llt ( eltc(:cmplen), cval(:cvlen) )  )then
+               rel = lt
+            else if (  lgt ( eltc(:cmplen), cval(:cvlen) )  ) then
+               rel = gt
+            else
+               rel = eq
+            end if
 
 
-         ELSE IF ( COLTYP .EQ. DP ) THEN
+         else if ( coltyp .eq. time ) then
 
-            IF ( DTYPE .EQ. INT ) THEN
+            if (  ( dtype .ne. time ) .and. ( dtype .ne. dp )  ) then
 
-               NUMVAL = IVAL
+               call chkin  ( 'ZZEKSCMP'                          )
+               call setmsg ( 'Column type is #; value type is #.')
+               call errint ( '#', coltyp                         )
+               call errint ( '#', dtype                          )
+               call sigerr ( 'SPICE(BUG)'                        )
+               call chkout ( 'ZZEKSCMP'                          )
+               return
 
+            end if
 
-            ELSE IF ( ( DTYPE .EQ. DP ) .OR. ( DTYPE .EQ. TIME ) ) THEN
-
-               NUMVAL = DVAL
-
-            ELSE
-
-               CALL CHKIN  ( 'ZZEKSCMP'                          )
-               CALL SETMSG ( 'Column type is #; value type is #.')
-               CALL ERRINT ( '#', COLTYP                         )
-               CALL ERRINT ( '#', DTYPE                          )
-               CALL SIGERR ( 'SPICE(BUG)'                        )
-               CALL CHKOUT ( 'ZZEKSCMP'                          )
-               RETURN
-
-            END IF
-
-            IF ( ELTD .LT. NUMVAL ) THEN
-               REL = LT
-            ELSE IF ( ELTD .GT. NUMVAL ) THEN
-               REL = GT
-            ELSE
-               REL = EQ
-            END IF
+            if ( eltd .lt. dval ) then
+               rel = lt
+            else if ( eltd .gt. dval ) then
+               rel = gt
+            else
+               rel = eq
+            end if
 
 
-         ELSE IF ( COLTYP .EQ. INT ) THEN
+         else if ( coltyp .eq. dp ) then
 
-            IF ( DTYPE .EQ. INT ) THEN
+            if ( dtype .eq. int ) then
 
-               NUMVAL = IVAL
-
-
-            ELSE IF ( DTYPE .EQ. DP ) THEN
-
-               NUMVAL = DVAL
-
-            ELSE
-
-               CALL CHKIN  ( 'ZZEKSCMP'                          )
-               CALL SETMSG ( 'Column type is #; value type is #.')
-               CALL ERRINT ( '#', COLTYP                         )
-               CALL ERRINT ( '#', DTYPE                          )
-               CALL SIGERR ( 'SPICE(BUG)'                        )
-               CALL CHKOUT ( 'ZZEKSCMP'                          )
-               RETURN
-
-            END IF
-
-            IF ( ELTI .LT. NUMVAL ) THEN
-               REL = LT
-            ELSE IF ( ELTI .GT. NUMVAL ) THEN
-               REL = GT
-            ELSE
-               REL = EQ
-            END IF
+               numval = ival
 
 
-         ELSE
+            else if ( ( dtype .eq. dp ) .or. ( dtype .eq. time ) ) then
+
+               numval = dval
+
+            else
+
+               call chkin  ( 'ZZEKSCMP'                          )
+               call setmsg ( 'Column type is #; value type is #.')
+               call errint ( '#', coltyp                         )
+               call errint ( '#', dtype                          )
+               call sigerr ( 'SPICE(BUG)'                        )
+               call chkout ( 'ZZEKSCMP'                          )
+               return
+
+            end if
+
+            if ( eltd .lt. numval ) then
+               rel = lt
+            else if ( eltd .gt. numval ) then
+               rel = gt
+            else
+               rel = eq
+            end if
+
+
+         else if ( coltyp .eq. int ) then
+
+            if ( dtype .eq. int ) then
+
+               numval = ival
+
+
+            else if ( dtype .eq. dp ) then
+
+               numval = dval
+
+            else
+
+               call chkin  ( 'ZZEKSCMP'                          )
+               call setmsg ( 'Column type is #; value type is #.')
+               call errint ( '#', coltyp                         )
+               call errint ( '#', dtype                          )
+               call sigerr ( 'SPICE(BUG)'                        )
+               call chkout ( 'ZZEKSCMP'                          )
+               return
+
+            end if
+
+            if ( elti .lt. numval ) then
+               rel = lt
+            else if ( elti .gt. numval ) then
+               rel = gt
+            else
+               rel = eq
+            end if
+
+
+         else
 !
 !           Something untoward has happened in our column descriptor
 !           argument.
 !
-            CALL CHKIN  ( 'ZZEKSCMP'                                )
-            CALL SETMSG ( 'The data type code # was not recognized.')
-            CALL ERRINT ( '#',  COLTYP                              )
-            CALL SIGERR ( 'SPICE(INVALIDDATATYPE)'                  )
-            CALL CHKOUT ( 'ZZEKSCMP'                                )
-            RETURN
+            call chkin  ( 'ZZEKSCMP'                                )
+            call setmsg ( 'The data type code # was not recognized.')
+            call errint ( '#',  coltyp                              )
+            call sigerr ( 'SPICE(INVALIDDATATYPE)'                  )
+            call chkout ( 'ZZEKSCMP'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Determine the truth of the input relational expression.
 !
-      IF ( OP .EQ. EQ )   THEN
+      if ( op .eq. eq )   then
 
-         ZZEKSCMP  =  REL .EQ. EQ
-
-
-      ELSE IF ( OP .EQ. LT )   THEN
-
-         ZZEKSCMP  =  REL .EQ. LT
+         zzekscmp  =  rel .eq. eq
 
 
-      ELSE IF ( OP .EQ. LE )   THEN
+      else if ( op .eq. lt )   then
 
-         ZZEKSCMP  =  REL .NE. GT
-
-
-      ELSE IF ( OP .EQ. GT )   THEN
-
-         ZZEKSCMP  =  REL .EQ. GT
+         zzekscmp  =  rel .eq. lt
 
 
-      ELSE IF ( OP .EQ. GE )   THEN
+      else if ( op .eq. le )   then
 
-         ZZEKSCMP  =  REL .NE. LT
-
-
-      ELSE IF ( OP .EQ. NE )   THEN
-
-         ZZEKSCMP  =  REL .NE. EQ
+         zzekscmp  =  rel .ne. gt
 
 
-      ELSE IF (  ( OP .EQ. LIKE ) .AND. ( DTYPE .EQ. CHR )  ) THEN
+      else if ( op .eq. gt )   then
 
-         IF ( NULL .OR. ENULL ) THEN
-            ZZEKSCMP = .FALSE.
-         ELSE
-            ZZEKSCMP = MATCHI( ELTC(:CMPLEN), CVAL(:CVLEN), WSTR, WCHR )
-         END IF
+         zzekscmp  =  rel .eq. gt
 
 
-      ELSE IF (  ( OP .EQ. UNLIKE ) .AND. ( DTYPE .EQ. CHR )  ) THEN
+      else if ( op .eq. ge )   then
 
-         IF ( NULL .OR. ENULL ) THEN
-            ZZEKSCMP = .FALSE.
-         ELSE
-            ZZEKSCMP = .NOT. &
-                       MATCHI( ELTC(:CMPLEN), CVAL(:CVLEN), WSTR, WCHR )
-         END IF
+         zzekscmp  =  rel .ne. lt
 
-      ELSE
+
+      else if ( op .eq. ne )   then
+
+         zzekscmp  =  rel .ne. eq
+
+
+      else if (  ( op .eq. like ) .and. ( dtype .eq. chr )  ) then
+
+         if ( null .or. enull ) then
+            zzekscmp = .false.
+         else
+            zzekscmp = matchi( eltc(:cmplen), cval(:cvlen), wstr, wchr )
+         end if
+
+
+      else if (  ( op .eq. unlike ) .and. ( dtype .eq. chr )  ) then
+
+         if ( null .or. enull ) then
+            zzekscmp = .false.
+         else
+            zzekscmp = .not. &
+                       matchi( eltc(:cmplen), cval(:cvlen), wstr, wchr )
+         end if
+
+      else
 !
 !        Sorry, we couldn't resist.
 !
-         CALL CHKIN  ( 'ZZEKSCMP'                                      )
-         CALL SETMSG ( 'The relational operator # was not recognized '// &
+         call chkin  ( 'ZZEKSCMP'                                      )
+         call setmsg ( 'The relational operator # was not recognized '// &
                        'or was not applicable for data type #.'        )
-         CALL ERRINT ( '#',  OP                                        )
-         CALL ERRINT ( '#',  DTYPE                                     )
-         CALL SIGERR ( 'SPICE(UNNATURALRELATION)'                      )
-         CALL CHKOUT ( 'ZZEKSCMP'                                      )
-         RETURN
+         call errint ( '#',  op                                        )
+         call errint ( '#',  dtype                                     )
+         call sigerr ( 'SPICE(UNNATURALRELATION)'                      )
+         call chkout ( 'ZZEKSCMP'                                      )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DCBRT ( Double precision cube root )
 
-      DOUBLE PRECISION FUNCTION  DCBRT ( X )
+      double precision function  dcbrt ( x )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   X
+      double precision   x
 
 ! $ Brief_I/O
 !
@@ -110,10 +110,10 @@
 !-&
 
 
-      DOUBLE PRECISION THIRD
-      PARAMETER (THIRD = 1.D0/3.D0)
+      double precision third
+      parameter (third = 1.d0/3.d0)
 !
-      DCBRT = DSIGN (DABS(X)**THIRD, X)
+      dcbrt = dsign (dabs(x)**third, x)
 !
-      RETURN
-      END
+      return
+      end

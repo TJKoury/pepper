@@ -1,6 +1,6 @@
 !$Procedure NCPOS ( NOT character position )
 
-      INTEGER FUNCTION NCPOS ( STR, CHARS, START )
+      integer function ncpos ( str, chars, start )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STR
-      CHARACTER*(*)         CHARS
-      INTEGER               START
+      character*(*)         str
+      character*(*)         chars
+      integer               start
 
 ! $ Brief_I/O
 !
@@ -171,29 +171,29 @@
 !
 !     Local variables
 !
-      LOGICAL               FOUND
-      INTEGER               LENSTR
-      INTEGER               B
+      logical               found
+      integer               lenstr
+      integer               b
 
 
-      LENSTR = LEN ( STR )
+      lenstr = len ( str )
 
-      B      = MAX(1,START)
-      FOUND  = .FALSE.
-      NCPOS   = 0
+      b      = max(1,start)
+      found  = .false.
+      ncpos   = 0
 
-      DO WHILE ( .NOT. FOUND )
+      do while ( .not. found )
 
-         IF ( B .GT. LENSTR ) THEN
-            RETURN
-         ELSE IF ( INDEX( CHARS, STR(B:B) ) .EQ. 0 ) THEN
-            NCPOS = B
-            RETURN
-         ELSE
-            B = B + 1
-         END IF
+         if ( b .gt. lenstr ) then
+            return
+         else if ( index( chars, str(b:b) ) .eq. 0 ) then
+            ncpos = b
+            return
+         else
+            b = b + 1
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

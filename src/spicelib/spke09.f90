@@ -1,6 +1,6 @@
 !$Procedure SPKE09 ( S/P Kernel, evaluate, type 9 )
 
-      SUBROUTINE SPKE09 ( ET, RECORD, STATE )
+      subroutine spke09 ( et, record, state )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spkrec.inc'
+      include 'spkrec.inc'
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD ( * )
-      DOUBLE PRECISION      STATE  ( 6 )
+      double precision      et
+      double precision      record ( * )
+      double precision      state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -185,14 +185,14 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      LGRINT
-      LOGICAL               RETURN
+      double precision      lgrint
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               STATSZ
-      PARAMETER           ( STATSZ = 6 )
+      integer               statsz
+      parameter           ( statsz = 6 )
 
 !
 !     Indices of input record elements:
@@ -200,28 +200,28 @@
 !        -- size
 !        -- start of state information
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX = 1 )
+      integer               sizidx
+      parameter           ( sizidx = 1 )
 
-      INTEGER               STAIDX
-      PARAMETER           ( STAIDX = 2 )
+      integer               staidx
+      parameter           ( staidx = 2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LOCREC ( MAXREC )
+      double precision      locrec ( maxrec )
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               XSTART
-      INTEGER               YSTART
+      integer               i
+      integer               n
+      integer               xstart
+      integer               ystart
 
 !
 !     Discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     We'll transpose the state information in the input record
@@ -231,27 +231,27 @@
 !     and does no harm.  (See the header of LGRINT for a description of
 !     its work space usage.)
 !
-      N   =  NINT( RECORD(SIZIDX) )
+      n   =  nint( record(sizidx) )
 
-      CALL XPOSEG ( RECORD(STAIDX),  STATSZ,   N,  LOCREC         )
-      CALL MOVED  ( LOCREC,          STATSZ*N,     RECORD(STAIDX) )
+      call xposeg ( record(staidx),  statsz,   n,  locrec         )
+      call moved  ( locrec,          statsz*n,     record(staidx) )
 
 !
 !     We interpolate each state component in turn.
 !
-      XSTART   =   2   +  N * STATSZ
+      xstart   =   2   +  n * statsz
 
-      DO I = 1, STATSZ
+      do i = 1, statsz
 
-         YSTART    =   2   +  N * (I-1)
+         ystart    =   2   +  n * (i-1)
 
-         STATE(I)  =   LGRINT ( N, &
-                                RECORD(XSTART), &
-                                RECORD(YSTART), &
-                                LOCREC, &
-                                ET              )
+         state(i)  =   lgrint ( n, &
+                                record(xstart), &
+                                record(ystart), &
+                                locrec, &
+                                et              )
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure NPARSD ( Double Precision parsing of a string )
 
-      SUBROUTINE NPARSD ( STRING, X, ERROR, PTR )
+      subroutine nparsd ( string, x, error, ptr )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
-      DOUBLE PRECISION X
-      CHARACTER*(*)    ERROR
-      INTEGER          PTR
+      character*(*)    string
+      double precision x
+      character*(*)    error
+      integer          ptr
 
 ! $ Brief_I/O
 !
@@ -231,200 +231,200 @@
 !     SPICELIB functions.
 !
 
-      DOUBLE PRECISION      DPMAX
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
+      double precision      dpmax
+      external              pi
+      double precision      pi
 
 !
 !     Local Parameters.
 !
 
-      DOUBLE PRECISION      BASE
-      PARAMETER           ( BASE   = 10.0D0 )
+      double precision      base
+      parameter           ( base   = 10.0d0 )
 
-      INTEGER               DIGIT
-      PARAMETER           ( DIGIT  = 1   )
+      integer               digit
+      parameter           ( digit  = 1   )
 
-      INTEGER               DPOINT
-      PARAMETER           ( DPOINT = 2   )
+      integer               dpoint
+      parameter           ( dpoint = 2   )
 
-      INTEGER               EXPONT
-      PARAMETER           ( EXPONT = 3   )
+      integer               expont
+      parameter           ( expont = 3   )
 
-      INTEGER               IGNORE
-      PARAMETER           ( IGNORE = 4   )
+      integer               ignore
+      parameter           ( ignore = 4   )
 
-      INTEGER               BPISTR
-      PARAMETER           ( BPISTR = 5   )
+      integer               bpistr
+      parameter           ( bpistr = 5   )
 
-      INTEGER               EPISTR
-      PARAMETER           ( EPISTR = 6   )
+      integer               epistr
+      parameter           ( epistr = 6   )
 
-      INTEGER               SIGN
-      PARAMETER           ( SIGN   = 7   )
+      integer               sign
+      parameter           ( sign   = 7   )
 
-      INTEGER               IBASE
-      PARAMETER           ( IBASE  = 10  )
+      integer               ibase
+      parameter           ( ibase  = 10  )
 
-      INTEGER               NKNOWN
-      PARAMETER           ( NKNOWN = 128 )
+      integer               nknown
+      parameter           ( nknown = 128 )
 
-      INTEGER               TEST
-      PARAMETER           ( TEST = 16 )
+      integer               test
+      parameter           ( test = 16 )
 
-      INTEGER               ERRSIZ
-      PARAMETER           ( ERRSIZ = 160 )
+      integer               errsiz
+      parameter           ( errsiz = 160 )
 
-      CHARACTER*(ERRSIZ)    BLNKST
-      CHARACTER*(ERRSIZ)    TOOBIG
-      CHARACTER*(ERRSIZ)    UNRCST
-      CHARACTER*(ERRSIZ)    UNXPCH
-      CHARACTER*(ERRSIZ)    UNXPPT
-      CHARACTER*(ERRSIZ)    UNXPSN
+      character*(errsiz)    blnkst
+      character*(errsiz)    toobig
+      character*(errsiz)    unrcst
+      character*(errsiz)    unxpch
+      character*(errsiz)    unxppt
+      character*(errsiz)    unxpsn
 
-      DOUBLE PRECISION      DECVAL
-      DOUBLE PRECISION      DIVISR
-      DOUBLE PRECISION      DPSIGN (     2     )
-      DOUBLE PRECISION      ECOUNT
-      DOUBLE PRECISION      EXPVAL
-      DOUBLE PRECISION      FACTOR
-      DOUBLE PRECISION      INTBND
-      DOUBLE PRECISION      INTVAL
-      DOUBLE PRECISION      LOOKUP ( 0 : IBASE )
-      DOUBLE PRECISION      MAXEXP
-      DOUBLE PRECISION      MINEXP
-      DOUBLE PRECISION      NEXT
-      DOUBLE PRECISION      SMLBND
-      DOUBLE PRECISION      VALUE
-      DOUBLE PRECISION      VALUES (     NKNOWN )
+      double precision      decval
+      double precision      divisr
+      double precision      dpsign (     2     )
+      double precision      ecount
+      double precision      expval
+      double precision      factor
+      double precision      intbnd
+      double precision      intval
+      double precision      lookup ( 0 : ibase )
+      double precision      maxexp
+      double precision      minexp
+      double precision      next
+      double precision      smlbnd
+      double precision      value
+      double precision      values (     nknown )
 
-      INTEGER               CLASS  ( 0 : NKNOWN )
-      INTEGER               EXP
-      INTEGER               I
-      INTEGER               ID
-      INTEGER               SIGNDX
+      integer               class  ( 0 : nknown )
+      integer               exp
+      integer               i
+      integer               id
+      integer               signdx
 
-      INTEGER               B
-      INTEGER               BLANK
-      INTEGER               L
-      INTEGER               M
-      INTEGER               NL
-      INTEGER               NEXTI
-      INTEGER               THISI
+      integer               b
+      integer               blank
+      integer               l
+      integer               m
+      integer               nl
+      integer               nexti
+      integer               thisi
 
 
-      LOGICAL               DODEC
-      LOGICAL               EXPOK
-      LOGICAL               DOEXP
-      LOGICAL               FIRST
-      LOGICAL               DOINT
-      LOGICAL               MANTSA
-      LOGICAL               BPIOK
-      LOGICAL               EPIOK
-      LOGICAL               PNTOK
-      LOGICAL               ROUNDI
-      LOGICAL               ROUNDD
-      LOGICAL               SIGCHR
-      LOGICAL               SIGNOK
-      LOGICAL               ZEROI
+      logical               dodec
+      logical               expok
+      logical               doexp
+      logical               first
+      logical               doint
+      logical               mantsa
+      logical               bpiok
+      logical               epiok
+      logical               pntok
+      logical               roundi
+      logical               roundd
+      logical               sigchr
+      logical               signok
+      logical               zeroi
 !
 !     Save everything.  It's easier than tracking down every
 !     little variable that might need to be saved.
 !
-      SAVE
+      save
 
-      DATA                  LOOKUP  /               1.0D0, &
-                                                   10.0D0, &
-                                                  100.0D0, &
-                                                 1000.0D0, &
-                                                10000.0D0, &
-                                               100000.0D0, &
-                                              1000000.0D0, &
-                                             10000000.0D0, &
-                                            100000000.0D0, &
-                                           1000000000.0D0, &
-                                          10000000000.0D0  /
+      data                  lookup  /               1.0d0, &
+                                                   10.0d0, &
+                                                  100.0d0, &
+                                                 1000.0d0, &
+                                                10000.0d0, &
+                                               100000.0d0, &
+                                              1000000.0d0, &
+                                             10000000.0d0, &
+                                            100000000.0d0, &
+                                           1000000000.0d0, &
+                                          10000000000.0d0  /
 
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
-      DATA                  VALUES  / NKNOWN * 0.0D0 /
+      data                  values  / nknown * 0.0d0 /
 
-      DATA                  CLASS   / 0, NKNOWN * 0 /
+      data                  class   / 0, nknown * 0 /
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 !
 !        Set up the error messages
 !
-         TOOBIG = 'The number represented by the input string is ' &
+         toobig = 'The number represented by the input string is ' &
          //       'too large to be stored as a double precision ' &
          //       'number. '
 
 
-         UNXPCH = 'An unexpected character was found while ' &
+         unxpch = 'An unexpected character was found while ' &
          //       'attempting to parse the input string. '
 
 
-         UNXPPT = 'An unexpected decimal point was found in the ' &
+         unxppt = 'An unexpected decimal point was found in the ' &
          //       'input string. '
 
 
-         UNXPSN = 'An unexpected sign character was found in the ' &
+         unxpsn = 'An unexpected sign character was found in the ' &
          //       'input string. '
 
 
-         BLNKST = 'The input string is blank. Blank strings are ' &
+         blnkst = 'The input string is blank. Blank strings are ' &
          //       'not considered to be numbers. '
 
 
-         UNRCST = 'The input string could not be recognized as a ' &
+         unrcst = 'The input string could not be recognized as a ' &
          //       'number. '
 
-         BLANK = ICHAR ( ' ' )
+         blank = ichar ( ' ' )
 
-         VALUES( ICHAR ( '0' ) ) =  0.0D0
-         VALUES( ICHAR ( '1' ) ) =  1.0D0
-         VALUES( ICHAR ( '2' ) ) =  2.0D0
-         VALUES( ICHAR ( '3' ) ) =  3.0D0
-         VALUES( ICHAR ( '4' ) ) =  4.0D0
-         VALUES( ICHAR ( '5' ) ) =  5.0D0
-         VALUES( ICHAR ( '6' ) ) =  6.0D0
-         VALUES( ICHAR ( '7' ) ) =  7.0D0
-         VALUES( ICHAR ( '8' ) ) =  8.0D0
-         VALUES( ICHAR ( '9' ) ) =  9.0D0
-         VALUES( ICHAR ( '-' ) ) = -1.0D0
-         VALUES( ICHAR ( '+' ) ) =  1.0D0
+         values( ichar ( '0' ) ) =  0.0d0
+         values( ichar ( '1' ) ) =  1.0d0
+         values( ichar ( '2' ) ) =  2.0d0
+         values( ichar ( '3' ) ) =  3.0d0
+         values( ichar ( '4' ) ) =  4.0d0
+         values( ichar ( '5' ) ) =  5.0d0
+         values( ichar ( '6' ) ) =  6.0d0
+         values( ichar ( '7' ) ) =  7.0d0
+         values( ichar ( '8' ) ) =  8.0d0
+         values( ichar ( '9' ) ) =  9.0d0
+         values( ichar ( '-' ) ) = -1.0d0
+         values( ichar ( '+' ) ) =  1.0d0
 
-         CLASS( ICHAR(' ') ) = IGNORE
-         CLASS( ICHAR(',') ) = IGNORE
+         class( ichar(' ') ) = ignore
+         class( ichar(',') ) = ignore
 
-         CLASS( ICHAR('.') ) = DPOINT
+         class( ichar('.') ) = dpoint
 
-         CLASS( ICHAR('E') ) = EXPONT
-         CLASS( ICHAR('D') ) = EXPONT
-         CLASS( ICHAR('e') ) = EXPONT
-         CLASS( ICHAR('d') ) = EXPONT
+         class( ichar('E') ) = expont
+         class( ichar('D') ) = expont
+         class( ichar('e') ) = expont
+         class( ichar('d') ) = expont
 
-         CLASS( ICHAR('+') ) = SIGN
-         CLASS( ICHAR('-') ) = SIGN
+         class( ichar('+') ) = sign
+         class( ichar('-') ) = sign
 
-         CLASS( ICHAR('1') ) = DIGIT
-         CLASS( ICHAR('2') ) = DIGIT
-         CLASS( ICHAR('3') ) = DIGIT
-         CLASS( ICHAR('4') ) = DIGIT
-         CLASS( ICHAR('5') ) = DIGIT
-         CLASS( ICHAR('6') ) = DIGIT
-         CLASS( ICHAR('7') ) = DIGIT
-         CLASS( ICHAR('8') ) = DIGIT
-         CLASS( ICHAR('9') ) = DIGIT
-         CLASS( ICHAR('0') ) = DIGIT
+         class( ichar('1') ) = digit
+         class( ichar('2') ) = digit
+         class( ichar('3') ) = digit
+         class( ichar('4') ) = digit
+         class( ichar('5') ) = digit
+         class( ichar('6') ) = digit
+         class( ichar('7') ) = digit
+         class( ichar('8') ) = digit
+         class( ichar('9') ) = digit
+         class( ichar('0') ) = digit
 
-         CLASS( ICHAR('p') ) = BPISTR
-         CLASS( ICHAR('P') ) = BPISTR
-         CLASS( ICHAR('i') ) = EPISTR
-         CLASS( ICHAR('I') ) = EPISTR
+         class( ichar('p') ) = bpistr
+         class( ichar('P') ) = bpistr
+         class( ichar('i') ) = epistr
+         class( ichar('I') ) = epistr
 !
 !        Finally create the numbers that will be used for checking
 !        for floating point overflow.
@@ -434,25 +434,25 @@
 !              underflow anyway, and dividing zero by a number (BASE)
 !              still gives you zero.
 !
-         MAXEXP = DINT ( DLOG10( DPMAX() ) )
-         MINEXP =-( MAXEXP + 1 )
-         SMLBND = DPMAX()/LOOKUP(IBASE)
+         maxexp = dint ( dlog10( dpmax() ) )
+         minexp =-( maxexp + 1 )
+         smlbnd = dpmax()/lookup(ibase)
 
-         INTBND = BASE
-         NEXT   = INTBND + 1.0D0
+         intbnd = base
+         next   = intbnd + 1.0d0
 
-         DO WHILE ( INTBND .NE. NEXT )
+         do while ( intbnd .ne. next )
 
-            INTBND = INTBND *  BASE
-            NEXT   = INTBND +  1.0D0
+            intbnd = intbnd *  base
+            next   = intbnd +  1.0d0
 
-         END DO
+         end do
 
-         INTBND = INTBND / BASE
+         intbnd = intbnd / base
 !
 !        That takes care of the first pass initializations.
 !
-      END IF
+      end if
 !
 !     Here's what's true right now.
 !
@@ -466,16 +466,16 @@
 !     We expect to be constructing the integer part of the
 !     numeric string.
 !
-      ERROR     = ' '
-      PTR       = 0
+      error     = ' '
+      ptr       = 0
 
-      PNTOK     = .TRUE.
-      SIGNOK    = .TRUE.
-      EXPOK     = .TRUE.
-      BPIOK     = .TRUE.
-      DOINT     = .TRUE.
-      ROUNDD    = .TRUE.
-      ROUNDI    = .TRUE.
+      pntok     = .true.
+      signok    = .true.
+      expok     = .true.
+      bpiok     = .true.
+      doint     = .true.
+      roundd    = .true.
+      roundi    = .true.
 !
 !     Here's some other facts.
 !
@@ -485,40 +485,40 @@
 !     We have not encountered any significant characters.
 !     It's not ok for the next character to be the end of pi (i).
 !
-      DODEC     = .FALSE.
-      DOEXP     = .FALSE.
-      MANTSA    = .FALSE.
-      SIGCHR    = .FALSE.
-      EPIOK     = .FALSE.
+      dodec     = .false.
+      doexp     = .false.
+      mantsa    = .false.
+      sigchr    = .false.
+      epiok     = .false.
 !
 !     So far there is no integer, decimal or exponent part to this
 !     string.
 !
-      INTVAL    = 0.0D0
-      DECVAL    = 0.0D0
-      EXPVAL    = 0.0D0
-      DIVISR    = 1.0D0
-      FACTOR    = 1.0D0
-      ECOUNT    = 0.0D0
+      intval    = 0.0d0
+      decval    = 0.0d0
+      expval    = 0.0d0
+      divisr    = 1.0d0
+      factor    = 1.0d0
+      ecount    = 0.0d0
 !
 !     Right now if we encounter a sign, it's part of the mantissa.
 !     And until we know better the sign of both the mantissa and
 !     exponent are +1 (as opposed to -1).
 !
-      SIGNDX    = 1
-      DPSIGN(1) = 1.0D0
-      DPSIGN(2) = 1.0D0
+      signdx    = 1
+      dpsign(1) = 1.0d0
+      dpsign(2) = 1.0d0
 !
 !     Before doing anything else we determine whether or not
 !     the input string is empty.
 !
-      IF ( STRING .EQ. ' ' ) THEN
+      if ( string .eq. ' ' ) then
 
-         ERROR = BLNKST
-         PTR   = 1
-         RETURN
+         error = blnkst
+         ptr   = 1
+         return
 
-      END IF
+      end if
 
 !
 !     We need to find the last non-blank character of the input
@@ -535,16 +535,16 @@
 !     character that we are concerned with and M is the middle of
 !     the current search interval ( from B to NL ).
 !
-      L     =  LEN(STRING)
-      B     =  1
-      NL    =  L - 1
+      l     =  len(string)
+      b     =  1
+      nl    =  l - 1
 
 !
 !     We want M to be ( B + NL ) / 2   but right now that's L/2
 !
-      M     =  L / 2
+      m     =  l / 2
 
-      DO WHILE ( L-B .GT. TEST )
+      do while ( l-b .gt. test )
 !
 !        What is true right now?  The string from L+1 on out
 !        is blank.  L > B; L-1 = NL >= B;  M = (B + NL) / 2;
@@ -552,11 +552,11 @@
 !        there must be a non-blank character between B and the
 !        end of the string.
 !
-         IF ( ICHAR(STRING(L:L)) .NE. BLANK ) THEN
+         if ( ichar(string(l:l)) .ne. blank ) then
 
-            B = L
+            b = l
 
-         ELSE IF ( STRING(M:NL) .EQ. ' ' ) THEN
+         else if ( string(m:nl) .eq. ' ' ) then
 
 !
 !           If you got here, the STRING(L:L) is a blank.
@@ -572,12 +572,12 @@
 !           have to worry about the reference STRING(M:NL)
 !           giving us an access violation.
 !
-            L  = M - 1
+            l  = m - 1
 !
 !           With the new value of L, we now know that STRING(L+1:)
 !           is blank.
 !
-         ELSE
+         else
 !
 !           If you get to this point all of the string from
 !           L out is blank and L is greater than M.
@@ -587,91 +587,91 @@
 !           we don't have to worry about STRING(M:NL) being
 !           an ill formed string.
 !
-            L  =  NL
-            B  =  M
+            l  =  nl
+            b  =  m
 !
 !           With the new value of L, we now know that STRING(L+1:)
 !           is blank.
 !
-         END IF
+         end if
 
 
 !
 !        Finally compute NL,the index of the character that precedes
 !        L and the new midpoint of the stuff from B to NL.
 !
-         NL =  L - 1
-         M  = (B + NL) / 2
+         nl =  l - 1
+         m  = (b + nl) / 2
 
 !
 !        What's true now?  The string from L+1 on out is blank.
 !
-      END DO
+      end do
 
 !
 !     L is now within 16 characters of the last non-blank character
 !     of the input string.  We simply search backward from L to
 !     locate this last non-blank.
 !
-      DO WHILE ( ICHAR(STRING(L:L)) .EQ. BLANK )
-         L = L - 1
-      END DO
+      do while ( ichar(string(l:l)) .eq. blank )
+         l = l - 1
+      end do
 
 
 !
 !     Begin to collect the number in its various parts: an integer
 !     portion, a fractional portion, and an exponent.
 !
-      DO I = 1, L
+      do i = 1, l
 
 
 
-         ID    = ICHAR(STRING(I:I))
+         id    = ichar(string(i:i))
 
-         IF ( ID .GT. NKNOWN .OR. ID .LT. 0 ) THEN
+         if ( id .gt. nknown .or. id .lt. 0 ) then
 
 !
 !           This is definitely not expected.  Set the error message
 !           and return.
 !
-            NEXTI = I + 1
-            THISI = I
+            nexti = i + 1
+            thisi = i
 
-            CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-            CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-            CALL PREFIX ( UNXPCH,  1,         ERROR )
+            call zzinssub ( string, ']', nexti, error )
+            call zzinssub ( error,  '[', thisi, error )
+            call prefix ( unxpch,  1,         error )
 
-            PTR   = I
-            RETURN
+            ptr   = i
+            return
 
 !
 !        The action taken depends upon the class of the token.
 !
-         ELSE IF ( CLASS(ID) .EQ. DIGIT ) THEN
+         else if ( class(id) .eq. digit ) then
 !
 !           Once a digit has been encountered, we can no longer
 !           allow the string 'PI' or a sign until an exponent
 !           character is hit and resets the SIGNOK flag.
 !
-            BPIOK  = .FALSE.
-            EPIOK  = .FALSE.
-            SIGNOK = .FALSE.
-            SIGCHR = .TRUE.
+            bpiok  = .false.
+            epiok  = .false.
+            signok = .false.
+            sigchr = .true.
 !
 !           If we are constructing the integer part ...
 !
-            IF ( DOINT  ) THEN
+            if ( doint  ) then
 
-               MANTSA = .TRUE.
+               mantsa = .true.
 !
 !              Check the current value of the integer part to
 !              make sure we don't overflow.
 !
-               IF ( INTVAL .LT. INTBND ) THEN
+               if ( intval .lt. intbnd ) then
 
-                  INTVAL = INTVAL * BASE + VALUES(ID)
+                  intval = intval * base + values(id)
 
-               ELSE
+               else
 !
 !                 Once the integer exceeds a given bound,
 !                 we add the rest on as fractional part and
@@ -680,31 +680,31 @@
 !                 appropriately.  We also keep track of the number
 !                 we will need to add to the exponent part.
 !
-                  ECOUNT = ECOUNT + 1
-                  FACTOR = FACTOR / BASE
+                  ecount = ecount + 1
+                  factor = factor / base
 
-                  IF ( ROUNDI ) THEN
+                  if ( roundi ) then
 
-                     ROUNDI = .FALSE.
+                     roundi = .false.
 
-                     IF ( VALUES(ID) .GT. 0.5D0*BASE ) THEN
-                        INTVAL = INTVAL + 1.0D0
-                     END IF
+                     if ( values(id) .gt. 0.5d0*base ) then
+                        intval = intval + 1.0d0
+                     end if
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !           ... or the decimal part ...
 !
-            ELSE IF ( DODEC ) THEN
+            else if ( dodec ) then
 
-               MANTSA = .TRUE.
+               mantsa = .true.
 !
 !              There are two cases to consider.  The case in which
 !              the integer portion of the string has value 0...
 !
-               IF ( ZEROI ) THEN
+               if ( zeroi ) then
 !
 !                 We can just keep accumulating the decimal part
 !                 as an integer.  But we keep track of how many
@@ -714,25 +714,25 @@
 !                 anything.  The remaining digits cannot contribute
 !                 to the value of the decimal part.
 !
-                  IF  ( DECVAL .LT. INTBND ) THEN
+                  if  ( decval .lt. intbnd ) then
 
-                     DECVAL = DECVAL * BASE + VALUES(ID)
-                     ECOUNT = ECOUNT - 1
+                     decval = decval * base + values(id)
+                     ecount = ecount - 1
 
-                  ELSE IF ( ROUNDD ) THEN
+                  else if ( roundd ) then
 
-                     ROUNDD = .FALSE.
+                     roundd = .false.
 
-                     IF ( VALUES(ID) .GE. 0.5D0*BASE ) THEN
-                        DECVAL =  DECVAL + 1.0D0
-                     END IF
+                     if ( values(id) .ge. 0.5d0*base ) then
+                        decval =  decval + 1.0d0
+                     end if
 
-                  END IF
+                  end if
 !
 !              ...and the case in which the integer portion is not
 !              zero.
 !
-               ELSE
+               else
 !
 !                 In this case, we know there is at least _something_
 !                 to the integer part of this string.  We can
@@ -741,20 +741,20 @@
 !                 the extra digits can't make any contribution to
 !                 the double precision value given to the string.
 !
-                  IF ( DIVISR .LT. INTBND ) THEN
+                  if ( divisr .lt. intbnd ) then
 
-                     DECVAL = DECVAL * BASE + VALUES(ID)
-                     DIVISR = DIVISR * BASE
+                     decval = decval * base + values(id)
+                     divisr = divisr * base
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !           ...or the exponent part of the string.
 !
-            ELSE IF ( DOEXP  ) THEN
+            else if ( doexp  ) then
 
-               IF ( EXPVAL + ECOUNT .GT. MAXEXP ) THEN
+               if ( expval + ecount .gt. maxexp ) then
 !
 !                 This number is too big to put into a double
 !                 precision number. The marginal case where
@@ -763,11 +763,11 @@
 !                 of the double precision number are built
 !                 at the end of this routine.
 !
-                  ERROR = TOOBIG
-                  PTR   = I
-                  RETURN
+                  error = toobig
+                  ptr   = i
+                  return
 
-               ELSE IF ( EXPVAL + ECOUNT .LT. MINEXP ) THEN
+               else if ( expval + ecount .lt. minexp ) then
 !
 !                 This number is going to underflow, we can
 !                 just stop accumulating exponent. But we don't
@@ -780,205 +780,205 @@
 !                       since an entire 'BASE' scale is not supported
 !                       for this particular exponent.
 !
-               ELSE
+               else
 !
 !                 This is the case we expect.  Just add on the
 !                 next part of the exponent.
 !
-                  EXPVAL = EXPVAL*BASE + DPSIGN(2)*VALUES(ID)
+                  expval = expval*base + dpsign(2)*values(id)
 
-               END IF
+               end if
 !
 !           Even though this character is a digit, its not expected
 !           for some reason.  Set the error flag and return.
 !
-            ELSE
+            else
 
-               NEXTI = I + 1
-               THISI = I
+               nexti = i + 1
+               thisi = i
 
-               CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-               CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-               CALL PREFIX ( UNXPCH,  1,         ERROR )
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
 
-               PTR   = I
-               RETURN
+               ptr   = i
+               return
 
-            END IF
+            end if
 
-         ELSE IF ( CLASS(ID) .EQ. DPOINT ) THEN
+         else if ( class(id) .eq. dpoint ) then
 
-            IF ( PNTOK ) THEN
+            if ( pntok ) then
 
-               BPIOK  = .FALSE.
-               EPIOK  = .FALSE.
-               PNTOK  = .FALSE.
-               SIGNOK = .FALSE.
-               DODEC  = .TRUE.
-               DOINT  = .FALSE.
-               DOEXP  = .FALSE.
-               ZEROI  = INTVAL .EQ. 0.0D0
+               bpiok  = .false.
+               epiok  = .false.
+               pntok  = .false.
+               signok = .false.
+               dodec  = .true.
+               doint  = .false.
+               doexp  = .false.
+               zeroi  = intval .eq. 0.0d0
 
-            ELSE
+            else
 
-               NEXTI = I + 1
-               THISI = I
+               nexti = i + 1
+               thisi = i
 
-               CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-               CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-               CALL PREFIX ( UNXPPT,  1,         ERROR )
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxppt,  1,         error )
 
-               PTR    = I
-               RETURN
+               ptr    = i
+               return
 
-            END IF
+            end if
 
-         ELSE IF ( CLASS(ID) .EQ. EXPONT ) THEN
+         else if ( class(id) .eq. expont ) then
 
-            SIGCHR = .TRUE.
+            sigchr = .true.
 
-            IF ( EXPOK ) THEN
+            if ( expok ) then
 
-               BPIOK  = .FALSE.
-               EPIOK  = .FALSE.
-               EXPOK  = .FALSE.
-               PNTOK  = .FALSE.
-               DODEC  = .FALSE.
-               DOINT  = .FALSE.
-               DOEXP  = .TRUE.
-               SIGNOK = .TRUE.
-               SIGNDX =  2
+               bpiok  = .false.
+               epiok  = .false.
+               expok  = .false.
+               pntok  = .false.
+               dodec  = .false.
+               doint  = .false.
+               doexp  = .true.
+               signok = .true.
+               signdx =  2
 
-            ELSE
+            else
 
-               NEXTI = I + 1
-               THISI = I
+               nexti = i + 1
+               thisi = i
 
-               CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-               CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-               CALL PREFIX ( UNXPCH,  1,         ERROR )
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
 
-               PTR   =  I
-               RETURN
+               ptr   =  i
+               return
 
-            END IF
+            end if
 
-         ELSE IF ( CLASS(ID) .EQ. SIGN ) THEN
+         else if ( class(id) .eq. sign ) then
 
-            IF ( SIGNOK ) THEN
+            if ( signok ) then
 
-               DPSIGN(SIGNDX) = VALUES(ID)
-               SIGNOK         = .FALSE.
+               dpsign(signdx) = values(id)
+               signok         = .false.
 
-            ELSE
+            else
 
-               NEXTI = I + 1
-               THISI = I
+               nexti = i + 1
+               thisi = i
 
-               CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-               CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-               CALL PREFIX ( UNXPSN,  1,         ERROR )
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpsn,  1,         error )
 
-               PTR   = I
-               RETURN
+               ptr   = i
+               return
 
-            END IF
+            end if
 
-         ELSE IF ( CLASS(ID) .EQ. BPISTR ) THEN
+         else if ( class(id) .eq. bpistr ) then
 
-            SIGCHR = .TRUE.
+            sigchr = .true.
 
-            IF ( BPIOK ) THEN
+            if ( bpiok ) then
 
-               DOINT  = .FALSE.
-               DODEC  = .FALSE.
-               DOEXP  = .FALSE.
-               EXPOK  = .FALSE.
-               PNTOK  = .FALSE.
-               BPIOK  = .FALSE.
-               SIGNOK = .FALSE.
-               EPIOK  = .TRUE.
+               doint  = .false.
+               dodec  = .false.
+               doexp  = .false.
+               expok  = .false.
+               pntok  = .false.
+               bpiok  = .false.
+               signok = .false.
+               epiok  = .true.
 
-            ELSE
+            else
 
-               NEXTI = I + 1
-               THISI = I
+               nexti = i + 1
+               thisi = i
 
-               CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-               CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-               CALL PREFIX ( UNXPCH,  1,         ERROR )
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
 
-               PTR   = I
-               RETURN
+               ptr   = i
+               return
 
-            END IF
+            end if
 
-         ELSE IF ( CLASS(ID) .EQ. EPISTR ) THEN
+         else if ( class(id) .eq. epistr ) then
 
-            IF ( EPIOK ) THEN
+            if ( epiok ) then
 
-               DOINT  = .FALSE.
-               DODEC  = .FALSE.
-               DOEXP  = .FALSE.
-               EXPOK  = .FALSE.
-               PNTOK  = .FALSE.
-               BPIOK  = .FALSE.
-               SIGNOK = .FALSE.
-               EPIOK  = .FALSE.
-               MANTSA = .TRUE.
+               doint  = .false.
+               dodec  = .false.
+               doexp  = .false.
+               expok  = .false.
+               pntok  = .false.
+               bpiok  = .false.
+               signok = .false.
+               epiok  = .false.
+               mantsa = .true.
 
-               INTVAL = PI()
+               intval = pi()
 
-            ELSE
+            else
 
-               NEXTI = I + 1
-               THISI = I
+               nexti = i + 1
+               thisi = i
 
-               CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-               CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-               CALL PREFIX ( UNXPCH,  1,         ERROR )
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
 
-               PTR   = I
-               RETURN
+               ptr   = i
+               return
 
-            END IF
+            end if
 
-         ELSE IF ( CLASS(ID) .EQ. IGNORE ) THEN
+         else if ( class(id) .eq. ignore ) then
 
 !
 !           We don't do anything.
 !
 
-         ELSE
+         else
 
 !
 !           This is definitely not expected.  Set the error message
 !           and return.
 !
-            NEXTI = I + 1
-            THISI = I
+            nexti = i + 1
+            thisi = i
 
-            CALL ZZINSSUB ( STRING, ']', NEXTI, ERROR )
-            CALL ZZINSSUB ( ERROR,  '[', THISI, ERROR )
-            CALL PREFIX ( UNXPCH,  1,         ERROR )
+            call zzinssub ( string, ']', nexti, error )
+            call zzinssub ( error,  '[', thisi, error )
+            call prefix ( unxpch,  1,         error )
 
-            PTR   = I
-            RETURN
+            ptr   = i
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
 !     If we got through the loop and it's OK to end PI, then we started
 !     it but never finished.  This is an error.
 !
-      IF ( EPIOK ) THEN
-         ERROR = UNRCST
-         PTR   = L
-         RETURN
-      END IF
+      if ( epiok ) then
+         error = unrcst
+         ptr   = l
+         return
+      end if
 
 !
 !     Put together the portion that does not involve an exponent.
@@ -1000,101 +1000,101 @@
 !                routine emulates an RPN calculator of popular repute,
 !                not because it is inherently a good idea.
 !
-      IF ( MANTSA ) THEN
+      if ( mantsa ) then
 !
 !        We had an integer part of the number, a fractional part, or
 !        both, so we need to put them together in an appropriate
 !        fashion.
 !
-         VALUE = INTVAL + ( DECVAL / DIVISR ) * FACTOR
+         value = intval + ( decval / divisr ) * factor
 
-      ELSE IF ( SIGCHR ) THEN
+      else if ( sigchr ) then
 !
 !        We do not have a mantissa, so we had an  implicit mantissa,
 !        see above, so we need to set the value to one.
 !
-         VALUE = 1.0D0
+         value = 1.0d0
 
-      ELSE
+      else
 !
 !        We have an error. There were no significant characters in the
 !        input character string, and hence we could not parse it into
 !        a number. An example of such a string would be: '+  ,,.,,'.
 !        So, we will set an appropriate error message and return.
 !
-         ERROR = UNRCST
-         PTR   = LEN(STRING) + 1
-         RETURN
+         error = unrcst
+         ptr   = len(string) + 1
+         return
 
-      END IF
+      end if
 !
 !     Adjust the entered part of the exponent by the amount
 !     we "shifted" the decimal point when we were computing
 !     the integer and decimal values.
 !
-      EXPVAL = EXPVAL + ECOUNT
+      expval = expval + ecount
 !
 !     Now take care of the exponent contribution to the answer.
 !
 !     If the exponent is negative ...
 !
-      IF ( EXPVAL .LT. 0 ) THEN
+      if ( expval .lt. 0 ) then
 
-         DO WHILE ( EXPVAL .LT. -BASE )
+         do while ( expval .lt. -base )
 
-            VALUE  = VALUE  / LOOKUP(IBASE)
-            EXPVAL = EXPVAL + BASE
+            value  = value  / lookup(ibase)
+            expval = expval + base
 
-         END DO
+         end do
 
-         VALUE  = VALUE / LOOKUP( -INT(EXPVAL) )
+         value  = value / lookup( -int(expval) )
 !
 !     If the exponent is positive ...
 !
-      ELSE IF ( EXPVAL .GT. 0 ) THEN
+      else if ( expval .gt. 0 ) then
 
-         DO WHILE ( EXPVAL .GT. BASE )
+         do while ( expval .gt. base )
 !
 !           Make sure that a multiply isn't going to create
 !           a number that overflows.
 !
-            IF ( VALUE .GE. SMLBND ) THEN
+            if ( value .ge. smlbnd ) then
 
-               ERROR = TOOBIG
-               PTR   = LEN(STRING)+1
-               RETURN
+               error = toobig
+               ptr   = len(string)+1
+               return
 
-            ELSE
+            else
 
-               VALUE  = VALUE  * LOOKUP(IBASE)
-               EXPVAL = EXPVAL - BASE
+               value  = value  * lookup(ibase)
+               expval = expval - base
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 
 
-         EXP = NINT(EXPVAL)
+         exp = nint(expval)
 !
 !        Again, make sure that a floating point overflow isn't
 !        going to happen.
 !
-         IF ( VALUE .LT. DPMAX()/LOOKUP(EXP) ) THEN
+         if ( value .lt. dpmax()/lookup(exp) ) then
 
-            VALUE = VALUE * LOOKUP(EXP)
+            value = value * lookup(exp)
 
-         ELSE
+         else
 
-               ERROR = TOOBIG
-               PTR   = LEN(STRING)+1
-               RETURN
+               error = toobig
+               ptr   = len(string)+1
+               return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      X = DPSIGN(1)*VALUE
+      x = dpsign(1)*value
 
-      RETURN
-      END
+      return
+      end

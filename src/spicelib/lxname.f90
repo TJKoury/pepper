@@ -1,7 +1,7 @@
 !$Procedure LXNAME ( Lex names )
 
-      SUBROUTINE LXNAME ( HDCHRS, TLCHRS, STRING, FIRST, LAST, IDSPEC, &
-                          NCHAR                                        )
+      subroutine lxname ( hdchrs, tlchrs, string, first, last, idspec, &
+                          nchar                                        )
 
 ! $ Abstract
 !
@@ -21,21 +21,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               MXSPEC
-      PARAMETER           ( MXSPEC = 512 )
+      integer               mxspec
+      parameter           ( mxspec = 512 )
 
-      CHARACTER*(*)         HDCHRS
-      CHARACTER*(*)         TLCHRS
-      CHARACTER*(*)         STRING
-      INTEGER               FIRST
-      INTEGER               IDSPEC ( LBCELL : * )
-      INTEGER               LAST
-      INTEGER               NCHAR
+      character*(*)         hdchrs
+      character*(*)         tlchrs
+      character*(*)         string
+      integer               first
+      integer               idspec ( lbcell : * )
+      integer               last
+      integer               nchar
 
 ! $ Brief_I/O
 !
@@ -277,69 +277,69 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHI
-      INTEGER               CARDI
-      INTEGER               RTRIM
+      integer               bsrchi
+      integer               cardi
+      integer               rtrim
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MAXCHR
-      PARAMETER           ( MAXCHR = 255 )
+      integer               maxchr
+      parameter           ( maxchr = 255 )
 
-      INTEGER               BLANK
-      PARAMETER           ( BLANK  = 32  )
+      integer               blank
+      parameter           ( blank  = 32  )
 
-      INTEGER               MINPRT
-      PARAMETER           ( MINPRT = 32 )
+      integer               minprt
+      parameter           ( minprt = 32 )
 
-      INTEGER               MAXPRT
-      PARAMETER           ( MAXPRT = 126 )
+      integer               maxprt
+      parameter           ( maxprt = 126 )
 
 !
 !     IDSPEC parameters:
 !
-      INTEGER               NHPOS
-      PARAMETER           ( NHPOS  = 1 )
+      integer               nhpos
+      parameter           ( nhpos  = 1 )
 
-      INTEGER               NTPOS
-      PARAMETER           ( NTPOS  = 2 )
+      integer               ntpos
+      parameter           ( ntpos  = 2 )
 
-      INTEGER               HCPOS
-      PARAMETER           ( HCPOS  = 3 )
+      integer               hcpos
+      parameter           ( hcpos  = 3 )
 
 
 !
 !     Local variables
 !
-      INTEGER               C
-      INTEGER               HEADC  ( LBCELL : MAXCHR )
-      INTEGER               HL
-      INTEGER               I
-      INTEGER               L
-      INTEGER               NHEAD
-      INTEGER               NTAIL
-      INTEGER               TAILC  ( LBCELL : MAXCHR )
-      INTEGER               TCPOS
-      INTEGER               TL
+      integer               c
+      integer               headc  ( lbcell : maxchr )
+      integer               hl
+      integer               i
+      integer               l
+      integer               nhead
+      integer               ntail
+      integer               tailc  ( lbcell : maxchr )
+      integer               tcpos
+      integer               tl
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LXNAME' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'LXNAME' )
+      end if
 
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      CALL CHKOUT ( 'LXNAME' )
-      RETURN
+      call chkout ( 'LXNAME' )
+      return
 
 
 
@@ -347,7 +347,7 @@
 
 !$Procedure LXIDNT ( Lex identifier )
 
-      ENTRY LXIDNT ( IDSPEC, STRING, FIRST, LAST, NCHAR )
+      entry lxidnt ( idspec, string, first, last, nchar )
 
 ! $ Abstract
 !
@@ -504,63 +504,63 @@
 !
 !     Save the length of the non-blank prefix of the input string.
 !
-      L    =   RTRIM(STRING)
+      l    =   rtrim(string)
 
 !
 !     Handle the cases in which we can tell right away that
 !     no token can be found.
 !
-      IF (  ( FIRST .LT. 1 ) .OR. ( FIRST .GT. L )  ) THEN
+      if (  ( first .lt. 1 ) .or. ( first .gt. l )  ) then
 
-         LAST  = FIRST - 1
-         NCHAR = 0
-         RETURN
+         last  = first - 1
+         nchar = 0
+         return
 
-      END IF
+      end if
 
 !
 !     In order for there to be a match, the character at position
 !     FIRST must be in the head character set.
 !
-      NHEAD =  IDSPEC(NHPOS)
+      nhead =  idspec(nhpos)
 
-      C     =  ICHAR  (  STRING(FIRST:FIRST)       )
-      I     =  BSRCHI (  C,  NHEAD,  IDSPEC(HCPOS) )
+      c     =  ichar  (  string(first:first)       )
+      i     =  bsrchi (  c,  nhead,  idspec(hcpos) )
 
-      IF ( I .EQ. 0 ) THEN
+      if ( i .eq. 0 ) then
 
-         LAST  = FIRST - 1
-         NCHAR = 0
-         RETURN
+         last  = first - 1
+         nchar = 0
+         return
 
-      END IF
+      end if
 
 !
 !     We have an identifier.  The remaining question is how long it is.
 !     Each subsequent character that is in the tail character set is
 !     considered to be part of the identifier.
 !
-      NCHAR  =  1
-      LAST   =  FIRST
-      NTAIL  =  IDSPEC(NTPOS)
-      TCPOS  =  3 + NHEAD
+      nchar  =  1
+      last   =  first
+      ntail  =  idspec(ntpos)
+      tcpos  =  3 + nhead
 
-      DO WHILE ( LAST .LT. L )
+      do while ( last .lt. l )
 
-         C  =  ICHAR  (  STRING( LAST+1 : LAST+1 )       )
-         I  =  BSRCHI (  C,      NTAIL,   IDSPEC(TCPOS)  )
+         c  =  ichar  (  string( last+1 : last+1 )       )
+         i  =  bsrchi (  c,      ntail,   idspec(tcpos)  )
 
-         IF ( I .EQ. 0 ) THEN
-            RETURN
-         ELSE
-            NCHAR  =  NCHAR + 1
-            LAST   =  LAST  + 1
-         END IF
+         if ( i .eq. 0 ) then
+            return
+         else
+            nchar  =  nchar + 1
+            last   =  last  + 1
+         end if
 
-      END DO
+      end do
 
 
-      RETURN
+      return
 
 
 
@@ -568,7 +568,7 @@
 
 !$Procedure LXDFID ( Lex, default identifier characters )
 
-      ENTRY LXDFID ( IDSPEC )
+      entry lxdfid ( idspec )
 
 ! $ Abstract
 !
@@ -697,46 +697,46 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LXDFID' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'LXDFID' )
+      end if
 
 !
 !     Initialize our head and tail character sets.
 !
-      CALL SSIZEI ( MAXCHR, HEADC )
-      CALL SSIZEI ( MAXCHR, TAILC )
+      call ssizei ( maxchr, headc )
+      call ssizei ( maxchr, tailc )
 
 !
 !     Fill in the head and tail character arrays with their default
 !     values.  User integer codes for the characters.
 !
-      DO I = 1, 26
+      do i = 1, 26
 
-         HEADC( I    ) = ICHAR( 'A'  ) + I - 1
-         HEADC( I+26 ) = ICHAR( 'a'  ) + I - 1
-         TAILC( I    ) = HEADC( I    )
-         TAILC( I+26 ) = HEADC( I+26 )
+         headc( i    ) = ichar( 'A'  ) + i - 1
+         headc( i+26 ) = ichar( 'a'  ) + i - 1
+         tailc( i    ) = headc( i    )
+         tailc( i+26 ) = headc( i+26 )
 
-      END DO
+      end do
 
-      DO I = 1, 10
-         TAILC(52+I) = ICHAR('0') + I - 1
-      END DO
+      do i = 1, 10
+         tailc(52+i) = ichar('0') + i - 1
+      end do
 
-      TAILC(63) = ICHAR( '$' )
-      TAILC(64) = ICHAR( '_' )
+      tailc(63) = ichar( '$' )
+      tailc(64) = ichar( '_' )
 
-      NHEAD     = 52
-      NTAIL     = 64
+      nhead     = 52
+      ntail     = 64
 
 !
 !     Turn the arrays into integer sets.
 !
-      CALL VALIDI ( MAXCHR, NHEAD, HEADC )
-      CALL VALIDI ( MAXCHR, NTAIL, TAILC )
+      call validi ( maxchr, nhead, headc )
+      call validi ( maxchr, ntail, tailc )
 
 !
 !     Create the output specification IDSPEC.  This is a cell
@@ -750,21 +750,21 @@
 !     IDSPEC is assumed to be initialized.
 !
 !
-      CALL SCARDI ( 0,     IDSPEC )
+      call scardi ( 0,     idspec )
 
-      CALL APPNDI ( NHEAD, IDSPEC )
-      CALL APPNDI ( NTAIL, IDSPEC )
+      call appndi ( nhead, idspec )
+      call appndi ( ntail, idspec )
 
-      DO I = 1, NHEAD
-         CALL APPNDI ( HEADC(I), IDSPEC )
-      END DO
+      do i = 1, nhead
+         call appndi ( headc(i), idspec )
+      end do
 
-      DO I = 1, NTAIL
-         CALL APPNDI ( TAILC(I), IDSPEC )
-      END DO
+      do i = 1, ntail
+         call appndi ( tailc(i), idspec )
+      end do
 
-      CALL CHKOUT ( 'LXDFID' )
-      RETURN
+      call chkout ( 'LXDFID' )
+      return
 
 
 
@@ -772,7 +772,7 @@
 
 !$Procedure LXCSID ( Lex, custom identifier characters )
 
-      ENTRY LXCSID ( HDCHRS, TLCHRS, IDSPEC )
+      entry lxcsid ( hdchrs, tlchrs, idspec )
 
 ! $ Abstract
 !
@@ -920,63 +920,63 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LXCSID' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'LXCSID' )
+      end if
 
 !
 !     Initialize our head and tail character sets, every time.
 !
-      CALL SSIZEI ( MAXCHR, HEADC )
-      CALL SSIZEI ( MAXCHR, TAILC )
+      call ssizei ( maxchr, headc )
+      call ssizei ( maxchr, tailc )
 
 !
 !     Check the inputs before proceeding.
 !
-      HL  =  RTRIM(HDCHRS)
-      TL  =  RTRIM(TLCHRS)
+      hl  =  rtrim(hdchrs)
+      tl  =  rtrim(tlchrs)
 
 
-      DO I = 1, HL
+      do i = 1, hl
 
-         C  =  ICHAR( HDCHRS(I:I) )
+         c  =  ichar( hdchrs(i:i) )
 
-         IF (  ( C .LT. MINPRT ) .OR. ( C .GT. MAXPRT )  ) THEN
+         if (  ( c .lt. minprt ) .or. ( c .gt. maxprt )  ) then
 
-            CALL SETMSG ( 'The character having integer code # in '  // &
+            call setmsg ( 'The character having integer code # in '  // &
                           'position # of the head character string ' // &
                           'HDCHRS is a non-printing character.'      )
-            CALL ERRINT ( '#',  C                                    )
-            CALL ERRINT ( '#',  I                                    )
-            CALL SIGERR ( 'SPICE(NONPRINTINGCHARS)'                  )
-            CALL CHKOUT ( 'LXCSID'                                   )
-            RETURN
+            call errint ( '#',  c                                    )
+            call errint ( '#',  i                                    )
+            call sigerr ( 'SPICE(NONPRINTINGCHARS)'                  )
+            call chkout ( 'LXCSID'                                   )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      DO I = 1, TL
+      do i = 1, tl
 
-         C  =  ICHAR( TLCHRS(I:I) )
+         c  =  ichar( tlchrs(i:i) )
 
-         IF (  ( C .LT. MINPRT ) .OR. ( C .GT. MAXPRT )  ) THEN
+         if (  ( c .lt. minprt ) .or. ( c .gt. maxprt )  ) then
 
-            CALL SETMSG ( 'The character having integer code # in '  // &
+            call setmsg ( 'The character having integer code # in '  // &
                           'position # of the tail character string ' // &
                           'TLCHRS is a non-printing character.'      )
-            CALL ERRINT ( '#',  C                                    )
-            CALL ERRINT ( '#',  I                                    )
-            CALL SIGERR ( 'SPICE(NONPRINTINGCHARS)'                  )
-            CALL CHKOUT ( 'LXCSID'                                   )
-            RETURN
+            call errint ( '#',  c                                    )
+            call errint ( '#',  i                                    )
+            call sigerr ( 'SPICE(NONPRINTINGCHARS)'                  )
+            call chkout ( 'LXCSID'                                   )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
@@ -984,32 +984,32 @@
 !     characters for the head identifier character---all except
 !     the blanks.  Same deal goes for the tail characters.
 !
-      DO I = 1, HL
+      do i = 1, hl
 
-         C  =  ICHAR( HDCHRS(I:I) )
+         c  =  ichar( hdchrs(i:i) )
 
-         IF ( C .NE. BLANK ) THEN
-            CALL INSRTI ( C, HEADC )
-         END IF
+         if ( c .ne. blank ) then
+            call insrti ( c, headc )
+         end if
 
-      END DO
+      end do
 
-      NHEAD  =  CARDI ( HEADC )
-
-
-
-      DO I = 1, TL
-
-         C  =  ICHAR( TLCHRS(I:I) )
-
-         IF ( C .NE. BLANK ) THEN
-            CALL INSRTI ( C, TAILC )
-         END IF
-
-      END DO
+      nhead  =  cardi ( headc )
 
 
-      NTAIL  =  CARDI ( TAILC )
+
+      do i = 1, tl
+
+         c  =  ichar( tlchrs(i:i) )
+
+         if ( c .ne. blank ) then
+            call insrti ( c, tailc )
+         end if
+
+      end do
+
+
+      ntail  =  cardi ( tailc )
 
 !
 !     Create the output specification IDSPEC.  This is a cell
@@ -1023,19 +1023,19 @@
 !     IDSPEC is assumed to be initialized.
 !
 !
-      CALL SCARDI ( 0,     IDSPEC )
+      call scardi ( 0,     idspec )
 
-      CALL APPNDI ( NHEAD, IDSPEC )
-      CALL APPNDI ( NTAIL, IDSPEC )
+      call appndi ( nhead, idspec )
+      call appndi ( ntail, idspec )
 
-      DO I = 1, NHEAD
-         CALL APPNDI ( HEADC(I), IDSPEC )
-      END DO
+      do i = 1, nhead
+         call appndi ( headc(i), idspec )
+      end do
 
-      DO I = 1, NTAIL
-         CALL APPNDI ( TAILC(I), IDSPEC )
-      END DO
+      do i = 1, ntail
+         call appndi ( tailc(i), idspec )
+      end do
 
-      CALL CHKOUT ( 'LXCSID' )
-      RETURN
-      END
+      call chkout ( 'LXCSID' )
+      return
+      end

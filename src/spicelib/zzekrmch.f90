@@ -1,19 +1,19 @@
 !$Procedure      ZZEKRMCH ( EK, row match )
 
-      LOGICAL FUNCTION ZZEKRMCH ( NCNSTR, &
-                                  ACTIVE, &
-                                  HANDLE, &
-                                  SEGDSC, &
-                                  CDSCRS, &
-                                  ROW, &
-                                  ELTS, &
-                                  OPS, &
-                                  VTYPES, &
-                                  CHRBUF, &
-                                  CBEGS, &
-                                  CENDS, &
-                                  DVALS, &
-                                  IVALS  )
+      logical function zzekrmch ( ncnstr, &
+                                  active, &
+                                  handle, &
+                                  segdsc, &
+                                  cdscrs, &
+                                  row, &
+                                  elts, &
+                                  ops, &
+                                  vtypes, &
+                                  chrbuf, &
+                                  cbegs, &
+                                  cends, &
+                                  dvals, &
+                                  ivals  )
 
 ! $ Abstract
 !
@@ -32,30 +32,30 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekwild.inc'
-      INCLUDE 'ekqlimit.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'ektype.inc'
+      include 'ekopcd.inc'
+      include 'ekwild.inc'
+      include 'ekqlimit.inc'
 
-      INTEGER               MAXCOL
-      PARAMETER           ( MAXCOL = 10 )
+      integer               maxcol
+      parameter           ( maxcol = 10 )
 
-      INTEGER               NCNSTR
-      LOGICAL               ACTIVE ( * )
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               CDSCRS ( CDSCSZ, * )
-      INTEGER               ROW
-      INTEGER               ELTS   ( * )
-      INTEGER               OPS    ( * )
-      INTEGER               VTYPES ( * )
-      CHARACTER*(*)         CHRBUF
-      INTEGER               CBEGS  ( * )
-      INTEGER               CENDS  ( * )
-      DOUBLE PRECISION      DVALS  ( * )
-      INTEGER               IVALS  ( * )
+      integer               ncnstr
+      logical               active ( * )
+      integer               handle
+      integer               segdsc ( * )
+      integer               cdscrs ( cdscsz, * )
+      integer               row
+      integer               elts   ( * )
+      integer               ops    ( * )
+      integer               vtypes ( * )
+      character*(*)         chrbuf
+      integer               cbegs  ( * )
+      integer               cends  ( * )
+      double precision      dvals  ( * )
+      integer               ivals  ( * )
 
 ! $ Brief_I/O
 !
@@ -242,12 +242,12 @@
 !
 !     Non-SPICELIB functions
 !
-      LOGICAL               ZZEKSCMP
+      logical               zzekscmp
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Use discovery check-in.
@@ -256,39 +256,39 @@
 !     row satisfies the constraint.  If any constraint is not satisfied,
 !     return immediately.
 !
-      I        =  1
-      ZZEKRMCH = .TRUE.
+      i        =  1
+      zzekrmch = .true.
 
-      DO WHILE (  ( I .LE. NCNSTR ) .AND. ZZEKRMCH  )
+      do while (  ( i .le. ncnstr ) .and. zzekrmch  )
 
 
-         IF ( ACTIVE(I) ) THEN
+         if ( active(i) ) then
 !
 !           See whether the row satisfies the Ith constraint.
 !
-            ZZEKRMCH  =  ZZEKSCMP ( OPS(I), &
-                                    HANDLE, &
-                                    SEGDSC, &
-                                    CDSCRS(1,I), &
-                                    ROW, &
-                                    ELTS(I), &
-                                    VTYPES(I), &
-                                    CHRBUF( CBEGS(I) : CENDS(I) ), &
-                                    DVALS(I), &
-                                    IVALS(I), &
-                                    .FALSE.   )
+            zzekrmch  =  zzekscmp ( ops(i), &
+                                    handle, &
+                                    segdsc, &
+                                    cdscrs(1,i), &
+                                    row, &
+                                    elts(i), &
+                                    vtypes(i), &
+                                    chrbuf( cbegs(i) : cends(i) ), &
+                                    dvals(i), &
+                                    ivals(i), &
+                                    .false.   )
 
-         END IF
+         end if
 
 !
 !        Take a look at the next constraint.
 !
-         I  =  I + 1
+         i  =  i + 1
 
-      END DO
+      end do
 
 !
 !     It's a match if we got this far.
 !
-      RETURN
-      END
+      return
+      end

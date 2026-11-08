@@ -1,7 +1,7 @@
 !$Procedure ZZTIME ( Private, Time --- time parsing utilities )
 
-      LOGICAL FUNCTION ZZTIME ( STRING, TRANSL, LETTER, ERROR, PIC, &
-                                TVEC,   B,      E,      L2R,   YABBRV )
+      logical function zztime ( string, transl, letter, error, pic, &
+                                tvec,   b,      e,      l2r,   yabbrv )
 
 ! $ Abstract
 !
@@ -22,17 +22,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         STRING
-      CHARACTER*(*)         TRANSL
-      CHARACTER*(1)         LETTER
-      CHARACTER*(*)         ERROR
-      CHARACTER*(*)         PIC
-      DOUBLE PRECISION      TVEC  ( * )
-      INTEGER               B
-      INTEGER               E
-      LOGICAL               L2R
-      LOGICAL               YABBRV
+      implicit none
+      character*(*)         string
+      character*(*)         transl
+      character*(1)         letter
+      character*(*)         error
+      character*(*)         pic
+      double precision      tvec  ( * )
+      integer               b
+      integer               e
+      logical               l2r
+      logical               yabbrv
 
 
 ! $ Brief_I/O
@@ -238,37 +238,37 @@
 !
 !     Entry points
 !
-      LOGICAL               ZZCMBT
-      LOGICAL               ZZGREP
-      LOGICAL               ZZISPT
-      LOGICAL               ZZIST
-      LOGICAL               ZZNOTE
-      LOGICAL               ZZREMT
-      LOGICAL               ZZSUBT
-      LOGICAL               ZZTOKNS
-      LOGICAL               ZZUNPCK
-      LOGICAL               ZZVALT
+      logical               zzcmbt
+      logical               zzgrep
+      logical               zzispt
+      logical               zzist
+      logical               zznote
+      logical               zzremt
+      logical               zzsubt
+      logical               zztokns
+      logical               zzunpck
+      logical               zzvalt
 
 !
 !     SPICELIB Functions
 !
-      INTEGER               CPOS
-      INTEGER               POS
-      INTEGER               POSR
-      INTEGER               RTRIM
-      INTEGER               ISRCHC
+      integer               cpos
+      integer               pos
+      integer               posr
+      integer               rtrim
+      integer               isrchc
 
-      LOGICAL               SAMSBI
-      LOGICAL               SAMCHI
+      logical               samsbi
+      logical               samchi
 
 !
 !     Standard Parameters
 !
-      LOGICAL               YES
-      PARAMETER           ( YES = .TRUE.  )
+      logical               yes
+      parameter           ( yes = .true.  )
 
-      LOGICAL               NO
-      PARAMETER           ( NO  = .FALSE. )
+      logical               no
+      parameter           ( no  = .false. )
 
 
 
@@ -278,106 +278,106 @@
 !     MIXED
 !
 
-      INTEGER               LOWER
-      PARAMETER           ( LOWER  = 1 )
+      integer               lower
+      parameter           ( lower  = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER  = LOWER  + 1 )
+      integer               upper
+      parameter           ( upper  = lower  + 1 )
 
-      INTEGER               MIXED
-      PARAMETER           ( MIXED  = UPPER  + 1 )
+      integer               mixed
+      parameter           ( mixed  = upper  + 1 )
 
 !
 !     FULL
 !     SHORT
 !
 
-      INTEGER               FULL
-      PARAMETER           ( FULL   = 1 )
+      integer               full
+      parameter           ( full   = 1 )
 
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = FULL   + 1 )
+      integer               short
+      parameter           ( short  = full   + 1 )
 
 !
 !     Maximum number of tokens that a valid time string can contain.
 !
-      INTEGER               MAXTKN
-      PARAMETER           ( MAXTKN = 64 )
+      integer               maxtkn
+      parameter           ( maxtkn = 64 )
 
 !
 !     Length of the string buffer containing the time string picture.
 !
-      INTEGER               PICLEN
-      PARAMETER           ( PICLEN = MAXTKN * 5 )
+      integer               piclen
+      parameter           ( piclen = maxtkn * 5 )
 
 !
 !     Representation Variables.
 !
-      CHARACTER*(MAXTKN)    REP
-      INTEGER               SIZE
+      character*(maxtkn)    rep
+      integer               size
 
-      INTEGER               BEGS ( MAXTKN )
-      INTEGER               ENDS ( MAXTKN )
-      INTEGER               PBEGS( MAXTKN )
-      INTEGER               PENDS( MAXTKN )
+      integer               begs ( maxtkn )
+      integer               ends ( maxtkn )
+      integer               pbegs( maxtkn )
+      integer               pends( maxtkn )
 
-      CHARACTER*(PICLEN)    PICTUR
-
-
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
-
-      CHARACTER*(WDSIZE)    NAMES( 32 : 126 )
-
-      CHARACTER*(WDSIZE)    MYERR
-
-      CHARACTER*(PICLEN)    MESSGE
-      CHARACTER*(PICLEN)    PICERR
-      CHARACTER*(PICLEN)    TKNERR
+      character*(piclen)    pictur
 
 
-      CHARACTER*(3)         MONTH
-      CHARACTER*(3)         MONTHS ( 12 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      DOUBLE PRECISION      HMS    ( 3  )
+      character*(wdsize)    names( 32 : 126 )
 
-      INTEGER               BLANK
-      INTEGER               FROM
-      INTEGER               GET
-      INTEGER               I
-      INTEGER               ITEM
-      INTEGER               J
-      INTEGER               K
-      INTEGER               LAST
-      INTEGER               NCHAR
-      INTEGER               NEXT
-      INTEGER               P1
-      INTEGER               P2
-      INTEGER               PTR
-      INTEGER               PUT
-      INTEGER               R
-      INTEGER               TO
-      INTEGER               W
-      INTEGER               NJD
+      character*(wdsize)    myerr
 
-      INTEGER               PFROM
-      INTEGER               PTO
-      INTEGER               PNEXT
-      INTEGER               CASE
-      INTEGER               KIND
+      character*(piclen)    messge
+      character*(piclen)    picerr
+      character*(piclen)    tknerr
 
 
-      INTEGER               NYEAR
-      INTEGER               NMON
-      INTEGER               NDAY
-      INTEGER               NHOUR
-      INTEGER               NMIN
-      INTEGER               NSEC
-      INTEGER               NDOY
-      INTEGER               VALUE
+      character*(3)         month
+      character*(3)         months ( 12 )
 
-      INTEGER               MNSIZE ( SHORT )
-      INTEGER               WKSIZE ( SHORT )
+      double precision      hms    ( 3  )
+
+      integer               blank
+      integer               from
+      integer               get
+      integer               i
+      integer               item
+      integer               j
+      integer               k
+      integer               last
+      integer               nchar
+      integer               next
+      integer               p1
+      integer               p2
+      integer               ptr
+      integer               put
+      integer               r
+      integer               to
+      integer               w
+      integer               njd
+
+      integer               pfrom
+      integer               pto
+      integer               pnext
+      integer               case
+      integer               kind
+
+
+      integer               nyear
+      integer               nmon
+      integer               nday
+      integer               nhour
+      integer               nmin
+      integer               nsec
+      integer               ndoy
+      integer               value
+
+      integer               mnsize ( short )
+      integer               wksize ( short )
 
 !
 !     Token Recognition Variables.
@@ -386,52 +386,52 @@
 !     make room for 70 just so we won't have to increase
 !     the parameter NRECOG soon.
 !
-      INTEGER               NRECOG
-      PARAMETER           ( NRECOG = 70 )
+      integer               nrecog
+      parameter           ( nrecog = 70 )
 
-      INTEGER               SMWDSZ
-      PARAMETER           ( SMWDSZ = 12 )
+      integer               smwdsz
+      parameter           ( smwdsz = 12 )
 
-      INTEGER               WIDTH ( NRECOG )
-      CHARACTER*(SMWDSZ)    RECOG ( NRECOG )
-      CHARACTER*(SMWDSZ)    SPCIAL
+      integer               width ( nrecog )
+      character*(smwdsz)    recog ( nrecog )
+      character*(smwdsz)    spcial
 
-      CHARACTER*(SMWDSZ)    MNMRK ( MIXED, SHORT )
-      CHARACTER*(SMWDSZ)    WKDAY ( MIXED, SHORT )
+      character*(smwdsz)    mnmrk ( mixed, short )
+      character*(smwdsz)    wkday ( mixed, short )
 
-      CHARACTER*(1)         CLASS ( NRECOG )
-      CHARACTER*(1)         THIS
+      character*(1)         class ( nrecog )
+      character*(1)         this
 
-      INTEGER               F ( 32 : 126 )
-      INTEGER               L ( 32 : 126 )
+      integer               f ( 32 : 126 )
+      integer               l ( 32 : 126 )
 
-      LOGICAL               AMPM
-      LOGICAL               DID
-      LOGICAL               GOT
-      LOGICAL               CHECK
-      LOGICAL               FIRST
+      logical               ampm
+      logical               did
+      logical               got
+      logical               check
+      logical               first
 
-      SAVE
+      save
 
-      DATA                  SIZE   /  0     /
-      DATA                  FIRST  / .TRUE. /
-      DATA                  MONTHS / 'JAN', 'FEB', 'MAR', 'APR', &
+      data                  size   /  0     /
+      data                  first  / .true. /
+      data                  months / 'JAN', 'FEB', 'MAR', 'APR', &
                                      'MAY', 'JUN', 'JUL', 'AUG', &
                                      'SEP', 'OCT', 'NOV', 'DEC' /
 
-      ZZTIME = .FALSE.
+      zztime = .false.
 
-      CALL CHKIN  ( 'ZZTIME'            )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZTIME'            )
-      RETURN
+      call chkin  ( 'ZZTIME'            )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZTIME'            )
+      return
 
 
 
 
 !$Procedure ZZCMBT ( Private, Time --- combine tokens )
 
-      ENTRY ZZCMBT  ( STRING, LETTER, L2R )
+      entry zzcmbt  ( string, letter, l2r )
 
 ! $ Abstract
 !
@@ -546,58 +546,58 @@
 !
 !     So far we haven't combined anything.
 !
-      DID = NO
+      did = no
 !
 !     Look for the substring either looking from the
 !     left (L2R is YES) or from the right (L2R is NO).
 !
-      IF ( L2R ) THEN
-         FROM = POS  ( REP(1:SIZE), STRING, 1    )
-      ELSE
-         FROM = POSR ( REP(1:SIZE), STRING, SIZE )
-      END IF
+      if ( l2r ) then
+         from = pos  ( rep(1:size), string, 1    )
+      else
+         from = posr ( rep(1:size), string, size )
+      end if
 
-      TO = FROM + LEN(STRING) - 1
+      to = from + len(string) - 1
 
-      IF ( FROM .GT. 0 ) THEN
+      if ( from .gt. 0 ) then
 
-         DID         = YES
-         ENDS(FROM)  = ENDS(TO)
-         PENDS(FROM) = PENDS(TO)
-         PUT         = FROM + 1
-         NEXT        = TO   + 1
+         did         = yes
+         ends(from)  = ends(to)
+         pends(from) = pends(to)
+         put         = from + 1
+         next        = to   + 1
 
 !
 !        Perform the substitution in the representation
 !
-         CALL ZZREPSUB ( REP, FROM, TO, LETTER, REP )
+         call zzrepsub ( rep, from, to, letter, rep )
 !
 !        Now update the begins and ends of tokens in the original
 !        string.
 !
-         DO GET = NEXT, SIZE
+         do get = next, size
 
-            BEGS (PUT) = BEGS (GET)
-            ENDS (PUT) = ENDS (GET)
-            PBEGS(PUT) = PBEGS(GET)
-            PENDS(PUT) = PENDS(GET)
+            begs (put) = begs (get)
+            ends (put) = ends (get)
+            pbegs(put) = pbegs(get)
+            pends(put) = pends(get)
 
-            PUT       = PUT + 1
-         END DO
+            put       = put + 1
+         end do
 
-         SIZE = SIZE - LEN(STRING) + 1
+         size = size - len(string) + 1
 
-      END IF
+      end if
 
-      ZZCMBT = DID
-      RETURN
+      zzcmbt = did
+      return
 
 
 
 
 !$Procedure ZZGREP ( Private, Time --- get representation )
 
-      ENTRY ZZGREP  ( STRING )
+      entry zzgrep  ( string )
 
 ! $ Abstract
 !
@@ -690,17 +690,17 @@
 !
 !-&
 
-      STRING = REP(1:MAX(1,SIZE))
-      ZZGREP = .TRUE.
+      string = rep(1:max(1,size))
+      zzgrep = .true.
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZISPT ( Private, Time --- is pair of tokens )
 
-      ENTRY ZZISPT  ( STRING, B, E )
+      entry zzispt  ( string, b, e )
 
 ! $ Abstract
 !
@@ -808,44 +808,44 @@
 !
 !-&
 
-      DID  = NO
-      FROM = CPOS ( REP, STRING, 1 )
+      did  = no
+      from = cpos ( rep, string, 1 )
 
-      DO WHILE ( FROM .GT. 0 )
+      do while ( from .gt. 0 )
 
-         IF ( FROM .LT. SIZE ) THEN
-            TO   = FROM + 1
-            DID  = INDEX( STRING, REP(TO:TO) ) .GT. 0
-         ELSE
-            B       = 0
-            E       = 0
-            ZZISPT  = .FALSE.
-            RETURN
-         END IF
+         if ( from .lt. size ) then
+            to   = from + 1
+            did  = index( string, rep(to:to) ) .gt. 0
+         else
+            b       = 0
+            e       = 0
+            zzispt  = .false.
+            return
+         end if
 
-         IF ( DID ) THEN
-            B      = BEGS(FROM)
-            E      = ENDS(TO)
-            ZZISPT = .TRUE.
-            RETURN
-         END IF
+         if ( did ) then
+            b      = begs(from)
+            e      = ends(to)
+            zzispt = .true.
+            return
+         end if
 
-         FROM = CPOS ( REP, STRING, TO )
+         from = cpos ( rep, string, to )
 
-      END DO
+      end do
 
-      B      =  0
-      E      =  0
-      ZZISPT = .FALSE.
+      b      =  0
+      e      =  0
+      zzispt = .false.
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZIST ( Private, Time --- is there a token )
 
-      ENTRY ZZIST   ( LETTER )
+      entry zzist   ( letter )
 
 ! $ Abstract
 !
@@ -944,15 +944,15 @@
 !
 !-&
 
-      ZZIST = INDEX ( REP(1:SIZE), LETTER ) .GT. 0
-      RETURN
+      zzist = index ( rep(1:size), letter ) .gt. 0
+      return
 
 
 
 
 !$Procedure ZZNOTE ( Private, Time --- note the existence and remove )
 
-      ENTRY ZZNOTE  ( LETTER, B, E )
+      entry zznote  ( letter, b, e )
 
 ! $ Abstract
 !
@@ -1066,44 +1066,44 @@
 !-&
 
 
-      PUT = INDEX ( REP, LETTER )
+      put = index ( rep, letter )
 
-      IF ( PUT .GT. 0 ) THEN
-         B = BEGS(PUT)
-         E = ENDS(PUT)
+      if ( put .gt. 0 ) then
+         b = begs(put)
+         e = ends(put)
 
-         NEXT = PUT + 1
+         next = put + 1
 
-         DO GET = NEXT, SIZE
+         do get = next, size
 
-            BEGS (PUT)     = BEGS (GET)
-            ENDS (PUT)     = ENDS (GET)
-            PBEGS(PUT)     = PBEGS(GET)
-            PENDS(PUT)     = PENDS(GET)
-            REP  (PUT:PUT) = REP  (GET:GET)
+            begs (put)     = begs (get)
+            ends (put)     = ends (get)
+            pbegs(put)     = pbegs(get)
+            pends(put)     = pends(get)
+            rep  (put:put) = rep  (get:get)
 
-            PUT           = PUT + 1
-         END DO
+            put           = put + 1
+         end do
 
-         REP(SIZE:) = ' '
-         SIZE       = SIZE - 1
-         DID        = YES
+         rep(size:) = ' '
+         size       = size - 1
+         did        = yes
 
-      ELSE
-         B          = 0
-         E          = 0
-         DID        = NO
-      END IF
+      else
+         b          = 0
+         e          = 0
+         did        = no
+      end if
 
-      ZZNOTE = DID
-      RETURN
+      zznote = did
+      return
 
 
 
 
 !$Procedure ZZREMT ( Private, Time --- remove token )
 
-      ENTRY ZZREMT  ( LETTER )
+      entry zzremt  ( letter )
 
 ! $ Abstract
 !
@@ -1202,41 +1202,41 @@
 !
 !-&
 
-      PUT = 0
-      DID = NO
+      put = 0
+      did = no
 
-      DO I = 1, SIZE
+      do i = 1, size
 
-         IF ( ICHAR(REP(I:I) ) .NE. ICHAR(LETTER) ) THEN
-            PUT            = PUT + 1
-            REP  (PUT:PUT) = REP  (I:I)
-            BEGS (PUT)     = BEGS (I)
-            ENDS (PUT)     = ENDS (I)
-            PBEGS(PUT)     = PBEGS(I)
-            PENDS(PUT)     = PENDS(I)
-         ELSE
-            DID = YES
-         END IF
+         if ( ichar(rep(i:i) ) .ne. ichar(letter) ) then
+            put            = put + 1
+            rep  (put:put) = rep  (i:i)
+            begs (put)     = begs (i)
+            ends (put)     = ends (i)
+            pbegs(put)     = pbegs(i)
+            pends(put)     = pends(i)
+         else
+            did = yes
+         end if
 
-      END DO
+      end do
 
-      SIZE = PUT
+      size = put
 
-      IF ( PUT .EQ. 0 ) THEN
-         REP = ' '
-      ELSE IF ( PUT .LT. LEN(REP) ) THEN
-         REP(PUT+1:) = ' '
-      END IF
+      if ( put .eq. 0 ) then
+         rep = ' '
+      else if ( put .lt. len(rep) ) then
+         rep(put+1:) = ' '
+      end if
 
-      ZZREMT = DID
-      RETURN
+      zzremt = did
+      return
 
 
 
 
 !$Procedure ZZSUBT ( Private, Time --- substitute tokens )
 
-      ENTRY ZZSUBT  ( STRING, TRANSL, L2R )
+      entry zzsubt  ( string, transl, l2r )
 
 ! $ Abstract
 !
@@ -1370,69 +1370,69 @@
 !
 !     So far we haven't combined anything.
 !
-      DID = NO
-      K   = LEN ( STRING )
+      did = no
+      k   = len ( string )
 
 !
 !     We have two special cases to deal with.
 !
-      IF ( ICHAR(STRING(1:1)) .EQ. ICHAR('<') .AND. K .GT. 1 ) THEN
+      if ( ichar(string(1:1)) .eq. ichar('<') .and. k .gt. 1 ) then
 
-         TO   = MIN( K-1, SIZE )
-         FROM = 1
+         to   = min( k-1, size )
+         from = 1
 
-         IF ( STRING(2:K) .EQ. REP(FROM:TO) ) THEN
-            REP(FROM:TO) = TRANSL
-            ZZSUBT       = YES
-         ELSE
-            ZZSUBT       = NO
-         END IF
+         if ( string(2:k) .eq. rep(from:to) ) then
+            rep(from:to) = transl
+            zzsubt       = yes
+         else
+            zzsubt       = no
+         end if
 
-         RETURN
+         return
 
-      ELSE IF ( ICHAR(STRING(K:K)) .EQ. ICHAR('>') .AND. K .GT. 1 ) THEN
+      else if ( ichar(string(k:k)) .eq. ichar('>') .and. k .gt. 1 ) then
 
-         FROM = MAX(1,SIZE - K + 2)
-         TO   = SIZE
+         from = max(1,size - k + 2)
+         to   = size
 
-         IF ( STRING(1:K-1) .EQ. REP(FROM:TO) ) THEN
-            REP(FROM:TO) =  TRANSL
-            ZZSUBT       = YES
-         ELSE
-            ZZSUBT       = NO
-         END IF
+         if ( string(1:k-1) .eq. rep(from:to) ) then
+            rep(from:to) =  transl
+            zzsubt       = yes
+         else
+            zzsubt       = no
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 
 !
 !     Look for the substring either looking from the
 !     left (L2R is YES) or from the right (L2R is NO).
 !
-      IF ( L2R ) THEN
-         FROM = POS  ( REP, STRING, 1 )
-      ELSE
-         FROM = POSR ( REP, STRING, SIZE )
-      END IF
+      if ( l2r ) then
+         from = pos  ( rep, string, 1 )
+      else
+         from = posr ( rep, string, size )
+      end if
 
-      TO   = FROM + LEN(TRANSL) - 1
+      to   = from + len(transl) - 1
 
-      IF ( FROM .GT. 0 ) THEN
-         DID          = YES
-         REP(FROM:TO) = TRANSL
-      END IF
+      if ( from .gt. 0 ) then
+         did          = yes
+         rep(from:to) = transl
+      end if
 
-      ZZSUBT = DID
-      RETURN
+      zzsubt = did
+      return
 
 
 
 
 !$Procedure ZZTOKNS ( Private, Time --- Time Tokens )
 
-      ENTRY ZZTOKNS ( STRING, ERROR )
+      entry zztokns ( string, error )
 
 ! $ Abstract
 !
@@ -1594,12 +1594,12 @@
 !     The first time in this routine we initialize our "tokenizing"
 !     table.
 !
-      ZZTOKNS = NO
+      zztokns = no
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = NO
-         BLANK = ICHAR ( ' ' )
+         first = no
+         blank = ichar ( ' ' )
 
 !
 !        These are the error message templates for errors generated
@@ -1607,17 +1607,17 @@
 !        or are too long for their pictures to fit in the internal
 !        picture buffer.
 !
-         TKNERR = 'The input time string ''#'' cannot be processed ' // &
+         tknerr = 'The input time string ''#'' cannot be processed ' // &
                   'because it contains more than @ recognizable ' // &
                   'tokens. The token that could not be processed ' // &
                   'was ''#''.'
-         CALL REPMI ( TKNERR, '@', MAXTKN, TKNERR )
+         call repmi ( tknerr, '@', maxtkn, tknerr )
 
-         PICERR = 'The input time string ''#'' cannot be processed '// &
+         picerr = 'The input time string ''#'' cannot be processed '// &
                   'because the internal picture describing it ' // &
                   'requires more than @ characters. The token that ' // &
                   'could not be processed was ''#''.'
-         CALL REPMI ( PICERR, '@', PICLEN, PICERR )
+         call repmi ( picerr, '@', piclen, picerr )
 
 !
 !        Below is the list of recognized substrings. The basic
@@ -1637,252 +1637,252 @@
 !
 !
 
-         DO I = 32, 126
-            F(I)     =  0
-            L(I)     = -1
-            NAMES(I) = 'substring'
-         END DO
+         do i = 32, 126
+            f(i)     =  0
+            l(i)     = -1
+            names(i) = 'substring'
+         end do
 
 
-         NAMES( ICHAR('''') ) = '"Year Abbreviation Mark"'
-         NAMES( ICHAR(',' ) ) = 'comma'
-         NAMES( ICHAR('-' ) ) = 'dash'
-         NAMES( ICHAR('.' ) ) = 'period'
-         NAMES( ICHAR('/' ) ) = 'slash'
-         NAMES( ICHAR(':' ) ) = 'colon'
-         NAMES( ICHAR('D' ) ) = 'Day of Month'
-         NAMES( ICHAR('H' ) ) = 'Hour'
-         NAMES( ICHAR('M' ) ) = 'Minute'
-         NAMES( ICHAR('N' ) ) = 'AM/PM indicator'
-         NAMES( ICHAR('O' ) ) = 'UTC-Offset indicator'
-         NAMES( ICHAR('S' ) ) = 'Second'
-         NAMES( ICHAR('Y' ) ) = 'Year'
-         NAMES( ICHAR('Z' ) ) = 'Time-Zone indicator'
-         NAMES( ICHAR('[' ) ) = 'Left Parenthesis'
-         NAMES( ICHAR(']' ) ) = 'Right Parenthesis'
-         NAMES( ICHAR('b' ) ) = 'White Space'
-         NAMES( ICHAR('d' ) ) = 'Day-of-Year indicator'
-         NAMES( ICHAR('e' ) ) = 'Era'
-         NAMES( ICHAR('i' ) ) = 'Integer'
-         NAMES( ICHAR('j' ) ) = 'Julian Date indicator'
-         NAMES( ICHAR('m' ) ) = 'Month'
-         NAMES( ICHAR('n' ) ) = 'Decimal Number'
-         NAMES( ICHAR('o' ) ) = 'UTC-Offset indicator'
-         NAMES( ICHAR('s' ) ) = 'Time System specification'
-         NAMES( ICHAR('t' ) ) = 'ISO Time Separator'
-         NAMES( ICHAR('w' ) ) = 'Weekday'
-         NAMES( ICHAR('y' ) ) = 'Day of Year'
+         names( ichar('''') ) = '"Year Abbreviation Mark"'
+         names( ichar(',' ) ) = 'comma'
+         names( ichar('-' ) ) = 'dash'
+         names( ichar('.' ) ) = 'period'
+         names( ichar('/' ) ) = 'slash'
+         names( ichar(':' ) ) = 'colon'
+         names( ichar('D' ) ) = 'Day of Month'
+         names( ichar('H' ) ) = 'Hour'
+         names( ichar('M' ) ) = 'Minute'
+         names( ichar('N' ) ) = 'AM/PM indicator'
+         names( ichar('O' ) ) = 'UTC-Offset indicator'
+         names( ichar('S' ) ) = 'Second'
+         names( ichar('Y' ) ) = 'Year'
+         names( ichar('Z' ) ) = 'Time-Zone indicator'
+         names( ichar('[' ) ) = 'Left Parenthesis'
+         names( ichar(']' ) ) = 'Right Parenthesis'
+         names( ichar('b' ) ) = 'White Space'
+         names( ichar('d' ) ) = 'Day-of-Year indicator'
+         names( ichar('e' ) ) = 'Era'
+         names( ichar('i' ) ) = 'Integer'
+         names( ichar('j' ) ) = 'Julian Date indicator'
+         names( ichar('m' ) ) = 'Month'
+         names( ichar('n' ) ) = 'Decimal Number'
+         names( ichar('o' ) ) = 'UTC-Offset indicator'
+         names( ichar('s' ) ) = 'Time System specification'
+         names( ichar('t' ) ) = 'ISO Time Separator'
+         names( ichar('w' ) ) = 'Weekday'
+         names( ichar('y' ) ) = 'Day of Year'
 
-         MNMRK ( LOWER, FULL  ) = 'month'
-         MNMRK ( UPPER, FULL  ) = 'MONTH'
-         MNMRK ( MIXED, FULL  ) = 'Month'
-         MNMRK ( LOWER, SHORT ) = 'mon'
-         MNMRK ( UPPER, SHORT ) = 'MON'
-         MNMRK ( MIXED, SHORT ) = 'Mon'
+         mnmrk ( lower, full  ) = 'month'
+         mnmrk ( upper, full  ) = 'MONTH'
+         mnmrk ( mixed, full  ) = 'Month'
+         mnmrk ( lower, short ) = 'mon'
+         mnmrk ( upper, short ) = 'MON'
+         mnmrk ( mixed, short ) = 'Mon'
 
-         WKDAY ( LOWER, FULL  ) = 'weekday'
-         WKDAY ( UPPER, FULL  ) = 'WEEKDAY'
-         WKDAY ( MIXED, FULL  ) = 'Weekday'
-         WKDAY ( LOWER, SHORT ) = 'wkd'
-         WKDAY ( UPPER, SHORT ) = 'WKD'
-         WKDAY ( MIXED, SHORT ) = 'Wkd'
+         wkday ( lower, full  ) = 'weekday'
+         wkday ( upper, full  ) = 'WEEKDAY'
+         wkday ( mixed, full  ) = 'Weekday'
+         wkday ( lower, short ) = 'wkd'
+         wkday ( upper, short ) = 'WKD'
+         wkday ( mixed, short ) = 'Wkd'
 !
 !        Length of the items Month, Mon, weekday, wkd
 !
-         WKSIZE ( FULL  ) = 7
-         WKSIZE ( SHORT ) = 3
-         MNSIZE ( FULL  ) = 5
-         MNSIZE ( SHORT ) = 3
+         wksize ( full  ) = 7
+         wksize ( short ) = 3
+         mnsize ( full  ) = 5
+         mnsize ( short ) = 3
 
-         I = 0
+         i = 0
 !
 !        Tokens beginning with ' '
 !
-         I              =  I + 1
-         F( ICHAR(' ')) =  I
-         RECOG(I)       = ' '
-         WIDTH(I)       =  1
-         CLASS(I)       = 'b'
-         L( ICHAR(' ')) =  I
+         i              =  i + 1
+         f( ichar(' ')) =  i
+         recog(i)       = ' '
+         width(i)       =  1
+         class(i)       = 'b'
+         l( ichar(' ')) =  i
 
 !
 !        Tokens beginning with '('
 !
-         I              =  I + 1
-         F( ICHAR('(')) =  I
-         RECOG(I)       = '('
-         WIDTH(I)       =  1
-         CLASS(I)       = '['
-         L( ICHAR('(')) =  I
+         i              =  i + 1
+         f( ichar('(')) =  i
+         recog(i)       = '('
+         width(i)       =  1
+         class(i)       = '['
+         l( ichar('(')) =  i
 !
 !        Tokens beginning with ')'
 !
-         I              =  I + 1
-         F( ICHAR(')')) =  I
-         RECOG(I)       = ')'
-         WIDTH(I)       =  1
-         CLASS(I)       = ']'
-         L( ICHAR(')')) =  I
+         i              =  i + 1
+         f( ichar(')')) =  i
+         recog(i)       = ')'
+         width(i)       =  1
+         class(i)       = ']'
+         l( ichar(')')) =  i
 !
 !        Tokens beginning with ','
 !
-         I              =  I + 1
-         F( ICHAR(',')) =  I
-         RECOG(I)       = ','
-         WIDTH(I)       =  1
-         CLASS(I)       = ','
-         L( ICHAR(',')) =  I
+         i              =  i + 1
+         f( ichar(',')) =  i
+         recog(i)       = ','
+         width(i)       =  1
+         class(i)       = ','
+         l( ichar(',')) =  i
 
 !
 !        Tokens beginning with '-'
 !
-         I              =  I + 1
-         F( ICHAR('-')) =  I
-         RECOG(I)       = '-'
-         WIDTH(I)       =  1
-         CLASS(I)       = '-'
-         L( ICHAR('-')) =  I
+         i              =  i + 1
+         f( ichar('-')) =  i
+         recog(i)       = '-'
+         width(i)       =  1
+         class(i)       = '-'
+         l( ichar('-')) =  i
 
 !
 !        Tokens beginning with '.'
 !
-         I              =  I + 1
-         F( ICHAR('.')) =  I
-         RECOG(I)       = '.'
-         WIDTH(I)       =  1
-         CLASS(I)       = '.'
-         L( ICHAR('.')) =  I
+         i              =  i + 1
+         f( ichar('.')) =  i
+         recog(i)       = '.'
+         width(i)       =  1
+         class(i)       = '.'
+         l( ichar('.')) =  i
 
 !
 !        Tokens beginning with '/'
 !
-         I              =  I + 1
-         F( ICHAR('/')) =  I
-         RECOG(I)       = '//'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'd'
-         L( ICHAR('/')) =  I
+         i              =  i + 1
+         f( ichar('/')) =  i
+         recog(i)       = '//'
+         width(i)       =  2
+         class(i)       = 'd'
+         l( ichar('/')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = '/'
-         WIDTH(I)       =  1
-         CLASS(I)       = '/'
-         L( ICHAR('/')) =  I
+         i              =  i + 1
+         recog(i)       = '/'
+         width(i)       =  1
+         class(i)       = '/'
+         l( ichar('/')) =  i
 !
 !        Tokens beginning with ':'
 !
-         I              =  I + 1
-         F( ICHAR(':')) =  I
-         RECOG(I)       = '::'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'd'
-         L( ICHAR(':')) =  I
+         i              =  i + 1
+         f( ichar(':')) =  i
+         recog(i)       = '::'
+         width(i)       =  2
+         class(i)       = 'd'
+         l( ichar(':')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = ':'
-         WIDTH(I)       =  1
-         CLASS(I)       = ':'
-         L( ICHAR(':')) =  I
+         i              =  i + 1
+         recog(i)       = ':'
+         width(i)       =  1
+         class(i)       = ':'
+         l( ichar(':')) =  i
 
 !
 !        Tokens beginning with 'A'
 !
-         I              =  I + 1
-         F( ICHAR('A')) =  I
-         RECOG(I)       = 'A.D.'
-         WIDTH(I)       =  4
-         CLASS(I)       = 'e'
-         L( ICHAR('A')) =  I
+         i              =  i + 1
+         f( ichar('A')) =  i
+         recog(i)       = 'A.D.'
+         width(i)       =  4
+         class(i)       = 'e'
+         l( ichar('A')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'AD'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'e'
-         L( ICHAR('A')) =  I
+         i              =  i + 1
+         recog(i)       = 'AD'
+         width(i)       =  2
+         class(i)       = 'e'
+         l( ichar('A')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'A.M.'
-         WIDTH(I)       =  4
-         CLASS(I)       = 'N'
-         L( ICHAR('A')) =  I
+         i              =  i + 1
+         recog(i)       = 'A.M.'
+         width(i)       =  4
+         class(i)       = 'N'
+         l( ichar('A')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'AM'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'N'
-         L( ICHAR('A')) =  I
+         i              =  i + 1
+         recog(i)       = 'AM'
+         width(i)       =  2
+         class(i)       = 'N'
+         l( ichar('A')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'APRIL'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('A')) =  I
+         i              =  i + 1
+         recog(i)       = 'APRIL'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('A')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'AUGUST'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('A')) =  I
+         i              =  i + 1
+         recog(i)       = 'AUGUST'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('A')) =  i
 
 !
 !        Tokens beginning with 'B'
 !
-         I              =  I + 1
-         F( ICHAR('B')) =  I
-         RECOG(I)       = 'B.C.'
-         WIDTH(I)       =  4
-         CLASS(I)       = 'e'
-         L( ICHAR('B')) =  I
+         i              =  i + 1
+         f( ichar('B')) =  i
+         recog(i)       = 'B.C.'
+         width(i)       =  4
+         class(i)       = 'e'
+         l( ichar('B')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'BC'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'e'
-         L( ICHAR('B')) =  I
+         i              =  i + 1
+         recog(i)       = 'BC'
+         width(i)       =  2
+         class(i)       = 'e'
+         l( ichar('B')) =  i
 
 !
 !        Tokens beginning with 'C'
 !
-         I              =  I + 1
-         F( ICHAR('C')) =  I
-         RECOG(I)       = 'CDT'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('C')) =  I
+         i              =  i + 1
+         f( ichar('C')) =  i
+         recog(i)       = 'CDT'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('C')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'CST'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('C')) =  I
+         i              =  i + 1
+         recog(i)       = 'CST'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('C')) =  i
 
 !
 !        Tokens beginning with 'D'
 !
-         I              =  I + 1
-         F( ICHAR('D')) =  I
-         RECOG(I)       = 'DECEMBER'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('D')) =  I
+         i              =  i + 1
+         f( ichar('D')) =  i
+         recog(i)       = 'DECEMBER'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('D')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'D+'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'E'
-         L( ICHAR('D')) =  I
+         i              =  i + 1
+         recog(i)       = 'D+'
+         width(i)       =  2
+         class(i)       = 'E'
+         l( ichar('D')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'D-'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'E'
-         L( ICHAR('D')) =  I
+         i              =  i + 1
+         recog(i)       = 'D-'
+         width(i)       =  2
+         class(i)       = 'E'
+         l( ichar('D')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'D'
-         WIDTH(I)       =  1
-         CLASS(I)       = 'E'
-         L( ICHAR('D')) =  I
+         i              =  i + 1
+         recog(i)       = 'D'
+         width(i)       =  1
+         class(i)       = 'E'
+         l( ichar('D')) =  i
 
 
 
@@ -1890,442 +1890,442 @@
 !
 !        Tokens beginning with 'E'
 !
-         I              =  I + 1
-         F( ICHAR('E')) =  I
-         RECOG(I)       = 'EDT'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('E')) =  I
+         i              =  i + 1
+         f( ichar('E')) =  i
+         recog(i)       = 'EDT'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('E')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'EST'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('E')) =  I
+         i              =  i + 1
+         recog(i)       = 'EST'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('E')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'E+'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'E'
-         L( ICHAR('E')) =  I
+         i              =  i + 1
+         recog(i)       = 'E+'
+         width(i)       =  2
+         class(i)       = 'E'
+         l( ichar('E')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'E-'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'E'
-         L( ICHAR('E')) =  I
+         i              =  i + 1
+         recog(i)       = 'E-'
+         width(i)       =  2
+         class(i)       = 'E'
+         l( ichar('E')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'E'
-         WIDTH(I)       =  1
-         CLASS(I)       = 'E'
-         L( ICHAR('E')) =  I
+         i              =  i + 1
+         recog(i)       = 'E'
+         width(i)       =  1
+         class(i)       = 'E'
+         l( ichar('E')) =  i
 
 
 !
 !        Tokens beginning with 'F'
 !
-         I              =  I + 1
-         F( ICHAR('F')) =  I
-         RECOG(I)       = 'FEBRUARY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('F')) =  I
+         i              =  i + 1
+         f( ichar('F')) =  i
+         recog(i)       = 'FEBRUARY'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('F')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'FRIDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('F')) =  I
+         i              =  i + 1
+         recog(i)       = 'FRIDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('F')) =  i
 
 !
 !        Tokens beginning with 'J'
 !
-         I              =  I + 1
-         F( ICHAR('J')) =  I
-         RECOG(I)       = 'JANUARY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('J')) =  I
+         i              =  i + 1
+         f( ichar('J')) =  i
+         recog(i)       = 'JANUARY'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('J')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'JD'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'j'
-         L( ICHAR('J')) =  I
+         i              =  i + 1
+         recog(i)       = 'JD'
+         width(i)       =  2
+         class(i)       = 'j'
+         l( ichar('J')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'JULY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('J')) =  I
+         i              =  i + 1
+         recog(i)       = 'JULY'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('J')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'JUNE'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('J')) =  I
+         i              =  i + 1
+         recog(i)       = 'JUNE'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('J')) =  i
 
 !
 !        Tokens beginning with 'M'
 !
-         I              =  I + 1
-         F( ICHAR('M')) =  I
-         RECOG(I)       = 'MARCH'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('M')) =  I
+         i              =  i + 1
+         f( ichar('M')) =  i
+         recog(i)       = 'MARCH'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('M')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'MAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('M')) =  I
+         i              =  i + 1
+         recog(i)       = 'MAY'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('M')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'MDT'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('M')) =  I
+         i              =  i + 1
+         recog(i)       = 'MDT'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('M')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'MONDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('M')) =  I
+         i              =  i + 1
+         recog(i)       = 'MONDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('M')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'MST'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('M')) =  I
+         i              =  i + 1
+         recog(i)       = 'MST'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('M')) =  i
 
 !
 !        Tokens beginning with 'N'
 !
-         I              =  I + 1
-         F( ICHAR('N')) =  I
-         RECOG(I)       = 'NOVEMBER'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('N')) =  I
+         i              =  i + 1
+         f( ichar('N')) =  i
+         recog(i)       = 'NOVEMBER'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('N')) =  i
 
 !
 !        Tokens beginning with 'O'
 !
-         I              =  I + 1
-         F( ICHAR('O')) =  I
-         RECOG(I)       = 'OCTOBER'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('O')) =  I
+         i              =  i + 1
+         f( ichar('O')) =  i
+         recog(i)       = 'OCTOBER'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('O')) =  i
 
 !
 !        Tokens beginning with 'P'
 !
-         I              =  I + 1
-         F( ICHAR('P')) =  I
-         RECOG(I)       = 'P.M.'
-         WIDTH(I)       =  4
-         CLASS(I)       = 'N'
-         L( ICHAR('P')) =  I
+         i              =  i + 1
+         f( ichar('P')) =  i
+         recog(i)       = 'P.M.'
+         width(i)       =  4
+         class(i)       = 'N'
+         l( ichar('P')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'PDT'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('P')) =  I
+         i              =  i + 1
+         recog(i)       = 'PDT'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('P')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'PM'
-         WIDTH(I)       =  2
-         CLASS(I)       = 'N'
-         L( ICHAR('P')) =  I
+         i              =  i + 1
+         recog(i)       = 'PM'
+         width(i)       =  2
+         class(i)       = 'N'
+         l( ichar('P')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'PST'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'Z'
-         L( ICHAR('P')) =  I
+         i              =  i + 1
+         recog(i)       = 'PST'
+         width(i)       =  3
+         class(i)       = 'Z'
+         l( ichar('P')) =  i
 
 !
 !        Tokens beginning with 'S'
 !
-         I              =  I + 1
-         F( ICHAR('S')) =  I
-         RECOG(I)       = 'SATURDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('S')) =  I
+         i              =  i + 1
+         f( ichar('S')) =  i
+         recog(i)       = 'SATURDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('S')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'SEPTEMBER'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'm'
-         L( ICHAR('S')) =  I
+         i              =  i + 1
+         recog(i)       = 'SEPTEMBER'
+         width(i)       =  3
+         class(i)       = 'm'
+         l( ichar('S')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'SUNDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('S')) =  I
+         i              =  i + 1
+         recog(i)       = 'SUNDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('S')) =  i
 
 !
 !        Tokens beginning with 'T'
 !
-         I              =  I + 1
-         F( ICHAR('T')) =  I
-         RECOG(I)       = 'TDB'
-         WIDTH(I)       =  3
-         CLASS(I)       = 's'
-         L( ICHAR('T')) =  I
+         i              =  i + 1
+         f( ichar('T')) =  i
+         recog(i)       = 'TDB'
+         width(i)       =  3
+         class(i)       = 's'
+         l( ichar('T')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'TDT'
-         WIDTH(I)       =  3
-         CLASS(I)       = 's'
-         L( ICHAR('T')) =  I
+         i              =  i + 1
+         recog(i)       = 'TDT'
+         width(i)       =  3
+         class(i)       = 's'
+         l( ichar('T')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'THURSDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('T')) =  I
+         i              =  i + 1
+         recog(i)       = 'THURSDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('T')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'TUESDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('T')) =  I
+         i              =  i + 1
+         recog(i)       = 'TUESDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('T')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'T'
-         WIDTH(I)       =  1
-         CLASS(I)       = 't'
-         L( ICHAR('T')) =  I
+         i              =  i + 1
+         recog(i)       = 'T'
+         width(i)       =  1
+         class(i)       = 't'
+         l( ichar('T')) =  i
 
 !
 !        Tokens beginning with 'U'
 !
-         I              =  I + 1
-         F( ICHAR('U')) =  I
-         RECOG(I)       = 'UTC+'
-         WIDTH(I)       =  4
-         CLASS(I)       = 'O'
-         L( ICHAR('U')) =  I
+         i              =  i + 1
+         f( ichar('U')) =  i
+         recog(i)       = 'UTC+'
+         width(i)       =  4
+         class(i)       = 'O'
+         l( ichar('U')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'UTC-'
-         WIDTH(I)       =  4
-         CLASS(I)       = 'o'
-         L( ICHAR('U')) =  I
+         i              =  i + 1
+         recog(i)       = 'UTC-'
+         width(i)       =  4
+         class(i)       = 'o'
+         l( ichar('U')) =  i
 
-         I              =  I + 1
-         RECOG(I)       = 'UTC'
-         WIDTH(I)       =  3
-         CLASS(I)       = 's'
-         L( ICHAR('U')) =  I
+         i              =  i + 1
+         recog(i)       = 'UTC'
+         width(i)       =  3
+         class(i)       = 's'
+         l( ichar('U')) =  i
 !
 !        Tokens beginning with ''''
 !
-         I              =  I + 1
-         F( ICHAR('''')) =  I
-         RECOG(I)       = ''''
-         WIDTH(I)       =  1
-         CLASS(I)       = ''''
-         L( ICHAR('''')) =  I
+         i              =  i + 1
+         f( ichar('''')) =  i
+         recog(i)       = ''''
+         width(i)       =  1
+         class(i)       = ''''
+         l( ichar('''')) =  i
 !
 !        Tokens beginning with 'W'
 !
-         I              =  I + 1
-         F( ICHAR('W')) =  I
-         RECOG(I)       = 'WEDNESDAY'
-         WIDTH(I)       =  3
-         CLASS(I)       = 'w'
-         L( ICHAR('W')) =  I
+         i              =  i + 1
+         f( ichar('W')) =  i
+         recog(i)       = 'WEDNESDAY'
+         width(i)       =  3
+         class(i)       = 'w'
+         l( ichar('W')) =  i
 !
 !        Tokens beginning with 'Z'
 !
-         I              =  I + 1
-         F( ICHAR('Z')) =  I
-         RECOG(I)       = 'Z'
-         WIDTH(I)       =  1
-         CLASS(I)       = 'x'
-         L( ICHAR('Z')) =  I
+         i              =  i + 1
+         f( ichar('Z')) =  i
+         recog(i)       = 'Z'
+         width(i)       =  1
+         class(i)       = 'x'
+         l( ichar('Z')) =  i
 
-      END IF
+      end if
 
 !
 !     If the input string is blank, return with an error message.
 !
-      IF ( STRING .EQ. ' ' ) THEN
-         ERROR = 'The input time string is blank.'
-         ZZTOKNS = NO
-         RETURN
-      END IF
+      if ( string .eq. ' ' ) then
+         error = 'The input time string is blank.'
+         zztokns = no
+         return
+      end if
 
 !
 !     OK. Initializations are out of the way. We now take
 !     apart the string.
 !
-      DID    = NO
-      ERROR  = ' '
-      REP    = ' '
-      PICTUR = ' '
-      SIZE   = 0
-      NEXT   = 1
-      PNEXT  = 1
-      PUT    = 0
-      AMPM   = .FALSE.
-      LAST   = RTRIM ( STRING )
+      did    = no
+      error  = ' '
+      rep    = ' '
+      pictur = ' '
+      size   = 0
+      next   = 1
+      pnext  = 1
+      put    = 0
+      ampm   = .false.
+      last   = rtrim ( string )
 
-      DO WHILE ( NEXT .LE. LAST )
+      do while ( next .le. last )
 !
 !        FROM and NEXT point to parts of the string, PFROM and PNEXT
 !        point to parts of the picture we will construct.
 !
-         FROM  = NEXT
-         PFROM = PNEXT
-         ITEM  = ICHAR( STRING(NEXT:NEXT) )
+         from  = next
+         pfrom = pnext
+         item  = ichar( string(next:next) )
 !
 !        First we try to find an unsigned integer in the string.
 !
-         CALL LX4UNS ( STRING(1:LAST), FROM, TO, NCHAR )
+         call lx4uns ( string(1:last), from, to, nchar )
 
-         IF ( NCHAR .GT. 0 ) THEN
+         if ( nchar .gt. 0 ) then
 !
 !           We found an unsigned integer, add a letter to the
 !           internal representation, note the begin and end
 !           of the token and set NEXT to the first character
 !           beyond this token.
 !
-            PUT               =  PUT + 1
+            put               =  put + 1
 
-            IF ( PUT .GT. MAXTKN ) THEN
-               CALL ZZTKNERR ( TKNERR, STRING, STRING(FROM:TO), &
-                               ERROR, ZZTOKNS )
-               RETURN
-            END IF
+            if ( put .gt. maxtkn ) then
+               call zztknerr ( tknerr, string, string(from:to), &
+                               error, zztokns )
+               return
+            end if
 
-            REP (PUT:PUT)     = 'i'
-            BEGS(PUT)         =  FROM
-            ENDS(PUT)         =  TO
-            NEXT              =  TO    + 1
-            PTO               =  PFROM + NCHAR - 1
+            rep (put:put)     = 'i'
+            begs(put)         =  from
+            ends(put)         =  to
+            next              =  to    + 1
+            pto               =  pfrom + nchar - 1
 
-            IF ( PTO .GT. PICLEN ) THEN
-               CALL ZZTKNERR ( PICERR, STRING, STRING(FROM:TO), &
-                               ERROR, ZZTOKNS )
-               RETURN
-            END IF
+            if ( pto .gt. piclen ) then
+               call zztknerr ( picerr, string, string(from:to), &
+                               error, zztokns )
+               return
+            end if
 
-            PNEXT             =  PTO   + 1
-            PICTUR(PFROM:PTO) =  STRING(FROM:TO)
-            PBEGS(PUT)        =  PFROM
-            PENDS(PUT)        =  PTO
+            pnext             =  pto   + 1
+            pictur(pfrom:pto) =  string(from:to)
+            pbegs(put)        =  pfrom
+            pends(put)        =  pto
 
-         ELSE IF ( ITEM .EQ. BLANK  ) THEN
+         else if ( item .eq. blank  ) then
 !
 !           We have a blank. We lump all consecutive
 !           blanks together as one big fat blank.
 !
-            PUT           =  PUT + 1
+            put           =  put + 1
 
-            IF ( PUT .GT. MAXTKN ) THEN
-               CALL ZZTKNERR ( TKNERR, STRING, ' ', ERROR, ZZTOKNS )
-               RETURN
-            END IF
+            if ( put .gt. maxtkn ) then
+               call zztknerr ( tknerr, string, ' ', error, zztokns )
+               return
+            end if
 
-            TO            =  FROM
-            BEGS(PUT)     =  FROM
-            REP (PUT:PUT) = 'b'
+            to            =  from
+            begs(put)     =  from
+            rep (put:put) = 'b'
 
-            DO WHILE ( ITEM .EQ. BLANK .AND. TO .LE. LAST )
+            do while ( item .eq. blank .and. to .le. last )
 
-               TO   = TO + 1
-               IF ( TO .LE. LAST ) THEN
-                  ITEM = ICHAR( STRING(TO:TO) )
-               END IF
+               to   = to + 1
+               if ( to .le. last ) then
+                  item = ichar( string(to:to) )
+               end if
 
-            END DO
+            end do
 
-            NEXT              = TO
-            TO                = TO - 1
-            ENDS(PUT)         = TO
+            next              = to
+            to                = to - 1
+            ends(put)         = to
 
-            PTO               = PFROM + TO - FROM
+            pto               = pfrom + to - from
 
-            IF ( PTO .GT. PICLEN ) THEN
-               CALL ZZTKNERR ( PICERR, STRING, ' ', ERROR, ZZTOKNS )
-               RETURN
-            END IF
+            if ( pto .gt. piclen ) then
+               call zztknerr ( picerr, string, ' ', error, zztokns )
+               return
+            end if
 
-            PNEXT             = PTO   + 1
-            PICTUR(PFROM:PTO) = STRING(FROM:TO)
-            PBEGS (PUT)       = PFROM
-            PENDS (PUT)       = PTO
+            pnext             = pto   + 1
+            pictur(pfrom:pto) = string(from:to)
+            pbegs (put)       = pfrom
+            pends (put)       = pto
 
-         ELSE IF ( ITEM .EQ. 9 ) THEN
+         else if ( item .eq. 9 ) then
 !
 !           We've got a tab character, we treat tabs as
 !           blanks.
 !
-            PUT               = PUT + 1
+            put               = put + 1
 
-            IF ( PUT .GT. MAXTKN ) THEN
-               CALL ZZTKNERR ( TKNERR, STRING, '<TAB>', &
-                               ERROR, ZZTOKNS )
-               RETURN
-            END IF
+            if ( put .gt. maxtkn ) then
+               call zztknerr ( tknerr, string, '<TAB>', &
+                               error, zztokns )
+               return
+            end if
 
-            REP(PUT:PUT)      = 'b'
-            BEGS(PUT)         = FROM
-            ENDS(PUT)         = FROM
-            NEXT              = NEXT + 1
+            rep(put:put)      = 'b'
+            begs(put)         = from
+            ends(put)         = from
+            next              = next + 1
 
-            PTO               = PFROM
+            pto               = pfrom
 
-            IF ( PTO .GT. PICLEN ) THEN
-               CALL ZZTKNERR ( PICERR, STRING, '<TAB>', &
-                               ERROR, ZZTOKNS )
-               RETURN
-            END IF
+            if ( pto .gt. piclen ) then
+               call zztknerr ( picerr, string, '<TAB>', &
+                               error, zztokns )
+               return
+            end if
 
-            PNEXT             = PTO   + 1
-            PICTUR(PFROM:PTO) = ' '
-            PBEGS (PUT)       = PFROM
-            PENDS (PUT)       = PFROM
+            pnext             = pto   + 1
+            pictur(pfrom:pto) = ' '
+            pbegs (put)       = pfrom
+            pends (put)       = pfrom
 
-         ELSE IF (      ITEM .LT. 32 &
-                   .OR. ITEM .GT. 126 ) THEN
+         else if (      item .lt. 32 &
+                   .or. item .gt. 126 ) then
 !
 !           This is a non-printing character. This is
 !           regarded as an error.
 !
-            ERROR = STRING
+            error = string
 
-            CALL ZZINSSUB ( ERROR, '<', NEXT,   ERROR )
+            call zzinssub ( error, '<', next,   error )
 
 !
 !           Overwrite the non-printing character with a
 !           closing angle bracket.
 !
-            IF ( NEXT .LT. LEN(ERROR) ) THEN
-               ERROR( NEXT+1 : NEXT+1 ) = '>'
-            END IF
+            if ( next .lt. len(error) ) then
+               error( next+1 : next+1 ) = '>'
+            end if
 
-            CALL PREFIX ( 'There is a non-printing, non-tab ' &
+            call prefix ( 'There is a non-printing, non-tab ' &
             //            'character (ASCII #) at position # of the ' &
-            //            'time string: ', 1, ERROR )
+            //            'time string: ', 1, error )
 
-            CALL REPMI ( ERROR, '#', ITEM, ERROR )
-            CALL REPMI ( ERROR, '#', NEXT, ERROR )
+            call repmi ( error, '#', item, error )
+            call repmi ( error, '#', next, error )
 
-            ZZTOKNS = NO
-            RETURN
+            zztokns = no
+            return
 
 
-         ELSE
+         else
 !
 !           This has to be one of the known types or we
 !           have an unknown component in the string. We've constructed
@@ -2334,202 +2334,202 @@
 !           to begin a search. We get that code and force it
 !           into a suitable range.
 !
-            CALL     UCASE ( STRING(NEXT:NEXT), THIS )
-            ITEM  =  ICHAR ( THIS )
-            FROM  =  NEXT
-            CHECK =  YES
-            I     =  F(ITEM)
+            call     ucase ( string(next:next), this )
+            item  =  ichar ( this )
+            from  =  next
+            check =  yes
+            i     =  f(item)
 
-            DO WHILE ( CHECK .AND. (I .LE. L(ITEM)) )
+            do while ( check .and. (i .le. l(item)) )
 
-               W    = WIDTH(I)
-               TO   = FROM + W - 1
+               w    = width(i)
+               to   = from + w - 1
 
-               GOT  = SAMSBI( STRING, FROM, TO, RECOG(I), 1, W )
+               got  = samsbi( string, from, to, recog(i), 1, w )
 
-               IF ( GOT ) THEN
+               if ( got ) then
 !
 !                 We have a match. If it is the match of a month
 !                 or day of the week, we keep looking for the
 !                 end of the match.
 !
-                  IF (      CLASS(I) .EQ. 'm' &
-                       .OR. CLASS(I) .EQ. 'w' ) THEN
+                  if (      class(i) .eq. 'm' &
+                       .or. class(i) .eq. 'w' ) then
 
 
-                     SPCIAL = RECOG(I)
-                     R      = RTRIM(SPCIAL)
-                     W      = W+1
-                     TO     = TO + 1
+                     spcial = recog(i)
+                     r      = rtrim(spcial)
+                     w      = w+1
+                     to     = to + 1
 
-                     DO WHILE ( SAMCHI ( STRING, TO, SPCIAL(1:R), W ) )
-                        W  = W  + 1
-                        TO = TO + 1
-                     END DO
+                     do while ( samchi ( string, to, spcial(1:r), w ) )
+                        w  = w  + 1
+                        to = to + 1
+                     end do
 
-                     TO        = TO - 1
+                     to        = to - 1
 
-                     IF ( W .GT. R ) THEN
-                        KIND = FULL
-                     ELSE
-                        KIND = SHORT
-                     END IF
+                     if ( w .gt. r ) then
+                        kind = full
+                     else
+                        kind = short
+                     end if
 
-                     IF ( THIS .NE. STRING(NEXT:NEXT) ) THEN
-                        CASE = LOWER
-                     ELSE IF (STRING(NEXT:NEXT+2) .EQ. SPCIAL(1:3)) &
-                     THEN
-                        CASE = UPPER
-                     ELSE
-                        CASE = MIXED
-                     END IF
+                     if ( this .ne. string(next:next) ) then
+                        case = lower
+                     else if (string(next:next+2) .eq. spcial(1:3)) &
+                     then
+                        case = upper
+                     else
+                        case = mixed
+                     end if
 
-                     IF ( CLASS(I) .EQ. 'm' ) THEN
+                     if ( class(i) .eq. 'm' ) then
 
-                        PTO               = PFROM + MNSIZE(KIND) - 1
+                        pto               = pfrom + mnsize(kind) - 1
 
-                        IF ( PTO .GT. PICLEN ) THEN
-                           CALL ZZTKNERR ( PICERR, STRING, &
-                                    STRING(FROM:TO), ERROR, ZZTOKNS )
-                           RETURN
-                        END IF
+                        if ( pto .gt. piclen ) then
+                           call zztknerr ( picerr, string, &
+                                    string(from:to), error, zztokns )
+                           return
+                        end if
 
-                        PNEXT             = PTO   + 1
-                        PICTUR(PFROM:PTO) = MNMRK(CASE,KIND)
+                        pnext             = pto   + 1
+                        pictur(pfrom:pto) = mnmrk(case,kind)
 
-                     ELSE
+                     else
 
-                        PTO               = PFROM + WKSIZE(KIND) - 1
+                        pto               = pfrom + wksize(kind) - 1
 
-                        IF ( PTO .GT. PICLEN ) THEN
-                           CALL ZZTKNERR ( PICERR, STRING, &
-                                    STRING(FROM:TO), ERROR, ZZTOKNS )
-                           RETURN
-                        END IF
+                        if ( pto .gt. piclen ) then
+                           call zztknerr ( picerr, string, &
+                                    string(from:to), error, zztokns )
+                           return
+                        end if
 
-                        PNEXT             = PTO   + 1
-                        PICTUR(PFROM:PTO) = WKDAY(CASE,KIND)
+                        pnext             = pto   + 1
+                        pictur(pfrom:pto) = wkday(case,kind)
 
-                     END IF
+                     end if
 
-                  ELSE IF ( CLASS(I) .EQ. 'e' ) THEN
+                  else if ( class(i) .eq. 'e' ) then
 
-                     PTO               =  PFROM + 2
+                     pto               =  pfrom + 2
 
-                     IF ( PTO .GT. PICLEN ) THEN
-                        CALL ZZTKNERR ( PICERR, STRING, STRING(FROM:TO), &
-                                                        ERROR, ZZTOKNS )
-                        RETURN
-                     END IF
+                     if ( pto .gt. piclen ) then
+                        call zztknerr ( picerr, string, string(from:to), &
+                                                        error, zztokns )
+                        return
+                     end if
 
-                     PNEXT             =  PTO   + 1
+                     pnext             =  pto   + 1
 
-                     IF ( STRING(FROM:FROM) .EQ. THIS ) THEN
-                        PICTUR(PFROM:PTO) = 'ERA'
-                     ELSE
-                        PICTUR(PFROM:PTO) = 'era'
-                     END IF
+                     if ( string(from:from) .eq. this ) then
+                        pictur(pfrom:pto) = 'ERA'
+                     else
+                        pictur(pfrom:pto) = 'era'
+                     end if
 
-                  ELSE IF ( CLASS(I) .EQ. 'N' ) THEN
+                  else if ( class(i) .eq. 'N' ) then
 
-                     PTO               =  PFROM + 3
+                     pto               =  pfrom + 3
 
-                     IF ( PTO .GT. PICLEN ) THEN
-                        CALL ZZTKNERR ( PICERR, STRING, STRING(FROM:TO), &
-                                                        ERROR, ZZTOKNS )
-                        RETURN
-                     END IF
+                     if ( pto .gt. piclen ) then
+                        call zztknerr ( picerr, string, string(from:to), &
+                                                        error, zztokns )
+                        return
+                     end if
 
-                     PNEXT             =  PTO   + 1
-                     IF ( STRING(FROM:FROM) .EQ. THIS ) THEN
-                        PICTUR(PFROM:PTO) = 'AMPM'
-                     ELSE
-                        PICTUR(PFROM:PTO) = 'ampm'
-                     END IF
+                     pnext             =  pto   + 1
+                     if ( string(from:from) .eq. this ) then
+                        pictur(pfrom:pto) = 'AMPM'
+                     else
+                        pictur(pfrom:pto) = 'ampm'
+                     end if
 
-                     AMPM = .TRUE.
+                     ampm = .true.
 
-                  ELSE IF ( CLASS(I) .EQ. 'x' ) THEN
+                  else if ( class(i) .eq. 'x' ) then
 
 !
 !                    Recognized token, but ignored.
 !
 
-                  ELSE
+                  else
 
-                     PTO               =  PFROM + TO - FROM
+                     pto               =  pfrom + to - from
 
-                     IF ( PTO .GT. PICLEN ) THEN
-                        CALL ZZTKNERR ( PICERR, STRING, STRING(FROM:TO), &
-                                                        ERROR, ZZTOKNS )
-                        RETURN
-                     END IF
+                     if ( pto .gt. piclen ) then
+                        call zztknerr ( picerr, string, string(from:to), &
+                                                        error, zztokns )
+                        return
+                     end if
 
-                     PNEXT             =  PTO   + 1
-                     PICTUR(PFROM:PTO) =  STRING(FROM:TO )
+                     pnext             =  pto   + 1
+                     pictur(pfrom:pto) =  string(from:to )
 
-                  END IF
+                  end if
 
-                  PUT           = PUT + 1
+                  put           = put + 1
 
-                  IF ( PUT .GT. MAXTKN ) THEN
-                     CALL ZZTKNERR ( TKNERR, STRING, STRING(FROM:TO), &
-                                     ERROR, ZZTOKNS )
-                     RETURN
-                  END IF
+                  if ( put .gt. maxtkn ) then
+                     call zztknerr ( tknerr, string, string(from:to), &
+                                     error, zztokns )
+                     return
+                  end if
 
-                  REP (PUT:PUT) = CLASS(I)(1:1)
-                  BEGS(PUT)     = FROM
-                  ENDS(PUT)     = TO
-                  PBEGS(PUT)    = PFROM
-                  PENDS(PUT)    = PTO
-                  CHECK         = NO
-                  NEXT          = TO + 1
+                  rep (put:put) = class(i)(1:1)
+                  begs(put)     = from
+                  ends(put)     = to
+                  pbegs(put)    = pfrom
+                  pends(put)    = pto
+                  check         = no
+                  next          = to + 1
 
 
-               END IF
+               end if
 
-               I = I + 1
+               i = i + 1
 
-            END DO
+            end do
 !
 !           If we reach the end of the loop and CHECK is still
 !           set to TRUE, we have a bit of unrecognizable string.
 !
-            IF ( CHECK ) THEN
+            if ( check ) then
 
-               ERROR = STRING
+               error = string
 
-               CALL ZZINSSUB ( ERROR, '>', FROM + 1, ERROR )
-               CALL ZZINSSUB ( ERROR, '<', FROM,     ERROR )
+               call zzinssub ( error, '>', from + 1, error )
+               call zzinssub ( error, '<', from,     error )
 
-               CALL PREFIX ( 'The input string contains an ' &
+               call prefix ( 'The input string contains an ' &
                //            'unrecognizable substring beginning ' &
                //            'at the character marked by <#>: "', &
-                                  0, ERROR )
-               CALL SUFFIX ( '"', 0, ERROR )
+                                  0, error )
+               call suffix ( '"', 0, error )
 
-               CALL REPMC ( ERROR, '#', STRING(FROM:FROM), ERROR )
-               ZZTOKNS = NO
-               RETURN
+               call repmc ( error, '#', string(from:from), error )
+               zztokns = no
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      SIZE    = PUT
-      ZZTOKNS = YES
-      RETURN
+      size    = put
+      zztokns = yes
+      return
 
 
 
 
 !$Procedure ZZUNPCK ( Private, Time --- Unpack a time string )
 
-      ENTRY ZZUNPCK ( STRING, YABBRV, TVEC,  E, TRANSL, PIC, ERROR )
+      entry zzunpck ( string, yabbrv, tvec,  e, transl, pic, error )
 
 ! $ Abstract
 !
@@ -2684,210 +2684,210 @@
 !-&
 
 
-      NYEAR  = 0
-      NMON   = 0
-      NDAY   = 0
-      NHOUR  = 0
-      NMIN   = 0
-      NSEC   = 0
-      NDOY   = 0
-      NJD    = 0
-      E      = 0
-      TRANSL = ' '
+      nyear  = 0
+      nmon   = 0
+      nday   = 0
+      nhour  = 0
+      nmin   = 0
+      nsec   = 0
+      ndoy   = 0
+      njd    = 0
+      e      = 0
+      transl = ' '
 
-      HMS(1) = 0.0D0
-      HMS(2) = 0.0D0
-      HMS(3) = 0.0D0
+      hms(1) = 0.0d0
+      hms(2) = 0.0d0
+      hms(3) = 0.0d0
 
-      DO I = SIZE, 1, -1
+      do i = size, 1, -1
 
-         ITEM = ICHAR( REP(I:I) )
+         item = ichar( rep(i:i) )
 
 !
 !        Confirm ITEM range [32,126].
 !
-         IF (      ITEM .LT. 32 &
-              .OR. ITEM .GT. 126 ) THEN
+         if (      item .lt. 32 &
+              .or. item .gt. 126 ) then
 
 !
 !           A non-printing character found in REP. This is
 !           an error.
 !
-            ERROR = 'A character at location #1 does not ' &
+            error = 'A character at location #1 does not ' &
          //         'have ASCII value [32,126] for REP string.'
 
-            CALL REPMI ( ERROR, '#1', I,   ERROR )
+            call repmi ( error, '#1', i,   error )
 
 !
 !           Error condition, return.
 !
-            ZZUNPCK = NO
-            RETURN
+            zzunpck = no
+            return
 
-         END IF
+         end if
 
-         J    = BEGS(I)
-         K    = ENDS(I)
+         j    = begs(i)
+         k    = ends(i)
 
-         IF      ( ITEM .EQ. ICHAR('Y') ) THEN
+         if      ( item .eq. ichar('Y') ) then
 
-            NYEAR = NYEAR + 1
-            E     = E     + 1
-            CALL NPARSD   ( STRING(J:K), TVEC(1), ERROR, PTR )
+            nyear = nyear + 1
+            e     = e     + 1
+            call nparsd   ( string(j:k), tvec(1), error, ptr )
 
-            IF ( YABBRV ) THEN
-               CALL ZZREPSUB ( PICTUR, PBEGS(I), PENDS(I), &
-                              'YR', PICTUR )
-            ELSE
-               CALL ZZREPSUB ( PICTUR, PBEGS(I), PENDS(I), &
-                              'YYYY', PICTUR )
-            END IF
+            if ( yabbrv ) then
+               call zzrepsub ( pictur, pbegs(i), pends(i), &
+                              'YR', pictur )
+            else
+               call zzrepsub ( pictur, pbegs(i), pends(i), &
+                              'YYYY', pictur )
+            end if
 
-         ELSE IF ( ITEM .EQ. ICHAR('m') ) THEN
+         else if ( item .eq. ichar('m') ) then
 
-            NMON  = NMON  + 1
-            E     = E     + 1
+            nmon  = nmon  + 1
+            e     = e     + 1
 
-            CALL UCASE ( STRING(J:K), MONTH )
-            VALUE = ISRCHC ( MONTH, 12, MONTHS )
+            call ucase ( string(j:k), month )
+            value = isrchc ( month, 12, months )
 
-            IF ( VALUE .EQ. 0 ) THEN
-               CALL NPARSD  ( STRING(J:K), TVEC(2), ERROR, PTR )
-               CALL ZZREPSUB( PICTUR, PBEGS(I), PENDS(I), 'MM', PICTUR )
-            ELSE
-               TVEC(2) = DBLE( VALUE )
-            END IF
+            if ( value .eq. 0 ) then
+               call nparsd  ( string(j:k), tvec(2), error, ptr )
+               call zzrepsub( pictur, pbegs(i), pends(i), 'MM', pictur )
+            else
+               tvec(2) = dble( value )
+            end if
 
 
-         ELSE IF ( ITEM .EQ. ICHAR('D') ) THEN
+         else if ( item .eq. ichar('D') ) then
 
-            NDAY  = NDAY  + 1
-            E     = E     + 1
+            nday  = nday  + 1
+            e     = e     + 1
 
-            CALL NPARSD ( STRING(J:K), TVEC(3), ERROR, PTR  )
+            call nparsd ( string(j:k), tvec(3), error, ptr  )
 
-            CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'DD', &
-                          STRING(J:K) )
+            call zzmkpc ( pictur, pbegs(i), pends(i), 'DD', &
+                          string(j:k) )
 
-         ELSE IF ( ITEM .EQ. ICHAR('y') ) THEN
+         else if ( item .eq. ichar('y') ) then
 
-            NDOY  = NDOY  + 1
-            E     = E     + 1
+            ndoy  = ndoy  + 1
+            e     = e     + 1
 
-            CALL NPARSD ( STRING(J:K), TVEC(2), ERROR, PTR  )
+            call nparsd ( string(j:k), tvec(2), error, ptr  )
 
-            CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'DOY', &
-                          STRING(J:K) )
+            call zzmkpc ( pictur, pbegs(i), pends(i), 'DOY', &
+                          string(j:k) )
 
-         ELSE IF ( ITEM .EQ. ICHAR('H') ) THEN
+         else if ( item .eq. ichar('H') ) then
 
-            NHOUR = NHOUR + 1
-            E     = E     + 1
+            nhour = nhour + 1
+            e     = e     + 1
 
-            CALL NPARSD ( STRING(J:K), HMS(1), ERROR, PTR  )
+            call nparsd ( string(j:k), hms(1), error, ptr  )
 !
 !           We have to handle the hour component based on the
 !           presence of the AM/PM mark in the picture. We earlier
 !           set up the logical AMPM to indicate its presence.
 !
-            IF (  AMPM ) THEN
+            if (  ampm ) then
 
-               CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'AP', &
-                             STRING(J:K) )
+               call zzmkpc ( pictur, pbegs(i), pends(i), 'AP', &
+                             string(j:k) )
 
-            ELSE
+            else
 
-               CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'HR', &
-                             STRING(J:K) )
+               call zzmkpc ( pictur, pbegs(i), pends(i), 'HR', &
+                             string(j:k) )
 
-            END IF
+            end if
 
-         ELSE IF ( ITEM .EQ. ICHAR('M') ) THEN
+         else if ( item .eq. ichar('M') ) then
 
-            NMIN  = NMIN  + 1
-            E     = E     + 1
+            nmin  = nmin  + 1
+            e     = e     + 1
 
-            CALL NPARSD ( STRING(J:K), HMS(2), ERROR, PTR  )
+            call nparsd ( string(j:k), hms(2), error, ptr  )
 
-            CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'MN', &
-                          STRING(J:K) )
+            call zzmkpc ( pictur, pbegs(i), pends(i), 'MN', &
+                          string(j:k) )
 
-         ELSE IF ( ITEM .EQ. ICHAR('S') ) THEN
+         else if ( item .eq. ichar('S') ) then
 
-            NSEC  = NSEC  + 1
-            E     = E     + 1
+            nsec  = nsec  + 1
+            e     = e     + 1
 
-            CALL NPARSD ( STRING(J:K), HMS(3), ERROR, PTR  )
+            call nparsd ( string(j:k), hms(3), error, ptr  )
 
-            CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'SC', &
-                          STRING(J:K) )
+            call zzmkpc ( pictur, pbegs(i), pends(i), 'SC', &
+                          string(j:k) )
 
-         ELSE IF ( ITEM .EQ. ICHAR('J') ) THEN
+         else if ( item .eq. ichar('J') ) then
 
-            NJD   = NJD   + 1
-            E     = E     + 1
+            njd   = njd   + 1
+            e     = e     + 1
 
-            CALL NPARSD ( STRING(J:K), TVEC(1), ERROR, PTR  )
+            call nparsd ( string(j:k), tvec(1), error, ptr  )
 
-            CALL ZZMKPC ( PICTUR, PBEGS(I), PENDS(I), 'JULIAND', &
-                          STRING(J:K) )
+            call zzmkpc ( pictur, pbegs(i), pends(i), 'JULIAND', &
+                          string(j:k) )
 
-         ELSE IF ( ITEM .EQ. ICHAR('i') ) THEN
+         else if ( item .eq. ichar('i') ) then
 
-            ERROR = STRING
+            error = string
 
-            CALL ZZINSSUB ( ERROR, '>', K+1,  ERROR )
-            CALL ZZINSSUB ( ERROR, '<', J,    ERROR )
+            call zzinssub ( error, '>', k+1,  error )
+            call zzinssub ( error, '<', j,    error )
 
-            CALL PREFIX ( 'The meaning of the integer <#> could ' &
-            //            'not be determined: ''', 1, ERROR )
-            CALL SUFFIX ( '''', 0, ERROR )
+            call prefix ( 'The meaning of the integer <#> could ' &
+            //            'not be determined: ''', 1, error )
+            call suffix ( '''', 0, error )
 
-            CALL REPMC ( ERROR, '#', STRING(J:K), ERROR )
+            call repmc ( error, '#', string(j:k), error )
 
-            E       = 0
-            PIC     = ' '
-            ZZUNPCK = NO
-            RETURN
+            e       = 0
+            pic     = ' '
+            zzunpck = no
+            return
 
-         ELSE IF ( ITEM .EQ. ICHAR('n') ) THEN
+         else if ( item .eq. ichar('n') ) then
 
-            ERROR = STRING
+            error = string
 
-            CALL ZZINSSUB ( ERROR, '>', K+1,  ERROR )
-            CALL ZZINSSUB ( ERROR, '<',  J,   ERROR )
+            call zzinssub ( error, '>', k+1,  error )
+            call zzinssub ( error, '<',  j,   error )
 
-            CALL PREFIX ( 'The meaning of the decimal number <#> ' &
-            //            'could not be determined: ', 1, ERROR )
+            call prefix ( 'The meaning of the decimal number <#> ' &
+            //            'could not be determined: ', 1, error )
 
-            CALL REPMC ( ERROR, '#', STRING(J:K), ERROR )
+            call repmc ( error, '#', string(j:k), error )
 
-            E       = 0
-            PIC     = ' '
-            ZZUNPCK = NO
-            RETURN
+            e       = 0
+            pic     = ' '
+            zzunpck = no
+            return
 
-         ELSE
+         else
 
-            ERROR = STRING
+            error = string
 
-            CALL ZZINSSUB ( ERROR, '>', K+1,  ERROR )
-            CALL ZZINSSUB ( ERROR, '<',  J,   ERROR )
+            call zzinssub ( error, '>', k+1,  error )
+            call zzinssub ( error, '<',  j,   error )
 
-            CALL PREFIX ( 'An unexpected # ("#") was encountered ' &
-            //            'in the time string: ', 1, ERROR )
-            CALL REPMC ( ERROR, '#', NAMES(ITEM),    ERROR )
-            CALL REPMC ( ERROR, '#', STRING(J:K),    ERROR )
+            call prefix ( 'An unexpected # ("#") was encountered ' &
+            //            'in the time string: ', 1, error )
+            call repmc ( error, '#', names(item),    error )
+            call repmc ( error, '#', string(j:k),    error )
 
-            PIC     = ' '
-            E       = 0
-            ZZUNPCK = NO
-            RETURN
+            pic     = ' '
+            e       = 0
+            zzunpck = no
+            return
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
 !
 !     Ok. Check the counts of substrings to make sure everything
@@ -2896,368 +2896,368 @@
 !     and RETURN. Note regardless of the correctness of the parsing
 !     we have a legitimate format picture at this point so we keep it.
 !
-      PIC = PICTUR
+      pic = pictur
 
-      IF (       NYEAR .EQ. 1 &
-           .AND. NMON  .EQ. 1 &
-           .AND. NDAY  .EQ. 1 &
-           .AND. NDOY  .EQ. 0 &
-           .AND. NJD   .EQ. 0 &
-           .AND. NHOUR .LE. 1 &
-           .AND. NMIN  .LE. NHOUR &
-           .AND. NSEC  .LE. NMIN ) THEN
+      if (       nyear .eq. 1 &
+           .and. nmon  .eq. 1 &
+           .and. nday  .eq. 1 &
+           .and. ndoy  .eq. 0 &
+           .and. njd   .eq. 0 &
+           .and. nhour .le. 1 &
+           .and. nmin  .le. nhour &
+           .and. nsec  .le. nmin ) then
 
-          TVEC(4) = HMS(1)
-          TVEC(5) = HMS(2)
-          TVEC(6) = HMS(3)
+          tvec(4) = hms(1)
+          tvec(5) = hms(2)
+          tvec(6) = hms(3)
 
-          TRANSL  = 'YMD'
-          ZZUNPCK =  YES
-          RETURN
+          transl  = 'YMD'
+          zzunpck =  yes
+          return
 
-      ELSE IF (      NYEAR .EQ. 1 &
-               .AND. NMON  .EQ. 0 &
-               .AND. NDAY  .EQ. 0 &
-               .AND. NJD   .EQ. 0 &
-               .AND. NDOY  .EQ. 1 &
-               .AND. NHOUR .LE. 1 &
-               .AND. NMIN  .LE. NHOUR &
-               .AND. NSEC  .LE. NMIN  ) THEN
+      else if (      nyear .eq. 1 &
+               .and. nmon  .eq. 0 &
+               .and. nday  .eq. 0 &
+               .and. njd   .eq. 0 &
+               .and. ndoy  .eq. 1 &
+               .and. nhour .le. 1 &
+               .and. nmin  .le. nhour &
+               .and. nsec  .le. nmin  ) then
 
-          TVEC(3) = HMS(1)
-          TVEC(4) = HMS(2)
-          TVEC(5) = HMS(3)
+          tvec(3) = hms(1)
+          tvec(4) = hms(2)
+          tvec(5) = hms(3)
 
-          TRANSL  = 'YD'
-          ZZUNPCK =  YES
-          RETURN
+          transl  = 'YD'
+          zzunpck =  yes
+          return
 
-      ELSE IF (      NYEAR .EQ. 0 &
-               .AND. NMON  .EQ. 0 &
-               .AND. NDAY  .EQ. 0 &
-               .AND. NJD   .EQ. 1 &
-               .AND. NDOY  .EQ. 0 &
-               .AND. NHOUR .LE. 0 &
-               .AND. NMIN  .LE. 0 &
-               .AND. NSEC  .LE. 0  ) THEN
+      else if (      nyear .eq. 0 &
+               .and. nmon  .eq. 0 &
+               .and. nday  .eq. 0 &
+               .and. njd   .eq. 1 &
+               .and. ndoy  .eq. 0 &
+               .and. nhour .le. 0 &
+               .and. nmin  .le. 0 &
+               .and. nsec  .le. 0  ) then
 
-          TRANSL  = 'JD'
-          ZZUNPCK =  YES
-          RETURN
+          transl  = 'JD'
+          zzunpck =  yes
+          return
 
-      END IF
+      end if
 !
 !     If we're still here, there is some kind of an error
 !     in the input string. There are a lot of possible
 !     problems.
 !
-      E = 0
+      e = 0
 
-      IF (           NYEAR .EQ. 0 &
-               .AND. NDAY  .EQ. 0 &
-               .AND. NJD   .EQ. 0 &
-               .AND. NDOY  .EQ. 0 &
-               .AND. NHOUR .EQ. 0 &
-               .AND. NMIN  .EQ. 0 &
-               .AND. NSEC  .EQ. 0  ) THEN
+      if (           nyear .eq. 0 &
+               .and. nday  .eq. 0 &
+               .and. njd   .eq. 0 &
+               .and. ndoy  .eq. 0 &
+               .and. nhour .eq. 0 &
+               .and. nmin  .eq. 0 &
+               .and. nsec  .eq. 0  ) then
 
 
-         ERROR = 'No numeric components were supplied in the ' &
+         error = 'No numeric components were supplied in the ' &
          //      'time string. '
 
 
-      ELSE IF ( NJD .EQ. 1 ) THEN
+      else if ( njd .eq. 1 ) then
 
-         ERROR = 'The string possesses calendar components in ' &
+         error = 'The string possesses calendar components in ' &
          //      'addition to Julian Date specifier. '
 
-      ELSE IF ( NJD .GT. 1 ) THEN
+      else if ( njd .gt. 1 ) then
 
-         ERROR = 'There is more than one Julian Date specified ' &
+         error = 'There is more than one Julian Date specified ' &
          //      'in the epoch string. '
 
 
-      ELSE IF      ( NYEAR .EQ. 0 ) THEN
+      else if      ( nyear .eq. 0 ) then
 
-         ERROR = 'The year associated with the calendar string ' &
+         error = 'The year associated with the calendar string ' &
          //      '"#" could not be identified. '
 
-         CALL REPMC ( ERROR, '#', STRING, ERROR )
+         call repmc ( error, '#', string, error )
 
-      ELSE IF ( NYEAR .GT. 1 ) THEN
+      else if ( nyear .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings indicating a calendar year ' &
+         error  =  string
+         messge = 'Two substrings indicating a calendar year ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'Y', 1    )
-         P2 = POS ( REP, 'Y', P1+1 )
+         p1 = pos ( rep, 'Y', 1    )
+         p2 = pos ( rep, 'Y', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NMON .GT. 0 .AND. NDOY .GT. 0 ) THEN
+      else if ( nmon .gt. 0 .and. ndoy .gt. 0 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Both a day of year and month were identified ' &
+         error  =  string
+         messge = 'Both a day of year and month were identified ' &
          //       'in the input string. "'
 
 
-         P2 = MAX ( POS ( REP, 'm', 1 ), &
-                    POS ( REP, 'y', 1 ) )
+         p2 = max ( pos ( rep, 'm', 1 ), &
+                    pos ( rep, 'y', 1 ) )
 
-         P1 = MIN ( POS ( REP, 'm', 1 ), &
-                    POS ( REP, 'y', 1 ) )
+         p1 = min ( pos ( rep, 'm', 1 ), &
+                    pos ( rep, 'y', 1 ) )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NMON .GT. 1 ) THEN
+      else if ( nmon .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings indicating a calendar month ' &
+         error  =  string
+         messge = 'Two substrings indicating a calendar month ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'm', 1    )
-         P2 = POS ( REP, 'm', P1+1 )
+         p1 = pos ( rep, 'm', 1    )
+         p2 = pos ( rep, 'm', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NDOY .GT. 1 ) THEN
+      else if ( ndoy .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings indicating a day of year ' &
+         error  =  string
+         messge = 'Two substrings indicating a day of year ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'y', 1    )
-         P2 = POS ( REP, 'y', P1+1 )
+         p1 = pos ( rep, 'y', 1    )
+         p2 = pos ( rep, 'y', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NDAY .GT. 1 ) THEN
+      else if ( nday .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings indicating a day of month ' &
+         error  =  string
+         messge = 'Two substrings indicating a day of month ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'D', 1    )
-         P2 = POS ( REP, 'D', P1+1 )
+         p1 = pos ( rep, 'D', 1    )
+         p2 = pos ( rep, 'D', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NHOUR .GT. 1 ) THEN
+      else if ( nhour .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings representing an hour of the day ' &
+         error  =  string
+         messge = 'Two substrings representing an hour of the day ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'H', 1    )
-         P2 = POS ( REP, 'H', P1+1 )
+         p1 = pos ( rep, 'H', 1    )
+         p2 = pos ( rep, 'H', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NMIN  .GT. 1 ) THEN
+      else if ( nmin  .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings representing minutes of the hour ' &
+         error  =  string
+         messge = 'Two substrings representing minutes of the hour ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'M', 1    )
-         P2 = POS ( REP, 'M', P1+1 )
+         p1 = pos ( rep, 'M', 1    )
+         p2 = pos ( rep, 'M', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NSEC  .GT. 1 ) THEN
+      else if ( nsec  .gt. 1 ) then
 
-         ERROR  =  STRING
-         MESSGE = 'Two substrings representing seconds ' &
+         error  =  string
+         messge = 'Two substrings representing seconds ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
 
-         P1 = POS ( REP, 'S', 1    )
-         P2 = POS ( REP, 'S', P1+1 )
+         p1 = pos ( rep, 'S', 1    )
+         p2 = pos ( rep, 'S', p1+1 )
 
-         J = BEGS(P2)
-         K = ENDS(P2)
+         j = begs(p2)
+         k = ends(p2)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         J = BEGS(P1)
-         K = ENDS(P1)
+         j = begs(p1)
+         k = ends(p1)
 
-         CALL ZZINSSUB ( ERROR, '>', K+1, ERROR )
-         CALL ZZINSSUB ( ERROR, '<', J,   ERROR )
-         CALL REPMC  ( MESSGE, '#', STRING(J:K), MESSGE )
+         call zzinssub ( error, '>', k+1, error )
+         call zzinssub ( error, '<', j,   error )
+         call repmc  ( messge, '#', string(j:k), messge )
 
-         CALL PREFIX ( MESSGE, 1, ERROR )
-         CALL SUFFIX ( '"',    0, ERROR )
+         call prefix ( messge, 1, error )
+         call suffix ( '"',    0, error )
 
-      ELSE IF ( NDOY .EQ. 0 .AND. NMON .EQ. 0 ) THEN
+      else if ( ndoy .eq. 0 .and. nmon .eq. 0 ) then
 
-         ERROR = 'Neither a month nor day of year could be ' &
+         error = 'Neither a month nor day of year could be ' &
          //      'identified in the input time string: "#" '
 
-         CALL REPMC ( ERROR, '#', STRING, ERROR )
+         call repmc ( error, '#', string, error )
 
-      ELSE IF ( NMON .EQ. 1 .AND. NDAY .EQ. 0 ) THEN
+      else if ( nmon .eq. 1 .and. nday .eq. 0 ) then
 
-         ERROR = 'A month was identified in the time string "#", ' &
+         error = 'A month was identified in the time string "#", ' &
          //      'but a day of month could not be identified. '
 
-         CALL REPMC ( ERROR, '#', STRING, ERROR )
+         call repmc ( error, '#', string, error )
 
-      ELSE IF ( NMON .EQ. 0 .AND. NDAY .EQ. 1 ) THEN
+      else if ( nmon .eq. 0 .and. nday .eq. 1 ) then
 
-         ERROR = 'A day of month was identified in the time ' &
+         error = 'A day of month was identified in the time ' &
          //      'string "#", but the month it belongs to could ' &
          //      'not be identified. '
 
-         CALL REPMC ( ERROR, '#', STRING, ERROR )
+         call repmc ( error, '#', string, error )
 
-      ELSE IF ( NMIN  .GT. NHOUR ) THEN
+      else if ( nmin  .gt. nhour ) then
 
-         ERROR = 'A minutes components of the time  was ' &
+         error = 'A minutes components of the time  was ' &
          //      'identified in the time string "#", but the ' &
          //      'hours component could not be identified. '
 
-         CALL REPMC ( ERROR, '#', STRING, ERROR )
+         call repmc ( error, '#', string, error )
 
-      ELSE IF ( NSEC  .GT. NMIN  ) THEN
+      else if ( nsec  .gt. nmin  ) then
 
-         ERROR = 'A seconds components of the time was ' &
+         error = 'A seconds components of the time was ' &
          //      'identified in the time string "#", but the ' &
          //      'minutes component could not be identified. '
 
-         CALL REPMC ( ERROR, '#', STRING, ERROR )
+         call repmc ( error, '#', string, error )
 
-      END IF
+      end if
 
 
-      ZZUNPCK = NO
-      RETURN
+      zzunpck = no
+      return
 
 
 
 
 !$Procedure ZZVALT ( Private, Time --- Value Based Tokens )
 
-      ENTRY ZZVALT  ( STRING, B, E, LETTER )
+      entry zzvalt  ( string, b, e, letter )
 
 ! $ Abstract
 !
@@ -3372,38 +3372,38 @@
 !
 !     So far no translations have been performed.
 !
-      DID = NO
+      did = no
 !
 !     Examine each token to see if it is an integer.
 !
-      DO I = 1, SIZE
+      do i = 1, size
 
-         ITEM = ICHAR( REP(I:I) )
+         item = ichar( rep(i:i) )
 
-         IF ( ITEM .EQ. ICHAR('i') ) THEN
+         if ( item .eq. ichar('i') ) then
 !
 !           We've got an integer. Parse it to see if it
 !           is in the specified range.
 !
-            J = BEGS(I)
-            K = ENDS(I)
+            j = begs(i)
+            k = ends(i)
 
-            CALL NPARSI ( STRING(J:K), VALUE, MYERR, PTR )
+            call nparsi ( string(j:k), value, myerr, ptr )
 
-            IF (      PTR   .EQ. 0 &
-                .AND. VALUE .GE. B &
-                .AND. VALUE .LE. E ) THEN
+            if (      ptr   .eq. 0 &
+                .and. value .ge. b &
+                .and. value .le. e ) then
 
-               REP(I:I) = LETTER
-               DID      = YES
+               rep(i:i) = letter
+               did      = yes
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      ZZVALT = DID
-      RETURN
+      zzvalt = did
+      return
 
-      END
+      end

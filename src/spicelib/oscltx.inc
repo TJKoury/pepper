@@ -25,8 +25,8 @@
 !     DOUBLE PRECISION   ELTS( OSCXSZ )
 !
 
-      INTEGER               OSCXSZ
-      PARAMETER           ( OSCXSZ = 20 )
+      integer               oscxsz
+      parameter           ( oscxsz = 20 )
 
 
 !

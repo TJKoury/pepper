@@ -1,6 +1,6 @@
 !$Procedure GFSTEP ( GF, step size )
 
-      SUBROUTINE GFSTEP ( TIME, STEP )
+      subroutine gfstep ( time, step )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      TIME
-      DOUBLE PRECISION      STEP
+      double precision      time
+      double precision      step
 
 ! $ Brief_I/O
 !
@@ -152,49 +152,49 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SVSTEP
+      double precision      svstep
 
-      LOGICAL               SVINIT
+      logical               svinit
 
 !
 !     Saved variables
 !
-      SAVE                  SVSTEP
-      SAVE                  SVINIT
+      save                  svstep
+      save                  svinit
 
 !
 !     Initial values
 !
-      DATA                  SVINIT / .FALSE. /
-      DATA                  SVSTEP / -1.0D0  /
+      data                  svinit / .false. /
+      data                  svstep / -1.0d0  /
 
 
 !
 !     Discovery check-in.
 !
-      IF ( .NOT. SVINIT ) THEN
+      if ( .not. svinit ) then
 
-         CALL CHKIN  ( 'GFSTEP'                           )
-         CALL SETMSG ( 'Step size was never initialized.' )
-         CALL SIGERR ( 'SPICE(NOTINITIALIZED)'            )
-         CALL CHKOUT ( 'GFSTEP'                           )
-         RETURN
+         call chkin  ( 'GFSTEP'                           )
+         call setmsg ( 'Step size was never initialized.' )
+         call sigerr ( 'SPICE(NOTINITIALIZED)'            )
+         call chkout ( 'GFSTEP'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Set STEP to the saved value from the last call to GFSSTP.
 !
-      STEP = SVSTEP
-      TIME = TIME
+      step = svstep
+      time = time
 
-      RETURN
+      return
 
 
 
 !$Procedure GFSSTP ( Geometry finder set step size )
 
-      ENTRY GFSSTP ( STEP )
+      entry gfsstp ( step )
 
 ! $ Abstract
 !
@@ -298,19 +298,19 @@
 !
 !     Check the step size.
 !
-      IF ( STEP .LE. 0.D0 ) THEN
+      if ( step .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'GFSSTP'                                       )
-         CALL SETMSG ( 'Step has value #; step size must be positive.')
-         CALL ERRDP  ( '#',  STEP                                     )
-         CALL SIGERR ( 'SPICE(INVALIDSTEP)'                           )
-         CALL CHKOUT ( 'GFSSTP'                                       )
-         RETURN
+         call chkin  ( 'GFSSTP'                                       )
+         call setmsg ( 'Step has value #; step size must be positive.')
+         call errdp  ( '#',  step                                     )
+         call sigerr ( 'SPICE(INVALIDSTEP)'                           )
+         call chkout ( 'GFSSTP'                                       )
+         return
 
-      END IF
+      end if
 
-      SVSTEP = STEP
-      SVINIT = .TRUE.
+      svstep = step
+      svinit = .true.
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure STCF01 (STAR catalog type 1, find stars in RA-DEC box)
 
-      SUBROUTINE STCF01 ( CATNAM, WESTRA, EASTRA, STHDEC, NTHDEC, &
-                          NSTARS)
+      subroutine stcf01 ( catnam, westra, eastra, sthdec, nthdec, &
+                          nstars)
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         CATNAM
-      DOUBLE PRECISION      WESTRA
-      DOUBLE PRECISION      EASTRA
-      DOUBLE PRECISION      STHDEC
-      DOUBLE PRECISION      NTHDEC
-      INTEGER               NSTARS
+      character*(*)         catnam
+      double precision      westra
+      double precision      eastra
+      double precision      sthdec
+      double precision      nthdec
+      integer               nstars
 
 ! $ Brief_I/O
 !
@@ -227,46 +227,46 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      DOUBLE PRECISION      DPR
+      logical               return
+      double precision      dpr
 
 !
 !     Local parameters.
 !
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN = 512 )
+      integer               errlen
+      parameter           ( errlen = 512 )
 
-      INTEGER               QRYLEN
-      PARAMETER           ( QRYLEN = 512 )
+      integer               qrylen
+      parameter           ( qrylen = 512 )
 
 !
 !     Local variables
 !
-      CHARACTER*(ERRLEN)    ERRMSG
-      CHARACTER*(QRYLEN)    QUERY
-      CHARACTER*(QRYLEN)    QRYTM1
-      CHARACTER*(QRYLEN)    QRYTM2
+      character*(errlen)    errmsg
+      character*(qrylen)    query
+      character*(qrylen)    qrytm1
+      character*(qrylen)    qrytm2
 
-      DOUBLE PRECISION      RAMIN
-      DOUBLE PRECISION      RAMAX
-      DOUBLE PRECISION      DECMIN
-      DOUBLE PRECISION      DECMAX
+      double precision      ramin
+      double precision      ramax
+      double precision      decmin
+      double precision      decmax
 
-      LOGICAL               ERROR
+      logical               error
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'STCF01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'STCF01' )
+      end if
 
 !
 !     Query templates.
 !
-      QRYTM1 = &
+      qrytm1 = &
        'SELECT '                                            // &
        'RA, DEC, RA_SIGMA, DEC_SIGMA,'                      // &
        'CATALOG_NUMBER, SPECTRAL_TYPE, VISUAL_MAGNITUDE '   // &
@@ -275,7 +275,7 @@
        '( RA  BETWEEN # AND # ) AND '                       // &
        '( DEC BETWEEN # AND # ) '
 
-      QRYTM2 = &
+      qrytm2 = &
        'SELECT '                                            // &
        'RA, DEC, RA_SIGMA, DEC_SIGMA,'                      // &
        'CATALOG_NUMBER, SPECTRAL_TYPE, VISUAL_MAGNITUDE '   // &
@@ -288,44 +288,44 @@
 !
 !     Choose query template to be used.
 !
-      IF ( WESTRA .LE. EASTRA ) THEN
-         QUERY = QRYTM1
-      ELSE
-         QUERY = QRYTM2
-      END IF
+      if ( westra .le. eastra ) then
+         query = qrytm1
+      else
+         query = qrytm2
+      end if
 
 !
 !     Convert angles in radians to angles in degrees.
 !
-      RAMIN   = WESTRA * DPR()
-      RAMAX   = EASTRA * DPR()
-      DECMIN  = STHDEC * DPR()
-      DECMAX  = NTHDEC * DPR()
+      ramin   = westra * dpr()
+      ramax   = eastra * dpr()
+      decmin  = sthdec * dpr()
+      decmax  = nthdec * dpr()
 
 !
 !     Construct query using inputs and chosen template.
 !
-      CALL REPMC( QUERY, '#', CATNAM,     QUERY )
-      CALL REPMD( QUERY, '#', RAMIN,  15, QUERY )
-      CALL REPMD( QUERY, '#', RAMAX,  15, QUERY )
-      CALL REPMD( QUERY, '#', DECMIN, 15, QUERY )
-      CALL REPMD( QUERY, '#', DECMAX, 15, QUERY )
+      call repmc( query, '#', catnam,     query )
+      call repmd( query, '#', ramin,  15, query )
+      call repmd( query, '#', ramax,  15, query )
+      call repmd( query, '#', decmin, 15, query )
+      call repmd( query, '#', decmax, 15, query )
 
 !
 !     Submit query and get number of stars. Check for
 !     errors in QUERY.
 !
-      CALL EKFIND( QUERY, NSTARS, ERROR, ERRMSG )
+      call ekfind( query, nstars, error, errmsg )
 
-      IF ( ERROR ) THEN
-         CALL SETMSG ( 'Error querying type 1 star catalog. '// &
+      if ( error ) then
+         call setmsg ( 'Error querying type 1 star catalog. '// &
                        'Error message: # '                  )
-         CALL ERRCH  ( '#', ERRMSG                          )
-         CALL SIGERR ( 'SPICE(QUERYFAILURE)'                )
-         CALL CHKOUT ( 'STCF01' )
-         RETURN
-      END IF
+         call errch  ( '#', errmsg                          )
+         call sigerr ( 'SPICE(QUERYFAILURE)'                )
+         call chkout ( 'STCF01' )
+         return
+      end if
 
-      CALL CHKOUT ( 'STCF01' )
-      RETURN
-      END
+      call chkout ( 'STCF01' )
+      return
+      end

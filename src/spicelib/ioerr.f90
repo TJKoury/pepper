@@ -1,6 +1,6 @@
 !$Procedure IOERR ( I/O error message writer )
 
-      SUBROUTINE IOERR ( ACTION, FILE, IOSTAT )
+      subroutine ioerr ( action, file, iostat )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    ACTION
-      CHARACTER*(*)    FILE
-      INTEGER          IOSTAT
+      character*(*)    action
+      character*(*)    file
+      integer          iostat
 
 ! $ Brief_I/O
 !
@@ -187,52 +187,52 @@
 !
 !     Local variables
 !
-      CHARACTER*10          IOCHAR
+      character*10          iochar
 
-      INTEGER               LONGLN
-      PARAMETER           ( LONGLN = 320 )
-      CHARACTER*(LONGLN)    ERROR
+      integer               longln
+      parameter           ( longln = 320 )
+      character*(longln)    error
 
 !
 !     First comes some standard stuff.
 !
-      ERROR =  'An error occurred while'
+      error =  'An error occurred while'
 
 !
 !     Next comes the action that caused the error, and the file name.
 !     There should be at least one space between each of these pieces,
 !     but not more than one.
 !
-      CALL SUFFIX ( ACTION, 1, ERROR )
-      CALL SUFFIX ( FILE,   1, ERROR )
-      CALL SUFFIX ( '.',    0, ERROR )
+      call suffix ( action, 1, error )
+      call suffix ( file,   1, error )
+      call suffix ( '.',    0, error )
 
 !
 !     More standard stuff. If IOSTAT is zero, there is no need for this
 !     part of the message.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SUFFIX ( 'The value of IOSTAT returned was', 2, ERROR )
+         call suffix ( 'The value of IOSTAT returned was', 2, error )
 
 !
 !        IOSTAT must be written to a character variable first.
 !        Attempting to write it directly to ERROR could cause a
 !        boo-boo if we have already overrun the length of ERROR.
 !
-         CALL INTSTR ( IOSTAT, IOCHAR )
+         call intstr ( iostat, iochar )
 
-         CALL SUFFIX ( IOCHAR, 1, ERROR )
-         CALL SUFFIX ( '.',    0, ERROR )
+         call suffix ( iochar, 1, error )
+         call suffix ( '.',    0, error )
 
-      END IF
+      end if
 
 !
 !     The message has been constructed.  Set the long error message
 !     equal to the constructed message.
 !
 
-      CALL SETMSG ( ERROR )
+      call setmsg ( error )
 
-      RETURN
-      END
+      return
+      end

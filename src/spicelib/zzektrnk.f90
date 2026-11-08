@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRNK ( EK, node size )
 
-      INTEGER FUNCTION ZZEKTRNK ( HANDLE, TREE, NODE )
+      integer function zzektrnk ( handle, tree, node )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               NODE
+      integer               handle
+      integer               tree
+      integer               node
 
 ! $ Brief_I/O
 !
@@ -97,24 +97,24 @@
 !
 !     Other functions
 !
-      INTEGER               ZZEKTRBS
+      integer               zzektrbs
 
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
+      integer               addrss
 
 !
 !     Go straight to the address at which the key count for the
 !     node is stored.
 !
-      IF ( TREE .EQ. NODE ) THEN
-         ADDRSS  =  ZZEKTRBS ( NODE )  +  TRNKR
-      ELSE
-         ADDRSS  =  ZZEKTRBS ( NODE )  +  TRNKC
-      END IF
+      if ( tree .eq. node ) then
+         addrss  =  zzektrbs ( node )  +  trnkr
+      else
+         addrss  =  zzektrbs ( node )  +  trnkc
+      end if
 
-      CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, ZZEKTRNK )
+      call dasrdi ( handle, addrss, addrss, zzektrnk )
 
-      RETURN
-      END
+      return
+      end

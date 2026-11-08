@@ -1,6 +1,6 @@
 !$Procedure SPKR01 ( Read SPK record from segment, type 1 )
 
-      SUBROUTINE SPKR01 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr01 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -155,47 +155,47 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLTD
-      LOGICAL               RETURN
+      integer               lstltd
+      logical               return
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      DC       (   2 )
-      INTEGER               IC       (   6 )
-      INTEGER               BEGIN
-      INTEGER               END
+      double precision      dc       (   2 )
+      integer               ic       (   6 )
+      integer               begin
+      integer               end
 
-      DOUBLE PRECISION      DATA     ( 100 )
-      INTEGER               NREC
-      INTEGER               NDIR
-      INTEGER               OFFD
-      INTEGER               OFFE
-      INTEGER               OFF
+      double precision      data     ( 100 )
+      integer               nrec
+      integer               ndir
+      integer               offd
+      integer               offe
+      integer               off
 
-      INTEGER               RECNO
-      INTEGER               OFFR
-      INTEGER               I
+      integer               recno
+      integer               offr
+      integer               i
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKR01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKR01' )
+      end if
 
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      BEGIN = IC(5)
-      END   = IC(6)
+      begin = ic(5)
+      end   = ic(6)
 
 !
 !     Get the number of records in the segment. From that, we can
@@ -210,12 +210,12 @@
 !
 !     the number of directory epochs.
 !
-      CALL DAFGDA ( HANDLE, END, END, DATA )
-      NREC = INT ( DATA(1) )
+      call dafgda ( handle, end, end, data )
+      nrec = int ( data(1) )
 
-      NDIR  = NREC / 100
-      OFFD  = END - NDIR - 1
-      OFFE  = END - NDIR - NREC - 1
+      ndir  = nrec / 100
+      offd  = end - ndir - 1
+      offe  = end - ndir - nrec - 1
 
 !
 !     What we want is the record number: once we have that, we can
@@ -226,16 +226,16 @@
 !     than or equal to ET. If there are 100 or fewer records, all
 !     the record epochs can be examined in a single group.
 !
-      IF ( NREC .LE. 100 ) THEN
-         CALL DAFGDA ( HANDLE, OFFE+1, OFFE+NREC, DATA )
-         RECNO = LSTLTD ( ET, NREC, DATA ) + 1
+      if ( nrec .le. 100 ) then
+         call dafgda ( handle, offe+1, offe+nrec, data )
+         recno = lstltd ( et, nrec, data ) + 1
 
-         OFFR = (BEGIN - 1) + (RECNO - 1) * 71
-         CALL DAFGDA ( HANDLE, OFFR+1, OFFR+71, RECORD )
+         offr = (begin - 1) + (recno - 1) * 71
+         call dafgda ( handle, offr+1, offr+71, record )
 
-         CALL CHKOUT ( 'SPKR01' )
-         RETURN
-      END IF
+         call chkout ( 'SPKR01' )
+         return
+      end if
 
 !
 !     Searching directories is a little more difficult.
@@ -245,36 +245,36 @@
 !     we can grab the corresponding set of 100 record epochs, and
 !     search them.
 !
-      DO I = 1, NDIR
-         CALL DAFGDA ( HANDLE, OFFD+I, OFFD+I, DATA )
+      do i = 1, ndir
+         call dafgda ( handle, offd+i, offd+i, data )
 
-         IF ( DATA(1) .GE. ET ) THEN
-            OFF = OFFE + (I - 1) * 100
-            CALL DAFGDA ( HANDLE, OFF+1, OFF+100, DATA )
+         if ( data(1) .ge. et ) then
+            off = offe + (i - 1) * 100
+            call dafgda ( handle, off+1, off+100, data )
 
-            RECNO = ((I - 1) * 100) + LSTLTD ( ET, 100, DATA ) + 1
+            recno = ((i - 1) * 100) + lstltd ( et, 100, data ) + 1
 
-            OFFR = (BEGIN - 1) + (RECNO - 1) * 71
-            CALL DAFGDA ( HANDLE, OFFR+1, OFFR+71, RECORD )
+            offr = (begin - 1) + (recno - 1) * 71
+            call dafgda ( handle, offr+1, offr+71, record )
 
-            CALL CHKOUT ( 'SPKR01' )
-            RETURN
-         END IF
-      END DO
+            call chkout ( 'SPKR01' )
+            return
+         end if
+      end do
 
 !
 !     If ET is greater than the final directory epoch, we want one
 !     of the final records.
 !
-      I = MOD ( NREC, 100 )
+      i = mod ( nrec, 100 )
 
-      CALL DAFGDA ( HANDLE, END-NDIR-I, END-NDIR-1, DATA )
-      RECNO = (NDIR * 100) + LSTLTD ( ET, I, DATA ) + 1
+      call dafgda ( handle, end-ndir-i, end-ndir-1, data )
+      recno = (ndir * 100) + lstltd ( et, i, data ) + 1
 
-      OFFR = (BEGIN - 1) + (RECNO - 1) * 71
-      CALL DAFGDA ( HANDLE, OFFR+1, OFFR+71, RECORD )
+      offr = (begin - 1) + (recno - 1) * 71
+      call dafgda ( handle, offr+1, offr+71, record )
 
 
-      CALL CHKOUT ( 'SPKR01' )
-      RETURN
-      END
+      call chkout ( 'SPKR01' )
+      return
+      end

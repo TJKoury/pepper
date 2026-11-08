@@ -1,6 +1,6 @@
 !$Procedure CYLREC ( Cylindrical to rectangular )
 
-      SUBROUTINE CYLREC ( R, CLON, Z,  RECTAN )
+      subroutine cylrec ( r, clon, z,  rectan )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    R
-      DOUBLE PRECISION    CLON
-      DOUBLE PRECISION    Z
-      DOUBLE PRECISION    RECTAN ( 3 )
+      double precision    r
+      double precision    clon
+      double precision    z
+      double precision    rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -355,22 +355,22 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
+      double precision x
+      double precision y
 
 !
 !     Convert to rectangular coordinates, storing the results in
 !     temporary variables.
 !
-      X         = R * DCOS(CLON)
-      Y         = R * DSIN(CLON)
+      x         = r * dcos(clon)
+      y         = r * dsin(clon)
 
 !
 !     Move the results to the output variables.
 !
-      RECTAN(1) = X
-      RECTAN(2) = Y
-      RECTAN(3) = Z
+      rectan(1) = x
+      rectan(2) = y
+      rectan(3) = z
 
-      RETURN
-      END
+      return
+      end

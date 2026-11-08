@@ -14,14 +14,14 @@
 !
 !     Maximum length of the long error message:
 !
-      INTEGER               LMSGLN
-      PARAMETER           ( LMSGLN = 23 * 80 )
+      integer               lmsgln
+      parameter           ( lmsgln = 23 * 80 )
 
 !
 !     Maximum length of the short error message:
 !
-      INTEGER               SMSGLN
-      PARAMETER           ( SMSGLN = 25 )
+      integer               smsgln
+      parameter           ( smsgln = 25 )
 
 !
 !     End Include File:  SPICELIB Error Handling Parameters

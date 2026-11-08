@@ -1,6 +1,6 @@
 !$Procedure ZZPLTCHK ( Private --- Platform Check )
 
-      SUBROUTINE ZZPLTCHK ( OK )
+      subroutine zzpltchk ( ok )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      LOGICAL               OK
+      logical               ok
 
 ! $ Brief_I/O
 !
@@ -90,51 +90,51 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(WDSIZE)    STRBFF
-      CHARACTER*(WDSIZE)    VALUE
-      CHARACTER*(WDSIZE)    RTEBFF
+      character*(wdsize)    strbff
+      character*(wdsize)    value
+      character*(wdsize)    rtebff
 
-      INTEGER               BFF
+      integer               bff
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZPLTCHK' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZPLTCHK' )
+      end if
 
 !
 !     Verify that the runtime environment's binary file format agrees
 !     with the value listed in ZZPLATFM.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', STRBFF )
+      call zzplatfm ( 'FILE_FORMAT', strbff )
 
 !
 !     Determine what the runtime environment binary file format appears
 !     to be.
 !
-      CALL ZZGETBFF ( BFF )
-      CALL ZZDDHGSD ( 'BFF', BFF, RTEBFF )
+      call zzgetbff ( bff )
+      call zzddhgsd ( 'BFF', bff, rtebff )
 
 !
 !     Check results, signal SPICE(BUG) if a discrepancy appears.
 !
-      IF ( STRBFF .NE. RTEBFF ) THEN
+      if ( strbff .ne. rtebff ) then
 
-         CALL SETMSG   ( 'This version of SPICELIB was originally ' &
+         call setmsg   ( 'This version of SPICELIB was originally ' &
          //              'packaged by NAIF for # hardware using ' &
          //              '# with the # compiler.  This ' &
          //              'environment has a binary ' &
@@ -146,30 +146,30 @@
          //              'system.  It also may be the result of an ' &
          //              'improper port; please contact NAIF.'         )
 
-         CALL ZZPLATFM ( 'SYSTEM',   VALUE                             )
-         CALL ERRCH    ( '#',        VALUE                             )
+         call zzplatfm ( 'SYSTEM',   value                             )
+         call errch    ( '#',        value                             )
 
-         CALL ZZPLATFM ( 'O/S',      VALUE                             )
-         CALL ERRCH    ( '#',        VALUE                             )
+         call zzplatfm ( 'O/S',      value                             )
+         call errch    ( '#',        value                             )
 
-         CALL ZZPLATFM ( 'COMPILER', VALUE                             )
-         CALL ERRCH    ( '#',        VALUE                             )
+         call zzplatfm ( 'COMPILER', value                             )
+         call errch    ( '#',        value                             )
 
-         CALL ERRCH    ( '#',        STRBFF                            )
+         call errch    ( '#',        strbff                            )
 
-         IF ( RTEBFF .EQ. ' ' ) THEN
-            CALL ERRCH ( '#', 'UNKNOWN' )
-         ELSE
-            CALL ERRCH ( '#',  RTEBFF   )
-         END IF
+         if ( rtebff .eq. ' ' ) then
+            call errch ( '#', 'UNKNOWN' )
+         else
+            call errch ( '#',  rtebff   )
+         end if
 
-         CALL SIGERR   ( 'SPICE(BUG)'                                  )
-         CALL CHKOUT   ( 'ZZPLTCHK'                                    )
-         RETURN
+         call sigerr   ( 'SPICE(BUG)'                                  )
+         call chkout   ( 'ZZPLTCHK'                                    )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZPLTCHK' )
-      RETURN
+      call chkout ( 'ZZPLTCHK' )
+      return
 
-      END
+      end

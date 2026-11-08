@@ -1,6 +1,6 @@
 !$Procedure ERRPRT ( Get/Set Error Output Items )
 
-      SUBROUTINE ERRPRT ( OP, LIST )
+      subroutine errprt ( op, list )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-       CHARACTER*(*)          OP
-       CHARACTER*(*)          LIST
+       character*(*)          op
+       character*(*)          list
 
 ! $ Brief_I/O
 !
@@ -272,126 +272,126 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               SETPRT
-      LOGICAL               MSGSEL
+      logical               setprt
+      logical               msgsel
 
 !
 !     Local Variables:
 !
 
-      INTEGER               WRDLEN
-      PARAMETER           ( WRDLEN = 9 )
+      integer               wrdlen
+      parameter           ( wrdlen = 9 )
 
-      INTEGER               MAXWRD
-      PARAMETER           ( MAXWRD = 10 )
+      integer               maxwrd
+      parameter           ( maxwrd = 10 )
 
-      CHARACTER*(WRDLEN)    WORDS ( MAXWRD )
-      CHARACTER*(WRDLEN)    UPWORD
+      character*(wrdlen)    words ( maxwrd )
+      character*(wrdlen)    upword
 
-      INTEGER               NUMWRD
-
-
-      INTEGER               I
-
-      LOGICAL               SHORT
-      LOGICAL               LONG
-      LOGICAL               EXPL
-      LOGICAL               TRACE
-      LOGICAL               DFAULT
-      LOGICAL               STATUS
-
-      INTEGER               OPLEN
-      PARAMETER           ( OPLEN = 3 )
-      CHARACTER*(OPLEN)     UPOP
-      CHARACTER*(OPLEN)     LOCOP
+      integer               numwrd
 
 
+      integer               i
 
-      INTEGER               LSTLEN
-      PARAMETER           ( LSTLEN = 100 )
+      logical               short
+      logical               long
+      logical               expl
+      logical               trace
+      logical               dfault
+      logical               status
+
+      integer               oplen
+      parameter           ( oplen = 3 )
+      character*(oplen)     upop
+      character*(oplen)     locop
+
+
+
+      integer               lstlen
+      parameter           ( lstlen = 100 )
 
 
 !
 !     Executable Code:
 !
 
-      CALL CHKIN ( 'ERRPRT' )
+      call chkin ( 'ERRPRT' )
 
 !
 !     We first initialize the message selection flags to
 !     correspond to the current selection of error messages:
 !
-      SHORT  = MSGSEL ( 'SHORT'     )
-      LONG   = MSGSEL ( 'LONG'      )
-      EXPL   = MSGSEL ( 'EXPLAIN'   )
-      TRACE  = MSGSEL ( 'TRACEBACK' )
-      DFAULT = MSGSEL ( 'DEFAULT'   )
+      short  = msgsel ( 'SHORT'     )
+      long   = msgsel ( 'LONG'      )
+      expl   = msgsel ( 'EXPLAIN'   )
+      trace  = msgsel ( 'TRACEBACK' )
+      dfault = msgsel ( 'DEFAULT'   )
 
 !
 !     We save the operation string as input, and get
 !     an upper case version for our own use:
 !
-      CALL LJUST ( OP,   UPOP )
-      CALL UCASE ( UPOP, UPOP )
+      call ljust ( op,   upop )
+      call ucase ( upop, upop )
 
-      IF (  UPOP  .EQ. 'GET' ) THEN
+      if (  upop  .eq. 'GET' ) then
 !
 !        Construct a string indicating which messages are enabled.
 !
-         LIST = ' '
+         list = ' '
 
-         IF ( SHORT ) THEN
+         if ( short ) then
 
-            LIST = 'SHORT'
+            list = 'SHORT'
 
-         END IF
-
-
-         IF ( LONG ) THEN
-
-            IF ( LIST .EQ. ' ' ) THEN
-               LIST = 'LONG'
-            ELSE
-               CALL SUFFIX ( ', LONG', 0, LIST )
-            END IF
-
-         END IF
+         end if
 
 
-         IF ( EXPL ) THEN
+         if ( long ) then
 
-            IF ( LIST .EQ. ' ' ) THEN
-               LIST = 'EXPLAIN'
-            ELSE
-               CALL SUFFIX ( ', EXPLAIN', 0, LIST )
-            END IF
+            if ( list .eq. ' ' ) then
+               list = 'LONG'
+            else
+               call suffix ( ', LONG', 0, list )
+            end if
 
-         END IF
-
-
-         IF ( TRACE ) THEN
-
-            IF ( LIST .EQ. ' ' ) THEN
-               LIST = 'TRACEBACK'
-            ELSE
-               CALL SUFFIX ( ', TRACEBACK', 0, LIST )
-            END IF
-
-         END IF
+         end if
 
 
-         IF ( DFAULT ) THEN
+         if ( expl ) then
 
-            IF ( LIST .EQ. ' ' ) THEN
-               LIST = 'DEFAULT'
-            ELSE
-               CALL SUFFIX ( ', DEFAULT', 0, LIST )
-            END IF
+            if ( list .eq. ' ' ) then
+               list = 'EXPLAIN'
+            else
+               call suffix ( ', EXPLAIN', 0, list )
+            end if
 
-         END IF
+         end if
 
 
-      ELSE IF ( UPOP .EQ. 'SET' ) THEN
+         if ( trace ) then
+
+            if ( list .eq. ' ' ) then
+               list = 'TRACEBACK'
+            else
+               call suffix ( ', TRACEBACK', 0, list )
+            end if
+
+         end if
+
+
+         if ( dfault ) then
+
+            if ( list .eq. ' ' ) then
+               list = 'DEFAULT'
+            else
+               call suffix ( ', DEFAULT', 0, list )
+            end if
+
+         end if
+
+
+      else if ( upop .eq. 'SET' ) then
 !
 !        We parse the list of words, converting each word
 !        to upper case, testing each word for validity,
@@ -408,72 +408,72 @@
 !
 
 
-         CALL LPARSE ( LIST,  ','  ,  MAXWRD,  NUMWRD, WORDS )
+         call lparse ( list,  ','  ,  maxwrd,  numwrd, words )
 
-         DO I = 1, NUMWRD
+         do i = 1, numwrd
 
-            CALL UCASE  ( WORDS(I), UPWORD )
+            call ucase  ( words(i), upword )
 
-            IF ( UPWORD .EQ. 'SHORT' ) THEN
+            if ( upword .eq. 'SHORT' ) then
 
-               SHORT  =  .TRUE.
+               short  =  .true.
 
-            ELSE IF ( UPWORD .EQ. 'LONG' ) THEN
+            else if ( upword .eq. 'LONG' ) then
 
-               LONG   =  .TRUE.
+               long   =  .true.
 
-            ELSE IF ( UPWORD .EQ. 'EXPLAIN' ) THEN
+            else if ( upword .eq. 'EXPLAIN' ) then
 
-               EXPL   =  .TRUE.
+               expl   =  .true.
 
-            ELSE IF ( UPWORD .EQ. 'TRACEBACK' ) THEN
+            else if ( upword .eq. 'TRACEBACK' ) then
 
-               TRACE  =  .TRUE.
+               trace  =  .true.
 
-            ELSE IF ( UPWORD .EQ. 'ALL' ) THEN
+            else if ( upword .eq. 'ALL' ) then
 
-               SHORT  =  .TRUE.
-               LONG   =  .TRUE.
-               EXPL   =  .TRUE.
-               TRACE  =  .TRUE.
+               short  =  .true.
+               long   =  .true.
+               expl   =  .true.
+               trace  =  .true.
 
-            ELSE IF ( UPWORD .EQ. 'DEFAULT' ) THEN
+            else if ( upword .eq. 'DEFAULT' ) then
 
-               SHORT  =  .TRUE.
-               LONG   =  .TRUE.
-               EXPL   =  .TRUE.
-               TRACE  =  .TRUE.
-               DFAULT =  .TRUE.
+               short  =  .true.
+               long   =  .true.
+               expl   =  .true.
+               trace  =  .true.
+               dfault =  .true.
 
-            ELSE IF ( UPWORD .EQ. 'NONE' ) THEN
+            else if ( upword .eq. 'NONE' ) then
 
-               SHORT  =  .FALSE.
-               LONG   =  .FALSE.
-               EXPL   =  .FALSE.
-               TRACE  =  .FALSE.
-               DFAULT =  .FALSE.
+               short  =  .false.
+               long   =  .false.
+               expl   =  .false.
+               trace  =  .false.
+               dfault =  .false.
 
 
-            ELSE IF  (  UPWORD .NE. ' '  )  THEN
+            else if  (  upword .ne. ' '  )  then
 !
 !              Oops! Invalid word...
 !
-               CALL SETMSG ( 'ERRPRT: An invalid list item was found' // &
+               call setmsg ( 'ERRPRT: An invalid list item was found' // &
                              ' in the error message list.  The word'  // &
-                             ' was:' //WORDS(I) &
+                             ' was:' //words(i) &
                            )
 
-               CALL SIGERR ( 'SPICE(INVALIDLISTITEM)' )
+               call sigerr ( 'SPICE(INVALIDLISTITEM)' )
 
 
-            END IF
+            end if
 !
 !           At this point, we have either set some set of
 !           flags in response to WORD, or determined that
 !           WORD was invalid.
 !
 
-         END DO
+         end do
 !
 !        We've now responded to all words in LIST.
 !
@@ -483,23 +483,23 @@
 !        consumption (SETPRT doesn't actually detect errors).
 !
 
-         STATUS  =  SETPRT ( SHORT, EXPL, LONG, TRACE, DFAULT )
+         status  =  setprt ( short, expl, long, trace, dfault )
 
-      ELSE
+      else
 
 !
 !        An invalid value of OP was supplied.
 !
 
-         LOCOP = OP
+         locop = op
 
-         CALL SETMSG ( 'ERRPRT:  An invalid value of OP was supplied.'// &
-                       '  The value was: '  // LOCOP   )
+         call setmsg ( 'ERRPRT:  An invalid value of OP was supplied.'// &
+                       '  The value was: '  // locop   )
 
-         CALL SIGERR ( 'SPICE(INVALIDOPERATION)' )
+         call sigerr ( 'SPICE(INVALIDOPERATION)' )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ERRPRT' )
-      RETURN
-      END
+      call chkout ( 'ERRPRT' )
+      return
+      end

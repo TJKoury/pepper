@@ -1,6 +1,6 @@
 !$Procedure EV2LIN ( Evaluate "two-line" element data, near-earth )
 
-      SUBROUTINE EV2LIN ( ET, GEOPHS, ELEMS, STATE )
+      subroutine ev2lin ( et, geophs, elems, state )
 
 ! $ Abstract
 !
@@ -23,15 +23,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      GEOPHS ( * )
-      DOUBLE PRECISION      ELEMS  ( * )
-      DOUBLE PRECISION      STATE  ( * )
+      double precision      et
+      double precision      geophs ( * )
+      double precision      elems  ( * )
+      double precision      state  ( * )
 
-      INTEGER               NMODL
-      PARAMETER           ( NMODL = 6 )
+      integer               nmodl
+      parameter           ( nmodl = 6 )
 
 ! $ Brief_I/O
 !
@@ -430,8 +430,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      TWOPI
+      double precision      brcktd
+      double precision      twopi
 
 !
 !     Local Parameters
@@ -451,26 +451,26 @@
 !     KAE  --- distance units/earth radius
 !
 !
-      INTEGER               KJ2
-      INTEGER               KJ3
-      INTEGER               KJ4
-      INTEGER               KKE
-      INTEGER               KQO
-      INTEGER               KSO
-      INTEGER               KER
-      INTEGER               KAE
+      integer               kj2
+      integer               kj3
+      integer               kj4
+      integer               kke
+      integer               kqo
+      integer               kso
+      integer               ker
+      integer               kae
 
-      PARAMETER           ( KJ2 = 1 )
-      PARAMETER           ( KJ3 = 2 )
-      PARAMETER           ( KJ4 = 3 )
-      PARAMETER           ( KKE = 4 )
-      PARAMETER           ( KQO = 5 )
-      PARAMETER           ( KSO = 6 )
-      PARAMETER           ( KER = 7 )
-      PARAMETER           ( KAE = 8 )
+      parameter           ( kj2 = 1 )
+      parameter           ( kj3 = 2 )
+      parameter           ( kj4 = 3 )
+      parameter           ( kke = 4 )
+      parameter           ( kqo = 5 )
+      parameter           ( kso = 6 )
+      parameter           ( ker = 7 )
+      parameter           ( kae = 8 )
 
-      INTEGER               NGEOCN
-      PARAMETER           ( NGEOCN = KAE )
+      integer               ngeocn
+      parameter           ( ngeocn = kae )
 !
 !     An enumeration of the various components of the
 !     elements array---ELEMS
@@ -486,29 +486,29 @@
 !     KNO
 !
 
-      INTEGER               KNDT20
-      INTEGER               KNDD60
-      INTEGER               KBSTAR
-      INTEGER               KINCL
-      INTEGER               KNODE0
-      INTEGER               KECC
-      INTEGER               KOMEGA
-      INTEGER               KMO
-      INTEGER               KNO
-      INTEGER               KEPOCH
-      INTEGER               NELEMS
+      integer               kndt20
+      integer               kndd60
+      integer               kbstar
+      integer               kincl
+      integer               knode0
+      integer               kecc
+      integer               komega
+      integer               kmo
+      integer               kno
+      integer               kepoch
+      integer               nelems
 
-      PARAMETER           ( KNDT20 =      1 )
-      PARAMETER           ( KNDD60 =      2 )
-      PARAMETER           ( KBSTAR =      3 )
-      PARAMETER           ( KINCL  =      4 )
-      PARAMETER           ( KNODE0 =      5 )
-      PARAMETER           ( KECC   =      6 )
-      PARAMETER           ( KOMEGA =      7 )
-      PARAMETER           ( KMO    =      8 )
-      PARAMETER           ( KNO    =      9 )
-      PARAMETER           ( KEPOCH =     10 )
-      PARAMETER           ( NELEMS = KEPOCH )
+      parameter           ( kndt20 =      1 )
+      parameter           ( kndd60 =      2 )
+      parameter           ( kbstar =      3 )
+      parameter           ( kincl  =      4 )
+      parameter           ( knode0 =      5 )
+      parameter           ( kecc   =      6 )
+      parameter           ( komega =      7 )
+      parameter           ( kmo    =      8 )
+      parameter           ( kno    =      9 )
+      parameter           ( kepoch =     10 )
+      parameter           ( nelems = kepoch )
 
 !
 !     The parameters NEXT and PREV are used in our linked list
@@ -519,14 +519,14 @@
 !     PREV
 !
 
-      INTEGER               NEXT
-      PARAMETER           ( NEXT   = 1 )
+      integer               next
+      parameter           ( next   = 1 )
 
-      INTEGER               PREV
-      PARAMETER           ( PREV   = 2 )
+      integer               prev
+      parameter           ( prev   = 2 )
 
-      INTEGER               NIL
-      PARAMETER           ( NIL    = 0 )
+      integer               nil
+      parameter           ( nil    = 0 )
 
 !
 !     There are a number of preliminary quantities that are needed
@@ -536,71 +536,71 @@
 !     quantities  will not be recomputed.  PRSIZE is the parameter
 !     used to declare the needed room.
 !
-      INTEGER               PRSIZE
-      PARAMETER           ( PRSIZE = 29 )
+      integer               prsize
+      parameter           ( prsize = 29 )
 !
 !     When we perform bisection in the solution of Kepler's equation
 !     we don't want to bisect too many times.
 !
-      INTEGER               MXLOOP
-      PARAMETER           ( MXLOOP = 20 )
+      integer               mxloop
+      parameter           ( mxloop = 20 )
 
 !
 !     Numerical Constants
 !
-      DOUBLE PRECISION      HALF
-      DOUBLE PRECISION      ONE
-      DOUBLE PRECISION      F3OV8
-      DOUBLE PRECISION      F3OV2
-      DOUBLE PRECISION      TOTHRD
-      DOUBLE PRECISION      ONETHD
+      double precision      half
+      double precision      one
+      double precision      f3ov8
+      double precision      f3ov2
+      double precision      tothrd
+      double precision      onethd
 
-      PARAMETER           ( HALF    =    0.5D0         )
-      PARAMETER           ( ONE     =    1.0D0         )
-      PARAMETER           ( F3OV8   =    3.0D0/8.0D0   )
-      PARAMETER           ( F3OV2   =    1.50D0        )
-      PARAMETER           ( TOTHRD  =    2.0D0/3.0D0   )
-      PARAMETER           ( ONETHD  =    1.0D0/3.0D0   )
+      parameter           ( half    =    0.5d0         )
+      parameter           ( one     =    1.0d0         )
+      parameter           ( f3ov8   =    3.0d0/8.0d0   )
+      parameter           ( f3ov2   =    1.50d0        )
+      parameter           ( tothrd  =    2.0d0/3.0d0   )
+      parameter           ( onethd  =    1.0d0/3.0d0   )
 
 !
 !     Local variables
 !
 !     Geophysical Quantities
 !
-      DOUBLE PRECISION      J2
-      DOUBLE PRECISION      J3
-      DOUBLE PRECISION      J4
-      DOUBLE PRECISION      KE
-      DOUBLE PRECISION      QO
-      DOUBLE PRECISION      SO
-      DOUBLE PRECISION      ER
-      DOUBLE PRECISION      AE
-      DOUBLE PRECISION      AE2
-      DOUBLE PRECISION      AE3
-      DOUBLE PRECISION      AE4
-      DOUBLE PRECISION      CK2
-      DOUBLE PRECISION      A3OVK2
-      DOUBLE PRECISION      CK4
-      DOUBLE PRECISION      QOMSO
-      DOUBLE PRECISION      Q1
-      DOUBLE PRECISION      Q2
-      DOUBLE PRECISION      QOMS2T
-      DOUBLE PRECISION      S
+      double precision      j2
+      double precision      j3
+      double precision      j4
+      double precision      ke
+      double precision      qo
+      double precision      so
+      double precision      er
+      double precision      ae
+      double precision      ae2
+      double precision      ae3
+      double precision      ae4
+      double precision      ck2
+      double precision      a3ovk2
+      double precision      ck4
+      double precision      qomso
+      double precision      q1
+      double precision      q2
+      double precision      qoms2t
+      double precision      s
 
 
 !
 !     Elements
 !
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      XNDT2O
-      DOUBLE PRECISION      XNDD6O
-      DOUBLE PRECISION      BSTAR
-      DOUBLE PRECISION      XINCL
-      DOUBLE PRECISION      XNODEO
-      DOUBLE PRECISION      EO
-      DOUBLE PRECISION      OMEGAO
-      DOUBLE PRECISION      XMO
-      DOUBLE PRECISION      XNO
+      double precision      epoch
+      double precision      xndt2o
+      double precision      xndd6o
+      double precision      bstar
+      double precision      xincl
+      double precision      xnodeo
+      double precision      eo
+      double precision      omegao
+      double precision      xmo
+      double precision      xno
 
 !
 !     Intermediate quantities. The time independent quantities
@@ -608,185 +608,185 @@
 !
 
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      A1
-      DOUBLE PRECISION      AO
-      DOUBLE PRECISION      AODP
-      DOUBLE PRECISION      AXN
-      DOUBLE PRECISION      AYCOF
-      DOUBLE PRECISION      AYN
-      DOUBLE PRECISION      AYNL
-      DOUBLE PRECISION      BETAL
-      DOUBLE PRECISION      BETAO
-      DOUBLE PRECISION      BETAO2
-      DOUBLE PRECISION      BETAO3
-      DOUBLE PRECISION      BETAO4
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C1SQ
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      C3
-      DOUBLE PRECISION      C4
-      DOUBLE PRECISION      C5
-      DOUBLE PRECISION      CAPU
-      DOUBLE PRECISION      COEF
-      DOUBLE PRECISION      COEF1
-      DOUBLE PRECISION      COS2U
-      DOUBLE PRECISION      COSEPW
-      DOUBLE PRECISION      COSIK
-      DOUBLE PRECISION      COSIO
-      DOUBLE PRECISION      COSNOK
-      DOUBLE PRECISION      COSU
-      DOUBLE PRECISION      COSUK
-      DOUBLE PRECISION      D2
-      DOUBLE PRECISION      D3
-      DOUBLE PRECISION      D4
-      DOUBLE PRECISION      DEL1
-      DOUBLE PRECISION      DELM
-      DOUBLE PRECISION      DELMO
-      DOUBLE PRECISION      DELO
-      DOUBLE PRECISION      DELOMG
-      DOUBLE PRECISION      E
-      DOUBLE PRECISION      ECOSE
-      DOUBLE PRECISION      EETA
-      DOUBLE PRECISION      ELEMNT ( NELEMS, NMODL )
-      DOUBLE PRECISION      ELSQ
-      DOUBLE PRECISION      EPSILN
-      DOUBLE PRECISION      EPW
-      DOUBLE PRECISION      EPWNXT
-      DOUBLE PRECISION      ESINE
-      DOUBLE PRECISION      EST
-      DOUBLE PRECISION      ETA
-      DOUBLE PRECISION      ETASQ
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      FL
-      DOUBLE PRECISION      FMOD2P
-      DOUBLE PRECISION      FPRIME
-      DOUBLE PRECISION      FU
-      DOUBLE PRECISION      LOWER
-      DOUBLE PRECISION      LSTGEO ( NGEOCN )
-      DOUBLE PRECISION      M
-      DOUBLE PRECISION      MOV1M
-      DOUBLE PRECISION      OMEGA
-      DOUBLE PRECISION      OMGADF
-      DOUBLE PRECISION      OMGCOF
-      DOUBLE PRECISION      OMGDOT
-      DOUBLE PRECISION      PERIGE
-      DOUBLE PRECISION      PINVSQ
-      DOUBLE PRECISION      PIX2
-      DOUBLE PRECISION      PL
-      DOUBLE PRECISION      PRELIM ( PRSIZE, NMODL )
-      DOUBLE PRECISION      PSISQ
-      DOUBLE PRECISION      QOMS24
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RDOT
-      DOUBLE PRECISION      RDOTK
-      DOUBLE PRECISION      RFDOT
-      DOUBLE PRECISION      RFDOTK
-      DOUBLE PRECISION      RK
-      DOUBLE PRECISION      S4
-      DOUBLE PRECISION      SIN2U
-      DOUBLE PRECISION      SINEPW
-      DOUBLE PRECISION      SINIK
-      DOUBLE PRECISION      SINIO
-      DOUBLE PRECISION      SINMO
-      DOUBLE PRECISION      SINNOK
-      DOUBLE PRECISION      SINU
-      DOUBLE PRECISION      SINUK
-      DOUBLE PRECISION      T2COF
-      DOUBLE PRECISION      T3COF
-      DOUBLE PRECISION      T4COF
-      DOUBLE PRECISION      T5COF
-      DOUBLE PRECISION      TCUBE
-      DOUBLE PRECISION      TEMP
-      DOUBLE PRECISION      TEMP1
-      DOUBLE PRECISION      TEMP2
-      DOUBLE PRECISION      TEMP3
-      DOUBLE PRECISION      TEMP4
-      DOUBLE PRECISION      TEMP5
-      DOUBLE PRECISION      TEMP6
-      DOUBLE PRECISION      TEMPA
-      DOUBLE PRECISION      TEMPE
-      DOUBLE PRECISION      TEMPL
-      DOUBLE PRECISION      TFOUR
-      DOUBLE PRECISION      THETA2
-      DOUBLE PRECISION      THETA4
-      DOUBLE PRECISION      TOKM
-      DOUBLE PRECISION      TOKMPS
-      DOUBLE PRECISION      TSI
-      DOUBLE PRECISION      TSINCE
-      DOUBLE PRECISION      TSQ
-      DOUBLE PRECISION      U
-      DOUBLE PRECISION      UK
-      DOUBLE PRECISION      UPPER
-      DOUBLE PRECISION      UX
-      DOUBLE PRECISION      UY
-      DOUBLE PRECISION      UZ
-      DOUBLE PRECISION      VX
-      DOUBLE PRECISION      VY
-      DOUBLE PRECISION      VZ
-      DOUBLE PRECISION      X1M5TH
-      DOUBLE PRECISION      X1MTH2
-      DOUBLE PRECISION      X3THM1
-      DOUBLE PRECISION      X7THM1
-      DOUBLE PRECISION      XHDOT1
-      DOUBLE PRECISION      XINCK
-      DOUBLE PRECISION      XL
-      DOUBLE PRECISION      XLCOF
-      DOUBLE PRECISION      XLL
-      DOUBLE PRECISION      XLT
-      DOUBLE PRECISION      XMCOF
-      DOUBLE PRECISION      XMDF
-      DOUBLE PRECISION      XMDOT
-      DOUBLE PRECISION      XMP
-      DOUBLE PRECISION      XMX
-      DOUBLE PRECISION      XMY
-      DOUBLE PRECISION      XN
-      DOUBLE PRECISION      XNODCF
-      DOUBLE PRECISION      XNODDF
-      DOUBLE PRECISION      XNODE
-      DOUBLE PRECISION      XNODEK
-      DOUBLE PRECISION      XNODOT
-      DOUBLE PRECISION      XNODP
+      double precision      a
+      double precision      a1
+      double precision      ao
+      double precision      aodp
+      double precision      axn
+      double precision      aycof
+      double precision      ayn
+      double precision      aynl
+      double precision      betal
+      double precision      betao
+      double precision      betao2
+      double precision      betao3
+      double precision      betao4
+      double precision      c1
+      double precision      c1sq
+      double precision      c2
+      double precision      c3
+      double precision      c4
+      double precision      c5
+      double precision      capu
+      double precision      coef
+      double precision      coef1
+      double precision      cos2u
+      double precision      cosepw
+      double precision      cosik
+      double precision      cosio
+      double precision      cosnok
+      double precision      cosu
+      double precision      cosuk
+      double precision      d2
+      double precision      d3
+      double precision      d4
+      double precision      del1
+      double precision      delm
+      double precision      delmo
+      double precision      delo
+      double precision      delomg
+      double precision      e
+      double precision      ecose
+      double precision      eeta
+      double precision      elemnt ( nelems, nmodl )
+      double precision      elsq
+      double precision      epsiln
+      double precision      epw
+      double precision      epwnxt
+      double precision      esine
+      double precision      est
+      double precision      eta
+      double precision      etasq
+      double precision      f
+      double precision      fl
+      double precision      fmod2p
+      double precision      fprime
+      double precision      fu
+      double precision      lower
+      double precision      lstgeo ( ngeocn )
+      double precision      m
+      double precision      mov1m
+      double precision      omega
+      double precision      omgadf
+      double precision      omgcof
+      double precision      omgdot
+      double precision      perige
+      double precision      pinvsq
+      double precision      pix2
+      double precision      pl
+      double precision      prelim ( prsize, nmodl )
+      double precision      psisq
+      double precision      qoms24
+      double precision      r
+      double precision      rdot
+      double precision      rdotk
+      double precision      rfdot
+      double precision      rfdotk
+      double precision      rk
+      double precision      s4
+      double precision      sin2u
+      double precision      sinepw
+      double precision      sinik
+      double precision      sinio
+      double precision      sinmo
+      double precision      sinnok
+      double precision      sinu
+      double precision      sinuk
+      double precision      t2cof
+      double precision      t3cof
+      double precision      t4cof
+      double precision      t5cof
+      double precision      tcube
+      double precision      temp
+      double precision      temp1
+      double precision      temp2
+      double precision      temp3
+      double precision      temp4
+      double precision      temp5
+      double precision      temp6
+      double precision      tempa
+      double precision      tempe
+      double precision      templ
+      double precision      tfour
+      double precision      theta2
+      double precision      theta4
+      double precision      tokm
+      double precision      tokmps
+      double precision      tsi
+      double precision      tsince
+      double precision      tsq
+      double precision      u
+      double precision      uk
+      double precision      upper
+      double precision      ux
+      double precision      uy
+      double precision      uz
+      double precision      vx
+      double precision      vy
+      double precision      vz
+      double precision      x1m5th
+      double precision      x1mth2
+      double precision      x3thm1
+      double precision      x7thm1
+      double precision      xhdot1
+      double precision      xinck
+      double precision      xl
+      double precision      xlcof
+      double precision      xll
+      double precision      xlt
+      double precision      xmcof
+      double precision      xmdf
+      double precision      xmdot
+      double precision      xmp
+      double precision      xmx
+      double precision      xmy
+      double precision      xn
+      double precision      xnodcf
+      double precision      xnoddf
+      double precision      xnode
+      double precision      xnodek
+      double precision      xnodot
+      double precision      xnodp
 
-      INTEGER               BEFORE
-      INTEGER               COUNT
-      INTEGER               AFTER
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LAST
-      INTEGER               LIST ( 2, NMODL )
-      INTEGER               N
+      integer               before
+      integer               count
+      integer               after
+      integer               head
+      integer               i
+      integer               j
+      integer               last
+      integer               list ( 2, nmodl )
+      integer               n
 
-      LOGICAL               DOINIT
-      LOGICAL               NEWGEO
-      LOGICAL               RECOG
-      LOGICAL               UNREC
-      SAVE
+      logical               doinit
+      logical               newgeo
+      logical               recog
+      logical               unrec
+      save
 
-      DATA                  DOINIT / .TRUE. /
+      data                  doinit / .true. /
 
-      CALL CHKIN ( 'EV2LIN' )
+      call chkin ( 'EV2LIN' )
 
 !
 !     Rather than always making function calls we store the
 !     values of the PI dependent constants the first time
 !     through the routine.
 !
-      IF ( DOINIT ) THEN
+      if ( doinit ) then
 
-         DOINIT = .FALSE.
-         PIX2   = TWOPI()
+         doinit = .false.
+         pix2   = twopi()
 
-         DO I = 1, NGEOCN
-            LSTGEO(I) = 0.0D0
-         END DO
+         do i = 1, ngeocn
+            lstgeo(i) = 0.0d0
+         end do
 
-         DO I = 1, NMODL
-            DO J = 1, NELEMS
-               ELEMNT ( J, I ) = 0.0D0
-            END DO
-         END DO
+         do i = 1, nmodl
+            do j = 1, nelems
+               elemnt ( j, i ) = 0.0d0
+            end do
+         end do
 
 !
 !        Set up our doubly linked list of most recently used
@@ -801,99 +801,99 @@
 !                       model.
 !
 !
-         HEAD            = 1
+         head            = 1
 
-         LIST(PREV,HEAD) = NIL
-         LIST(NEXT,1   ) = 2
+         list(prev,head) = nil
+         list(next,1   ) = 2
 
 
-         DO I = 2,NMODL-1
-            LIST(NEXT,I) = I+1
-            LIST(PREV,I) = I-1
-         END DO
+         do i = 2,nmodl-1
+            list(next,i) = i+1
+            list(prev,i) = i-1
+         end do
 
-         LIST(NEXT,NMODL) = NIL
-         LIST(PREV,NMODL) = NMODL - 1
+         list(next,nmodl) = nil
+         list(prev,nmodl) = nmodl - 1
 
-      END IF
+      end if
 !
 !     We update the geophysical parameters only if there
 !     has been a change from the last time they were
 !     supplied.
 !
-      IF (       ( LSTGEO( KAE ) .NE. GEOPHS( KAE ) ) &
-           .OR.  ( LSTGEO( KER ) .NE. GEOPHS( KER ) ) &
-           .OR.  ( LSTGEO( KJ2 ) .NE. GEOPHS( KJ2 ) ) &
-           .OR.  ( LSTGEO( KJ3 ) .NE. GEOPHS( KJ3 ) ) &
-           .OR.  ( LSTGEO( KJ4 ) .NE. GEOPHS( KJ4 ) ) &
-           .OR.  ( LSTGEO( KKE ) .NE. GEOPHS( KKE ) ) &
-           .OR.  ( LSTGEO( KQO ) .NE. GEOPHS( KQO ) ) &
-           .OR.  ( LSTGEO( KSO ) .NE. GEOPHS( KSO ) ) ) THEN
+      if (       ( lstgeo( kae ) .ne. geophs( kae ) ) &
+           .or.  ( lstgeo( ker ) .ne. geophs( ker ) ) &
+           .or.  ( lstgeo( kj2 ) .ne. geophs( kj2 ) ) &
+           .or.  ( lstgeo( kj3 ) .ne. geophs( kj3 ) ) &
+           .or.  ( lstgeo( kj4 ) .ne. geophs( kj4 ) ) &
+           .or.  ( lstgeo( kke ) .ne. geophs( kke ) ) &
+           .or.  ( lstgeo( kqo ) .ne. geophs( kqo ) ) &
+           .or.  ( lstgeo( kso ) .ne. geophs( kso ) ) ) then
 
-         DO I = 1, NGEOCN
-            LSTGEO(I) = GEOPHS(I)
-         END DO
+         do i = 1, ngeocn
+            lstgeo(i) = geophs(i)
+         end do
 
-         J2     = GEOPHS( KJ2 )
-         J3     = GEOPHS( KJ3 )
-         J4     = GEOPHS( KJ4 )
-         KE     = GEOPHS( KKE )
-         QO     = GEOPHS( KQO )
-         SO     = GEOPHS( KSO )
-         ER     = GEOPHS( KER )
-         AE     = GEOPHS( KAE )
+         j2     = geophs( kj2 )
+         j3     = geophs( kj3 )
+         j4     = geophs( kj4 )
+         ke     = geophs( kke )
+         qo     = geophs( kqo )
+         so     = geophs( kso )
+         er     = geophs( ker )
+         ae     = geophs( kae )
 
-         AE2    =  AE    * AE
-         AE3    =  AE    * AE2
-         AE4    =  AE    * AE3
-         CK2    =  HALF  * J2 * AE2
-         A3OVK2 = -2.0D0 * J3 * AE  / J2
-         CK4    = -F3OV8 * J4 * AE4
-         QOMSO  = QO-SO
-         Q1     = QOMSO  * AE / ER
-         Q2     = Q1     * Q1
-         QOMS2T = Q2     * Q2
-         S      = AE     * (ONE+SO/ER)
+         ae2    =  ae    * ae
+         ae3    =  ae    * ae2
+         ae4    =  ae    * ae3
+         ck2    =  half  * j2 * ae2
+         a3ovk2 = -2.0d0 * j3 * ae  / j2
+         ck4    = -f3ov8 * j4 * ae4
+         qomso  = qo-so
+         q1     = qomso  * ae / er
+         q2     = q1     * q1
+         qoms2t = q2     * q2
+         s      = ae     * (one+so/er)
 !
 !        When we've finished up we will need to convert everything
 !        back to KM and KM/SEC  the two variables below give the
 !        factors we shall need to do this.
 !
-         TOKM   = ER/AE
-         TOKMPS = TOKM   / 60.0D0
+         tokm   = er/ae
+         tokmps = tokm   / 60.0d0
 
-         NEWGEO = .TRUE.
+         newgeo = .true.
 
-      ELSE
+      else
 
-         NEWGEO = .FALSE.
+         newgeo = .false.
 
-      END IF
+      end if
 
 
 !
 !     Fetch all of the pieces of this model.
 !
-      EPOCH  = ELEMS ( KEPOCH )
-      XNDT2O = ELEMS ( KNDT20 )
-      XNDD6O = ELEMS ( KNDD60 )
-      BSTAR  = ELEMS ( KBSTAR )
-      XINCL  = ELEMS ( KINCL  )
-      XNODEO = ELEMS ( KNODE0 )
-      EO     = ELEMS ( KECC   )
-      OMEGAO = ELEMS ( KOMEGA )
-      XMO    = ELEMS ( KMO    )
-      XNO    = ELEMS ( KNO    )
+      epoch  = elems ( kepoch )
+      xndt2o = elems ( kndt20 )
+      xndd6o = elems ( kndd60 )
+      bstar  = elems ( kbstar )
+      xincl  = elems ( kincl  )
+      xnodeo = elems ( knode0 )
+      eo     = elems ( kecc   )
+      omegao = elems ( komega )
+      xmo    = elems ( kmo    )
+      xno    = elems ( kno    )
 
 !
 !     See if this model is already buffered, start at the first
 !     model in the list (the most recently used model).
 !
 
-      UNREC = .TRUE.
-      N     =  HEAD
+      unrec = .true.
+      n     =  head
 
-      DO WHILE (  N .NE. NIL .AND. UNREC )
+      do while (  n .ne. nil .and. unrec )
 
 !
 !        The actual order of the elements is such that we can
@@ -903,26 +903,26 @@
 !        and decrement I until we have looked at everything
 !        or found a mismatch.
 !
-         RECOG = .TRUE.
-         I     =  NELEMS
+         recog = .true.
+         i     =  nelems
 
-         DO WHILE  ( RECOG .AND. I           .GT. 0      )
-            RECOG  = RECOG .AND. ELEMNT(I,N) .EQ. ELEMS(I)
-            I      = I - 1
-         END DO
+         do while  ( recog .and. i           .gt. 0      )
+            recog  = recog .and. elemnt(i,n) .eq. elems(i)
+            i      = i - 1
+         end do
 
-         UNREC = .NOT. RECOG
+         unrec = .not. recog
 
-         IF ( UNREC ) THEN
-            LAST = N
-            N    = LIST(NEXT,N)
-         END IF
+         if ( unrec ) then
+            last = n
+            n    = list(next,n)
+         end if
 
-      END DO
+      end do
 
-      IF ( N .EQ. NIL ) THEN
-         N = LAST
-      END IF
+      if ( n .eq. nil ) then
+         n = last
+      end if
 !
 !     Either N points to a recognized item or it points to the
 !     tail of the list where the least recently used items is
@@ -930,211 +930,211 @@
 !     list.  (If it is already the head of the list we don't
 !     have to bother with anything.)
 !
-      IF ( N .NE. HEAD ) THEN
+      if ( n .ne. head ) then
 
 !
 !        Find the items that come before and after N and
 !        link them together.
 !
-         BEFORE                = LIST ( PREV, N )
-         AFTER                 = LIST ( NEXT, N )
+         before                = list ( prev, n )
+         after                 = list ( next, n )
 
-         LIST ( NEXT, BEFORE ) = AFTER
+         list ( next, before ) = after
 
-         IF ( AFTER .NE. NIL ) THEN
-            LIST ( PREV, AFTER  ) = BEFORE
-         END IF
+         if ( after .ne. nil ) then
+            list ( prev, after  ) = before
+         end if
 !
 !        Now the guy that will come after N is the current
 !        head of the list.  N will have no predecessor.
 !
-         LIST ( NEXT, N      ) = HEAD
-         LIST ( PREV, N      ) = NIL
+         list ( next, n      ) = head
+         list ( prev, n      ) = nil
 !
 !        The predecessor the current head of the list becomes N
 !
-         LIST ( PREV, HEAD   ) = N
+         list ( prev, head   ) = n
 !
 !        and finally, N becomes the head of the list.
 !
-         HEAD = N
+         head = n
 
-      END IF
+      end if
 
 
-      IF ( RECOG .AND. .NOT. NEWGEO ) THEN
+      if ( recog .and. .not. newgeo ) then
 !
 !        We can just look up the intermediate values from
 !        computations performed on a previous call to this
 !        routine.
 !
-         AODP   = PRELIM (  1, N )
-         AYCOF  = PRELIM (  2, N )
-         C1     = PRELIM (  3, N )
-         C4     = PRELIM (  4, N )
-         C5     = PRELIM (  5, N )
-         COSIO  = PRELIM (  6, N )
-         D2     = PRELIM (  7, N )
-         D3     = PRELIM (  8, N )
-         D4     = PRELIM (  9, N )
-         DELMO  = PRELIM ( 10, N )
-         ETA    = PRELIM ( 11, N )
-         OMGCOF = PRELIM ( 12, N )
-         OMGDOT = PRELIM ( 13, N )
-         PERIGE = PRELIM ( 14, N )
-         SINIO  = PRELIM ( 15, N )
-         SINMO  = PRELIM ( 16, N )
-         T2COF  = PRELIM ( 17, N )
-         T3COF  = PRELIM ( 18, N )
-         T4COF  = PRELIM ( 19, N )
-         T5COF  = PRELIM ( 20, N )
-         X1MTH2 = PRELIM ( 21, N )
-         X3THM1 = PRELIM ( 22, N )
-         X7THM1 = PRELIM ( 23, N )
-         XLCOF  = PRELIM ( 24, N )
-         XMCOF  = PRELIM ( 25, N )
-         XMDOT  = PRELIM ( 26, N )
-         XNODCF = PRELIM ( 27, N )
-         XNODOT = PRELIM ( 28, N )
-         XNODP  = PRELIM ( 29, N )
+         aodp   = prelim (  1, n )
+         aycof  = prelim (  2, n )
+         c1     = prelim (  3, n )
+         c4     = prelim (  4, n )
+         c5     = prelim (  5, n )
+         cosio  = prelim (  6, n )
+         d2     = prelim (  7, n )
+         d3     = prelim (  8, n )
+         d4     = prelim (  9, n )
+         delmo  = prelim ( 10, n )
+         eta    = prelim ( 11, n )
+         omgcof = prelim ( 12, n )
+         omgdot = prelim ( 13, n )
+         perige = prelim ( 14, n )
+         sinio  = prelim ( 15, n )
+         sinmo  = prelim ( 16, n )
+         t2cof  = prelim ( 17, n )
+         t3cof  = prelim ( 18, n )
+         t4cof  = prelim ( 19, n )
+         t5cof  = prelim ( 20, n )
+         x1mth2 = prelim ( 21, n )
+         x3thm1 = prelim ( 22, n )
+         x7thm1 = prelim ( 23, n )
+         xlcof  = prelim ( 24, n )
+         xmcof  = prelim ( 25, n )
+         xmdot  = prelim ( 26, n )
+         xnodcf = prelim ( 27, n )
+         xnodot = prelim ( 28, n )
+         xnodp  = prelim ( 29, n )
 
-      ELSE
+      else
 
 !
 !        Compute all of the intermediate items needed.
 !        First, the inclination dependent constants.
 !
-         COSIO  = DCOS ( XINCL )
-         SINIO  = DSIN ( XINCL )
-         THETA2 = COSIO  * COSIO
+         cosio  = dcos ( xincl )
+         sinio  = dsin ( xincl )
+         theta2 = cosio  * cosio
 
-         THETA4 = THETA2 * THETA2
-         X3THM1 = 3.0D0  * THETA2  -  ONE
-         X7THM1 = 7.0D0  * THETA2  -  ONE
+         theta4 = theta2 * theta2
+         x3thm1 = 3.0d0  * theta2  -  one
+         x7thm1 = 7.0d0  * theta2  -  one
 
-         X1MTH2 = ONE    - THETA2
-         X1M5TH = ONE    - 5.0D0 * THETA2
+         x1mth2 = one    - theta2
+         x1m5th = one    - 5.0d0 * theta2
 !
 !        Eccentricity dependent constants
 !
-         BETAO  = DSQRT(ONE - EO*EO)
-         BETAO2 = ONE       - EO*EO
-         BETAO3 = BETAO  * BETAO2
-         BETAO4 = BETAO2 * BETAO2
+         betao  = dsqrt(one - eo*eo)
+         betao2 = one       - eo*eo
+         betao3 = betao  * betao2
+         betao4 = betao2 * betao2
 !
 !        Semi-major axis and ascending node related constants.
 !
-         A1     = (KE/XNO)**TOTHRD
-         DEL1   = 1.5D0 * CK2 * X3THM1 / ( A1*A1*BETAO3 )
+         a1     = (ke/xno)**tothrd
+         del1   = 1.5d0 * ck2 * x3thm1 / ( a1*a1*betao3 )
 
-         AO     = A1    * ( ONE &
-                           - DEL1*( ONETHD &
-                                 + DEL1*( ONE + DEL1*134.0D0/81.0D0)))
+         ao     = a1    * ( one &
+                           - del1*( onethd &
+                                 + del1*( one + del1*134.0d0/81.0d0)))
 
-         DELO   = 1.5D0 * CK2 * X3THM1 / (AO*AO*BETAO3)
+         delo   = 1.5d0 * ck2 * x3thm1 / (ao*ao*betao3)
 
-         XNODP  = XNO / (ONE + DELO)
-         AODP   = AO  / (ONE - DELO)
+         xnodp  = xno / (one + delo)
+         aodp   = ao  / (one - delo)
 
-         S4     = S
-         QOMS24 = QOMS2T
-         PERIGE = ER * ( AODP*(ONE-EO) - AE )
+         s4     = s
+         qoms24 = qoms2t
+         perige = er * ( aodp*(one-eo) - ae )
 
 !
 !        For perigee below 156 km, the values of S and QOMS2T are
 !        altered.
 !
-         IF ( PERIGE .LT. 156.0D0 ) THEN
-            S4 = PERIGE - 78.0D0
+         if ( perige .lt. 156.0d0 ) then
+            s4 = perige - 78.0d0
 
-            IF ( PERIGE .LE. 98.0D0 ) THEN
-               S4 = 20.0D0
-            END IF
+            if ( perige .le. 98.0d0 ) then
+               s4 = 20.0d0
+            end if
 
-            QOMS24 = ( (120.0D0-S4)*AE / ER )**4
-            S4     = AE + ( S4/ER )
-         END IF
+            qoms24 = ( (120.0d0-s4)*ae / er )**4
+            s4     = ae + ( s4/er )
+         end if
 !
 !        The next block is simply a pretty print of the code in
 !        sgp4 from label number 10 through the label 90.
 !
-         PINVSQ = ONE  / (AODP * AODP * BETAO4)
-         TSI    = ONE  / (AODP - S4           )
+         pinvsq = one  / (aodp * aodp * betao4)
+         tsi    = one  / (aodp - s4           )
 
-         ETA    = AODP   *  EO  * TSI
-         ETASQ  = ETA    *  ETA
-         EETA   = EO     *  ETA
-         COEF   = QOMS24 *  TSI**4
+         eta    = aodp   *  eo  * tsi
+         etasq  = eta    *  eta
+         eeta   = eo     *  eta
+         coef   = qoms24 *  tsi**4
 
-         PSISQ  = DABS(ONE - ETASQ)
+         psisq  = dabs(one - etasq)
 
-         COEF1  = COEF  / PSISQ**3.5D0
-         C2     = COEF1 &
-                  * XNODP &
-                  * (   AODP   * (  ONE &
-                                 + F3OV2*ETASQ &
-                                 + EETA *( 4.0D0 +       ETASQ) ) &
-                     + 0.75D0 * CK2 &
-                              * (TSI/PSISQ) &
-                              * X3THM1 &
-                              * (  8.0D0 &
-                                 + ETASQ*(24.0D0 + 3.0D0*ETASQ) )   )
+         coef1  = coef  / psisq**3.5d0
+         c2     = coef1 &
+                  * xnodp &
+                  * (   aodp   * (  one &
+                                 + f3ov2*etasq &
+                                 + eeta *( 4.0d0 +       etasq) ) &
+                     + 0.75d0 * ck2 &
+                              * (tsi/psisq) &
+                              * x3thm1 &
+                              * (  8.0d0 &
+                                 + etasq*(24.0d0 + 3.0d0*etasq) )   )
 
-         C1     =  C2 * BSTAR
+         c1     =  c2 * bstar
 
-         C3     =  COEF * TSI * A3OVK2 * XNODP *AE * SINIO / EO
+         c3     =  coef * tsi * a3ovk2 * xnodp *ae * sinio / eo
 
-         C4    = 2.0D0 * XNODP * COEF1 * AODP &
-               * BETAO2 &
-               * (  ETA   * ( 2.0D0 + 0.50D0*ETASQ  ) &
-                  + EO    * ( HALF  + 2.0D0*ETASQ  ) &
-                  - 2.0D0 * ( CK2*TSI/(AODP*PSISQ) ) &
-                           * ( -3.00D0 * X3THM1 &
-                                       * ( ONE &
-                                         - EETA * 2.0D0 &
-                                         + ETASQ*(F3OV2 - HALF*EETA)) &
-                              + 0.75D0 * DCOS ( 2.0D0 * OMEGAO ) &
-                                       * X1MTH2 &
-                                       * (  ETASQ * 2.0D0 &
-                                          - EETA  * (ONE+ETASQ))))
+         c4    = 2.0d0 * xnodp * coef1 * aodp &
+               * betao2 &
+               * (  eta   * ( 2.0d0 + 0.50d0*etasq  ) &
+                  + eo    * ( half  + 2.0d0*etasq  ) &
+                  - 2.0d0 * ( ck2*tsi/(aodp*psisq) ) &
+                           * ( -3.00d0 * x3thm1 &
+                                       * ( one &
+                                         - eeta * 2.0d0 &
+                                         + etasq*(f3ov2 - half*eeta)) &
+                              + 0.75d0 * dcos ( 2.0d0 * omegao ) &
+                                       * x1mth2 &
+                                       * (  etasq * 2.0d0 &
+                                          - eeta  * (one+etasq))))
 
-         C5    = 2.0D0*COEF1*AODP*BETAO2 &
-                        *(ONE + 2.75D0*(ETASQ+EETA) + EETA*ETASQ )
+         c5    = 2.0d0*coef1*aodp*betao2 &
+                        *(one + 2.75d0*(etasq+eeta) + eeta*etasq )
 
-         TEMP1  = 3.0D0  * CK2 * PINVSQ * XNODP
-         TEMP2  = TEMP1  * CK2 * PINVSQ
-         TEMP3  = 1.25D0 * CK4 * PINVSQ * PINVSQ * XNODP
+         temp1  = 3.0d0  * ck2 * pinvsq * xnodp
+         temp2  = temp1  * ck2 * pinvsq
+         temp3  = 1.25d0 * ck4 * pinvsq * pinvsq * xnodp
 
-         XMDOT  =  XNODP &
-                  +  HALF     * TEMP1 * BETAO * X3THM1 &
-                  +  0.0625D0 * TEMP2 * BETAO * (  13.0D0 &
-                                             -  78.0D0*THETA2 &
-                                             + 137.0D0*THETA4 )
+         xmdot  =  xnodp &
+                  +  half     * temp1 * betao * x3thm1 &
+                  +  0.0625d0 * temp2 * betao * (  13.0d0 &
+                                             -  78.0d0*theta2 &
+                                             + 137.0d0*theta4 )
 
-         OMGDOT = -HALF      * TEMP1 * X1M5TH &
-                  + 0.0625D0 * TEMP2 * (   7.0D0 &
-                                       - 114.0D0*THETA2 &
-                                       + 395.0D0*THETA4 ) &
-                  +            TEMP3 * (   3.0D0 &
-                                       -  36.0D0*THETA2 &
-                                       +  49.0D0*THETA4 )
+         omgdot = -half      * temp1 * x1m5th &
+                  + 0.0625d0 * temp2 * (   7.0d0 &
+                                       - 114.0d0*theta2 &
+                                       + 395.0d0*theta4 ) &
+                  +            temp3 * (   3.0d0 &
+                                       -  36.0d0*theta2 &
+                                       +  49.0d0*theta4 )
 
-         XHDOT1 = -TEMP1*COSIO
+         xhdot1 = -temp1*cosio
 
-         XNODOT = XHDOT1 &
-                  + COSIO * (  HALF  * TEMP2*(4.0D0 - 19.0D0*THETA2) &
-                           + 2.0D0 * TEMP3*(3.0D0 -  7.0D0*THETA2) )
+         xnodot = xhdot1 &
+                  + cosio * (  half  * temp2*(4.0d0 - 19.0d0*theta2) &
+                           + 2.0d0 * temp3*(3.0d0 -  7.0d0*theta2) )
 
-         OMGCOF =  BSTAR   * C3     * DCOS(OMEGAO)
-         XMCOF  = -BSTAR   * TOTHRD * COEF  * AE / EETA
-         XNODCF =  3.5D0   * BETAO2 * XHDOT1* C1
-         T2COF  =  F3OV2   * C1
-         AYCOF  =  0.250D0 * A3OVK2 * SINIO
-         XLCOF  =  HALF    * AYCOF  * (3.0D0 + 5.0D0*COSIO) &
-                                    / (ONE   +       COSIO)
+         omgcof =  bstar   * c3     * dcos(omegao)
+         xmcof  = -bstar   * tothrd * coef  * ae / eeta
+         xnodcf =  3.5d0   * betao2 * xhdot1* c1
+         t2cof  =  f3ov2   * c1
+         aycof  =  0.250d0 * a3ovk2 * sinio
+         xlcof  =  half    * aycof  * (3.0d0 + 5.0d0*cosio) &
+                                    / (one   +       cosio)
 
-         DELMO  =  (ONE    + ETA*COS(XMO) )**3
-         SINMO  =  SIN(XMO)
+         delmo  =  (one    + eta*cos(xmo) )**3
+         sinmo  =  sin(xmo)
 !
 !        For perigee less than 220 kilometers, the ISIMP flag is set
 !        and the equations are truncated to linear variation in SQRT
@@ -1142,118 +1142,118 @@
 !        term, the Delta OMEGA term, and the Delta M term are
 !        dropped.  (Note: Normally we would just use
 !
-         IF ( PERIGE .GE. 220.0D0 ) THEN
+         if ( perige .ge. 220.0d0 ) then
 
-            C1SQ  = C1*C1
-            D2    = 4.0D0 * TSI   * C1SQ   * AODP
-            TEMP  = D2    * TSI   * C1     * ONETHD
-            D3    = TEMP  * (S4   + 17.0D0 * AODP )
-            D4    = TEMP  * TSI   * C1     * AODP &
-                          * HALF  *(221.0D0* AODP + 31.0D0*S4)
+            c1sq  = c1*c1
+            d2    = 4.0d0 * tsi   * c1sq   * aodp
+            temp  = d2    * tsi   * c1     * onethd
+            d3    = temp  * (s4   + 17.0d0 * aodp )
+            d4    = temp  * tsi   * c1     * aodp &
+                          * half  *(221.0d0* aodp + 31.0d0*s4)
 
-            T3COF = D2    + 2.0D0 * C1SQ
+            t3cof = d2    + 2.0d0 * c1sq
 
-            T4COF = 0.25D0 * ( 3.0D0*D3 + C1*(  12.0D0*D2 &
-                                              + 10.0D0*C1SQ) )
+            t4cof = 0.25d0 * ( 3.0d0*d3 + c1*(  12.0d0*d2 &
+                                              + 10.0d0*c1sq) )
 
-            T5COF = 0.20D0 * (3.0D0*D4 + 12.0D0*C1*D3 &
-                                       +  6.0D0*D2*D2 &
-                                       + 15.0D0*C1SQ*(  2.0D0*D2 &
-                                                      + C1SQ) )
-         END IF
+            t5cof = 0.20d0 * (3.0d0*d4 + 12.0d0*c1*d3 &
+                                       +  6.0d0*d2*d2 &
+                                       + 15.0d0*c1sq*(  2.0d0*d2 &
+                                                      + c1sq) )
+         end if
 !
 !        Now store the intermediate computations so that if we
 !        should hit this model again we can just look up the needed
 !        results from the above computations.
 !
-         PRELIM (  1, N ) = AODP
-         PRELIM (  2, N ) = AYCOF
-         PRELIM (  3, N ) = C1
-         PRELIM (  4, N ) = C4
-         PRELIM (  5, N ) = C5
-         PRELIM (  6, N ) = COSIO
-         PRELIM (  7, N ) = D2
-         PRELIM (  8, N ) = D3
-         PRELIM (  9, N ) = D4
-         PRELIM ( 10, N ) = DELMO
-         PRELIM ( 11, N ) = ETA
-         PRELIM ( 12, N ) = OMGCOF
-         PRELIM ( 13, N ) = OMGDOT
-         PRELIM ( 14, N ) = PERIGE
-         PRELIM ( 15, N ) = SINIO
-         PRELIM ( 16, N ) = SINMO
-         PRELIM ( 17, N ) = T2COF
-         PRELIM ( 18, N ) = T3COF
-         PRELIM ( 19, N ) = T4COF
-         PRELIM ( 20, N ) = T5COF
-         PRELIM ( 21, N ) = X1MTH2
-         PRELIM ( 22, N ) = X3THM1
-         PRELIM ( 23, N ) = X7THM1
-         PRELIM ( 24, N ) = XLCOF
-         PRELIM ( 25, N ) = XMCOF
-         PRELIM ( 26, N ) = XMDOT
-         PRELIM ( 27, N ) = XNODCF
-         PRELIM ( 28, N ) = XNODOT
-         PRELIM ( 29, N ) = XNODP
+         prelim (  1, n ) = aodp
+         prelim (  2, n ) = aycof
+         prelim (  3, n ) = c1
+         prelim (  4, n ) = c4
+         prelim (  5, n ) = c5
+         prelim (  6, n ) = cosio
+         prelim (  7, n ) = d2
+         prelim (  8, n ) = d3
+         prelim (  9, n ) = d4
+         prelim ( 10, n ) = delmo
+         prelim ( 11, n ) = eta
+         prelim ( 12, n ) = omgcof
+         prelim ( 13, n ) = omgdot
+         prelim ( 14, n ) = perige
+         prelim ( 15, n ) = sinio
+         prelim ( 16, n ) = sinmo
+         prelim ( 17, n ) = t2cof
+         prelim ( 18, n ) = t3cof
+         prelim ( 19, n ) = t4cof
+         prelim ( 20, n ) = t5cof
+         prelim ( 21, n ) = x1mth2
+         prelim ( 22, n ) = x3thm1
+         prelim ( 23, n ) = x7thm1
+         prelim ( 24, n ) = xlcof
+         prelim ( 25, n ) = xmcof
+         prelim ( 26, n ) = xmdot
+         prelim ( 27, n ) = xnodcf
+         prelim ( 28, n ) = xnodot
+         prelim ( 29, n ) = xnodp
 !
 !        Finally, move these elements in the storage area
 !        for checking the next time through.
 !
-         DO I = 1, NELEMS
-            ELEMNT(I,N) = ELEMS(I)
-         END DO
+         do i = 1, nelems
+            elemnt(i,n) = elems(i)
+         end do
 
-      END IF
+      end if
 !
 !     Now that all of the introductions are out of the way
 !     we can get down to business.
 !
 !     Compute the time since the epoch for this model.
 !
-      TSINCE = ET - EPOCH
+      tsince = et - epoch
 !
 !     and convert it to minutes
 !
-      TSINCE = TSINCE / 60.0D0
+      tsince = tsince / 60.0d0
 
 
-      XMDF   = XMO      +   XMDOT  * TSINCE
-      OMGADF = OMEGAO   +   OMGDOT * TSINCE
-      XNODDF = XNODEO   +   XNODOT * TSINCE
-      OMEGA  = OMGADF
-      XMP    = XMDF
+      xmdf   = xmo      +   xmdot  * tsince
+      omgadf = omegao   +   omgdot * tsince
+      xnoddf = xnodeo   +   xnodot * tsince
+      omega  = omgadf
+      xmp    = xmdf
 
-      TSQ    = TSINCE  *  TSINCE
-      XNODE  = XNODDF  +  XNODCF * TSQ
-      TEMPA  = 1.0D0   -  C1     * TSINCE
-      TEMPE  = BSTAR   *  C4     * TSINCE
-      TEMPL  = T2COF   *  TSQ
+      tsq    = tsince  *  tsince
+      xnode  = xnoddf  +  xnodcf * tsq
+      tempa  = 1.0d0   -  c1     * tsince
+      tempe  = bstar   *  c4     * tsince
+      templ  = t2cof   *  tsq
 
 
-      IF(PERIGE .GT. 220.0D0 ) THEN
+      if(perige .gt. 220.0d0 ) then
 
-         TCUBE  = TSQ    * TSINCE
-         TFOUR  = TCUBE  * TSINCE
+         tcube  = tsq    * tsince
+         tfour  = tcube  * tsince
 
-         DELOMG = OMGCOF * TSINCE
-         DELM   = XMCOF* ( (1.0D0 + ETA*COS(XMDF))**3  -  DELMO )
-         TEMP   = DELOMG + DELM
-         XMP    = XMDF   + TEMP
-         OMEGA  = OMGADF - TEMP
+         delomg = omgcof * tsince
+         delm   = xmcof* ( (1.0d0 + eta*cos(xmdf))**3  -  delmo )
+         temp   = delomg + delm
+         xmp    = xmdf   + temp
+         omega  = omgadf - temp
 
-         TEMPA  = TEMPA - D2*TSQ &
-                        - D3*TCUBE &
-                        - D4*TFOUR
+         tempa  = tempa - d2*tsq &
+                        - d3*tcube &
+                        - d4*tfour
 
-         TEMPE  = TEMPE  +  BSTAR * C5 * (SIN(XMP) - SINMO)
-         TEMPL  = TEMPL  +  TCUBE * T3COF &
-                         +  TFOUR *(T4COF + TSINCE*T5COF)
-      END IF
+         tempe  = tempe  +  bstar * c5 * (sin(xmp) - sinmo)
+         templ  = templ  +  tcube * t3cof &
+                         +  tfour *(t4cof + tsince*t5cof)
+      end if
 
-      A    =  AODP * TEMPA**2
-      XL   =  XMP  + OMEGA  +  XNODE  +  XNODP*TEMPL
+      a    =  aodp * tempa**2
+      xl   =  xmp  + omega  +  xnode  +  xnodp*templ
 
-      E    =  EO   - TEMPE
+      e    =  eo   - tempe
 
 !
 !     The parameter BETA used to be needed, but it's only use
@@ -1265,18 +1265,18 @@
 
 
 
-      XN   =  KE/A**1.5D0
+      xn   =  ke/a**1.5d0
 
 !
 !     Long period periodics
 !
-      TEMP = 1.0D0/(A*(1.0D0 - E*E) )
-      AYNL = TEMP * AYCOF
-      AYN  = E    * SIN(OMEGA)   +    AYNL
-      AXN  = E    * COS(OMEGA)
+      temp = 1.0d0/(a*(1.0d0 - e*e) )
+      aynl = temp * aycof
+      ayn  = e    * sin(omega)   +    aynl
+      axn  = e    * cos(omega)
 
-      XLL  = TEMP * XLCOF * AXN
-      XLT  = XL   + XLL
+      xll  = temp * xlcof * axn
+      xlt  = xl   + xll
 
 !
 !     Solve Kepler's equation.
@@ -1489,50 +1489,50 @@
 !     convergence.
 !
 
-      M      = DSQRT ( AXN*AXN + AYN*AYN )
-      MOV1M  = DABS  ( M / ( 1.0D0 - M ) )
+      m      = dsqrt ( axn*axn + ayn*ayn )
+      mov1m  = dabs  ( m / ( 1.0d0 - m ) )
 
 
-      FMOD2P = DMOD(XLT-XNODE,PIX2)
+      fmod2p = dmod(xlt-xnode,pix2)
 
-      IF ( FMOD2P .LT. 0 ) THEN
-         FMOD2P = FMOD2P + PIX2
-      END IF
+      if ( fmod2p .lt. 0 ) then
+         fmod2p = fmod2p + pix2
+      end if
 
-      CAPU  = FMOD2P
-      EPW   = CAPU
-      EST   = 1.0D0
+      capu  = fmod2p
+      epw   = capu
+      est   = 1.0d0
 
-      COUNT = 0
+      count = 0
 
-      DO WHILE ( EST .GT. 0.125D0 )
+      do while ( est .gt. 0.125d0 )
 
-         COUNT = COUNT + 1
+         count = count + 1
 
-         IF ( COUNT .GT. MXLOOP ) THEN
-            CALL SETMSG ( 'EST iteration count of #1 exceeded at ' &
+         if ( count .gt. mxloop ) then
+            call setmsg ( 'EST iteration count of #1 exceeded at ' &
             //            'time ET #2. This error may indicate a ' &
             //            'bad TLE set.'                       )
-            CALL ERRINT ( '#1', MXLOOP                         )
-            CALL ERRDP  ( '#2', ET                             )
-            CALL SIGERR ( 'SPICE(ITERATIONEXCEEDED)'           )
-            CALL CHKOUT ( 'EV2LIN'                             )
-            RETURN
-         END IF
+            call errint ( '#1', mxloop                         )
+            call errdp  ( '#2', et                             )
+            call sigerr ( 'SPICE(ITERATIONEXCEEDED)'           )
+            call chkout ( 'EV2LIN'                             )
+            return
+         end if
 
-         EPWNXT = CAPU - AXN*SIN(EPW) + AYN*COS(EPW)
-         EST    = MOV1M * DABS ( EPWNXT - EPW )
-         EPW    = EPWNXT
+         epwnxt = capu - axn*sin(epw) + ayn*cos(epw)
+         est    = mov1m * dabs ( epwnxt - epw )
+         epw    = epwnxt
 
-      END DO
+      end do
 
 !
 !     We need to be able to add something to EPW and not
 !     get EPW (but not too much).
 !
-      EPSILN = EST
+      epsiln = est
 
-      IF ( EPSILN + EPW .NE. EPW ) THEN
+      if ( epsiln + epw .ne. epw ) then
 
 !
 !        Now we switch over to Newton's method.  Note that
@@ -1541,29 +1541,29 @@
 !        the correct answer (If there were no round off to contend
 !        with).
 !
-         DO I = 1, 5
+         do i = 1, 5
 
-            SINEPW = SIN(EPW)
-            COSEPW = COS(EPW)
+            sinepw = sin(epw)
+            cosepw = cos(epw)
 
-            F      =  EPW - CAPU - AXN * SINEPW + AYN * COSEPW
-            FPRIME =  1.0D0      - AXN * COSEPW -  AYN * SINEPW
+            f      =  epw - capu - axn * sinepw + ayn * cosepw
+            fprime =  1.0d0      - axn * cosepw -  ayn * sinepw
 
-            EPWNXT = EPW -  F/FPRIME
+            epwnxt = epw -  f/fprime
 !
 !           Our new error estimate comes from the discussion
 !           of convergence of Newton's method.
 !
-            EPW    = EPWNXT
+            epw    = epwnxt
 
-            IF ( EPW + EST .NE. EPW ) THEN
-               EPSILN = EST
-               EST    = MOV1M * EST * EST
-            END IF
+            if ( epw + est .ne. epw ) then
+               epsiln = est
+               est    = mov1m * est * est
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 !
 !     Finally, we use bisection to avoid the problems of
 !     round-off that may be present in Newton's method.  Since
@@ -1579,201 +1579,201 @@
 !     or subtracting it from EPW.
 !
 
-      SINEPW = SIN(EPW)
-      COSEPW = COS(EPW)
+      sinepw = sin(epw)
+      cosepw = cos(epw)
 
-      F      =  EPW - CAPU - AXN * SINEPW + AYN * COSEPW
-      EPSILN =  MAX ( DABS(F), EPSILN )
+      f      =  epw - capu - axn * sinepw + ayn * cosepw
+      epsiln =  max ( dabs(f), epsiln )
 
-      IF ( F .EQ. 0 ) THEN
+      if ( f .eq. 0 ) then
 
-         LOWER = EPW
-         UPPER = EPW
+         lower = epw
+         upper = epw
 
-      ELSE IF ( F .GT. 0 ) THEN
+      else if ( f .gt. 0 ) then
 
-         FU    = F
-         UPPER = EPW
-         LOWER = EPW - EPSILN
-         EPW   = LOWER
+         fu    = f
+         upper = epw
+         lower = epw - epsiln
+         epw   = lower
 
-         DO WHILE ( F .GT. 0 .AND. LOWER .NE. UPPER )
-            EPW    = EPW - EPSILN
-            F      = EPW - CAPU - AXN * SIN(EPW) + AYN * COS(EPW)
-            EPSILN = EPSILN * 2.0D0
-         END DO
+         do while ( f .gt. 0 .and. lower .ne. upper )
+            epw    = epw - epsiln
+            f      = epw - capu - axn * sin(epw) + ayn * cos(epw)
+            epsiln = epsiln * 2.0d0
+         end do
 
-         LOWER = EPW
-         FL    = F
+         lower = epw
+         fl    = f
 
-         IF ( F .EQ. 0 ) THEN
-            UPPER = LOWER
-         END IF
+         if ( f .eq. 0 ) then
+            upper = lower
+         end if
 
 
-      ELSE IF ( F .LT. 0 ) THEN
+      else if ( f .lt. 0 ) then
 
-         FL    = F
-         LOWER = EPW
-         UPPER = EPW + EPSILN
-         EPW   = UPPER
+         fl    = f
+         lower = epw
+         upper = epw + epsiln
+         epw   = upper
 
-         DO WHILE ( F .LT. 0 .AND. LOWER .NE. UPPER )
-            EPW    = EPW + EPSILN
-            F      = EPW - CAPU - AXN * SIN(EPW) + AYN * COS(EPW)
-            EPSILN = EPSILN * 2.0D0
-         END DO
+         do while ( f .lt. 0 .and. lower .ne. upper )
+            epw    = epw + epsiln
+            f      = epw - capu - axn * sin(epw) + ayn * cos(epw)
+            epsiln = epsiln * 2.0d0
+         end do
 
-         UPPER = EPW
-         FU    = F
+         upper = epw
+         fu    = f
 
-         IF ( F .EQ. 0 ) THEN
-            LOWER = EPW
-         END IF
+         if ( f .eq. 0 ) then
+            lower = epw
+         end if
 
-      END IF
+      end if
 
 !
 !     Finally, bisect until we can do no more.
 !
-      COUNT = 0
+      count = 0
 
-      DO WHILE ( UPPER .GT. LOWER .AND. COUNT .LT. MXLOOP )
-         COUNT = COUNT + 1
-         EPW   = BRCKTD( 0.5D0 * ( UPPER + LOWER ), LOWER, UPPER )
+      do while ( upper .gt. lower .and. count .lt. mxloop )
+         count = count + 1
+         epw   = brcktd( 0.5d0 * ( upper + lower ), lower, upper )
 !
 !        EPW eventually will not be different from one of the
 !        two bracketing values.  If this is the time, we need
 !        to decide on a value for EPW.  That's done below.
 !
-         IF   (      ( EPW .EQ. UPPER ) &
-                .OR. ( EPW .EQ. LOWER ) ) THEN
+         if   (      ( epw .eq. upper ) &
+                .or. ( epw .eq. lower ) ) then
 
-            IF ( -FL .LT. FU ) THEN
-               EPW   = LOWER
-               UPPER = LOWER
-            ELSE
-               EPW   = UPPER
-               LOWER = UPPER
-            END IF
+            if ( -fl .lt. fu ) then
+               epw   = lower
+               upper = lower
+            else
+               epw   = upper
+               lower = upper
+            end if
 
-         ELSE
+         else
 
-            F   = EPW - CAPU - AXN * SIN(EPW) + AYN * COS(EPW)
+            f   = epw - capu - axn * sin(epw) + ayn * cos(epw)
 
-            IF ( F .GT. 0 ) THEN
-               UPPER = EPW
-               FU    = F
-            ELSE IF ( F .LT. 0 ) THEN
-               LOWER = EPW
-               FL    = F
-            ELSE
-               LOWER = EPW
-               UPPER = EPW
-            END IF
+            if ( f .gt. 0 ) then
+               upper = epw
+               fu    = f
+            else if ( f .lt. 0 ) then
+               lower = epw
+               fl    = f
+            else
+               lower = epw
+               upper = epw
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Short period preliminary quantities
 !
 
-      SINEPW = SIN(EPW)
-      COSEPW = COS(EPW)
+      sinepw = sin(epw)
+      cosepw = cos(epw)
 
-      TEMP3  = AXN * SINEPW
-      TEMP4  = AYN * COSEPW
+      temp3  = axn * sinepw
+      temp4  = ayn * cosepw
 
-      TEMP5  = AXN * COSEPW
-      TEMP6  = AYN * SINEPW
+      temp5  = axn * cosepw
+      temp6  = ayn * sinepw
 
-      ECOSE = TEMP5   + TEMP6
-      ESINE = TEMP3   - TEMP4
-      ELSQ  = AXN*AXN + AYN*AYN
-      TEMP  = 1.0D0   - ELSQ
-      PL    = A       * TEMP
-      R     = A       * (1.0D0 - ECOSE)
+      ecose = temp5   + temp6
+      esine = temp3   - temp4
+      elsq  = axn*axn + ayn*ayn
+      temp  = 1.0d0   - elsq
+      pl    = a       * temp
+      r     = a       * (1.0d0 - ecose)
 
-      TEMP1 = 1.0D0   /  R
-      RDOT  = KE      * TEMP1 * SQRT(A)  * ESINE
-      RFDOT = KE      * TEMP1 * SQRT(PL)
-      TEMP2 = A       * TEMP1
-      BETAL = DSQRT   ( TEMP )
-      TEMP3 = 1.0D0 / (1.0D0 + BETAL)
+      temp1 = 1.0d0   /  r
+      rdot  = ke      * temp1 * sqrt(a)  * esine
+      rfdot = ke      * temp1 * sqrt(pl)
+      temp2 = a       * temp1
+      betal = dsqrt   ( temp )
+      temp3 = 1.0d0 / (1.0d0 + betal)
 
-      COSU  = TEMP2 * (COSEPW  -  AXN  +  AYN * ESINE * TEMP3)
-      SINU  = TEMP2 * (SINEPW  -  AYN  -  AXN * ESINE * TEMP3)
+      cosu  = temp2 * (cosepw  -  axn  +  ayn * esine * temp3)
+      sinu  = temp2 * (sinepw  -  ayn  -  axn * esine * temp3)
 !
 !     Compute the angle from the x-axis of the point ( COSU, SINU )
 !
-      IF (      SINU .NE. 0.0D0 &
-           .OR. COSU .NE. 0.0D0 ) THEN
+      if (      sinu .ne. 0.0d0 &
+           .or. cosu .ne. 0.0d0 ) then
 
-         U     = DATAN2 (SINU,COSU)
+         u     = datan2 (sinu,cosu)
 
-         IF ( U .LT. 0 ) THEN
-            U = U + PIX2
-         END IF
+         if ( u .lt. 0 ) then
+            u = u + pix2
+         end if
 
-      ELSE
+      else
 
-         U = 0.0D0
+         u = 0.0d0
 
-      END IF
+      end if
 
 
-      SIN2U = 2.0D0 * SINU * COSU
-      COS2U = 2.0D0 * COSU * COSU  -  1.0D0
-      TEMP  = 1.0D0 / PL
-      TEMP1 = CK2   * TEMP
-      TEMP2 = TEMP1 * TEMP
+      sin2u = 2.0d0 * sinu * cosu
+      cos2u = 2.0d0 * cosu * cosu  -  1.0d0
+      temp  = 1.0d0 / pl
+      temp1 = ck2   * temp
+      temp2 = temp1 * temp
 
 !
 !     Update for short periodics
 !
-      RK     = R * ( 1.0D0   -  1.5D0 * TEMP2 * BETAL * X3THM1) &
-             +     0.50D0 * TEMP1 * X1MTH2 * COS2U
-      UK     = U - 0.25D0 * TEMP2 * X7THM1 * SIN2U
+      rk     = r * ( 1.0d0   -  1.5d0 * temp2 * betal * x3thm1) &
+             +     0.50d0 * temp1 * x1mth2 * cos2u
+      uk     = u - 0.25d0 * temp2 * x7thm1 * sin2u
 
-      XNODEK = XNODE + 1.50D0 * TEMP2 * COSIO  * SIN2U
-      XINCK  = XINCL + 1.50D0 * TEMP2 * COSIO  * COS2U * SINIO
-      RDOTK  = RDOT  - XN     * TEMP1 * X1MTH2 * SIN2U
-      RFDOTK = RFDOT + XN     * TEMP1 *(X1MTH2 * COS2U + 1.5D0*X3THM1)
+      xnodek = xnode + 1.50d0 * temp2 * cosio  * sin2u
+      xinck  = xincl + 1.50d0 * temp2 * cosio  * cos2u * sinio
+      rdotk  = rdot  - xn     * temp1 * x1mth2 * sin2u
+      rfdotk = rfdot + xn     * temp1 *(x1mth2 * cos2u + 1.5d0*x3thm1)
 !
 !     Orientation vectors
 !
-      SINUK  = SIN(UK)
-      COSUK  = COS(UK)
+      sinuk  = sin(uk)
+      cosuk  = cos(uk)
 
-      SINIK  = SIN(XINCK)
-      COSIK  = COS(XINCK)
+      sinik  = sin(xinck)
+      cosik  = cos(xinck)
 
-      SINNOK = SIN(XNODEK)
-      COSNOK = COS(XNODEK)
+      sinnok = sin(xnodek)
+      cosnok = cos(xnodek)
 
-      XMX    = -SINNOK * COSIK
-      XMY    =  COSNOK * COSIK
+      xmx    = -sinnok * cosik
+      xmy    =  cosnok * cosik
 
-      UX     =  XMX    * SINUK   +   COSNOK * COSUK
-      UY     =  XMY    * SINUK   +   SINNOK * COSUK
-      UZ     =  SINIK  * SINUK
-      VX     =  XMX    * COSUK   -   COSNOK * SINUK
-      VY     =  XMY    * COSUK   -   SINNOK * SINUK
-      VZ     =  SINIK  * COSUK
+      ux     =  xmx    * sinuk   +   cosnok * cosuk
+      uy     =  xmy    * sinuk   +   sinnok * cosuk
+      uz     =  sinik  * sinuk
+      vx     =  xmx    * cosuk   -   cosnok * sinuk
+      vy     =  xmy    * cosuk   -   sinnok * sinuk
+      vz     =  sinik  * cosuk
 !
 !     Position and velocity
 !
-      STATE(1) = TOKM    *   RK    * UX
-      STATE(2) = TOKM    *   RK    * UY
-      STATE(3) = TOKM    *   RK    * UZ
-      STATE(4) = TOKMPS  * ( RDOTK * UX     +   RFDOTK * VX )
-      STATE(5) = TOKMPS  * ( RDOTK * UY     +   RFDOTK * VY )
-      STATE(6) = TOKMPS  * ( RDOTK * UZ     +   RFDOTK * VZ )
+      state(1) = tokm    *   rk    * ux
+      state(2) = tokm    *   rk    * uy
+      state(3) = tokm    *   rk    * uz
+      state(4) = tokmps  * ( rdotk * ux     +   rfdotk * vx )
+      state(5) = tokmps  * ( rdotk * uy     +   rfdotk * vy )
+      state(6) = tokmps  * ( rdotk * uz     +   rfdotk * vz )
 
-      CALL CHKOUT ( 'EV2LIN' )
+      call chkout ( 'EV2LIN' )
 
-      RETURN
-      END
+      return
+      end

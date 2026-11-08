@@ -1,6 +1,6 @@
 !$Procedure SETERR ( Set Error Status )
 
-      LOGICAL FUNCTION SETERR ( STATUS )
+      logical function seterr ( status )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               STATUS
+      logical               status
 
 ! $ Brief_I/O
 !
@@ -132,46 +132,46 @@
 !     The SPICELIB status:
 !
 
-      LOGICAL               SVSTAT
+      logical               svstat
 
-      SAVE                  SVSTAT
+      save                  svstat
 
 !
 !     Declaration of the entry point, FAILED:
 !
 
-      LOGICAL FAILED
+      logical failed
 
 
 !
 !     Initial values:
 !
 
-      DATA    SVSTAT      / .FALSE. /
+      data    svstat      / .false. /
 
 !
 !     Executable Code:
 !
 
 
-      SVSTAT = STATUS
+      svstat = status
 
 !
 !     Give SETERR a value; the value does not have any
 !     meaning, but it appears standard FORTRAN requires this.
 !
 
-      SETERR = .TRUE.
+      seterr = .true.
 
 
-      RETURN
+      return
 
 
 
 
 !$Procedure FAILED ( Error Status Indicator )
 
-      ENTRY FAILED ()
+      entry failed ()
 
 ! $ Abstract
 !
@@ -393,6 +393,6 @@
 !     Grab saved status value:
 !
 
-      FAILED = SVSTAT
+      failed = svstat
 
-      END
+      end

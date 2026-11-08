@@ -1,6 +1,6 @@
 !$Procedure NPELPT  ( Nearest point on ellipse to point )
 
-      SUBROUTINE NPELPT ( POINT, ELLIPS, PNEAR, DIST )
+      subroutine npelpt ( point, ellips, pnear, dist )
 
 ! $ Abstract
 !
@@ -21,15 +21,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL    =   9 )
+      integer               ubel
+      parameter           ( ubel    =   9 )
 
-      DOUBLE PRECISION      ELLIPS ( UBEL )
-      DOUBLE PRECISION      POINT  (    3 )
-      DOUBLE PRECISION      PNEAR  (    3 )
-      DOUBLE PRECISION      DIST
+      double precision      ellips ( ubel )
+      double precision      point  (    3 )
+      double precision      pnear  (    3 )
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -176,35 +176,35 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VDIST
+      double precision      vnorm
+      double precision      vdist
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      MAJLEN
-      DOUBLE PRECISION      MINLEN
-      DOUBLE PRECISION      ROTATE ( 3, 3 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SMAJOR ( 3 )
-      DOUBLE PRECISION      SMINOR ( 3 )
-      DOUBLE PRECISION      TEMPV  ( 3 )
-      DOUBLE PRECISION      TMPPNT ( 3 )
-      DOUBLE PRECISION      PRJPNT ( 3 )
+      double precision      center ( 3 )
+      double precision      majlen
+      double precision      minlen
+      double precision      rotate ( 3, 3 )
+      double precision      scale
+      double precision      smajor ( 3 )
+      double precision      sminor ( 3 )
+      double precision      tempv  ( 3 )
+      double precision      tmppnt ( 3 )
+      double precision      prjpnt ( 3 )
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'NPELPT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'NPELPT' )
+      end if
 
 !
 !     Here's an overview of our solution:
@@ -250,40 +250,40 @@
 !
 !     Find the ellipse's center and semi-axes.
 !
-      CALL EL2CGV ( ELLIPS, CENTER, SMAJOR, SMINOR )
+      call el2cgv ( ellips, center, smajor, sminor )
 
 !
 !     Find the lengths of the semi-axes, and scale the vectors to try
 !     to prevent arithmetic unpleasantness.  Degenerate ellipses are
 !     turned away at the door.
 !
-      MINLEN = VNORM (SMINOR)
-      MAJLEN = VNORM (SMAJOR)
+      minlen = vnorm (sminor)
+      majlen = vnorm (smajor)
 
-      IF (   MIN ( MAJLEN, MINLEN )  .EQ.  0.D0  ) THEN
+      if (   min ( majlen, minlen )  .eq.  0.d0  ) then
 
-         CALL SETMSG ( 'Semi-axis lengths: # #. ' )
-         CALL ERRDP  ( '#', MAJLEN                )
-         CALL ERRDP  ( '#', MINLEN                )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'    )
-         CALL CHKOUT ( 'NPELPT'                   )
-         RETURN
+         call setmsg ( 'Semi-axis lengths: # #. ' )
+         call errdp  ( '#', majlen                )
+         call errdp  ( '#', minlen                )
+         call sigerr ( 'SPICE(DEGENERATECASE)'    )
+         call chkout ( 'NPELPT'                   )
+         return
 
-      END IF
+      end if
 
 
-      SCALE = 1.D0 / MAJLEN
+      scale = 1.d0 / majlen
 
-      CALL VSCLIP ( SCALE, SMAJOR )
-      CALL VSCLIP ( SCALE, SMINOR )
+      call vsclip ( scale, smajor )
+      call vsclip ( scale, sminor )
 
 !
 !     Translate ellipse and point so that the ellipse is centered at
 !     the origin.  Scale the point's coordinates to maintain the
 !     correct relative position to the scaled ellipse.
 !
-      CALL VSUB   ( POINT, CENTER, TMPPNT )
-      CALL VSCLIP ( SCALE,         TMPPNT )
+      call vsub   ( point, center, tmppnt )
+      call vsclip ( scale,         tmppnt )
 
 !
 !     We want to reduce the problem to a two-dimensional one.  We'll
@@ -292,13 +292,13 @@
 !     z-axis is picked to give us a right-handed system.  We find the
 !     matrix that transforms coordinates to our new system using TWOVEC.
 !
-      CALL TWOVEC ( SMAJOR, 1, SMINOR, 2, ROTATE )
+      call twovec ( smajor, 1, sminor, 2, rotate )
 
 !
 !     Apply the coordinate transformation to our scaled input point.
 !
-      CALL MXV  ( ROTATE, TMPPNT, TEMPV  )
-      CALL VEQU ( TEMPV,          TMPPNT )
+      call mxv  ( rotate, tmppnt, tempv  )
+      call vequ ( tempv,          tmppnt )
 
 !
 !     We must find the distance between the orthogonal projection of
@@ -310,7 +310,7 @@
 !     we'll call this projection PRJPNT.
 !
 !
-      CALL VPACK ( TMPPNT(1),  TMPPNT(2),  0.D0,  PRJPNT )
+      call vpack ( tmppnt(1),  tmppnt(2),  0.d0,  prjpnt )
 
 !
 !     Now we're ready to find the distance between and a triaxial
@@ -325,23 +325,23 @@
 !
 !     Find the nearest point to PRJPNT on the ellipsoid, PNEAR.
 !
-      CALL NEARPT ( PRJPNT, 1.D0, MINLEN/MAJLEN, 2.D0, PNEAR, DIST )
+      call nearpt ( prjpnt, 1.d0, minlen/majlen, 2.d0, pnear, dist )
 
 !
 !     Scale the near point coordinates back to the original scale.
 !
-      CALL VSCLIP ( MAJLEN, PNEAR )
+      call vsclip ( majlen, pnear )
 
 !
 !     Apply the required inverse rotation and translation to PNEAR.
 !     Compute the point-to-ellipse distance.
 !
-      CALL MTXV ( ROTATE, PNEAR,  TEMPV )
-      CALL VADD ( TEMPV,  CENTER, PNEAR )
+      call mtxv ( rotate, pnear,  tempv )
+      call vadd ( tempv,  center, pnear )
 
-      DIST = VDIST ( PNEAR, POINT )
+      dist = vdist ( pnear, point )
 
 
-      CALL CHKOUT  ( 'NPELPT' )
-      RETURN
-      END
+      call chkout  ( 'NPELPT' )
+      return
+      end

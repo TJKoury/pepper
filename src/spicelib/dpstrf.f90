@@ -1,6 +1,6 @@
 !$Procedure DPSTRF ( Double Precision Number to Character )
 
-      SUBROUTINE DPSTRF ( X, SIGDIG, FORMAT, STRING )
+      subroutine dpstrf ( x, sigdig, format, string )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      INTEGER               SIGDIG
-      CHARACTER*1           FORMAT
-      CHARACTER*(*)         STRING
+      double precision      x
+      integer               sigdig
+      character*1           format
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -239,64 +239,64 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      Y
+      double precision      y
 
-      INTEGER               EXP
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               LASTCH
-      INTEGER               MAXDIG
-      INTEGER               I
-      INTEGER               J
-
-
-      LOGICAL               OVFLOW
+      integer               exp
+      integer               first
+      integer               last
+      integer               lastch
+      integer               maxdig
+      integer               i
+      integer               j
 
 
+      logical               ovflow
 
 
-      MAXDIG = MIN ( 14, MAX(1,SIGDIG)       )
+
+
+      maxdig = min ( 14, max(1,sigdig)       )
 
 !
 !     If the format is 'E' we just let DPSTR handle the problem.
 !
-      IF ( FORMAT .EQ. 'E' ) THEN
+      if ( format .eq. 'E' ) then
 
-         CALL DPSTR  ( X,  MAXDIG, STRING )
-         RETURN
+         call dpstr  ( x,  maxdig, string )
+         return
 
-      END IF
+      end if
 
 !
 !     If we're still here, we have a decimal format requested.  Set
 !     the sign for the number.
 !
-      IF ( X .LT. 0.0D0 ) THEN
-         STRING = '-'
-      ELSE
-         STRING = ' '
-      END IF
+      if ( x .lt. 0.0d0 ) then
+         string = '-'
+      else
+         string = ' '
+      end if
 !
 !     If X is zero, we can handle this without any regard to the
 !     exponent.
 !
-      IF ( X .EQ. 0.0D0 ) THEN
+      if ( x .eq. 0.0d0 ) then
 
-         CALL ZZVSTSTR (  X, ' ', EXP )
-         CALL ZZVSBSTR ( -1, MAXDIG, .FALSE., STRING(2:), OVFLOW )
-         RETURN
+         call zzvststr (  x, ' ', exp )
+         call zzvsbstr ( -1, maxdig, .false., string(2:), ovflow )
+         return
 
-      END IF
+      end if
 !
 !     We've already set the sign, now we deal with the unsigned
 !     portion of X.
 !
-      Y = DABS(X)
+      y = dabs(x)
 
 !
 !     Create a virtual decimal string for Y.
 !
-      CALL ZZVSTSTR ( Y, ' ', EXP )
+      call zzvststr ( y, ' ', exp )
 
 !
 !     Now we can just fill in the string by reading the appropriate
@@ -304,62 +304,62 @@
 !     the first and last virtual digits to retrieve.  To do this
 !     we look at EXP.
 !
-      IF ( EXP .GE. 0 ) THEN
-         FIRST  = -EXP-1
-      ELSE
-         FIRST  = -EXP
-      END IF
+      if ( exp .ge. 0 ) then
+         first  = -exp-1
+      else
+         first  = -exp
+      end if
 
-      LAST   =  FIRST + MAXDIG - 1
+      last   =  first + maxdig - 1
 
-      IF ( FIRST .LT. 0 .AND. LAST .GE. 0 ) THEN
-         LAST = LAST + 1
-      END IF
+      if ( first .lt. 0 .and. last .ge. 0 ) then
+         last = last + 1
+      end if
 
-      FIRST = MIN ( -1, FIRST )
+      first = min ( -1, first )
 
-      CALL ZZVSBSTR ( FIRST, LAST, .TRUE., STRING(2:), OVFLOW )
+      call zzvsbstr ( first, last, .true., string(2:), ovflow )
 
-      IF ( OVFLOW ) THEN
+      if ( ovflow ) then
 
-         FIRST = FIRST - 1
+         first = first - 1
 
-         CALL ZZVSBSTR ( FIRST, LAST, .TRUE., STRING(2:), OVFLOW )
+         call zzvsbstr ( first, last, .true., string(2:), ovflow )
 !
 !        We need to blank out the last digit of string.
 !
-         LASTCH = LAST - FIRST + 2
+         lastch = last - first + 2
 
-         IF (       LAST   .GT. 0 &
-              .AND. LASTCH .LE. LEN(STRING) ) THEN
-            STRING(LASTCH:) = ' '
-         END IF
+         if (       last   .gt. 0 &
+              .and. lastch .le. len(string) ) then
+            string(lastch:) = ' '
+         end if
 
-      END IF
-
-
-      IF ( LAST .LT. 0 ) THEN
-
-         J  = LAST - FIRST + 3
-
-         DO I = LAST+1, -1
-
-            IF ( J .LE. LEN(STRING) ) THEN
-               STRING(J:J) = '0'
-            END IF
-            J = J + 1
-
-         END DO
-
-         IF ( J .LE. LEN(STRING) ) THEN
-            STRING(J:J) = '.'
-         END IF
-
-      END IF
+      end if
 
 
+      if ( last .lt. 0 ) then
+
+         j  = last - first + 3
+
+         do i = last+1, -1
+
+            if ( j .le. len(string) ) then
+               string(j:j) = '0'
+            end if
+            j = j + 1
+
+         end do
+
+         if ( j .le. len(string) ) then
+            string(j:j) = '.'
+         end if
+
+      end if
 
 
-      RETURN
 
-      END
+
+      return
+
+      end

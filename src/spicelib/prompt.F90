@@ -1,6 +1,6 @@
 !$Procedure PROMPT ( Prompt a user for a string )
 
-      SUBROUTINE PROMPT ( DSPMSG, BUFFER )
+      subroutine prompt ( dspmsg, buffer )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         DSPMSG
-      CHARACTER*(*)         BUFFER
+      character*(*)         dspmsg
+      character*(*)         buffer
 
 ! $ Brief_I/O
 !
@@ -424,7 +424,7 @@
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
 !
 
@@ -437,7 +437,7 @@
 #endif
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      WRITE (*,FMT='(1H ,A,$)', IOSTAT=IOSTAT ) DSPMSG
+      write (*,fmt='(" ",A,$)', iostat=iostat ) dspmsg
 #else
 !     The code below should be used in the following environments:
 !
@@ -448,7 +448,7 @@
 !     NeXT/Absoft Fortran
 !     PC Linux/Fort77
 !
-      WRITE (*,FMT='(A,$)', IOSTAT=IOSTAT ) DSPMSG
+      write (*,fmt='(A,$)', iostat=iostat ) dspmsg
 #endif
 
 !
@@ -468,10 +468,10 @@
 !     Check for a write error. It's not likely, but the standard output
 !     can be redirected. Better safe than confused later.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL CHKIN ( 'PROMPT' )
-         CALL SETMSG ( 'An error occurred while attempting to ' &
+         call chkin ( 'PROMPT' )
+         call setmsg ( 'An error occurred while attempting to ' &
          //            'write a prompt to the standard output ' &
          //            'device, possibly because standard output ' &
          //            'has been redirected to a file. There is ' &
@@ -480,35 +480,35 @@
          //            'standard output has been redirected, so be ' &
          //            'sure that there are sufficient resources ' &
          //            'available for the operation being performed.' )
-         CALL SIGERR ( 'SPICE(WRITEFAILED)'                           )
-         CALL CHKOUT ( 'PROMPT'                                       )
-         RETURN
+         call sigerr ( 'SPICE(WRITEFAILED)'                           )
+         call chkout ( 'PROMPT'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Now that we've written out the prompt and there was no error, we
 !     can read in the response.
 !
-      READ  (*,FMT='(A)', IOSTAT=IOSTAT ) BUFFER
+      read  (*,fmt='(A)', iostat=iostat ) buffer
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL CHKIN ( 'PROMPT' )
-         CALL SETMSG ( 'An error occurred while attempting to ' &
+         call chkin ( 'PROMPT' )
+         call setmsg ( 'An error occurred while attempting to ' &
          //            'retrieve a reply to the prompt "#".  A ' &
          //            'possible cause is that you have ' &
          //            'exhausted the input buffer while ' &
          //            'attempting to type your response.  It ' &
          //            'may help if you limit your response to # ' &
          //            'or fewer characters. '                      )
-         CALL ERRCH  ( '#', DSPMSG                                  )
-         CALL ERRINT ( '#', MIN(LEN(BUFFER),131)                    )
-         CALL SIGERR ( 'SPICE(READFAILED)'                          )
-         CALL CHKOUT ( 'PROMPT'                                     )
-         RETURN
+         call errch  ( '#', dspmsg                                  )
+         call errint ( '#', min(len(buffer),131)                    )
+         call sigerr ( 'SPICE(READFAILED)'                          )
+         call chkout ( 'PROMPT'                                     )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

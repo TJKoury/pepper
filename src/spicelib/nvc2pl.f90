@@ -1,6 +1,6 @@
 !$Procedure NVC2PL ( Normal vector and constant to plane )
 
-      SUBROUTINE NVC2PL ( NORMAL, KONST, PLANE )
+      subroutine nvc2pl ( normal, konst, plane )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL    =   4 )
+      integer               ubpl
+      parameter           ( ubpl    =   4 )
 
-      DOUBLE PRECISION      NORMAL (    3 )
-      DOUBLE PRECISION      KONST
-      DOUBLE PRECISION      PLANE  ( UBPL )
+      double precision      normal (    3 )
+      double precision      konst
+      double precision      plane  ( ubpl )
 
 ! $ Brief_I/O
 !
@@ -331,7 +331,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
@@ -354,39 +354,39 @@
 !        closest point in the plane to the origin.
 !
 !
-      INTEGER               NMLPOS
-      PARAMETER           ( NMLPOS = 1 )
+      integer               nmlpos
+      parameter           ( nmlpos = 1 )
 
-      INTEGER               CONPOS
-      PARAMETER           ( CONPOS = 4 )
+      integer               conpos
+      parameter           ( conpos = 4 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      MAG
-      DOUBLE PRECISION      TMPVEC ( 3 )
+      double precision      mag
+      double precision      tmpvec ( 3 )
 
 !
 !     This routine checks in only if an error is discovered.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL UNORM ( NORMAL, PLANE(NMLPOS), MAG )
+      call unorm ( normal, plane(nmlpos), mag )
 
 !
 !     The normal vector must be non-zero.
 !
-      IF ( MAG .EQ. 0 ) THEN
+      if ( mag .eq. 0 ) then
 
-         CALL CHKIN  ( 'NVC2PL'                            )
-         CALL SETMSG ( 'Plane''s normal must be non-zero.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                 )
-         CALL CHKOUT ( 'NVC2PL'                            )
-         RETURN
+         call chkin  ( 'NVC2PL'                            )
+         call setmsg ( 'Plane''s normal must be non-zero.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                 )
+         call chkout ( 'NVC2PL'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     To find the plane constant corresponding to the unitized normal
@@ -399,20 +399,20 @@
 !        < X, NORMAL / || NORMAL || >   =   KONST / || NORMAL ||
 !
 !
-      PLANE(CONPOS) =  KONST / MAG
+      plane(conpos) =  konst / mag
 
 !
 !     The constant should be the distance of the plane from the
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      IF ( PLANE(CONPOS) .LT. 0.D0 ) THEN
+      if ( plane(conpos) .lt. 0.d0 ) then
 
-         PLANE(CONPOS) =   -PLANE(CONPOS)
-         CALL VMINUS     (  PLANE(NMLPOS), TMPVEC        )
-         CALL VEQU       (  TMPVEC,        PLANE(NMLPOS) )
+         plane(conpos) =   -plane(conpos)
+         call vminus     (  plane(nmlpos), tmpvec        )
+         call vequ       (  tmpvec,        plane(nmlpos) )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure WNCARD ( Cardinality of a double precision window )
 
-      INTEGER FUNCTION WNCARD ( WINDOW )
+      integer function wncard ( window )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      WINDOW  ( LBCELL:* )
+      double precision      window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -189,46 +189,46 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               EVEN
+      logical               return
+      logical               even
 
-      INTEGER               CARDD
+      integer               cardd
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         WNCARD = 0
-         RETURN
-      END IF
+      if ( return() ) then
+         wncard = 0
+         return
+      end if
 
-      CALL CHKIN ( 'WNCARD' )
+      call chkin ( 'WNCARD' )
 
 
-      WNCARD = CARDD(WINDOW)
+      wncard = cardd(window)
 
 !
 !     Confirm the cardinality as an even integer.
 !
-      IF( .NOT. EVEN(WNCARD) ) THEN
+      if( .not. even(wncard) ) then
 
-         CALL SETMSG ( 'Invalid window size, a window should ' &
+         call setmsg ( 'Invalid window size, a window should ' &
               // 'have an even number of elements. The size was #.')
-         CALL ERRINT ( '#', WNCARD )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'WNCARD' )
-         WNCARD = 0
-         RETURN
+         call errint ( '#', wncard )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'WNCARD' )
+         wncard = 0
+         return
 
-      END IF
+      end if
 
 !
 !     Set return value. Cardinality in a SPICE window sense
 !     means the number of intervals, half the cell
 !     cardinality value.
 !
-      WNCARD = WNCARD/2
+      wncard = wncard/2
 
-      CALL CHKOUT ( 'WNCARD' )
-      RETURN
-      END
+      call chkout ( 'WNCARD' )
+      return
+      end

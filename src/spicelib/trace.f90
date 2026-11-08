@@ -1,6 +1,6 @@
 !$Procedure TRACE ( Trace of a 3x3 matrix )
 
-      DOUBLE PRECISION FUNCTION  TRACE ( MATRIX )
+      double precision function  trace ( matrix )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   MATRIX ( 3, 3 )
+      double precision   matrix ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -172,7 +172,7 @@
 !-&
 
 
-      TRACE = MATRIX(1,1) + MATRIX(2,2) + MATRIX(3,3)
+      trace = matrix(1,1) + matrix(2,2) + matrix(3,3)
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 
 !$Procedure ZZSPKSB0 ( S/P Kernel, solar system barycenter )
 
-      SUBROUTINE ZZSPKSB0 ( TARG, ET, REF, STARG )
+      subroutine zzspksb0 ( targ, et, ref, starg )
 
 ! $ Abstract
 !
@@ -22,11 +22,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      STARG    ( 6 )
+      implicit none
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      double precision      starg    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -154,27 +154,27 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LT
-      INTEGER               BARY
+      double precision      lt
+      integer               bary
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZSPKSB0' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZSPKSB0' )
+      end if
 
-      BARY = 0
+      bary = 0
 
-      CALL ZZSPKGO0 ( TARG, ET, REF, BARY, STARG, LT )
+      call zzspkgo0 ( targ, et, ref, bary, starg, lt )
 
-      CALL CHKOUT ( 'ZZSPKSB0' )
-      RETURN
-      END
+      call chkout ( 'ZZSPKSB0' )
+      return
+      end

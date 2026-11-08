@@ -1,8 +1,8 @@
 !$Procedure ZZNRDDP ( Shell for deep space entry points )
 
-      SUBROUTINE ZZNRDDP ( AO , ELEMS , EM, OMGASM, OMGDOT, T, XINC, &
-                           XLL, XLLDOT, XN, XNODES, XNODOT, XNODP  )
-      IMPLICIT NONE
+      subroutine zznrddp ( ao , elems , em, omgasm, omgdot, t, xinc, &
+                           xll, xlldot, xn, xnodes, xnodot, xnodp  )
+      implicit none
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION      AO
-      DOUBLE PRECISION      ELEMS ( 10 )
-      DOUBLE PRECISION      EM
-      DOUBLE PRECISION      OMGASM
-      DOUBLE PRECISION      OMGDOT
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      XINC
-      DOUBLE PRECISION      XLL
-      DOUBLE PRECISION      XLLDOT
-      DOUBLE PRECISION      XN
-      DOUBLE PRECISION      XNODES
-      DOUBLE PRECISION      XNODOT
-      DOUBLE PRECISION      XNODP
+      double precision      ao
+      double precision      elems ( 10 )
+      double precision      em
+      double precision      omgasm
+      double precision      omgdot
+      double precision      t
+      double precision      xinc
+      double precision      xll
+      double precision      xlldot
+      double precision      xn
+      double precision      xnodes
+      double precision      xnodot
+      double precision      xnodp
 
 
 ! $ Brief_I/O
@@ -264,329 +264,329 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A1
-      DOUBLE PRECISION      A10
-      DOUBLE PRECISION      A2
-      DOUBLE PRECISION      A3
-      DOUBLE PRECISION      A4
-      DOUBLE PRECISION      A5
-      DOUBLE PRECISION      A6
-      DOUBLE PRECISION      A7
-      DOUBLE PRECISION      A8
-      DOUBLE PRECISION      A9
-      DOUBLE PRECISION      AINV2
-      DOUBLE PRECISION      ALFDP
-      DOUBLE PRECISION      AQNV
-      DOUBLE PRECISION      ATIME
-      DOUBLE PRECISION      BETDP
-      DOUBLE PRECISION      BFACT
-      DOUBLE PRECISION      BSQ
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      CC
-      DOUBLE PRECISION      COSIQ
-      DOUBLE PRECISION      COSIS
-      DOUBLE PRECISION      COSOK
-      DOUBLE PRECISION      COSOMO
-      DOUBLE PRECISION      COSQ
-      DOUBLE PRECISION      COSQ2
-      DOUBLE PRECISION      CTEM
-      DOUBLE PRECISION      DAY
-      DOUBLE PRECISION      DELT
-      DOUBLE PRECISION      DS50
-      DOUBLE PRECISION      E3
-      DOUBLE PRECISION      EE2
-      DOUBLE PRECISION      EO
-      DOUBLE PRECISION      EOC
-      DOUBLE PRECISION      EQ
-      DOUBLE PRECISION      EQSQ
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      F2
-      DOUBLE PRECISION      F220
-      DOUBLE PRECISION      F221
-      DOUBLE PRECISION      F3
-      DOUBLE PRECISION      F311
-      DOUBLE PRECISION      F321
-      DOUBLE PRECISION      F322
-      DOUBLE PRECISION      F330
-      DOUBLE PRECISION      F441
-      DOUBLE PRECISION      F442
-      DOUBLE PRECISION      F522
-      DOUBLE PRECISION      F523
-      DOUBLE PRECISION      F542
-      DOUBLE PRECISION      F543
-      DOUBLE PRECISION      FT
-      DOUBLE PRECISION      G200
-      DOUBLE PRECISION      G201
-      DOUBLE PRECISION      G211
-      DOUBLE PRECISION      G300
-      DOUBLE PRECISION      G310
-      DOUBLE PRECISION      G322
-      DOUBLE PRECISION      G410
-      DOUBLE PRECISION      G422
-      DOUBLE PRECISION      G520
-      DOUBLE PRECISION      G521
-      DOUBLE PRECISION      G532
-      DOUBLE PRECISION      G533
-      DOUBLE PRECISION      GAM
-      DOUBLE PRECISION      OMEGAO
-      DOUBLE PRECISION      OXNODE
-      DOUBLE PRECISION      PE
-      DOUBLE PRECISION      PE0
-      DOUBLE PRECISION      PGH
-      DOUBLE PRECISION      PGH0
-      DOUBLE PRECISION      PH
-      DOUBLE PRECISION      PH0
-      DOUBLE PRECISION      PINC
-      DOUBLE PRECISION      PINC0
-      DOUBLE PRECISION      PIX1
-      DOUBLE PRECISION      PIX2
-      DOUBLE PRECISION      PL
-      DOUBLE PRECISION      PL0
-      DOUBLE PRECISION      PREEP
-      DOUBLE PRECISION      RTEQSQ
-      DOUBLE PRECISION      S1
-      DOUBLE PRECISION      S2
-      DOUBLE PRECISION      S3
-      DOUBLE PRECISION      S4
-      DOUBLE PRECISION      S5
-      DOUBLE PRECISION      S6
-      DOUBLE PRECISION      S7
-      DOUBLE PRECISION      SE
-      DOUBLE PRECISION      SE2
-      DOUBLE PRECISION      SE3
-      DOUBLE PRECISION      SEL
-      DOUBLE PRECISION      SES
-      DOUBLE PRECISION      SGH
-      DOUBLE PRECISION      SGH2
-      DOUBLE PRECISION      SGH3
-      DOUBLE PRECISION      SGH4
-      DOUBLE PRECISION      SGHL
-      DOUBLE PRECISION      SGHS
-      DOUBLE PRECISION      SH
-      DOUBLE PRECISION      SH2
-      DOUBLE PRECISION      SH3
-      DOUBLE PRECISION      SHL
-      DOUBLE PRECISION      SHS
-      DOUBLE PRECISION      SI
-      DOUBLE PRECISION      SI2
-      DOUBLE PRECISION      SI3
-      DOUBLE PRECISION      SIL
-      DOUBLE PRECISION      SINI2
-      DOUBLE PRECISION      SINIQ
-      DOUBLE PRECISION      SINIS
-      DOUBLE PRECISION      SINOK
-      DOUBLE PRECISION      SINOMO
-      DOUBLE PRECISION      SINQ
-      DOUBLE PRECISION      SINZF
-      DOUBLE PRECISION      SIS
-      DOUBLE PRECISION      SL
-      DOUBLE PRECISION      SL2
-      DOUBLE PRECISION      SL3
-      DOUBLE PRECISION      SL4
-      DOUBLE PRECISION      SLL
-      DOUBLE PRECISION      SLS
-      DOUBLE PRECISION      STEM
-      DOUBLE PRECISION      STEPN
-      DOUBLE PRECISION      STEPP
-      DOUBLE PRECISION      TEMP
-      DOUBLE PRECISION      TEMP1
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      THGR
-      DOUBLE PRECISION      X1
-      DOUBLE PRECISION      X2
-      DOUBLE PRECISION      X3
-      DOUBLE PRECISION      X4
-      DOUBLE PRECISION      X5
-      DOUBLE PRECISION      X6
-      DOUBLE PRECISION      X7
-      DOUBLE PRECISION      X8
-      DOUBLE PRECISION      XFACT
-      DOUBLE PRECISION      XGH2
-      DOUBLE PRECISION      XGH3
-      DOUBLE PRECISION      XGH4
-      DOUBLE PRECISION      XH2
-      DOUBLE PRECISION      XH3
-      DOUBLE PRECISION      XI2
-      DOUBLE PRECISION      XI3
-      DOUBLE PRECISION      XINCL
-      DOUBLE PRECISION      XL
-      DOUBLE PRECISION      XL2
-      DOUBLE PRECISION      XL3
-      DOUBLE PRECISION      XL4
-      DOUBLE PRECISION      XLAMO
-      DOUBLE PRECISION      XLDOT
-      DOUBLE PRECISION      XLI
-      DOUBLE PRECISION      XLS
-      DOUBLE PRECISION      XMAO
-      DOUBLE PRECISION      XMO
-      DOUBLE PRECISION      XNDDT
-      DOUBLE PRECISION      XNDOT
-      DOUBLE PRECISION      XNI
-      DOUBLE PRECISION      XNO2
-      DOUBLE PRECISION      XNODCE
-      DOUBLE PRECISION      XNODEO
-      DOUBLE PRECISION      XNOI
-      DOUBLE PRECISION      XNQ
-      DOUBLE PRECISION      XQNCL
-      DOUBLE PRECISION      Z1
-      DOUBLE PRECISION      Z11
-      DOUBLE PRECISION      Z12
-      DOUBLE PRECISION      Z13
-      DOUBLE PRECISION      Z2
-      DOUBLE PRECISION      Z21
-      DOUBLE PRECISION      Z22
-      DOUBLE PRECISION      Z23
-      DOUBLE PRECISION      Z3
-      DOUBLE PRECISION      Z31
-      DOUBLE PRECISION      Z32
-      DOUBLE PRECISION      Z33
-      DOUBLE PRECISION      ZCOSG
-      DOUBLE PRECISION      ZCOSGL
-      DOUBLE PRECISION      ZCOSH
-      DOUBLE PRECISION      ZCOSHL
-      DOUBLE PRECISION      ZCOSI
-      DOUBLE PRECISION      ZCOSIL
-      DOUBLE PRECISION      ZE
-      DOUBLE PRECISION      ZF
-      DOUBLE PRECISION      ZM
-      DOUBLE PRECISION      ZMOL
-      DOUBLE PRECISION      ZMOS
-      DOUBLE PRECISION      ZN
-      DOUBLE PRECISION      ZSING
-      DOUBLE PRECISION      ZSINGL
-      DOUBLE PRECISION      ZSINH
-      DOUBLE PRECISION      ZSINHL
-      DOUBLE PRECISION      ZSINI
-      DOUBLE PRECISION      ZSINIL
-      DOUBLE PRECISION      ZX
-      DOUBLE PRECISION      ZY
-      DOUBLE PRECISION      DEL   ( 3  )
-      DOUBLE PRECISION      DG    ( 10 )
-      DOUBLE PRECISION      SSX   ( 5  )
-      DOUBLE PRECISION      JDTDB
-      DOUBLE PRECISION      JDUT50
+      double precision      a1
+      double precision      a10
+      double precision      a2
+      double precision      a3
+      double precision      a4
+      double precision      a5
+      double precision      a6
+      double precision      a7
+      double precision      a8
+      double precision      a9
+      double precision      ainv2
+      double precision      alfdp
+      double precision      aqnv
+      double precision      atime
+      double precision      betdp
+      double precision      bfact
+      double precision      bsq
+      double precision      c
+      double precision      cc
+      double precision      cosiq
+      double precision      cosis
+      double precision      cosok
+      double precision      cosomo
+      double precision      cosq
+      double precision      cosq2
+      double precision      ctem
+      double precision      day
+      double precision      delt
+      double precision      ds50
+      double precision      e3
+      double precision      ee2
+      double precision      eo
+      double precision      eoc
+      double precision      eq
+      double precision      eqsq
+      double precision      et
+      double precision      f2
+      double precision      f220
+      double precision      f221
+      double precision      f3
+      double precision      f311
+      double precision      f321
+      double precision      f322
+      double precision      f330
+      double precision      f441
+      double precision      f442
+      double precision      f522
+      double precision      f523
+      double precision      f542
+      double precision      f543
+      double precision      ft
+      double precision      g200
+      double precision      g201
+      double precision      g211
+      double precision      g300
+      double precision      g310
+      double precision      g322
+      double precision      g410
+      double precision      g422
+      double precision      g520
+      double precision      g521
+      double precision      g532
+      double precision      g533
+      double precision      gam
+      double precision      omegao
+      double precision      oxnode
+      double precision      pe
+      double precision      pe0
+      double precision      pgh
+      double precision      pgh0
+      double precision      ph
+      double precision      ph0
+      double precision      pinc
+      double precision      pinc0
+      double precision      pix1
+      double precision      pix2
+      double precision      pl
+      double precision      pl0
+      double precision      preep
+      double precision      rteqsq
+      double precision      s1
+      double precision      s2
+      double precision      s3
+      double precision      s4
+      double precision      s5
+      double precision      s6
+      double precision      s7
+      double precision      se
+      double precision      se2
+      double precision      se3
+      double precision      sel
+      double precision      ses
+      double precision      sgh
+      double precision      sgh2
+      double precision      sgh3
+      double precision      sgh4
+      double precision      sghl
+      double precision      sghs
+      double precision      sh
+      double precision      sh2
+      double precision      sh3
+      double precision      shl
+      double precision      shs
+      double precision      si
+      double precision      si2
+      double precision      si3
+      double precision      sil
+      double precision      sini2
+      double precision      siniq
+      double precision      sinis
+      double precision      sinok
+      double precision      sinomo
+      double precision      sinq
+      double precision      sinzf
+      double precision      sis
+      double precision      sl
+      double precision      sl2
+      double precision      sl3
+      double precision      sl4
+      double precision      sll
+      double precision      sls
+      double precision      stem
+      double precision      stepn
+      double precision      stepp
+      double precision      temp
+      double precision      temp1
+      double precision      theta
+      double precision      thgr
+      double precision      x1
+      double precision      x2
+      double precision      x3
+      double precision      x4
+      double precision      x5
+      double precision      x6
+      double precision      x7
+      double precision      x8
+      double precision      xfact
+      double precision      xgh2
+      double precision      xgh3
+      double precision      xgh4
+      double precision      xh2
+      double precision      xh3
+      double precision      xi2
+      double precision      xi3
+      double precision      xincl
+      double precision      xl
+      double precision      xl2
+      double precision      xl3
+      double precision      xl4
+      double precision      xlamo
+      double precision      xldot
+      double precision      xli
+      double precision      xls
+      double precision      xmao
+      double precision      xmo
+      double precision      xnddt
+      double precision      xndot
+      double precision      xni
+      double precision      xno2
+      double precision      xnodce
+      double precision      xnodeo
+      double precision      xnoi
+      double precision      xnq
+      double precision      xqncl
+      double precision      z1
+      double precision      z11
+      double precision      z12
+      double precision      z13
+      double precision      z2
+      double precision      z21
+      double precision      z22
+      double precision      z23
+      double precision      z3
+      double precision      z31
+      double precision      z32
+      double precision      z33
+      double precision      zcosg
+      double precision      zcosgl
+      double precision      zcosh
+      double precision      zcoshl
+      double precision      zcosi
+      double precision      zcosil
+      double precision      ze
+      double precision      zf
+      double precision      zm
+      double precision      zmol
+      double precision      zmos
+      double precision      zn
+      double precision      zsing
+      double precision      zsingl
+      double precision      zsinh
+      double precision      zsinhl
+      double precision      zsini
+      double precision      zsinil
+      double precision      zx
+      double precision      zy
+      double precision      del   ( 3  )
+      double precision      dg    ( 10 )
+      double precision      ssx   ( 5  )
+      double precision      jdtdb
+      double precision      jdut50
 
-      INTEGER               I
-      INTEGER               IRESFL
-      INTEGER               ISYNFL
+      integer               i
+      integer               iresfl
+      integer               isynfl
 
-      LOGICAL               CONT
+      logical               cont
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      J1950
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
+      double precision      j1950
+      double precision      spd
+      double precision      j2000
+      double precision      pi
+      double precision      twopi
 
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Define rather a large number of local parameters.
 !
-      DOUBLE PRECISION      ZNS
-      PARAMETER           ( ZNS    = 1.19459D-5   )
+      double precision      zns
+      parameter           ( zns    = 1.19459d-5   )
 
-      DOUBLE PRECISION      C1SS
-      PARAMETER           ( C1SS   = 2.9864797D-6 )
+      double precision      c1ss
+      parameter           ( c1ss   = 2.9864797d-6 )
 
 
-      DOUBLE PRECISION      ZES
-      PARAMETER           ( ZES    = 0.01675D0    )
+      double precision      zes
+      parameter           ( zes    = 0.01675d0    )
 
-      DOUBLE PRECISION      ZNL
-      PARAMETER           ( ZNL    = 1.5835218D-4 )
+      double precision      znl
+      parameter           ( znl    = 1.5835218d-4 )
 
-      DOUBLE PRECISION      C1L
-      PARAMETER           ( C1L    = 4.7968065D-7 )
+      double precision      c1l
+      parameter           ( c1l    = 4.7968065d-7 )
 
-      DOUBLE PRECISION      ZEL
-      PARAMETER           ( ZEL    = .05490D0     )
+      double precision      zel
+      parameter           ( zel    = .05490d0     )
 
-      DOUBLE PRECISION      ZCOSIS
-      PARAMETER           ( ZCOSIS = .91744867D0  )
+      double precision      zcosis
+      parameter           ( zcosis = .91744867d0  )
 
-      DOUBLE PRECISION      ZSINIS
-      PARAMETER           ( ZSINIS = .39785416D0  )
+      double precision      zsinis
+      parameter           ( zsinis = .39785416d0  )
 
-      DOUBLE PRECISION      ZSINGS
-      PARAMETER           ( ZSINGS = -.98088458D0 )
+      double precision      zsings
+      parameter           ( zsings = -.98088458d0 )
 
-      DOUBLE PRECISION      ZCOSGS
-      PARAMETER           ( ZCOSGS = .1945905D0   )
+      double precision      zcosgs
+      parameter           ( zcosgs = .1945905d0   )
 
-      DOUBLE PRECISION      Q22
-      PARAMETER           ( Q22    = 1.7891679D-6 )
+      double precision      q22
+      parameter           ( q22    = 1.7891679d-6 )
 
-      DOUBLE PRECISION      Q31
-      PARAMETER           ( Q31    = 2.1460748D-6 )
+      double precision      q31
+      parameter           ( q31    = 2.1460748d-6 )
 
-      DOUBLE PRECISION      Q33
-      PARAMETER           ( Q33    = 2.2123015D-7 )
+      double precision      q33
+      parameter           ( q33    = 2.2123015d-7 )
 
-      DOUBLE PRECISION      ROOT22
-      PARAMETER           ( ROOT22 = 1.7891679D-6 )
+      double precision      root22
+      parameter           ( root22 = 1.7891679d-6 )
 
-      DOUBLE PRECISION      ROOT32
-      PARAMETER           ( ROOT32 = 3.7393792D-7 )
+      double precision      root32
+      parameter           ( root32 = 3.7393792d-7 )
 
-      DOUBLE PRECISION      ROOT44
-      PARAMETER           ( ROOT44 = 7.3636953D-9 )
+      double precision      root44
+      parameter           ( root44 = 7.3636953d-9 )
 
-      DOUBLE PRECISION      ROOT52
-      PARAMETER           ( ROOT52 = 1.1428639D-7 )
+      double precision      root52
+      parameter           ( root52 = 1.1428639d-7 )
 
-      DOUBLE PRECISION      ROOT54
-      PARAMETER           ( ROOT54 = 2.1765803D-9 )
+      double precision      root54
+      parameter           ( root54 = 2.1765803d-9 )
 
-      DOUBLE PRECISION      THDT
-      PARAMETER           ( THDT   = 4.3752691D-3 )
+      double precision      thdt
+      parameter           ( thdt   = 4.3752691d-3 )
 
-      DOUBLE PRECISION      STEP2
-      PARAMETER           ( STEP2 = 259200.D0 )
+      double precision      step2
+      parameter           ( step2 = 259200.d0 )
 
-      INTEGER               LUNAR
-      PARAMETER           ( LUNAR = 1 )
+      integer               lunar
+      parameter           ( lunar = 1 )
 
-      DOUBLE PRECISION      ZERO
-      PARAMETER           ( ZERO    =  0.0D0    )
+      double precision      zero
+      parameter           ( zero    =  0.0d0    )
 
-      DOUBLE PRECISION      ONE
-      PARAMETER           ( ONE     =  1.0D0    )
+      double precision      one
+      parameter           ( one     =  1.0d0    )
 
 
 !
 !     Save everything just to be sure.
 !
-      SAVE
+      save
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZNRDDP' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZNRDDP' )
+      end if
 
 !
 !     This routine should never be called. If this routine is called,
 !     an error is signaled.
 !
-      CALL SETMSG ( 'NRDDP: You called an entry which '  // &
+      call setmsg ( 'NRDDP: You called an entry which '  // &
                     'performs no run-time function. This may '        // &
                     'indicate a bug. Please check the documentation ' // &
                     'for the subroutine ZZNRDDP.' )
 
-      CALL SIGERR ( 'SPICE(EVILBOGUSENTRY)' )
+      call sigerr ( 'SPICE(EVILBOGUSENTRY)' )
 
-      CALL CHKOUT ( 'ZZNRDDP' )
+      call chkout ( 'ZZNRDDP' )
 
-      RETURN
+      return
 
 
 
@@ -594,7 +594,7 @@
 
 !$Procedure ZZDPINIT (Initialize deep space algorithm and variables )
 
-      ENTRY ZZDPINIT( AO, XLLDOT, OMGDOT, XNODOT, XNODP, ELEMS )
+      entry zzdpinit( ao, xlldot, omgdot, xnodot, xnodp, elems )
 
 ! $ Abstract
 !
@@ -761,29 +761,29 @@
 !
 !-&
 
-      PIX1 = PI()
-      PIX2 = TWOPI()
+      pix1 = pi()
+      pix2 = twopi()
 
 !
 !     Unpack the elements array.
 !
-      XINCL  = ELEMS( 4  )
-      XNODEO = ELEMS( 5  )
-      EO     = ELEMS( 6  )
-      OMEGAO = ELEMS( 7  )
-      XMO    = ELEMS( 8  )
+      xincl  = elems( 4  )
+      xnodeo = elems( 5  )
+      eo     = elems( 6  )
+      omegao = elems( 7  )
+      xmo    = elems( 8  )
 
 !
 !     Calculate intermediate values
 !
-      EQSQ   = EO**2
-      BSQ    = ONE - EQSQ
-      RTEQSQ = DSQRT( BSQ   )
-      SINIQ  = DSIN( XINCL  )
-      COSIQ  = DCOS( XINCL  )
-      COSQ2  = COSIQ**2
-      SINOMO = DSIN( OMEGAO )
-      COSOMO = DCOS( OMEGAO )
+      eqsq   = eo**2
+      bsq    = one - eqsq
+      rteqsq = dsqrt( bsq   )
+      siniq  = dsin( xincl  )
+      cosiq  = dcos( xincl  )
+      cosq2  = cosiq**2
+      sinomo = dsin( omegao )
+      cosomo = dcos( omegao )
 
 
 !
@@ -795,13 +795,13 @@
 !     from the ELEMS array and place it in the first entry of a working
 !     array.
 !
-      ET = ELEMS( 10 )
+      et = elems( 10 )
 
 !
 !     Convert the ET seconds past the J2000 epoch to the Julian
 !     date TDB.
 !
-      JDTDB = J2000() + ET/SPD()
+      jdtdb = j2000() + et/spd()
 
 !
 !     How many days since the 1950 reference? Using SPICE standard
@@ -810,8 +810,8 @@
 !     epoch.  We call this JDTDB epoch ---JDUT50. Then we get the days
 !     since 1950 by simple arithmetic.
 !
-      JDUT50 = J1950() - ONE    + (32.184D0/SPD())
-      DS50   = JDTDB   - JDUT50
+      jdut50 = j1950() - one    + (32.184d0/spd())
+      ds50   = jdtdb   - jdut50
 
 !
 !     What is the Earth's right ascension of the epoch?  We know the
@@ -820,86 +820,86 @@
 !     2*PI to get the right ascension for the epoch.  This technique may
 !     not be the best way to get this value.
 !
-      THETA  = 1.72944494D0 + 6.3003880987D0 * DS50
-      THGR   = DMOD( THETA, PIX2 )
+      theta  = 1.72944494d0 + 6.3003880987d0 * ds50
+      thgr   = dmod( theta, pix2 )
 
 
 !
 !     THGR should have a domain between 0 and 2 Pi.
 !
-      IF ( THGR .LT. ZERO ) THEN
-         THGR = THGR + PIX2
-      END IF
+      if ( thgr .lt. zero ) then
+         thgr = thgr + pix2
+      end if
 
 !
 !     Set some operation variables.
 !
-      EQ     = EO
-      XNQ    = XNODP
-      AQNV   = ONE/AO
-      XQNCL  = XINCL
-      XMAO   = XMO
-      SINQ   = DSIN( XNODEO )
-      COSQ   = DCOS( XNODEO )
+      eq     = eo
+      xnq    = xnodp
+      aqnv   = one/ao
+      xqncl  = xincl
+      xmao   = xmo
+      sinq   = dsin( xnodeo )
+      cosq   = dcos( xnodeo )
 
 
 !
 !     Initialize lunar solar terms
 !
 
-      DAY = DS50 + 18261.5D0
+      day = ds50 + 18261.5d0
 
 
-      IF ( DAY .NE. PREEP ) THEN
+      if ( day .ne. preep ) then
 
-         PREEP  = DAY
-         XNODCE = 4.5236020D0  -  9.2422029D-04 * DAY
-         STEM   = DSIN( XNODCE )
-         CTEM   = DCOS( XNODCE )
-         ZCOSIL = 0.91375164D0 - .03568096D0*CTEM
-         ZSINIL = DSQRT ( ONE - ZCOSIL**2 )
-         ZSINHL = 0.089683511D0 * STEM / ZSINIL
-         ZCOSHL = DSQRT ( ONE - ZSINHL**2 )
-         C      = 4.7199672D0 + .22997150D0 * DAY
-         GAM    = 5.8351514D0 + .0019443680D0 * DAY
-         ZMOL   = DMOD( (C - GAM), PIX2 )
+         preep  = day
+         xnodce = 4.5236020d0  -  9.2422029d-04 * day
+         stem   = dsin( xnodce )
+         ctem   = dcos( xnodce )
+         zcosil = 0.91375164d0 - .03568096d0*ctem
+         zsinil = dsqrt ( one - zcosil**2 )
+         zsinhl = 0.089683511d0 * stem / zsinil
+         zcoshl = dsqrt ( one - zsinhl**2 )
+         c      = 4.7199672d0 + .22997150d0 * day
+         gam    = 5.8351514d0 + .0019443680d0 * day
+         zmol   = dmod( (c - gam), pix2 )
 
-         IF ( ZMOL .LT. ZERO ) THEN
-            ZMOL = ZMOL + PIX2
-         END IF
+         if ( zmol .lt. zero ) then
+            zmol = zmol + pix2
+         end if
 
-         ZX = .39785416D0 * STEM/ZSINIL
-         ZY = ZCOSHL*CTEM + 0.91744867D0 * ZSINHL*STEM
+         zx = .39785416d0 * stem/zsinil
+         zy = zcoshl*ctem + 0.91744867d0 * zsinhl*stem
 
 !
 !        Compute the angle from the x-axis of the point
 !
-         IF (      ZX .NE. ZERO &
-              .OR. ZY .NE. ZERO ) THEN
+         if (      zx .ne. zero &
+              .or. zy .ne. zero ) then
 
-            ZX = DATAN2 ( ZX, ZY)
+            zx = datan2 ( zx, zy)
 
-            IF ( ZX .LT. ZERO ) THEN
-               ZX = ZX + PIX2
-            END IF
+            if ( zx .lt. zero ) then
+               zx = zx + pix2
+            end if
 
-         ELSE
+         else
 
-            ZX = ZERO
+            zx = zero
 
-         END IF
+         end if
 
-         ZX     = GAM + ZX - XNODCE
-         ZCOSGL = DCOS( ZX )
-         ZSINGL = DSIN( ZX )
-         ZMOS   = 6.2565837D0 + .017201977D0 * DAY
-         ZMOS   = DMOD( ZMOS, PIX2 )
+         zx     = gam + zx - xnodce
+         zcosgl = dcos( zx )
+         zsingl = dsin( zx )
+         zmos   = 6.2565837d0 + .017201977d0 * day
+         zmos   = dmod( zmos, pix2 )
 
-         IF ( ZMOS .LT. ZERO ) THEN
-            ZMOS = ZMOS + PIX2
-         END IF
+         if ( zmos .lt. zero ) then
+            zmos = zmos + pix2
+         end if
 
-      END IF
+      end if
 
 
 
@@ -907,351 +907,351 @@
 !     Do solar terms.  Start with the constant values.
 !
 
-      ZCOSG  = ZCOSGS
-      ZSING  = ZSINGS
-      ZCOSI  = ZCOSIS
-      ZSINI  = ZSINIS
-      ZCOSH  = COSQ
-      ZSINH  = SINQ
-      CC     = C1SS
-      ZN     = ZNS
-      ZE     = ZES
-      XNOI   = ONE/XNQ
+      zcosg  = zcosgs
+      zsing  = zsings
+      zcosi  = zcosis
+      zsini  = zsinis
+      zcosh  = cosq
+      zsinh  = sinq
+      cc     = c1ss
+      zn     = zns
+      ze     = zes
+      xnoi   = one/xnq
 
 !
 !     Initialize solar and lunar terms.  The procedure will
 !     first initialize just the solar, then the lunar, then
 !     reinitialize the solar with the added lunar effect.
 !
-      DO I = 1, 2
+      do i = 1, 2
 
 !
 !        Solar.
 !
-         A1  = ZCOSG*ZCOSH + ZSING*ZCOSI*ZSINH
-         A3  =-ZSING*ZCOSH + ZCOSG*ZCOSI*ZSINH
-         A7  =-ZCOSG*ZSINH + ZSING*ZCOSI*ZCOSH
-         A8  = ZSING*ZSINI
-         A9  = ZSING*ZSINH + ZCOSG*ZCOSI*ZCOSH
-         A10 = ZCOSG*ZSINI
-         A2  = COSIQ*A7 + SINIQ*A8
-         A4  = COSIQ*A9 + SINIQ*A10
-         A5  =-SINIQ*A7 + COSIQ*A8
-         A6  =-SINIQ*A9 + COSIQ*A10
+         a1  = zcosg*zcosh + zsing*zcosi*zsinh
+         a3  =-zsing*zcosh + zcosg*zcosi*zsinh
+         a7  =-zcosg*zsinh + zsing*zcosi*zcosh
+         a8  = zsing*zsini
+         a9  = zsing*zsinh + zcosg*zcosi*zcosh
+         a10 = zcosg*zsini
+         a2  = cosiq*a7 + siniq*a8
+         a4  = cosiq*a9 + siniq*a10
+         a5  =-siniq*a7 + cosiq*a8
+         a6  =-siniq*a9 + cosiq*a10
 
-         X1  = A1*COSOMO + A2*SINOMO
-         X2  = A3*COSOMO + A4*SINOMO
-         X3  =-A1*SINOMO + A2*COSOMO
-         X4  =-A3*SINOMO + A4*COSOMO
-         X5  = A5*SINOMO
-         X6  = A6*SINOMO
-         X7  = A5*COSOMO
-         X8  = A6*COSOMO
+         x1  = a1*cosomo + a2*sinomo
+         x2  = a3*cosomo + a4*sinomo
+         x3  =-a1*sinomo + a2*cosomo
+         x4  =-a3*sinomo + a4*cosomo
+         x5  = a5*sinomo
+         x6  = a6*sinomo
+         x7  = a5*cosomo
+         x8  = a6*cosomo
 
-         Z31 = 12.D0*X1**2 - 3.D0*X3**2
-         Z32 = 24.D0*X1*X2 - 6.D0*X3*X4
-         Z33 = 12.D0*X2**2 - 3.D0*X4**2
+         z31 = 12.d0*x1**2 - 3.d0*x3**2
+         z32 = 24.d0*x1*x2 - 6.d0*x3*x4
+         z33 = 12.d0*x2**2 - 3.d0*x4**2
 
-         Z1  = 3.D0*(A1**2 + A2**2) + Z31*EQSQ
-         Z2  = 6.D0*(A1*A3 + A2*A4) + Z32*EQSQ
-         Z3  = 3.D0*(A3**2 + A4**2) + Z33*EQSQ
+         z1  = 3.d0*(a1**2 + a2**2) + z31*eqsq
+         z2  = 6.d0*(a1*a3 + a2*a4) + z32*eqsq
+         z3  = 3.d0*(a3**2 + a4**2) + z33*eqsq
 
-         Z11 =-6.D0*A1*A5 + EQSQ*(-24.D0*X1*X7 - 6.D0*X3*X5)
-         Z12 =-6.D0*(A1*A6 + A3*A5) + EQSQ* &
-               ( -24.D0*(X2*X7 + X1*X8) - 6.D0*(X3*X6 + X4*X5))
-         Z13 =-6.D0*A3*A6+EQSQ *(-24.D0*X2*X8-6.D0*X4*X6)
-         Z21 = 6.D0*A2*A5+EQSQ *(24.D0*X1*X5-6.D0*X3*X7)
-         Z22 = 6.D0*(A4*A5+A2*A6)+EQSQ *(24.D0*(X2*X5+X1*X6) - &
-               6.D0*(X4*X7+X3*X8))
-         Z23 = 6.D0*A4*A6 + EQSQ* &
-               ( 24.D0*X2*X6 - 6.D0*X4*X8 )
+         z11 =-6.d0*a1*a5 + eqsq*(-24.d0*x1*x7 - 6.d0*x3*x5)
+         z12 =-6.d0*(a1*a6 + a3*a5) + eqsq* &
+               ( -24.d0*(x2*x7 + x1*x8) - 6.d0*(x3*x6 + x4*x5))
+         z13 =-6.d0*a3*a6+eqsq *(-24.d0*x2*x8-6.d0*x4*x6)
+         z21 = 6.d0*a2*a5+eqsq *(24.d0*x1*x5-6.d0*x3*x7)
+         z22 = 6.d0*(a4*a5+a2*a6)+eqsq *(24.d0*(x2*x5+x1*x6) - &
+               6.d0*(x4*x7+x3*x8))
+         z23 = 6.d0*a4*a6 + eqsq* &
+               ( 24.d0*x2*x6 - 6.d0*x4*x8 )
 
-         Z1  = Z1 + Z1 + BSQ*Z31
-         Z2  = Z2 + Z2 + BSQ*Z32
-         Z3  = Z3 + Z3 + BSQ*Z33
+         z1  = z1 + z1 + bsq*z31
+         z2  = z2 + z2 + bsq*z32
+         z3  = z3 + z3 + bsq*z33
 
-         S3  = CC * XNOI
-         S2  =-0.5D0 * S3/RTEQSQ
-         S4  = S3 * RTEQSQ
-         S1  =-15.D0 * EQ * S4
-         S5  = X1*X3 + X2*X4
-         S6  = X2*X3 + X1*X4
-         S7  = X2*X4 - X1*X3
+         s3  = cc * xnoi
+         s2  =-0.5d0 * s3/rteqsq
+         s4  = s3 * rteqsq
+         s1  =-15.d0 * eq * s4
+         s5  = x1*x3 + x2*x4
+         s6  = x2*x3 + x1*x4
+         s7  = x2*x4 - x1*x3
 
-         SE  = S1 * ZN * S5
-         SI  = S2 * ZN * ( Z11 + Z13 )
-         SL  =-ZN * S3 * ( Z1  + Z3 - 14.D0 - 6.D0*EQSQ )
-         SGH = S4 * ZN * ( Z31 + Z33 - 6.D0 )
-         SH  =-ZN * S2 * ( Z21 + Z23 )
+         se  = s1 * zn * s5
+         si  = s2 * zn * ( z11 + z13 )
+         sl  =-zn * s3 * ( z1  + z3 - 14.d0 - 6.d0*eqsq )
+         sgh = s4 * zn * ( z31 + z33 - 6.d0 )
+         sh  =-zn * s2 * ( z21 + z23 )
 
 !
 !        Check for, and adjust SH, at inclinations near 0 and 180 degs.
 !
-         IF ( (XQNCL .LT. 5.2359877D-2)        .OR. &
-              (XQNCL .GT. PI()-5.2359877D-2) ) THEN
-            SH = ZERO
-         END IF
+         if ( (xqncl .lt. 5.2359877d-2)        .or. &
+              (xqncl .gt. pi()-5.2359877d-2) ) then
+            sh = zero
+         end if
 
 !
 !        Secondary check, J.I.C.
 !
-         IF ( SINIQ .EQ. 0.D0 ) THEN
-            SH = ZERO
-         END IF
+         if ( siniq .eq. 0.d0 ) then
+            sh = zero
+         end if
 
-         EE2  =  2.D0 * S1 * S6
-         E3   =  2.D0 * S1 * S7
-         XI2  =  2.D0 * S2 * Z12
-         XI3  =  2.D0 * S2 *(Z13-Z11)
-         XL2  = -2.D0 * S3 * Z2
-         XL3  = -2.D0 * S3 *(Z3-Z1)
-         XL4  = -2.D0 * S3 * (-21.D0-9.D0*EQSQ)*ZE
-         XGH2 =  2.D0 * S4 * Z32
-         XGH3 =  2.D0 * S4 *(Z33-Z31)
-         XGH4 =-18.D0 * S4 * ZE
-         XH2  = -2.D0 * S2 * Z22
-         XH3  = -2.D0 * S2 *(Z23-Z21)
+         ee2  =  2.d0 * s1 * s6
+         e3   =  2.d0 * s1 * s7
+         xi2  =  2.d0 * s2 * z12
+         xi3  =  2.d0 * s2 *(z13-z11)
+         xl2  = -2.d0 * s3 * z2
+         xl3  = -2.d0 * s3 *(z3-z1)
+         xl4  = -2.d0 * s3 * (-21.d0-9.d0*eqsq)*ze
+         xgh2 =  2.d0 * s4 * z32
+         xgh3 =  2.d0 * s4 *(z33-z31)
+         xgh4 =-18.d0 * s4 * ze
+         xh2  = -2.d0 * s2 * z22
+         xh3  = -2.d0 * s2 *(z23-z21)
 
-         IF ( I .EQ. LUNAR ) THEN
+         if ( i .eq. lunar ) then
 
 !
 !           Do lunar terms after solar terms, but only once.
 !
-            SSX(1)   = SL
+            ssx(1)   = sl
 
 !
 !            Prevent evaluation of 1/SINIQ for SH = 0.
 !
-            IF ( SH .EQ. 0.D0 ) SSX(3) = 0.D0
-            IF ( SH .NE. 0.D0 ) SSX(3) = SH/SINIQ
+            if ( sh .eq. 0.d0 ) ssx(3) = 0.d0
+            if ( sh .ne. 0.d0 ) ssx(3) = sh/siniq
 
-            SSX(2)   = SGH  -  COSIQ * SSX(3)
-            SSX(4)   = SE
-            SSX(5)   = SI
-            SE2      = EE2
-            SI2      = XI2
-            SL2      = XL2
+            ssx(2)   = sgh  -  cosiq * ssx(3)
+            ssx(4)   = se
+            ssx(5)   = si
+            se2      = ee2
+            si2      = xi2
+            sl2      = xl2
 
-            SGH2     = XGH2
-            SH2      = XH2
-            SE3      = E3
-            SI3      = XI3
-            SL3      = XL3
+            sgh2     = xgh2
+            sh2      = xh2
+            se3      = e3
+            si3      = xi3
+            sl3      = xl3
 
-            SGH3     = XGH3
-            SH3      = XH3
-            SL4      = XL4
-            SGH4     = XGH4
+            sgh3     = xgh3
+            sh3      = xh3
+            sl4      = xl4
+            sgh4     = xgh4
 
-            ZCOSG    = ZCOSGL
-            ZSING    = ZSINGL
-            ZCOSI    = ZCOSIL
-            ZSINI    = ZSINIL
-            ZCOSH    = ZCOSHL * COSQ    +  ZSINHL * SINQ
-            ZSINH    = SINQ   * ZCOSHL  -  COSQ   * ZSINHL
+            zcosg    = zcosgl
+            zsing    = zsingl
+            zcosi    = zcosil
+            zsini    = zsinil
+            zcosh    = zcoshl * cosq    +  zsinhl * sinq
+            zsinh    = sinq   * zcoshl  -  cosq   * zsinhl
 
-            ZN       = ZNL
-            CC       = C1L
-            ZE       = ZEL
+            zn       = znl
+            cc       = c1l
+            ze       = zel
 
-         END IF
-
-
-      END DO
+         end if
 
 
-      SSX(1) = SSX(1) + SL
+      end do
+
+
+      ssx(1) = ssx(1) + sl
 
 !
 !      Prevent evaluation of 1/SINIQ for SH = 0.
 !
-      IF ( SH .EQ. 0.D0 ) SSX(2) = SSX(2) + SGH
-      IF ( SH .NE. 0.D0 ) SSX(2) = SSX(2) + SGH - COSIQ/SINIQ * SH
+      if ( sh .eq. 0.d0 ) ssx(2) = ssx(2) + sgh
+      if ( sh .ne. 0.d0 ) ssx(2) = ssx(2) + sgh - cosiq/siniq * sh
 
-      IF ( SH .EQ. 0.D0 ) SSX(3) = SSX(3)
-      IF ( SH .NE. 0.D0 ) SSX(3) = SSX(3) + SH/SINIQ
+      if ( sh .eq. 0.d0 ) ssx(3) = ssx(3)
+      if ( sh .ne. 0.d0 ) ssx(3) = ssx(3) + sh/siniq
 
-      SSX(4) = SSX(4) + SE
-      SSX(5) = SSX(5) + SI
+      ssx(4) = ssx(4) + se
+      ssx(5) = ssx(5) + si
 
 !
 !     Geopotential resonance initialization for 12 hour orbits
 !
 
-      IRESFL = 0
-      ISYNFL = 0
+      iresfl = 0
+      isynfl = 0
 
-      IF( XNQ .LT. (.0052359877D0) .AND. &
-          XNQ .GT. (.0034906585D0)       ) THEN
+      if( xnq .lt. (.0052359877d0) .and. &
+          xnq .gt. (.0034906585d0)       ) then
 
 !
 !        Synchronous resonance terms initialization
 !
 
-         IRESFL = 1
-         ISYNFL = 1
-         G200   = ONE + EQSQ*(-2.5D0 +.8125D0 * EQSQ)
-         G310   = ONE + 2.D0*EQSQ
-         G300   = ONE + EQSQ*(-6.0D0 + 6.60937D0 * EQSQ)
-         F220   = 0.75D0 * (ONE + COSIQ)**2
-         F311   =.9375D0 * SINIQ*SINIQ*(ONE + 3.D0*COSIQ) - &
-                  0.75D0*(ONE + COSIQ)
-         F330   = 1.875D0 * ( ONE + COSIQ )**3
-         DEL(1) = 3.D0*(XNQ**2)*(AQNV**2)
-         DEL(2) = 2.D0*DEL(1)*F220*G200*Q22
-         DEL(3) = 3.D0*DEL(1)*F330*G300*Q33*AQNV
-         DEL(1) =      DEL(1)*F311*G310*Q31*AQNV
-         XLAMO  = XMAO   + XNODEO + OMEGAO - THGR
-         BFACT  = XLLDOT + OMGDOT + XNODOT - THDT
-         BFACT  = BFACT  + SSX(1) + SSX(2) + SSX(3)
+         iresfl = 1
+         isynfl = 1
+         g200   = one + eqsq*(-2.5d0 +.8125d0 * eqsq)
+         g310   = one + 2.d0*eqsq
+         g300   = one + eqsq*(-6.0d0 + 6.60937d0 * eqsq)
+         f220   = 0.75d0 * (one + cosiq)**2
+         f311   =.9375d0 * siniq*siniq*(one + 3.d0*cosiq) - &
+                  0.75d0*(one + cosiq)
+         f330   = 1.875d0 * ( one + cosiq )**3
+         del(1) = 3.d0*(xnq**2)*(aqnv**2)
+         del(2) = 2.d0*del(1)*f220*g200*q22
+         del(3) = 3.d0*del(1)*f330*g300*q33*aqnv
+         del(1) =      del(1)*f311*g310*q31*aqnv
+         xlamo  = xmao   + xnodeo + omegao - thgr
+         bfact  = xlldot + omgdot + xnodot - thdt
+         bfact  = bfact  + ssx(1) + ssx(2) + ssx(3)
 
-      ELSE
+      else
 
-         IF ( XNQ .LT.(8.26D-3) .OR. &
-              XNQ .GT.(9.24D-3) .OR. &
-              EQ  .LT. 0.5D0        ) THEN
+         if ( xnq .lt.(8.26d-3) .or. &
+              xnq .gt.(9.24d-3) .or. &
+              eq  .lt. 0.5d0        ) then
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 
-         IRESFL = 1
-         EOC    = EQ*EQSQ
-         G201   = -.306D0 - ( EQ - .64D0 )*0.440D0
+         iresfl = 1
+         eoc    = eq*eqsq
+         g201   = -.306d0 - ( eq - .64d0 )*0.440d0
 
 !
 !     Looks icky doesn't it?
 !
 
-         IF( EQ.GT. (.65D0) ) THEN
+         if( eq.gt. (.65d0) ) then
 
-            G211 =-72.099D0  + 331.819D0 * EQ - 508.738D0 * EQSQ + &
-                   266.724D0 * EOC
-            G310 =-346.844D0 + 1582.851D0 * EQ - 2415.925D0 * EQSQ + &
-                   1246.113D0 * EOC
-            G322 =-342.585D0 + 1554.908D0 * EQ - 2366.899D0 * EQSQ + &
-                   1215.972D0 * EOC
-            G410 =-1052.797D0 + 4758.686D0 * EQ - 7193.992D0 * EQSQ + &
-                   3651.957D0 * EOC
-            G422 =-3581.69D0 + 16178.11D0 * EQ - 24462.77D0 * EQSQ + &
-                   12422.52D0 * EOC
+            g211 =-72.099d0  + 331.819d0 * eq - 508.738d0 * eqsq + &
+                   266.724d0 * eoc
+            g310 =-346.844d0 + 1582.851d0 * eq - 2415.925d0 * eqsq + &
+                   1246.113d0 * eoc
+            g322 =-342.585d0 + 1554.908d0 * eq - 2366.899d0 * eqsq + &
+                   1215.972d0 * eoc
+            g410 =-1052.797d0 + 4758.686d0 * eq - 7193.992d0 * eqsq + &
+                   3651.957d0 * eoc
+            g422 =-3581.69d0 + 16178.11d0 * eq - 24462.77d0 * eqsq + &
+                   12422.52d0 * eoc
 
 !
 !           Decide on the G520 coefficient.
 !
-            IF ( EQ .GT. (.715D0) ) THEN
+            if ( eq .gt. (.715d0) ) then
 
-               G520 = -5149.66D0 + 29936.92D0 * EQ - &
-                      54087.36D0 * EQSQ + 31324.56D0 * EOC
+               g520 = -5149.66d0 + 29936.92d0 * eq - &
+                      54087.36d0 * eqsq + 31324.56d0 * eoc
 
-            ELSE
+            else
 
-               G520 = 1464.74D0 - 4664.75D0 * EQ + 3763.64D0 * EQSQ
+               g520 = 1464.74d0 - 4664.75d0 * eq + 3763.64d0 * eqsq
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            G211 = 3.616D0 - 13.247D0*EQ + 16.290D0*EQSQ
-            G310 = -19.302D0 + 117.390D0*EQ - &
-                   228.419D0 * EQSQ + 156.591D0*EOC
-            G322 = -18.9068D0 + 109.7927D0*EQ - &
-                   214.6334D0 * EQSQ + 146.5816D0*EOC
-            G410 = -41.122D0 + 242.694D0*EQ - 471.094D0*EQSQ + &
-                   313.953D0 * EOC
-            G422 = -146.407D0 + 841.880D0*EQ - 1629.014D0*EQSQ + &
-                   1083.435D0 * EOC
-            G520 = -532.114D0 + 3017.977D0*EQ - 5740.D0*EQSQ + &
-                   3708.276D0 * EOC
+            g211 = 3.616d0 - 13.247d0*eq + 16.290d0*eqsq
+            g310 = -19.302d0 + 117.390d0*eq - &
+                   228.419d0 * eqsq + 156.591d0*eoc
+            g322 = -18.9068d0 + 109.7927d0*eq - &
+                   214.6334d0 * eqsq + 146.5816d0*eoc
+            g410 = -41.122d0 + 242.694d0*eq - 471.094d0*eqsq + &
+                   313.953d0 * eoc
+            g422 = -146.407d0 + 841.880d0*eq - 1629.014d0*eqsq + &
+                   1083.435d0 * eoc
+            g520 = -532.114d0 + 3017.977d0*eq - 5740.d0*eqsq + &
+                   3708.276d0 * eoc
 
-         END IF
-
-
-         IF( EQ .GE.(.7D0) ) THEN
-
-            G533  = -37995.78D0 + 161616.52D0*EQ - &
-                    229838.2D0*EQSQ + 109377.94D0*EOC
-            G521  = -51752.104D0 + 218913.95D0*EQ - &
-                    309468.16D0*EQSQ + 146349.42D0*EOC
-            G532  = -40023.88D0 + 170470.89D0*EQ - &
-                    242699.48D0*EQSQ + 115605.82D0*EOC
-
-         ELSE
-
-            G533  = -919.2277D0 + 4988.61D0*EQ - &
-                    9064.77D0*EQSQ + 5542.21D0*EOC
-            G521  = -822.71072D0 + 4568.6173D0*EQ - &
-                    8491.4146D0*EQSQ + 5337.524D0*EOC
-            G532  = -853.666D0 + 4690.25D0*EQ - &
-                    8624.77D0*EQSQ + 5341.4D0*EOC
-
-         END IF
+         end if
 
 
-         SINI2    = SINIQ*SINIQ
+         if( eq .ge.(.7d0) ) then
 
-         F220     = .75D0 * (ONE + 2.D0*COSIQ + COSQ2)
-         F221     = 1.5D0*SINI2
-         F321     = 1.875D0 * SINIQ * (ONE-2.D0*COSIQ-3.D0*COSQ2)
-         F322     =-1.875D0 * SINIQ * (ONE+2.D0*COSIQ-3.D0*COSQ2)
-         F441     = 35.D0 * SINI2 * F220
-         F442     = 39.3750D0 * SINI2 * SINI2
+            g533  = -37995.78d0 + 161616.52d0*eq - &
+                    229838.2d0*eqsq + 109377.94d0*eoc
+            g521  = -51752.104d0 + 218913.95d0*eq - &
+                    309468.16d0*eqsq + 146349.42d0*eoc
+            g532  = -40023.88d0 + 170470.89d0*eq - &
+                    242699.48d0*eqsq + 115605.82d0*eoc
 
-         F522     = 9.84375D0 * SINIQ * (SINI2 * &
-                    (ONE - 2.D0*COSIQ-5.D0*COSQ2) &
-                    +.33333333D0 * (-2.D0 + 4.D0 * COSIQ + &
-                    6.D0 *COSQ2))
+         else
 
-         F523     = SINIQ * (4.92187512D0 * SINI2 * &
-                    ( -2.D0 - 4.D0 * COSIQ + 10.D0 * COSQ2 ) &
-                    + 6.56250012D0 * ( ONE + 2.D0 * COSIQ - &
-                    3.D0 * COSQ2 ) )
+            g533  = -919.2277d0 + 4988.61d0*eq - &
+                    9064.77d0*eqsq + 5542.21d0*eoc
+            g521  = -822.71072d0 + 4568.6173d0*eq - &
+                    8491.4146d0*eqsq + 5337.524d0*eoc
+            g532  = -853.666d0 + 4690.25d0*eq - &
+                    8624.77d0*eqsq + 5341.4d0*eoc
 
-         F542     = 29.53125D0 * SINIQ * (2.D0 - 8.D0 * COSIQ + &
-                    COSQ2 * ( -12.D0+8.D0*COSIQ + 10.D0 * COSQ2 ) )
+         end if
 
-         F543     = 29.53125D0 * SINIQ * (-2.D0 - 8.D0 * COSIQ + &
-                    COSQ2 * (12.D0 + 8.D0*COSIQ - 10.D0*COSQ2 ) )
 
-         XNO2     = XNQ   * XNQ
-         AINV2    = AQNV  * AQNV
-         TEMP1    = 3.D0  * XNO2 * AINV2
-         TEMP     = TEMP1 * ROOT22
-         DG( 1  ) = TEMP  * F220 * G201
-         DG( 2  ) = TEMP  * F221 * G211
-         TEMP1    = TEMP1 * AQNV
-         TEMP     = TEMP1 * ROOT32
-         DG( 3  ) = TEMP  * F321 * G310
-         DG( 4  ) = TEMP  * F322 * G322
-         TEMP1    = TEMP1 * AQNV
-         TEMP     = 2.D0  * TEMP1 * ROOT44
-         DG( 5  ) = TEMP  * F441 * G410
-         DG( 6  ) = TEMP  * F442 * G422
-         TEMP1    = TEMP1 * AQNV
-         TEMP     = TEMP1 * ROOT52
-         DG( 7  ) = TEMP  * F522  * G520
-         DG( 8  ) = TEMP  * F523  * G532
-         TEMP     = 2.D0  * TEMP1 * ROOT54
-         DG( 9  ) = TEMP  * F542  * G521
-         DG( 10 ) = TEMP  * F543  * G533
+         sini2    = siniq*siniq
 
-         XLAMO    = XMAO   + XNODEO + XNODEO - THGR - THGR
-         BFACT    = XLLDOT + XNODOT + XNODOT - THDT - THDT
-         BFACT    = BFACT  + SSX(1)    + SSX(3)    + SSX(3)
+         f220     = .75d0 * (one + 2.d0*cosiq + cosq2)
+         f221     = 1.5d0*sini2
+         f321     = 1.875d0 * siniq * (one-2.d0*cosiq-3.d0*cosq2)
+         f322     =-1.875d0 * siniq * (one+2.d0*cosiq-3.d0*cosq2)
+         f441     = 35.d0 * sini2 * f220
+         f442     = 39.3750d0 * sini2 * sini2
 
-      END IF
+         f522     = 9.84375d0 * siniq * (sini2 * &
+                    (one - 2.d0*cosiq-5.d0*cosq2) &
+                    +.33333333d0 * (-2.d0 + 4.d0 * cosiq + &
+                    6.d0 *cosq2))
 
-      XFACT = BFACT - XNQ
+         f523     = siniq * (4.92187512d0 * sini2 * &
+                    ( -2.d0 - 4.d0 * cosiq + 10.d0 * cosq2 ) &
+                    + 6.56250012d0 * ( one + 2.d0 * cosiq - &
+                    3.d0 * cosq2 ) )
+
+         f542     = 29.53125d0 * siniq * (2.d0 - 8.d0 * cosiq + &
+                    cosq2 * ( -12.d0+8.d0*cosiq + 10.d0 * cosq2 ) )
+
+         f543     = 29.53125d0 * siniq * (-2.d0 - 8.d0 * cosiq + &
+                    cosq2 * (12.d0 + 8.d0*cosiq - 10.d0*cosq2 ) )
+
+         xno2     = xnq   * xnq
+         ainv2    = aqnv  * aqnv
+         temp1    = 3.d0  * xno2 * ainv2
+         temp     = temp1 * root22
+         dg( 1  ) = temp  * f220 * g201
+         dg( 2  ) = temp  * f221 * g211
+         temp1    = temp1 * aqnv
+         temp     = temp1 * root32
+         dg( 3  ) = temp  * f321 * g310
+         dg( 4  ) = temp  * f322 * g322
+         temp1    = temp1 * aqnv
+         temp     = 2.d0  * temp1 * root44
+         dg( 5  ) = temp  * f441 * g410
+         dg( 6  ) = temp  * f442 * g422
+         temp1    = temp1 * aqnv
+         temp     = temp1 * root52
+         dg( 7  ) = temp  * f522  * g520
+         dg( 8  ) = temp  * f523  * g532
+         temp     = 2.d0  * temp1 * root54
+         dg( 9  ) = temp  * f542  * g521
+         dg( 10 ) = temp  * f543  * g533
+
+         xlamo    = xmao   + xnodeo + xnodeo - thgr - thgr
+         bfact    = xlldot + xnodot + xnodot - thdt - thdt
+         bfact    = bfact  + ssx(1)    + ssx(3)    + ssx(3)
+
+      end if
+
+      xfact = bfact - xnq
 
 !
 !     Initialize integrator
 !
-      XLI   = XLAMO
-      XNI   = XNQ
-      ATIME = ZERO
+      xli   = xlamo
+      xni   = xnq
+      atime = zero
 
-      RETURN
+      return
 
 
 
@@ -1259,8 +1259,8 @@
 
 !$Procedure ZZDPSEC (Calculate secular perturbations )
 
-      ENTRY ZZDPSEC( XLL , OMGASM, XNODES, EM, XINC, XN, T, ELEMS, &
-                     OMGDOT )
+      entry zzdpsec( xll , omgasm, xnodes, em, xinc, xn, t, elems, &
+                     omgdot )
 
 ! $ Abstract
 !
@@ -1425,105 +1425,105 @@
 !
 !-&
 
-      STEPP  = 720.D0
-      STEPN  =-720.D0
+      stepp  = 720.d0
+      stepn  =-720.d0
 
-      XINCL  = ELEMS( 4 )
-      EO     = ELEMS( 6 )
-      XLL    = XLL     +  SSX(1) * T
-      OMGASM = OMGASM  +  SSX(2) * T
-      XNODES = XNODES  +  SSX(3) * T
-      EM     = EO      +  SSX(4) * T
-      XINC   = XINCL   +  SSX(5) * T
+      xincl  = elems( 4 )
+      eo     = elems( 6 )
+      xll    = xll     +  ssx(1) * t
+      omgasm = omgasm  +  ssx(2) * t
+      xnodes = xnodes  +  ssx(3) * t
+      em     = eo      +  ssx(4) * t
+      xinc   = xincl   +  ssx(5) * t
 
 
 !
 !     Check for the state of the resonance flag.
 !
-      IF( IRESFL .EQ. 0) THEN
-         RETURN
-      END IF
+      if( iresfl .eq. 0) then
+         return
+      end if
 
 
 !
 !     If we got down here then the resonance effects need to be
 !     calculated.  Continue to loop until the CONT flag is set to false.
 !
-      CONT = .TRUE.
+      cont = .true.
 
-      DO WHILE( CONT )
+      do while( cont )
 
-         IF ( ( ATIME .EQ. ZERO )                   .OR. &
-              ( T .GE. ZERO .AND. ATIME .LT. ZERO ) .OR. &
-              ( T .LT. ZERO .AND. ATIME .GE. ZERO )     ) THEN
+         if ( ( atime .eq. zero )                   .or. &
+              ( t .ge. zero .and. atime .lt. zero ) .or. &
+              ( t .lt. zero .and. atime .ge. zero )     ) then
 
 !
 !           Epoch restart
 !
-            IF ( T .GE. ZERO )  THEN
-               DELT = STEPP
-            ELSE
-               DELT = STEPN
-            END IF
+            if ( t .ge. zero )  then
+               delt = stepp
+            else
+               delt = stepn
+            end if
 
 
-            ATIME = ZERO
-            XNI   = XNQ
-            XLI   = XLAMO
+            atime = zero
+            xni   = xnq
+            xli   = xlamo
 
-            CONT = .FALSE.
-
-
-         ELSE IF ( DABS( T ).GE. DABS(ATIME) ) THEN
-
-            DELT = STEPN
-
-            IF ( T .GT. ZERO ) THEN
-               DELT = STEPP
-            END IF
-
-            CONT = .FALSE.
+            cont = .false.
 
 
-         ELSE
+         else if ( dabs( t ).ge. dabs(atime) ) then
 
-            DELT = STEPP
+            delt = stepn
 
-            IF ( T .GE. ZERO ) THEN
-               DELT = STEPN
-            END IF
+            if ( t .gt. zero ) then
+               delt = stepp
+            end if
+
+            cont = .false.
 
 
-            CALL ZZSECPRT ( ISYNFL, DG   , DEL   , XNI, &
-                            OMEGAO, ATIME, OMGDOT, XLI, &
-                            XFACT , XLDOT, XNDOT , XNDDT )
+         else
 
-            XLI   = XLI   +  XLDOT * DELT  +  XNDOT * STEP2
-            XNI   = XNI   +  XNDOT * DELT  +  XNDDT * STEP2
-            ATIME = ATIME +  DELT
+            delt = stepp
 
-            CONT = .TRUE.
+            if ( t .ge. zero ) then
+               delt = stepn
+            end if
 
-         END IF
 
-      END DO
+            call zzsecprt ( isynfl, dg   , del   , xni, &
+                            omegao, atime, omgdot, xli, &
+                            xfact , xldot, xndot , xnddt )
+
+            xli   = xli   +  xldot * delt  +  xndot * step2
+            xni   = xni   +  xndot * delt  +  xnddt * step2
+            atime = atime +  delt
+
+            cont = .true.
+
+         end if
+
+      end do
 
 
 !
 !     Do this loop while the time interval is greater than STEPP
 !
 
-      DO WHILE ( DABS( T - ATIME ).GE. STEPP )
+      do while ( dabs( t - atime ).ge. stepp )
 
-         CALL ZZSECPRT ( ISYNFL, DG   , DEL   , XNI, &
-                         OMEGAO, ATIME, OMGDOT, XLI, &
-                         XFACT , XLDOT, XNDOT , XNDDT )
+         call zzsecprt ( isynfl, dg   , del   , xni, &
+                         omegao, atime, omgdot, xli, &
+                         xfact , xldot, xndot , xnddt )
 
-         XLI   = XLI  +  XLDOT * DELT  +  XNDOT * STEP2
-         XNI   = XNI  +  XNDOT * DELT  +  XNDDT * STEP2
-         ATIME = ATIME + DELT
+         xli   = xli  +  xldot * delt  +  xndot * step2
+         xni   = xni  +  xndot * delt  +  xnddt * step2
+         atime = atime + delt
 
-      END DO
+      end do
 
 
 !
@@ -1531,24 +1531,24 @@
 !     perturbations
 !
 
-      FT = T - ATIME
+      ft = t - atime
 
-      CALL ZZSECPRT ( ISYNFL, DG   , DEL   , XNI, &
-                      OMEGAO, ATIME, OMGDOT, XLI, &
-                      XFACT , XLDOT, XNDOT , XNDDT )
+      call zzsecprt ( isynfl, dg   , del   , xni, &
+                      omegao, atime, omgdot, xli, &
+                      xfact , xldot, xndot , xnddt )
 
-      XN    = XNI    + XNDOT * FT + XNDDT * FT * FT * 0.5D0
-      XL    = XLI    + XLDOT * FT + XNDOT * FT * FT * 0.5D0
-      TEMP  =-XNODES + THGR       + T     * THDT
-      XLL   = XL     - OMGASM     + TEMP
-
-
-      IF ( ISYNFL .EQ. 0) THEN
-         XLL = XL + TEMP + TEMP
-      END IF
+      xn    = xni    + xndot * ft + xnddt * ft * ft * 0.5d0
+      xl    = xli    + xldot * ft + xndot * ft * ft * 0.5d0
+      temp  =-xnodes + thgr       + t     * thdt
+      xll   = xl     - omgasm     + temp
 
 
-      RETURN
+      if ( isynfl .eq. 0) then
+         xll = xl + temp + temp
+      end if
+
+
+      return
 
 
 
@@ -1556,7 +1556,7 @@
 
 !$Procedure ZZDPPER ( Calculate periodic perturbations )
 
-      ENTRY ZZDPPER( T, EM, XINC, OMGASM, XNODES, XLL)
+      entry zzdpper( t, em, xinc, omgasm, xnodes, xll)
 
 ! $ Abstract
 !
@@ -1711,53 +1711,53 @@
 !
 !     Update for solar perts at time T.
 !
-      ZM     = ZMOS + ZNS * T
-      ZF     = ZM   + 2.D0 * ZES * DSIN(ZM)
-      SINZF  = DSIN(ZF)
-      F2     = 0.5D0 * SINZF * SINZF - 0.25D0
-      F3     =-0.5D0*SINZF*DCOS( ZF )
-      SES    =  SE2*F2 +  SE3*F3
-      SIS    =  SI2*F2 +  SI3*F3
-      SLS    =  SL2*F2 +  SL3*F3 +  SL4*SINZF
-      SGHS   = SGH2*F2 + SGH3*F3 + SGH4*SINZF
-      SHS    =  SH2*F2 +  SH3*F3
+      zm     = zmos + zns * t
+      zf     = zm   + 2.d0 * zes * dsin(zm)
+      sinzf  = dsin(zf)
+      f2     = 0.5d0 * sinzf * sinzf - 0.25d0
+      f3     =-0.5d0*sinzf*dcos( zf )
+      ses    =  se2*f2 +  se3*f3
+      sis    =  si2*f2 +  si3*f3
+      sls    =  sl2*f2 +  sl3*f3 +  sl4*sinzf
+      sghs   = sgh2*f2 + sgh3*f3 + sgh4*sinzf
+      shs    =  sh2*f2 +  sh3*f3
 
 
 !
 !     Update for lunar perts at time T.
 !
-      ZM     = ZMOL + ZNL*T
-      ZF     = ZM + 2.D0*ZEL * DSIN(ZM)
-      SINZF  = DSIN( ZF )
-      F2     = 0.5D0*SINZF*SINZF - 0.25D0
-      F3     =-0.5D0*SINZF*DCOS(ZF)
-      SEL    =  EE2*F2 +   E3*F3
-      SIL    =  XI2*F2 +  XI3*F3
-      SLL    =  XL2*F2 +  XL3*F3 +  XL4*SINZF
-      SGHL   = XGH2*F2 + XGH3*F3 + XGH4*SINZF
-      SHL    =  XH2*F2 +  XH3*F3
+      zm     = zmol + znl*t
+      zf     = zm + 2.d0*zel * dsin(zm)
+      sinzf  = dsin( zf )
+      f2     = 0.5d0*sinzf*sinzf - 0.25d0
+      f3     =-0.5d0*sinzf*dcos(zf)
+      sel    =  ee2*f2 +   e3*f3
+      sil    =  xi2*f2 +  xi3*f3
+      sll    =  xl2*f2 +  xl3*f3 +  xl4*sinzf
+      sghl   = xgh2*f2 + xgh3*f3 + xgh4*sinzf
+      shl    =  xh2*f2 +  xh3*f3
 
 !
 !     Sum of solar and lunar perts
 !
-      PE     = SES + SEL
-      PINC   = SIS + SIL
-      PL     = SLS + SLL
-      PGH    = SGHS + SGHL
-      PH     = SHS  + SHL
+      pe     = ses + sel
+      pinc   = sis + sil
+      pl     = sls + sll
+      pgh    = sghs + sghl
+      ph     = shs  + shl
 
 
 !
 !     Subtract the epoch perturbations off the calculated values.
 !
-      PE     = PE   - PE0
-      PINC   = PINC - PINC0
-      PL     = PL   - PL0
-      PGH    = PGH  - PGH0
-      PH     = PH   - PH0
+      pe     = pe   - pe0
+      pinc   = pinc - pinc0
+      pl     = pl   - pl0
+      pgh    = pgh  - pgh0
+      ph     = ph   - ph0
 
-      XINC  = XINC + PINC
-      EM    = EM   + PE
+      xinc  = xinc + pinc
+      em    = em   + pe
 
 
 !
@@ -1765,60 +1765,60 @@
 !     Spacetrack 3 report calculated the values before the
 !     perturbation.
 !
-      SINIS = DSIN( XINC )
-      COSIS = DCOS( XINC )
+      sinis = dsin( xinc )
+      cosis = dcos( xinc )
 
 
-      IF ( XQNCL.GT. (.2D0) ) THEN
+      if ( xqncl.gt. (.2d0) ) then
 
-         PH     = PH/SINIQ
-         PGH    = PGH    - COSIQ * PH
-         OMGASM = OMGASM + PGH
-         XNODES = XNODES + PH
-         XLL    = XLL    + PL
+         ph     = ph/siniq
+         pgh    = pgh    - cosiq * ph
+         omgasm = omgasm + pgh
+         xnodes = xnodes + ph
+         xll    = xll    + pl
 
-      ELSE
+      else
 
 !
 !        Apply periodics with Lyddane modification
 !
-         SINOK = DSIN( XNODES )
-         COSOK = DCOS( XNODES )
-         ALFDP = SINIS * SINOK
-         BETDP = SINIS * COSOK
-         ALFDP = ALFDP + PH*COSOK + PINC*COSIS*SINOK
-         BETDP = BETDP - PH*SINOK + PINC*COSIS*COSOK
+         sinok = dsin( xnodes )
+         cosok = dcos( xnodes )
+         alfdp = sinis * sinok
+         betdp = sinis * cosok
+         alfdp = alfdp + ph*cosok + pinc*cosis*sinok
+         betdp = betdp - ph*sinok + pinc*cosis*cosok
 
 !
 !        Force a 0 - 2Pi domain on XNODES.
 !
-         IF ( XNODES .LT. ZERO ) THEN
-            XNODES = XNODES + PIX2
-         END IF
+         if ( xnodes .lt. zero ) then
+            xnodes = xnodes + pix2
+         end if
 
-         XLS = XLL + OMGASM + PL + PGH +  COSIS * XNODES &
-                                       -  SINIS * XNODES * PINC
+         xls = xll + omgasm + pl + pgh +  cosis * xnodes &
+                                       -  sinis * xnodes * pinc
 
 
 !
 !        Compute the angle from the x-axis of the point
 !
-         IF (      ALFDP .NE. ZERO &
-              .OR. BETDP .NE. ZERO ) THEN
+         if (      alfdp .ne. zero &
+              .or. betdp .ne. zero ) then
 
 !
 !           Save the old value of XNODES, then compute the current value
 !           From ALFDP and BETDP
 !
-            OXNODE = XNODES
-            XNODES = DATAN2( ALFDP, BETDP )
+            oxnode = xnodes
+            xnodes = datan2( alfdp, betdp )
 
 !
 !           Force a 0 - 2Pi domain on XNODES
 !
-            IF ( XNODES .LT. ZERO ) THEN
-               XNODES = XNODES + PIX2
-            END IF
+            if ( xnodes .lt. zero ) then
+               xnodes = xnodes + pix2
+            end if
 
 
 !
@@ -1828,26 +1828,26 @@
 !           calculate this term correctly if XNODES passes over the
 !           branch cut at 2*Pi.
 !
-            IF ( DABS( XNODES - OXNODE ).GT. PIX1 ) THEN
+            if ( dabs( xnodes - oxnode ).gt. pix1 ) then
 
-               IF ( XNODES.GT. OXNODE ) THEN
-                  XNODES = XNODES - PIX2
-               ELSE
-                  XNODES = XNODES + PIX2
-               END IF
+               if ( xnodes.gt. oxnode ) then
+                  xnodes = xnodes - pix2
+               else
+                  xnodes = xnodes + pix2
+               end if
 
-            END IF
+            end if
 
 
-         ELSE
-            XNODES = ZERO
+         else
+            xnodes = zero
 
-         END IF
+         end if
 
-         XLL    = XLL  +  PL
-         OMGASM = XLS  -  XLL  -  XNODES * DCOS( XINC )
+         xll    = xll  +  pl
+         omgasm = xls  -  xll  -  xnodes * dcos( xinc )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

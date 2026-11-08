@@ -1,6 +1,6 @@
 !$Procedure STCC01 ( STAR catalog type 1, check whether type 1 )
 
-      SUBROUTINE STCC01 ( CATFNM, TABNAM, ISTYP1, ERRMSG )
+      subroutine stcc01 ( catfnm, tabnam, istyp1, errmsg )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ekglimit.inc'
+      include 'ekcnamsz.inc'
+      include 'ektnamsz.inc'
+      include 'ekglimit.inc'
 
-      CHARACTER*(*)         CATFNM
-      CHARACTER*(*)         TABNAM
-      LOGICAL               ISTYP1
-      CHARACTER*(*)         ERRMSG
+      character*(*)         catfnm
+      character*(*)         tabnam
+      logical               istyp1
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -163,48 +163,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               EKNSEG
-      INTEGER               NBLEN
-      INTEGER               ISRCHC
+      logical               return
+      integer               eknseg
+      integer               nblen
+      integer               isrchc
 
 
 !
 !     Local parameters.
 !
-      INTEGER               CAT1NC
-      PARAMETER           ( CAT1NC = 7 )
+      integer               cat1nc
+      parameter           ( cat1nc = 7 )
 
 !
 !     Local variables
 !
 
-      CHARACTER*(4)         CAT1DT ( CAT1NC )
-      CHARACTER*(4)         DTYPES ( MXCLSG )
-      CHARACTER*(CNAMSZ)    CAT1NM ( CAT1NC )
-      CHARACTER*(CNAMSZ)    CNAMES ( MXCLSG )
-      CHARACTER*(TNAMSZ)    TMPTNM
-      CHARACTER*(TNAMSZ)    TNMPRV
+      character*(4)         cat1dt ( cat1nc )
+      character*(4)         dtypes ( mxclsg )
+      character*(cnamsz)    cat1nm ( cat1nc )
+      character*(cnamsz)    cnames ( mxclsg )
+      character*(tnamsz)    tmptnm
+      character*(tnamsz)    tnmprv
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NCOLS
-      INTEGER               NROWS
-      INTEGER               NUMSEG
-      INTEGER               SIZES  ( MXCLSG )
-      INTEGER               STRLNS ( MXCLSG )
-      INTEGER               TMPHND
+      integer               i
+      integer               j
+      integer               ncols
+      integer               nrows
+      integer               numseg
+      integer               sizes  ( mxclsg )
+      integer               strlns ( mxclsg )
+      integer               tmphnd
 
-      LOGICAL               FOUND
-      LOGICAL               INDEXD ( MXCLSG )
-      LOGICAL               NULLOK ( MXCLSG )
+      logical               found
+      logical               indexd ( mxclsg )
+      logical               nullok ( mxclsg )
 
-      SAVE
+      save
 
 !
 !     Initial values.
 !
-      DATA                  CAT1NM  /  'CATALOG_NUMBER', &
+      data                  cat1nm  /  'CATALOG_NUMBER', &
                                        'RA', &
                                        'DEC', &
                                        'RA_SIGMA', &
@@ -212,7 +212,7 @@
                                        'VISUAL_MAGNITUDE', &
                                        'SPECTRAL_TYPE' /
 
-      DATA                  CAT1DT  /  'INT', &
+      data                  cat1dt  /  'INT', &
                                        'DP', &
                                        'DP', &
                                        'DP', &
@@ -223,64 +223,64 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'STCC01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'STCC01' )
+      end if
 
 !
 !     More initial values.
 !
-      TABNAM = ' '
-      ERRMSG = ' '
-      ISTYP1 = .TRUE.
+      tabnam = ' '
+      errmsg = ' '
+      istyp1 = .true.
 
 !
 !     Open star catalog file with low level "open for read access"
 !     EK routine.
 !
-      CALL EKOPR ( CATFNM, TMPHND )
+      call ekopr ( catfnm, tmphnd )
 
 !
 !     Get the number of segments in the file and check whether it is
 !     greater than 0 (i.e. some data are is present in the file). If
 !     not then set an error message and return to the calling routine.
 !
-      NUMSEG = EKNSEG ( TMPHND )
+      numseg = eknseg ( tmphnd )
 
-      IF ( NUMSEG .LE. 0 ) THEN
-         ERRMSG = 'File contains no data.'
-         ISTYP1 = .FALSE.
-         CALL CHKOUT ( 'STCC01' )
-         RETURN
-      END IF
+      if ( numseg .le. 0 ) then
+         errmsg = 'File contains no data.'
+         istyp1 = .false.
+         call chkout ( 'STCC01' )
+         return
+      end if
 
 !
 !     Loop through the segments to find out whether all of them
 !     contain pieces of the same table. If not then set
 !     an error message and return to the calling routine.
 !
-      DO I = 1, NUMSEG
+      do i = 1, numseg
 
-         CALL EKSSUM (  TMPHND,  I,       TMPTNM,  NROWS, &
-                        NCOLS,   CNAMES,  DTYPES,  SIZES, &
-                        STRLNS,  INDEXD,  NULLOK          )
+         call ekssum (  tmphnd,  i,       tmptnm,  nrows, &
+                        ncols,   cnames,  dtypes,  sizes, &
+                        strlns,  indexd,  nullok          )
 
-         IF ( I .GT. 1 ) THEN
+         if ( i .gt. 1 ) then
 
-            IF ( TMPTNM .NE. TNMPRV ) THEN
-               ERRMSG = 'File contains more than one data table.'
-               ISTYP1 = .FALSE.
-               CALL CHKOUT ( 'STCC01' )
-               RETURN
-            END IF
+            if ( tmptnm .ne. tnmprv ) then
+               errmsg = 'File contains more than one data table.'
+               istyp1 = .false.
+               call chkout ( 'STCC01' )
+               return
+            end if
 
-         END IF
+         end if
 
-         TNMPRV = TMPTNM
+         tnmprv = tmptnm
 
-      END DO
+      end do
 
 !
 !     Check whether the  number of columns is less than it
@@ -288,39 +288,39 @@
 !     an error message and return to a calling routine.
 !
 
-      IF ( NCOLS .LT. CAT1NC ) THEN
-         ERRMSG = 'File contains too few data columns.'
-         ISTYP1 = .FALSE.
-         CALL CHKOUT ( 'STCC01' )
-         RETURN
-      END IF
+      if ( ncols .lt. cat1nc ) then
+         errmsg = 'File contains too few data columns.'
+         istyp1 = .false.
+         call chkout ( 'STCC01' )
+         return
+      end if
 
 !
 !     Check whether all columns that will be used in catalog search and
 !     star data fetching are present in the data table. If not
 !     then set an error message and return to a calling routine.
 !
-      DO I = 1, CAT1NC
+      do i = 1, cat1nc
 
-         FOUND = .FALSE.
+         found = .false.
 
-         J = ISRCHC ( CAT1NM(I), NCOLS, CNAMES )
+         j = isrchc ( cat1nm(i), ncols, cnames )
 
-         IF ( J .GT. 0  ) THEN
-            FOUND = CAT1DT(I) .EQ. DTYPES(J) .AND. .NOT. NULLOK(J)
-         END IF
+         if ( j .gt. 0  ) then
+            found = cat1dt(i) .eq. dtypes(j) .and. .not. nullok(j)
+         end if
 
-         IF ( .NOT. FOUND ) THEN
-            ERRMSG = ' Column '                             // &
-                     CAT1NM(I)(1:NBLEN(CAT1NM(I)))          // &
+         if ( .not. found ) then
+            errmsg = ' Column '                             // &
+                     cat1nm(i)(1:nblen(cat1nm(i)))          // &
                      ' is not found or'                     // &
                      ' improperly declared in the file.'
-            ISTYP1 = .FALSE.
-            CALL CHKOUT ( 'STCC01' )
-            RETURN
-         END IF
+            istyp1 = .false.
+            call chkout ( 'STCC01' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     If we got to this point then all checks were passed successfully
@@ -328,10 +328,10 @@
 !     "return" the table name and close the file with the EK close
 !     routine.
 !
-      TABNAM = TMPTNM
+      tabnam = tmptnm
 
-      CALL EKCLS ( TMPHND )
+      call ekcls ( tmphnd )
 
-      CALL CHKOUT ( 'STCC01' )
-      RETURN
-      END
+      call chkout ( 'STCC01' )
+      return
+      end

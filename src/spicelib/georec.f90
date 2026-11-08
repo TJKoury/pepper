@@ -1,6 +1,6 @@
 !$Procedure GEOREC ( Geodetic to rectangular coordinates )
 
-      SUBROUTINE GEOREC ( LON, LAT, ALT,  RE, F,  RECTAN )
+      subroutine georec ( lon, lat, alt,  re, f,  rectan )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   LON
-      DOUBLE PRECISION   LAT
-      DOUBLE PRECISION   ALT
-      DOUBLE PRECISION   RE
-      DOUBLE PRECISION   F
-      DOUBLE PRECISION   RECTAN ( 3 )
+      double precision   lon
+      double precision   lat
+      double precision   alt
+      double precision   re
+      double precision   f
+      double precision   rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -399,26 +399,26 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION HEIGHT
+      double precision height
 
-      DOUBLE PRECISION RP
-      DOUBLE PRECISION CLMBDA
-      DOUBLE PRECISION SLMBDA
-      DOUBLE PRECISION CPHI
-      DOUBLE PRECISION SPHI
-      DOUBLE PRECISION BIG
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
-      DOUBLE PRECISION SCALE
+      double precision rp
+      double precision clmbda
+      double precision slmbda
+      double precision cphi
+      double precision sphi
+      double precision big
+      double precision x
+      double precision y
+      double precision scale
 
-      DOUBLE PRECISION BASE   (3)
-      DOUBLE PRECISION NORMAL (3)
+      double precision base   (3)
+      double precision normal (3)
 
 
 
@@ -426,24 +426,24 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'GEOREC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'GEOREC' )
+      end if
 
 
 
 !
 !     The equatorial radius must be greater than zero.
 !
-      IF ( RE .LE. 0.0D0 ) THEN
-          CALL SETMSG ( 'Equatorial radius was *.' )
-          CALL ERRDP  ( '*', RE                    )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'   )
-          CALL CHKOUT ( 'GEOREC'                   )
-          RETURN
-      END IF
+      if ( re .le. 0.0d0 ) then
+          call setmsg ( 'Equatorial radius was *.' )
+          call errdp  ( '*', re                    )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
+          call chkout ( 'GEOREC'                   )
+          return
+      end if
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -451,63 +451,63 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      IF ( F .GE. 1 ) THEN
-          CALL SETMSG ( 'Flattening coefficient was *.'  )
-          CALL ERRDP  ( '*', F                           )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-          CALL CHKOUT ( 'GEOREC'                         )
-          RETURN
-      END IF
+      if ( f .ge. 1 ) then
+          call setmsg ( 'Flattening coefficient was *.'  )
+          call errdp  ( '*', f                           )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+          call chkout ( 'GEOREC'                         )
+          return
+      end if
 
 
 !
 !     Move the altitude to a temporary variable.
 !
-      HEIGHT = ALT
+      height = alt
 
 
 !
 !     Compute the polar radius of the spheroid.
 !
-      RP     = RE - (F * RE)
+      rp     = re - (f * re)
 
 !
 !     Compute a scale factor needed for finding the rectangular
 !     coordinates of a point with altitude 0 but the same geodetic
 !     latitude and longitude as the input point.
 !
-      CPHI   = DCOS(LAT)
-      SPHI   = DSIN(LAT)
-      CLMBDA = DCOS(LON)
-      SLMBDA = DSIN(LON)
+      cphi   = dcos(lat)
+      sphi   = dsin(lat)
+      clmbda = dcos(lon)
+      slmbda = dsin(lon)
 
-      BIG    = MAX ( DABS(RE*CPHI), DABS(RP*SPHI) )
+      big    = max ( dabs(re*cphi), dabs(rp*sphi) )
 
-      X      = RE*CPHI / BIG
-      Y      = RP*SPHI / BIG
+      x      = re*cphi / big
+      y      = rp*sphi / big
 
-      SCALE  = 1.0D0   / (BIG * DSQRT(X*X + Y*Y) )
+      scale  = 1.0d0   / (big * dsqrt(x*x + y*y) )
 
 !
 !     Compute the rectangular coordinates of the point with zero
 !     altitude.
 !
-      BASE(1) = SCALE * RE * RE * CLMBDA * CPHI
-      BASE(2) = SCALE * RE * RE * SLMBDA * CPHI
-      BASE(3) = SCALE * RP * RP * SPHI
+      base(1) = scale * re * re * clmbda * cphi
+      base(2) = scale * re * re * slmbda * cphi
+      base(3) = scale * rp * rp * sphi
 
 !
 !     Fetch the normal to the ellipsoid at this point.
 !
-      CALL SURFNM ( RE, RE, RP, BASE, NORMAL )
+      call surfnm ( re, re, rp, base, normal )
 
 !
 !     Move along the normal to the input point.
 !
-      CALL VLCOM ( 1.0D0, BASE, HEIGHT, NORMAL, RECTAN )
+      call vlcom ( 1.0d0, base, height, normal, rectan )
 
 
 
-      CALL CHKOUT ( 'GEOREC' )
-      RETURN
-      END
+      call chkout ( 'GEOREC' )
+      return
+      end

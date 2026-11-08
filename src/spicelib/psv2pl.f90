@@ -1,6 +1,6 @@
 !$Procedure PSV2PL ( Point and spanning vectors to plane )
 
-      SUBROUTINE PSV2PL ( POINT, SPAN1, SPAN2, PLANE )
+      subroutine psv2pl ( point, span1, span2, plane )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   =   4 )
+      integer               ubpl
+      parameter           ( ubpl   =   4 )
 
-      DOUBLE PRECISION      POINT (    3 )
-      DOUBLE PRECISION      SPAN1 (    3 )
-      DOUBLE PRECISION      SPAN2 (    3 )
-      DOUBLE PRECISION      PLANE ( UBPL )
+      double precision      point (    3 )
+      double precision      span1 (    3 )
+      double precision      span2 (    3 )
+      double precision      plane ( ubpl )
 
 ! $ Brief_I/O
 !
@@ -166,10 +166,10 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -191,57 +191,57 @@
 !        closest point in the plane to the origin.
 !
 !
-      INTEGER               NMLPOS
-      PARAMETER           ( NMLPOS = 1 )
+      integer               nmlpos
+      parameter           ( nmlpos = 1 )
 
-      INTEGER               CONPOS
-      PARAMETER           ( CONPOS = 4 )
+      integer               conpos
+      parameter           ( conpos = 4 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TMPVEC ( 3 )
+      double precision      tmpvec ( 3 )
 
 
 !
 !     This routine checks in only if an error is discovered.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Find the unitized cross product of SPAN1 and SPAN2; this is our
 !     unit normal vector, or possibly its inverse.
 !
-      CALL UCRSS (  SPAN1,  SPAN2,  PLANE(NMLPOS)  )
+      call ucrss (  span1,  span2,  plane(nmlpos)  )
 
-      IF (  VZERO ( PLANE(NMLPOS) )  ) THEN
-         CALL CHKIN  ( 'PSV2PL'                         )
-         CALL SETMSG ( 'Spanning vectors are parallel.' )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'          )
-         CALL CHKOUT ( 'PSV2PL'                         )
-         RETURN
-      END IF
+      if (  vzero ( plane(nmlpos) )  ) then
+         call chkin  ( 'PSV2PL'                         )
+         call setmsg ( 'Spanning vectors are parallel.' )
+         call sigerr ( 'SPICE(DEGENERATECASE)'          )
+         call chkout ( 'PSV2PL'                         )
+         return
+      end if
 
 !
 !     Find the plane constant corresponding to the unit normal
 !     vector we've found.
 !
-      PLANE(CONPOS)  =  VDOT ( PLANE(NMLPOS), POINT )
+      plane(conpos)  =  vdot ( plane(nmlpos), point )
 
 !
 !     The constant should be the distance of the plane from the
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      IF ( PLANE(CONPOS) .LT. 0.D0 ) THEN
+      if ( plane(conpos) .lt. 0.d0 ) then
 
-         PLANE(CONPOS) =   -PLANE(CONPOS)
-         CALL VMINUS     (  PLANE(NMLPOS), TMPVEC        )
-         CALL VEQU       (  TMPVEC,        PLANE(NMLPOS) )
+         plane(conpos) =   -plane(conpos)
+         call vminus     (  plane(nmlpos), tmpvec        )
+         call vequ       (  tmpvec,        plane(nmlpos) )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKR18 ( Read SPK record from segment, type 18 )
 
-      SUBROUTINE SPKR18 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr18 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk18.inc'
+      include 'spk18.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -198,144 +198,144 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLTD
+      integer               lstltd
 
-      LOGICAL               ODD
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               odd
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = DIRSIZ + 1 )
+      integer               bufsiz
+      parameter           ( bufsiz = dirsiz + 1 )
 
-      INTEGER               CTRLSZ
-      PARAMETER           ( CTRLSZ = 3 )
+      integer               ctrlsz
+      parameter           ( ctrlsz = 3 )
 
 !
 !     Maximum polynomial degree:
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 15 )
+      integer               maxdeg
+      parameter           ( maxdeg = 15 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      CONTRL ( CTRLSZ )
-      DOUBLE PRECISION      DC     ( ND )
+      double precision      buffer ( bufsiz )
+      double precision      contrl ( ctrlsz )
+      double precision      dc     ( nd )
 
-      INTEGER               BEGIDX
-      INTEGER               BEGIN
-      INTEGER               BUFBAS
-      INTEGER               DIRBAS
-      INTEGER               END
-      INTEGER               ENDIDX
-      INTEGER               FIRST
-      INTEGER               GROUP
-      INTEGER               HIGH
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               LAST
-      INTEGER               LSIZE
-      INTEGER               LOW
-      INTEGER               MAXWND
-      INTEGER               N
-      INTEGER               NDIR
-      INTEGER               NREAD
-      INTEGER               PACKSZ
-      INTEGER               REMAIN
-      INTEGER               RSIZE
-      INTEGER               START
-      INTEGER               SUBTYP
-      INTEGER               TIMBAS
-      INTEGER               TYPE
-      INTEGER               WNDSIZ
+      integer               begidx
+      integer               begin
+      integer               bufbas
+      integer               dirbas
+      integer               end
+      integer               endidx
+      integer               first
+      integer               group
+      integer               high
+      integer               i
+      integer               ic     ( ni )
+      integer               last
+      integer               lsize
+      integer               low
+      integer               maxwnd
+      integer               n
+      integer               ndir
+      integer               nread
+      integer               packsz
+      integer               remain
+      integer               rsize
+      integer               start
+      integer               subtyp
+      integer               timbas
+      integer               type
+      integer               wndsiz
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKR18' )
+      call chkin ( 'SPKR18' )
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
 !     of the segment.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      TYPE  = IC( 4 )
-      BEGIN = IC( 5 )
-      END   = IC( 6 )
+      type  = ic( 4 )
+      begin = ic( 5 )
+      end   = ic( 6 )
 
 !
 !     Make sure that this really is a type 18 data segment.
 !
-      IF ( TYPE .NE. 18 ) THEN
-         CALL SETMSG( 'You are attempting to locate type * ' // &
+      if ( type .ne. 18 ) then
+         call setmsg( 'You are attempting to locate type * ' // &
                       'data in a type 18 data segment.'      )
-         CALL ERRINT( '*',  TYPE                             )
-         CALL SIGERR( 'SPICE(WRONGSPKTYPE)'                  )
-         CALL CHKOUT( 'SPKR18'                               )
-         RETURN
-      END IF
+         call errint( '*',  type                             )
+         call sigerr( 'SPICE(WRONGSPKTYPE)'                  )
+         call chkout( 'SPKR18'                               )
+         return
+      end if
 
 !
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      IF (  ( ET .LT. DC(1) )  .OR.  ( ET .GT. DC(2) )  )  THEN
-         CALL SETMSG( 'Request time # is outside of descriptor '   // &
+      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+         call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
-         CALL ERRDP ( '#',  ET                                      )
-         CALL ERRDP ( '#',  DC(1)                                   )
-         CALL ERRDP ( '#',  DC(2)                                   )
-         CALL SIGERR( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         CALL CHKOUT( 'SPKR18'                                      )
-         RETURN
+         call errdp ( '#',  et                                      )
+         call errdp ( '#',  dc(1)                                   )
+         call errdp ( '#',  dc(2)                                   )
+         call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
+         call chkout( 'SPKR18'                                      )
+         return
 
-      END IF
+      end if
 
 !     We'll need the last two items before we can determine which
 !     packets make up our output record.
 !
-      CALL DAFGDA ( HANDLE, END-CTRLSZ+1, END, CONTRL )
+      call dafgda ( handle, end-ctrlsz+1, end, contrl )
 
 !
 !     Check the FAILED flag just in case HANDLE is not attached to
 !     any DAF file and the error action is not set to ABORT. You need
 !     need to do this only after the first call to DAFGDA.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKR18' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKR18' )
+         return
+      end if
 
-      SUBTYP  =  NINT ( CONTRL(1) )
-      WNDSIZ  =  NINT ( CONTRL(2) )
-      N       =  NINT ( CONTRL(3) )
+      subtyp  =  nint ( contrl(1) )
+      wndsiz  =  nint ( contrl(2) )
+      n       =  nint ( contrl(3) )
 
-      IF ( N .LT. 2 )  THEN
+      if ( n .lt. 2 )  then
 
-         CALL SETMSG( 'Packet count # is less than the minimum '   // &
+         call setmsg( 'Packet count # is less than the minimum '   // &
                       'valid value, which is 2.'                   )
-         CALL ERRINT( '#',  N                                      )
-         CALL SIGERR( 'SPICE(TOOFEWSTATES)'                        )
-         CALL CHKOUT( 'SPKR18'                                     )
-         RETURN
+         call errint( '#',  n                                      )
+         call sigerr( 'SPICE(TOOFEWSTATES)'                        )
+         call chkout( 'SPKR18'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     From this point onward, we assume the segment was constructed
@@ -361,109 +361,109 @@
 !
 !     Set the packet size, which is a function of the subtype.
 !
-      IF ( SUBTYP .EQ. S18TP0 ) THEN
+      if ( subtyp .eq. s18tp0 ) then
 
-         PACKSZ = S18PS0
+         packsz = s18ps0
 
-      ELSE IF ( SUBTYP .EQ. S18TP1 ) THEN
+      else if ( subtyp .eq. s18tp1 ) then
 
-         PACKSZ = S18PS1
+         packsz = s18ps1
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unexpected SPK type 18 subtype # found in ' // &
+         call setmsg ( 'Unexpected SPK type 18 subtype # found in ' // &
                        'type 18 segment.'                           )
-         CALL ERRINT ( '#',  SUBTYP                                 )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                        )
-         CALL CHKOUT ( 'SPKR18'                                     )
-         RETURN
+         call errint ( '#',  subtyp                                 )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
+         call chkout ( 'SPKR18'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the window size.
 !
-      IF ( WNDSIZ .LE. 0 ) THEN
+      if ( wndsiz .le. 0 ) then
 
-         CALL SETMSG ( 'Window size in type 18 segment was #; must ' // &
+         call setmsg ( 'Window size in type 18 segment was #; must ' // &
                        'be positive.'                                )
-         CALL ERRINT ( '#',  SUBTYP                                  )
-         CALL SIGERR ( 'SPICE(INVALIDVALUE)'                         )
-         CALL CHKOUT ( 'SPKR18'                                      )
-         RETURN
+         call errint ( '#',  subtyp                                  )
+         call sigerr ( 'SPICE(INVALIDVALUE)'                         )
+         call chkout ( 'SPKR18'                                      )
+         return
 
-      END IF
+      end if
 
 
-      IF ( SUBTYP .EQ. S18TP0 ) THEN
+      if ( subtyp .eq. s18tp0 ) then
 
-         MAXWND  =  (MAXDEG+1)/2
+         maxwnd  =  (maxdeg+1)/2
 
-         IF ( WNDSIZ .GT. MAXWND ) THEN
+         if ( wndsiz .gt. maxwnd ) then
 
-            CALL SETMSG ( 'Window size in type 18 segment was #; max '// &
+            call setmsg ( 'Window size in type 18 segment was #; max '// &
                           'allowed value is # for subtype 0 (Hermite,'// &
                           ' 12-element packets).'                     )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL ERRINT ( '#',  MAXWND                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'SPKR18'                                    )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call errint ( '#',  maxwnd                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'SPKR18'                                    )
+            return
 
-         END IF
+         end if
 
-         IF ( ODD(WNDSIZ) ) THEN
+         if ( odd(wndsiz) ) then
 
-            CALL SETMSG ( 'Window size in type 18 segment was #; '    // &
+            call setmsg ( 'Window size in type 18 segment was #; '    // &
                           'must be even for subtype 0 (Hermite,'      // &
                           ' 12-element packets).'                     )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'SPKR18'                                    )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'SPKR18'                                    )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF ( SUBTYP .EQ. S18TP1 ) THEN
+      else if ( subtyp .eq. s18tp1 ) then
 
-         MAXWND  =  MAXDEG + 1
+         maxwnd  =  maxdeg + 1
 
-         IF ( WNDSIZ .GT. MAXWND ) THEN
+         if ( wndsiz .gt. maxwnd ) then
 
-            CALL SETMSG ( 'Window size in type 18 segment was #; max '// &
+            call setmsg ( 'Window size in type 18 segment was #; max '// &
                           'allowed value is # for subtype 1 '         // &
                           '(Lagrange, 6-element packets).'            )
-            CALL ERRINT ( '#',  WNDSIZ                                )
-            CALL ERRINT ( '#',  MAXWND                                )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                       )
-            CALL CHKOUT ( 'SPKR18'                                    )
-            RETURN
+            call errint ( '#',  wndsiz                                )
+            call errint ( '#',  maxwnd                                )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                       )
+            call chkout ( 'SPKR18'                                    )
+            return
 
-         END IF
+         end if
 
-         IF ( ODD(WNDSIZ) ) THEN
+         if ( odd(wndsiz) ) then
 
-            CALL SETMSG ( 'Window size in type 18 segment was #; '// &
+            call setmsg ( 'Window size in type 18 segment was #; '// &
                           'must be even for subtype 1 '           // &
                           '(Lagrange, 6-element packets).'        )
-            CALL ERRINT ( '#',  WNDSIZ                            )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                   )
-            CALL CHKOUT ( 'SPKR18'                                )
-            RETURN
+            call errint ( '#',  wndsiz                            )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                   )
+            call chkout ( 'SPKR18'                                )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'This point should not be reached. Getting ' // &
+         call setmsg ( 'This point should not be reached. Getting ' // &
                        'here may indicate that the code needs to '  // &
                        'updated to handle new subtypes.'            )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                        )
-         CALL CHKOUT ( 'SPKR18'                                     )
-         RETURN
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
+         call chkout ( 'SPKR18'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     We'll now select the set of packets that define the interpolating
@@ -472,16 +472,16 @@
 !     use the variable GROUP to indicate the set of epochs to search
 !     within, once we've found the right directory entry.
 !
-      NDIR    =  (N-1) / DIRSIZ
-      DIRBAS  =  END  -  NDIR  -  CTRLSZ
+      ndir    =  (n-1) / dirsiz
+      dirbas  =  end  -  ndir  -  ctrlsz
 
-      IF ( NDIR .EQ. 0 ) THEN
+      if ( ndir .eq. 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
-         GROUP  = 1
+         group  = 1
 
-      ELSE
+      else
 !
 !        There's at least one directory.  Find the first directory
 !        whose time is greater than or equal to the request time, if
@@ -490,34 +490,34 @@
 !        Having found the correct set of directory entries, we'll
 !        perform a binary search within that set for the desired entry.
 !
-         BUFBAS  =  DIRBAS
-         NREAD   =  MIN ( NDIR, DIRSIZ )
-         REMAIN  =  NDIR - NREAD
+         bufbas  =  dirbas
+         nread   =  min ( ndir, dirsiz )
+         remain  =  ndir - nread
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+         call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         DO WHILE (       ( BUFFER(NREAD) .LT. ET ) &
-                    .AND. ( REMAIN        .GT. 0  )   )
+         do while (       ( buffer(nread) .lt. et ) &
+                    .and. ( remain        .gt. 0  )   )
 
-            BUFBAS  =  BUFBAS + NREAD
-            NREAD   =  MIN ( REMAIN, DIRSIZ )
-            REMAIN  =  REMAIN - NREAD
+            bufbas  =  bufbas + nread
+            nread   =  min ( remain, dirsiz )
+            remain  =  remain - nread
 !
 !           Note:  NREAD is always > 0 here.
 !
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+            call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         END DO
+         end do
 
 !
 !        At this point, BUFBAS - DIRBAS is the number of directory
 !        entries preceding the one contained in BUFFER(1).
 !
-         GROUP  =     ( BUFBAS - DIRBAS ) &
-                    +   LSTLTD ( ET, NREAD, BUFFER ) &
+         group  =     ( bufbas - dirbas ) &
+                    +   lstltd ( et, nread, buffer ) &
                     +   1
 
-      END IF
+      end if
 
 !
 !     GROUP now indicates the set of epochs in which to search for the
@@ -531,46 +531,46 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      IF ( GROUP .EQ. 1 ) THEN
+      if ( group .eq. 1 ) then
 
-         BEGIDX  =  1
-         ENDIDX  =  MIN ( N, DIRSIZ )
+         begidx  =  1
+         endidx  =  min ( n, dirsiz )
 
-      ELSE
+      else
 !
 !        If the group index is greater than 1, we'll include the last
 !        time tag of the previous group in the set of time tags we look
 !        up.  That way, the request time is bracketed by the time tag
 !        set we look up.
 !
-         BEGIDX  =      (  GROUP  - 1 ) * DIRSIZ
-         ENDIDX  =  MIN (  BEGIDX + DIRSIZ,  N  )
+         begidx  =      (  group  - 1 ) * dirsiz
+         endidx  =  min (  begidx + dirsiz,  n  )
 
-      END IF
+      end if
 
 
-      TIMBAS  =  DIRBAS - N
+      timbas  =  dirbas - n
 
-      CALL DAFGDA ( HANDLE, TIMBAS+BEGIDX, TIMBAS+ENDIDX, BUFFER )
+      call dafgda ( handle, timbas+begidx, timbas+endidx, buffer )
 
 !
 !     Find two adjacent epochs bounding the request epoch.  The request
 !     time cannot be greater than all of epochs in the group, and it
 !     cannot precede the first element of the group.
 !
-      I  =  LSTLTD (  ET,  ENDIDX-BEGIDX+1,  BUFFER  )
+      i  =  lstltd (  et,  endidx-begidx+1,  buffer  )
 
 !
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      IF ( I .EQ. 0 ) THEN
-         LOW  =  1
-      ELSE
-         LOW  =  BEGIDX + I - 1
-      END IF
+      if ( i .eq. 0 ) then
+         low  =  1
+      else
+         low  =  begidx + i - 1
+      end if
 
-      HIGH  =  LOW  +  1
+      high  =  low  +  1
 
 !
 !     Now select the set of packets used for interpolation.  Note
@@ -592,52 +592,52 @@
 !     available, the set ranges from index 1 to index LOW.
 !
 
-      LSIZE =  MIN ( WNDSIZ/2, LOW )
+      lsize =  min ( wndsiz/2, low )
 
 !
 !     RSIZE is defined analogously for the right half of the window.
 !
-      RSIZE =  MIN (  WNDSIZ/2,  ( N - HIGH + 1 )  )
+      rsize =  min (  wndsiz/2,  ( n - high + 1 )  )
 
 !
 !     The window size is simply the sum of LSIZE and RSIZE.
 !
-      WNDSIZ =  LSIZE + RSIZE
+      wndsiz =  lsize + rsize
 
 !
 !     FIRST and LAST are the endpoints of the range of indices of
 !     time tags (and packets) we'll collect in the output record.
 !
-      FIRST =  LOW    -  LSIZE   +  1
+      first =  low    -  lsize   +  1
 
-      LAST  =  FIRST  +  WNDSIZ  -  1
+      last  =  first  +  wndsiz  -  1
 
 !
 !     Put the subtype and actual window size, which is the number of
 !     packets in the record, into the output record.
 !
-      RECORD(1) =  SUBTYP
+      record(1) =  subtyp
 
-      RECORD(2) =  WNDSIZ
+      record(2) =  wndsiz
 
 !
 !     Read the packets.
 !
-      CALL DAFGDA ( HANDLE, &
-                    BEGIN + (FIRST-1)*PACKSZ, &
-                    BEGIN +      LAST*PACKSZ  -  1, &
-                    RECORD(3)                       )
+      call dafgda ( handle, &
+                    begin + (first-1)*packsz, &
+                    begin +      last*packsz  -  1, &
+                    record(3)                       )
 
 !
 !     Finally, add the epochs to the output record.
 !
-      START  =  BEGIN   +  N * PACKSZ  +  FIRST - 2
+      start  =  begin   +  n * packsz  +  first - 2
 
-      CALL DAFGDA (  HANDLE, &
-                     START + 1, &
-                     START + WNDSIZ, &
-                     RECORD( 3 + WNDSIZ*PACKSZ )   )
+      call dafgda (  handle, &
+                     start + 1, &
+                     start + wndsiz, &
+                     record( 3 + wndsiz*packsz )   )
 
-      CALL CHKOUT ( 'SPKR18' )
-      RETURN
-      END
+      call chkout ( 'SPKR18' )
+      return
+      end

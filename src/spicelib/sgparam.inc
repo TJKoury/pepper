@@ -157,8 +157,8 @@
 !
 !        REFVAL = REF(1) + DBLE (INDEX-1) * REF(2)
 !
-      INTEGER               IMPLE
-      PARAMETER           ( IMPLE  = 0 )
+      integer               imple
+      parameter           ( imple  = 0 )
 
 !
 !     Reference Index Type 1
@@ -184,8 +184,8 @@
 !     We get the larger index in the event that VALUE is halfway between
 !     X(I) and X(I+1), where X(I) = BUFFER(1) + DBLE (I-1) * REFDAT(2).
 !
-      INTEGER               IMPCLS
-      PARAMETER           ( IMPCLS = 1 )
+      integer               impcls
+      parameter           ( impcls = 1 )
 
 !
 !     Reference Index Type 2
@@ -197,8 +197,8 @@
 !     that is strictly less than VALUE. The reference values must be in
 !     ascending order, REF(I) < REF(I+1).
 !
-      INTEGER               EXPLT
-      PARAMETER           ( EXPLT  = 2 )
+      integer               explt
+      parameter           ( explt  = 2 )
 
 !
 !     Reference Index Type 3
@@ -210,8 +210,8 @@
 !     that is less than or equal to VALUE. The reference values must be
 !     in ascending order, REF(I) < REF(I+1).
 !
-      INTEGER               EXPLE
-      PARAMETER           ( EXPLE  = 3 )
+      integer               exple
+      parameter           ( exple  = 3 )
 
 !
 !     Reference Index Type 4
@@ -224,19 +224,19 @@
 !     the larger index is selected. The reference values must be in
 !     ascending order, REF(I) < REF(I+1).
 !
-      INTEGER               EXPCLS
-      PARAMETER           ( EXPCLS = 4 )
+      integer               expcls
+      parameter           ( expcls = 4 )
 
 !
 !     These parameters define the valid range for the index types. An
 !     index type code, MYTYPE, for a generic segment must satisfy the
 !     relation MNIDXT <= MYTYPE <= MXIDXT.
 !
-      INTEGER               MNIDXT
-      PARAMETER           ( MNIDXT = 0 )
+      integer               mnidxt
+      parameter           ( mnidxt = 0 )
 
-      INTEGER               MXIDXT
-      PARAMETER           ( MXIDXT = 4 )
+      integer               mxidxt
+      parameter           ( mxidxt = 4 )
 
 !
 !     The following meta data items will appear in all generic segments.
@@ -294,99 +294,99 @@
 !     Meta Data Item  1
 !     -----------------
 !
-      INTEGER               CONBAS
-      PARAMETER           ( CONBAS =  1         )
+      integer               conbas
+      parameter           ( conbas =  1         )
 !
 !     Meta Data Item  2
 !     -----------------
 !
 
-      INTEGER               NCON
-      PARAMETER           ( NCON   = CONBAS + 1 )
+      integer               ncon
+      parameter           ( ncon   = conbas + 1 )
 !
 !     Meta Data Item  3
 !     -----------------
 !
-      INTEGER               RDRBAS
-      PARAMETER           ( RDRBAS = NCON   + 1 )
+      integer               rdrbas
+      parameter           ( rdrbas = ncon   + 1 )
 !
 !     Meta Data Item  4
 !     -----------------
 !
-      INTEGER               NRDR
-      PARAMETER           ( NRDR   = RDRBAS + 1 )
+      integer               nrdr
+      parameter           ( nrdr   = rdrbas + 1 )
 !
 !     Meta Data Item  5
 !     -----------------
 !
-      INTEGER               RDRTYP
-      PARAMETER           ( RDRTYP = NRDR   + 1 )
+      integer               rdrtyp
+      parameter           ( rdrtyp = nrdr   + 1 )
 !
 !     Meta Data Item  6
 !     -----------------
 !
-      INTEGER               REFBAS
-      PARAMETER           ( REFBAS = RDRTYP + 1 )
+      integer               refbas
+      parameter           ( refbas = rdrtyp + 1 )
 !
 !     Meta Data Item  7
 !     -----------------
 !
-      INTEGER               NREF
-      PARAMETER           ( NREF   = REFBAS + 1 )
+      integer               nref
+      parameter           ( nref   = refbas + 1 )
 !
 !     Meta Data Item  8
 !     -----------------
 !
-      INTEGER               PDRBAS
-      PARAMETER           ( PDRBAS = NREF   + 1 )
+      integer               pdrbas
+      parameter           ( pdrbas = nref   + 1 )
 !
 !     Meta Data Item  9
 !     -----------------
 !
-      INTEGER               NPDR
-      PARAMETER           ( NPDR   = PDRBAS + 1 )
+      integer               npdr
+      parameter           ( npdr   = pdrbas + 1 )
 !
 !     Meta Data Item 10
 !     -----------------
 !
-      INTEGER               PDRTYP
-      PARAMETER           ( PDRTYP = NPDR   + 1 )
+      integer               pdrtyp
+      parameter           ( pdrtyp = npdr   + 1 )
 !
 !     Meta Data Item 11
 !     -----------------
 !
-      INTEGER               PKTBAS
-      PARAMETER           ( PKTBAS = PDRTYP + 1 )
+      integer               pktbas
+      parameter           ( pktbas = pdrtyp + 1 )
 !
 !     Meta Data Item 12
 !     -----------------
 !
-      INTEGER               NPKT
-      PARAMETER           ( NPKT   = PKTBAS + 1 )
+      integer               npkt
+      parameter           ( npkt   = pktbas + 1 )
 !
 !     Meta Data Item 13
 !     -----------------
 !
-      INTEGER               RSVBAS
-      PARAMETER           ( RSVBAS = NPKT   + 1 )
+      integer               rsvbas
+      parameter           ( rsvbas = npkt   + 1 )
 !
 !     Meta Data Item 14
 !     -----------------
 !
-      INTEGER               NRSV
-      PARAMETER           ( NRSV   = RSVBAS + 1 )
+      integer               nrsv
+      parameter           ( nrsv   = rsvbas + 1 )
 !
 !     Meta Data Item 15
 !     -----------------
 !
-      INTEGER               PKTSZ
-      PARAMETER           ( PKTSZ  = NRSV   + 1 )
+      integer               pktsz
+      parameter           ( pktsz  = nrsv   + 1 )
 !
 !     Meta Data Item 16
 !     -----------------
 !
-      INTEGER               PKTOFF
-      PARAMETER           ( PKTOFF = PKTSZ  + 1 )
+      integer               pktoff
+      parameter           ( pktoff = pktsz  + 1 )
 !
 !     If new meta data items are to be added to this list, they should
 !     be added above this comment block as described below.
@@ -408,18 +408,18 @@
 !     Meta Data Item 17
 !     -----------------
 !
-      INTEGER               NMETA
-      PARAMETER           ( NMETA  = PKTOFF + 1 )
+      integer               nmeta
+      parameter           ( nmeta  = pktoff + 1 )
 !
 !     Maximum number of meta data items. This is always set equal to
 !     NMETA.
 !
-      INTEGER               MXMETA
-      PARAMETER           ( MXMETA = NMETA )
+      integer               mxmeta
+      parameter           ( mxmeta = nmeta )
 !
 !     Minimum number of meta data items that must be present in a DAF
 !     generic segment.  This number is to remain fixed even if more
 !     meta data items are added for compatibility with old DAF files.
 !
-      INTEGER               MNMETA
-      PARAMETER           ( MNMETA = 15 )
+      integer               mnmeta
+      parameter           ( mnmeta = 15 )

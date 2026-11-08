@@ -1,6 +1,6 @@
 !$Procedure      ZZINILNK ( Initialize an AB cell linked-list )
 
-      SUBROUTINE ZZINILNK ( MAXP, MAXC, NCELL, PNTRS, CELLS )
+      subroutine zzinilnk ( maxp, maxc, ncell, pntrs, cells )
 
 ! $ Abstract
 !
@@ -21,13 +21,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               MAXP
-      INTEGER               MAXC
-      INTEGER               NCELL
-      INTEGER               PNTRS  ( * )
-      INTEGER               CELLS  ( 2, * )
+      integer               maxp
+      integer               maxc
+      integer               ncell
+      integer               pntrs  ( * )
+      integer               cells  ( 2, * )
 
 ! $ Brief_I/O
 !
@@ -142,57 +142,57 @@
 !
 !-&
 
-      INTEGER               I
-      LOGICAL               RETURN
+      integer               i
+      logical               return
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZINILNK' )
+      call chkin ( 'ZZINILNK' )
 
-      IF ( MAXP .LT. 1 ) THEN
+      if ( maxp .lt. 1 ) then
 
-         CALL SETMSG ( 'Pointer array size MAXP = #; size must ' &
+         call setmsg ( 'Pointer array size MAXP = #; size must ' &
          //            'be positive.'                           )
-         CALL ERRINT ( '#',  MAXP                               )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZINILNK'                               )
-         RETURN
+         call errint ( '#',  maxp                               )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZINILNK'                               )
+         return
 
-      END IF
+      end if
 
-      IF ( MAXC .LT. MAXP ) THEN
+      if ( maxc .lt. maxp ) then
 
-         CALL SETMSG ( 'Cell array size MAXC = #; size must ' &
+         call setmsg ( 'Cell array size MAXC = #; size must ' &
          //            'be at least as large as pointer array ' &
          //            'size #.'                                )
-         CALL ERRINT ( '#',  MAXC                               )
-         CALL ERRINT ( '#',  MAXP                               )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZINILNK'                               )
-         RETURN
+         call errint ( '#',  maxc                               )
+         call errint ( '#',  maxp                               )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZINILNK'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize pointer array and cells.
 !
-      DO I = 1, MAXP
-         PNTRS(I)   = -1
-      END DO
+      do i = 1, maxp
+         pntrs(i)   = -1
+      end do
 
-      DO I = 1, MAXC
-         CELLS(1,I) =  0
-         CELLS(2,I) = -1
-      END DO
+      do i = 1, maxc
+         cells(1,i) =  0
+         cells(2,i) = -1
+      end do
 
 !
 !     Set count of cells in use to 0, for the convenience
 !     of the calling routine.
 !
-      NCELL = 0
+      ncell = 0
 
-      CALL CHKOUT ( 'ZZINILNK' )
-      RETURN
-      END
+      call chkout ( 'ZZINILNK' )
+      return
+      end

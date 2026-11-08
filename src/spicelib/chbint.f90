@@ -1,6 +1,6 @@
 !$Procedure CHBINT ( Interpolate a Chebyshev expansion )
 
-      SUBROUTINE CHBINT ( CP, DEGP, X2S, X, P, DPDX )
+      subroutine chbint ( cp, degp, x2s, x, p, dpdx )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      CP  ( * )
-      INTEGER               DEGP
-      DOUBLE PRECISION      X2S ( 2 )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      P
-      DOUBLE PRECISION      DPDX
+      double precision      cp  ( * )
+      integer               degp
+      double precision      x2s ( 2 )
+      double precision      x
+      double precision      p
+      double precision      dpdx
 
 ! $ Brief_I/O
 !
@@ -299,42 +299,42 @@
 !
 !     Local variables
 !
-      INTEGER          J
-      DOUBLE PRECISION W (3)
-      DOUBLE PRECISION DW(3)
-      DOUBLE PRECISION S
-      DOUBLE PRECISION S2
+      integer          j
+      double precision w (3)
+      double precision dw(3)
+      double precision s
+      double precision s2
 
 !
 !     Transform X to S and initialize temporary variables.
 !
-      S     = (X-X2S(1)) / X2S(2)
-      S2    = 2.0D0 * S
-      J     = DEGP  + 1
-      W (1) = 0.D0
-      W (2) = 0.D0
-      DW(1) = 0.D0
-      DW(2) = 0.D0
+      s     = (x-x2s(1)) / x2s(2)
+      s2    = 2.0d0 * s
+      j     = degp  + 1
+      w (1) = 0.d0
+      w (2) = 0.d0
+      dw(1) = 0.d0
+      dw(2) = 0.d0
 
 !
 !     Evaluate the polynomial and its derivative using recursion.
 !
-      DO WHILE ( J .GT. 1 )
+      do while ( j .gt. 1 )
 
-         W (3) = W (2)
-         W (2) = W (1)
-         W (1) = CP(J)  + ( S2*W(2)  - W(3) )
+         w (3) = w (2)
+         w (2) = w (1)
+         w (1) = cp(j)  + ( s2*w(2)  - w(3) )
 
-         DW(3) = DW(2)
-         DW(2) = DW(1)
-         DW(1) = W(2)*2.0D0 + DW(2)*S2 - DW(3)
+         dw(3) = dw(2)
+         dw(2) = dw(1)
+         dw(1) = w(2)*2.0d0 + dw(2)*s2 - dw(3)
 
-         J     = J - 1
+         j     = j - 1
 
-      END DO
+      end do
 
-      P    = CP(1) + ( S*W (1) - W (2) )
-      DPDX =  W(1) + S*DW(1) - DW(2)
+      p    = cp(1) + ( s*w (1) - w (2) )
+      dpdx =  w(1) + s*dw(1) - dw(2)
 
 !
 !     Scale the derivative by 1/X2S(2) so that we have the derivative
@@ -343,7 +343,7 @@
 !                       ------
 !                         dX
 !
-      DPDX = DPDX / X2S(2)
+      dpdx = dpdx / x2s(2)
 
-      RETURN
-      END
+      return
+      end

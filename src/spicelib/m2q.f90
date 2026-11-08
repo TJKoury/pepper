@@ -1,6 +1,6 @@
 !$Procedure M2Q ( Matrix to quaternion )
 
-      SUBROUTINE M2Q ( R, Q )
+      subroutine m2q ( r, q )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      R ( 3,  3 )
-      DOUBLE PRECISION      Q ( 0 : 3 )
+      double precision      r ( 3,  3 )
+      double precision      q ( 0 : 3 )
 
 ! $ Brief_I/O
 !
@@ -438,7 +438,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ISROT
+      logical               isrot
 
 !
 !     Local parameters
@@ -454,39 +454,39 @@
 !     columns are the unitized columns of R.
 !
 !
-      DOUBLE PRECISION      NTOL
-      PARAMETER           ( NTOL = 0.1D0 )
+      double precision      ntol
+      parameter           ( ntol = 0.1d0 )
 
-      DOUBLE PRECISION      DTOL
-      PARAMETER           ( DTOL = 0.1D0 )
+      double precision      dtol
+      parameter           ( dtol = 0.1d0 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      CC4
-      DOUBLE PRECISION      FACTOR
-      DOUBLE PRECISION      L2
-      DOUBLE PRECISION      MTRACE
-      DOUBLE PRECISION      POLISH
-      DOUBLE PRECISION      S(3)
-      DOUBLE PRECISION      S114
-      DOUBLE PRECISION      S224
-      DOUBLE PRECISION      S334
-      DOUBLE PRECISION      TRACE
+      double precision      c
+      double precision      cc4
+      double precision      factor
+      double precision      l2
+      double precision      mtrace
+      double precision      polish
+      double precision      s(3)
+      double precision      s114
+      double precision      s224
+      double precision      s334
+      double precision      trace
 
 
 !
 !     If R is not a rotation matrix, we can't proceed.
 !
-      IF (  .NOT. ISROT ( R, NTOL, DTOL )  ) THEN
-         CALL CHKIN  ( 'M2Q' )
-         CALL SETMSG ( 'Input matrix was not a rotation.' )
-         CALL SIGERR ( 'SPICE(NOTAROTATION)'              )
-         CALL CHKOUT ( 'M2Q'                              )
-         RETURN
+      if (  .not. isrot ( r, ntol, dtol )  ) then
+         call chkin  ( 'M2Q' )
+         call setmsg ( 'Input matrix was not a rotation.' )
+         call sigerr ( 'SPICE(NOTAROTATION)'              )
+         call chkout ( 'M2Q'                              )
+         return
 
-      END IF
+      end if
 !
 !
 !     If our quaternion is C, S1, S2, S3 (the S's being the imaginary
@@ -559,80 +559,80 @@
 !     remaining components of the quaternion.
 !
 
-      TRACE  = R(1,1) + R(2,2) + R(3,3)
-      MTRACE = 1.0D0 - TRACE
+      trace  = r(1,1) + r(2,2) + r(3,3)
+      mtrace = 1.0d0 - trace
 
-      CC4    = 1.0D0  + TRACE
-      S114   = MTRACE + 2.0D0*R(1,1)
-      S224   = MTRACE + 2.0D0*R(2,2)
-      S334   = MTRACE + 2.0D0*R(3,3)
+      cc4    = 1.0d0  + trace
+      s114   = mtrace + 2.0d0*r(1,1)
+      s224   = mtrace + 2.0d0*r(2,2)
+      s334   = mtrace + 2.0d0*r(3,3)
 
 !
 !     Note that if you simply add CC4 + S114 + S224 + S334
 !     you get four. Thus at least one of the 4 terms is greater than 1.
 !
-      IF ( 1.0D0 .LE. CC4 ) THEN
-         C      =  DSQRT  ( CC4 * 0.25D0 )
-         FACTOR =  1.0D0 /( C   * 4.0D0  )
+      if ( 1.0d0 .le. cc4 ) then
+         c      =  dsqrt  ( cc4 * 0.25d0 )
+         factor =  1.0d0 /( c   * 4.0d0  )
 
-         S(1)   = ( R(3,2) - R(2,3) )*FACTOR
-         S(2)   = ( R(1,3) - R(3,1) )*FACTOR
-         S(3)   = ( R(2,1) - R(1,2) )*FACTOR
+         s(1)   = ( r(3,2) - r(2,3) )*factor
+         s(2)   = ( r(1,3) - r(3,1) )*factor
+         s(3)   = ( r(2,1) - r(1,2) )*factor
 
-      ELSE IF ( 1.0D0 .LE. S114 ) THEN
+      else if ( 1.0d0 .le. s114 ) then
 
-         S(1)   = DSQRT  ( S114 * 0.25D0 )
-         FACTOR = 1.0D0 /( S(1) * 4.0D0  )
+         s(1)   = dsqrt  ( s114 * 0.25d0 )
+         factor = 1.0d0 /( s(1) * 4.0d0  )
 
-         C      = ( R(3,2) - R(2,3) ) * FACTOR
-         S(2)   = ( R(1,2) + R(2,1) ) * FACTOR
-         S(3)   = ( R(1,3) + R(3,1) ) * FACTOR
+         c      = ( r(3,2) - r(2,3) ) * factor
+         s(2)   = ( r(1,2) + r(2,1) ) * factor
+         s(3)   = ( r(1,3) + r(3,1) ) * factor
 
 
-      ELSE IF ( 1.0D0 .LE. S224 ) THEN
+      else if ( 1.0d0 .le. s224 ) then
 
-         S(2)   = DSQRT  ( S224 * 0.25D0 )
-         FACTOR = 1.0D0 /( S(2) * 4.0D0  )
+         s(2)   = dsqrt  ( s224 * 0.25d0 )
+         factor = 1.0d0 /( s(2) * 4.0d0  )
 
-         C      = ( R(1,3) - R(3,1) ) * FACTOR
-         S(1)   = ( R(1,2) + R(2,1) ) * FACTOR
-         S(3)   = ( R(2,3) + R(3,2) ) * FACTOR
+         c      = ( r(1,3) - r(3,1) ) * factor
+         s(1)   = ( r(1,2) + r(2,1) ) * factor
+         s(3)   = ( r(2,3) + r(3,2) ) * factor
 
-      ELSE
+      else
 
-         S(3)   = DSQRT  ( S334 * 0.25D0 )
-         FACTOR = 1.0D0 /( S(3) * 4.0D0  )
+         s(3)   = dsqrt  ( s334 * 0.25d0 )
+         factor = 1.0d0 /( s(3) * 4.0d0  )
 
-         C      = ( R(2,1) - R(1,2) ) * FACTOR
-         S(1)   = ( R(1,3) + R(3,1) ) * FACTOR
-         S(2)   = ( R(2,3) + R(3,2) ) * FACTOR
+         c      = ( r(2,1) - r(1,2) ) * factor
+         s(1)   = ( r(1,3) + r(3,1) ) * factor
+         s(2)   = ( r(2,3) + r(3,2) ) * factor
 
-      END IF
+      end if
 !
 !     If the magnitude of this quaternion is not one, we polish it
 !     up a bit.
 !
-      L2 = C*C + S(1)*S(1) + S(2)*S(2) + S(3)*S(3)
+      l2 = c*c + s(1)*s(1) + s(2)*s(2) + s(3)*s(3)
 
-      IF ( L2 .NE. 1.0D0 ) THEN
-         POLISH = 1.0D0/DSQRT(L2)
-         C      =    C*POLISH
-         S(1)   = S(1)*POLISH
-         S(2)   = S(2)*POLISH
-         S(3)   = S(3)*POLISH
-      END IF
+      if ( l2 .ne. 1.0d0 ) then
+         polish = 1.0d0/dsqrt(l2)
+         c      =    c*polish
+         s(1)   = s(1)*polish
+         s(2)   = s(2)*polish
+         s(3)   = s(3)*polish
+      end if
 
-      IF ( C .GT. 0.0D0 ) THEN
-         Q(0) = C
-         Q(1) = S(1)
-         Q(2) = S(2)
-         Q(3) = S(3)
-      ELSE
-         Q(0) = -C
-         Q(1) = -S(1)
-         Q(2) = -S(2)
-         Q(3) = -S(3)
-      END IF
+      if ( c .gt. 0.0d0 ) then
+         q(0) = c
+         q(1) = s(1)
+         q(2) = s(2)
+         q(3) = s(3)
+      else
+         q(0) = -c
+         q(1) = -s(1)
+         q(2) = -s(2)
+         q(3) = -s(3)
+      end if
 
-      RETURN
-      END
+      return
+      end

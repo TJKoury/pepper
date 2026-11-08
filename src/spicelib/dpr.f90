@@ -1,6 +1,6 @@
 !$Procedure DPR ( Degrees per radian )
 
-      DOUBLE PRECISION FUNCTION DPR ( )
+      double precision function dpr ( )
 
 ! $ Abstract
 !
@@ -111,23 +111,23 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VALUE
-      SAVE                  VALUE
+      double precision      value
+      save                  value
 
 !
 !     Initial values
 !
-      DATA                  VALUE      / 0.D0 /
+      data                  value      / 0.d0 /
 
 
 !
 !     What is there to say?
 !
-      IF ( VALUE .EQ. 0.D0 ) THEN
-         VALUE = 180.D0 / ACOS ( -1.D0 )
-      END IF
+      if ( value .eq. 0.d0 ) then
+         value = 180.d0 / acos ( -1.d0 )
+      end if
 
-      DPR = VALUE
+      dpr = value
 
-      RETURN
-      END
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure ZZSWFFET ( Private, switch frame kernel pool data fetch )
 
-      SUBROUTINE ZZSWFFET ( FRAMID, HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                            FREE,   BASCNT, USETIM, BINARY, CLSSES, &
-                            CLSIDS, BASLST, STARTS, STOPS,  FRAMAT )
+      subroutine zzswffet ( framid, hdfram, frpool, fidlst, basbeg, &
+                            free,   bascnt, usetim, binary, clsses, &
+                            clsids, baslst, starts, stops,  framat )
 
 ! $ Abstract
 !
@@ -26,25 +26,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzswtchf.inc'
+      include              'zzswtchf.inc'
 
-      INTEGER               FRAMID
-      INTEGER               HDFRAM ( * )
-      INTEGER               FRPOOL ( LBSNGL : * )
-      INTEGER               FIDLST ( * )
-      INTEGER               BASBEG ( * )
-      INTEGER               FREE
-      INTEGER               BASCNT ( * )
-      LOGICAL               USETIM ( * )
-      LOGICAL               BINARY ( * )
-      INTEGER               CLSSES ( * )
-      INTEGER               CLSIDS ( * )
-      INTEGER               BASLST ( * )
-      DOUBLE PRECISION      STARTS ( * )
-      DOUBLE PRECISION      STOPS ( * )
-      INTEGER               FRAMAT
+      integer               framid
+      integer               hdfram ( * )
+      integer               frpool ( lbsngl : * )
+      integer               fidlst ( * )
+      integer               basbeg ( * )
+      integer               free
+      integer               bascnt ( * )
+      logical               usetim ( * )
+      logical               binary ( * )
+      integer               clsses ( * )
+      integer               clsids ( * )
+      integer               baslst ( * )
+      double precision      starts ( * )
+      double precision      stops ( * )
+      integer               framat
 
 ! $ Brief_I/O
 !
@@ -341,8 +341,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local parameters
@@ -351,130 +351,130 @@
 !
 !     Kernel variable name templates:
 !
-      CHARACTER*(*)         TMALGN
-      PARAMETER           ( TMALGN = 'FRAME_#_ALIGNED_WITH' )
+      character*(*)         tmalgn
+      parameter           ( tmalgn = 'FRAME_#_ALIGNED_WITH' )
 
-      CHARACTER*(*)         TMCENT
-      PARAMETER           ( TMCENT = 'FRAME_#_CENTER' )
+      character*(*)         tmcent
+      parameter           ( tmcent = 'FRAME_#_CENTER' )
 
-      CHARACTER*(*)         TMCLAS
-      PARAMETER           ( TMCLAS = 'FRAME_#_CLASS' )
+      character*(*)         tmclas
+      parameter           ( tmclas = 'FRAME_#_CLASS' )
 
-      CHARACTER*(*)         TMCLID
-      PARAMETER           ( TMCLID = 'FRAME_#_CLASS_ID' )
+      character*(*)         tmclid
+      parameter           ( tmclid = 'FRAME_#_CLASS_ID' )
 
-      CHARACTER*(*)         TMID
-      PARAMETER           ( TMID   = 'FRAME_#' )
+      character*(*)         tmid
+      parameter           ( tmid   = 'FRAME_#' )
 
-      CHARACTER*(*)         TMFNAM
-      PARAMETER           ( TMFNAM = 'FRAME_#_NAME' )
+      character*(*)         tmfnam
+      parameter           ( tmfnam = 'FRAME_#_NAME' )
 
-      CHARACTER*(*)         TMSTRT
-      PARAMETER           ( TMSTRT = 'FRAME_#_START' )
+      character*(*)         tmstrt
+      parameter           ( tmstrt = 'FRAME_#_START' )
 
-      CHARACTER*(*)         TMSTOP
-      PARAMETER           ( TMSTOP = 'FRAME_#_STOP' )
+      character*(*)         tmstop
+      parameter           ( tmstop = 'FRAME_#_STOP' )
 
 !
 !     Other parameters
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
-      INTEGER               TIMLEN
-      PARAMETER           ( TIMLEN = 80 )
+      integer               timlen
+      parameter           ( timlen = 80 )
 
 !
 !     Indices of items in the arrays of kernel variables:
 !
-      INTEGER               IXFNAM
-      PARAMETER           ( IXFNAM = 1 )
+      integer               ixfnam
+      parameter           ( ixfnam = 1 )
 
-      INTEGER               IXID
-      PARAMETER           ( IXID   = IXFNAM + 1 )
+      integer               ixid
+      parameter           ( ixid   = ixfnam + 1 )
 
-      INTEGER               IXCENT
-      PARAMETER           ( IXCENT = IXID    + 1 )
+      integer               ixcent
+      parameter           ( ixcent = ixid    + 1 )
 
-      INTEGER               IXCLAS
-      PARAMETER           ( IXCLAS = IXCENT + 1 )
+      integer               ixclas
+      parameter           ( ixclas = ixcent + 1 )
 
-      INTEGER               IXCLID
-      PARAMETER           ( IXCLID = IXCLAS + 1 )
+      integer               ixclid
+      parameter           ( ixclid = ixclas + 1 )
 
-      INTEGER               IXALGN
-      PARAMETER           ( IXALGN = IXCLID + 1 )
+      integer               ixalgn
+      parameter           ( ixalgn = ixclid + 1 )
 
-      INTEGER               IXSTRT
-      PARAMETER           ( IXSTRT = IXALGN + 1 )
+      integer               ixstrt
+      parameter           ( ixstrt = ixalgn + 1 )
 
-      INTEGER               IXSTOP
-      PARAMETER           ( IXSTOP = IXSTRT + 1 )
+      integer               ixstop
+      parameter           ( ixstop = ixstrt + 1 )
 
 
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN = 32 )
+      integer               kvnmln
+      parameter           ( kvnmln = 32 )
 
-      INTEGER               NKV
-      PARAMETER           ( NKV    = 8 )
+      integer               nkv
+      parameter           ( nkv    = 8 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    BASNAM
-      CHARACTER*(1)         BASTYP
-      CHARACTER*(FRNMLN)    FRNAME
-      CHARACTER*(KVNMLN)    KVALGN
-      CHARACTER*(KVNMLN)    KVCLID
-      CHARACTER*(KVNMLN)    KVCENT
-      CHARACTER*(KVNMLN)    KVCLAS
-      CHARACTER*(KVNMLN)    KVID
-      CHARACTER*(KVNMLN)    KVFNAM
-      CHARACTER*(KVNMLN)    KVNAMS ( NKV )
-      CHARACTER*(KVNMLN)    KVSTRT
-      CHARACTER*(KVNMLN)    KVSTOP
-      CHARACTER*(1)         STPTYP
-      CHARACTER*(1)         STRTYP
-      CHARACTER*(TIMLEN)    TIMSTR
+      character*(frnmln)    basnam
+      character*(1)         bastyp
+      character*(frnmln)    frname
+      character*(kvnmln)    kvalgn
+      character*(kvnmln)    kvclid
+      character*(kvnmln)    kvcent
+      character*(kvnmln)    kvclas
+      character*(kvnmln)    kvid
+      character*(kvnmln)    kvfnam
+      character*(kvnmln)    kvnams ( nkv )
+      character*(kvnmln)    kvstrt
+      character*(kvnmln)    kvstop
+      character*(1)         stptyp
+      character*(1)         strtyp
+      character*(timlen)    timstr
 
-      INTEGER               CENTER
-      INTEGER               FID
-      INTEGER               FRCENT
-      INTEGER               FRCLAS
-      INTEGER               FRCLID
-      INTEGER               I
-      INTEGER               J
-      INTEGER               N
-      INTEGER               NBASES
-      INTEGER               NFRAVL
-      INTEGER               NSTART
-      INTEGER               NSTOP
-      INTEGER               ROOM
+      integer               center
+      integer               fid
+      integer               frcent
+      integer               frclas
+      integer               frclid
+      integer               i
+      integer               j
+      integer               n
+      integer               nbases
+      integer               nfravl
+      integer               nstart
+      integer               nstop
+      integer               room
 
 !
 !     KVFND(*) indicates whether a specified kernel variable was found.
 !
-      LOGICAL               HAVTIM
-      LOGICAL               INFFND
-      LOGICAL               KVFND ( NKV )
-      LOGICAL               NEW
+      logical               havtim
+      logical               inffnd
+      logical               kvfnd ( nkv )
+      logical               new
 
-      LOGICAL               STRXST
-      LOGICAL               STPXST
+      logical               strxst
+      logical               stpxst
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSWFFET' )
+      call chkin ( 'ZZSWFFET' )
 
 !
 !     No result found yet.
 !
-      FRAMAT = 0
+      framat = 0
 
 !
 !     Create names of kernel variables, using the input frame ID.
@@ -483,17 +483,17 @@
 !     frame ID. We'll need the frame name before we can create the
 !     name of the kernel variable for the frame ID.
 !
-      CALL REPMI( TMCENT, '#', FRAMID, KVCENT )
-      CALL REPMI( TMCLAS, '#', FRAMID, KVCLAS )
-      CALL REPMI( TMCLID, '#', FRAMID, KVCLID )
-      CALL REPMI( TMFNAM, '#', FRAMID, KVFNAM )
+      call repmi( tmcent, '#', framid, kvcent )
+      call repmi( tmclas, '#', framid, kvclas )
+      call repmi( tmclid, '#', framid, kvclid )
+      call repmi( tmfnam, '#', framid, kvfnam )
 
 !
 !     Switch frame specification variables:
 !
-      CALL REPMI( TMALGN, '#', FRAMID, KVALGN )
-      CALL REPMI( TMSTRT, '#', FRAMID, KVSTRT )
-      CALL REPMI( TMSTOP, '#', FRAMID, KVSTOP )
+      call repmi( tmalgn, '#', framid, kvalgn )
+      call repmi( tmstrt, '#', framid, kvstrt )
+      call repmi( tmstop, '#', framid, kvstop )
 
 !
 !     Below, we use logical flags to describe the status
@@ -503,134 +503,134 @@
 !
 !     Look up the basic variables.
 !
-      CALL GIPOOL( KVCLAS, 1, 1, N, FRCLAS, KVFND(IXCLAS) )
-      CALL GIPOOL( KVCLID, 1, 1, N, FRCLID, KVFND(IXCLID) )
-      CALL GCPOOL( KVFNAM, 1, 1, N, FRNAME, KVFND(IXFNAM) )
+      call gipool( kvclas, 1, 1, n, frclas, kvfnd(ixclas) )
+      call gipool( kvclid, 1, 1, n, frclid, kvfnd(ixclid) )
+      call gcpool( kvfnam, 1, 1, n, frname, kvfnd(ixfnam) )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+         call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         CALL CHKOUT ( 'ZZSWFFET' )
-         RETURN
+         call chkout ( 'ZZSWFFET' )
+         return
 
-      END IF
+      end if
 
 !
 !     Fetch the switch frame ID variable.
 !
-      IF ( KVFND(IXFNAM) ) THEN
+      if ( kvfnd(ixfnam) ) then
 !
 !        Use the frame name to fetch the switch frame ID variable.
 !
-         CALL REPMC ( TMID, '#', FRNAME, KVID )
+         call repmc ( tmid, '#', frname, kvid )
 
-         CALL GIPOOL( KVID, 1, 1, N, FID, KVFND(IXID) )
+         call gipool( kvid, 1, 1, n, fid, kvfnd(ixid) )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL CHKOUT( 'ZZSWFFET' )
-            RETURN
+            call chkout( 'ZZSWFFET' )
+            return
 
-         END IF
+         end if
 
 !
 !        The frame ID of the frame specification had better match
 !        the input frame ID.
 !
-         IF ( KVFND(IXID) .AND. ( FID .NE. FRAMID ) ) THEN
+         if ( kvfnd(ixid) .and. ( fid .ne. framid ) ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'Input frame ID was #, but ID in frame ' &
+            call setmsg ( 'Input frame ID was #, but ID in frame ' &
             //            'specification from kernel pool was #. ' )
-            CALL ERRINT ( '#', FRAMID           )
-            CALL ERRINT ( '#', FID              )
-            CALL SIGERR ( 'SPICE(BADFRAMESPEC)' )
-            CALL CHKOUT ( 'ZZSWFFET'            )
-            RETURN
+            call errint ( '#', framid           )
+            call errint ( '#', fid              )
+            call sigerr ( 'SPICE(BADFRAMESPEC)' )
+            call chkout ( 'ZZSWFFET'            )
+            return
 
-         END IF
+         end if
 !
 !        The frame name must always be found. If not, the error
 !        will be diagnosed in the block below.
 !
-      ELSE
+      else
 !
 !        We couldn't find the frame name. Indicate the frame ID
 !        variable [sic] wasn't found, since its found flag won't be set
 !        by GIPOOL.
 !
-         KVFND(IXID) = .FALSE.
+         kvfnd(ixid) = .false.
 
-      END IF
+      end if
 
 !
 !     Look up the central body of the frame. The name of the kernel
 !     variable for the body could refer to the frame by name or frame
 !     ID; the body itself could be specified by name or body ID.
 !
-      IF ( KVFND(IXFNAM) ) THEN
+      if ( kvfnd(ixfnam) ) then
 
-         CALL ZZDYNBID ( FRNAME, FRAMID, 'CENTER', FRCENT )
+         call zzdynbid ( frname, framid, 'CENTER', frcent )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL CHKOUT ( 'ZZSWFFET' )
-            RETURN
+            call chkout ( 'ZZSWFFET' )
+            return
 
-         END IF
+         end if
 
-         KVFND(IXCENT) = .TRUE.
-      ELSE
-         KVFND(IXCENT) = .FALSE.
-      END IF
+         kvfnd(ixcent) = .true.
+      else
+         kvfnd(ixcent) = .false.
+      end if
 
 !
 !     Look up the type and count of the base frame list. It
 !     may have either string or numeric type.
 !
-      CALL DTPOOL( KVALGN, KVFND(IXALGN), NBASES, BASTYP )
+      call dtpool( kvalgn, kvfnd(ixalgn), nbases, bastyp )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+         call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         CALL CHKOUT ( 'ZZSWFFET' )
-         RETURN
+         call chkout ( 'ZZSWFFET' )
+         return
 
-      END IF
+      end if
 
 !
 !     Store the kernel variable names in order to prepare for
 !     checking availability of required variables.
 !
-      KVNAMS(IXID)   = KVID
-      KVNAMS(IXFNAM) = KVFNAM
-      KVNAMS(IXCENT) = KVCENT
-      KVNAMS(IXCLAS) = KVCLAS
-      KVNAMS(IXCLID) = KVCLID
-      KVNAMS(IXALGN) = KVALGN
+      kvnams(ixid)   = kvid
+      kvnams(ixfnam) = kvfnam
+      kvnams(ixcent) = kvcent
+      kvnams(ixclas) = kvclas
+      kvnams(ixclid) = kvclid
+      kvnams(ixalgn) = kvalgn
 
 !
 !     Check for required variables that haven't been supplied.
 !
-      DO I = 1, IXALGN
+      do i = 1, ixalgn
 !
 !        The first 6 items are needed; start and stop times are needed
 !        if at least one is present.
 !
-         IF ( .NOT. KVFND(I) ) THEN
+         if ( .not. kvfnd(i) ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'Kernel variable #, needed for ' &
+            call setmsg ( 'Kernel variable #, needed for ' &
             //            'specification of switch frame having ' &
             //            'frame ID #, was not ' &
             //            'found in the kernel pool. This can occur ' &
@@ -638,36 +638,36 @@
             //            'switch frame specification has not been ' &
             //            'loaded, or if the specification is present ' &
             //            'but is incorrect.'                         )
-            CALL ERRCH  ( '#', KVNAMS(I)                              )
-            CALL ERRINT ( '#', FRAMID                                 )
-            CALL SIGERR ( 'SPICE(MISSINGFRAMEVAR)'                    )
-            CALL CHKOUT ( 'ZZSWFFET'                                  )
-            RETURN
+            call errch  ( '#', kvnams(i)                              )
+            call errint ( '#', framid                                 )
+            call sigerr ( 'SPICE(MISSINGFRAMEVAR)'                    )
+            call chkout ( 'ZZSWFFET'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Find out whether time bounds are supplied, and if so, which data
 !     type is used to represent them.
 !
-      KVNAMS(IXSTRT) = KVSTRT
-      KVNAMS(IXSTOP) = KVSTOP
+      kvnams(ixstrt) = kvstrt
+      kvnams(ixstop) = kvstop
 
-      CALL DTPOOL( KVSTRT, KVFND(IXSTRT), NSTART, STRTYP )
-      CALL DTPOOL( KVSTOP, KVFND(IXSTOP), NSTOP,  STPTYP )
+      call dtpool( kvstrt, kvfnd(ixstrt), nstart, strtyp )
+      call dtpool( kvstop, kvfnd(ixstop), nstop,  stptyp )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+         call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         CALL CHKOUT ( 'ZZSWFFET' )
-         RETURN
+         call chkout ( 'ZZSWFFET' )
+         return
 
-      END IF
+      end if
 
 !
 !     Availability of starts and stops is optional...however both
@@ -679,46 +679,46 @@
 !     start and stop times is either zero or matches the number of
 !     base frames.
 !
-      STRXST = KVFND(IXSTRT)
-      STPXST = KVFND(IXSTOP)
+      strxst = kvfnd(ixstrt)
+      stpxst = kvfnd(ixstop)
 
-      HAVTIM = STRXST .AND. STPXST
+      havtim = strxst .and. stpxst
 
-      IF ( HAVTIM ) THEN
+      if ( havtim ) then
 !
 !        Make sure that counts of base frames, start times, and
 !        stop times are equal.
 !
-         IF ( ( NSTART .NE. NSTOP ) .OR. ( NSTART .NE. NBASES ) ) THEN
+         if ( ( nstart .ne. nstop ) .or. ( nstart .ne. nbases ) ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'Kernel variables for the switch frame ' &
+            call setmsg ( 'Kernel variables for the switch frame ' &
             //            'having frame ID # have mismatched sizes: ' &
             //            'number of base frames = #; number of start ' &
             //            'times = #; number of stop times = #.'      )
-            CALL ERRINT ( '#', FRAMID            )
-            CALL ERRINT ( '#', NBASES            )
-            CALL ERRINT ( '#', NSTART            )
-            CALL ERRINT ( '#', NSTOP             )
-            CALL SIGERR ( 'SPICE(COUNTMISMATCH)' )
-            CALL CHKOUT ( 'ZZSWFFET'             )
-            RETURN
+            call errint ( '#', framid            )
+            call errint ( '#', nbases            )
+            call errint ( '#', nstart            )
+            call errint ( '#', nstop             )
+            call sigerr ( 'SPICE(COUNTMISMATCH)' )
+            call chkout ( 'ZZSWFFET'             )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Check for inconsistent presence of start and stop times.
 !
-         IF ( STRXST .OR. STPXST ) THEN
+         if ( strxst .or. stpxst ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
 !
 !           Create long message template to be filled in.
 !
-            CALL SETMSG ( 'Kernel variable #, which specifies base ' &
+            call setmsg ( 'Kernel variable #, which specifies base ' &
             //            'frame applicability # times, was not ' &
             //            'provided for the switch frame having ' &
             //            'frame ID #, while the kernel variable # ' &
@@ -728,48 +728,48 @@
             //            'optional, but both must be provided if ' &
             //            'either is.'  )
 
-            IF ( STRXST ) THEN
+            if ( strxst ) then
 !
 !              Stop times are missing.
 !
-               CALL ERRCH  ( '#', KVSTOP  )
-               CALL ERRCH  ( '#', 'stop'  )
-               CALL ERRINT ( '#', FRAMID  )
-               CALL ERRCH  ( '#', KVSTRT  )
-               CALL ERRCH  ( '#', 'start' )
+               call errch  ( '#', kvstop  )
+               call errch  ( '#', 'stop'  )
+               call errint ( '#', framid  )
+               call errch  ( '#', kvstrt  )
+               call errch  ( '#', 'start' )
 
-            ELSE
+            else
 !
 !              Start times are missing.
 !
-               CALL ERRCH  ( '#', KVSTRT  )
-               CALL ERRCH  ( '#', 'start' )
-               CALL ERRINT ( '#', FRAMID  )
-               CALL ERRCH  ( '#', KVSTOP  )
-               CALL ERRCH  ( '#', 'stop'  )
+               call errch  ( '#', kvstrt  )
+               call errch  ( '#', 'start' )
+               call errint ( '#', framid  )
+               call errch  ( '#', kvstop  )
+               call errch  ( '#', 'stop'  )
 
-            END IF
+            end if
 
-            CALL SIGERR ( 'SPICE(PARTIALFRAMESPEC)' )
-            CALL CHKOUT ( 'ZZSWFFET'                )
-            RETURN
+            call sigerr ( 'SPICE(PARTIALFRAMESPEC)' )
+            call chkout ( 'ZZSWFFET'                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Compute room for the output data.
 !
-      ROOM = MAXBAS + 1 - FREE
+      room = maxbas + 1 - free
 
 !
 !     Check the available room in the frame ID pool and in the frame
 !     base arrays.
 !
-      CALL ZZHSIAVL ( FRPOOL, NFRAVL )
+      call zzhsiavl ( frpool, nfravl )
 
-      IF ( ( NFRAVL .EQ. 0 ) .OR. ( ROOM .LT. NBASES ) ) THEN
+      if ( ( nfravl .eq. 0 ) .or. ( room .lt. nbases ) ) then
 !
 !        There's no room for another frame in the frame pool, or
 !        there's no room for the new frame's data in the base
@@ -780,40 +780,40 @@
 !        much data to fit in the empty base frame arrays, that's
 !        an error.
 !
-         IF ( NBASES .LE. MAXBAS ) THEN
+         if ( nbases .le. maxbas ) then
 !
 !           We can fit the frame data in by clearing out the
 !           database.
 !
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
 !
 !           The database is now initialized.
 !
-            FREE = 1
-            ROOM = MAXBAS
+            free = 1
+            room = maxbas
 
-         ELSE
+         else
 !
 !           We can't make enough room.
 !
 !           Initialize local data structures, for safety.
 !
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'The requested frame # has # associated ' &
+            call setmsg ( 'The requested frame # has # associated ' &
             //            'base frames. The maximum number that ' &
             //            'can be supported is #.'   )
-            CALL ERRINT ( '#', FRAMID                )
-            CALL ERRINT ( '#', NBASES                )
-            CALL ERRINT ( '#', MAXBAS                )
-            CALL SIGERR ( 'SPICE(TOOMANYBASEFRAMES)' )
-            CALL CHKOUT ( 'ZZSWFFET'                 )
-            RETURN
+            call errint ( '#', framid                )
+            call errint ( '#', nbases                )
+            call errint ( '#', maxbas                )
+            call sigerr ( 'SPICE(TOOMANYBASEFRAMES)' )
+            call chkout ( 'ZZSWFFET'                 )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Add the frame and its data to the local database.
@@ -824,7 +824,7 @@
 !     check for failure of ZZHSIADD, since we've already ensured
 !     there's room in the hash for a new clock.
 !
-      CALL ZZHSIADD ( HDFRAM, FRPOOL, FIDLST, FRAMID, FRAMAT, NEW )
+      call zzhsiadd ( hdfram, frpool, fidlst, framid, framat, new )
 
 !
 !     At this point, FRAMAT is set.
@@ -832,311 +832,311 @@
 !     Store the frame ID, base start index, base count, and time
 !     interval availability attributes for this frame.
 !
-      FIDLST( FRAMAT ) = FRAMID
-      BASBEG( FRAMAT ) = FREE
-      BASCNT( FRAMAT ) = NBASES
-      USETIM( FRAMAT ) = HAVTIM
+      fidlst( framat ) = framid
+      basbeg( framat ) = free
+      bascnt( framat ) = nbases
+      usetim( framat ) = havtim
 
 !
 !     Look up the base frame variables. The base frame list may have
 !     either string or numeric type.
 !
-      KVFND(IXALGN) = .FALSE.
+      kvfnd(ixalgn) = .false.
 
-      IF ( BASTYP .EQ. 'N' ) THEN
+      if ( bastyp .eq. 'N' ) then
 !
 !        The frames are specified by ID code. We can buffer the frame
 !        ID codes immediately.
 !
-         CALL GIPOOL ( KVALGN,       1,            ROOM, &
-                       BASCNT(FREE), BASLST(FREE), KVFND(IXALGN) )
+         call gipool ( kvalgn,       1,            room, &
+                       bascnt(free), baslst(free), kvfnd(ixalgn) )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL CHKOUT( 'ZZSWFFET' )
-            RETURN
+            call chkout( 'ZZSWFFET' )
+            return
 
-         END IF
+         end if
 
-      ELSE IF ( BASTYP .EQ. 'C' ) THEN
+      else if ( bastyp .eq. 'C' ) then
 !
 !        The frames are specified by name. We must convert the
 !        names to frame ID codes before we can can buffer the IDs.
 !
-         KVFND(IXALGN) = .FALSE.
+         kvfnd(ixalgn) = .false.
 
-         DO I = 1, NBASES
+         do i = 1, nbases
 
-            CALL GCPOOL( KVALGN,  I,       1, &
-                         N,       BASNAM,  KVFND(IXALGN) )
+            call gcpool( kvalgn,  i,       1, &
+                         n,       basnam,  kvfnd(ixalgn) )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 !
 !              This code should be unreachable but is provided for
 !              safety.
 !
-               CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+               call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-               CALL CHKOUT( 'ZZSWFFET' )
-               RETURN
+               call chkout( 'ZZSWFFET' )
+               return
 
-            END IF
+            end if
 
-            CALL NAMFRM( BASNAM, BASLST(FREE-1+I) )
+            call namfrm( basnam, baslst(free-1+i) )
 
-            IF ( BASLST(FREE-1+I) .EQ. 0 ) THEN
+            if ( baslst(free-1+i) .eq. 0 ) then
 
-               CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+               call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-               CALL SETMSG( 'Base frame name # of switch frame ' &
+               call setmsg( 'Base frame name # of switch frame ' &
                //           '# could not be translated to a ' &
                //           'frame ID code '           )
-               CALL ERRCH ( '#', BASNAM                )
-               CALL ERRINT( '#', FRAMID                )
-               CALL SIGERR( 'SPICE(FRAMENAMENOTFOUND)' )
-               CALL CHKOUT( 'ZZSWFFET'                 )
-               RETURN
+               call errch ( '#', basnam                )
+               call errint( '#', framid                )
+               call sigerr( 'SPICE(FRAMENAMENOTFOUND)' )
+               call chkout( 'ZZSWFFET'                 )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        Backstop: this code should be unreachable.
 !
-         CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+         call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-         CALL SETMSG ( 'Base frame kernel variable # exists but ' &
+         call setmsg ( 'Base frame kernel variable # exists but ' &
          //            'DTPOOL returned data type # rather than ' &
          //            'one of the expected values: ''C'' or ''N''.' )
-         CALL ERRCH  ( '#', KVALGN  )
-         CALL ERRCH  ( '#', BASTYP  )
-         CALL SIGERR ( 'SPICE(BUG)' )
-         CALL CHKOUT( 'ZZSWFFET'    )
-         RETURN
+         call errch  ( '#', kvalgn  )
+         call errch  ( '#', bastyp  )
+         call sigerr ( 'SPICE(BUG)' )
+         call chkout( 'ZZSWFFET'    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get attributes of each base frame.
 !
-      DO I = 1, NBASES
+      do i = 1, nbases
 !
 !        Store the frame class and frame class ID for this base frame.
 !
-         J = FREE - 1 + I
+         j = free - 1 + i
 
-         CALL FRINFO ( BASLST(J), CENTER, &
-                       CLSSES(J), CLSIDS(J), INFFND )
+         call frinfo ( baslst(j), center, &
+                       clsses(j), clsids(j), inffnd )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL CHKOUT ( 'ZZSWFFET' )
-            RETURN
+            call chkout ( 'ZZSWFFET' )
+            return
 
-         END IF
+         end if
 
-         IF ( .NOT. INFFND ) THEN
+         if ( .not. inffnd ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'No specification was found for ' &
+            call setmsg ( 'No specification was found for ' &
             //            'base frame # of switch frame #.' )
-            CALL ERRINT ( '#', BASLST(J)                    )
-            CALL ERRINT ( '#', FRAMID                       )
-            CALL SIGERR ( 'SPICE(FRAMEINFONOTFOUND)'        )
-            CALL CHKOUT ( 'ZZSWFFET' )
-            RETURN
+            call errint ( '#', baslst(j)                    )
+            call errint ( '#', framid                       )
+            call sigerr ( 'SPICE(FRAMEINFONOTFOUND)'        )
+            call chkout ( 'ZZSWFFET' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Fetch interval bounds if they're present.
 !
-      IF ( USETIM(FRAMAT) ) THEN
+      if ( usetim(framat) ) then
 !
 !        Fetch start times.
 !
 !        Note that DTPOOL sets the type to 'X' if the target
 !        kernel variable is not found.
 !
-         IF ( STRTYP .EQ. 'N' ) THEN
+         if ( strtyp .eq. 'N' ) then
 !
 !           The start times are represented by double precision
 !           numbers.
 !
-            CALL GDPOOL( KVSTRT, 1,            ROOM, &
-                         NSTART, STARTS(FREE), KVFND(IXSTRT) )
+            call gdpool( kvstrt, 1,            room, &
+                         nstart, starts(free), kvfnd(ixstrt) )
 
-         ELSE IF ( STRTYP .EQ. 'C' ) THEN
+         else if ( strtyp .eq. 'C' ) then
 !
 !           The start times are represented by strings.
 !
 !           We must convert each string to a numeric value and store
 !           the value in the start time buffer.
 !
-            KVFND(IXSTRT) = .FALSE.
+            kvfnd(ixstrt) = .false.
 
-            DO I = 1, NBASES
+            do i = 1, nbases
 
-               CALL GCPOOL( KVSTRT,  I,      1, &
-                            N,       TIMSTR, KVFND(IXSTRT) )
+               call gcpool( kvstrt,  i,      1, &
+                            n,       timstr, kvfnd(ixstrt) )
 
-               CALL STR2ET( TIMSTR, STARTS(FREE-1+I) )
+               call str2et( timstr, starts(free-1+i) )
 
-            END DO
+            end do
 
-         ELSE
+         else
 !
 !           Backstop: this code should be unreachable.
 !
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'Start time kernel variable # exists but ' &
+            call setmsg ( 'Start time kernel variable # exists but ' &
             //            'DTPOOL returned data type # rather than ' &
             //            'one of the expected values: ''C'' ' &
             //            'or ''N''.' )
-            CALL ERRCH  ( '#', KVSTRT  )
-            CALL ERRCH  ( '#', STRTYP  )
-            CALL SIGERR ( 'SPICE(BUG)' )
-            CALL CHKOUT( 'ZZSWFFET'    )
-            RETURN
+            call errch  ( '#', kvstrt  )
+            call errch  ( '#', strtyp  )
+            call sigerr ( 'SPICE(BUG)' )
+            call chkout( 'ZZSWFFET'    )
+            return
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL CHKOUT( 'ZZSWFFET' )
-            RETURN
+            call chkout( 'ZZSWFFET' )
+            return
 
-         END IF
+         end if
 
 !
 !        Fetch stop times.
 !
-         IF ( STPTYP .EQ. 'N' ) THEN
+         if ( stptyp .eq. 'N' ) then
 !
 !           The stop times are represented by double precision numbers.
 !
-            CALL GDPOOL( KVSTOP, 1,           ROOM, &
-                         NSTOP,  STOPS(FREE), KVFND(IXSTOP) )
+            call gdpool( kvstop, 1,           room, &
+                         nstop,  stops(free), kvfnd(ixstop) )
 
-         ELSE IF ( STPTYP .EQ. 'C' ) THEN
+         else if ( stptyp .eq. 'C' ) then
 !
 !           The stop times are represented by strings.
 !
 !           We must convert each string to a numeric value and store
 !           the value in the stop time buffer.
 !
-            KVFND(IXSTOP) = .FALSE.
+            kvfnd(ixstop) = .false.
 
-            DO I = 1, NSTOP
+            do i = 1, nstop
 
-               CALL GCPOOL( KVSTOP,  I,      1, &
-                            N,       TIMSTR, KVFND(IXSTOP) )
+               call gcpool( kvstop,  i,      1, &
+                            n,       timstr, kvfnd(ixstop) )
 
-               CALL STR2ET( TIMSTR, STOPS(FREE-1+I) )
+               call str2et( timstr, stops(free-1+i) )
 
-            END DO
+            end do
 
-         ELSE
+         else
 !
 !           Backstop: this code should be unreachable.
 !
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL SETMSG ( 'Stop time kernel variable # exists but ' &
+            call setmsg ( 'Stop time kernel variable # exists but ' &
             //            'DTPOOL returned data type # rather than ' &
             //            'one of the expected values: ''C'' ' &
             //            'or ''N''.' )
-            CALL ERRCH  ( '#', KVSTOP  )
-            CALL ERRCH  ( '#', STPTYP  )
-            CALL SIGERR ( 'SPICE(BUG)' )
-            CALL CHKOUT( 'ZZSWFFET'    )
-            RETURN
+            call errch  ( '#', kvstop  )
+            call errch  ( '#', stptyp  )
+            call sigerr ( 'SPICE(BUG)' )
+            call chkout( 'ZZSWFFET'    )
+            return
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+            call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-            CALL CHKOUT( 'ZZSWFFET' )
-            RETURN
-         END IF
+            call chkout( 'ZZSWFFET' )
+            return
+         end if
 
 !
 !        Singleton intervals and out-of-order intervals are not
 !        allowed.
 !
-         DO I = 1, NSTART
+         do i = 1, nstart
 
-            J = FREE - 1 + I
+            j = free - 1 + i
 
-            IF ( STARTS(J) .GE. STOPS(J) ) THEN
+            if ( starts(j) .ge. stops(j) ) then
 
-               CALL ZZSWFCLN ( HDFRAM, FRPOOL, BASBEG, FRAMAT )
+               call zzswfcln ( hdfram, frpool, basbeg, framat )
 
-               CALL SETMSG ( 'Interval time bounds are not strictly ' &
+               call setmsg ( 'Interval time bounds are not strictly ' &
                //            'increasing at interval index # for ' &
                //            'switch frame #. Time bounds are #:# TDB ' &
                //            '(# TDB : # TDB)'      )
-               CALL ERRINT ( '#', I                 )
-               CALL ERRINT ( '#', FRAMID            )
-               CALL ERRDP  ( '#', STARTS(J)         )
-               CALL ERRDP  ( '#', STOPS(J)          )
-               CALL ETCAL  ( STARTS(J), TIMSTR      )
-               CALL ERRCH  ( '#',       TIMSTR      )
-               CALL ETCAL  ( STOPS(J),  TIMSTR      )
-               CALL ERRCH  ( '#',       TIMSTR      )
-               CALL SIGERR ( 'SPICE(BADTIMEBOUNDS)' )
-               CALL CHKOUT ( 'ZZSWFFET'             )
-               RETURN
+               call errint ( '#', i                 )
+               call errint ( '#', framid            )
+               call errdp  ( '#', starts(j)         )
+               call errdp  ( '#', stops(j)          )
+               call etcal  ( starts(j), timstr      )
+               call errch  ( '#',       timstr      )
+               call etcal  ( stops(j),  timstr      )
+               call errch  ( '#',       timstr      )
+               call sigerr ( 'SPICE(BADTIMEBOUNDS)' )
+               call chkout ( 'ZZSWFFET'             )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Determine whether binary search on the time intervals is
 !     possible.
 !
-      IF ( USETIM(FRAMAT) ) THEN
+      if ( usetim(framat) ) then
 
-         I = 2
-         BINARY( FRAMAT ) = .TRUE.
+         i = 2
+         binary( framat ) = .true.
 
-         DO WHILE (  ( I .LE. NBASES ) .AND.  BINARY(FRAMAT)  )
+         do while (  ( i .le. nbases ) .and.  binary(framat)  )
 !
 !           Note that proper ordering of start and stop times for
 !           each interval has already been verified.
 !
-            J = BASBEG(FRAMAT) - 1 + I
+            j = basbeg(framat) - 1 + i
 
-            IF ( STOPS(J-1) .GT. STARTS(J) ) THEN
+            if ( stops(j-1) .gt. starts(j) ) then
 
-               BINARY( FRAMAT ) = .FALSE.
+               binary( framat ) = .false.
 
-            END IF
+            end if
 
-            I = I + 1
+            i = i + 1
 
-         END DO
+         end do
 
-      ELSE
-         BINARY( FRAMAT ) = .FALSE.
-      END IF
+      else
+         binary( framat ) = .false.
+      end if
 
 !
 !     We've found the data. The switch frame database has been
@@ -1144,8 +1144,8 @@
 !
 !     Account for the base frame storage used.
 !
-      FREE = FREE + NBASES
+      free = free + nbases
 
-      CALL CHKOUT ( 'ZZSWFFET' )
-      RETURN
-      END
+      call chkout ( 'ZZSWFFET' )
+      return
+      end

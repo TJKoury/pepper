@@ -1,6 +1,6 @@
 !$Procedure EKFIND ( EK, find data )
 
-      SUBROUTINE EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      subroutine ekfind ( query, nmrows, error, errmsg )
 
 ! $ Abstract
 !
@@ -18,18 +18,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekcnamsz.inc'
+      include 'ekquery.inc'
+      include 'ekqlimit.inc'
+      include 'ektype.inc'
+      include 'ekopcd.inc'
+      include 'ekcnamsz.inc'
 
-      CHARACTER*(*)         QUERY
-      INTEGER               NMROWS
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         query
+      integer               nmrows
+      logical               error
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -702,125 +702,125 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
 !
 !     Storage limits:
 !
-      INTEGER               MAXCOL
-      PARAMETER           ( MAXCOL = 100 )
+      integer               maxcol
+      parameter           ( maxcol = 100 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXCLN)    CHRBUF
-      CHARACTER*(MAXCLN)    EQRYC
+      character*(maxcln)    chrbuf
+      character*(maxcln)    eqryc
 
-      DOUBLE PRECISION      EQRYD  ( MAXQNM )
-      DOUBLE PRECISION      NUMVLS ( MAXQNM )
+      double precision      eqryd  ( maxqnm )
+      double precision      numvls ( maxqnm )
 
-      INTEGER               CHBEGS ( MAXTOK )
-      INTEGER               CHENDS ( MAXTOK )
-      INTEGER               EQRYI  ( LBCELL : EQIMIN )
-      INTEGER               ERRPTR
-      INTEGER               LXBEGS ( MAXTOK )
-      INTEGER               LXENDS ( MAXTOK )
-      INTEGER               NTOKEN
-      INTEGER               TOKENS ( MAXTOK )
-      INTEGER               VALUES ( MAXTOK )
+      integer               chbegs ( maxtok )
+      integer               chends ( maxtok )
+      integer               eqryi  ( lbcell : eqimin )
+      integer               errptr
+      integer               lxbegs ( maxtok )
+      integer               lxends ( maxtok )
+      integer               ntoken
+      integer               tokens ( maxtok )
+      integer               values ( maxtok )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKFIND' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKFIND' )
+      end if
 
 !
 !     Initialize the encoded query each time, for safety.
 !
-      CALL ZZEKQINI ( EQIMIN, MAXQNM, EQRYI, EQRYC, EQRYD )
+      call zzekqini ( eqimin, maxqnm, eqryi, eqryc, eqryd )
 
 !
 !     Find the tokens in the input query.
 !
-      CALL ZZEKSCAN ( QUERY,  MAXTOK, MAXQNM, NTOKEN, TOKENS, &
-                      LXBEGS, LXENDS, VALUES, NUMVLS, CHRBUF, &
-                      CHBEGS, CHENDS, ERROR,  ERRMSG         )
+      call zzekscan ( query,  maxtok, maxqnm, ntoken, tokens, &
+                      lxbegs, lxends, values, numvls, chrbuf, &
+                      chbegs, chends, error,  errmsg         )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'EKFIND' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'EKFIND' )
+         return
+      end if
 
 
 !
 !     Now parse the query.
 !
-      CALL ZZEKPARS (  QUERY,   NTOKEN,  LXBEGS,  LXENDS, &
-                       TOKENS,  VALUES,  NUMVLS,  CHRBUF, &
-                       CHBEGS,  CHENDS,  EQRYI,   EQRYC, &
-                       EQRYD,   ERROR,   ERRMSG          )
+      call zzekpars (  query,   ntoken,  lxbegs,  lxends, &
+                       tokens,  values,  numvls,  chrbuf, &
+                       chbegs,  chends,  eqryi,   eqryc, &
+                       eqryd,   error,   errmsg          )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'EKFIND' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'EKFIND' )
+         return
+      end if
 
 
 !
 !     Resolve names.
 !
-      CALL ZZEKNRES ( QUERY, EQRYI, EQRYC, &
-                             ERROR, ERRMSG, ERRPTR )
+      call zzeknres ( query, eqryi, eqryc, &
+                             error, errmsg, errptr )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'EKFIND' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'EKFIND' )
+         return
+      end if
 
 
 !
 !     Resolve time values, if necessary.
 !
-      CALL ZZEKTRES ( QUERY, EQRYI,  EQRYC,  EQRYD, &
-                             ERROR,  ERRMSG, ERRPTR  )
+      call zzektres ( query, eqryi,  eqryc,  eqryd, &
+                             error,  errmsg, errptr  )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'EKFIND' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'EKFIND' )
+         return
+      end if
 
 
 !
 !     Perform semantic checks.
 !
-      CALL ZZEKSEMC ( QUERY, EQRYI, EQRYC, &
-                             ERROR, ERRMSG, ERRPTR )
+      call zzeksemc ( query, eqryi, eqryc, &
+                             error, errmsg, errptr )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'EKFIND' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'EKFIND' )
+         return
+      end if
 
 !
 !     If we arrived here, the encoded query is ready for execution.
 !     Find the data satisfying the constraints.
 !
-      CALL EKSRCH ( EQRYI, EQRYC, EQRYD, NMROWS, ERROR, ERRMSG )
+      call eksrch ( eqryi, eqryc, eqryd, nmrows, error, errmsg )
 
 
-      CALL CHKOUT ( 'EKFIND' )
-      RETURN
-      END
+      call chkout ( 'EKFIND' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure VCRSS ( Vector cross product, 3 dimensions )
 
-      SUBROUTINE VCRSS ( V1, V2, VOUT )
+      subroutine vcrss ( v1, v2, vout )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    V1   ( 3 )
-      DOUBLE PRECISION    V2   ( 3 )
-      DOUBLE PRECISION    VOUT ( 3 )
+      double precision    v1   ( 3 )
+      double precision    v2   ( 3 )
+      double precision    vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -199,20 +199,20 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION VTEMP(3)
+      double precision vtemp(3)
 
 !
 !  Calculate the cross product of V1 and V2, store in VTEMP
 !
-      VTEMP(1) = V1(2)*V2(3) - V1(3)*V2(2)
-      VTEMP(2) = V1(3)*V2(1) - V1(1)*V2(3)
-      VTEMP(3) = V1(1)*V2(2) - V1(2)*V2(1)
+      vtemp(1) = v1(2)*v2(3) - v1(3)*v2(2)
+      vtemp(2) = v1(3)*v2(1) - v1(1)*v2(3)
+      vtemp(3) = v1(1)*v2(2) - v1(2)*v2(1)
 !
 !  Now move the result into VOUT
 !
-      VOUT(1) = VTEMP(1)
-      VOUT(2) = VTEMP(2)
-      VOUT(3) = VTEMP(3)
+      vout(1) = vtemp(1)
+      vout(2) = vtemp(2)
+      vout(3) = vtemp(3)
 !
-      RETURN
-      END
+      return
+      end

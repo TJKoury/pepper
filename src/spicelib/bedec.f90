@@ -1,6 +1,6 @@
 !$Procedure BEDEC  ( Be a decimal number? )
 
-      LOGICAL FUNCTION BEDEC  ( STRING )
+      logical function bedec  ( string )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -156,91 +156,91 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               BEINT
-      LOGICAL               BEUNS
-      INTEGER               POS
+      logical               beint
+      logical               beuns
+      integer               pos
 
 !
 !     Local Variables
 !
-      INTEGER               C
-      INTEGER               D
-      INTEGER               E
-      INTEGER               L
+      integer               c
+      integer               d
+      integer               e
+      integer               l
 
 
 !
 !     First determine whether or not a decimal point is present.
 !
-      D = POS ( STRING, '.', 1 )
-      C = D-1
-      E = D+1
+      d = pos ( string, '.', 1 )
+      c = d-1
+      e = d+1
 
-      IF ( D .EQ. 0 ) THEN
+      if ( d .eq. 0 ) then
 
 !
 !        If there is no decimal point just apply the integer test.
 !
-         BEDEC = BEINT ( STRING )
+         bedec = beint ( string )
 
-      ELSE
+      else
 
 !
 !        A decimal point is present, get the length of the string
 !        and see where the decimal point is relative to the last
 !        character.
 !
-         L = LEN(STRING)
+         l = len(string)
 
-         IF ( L .EQ. 1 ) THEN
+         if ( l .eq. 1 ) then
 
 !
 !           The string is one character long and a decimal point.
 !           Sorry, this is not a decimal number.
 !
-            BEDEC = .FALSE.
+            bedec = .false.
 
-         ELSE IF ( D .EQ. 1 ) THEN
+         else if ( d .eq. 1 ) then
 
 !
 !           The decimal point occurs as the first character of the
 !           string.  The string following it must begin with
 !           a non-blank character and be an unsigned integer.
 !
-            BEDEC =       STRING(E:E) .NE. ' ' &
-                     .AND. BEUNS  ( STRING(E:) )
+            bedec =       string(e:e) .ne. ' ' &
+                     .and. beuns  ( string(e:) )
 
-         ELSE IF ( D .EQ. L ) THEN
+         else if ( d .eq. l ) then
 
 !
 !           The decimal point is the last character of the string.
 !           The character that precedes it must be non-blank and
 !           the substring to the left must be an integer.
 !
-            BEDEC =       STRING(C:C) .NE. ' ' &
-                     .AND. BEINT ( STRING(1:C) )
+            bedec =       string(c:c) .ne. ' ' &
+                     .and. beint ( string(1:c) )
 
-         ELSE IF ( STRING(C:C) .EQ. ' ' ) THEN
+         else if ( string(c:c) .eq. ' ' ) then
 
 !
 !           The decimal point occurs somewhere in the middle of the
 !           string and the character preceding it is blank.
 !
-            BEDEC =        STRING(E:E) .NE. ' ' &
-                     .AND. STRING(1:C) .EQ. ' ' &
-                     .AND. BEUNS  ( STRING(E:) )
+            bedec =        string(e:e) .ne. ' ' &
+                     .and. string(1:c) .eq. ' ' &
+                     .and. beuns  ( string(e:) )
 
-         ELSE IF ( STRING(E:E) .EQ. ' ' ) THEN
+         else if ( string(e:e) .eq. ' ' ) then
 
 !
 !           Again the decimal point occurs somewhere in the middle of
 !           the string and the character following it is blank.
 !
-            BEDEC =        STRING(E:L) .EQ. ' ' &
-                     .AND. STRING(C:C) .NE. ' ' &
-                     .AND. BEINT ( STRING(1:C) )
+            bedec =        string(e:l) .eq. ' ' &
+                     .and. string(c:c) .ne. ' ' &
+                     .and. beint ( string(1:c) )
 
-         ELSE IF ( STRING(C:C) .EQ. '-' .OR. STRING(C:C) .EQ. '+' ) THEN
+         else if ( string(c:c) .eq. '-' .or. string(c:c) .eq. '+' ) then
 
 !
 !           The decimal point is in the middle of the string and
@@ -249,14 +249,14 @@
 !           should be an unsigned integer. (we already know that the
 !           character following the decimal point is not a blank)
 !
-            IF ( C .EQ. 1 ) THEN
-               BEDEC = BEUNS (STRING(E:L))
-            ELSE
-               BEDEC =        BEUNS ( STRING(E:L) ) &
-                        .AND. STRING(1:C-1) .EQ. ' '
-            END IF
+            if ( c .eq. 1 ) then
+               bedec = beuns (string(e:l))
+            else
+               bedec =        beuns ( string(e:l) ) &
+                        .and. string(1:c-1) .eq. ' '
+            end if
 
-         ELSE
+         else
 
 !
 !            Last chance, the decimal point is in the middle of the
@@ -266,12 +266,12 @@
 !            be an integer, the string to the right must be an
 !            unsigned integer.
 !
-             BEDEC =       BEINT  ( STRING(1:C) ) &
-                     .AND. BEUNS  ( STRING(E:L) )
+             bedec =       beint  ( string(1:c) ) &
+                     .and. beuns  ( string(e:l) )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

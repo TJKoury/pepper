@@ -1,6 +1,6 @@
 !$Procedure ZZDAFGSR ( Private --- DAF Get Summary/Descriptor Record )
 
-      SUBROUTINE ZZDAFGSR ( HANDLE, RECNO, ND, NI, DPREC, FOUND )
+      subroutine zzdafgsr ( handle, recno, nd, ni, dprec, found )
 
 ! $ Abstract
 !
@@ -20,16 +20,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      INTEGER               ND
-      INTEGER               NI
-      DOUBLE PRECISION      DPREC  ( * )
-      LOGICAL               FOUND
+      integer               handle
+      integer               recno
+      integer               nd
+      integer               ni
+      double precision      dprec  ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -131,122 +131,122 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Length in bytes of double precision numbers and integers.
 !
-      INTEGER               DPLEN
-      PARAMETER           ( DPLEN = 8       )
+      integer               dplen
+      parameter           ( dplen = 8       )
 
-      INTEGER               INLEN
-      PARAMETER           ( INLEN = DPLEN/2 )
+      integer               inlen
+      parameter           ( inlen = dplen/2 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(CBFSIZ)    CHRBUF
-      CHARACTER*(FILEN)     FNAME
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
-      CHARACTER*(STRSIZ)    TMPSTR
+      character*(cbfsiz)    chrbuf
+      character*(filen)     fname
+      character*(strsiz)    strbff ( numbff )
+      character*(strsiz)    tmpstr
 
-      DOUBLE PRECISION      DPBUF  ( 128 )
+      double precision      dpbuf  ( 128 )
 
-      INTEGER               CINDEX
-      INTEGER               DINDEX
-      INTEGER               I
-      INTEGER               IAMH
-      INTEGER               IARCH
-      INTEGER               IBFF
-      INTEGER               INBUF  ( 256 )
-      INTEGER               IOSTAT
-      INTEGER               LEFT
-      INTEGER               LUN
-      INTEGER               NATBFF
-      INTEGER               NSUM
-      INTEGER               SUMSIZ
+      integer               cindex
+      integer               dindex
+      integer               i
+      integer               iamh
+      integer               iarch
+      integer               ibff
+      integer               inbuf  ( 256 )
+      integer               iostat
+      integer               left
+      integer               lun
+      integer               natbff
+      integer               nsum
+      integer               sumsiz
 
-      LOGICAL               FIRST
-      LOGICAL               LOCFND
+      logical               first
+      logical               locfnd
 
 !
 !     Equivalence DPBUF to INBUF.
 !
-      EQUIVALENCE         ( DPBUF, INBUF )
+      equivalence         ( dpbuf, inbuf )
 
 !
 !     Saved Variables
 !
-      SAVE                  FIRST
-      SAVE                  NATBFF
-      SAVE                  STRBFF
+      save                  first
+      save                  natbff
+      save                  strbff
 
 !
 !     Data Statements
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  NATBFF / 0      /
+      data                  first  / .true. /
+      data                  natbff / 0      /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDAFGSR' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDAFGSR' )
+      end if
 
 !
 !     Perform some initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Populate STRBFF, the buffer that contains the labels
 !        for each binary file format.
 !
-         DO I = 1, NUMBFF
-            CALL ZZDDHGSD ( 'BFF', I, STRBFF(I) )
-         END DO
+         do i = 1, numbff
+            call zzddhgsd ( 'BFF', i, strbff(i) )
+         end do
 
 !
 !        Fetch the native binary file format and determine its
 !        integer code.
 !
-         CALL ZZPLATFM ( 'FILE_FORMAT', TMPSTR )
-         CALL UCASE    ( TMPSTR,        TMPSTR )
+         call zzplatfm ( 'FILE_FORMAT', tmpstr )
+         call ucase    ( tmpstr,        tmpstr )
 
-         NATBFF = ISRCHC ( TMPSTR, NUMBFF, STRBFF )
+         natbff = isrchc ( tmpstr, numbff, strbff )
 
-         IF ( NATBFF .EQ. 0 ) THEN
+         if ( natbff .eq. 0 ) then
 
-            CALL SETMSG ( 'The binary file format, ''#'', is not ' &
+            call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
             //            'This is a serious problem, contact NAIF.'   )
-            CALL ERRCH  ( '#', TMPSTR                                  )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZDAFGSR'                                   )
-            RETURN
+            call errch  ( '#', tmpstr                                  )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZDAFGSR'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Do not perform initialization tasks again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Assume the data record will not be found, until it has been read
 !     from the file, and if necessary, successfully translated.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Retrieve information regarding the file from the handle manager.
@@ -254,105 +254,105 @@
 !     all values passed into handle manager entry points will have
 !     'DAF' as their architecture arguments.
 !
-      CALL ZZDDHNFO ( HANDLE, FNAME, IARCH, IBFF, IAMH, LOCFND )
+      call zzddhnfo ( handle, fname, iarch, ibff, iamh, locfnd )
 
-      IF ( .NOT. LOCFND ) THEN
-         CALL SETMSG ( 'Unable to locate file associated with ' &
+      if ( .not. locfnd ) then
+         call setmsg ( 'Unable to locate file associated with ' &
          //            'HANDLE, #.  The most likely cause of this ' &
          //            'is the file that you are trying to read ' &
          //            'has been closed.'                           )
-         CALL ERRINT ( '#', HANDLE                                  )
-         CALL SIGERR ( 'SPICE(HANDLENOTFOUND)'                      )
-         CALL CHKOUT ( 'ZZDAFGSR'                                   )
-         RETURN
-      END IF
+         call errint ( '#', handle                                  )
+         call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         call chkout ( 'ZZDAFGSR'                                   )
+         return
+      end if
 
 !
 !     Now get a logical unit for the handle.  Check FAILED()
 !     in case an error occurs.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., LUN )
+      call zzddhhlu ( handle, 'DAF', .false., lun )
 
-      IF ( FAILED() ) THEN
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'ZZDAFGSR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         found = .false.
+         call chkout ( 'ZZDAFGSR' )
+         return
+      end if
 
 !
 !     Branch based on whether the binary file format is native
 !     or not.  Only supported formats can be opened by ZZDDHOPN,
 !     so no check of IBFF is required.
 !
-      IF ( IBFF .EQ. NATBFF ) THEN
+      if ( ibff .eq. natbff ) then
 
 !
 !        In the native case, just read the array of double precision
 !        numbers from the file.  The packed integers will be
 !        processed properly by the READ.
 !
-         READ ( UNIT   = LUN, &
-                REC    = RECNO, &
-                IOSTAT = IOSTAT ) ( DPBUF(I), I = 1, 128 )
+         read ( unit   = lun, &
+                rec    = recno, &
+                iostat = iostat ) ( dpbuf(i), i = 1, 128 )
 
 !
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL CHKOUT ( 'ZZDAFGSR' )
-            RETURN
-         END IF
+         if ( iostat .ne. 0 ) then
+            call chkout ( 'ZZDAFGSR' )
+            return
+         end if
 
 !
 !     Process the non-native binary file format case.
 !
-      ELSE
+      else
 
 !
 !        Read the record as characters.
 !
-         READ ( UNIT   = LUN, &
-                REC    = RECNO, &
-                IOSTAT = IOSTAT ) CHRBUF
+         read ( unit   = lun, &
+                rec    = recno, &
+                iostat = iostat ) chrbuf
 
 !
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL CHKOUT ( 'ZZDAFGSR' )
-            RETURN
-         END IF
+         if ( iostat .ne. 0 ) then
+            call chkout ( 'ZZDAFGSR' )
+            return
+         end if
 
 !
 !        Translate the summary record.  First extract the leading
 !        3 double precision numbers from the summary record as these
 !        respectively are NEXT, PREV, and NSUM.
 !
-         CALL ZZXLATED ( IBFF, CHRBUF(1:3*DPLEN), 128, DPBUF )
+         call zzxlated ( ibff, chrbuf(1:3*dplen), 128, dpbuf )
 
 !
 !        Check FAILED() in case the translation process fails for
 !        any reason.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDAFGSR' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDAFGSR' )
+            return
+         end if
 
 !
 !        Convert NSUM to an integer, and compute the number of
 !        double precision numbers required to store each individual
 !        summary in the record.
 !
-         NSUM   = INT ( DPBUF(3) )
-         SUMSIZ = ( ND + (NI+1)/2 )
+         nsum   = int ( dpbuf(3) )
+         sumsiz = ( nd + (ni+1)/2 )
 
 !
 !        Convert each of the summaries one at a time.
 !
-         DO I = 1, NSUM
+         do i = 1, nsum
 
 !
 !           Set the start index into the double precision array
@@ -371,41 +371,41 @@
 !              |                                            Summary
 !           NEXT, PREV, NSUM                                 Start
 !
-            DINDEX = (I-1)*SUMSIZ + 4
-            CINDEX = DPLEN*(DINDEX-1) + 1
+            dindex = (i-1)*sumsiz + 4
+            cindex = dplen*(dindex-1) + 1
 
 !
 !           First, check to see if there are any double precision
 !           numbers to translate.  If so, translate, and then
 !           increment DINDEX and CINDEX accordingly.
 !
-            IF ( ND .GT. 0 ) THEN
+            if ( nd .gt. 0 ) then
 
 !
 !              DPBUF has room for 128 double precision numbers
 !              total.  Compute the amount of space left in the
 !              buffer.
 !
-               LEFT = 128 - (I-1)*SUMSIZ - 3
+               left = 128 - (i-1)*sumsiz - 3
 
-               CALL ZZXLATED ( IBFF, &
-                               CHRBUF(CINDEX:CINDEX+ND*DPLEN-1), &
-                               LEFT, &
-                               DPBUF(DINDEX)                     )
+               call zzxlated ( ibff, &
+                               chrbuf(cindex:cindex+nd*dplen-1), &
+                               left, &
+                               dpbuf(dindex)                     )
 
 !
 !              If the translation routine fails for any reason,
 !              check out and return.
 !
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDAFGSR' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDAFGSR' )
+                  return
+               end if
 
-               DINDEX = DINDEX + ND
-               CINDEX = CINDEX + DPLEN*ND
+               dindex = dindex + nd
+               cindex = cindex + dplen*nd
 
-            END IF
+            end if
 
 !
 !           At this point DINDEX and CINDEX are pointing at the
@@ -413,7 +413,7 @@
 !           Use DINDEX to compute the index into INBUF, the
 !           equivalenced integer buffer and translate.
 !
-            IF ( NI .GT. 0 ) THEN
+            if ( ni .gt. 0 ) then
 
 !
 !              INBUF has room for 256 integers total.  Compute
@@ -421,21 +421,21 @@
 !              it is equivalenced to DPBUF, account for the
 !              double precision numbers that were just added.
 !
-               LEFT = 256 - 2*(I-1)*SUMSIZ - ND*2 - 6
+               left = 256 - 2*(i-1)*sumsiz - nd*2 - 6
 
-               CALL ZZXLATEI ( IBFF, &
-                               CHRBUF(CINDEX:CINDEX+NI*INLEN-1), &
-                               LEFT, &
-                               INBUF(2*DINDEX-1)                 )
+               call zzxlatei ( ibff, &
+                               chrbuf(cindex:cindex+ni*inlen-1), &
+                               left, &
+                               inbuf(2*dindex-1)                 )
 
 !
 !              If the translation routine fails for any reason,
 !              check out and return.
 !
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDAFGSR' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDAFGSR' )
+                  return
+               end if
 
 !
 !              Now check to see if NI is odd.  If so, then zero
@@ -443,35 +443,35 @@
 !              summary.  This is necessary to purge any garbage
 !              present in memory.
 !
-               IF ( MOD(NI,2) .EQ. 1 ) THEN
-                  INBUF(2*DINDEX-1+NI) = 0
-               END IF
+               if ( mod(ni,2) .eq. 1 ) then
+                  inbuf(2*dindex-1+ni) = 0
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Translating garbage is a bad idea in general, so set
 !        the any remaining double precision numbers in the summary
 !        record to 0.
 !
-         DINDEX = NSUM*SUMSIZ + 4
+         dindex = nsum*sumsiz + 4
 
-         DO I = DINDEX, 128
-            DPBUF(I) = 0
-         END DO
+         do i = dindex, 128
+            dpbuf(i) = 0
+         end do
 
-      END IF
+      end if
 
 !
 !     Transfer the DPs to the output argument and return to the
 !     caller.
 !
-      FOUND = .TRUE.
-      CALL MOVED ( DPBUF, 128, DPREC )
+      found = .true.
+      call moved ( dpbuf, 128, dprec )
 
-      CALL CHKOUT( 'ZZDAFGSR' )
-      RETURN
+      call chkout( 'ZZDAFGSR' )
+      return
 
-      END
+      end

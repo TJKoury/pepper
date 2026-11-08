@@ -1,6 +1,6 @@
 !$Procedure CKW04E ( CK type 04: End a segment )
 
-      SUBROUTINE CKW04E ( HANDLE, ENDTIM )
+      subroutine ckw04e ( handle, endtim )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      ENDTIM
+      integer               handle
+      double precision      endtim
 
 ! $ Brief_I/O
 !
@@ -235,8 +235,8 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters.
@@ -245,87 +245,87 @@
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
-      INTEGER               NDESCR
-      PARAMETER           ( NDESCR =  ND + ( NI + 1 ) / 2 )
+      integer               ndescr
+      parameter           ( ndescr =  nd + ( ni + 1 ) / 2 )
 
 !
 !     Local variables.
 !
-      DOUBLE PRECISION      DCD    ( ND )
-      DOUBLE PRECISION      DESCR  ( NDESCR )
+      double precision      dcd    ( nd )
+      double precision      descr  ( ndescr )
 
-      INTEGER               ICD    ( NI )
+      integer               icd    ( ni )
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKW04E' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'CKW04E' )
+      end if
 
 !
 !     This is simple, just call the routine which ends a generic
 !     segment.
 !
-      CALL SGWES ( HANDLE )
+      call sgwes ( handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'CKW04E' )
-         RETURN
+         call chkout ( 'CKW04E' )
+         return
 
-      END IF
+      end if
 
 !
 !     Now update the descriptor with the end time. Locate the segment
 !     with a backward search.
 !
-      CALL DAFBBS ( HANDLE )
-      CALL DAFFPA ( FOUND  )
+      call dafbbs ( handle )
+      call daffpa ( found  )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
 !
 !        We have a bug.
 !
-         CALL SETMSG ( 'The segment which was just written could '   // &
+         call setmsg ( 'The segment which was just written could '   // &
                        'not be found by a DAF search. This  '        // &
                        'indicates a serious error.  Contact NAIF.'   )
-         CALL SIGERR ( 'SPICE(BUG)'                                  )
-         CALL CHKOUT ( 'CKW04E'                                      )
-         RETURN
+         call sigerr ( 'SPICE(BUG)'                                  )
+         call chkout ( 'CKW04E'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the descriptor, set the end time, and update the descriptor
 !     in the file.
 !
-      CALL DAFGS( DESCR )
+      call dafgs( descr )
 
-      CALL DAFUS( DESCR, ND, NI, DCD, ICD )
+      call dafus( descr, nd, ni, dcd, icd )
 
-      DCD( 2 ) = ENDTIM
+      dcd( 2 ) = endtim
 
-      CALL DAFPS( ND, NI, DCD, ICD, DESCR )
+      call dafps( nd, ni, dcd, icd, descr )
 
-      CALL DAFRS( DESCR )
+      call dafrs( descr )
 
 !
 !     All done.
 !
-      CALL CHKOUT( 'CKW04E' )
+      call chkout( 'CKW04E' )
 
-      RETURN
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure LOCATI ( Locate an identifier in a list )
 
-      SUBROUTINE LOCATI ( ID, IDSZ, LIST, POOL, AT, PRESNT )
+      subroutine locati ( id, idsz, list, pool, at, presnt )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               ID   (            * )
-      INTEGER               IDSZ
-      INTEGER               LIST ( IDSZ,      * )
-      INTEGER               POOL ( 2, LBPOOL: * )
-      INTEGER               AT
-      LOGICAL               PRESNT
+      integer               id   (            * )
+      integer               idsz
+      integer               list ( idsz,      * )
+      integer               pool ( 2, lbpool: * )
+      integer               at
+      logical               presnt
 
 ! $ Brief_I/O
 !
@@ -296,74 +296,74 @@
 !     Spicelib functions
 !
 
-      INTEGER               LNKNFN
-      INTEGER               LNKSIZ
+      integer               lnknfn
+      integer               lnksiz
 
 !
 !     Linked list parameters
 !
-      INTEGER               NEXT
-      PARAMETER           ( NEXT = 1 )
+      integer               next
+      parameter           ( next = 1 )
 
-      INTEGER               PREV
-      PARAMETER           ( PREV = 2 )
+      integer               prev
+      parameter           ( prev = 2 )
 
 !
 !     Local Variables.
 !
 
-      INTEGER               LAST
-      INTEGER               NFREE
-      INTEGER               PSIZE
-      INTEGER               I
-      INTEGER               HEAD
-      INTEGER               NEW
+      integer               last
+      integer               nfree
+      integer               psize
+      integer               i
+      integer               head
+      integer               new
 
-      LOGICAL               MORE
-      LOGICAL               SAME
+      logical               more
+      logical               same
 
 
 
-      CALL CHKIN ( 'LOCATI' )
+      call chkin ( 'LOCATI' )
 !
 !     We begin by looking through the list of items at our disposal.
 !     One way or the other we will need the number of free nodes
 !     in the linked list.
 !
-      NFREE = LNKNFN(POOL)
-      PSIZE = LNKSIZ(POOL)
+      nfree = lnknfn(pool)
+      psize = lnksiz(pool)
 
-      IF ( NFREE .EQ. PSIZE ) THEN
+      if ( nfree .eq. psize ) then
 !
 !        There's nothing in the list so far. Allocate a
 !        node and begin a list.
 !
-         CALL LNKAN ( POOL, AT )
+         call lnkan ( pool, at )
 
-         DO I = 1, IDSZ
-            LIST(I,AT) = ID(I)
-         END DO
+         do i = 1, idsz
+            list(i,at) = id(i)
+         end do
 
-         PRESNT = .FALSE.
+         presnt = .false.
 
-         CALL CHKOUT ( 'LOCATI' )
-         RETURN
+         call chkout ( 'LOCATI' )
+         return
 
-      END IF
+      end if
 
-      IF ( AT .LE. 0 .OR. AT .GT. PSIZE ) THEN
+      if ( at .le. 0 .or. at .gt. psize ) then
 
-         CALL SETMSG ( 'The input value for the head of the ID ' &
+         call setmsg ( 'The input value for the head of the ID ' &
          //            'address linked list is out of bounds. ' &
          //            'It should be between 0 and #. The value ' &
          //            'supplied was #.' )
-         CALL ERRINT( '#', PSIZE )
-         CALL ERRINT( '#', AT    )
-         CALL SIGERR ( 'SPICE(ADDRESSOUTOFBOUNDS)'  )
-         CALL CHKOUT ( 'LOCATI' )
-         RETURN
+         call errint( '#', psize )
+         call errint( '#', at    )
+         call sigerr ( 'SPICE(ADDRESSOUTOFBOUNDS)'  )
+         call chkout ( 'LOCATI' )
+         return
 
-      END IF
+      end if
 
 !
 !     If we are still here then there is actually something in
@@ -373,134 +373,134 @@
 !     will handle the cases where IDSZ is 1 or 2 as special
 !     cases since the tests for equality are a lot easier.
 !
-      SAME = .FALSE.
+      same = .false.
 
-      HEAD =  AT
+      head =  at
 
 
 
-      IF ( IDSZ .EQ. 1 ) THEN
+      if ( idsz .eq. 1 ) then
 
-         SAME = ID(1) .EQ. LIST(1,AT)
-         MORE = AT .GT. 0 .AND. .NOT. SAME
+         same = id(1) .eq. list(1,at)
+         more = at .gt. 0 .and. .not. same
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            AT   =  POOL ( NEXT, AT )
+            at   =  pool ( next, at )
 
-            IF ( AT .GT. 0 ) THEN
-               SAME =  ID(1) .EQ. LIST(1,AT)
-               MORE = .NOT. SAME
-            ELSE
-               MORE = .FALSE.
-            END IF
+            if ( at .gt. 0 ) then
+               same =  id(1) .eq. list(1,at)
+               more = .not. same
+            else
+               more = .false.
+            end if
 
-         END DO
+         end do
 
-      ELSE IF ( IDSZ .EQ. 2 ) THEN
+      else if ( idsz .eq. 2 ) then
 
-         SAME =       ID(1) .EQ. LIST(1,AT) &
-                .AND. ID(2) .EQ. LIST(2,AT)
+         same =       id(1) .eq. list(1,at) &
+                .and. id(2) .eq. list(2,at)
 
-         MORE = AT .GT. 0 .AND. .NOT. SAME
+         more = at .gt. 0 .and. .not. same
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            AT  = POOL ( NEXT, AT )
+            at  = pool ( next, at )
 
-            IF ( AT .GT. 0 ) THEN
-               IF (      ID(1) .EQ. LIST(1,AT) ) THEN
-                  SAME = ID(2) .EQ. LIST(2,AT)
-                  MORE = .NOT. SAME
-               END IF
-            ELSE
-               MORE = .FALSE.
-            END IF
+            if ( at .gt. 0 ) then
+               if (      id(1) .eq. list(1,at) ) then
+                  same = id(2) .eq. list(2,at)
+                  more = .not. same
+               end if
+            else
+               more = .false.
+            end if
 
-         END DO
+         end do
 
-      ELSE
+      else
 
-         I      =  1
-         SAME   = .TRUE.
+         i      =  1
+         same   = .true.
 
-         DO WHILE ( SAME .AND. I .LT. IDSZ )
-            SAME = SAME .AND. ID(I) .EQ. LIST(I,AT)
-            I    = I + 1
-         END DO
+         do while ( same .and. i .lt. idsz )
+            same = same .and. id(i) .eq. list(i,at)
+            i    = i + 1
+         end do
 
-         MORE = AT .GT. 0 .AND. .NOT. SAME
+         more = at .gt. 0 .and. .not. same
 
-         DO WHILE ( MORE )
+         do while ( more )
 
-            AT = POOL ( NEXT, AT )
+            at = pool ( next, at )
 
-            IF ( AT .GT. 0 ) THEN
-               I      =  1
-               SAME   = .TRUE.
+            if ( at .gt. 0 ) then
+               i      =  1
+               same   = .true.
 
-               DO WHILE ( SAME .AND. I .LT. IDSZ )
-                  SAME = SAME .AND. ID(I) .EQ. LIST(I,AT)
-                  I    = I + 1
-               END DO
+               do while ( same .and. i .lt. idsz )
+                  same = same .and. id(i) .eq. list(i,at)
+                  i    = i + 1
+               end do
 
-               MORE = .NOT. SAME
-            ELSE
-               MORE = .FALSE.
-            END IF
+               more = .not. same
+            else
+               more = .false.
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     The hunting is over either we found it or we need to
 !     allocate space to put this ID into storage.
 !
-      IF ( SAME ) THEN
+      if ( same ) then
 
-         PRESNT = .TRUE.
-         LAST   =  POOL(PREV,AT)
+         presnt = .true.
+         last   =  pool(prev,at)
 
 
 !
 !        If AT is not already at the head of the list, we
 !        move this node to the front of the list.
 !
-         IF ( LAST .GT. 0 ) THEN
-            CALL LNKXSL ( AT, AT,   POOL )
-            CALL LNKILB ( AT, HEAD, POOL )
-         END IF
+         if ( last .gt. 0 ) then
+            call lnkxsl ( at, at,   pool )
+            call lnkilb ( at, head, pool )
+         end if
 
-         CALL CHKOUT ( 'LOCATI' )
-         RETURN
+         call chkout ( 'LOCATI' )
+         return
 
-      END IF
+      end if
 
 !
 !     If we got to this point, we traversed the entire linked
 !     list and did not find a matching ID.  AT is negative
 !     and -AT points to the head of the list.
 !
-      PRESNT =  .FALSE.
+      presnt =  .false.
 !
 !     We'll put it in the list. First see if there are any free nodes.
 !
-      IF ( NFREE .GT. 0 ) THEN
+      if ( nfree .gt. 0 ) then
 !
 !        Allocate a free node and put our ID at the NEW address.
 !
-         CALL LNKAN ( POOL, NEW )
-         DO I = 1, IDSZ
-            LIST(I,NEW) = ID(I)
-         END DO
+         call lnkan ( pool, new )
+         do i = 1, idsz
+            list(i,new) = id(i)
+         end do
 !
 !        Put the new node at the head of the linked list.
 !
-         CALL LNKILB ( NEW, HEAD, POOL )
-         AT =  NEW
+         call lnkilb ( new, head, pool )
+         at =  new
 
-      ELSE
+      else
 
 !
 !        The last item in the list is pointed to as being the
@@ -508,23 +508,23 @@
 !        change the sign to get a legitimate address.  Overwrite
 !        the ID information in this last slot of the list.
 !
-         LAST = -POOL(PREV,HEAD)
+         last = -pool(prev,head)
 
-         DO I = 1, IDSZ
-            LIST(I,LAST) = ID(I)
-         END DO
+         do i = 1, idsz
+            list(i,last) = id(i)
+         end do
 !
 !        Extract the last item as a sublist and insert it before
 !        the current head of the list.
 !
-         CALL LNKXSL ( LAST,   LAST,   POOL )
-         CALL LNKILB ( LAST,   HEAD,   POOL )
+         call lnkxsl ( last,   last,   pool )
+         call lnkilb ( last,   head,   pool )
 
-         AT    = LAST
+         at    = last
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'LOCATI' )
-      RETURN
+      call chkout ( 'LOCATI' )
+      return
 
-      END
+      end

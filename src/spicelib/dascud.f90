@@ -1,6 +1,6 @@
 !$Procedure DASCUD ( DAS, create or update directories )
 
-      SUBROUTINE DASCUD ( HANDLE, TYPE, NWORDS )
+      subroutine dascud ( handle, type, nwords )
 
 ! $ Abstract
 !
@@ -19,20 +19,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               TYPE
-      INTEGER               NWORDS
+      integer               handle
+      integer               type
+      integer               nwords
 
-      INTEGER               CHAR
-      PARAMETER           ( CHAR   =  1  )
+      integer               char
+      parameter           ( char   =  1  )
 
-      INTEGER               DP
-      PARAMETER           ( DP     =  2  )
+      integer               dp
+      parameter           ( dp     =  2  )
 
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
 ! $ Brief_I/O
 !
@@ -256,7 +256,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -265,41 +265,41 @@
 !
 !     Words per data record, for each data type:
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC = 1024 )
+      integer               nwc
+      parameter           ( nwc = 1024 )
 
-      INTEGER               NWD
-      PARAMETER           ( NWD =  128 )
+      integer               nwd
+      parameter           ( nwd =  128 )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI =  256 )
+      integer               nwi
+      parameter           ( nwi =  256 )
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      INTEGER               BWDLOC
-      PARAMETER           ( BWDLOC = 1 )
+      integer               bwdloc
+      parameter           ( bwdloc = 1 )
 
-      INTEGER               FWDLOC
-      PARAMETER           ( FWDLOC = 2 )
+      integer               fwdloc
+      parameter           ( fwdloc = 2 )
 
 !
 !     Directory address range locations
 !
-      INTEGER               CHRRNG
-      PARAMETER           ( CHRRNG =          3 )
+      integer               chrrng
+      parameter           ( chrrng =          3 )
 
-      INTEGER               DPRNG
-      PARAMETER           ( DPRNG  = CHRRNG + 2 )
+      integer               dprng
+      parameter           ( dprng  = chrrng + 2 )
 
-      INTEGER               INTRNG
-      PARAMETER           ( INTRNG = DPRNG  + 2 )
+      integer               intrng
+      parameter           ( intrng = dprng  + 2 )
 
 !
 !     Location of first type descriptor
 !
-      INTEGER               BEGDSC
-      PARAMETER           ( BEGDSC = 9 )
+      integer               begdsc
+      parameter           ( begdsc = 9 )
 
 
 
@@ -307,30 +307,30 @@
 !
 !     Local variables
 !
-      INTEGER               DESCR
-      INTEGER               DIRREC ( NWI )
-      INTEGER               DSCREC
-      INTEGER               FREE
-      INTEGER               I
-      INTEGER               LAST
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               LREC
-      INTEGER               LOC
-      INTEGER               LTYPE
-      INTEGER               LWORD
-      INTEGER               MAXADR
-      INTEGER               MINADR
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NEEDED
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NW
-      INTEGER               RECNO
-      INTEGER               RNGLOC
-      INTEGER               ROOM
+      integer               descr
+      integer               dirrec ( nwi )
+      integer               dscrec
+      integer               free
+      integer               i
+      integer               last
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               lrec
+      integer               loc
+      integer               ltype
+      integer               lword
+      integer               maxadr
+      integer               minadr
+      integer               ncomc
+      integer               ncomr
+      integer               needed
+      integer               nresvc
+      integer               nresvr
+      integer               nw
+      integer               recno
+      integer               rngloc
+      integer               room
 
 
 
@@ -342,13 +342,13 @@
 !
 !     NEXT maps the DAS data type codes to their successors.
 !
-      INTEGER               NEXT   ( 3 )
-      SAVE                  NEXT
+      integer               next   ( 3 )
+      save                  next
 
 !
 !     Initial values
 !
-      DATA                  NEXT   /  2,   3,   1  /
+      data                  next   /  2,   3,   1  /
 
 
 
@@ -356,11 +356,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASCUD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASCUD' )
+      end if
 
 !
 !     Here's a preview of coming attractions:
@@ -468,15 +468,15 @@
 !
 !     Get the file summary.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
 !
 !     Now do all of the data-type-dependent work:
@@ -497,67 +497,67 @@
 !     data addition.
 !
 !
-      LAST    =  LASTLA( TYPE )
-      DSCREC  =  LASTRC( TYPE )
+      last    =  lastla( type )
+      dscrec  =  lastrc( type )
 
-      IF ( TYPE .EQ. DP ) THEN
+      if ( type .eq. dp ) then
 
-         NW      =  NWD
-         RNGLOC  =  DPRNG
+         nw      =  nwd
+         rngloc  =  dprng
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. int ) then
 
-         NW      =  NWI
-         RNGLOC  =  INTRNG
+         nw      =  nwi
+         rngloc  =  intrng
 
-      ELSE IF ( TYPE .EQ. CHAR ) THEN
+      else if ( type .eq. char ) then
 
-         NW      =  NWC
-         RNGLOC  =  CHRRNG
+         nw      =  nwc
+         rngloc  =  chrrng
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Invalid data type: #. ' )
-         CALL ERRINT ( '#',  TYPE               )
-         CALL SIGERR ( 'SPICE(DASINVALIDTYPE)'  )
-         CALL CHKOUT ( 'DASCUD'                 )
-         RETURN
+         call setmsg ( 'Invalid data type: #. ' )
+         call errint ( '#',  type               )
+         call sigerr ( 'SPICE(DASINVALIDTYPE)'  )
+         call chkout ( 'DASCUD'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that NWORDS is something sensible.
 !
-      IF ( NWORDS .LT. 0 ) THEN
+      if ( nwords .lt. 0 ) then
 
-         CALL SETMSG ( 'NWORDS was #; should be non-negative.' )
-         CALL ERRINT ( '#',  NWORDS                            )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                )
-         CALL CHKOUT ( 'DASCUD'                                )
-         RETURN
+         call setmsg ( 'NWORDS was #; should be non-negative.' )
+         call errint ( '#',  nwords                            )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
+         call chkout ( 'DASCUD'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the record and word positions LREC and LWORD of the last
 !     descriptor in the file, and also find the type of the descriptor
 !     LTYPE.
 !
-      CALL MAXAI  ( LASTRC,  3,  LREC,  LOC )
-      LWORD  =  0
-      LTYPE  =  0
+      call maxai  ( lastrc,  3,  lrec,  loc )
+      lword  =  0
+      ltype  =  0
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF (       ( LASTRC(I) .EQ. LREC  ) &
-              .AND. ( LASTWD(I) .GT. LWORD )  ) THEN
+         if (       ( lastrc(i) .eq. lrec  ) &
+              .and. ( lastwd(i) .gt. lword )  ) then
 
-            LWORD = LASTWD(I)
-            LTYPE = I
+            lword = lastwd(i)
+            ltype = i
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     LREC, LWORD, and LTYPE are now the record, word, and data type
@@ -570,25 +570,25 @@
 !     Compute the number of words we have room for in the current
 !     last data record of the indicated type.
 !
-      IF ( LAST .GT. 0 ) THEN
-         ROOM  =  NW   -   (  LAST  -  ( (LAST-1) / NW ) * NW  )
-      ELSE
-         ROOM  =  0
-      END IF
+      if ( last .gt. 0 ) then
+         room  =  nw   -   (  last  -  ( (last-1) / nw ) * nw  )
+      else
+         room  =  0
+      end if
 
 !
 !     Compute the number of additional data records needed to
 !     accommodate (NWORDS - ROOM) additional words of data of type
 !     TYPE.
 !
-      NEEDED  =  ( NWORDS - ROOM + NW - 1 ) / NW
+      needed  =  ( nwords - room + nw - 1 ) / nw
 
 
 !
 !     Now, update the descriptor directories.
 !
 
-      IF (  ( ROOM .GE. NWORDS ) .AND. ( DSCREC .GT. 0 )  ) THEN
+      if (  ( room .ge. nwords ) .and. ( dscrec .gt. 0 )  ) then
 !
 !        This is case (1).
 !
@@ -598,33 +598,33 @@
 !        Update the address range in the directory record containing
 !        the last descriptor of TYPE.
 !
-         MAXADR  =  LAST + NWORDS
+         maxadr  =  last + nwords
 
-         CALL DASURI ( HANDLE, DSCREC, RNGLOC+1, RNGLOC+1, MAXADR )
+         call dasuri ( handle, dscrec, rngloc+1, rngloc+1, maxadr )
 
 !
 !        The last logical address of TYPE is now MAXADR.
 !
-         LASTLA( TYPE )  =  MAXADR
+         lastla( type )  =  maxadr
 
 !
 !        Write out the updated file summary.
 !
-         CALL DASUFS ( HANDLE, &
-                       NRESVR, &
-                       NRESVC, &
-                       NCOMR, &
-                       NCOMC, &
-                       FREE, &
-                       LASTLA, &
-                       LASTRC, &
-                       LASTWD )
+         call dasufs ( handle, &
+                       nresvr, &
+                       nresvc, &
+                       ncomr, &
+                       ncomc, &
+                       free, &
+                       lastla, &
+                       lastrc, &
+                       lastwd )
 
 
 
-      ELSE IF (       ( TYPE   .EQ. LTYPE ) &
-                .AND. ( DSCREC .GT. 0     ) &
-                .AND. ( LWORD  .LT. NWI   )  ) THEN
+      else if (       ( type   .eq. ltype ) &
+                .and. ( dscrec .gt. 0     ) &
+                .and. ( lword  .lt. nwi   )  ) then
 !
 !
 !        This is case (2).
@@ -638,82 +638,82 @@
 !        Get the old descriptor, since we're going to update it.
 !
 !
-         CALL DASRRI ( HANDLE, DSCREC, LWORD, LWORD, DESCR )
+         call dasrri ( handle, dscrec, lword, lword, descr )
 
 !
 !        Update the descriptor and write it back into the file.
 !
-         IF ( DESCR .LT. 0 ) THEN
-            DESCR = DESCR - NEEDED
-         ELSE
-            DESCR = DESCR + NEEDED
-         END IF
+         if ( descr .lt. 0 ) then
+            descr = descr - needed
+         else
+            descr = descr + needed
+         end if
 
-         CALL DASURI ( HANDLE, DSCREC, LWORD, LWORD, DESCR )
+         call dasuri ( handle, dscrec, lword, lword, descr )
 
 !
 !        Update the address range for this type.
 !
-         MAXADR = LAST + NWORDS
+         maxadr = last + nwords
 
-         CALL DASURI ( HANDLE, DSCREC, RNGLOC+1, RNGLOC+1, MAXADR )
+         call dasuri ( handle, dscrec, rngloc+1, rngloc+1, maxadr )
 
 !
 !        The last logical address of TYPE is now MAXADR.  The first
 !        free record follows the last data record in use.
 !
-         LASTLA( TYPE )  =  MAXADR
-         FREE            =  FREE  +  NEEDED
+         lastla( type )  =  maxadr
+         free            =  free  +  needed
 
 !
 !        Write out the updated file summary.
 !
-         CALL DASUFS ( HANDLE, &
-                       NRESVR, &
-                       NRESVC, &
-                       NCOMR, &
-                       NCOMC, &
-                       FREE, &
-                       LASTLA, &
-                       LASTRC, &
-                       LASTWD )
+         call dasufs ( handle, &
+                       nresvr, &
+                       nresvc, &
+                       ncomr, &
+                       ncomc, &
+                       free, &
+                       lastla, &
+                       lastrc, &
+                       lastwd )
 
 
-      ELSE
+      else
 !
 !        This is case (3).  We need a new descriptor.
 !
 
-         IF ( LREC .EQ. 0 ) THEN
+         if ( lrec .eq. 0 ) then
 !
 !           This is case (3a).  We have a virgin directory record.
 !           Set the number of this record.
 !
-            RECNO  =  NRESVR + NCOMR + 2
+            recno  =  nresvr + ncomr + 2
 
 !
 !           Start with an empty directory record.
 !
-            CALL CLEARI ( NWI, DIRREC )
+            call cleari ( nwi, dirrec )
 
 !
 !           Add a new descriptor to the directory.  The record
 !           count is the number of new records required:  NEEDED.
 !
-            DIRREC ( BEGDSC     )  =  TYPE
-            DIRREC ( BEGDSC + 1 )  =  NEEDED
+            dirrec ( begdsc     )  =  type
+            dirrec ( begdsc + 1 )  =  needed
 
 !
 !           Fill in the address range for TYPE covered by this
 !           directory.
 !
-            DIRREC ( RNGLOC     )  =  1
-            DIRREC ( RNGLOC + 1 )  =  NWORDS
+            dirrec ( rngloc     )  =  1
+            dirrec ( rngloc + 1 )  =  nwords
 
 !
 !           Write out this directory.
 !
-            CALL DASWRI ( HANDLE, RECNO, DIRREC )
+            call daswri ( handle, recno, dirrec )
 
 !
 !           Update the file summary:  the location of the descriptor
@@ -724,23 +724,23 @@
 !
 !           The first free record follows the last data record in use.
 !
-            FREE            =  RECNO  + NEEDED + 1
-            LASTLA( TYPE )  =  NWORDS
-            LASTRC( TYPE )  =  RECNO
-            LASTWD( TYPE )  =  BEGDSC + 1
+            free            =  recno  + needed + 1
+            lastla( type )  =  nwords
+            lastrc( type )  =  recno
+            lastwd( type )  =  begdsc + 1
 
-            CALL DASUFS ( HANDLE, &
-                          NRESVR, &
-                          NRESVC, &
-                          NCOMR, &
-                          NCOMC, &
-                          FREE, &
-                          LASTLA, &
-                          LASTRC, &
-                          LASTWD )
+            call dasufs ( handle, &
+                          nresvr, &
+                          nresvc, &
+                          ncomr, &
+                          ncomc, &
+                          free, &
+                          lastla, &
+                          lastrc, &
+                          lastwd )
 
 
-         ELSE IF ( LWORD .LT. NWI ) THEN
+         else if ( lword .lt. nwi ) then
 !
 !           This is case (3b).  We have room for another descriptor
 !           in the current directory record.
@@ -752,20 +752,20 @@
 !           course, this update is required only if there IS such a
 !           descriptor, and if it is in a record that precedes LREC.
 !
-            IF (       ( DSCREC .GT. 0    ) &
-                 .AND. ( DSCREC .LT. LREC ) &
-                 .AND. ( ROOM   .GT. 0    )   )  THEN
+            if (       ( dscrec .gt. 0    ) &
+                 .and. ( dscrec .lt. lrec ) &
+                 .and. ( room   .gt. 0    )   )  then
 !
 !              Update the address range for TYPE in record DSCREC.
 !              The upper bound is increased by ROOM, since that many
 !              words of TYPE were added to the last record in the
 !              last cluster of TYPE described by that directory.
 !
-               MAXADR = LAST + ROOM
+               maxadr = last + room
 
-               CALL DASURI (HANDLE, DSCREC, RNGLOC+1, RNGLOC+1, MAXADR )
+               call dasuri (handle, dscrec, rngloc+1, rngloc+1, maxadr )
 
-            END IF
+            end if
 
 !
 !           Make up the new descriptor and write it to the last
@@ -773,19 +773,19 @@
 !           sign of the new descriptor is a function of the type of
 !           the current last descriptor.
 !
-            IF (  TYPE  .EQ.  NEXT(LTYPE)  ) THEN
+            if (  type  .eq.  next(ltype)  ) then
 !
 !              TYPE is the successor in the type sequence of the type
 !              of the previous descriptor; use a positive count.
 !
-               DESCR  =   NEEDED
+               descr  =   needed
 
-            ELSE
-               DESCR  =  -NEEDED
+            else
+               descr  =  -needed
 
-            END IF
+            end if
 
-            CALL DASURI ( HANDLE, LREC, LWORD+1,  LWORD+1,  DESCR  )
+            call dasuri ( handle, lrec, lword+1,  lword+1,  descr  )
 
 !
 !           Update the address range for this type.  Some care is needed
@@ -793,18 +793,18 @@
 !           assigned only if this is the first descriptor of TYPE in
 !           this directory record.
 !
-            IF ( DSCREC .LT. LREC ) THEN
+            if ( dscrec .lt. lrec ) then
 
-               MINADR = LAST + ROOM + 1
+               minadr = last + room + 1
 
-               CALL DASURI ( HANDLE, LREC, RNGLOC, RNGLOC, MINADR )
+               call dasuri ( handle, lrec, rngloc, rngloc, minadr )
 
-            END IF
+            end if
 
 
-            MAXADR = LAST + NWORDS
+            maxadr = last + nwords
 
-            CALL DASURI ( HANDLE, LREC, RNGLOC+1, RNGLOC+1, MAXADR )
+            call dasuri ( handle, lrec, rngloc+1, rngloc+1, maxadr )
 
 !
 !           Update the file summary:  the location of the descriptor
@@ -812,10 +812,10 @@
 !
 !           The first free record follows the last data record in use.
 !
-            FREE            =  FREE  +  NEEDED
-            LASTLA( TYPE )  =  LAST  +  NWORDS
-            LASTRC( TYPE )  =  LREC
-            LASTWD( TYPE )  =  LWORD +  1
+            free            =  free  +  needed
+            lastla( type )  =  last  +  nwords
+            lastrc( type )  =  lrec
+            lastwd( type )  =  lword +  1
 
 !
 !           Before writing out the summary, see whether we'll need
@@ -830,46 +830,46 @@
 !           of the new directory record to make the linked list valid.
 !
 
-            IF ( LWORD+1 .EQ. NWI ) THEN
+            if ( lword+1 .eq. nwi ) then
 !
 !              Update the previous directory to point forward to the
 !              next one.
 !
-               CALL DASURI ( HANDLE, LREC, FWDLOC, FWDLOC, FREE )
+               call dasuri ( handle, lrec, fwdloc, fwdloc, free )
 
 
 !
 !              Prepare the new directory record: clear it, set the
 !              backward pointer, and write the record.
 !
-               CALL CLEARI ( NWI, DIRREC )
+               call cleari ( nwi, dirrec )
 
-               DIRREC ( BWDLOC )  =  LREC
+               dirrec ( bwdloc )  =  lrec
 
-               CALL DASWRI ( HANDLE, FREE, DIRREC )
+               call daswri ( handle, free, dirrec )
 
 !
 !              Update the free record number.
 !
-               FREE = FREE + 1
+               free = free + 1
 
-            END IF
+            end if
 
 !
 !           Now write out the file summary.
 !
-            CALL DASUFS ( HANDLE, &
-                          NRESVR, &
-                          NRESVC, &
-                          NCOMR, &
-                          NCOMC, &
-                          FREE, &
-                          LASTLA, &
-                          LASTRC, &
-                          LASTWD )
+            call dasufs ( handle, &
+                          nresvr, &
+                          nresvc, &
+                          ncomr, &
+                          ncomc, &
+                          free, &
+                          lastla, &
+                          lastrc, &
+                          lastwd )
 
 
-         ELSE
+         else
 !
 !           This is case (3c).  We must put the new descriptor in
 !           the last directory record, which is currently empty.
@@ -880,44 +880,44 @@
 !           increased by the last data addition.  Of course, this
 !           update is required only if there IS such a descriptor.
 !
-            IF (  ( DSCREC .GT. 0 ) .AND. ( ROOM .GT. 0 )  )  THEN
+            if (  ( dscrec .gt. 0 ) .and. ( room .gt. 0 )  )  then
 !
 !              Update the address range for TYPE in record DSCREC.
 !              The upper bound is increased by ROOM, since that many
 !              words of TYPE were added to the last record in the
 !              last cluster of TYPE described by that directory.
 !
-               MAXADR = LAST + ROOM
+               maxadr = last + room
 
-               CALL DASURI (HANDLE, DSCREC, RNGLOC+1, RNGLOC+1, MAXADR )
+               call dasuri (handle, dscrec, rngloc+1, rngloc+1, maxadr )
 
-            END IF
+            end if
 
 !
 !           Obtain the record number for this directory.
 !
-            CALL DASRRI ( HANDLE, LREC, FWDLOC, FWDLOC, RECNO )
+            call dasrri ( handle, lrec, fwdloc, fwdloc, recno )
 
 !
 !           Now fill in the new directory record.  Start with a clean
 !           record.
 !
-            CALL CLEARI ( NWI, DIRREC )
+            call cleari ( nwi, dirrec )
 
 !
 !           Set the backward pointer, the address range for TYPE,
 !           initial data type, and record count.
 !
-            DIRREC ( BWDLOC     )  =  LREC
-            DIRREC ( RNGLOC     )  =  LAST   +  ROOM    +  1
-            DIRREC ( RNGLOC + 1 )  =  LAST   +  NWORDS
-            DIRREC ( BEGDSC     )  =  TYPE
-            DIRREC ( BEGDSC + 1 )  =  NEEDED
+            dirrec ( bwdloc     )  =  lrec
+            dirrec ( rngloc     )  =  last   +  room    +  1
+            dirrec ( rngloc + 1 )  =  last   +  nwords
+            dirrec ( begdsc     )  =  type
+            dirrec ( begdsc + 1 )  =  needed
 
 !
 !           Write out the record.
 !
-            CALL DASWRI ( HANDLE, RECNO, DIRREC )
+            call daswri ( handle, recno, dirrec )
 
 
 !
@@ -926,27 +926,27 @@
 !           last address of TYPE has increased also.  The first free
 !           record lies after the added data records.
 !
-            FREE            =  FREE   +  NEEDED
-            LASTLA( TYPE )  =  LAST   +  NWORDS
-            LASTRC( TYPE )  =  RECNO
-            LASTWD( TYPE )  =  BEGDSC +  1
+            free            =  free   +  needed
+            lastla( type )  =  last   +  nwords
+            lastrc( type )  =  recno
+            lastwd( type )  =  begdsc +  1
 
-            CALL DASUFS ( HANDLE, &
-                          NRESVR, &
-                          NRESVC, &
-                          NCOMR, &
-                          NCOMC, &
-                          FREE, &
-                          LASTLA, &
-                          LASTRC, &
-                          LASTWD )
+            call dasufs ( handle, &
+                          nresvr, &
+                          nresvc, &
+                          ncomr, &
+                          ncomc, &
+                          free, &
+                          lastla, &
+                          lastrc, &
+                          lastwd )
 
-         END IF
-
-
-      END IF
+         end if
 
 
-      CALL CHKOUT ( 'DASCUD' )
-      RETURN
-      END
+      end if
+
+
+      call chkout ( 'DASCUD' )
+      return
+      end

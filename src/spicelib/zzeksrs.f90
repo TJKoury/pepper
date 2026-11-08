@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSRS ( EK, set record status )
 
-      SUBROUTINE ZZEKSRS ( HANDLE, RECPTR, STATUS )
+      subroutine zzeksrs ( handle, recptr, status )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekrecptr.inc'
+      include 'ekrecptr.inc'
 
-      INTEGER               HANDLE
-      INTEGER               RECPTR
-      INTEGER               STATUS
+      integer               handle
+      integer               recptr
+      integer               status
 
 ! $ Brief_I/O
 !
@@ -94,12 +94,12 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               LOC
+      integer               loc
 
 !
 !     Use discovery check-in.
@@ -108,18 +108,18 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Compute the status word location and set the status.
 !
-      LOC  =  RECPTR + STAIDX
+      loc  =  recptr + staidx
 
-      CALL DASUDI ( HANDLE, LOC, LOC, STATUS )
+      call dasudi ( handle, loc, loc, status )
 
-      RETURN
-      END
+      return
+      end

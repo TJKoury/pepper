@@ -1,12 +1,12 @@
 !$Procedure DASWFR ( DAS write file record )
 
-      SUBROUTINE DASWFR ( HANDLE, &
-                          IDWORD, &
-                          IFNAME, &
-                          NRESVR, &
-                          NRESVC, &
-                          NCOMR, &
-                          NCOMC  )
+      subroutine daswfr ( handle, &
+                          idword, &
+                          ifname, &
+                          nresvr, &
+                          nresvc, &
+                          ncomr, &
+                          ncomc  )
 
 ! $ Abstract
 !
@@ -24,15 +24,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         IDWORD
-      CHARACTER*(*)         IFNAME
-      INTEGER               NRESVR
-      INTEGER               NRESVC
-      INTEGER               NCOMR
-      INTEGER               NCOMC
+      integer               handle
+      character*(*)         idword
+      character*(*)         ifname
+      integer               nresvr
+      integer               nresvc
+      integer               ncomr
+      integer               ncomc
 
 ! $ Brief_I/O
 !
@@ -252,20 +252,20 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               FMTLEN
-      PARAMETER           ( FMTLEN =  8 )
+      integer               fmtlen
+      parameter           ( fmtlen =  8 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =  8 )
+      integer               idwlen
+      parameter           ( idwlen =  8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 
 !
 !     The parameter TAILEN determines the tail length of a DAS file
@@ -298,57 +298,57 @@
 !     1 byte characters, and a DAS record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      INTEGER               TAILEN
-      PARAMETER           ( TAILEN = 932 )
+      integer               tailen
+      parameter           ( tailen = 932 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FMTLEN)    FORMAT
-      CHARACTER*(IDWLEN)    LOCIDW
-      CHARACTER*(IFNLEN)    LOCIFN
-      CHARACTER*(IFNLEN)    IFN
-      CHARACTER*(TAILEN)    TAIL
+      character*(fmtlen)    format
+      character*(idwlen)    locidw
+      character*(ifnlen)    locifn
+      character*(ifnlen)    ifn
+      character*(tailen)    tail
 
-      INTEGER               FREE
-      INTEGER               IOSTAT
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               LOCNCC
-      INTEGER               LOCNCR
-      INTEGER               LOCNVC
-      INTEGER               LOCNVR
-      INTEGER               OLDRRC
-      INTEGER               OLDRCH
-      INTEGER               OLDCRC
-      INTEGER               OLDCCH
-      INTEGER               UNIT
+      integer               free
+      integer               iostat
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               locncc
+      integer               locncr
+      integer               locnvc
+      integer               locnvr
+      integer               oldrrc
+      integer               oldrch
+      integer               oldcrc
+      integer               oldcch
+      integer               unit
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASWFR' )
+      call chkin ( 'DASWFR' )
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
 !     with write access.  If the call fails, check out and return.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
 !
 !     Get the logical unit for this DAS file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      IF ( FAILED () ) THEN
-         CALL CHKOUT ( 'DASWFR' )
-         RETURN
-      END IF
+      if ( failed () ) then
+         call chkout ( 'DASWFR' )
+         return
+      end if
 
 !
 !     In order to maintain the integrity of the file ID word, the
@@ -357,81 +357,81 @@
 !     buffers. The values of the LOCxxx variables are simply
 !     ignored, since the caller passes new values in for updates.
 !
-      READ ( UNIT, REC=1, IOSTAT=IOSTAT) LOCIDW, &
-                                         LOCIFN, &
-                                         LOCNVR, &
-                                         LOCNVC, &
-                                         LOCNCR, &
-                                         LOCNCC, &
-                                         FORMAT, &
-                                         TAIL
+      read ( unit, rec=1, iostat=iostat) locidw, &
+                                         locifn, &
+                                         locnvr, &
+                                         locnvc, &
+                                         locncr, &
+                                         locncc, &
+                                         format, &
+                                         tail
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Attempt to read the file record failed for'   // &
+         call setmsg ( 'Attempt to read the file record failed for'   // &
                        ' file ''#''. IOSTAT = #'                      )
-         CALL ERRFNM ( '#', UNIT                                      )
-         CALL ERRINT ( '#', IOSTAT                                    )
-         CALL SIGERR ( 'SPICE(DASREADFAIL)'                           )
-         CALL CHKOUT ( 'DASWFR'                                       )
-         RETURN
+         call errfnm ( '#', unit                                      )
+         call errint ( '#', iostat                                    )
+         call sigerr ( 'SPICE(DASREADFAIL)'                           )
+         call chkout ( 'DASWFR'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the value of the internal file name and IDWORD before
 !     writing.  This is to guarantee that their lengths are ok.
 !
-      IFN    = IFNAME
-      LOCIDW = IDWORD
+      ifn    = ifname
+      locidw = idword
 
-      WRITE ( UNIT    =  UNIT, &
-              REC     =  1, &
-              IOSTAT  =  IOSTAT )     LOCIDW, &
-                                      IFN, &
-                                      NRESVR, &
-                                      NRESVC, &
-                                      NCOMR, &
-                                      NCOMC, &
-                                      FORMAT, &
-                                      TAIL
+      write ( unit    =  unit, &
+              rec     =  1, &
+              iostat  =  iostat )     locidw, &
+                                      ifn, &
+                                      nresvr, &
+                                      nresvc, &
+                                      ncomr, &
+                                      ncomc, &
+                                      format, &
+                                      tail
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Could not write file record.  File was ' &
+         call setmsg ( 'Could not write file record.  File was ' &
          //            '#.  IOSTAT was #.'                       )
-         CALL ERRFNM ( '#', UNIT                                 )
-         CALL ERRINT ( '#', IOSTAT                               )
-         CALL SIGERR ( 'SPICE(DASFILEWRITEFAILED)'               )
-         CALL CHKOUT ( 'DASWFR'                                  )
-         RETURN
+         call errfnm ( '#', unit                                 )
+         call errint ( '#', iostat                               )
+         call sigerr ( 'SPICE(DASFILEWRITEFAILED)'               )
+         call chkout ( 'DASWFR'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Update the file summary, in case the values of the reserved
 !     record or comment area counts have changed.
 !
-      CALL DASHFS ( HANDLE, &
-                    OLDRRC, &
-                    OLDRCH, &
-                    OLDCRC, &
-                    OLDCCH, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    oldrrc, &
+                    oldrch, &
+                    oldcrc, &
+                    oldcch, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      CALL DASUFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dasufs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      CALL CHKOUT ( 'DASWFR' )
-      RETURN
-      END
+      call chkout ( 'DASWFR' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ISRCHI  ( Search in an integer array )
 
-      INTEGER FUNCTION  ISRCHI ( VALUE, NDIM, ARRAY )
+      integer function  isrchi ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER    VALUE
-      INTEGER    NDIM
-      INTEGER    ARRAY ( * )
+      integer    value
+      integer    ndim
+      integer    array ( * )
 
 ! $ Brief_I/O
 !
@@ -120,19 +120,19 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      ISRCHI = 0
+      isrchi = 0
 
-      DO I = 1, NDIM
+      do i = 1, ndim
 
-         IF ( ARRAY(I) .EQ. VALUE ) THEN
-            ISRCHI = I
-            RETURN
-         END IF
+         if ( array(i) .eq. value ) then
+            isrchi = i
+            return
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DROTAT ( Derivative of a rotation matrix )
 
-      SUBROUTINE DROTAT ( ANGLE, IAXIS, DMOUT )
+      subroutine drotat ( angle, iaxis, dmout )
 
 ! $ Abstract
 !
@@ -20,11 +20,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   ANGLE
-      INTEGER            IAXIS
-      DOUBLE PRECISION   DMOUT  ( 3,3 )
+      double precision   angle
+      integer            iaxis
+      double precision   dmout  ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -167,61 +167,61 @@
 !-&
 
 
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      C
+      double precision      s
+      double precision      c
 
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               INDEXS ( 5 )
-      SAVE                  INDEXS
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               indexs ( 5 )
+      save                  indexs
 
-      DATA                  INDEXS  / 1, 2, 3, 1, 2 /
+      data                  indexs  / 1, 2, 3, 1, 2 /
 
 
 
 !
 !     First make sure the input axis is reasonable.
 !
-      IF (      ( IAXIS .GT. 3 ) &
-           .OR. ( IAXIS .LT. 1 ) ) THEN
+      if (      ( iaxis .gt. 3 ) &
+           .or. ( iaxis .lt. 1 ) ) then
 
-         CALL CHKIN  ( 'DROTAT' )
-         CALL SETMSG ( 'The input axis is out of range.  Its value '  // &
+         call chkin  ( 'DROTAT' )
+         call setmsg ( 'The input axis is out of range.  Its value '  // &
                        'is #.')
-         CALL ERRINT ( '#', IAXIS       )
-         CALL SIGERR ( 'SPICE(BADAXIS)' )
-         CALL CHKOUT ( 'DROTAT'         )
-         RETURN
+         call errint ( '#', iaxis       )
+         call sigerr ( 'SPICE(BADAXIS)' )
+         call chkout ( 'DROTAT'         )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the sine and cosine of ANGLE
 !
-      S  = DSIN(ANGLE)
-      C  = DCOS(ANGLE)
+      s  = dsin(angle)
+      c  = dcos(angle)
 
 !
 !     Get indices for axes. The first index is for the axis of rotation.
 !     The next two axes follow in right hand order (XYZ).
 !
-      I1 = INDEXS( IAXIS     )
-      I2 = INDEXS( IAXIS + 1 )
-      I3 = INDEXS( IAXIS + 2 )
+      i1 = indexs( iaxis     )
+      i2 = indexs( iaxis + 1 )
+      i3 = indexs( iaxis + 2 )
 
 !
 !  Construct the rotation matrix
 !
-      DMOUT(I1,I1) =  0.D0
-      DMOUT(I2,I1) =  0.D0
-      DMOUT(I3,I1) =  0.D0
-      DMOUT(I1,I2) =  0.D0
-      DMOUT(I2,I2) = -S
-      DMOUT(I3,I2) = -C
-      DMOUT(I1,I3) =  0.D0
-      DMOUT(I2,I3) =  C
-      DMOUT(I3,I3) = -S
+      dmout(i1,i1) =  0.d0
+      dmout(i2,i1) =  0.d0
+      dmout(i3,i1) =  0.d0
+      dmout(i1,i2) =  0.d0
+      dmout(i2,i2) = -s
+      dmout(i3,i2) = -c
+      dmout(i1,i3) =  0.d0
+      dmout(i2,i3) =  c
+      dmout(i3,i3) = -s
 !
-      RETURN
-      END
+      return
+      end

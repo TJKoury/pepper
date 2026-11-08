@@ -1,6 +1,6 @@
 !$Procedure ZZDASGRI ( DAS, get record, integer )
 
-      SUBROUTINE ZZDASGRI ( HANDLE, RECNO, RECORD )
+      subroutine zzdasgri ( handle, recno, record )
 
 ! $ Abstract
 !
@@ -22,13 +22,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'das.inc'
+      include 'das.inc'
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      INTEGER               RECORD ( NWI )
+      integer               handle
+      integer               recno
+      integer               record ( nwi )
 
 ! $ Brief_I/O
 !
@@ -115,149 +115,149 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               FILSIZ
-      PARAMETER           ( FILSIZ = 255 )
+      integer               filsiz
+      parameter           ( filsiz = 255 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NWC)       CHRREC
-      CHARACTER*(FILSIZ)    FNAME
+      character*(nwc)       chrrec
+      character*(filsiz)    fname
 
-      INTEGER               INTAMH
-      INTEGER               INTARC
-      INTEGER               INTBFF
-      INTEGER               IOSTAT
-      INTEGER               NATBFF
-      INTEGER               UNIT
+      integer               intamh
+      integer               intarc
+      integer               intbff
+      integer               iostat
+      integer               natbff
+      integer               unit
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
+      logical               first
+      logical               found
 
 !
 !     Saved variables
 !
-      SAVE                 FIRST
-      SAVE                 INTBFF
-      SAVE                 NATBFF
+      save                 first
+      save                 intbff
+      save                 natbff
 
 
 !
 !     Initial values
 !
-      DATA                 FIRST  / .TRUE. /
+      data                 first  / .true. /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDASGRI' )
+      call chkin ( 'ZZDASGRI' )
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Get the integer code for the host binary file format.
 !
-         CALL ZZDDHNFC ( NATBFF )
+         call zzddhnfc ( natbff )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'ZZDASGRI' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'ZZDASGRI' )
+            return
+         end if
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get a logical unit for this file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAS', .false., unit )
 !
 !     Get the binary file format of the file designated by HANDLE.
 !
-      CALL ZZDDHNFO ( HANDLE, FNAME, INTARC, INTBFF, INTAMH, FOUND )
+      call zzddhnfo ( handle, fname, intarc, intbff, intamh, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'ZZDASGRI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'ZZDASGRI' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Unable to locate file associated with ' &
+         call setmsg ( 'Unable to locate file associated with ' &
          //            'HANDLE, #. The most likely cause of this ' &
          //            'is the file that you are trying to read ' &
          //            'has been closed.'                           )
-         CALL ERRINT ( '#', HANDLE                                  )
-         CALL SIGERR ( 'SPICE(HANDLENOTFOUND)'                      )
-         CALL CHKOUT ( 'ZZDASGRI'                                   )
-         RETURN
+         call errint ( '#', handle                                  )
+         call sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         call chkout ( 'ZZDASGRI'                                   )
+         return
 
-      END IF
+      end if
 
 
-      IF ( INTBFF .EQ. NATBFF ) THEN
+      if ( intbff .eq. natbff ) then
 !
 !        The file has native format.
 !
-         READ (  UNIT    =   UNIT, &
-                 REC     =   RECNO, &
-                 IOSTAT  =   IOSTAT  ) RECORD
+         read (  unit    =   unit, &
+                 rec     =   recno, &
+                 iostat  =   iostat  ) record
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Could not read DAS integer record. ' &
+            call setmsg ( 'Could not read DAS integer record. ' &
             //            'File = # Record number = #. IOSTAT = #.'    )
-            CALL ERRFNM ( '#', UNIT                                    )
-            CALL ERRINT ( '#', RECNO                                   )
-            CALL ERRINT ( '#', IOSTAT                                  )
-            CALL SIGERR ( 'SPICE(DASFILEREADFAILED)'                   )
-            CALL CHKOUT ( 'ZZDASGRI'                                   )
-            RETURN
+            call errfnm ( '#', unit                                    )
+            call errint ( '#', recno                                   )
+            call errint ( '#', iostat                                  )
+            call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
+            call chkout ( 'ZZDASGRI'                                   )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Read the record as a character string, then translate it
 !        to an array of integers.
 !
-         READ (  UNIT    =    UNIT, &
-                 REC     =    RECNO, &
-                 IOSTAT  =    IOSTAT  ) CHRREC
+         read (  unit    =    unit, &
+                 rec     =    recno, &
+                 iostat  =    iostat  ) chrrec
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL SETMSG ( 'Could not read non-native DAS integer ' &
+            call setmsg ( 'Could not read non-native DAS integer ' &
             //            'record into character array. ' &
             //            'File = # Record number = #. IOSTAT = #.'    )
-            CALL ERRFNM ( '#', UNIT                                    )
-            CALL ERRINT ( '#', RECNO                                   )
-            CALL ERRINT ( '#', IOSTAT                                  )
-            CALL SIGERR ( 'SPICE(DASFILEREADFAILED)'                   )
-            CALL CHKOUT ( 'ZZDASGRI'                                   )
-            RETURN
+            call errfnm ( '#', unit                                    )
+            call errint ( '#', recno                                   )
+            call errint ( '#', iostat                                  )
+            call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
+            call chkout ( 'ZZDASGRI'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Translate the character record to integer type.
 !
-         CALL ZZXLATEI ( INTBFF, CHRREC, NWI, RECORD )
+         call zzxlatei ( intbff, chrrec, nwi, record )
 
 !
 !        We don't test FAILED here because the routine
 !        will return from this point.
 !
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDASGRI' )
-      RETURN
-      END
+      call chkout ( 'ZZDASGRI' )
+      return
+      end

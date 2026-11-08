@@ -1,6 +1,6 @@
 !$Procedure GETELM ( Get the components from two-line elements )
 
-      SUBROUTINE GETELM ( FRSTYR, LINES, EPOCH, ELEMS )
+      subroutine getelm ( frstyr, lines, epoch, elems )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               FRSTYR
-      CHARACTER*(*)         LINES ( 2  )
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      ELEMS ( 10 )
+      integer               frstyr
+      character*(*)         lines ( 2  )
+      double precision      epoch
+      double precision      elems ( 10 )
 
 ! $ Brief_I/O
 !
@@ -718,42 +718,42 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      LOGICAL               OK
-      CHARACTER*(256)       ERROR
+      logical               ok
+      character*(256)       error
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GETELM' )
+      call chkin ( 'GETELM' )
 
 !
 !     Pass the input to the parse routine...
 !
-      CALL ZZGETELM ( FRSTYR, LINES, EPOCH, ELEMS, OK, ERROR )
+      call zzgetelm ( frstyr, lines, epoch, elems, ok, error )
 
 !
 !     ...check for an error parsing the TLE pair. Signal an
 !     error if OK equals .FALSE.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         CALL SETMSG ( 'Error in TLE set. #' )
-         CALL ERRCH  ( '#', ERROR  )
-         CALL SIGERR ( 'SPICE(BADTLE)' )
-         CALL CHKOUT ( 'GETELM' )
-         RETURN
+         call setmsg ( 'Error in TLE set. #' )
+         call errch  ( '#', error  )
+         call sigerr ( 'SPICE(BADTLE)' )
+         call chkout ( 'GETELM' )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'GETELM' )
-      RETURN
-      END
+      call chkout ( 'GETELM' )
+      return
+      end

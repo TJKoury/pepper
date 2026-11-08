@@ -1,6 +1,6 @@
 !$Procedure PLNSNS ( Planetographic Longitude Sense )
 
-      INTEGER FUNCTION PLNSNS ( BODID )
+      integer function plnsns ( bodid )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODID
+      integer               bodid
 
 ! $ Brief_I/O
 !
@@ -163,70 +163,70 @@
 !-&
 
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      CHARACTER*(1)         TYPE
-      CHARACTER*(WDSIZE)    ITEM
+      character*(1)         type
+      character*(wdsize)    item
 
-      DOUBLE PRECISION      RATE
+      double precision      rate
 
-      INTEGER               N
-      INTEGER               VALUE
+      integer               n
+      integer               value
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     The earth is a special case so we just handle it here.
 !
-      IF ( BODID .EQ. 399 ) THEN
+      if ( bodid .eq. 399 ) then
 
-         PLNSNS = 1
-         RETURN
+         plnsns = 1
+         return
 
-      END IF
+      end if
 
 
 !
 !     Create the name of the item to look up in the kernel pool.
 !
-      ITEM = 'BODY#_PM'
-      CALL REPMI ( ITEM, '#', BODID, ITEM )
+      item = 'BODY#_PM'
+      call repmi ( item, '#', bodid, item )
 
 !
 !     See if this item exists in the kernel pool.
 !
-      CALL DTPOOL ( ITEM, FOUND, N, TYPE )
+      call dtpool ( item, found, n, type )
 
-      IF (     .NOT. FOUND &
-            .OR. TYPE .NE. 'N' &
-            .OR. N    .LT.  2 ) THEN
-         VALUE = 0
-      ELSE
+      if (     .not. found &
+            .or. type .ne. 'N' &
+            .or. n    .lt.  2 ) then
+         value = 0
+      else
 
-         CALL GDPOOL ( ITEM, 2, 1, N, RATE, FOUND )
+         call gdpool ( item, 2, 1, n, rate, found )
 
 !
 !        If the rate of change of the prime meridian is negative
 !        the planetocentric and planetographic longitude are the
 !        same...
 !
-         IF ( RATE .LT. 0.0D0 ) THEN
+         if ( rate .lt. 0.0d0 ) then
 
-            VALUE = 1
+            value = 1
 
-         ELSE
+         else
 
 !
 !           ...otherwise they have opposite signs.
 !
-            VALUE = -1
+            value = -1
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      PLNSNS = VALUE
-      RETURN
-      END
+      plnsns = value
+      return
+      end

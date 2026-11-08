@@ -1,6 +1,6 @@
 !$Procedure FRSTPC ( First printable character )
 
-      INTEGER FUNCTION FRSTPC ( STRING )
+      integer function frstpc ( string )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -138,7 +138,7 @@
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 
 
@@ -146,21 +146,21 @@
 !     Look for the first character in the range [33,126], and return
 !     its index.
 !
-      DO I = 1, LEN ( STRING )
+      do i = 1, len ( string )
 
-         IF (       (ICHAR ( STRING(I:I) ) .GE.  33) &
-              .AND. (ICHAR ( STRING(I:I) ) .LE. 126) ) THEN
+         if (       (ichar ( string(i:i) ) .ge.  33) &
+              .and. (ichar ( string(i:i) ) .le. 126) ) then
 
-            FRSTPC = I
-            RETURN
-         END IF
+            frstpc = i
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Still here? No printable characters. Return zero.
 !
-      FRSTPC = 0
+      frstpc = 0
 
-      RETURN
-      END
+      return
+      end

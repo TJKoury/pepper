@@ -1,7 +1,7 @@
 !$Procedure  ZZEKPCOL ( Private: EK, parse column name )
 
-      SUBROUTINE ZZEKPCOL ( QCOL,    EQRYI,   EQRYC,   TABLE,  ALIAS, &
-                            TABIDX,  COLUMN,  COLIDX,  ERROR,  ERRMSG )
+      subroutine zzekpcol ( qcol,    eqryi,   eqryc,   table,  alias, &
+                            tabidx,  column,  colidx,  error,  errmsg )
 
 ! $ Abstract
 !
@@ -25,27 +25,27 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekattdsc.inc'
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ektokn.inc'
+      include 'ekattdsc.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'ektnamsz.inc'
+      include 'ektokn.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QCOL
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      CHARACTER*(*)         TABLE
-      CHARACTER*(*)         ALIAS
-      INTEGER               TABIDX
-      CHARACTER*(*)         COLUMN
-      INTEGER               COLIDX
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         qcol
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      character*(*)         table
+      character*(*)         alias
+      integer               tabidx
+      character*(*)         column
+      integer               colidx
+      logical               error
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -194,71 +194,71 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               FAILED
+      integer               isrchc
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               LONG
-      PARAMETER           ( LONG   = 160 )
+      integer               long
+      parameter           ( long   = 160 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TNAMSZ)    ALSLST ( MAXTAB )
-      CHARACTER*(LONG)      CHRBUF
-      CHARACTER*(TNAMSZ)    TABLST ( MAXTAB )
-      CHARACTER*(CNAMSZ)    TMPCOL
-      CHARACTER*(TNAMSZ)    TMPTAB
+      character*(tnamsz)    alslst ( maxtab )
+      character*(long)      chrbuf
+      character*(tnamsz)    tablst ( maxtab )
+      character*(cnamsz)    tmpcol
+      character*(tnamsz)    tmptab
 
-      DOUBLE PRECISION      NUMVLS ( 3 )
+      double precision      numvls ( 3 )
 
-      INTEGER               ATTDSC ( ADSCSZ )
-      INTEGER               CC
-      INTEGER               CHBEGS ( 3 )
-      INTEGER               CHENDS ( 3 )
-      INTEGER               I
-      INTEGER               ICHECK
-      INTEGER               J
-      INTEGER               LXBEGS ( 3 )
-      INTEGER               LXENDS ( 3 )
-      INTEGER               NMATCH
-      INTEGER               NTAB
-      INTEGER               NTOKEN
-      INTEGER               TOKENS ( 3 )
-      INTEGER               VALUES ( 3 )
+      integer               attdsc ( adscsz )
+      integer               cc
+      integer               chbegs ( 3 )
+      integer               chends ( 3 )
+      integer               i
+      integer               icheck
+      integer               j
+      integer               lxbegs ( 3 )
+      integer               lxends ( 3 )
+      integer               nmatch
+      integer               ntab
+      integer               ntoken
+      integer               tokens ( 3 )
+      integer               values ( 3 )
 
-      LOGICAL               FND
-      LOGICAL               QUAL
+      logical               fnd
+      logical               qual
 
 
 !
 !     Use discovery check-in.
 !
-      ERROR   =  .FALSE.
-      ERRMSG  = ' '
+      error   =  .false.
+      errmsg  = ' '
 
 
-      CALL ZZEKREQI ( EQRYI, 'SEM_CHECKED', ICHECK )
+      call zzekreqi ( eqryi, 'SEM_CHECKED', icheck )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Make sure the encoded query is in order before proceeding.
 !
-      IF ( ICHECK .EQ. IFALSE ) THEN
+      if ( icheck .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKPCOL'                                     )
-         CALL SETMSG ( 'Encoded query has not yet been semantically '// &
+         call chkin  ( 'ZZEKPCOL'                                     )
+         call setmsg ( 'Encoded query has not yet been semantically '// &
                        'checked.'                                     )
-         CALL SIGERR ( 'SPICE(NOTSEMCHECKED)'                         )
-         CALL CHKOUT ( 'ZZEKPCOL'                                     )
-         RETURN
+         call sigerr ( 'SPICE(NOTSEMCHECKED)'                         )
+         call chkout ( 'ZZEKPCOL'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Scan the input column name.  There are only two valid token
@@ -270,71 +270,71 @@
 !
 !     ZZEKSCAN should therefore return 1 or 3 tokens.
 !
-      CALL ZZEKSCAN ( QCOL,   3,      0,      NTOKEN, TOKENS, &
-                      LXBEGS, LXENDS, VALUES, NUMVLS, CHRBUF, &
-                      CHBEGS, CHENDS, ERROR,  ERRMSG          )
+      call zzekscan ( qcol,   3,      0,      ntoken, tokens, &
+                      lxbegs, lxends, values, numvls, chrbuf, &
+                      chbegs, chends, error,  errmsg          )
 
-      IF ( ERROR ) THEN
-         RETURN
-      END IF
+      if ( error ) then
+         return
+      end if
 
 
-      IF ( NTOKEN .EQ. 1 ) THEN
+      if ( ntoken .eq. 1 ) then
 
-         IF ( TOKENS(1) .NE. TKID ) THEN
+         if ( tokens(1) .ne. tkid ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Invalid column name; name should consist of ' // &
+            error  = .true.
+            errmsg = 'Invalid column name; name should consist of ' // &
                      'an identifier.'
-            RETURN
+            return
 
-         END IF
+         end if
 
-         CALL UCASE ( QCOL, COLUMN )
-         QUAL   =  .FALSE.
+         call ucase ( qcol, column )
+         qual   =  .false.
 
 
-      ELSE IF ( NTOKEN .EQ. 3 ) THEN
+      else if ( ntoken .eq. 3 ) then
 
-         IF ( TOKENS(1) .NE. TKID  ) THEN
+         if ( tokens(1) .ne. tkid  ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Invalid table name; name should consist of ' // &
+            error  = .true.
+            errmsg = 'Invalid table name; name should consist of ' // &
                      'an identifier.'
-            RETURN
+            return
 
-         ELSE IF ( TOKENS(2) .NE. TKDOT ) THEN
+         else if ( tokens(2) .ne. tkdot ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Invalid qualified column name; table name ' // &
+            error  = .true.
+            errmsg = 'Invalid qualified column name; table name ' // &
                      'should be followed by a period.'
-            RETURN
+            return
 
-         ELSE IF ( TOKENS(3) .NE. TKID ) THEN
+         else if ( tokens(3) .ne. tkid ) then
 
-            ERROR  = .TRUE.
-            ERRMSG = 'Invalid column name; name should consist of ' // &
+            error  = .true.
+            errmsg = 'Invalid column name; name should consist of ' // &
                      'an identifier.'
-            RETURN
+            return
 
-         END IF
-
-
-         I       =  VALUES(1)
-         J       =  VALUES(3)
-         TMPTAB  =  CHRBUF ( CHBEGS(I) : CHENDS(I) )
-         COLUMN  =  CHRBUF ( CHBEGS(J) : CHENDS(J) )
-         QUAL    = .TRUE.
+         end if
 
 
-      ELSE
+         i       =  values(1)
+         j       =  values(3)
+         tmptab  =  chrbuf ( chbegs(i) : chends(i) )
+         column  =  chrbuf ( chbegs(j) : chends(j) )
+         qual    = .true.
 
-         ERROR  = .TRUE.
-         ERRMSG = 'Invalid tokens present in qualified column name. ' // &
+
+      else
+
+         error  = .true.
+         errmsg = 'Invalid tokens present in qualified column name. ' // &
                   'Valid syntax is <column> or <table>.<column>'
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, COLUMN and QUAL are set.  If a qualifying table
@@ -344,79 +344,79 @@
 !     If we got this far, we'll need to look up the table names and
 !     aliases from the query.
 !
-      CALL ZZEKREQI ( EQRYI,  'NUM_TABLES', NTAB   )
+      call zzekreqi ( eqryi,  'NUM_TABLES', ntab   )
 
-      DO I = 1, NTAB
-         CALL ZZEKQTAB ( EQRYI, EQRYC, I, TABLST(I), ALSLST(I) )
-      END DO
+      do i = 1, ntab
+         call zzekqtab ( eqryi, eqryc, i, tablst(i), alslst(i) )
+      end do
 
 !
 !     If QCOL contains a table name, look for that name in the
 !     table list, and if necessary, in the alias list.
 !
-      IF ( QUAL ) THEN
+      if ( qual ) then
 
-         TABIDX  =  ISRCHC ( TMPTAB, NTAB, TABLST )
+         tabidx  =  isrchc ( tmptab, ntab, tablst )
 
-         IF ( TABIDX .EQ. 0 ) THEN
-            TABIDX = ISRCHC ( TMPTAB, NTAB, ALSLST )
-         END IF
+         if ( tabidx .eq. 0 ) then
+            tabidx = isrchc ( tmptab, ntab, alslst )
+         end if
 
 !
 !        If we didn't find the table name in either list, it's just
 !        plain wrong.
 !
-         IF ( TABIDX .EQ. 0 ) THEN
-            ERROR  =  .TRUE.
-            ERRMSG =  'Table name <#> does not match table or alias '// &
+         if ( tabidx .eq. 0 ) then
+            error  =  .true.
+            errmsg =  'Table name <#> does not match table or alias '// &
                       'from query.'
-            CALL REPMC ( ERRMSG, '#', TMPTAB, ERRMSG )
-            RETURN
-         END IF
+            call repmc ( errmsg, '#', tmptab, errmsg )
+            return
+         end if
 
 !
 !        At this point, TABIDX is valid.  Locate the column within
 !        the table.
 !
-         CALL EKCCNT ( TABLST(TABIDX), CC )
+         call ekccnt ( tablst(tabidx), cc )
 
-         IF ( FAILED() ) THEN
-            RETURN
-         END IF
-
-
-         FND   =  .FALSE.
-         J     =   1
-
-         DO WHILE (  ( J .LE. CC ) .AND. ( .NOT. FND )  )
-
-            CALL EKCII ( TABLST(TABIDX), J, TMPCOL, ATTDSC )
-
-            IF ( TMPCOL .EQ. COLUMN ) THEN
-               COLIDX  =  J
-               FND     =  .TRUE.
-            ELSE
-               J       = J + 1
-            END IF
-
-         END DO
+         if ( failed() ) then
+            return
+         end if
 
 
-         IF ( .NOT. FND ) THEN
+         fnd   =  .false.
+         j     =   1
 
-            ERROR  =  .TRUE.
-            ERRMSG =  'Column name <#> does not appear in the '// &
+         do while (  ( j .le. cc ) .and. ( .not. fnd )  )
+
+            call ekcii ( tablst(tabidx), j, tmpcol, attdsc )
+
+            if ( tmpcol .eq. column ) then
+               colidx  =  j
+               fnd     =  .true.
+            else
+               j       = j + 1
+            end if
+
+         end do
+
+
+         if ( .not. fnd ) then
+
+            error  =  .true.
+            errmsg =  'Column name <#> does not appear in the '// &
                       'qualifying table <#>.'
-            CALL REPMC ( ERRMSG, '#', COLUMN, ERRMSG )
-            CALL REPMC ( ERRMSG, '#', TMPTAB, ERRMSG )
-            RETURN
+            call repmc ( errmsg, '#', column, errmsg )
+            call repmc ( errmsg, '#', tmptab, errmsg )
+            return
 
-         END IF
+         end if
 !
 !        At this point, TABIDX and COLIDX are set correctly.
 !
 
-      ELSE
+      else
 !
 !        No qualifying table name was supplied.  COLUMN had better
 !        be a unique column name among the set of columns belong to
@@ -424,64 +424,64 @@
 !        columns for each table in the FROM clause, looking for
 !        matches.
 !
-         NMATCH  =  0
+         nmatch  =  0
 
-         DO I  = 1, NTAB
+         do i  = 1, ntab
 
-            CALL EKCCNT ( TABLST(I), CC )
+            call ekccnt ( tablst(i), cc )
 
-            IF ( FAILED() ) THEN
-               RETURN
-            END IF
+            if ( failed() ) then
+               return
+            end if
 
-            DO J = 1, CC
+            do j = 1, cc
 
-               CALL EKCII ( TABLST(I), J, TMPCOL, ATTDSC )
+               call ekcii ( tablst(i), j, tmpcol, attdsc )
 
-               IF (  TMPCOL .EQ. COLUMN ) THEN
-                  NMATCH = NMATCH + 1
-                  COLUMN = TMPCOL
-                  COLIDX = J
-                  TABIDX = I
-               END IF
+               if (  tmpcol .eq. column ) then
+                  nmatch = nmatch + 1
+                  column = tmpcol
+                  colidx = j
+                  tabidx = i
+               end if
 
-            END DO
+            end do
 
-         END DO
+         end do
 !
 !        Check to see whether we have the unique identification we're
 !        hoping for.
 !
-         IF ( NMATCH .EQ. 0 ) THEN
+         if ( nmatch .eq. 0 ) then
 
-            ERROR  =  .TRUE.
-            ERRMSG =  'Column name <#> does not appear in any table '// &
+            error  =  .true.
+            errmsg =  'Column name <#> does not appear in any table '// &
                       'in FROM clause of query.'
-            CALL REPMC ( ERRMSG, '#', COLUMN, ERRMSG )
-            RETURN
+            call repmc ( errmsg, '#', column, errmsg )
+            return
 
-         ELSE IF ( NMATCH .GT. 1 ) THEN
+         else if ( nmatch .gt. 1 ) then
 
-            ERROR  =  .TRUE.
-            ERRMSG =  'Column name <#> is ambiguous without '// &
+            error  =  .true.
+            errmsg =  'Column name <#> is ambiguous without '// &
                       'a qualifying table name.'
-            CALL REPMC ( ERRMSG, '#', COLUMN, ERRMSG )
-            RETURN
+            call repmc ( errmsg, '#', column, errmsg )
+            return
 
-         END IF
+         end if
 !
 !        At this point, COLUMN, TABIDX and COLIDX are set correctly.
 !
 
-      END IF
+      end if
 
 !
 !     At this point, COLUMN, TABIDX and COLIDX are set correctly,
 !     regardless of whether the input name was qualified.  Fill the rest
 !     of our output variables.
 !
-      TABLE  =  TABLST ( TABIDX )
-      ALIAS  =  ALSLST ( TABIDX )
+      table  =  tablst ( tabidx )
+      alias  =  alslst ( tabidx )
 
-      RETURN
-      END
+      return
+      end

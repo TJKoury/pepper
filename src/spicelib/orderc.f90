@@ -1,6 +1,6 @@
 !$Procedure ORDERC ( Order of a character array )
 
-      SUBROUTINE ORDERC ( ARRAY, NDIM, IORDER )
+      subroutine orderc ( array, ndim, iorder )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    ARRAY  ( * )
-      INTEGER          NDIM
-      INTEGER          IORDER ( * )
+      character*(*)    array  ( * )
+      integer          ndim
+      integer          iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -215,48 +215,48 @@
 !
 !     Local variables
 !
-      INTEGER          GAP
-      INTEGER          I
-      INTEGER          J
-      INTEGER          JG
+      integer          gap
+      integer          i
+      integer          j
+      integer          jg
 
 
 !
 !     Begin with the initial ordering.
 !
-      DO I = 1, NDIM
-         IORDER(I) = I
-      END DO
+      do i = 1, ndim
+         iorder(i) = i
+      end do
 
 !
 !     Find the smallest element, then the next smallest, and so on.
 !     This uses the Shell Sort algorithm, but swaps the elements of
 !     the order vector instead of the array itself.
 !
-      GAP = NDIM / 2
+      gap = ndim / 2
 
-      DO WHILE ( GAP .GT. 0 )
+      do while ( gap .gt. 0 )
 
-         DO I = GAP+1, NDIM
+         do i = gap+1, ndim
 
-            J = I - GAP
-            DO WHILE ( J .GT. 0 )
-               JG = J + GAP
+            j = i - gap
+            do while ( j .gt. 0 )
+               jg = j + gap
 
-               IF ( LLE ( ARRAY(IORDER(J)), ARRAY(IORDER(JG)) ) ) THEN
-                  J = 0
-               ELSE
-                  CALL SWAPI ( IORDER(J), IORDER(JG) )
-               END IF
+               if ( lle ( array(iorder(j)), array(iorder(jg)) ) ) then
+                  j = 0
+               else
+                  call swapi ( iorder(j), iorder(jg) )
+               end if
 
-               J = J - GAP
-            END DO
+               j = j - gap
+            end do
 
-         END DO
+         end do
 
-         GAP = GAP / 2
+         gap = gap / 2
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

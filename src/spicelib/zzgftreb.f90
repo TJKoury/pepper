@@ -1,6 +1,6 @@
 !$Procedure ZZGFTREB ( Geometry finder: return body axes )
 
-      SUBROUTINE ZZGFTREB ( BODY, AXES )
+      subroutine zzgftreb ( body, axes )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER              BODY
-      DOUBLE PRECISION     AXES ( 3 )
+      integer              body
+      double precision     axes ( 3 )
 
 ! $ Brief_I/O
 !
@@ -136,71 +136,71 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               N
+      integer               i
+      integer               n
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFTREB' )
+      call chkin  ( 'ZZGFTREB' )
 
 
 !
 !     Look up BODY radii in the kernel pool.
 !
-      CALL BODVCD ( BODY, 'RADII', 3, N, AXES )
+      call bodvcd ( body, 'RADII', 3, n, axes )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFTREB' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFTREB' )
+         return
+      end if
 
-      IF ( N .NE. 3 ) THEN
+      if ( n .ne. 3 ) then
 
-         CALL SETMSG ( 'Only # axes were found  ' &
+         call setmsg ( 'Only # axes were found  ' &
               //       'for ID #. Three axes expected.'    )
-         CALL ERRINT ( '#',   N                            )
-         CALL ERRINT ( '#',   BODY                         )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'               )
-         CALL CHKOUT ( 'ZZGFTREB'                          )
-         RETURN
+         call errint ( '#',   n                            )
+         call errint ( '#',   body                         )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'               )
+         call chkout ( 'ZZGFTREB'                          )
+         return
 
-      ELSE
+      else
 
-         DO I = 1, 3
+         do i = 1, 3
 
-           IF ( AXES(I) .LE. 0.0D0 ) THEN
+           if ( axes(i) .le. 0.0d0 ) then
 
-               CALL SETMSG ('Degenerate case. The # axis of body # ' &
+               call setmsg ('Degenerate case. The # axis of body # ' &
                //           'is negative or zero.  Please check ' &
                //           'the text PCK file. You should fix the ' &
                //           '# component of the kernel pool ' &
                //           'variable  BODY#_RADII. '          )
 
-               CALL ERRINT ( '#', I                            )
-               CALL ERRINT ( '#', BODY                         )
-               CALL ERRINT ( '#', I                            )
-               CALL ERRINT ( '#', BODY                         )
-               CALL SIGERR ( 'SPICE(BADAXISLENGTH)'            )
-               CALL CHKOUT ( 'ZZGFTREB'                        )
-               RETURN
+               call errint ( '#', i                            )
+               call errint ( '#', body                         )
+               call errint ( '#', i                            )
+               call errint ( '#', body                         )
+               call sigerr ( 'SPICE(BADAXISLENGTH)'            )
+               call chkout ( 'ZZGFTREB'                        )
+               return
 
-           END IF
+           end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFTREB' )
-      RETURN
-      END
+      call chkout ( 'ZZGFTREB' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure MTXVG ( Matrix transpose times vector, general dimension )
 
-      SUBROUTINE MTXVG ( M1, V2, NC1, NR1R2, VOUT )
+      subroutine mtxvg ( m1, v2, nc1, nr1r2, vout )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NC1
-      INTEGER            NR1R2
-      DOUBLE PRECISION   M1   ( NR1R2,NC1 )
-      DOUBLE PRECISION   V2   ( NR1R2     )
-      DOUBLE PRECISION   VOUT (       NC1 )
+      integer            nc1
+      integer            nr1r2
+      double precision   m1   ( nr1r2,nc1 )
+      double precision   v2   ( nr1r2     )
+      double precision   vout (       nc1 )
 
 ! $ Brief_I/O
 !
@@ -192,24 +192,24 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION SUM
-      INTEGER          I,K
+      double precision sum
+      integer          i,k
 
 
 !
 !  Perform the matrix-vector multiplication
 !
-      DO I = 1, NC1
+      do i = 1, nc1
 
-         SUM = 0.D0
+         sum = 0.d0
 
-         DO K = 1, NR1R2
-            SUM = SUM + M1(K,I)*V2(K)
-         END DO
+         do k = 1, nr1r2
+            sum = sum + m1(k,i)*v2(k)
+         end do
 
-         VOUT(I) = SUM
+         vout(i) = sum
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

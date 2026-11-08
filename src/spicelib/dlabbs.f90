@@ -1,6 +1,6 @@
 !$Procedure DLABBS ( DLA, begin backward search )
 
-      SUBROUTINE DLABBS ( HANDLE, DLADSC, FOUND )
+      subroutine dlabbs ( handle, dladsc, found )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC  ( * )
-      LOGICAL               FOUND
+      integer               handle
+      integer               dladsc  ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -288,51 +288,51 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               THIS
+      integer               this
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DLABBS' )
+      call chkin ( 'DLABBS' )
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Look up the pointer to the last DLA segment descriptor in the
 !     file.  Then look up the segment descriptor itself.
 !
-      CALL DASRDI ( HANDLE, LLEIDX, LLEIDX, THIS )
+      call dasrdi ( handle, lleidx, lleidx, this )
 
-      IF (  FAILED()  .OR.  ( THIS .EQ. NULPTR )  ) THEN
+      if (  failed()  .or.  ( this .eq. nulptr )  ) then
 !
 !        If the pointer THIS is null, there are no segments in the
 !        file.
 !
-         CALL CHKOUT ( 'DLABBS' )
-         RETURN
+         call chkout ( 'DLABBS' )
+         return
 
-      END IF
+      end if
 
 !
 !     Return the last descriptor.
 !
-      CALL DASRDI ( HANDLE, THIS, THIS+DLADSZ-1, DLADSC )
+      call dasrdi ( handle, this, this+dladsz-1, dladsc )
 
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT ( 'DLABBS' )
-      RETURN
-      END
+      call chkout ( 'DLABBS' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SSIZEC ( Set the size of a character cell )
 
-      SUBROUTINE SSIZEC ( SIZE, CELL )
+      subroutine ssizec ( size, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER            SIZE
-      CHARACTER*(*)      CELL   ( LBCELL:* )
+      integer            size
+      character*(*)      cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -168,45 +168,45 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SSIZEC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SSIZEC' )
+      end if
 
 !
 !     The size must be non-negative.  Other values will be snubbed.
 !
-      IF (  SIZE .LT. 0  )  THEN
-         CALL SETMSG ( 'Attempt to set size of cell to invalid '      // &
+      if (  size .lt. 0  )  then
+         call setmsg ( 'Attempt to set size of cell to invalid '      // &
                        'value.  The value was #.'  )
-         CALL ERRINT ( '#', SIZE )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'SSIZEC' )
-         RETURN
-      END IF
+         call errint ( '#', size )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'SSIZEC' )
+         return
+      end if
 
 
 !
 !     Not much to this.
 !
-      CALL ENCHAR ( SIZE, CELL(-1) )
-      CALL ENCHAR ( 0,    CELL( 0) )
+      call enchar ( size, cell(-1) )
+      call enchar ( 0,    cell( 0) )
 
-      DO I = LBCELL, -2
-         CALL ENCHAR ( 0, CELL(I) )
-      END DO
+      do i = lbcell, -2
+         call enchar ( 0, cell(i) )
+      end do
 
-      CALL  CHKOUT ( 'SSIZEC' )
-      RETURN
-      END
+      call  chkout ( 'SSIZEC' )
+      return
+      end

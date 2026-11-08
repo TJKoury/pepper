@@ -1,6 +1,6 @@
 !$Procedure PCKPDS ( PCK, pack descriptor )
 
-      SUBROUTINE PCKPDS ( BODY, FRAME, TYPE, FIRST, LAST, DESCR )
+      subroutine pckpds ( body, frame, type, first, last, descr )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      CHARACTER*(*)         FRAME
-      INTEGER               TYPE
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      DOUBLE PRECISION      DESCR ( * )
+      integer               body
+      character*(*)         frame
+      integer               type
+      double precision      first
+      double precision      last
+      double precision      descr ( * )
 
 ! $ Brief_I/O
 !
@@ -145,122 +145,122 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local Parameters
 !
 !     ND and NI values for a PCK file.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 5 )
+      integer               ni
+      parameter           ( ni = 5 )
 !
 !     Length of a calender string.
 !
-      INTEGER               CALSIZ
-      PARAMETER           ( CALSIZ = 40 )
+      integer               calsiz
+      parameter           ( calsiz = 40 )
 !
 !     Local Variables
 !
-      CHARACTER*(CALSIZ)    CALFST
-      CHARACTER*(CALSIZ)    CALLST
+      character*(calsiz)    calfst
+      character*(calsiz)    callst
 
-      DOUBLE PRECISION      DPPART ( ND )
+      double precision      dppart ( nd )
 
-      INTEGER               IPART  ( NI )
-      INTEGER               REFCOD
+      integer               ipart  ( ni )
+      integer               refcod
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKPDS' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'PCKPDS' )
+      end if
 !
 !     We do not support orientation models for barycenters.
 !
-      IF ( ( BODY .GE. 0 ) .AND. ( BODY .LE. 9 ) ) THEN
+      if ( ( body .ge. 0 ) .and. ( body .le. 9 ) ) then
 
-         CALL SETMSG ( 'You have attempted to create a segment ' &
+         call setmsg ( 'You have attempted to create a segment ' &
          //            ' for for a barycenter, and the PCK system' &
          //            ' does not support this.'                   )
-         CALL SIGERR ( 'SPICE(BARYCENTERIDCODE)'                   )
-         CALL CHKOUT ( 'PCKPDS'                                    )
+         call sigerr ( 'SPICE(BARYCENTERIDCODE)'                   )
+         call chkout ( 'PCKPDS'                                    )
 
-         RETURN
+         return
 
-      END IF
+      end if
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL IRFNUM ( FRAME, REFCOD )
+      call irfnum ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'PCKPDS'                                    )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'PCKPDS'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The segment stop time should be greater then the begin time.
 !
-      IF ( FIRST .GE. LAST ) THEN
+      if ( first .ge. last ) then
 !
 !        We've got an error. Get the calendar string for the first
 !        and last epochs.
 !
-         CALL ETCAL  ( FIRST, CALFST )
-         CALL ETCAL  ( LAST,  CALLST )
+         call etcal  ( first, calfst )
+         call etcal  ( last,  callst )
 
-         CALL SETMSG ( 'The segment start time: # (#) is at or' &
+         call setmsg ( 'The segment start time: # (#) is at or' &
          //            'after the segment stop time # (#). '       )
 
-         CALL ERRDP  ( '#', FIRST                                  )
-         CALL ERRCH  ( '#', CALFST                                 )
-         CALL ERRDP  ( '#', LAST                                   )
-         CALL ERRCH  ( '#', CALLST                                 )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'PCKPDS'                                    )
-         RETURN
+         call errdp  ( '#', first                                  )
+         call errch  ( '#', calfst                                 )
+         call errdp  ( '#', last                                   )
+         call errch  ( '#', callst                                 )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'PCKPDS'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The type must be something reasonable.  The interval from
 !     2 to 1000 is what we are calling reasonable these days.
 !
-      IF ( ( TYPE .LE. 1)  .OR. ( TYPE .GT. 1000 ) ) THEN
+      if ( ( type .le. 1)  .or. ( type .gt. 1000 ) ) then
 
-         CALL SETMSG ( 'The type specified, #, is not supported ' &
+         call setmsg ( 'The type specified, #, is not supported ' &
          //            'within the PCK system. '                  )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(UNKNOWNPCKTYPE)'                    )
-         CALL CHKOUT ( 'PCKPDS'                                   )
-         RETURN
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(UNKNOWNPCKTYPE)'                    )
+         call chkout ( 'PCKPDS'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Well, that's it.  As far as we can determine these seem to be
 !     reasonable values to put into a descriptor.   Do it.
 !
-      IPART(1)  = BODY
-      IPART(2)  = REFCOD
-      IPART(3)  = TYPE
-      IPART(4)  = 0
-      IPART(5)  = 0
+      ipart(1)  = body
+      ipart(2)  = refcod
+      ipart(3)  = type
+      ipart(4)  = 0
+      ipart(5)  = 0
 
-      DPPART(1) = FIRST
-      DPPART(2) = LAST
+      dppart(1) = first
+      dppart(2) = last
 
-      CALL DAFPS  ( ND, NI, DPPART, IPART, DESCR )
+      call dafps  ( nd, ni, dppart, ipart, descr )
 
-      CALL CHKOUT ( 'PCKPDS' )
-      RETURN
+      call chkout ( 'PCKPDS' )
+      return
 
-      END
+      end

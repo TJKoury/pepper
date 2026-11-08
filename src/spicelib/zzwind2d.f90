@@ -1,7 +1,7 @@
 !$Procedure  ZZWIND2D ( Find winding number of polygon about point )
 
-      INTEGER FUNCTION ZZWIND2D ( N, VERTCS, POINT )
-      IMPLICIT NONE
+      integer function zzwind2d ( n, vertcs, point )
+      implicit none
 
 ! $ Abstract
 !
@@ -24,9 +24,9 @@
 !
 ! $ Declarations
 
-      INTEGER               N
-      DOUBLE PRECISION      VERTCS ( 2, N )
-      DOUBLE PRECISION      POINT  ( 2 )
+      integer               n
+      double precision      vertcs ( 2, n )
+      double precision      point  ( 2 )
 
 ! $ Brief_I/O
 !
@@ -210,70 +210,70 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOTG
-      DOUBLE PRECISION      VSEPG
+      double precision      twopi
+      double precision      vdotg
+      double precision      vsepg
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ATOTAL
-      DOUBLE PRECISION      RNEXT  ( 2 )
-      DOUBLE PRECISION      RPERP  ( 2 )
-      DOUBLE PRECISION      RVEC   ( 2 )
-      DOUBLE PRECISION      SEP
+      double precision      atotal
+      double precision      rnext  ( 2 )
+      double precision      rperp  ( 2 )
+      double precision      rvec   ( 2 )
+      double precision      sep
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 !
 !     Initialize the function return value.
 !
-      ZZWIND2D = 0
+      zzwind2d = 0
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZWIND2D' )
+      call chkin ( 'ZZWIND2D' )
 
 !
 !     Check the number of sides of the polygon.
 !
-      IF ( N .LT. 3 ) THEN
+      if ( n .lt. 3 ) then
 
-         CALL SETMSG ( 'Polygon must have at least 3 sides; N = #.' )
-         CALL ERRINT ( '#',  N                                      )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                      )
-         CALL CHKOUT ( 'ZZWIND2D'                                     )
-         RETURN
+         call setmsg ( 'Polygon must have at least 3 sides; N = #.' )
+         call errint ( '#',  n                                      )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                      )
+         call chkout ( 'ZZWIND2D'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     The total "wrap angle" starts at zero.
 !
-      ATOTAL  = 0.D0
+      atotal  = 0.d0
 
-      CALL VSUBG ( VERTCS(1,1), POINT, 2, RVEC )
+      call vsubg ( vertcs(1,1), point, 2, rvec )
 
-      DO I = 2, N+1
+      do i = 2, n+1
 
-         IF ( I .LE. N ) THEN
-            J = I
-         ELSE
-            J = 1
-         END IF
+         if ( i .le. n ) then
+            j = i
+         else
+            j = 1
+         end if
 
 !
 !        Find the angular separation of RVEC and the next vector
 !        RNEXT.
 !
-         CALL VSUBG ( VERTCS(1,J), POINT, 2, RNEXT )
+         call vsubg ( vertcs(1,j), point, 2, rnext )
 
-         SEP  =  VSEPG ( RNEXT, RVEC, 2 )
+         sep  =  vsepg ( rnext, rvec, 2 )
 
 !
 !        Create a normal vector to RVEC by rotating RVEC pi/2 radians
@@ -281,34 +281,34 @@
 !        whether the next point is reached by clockwise or
 !        counterclockwise rotation from RVEC.
 !
-         RPERP(1) = -RVEC(2)
-         RPERP(2) =  RVEC(1)
+         rperp(1) = -rvec(2)
+         rperp(2) =  rvec(1)
 
 
-         IF (  VDOTG( RNEXT, RPERP, 2 )  .GE.  0.D0  ) THEN
+         if (  vdotg( rnext, rperp, 2 )  .ge.  0.d0  ) then
 !
 !           RNEXT is reached by counterclockwise rotation from
 !           RVEC.  Note that in the case of zero rotation, the
 !           sign doesn't matter because the contribution is zero.
 !
-            ATOTAL = ATOTAL + SEP
-         ELSE
-            ATOTAL = ATOTAL - SEP
-         END IF
+            atotal = atotal + sep
+         else
+            atotal = atotal - sep
+         end if
 
 !
 !        Update RVEC.
 !
-         CALL MOVED ( RNEXT, 2, RVEC )
+         call moved ( rnext, 2, rvec )
 
-      END DO
+      end do
 
 !
 !     The above sum is 2 * pi * <the number of times the polygon
 !     wraps around P>.  Let ZZWIND2D be the wrap count.
 !
-      ZZWIND2D = NINT ( ATOTAL / TWOPI() )
+      zzwind2d = nint ( atotal / twopi() )
 
-      CALL CHKOUT ( 'ZZWIND2D' )
-      RETURN
-      END
+      call chkout ( 'ZZWIND2D' )
+      return
+      end

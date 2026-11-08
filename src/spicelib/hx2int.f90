@@ -1,6 +1,6 @@
 !$Procedure HX2INT  ( Signed hexadecimal string to integer )
 
-      SUBROUTINE HX2INT ( STRING, NUMBER, ERROR, ERRMSG )
+      subroutine hx2int ( string, number, error, errmsg )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 !
-      CHARACTER*(*)         STRING
-      INTEGER               NUMBER
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         string
+      integer               number
+      logical               error
+      character*(*)         errmsg
 !
 ! $ Brief_I/O
 !
@@ -292,61 +292,61 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
-      INTEGER               INTMIN
+      integer               intmax
+      integer               intmin
 !
 !     Local Parameters
 !
-      INTEGER               BASE
-      PARAMETER           ( BASE = 16  )
+      integer               base
+      parameter           ( base = 16  )
 !
 !     Local variables
 !
-      INTEGER               DIGBEG
-      INTEGER               DIGEND
-      INTEGER               IDIGIT
-      INTEGER               IMINUS
-      INTEGER               IPLUS
-      INTEGER               ISPACE
-      INTEGER               LCCBEG
-      INTEGER               LCCEND
-      INTEGER               LETTER
-      INTEGER               MAXI
-      INTEGER               MAXMOD
-      INTEGER               MINI
-      INTEGER               MINMOD
-      INTEGER               POS
-      INTEGER               STRBEG
-      INTEGER               STREND
-      INTEGER               TMPNUM
-      INTEGER               UCCBEG
-      INTEGER               UCCEND
+      integer               digbeg
+      integer               digend
+      integer               idigit
+      integer               iminus
+      integer               iplus
+      integer               ispace
+      integer               lccbeg
+      integer               lccend
+      integer               letter
+      integer               maxi
+      integer               maxmod
+      integer               mini
+      integer               minmod
+      integer               pos
+      integer               strbeg
+      integer               strend
+      integer               tmpnum
+      integer               uccbeg
+      integer               uccend
 
-      LOGICAL               FIRST
-      LOGICAL               MORE
-      LOGICAL               NEGTIV
+      logical               first
+      logical               more
+      logical               negtiv
 !
 !     Saved variables
 !
-      SAVE                  DIGBEG
-      SAVE                  DIGEND
-      SAVE                  LCCBEG
-      SAVE                  LCCEND
-      SAVE                  IMINUS
-      SAVE                  IPLUS
-      SAVE                  ISPACE
-      SAVE                  MAXI
-      SAVE                  MAXMOD
-      SAVE                  MINI
-      SAVE                  MINMOD
-      SAVE                  UCCBEG
-      SAVE                  UCCEND
+      save                  digbeg
+      save                  digend
+      save                  lccbeg
+      save                  lccend
+      save                  iminus
+      save                  iplus
+      save                  ispace
+      save                  maxi
+      save                  maxmod
+      save                  mini
+      save                  minmod
+      save                  uccbeg
+      save                  uccend
 
-      SAVE                  FIRST
+      save                  first
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
@@ -357,9 +357,9 @@
 !     If this is the first time that this routine has been called,
 !     we need to do some setup stuff.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 !
 !        Initialize the upper and lower bounds for the decimal digits,
 !        the upper and lower bounds for the uppercase hexadecimal
@@ -367,90 +367,90 @@
 !        hexadecimal digits, the space, the plus sign, and the minus
 !        sign in the character sequence.
 !
-         DIGBEG = ICHAR( '0' )
-         DIGEND = ICHAR( '9' )
-         UCCBEG = ICHAR( 'A' )
-         UCCEND = ICHAR( 'F' )
-         LCCBEG = ICHAR( 'a' )
-         LCCEND = ICHAR( 'f' )
-         IMINUS = ICHAR( '-' )
-         IPLUS  = ICHAR( '+' )
-         ISPACE = ICHAR( ' ' )
+         digbeg = ichar( '0' )
+         digend = ichar( '9' )
+         uccbeg = ichar( 'A' )
+         uccend = ichar( 'F' )
+         lccbeg = ichar( 'a' )
+         lccend = ichar( 'f' )
+         iminus = ichar( '-' )
+         iplus  = ichar( '+' )
+         ispace = ichar( ' ' )
 !
 !        Initialize some boundary values for error checking while
 !        constructing the desired integer. These are used to help
 !        determine integer overflow or integer underflow errors.
 !
-         MINI   = INTMIN() / BASE
-         MINMOD = BASE * MINI - INTMIN()
-         MAXI   = INTMAX() / BASE
-         MAXMOD = INTMAX() - BASE * MAXI
+         mini   = intmin() / base
+         minmod = base * mini - intmin()
+         maxi   = intmax() / base
+         maxmod = intmax() - base * maxi
 
-      END IF
+      end if
 !
 !     There are no errors initially, so set the error flag to
 !     .FALSE.
 !
-      ERROR = .FALSE.
+      error = .false.
 !
 !     If the string is blank, set the error flag and return immediately.
 !
-      IF ( STRING .EQ. ' ' ) THEN
+      if ( string .eq. ' ' ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'ERROR: A blank input string is not allowed.'
-         RETURN
+         error  = .true.
+         errmsg = 'ERROR: A blank input string is not allowed.'
+         return
 
-      END IF
+      end if
 !
 !     Initialize a few other things.
 !
-      ERRMSG = ' '
-      TMPNUM = 0
+      errmsg = ' '
+      tmpnum = 0
 !
 !     Assume that the number is nonnegative.
 !
-      NEGTIV = .FALSE.
+      negtiv = .false.
 !
 !     Skip any leading white space. We know that there is at least
 !     one nonblank character at this point, so we will not loop
 !     off the end of the string.
 !
-      STRBEG = 1
+      strbeg = 1
 
-      DO WHILE ( ICHAR( STRING(STRBEG:STRBEG) ) .EQ. ISPACE )
+      do while ( ichar( string(strbeg:strbeg) ) .eq. ispace )
 
-         STRBEG = STRBEG + 1
+         strbeg = strbeg + 1
 
-      END DO
+      end do
 !
 !     Now, we want to find the end of the significant portion of
 !     the input string.
 !
-      STREND = STRBEG + 1
-      MORE   = .TRUE.
+      strend = strbeg + 1
+      more   = .true.
 
-      DO WHILE ( MORE )
+      do while ( more )
 
-         IF ( STREND .LE. LEN( STRING ) ) THEN
+         if ( strend .le. len( string ) ) then
 
-            IF ( STRING(STREND:) .NE. ' ' ) THEN
+            if ( string(strend:) .ne. ' ' ) then
 
-               STREND = STREND + 1
+               strend = strend + 1
 
-            ELSE
+            else
 
-               MORE = .FALSE.
+               more = .false.
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            MORE = .FALSE.
+            more = .false.
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     At this point, STREND is one larger than the length of the
 !     significant portion of the string because we incremented
@@ -458,13 +458,13 @@
 !     value of STREND so that it exactly represents the position
 !     of the last significant character in the string.
 !
-      STREND = STREND - 1
+      strend = strend - 1
 !
 !     Set the position pointer to the beginning of the significant
 !     part, i.e., the nonblank part, of the string, because we are
 !     now ready to try and parse the number.
 !
-      POS = STRBEG
+      pos = strbeg
 !
 !     The first character should be a plus sign, '+', a minus sign,
 !     '-', or a digit, '0' - '9', 'A' - 'F', or 'a' - 'f'. Anything
@@ -476,16 +476,16 @@
 !     If the character is a plus sign, we want to increment the
 !     position.
 !
-      IF ( ICHAR( STRING(POS:POS) ) .EQ. IMINUS ) THEN
+      if ( ichar( string(pos:pos) ) .eq. iminus ) then
 
-         NEGTIV = .TRUE.
-         POS    = POS + 1
+         negtiv = .true.
+         pos    = pos + 1
 
-      ELSE IF ( ICHAR( STRING(POS:POS) ) .EQ. IPLUS ) THEN
+      else if ( ichar( string(pos:pos) ) .eq. iplus ) then
 
-         POS = POS + 1
+         pos = pos + 1
 
-      END IF
+      end if
 !
 !     When we build up the number from the hexadecimal string we
 !     need to treat nonnegative numbers differently from negative
@@ -499,118 +499,118 @@
 !
 !     Build up the number from the hexadecimal character string.
 !
-      IF ( NEGTIV ) THEN
+      if ( negtiv ) then
 
-         DO WHILE ( POS .LE. STREND )
+         do while ( pos .le. strend )
 
-            LETTER = ICHAR( STRING(POS:POS) )
+            letter = ichar( string(pos:pos) )
 
-            IF ( ( LETTER .GE. DIGBEG ) .AND. &
-                 ( LETTER .LE. DIGEND ) ) THEN
+            if ( ( letter .ge. digbeg ) .and. &
+                 ( letter .le. digend ) ) then
 
-               IDIGIT = LETTER - DIGBEG
+               idigit = letter - digbeg
 
-            ELSE IF ( ( LETTER .GE. UCCBEG ) .AND. &
-                      ( LETTER .LE. UCCEND ) ) THEN
+            else if ( ( letter .ge. uccbeg ) .and. &
+                      ( letter .le. uccend ) ) then
 
-               IDIGIT = 10 + LETTER - UCCBEG
+               idigit = 10 + letter - uccbeg
 
-            ELSE IF ( ( LETTER .GE. LCCBEG ) .AND. &
-                      ( LETTER .LE. LCCEND ) ) THEN
+            else if ( ( letter .ge. lccbeg ) .and. &
+                      ( letter .le. lccend ) ) then
 
-               IDIGIT = 10 + LETTER - LCCBEG
+               idigit = 10 + letter - lccbeg
 
-            ELSE
+            else
 
-               ERROR  = .TRUE.
-               ERRMSG = 'ERROR: Illegal character ''#'''  // &
+               error  = .true.
+               errmsg = 'ERROR: Illegal character ''#'''  // &
                         ' encountered.'
-               CALL REPMC( ERRMSG, '#', CHAR( LETTER ), ERRMSG )
-               RETURN
+               call repmc( errmsg, '#', char( letter ), errmsg )
+               return
 
-            END IF
+            end if
 
-            IF ( TMPNUM .GT. MINI ) THEN
+            if ( tmpnum .gt. mini ) then
 
-               TMPNUM = TMPNUM * BASE - IDIGIT
-               POS    = POS + 1
+               tmpnum = tmpnum * base - idigit
+               pos    = pos + 1
 
-            ELSE IF ( ( TMPNUM .EQ. MINI   ) .AND. &
-                      ( IDIGIT .LE. MINMOD ) ) THEN
+            else if ( ( tmpnum .eq. mini   ) .and. &
+                      ( idigit .le. minmod ) ) then
 
-               TMPNUM = TMPNUM * BASE - IDIGIT
-               POS    = POS + 1
+               tmpnum = tmpnum * base - idigit
+               pos    = pos + 1
 
-            ELSE
+            else
 
-               ERROR  = .TRUE.
-               ERRMSG = 'ERROR: Integer too small'  // &
+               error  = .true.
+               errmsg = 'ERROR: Integer too small'  // &
                         ' to be represented.'
-               RETURN
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      ELSE
+      else
 
-         DO WHILE ( POS .LE. STREND )
+         do while ( pos .le. strend )
 
-            LETTER = ICHAR( STRING(POS:POS) )
+            letter = ichar( string(pos:pos) )
 
-            IF ( ( LETTER .GE. DIGBEG ) .AND. &
-                 ( LETTER .LE. DIGEND ) ) THEN
+            if ( ( letter .ge. digbeg ) .and. &
+                 ( letter .le. digend ) ) then
 
-               IDIGIT = LETTER - DIGBEG
+               idigit = letter - digbeg
 
-            ELSE IF ( ( LETTER .GE. UCCBEG ) .AND. &
-                      ( LETTER .LE. UCCEND ) ) THEN
+            else if ( ( letter .ge. uccbeg ) .and. &
+                      ( letter .le. uccend ) ) then
 
-               IDIGIT = 10 + LETTER - UCCBEG
+               idigit = 10 + letter - uccbeg
 
-            ELSE IF ( ( LETTER .GE. LCCBEG) .AND. &
-                      ( LETTER .LE. LCCEND) ) THEN
+            else if ( ( letter .ge. lccbeg) .and. &
+                      ( letter .le. lccend) ) then
 
-               IDIGIT = 10 + LETTER - LCCBEG
+               idigit = 10 + letter - lccbeg
 
-            ELSE
+            else
 
-               ERROR  = .TRUE.
-               ERRMSG = 'ERROR: Illegal character ''#'''  // &
+               error  = .true.
+               errmsg = 'ERROR: Illegal character ''#'''  // &
                         ' encountered.'
-               CALL REPMC( ERRMSG, '#', CHAR( LETTER ), ERRMSG )
-               RETURN
+               call repmc( errmsg, '#', char( letter ), errmsg )
+               return
 
-            END IF
+            end if
 
-            IF ( TMPNUM .LT. MAXI ) THEN
+            if ( tmpnum .lt. maxi ) then
 
-               TMPNUM = TMPNUM * BASE + IDIGIT
-               POS    = POS + 1
+               tmpnum = tmpnum * base + idigit
+               pos    = pos + 1
 
-            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND. &
-                      ( IDIGIT .LE. MAXMOD ) ) THEN
+            else if ( ( tmpnum .eq. maxi   ) .and. &
+                      ( idigit .le. maxmod ) ) then
 
-               TMPNUM = TMPNUM * BASE + IDIGIT
-               POS    = POS + 1
+               tmpnum = tmpnum * base + idigit
+               pos    = pos + 1
 
-            ELSE
+            else
 
-               ERROR  = .TRUE.
-               ERRMSG = 'ERROR: Integer too large'  // &
+               error  = .true.
+               errmsg = 'ERROR: Integer too large'  // &
                         ' to be represented.'
-               RETURN
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 !
 !     If we got to here, we have successfully parsed the hexadecimal
 !     string into an integer. Set the value and return.
 !
-      NUMBER = TMPNUM
+      number = tmpnum
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure GFRPRT ( GF, progress reporting package )
 
-      SUBROUTINE GFRPRT ( WINDOW, BEGMSS, ENDMSS, IVBEG, IVEND, TIME )
+      subroutine gfrprt ( window, begmss, endmss, ivbeg, ivend, time )
 
 ! $ Abstract
 !
@@ -18,19 +18,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzgf.inc'
+      include               'zzgf.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      WINDOW ( LBCELL : * )
-      CHARACTER*(*)         BEGMSS
-      CHARACTER*(*)         ENDMSS
-      DOUBLE PRECISION      IVBEG
-      DOUBLE PRECISION      IVEND
-      DOUBLE PRECISION      TIME
+      double precision      window ( lbcell : * )
+      character*(*)         begmss
+      character*(*)         endmss
+      double precision      ivbeg
+      double precision      ivend
+      double precision      time
 
 ! $ Brief_I/O
 !
@@ -488,63 +488,63 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               LASTNB
+      integer               cardd
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
 !
 !     Local variables
 !
 
-      CHARACTER*(MXBEGM)    BEGIN
-      CHARACTER*(MXBEGM)    COPYB
-      CHARACTER*(MXENDM)    COPYE
-      CHARACTER*(MXENDM)    END
+      character*(mxbegm)    begin
+      character*(mxbegm)    copyb
+      character*(mxendm)    copye
+      character*(mxendm)    end
 
-      DOUBLE PRECISION      AVE
-      DOUBLE PRECISION      FREQ
-      DOUBLE PRECISION      INCR
-      DOUBLE PRECISION      MEASUR
-      DOUBLE PRECISION      REMAIN
-      DOUBLE PRECISION      STDDEV
-      DOUBLE PRECISION      T0
-      DOUBLE PRECISION      TOTAL
+      double precision      ave
+      double precision      freq
+      double precision      incr
+      double precision      measur
+      double precision      remain
+      double precision      stddev
+      double precision      t0
+      double precision      total
 
-      INTEGER               CHRCOD
-      INTEGER               I
-      INTEGER               LONG
-      INTEGER               SHORT
-      INTEGER               STDOUT
-      INTEGER               TCHECK
-      INTEGER               UNIT
+      integer               chrcod
+      integer               i
+      integer               long
+      integer               short
+      integer               stdout
+      integer               tcheck
+      integer               unit
 
-      SAVE                  COPYB
-      SAVE                  COPYE
-      SAVE                  T0
-      SAVE                  REMAIN
+      save                  copyb
+      save                  copye
+      save                  t0
+      save                  remain
 
 
-      CALL CHKIN  ( 'GFRPRT'            )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'GFRPRT'            )
-      RETURN
+      call chkin  ( 'GFRPRT'            )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'GFRPRT'            )
+      return
 
 
 
 !$Procedure GFREPI ( GF, progress report initialization )
 
-      ENTRY GFREPI ( WINDOW, BEGMSS, ENDMSS )
+      entry gfrepi ( window, begmss, endmss )
 
 ! $ Abstract
 !
@@ -696,95 +696,95 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFREPI' )
+      call chkin  ( 'GFREPI' )
 
 !
 !     Check to see if either the message prefix or suffix
 !     is too long.
 !
-      IF ( LASTNB(BEGMSS) .GT. MXBEGM ) THEN
+      if ( lastnb(begmss) .gt. mxbegm ) then
 
-         CALL SETMSG ( 'Progress report prefix message contains ' &
+         call setmsg ( 'Progress report prefix message contains ' &
          //            '# characters; limit is #.'                 )
-         CALL ERRINT ( '#', LASTNB(BEGMSS)                         )
-         CALL ERRINT ( '#', MXBEGM                                 )
-         CALL SIGERR ( 'SPICE(MESSAGETOOLONG)'                     )
-         CALL CHKOUT ( 'GFREPI'                                    )
-         RETURN
+         call errint ( '#', lastnb(begmss)                         )
+         call errint ( '#', mxbegm                                 )
+         call sigerr ( 'SPICE(MESSAGETOOLONG)'                     )
+         call chkout ( 'GFREPI'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( LASTNB(ENDMSS) .GT. MXENDM ) THEN
+      if ( lastnb(endmss) .gt. mxendm ) then
 
-         CALL SETMSG ( 'Progress report suffix message contains ' &
+         call setmsg ( 'Progress report suffix message contains ' &
          //            '# characters; limit is #.'                 )
-         CALL ERRINT ( '#', LASTNB(ENDMSS)                         )
-         CALL ERRINT ( '#', MXENDM                                 )
-         CALL SIGERR ( 'SPICE(MESSAGETOOLONG)'                     )
-         CALL CHKOUT ( 'GFREPI'                                    )
-         RETURN
+         call errint ( '#', lastnb(endmss)                         )
+         call errint ( '#', mxendm                                 )
+         call sigerr ( 'SPICE(MESSAGETOOLONG)'                     )
+         call chkout ( 'GFREPI'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that all the characters in the message prefix and
 !     suffix can be printed.
 !
-      DO I = 1, LASTNB(BEGMSS)
+      do i = 1, lastnb(begmss)
 
-         CHRCOD = ICHAR( BEGMSS(I:I) )
+         chrcod = ichar( begmss(i:i) )
 
-         IF ( ( CHRCOD .LT. FPRINT ) .OR. ( CHRCOD .GT. LPRINT ) ) THEN
+         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The progress report message prefix ' &
+            call setmsg ( 'The progress report message prefix ' &
             //            'contains a nonprintable character; ' &
             //            'ASCII code is #.'                    )
-            CALL ERRINT ( '#', CHRCOD                           )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'            )
-            CALL CHKOUT ( 'GFREPI'                              )
-            RETURN
+            call errint ( '#', chrcod                           )
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'            )
+            call chkout ( 'GFREPI'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      DO I = 1, LASTNB(ENDMSS)
+      do i = 1, lastnb(endmss)
 
-         CHRCOD = ICHAR( ENDMSS(I:I) )
+         chrcod = ichar( endmss(i:i) )
 
-         IF ( ( CHRCOD .LT. FPRINT ) .OR. ( CHRCOD .GT. LPRINT ) ) THEN
+         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The progress report message suffix ' &
+            call setmsg ( 'The progress report message suffix ' &
             //            'contains a nonprintable character; ' &
             //            'ASCII code is #.'                    )
-            CALL ERRINT ( '#', CHRCOD                           )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'            )
-            CALL CHKOUT ( 'GFREPI'                              )
-            RETURN
+            call errint ( '#', chrcod                           )
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'            )
+            call chkout ( 'GFREPI'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      COPYB = BEGMSS
-      COPYE = ENDMSS
+      copyb = begmss
+      copye = endmss
 
 !
 !     Find the length of the window. Use that to initialize the work
 !     reporter.
 !
-      CALL WNSUMD   ( WINDOW, MEASUR, AVE, STDDEV, SHORT, LONG )
-      CALL ZZGFTSWK ( MEASUR, 1.0D0,  4,   BEGMSS, ENDMSS )
+      call wnsumd   ( window, measur, ave, stddev, short, long )
+      call zzgftswk ( measur, 1.0d0,  4,   begmss, endmss )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'GFREPI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'GFREPI' )
+         return
+      end if
 
 
 !
@@ -792,21 +792,21 @@
 !     The remaining amount of work in the current interval is
 !     the measure of the interval.
 !
-      IF ( CARDD(WINDOW) .GE. 2 ) THEN
+      if ( cardd(window) .ge. 2 ) then
 
-         T0     = WINDOW(1)
-         REMAIN = WINDOW(2) - T0
+         t0     = window(1)
+         remain = window(2) - t0
 
-      ELSE
+      else
 
-         REMAIN = 0.D0
+         remain = 0.d0
 
-      END IF
+      end if
 
 
 
-      CALL CHKOUT  ( 'GFREPI' )
-      RETURN
+      call chkout  ( 'GFREPI' )
+      return
 
 
 
@@ -814,7 +814,7 @@
 
 !$Procedure GFREPU ( GF, progress report update )
 
-      ENTRY GFREPU ( IVBEG, IVEND, TIME )
+      entry gfrepu ( ivbeg, ivend, time )
 
 ! $ Abstract
 !
@@ -961,54 +961,54 @@
 !-&
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFREPU' )
+      call chkin  ( 'GFREPU' )
 
 !
 !     Do a few error checks before getting started.
 !
 !     We expect the endpoints of the current window to be in order.
 !
-      IF ( IVEND .LT. IVBEG ) THEN
+      if ( ivend .lt. ivbeg ) then
 
-         CALL SETMSG ( 'Interval endpoints are #:#; endpoints ' &
+         call setmsg ( 'Interval endpoints are #:#; endpoints ' &
          //            'must be in increasing order.'             )
-         CALL ERRDP  ( '#',  IVBEG                                )
-         CALL ERRDP  ( '#',  IVEND                                )
-         CALL SIGERR ( 'SPICE(BADENDPOINTS)'                      )
-         CALL CHKOUT ( 'GFREPU'                                   )
-         RETURN
-      END IF
+         call errdp  ( '#',  ivbeg                                )
+         call errdp  ( '#',  ivend                                )
+         call sigerr ( 'SPICE(BADENDPOINTS)'                      )
+         call chkout ( 'GFREPU'                                   )
+         return
+      end if
 
 !
 !     We expect TIME to be in the current interval of the confinement
 !     window.
 !
-      IF (  ( TIME .LT. IVBEG ) .OR. ( TIME .GT. IVEND )  ) THEN
+      if (  ( time .lt. ivbeg ) .or. ( time .gt. ivend )  ) then
 
-         CALL SETMSG ( 'TIME should be in interval #:# but ' &
+         call setmsg ( 'TIME should be in interval #:# but ' &
          //            'is #.'                               )
-         CALL ERRDP  ( '#',  TIME                            )
-         CALL ERRDP  ( '#',  IVBEG                           )
-         CALL ERRDP  ( '#',  IVEND                           )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-         CALL CHKOUT ( 'GFREPU'                              )
-         RETURN
-      END IF
+         call errdp  ( '#',  time                            )
+         call errdp  ( '#',  ivbeg                           )
+         call errdp  ( '#',  ivend                           )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+         call chkout ( 'GFREPU'                              )
+         return
+      end if
 
 !
 !     The amount of work done is the difference between the current
 !     time and the previous time T0, presuming both times are in
 !     the current interval.  Note this work amount may be negative.
 !
-      IF (  ( T0 .GE. IVBEG ) .AND. ( T0 .LE. IVEND )  ) THEN
+      if (  ( t0 .ge. ivbeg ) .and. ( t0 .le. ivend )  ) then
 
-         INCR = TIME - T0
+         incr = time - t0
 
-      ELSE
+      else
 !
 !        T0 is in the previous interval.  The amount of work
 !        done to complete processing of that interval is REMAIN.
@@ -1016,33 +1016,33 @@
 !        the difference of TIME and the left endpoint of the
 !        interval.
 !
-         INCR = REMAIN + TIME - IVBEG
+         incr = remain + time - ivbeg
 
-      END IF
+      end if
 
 !
 !     The remaining work is the distance from TIME to the right
 !     endpoint of the current interval.
 !
-      REMAIN = IVEND - TIME
+      remain = ivend - time
 
 !
 !     Record the current time as T0.
 !
-      T0  =  TIME
+      t0  =  time
 
 !
 !     Report the work increment.
 !
-      CALL ZZGFWKIN ( INCR )
+      call zzgfwkin ( incr )
 
-      CALL CHKOUT  ( 'GFREPU' )
-      RETURN
+      call chkout  ( 'GFREPU' )
+      return
 
 
 !$Procedure GFREPF ( GF, progress report finalization )
 
-      ENTRY GFREPF
+      entry gfrepf
 
 ! $ Abstract
 !
@@ -1133,32 +1133,32 @@
 !-&
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFREPF' )
+      call chkin  ( 'GFREPF' )
 
-      CALL ZZGFWKAD ( 0.0D0, 1, COPYB, COPYE )
-      CALL ZZGFWKIN ( 0.0D0 )
+      call zzgfwkad ( 0.0d0, 1, copyb, copye )
+      call zzgfwkin ( 0.0d0 )
 
 !
 !     Determine whether progress report output is currently
 !     being sent to standard output. Fetch the output unit.
 !
-      CALL ZZGFWKMO ( UNIT, TOTAL, FREQ, TCHECK, BEGIN, END, INCR )
+      call zzgfwkmo ( unit, total, freq, tcheck, begin, end, incr )
 
-      CALL STDIO ( 'STDOUT', STDOUT )
+      call stdio ( 'STDOUT', stdout )
 
-      IF ( UNIT .NE. STDOUT ) THEN
+      if ( unit .ne. stdout ) then
 !
 !        We're not currently writing to standard output, so we're
 !        done.
 !
-         CALL CHKOUT ( 'GFREPF' )
-         RETURN
+         call chkout ( 'GFREPF' )
+         return
 
-      END IF
+      end if
 
 !
 !     Emit a final blank line by moving the cursor down two
@@ -1181,9 +1181,9 @@
 !     interest of minimizing the number of places where I/O is
 !     performed, we rely on ZZGFDSPS to do that job.
 !
-      CALL ZZGFDSPS  ( 1, ' ', 'A', 1 )
+      call zzgfdsps  ( 1, ' ', 'A', 1 )
 
 
-      CALL CHKOUT  ( 'GFREPF' )
-      RETURN
-      END
+      call chkout  ( 'GFREPF' )
+      return
+      end

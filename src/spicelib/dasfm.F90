@@ -1,20 +1,20 @@
 !$Procedure DASFM ( DAS, file manager )
 
-      SUBROUTINE DASFM ( FNAME, &
-                         FTYPE, &
-                         IFNAME, &
-                         HANDLE, &
-                         UNIT, &
-                         FREE, &
-                         LASTLA, &
-                         LASTRC, &
-                         LASTWD, &
-                         NRESVR, &
-                         NRESVC, &
-                         NCOMR, &
-                         NCOMC, &
-                         FHSET, &
-                         ACCESS  )
+      subroutine dasfm ( fname, &
+                         ftype, &
+                         ifname, &
+                         handle, &
+                         unit, &
+                         free, &
+                         lastla, &
+                         lastrc, &
+                         lastwd, &
+                         nresvr, &
+                         nresvc, &
+                         ncomr, &
+                         ncomc, &
+                         fhset, &
+                         access  )
 
 ! $ Abstract
 !
@@ -32,29 +32,29 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'das.inc'
-      INCLUDE 'errhnd.inc'
+      include 'das.inc'
+      include 'errhnd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL  =   -5 )
+      integer               lbcell
+      parameter           ( lbcell  =   -5 )
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         FTYPE
-      CHARACTER*(*)         IFNAME
-      INTEGER               HANDLE
-      INTEGER               UNIT
-      INTEGER               FREE
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               NRESVR
-      INTEGER               NRESVC
-      INTEGER               NCOMR
-      INTEGER               NCOMC
-      INTEGER               FHSET  ( LBCELL : * )
-      CHARACTER*(*)         ACCESS
+      character*(*)         fname
+      character*(*)         ftype
+      character*(*)         ifname
+      integer               handle
+      integer               unit
+      integer               free
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               nresvr
+      integer               nresvc
+      integer               ncomr
+      integer               ncomc
+      integer               fhset  ( lbcell : * )
+      character*(*)         access
 
 !
 !     The record length should be big enough to hold the greatest of the
@@ -98,13 +98,13 @@
 !                  Absoft Fortran Version 3.2
 !     Source:      NAIF Program
 
-      INTEGER               RECL
-      PARAMETER           ( RECL   = 1024 )
-      INTEGER               FILEN
+      integer               recl
+      parameter           ( recl   = 1024 )
+      integer               filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER           ( FILEN  =  128 )
+      parameter           ( filen  =  128 )
 #else
-      PARAMETER           ( FILEN  =  255 )
+      parameter           ( filen  =  255 )
 #endif
 
 
@@ -785,46 +785,46 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LNKNFN
-      INTEGER               LNKNXT
-      INTEGER               LTRIM
-      INTEGER               RTRIM
+      integer               lnknfn
+      integer               lnknxt
+      integer               ltrim
+      integer               rtrim
 
-      LOGICAL               ELEMI
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               elemi
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ACCLEN
-      PARAMETER           ( ACCLEN =   10 )
+      integer               acclen
+      parameter           ( acclen =   10 )
 
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =    8 )
+      integer               idwlen
+      parameter           ( idwlen =    8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN =   60 )
+      integer               ifnlen
+      parameter           ( ifnlen =   60 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL =   -5 )
+      integer               lbpool
+      parameter           ( lbpool =   -5 )
 
-      INTEGER               MAXPC
-      PARAMETER           ( MAXPC  =  126 )
+      integer               maxpc
+      parameter           ( maxpc  =  126 )
 
-      INTEGER               MINPC
-      PARAMETER           ( MINPC  =   32 )
+      integer               minpc
+      parameter           ( minpc  =   32 )
 
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN =    4 )
+      integer               typlen
+      parameter           ( typlen =    4 )
 !
 !     Access method parameters:
 !
-      INTEGER               READ
-      PARAMETER           ( READ   =          1 )
+      integer               read
+      parameter           ( read   =          1 )
 
-      INTEGER               WRITE
-      PARAMETER           ( WRITE  =  READ  + 1 )
+      integer               write
+      parameter           ( write  =  read  + 1 )
 
 !
 !     File summary parameters:
@@ -862,20 +862,20 @@
 !           +----------------------------------------+
 !
 
-      INTEGER               RRCIDX
-      PARAMETER           ( RRCIDX  =           1 )
+      integer               rrcidx
+      parameter           ( rrcidx  =           1 )
 
-      INTEGER               RCHIDX
-      PARAMETER           ( RCHIDX  =  RRCIDX + 1 )
+      integer               rchidx
+      parameter           ( rchidx  =  rrcidx + 1 )
 
-      INTEGER               CRCIDX
-      PARAMETER           ( CRCIDX  =  RCHIDX + 1 )
+      integer               crcidx
+      parameter           ( crcidx  =  rchidx + 1 )
 
-      INTEGER               CCHIDX
-      PARAMETER           ( CCHIDX  =  CRCIDX + 1 )
+      integer               cchidx
+      parameter           ( cchidx  =  crcidx + 1 )
 
-      INTEGER               FREIDX
-      PARAMETER           ( FREIDX =   CCHIDX + 1 )
+      integer               freidx
+      parameter           ( freidx =   cchidx + 1 )
 
 !
 !     Base indices for:
@@ -888,41 +888,41 @@
 !     is obtained by adding the appropriate data type parameter
 !     (DP, INT, or CHAR) to the base index for the item.
 !
-      INTEGER               LLABAS
-      PARAMETER           ( LLABAS =   FREIDX     )
+      integer               llabas
+      parameter           ( llabas =   freidx     )
 
-      INTEGER               LRCBAS
-      PARAMETER           ( LRCBAS =   LLABAS + 3 )
+      integer               lrcbas
+      parameter           ( lrcbas =   llabas + 3 )
 
-      INTEGER               LWDBAS
-      PARAMETER           ( LWDBAS =   LRCBAS + 3 )
+      integer               lwdbas
+      parameter           ( lwdbas =   lrcbas + 3 )
 
-      INTEGER               SUMSIZ
-      PARAMETER           ( SUMSIZ =   LWDBAS + 3 )
+      integer               sumsiz
+      parameter           ( sumsiz =   lwdbas + 3 )
 
 !
 !     Descriptor record pointer locations (within descriptor records):
 !
-      INTEGER               FWDLOC
-      PARAMETER           ( FWDLOC =  2 )
+      integer               fwdloc
+      parameter           ( fwdloc =  2 )
 
 !
 !     Directory address range location parameters:
 !
-      INTEGER               RNGBAS
-      PARAMETER           ( RNGBAS =   2 )
+      integer               rngbas
+      parameter           ( rngbas =   2 )
 
 !
 !     First descriptor position in descriptor record:
 !
-      INTEGER               BEGDSC
-      PARAMETER           ( BEGDSC =   9 )
+      integer               begdsc
+      parameter           ( begdsc =   9 )
 
 !
 !     Length of the Binary File Format string:
 !
-      INTEGER               FMTLEN
-      PARAMETER           ( FMTLEN = 8 )
+      integer               fmtlen
+      parameter           ( fmtlen = 8 )
 
 !
 !     The parameter TAILEN determines the tail length of a DAS file
@@ -955,8 +955,8 @@
 !     1 byte characters, and a DAS record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      INTEGER               TAILEN
-      PARAMETER           ( TAILEN = 932 )
+      integer               tailen
+      parameter           ( tailen = 932 )
 
 !
 !     Local variables
@@ -987,107 +987,107 @@
 !     NEXT is incremented each time a file is opened to become the
 !     next file handle assigned.
 !
-      INTEGER               FTHAN  (         FTSIZE )
-      INTEGER               FTACC  (         FTSIZE )
-      INTEGER               FTLNK  (         FTSIZE )
-      INTEGER               FTSUM  ( SUMSIZ, FTSIZE )
+      integer               fthan  (         ftsize )
+      integer               ftacc  (         ftsize )
+      integer               ftlnk  (         ftsize )
+      integer               ftsum  ( sumsiz, ftsize )
 
-      INTEGER               POOL   ( 2,  LBPOOL : FTSIZE )
+      integer               pool   ( 2,  lbpool : ftsize )
 
 !
 !     FTHEAD is a pointer to the head of the active file list.
 !
-      INTEGER               FTHEAD
+      integer               fthead
 
 !
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      INTEGER               NEXT   ( 3 )
-      INTEGER               PREV   ( 3 )
+      integer               next   ( 3 )
+      integer               prev   ( 3 )
 
 !
 !     Other local variables
 !
-      CHARACTER*(ACCLEN)    ACC
-      CHARACTER*(FMTLEN)    FORMAT
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(FILEN)     LOCDAS
-      CHARACTER*(IFNLEN)    LOCIFN
-      CHARACTER*(FMTLEN)    LOCFMT
-      CHARACTER*(TAILEN)    TAIL
-      CHARACTER*(TYPLEN)    TTYPE
+      character*(acclen)    acc
+      character*(fmtlen)    format
+      character*(idwlen)    idword
+      character*(filen)     locdas
+      character*(ifnlen)    locifn
+      character*(fmtlen)    locfmt
+      character*(tailen)    tail
+      character*(typlen)    ttype
 
-      INTEGER               CURTYP
-      INTEGER               DIRREC ( NWI )
-      INTEGER               DSCTYP
-      INTEGER               ENDREC
-      INTEGER               FNB
-      INTEGER               FHLIST ( LBCELL : FTSIZE )
-      INTEGER               FINDEX
-      INTEGER               I
-      INTEGER               INQSTA
-      INTEGER               IOSTAT
-      INTEGER               LAST
-      INTEGER               LDREC  ( 3 )
-      INTEGER               LDRMAX
-      INTEGER               LOC
-      INTEGER               LOCCCH
-      INTEGER               LOCCRC
-      INTEGER               LOCRRC
-      INTEGER               LOCRCH
-      INTEGER               MAXADR
-      INTEGER               NEW
-      INTEGER               NREC
-      INTEGER               NUMBER
-      INTEGER               NW     ( 3 )
-      INTEGER               NXTDIR
-      INTEGER               NXTREC
-      INTEGER               POS
-      INTEGER               PRVTYP
-      INTEGER               TYPE
+      integer               curtyp
+      integer               dirrec ( nwi )
+      integer               dsctyp
+      integer               endrec
+      integer               fnb
+      integer               fhlist ( lbcell : ftsize )
+      integer               findex
+      integer               i
+      integer               inqsta
+      integer               iostat
+      integer               last
+      integer               ldrec  ( 3 )
+      integer               ldrmax
+      integer               loc
+      integer               loccch
+      integer               loccrc
+      integer               locrrc
+      integer               locrch
+      integer               maxadr
+      integer               new
+      integer               nrec
+      integer               number
+      integer               nw     ( 3 )
+      integer               nxtdir
+      integer               nxtrec
+      integer               pos
+      integer               prvtyp
+      integer               type
 
-      LOGICAL               FOUND
-      LOGICAL               PASS1
+      logical               found
+      logical               pass1
 
 !
 !     Save everything between calls.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  FTACC   / FTSIZE * -1    /
-      DATA                  FTHAN   / FTSIZE *  0    /
-      DATA                  FTLNK   / FTSIZE * -1    /
+      data                  ftacc   / ftsize * -1    /
+      data                  fthan   / ftsize *  0    /
+      data                  ftlnk   / ftsize * -1    /
 
-      DATA                  PASS1   / .TRUE.         /
-      DATA                  FTHEAD  / 0              /
+      data                  pass1   / .true.         /
+      data                  fthead  / 0              /
 
-      DATA                  NEXT    /  2,   3,   1   /
-      DATA                  PREV    /  3,   1,   2   /
-      DATA                  NW      /  NWC, NWD, NWI /
+      data                  next    /  2,   3,   1   /
+      data                  prev    /  3,   1,   2   /
+      data                  nw      /  nwc, nwd, nwi /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'DASFM' )
-         CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-         CALL CHKOUT ( 'DASFM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'DASFM' )
+         call sigerr ( 'SPICE(BOGUSENTRY)' )
+         call chkout ( 'DASFM' )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure DASOPR ( DAS, open for read )
 
-      ENTRY DASOPR ( FNAME, HANDLE )
+      entry dasopr ( fname, handle )
 
 ! $ Abstract
 !
@@ -1475,23 +1475,23 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASOPR' )
+      call chkin ( 'DASOPR' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Try to open the file for READ access.
@@ -1502,84 +1502,84 @@
 !        reading, ZZDDHOPN will just increment the number of links and
 !        return the handle.
 !
-      CALL ZZDDHOPN ( FNAME, 'READ', 'DAS', HANDLE )
+      call zzddhopn ( fname, 'READ', 'DAS', handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPR' )
+         return
+      end if
 
 !
 !     Determine whether this file is already in the file table.
 !     Search for a matching handle.
 !
-      FINDEX = FTHEAD
-      FOUND  = .FALSE.
+      findex = fthead
+      found  = .false.
 
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
+         if ( fthan(findex) .eq. handle ) then
+            found = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
 
-      END DO
+      end do
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        The file is already open for read access. Increment the number
 !        of links to this file.
 !
-         FTLNK(FINDEX) = FTLNK(FINDEX) + 1
-         HANDLE        = FTHAN(FINDEX)
+         ftlnk(findex) = ftlnk(findex) + 1
+         handle        = fthan(findex)
 !
 !        There's nothing else to do.
 !
-         CALL CHKOUT ( 'DASOPR' )
-         RETURN
+         call chkout ( 'DASOPR' )
+         return
 
-      END IF
+      end if
 
 !
 !     This file has no entry in the file table. We need to
 !     create a new entry. See whether there's room for it.
 !
-      IF ( LNKNFN(POOL) .EQ. 0  ) THEN
+      if ( lnknfn(pool) .eq. 0  ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. ' &
+         call setmsg ( 'The file table is full, with # entries. ' &
          //            'Could not open ''#''.'                    )
-         CALL ERRINT ( '#', FTSIZE                                )
-         CALL ERRCH  ( '#', FNAME                                 )
-         CALL SIGERR ( 'SPICE(DASFTFULL)'                         )
-         CALL CHKOUT ( 'DASOPR'                                   )
-         RETURN
+         call errint ( '#', ftsize                                )
+         call errch  ( '#', fname                                 )
+         call sigerr ( 'SPICE(DASFTFULL)'                         )
+         call chkout ( 'DASOPR'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the file's file record.
 !
-      CALL ZZDASRFR ( HANDLE, IDWORD, LOCIFN, LOCRRC, &
-                      LOCRCH, LOCCRC, LOCCCH         )
+      call zzdasrfr ( handle, idword, locifn, locrrc, &
+                      locrch, loccrc, loccch         )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPR' )
+         return
+      end if
 
 !
 !     Update the file table to include information about our newly
 !     opened DAS file. Link the information for this file at the
 !     head of the file table list.
 !
-      CALL LNKAN  ( POOL, NEW          )
-      CALL LNKILB ( NEW,  FTHEAD, POOL )
+      call lnkan  ( pool, new          )
+      call lnkilb ( new,  fthead, pool )
 
-      FTHEAD           =   NEW
-      FTHAN (FTHEAD)   =   HANDLE
-      FTACC (FTHEAD)   =   READ
-      FTLNK (FTHEAD)   =   1
+      fthead           =   new
+      fthan (fthead)   =   handle
+      ftacc (fthead)   =   read
+      ftlnk (fthead)   =   1
 
 !
 !     Fill in the file summary. We already know how many reserved
@@ -1589,63 +1589,63 @@
 !     the directory records. We do not assume that the data records in
 !     the DAS file have been segregated.
 !
-      CALL CLEARI ( SUMSIZ, FTSUM (1,FTHEAD) )
+      call cleari ( sumsiz, ftsum (1,fthead) )
 
-      FTSUM ( RRCIDX, FTHEAD )  =  LOCRRC
-      FTSUM ( RCHIDX, FTHEAD )  =  LOCRCH
-      FTSUM ( CRCIDX, FTHEAD )  =  LOCCRC
-      FTSUM ( CCHIDX, FTHEAD )  =  LOCCCH
+      ftsum ( rrcidx, fthead )  =  locrrc
+      ftsum ( rchidx, fthead )  =  locrch
+      ftsum ( crcidx, fthead )  =  loccrc
+      ftsum ( cchidx, fthead )  =  loccch
 
 !
 !     We'll find the values for each data type separately.
 !
-      DO TYPE = 1, 3
+      do type = 1, 3
 !
 !        The first directory record is located right after the
 !        last comment record.
 !
-         NREC  =  LOCRRC + LOCCRC + 2
+         nrec  =  locrrc + loccrc + 2
 
 !
 !        Keep track of the record number of the last data
 !        record of the current type.
 !
-         LDREC(TYPE)  =  0
+         ldrec(type)  =  0
 
 !
 !        Find the last directory containing a descriptor of a
 !        record cluster of the current type.
 !
-         CALL ZZDASGRI( HANDLE, NREC, DIRREC )
+         call zzdasgri( handle, nrec, dirrec )
 
-         MAXADR  =  DIRREC ( RNGBAS  +  2 * TYPE )
-         NXTDIR  =  DIRREC ( FWDLOC              )
+         maxadr  =  dirrec ( rngbas  +  2 * type )
+         nxtdir  =  dirrec ( fwdloc              )
 
 
-         DO WHILE ( NXTDIR .GT. 0 )
+         do while ( nxtdir .gt. 0 )
 !
 !           Read the directory record. If this record contains
 !           descriptors for clusters we're interested in, update the
 !           directory record number.
 !
-            CALL ZZDASGRI ( HANDLE, NXTDIR, DIRREC )
+            call zzdasgri ( handle, nxtdir, dirrec )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASOPR' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASOPR' )
+               return
+            end if
 
 
-            IF (  DIRREC(RNGBAS + 2*TYPE)  .GT.  0  ) THEN
+            if (  dirrec(rngbas + 2*type)  .gt.  0  ) then
 
-               MAXADR  =  DIRREC ( RNGBAS  +  2 * TYPE  )
-               NREC    =  NXTDIR
+               maxadr  =  dirrec ( rngbas  +  2 * type  )
+               nrec    =  nxtdir
 
-            END IF
+            end if
 
-            NXTDIR = DIRREC ( FWDLOC )
+            nxtdir = dirrec ( fwdloc )
 
-         END DO
+         end do
 
 !
 !        At this point, NREC is the record number of the directory
@@ -1654,28 +1654,28 @@
 !
 !        MAXADR is the maximum logical address of TYPE.
 !
-         FTSUM ( LLABAS + TYPE,  FTHEAD )  =  MAXADR
+         ftsum ( llabas + type,  fthead )  =  maxadr
 
-         IF ( MAXADR .GT. 0 ) THEN
-            FTSUM ( LRCBAS + TYPE,  FTHEAD )  =  NREC
-         ELSE
-            FTSUM ( LRCBAS + TYPE,  FTHEAD )  =  0
-         END IF
+         if ( maxadr .gt. 0 ) then
+            ftsum ( lrcbas + type,  fthead )  =  nrec
+         else
+            ftsum ( lrcbas + type,  fthead )  =  0
+         end if
 !
 !        We still need to set the word location of the final
 !        descriptor of TYPE, if there are any descriptors of TYPE.
 !
-         IF ( MAXADR .GT. 0 ) THEN
+         if ( maxadr .gt. 0 ) then
 !
 !           Re-read the directory record containing the last descriptor
 !           of the current type.
 !
-            CALL ZZDASGRI ( HANDLE, NREC, DIRREC )
+            call zzdasgri ( handle, nrec, dirrec )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASOPR' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASOPR' )
+               return
+            end if
 
 !
 !           Traverse the directory record, looking for the last
@@ -1687,49 +1687,49 @@
 !           Also keep track of the end record numbers for each
 !           cluster.
 !
-            LAST    =  DIRREC( RNGBAS  +  (2*TYPE - 1)  )  -  1
-            DSCTYP  =  DIRREC( BEGDSC                   )
-            PRVTYP  =  PREV  ( DSCTYP                   )
-            ENDREC  =  NREC
-            POS     =  BEGDSC
+            last    =  dirrec( rngbas  +  (2*type - 1)  )  -  1
+            dsctyp  =  dirrec( begdsc                   )
+            prvtyp  =  prev  ( dsctyp                   )
+            endrec  =  nrec
+            pos     =  begdsc
 
-            DO WHILE ( LAST .LT. MAXADR )
+            do while ( last .lt. maxadr )
 
-               POS = POS + 1
+               pos = pos + 1
 
-               IF ( DIRREC(POS) .GT. 0 ) THEN
-                  CURTYP = NEXT(PRVTYP)
-               ELSE
-                  CURTYP = PREV(PRVTYP)
-               END IF
+               if ( dirrec(pos) .gt. 0 ) then
+                  curtyp = next(prvtyp)
+               else
+                  curtyp = prev(prvtyp)
+               end if
 
-               IF ( CURTYP .EQ. TYPE ) THEN
-                  LAST = LAST  +  NW(TYPE) * ABS( DIRREC(POS) )
-               END IF
+               if ( curtyp .eq. type ) then
+                  last = last  +  nw(type) * abs( dirrec(pos) )
+               end if
 
-               ENDREC = ENDREC + ABS( DIRREC(POS) )
-               PRVTYP = CURTYP
+               endrec = endrec + abs( dirrec(pos) )
+               prvtyp = curtyp
 
-            END DO
+            end do
 !
 !           At this point, POS is the word position of the last
 !           descriptor of TYPE, and ENDREC is the record number
 !           of the last data record of TYPE.
 !
-            FTSUM ( LWDBAS + TYPE, FTHEAD )  =  POS
-            LDREC ( TYPE )                   =  ENDREC
+            ftsum ( lwdbas + type, fthead )  =  pos
+            ldrec ( type )                   =  endrec
 
 
-         ELSE
+         else
 !
 !           There's no data of TYPE in the file.
 !
-            FTSUM ( LWDBAS + TYPE, FTHEAD )  =  0
-            LDREC ( TYPE )                   =  0
+            ftsum ( lwdbas + type, fthead )  =  0
+            ldrec ( type )                   =  0
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     We're almost done; we need to find the number of the first free
@@ -1737,44 +1737,44 @@
 !     the directory records. It may happen that the last record in use
 !     is an empty directory.
 !
-      CALL MAXAI ( LDREC, 3, LDRMAX, LOC )
+      call maxai ( ldrec, 3, ldrmax, loc )
 
-      NREC   = LOCRRC + LOCCRC + 2
+      nrec   = locrrc + loccrc + 2
 
-      CALL ZZDASGRI ( HANDLE,  NREC,  DIRREC  )
+      call zzdasgri ( handle,  nrec,  dirrec  )
 
-      NXTREC = DIRREC(FWDLOC)
+      nxtrec = dirrec(fwdloc)
 
 
-      DO WHILE ( NXTREC .NE. 0 )
+      do while ( nxtrec .ne. 0 )
 
-         NREC   = NXTREC
+         nrec   = nxtrec
 
-         CALL ZZDASGRI ( HANDLE,  NREC,  DIRREC  )
+         call zzdasgri ( handle,  nrec,  dirrec  )
 
-         NXTREC = DIRREC(FWDLOC)
+         nxtrec = dirrec(fwdloc)
 
-      END DO
+      end do
 
 !
 !     Now NREC is the last directory record.
 !
-      FTSUM ( FREIDX, FTHEAD)   =   MAX ( LDRMAX, NREC )  +  1
+      ftsum ( freidx, fthead)   =   max ( ldrmax, nrec )  +  1
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
-      CALL CHKOUT ( 'DASOPR' )
-      RETURN
+      call chkout ( 'DASOPR' )
+      return
 
 
 
 
 !$Procedure DASOPW ( DAS, open for write )
 
-      ENTRY DASOPW ( FNAME, HANDLE )
+      entry dasopw ( fname, handle )
 
 ! $ Abstract
 !
@@ -2159,53 +2159,53 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASOPW' )
+      call chkin ( 'DASOPW' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 
-      IF ( LNKNFN(POOL) .EQ. 0  ) THEN
+      if ( lnknfn(pool) .eq. 0  ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. '     // &
+         call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DASFTFULL)'                              )
-         CALL CHKOUT ( 'DASOPW'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DASFTFULL)'                              )
+         call chkout ( 'DASOPW'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Open the file for writing:   open the file, get the
 !     internal file name, and set the number of links to one.
 !
-      CALL ZZDDHOPN ( FNAME, 'WRITE', 'DAS', HANDLE )
+      call zzddhopn ( fname, 'WRITE', 'DAS', handle )
 
 !
 !     Read the file record.
 !
-      CALL ZZDASRFR ( HANDLE, IDWORD, LOCIFN, LOCRRC, &
-                      LOCRCH, LOCCRC, LOCCCH         )
+      call zzdasrfr ( handle, idword, locifn, locrrc, &
+                      locrch, loccrc, loccch         )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPW' )
+         return
+      end if
 
 !
 !     At this point, we know that we have a valid DAS file, and
@@ -2217,13 +2217,13 @@
 !
 !     Set the output argument HANDLE as well.
 !
-      CALL LNKAN  ( POOL, NEW          )
-      CALL LNKILB ( NEW,  FTHEAD, POOL )
+      call lnkan  ( pool, new          )
+      call lnkilb ( new,  fthead, pool )
 
-      FTHEAD           =   NEW
-      FTHAN (FTHEAD)   =   HANDLE
-      FTACC (FTHEAD)   =   WRITE
-      FTLNK (FTHEAD)   =   1
+      fthead           =   new
+      fthan (fthead)   =   handle
+      ftacc (fthead)   =   write
+      ftlnk (fthead)   =   1
 
 !
 !     Fill in the file summary. We already know how many reserved
@@ -2233,74 +2233,74 @@
 !     the directory records. We do not assume that the data records in
 !     the DAS file have been segregated.
 !
-      CALL CLEARI ( SUMSIZ, FTSUM (1,FTHEAD) )
+      call cleari ( sumsiz, ftsum (1,fthead) )
 
-      FTSUM ( RRCIDX, FTHEAD )  =  LOCRRC
-      FTSUM ( RCHIDX, FTHEAD )  =  LOCRCH
-      FTSUM ( CRCIDX, FTHEAD )  =  LOCCRC
-      FTSUM ( CCHIDX, FTHEAD )  =  LOCCCH
+      ftsum ( rrcidx, fthead )  =  locrrc
+      ftsum ( rchidx, fthead )  =  locrch
+      ftsum ( crcidx, fthead )  =  loccrc
+      ftsum ( cchidx, fthead )  =  loccch
 
 !
 !     We'll need the logical unit connected to the file, so
 !     we can read the file's directory records.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+      call zzddhhlu ( handle, 'DAS', .false., number )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPW' )
+         return
+      end if
 
 !
 !     We'll find the values for each data type separately.
 !
-      DO TYPE = 1, 3
+      do type = 1, 3
 !
 !        The first directory record is located right after the
 !        last comment record.
 !
-         NREC  =  LOCRRC + LOCCRC + 2
+         nrec  =  locrrc + loccrc + 2
 
 !
 !        Keep track of the record number of the last data
 !        record of the current type.
 !
-         LDREC(TYPE)  =  0
+         ldrec(type)  =  0
 
 !
 !        Find the last directory containing a descriptor of a
 !        record cluster of the current type.
 !
-         CALL ZZDASGRI( HANDLE, NREC, DIRREC )
+         call zzdasgri( handle, nrec, dirrec )
 
-         MAXADR  =  DIRREC ( RNGBAS  +  2 * TYPE )
-         NXTDIR  =  DIRREC ( FWDLOC              )
+         maxadr  =  dirrec ( rngbas  +  2 * type )
+         nxtdir  =  dirrec ( fwdloc              )
 
 
-         DO WHILE ( NXTDIR .GT. 0 )
+         do while ( nxtdir .gt. 0 )
 !
 !           Read the directory record. If this record contains
 !           descriptors for clusters we're interested in, update the
 !           directory record number.
 !
-            CALL ZZDASGRI ( HANDLE, NXTDIR, DIRREC )
+            call zzdasgri ( handle, nxtdir, dirrec )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASOPW' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASOPW' )
+               return
+            end if
 
 
-            IF (  DIRREC(RNGBAS + 2*TYPE)  .GT.  0  ) THEN
+            if (  dirrec(rngbas + 2*type)  .gt.  0  ) then
 
-               MAXADR  =  DIRREC ( RNGBAS  +  2 * TYPE  )
-               NREC    =  NXTDIR
+               maxadr  =  dirrec ( rngbas  +  2 * type  )
+               nrec    =  nxtdir
 
-            END IF
+            end if
 
-            NXTDIR = DIRREC ( FWDLOC )
+            nxtdir = dirrec ( fwdloc )
 
-         END DO
+         end do
 
 !
 !        At this point, NREC is the record number of the directory
@@ -2309,28 +2309,28 @@
 !
 !        MAXADR is the maximum logical address of TYPE.
 !
-         FTSUM ( LLABAS + TYPE,  FTHEAD )  =  MAXADR
+         ftsum ( llabas + type,  fthead )  =  maxadr
 
-         IF ( MAXADR .GT. 0 ) THEN
-            FTSUM ( LRCBAS + TYPE,  FTHEAD )  =  NREC
-         ELSE
-            FTSUM ( LRCBAS + TYPE,  FTHEAD )  =  0
-         END IF
+         if ( maxadr .gt. 0 ) then
+            ftsum ( lrcbas + type,  fthead )  =  nrec
+         else
+            ftsum ( lrcbas + type,  fthead )  =  0
+         end if
 !
 !        We still need to set the word location of the final
 !        descriptor of TYPE, if there are any descriptors of TYPE.
 !
-         IF ( MAXADR .GT. 0 ) THEN
+         if ( maxadr .gt. 0 ) then
 !
 !           Re-read the directory record containing the last descriptor
 !           of the current type.
 !
-            CALL ZZDASGRI ( HANDLE, NREC, DIRREC )
+            call zzdasgri ( handle, nrec, dirrec )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASOPW' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASOPW' )
+               return
+            end if
 
 !
 !           Traverse the directory record, looking for the last
@@ -2342,49 +2342,49 @@
 !           Also keep track of the end record numbers for each
 !           cluster.
 !
-            LAST    =  DIRREC( RNGBAS  +  (2*TYPE - 1)  )  -  1
-            DSCTYP  =  DIRREC( BEGDSC                   )
-            PRVTYP  =  PREV  ( DSCTYP                   )
-            ENDREC  =  NREC
-            POS     =  BEGDSC
+            last    =  dirrec( rngbas  +  (2*type - 1)  )  -  1
+            dsctyp  =  dirrec( begdsc                   )
+            prvtyp  =  prev  ( dsctyp                   )
+            endrec  =  nrec
+            pos     =  begdsc
 
-            DO WHILE ( LAST .LT. MAXADR )
+            do while ( last .lt. maxadr )
 
-               POS = POS + 1
+               pos = pos + 1
 
-               IF ( DIRREC(POS) .GT. 0 ) THEN
-                  CURTYP = NEXT(PRVTYP)
-               ELSE
-                  CURTYP = PREV(PRVTYP)
-               END IF
+               if ( dirrec(pos) .gt. 0 ) then
+                  curtyp = next(prvtyp)
+               else
+                  curtyp = prev(prvtyp)
+               end if
 
-               IF ( CURTYP .EQ. TYPE ) THEN
-                  LAST = LAST  +  NW(TYPE) * ABS( DIRREC(POS) )
-               END IF
+               if ( curtyp .eq. type ) then
+                  last = last  +  nw(type) * abs( dirrec(pos) )
+               end if
 
-               ENDREC = ENDREC + ABS( DIRREC(POS) )
-               PRVTYP = CURTYP
+               endrec = endrec + abs( dirrec(pos) )
+               prvtyp = curtyp
 
-            END DO
+            end do
 !
 !           At this point, POS is the word position of the last
 !           descriptor of TYPE, and ENDREC is the record number
 !           of the last data record of TYPE.
 !
-            FTSUM ( LWDBAS + TYPE, FTHEAD )  =  POS
-            LDREC ( TYPE )                   =  ENDREC
+            ftsum ( lwdbas + type, fthead )  =  pos
+            ldrec ( type )                   =  endrec
 
 
-         ELSE
+         else
 !
 !           There's no data of TYPE in the file.
 !
-            FTSUM ( LWDBAS + TYPE, FTHEAD )  =  0
-            LDREC ( TYPE )                   =  0
+            ftsum ( lwdbas + type, fthead )  =  0
+            ldrec ( type )                   =  0
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     We're almost done; we need to find the number of the first free
@@ -2392,38 +2392,38 @@
 !     the directory records. It may happen that the last record in use
 !     is an empty directory.
 !
-      CALL MAXAI ( LDREC, 3, LDRMAX, LOC )
+      call maxai ( ldrec, 3, ldrmax, loc )
 
-      NREC   = LOCRRC + LOCCRC + 2
+      nrec   = locrrc + loccrc + 2
 
-      CALL DASIOI ( 'READ',  NUMBER,  NREC,  DIRREC  )
+      call dasioi ( 'READ',  number,  nrec,  dirrec  )
 
-      NXTREC = DIRREC(FWDLOC)
+      nxtrec = dirrec(fwdloc)
 
 
-      DO WHILE ( NXTREC .NE. 0 )
+      do while ( nxtrec .ne. 0 )
 
-         NREC   = NXTREC
+         nrec   = nxtrec
 
-         CALL DASIOI ( 'READ',  NUMBER,  NREC,  DIRREC  )
+         call dasioi ( 'READ',  number,  nrec,  dirrec  )
 
-         NXTREC = DIRREC(FWDLOC)
+         nxtrec = dirrec(fwdloc)
 
-      END DO
+      end do
 
 !
 !     Now NREC is the last directory record.
 !
-      FTSUM ( FREIDX, FTHEAD)  =  MAX ( LDRMAX, NREC )  +  1
+      ftsum ( freidx, fthead)  =  max ( ldrmax, nrec )  +  1
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
 
-      CALL CHKOUT ( 'DASOPW' )
-      RETURN
+      call chkout ( 'DASOPW' )
+      return
 
 
 
@@ -2431,7 +2431,7 @@
 
 !$Procedure DASONW ( DAS, open new file )
 
-      ENTRY DASONW ( FNAME, FTYPE, IFNAME, NCOMR, HANDLE )
+      entry dasonw ( fname, ftype, ifname, ncomr, handle )
 
 ! $ Abstract
 !
@@ -2759,79 +2759,79 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASONW' )
+      call chkin ( 'DASONW' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 !
 !     Check to see whether the filename is blank. If it is, signal an
 !     error, check out, and return.
 !
-      IF ( FNAME .EQ. ' ' ) THEN
+      if ( fname .eq. ' ' ) then
 
-         CALL SETMSG ( 'The file name is blank. ' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'     )
-         CALL CHKOUT ( 'DASONW'                   )
-         RETURN
+         call setmsg ( 'The file name is blank. ' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'     )
+         call chkout ( 'DASONW'                   )
+         return
 
-      END IF
+      end if
 !
 !     Check if the file type is blank.
 !
-      IF ( FTYPE .EQ. ' ' ) THEN
+      if ( ftype .eq. ' ' ) then
 
-         CALL SETMSG ( 'The file type is blank. ' )
-         CALL SIGERR ( 'SPICE(BLANKFILETYPE)'     )
-         CALL CHKOUT ( 'DASONW'                   )
-         RETURN
+         call setmsg ( 'The file type is blank. ' )
+         call sigerr ( 'SPICE(BLANKFILETYPE)'     )
+         call chkout ( 'DASONW'                   )
+         return
 
-      END IF
+      end if
 !
 !     Check for nonprinting characters in the file type.
 !
-      FNB =  LTRIM ( FTYPE )
+      fnb =  ltrim ( ftype )
 
-      DO I = FNB, RTRIM ( FTYPE )
+      do i = fnb, rtrim ( ftype )
 
-         IF ( ( ICHAR ( FTYPE(I:I) ) .GT. MAXPC )   .OR. &
-              ( ICHAR ( FTYPE(I:I) ) .LT. MINPC ) ) THEN
+         if ( ( ichar ( ftype(i:i) ) .gt. maxpc )   .or. &
+              ( ichar ( ftype(i:i) ) .lt. minpc ) ) then
 
-            CALL SETMSG ( 'The file type contains nonprinting' // &
+            call setmsg ( 'The file type contains nonprinting' // &
                           ' characters. '                       )
-            CALL SIGERR ( 'SPICE(ILLEGALCHARACTER)'             )
-            CALL CHKOUT ( 'DASONW'                              )
-            RETURN
+            call sigerr ( 'SPICE(ILLEGALCHARACTER)'             )
+            call chkout ( 'DASONW'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Validate the comment record count.
 !
-      IF ( NCOMR .LT. 0 ) THEN
+      if ( ncomr .lt. 0 ) then
 
-         CALL SETMSG ( 'The number of comment records allocated ' // &
+         call setmsg ( 'The number of comment records allocated ' // &
                        'must be non-negative but was #.'           )
-         CALL ERRINT ( '#',  NCOMR                                 )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-         CALL CHKOUT ( 'DASONW'                                    )
-         RETURN
+         call errint ( '#',  ncomr                                 )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+         call chkout ( 'DASONW'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the value the file type in a temporary variable to be sure of
@@ -2840,38 +2840,38 @@
 !     nonblank character and its three (3) immediate successors in the
 !     input string FTYPE.
 !
-      TTYPE  = FTYPE(FNB:)
-      IDWORD = 'DAS/' // TTYPE
+      ttype  = ftype(fnb:)
+      idword = 'DAS/' // ttype
 
 !
 !     The file can be opened only if there is room for another file.
 !
-      IF ( LNKNFN(POOL) .EQ. 0  ) THEN
+      if ( lnknfn(pool) .eq. 0  ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. '     // &
+         call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DASFTFULL)'                              )
-         CALL CHKOUT ( 'DASONW'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DASFTFULL)'                              )
+         call chkout ( 'DASONW'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Open a new file.
 !
-      CALL ZZDDHOPN ( FNAME, 'NEW', 'DAS', HANDLE )
+      call zzddhopn ( fname, 'NEW', 'DAS', handle )
 
 !
 !     Get a logical unit for the file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+      call zzddhhlu ( handle, 'DAS', .false., number )
 
 !
 !     Fetch the system file format.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', FORMAT )
+      call zzplatfm ( 'FILE_FORMAT', format )
 
 !
 !     Prepare to write the file record.
@@ -2892,26 +2892,26 @@
 !     Initially, all of these counts are zero, except for the
 !     comment record count, which is set by the caller.
 !
-      LOCIFN = IFNAME
+      locifn = ifname
 
-      CALL ZZDASNFR ( NUMBER, &
-                      IDWORD, &
-                      LOCIFN, &
+      call zzdasnfr ( number, &
+                      idword, &
+                      locifn, &
                       0, &
                       0, &
-                      NCOMR, &
+                      ncomr, &
                       0, &
-                      FORMAT  )
+                      format  )
 
 !
 !     Check to see whether or not ZZDASNFR generated an error
 !     writing the file record to the logical unit. In the event
 !     an error occurs, checkout and return.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASONW' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASONW' )
+         return
+      end if
 
 !
 !     Zero out the first directory record in the file. If this
@@ -2921,23 +2921,23 @@
 !     are no reserved records, so the directory occupies record
 !     NCOMR+2.
 !
-      CALL CLEARI ( NWI, DIRREC )
+      call cleari ( nwi, dirrec )
 
-      WRITE ( UNIT   = NUMBER, &
-              REC    = NCOMR + 2, &
-              IOSTAT = IOSTAT     ) DIRREC
+      write ( unit   = number, &
+              rec    = ncomr + 2, &
+              iostat = iostat     ) dirrec
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 !
 !        We had a write error. Ask the handle manager to
 !        close and delete the new file.
 !
-         CALL ZZDDHCLS ( HANDLE, 'DAS', .TRUE. )
+         call zzddhcls ( handle, 'DAS', .true. )
 
-         CALL CHKOUT ( 'DASONW' )
-         RETURN
+         call chkout ( 'DASONW' )
+         return
 
-      END IF
+      end if
 
 !
 !     Update the file table to include information about
@@ -2946,39 +2946,39 @@
 !
 !     Set the output argument HANDLE as well.
 !
-      CALL LNKAN  ( POOL,   NEW             )
-      CALL LNKILB ( NEW,    FTHEAD,   POOL  )
+      call lnkan  ( pool,   new             )
+      call lnkilb ( new,    fthead,   pool  )
 
 !
 !     Clear out the file summary, except for the number of comment
 !     records and the free record pointer. The free record pointer
 !     should point to the first record AFTER the first directory.
 !
-      FTHEAD                     =   NEW
+      fthead                     =   new
 
-      CALL CLEARI ( SUMSIZ, FTSUM(1,FTHEAD) )
+      call cleari ( sumsiz, ftsum(1,fthead) )
 
-      FTHAN (         FTHEAD )   =   HANDLE
-      FTACC (         FTHEAD )   =   WRITE
-      FTLNK (         FTHEAD )   =   1
-      FTSUM ( FREIDX, FTHEAD )   =   NCOMR + 3
-      FTSUM ( CRCIDX, FTHEAD )   =   NCOMR
+      fthan (         fthead )   =   handle
+      ftacc (         fthead )   =   write
+      ftlnk (         fthead )   =   1
+      ftsum ( freidx, fthead )   =   ncomr + 3
+      ftsum ( crcidx, fthead )   =   ncomr
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
 
-      CALL CHKOUT ( 'DASONW' )
-      RETURN
+      call chkout ( 'DASONW' )
+      return
 
 
 
 
 !$Procedure DASOPN ( DAS, open new )
 
-      ENTRY DASOPN ( FNAME, IFNAME, HANDLE )
+      entry dasopn ( fname, ifname, handle )
 
 ! $ Abstract
 !
@@ -3292,51 +3292,51 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASOPN' )
+      call chkin ( 'DASOPN' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 !
 !     Check to see whether the filename is blank. If it is, signal an
 !     error, check out, and return.
 !
-      IF ( FNAME .EQ. ' ' ) THEN
+      if ( fname .eq. ' ' ) then
 
-         CALL SETMSG ( 'The file name is blank. ' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'     )
-         CALL CHKOUT ( 'DASOPN'                   )
-         RETURN
+         call setmsg ( 'The file name is blank. ' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'     )
+         call chkout ( 'DASOPN'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     The file can be opened only if there is room for another file.
 !
-      IF ( LNKNFN(POOL) .EQ. 0  ) THEN
+      if ( lnknfn(pool) .eq. 0  ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries. '     // &
+         call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DASFTFULL)'                              )
-         CALL CHKOUT ( 'DASOPN'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DASFTFULL)'                              )
+         call chkout ( 'DASOPN'                                        )
+         return
 
 
-      END IF
+      end if
 
 !
 !     To open a new file: get a free unit, open the file, write
@@ -3354,19 +3354,19 @@
 !     the file.
 !
 !
-      CALL ZZDDHOPN ( FNAME, 'NEW', 'DAS', HANDLE )
+      call zzddhopn ( fname, 'NEW', 'DAS', handle )
 
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+      call zzddhhlu ( handle, 'DAS', .false., number )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPN' )
+         return
+      end if
 
 !
 !     Fetch the system file format.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', FORMAT )
+      call zzplatfm ( 'FILE_FORMAT', format )
 
 !
 !     Prepare to write the file record.
@@ -3387,22 +3387,22 @@
 !     Initially, all of these counts are zero.
 !
 !
-      LOCIFN = IFNAME
-      IDWORD = 'NAIF/DAS'
+      locifn = ifname
+      idword = 'NAIF/DAS'
 
-      CALL ZZDASNFR ( NUMBER, &
-                      IDWORD, &
-                      LOCIFN, &
+      call zzdasnfr ( number, &
+                      idword, &
+                      locifn, &
                       0, &
                       0, &
                       0, &
                       0, &
-                      FORMAT  )
+                      format  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPN' )
+         return
+      end if
 
 !
 !     Zero out the first directory record (record #2) in the file. If
@@ -3413,14 +3413,14 @@
 !
 !     NOTE: re-write this using ZZDDHCLS.
 !
-      CALL CLEARI (  NWI,               DIRREC )
-      CALL DASIOI ( 'WRITE', NUMBER, 2, DIRREC )
+      call cleari (  nwi,               dirrec )
+      call dasioi ( 'WRITE', number, 2, dirrec )
 
-      IF ( FAILED() ) THEN
-         CLOSE       ( UNIT = NUMBER,  STATUS = 'DELETE' )
-         CALL CHKOUT ( 'DASOPN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         close       ( unit = number,  status = 'DELETE' )
+         call chkout ( 'DASOPN' )
+         return
+      end if
 
 !
 !     Update the file table to include information about
@@ -3429,37 +3429,37 @@
 !
 !     Set the output argument HANDLE as well.
 !
-      CALL LNKAN  ( POOL,   NEW             )
-      CALL LNKILB ( NEW,    FTHEAD,   POOL  )
+      call lnkan  ( pool,   new             )
+      call lnkilb ( new,    fthead,   pool  )
 
 !
 !     Clear out the file summary, except for the free record pointer.
 !     The free record pointer should point to the first record AFTER
 !     the first directory.
 !
-      FTHEAD                     =   NEW
+      fthead                     =   new
 
-      CALL CLEARI ( SUMSIZ, FTSUM(1,FTHEAD) )
+      call cleari ( sumsiz, ftsum(1,fthead) )
 
-      FTHAN (         FTHEAD )   =   HANDLE
-      FTACC (         FTHEAD )   =   WRITE
-      FTLNK (         FTHEAD )   =   1
-      FTSUM ( FREIDX, FTHEAD )   =   3
+      fthan (         fthead )   =   handle
+      ftacc (         fthead )   =   write
+      ftlnk (         fthead )   =   1
+      ftsum ( freidx, fthead )   =   3
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
-      CALL CHKOUT ( 'DASOPN' )
-      RETURN
+      call chkout ( 'DASOPN' )
+      return
 
 
 
 
 !$Procedure DASOPS ( DAS, open scratch )
 
-      ENTRY DASOPS ( HANDLE )
+      entry dasops ( handle )
 
 ! $ Abstract
 !
@@ -3764,30 +3764,30 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASOPS' )
+      call chkin ( 'DASOPS' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     The file can be opened only if there is room for another file.
 !
-      IF ( LNKNFN(POOL) .EQ. 0  ) THEN
+      if ( lnknfn(pool) .eq. 0  ) then
 
-         CALL SETMSG ( 'The file table is full, with # entries.'      // &
+         call setmsg ( 'The file table is full, with # entries.'      // &
                        ' Could not open a scratch file. If a call'    // &
                        ' to DASOPS was not made and this error'       // &
                        ' occurred, it is likely that the DAS file'    // &
@@ -3795,38 +3795,38 @@
                        ' file opened with write access was made. See' // &
                        ' the DAS required reading and DASFM for'      // &
                        ' details.'                                     )
-         CALL ERRINT ( '#', FTSIZE                                     )
-         CALL SIGERR ( 'SPICE(DASFTFULL)'                              )
-         CALL CHKOUT ( 'DASOPS'                                        )
-         RETURN
+         call errint ( '#', ftsize                                     )
+         call sigerr ( 'SPICE(DASFTFULL)'                              )
+         call chkout ( 'DASOPS'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Assign a name to the scratch file. This name is required
 !     by the DDH subsystem.
 !
-      LOCDAS = 'DAS SCRATCH FILE'
+      locdas = 'DAS SCRATCH FILE'
 
 !
 !     Open a DAS file for scratch access.
 !
-      CALL ZZDDHOPN ( LOCDAS, 'SCRATCH', 'DAS', HANDLE )
+      call zzddhopn ( locdas, 'SCRATCH', 'DAS', handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPS' )
+         return
+      end if
 
 !
 !     Get a logical unit for the file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+      call zzddhhlu ( handle, 'DAS', .false., number )
 
 !
 !     Fetch the system file format.
 !
-      CALL ZZPLATFM ( 'FILE_FORMAT', FORMAT )
+      call zzplatfm ( 'FILE_FORMAT', format )
 
 !
 !     Prepare to write the file record.
@@ -3847,26 +3847,26 @@
 !     Initially, all of these counts are zero, except for the
 !     comment record count, which is set by the caller.
 !
-      LOCIFN = LOCDAS(:IFNLEN)
+      locifn = locdas(:ifnlen)
 
-      CALL ZZDASNFR ( NUMBER, &
-                      IDWORD, &
-                      LOCIFN, &
+      call zzdasnfr ( number, &
+                      idword, &
+                      locifn, &
                       0, &
                       0, &
                       0, &
                       0, &
-                      FORMAT  )
+                      format  )
 
 !
 !     Check to see whether or not ZZDASNFR generated an error
 !     writing the file record to the logical unit. In the event
 !     an error occurs, checkout and return.
 !
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASOPS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASOPS' )
+         return
+      end if
 
 !
 !     Update the file table to include information about
@@ -3875,37 +3875,37 @@
 !
 !     Set the output argument HANDLE as well.
 !
-      CALL LNKAN  ( POOL,   NEW             )
-      CALL LNKILB ( NEW,    FTHEAD,   POOL  )
+      call lnkan  ( pool,   new             )
+      call lnkilb ( new,    fthead,   pool  )
 
-      FTHEAD                     =   NEW
+      fthead                     =   new
 
 !
 !     Clear out the file summary, except for the free record pointer.
 !     The free record pointer should point to the first record AFTER
 !     the first directory.
 !
-      CALL CLEARI ( SUMSIZ, FTSUM(1,FTHEAD) )
+      call cleari ( sumsiz, ftsum(1,fthead) )
 
-      FTHAN (         FTHEAD )   =   HANDLE
-      FTACC (         FTHEAD )   =   WRITE
-      FTLNK (         FTHEAD )   =   1
-      FTSUM ( FREIDX, FTHEAD )   =   3
+      fthan (         fthead )   =   handle
+      ftacc (         fthead )   =   write
+      ftlnk (         fthead )   =   1
+      ftsum ( freidx, fthead )   =   3
 
 !
 !     Insert the new handle into our handle set.
 !
-      CALL INSRTI ( HANDLE, FHLIST )
+      call insrti ( handle, fhlist )
 
 
-      CALL CHKOUT ( 'DASOPS' )
-      RETURN
+      call chkout ( 'DASOPS' )
+      return
 
 
 
 !$Procedure DASLLC ( DAS, low-level close )
 
-      ENTRY DASLLC ( HANDLE )
+      entry dasllc ( handle )
 
 ! $ Abstract
 !
@@ -4369,40 +4369,40 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASLLC' )
+      call chkin ( 'DASLLC' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Is this file even open?  Peruse the `handle' column of the file
 !     table; see whether this handle is present.
 !
-      FINDEX  =  FTHEAD
-      FOUND   = .FALSE.
+      findex  =  fthead
+      found   = .false.
 
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
+         if ( fthan(findex) .eq. handle ) then
+            found = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
 
-      END DO
+      end do
 
 !
 !     If the file is not open: no harm, no foul.  Otherwise, decrement
@@ -4410,51 +4410,51 @@
 !     zero, physically close the file and remove it from the file
 !     buffer.
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         FTLNK(FINDEX) = FTLNK(FINDEX) - 1
+         ftlnk(findex) = ftlnk(findex) - 1
 
-         IF ( FTLNK(FINDEX) .EQ. 0 ) THEN
+         if ( ftlnk(findex) .eq. 0 ) then
 !
 !           Close this file and delete it from the active list.
 !           If this was the head node of the list, the head node
 !           becomes the successor of this node (which may be NIL).
 !           Delete the handle from our handle set.
 !
-            CALL ZZDDHCLS ( HANDLE, 'DAS', .FALSE. )
+            call zzddhcls ( handle, 'DAS', .false. )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASLLC' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASLLC' )
+               return
+            end if
 
-            IF ( FINDEX .EQ. FTHEAD ) THEN
-               FTHEAD = LNKNXT ( FINDEX, POOL )
-            END IF
+            if ( findex .eq. fthead ) then
+               fthead = lnknxt ( findex, pool )
+            end if
 
-            CALL LNKFSL ( FINDEX, FINDEX, POOL )
+            call lnkfsl ( findex, findex, pool )
 
-            CALL REMOVI ( HANDLE, FHLIST       )
+            call removi ( handle, fhlist       )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DASLLC' )
-      RETURN
+      call chkout ( 'DASLLC' )
+      return
 
 
 !$Procedure DASHFS ( DAS, handle to file summary )
 
-      ENTRY DASHFS ( HANDLE, &
-                     NRESVR, &
-                     NRESVC, &
-                     NCOMR, &
-                     NCOMC, &
-                     FREE, &
-                     LASTLA, &
-                     LASTRC, &
-                     LASTWD )
+      entry dashfs ( handle, &
+                     nresvr, &
+                     nresvc, &
+                     ncomr, &
+                     ncomc, &
+                     free, &
+                     lastla, &
+                     lastrc, &
+                     lastwd )
 
 ! $ Abstract
 !
@@ -4939,76 +4939,76 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASHFS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASHFS' )
+      end if
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
-
-
-      FINDEX  =  FTHEAD
-      FOUND   = .FALSE.
-
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
-
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
-
-      END DO
+      end if
 
 
-      IF ( FOUND ) THEN
+      findex  =  fthead
+      found   = .false.
+
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+
+         if ( fthan(findex) .eq. handle ) then
+            found = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
+
+      end do
+
+
+      if ( found ) then
 !
 !        Give the caller the current summary from the file table.
 !
-         NRESVR  =  FTSUM ( RRCIDX, FINDEX )
-         NRESVC  =  FTSUM ( RCHIDX, FINDEX )
-         NCOMR   =  FTSUM ( CRCIDX, FINDEX )
-         NCOMC   =  FTSUM ( CCHIDX, FINDEX )
-         FREE    =  FTSUM ( FREIDX, FINDEX )
+         nresvr  =  ftsum ( rrcidx, findex )
+         nresvc  =  ftsum ( rchidx, findex )
+         ncomr   =  ftsum ( crcidx, findex )
+         ncomc   =  ftsum ( cchidx, findex )
+         free    =  ftsum ( freidx, findex )
 
-         DO I = 1, 3
-            LASTLA(I)  =  FTSUM ( LLABAS + I,  FINDEX )
-            LASTRC(I)  =  FTSUM ( LRCBAS + I,  FINDEX )
-            LASTWD(I)  =  FTSUM ( LWDBAS + I,  FINDEX )
-         END DO
+         do i = 1, 3
+            lastla(i)  =  ftsum ( llabas + i,  findex )
+            lastrc(i)  =  ftsum ( lrcbas + i,  findex )
+            lastwd(i)  =  ftsum ( lwdbas + i,  findex )
+         end do
 
-      ELSE
-         CALL SETMSG ( 'There is no DAS file open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                                 )
-         CALL SIGERR ( 'SPICE(DASNOSUCHHANDLE)'                    )
-      END IF
+      else
+         call setmsg ( 'There is no DAS file open with handle = #' )
+         call errint ( '#', handle                                 )
+         call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                    )
+      end if
 
-      CALL CHKOUT ( 'DASHFS' )
-      RETURN
+      call chkout ( 'DASHFS' )
+      return
 
 
 !$Procedure DASUFS ( DAS, update file summary )
 
-      ENTRY DASUFS ( HANDLE, &
-                     NRESVR, &
-                     NRESVC, &
-                     NCOMR, &
-                     NCOMC, &
-                     FREE, &
-                     LASTLA, &
-                     LASTRC, &
-                     LASTWD )
+      entry dasufs ( handle, &
+                     nresvr, &
+                     nresvc, &
+                     ncomr, &
+                     ncomc, &
+                     free, &
+                     lastla, &
+                     lastrc, &
+                     lastwd )
 
 ! $ Abstract
 !
@@ -5287,177 +5287,177 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASUFS' )
+      call chkin ( 'DASUFS' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Find the file table entries for this file.
 !
-      FINDEX  =  FTHEAD
-      FOUND   = .FALSE.
+      findex  =  fthead
+      found   = .false.
 
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND  = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
+         if ( fthan(findex) .eq. handle ) then
+            found  = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
 
-      END DO
+      end do
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        Obtain a logical unit for this file.
 !
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+         call zzddhhlu ( handle, 'DAS', .false., number )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DASUFS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DASUFS' )
+            return
+         end if
 
 !
 !        Now check to see that HANDLE is open for write, as one has
 !        no business updating a file summary for files that are
 !        open for read access only.
 !
-         IF ( FTACC(FINDEX) .NE. WRITE ) THEN
+         if ( ftacc(findex) .ne. write ) then
 
-            CALL SETMSG ( 'DAS file not open for writing. Handle = #,' &
+            call setmsg ( 'DAS file not open for writing. Handle = #,' &
             //            ' file = ''#''.'                             )
-            CALL ERRINT ( '#', HANDLE                                  )
-            CALL ERRFNM ( '#', NUMBER                                  )
-            CALL SIGERR ( 'SPICE(DASINVALIDACCESS)'                    )
-            CALL CHKOUT ( 'DASUFS'                                     )
-            RETURN
+            call errint ( '#', handle                                  )
+            call errfnm ( '#', number                                  )
+            call sigerr ( 'SPICE(DASINVALIDACCESS)'                    )
+            call chkout ( 'DASUFS'                                     )
+            return
 
-         END IF
+         end if
 
 !
 !        If any of the counts pertaining to the reserved record are or
 !        the comment area were changed, we need to record the new
 !        counts in the file record.  Otherwise, leave the file alone.
 !
-         IF (      (  NRESVR .NE. FTSUM( RRCIDX, FINDEX )  ) &
-              .OR. (  NRESVC .NE. FTSUM( RCHIDX, FINDEX )  ) &
-              .OR. (  NCOMR  .NE. FTSUM( CRCIDX, FINDEX )  ) &
-              .OR. (  NCOMC  .NE. FTSUM( CCHIDX, FINDEX )  )   )  THEN
+         if (      (  nresvr .ne. ftsum( rrcidx, findex )  ) &
+              .or. (  nresvc .ne. ftsum( rchidx, findex )  ) &
+              .or. (  ncomr  .ne. ftsum( crcidx, findex )  ) &
+              .or. (  ncomc  .ne. ftsum( cchidx, findex )  )   )  then
 
 !
 !           Read the file record.
 !
-            READ ( NUMBER, &
-                   REC    = 1, &
-                   IOSTAT = IOSTAT )  IDWORD, &
-                                      LOCIFN, &
-                                      LOCRRC, &
-                                      LOCRCH, &
-                                      LOCCRC, &
-                                      LOCCCH, &
-                                      LOCFMT, &
-                                      TAIL
+            read ( number, &
+                   rec    = 1, &
+                   iostat = iostat )  idword, &
+                                      locifn, &
+                                      locrrc, &
+                                      locrch, &
+                                      loccrc, &
+                                      loccch, &
+                                      locfmt, &
+                                      tail
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Attempt to read file record failed. ' &
+               call setmsg ( 'Attempt to read file record failed. ' &
                //            'File was ''#''.  Value of IOSTAT was' &
                //            ' ''#''.'                              )
-               CALL ERRFNM ( '#', NUMBER                            )
-               CALL ERRINT ( '#', IOSTAT                            )
-               CALL SIGERR ( 'SPICE(DASREADFAIL)'                   )
-               CALL CHKOUT ( 'DASUFS'                               )
-               RETURN
+               call errfnm ( '#', number                            )
+               call errint ( '#', iostat                            )
+               call sigerr ( 'SPICE(DASREADFAIL)'                   )
+               call chkout ( 'DASUFS'                               )
+               return
 
-            END IF
+            end if
 
-            WRITE ( NUMBER, &
-                    REC     =  1, &
-                    IOSTAT  =  IOSTAT )  IDWORD, &
-                                         LOCIFN, &
-                                         NRESVR, &
-                                         NRESVC, &
-                                         NCOMR, &
-                                         NCOMC, &
-                                         LOCFMT, &
-                                         TAIL
+            write ( number, &
+                    rec     =  1, &
+                    iostat  =  iostat )  idword, &
+                                         locifn, &
+                                         nresvr, &
+                                         nresvc, &
+                                         ncomr, &
+                                         ncomc, &
+                                         locfmt, &
+                                         tail
 
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 !
 !              Try to obtain the DAS file's name.
 !
-               INQUIRE ( UNIT   = NUMBER, &
-                         NAME   = LOCDAS, &
-                         IOSTAT = INQSTA )
+               inquire ( unit   = number, &
+                         name   = locdas, &
+                         iostat = inqsta )
 
-               CALL ZZDDHCLS ( HANDLE, 'DAS', .FALSE. )
+               call zzddhcls ( handle, 'DAS', .false. )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'DASUFS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'DASUFS' )
+                  return
+               end if
 
-               CALL SETMSG ( 'Attempt to update file record failed. ' &
+               call setmsg ( 'Attempt to update file record failed. ' &
                //            'File was ''#''.  Value of IOSTAT was' &
                //             ' ''#''.'                                )
-               CALL ERRCH  ( '#', LOCDAS                               )
-               CALL ERRINT ( '#', IOSTAT                               )
-               CALL SIGERR ( 'SPICE(DASWRITEFAIL)'                     )
-               CALL CHKOUT ( 'DASUFS'                                  )
-               RETURN
+               call errch  ( '#', locdas                               )
+               call errint ( '#', iostat                               )
+               call sigerr ( 'SPICE(DASWRITEFAIL)'                     )
+               call chkout ( 'DASUFS'                                  )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Update the file table.
 !
-         FTSUM ( RRCIDX, FINDEX )  =  NRESVR
-         FTSUM ( RCHIDX, FINDEX )  =  NRESVC
-         FTSUM ( CRCIDX, FINDEX )  =  NCOMR
-         FTSUM ( CCHIDX, FINDEX )  =  NCOMC
-         FTSUM ( FREIDX, FINDEX )  =  FREE
+         ftsum ( rrcidx, findex )  =  nresvr
+         ftsum ( rchidx, findex )  =  nresvc
+         ftsum ( crcidx, findex )  =  ncomr
+         ftsum ( cchidx, findex )  =  ncomc
+         ftsum ( freidx, findex )  =  free
 
-         DO I = 1, 3
-            FTSUM ( LLABAS + I,  FINDEX )  =  LASTLA(I)
-            FTSUM ( LRCBAS + I,  FINDEX )  =  LASTRC(I)
-            FTSUM ( LWDBAS + I,  FINDEX )  =  LASTWD(I)
-         END DO
+         do i = 1, 3
+            ftsum ( llabas + i,  findex )  =  lastla(i)
+            ftsum ( lrcbas + i,  findex )  =  lastrc(i)
+            ftsum ( lwdbas + i,  findex )  =  lastwd(i)
+         end do
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'There is no file open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                             )
-         CALL SIGERR ( 'SPICE(DASNOSUCHHANDLE)'                )
-         CALL CHKOUT ( 'DASUFS'                                )
-         RETURN
+         call setmsg ( 'There is no file open with handle = #' )
+         call errint ( '#', handle                             )
+         call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                )
+         call chkout ( 'DASUFS'                                )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DASUFS' )
-      RETURN
+      call chkout ( 'DASUFS' )
+      return
 
 
 
 !$Procedure DASHLU ( DAS, handle to logical unit )
 
-      ENTRY DASHLU ( HANDLE, UNIT )
+      entry dashlu ( handle, unit )
 
 ! $ Abstract
 !
@@ -5629,67 +5629,67 @@
 !
 !     We use discovery check-ins in this routine.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL CHKIN  ( 'DASHLU'       )
+         call chkin  ( 'DASHLU'       )
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         CALL CHKOUT ( 'DASHLU'       )
+         call chkout ( 'DASHLU'       )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Find the file table entries for this file.
 !
-      FINDEX  =  FTHEAD
-      FOUND   = .FALSE.
+      findex  =  fthead
+      found   = .false.
 
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
+         if ( fthan(findex) .eq. handle ) then
+            found = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
 
-      END DO
+      end do
 
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        For backward compatibility, the logical unit must be
 !        locked to the file.
 !
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .TRUE., UNIT )
+         call zzddhhlu ( handle, 'DAS', .true., unit )
 
-      ELSE
+      else
 
-         CALL CHKIN  ( 'DASHLU'                                )
-         CALL SETMSG ( 'There is no file open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                             )
-         CALL SIGERR ( 'SPICE(DASNOSUCHHANDLE)'                )
-         CALL CHKOUT ( 'DASHLU'                                )
+         call chkin  ( 'DASHLU'                                )
+         call setmsg ( 'There is no file open with handle = #' )
+         call errint ( '#', handle                             )
+         call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                )
+         call chkout ( 'DASHLU'                                )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure DASLUH ( DAS, logical unit to handle )
 
-      ENTRY DASLUH ( UNIT, HANDLE )
+      entry dasluh ( unit, handle )
 
 ! $ Abstract
 !
@@ -5848,45 +5848,45 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASLUH' )
+      call chkin ( 'DASLUH' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Try to locate the handle associated with this unit.
 !
-      CALL ZZDDHLUH ( UNIT, HANDLE, FOUND )
+      call zzddhluh ( unit, handle, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'There is no DAS file open with unit = #' )
-         CALL ERRINT ( '#', UNIT                                 )
-         CALL SIGERR ( 'SPICE(DASNOSUCHUNIT)'                    )
+         call setmsg ( 'There is no DAS file open with unit = #' )
+         call errint ( '#', unit                                 )
+         call sigerr ( 'SPICE(DASNOSUCHUNIT)'                    )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DASLUH' )
-      RETURN
+      call chkout ( 'DASLUH' )
+      return
 
 
 
 !$Procedure DASHFN ( DAS, handle to file name )
 
-      ENTRY DASHFN ( HANDLE, FNAME )
+      entry dashfn ( handle, fname )
 
 ! $ Abstract
 !
@@ -6108,62 +6108,62 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASHFN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASHFN' )
+      end if
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Find the file table entries for this file.
 !
-      FINDEX  =  FTHEAD
-      FOUND   = .FALSE.
+      findex  =  fthead
+      found   = .false.
 
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND  = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
+         if ( fthan(findex) .eq. handle ) then
+            found  = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
 
-      END DO
+      end do
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+         call zzddhhlu ( handle, 'DAS', .false., number )
 
-         INQUIRE ( UNIT = NUMBER, &
-                   NAME = FNAME  )
+         inquire ( unit = number, &
+                   name = fname  )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'There is no DAS file open with handle = #' )
-         CALL ERRINT ( '#', HANDLE                                 )
-         CALL SIGERR ( 'SPICE(DASNOSUCHHANDLE)'                    )
+         call setmsg ( 'There is no DAS file open with handle = #' )
+         call errint ( '#', handle                                 )
+         call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                    )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DASHFN' )
-      RETURN
+      call chkout ( 'DASHFN' )
+      return
 
 
 !$Procedure DASFNH ( DAS, file name to handle )
 
-      ENTRY DASFNH ( FNAME, HANDLE )
+      entry dasfnh ( fname, handle )
 
 ! $ Abstract
 !
@@ -6323,42 +6323,42 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASFNH' )
+      call chkin ( 'DASFNH' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
-      CALL ZZDDHFNH ( FNAME, HANDLE, FOUND )
+      call zzddhfnh ( fname, handle, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'There is no DAS file in the table with file ' // &
+         call setmsg ( 'There is no DAS file in the table with file ' // &
                        'name = ''#'''                                  )
-         CALL ERRCH  ( '#', FNAME                                      )
-         CALL SIGERR ( 'SPICE(DASNOSUCHFILE)'                          )
+         call errch  ( '#', fname                                      )
+         call sigerr ( 'SPICE(DASNOSUCHFILE)'                          )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DASFNH' )
-      RETURN
+      call chkout ( 'DASFNH' )
+      return
 
 
 !$Procedure DASHOF ( DAS, handles of open files )
 
-      ENTRY DASHOF ( FHSET )
+      entry dashof ( fhset )
 
 ! $ Abstract
 !
@@ -6510,37 +6510,37 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASHOF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASHOF' )
+      end if
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Just stuff our local list into the set.
 !
-      CALL COPYI ( FHLIST, FHSET )
+      call copyi ( fhlist, fhset )
 
-      CALL CHKOUT ( 'DASHOF' )
-      RETURN
+      call chkout ( 'DASHOF' )
+      return
 
 
 
 !$Procedure DASSIH ( DAS, signal invalid handles )
 
-      ENTRY DASSIH ( HANDLE, ACCESS )
+      entry dassih ( handle, access )
 
 ! $ Abstract
 !
@@ -6748,107 +6748,107 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASSIH' )
+      call chkin ( 'DASSIH' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
-      CALL LJUST ( ACCESS, ACC )
-      CALL UCASE ( ACC,    ACC )
+      call ljust ( access, acc )
+      call ucase ( acc,    acc )
 
 !
 !     Make sure we recognize the access type specified by the caller.
 !
-      IF (  ( ACC .NE. 'READ' ) .AND. ( ACC .NE. 'WRITE' )  ) THEN
+      if (  ( acc .ne. 'READ' ) .and. ( acc .ne. 'WRITE' )  ) then
 
-         CALL SETMSG ( 'Unrecognized access type.  Type was #. ' )
-         CALL ERRCH  ( '#', ACCESS                               )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-         CALL CHKOUT ( 'DASSIH'                                  )
-         RETURN
+         call setmsg ( 'Unrecognized access type.  Type was #. ' )
+         call errch  ( '#', access                               )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+         call chkout ( 'DASSIH'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     See whether the input handle is in our list at all.  It's
 !     unlawful for the handle to be absent.
 !
-      IF (  .NOT.  ELEMI ( HANDLE, FHLIST )  )  THEN
+      if (  .not.  elemi ( handle, fhlist )  )  then
 
-         CALL SETMSG ( 'Handle # is not attached to an open DAS file.' )
-         CALL ERRINT ( '#', HANDLE                                     )
-         CALL SIGERR ( 'SPICE(DASNOSUCHHANDLE)'                        )
-         CALL CHKOUT ( 'DASSIH'                                        )
-         RETURN
+         call setmsg ( 'Handle # is not attached to an open DAS file.' )
+         call errint ( '#', handle                                     )
+         call sigerr ( 'SPICE(DASNOSUCHHANDLE)'                        )
+         call chkout ( 'DASSIH'                                        )
+         return
 
-      ELSE
+      else
 !
 !        Find the file table entries for this file.  We know they
 !        must exist.
 !
-         FINDEX  =  FTHEAD
-         FOUND   = .FALSE.
+         findex  =  fthead
+         found   = .false.
 
-         DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+         do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-            IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-               FOUND  = .TRUE.
-            ELSE
-               FINDEX = LNKNXT ( FINDEX, POOL )
-            END IF
+            if ( fthan(findex) .eq. handle ) then
+               found  = .true.
+            else
+               findex = lnknxt ( findex, pool )
+            end if
 
-         END DO
+         end do
 !
 !        At this point, FINDEX points to the file table entries
 !        for this file.
 !
 
-         IF (       ( ACC           .EQ. 'WRITE' ) &
-              .AND. ( FTACC(FINDEX) .NE.  WRITE  )  ) THEN
+         if (       ( acc           .eq. 'WRITE' ) &
+              .and. ( ftacc(findex) .ne.  write  )  ) then
 !
 !           If the access type is 'WRITE', the DAS file must be open
 !           for writing.
 !
-            CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., NUMBER )
+            call zzddhhlu ( handle, 'DAS', .false., number )
 
-            CALL SETMSG ( 'DAS file not open for writing. Handle = #,'// &
+            call setmsg ( 'DAS file not open for writing. Handle = #,'// &
                           ' file = ''#''.'                             )
-            CALL ERRINT ( '#', HANDLE                                  )
-            CALL ERRFNM ( '#', NUMBER                                  )
-            CALL SIGERR ( 'SPICE(DASINVALIDACCESS)'                    )
-            CALL CHKOUT ( 'DASSIH'                                     )
-            RETURN
+            call errint ( '#', handle                                  )
+            call errfnm ( '#', number                                  )
+            call sigerr ( 'SPICE(DASINVALIDACCESS)'                    )
+            call chkout ( 'DASSIH'                                     )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The DAS file's handle is o.k.
 !
-      CALL CHKOUT ( 'DASSIH' )
-      RETURN
+      call chkout ( 'DASSIH' )
+      return
 
 
 !$Procedure DASHAM ( DAS, handle to access method )
 
-      ENTRY DASHAM ( HANDLE, ACCESS )
+      entry dasham ( handle, access )
 
 ! $ Abstract
 !
@@ -7014,62 +7014,62 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASHAM' )
+      call chkin ( 'DASHAM' )
 
 !
 !     Initialize the file table pool and handle list, if necessary.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( FTSIZE, POOL   )
-         CALL SSIZEI ( FTSIZE, FHLIST )
+         call lnkini ( ftsize, pool   )
+         call ssizei ( ftsize, fhlist )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     See whether the input handle is in our list at all.  It's
 !     unlawful for the handle to be absent.
 !
-      FINDEX  =  FTHEAD
-      FOUND   = .FALSE.
+      findex  =  fthead
+      found   = .false.
 
-      DO WHILE (  ( .NOT. FOUND )  .AND.  ( FINDEX .GT. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
 
-         IF ( FTHAN(FINDEX) .EQ. HANDLE ) THEN
-            FOUND  = .TRUE.
-         ELSE
-            FINDEX = LNKNXT ( FINDEX, POOL )
-         END IF
+         if ( fthan(findex) .eq. handle ) then
+            found  = .true.
+         else
+            findex = lnknxt ( findex, pool )
+         end if
 
-      END DO
+      end do
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The handle # does not designate a known DAS ' // &
+         call setmsg ( 'The handle # does not designate a known DAS ' // &
                        'file '                                         )
-         CALL ERRINT ( '#',  HANDLE                                    )
-         CALL SIGERR ( 'SPICE(INVALIDHANDLE)'                          )
-         CALL CHKOUT ( 'DASHAM'                                        )
-         RETURN
+         call errint ( '#',  handle                                    )
+         call sigerr ( 'SPICE(INVALIDHANDLE)'                          )
+         call chkout ( 'DASHAM'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     We know about the file if we got this far.  Set the output
 !     argument accordingly.
 !
-      IF (  FTACC(FINDEX) .EQ. READ ) THEN
-         ACCESS = 'READ'
-      ELSE
-         ACCESS = 'WRITE'
-      END IF
+      if (  ftacc(findex) .eq. read ) then
+         access = 'READ'
+      else
+         access = 'WRITE'
+      end if
 
-      CALL CHKOUT ( 'DASHAM' )
-      RETURN
-      END
+      call chkout ( 'DASHAM' )
+      return
+      end

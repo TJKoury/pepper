@@ -1,6 +1,6 @@
 !$Procedure ZZINREC ( DSK, in rectangular element? )
 
-      SUBROUTINE ZZINREC ( P, BOUNDS, MARGIN, EXCLUD, INSIDE )
+      subroutine zzinrec ( p, bounds, margin, exclud, inside )
 
 ! $ Abstract
 !
@@ -26,16 +26,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      P      ( 3 )
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               EXCLUD
-      LOGICAL               INSIDE
+      double precision      p      ( 3 )
+      double precision      bounds ( 2, 3 )
+      double precision      margin
+      integer               exclud
+      logical               inside
 
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
 ! $ Brief_I/O
 !
@@ -172,129 +172,129 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Element boundary indices:
 !
-      INTEGER               LOWER
-      PARAMETER           ( LOWER  = 1 )
+      integer               lower
+      parameter           ( lower  = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER  = 2 )
+      integer               upper
+      parameter           ( upper  = 2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      AMNCOR ( 3 )
-      DOUBLE PRECISION      AMXCOR ( 3 )
-      DOUBLE PRECISION      DELTA  ( 3 )
-      DOUBLE PRECISION      MAXCOR ( 3 )
-      DOUBLE PRECISION      MINCOR ( 3 )
-      DOUBLE PRECISION      L      ( 3 )
+      double precision      amncor ( 3 )
+      double precision      amxcor ( 3 )
+      double precision      delta  ( 3 )
+      double precision      maxcor ( 3 )
+      double precision      mincor ( 3 )
+      double precision      l      ( 3 )
 
-      INTEGER               I
+      integer               i
 
 
 !
 !     Check-in is discovery style.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Assume the point is outside to start. This allows us
 !     to skip setting INSIDE when we find a boundary test
 !     failure.
 !
-      INSIDE = .FALSE.
+      inside = .false.
 
 
 !
 !     Reject negative margins.
 !
-      IF ( MARGIN .LT. 0.D0 ) THEN
+      if ( margin .lt. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZINREC'                                )
-         CALL SETMSG ( 'Margin must be non-negative but was #.' )
-         CALL ERRDP  ( '#', MARGIN                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZINREC'                                )
-         RETURN
+         call chkin  ( 'ZZINREC'                                )
+         call setmsg ( 'Margin must be non-negative but was #.' )
+         call errdp  ( '#', margin                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZINREC'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the exclusion index.
 !
-      IF ( ( EXCLUD .LT. NONE ) .OR. ( EXCLUD .GT. 3 ) ) THEN
+      if ( ( exclud .lt. none ) .or. ( exclud .gt. 3 ) ) then
 
-         CALL CHKIN  ( 'ZZINREC'                             )
-         CALL SETMSG ( 'EXCLUD was #; allowed range is 0:3.' )
-         CALL ERRINT ( '#', EXCLUD                           )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'              )
-         CALL CHKOUT ( 'ZZINREC'                             )
-         RETURN
+         call chkin  ( 'ZZINREC'                             )
+         call setmsg ( 'EXCLUD was #; allowed range is 0:3.' )
+         call errint ( '#', exclud                           )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
+         call chkout ( 'ZZINREC'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Get local copies of the coordinate bounds.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         MINCOR(I) = BOUNDS( LOWER, I)
-         MAXCOR(I) = BOUNDS( UPPER, I)
-         L     (I) = MAXCOR(I) - MINCOR(I)
+         mincor(i) = bounds( lower, i)
+         maxcor(i) = bounds( upper, i)
+         l     (i) = maxcor(i) - mincor(i)
 
-         IF ( L(I) .LT. 0.D0 ) THEN
+         if ( l(i) .lt. 0.d0 ) then
 
-            CALL CHKIN  ( 'ZZINREC'                              )
-            CALL SETMSG ( 'Bounds are out of order for index #; ' &
+            call chkin  ( 'ZZINREC'                              )
+            call setmsg ( 'Bounds are out of order for index #; ' &
             //            'bounds are #:#.'                      )
-            CALL ERRDP  ( '#', BOUNDS(LOWER,I)                   )
-            CALL ERRDP  ( '#', BOUNDS(UPPER,I)                   )
-            CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)'              )
-            CALL CHKOUT ( 'ZZINREC'                              )
-            RETURN
+            call errdp  ( '#', bounds(lower,i)                   )
+            call errdp  ( '#', bounds(upper,i)                   )
+            call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'              )
+            call chkout ( 'ZZINREC'                              )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Compare coordinates to adjusted coordinate
 !     boundaries.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( EXCLUD .NE. I ) THEN
+         if ( exclud .ne. i ) then
 !
 !           Create adjusted bounds for the Ith coordinate.
 !
-            DELTA(I)  = MARGIN * ABS( L(I) )
+            delta(i)  = margin * abs( l(i) )
 
-            AMNCOR(I) = MINCOR(I) - DELTA(I)
-            AMXCOR(I) = MAXCOR(I) + DELTA(I)
+            amncor(i) = mincor(i) - delta(i)
+            amxcor(i) = maxcor(i) + delta(i)
 
-            IF (      ( P(I) .LT. AMNCOR(I) ) &
-                 .OR. ( P(I) .GT. AMXCOR(I) ) ) THEN
+            if (      ( p(i) .lt. amncor(i) ) &
+                 .or. ( p(i) .gt. amxcor(i) ) ) then
 
-                RETURN
+                return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     All tests that were commanded have been passed. The input
 !     point is considered to be contained in the expanded volume
 !     element.
 !
-      INSIDE = .TRUE.
+      inside = .true.
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZDDHMNM ( Return unique enough DP number for a file )
 
-      DOUBLE PRECISION FUNCTION ZZDDHMNM ( UNIT )
+      double precision function zzddhmnm ( unit )
 
 ! $ Abstract
 !
@@ -21,17 +21,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               UNIT
+      integer               unit
 
-      INTEGER               IDLEN
-      PARAMETER           ( IDLEN  = 8 )
+      integer               idlen
+      parameter           ( idlen  = 8 )
 
-      INTEGER               NINTS
-      PARAMETER           ( NINTS  = 20 )
+      integer               nints
+      parameter           ( nints  = 20 )
 
 ! $ Brief_I/O
 !
@@ -143,10 +143,10 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters.
@@ -154,106 +154,106 @@
 !     Character buffer size consistent with the number of integers
 !     that will be read from the file.
 !
-      INTEGER               NCHARS
-      PARAMETER           ( NCHARS = NINTS * 4 )
+      integer               nchars
+      parameter           ( nchars = nints * 4 )
 
 !
 !     Minimum and maximum values for the range of ASCII printing
 !     characters.
 !
-      INTEGER               MINPCH
-      PARAMETER           ( MINPCH = 32 )
+      integer               minpch
+      parameter           ( minpch = 32 )
 
-      INTEGER               MAXPCH
-      PARAMETER           ( MAXPCH = 126 )
+      integer               maxpch
+      parameter           ( maxpch = 126 )
 
 !
 !     Local variables.
 !
-      CHARACTER*(IDLEN)     ARCH
-      CHARACTER*(IDLEN)     IDWORD
-      CHARACTER*(IDLEN)     TYPE
-      CHARACTER*(NCHARS)    STRBUF
+      character*(idlen)     arch
+      character*(idlen)     idword
+      character*(idlen)     type
+      character*(nchars)    strbuf
 
-      CHARACTER*(STRSIZ)    STRAMH ( NUMAMH )
-      CHARACTER*(STRSIZ)    STRARC ( NUMARC )
-      CHARACTER*(STRSIZ)    STRBFF ( NUMBFF )
+      character*(strsiz)    stramh ( numamh )
+      character*(strsiz)    strarc ( numarc )
+      character*(strsiz)    strbff ( numbff )
 
-      DOUBLE PRECISION      MNM
+      double precision      mnm
 
-      INTEGER               BFF
-      INTEGER               I
-      INTEGER               INTARR ( NINTS )
-      INTEGER               IOSTAT
+      integer               bff
+      integer               i
+      integer               intarr ( nints )
+      integer               iostat
 
-      INTEGER               NATBFF
-      INTEGER               SUPBFF ( NUMBFF )
-      INTEGER               NUMSUP
-      INTEGER               SUPIDX
+      integer               natbff
+      integer               supbff ( numbff )
+      integer               numsup
+      integer               supidx
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables.
 !
-      SAVE                  FIRST
+      save                  first
 
-      SAVE                  NATBFF
-      SAVE                  SUPBFF
-      SAVE                  NUMSUP
+      save                  natbff
+      save                  supbff
+      save                  numsup
 
 !
 !     Data statements.
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  NATBFF / 0      /
+      data                  first  / .true. /
+      data                  natbff / 0      /
 
 !
 !     Set default output value to zero.
 !
-      MNM      = 0.D0
-      ZZDDHMNM = 0.D0
+      mnm      = 0.d0
+      zzddhmnm = 0.d0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZDDHMNM' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZDDHMNM' )
+      end if
 
 !
 !     Perform some initialization tasks.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZDDHINI ( NATBFF, SUPBFF, NUMSUP, &
-                         STRAMH, STRARC, STRBFF  )
+         call zzddhini ( natbff, supbff, numsup, &
+                         stramh, strarc, strbff  )
 
 !
 !        Check FAILED() to handle the unlikely event that
 !        ZZDDHINI signaled SPICE(BUG).
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZDDHMNM' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZDDHMNM' )
+            return
+         end if
 
 !
 !        Do not perform initialization tasks again.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Read ID word string followed by NINTS integers from the first
 !     record of the file.
 !
-      READ ( UNIT=UNIT, REC=1, IOSTAT=IOSTAT ) IDWORD, INTARR
+      read ( unit=unit, rec=1, iostat=iostat ) idword, intarr
 
-      IF ( IOSTAT .EQ. 0 ) THEN
+      if ( iostat .eq. 0 ) then
 
 !
 !        Read succeeded. Try to determine the file architecture and
@@ -262,36 +262,36 @@
 !        printing ASCII characters in the ID word with blanks, then use
 !        IDW2AT on the "cleaned" ID word to get architecture and type.
 !
-         DO I = 1, IDLEN
-            IF (      ( ICHAR(IDWORD(I:I)) .LT. MINPCH ) &
-                 .OR. ( ICHAR(IDWORD(I:I)) .GT. MAXPCH ) ) THEN
-               IDWORD(I:I) = ' '
-            END IF
-         END DO
+         do i = 1, idlen
+            if (      ( ichar(idword(i:i)) .lt. minpch ) &
+                 .or. ( ichar(idword(i:i)) .gt. maxpch ) ) then
+               idword(i:i) = ' '
+            end if
+         end do
 
-         CALL IDW2AT ( IDWORD, ARCH, TYPE )
+         call idw2at ( idword, arch, type )
 
 !
 !        Compute the output value based on the file architecture.
 !
-         IF   ( ARCH .EQ. 'DAF' ) THEN
+         if   ( arch .eq. 'DAF' ) then
 
 !
 !           For DAF files, try to get the file's binary format.
 !
-            CALL ZZDDHPPF ( UNIT, DAF, BFF )
+            call zzddhppf ( unit, daf, bff )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDDHMNM' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDDHMNM' )
+               return
+            end if
 
 !
 !           If the file is in a non-native format, we will need to read
 !           the first record again, now directly as characters, and
 !           translate these character to native integers.
 !
-            IF ( BFF .NE. NATBFF ) THEN
+            if ( bff .ne. natbff ) then
 
 !
 !              First, check if run-time translation is supported for
@@ -301,83 +301,83 @@
 !              is not supported, simply get out (note that the default
 !              return value was set to zero at the start.)
 !
-               SUPIDX = ISRCHI ( BFF, NUMSUP, SUPBFF )
+               supidx = isrchi ( bff, numsup, supbff )
 
-               IF ( SUPIDX .EQ. 0 ) THEN
-                  CALL CHKOUT ( 'ZZDDHMNM' )
-                  RETURN
-               END IF
+               if ( supidx .eq. 0 ) then
+                  call chkout ( 'ZZDDHMNM' )
+                  return
+               end if
 
 !
 !              Read the first record as characters and do translation.
 !
-               READ ( UNIT=UNIT, REC=1, IOSTAT=IOSTAT ) IDWORD, STRBUF
+               read ( unit=unit, rec=1, iostat=iostat ) idword, strbuf
 
-               CALL ZZXLATEI ( BFF, STRBUF, NINTS, INTARR )
+               call zzxlatei ( bff, strbuf, nints, intarr )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDDHMNM' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDDHMNM' )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           Add integers from the file record to the output value.
 !
-            DO I = 1, NINTS
-               MNM = MNM + INTARR(I)
-            END DO
+            do i = 1, nints
+               mnm = mnm + intarr(i)
+            end do
 
 !
 !           Read more integers from the start of the first descriptor
 !           record without regard to the file's binary format and,
 !           if successful, add them to the total.
 !
-            READ ( UNIT=UNIT, REC=INTARR(18), IOSTAT=IOSTAT ) INTARR
+            read ( unit=unit, rec=intarr(18), iostat=iostat ) intarr
 
-            IF ( IOSTAT .EQ. 0 ) THEN
+            if ( iostat .eq. 0 ) then
 
-               DO I = 1, NINTS
-                  MNM = MNM + INTARR(I)
-               END DO
+               do i = 1, nints
+                  mnm = mnm + intarr(i)
+               end do
 
-            END IF
+            end if
 
-         ELSE IF ( ARCH .EQ. 'DAS' ) THEN
+         else if ( arch .eq. 'DAS' ) then
 
 !
 !           For DAS files, for now, add up integers from the first
 !           record to get the output value.
 !
-            DO I = 1, NINTS
-               MNM = MNM + INTARR(I)
-            END DO
+            do i = 1, nints
+               mnm = mnm + intarr(i)
+            end do
 
-         ELSE
+         else
 
 !
 !           For all other files, add up integers from the first record
 !           to get the output value.
 !
-            DO I = 1, NINTS
-               MNM = MNM + INTARR(I)
-            END DO
+            do i = 1, nints
+               mnm = mnm + intarr(i)
+            end do
 
-         END IF
+         end if
 
-      ELSE
+      else
 
 !
 !        The read of the file record failed. Do nothing as the output
 !        value has already been set at the start of the function.
 !
 
-      END IF
+      end if
 
-      ZZDDHMNM = MNM
+      zzddhmnm = mnm
 
-      CALL CHKOUT ( 'ZZDDHMNM' )
+      call chkout ( 'ZZDDHMNM' )
 
-      RETURN
-      END
+      return
+      end

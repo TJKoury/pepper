@@ -48,14 +48,14 @@
 !
 !     This parameter is user-adjustable.
 !
-      DOUBLE PRECISION      XFRACT
-      PARAMETER           ( XFRACT = 1.D-10 )
+      double precision      xfract
+      parameter           ( xfract = 1.d-10 )
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-      INTEGER               KEYXFR
-      PARAMETER           ( KEYXFR = 1 )
+      integer               keyxfr
+      parameter           ( keyxfr = 1 )
 
 !
 !     Greedy segment selection factor
@@ -77,14 +77,14 @@
 !     software implementation. This parameter may be changed in a
 !     future version of SPICE.
 !
-      DOUBLE PRECISION      SGREED
-      PARAMETER           ( SGREED = 1.D-8 )
+      double precision      sgreed
+      parameter           ( sgreed = 1.d-8 )
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-      INTEGER               KEYSGR
-      PARAMETER           ( KEYSGR = KEYXFR + 1 )
+      integer               keysgr
+      parameter           ( keysgr = keyxfr + 1 )
 
 !
 !     Segment pad margin
@@ -109,14 +109,14 @@
 !     value of this margin, when applied to a segment's boundary
 !     dimensions.
 
-      DOUBLE PRECISION      SGPADM
-      PARAMETER           ( SGPADM = 1.D-10 )
+      double precision      sgpadm
+      parameter           ( sgpadm = 1.d-10 )
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-      INTEGER               KEYSPM
-      PARAMETER           ( KEYSPM = KEYSGR + 1 )
+      integer               keyspm
+      parameter           ( keyspm = keysgr + 1 )
 
 !
 !     Surface-point membership margin
@@ -134,14 +134,14 @@
 !     routines that make use of the surface-point mapping won't
 !     work properly.
 !
-      DOUBLE PRECISION      PTMEMM
-      PARAMETER           ( PTMEMM = 1.D-7 )
+      double precision      ptmemm
+      parameter           ( ptmemm = 1.d-7 )
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-      INTEGER               KEYPTM
-      PARAMETER           ( KEYPTM = KEYSPM + 1 )
+      integer               keyptm
+      parameter           ( keyptm = keyspm + 1 )
 
 !
 !     Angular rounding margin
@@ -157,16 +157,16 @@
 !
 !     Units are radians.
 !
-      DOUBLE PRECISION      ANGMRG
-      PARAMETER           ( ANGMRG = 1.D-12 )
+      double precision      angmrg
+      parameter           ( angmrg = 1.d-12 )
 
 !
 !     This parameter is not user-adjustable.
 !
 !     The keyword for retrieving this parameter is
 !
-      INTEGER               KEYAMG
-      PARAMETER           ( KEYAMG = KEYPTM + 1 )
+      integer               keyamg
+      parameter           ( keyamg = keyptm + 1 )
 
 
 !
@@ -187,16 +187,16 @@
 !
 !     Units are radians.
 !
-      DOUBLE PRECISION      LONALI
-      PARAMETER           ( LONALI = 1.D-12 )
+      double precision      lonali
+      parameter           ( lonali = 1.d-12 )
 
 !
 !     This parameter is not user-adjustable.
 !
 !     The keyword for retrieving this parameter is
 !
-      INTEGER               KEYLAL
-      PARAMETER           ( KEYLAL = KEYAMG + 1 )
+      integer               keylal
+      parameter           ( keylal = keyamg + 1 )
 
 !
 !     End of include file dsktol.inc

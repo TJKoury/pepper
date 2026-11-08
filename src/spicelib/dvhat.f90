@@ -1,6 +1,6 @@
 !$Procedure DVHAT ( Derivative and unit vector "V-hat" of a state)
 
-      SUBROUTINE DVHAT ( S1, SOUT )
+      subroutine dvhat ( s1, sout )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   S1   ( 6 )
-      DOUBLE PRECISION   SOUT ( 6 )
+      double precision   s1   ( 6 )
+      double precision   sout ( 6 )
 
 ! $ Brief_I/O
 !
@@ -253,41 +253,41 @@
 !
 !     Local Constants.
 !
-      INTEGER               POS
-      PARAMETER           ( POS = 1 )
+      integer               pos
+      parameter           ( pos = 1 )
 
-      INTEGER               VEL
-      PARAMETER           ( VEL = 4 )
+      integer               vel
+      parameter           ( vel = 4 )
 
 !
 !     Local variables.
 !
-      DOUBLE PRECISION      LENGTH
+      double precision      length
 
 !
 !     Get the position portion of the output state and the length of
 !     the input position.
 !
-      CALL UNORM ( S1(POS), SOUT(POS), LENGTH )
+      call unorm ( s1(pos), sout(pos), length )
 
-      IF ( LENGTH .EQ. 0.0D0 ) THEN
+      if ( length .eq. 0.0d0 ) then
 !
 !        If the length of the input position is zero, just copy
 !        the input velocity to the output velocity.
 !
-         CALL VEQU ( S1(VEL), SOUT(VEL) )
+         call vequ ( s1(vel), sout(vel) )
 
-      ELSE
+      else
 !
 !        Otherwise the derivative of the unit vector is just the
 !        component of the input velocity perpendicular to the input
 !        position, scaled by the reciprocal of the length of the
 !        input position.
 !
-         CALL VPERP  ( S1(VEL),      SOUT(POS), SOUT(VEL) )
-         CALL VSCLIP ( 1.0D0/LENGTH,            SOUT(VEL) )
+         call vperp  ( s1(vel),      sout(pos), sout(vel) )
+         call vsclip ( 1.0d0/length,            sout(vel) )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

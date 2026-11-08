@@ -1,8 +1,8 @@
 !$Procedure      ZZGFCOST ( GF, coordinate definition state )
 
-      SUBROUTINE ZZGFCOST ( VECDEF, METHOD, TRGID, ET, &
-                            REF,    ABCORR, OBSID, DREF, &
-                            DCTR,   DVEC,   RADII, STATE, FOUND )
+      subroutine zzgfcost ( vecdef, method, trgid, et, &
+                            ref,    abcorr, obsid, dref, &
+                            dctr,   dvec,   radii, state, found )
 
 ! $ Abstract
 !
@@ -29,24 +29,24 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
 
-      CHARACTER*(*)         VECDEF
-      CHARACTER*(*)         METHOD
-      INTEGER               TRGID
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBSID
-      CHARACTER*(*)         DREF
-      INTEGER               DCTR
-      DOUBLE PRECISION      DVEC   ( 3 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      STATE  ( 6 )
-      LOGICAL               FOUND
+      character*(*)         vecdef
+      character*(*)         method
+      integer               trgid
+      double precision      et
+      character*(*)         ref
+      character*(*)         abcorr
+      integer               obsid
+      character*(*)         dref
+      integer               dctr
+      double precision      dvec   ( 3 )
+      double precision      radii  ( 3 )
+      double precision      state  ( 6 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -363,63 +363,63 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LT
+      double precision      lt
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFCOST' )
+      call chkin ( 'ZZGFCOST' )
 
 !
 !     No result was found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 
-      IF ( VECDEF .EQ. POSDEF  ) THEN
+      if ( vecdef .eq. posdef  ) then
 !
 !        Find the observer-target state vector.
 !
-         CALL SPKEZ ( TRGID, ET, REF, ABCORR, OBSID, STATE, LT )
+         call spkez ( trgid, et, ref, abcorr, obsid, state, lt )
 
-         FOUND = .TRUE.
+         found = .true.
 
-      ELSE IF ( VECDEF .EQ. SOBDEF ) THEN
+      else if ( vecdef .eq. sobdef ) then
 !
 !        The caller has requested the state of a sub-observer point.
 !
-         CALL ZZGFSSOB ( METHOD, TRGID, ET,    REF, &
-                         ABCORR, OBSID, RADII, STATE )
+         call zzgfssob ( method, trgid, et,    ref, &
+                         abcorr, obsid, radii, state )
 
-         FOUND = .TRUE.
+         found = .true.
 
 
-      ELSE IF ( VECDEF .EQ. SINDEF ) THEN
+      else if ( vecdef .eq. sindef ) then
 !
 !        The caller has requested the state of a surface intercept
 !        point.
 !
-         CALL ZZGFSSIN ( METHOD, TRGID, ET,   REF,   ABCORR, OBSID, &
-                         DREF,   DCTR,  DVEC, RADII, STATE,  FOUND )
+         call zzgfssin ( method, trgid, et,   ref,   abcorr, obsid, &
+                         dref,   dctr,  dvec, radii, state,  found )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The coordinate quantity # is not recognized.' )
-         CALL ERRCH  ( '#',  VECDEF                                   )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                          )
-         CALL CHKOUT ( 'ZZGFCOST'                                     )
-         RETURN
+         call setmsg ( 'The coordinate quantity # is not recognized.' )
+         call errch  ( '#',  vecdef                                   )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                          )
+         call chkout ( 'ZZGFCOST'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point, one of the following is true:
@@ -432,6 +432,6 @@
 !        - a SPICE error occurred
 !
 
-      CALL CHKOUT  ( 'ZZGFCOST' )
-      RETURN
-      END
+      call chkout  ( 'ZZGFCOST' )
+      return
+      end

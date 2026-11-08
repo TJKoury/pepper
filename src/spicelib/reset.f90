@@ -1,6 +1,6 @@
 !$Procedure RESET ( Reset Error Status )
 
-      SUBROUTINE RESET
+      subroutine reset
 
 ! $ Abstract
 !
@@ -18,7 +18,7 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Brief_I/O
 !
@@ -186,14 +186,14 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               SETERR
-      LOGICAL               ACCEPT
+      logical               seterr
+      logical               accept
 
 !
 !     Local Variables:
 !
 
-      LOGICAL               STAT
+      logical               stat
 
 !
 !     Executable Code:
@@ -201,18 +201,18 @@
 !     This odd-looking function reference resets the error
 !     status to indicate "no error":
 !
-      STAT = SETERR ( .FALSE. )
+      stat = seterr ( .false. )
 
 !
 !     Wipe out the short and long error messages:
 !
-      CALL PUTSMS ( ' ' )
-      CALL PUTLMS ( ' ' )
+      call putsms ( ' ' )
+      call putlms ( ' ' )
 
 !
 !     Allow long error message to be updated:
 !
-      STAT = ACCEPT ( .TRUE. )
+      stat = accept ( .true. )
 
-      RETURN
-      END
+      return
+      end

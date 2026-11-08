@@ -1,6 +1,6 @@
 !$Procedure BODFND ( Find values from the kernel pool )
 
-      LOGICAL FUNCTION BODFND ( BODY, ITEM )
+      logical function bodfnd ( body, item )
 
 ! $ Abstract
 !
@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      CHARACTER*(*)         ITEM
+      integer               body
+      character*(*)         item
 
 ! $ Brief_I/O
 !
@@ -146,61 +146,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               VNMLEN
-      PARAMETER           ( VNMLEN = 32 )
+      integer               vnmlen
+      parameter           ( vnmlen = 32 )
 
-      INTEGER               NUMLEN
-      PARAMETER           ( NUMLEN = 16 )
+      integer               numlen
+      parameter           ( numlen = 16 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         DTYPE
-      CHARACTER*(NUMLEN)    CODE
-      CHARACTER*(VNMLEN)    VARNAM
+      character*(1)         dtype
+      character*(numlen)    code
+      character*(vnmlen)    varnam
 
-      INTEGER               N
+      integer               n
 
-      LOGICAL               FOUND
+      logical               found
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-        BODFND = .FALSE.
-        RETURN
-      ELSE
-        CALL CHKIN ( 'BODFND' )
-      END IF
+      if ( return () ) then
+        bodfnd = .false.
+        return
+      else
+        call chkin ( 'BODFND' )
+      end if
 
 
 !
 !     Construct the variable name from BODY and ITEM.
 !
-      VARNAM = 'BODY'
+      varnam = 'BODY'
 
-      CALL INTSTR ( BODY, CODE )
-      CALL SUFFIX ( CODE, 0, VARNAM )
-      CALL SUFFIX ( '_',  0, VARNAM )
-      CALL SUFFIX ( ITEM, 0, VARNAM )
+      call intstr ( body, code )
+      call suffix ( code, 0, varnam )
+      call suffix ( '_',  0, varnam )
+      call suffix ( item, 0, varnam )
 
 !
 !     Search the kernel pool for the item.
 !
-      CALL DTPOOL ( VARNAM, FOUND, N, DTYPE )
+      call dtpool ( varnam, found, n, dtype )
 
 !
 !     Was anything there?
 !
-      BODFND = FOUND
+      bodfnd = found
 
-      CALL CHKOUT ( 'BODFND' )
-      RETURN
-      END
+      call chkout ( 'BODFND' )
+      return
+      end

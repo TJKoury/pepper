@@ -1,9 +1,9 @@
 !$Procedure TRGSEP ( Separation quantity from observer )
 
-      DOUBLE PRECISION FUNCTION TRGSEP ( ET, &
-                                         TARG1,  SHAPE1, FRAME1, &
-                                         TARG2,  SHAPE2, FRAME2, &
-                                         OBSRVR, ABCORR )
+      double precision function trgsep ( et, &
+                                         targ1,  shape1, frame1, &
+                                         targ2,  shape2, frame2, &
+                                         obsrvr, abcorr )
 
 ! $ Abstract
 !
@@ -21,20 +21,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
-      INCLUDE 'zzdyn.inc'
+      include 'zzabcorr.inc'
+      include 'zzdyn.inc'
 
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         TARG1
-      CHARACTER*(*)         SHAPE1
-      CHARACTER*(*)         FRAME1
-      CHARACTER*(*)         TARG2
-      CHARACTER*(*)         SHAPE2
-      CHARACTER*(*)         FRAME2
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         ABCORR
+      double precision      et
+      character*(*)         targ1
+      character*(*)         shape1
+      character*(*)         frame1
+      character*(*)         targ2
+      character*(*)         shape2
+      character*(*)         frame2
+      character*(*)         obsrvr
+      character*(*)         abcorr
 
 ! $ Brief_I/O
 !
@@ -441,64 +441,64 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
-      DOUBLE PRECISION      ZZSEPQ
+      logical               return
+      logical               failed
+      double precision      zzsepq
 
 !
 !     Local Variables
 !
-      CHARACTER*(5)         REF
+      character*(5)         ref
 
-      DOUBLE PRECISION      RAD    (2)
+      double precision      rad    (2)
 
-      INTEGER               BOD    (2)
-      INTEGER               FRAMES (2)
-      INTEGER               OBS
+      integer               bod    (2)
+      integer               frames (2)
+      integer               obs
 
 !
 !     Set an initial value to return in case of error.
 !
-      TRGSEP = 0.D0
-      REF    = 'J2000'
+      trgsep = 0.d0
+      ref    = 'J2000'
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN( 'TRGSEP' )
+      call chkin( 'TRGSEP' )
 
 !
 !     Argument check and initialization.
 !
-      CALL ZZSPIN ( TARG1,  SHAPE1, FRAME1, &
-                    TARG2,  SHAPE2, FRAME2, &
-                    OBSRVR, ABCORR, &
-                    BOD,    FRAMES, RAD, OBS )
+      call zzspin ( targ1,  shape1, frame1, &
+                    targ2,  shape2, frame2, &
+                    obsrvr, abcorr, &
+                    bod,    frames, rad, obs )
 
-      IF ( FAILED () ) THEN
-         TRGSEP = 0.D0
-         CALL CHKOUT ('TRGSEP')
-         RETURN
-      END IF
+      if ( failed () ) then
+         trgsep = 0.d0
+         call chkout ('TRGSEP')
+         return
+      end if
 
 !
 !     Perform the calculation.
 !
-      TRGSEP = ZZSEPQ ( ET, &
-                        BOD(1), BOD(2), &
-                        RAD(1), RAD(2), &
-                        OBS,    ABCORR, REF )
+      trgsep = zzsepq ( et, &
+                        bod(1), bod(2), &
+                        rad(1), rad(2), &
+                        obs,    abcorr, ref )
 
-      IF ( FAILED () ) THEN
-         TRGSEP = 0.D0
-         CALL CHKOUT ('TRGSEP')
-         RETURN
-      END IF
+      if ( failed () ) then
+         trgsep = 0.d0
+         call chkout ('TRGSEP')
+         return
+      end if
 
-      CALL CHKOUT ('TRGSEP')
-      RETURN
-      END
+      call chkout ('TRGSEP')
+      return
+      end

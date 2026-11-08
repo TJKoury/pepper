@@ -1,6 +1,6 @@
 !$Procedure SPKSSB ( S/P Kernel, solar system barycenter )
 
-      SUBROUTINE SPKSSB ( TARG, ET, REF, STARG )
+      subroutine spkssb ( targ, et, ref, starg )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               TARG
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      STARG    ( 6 )
+      integer               targ
+      double precision      et
+      character*(*)         ref
+      double precision      starg    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -182,27 +182,27 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LT
-      INTEGER               BARY
+      double precision      lt
+      integer               bary
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKSSB' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKSSB' )
+      end if
 
-      BARY = 0
+      bary = 0
 
-      CALL SPKGEO ( TARG, ET, REF, BARY, STARG, LT )
+      call spkgeo ( targ, et, ref, bary, starg, lt )
 
-      CALL CHKOUT ( 'SPKSSB' )
-      RETURN
-      END
+      call chkout ( 'SPKSSB' )
+      return
+      end

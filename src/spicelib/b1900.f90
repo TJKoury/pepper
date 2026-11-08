@@ -1,6 +1,6 @@
 !$Procedure B1900 ( Besselian Date 1900.0 )
 
-      DOUBLE PRECISION FUNCTION B1900 ( )
+      double precision function b1900 ( )
 
 ! $ Abstract
 !
@@ -98,7 +98,7 @@
 !-&
 
 
-      B1900 = 2415020.31352D0
+      b1900 = 2415020.31352d0
 
-      RETURN
-      END
+      return
+      end

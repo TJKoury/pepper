@@ -1,7 +1,7 @@
 !$Procedure ZZGFFVU ( GF, instrument FOV utilities )
 
-      SUBROUTINE ZZGFFVU ( INST,   TSHAPE, RAYDIR, TARGET, &
-                           TFRAME, ABCORR, OBSRVR, TIME,   VISTAT )
+      subroutine zzgffvu ( inst,   tshape, raydir, target, &
+                           tframe, abcorr, obsrvr, time,   vistat )
 
 ! $ Abstract
 !
@@ -33,27 +33,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
-      INCLUDE 'zzocced.inc'
-      INCLUDE 'gf.inc'
+      include 'zzabcorr.inc'
+      include 'zzocced.inc'
+      include 'gf.inc'
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL = 9 )
+      integer               ubel
+      parameter           ( ubel = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL = 4 )
+      integer               ubpl
+      parameter           ( ubpl = 4 )
 
-      CHARACTER*(*)         INST
-      CHARACTER*(*)         TSHAPE
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         TFRAME
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      TIME
-      LOGICAL               VISTAT
+      character*(*)         inst
+      character*(*)         tshape
+      double precision      raydir ( 3 )
+      character*(*)         target
+      character*(*)         tframe
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      time
+      logical               vistat
 
 ! $ Brief_I/O
 !
@@ -224,18 +224,18 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      dpr
+      double precision      halfpi
+      double precision      vdot
+      double precision      vnorm
+      double precision      vsep
 
-      INTEGER               ZZOCCED
-      INTEGER               ZZWIND2D
+      integer               zzocced
+      integer               zzwind2d
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 
 !
@@ -246,130 +246,130 @@
 !     ATOL is a tolerance value for computing FOV angular radius.
 !     The angular radius must not exceed pi/2 - ATOL radians.
 !
-      DOUBLE PRECISION      ATOL
-      PARAMETER           ( ATOL   = 1.D-6 )
+      double precision      atol
+      parameter           ( atol   = 1.d-6 )
 
-      DOUBLE PRECISION      FVEMAX
-      PARAMETER           ( FVEMAX = 1.D-5 )
+      double precision      fvemax
+      parameter           ( fvemax = 1.d-5 )
 
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    SVIFRM
-      CHARACTER*(BDNMLN)    SVINAM
-      CHARACTER*(SHPLEN)    SVISHP
-      CHARACTER*(FRNMLN)    SVTFRM
-      CHARACTER*(BDNMLN)    SVTNAM
-      CHARACTER*(SHPLEN)    SVTSHP
-      CHARACTER*(CORLEN)    SVCORR
+      character*(frnmln)    svifrm
+      character*(bdnmln)    svinam
+      character*(shplen)    svishp
+      character*(frnmln)    svtfrm
+      character*(bdnmln)    svtnam
+      character*(shplen)    svtshp
+      character*(corlen)    svcorr
 
-      DOUBLE PRECISION      BSITE  ( 3 )
-      DOUBLE PRECISION      COORD  ( 2 )
-      DOUBLE PRECISION      CTREXT
-      DOUBLE PRECISION      DIR    ( 3 )
-      DOUBLE PRECISION      ELLRAD ( 3 )
-      DOUBLE PRECISION      ESCALE
-      DOUBLE PRECISION      ETTARG
-      DOUBLE PRECISION      FOVPT  ( 3 )
-      DOUBLE PRECISION      FVLIMB ( UBEL )
-      DOUBLE PRECISION      INSMAT ( 3, 3 )
-      DOUBLE PRECISION      L
-      DOUBLE PRECISION      LIMB   ( UBEL )
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      M1     ( 3, 3 )
-      DOUBLE PRECISION      M2     ( 3, 3 )
-      DOUBLE PRECISION      OBSPOS ( 3 )
-      DOUBLE PRECISION      PNT2D  ( 3 )
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      SEMIPT ( 3, 2 )
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      STOBS  ( 6 )
-      DOUBLE PRECISION      SVARAD
-      DOUBLE PRECISION      SVBNDS ( 3, MAXVRT )
-      DOUBLE PRECISION      SVEDCT ( 3 )
-      DOUBLE PRECISION      SVFAXI ( 3 )
-      DOUBLE PRECISION      SVFOVM ( 3, 3 )
-      DOUBLE PRECISION      SVFPOL ( 2, MAXVRT )
-      DOUBLE PRECISION      SVFSMX ( 3, 3 )
-      DOUBLE PRECISION      SVFVCT ( 3 )
-      DOUBLE PRECISION      SVORIG ( 3 )
-      DOUBLE PRECISION      SVPLAN ( UBPL )
-      DOUBLE PRECISION      SVRDIR ( 3 )
-      DOUBLE PRECISION      SVSEMI ( 3, 2 )
-      DOUBLE PRECISION      SVTRAD ( 3 )
-      DOUBLE PRECISION      SVXMAG ( 2 )
-      DOUBLE PRECISION      TRGCTR ( 3 )
-      DOUBLE PRECISION      TRGSMX ( 3, 3 )
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      VTEMP2 ( 3 )
-      DOUBLE PRECISION      X      ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
-      DOUBLE PRECISION      Y      ( 3 )
-      DOUBLE PRECISION      Z      ( 3 )
+      double precision      bsite  ( 3 )
+      double precision      coord  ( 2 )
+      double precision      ctrext
+      double precision      dir    ( 3 )
+      double precision      ellrad ( 3 )
+      double precision      escale
+      double precision      ettarg
+      double precision      fovpt  ( 3 )
+      double precision      fvlimb ( ubel )
+      double precision      insmat ( 3, 3 )
+      double precision      l
+      double precision      limb   ( ubel )
+      double precision      lt
+      double precision      m1     ( 3, 3 )
+      double precision      m2     ( 3, 3 )
+      double precision      obspos ( 3 )
+      double precision      pnt2d  ( 3 )
+      double precision      pos    ( 3 )
+      double precision      semipt ( 3, 2 )
+      double precision      sep
+      double precision      stobs  ( 6 )
+      double precision      svarad
+      double precision      svbnds ( 3, maxvrt )
+      double precision      svedct ( 3 )
+      double precision      svfaxi ( 3 )
+      double precision      svfovm ( 3, 3 )
+      double precision      svfpol ( 2, maxvrt )
+      double precision      svfsmx ( 3, 3 )
+      double precision      svfvct ( 3 )
+      double precision      svorig ( 3 )
+      double precision      svplan ( ubpl )
+      double precision      svrdir ( 3 )
+      double precision      svsemi ( 3, 2 )
+      double precision      svtrad ( 3 )
+      double precision      svxmag ( 2 )
+      double precision      trgctr ( 3 )
+      double precision      trgsmx ( 3, 3 )
+      double precision      vtemp  ( 3 )
+      double precision      vtemp2 ( 3 )
+      double precision      x      ( 3 )
+      double precision      xpt    ( 3 )
+      double precision      y      ( 3 )
+      double precision      z      ( 3 )
 
-      INTEGER               CLSSID
-      INTEGER               FRAMID
-      INTEGER               FRCENT
-      INTEGER               FRCLSS
-      INTEGER               I
-      INTEGER               NXPTS
-      INTEGER               OCSTAT
-      INTEGER               SVINST
-      INTEGER               SVNVRT
-      INTEGER               SVOBS
-      INTEGER               SVTARG
-      INTEGER               W
+      integer               clssid
+      integer               framid
+      integer               frcent
+      integer               frclss
+      integer               i
+      integer               nxpts
+      integer               ocstat
+      integer               svinst
+      integer               svnvrt
+      integer               svobs
+      integer               svtarg
+      integer               w
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FOUND
-      LOGICAL               SVETRG
-      LOGICAL               SVURAY
-      LOGICAL               SVUSTL
-      LOGICAL               SVXMIT
+      logical               attblk ( nabcor )
+      logical               found
+      logical               svetrg
+      logical               svuray
+      logical               svustl
+      logical               svxmit
 
 !
 !     Saved variables
 !
-      SAVE                  SVARAD
-      SAVE                  SVBNDS
-      SAVE                  SVCORR
-      SAVE                  SVEDCT
-      SAVE                  SVETRG
-      SAVE                  SVFAXI
-      SAVE                  SVFOVM
-      SAVE                  SVFPOL
-      SAVE                  SVFSMX
-      SAVE                  SVFVCT
-      SAVE                  SVIFRM
-      SAVE                  SVINAM
-      SAVE                  SVINST
-      SAVE                  SVISHP
-      SAVE                  SVNVRT
-      SAVE                  SVOBS
-      SAVE                  SVORIG
-      SAVE                  SVPLAN
-      SAVE                  SVRDIR
-      SAVE                  SVSEMI
-      SAVE                  SVTARG
-      SAVE                  SVTFRM
-      SAVE                  SVTNAM
-      SAVE                  SVTRAD
-      SAVE                  SVTSHP
-      SAVE                  SVURAY
-      SAVE                  SVUSTL
-      SAVE                  SVXMAG
-      SAVE                  SVXMIT
+      save                  svarad
+      save                  svbnds
+      save                  svcorr
+      save                  svedct
+      save                  svetrg
+      save                  svfaxi
+      save                  svfovm
+      save                  svfpol
+      save                  svfsmx
+      save                  svfvct
+      save                  svifrm
+      save                  svinam
+      save                  svinst
+      save                  svishp
+      save                  svnvrt
+      save                  svobs
+      save                  svorig
+      save                  svplan
+      save                  svrdir
+      save                  svsemi
+      save                  svtarg
+      save                  svtfrm
+      save                  svtnam
+      save                  svtrad
+      save                  svtshp
+      save                  svuray
+      save                  svustl
+      save                  svxmag
+      save                  svxmit
 
 !
 !     Initial values
 !
-      DATA                  SVORIG / 3 * 0.D0 /
+      data                  svorig / 3 * 0.d0 /
 
 !
 !     Below we initialize the list of visibility types.
@@ -378,20 +378,20 @@
 !
 !     This routine should never be called directly.
 !
-      CALL CHKIN  ( 'ZZGFFVU' )
+      call chkin  ( 'ZZGFFVU' )
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'ZZGFFVU' )
-      RETURN
+      call chkout ( 'ZZGFFVU' )
+      return
 
 
 
 
 !$Procedure  ZZGFFVIN ( GF, visibility initialization )
 
-      ENTRY ZZGFFVIN ( INST,   TSHAPE, RAYDIR, &
-                       TARGET, TFRAME, ABCORR, OBSRVR )
+      entry zzgffvin ( inst,   tshape, raydir, &
+                       target, tframe, abcorr, obsrvr )
 
 ! $ Abstract
 !
@@ -808,11 +808,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFFVIN' )
+      call chkin ( 'ZZGFFVIN' )
 
 !
 !     To avoid portability problems, initialize all
@@ -820,38 +820,38 @@
 !     statements and aren't guaranteed to be initialized
 !     for all cases.
 !
-      CALL CLEARD ( 3*MAXVRT, SVBNDS )
-      CALL CLEARD ( 3,        SVEDCT )
-      CALL CLEARD ( 3,        SVFAXI )
-      CALL CLEARD ( 2*MAXVRT, SVFPOL )
-      CALL CLEARD ( 9,        SVFSMX )
-      CALL CLEARD ( UBPL,     SVPLAN )
-      CALL CLEARD ( 3,        SVRDIR )
-      SVTARG = 0
-      SVTFRM = ' '
-      SVTNAM = ' '
-      CALL CLEARD ( 3,        SVTRAD )
-      SVUSTL = .FALSE.
-      SVXMIT = .FALSE.
+      call cleard ( 3*maxvrt, svbnds )
+      call cleard ( 3,        svedct )
+      call cleard ( 3,        svfaxi )
+      call cleard ( 2*maxvrt, svfpol )
+      call cleard ( 9,        svfsmx )
+      call cleard ( ubpl,     svplan )
+      call cleard ( 3,        svrdir )
+      svtarg = 0
+      svtfrm = ' '
+      svtnam = ' '
+      call cleard ( 3,        svtrad )
+      svustl = .false.
+      svxmit = .false.
 
 !
 !     Find the NAIF ID for OBSRVR.
 !
-      CALL BODS2C ( OBSRVR, SVOBS, FOUND )
+      call bods2c ( obsrvr, svobs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFFVIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFFVIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Process the target shape specifier here.
@@ -859,185 +859,185 @@
 !     Save a left-justified, upper case version of the target shape
 !     specifier.
 !
-      CALL LJUST ( TSHAPE, SVTSHP )
-      CALL UCASE ( SVTSHP, SVTSHP )
+      call ljust ( tshape, svtshp )
+      call ucase ( svtshp, svtshp )
 
 !
 !     Note for maintenance programmer: these checks will
 !     require modification to handle DSK-based shapes.
 !
-      IF (      ( SVTSHP .NE. PTSHAP ) &
-          .AND. ( SVTSHP .NE. EDSHAP ) &
-          .AND. ( SVTSHP .NE. RYSHAP )  ) THEN
+      if (      ( svtshp .ne. ptshap ) &
+          .and. ( svtshp .ne. edshap ) &
+          .and. ( svtshp .ne. ryshap )  ) then
 
-         CALL SETMSG ( 'The target shape specification, ' &
+         call setmsg ( 'The target shape specification, ' &
          //            '''#'', is not recognized.'       )
-            CALL ERRCH  ( '#', TSHAPE                    )
-         CALL SIGERR ( 'SPICE(INVALIDSHAPE)'             )
-         CALL CHKOUT ( 'ZZGFFVIN'                        )
-         RETURN
+            call errch  ( '#', tshape                    )
+         call sigerr ( 'SPICE(INVALIDSHAPE)'             )
+         call chkout ( 'ZZGFFVIN'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     We'll use the logical variable USERAY to indicate that the
 !     target is modeled as ray.
 !
-      SVURAY = SVTSHP .EQ. RYSHAP
+      svuray = svtshp .eq. ryshap
 
 !
 !     Indicate whether we have an ellipsoidal target. SVETRG is .TRUE.
 !     if and only we have one.
 !
-      SVETRG = SVTSHP .EQ. EDSHAP
+      svetrg = svtshp .eq. edshap
 
 !
 !     If the target is an ephemeris object, obtain its ID code.
 !     Save the target object's name, if applicable.
 !
-      IF ( .NOT. SVURAY ) THEN
+      if ( .not. svuray ) then
 
-         CALL BODS2C ( TARGET, SVTARG, FOUND )
+         call bods2c ( target, svtarg, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'The target object, ' &
+            call setmsg ( 'The target object, ' &
             //            '''#'', is not a recognized name for an ' &
             //            'ephemeris object. The cause of this ' &
             //            'problem may be that you need an updated ' &
             //            'version of the SPICE Toolkit. '           )
-            CALL ERRCH  ( '#', TARGET                                )
-            CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-            CALL CHKOUT ( 'ZZGFFVIN'                                 )
-            RETURN
+            call errch  ( '#', target                                )
+            call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+            call chkout ( 'ZZGFFVIN'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        Save the target's name.
 !
-         SVTNAM = TARGET
+         svtnam = target
 
 !
 !        Make sure the observer and target are distinct.
 !
-         IF ( SVTARG .EQ. SVOBS ) THEN
+         if ( svtarg .eq. svobs ) then
 
-            CALL SETMSG ( 'The observer and target must be ' &
+            call setmsg ( 'The observer and target must be ' &
             //            'distinct objects, but are not: ' &
             //            'OBSRVR = #; TARGET = #;'         )
-            CALL ERRCH  ( '#', OBSRVR                       )
-            CALL ERRCH  ( '#', TARGET                       )
-            CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'        )
-            CALL CHKOUT ( 'ZZGFFVIN'                        )
-            RETURN
+            call errch  ( '#', obsrvr                       )
+            call errch  ( '#', target                       )
+            call sigerr ( 'SPICE(BODIESNOTDISTINCT)'        )
+            call chkout ( 'ZZGFFVIN'                        )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Process the target frame. The target frame is defined except
 !     when the target is an ephemeris object modeled as a point.
 !
-      IF ( SVURAY .OR. SVETRG ) THEN
+      if ( svuray .or. svetrg ) then
 !
 !        We'll use the target frame argument. Look up the target
 !        frame's ID code. But first, check for a blank frame name,
 !        since this may be a common problem for the GF FOV system.
 !
-         IF ( TFRAME .EQ. ' ' ) THEN
+         if ( tframe .eq. ' ' ) then
 
-            CALL SETMSG ( 'The target is not modeled as a ' &
+            call setmsg ( 'The target is not modeled as a ' &
             //            'point, but the associated ' &
             //            'frame name is blank.'           )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'            )
-            CALL CHKOUT ( 'ZZGFFVIN'                       )
-            RETURN
+            call sigerr ( 'SPICE(INVALIDFRAME)'            )
+            call chkout ( 'ZZGFFVIN'                       )
+            return
 
-         END IF
+         end if
 
-         CALL NAMFRM ( TFRAME, FRAMID )
+         call namfrm ( tframe, framid )
 
-         IF ( FRAMID .EQ. 0 ) THEN
+         if ( framid .eq. 0 ) then
 
-            CALL SETMSG ( 'The target frame name # is not recognized.' )
-            CALL ERRCH  ( '#',  TFRAME                                 )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'                        )
-            CALL CHKOUT ( 'ZZGFFVIN'                                   )
-            RETURN
+            call setmsg ( 'The target frame name # is not recognized.' )
+            call errch  ( '#',  tframe                                 )
+            call sigerr ( 'SPICE(INVALIDFRAME)'                        )
+            call chkout ( 'ZZGFFVIN'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Save the target frame name.
 !
-         CALL LJUST ( TFRAME, SVTFRM )
-         CALL UCASE ( SVTFRM, SVTFRM )
+         call ljust ( tframe, svtfrm )
+         call ucase ( svtfrm, svtfrm )
 
 !
 !        Obtain the center of the frame. If the target is an ephemeris
 !        object, we must verify the frame center is the target.
 !
-         CALL FRINFO ( FRAMID, FRCENT, FRCLSS, CLSSID, FOUND )
+         call frinfo ( framid, frcent, frclss, clssid, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 !
 !           Since we mapped the frame name to an ID code, we expect to
 !           find the frame info. Getting here may be a sign of an
 !           invalid frame kernel.
 !
-            CALL SETMSG ( 'Frame ID found for # body-fixed ' &
+            call setmsg ( 'Frame ID found for # body-fixed ' &
             //            'frame # but FRINFO couldn''t find frame ' &
             //            'info. This may be due to a frame kernel ' &
             //            'error.'                                  )
-            CALL ERRCH  ( '#',  TARGET                              )
-            CALL SIGERR ( 'SPICE(FRAMEINFONOTFOUND)'                )
-            CALL CHKOUT ( 'ZZGFFVIN'                                )
-            RETURN
+            call errch  ( '#',  target                              )
+            call sigerr ( 'SPICE(FRAMEINFONOTFOUND)'                )
+            call chkout ( 'ZZGFFVIN'                                )
+            return
 
-         END IF
+         end if
 
-         IF ( SVETRG ) THEN
+         if ( svetrg ) then
 !
 !           We have an ellipsoidal target. Check the target frame's
 !           center.
 !
-            IF ( FRCENT .NE. SVTARG ) THEN
+            if ( frcent .ne. svtarg ) then
 !
 !              The supposed body-fixed frame for the target isn't
 !              actually centered on the target.
 !
-               CALL SETMSG ( 'Supposed body-fixed frame # for ' &
+               call setmsg ( 'Supposed body-fixed frame # for ' &
                //            'target # is actually centered ' &
                //            'on body #.'                       )
-               CALL ERRCH  ( '#',  TFRAME                       )
-               CALL ERRCH  ( '#',  TARGET                       )
-               CALL ERRINT ( '#',  FRCENT                       )
-               CALL SIGERR ( 'SPICE(INVALIDFRAME)'              )
-               CALL CHKOUT ( 'ZZGFFVIN'                         )
-               RETURN
+               call errch  ( '#',  tframe                       )
+               call errch  ( '#',  target                       )
+               call errint ( '#',  frcent                       )
+               call sigerr ( 'SPICE(INVALIDFRAME)'              )
+               call chkout ( 'ZZGFFVIN'                         )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Process the aberration correction specifier.
 !
-      IF ( SVURAY ) THEN
+      if ( svuray ) then
 !
 !        The target is represented by a ray. Check and save the
 !        aberration correction.
 !
-         CALL ZZPRSCOR ( ABCORR, ATTBLK )
+         call zzprscor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFFVIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFFVIN' )
+            return
+         end if
 
 !
 !        Reject aberration correction flags calling for any type of
@@ -1047,176 +1047,176 @@
 !
 !           'NONE', 'S', 'XS'
 !
-         IF ( ATTBLK(LTIDX) ) THEN
+         if ( attblk(ltidx) ) then
 
-            CALL SETMSG ( 'Aberration correction flag # calls for ' &
+            call setmsg ( 'Aberration correction flag # calls for ' &
             //            'light time corrections; these are not ' &
             //            'supported for targets represented by ' &
             //            'rays.'                                  )
-            CALL ERRCH  ( '#', ABCORR                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                   )
-            CALL CHKOUT ( 'ZZGFFVIN'                               )
-            RETURN
+            call errch  ( '#', abcorr                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                   )
+            call chkout ( 'ZZGFFVIN'                               )
+            return
 
-         END IF
+         end if
 
 !
 !        Save flags indicating whether to use stellar aberration
 !        corrections and indicating the sense of radiation travel.
 !
-         SVUSTL = ATTBLK(STLIDX)
-         SVXMIT = ATTBLK(XMTIDX)
+         svustl = attblk(stlidx)
+         svxmit = attblk(xmtidx)
 
 
-      ELSE
+      else
 !
 !        The target is an ephemeris object.
 !
 !        Check the aberration correction. If SPKEZR can't handle it,
 !        neither can we.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFFVIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFFVIN' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Remove all spaces from ABCORR then convert to uppercase. Save
 !     this version of the aberration correction specifier.
 !
-      CALL CMPRSS ( ' ', 0, ABCORR, SVCORR )
-      CALL UCASE ( SVCORR, SVCORR )
+      call cmprss ( ' ', 0, abcorr, svcorr )
+      call ucase ( svcorr, svcorr )
 
 !
 !     Process the target body's radii, if applicable.
 !
-      IF ( SVETRG ) THEN
+      if ( svetrg ) then
 
 !
 !        Fetch and check the radii.
 !
-         CALL ZZGFTREB ( SVTARG, SVTRAD )
+         call zzgftreb ( svtarg, svtrad )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFFVIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFFVIN' )
+            return
+         end if
 
 !
 !        Checks of radii have been completed.
 !
-      ELSE
+      else
 !
 !        We don't have an ellipsoidal target body: zero out radius
 !        values for this target.
 !
-         CALL CLEARD ( 3, SVTRAD )
+         call cleard ( 3, svtrad )
 
-      END IF
+      end if
 
 !
 !     Check the direction vector, if applicable.
 !
-      IF ( SVURAY ) THEN
+      if ( svuray ) then
 !
 !        Make sure the direction vector is non-zero. Save a unit-length
 !        copy of the vector.
 !
-         IF ( VZERO( RAYDIR ) ) THEN
+         if ( vzero( raydir ) ) then
 
-            CALL SETMSG ( 'Input ray direction was the zero vector; ' &
+            call setmsg ( 'Input ray direction was the zero vector; ' &
             //            'this vector must be non-zero.'            )
-            CALL SIGERR ( 'SPICE(ZEROVECTOR)'                        )
-            CALL CHKOUT ( 'ZZGFFVIN'                                 )
-            RETURN
+            call sigerr ( 'SPICE(ZEROVECTOR)'                        )
+            call chkout ( 'ZZGFFVIN'                                 )
+            return
 
-         END IF
+         end if
 
-         CALL VHAT ( RAYDIR, SVRDIR )
+         call vhat ( raydir, svrdir )
 
-      END IF
+      end if
 
 !
 !     Look up the instrument's ID code.
 !
-      CALL BODS2C ( INST, SVINST, FOUND )
+      call bods2c ( inst, svinst, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( '''#'' is not a recognized name for an ' &
+         call setmsg ( '''#'' is not a recognized name for an ' &
          //            'instrument. The cause of this ' &
          //            'problem may be that you have not loaded ' &
          //            'a required frame kernel or instrument ' &
          //            'kernel.'                                  )
-         CALL ERRCH  ( '#', INST                                  )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFFVIN'                                 )
-         RETURN
+         call errch  ( '#', inst                                  )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFFVIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Save the instrument's name.
 !
-      CALL LJUST ( INST,   SVINAM )
-      CALL UCASE ( SVINAM, SVINAM )
+      call ljust ( inst,   svinam )
+      call ucase ( svinam, svinam )
 
 !
 !     Look up the instrument parameters.
 !
-      CALL GETFOV ( SVINST, MAXVRT, SVISHP, &
-                    SVIFRM, BSITE,  SVNVRT, SVBNDS )
+      call getfov ( svinst, maxvrt, svishp, &
+                    svifrm, bsite,  svnvrt, svbnds )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFFVIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFFVIN' )
+         return
+      end if
 
 !
 !     Scale boresight vector to unit length.
 !
-      CALL VHATIP( BSITE )
+      call vhatip( bsite )
 
 !
 !     Make sure the instrument shape specifier is left-justified
 !     and in upper case.
 !
-      CALL LJUST ( SVISHP, SVISHP )
-      CALL UCASE ( SVISHP, SVISHP )
+      call ljust ( svishp, svishp )
+      call ucase ( svishp, svishp )
 
 !
 !     If the instrument's shape is 'RECTANGLE', map it to
 !     'POLYGON'
 !
-      IF (  SVISHP .EQ. RECFOV ) THEN
+      if (  svishp .eq. recfov ) then
 
-         SVISHP = POLFOV
+         svishp = polfov
 
-      END IF
+      end if
 
 !
 !     Save an axis vector for the FOV. For circular and ellipsoidal
 !     FOVs, the boresight serves as this axis. For polygonal FOVs
 !     (rectangular FOVs are included), we'll generate an axis vector.
 !
-      IF ( SVISHP .EQ. POLFOV ) THEN
+      if ( svishp .eq. polfov ) then
 
-         CALL ZZFOVAXI ( INST,  SVNVRT, SVBNDS, SVFAXI )
+         call zzfovaxi ( inst,  svnvrt, svbnds, svfaxi )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFFVIN' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFFVIN' )
+            return
+         end if
 
-      ELSE
+      else
 
-         CALL VEQU ( BSITE, SVFAXI )
+         call vequ ( bsite, svfaxi )
 
-      END IF
+      end if
 
 !
 !     Check the angular radius of the FOV.
@@ -1226,34 +1226,34 @@
 !     the observer. This cone will be used for a preliminary FOV
 !     exclusion test.
 !
-      SVARAD = 0.D0
+      svarad = 0.d0
 
-      DO I = 1, SVNVRT
-         SVARAD = MAX (  SVARAD,  VSEP( SVBNDS(1,I), SVFAXI )  )
-      END DO
+      do i = 1, svnvrt
+         svarad = max (  svarad,  vsep( svbnds(1,i), svfaxi )  )
+      end do
 
 !
 !     Our algorithms can't handle FOVs with angular radius of 90
 !     degrees.
 !
-      IF (  SVARAD   .GT. ( HALFPI()-ATOL )  ) THEN
+      if (  svarad   .gt. ( halfpi()-atol )  ) then
 
-         CALL SETMSG ( 'FOV angular radius of # degrees ' &
+         call setmsg ( 'FOV angular radius of # degrees ' &
          //            'exceeds limit of # degrees.'     )
-         CALL ERRDP  ( '#',  SVARAD*DPR()                )
-         CALL ERRDP  ( '#',  (HALFPI()-ATOL)*DPR()       )
-         CALL SIGERR ( 'SPICE(FOVTOOWIDE)'               )
-         CALL CHKOUT ( 'ZZGFFVIN'                        )
-         RETURN
+         call errdp  ( '#',  svarad*dpr()                )
+         call errdp  ( '#',  (halfpi()-atol)*dpr()       )
+         call sigerr ( 'SPICE(FOVTOOWIDE)'               )
+         call chkout ( 'ZZGFFVIN'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the FOV shape specifier to a left-justified, upper
 !     case form.
 !
-      CALL LJUST ( SVISHP, SVISHP )
-      CALL UCASE ( SVISHP, SVISHP )
+      call ljust ( svishp, svishp )
+      call ucase ( svishp, svishp )
 
 !
 !     We can make the search more efficient by computing any
@@ -1265,13 +1265,13 @@
 !     the observer. The plane is normal to the FOV axis, at distance 1
 !     unit from the observer.
 !
-      CALL NVC2PL ( SVFAXI, 1.D0, SVPLAN )
+      call nvc2pl ( svfaxi, 1.d0, svplan )
 
 !
 !     Find the point on the plane closest to the origin. This is
 !     the center of the FOV.
 !
-      CALL VHAT ( SVFAXI, SVFVCT )
+      call vhat ( svfaxi, svfvct )
 
 !
 !     If applicable, perform the computations required for an
@@ -1280,67 +1280,67 @@
 !     these computations are not needed for the combination of a
 !     circular FOV and a point or ray target.
 !
-      IF (        ( SVISHP .EQ. ELLFOV ) &
-           .OR. ( ( SVISHP .EQ. CIRFOV ) .AND. SVETRG )  ) THEN
+      if (        ( svishp .eq. ellfov ) &
+           .or. ( ( svishp .eq. cirfov ) .and. svetrg )  ) then
 !
 !        Also compute the center, semi-axis vectors, and semi-axis
 !        lengths of the FOV. If the FOV is circular, we create an
 !        artificial, second semi-axis vector.
 !
-         IF ( SVISHP .EQ. CIRFOV ) THEN
+         if ( svishp .eq. cirfov ) then
 !
 !           We have a circular FOV. We'll create an artificial, second
 !           boundary vector, which will give rise to a second
 !           semi-axis.
 !
-            CALL VROTV ( SVBNDS(1,1), SVFAXI, HALFPI(), SVBNDS(1,2) )
+            call vrotv ( svbnds(1,1), svfaxi, halfpi(), svbnds(1,2) )
 
-         END IF
+         end if
 
 !
 !        Now find the endpoints of the semi-axes in this plane.
 !
-         DO I = 1, 2
+         do i = 1, 2
 
-            CALL INRYPL ( SVORIG, SVBNDS(1,I), &
-                          SVPLAN, NXPTS,       SEMIPT(1,I) )
+            call inrypl ( svorig, svbnds(1,i), &
+                          svplan, nxpts,       semipt(1,i) )
 
-            IF ( NXPTS .NE. 1 ) THEN
+            if ( nxpts .ne. 1 ) then
 
-               CALL SETMSG ( 'Error creating FOV semi-axis ' &
+               call setmsg ( 'Error creating FOV semi-axis ' &
                //            'vectors, NXPTS = #. This ' &
                //            'may indicate an error in the ' &
                //            'IK parameters for #.'         )
-               CALL ERRINT ( '#', NXPTS                     )
-               CALL ERRCH  ( '#', INST                      )
-               CALL SIGERR ( 'SPICE(DEGENERATECASE)'        )
-               CALL CHKOUT ( 'ZZGFFVIN'                     )
-               RETURN
+               call errint ( '#', nxpts                     )
+               call errch  ( '#', inst                      )
+               call sigerr ( 'SPICE(DEGENERATECASE)'        )
+               call chkout ( 'ZZGFFVIN'                     )
+               return
 
-            END IF
+            end if
 
 !
 !           Compute and find the length of each semi-axis vector.
 !
-            CALL VSUB ( SEMIPT(1,I), SVFVCT, SVSEMI(1,I) )
+            call vsub ( semipt(1,i), svfvct, svsemi(1,i) )
 
-            SVXMAG(I) = VNORM ( SVSEMI(1,I) )
+            svxmag(i) = vnorm ( svsemi(1,i) )
 
-            IF ( SVXMAG(I) .EQ. 0.D0 ) THEN
+            if ( svxmag(i) .eq. 0.d0 ) then
 
-               CALL SETMSG ( 'FOV semi-axis #* for @ ' &
+               call setmsg ( 'FOV semi-axis #* for @ ' &
                //            'has zero length.'        )
-               CALL ERRINT ( '*', I                    )
-               CALL ERRCH  ( '@', INST                 )
-               CALL SIGERR ( 'SPICE(DEGENERATECASE)'   )
-               CALL CHKOUT ( 'ZZGFFVIN'                )
-               RETURN
+               call errint ( '*', i                    )
+               call errch  ( '@', inst                 )
+               call sigerr ( 'SPICE(DEGENERATECASE)'   )
+               call chkout ( 'ZZGFFVIN'                )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     If we have an ellipsoidal target, and the FOV is circular or
@@ -1348,8 +1348,8 @@
 !     the FOV. This allows use to later use ZZOCCED to determine the
 !     target's visibility.
 !
-      IF (   (      ( SVISHP .EQ. CIRFOV ) &
-               .OR. ( SVISHP .EQ. ELLFOV ) )  .AND.  SVETRG  ) THEN
+      if (   (      ( svishp .eq. cirfov ) &
+               .or. ( svishp .eq. ellfov ) )  .and.  svetrg  ) then
 !
 !
 !        Create an ellipsoid whose semi-axes are consistent with the
@@ -1372,12 +1372,12 @@
 !           CTREXT / SVXMAG(1) = SVXMAG(1) / 1
 !
 !
-         CTREXT = SVXMAG(1) ** 2
+         ctrext = svxmag(1) ** 2
 
 !
 !        The ellipsoid's center is SVEDCT.
 !
-         CALL VSCL ( 1.D0 + CTREXT, SVFVCT, SVEDCT )
+         call vscl ( 1.d0 + ctrext, svfvct, svedct )
 
 !
 !        NOTE: in the code and discussion that follow, there are
@@ -1392,8 +1392,8 @@
 !        in the direction from SVFVCT toward SEMIPT(*,1) will have this
 !        length.
 !
-         ELLRAD(3) = SVXMAG(1) * SQRT ( 1.D0 + SVXMAG(1)**2.D0 )
-         ELLRAD(1) = ELLRAD(3)
+         ellrad(3) = svxmag(1) * sqrt ( 1.d0 + svxmag(1)**2.d0 )
+         ellrad(1) = ellrad(3)
 
 !
 !        Compute the corresponding columns of the FOV semi-axis matrix.
@@ -1402,14 +1402,14 @@
 !        that SVFVCT is a unit vector pointing in the desired
 !        direction.
 !
-         CALL VSCL ( ELLRAD(3), SVFVCT, SVFSMX(1,3) )
+         call vscl ( ellrad(3), svfvct, svfsmx(1,3) )
 
 !
 !        The first ellipsoid semi-axis is associated with SEMIPT(*,1)
 !        and also has length ELLRAD(3):
 !
-         CALL VHAT ( SVSEMI(1,1), VTEMP )
-         CALL VSCL ( ELLRAD(1),   VTEMP,  SVFSMX(1,1) )
+         call vhat ( svsemi(1,1), vtemp )
+         call vscl ( ellrad(1),   vtemp,  svfsmx(1,1) )
 
 !
 !        The ellipsoid's second semi-axis points from SVFVCT toward
@@ -1418,14 +1418,14 @@
 !        semi-axis to that of its first. Note that we've already ruled
 !        out divide-by-zero errors here.
 !
-         ELLRAD(2) = ( SVXMAG(2)/SVXMAG(1) ) * ELLRAD(3)
+         ellrad(2) = ( svxmag(2)/svxmag(1) ) * ellrad(3)
 
 !
 !        We define the third axis using a cross product to
 !        ensure we produce a matrix with positive determinant.
 !
-         CALL UCRSS  ( SVFSMX(1,3), SVFSMX(1,1), VTEMP )
-         CALL VSCL   ( ELLRAD(2),   VTEMP,       SVFSMX(1,2) )
+         call ucrss  ( svfsmx(1,3), svfsmx(1,1), vtemp )
+         call vscl   ( ellrad(2),   vtemp,       svfsmx(1,2) )
 
 !
 !        Scale the ellipsoid and the distance of its center from
@@ -1435,18 +1435,18 @@
 !        plane at the FOV boundary. The ellipsoid is still usable with
 !        ZZOCCED, which is the ellipsoid's raison d'etre.
 !
-         ESCALE = FVEMAX/ ( VNORM(SVEDCT) + MAX(ELLRAD(1), ELLRAD(2)) )
+         escale = fvemax/ ( vnorm(svedct) + max(ellrad(1), ellrad(2)) )
 
-         DO I = 1, 3
-            CALL VSCLIP ( ESCALE, SVFSMX(1,I) )
-         END DO
+         do i = 1, 3
+            call vsclip ( escale, svfsmx(1,i) )
+         end do
 
-         CALL VSCLIP ( ESCALE, SVEDCT )
+         call vsclip ( escale, svedct )
 
-      END IF
+      end if
 
 
-      IF ( ( SVISHP .EQ. CIRFOV ) .AND. ( .NOT. SVETRG ) ) THEN
+      if ( ( svishp .eq. cirfov ) .and. ( .not. svetrg ) ) then
 !
 !        We have a circular FOV and a point or ray target model.
 !        In this case, our FOV inclusion test is simple as can
@@ -1454,12 +1454,12 @@
 !        target and FOV axis against the angular radius of the
 !        FOV. Compute and save this angular radius.
 !
-         SVARAD = VSEP ( SVFAXI, SVBNDS(1,1) )
+         svarad = vsep ( svfaxi, svbnds(1,1) )
 
 
-      ELSE IF (       (      ( SVISHP .EQ. RECFOV ) &
-                        .OR. ( SVISHP .EQ. POLFOV ) ) &
-                .AND. ( .NOT.  SVETRG               )   ) THEN
+      else if (       (      ( svishp .eq. recfov ) &
+                        .or. ( svishp .eq. polfov ) ) &
+                .and. ( .not.  svetrg               )   ) then
 !
 !        We have a rectangular or polygonal FOV and a ray or point
 !        target.
@@ -1474,15 +1474,15 @@
 !        will have vertices given by the (X,Y) components of each
 !        intersection.
 !
-         CALL VEQU ( SVFAXI, Z )
+         call vequ ( svfaxi, z )
 
-         CALL FRAME ( Z, X, Y )
+         call frame ( z, x, y )
 
-         DO I = 1, 3
-            SVFOVM(1,I) = X(I)
-            SVFOVM(2,I) = Y(I)
-            SVFOVM(3,I) = Z(I)
-         END DO
+         do i = 1, 3
+            svfovm(1,i) = x(i)
+            svfovm(2,i) = y(i)
+            svfovm(3,i) = z(i)
+         end do
 
 !
 !        Compute the intersections of the FOV boundary vectors with the
@@ -1491,44 +1491,44 @@
 !        difference vector into the FOV frame. Save the projection onto
 !        the FOV frame's X-Y plane.
 !
-         DO I = 1, SVNVRT
+         do i = 1, svnvrt
 
-            CALL INRYPL ( SVORIG, SVBNDS(1,I), &
-                          SVPLAN, NXPTS,       XPT)
+            call inrypl ( svorig, svbnds(1,i), &
+                          svplan, nxpts,       xpt)
 
-            IF ( NXPTS .NE. 1 ) THEN
+            if ( nxpts .ne. 1 ) then
 
-               CALL SETMSG ( 'Error finding FOV plane intercept ' &
+               call setmsg ( 'Error finding FOV plane intercept ' &
                //            'of FOV boundary vector #, NXPTS = #. ' &
                //            'This may indicate an error ' &
                //            'in the IK parameters for #.'          )
-               CALL ERRINT ( '#', I                                 )
-               CALL ERRINT ( '#', NXPTS                             )
-               CALL ERRCH  ( '#', INST                              )
-               CALL SIGERR ( 'SPICE(DEGENERATECASE)'                )
-               CALL CHKOUT ( 'ZZGFFVIN'                             )
-               RETURN
+               call errint ( '#', i                                 )
+               call errint ( '#', nxpts                             )
+               call errch  ( '#', inst                              )
+               call sigerr ( 'SPICE(DEGENERATECASE)'                )
+               call chkout ( 'ZZGFFVIN'                             )
+               return
 
-            END IF
+            end if
 
-            CALL VSUB ( XPT,   SVFVCT, VTEMP  )
-            CALL MXV ( SVFOVM, VTEMP,  VTEMP2 )
+            call vsub ( xpt,   svfvct, vtemp  )
+            call mxv ( svfovm, vtemp,  vtemp2 )
 
-            SVFPOL(1,I) = VTEMP2(1)
-            SVFPOL(2,I) = VTEMP2(2)
+            svfpol(1,i) = vtemp2(1)
+            svfpol(2,i) = vtemp2(2)
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFFVIN' )
-      RETURN
+      call chkout ( 'ZZGFFVIN' )
+      return
 
 
 
 !$Procedure ZZGFFVST ( GF, "is target in FOV?"  )
 
-      ENTRY ZZGFFVST ( TIME, VISTAT )
+      entry zzgffvst ( time, vistat )
 
 ! $ Abstract
 !
@@ -1645,22 +1645,22 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFFVST' )
+      call chkin  ( 'ZZGFFVST' )
 
 !
 !     Initialize the state output.
 !
-      VISTAT = .FALSE.
+      vistat = .false.
 
 !
 !     The algorithm for the state determination depends on the
 !     target model and the FOV shape.
 !
-      IF ( SVETRG ) THEN
+      if ( svetrg ) then
 !
 !        The target is an ephemeris object modeled as an ellipsoid.
 !        There are two branches here: one for a rectangular/
@@ -1669,30 +1669,30 @@
 !        Start by finding the observer-target position vector in the
 !        target body-fixed frame.
 !
-         CALL SPKEZP ( SVTARG, TIME, SVTFRM, SVCORR, SVOBS, POS, LT )
+         call spkezp ( svtarg, time, svtfrm, svcorr, svobs, pos, lt )
 
 !
 !        Compute the target epoch.
 !
-         CALL ZZCOREPC ( SVCORR, TIME, LT, ETTARG )
+         call zzcorepc ( svcorr, time, lt, ettarg )
 
 !
 !        Find the transformation from the target frame at ETTARG to the
 !        instrument frame at TIME. We'll need to use J2000 as an
 !        intermediate frame.
 !
-         CALL PXFORM ( SVTFRM,  'J2000', ETTARG, M1 )
-         CALL PXFORM ( 'J2000', SVIFRM,  TIME,   M2 )
+         call pxform ( svtfrm,  'J2000', ettarg, m1 )
+         call pxform ( 'J2000', svifrm,  time,   m2 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFFVST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFFVST' )
+            return
+         end if
 
-         CALL MXM ( M2, M1, INSMAT )
+         call mxm ( m2, m1, insmat )
 
 
-         IF ( ( SVISHP .EQ. RECFOV ) .OR. ( SVISHP .EQ. POLFOV ) ) THEN
+         if ( ( svishp .eq. recfov ) .or. ( svishp .eq. polfov ) ) then
 !
 !           The FOV is a rectangle or other polygon; we treat both
 !           cases the same way.
@@ -1700,13 +1700,13 @@
 !           Negate POS to obtain the position of the observer with
 !           respect to the target.
 !
-            CALL VMINUS ( POS, OBSPOS )
+            call vminus ( pos, obspos )
 
 !
 !           Find the limb in the target body-fixed frame.
 !
-            CALL EDLIMB ( SVTRAD(1), SVTRAD(2), SVTRAD(3), &
-                          OBSPOS,    LIMB                  )
+            call edlimb ( svtrad(1), svtrad(2), svtrad(3), &
+                          obspos,    limb                  )
 
 !
 !           Transform the limb from the target frame at ETTARG
@@ -1716,7 +1716,7 @@
 !           pack the results into FVLIMB. Below, M1 and M2 are
 !           simply temporary 3x3 matrices.
 !
-            CALL EL2CGV ( LIMB, M1(1,1), M1(1,2), M1(1,3) )
+            call el2cgv ( limb, m1(1,1), m1(1,2), m1(1,3) )
 
 !
 !           Before performing the frame transformation on the
@@ -1725,14 +1725,14 @@
 !           in the target body-fixed frame, this is a convenient
 !           place for the translation.
 !
-            CALL VADD ( POS,   M1(1,1), VTEMP )
-            CALL VEQU ( VTEMP, M1(1,1)        )
+            call vadd ( pos,   m1(1,1), vtemp )
+            call vequ ( vtemp, m1(1,1)        )
 
-            DO I = 1, 3
-               CALL MXV ( INSMAT, M1(1,I), M2(1,I) )
-            END DO
+            do i = 1, 3
+               call mxv ( insmat, m1(1,i), m2(1,i) )
+            end do
 
-            CALL CGV2EL (  M2(1,1), M2(1,2), M2(1,3), FVLIMB )
+            call cgv2el (  m2(1,1), m2(1,2), m2(1,3), fvlimb )
 
 !
 !           All geometric objects in the following call are expressed
@@ -1741,12 +1741,12 @@
 !           The target is in the FOV if and only if ZZELVUPY finds an
 !           intersection, so we use VISTAT as the "found" flag.
 !
-            CALL ZZELVUPY ( FVLIMB, SVORIG, SVFAXI, &
-                            SVNVRT, SVBNDS, VISTAT )
+            call zzelvupy ( fvlimb, svorig, svfaxi, &
+                            svnvrt, svbnds, vistat )
 
 
-         ELSE IF (      ( SVISHP .EQ. CIRFOV ) &
-                   .OR. ( SVISHP .EQ. ELLFOV )  ) THEN
+         else if (      ( svishp .eq. cirfov ) &
+                   .or. ( svishp .eq. ellfov )  ) then
 !
 !           The FOV is a circle or ellipse. For both FOV shapes,
 !           we represent the FOV by an ellipsoid in the FOV
@@ -1759,55 +1759,55 @@
 !
 !           Transform the target position to the instrument frame.
 !
-            CALL MXV ( INSMAT, POS, TRGCTR )
+            call mxv ( insmat, pos, trgctr )
 
 !
 !           The columns of INSMAT are the target body's semi-axis
 !           direction vectors; we scale these by the target radii
 !           to obtain the semi-axis matrix for the target.
 !
-            DO I = 1, 3
-               CALL VSCL ( SVTRAD(I), INSMAT(1,I), TRGSMX(1,I) )
-            END DO
+            do i = 1, 3
+               call vscl ( svtrad(i), insmat(1,i), trgsmx(1,i) )
+            end do
 
-            OCSTAT = ZZOCCED ( SVORIG, SVEDCT, SVFSMX, TRGCTR, TRGSMX )
+            ocstat = zzocced ( svorig, svedct, svfsmx, trgctr, trgsmx )
 
 !
 !           A return code of zero indicates no occultation. Any other
 !           return code indicates a non-empty intersection of the
 !           target and FOV.
 !
-            VISTAT = OCSTAT .NE. 0
+            vistat = ocstat .ne. 0
 
-         ELSE
+         else
 !
 !           This is an unexpected FOV shape. We should have prevented
 !           this problem in the initialization step, but we repeat the
 !           check here for safety.
 !
-            CALL SETMSG ( 'The target body # has shape #; the only ' &
+            call setmsg ( 'The target body # has shape #; the only ' &
             //            'supported shapes are ELLIPSOID, POINT, ' &
             //            'and RAY.'                                )
-            CALL ERRCH  ( '#',  SVTNAM                              )
-            CALL ERRCH  ( '#',  SVISHP                              )
-            CALL SIGERR ( 'SPICE(INVALIDSHAPE)'                     )
-            CALL CHKOUT ( 'ZZGFFVST'                                )
-            RETURN
+            call errch  ( '#',  svtnam                              )
+            call errch  ( '#',  svishp                              )
+            call sigerr ( 'SPICE(INVALIDSHAPE)'                     )
+            call chkout ( 'ZZGFFVST'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        This is the end of the ellipsoidal target case. At this
 !        point, VISTAT is set.
 !
 
-      ELSE
+      else
 !
 !        The target is a ray or an ephemeris object modeled as a point.
 !        In either case, we want to obtain the aberration-corrected
 !        observer-target vector.
 !
-         IF ( SVURAY ) THEN
+         if ( svuray ) then
 !
 !           The target is represented by a ray expressed in the
 !           frame SVTFRM.
@@ -1818,67 +1818,67 @@
 !           for targets represented by rays, we evaluate SVTFRM
 !           at the current epoch TIME.
 !
-            CALL PXFORM ( SVTFRM, SVIFRM, TIME, INSMAT )
+            call pxform ( svtfrm, svifrm, time, insmat )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFFVST' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFFVST' )
+               return
+            end if
 
 !
 !           Transform the ray's direction vector to the instrument
 !           frame.
 !
-            CALL MXV ( INSMAT, SVRDIR, DIR )
+            call mxv ( insmat, svrdir, dir )
 
 !
 !           If we need to correct the ray's direction for stellar
 !           aberration, do it now.
 !
-            IF ( SVUSTL ) THEN
+            if ( svustl ) then
 !
 !              Find the state of the observer relative to the
 !              solar system barycenter in the J2000 frame.
 !
-               CALL SPKSSB ( SVOBS, TIME, 'J2000', STOBS )
+               call spkssb ( svobs, time, 'J2000', stobs )
 
 !
 !              Convert the direction vector to the J2000 frame.
 !
-               CALL PXFORM ( SVIFRM, 'J2000', TIME, M1 )
+               call pxform ( svifrm, 'J2000', time, m1 )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZGFFVST' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZGFFVST' )
+                  return
+               end if
 
-               CALL MXV ( M1, DIR, VTEMP )
+               call mxv ( m1, dir, vtemp )
 
 !
 !              Apply the stellar aberration correction.
 !
-               IF ( SVXMIT ) THEN
+               if ( svxmit ) then
 !
 !                 Use the transmission correction.
 !
-                  CALL STLABX ( VTEMP, STOBS(4), VTEMP2 )
-               ELSE
-                  CALL STELAB ( VTEMP, STOBS(4), VTEMP2 )
-               END IF
+                  call stlabx ( vtemp, stobs(4), vtemp2 )
+               else
+                  call stelab ( vtemp, stobs(4), vtemp2 )
+               end if
 
 !
 !              Map the direction vector back to the instrument
 !              frame.
 !
-               CALL MTXV ( M1, VTEMP2, DIR )
+               call mtxv ( m1, vtemp2, dir )
 
-            END IF
+            end if
 !
 !           The target direction in the instrument frame DIR has
 !           been computed.
 !
 
-         ELSE
+         else
 !
 !           The target is an ephemeris object. Look up the
 !           target's position relative to the observer.
@@ -1892,24 +1892,24 @@
 !           time, we look up the direction vector in the J2000 frame
 !           and then map it to the instrument frame.
 !
-            CALL SPKEZP ( SVTARG,  TIME,   'J2000', &
-                          SVCORR,  SVOBS,  VTEMP, LT )
+            call spkezp ( svtarg,  time,   'J2000', &
+                          svcorr,  svobs,  vtemp, lt )
 
-            CALL PXFORM ( 'J2000', SVIFRM, TIME,  M1 )
+            call pxform ( 'J2000', svifrm, time,  m1 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFFVST' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFFVST' )
+               return
+            end if
 
-            CALL MXV ( M1, VTEMP, DIR )
+            call mxv ( m1, vtemp, dir )
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFFVST' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFFVST' )
+            return
+         end if
 
 !
 !        The observer-target direction vector DIR is set.
@@ -1917,17 +1917,17 @@
 !        The determination of whether the ray is in the FOV depends
 !        on the FOV shape.
 !
-         SEP = VSEP( DIR, SVFAXI )
+         sep = vsep( dir, svfaxi )
 
-         IF ( SVISHP .EQ. CIRFOV ) THEN
+         if ( svishp .eq. cirfov ) then
 !
 !           Just compare the angular separation of POS with the
 !           FOV axis direction against the FOV angular radius SVARAD.
 !
-            VISTAT =  SEP .LE. SVARAD
+            vistat =  sep .le. svarad
 
 
-         ELSE IF ( SEP .GT. SVARAD ) THEN
+         else if ( sep .gt. svarad ) then
 !
 !           The FOV is an ellipse or polygon.
 !
@@ -1935,9 +1935,9 @@
 !           greater than the angular radius of the exclusion
 !           cone. The target can't be seen.
 !
-            VISTAT = .FALSE.
+            vistat = .false.
 
-         ELSE
+         else
 !
 !           The FOV is an ellipse or polygon.
 !
@@ -1949,38 +1949,38 @@
 !           observer, and having direction vector POS, with the FOV
 !           plane.
 !
-            CALL INRYPL ( SVORIG, DIR, SVPLAN, NXPTS, XPT )
+            call inrypl ( svorig, dir, svplan, nxpts, xpt )
 
 !
 !           If there's no intersection, the target isn't visible.
 !
-            IF ( NXPTS .EQ. 0 ) THEN
+            if ( nxpts .eq. 0 ) then
 
-               VISTAT = .FALSE.
+               vistat = .false.
 
-            ELSE IF ( NXPTS .NE. 1 ) THEN
+            else if ( nxpts .ne. 1 ) then
 !
 !              "This can't happen." :)
 !
-               CALL SETMSG ( 'By construction, the vertex of ' &
+               call setmsg ( 'By construction, the vertex of ' &
                //            'the observer-target ray can''t ' &
                //            'lie in the FOV plane. If ' &
                //            'somehow it does, we have a serious ' &
                //            'problem.'                           )
-               CALL SIGERR ( 'SPICE(BUG)'                         )
-               CALL CHKOUT ( 'ZZGFFVST'                           )
-               RETURN
+               call sigerr ( 'SPICE(BUG)'                         )
+               call chkout ( 'ZZGFFVST'                           )
+               return
 
-            ELSE
+            else
 !
 !              NXPTS is 1.
 !
 !              Find the vector from the center of the FOV to XPT.
 !              Call this vector FOVPT.
 !
-               CALL VSUB ( XPT, SVFVCT, FOVPT )
+               call vsub ( xpt, svfvct, fovpt )
 
-               IF ( SVISHP .EQ. ELLFOV ) THEN
+               if ( svishp .eq. ellfov ) then
 !
 !                 The FOV shape is elliptical. To decide whether FOVPT
 !                 is within the FOV, compute the level surface
@@ -1995,32 +1995,32 @@
 !                 We've already eliminated zero divisors in the
 !                 initialization routine.
 !
-                  DO I = 1, 2
-                     COORD(I) = VDOT( FOVPT, SVSEMI(1,I) )  /  SVXMAG(I)
-                  END DO
+                  do i = 1, 2
+                     coord(i) = vdot( fovpt, svsemi(1,i) )  /  svxmag(i)
+                  end do
 
-                  L =   ( COORD(1) / SVXMAG(1) )**2.D0 &
-                      + ( COORD(2) / SVXMAG(2) )**2.D0
+                  l =   ( coord(1) / svxmag(1) )**2.d0 &
+                      + ( coord(2) / svxmag(2) )**2.d0
 
 !
 !                 The target is visible if FOVPT is inside the FOV
 !                 ellipse; this condition is indicated by L <= 1.
 !
-                  VISTAT = L .LE. 1.D0
+                  vistat = l .le. 1.d0
 
 
-               ELSE IF ( SVISHP .EQ. POLFOV ) THEN
+               else if ( svishp .eq. polfov ) then
 !
 !                The FOV is a polygon. Convert FOVPT to the FOV frame,
 !                then find the winding number of the FOV about the X-Y
 !                projection of FOVPT.
 !
-                  CALL MXV ( SVFOVM, FOVPT, VTEMP )
+                  call mxv ( svfovm, fovpt, vtemp )
 
-                  PNT2D(1) = VTEMP(1)
-                  PNT2D(2) = VTEMP(2)
+                  pnt2d(1) = vtemp(1)
+                  pnt2d(2) = vtemp(2)
 
-                  W        = ZZWIND2D ( SVNVRT, SVFPOL, PNT2D )
+                  w        = zzwind2d ( svnvrt, svfpol, pnt2d )
 
 !
 !                 Any non-zero winding number indicates that the
@@ -2028,44 +2028,44 @@
 !                 the intercept of the target direction with the
 !                 FOV plane.
 !
-                  VISTAT   = W .NE. 0
+                  vistat   = w .ne. 0
 
-               ELSE
+               else
 !
 !                 This is an unexpected FOV shape. We should have
 !                 prevented this problem in the initialization step,
 !                 but we repeat the check here for safety.
 !
-                  CALL SETMSG ( 'Instrument #''s FOV has shape #; ' &
+                  call setmsg ( 'Instrument #''s FOV has shape #; ' &
                   //            'the only supported shapes are ' &
                   //            'ELLIPSE, CIRCLE, and POLYGON.'    )
-                  CALL ERRCH  ( '#',  SVINAM                       )
-                  CALL ERRCH  ( '#',  SVISHP                       )
-                  CALL SIGERR ( 'SPICE(INVALIDSHAPE)'              )
-                  CALL CHKOUT ( 'ZZGFFVST'                         )
-                  RETURN
+                  call errch  ( '#',  svinam                       )
+                  call errch  ( '#',  svishp                       )
+                  call sigerr ( 'SPICE(INVALIDSHAPE)'              )
+                  call chkout ( 'ZZGFFVST'                         )
+                  return
 
-               END IF
+               end if
 !
 !              We've performed visibility tests for elliptical or
 !              polygonal FOVs. VISTAT is set.
 !
-            END IF
+            end if
 !
 !           We've processed the intercept found by the INRYPL call,
 !           or, if the intercept count was not 1, indicated that the
 !           target is not visible. VISTAT is set.
 !
-         END IF
+         end if
 !
 !        We've processed both the ray and point ephemeris object
 !        cases. VISTAT is set.
 !
-      END IF
+      end if
 !
 !     We've processed all target representation/FOV shape cases.
 !
 
-      CALL CHKOUT ( 'ZZGFFVST' )
-      RETURN
-      END
+      call chkout ( 'ZZGFFVST' )
+      return
+      end

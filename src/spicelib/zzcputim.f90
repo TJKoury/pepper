@@ -1,6 +1,6 @@
 !$Procedure ZZCPUTIM ( CPU Time )
 
-      SUBROUTINE ZZCPUTIM ( TVEC )
+      subroutine zzcputim ( tvec )
 
 ! $ Abstract
 !
@@ -18,7 +18,7 @@
 !
 ! $ Declarations
 
-      DOUBLE PRECISION      TVEC ( 6 )
+      double precision      tvec ( 6 )
 
 ! $ Brief_I/O
 !
@@ -400,39 +400,39 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               DTIME (8)
-      CHARACTER*(12)        RCLOCK(3)
+      integer               dtime (8)
+      character*(12)        rclock(3)
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZCPUTIM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZCPUTIM' )
+      end if
 
-      CALL DATE_AND_TIME( RCLOCK(1), RCLOCK(2), RCLOCK(3), DTIME )
+      call date_and_time( rclock(1), rclock(2), rclock(3), dtime )
 !
 !     Let's pack all this information into our double precision TVEC
 !     array.
 !
-      TVEC ( 1 ) = DBLE( DTIME(1) )
-      TVEC ( 2 ) = DBLE( DTIME(2) )
-      TVEC ( 3 ) = DBLE( DTIME(3) )
-      TVEC ( 4 ) = DBLE( DTIME(5) )
-      TVEC ( 5 ) = DBLE( DTIME(6) )
-      TVEC ( 6 ) = DBLE( DTIME(7) ) + DBLE( DTIME(8) )/1000.D0
+      tvec ( 1 ) = dble( dtime(1) )
+      tvec ( 2 ) = dble( dtime(2) )
+      tvec ( 3 ) = dble( dtime(3) )
+      tvec ( 4 ) = dble( dtime(5) )
+      tvec ( 5 ) = dble( dtime(6) )
+      tvec ( 6 ) = dble( dtime(7) ) + dble( dtime(8) )/1000.d0
 
 !
 !     That's it.
 !
-      CALL CHKOUT ( 'ZZCPUTIM' )
-      RETURN
+      call chkout ( 'ZZCPUTIM' )
+      return
 
-      END
+      end

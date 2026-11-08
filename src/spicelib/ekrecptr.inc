@@ -51,23 +51,23 @@
 !     In EKs that are not shadowed, all records have status OLD.
 !
 !
-      INTEGER               OLD
-      PARAMETER           ( OLD    =          1 )
+      integer               old
+      parameter           ( old    =          1 )
 
-      INTEGER               UPDATE
-      PARAMETER           ( UPDATE = OLD    + 1 )
+      integer               update
+      parameter           ( update = old    + 1 )
 
-      INTEGER               NEW
-      PARAMETER           ( NEW    = UPDATE + 1 )
+      integer               new
+      parameter           ( new    = update + 1 )
 
-      INTEGER               DELOLD
-      PARAMETER           ( DELOLD = NEW    + 1 )
+      integer               delold
+      parameter           ( delold = new    + 1 )
 
-      INTEGER               DELNEW
-      PARAMETER           ( DELNEW = DELOLD + 1 )
+      integer               delnew
+      parameter           ( delnew = delold + 1 )
 
-      INTEGER               DELUPD
-      PARAMETER           ( DELUPD = DELNEW + 1 )
+      integer               delupd
+      parameter           ( delupd = delnew + 1 )
 
 !
 !     The following parameters refer to indices within the record
@@ -75,8 +75,8 @@
 !
 !     Index of status indicator:
 !
-      INTEGER               STAIDX
-      PARAMETER           ( STAIDX = 1 )
+      integer               staidx
+      parameter           ( staidx = 1 )
 
 !
 !     Each record pointer contains a pointer to its companion:  for a
@@ -90,8 +90,8 @@
 !
 !     Index of record's companion pointer:
 !
-      INTEGER               RCPIDX
-      PARAMETER           ( RCPIDX = STAIDX + 1 )
+      integer               rcpidx
+      parameter           ( rcpidx = staidx + 1 )
 
 !
 !     Each data item is referenced by an integer.  The meaning of
@@ -103,14 +103,14 @@
 !
 !     Base address of data pointers:
 !
-      INTEGER               DPTBAS
-      PARAMETER           ( DPTBAS = 2 )
+      integer               dptbas
+      parameter           ( dptbas = 2 )
 
 !
 !     Maximum record pointer size:
 !
-      INTEGER               MXRPSZ
-      PARAMETER           ( MXRPSZ = 254 )
+      integer               mxrpsz
+      parameter           ( mxrpsz = 254 )
 
 !
 !     Data pointers are given the value UNINIT to start with; this
@@ -118,14 +118,14 @@
 !     distinct from the value NULL.  NOBACK indicates an uninitialized
 !     backup column entry.
 !
-      INTEGER               UNINIT
-      PARAMETER           ( UNINIT = -1 )
+      integer               uninit
+      parameter           ( uninit = -1 )
 
-      INTEGER               NULL
-      PARAMETER           ( NULL   = UNINIT - 1 )
+      integer               null
+      parameter           ( null   = uninit - 1 )
 
-      INTEGER               NOBACK
-      PARAMETER           ( NOBACK = NULL   - 1 )
+      integer               noback
+      parameter           ( noback = null   - 1 )
 
 !
 !     End Include Section:  EK Record Pointer Parameters

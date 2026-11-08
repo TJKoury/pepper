@@ -1,8 +1,8 @@
 !$Procedure PCKW02 ( PCK, write type 2 segment )
 
-      SUBROUTINE PCKW02 (  HANDLE,  CLSSID,  FRAME,   FIRST, &
-                           LAST,    SEGID,   INTLEN,  N, &
-                           POLYDG,  CDATA,   BTIME          )
+      subroutine pckw02 (  handle,  clssid,  frame,   first, &
+                           last,    segid,   intlen,  n, &
+                           polydg,  cdata,   btime          )
 
 ! $ Abstract
 !
@@ -22,19 +22,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               CLSSID
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      DOUBLE PRECISION      INTLEN
-      INTEGER               N
-      INTEGER               POLYDG
-      DOUBLE PRECISION      CDATA (*)
-      DOUBLE PRECISION      BTIME
+      integer               handle
+      integer               clssid
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      double precision      intlen
+      integer               n
+      integer               polydg
+      double precision      cdata (*)
+      double precision      btime
 
 ! $ Brief_I/O
 !
@@ -352,193 +352,193 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     DTYPE is the PCK data type.
 !
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE   =   2 )
+      integer               dtype
+      parameter           ( dtype   =   2 )
 !
 !     NS is the size of a packed PCK segment descriptor.
 !
-      INTEGER               NS
-      PARAMETER           ( NS      =   5 )
+      integer               ns
+      parameter           ( ns      =   5 )
 !
 !     ND is the number of double precision components in an PCK
 !     segment descriptor. PCK uses ND = 2.
 !
-      INTEGER               ND
-      PARAMETER           ( ND      =   2 )
+      integer               nd
+      parameter           ( nd      =   2 )
 !
 !     NI is the number of integer components in an PCK segment
 !     descriptor. PCK uses NI = 5.
 !
-      INTEGER               NI
-      PARAMETER           ( NI      =   5 )
+      integer               ni
+      parameter           ( ni      =   5 )
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     PCK segment identifier.
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
 !
 !     Local variables
 !
-      CHARACTER*(SIDLEN)    ETSTR
-      CHARACTER*(SIDLEN)    NETSTR
+      character*(sidlen)    etstr
+      character*(sidlen)    netstr
 
-      DOUBLE PRECISION      DCD   ( ND )
-      DOUBLE PRECISION      DESCR ( NS )
-      DOUBLE PRECISION      LTIME
-      DOUBLE PRECISION      MID
-      DOUBLE PRECISION      NUMREC
-      DOUBLE PRECISION      RADIUS
-      DOUBLE PRECISION      RSIZE
+      double precision      dcd   ( nd )
+      double precision      descr ( ns )
+      double precision      ltime
+      double precision      mid
+      double precision      numrec
+      double precision      radius
+      double precision      rsize
 
-      INTEGER               I
-      INTEGER               ICD   ( NI )
-      INTEGER               K
-      INTEGER               NINREC
-      INTEGER               REFCOD
+      integer               i
+      integer               icd   ( ni )
+      integer               k
+      integer               ninrec
+      integer               refcod
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKW02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PCKW02' )
+      end if
 
 !
 !     The number of sets of coefficients must be positive.
 !
-      IF ( N .LE. 0 ) THEN
+      if ( n .le. 0 ) then
 
-         CALL SETMSG ( 'The number of sets of Euler angle'  // &
+         call setmsg ( 'The number of sets of Euler angle'  // &
                        'coefficients is not positive. N = #'       )
-         CALL ERRINT ( '#', N                                      )
-         CALL SIGERR ( 'SPICE(NUMCOEFFSNOTPOS)'                    )
-         CALL CHKOUT ( 'PCKW02'                                    )
-         RETURN
+         call errint ( '#', n                                      )
+         call sigerr ( 'SPICE(NUMCOEFFSNOTPOS)'                    )
+         call chkout ( 'PCKW02'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The interval length must be positive.
 !
-      IF ( INTLEN .LE. 0 ) THEN
+      if ( intlen .le. 0 ) then
 
-         CALL SETMSG ( 'The interval length is not positive.'  // &
+         call setmsg ( 'The interval length is not positive.'  // &
                        'N = #'                                     )
-         CALL ERRDP  ( '#', INTLEN                                 )
-         CALL SIGERR ( 'SPICE(INTLENNOTPOS)'                       )
-         CALL CHKOUT ( 'PCKW02'                                    )
-         RETURN
+         call errdp  ( '#', intlen                                 )
+         call sigerr ( 'SPICE(INTLENNOTPOS)'                       )
+         call chkout ( 'PCKW02'                                    )
+         return
 
-      END IF
+      end if
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL IRFNUM ( FRAME, REFCOD )
+      call irfnum ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'PCKW02'                                    )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'PCKW02'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     The segment stop time must be greater than the begin time.
 !
-      IF ( FIRST .GT. LAST ) THEN
+      if ( first .gt. last ) then
 
-         CALL SETMSG ( 'The segment start time: # is greater than ' // &
+         call setmsg ( 'The segment start time: # is greater than ' // &
                        'the segment end time: #'                   )
-         CALL ETCAL  ( FIRST, ETSTR                                )
-         CALL ERRCH  ( '#',   ETSTR                                )
-         CALL ETCAL  ( LAST,  NETSTR                               )
-         CALL ERRCH  ( '#',   NETSTR                               )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'PCKW02'                                    )
-         RETURN
+         call etcal  ( first, etstr                                )
+         call errch  ( '#',   etstr                                )
+         call etcal  ( last,  netstr                               )
+         call errch  ( '#',   netstr                               )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'PCKW02'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     The begin time of the first record must be less than or equal
 !     to the begin time of the segment.
 !
-      IF ( FIRST .LT. BTIME ) THEN
+      if ( first .lt. btime ) then
 
-         CALL SETMSG ( 'The segment descriptor start time: # is '// &
+         call setmsg ( 'The segment descriptor start time: # is '// &
                        'less than the beginning time of the '// &
                        'segment data: #'                           )
-         CALL ETCAL  ( FIRST, ETSTR                                )
-         CALL ERRCH  ( '#',   ETSTR                                )
-         CALL ETCAL  ( BTIME, ETSTR                                )
-         CALL ERRCH  ( '#',   ETSTR                                )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'PCKW02'                                    )
-         RETURN
+         call etcal  ( first, etstr                                )
+         call errch  ( '#',   etstr                                )
+         call etcal  ( btime, etstr                                )
+         call errch  ( '#',   etstr                                )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'PCKW02'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The end time of the final record must be greater than or
 !     equal to the end time of the segment.
 !
-      LTIME = BTIME + N * INTLEN
-      IF ( LAST .GT. LTIME ) THEN
+      ltime = btime + n * intlen
+      if ( last .gt. ltime ) then
 
-         CALL SETMSG ( 'The segment descriptor end time: # is '// &
+         call setmsg ( 'The segment descriptor end time: # is '// &
                        'greater than the end time of the segment '// &
                        'data: #'  )
-         CALL ETCAL  ( LAST,  ETSTR                                )
-         CALL ERRCH  ( '#',   ETSTR                                )
-         CALL ETCAL  ( LTIME, ETSTR                                )
-         CALL ERRCH  ( '#',   ETSTR                                )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'PCKW02'                                    )
-         RETURN
+         call etcal  ( last,  etstr                                )
+         call errch  ( '#',   etstr                                )
+         call etcal  ( ltime, etstr                                )
+         call errch  ( '#',   etstr                                )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'PCKW02'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check the validity of the segment identifier.
 !
-      CALL CHCKID ( 'PCK segment identifier', SIDLEN, SEGID )
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'PCKW02' )
-         RETURN
-      END IF
+      call chckid ( 'PCK segment identifier', sidlen, segid )
+      if ( failed() ) then
+         call chkout ( 'PCKW02' )
+         return
+      end if
 
 !
 !     Store the start and end times to be associated
 !     with this segment.
 !
-      DCD(1) = FIRST
-      DCD(2) = LAST
+      dcd(1) = first
+      dcd(2) = last
 
 !
 !     Create the integer portion of the descriptor.
 !
-      ICD(1) = CLSSID
-      ICD(2) = REFCOD
-      ICD(3) = DTYPE
+      icd(1) = clssid
+      icd(2) = refcod
+      icd(3) = dtype
 
 !
 !     Pack the segment descriptor.
 !
-      CALL DAFPS ( ND, NI, DCD, ICD, DESCR )
+      call dafps ( nd, ni, dcd, icd, descr )
 
 !
 !     Begin a new segment of PCK type 2 form:
@@ -558,63 +558,63 @@
 !        RADIUS     ( radius of time interval )
 !        X coefficients, Y coefficients, Z coefficients
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
 !
 !     Calculate the number of entries in a record.
 !
-      NINREC = ( POLYDG + 1 ) * 3
+      ninrec = ( polydg + 1 ) * 3
 
 !
 !     Fill segment with N records of data.
 !
-      DO I = 1, N
+      do i = 1, n
 
 !
 !        Calculate the midpoint and radius of the time of each
 !        record, and put that at the beginning of each record.
 !
-         RADIUS = INTLEN / 2
-         MID    = BTIME + RADIUS + ( I - 1 ) * INTLEN
+         radius = intlen / 2
+         mid    = btime + radius + ( i - 1 ) * intlen
 
-         CALL DAFADA ( MID,    1)
-         CALL DAFADA ( RADIUS, 1)
+         call dafada ( mid,    1)
+         call dafada ( radius, 1)
 
 !
 !        Put one set of coefficients into the segment.
 !
-         K = 1 + (I - 1) * NINREC
+         k = 1 + (i - 1) * ninrec
 
-         CALL DAFADA ( CDATA(K), NINREC )
+         call dafada ( cdata(k), ninrec )
 
-      END DO
+      end do
 !
 !     Store the initial epoch of the first record.
 !
-      CALL DAFADA ( BTIME, 1 )
+      call dafada ( btime, 1 )
 
 !
 !     Store the length of interval covered by each record.
 !
-      CALL DAFADA ( INTLEN, 1 )
+      call dafada ( intlen, 1 )
 
 !
 !     Store the size of each record (total number of array elements).
 !
-      RSIZE = 2 + NINREC
-      CALL DAFADA ( RSIZE, 1 )
+      rsize = 2 + ninrec
+      call dafada ( rsize, 1 )
 
 !
 !     Store the number of records contained in the segment.
 !
-      NUMREC = N
-      CALL DAFADA ( NUMREC, 1 )
+      numrec = n
+      call dafada ( numrec, 1 )
 
 !
 !     End this segment.
 !
-      CALL DAFENA
+      call dafena
 
-      CALL CHKOUT ( 'PCKW02' )
-      RETURN
-      END
+      call chkout ( 'PCKW02' )
+      return
+      end

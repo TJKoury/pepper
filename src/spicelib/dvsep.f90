@@ -1,6 +1,6 @@
 !$Procedure DVSEP ( Derivative of separation angle )
 
-      DOUBLE PRECISION FUNCTION DVSEP ( S1, S2 )
+      double precision function dvsep ( s1, s2 )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      S1 (6)
-      DOUBLE PRECISION      S2 (6)
+      double precision      s1 (6)
+      double precision      s2 (6)
 
 ! $ Brief_I/O
 !
@@ -316,55 +316,55 @@
 !     SPICELIB functions
 !
 
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      ZZDIV
+      double precision      vdot
+      double precision      vnorm
+      double precision      zzdiv
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      NUMR
-      DOUBLE PRECISION      PCROSS (3)
-      DOUBLE PRECISION      U1     (6)
-      DOUBLE PRECISION      U2     (6)
+      double precision      denom
+      double precision      numr
+      double precision      pcross (3)
+      double precision      u1     (6)
+      double precision      u2     (6)
 
 
-      IF ( RETURN() ) THEN
-         DVSEP = 0.D0
-         RETURN
-      END IF
+      if ( return() ) then
+         dvsep = 0.d0
+         return
+      end if
 
-      CALL CHKIN( 'DVSEP' )
+      call chkin( 'DVSEP' )
 
 !
 !     Compute the unit vectors and corresponding time derivatives
 !     for the input state vectors.
 !
-      CALL DVHAT( S1, U1 )
-      CALL DVHAT( S2, U2 )
+      call dvhat( s1, u1 )
+      call dvhat( s2, u2 )
 
 !
 !     Calculate the cross product vector of U1 and U2. As both vectors
 !     have magnitude one, the magnitude of the cross product equals
 !     sin(THETA), with THETA the angle between S1 and S2.
 !
-      CALL VCRSS( U1(1), U2(1), PCROSS )
+      call vcrss( u1(1), u2(1), pcross )
 
 !
 !     Handle the parallel and anti-parallel cases.
 !
-      IF ( VZERO(PCROSS) ) THEN
+      if ( vzero(pcross) ) then
 
-         DVSEP = 0.D0
-         CALL CHKOUT( 'DVSEP' )
-         RETURN
+         dvsep = 0.d0
+         call chkout( 'DVSEP' )
+         return
 
-      END IF
+      end if
 
 !
 !     Now calculate the time derivative of the angular separation
@@ -374,20 +374,20 @@
 !
 !     Separately calculate the numerator and denominator.
 !
-      NUMR  = VDOT( U1(1), U2(4) ) + VDOT( U1(4), U2(1) )
-      DENOM = VNORM(PCROSS)
+      numr  = vdot( u1(1), u2(4) ) + vdot( u1(4), u2(1) )
+      denom = vnorm(pcross)
 
 !
 !     ZZDIV checks for over- or underflow. Finite precision
 !     arithmetic is a pain.
 !
-      DVSEP = ZZDIV( -NUMR, DENOM )
+      dvsep = zzdiv( -numr, denom )
 
 !
 !     Return, the expectation exists that a FAILED() call
 !     follows the DVSEP call.
 !
-      CALL CHKOUT( 'DVSEP' )
+      call chkout( 'DVSEP' )
 
-      RETURN
-      END
+      return
+      end

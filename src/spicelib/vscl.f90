@@ -1,6 +1,6 @@
 !$Procedure VSCL ( Vector scaling, 3 dimensions )
 
-      SUBROUTINE VSCL ( S, V1, VOUT )
+      subroutine vscl ( s, v1, vout )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   S
-      DOUBLE PRECISION   V1   ( 3 )
-      DOUBLE PRECISION   VOUT ( 3 )
+      double precision   s
+      double precision   v1   ( 3 )
+      double precision   vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -189,9 +189,9 @@
 !-&
 
 
-      VOUT(1) = S * V1(1)
-      VOUT(2) = S * V1(2)
-      VOUT(3) = S * V1(3)
+      vout(1) = s * v1(1)
+      vout(2) = s * v1(2)
+      vout(3) = s * v1(3)
 
-      RETURN
-      END
+      return
+      end

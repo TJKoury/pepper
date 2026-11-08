@@ -1,6 +1,6 @@
 !$Procedure LNKSIZ ( LNK, size )
 
-      INTEGER FUNCTION LNKSIZ ( POOL )
+      integer function lnksiz ( pool )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               POOL ( 2,  LBPOOL : * )
+      integer               pool ( 2,  lbpool : * )
 
 ! $ Brief_I/O
 !
@@ -126,23 +126,23 @@
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      INTEGER               SIZROW
-      PARAMETER           ( SIZROW =   1 )
+      integer               sizrow
+      parameter           ( sizrow =   1 )
 
-      INTEGER               SIZCOL
-      PARAMETER           ( SIZCOL =   0 )
+      integer               sizcol
+      parameter           ( sizcol =   0 )
 
-      INTEGER               NFRROW
-      PARAMETER           ( NFRROW =   2 )
+      integer               nfrrow
+      parameter           ( nfrrow =   2 )
 
-      INTEGER               NFRCOL
-      PARAMETER           ( NFRCOL =   0 )
+      integer               nfrcol
+      parameter           ( nfrcol =   0 )
 
-      INTEGER               FREROW
-      PARAMETER           ( FREROW =   1 )
+      integer               frerow
+      parameter           ( frerow =   1 )
 
-      INTEGER               FRECOL
-      PARAMETER           ( FRECOL =  -1 )
+      integer               frecol
+      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -158,26 +158,26 @@
 !
 !
 !
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  = 1 )
+      integer               forwrd
+      parameter           ( forwrd  = 1 )
 
-      INTEGER               BCKWRD
-      PARAMETER           ( BCKWRD  = 2 )
+      integer               bckwrd
+      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      INTEGER               FREE
-      PARAMETER           ( FREE   = 0 )
+      integer               free
+      parameter           ( free   = 0 )
 
 
 
 !
 !     Grab the pool size from the control area.
 !
-      LNKSIZ  =  POOL ( SIZROW, SIZCOL )
+      lnksiz  =  pool ( sizrow, sizcol )
 
-      RETURN
-      END
+      return
+      end

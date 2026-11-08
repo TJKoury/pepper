@@ -1,6 +1,6 @@
 !$Procedure PRTENC ( Encode a character string, portably )
 
-      SUBROUTINE PRTENC ( NUMBER, STRING )
+      subroutine prtenc ( number, string )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NUMBER
-      CHARACTER*(*)      STRING
+      integer            number
+      character*(*)      string
 
-      INTEGER            MINLEN
-      PARAMETER        ( MINLEN = 5 )
+      integer            minlen
+      parameter        ( minlen = 5 )
 
 ! $ Brief_I/O
 !
@@ -142,64 +142,64 @@
 !
 !     Local parameters
 !
-      INTEGER               CHBASE
-      PARAMETER           ( CHBASE = 128 )
+      integer               chbase
+      parameter           ( chbase = 128 )
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               NUM
-      INTEGER               REMAIN
-      INTEGER               I
+      integer               base
+      integer               num
+      integer               remain
+      integer               i
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( LEN ( STRING ) .LT. MINLEN ) THEN
-         CALL CHKIN  ( 'PRTENC' )
-         CALL SIGERR ( 'SPICE(INSUFFLEN)' )
-         CALL CHKOUT ( 'PRTENC' )
-         RETURN
+      if ( len ( string ) .lt. minlen ) then
+         call chkin  ( 'PRTENC' )
+         call sigerr ( 'SPICE(INSUFFLEN)' )
+         call chkout ( 'PRTENC' )
+         return
 
-      ELSE IF ( NUMBER .LT. 0 ) THEN
-         CALL CHKIN  ( 'PRTENC' )
-         CALL SIGERR ( 'SPICE(OUTOFRANGE)' )
-         CALL CHKOUT ( 'PRTENC' )
-         RETURN
-      END IF
+      else if ( number .lt. 0 ) then
+         call chkin  ( 'PRTENC' )
+         call sigerr ( 'SPICE(OUTOFRANGE)' )
+         call chkout ( 'PRTENC' )
+         return
+      end if
 
 !
 !     Generate the digits from right to left.
 !
-      BASE = CHBASE
-      NUM  = NUMBER
+      base = chbase
+      num  = number
 
-      DO I = MINLEN, 1, -1
+      do i = minlen, 1, -1
 
-         REMAIN      = MOD ( NUM, BASE )
-         STRING(I:I) = CHAR ( REMAIN )
-         NUM         = NUM / BASE
+         remain      = mod ( num, base )
+         string(i:i) = char ( remain )
+         num         = num / base
 
-      END DO
+      end do
 
 !
 !     More error handling.
 !
-      IF ( NUM .GT. 0 ) THEN
-         CALL CHKIN  ( 'PRTENC' )
-         CALL SIGERR ( 'SPICE(OUTOFRANGE)' )
-         CALL CHKOUT ( 'PRTENC' )
-      END IF
+      if ( num .gt. 0 ) then
+         call chkin  ( 'PRTENC' )
+         call sigerr ( 'SPICE(OUTOFRANGE)' )
+         call chkout ( 'PRTENC' )
+      end if
 
-      RETURN
+      return
 
 
 
 
 !$Procedure PRTDEC ( Decode a character string )
 
-      ENTRY PRTDEC ( STRING, NUMBER )
+      entry prtdec ( string, number )
 
 ! $ Abstract
 !
@@ -308,23 +308,23 @@
 !-&
 
 
-      IF ( LEN ( STRING ) .LT. MINLEN ) THEN
-         CALL CHKIN  ( 'PRTDEC' )
-         CALL SIGERR ( 'SPICE(INSUFFLEN)' )
-         CALL CHKOUT ( 'PRTDEC' )
-         RETURN
-      END IF
+      if ( len ( string ) .lt. minlen ) then
+         call chkin  ( 'PRTDEC' )
+         call sigerr ( 'SPICE(INSUFFLEN)' )
+         call chkout ( 'PRTDEC' )
+         return
+      end if
 
 !
 !     Sum the products of the 'digits' and the corresponding powers
 !     of NDCHAR, just like any other base conversion.
 !
-      BASE   = CHBASE
-      NUMBER = 0
+      base   = chbase
+      number = 0
 
-      DO I = 1, MINLEN
-         NUMBER = BASE*NUMBER + ICHAR ( STRING(I:I) )
-      END DO
+      do i = 1, minlen
+         number = base*number + ichar ( string(i:i) )
+      end do
 
-      RETURN
-      END
+      return
+      end

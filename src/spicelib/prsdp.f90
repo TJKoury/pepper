@@ -1,6 +1,6 @@
 !$Procedure PRSDP   ( Parse d.p. number with error checking )
 
-      SUBROUTINE PRSDP ( STRING, DPVAL )
+      subroutine prsdp ( string, dpval )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      DOUBLE PRECISION      DPVAL
+      character*(*)         string
+      double precision      dpval
 
 ! $ Brief_I/O
 !
@@ -207,30 +207,30 @@
 !
 !     Local parameters
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 320 )
+      integer               msglen
+      parameter           ( msglen = 320 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    ERRMSG
-      INTEGER               PTR
+      character*(msglen)    errmsg
+      integer               ptr
 
 
 !
 !     Use discovery check-in.
 !
-      CALL NPARSD ( STRING, DPVAL, ERRMSG, PTR )
+      call nparsd ( string, dpval, errmsg, ptr )
 
-      IF ( ERRMSG .NE. ' ' ) THEN
+      if ( errmsg .ne. ' ' ) then
 
-         CALL CHKIN  ( 'PRSDP'               )
-         CALL SETMSG ( ERRMSG                )
-         CALL SIGERR ( 'SPICE(NOTADPNUMBER)' )
-         CALL CHKOUT ( 'PRSDP'               )
-         RETURN
+         call chkin  ( 'PRSDP'               )
+         call setmsg ( errmsg                )
+         call sigerr ( 'SPICE(NOTADPNUMBER)' )
+         call chkout ( 'PRSDP'               )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

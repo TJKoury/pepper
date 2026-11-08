@@ -8,20 +8,20 @@
 !
 !     Data array base address:
 !
-      INTEGER               DBIX09
-      PARAMETER           ( DBIX09 = 1 )
+      integer               dbix09
+      parameter           ( dbix09 = 1 )
 
 !
 !     Null flag array base address:
 !
-      INTEGER               NFIX09
-      PARAMETER           ( NFIX09 = 2 )
+      integer               nfix09
+      parameter           ( nfix09 = 2 )
 
 !
 !     Size of class 9 metadata array:
 !
-      INTEGER               MDSZ09
-      PARAMETER           ( MDSZ09 = 2 )
+      integer               mdsz09
+      parameter           ( mdsz09 = 2 )
 
 !
 !     End Include Section:  EK Column Class 9 Parameters

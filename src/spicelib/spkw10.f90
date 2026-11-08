@@ -1,7 +1,7 @@
 !$Procedure SPKW10 (SPK - write a type 10 segment )
 
-      SUBROUTINE SPKW10 ( HANDLE, BODY,   CENTER, FRAME,  FIRST, LAST, &
-                          SEGID,  CONSTS, N,      ELEMS,  EPOCHS      )
+      subroutine spkw10 ( handle, body,   center, frame,  first, last, &
+                          segid,  consts, n,      elems,  epochs      )
 
 ! $ Abstract
 !
@@ -19,22 +19,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'sgparam.inc'
+      include              'sgparam.inc'
 
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      DOUBLE PRECISION      CONSTS ( * )
-      INTEGER               N
-      DOUBLE PRECISION      ELEMS  ( * )
-      DOUBLE PRECISION      EPOCHS ( * )
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      double precision      consts ( * )
+      integer               n
+      double precision      elems  ( * )
+      double precision      epochs ( * )
 
 ! $ Brief_I/O
 !
@@ -523,8 +523,8 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
@@ -533,106 +533,106 @@
 !
 !     The type of this segment
 !
-      INTEGER               SPKTYP
-      PARAMETER           ( SPKTYP = 10 )
+      integer               spktyp
+      parameter           ( spktyp = 10 )
 !
 !     The number of geophysical constants:
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 8 )
+      integer               nconst
+      parameter           ( nconst = 8 )
 !
 !     The number of elements per two-line set:
 !
-      INTEGER               NELEMS
-      PARAMETER           ( NELEMS = 10 )
+      integer               nelems
+      parameter           ( nelems = 10 )
 
-      INTEGER               NUOBL
-      PARAMETER           ( NUOBL  = 11 )
+      integer               nuobl
+      parameter           ( nuobl  = 11 )
 
-      INTEGER               NULON
-      PARAMETER           ( NULON  = 12 )
+      integer               nulon
+      parameter           ( nulon  = 12 )
 
-      INTEGER               DNUOBL
-      PARAMETER           ( DNUOBL = 13 )
+      integer               dnuobl
+      parameter           ( dnuobl = 13 )
 
-      INTEGER               DNULON
-      PARAMETER           ( DNULON = 14 )
+      integer               dnulon
+      parameter           ( dnulon = 14 )
 
-      INTEGER               PKTSIZ
-      PARAMETER           ( PKTSIZ = DNULON )
+      integer               pktsiz
+      parameter           ( pktsiz = dnulon )
 
 
-      DOUBLE PRECISION      DESCR ( 6 )
-      DOUBLE PRECISION      PACKET( PKTSIZ )
-      DOUBLE PRECISION      DNUT  ( 4 )
+      double precision      descr ( 6 )
+      double precision      packet( pktsiz )
+      double precision      dnut  ( 4 )
 
-      INTEGER               BASE
-      INTEGER               I
-      INTEGER               NPKTS
-      INTEGER               NEPOCH
+      integer               base
+      integer               i
+      integer               npkts
+      integer               nepoch
 
 
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKW10' )
+      call chkin ( 'SPKW10' )
 !
 !     First we need to create a descriptor for the segment
 !     we are about to write.
 !
-      CALL SPKPDS ( BODY,  CENTER, FRAME, SPKTYP, FIRST, LAST, &
-                    DESCR  )
+      call spkpds ( body,  center, frame, spktyp, first, last, &
+                    descr  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW10' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW10' )
+         return
+      end if
 
 !
 !     We've got a valid descriptor, write the data to a DAF
 !     segment using the generic segment writer.
 !
-      NPKTS  = N
-      NEPOCH = N
+      npkts  = n
+      nepoch = n
 
 
-      CALL SGBWFS ( HANDLE, DESCR,   SEGID, &
-                    NCONST, CONSTS,  PKTSIZ, EXPCLS          )
+      call sgbwfs ( handle, descr,   segid, &
+                    nconst, consts,  pktsiz, expcls          )
 
-      DO I = 1, NEPOCH
+      do i = 1, nepoch
 !
 !        Move the elements into the next packet.
 !
-         BASE = (I-1)*NELEMS
+         base = (i-1)*nelems
 
-         CALL MOVED ( ELEMS(BASE + 1), 10, PACKET )
+         call moved ( elems(base + 1), 10, packet )
 !
 !        For each epoch, we need to get the nutation in obliquity,
 !        nutation in longitude and mean obliquity.
 !
-         CALL ZZWAHR  ( EPOCHS(I), DNUT )
+         call zzwahr  ( epochs(i), dnut )
 
-         PACKET(NULON)  = DNUT(1)
-         PACKET(NUOBL)  = DNUT(2)
-         PACKET(DNULON) = DNUT(3)
-         PACKET(DNUOBL) = DNUT(4)
+         packet(nulon)  = dnut(1)
+         packet(nuobl)  = dnut(2)
+         packet(dnulon) = dnut(3)
+         packet(dnuobl) = dnut(4)
 
 !
 !        Now write the packet into the generic segment.
 !
-         CALL SGWFPK ( HANDLE, 1, PACKET, 1, EPOCHS(I) )
+         call sgwfpk ( handle, 1, packet, 1, epochs(i) )
 
-      END DO
+      end do
 
-      CALL SGWES  ( HANDLE )
+      call sgwes  ( handle )
 
-      CALL CHKOUT ( 'SPKW10' )
+      call chkout ( 'SPKW10' )
 
-      RETURN
+      return
 
-      END
+      end

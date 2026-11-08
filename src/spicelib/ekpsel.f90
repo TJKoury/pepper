@@ -1,7 +1,7 @@
 !$Procedure EKPSEL ( EK, parse SELECT clause )
 
-      SUBROUTINE EKPSEL (  QUERY,   N,     XBEGS,  XENDS,  XTYPES, &
-                           XCLASS,  TABS,  COLS,   ERROR,  ERRMSG  )
+      subroutine ekpsel (  query,   n,     xbegs,  xends,  xtypes, &
+                           xclass,  tabs,  cols,   error,  errmsg  )
 
 ! $ Abstract
 !
@@ -18,25 +18,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekattdsc.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekattdsc.inc'
+      include 'ekcnamsz.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'ektnamsz.inc'
+      include 'ektype.inc'
 
-      CHARACTER*(*)         QUERY
-      INTEGER               N
-      INTEGER               XBEGS  ( * )
-      INTEGER               XENDS  ( * )
-      CHARACTER*(*)         XTYPES ( * )
-      CHARACTER*(*)         XCLASS ( * )
-      CHARACTER*(*)         TABS   ( * )
-      CHARACTER*(*)         COLS   ( * )
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         query
+      integer               n
+      integer               xbegs  ( * )
+      integer               xends  ( * )
+      character*(*)         xtypes ( * )
+      character*(*)         xclass ( * )
+      character*(*)         tabs   ( * )
+      character*(*)         cols   ( * )
+      logical               error
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -562,105 +562,105 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               NTYPES
-      PARAMETER           ( NTYPES = 4 )
+      integer               ntypes
+      parameter           ( ntypes = 4 )
 
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = 4 )
+      integer               short
+      parameter           ( short  = 4 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TNAMSZ)    AKA
-      CHARACTER*(SHORT)     CHRTYP ( NTYPES )
-      CHARACTER*(CNAMSZ)    COLUMN
-      CHARACTER*(MAXCLN)    EQRYC
-      CHARACTER*(TNAMSZ)    QTAB
+      character*(tnamsz)    aka
+      character*(short)     chrtyp ( ntypes )
+      character*(cnamsz)    column
+      character*(maxcln)    eqryc
+      character*(tnamsz)    qtab
 
-      DOUBLE PRECISION      EQRYD  ( MAXQNM )
+      double precision      eqryd  ( maxqnm )
 
-      INTEGER               ATTDSC ( ADSCSZ )
-      INTEGER               COLIDX
-      INTEGER               EQRYI  ( LBCELL : EQIMIN )
-      INTEGER               ERRPTR
-      INTEGER               I
-      INTEGER               TABIDX
+      integer               attdsc ( adscsz )
+      integer               colidx
+      integer               eqryi  ( lbcell : eqimin )
+      integer               errptr
+      integer               i
+      integer               tabidx
 
 !
 !     Saved values
 !
-      SAVE                  CHRTYP
+      save                  chrtyp
 
 !
 !     Initial values
 !
-      DATA                  CHRTYP / 'CHR', 'DP', 'INT', 'TIME' /
+      data                  chrtyp / 'CHR', 'DP', 'INT', 'TIME' /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKPSEL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKPSEL' )
+      end if
 
 !
 !     Initialize the encoded query each time, for safety.
 !
-      CALL ZZEKQINI ( EQIMIN, MAXQNM, EQRYI, EQRYC, EQRYD )
+      call zzekqini ( eqimin, maxqnm, eqryi, eqryc, eqryd )
 
 !
 !     Encode the input query.
 !
-      CALL ZZEKENCD (  QUERY, &
-                       EQRYI,  EQRYC,   EQRYD, &
-                       ERROR,  ERRMSG,  ERRPTR  )
+      call zzekencd (  query, &
+                       eqryi,  eqryc,   eqryd, &
+                       error,  errmsg,  errptr  )
 
-      IF ( ERROR ) THEN
-         CALL CHKOUT ( 'EKPSEL' )
-         RETURN
-      END IF
+      if ( error ) then
+         call chkout ( 'EKPSEL' )
+         return
+      end if
 
 !
 !     Look up the number of SELECT columns.  For each column, look up
 !     the parent table, the alias, and the column's name.
 !
-      CALL ZZEKREQI (  EQRYI,  'NUM_SELECT_COLS',  N   )
+      call zzekreqi (  eqryi,  'NUM_SELECT_COLS',  n   )
 
-      DO I = 1, N
+      do i = 1, n
 
-         CALL ZZEKQSEL ( EQRYI,  EQRYC,   I,        XBEGS(I),  XENDS(I), &
-                         QTAB,   TABIDX,  COLS(I),  COLIDX             )
+         call zzekqsel ( eqryi,  eqryc,   i,        xbegs(i),  xends(i), &
+                         qtab,   tabidx,  cols(i),  colidx             )
 
 !
 !        Make the table index to the table name.
 !
-         CALL ZZEKQTAB ( EQRYI, EQRYC, TABIDX, TABS(I), AKA )
+         call zzekqtab ( eqryi, eqryc, tabidx, tabs(i), aka )
 
 !
 !        Currently, every expression is a column.
 !
-         XCLASS(I)  =  'COL'
+         xclass(i)  =  'COL'
 
 !
 !        Look up the data type of the column.
 !
-         CALL EKCII ( TABS(I), COLIDX, COLUMN, ATTDSC )
+         call ekcii ( tabs(i), colidx, column, attdsc )
 
-         XTYPES(I)  =  CHRTYP (  ATTDSC(ATTTYP)  )
+         xtypes(i)  =  chrtyp (  attdsc(atttyp)  )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'EKPSEL' )
-      RETURN
-      END
+      call chkout ( 'EKPSEL' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZVOX2ID ( Return voxel index from coords )
 
-      INTEGER FUNCTION ZZVOX2ID ( VIXYZ, NVOX )
+      integer function zzvox2id ( vixyz, nvox )
 
 ! $ Abstract
 !
@@ -24,10 +24,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT              NONE
+      implicit              none
 
-      INTEGER               NVOX   ( 3 )
-      INTEGER               VIXYZ  ( 3 )
+      integer               nvox   ( 3 )
+      integer               vixyz  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -133,9 +133,9 @@
 !     Expressing the function in this format improves runtime
 !     performance as per Horner's Rule.
 !
-      ZZVOX2ID = VIXYZ(1) + &
-                 NVOX(1)*(  VIXYZ(2) - 1 + (VIXYZ(3)-1)*NVOX(2)  )
+      zzvox2id = vixyz(1) + &
+                 nvox(1)*(  vixyz(2) - 1 + (vixyz(3)-1)*nvox(2)  )
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SCPARS ( Parse a spacecraft clock string )
 
-      SUBROUTINE SCPARS ( SC, SCLKCH, ERROR, MSG, SCLKDP )
+      subroutine scpars ( sc, sclkch, error, msg, sclkdp )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sclk.inc'
+      include               'sclk.inc'
 
-      INTEGER               SC
-      CHARACTER*(*)         SCLKCH
-      LOGICAL               ERROR
-      CHARACTER*(*)         MSG
-      DOUBLE PRECISION      SCLKDP
+      integer               sc
+      character*(*)         sclkch
+      logical               error
+      character*(*)         msg
+      double precision      sclkdp
 
 ! $ Brief_I/O
 !
@@ -427,41 +427,41 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CPOS
-      INTEGER               SCTYPE
+      integer               cpos
+      integer               sctype
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
 !     Local variables
 !
-      CHARACTER*(255)       PSMSG
-      CHARACTER*(255)       STRERR
+      character*(255)       psmsg
+      character*(255)       strerr
 
-      DOUBLE PRECISION      PSTART   ( MXPART )
-      DOUBLE PRECISION      PSTOP    ( MXPART )
-      DOUBLE PRECISION      PTOTLS   ( MXPART )
-      DOUBLE PRECISION      TICKS
+      double precision      pstart   ( mxpart )
+      double precision      pstop    ( mxpart )
+      double precision      ptotls   ( mxpart )
+      double precision      ticks
 
-      INTEGER               DTYPE
-      INTEGER               I
-      INTEGER               NPARTS
-      INTEGER               PART
-      INTEGER               POS
-      INTEGER               PNTER
+      integer               dtype
+      integer               i
+      integer               nparts
+      integer               part
+      integer               pos
+      integer               pnter
 
-      LOGICAL               PSERR
+      logical               pserr
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCPARS' )
+      call chkin ( 'SCPARS' )
 
 !
 !     This routine handles errors in two different ways.
@@ -478,130 +478,130 @@
 !     In the event that a SPICE error occurs somewhere, ERROR
 !     and MSG will be initialized to the following values:
 !
-      ERROR = .TRUE.
+      error = .true.
 
-      MSG   = 'SPICELIB error detected.'
+      msg   = 'SPICELIB error detected.'
 
-      DTYPE = SCTYPE ( SC )
+      dtype = sctype ( sc )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SCPARS' )
+         return
+      end if
 
-      IF ( DTYPE .NE. 1 )  THEN
+      if ( dtype .ne. 1 )  then
 
-         CALL SETMSG ( 'Clock type # is not supported.' )
-         CALL ERRINT ( '#', DTYPE                       )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
-         CALL CHKOUT ( 'SCPARS'                         )
-         RETURN
+         call setmsg ( 'Clock type # is not supported.' )
+         call errint ( '#', dtype                       )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'            )
+         call chkout ( 'SCPARS'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the partition start and stop times (in ticks) for this
 !     mission. Error if there are too many of them.
 !
-      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      call scpart ( sc, nparts, pstart, pstop )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable but is provided for safety.
 !        Missing partition data should be caught by the earlier SCTYPE
 !        call, which accesses the type 1 SCLK database.
 !
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
+         call chkout ( 'SCPARS' )
+         return
 
-      END IF
+      end if
 
-      IF ( NPARTS .GT. MXPART ) THEN
+      if ( nparts .gt. mxpart ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         CALL SETMSG ( 'The number of partitions, #, for spacecraft ' // &
+         call setmsg ( 'The number of partitions, #, for spacecraft ' // &
                        '# exceeds the value for parameter MXPART, #.' )
-         CALL ERRINT ( '#', NPARTS           )
-         CALL ERRINT ( '#', SC               )
-         CALL ERRINT ( '#', MXPART           )
-         CALL SIGERR ( 'SPICE(TOOMANYPARTS)' )
-         CALL CHKOUT ( 'SCPARS'              )
-         RETURN
+         call errint ( '#', nparts           )
+         call errint ( '#', sc               )
+         call errint ( '#', mxpart           )
+         call sigerr ( 'SPICE(TOOMANYPARTS)' )
+         call chkout ( 'SCPARS'              )
+         return
 
-      END IF
+      end if
 
 !
 !     First check if the string is blank.
 !
-      IF ( SCLKCH .EQ. ' ' ) THEN
+      if ( sclkch .eq. ' ' ) then
 
-         ERROR = .TRUE.
+         error = .true.
 
-         MSG   = 'Input spacecraft clock string is blank.'
+         msg   = 'Input spacecraft clock string is blank.'
 
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
+         call chkout ( 'SCPARS' )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the non-partition clock string to a tick value.
 !     This conversion depends on the data type of the clock.
 !
-      POS = CPOS ( SCLKCH, '/', 1 )
+      pos = cpos ( sclkch, '/', 1 )
 
-      IF ( POS .EQ. 1 ) THEN
+      if ( pos .eq. 1 ) then
 !
 !        The slash character is first character in the string which
 !        means that the partition number is not there.
 !
-         MSG = 'Unable to parse the partition number from SCLK ' // &
+         msg = 'Unable to parse the partition number from SCLK ' // &
                'string #.'
 
-         CALL REPMC ( MSG, '#', SCLKCH, MSG )
+         call repmc ( msg, '#', sclkch, msg )
 
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
+         call chkout ( 'SCPARS' )
+         return
 
-      END IF
+      end if
 
-      IF ( POS .EQ. LEN(SCLKCH) ) THEN
+      if ( pos .eq. len(sclkch) ) then
 
-         MSG = 'SCLK string ends with slash.'
+         msg = 'SCLK string ends with slash.'
 
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
+         call chkout ( 'SCPARS' )
+         return
 
-      END IF
+      end if
 
 !
 !     Parse the portion of the clock string following the slash,
 !     if any, or the whole string if the slash is absent.
 !
-      CALL SCPS01 ( SC, SCLKCH( POS+1 : ), PSERR, PSMSG, TICKS )
+      call scps01 ( sc, sclkch( pos+1 : ), pserr, psmsg, ticks )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable but is provided for safety.
 !        Missing SCLK data should be caught by the earlier SCTYPE call,
 !        which accesses the type 1 SCLK database.
 !
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
-      END IF
+         call chkout ( 'SCPARS' )
+         return
+      end if
 
 !
 !     Check if the SCPSxx routine encountered a problem.
 !
-      IF ( PSERR ) THEN
+      if ( pserr ) then
 
-         ERROR = .TRUE.
-         MSG   =  PSMSG
-         CALL CHKOUT ( 'SCPARS' )
-         RETURN
+         error = .true.
+         msg   =  psmsg
+         call chkout ( 'SCPARS' )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the partition that this clock time falls in.
@@ -609,11 +609,11 @@
 !     For each partition, compute the total number of ticks in that
 !     partition plus all preceding partitions.
 !
-      PTOTLS( 1 ) = ANINT ( PSTOP( 1 ) - PSTART( 1 ) )
+      ptotls( 1 ) = anint ( pstop( 1 ) - pstart( 1 ) )
 
-      DO I = 2, NPARTS
-         PTOTLS( I ) = ANINT ( PTOTLS( I-1 ) + PSTOP( I ) - PSTART( I ))
-      END DO
+      do i = 2, nparts
+         ptotls( i ) = anint ( ptotls( i-1 ) + pstop( i ) - pstart( i ))
+      end do
 
 !
 !     Determine the partition number for the input clock string:
@@ -640,99 +640,99 @@
 !              of the partitions.
 !
 !
-      IF ( POS .GT. 1 ) THEN
+      if ( pos .gt. 1 ) then
 !
 !        Try to parse the partition number.
 !
-         PART = 0
+         part = 0
 
-         CALL NPARSI ( SCLKCH( : POS-1 ), PART, STRERR, PNTER )
+         call nparsi ( sclkch( : pos-1 ), part, strerr, pnter )
 !
 !        Make sure that the number parsed is correct.
 !
-         IF ( STRERR .NE. ' ' ) THEN
+         if ( strerr .ne. ' ' ) then
 !
 !          Was not able to parse a number.
 !
 
-            MSG = 'Unable to parse the partition number from SCLK ' // &
+            msg = 'Unable to parse the partition number from SCLK ' // &
                   'string #.'
 
-            CALL REPMC ( MSG, '#', SCLKCH, MSG )
+            call repmc ( msg, '#', sclkch, msg )
 
-            CALL CHKOUT ( 'SCPARS' )
-            RETURN
+            call chkout ( 'SCPARS' )
+            return
 
-         ELSE IF ( PART .LE. 0 .OR. PART .GT. NPARTS ) THEN
+         else if ( part .le. 0 .or. part .gt. nparts ) then
 
 !
 !           The parsed number does not fall in the range of valid
 !           numbers.
 !
-            MSG = 'Partition number # taken from SCLK string ' // &
+            msg = 'Partition number # taken from SCLK string ' // &
                   '# is not in acceptable range 1 to #.'
 
-            CALL REPMI ( MSG, '#', PART,   MSG )
+            call repmi ( msg, '#', part,   msg )
 
-            CALL REPMC ( MSG, '#', SCLKCH, MSG )
+            call repmc ( msg, '#', sclkch, msg )
 
-            CALL REPMI ( MSG, '#', NPARTS, MSG )
+            call repmi ( msg, '#', nparts, msg )
 
-            CALL CHKOUT ( 'SCPARS' )
-            RETURN
+            call chkout ( 'SCPARS' )
+            return
 
-         ELSE IF ( TICKS .LT. PSTART( PART )   .OR. &
-                   TICKS .GT. PSTOP ( PART ) )  THEN
+         else if ( ticks .lt. pstart( part )   .or. &
+                   ticks .gt. pstop ( part ) )  then
 
 !
 !           The TICKS value does not fall in the range of valid
 !           values for the partition number parsed from the input
 !           clock string.
 !
-            MSG = 'SCLK count from # does not fall in the ' // &
+            msg = 'SCLK count from # does not fall in the ' // &
                   'boundaries of partition number #.'
 
-            CALL REPMC ( MSG, '#', SCLKCH( POS+1 : ), MSG )
+            call repmc ( msg, '#', sclkch( pos+1 : ), msg )
 
-            CALL REPMI ( MSG, '#', PART, MSG )
+            call repmi ( msg, '#', part, msg )
 
-            CALL CHKOUT ( 'SCPARS' )
-            RETURN
+            call chkout ( 'SCPARS' )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
 !
 !        The partition number was not included in the string.
 !        Determine the partition from the TICKS value that the
 !        clock string converted to.
 !
-         PART = 1
+         part = 1
 
-         DO WHILE (   PART  .LE. NPARTS             .AND. &
-                    ( TICKS .LT. PSTART( PART )     .OR. &
-                      TICKS .GT. PSTOP ( PART ) )        )
+         do while (   part  .le. nparts             .and. &
+                    ( ticks .lt. pstart( part )     .or. &
+                      ticks .gt. pstop ( part ) )        )
 
-            PART = PART + 1
+            part = part + 1
 
-         END DO
+         end do
 
-         IF ( PART .GT. NPARTS ) THEN
+         if ( part .gt. nparts ) then
 
-            MSG = 'SCLK count # does not fall in the boundaries ' // &
+            msg = 'SCLK count # does not fall in the boundaries ' // &
                   'of any of the partitions for spacecraft #.'
 
-            CALL REPMC ( MSG, '#', SCLKCH( POS+1 : ), MSG )
+            call repmc ( msg, '#', sclkch( pos+1 : ), msg )
 
-            CALL REPMI ( MSG, '#', SC, MSG )
+            call repmi ( msg, '#', sc, msg )
 
-            CALL CHKOUT ( 'SCPARS' )
-            RETURN
+            call chkout ( 'SCPARS' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now we have a valid partition number, and the number of ticks for
@@ -740,17 +740,17 @@
 !     mission, add in the total number of ticks in preceding partitions
 !     and subtract off the starting ticks value for this partition.
 !
-      IF ( PART .GT. 1 ) THEN
-         SCLKDP = TICKS - PSTART( PART ) + PTOTLS( PART - 1 )
-      ELSE
-         SCLKDP = TICKS - PSTART( PART )
-      END IF
+      if ( part .gt. 1 ) then
+         sclkdp = ticks - pstart( part ) + ptotls( part - 1 )
+      else
+         sclkdp = ticks - pstart( part )
+      end if
 
-      ERROR = .FALSE.
+      error = .false.
 
-      MSG   = ' '
+      msg   = ' '
 
-      CALL CHKOUT ( 'SCPARS' )
-      RETURN
+      call chkout ( 'SCPARS' )
+      return
 
-      END
+      end

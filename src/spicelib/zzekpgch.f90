@@ -1,6 +1,6 @@
 !$Procedure   ZZEKPGCH ( EK, paging system access check )
 
-      SUBROUTINE ZZEKPGCH ( HANDLE, ACCESS )
+      subroutine zzekpgch ( handle, access )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ekarch.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekpage.inc'
+      include 'ekarch.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         ACCESS
+      integer               handle
+      character*(*)         access
 
 ! $ Brief_I/O
 !
@@ -122,105 +122,105 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               ID
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               NPC
-      INTEGER               NPD
-      INTEGER               NPI
-      INTEGER               TOPC
-      INTEGER               TOPD
-      INTEGER               TOPI
+      integer               id
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               npc
+      integer               npd
+      integer               npi
+      integer               topc
+      integer               topd
+      integer               topi
 
 
 
-      CALL CHKIN ( 'ZZEKPGCH' )
+      call chkin ( 'ZZEKPGCH' )
 
 !
 !     Check whether the DAS is opened for the specified access method.
 !
-      CALL DASSIH ( HANDLE, ACCESS )
+      call dassih ( handle, access )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKPGCH' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKPGCH' )
+         return
+      end if
 
 !
 !     Make sure the DAS file is of the right type.
 !
-      CALL DASRDI ( HANDLE, EPARCH, EPARCH, ID )
+      call dasrdi ( handle, eparch, eparch, id )
 
-      IF ( ID .NE. ARCHID ) THEN
+      if ( id .ne. archid ) then
 
-         CALL SETMSG ( 'File # has architecture #, which is invalid '// &
+         call setmsg ( 'File # has architecture #, which is invalid '// &
                        'for paged access.  You are using EK software '// &
                        'version #.'                                  )
-         CALL ERRHAN ( '#',   HANDLE                                 )
-         CALL ERRINT ( '#',   ID                                     )
-         CALL ERRINT ( '#',   ARCHID                                 )
-         CALL SIGERR ( 'SPICE(WRONGARCHITECTURE)'                    )
-         CALL CHKOUT ( 'ZZEKPGCH'                                    )
-         RETURN
+         call errhan ( '#',   handle                                 )
+         call errint ( '#',   id                                     )
+         call errint ( '#',   archid                                 )
+         call sigerr ( 'SPICE(WRONGARCHITECTURE)'                    )
+         call chkout ( 'ZZEKPGCH'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Obtain the page counts.  Set the `top' addresses.
 !
-      CALL DASRDI ( HANDLE, EPNPC, EPNPC, NPC )
-      CALL DASRDI ( HANDLE, EPNPD, EPNPD, NPD )
-      CALL DASRDI ( HANDLE, EPNPI, EPNPI, NPI )
+      call dasrdi ( handle, epnpc, epnpc, npc )
+      call dasrdi ( handle, epnpd, epnpd, npd )
+      call dasrdi ( handle, epnpi, epnpi, npi )
 
-      TOPC  =  NPC * PGSIZC
-      TOPD  =  NPD * PGSIZD
-      TOPI  =  NPI * PGSIZI + PGBASI
+      topc  =  npc * pgsizc
+      topd  =  npd * pgsizd
+      topi  =  npi * pgsizi + pgbasi
 
 !
 !     Verify that the last addresses in use are consistent with the
 !     `top' addresses known to this system.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
-      IF ( LASTC .GT. TOPC ) THEN
+      if ( lastc .gt. topc ) then
 
-         CALL SETMSG ( 'File # has last char address #; `top'' = #.' )
-         CALL ERRHAN ( '#',   HANDLE                                 )
-         CALL ERRINT ( '#',   LASTC                                  )
-         CALL ERRINT ( '#',   TOPC                                   )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                        )
-         CALL CHKOUT ( 'ZZEKPGCH'                                    )
-         RETURN
+         call setmsg ( 'File # has last char address #; `top'' = #.' )
+         call errhan ( '#',   handle                                 )
+         call errint ( '#',   lastc                                  )
+         call errint ( '#',   topc                                   )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
+         call chkout ( 'ZZEKPGCH'                                    )
+         return
 
-      ELSE IF ( LASTD .GT. TOPD ) THEN
+      else if ( lastd .gt. topd ) then
 
-         CALL SETMSG ( 'File # has last d.p. address #; `top'' = #.' )
-         CALL ERRHAN ( '#',   HANDLE                                 )
-         CALL ERRINT ( '#',   LASTD                                  )
-         CALL ERRINT ( '#',   TOPD                                   )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                        )
-         CALL CHKOUT ( 'ZZEKPGCH'                                    )
-         RETURN
+         call setmsg ( 'File # has last d.p. address #; `top'' = #.' )
+         call errhan ( '#',   handle                                 )
+         call errint ( '#',   lastd                                  )
+         call errint ( '#',   topd                                   )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
+         call chkout ( 'ZZEKPGCH'                                    )
+         return
 
-      ELSE IF ( LASTI .GT. TOPI ) THEN
+      else if ( lasti .gt. topi ) then
 
-         CALL SETMSG ( 'File # has last int. address #; `top'' = #.' )
-         CALL ERRHAN ( '#',   HANDLE                                 )
-         CALL ERRINT ( '#',   LASTI                                  )
-         CALL ERRINT ( '#',   TOPI                                   )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                        )
-         CALL CHKOUT ( 'ZZEKPGCH'                                    )
-         RETURN
+         call setmsg ( 'File # has last int. address #; `top'' = #.' )
+         call errhan ( '#',   handle                                 )
+         call errint ( '#',   lasti                                  )
+         call errint ( '#',   topi                                   )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
+         call chkout ( 'ZZEKPGCH'                                    )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKPGCH' )
-      RETURN
-      END
+      call chkout ( 'ZZEKPGCH' )
+      return
+      end

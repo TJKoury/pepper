@@ -1,6 +1,6 @@
 !$Procedure DSKN02 ( DSK, type 2, compute normal vector for plate )
 
-      SUBROUTINE DSKN02 ( HANDLE, DLADSC, PLID, NORMAL )
+      subroutine dskn02 ( handle, dladsc, plid, normal )
 
 ! $ Abstract
 !
@@ -20,16 +20,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               PLID
-      DOUBLE PRECISION      NORMAL ( 3 )
+      integer               handle
+      integer               dladsc ( * )
+      integer               plid
+      double precision      normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -361,96 +361,96 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      DOUBLE PRECISION      EDGE1  ( 3 )
-      DOUBLE PRECISION      EDGE2  ( 3 )
-      DOUBLE PRECISION      VERTS  ( 3, 3 )
+      double precision      dskdsc ( dskdsz )
+      double precision      edge1  ( 3 )
+      double precision      edge2  ( 3 )
+      double precision      verts  ( 3, 3 )
 
-      INTEGER               I
-      INTEGER               N
-      INTEGER               NP
-      INTEGER               NV
-      INTEGER               PLATE  ( 3 )
-      INTEGER               START
-      INTEGER               UNIT
+      integer               i
+      integer               n
+      integer               np
+      integer               nv
+      integer               plate  ( 3 )
+      integer               start
+      integer               unit
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKN02' )
+      call chkin ( 'DSKN02' )
 
 !
 !     Look up the DSK descriptor for this segment.
 !
-      CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      call dskgd ( handle, dladsc, dskdsc )
 
 !
 !     Get the plate model size parameters for this segment.
 !     Note that we get a segment data type check for free from
 !     DSKZ02.
 !
-      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      call dskz02 ( handle, dladsc, nv, np )
 
 !
 !     Check START.
 !
-      IF (  ( PLID .LT. 1 ) .OR. ( PLID .GT. NP )  ) THEN
+      if (  ( plid .lt. 1 ) .or. ( plid .gt. np )  ) then
 
-         CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+         call zzddhhlu ( handle, 'DAS', .false., unit )
 
-         CALL SETMSG ( 'Segment in DSK file # with DAS base ' &
+         call setmsg ( 'Segment in DSK file # with DAS base ' &
          //            'addresses INT = #, DP = #, CHR = # ' &
          //            'contains # plates, so PLID must ' &
          //            'be in the range 1:#; actual value ' &
          //            'was #.'                              )
-         CALL ERRFNM ( '#', UNIT                             )
-         CALL ERRINT ( '#', DLADSC(IBSIDX)                   )
-         CALL ERRINT ( '#', DLADSC(DBSIDX)                   )
-         CALL ERRINT ( '#', DLADSC(CBSIDX)                   )
-         CALL ERRINT ( '#', NP                               )
-         CALL ERRINT ( '#', NP                               )
-         CALL ERRINT ( '#', PLID                             )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'              )
-         CALL CHKOUT ( 'DSKN02'                              )
-         RETURN
+         call errfnm ( '#', unit                             )
+         call errint ( '#', dladsc(ibsidx)                   )
+         call errint ( '#', dladsc(dbsidx)                   )
+         call errint ( '#', dladsc(cbsidx)                   )
+         call errint ( '#', np                               )
+         call errint ( '#', np                               )
+         call errint ( '#', plid                             )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'              )
+         call chkout ( 'DSKN02'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the plate and its vertices.
 !
-      START = (PLID-1)*3  +  1
+      start = (plid-1)*3  +  1
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START, 3, N, PLATE )
+      call dski02 ( handle, dladsc, kwplat, start, 3, n, plate )
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         START = ( PLATE(I) - 1 )*3  + 1
+         start = ( plate(i) - 1 )*3  + 1
 
-         CALL DSKD02 ( HANDLE, DLADSC, KWVERT, START, 3, N, VERTS(1,I) )
+         call dskd02 ( handle, dladsc, kwvert, start, 3, n, verts(1,i) )
 
-      END DO
+      end do
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKN02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKN02' )
+         return
+      end if
 
 !
 !     Use the right-handed order of the vertices to determine the
 !     correct choice of normal direction.
 !
-      CALL VSUB ( VERTS(1,2), VERTS(1,1), EDGE1 )
-      CALL VSUB ( VERTS(1,3), VERTS(1,1), EDGE2 )
+      call vsub ( verts(1,2), verts(1,1), edge1 )
+      call vsub ( verts(1,3), verts(1,1), edge2 )
 
-      CALL UCRSS ( EDGE1, EDGE2, NORMAL )
+      call ucrss ( edge1, edge2, normal )
 
-      CALL CHKOUT ( 'DSKN02' )
-      RETURN
-      END
+      call chkout ( 'DSKN02' )
+      return
+      end

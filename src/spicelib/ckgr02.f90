@@ -1,6 +1,6 @@
 !$Procedure CKGR02 ( C-kernel, get record, type 02 )
 
-      SUBROUTINE CKGR02 ( HANDLE, DESCR, RECNO, RECORD )
+      subroutine ckgr02 ( handle, descr, recno, record )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               RECNO
-      DOUBLE PRECISION      RECORD  ( * )
+      integer               handle
+      double precision      descr   ( * )
+      integer               recno
+      double precision      record  ( * )
 
 ! $ Brief_I/O
 !
@@ -398,7 +398,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -416,39 +416,39 @@
 !        DTYPE      is the data type.
 !
 
-      INTEGER               NDC
-      PARAMETER           ( NDC    = 2 )
+      integer               ndc
+      parameter           ( ndc    = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC    = 6 )
+      integer               nic
+      parameter           ( nic    = 6 )
 
-      INTEGER               PSIZ
-      PARAMETER           ( PSIZ   = 8 )
+      integer               psiz
+      parameter           ( psiz   = 8 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE  = 2 )
+      integer               dtype
+      parameter           ( dtype  = 2 )
 
 !
 !     Local variables
 !
-      INTEGER               ICD    ( NIC )
-      INTEGER               NREC
-      INTEGER               BEG
-      INTEGER               ADDR
+      integer               icd    ( nic )
+      integer               nrec
+      integer               beg
+      integer               addr
 
-      DOUBLE PRECISION      DCD    ( NDC  )
-      DOUBLE PRECISION      PREC   ( PSIZ )
+      double precision      dcd    ( ndc  )
+      double precision      prec   ( psiz )
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKGR02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKGR02' )
+      end if
 
 
 !
@@ -466,73 +466,73 @@
 !        ICD(6)  Final address of segment data
 !
 
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
-      IF ( ICD( 3 ) .NE. DTYPE ) THEN
-         CALL SETMSG ( 'Data type of the segment should be 2: Passed '// &
+      if ( icd( 3 ) .ne. dtype ) then
+         call setmsg ( 'Data type of the segment should be 2: Passed '// &
                        'descriptor shows type = #.'                    )
-         CALL ERRINT ( '#', ICD( 3 )                                   )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                        )
-         CALL CHKOUT ( 'CKGR02'                                        )
-         RETURN
-      END IF
+         call errint ( '#', icd( 3 )                                   )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
+         call chkout ( 'CKGR02'                                        )
+         return
+      end if
 
 
 !
 !     Find out how many pointing instances there are in the segment.
 !
-      CALL CKNR02 ( HANDLE, DESCR, NREC )
+      call cknr02 ( handle, descr, nrec )
 
 !
 !     If a request was made for a record which doesn't exist, then
 !     signal an error and leave.
 !
-      IF ( ( RECNO .LT. 1 ) .OR. ( RECNO .GT. NREC ) ) THEN
-         CALL SETMSG ( 'Requested record number (#) does not exist. ' // &
+      if ( ( recno .lt. 1 ) .or. ( recno .gt. nrec ) ) then
+         call setmsg ( 'Requested record number (#) does not exist. ' // &
                        'There are # records in the segment.'           )
-         CALL ERRINT ( '#', RECNO                                      )
-         CALL ERRINT ( '#', NREC                                       )
-         CALL SIGERR ( 'SPICE(CKNONEXISTREC)'                          )
-         CALL CHKOUT ( 'CKGR02'                                        )
-         RETURN
-      END IF
+         call errint ( '#', recno                                      )
+         call errint ( '#', nrec                                       )
+         call sigerr ( 'SPICE(CKNONEXISTREC)'                          )
+         call chkout ( 'CKGR02'                                        )
+         return
+      end if
 
 !
 !     The address of the first double precision number in the array
 !     is stored in the fifth integer component of the descriptor.
 !
-      BEG  = ICD( 5 )
+      beg  = icd( 5 )
 
 
 !
 !     Get the pointing record indexed by RECNO.
 !
-      ADDR = BEG + PSIZ * ( RECNO - 1 )
+      addr = beg + psiz * ( recno - 1 )
 
-      CALL DAFGDA ( HANDLE, ADDR, ADDR + ( PSIZ - 1 ), PREC )
+      call dafgda ( handle, addr, addr + ( psiz - 1 ), prec )
 
-      RECORD ( 3 ) = PREC ( PSIZ )
+      record ( 3 ) = prec ( psiz )
 
-      CALL MOVED ( PREC, 7, RECORD ( 4 ) )
+      call moved ( prec, 7, record ( 4 ) )
 
 !
 !     Next get the interval start time.  Need to go past all of the
 !     NREC pointing records (PSIZ * NREC numbers), and then to the
 !     RECNOth SCLK start time.
 !
-      ADDR = BEG  +  PSIZ * NREC  +  RECNO  -  1
+      addr = beg  +  psiz * nrec  +  recno  -  1
 
-      CALL DAFGDA ( HANDLE, ADDR, ADDR, RECORD( 1 ) )
+      call dafgda ( handle, addr, addr, record( 1 ) )
 
 !
 !     Next get the interval stop time.  Need to go past all of the
 !     NREC pointing records and start times ( (PSIZ+1)*NREC numbers ),
 !     and then to the RECNOth SCLK stop time.
 !
-      ADDR = BEG  +  ( PSIZ + 1 ) * NREC  +  RECNO  -  1
+      addr = beg  +  ( psiz + 1 ) * nrec  +  recno  -  1
 
-      CALL DAFGDA ( HANDLE, ADDR, ADDR, RECORD( 2 ) )
+      call dafgda ( handle, addr, addr, record( 2 ) )
 
-      CALL CHKOUT ( 'CKGR02' )
-      RETURN
-      END
+      call chkout ( 'CKGR02' )
+      return
+      end

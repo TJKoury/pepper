@@ -1,6 +1,6 @@
 !$Procedure PRODAI ( Product of an integer array )
 
-      INTEGER FUNCTION  PRODAI ( ARRAY, N )
+      integer function  prodai ( array, n )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          ARRAY  ( * )
-      INTEGER          N
+      integer          array  ( * )
+      integer          n
 
 ! $ Brief_I/O
 !
@@ -127,26 +127,26 @@
 !
 !     Local variables
 !
-      INTEGER          PROD
-      INTEGER          I
+      integer          prod
+      integer          i
 
 
 !
 !     Begin at one.
 !
-      PROD = 1
+      prod = 1
 
 !
 !     Multiply the elements. If N is zero or negative, nothing happens.
 !
-      DO I = 1, N
-         PROD = PROD * ARRAY(I)
-      END DO
+      do i = 1, n
+         prod = prod * array(i)
+      end do
 
 !
 !     Return the product.
 !
-      PRODAI = PROD
+      prodai = prod
 
-      RETURN
-      END
+      return
+      end

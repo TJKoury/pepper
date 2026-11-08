@@ -1,6 +1,6 @@
 !$Procedure PCWID ( Printable width of a character array )
 
-      INTEGER FUNCTION PCWID ( ARRAY, NELT )
+      integer function pcwid ( array, nelt )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ARRAY   ( * )
-      INTEGER               NELT
+      character*(*)         array   ( * )
+      integer               nelt
 
 ! $ Brief_I/O
 !
@@ -135,57 +135,57 @@
 !
 !     Local variables
 !
-      INTEGER               STRLEN
-      INTEGER               I
-      INTEGER               J
+      integer               strlen
+      integer               i
+      integer               j
 
 
 !
 !     Nonsense case: no elements.
 !
-      IF ( NELT .LT. 1 ) THEN
+      if ( nelt .lt. 1 ) then
 
-         PCWID = 0
+         pcwid = 0
 
 !
 !     Get the length of the individual elements of the string.
 !     So far, we have no maximum width, because we haven't examined
 !     any elements.
 !
-      ELSE
+      else
 
-         STRLEN = LEN ( ARRAY(1) )
-         PCWID  = 0
-         I      = 0
+         strlen = len ( array(1) )
+         pcwid  = 0
+         i      = 0
 
 !
 !        Continue until the end of the array is reached, or until
 !        a string with no trailing non-printing characters is found.
 !
-         DO WHILE ( I .LT. NELT  .AND.  PCWID .LT. STRLEN )
+         do while ( i .lt. nelt  .and.  pcwid .lt. strlen )
 
 !
 !           Search no further than the current value of PCWID.
 !
-            I = I + 1
-            J = STRLEN
+            i = i + 1
+            j = strlen
 
-            DO WHILE (        J                       .GT. PCWID &
-                       .AND.  ICHAR ( ARRAY(I)(J:J) ) .LT.    33 &
-                       .AND.  ICHAR ( ARRAY(I)(J:J) ) .GT.   126 )
+            do while (        j                       .gt. pcwid &
+                       .and.  ichar ( array(i)(j:j) ) .lt.    33 &
+                       .and.  ichar ( array(i)(j:j) ) .gt.   126 )
 
-               J = J - 1
-            END DO
+               j = j - 1
+            end do
 
 !
 !           PCWID only increases if this string was wider than all
 !           previous strings.
 !
-            PCWID = MAX ( PCWID, J )
+            pcwid = max ( pcwid, j )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

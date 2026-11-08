@@ -1,6 +1,6 @@
 !$Procedure VMINUS ( Negate vector, "-V", 3 dimensions )
 
-      SUBROUTINE VMINUS ( V1, VOUT )
+      subroutine vminus ( v1, vout )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  V1   ( 3 )
-      DOUBLE PRECISION  VOUT ( 3 )
+      double precision  v1   ( 3 )
+      double precision  vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -174,9 +174,9 @@
 !-&
 
 
-      VOUT(1) = -V1(1)
-      VOUT(2) = -V1(2)
-      VOUT(3) = -V1(3)
+      vout(1) = -v1(1)
+      vout(2) = -v1(2)
+      vout(3) = -v1(3)
 !
-      RETURN
-      END
+      return
+      end

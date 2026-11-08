@@ -1,7 +1,7 @@
 !$Procedure SC01 ( Spacecraft clock, type 1 )
 
-      SUBROUTINE SC01 ( SC,     CLKSTR, TICKS,  SCLKDP, ET, &
-                        NPARTN, PARBEG, PAREND, CLKTYP     )
+      subroutine sc01 ( sc,     clkstr, ticks,  sclkdp, et, &
+                        npartn, parbeg, parend, clktyp     )
 
 ! $ Abstract
 !
@@ -20,20 +20,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
-      INCLUDE               'zzsc01.inc'
+      include               'zzctr.inc'
+      include               'zzsc01.inc'
 
-      INTEGER               SC
-      CHARACTER*(*)         CLKSTR
-      DOUBLE PRECISION      TICKS
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      ET
-      INTEGER               NPARTN
-      DOUBLE PRECISION      PARBEG ( * )
-      DOUBLE PRECISION      PAREND ( * )
-      INTEGER               CLKTYP
+      integer               sc
+      character*(*)         clkstr
+      double precision      ticks
+      double precision      sclkdp
+      double precision      et
+      integer               npartn
+      double precision      parbeg ( * )
+      double precision      parend ( * )
+      integer               clktyp
 
 ! $ Brief_I/O
 !
@@ -327,29 +327,29 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      UNITIM
+      double precision      unitim
 
-      INTEGER               SUMAI
+      integer               sumai
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
 
 
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN =    240 )
+      integer               errlen
+      parameter           ( errlen =    240 )
 
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN =    320 )
+      integer               msglen
+      parameter           ( msglen =    320 )
 
-      INTEGER               INITSC
-      PARAMETER           ( INITSC =      0 )
+      integer               initsc
+      parameter           ( initsc =      0 )
 
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN =     32 )
+      integer               kvnmln
+      parameter           ( kvnmln =     32 )
 
 !
 !     Local variables
@@ -358,77 +358,77 @@
 !
 !     SCLK pool:
 !
-      INTEGER               HDSCLK ( MXNCLK )
-      INTEGER               SCPOOL ( LBSNGL : MXNCLK )
-      INTEGER               CLKLST ( MXNCLK )
-      INTEGER               SCBASE ( MXNCLK )
+      integer               hdsclk ( mxnclk )
+      integer               scpool ( lbsngl : mxnclk )
+      integer               clklst ( mxnclk )
+      integer               scbase ( mxnclk )
 
 !
 !     Other local variables
 !
-      CHARACTER*(MSGLEN)    BVLMSG
-      CHARACTER*(DPLEN)     CMP    ( MXNFLD )
-      CHARACTER*(1)         DEL    ( NDELIM )
-      CHARACTER*(DPLEN)     DPCHAR
-      CHARACTER*(ERRLEN)    ERROR
-      CHARACTER*(KVNMLN)    KVNAME
+      character*(msglen)    bvlmsg
+      character*(dplen)     cmp    ( mxnfld )
+      character*(1)         del    ( ndelim )
+      character*(dplen)     dpchar
+      character*(errlen)    error
+      character*(kvnmln)    kvname
 
-      DOUBLE PRECISION      CMPTKS ( MXNFLD )
-      DOUBLE PRECISION      CMPVAL ( MXNFLD )
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      DPBUFF ( DBUFSZ )
-      DOUBLE PRECISION      DVAL
-      DOUBLE PRECISION      MAXWID
-      DOUBLE PRECISION      MXTICK
-      DOUBLE PRECISION      PARTIM
-      DOUBLE PRECISION      RATE
-      DOUBLE PRECISION      REM
-      DOUBLE PRECISION      SAVCMP
-      DOUBLE PRECISION      TIKDIF
-      DOUBLE PRECISION      TIKMSC
-      DOUBLE PRECISION      TIMDIF
+      double precision      cmptks ( mxnfld )
+      double precision      cmpval ( mxnfld )
+      double precision      const
+      double precision      dpbuff ( dbufsz )
+      double precision      dval
+      double precision      maxwid
+      double precision      mxtick
+      double precision      partim
+      double precision      rate
+      double precision      rem
+      double precision      savcmp
+      double precision      tikdif
+      double precision      tikmsc
+      double precision      timdif
 
-      INTEGER               CMPWID ( MXNFLD )
-      INTEGER               COFBAS
-      INTEGER               DELCDE
-      INTEGER               DPFREE
-      INTEGER               END
-      INTEGER               ENDBAS
-      INTEGER               I
-      INTEGER               IFREE
-      INTEGER               INTBUF ( IBUFSZ )
-      INTEGER               J
-      INTEGER               LENGTH ( MXNFLD )
-      INTEGER               LOWER
-      INTEGER               MIDDLE
-      INTEGER               MODBAS
-      INTEGER               N
-      INTEGER               NCOEFF
-      INTEGER               NEEDED
-      INTEGER               NFIELD
-      INTEGER               NPART
-      INTEGER               OFFBAS
-      INTEGER               PAD
-      INTEGER               PNTR
-      INTEGER               POLCTR ( CTRSIZ )
-      INTEGER               PRVSC
-      INTEGER               STRBAS
-      INTEGER               TIMSYS
-      INTEGER               UPPER
+      integer               cmpwid ( mxnfld )
+      integer               cofbas
+      integer               delcde
+      integer               dpfree
+      integer               end
+      integer               endbas
+      integer               i
+      integer               ifree
+      integer               intbuf ( ibufsz )
+      integer               j
+      integer               length ( mxnfld )
+      integer               lower
+      integer               middle
+      integer               modbas
+      integer               n
+      integer               ncoeff
+      integer               needed
+      integer               nfield
+      integer               npart
+      integer               offbas
+      integer               pad
+      integer               pntr
+      integer               polctr ( ctrsiz )
+      integer               prvsc
+      integer               strbas
+      integer               timsys
+      integer               upper
 
-      LOGICAL               FOUND
-      LOGICAL               PASS1
-      LOGICAL               SAMCLK
-      LOGICAL               UPDATE
+      logical               found
+      logical               pass1
+      logical               samclk
+      logical               update
 
 !
 !     Declarations of statement functions
 !
-      DOUBLE PRECISION      COEFFS
-      DOUBLE PRECISION      MODULI
-      DOUBLE PRECISION      OFFSET
-      DOUBLE PRECISION      PREND
-      DOUBLE PRECISION      PRSTRT
+      double precision      coeffs
+      double precision      moduli
+      double precision      offset
+      double precision      prend
+      double precision      prstrt
 
 !
 !     Saved variables
@@ -442,30 +442,30 @@
 !     should be saved in any event to prevent memory problems
 !     on some platforms.
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA BVLMSG / 'Invalid value of #. Value was #.'    /
+      data bvlmsg / 'Invalid value of #. Value was #.'    /
 
-      DATA DEL    / '.'    , &
+      data del    / '.'    , &
                     ':'    , &
                     '-'    , &
                     ','    , &
                     ' '                                   /
 
-      DATA PASS1  / .TRUE. /
+      data pass1  / .true. /
 
-      DATA PRVSC  / INITSC /
+      data prvsc  / initsc /
 
-      DATA COFBAS / 0 /
-      DATA STRBAS / 0 /
-      DATA ENDBAS / 0 /
-      DATA MODBAS / 0 /
-      DATA OFFBAS / 0 /
-      DATA DPFREE / 1 /
-      DATA IFREE  / 1 /
+      data cofbas / 0 /
+      data strbas / 0 /
+      data endbas / 0 /
+      data modbas / 0 /
+      data offbas / 0 /
+      data dpfree / 1 /
+      data ifree  / 1 /
 
 
 !
@@ -477,35 +477,35 @@
 !     record for the record set starting at index COFBAS+1 in the
 !     double precision SCLK data buffer.
 
-      COEFFS( I, J ) = DPBUFF( COFBAS + I + (J-1)*3 )
+      coeffs( i, j ) = dpbuff( cofbas + i + (j-1)*3 )
 
 !
 !     Function PREND returns the Ith partition end time for the
 !     partition end time set starting at index ENDBAS+1 in the double
 !     precision SCLK data buffer.
 !
-      PREND( I ) = DPBUFF( ENDBAS + I )
+      prend( i ) = dpbuff( endbas + i )
 
 !
 !     Function PRSTRT returns the Ith partition start time for the
 !     partition start time set starting at index STRBAS+1 in the double
 !     precision SCLK data buffer.
 !
-      PRSTRT( I ) = DPBUFF( STRBAS + I )
+      prstrt( i ) = dpbuff( strbas + i )
 
 !
 !     Function MODULI returns the Ith field modulus for the modulus
 !     array starting at index MODBAS+1 in the double
 !     precision SCLK data buffer.
 !
-      MODULI( I ) = DPBUFF( MODBAS + I )
+      moduli( i ) = dpbuff( modbas + i )
 
 !
 !     Function OFFSET returns the Ith field offset for the offset
 !     array starting at index OFFBAS+1 in the double
 !     precision SCLK data buffer.
 !
-      OFFSET( I ) = DPBUFF( OFFBAS + I )
+      offset( i ) = dpbuff( offbas + i )
 
 !
 !     For later implementation:
@@ -520,21 +520,21 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SC01' )
+      call chkin ( 'SC01' )
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'SC01' )
-      RETURN
+      call chkout ( 'SC01' )
+      return
 
 
 !$Procedure SCTK01 ( Convert type 1 SCLK string to ticks )
 
-      ENTRY SCTK01 ( SC, CLKSTR, TICKS )
+      entry sctk01 ( sc, clkstr, ticks )
 
 ! $ Abstract
 !
@@ -881,66 +881,66 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCTK01' )
+      call chkin ( 'SCTK01' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures. This routine is error-free.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      CALL ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                      DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                      DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                      ENDBAS, MODBAS, OFFBAS )
+      call zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                      endbas, modbas, offbas )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        For safety, initialize the database on the next call to
 !        any entry point of SC01. Setting PASS1 to .TRUE.
 !        accomplishes this.
 !
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL CHKOUT ( 'SCTK01' )
-         RETURN
-      END IF
+         call chkout ( 'SCTK01' )
+         return
+      end if
 
 !
 !     If our clock string is blank, we can stop now.
 !
-      IF ( CLKSTR .EQ. ' ' ) THEN
+      if ( clkstr .eq. ' ' ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'CLKSTR is blank.'         )
-         CALL SIGERR ( 'SPICE(INVALIDSCLKSTRING)' )
-         CALL CHKOUT ( 'SCTK01'                   )
-         RETURN
+         call setmsg ( 'CLKSTR is blank.'         )
+         call sigerr ( 'SPICE(INVALIDSCLKSTRING)' )
+         call chkout ( 'SCTK01'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine how many ticks is each field is worth.
 !
-      CMPTKS( NFIELD ) = 1.D0
+      cmptks( nfield ) = 1.d0
 
-      DO  I = NFIELD-1, 1, -1
-         CMPTKS(I) = CMPTKS(I+1) * MODULI(I+1)
-      END DO
+      do  i = nfield-1, 1, -1
+         cmptks(i) = cmptks(i+1) * moduli(i+1)
+      end do
 
 !
 !     Parse the clock components from the input string. There should
@@ -950,23 +950,23 @@
 !
 !     NOTE: LPARSM is error-free.
 !
-      CALL LPARSM ( CLKSTR, DELIMS, MXNFLD, N, CMP )
+      call lparsm ( clkstr, delims, mxnfld, n, cmp )
 
 !
 !     If the string has too many fields for the specified spacecraft
 !     then signal an error.
 !
-      IF  ( N .GT. NFIELD )  THEN
+      if  ( n .gt. nfield )  then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'CLKSTR has # fields, which is too many.' )
-         CALL ERRINT ( '#' , N                                   )
-         CALL SIGERR ( 'SPICE(INVALIDSCLKSTRING)'                )
-         CALL CHKOUT ( 'SCTK01'                                  )
-         RETURN
+         call setmsg ( 'CLKSTR has # fields, which is too many.' )
+         call errint ( '#' , n                                   )
+         call sigerr ( 'SPICE(INVALIDSCLKSTRING)'                )
+         call chkout ( 'SCTK01'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert each of the components into numbers.  Error if any
@@ -974,28 +974,28 @@
 !     to ' ', so assign the numeric value of the blank components
 !     to be equal to the offset value.
 !
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( CMP(I) .EQ. ' ' )  THEN
-            CMPVAL(I) = OFFSET(I)
-         ELSE
-            CALL NPARSD ( CMP(I), CMPVAL(I), ERROR, PNTR )
-         END IF
+         if ( cmp(i) .eq. ' ' )  then
+            cmpval(i) = offset(i)
+         else
+            call nparsd ( cmp(i), cmpval(i), error, pntr )
+         end if
 
 
-         IF ( ERROR .NE. ' ' ) THEN
+         if ( error .ne. ' ' ) then
 
-            PASS1 = .TRUE.
+            pass1 = .true.
 
-            CALL SETMSG ( 'Could not parse SCLK component # from ' &
+            call setmsg ( 'Could not parse SCLK component # from ' &
             //           '# as a number.'                          )
-            CALL ERRCH  ( '#', CMP(I)                              )
-            CALL ERRCH  ( '#', CLKSTR                              )
-            CALL SIGERR ( 'SPICE(INVALIDSCLKSTRING)'               )
-            CALL CHKOUT ( 'SCTK01'                                 )
-            RETURN
+            call errch  ( '#', cmp(i)                              )
+            call errch  ( '#', clkstr                              )
+            call sigerr ( 'SPICE(INVALIDSCLKSTRING)'               )
+            call chkout ( 'SCTK01'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        Subtract off the offset value so that we can do base ten
@@ -1003,51 +1003,51 @@
 !        as a result of the subtraction, then that component must
 !        have been invalid.
 !
-         SAVCMP    = CMPVAL(I)
-         CMPVAL(I) = CMPVAL(I) - OFFSET(I)
+         savcmp    = cmpval(i)
+         cmpval(i) = cmpval(i) - offset(i)
 
-         IF  ( ANINT( CMPVAL(I) ) .LT. 0.D0  )   THEN
+         if  ( anint( cmpval(i) ) .lt. 0.d0  )   then
 
-            PASS1 = .TRUE.
+            pass1 = .true.
 
-            CALL SETMSG ( 'Component number # in the SCLK string, ' &
+            call setmsg ( 'Component number # in the SCLK string, ' &
             //            'counting left to right, is invalid: ' &
             //            'component # is less than field offset #.' )
-            CALL ERRINT ( '#', I                                     )
-            CALL ERRDP  ( '#', SAVCMP                                )
-            CALL ERRDP  ( '#', OFFSET(I)                             )
-            CALL SIGERR ( 'SPICE(INVALIDSCLKSTRING)'                 )
-            CALL CHKOUT ( 'SCTK01'                                   )
-            RETURN
+            call errint ( '#', i                                     )
+            call errdp  ( '#', savcmp                                )
+            call errdp  ( '#', offset(i)                             )
+            call sigerr ( 'SPICE(INVALIDSCLKSTRING)'                 )
+            call chkout ( 'SCTK01'                                   )
+            return
 
-          END IF
+          end if
 
-      END DO
+      end do
 
 !
 !     Convert to ticks by multiplying the value of each component by
 !     the number of ticks each component count represents, and then
 !     add up the results.
 !
-      TICKS = 0.D0
+      ticks = 0.d0
 
-      DO I = 1, N
-         TICKS = TICKS + CMPVAL(I)*CMPTKS(I)
-      END DO
+      do i = 1, n
+         ticks = ticks + cmpval(i)*cmptks(i)
+      end do
 
 !
 !     Keep track of the last spacecraft clock ID encountered.
 !
-      PRVSC = SC
+      prvsc = sc
 
-      CALL CHKOUT ( 'SCTK01' )
-      RETURN
+      call chkout ( 'SCTK01' )
+      return
 
 
 
 !$Procedure SCFM01 ( Convert ticks to a type 1 SCLK string. )
 
-      ENTRY SCFM01 ( SC, TICKS, CLKSTR )
+      entry scfm01 ( sc, ticks, clkstr )
 
 ! $ Abstract
 !
@@ -1343,186 +1343,186 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCFM01' )
+      call chkin ( 'SCFM01' )
 
 !
 !     On the first pass through the subroutine, or if the spacecraft
 !     clock ID changes, we will set watches on the SCLK kernel
 !     variables for the current clock.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures. This routine is error-free.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      CALL ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                      DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                      DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                      ENDBAS, MODBAS, OFFBAS )
+      call zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                      endbas, modbas, offbas )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        For safety, initialize the database on the next call to
 !        any entry point of SC01. Setting PASS1 to .TRUE.
 !        accomplishes this.
 !
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL CHKOUT ( 'SCFM01' )
-         RETURN
+         call chkout ( 'SCFM01' )
+         return
 
-      END IF
+      end if
 !
 !     Determine how many ticks each field is worth.
 !
-      CMPTKS( NFIELD ) = 1.D0
+      cmptks( nfield ) = 1.d0
 
-      DO  I = NFIELD-1, 1, -1
-         CMPTKS(I) = CMPTKS(I+1) * MODULI(I+1)
-      END DO
+      do  i = nfield-1, 1, -1
+         cmptks(i) = cmptks(i+1) * moduli(i+1)
+      end do
 
 !
 !     Determine the width of each field.
 !
-      DO I  = 1, NFIELD
+      do i  = 1, nfield
 
-         MAXWID     =  MODULI(I) + OFFSET(I) - 1.D0
+         maxwid     =  moduli(i) + offset(i) - 1.d0
 
-         CMPWID(I)  =  1 + INT ( LOG10( MAXWID + 0.5D0 ) )
+         cmpwid(i)  =  1 + int ( log10( maxwid + 0.5d0 ) )
 
-      END DO
+      end do
 
 !
 !     Check whether the output string is long enough to contain the
 !     string we're about to assemble.  We need room for (NFIELD - 1)
 !     delimiters as well as for the numeric fields.
 !
-      NEEDED  =  NFIELD  -  1  +  SUMAI ( CMPWID, NFIELD )
+      needed  =  nfield  -  1  +  sumai ( cmpwid, nfield )
 
-      IF (  LEN( CLKSTR )  .LT.  NEEDED  ) THEN
+      if (  len( clkstr )  .lt.  needed  ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Output argument has declared length #; '      // &
+         call setmsg ( 'Output argument has declared length #; '      // &
                        'required length is #. Input tick value was #.' )
-         CALL ERRINT ( '#',  LEN(CLKSTR)                               )
-         CALL ERRINT ( '#',  NEEDED                                    )
-         CALL ERRDP  ( '#',  TICKS                                     )
-         CALL SIGERR ( 'SPICE(SCLKTRUNCATED)'                          )
-         CALL CHKOUT ( 'SCFM01'                                        )
-         RETURN
+         call errint ( '#',  len(clkstr)                               )
+         call errint ( '#',  needed                                    )
+         call errdp  ( '#',  ticks                                     )
+         call sigerr ( 'SPICE(SCLKTRUNCATED)'                          )
+         call chkout ( 'SCFM01'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Need to check that TICKS is a positive number.
 !
-      IF (  ANINT( TICKS ) .LT. 0  ) THEN
+      if (  anint( ticks ) .lt. 0  ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Negative value for SCLK ticks: #' )
-         CALL ERRDP  ( '#', TICKS                         )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'           )
-         CALL CHKOUT ( 'SCFM01'                           )
-         RETURN
+         call setmsg ( 'Negative value for SCLK ticks: #' )
+         call errdp  ( '#', ticks                         )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'           )
+         call chkout ( 'SCFM01'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Determine the value of each of the components. This is done by
 !     successively dividing by the number of ticks each component value
 !     is worth.
 !
-      REM = ANINT ( TICKS )
+      rem = anint ( ticks )
 
-      DO I = 1, NFIELD - 1
+      do i = 1, nfield - 1
 
-         CMPVAL(I)   =  AINT ( REM / CMPTKS(I) ) + OFFSET(I)
-         REM         =  MOD  ( REM,  CMPTKS(I) )
+         cmpval(i)   =  aint ( rem / cmptks(i) ) + offset(i)
+         rem         =  mod  ( rem,  cmptks(i) )
 
-      END DO
+      end do
 
-      CMPVAL(NFIELD) =  REM + OFFSET(NFIELD)
+      cmpval(nfield) =  rem + offset(nfield)
 
 !
 !     Convert the values of each component from double precision
 !     numbers to character strings.
 !
-      DO  I = 1, NFIELD
+      do  i = 1, nfield
 !
 !        NOTE: DPSTRF is error-free.
 !
-         CALL DPSTRF ( CMPVAL(I), DPLEN, 'F', DPCHAR )
+         call dpstrf ( cmpval(i), dplen, 'F', dpchar )
 
-         END        =  INDEX ( DPCHAR, '.' ) - 1
-         LENGTH(I)  =  END - 1
-         CMP(I)     =  DPCHAR(2:END)
+         end        =  index ( dpchar, '.' ) - 1
+         length(i)  =  end - 1
+         cmp(i)     =  dpchar(2:end)
 
-      END DO
+      end do
 
 !
 !     Pad on the left with zeros if necessary.
 !
-      DO  I = 1, NFIELD
+      do  i = 1, nfield
 
-         PAD = CMPWID(I) - LENGTH(I)
+         pad = cmpwid(i) - length(i)
 
-         IF ( PAD .GT. 0 )  THEN
+         if ( pad .gt. 0 )  then
 
-            DO  J = 1, PAD
-               CALL PREFIX ( '0', 0, CMP(I) )
-            END DO
+            do  j = 1, pad
+               call prefix ( '0', 0, cmp(i) )
+            end do
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Construct the clock string with a delimiter separating
 !     each field.
 !
-      CLKSTR = CMP(1)
+      clkstr = cmp(1)
 
-      DO  I = 2, NFIELD
+      do  i = 2, nfield
 
-         IF ( DEL(DELCDE) .NE. ' ' ) THEN
+         if ( del(delcde) .ne. ' ' ) then
 
-            CALL PREFIX ( DEL(DELCDE), 0, CMP(I) )
-            CALL SUFFIX ( CMP(I),      0, CLKSTR )
-         ELSE
-            CALL SUFFIX ( CMP(I),      1, CLKSTR )
-         END IF
+            call prefix ( del(delcde), 0, cmp(i) )
+            call suffix ( cmp(i),      0, clkstr )
+         else
+            call suffix ( cmp(i),      1, clkstr )
+         end if
 
-      END DO
+      end do
 
 !
 !     Keep track of the last spacecraft clock ID encountered.
 !
-      PRVSC = SC
+      prvsc = sc
 
-      CALL CHKOUT ( 'SCFM01' )
-      RETURN
+      call chkout ( 'SCFM01' )
+      return
 
 
 
 !$Procedure SCTE01 ( Ticks to ET, type 01 )
 
-      ENTRY SCTE01 ( SC, SCLKDP, ET )
+      entry scte01 ( sc, sclkdp, et )
 
 ! $ Abstract
 !
@@ -1814,70 +1814,70 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCTE01' )
+      call chkin ( 'SCTE01' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures. This routine is error-free.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      CALL ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                      DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                      DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                      ENDBAS, MODBAS, OFFBAS )
+      call zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                      endbas, modbas, offbas )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL CHKOUT ( 'SCTE01' )
-         RETURN
+         call chkout ( 'SCTE01' )
+         return
 
-      END IF
+      end if
 
 !
 !     To check whether SCLKDP is in range, we must find the end time
 !     of the last partition, in total ticks since spacecraft clock
 !     start.
 !
-      MXTICK = 0.D0
+      mxtick = 0.d0
 
-      DO I = 1, NPART
-         MXTICK  =  ANINT (  PREND(I) - PRSTRT(I) + MXTICK  )
-      END DO
+      do i = 1, npart
+         mxtick  =  anint (  prend(i) - prstrt(i) + mxtick  )
+      end do
 
 !
 !     We now check that SCLKDP is in range.  COEFFS(1,1) and
 !     MXTICK are, respectively, the first and last absolute
 !     tick values of the clock.
 !
-      IF (      ( SCLKDP .LT. COEFFS(1,1)    ) &
-           .OR. ( SCLKDP .GT. MXTICK         )   ) THEN
+      if (      ( sclkdp .lt. coeffs(1,1)    ) &
+           .or. ( sclkdp .gt. mxtick         )   ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG (  BVLMSG                  )
-         CALL ERRCH  ( '#', 'SCLKDP'            )
-         CALL ERRDP  ( '#',  SCLKDP             )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCTE01'                 )
-         RETURN
+         call setmsg (  bvlmsg                  )
+         call errch  ( '#', 'SCLKDP'            )
+         call errdp  ( '#',  sclkdp             )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCTE01'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Ok, if we made it this far, we can actually interpret the tick
@@ -1902,10 +1902,10 @@
 !           last SCLK value in the array is the one we want.
 !
 
-      IF (  SCLKDP .LT.  COEFFS(1, NCOEFF/3) ) THEN
+      if (  sclkdp .lt.  coeffs(1, ncoeff/3) ) then
 
-         LOWER  =  1
-         UPPER  =  NCOEFF / 3
+         lower  =  1
+         upper  =  ncoeff / 3
 
 !
 !        In the following loop, we maintain an invariant:
@@ -1920,17 +1920,17 @@
 !        Note that we start out with if LOWER < UPPER, since we've
 !        already made sure that the invariant expression above is true.
 !
-         DO WHILE ( LOWER .LT. UPPER - 1 )
+         do while ( lower .lt. upper - 1 )
 
-            MIDDLE  =  ( LOWER + UPPER ) / 2
+            middle  =  ( lower + upper ) / 2
 
-            IF (  SCLKDP  .LT. COEFFS(1,MIDDLE) ) THEN
-               UPPER = MIDDLE
-            ELSE
-               LOWER = MIDDLE
-            END IF
+            if (  sclkdp  .lt. coeffs(1,middle) ) then
+               upper = middle
+            else
+               lower = middle
+            end if
 
-         END DO
+         end do
 
 !
 !        We've got SCLKDP trapped between two tick values that are
@@ -1947,14 +1947,14 @@
 !        equal to SCLKDP.
 !
 
-      ELSE
+      else
 !
 !        SCLKDP is greater than or equal to all of the SCLK
 !        coefficients in the coefficients array.
 !
-         LOWER = NCOEFF / 3
+         lower = ncoeff / 3
 
-      END IF
+      end if
 
 !
 !     Now we evaluate a linear polynomial to find the time value that
@@ -1969,76 +1969,76 @@
 !     SCLK count, so we use the conversion factor TIKMSC to change the
 !     rate to seconds per tick.
 !
-      TIKMSC = 1.0D0
+      tikmsc = 1.0d0
 
-      DO I = NFIELD, 2, -1
-         TIKMSC  =  TIKMSC * MODULI(I)
-      END DO
+      do i = nfield, 2, -1
+         tikmsc  =  tikmsc * moduli(i)
+      end do
 
-      IF (  COEFFS( 3, LOWER ) .LE. 0.D0  ) THEN
+      if (  coeffs( 3, lower ) .le. 0.d0  ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Invalid SCLK rate.'     )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCTE01'                 )
-         RETURN
+         call setmsg ( 'Invalid SCLK rate.'     )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCTE01'                 )
+         return
 
-      END IF
+      end if
 
-      TIKDIF =  SCLKDP  -  COEFFS( 1, LOWER )
-      CONST  =             COEFFS( 2, LOWER )
-      RATE   =             COEFFS( 3, LOWER )  /  TIKMSC
+      tikdif =  sclkdp  -  coeffs( 1, lower )
+      const  =             coeffs( 2, lower )
+      rate   =             coeffs( 3, lower )  /  tikmsc
 
-      PARTIM =  CONST  +  ( RATE * TIKDIF )
+      partim =  const  +  ( rate * tikdif )
 
 !
 !     Convert the parallel time to TDB, if the system is not TDB.
 !     We don't need to check the validity of TIMSYS, because SCLI01
 !     already made this check.
 !
-      IF ( TIMSYS .EQ. TDB ) THEN
+      if ( timsys .eq. tdb ) then
 
-         ET = PARTIM
+         et = partim
 
-      ELSE IF ( TIMSYS .EQ. TDT ) THEN
+      else if ( timsys .eq. tdt ) then
 
-         ET = UNITIM ( PARTIM, 'TDT', 'TDB' )
+         et = unitim ( partim, 'TDT', 'TDB' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SCTE01' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SCTE01' )
+            return
+         end if
 
-      ELSE
+      else
 !
 !        This code should be unreachable. It's present for safety.
 !
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Invalid time system code # was found for ' &
+         call setmsg ( 'Invalid time system code # was found for ' &
          //            'SCLK #.'                                   )
-         CALL ERRINT ( '#', TIMSYS                                 )
-         CALL ERRINT ( '#', SC                                     )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         CALL CHKOUT ( 'SCTE01' )
-         RETURN
+         call errint ( '#', timsys                                 )
+         call errint ( '#', sc                                     )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
+         call chkout ( 'SCTE01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Keep track of the last spacecraft clock ID encountered.
 !
-      PRVSC = SC
+      prvsc = sc
 
-      CALL CHKOUT ( 'SCTE01' )
-      RETURN
+      call chkout ( 'SCTE01' )
+      return
 
 
 
 !$Procedure SCET01 ( ET to discrete ticks, type 1 )
 
-      ENTRY SCET01 ( SC, ET, SCLKDP )
+      entry scet01 ( sc, et, sclkdp )
 
 ! $ Abstract
 !
@@ -2340,40 +2340,40 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCET01' )
+      call chkin ( 'SCET01' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures. This routine is error-free.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      CALL ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                      DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                      DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                      ENDBAS, MODBAS, OFFBAS )
+      call zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                      endbas, modbas, offbas )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL CHKOUT ( 'SCET01' )
-         RETURN
+         call chkout ( 'SCET01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the input TDB time to the parallel time system, if the
@@ -2382,34 +2382,34 @@
 !     We don't need to check the validity of TIMSYS, because SCLI01
 !     already made this check.
 !
-      IF ( TIMSYS .EQ. TDB ) THEN
+      if ( timsys .eq. tdb ) then
 
-         PARTIM = ET
+         partim = et
 
-      ELSE IF ( TIMSYS .EQ. TDT ) THEN
+      else if ( timsys .eq. tdt ) then
 
-         PARTIM = UNITIM ( ET, 'TDB', 'TDT' )
+         partim = unitim ( et, 'TDB', 'TDT' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SCET01' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SCET01' )
+            return
+         end if
 
-      ELSE
+      else
 !
 !        This code should be unreachable. It's present for safety.
 !
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Invalid time system code # was found for ' &
+         call setmsg ( 'Invalid time system code # was found for ' &
          //            'SCLK #.'                                   )
-         CALL ERRINT ( '#', TIMSYS                                 )
-         CALL ERRINT ( '#', SC                                     )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         CALL CHKOUT ( 'SCET01' )
-         RETURN
+         call errint ( '#', timsys                                 )
+         call errint ( '#', sc                                     )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
+         call chkout ( 'SCET01' )
+         return
 
-      END IF
+      end if
 !
 !     We'd like to ascertain whether PARTIM is between the minimum
 !     time value in the coefficients array and the end time
@@ -2447,14 +2447,14 @@
 !           last time value in the array is the one we want.
 !
 !
-      IF (  PARTIM  .LT.  COEFFS( 2, 1 )  ) THEN
+      if (  partim  .lt.  coeffs( 2, 1 )  ) then
 !
 !        The coefficient set to use for extrapolation is the first.
 !
-         LOWER = 1
+         lower = 1
 
 
-      ELSE IF (  PARTIM .LT. COEFFS( 2, NCOEFF/3 )  ) THEN
+      else if (  partim .lt. coeffs( 2, ncoeff/3 )  ) then
 !
 !        In the following loop, we maintain an invariant:
 !
@@ -2469,20 +2469,20 @@
 !        already made sure that the invariant expression above is true.
 !
 
-         LOWER  =  1
-         UPPER  =  NCOEFF / 3
+         lower  =  1
+         upper  =  ncoeff / 3
 
-         DO WHILE ( LOWER .LT. UPPER - 1 )
+         do while ( lower .lt. upper - 1 )
 
-            MIDDLE  =  ( LOWER + UPPER ) / 2
+            middle  =  ( lower + upper ) / 2
 
-            IF (  PARTIM  .LT.  COEFFS( 2, MIDDLE )  ) THEN
-               UPPER = MIDDLE
-            ELSE
-               LOWER = MIDDLE
-            END IF
+            if (  partim  .lt.  coeffs( 2, middle )  ) then
+               upper = middle
+            else
+               lower = middle
+            end if
 
-         END DO
+         end do
 
 !
 !        We've got PARTIM trapped between two time values that are
@@ -2499,14 +2499,14 @@
 !        equal to PARTIM.
 !
 
-      ELSE
+      else
 !
 !        PARTIM is greater than or equal to all of the time values in
 !        the coefficients array.
 !
-         LOWER = NCOEFF / 3
+         lower = ncoeff / 3
 
-      END IF
+      end if
 
 !
 !     Now we evaluate a linear polynomial to find the tick value that
@@ -2525,30 +2525,30 @@
 !     We use the generic `nearest whole number' function ANINT to
 !     ensure this.
 !
-      TIMDIF =  PARTIM  -  COEFFS( 2, LOWER )
-      CONST  =             COEFFS( 1, LOWER )
+      timdif =  partim  -  coeffs( 2, lower )
+      const  =             coeffs( 1, lower )
 
-      IF (  COEFFS( 3, LOWER ) .LE. 0.D0  ) THEN
+      if (  coeffs( 3, lower ) .le. 0.d0  ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Invalid SCLK rate.'     )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCET01'                 )
-         RETURN
+         call setmsg ( 'Invalid SCLK rate.'     )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCET01'                 )
+         return
 
-      END IF
+      end if
 
 
-      TIKMSC = 1.0D0
+      tikmsc = 1.0d0
 
-      DO I = NFIELD, 2, -1
-         TIKMSC  =  TIKMSC * MODULI(I)
-      END DO
+      do i = nfield, 2, -1
+         tikmsc  =  tikmsc * moduli(i)
+      end do
 
-      RATE   =  1.D0   /   (  COEFFS(3, LOWER) / TIKMSC  )
+      rate   =  1.d0   /   (  coeffs(3, lower) / tikmsc  )
 
-      SCLKDP =  ANINT (  CONST   +   ( RATE * TIMDIF )  )
+      sclkdp =  anint (  const   +   ( rate * timdif )  )
 
 !
 !     Now, we'll see whether the SCLK value we've found is meaningful.
@@ -2557,11 +2557,11 @@
 !     range, we must find the end time of the last partition, in total
 !     ticks since spacecraft clock start.
 !
-      MXTICK  =  ANINT ( PREND(1) - PRSTRT(1) )
+      mxtick  =  anint ( prend(1) - prstrt(1) )
 
-      DO I = 2, NPART
-         MXTICK  =  ANINT ( PREND(I) -  PRSTRT(I)  +  MXTICK )
-      END DO
+      do i = 2, npart
+         mxtick  =  anint ( prend(i) -  prstrt(i)  +  mxtick )
+      end do
 
 !
 !     Make sure that ET does not precede the ET corresponding to
@@ -2573,37 +2573,37 @@
 !     Convert SCLKDP and COEFFS(1,1) to whole numbers, so that
 !     direct comparisons without tolerances are possible.
 !
-      SCLKDP = ANINT ( SCLKDP      )
-      DVAL   = ANINT ( COEFFS(1,1) )
+      sclkdp = anint ( sclkdp      )
+      dval   = anint ( coeffs(1,1) )
 
-      IF (      ( SCLKDP .LT. DVAL  ) &
-           .OR. ( SCLKDP .GT. MXTICK       )   ) THEN
+      if (      ( sclkdp .lt. dval  ) &
+           .or. ( sclkdp .gt. mxtick       )   ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG (  BVLMSG                  )
-         CALL ERRCH  ( '#', 'ET'                )
-         CALL ERRDP  ( '#',  ET                 )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCET01'                 )
-         RETURN
+         call setmsg (  bvlmsg                  )
+         call errch  ( '#', 'ET'                )
+         call errdp  ( '#',  et                 )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCET01'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Keep track of the last spacecraft clock ID encountered.
 !
-      PRVSC = SC
+      prvsc = sc
 
-      CALL CHKOUT ( 'SCET01' )
-      RETURN
+      call chkout ( 'SCET01' )
+      return
 
 
 
 
 !$Procedure SCEC01 ( ET to continuous ticks, type 1 )
 
-      ENTRY SCEC01 ( SC, ET, SCLKDP )
+      entry scec01 ( sc, et, sclkdp )
 
 ! $ Abstract
 !
@@ -2849,40 +2849,40 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCEC01' )
+      call chkin ( 'SCEC01' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures. This routine is error-free.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      CALL ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                      DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                      DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                      ENDBAS, MODBAS, OFFBAS )
+      call zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                      endbas, modbas, offbas )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL CHKOUT ( 'SCEC01' )
-         RETURN
+         call chkout ( 'SCEC01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the input TDB time to the parallel time system, if the
@@ -2891,34 +2891,34 @@
 !     We don't need to check the validity of TIMSYS, because SCLI01
 !     already made this check.
 !
-      IF ( TIMSYS .EQ. TDB ) THEN
+      if ( timsys .eq. tdb ) then
 
-         PARTIM = ET
+         partim = et
 
-      ELSE IF ( TIMSYS .EQ. TDT ) THEN
+      else if ( timsys .eq. tdt ) then
 
-         PARTIM = UNITIM ( ET, 'TDB', 'TDT' )
+         partim = unitim ( et, 'TDB', 'TDT' )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SCEC01' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SCEC01' )
+            return
+         end if
 
-      ELSE
+      else
 !
 !        This code should be unreachable. It's present for safety.
 !
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Invalid time system code # was found for ' &
+         call setmsg ( 'Invalid time system code # was found for ' &
          //            'SCLK #.'                                   )
-         CALL ERRINT ( '#', TIMSYS                                 )
-         CALL ERRINT ( '#', SC                                     )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                    )
-         CALL CHKOUT ( 'SCEC01' )
-         RETURN
+         call errint ( '#', timsys                                 )
+         call errint ( '#', sc                                     )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                    )
+         call chkout ( 'SCEC01' )
+         return
 
-      END IF
+      end if
 
 !
 !     We'd like to ascertain whether PARTIM is between the minimum
@@ -2951,21 +2951,21 @@
 !           last time value in the array is the one we want.
 !
 !
-      IF (  PARTIM  .LT.  COEFFS( 2, 1 )  ) THEN
+      if (  partim  .lt.  coeffs( 2, 1 )  ) then
 !
 !        PARTIM precedes the coverage of the kernel.
 !
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG (  BVLMSG                  )
-         CALL ERRCH  ( '#', 'ET'                )
-         CALL ERRDP  ( '#',  ET                 )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCEC01'                 )
-         RETURN
+         call setmsg (  bvlmsg                  )
+         call errch  ( '#', 'ET'                )
+         call errdp  ( '#',  et                 )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCEC01'                 )
+         return
 
 
-      ELSE IF (  PARTIM .LT. COEFFS( 2, NCOEFF/3 )  ) THEN
+      else if (  partim .lt. coeffs( 2, ncoeff/3 )  ) then
 !
 !        In the following loop, we maintain an invariant:
 !
@@ -2980,20 +2980,20 @@
 !        already made sure that the invariant expression above is true.
 !
 
-         LOWER  =  1
-         UPPER  =  NCOEFF / 3
+         lower  =  1
+         upper  =  ncoeff / 3
 
-         DO WHILE ( LOWER .LT. UPPER - 1 )
+         do while ( lower .lt. upper - 1 )
 
-            MIDDLE  =  ( LOWER + UPPER ) / 2
+            middle  =  ( lower + upper ) / 2
 
-            IF (  PARTIM  .LT.  COEFFS( 2, MIDDLE )  ) THEN
-               UPPER = MIDDLE
-            ELSE
-               LOWER = MIDDLE
-            END IF
+            if (  partim  .lt.  coeffs( 2, middle )  ) then
+               upper = middle
+            else
+               lower = middle
+            end if
 
-         END DO
+         end do
 
 !
 !        We've got PARTIM trapped between two time values that are
@@ -3010,14 +3010,14 @@
 !        equal to PARTIM.
 !
 
-      ELSE
+      else
 !
 !        PARTIM is greater than or equal to all of the time values in
 !        the coefficients array.
 !
-         LOWER = NCOEFF / 3
+         lower = ncoeff / 3
 
-      END IF
+      end if
 
 !
 !     Now we evaluate a linear polynomial to find the tick value that
@@ -3032,31 +3032,31 @@
 !     clock count, so we use the conversion factor TIKMSC (`ticks per
 !     most significant count') to change the rate to seconds per tick.
 !
-      TIMDIF =  PARTIM  -  COEFFS( 2, LOWER )
-      CONST  =             COEFFS( 1, LOWER )
+      timdif =  partim  -  coeffs( 2, lower )
+      const  =             coeffs( 1, lower )
 
-      IF (  COEFFS( 3, LOWER ) .LE. 0.D0  ) THEN
+      if (  coeffs( 3, lower ) .le. 0.d0  ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG ( 'Invalid SCLK rate #.'   )
-         CALL ERRDP  ( '#', COEFFS( 3, LOWER )  )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCEC01'                 )
-         RETURN
+         call setmsg ( 'Invalid SCLK rate #.'   )
+         call errdp  ( '#', coeffs( 3, lower )  )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCEC01'                 )
+         return
 
-      END IF
+      end if
 
 
-      TIKMSC = 1.0D0
+      tikmsc = 1.0d0
 
-      DO I = NFIELD, 2, -1
-         TIKMSC  =  TIKMSC * MODULI(I)
-      END DO
+      do i = nfield, 2, -1
+         tikmsc  =  tikmsc * moduli(i)
+      end do
 
-      RATE   =  1.D0   /  (  COEFFS(3, LOWER) / TIKMSC  )
+      rate   =  1.d0   /  (  coeffs(3, lower) / tikmsc  )
 
-      SCLKDP =  CONST  +  ( RATE * TIMDIF )
+      sclkdp =  const  +  ( rate * timdif )
 
 !
 !     Now, we'll see whether the SCLK value we've found is meaningful.
@@ -3065,11 +3065,11 @@
 !     range, we must find the end time of the last partition, in total
 !     ticks since spacecraft clock start.
 !
-      MXTICK  =  ANINT ( PREND(1) - PRSTRT(1) )
+      mxtick  =  anint ( prend(1) - prstrt(1) )
 
-      DO I = 2, NPART
-         MXTICK  =  ANINT ( PREND(I) -  PRSTRT(I)  +  MXTICK )
-      END DO
+      do i = 2, npart
+         mxtick  =  anint ( prend(i) -  prstrt(i)  +  mxtick )
+      end do
 
 !
 !     Make sure that ET does not exceed the ET corresponding to
@@ -3077,32 +3077,32 @@
 !     using the tick value that ET mapped to and the maximum tick
 !     value of the spacecraft clock.
 !
-      IF ( SCLKDP .GT. MXTICK ) THEN
+      if ( sclkdp .gt. mxtick ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL SETMSG (  BVLMSG                  )
-         CALL ERRCH  ( '#', 'ET'                )
-         CALL ERRDP  ( '#',  ET                 )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)' )
-         CALL CHKOUT ( 'SCEC01'                 )
-         RETURN
+         call setmsg (  bvlmsg                  )
+         call errch  ( '#', 'ET'                )
+         call errdp  ( '#',  et                 )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
+         call chkout ( 'SCEC01'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Keep track of the last spacecraft clock ID encountered.
 !
-      PRVSC = SC
+      prvsc = sc
 
-      CALL CHKOUT ( 'SCEC01' )
-      RETURN
+      call chkout ( 'SCEC01' )
+      return
 
 
 
 !$Procedure SCTY01 ( SCLK type, using type 1 SCLK database )
 
-      ENTRY SCTY01 ( SC, CLKTYP )
+      entry scty01 ( sc, clktyp )
 
 ! $ Abstract
 !
@@ -3220,11 +3220,11 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCTY01' )
+      call chkin ( 'SCTY01' )
 
 !
 !     At this point, PRVSC is either 0 or the ID of the last type 1
@@ -3232,98 +3232,98 @@
 !     was made. PRVSC is never assigned the code of a clock that isn't
 !     type 1.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     The clock type is unknown at this point.
 !
-      CLKTYP = 0
+      clktyp = 0
 
 !
 !     Reinitialize the SC01 database if the kernel pool has been
 !     updated. The call below syncs POLCTR.
 !
-      CALL ZZPCTRCK ( POLCTR, UPDATE )
+      call zzpctrck ( polctr, update )
 
-      IF ( UPDATE ) THEN
+      if ( update ) then
 !
 !        Initialize local data structures.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
-         SAMCLK = .FALSE.
+         samclk = .false.
 
-      ELSE
+      else
 !
 !        We never indicate the clock is the "same" as the previous
 !        one unless the clock is type 1.
 !
-         SAMCLK = ( SC .NE. 0 ) .AND. ( SC .EQ. PRVSC )
+         samclk = ( sc .ne. 0 ) .and. ( sc .eq. prvsc )
 
-      END IF
+      end if
 
-      IF ( .NOT. SAMCLK )  THEN
+      if ( .not. samclk )  then
 !
 !        Get the SCLK type of the input SCLK.
 !
-         KVNAME = 'SCLK_DATA_TYPE_#'
-         CALL REPMI  ( KVNAME,  '#',  -SC,  KVNAME )
+         kvname = 'SCLK_DATA_TYPE_#'
+         call repmi  ( kvname,  '#',  -sc,  kvname )
 
-         CALL GIPOOL ( KVNAME, 1, 1, N, CLKTYP, FOUND )
+         call gipool ( kvname, 1, 1, n, clktyp, found )
 
-         IF ( FAILED() .OR. .NOT. FOUND ) THEN
+         if ( failed() .or. .not. found ) then
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               PASS1 = .TRUE.
+               pass1 = .true.
 
-               CALL CHKOUT ( 'SCTY01' )
-               RETURN
+               call chkout ( 'SCTY01' )
+               return
 
-            END IF
+            end if
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 !
 !              The GIPOOL call succeeded but the kernel variable was
 !              not found.
 !
-               PASS1 = .TRUE.
+               pass1 = .true.
 
-               CALL SETMSG ( 'Kernel variable # was not ' &
+               call setmsg ( 'Kernel variable # was not ' &
                //            'found in the kernel pool.' )
-               CALL ERRCH  ( '#', KVNAME                 )
-               CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)'  )
+               call errch  ( '#', kvname                 )
+               call sigerr ( 'SPICE(KERNELVARNOTFOUND)'  )
 
-               CALL CHKOUT ( 'SCTY01' )
-               RETURN
+               call chkout ( 'SCTY01' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        At this point, the clock type is set.
 !
-         IF ( CLKTYP .NE. 1 ) THEN
+         if ( clktyp .ne. 1 ) then
 !
 !           The clock is not type 1, so we don't add it to the
 !           SC01 database.
 !
-            PRVSC = 0
+            prvsc = 0
 
-            CALL CHKOUT ( 'SCTY01' )
-            RETURN
+            call chkout ( 'SCTY01' )
+            return
 
-         END IF
+         end if
 
 !
 !        The SCLK is type 1 but may not be in the SC01 database, and
@@ -3331,36 +3331,36 @@
 !        call to any SC01 entry point. Update the SCLK parameters and,
 !        if necessary, the database.
 !
-         CALL ZZSCUP01( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                        DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                        DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                        ENDBAS, MODBAS, OFFBAS )
+         call zzscup01( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                        dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                        delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                        endbas, modbas, offbas )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            PASS1 = .TRUE.
+            pass1 = .true.
 
-            CALL CHKOUT ( 'SCTY01' )
-            RETURN
+            call chkout ( 'SCTY01' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     We can arrive here only if the clock type is 1.
 !
-      CLKTYP = 1
-      PRVSC  = SC
+      clktyp = 1
+      prvsc  = sc
 
-      CALL CHKOUT ( 'SCTY01' )
-      RETURN
+      call chkout ( 'SCTY01' )
+      return
 
 
 
 !$Procedure SCPR01 ( SCLK partition bounds, type 1  )
 
-      ENTRY SCPR01 ( SC, NPARTN, PARBEG, PAREND )
+      entry scpr01 ( sc, npartn, parbeg, parend )
 
 ! $ Abstract
 !
@@ -3467,51 +3467,51 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCPR01' )
+      call chkin ( 'SCPR01' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize local data structures. This routine is error-free.
 !
-         CALL ZZSCIN01 ( HDSCLK, SCPOOL, CLKLST, DPFREE, IFREE, PRVSC )
-         CALL ZZCTRUIN ( POLCTR )
+         call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzctruin ( polctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Get partition data for this clock. Update the type 1 database
 !     if necessary.
 !
-      CALL ZZSCUP01 ( SC,     POLCTR, HDSCLK, SCPOOL, CLKLST, DPFREE, &
-                      DPBUFF, IFREE,  INTBUF, SCBASE, PRVSC,  NFIELD, &
-                      DELCDE, TIMSYS, NCOEFF, NPART,  COFBAS, STRBAS, &
-                      ENDBAS, MODBAS, OFFBAS )
+      call zzscup01 ( sc,     polctr, hdsclk, scpool, clklst, dpfree, &
+                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
+                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
+                      endbas, modbas, offbas )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         PASS1 = .TRUE.
+         pass1 = .true.
 
-         CALL CHKOUT ( 'SCPR01' )
-         RETURN
+         call chkout ( 'SCPR01' )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the output partition arguments.
 !
-      CALL MOVED ( DPBUFF(STRBAS+1), NPART, PARBEG )
-      CALL MOVED ( DPBUFF(ENDBAS+1), NPART, PAREND )
+      call moved ( dpbuff(strbas+1), npart, parbeg )
+      call moved ( dpbuff(endbas+1), npart, parend )
 
-      NPARTN = NPART
+      npartn = npart
 
-      PRVSC  = SC
+      prvsc  = sc
 
-      CALL CHKOUT ( 'SCPR01' )
-      RETURN
-      END
+      call chkout ( 'SCPR01' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZINLAT ( DSK, in latitudinal element? )
 
-      SUBROUTINE ZZINLAT ( P, BOUNDS, MARGIN, EXCLUD, INSIDE )
+      subroutine zzinlat ( p, bounds, margin, exclud, inside )
 
 ! $ Abstract
 !
@@ -26,30 +26,30 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      DOUBLE PRECISION      P      ( 3 )
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               EXCLUD
-      LOGICAL               INSIDE
+      double precision      p      ( 3 )
+      double precision      bounds ( 2, 3 )
+      double precision      margin
+      integer               exclud
+      logical               inside
 
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
-      INTEGER               LONIDX
-      PARAMETER           ( LONIDX = 1 )
+      integer               lonidx
+      parameter           ( lonidx = 1 )
 
-      INTEGER               LATIDX
-      PARAMETER           ( LATIDX = 2 )
+      integer               latidx
+      parameter           ( latidx = 2 )
 
-      INTEGER               RADIDX
-      PARAMETER           ( RADIDX = 3 )
+      integer               radidx
+      parameter           ( radidx = 3 )
 
-      DOUBLE PRECISION      LATMRG
-      PARAMETER           ( LATMRG = 1.D-8 )
+      double precision      latmrg
+      parameter           ( latmrg = 1.d-8 )
 
 
 ! $ Brief_I/O
@@ -264,10 +264,10 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
+      double precision      halfpi
+      double precision      twopi
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -276,131 +276,131 @@
 !
 !     Element boundary indices:
 !
-      INTEGER               WEST
-      PARAMETER           ( WEST   = 1 )
+      integer               west
+      parameter           ( west   = 1 )
 
-      INTEGER               EAST
-      PARAMETER           ( EAST   = 2 )
+      integer               east
+      parameter           ( east   = 2 )
 
-      INTEGER               SOUTH
-      PARAMETER           ( SOUTH  = 1 )
+      integer               south
+      parameter           ( south  = 1 )
 
-      INTEGER               NORTH
-      PARAMETER           ( NORTH  = 2 )
+      integer               north
+      parameter           ( north  = 2 )
 
-      INTEGER               INNER
-      PARAMETER           ( INNER  = 1 )
+      integer               inner
+      parameter           ( inner  = 1 )
 
-      INTEGER               OUTER
-      PARAMETER           ( OUTER  = 2 )
+      integer               outer
+      parameter           ( outer  = 2 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      AMAXR
-      DOUBLE PRECISION      AMINR
-      DOUBLE PRECISION      AMAXLT
-      DOUBLE PRECISION      AMINLT
-      DOUBLE PRECISION      AMAXLO
-      DOUBLE PRECISION      AMINLO
-      DOUBLE PRECISION      DLON
-      DOUBLE PRECISION      HPI
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LONMRG
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      MINR
-      DOUBLE PRECISION      PI2
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      SMAX
-      DOUBLE PRECISION      SMIN
+      double precision      amaxr
+      double precision      aminr
+      double precision      amaxlt
+      double precision      aminlt
+      double precision      amaxlo
+      double precision      aminlo
+      double precision      dlon
+      double precision      hpi
+      double precision      lat
+      double precision      lon
+      double precision      lonmrg
+      double precision      maxlat
+      double precision      maxlon
+      double precision      maxr
+      double precision      minlat
+      double precision      minlon
+      double precision      minr
+      double precision      pi2
+      double precision      r
+      double precision      smax
+      double precision      smin
 
-      LOGICAL               FIRST
+      logical               first
 
 
-      SAVE                  FIRST
-      SAVE                  PI2
-      SAVE                  HPI
+      save                  first
+      save                  pi2
+      save                  hpi
 
-      DATA                  FIRST / .TRUE. /
-      DATA                  PI2   / -1.D0  /
-      DATA                  HPI   / -1.D0  /
+      data                  first / .true. /
+      data                  pi2   / -1.d0  /
+      data                  hpi   / -1.d0  /
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         PI2   = TWOPI()
-         HPI   = HALFPI()
+         pi2   = twopi()
+         hpi   = halfpi()
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get the latitudinal coordinates of the input point.
 !
-      CALL RECLAT ( P, R, LON, LAT )
+      call reclat ( p, r, lon, lat )
 
 
 !
 !     Handle the simpler zero-margin case separately.
 !
-      IF ( MARGIN .EQ. 0.D0 ) THEN
+      if ( margin .eq. 0.d0 ) then
 
-         CALL ZZINLAT0 ( R, LON, LAT, BOUNDS, EXCLUD, INSIDE )
+         call zzinlat0 ( r, lon, lat, bounds, exclud, inside )
 
-         RETURN
+         return
 
-      ELSE IF ( MARGIN .LT. 0.D0 ) THEN
+      else if ( margin .lt. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZINLAT'                                )
-         CALL SETMSG ( 'Margin must be non-negative but was #.' )
-         CALL ERRDP  ( '#', MARGIN                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         CALL CHKOUT ( 'ZZINLAT'                                )
-         RETURN
+         call chkin  ( 'ZZINLAT'                                )
+         call setmsg ( 'Margin must be non-negative but was #.' )
+         call errdp  ( '#', margin                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
+         call chkout ( 'ZZINLAT'                                )
+         return
 
-      END IF
+      end if
 
 
-      IF (  ( EXCLUD .LT. 0 ) .OR. ( EXCLUD .GT. 3 )  ) THEN
+      if (  ( exclud .lt. 0 ) .or. ( exclud .gt. 3 )  ) then
 
-         CALL CHKIN  ( 'ZZINLAT'                                    )
-         CALL SETMSG ( 'EXCLUD must be in the range 0:3 but was #.' )
-         CALL ERRINT ( '#', EXCLUD                                  )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                     )
-         CALL CHKOUT ( 'ZZINLAT'                                    )
-         RETURN
+         call chkin  ( 'ZZINLAT'                                    )
+         call setmsg ( 'EXCLUD must be in the range 0:3 but was #.' )
+         call errint ( '#', exclud                                  )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                     )
+         call chkout ( 'ZZINLAT'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Special case: if the input point is within distance MARGIN
 !     from the origin, and the minimum radius of the volume element
 !     is less than or equal to MARGIN, the point is inside.
 !
-      IF ( R .LE. MARGIN ) THEN
+      if ( r .le. margin ) then
 
-         IF ( BOUNDS(INNER, RADIDX) .LE. MARGIN ) THEN
+         if ( bounds(inner, radidx) .le. margin ) then
 
-            INSIDE = .TRUE.
+            inside = .true.
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 !
@@ -408,51 +408,51 @@
 !     to skip setting INSIDE when we find a boundary test
 !     failure.
 !
-      INSIDE = .FALSE.
+      inside = .false.
 
 !
 !     Get local copies of the coordinate bounds. Don't normalize the
 !     longitude bounds until we know we need them.
 !
-      MINR   = BOUNDS( INNER, RADIDX )
-      MAXR   = BOUNDS( OUTER, RADIDX )
+      minr   = bounds( inner, radidx )
+      maxr   = bounds( outer, radidx )
 
-      MINLAT = BOUNDS( SOUTH, LATIDX )
-      MAXLAT = BOUNDS( NORTH, LATIDX )
+      minlat = bounds( south, latidx )
+      maxlat = bounds( north, latidx )
 
 !
 !     Compare coordinates to adjusted latitude and radius
 !     boundaries.
 !
-      IF ( EXCLUD .NE. RADIDX ) THEN
+      if ( exclud .ne. radidx ) then
 !
 !        Create adjusted radius bounds.
 !
-         SMAX  = 1.D0 + MARGIN
-         SMIN  = 1.D0 - MARGIN
+         smax  = 1.d0 + margin
+         smin  = 1.d0 - margin
 
-         AMINR = MAX( 0.D0,  MINR*SMIN )
-         AMAXR = MAXR * SMAX
+         aminr = max( 0.d0,  minr*smin )
+         amaxr = maxr * smax
 
-         IF ( ( R .LT. AMINR ) .OR. ( R .GT. AMAXR ) ) THEN
-             RETURN
-         END IF
+         if ( ( r .lt. aminr ) .or. ( r .gt. amaxr ) ) then
+             return
+         end if
 
-      END IF
+      end if
 
 
-      IF ( EXCLUD .NE. LATIDX ) THEN
+      if ( exclud .ne. latidx ) then
 !
 !        Create adjusted latitude bounds.
 !
-         AMINLT = MAX( -HPI, MINLAT - MARGIN )
-         AMAXLT = MIN(  HPI, MAXLAT + MARGIN )
+         aminlt = max( -hpi, minlat - margin )
+         amaxlt = min(  hpi, maxlat + margin )
 
-         IF ( ( LAT .LT. AMINLT ) .OR. ( LAT .GT. AMAXLT ) ) THEN
-            RETURN
-         END IF
+         if ( ( lat .lt. aminlt ) .or. ( lat .gt. amaxlt ) ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, the input radius and latitude are within the
@@ -462,16 +462,16 @@
 !     Perform longitude tests, unless they're excluded by the
 !     caller.
 !
-      IF ( EXCLUD .NE. LONIDX ) THEN
+      if ( exclud .ne. lonidx ) then
 
-         CALL ZZNRMLON ( BOUNDS(WEST,LONIDX), BOUNDS(EAST,LONIDX), &
-                         ANGMRG,              MINLON, &
-                         MAXLON                                   )
+         call zznrmlon ( bounds(west,lonidx), bounds(east,lonidx), &
+                         angmrg,              minlon, &
+                         maxlon                                   )
 !
 !        Set the margin to be used for longitude interval
 !        inclusion tests.
 !
-         LONMRG = MAX( ABS(ANGMRG), ABS(MARGIN) )
+         lonmrg = max( abs(angmrg), abs(margin) )
 
 !
 !        We have a special case for segments that include the poles. If
@@ -480,8 +480,8 @@
 !        regardless of the point's longitude. All other points get the
 !        normal longitude test.
 !
-         IF (       ( LAT .LE. (  HPI - LATMRG ) ) &
-              .AND. ( LAT .GE. ( -HPI + LATMRG ) )  ) THEN
+         if (       ( lat .le. (  hpi - latmrg ) ) &
+              .and. ( lat .ge. ( -hpi + latmrg ) )  ) then
 !
 !           This is the usual case: the latitude of the input point
 !           is bounded away from the poles.
@@ -496,61 +496,61 @@
 !
 !              DLON << 1
 !
-            DLON   = LONMRG / MAX( ABS(COS(LAT)), LATMRG )
+            dlon   = lonmrg / max( abs(cos(lat)), latmrg )
 
-            AMINLO = MINLON - DLON
-            AMAXLO = MAXLON + DLON
+            aminlo = minlon - dlon
+            amaxlo = maxlon + dlon
 
 !
 !           Now move the input point's longitude into range, if
 !           necessary.
 !
-            IF ( LON .LT. AMINLO ) THEN
+            if ( lon .lt. aminlo ) then
 
-               IF (  LON  .LT. ( AMINLO - LONALI )  ) THEN
+               if (  lon  .lt. ( aminlo - lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
-                  LON = LON + PI2
+                  lon = lon + pi2
 
-               ELSE
+               else
 !
 !                 Consider LON to be a match with the lower bound.
 !
-                  LON = AMINLO
+                  lon = aminlo
 
-               END IF
+               end if
 
-            ELSE IF ( LON .GT. AMAXLO ) THEN
+            else if ( lon .gt. amaxlo ) then
 
-               IF (  LON  .GT. ( AMAXLO + LONALI )  ) THEN
+               if (  lon  .gt. ( amaxlo + lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
-                  LON = LON - PI2
+                  lon = lon - pi2
 
-               ELSE
+               else
 !
 !                 Consider LON to be a match with the upper bound.
 !
-                  LON = AMAXLO
+                  lon = amaxlo
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Compare the adjusted longitude of the input point to the
 !           adjusted longitude bounds.
 !
-            IF ( ( LON .LT. AMINLO ) .OR. ( LON .GT. AMAXLO ) ) THEN
+            if ( ( lon .lt. aminlo ) .or. ( lon .gt. amaxlo ) ) then
 
-               RETURN
+               return
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           The latitude of the input point is close to one of the
 !           poles.
@@ -582,15 +582,15 @@
 !           the point is close to the element. We consider the point to
 !           be in the expanded element.
 !
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     All tests that were commanded have been passed. The input
 !     point is considered to be contained in the expanded volume
 !     element.
 !
-      INSIDE = .TRUE.
+      inside = .true.
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure LNKTL ( LNK, tail of list )
 
-      INTEGER FUNCTION LNKTL ( NODE, POOL )
+      integer function lnktl ( node, pool )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               NODE
-      INTEGER               POOL (  2,  LBPOOL : *  )
+      integer               node
+      integer               pool (  2,  lbpool : *  )
 
 ! $ Brief_I/O
 !
@@ -172,23 +172,23 @@
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      INTEGER               SIZROW
-      PARAMETER           ( SIZROW =   1 )
+      integer               sizrow
+      parameter           ( sizrow =   1 )
 
-      INTEGER               SIZCOL
-      PARAMETER           ( SIZCOL =   0 )
+      integer               sizcol
+      parameter           ( sizcol =   0 )
 
-      INTEGER               NFRROW
-      PARAMETER           ( NFRROW =   2 )
+      integer               nfrrow
+      parameter           ( nfrrow =   2 )
 
-      INTEGER               NFRCOL
-      PARAMETER           ( NFRCOL =   0 )
+      integer               nfrcol
+      parameter           ( nfrcol =   0 )
 
-      INTEGER               FREROW
-      PARAMETER           ( FREROW =   1 )
+      integer               frerow
+      parameter           ( frerow =   1 )
 
-      INTEGER               FRECOL
-      PARAMETER           ( FRECOL =  -1 )
+      integer               frecol
+      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -204,87 +204,87 @@
 !
 !
 !
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  = 1 )
+      integer               forwrd
+      parameter           ( forwrd  = 1 )
 
-      INTEGER               BCKWRD
-      PARAMETER           ( BCKWRD  = 2 )
+      integer               bckwrd
+      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      INTEGER               FREE
-      PARAMETER           ( FREE   = 0 )
+      integer               free
+      parameter           ( free   = 0 )
 
 
 
 !
 !     Local variables
 !
-      INTEGER               NEXT
+      integer               next
 
 
 
 !
 !     If the node is non-positive, we regard it as the nil node.
 !
-      IF ( NODE .LT. 1 ) THEN
+      if ( node .lt. 1 ) then
 
-         LNKTL = 0
-         RETURN
+         lnktl = 0
+         return
 
 !
 !     If the node is out of range, something's very wrong.
 !
-      ELSE IF  ( NODE .GT. POOL( SIZROW, SIZCOL ) ) THEN
+      else if  ( node .gt. pool( sizrow, sizcol ) ) then
 
-         LNKTL = 0
+         lnktl = 0
 
-         CALL CHKIN  ( 'LNKTL'                              )
-         CALL SETMSG ( 'NODE was #; valid range is 1 to #.' )
-         CALL ERRINT ( '#', NODE                            )
-         CALL ERRINT ( '#', POOL(SIZROW,SIZCOL)             )
-         CALL SIGERR ( 'SPICE(INVALIDNODE)'                 )
-         CALL CHKOUT ( 'LNKTL'                              )
-         RETURN
+         call chkin  ( 'LNKTL'                              )
+         call setmsg ( 'NODE was #; valid range is 1 to #.' )
+         call errint ( '#', node                            )
+         call errint ( '#', pool(sizrow,sizcol)             )
+         call sigerr ( 'SPICE(INVALIDNODE)'                 )
+         call chkout ( 'LNKTL'                              )
+         return
 
 !
 !     We don't do free nodes.
 !
-      ELSE IF (  POOL( BCKWRD, NODE )  .EQ.  FREE  ) THEN
+      else if (  pool( bckwrd, node )  .eq.  free  ) then
 
-         LNKTL = 0
+         lnktl = 0
 
-         CALL CHKIN  ( 'LNKTL'                               )
-         CALL SETMSG ( 'NODE was #; backward pointer = #; '  // &
+         call chkin  ( 'LNKTL'                               )
+         call setmsg ( 'NODE was #; backward pointer = #; '  // &
                        'forward pointer = #. "FREE" is #)'   )
-         CALL ERRINT ( '#', NODE                             )
-         CALL ERRINT ( '#', POOL(BCKWRD,NODE)                )
-         CALL ERRINT ( '#', POOL(FORWRD,NODE)                )
-         CALL ERRINT ( '#', FREE                             )
-         CALL SIGERR ( 'SPICE(UNALLOCATEDNODE)'              )
-         CALL CHKOUT ( 'LNKTL'                               )
-         RETURN
+         call errint ( '#', node                             )
+         call errint ( '#', pool(bckwrd,node)                )
+         call errint ( '#', pool(forwrd,node)                )
+         call errint ( '#', free                             )
+         call sigerr ( 'SPICE(UNALLOCATEDNODE)'              )
+         call chkout ( 'LNKTL'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the tail of the list.
 !
-      LNKTL = NODE
-      NEXT  = POOL ( FORWRD, NODE )
+      lnktl = node
+      next  = pool ( forwrd, node )
 
-      DO WHILE ( NEXT .GT. 0 )
+      do while ( next .gt. 0 )
 
-         LNKTL = NEXT
-         NEXT  = POOL ( FORWRD, LNKTL )
+         lnktl = next
+         next  = pool ( forwrd, lnktl )
 
-      END DO
+      end do
 
 !
 !     LNKTL is now the tail of the list.
 !
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure BODC2S ( Body ID code to string translation )
 
-      SUBROUTINE BODC2S ( CODE, NAME )
+      subroutine bodc2s ( code, name )
 
 ! $ Abstract
 !
@@ -22,10 +22,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               CODE
-      CHARACTER*(*)         NAME
+      integer               code
+      character*(*)         name
 
 ! $ Brief_I/O
 !
@@ -222,21 +222,21 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'BODC2S' )
+      call chkin ( 'BODC2S' )
 
 !
 !     Fortran. No type check available for CODE. Bother.
@@ -246,26 +246,26 @@
 !     Attempt to translate the input CODE to a name. Use
 !     the private routine ZZBODC2N.
 !
-      CALL ZZBODC2N ( CODE, NAME, FOUND )
+      call zzbodc2n ( code, name, found )
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
 !
 !        Success. CODE maps to NAME. Return.
 !
-         CALL CHKOUT ( 'BODC2S' )
-         RETURN
+         call chkout ( 'BODC2S' )
+         return
 
-      END IF
+      end if
 
 !
 !     If execution reaches this level, the SPICE body ID
 !     to name mapping lacks an assignment for CODE. Convert
 !     CODE to a string representation of the integer value.
 !
-      CALL INTSTR ( CODE, NAME )
+      call intstr ( code, name )
 
-      CALL CHKOUT ( 'BODC2S' )
-      RETURN
+      call chkout ( 'BODC2S' )
+      return
 
-      END
+      end

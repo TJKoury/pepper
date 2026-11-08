@@ -1,7 +1,7 @@
 !$Procedure ZZRYTREC ( DSK, ray touches rectangular element )
 
-      SUBROUTINE ZZRYTREC ( VERTEX, RAYDIR, BOUNDS, &
-                            MARGIN, NXPTS,  XPT    )
+      subroutine zzrytrec ( vertex, raydir, bounds, &
+                            margin, nxpts,  xpt    )
 
 ! $ Abstract
 !
@@ -28,14 +28,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      MARGIN
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT    ( 3 )
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      bounds ( 2, 3 )
+      double precision      margin
+      integer               nxpts
+      double precision      xpt    ( 3 )
 
 
 ! $ Brief_I/O
@@ -155,64 +155,64 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NONE
-      PARAMETER           ( NONE   = 0 )
+      integer               none
+      parameter           ( none   = 0 )
 
 !
 !     Element boundary indices:
 !
-      INTEGER               LOWER
-      PARAMETER           ( LOWER  = 1 )
+      integer               lower
+      parameter           ( lower  = 1 )
 
-      INTEGER               UPPER
-      PARAMETER           ( UPPER  = 2 )
+      integer               upper
+      parameter           ( upper  = 2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BOXORI ( 3 )
-      DOUBLE PRECISION      EXTENT ( 3 )
-      DOUBLE PRECISION      DELTA  ( 3 )
-      DOUBLE PRECISION      L      ( 3 )
+      double precision      boxori ( 3 )
+      double precision      extent ( 3 )
+      double precision      delta  ( 3 )
+      double precision      l      ( 3 )
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               FOUND
-      LOGICAL               INSIDE
+      logical               found
+      logical               inside
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Compute the original volume edge lengths from the coordinate
 !     bounds.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         L(I) = BOUNDS(UPPER, I) - BOUNDS(LOWER, I)
+         l(i) = bounds(upper, i) - bounds(lower, i)
 
-         IF ( L(I) .LE. 0.D0 ) THEN
+         if ( l(i) .le. 0.d0 ) then
 
-            CALL CHKIN  ( 'ZZRYTREC'                               )
-            CALL SETMSG ( 'Coordinate # bounds were #:#; bounds ' &
+            call chkin  ( 'ZZRYTREC'                               )
+            call setmsg ( 'Coordinate # bounds were #:#; bounds ' &
             //            'must be strictly increasing.'           )
-            CALL ERRINT ( '#',  I                                  )
-            CALL ERRDP  ( '#',  BOUNDS(LOWER,I)                    )
-            CALL ERRDP  ( '#',  BOUNDS(UPPER,I)                    )
-            CALL SIGERR ( 'SPICE(BADCOORDBOUNDS)'                  )
-            CALL CHKOUT ( 'ZZRYTREC'                               )
-            RETURN
+            call errint ( '#',  i                                  )
+            call errdp  ( '#',  bounds(lower,i)                    )
+            call errdp  ( '#',  bounds(upper,i)                    )
+            call sigerr ( 'SPICE(BADCOORDBOUNDS)'                  )
+            call chkout ( 'ZZRYTREC'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Determine whether the vertex is inside the element.
@@ -220,44 +220,44 @@
 !     want to have false negative tests for rays having
 !     vertices lying on the expanded element boundary.
 !
-      NXPTS = 0
+      nxpts = 0
 
-      CALL ZZINREC ( VERTEX, BOUNDS, 2*MARGIN, NONE, INSIDE )
+      call zzinrec ( vertex, bounds, 2*margin, none, inside )
 
-      IF ( INSIDE ) THEN
+      if ( inside ) then
 !
 !        We know the answer.
 !
-         NXPTS = 1
+         nxpts = 1
 
-         CALL VEQU ( VERTEX, XPT )
+         call vequ ( vertex, xpt )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Expand the box using the specified margin.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         DELTA(I)  = MARGIN * ABS( L(I) )
+         delta(i)  = margin * abs( l(i) )
 
-         BOXORI(I) = BOUNDS(LOWER,I) - DELTA(I)
+         boxori(i) = bounds(lower,i) - delta(i)
 
-         EXTENT(I) = L(I) + ( 2*DELTA(I) )
+         extent(i) = l(i) + ( 2*delta(i) )
 
-      END DO
+      end do
 
 !
 !     Find the ray-surface intercept on the expanded element,
 !     if the intercept exists.
 !
-      CALL ZZRAYBOX ( VERTEX, RAYDIR, BOXORI, EXTENT, XPT, FOUND )
+      call zzraybox ( vertex, raydir, boxori, extent, xpt, found )
 
-      IF ( FOUND ) THEN
-         NXPTS = 1
-      END IF
+      if ( found ) then
+         nxpts = 1
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZGFREF ( Private --- GF, update REFVAL )
 
-      SUBROUTINE ZZGFREF( REFVAL )
+      subroutine zzgfref( refval )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzholdd.inc'
+      include 'zzholdd.inc'
 
-      DOUBLE PRECISION      REFVAL
+      double precision      refval
 
 ! $ Brief_I/O
 !
@@ -99,12 +99,12 @@
 !     Local Variables
 !
 
-      LOGICAL               OK
+      logical               ok
 
 !
 !     Store the REFVAL value for use in ZZGFUDLT.
 !
-      CALL ZZHOLDD ( ZZPUT, GF_REF, OK, REFVAL )
+      call zzholdd ( zzput, gf_ref, ok, refval )
 
-      END
+      end
 

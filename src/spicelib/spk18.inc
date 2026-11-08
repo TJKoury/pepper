@@ -36,24 +36,24 @@
 !                 reduction at boundaries to preceding number
 !                 equivalent to 3 mod 4.
 !
-      INTEGER               S18TP0
-      PARAMETER           ( S18TP0 = 0 )
+      integer               s18tp0
+      parameter           ( s18tp0 = 0 )
 
 !
 !     Subtype 1:  Lagrange interpolation, 6-element packets, order
 !                 reduction at boundaries to preceding odd number.
 !
-      INTEGER               S18TP1
-      PARAMETER           ( S18TP1 = S18TP0 + 1 )
+      integer               s18tp1
+      parameter           ( s18tp1 = s18tp0 + 1 )
 
 !
 !     Packet sizes associated with the various subtypes:
 !
-      INTEGER               S18PS0
-      PARAMETER           ( S18PS0 = 12 )
+      integer               s18ps0
+      parameter           ( s18ps0 = 12 )
 
-      INTEGER               S18PS1
-      PARAMETER           ( S18PS1 =  6 )
+      integer               s18ps1
+      parameter           ( s18ps1 =  6 )
 
 !
 !     End of include file spk18.inc.

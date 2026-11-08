@@ -8,8 +8,8 @@
 !
 !     Maximum size of surface ID list.
 !
-      INTEGER               MAXSRF
-      PARAMETER           ( MAXSRF = 100 )
+      integer               maxsrf
+      parameter           ( maxsrf = 100 )
 
 !
 !     End of include file dsk.inc

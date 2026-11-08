@@ -1,6 +1,6 @@
 !$Procedure PCKEUL ( PCK, get Euler angles at time from PCK file )
 
-      SUBROUTINE PCKEUL ( BODY, ET, FOUND, REF, EULANG )
+      subroutine pckeul ( body, et, found, ref, eulang )
 
 ! $ Abstract
 !
@@ -25,13 +25,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER              BODY
-      DOUBLE PRECISION     ET
-      LOGICAL              FOUND
-      CHARACTER*(*)        REF
-      DOUBLE PRECISION     EULANG   ( 6 )
+      integer              body
+      double precision     et
+      logical              found
+      character*(*)        ref
+      double precision     eulang   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -157,7 +157,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Parameters
@@ -170,86 +170,86 @@
 !     NT    component number of data type in integer portion
 !           of descriptor
 !
-      INTEGER               ND
-      PARAMETER           ( ND      =   2 )
+      integer               nd
+      parameter           ( nd      =   2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     =    5 )
+      integer               ni
+      parameter           ( ni     =    5 )
 
-      INTEGER               NR
-      PARAMETER           ( NR      =   2 )
+      integer               nr
+      parameter           ( nr      =   2 )
 
-      INTEGER               NS
-      PARAMETER           ( NS      =   5 )
+      integer               ns
+      parameter           ( ns      =   5 )
 
-      INTEGER               NT
-      PARAMETER           ( NT      =   3 )
+      integer               nt
+      parameter           ( nt      =   3 )
 
-      INTEGER               FILEN
-      PARAMETER           ( FILEN   = 128 )
+      integer               filen
+      parameter           ( filen   = 128 )
 
 !
 !  Local Variables
 !
 
-      CHARACTER*(40)  IDENT
+      character*(40)  ident
 
-      DOUBLE PRECISION      DCD     ( ND )
-      DOUBLE PRECISION      DESCR   ( NS )
-      DOUBLE PRECISION      RECORD  ( 130 )
+      double precision      dcd     ( nd )
+      double precision      descr   ( ns )
+      double precision      record  ( 130 )
 
-      INTEGER     TYPE
-      INTEGER     HANDLE
-      INTEGER     ICD ( NI )
-      INTEGER     IREF
+      integer     type
+      integer     handle
+      integer     icd ( ni )
+      integer     iref
 
 !
 !     Standard SPICE Error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKEUL' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PCKEUL' )
+      end if
 
 !
 !     Get a segment applicable to a specified body and epoch.
 !
-      CALL PCKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+      call pcksfs ( body, et, handle, descr, ident, found )
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
 !
 !        Look at parts of the descriptor.
 !
-         CALL DAFUS ( DESCR, ND, NI, DCD, ICD )
-         TYPE   = ICD( NT )
-         IREF   = ICD( NR )
-         CALL IRFNAM ( IREF, REF )
+         call dafus ( descr, nd, ni, dcd, icd )
+         type   = icd( nt )
+         iref   = icd( nr )
+         call irfnam ( iref, ref )
 
-         IF ( TYPE .EQ. 2 ) THEN
+         if ( type .eq. 2 ) then
 
 !
 !           Read in Chebyshev coefficients from segment.
 !
-            CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
+            call pckr02 ( handle, descr, et, record )
 
 !
 !           Call evaluation routine to get Euler angles
 !           phi, delta, w.
 !
-            CALL PCKE02 ( ET, RECORD, EULANG )
+            call pcke02 ( et, record, eulang )
 
-         ELSE
+         else
 !
 !           If appropriate data was not found, found is false.
 !
-            FOUND = .FALSE.
+            found = .false.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'PCKEUL' )
-      RETURN
-      END
+      call chkout ( 'PCKEUL' )
+      return
+      end

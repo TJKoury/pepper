@@ -1,6 +1,6 @@
 !$Procedure  ZZEKJSQZ ( Private: EK, join row set squeeze )
 
-      SUBROUTINE ZZEKJSQZ ( JRSBAS )
+      subroutine zzekjsqz ( jrsbas )
 
 ! $ Abstract
 !
@@ -22,10 +22,10 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekjrs.inc'
-      INCLUDE 'ekqlimit.inc'
+      include 'ekjrs.inc'
+      include 'ekqlimit.inc'
 
-      INTEGER               JRSBAS
+      integer               jrsbas
 
 ! $ Brief_I/O
 !
@@ -134,40 +134,40 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               CNTLOC
-      INTEGER               DELTA
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NSVDEL
-      INTEGER               NRVDEL
-      INTEGER               NEWNSV
-      INTEGER               NR
-      INTEGER               NRLOC
-      INTEGER               NSV
-      INTEGER               NSVLOC
-      INTEGER               NTAB
-      INTEGER               NTLOC
-      INTEGER               PCPAIR ( 2 )
-      INTEGER               PTARG
-      INTEGER               PTBASE
-      INTEGER               PTRLOC
-      INTEGER               RC
-      INTEGER               RBASE
-      INTEGER               ROWVEC ( MAXTAB+1 )
-      INTEGER               RTARG
-      INTEGER               RVSIZE
-      INTEGER               SEGVEC ( MAXTAB )
-      INTEGER               SETBAS
-      INTEGER               SIZE
-      INTEGER               SIZLOC
-      INTEGER               SVBASE
-      INTEGER               SVSIZE
-      INTEGER               VTARG
+      integer               cntloc
+      integer               delta
+      integer               i
+      integer               j
+      integer               nsvdel
+      integer               nrvdel
+      integer               newnsv
+      integer               nr
+      integer               nrloc
+      integer               nsv
+      integer               nsvloc
+      integer               ntab
+      integer               ntloc
+      integer               pcpair ( 2 )
+      integer               ptarg
+      integer               ptbase
+      integer               ptrloc
+      integer               rc
+      integer               rbase
+      integer               rowvec ( maxtab+1 )
+      integer               rtarg
+      integer               rvsize
+      integer               segvec ( maxtab )
+      integer               setbas
+      integer               size
+      integer               sizloc
+      integer               svbase
+      integer               svsize
+      integer               vtarg
 
 !
 !     Use discovery check-in.
@@ -181,104 +181,104 @@
 !
 !     Save the address of each count.
 !
-      SIZLOC  =  JRSBAS + JSZIDX
-      NSVLOC  =  JRSBAS + JSCIDX
-      NTLOC   =  JRSBAS + JTCIDX
+      sizloc  =  jrsbas + jszidx
+      nsvloc  =  jrsbas + jscidx
+      ntloc   =  jrsbas + jtcidx
 
-      CALL ZZEKSRD ( SIZLOC, SIZLOC, SIZE   )
-      CALL ZZEKSRD ( NTLOC,  NTLOC,  NTAB   )
-      CALL ZZEKSRD ( NSVLOC, NSVLOC, NSV    )
+      call zzeksrd ( sizloc, sizloc, size   )
+      call zzeksrd ( ntloc,  ntloc,  ntab   )
+      call zzeksrd ( nsvloc, nsvloc, nsv    )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Set the sizes of segment and row vectors.
 !
-      SVSIZE  =  NTAB
-      RVSIZE  =  NTAB + 1
+      svsize  =  ntab
+      rvsize  =  ntab + 1
 
 !
 !     For each segment vector, obtain the row count.  Clean up after
 !     null segment vectors:  compress out the space allocated for their
 !     row vector pointers.  Keep track of the number of deletions.
 !
-      NSVDEL  =  0
-      NRVDEL  =  0
-      VTARG   =  JRSBAS + JSVBAS
+      nsvdel  =  0
+      nrvdel  =  0
+      vtarg   =  jrsbas + jsvbas
 
-      DO I = 1, NSV
+      do i = 1, nsv
 !
 !        The location of the row count is CNTLOC.  The row vector base
 !        pointer precedes the row count.
 !
-         CNTLOC  =  JRSBAS + JSVBAS + NSV*SVSIZE + 2*(I-1) + 2
-         PTRLOC  =  CNTLOC - 1
+         cntloc  =  jrsbas + jsvbas + nsv*svsize + 2*(i-1) + 2
+         ptrloc  =  cntloc - 1
 
-         CALL ZZEKSRD ( CNTLOC, CNTLOC, RC )
+         call zzeksrd ( cntloc, cntloc, rc )
 
 
-         IF ( RC .GT. 0 ) THEN
+         if ( rc .gt. 0 ) then
 !
 !           The row vector set for this segment vector is non-empty.
 !           scan the rows, looking for those marked for deletion, and
 !           update the row count to reflect the number of rows that
 !           we're going to keep.
 !
-            CALL ZZEKSRD ( PTRLOC, PTRLOC, SETBAS )
+            call zzeksrd ( ptrloc, ptrloc, setbas )
 
-            NRVDEL = 0
+            nrvdel = 0
 
-            DO J = 1, RC
+            do j = 1, rc
 
-               RBASE  =  JRSBAS + SETBAS + (J-1)*RVSIZE
+               rbase  =  jrsbas + setbas + (j-1)*rvsize
 
-               CALL ZZEKSRD ( RBASE+1, RBASE+1, ROWVEC(1) )
+               call zzeksrd ( rbase+1, rbase+1, rowvec(1) )
 
-               IF ( ROWVEC(1) .EQ. 0 ) THEN
-                  NRVDEL = NRVDEL + 1
-               END IF
+               if ( rowvec(1) .eq. 0 ) then
+                  nrvdel = nrvdel + 1
+               end if
 
-            END DO
+            end do
 
-         END IF
+         end if
 
 !
 !        Compute the base address of the current segment vector.
 !
-         SVBASE  =  JRSBAS + JSVBAS + (I-1)*SVSIZE
+         svbase  =  jrsbas + jsvbas + (i-1)*svsize
 
 
-         IF (  ( RC .EQ. 0 ) .OR. ( NRVDEL .EQ. RC )  ) THEN
+         if (  ( rc .eq. 0 ) .or. ( nrvdel .eq. rc )  ) then
 !
 !           We're going to delete the current segment vector.  We'll
 !           just skip over it without advancing our target pointers.
 !
-            NSVDEL   =  NSVDEL + 1
+            nsvdel   =  nsvdel + 1
 
 
-         ELSE IF ( NSVDEL .GT. 0 ) THEN
+         else if ( nsvdel .gt. 0 ) then
 !
 !           We need to shift the current segment vector to its
 !           destination.
 !
-            CALL ZZEKSRD  ( SVBASE+1, SVBASE+SVSIZE, SEGVEC )
-            CALL ZZEKSUPD ( VTARG+1,  VTARG+SVSIZE,  SEGVEC )
+            call zzeksrd  ( svbase+1, svbase+svsize, segvec )
+            call zzeksupd ( vtarg+1,  vtarg+svsize,  segvec )
 
-            VTARG = VTARG + SVSIZE
+            vtarg = vtarg + svsize
 
-         ELSE
+         else
 !
 !           No segment vectors have been deleted yet.  We still must
 !           update the target in case we shift vectors later on in this
 !           loop.
 !
-            VTARG = VTARG + SVSIZE
+            vtarg = vtarg + svsize
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     At this point, we've compressed out the null segment vectors.
@@ -289,47 +289,47 @@
 !
 !     We need to do this only if we deleted some segment vectors.
 !
-      IF ( NSVDEL .GT. 0 ) THEN
+      if ( nsvdel .gt. 0 ) then
 
-         NEWNSV =  NSV    - NSVDEL
-         PTARG  =  JRSBAS + JSVBAS + (NEWNSV)*SVSIZE
+         newnsv =  nsv    - nsvdel
+         ptarg  =  jrsbas + jsvbas + (newnsv)*svsize
 
-         DO I = 1, NSV
+         do i = 1, nsv
 !
 !           The row count is RC.
 !
-            SVSIZE  =  NTAB
-            CNTLOC  =  JRSBAS + JSVBAS + NSV*SVSIZE + 2*(I-1) + 2
+            svsize  =  ntab
+            cntloc  =  jrsbas + jsvbas + nsv*svsize + 2*(i-1) + 2
 
-            CALL ZZEKSRD ( CNTLOC, CNTLOC, RC )
+            call zzeksrd ( cntloc, cntloc, rc )
 
-            PTBASE  =  CNTLOC - 2
+            ptbase  =  cntloc - 2
 
-            IF ( RC .GT. 0 ) THEN
+            if ( rc .gt. 0 ) then
 !
 !              Shift the current row vector pointer and row vector
 !              count.
 !
-               CALL ZZEKSRD  ( PTBASE+1, PTBASE+2, PCPAIR )
-               CALL ZZEKSUPD ( PTARG+1,  PTARG+2,  PCPAIR )
+               call zzeksrd  ( ptbase+1, ptbase+2, pcpair )
+               call zzeksupd ( ptarg+1,  ptarg+2,  pcpair )
 
-               PTARG =  PTARG + 2
+               ptarg =  ptarg + 2
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 
-      ELSE
+      else
 
-         NEWNSV = NSV
+         newnsv = nsv
 
-      END IF
+      end if
 
 !
 !     Update the segment vector count.
 !
-      CALL ZZEKSUPD ( NSVLOC, NSVLOC, NEWNSV )
+      call zzeksupd ( nsvloc, nsvloc, newnsv )
 
 !
 !     Remove any gaps that may exist between any of the row vectors,
@@ -345,62 +345,62 @@
 !     if necessary.
 !
 !
-      RTARG   =  JRSBAS + JSVBAS + NEWNSV*(SVSIZE+2)
+      rtarg   =  jrsbas + jsvbas + newnsv*(svsize+2)
 
-      DO I = 1, NEWNSV
+      do i = 1, newnsv
 !
 !        Find the row count and row pointer for the current segment
 !        vector.
 !
-         CNTLOC  =  JRSBAS + JSVBAS + NEWNSV*SVSIZE + 2*(I-1) + 2
+         cntloc  =  jrsbas + jsvbas + newnsv*svsize + 2*(i-1) + 2
 
-         CALL ZZEKSRD ( CNTLOC, CNTLOC, RC )
+         call zzeksrd ( cntloc, cntloc, rc )
 
-         PTRLOC  =  CNTLOC - 1
+         ptrloc  =  cntloc - 1
 
 !
 !        Get the row vector set base pointer.  After capturing the
 !        current value, we'll update this pointer to account for
 !        the shifting of row vectors.
 !
-         CALL ZZEKSRD  ( PTRLOC, PTRLOC, SETBAS )
+         call zzeksrd  ( ptrloc, ptrloc, setbas )
 
-         RBASE   =  JRSBAS + SETBAS
-         DELTA   =  RTARG  - RBASE
+         rbase   =  jrsbas + setbas
+         delta   =  rtarg  - rbase
 
-         CALL ZZEKSUPD ( PTRLOC, PTRLOC, SETBAS+DELTA )
+         call zzeksupd ( ptrloc, ptrloc, setbas+delta )
 
 !
 !        Shift the row vectors for the current segment vector,
 !        leaving behind the row vectors marked for deletion.
 !
-         NRVDEL = 0
+         nrvdel = 0
 
-         DO J = 1, RC
+         do j = 1, rc
 
-            CALL ZZEKSRD  ( RBASE+1, RBASE+RVSIZE, ROWVEC )
+            call zzeksrd  ( rbase+1, rbase+rvsize, rowvec )
 
-            IF ( ROWVEC(1) .EQ. 0 ) THEN
+            if ( rowvec(1) .eq. 0 ) then
 !
 !              This row vector is to be deleted; don't copy it.
 !
-               RBASE  = RBASE  + RVSIZE
-               NRVDEL = NRVDEL + 1
+               rbase  = rbase  + rvsize
+               nrvdel = nrvdel + 1
 
-            ELSE
+            else
 !
 !              The segment vector pointer is base-relative.
 !
-               ROWVEC( RVSIZE )  =  JSVBAS + (I-1)*SVSIZE
+               rowvec( rvsize )  =  jsvbas + (i-1)*svsize
 
-               CALL ZZEKSUPD ( RTARG+1, RTARG+RVSIZE, ROWVEC )
+               call zzeksupd ( rtarg+1, rtarg+rvsize, rowvec )
 
-               RBASE  =  RBASE + RVSIZE
-               RTARG  =  RTARG + RVSIZE
+               rbase  =  rbase + rvsize
+               rtarg  =  rtarg + rvsize
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Update the row count for the current segment vector, if
@@ -409,34 +409,34 @@
 !        already eliminated any segment vectors for which that
 !        could happen, before we entered this loop.
 !
-         IF ( NRVDEL .GT. 0 ) THEN
-            CALL ZZEKSUPD (  CNTLOC,  CNTLOC,  RC - NRVDEL  )
-         END IF
+         if ( nrvdel .gt. 0 ) then
+            call zzeksupd (  cntloc,  cntloc,  rc - nrvdel  )
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Update the total row count and size of the join row set.
 !
-      NR  =  0
+      nr  =  0
 
-      DO I = 1, NEWNSV
+      do i = 1, newnsv
 
-         CNTLOC  =  JRSBAS + JSVBAS + NEWNSV*SVSIZE + (I-1)*2 + 2
+         cntloc  =  jrsbas + jsvbas + newnsv*svsize + (i-1)*2 + 2
 
-         CALL ZZEKSRD ( CNTLOC, CNTLOC, RC )
+         call zzeksrd ( cntloc, cntloc, rc )
 
-         NR      =  NR     + RC
+         nr      =  nr     + rc
 
-      END DO
+      end do
 
 
-      NRLOC  =  JRSBAS   +   JRCIDX
-      SIZE   =  JSVBAS   +   NEWNSV * ( SVSIZE + 2 )  +  NR * RVSIZE
+      nrloc  =  jrsbas   +   jrcidx
+      size   =  jsvbas   +   newnsv * ( svsize + 2 )  +  nr * rvsize
 
-      CALL ZZEKSUPD ( NRLOC,  NRLOC,  NR   )
-      CALL ZZEKSUPD ( SIZLOC, SIZLOC, SIZE )
+      call zzeksupd ( nrloc,  nrloc,  nr   )
+      call zzeksupd ( sizloc, sizloc, size )
 
-      RETURN
-      END
+      return
+      end

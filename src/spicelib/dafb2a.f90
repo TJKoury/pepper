@@ -1,6 +1,6 @@
 !$Procedure DAFB2A ( DAF, binary to ASCII )
 
-      SUBROUTINE DAFB2A ( BINARY, ASCII )
+      subroutine dafb2a ( binary, ascii )
 
 ! $ Abstract
 !
@@ -20,10 +20,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         BINARY
-      CHARACTER*(*)         ASCII
+      character*(*)         binary
+      character*(*)         ascii
 
 ! $ Brief_I/O
 !
@@ -178,54 +178,54 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               UNIT
+      integer               unit
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFB2A' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFB2A' )
+      end if
 !
 !     Open the ASCII file for writing. If an error occurs, then check
 !     out and return. An appropriate error message will have already
 !     been set.
 !
-      CALL TXTOPN ( ASCII, UNIT )
+      call txtopn ( ascii, unit )
 
-      IF ( FAILED () ) THEN
+      if ( failed () ) then
 
-         CALL CHKOUT ( 'DAFB2A' )
-         RETURN
+         call chkout ( 'DAFB2A' )
+         return
 
-      END IF
+      end if
 !
 !     Attempt to perform the file conversion. If it fails, close the
 !     text file with STATUS = 'DELETE', check out and return, as an
 !     appropriate error message should have already been set.
 !
-      CALL DAFB2T ( BINARY, UNIT )
+      call dafb2t ( binary, unit )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CLOSE       ( UNIT, STATUS='DELETE' )
-         CALL CHKOUT ( 'DAFB2A'              )
-         RETURN
+         close       ( unit, status='DELETE' )
+         call chkout ( 'DAFB2A'              )
+         return
 
-      END IF
+      end if
 !
 !     Close the text file.
 !
-      CLOSE ( UNIT )
+      close ( unit )
 
-      CALL CHKOUT ( 'DAFB2A' )
-      RETURN
-      END
+      call chkout ( 'DAFB2A' )
+      return
+      end

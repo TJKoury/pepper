@@ -1,6 +1,6 @@
 !$Procedure ZZSGLATX ( Line segment latitude extent )
 
-      SUBROUTINE ZZSGLATX ( P1, P2, MINLAT, MINP, MAXLAT, MAXP )
+      subroutine zzsglatx ( p1, p2, minlat, minp, maxlat, maxp )
 
 ! $ Abstract
 !
@@ -24,17 +24,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      P1     ( 3 )
-      DOUBLE PRECISION      P2     ( 3 )
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINP   ( 3 )
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXP   ( 3 )
+      double precision      p1     ( 3 )
+      double precision      p2     ( 3 )
+      double precision      minlat
+      double precision      minp   ( 3 )
+      double precision      maxlat
+      double precision      maxp   ( 3 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL = 4 )
+      integer               ubpl
+      parameter           ( ubpl = 4 )
 
 ! $ Brief_I/O
 !
@@ -219,103 +219,103 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      LOGICAL               FAILED
-      LOGICAL               OPSGND
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               opsgnd
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CREASE ( 3 )
-      DOUBLE PRECISION      DIR    ( 3 )
-      DOUBLE PRECISION      DP1
-      DOUBLE PRECISION      DP2
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LAT1
-      DOUBLE PRECISION      LAT2
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      PLANE2 ( UBPL )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      T      ( 3 )
-      DOUBLE PRECISION      Z      ( 3 )
+      double precision      crease ( 3 )
+      double precision      dir    ( 3 )
+      double precision      dp1
+      double precision      dp2
+      double precision      lat
+      double precision      lat1
+      double precision      lat2
+      double precision      lon
+      double precision      normal ( 3 )
+      double precision      plane2 ( ubpl )
+      double precision      r
+      double precision      t      ( 3 )
+      double precision      z      ( 3 )
 
-      INTEGER               NXPTS
+      integer               nxpts
 !
 !     Saved variables
 !
-      SAVE                  Z
+      save                  z
 
 !
 !     Initial values
 !
-      DATA                  Z / 0.D0, 0.D0, 1.D0 /
+      data                  z / 0.d0, 0.d0, 1.d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSGLATX' )
+      call chkin ( 'ZZSGLATX' )
 
 !
 !     Start by computing latitude at the segment's endpoints.
 !
-      CALL RECLAT ( P1, R, LON, LAT1 )
-      CALL RECLAT ( P2, R, LON, LAT2 )
+      call reclat ( p1, r, lon, lat1 )
+      call reclat ( p2, r, lon, lat2 )
 
 !
 !     Initialize the outputs using latitudes of the endpoints.
 !     If there are interior extrema, we'll update these outputs
 !     as needed.
 !
-      IF ( LAT1 .LE. LAT2 ) THEN
+      if ( lat1 .le. lat2 ) then
 
-         MINLAT = LAT1
-         MAXLAT = LAT2
+         minlat = lat1
+         maxlat = lat2
 
-         CALL VEQU ( P1, MINP )
-         CALL VEQU ( P2, MAXP )
+         call vequ ( p1, minp )
+         call vequ ( p2, maxp )
 
-      ELSE
+      else
 
-         MINLAT = LAT2
-         MAXLAT = LAT1
+         minlat = lat2
+         maxlat = lat1
 
-         CALL VEQU ( P2, MINP )
-         CALL VEQU ( P1, MAXP )
+         call vequ ( p2, minp )
+         call vequ ( p1, maxp )
 
-      END IF
+      end if
 
 !
 !     We want to work with the plane containing the origin, P1, and P2.
 !     We'll call this plane PLANE1. First see whether P1 and P2 are
 !     linearly independent.
 !
-      CALL VCRSS ( P1, P2, NORMAL )
+      call vcrss ( p1, p2, normal )
 
-      IF ( VZERO(NORMAL) ) THEN
+      if ( vzero(normal) ) then
 !
 !        We have a special case: P1 and P2 define a line passing
 !        through the origin. The latitude extrema lie on the
 !        segment endpoints, and possibly at every point on the
 !        segment. We've already computed the outputs.
 !
-         CALL CHKOUT ( 'ZZSGLATX' )
-         RETURN
+         call chkout ( 'ZZSGLATX' )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we know that NORMAL is non-zero. Convert it
 !     to a unit vector.
 !
-      CALL VHATIP ( NORMAL )
+      call vhatip ( normal )
 
 !
 !     Let ALPHA be the non-negative angle between PLANE1 and the X-Y
@@ -332,24 +332,24 @@
 !     does exist, the X-Y plane and PLANE1 intersect in a "crease"
 !     that is normal to PLANE2.
 !
-      CALL VCRSS ( Z, NORMAL, CREASE )
+      call vcrss ( z, normal, crease )
 
-      IF ( VZERO(CREASE) ) THEN
+      if ( vzero(crease) ) then
 !
 !        Z and NORMAL are linearly dependent; PLANE1 coincides (up to
 !        round-off error) with the X-Y plane. We've already computed
 !        the outputs.
 !
-         CALL CHKOUT ( 'ZZSGLATX' )
-         RETURN
+         call chkout ( 'ZZSGLATX' )
+         return
 
-      END IF
+      end if
 
 !
 !     At this point we know CREASE is non-zero. Convert
 !     it to a unit vector.
 !
-      CALL VHATIP ( CREASE )
+      call vhatip ( crease )
 
 !
 !     By construction, CREASE is orthogonal to NORMAL. PLANE2
@@ -365,10 +365,10 @@
 !     segment, then the endpoints must be on opposite sides of PLANE2.
 !     See whether this is the case.
 !
-      DP1 = VDOT(P1,CREASE)
-      DP2 = VDOT(P2,CREASE)
+      dp1 = vdot(p1,crease)
+      dp2 = vdot(p2,crease)
 
-      IF (  OPSGND( DP1, DP2 )  ) THEN
+      if (  opsgnd( dp1, dp2 )  ) then
 !
 !        The segment crosses PLANE2 at an interior point; this
 !        point is where the extremum occurs. Solve for the
@@ -379,18 +379,18 @@
 !        an error. Therefore we don't check FAILED after the
 !        following call.
 !
-         CALL NVC2PL ( CREASE, 0.D0, PLANE2 )
+         call nvc2pl ( crease, 0.d0, plane2 )
 
-         CALL VSUB ( P2, P1, DIR )
+         call vsub ( p2, p1, dir )
 
-         CALL INRYPL ( P1, DIR, PLANE2, NXPTS, T )
+         call inrypl ( p1, dir, plane2, nxpts, t )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZSGLATX' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZSGLATX' )
+            return
+         end if
 
-         IF ( NXPTS .EQ. 1 ) THEN
+         if ( nxpts .eq. 1 ) then
 !
 !           This is the normal case: we have one intersection of the
 !           segment with PLANE2. Update whichever of the extrema is
@@ -405,23 +405,23 @@
 !
 !           This is not a special case computationally.
 !
-            CALL RECLAT ( T, R, LON, LAT )
+            call reclat ( t, r, lon, lat )
 
-            IF ( LAT .GT. MAXLAT ) THEN
+            if ( lat .gt. maxlat ) then
 
-               MAXLAT = LAT
-               CALL VEQU ( T, MAXP )
+               maxlat = lat
+               call vequ ( t, maxp )
 
-            ELSE IF ( LAT .LT. MINLAT ) THEN
+            else if ( lat .lt. minlat ) then
 
-               MINLAT = LAT
-               CALL VEQU ( T, MINP )
+               minlat = lat
+               call vequ ( t, minp )
 
-            END IF
+            end if
 !
 !           There can be only one local extremum, so we're done.
 !
-         END IF
+         end if
 !
 !        If NXPTS is not 1, then even though the endpoints are on
 !        opposite sides of PLANE2, either the segment was found to lie
@@ -429,7 +429,7 @@
 !        due to finite precision arithmetic error. We'll make do with
 !        the extrema already found.
 
-      END IF
+      end if
 
 !
 !     We reach this point if we found a local extremum or if any of the
@@ -448,6 +448,6 @@
 !     In all of the numbered cases the extrema occur at the endpoints.
 !     and have been found already. In all cases, the outputs are set.
 !
-      CALL CHKOUT ( 'ZZSGLATX' )
-      RETURN
-      END
+      call chkout ( 'ZZSGLATX' )
+      return
+      end

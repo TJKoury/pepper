@@ -1,6 +1,6 @@
 !$Procedure SGFPKT ( Generic Segment: Fetch data packets )
 
-      SUBROUTINE SGFPKT ( HANDLE, DESCR, FIRST, LAST, VALUES, ENDS )
+      subroutine sgfpkt ( handle, descr, first, last, values, ends )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               FIRST
-      INTEGER               LAST
-      DOUBLE PRECISION      VALUES  ( * )
-      INTEGER               ENDS    ( * )
+      integer               handle
+      double precision      descr   ( * )
+      integer               first
+      integer               last
+      double precision      values  ( * )
+      integer               ends    ( * )
 
 ! $ Brief_I/O
 !
@@ -191,89 +191,89 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Include the mnemonic values.
 !
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DTEMP(2)
+      double precision      dtemp(2)
 
-      INTEGER               B
-      INTEGER               BEGIN1
-      INTEGER               BEGIN2
-      INTEGER               E
-      INTEGER               I
-      INTEGER               MYNPDR
-      INTEGER               MYNPKT
-      INTEGER               MYPDRB
-      INTEGER               MYPDRT
-      INTEGER               MYPKSZ
-      INTEGER               MYPKTB
-      INTEGER               MYPKTO
-      INTEGER               SIZE
-      INTEGER               SOFFST
-      INTEGER               VOFFST
+      integer               b
+      integer               begin1
+      integer               begin2
+      integer               e
+      integer               i
+      integer               mynpdr
+      integer               mynpkt
+      integer               mypdrb
+      integer               mypdrt
+      integer               mypksz
+      integer               mypktb
+      integer               mypkto
+      integer               size
+      integer               soffst
+      integer               voffst
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGFPKT' )
+      call chkin ( 'SGFPKT' )
 !
 !     Perform the needed initialization
 !
-      CALL SGMETA ( HANDLE, DESCR, NPKT,   MYNPKT )
-      CALL SGMETA ( HANDLE, DESCR, PDRTYP, MYPDRT )
-      CALL SGMETA ( HANDLE, DESCR, PKTOFF, MYPKTO )
-      CALL SGMETA ( HANDLE, DESCR, PKTSZ,  MYPKSZ )
-      CALL SGMETA ( HANDLE, DESCR, PKTBAS, MYPKTB )
+      call sgmeta ( handle, descr, npkt,   mynpkt )
+      call sgmeta ( handle, descr, pdrtyp, mypdrt )
+      call sgmeta ( handle, descr, pktoff, mypkto )
+      call sgmeta ( handle, descr, pktsz,  mypksz )
+      call sgmeta ( handle, descr, pktbas, mypktb )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGFPKT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGFPKT' )
+         return
+      end if
 
 !
 !     Perform checks on the inputs for reasonableness.
 !
-      IF ( ( FIRST .LT. 1 ) .OR. ( LAST .GT. MYNPKT ) ) THEN
+      if ( ( first .lt. 1 ) .or. ( last .gt. mynpkt ) ) then
 
-         CALL SETMSG ( 'The range of packets requested ' &
+         call setmsg ( 'The range of packets requested ' &
          //            'extends beyond the available packet ' &
          //            'data.  The packet data is available ' &
          //            'for indexes 1 to #.  You''ve requested ' &
          //            'data from # to #. '                       )
-         CALL ERRINT ( '#', MYNPKT                                )
-         CALL ERRINT ( '#', FIRST                                 )
-         CALL ERRINT ( '#', LAST                                  )
-         CALL SIGERR ( 'SPICE(REQUESTOUTOFBOUNDS)'                )
-         CALL CHKOUT ( 'SGFPKT'                                   )
-         RETURN
+         call errint ( '#', mynpkt                                )
+         call errint ( '#', first                                 )
+         call errint ( '#', last                                  )
+         call sigerr ( 'SPICE(REQUESTOUTOFBOUNDS)'                )
+         call chkout ( 'SGFPKT'                                   )
+         return
 
-      END IF
+      end if
 
-      IF ( LAST .LT. FIRST ) THEN
+      if ( last .lt. first ) then
 
-         CALL SETMSG ( 'The last packet requested, #, is ' &
+         call setmsg ( 'The last packet requested, #, is ' &
          //            'before the first packet ' &
          //            'requested, #. '                     )
-         CALL ERRINT ( '#', LAST                            )
-         CALL ERRINT ( '#', FIRST                           )
-         CALL SIGERR ( 'SPICE(REQUESTOUTOFORDER)'           )
-         CALL CHKOUT ( 'SGFPKT'                             )
-         RETURN
+         call errint ( '#', last                            )
+         call errint ( '#', first                           )
+         call sigerr ( 'SPICE(REQUESTOUTOFORDER)'           )
+         call chkout ( 'SGFPKT'                             )
+         return
 
-      END IF
+      end if
 !
 !     We've passed the sanity tests, if the packet directory structure
 !     is recognized fetch the values and ends. We assume that we are
@@ -285,76 +285,76 @@
 !     have values zero (0) and one (1) for, respectively, fixed size
 !     packets and variable size packets.
 !
-      IF ( MYPDRT .EQ. 0 ) THEN
+      if ( mypdrt .eq. 0 ) then
 !
 !        All packets have the same size MYPKSZ so the address of the
 !        start of the first packet and end of the last packet are easily
 !        computed.
 !
-         IF ( MYPKTO .EQ. 0 ) THEN
+         if ( mypkto .eq. 0 ) then
 !
 !           Compute tha addresses for the packet data in the generic
 !           segment.
 !
-            B    =  MYPKTB   + ( FIRST - 1 ) * MYPKSZ + 1
-            E    =  MYPKTB   +  LAST         * MYPKSZ
+            b    =  mypktb   + ( first - 1 ) * mypksz + 1
+            e    =  mypktb   +  last         * mypksz
 !
 !           Get the packet data all in one shot since we know it's
 !           contiguous.
 !
-            CALL DAFGDA ( HANDLE, B, E, VALUES )
+            call dafgda ( handle, b, e, values )
 
-         ELSE
+         else
 !
 !           Compute the addresses for the packet data in the generic
 !           segment. Remember that we need to account for an offset
 !           here to get to the start of the actual data packet.
 !
-            SIZE = MYPKSZ + MYPKTO
+            size = mypksz + mypkto
 !
 !           Get the packet data. Because there is an offset from the
 !           address to the start of the packet data, we need to get
 !           the data one packet at a time rather than all at once.
 !
-            DO I = FIRST, LAST
+            do i = first, last
 
-               SOFFST = ( I -     1 ) * SIZE   + 1
-               VOFFST = ( I - FIRST ) * MYPKSZ + 1
+               soffst = ( i -     1 ) * size   + 1
+               voffst = ( i - first ) * mypksz + 1
 
-               B =  MYPKTB + SOFFST + MYPKTO
-               E =  MYPKTB + SOFFST + MYPKSZ
+               b =  mypktb + soffst + mypkto
+               e =  mypktb + soffst + mypksz
 
-               CALL DAFGDA ( HANDLE, B, E, VALUES(VOFFST) )
+               call dafgda ( handle, b, e, values(voffst) )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGFPKT' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGFPKT' )
+                  return
+               end if
 
-            END DO
+            end do
 
-         END IF
+         end if
 !
 !        Compute the ends for each of the data packets. This is the
 !        same for both of the cases above because we have fixed size
 !        data packets.
 !
-         DO I = 1, LAST-FIRST+1
-            ENDS(I) = I * MYPKSZ
-         END DO
+         do i = 1, last-first+1
+            ends(i) = i * mypksz
+         end do
 
-      ELSE
+      else
 !
 !        In addition to the other meta data items already retrieved, we
 !        will also need a few others.
 !
-         CALL SGMETA ( HANDLE, DESCR, PDRBAS, MYPDRB )
-         CALL SGMETA ( HANDLE, DESCR, NPDR,   MYNPDR )
+         call sgmeta ( handle, descr, pdrbas, mypdrb )
+         call sgmeta ( handle, descr, npdr,   mynpdr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGFPKT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGFPKT' )
+            return
+         end if
 !
 !        Each packet has a different size, so we need to fetch each one
 !        individually, keeping track of the ends and things. We assume
@@ -363,57 +363,57 @@
 !        need to treat the implicit indexing and explicit indexing cases
 !        separately.
 !
-         VOFFST = 1
+         voffst = 1
 
-         DO I = 1, LAST-FIRST+1
+         do i = 1, last-first+1
 !
 !           Compute the addresses in the generic segment for the
 !           beginning of data packets I and I+1. We need these to
 !           compute the size of the packet.
 !
-            B = MYPDRB + FIRST + I - 1
-            E = B + 1
+            b = mypdrb + first + i - 1
+            e = b + 1
 !
 !           Get the beginning addresses for the two data packets and
 !           convert them into integers.
 !
-            CALL DAFGDA( HANDLE, B, E, DTEMP )
+            call dafgda( handle, b, e, dtemp )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGFPKT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGFPKT' )
+               return
+            end if
 
-            BEGIN1 = INT ( DTEMP(1) )
-            BEGIN2 = INT ( DTEMP(2) )
+            begin1 = int ( dtemp(1) )
+            begin2 = int ( dtemp(2) )
 !
 !           Compute the size of data packet I, remembering to deal with
 !           the packet offset that might be present, and the beginning
 !           and ending addresses for the packet data.
 !
-            SIZE = BEGIN2 - BEGIN1 - MYPKTO
-            B    = MYPKTB + BEGIN1
-            E    = B      + SIZE - 1
+            size = begin2 - begin1 - mypkto
+            b    = mypktb + begin1
+            e    = b      + size - 1
 !
 !           Get the data for packet I.
 !
-            CALL DAFGDA ( HANDLE, B, E, VALUES(VOFFST) )
+            call dafgda ( handle, b, e, values(voffst) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGFPKT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGFPKT' )
+               return
+            end if
 !
 !           Compute the end for packet I and store it.
 !
-            VOFFST  = VOFFST + SIZE
-            ENDS(I) = VOFFST - 1
+            voffst  = voffst + size
+            ends(i) = voffst - 1
 
-         END DO
+         end do
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SGFPKT' )
-      RETURN
+      call chkout ( 'SGFPKT' )
+      return
 
-      END
+      end

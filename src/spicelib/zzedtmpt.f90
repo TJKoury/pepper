@@ -1,6 +1,6 @@
 !$Procedure ZZEDTMPT ( Ellipsoid terminator point in half-plane )
 
-      SUBROUTINE ZZEDTMPT ( UMBRAL, A, B, C, R, AXIS, PLNVEC, POINT )
+      subroutine zzedtmpt ( umbral, a, b, c, r, axis, plnvec, point )
 
 ! $ Abstract
 !
@@ -24,16 +24,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               UMBRAL
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      PLNVEC ( 3 )
-      DOUBLE PRECISION      POINT  ( 3 )
+      logical               umbral
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      r
+      double precision      axis   ( 3 )
+      double precision      plnvec ( 3 )
+      double precision      point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -179,16 +179,16 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
+      double precision      dasine
+      double precision      halfpi
+      double precision      touchd
+      double precision      vdot
+      double precision      vdist
+      double precision      vnorm
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -196,180 +196,180 @@
 !
 !     Tolerance used for arcsine arguments:
 !
-      DOUBLE PRECISION      ATOL
-      PARAMETER           ( ATOL = 1.D-14 )
+      double precision      atol
+      parameter           ( atol = 1.d-14 )
 
 !
 !     Angular error used to determine convergence:
 !
-      DOUBLE PRECISION      CNVLIM
-      PARAMETER           ( CNVLIM = 1.D-15 )
+      double precision      cnvlim
+      parameter           ( cnvlim = 1.d-15 )
 
 !
 !     Maximum number of iterations allowed for root finding:
 !
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR = 20 )
+      integer               maxitr
+      parameter           ( maxitr = 20 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ANGERR
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      H
-      DOUBLE PRECISION      HPLNML ( 3 )
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      PROJ   ( 3 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SGNNML ( 3 )
-      DOUBLE PRECISION      SRCPNT ( 3 )
-      DOUBLE PRECISION      TA
-      DOUBLE PRECISION      TARGPT ( 3 )
-      DOUBLE PRECISION      TAXIS  ( 3 )
-      DOUBLE PRECISION      TB
-      DOUBLE PRECISION      TC
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      TMPVEC ( 3 )
-      DOUBLE PRECISION      TPLNVC ( 3 )
-      DOUBLE PRECISION      TRANS  ( 3, 3 )
-      DOUBLE PRECISION      UTAXIS ( 3 )
-      DOUBLE PRECISION      XA
-      DOUBLE PRECISION      XB
-      DOUBLE PRECISION      XC
+      double precision      angerr
+      double precision      angle
+      double precision      const
+      double precision      d
+      double precision      h
+      double precision      hplnml ( 3 )
+      double precision      maxr
+      double precision      normal ( 3 )
+      double precision      proj   ( 3 )
+      double precision      s
+      double precision      sgnnml ( 3 )
+      double precision      srcpnt ( 3 )
+      double precision      ta
+      double precision      targpt ( 3 )
+      double precision      taxis  ( 3 )
+      double precision      tb
+      double precision      tc
+      double precision      theta
+      double precision      tmpvec ( 3 )
+      double precision      tplnvc ( 3 )
+      double precision      trans  ( 3, 3 )
+      double precision      utaxis ( 3 )
+      double precision      xa
+      double precision      xb
+      double precision      xc
 
-      INTEGER               NITR
+      integer               nitr
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEDTMPT' )
+      call chkin ( 'ZZEDTMPT' )
 
 !
 !     Check A, B, C, and R.
 !
-      IF (      ( A .LE. 0.D0 ) &
-           .OR. ( B .LE. 0.D0 ) &
-           .OR. ( C .LE. 0.D0 )  ) THEN
+      if (      ( a .le. 0.d0 ) &
+           .or. ( b .le. 0.d0 ) &
+           .or. ( c .le. 0.d0 )  ) then
 
-         CALL SETMSG ( 'Target radii must be strictly positive ' &
+         call setmsg ( 'Target radii must be strictly positive ' &
          //            'but were #, #, #.'                      )
-         CALL ERRDP  ( '#',  A                                  )
-         CALL ERRDP  ( '#',  B                                  )
-         CALL ERRDP  ( '#',  C                                  )
-         CALL SIGERR ( 'SPICE(INVALIDAXISLENGTH)'               )
-         CALL CHKOUT ( 'ZZEDTMPT'                               )
-         RETURN
+         call errdp  ( '#',  a                                  )
+         call errdp  ( '#',  b                                  )
+         call errdp  ( '#',  c                                  )
+         call sigerr ( 'SPICE(INVALIDAXISLENGTH)'               )
+         call chkout ( 'ZZEDTMPT'                               )
+         return
 
-      END IF
+      end if
 
-      IF ( R .LE. 0.D0 ) THEN
+      if ( r .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Source radius must be strictly positive ' &
+         call setmsg ( 'Source radius must be strictly positive ' &
          //            'but was #.'                             )
-         CALL ERRDP  ( '#',  R                                  )
-         CALL SIGERR ( 'SPICE(INVALIDRADIUS)'                   )
-         CALL CHKOUT ( 'ZZEDTMPT'                               )
-         RETURN
+         call errdp  ( '#',  r                                  )
+         call sigerr ( 'SPICE(INVALIDRADIUS)'                   )
+         call chkout ( 'ZZEDTMPT'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Check AXIS and PLNVEC.
 !
-      IF ( VZERO( AXIS ) ) THEN
+      if ( vzero( axis ) ) then
 
-         CALL SETMSG ( 'AXIS must be a non-zero vector but is ' &
+         call setmsg ( 'AXIS must be a non-zero vector but is ' &
          //            'in fact zero.'                         )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                     )
-         CALL CHKOUT ( 'ZZEDTMPT'                              )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                     )
+         call chkout ( 'ZZEDTMPT'                              )
+         return
 
-      END IF
+      end if
 
-      IF (  R + MAX(A,B,C)  .GE.  VNORM(AXIS)  ) THEN
+      if (  r + max(a,b,c)  .ge.  vnorm(axis)  ) then
 
-         CALL SETMSG ( 'Centers of source and target are too ' &
+         call setmsg ( 'Centers of source and target are too ' &
          //            'close together; distance is #. Radius ' &
          //            'of source is #; semi-axis lengths are ' &
          //            '#, #, #.'                               )
-         CALL ERRDP  ( '#',  VNORM(AXIS)                        )
-         CALL ERRDP  ( '#',  R                                  )
-         CALL ERRDP  ( '#',  A                                  )
-         CALL ERRDP  ( '#',  B                                  )
-         CALL ERRDP  ( '#',  C                                  )
-         CALL SIGERR ( 'SPICE(OBJECTSTOOCLOSE)'                 )
-         CALL CHKOUT ( 'ZZEDTMPT'                               )
-         RETURN
+         call errdp  ( '#',  vnorm(axis)                        )
+         call errdp  ( '#',  r                                  )
+         call errdp  ( '#',  a                                  )
+         call errdp  ( '#',  b                                  )
+         call errdp  ( '#',  c                                  )
+         call sigerr ( 'SPICE(OBJECTSTOOCLOSE)'                 )
+         call chkout ( 'ZZEDTMPT'                               )
+         return
 
-      END IF
+      end if
 
 
-      IF ( VZERO( PLNVEC ) ) THEN
+      if ( vzero( plnvec ) ) then
 
-         CALL SETMSG ( 'PLNVEC must be a non-zero vector but is ' &
+         call setmsg ( 'PLNVEC must be a non-zero vector but is ' &
          //            'in fact zero.'                           )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                       )
-         CALL CHKOUT ( 'ZZEDTMPT'                                )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                       )
+         call chkout ( 'ZZEDTMPT'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Transform the source, target, axis, and plane vector
 !     so that the target becomes a unit sphere.
 !
-      CALL CLEARD ( 9, TRANS )
+      call cleard ( 9, trans )
 
-      TA         = 1.D0 / A
-      TB         = 1.D0 / B
-      TC         = 1.D0 / C
+      ta         = 1.d0 / a
+      tb         = 1.d0 / b
+      tc         = 1.d0 / c
 
-      XA         = TA * R
-      XB         = TB * R
-      XC         = TC * R
+      xa         = ta * r
+      xb         = tb * r
+      xc         = tc * r
 
-      TRANS(1,1) = TA
-      TRANS(2,2) = TB
-      TRANS(3,3) = TC
+      trans(1,1) = ta
+      trans(2,2) = tb
+      trans(3,3) = tc
 
 !
 !     TNEGAX is the negative of the transformed axis.
 !     UTAXIS is the unit vector in the direction of TNEGAX.
 !
-      CALL MXV    ( TRANS,  PLNVEC, TPLNVC )
-      CALL MXV    ( TRANS,  AXIS,   TAXIS )
-      CALL VHAT   ( TAXIS,  UTAXIS )
+      call mxv    ( trans,  plnvec, tplnvc )
+      call mxv    ( trans,  axis,   taxis )
+      call vhat   ( taxis,  utaxis )
 
 !
 !     Let HPLNML be a normal vector to the plane containing
 !     the transformed axis and plane vectors.
 !
-      CALL VCRSS ( TPLNVC, TAXIS, HPLNML )
+      call vcrss ( tplnvc, taxis, hplnml )
 
-      IF ( VZERO(HPLNML) ) THEN
+      if ( vzero(hplnml) ) then
 
-         CALL SETMSG ( 'Plane reference vector and axis are ' &
+         call setmsg ( 'Plane reference vector and axis are ' &
          //            'linearly dependent.'                 )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'               )
-         CALL CHKOUT ( 'ZZEDTMPT'                            )
-         RETURN
+         call sigerr ( 'SPICE(DEGENERATECASE)'               )
+         call chkout ( 'ZZEDTMPT'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Let MAXR be an outer bounding radius for the transformed
 !     source sphere.
 !
-      MAXR = MAX ( XA, XB, XC )
+      maxr = max ( xa, xb, xc )
 
-      D    = VNORM ( TAXIS )
+      d    = vnorm ( taxis )
 
-      IF ( UMBRAL ) THEN
+      if ( umbral ) then
 !
 !        Find the angle between the negative axis and a ray tangent to
 !        both the transformed target and the outer bounding sphere of
@@ -379,26 +379,26 @@
 !        TPLNVC, and bounded by the line containing TNEGAX. The
 !        tangent ray does not cross the line containing TNEGAX.
 !
-         ANGLE = DASINE ( (MAXR-1.D0) / D,  ATOL  )
+         angle = dasine ( (maxr-1.d0) / d,  atol  )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZEDTMPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZEDTMPT' )
+            return
+         end if
 
 !
 !        Create the tangent point on the transformed target.
 !
-         THETA = - ( HALFPI() + ANGLE )
+         theta = - ( halfpi() + angle )
 
-         CALL VROTV ( UTAXIS, HPLNML, THETA, TARGPT )
+         call vrotv ( utaxis, hplnml, theta, targpt )
 
 !
 !        S is the sign applied to pi/2 - ANGLE.
 !
-         S = 1.D0
+         s = 1.d0
 
-      ELSE
+      else
 !
 !        This is the penumbral case. The tangent ray crosses
 !        the line containing TNEGAX.
@@ -407,33 +407,33 @@
 !        The tangent line always slopes downward (toward AXIS)
 !        toward the light source.
 !
-         ANGLE = DASINE ( (MAXR+1.D0) / D,  ATOL  )
+         angle = dasine ( (maxr+1.d0) / d,  atol  )
 
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZEDTMPT' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZEDTMPT' )
+            return
+         end if
 
 !
 !        Create the tangent point on the transformed target.
 !
-         THETA = ANGLE - HALFPI()
+         theta = angle - halfpi()
 
-         CALL VROTV ( UTAXIS, HPLNML, THETA, TARGPT )
+         call vrotv ( utaxis, hplnml, theta, targpt )
 
-         S = -1.D0
+         s = -1.d0
 
-      END IF
+      end if
 
 !
 !     The tangent point is also a normal direction for the plane
 !     tangent to both objects. Get the corresponding unit normal and
 !     the plane constant.
 !
-      CALL VHAT ( TARGPT, NORMAL )
+      call vhat ( targpt, normal )
 
-      CONST = VDOT( NORMAL, TARGPT )
+      const = vdot( normal, targpt )
 !
 !     Find the height of the plane relative to the transformed source.
 !     We'll find the unique point on the transformed source where the
@@ -443,16 +443,16 @@
 !     Let SGNNML be the "signed" normal which is parallel to NORMAL
 !     in the umbral case and anti-parallel otherwise.
 !
-      CALL VSCL   ( S,  NORMAL, SGNNML )
+      call vscl   ( s,  normal, sgnnml )
 
-      CALL EDNMPT ( XA, XB, XC, SGNNML, SRCPNT )
+      call ednmpt ( xa, xb, xc, sgnnml, srcpnt )
 
 !
 !     Express the source point as an offset from the transformed
 !     target center.
 !
-      CALL VADD ( SRCPNT, TAXIS, TMPVEC )
-      CALL VEQU ( TMPVEC,        SRCPNT )
+      call vadd ( srcpnt, taxis, tmpvec )
+      call vequ ( tmpvec,        srcpnt )
 
 !
 !     H is the height of the surface point on the source, relative
@@ -461,76 +461,76 @@
 !     amount by which TARGPT needs to be rotated in the positive
 !     sense about HPLNML to make the plane contain SRCPNT.
 !
-      H      = VDOT( SRCPNT, NORMAL ) - CONST
+      h      = vdot( srcpnt, normal ) - const
 
-      ANGERR = TOUCHD( -H / D )
+      angerr = touchd( -h / d )
 
-      NITR   = 0
+      nitr   = 0
 
 !
 !     The loop terminates when the angular error magnitude
 !     stops decreasing. If the iteration count exceeds the
 !     limit, an error will be signaled.
 !
-      DO WHILE (       ( ABS(ANGERR) .GT. CNVLIM ) &
-                 .AND. ( NITR        .LE. MAXITR )  )
+      do while (       ( abs(angerr) .gt. cnvlim ) &
+                 .and. ( nitr        .le. maxitr )  )
 !
 !        Rotate the target point about HPLNML in the positive sense
 !        by the angular error. This should make the tangent plane
 !        closer to the source point.
 !
-         CALL VROTV ( TARGPT, HPLNML, ANGERR, TMPVEC )
-         CALL VEQU  ( TMPVEC,                 TARGPT )
-         CALL VHAT  ( TARGPT, NORMAL )
+         call vrotv ( targpt, hplnml, angerr, tmpvec )
+         call vequ  ( tmpvec,                 targpt )
+         call vhat  ( targpt, normal )
 
 !
 !        Re-compute the normal and constant of the tangent plane.
 !
-         CONST = VDOT( NORMAL, TARGPT )
+         const = vdot( normal, targpt )
 
-         CALL VSCL   ( S,  NORMAL, SGNNML )
+         call vscl   ( s,  normal, sgnnml )
 
 !
 !        Find the near point on the source to the tangent plane.
 !
-         CALL EDNMPT ( XA, XB, XC, SGNNML, SRCPNT )
+         call ednmpt ( xa, xb, xc, sgnnml, srcpnt )
 
-         CALL VADD ( SRCPNT, TAXIS, TMPVEC )
-         CALL VEQU ( TMPVEC,        SRCPNT )
+         call vadd ( srcpnt, taxis, tmpvec )
+         call vequ ( tmpvec,        srcpnt )
 
 !
 !        Re-compute the height error and angular error.
 !
-         H      = VDOT  ( SRCPNT, NORMAL ) - CONST
+         h      = vdot  ( srcpnt, normal ) - const
 
-         CALL VPERP ( SRCPNT, HPLNML, PROJ )
+         call vperp ( srcpnt, hplnml, proj )
 
-         D      = VDIST ( PROJ, TARGPT )
-         ANGERR = TOUCHD( -H / D )
+         d      = vdist ( proj, targpt )
+         angerr = touchd( -h / d )
 
-         NITR   = NITR + 1
+         nitr   = nitr + 1
 
-         IF ( NITR .GT. MAXITR ) THEN
+         if ( nitr .gt. maxitr ) then
 
-            CALL SETMSG ( 'Tangent finding loop failed to ' &
+            call setmsg ( 'Tangent finding loop failed to ' &
             //            'converge. Iteration count = #.' )
-            CALL ERRINT ( '#', NITR                        )
-            CALL SIGERR ( 'SPICE(NOCONVERGENCE)'           )
-            CALL CHKOUT ( 'ZZEDTMPT'                       )
-            RETURN
+            call errint ( '#', nitr                        )
+            call sigerr ( 'SPICE(NOCONVERGENCE)'           )
+            call chkout ( 'ZZEDTMPT'                       )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Apply the inverse distortion transformation to TARGPT in order to
 !     obtain the tangent point on the original, ellipsoidal target.
 !
-      POINT(1) = A * TARGPT(1)
-      POINT(2) = B * TARGPT(2)
-      POINT(3) = C * TARGPT(3)
+      point(1) = a * targpt(1)
+      point(2) = b * targpt(2)
+      point(3) = c * targpt(3)
 
-      CALL CHKOUT ( 'ZZEDTMPT' )
-      RETURN
-      END
+      call chkout ( 'ZZEDTMPT' )
+      return
+      end

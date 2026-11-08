@@ -1,6 +1,6 @@
 !$Procedure SPKR08 ( Read SPK record from segment, type 8 )
 
-      SUBROUTINE SPKR08 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr08 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -182,94 +182,94 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ODD
-      LOGICAL               RETURN
+      logical               odd
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               STATSZ
-      PARAMETER           ( STATSZ = 6 )
+      integer               statsz
+      parameter           ( statsz = 6 )
 
-      INTEGER               CTRLSZ
-      PARAMETER           ( CTRLSZ = 4 )
+      integer               ctrlsz
+      parameter           ( ctrlsz = 4 )
 
-      INTEGER               STAIDX
-      PARAMETER           ( STAIDX = 4 )
+      integer               staidx
+      parameter           ( staidx = 4 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CONTRL ( CTRLSZ  )
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      STEP
+      double precision      contrl ( ctrlsz  )
+      double precision      dc     ( nd )
+      double precision      start
+      double precision      step
 
-      INTEGER               BEGIN
-      INTEGER               DEGREE
-      INTEGER               END
-      INTEGER               FIRST
-      INTEGER               GRPSIZ
-      INTEGER               IC     ( NI )
-      INTEGER               LAST
-      INTEGER               LOW
-      INTEGER               N
-      INTEGER               NEAR
-      INTEGER               TYPE
+      integer               begin
+      integer               degree
+      integer               end
+      integer               first
+      integer               grpsiz
+      integer               ic     ( ni )
+      integer               last
+      integer               low
+      integer               n
+      integer               near
+      integer               type
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
 !     of the segment.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      TYPE  = IC( 4 )
-      BEGIN = IC( 5 )
-      END   = IC( 6 )
+      type  = ic( 4 )
+      begin = ic( 5 )
+      end   = ic( 6 )
 
 !
 !     Make sure that this really is a type 8 or type 12 data segment.
 !
-      IF (  ( TYPE .NE. 08 ) .AND. ( TYPE .NE. 12 )  ) THEN
-         CALL CHKIN ( 'SPKR08'                                        )
-         CALL SETMSG( 'You are attempting to locate type 8 or type ' // &
+      if (  ( type .ne. 08 ) .and. ( type .ne. 12 )  ) then
+         call chkin ( 'SPKR08'                                        )
+         call setmsg( 'You are attempting to locate type 8 or type ' // &
                       '12 data in a type # data segment.'             )
-         CALL ERRINT( '#',  TYPE                                      )
-         CALL SIGERR( 'SPICE(WRONGSPKTYPE)'                           )
-         CALL CHKOUT( 'SPKR08'                                        )
-         RETURN
-      END IF
+         call errint( '#',  type                                      )
+         call sigerr( 'SPICE(WRONGSPKTYPE)'                           )
+         call chkout( 'SPKR08'                                        )
+         return
+      end if
 
 !
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      IF (  ( ET .LT. DC(1) )  .OR.  ( ET .GT. DC(2) )  )  THEN
-         CALL CHKIN ( 'SPKR08'                                      )
-         CALL SETMSG( 'Request time # is outside of descriptor '   // &
+      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+         call chkin ( 'SPKR08'                                      )
+         call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
-         CALL ERRDP ( '#',  ET                                      )
-         CALL ERRDP ( '#',  DC(1)                                   )
-         CALL ERRDP ( '#',  DC(2)                                   )
-         CALL SIGERR( 'SPICE(TIMEOUTOFBOUNDS)'                      )
-         CALL CHKOUT( 'SPKR08'                                      )
-         RETURN
+         call errdp ( '#',  et                                      )
+         call errdp ( '#',  dc(1)                                   )
+         call errdp ( '#',  dc(2)                                   )
+         call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                      )
+         call chkout( 'SPKR08'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     The type 8 segment structure is described by this diagram from
@@ -300,62 +300,62 @@
 !     states make up our output record.
 !
 !
-      CALL DAFGDA ( HANDLE, END-3, END, CONTRL )
+      call dafgda ( handle, end-3, end, contrl )
 
-      START   =  CONTRL(1)
-      STEP    =  CONTRL(2)
-      DEGREE  =  NINT ( CONTRL(3) )
-      N       =  NINT ( CONTRL(4) )
+      start   =  contrl(1)
+      step    =  contrl(2)
+      degree  =  nint ( contrl(3) )
+      n       =  nint ( contrl(4) )
 
-      GRPSIZ  =  DEGREE + 1
+      grpsiz  =  degree + 1
 
 !
 !     We'll now select the set of states that define the interpolating
 !     polynomials.  The cases of odd and even GRPSIZ are handled
 !     separately.
 !
-      IF ( ODD(GRPSIZ) ) THEN
+      if ( odd(grpsiz) ) then
 !
 !        Find the index of the state whose epoch is closest to the
 !        input epoch.  Find the first and last indices in the record
 !        of the (GRPSIZ-1)/2 states on either side of this central
 !        state.
 !
-         NEAR   =  NINT ( ( ET - START ) / STEP )  +  1
+         near   =  nint ( ( et - start ) / step )  +  1
 
-         FIRST  =  MIN (  MAX( 1,  NEAR - (DEGREE/2) ),  N-DEGREE )
-         LAST   =  FIRST  +  DEGREE
+         first  =  min (  max( 1,  near - (degree/2) ),  n-degree )
+         last   =  first  +  degree
 
 
-      ELSE
+      else
 !
 !        Find the index of the last state whose epoch is less than or
 !        equal to that of the input epoch.  Find the first and last
 !        indices in the record of the set of GRPSIZ consecutive states
 !        having this state as the (GRPSIZ/2)th one.
 !
-         LOW    =  INT ( ( ET - START ) / STEP )  +  1
+         low    =  int ( ( et - start ) / step )  +  1
 
-         FIRST  =  MIN (  MAX( 1,  LOW - DEGREE/2 ),  N-DEGREE )
-         LAST   =  FIRST  +  DEGREE
+         first  =  min (  max( 1,  low - degree/2 ),  n-degree )
+         last   =  first  +  degree
 
-      END IF
+      end if
 
 !
 !     Put the size of the group of states, the epoch of the first
 !     state in the record, and the step size into the output record.
 !
-      RECORD(1) =  GRPSIZ
-      RECORD(2) =  START  +  (FIRST-1)*STEP
-      RECORD(3) =  STEP
+      record(1) =  grpsiz
+      record(2) =  start  +  (first-1)*step
+      record(3) =  step
 
 !
 !     Read the states.
 !
-      CALL DAFGDA ( HANDLE, &
-                    BEGIN + (FIRST-1)*STATSZ, &
-                    BEGIN +      LAST*STATSZ  -  1, &
-                    RECORD(STAIDX)                  )
+      call dafgda ( handle, &
+                    begin + (first-1)*statsz, &
+                    begin +      last*statsz  -  1, &
+                    record(staidx)                  )
 
-      RETURN
-      END
+      return
+      end

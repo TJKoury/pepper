@@ -1,6 +1,6 @@
 !$Procedure FETCHI ( Fetch from an integer set )
 
-      INTEGER FUNCTION FETCHI ( NTH, SET )
+      integer function fetchi ( nth, set )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               NTH
-      INTEGER               SET      ( LBCELL:* )
+      integer               nth
+      integer               set      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -175,37 +175,37 @@
 !
 !     SPICELIB functions
 !
-      INTEGER            CARDI
-      LOGICAL            RETURN
+      integer            cardi
+      logical            return
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) THEN
-         FETCHI = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'FETCHI' )
-      END IF
+      if ( return () ) then
+         fetchi = 0
+         return
+      else
+         call chkin ( 'FETCHI' )
+      end if
 
 !
 !     Check to see if the N'TH element exists.
 !
-      IF ( NTH .LT. 1  .OR.  NTH .GT. CARDI ( SET ) ) THEN
-         FETCHI = 0
-         CALL SETMSG ( 'NTH element does not exist. NTH was *.' )
-         CALL ERRINT ( '*', NTH              )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)' )
+      if ( nth .lt. 1  .or.  nth .gt. cardi ( set ) ) then
+         fetchi = 0
+         call setmsg ( 'NTH element does not exist. NTH was *.' )
+         call errint ( '*', nth              )
+         call sigerr ( 'SPICE(INVALIDINDEX)' )
 
 !
 !     The great secret is that, for now, sets really are maintained
 !     in order, for reasons of efficiency.
 !
-      ELSE
-         FETCHI = NTH
-      END IF
+      else
+         fetchi = nth
+      end if
 
 
-      CALL CHKOUT ( 'FETCHI' )
-      RETURN
-      END
+      call chkout ( 'FETCHI' )
+      return
+      end

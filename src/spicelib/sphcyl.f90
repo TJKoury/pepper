@@ -1,6 +1,6 @@
 !$Procedure SPHCYL ( Spherical to cylindrical coordinates )
 
-      SUBROUTINE SPHCYL ( RADIUS, COLAT, SLON, R, CLON, Z )
+      subroutine sphcyl ( radius, colat, slon, r, clon, z )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RADIUS
-      DOUBLE PRECISION   COLAT
-      DOUBLE PRECISION   SLON
-      DOUBLE PRECISION   R
-      DOUBLE PRECISION   CLON
-      DOUBLE PRECISION   Z
+      double precision   radius
+      double precision   colat
+      double precision   slon
+      double precision   r
+      double precision   clon
+      double precision   z
 
 ! $ Brief_I/O
 !
@@ -468,22 +468,22 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION RR
-      DOUBLE PRECISION ZZ
+      double precision rr
+      double precision zz
 
 !
 !     Convert to cylindrical coordinates, storing the results in
 !     temporary variables.
 !
-      RR = RADIUS*DSIN(COLAT)
-      ZZ = RADIUS*DCOS(COLAT)
+      rr = radius*dsin(colat)
+      zz = radius*dcos(colat)
 
 !
 !     Move the results to the output variables.
 !
-      CLON   = SLON
-      R      = RR
-      Z      = ZZ
+      clon   = slon
+      r      = rr
+      z      = zz
 
-      RETURN
-      END
+      return
+      end

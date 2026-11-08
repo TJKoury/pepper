@@ -1,6 +1,6 @@
 !$Procedure FILLI ( Fill an integer array )
 
-      SUBROUTINE FILLI ( VALUE, NDIM, ARRAY )
+      subroutine filli ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               VALUE
-      INTEGER               NDIM
-      INTEGER               ARRAY ( * )
+      integer               value
+      integer               ndim
+      integer               array ( * )
 
 ! $ Brief_I/O
 !
@@ -161,13 +161,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-        ARRAY(I) = VALUE
-      END DO
+      do i = 1, ndim
+        array(i) = value
+      end do
 
 
-      RETURN
-      END
+      return
+      end

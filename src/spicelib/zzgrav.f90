@@ -1,6 +1,6 @@
 !$Procedure ZZGRAV ( SGP4 gravitational constants )
 
-      SUBROUTINE ZZGRAV ( GRAV )
+      subroutine zzgrav ( grav )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzsgp4.inc'
+      include               'zzsgp4.inc'
 
-      DOUBLE PRECISION      GRAV( NGRAVS, NGRAVC )
+      double precision      grav( ngravs, ngravc )
 
 ! $ Brief_I/O
 !
@@ -126,65 +126,65 @@
 !     very wrong.
 !
 
-      GRAV( WGS721, P_RAD)  =  6378.135D0
+      grav( wgs721, p_rad)  =  6378.135d0
 
-      GRAV( WGS721, P_XKE)  =  0.0743669161D0
+      grav( wgs721, p_xke)  =  0.0743669161d0
 
-      GRAV( WGS721, P_MU)   =  398600.79964D0
+      grav( wgs721, p_mu)   =  398600.79964d0
 
-      GRAV( WGS721, P_TUMN) =  1.0D0 / GRAV(WGS721, P_XKE)
+      grav( wgs721, p_tumn) =  1.0d0 / grav(wgs721, p_xke)
 
-      GRAV( WGS721, P_J2)   =  0.001082616D0
+      grav( wgs721, p_j2)   =  0.001082616d0
 
-      GRAV( WGS721, P_J3)   =  -0.00000253881D0
+      grav( wgs721, p_j3)   =  -0.00000253881d0
 
-      GRAV( WGS721, P_J4)   =  -0.00000165597D0
+      grav( wgs721, p_j4)   =  -0.00000165597d0
 
-      GRAV( WGS721, P_J3J2) =  GRAV(WGS721, P_J3) / GRAV(WGS721, P_J2)
+      grav( wgs721, p_j3j2) =  grav(wgs721, p_j3) / grav(wgs721, p_j2)
 
 
 !
 !     WGS 72 constants.
 !
 
-      GRAV( WGS72, P_MU)   = 398600.8D0
+      grav( wgs72, p_mu)   = 398600.8d0
 
-      GRAV( WGS72, P_RAD)  =  6378.135D0
+      grav( wgs72, p_rad)  =  6378.135d0
 
-      GRAV( WGS72, P_XKE)  =  60.0D0 / &
-                       DSQRT(GRAV(WGS72, P_RAD)**3/GRAV(WGS72, P_MU))
+      grav( wgs72, p_xke)  =  60.0d0 / &
+                       dsqrt(grav(wgs72, p_rad)**3/grav(wgs72, p_mu))
 
-      GRAV( WGS72, P_TUMN) =  1.0D0 / GRAV(WGS72, P_XKE)
+      grav( wgs72, p_tumn) =  1.0d0 / grav(wgs72, p_xke)
 
-      GRAV( WGS72, P_J2)   =  0.001082616D0
+      grav( wgs72, p_j2)   =  0.001082616d0
 
-      GRAV( WGS72, P_J3)   =  -0.00000253881D0
+      grav( wgs72, p_j3)   =  -0.00000253881d0
 
-      GRAV( WGS72, P_J4)   =  -0.00000165597D0
+      grav( wgs72, p_j4)   =  -0.00000165597d0
 
-      GRAV( WGS72, P_J3J2) =  GRAV(WGS72, P_J3) / GRAV(WGS72, P_J2)
+      grav( wgs72, p_j3j2) =  grav(wgs72, p_j3) / grav(wgs72, p_j2)
 
 
 !
 !     WGS 84 constants.
 !
 
-      GRAV( WGS84, P_MU)   =  398600.5D0
+      grav( wgs84, p_mu)   =  398600.5d0
 
-      GRAV( WGS84, P_RAD)  =  6378.137D0
+      grav( wgs84, p_rad)  =  6378.137d0
 
-      GRAV( WGS84, P_XKE)  =  60.0D0 / &
-                       DSQRT(GRAV(WGS84, P_RAD)**3/GRAV(WGS84, P_MU))
+      grav( wgs84, p_xke)  =  60.0d0 / &
+                       dsqrt(grav(wgs84, p_rad)**3/grav(wgs84, p_mu))
 
-      GRAV( WGS84, P_TUMN) =  1.0D0 / GRAV(WGS84, P_XKE)
+      grav( wgs84, p_tumn) =  1.0d0 / grav(wgs84, p_xke)
 
-      GRAV( WGS84, P_J2)   =  0.00108262998905D0
+      grav( wgs84, p_j2)   =  0.00108262998905d0
 
-      GRAV( WGS84, P_J3)   =  -0.00000253215306D0
+      grav( wgs84, p_j3)   =  -0.00000253215306d0
 
-      GRAV( WGS84, P_J4)   =  -0.00000161098761D0
+      grav( wgs84, p_j4)   =  -0.00000161098761d0
 
-      GRAV( WGS84, P_J3J2) =  GRAV(WGS84, P_J3) / GRAV(WGS84, P_J2)
+      grav( wgs84, p_j3j2) =  grav(wgs84, p_j3) / grav(wgs84, p_j2)
 
-      END
+      end
 

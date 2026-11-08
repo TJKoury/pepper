@@ -1,9 +1,9 @@
 !$Procedure ZZDSKSBR ( DSK, remove entries from API segment buffer )
 
-      SUBROUTINE ZZDSKSBR ( NEEDED, &
-                            MAXBOD, STSIZE, BTBODY, BTNBOD, BTSEGP, &
-                            BTSTSZ, STHAN,  STDSCR, STDLAD, STFREE, &
-                            STOFF,  STCTR,  STRAD                   )
+      subroutine zzdsksbr ( needed, &
+                            maxbod, stsize, btbody, btnbod, btsegp, &
+                            btstsz, sthan,  stdscr, stdlad, stfree, &
+                            stoff,  stctr,  strad                   )
 
 ! $ Abstract
 !
@@ -27,25 +27,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               NEEDED
-      INTEGER               MAXBOD
-      INTEGER               STSIZE
-      INTEGER               BTBODY ( * )
-      INTEGER               BTNBOD
-      INTEGER               BTSEGP ( * )
-      INTEGER               BTSTSZ ( * )
-      INTEGER               STHAN  ( * )
-      DOUBLE PRECISION      STDSCR ( DSKDSZ, * )
-      INTEGER               STDLAD ( DLADSZ, * )
-      INTEGER               STFREE
-      DOUBLE PRECISION      STOFF  ( 3, * )
-      DOUBLE PRECISION      STCTR  ( 3, * )
-      DOUBLE PRECISION      STRAD  ( * )
+      integer               needed
+      integer               maxbod
+      integer               stsize
+      integer               btbody ( * )
+      integer               btnbod
+      integer               btsegp ( * )
+      integer               btstsz ( * )
+      integer               sthan  ( * )
+      double precision      stdscr ( dskdsz, * )
+      integer               stdlad ( dladsz, * )
+      integer               stfree
+      double precision      stoff  ( 3, * )
+      double precision      stctr  ( 3, * )
+      double precision      strad  ( * )
 
 ! $ Brief_I/O
 !
@@ -256,61 +256,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               AVAIL
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NBTDEL
-      INTEGER               NSTDEL
+      integer               avail
+      integer               i
+      integer               j
+      integer               nbtdel
+      integer               nstdel
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKSBR' )
+      call chkin ( 'ZZDSKSBR' )
 
 
-      IF ( NEEDED .GT. STSIZE ) THEN
+      if ( needed .gt. stsize ) then
 !
 !        There's not enough room in the entire segment table.
 !
-         CALL SETMSG ( 'Size of segment table is #; number of ' &
+         call setmsg ( 'Size of segment table is #; number of ' &
          //            'entries requested is #. The segment ' &
          //            'table is supposed to be declared ' &
          //            'with sufficient size to accommodate all ' &
          //            'loaded DSK segments.'                    )
-         CALL ERRINT ( '#', STSIZE                               )
-         CALL ERRINT ( '#', NEEDED                               )
-         CALL SIGERR ( 'SPICE(SEGTABLETOOSMALL)'                 )
-         CALL CHKOUT ( 'ZZDSKSBR'                                )
-         RETURN
+         call errint ( '#', stsize                               )
+         call errint ( '#', needed                               )
+         call sigerr ( 'SPICE(SEGTABLETOOSMALL)'                 )
+         call chkout ( 'ZZDSKSBR'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     We can't make room in a body table of zero size.
 !
-      IF ( MAXBOD .LT. 1 ) THEN
+      if ( maxbod .lt. 1 ) then
 
-         CALL SETMSG ( 'Body table size must be at least 1 but is #.' )
-         CALL ERRINT ( '#', MAXBOD                                    )
-         CALL SIGERR ( 'SPICE(INVALIDTABLESIZE)'                      )
-         CALL CHKOUT ( 'ZZDSKSBR'                                     )
-         RETURN
+         call setmsg ( 'Body table size must be at least 1 but is #.' )
+         call errint ( '#', maxbod                                    )
+         call sigerr ( 'SPICE(INVALIDTABLESIZE)'                      )
+         call chkout ( 'ZZDSKSBR'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     AVAIL is the number of entries currently available.
 !
-      AVAIL = STSIZE - STFREE + 1
+      avail = stsize - stfree + 1
 
-      IF ( AVAIL .LT. NEEDED ) THEN
+      if ( avail .lt. needed ) then
 !
 !        We need to make room in the segment table.
 !
@@ -320,36 +320,36 @@
 !        NE represent the number of available entries. NE is initially
 !        the number of unused entries.
 !
-         NSTDEL = 0
-         I      = 1
+         nstdel = 0
+         i      = 1
 
-         DO WHILE ( ( I .LE. BTNBOD ) .AND. ( AVAIL .LT. NEEDED ) )
+         do while ( ( i .le. btnbod ) .and. ( avail .lt. needed ) )
 !
 !           Add the segment count for the Ith body to the total.
 !
-            NSTDEL = NSTDEL + BTSTSZ(I)
-            AVAIL  = AVAIL  + NSTDEL
-            I      = I      + 1
+            nstdel = nstdel + btstsz(i)
+            avail  = avail  + nstdel
+            i      = i      + 1
 
-         END DO
+         end do
 
 !
 !        Backstop: we should always have enough room in the segment
 !        table at this point.
 !
-         IF ( AVAIL .LT. NEEDED ) THEN
+         if ( avail .lt. needed ) then
 
-            CALL SETMSG ( 'The requested number of segment entries is ' &
+            call setmsg ( 'The requested number of segment entries is ' &
             //            '#; the size STSIZE of the input segment  ' &
             //            'table is #. This error should have been ' &
             //            'trapped before this point.'                )
-            CALL ERRINT ( '#', NEEDED                                 )
-            CALL ERRINT ( '#', STSIZE                                 )
-            CALL SIGERR ( 'SPICE(BUG)'                                )
-            CALL CHKOUT ( 'ZZDSKSBR'                                  )
-            RETURN
+            call errint ( '#', needed                                 )
+            call errint ( '#', stsize                                 )
+            call sigerr ( 'SPICE(BUG)'                                )
+            call chkout ( 'ZZDSKSBR'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        At this point, I is the index of the first retained body,
@@ -357,52 +357,52 @@
 !        to delete the segment table entries of the bodies indexed from
 !        1 to I-1.
 !
-         NBTDEL = I - 1
+         nbtdel = i - 1
 
-         IF ( NSTDEL .GT. 0 ) THEN
+         if ( nstdel .gt. 0 ) then
 !
 !           Adjust the tables to be consistent with the deletions.
 !
 !           Shift the body table and update the body table pointers.
 !
-            DO I = NBTDEL+1, BTNBOD
+            do i = nbtdel+1, btnbod
 
-               J         = I - NBTDEL
-               BTBODY(J) = BTBODY(I)
-               BTSTSZ(J) = BTSTSZ(I)
-               BTSEGP(J) = BTSEGP(I) - NSTDEL
+               j         = i - nbtdel
+               btbody(j) = btbody(i)
+               btstsz(j) = btstsz(i)
+               btsegp(j) = btsegp(i) - nstdel
 
-            END DO
+            end do
 
 !
 !           Update the body table count.
 !
-            BTNBOD = BTNBOD - NBTDEL
+            btnbod = btnbod - nbtdel
 
 !
 !           Shift the segment table entries forward by NSTDEL to make
 !           room at the rear of the table.
 !
-            DO I = NSTDEL+1, STFREE-1
+            do i = nstdel+1, stfree-1
 
-               J        = I - NSTDEL
-               STHAN(J) = STHAN(I)
+               j        = i - nstdel
+               sthan(j) = sthan(i)
 
-               CALL MOVED( STDSCR(1,I), DSKDSZ, STDSCR(1,J) )
-               CALL MOVEI( STDLAD(1,I), DLADSZ, STDLAD(1,J) )
-               CALL MOVED( STOFF (1,I), 3,      STOFF (1,J) )
-               CALL MOVED( STCTR (1,I), 3,      STCTR (1,J) )
+               call moved( stdscr(1,i), dskdsz, stdscr(1,j) )
+               call movei( stdlad(1,i), dladsz, stdlad(1,j) )
+               call moved( stoff (1,i), 3,      stoff (1,j) )
+               call moved( stctr (1,i), 3,      stctr (1,j) )
 
-               STRAD(J) = STRAD(I)
+               strad(j) = strad(i)
 
-            END DO
+            end do
 
-            STFREE = STFREE - NSTDEL
+            stfree = stfree - nstdel
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDSKSBR' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKSBR' )
+      return
+      end

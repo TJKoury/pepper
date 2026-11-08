@@ -1,6 +1,6 @@
 !$Procedure  ZZEKQTAB ( Private: EK, read table names from query )
 
-      SUBROUTINE ZZEKQTAB ( EQRYI, EQRYC, N, TABLE, ALIAS )
+      subroutine zzekqtab ( eqryi, eqryc, n, table, alias )
 
 ! $ Abstract
 !
@@ -21,17 +21,17 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekbool.inc'
+      include 'ekquery.inc'
+      include 'ekbool.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      INTEGER               N
-      CHARACTER*(*)         TABLE
-      CHARACTER*(*)         ALIAS
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      integer               n
+      character*(*)         table
+      character*(*)         alias
 
 ! $ Brief_I/O
 !
@@ -121,55 +121,55 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               AB
-      INTEGER               AE
-      INTEGER               BASE
-      INTEGER               BUFLEN
-      INTEGER               IPARSE
-      INTEGER               NTAB
-      INTEGER               TB
-      INTEGER               TE
+      integer               ab
+      integer               ae
+      integer               base
+      integer               buflen
+      integer               iparse
+      integer               ntab
+      integer               tb
+      integer               te
 
 !
 !     Use discovery check-in.
 !
 
-      CALL ZZEKREQI ( EQRYI, 'PARSED', IPARSE )
+      call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IPARSE .EQ. IFALSE ) THEN
+      if ( iparse .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKQTAB'                                )
-         CALL SETMSG ( 'Encoded query has not yet been parsed.'  )
-         CALL SIGERR ( 'SPICE(UNPARSEDQUERY)'                    )
-         CALL CHKOUT ( 'ZZEKQTAB'                                )
-         RETURN
+         call chkin  ( 'ZZEKQTAB'                                )
+         call setmsg ( 'Encoded query has not yet been parsed.'  )
+         call sigerr ( 'SPICE(UNPARSEDQUERY)'                    )
+         call chkout ( 'ZZEKQTAB'                                )
+         return
 
-      END IF
+      end if
 
-      CALL ZZEKREQI ( EQRYI, 'CHR_BUF_SIZE', BUFLEN )
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',   NTAB   )
+      call zzekreqi ( eqryi, 'CHR_BUF_SIZE', buflen )
+      call zzekreqi ( eqryi, 'NUM_TABLES',   ntab   )
 
 
-      IF (  ( N .LT. 1 ) .OR. ( N .GT. NTAB )  ) THEN
+      if (  ( n .lt. 1 ) .or. ( n .gt. ntab )  ) then
 
-         CALL CHKIN  ( 'ZZEKQTAB'                                  )
-         CALL SETMSG ( 'Table index # is out of valid range 1:#.'  )
-         CALL ERRINT ( '#',  N                                     )
-         CALL ERRINT ( '#',  NTAB                                  )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-         CALL CHKOUT ( 'ZZEKQTAB'                                  )
-         RETURN
+         call chkin  ( 'ZZEKQTAB'                                  )
+         call setmsg ( 'Table index # is out of valid range 1:#.'  )
+         call errint ( '#',  n                                     )
+         call errint ( '#',  ntab                                  )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+         call chkout ( 'ZZEKQTAB'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the Nth table and alias from the query.  The table
@@ -177,75 +177,75 @@
 !     well as the (N-1) previous descriptors, each one of which has
 !     size 2*EQVDSZ.
 !
-      BASE   =  EQVBAS + (N-1)*2*EQVDSZ
+      base   =  eqvbas + (n-1)*2*eqvdsz
 
-      TB     =  EQRYI ( BASE + EQBSTR )
-      TE     =  EQRYI ( BASE + EQESTR )
+      tb     =  eqryi ( base + eqbstr )
+      te     =  eqryi ( base + eqestr )
 
-      IF (       ( TB .GT. 0      ) &
-           .AND. ( TE .GT. 0      ) &
-           .AND. ( TB .LE. BUFLEN ) &
-           .AND. ( TE .LE. BUFLEN ) &
-           .AND. ( TB .LE. TE     )  ) THEN
+      if (       ( tb .gt. 0      ) &
+           .and. ( te .gt. 0      ) &
+           .and. ( tb .le. buflen ) &
+           .and. ( te .le. buflen ) &
+           .and. ( tb .le. te     )  ) then
 
-         TABLE = EQRYC(TB:TE)
+         table = eqryc(tb:te)
 
-      ELSE
+      else
 !
 !        We should never see invalid pointers in a parsed, encoded
 !        query, but let's not take chances.
 !
-         CALL CHKIN  ( 'ZZEKQTAB'                                )
-         CALL SETMSG ( 'Invalid string bounds #:# for table #.'  )
-         CALL ERRINT ( '#',  TB                                  )
-         CALL ERRINT ( '#',  TE                                  )
-         CALL ERRINT ( '#',  N                                   )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKQTAB'                                )
-         RETURN
+         call chkin  ( 'ZZEKQTAB'                                )
+         call setmsg ( 'Invalid string bounds #:# for table #.'  )
+         call errint ( '#',  tb                                  )
+         call errint ( '#',  te                                  )
+         call errint ( '#',  n                                   )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKQTAB'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Same deal for the alias, except that the begin pointer is
 !     set to zero if there's no alias.
 !
-      AB     =  EQRYI ( BASE + EQVDSZ + EQBSTR )
-      AE     =  EQRYI ( BASE + EQVDSZ + EQESTR )
+      ab     =  eqryi ( base + eqvdsz + eqbstr )
+      ae     =  eqryi ( base + eqvdsz + eqestr )
 
-      IF ( AB .GT. 0 ) THEN
+      if ( ab .gt. 0 ) then
 
-         IF (       ( AE .GT. 0      ) &
-              .AND. ( AB .LE. BUFLEN ) &
-              .AND. ( AE .LE. BUFLEN ) &
-              .AND. ( AB .LE. AE     )  ) THEN
+         if (       ( ae .gt. 0      ) &
+              .and. ( ab .le. buflen ) &
+              .and. ( ae .le. buflen ) &
+              .and. ( ab .le. ae     )  ) then
 
-            ALIAS  = EQRYC(AB:AE)
+            alias  = eqryc(ab:ae)
 
-         ELSE
+         else
 !
 !           If the first pointer is non-zero, both pointers should have
 !           been valid.
 !
-            CALL CHKIN  ( 'ZZEKQTAB'                                   )
-            CALL SETMSG ( 'Invalid string bounds #:# for the alias '  // &
+            call chkin  ( 'ZZEKQTAB'                                   )
+            call setmsg ( 'Invalid string bounds #:# for the alias '  // &
                           'of table #.'                                )
-            CALL ERRINT ( '#',  AB                                     )
-            CALL ERRINT ( '#',  AE                                     )
-            CALL ERRINT ( '#',  N                                      )
-            CALL SIGERR ( 'SPICE(BUG)'                                 )
-            CALL CHKOUT ( 'ZZEKQTAB'                                   )
-            RETURN
+            call errint ( '#',  ab                                     )
+            call errint ( '#',  ae                                     )
+            call errint ( '#',  n                                      )
+            call sigerr ( 'SPICE(BUG)'                                 )
+            call chkout ( 'ZZEKQTAB'                                   )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        No alias was supplied.
 !
-         ALIAS  =  ' '
+         alias  =  ' '
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

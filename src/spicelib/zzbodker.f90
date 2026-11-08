@@ -1,8 +1,8 @@
 !$Procedure ZZBODKER ( Private --- Process Body-Name Kernel Pool Maps )
 
-      SUBROUTINE ZZBODKER ( NAMES,  NORNAM, CODES,  NVALS,  EXTKER, &
-                            BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                            BIDLST, BIDPOL, BIDIDS, BIDIDX  )
+      subroutine zzbodker ( names,  nornam, codes,  nvals,  extker, &
+                            bnmlst, bnmpol, bnmnms, bnmidx, &
+                            bidlst, bidpol, bidids, bididx  )
 
 ! $ Abstract
 !
@@ -24,26 +24,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzbodtrn.inc'
+      include               'zzbodtrn.inc'
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      CHARACTER*(MAXL)      NAMES  (          NROOM )
-      CHARACTER*(MAXL)      NORNAM (          NROOM )
-      INTEGER               CODES  (          NROOM )
-      INTEGER               NVALS
-      LOGICAL               EXTKER
-      INTEGER               BNMLST (          NROOM )
-      INTEGER               BNMPOL ( LBPOOL : NROOM )
-      CHARACTER*(MAXL)      BNMNMS (          NROOM )
-      INTEGER               BNMIDX (          NROOM )
-      INTEGER               BIDLST (          NROOM )
-      INTEGER               BIDPOL ( LBPOOL : NROOM )
-      INTEGER               BIDIDS (          NROOM )
-      INTEGER               BIDIDX (          NROOM )
+      character*(maxl)      names  (          nroom )
+      character*(maxl)      nornam (          nroom )
+      integer               codes  (          nroom )
+      integer               nvals
+      logical               extker
+      integer               bnmlst (          nroom )
+      integer               bnmpol ( lbpool : nroom )
+      character*(maxl)      bnmnms (          nroom )
+      integer               bnmidx (          nroom )
+      integer               bidlst (          nroom )
+      integer               bidpol ( lbpool : nroom )
+      integer               bidids (          nroom )
+      integer               bididx (          nroom )
 
 ! $ Brief_I/O
 !
@@ -218,134 +218,134 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local Parameters
 !
-      INTEGER               KEYLEN
-      PARAMETER           ( KEYLEN = 32 )
+      integer               keylen
+      parameter           ( keylen = 32 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(KEYLEN)    NBC
-      CHARACTER*(KEYLEN)    NBN
-      CHARACTER*(1)         TYPE   ( 2 )
+      character*(keylen)    nbc
+      character*(keylen)    nbn
+      character*(1)         type   ( 2 )
 
-      INTEGER               I
-      INTEGER               NSIZ   ( 2 )
-      INTEGER               NUM    ( 2 )
+      integer               i
+      integer               nsiz   ( 2 )
+      integer               num    ( 2 )
 
-      LOGICAL               FOUND
-      LOGICAL               PLFIND ( 2 )
+      logical               found
+      logical               plfind ( 2 )
 
 !
 !     Saved Variables
 !
-      SAVE                  NBC
-      SAVE                  NBN
+      save                  nbc
+      save                  nbn
 
 !
 !     Data Statements
 !
-      DATA                  NBC    / 'NAIF_BODY_CODE' /
-      DATA                  NBN    / 'NAIF_BODY_NAME' /
+      data                  nbc    / 'NAIF_BODY_CODE' /
+      data                  nbn    / 'NAIF_BODY_NAME' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZBODKER' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZBODKER' )
+      end if
 
 !
 !     Until the code below proves otherwise, we shall assume
 !     we lack kernel pool name/code mappings.
 !
-      EXTKER = .FALSE.
+      extker = .false.
 
 !
 !     Check for the external body ID variables in the kernel pool.
 !
-      CALL GCPOOL ( NBN, 1, NROOM, NUM(1), NAMES, PLFIND(1) )
-      CALL GIPOOL ( NBC, 1, NROOM, NUM(2), CODES, PLFIND(2) )
+      call gcpool ( nbn, 1, nroom, num(1), names, plfind(1) )
+      call gipool ( nbc, 1, nroom, num(2), codes, plfind(2) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZBODKER' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZBODKER' )
+         return
+      end if
 
 !
 !     Examine PLFIND(1) and PLFIND(2) for problems.
 !
-      IF ( PLFIND(1) .NEQV. PLFIND(2) ) THEN
+      if ( plfind(1) .neqv. plfind(2) ) then
 
 !
 !        If they are not both present or absent, signal an error.
 !
-         CALL SETMSG ( 'The kernel pool vector, #, used in ' &
+         call setmsg ( 'The kernel pool vector, #, used in ' &
          //            'mapping between names and ID-codes ' &
          //            'is absent, while # is not.  This is ' &
          //            'often due to an improperly constructed ' &
          //            'text kernel.  Check loaded kernels for ' &
          //            'these keywords.'                         )
 
-         IF ( PLFIND(1) ) THEN
-            CALL ERRCH ( '#', NBC )
-            CALL ERRCH ( '#', NBN )
-         ELSE
-            CALL ERRCH ( '#', NBN )
-            CALL ERRCH ( '#', NBC )
-         END IF
+         if ( plfind(1) ) then
+            call errch ( '#', nbc )
+            call errch ( '#', nbn )
+         else
+            call errch ( '#', nbn )
+            call errch ( '#', nbc )
+         end if
 
-         CALL SIGERR ( 'SPICE(MISSINGKPV)' )
-         CALL CHKOUT ( 'ZZBODKER'          )
-         RETURN
+         call sigerr ( 'SPICE(MISSINGKPV)' )
+         call chkout ( 'ZZBODKER'          )
+         return
 
-      ELSE IF ( .NOT. PLFIND(1) ) THEN
+      else if ( .not. plfind(1) ) then
 
 !
 !        Return if both keywords are absent.
 !
-         CALL CHKOUT ( 'ZZBODKER' )
-         RETURN
+         call chkout ( 'ZZBODKER' )
+         return
 
-      END IF
+      end if
 
 !
 !     If we reach here, then both kernel pool variables are present.
 !     Perform some simple sanity checks on their lengths.
 !
-      CALL DTPOOL ( NBN, FOUND, NSIZ(1), TYPE(1) )
-      CALL DTPOOL ( NBC, FOUND, NSIZ(2), TYPE(2) )
+      call dtpool ( nbn, found, nsiz(1), type(1) )
+      call dtpool ( nbc, found, nsiz(2), type(2) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZBODKER' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZBODKER' )
+         return
+      end if
 
-      IF ( ( NSIZ(1) .GT. NROOM ) .OR. ( NSIZ(2) .GT. NROOM ) ) THEN
+      if ( ( nsiz(1) .gt. nroom ) .or. ( nsiz(2) .gt. nroom ) ) then
 
-         CALL SETMSG ( 'The kernel pool vectors used to ' &
+         call setmsg ( 'The kernel pool vectors used to ' &
          //            'define the names/ID-codes mapping' &
          //            'exceeds the max size. The size of ' &
          //            'the NAME vector is #1. The size of ' &
          //            'the CODE vector is #2. The max ' &
          //            'number allowed of elements is #3.'   )
-         CALL ERRINT ( '#1', NSIZ(1)                         )
-         CALL ERRINT ( '#2', NSIZ(2)                         )
-         CALL ERRINT ( '#3', NROOM                           )
-         CALL SIGERR ( 'SPICE(KERVARTOOBIG)'                 )
-         CALL CHKOUT ( 'ZZBODKER'                            )
-         RETURN
+         call errint ( '#1', nsiz(1)                         )
+         call errint ( '#2', nsiz(2)                         )
+         call errint ( '#3', nroom                           )
+         call sigerr ( 'SPICE(KERVARTOOBIG)'                 )
+         call chkout ( 'ZZBODKER'                            )
+         return
 
-      ELSE IF ( NSIZ(1) .NE. NSIZ(2) ) THEN
+      else if ( nsiz(1) .ne. nsiz(2) ) then
 
-         CALL SETMSG ( 'The kernel pool vectors used for ' &
+         call setmsg ( 'The kernel pool vectors used for ' &
          //            'mapping between names and ID-codes ' &
          //            'are not the same size.  The size ' &
          //            'of the name vector, NAIF_BODY_NAME ' &
@@ -353,13 +353,13 @@
          //            'vector, NAIF_BODY_CODE is #. You ' &
          //            'need to examine the ID-code kernel ' &
          //            'you loaded and correct the mismatch.' )
-         CALL ERRINT ( '#', NSIZ(1)                           )
-         CALL ERRINT ( '#', NSIZ(2)                           )
-         CALL SIGERR ( 'SPICE(BADDIMENSIONS)'                 )
-         CALL CHKOUT ( 'ZZBODKER'                             )
-         RETURN
+         call errint ( '#', nsiz(1)                           )
+         call errint ( '#', nsiz(2)                           )
+         call sigerr ( 'SPICE(BADDIMENSIONS)'                 )
+         call chkout ( 'ZZBODKER'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the canonical member of the equivalence class of NAMES,
@@ -368,53 +368,53 @@
 !     contents.  While passing through the NAMES array, look for any
 !     blank strings and signal an appropriate error.
 !
-      NVALS = NUM(1)
+      nvals = num(1)
 
-      DO I = 1, NVALS
+      do i = 1, nvals
 
 !
 !        Check for blank strings.
 !
-         IF ( NAMES(I) .EQ. ' ' ) THEN
+         if ( names(i) .eq. ' ' ) then
 
-            CALL SETMSG ( 'An attempt to assign the code, #, to ' &
+            call setmsg ( 'An attempt to assign the code, #, to ' &
             //            'a blank string was made.  Check loaded ' &
             //            'text kernels for a blank string in ' &
             //            'the NAIF_BODY_NAME array.'               )
-            CALL ERRINT ( '#', I                                    )
-            CALL SIGERR ( 'SPICE(BLANKNAMEASSIGNED)'                )
-            CALL CHKOUT ( 'ZZBODKER'                                )
-            RETURN
+            call errint ( '#', i                                    )
+            call sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
+            call chkout ( 'ZZBODKER'                                )
+            return
 
-         END IF
+         end if
 
 !
 !        Compute the canonical member of the equivalence class.
 !
-         CALL LJUCRS ( 1, NAMES(I), NORNAM(I) )
+         call ljucrs ( 1, names(i), nornam(i) )
 
-      END DO
+      end do
 
 !
 !     Populate hashes required by ZZBODTRN.
 !
-      CALL ZZBODINI ( NAMES,  NORNAM, CODES,  NVALS,  NROOM, &
-                      BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                      BIDLST, BIDPOL, BIDIDS, BIDIDX  )
+      call zzbodini ( names,  nornam, codes,  nvals,  nroom, &
+                      bnmlst, bnmpol, bnmnms, bnmidx, &
+                      bidlst, bidpol, bidids, bididx  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZBODKER' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZBODKER' )
+         return
+      end if
 
 
 !
 !     We're on the home stretch if we make it to this point. Set EXTKER
 !     to .TRUE., check out and return.
 !
-      EXTKER = .TRUE.
+      extker = .true.
 
-      CALL CHKOUT ( 'ZZBODKER' )
-      RETURN
+      call chkout ( 'ZZBODKER' )
+      return
 
-      END
+      end

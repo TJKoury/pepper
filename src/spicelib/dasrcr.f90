@@ -1,6 +1,6 @@
 !$Procedure DASRCR ( DAS, remove comment records )
 
-      SUBROUTINE DASRCR ( HANDLE, N )
+      subroutine dasrcr ( handle, n )
 
 ! $ Abstract
 !
@@ -20,10 +20,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               N
+      integer               handle
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -160,8 +160,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
@@ -171,65 +171,65 @@
 !
 !     Words per data record, for each data type:
 !
-      INTEGER               NWC
-      PARAMETER           ( NWC    = 1024 )
+      integer               nwc
+      parameter           ( nwc    = 1024 )
 
-      INTEGER               NWD
-      PARAMETER           ( NWD    =  128 )
+      integer               nwd
+      parameter           ( nwd    =  128 )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI    =  256 )
+      integer               nwi
+      parameter           ( nwi    =  256 )
 
 !
 !     Data type parameters
 !
-      INTEGER               CHAR
-      PARAMETER           ( CHAR   =   1  )
+      integer               char
+      parameter           ( char   =   1  )
 
-      INTEGER               DP
-      PARAMETER           ( DP     =   2  )
+      integer               dp
+      parameter           ( dp     =   2  )
 
 !
 !     Directory pointer location (forward):
 !
-      INTEGER               FWDLOC
-      PARAMETER           ( FWDLOC =   1  )
+      integer               fwdloc
+      parameter           ( fwdloc =   1  )
 
 !
 !     Location of first type descriptor
 !
-      INTEGER               BEGDSC
-      PARAMETER           ( BEGDSC = 9 )
+      integer               begdsc
+      parameter           ( begdsc = 9 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(NWC)       RECC
+      character*(nwc)       recc
 
-      DOUBLE PRECISION      RECD   ( NWD )
+      double precision      recd   ( nwd )
 
-      INTEGER               BASE
-      INTEGER               DIRREC ( NWI )
-      INTEGER               FREE
-      INTEGER               I
-      INTEGER               LASTLA ( 3 )
-      INTEGER               LASTRC ( 3 )
-      INTEGER               LASTWD ( 3 )
-      INTEGER               LOC
-      INTEGER               LREC
-      INTEGER               LINDEX
-      INTEGER               LWORD
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NREC
-      INTEGER               NRESVC
-      INTEGER               NRESVR
-      INTEGER               NSHIFT
-      INTEGER               POS
-      INTEGER               RECI   ( NWI    )
-      INTEGER               TYPE
-      INTEGER               UNIT
+      integer               base
+      integer               dirrec ( nwi )
+      integer               free
+      integer               i
+      integer               lastla ( 3 )
+      integer               lastrc ( 3 )
+      integer               lastwd ( 3 )
+      integer               loc
+      integer               lrec
+      integer               lindex
+      integer               lword
+      integer               ncomc
+      integer               ncomr
+      integer               nrec
+      integer               nresvc
+      integer               nresvr
+      integer               nshift
+      integer               pos
+      integer               reci   ( nwi    )
+      integer               type
+      integer               unit
 
 
 !
@@ -240,58 +240,58 @@
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      INTEGER               NEXT   ( 3 )
-      SAVE                  NEXT
+      integer               next   ( 3 )
+      save                  next
 
-      INTEGER               PREV   ( 3 )
-      SAVE                  PREV
+      integer               prev   ( 3 )
+      save                  prev
 
 !
 !     Initial values
 !
-      DATA                  NEXT   /  2,   3,   1  /
-      DATA                  PREV   /  3,   1,   2  /
+      data                  next   /  2,   3,   1  /
+      data                  prev   /  3,   1,   2  /
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASRCR' )
+      call chkin ( 'DASRCR' )
 
 !
 !     Make sure this DAS file is open for writing.  Signal an error if
 !     not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
 !
 !     Get the logical unit for this DAS file.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASRCR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASRCR' )
+         return
+      end if
 
 !
 !     It's a mistake to use a negative value of N.
 !
-      IF ( N .LT. 0 ) THEN
+      if ( n .lt. 0 ) then
 
-         CALL SETMSG ( 'Number of comment records to remove must be ' // &
+         call setmsg ( 'Number of comment records to remove must be ' // &
                        'non-negative.  Actual number requested was #.' )
-         CALL ERRINT ( '#',  N                                         )
-         CALL SIGERR ( 'SPICE(DASINVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'DASRCR'                                        )
-         RETURN
+         call errint ( '#',  n                                         )
+         call sigerr ( 'SPICE(DASINVALIDCOUNT)'                        )
+         call chkout ( 'DASRCR'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Before doing anything to the file, make sure that the DASRWR
@@ -302,45 +302,45 @@
 !
 !     DASWBR flushes buffered records to the file.
 !
-      CALL DASWBR ( HANDLE )
+      call daswbr ( handle )
 
 !
 !     Grab the file summary for this DAS file.  Find the number of
 !     reserved records and the number of the first free record.
 !
-      CALL DASHFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dashfs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
 
 !
 !     Determine the size of the record shift we'll actually perform.
 !
-      NSHIFT  =  MIN ( N, NCOMR )
+      nshift  =  min ( n, ncomr )
 
 !
 !     Find the record and word positions LREC and LWORD of the last
 !     descriptor in the file.
 !
-      CALL MAXAI  ( LASTRC,  3,  LREC,  LOC )
-      LWORD  =  0
+      call maxai  ( lastrc,  3,  lrec,  loc )
+      lword  =  0
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF (       ( LASTRC(I) .EQ. LREC  ) &
-              .AND. ( LASTWD(I) .GT. LWORD )  ) THEN
+         if (       ( lastrc(i) .eq. lrec  ) &
+              .and. ( lastwd(i) .gt. lword )  ) then
 
-            LWORD = LASTWD(I)
+            lword = lastwd(i)
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     LREC and LWORD are now the record and word index of the last
@@ -349,30 +349,30 @@
 !     data have their first directory records zeroed out, and this
 !     should remain true after the removal of the comment records.
 !
-      IF ( LREC .EQ. 0 ) THEN
+      if ( lrec .eq. 0 ) then
 !
 !        Just write the zero-filled record to record number
 !
 !           NRESVR + NCOMR + 2 - NSHIFT
 !
-         CALL CLEARI (  NWI,                                 DIRREC )
-         CALL DASIOI ( 'WRITE', UNIT, NRESVR+NCOMR+2-NSHIFT, DIRREC )
+         call cleari (  nwi,                                 dirrec )
+         call dasioi ( 'WRITE', unit, nresvr+ncomr+2-nshift, dirrec )
 
-      ELSE
+      else
 !
 !        There really is stuff to move.  For each directory record,
 !        move the record and then all of the records described by that
 !        record.  We start at the beginning of the data area and move
 !        downwards in the file as we go.
 !
-         NREC  =  NRESVR + NCOMR + 2
+         nrec  =  nresvr + ncomr + 2
 
-         DO WHILE ( ( NREC .LE. LREC ) .AND. ( NREC .NE. 0 ) )
+         do while ( ( nrec .le. lrec ) .and. ( nrec .ne. 0 ) )
 !
 !           Read the current directory record and move it.
 !
-            CALL DASIOI ( 'READ',   UNIT,  NREC,         DIRREC )
-            CALL DASIOI ( 'WRITE',  UNIT,  NREC-NSHIFT,  DIRREC )
+            call dasioi ( 'READ',   unit,  nrec,         dirrec )
+            call dasioi ( 'WRITE',  unit,  nrec-nshift,  dirrec )
 
 !
 !           For each descriptor in the current directory, move the
@@ -383,14 +383,14 @@
 !           find the index within the directory of the directory's
 !           last descriptor.
 !
-            TYPE  =  DIRREC( BEGDSC )
-            BASE  =  NREC + 1
+            type  =  dirrec( begdsc )
+            base  =  nrec + 1
 
-            IF ( NREC .EQ. LREC ) THEN
-               LINDEX = LWORD
-            ELSE
-               LINDEX = NWI
-            END IF
+            if ( nrec .eq. lrec ) then
+               lindex = lword
+            else
+               lindex = nwi
+            end if
 
 !
 !           We'll now traverse the directory in forward order, keeping
@@ -399,11 +399,11 @@
 !           POS will be the index of the descriptor of the current
 !           cluster.
 !
-            POS  =  BEGDSC + 1
+            pos  =  begdsc + 1
 
-            DO WHILE ( POS .LE. LINDEX )
+            do while ( pos .le. lindex )
 
-               IF ( POS .GT. BEGDSC+1 ) THEN
+               if ( pos .gt. begdsc+1 ) then
 !
 !                 We'll need to determine the type of the current
 !                 cluster.  If the descriptor contains a positive
@@ -411,60 +411,60 @@
 !                 the successor of the previous type, according to our
 !                 ordering of types.
 !
-                  IF (  DIRREC(POS)  .GT.  0  ) THEN
-                     TYPE  =  NEXT( TYPE )
-                  ELSE
-                     TYPE  =  PREV( TYPE )
-                  END IF
+                  if (  dirrec(pos)  .gt.  0  ) then
+                     type  =  next( type )
+                  else
+                     type  =  prev( type )
+                  end if
 
 !
 !                 Update the cluster base record number.
 !
-                  BASE  =  BASE + ABS ( DIRREC(POS-1) )
+                  base  =  base + abs ( dirrec(pos-1) )
 
-               END IF
+               end if
 
 !
 !              BASE and TYPE now are correctly set for the current
 !              cluster.  Move the cluster.
 !
-               DO I  =  BASE,   BASE + ABS( DIRREC(POS) ) - 1
+               do i  =  base,   base + abs( dirrec(pos) ) - 1
 
-                  IF ( TYPE .EQ. CHAR ) THEN
+                  if ( type .eq. char ) then
 
-                     CALL DASIOC ( 'READ',   UNIT,  I,         RECC )
-                     CALL DASIOC ( 'WRITE',  UNIT,  I-NSHIFT,  RECC )
+                     call dasioc ( 'READ',   unit,  i,         recc )
+                     call dasioc ( 'WRITE',  unit,  i-nshift,  recc )
 
-                  ELSE IF ( TYPE .EQ. DP ) THEN
+                  else if ( type .eq. dp ) then
 
-                     CALL DASIOD ( 'READ',   UNIT,  I,         RECD )
-                     CALL DASIOD ( 'WRITE',  UNIT,  I-NSHIFT,  RECD )
+                     call dasiod ( 'READ',   unit,  i,         recd )
+                     call dasiod ( 'WRITE',  unit,  i-nshift,  recd )
 
-                  ELSE
+                  else
 
-                     CALL DASIOI ( 'READ',   UNIT,  I,         RECI )
-                     CALL DASIOI ( 'WRITE',  UNIT,  I-NSHIFT,  RECI )
+                     call dasioi ( 'READ',   unit,  i,         reci )
+                     call dasioi ( 'WRITE',  unit,  i-nshift,  reci )
 
-                  END IF
+                  end if
 
-               END DO
+               end do
 
 !
 !              The next descriptor to look at is the next one in the
 !              current directory.
 !
-               POS     =  POS + 1
+               pos     =  pos + 1
 
-            END DO
+            end do
 
 !
 !           Find the next directory record.
 !
-            NREC = DIRREC ( FWDLOC )
+            nrec = dirrec ( fwdloc )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     Update the file summary.  The number of comment records and the
@@ -476,27 +476,27 @@
 !     The call to DASUFS will update the file record as well as the
 !     file summary.
 !
-      NCOMR  =  NCOMR - NSHIFT
-      FREE   =  FREE  - NSHIFT
+      ncomr  =  ncomr - nshift
+      free   =  free  - nshift
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( LASTRC(I) .NE. 0 ) THEN
-            LASTRC(I)  =  LASTRC(I) - NSHIFT
-         END IF
+         if ( lastrc(i) .ne. 0 ) then
+            lastrc(i)  =  lastrc(i) - nshift
+         end if
 
-      END DO
+      end do
 
-      CALL DASUFS ( HANDLE, &
-                    NRESVR, &
-                    NRESVC, &
-                    NCOMR, &
-                    NCOMC, &
-                    FREE, &
-                    LASTLA, &
-                    LASTRC, &
-                    LASTWD )
+      call dasufs ( handle, &
+                    nresvr, &
+                    nresvc, &
+                    ncomr, &
+                    ncomc, &
+                    free, &
+                    lastla, &
+                    lastrc, &
+                    lastwd )
 
-      CALL CHKOUT ( 'DASRCR' )
-      RETURN
-      END
+      call chkout ( 'DASRCR' )
+      return
+      end

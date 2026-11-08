@@ -1,7 +1,7 @@
 !$Procedure DSKRB2 ( DSK, determine range bounds for plate set )
 
-      SUBROUTINE DSKRB2 ( NV,     VRTCES, NP,     PLATES, &
-                          CORSYS, CORPAR, MNCOR3, MXCOR3 )
+      subroutine dskrb2 ( nv,     vrtces, np,     plates, &
+                          corsys, corpar, mncor3, mxcor3 )
 
 ! $ Abstract
 !
@@ -22,18 +22,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dskdsc.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               NV
-      DOUBLE PRECISION      VRTCES ( 3, * )
-      INTEGER               NP
-      INTEGER               PLATES ( 3, * )
-      INTEGER               CORSYS
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      MNCOR3
-      DOUBLE PRECISION      MXCOR3
+      integer               nv
+      double precision      vrtces ( 3, * )
+      integer               np
+      integer               plates ( 3, * )
+      integer               corsys
+      double precision      corpar ( * )
+      double precision      mncor3
+      double precision      mxcor3
 
 ! $ Brief_I/O
 !
@@ -508,129 +508,129 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VDIST
+      double precision      dpmax
+      double precision      dpmin
+      double precision      vnorm
+      double precision      vdist
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      THIRD
-      PARAMETER           ( THIRD  = 1.D0/3.D0 )
+      double precision      third
+      parameter           ( third  = 1.d0/3.d0 )
 !
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      DIST
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      MAXD
-      DOUBLE PRECISION      ORIGIN ( 3 )
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      RE
+      double precision      alt
+      double precision      center ( 3 )
+      double precision      dist
+      double precision      f
+      double precision      lat
+      double precision      lon
+      double precision      maxd
+      double precision      origin ( 3 )
+      double precision      pnear  ( 3 )
+      double precision      re
 
-      INTEGER               I
+      integer               i
 
 !
 !     Saved variables
 !
-      SAVE                  ORIGIN
+      save                  origin
 
 !
 !     Initial values
 !
-      DATA                  ORIGIN / 3 * 0.D0 /
+      data                  origin / 3 * 0.d0 /
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKRB2' )
+      call chkin ( 'DSKRB2' )
 
 
-      IF ( CORSYS .EQ. LATSYS ) THEN
+      if ( corsys .eq. latsys ) then
 !
 !        The coordinate system is latitudinal.
 !
 !        Compute radius bounds. Start with the maximum radius.
 !        This is simply the maximum norm of the vertices.
 !
-         MXCOR3 = 0.D0
+         mxcor3 = 0.d0
 
-         DO I = 1, NV
-            MXCOR3 = MAX (  VNORM( VRTCES(1,I) ),  MXCOR3  )
-         END DO
+         do i = 1, nv
+            mxcor3 = max (  vnorm( vrtces(1,i) ),  mxcor3  )
+         end do
 
 !
 !        Compute the minimum radius of the plate set.
 !
-         MNCOR3 = DPMAX()
+         mncor3 = dpmax()
 
-         DO I = 1, NP
+         do i = 1, np
 
-            CALL PLTNP ( ORIGIN, &
-                         VRTCES( 1, PLATES(1,I) ), &
-                         VRTCES( 1, PLATES(2,I) ), &
-                         VRTCES( 1, PLATES(3,I) ), &
-                         PNEAR, &
-                         DIST                     )
+            call pltnp ( origin, &
+                         vrtces( 1, plates(1,i) ), &
+                         vrtces( 1, plates(2,i) ), &
+                         vrtces( 1, plates(3,i) ), &
+                         pnear, &
+                         dist                     )
 
-            MNCOR3 = MIN ( DIST, MNCOR3 )
+            mncor3 = min ( dist, mncor3 )
 
-         END DO
+         end do
 
 
-      ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      else if ( corsys .eq. recsys ) then
 !
 !        The coordinate system is rectangular. Compute the range
 !        of Z-coordinates of the plates.
 !
-         MNCOR3 = DPMAX()
-         MXCOR3 = DPMIN()
+         mncor3 = dpmax()
+         mxcor3 = dpmin()
 
-         DO I = 1, NV
+         do i = 1, nv
 
-            MNCOR3 = MIN( MNCOR3, VRTCES(3,I) )
-            MXCOR3 = MAX( MXCOR3, VRTCES(3,I) )
+            mncor3 = min( mncor3, vrtces(3,i) )
+            mxcor3 = max( mxcor3, vrtces(3,i) )
 
-         END DO
+         end do
 
 
-      ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+      else if ( corsys .eq. pdtsys ) then
 !
 !        The coordinate system is planetodetic. Compute the range
 !        of altitudes of the plates.
 !
-         RE     = CORPAR(1)
-         F      = CORPAR(2)
+         re     = corpar(1)
+         f      = corpar(2)
 
-         MXCOR3 = DPMIN()
-         MNCOR3 = DPMAX()
+         mxcor3 = dpmin()
+         mncor3 = dpmax()
 
 !
 !        The maximum altitude is attained at a plate vertex.
 !
-         DO I = 1, NV
+         do i = 1, nv
 
-            CALL RECGEO ( VRTCES(1,I), RE, F, LON, LAT, ALT )
+            call recgeo ( vrtces(1,i), re, f, lon, lat, alt )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DSKRB2' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DSKRB2' )
+               return
+            end if
 
-            MXCOR3 = MAX( MXCOR3, ALT )
+            mxcor3 = max( mxcor3, alt )
 
-         END DO
+         end do
 
 !
 !        For the Ith plate, let DMAX(I) be the maximum distance between
@@ -643,38 +643,38 @@
 !
 !        taken over all plates.
 !
-         DO I = 1, NP
+         do i = 1, np
 
-            CALL VLCOM3 ( THIRD, VRTCES( 1, PLATES(1,I) ), &
-                          THIRD, VRTCES( 1, PLATES(2,I) ), &
-                          THIRD, VRTCES( 1, PLATES(3,I) ),  CENTER )
+            call vlcom3 ( third, vrtces( 1, plates(1,i) ), &
+                          third, vrtces( 1, plates(2,i) ), &
+                          third, vrtces( 1, plates(3,i) ),  center )
 
-            MAXD = MAX (  VDIST(  VRTCES( 1, PLATES(1,I) ), CENTER  ), &
-                          VDIST(  VRTCES( 1, PLATES(2,I) ), CENTER  ), &
-                          VDIST(  VRTCES( 1, PLATES(3,I) ), CENTER  )  )
+            maxd = max (  vdist(  vrtces( 1, plates(1,i) ), center  ), &
+                          vdist(  vrtces( 1, plates(2,i) ), center  ), &
+                          vdist(  vrtces( 1, plates(3,i) ), center  )  )
 
-            CALL RECGEO ( CENTER, RE, F, LON, LAT, ALT )
+            call recgeo ( center, re, f, lon, lat, alt )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DSKRB2' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DSKRB2' )
+               return
+            end if
 
-            MNCOR3 = MIN (  MNCOR3,  ( ALT - MAXD )  )
+            mncor3 = min (  mncor3,  ( alt - maxd )  )
 
-         END DO
+         end do
 
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Coordinate system # is not supported.' )
-         CALL ERRINT ( '#', CORSYS                             )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                   )
-         CALL CHKOUT ( 'DSKRB2'                                )
-         RETURN
+         call setmsg ( 'Coordinate system # is not supported.' )
+         call errint ( '#', corsys                             )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                   )
+         call chkout ( 'DSKRB2'                                )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DSKRB2' )
-      RETURN
-      END
+      call chkout ( 'DSKRB2' )
+      return
+      end

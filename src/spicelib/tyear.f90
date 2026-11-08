@@ -1,6 +1,6 @@
 !$Procedure TYEAR ( Seconds per tropical year )
 
-      DOUBLE PRECISION FUNCTION TYEAR ()
+      double precision function tyear ()
 
 ! $ Abstract
 !
@@ -94,6 +94,6 @@
 !-&
 
 
-      TYEAR = 31556925.9747D0
-      RETURN
-      END
+      tyear = 31556925.9747d0
+      return
+      end

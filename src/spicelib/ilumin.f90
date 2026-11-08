@@ -1,8 +1,8 @@
 !$Procedure ILUMIN ( Illumination angles )
 
-      SUBROUTINE ILUMIN ( METHOD, TARGET, ET,     FIXREF, &
-                          ABCORR, OBSRVR, SPOINT, TRGEPC, &
-                          SRFVEC, PHASE,  INCDNC, EMISSN  )
+      subroutine ilumin ( method, target, et,     fixref, &
+                          abcorr, obsrvr, spoint, trgepc, &
+                          srfvec, phase,  incdnc, emissn  )
 
 ! $ Abstract
 !
@@ -28,20 +28,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      SRFVEC ( 3 )
-      DOUBLE PRECISION      PHASE
-      DOUBLE PRECISION      INCDNC
-      DOUBLE PRECISION      EMISSN
+      character*(*)         method
+      character*(*)         target
+      double precision      et
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      double precision      trgepc
+      double precision      srfvec ( 3 )
+      double precision      phase
+      double precision      incdnc
+      double precision      emissn
 
 ! $ Brief_I/O
 !
@@ -1153,22 +1153,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ILUMIN' )
+      call chkin ( 'ILUMIN' )
 
-      CALL ILLUMG ( METHOD,  TARGET,  '10',    ET, &
-                    FIXREF,  ABCORR,  OBSRVR,  SPOINT, &
-                    TRGEPC,  SRFVEC,  PHASE,   INCDNC,  EMISSN )
+      call illumg ( method,  target,  '10',    et, &
+                    fixref,  abcorr,  obsrvr,  spoint, &
+                    trgepc,  srfvec,  phase,   incdnc,  emissn )
 
 
-      CALL CHKOUT ( 'ILUMIN' )
-      RETURN
-      END
+      call chkout ( 'ILUMIN' )
+      return
+      end

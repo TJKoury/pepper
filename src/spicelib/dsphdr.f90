@@ -1,6 +1,6 @@
 !$Procedure DSPHDR ( Derivative of spherical w.r.t. rectangular )
 
-      SUBROUTINE DSPHDR ( X, Y, Z, JACOBI )
+      subroutine dsphdr ( x, y, z, jacobi )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      Y
-      DOUBLE PRECISION      Z
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      x
+      double precision      y
+      double precision      z
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -341,39 +341,39 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
+      logical          return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RECTAN  ( 3 )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      COLAT
-      DOUBLE PRECISION      LONG
-      DOUBLE PRECISION      INJACB  ( 3, 3 )
+      double precision      rectan  ( 3 )
+      double precision      r
+      double precision      colat
+      double precision      long
+      double precision      injacb  ( 3, 3 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DSPHDR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DSPHDR' )
+      end if
 
 !
 !     There is a singularity of the jacobian for points on the z-axis.
 !
-      IF ( ( X .EQ. 0 ) .AND. ( Y .EQ. 0 ) ) THEN
+      if ( ( x .eq. 0 ) .and. ( y .eq. 0 ) ) then
 
-         CALL SETMSG ( 'The Jacobian of the transformation from '     // &
+         call setmsg ( 'The Jacobian of the transformation from '     // &
                        'rectangular to spherical coordinates '        // &
                        'is not defined for points on the z-axis.'      )
-         CALL SIGERR ( 'SPICE(POINTONZAXIS)'                           )
-         CALL CHKOUT ( 'DSPHDR'                                        )
-         RETURN
+         call sigerr ( 'SPICE(POINTONZAXIS)'                           )
+         call chkout ( 'DSPHDR'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     We will get the Jacobian of the transformation from rectangular
@@ -381,25 +381,25 @@
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      CALL VPACK  ( X, Y, Z, RECTAN )
+      call vpack  ( x, y, z, rectan )
 
 !
 !     Convert from rectangular to spherical coordinates.
 !
-      CALL RECSPH ( RECTAN, R, COLAT, LONG  )
+      call recsph ( rectan, r, colat, long  )
 
 !
 !     Get the Jacobian of the transformation from spherical to
 !     rectangular coordinates at R, COLAT, LONG.
 !
-      CALL DRDSPH ( R, COLAT, LONG, INJACB )
+      call drdsph ( r, colat, long, injacb )
 
 !
 !     Now invert INJACB to get the Jacobian of the transformation from
 !     rectangular to spherical coordinates.
 !
-      CALL INVORT ( INJACB, JACOBI )
+      call invort ( injacb, jacobi )
 
-      CALL CHKOUT ( 'DSPHDR' )
-      RETURN
-      END
+      call chkout ( 'DSPHDR' )
+      return
+      end

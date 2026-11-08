@@ -1,6 +1,6 @@
 !$Procedure PI ( Value of pi )
 
-      DOUBLE PRECISION FUNCTION PI ( )
+      double precision function pi ( )
 
 ! $ Abstract
 !
@@ -112,23 +112,23 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VALUE
-      SAVE                  VALUE
+      double precision      value
+      save                  value
 
 !
 !     Initial values
 !
-      DATA                  VALUE      / 0.D0 /
+      data                  value      / 0.d0 /
 
 
 !
 !     What is there to say?
 !
-      IF ( VALUE .EQ. 0.D0 ) THEN
-         VALUE = ACOS ( -1.D0 )
-      END IF
+      if ( value .eq. 0.d0 ) then
+         value = acos ( -1.d0 )
+      end if
 
-      PI = VALUE
+      pi = value
 
-      RETURN
-      END
+      return
+      end

@@ -1,8 +1,8 @@
 !$Procedure ZZBODINI ( Private --- Body-Code Hash Initialization )
 
-      SUBROUTINE ZZBODINI (  NAMES,  NORNAM, CODES,  NVALS, MAXVAL, &
-                             BNMLST, BNMPOL, BNMNMS, BNMIDX, &
-                             BIDLST, BIDPOL, BIDIDS, BIDIDX  )
+      subroutine zzbodini (  names,  nornam, codes,  nvals, maxval, &
+                             bnmlst, bnmpol, bnmnms, bnmidx, &
+                             bidlst, bidpol, bidids, bididx  )
 
 ! $ Abstract
 !
@@ -24,26 +24,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzbodtrn.inc'
+      include              'zzbodtrn.inc'
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      CHARACTER*(MAXL)      NAMES  (          * )
-      CHARACTER*(MAXL)      NORNAM (          * )
-      INTEGER               CODES  (          * )
-      INTEGER               NVALS
-      INTEGER               MAXVAL
-      INTEGER               BNMLST (          * )
-      INTEGER               BNMPOL ( LBPOOL : * )
-      CHARACTER*(MAXL)      BNMNMS (          * )
-      INTEGER               BNMIDX (          * )
-      INTEGER               BIDLST (          * )
-      INTEGER               BIDPOL ( LBPOOL : * )
-      INTEGER               BIDIDS (          * )
-      INTEGER               BIDIDX (          * )
+      character*(maxl)      names  (          * )
+      character*(maxl)      nornam (          * )
+      integer               codes  (          * )
+      integer               nvals
+      integer               maxval
+      integer               bnmlst (          * )
+      integer               bnmpol ( lbpool : * )
+      character*(maxl)      bnmnms (          * )
+      integer               bnmidx (          * )
+      integer               bidlst (          * )
+      integer               bidpol ( lbpool : * )
+      integer               bidids (          * )
+      integer               bididx (          * )
 
 ! $ Brief_I/O
 !
@@ -236,57 +236,57 @@
 !
 !     Local Variables
 !
-      INTEGER               I
-      INTEGER               ITEM
+      integer               i
+      integer               item
 
-      LOGICAL               NEW
+      logical               new
 
 !
 !     Consistency check.
 !
-      IF ( MAXVAL .LT. NVALS ) THEN
-         CALL CHKIN  ( 'ZZBODINI' )
-         CALL SETMSG ( 'There is an inconsistency between the '  // &
+      if ( maxval .lt. nvals ) then
+         call chkin  ( 'ZZBODINI' )
+         call setmsg ( 'There is an inconsistency between the '  // &
                        'number of input bodies and the size of ' // &
                        'the output hashes. The number of input ' // &
                        'bodies was #. The size of the output '   // &
                        'hashes was #.' )
-         CALL ERRINT ( '#', NVALS  )
-         CALL ERRINT ( '#', MAXVAL )
-         CALL SIGERR ( 'SPICE(BUG1)' )
-         CALL CHKOUT ( 'ZZBODINI' )
-         RETURN
-      END IF
+         call errint ( '#', nvals  )
+         call errint ( '#', maxval )
+         call sigerr ( 'SPICE(BUG1)' )
+         call chkout ( 'ZZBODINI' )
+         return
+      end if
 
 !
 !     Initialize output hashes.
 !
-      CALL ZZHSIINI ( MAXVAL, BIDLST, BIDPOL )
-      CALL ZZHSCINI ( MAXVAL, BNMLST, BNMPOL )
+      call zzhsiini ( maxval, bidlst, bidpol )
+      call zzhscini ( maxval, bnmlst, bnmpol )
 
 !
 !     Loop through the input arrays to populate hashes. We do it
 !     backwards to pick and register only the highest priority (latest)
 !     values for each normalized name.
 !
-      DO I = NVALS, 1, -1
+      do i = nvals, 1, -1
 
 !
 !        Register this normalized name, but only if it is not already
 !        in the hash.
 !
-         CALL ZZHSCADD ( BNMLST, BNMPOL, BNMNMS, NORNAM(I), ITEM, NEW )
-         IF ( NEW ) THEN
-            IF ( ITEM .NE. 0 ) THEN
-               BNMIDX( ITEM ) = I
-            ELSE
-               CALL CHKIN  ( 'ZZBODINI' )
-               CALL SETMSG ( 'Could not add name # to the hash.' )
-               CALL ERRCH  ( '#', NORNAM(I) )
-               CALL SIGERR ( 'SPICE(BUG3)' )
-               CALL CHKOUT ( 'ZZBODINI' )
-            END IF
-         END IF
+         call zzhscadd ( bnmlst, bnmpol, bnmnms, nornam(i), item, new )
+         if ( new ) then
+            if ( item .ne. 0 ) then
+               bnmidx( item ) = i
+            else
+               call chkin  ( 'ZZBODINI' )
+               call setmsg ( 'Could not add name # to the hash.' )
+               call errch  ( '#', nornam(i) )
+               call sigerr ( 'SPICE(BUG3)' )
+               call chkout ( 'ZZBODINI' )
+            end if
+         end if
 
 !
 !        We may have a situation when a single normalized name maps to
@@ -295,28 +295,28 @@
 !        attempting to register any more IDs if the name is already
 !        registered.
 !
-         IF ( NEW ) THEN
+         if ( new ) then
 
 !
 !           Register this ID, but only if it is not already in the hash.
 !
-            CALL ZZHSIADD ( BIDLST, BIDPOL, BIDIDS, CODES(I), ITEM, NEW)
-            IF ( NEW ) THEN
-               IF ( ITEM .NE. 0 ) THEN
-                  BIDIDX( ITEM ) = I
-               ELSE
-                  CALL CHKIN  ( 'ZZBODINI' )
-                  CALL SETMSG ( 'Could not add ID # to the hash.' )
-                  CALL ERRINT ( '#', CODES(I) )
-                  CALL SIGERR ( 'SPICE(BUG2)' )
-                  CALL CHKOUT ( 'ZZBODINI' )
-                  RETURN
-               END IF
-            END IF
+            call zzhsiadd ( bidlst, bidpol, bidids, codes(i), item, new)
+            if ( new ) then
+               if ( item .ne. 0 ) then
+                  bididx( item ) = i
+               else
+                  call chkin  ( 'ZZBODINI' )
+                  call setmsg ( 'Could not add ID # to the hash.' )
+                  call errint ( '#', codes(i) )
+                  call sigerr ( 'SPICE(BUG2)' )
+                  call chkout ( 'ZZBODINI' )
+                  return
+               end if
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKS01 ( S/P Kernel, subset, type 1 )
 
-      SUBROUTINE SPKS01 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks01 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -139,30 +139,30 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA     ( 71 )
+      double precision      data     ( 71 )
 
-      INTEGER               NREC
-      INTEGER               NDIR
-      INTEGER               OFFE
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               OFFSET
-      INTEGER               I
+      integer               nrec
+      integer               ndir
+      integer               offe
+      integer               first
+      integer               last
+      integer               offset
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS01' )
+      end if
 
 !
 !     Get the number of records in the segment. From that, we can
@@ -175,11 +175,11 @@
 !
 !     the number of directory epochs.
 !
-      CALL DAFGDA ( HANDLE, EADDR, EADDR, DATA )
-      NREC = INT ( DATA(1) )
+      call dafgda ( handle, eaddr, eaddr, data )
+      nrec = int ( data(1) )
 
-      NDIR  = NREC / 100
-      OFFE  = EADDR - NDIR - NREC - 1
+      ndir  = nrec / 100
+      offe  = eaddr - ndir - nrec - 1
 
 !
 !     Well, the new segment has already been begun. We just have to
@@ -203,55 +203,55 @@
 !
 !     First pass: which records are to be moved?
 !
-      FIRST = 0
-      LAST  = 0
+      first = 0
+      last  = 0
 
-      DO I = 1, NREC
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA )
+      do i = 1, nrec
+         call dafgda ( handle, offe+i, offe+i, data )
 
-         IF (        FIRST   .EQ. 0 &
-              .AND.  DATA(1) .GE. BEGIN )   FIRST = I
+         if (        first   .eq. 0 &
+              .and.  data(1) .ge. begin )   first = i
 
-         IF (        FIRST   .NE. 0 &
-              .AND.  LAST    .EQ. 0 &
-              .AND.  DATA(1) .GE. END )     LAST = I
+         if (        first   .ne. 0 &
+              .and.  last    .eq. 0 &
+              .and.  data(1) .ge. end )     last = i
 
-      END DO
+      end do
 
 !
 !     Second pass. Move the records.
 !
-      OFFSET = (BADDR - 1) + (FIRST - 1) * 71
+      offset = (baddr - 1) + (first - 1) * 71
 
-      DO I = FIRST, LAST
-         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+71, DATA     )
-         CALL DAFADA (                              DATA, 71 )
+      do i = first, last
+         call dafgda ( handle, offset+1, offset+71, data     )
+         call dafada (                              data, 71 )
 
-         OFFSET = OFFSET + 71
-      END DO
+         offset = offset + 71
+      end do
 
 !
 !     Third pass. Move the epochs.
 !
-      DO I = FIRST, LAST
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do i = first, last
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Get every 100'th epoch for the directory.
 !
-      DO I = FIRST + 99, LAST, 100
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
-      END DO
+      do i = first + 99, last, 100
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
+      end do
 
 !
 !     Add the number of records, and we're done.
 !
-      DATA(1) = DBLE ( LAST - FIRST + 1 )
-      CALL DAFADA ( DATA, 1 )
+      data(1) = dble ( last - first + 1 )
+      call dafada ( data, 1 )
 
-      CALL CHKOUT ( 'SPKS01' )
-      RETURN
-      END
+      call chkout ( 'SPKS01' )
+      return
+      end

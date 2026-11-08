@@ -20,47 +20,47 @@
 !
 !     Number of supported SCLK field delimiters:
 !
-      INTEGER               NDELIM
-      PARAMETER           ( NDELIM = 5 )
+      integer               ndelim
+      parameter           ( ndelim = 5 )
 
 !
 !     Supported SCLK string field delimiters:
 !
-      CHARACTER*(NDELIM)    DELIMS
-      PARAMETER           ( DELIMS = '.:-, ' )
+      character*(ndelim)    delims
+      parameter           ( delims = '.:-, ' )
 
 !
 !     Time system codes
 !
-      INTEGER               TDB
-      PARAMETER           ( TDB    =      1 )
+      integer               tdb
+      parameter           ( tdb    =      1 )
 
-      INTEGER               TDT
-      PARAMETER           ( TDT    =      2 )
+      integer               tdt
+      parameter           ( tdt    =      2 )
 
 !
 !     Maximum number of partitions:
 !
-      INTEGER               MXPART
-      PARAMETER           ( MXPART = 9999 )
+      integer               mxpart
+      parameter           ( mxpart = 9999 )
 
 !
 !     Maximum number of coefficient records:
 !
-      INTEGER               MXCOEF
-      PARAMETER           ( MXCOEF = 100000 )
+      integer               mxcoef
+      parameter           ( mxcoef = 100000 )
 
 !
 !     Maximum number of fields in an SCLK string:
 !
-      INTEGER               MXNFLD
-      PARAMETER           ( MXNFLD = 10 )
+      integer               mxnfld
+      parameter           ( mxnfld = 10 )
 
 !
 !     Length of strings used to represent D.P. numbers:
 !
-      INTEGER               DPLEN
-      PARAMETER           ( DPLEN = 30 )
+      integer               dplen
+      parameter           ( dplen = 30 )
 
 !
 !     End of duplicated declarations.
@@ -73,73 +73,73 @@
 !
 !     Index of number of fields
 !
-      INTEGER               IXNFLD
-      PARAMETER           ( IXNFLD = 1 )
+      integer               ixnfld
+      parameter           ( ixnfld = 1 )
 
 !
 !     Index of delimiter code
 !
-      INTEGER               IXDLIM
-      PARAMETER           ( IXDLIM = IXNFLD + 1 )
+      integer               ixdlim
+      parameter           ( ixdlim = ixnfld + 1 )
 !
 !     Index of time system code
 !
-      INTEGER               IXTSYS
-      PARAMETER           ( IXTSYS = IXDLIM + 1 )
+      integer               ixtsys
+      parameter           ( ixtsys = ixdlim + 1 )
 
 !
 !     Index of coefficient count. The count is 3 x the number of
 !     coefficient records.
 !
-      INTEGER               IXNCOF
-      PARAMETER           ( IXNCOF = IXTSYS + 1 )
+      integer               ixncof
+      parameter           ( ixncof = ixtsys + 1 )
 
 !
 !     Index of the number of partitions
 !
-      INTEGER               IXNPRT
-      PARAMETER           ( IXNPRT = IXNCOF + 1 )
+      integer               ixnprt
+      parameter           ( ixnprt = ixncof + 1 )
 
 !
 !     Index of the base index in the double precision buffer of the
 !     coefficient set
 !
-      INTEGER               IXBCOF
-      PARAMETER           ( IXBCOF = IXNPRT + 1 )
+      integer               ixbcof
+      parameter           ( ixbcof = ixnprt + 1 )
 
 !
 !     Index of the base index in the double precision buffer of the
 !     partition start times
 !
-      INTEGER               IXBSTR
-      PARAMETER           ( IXBSTR = IXBCOF + 1 )
+      integer               ixbstr
+      parameter           ( ixbstr = ixbcof + 1 )
 
 !
 !     Index of the base index in the double precision buffer of the
 !     partition end times
 !
-      INTEGER               IXBEND
-      PARAMETER           ( IXBEND = IXBSTR + 1 )
+      integer               ixbend
+      parameter           ( ixbend = ixbstr + 1 )
 
 !
 !     Index of the base index in the double precision buffer of the
 !     SCLK field moduli
 !
-      INTEGER               IXBMOD
-      PARAMETER           ( IXBMOD  = IXBEND + 1 )
+      integer               ixbmod
+      parameter           ( ixbmod  = ixbend + 1 )
 
 !
 !     Index of the base index in the double precision buffer of the
 !     SCLK field offsets
 !
-      INTEGER               IXBOFF
-      PARAMETER           ( IXBOFF   = IXBMOD + 1 )
+      integer               ixboff
+      parameter           ( ixboff   = ixbmod + 1 )
 
 !
 !     Number of integer values per clock
 !
-      INTEGER               NIVALS
-      PARAMETER           ( NIVALS = IXBOFF )
+      integer               nivals
+      parameter           ( nivals = ixboff )
 
 
 !
@@ -149,8 +149,8 @@
 !
 !     Maximum number of clocks
 !
-      INTEGER               MXNCLK
-      PARAMETER           ( MXNCLK = 100 )
+      integer               mxnclk
+      parameter           ( mxnclk = 100 )
 
 !
 !     DP buffer size
@@ -158,28 +158,28 @@
 !     The buffer is large enough to hold data for one clock having the
 !     maximum amount of data.
 !
-      INTEGER               DBUFSZ
-      PARAMETER           ( DBUFSZ =   ( 3 * MXCOEF ) &
-                                     + ( 2 * MXPART ) &
-                                     + ( 2 * MXNFLD ) )
+      integer               dbufsz
+      parameter           ( dbufsz =   ( 3 * mxcoef ) &
+                                     + ( 2 * mxpart ) &
+                                     + ( 2 * mxnfld ) )
 
 !
 !     Integer buffer size
 !
-      INTEGER               IBUFSZ
-      PARAMETER           ( IBUFSZ = NIVALS * MXNCLK )
+      integer               ibufsz
+      parameter           ( ibufsz = nivals * mxnclk )
 
 !
 !     Lower bound of control area of singly linked list:
 !
-      INTEGER               LBSNGL
-      PARAMETER           ( LBSNGL = -5 )
+      integer               lbsngl
+      parameter           ( lbsngl = -5 )
 
 !
 !     The add-only hash pool for frame IDs is singly linked.
 !
-      INTEGER               CPLSIZ
-      PARAMETER           ( CPLSIZ = MXNCLK - LBSNGL + 1 )
+      integer               cplsiz
+      parameter           ( cplsiz = mxnclk - lbsngl + 1 )
 
 !
 !     End include file zzsc01.inc

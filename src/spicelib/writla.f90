@@ -1,6 +1,6 @@
 !$Procedure WRITLA ( Write array of lines to a logical unit )
 
-      SUBROUTINE WRITLA ( NUMLIN, ARRAY, UNIT )
+      subroutine writla ( numlin, array, unit )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NUMLIN
-      CHARACTER*(*)         ARRAY(*)
-      INTEGER               UNIT
+      integer               numlin
+      character*(*)         array(*)
+      integer               unit
 
 ! $ Brief_I/O
 !
@@ -163,58 +163,58 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'WRITLA' )
+      call chkin ( 'WRITLA' )
 
 !
 !     Check to see if the maximum number of lines is positive.
 !
-      IF ( NUMLIN .LE. 0 ) THEN
+      if ( numlin .le. 0 ) then
 
-         CALL SETMSG ( 'The number of lines to be written was not'  // &
+         call setmsg ( 'The number of lines to be written was not'  // &
                        ' positive. It was #.'                        )
-         CALL ERRINT ( '#', NUMLIN                                   )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                      )
-         CALL CHKOUT ( 'WRITLA'                                      )
-         RETURN
+         call errint ( '#', numlin                                   )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         call chkout ( 'WRITLA'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Begin writing the lines to UNIT. Stop when an error occurs, or
 !     when we have finished writing all of the lines.
 !
-      DO I = 1, NUMLIN
+      do i = 1, numlin
 
-         CALL WRITLN( ARRAY(I), UNIT )
+         call writln( array(i), unit )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
 !
 !           If the write failed, an appropriate error message has
 !           already been set, so we simply need to return.
 !
-            CALL CHKOUT ( 'WRITLA' )
-            RETURN
+            call chkout ( 'WRITLA' )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'WRITLA' )
-      RETURN
+      call chkout ( 'WRITLA' )
+      return
 
-      END
+      end

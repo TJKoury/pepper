@@ -1,6 +1,6 @@
 !$Procedure PUTDEV ( Store Error Output Device Specification )
 
-      SUBROUTINE PUTDEV ( DEVICE )
+      subroutine putdev ( device )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)          DEVICE
+      character*(*)          device
 
-      INTEGER                FILEN
+      integer                filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER            ( FILEN = 128 )
+      parameter            ( filen = 128 )
 #else
-      PARAMETER            ( FILEN = 255 )
+      parameter            ( filen = 255 )
 #endif
 
 ! $ Brief_I/O
@@ -310,15 +310,15 @@
 !     The current error output device specification:
 !
 
-      CHARACTER*(FILEN)     SAVDEV
+      character*(filen)     savdev
 
-      SAVE                  SAVDEV
+      save                  savdev
 
 !
 !     Initial values:
 !
 
-      DATA    SAVDEV      / 'SCREEN' /
+      data    savdev      / 'SCREEN' /
 
 
 
@@ -327,16 +327,16 @@
 !
 
 
-      SAVDEV = DEVICE
+      savdev = device
 
-      RETURN
+      return
 
 
 
 
 !$Procedure GETDEV ( Get Error Output Device Specification )
 
-      ENTRY GETDEV ( DEVICE )
+      entry getdev ( device )
 
 ! $ Abstract
 !
@@ -472,6 +472,6 @@
 !     Grab saved error output device specification:
 !
 
-      DEVICE = SAVDEV
+      device = savdev
 
-      END
+      end

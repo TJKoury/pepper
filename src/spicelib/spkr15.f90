@@ -1,6 +1,6 @@
 !$Procedure SPKR15 ( Read SPK record from segment, type 15 )
 
-      SUBROUTINE SPKR15 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr15 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR (5)
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD(*)
+      integer               handle
+      double precision      descr (5)
+      double precision      et
+      double precision      record(*)
 
 ! $ Brief_I/O
 !
@@ -173,83 +173,83 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Variables
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
 !
 !     The difference between the first and last address of a type 15
 !     segment should be 15.
 !
-      INTEGER               DIFF
-      PARAMETER           ( DIFF = 15 )
+      integer               diff
+      parameter           ( diff = 15 )
 
-      DOUBLE PRECISION      DC  ( ND )
-      INTEGER               IC  ( NI )
+      double precision      dc  ( nd )
+      integer               ic  ( ni )
 
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               TYPE
+      integer               begin
+      integer               end
+      integer               type
 
 !
 !     Standard Spice Error Handling.
 !
-      IF (RETURN() ) THEN
-         RETURN
-      END IF
+      if (return() ) then
+         return
+      end if
 
-      CALL CHKIN('SPKR15')
+      call chkin('SPKR15')
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS( DESCR, ND, NI, DC, IC )
+      call dafus( descr, nd, ni, dc, ic )
 
-      TYPE  = IC(4)
-      BEGIN = IC(5)
-      END   = IC(6)
+      type  = ic(4)
+      begin = ic(5)
+      end   = ic(6)
 !
 !     Make sure that this really is a type 15 data segment.
 !
-      IF (TYPE .NE. 15) THEN
+      if (type .ne. 15) then
 
-         CALL SETMSG ('You are attempting to locate type 15 ' // &
+         call setmsg ('You are attempting to locate type 15 ' // &
                       'data in a type # data segment.')
-         CALL ERRINT ('#', TYPE                       )
-         CALL SIGERR ('SPICE(WRONGSPKTYPE)'           )
-         CALL CHKOUT ('SPKR15'                        )
-         RETURN
+         call errint ('#', type                       )
+         call sigerr ('SPICE(WRONGSPKTYPE)'           )
+         call chkout ('SPKR15'                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Since it doesn't cost much we make sure that the segment has
 !     the correct amount of data.
 !
-      IF ( END - BEGIN .NE. DIFF ) THEN
+      if ( end - begin .ne. diff ) then
 
-         CALL SETMSG ( 'A type 15 segment should contain exactly ' &
+         call setmsg ( 'A type 15 segment should contain exactly ' &
          //            '16 double precision values.  The segment ' &
          //            'supplied had #.  The segment is badly ' &
          //            'formed. ' )
 
-         CALL ERRINT ( '#',   END-BEGIN+1         )
-         CALL SIGERR ( 'SPICE(MALFORMEDSEGMENT)'  )
-         CALL CHKOUT ( 'SPKR15'                   )
-         RETURN
+         call errint ( '#',   end-begin+1         )
+         call sigerr ( 'SPICE(MALFORMEDSEGMENT)'  )
+         call chkout ( 'SPKR15'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the data for the record.
 !
-      CALL DAFGDA ( HANDLE, BEGIN, END, RECORD )
-      CALL CHKOUT ('SPKR15')
-      RETURN
-      END
+      call dafgda ( handle, begin, end, record )
+      call chkout ('SPKR15')
+      return
+      end

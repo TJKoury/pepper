@@ -1,6 +1,6 @@
 !$Procedure TKFRAM ( TK frame, find position rotation )
 
-      SUBROUTINE TKFRAM ( FRCODE, ROT, FRAME, FOUND )
+      subroutine tkfram ( frcode, rot, frame, found )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               FRCODE
-      DOUBLE PRECISION      ROT   ( 3, 3 )
-      INTEGER               FRAME
-      LOGICAL               FOUND
+      integer               frcode
+      double precision      rot   ( 3, 3 )
+      integer               frame
+      logical               found
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 200 )
+      integer               bufsiz
+      parameter           ( bufsiz = 200 )
 
 ! $ Brief_I/O
 !
@@ -360,101 +360,101 @@
 !
 !     Spicelib Functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      INTEGER               LNKNFN
-      INTEGER               LNKTL
-      INTEGER               RTRIM
+      integer               lnknfn
+      integer               lnktl
+      integer               rtrim
 
-      LOGICAL               BADKPV
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               badkpv
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
-      INTEGER               NITEMS
-      PARAMETER           ( NITEMS = 14 )
+      integer               nitems
+      parameter           ( nitems = 14 )
 
-      INTEGER               NVARS
-      PARAMETER           ( NVARS = 14 )
+      integer               nvars
+      parameter           ( nvars = 14 )
 
-      INTEGER               NDPS
-      PARAMETER           ( NDPS  =  9 )
+      integer               ndps
+      parameter           ( ndps  =  9 )
 
-      INTEGER               DBUFSZ
-      PARAMETER           ( DBUFSZ = NDPS * BUFSIZ )
+      integer               dbufsz
+      parameter           ( dbufsz = ndps * bufsiz )
 
-      INTEGER               NINTS
-      PARAMETER           ( NINTS =  1 )
+      integer               nints
+      parameter           ( nints =  1 )
 
-      INTEGER               IBUFSZ
-      PARAMETER           ( IBUFSZ = NINTS * BUFSIZ )
+      integer               ibufsz
+      parameter           ( ibufsz = nints * bufsiz )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
 
 !
 !     Local Variables
 !
-      CHARACTER*(WDSIZE)    AGENT
-      CHARACTER*(WDSIZE)    ALT    ( NITEMS )
-      CHARACTER*(WDSIZE)    ALTNAT
-      CHARACTER*(WDSIZE)    FRNAME
-      CHARACTER*(WDSIZE)    IDSTR
-      CHARACTER*(WDSIZE)    ITEM   ( NVARS  )
-      CHARACTER*(WDSIZE)    OLDAGT
-      CHARACTER*(WDSIZE)    NAME
-      CHARACTER*(WDSIZE)    SPEC
-      CHARACTER*(1)         TYPE
-      CHARACTER*(WDSIZE)    UNITS
+      character*(wdsize)    agent
+      character*(wdsize)    alt    ( nitems )
+      character*(wdsize)    altnat
+      character*(wdsize)    frname
+      character*(wdsize)    idstr
+      character*(wdsize)    item   ( nvars  )
+      character*(wdsize)    oldagt
+      character*(wdsize)    name
+      character*(wdsize)    spec
+      character*(1)         type
+      character*(wdsize)    units
 
-      DOUBLE PRECISION      ANGLES ( 3 )
-      DOUBLE PRECISION      BUFFD  ( NDPS, BUFSIZ )
-      DOUBLE PRECISION      MATRIX ( 3,    3      )
-      DOUBLE PRECISION      QUATRN ( 0:3 )
-      DOUBLE PRECISION      QTMP   ( 0:3 )
-      DOUBLE PRECISION      TEMPD
+      double precision      angles ( 3 )
+      double precision      buffd  ( ndps, bufsiz )
+      double precision      matrix ( 3,    3      )
+      double precision      quatrn ( 0:3 )
+      double precision      qtmp   ( 0:3 )
+      double precision      tempd
 
-      INTEGER               AR
-      INTEGER               AT
-      INTEGER               AXES   ( 3 )
-      INTEGER               BUFFI  ( NINTS,     BUFSIZ )
-      INTEGER               I
-      INTEGER               IDENTS ( 1,         BUFSIZ )
-      INTEGER               IDNT   ( 1 )
-      INTEGER               N
-      INTEGER               OLDID
-      INTEGER               POOL   ( 2, LBPOOL: BUFSIZ )
-      INTEGER               R
-      INTEGER               TAIL
+      integer               ar
+      integer               at
+      integer               axes   ( 3 )
+      integer               buffi  ( nints,     bufsiz )
+      integer               i
+      integer               idents ( 1,         bufsiz )
+      integer               idnt   ( 1 )
+      integer               n
+      integer               oldid
+      integer               pool   ( 2, lbpool: bufsiz )
+      integer               r
+      integer               tail
 
-      LOGICAL               BUFFRD
-      LOGICAL               FIRST
-      LOGICAL               FOUND1
-      LOGICAL               FOUND2
-      LOGICAL               FND
-      LOGICAL               FULL
-      LOGICAL               UPDATE
+      logical               buffrd
+      logical               first
+      logical               found1
+      logical               found2
+      logical               fnd
+      logical               full
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  AT     /  0            /
-      DATA                  BUFFD  / DBUFSZ * 0.D0 /
-      DATA                  BUFFI  / IBUFSZ * 0    /
-      DATA                  FIRST  / .TRUE.        /
-      DATA                  IDENTS / BUFSIZ * 0    /
+      data                  at     /  0            /
+      data                  buffd  / dbufsz * 0.d0 /
+      data                  buffi  / ibufsz * 0    /
+      data                  first  / .true.        /
+      data                  idents / bufsiz * 0    /
 
 
 !
@@ -472,55 +472,55 @@
 !     Perform any initializations that might be needed for this
 !     routine.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         CALL LNKINI ( BUFSIZ, POOL )
+         call lnkini ( bufsiz, pool )
 
-      END IF
+      end if
 
 !
 !     Now do the standard SPICE error handling.  Sure this is
 !     a bit unconventional, but nothing will be hurt by doing
 !     the stuff above first.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'TKFRAM' )
+      call chkin ( 'TKFRAM' )
 
 !
 !     So far, we've not FOUND the rotation to the specified frame.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Check the ID to make sure it is non-zero.
 !
-      IF (  FRCODE .EQ. 0 ) THEN
+      if (  frcode .eq. 0 ) then
 
-         CALL LNKINI ( BUFSIZ, POOL )
+         call lnkini ( bufsiz, pool )
 
-         CALL SETMSG ( 'Frame identification codes are ' &
+         call setmsg ( 'Frame identification codes are ' &
          //            'required to be non-zero.  You''ve ' &
          //            'specified a frame with ID value ' &
          //            'zero. '                            )
-         CALL SIGERR ( 'SPICE(ZEROFRAMEID)'                )
-         CALL CHKOUT ( 'TKFRAM'                            )
-         RETURN
+         call sigerr ( 'SPICE(ZEROFRAMEID)'                )
+         call chkout ( 'TKFRAM'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Find out whether our linked list pool is already full.
 !     We'll use this information later to decide whether we're
 !     going to have to delete a watcher.
 !
-      FULL = LNKNFN(POOL) .EQ. 0
+      full = lnknfn(pool) .eq. 0
 
-      IF ( FULL ) THEN
+      if ( full ) then
 !
 !        If the input frame ID is not buffered, we'll need to
 !        overwrite an existing buffer entry. In this case
@@ -530,27 +530,27 @@
 !        opportunity. The old ID sits at the tail of the list
 !        whose head node is AT.
 !
-         TAIL  = LNKTL  ( AT, POOL )
+         tail  = lnktl  ( at, pool )
 
-         OLDID = IDENTS ( 1,  TAIL )
+         oldid = idents ( 1,  tail )
 
 !
 !        Create the name of the agent associated with the old
 !        frame.
 !
-         OLDAGT = 'TKFRAME_#'
-         CALL REPMI ( OLDAGT, '#', OLDID, OLDAGT )
+         oldagt = 'TKFRAME_#'
+         call repmi ( oldagt, '#', oldid, oldagt )
 
-      END IF
+      end if
 
 !
 !     Look up the address of the instance data.
 !
-      IDNT(1) = FRCODE
-      CALL LOCATI ( IDNT, 1, IDENTS, POOL, AT, BUFFRD )
+      idnt(1) = frcode
+      call locati ( idnt, 1, idents, pool, at, buffrd )
 
 
-      IF (  FULL  .AND. ( .NOT. BUFFRD )  ) THEN
+      if (  full  .and. ( .not. buffrd )  ) then
 !
 !        Since the buffer is already full, we'll delete the watcher for
 !        the kernel variables associated with OLDID, since there's no
@@ -559,17 +559,17 @@
 !        First clear the update status of the old agent; DWPOOL won't
 !        delete an agent with a unchecked update.
 !
-         CALL CVPOOL ( OLDAGT, UPDATE )
-         CALL DWPOOL ( OLDAGT )
+         call cvpool ( oldagt, update )
+         call dwpool ( oldagt )
 
-      END IF
+      end if
 
 !
 !     Until we have better information we put the identity matrix
 !     into the output rotation and set FRAME to zero.
 !
-      CALL IDENT ( ROT )
-      FRAME = 0
+      call ident ( rot )
+      frame = 0
 
 !
 !     If we have to look up the data for our frame, we do
@@ -580,64 +580,64 @@
 !     Construct the name of the agent associated with the
 !     requested frame.  (Each frame has its own agent).
 !
-      CALL INTSTR ( FRCODE, IDSTR  )
-      CALL FRMNAM ( FRCODE, FRNAME )
+      call intstr ( frcode, idstr  )
+      call frmnam ( frcode, frname )
 
-      IF ( FRNAME .EQ. ' ' ) THEN
+      if ( frname .eq. ' ' ) then
 
-         CALL LNKINI ( BUFSIZ, POOL )
+         call lnkini ( bufsiz, pool )
 
-         CALL SETMSG ( 'The Text Kernel (TK) frame with ID code ' &
+         call setmsg ( 'The Text Kernel (TK) frame with ID code ' &
          //            '# does not have a recognized name. '      )
-         CALL ERRINT ( '#', FRCODE                                )
-         CALL SIGERR ( 'SPICE(INCOMPLETEFRAME)'                   )
-         CALL CHKOUT ( 'TKFRAM'                                   )
-         RETURN
+         call errint ( '#', frcode                                )
+         call sigerr ( 'SPICE(INCOMPLETEFRAME)'                   )
+         call chkout ( 'TKFRAM'                                   )
+         return
 
-      END IF
+      end if
 
-      AGENT  = 'TKFRAME_' // IDSTR( :RTRIM(IDSTR) )
-      R      =  RTRIM(AGENT)
+      agent  = 'TKFRAME_' // idstr( :rtrim(idstr) )
+      r      =  rtrim(agent)
 
-      ALTNAT = 'TKFRAME_' // FRNAME( :RTRIM(FRNAME) )
-      AR     =  RTRIM(ALTNAT)
+      altnat = 'TKFRAME_' // frname( :rtrim(frname) )
+      ar     =  rtrim(altnat)
 
 !
 !     If the frame is buffered, we check the kernel pool to
 !     see if there has been an update to this frame.
 !
-      IF ( BUFFRD ) THEN
+      if ( buffrd ) then
 
-         CALL CVPOOL ( AGENT(1:R), UPDATE )
+         call cvpool ( agent(1:r), update )
 
-      ELSE
+      else
 !
 !        If the frame is not buffered we definitely need to update
 !        things.
 
-         UPDATE = .TRUE.
+         update = .true.
 
-      END IF
+      end if
 
 
-      IF ( .NOT. UPDATE ) THEN
+      if ( .not. update ) then
 !
 !        Just look up the rotation matrix and relative-to
 !        information from the local buffer.
 !
-         ROT(1,1)  = BUFFD ( 1, AT )
-         ROT(2,1)  = BUFFD ( 2, AT )
-         ROT(3,1)  = BUFFD ( 3, AT )
-         ROT(1,2)  = BUFFD ( 4, AT )
-         ROT(2,2)  = BUFFD ( 5, AT )
-         ROT(3,2)  = BUFFD ( 6, AT )
-         ROT(1,3)  = BUFFD ( 7, AT )
-         ROT(2,3)  = BUFFD ( 8, AT )
-         ROT(3,3)  = BUFFD ( 9, AT )
+         rot(1,1)  = buffd ( 1, at )
+         rot(2,1)  = buffd ( 2, at )
+         rot(3,1)  = buffd ( 3, at )
+         rot(1,2)  = buffd ( 4, at )
+         rot(2,2)  = buffd ( 5, at )
+         rot(3,2)  = buffd ( 6, at )
+         rot(1,3)  = buffd ( 7, at )
+         rot(2,3)  = buffd ( 8, at )
+         rot(3,3)  = buffd ( 9, at )
 
-         FRAME     = BUFFI ( 1, AT )
+         frame     = buffi ( 1, at )
 
-      ELSE
+      else
 !
 !        Determine how the frame is specified and what it
 !        is relative to.  The variables that specify
@@ -645,27 +645,27 @@
 !        are TKFRAME_#_SPEC and TKFRAME_#_RELATIVE where # is
 !        replaced by the text value of ID or the frame name.
 !
-         ITEM(1) = AGENT(1:R) // '_SPEC'
-         ITEM(2) = AGENT(1:R) // '_RELATIVE'
+         item(1) = agent(1:r) // '_SPEC'
+         item(2) = agent(1:r) // '_RELATIVE'
 
-         ALT (1) = ALTNAT(1:AR) // '_SPEC'
-         ALT (2) = ALTNAT(1:AR) // '_RELATIVE'
+         alt (1) = altnat(1:ar) // '_SPEC'
+         alt (2) = altnat(1:ar) // '_RELATIVE'
 !
 !        See if the friendlier version of the kernel pool variables
 !        are available.
 !
 !        If both forms are present, we signal an error.
 !
-         DO I = 1, 2
+         do i = 1, 2
 
-            CALL DTPOOL ( ITEM(I), FOUND1, N, TYPE )
-            CALL DTPOOL ( ALT(I),  FOUND2, N, TYPE )
+            call dtpool ( item(i), found1, n, type )
+            call dtpool ( alt(i),  found2, n, type )
 
-            IF ( FOUND1 .AND. FOUND2 ) THEN
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL SETMSG ( 'Frame name-based and frame '    // &
+            if ( found1 .and. found2 ) then
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call setmsg ( 'Frame name-based and frame '    // &
                              'ID-based text kernel (fixed-'   // &
                              'offset) frame definition '      // &
                              'keywords ''#'' and ''#'' are '  // &
@@ -676,93 +676,93 @@
                              'of the ''#'' frame using '      // &
                              'different keyword styles, '     // &
                              'which is not allowed. '         )
-               CALL ERRCH  ( '#', ITEM(I) )
-               CALL ERRCH  ( '#', ALT(I) )
-               CALL ERRCH  ( '#', FRNAME )
-               CALL SIGERR ( 'SPICE(COMPETINGFRAMESPEC)' )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
-            END IF
+               call errch  ( '#', item(i) )
+               call errch  ( '#', alt(i) )
+               call errch  ( '#', frname )
+               call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
+               call chkout ( 'TKFRAM' )
+               return
+            end if
 
-            IF ( FOUND2 ) THEN
-               ITEM(I) = ALT(I)
-            END IF
+            if ( found2 ) then
+               item(i) = alt(i)
+            end if
 
-         END DO
+         end do
 
 !
 !        If either the SPEC or RELATIVE frame are missing from
 !        the kernel pool, we simply return.
 !
-         IF (     BADKPV ( 'TKFRAM', ITEM(1), '=', 1, 1, 'C' ) &
-             .OR. BADKPV ( 'TKFRAM', ITEM(2), '=', 1, 1, 'C' ) ) THEN
+         if (     badkpv ( 'TKFRAM', item(1), '=', 1, 1, 'C' ) &
+             .or. badkpv ( 'TKFRAM', item(2), '=', 1, 1, 'C' ) ) then
 
-            CALL LNKINI ( BUFSIZ, POOL )
-            FRAME =  0
-            CALL IDENT  (  ROT     )
-            CALL CHKOUT ( 'TKFRAM' )
-            RETURN
+            call lnkini ( bufsiz, pool )
+            frame =  0
+            call ident  (  rot     )
+            call chkout ( 'TKFRAM' )
+            return
 
-         END IF
+         end if
 
 !
 !        If we make it this far, look up the SPEC and RELATIVE frame.
 !
-         CALL GCPOOL ( ITEM(1),   1, 1, N, SPEC,  FND )
-         CALL GCPOOL ( ITEM(2),   1, 1, N, NAME,  FND )
+         call gcpool ( item(1),   1, 1, n, spec,  fnd )
+         call gcpool ( item(2),   1, 1, n, name,  fnd )
 
 !
 !        Look up the ID code for this frame.
 !
-         CALL NAMFRM ( NAME, FRAME )
+         call namfrm ( name, frame )
 
-         IF ( FRAME .EQ. 0 ) THEN
+         if ( frame .eq. 0 ) then
 
-            CALL LNKINI ( BUFSIZ, POOL )
-            CALL IDENT  (  ROT     )
-            CALL SETMSG ( 'The frame to which frame # is ' &
+            call lnkini ( bufsiz, pool )
+            call ident  (  rot     )
+            call setmsg ( 'The frame to which frame # is ' &
             //            'relatively defined is not ' &
             //            'recognized. The kernel pool ' &
             //            'specification of the relative ' &
             //            'frame is ''#''.  This is not a ' &
             //            'recognized frame. '              )
-            CALL ERRINT ( '#', FRCODE                       )
-            CALL ERRCH  ( '#', NAME                         )
-            CALL SIGERR ( 'SPICE(BADFRAMESPEC)'             )
-            CALL CHKOUT ( 'TKFRAM'                          )
-            RETURN
+            call errint ( '#', frcode                       )
+            call errch  ( '#', name                         )
+            call sigerr ( 'SPICE(BADFRAMESPEC)'             )
+            call chkout ( 'TKFRAM'                          )
+            return
 
-         END IF
+         end if
 
 !
 !        Make sure that the RELATIVE frame ID is distinct from the
 !        frame ID. If they are the same, SPICE will go into an
 !        indefinite loop.
 !
-         IF ( FRAME .EQ. FRCODE ) THEN
+         if ( frame .eq. frcode ) then
 
-            CALL LNKINI ( BUFSIZ, POOL )
-            FRAME =  0
-            CALL IDENT  (  ROT     )
-            CALL SETMSG ( 'Bad fixed offset frame specification: ' &
+            call lnkini ( bufsiz, pool )
+            frame =  0
+            call ident  (  rot     )
+            call setmsg ( 'Bad fixed offset frame specification: ' &
             //            'the frame ''#'' (frame ID #) is ' &
             //            'defined relative to itself. SPICE ' &
             //            'cannot work with such frames. '         )
-            CALL ERRCH  ( '#', NAME                                )
-            CALL ERRINT ( '#', FRCODE                              )
-            CALL SIGERR ( 'SPICE(BADFRAMESPEC2)'                   )
-            CALL CHKOUT ( 'TKFRAM'                                 )
-            RETURN
+            call errch  ( '#', name                                )
+            call errint ( '#', frcode                              )
+            call sigerr ( 'SPICE(BADFRAMESPEC2)'                   )
+            call chkout ( 'TKFRAM'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        Convert SPEC to upper case so that we can easily check
 !        to see if this is one of the expected specification types.
 !
-         CALL UCASE ( SPEC, SPEC )
+         call ucase ( spec, spec )
 
-         IF ( SPEC .EQ. 'MATRIX' ) THEN
+         if ( spec .eq. 'MATRIX' ) then
 !
 !           This is the easiest case.  Just grab the matrix
 !           from the kernel pool (and polish it up a bit just
@@ -773,17 +773,17 @@
 !
 !           If both forms are present, we signal an error.
 !
-            ITEM(3) = AGENT (1:R)  // '_MATRIX'
-            ALT (3) = ALTNAT(1:AR) // '_MATRIX'
+            item(3) = agent (1:r)  // '_MATRIX'
+            alt (3) = altnat(1:ar) // '_MATRIX'
 
-            CALL DTPOOL ( ITEM(3), FOUND1, N, TYPE )
-            CALL DTPOOL ( ALT(3),  FOUND2, N, TYPE )
+            call dtpool ( item(3), found1, n, type )
+            call dtpool ( alt(3),  found2, n, type )
 
-            IF ( FOUND1 .AND. FOUND2 ) THEN
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL SETMSG ( 'Frame name-based and frame '    // &
+            if ( found1 .and. found2 ) then
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call setmsg ( 'Frame name-based and frame '    // &
                              'ID-based text kernel (fixed-'   // &
                              'offset) frame definition '      // &
                              'keywords ''#'' and ''#'' are '  // &
@@ -794,84 +794,84 @@
                              'of the ''#'' frame using '      // &
                              'different keyword styles, '     // &
                              'which is not allowed. '         )
-               CALL ERRCH  ( '#', ITEM(3) )
-               CALL ERRCH  ( '#', ALT(3) )
-               CALL ERRCH  ( '#', FRNAME )
-               CALL SIGERR ( 'SPICE(COMPETINGFRAMESPEC)' )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
-            END IF
+               call errch  ( '#', item(3) )
+               call errch  ( '#', alt(3) )
+               call errch  ( '#', frname )
+               call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
+               call chkout ( 'TKFRAM' )
+               return
+            end if
 
-            IF ( FOUND2 ) THEN
-               ITEM(3) = ALT(3)
-            END IF
+            if ( found2 ) then
+               item(3) = alt(3)
+            end if
 
-            IF ( BADKPV ( 'TKFRAM', ITEM(3), '=', 9, 1, 'N' ) ) THEN
+            if ( badkpv ( 'TKFRAM', item(3), '=', 9, 1, 'N' ) ) then
 
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call chkout ( 'TKFRAM' )
+               return
 
-            END IF
+            end if
 
 !
 !           The variable meets current expectations, look it up
 !           from the kernel pool.
 !
-            CALL GDPOOL ( ITEM(3),   1, 9, N, MATRIX,  FND )
+            call gdpool ( item(3),   1, 9, n, matrix,  fnd )
 
 !
 !           In this case the full transformation matrix has been
 !           specified.  We simply polish it up a bit.
 !
-            CALL MOVED  ( MATRIX, 9, ROT )
-            CALL SHARPR (            ROT )
+            call moved  ( matrix, 9, rot )
+            call sharpr (            rot )
 
 !
 !           The matrix might not be right-handed, so correct
 !           the sense of the second and third columns if necessary.
 !
-            IF ( VDOT( ROT(1,2), MATRIX(1,2) ) .LT. 0.0D0 ) THEN
-               CALL VSCLIP ( -1.0D0, ROT(1,2) )
-            END IF
+            if ( vdot( rot(1,2), matrix(1,2) ) .lt. 0.0d0 ) then
+               call vsclip ( -1.0d0, rot(1,2) )
+            end if
 
-            IF ( VDOT( ROT(1,3), MATRIX(1,3) ) .LT. 0.0D0 ) THEN
-               CALL VSCLIP ( -1.0D0, ROT(1,3) )
-            END IF
+            if ( vdot( rot(1,3), matrix(1,3) ) .lt. 0.0d0 ) then
+               call vsclip ( -1.0d0, rot(1,3) )
+            end if
 
 
-         ELSE IF ( SPEC .EQ. 'ANGLES' ) THEN
+         else if ( spec .eq. 'ANGLES' ) then
 !
 !           Look up the angles, their units and axes for the
 !           frame specified by ID. (Note that UNITS are optional).
 !           As in the previous case we give preference to the
 !           form TKFRAME_<name>_<item> over TKFRAME_<id>_<item>.
 !
-            ITEM(3) = AGENT(1:R)   // '_ANGLES'
-            ITEM(4) = AGENT(1:R)   // '_AXES'
-            ITEM(5) = AGENT(1:R)   // '_UNITS'
+            item(3) = agent(1:r)   // '_ANGLES'
+            item(4) = agent(1:r)   // '_AXES'
+            item(5) = agent(1:r)   // '_UNITS'
 
-            ALT (3) = ALTNAT(1:AR) // '_ANGLES'
-            ALT (4) = ALTNAT(1:AR) // '_AXES'
-            ALT (5) = ALTNAT(1:AR) // '_UNITS'
+            alt (3) = altnat(1:ar) // '_ANGLES'
+            alt (4) = altnat(1:ar) // '_AXES'
+            alt (5) = altnat(1:ar) // '_UNITS'
 !
 !           Again, we give preference to the more friendly form
 !           of TKFRAME specification.
 !
 !           If both forms are present, we signal an error.
 !
-            DO I = 3, 5
+            do i = 3, 5
 
-               CALL DTPOOL ( ITEM(I), FOUND1, N, TYPE )
-               CALL DTPOOL ( ALT(I),  FOUND2, N, TYPE )
+               call dtpool ( item(i), found1, n, type )
+               call dtpool ( alt(i),  found2, n, type )
 
-               IF ( FOUND1 .AND. FOUND2 ) THEN
-                  CALL LNKINI ( BUFSIZ, POOL )
-                  FRAME =  0
-                  CALL IDENT  ( ROT      )
-                  CALL SETMSG ( 'Frame name-based and frame '    // &
+               if ( found1 .and. found2 ) then
+                  call lnkini ( bufsiz, pool )
+                  frame =  0
+                  call ident  ( rot      )
+                  call setmsg ( 'Frame name-based and frame '    // &
                                 'ID-based text kernel (fixed-'   // &
                                 'offset) frame definition '      // &
                                 'keywords ''#'' and ''#'' are '  // &
@@ -882,64 +882,64 @@
                                 'of the ''#'' frame using '      // &
                                 'different keyword styles, '     // &
                                 'which is not allowed. '         )
-                  CALL ERRCH  ( '#', ITEM(I) )
-                  CALL ERRCH  ( '#', ALT(I) )
-                  CALL ERRCH  ( '#', FRNAME )
-                  CALL SIGERR ( 'SPICE(COMPETINGFRAMESPEC)' )
-                  CALL CHKOUT ( 'TKFRAM' )
-                  RETURN
-               END IF
+                  call errch  ( '#', item(i) )
+                  call errch  ( '#', alt(i) )
+                  call errch  ( '#', frname )
+                  call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
+                  call chkout ( 'TKFRAM' )
+                  return
+               end if
 
-               IF ( FOUND2 ) THEN
-                  ITEM(I) = ALT(I)
-               END IF
+               if ( found2 ) then
+                  item(i) = alt(i)
+               end if
 
-            END DO
+            end do
 
 
-            IF (    BADKPV( 'TKFRAM', ITEM(3), '=', 3, 1, 'N' ) &
-               .OR. BADKPV( 'TKFRAM', ITEM(4), '=', 3, 1, 'N' ) ) &
-            THEN
+            if (    badkpv( 'TKFRAM', item(3), '=', 3, 1, 'N' ) &
+               .or. badkpv( 'TKFRAM', item(4), '=', 3, 1, 'N' ) ) &
+            then
 
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call chkout ( 'TKFRAM' )
+               return
 
-            END IF
+            end if
 
-            UNITS = 'RADIANS'
+            units = 'RADIANS'
 
-            CALL GDPOOL ( ITEM(3),   1, 3, N, ANGLES, FND )
-            CALL GIPOOL ( ITEM(4),   1, 3, N, AXES,   FND )
-            CALL GCPOOL ( ITEM(5),   1, 1, N, UNITS,  FND )
+            call gdpool ( item(3),   1, 3, n, angles, fnd )
+            call gipool ( item(4),   1, 3, n, axes,   fnd )
+            call gcpool ( item(5),   1, 1, n, units,  fnd )
 
 !
 !           Convert angles to radians.
 !
-            DO I = 1, 3
+            do i = 1, 3
 
-               CALL CONVRT ( ANGLES(I), UNITS, 'RADIANS', TEMPD )
-               ANGLES(I) = TEMPD
+               call convrt ( angles(i), units, 'RADIANS', tempd )
+               angles(i) = tempd
 
-            END DO
+            end do
 
 !
 !           Compute the rotation from instrument frame to CK frame.
 !
-            CALL EUL2M (  ANGLES(1),   ANGLES(2),   ANGLES(3), &
-                          AXES  (1),   AXES  (2),   AXES  (3), ROT )
+            call eul2m (  angles(1),   angles(2),   angles(3), &
+                          axes  (1),   axes  (2),   axes  (3), rot )
 
-            IF ( FAILED() ) THEN
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call chkout ( 'TKFRAM' )
+               return
+            end if
 
-         ELSE IF ( SPEC .EQ. 'QUATERNION' ) THEN
+         else if ( spec .eq. 'QUATERNION' ) then
 !
 !           Look up the quaternion and convert it to a rotation
 !           matrix. Again there are two possible variables that
@@ -948,17 +948,17 @@
 !
 !           If both forms are present, we signal an error.
 !
-            ITEM(3) = AGENT(1:R)   // '_Q'
-            ALT (3) = ALTNAT(1:AR) // '_Q'
+            item(3) = agent(1:r)   // '_Q'
+            alt (3) = altnat(1:ar) // '_Q'
 
-            CALL DTPOOL ( ITEM(3), FOUND1, N, TYPE )
-            CALL DTPOOL ( ALT(3),  FOUND2, N, TYPE )
+            call dtpool ( item(3), found1, n, type )
+            call dtpool ( alt(3),  found2, n, type )
 
-            IF ( FOUND1 .AND. FOUND2 ) THEN
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL SETMSG ( 'Frame name-based and frame '    // &
+            if ( found1 .and. found2 ) then
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call setmsg ( 'Frame name-based and frame '    // &
                              'ID-based text kernel (fixed-'   // &
                              'offset) frame definition '      // &
                              'keywords ''#'' and ''#'' are '  // &
@@ -969,44 +969,44 @@
                              'of the ''#'' frame using '      // &
                              'different keyword styles, '     // &
                              'which is not allowed. '         )
-               CALL ERRCH  ( '#', ITEM(3) )
-               CALL ERRCH  ( '#', ALT(3) )
-               CALL ERRCH  ( '#', FRNAME )
-               CALL SIGERR ( 'SPICE(COMPETINGFRAMESPEC)' )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
-            END IF
+               call errch  ( '#', item(3) )
+               call errch  ( '#', alt(3) )
+               call errch  ( '#', frname )
+               call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
+               call chkout ( 'TKFRAM' )
+               return
+            end if
 
-            IF ( FOUND2 ) THEN
-               ITEM(3) = ALT(3)
-            END IF
+            if ( found2 ) then
+               item(3) = alt(3)
+            end if
 
 
-            IF ( BADKPV ( 'TKFRAM', ITEM(3), '=', 4, 1, 'N' ) ) THEN
-               CALL LNKINI ( BUFSIZ, POOL )
-               FRAME =  0
-               CALL IDENT  ( ROT      )
-               CALL CHKOUT ( 'TKFRAM' )
-               RETURN
-            END IF
+            if ( badkpv ( 'TKFRAM', item(3), '=', 4, 1, 'N' ) ) then
+               call lnkini ( bufsiz, pool )
+               frame =  0
+               call ident  ( rot      )
+               call chkout ( 'TKFRAM' )
+               return
+            end if
 !
 !           In this case we have the quaternion representation.
 !           Again, we do a small amount of polishing of the input.
 !
-            CALL GDPOOL ( ITEM(3), 1, 4, N, QUATRN, FND )
-            CALL VHATG  ( QUATRN,  4,       QTMP   )
-            CALL Q2M    ( QTMP,             ROT    )
+            call gdpool ( item(3), 1, 4, n, quatrn, fnd )
+            call vhatg  ( quatrn,  4,       qtmp   )
+            call q2m    ( qtmp,             rot    )
 
-         ELSE
+         else
 !
 !           We don't recognize the SPEC for this frame.  Say
 !           so.  Also note that perhaps the user needs to upgrade
 !           the toolkit.
 !
-            CALL LNKINI ( BUFSIZ, POOL )
-            FRAME =  0
-            CALL IDENT  ( ROT      )
-            CALL SETMSG ( 'The frame specification "# = ' &
+            call lnkini ( bufsiz, pool )
+            frame =  0
+            call ident  ( rot      )
+            call setmsg ( 'The frame specification "# = ' &
             //            '''#''" is not one of the recognized ' &
             //            'means of specifying a text-kernel ' &
             //            'constant offset frame. ' &
@@ -1015,82 +1015,82 @@
             //            'need to consider updating your ' &
             //            'version of the SPICE toolkit. ' )
 
-            CALL ERRCH  ( '#', ITEM(1) )
-            CALL ERRCH  ( '#', SPEC    )
-            CALL SIGERR ( 'SPICE(UNKNOWNFRAMESPEC)' )
-            CALL CHKOUT ( 'TKFRAM' )
-            RETURN
+            call errch  ( '#', item(1) )
+            call errch  ( '#', spec    )
+            call sigerr ( 'SPICE(UNKNOWNFRAMESPEC)' )
+            call chkout ( 'TKFRAM' )
+            return
 
-         END IF
+         end if
 
 !
 !        Buffer the identifier, relative frame and rotation matrix.
 !
-         BUFFD ( 1, AT ) = ROT(1,1)
-         BUFFD ( 2, AT ) = ROT(2,1)
-         BUFFD ( 3, AT ) = ROT(3,1)
-         BUFFD ( 4, AT ) = ROT(1,2)
-         BUFFD ( 5, AT ) = ROT(2,2)
-         BUFFD ( 6, AT ) = ROT(3,2)
-         BUFFD ( 7, AT ) = ROT(1,3)
-         BUFFD ( 8, AT ) = ROT(2,3)
-         BUFFD ( 9, AT ) = ROT(3,3)
+         buffd ( 1, at ) = rot(1,1)
+         buffd ( 2, at ) = rot(2,1)
+         buffd ( 3, at ) = rot(3,1)
+         buffd ( 4, at ) = rot(1,2)
+         buffd ( 5, at ) = rot(2,2)
+         buffd ( 6, at ) = rot(3,2)
+         buffd ( 7, at ) = rot(1,3)
+         buffd ( 8, at ) = rot(2,3)
+         buffd ( 9, at ) = rot(3,3)
 
-         BUFFI ( 1, AT ) = FRAME
+         buffi ( 1, at ) = frame
 
 !
 !        If these were not previously buffered, we need to set
 !        a watch on the various items that might be used to define
 !        this frame.
 !
-         IF ( .NOT. BUFFRD ) THEN
+         if ( .not. buffrd ) then
 !
 !           Immediately check for an update so that we will
 !           not redundantly look for this item the next time this
 !           routine is called.
 !
-            ITEM( 1) = AGENT(1:R)   // '_RELATIVE'
-            ITEM( 2) = AGENT(1:R)   // '_SPEC'
-            ITEM( 3) = AGENT(1:R)   // '_AXES'
-            ITEM( 4) = AGENT(1:R)   // '_MATRIX'
-            ITEM( 5) = AGENT(1:R)   // '_Q'
-            ITEM( 6) = AGENT(1:R)   // '_ANGLES'
-            ITEM( 7) = AGENT(1:R)   // '_UNITS'
+            item( 1) = agent(1:r)   // '_RELATIVE'
+            item( 2) = agent(1:r)   // '_SPEC'
+            item( 3) = agent(1:r)   // '_AXES'
+            item( 4) = agent(1:r)   // '_MATRIX'
+            item( 5) = agent(1:r)   // '_Q'
+            item( 6) = agent(1:r)   // '_ANGLES'
+            item( 7) = agent(1:r)   // '_UNITS'
 
-            ITEM( 8) = ALTNAT(1:AR) // '_RELATIVE'
-            ITEM( 9) = ALTNAT(1:AR) // '_SPEC'
-            ITEM(10) = ALTNAT(1:AR) // '_AXES'
-            ITEM(11) = ALTNAT(1:AR) // '_MATRIX'
-            ITEM(12) = ALTNAT(1:AR) // '_Q'
-            ITEM(13) = ALTNAT(1:AR) // '_ANGLES'
-            ITEM(14) = ALTNAT(1:AR) // '_UNITS'
+            item( 8) = altnat(1:ar) // '_RELATIVE'
+            item( 9) = altnat(1:ar) // '_SPEC'
+            item(10) = altnat(1:ar) // '_AXES'
+            item(11) = altnat(1:ar) // '_MATRIX'
+            item(12) = altnat(1:ar) // '_Q'
+            item(13) = altnat(1:ar) // '_ANGLES'
+            item(14) = altnat(1:ar) // '_UNITS'
 
-            CALL SWPOOL ( AGENT, 14, ITEM )
-            CALL CVPOOL ( AGENT, UPDATE   )
+            call swpool ( agent, 14, item )
+            call cvpool ( agent, update   )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL LNKINI ( BUFSIZ, POOL )
-         FRAME =  0
-         CALL IDENT  ( ROT      )
-         CALL CHKOUT ( 'TKFRAM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call lnkini ( bufsiz, pool )
+         frame =  0
+         call ident  ( rot      )
+         call chkout ( 'TKFRAM' )
+         return
+      end if
 
 !
 !     All errors cause the routine to exit before we get to this
 !     point.  If we reach this point we didn't have an error and
 !     hence did find the rotation from ID to FRAME.
 !
-      FOUND = .TRUE.
+      found = .true.
 
 !
 !     That's it
 !
-      CALL CHKOUT ( 'TKFRAM' )
-      RETURN
+      call chkout ( 'TKFRAM' )
+      return
 
-      END
+      end

@@ -1,8 +1,8 @@
 !$Procedure CKW05 ( Write CK segment, type 5 )
 
-      SUBROUTINE CKW05 ( HANDLE,  SUBTYP,  DEGREE,  BEGTIM,  ENDTIM, &
-                         INST,    REF,     AVFLAG,  SEGID,   N, &
-                         SCLKDP,  PACKTS,  RATE,    NINTS,   STARTS  )
+      subroutine ckw05 ( handle,  subtyp,  degree,  begtim,  endtim, &
+                         inst,    ref,     avflag,  segid,   n, &
+                         sclkdp,  packts,  rate,    nints,   starts  )
 
 ! $ Abstract
 !
@@ -22,28 +22,28 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ck05.inc'
+      include 'ck05.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SUBTYP
-      INTEGER               DEGREE
-      DOUBLE PRECISION      BEGTIM
-      DOUBLE PRECISION      ENDTIM
-      INTEGER               INST
-      CHARACTER*(*)         REF
-      LOGICAL               AVFLAG
-      CHARACTER*(*)         SEGID
-      INTEGER               N
-      DOUBLE PRECISION      SCLKDP ( * )
-      DOUBLE PRECISION      PACKTS ( * )
-      DOUBLE PRECISION      RATE
-      INTEGER               NINTS
-      DOUBLE PRECISION      STARTS ( * )
+      integer               handle
+      integer               subtyp
+      integer               degree
+      double precision      begtim
+      double precision      endtim
+      integer               inst
+      character*(*)         ref
+      logical               avflag
+      character*(*)         segid
+      integer               n
+      double precision      sclkdp ( * )
+      double precision      packts ( * )
+      double precision      rate
+      integer               nints
+      double precision      starts ( * )
 
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 23 )
+      integer               maxdeg
+      parameter           ( maxdeg = 23 )
 
 ! $ Brief_I/O
 !
@@ -594,155 +594,155 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               VZEROG
+      logical               vzerog
 
-      INTEGER               BSRCHD
-      INTEGER               LASTNB
-      INTEGER               LSTLTD
+      integer               bsrchd
+      integer               lastnb
+      integer               lstltd
 
-      LOGICAL               FAILED
-      LOGICAL               ODD
-      LOGICAL               RETURN
+      logical               failed
+      logical               odd
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
-      INTEGER               ND
-      PARAMETER           ( ND      =   2 )
+      integer               nd
+      parameter           ( nd      =   2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI      =   6 )
+      integer               ni
+      parameter           ( ni      =   6 )
 
-      INTEGER               DSCSIZ
-      PARAMETER           ( DSCSIZ  =   5 )
+      integer               dscsiz
+      parameter           ( dscsiz  =   5 )
 
-      INTEGER               TYPIDX
-      PARAMETER           ( TYPIDX  =   4 )
+      integer               typidx
+      parameter           ( typidx  =   4 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE   =   5 )
+      integer               dtype
+      parameter           ( dtype   =   5 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ  = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz  = 100 )
 
-      INTEGER               STATSZ
-      PARAMETER           ( STATSZ  =   6 )
+      integer               statsz
+      parameter           ( statsz  =   6 )
 
 !
 !     Packet structure parameters
 !
-      INTEGER               QIDX
-      PARAMETER           ( QIDX   = 1 )
+      integer               qidx
+      parameter           ( qidx   = 1 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DESCR  ( DSCSIZ )
+      double precision      dc     ( nd )
+      double precision      descr  ( dscsiz )
 
-      INTEGER               ADDR
-      INTEGER               CHRCOD
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               PACKSZ
-      INTEGER               REFCOD
-      INTEGER               WINSIZ
+      integer               addr
+      integer               chrcod
+      integer               i
+      integer               ic     ( ni )
+      integer               packsz
+      integer               refcod
+      integer               winsiz
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKW05' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKW05' )
+      end if
 
 !
 !     Make sure that the number of packets is positive.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL SETMSG ( 'At least 1 packet is required for CK type 5. '// &
+         call setmsg ( 'At least 1 packet is required for CK type 5. '// &
                        'Number of packets supplied:  #'                )
-         CALL ERRINT ( '#', N                                          )
-         CALL SIGERR ( 'SPICE(TOOFEWPACKETS)'                          )
-         CALL CHKOUT ( 'CKW05'                                         )
-         RETURN
+         call errint ( '#', n                                          )
+         call sigerr ( 'SPICE(TOOFEWPACKETS)'                          )
+         call chkout ( 'CKW05'                                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that there is a positive number of interpolation
 !     intervals.
 !
-      IF ( NINTS .LE. 0 ) THEN
+      if ( nints .le. 0 ) then
 
-         CALL SETMSG ( '# is an invalid number of interpolation ' // &
+         call setmsg ( '# is an invalid number of interpolation ' // &
                        'intervals for type 5.'                     )
-         CALL ERRINT ( '#', NINTS                                  )
-         CALL SIGERR ( 'SPICE(INVALIDNUMINTS)'                     )
-         CALL CHKOUT ( 'CKW05'                                     )
-         RETURN
+         call errint ( '#', nints                                  )
+         call sigerr ( 'SPICE(INVALIDNUMINTS)'                     )
+         call chkout ( 'CKW05'                                     )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL NAMFRM ( REF, REFCOD )
+      call namfrm ( ref, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', REF                                    )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'CKW05'                                     )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', ref                                    )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'CKW05'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Check to see if the segment identifier is too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' // &
+         call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'CKW05'                                   )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'CKW05'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         CHRCOD = ICHAR( SEGID(I:I) )
+         chrcod = ichar( segid(i:i) )
 
-         IF ( ( CHRCOD .LT. FPRINT ) .OR. ( CHRCOD .GT. LPRINT ) ) THEN
+         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains '  // &
+            call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'CKW05'                                 )
-            RETURN
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'CKW05'                                 )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Now check that the encoded SCLK times are positive and strictly
@@ -750,84 +750,84 @@
 !
 !     Check that the first time is nonnegative.
 !
-      IF ( SCLKDP(1) .LT. 0.D0 ) THEN
+      if ( sclkdp(1) .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'The first SCLKDP time: # is negative.' )
-         CALL ERRDP  ( '#', SCLKDP(1)                          )
-         CALL SIGERR ( 'SPICE(INVALIDSCLKTIME)'                )
-         CALL CHKOUT ( 'CKW05'                                 )
-         RETURN
+         call setmsg ( 'The first SCLKDP time: # is negative.' )
+         call errdp  ( '#', sclkdp(1)                          )
+         call sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
+         call chkout ( 'CKW05'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that the times are ordered properly.
 !
-      DO I = 2, N
+      do i = 2, n
 
-         IF ( SCLKDP(I) .LE. SCLKDP(I-1) )  THEN
+         if ( sclkdp(i) .le. sclkdp(i-1) )  then
 
-            CALL SETMSG ( 'The SCLKDP times are not strictly '      // &
+            call setmsg ( 'The SCLKDP times are not strictly '      // &
                           'increasing. SCLKDP(#) = # and SCLKDP(#) '// &
                           '= #.'                                )
-            CALL ERRINT ( '#', I                                )
-            CALL ERRDP  ( '#', SCLKDP(I)                        )
-            CALL ERRINT ( '#', I-1                              )
-            CALL ERRDP  ( '#', SCLKDP(I-1)                      )
-            CALL SIGERR ( 'SPICE(TIMESOUTOFORDER)'              )
-            CALL CHKOUT ( 'CKW05'                               )
-            RETURN
+            call errint ( '#', i                                )
+            call errdp  ( '#', sclkdp(i)                        )
+            call errint ( '#', i-1                              )
+            call errdp  ( '#', sclkdp(i-1)                      )
+            call sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            call chkout ( 'CKW05'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Now check that the interval start times are ordered properly.
 !
-      DO I = 2, NINTS
+      do i = 2, nints
 
-         IF ( STARTS(I) .LE. STARTS(I-1) )  THEN
+         if ( starts(i) .le. starts(i-1) )  then
 
-            CALL SETMSG ( 'The interval start times are not strictly '// &
+            call setmsg ( 'The interval start times are not strictly '// &
                           'increasing. STARTS(#) = # and STARTS(#) '  // &
                           '= #.'                                )
-            CALL ERRINT ( '#', I                                )
-            CALL ERRDP  ( '#', STARTS(I)                        )
-            CALL ERRINT ( '#', I-1                              )
-            CALL ERRDP  ( '#', STARTS(I-1)                      )
-            CALL SIGERR ( 'SPICE(TIMESOUTOFORDER)'              )
-            CALL CHKOUT ( 'CKW05'                               )
-            RETURN
+            call errint ( '#', i                                )
+            call errdp  ( '#', starts(i)                        )
+            call errint ( '#', i-1                              )
+            call errdp  ( '#', starts(i-1)                      )
+            call sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            call chkout ( 'CKW05'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Now make sure that all of the interval start times coincide with
 !     one of the times associated with the actual pointing.
 !
-      DO I = 1, NINTS
+      do i = 1, nints
 !
 !        We know the SCLKDP array is ordered, so a binary search is
 !        ok.
 !
-         IF (  BSRCHD ( STARTS(I), N, SCLKDP )  .EQ.  0  ) THEN
+         if (  bsrchd ( starts(i), n, sclkdp )  .eq.  0  ) then
 
-            CALL SETMSG ( 'Interval start time number # is invalid. '// &
+            call setmsg ( 'Interval start time number # is invalid. '// &
                           'STARTS(#) = *'                             )
-            CALL ERRINT ( '#', I                                      )
-            CALL ERRINT ( '#', I                                      )
-            CALL ERRDP  ( '*', STARTS(I)                              )
-            CALL SIGERR ( 'SPICE(INVALIDSTARTTIME)'                   )
-            CALL CHKOUT ( 'CKW05'                                     )
-            RETURN
+            call errint ( '#', i                                      )
+            call errint ( '#', i                                      )
+            call errdp  ( '*', starts(i)                              )
+            call sigerr ( 'SPICE(INVALIDSTARTTIME)'                   )
+            call chkout ( 'CKW05'                                     )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 
@@ -835,93 +835,93 @@
 !     Set the window, packet size and angular velocity flag, all of
 !     which are functions of the subtype.
 !
-      IF (  SUBTYP .EQ. C05TP0 ) THEN
+      if (  subtyp .eq. c05tp0 ) then
 
-         WINSIZ = ( DEGREE + 1 ) / 2
-         PACKSZ = C05PS0
+         winsiz = ( degree + 1 ) / 2
+         packsz = c05ps0
 
-      ELSE IF ( SUBTYP .EQ. C05TP1  ) THEN
+      else if ( subtyp .eq. c05tp1  ) then
 
-         WINSIZ = DEGREE + 1
-         PACKSZ = C05PS1
+         winsiz = degree + 1
+         packsz = c05ps1
 
-      ELSE IF (  SUBTYP .EQ. C05TP2 ) THEN
+      else if (  subtyp .eq. c05tp2 ) then
 
-         WINSIZ = ( DEGREE + 1 ) / 2
-         PACKSZ = C05PS2
+         winsiz = ( degree + 1 ) / 2
+         packsz = c05ps2
 
-      ELSE IF ( SUBTYP .EQ. C05TP3  ) THEN
+      else if ( subtyp .eq. c05tp3  ) then
 
-         WINSIZ = DEGREE + 1
-         PACKSZ = C05PS3
+         winsiz = degree + 1
+         packsz = c05ps3
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'CK type 5 subtype <#> is not supported.' )
-         CALL ERRINT ( '#', SUBTYP                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-         CALL CHKOUT ( 'CKW05'                                   )
-         RETURN
+         call setmsg ( 'CK type 5 subtype <#> is not supported.' )
+         call errint ( '#', subtyp                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+         call chkout ( 'CKW05'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the quaternions are non-zero. This is just
 !     a check for uninitialized data.
 !
-      DO I = 1, N
+      do i = 1, n
 !
 !        We have to address the quaternion explicitly, since the shape
 !        of the packet array is not known at compile time.
 !
-         ADDR = PACKSZ * (I-1)  +  QIDX
+         addr = packsz * (i-1)  +  qidx
 
-         IF (  VZEROG( PACKTS(ADDR), 4 )  ) THEN
+         if (  vzerog( packts(addr), 4 )  ) then
 
-            CALL SETMSG ( 'The quaternion at index # has magnitude ' &
+            call setmsg ( 'The quaternion at index # has magnitude ' &
             //            'zero.'                                    )
-            CALL ERRINT ( '#', I                                     )
-            CALL SIGERR ( 'SPICE(ZEROQUATERNION)'                    )
-            CALL CHKOUT ( 'CKW05'                                    )
-            RETURN
+            call errint ( '#', i                                     )
+            call sigerr ( 'SPICE(ZEROQUATERNION)'                    )
+            call chkout ( 'CKW05'                                    )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Make sure that the degree of the interpolating polynomials is
 !     in range.
 !
-      IF (  ( DEGREE .LT. 1 ) .OR. ( DEGREE .GT. MAXDEG )  )  THEN
+      if (  ( degree .lt. 1 ) .or. ( degree .gt. maxdeg )  )  then
 
-         CALL SETMSG ( 'The interpolating polynomials have degree #; '// &
+         call setmsg ( 'The interpolating polynomials have degree #; '// &
                        'the valid degree range is [1, #]'              )
-         CALL ERRINT ( '#', DEGREE                                     )
-         CALL ERRINT ( '#', MAXDEG                                     )
-         CALL SIGERR ( 'SPICE(INVALIDDEGREE)'                          )
-         CALL CHKOUT ( 'CKW05'                                         )
-         RETURN
+         call errint ( '#', degree                                     )
+         call errint ( '#', maxdeg                                     )
+         call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         call chkout ( 'CKW05'                                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the window size is even.  If not, the input
 !     DEGREE is incompatible with the subtype.
 !
-      IF (  ODD(WINSIZ)  )  THEN
+      if (  odd(winsiz)  )  then
 
-         CALL SETMSG ( 'The interpolating polynomials have degree #; '// &
+         call setmsg ( 'The interpolating polynomials have degree #; '// &
                        'for CK type 5, the degree must be '           // &
                        'equivalent to 3 mod 4 for Hermite '           // &
                        'interpolation and odd for for Lagrange '      // &
                        'interpolation.'                                )
-         CALL ERRINT ( '#', DEGREE                                     )
-         CALL SIGERR ( 'SPICE(INVALIDDEGREE)'                          )
-         CALL CHKOUT ( 'CKW05'                                         )
-         RETURN
+         call errint ( '#', degree                                     )
+         call sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         call chkout ( 'CKW05'                                         )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -931,88 +931,88 @@
 !
 !     Assign values to the integer components of the segment descriptor.
 !
-      IC ( 1 ) = INST
-      IC ( 2 ) = REFCOD
-      IC ( 3 ) = DTYPE
+      ic ( 1 ) = inst
+      ic ( 2 ) = refcod
+      ic ( 3 ) = dtype
 
-      IF ( AVFLAG ) THEN
-         IC ( 4 ) = 1
-      ELSE
-         IC ( 4 ) = 0
-      END IF
+      if ( avflag ) then
+         ic ( 4 ) = 1
+      else
+         ic ( 4 ) = 0
+      end if
 
-      DC( 1 ) = BEGTIM
-      DC( 2 ) = ENDTIM
+      dc( 1 ) = begtim
+      dc( 2 ) = endtim
 
 !
 !     Make sure the descriptor times are in increasing order.
 !
-      IF ( ENDTIM .LT. BEGTIM ) THEN
+      if ( endtim .lt. begtim ) then
 
-         CALL SETMSG ( 'Descriptor bounds are non-increasing: #:#' )
-         CALL ERRDP  ( '#', BEGTIM                                 )
-         CALL ERRDP  ( '#', ENDTIM                                 )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'CKW05'                                     )
-         RETURN
+         call setmsg ( 'Descriptor bounds are non-increasing: #:#' )
+         call errdp  ( '#', begtim                                 )
+         call errdp  ( '#', endtim                                 )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'CKW05'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that at least one time tag lies between BEGTIM and
 !     ENDTIM.  The first time tag not less than BEGTIM must exist
 !     and must be less than or equal to ENDTIM.
 !
-      I = LSTLTD ( BEGTIM, N, SCLKDP )
+      i = lstltd ( begtim, n, sclkdp )
 
 
-      IF ( I .EQ. N ) THEN
+      if ( i .eq. n ) then
 
-         CALL SETMSG ( 'All time tags are less than segment start ' // &
+         call setmsg ( 'All time tags are less than segment start ' // &
                        'time #.'                                  )
-         CALL ERRDP  ( '#',  BEGTIM                               )
-         CALL SIGERR ( 'SPICE(EMPTYSEGMENT)'                      )
-         CALL CHKOUT ( 'CKW05'                                    )
-         RETURN
+         call errdp  ( '#',  begtim                               )
+         call sigerr ( 'SPICE(EMPTYSEGMENT)'                      )
+         call chkout ( 'CKW05'                                    )
+         return
 
-      ELSE IF (  SCLKDP(I+1)  .GT.  ENDTIM  ) THEN
+      else if (  sclkdp(i+1)  .gt.  endtim  ) then
 
-         CALL SETMSG ( 'No time tags lie between the segment start ' // &
+         call setmsg ( 'No time tags lie between the segment start ' // &
                        'time # and segment end time #'              )
-         CALL ERRDP  ( '#',  BEGTIM                                 )
-         CALL ERRDP  ( '#',  ENDTIM                                 )
-         CALL SIGERR ( 'SPICE(EMPTYSEGMENT)'                        )
-         CALL CHKOUT ( 'CKW05'                                      )
-         RETURN
+         call errdp  ( '#',  begtim                                 )
+         call errdp  ( '#',  endtim                                 )
+         call sigerr ( 'SPICE(EMPTYSEGMENT)'                        )
+         call chkout ( 'CKW05'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     The clock rate must be non-zero.
 !
-      IF ( RATE .EQ. 0.D0 ) THEN
+      if ( rate .eq. 0.d0 ) then
 
-         CALL SETMSG ( 'The SCLK rate RATE was zero.'  )
-         CALL SIGERR ( 'SPICE(INVALIDVALUE)'           )
-         CALL CHKOUT ( 'CKW05'                         )
-         RETURN
+         call setmsg ( 'The SCLK rate RATE was zero.'  )
+         call sigerr ( 'SPICE(INVALIDVALUE)'           )
+         call chkout ( 'CKW05'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Now pack the segment descriptor.
 !
-      CALL DAFPS ( ND, NI, DC, IC, DESCR )
+      call dafps ( nd, ni, dc, ic, descr )
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKW05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKW05' )
+         return
+      end if
 
 
 !
@@ -1078,48 +1078,48 @@
 !        +----------------------------+
 !
 !
-      CALL DAFADA ( PACKTS,  N*PACKSZ )
-      CALL DAFADA ( SCLKDP,  N        )
+      call dafada ( packts,  n*packsz )
+      call dafada ( sclkdp,  n        )
 
-      DO I = 1,   (N-1) / DIRSIZ
+      do i = 1,   (n-1) / dirsiz
 
-         CALL DAFADA (  SCLKDP( DIRSIZ*I ),  1  )
+         call dafada (  sclkdp( dirsiz*i ),  1  )
 
-      END DO
+      end do
 
 !
 !     Now add the interval start times.
 !
-      CALL DAFADA ( STARTS, NINTS )
+      call dafada ( starts, nints )
 
 !
 !     And the directory of interval start times.  The directory of
 !     start times will simply be every (DIRSIZ)th start time.
 !
-      DO I = 1, (NINTS -1) / DIRSIZ
+      do i = 1, (nints -1) / dirsiz
 
-         CALL DAFADA ( STARTS( DIRSIZ*I ), 1 )
+         call dafada ( starts( dirsiz*i ), 1 )
 
-      END DO
+      end do
 
 !
 !     Add the SCLK rate, segment subtype, window size, interval
 !     count, and packet count.
 !
-      CALL DAFADA ( RATE,            1 )
-      CALL DAFADA ( DBLE( SUBTYP ),  1 )
-      CALL DAFADA ( DBLE( WINSIZ ),  1 )
-      CALL DAFADA ( DBLE( NINTS  ),  1 )
-      CALL DAFADA ( DBLE( N      ),  1 )
+      call dafada ( rate,            1 )
+      call dafada ( dble( subtyp ),  1 )
+      call dafada ( dble( winsiz ),  1 )
+      call dafada ( dble( nints  ),  1 )
+      call dafada ( dble( n      ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.
 !
-      IF ( .NOT. FAILED() ) THEN
-         CALL DAFENA
-      END IF
+      if ( .not. failed() ) then
+         call dafena
+      end if
 
 
-      CALL CHKOUT ( 'CKW05' )
-      RETURN
-      END
+      call chkout ( 'CKW05' )
+      return
+      end

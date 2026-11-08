@@ -1,6 +1,6 @@
 !$Procedure     ZZEKWPAI ( EK, write paged array, integer )
 
-      SUBROUTINE ZZEKWPAI ( HANDLE, SEGDSC, NVALS, IVALS, P, BASE )
+      subroutine zzekwpai ( handle, segdsc, nvals, ivals, p, base )
 
 ! $ Abstract
 !
@@ -17,17 +17,17 @@
 ! $ Declarations
 
 
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               NVALS
-      INTEGER               IVALS  ( * )
-      INTEGER               P
-      INTEGER               BASE
+      integer               handle
+      integer               segdsc ( * )
+      integer               nvals
+      integer               ivals  ( * )
+      integer               p
+      integer               base
 
 ! $ Brief_I/O
 !
@@ -124,74 +124,74 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               FROM
-      INTEGER               NPAGE
-      INTEGER               PAGE   ( PGSIZI )
-      INTEGER               TO
+      integer               from
+      integer               npage
+      integer               page   ( pgsizi )
+      integer               to
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKWPAI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKWPAI' )
+      end if
 
 !
 !     Decide how many pages are required to hold the array, and
 !     allocate that many new, contiguous pages.
 !
-      NPAGE  =  ( NVALS + IPSIZE - 1 ) / IPSIZE
+      npage  =  ( nvals + ipsize - 1 ) / ipsize
 
-      CALL ZZEKACPS ( HANDLE, SEGDSC, INT, NPAGE, P, BASE )
+      call zzekacps ( handle, segdsc, int, npage, p, base )
 
 !
 !     We'll use FROM to indicate the element of IVALS we're
 !     considering and TO to indicate the element of PAGE to write
 !     to.
 !
-      TO  =  1
-      CALL CLEARI ( PGSIZI, PAGE )
+      to  =  1
+      call cleari ( pgsizi, page )
 
 
-      DO FROM = 1, NVALS
+      do from = 1, nvals
 !
 !        The Assignment.
 !
-         PAGE(TO) =  IVALS(FROM)
-         TO       =  TO + 1
+         page(to) =  ivals(from)
+         to       =  to + 1
 
 
-         IF (  ( TO .GT. IPSIZE ) .OR. ( FROM .EQ. NVALS )  ) THEN
+         if (  ( to .gt. ipsize ) .or. ( from .eq. nvals )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the
 !           current page.  First set the link count.
 !
-            PAGE ( ILCIDX ) =  TO - 1
+            page ( ilcidx ) =  to - 1
 
 !
 !           Write out the data page.
 !
-            CALL ZZEKPGWI ( HANDLE, P, PAGE  )
+            call zzekpgwi ( handle, p, page  )
 
 !
 !           Next page.
 !
-            P   =  P + 1
-            TO  =  1
+            p   =  p + 1
+            to  =  1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZEKWPAI' )
-      RETURN
-      END
+      call chkout ( 'ZZEKWPAI' )
+      return
+      end

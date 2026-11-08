@@ -1,10 +1,10 @@
 !$Procedure  ZZEKJOIN  ( Perform join on two join row sets )
 
-      SUBROUTINE ZZEKJOIN ( JBASE1,  JBASE2,  NJCNST,  ACTIVE, &
-                            CPIDX1,  CLIDX1,  ELTS1,   OPS, &
-                            CPIDX2,  CLIDX2,  ELTS2,   STHAN, &
-                            STSDSC,  STDTPT,  DTPOOL,  DTDSCS, &
-                            JBASE3,  NROWS                             )
+      subroutine zzekjoin ( jbase1,  jbase2,  njcnst,  active, &
+                            cpidx1,  clidx1,  elts1,   ops, &
+                            cpidx2,  clidx2,  elts2,   sthan, &
+                            stsdsc,  stdtpt,  dtpool,  dtdscs, &
+                            jbase3,  nrows                             )
 
 ! $ Abstract
 !
@@ -23,32 +23,32 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekjrs.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'eksegdsc.inc'
+      include 'ekcoldsc.inc'
+      include 'ekjrs.inc'
+      include 'ekqlimit.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               JBASE1
-      INTEGER               JBASE2
-      INTEGER               NJCNST
-      LOGICAL               ACTIVE ( * )
-      INTEGER               CPIDX1 ( * )
-      INTEGER               CLIDX1 ( * )
-      INTEGER               ELTS1  ( * )
-      INTEGER               OPS    ( * )
-      INTEGER               CPIDX2 ( * )
-      INTEGER               CLIDX2 ( * )
-      INTEGER               ELTS2  ( * )
-      INTEGER               STHAN  ( * )
-      INTEGER               STSDSC ( SDSCSZ, * )
-      INTEGER               STDTPT ( * )
-      INTEGER               DTPOOL ( 2,      LBPOOL : * )
-      INTEGER               DTDSCS ( CDSCSZ,          * )
-      INTEGER               JBASE3
-      INTEGER               NROWS
+      integer               jbase1
+      integer               jbase2
+      integer               njcnst
+      logical               active ( * )
+      integer               cpidx1 ( * )
+      integer               clidx1 ( * )
+      integer               elts1  ( * )
+      integer               ops    ( * )
+      integer               cpidx2 ( * )
+      integer               clidx2 ( * )
+      integer               elts2  ( * )
+      integer               sthan  ( * )
+      integer               stsdsc ( sdscsz, * )
+      integer               stdtpt ( * )
+      integer               dtpool ( 2,      lbpool : * )
+      integer               dtdscs ( cdscsz,          * )
+      integer               jbase3
+      integer               nrows
 
 ! $ Brief_I/O
 !
@@ -284,30 +284,30 @@
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               OFFSET
-      INTEGER               NR1
-      INTEGER               NR2
-      INTEGER               NR3
-      INTEGER               NRESV
-      INTEGER               NSV1
-      INTEGER               NSV2
-      INTEGER               NSV3
-      INTEGER               NT1
-      INTEGER               NT2
-      INTEGER               NT3
-      INTEGER               RB1
-      INTEGER               RB2
-      INTEGER               RB3
-      INTEGER               ROWVEC ( MXJOIN + 1 )
-      INTEGER               S1
-      INTEGER               S2
-      INTEGER               S3
-      INTEGER               SEGVEC ( MXJOIN )
-      INTEGER               SGVBAS
-      INTEGER               TOP
+      integer               i
+      integer               offset
+      integer               nr1
+      integer               nr2
+      integer               nr3
+      integer               nresv
+      integer               nsv1
+      integer               nsv2
+      integer               nsv3
+      integer               nt1
+      integer               nt2
+      integer               nt3
+      integer               rb1
+      integer               rb2
+      integer               rb3
+      integer               rowvec ( mxjoin + 1 )
+      integer               s1
+      integer               s2
+      integer               s3
+      integer               segvec ( mxjoin )
+      integer               sgvbas
+      integer               top
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     For speed, we use discovery check-in.  We don't check
@@ -316,113 +316,113 @@
 !
 !     Validate constraint count.
 !
-      IF (  ( NJCNST .LT. 0 ) .OR. ( NJCNST .GT. MXJCON )  ) THEN
+      if (  ( njcnst .lt. 0 ) .or. ( njcnst .gt. mxjcon )  ) then
 
-         CALL CHKIN  ( 'ZZEKJOIN'                                  )
-         CALL SETMSG ( 'Number of join constraints was #; valid ' // &
+         call chkin  ( 'ZZEKJOIN'                                  )
+         call setmsg ( 'Number of join constraints was #; valid ' // &
                        'range is 0:#'                              )
-         CALL ERRINT ( '#',  NJCNST                                )
-         CALL ERRINT ( '#',  MXJCON                                )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-         CALL CHKOUT ( 'ZZEKJOIN'                                  )
-         RETURN
+         call errint ( '#',  njcnst                                )
+         call errint ( '#',  mxjcon                                )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+         call chkout ( 'ZZEKJOIN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the table count and segment vector count for each input join
 !     row set.
 !
-      CALL ZZEKSRD (  JBASE1+JTCIDX,  JBASE1+JTCIDX,  NT1   )
-      CALL ZZEKSRD (  JBASE1+JSCIDX,  JBASE1+JSCIDX,  NSV1  )
-      CALL ZZEKSRD (  JBASE2+JTCIDX,  JBASE2+JTCIDX,  NT2   )
-      CALL ZZEKSRD (  JBASE2+JSCIDX,  JBASE2+JSCIDX,  NSV2  )
+      call zzeksrd (  jbase1+jtcidx,  jbase1+jtcidx,  nt1   )
+      call zzeksrd (  jbase1+jscidx,  jbase1+jscidx,  nsv1  )
+      call zzeksrd (  jbase2+jtcidx,  jbase2+jtcidx,  nt2   )
+      call zzeksrd (  jbase2+jscidx,  jbase2+jscidx,  nsv2  )
 
 !
 !     Set the table count and segment vector count for the output join
 !     row set.
 !
-      NT3  =  NT1  +  NT2
-      NSV3 =  NSV1 *  NSV2
+      nt3  =  nt1  +  nt2
+      nsv3 =  nsv1 *  nsv2
 
-      IF (  ( NT1 .LT. 1 ) .OR. ( NT2 .GT. MXJOIN-1 )  ) THEN
+      if (  ( nt1 .lt. 1 ) .or. ( nt2 .gt. mxjoin-1 )  ) then
 
-         CALL CHKIN  ( 'ZZEKJOIN'                                      )
-         CALL SETMSG ( 'Number tables in first join row set was #; '  // &
+         call chkin  ( 'ZZEKJOIN'                                      )
+         call setmsg ( 'Number tables in first join row set was #; '  // &
                        'valid range is 1:#'                            )
-         CALL ERRINT ( '#',  NT1                                       )
-         CALL ERRINT ( '#',  MXJOIN-1                                  )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                           )
-         CALL CHKOUT ( 'ZZEKJOIN'                                      )
-         RETURN
+         call errint ( '#',  nt1                                       )
+         call errint ( '#',  mxjoin-1                                  )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
+         call chkout ( 'ZZEKJOIN'                                      )
+         return
 
-      ELSE IF (  ( NT2 .LT. 1 ) .OR. ( NT2 .GT. MXJOIN-1 )  ) THEN
+      else if (  ( nt2 .lt. 1 ) .or. ( nt2 .gt. mxjoin-1 )  ) then
 
-         CALL CHKIN  ( 'ZZEKJOIN'                                      )
-         CALL SETMSG ( 'Number tables in second join row set was #; ' // &
+         call chkin  ( 'ZZEKJOIN'                                      )
+         call setmsg ( 'Number tables in second join row set was #; ' // &
                        'valid range is 1:#'                            )
-         CALL ERRINT ( '#',  NT2                                       )
-         CALL ERRINT ( '#',  MXJOIN-1                                  )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                           )
-         CALL CHKOUT ( 'ZZEKJOIN'                                      )
-         RETURN
+         call errint ( '#',  nt2                                       )
+         call errint ( '#',  mxjoin-1                                  )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
+         call chkout ( 'ZZEKJOIN'                                      )
+         return
 
-      ELSE IF ( NT3 .GT. MXJOIN ) THEN
+      else if ( nt3 .gt. mxjoin ) then
 
-         CALL CHKIN  ( 'ZZEKJOIN'                                  )
-         CALL SETMSG ( 'Number of crossed tables was #; valid '  // &
+         call chkin  ( 'ZZEKJOIN'                                  )
+         call setmsg ( 'Number of crossed tables was #; valid '  // &
                        'range is 0:#'                              )
-         CALL ERRINT ( '#',  NT3                                   )
-         CALL ERRINT ( '#',  MXJOIN                                )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-         CALL CHKOUT ( 'ZZEKJOIN'                                  )
-         RETURN
+         call errint ( '#',  nt3                                   )
+         call errint ( '#',  mxjoin                                )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+         call chkout ( 'ZZEKJOIN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Validate cross product indices.  The column indices don't lend
 !     themselves to such a convenient check; we'll check those as we
 !     use them.
 !
-      DO I = 1, NJCNST
+      do i = 1, njcnst
 
-         IF ( ACTIVE(I) ) THEN
+         if ( active(i) ) then
 
-            IF (       ( CPIDX1(I) .LT. 1   ) &
-                  .OR. ( CPIDX1(I) .GT. NT3 )  ) THEN
+            if (       ( cpidx1(i) .lt. 1   ) &
+                  .or. ( cpidx1(i) .gt. nt3 )  ) then
 
-               CALL CHKIN  ( 'ZZEKJOIN'                             )
-               CALL SETMSG ( 'Cross product table index for left ' // &
+               call chkin  ( 'ZZEKJOIN'                             )
+               call setmsg ( 'Cross product table index for left ' // &
                              'hand side of constraint # was #; '   // &
                              'valid range is 1:#'                   )
-               CALL ERRINT ( '#',  I                                )
-               CALL ERRINT ( '#',  CPIDX1(I)                        )
-               CALL ERRINT ( '#',  NT3                              )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                  )
-               CALL CHKOUT ( 'ZZEKJOIN'                             )
-               RETURN
+               call errint ( '#',  i                                )
+               call errint ( '#',  cpidx1(i)                        )
+               call errint ( '#',  nt3                              )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                  )
+               call chkout ( 'ZZEKJOIN'                             )
+               return
 
 
-            ELSE IF (      ( CPIDX2(I) .LT. 1   ) &
-                      .OR. ( CPIDX2(I) .GT. NT3 )  ) THEN
+            else if (      ( cpidx2(i) .lt. 1   ) &
+                      .or. ( cpidx2(i) .gt. nt3 )  ) then
 
-               CALL CHKIN  ( 'ZZEKJOIN'                              )
-               CALL SETMSG ( 'Cross product table index for right ' // &
+               call chkin  ( 'ZZEKJOIN'                              )
+               call setmsg ( 'Cross product table index for right ' // &
                              'hand side of constraint # was #; '    // &
                              'valid range is 1:#'                    )
-               CALL ERRINT ( '#',  I                                 )
-               CALL ERRINT ( '#',  CPIDX2(I)                         )
-               CALL ERRINT ( '#',  NT3                               )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-               CALL CHKOUT ( 'ZZEKJOIN'                              )
-               RETURN
+               call errint ( '#',  i                                 )
+               call errint ( '#',  cpidx2(i)                         )
+               call errint ( '#',  nt3                               )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+               call chkout ( 'ZZEKJOIN'                              )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Form the joint row set control area for output join row set.
@@ -430,87 +430,87 @@
 !     The current stack top is the base address of the output join row
 !     set.
 !
-      CALL ZZEKSTOP ( JBASE3  )
+      call zzekstop ( jbase3  )
 !
 !     Save room for the size and row vector count
 !
-      DO I = 1, 2
-         CALL ZZEKSPSH ( 1, 0 )
-      END DO
+      do i = 1, 2
+         call zzekspsh ( 1, 0 )
+      end do
 
 !
 !     The table count and segment vector count come next.
 !
-      CALL ZZEKSPSH ( 1, NT3  )
-      CALL ZZEKSPSH ( 1, NSV3 )
+      call zzekspsh ( 1, nt3  )
+      call zzekspsh ( 1, nsv3 )
 
 !
 !     Just reserve room for the segment vectors and the segment vector
 !     row set base addresses and counts.
 !
-      NRESV  =  NSV3 * ( NT3 + 2 )
+      nresv  =  nsv3 * ( nt3 + 2 )
 
-      DO I = 1, NRESV
-         CALL ZZEKSPSH ( 1, 0 )
-      END DO
+      do i = 1, nresv
+         call zzekspsh ( 1, 0 )
+      end do
 
 !
 !     Initialize the output segment vector count and the total row
 !     count.
 !
-      S3     =  0
-      NROWS  =  0
+      s3     =  0
+      nrows  =  0
 
 !
 !     For every segment vector in the first join row set,
 !
-      DO S1 = 1, NSV1
+      do s1 = 1, nsv1
 !
 !        Fill in the first NT1 elements of our composite segment vector
 !        with the current segment vector from the first join row set.
 !
-         OFFSET  =  JSVBAS  +  (S1 - 1) * NT1
+         offset  =  jsvbas  +  (s1 - 1) * nt1
 
-         CALL ZZEKSRD ( JBASE1+OFFSET+1, JBASE1+OFFSET+NT1, SEGVEC )
+         call zzeksrd ( jbase1+offset+1, jbase1+offset+nt1, segvec )
 
 !
 !        Get the row set base address and count for this segment vector.
 !
-         OFFSET  =  JSVBAS  +  NSV1*NT1  +  2*( S1 - 1 )  +  1
+         offset  =  jsvbas  +  nsv1*nt1  +  2*( s1 - 1 )  +  1
 
-         CALL ZZEKSRD ( JBASE1+OFFSET,   JBASE1+OFFSET,   RB1 )
-         CALL ZZEKSRD ( JBASE1+OFFSET+1, JBASE1+OFFSET+1, NR1 )
+         call zzeksrd ( jbase1+offset,   jbase1+offset,   rb1 )
+         call zzeksrd ( jbase1+offset+1, jbase1+offset+1, nr1 )
 
 !
 !        For every segment vector in the second join row set,
 !
-         DO S2 = 1, NSV2
+         do s2 = 1, nsv2
 !
 !           Fill in the last NT2 elements of our composite segment
 !           vector with the current segment vector from the second join
 !           row set.
 !
-            OFFSET = JSVBAS  +  (S2 - 1) * NT2
+            offset = jsvbas  +  (s2 - 1) * nt2
 
-            CALL ZZEKSRD ( JBASE2+OFFSET+1, &
-                           JBASE2+OFFSET+NT2, SEGVEC(NT1+1) )
+            call zzeksrd ( jbase2+offset+1, &
+                           jbase2+offset+nt2, segvec(nt1+1) )
 
 !
 !           Write this segment vector to the output join row set.
 !
-            S3      =  S3      +  1
-            SGVBAS  =  JSVBAS  + ( S3 - 1 ) * NT3
+            s3      =  s3      +  1
+            sgvbas  =  jsvbas  + ( s3 - 1 ) * nt3
 
-            CALL ZZEKSUPD ( JBASE3+SGVBAS+1, JBASE3+SGVBAS+NT3, SEGVEC )
+            call zzeksupd ( jbase3+sgvbas+1, jbase3+sgvbas+nt3, segvec )
 
 !
 !           Get the row set base address and count for this segment
 !           vector.
 !
-            OFFSET  =  JSVBAS  +  NSV2*NT2 +  2*( S2 - 1 )  +  1
+            offset  =  jsvbas  +  nsv2*nt2 +  2*( s2 - 1 )  +  1
 
-            CALL ZZEKSRD ( JBASE2+OFFSET,   JBASE2+OFFSET,   RB2 )
-            CALL ZZEKSRD ( JBASE2+OFFSET+1, JBASE2+OFFSET+1, NR2 )
+            call zzeksrd ( jbase2+offset,   jbase2+offset,   rb2 )
+            call zzeksrd ( jbase2+offset+1, jbase2+offset+1, nr2 )
 
 !
 !           It's time to decide which row vectors corresponding to
@@ -524,83 +524,83 @@
 !           the join operation will use the scratch area.
 !
 
-            CALL ZZEKJPRP ( SEGVEC, &
-                            JBASE1,  NT1,     RB1,     NR1, &
-                            JBASE2,  NT2,     RB2,     NR2, &
-                            NJCNST,  ACTIVE, &
-                            CPIDX1,  CLIDX1,  ELTS1, &
-                            OPS, &
-                            CPIDX2,  CLIDX2,  ELTS2, &
-                            STHAN,   STSDSC,  STDTPT,  DTPOOL,  DTDSCS )
+            call zzekjprp ( segvec, &
+                            jbase1,  nt1,     rb1,     nr1, &
+                            jbase2,  nt2,     rb2,     nr2, &
+                            njcnst,  active, &
+                            cpidx1,  clidx1,  elts1, &
+                            ops, &
+                            cpidx2,  clidx2,  elts2, &
+                            sthan,   stsdsc,  stdtpt,  dtpool,  dtdscs )
 
 !
 !           Initialize the row count for the current output segment
 !           vector.  Also set the segment vector row set base address.
 !
-            NR3     =  0
+            nr3     =  0
 
-            CALL ZZEKSTOP ( TOP )
+            call zzekstop ( top )
 
-            RB3     =  TOP     -  JBASE3
-            OFFSET  =  JSVBAS  +  NSV3*NT3  +  ( S3 - 1 ) * 2   +   1
+            rb3     =  top     -  jbase3
+            offset  =  jsvbas  +  nsv3*nt3  +  ( s3 - 1 ) * 2   +   1
 
-            CALL ZZEKSUPD ( JBASE3+OFFSET, JBASE3+OFFSET, RB3 )
+            call zzeksupd ( jbase3+offset, jbase3+offset, rb3 )
 
 !
 !           Fetch the row vectors that satisfy the join constraints.
 !
-            NR3  =  0
-            CALL ZZEKJNXT ( FOUND, ROWVEC )
+            nr3  =  0
+            call zzekjnxt ( found, rowvec )
 
 
-            DO WHILE ( FOUND )
+            do while ( found )
 !
 !              Append the base offset of the parent segment vector
 !              to the row vector.  The base offset is one less than
 !              the base-relative address of the segment vector.
 !
-               NR3                 =   NR3  +  1
-               ROWVEC ( NT3 + 1 )  =   SGVBAS
+               nr3                 =   nr3  +  1
+               rowvec ( nt3 + 1 )  =   sgvbas
 
 !
 !              Add this vector to the output join row set.  Get the
 !              next row vector.
 !
-               CALL ZZEKSPSH ( NT3 + 1, ROWVEC )
-               CALL ZZEKJNXT ( FOUND,   ROWVEC )
+               call zzekspsh ( nt3 + 1, rowvec )
+               call zzekjnxt ( found,   rowvec )
 
-            END DO
+            end do
 
 !
 !           At this point, we've tested every row corresponding to the
 !           current segment vector.  Update the row count for this
 !           segment vector.
 !
-            OFFSET  =  JSVBAS   +  NSV3*NT3  +  ( S3 - 1 ) * 2   +   2
+            offset  =  jsvbas   +  nsv3*nt3  +  ( s3 - 1 ) * 2   +   2
 
-            CALL ZZEKSUPD ( JBASE3+OFFSET, JBASE3+OFFSET, NR3 )
+            call zzeksupd ( jbase3+offset, jbase3+offset, nr3 )
 
 !
 !           Keep the overall row total up to date.
 !
-            NROWS  =  NROWS + NR3
+            nrows  =  nrows + nr3
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Fill in the row count and size values in the output join row
 !     set.
 !
-      CALL ZZEKSTOP ( TOP                                       )
-      CALL ZZEKSUPD ( JBASE3+JSZIDX, JBASE3+JSZIDX, TOP-JBASE3  )
-      CALL ZZEKSUPD ( JBASE3+JRCIDX, JBASE3+JRCIDX, NROWS       )
+      call zzekstop ( top                                       )
+      call zzeksupd ( jbase3+jszidx, jbase3+jszidx, top-jbase3  )
+      call zzeksupd ( jbase3+jrcidx, jbase3+jrcidx, nrows       )
 
 !
 !     We've constructed the output join row set resulting from
 !     joining the input row sets.
 !
 
-      RETURN
-      END
+      return
+      end

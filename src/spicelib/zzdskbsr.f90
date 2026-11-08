@@ -1,16 +1,16 @@
 !$Procedure      ZZDSKBSR ( DSK, buffer segments for readers )
 
-      SUBROUTINE ZZDSKBSR ( FNAME, &
-                            BODYID, &
-                            HANDLE, &
-                            CMPFUN, &
-                            USRCTR, &
-                            UPDATE, &
-                            DLADSC, &
-                            DSKDSC, &
-                            FOUND   )
+      subroutine zzdskbsr ( fname, &
+                            bodyid, &
+                            handle, &
+                            cmpfun, &
+                            usrctr, &
+                            update, &
+                            dladsc, &
+                            dskdsc, &
+                            found   )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -28,33 +28,33 @@
 !
 ! $ Declarations
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'zzctr.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'zzctr.inc'
 
-      CHARACTER*(*)         FNAME
-      INTEGER               BODYID
-      INTEGER               HANDLE
-      LOGICAL               CMPFUN
-      EXTERNAL              CMPFUN
-      INTEGER               USRCTR ( * )
-      LOGICAL               UPDATE
-      INTEGER               DLADSC ( * )
-      DOUBLE PRECISION      DSKDSC ( * )
-      LOGICAL               FOUND
+      character*(*)         fname
+      integer               bodyid
+      integer               handle
+      logical               cmpfun
+      external              cmpfun
+      integer               usrctr ( * )
+      logical               update
+      integer               dladsc ( * )
+      double precision      dskdsc ( * )
+      logical               found
 
 
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE =  5000 )
+      integer               ftsize
+      parameter           ( ftsize =  5000 )
 
-      INTEGER               BTSIZE
-      PARAMETER           ( BTSIZE =  100 )
+      integer               btsize
+      parameter           ( btsize =  100 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL =   -5 )
+      integer               lbpool
+      parameter           ( lbpool =   -5 )
 
-      INTEGER               STSIZE
-      PARAMETER           ( STSIZE = 10000 )
+      integer               stsize
+      parameter           ( stsize = 10000 )
 
 ! $ Brief_I/O
 !
@@ -255,27 +255,27 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
-      INTEGER               ISRCHI
-      INTEGER               LNKNFN
-      INTEGER               LNKNXT
-      INTEGER               LNKPRV
+      integer               intmax
+      integer               isrchi
+      integer               lnknfn
+      integer               lnknxt
+      integer               lnkprv
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 
 
-      INTEGER               SLEN
-      PARAMETER           ( SLEN   = 40 )
+      integer               slen
+      parameter           ( slen   = 40 )
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  = 1 )
+      integer               forwrd
+      parameter           ( forwrd  = 1 )
 
 !
 !     Local variables
@@ -284,7 +284,7 @@
 !
 !     DSK loaded kernel set state change counter:
 !
-      INTEGER               DSKCTR ( CTRSIZ )
+      integer               dskctr ( ctrsiz )
 
 !
 !     The file table contains the handle and file number of each file
@@ -312,11 +312,11 @@
 !     removed, succeeding files are moved forward to take up the
 !     slack. This keeps the table ordered by file number.
 !
-      INTEGER               NFT
-      INTEGER               FTHAN    ( FTSIZE )
-      INTEGER               FTNUM    ( FTSIZE )
-      INTEGER               NEXT
-      INTEGER               FINDEX
+      integer               nft
+      integer               fthan    ( ftsize )
+      integer               ftnum    ( ftsize )
+      integer               next
+      integer               findex
 
 !
 !     The body table contains the beginning of the list of the stored
@@ -342,13 +342,13 @@
 !     are removed, the last body is moved forward to take up the
 !     slack. This keeps the entries in the table contiguous.
 !
-      INTEGER               BINDEX
-      INTEGER               BTBEG    ( BTSIZE )
-      INTEGER               BTEXP    ( BTSIZE )
-      INTEGER               BTHFS    ( BTSIZE )
-      INTEGER               BTBOD    ( BTSIZE )
-      INTEGER               BTLFS    ( BTSIZE )
-      INTEGER               NBT
+      integer               bindex
+      integer               btbeg    ( btsize )
+      integer               btexp    ( btsize )
+      integer               bthfs    ( btsize )
+      integer               btbod    ( btsize )
+      integer               btlfs    ( btsize )
+      integer               nbt
 
 !
 !     The segment table contains the handle, descriptor, and identifier
@@ -374,101 +374,101 @@
 !     entry point ZZDSKSNS.
 !
 
-      DOUBLE PRECISION      STDSKD  ( DSKDSZ,     STSIZE )
+      double precision      stdskd  ( dskdsz,     stsize )
 
-      INTEGER               STHAN   (             STSIZE )
-      INTEGER               STDLAD  ( DLADSZ,     STSIZE )
-      INTEGER               STPOOL ( 2,  LBPOOL : STSIZE )
+      integer               sthan   (             stsize )
+      integer               stdlad  ( dladsz,     stsize )
+      integer               stpool ( 2,  lbpool : stsize )
 
 !
 !     Other local variables
 !
-      CHARACTER*(SLEN)      DOING
-      CHARACTER*(SLEN)      STACK    ( 2 )
-      CHARACTER*(SLEN)      STATUS
-      CHARACTER*(SLEN)      URGENT
+      character*(slen)      doing
+      character*(slen)      stack    ( 2 )
+      character*(slen)      status
+      character*(slen)      urgent
 
-      DOUBLE PRECISION      DSKLDS ( DSKDSZ )
+      double precision      dsklds ( dskdsz )
 
 
-      INTEGER               CHEAP
-      INTEGER               COST
-      INTEGER               DLALDS ( DLADSZ )
-      INTEGER               DLANXT ( DLADSZ )
-      INTEGER               DLAPRV ( DLADSZ )
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               J
-      INTEGER               MINEXP
-      INTEGER               NEW
-      INTEGER               NODE
-      INTEGER               NXTSEG
-      INTEGER               P
-      INTEGER               PRVNOD
-      INTEGER               SAVEP
-      INTEGER               SVBODY
-      INTEGER               TAIL
-      INTEGER               TOP
-      LOGICAL               BEGSCH
-      LOGICAL               FND
-      LOGICAL               PASS1
+      integer               cheap
+      integer               cost
+      integer               dlalds ( dladsz )
+      integer               dlanxt ( dladsz )
+      integer               dlaprv ( dladsz )
+      integer               head
+      integer               i
+      integer               j
+      integer               minexp
+      integer               new
+      integer               node
+      integer               nxtseg
+      integer               p
+      integer               prvnod
+      integer               savep
+      integer               svbody
+      integer               tail
+      integer               top
+      logical               begsch
+      logical               fnd
+      logical               pass1
 
 !
 !     Saved variables
 !
-      SAVE                  BEGSCH
-      SAVE                  FINDEX
-      SAVE                  FND
-      SAVE                  FTHAN
-      SAVE                  FTNUM
-      SAVE                  BINDEX
-      SAVE                  BTBEG
-      SAVE                  BTEXP
-      SAVE                  BTHFS
-      SAVE                  BTBOD
-      SAVE                  BTLFS
-      SAVE                  DSKCTR
-      SAVE                  NEXT
-      SAVE                  NFT
-      SAVE                  NBT
-      SAVE                  PASS1
-      SAVE                  SAVEP
-      SAVE                  SVBODY
-      SAVE                  STATUS
-      SAVE                  STDLAD
-      SAVE                  STDSKD
-      SAVE                  STHAN
-      SAVE                  STPOOL
-      SAVE                  TOP
+      save                  begsch
+      save                  findex
+      save                  fnd
+      save                  fthan
+      save                  ftnum
+      save                  bindex
+      save                  btbeg
+      save                  btexp
+      save                  bthfs
+      save                  btbod
+      save                  btlfs
+      save                  dskctr
+      save                  next
+      save                  nft
+      save                  nbt
+      save                  pass1
+      save                  savep
+      save                  svbody
+      save                  status
+      save                  stdlad
+      save                  stdskd
+      save                  sthan
+      save                  stpool
+      save                  top
 
 !
 !     Initial values
 !
-      DATA                  NFT       / 0             /
-      DATA                  NBT       / 0             /
-      DATA                  NEXT      / 0             /
-      DATA                  PASS1     / .TRUE.        /
-      DATA                  SAVEP     / 0             /
-      DATA                  STATUS    / 'BOGUS ENTRY' /
+      data                  nft       / 0             /
+      data                  nbt       / 0             /
+      data                  next      / 0             /
+      data                  pass1     / .true.        /
+      data                  savep     / 0             /
+      data                  status    / 'BOGUS ENTRY' /
 
 
 !
 !     Nobody has any business calling ZZDSKBSR directly.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZDSKBSR' )
-      CALL SIGERR ( 'SPICE(DSKBOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZDSKBSR' )
+      call chkin  ( 'ZZDSKBSR' )
+      call sigerr ( 'SPICE(DSKBOGUSENTRY)' )
+      call chkout ( 'ZZDSKBSR' )
 
-      RETURN
+      return
 
 
 !$Procedure ZZDSKLSF ( DSK, load shape file )
 
-      ENTRY ZZDSKLSF ( FNAME, HANDLE )
+      entry zzdsklsf ( fname, handle )
 
 ! $ Abstract
 !
@@ -608,91 +608,91 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKLSF' )
+      call chkin ( 'ZZDSKLSF' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize the BSR counter.
 !
-         CALL ZZCTRSIN ( DSKCTR )
+         call zzctrsin ( dskctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Increment the BSR counter regardless of whether
 !     the load operation is successful.
 !
-      CALL ZZCTRINC ( DSKCTR )
+      call zzctrinc ( dskctr )
 
 !
 !     Don't allow a search to continue after loading a file; a new
 !     search should be re-started.
 !
-      STATUS = 'BOGUS ENTRY'
+      status = 'BOGUS ENTRY'
 
 !
 !     Nothing works unless at least one file has been loaded, so
 !     this is as good a place as any to initialize the free list
 !     whenever the body table is empty.
 !
-      IF ( NBT .EQ. 0 ) THEN
-         CALL LNKINI ( STSIZE, STPOOL )
-      END IF
+      if ( nbt .eq. 0 ) then
+         call lnkini ( stsize, stpool )
+      end if
 
 !
 !     To load a new file, first try to open it for reading.
 !
-      CALL DASOPR ( FNAME, HANDLE )
+      call dasopr ( fname, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZDSKLSF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZDSKLSF' )
+         return
+      end if
 
 !
 !     Determine if the file is already in the table.
 !
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .GT. 0 ) THEN
+      if ( findex .gt. 0 ) then
 !
 !        The last call we made to DASOPR added another DAS link to
 !        the DSK file.  Remove this link.
 !
-         CALL DASCLS ( HANDLE )
+         call dascls ( handle )
 
 !
 !        Handle is already in the table.  Remove it.
 !
-         NFT = NFT - 1
+         nft = nft - 1
 
-         DO I = FINDEX, NFT
-            FTHAN( I ) = FTHAN( I + 1 )
-            FTNUM( I ) = FTNUM( I + 1 )
-         END DO
+         do i = findex, nft
+            fthan( i ) = fthan( i + 1 )
+            ftnum( i ) = ftnum( i + 1 )
+         end do
 
 !
 !        Unlink any segments that came from this file.
 !
-         I = 1
+         i = 1
 
-         DO WHILE ( I .LE. NBT )
+         do while ( i .le. nbt )
 
-            P = BTBEG( I )
+            p = btbeg( i )
 
-            DO WHILE ( P .GT. 0 )
+            do while ( p .gt. 0 )
 !
 !              Find the successor of P, if any.
 !
-               NXTSEG = LNKNXT ( P, STPOOL )
+               nxtseg = lnknxt ( p, stpool )
 
-               IF ( STHAN( P ) .EQ. HANDLE ) THEN
+               if ( sthan( p ) .eq. handle ) then
 !
 !                 The segment corresponding to node P came from
 !                 the file we're unloading.  Delete the node for
@@ -700,19 +700,19 @@
 !                 to be the head node for body I's segment list,
 !                 make the successor of P the head of the list.
 !
-                  CALL LNKFSL ( P, P, STPOOL )
+                  call lnkfsl ( p, p, stpool )
 
-                  IF ( P .EQ. BTBEG(I) ) THEN
-                     BTBEG( I ) = NXTSEG
-                  END IF
+                  if ( p .eq. btbeg(i) ) then
+                     btbeg( i ) = nxtseg
+                  end if
 
-               END IF
+               end if
 !
 !              Update P.
 !
-               P = NXTSEG
+               p = nxtseg
 
-            END DO
+            end do
 
 !
 !           If the list for this body is now empty, shorten the
@@ -720,46 +720,46 @@
 !           body in the table into the space occupied by the
 !           one we've deleted.
 !
-            IF ( BTBEG( I ) .LE. 0 ) THEN
+            if ( btbeg( i ) .le. 0 ) then
 
-               BTBOD( I ) = BTBOD( NBT )
-               BTEXP( I ) = BTEXP( NBT )
-               BTHFS( I ) = BTHFS( NBT )
-               BTLFS( I ) = BTLFS( NBT )
-               BTBEG( I ) = BTBEG( NBT )
+               btbod( i ) = btbod( nbt )
+               btexp( i ) = btexp( nbt )
+               bthfs( i ) = bthfs( nbt )
+               btlfs( i ) = btlfs( nbt )
+               btbeg( i ) = btbeg( nbt )
 
-               NBT = NBT - 1
+               nbt = nbt - 1
 
-            ELSE
+            else
 
-               I = I + 1
+               i = i + 1
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      ELSE
+      else
 !
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         IF ( NFT .EQ. FTSIZE ) THEN
+         if ( nft .eq. ftsize ) then
 
-            CALL DASCLS ( HANDLE )
+            call dascls ( handle )
 
-            CALL SETMSG ( 'Number of files loaded is at a maximum, ' // &
+            call setmsg ( 'Number of files loaded is at a maximum, ' // &
                           'as specified by the parameter FTSIZE, '   // &
                           'the value of which is #. You will need '  // &
                           'to load fewer files. Consider unloading ' // &
                           'any files that are not needed.'            )
-            CALL ERRINT ( '#', FTSIZE                                 )
-            CALL SIGERR ( 'SPICE(DSKTOOMANYFILES)'                    )
-            CALL CHKOUT ( 'ZZDSKLSF'                                  )
-            RETURN
+            call errint ( '#', ftsize                                 )
+            call sigerr ( 'SPICE(DSKTOOMANYFILES)'                    )
+            call chkout ( 'ZZDSKLSF'                                  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Determine the next file number.
@@ -768,11 +768,11 @@
 !     It should be tested by temporarily setting the comparison
 !     value to a smaller number, for example 2*FTSIZE.
 !
-      IF ( NEXT .LT. INTMAX()-1 ) THEN
+      if ( next .lt. intmax()-1 ) then
 
-         NEXT = NEXT + 1
+         next = next + 1
 
-      ELSE
+      else
 !
 !        The user is to be congratulated:  we've run out of file
 !        numbers.
@@ -785,11 +785,11 @@
 !        Set any body table entries that are lower than FTNUM(1)
 !        to zero.
 !
-         DO I = 1, NBT
+         do i = 1, nbt
 !
 !           Re-map the HFS table for the Ith body.
 !
-            J = ISRCHI ( BTHFS(I), NFT, FTNUM )
+            j = isrchi ( bthfs(i), nft, ftnum )
 
 !
 !           Either the highest file searched for body I is the Jth
@@ -797,7 +797,7 @@
 !           In both cases, J is the correct value to assign to
 !           BTHFS(I).
 !
-            BTHFS(I) = J
+            bthfs(i) = j
 
 !
 !           When the highest file searched for body I is not in the
@@ -807,16 +807,16 @@
 !
 !           Re-map the LFS table for the Ith body.
 !
-            J = ISRCHI ( BTLFS(I), NFT, FTNUM )
+            j = isrchi ( btlfs(i), nft, ftnum )
 
-            IF ( J .GT. 0 ) THEN
+            if ( j .gt. 0 ) then
 !
 !              The lowest file searched for body I is the Jth file
 !              in the file table.
 !
-               BTLFS(I) = J
+               btlfs(i) = j
 
-            ELSE
+            else
 !
 !              The lowest file searched for body I is not in the
 !              file table.  This occurs when the lowest file searched
@@ -824,45 +824,45 @@
 !              highest file searched to force reconstruction of the
 !              list.
 !
-               BTLFS(I) = 0
-               BTHFS(I) = 0
+               btlfs(i) = 0
+               bthfs(i) = 0
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        Re-map the file number table itself.
 !
-         DO I = 1, NFT
+         do i = 1, nft
 
-            FTNUM(I) = I
+            ftnum(i) = i
 
-         END DO
+         end do
 
 !
 !        Assign a new file number.
 !
-         NEXT = NFT + 1
+         next = nft + 1
 
-      END IF
+      end if
 
 !
 !     Now add this file to file table.
 !
-      NFT        = NFT  + 1
-      FTHAN(NFT) = HANDLE
-      FTNUM(NFT) = NEXT
+      nft        = nft  + 1
+      fthan(nft) = handle
+      ftnum(nft) = next
 
-      CALL CHKOUT ( 'ZZDSKLSF' )
-      RETURN
+      call chkout ( 'ZZDSKLSF' )
+      return
 
 
 
 
 !$Procedure ZZDSKUSF ( DSK, Unload shape file )
 
-      ENTRY ZZDSKUSF ( HANDLE )
+      entry zzdskusf ( handle )
 
 ! $ Abstract
 !
@@ -972,34 +972,34 @@
 !     None.
 !
 !-&
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKUSF' )
+      call chkin ( 'ZZDSKUSF' )
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize the BSR counter.
 !
-         CALL ZZCTRSIN ( DSKCTR )
+         call zzctrsin ( dskctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Increment the BSR counter regardless of whether
 !     the load operation is successful.
 !
-      CALL ZZCTRINC ( DSKCTR )
+      call zzctrinc ( dskctr )
 
 
 !
 !     Don't allow a search to continue after unloading a file; a new
 !     search should be re-started.
 !
-      STATUS = 'BOGUS ENTRY'
+      status = 'BOGUS ENTRY'
 
 !
 !     All of the stored segments from the file must be removed
@@ -1008,57 +1008,57 @@
 !
 !     Don't do anything if the given handle is not in the file table.
 !
-      FINDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+      findex = isrchi ( handle, nft, fthan )
 
-      IF ( FINDEX .EQ. 0 ) THEN
-         CALL CHKOUT ( 'ZZDSKUSF' )
-         RETURN
-      END IF
+      if ( findex .eq. 0 ) then
+         call chkout ( 'ZZDSKUSF' )
+         return
+      end if
 !
 !
 !     First get rid of the entry in the file table. Close the file
 !     before wiping out the handle.
 !
-      CALL DASCLS ( FTHAN(FINDEX) )
+      call dascls ( fthan(findex) )
 
 
-      NFT = NFT - 1
+      nft = nft - 1
 
-      DO I = FINDEX, NFT
-         FTHAN( I ) = FTHAN( I + 1 )
-         FTNUM( I ) = FTNUM( I + 1 )
-      END DO
+      do i = findex, nft
+         fthan( i ) = fthan( i + 1 )
+         ftnum( i ) = ftnum( i + 1 )
+      end do
 
 !
 !     Check each body list individually. Note that the first
 !     node on each list, having no predecessor, must be handled
 !     specially.
 !
-      I = 1
+      i = 1
 
-      DO WHILE ( I .LE. NBT )
+      do while ( i .le. nbt )
 
-         P = BTBEG( I )
+         p = btbeg( i )
 
-         DO WHILE ( P .GT. 0 )
+         do while ( p .gt. 0 )
 
-            NXTSEG = LNKNXT ( P, STPOOL )
+            nxtseg = lnknxt ( p, stpool )
 
-            IF ( STHAN(P) .EQ. HANDLE ) THEN
+            if ( sthan(p) .eq. handle ) then
 
-               IF ( P .EQ. BTBEG(I) ) THEN
-                  BTBEG( I ) = NXTSEG
-               END IF
+               if ( p .eq. btbeg(i) ) then
+                  btbeg( i ) = nxtseg
+               end if
 !
 !              Free this segment table entry.
 !
-               CALL LNKFSL ( P, P, STPOOL )
+               call lnkfsl ( p, p, stpool )
 
-            END IF
+            end if
 
-            P = NXTSEG
+            p = nxtseg
 
-         END DO
+         end do
 
 !
 !        If the list for this body is now empty, shorten the
@@ -1066,38 +1066,38 @@
 !        body in the table into the space occupied by the
 !        one we've deleted.
 !
-         IF ( BTBEG(I) .LE. 0 ) THEN
+         if ( btbeg(i) .le. 0 ) then
 
-            IF ( I .NE. NBT ) THEN
+            if ( i .ne. nbt ) then
 
-               BTBOD (I) = BTBOD (NBT)
-               BTEXP (I) = BTEXP (NBT)
-               BTHFS (I) = BTHFS (NBT)
-               BTLFS (I) = BTLFS (NBT)
-               BTBEG (I) = BTBEG (NBT)
+               btbod (i) = btbod (nbt)
+               btexp (i) = btexp (nbt)
+               bthfs (i) = bthfs (nbt)
+               btlfs (i) = btlfs (nbt)
+               btbeg (i) = btbeg (nbt)
 
-            END IF
+            end if
 
-            NBT = NBT - 1
+            nbt = nbt - 1
 
-         ELSE
+         else
 
-            I = I + 1
+            i = i + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZDSKUSF' )
-      RETURN
+      call chkout ( 'ZZDSKUSF' )
+      return
 
 
 
 
 !$Procedure ZZDSKBSS ( DSK, begin search for segment )
 
-      ENTRY ZZDSKBSS ( BODYID )
+      entry zzdskbss ( bodyid )
 
 ! $ Abstract
 !
@@ -1219,80 +1219,80 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKBSS' )
+      call chkin ( 'ZZDSKBSS' )
 
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize the BSR counter.
 !
-         CALL ZZCTRSIN ( DSKCTR )
+         call zzctrsin ( dskctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 
 !
 !     Make a saved copy of the body ID code.
 !
-      SVBODY = BODYID
+      svbody = bodyid
 
 !
 !     There must be at least one file loaded.
 !
-      IF ( NFT .EQ. 0 ) THEN
+      if ( nft .eq. 0 ) then
 
-         CALL SETMSG ( 'At least one DSK file must have been loaded ' &
+         call setmsg ( 'At least one DSK file must have been loaded ' &
          //            'by ZZDSKLSF before a search can be started.' )
-         CALL SIGERR ( 'SPICE(NOLOADEDDSKFILES)'                     )
-         CALL CHKOUT ( 'ZZDSKBSS'                                    )
-         RETURN
+         call sigerr ( 'SPICE(NOLOADEDDSKFILES)'                     )
+         call chkout ( 'ZZDSKBSS'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     The stack of suspended tasks is empty.
 !
-      TOP = 0
+      top = 0
 
 !
 !     Is the body already in the body table?  The answer
 !     determines what the first task for ZZDSKSNS will be.
 !
-      BINDEX = ISRCHI ( SVBODY, NBT, BTBOD )
+      bindex = isrchi ( svbody, nbt, btbod )
 
 
-      IF ( BINDEX .EQ. 0 ) THEN
+      if ( bindex .eq. 0 ) then
 
-         STATUS = 'NEW BODY'
+         status = 'NEW BODY'
 
-      ELSE
+      else
 !
 !        Set the status so that ZZDSKSNS will determine whether to check
 !        the segment list or search new files.
 !
-         STATUS = '?'
+         status = '?'
 
-      END IF
+      end if
 
 !
 !     The saved segment list pointer is no longer valid.
 !
-      SAVEP  = -1
+      savep  = -1
 
-      CALL CHKOUT ( 'ZZDSKBSS' )
-      RETURN
+      call chkout ( 'ZZDSKBSS' )
+      return
 
 
 
 !$Procedure ZZDSKSNS ( DSK, Select next segment )
 
-      ENTRY ZZDSKSNS ( CMPFUN, HANDLE, DLADSC, DSKDSC, FOUND )
+      entry zzdsksns ( cmpfun, handle, dladsc, dskdsc, found )
 
 ! $ Abstract
 !
@@ -1477,33 +1477,33 @@
 !
 !     Nothing's been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKSNS' )
+      call chkin ( 'ZZDSKSNS' )
 
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize the BSR counter.
 !
-         CALL ZZCTRSIN ( DSKCTR )
+         call zzctrsin ( dskctr )
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Initialize the segment list pointer to the saved value from
 !     the previous pass through this routine, if any.
 !
-      P = SAVEP
+      p = savep
 
 !
 !     ZZDSKSNS buffers segment descriptors and identifiers, to
@@ -1652,23 +1652,23 @@
 !        error will be signaled.
 !
 
-      IF ( STATUS .EQ. 'BOGUS ENTRY' )  THEN
+      if ( status .eq. 'BOGUS ENTRY' )  then
 
-         CALL SETMSG ( 'Must begin a search by calling ZZDSKBSS ' &
+         call setmsg ( 'Must begin a search by calling ZZDSKBSS ' &
          //            'first.'                                   )
-         CALL SIGERR ( 'SPICE(CALLZZDSKBSSFIRST)'                 )
-         CALL CHKOUT ( 'ZZDSKSNS'                                 )
-         RETURN
+         call sigerr ( 'SPICE(CALLZZDSKBSSFIRST)'                 )
+         call chkout ( 'ZZDSKSNS'                                 )
+         return
 
-      END IF
+      end if
 
 
-      DO WHILE ( STATUS .NE. 'HOPELESS' )
+      do while ( status .ne. 'HOPELESS' )
 !
 !        If new files have been added, they have to be searched.
 !        Otherwise, go right to the list of stored segments.
 !
-         IF ( STATUS .EQ. '?' ) THEN
+         if ( status .eq. '?' ) then
 !
 !           There are two ways to get to this point.
 !
@@ -1679,30 +1679,30 @@
 !               a new file.
 !
 
-            IF ( BTHFS( BINDEX ) .LT. FTNUM( NFT ) ) THEN
+            if ( bthfs( bindex ) .lt. ftnum( nft ) ) then
 
-               STATUS = 'NEW FILES'
+               status = 'NEW FILES'
 
-            ELSE
+            else
 
 !              If the segment list for this body is empty, make
 !              sure the expense is set to 0.
 !
-               IF ( BTBEG(BINDEX) .LE. 0 ) THEN
-                  BTEXP(BINDEX) = 0
-               END IF
+               if ( btbeg(bindex) .le. 0 ) then
+                  btexp(bindex) = 0
+               end if
 
 !
 !              Prepare to look at the first segment in the list for
 !              this body.
 !
-               P      =  BTBEG( BINDEX )
-               STATUS = 'CHECK LIST'
+               p      =  btbeg( bindex )
+               status = 'CHECK LIST'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATUS .EQ. 'NEW BODY' ) THEN
+         else if ( status .eq. 'NEW BODY' ) then
 !
 !           New bodies are added to the end of the body
 !           table. If the table is full, one of the current occupants
@@ -1724,65 +1724,65 @@
 !           However, trying to handle this special case there was
 !           just more trouble than it was worth.
 !
-            IF ( NBT .LT. BTSIZE ) THEN
+            if ( nbt .lt. btsize ) then
 !
 !              If the body table isn't full, the cheapest place is
 !              just the next unused row of the table.
 !
-               NBT   = NBT + 1
-               CHEAP = NBT
+               nbt   = nbt + 1
+               cheap = nbt
 
-            ELSE
+            else
 !
 !              The body table is full.  Find the least
 !              expensive body in the table and remove it.
 !
-               CHEAP  = 1
-               MINEXP = BTEXP(1)
+               cheap  = 1
+               minexp = btexp(1)
 
-               DO I = 2, NBT
+               do i = 2, nbt
 
-                  IF ( BTEXP(I) .LT. MINEXP ) THEN
-                     CHEAP  = I
-                     MINEXP = BTEXP(I)
-                  END IF
+                  if ( btexp(i) .lt. minexp ) then
+                     cheap  = i
+                     minexp = btexp(i)
+                  end if
 
-               END DO
+               end do
 
 !
 !              If there are any segments associated with the
 !              least expensive body, we put them back on the free
 !              list.
 !
-               HEAD = BTBEG(CHEAP)
+               head = btbeg(cheap)
 
-               IF ( HEAD .GT. 0 ) THEN
+               if ( head .gt. 0 ) then
 
-                  TAIL =  - LNKPRV ( HEAD, STPOOL )
-                  CALL LNKFSL ( HEAD, TAIL, STPOOL )
+                  tail =  - lnkprv ( head, stpool )
+                  call lnkfsl ( head, tail, stpool )
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Set up a table entry for the new body.
 !
-            BTBOD (CHEAP) = SVBODY
-            BTEXP (CHEAP) = 0
-            BTHFS (CHEAP) = FTNUM(NFT)
-            BTLFS (CHEAP) = FTNUM(NFT) + 1
-            BTBEG (CHEAP) = 0
-            BINDEX        = CHEAP
+            btbod (cheap) = svbody
+            btexp (cheap) = 0
+            bthfs (cheap) = ftnum(nft)
+            btlfs (cheap) = ftnum(nft) + 1
+            btbeg (cheap) = 0
+            bindex        = cheap
 
 !
 !           Now search all of the files for segments relating to
 !           this body.
 !
-            STATUS = 'OLD FILES'
+            status = 'OLD FILES'
 
 
-         ELSE IF ( STATUS .EQ. 'NEW FILES' ) THEN
+         else if ( status .eq. 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
 !           order, beginning with the oldest new file not yet searched.
@@ -1800,37 +1800,37 @@
 !           Find the next file to search; set FINDEX to the
 !           corresponding file table entry.
 
-            FINDEX = 1
+            findex = 1
 
-            DO WHILE ( BTHFS(BINDEX) .GE. FTNUM(FINDEX) )
+            do while ( bthfs(bindex) .ge. ftnum(findex) )
 
-               FINDEX = FINDEX + 1
+               findex = findex + 1
 
-            END DO
+            end do
 
-            BTHFS( BINDEX ) = FTNUM( FINDEX )
+            bthfs( bindex ) = ftnum( findex )
 
 !
 !           Start a forward search through the current file.
 !
-            BEGSCH = .TRUE.
-            CALL DLABFS (  FTHAN( FINDEX ),  DLALDS,  FND  )
+            begsch = .true.
+            call dlabfs (  fthan( findex ),  dlalds,  fnd  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDSKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDSKSNS' )
+               return
+            end if
 
-            STATUS = 'NEW SEGMENTS'
+            status = 'NEW SEGMENTS'
 
 !
 !           The cost of the list contributed by the new file is
 !           zero so far.
 !
-            COST   = 0
+            cost   = 0
 
 
-         ELSE IF ( STATUS .EQ. 'NEW SEGMENTS' ) THEN
+         else if ( status .eq. 'NEW SEGMENTS' ) then
 !
 !           New files are searched in forward order. Segments, when
 !           found, are inserted at the front of the list.
@@ -1847,66 +1847,66 @@
 !               3) Enter from the RESUME state after adding a segment
 !                  to the front of the list for the current body.
 !
-            IF ( BEGSCH ) THEN
+            if ( begsch ) then
 !
 !              We already have a FND value, and if FND is true, a
 !              DLA descriptor.
 !
-               BEGSCH = .FALSE.
+               begsch = .false.
 
-            ELSE
+            else
 !
 !              Use the current DLA descriptor to look up the next one.
 !
-               CALL DLAFNS ( FTHAN(FINDEX), DLALDS, DLANXT, FND )
+               call dlafns ( fthan(findex), dlalds, dlanxt, fnd )
 
-               IF ( FND ) THEN
-                  CALL MOVEI  ( DLANXT, DLADSZ, DLALDS )
-               END IF
+               if ( fnd ) then
+                  call movei  ( dlanxt, dladsz, dlalds )
+               end if
 
-            END IF
+            end if
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDSKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDSKSNS' )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 !
 !              We're out of segments in the current file.  Decide
 !              whether we need to examine another new file, or
 !              whether we're ready to check the list.
 !
-               STATUS = '?'
-               BTEXP( BINDEX ) = BTEXP( BINDEX ) + COST
+               status = '?'
+               btexp( bindex ) = btexp( bindex ) + cost
 
-            ELSE
+            else
 !
 !              Get the DSK segment descriptor for the current
 !              segment.
 !
-               CALL DSKGD( FTHAN(FINDEX), DLALDS, DSKLDS )
+               call dskgd( fthan(findex), dlalds, dsklds )
 
-               IF (  NINT( DSKLDS(CTRIDX) ) .EQ. SVBODY ) THEN
+               if (  nint( dsklds(ctridx) ) .eq. svbody ) then
 !
 !                 The segment is for the body of interest. Add this
 !                 segment to the front of the list.
 !
-                  DOING  = 'NEW SEGMENTS'
-                  URGENT = 'ADD TO FRONT'
-                  STATUS = 'SUSPEND'
+                  doing  = 'NEW SEGMENTS'
+                  urgent = 'ADD TO FRONT'
+                  status = 'SUSPEND'
 
-               END IF
+               end if
 
-               COST = COST + 1
+               cost = cost + 1
 
-            END IF
+            end if
 !
 !           If we haven't reset the status, we'll return for another
 !           'NEW SEGMENTS' pass.
 !
 
-         ELSE IF ( STATUS .EQ. 'OLD FILES' ) THEN
+         else if ( status .eq. 'OLD FILES' ) then
 !
 !           When old files must be searched (because the segments in
 !           the list are inadequate), they should be searched in
@@ -1927,21 +1927,21 @@
 !              this body, didn't find an applicable segment and
 !              have some files left that have not been searched.
 
-            FINDEX = NFT
+            findex = nft
 
-            DO WHILE ( BTLFS( BINDEX ) .LE. FTNUM( FINDEX ) )
-               FINDEX = FINDEX - 1
-            END DO
+            do while ( btlfs( bindex ) .le. ftnum( findex ) )
+               findex = findex - 1
+            end do
 
-            BEGSCH = .TRUE.
-            CALL DLABBS (  FTHAN( FINDEX ),  DLALDS,  FND )
+            begsch = .true.
+            call dlabbs (  fthan( findex ),  dlalds,  fnd )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDSKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDSKSNS' )
+               return
+            end if
 
-            STATUS = 'OLD SEGMENTS'
+            status = 'OLD SEGMENTS'
 
 !
 !           The next thing we'll do is search through all the segments
@@ -1949,7 +1949,7 @@
 !           The cost of the list contributed by the current file is
 !           zero so far.
 !
-            COST = 0
+            cost = 0
 
 !
 !        Old files are searched in backward order. Segments, when
@@ -1958,78 +1958,78 @@
 !        Each segment examined, whether applicable or not, adds to
 !        the expense of the list.
 !
-         ELSE IF ( STATUS .EQ. 'OLD SEGMENTS' ) THEN
+         else if ( status .eq. 'OLD SEGMENTS' ) then
 !
 !           There is only one way to get here---from the
 !           block 'OLD FILES'.  Note we do not add to the
 !           expense of the list for this body until we've
 !           completely searched this file.
 !
-            IF ( BEGSCH ) THEN
+            if ( begsch ) then
 !
 !              We already have a value of FND, and if FND is true,
 !              a DLA segment from the current file.
 !
-               BEGSCH = .FALSE.
+               begsch = .false.
 
-            ELSE
+            else
 !
 !              Look up the previous segment from this file.
 !
-               CALL DLAFPS ( FTHAN(FINDEX), DLALDS, DLAPRV, FND )
+               call dlafps ( fthan(findex), dlalds, dlaprv, fnd )
 
-               IF ( FND ) THEN
+               if ( fnd ) then
 
-                  CALL MOVEI ( DLAPRV, DLADSZ, DLALDS )
+                  call movei ( dlaprv, dladsz, dlalds )
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZDSKSNS' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZDSKSNS' )
+               return
+            end if
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 !
 !              All of the segments in this file have been exhausted.
 !              Change the lowest file searched indicator for this
 !              body to be the current file, and go check the
 !              current list.
 !
-               BTLFS( BINDEX ) =  FTNUM( FINDEX )
-               BTEXP( BINDEX ) =  BTEXP( BINDEX ) + COST
-               P               =  BTBEG( BINDEX )
-               STATUS          = 'CHECK LIST'
+               btlfs( bindex ) =  ftnum( findex )
+               btexp( bindex ) =  btexp( bindex ) + cost
+               p               =  btbeg( bindex )
+               status          = 'CHECK LIST'
 
-            ELSE
+            else
 !
 !              Get the DSK descriptor for this segment.
 !
-               CALL DSKGD ( FTHAN(FINDEX), DLALDS, DSKLDS )
+               call dskgd ( fthan(findex), dlalds, dsklds )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDSKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDSKSNS' )
+                  return
+               end if
 
-               IF (  NINT( DSKLDS(CTRIDX) )  .EQ.  SVBODY  ) THEN
+               if (  nint( dsklds(ctridx) )  .eq.  svbody  ) then
 !
 !                 This is a segment for the body of interest.
 !
-                  DOING  = 'OLD SEGMENTS'
-                  URGENT = 'ADD TO END'
-                  STATUS = 'SUSPEND'
+                  doing  = 'OLD SEGMENTS'
+                  urgent = 'ADD TO END'
+                  status = 'SUSPEND'
 
-               END IF
+               end if
 
-               COST = COST + 1
+               cost = cost + 1
 
-            END IF
+            end if
 
-         ELSE IF ( STATUS .EQ. 'CHECK LIST' ) THEN
+         else if ( status .eq. 'CHECK LIST' ) then
 !
 !           Okay, all the new files (and maybe an old file or two)
 !           have been searched. Time to look at the list of segments
@@ -2052,36 +2052,36 @@
 !           the segment doesn't have it.
 !
 !
-            DO WHILE ( P .GT. 0 )
+            do while ( p .gt. 0 )
 
-               IF ( CMPFUN( STHAN(P), STDLAD(1,P), STDSKD(1,P) )  ) THEN
+               if ( cmpfun( sthan(p), stdlad(1,p), stdskd(1,p) )  ) then
 
-                  CALL MOVEI ( STDLAD(1,P), DLADSZ, DLADSC )
+                  call movei ( stdlad(1,p), dladsz, dladsc )
 
-                  CALL MOVED ( STDSKD(1,P), DSKDSZ, DSKDSC )
+                  call moved ( stdskd(1,p), dskdsz, dskdsc )
 
-                  HANDLE =  STHAN ( P )
-                  FOUND  = .TRUE.
+                  handle =  sthan ( p )
+                  found  = .true.
 !
 !                 Go ahead and move the pointer up before returning
 !                 so that the search for the next applicable segment
 !                 will start at the right place.
 !
-                  SAVEP = STPOOL ( FORWRD, P )
+                  savep = stpool ( forwrd, p )
 
-                  CALL CHKOUT ( 'ZZDSKSNS' )
-                  RETURN
+                  call chkout ( 'ZZDSKSNS' )
+                  return
 
-               END IF
+               end if
 
 
 !
 !              Get the next node.  We avoid LNKNXT here in order
 !              to speed up the operation.
 !
-               P = STPOOL ( FORWRD, P )
+               p = stpool ( forwrd, p )
 
-            END DO
+            end do
 
 !
 !           If we're still here we didn't have information for this
@@ -2090,14 +2090,14 @@
 !           If there are more files, search them.
 !           Otherwise, things are hopeless, set the status that way.
 !
-            IF ( BTLFS( BINDEX ) .GT. FTNUM( 1 ) ) THEN
-               STATUS = 'OLD FILES'
-            ELSE
-               STATUS = 'HOPELESS'
-            END IF
+            if ( btlfs( bindex ) .gt. ftnum( 1 ) ) then
+               status = 'OLD FILES'
+            else
+               status = 'HOPELESS'
+            end if
 
 
-         ELSE IF ( STATUS .EQ. 'MAKE ROOM' ) THEN
+         else if ( status .eq. 'MAKE ROOM' ) then
 !
 !           When adding a new segment to a full table, one of the
 !           current bodies must be dropped.  The ideal
@@ -2131,40 +2131,40 @@
 !           be the index of the "cheapest" segment list in the
 !           body table.
 !
-            MINEXP = INTMAX()
-            CHEAP  = 0
+            minexp = intmax()
+            cheap  = 0
 
 
 
-            DO I = 1, NBT
+            do i = 1, nbt
 
-               IF ( I .NE. BINDEX ) THEN
+               if ( i .ne. bindex ) then
 
-                  IF (      ( BTEXP(I) .LT. MINEXP   ) &
-                       .OR. ( CHEAP    .EQ. 0        )  )THEN
+                  if (      ( btexp(i) .lt. minexp   ) &
+                       .or. ( cheap    .eq. 0        )  )then
 !
 !                    This list is the cheapest seen so far,
 !                    possibly because it's the first one
 !                    considered.  At the moment, it's as good
 !                    a candidate for removal as any.
 !
-                     CHEAP  = I
-                     MINEXP = BTEXP(I)
+                     cheap  = i
+                     minexp = btexp(i)
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 
-            IF ( CHEAP .EQ. 0 ) THEN
+            if ( cheap .eq. 0 ) then
 !
 !              If there are no deletable segments, the Thing To
 !              Do depends on the task that was suspended before
 !              entering MAKE ROOM.
 !
-               IF ( STACK(TOP) .EQ. 'ADD TO END' ) THEN
+               if ( stack(top) .eq. 'ADD TO END' ) then
 !
 !                 The segment meta-data from the current file cannot
 !                 be buffered.
@@ -2184,27 +2184,27 @@
 !                 the segment list becomes empty, the body must be
 !                 deleted from the body table.
 !
-                  HEAD =   BTBEG ( BINDEX )
-                  TAIL = - LNKPRV( HEAD, STPOOL )
+                  head =   btbeg ( bindex )
+                  tail = - lnkprv( head, stpool )
 
-                  NODE =   TAIL
+                  node =   tail
 
-                  DO WHILE ( NODE .GT. 0 )
+                  do while ( node .gt. 0 )
 !
 !                    Let PRVNOD be the predecessor of NODE. PRVNOD may
 !                    be negative (actually, a pointer to the list tail).
 !
-                     PRVNOD = LNKPRV( NODE, STPOOL )
+                     prvnod = lnkprv( node, stpool )
 
-                     IF ( STHAN(NODE) .EQ. FTHAN(FINDEX) ) THEN
+                     if ( sthan(node) .eq. fthan(findex) ) then
 !
 !                       This segment is from the file we were
 !                       searching when we ran out of room. Free
 !                       the segment list entry at index NODE.
 
-                        CALL LNKFSL ( NODE, NODE, STPOOL )
+                        call lnkfsl ( node, node, stpool )
 
-                        IF ( NODE .EQ. HEAD ) THEN
+                        if ( node .eq. head ) then
 !
 !                          We just deleted the last remaining node in
 !                          the list for the current body. We can delete
@@ -2215,14 +2215,14 @@
 !                          body. So we don't need to compress the body
 !                          table; we just indicate that it's empty.
 !
-                           NBT = 0
+                           nbt = 0
 
-                        END IF
+                        end if
 !
 !                       This is the end of the block that handles the
 !                       head node case.
 !
-                     END IF
+                     end if
 !
 !                    This is the end of the block that handles the
 !                    matching file case.
@@ -2230,9 +2230,9 @@
 !                    Process the previous node. If the node is
 !                    non-positive, the loop will terminate.
 !
-                     NODE = PRVNOD
+                     node = prvnod
 
-                  END DO
+                  end do
 !
 !                 The segment table entries for the current body that
 !                 are associated with the current file have been
@@ -2241,21 +2241,21 @@
 !                 Make sure that a new search is started before this
 !                 routine is called again.
 !
-                  STATUS = 'HOPELESS'
-                  TOP    = 0
+                  status = 'HOPELESS'
+                  top    = 0
 !
 !                 It's finally time to signal the error.
 !
-                  CALL SETMSG ( 'ZZDSKSNS ran out of segment table ' &
+                  call setmsg ( 'ZZDSKSNS ran out of segment table ' &
                   //            'room while trying to append to the ' &
                   //            'tail of the segment list for body ' &
                   //            '#. Current state is ADD TO END.'    )
-                  CALL ERRINT ( '#', SVBODY                          )
-                  CALL SIGERR ( 'SPICE(BUFFEROVERFLOW)'              )
-                  CALL CHKOUT ( 'ZZDSKSNS'                           )
-                  RETURN
+                  call errint ( '#', svbody                          )
+                  call sigerr ( 'SPICE(BUFFEROVERFLOW)'              )
+                  call chkout ( 'ZZDSKSNS'                           )
+                  return
 
-               ELSE
+               else
 !
 !                 STACK(TOP) is set to 'ADD TO FRONT'.
 !
@@ -2267,68 +2267,68 @@
 !                 Return the current list to the segment table pool.
 !                 Note this list is non-empty.
 !
-                  P    =   BTBEG ( BINDEX )
-                  TAIL = - LNKPRV( P, STPOOL )
+                  p    =   btbeg ( bindex )
+                  tail = - lnkprv( p, stpool )
 
-                  CALL LNKFSL ( P, TAIL, STPOOL )
+                  call lnkfsl ( p, tail, stpool )
 !
 !                 Re-initialize the table for this body, and
 !                 initiate an 'OLD FILES' search, just as in 'NEW
 !                 BODY'.
 !
-                  BTEXP( BINDEX ) = 0
-                  BTHFS( BINDEX ) = FTNUM( NFT )
-                  BTLFS( BINDEX ) = FTNUM( NFT ) + 1
+                  btexp( bindex ) = 0
+                  bthfs( bindex ) = ftnum( nft )
+                  btlfs( bindex ) = ftnum( nft ) + 1
 
-                  STATUS = 'OLD FILES'
+                  status = 'OLD FILES'
 
-               END IF
+               end if
 
 !
 !              Unwind the stack; we've set the target states already.
 !
-               TOP = 0
+               top = 0
 
-            ELSE
+            else
 !
 !              Return this cheapest list to the segment pool.  This
 !              list could be empty.
 !
-               HEAD = BTBEG( CHEAP )
+               head = btbeg( cheap )
 
-               IF ( HEAD .GT. 0 ) THEN
+               if ( head .gt. 0 ) then
 
-                  TAIL = - LNKPRV ( HEAD, STPOOL )
+                  tail = - lnkprv ( head, stpool )
 
-                  CALL LNKFSL ( HEAD, TAIL, STPOOL )
+                  call lnkfsl ( head, tail, stpool )
 
-               END IF
+               end if
 
 !
 !              Fill the deleted body's space in the table with
 !              the final entry in the table.
 !
-               IF ( CHEAP .NE. NBT ) THEN
+               if ( cheap .ne. nbt ) then
 
-                  BTBOD (CHEAP) = BTBOD (NBT)
-                  BTEXP (CHEAP) = BTEXP (NBT)
-                  BTHFS (CHEAP) = BTHFS (NBT)
-                  BTLFS (CHEAP) = BTLFS (NBT)
-                  BTBEG (CHEAP) = BTBEG (NBT)
+                  btbod (cheap) = btbod (nbt)
+                  btexp (cheap) = btexp (nbt)
+                  bthfs (cheap) = bthfs (nbt)
+                  btlfs (cheap) = btlfs (nbt)
+                  btbeg (cheap) = btbeg (nbt)
 
-               END IF
+               end if
 
-               IF ( BINDEX .EQ. NBT ) THEN
-                  BINDEX = CHEAP
-               END IF
+               if ( bindex .eq. nbt ) then
+                  bindex = cheap
+               end if
 
 !
 !              One less body now.
 !
-               NBT    = NBT - 1
-               STATUS = 'RESUME'
+               nbt    = nbt - 1
+               status = 'RESUME'
 
-            END IF
+            end if
 !
 !           At this point, we either made room by freeing a non-empty
 !           segment list, or we're going to re-build the list for the
@@ -2338,7 +2338,7 @@
 !
 
 
-         ELSE IF ( STATUS .EQ. 'ADD TO FRONT' ) THEN
+         else if ( status .eq. 'ADD TO FRONT' ) then
 !
 !           The current segment information should be linked in at
 !           the head of the segment list for the current body,
@@ -2348,45 +2348,45 @@
 !           The only way to get here is from the block NEW SEGMENTS
 !           after suspending that task.
 
-            IF ( LNKNFN(STPOOL) .EQ. 0 ) THEN
+            if ( lnknfn(stpool) .eq. 0 ) then
 
-               DOING  = 'ADD TO FRONT'
-               URGENT = 'MAKE ROOM'
-               STATUS = 'SUSPEND'
+               doing  = 'ADD TO FRONT'
+               urgent = 'MAKE ROOM'
+               status = 'SUSPEND'
 
-            ELSE
+            else
 !
 !              Allocate a node and link it to the front of the list
 !              for the current body.
 !
-               CALL LNKAN ( STPOOL, NEW )
+               call lnkan ( stpool, new )
 
-               STHAN( NEW ) = FTHAN( FINDEX )
+               sthan( new ) = fthan( findex )
 !
 !              Store the DLA and DSK descriptors for this segment in
 !              the segment table.
 !
-               CALL MOVEI ( DLALDS, DLADSZ, STDLAD(1,NEW) )
-               CALL MOVED ( DSKLDS, DSKDSZ, STDSKD(1,NEW) )
+               call movei ( dlalds, dladsz, stdlad(1,new) )
+               call moved ( dsklds, dskdsz, stdskd(1,new) )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDSKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDSKSNS' )
+                  return
+               end if
 
 !
 !              If the current list is empty, this append operation
 !              is a no-op.
 !
-               CALL LNKILB ( NEW, BTBEG(BINDEX), STPOOL )
-               BTBEG( BINDEX ) = NEW
+               call lnkilb ( new, btbeg(bindex), stpool )
+               btbeg( bindex ) = new
 
-               STATUS  = 'RESUME'
+               status  = 'RESUME'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATUS .EQ. 'ADD TO END' ) THEN
+         else if ( status .eq. 'ADD TO END' ) then
 !
 !           The current segment information should be linked in at
 !           the tail of the segment list for the current body.
@@ -2394,89 +2394,89 @@
 !           The only way to get to this task is from the OLD SEGMENTS
 !           block after suspending that task.
 !
-            IF ( LNKNFN(STPOOL) .EQ. 0 ) THEN
+            if ( lnknfn(stpool) .eq. 0 ) then
 
-               DOING  = 'ADD TO END'
-               URGENT = 'MAKE ROOM'
-               STATUS = 'SUSPEND'
+               doing  = 'ADD TO END'
+               urgent = 'MAKE ROOM'
+               status = 'SUSPEND'
 
-            ELSE
+            else
 !
 !              Allocate a new node in the segment table pool.
 !
-               CALL LNKAN ( STPOOL, NEW )
+               call lnkan ( stpool, new )
 
-               STHAN( NEW ) = FTHAN( FINDEX )
+               sthan( new ) = fthan( findex )
 
 !
 !              Store the DLA and DSK descriptors for this segment in
 !              the segment table.
 !
-               CALL MOVEI ( DLALDS, DLADSZ, STDLAD(1,NEW) )
-               CALL MOVED ( DSKLDS, DSKDSZ, STDSKD(1,NEW) )
+               call movei ( dlalds, dladsz, stdlad(1,new) )
+               call moved ( dsklds, dskdsz, stdskd(1,new) )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'ZZDSKSNS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'ZZDSKSNS' )
+                  return
+               end if
 
-               IF ( BTBEG(BINDEX) .LE. 0 ) THEN
+               if ( btbeg(bindex) .le. 0 ) then
 !
 !                 This is the first node in the list for this
 !                 body.
 !
-                  BTBEG( BINDEX ) = NEW
+                  btbeg( bindex ) = new
 
-               ELSE
+               else
 !
 !                 Link the new node to the tail of the list.
 !
-                  TAIL = - LNKPRV ( BTBEG(BINDEX), STPOOL )
-                  CALL LNKILA ( TAIL, NEW, STPOOL )
+                  tail = - lnkprv ( btbeg(bindex), stpool )
+                  call lnkila ( tail, new, stpool )
 
-               END IF
+               end if
 
-               STATUS = 'RESUME'
+               status = 'RESUME'
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATUS .EQ. 'SUSPEND' ) THEN
+         else if ( status .eq. 'SUSPEND' ) then
 !
 !           When a task is suspended, the current activity is placed on
 !           a stack, to be restored later. Two levels are provided,
 !           since some interrupts can be interrupted by others.
 !
-            TOP          = TOP + 1
-            STACK( TOP ) = DOING
-            STATUS       = URGENT
+            top          = top + 1
+            stack( top ) = doing
+            status       = urgent
 
-         ELSE IF ( STATUS .EQ. 'RESUME' ) THEN
+         else if ( status .eq. 'RESUME' ) then
 
-            STATUS = STACK( TOP )
-            TOP    = TOP - 1
+            status = stack( top )
+            top    = top - 1
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
 !
 !     Can only get here if status is 'HOPELESS', in which case a
 !     segment was not found.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 
-      CALL CHKOUT ( 'ZZDSKSNS' )
-      RETURN
+      call chkout ( 'ZZDSKSNS' )
+      return
 
 
 
 
 !$Procedure ZZDSKCHK ( DSK, check for file updates )
 
-      ENTRY ZZDSKCHK ( USRCTR, UPDATE )
+      entry zzdskchk ( usrctr, update )
 
 ! $ Abstract
 !
@@ -2602,14 +2602,14 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKCHK' )
+      call chkin ( 'ZZDSKCHK' )
 
-      CALL ZZCTRCHK ( DSKCTR, USRCTR, UPDATE )
+      call zzctrchk ( dskctr, usrctr, update )
 
-      CALL CHKOUT ( 'ZZDSKCHK' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKCHK' )
+      return
+      end

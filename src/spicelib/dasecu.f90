@@ -1,6 +1,6 @@
 !$Procedure DASECU ( DAS extract comments to a logical unit )
 
-      SUBROUTINE DASECU ( HANDLE, COMLUN, COMNTS )
+      subroutine dasecu ( handle, comlun, comnts )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               COMLUN
-      LOGICAL               COMNTS
+      integer               handle
+      integer               comlun
+      logical               comnts
 
 ! $ Brief_I/O
 !
@@ -136,101 +136,101 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
 !     Set the value for the maximum length of a text line.
 !
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 255 )
+      integer               linlen
+      parameter           ( linlen = 255 )
 !
 !     Set the size of the comment buffer.
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 22 )
+      integer               bufsiz
+      parameter           ( bufsiz = 22 )
 !
 !     Local variables
 !
-      CHARACTER*(LINLEN)    COMBUF(BUFSIZ)
+      character*(linlen)    combuf(bufsiz)
 
-      INTEGER               NUMCOM
+      integer               numcom
 
-      LOGICAL               EOC
-      LOGICAL               GOTSOM
+      logical               eoc
+      logical               gotsom
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASECU' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASECU' )
+      end if
 !
 !     Verify that the DAS file attached to HANDLE is opened for reading.
 !
-      CALL DASSIH ( HANDLE, 'READ' )
+      call dassih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASECU' )
-         RETURN
+         call chkout ( 'DASECU' )
+         return
 
-      END IF
+      end if
 !
 !     Initialize some things before the loop.
 !
-      NUMCOM = 0
-      EOC    = .FALSE.
-      GOTSOM = .FALSE.
+      numcom = 0
+      eoc    = .false.
+      gotsom = .false.
 
-      DO WHILE ( .NOT. EOC )
+      do while ( .not. eoc )
 !
 !        While we have not reached the end of the comments, get some
 !        more.
 !
-         CALL DASEC ( HANDLE, BUFSIZ, NUMCOM, COMBUF, EOC )
+         call dasec ( handle, bufsiz, numcom, combuf, eoc )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT( 'DASECU' )
-            RETURN
+            call chkout( 'DASECU' )
+            return
 
-         END IF
+         end if
 
-         IF ( NUMCOM .GT. 0 ) THEN
+         if ( numcom .gt. 0 ) then
 !
 !           If NUMCOM .GT. 0 then we did get some comments, and we need
 !           to write them out, but first, set the flag indicating that
 !           we got some comments.
 !
-            IF ( .NOT. GOTSOM ) THEN
+            if ( .not. gotsom ) then
 
-               GOTSOM = .TRUE.
+               gotsom = .true.
 
-            END IF
+            end if
 
-            CALL WRITLA ( NUMCOM, COMBUF, COMLUN )
+            call writla ( numcom, combuf, comlun )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               CALL CHKOUT( 'DASECU' )
-               RETURN
+               call chkout( 'DASECU' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Set the output flag indicating whether or not we got any comments.
 !
-      COMNTS = GOTSOM
+      comnts = gotsom
 
-      CALL CHKOUT ( 'DASECU' )
-      RETURN
-      END
+      call chkout ( 'DASECU' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZDNPT ( Derivative of ellipsoid near point )
 
-      SUBROUTINE ZZDNPT ( STATE, NEARP, A, B, C, DNEAR, DALT, FOUND )
+      subroutine zzdnpt ( state, nearp, a, b, c, dnear, dalt, found )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      STATE ( 6 )
-      DOUBLE PRECISION      NEARP ( 3 )
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      DNEAR ( 3 )
-      DOUBLE PRECISION      DALT
-      LOGICAL               FOUND
+      implicit none
+      double precision      state ( 6 )
+      double precision      nearp ( 3 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      dnear ( 3 )
+      double precision      dalt
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -170,57 +170,57 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VTMV
+      double precision      vdot
+      double precision      vtmv
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      DTERM  ( 3 )
-      DOUBLE PRECISION      GRAD   ( 3 )
-      DOUBLE PRECISION      L
-      DOUBLE PRECISION      LENGTH
-      DOUBLE PRECISION      LPRIME
-      DOUBLE PRECISION      NORML  ( 3 )
-      DOUBLE PRECISION      TEMP   ( 3 )
-      DOUBLE PRECISION      ZENITH ( 3 )
+      double precision      denom
+      double precision      dterm  ( 3 )
+      double precision      grad   ( 3 )
+      double precision      l
+      double precision      length
+      double precision      lprime
+      double precision      norml  ( 3 )
+      double precision      temp   ( 3 )
+      double precision      zenith ( 3 )
 
 
-      DOUBLE PRECISION      GRADM  ( 3, 3 )
-      DOUBLE PRECISION      M      ( 3, 3 )
+      double precision      gradm  ( 3, 3 )
+      double precision      m      ( 3, 3 )
 
-      INTEGER               I
+      integer               i
 !
 !     Saved Variables
 !
-      SAVE                  GRADM
-      SAVE                  M
+      save                  gradm
+      save                  m
 
 !
 !     Initial Values
 !
-      DATA   GRADM / 1.0D0, 0.0D0, 0.0D0, &
-                     0.0D0, 1.0D0, 0.0D0, &
-                     0.0D0, 0.0D0, 1.0D0  /
+      data   gradm / 1.0d0, 0.0d0, 0.0d0, &
+                     0.0d0, 1.0d0, 0.0d0, &
+                     0.0d0, 0.0d0, 1.0d0  /
 
-      DATA   M     / 1.0D0, 0.0D0, 0.0D0, &
-                     0.0D0, 1.0D0, 0.0D0, &
-                     0.0D0, 0.0D0, 1.0D0  /
+      data   m     / 1.0d0, 0.0d0, 0.0d0, &
+                     0.0d0, 1.0d0, 0.0d0, &
+                     0.0d0, 0.0d0, 1.0d0  /
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDNPT' )
+      call chkin ( 'ZZDNPT' )
 !
 !     Until we have reason to believe otherwise, we set FOUND to TRUE.
 !
-      FOUND = .TRUE.
+      found = .true.
 
 !
 !     Now for the work of this routine.  We need to compute the
@@ -290,16 +290,16 @@
 !     following the declaration section of this routine.
 !
 
-      GRADM(1,1) = 1.0D0/(A*A)
-      GRADM(2,2) = 1.0D0/(B*B)
-      GRADM(3,3) = 1.0D0/(C*C)
+      gradm(1,1) = 1.0d0/(a*a)
+      gradm(2,2) = 1.0d0/(b*b)
+      gradm(3,3) = 1.0d0/(c*c)
 
-      CALL VSUB  ( STATE,  NEARP, ZENITH )
+      call vsub  ( state,  nearp, zenith )
 
-      CALL MXV   ( GRADM,  NEARP,    GRAD   )
-      CALL UNORM ( GRAD,   NORML,    LENGTH )
+      call mxv   ( gradm,  nearp,    grad   )
+      call unorm ( grad,   norml,    length )
 
-      L  = VDOT  ( ZENITH, NORML ) / LENGTH
+      l  = vdot  ( zenith, norml ) / length
 
 !
 !     We can rewrite equation (1) as
@@ -355,31 +355,31 @@
 !        zero when computing L'.
 !
 
-      DO I = 1, 3
-         DTERM(I) = 1.0D0 + L*GRADM(I,I)
-      END DO
+      do i = 1, 3
+         dterm(i) = 1.0d0 + l*gradm(i,i)
+      end do
 
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( DTERM(I) .NE. 0.0D0 ) THEN
-            M(I,I) = 1.0D0 / DTERM(I)
-         ELSE
-            FOUND = .FALSE.
-            CALL CHKOUT ( 'ZZDNPT' )
-            RETURN
-         END IF
+         if ( dterm(i) .ne. 0.0d0 ) then
+            m(i,i) = 1.0d0 / dterm(i)
+         else
+            found = .false.
+            call chkout ( 'ZZDNPT' )
+            return
+         end if
 
-      END DO
+      end do
 
-      DENOM = VTMV ( GRAD, M, GRAD )
+      denom = vtmv ( grad, m, grad )
 
-      IF ( DENOM .EQ. 0.0D0 ) THEN
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'ZZDNPT' )
-         RETURN
-      END IF
+      if ( denom .eq. 0.0d0 ) then
+         found = .false.
+         call chkout ( 'ZZDNPT' )
+         return
+      end if
 
-      LPRIME = VTMV( GRAD, M, STATE(4) ) / DENOM
+      lprime = vtmv( grad, m, state(4) ) / denom
 
 !
 !     Now that we have L' we can easily compute N'. Rewriting
@@ -387,8 +387,8 @@
 !
 !        N'  = M * ( P' - L'*GRAD )
 !
-      CALL VLCOM ( 1.0D0, STATE(4), -LPRIME, GRAD, TEMP     )
-      CALL MXV   ( M,     TEMP,                    DNEAR )
+      call vlcom ( 1.0d0, state(4), -lprime, grad, temp     )
+      call mxv   ( m,     temp,                    dnear )
 
 
 !
@@ -417,9 +417,9 @@
 !
 !     Given P' = STATE(4,5,6)
 !
-      DALT = VDOT ( NORML, STATE(4) )
+      dalt = vdot ( norml, state(4) )
 
-      CALL CHKOUT ( 'ZZDNPT' )
+      call chkout ( 'ZZDNPT' )
 
-      RETURN
-      END
+      return
+      end

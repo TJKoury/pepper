@@ -1,6 +1,6 @@
 !$Procedure VRELG ( Vector relative difference, general dimension )
 
-      DOUBLE PRECISION FUNCTION VRELG ( V1, V2, NDIM )
+      double precision function vrelg ( v1, v2, ndim )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V1 ( * )
-      DOUBLE PRECISION      V2 ( * )
-      INTEGER               NDIM
+      double precision      v1 ( * )
+      double precision      v2 ( * )
+      integer               ndim
 
 ! $ Brief_I/O
 !
@@ -209,15 +209,15 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORMG
-      DOUBLE PRECISION      VDISTG
+      double precision      vnormg
+      double precision      vdistg
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      NUNORM
-      DOUBLE PRECISION      DENORM
+      double precision      nunorm
+      double precision      denorm
 
 
 
@@ -230,20 +230,20 @@
 !     This handles the case where both vectors are zero vectors since
 !     the distance between them will be zero.
 !
-      NUNORM = VDISTG ( V1, V2, NDIM )
+      nunorm = vdistg ( v1, v2, ndim )
 
-      IF ( NUNORM .EQ. 0.D0 ) THEN
+      if ( nunorm .eq. 0.d0 ) then
 
-         VRELG = 0.D0
+         vrelg = 0.d0
 
-      ELSE
+      else
 
-         DENORM = MAX (  VNORMG(V1,NDIM), VNORMG(V2,NDIM)  )
+         denorm = max (  vnormg(v1,ndim), vnormg(v2,ndim)  )
 
-         VRELG = NUNORM / DENORM
+         vrelg = nunorm / denorm
 
-       END IF
+       end if
 
 
-      RETURN
-      END
+      return
+      end

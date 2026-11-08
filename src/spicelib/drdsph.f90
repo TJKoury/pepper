@@ -1,6 +1,6 @@
 !$Procedure DRDSPH ( Derivative of rectangular w.r.t. spherical )
 
-      SUBROUTINE DRDSPH ( R, COLAT, SLON, JACOBI )
+      subroutine drdsph ( r, colat, slon, jacobi )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      COLAT
-      DOUBLE PRECISION      SLON
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      r
+      double precision      colat
+      double precision      slon
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -350,53 +350,53 @@
 !
 !     Local parameters
 !
-      INTEGER               DX
-      PARAMETER           ( DX     = 1 )
+      integer               dx
+      parameter           ( dx     = 1 )
 
-      INTEGER               DY
-      PARAMETER           ( DY     = 2 )
+      integer               dy
+      parameter           ( dy     = 2 )
 
-      INTEGER               DZ
-      PARAMETER           ( DZ     = 3 )
+      integer               dz
+      parameter           ( dz     = 3 )
 
-      INTEGER               DR
-      PARAMETER           ( DR     = 1 )
+      integer               dr
+      parameter           ( dr     = 1 )
 
-      INTEGER               DCOLAT
-      PARAMETER           ( DCOLAT = 2 )
+      integer               dcolat
+      parameter           ( dcolat = 2 )
 
-      INTEGER               DLON
-      PARAMETER           ( DLON   = 3 )
+      integer               dlon
+      parameter           ( dlon   = 3 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CCOLAT
-      DOUBLE PRECISION      CLONG
-      DOUBLE PRECISION      SCOLAT
-      DOUBLE PRECISION      SLONG
+      double precision      ccolat
+      double precision      clong
+      double precision      scolat
+      double precision      slong
 
 
 
-      CCOLAT = DCOS( COLAT )
-      SCOLAT = DSIN( COLAT )
+      ccolat = dcos( colat )
+      scolat = dsin( colat )
 
-      CLONG  = DCOS( SLON  )
-      SLONG  = DSIN( SLON  )
+      clong  = dcos( slon  )
+      slong  = dsin( slon  )
 
 
-      JACOBI (DX,DR)     =      CLONG * SCOLAT
-      JACOBI (DY,DR)     =      SLONG * SCOLAT
-      JACOBI (DZ,DR)     =              CCOLAT
+      jacobi (dx,dr)     =      clong * scolat
+      jacobi (dy,dr)     =      slong * scolat
+      jacobi (dz,dr)     =              ccolat
 
-      JACOBI (DX,DCOLAT) =  R * CLONG * CCOLAT
-      JACOBI (DY,DCOLAT) =  R * SLONG * CCOLAT
-      JACOBI (DZ,DCOLAT) = -R *         SCOLAT
+      jacobi (dx,dcolat) =  r * clong * ccolat
+      jacobi (dy,dcolat) =  r * slong * ccolat
+      jacobi (dz,dcolat) = -r *         scolat
 
-      JACOBI (DX,DLON)   = -R * SLONG * SCOLAT
-      JACOBI (DY,DLON)   =  R * CLONG * SCOLAT
-      JACOBI (DZ,DLON)   =  0.0D0
+      jacobi (dx,dlon)   = -r * slong * scolat
+      jacobi (dy,dlon)   =  r * clong * scolat
+      jacobi (dz,dlon)   =  0.0d0
 
-      RETURN
-      END
+      return
+      end

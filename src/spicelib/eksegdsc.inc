@@ -11,136 +11,136 @@
 !     must be updated if this parameter is changed.  The parameter
 !     CDOFF in that file should be kept equal to SDSCSZ.
 !
-      INTEGER               SDSCSZ
-      PARAMETER           ( SDSCSZ = 24  )
+      integer               sdscsz
+      parameter           ( sdscsz = 24  )
 
 !
 !     Index of the segment type code:
 !
-      INTEGER               EKTIDX
-      PARAMETER           ( EKTIDX = 1 )
+      integer               ektidx
+      parameter           ( ektidx = 1 )
 
 !
 !     Index of the segment's number.  This number is the segment's
 !     index in the list of segments contained in the EK to which
 !     the segment belongs.
 !
-      INTEGER               SNOIDX
-      PARAMETER           ( SNOIDX = EKTIDX  + 1 )
+      integer               snoidx
+      parameter           ( snoidx = ektidx  + 1 )
 
 !
 !     Index of the DAS integer base address of the segment's integer
 !     meta-data:
 !
-      INTEGER               IMDIDX
-      PARAMETER           ( IMDIDX = SNOIDX  + 1 )
+      integer               imdidx
+      parameter           ( imdidx = snoidx  + 1 )
 
 !
 !     Index of the DAS character base address of the table name:
 !
-      INTEGER               TNMIDX
-      PARAMETER           ( TNMIDX = IMDIDX  + 1 )
+      integer               tnmidx
+      parameter           ( tnmidx = imdidx  + 1 )
 
 !
 !     Index of the segment's column count:
 !
-      INTEGER               NCIDX
-      PARAMETER           ( NCIDX  = TNMIDX  + 1 )
+      integer               ncidx
+      parameter           ( ncidx  = tnmidx  + 1 )
 
 !
 !     Index of the segment's record count:
 !
-      INTEGER               NRIDX
-      PARAMETER           ( NRIDX  = NCIDX + 1 )
+      integer               nridx
+      parameter           ( nridx  = ncidx + 1 )
 
 !
 !     Index of the root page number of the record tree:
 !
-      INTEGER               RTIDX
-      PARAMETER           ( RTIDX  = NRIDX + 1 )
+      integer               rtidx
+      parameter           ( rtidx  = nridx + 1 )
 
 !
 !     Index of the root page number of the character data page tree:
 !
-      INTEGER               CPTIDX
-      PARAMETER           ( CPTIDX = RTIDX  + 1 )
+      integer               cptidx
+      parameter           ( cptidx = rtidx  + 1 )
 
 !
 !     Index of the root page number of the double precision data page
 !     tree:
 !
-      INTEGER               DPTIDX
-      PARAMETER           ( DPTIDX = CPTIDX + 1 )
+      integer               dptidx
+      parameter           ( dptidx = cptidx + 1 )
 
 !
 !     Index of the root page number of the integer data page tree:
 !
-      INTEGER               IPTIDX
-      PARAMETER           ( IPTIDX = DPTIDX + 1 )
+      integer               iptidx
+      parameter           ( iptidx = dptidx + 1 )
 
 !
 !     Index of the `modified' flag:
 !
-      INTEGER               MFLIDX
-      PARAMETER           ( MFLIDX = IPTIDX + 1 )
+      integer               mflidx
+      parameter           ( mflidx = iptidx + 1 )
 
 !
 !     Index of the `initialized' flag:
 !
-      INTEGER               IFLIDX
-      PARAMETER           ( IFLIDX = MFLIDX + 1 )
+      integer               iflidx
+      parameter           ( iflidx = mflidx + 1 )
 
 !
 !     Index of the shadowing flag:
 !
-      INTEGER               SHDIDX
-      PARAMETER           ( SHDIDX = IFLIDX + 1 )
+      integer               shdidx
+      parameter           ( shdidx = iflidx + 1 )
 
 !
 !     Index of the companion file handle:
 !
-      INTEGER               CFHIDX
-      PARAMETER           ( CFHIDX = SHDIDX + 1 )
+      integer               cfhidx
+      parameter           ( cfhidx = shdidx + 1 )
 
 !
 !     Index of the companion segment number:
 !
-      INTEGER               CSNIDX
-      PARAMETER           ( CSNIDX = CFHIDX + 1 )
+      integer               csnidx
+      parameter           ( csnidx = cfhidx + 1 )
 
 !
 !     The next three items are, respectively, the page numbers of the
 !     last character, d.p., and integer data pages allocated by the
 !     segment:
 !
-      INTEGER               LCPIDX
-      PARAMETER           ( LCPIDX = CSNIDX + 1 )
+      integer               lcpidx
+      parameter           ( lcpidx = csnidx + 1 )
 
-      INTEGER               LDPIDX
-      PARAMETER           ( LDPIDX = LCPIDX + 1 )
+      integer               ldpidx
+      parameter           ( ldpidx = lcpidx + 1 )
 
-      INTEGER               LIPIDX
-      PARAMETER           ( LIPIDX = LDPIDX + 1 )
+      integer               lipidx
+      parameter           ( lipidx = ldpidx + 1 )
 
 !
 !     The next three items are, respectively, the page-relative
 !     indices of the last DAS word in use in the segment's
 !     last character, d.p., and integer data pages:
 !
-      INTEGER               LCWIDX
-      PARAMETER           ( LCWIDX = LIPIDX + 1 )
+      integer               lcwidx
+      parameter           ( lcwidx = lipidx + 1 )
 
-      INTEGER               LDWIDX
-      PARAMETER           ( LDWIDX = LCWIDX + 1 )
+      integer               ldwidx
+      parameter           ( ldwidx = lcwidx + 1 )
 
-      INTEGER               LIWIDX
-      PARAMETER           ( LIWIDX = LDWIDX + 1 )
+      integer               liwidx
+      parameter           ( liwidx = ldwidx + 1 )
 
 !
 !     Index of the DAS character base address of the column name list:
 !
-      INTEGER               NMLIDX
-      PARAMETER           ( NMLIDX = LIWIDX  + 1 )
+      integer               nmlidx
+      parameter           ( nmlidx = liwidx  + 1 )
 
 !
 !     The last descriptor element is reserved for future use.  No

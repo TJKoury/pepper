@@ -1,6 +1,6 @@
 !$Procedure VZERO    ( Is a vector the zero vector? )
 
-      LOGICAL FUNCTION VZERO ( V )
+      logical function vzero ( v )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V ( 3 )
+      double precision      v ( 3 )
 
 ! $ Brief_I/O
 !
@@ -146,9 +146,9 @@
 !     `Just do it'.
 !
 !
-      VZERO   =        (  V(1) .EQ. 0.D0  ) &
-                .AND.  (  V(2) .EQ. 0.D0  ) &
-                .AND.  (  V(3) .EQ. 0.D0  )
+      vzero   =        (  v(1) .eq. 0.d0  ) &
+                .and.  (  v(2) .eq. 0.d0  ) &
+                .and.  (  v(3) .eq. 0.d0  )
 
-      RETURN
-      END
+      return
+      end

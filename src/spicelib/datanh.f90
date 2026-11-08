@@ -1,6 +1,6 @@
 !$Procedure DATANH  ( Double precision arc hyperbolic tangent )
 
-      DOUBLE PRECISION FUNCTION  DATANH ( X )
+      double precision function  datanh ( x )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   X
+      double precision   x
 
 ! $ Brief_I/O
 !
@@ -130,7 +130,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL            RETURN
+      logical            return
 
 
 
@@ -139,29 +139,29 @@
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) THEN
-         DATANH = 0.0D0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DATANH' )
-         DATANH = 0.0D0
-      END IF
+      if ( return () ) then
+         datanh = 0.0d0
+         return
+      else
+         call chkin ( 'DATANH' )
+         datanh = 0.0d0
+      end if
 
 !
 !     Check that -1 < X < +1.
 !
-      IF ( DABS(X) .GE. 1.0D0 ) THEN
+      if ( dabs(x) .ge. 1.0d0 ) then
 
-         CALL SETMSG ( 'DATANH: Argument out of range.' )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)' )
+         call setmsg ( 'DATANH: Argument out of range.' )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)' )
 
-         CALL CHKOUT ( 'DATANH' )
-         RETURN
-      END IF
+         call chkout ( 'DATANH' )
+         return
+      end if
 
-      DATANH = 0.5D0 * DLOG ( (1.D0+X) / (1.D0-X) )
+      datanh = 0.5d0 * dlog ( (1.d0+x) / (1.d0-x) )
 
-      CALL CHKOUT ( 'DATANH' )
+      call chkout ( 'DATANH' )
 
-      RETURN
-      END
+      return
+      end

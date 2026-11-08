@@ -1,6 +1,6 @@
 !$Procedure QDQ2AV (Quaternion and quaternion derivative to a.v.)
 
-      SUBROUTINE QDQ2AV ( Q, DQ, AV )
+      subroutine qdq2av ( q, dq, av )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      Q    ( 0 : 3 )
-      DOUBLE PRECISION      DQ   ( 0 : 3 )
-      DOUBLE PRECISION      AV   ( 3 )
+      double precision      q    ( 0 : 3 )
+      double precision      dq   ( 0 : 3 )
+      double precision      av   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -699,21 +699,21 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      QHAT  ( 0 : 3 )
-      DOUBLE PRECISION      QSTAR ( 0 : 3 )
-      DOUBLE PRECISION      QTEMP ( 0 : 3 )
+      double precision      qhat  ( 0 : 3 )
+      double precision      qstar ( 0 : 3 )
+      double precision      qtemp ( 0 : 3 )
 
 
 !
 !     Get a unitized copy of the input quaternion.
 !
-      CALL VHATG  ( Q,    4,  QHAT     )
+      call vhatg  ( q,    4,  qhat     )
 
 !
 !     Get the conjugate QSTAR of QHAT.
 !
-      QSTAR(0) = QHAT(0)
-      CALL VMINUS ( QHAT(1),  QSTAR(1) )
+      qstar(0) = qhat(0)
+      call vminus ( qhat(1),  qstar(1) )
 
 !
 !     Compute the angular velocity via the relationship
@@ -722,8 +722,8 @@
 !           AV  = -2 * Q  * DQ
 !
 
-      CALL QXQ    ( QSTAR,  DQ,        QTEMP )
-      CALL VSCL   ( -2.D0,  QTEMP(1),  AV    )
+      call qxq    ( qstar,  dq,        qtemp )
+      call vscl   ( -2.d0,  qtemp(1),  av    )
 
-      RETURN
-      END
+      return
+      end

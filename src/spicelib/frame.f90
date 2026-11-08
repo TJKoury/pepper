@@ -1,6 +1,6 @@
 !$Procedure FRAME ( Build a right handed coordinate frame )
 
-      SUBROUTINE FRAME ( X, Y, Z )
+      subroutine frame ( x, y, z )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    X ( 3 )
-      DOUBLE PRECISION    Y ( 3 )
-      DOUBLE PRECISION    Z ( 3 )
+      double precision    x ( 3 )
+      double precision    y ( 3 )
+      double precision    z ( 3 )
 
 ! $ Brief_I/O
 !
@@ -180,49 +180,49 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      F
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      f
 
-      INTEGER               S1
-      INTEGER               S2
-      INTEGER               S3
+      integer               s1
+      integer               s2
+      integer               s3
 
 
 
 !
 !     First make X into a unit vector.
 !
-      CALL VHATIP ( X )
+      call vhatip ( x )
 
 !
 !     We'll need the squares of the components of X in a bit.
 !
-      A = X(1)*X(1)
-      B = X(2)*X(2)
-      C = X(3)*X(3)
+      a = x(1)*x(1)
+      b = x(2)*x(2)
+      c = x(3)*x(3)
 
 !
 !     If X is zero, then just return the ijk frame.
 !
-      IF ( A+B+C .EQ. 0.0D0 ) THEN
+      if ( a+b+c .eq. 0.0d0 ) then
 
-         X(1) = 1.0D0
-         X(2) = 0.0D0
-         X(3) = 0.0D0
+         x(1) = 1.0d0
+         x(2) = 0.0d0
+         x(3) = 0.0d0
 
-         Y(1) = 0.0D0
-         Y(2) = 1.0D0
-         Y(3) = 0.0D0
+         y(1) = 0.0d0
+         y(2) = 1.0d0
+         y(3) = 0.0d0
 
-         Z(1) = 0.0D0
-         Z(2) = 0.0D0
-         Z(3) = 1.0D0
+         z(1) = 0.0d0
+         z(2) = 0.0d0
+         z(3) = 1.0d0
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 
 !
@@ -233,30 +233,30 @@
 !     set of values which it gets from the smallest component
 !     of X, the non-zero components of Y and the length of Y.
 !
-      IF      (       ( A .LE. B ) &
-                .AND. ( A .LE. C ) ) THEN
+      if      (       ( a .le. b ) &
+                .and. ( a .le. c ) ) then
 
-         F  = DSQRT ( B + C )
-         S1 = 1
-         S2 = 2
-         S3 = 3
+         f  = dsqrt ( b + c )
+         s1 = 1
+         s2 = 2
+         s3 = 3
 
-      ELSE IF (       ( B .LE. A ) &
-                .AND. ( B .LE. C ) ) THEN
+      else if (       ( b .le. a ) &
+                .and. ( b .le. c ) ) then
 
-         F  = DSQRT ( A + C )
-         S1 = 2
-         S2 = 3
-         S3 = 1
+         f  = dsqrt ( a + c )
+         s1 = 2
+         s2 = 3
+         s3 = 1
 
-      ELSE
+      else
 
-         F  = DSQRT ( A + B )
-         S1 = 3
-         S2 = 1
-         S3 = 2
+         f  = dsqrt ( a + b )
+         s1 = 3
+         s2 = 1
+         s3 = 2
 
-      END IF
+      end if
 
 !
 !     Note: by construction, F is the magnitude of the large components
@@ -265,13 +265,13 @@
 !     from the assignment of values to S1, S2 and S3 (they are merely
 !     cycled from one case to the next).
 !
-      Y(S1)  =   0.0D0
-      Y(S2)  = - X(S3) / F
-      Y(S3)  =   X(S2) / F
+      y(s1)  =   0.0d0
+      y(s2)  = - x(s3) / f
+      y(s3)  =   x(s2) / f
 
-      Z(S1)  =   F
-      Z(S2)  = - X(S1) * Y(S3)
-      Z(S3)  =   X(S1) * Y(S2)
+      z(s1)  =   f
+      z(s2)  = - x(s1) * y(s3)
+      z(s3)  =   x(s1) * y(s2)
 
-      RETURN
-      END
+      return
+      end

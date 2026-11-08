@@ -1,6 +1,6 @@
 !$Procedure ZZLEXMET ( Scan method string )
 
-      SUBROUTINE ZZLEXMET ( METHOD, MAXN, N, BEGS, ENDS )
+      subroutine zzlexmet ( method, maxn, n, begs, ends )
 
 ! $ Abstract
 !
@@ -25,13 +25,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         METHOD
-      INTEGER               MAXN
-      INTEGER               N
-      INTEGER               BEGS   ( * )
-      INTEGER               ENDS   ( * )
+      character*(*)         method
+      integer               maxn
+      integer               n
+      integer               begs   ( * )
+      integer               ends   ( * )
 
 ! $ Brief_I/O
 !
@@ -173,11 +173,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CPOS
-      INTEGER               LTRIM
-      INTEGER               RTRIM
+      integer               cpos
+      integer               ltrim
+      integer               rtrim
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -186,89 +186,89 @@
 !     Note the leading blank in DELIM below; this
 !     indicates that the blank character is a delimiter.
 !
-      CHARACTER*(*)         DELIM
-      PARAMETER           ( DELIM  = ' /,=:' )
+      character*(*)         delim
+      parameter           ( delim  = ' /,=:' )
 
-      CHARACTER*(*)         DQUOTE
-      PARAMETER           ( DQUOTE  = '"' )
+      character*(*)         dquote
+      parameter           ( dquote  = '"' )
 
 !
 !     Local variables
 !
-      INTEGER               B
-      INTEGER               E
-      INTEGER               EQ
-      INTEGER               I
-      INTEGER               LOC
-      INTEGER               NCHAR
-      INTEGER               QPOS
-      INTEGER               R
-      INTEGER               ROOM
-      INTEGER               TKE
+      integer               b
+      integer               e
+      integer               eq
+      integer               i
+      integer               loc
+      integer               nchar
+      integer               qpos
+      integer               r
+      integer               room
+      integer               tke
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZLEXMET' )
+      call chkin ( 'ZZLEXMET' )
 
 
-      IF ( METHOD .EQ. ' ' ) THEN
+      if ( method .eq. ' ' ) then
 !
 !        No tokens here.
 !
-         N = 0
+         n = 0
 
-         CALL CHKOUT ( 'ZZLEXMET' )
-         RETURN
+         call chkout ( 'ZZLEXMET' )
+         return
 
-      END IF
+      end if
 
 
-      N    = 0
-      ROOM = MAXN
-      R    = RTRIM( METHOD )
-      I    = 1
+      n    = 0
+      room = maxn
+      r    = rtrim( method )
+      i    = 1
 
-      DO WHILE ( I .LE. R )
+      do while ( i .le. r )
 !
 !        Look ahead in the input string for the start of a
 !        quoted string.
 !
-         QPOS = CPOS ( METHOD(I:), DQUOTE, 1 )
-         B    = I
+         qpos = cpos ( method(i:), dquote, 1 )
+         b    = i
 
-         IF ( QPOS .EQ. 0 ) THEN
+         if ( qpos .eq. 0 ) then
 !
 !           There are no quoted string tokens in the input string
 !           from index I onward.
 !
-            E = R
-         ELSE
-            E = I + QPOS - 2
-         END IF
+            e = r
+         else
+            e = i + qpos - 2
+         end if
 
 
-         IF ( B .LE. E ) THEN
+         if ( b .le. e ) then
 !
 !           Locate any tokens between indices B and E.
 !
-            I = B
+            i = b
 
-            DO WHILE ( I .LE. E )
+            do while ( i .le. e )
 !
 !              Find the next delimiter in the substring
 !              from indices I : E.
 !
-               LOC = CPOS( METHOD(I:E), DELIM, 1 )
+               loc = cpos( method(i:e), delim, 1 )
 
-               IF ( LOC .EQ. 1 ) THEN
+               if ( loc .eq. 1 ) then
 !
 !                 There is a delimiter character at index I in METHOD.
 !
-                  TKE  = I - 1 + LOC
+                  tke  = i - 1 + loc
 
-               ELSE IF ( LOC .GT. 1 ) THEN
+               else if ( loc .gt. 1 ) then
 !
 !                 There is a delimiter character at index
 !
@@ -276,124 +276,124 @@
 !
 !                 in METHOD.
 !
-                  IF ( METHOD(I:I+LOC-2) .NE. ' ' ) THEN
+                  if ( method(i:i+loc-2) .ne. ' ' ) then
 !
 !                    There's a token preceding the delimiter.
 !
-                     TKE  = I - 2 + LOC
+                     tke  = i - 2 + loc
 
-                  ELSE
+                  else
 !
 !                    The delimiter is all we've got.
 !
-                     TKE = I - 1 + LOC
+                     tke = i - 1 + loc
 
-                  END IF
+                  end if
 
-               ELSE
+               else
 !
 !                 The token, if any, ends at the end of
 !                 substring we're considering.
 !
-                  TKE  = E
+                  tke  = e
 
-               END IF
+               end if
 
 !
 !              There is a token, which may be blank, between
 !              indices I and TKE. We don't return blank tokens
 !              in the output array.
 !
-               IF ( METHOD( I : TKE ) .NE. ' ' ) THEN
+               if ( method( i : tke ) .ne. ' ' ) then
 
-                  IF ( ROOM .GT. 0 ) THEN
+                  if ( room .gt. 0 ) then
 
-                     N       = N    + 1
-                     ROOM    = ROOM - 1
-                     BEGS(N) = LTRIM( METHOD(I : TKE) ) + I - 1
-                     ENDS(N) = RTRIM( METHOD(I : TKE) ) + I - 1
+                     n       = n    + 1
+                     room    = room - 1
+                     begs(n) = ltrim( method(i : tke) ) + i - 1
+                     ends(n) = rtrim( method(i : tke) ) + i - 1
 
-                  ELSE
+                  else
 
-                     CALL SETMSG ( 'Need more room in output ' &
+                     call setmsg ( 'Need more room in output ' &
                      //            'arrays. Token count = #; ' &
                      //            'substring indices = #:#; ' &
                      //            'substring = #.'           )
-                     CALL ERRINT ( '#', N                     )
-                     CALL ERRINT ( '#', I                     )
-                     CALL ERRINT ( '#', TKE                   )
-                     CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'     )
-                     CALL CHKOUT ( 'ZZLEXMET'                 )
-                     RETURN
+                     call errint ( '#', n                     )
+                     call errint ( '#', i                     )
+                     call errint ( '#', tke                   )
+                     call sigerr ( 'SPICE(ARRAYTOOSMALL)'     )
+                     call chkout ( 'ZZLEXMET'                 )
+                     return
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-               I = TKE + 1
+               i = tke + 1
 
-            END DO
+            end do
 
-         END IF
+         end if
 
 
-         IF ( E .LT. R ) THEN
+         if ( e .lt. r ) then
 !
 !           We expect to find at least one quoted string starting
 !           at index E + 1.
 !
-            I  = E + 1
+            i  = e + 1
 
-            CALL LXQSTR ( METHOD(I:), DQUOTE, 1, EQ, NCHAR )
+            call lxqstr ( method(i:), dquote, 1, eq, nchar )
 
-            IF ( NCHAR .GT. 0 ) THEN
+            if ( nchar .gt. 0 ) then
 
-               IF ( ROOM .GT. 0 ) THEN
+               if ( room .gt. 0 ) then
 
-                  N       = N    + 1
-                  ROOM    = ROOM - 1
-                  BEGS(N) = I
-                  ENDS(N) = I    - 1 + EQ
+                  n       = n    + 1
+                  room    = room - 1
+                  begs(n) = i
+                  ends(n) = i    - 1 + eq
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'Need more room in output ' &
+                  call setmsg ( 'Need more room in output ' &
                   //            'arrays. Token count = #; ' &
                   //            'substring indices = #:#; ' &
                   //            'substring = #.'           )
-                  CALL ERRINT ( '#', N                     )
-                  CALL ERRINT ( '#', I                     )
-                  CALL ERRINT ( '#', TKE                   )
-                  CALL ERRCH  ( '#', METHOD(I:TKE)         )
-                  CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'     )
-                  CALL CHKOUT ( 'ZZLEXMET'                 )
-                  RETURN
+                  call errint ( '#', n                     )
+                  call errint ( '#', i                     )
+                  call errint ( '#', tke                   )
+                  call errch  ( '#', method(i:tke)         )
+                  call sigerr ( 'SPICE(ARRAYTOOSMALL)'     )
+                  call chkout ( 'ZZLEXMET'                 )
+                  return
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We have a syntax error in the input string.
 !
-               CALL SETMSG ( 'Invalid quoted string found ' &
+               call setmsg ( 'Invalid quoted string found ' &
                //            'starting at index #. Substring ' &
                //            'is #.'                          )
-               CALL ERRINT ( '#', I                           )
-               CALL ERRCH  ( '#', METHOD(I:)                  )
-               CALL SIGERR ( 'SPICE(SYNTAXERROR)'             )
-               CALL CHKOUT ( 'ZZLEXMET'                       )
-               RETURN
+               call errint ( '#', i                           )
+               call errch  ( '#', method(i:)                  )
+               call sigerr ( 'SPICE(SYNTAXERROR)'             )
+               call chkout ( 'ZZLEXMET'                       )
+               return
 
-            END IF
+            end if
 
-            I = ENDS(N) + 1
+            i = ends(n) + 1
 
-         END IF
+         end if
 !
 !        The index I has been moved forward by at least one position.
 !
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZLEXMET' )
-      RETURN
-      END
+      call chkout ( 'ZZLEXMET' )
+      return
+      end

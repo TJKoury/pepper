@@ -1,6 +1,6 @@
 !$Procedure CKNR02 ( C-kernel, number of records, type 02 )
 
-      SUBROUTINE CKNR02 ( HANDLE, DESCR, NREC )
+      subroutine cknr02 ( handle, descr, nrec )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               NREC
+      integer               handle
+      double precision      descr   ( * )
+      integer               nrec
 
 ! $ Brief_I/O
 !
@@ -357,7 +357,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
@@ -372,24 +372,24 @@
 !        DTYPE      is the data type.
 !
 
-      INTEGER               NDC
-      PARAMETER           ( NDC   = 2 )
+      integer               ndc
+      parameter           ( ndc   = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC   = 6 )
+      integer               nic
+      parameter           ( nic   = 6 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE = 2 )
+      integer               dtype
+      parameter           ( dtype = 2 )
 
 !
 !     Local variables
 !
-      INTEGER               BEG
-      INTEGER               END
-      INTEGER               ARRSIZ
-      INTEGER               ICD    ( NIC )
+      integer               beg
+      integer               end
+      integer               arrsiz
+      integer               icd    ( nic )
 
-      DOUBLE PRECISION      DCD    ( NDC )
+      double precision      dcd    ( ndc )
 
 
 
@@ -397,11 +397,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKNR02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKNR02' )
+      end if
 
 
 !
@@ -418,27 +418,27 @@
 !        ICD(6)  Final address of segment data
 !
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
 !
 !     If this segment is not of data type 2, then signal an error.
 !
 
-      IF ( ICD( 3 ) .NE. DTYPE ) THEN
-         CALL SETMSG ( 'Data type of the segment should be 2: Passed '// &
+      if ( icd( 3 ) .ne. dtype ) then
+         call setmsg ( 'Data type of the segment should be 2: Passed '// &
                        'descriptor shows type = #.'                   )
-         CALL ERRINT ( '#', ICD ( 3 )                                 )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                       )
-         CALL CHKOUT ( 'CKNR02'                                       )
-         RETURN
-      END IF
+         call errint ( '#', icd ( 3 )                                 )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         call chkout ( 'CKNR02'                                       )
+         return
+      end if
 
 !
 !     The beginning and ending addresses of the segment are in the
 !     descriptor.
 !
-      BEG = ICD( 5 )
-      END = ICD( 6 )
+      beg = icd( 5 )
+      end = icd( 6 )
 
 !
 !     Calculate the number of pointing records in the segment from
@@ -477,11 +477,11 @@
 !         than 0.1, the first term will always round to the correct
 !         value of N.
 !
-      ARRSIZ = END - BEG + 1
+      arrsiz = end - beg + 1
 
-      NREC   = NINT (  ( 100.D0 * (DBLE(ARRSIZ)) + 1.D0 ) / 1001.D0  )
+      nrec   = nint (  ( 100.d0 * (dble(arrsiz)) + 1.d0 ) / 1001.d0  )
 
 
-      CALL CHKOUT ( 'CKNR02' )
-      RETURN
-      END
+      call chkout ( 'CKNR02' )
+      return
+      end

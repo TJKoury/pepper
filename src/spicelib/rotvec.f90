@@ -1,6 +1,6 @@
 !$Procedure ROTVEC ( Transform a vector via a rotation )
 
-      SUBROUTINE ROTVEC ( V1, ANGLE, IAXIS, VOUT )
+      subroutine rotvec ( v1, angle, iaxis, vout )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V1    ( 3 )
-      DOUBLE PRECISION   ANGLE
-      INTEGER            IAXIS
-      DOUBLE PRECISION   VOUT  ( 3 )
+      double precision   v1    ( 3 )
+      double precision   angle
+      integer            iaxis
+      double precision   vout  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -237,50 +237,50 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      C
+      double precision      s
+      double precision      c
 
-      INTEGER               TMP
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
+      integer               tmp
+      integer               i1
+      integer               i2
+      integer               i3
 
-      DOUBLE PRECISION      TEMP   (3)
-      INTEGER               INDEXS (5)
-      SAVE                  INDEXS
+      double precision      temp   (3)
+      integer               indexs (5)
+      save                  indexs
 
-      DATA                  INDEXS  / 3, 1, 2, 3, 1 /
+      data                  indexs  / 3, 1, 2, 3, 1 /
 
 !
 !  Get the sine and cosine of ANGLE
 !
-      S = DSIN(ANGLE)
-      C = DCOS(ANGLE)
+      s = dsin(angle)
+      c = dcos(angle)
 
 !
 !  Get indices for axes. The first index is for the axis of rotation.
 !  The next two axes follow in right hand order (XYZ).  First get the
 !  non-negative value of IAXIS mod 3 .
 !
-      TMP = MOD ( MOD(IAXIS,3) + 3, 3 )
+      tmp = mod ( mod(iaxis,3) + 3, 3 )
 
-      I1  = INDEXS( TMP + 1 )
-      I2  = INDEXS( TMP + 2 )
-      I3  = INDEXS( TMP + 3 )
+      i1  = indexs( tmp + 1 )
+      i2  = indexs( tmp + 2 )
+      i3  = indexs( tmp + 3 )
 
 !
 !  The coordinate along the axis of rotation does not change.
 !
-      TEMP(1) =  V1(I1)
-      TEMP(2) =           C*V1(I2) + S*V1(I3)
-      TEMP(3) =          -S*V1(I2) + C*V1(I3)
+      temp(1) =  v1(i1)
+      temp(2) =           c*v1(i2) + s*v1(i3)
+      temp(3) =          -s*v1(i2) + c*v1(i3)
 
 !
 !  Move the buffered vector to the output
 !
-      VOUT(I1) = TEMP(1)
-      VOUT(I2) = TEMP(2)
-      VOUT(I3) = TEMP(3)
+      vout(i1) = temp(1)
+      vout(i2) = temp(2)
+      vout(i3) = temp(3)
 
-      RETURN
-      END
+      return
+      end

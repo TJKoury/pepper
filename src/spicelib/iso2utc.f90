@@ -1,6 +1,6 @@
 !$Procedure ISO2UTC ( Convert ISO time strings to UTC strings. )
 
-      SUBROUTINE ISO2UTC ( TSTRNG, UTCSTR, ERROR )
+      subroutine iso2utc ( tstrng, utcstr, error )
 
 ! $ Abstract
 !
@@ -23,11 +23,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         TSTRNG
-      CHARACTER*(*)         UTCSTR
-      CHARACTER*(*)         ERROR
+      character*(*)         tstrng
+      character*(*)         utcstr
+      character*(*)         error
 
 ! $ Brief_I/O
 !
@@ -181,52 +181,52 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               RTRIM
+      integer               bsrchc
+      integer               rtrim
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               NMNTHS
-      PARAMETER           ( NMNTHS = 12 )
+      integer               nmnths
+      parameter           ( nmnths = 12 )
 
 !
 !     In-line functions.
 !
-      LOGICAL               DIGIT
-      LOGICAL               COLON
-      LOGICAL               HYPHEN
-      LOGICAL               T
+      logical               digit
+      logical               colon
+      logical               hyphen
+      logical               t
 
 !
 !     Local Variables
 !
-      CHARACTER*(100)       ASCII
-      CHARACTER*(128)       MYSTR
+      character*(100)       ascii
+      character*(128)       mystr
 
-      CHARACTER*(3)         MONTHS ( 0 : NMNTHS )
-      SAVE                  MONTHS
+      character*(3)         months ( 0 : nmnths )
+      save                  months
 
-      CHARACTER*(2)         IMONTH (     NMNTHS )
-      SAVE                  IMONTH
+      character*(2)         imonth (     nmnths )
+      save                  imonth
 
-      INTEGER               I
-      INTEGER               L
-      INTEGER               M
+      integer               i
+      integer               l
+      integer               m
 
-      LOGICAL               CHANGE
+      logical               change
 !
 !     Initial Values
 !
 
-      DATA                  MONTHS  / '???', 'JAN', 'FEB', 'MAR', &
+      data                  months  / '???', 'JAN', 'FEB', 'MAR', &
                                              'APR', 'MAY', 'JUN', &
                                              'JUL', 'AUG', 'SEP', &
                                              'OCT', 'NOV', 'DEC' /
 
-      DATA                  IMONTH  /        '01',  '02',  '03', &
+      data                  imonth  /        '01',  '02',  '03', &
                                              '04',  '05',  '06', &
                                              '07',  '08',  '09', &
                                              '10',  '11',  '12'  /
@@ -236,80 +236,80 @@
 !
 !     In-line Function Definitions
 !
-      DIGIT(I)  =      ICHAR(ASCII(I:I)) .GE. ICHAR('0') &
-                 .AND. ICHAR(ASCII(I:I)) .LE. ICHAR('9')
+      digit(i)  =      ichar(ascii(i:i)) .ge. ichar('0') &
+                 .and. ichar(ascii(i:i)) .le. ichar('9')
 
-      HYPHEN(I) = ASCII(I:I) .EQ. '-'
-      COLON(I)  = ASCII(I:I) .EQ. ':'
-      T(I)      = ASCII(I:I) .EQ. 'T' .OR. ASCII(I:I) .EQ. 't'
+      hyphen(i) = ascii(i:i) .eq. '-'
+      colon(i)  = ascii(i:i) .eq. ':'
+      t(i)      = ascii(i:i) .eq. 'T' .or. ascii(i:i) .eq. 't'
 
 
 !
 !     Standard SPICELIB exception handling
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ISO2UTC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ISO2UTC' )
+      end if
 
 !
 !     Left justify the input time string, and determine the location of
 !     it's last non-blank character.  Finally make some local copies.
 !
-      CALL      LJUST ( TSTRNG, ASCII )
-      L      =  RTRIM (         ASCII )
-      MYSTR  =  ASCII
-      CHANGE = .FALSE.
+      call      ljust ( tstrng, ascii )
+      l      =  rtrim (         ascii )
+      mystr  =  ascii
+      change = .false.
 
 !
 !     Next check for one of the ISO allowed formats.
 !
-      IF      ( L .EQ. 8 ) THEN
+      if      ( l .eq. 8 ) then
 
 !
 !        The possible format is: yyyy-ddd.  If we get a
 !        match construct the corresponding SPICE day of
 !        year format using JAN  (e.g. 1991-JAN-261).
 !
-         IF (       DIGIT  (1) &
-              .AND. DIGIT  (2) &
-              .AND. DIGIT  (3) &
-              .AND. DIGIT  (4) &
-              .AND. HYPHEN (5) &
-              .AND. DIGIT  (6) &
-              .AND. DIGIT  (7) &
-              .AND. DIGIT  (8) ) THEN
+         if (       digit  (1) &
+              .and. digit  (2) &
+              .and. digit  (3) &
+              .and. digit  (4) &
+              .and. hyphen (5) &
+              .and. digit  (6) &
+              .and. digit  (7) &
+              .and. digit  (8) ) then
 
-            MYSTR  =  ASCII(1:5) // 'JAN' // ASCII(5:)
-            CHANGE = .TRUE.
+            mystr  =  ascii(1:5) // 'JAN' // ascii(5:)
+            change = .true.
 
-         END IF
+         end if
 
-      ELSE IF ( L .EQ. 10 ) THEN
+      else if ( l .eq. 10 ) then
 
 !
 !        The possible format is: yyyy-mm-dd. If we get a match
 !        construct the corresponding SPICE yyyy-mm-dd format.
 !
-         IF (       DIGIT  (1) &
-              .AND. DIGIT  (2) &
-              .AND. DIGIT  (3) &
-              .AND. DIGIT  (4) &
-              .AND. HYPHEN (5) &
-              .AND. DIGIT  (6) &
-              .AND. DIGIT  (7) &
-              .AND. HYPHEN (8) &
-              .AND. DIGIT  (9) &
-              .AND. DIGIT  (10)  ) THEN
+         if (       digit  (1) &
+              .and. digit  (2) &
+              .and. digit  (3) &
+              .and. digit  (4) &
+              .and. hyphen (5) &
+              .and. digit  (6) &
+              .and. digit  (7) &
+              .and. hyphen (8) &
+              .and. digit  (9) &
+              .and. digit  (10)  ) then
 
-            M      =  BSRCHC ( ASCII(6:7), NMNTHS, IMONTH )
-            MYSTR  =  ASCII(1:5) // MONTHS(M) // ASCII(8:)
-            CHANGE = .TRUE.
+            m      =  bsrchc ( ascii(6:7), nmnths, imonth )
+            mystr  =  ascii(1:5) // months(m) // ascii(8:)
+            change = .true.
 
-         END IF
+         end if
 
-      ELSE IF ( L .GE. 17 ) THEN
+      else if ( l .ge. 17 ) then
 
 !
 !        There are two possible formats yyyy-dddThh:mm:ss.ssssss
@@ -317,99 +317,99 @@
 !        As above, if we get a match up to the first character following
 !        a 'T', convert this to a standard SPICE time string.
 !
-         IF (       DIGIT  (1)  .AND. DIGIT  (2) &
-              .AND. DIGIT  (3)  .AND. DIGIT  (4) &
-              .AND. HYPHEN (5) &
-              .AND. DIGIT  (6)  .AND. DIGIT  (7)  .AND. DIGIT  (8) &
-              .AND. T      (9) &
-              .AND. DIGIT  (10) .AND. DIGIT  (11) &
-              .AND. COLON  (12) &
-              .AND. DIGIT  (13) .AND. DIGIT  (14) &
-              .AND. COLON  (15) &
-              .AND. DIGIT  (16) .AND. DIGIT  (17) ) THEN
+         if (       digit  (1)  .and. digit  (2) &
+              .and. digit  (3)  .and. digit  (4) &
+              .and. hyphen (5) &
+              .and. digit  (6)  .and. digit  (7)  .and. digit  (8) &
+              .and. t      (9) &
+              .and. digit  (10) .and. digit  (11) &
+              .and. colon  (12) &
+              .and. digit  (13) .and. digit  (14) &
+              .and. colon  (15) &
+              .and. digit  (16) .and. digit  (17) ) then
 
 
-            MYSTR  =  ASCII(1:5) // &
+            mystr  =  ascii(1:5) // &
                      'JAN'       // &
-                      ASCII(5:8) // &
+                      ascii(5:8) // &
                      ' '         // &
-                      ASCII(10:)
+                      ascii(10:)
 
-            CHANGE = .TRUE.
+            change = .true.
 
-         ELSE IF (       DIGIT  (1)  .AND. DIGIT  (2) &
-                   .AND. DIGIT  (3)  .AND. DIGIT  (4) &
-                   .AND. HYPHEN (5) &
-                   .AND. DIGIT  (6)  .AND. DIGIT  (7) &
-                   .AND. HYPHEN (8) &
-                   .AND. DIGIT  (9)  .AND. DIGIT  (10) &
-                   .AND. T      (11) &
-                   .AND. DIGIT  (12) .AND. DIGIT  (13) &
-                   .AND. COLON  (14) &
-                   .AND. DIGIT  (15) .AND. DIGIT  (16) &
-                   .AND. COLON  (17) &
-                   .AND. DIGIT  (18) .AND. DIGIT  (19) ) THEN
+         else if (       digit  (1)  .and. digit  (2) &
+                   .and. digit  (3)  .and. digit  (4) &
+                   .and. hyphen (5) &
+                   .and. digit  (6)  .and. digit  (7) &
+                   .and. hyphen (8) &
+                   .and. digit  (9)  .and. digit  (10) &
+                   .and. t      (11) &
+                   .and. digit  (12) .and. digit  (13) &
+                   .and. colon  (14) &
+                   .and. digit  (15) .and. digit  (16) &
+                   .and. colon  (17) &
+                   .and. digit  (18) .and. digit  (19) ) then
 
-            M      =  BSRCHC ( ASCII(6:7), NMNTHS, IMONTH )
-            MYSTR  =  ASCII(1:5)  // &
-                      MONTHS(M)   // &
-                      ASCII(8:10) // &
+            m      =  bsrchc ( ascii(6:7), nmnths, imonth )
+            mystr  =  ascii(1:5)  // &
+                      months(m)   // &
+                      ascii(8:10) // &
                       ' '         // &
-                      ASCII(12:)
+                      ascii(12:)
 
-            CHANGE = .TRUE.
-         END IF
+            change = .true.
+         end if
 
-      END IF
+      end if
 
 
 !
 !     If we didn't make some change to the input string, it's NOT
 !     an ISO format string. Say so in an error message and return.
 !
-      IF ( .NOT. CHANGE ) THEN
+      if ( .not. change ) then
 
-         ERROR = 'The input string does not match the format '  // &
+         error = 'The input string does not match the format '  // &
                  'expected of ISO time strings. The acceptable '// &
                  'formats are: yyyy-ddd, yyyy-mm-dd, '          // &
                  'yyyy-dddThh:mm:ss[.ss...], and '              // &
                  'yyyy-mm-ddThh:mm:ss[.ss...].  The input '     // &
                  'string was #. '
 
-         CALL REPMC  ( ERROR, '#', MYSTR(1:L), ERROR )
-         CALL CHKOUT ( 'ISO2UTC' )
-         RETURN
+         call repmc  ( error, '#', mystr(1:l), error )
+         call chkout ( 'ISO2UTC' )
+         return
 
-      END IF
+      end if
 
 !
 !     Check for a year out of the range from 1000 to 2999
 !
-      IF ( CHANGE &
-           .AND. (      LLT ( ASCII(1:4), '1000' ) &
-                   .OR. LGT ( ASCII(1:4), '2999' ) ) ) THEN
+      if ( change &
+           .and. (      llt ( ascii(1:4), '1000' ) &
+                   .or. lgt ( ascii(1:4), '2999' ) ) ) then
 
-         ERROR = 'Years outside the range from 1000 '           // &
+         error = 'Years outside the range from 1000 '           // &
                  'to 2999 are not supported in SPICE-ISO '      // &
                  'format. You''ve '                             // &
                  'supplied a time string of the form '          // &
                  '# ... '
-         CALL REPMC ( ERROR, '#', ASCII(1:7), ERROR )
-         CALL CHKOUT ( 'ISO2UTC' )
-         RETURN
+         call repmc ( error, '#', ascii(1:7), error )
+         call chkout ( 'ISO2UTC' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     That's it.
 !
-      ERROR = ' '
+      error = ' '
 
-      UTCSTR = MYSTR
+      utcstr = mystr
 
-      CALL CHKOUT ( 'ISO2UTC'  )
+      call chkout ( 'ISO2UTC'  )
 
-      RETURN
+      return
 
-      END
+      end

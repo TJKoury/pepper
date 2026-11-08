@@ -5,8 +5,8 @@
 !
 !     Size of column name, in characters.
 !
-      INTEGER               CNAMSZ
-      PARAMETER           ( CNAMSZ = 32 )
+      integer               cnamsz
+      parameter           ( cnamsz = 32 )
 
 !
 !     End Include Section:  EK Column Name Size

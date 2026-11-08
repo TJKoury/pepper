@@ -1,9 +1,9 @@
 !$Procedure GFPA ( GF, phase angle search )
 
-      SUBROUTINE GFPA ( TARGET, ILLMN,  ABCORR, OBSRVR, &
-                        RELATE, REFVAL, ADJUST, STEP, &
-                        CNFINE, MW,     NW,     WORK, &
-                        RESULT )
+      subroutine gfpa ( target, illmn,  abcorr, obsrvr, &
+                        relate, refval, adjust, step, &
+                        cnfine, mw,     nw,     work, &
+                        result )
 
 ! $ Abstract
 !
@@ -29,27 +29,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILLMN
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         target
+      character*(*)         illmn
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         relate
+      double precision      refval
+      double precision      adjust
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -970,165 +970,165 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               GFBAIL
-      LOGICAL               ODD
+      logical               return
+      logical               gfbail
+      logical               odd
 
-      INTEGER               SIZED
+      integer               sized
 
-      EXTERNAL              GFBAIL
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               QNPARS
-      PARAMETER           ( QNPARS = 4 )
+      integer               qnpars
+      parameter           ( qnpars = 4 )
 
-      LOGICAL               NOBAIL
-      PARAMETER           ( NOBAIL = .FALSE. )
+      logical               nobail
+      parameter           ( nobail = .false. )
 
-      LOGICAL               NORPT
-      PARAMETER           ( NORPT  = .FALSE. )
+      logical               norpt
+      parameter           ( norpt  = .false. )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      CHARACTER*(LNSIZE)    QCPARS ( QNPARS )
-      CHARACTER*(LNSIZE)    QPNAMS ( QNPARS )
+      character*(lnsize)    qcpars ( qnpars )
+      character*(lnsize)    qpnams ( qnpars )
 
-      DOUBLE PRECISION      QDPARS ( QNPARS )
+      double precision      qdpars ( qnpars )
 
-      INTEGER               QIPARS ( QNPARS )
+      integer               qipars ( qnpars )
 
-      LOGICAL               QLPARS ( QNPARS )
+      logical               qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check into the error subsystem.
 !
-      CALL CHKIN( 'GFPA' )
+      call chkin( 'GFPA' )
 
 !
 !     Confirm minimum window sizes.
 !
-      IF ( (MW .LT. 2) .OR. ODD(MW) ) THEN
+      if ( (mw .lt. 2) .or. odd(mw) ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
-         CALL ERRINT ( '#',  MW                                   )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                  )
-         CALL CHKOUT ( 'GFPA'                                     )
-         RETURN
+         call errint ( '#',  mw                                   )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                  )
+         call chkout ( 'GFPA'                                     )
+         return
 
-      END IF
+      end if
 
 
-      IF ( NW .LT. NWPA ) THEN
+      if ( nw .lt. nwpa ) then
 
-         CALL SETMSG ( 'Workspace window count was #; count must be ' &
+         call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                )
-         CALL ERRINT ( '#',  NW                                     )
-         CALL ERRINT ( '#',  NWPA                                   )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                    )
-         CALL CHKOUT ( 'GFPA'                                       )
-         RETURN
+         call errint ( '#',  nw                                     )
+         call errint ( '#',  nwpa                                   )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                    )
+         call chkout ( 'GFPA'                                       )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the result window size.
 !
-      IF ( (SIZED(RESULT) .LT. 2) .OR. ODD( SIZED(RESULT) ) ) THEN
+      if ( (sized(result) .lt. 2) .or. odd( sized(result) ) ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )
-         CALL ERRINT ( '#', SIZED(RESULT)                          )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFPA'                                      )
-         RETURN
+         call errint ( '#', sized(result)                          )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFPA'                                      )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Set up a call to GFEVNT specific to the phase angle search.
 !
-      QPNAMS(1) = 'TARGET'
-      QCPARS(1) =  TARGET
+      qpnams(1) = 'TARGET'
+      qcpars(1) =  target
 
-      QPNAMS(2) = 'OBSERVER'
-      QCPARS(2) =  OBSRVR
+      qpnams(2) = 'OBSERVER'
+      qcpars(2) =  obsrvr
 
-      QPNAMS(3) = 'ABCORR'
-      QCPARS(3) =  ABCORR
+      qpnams(3) = 'ABCORR'
+      qcpars(3) =  abcorr
 
-      QPNAMS(4) = 'ILLUM'
-      QCPARS(4) =  ILLMN
+      qpnams(4) = 'ILLUM'
+      qcpars(4) =  illmn
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Initialize the RESULT window to empty.
 !
-      CALL SCARDD ( 0, RESULT)
+      call scardd ( 0, result)
 
 !
 !     Look for solutions.
 !
 !     Progress report and interrupt options are set to .FALSE.
 !
-      CALL GFEVNT ( GFSTEP,   GFREFN,  'PHASE ANGLE', QNPARS, &
-                    QPNAMS,   QCPARS,   QDPARS,       QIPARS, &
-                    QLPARS,   RELATE,   REFVAL,       TOL, &
-                    ADJUST,   CNFINE,   NORPT,        GFREPI, &
-                    GFREPU,   GFREPF,   MW,           NWPA, &
-                    WORK,     NOBAIL,   GFBAIL,       RESULT  )
+      call gfevnt ( gfstep,   gfrefn,  'PHASE ANGLE', qnpars, &
+                    qpnams,   qcpars,   qdpars,       qipars, &
+                    qlpars,   relate,   refval,       tol, &
+                    adjust,   cnfine,   norpt,        gfrepi, &
+                    gfrepu,   gfrepf,   mw,           nwpa, &
+                    work,     nobail,   gfbail,       result  )
 
 
-      CALL CHKOUT( 'GFPA' )
-      RETURN
+      call chkout( 'GFPA' )
+      return
 
-      END
+      end

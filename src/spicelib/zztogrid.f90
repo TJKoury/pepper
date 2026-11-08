@@ -1,6 +1,6 @@
 !$Procedure ZZTOGRID ( Model coordinates to voxel grid coordinates )
 
-       SUBROUTINE ZZTOGRID ( MODXYZ, VOXORI, VOXSIZ, GRDXYZ )
+       subroutine zztogrid ( modxyz, voxori, voxsiz, grdxyz )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      MODXYZ  ( 3 )
-      DOUBLE PRECISION      VOXORI  ( 3 )
-      DOUBLE PRECISION      GRDXYZ  ( 3 )
+      double precision      voxsiz
+      double precision      modxyz  ( 3 )
+      double precision      voxori  ( 3 )
+      double precision      grdxyz  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -148,38 +148,38 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( VOXSIZ .LE. 0.D0 ) THEN
+      if ( voxsiz .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZTOGRID'                            )
-         CALL SETMSG ( 'Voxel size was #; must be positive.' )
-         CALL ERRDP  ( '#',  VOXSIZ                          )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEVALUE)'             )
-         CALL CHKOUT ( 'ZZTOGRID'                            )
-         RETURN
+         call chkin  ( 'ZZTOGRID'                            )
+         call setmsg ( 'Voxel size was #; must be positive.' )
+         call errdp  ( '#',  voxsiz                          )
+         call sigerr ( 'SPICE(NONPOSITIVEVALUE)'             )
+         call chkout ( 'ZZTOGRID'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert model coordinates to voxel grid coordinates
 !     via a Galilean transform.
 !
-      DO I = 1, 3
-         GRDXYZ(I) = (MODXYZ(I) - VOXORI(I)) / VOXSIZ
-      END DO
+      do i = 1, 3
+         grdxyz(i) = (modxyz(i) - voxori(i)) / voxsiz
+      end do
 
-      RETURN
-      END
+      return
+      end

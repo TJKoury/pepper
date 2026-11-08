@@ -27,13 +27,13 @@
 !
 !     Size of double precision source information component:
 !
-      INTEGER               DCSIZE
-      PARAMETER           ( DCSIZE = 1 )
+      integer               dcsize
+      parameter           ( dcsize = 1 )
 
 !     Size of integer source information component:
 !
-      INTEGER               ICSIZE
-      PARAMETER           ( ICSIZE = 1 )
+      integer               icsize
+      parameter           ( icsize = 1 )
 
 !
 !     The contents of the components are DSK data type-dependent.

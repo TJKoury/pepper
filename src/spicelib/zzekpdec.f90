@@ -1,8 +1,8 @@
 !$Procedure      ZZEKPDEC ( EK, parse column declaration )
 
-      SUBROUTINE ZZEKPDEC ( DECL, PARDSC )
+      subroutine zzekpdec ( decl, pardsc )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ektype.inc'
 
-      CHARACTER*(*)         DECL
-      INTEGER               PARDSC ( * )
+      character*(*)         decl
+      integer               pardsc ( * )
 
 ! $ Brief_I/O
 !
@@ -277,76 +277,76 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NATTR
-      PARAMETER           ( NATTR  =   5 )
+      integer               nattr
+      parameter           ( nattr  =   5 )
 
-      INTEGER               MAXTOK
-      PARAMETER           ( MAXTOK =  20 )
+      integer               maxtok
+      parameter           ( maxtok =  20 )
 
-      INTEGER               TOKLEN
-      PARAMETER           ( TOKLEN =  32 )
+      integer               toklen
+      parameter           ( toklen =  32 )
 
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 320 )
+      integer               msglen
+      parameter           ( msglen = 320 )
 
-      INTEGER               NRKEY
-      PARAMETER           ( NRKEY  =   1 )
+      integer               nrkey
+      parameter           ( nrkey  =   1 )
 
 !
 !     Parameters naming indices of keywords in the attribute list
 !     ATTKEY:
 !
-      INTEGER               TYPPOS
-      PARAMETER           ( TYPPOS =          1 )
+      integer               typpos
+      parameter           ( typpos =          1 )
 
-      INTEGER               SIZPOS
-      PARAMETER           ( SIZPOS = TYPPOS + 1 )
+      integer               sizpos
+      parameter           ( sizpos = typpos + 1 )
 
-      INTEGER               IDXPOS
-      PARAMETER           ( IDXPOS = SIZPOS + 1 )
+      integer               idxpos
+      parameter           ( idxpos = sizpos + 1 )
 
-      INTEGER               NFLPOS
-      PARAMETER           ( NFLPOS = IDXPOS + 1 )
+      integer               nflpos
+      parameter           ( nflpos = idxpos + 1 )
 
-      INTEGER               FXCPOS
-      PARAMETER           ( FXCPOS = NFLPOS + 1 )
+      integer               fxcpos
+      parameter           ( fxcpos = nflpos + 1 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(TOKLEN)    ATTKEY ( NATTR )
-      CHARACTER*(MSGLEN)    MSG
-      CHARACTER*(TOKLEN)    TOKENS ( MAXTOK )
+      character*(toklen)    attkey ( nattr )
+      character*(msglen)    msg
+      character*(toklen)    tokens ( maxtok )
 
-      INTEGER               ATTLOC ( CDSCSZ )
-      INTEGER               I
-      INTEGER               J
-      INTEGER               N
-      INTEGER               PTR
-      INTEGER               REQKEY ( NRKEY  )
-      INTEGER               TOKLOC
+      integer               attloc ( cdscsz )
+      integer               i
+      integer               j
+      integer               n
+      integer               ptr
+      integer               reqkey ( nrkey  )
+      integer               tokloc
 
-      LOGICAL               ATTFND ( CDSCSZ )
-      LOGICAL               FOUND
+      logical               attfnd ( cdscsz )
+      logical               found
 
 !
 !     Saved variables
 !
-      SAVE                  ATTKEY
-      SAVE                  REQKEY
+      save                  attkey
+      save                  reqkey
 
 
 !
 !     Initial values
 !
-      DATA                  ATTKEY         / &
+      data                  attkey         / &
 
                             'DATATYPE', &
                             'SIZE', &
@@ -355,23 +355,23 @@
                             'FIXED_COUNT'  /
 
 
-      DATA                  REQKEY         / &
+      data                  reqkey         / &
                             1              /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKPDEC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKPDEC' )
+      end if
 
 !
 !     Start with a clean slate.
 !
-      CALL CLEARI ( CDSCSZ, PARDSC )
+      call cleari ( cdscsz, pardsc )
 
 !
 !     Our declaration language has been cleverly designed so that the
@@ -418,61 +418,61 @@
 !     The order of the token pairs is not necessarily as shown.
 !
 !
-      CALL LPARSM ( DECL, ',=', MAXTOK, N, TOKENS )
+      call lparsm ( decl, ',=', maxtok, n, tokens )
 
 !
 !     Make sure the tokens are in upper case.  They are already
 !     left-justified.
 !
-      DO I = 1, N
-         CALL UCASE( TOKENS(I), TOKENS(I) )
-      END DO
+      do i = 1, n
+         call ucase( tokens(i), tokens(i) )
+      end do
 
 !
 !     See which clauses are present in the declaration, and keep track
 !     of the token indices of the keywords that start the clauses.
 !
-      DO I = 1, NATTR
-         ATTFND(I) = .FALSE.
-      END DO
+      do i = 1, nattr
+         attfnd(i) = .false.
+      end do
 
-      DO I = 1, N
+      do i = 1, n
 
-         J     = 1
-         FOUND = .FALSE.
+         j     = 1
+         found = .false.
 
-         DO WHILE (  ( J .LE. NATTR ) .AND. ( .NOT. FOUND )  )
+         do while (  ( j .le. nattr ) .and. ( .not. found )  )
 
-            IF ( TOKENS(I) .EQ. ATTKEY(J) ) THEN
-               FOUND     = .TRUE.
-               ATTFND(J) = .TRUE.
-               ATTLOC(J) =  I
-            ELSE
-               J         =  J + 1
-            END IF
+            if ( tokens(i) .eq. attkey(j) ) then
+               found     = .true.
+               attfnd(j) = .true.
+               attloc(j) =  i
+            else
+               j         =  j + 1
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Make sure we got the required keyword tokens we were expecting.
 !
-      DO I = 1, NRKEY
+      do i = 1, nrkey
 
-         IF (  .NOT. ATTFND( REQKEY(I) ) ) THEN
+         if (  .not. attfnd( reqkey(i) ) ) then
 
-            CALL SETMSG ( 'Required keyword # was not found in ' // &
+            call setmsg ( 'Required keyword # was not found in ' // &
                           'column declaration #.'                )
-            CALL ERRCH  ( '#',  ATTKEY( REQKEY(I) )              )
-            CALL ERRCH  ( '#',  DECL                             )
-            CALL SIGERR ( 'SPICE(BADCOLUMDECL)'                  )
-            CALL CHKOUT ( 'ZZEKPDEC'                             )
-            RETURN
+            call errch  ( '#',  attkey( reqkey(i) )              )
+            call errch  ( '#',  decl                             )
+            call sigerr ( 'SPICE(BADCOLUMDECL)'                  )
+            call chkout ( 'ZZEKPDEC'                             )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we got this far, we can start to fill in the data type
@@ -492,35 +492,35 @@
 !
 !     Find the location where the data type token should be.
 !
-      TOKLOC = ATTLOC(TYPPOS) + 1
+      tokloc = attloc(typpos) + 1
 
-      IF ( N .LT. TOKLOC ) THEN
-         CALL SETMSG (  'Column data type specification did not '     // &
+      if ( n .lt. tokloc ) then
+         call setmsg (  'Column data type specification did not '     // &
                         'follow "DATATYPE" keyword in declaration #.'  )
-         CALL ERRCH  ( '#', DECL                                       )
-         CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                          )
-         CALL CHKOUT ( 'ZZEKPDEC'                                      )
-         RETURN
-      END IF
+         call errch  ( '#', decl                                       )
+         call sigerr ( 'SPICE(BADCOLUMNDECL)'                          )
+         call chkout ( 'ZZEKPDEC'                                      )
+         return
+      end if
 
-      IF ( TOKENS(TOKLOC) .EQ. 'INTEGER' ) THEN
+      if ( tokens(tokloc) .eq. 'INTEGER' ) then
 
-         PARDSC(TYPIDX)  =  INT
-         PARDSC(LENIDX)  =  1
+         pardsc(typidx)  =  int
+         pardsc(lenidx)  =  1
 
-      ELSE IF (  EQSTR( TOKENS(TOKLOC), 'DOUBLE PRECISION' )  ) THEN
+      else if (  eqstr( tokens(tokloc), 'DOUBLE PRECISION' )  ) then
 
-         PARDSC(TYPIDX)  =  DP
-         PARDSC(LENIDX)  =  1
+         pardsc(typidx)  =  dp
+         pardsc(lenidx)  =  1
 
-      ELSE IF (  EQSTR( TOKENS(TOKLOC), 'TIME' )  ) THEN
+      else if (  eqstr( tokens(tokloc), 'TIME' )  ) then
 
-         PARDSC(TYPIDX)  =  TIME
-         PARDSC(LENIDX)  =  1
+         pardsc(typidx)  =  time
+         pardsc(lenidx)  =  1
 
-      ELSE IF (  TOKENS(TOKLOC)(1:9) .EQ. 'CHARACTER'  ) THEN
+      else if (  tokens(tokloc)(1:9) .eq. 'CHARACTER'  ) then
 
-         PARDSC(TYPIDX)  =  CHR
+         pardsc(typidx)  =  chr
 !
 !        To simplify picking up the length specification, compress
 !        out blanks and parentheses.  This should leave us with
@@ -533,224 +533,224 @@
 !           CHARACTER**
 !
 !
-         CALL CMPRSS ( ' ', 0, TOKENS(TOKLOC), TOKENS(TOKLOC) )
-         CALL CMPRSS ( '(', 0, TOKENS(TOKLOC), TOKENS(TOKLOC) )
-         CALL CMPRSS ( ')', 0, TOKENS(TOKLOC), TOKENS(TOKLOC) )
+         call cmprss ( ' ', 0, tokens(tokloc), tokens(tokloc) )
+         call cmprss ( '(', 0, tokens(tokloc), tokens(tokloc) )
+         call cmprss ( ')', 0, tokens(tokloc), tokens(tokloc) )
 
 
-         IF ( TOKENS(TOKLOC)(10:10) .NE. '*' ) THEN
+         if ( tokens(tokloc)(10:10) .ne. '*' ) then
 
-            CALL SETMSG ( 'Required asterisk missing from character ' // &
+            call setmsg ( 'Required asterisk missing from character ' // &
                           'column declaration:  #  in declaration:  ' // &
                           '#'                                          )
-            CALL ERRCH  ( '#', TOKENS(TOKLOC)                          )
-            CALL ERRCH  ( '#', DECL                                    )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#', tokens(tokloc)                          )
+            call errch  ( '#', decl                                    )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
 
-         IF ( TOKENS(TOKLOC)(11:11)  .EQ.  '*'  ) THEN
+         if ( tokens(tokloc)(11:11)  .eq.  '*'  ) then
 !
 !           The string length is variable.
 !
-            PARDSC(LENIDX) = IFALSE
+            pardsc(lenidx) = ifalse
 
-         ELSE
+         else
 !
 !           The portion of the token following the asterisk should be a
 !           string length.
 !
-            MSG = ' '
-            CALL NPARSI (TOKENS(TOKLOC)(11:), PARDSC(LENIDX), MSG, PTR )
+            msg = ' '
+            call nparsi (tokens(tokloc)(11:), pardsc(lenidx), msg, ptr )
 
-            IF ( MSG .NE. ' ' ) THEN
+            if ( msg .ne. ' ' ) then
 
-               CALL SETMSG ( 'String length specification # didn''t ' // &
+               call setmsg ( 'String length specification # didn''t ' // &
                              'parse as an integer in declaration   #'  )
-               CALL ERRCH  ( '#',  TOKENS(TOKLOC)(11:)                 )
-               CALL ERRCH  ( '#',  DECL                                )
-               CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                    )
-               CALL CHKOUT ( 'ZZEKPDEC'                                )
-               RETURN
+               call errch  ( '#',  tokens(tokloc)(11:)                 )
+               call errch  ( '#',  decl                                )
+               call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
+               call chkout ( 'ZZEKPDEC'                                )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        The type specification is invalid.
 !
-         CALL SETMSG ( 'Data type specification # is unrecognized in '// &
+         call setmsg ( 'Data type specification # is unrecognized in '// &
                        'declaration #.'                                )
-         CALL ERRCH  ( '#', TOKENS(TOKLOC)                             )
-         CALL ERRCH  ( '#', DECL                                       )
-         CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                          )
-         CALL CHKOUT ( 'ZZEKPDEC'                                      )
-         RETURN
+         call errch  ( '#', tokens(tokloc)                             )
+         call errch  ( '#', decl                                       )
+         call sigerr ( 'SPICE(BADCOLUMNDECL)'                          )
+         call chkout ( 'ZZEKPDEC'                                      )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Next, parse the size specification, if we have one.  If it's
 !     valid, it's either the string 'VARIABLE' or it's an integer.
 !
-      IF ( ATTFND(SIZPOS) ) THEN
+      if ( attfnd(sizpos) ) then
 
-         TOKLOC  =  ATTLOC(SIZPOS) + 1
+         tokloc  =  attloc(sizpos) + 1
 
-         IF ( N .LT. TOKLOC ) THEN
+         if ( n .lt. tokloc ) then
 
-            CALL SETMSG (  'Column size specification did not follow '// &
+            call setmsg (  'Column size specification did not follow '// &
                            '"SIZE" keyword in declaration #.'          )
-            CALL ERRCH  ( '#', DECL                                    )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#', decl                                    )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
 
-         IF ( TOKENS(TOKLOC) .EQ. 'VARIABLE' ) THEN
+         if ( tokens(tokloc) .eq. 'VARIABLE' ) then
 !
 !           Variable size entries are not allowed for CHARACTER*(*)
 !           columns.
 !
-            IF ( PARDSC(TYPIDX) .EQ. CHR ) THEN
+            if ( pardsc(typidx) .eq. chr ) then
 
-               IF ( PARDSC(LENIDX) .EQ. IFALSE ) THEN
+               if ( pardsc(lenidx) .eq. ifalse ) then
 
-                  CALL SETMSG (  'Column size specification was ' // &
+                  call setmsg (  'Column size specification was ' // &
                                  'VARIABLE for a CHARACTER*(*) '  // &
                                  'column in  declaration #.'      )
-                  CALL ERRCH  ( '#', DECL                         )
-                  CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'            )
-                  CALL CHKOUT ( 'ZZEKPDEC'                        )
-                  RETURN
+                  call errch  ( '#', decl                         )
+                  call sigerr ( 'SPICE(BADCOLUMNDECL)'            )
+                  call chkout ( 'ZZEKPDEC'                        )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-            PARDSC(SIZIDX) = IFALSE
+            pardsc(sizidx) = ifalse
 
-         ELSE
+         else
 
-            CALL NPARSI ( TOKENS(TOKLOC), PARDSC(SIZIDX), MSG,  PTR )
+            call nparsi ( tokens(tokloc), pardsc(sizidx), msg,  ptr )
 
-            IF ( MSG .NE. ' ' ) THEN
+            if ( msg .ne. ' ' ) then
 
-               CALL SETMSG ( 'Column element size  specification # '  // &
+               call setmsg ( 'Column element size  specification # '  // &
                              'didn''t parse as an integer in '        // &
                              'in declaration #'                        )
-               CALL ERRCH  ( '#',  TOKENS(TOKLOC)                      )
-               CALL ERRCH  ( '#',  DECL                                )
-               CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                    )
-               CALL CHKOUT ( 'ZZEKPDEC'                                )
-               RETURN
+               call errch  ( '#',  tokens(tokloc)                      )
+               call errch  ( '#',  decl                                )
+               call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
+               call chkout ( 'ZZEKPDEC'                                )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        If the size is not specified, it defaults to 1.
 !
-         PARDSC(SIZIDX) = 1
+         pardsc(sizidx) = 1
 
-      END IF
+      end if
 
 !
 !     The data type and entry size determine the column's class.
 !
-      IF ( PARDSC(TYPIDX) .EQ. CHR ) THEN
+      if ( pardsc(typidx) .eq. chr ) then
 !
 !        The character classes are 3 for scalars, 6 for arrays.
 !
-         IF ( PARDSC(SIZIDX) .EQ. 1 ) THEN
-            PARDSC(CLSIDX) =  3
-         ELSE
-            PARDSC(CLSIDX) =  6
-         END IF
+         if ( pardsc(sizidx) .eq. 1 ) then
+            pardsc(clsidx) =  3
+         else
+            pardsc(clsidx) =  6
+         end if
 
 
-      ELSE IF ( PARDSC(TYPIDX) .EQ. INT ) THEN
+      else if ( pardsc(typidx) .eq. int ) then
 !
 !        The integer classes are 1 for scalars, 4 for arrays.
 !
-         IF ( PARDSC(SIZIDX) .EQ. 1 ) THEN
-            PARDSC(CLSIDX) =  1
-         ELSE
-            PARDSC(CLSIDX) =  4
-         END IF
+         if ( pardsc(sizidx) .eq. 1 ) then
+            pardsc(clsidx) =  1
+         else
+            pardsc(clsidx) =  4
+         end if
 
 
-      ELSE IF (      ( PARDSC(TYPIDX) .EQ. DP   ) &
-                .OR. ( PARDSC(TYPIDX) .EQ. TIME )  ) THEN
+      else if (      ( pardsc(typidx) .eq. dp   ) &
+                .or. ( pardsc(typidx) .eq. time )  ) then
 !
 !        The d.p. classes are 2 for scalars, 6 for arrays.  TIME
 !        values are represented using d.p. classes as well.
 !
-         IF ( PARDSC(SIZIDX) .EQ. 1 ) THEN
-            PARDSC(CLSIDX) =  2
-         ELSE
-            PARDSC(CLSIDX) =  5
-         END IF
+         if ( pardsc(sizidx) .eq. 1 ) then
+            pardsc(clsidx) =  2
+         else
+            pardsc(clsidx) =  5
+         end if
 
-      END IF
+      end if
 
 !
 !     Parse the `NULLS_OK' clause, if we have one.
 !
-      IF ( ATTFND(NFLPOS) ) THEN
+      if ( attfnd(nflpos) ) then
 
-         TOKLOC = ATTLOC(NFLPOS) + 1
+         tokloc = attloc(nflpos) + 1
 
-         IF ( N .LT. TOKLOC ) THEN
+         if ( n .lt. tokloc ) then
 
-            CALL SETMSG (  'Boolean value did not follow '            // &
+            call setmsg (  'Boolean value did not follow '            // &
                            '"NULLS_OK" keyword in declaration #.'      )
-            CALL ERRCH  ( '#', DECL                                    )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#', decl                                    )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
-         IF ( TOKENS(TOKLOC) .EQ. 'TRUE' ) THEN
+         if ( tokens(tokloc) .eq. 'TRUE' ) then
 
-            PARDSC(NFLIDX)  =  ITRUE
+            pardsc(nflidx)  =  itrue
 
-         ELSE IF ( TOKENS(TOKLOC) .EQ. 'FALSE' ) THEN
+         else if ( tokens(tokloc) .eq. 'FALSE' ) then
 
-            PARDSC(NFLIDX)  =  IFALSE
+            pardsc(nflidx)  =  ifalse
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Invalid token # follows NULLS_OK keyword ' // &
+            call setmsg ( 'Invalid token # follows NULLS_OK keyword ' // &
                           'in declaration #. '                         )
-            CALL ERRCH  ( '#',  TOKENS(TOKLOC)                         )
-            CALL ERRCH  ( '#',  DECL                                   )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#',  tokens(tokloc)                         )
+            call errch  ( '#',  decl                                   )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        As a default, nulls are not allowed.
 !
-         PARDSC(NFLIDX) = IFALSE
+         pardsc(nflidx) = ifalse
 
-      END IF
+      end if
 
 
 
@@ -758,65 +758,65 @@
 !
 !     Parse the `INDEXED' clause, if we have one.
 !
-      IF ( ATTFND(IDXPOS) ) THEN
+      if ( attfnd(idxpos) ) then
 
-         TOKLOC = ATTLOC(IDXPOS) + 1
+         tokloc = attloc(idxpos) + 1
 
-         IF ( N .LT. TOKLOC ) THEN
+         if ( n .lt. tokloc ) then
 
-            CALL SETMSG (  'Boolean value did not follow '            // &
+            call setmsg (  'Boolean value did not follow '            // &
                            '"INDEXED" keyword in declaration #.'       )
-            CALL ERRCH  ( '#', DECL                                    )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#', decl                                    )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
 
-         IF ( TOKENS(TOKLOC) .EQ. 'TRUE' ) THEN
+         if ( tokens(tokloc) .eq. 'TRUE' ) then
 !
 !           If we have a fixed-size column whose size is 1, then it's
 !           possible to index that column.  Otherwise, we should not
 !           have an `INDEXED' clause.
 !
-            IF ( PARDSC(SIZIDX) .NE. 1 ) THEN
+            if ( pardsc(sizidx) .ne. 1 ) then
 
-               CALL SETMSG ( 'Non-scalar columns cannot be indexed. ' // &
+               call setmsg ( 'Non-scalar columns cannot be indexed. ' // &
                              'Declaration was #.'                      )
-               CALL ERRCH  ( '#',  DECL                                )
-               CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                    )
-               CALL CHKOUT ( 'ZZEKPDEC'                                )
-               RETURN
+               call errch  ( '#',  decl                                )
+               call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
+               call chkout ( 'ZZEKPDEC'                                )
+               return
 
-            END IF
+            end if
 
-            PARDSC(IXTIDX)  =  ITRUE
+            pardsc(ixtidx)  =  itrue
 
-         ELSE IF ( TOKENS(TOKLOC) .EQ. 'FALSE' ) THEN
+         else if ( tokens(tokloc) .eq. 'FALSE' ) then
 
-            PARDSC(IXTIDX)  =  IFALSE
+            pardsc(ixtidx)  =  ifalse
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Invalid token # follows INDEXED keyword '  // &
+            call setmsg ( 'Invalid token # follows INDEXED keyword '  // &
                           'in declaration #. '                         )
-            CALL ERRCH  ( '#',  TOKENS(TOKLOC)                         )
-            CALL ERRCH  ( '#',  DECL                                   )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#',  tokens(tokloc)                         )
+            call errch  ( '#',  decl                                   )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        As a default, the column is not indexed.
 !
-         PARDSC(IXTIDX) = IFALSE
+         pardsc(ixtidx) = ifalse
 
-      END IF
+      end if
 
 
 
@@ -824,77 +824,77 @@
 !
 !     Parse the `FIXED_COUNT' clause, if we have one.
 !
-      IF ( ATTFND(FXCPOS) ) THEN
+      if ( attfnd(fxcpos) ) then
 
-         TOKLOC = ATTLOC(FXCPOS) + 1
+         tokloc = attloc(fxcpos) + 1
 
-         IF ( N .LT. TOKLOC ) THEN
+         if ( n .lt. tokloc ) then
 
-            CALL SETMSG (  'Boolean value did not follow '            // &
+            call setmsg (  'Boolean value did not follow '            // &
                            '"FIXED_COUNT" keyword in declaration #.'   )
-            CALL ERRCH  ( '#', DECL                                    )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#', decl                                    )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
+         end if
 
-         IF ( TOKENS(TOKLOC) .EQ. 'TRUE' ) THEN
+         if ( tokens(tokloc) .eq. 'TRUE' ) then
 !
 !           The column is a fixed-count column.  Only scalar columns
 !           are permitted to have fixed count.  We adjust the column
 !           class to indicate fixed-count columns.
 !
-            IF ( PARDSC(CLSIDX) .EQ. 1 ) THEN
+            if ( pardsc(clsidx) .eq. 1 ) then
 !
 !              Map scalar integers.
 !
-               PARDSC(CLSIDX) =  7
+               pardsc(clsidx) =  7
 
-            ELSE IF ( PARDSC(CLSIDX) .EQ. 2 ) THEN
+            else if ( pardsc(clsidx) .eq. 2 ) then
 !
 !              Map scalar d.p. numbers.
 !
-               PARDSC(CLSIDX) =  8
+               pardsc(clsidx) =  8
 
-            ELSE IF ( PARDSC(CLSIDX) .EQ. 3 ) THEN
+            else if ( pardsc(clsidx) .eq. 3 ) then
 !
 !              Map scalar strings.
 !
-               PARDSC(CLSIDX) =  9
+               pardsc(clsidx) =  9
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'FIXED_COUNT attribute used in non-'     // &
+               call setmsg ( 'FIXED_COUNT attribute used in non-'     // &
                              'scalar column declaration #. '           )
-               CALL ERRCH  ( '#',  DECL                                )
-               CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                    )
-               CALL CHKOUT ( 'ZZEKPDEC'                                )
-               RETURN
+               call errch  ( '#',  decl                                )
+               call sigerr ( 'SPICE(BADCOLUMNDECL)'                    )
+               call chkout ( 'ZZEKPDEC'                                )
+               return
 
-            END IF
+            end if
 
 
-         ELSE IF ( TOKENS(TOKLOC) .NE. 'FALSE' ) THEN
+         else if ( tokens(tokloc) .ne. 'FALSE' ) then
 !
 !           No action is required if the FIXED_COUNT keyword is set
 !           to FALSE, but no value other than FALSE or TRUE may appear
 !           on the RHS.
 !
-            CALL SETMSG ( 'Invalid token # follows NULLS_OK keyword ' // &
+            call setmsg ( 'Invalid token # follows NULLS_OK keyword ' // &
                           'in declaration #. '                         )
-            CALL ERRCH  ( '#',  TOKENS(TOKLOC)                         )
-            CALL ERRCH  ( '#',  DECL                                   )
-            CALL SIGERR ( 'SPICE(BADCOLUMNDECL)'                       )
-            CALL CHKOUT ( 'ZZEKPDEC'                                   )
-            RETURN
+            call errch  ( '#',  tokens(tokloc)                         )
+            call errch  ( '#',  decl                                   )
+            call sigerr ( 'SPICE(BADCOLUMNDECL)'                       )
+            call chkout ( 'ZZEKPDEC'                                   )
+            return
 
-         END IF
-
-
-      END IF
+         end if
 
 
-      CALL CHKOUT ( 'ZZEKPDEC' )
-      RETURN
-      END
+      end if
+
+
+      call chkout ( 'ZZEKPDEC' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure PCKE03 ( PCK, evaluate data record from type 3 segment )
 
-      SUBROUTINE PCKE03 ( ET, RECORD, ROTMAT )
+      subroutine pcke03 ( et, record, rotmat )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( *    )
-      DOUBLE PRECISION      ROTMAT   ( 6, 6 )
+      double precision      et
+      double precision      record   ( *    )
+      double precision      rotmat   ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -172,31 +172,31 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      RPD
+      double precision      halfpi
+      double precision      rpd
 
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local variables
 !
-      DOUBLE PRECISION      EULANG ( 6    )
-      DOUBLE PRECISION      MAV    ( 3    )
-      DOUBLE PRECISION      ROT    ( 3, 3 )
-      DOUBLE PRECISION      DROTDT ( 3, 3 )
+      double precision      eulang ( 6    )
+      double precision      mav    ( 3    )
+      double precision      rot    ( 3, 3 )
+      double precision      drotdt ( 3, 3 )
 
-      INTEGER               NCOEFF
-      INTEGER               DEGREE
-      INTEGER               COFLOC
-      INTEGER               I
-      INTEGER               J
+      integer               ncoeff
+      integer               degree
+      integer               cofloc
+      integer               i
+      integer               j
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKE03' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PCKE03' )
+      end if
 
 !
 !     The first number in the record is the number of Chebyshev
@@ -204,12 +204,12 @@
 !     state vector.  Following it are two numbers that will be used
 !     later, then the six sets of coefficients.
 !
-      NCOEFF = INT( RECORD( 1 ) )
+      ncoeff = int( record( 1 ) )
 !
 !     The degree of each polynomial is one less than the number of
 !     coefficients.
 !
-      DEGREE = NCOEFF - 1
+      degree = ncoeff - 1
 !
 !     Call CHBVAL once for each quantity to obtain RA, DEC, and W values
 !     as well as values for the angular velocity.
@@ -230,33 +230,33 @@
 !        ---W.L. Taber
 !
 !
-      DO I = 1, 6
+      do i = 1, 6
 !
 !        The coefficients for each variable are located contiguously,
 !        following the first three words in the record.
 !
-         COFLOC = NCOEFF * ( I - 1 ) + 4
+         cofloc = ncoeff * ( i - 1 ) + 4
 !
 !        CHBVAL needs as input the coefficients, the degree of the
 !        polynomial, the epoch, and also two variable transformation
 !        parameters, which are located, in our case, in the second and
 !        third slots of the record.
 !
-         CALL CHBVAL ( RECORD( COFLOC ), DEGREE, RECORD( 2 ), ET, &
-                       EULANG(I)                                  )
+         call chbval ( record( cofloc ), degree, record( 2 ), et, &
+                       eulang(i)                                  )
 !
 !        Convert to radians.
 !
-         EULANG(I) = RPD() * EULANG(I)
+         eulang(i) = rpd() * eulang(i)
 
-      END DO
+      end do
 !
 !     EULANG(1) is RA make it PHI
 !     EULANG(2) is DEC make it DELTA
 !     EULANG(3) is W
 !
-      EULANG(1) = HALFPI() + EULANG(1)
-      EULANG(2) = HALFPI() - EULANG(2)
+      eulang(1) = halfpi() + eulang(1)
+      eulang(2) = halfpi() - eulang(2)
 
 !
 !     Before we obtain the state transformation matrix, we need to
@@ -278,7 +278,7 @@
 !
 !     Compute the rotation associated with the Euler angles.
 !
-      CALL EUL2M ( EULANG(3), EULANG(2), EULANG(1), 3, 1, 3, ROT  )
+      call eul2m ( eulang(3), eulang(2), eulang(1), 3, 1, 3, rot  )
 
 !
 !     This rotation transforms positions relative to the inertial
@@ -329,26 +329,26 @@
 !     of  -OMEGA*ROT by computing the cross products -AV x COL
 !     for each column COL of ROT.
 !
-      MAV(1) = -EULANG(4)
-      MAV(2) = -EULANG(5)
-      MAV(3) = -EULANG(6)
+      mav(1) = -eulang(4)
+      mav(2) = -eulang(5)
+      mav(3) = -eulang(6)
 
-      CALL VCRSS ( MAV, ROT(1,1), DROTDT(1,1) )
-      CALL VCRSS ( MAV, ROT(1,2), DROTDT(1,2) )
-      CALL VCRSS ( MAV, ROT(1,3), DROTDT(1,3) )
+      call vcrss ( mav, rot(1,1), drotdt(1,1) )
+      call vcrss ( mav, rot(1,2), drotdt(1,2) )
+      call vcrss ( mav, rot(1,3), drotdt(1,3) )
 
 !
 !     Now we simply fill in the blanks.
 !
-      DO I = 1, 3
-         DO J = 1, 3
-            ROTMAT(I,  J  ) = ROT   (I,J)
-            ROTMAT(I+3,J  ) = DROTDT(I,J)
-            ROTMAT(I,  J+3) = 0.0D0
-            ROTMAT(I+3,J+3) = ROT   (I,J)
-         END DO
-      END DO
+      do i = 1, 3
+         do j = 1, 3
+            rotmat(i,  j  ) = rot   (i,j)
+            rotmat(i+3,j  ) = drotdt(i,j)
+            rotmat(i,  j+3) = 0.0d0
+            rotmat(i+3,j+3) = rot   (i,j)
+         end do
+      end do
 
-      CALL CHKOUT ( 'PCKE03' )
-      RETURN
-      END
+      call chkout ( 'PCKE03' )
+      return
+      end

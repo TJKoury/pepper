@@ -1,6 +1,6 @@
 !$Procedure APPNDD ( Append an item to a double precision cell )
 
-      SUBROUTINE APPNDD ( ITEM, CELL )
+      subroutine appndd ( item, cell )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      ITEM
-      DOUBLE PRECISION      CELL ( LBCELL:* )
+      double precision      item
+      double precision      cell ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -223,14 +223,14 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDD
-      INTEGER               SIZED
+      logical               return
+      integer               cardd
+      integer               sized
 
 !
 !     Local variables
 !
-      INTEGER               NWCARD
+      integer               nwcard
 
 
 
@@ -239,11 +239,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'APPNDD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'APPNDD' )
+      end if
 
 
 !
@@ -253,24 +253,24 @@
 !     addition of a new item, signal an error.
 !
 
-      NWCARD = CARDD (CELL) + 1
+      nwcard = cardd (cell) + 1
 
-      IF (  ( NWCARD )  .LE.  ( SIZED (CELL) )  ) THEN
+      if (  ( nwcard )  .le.  ( sized (cell) )  ) then
 
-         CELL (NWCARD) = ITEM
-         CALL SCARDD ( NWCARD, CELL )
+         cell (nwcard) = item
+         call scardd ( nwcard, cell )
 
-      ELSE
+      else
 
-        CALL SETMSG ( 'The cell cannot accommodate the '          // &
+        call setmsg ( 'The cell cannot accommodate the '          // &
                       'addition of the element *. '                )
 
-        CALL ERRDP  ( '*', ITEM )
-        CALL SIGERR ( 'SPICE(CELLTOOSMALL)' )
+        call errdp  ( '*', item )
+        call sigerr ( 'SPICE(CELLTOOSMALL)' )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'APPNDD' )
-      RETURN
-      END
+      call chkout ( 'APPNDD' )
+      return
+      end

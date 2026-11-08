@@ -1,6 +1,6 @@
 !$Procedure SPKE10 ( Evaluate SPK record, type 10 )
 
-      SUBROUTINE SPKE10 ( ET, RECORD, STATE )
+      subroutine spke10 ( et, record, state )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsgp4.inc'
+      include 'zzsgp4.inc'
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -226,81 +226,81 @@
 !     SPICELIB functions
 !
 
-      DOUBLE PRECISION      PI
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      double precision      pi
+      logical               failed
+      logical               return
 
 !
 !     The nutation in obliquity and longitude as well as their rates
 !     follow the elements.  So we've got four angles/angle rates
 !     following the elements
 !
-      INTEGER               NANGS
-      PARAMETER           ( NANGS = 4 )
+      integer               nangs
+      parameter           ( nangs = 4 )
 
 !
 !     The locations of the epochs and the starts of the element
 !     sets are given below.
 !
-      INTEGER               TIME1
-      PARAMETER           ( TIME1  = NGEO + KEPOCH )
+      integer               time1
+      parameter           ( time1  = ngeo + kepoch )
 
-      INTEGER               TIME2
-      PARAMETER           ( TIME2  = NELEMS + NANGS + TIME1  )
+      integer               time2
+      parameter           ( time2  = nelems + nangs + time1  )
 
-      INTEGER               MODEL1
-      PARAMETER           ( MODEL1 = NGEO + 1      )
+      integer               model1
+      parameter           ( model1 = ngeo + 1      )
 
-      INTEGER               ANGS1
-      PARAMETER           ( ANGS1 = MODEL1 + NELEMS )
+      integer               angs1
+      parameter           ( angs1 = model1 + nelems )
 
-      INTEGER               MODEL2
-      PARAMETER           ( MODEL2 = ANGS1 + NANGS )
+      integer               model2
+      parameter           ( model2 = angs1 + nangs )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      J2TM     ( 6, 6 )
-      DOUBLE PRECISION      TM2J     ( 6, 6 )
-      DOUBLE PRECISION      S1       ( 6 )
-      DOUBLE PRECISION      S2       ( 6 )
-      DOUBLE PRECISION      TMPSTA   ( 6 )
-      DOUBLE PRECISION      VCOMP    ( 3 )
-      DOUBLE PRECISION      ARG
-      DOUBLE PRECISION      DARGDT
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      DWDT
-      DOUBLE PRECISION      MYPI
-      DOUBLE PRECISION      NUMER
-      DOUBLE PRECISION      T1
-      DOUBLE PRECISION      T2
-      DOUBLE PRECISION      W
+      double precision      j2tm     ( 6, 6 )
+      double precision      tm2j     ( 6, 6 )
+      double precision      s1       ( 6 )
+      double precision      s2       ( 6 )
+      double precision      tmpsta   ( 6 )
+      double precision      vcomp    ( 3 )
+      double precision      arg
+      double precision      dargdt
+      double precision      denom
+      double precision      dwdt
+      double precision      mypi
+      double precision      numer
+      double precision      t1
+      double precision      t2
+      double precision      w
 
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA                  FIRST /.TRUE./
+      data                  first /.true./
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKE10' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKE10' )
+      end if
 
-      IF ( FIRST ) THEN
-         FIRST  = .FALSE.
-         MYPI   = PI()
-      END IF
+      if ( first ) then
+         first  = .false.
+         mypi   = pi()
+      end if
 
 !
 !     Fetch the two epochs stored in the record.
 !
-      T1 = RECORD(TIME1)
-      T2 = RECORD(TIME2)
+      t1 = record(time1)
+      t2 = record(time2)
 
 !
 !     Evaluate the two states. Call them s_1(t) and s_2(t).
@@ -330,7 +330,7 @@
 !     symmetric and zero at both t1 and t2.
 !
 
-      IF ( T1 .NE. T2 ) THEN
+      if ( t1 .ne. t2 ) then
 
 !
 !        Initialize then propagate.
@@ -341,86 +341,86 @@
 !
 !        Evaluate first TLE.
 !
-         CALL XXSGP4I ( RECORD(1), RECORD(MODEL1), AFSPC )
+         call xxsgp4i ( record(1), record(model1), afspc )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKE10' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKE10' )
+            return
+         end if
 
 !
 !        Time from epoch of set 1 in minutes.
 !
-         CALL XXSGP4E ( (ET - T1)/60.D0, S1 )
+         call xxsgp4e ( (et - t1)/60.d0, s1 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKE10' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKE10' )
+            return
+         end if
 
 !
 !        Evaluate second TLE.
 !
-         CALL XXSGP4I ( RECORD(1), RECORD(MODEL2), AFSPC )
+         call xxsgp4i ( record(1), record(model2), afspc )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKE10' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKE10' )
+            return
+         end if
 
 !
 !        Time from epoch of set 2 in minutes.
 !
-         CALL XXSGP4E ( (ET - T2)/60.D0, S2 )
+         call xxsgp4e ( (et - t2)/60.d0, s2 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKE10' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKE10' )
+            return
+         end if
 
 !
 !        Compute the weighting function that we'll need later
 !        when we combine states 1 and 2.
 !
-         NUMER  = ET - T1
-         DENOM  = T2 - T1
-         ARG    = NUMER*MYPI/DENOM
-         DARGDT =       MYPI/DENOM
+         numer  = et - t1
+         denom  = t2 - t1
+         arg    = numer*mypi/denom
+         dargdt =       mypi/denom
 
-         W      =  0.5D0 + 0.5D0 * DCOS( ARG )
-         DWDT   =        - 0.5D0 * DSIN( ARG ) * DARGDT
+         w      =  0.5d0 + 0.5d0 * dcos( arg )
+         dwdt   =        - 0.5d0 * dsin( arg ) * dargdt
 
 !
 !        Now compute the weighted average of the two states.
 !
-         CALL VLCOMG ( 6,  W,    S1,       1.D0-W, S2,     STATE     )
-         CALL VLCOM  (     DWDT, S1,       -DWDT,  S2,     VCOMP     )
-         CALL VADD   (           STATE(4),         VCOMP,  TMPSTA(4) )
-         CALL VEQU   (           TMPSTA(4),                STATE(4)  )
+         call vlcomg ( 6,  w,    s1,       1.d0-w, s2,     state     )
+         call vlcom  (     dwdt, s1,       -dwdt,  s2,     vcomp     )
+         call vadd   (           state(4),         vcomp,  tmpsta(4) )
+         call vequ   (           tmpsta(4),                state(4)  )
 
-      ELSE
+      else
 
 !
 !        Evaluate the TLE.
 !
-         CALL XXSGP4I ( RECORD(1), RECORD(MODEL1), AFSPC )
+         call xxsgp4i ( record(1), record(model1), afspc )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKE10' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKE10' )
+            return
+         end if
 
 !
 !        Time from epoch of set 1 in minutes.
 !
-         CALL XXSGP4E ( (ET - T1)/60.D0, STATE )
+         call xxsgp4e ( (et - t1)/60.d0, state )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKE10' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKE10' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Finally, convert the TEME state to J2000.  First
@@ -430,15 +430,15 @@
 !                         -1
 !     Note that J2TM = TM2J
 !
-      CALL ZZTEME( ET, J2TM, TM2J )
+      call zzteme( et, j2tm, tm2j )
 
 !
 !     ...now convert the TEME state to a J2000 state.
 !
-      CALL MXVG   ( TM2J, STATE, 6, 6, TMPSTA )
-      CALL MOVED  ( TMPSTA,  6,      STATE     )
+      call mxvg   ( tm2j, state, 6, 6, tmpsta )
+      call moved  ( tmpsta,  6,      state     )
 
-      CALL CHKOUT ( 'SPKE10' )
-      RETURN
+      call chkout ( 'SPKE10' )
+      return
 
-      END
+      end

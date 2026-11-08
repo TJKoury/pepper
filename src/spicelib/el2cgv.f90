@@ -1,6 +1,6 @@
 !$Procedure EL2CGV ( Ellipse to center and generating vectors )
 
-      SUBROUTINE EL2CGV ( ELLIPS, CENTER, SMAJOR, SMINOR )
+      subroutine el2cgv ( ellips, center, smajor, sminor )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBEL
-      PARAMETER           ( UBEL    =   9 )
+      integer               ubel
+      parameter           ( ubel    =   9 )
 
-      DOUBLE PRECISION      ELLIPS ( UBEL )
-      DOUBLE PRECISION      CENTER (    3 )
-      DOUBLE PRECISION      SMAJOR (    3 )
-      DOUBLE PRECISION      SMINOR (    3 )
+      double precision      ellips ( ubel )
+      double precision      center (    3 )
+      double precision      smajor (    3 )
+      double precision      sminor (    3 )
 
 ! $ Brief_I/O
 !
@@ -316,23 +316,23 @@
 !        MINPOS through MINPOS + 1
 !
 !
-      INTEGER               CTRPOS
-      PARAMETER           ( CTRPOS = 1 )
+      integer               ctrpos
+      parameter           ( ctrpos = 1 )
 
-      INTEGER               MAJPOS
-      PARAMETER           ( MAJPOS = 4 )
+      integer               majpos
+      parameter           ( majpos = 4 )
 
-      INTEGER               MINPOS
-      PARAMETER           ( MINPOS = 7 )
+      integer               minpos
+      parameter           ( minpos = 7 )
 
 
 !
 !     The center of the ellipse is held in the first three elements.
 !     The semi-major and semi-minor axes come next.
 !
-      CALL VEQU ( ELLIPS(CTRPOS), CENTER )
-      CALL VEQU ( ELLIPS(MAJPOS), SMAJOR )
-      CALL VEQU ( ELLIPS(MINPOS), SMINOR )
+      call vequ ( ellips(ctrpos), center )
+      call vequ ( ellips(majpos), smajor )
+      call vequ ( ellips(minpos), sminor )
 
-      RETURN
-      END
+      return
+      end

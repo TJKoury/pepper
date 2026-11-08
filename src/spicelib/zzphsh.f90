@@ -1,6 +1,6 @@
 !$Procedure ZZPHSH ( Private---kernel POOL hash function umbrella )
 
-      INTEGER FUNCTION ZZPHSH ( WORD, M, M2 )
+      integer function zzphsh ( word, m, m2 )
 
 ! $ Abstract
 !
@@ -21,10 +21,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         WORD
-      INTEGER               M
-      INTEGER               M2
+      implicit none
+      character*(*)         word
+      integer               m
+      integer               m2
 
 ! $ Brief_I/O
 !
@@ -135,49 +135,49 @@
 !
 !     Entry Points
 !
-      INTEGER               ZZSHSH
-      INTEGER               ZZHASH
-      INTEGER               ZZHASH2
+      integer               zzshsh
+      integer               zzhash
+      integer               zzhash2
 
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
+      integer               intmax
 
 !
 !     Local Variables.
 !
-      INTEGER               I
-      INTEGER               DIVISR
-      INTEGER               VAL ( 0:128 )
-      INTEGER               F
-      INTEGER               BASE
-      INTEGER               BLANK
-      INTEGER               LENGTH
-      INTEGER               MAXDIV
+      integer               i
+      integer               divisr
+      integer               val ( 0:128 )
+      integer               f
+      integer               base
+      integer               blank
+      integer               length
+      integer               maxdiv
 
-      INTEGER               BSLASH
-      PARAMETER           ( BSLASH = 92 )
+      integer               bslash
+      parameter           ( bslash = 92 )
 
 
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
-      DATA                  DIVISR / -1 /
+      data                  divisr / -1 /
 
 !
 !     We do not diagnose a bogus call since this is a private routine.
 !
-      ZZPHSH = 0
+      zzphsh = 0
 
-      RETURN
+      return
 
 
 !$Procedure ZZSHSH ( Private---Set up POOL hash function )
 
-      ENTRY ZZSHSH ( M )
+      entry zzshsh ( m )
 
 ! $ Abstract
 !
@@ -290,153 +290,153 @@
 !
 !     Return zero.
 !
-      ZZSHSH = 0
+      zzshsh = 0
 
 !
 !     The initialization block below is identical to the initialization
 !     block in the entry ZZHASH2. If this block is changed in any way,
 !     the block in ZZHASH2 must be changed in the same way.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         BASE  = 68
-         BLANK = ICHAR( ' ' )
+         base  = 68
+         blank = ichar( ' ' )
 
-         MAXDIV = INTMAX() / BASE - 1
+         maxdiv = intmax() / base - 1
 
-         DO I = 0, 128
-            VAL(I) = 0
-         END DO
+         do i = 0, 128
+            val(i) = 0
+         end do
 
-         VAL(ICHAR('0')) = 1
-         VAL(ICHAR('1')) = 2
-         VAL(ICHAR('2')) = 3
-         VAL(ICHAR('3')) = 4
-         VAL(ICHAR('4')) = 5
-         VAL(ICHAR('5')) = 6
-         VAL(ICHAR('6')) = 7
-         VAL(ICHAR('7')) = 8
-         VAL(ICHAR('8')) = 9
-         VAL(ICHAR('9')) = 10
-         VAL(ICHAR('A')) = 11
-         VAL(ICHAR('B')) = 12
-         VAL(ICHAR('C')) = 13
-         VAL(ICHAR('D')) = 14
-         VAL(ICHAR('E')) = 15
-         VAL(ICHAR('F')) = 16
-         VAL(ICHAR('G')) = 17
-         VAL(ICHAR('H')) = 18
-         VAL(ICHAR('I')) = 19
-         VAL(ICHAR('J')) = 20
-         VAL(ICHAR('K')) = 21
-         VAL(ICHAR('L')) = 22
-         VAL(ICHAR('M')) = 23
-         VAL(ICHAR('N')) = 24
-         VAL(ICHAR('O')) = 25
-         VAL(ICHAR('P')) = 26
-         VAL(ICHAR('Q')) = 27
-         VAL(ICHAR('R')) = 28
-         VAL(ICHAR('S')) = 29
-         VAL(ICHAR('T')) = 30
-         VAL(ICHAR('U')) = 31
-         VAL(ICHAR('V')) = 32
-         VAL(ICHAR('W')) = 33
-         VAL(ICHAR('X')) = 34
-         VAL(ICHAR('Y')) = 35
-         VAL(ICHAR('Z')) = 36
-         VAL(ICHAR('-')) = 37
-         VAL(ICHAR('_')) = 38
-         VAL(ICHAR('.')) = 39
-         VAL(ICHAR('/')) = 40
-         VAL(ICHAR('!')) = 41
-         VAL(ICHAR('@')) = 42
-         VAL(ICHAR('#')) = 43
-         VAL(ICHAR('$')) = 44
-         VAL(ICHAR('%')) = 45
-         VAL(ICHAR('^')) = 46
-         VAL(ICHAR('&')) = 47
-         VAL(ICHAR('*')) = 48
-         VAL(ICHAR('(')) = 49
-         VAL(ICHAR(')')) = 50
-         VAL(ICHAR('+')) = 51
-         VAL(ICHAR('=')) = 52
-         VAL(ICHAR('[')) = 53
-         VAL(ICHAR('{')) = 54
-         VAL(ICHAR(']')) = 55
-         VAL(ICHAR('}')) = 56
-         VAL(ICHAR('|')) = 57
-         VAL(BSLASH    ) = 58
-         VAL(ICHAR(':')) = 59
-         VAL(ICHAR(';')) = 60
-         VAL(ICHAR('<')) = 61
-         VAL(ICHAR(',')) = 62
-         VAL(ICHAR('>')) = 63
-         VAL(ICHAR('?')) = 64
+         val(ichar('0')) = 1
+         val(ichar('1')) = 2
+         val(ichar('2')) = 3
+         val(ichar('3')) = 4
+         val(ichar('4')) = 5
+         val(ichar('5')) = 6
+         val(ichar('6')) = 7
+         val(ichar('7')) = 8
+         val(ichar('8')) = 9
+         val(ichar('9')) = 10
+         val(ichar('A')) = 11
+         val(ichar('B')) = 12
+         val(ichar('C')) = 13
+         val(ichar('D')) = 14
+         val(ichar('E')) = 15
+         val(ichar('F')) = 16
+         val(ichar('G')) = 17
+         val(ichar('H')) = 18
+         val(ichar('I')) = 19
+         val(ichar('J')) = 20
+         val(ichar('K')) = 21
+         val(ichar('L')) = 22
+         val(ichar('M')) = 23
+         val(ichar('N')) = 24
+         val(ichar('O')) = 25
+         val(ichar('P')) = 26
+         val(ichar('Q')) = 27
+         val(ichar('R')) = 28
+         val(ichar('S')) = 29
+         val(ichar('T')) = 30
+         val(ichar('U')) = 31
+         val(ichar('V')) = 32
+         val(ichar('W')) = 33
+         val(ichar('X')) = 34
+         val(ichar('Y')) = 35
+         val(ichar('Z')) = 36
+         val(ichar('-')) = 37
+         val(ichar('_')) = 38
+         val(ichar('.')) = 39
+         val(ichar('/')) = 40
+         val(ichar('!')) = 41
+         val(ichar('@')) = 42
+         val(ichar('#')) = 43
+         val(ichar('$')) = 44
+         val(ichar('%')) = 45
+         val(ichar('^')) = 46
+         val(ichar('&')) = 47
+         val(ichar('*')) = 48
+         val(ichar('(')) = 49
+         val(ichar(')')) = 50
+         val(ichar('+')) = 51
+         val(ichar('=')) = 52
+         val(ichar('[')) = 53
+         val(ichar('{')) = 54
+         val(ichar(']')) = 55
+         val(ichar('}')) = 56
+         val(ichar('|')) = 57
+         val(bslash    ) = 58
+         val(ichar(':')) = 59
+         val(ichar(';')) = 60
+         val(ichar('<')) = 61
+         val(ichar(',')) = 62
+         val(ichar('>')) = 63
+         val(ichar('?')) = 64
 
 !
 !        Note, ICHAR('''') returns the ASCII value for the single
 !        quote -> '.
 !
-         VAL(ICHAR(''''))= 65
-         VAL(ICHAR('"')) = 66
-         VAL(ICHAR('`')) = 67
-         VAL(ICHAR('~')) = 68
+         val(ichar(''''))= 65
+         val(ichar('"')) = 66
+         val(ichar('`')) = 67
+         val(ichar('~')) = 68
 
-         VAL(ICHAR('a')) = VAL(ICHAR('A'))
-         VAL(ICHAR('b')) = VAL(ICHAR('B'))
-         VAL(ICHAR('c')) = VAL(ICHAR('C'))
-         VAL(ICHAR('d')) = VAL(ICHAR('D'))
-         VAL(ICHAR('e')) = VAL(ICHAR('E'))
-         VAL(ICHAR('f')) = VAL(ICHAR('F'))
-         VAL(ICHAR('g')) = VAL(ICHAR('G'))
-         VAL(ICHAR('h')) = VAL(ICHAR('H'))
-         VAL(ICHAR('i')) = VAL(ICHAR('I'))
-         VAL(ICHAR('j')) = VAL(ICHAR('J'))
-         VAL(ICHAR('k')) = VAL(ICHAR('K'))
-         VAL(ICHAR('l')) = VAL(ICHAR('L'))
-         VAL(ICHAR('m')) = VAL(ICHAR('M'))
-         VAL(ICHAR('n')) = VAL(ICHAR('N'))
-         VAL(ICHAR('o')) = VAL(ICHAR('O'))
-         VAL(ICHAR('p')) = VAL(ICHAR('P'))
-         VAL(ICHAR('q')) = VAL(ICHAR('Q'))
-         VAL(ICHAR('r')) = VAL(ICHAR('R'))
-         VAL(ICHAR('s')) = VAL(ICHAR('S'))
-         VAL(ICHAR('t')) = VAL(ICHAR('T'))
-         VAL(ICHAR('u')) = VAL(ICHAR('U'))
-         VAL(ICHAR('v')) = VAL(ICHAR('V'))
-         VAL(ICHAR('w')) = VAL(ICHAR('W'))
-         VAL(ICHAR('x')) = VAL(ICHAR('X'))
-         VAL(ICHAR('y')) = VAL(ICHAR('Y'))
-         VAL(ICHAR('z')) = VAL(ICHAR('Z'))
+         val(ichar('a')) = val(ichar('A'))
+         val(ichar('b')) = val(ichar('B'))
+         val(ichar('c')) = val(ichar('C'))
+         val(ichar('d')) = val(ichar('D'))
+         val(ichar('e')) = val(ichar('E'))
+         val(ichar('f')) = val(ichar('F'))
+         val(ichar('g')) = val(ichar('G'))
+         val(ichar('h')) = val(ichar('H'))
+         val(ichar('i')) = val(ichar('I'))
+         val(ichar('j')) = val(ichar('J'))
+         val(ichar('k')) = val(ichar('K'))
+         val(ichar('l')) = val(ichar('L'))
+         val(ichar('m')) = val(ichar('M'))
+         val(ichar('n')) = val(ichar('N'))
+         val(ichar('o')) = val(ichar('O'))
+         val(ichar('p')) = val(ichar('P'))
+         val(ichar('q')) = val(ichar('Q'))
+         val(ichar('r')) = val(ichar('R'))
+         val(ichar('s')) = val(ichar('S'))
+         val(ichar('t')) = val(ichar('T'))
+         val(ichar('u')) = val(ichar('U'))
+         val(ichar('v')) = val(ichar('V'))
+         val(ichar('w')) = val(ichar('W'))
+         val(ichar('x')) = val(ichar('X'))
+         val(ichar('y')) = val(ichar('Y'))
+         val(ichar('z')) = val(ichar('Z'))
 
-      END IF
+      end if
 
 !
 !     Check and save divisor.
 !
-      IF ( M .LE. 0 .OR. M .GT. MAXDIV ) THEN
+      if ( m .le. 0 .or. m .gt. maxdiv ) then
 
-         CALL CHKIN  ( 'ZZSHSH'                                      )
-         CALL SETMSG ( 'The input hash function divisor was not '    // &
+         call chkin  ( 'ZZSHSH'                                      )
+         call setmsg ( 'The input hash function divisor was not '    // &
                        'in the allowed range from 1 to #. It was #.' )
-         CALL ERRINT ( '#', MAXDIV                                   )
-         CALL ERRINT ( '#', M                                        )
-         CALL SIGERR ( 'SPICE(INVALIDDIVISOR)'                       )
-         CALL CHKOUT ( 'ZZSHSH'                                      )
-         RETURN
+         call errint ( '#', maxdiv                                   )
+         call errint ( '#', m                                        )
+         call sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
+         call chkout ( 'ZZSHSH'                                      )
+         return
 
-      END IF
+      end if
 
-      DIVISR = M
+      divisr = m
 
-      RETURN
+      return
 
 
 !$Procedure ZZHASH ( Private---POOL Hash function )
 
-      ENTRY ZZHASH ( WORD )
+      entry zzhash ( word )
 
 ! $ Abstract
 !
@@ -541,79 +541,79 @@
 !
 !     Check if divisor was initialized by a prior call to ZZSHSH.
 !
-      IF ( DIVISR .EQ. -1 ) THEN
+      if ( divisr .eq. -1 ) then
 
-         ZZHASH = 0
+         zzhash = 0
 
-         CALL CHKIN  ( 'ZZHASH'                                     )
-         CALL SETMSG ( 'The ZZHASH function was called before the ' // &
+         call chkin  ( 'ZZHASH'                                     )
+         call setmsg ( 'The ZZHASH function was called before the ' // &
                        'POOL hash parameters were initialized by '  // &
                        'a call to ZZSHSH.'                          )
-         CALL SIGERR ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         CALL CHKOUT ( 'ZZHASH'                                     )
-         RETURN
+         call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
+         call chkout ( 'ZZHASH'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute hash value for the input string.
 !
-      F      = 0
-      LENGTH = LEN( WORD )
+      f      = 0
+      length = len( word )
 
-      DO I = 1, LENGTH
+      do i = 1, length
 
-         IF ( ICHAR(WORD(I:I)) .EQ. BLANK ) THEN
+         if ( ichar(word(i:i)) .eq. blank ) then
 
-            ZZHASH = MOD ( F*BASE, DIVISR ) + 1
+            zzhash = mod ( f*base, divisr ) + 1
 
 !
 !           A negative value for ZZHASH indicates a serious problem.
 !
-            IF( ZZHASH .LT. 0 ) THEN
+            if( zzhash .lt. 0 ) then
 
-               CALL CHKIN  ( 'ZZHASH'                             )
-               CALL SETMSG ( 'The ZZHASH function calculated a '  // &
+               call chkin  ( 'ZZHASH'                             )
+               call setmsg ( 'The ZZHASH function calculated a '  // &
                              'negative value for string $1. '     // &
                              'Contact NAIF.'                      )
-               CALL ERRCH  ( '$1', WORD                           )
-               CALL SIGERR ( 'SPICE(NEGATIVEHASHVALUE1)'          )
-               CALL CHKOUT ( 'ZZHASH'                             )
+               call errch  ( '$1', word                           )
+               call sigerr ( 'SPICE(NEGATIVEHASHVALUE1)'          )
+               call chkout ( 'ZZHASH'                             )
 
-            END IF
+            end if
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-         F = VAL(  MIN( 128, ICHAR(WORD(I:I)) )  ) + F * BASE
-         F = MOD( F, DIVISR )
+         f = val(  min( 128, ichar(word(i:i)) )  ) + f * base
+         f = mod( f, divisr )
 
-      END DO
+      end do
 
-      ZZHASH = MOD( F*BASE, DIVISR ) + 1
+      zzhash = mod( f*base, divisr ) + 1
 
 !
 !     A negative value for ZZHASH indicates a serious problem.
 !
-      IF( ZZHASH .LT. 0 ) THEN
+      if( zzhash .lt. 0 ) then
 
-         CALL CHKIN  ( 'ZZHASH'                              )
-         CALL SETMSG ( 'The ZZHASH function calculated a '  // &
+         call chkin  ( 'ZZHASH'                              )
+         call setmsg ( 'The ZZHASH function calculated a '  // &
                        'negative value for string $1. '     // &
                        'Contact NAIF.'                       )
-         CALL ERRCH  ( '$1', WORD                            )
-         CALL SIGERR ( 'SPICE(NEGATIVEHASHVALUE2)'           )
-         CALL CHKOUT ( 'ZZHASH'                              )
+         call errch  ( '$1', word                            )
+         call sigerr ( 'SPICE(NEGATIVEHASHVALUE2)'           )
+         call chkout ( 'ZZHASH'                              )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 !$Procedure ZZHASH2 ( Private---Arbitrary divisor hash function )
 
-      ENTRY ZZHASH2 ( WORD, M2 )
+      entry zzhash2 ( word, m2 )
 
 ! $ Abstract
 !
@@ -728,194 +728,194 @@
 !     block in the entry ZZSHSH. If this block is changed in any way,
 !     the block in ZZSHSH must be changed in the same way.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST = .FALSE.
+         first = .false.
 
-         BASE  = 68
-         BLANK = ICHAR( ' ' )
+         base  = 68
+         blank = ichar( ' ' )
 
-         MAXDIV = INTMAX() / BASE - 1
+         maxdiv = intmax() / base - 1
 
-         DO I = 0, 128
-            VAL(I) = 0
-         END DO
+         do i = 0, 128
+            val(i) = 0
+         end do
 
-         VAL(ICHAR('0')) = 1
-         VAL(ICHAR('1')) = 2
-         VAL(ICHAR('2')) = 3
-         VAL(ICHAR('3')) = 4
-         VAL(ICHAR('4')) = 5
-         VAL(ICHAR('5')) = 6
-         VAL(ICHAR('6')) = 7
-         VAL(ICHAR('7')) = 8
-         VAL(ICHAR('8')) = 9
-         VAL(ICHAR('9')) = 10
-         VAL(ICHAR('A')) = 11
-         VAL(ICHAR('B')) = 12
-         VAL(ICHAR('C')) = 13
-         VAL(ICHAR('D')) = 14
-         VAL(ICHAR('E')) = 15
-         VAL(ICHAR('F')) = 16
-         VAL(ICHAR('G')) = 17
-         VAL(ICHAR('H')) = 18
-         VAL(ICHAR('I')) = 19
-         VAL(ICHAR('J')) = 20
-         VAL(ICHAR('K')) = 21
-         VAL(ICHAR('L')) = 22
-         VAL(ICHAR('M')) = 23
-         VAL(ICHAR('N')) = 24
-         VAL(ICHAR('O')) = 25
-         VAL(ICHAR('P')) = 26
-         VAL(ICHAR('Q')) = 27
-         VAL(ICHAR('R')) = 28
-         VAL(ICHAR('S')) = 29
-         VAL(ICHAR('T')) = 30
-         VAL(ICHAR('U')) = 31
-         VAL(ICHAR('V')) = 32
-         VAL(ICHAR('W')) = 33
-         VAL(ICHAR('X')) = 34
-         VAL(ICHAR('Y')) = 35
-         VAL(ICHAR('Z')) = 36
-         VAL(ICHAR('-')) = 37
-         VAL(ICHAR('_')) = 38
-         VAL(ICHAR('.')) = 39
-         VAL(ICHAR('/')) = 40
-         VAL(ICHAR('!')) = 41
-         VAL(ICHAR('@')) = 42
-         VAL(ICHAR('#')) = 43
-         VAL(ICHAR('$')) = 44
-         VAL(ICHAR('%')) = 45
-         VAL(ICHAR('^')) = 46
-         VAL(ICHAR('&')) = 47
-         VAL(ICHAR('*')) = 48
-         VAL(ICHAR('(')) = 49
-         VAL(ICHAR(')')) = 50
-         VAL(ICHAR('+')) = 51
-         VAL(ICHAR('=')) = 52
-         VAL(ICHAR('[')) = 53
-         VAL(ICHAR('{')) = 54
-         VAL(ICHAR(']')) = 55
-         VAL(ICHAR('}')) = 56
-         VAL(ICHAR('|')) = 57
-         VAL(BSLASH    ) = 58
-         VAL(ICHAR(':')) = 59
-         VAL(ICHAR(';')) = 60
-         VAL(ICHAR('<')) = 61
-         VAL(ICHAR(',')) = 62
-         VAL(ICHAR('>')) = 63
-         VAL(ICHAR('?')) = 64
+         val(ichar('0')) = 1
+         val(ichar('1')) = 2
+         val(ichar('2')) = 3
+         val(ichar('3')) = 4
+         val(ichar('4')) = 5
+         val(ichar('5')) = 6
+         val(ichar('6')) = 7
+         val(ichar('7')) = 8
+         val(ichar('8')) = 9
+         val(ichar('9')) = 10
+         val(ichar('A')) = 11
+         val(ichar('B')) = 12
+         val(ichar('C')) = 13
+         val(ichar('D')) = 14
+         val(ichar('E')) = 15
+         val(ichar('F')) = 16
+         val(ichar('G')) = 17
+         val(ichar('H')) = 18
+         val(ichar('I')) = 19
+         val(ichar('J')) = 20
+         val(ichar('K')) = 21
+         val(ichar('L')) = 22
+         val(ichar('M')) = 23
+         val(ichar('N')) = 24
+         val(ichar('O')) = 25
+         val(ichar('P')) = 26
+         val(ichar('Q')) = 27
+         val(ichar('R')) = 28
+         val(ichar('S')) = 29
+         val(ichar('T')) = 30
+         val(ichar('U')) = 31
+         val(ichar('V')) = 32
+         val(ichar('W')) = 33
+         val(ichar('X')) = 34
+         val(ichar('Y')) = 35
+         val(ichar('Z')) = 36
+         val(ichar('-')) = 37
+         val(ichar('_')) = 38
+         val(ichar('.')) = 39
+         val(ichar('/')) = 40
+         val(ichar('!')) = 41
+         val(ichar('@')) = 42
+         val(ichar('#')) = 43
+         val(ichar('$')) = 44
+         val(ichar('%')) = 45
+         val(ichar('^')) = 46
+         val(ichar('&')) = 47
+         val(ichar('*')) = 48
+         val(ichar('(')) = 49
+         val(ichar(')')) = 50
+         val(ichar('+')) = 51
+         val(ichar('=')) = 52
+         val(ichar('[')) = 53
+         val(ichar('{')) = 54
+         val(ichar(']')) = 55
+         val(ichar('}')) = 56
+         val(ichar('|')) = 57
+         val(bslash    ) = 58
+         val(ichar(':')) = 59
+         val(ichar(';')) = 60
+         val(ichar('<')) = 61
+         val(ichar(',')) = 62
+         val(ichar('>')) = 63
+         val(ichar('?')) = 64
 
 !
 !        Note, ICHAR('''') returns the ASCII value for the single
 !        quote -> '.
 !
-         VAL(ICHAR(''''))= 65
-         VAL(ICHAR('"')) = 66
-         VAL(ICHAR('`')) = 67
-         VAL(ICHAR('~')) = 68
+         val(ichar(''''))= 65
+         val(ichar('"')) = 66
+         val(ichar('`')) = 67
+         val(ichar('~')) = 68
 
-         VAL(ICHAR('a')) = VAL(ICHAR('A'))
-         VAL(ICHAR('b')) = VAL(ICHAR('B'))
-         VAL(ICHAR('c')) = VAL(ICHAR('C'))
-         VAL(ICHAR('d')) = VAL(ICHAR('D'))
-         VAL(ICHAR('e')) = VAL(ICHAR('E'))
-         VAL(ICHAR('f')) = VAL(ICHAR('F'))
-         VAL(ICHAR('g')) = VAL(ICHAR('G'))
-         VAL(ICHAR('h')) = VAL(ICHAR('H'))
-         VAL(ICHAR('i')) = VAL(ICHAR('I'))
-         VAL(ICHAR('j')) = VAL(ICHAR('J'))
-         VAL(ICHAR('k')) = VAL(ICHAR('K'))
-         VAL(ICHAR('l')) = VAL(ICHAR('L'))
-         VAL(ICHAR('m')) = VAL(ICHAR('M'))
-         VAL(ICHAR('n')) = VAL(ICHAR('N'))
-         VAL(ICHAR('o')) = VAL(ICHAR('O'))
-         VAL(ICHAR('p')) = VAL(ICHAR('P'))
-         VAL(ICHAR('q')) = VAL(ICHAR('Q'))
-         VAL(ICHAR('r')) = VAL(ICHAR('R'))
-         VAL(ICHAR('s')) = VAL(ICHAR('S'))
-         VAL(ICHAR('t')) = VAL(ICHAR('T'))
-         VAL(ICHAR('u')) = VAL(ICHAR('U'))
-         VAL(ICHAR('v')) = VAL(ICHAR('V'))
-         VAL(ICHAR('w')) = VAL(ICHAR('W'))
-         VAL(ICHAR('x')) = VAL(ICHAR('X'))
-         VAL(ICHAR('y')) = VAL(ICHAR('Y'))
-         VAL(ICHAR('z')) = VAL(ICHAR('Z'))
+         val(ichar('a')) = val(ichar('A'))
+         val(ichar('b')) = val(ichar('B'))
+         val(ichar('c')) = val(ichar('C'))
+         val(ichar('d')) = val(ichar('D'))
+         val(ichar('e')) = val(ichar('E'))
+         val(ichar('f')) = val(ichar('F'))
+         val(ichar('g')) = val(ichar('G'))
+         val(ichar('h')) = val(ichar('H'))
+         val(ichar('i')) = val(ichar('I'))
+         val(ichar('j')) = val(ichar('J'))
+         val(ichar('k')) = val(ichar('K'))
+         val(ichar('l')) = val(ichar('L'))
+         val(ichar('m')) = val(ichar('M'))
+         val(ichar('n')) = val(ichar('N'))
+         val(ichar('o')) = val(ichar('O'))
+         val(ichar('p')) = val(ichar('P'))
+         val(ichar('q')) = val(ichar('Q'))
+         val(ichar('r')) = val(ichar('R'))
+         val(ichar('s')) = val(ichar('S'))
+         val(ichar('t')) = val(ichar('T'))
+         val(ichar('u')) = val(ichar('U'))
+         val(ichar('v')) = val(ichar('V'))
+         val(ichar('w')) = val(ichar('W'))
+         val(ichar('x')) = val(ichar('X'))
+         val(ichar('y')) = val(ichar('Y'))
+         val(ichar('z')) = val(ichar('Z'))
 
-      END IF
+      end if
 
 !
 !     Check divisor.
 !
-      IF ( M2 .LE. 0 .OR. M2 .GT. MAXDIV ) THEN
+      if ( m2 .le. 0 .or. m2 .gt. maxdiv ) then
 
-         ZZHASH2 = 0
+         zzhash2 = 0
 
-         CALL CHKIN  ( 'ZZHASH2'                                     )
-         CALL SETMSG ( 'The input hash function divisor was not '    // &
+         call chkin  ( 'ZZHASH2'                                     )
+         call setmsg ( 'The input hash function divisor was not '    // &
                        'in the allowed range from 1 to #. It was #.' )
-         CALL ERRINT ( '#', MAXDIV                                   )
-         CALL ERRINT ( '#', M2                                       )
-         CALL SIGERR ( 'SPICE(INVALIDDIVISOR)'                       )
-         CALL CHKOUT ( 'ZZHASH2'                                     )
-         RETURN
+         call errint ( '#', maxdiv                                   )
+         call errint ( '#', m2                                       )
+         call sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
+         call chkout ( 'ZZHASH2'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute hash value for the input string.
 !
-      F      = 0
-      LENGTH = LEN( WORD )
+      f      = 0
+      length = len( word )
 
-      DO I = 1, LENGTH
+      do i = 1, length
 
-         IF ( ICHAR(WORD(I:I)) .EQ. BLANK ) THEN
+         if ( ichar(word(i:i)) .eq. blank ) then
 
-            ZZHASH2 = MOD ( F*BASE, M2 ) + 1
+            zzhash2 = mod ( f*base, m2 ) + 1
 
 !
 !           A negative value for ZZHASH2 indicates a serious problem.
 !
-            IF( ZZHASH2 .LT. 0 ) THEN
+            if( zzhash2 .lt. 0 ) then
 
-               CALL CHKIN  ( 'ZZHASH2'                            )
-               CALL SETMSG ( 'The ZZHASH2 function calculated a ' // &
+               call chkin  ( 'ZZHASH2'                            )
+               call setmsg ( 'The ZZHASH2 function calculated a ' // &
                              'negative value for string $1. '     // &
                              'Contact NAIF.'                      )
-               CALL ERRCH  ( '$1', WORD                           )
-               CALL SIGERR ( 'SPICE(NEGATIVEHASHVALUE1)'          )
-               CALL CHKOUT ( 'ZZHASH2'                            )
+               call errch  ( '$1', word                           )
+               call sigerr ( 'SPICE(NEGATIVEHASHVALUE1)'          )
+               call chkout ( 'ZZHASH2'                            )
 
-            END IF
+            end if
 
-            RETURN
+            return
 
-         END IF
+         end if
 
-         F = VAL(  MIN( 128, ICHAR(WORD(I:I)) )  ) + F * BASE
-         F = MOD( F, M2 )
+         f = val(  min( 128, ichar(word(i:i)) )  ) + f * base
+         f = mod( f, m2 )
 
-      END DO
+      end do
 
-      ZZHASH2 = MOD( F*BASE, M2 ) + 1
+      zzhash2 = mod( f*base, m2 ) + 1
 
 !
 !     A negative value for ZZHASH2 indicates a serious problem.
 !
-      IF( ZZHASH2 .LT. 0 ) THEN
+      if( zzhash2 .lt. 0 ) then
 
-         CALL CHKIN  ( 'ZZHASH2'                             )
-         CALL SETMSG ( 'The ZZHASH2 function calculated a ' // &
+         call chkin  ( 'ZZHASH2'                             )
+         call setmsg ( 'The ZZHASH2 function calculated a ' // &
                        'negative value for string $1. '     // &
                        'Contact NAIF.'                       )
-         CALL ERRCH  ( '$1', WORD                            )
-         CALL SIGERR ( 'SPICE(NEGATIVEHASHVALUE2)'           )
-         CALL CHKOUT ( 'ZZHASH2'                             )
+         call errch  ( '$1', word                            )
+         call sigerr ( 'SPICE(NEGATIVEHASHVALUE2)'           )
+         call chkout ( 'ZZHASH2'                             )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end
 
 

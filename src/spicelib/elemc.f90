@@ -1,6 +1,6 @@
 !$Procedure ELEMC ( Element of a character set )
 
-      LOGICAL FUNCTION ELEMC ( ITEM, A )
+      logical function elemc ( item, a )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)      ITEM
-      CHARACTER*(*)      A      ( LBCELL:* )
+      character*(*)      item
+      character*(*)      a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -223,26 +223,26 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
+      integer               bsrchc
+      integer               cardc
+      logical               return
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         ELEMC = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ELEMC' )
-      END IF
+      if ( return() ) then
+         elemc = .false.
+         return
+      else
+         call chkin ( 'ELEMC' )
+      end if
 !
 !     Just a binary search.
 !
-      ELEMC = ( BSRCHC ( ITEM, CARDC ( A ), A(1) ) .NE. 0 )
+      elemc = ( bsrchc ( item, cardc ( a ), a(1) ) .ne. 0 )
 
 
-      CALL CHKOUT ( 'ELEMC' )
-      RETURN
-      END
+      call chkout ( 'ELEMC' )
+      return
+      end

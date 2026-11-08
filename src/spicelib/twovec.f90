@@ -1,6 +1,6 @@
 !$Procedure TWOVEC ( Two vectors defining an orthonormal frame )
 
-      SUBROUTINE TWOVEC ( AXDEF, INDEXA, PLNDEF, INDEXP, MOUT )
+      subroutine twovec ( axdef, indexa, plndef, indexp, mout )
 
 ! $ Abstract
 !
@@ -21,13 +21,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   AXDEF  (   3 )
-      INTEGER            INDEXA
-      DOUBLE PRECISION   PLNDEF (   3 )
-      INTEGER            INDEXP
-      DOUBLE PRECISION   MOUT   ( 3,3 )
+      double precision   axdef  (   3 )
+      integer            indexa
+      double precision   plndef (   3 )
+      integer            indexp
+      double precision   mout   ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -174,120 +174,120 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      MTEMP  ( 3, 3 )
+      double precision      mtemp  ( 3, 3 )
 
-      INTEGER               I1
-      INTEGER               I2
-      INTEGER               I3
-      INTEGER               SEQNCE ( 5 )
+      integer               i1
+      integer               i2
+      integer               i3
+      integer               seqnce ( 5 )
 
 !
 !     Saved variables
 !
-      SAVE                  SEQNCE
+      save                  seqnce
 
 !
 !     Initial values
 !
-      DATA                  SEQNCE  / 1, 2, 3, 1, 2 /
+      data                  seqnce  / 1, 2, 3, 1, 2 /
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'TWOVEC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'TWOVEC' )
+      end if
 
 !
 !     Check for obvious bad inputs.
 !
-      IF (      ( MAX(INDEXP,INDEXA) .GT. 3 ) &
-           .OR. ( MIN(INDEXP,INDEXA) .LT. 1 ) ) THEN
+      if (      ( max(indexp,indexa) .gt. 3 ) &
+           .or. ( min(indexp,indexa) .lt. 1 ) ) then
 
-         CALL SETMSG ( 'The definition indexes must lie in the range '// &
+         call setmsg ( 'The definition indexes must lie in the range '// &
                        'from 1 to 3.  The value of INDEXA was #. '    // &
                        'The value of INDEXP was #. '                  )
 
-         CALL ERRINT ( '#', INDEXA  )
-         CALL ERRINT ( '#', INDEXP  )
-         CALL SIGERR ( 'SPICE(BADINDEX)' )
-         CALL CHKOUT (     'TWOVEC' )
-         RETURN
+         call errint ( '#', indexa  )
+         call errint ( '#', indexp  )
+         call sigerr ( 'SPICE(BADINDEX)' )
+         call chkout (     'TWOVEC' )
+         return
 
-      ELSE IF   ( INDEXA .EQ. INDEXP )  THEN
+      else if   ( indexa .eq. indexp )  then
 
-         CALL SETMSG ( 'The values of INDEXA and INDEXP were the '    // &
+         call setmsg ( 'The values of INDEXA and INDEXP were the '    // &
                        'same, namely #.  They are required to be '    // &
                        'different.'                                   )
 
-         CALL ERRINT ( '#', INDEXA  )
-         CALL SIGERR ( 'SPICE(UNDEFINEDFRAME)' )
-         CALL CHKOUT (     'TWOVEC' )
-         RETURN
+         call errint ( '#', indexa  )
+         call sigerr ( 'SPICE(UNDEFINEDFRAME)' )
+         call chkout (     'TWOVEC' )
+         return
 
-      END IF
+      end if
 
 !
 !     Get indices for right-handed axes
 !
 !     First AXDEF ...
 !
-      I1 = INDEXA
+      i1 = indexa
 !
 !     ... then the other two.
 !
-      I2 = SEQNCE ( INDEXA + 1 )
-      I3 = SEQNCE ( INDEXA + 2 )
+      i2 = seqnce ( indexa + 1 )
+      i3 = seqnce ( indexa + 2 )
 
 !
 !     Row I1 contains normalized AXDEF (store in columns for now)
 !
-      CALL VHAT ( AXDEF, MOUT(1,I1) )
+      call vhat ( axdef, mout(1,i1) )
 
 !
 !     Obtain rows I2 and I3 using cross products.  Which order to use
 !     depends on whether INDEXP = I2 (next axis in right-handed order)
 !     or INDEXP = I3 (previous axis in right-handed order).
 !
-      IF ( INDEXP .EQ. I2 ) THEN
+      if ( indexp .eq. i2 ) then
 
-         CALL UCRSS ( AXDEF,      PLNDEF,        MOUT(1,I3) )
-         CALL UCRSS ( MOUT(1,I3), AXDEF,         MOUT(1,I2) )
+         call ucrss ( axdef,      plndef,        mout(1,i3) )
+         call ucrss ( mout(1,i3), axdef,         mout(1,i2) )
 
-      ELSE
+      else
 
-         CALL UCRSS ( PLNDEF,     AXDEF,         MOUT(1,I2) )
-         CALL UCRSS ( AXDEF,      MOUT(1,I2),    MOUT(1,I3) )
+         call ucrss ( plndef,     axdef,         mout(1,i2) )
+         call ucrss ( axdef,      mout(1,i2),    mout(1,i3) )
 
-      END IF
+      end if
 
 !
 !     Finally, check to see that we actually got something non-zero
 !     in one of the one columns of MOUT(1,I2) and MOUT(1,I3) (we need
 !     only check one of them since they are related by a cross product).
 !
-      IF (       ( MOUT(1,I2) .EQ. 0.0D0 ) &
-           .AND. ( MOUT(2,I2) .EQ. 0.0D0 ) &
-           .AND. ( MOUT(3,I2) .EQ. 0.0D0 ) ) THEN
+      if (       ( mout(1,i2) .eq. 0.0d0 ) &
+           .and. ( mout(2,i2) .eq. 0.0d0 ) &
+           .and. ( mout(3,i2) .eq. 0.0d0 ) ) then
 
-         CALL SETMSG ( 'The input vectors AXDEF and PLNDEF are '      // &
+         call setmsg ( 'The input vectors AXDEF and PLNDEF are '      // &
                        'linearly dependent.'                          )
-         CALL SIGERR ( 'SPICE(DEPENDENTVECTORS)' )
+         call sigerr ( 'SPICE(DEPENDENTVECTORS)' )
 
-      END IF
+      end if
 !
 !     Transpose MOUT.
 !
-      CALL XPOSE ( MOUT,     MTEMP )
-      CALL MOVED ( MTEMP, 9, MOUT  )
+      call xpose ( mout,     mtemp )
+      call moved ( mtemp, 9, mout  )
 
-      CALL CHKOUT ( 'TWOVEC' )
-      RETURN
-      END
+      call chkout ( 'TWOVEC' )
+      return
+      end

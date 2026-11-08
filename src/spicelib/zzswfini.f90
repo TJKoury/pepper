@@ -1,7 +1,7 @@
 !$Procedure ZZSWFINI ( Private, switch frame initialization )
 
-      SUBROUTINE ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                            FREE,   PRVAT,  PRVFRM, SAMFRM  )
+      subroutine zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                            free,   prvat,  prvfrm, samfrm  )
 
 ! $ Abstract
 !
@@ -27,18 +27,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzswtchf.inc'
+      include 'zzswtchf.inc'
 
-      INTEGER               HDFRAM ( * )
-      INTEGER               FRPOOL ( LBSNGL : * )
-      INTEGER               FIDLST ( * )
-      INTEGER               BASBEG ( * )
-      INTEGER               FREE
-      INTEGER               PRVAT
-      INTEGER               PRVFRM
-      LOGICAL               SAMFRM
+      integer               hdfram ( * )
+      integer               frpool ( lbsngl : * )
+      integer               fidlst ( * )
+      integer               basbeg ( * )
+      integer               free
+      integer               prvat
+      integer               prvfrm
+      logical               samfrm
 
 ! $ Brief_I/O
 !
@@ -135,14 +135,14 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSWFINI' )
+      call chkin ( 'ZZSWFINI' )
 
 !
 !     Initialize the frame hash head node array, hash collision list
@@ -150,29 +150,29 @@
 !     indices of associated base frame information. Indicate the base
 !     frame data buffers are empty by setting FREE to 1.
 !
-      CALL ZZHSIINI ( MAXFRM, HDFRAM, FRPOOL )
+      call zzhsiini ( maxfrm, hdfram, frpool )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable. It's provided for safety.
 !
-         CALL CHKOUT ( 'ZZSWFINI' )
-         RETURN
+         call chkout ( 'ZZSWFINI' )
+         return
 
-      END IF
+      end if
 
-      CALL CLEARI ( MAXFRM, FIDLST )
-      CALL CLEARI ( MAXFRM, BASBEG )
+      call cleari ( maxfrm, fidlst )
+      call cleari ( maxfrm, basbeg )
 
-      FREE = 1
+      free = 1
 
 !
 !     Initialize all saved frame identity information.
 !
-      PRVFRM = 0
-      PRVAT  = 0
-      SAMFRM = .FALSE.
+      prvfrm = 0
+      prvat  = 0
+      samfrm = .false.
 
-      CALL CHKOUT ( 'ZZSWFINI' )
-      RETURN
-      END
+      call chkout ( 'ZZSWFINI' )
+      return
+      end

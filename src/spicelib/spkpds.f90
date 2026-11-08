@@ -1,7 +1,7 @@
 !$Procedure SPKPDS ( SPK pack descriptor )
 
-      SUBROUTINE SPKPDS ( BODY, CENTER, FRAME, &
-                          TYPE, FIRST,  LAST, DESCR )
+      subroutine spkpds ( body, center, frame, &
+                          type, first,  last, descr )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      INTEGER               TYPE
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      DOUBLE PRECISION      DESCR ( * )
+      integer               body
+      integer               center
+      character*(*)         frame
+      integer               type
+      double precision      first
+      double precision      last
+      double precision      descr ( * )
 
 ! $ Brief_I/O
 !
@@ -151,140 +151,140 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local Parameters
 !
 !     ND and NI values for an SPK file.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 !
 !     Length of a calender string.
 !
-      INTEGER               CALSIZ
-      PARAMETER           ( CALSIZ = 40 )
+      integer               calsiz
+      parameter           ( calsiz = 40 )
 !
 !     Local Variables
 !
-      CHARACTER*(CALSIZ)    CALFST
-      CHARACTER*(CALSIZ)    CALLST
+      character*(calsiz)    calfst
+      character*(calsiz)    callst
 
-      DOUBLE PRECISION      DPPART ( 2 )
+      double precision      dppart ( 2 )
 
-      INTEGER               IPART  ( 6 )
-      INTEGER               REFCOD
+      integer               ipart  ( 6 )
+      integer               refcod
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKPDS' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'SPKPDS' )
+      end if
 !
 !     We do not support ephemerides for the solar system barycenter
 !     (at least not yet anyway).
 !
-      IF ( BODY .EQ. 0 ) THEN
+      if ( body .eq. 0 ) then
 
-         CALL SETMSG ( 'You''ve attempted to create a segment' &
+         call setmsg ( 'You''ve attempted to create a segment' &
          //            ' for the solar system barycenter.  This' &
          //            ' is not supported by the ephemeris system.' )
-         CALL SIGERR ( 'SPICE(BARYCENTEREPHEM)'                     )
-         CALL CHKOUT ( 'SPKPDS'                                     )
+         call sigerr ( 'SPICE(BARYCENTEREPHEM)'                     )
+         call chkout ( 'SPKPDS'                                     )
 
-         RETURN
+         return
 
-      END IF
+      end if
 !
 !     There is no point in having an ephemeris for a body relative
 !     to itself.
 !
-      IF ( BODY .EQ. CENTER ) THEN
+      if ( body .eq. center ) then
 
-         CALL SETMSG ( 'You''ve attempted to create a segment' &
+         call setmsg ( 'You''ve attempted to create a segment' &
          //            ' for a body relative to itself. The' &
          //            ' body ID code was: #.'                 )
-         CALL ERRINT ( '#', BODY                               )
-         CALL SIGERR ( 'SPICE(BODYANDCENTERSAME)'              )
-         CALL CHKOUT ( 'SPKPDS'                                )
-         RETURN
+         call errint ( '#', body                               )
+         call sigerr ( 'SPICE(BODYANDCENTERSAME)'              )
+         call chkout ( 'SPKPDS'                                )
+         return
 
-      END IF
+      end if
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL NAMFRM ( FRAME, REFCOD )
+      call namfrm ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'SPKPDS'                                    )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'SPKPDS'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The segment stop time should be greater then the begin time.
 !
-      IF ( FIRST .GE. LAST ) THEN
+      if ( first .ge. last ) then
 !
 !        We've got an error. Get the calendar string for the first
 !        and last epochs.
 !
-         CALL ETCAL  ( FIRST, CALFST )
-         CALL ETCAL  ( LAST,  CALLST )
+         call etcal  ( first, calfst )
+         call etcal  ( last,  callst )
 
-         CALL SETMSG ( 'The segment start time: # (#) is at or' &
+         call setmsg ( 'The segment start time: # (#) is at or' &
          //            ' after the segment stop time # (#).'       )
 
-         CALL ERRDP  ( '#', FIRST                                  )
-         CALL ERRCH  ( '#', CALFST                                 )
-         CALL ERRDP  ( '#', LAST                                   )
-         CALL ERRCH  ( '#', CALLST                                 )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'SPKPDS'                                    )
-         RETURN
+         call errdp  ( '#', first                                  )
+         call errch  ( '#', calfst                                 )
+         call errdp  ( '#', last                                   )
+         call errch  ( '#', callst                                 )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'SPKPDS'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The type must be something reasonable.  The interval from
 !     1 to 1000 is what we are calling reasonable these days.
 !
-      IF ( ( TYPE .LE. 0)  .OR. ( TYPE .GT. 1000 ) ) THEN
+      if ( ( type .le. 0)  .or. ( type .gt. 1000 ) ) then
 
-         CALL SETMSG ( 'The type specified, #, is not supported' &
+         call setmsg ( 'The type specified, #, is not supported' &
          //            ' within the SPK system.'                  )
-         CALL ERRINT ( '#', TYPE                                  )
-         CALL SIGERR ( 'SPICE(UNKNOWNSPKTYPE)'                    )
-         CALL CHKOUT ( 'SPKPDS'                                   )
-         RETURN
+         call errint ( '#', type                                  )
+         call sigerr ( 'SPICE(UNKNOWNSPKTYPE)'                    )
+         call chkout ( 'SPKPDS'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Well, that's it.  As far as we can determine these seem to be
 !     reasonable values to put into a descriptor.   Do it.
 !
-      IPART(1)  = BODY
-      IPART(2)  = CENTER
-      IPART(3)  = REFCOD
-      IPART(4)  = TYPE
-      IPART(5)  = 0
-      IPART(6)  = 0
+      ipart(1)  = body
+      ipart(2)  = center
+      ipart(3)  = refcod
+      ipart(4)  = type
+      ipart(5)  = 0
+      ipart(6)  = 0
 
-      DPPART(1) = FIRST
-      DPPART(2) = LAST
+      dppart(1) = first
+      dppart(2) = last
 
-      CALL DAFPS  ( ND, NI, DPPART, IPART, DESCR )
+      call dafps  ( nd, ni, dppart, ipart, descr )
 
-      CALL CHKOUT ( 'SPKPDS' )
-      RETURN
+      call chkout ( 'SPKPDS' )
+      return
 
-      END
+      end

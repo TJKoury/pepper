@@ -1,6 +1,6 @@
 !$Procedure LGRIND (Lagrange polynomial interpolation with derivative)
 
-      SUBROUTINE LGRIND ( N, XVALS, YVALS, WORK, X, P, DP )
+      subroutine lgrind ( n, xvals, yvals, work, x, p, dp )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      DOUBLE PRECISION      XVALS ( N )
-      DOUBLE PRECISION      YVALS ( N )
-      DOUBLE PRECISION      WORK  ( N, 2 )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      P
-      DOUBLE PRECISION      DP
+      integer               n
+      double precision      xvals ( n )
+      double precision      yvals ( n )
+      double precision      work  ( n, 2 )
+      double precision      x
+      double precision      p
+      double precision      dp
 
 ! $ Brief_I/O
 !
@@ -238,39 +238,39 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      DENOM
+      double precision      c1
+      double precision      c2
+      double precision      denom
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     Check in only if an error is detected.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     No data, no interpolation.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL CHKIN  ( 'LGRIND'                              )
-         CALL SETMSG ( 'Array size must be positive; was #.' )
-         CALL ERRINT ( '#',  N                               )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                  )
-         CALL CHKOUT ( 'LGRIND'                              )
-         RETURN
+         call chkin  ( 'LGRIND'                              )
+         call setmsg ( 'Array size must be positive; was #.' )
+         call errint ( '#',  n                               )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                  )
+         call chkout ( 'LGRIND'                              )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -366,61 +366,61 @@
 !     at X.
 !
 
-      DO I = 1, N
+      do i = 1, n
 
-         WORK(I,1)  =  YVALS(I)
-         WORK(I,2)  =  0.D0
+         work(i,1)  =  yvals(i)
+         work(i,2)  =  0.d0
 
-      END DO
+      end do
 
 !
 !     Compute columns 2 through N of the table.  Note that DENOM must
 !     be non-zero, or else a divide-by-zero error will occur.
 !
-      DO J = 1, N-1
+      do j = 1, n-1
 
-         DO I = 1, N-J
+         do i = 1, n-j
 
-            DENOM    =     XVALS(I)  -  XVALS(I+J)
+            denom    =     xvals(i)  -  xvals(i+j)
 
-            IF ( DENOM .EQ. 0.D0 ) THEN
+            if ( denom .eq. 0.d0 ) then
 
-               CALL CHKIN  ( 'LGRIND'                  )
-               CALL SETMSG ( 'XVALS(#) = XVALS(#) = #' )
-               CALL ERRINT ( '#',   I                  )
-               CALL ERRINT ( '#',   I + J              )
-               CALL ERRDP  ( '#',   XVALS(I)           )
-               CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'     )
-               CALL CHKOUT ( 'LGRIND'                  )
-               RETURN
+               call chkin  ( 'LGRIND'                  )
+               call setmsg ( 'XVALS(#) = XVALS(#) = #' )
+               call errint ( '#',   i                  )
+               call errint ( '#',   i + j              )
+               call errdp  ( '#',   xvals(i)           )
+               call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
+               call chkout ( 'LGRIND'                  )
+               return
 
-            END IF
+            end if
 
-            C1       =     X         -  XVALS(I+J)
-            C2       =     XVALS(I)  -  X
+            c1       =     x         -  xvals(i+j)
+            c2       =     xvals(i)  -  x
 
 !
 !           Use the chain rule to compute the derivatives.  Do this
 !           before computing the function value, because the latter
 !           computation will overwrite the first column of WORK.
 !
-            WORK(I,2) = (   ( C1*WORK(I,2) + C2*WORK(I+1,2) ) &
-                          + (    WORK(I,1) -    WORK(I+1,1) )  ) / DENOM
+            work(i,2) = (   ( c1*work(i,2) + c2*work(i+1,2) ) &
+                          + (    work(i,1) -    work(i+1,1) )  ) / denom
 
 !
 !           Compute the Ith entry in the Jth column.
 !
-            WORK(I,1) =     ( C1*WORK(I,1) + C2*WORK(I+1,1) )    / DENOM
+            work(i,1) =     ( c1*work(i,1) + c2*work(i+1,1) )    / denom
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Our results are sitting in WORK(1,1) and WORK(1,2) at this point.
 !
-      P  =  WORK(1,1)
-      DP =  WORK(1,2)
+      p  =  work(1,1)
+      dp =  work(1,2)
 
-      RETURN
-      END
+      return
+      end

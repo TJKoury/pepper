@@ -1,7 +1,7 @@
 !$Procedure      ZZEKTR32 ( EK tree, 3-2 merge )
 
-      SUBROUTINE ZZEKTR32 ( HANDLE,  TREE,    LEFT,    MIDDLE, &
-                            RIGHT,   PARENT,  LPKIDX,  UNDRFL )
+      subroutine zzektr32 ( handle,  tree,    left,    middle, &
+                            right,   parent,  lpkidx,  undrfl )
 
 ! $ Abstract
 !
@@ -21,18 +21,18 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektype.inc'
+      include 'ektree.inc'
+      include 'ekpage.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               LEFT
-      INTEGER               MIDDLE
-      INTEGER               RIGHT
-      INTEGER               PARENT
-      INTEGER               LPKIDX
-      LOGICAL               UNDRFL
+      integer               handle
+      integer               tree
+      integer               left
+      integer               middle
+      integer               right
+      integer               parent
+      integer               lpkidx
+      logical               undrfl
 
 ! $ Brief_I/O
 !
@@ -266,49 +266,49 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRBS
+      integer               zzektrbs
 
 !
 !     Local parameters
 !
-      INTEGER               LSIZE
-      PARAMETER           ( LSIZE  = (3*MNKEYC)/2 )
+      integer               lsize
+      parameter           ( lsize  = (3*mnkeyc)/2 )
 
-      INTEGER               RSIZE
-      PARAMETER           ( RSIZE  =  3*MNKEYC - LSIZE )
+      integer               rsize
+      parameter           ( rsize  =  3*mnkeyc - lsize )
 
 !
 !     Local variables
 !
-      INTEGER               C1PAGE ( PGSIZI )
-      INTEGER               C2PAGE ( PGSIZI )
-      INTEGER               C3PAGE ( PGSIZI )
-      INTEGER               DATBAS
-      INTEGER               I
-      INTEGER               KEYBAS
-      INTEGER               KIDBAS
-      INTEGER               LEFTSZ
-      INTEGER               LMIDSZ
-      INTEGER               LPKEY
-      INTEGER               LSIB
-      INTEGER               MIDSIZ
-      INTEGER               MSIB
-      INTEGER               N
-      INTEGER               NLKEYS
-      INTEGER               NMKEYS
-      INTEGER               NNODE
-      INTEGER               NPKEYS
-      INTEGER               NRKEYS
-      INTEGER               PPAGE ( PGSIZI )
-      INTEGER               PSIZE
-      INTEGER               RBASE
-      INTEGER               RMIDSZ
-      INTEGER               ROOT
-      INTEGER               RPKEY
-      INTEGER               RSHIFT
-      INTEGER               RSIB
-      INTEGER               SIZBAS
-      INTEGER               SUM
+      integer               c1page ( pgsizi )
+      integer               c2page ( pgsizi )
+      integer               c3page ( pgsizi )
+      integer               datbas
+      integer               i
+      integer               keybas
+      integer               kidbas
+      integer               leftsz
+      integer               lmidsz
+      integer               lpkey
+      integer               lsib
+      integer               midsiz
+      integer               msib
+      integer               n
+      integer               nlkeys
+      integer               nmkeys
+      integer               nnode
+      integer               npkeys
+      integer               nrkeys
+      integer               ppage ( pgsizi )
+      integer               psize
+      integer               rbase
+      integer               rmidsz
+      integer               root
+      integer               rpkey
+      integer               rshift
+      integer               rsib
+      integer               sizbas
+      integer               sum
 
 
 !
@@ -388,123 +388,123 @@
 !
 !     All right, read in the child and parent pages.
 !
-      CALL ZZEKPGRI ( HANDLE, LEFT,   C1PAGE )
-      CALL ZZEKPGRI ( HANDLE, MIDDLE, C2PAGE )
-      CALL ZZEKPGRI ( HANDLE, RIGHT,  C3PAGE )
-      CALL ZZEKPGRI ( HANDLE, PARENT, PPAGE  )
+      call zzekpgri ( handle, left,   c1page )
+      call zzekpgri ( handle, middle, c2page )
+      call zzekpgri ( handle, right,  c3page )
+      call zzekpgri ( handle, parent, ppage  )
 
 !
 !     The actual addresses in the parent node depend on whether the
 !     parent is the root.  Compute the necessary bases to avoid a lot
 !     of cases.
 !
-      ROOT  =  TREE
+      root  =  tree
 
-      IF ( PARENT .EQ. ROOT ) THEN
-         KEYBAS  =  TRKEYR
-         DATBAS  =  TRDATR
-         KIDBAS  =  TRKIDR
-         SIZBAS  =  TRNKR
-      ELSE
-         KEYBAS  =  TRKEYC
-         DATBAS  =  TRDATC
-         KIDBAS  =  TRKIDC
-         SIZBAS  =  TRNKC
-      END IF
+      if ( parent .eq. root ) then
+         keybas  =  trkeyr
+         datbas  =  trdatr
+         kidbas  =  trkidr
+         sizbas  =  trnkr
+      else
+         keybas  =  trkeyc
+         datbas  =  trdatc
+         kidbas  =  trkidc
+         sizbas  =  trnkc
+      end if
 
 !
 !     Check the left parent key of the middle child.
 !
-      PSIZE =  PPAGE ( SIZBAS )
+      psize =  ppage ( sizbas )
 
-      IF (  ( LPKIDX .LT. 1 ) .OR. ( LPKIDX .GT. PSIZE-1 )  )  THEN
+      if (  ( lpkidx .lt. 1 ) .or. ( lpkidx .gt. psize-1 )  )  then
 
-         CALL CHKIN  ( 'ZZEKTR32'                                )
-         CALL SETMSG ( 'Left parent key of MIDDLE is out of '   // &
+         call chkin  ( 'ZZEKTR32'                                )
+         call setmsg ( 'Left parent key of MIDDLE is out of '   // &
                        'range.  Value is #; valid range is 1:#'  )
-         CALL ERRINT ( '#',   LPKIDX                             )
-         CALL ERRINT ( '#',   PSIZE-1                            )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'ZZEKTR32'                                )
-         RETURN
+         call errint ( '#',   lpkidx                             )
+         call errint ( '#',   psize-1                            )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'ZZEKTR32'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Retain the left and right parent key values of the middle child.
 !
-      LPKEY  =  PPAGE( KEYBAS + LPKIDX    )
-      RPKEY  =  PPAGE( KEYBAS + LPKIDX + 1)
+      lpkey  =  ppage( keybas + lpkidx    )
+      rpkey  =  ppage( keybas + lpkidx + 1)
 
 !
 !     Verify that LEFT, MIDDLE, and RIGHT are siblings, and that PARENT
 !     is their common parent.
 !
-      LSIB  =  PPAGE ( KIDBAS+LPKIDX   )
-      MSIB  =  PPAGE ( KIDBAS+LPKIDX+1 )
-      RSIB  =  PPAGE ( KIDBAS+LPKIDX+2 )
+      lsib  =  ppage ( kidbas+lpkidx   )
+      msib  =  ppage ( kidbas+lpkidx+1 )
+      rsib  =  ppage ( kidbas+lpkidx+2 )
 
 
-      IF (      ( LSIB .NE. LEFT   ) &
-           .OR. ( MSIB .NE. MIDDLE ) &
-           .OR. ( RSIB .NE. RIGHT  )  ) THEN
+      if (      ( lsib .ne. left   ) &
+           .or. ( msib .ne. middle ) &
+           .or. ( rsib .ne. right  )  ) then
 
-         CALL CHKIN  ( 'ZZEKTR32'                                      )
-         CALL SETMSG ( 'LEFT, RIGHT, MIDDLE, PARENT, and PKIDX are '  // &
+         call chkin  ( 'ZZEKTR32'                                      )
+         call setmsg ( 'LEFT, RIGHT, MIDDLE, PARENT, and PKIDX are '  // &
                        'inconsistent. LEFT = #; MIDDLE = #; '         // &
                        'RIGHT = #; PARENT = #; LPKIDX = #; LSIB '     // &
                        'derived from PARENT = #; MSIB = #; RSIB = #.'  )
-         CALL ERRINT ( '#',   LEFT                                     )
-         CALL ERRINT ( '#',   MIDDLE                                   )
-         CALL ERRINT ( '#',   RIGHT                                    )
-         CALL ERRINT ( '#',   PARENT                                   )
-         CALL ERRINT ( '#',   LPKIDX                                   )
-         CALL ERRINT ( '#',   LSIB                                     )
-         CALL ERRINT ( '#',   MSIB                                     )
-         CALL ERRINT ( '#',   RSIB                                     )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZEKTR32'                                      )
-         RETURN
+         call errint ( '#',   left                                     )
+         call errint ( '#',   middle                                   )
+         call errint ( '#',   right                                    )
+         call errint ( '#',   parent                                   )
+         call errint ( '#',   lpkidx                                   )
+         call errint ( '#',   lsib                                     )
+         call errint ( '#',   msib                                     )
+         call errint ( '#',   rsib                                     )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZEKTR32'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the number of keys in the parent.
 !
-      IF ( PARENT .EQ. ROOT ) THEN
-         NPKEYS = PPAGE ( TRNKR )
-      ELSE
-         NPKEYS = PPAGE ( TRNKC )
-      END IF
+      if ( parent .eq. root ) then
+         npkeys = ppage ( trnkr )
+      else
+         npkeys = ppage ( trnkc )
+      end if
 
 !
 !     Get the number of keys in each child.
 !
-      NLKEYS  =  C1PAGE ( TRNKC )
-      NMKEYS  =  C2PAGE ( TRNKC )
-      NRKEYS  =  C3PAGE ( TRNKC )
+      nlkeys  =  c1page ( trnkc )
+      nmkeys  =  c2page ( trnkc )
+      nrkeys  =  c3page ( trnkc )
 
-      SUM     =  NLKEYS + NMKEYS + NRKEYS
+      sum     =  nlkeys + nmkeys + nrkeys
 
 !
 !     The sum of the number of keys in the three input nodes must
 !     sum exactly to value representing an underflow level of 1 key.
 !
-      IF (  SUM  .NE.  ( 3*MNKEYC - 1 )  ) THEN
+      if (  sum  .ne.  ( 3*mnkeyc - 1 )  ) then
 
-         CALL CHKIN  ( 'ZZEKTR32'                                      )
-         CALL SETMSG ( 'Number of keys in nodes LEFT = #; in MIDDLE ' // &
+         call chkin  ( 'ZZEKTR32'                                      )
+         call setmsg ( 'Number of keys in nodes LEFT = #; in MIDDLE ' // &
                        '= #; in RIGHT = #; counts summing to # were ' // &
                        'expected.'                                     )
-         CALL ERRINT ( '#',  NLKEYS                                    )
-         CALL ERRINT ( '#',  NMKEYS                                    )
-         CALL ERRINT ( '#',  NRKEYS                                    )
-         CALL ERRINT ( '#',  3*MNKEYC-1                                )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZEKTR32'                                      )
-         RETURN
+         call errint ( '#',  nlkeys                                    )
+         call errint ( '#',  nmkeys                                    )
+         call errint ( '#',  nrkeys                                    )
+         call errint ( '#',  3*mnkeyc-1                                )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZEKTR32'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     We're set to carry out the merge.  Here's an overview of what
@@ -550,17 +550,17 @@
 !     ascend into the parent.
 !
 
-      IF ( LPKIDX .EQ. 1 ) THEN
-         LEFTSZ  =  LPKEY - 1
-      ELSE
-         LEFTSZ  =  LPKEY - PPAGE(KEYBAS+LPKIDX-1) - 1
-      END IF
+      if ( lpkidx .eq. 1 ) then
+         leftsz  =  lpkey - 1
+      else
+         leftsz  =  lpkey - ppage(keybas+lpkidx-1) - 1
+      end if
 
-      N       =  LSIZE  -  ( 1 + NLKEYS ) + 1
+      n       =  lsize  -  ( 1 + nlkeys ) + 1
 
-      LMIDSZ  =  C2PAGE(TRKEYC+N)  - 1
-      MIDSIZ  =  RPKEY  -  LPKEY   - 1
-      RMIDSZ  =  MIDSIZ -  LMIDSZ  - 1
+      lmidsz  =  c2page(trkeyc+n)  - 1
+      midsiz  =  rpkey  -  lpkey   - 1
+      rmidsz  =  midsiz -  lmidsz  - 1
 
 !
 !     Move the left parent key into the left child.  The key itself
@@ -568,25 +568,25 @@
 !     data pointer is copied, however.  The child pointer at location
 !     LSIZE+1 is unaffected by this move.
 !
-      C1PAGE ( TRKEYC + NLKEYS + 1 )  =  LEFTSZ + 1
-      C1PAGE ( TRDATC + NLKEYS + 1 )  =  PPAGE ( DATBAS + LPKIDX )
+      c1page ( trkeyc + nlkeys + 1 )  =  leftsz + 1
+      c1page ( trdatc + nlkeys + 1 )  =  ppage ( datbas + lpkidx )
 
 !
 !     Move the first N-1 keys and data pointers, and the first N
 !     child pointers, from the middle child into the left
 !     child.  The moved keys will gain LEFTSZ + 1 predecessors.
 !
-      DO I = 1, N-1
-         C1PAGE(TRKEYC+NLKEYS+1+I) =  C2PAGE(TRKEYC+I) +  LEFTSZ + 1
-      END DO
+      do i = 1, n-1
+         c1page(trkeyc+nlkeys+1+i) =  c2page(trkeyc+i) +  leftsz + 1
+      end do
 
-      CALL MOVEI ( C2PAGE(TRDATC+1),  N-1,  C1PAGE(TRDATC+NLKEYS+2) )
-      CALL MOVEI ( C2PAGE(TRKIDC+1),  N,    C1PAGE(TRKIDC+NLKEYS+2) )
+      call movei ( c2page(trdatc+1),  n-1,  c1page(trdatc+nlkeys+2) )
+      call movei ( c2page(trkidc+1),  n,    c1page(trkidc+nlkeys+2) )
 
 !
 !     Set the key count in the left child.
 !
-      C1PAGE ( TRNKC )  =  LSIZE
+      c1page ( trnkc )  =  lsize
 
 !
 !     The left child is complete.  Now it's time to set up the right
@@ -595,19 +595,19 @@
 !     rightmost elements first.  The shifted keys will gain RMIDSZ+1
 !     predecessors, so  we adjust the keys as we shift them.
 !
-      RSHIFT  =  NMKEYS - N + 1
+      rshift  =  nmkeys - n + 1
 
-      DO I = NRKEYS, 1, -1
-         C3PAGE(TRKEYC+RSHIFT+I) =  C3PAGE(TRKEYC+I) + RMIDSZ + 1
-      END DO
+      do i = nrkeys, 1, -1
+         c3page(trkeyc+rshift+i) =  c3page(trkeyc+i) + rmidsz + 1
+      end do
 
-      DO I = NRKEYS, 1, -1
-         C3PAGE(TRDATC+RSHIFT+I) =  C3PAGE(TRDATC+I)
-      END DO
+      do i = nrkeys, 1, -1
+         c3page(trdatc+rshift+i) =  c3page(trdatc+i)
+      end do
 
-      DO I = NRKEYS+1, 1, -1
-         C3PAGE(TRKIDC+RSHIFT+I) =  C3PAGE(TRKIDC+I)
-      END DO
+      do i = nrkeys+1, 1, -1
+         c3page(trkidc+rshift+i) =  c3page(trkidc+i)
+      end do
 
 !
 !     The key at location RSHIFT receives the former right parent key
@@ -615,25 +615,25 @@
 !     data pointer is copied.  The child pointer at location RSHIFT
 !     will be set later.
 !
-      C3PAGE ( TRKEYC + RSHIFT )  =  RMIDSZ + 1
-      C3PAGE ( TRDATC + RSHIFT )  =  PPAGE ( DATBAS+LPKIDX+1 )
+      c3page ( trkeyc + rshift )  =  rmidsz + 1
+      c3page ( trdatc + rshift )  =  ppage ( datbas+lpkidx+1 )
 
 !
 !     The first RSHIFT-1 locations in the right child are filled in
 !     with data from the middle child.  The moved keys lose LMIDSZ+1
 !     predecessors.
 !
-      DO I = 1, RSHIFT-1
-         C3PAGE(TRKEYC+I) = C2PAGE(TRKEYC+N+I) - LMIDSZ - 1
-      END DO
+      do i = 1, rshift-1
+         c3page(trkeyc+i) = c2page(trkeyc+n+i) - lmidsz - 1
+      end do
 
-      CALL MOVEI ( C2PAGE(TRDATC+N+1), RSHIFT-1, C3PAGE(TRDATC+1) )
-      CALL MOVEI ( C2PAGE(TRKIDC+N+1), RSHIFT,   C3PAGE(TRKIDC+1) )
+      call movei ( c2page(trdatc+n+1), rshift-1, c3page(trdatc+1) )
+      call movei ( c2page(trkidc+n+1), rshift,   c3page(trkidc+1) )
 
 !
 !     Update the key count in the right child.
 !
-      C3PAGE ( TRNKC )  =  RSIZE
+      c3page ( trnkc )  =  rsize
 
 !
 !     The right child is complete.  It's time to update the parent.
@@ -643,82 +643,82 @@
 !     move.  The left parent key increases by the number of keys moved
 !     into the subtree headed by the left child.
 !
-      PPAGE ( KEYBAS + LPKIDX )  =  LPKEY + LMIDSZ + 1
-      PPAGE ( DATBAS + LPKIDX )  =  C2PAGE( TRDATC + N )
+      ppage ( keybas + lpkidx )  =  lpkey + lmidsz + 1
+      ppage ( datbas + lpkidx )  =  c2page( trdatc + n )
 
 !
 !     The parent keys, data pointers, and child pointers at locations
 !     LPKIDX+2 onward get shifted left by one position.  The keys lose
 !     no  predecessors as the result of these re-arrangements.
 !
-      DO I = LPKIDX+1, NPKEYS-1
-         PPAGE(KEYBAS+I)  =  PPAGE(KEYBAS+I+1)
-      END DO
+      do i = lpkidx+1, npkeys-1
+         ppage(keybas+i)  =  ppage(keybas+i+1)
+      end do
 
-      DO I = LPKIDX+1, NPKEYS-1
-         PPAGE(DATBAS+I)  =  PPAGE(DATBAS+I+1)
-      END DO
+      do i = lpkidx+1, npkeys-1
+         ppage(datbas+i)  =  ppage(datbas+i+1)
+      end do
 
-      DO I = LPKIDX+1, NPKEYS
-         PPAGE(KIDBAS+I)  =  PPAGE(KIDBAS+I+1)
-      END DO
+      do i = lpkidx+1, npkeys
+         ppage(kidbas+i)  =  ppage(kidbas+i+1)
+      end do
 
 !
 !     Zero out the freed locations.
 !
-      PPAGE ( KEYBAS+NPKEYS   ) = 0
-      PPAGE ( DATBAS+NPKEYS   ) = 0
-      PPAGE ( KIDBAS+NPKEYS+1 ) = 0
+      ppage ( keybas+npkeys   ) = 0
+      ppage ( datbas+npkeys   ) = 0
+      ppage ( kidbas+npkeys+1 ) = 0
 
 !
 !     The only required change to the parent's metadata is
 !     updating the key count.  At this point, we can set the
 !     underflow flag, depending on the status of the parent.
 !
-      IF ( PARENT .EQ. ROOT ) THEN
+      if ( parent .eq. root ) then
 
-         PPAGE ( TRNKR )  =  PPAGE ( TRNKR ) - 1
-         UNDRFL           =  PPAGE ( TRNKR )   .EQ.   0
+         ppage ( trnkr )  =  ppage ( trnkr ) - 1
+         undrfl           =  ppage ( trnkr )   .eq.   0
 
-      ELSE
+      else
 
-         PPAGE ( TRNKC )  =  PPAGE ( TRNKC ) - 1
-         UNDRFL           =  PPAGE ( TRNKC )   .EQ.   MNKEYC - 1
+         ppage ( trnkc )  =  ppage ( trnkc ) - 1
+         undrfl           =  ppage ( trnkc )   .eq.   mnkeyc - 1
 
-      END IF
+      end if
 
 !
 !     The last change we must make is to update the node count in
 !     the root.
 !
-      IF ( PARENT .EQ. ROOT ) THEN
+      if ( parent .eq. root ) then
 
-         PPAGE ( TRNNOD ) =  PPAGE ( TRNNOD ) - 1
+         ppage ( trnnod ) =  ppage ( trnnod ) - 1
 
-      ELSE
+      else
 !
 !        We won't read in the whole root page; we'll just get the
 !        base address of the root and update the affected location.
 !
-         RBASE  =  ZZEKTRBS ( ROOT )
+         rbase  =  zzektrbs ( root )
 
-         CALL DASRDI ( HANDLE, RBASE+TRNNOD, RBASE+TRNNOD, NNODE   )
-         CALL DASUDI ( HANDLE, RBASE+TRNNOD, RBASE+TRNNOD, NNODE-1 )
+         call dasrdi ( handle, rbase+trnnod, rbase+trnnod, nnode   )
+         call dasudi ( handle, rbase+trnnod, rbase+trnnod, nnode-1 )
 
-      END IF
+      end if
 
 !
 !     Write out our updates.
 !
-      CALL ZZEKPGWI ( HANDLE,  PARENT,  PPAGE  )
-      CALL ZZEKPGWI ( HANDLE,  LEFT,    C1PAGE )
-      CALL ZZEKPGWI ( HANDLE,  RIGHT,   C3PAGE )
+      call zzekpgwi ( handle,  parent,  ppage  )
+      call zzekpgwi ( handle,  left,    c1page )
+      call zzekpgwi ( handle,  right,   c3page )
 
 !
 !     Free the page used by the middle child.
 !
-      CALL ZZEKPGFR ( HANDLE, INT, MIDDLE )
+      call zzekpgfr ( handle, int, middle )
 
 
-      RETURN
-      END
+      return
+      end

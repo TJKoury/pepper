@@ -1,8 +1,8 @@
 !$Procedure ZZSINUTL ( Utilities for generalized ray intercept )
 
-      SUBROUTINE ZZSINUTL ( TRGCDE, NSURF,  SRFLST, ET,    FIXFID, &
-                            VERTEX, RAYDIR, SPOINT, FOUND, MINRAD, &
-                            MAXRAD, PNEAR,  DIST                  )
+      subroutine zzsinutl ( trgcde, nsurf,  srflst, et,    fixfid, &
+                            vertex, raydir, spoint, found, minrad, &
+                            maxrad, pnear,  dist                  )
 
 ! $ Abstract
 !
@@ -26,23 +26,23 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsk.inc'
+      include 'dsk.inc'
 
-      INTEGER               TRGCDE
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      ET
-      INTEGER               FIXFID
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      SPOINT ( 3 )
-      LOGICAL               FOUND
-      DOUBLE PRECISION      MINRAD
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      PNEAR  ( 3 )
-      DOUBLE PRECISION      DIST
+      integer               trgcde
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      et
+      integer               fixfid
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      spoint ( 3 )
+      logical               found
+      double precision      minrad
+      double precision      maxrad
+      double precision      pnear  ( 3 )
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -194,8 +194,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -203,56 +203,56 @@
 !
 !     Target types:
 !
-      INTEGER               ELLTRG
-      PARAMETER           ( ELLTRG = 1 )
+      integer               elltrg
+      parameter           ( elltrg = 1 )
 
-      INTEGER               DSKTRG
-      PARAMETER           ( DSKTRG = 2 )
+      integer               dsktrg
+      parameter           ( dsktrg = 2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SAVMNR
-      DOUBLE PRECISION      SAVMXR
-      DOUBLE PRECISION      SAVRAD ( 3 )
+      double precision      savmnr
+      double precision      savmxr
+      double precision      savrad ( 3 )
 
-      INTEGER               SAVFID
-      INTEGER               SAVNSF
-      INTEGER               SAVSRF ( MAXSRF )
-      INTEGER               SAVTRG
-      INTEGER               SAVTYP
+      integer               savfid
+      integer               savnsf
+      integer               savsrf ( maxsrf )
+      integer               savtrg
+      integer               savtyp
 
 !
 !     Saved variables
 !
-      SAVE                  SAVFID
-      SAVE                  SAVMNR
-      SAVE                  SAVMXR
-      SAVE                  SAVNSF
-      SAVE                  SAVRAD
-      SAVE                  SAVSRF
-      SAVE                  SAVTRG
-      SAVE                  SAVTYP
+      save                  savfid
+      save                  savmnr
+      save                  savmxr
+      save                  savnsf
+      save                  savrad
+      save                  savsrf
+      save                  savtrg
+      save                  savtyp
 
 !
 !     Initial values
 !
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZSINUTL' )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZSINUTL' )
-      RETURN
+      call chkin  ( 'ZZSINUTL' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZSINUTL' )
+      return
 
 
 
 
 !$Procedure ZZSUELIN ( Initialize SINCPT utilities for ellipsoid )
 
-      ENTRY ZZSUELIN ( TRGCDE )
+      entry zzsuelin ( trgcde )
 
 ! $ Abstract
 !
@@ -380,26 +380,26 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSUELIN' )
+      call chkin ( 'ZZSUELIN' )
 
-      SAVTYP = ELLTRG
+      savtyp = elltrg
 
-      CALL ZZGFTREB ( TRGCDE, SAVRAD )
+      call zzgftreb ( trgcde, savrad )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSUELIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSUELIN' )
+         return
+      end if
 
-      SAVMNR = MIN( SAVRAD(1), SAVRAD(2), SAVRAD(3) )
-      SAVMXR = MAX( SAVRAD(1), SAVRAD(2), SAVRAD(3) )
+      savmnr = min( savrad(1), savrad(2), savrad(3) )
+      savmxr = max( savrad(1), savrad(2), savrad(3) )
 
-      CALL CHKOUT( 'ZZSUELIN' )
-      RETURN
+      call chkout( 'ZZSUELIN' )
+      return
 
 
 
@@ -407,7 +407,7 @@
 
 !$Procedure ZZSUDSKI ( DSK, initialize SINCPT utilities for DSK target )
 
-      ENTRY ZZSUDSKI ( TRGCDE, NSURF, SRFLST, FIXFID )
+      entry zzsudski ( trgcde, nsurf, srflst, fixfid )
 
 ! $ Abstract
 !
@@ -563,48 +563,48 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSUDSKI' )
+      call chkin ( 'ZZSUDSKI' )
 
-      SAVTYP = DSKTRG
+      savtyp = dsktrg
 
-      IF (  ( NSURF .LT. 0 ) .OR. ( NSURF .GT. MAXSRF )  ) THEN
+      if (  ( nsurf .lt. 0 ) .or. ( nsurf .gt. maxsrf )  ) then
 
-         CALL SETMSG ( 'Surface count must be in the range ' &
+         call setmsg ( 'Surface count must be in the range ' &
          //            '0:# but was #.'                     )
-         CALL ERRINT ( '#', MAXSRF                          )
-         CALL ERRINT ( '#', NSURF                           )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                )
-         CALL CHKOUT ( 'ZZSUDSKI'                           )
-         RETURN
+         call errint ( '#', maxsrf                          )
+         call errint ( '#', nsurf                           )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                )
+         call chkout ( 'ZZSUDSKI'                           )
+         return
 
-      END IF
+      end if
 
-      SAVNSF = NSURF
+      savnsf = nsurf
 
-      CALL MOVEI ( SRFLST, SAVNSF, SAVSRF )
+      call movei ( srflst, savnsf, savsrf )
 
-      SAVFID = FIXFID
-      SAVTRG = TRGCDE
+      savfid = fixfid
+      savtrg = trgcde
 
-      CALL CLEARD ( 3, SAVRAD )
+      call cleard ( 3, savrad )
 
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZSUDSKI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZSUDSKI' )
+         return
+      end if
 
 !
 !     Fetch minimum and maximum radius of target body surface.
 !
-      CALL ZZDSKSPH ( TRGCDE, SAVNSF, SAVSRF, SAVMNR, SAVMXR )
+      call zzdsksph ( trgcde, savnsf, savsrf, savmnr, savmxr )
 
-      CALL CHKOUT( 'ZZSUDSKI' )
-      RETURN
+      call chkout( 'ZZSUDSKI' )
+      return
 
 
 
@@ -612,7 +612,7 @@
 
 !$Procedure ZZRAYSFX ( Callback for ray-surface intercept )
 
-      ENTRY ZZRAYSFX ( VERTEX, RAYDIR, ET, SPOINT, FOUND )
+      entry zzraysfx ( vertex, raydir, et, spoint, found )
 
 ! $ Abstract
 !
@@ -765,44 +765,44 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZRAYSFX' )
+      call chkin ( 'ZZRAYSFX' )
 
-      IF ( SAVTYP .EQ. ELLTRG ) THEN
+      if ( savtyp .eq. elltrg ) then
 
-         CALL SURFPT ( VERTEX,    RAYDIR,    SAVRAD(1), &
-                       SAVRAD(2), SAVRAD(3), SPOINT,    FOUND )
+         call surfpt ( vertex,    raydir,    savrad(1), &
+                       savrad(2), savrad(3), spoint,    found )
 
 
-      ELSE IF ( SAVTYP .EQ. DSKTRG ) THEN
+      else if ( savtyp .eq. dsktrg ) then
 
-         CALL ZZSBFXR ( SAVTRG, SAVNSF, SAVSRF, ET, &
-                        SAVFID, VERTEX, RAYDIR, SPOINT, FOUND )
+         call zzsbfxr ( savtrg, savnsf, savsrf, et, &
+                        savfid, vertex, raydir, spoint, found )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Surface type code # is not supported. ' &
+         call setmsg ( 'Surface type code # is not supported. ' &
          //            'This code branch is not supposed to be ' &
          //            'reached.'                               )
-         CALL ERRINT ( '#', SAVTYP                              )
-         CALL SIGERR ( 'SPICE(BUG)'                             )
-         CALL CHKOUT ( 'ZZRAYSFX'                               )
-         RETURN
+         call errint ( '#', savtyp                              )
+         call sigerr ( 'SPICE(BUG)'                             )
+         call chkout ( 'ZZRAYSFX'                               )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZRAYSFX' )
-      RETURN
+      call chkout ( 'ZZRAYSFX' )
+      return
 
 
 
 
 !$Procedure ZZMAXRAD ( Shape model, maximum radius )
 
-      ENTRY ZZMAXRAD ( MAXRAD )
+      entry zzmaxrad ( maxrad )
 
 ! $ Abstract
 !
@@ -938,9 +938,9 @@
 !-&
 
 
-      MAXRAD = SAVMXR
+      maxrad = savmxr
 
-      RETURN
+      return
 
 
 
@@ -948,7 +948,7 @@
 
 !$Procedure ZZMINRAD ( Shape model, minimum radius )
 
-      ENTRY ZZMINRAD ( MINRAD )
+      entry zzminrad ( minrad )
 
 ! $ Abstract
 !
@@ -1084,9 +1084,9 @@
 !-&
 
 
-      MINRAD = SAVMNR
+      minrad = savmnr
 
-      RETURN
+      return
 
 
 
@@ -1094,7 +1094,7 @@
 
 !$Procedure ZZRAYNP ( Shape model, callback for ray-surface near point )
 
-      ENTRY ZZRAYNP ( VERTEX, RAYDIR, ET, PNEAR, DIST )
+      entry zzraynp ( vertex, raydir, et, pnear, dist )
 
 ! $ Abstract
 !
@@ -1254,42 +1254,42 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZRAYNP' )
+      call chkin ( 'ZZRAYNP' )
 
 
-      IF ( SAVTYP .EQ. ELLTRG ) THEN
+      if ( savtyp .eq. elltrg ) then
 !
 !        Find the nearest point on the ellipsoid's surface to
 !        to the ray.
 !
-         CALL NPEDLN ( SAVRAD(1), SAVRAD(2), SAVRAD(3), &
-                       VERTEX,    RAYDIR,    PNEAR,    DIST )
+         call npedln ( savrad(1), savrad(2), savrad(3), &
+                       vertex,    raydir,    pnear,    dist )
 
 
-      ELSE IF ( SAVTYP .EQ. DSKTRG ) THEN
+      else if ( savtyp .eq. dsktrg ) then
 !
 !        Find the nearest point on the outer bounding sphere to
 !        to the ray.
 !
-         CALL NPEDLN ( SAVMXR, SAVMXR, SAVMXR, &
-                       VERTEX, RAYDIR, PNEAR,  DIST )
+         call npedln ( savmxr, savmxr, savmxr, &
+                       vertex, raydir, pnear,  dist )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Surface type code # is not supported. ' &
+         call setmsg ( 'Surface type code # is not supported. ' &
          //            'This code branch is not supposed to be ' &
          //            'reached.'                               )
-         CALL ERRINT ( '#', SAVTYP                              )
-         CALL SIGERR ( 'SPICE(BUG)'                             )
-         CALL CHKOUT ( 'ZZRAYNP'                                )
-         RETURN
+         call errint ( '#', savtyp                              )
+         call sigerr ( 'SPICE(BUG)'                             )
+         call chkout ( 'ZZRAYNP'                                )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZRAYNP' )
-      RETURN
-      END
+      call chkout ( 'ZZRAYNP' )
+      return
+      end

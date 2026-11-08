@@ -1,8 +1,8 @@
 !$Procedure SPKW21 ( Write SPK segment, type 21 )
 
-      SUBROUTINE SPKW21 ( HANDLE, BODY,   CENTER, FRAME, &
-                          FIRST,  LAST,   SEGID,  N, &
-                          DLSIZE, DLINES, EPOCHS        )
+      subroutine spkw21 ( handle, body,   center, frame, &
+                          first,  last,   segid,  n, &
+                          dlsize, dlines, epochs        )
 
 ! $ Abstract
 !
@@ -21,21 +21,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk21.inc'
+      include 'spk21.inc'
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      INTEGER               N
-      INTEGER               DLSIZE
-      DOUBLE PRECISION      DLINES ( DLSIZE, * )
-      DOUBLE PRECISION      EPOCHS (         * )
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      integer               n
+      integer               dlsize
+      double precision      dlines ( dlsize, * )
+      double precision      epochs (         * )
 
 ! $ Brief_I/O
 !
@@ -267,270 +267,270 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
 !
 !     MINDSZ is the minimum MDA size; this is the size
 !     of type 1 MDAs.
 !
-      INTEGER               MINDSZ
-      PARAMETER           ( MINDSZ =   71 )
+      integer               mindsz
+      parameter           ( mindsz =   71 )
 
 !
 !     Local variables
 !
-      INTEGER               DSCSIZ
-      PARAMETER           ( DSCSIZ  =   5 )
+      integer               dscsiz
+      parameter           ( dscsiz  =   5 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE   =  21 )
+      integer               dtype
+      parameter           ( dtype   =  21 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ  = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz  = 100 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DESCR  ( DSCSIZ )
-      DOUBLE PRECISION      PRVEPC
+      double precision      descr  ( dscsiz )
+      double precision      prvepc
 
-      INTEGER               CHRCOD
-      INTEGER               I
-      INTEGER               J
-      INTEGER               KQMAX1
-      INTEGER               KQMLOC
-      INTEGER               MAXDIM
-      INTEGER               MAXDSZ
-      INTEGER               REFCOD
+      integer               chrcod
+      integer               i
+      integer               j
+      integer               kqmax1
+      integer               kqmloc
+      integer               maxdim
+      integer               maxdsz
+      integer               refcod
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKW21' )
+      call chkin ( 'SPKW21' )
 
 !
 !     Make sure the difference line size is within limits.
 !
-      MAXDSZ = ( 4 * MAXTRM ) + 11
+      maxdsz = ( 4 * maxtrm ) + 11
 
-      IF ( DLSIZE .GT. MAXDSZ ) THEN
+      if ( dlsize .gt. maxdsz ) then
 
-         CALL SETMSG ( 'The input difference line size is #, ' &
+         call setmsg ( 'The input difference line size is #, ' &
          //            'while the maximum supported by ' &
          //            'this routine is #. It is possible ' &
          //            'that this problem is due to your ' &
          //            'SPICE Toolkit being out of date.'      )
-         CALL ERRINT ( '#',  DLSIZE                            )
-         CALL ERRINT ( '#',  MAXDSZ                            )
-         CALL SIGERR ( 'SPICE(DIFFLINETOOLARGE)'               )
-         CALL CHKOUT ( 'SPKW21'                                )
-         RETURN
+         call errint ( '#',  dlsize                            )
+         call errint ( '#',  maxdsz                            )
+         call sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
+         call chkout ( 'SPKW21'                                )
+         return
 
-      END IF
+      end if
 
-      IF ( DLSIZE .LT. MINDSZ ) THEN
+      if ( dlsize .lt. mindsz ) then
 
-         CALL SETMSG ( 'The input difference line size is #, ' &
+         call setmsg ( 'The input difference line size is #, ' &
          //            'while the minimum supported by ' &
          //            'this routine is #. It is possible ' &
          //            'that this problem is due to your ' &
          //            'SPICE Toolkit being out of date.'      )
-         CALL ERRINT ( '#',  DLSIZE                            )
-         CALL ERRINT ( '#',  MINDSZ                            )
-         CALL SIGERR ( 'SPICE(DIFFLINETOOSMALL)'               )
-         CALL CHKOUT ( 'SPKW21'                                )
-         RETURN
+         call errint ( '#',  dlsize                            )
+         call errint ( '#',  mindsz                            )
+         call sigerr ( 'SPICE(DIFFLINETOOSMALL)'               )
+         call chkout ( 'SPKW21'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the NAIF integer code for the reference frame.
 !
-      CALL NAMFRM ( FRAME, REFCOD )
+      call namfrm ( frame, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
+      if ( refcod .eq. 0 ) then
 
-         CALL SETMSG ( 'The reference frame # is not supported.'   )
-         CALL ERRCH  ( '#', FRAME                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                    )
-         CALL CHKOUT ( 'SPKW21'                                    )
-         RETURN
+         call setmsg ( 'The reference frame # is not supported.'   )
+         call errch  ( '#', frame                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         call chkout ( 'SPKW21'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Check to see if the segment identifier is too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' // &
+         call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SPKW21'                                  )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SPKW21'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         CHRCOD = ICHAR( SEGID(I:I) )
+         chrcod = ichar( segid(i:i) )
 
-         IF ( ( CHRCOD .LT. FPRINT ) .OR. ( CHRCOD .GT. LPRINT ) ) THEN
+         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains '  // &
+            call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'SPKW21'                                )
-            RETURN
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'SPKW21'                                )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     The difference line count must be at least one.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL SETMSG ( 'The difference line count was #; the count ' // &
+         call setmsg ( 'The difference line count was #; the count ' // &
                        'must be at least one.'                       )
-         CALL ERRINT ( '#', N                                        )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                         )
-         CALL CHKOUT ( 'SPKW21'                                      )
-         RETURN
+         call errint ( '#', n                                        )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                         )
+         call chkout ( 'SPKW21'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     The segment stop time should be greater than or equal to
 !     the begin time.
 !
-      IF ( FIRST .GT. LAST ) THEN
+      if ( first .gt. last ) then
 
-         CALL SETMSG ( 'The segment start time: # is greater than ' // &
+         call setmsg ( 'The segment start time: # is greater than ' // &
                        'the segment end time: #'                   )
-         CALL ERRDP  ( '#', FIRST                                  )
-         CALL ERRDP  ( '#', LAST                                   )
-         CALL SIGERR ( 'SPICE(BADDESCRTIMES)'                      )
-         CALL CHKOUT ( 'SPKW21'                                    )
-         RETURN
+         call errdp  ( '#', first                                  )
+         call errdp  ( '#', last                                   )
+         call sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         call chkout ( 'SPKW21'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the epochs form a strictly increasing sequence.
 !
-      PRVEPC = EPOCHS(1)
+      prvepc = epochs(1)
 
-      DO I = 2, N
+      do i = 2, n
 
-         IF ( EPOCHS(I) .LE. PRVEPC ) THEN
+         if ( epochs(i) .le. prvepc ) then
 
-            CALL SETMSG ( 'EPOCH # having index # is not greater '    // &
+            call setmsg ( 'EPOCH # having index # is not greater '    // &
                           'than its predecessor #.'                   )
-            CALL ERRDP  ( '#',  EPOCHS(I)                             )
-            CALL ERRINT ( '#',  I                                     )
-            CALL ERRDP  ( '#',  EPOCHS(I-1)                           )
-            CALL SIGERR ( 'SPICE(TIMESOUTOFORDER)'                    )
-            CALL CHKOUT ( 'SPKW21'                                    )
-            RETURN
+            call errdp  ( '#',  epochs(i)                             )
+            call errint ( '#',  i                                     )
+            call errdp  ( '#',  epochs(i-1)                           )
+            call sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            call chkout ( 'SPKW21'                                    )
+            return
 
-         END IF
+         end if
 
-         PRVEPC = EPOCHS(I)
+         prvepc = epochs(i)
 
-      END DO
+      end do
 
 !
 !     Make sure there's no gap between the last difference line
 !     epoch and the end of the time interval defined by the segment
 !     descriptor.
 !
-      IF (  EPOCHS(N) .LT. LAST ) THEN
+      if (  epochs(n) .lt. last ) then
 
-         CALL SETMSG ( 'Segment has coverage gap: segment end time # ' &
+         call setmsg ( 'Segment has coverage gap: segment end time # ' &
          //            'follows last epoch #.'                        )
-         CALL ERRDP  ( '#',  LAST                                     )
-         CALL ERRDP  ( '#',  EPOCHS(N)                                )
-         CALL SIGERR ( 'SPICE(COVERAGEGAP)'                           )
-         CALL CHKOUT ( 'SPKW21'                                       )
-         RETURN
+         call errdp  ( '#',  last                                     )
+         call errdp  ( '#',  epochs(n)                                )
+         call sigerr ( 'SPICE(COVERAGEGAP)'                           )
+         call chkout ( 'SPKW21'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the step size vectors in the difference lines.
 !
-      MAXDIM = ( DLSIZE - 11 ) / 4
-      KQMLOC = ( 4 * MAXDIM  ) + 8
+      maxdim = ( dlsize - 11 ) / 4
+      kqmloc = ( 4 * maxdim  ) + 8
 
 
-      DO I = 1, N
+      do i = 1, n
 !
 !        Check only the first KQMAX1-2 elements of the step size
 !        vector. The higher-indexed elements are allowed to be zero.
 !
-         KQMAX1 = NINT( DLINES(KQMLOC,I) )
+         kqmax1 = nint( dlines(kqmloc,i) )
 
-         DO J = 2, KQMAX1-1
+         do j = 2, kqmax1-1
 
-            IF ( DLINES(J,I) .EQ. 0.D0 ) THEN
+            if ( dlines(j,i) .eq. 0.d0 ) then
 
-               CALL SETMSG ( 'Step size was zero at step size vector ' &
+               call setmsg ( 'Step size was zero at step size vector ' &
                //            'index # within difference line #.'      )
-               CALL ERRINT ( '#',  J-1                                )
-               CALL ERRINT ( '#',  I                                  )
-               CALL SIGERR ( 'SPICE(ZEROSTEP)'                        )
-               CALL CHKOUT ( 'SPKW21'                                 )
-               RETURN
+               call errint ( '#',  j-1                                )
+               call errint ( '#',  i                                  )
+               call sigerr ( 'SPICE(ZEROSTEP)'                        )
+               call chkout ( 'SPKW21'                                 )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     If we made it this far, we're ready to start writing the segment.
 !
 !     Create the segment descriptor.
 !
-      CALL SPKPDS ( BODY, CENTER, FRAME, DTYPE, FIRST, LAST, DESCR )
+      call spkpds ( body, center, frame, dtype, first, last, descr )
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW21' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW21' )
+         return
+      end if
 
 !
 !     The type 21 segment structure is shown below:
@@ -564,23 +564,23 @@
 !        +-----------------------+
 !
 
-      CALL DAFADA ( DLINES,  N*DLSIZE )
-      CALL DAFADA ( EPOCHS,  N        )
+      call dafada ( dlines,  n*dlsize )
+      call dafada ( epochs,  n        )
 
-      DO I = 1,   N / DIRSIZ
-         CALL DAFADA (  EPOCHS( DIRSIZ*I ),  1  )
-      END DO
+      do i = 1,   n / dirsiz
+         call dafada (  epochs( dirsiz*i ),  1  )
+      end do
 
-      CALL DAFADA ( DBLE( MAXDIM ),  1 )
-      CALL DAFADA ( DBLE( N      ),  1 )
+      call dafada ( dble( maxdim ),  1 )
+      call dafada ( dble( n      ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.
 !
-      IF ( .NOT. FAILED() ) THEN
-         CALL DAFENA
-      END IF
+      if ( .not. failed() ) then
+         call dafena
+      end if
 
-      CALL CHKOUT ( 'SPKW21' )
-      RETURN
-      END
+      call chkout ( 'SPKW21' )
+      return
+      end

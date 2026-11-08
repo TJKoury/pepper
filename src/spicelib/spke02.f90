@@ -1,6 +1,6 @@
 !$Procedure SPKE02 ( SPK, evaluate record, type 2 )
 
-      SUBROUTINE SPKE02 ( ET, RECORD, XYZDOT )
+      subroutine spke02 ( et, record, xyzdot )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 !
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      XYZDOT   ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      xyzdot   ( 6 )
 !
 ! $ Brief_I/O
 !
@@ -203,22 +203,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               COFLOC
-      INTEGER               DEGP
-      INTEGER               I
-      INTEGER               NCOF
+      integer               cofloc
+      integer               degp
+      integer               i
+      integer               ncof
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     The first number in the record is the record size.  Following it
@@ -227,51 +227,51 @@
 !     be determined from the record size, since there are the same
 !     number of coefficients for each variable.
 !
-      NCOF = ( INT( RECORD( 1 ) ) - 2 ) / 3
+      ncof = ( int( record( 1 ) ) - 2 ) / 3
 
-      IF ( NCOF .LT. 1 ) THEN
+      if ( ncof .lt. 1 ) then
 
-         CALL CHKIN  ( 'SPKE02'                                     )
-         CALL SETMSG ( 'The input record''s coefficient count NCOF ' &
+         call chkin  ( 'SPKE02'                                     )
+         call setmsg ( 'The input record''s coefficient count NCOF ' &
          //            'should be positive but was #.'              )
-         CALL ERRINT ( '#', NCOF                                    )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'SPKE02'                                     )
-         RETURN
+         call errint ( '#', ncof                                    )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+         call chkout ( 'SPKE02'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the radius of the domain interval.
 !
-      IF ( RECORD(3) .LE. 0.D0 )  THEN
+      if ( record(3) .le. 0.d0 )  then
 
-         CALL CHKIN  ( 'SPKE02'                            )
-         CALL SETMSG ( 'Interval radius must be positive ' &
+         call chkin  ( 'SPKE02'                            )
+         call setmsg ( 'Interval radius must be positive ' &
          //            'but was #.'                        )
-         CALL ERRDP  ( '#', RECORD(3)                      )
-         CALL SIGERR ( 'SPICE(INVALIDRADIUS)'              )
-         CALL CHKOUT ( 'SPKE02'                            )
-         RETURN
+         call errdp  ( '#', record(3)                      )
+         call sigerr ( 'SPICE(INVALIDRADIUS)'              )
+         call chkout ( 'SPKE02'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     The degree of each polynomial is one less than the number of
 !     coefficients.
 !
-      DEGP = NCOF - 1
+      degp = ncof - 1
 
 !
 !     Call CHBINT once for each variable to evaluate the position
 !     and velocity values.
 !
-       DO I = 1, 3
+       do i = 1, 3
 !
 !        The coefficients for each variable are located contiguously,
 !        following the first three words in the record.
 !
-         COFLOC = NCOF*( I - 1 ) + 4
+         cofloc = ncof*( i - 1 ) + 4
 !
 !        CHBINT needs as input the coefficients, the degree of the
 !        polynomial, the epoch, and also two variable transformation
@@ -280,9 +280,9 @@
 !
 !        Note that CHBINT is "error free."
 !
-         CALL CHBINT ( RECORD( COFLOC ),  DEGP,       RECORD( 2 ), &
-                       ET,                XYZDOT(I),  XYZDOT(I + 3)  )
-      END DO
+         call chbint ( record( cofloc ),  degp,       record( 2 ), &
+                       et,                xyzdot(i),  xyzdot(i + 3)  )
+      end do
 
-      RETURN
-      END
+      return
+      end

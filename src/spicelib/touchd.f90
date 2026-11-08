@@ -1,6 +1,6 @@
 !$Procedure TOUCHD ( Touch a variable )
 
-      DOUBLE PRECISION FUNCTION TOUCHD ( DP )
+      double precision function touchd ( dp )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      DP
+      double precision      dp
 
 ! $ Brief_I/O
 !
@@ -121,6 +121,6 @@
 !-&
 
 
-      TOUCHD = DP
-      RETURN
-      END
+      touchd = dp
+      return
+      end

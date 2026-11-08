@@ -1,6 +1,6 @@
 !$Procedure VPERP ( Perpendicular component of a 3-vector )
 
-      SUBROUTINE VPERP ( A, B, P )
+      subroutine vperp ( a, b, p )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   A ( 3 )
-      DOUBLE PRECISION   B ( 3 )
-      DOUBLE PRECISION   P ( 3 )
+      double precision   a ( 3 )
+      double precision   b ( 3 )
+      double precision   p ( 3 )
 
 ! $ Brief_I/O
 !
@@ -138,54 +138,54 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BIGA
-      DOUBLE PRECISION      BIGB
-      DOUBLE PRECISION      R(3)
-      DOUBLE PRECISION      T(3)
-      DOUBLE PRECISION      V(3)
+      double precision      biga
+      double precision      bigb
+      double precision      r(3)
+      double precision      t(3)
+      double precision      v(3)
 
 
 !
 !     Error free routine:  no check-in.
 !
-      BIGA = MAX ( DABS(A(1)), DABS(A(2)), DABS(A(3)) )
-      BIGB = MAX ( DABS(B(1)), DABS(B(2)), DABS(B(3)) )
+      biga = max ( dabs(a(1)), dabs(a(2)), dabs(a(3)) )
+      bigb = max ( dabs(b(1)), dabs(b(2)), dabs(b(3)) )
 
 !
 !     If A is the zero vector, just set P to zero and return.
 !
-      IF ( BIGA .EQ. 0.0D0 ) THEN
+      if ( biga .eq. 0.0d0 ) then
 
-         P(1) = 0.0D0
-         P(2) = 0.0D0
-         P(3) = 0.0D0
-         RETURN
+         p(1) = 0.0d0
+         p(2) = 0.0d0
+         p(3) = 0.0d0
+         return
 
-      END IF
+      end if
 
 !
 !     If B is the zero vector, then set P equal to A.
 !
-      IF ( BIGB .EQ. 0.0D0 ) THEN
+      if ( bigb .eq. 0.0d0 ) then
 
-         P(1) = A(1)
-         P(2) = A(2)
-         P(3) = A(3)
-         RETURN
+         p(1) = a(1)
+         p(2) = a(2)
+         p(3) = a(3)
+         return
 
-      END IF
+      end if
 
-      T(1) = A(1) / BIGA
-      T(2) = A(2) / BIGA
-      T(3) = A(3) / BIGA
+      t(1) = a(1) / biga
+      t(2) = a(2) / biga
+      t(3) = a(3) / biga
 
-      R(1) = B(1) / BIGB
-      R(2) = B(2) / BIGB
-      R(3) = B(3) / BIGB
+      r(1) = b(1) / bigb
+      r(2) = b(2) / bigb
+      r(3) = b(3) / bigb
 
-      CALL VPROJ  ( T,    R, V )
-      CALL VSUB   ( T,    V, P )
-      CALL VSCLIP ( BIGA,    P )
+      call vproj  ( t,    r, v )
+      call vsub   ( t,    v, p )
+      call vsclip ( biga,    p )
 
-      RETURN
-      END
+      return
+      end

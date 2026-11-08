@@ -1,6 +1,6 @@
 !$Procedure APPROX ( Approximate equality )
 
-      LOGICAL FUNCTION APPROX ( X, Y, TOL )
+      logical function approx ( x, y, tol )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      Y
-      DOUBLE PRECISION      TOL
+      double precision      x
+      double precision      y
+      double precision      tol
 
 ! $ Brief_I/O
 !
@@ -121,7 +121,7 @@
 !
 !     Just shorthand, really.
 !
-      APPROX = ( ABS ( X - Y ) .LE. TOL )
+      approx = ( abs ( x - y ) .le. tol )
 
-      RETURN
-      END
+      return
+      end

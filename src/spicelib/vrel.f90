@@ -1,6 +1,6 @@
 !$Procedure VREL ( Vector relative difference, 3 dimensions )
 
-      DOUBLE PRECISION FUNCTION VREL ( V1, V2  )
+      double precision function vrel ( v1, v2  )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V1 ( 3 )
-      DOUBLE PRECISION      V2 ( 3 )
+      double precision      v1 ( 3 )
+      double precision      v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -179,15 +179,15 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VDIST
+      double precision      vnorm
+      double precision      vdist
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      NUNORM
-      DOUBLE PRECISION      DENORM
+      double precision      nunorm
+      double precision      denorm
 
 
 
@@ -201,20 +201,20 @@
 !     This handles the case where both vectors are zero vectors since
 !     the distance between them will be zero.
 !
-      NUNORM = VDIST ( V1, V2 )
+      nunorm = vdist ( v1, v2 )
 
-      IF ( NUNORM .EQ. 0.D0 ) THEN
+      if ( nunorm .eq. 0.d0 ) then
 
-         VREL = 0.D0
+         vrel = 0.d0
 
-      ELSE
+      else
 
-         DENORM = MAX (  VNORM(V1), VNORM(V2)  )
+         denorm = max (  vnorm(v1), vnorm(v2)  )
 
-         VREL = NUNORM / DENORM
+         vrel = nunorm / denorm
 
-       END IF
+       end if
 
 
-      RETURN
-      END
+      return
+      end

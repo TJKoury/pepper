@@ -1,6 +1,6 @@
 !$Procedure ZZDDHGTU ( Private --- DDH Get Unit )
 
-      SUBROUTINE ZZDDHGTU ( UTCST, UTHAN, UTLCK, UTLUN, NUT, UINDEX )
+      subroutine zzddhgtu ( utcst, uthan, utlck, utlun, nut, uindex )
 
 ! $ Abstract
 !
@@ -21,17 +21,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzddhman.inc'
+      include              'zzddhman.inc'
 
-      INTEGER               UTCST  ( * )
-      INTEGER               UTHAN  ( * )
-      LOGICAL               UTLCK  ( * )
-      INTEGER               UTLUN  ( * )
-      INTEGER               NUT
+      integer               utcst  ( * )
+      integer               uthan  ( * )
+      logical               utlck  ( * )
+      integer               utlun  ( * )
+      integer               nut
 
-      INTEGER               UINDEX
+      integer               uindex
 
 ! $ Brief_I/O
 !
@@ -124,70 +124,70 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
 !
-      INTEGER               I
-      INTEGER               ORDERV ( UTSIZE )
+      integer               i
+      integer               orderv ( utsize )
 
-      LOGICAL               DONE
+      logical               done
 
 
 !
 !     Standard SPICE discovery error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     First check the case when the unit table is completely empty.
 !
-      IF ( NUT .EQ. 0 ) THEN
+      if ( nut .eq. 0 ) then
 
-         NUT    = 1
-         UINDEX = 1
+         nut    = 1
+         uindex = 1
 
-         UTCST(UINDEX) = 0
-         UTHAN(UINDEX) = 0
-         UTLCK(UINDEX) = .FALSE.
+         utcst(uindex) = 0
+         uthan(uindex) = 0
+         utlck(uindex) = .false.
 
-         CALL GETLUN ( UTLUN(UINDEX) )
+         call getlun ( utlun(uindex) )
 
 !
 !        Check FAILED to see if GETLUN signaled an error.  If so, then
 !        return an invalid unit to the caller.
 !
-         IF ( FAILED() ) THEN
-            UTLUN(UINDEX) = -1
-            RETURN
-         END IF
+         if ( failed() ) then
+            utlun(uindex) = -1
+            return
+         end if
 
 !
 !        If we end up here, then GETLUN succeeded and we have the new
 !        unit.  Now return.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     If we reach here, then the table contains at least one entry.
 !     Order the table rows by cost.
 !
-      CALL ORDERI ( UTCST, NUT, ORDERV )
+      call orderi ( utcst, nut, orderv )
 
 !
 !     Now check to for '0' cost rows as this indicates rows whose
 !     logical units are reserved for this suite of routines usage,
 !     but are not currently assigned a file.
 !
-      IF ( UTCST(ORDERV(1)) .LE. 0 ) THEN
+      if ( utcst(orderv(1)) .le. 0 ) then
 
-         UINDEX = ORDERV(1)
+         uindex = orderv(1)
 
 !
 !        '0' cost rows end up in the unit table as the result of a
@@ -196,48 +196,48 @@
 !        row is reserved for this module's usage only with RESLUN.
 !        Free it, since we're about to reassign it.
 !
-         CALL FRELUN ( UTLUN(UINDEX) )
+         call frelun ( utlun(uindex) )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Now if no '0' cost rows exist, check to see if we can
 !     expand the table.
 !
-      IF ( NUT .LT. UTSIZE ) THEN
+      if ( nut .lt. utsize ) then
 
 !
 !        Now increment NUT and set UINDEX.
 !
-         NUT    = NUT + 1
-         UINDEX = NUT
+         nut    = nut + 1
+         uindex = nut
 
 !
 !        Prepare the default values for the new row.
 !
-         UTCST(UINDEX) = 0
-         UTHAN(UINDEX) = 0
-         UTLCK(UINDEX) = .FALSE.
+         utcst(uindex) = 0
+         uthan(uindex) = 0
+         utlck(uindex) = .false.
 
-         CALL GETLUN ( UTLUN(UINDEX) )
+         call getlun ( utlun(uindex) )
 
 !
 !        Check FAILED to see if GETLUN signaled an error.  If so, then
 !        return an invalid unit to the caller.
 !
-         IF ( FAILED() ) THEN
-            UTLUN(UINDEX) = -1
-            RETURN
-         END IF
+         if ( failed() ) then
+            utlun(uindex) = -1
+            return
+         end if
 
 !
 !        If we end up here, then GETLUN worked properly.  Now return.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     If we reach here, then we have no zero-cost rows and a full unit
@@ -245,49 +245,49 @@
 !     bump.  We do this by stepping through the order vector until
 !     we find the first 'non-locked' row.
 !
-      I    = 0
-      DONE = .FALSE.
+      i    = 0
+      done = .false.
 
-      DO WHILE ( (.NOT. DONE) .AND. (I .NE. NUT) )
+      do while ( (.not. done) .and. (i .ne. nut) )
 
-         I    = I + 1
-         DONE = .NOT. UTLCK( ORDERV(I) )
+         i    = i + 1
+         done = .not. utlck( orderv(i) )
 
-      END DO
+      end do
 
 !
 !     Before going any further, signal an error if we discover
 !     we have not found a row.
 !
-      IF ( .NOT. DONE ) THEN
+      if ( .not. done ) then
 
-         UINDEX = 0
-         CALL CHKIN  ( 'ZZDDHGTU' )
-         CALL SETMSG ( 'The unit table is full and all entries are ' &
+         uindex = 0
+         call chkin  ( 'ZZDDHGTU' )
+         call setmsg ( 'The unit table is full and all entries are ' &
          //            'locked.  This should never happen. Contact ' &
          //            'NAIF.'                                       )
-         CALL SIGERR ( 'SPICE(BUG)'                                  )
-         CALL CHKOUT ( 'ZZDDHGTU'                                    )
-         RETURN
+         call sigerr ( 'SPICE(BUG)'                                  )
+         call chkout ( 'ZZDDHGTU'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Clear UTCST and UTHAN since we intend to disconnect
 !     the unit upon return.
 !
-      UTCST( ORDERV(I) ) = 0
-      UTHAN( ORDERV(I) ) = 0
+      utcst( orderv(i) ) = 0
+      uthan( orderv(i) ) = 0
 
 !
 !     Set UINDEX and CLSLUN, then return.
 !
-      UINDEX = ORDERV(I)
+      uindex = orderv(i)
 
 !
 !     At this point we need to close the unit from the row of interest.
 !
-      CLOSE ( UNIT = UTLUN(UINDEX) )
+      close ( unit = utlun(uindex) )
 
-      RETURN
-      END
+      return
+      end

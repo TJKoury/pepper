@@ -1,11 +1,11 @@
 !$Procedure SYSELD ( Select a subset of the values of a symbol )
 
-      SUBROUTINE SYSELD ( NAME, &
-                          BEGIN, &
-                          END, &
-                          TABSYM, TABPTR, TABVAL, &
-                          VALUES, &
-                          FOUND                     )
+      subroutine syseld ( name, &
+                          begin, &
+                          end, &
+                          tabsym, tabptr, tabval, &
+                          values, &
+                          found                     )
 
 ! $ Abstract
 !
@@ -22,19 +22,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      INTEGER               BEGIN
-      INTEGER               END
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
-      DOUBLE PRECISION      VALUES     (        * )
-      LOGICAL               FOUND
+      character*(*)         name
+      integer               begin
+      integer               end
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
+      double precision      values     (        * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -210,75 +210,75 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
-      INTEGER               SUMAI
+      integer               bsrchc
+      integer               cardc
+      logical               return
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
+      integer               nsym
 
-      INTEGER               LOCSYM
-      INTEGER               LOCVAL
-      INTEGER               N
+      integer               locsym
+      integer               locval
+      integer               n
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYSELD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYSELD' )
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      IF ( LOCSYM .EQ. 0 ) THEN
+      if ( locsym .eq. 0 ) then
 
-         FOUND = .FALSE.
+         found = .false.
 
-      ELSE
+      else
 
 !
 !        We could still have a problem: do these components exist?
 !        Does this request even make sense?
 !
-         N = TABPTR(LOCSYM)
+         n = tabptr(locsym)
 
-         IF (       BEGIN .GE. 1 &
-              .AND. BEGIN .LE. N &
-              .AND. END   .GE. 1 &
-              .AND. END   .LE. N &
-              .AND. BEGIN .LE. END ) THEN
+         if (       begin .ge. 1 &
+              .and. begin .le. n &
+              .and. end   .ge. 1 &
+              .and. end   .le. n &
+              .and. begin .le. end ) then
 
-            FOUND  = .TRUE.
-            LOCVAL = SUMAI ( TABPTR(1), LOCSYM-1 ) + 1
+            found  = .true.
+            locval = sumai ( tabptr(1), locsym-1 ) + 1
 
-            CALL MOVED ( TABVAL(LOCVAL+BEGIN-1), END-BEGIN+1, VALUES )
+            call moved ( tabval(locval+begin-1), end-begin+1, values )
 
-         ELSE
-            FOUND = .FALSE.
-         END IF
+         else
+            found = .false.
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYSELD' )
-      RETURN
-      END
+      call chkout ( 'SYSELD' )
+      return
+      end

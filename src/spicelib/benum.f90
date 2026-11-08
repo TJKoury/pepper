@@ -1,6 +1,6 @@
 !$Procedure BENUM  ( Be a number? )
 
-      LOGICAL FUNCTION BENUM  ( STRING )
+      logical function benum  ( string )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -152,17 +152,17 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CPOS
-      LOGICAL               BEINT
-      LOGICAL               BEDEC
+      integer               cpos
+      logical               beint
+      logical               bedec
 
 !
 !     Local Variables
 !
-      INTEGER               D
-      INTEGER               E
-      INTEGER               F
-      INTEGER               L
+      integer               d
+      integer               e
+      integer               f
+      integer               l
 
 
 
@@ -171,36 +171,36 @@
 !     Determine whether or not there is an exponent character in the
 !     string.
 !
-      L = LEN  ( STRING            )
-      E = CPOS ( STRING, 'EeDd', 1 )
-      D = E-1
-      F = E+1
+      l = len  ( string            )
+      e = cpos ( string, 'EeDd', 1 )
+      d = e-1
+      f = e+1
 
 
-      IF ( E .EQ. 0 ) THEN
+      if ( e .eq. 0 ) then
 
 !
 !        There is no exponent character, this is a number if it
 !        is a decimal number.
 !
-         BENUM = BEDEC ( STRING )
+         benum = bedec ( string )
 
-      ELSE IF (     ( E .EQ. 1 ) &
-               .OR. ( E .EQ. L )  ) THEN
+      else if (     ( e .eq. 1 ) &
+               .or. ( e .eq. l )  ) then
 
-         BENUM = .FALSE.
+         benum = .false.
 
-      ELSE IF (      ( STRING(D:D) .EQ. ' ' ) &
-                .OR. ( STRING(F:F) .EQ. ' ' ) ) THEN
+      else if (      ( string(d:d) .eq. ' ' ) &
+                .or. ( string(f:f) .eq. ' ' ) ) then
 
-         BENUM = .FALSE.
+         benum = .false.
 
-      ELSE
+      else
 
-         BENUM =      BEDEC ( STRING(1:D) ) &
-                .AND. BEINT ( STRING(F:L) )
+         benum =      bedec ( string(1:d) ) &
+                .and. beint ( string(f:l) )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

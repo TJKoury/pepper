@@ -1,6 +1,6 @@
 !$Procedure DPMIN ( Smallest DP number )
 
-      DOUBLE PRECISION FUNCTION DPMIN ( )
+      double precision function dpmin ( )
 
 ! $ Abstract
 !
@@ -413,7 +413,7 @@
 !     HP-UX 9000/750, FORTRAN/9000 Series 700 computers
 !     PC/Linux, Fort77
 !
-      DPMIN = -1.79769313486231D+308
+      dpmin = -1.79769313486231d+308
 
-      RETURN
-      END
+      return
+      end

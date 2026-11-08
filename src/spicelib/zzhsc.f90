@@ -1,7 +1,7 @@
 !$Procedure ZZHSC ( Private---Add-only Character Hash )
 
-      SUBROUTINE ZZHSC ( HASHSZ, HEDLST, COLLST, ITEMS, &
-                         ITEM, ITEMAT, NEW, AVAIL )
+      subroutine zzhsc ( hashsz, hedlst, collst, items, &
+                         item, itemat, new, avail )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      INTEGER               HASHSZ
-      INTEGER               HEDLST  (          * )
-      INTEGER               COLLST  ( LBPOOL : * )
-      CHARACTER*(*)         ITEMS   (          * )
-      CHARACTER*(*)         ITEM
-      INTEGER               ITEMAT
-      LOGICAL               NEW
-      INTEGER               AVAIL
+      integer               hashsz
+      integer               hedlst  (          * )
+      integer               collst  ( lbpool : * )
+      character*(*)         items   (          * )
+      character*(*)         item
+      integer               itemat
+      logical               new
+      integer               avail
 
 ! $ Brief_I/O
 !
@@ -383,51 +383,51 @@
 !
 !     Hash control area items.
 !
-      INTEGER               SIZIDX
-      PARAMETER           ( SIZIDX =   0 )
+      integer               sizidx
+      parameter           ( sizidx =   0 )
 
-      INTEGER               FREIDX
-      PARAMETER           ( FREIDX =  -1 )
+      integer               freidx
+      parameter           ( freidx =  -1 )
 
 !
 !     SPICELIB functions.
 !
-      INTEGER               ZZHASH2
+      integer               zzhash2
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables.
 !
-      INTEGER               I
-      INTEGER               LOOKAT
-      INTEGER               NODE
+      integer               i
+      integer               lookat
+      integer               node
 
-      LOGICAL               FULL
-      LOGICAL               LFOUND
+      logical               full
+      logical               lfound
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZHSC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZHSC' )
+      end if
 
 !
 !     Signal bogus entry error and check out.
 !
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZHSC' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZHSC' )
 
-      RETURN
+      return
 
 
 !$Procedure ZZHSCINI ( Private---Initialize Add-only Character Hash )
 
-      ENTRY ZZHSCINI ( HASHSZ, HEDLST, COLLST )
+      entry zzhscini ( hashsz, hedlst, collst )
 
 ! $ Abstract
 !
@@ -538,44 +538,44 @@
 !
 !     Standard SPICE error handling.
 !
-      CALL CHKIN  ( 'ZZHSCINI' )
+      call chkin  ( 'ZZHSCINI' )
 
-      IF ( HASHSZ .GT. 0 ) THEN
+      if ( hashsz .gt. 0 ) then
 
 !
 !        Wipe out head node pointer list.
 !
-         DO I = 1, HASHSZ
-            HEDLST(I) = 0
-         END DO
+         do i = 1, hashsz
+            hedlst(i) = 0
+         end do
 
 !
 !        Reset control area.
 !
-         COLLST( SIZIDX ) = HASHSZ
-         COLLST( FREIDX ) = 1
+         collst( sizidx ) = hashsz
+         collst( freidx ) = 1
 
-      END IF
+      end if
 
 !
 !     The requested number of nodes must be in the valid range. If it
 !     is not, ZZHASH2 will signal an error.
 !
-      I = ZZHASH2( ' ', HASHSZ )
+      i = zzhash2( ' ', hashsz )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZHSCINI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZHSCINI' )
+         return
+      end if
 
-      CALL CHKOUT ( 'ZZHSCINI' )
+      call chkout ( 'ZZHSCINI' )
 
-      RETURN
+      return
 
 
 !$Procedure ZZHSCADD ( Private---Add Item to Add-only Character Hash )
 
-      ENTRY ZZHSCADD ( HEDLST, COLLST, ITEMS, ITEM, ITEMAT, NEW )
+      entry zzhscadd ( hedlst, collst, items, item, itemat, new )
 
 ! $ Abstract
 !
@@ -689,88 +689,88 @@
 !     Standard SPICE error handling. No checking-in here. We will do it
 !     when we have to.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Set flag indicating whether the hash is full.
 !
-      FULL   = COLLST ( FREIDX ) .GT. COLLST ( SIZIDX )
+      full   = collst ( freidx ) .gt. collst ( sizidx )
 
 !
 !     Use hash function to get index of the head node.
 !
-      LOOKAT = ZZHASH2 ( ITEM, COLLST ( SIZIDX ) )
-      NODE   = HEDLST  ( LOOKAT )
+      lookat = zzhash2 ( item, collst ( sizidx ) )
+      node   = hedlst  ( lookat )
 
 !
 !     Set initial values.
 !
-      LFOUND = .FALSE.
-      NEW    = .FALSE.
+      lfound = .false.
+      new    = .false.
 
 !
 !     See if this item (or one colliding with it in the hash scheme)
 !     has already been stored in the item list.
 !
-      IF ( NODE .GT. 0 ) THEN
+      if ( node .gt. 0 ) then
 
 !
 !        Start at the head node and check each item saved for this hash
 !        value until we find a item that matches or run out of items in
 !        this conflict resolution list.
 !
-         DO WHILE ( NODE .GT. 0 .AND. .NOT. LFOUND )
+         do while ( node .gt. 0 .and. .not. lfound )
 
-            LFOUND = ITEMS ( NODE ) .EQ. ITEM
-            ITEMAT = NODE
-            NODE   = COLLST ( NODE )
+            lfound = items ( node ) .eq. item
+            itemat = node
+            node   = collst ( node )
 
-         END DO
+         end do
 
 !
 !        If we didn't find this item on the conflict resolution list
 !        and our hash is not full we will add this item to it.
 !
-         IF ( .NOT. LFOUND .AND. .NOT. FULL   ) THEN
+         if ( .not. lfound .and. .not. full   ) then
 
 !
 !           Get next free node.
 !
-            NODE = COLLST ( FREIDX )
+            node = collst ( freidx )
 
 !
 !           Increment next free node pointer.
 !
-            COLLST ( FREIDX ) = COLLST ( FREIDX ) + 1
+            collst ( freidx ) = collst ( freidx ) + 1
 
 !
 !           Set current node pointer to the node we just picked for
 !           this item.
 !
-            COLLST ( ITEMAT ) = NODE
+            collst ( itemat ) = node
 
 !
 !           Set new node pointer to 0, just in case.
 !
-            COLLST ( NODE ) = 0
+            collst ( node ) = 0
 
 !
 !           Save item.
 !
-            ITEMS ( NODE ) = ITEM
+            items ( node ) = item
 
 !
 !           Set output node ID and new and found flags.
 !
-            ITEMAT =  NODE
-            NEW    = .TRUE.
-            LFOUND = .TRUE.
+            itemat =  node
+            new    = .true.
+            lfound = .true.
 
-         END IF
+         end if
 
-      ELSE IF ( .NOT. FULL ) THEN
+      else if ( .not. full ) then
 
 !
 !        Nothing like this item (in the hashing sense) has been stored
@@ -778,68 +778,68 @@
 !
 !        Get next free node.
 !
-         NODE = COLLST ( FREIDX )
+         node = collst ( freidx )
 
 !
 !        Increment next free node pointer.
 !
-         COLLST ( FREIDX ) = COLLST ( FREIDX ) + 1
+         collst ( freidx ) = collst ( freidx ) + 1
 
 !
 !        Set new node pointer to 0, just in case.
 !
-         COLLST ( NODE ) = 0
+         collst ( node ) = 0
 
 !
 !        Set the head node pointer to this node.
 !
-         HEDLST ( LOOKAT ) = NODE
+         hedlst ( lookat ) = node
 
 !
 !        Save item.
 !
-         ITEMS ( NODE ) = ITEM
+         items ( node ) = item
 
 !
 !        Set output node ID and new and found flags.
 !
-         ITEMAT =  NODE
-         NEW    = .TRUE.
-         LFOUND = .TRUE.
+         itemat =  node
+         new    = .true.
+         lfound = .true.
 
-      END IF
+      end if
 
 !
 !     Set ITEMAT to 0 if LFOUND is FALSE.
 !
-      IF ( .NOT. LFOUND ) THEN
+      if ( .not. lfound ) then
 
-         ITEMAT = 0
+         itemat = 0
 
-      END IF
+      end if
 
 !
 !     If the item hash was full and we didn't find this item we've got
 !     an error. Report it and return.
 !
-      IF ( FULL .AND. .NOT. LFOUND ) THEN
+      if ( full .and. .not. lfound ) then
 
-         CALL CHKIN  ( 'ZZHSCADD' )
+         call chkin  ( 'ZZHSCADD' )
 
-         CALL SETMSG ( 'The hash has no room for any more items.')
-         CALL SIGERR ( 'SPICE(HASHISFULL)' )
+         call setmsg ( 'The hash has no room for any more items.')
+         call sigerr ( 'SPICE(HASHISFULL)' )
 
-         CALL CHKOUT ( 'ZZHSCADD' )
-         RETURN
+         call chkout ( 'ZZHSCADD' )
+         return
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 !$Procedure ZZHSCCHK ( Private---Find Item in Add-only Character Hash )
 
-      ENTRY ZZHSCCHK ( HEDLST, COLLST, ITEMS, ITEM, ITEMAT )
+      entry zzhscchk ( hedlst, collst, items, item, itemat )
 
 ! $ Abstract
 !
@@ -942,57 +942,57 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Use hash function to get index of the head node.
 !
-      LOOKAT = ZZHASH2 ( ITEM, COLLST ( SIZIDX ) )
-      NODE   = HEDLST  ( LOOKAT )
+      lookat = zzhash2 ( item, collst ( sizidx ) )
+      node   = hedlst  ( lookat )
 
 !
 !     Set initial values.
 !
-      LFOUND  = .FALSE.
+      lfound  = .false.
 
 !
 !     See if this item (or one colliding with it in the hash scheme) is
 !     in the item list.
 !
-      IF ( NODE .GT. 0 ) THEN
+      if ( node .gt. 0 ) then
 
 !
 !        Start at the head node and check each item saved for this hash
 !        value until we find a item that matches or run out of items in
 !        this conflict resolution list.
 !
-         DO WHILE ( NODE .GT. 0 .AND. .NOT. LFOUND )
+         do while ( node .gt. 0 .and. .not. lfound )
 
-            LFOUND = ITEMS ( NODE ) .EQ. ITEM
-            ITEMAT = NODE
-            NODE   = COLLST ( NODE )
+            lfound = items ( node ) .eq. item
+            itemat = node
+            node   = collst ( node )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     If LFOUND is false, set ITEMAT to 0.
 !
-      IF ( .NOT. LFOUND ) THEN
+      if ( .not. lfound ) then
 
-         ITEMAT = 0
+         itemat = 0
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 !$Procedure ZZHSCAVL ( Private---Get room available in Add-only Hash )
 
-      ENTRY ZZHSCAVL ( COLLST, AVAIL )
+      entry zzhscavl ( collst, avail )
 
 ! $ Abstract
 !
@@ -1084,14 +1084,14 @@
 !
 !     Set the number of unoccupied slots in the hash.
 !
-      AVAIL = COLLST ( SIZIDX ) - COLLST ( FREIDX ) + 1
+      avail = collst ( sizidx ) - collst ( freidx ) + 1
 
-      RETURN
+      return
 
 
 !$Procedure ZZHSCINF ( Private---Get Information about Add-only Hash )
 
-      ENTRY ZZHSCINF ( HEDLST, COLLST, ITEMS, ITEM, AVAIL )
+      entry zzhscinf ( hedlst, collst, items, item, avail )
 
 ! $ Abstract
 !
@@ -1200,79 +1200,79 @@
 !
 !     Get the hash size.
 !
-      IF      ( ITEM .EQ. 'HASH SIZE' ) THEN
+      if      ( item .eq. 'HASH SIZE' ) then
 
-         AVAIL = COLLST ( SIZIDX )
+         avail = collst ( sizidx )
 
 !
 !     Get the count of used nodes in the head list.
 !
-      ELSE IF ( ITEM .EQ. 'USED HEADNODE COUNT' ) THEN
+      else if ( item .eq. 'USED HEADNODE COUNT' ) then
 
-         AVAIL = 0
-         DO I = 1, COLLST ( SIZIDX )
-            IF ( HEDLST ( I ) .NE. 0 ) THEN
-               AVAIL = AVAIL + 1
-            END IF
-         END DO
+         avail = 0
+         do i = 1, collst ( sizidx )
+            if ( hedlst ( i ) .ne. 0 ) then
+               avail = avail + 1
+            end if
+         end do
 
 !
 !     Get the count of unused nodes in the head list.
 !
-      ELSE IF ( ITEM .EQ. 'UNUSED HEADNODE COUNT' ) THEN
+      else if ( item .eq. 'UNUSED HEADNODE COUNT' ) then
 
-         AVAIL = 0
-         DO I = 1, COLLST ( SIZIDX )
-            IF ( HEDLST ( I ) .EQ. 0 ) THEN
-               AVAIL = AVAIL + 1
-            END IF
-         END DO
+         avail = 0
+         do i = 1, collst ( sizidx )
+            if ( hedlst ( i ) .eq. 0 ) then
+               avail = avail + 1
+            end if
+         end do
 
 !
 !     Get the count of used slots in the item list.
 !
-      ELSE IF ( ITEM .EQ. 'USED ITEM COUNT' ) THEN
+      else if ( item .eq. 'USED ITEM COUNT' ) then
 
-         AVAIL = COLLST ( FREIDX ) - 1
+         avail = collst ( freidx ) - 1
 
 !
 !     Get the count of unused slots in the item list.
 !
-      ELSE IF ( ITEM .EQ. 'UNUSED ITEM COUNT' ) THEN
+      else if ( item .eq. 'UNUSED ITEM COUNT' ) then
 
-         AVAIL = COLLST ( SIZIDX ) - COLLST ( FREIDX ) + 1
+         avail = collst ( sizidx ) - collst ( freidx ) + 1
 
 !
 !     Get the size of the longest item list for any hash value.
 !
-      ELSE IF ( ITEM .EQ. 'LONGEST LIST SIZE' ) THEN
+      else if ( item .eq. 'LONGEST LIST SIZE' ) then
 
-         AVAIL = 0
-         DO I = 1, COLLST ( SIZIDX )
-            NODE = HEDLST ( I )
-            LOOKAT = 0
-            DO WHILE ( NODE .GT. 0 )
-               LOOKAT = LOOKAT + 1
-               NODE   = COLLST ( NODE )
-            END DO
-            AVAIL = MAX( AVAIL, LOOKAT )
-         END DO
+         avail = 0
+         do i = 1, collst ( sizidx )
+            node = hedlst ( i )
+            lookat = 0
+            do while ( node .gt. 0 )
+               lookat = lookat + 1
+               node   = collst ( node )
+            end do
+            avail = max( avail, lookat )
+         end do
 
 !
 !     This parameter is not supported.
 !
-      ELSE
+      else
 
-         AVAIL = 0
+         avail = 0
 
-         CALL CHKIN  ( 'ZZHSCINF'                           )
-         CALL SETMSG ( 'Parameter ''#'' is not recognized.' )
-         CALL ERRCH  ( '#', ITEM                            )
-         CALL SIGERR ( 'SPICE(ITEMNOTRECOGNIZED)'           )
-         CALL CHKOUT ( 'ZZHSCINF'                           )
+         call chkin  ( 'ZZHSCINF'                           )
+         call setmsg ( 'Parameter ''#'' is not recognized.' )
+         call errch  ( '#', item                            )
+         call sigerr ( 'SPICE(ITEMNOTRECOGNIZED)'           )
+         call chkout ( 'ZZHSCINF'                           )
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZPDPLTC (Planetodetic coordinates, point latitude check)
 
-      LOGICAL FUNCTION ZZPDPLTC ( RE, F, P, LAT )
+      logical function zzpdpltc ( re, f, p, lat )
 
 ! $ Abstract
 !
@@ -25,12 +25,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      P   ( 3 )
-      DOUBLE PRECISION      LAT
+      double precision      re
+      double precision      f
+      double precision      p   ( 3 )
+      double precision      lat
 
 ! $ Brief_I/O
 !
@@ -177,49 +177,49 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      LIMIT
-      PARAMETER           ( LIMIT = 1.D-2 )
+      double precision      limit
+      parameter           ( limit = 1.d-2 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      R2
-      DOUBLE PRECISION      XXPT
-      DOUBLE PRECISION      YXPT
+      double precision      a
+      double precision      b
+      double precision      r
+      double precision      r2
+      double precision      xxpt
+      double precision      yxpt
 
 !
 !     Give the function a default value.
 !
-      ZZPDPLTC = .FALSE.
+      zzpdpltc = .false.
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZPDPLTC' )
+      call chkin ( 'ZZPDPLTC' )
 
 
 !
 !     The equatorial radius must be greater than zero.
 !
-      IF ( RE .LE. 0.0D0 ) THEN
+      if ( re .le. 0.0d0 ) then
 
-          CALL SETMSG ( 'Equatorial radius was *.' )
-          CALL ERRDP  ( '*', RE                    )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'   )
-          CALL CHKOUT ( 'ZZPDPLTC'                 )
-          RETURN
+          call setmsg ( 'Equatorial radius was *.' )
+          call errdp  ( '*', re                    )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
+          call chkout ( 'ZZPDPLTC'                 )
+          return
 
-      END IF
+      end if
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -227,15 +227,15 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      IF ( F .GE. 1 ) THEN
+      if ( f .ge. 1 ) then
 
-          CALL SETMSG ( 'Flattening coefficient was *.'  )
-          CALL ERRDP  ( '*', F                           )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-          CALL CHKOUT ( 'ZZPDPLTC'                       )
-          RETURN
+          call setmsg ( 'Flattening coefficient was *.'  )
+          call errdp  ( '*', f                           )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+          call chkout ( 'ZZPDPLTC'                       )
+          return
 
-      END IF
+      end if
 
 !
 !     The input point is assumed to be on the cone
@@ -245,11 +245,11 @@
 !     nothing to do: the point is automatically on the correct side of
 !     the X-Y plane.
 !
-      IF ( F .LE. 0.D0 ) THEN
+      if ( f .le. 0.d0 ) then
 
-         ZZPDPLTC = .TRUE.
+         zzpdpltc = .true.
 
-      ELSE
+      else
 !
 !        This is the oblate case.
 !
@@ -269,12 +269,12 @@
 !              LAT * P(3) > 0
 !
 !
-         IF (  ( P(3) * LAT )  .GE.  0.D0  ) THEN
+         if (  ( p(3) * lat )  .ge.  0.d0  ) then
 
-            ZZPDPLTC = .TRUE.
+            zzpdpltc = .true.
 
 
-         ELSE IF ( ABS(LAT) .GE. LIMIT ) THEN
+         else if ( abs(lat) .ge. limit ) then
 !
 !           Ideally, the input point is considered to have the given
 !           latitude if the point is on the side of the X-Y plane
@@ -290,9 +290,9 @@
 !           have the same sign. In this case, we know they have the
 !           opposite sign.
 !
-            ZZPDPLTC = .FALSE.
+            zzpdpltc = .false.
 
-         ELSE
+         else
 !
 !           At this point we know LAT is non-zero, so the cone
 !           corresponding to LAT has its vertex on the opposite side of
@@ -307,19 +307,19 @@
 !           from the Z axis to be outside the portion of the latitude
 !           cone on the wrong side of the X-Y plane.
 !
-            A = RE
-            B = A * ( 1.D0 - F )
+            a = re
+            b = a * ( 1.d0 - f )
 
 !
 !           Compute the intercepts of a normal vector of a point
 !           at latitude LAT, longitude 0, with the X and Y axes.
 !
-            CALL ZZELNAXX ( A, B, LAT, XXPT, YXPT )
+            call zzelnaxx ( a, b, lat, xxpt, yxpt )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZPDPLTC' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZPDPLTC' )
+               return
+            end if
 
 !
 !           We check the point's distance from the Z axis. This can be
@@ -334,17 +334,17 @@
 !           on the correct side of the X-Y plane.
 !
 
-            R2       = ( P(1) * P(1) ) +  ( P(2) * P(2) )
+            r2       = ( p(1) * p(1) ) +  ( p(2) * p(2) )
 
-            R        = SQRT(  MAX( R2, 0.D0 )  )
+            r        = sqrt(  max( r2, 0.d0 )  )
 
-            ZZPDPLTC = R .GE. XXPT
+            zzpdpltc = r .ge. xxpt
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZPDPLTC' )
-      RETURN
-      END
+      call chkout ( 'ZZPDPLTC' )
+      return
+      end

@@ -1,15 +1,15 @@
 !$Procedure DASRWR ( DAS, read/write records )
 
-      SUBROUTINE DASRWR ( HANDLE, &
-                          RECNO, &
-                          RECC, &
-                          RECD, &
-                          RECI, &
-                          FIRST, &
-                          LAST, &
-                          DATAD, &
-                          DATAI, &
-                          DATAC   )
+      subroutine dasrwr ( handle, &
+                          recno, &
+                          recc, &
+                          recd, &
+                          reci, &
+                          first, &
+                          last, &
+                          datad, &
+                          datai, &
+                          datac   )
 
 ! $ Abstract
 !
@@ -27,36 +27,36 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NWD
-      PARAMETER           ( NWD    =  128 )
+      integer               nwd
+      parameter           ( nwd    =  128 )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI    =  256 )
+      integer               nwi
+      parameter           ( nwi    =  256 )
 
-      INTEGER               NWC
-      PARAMETER           ( NWC    = 1024 )
+      integer               nwc
+      parameter           ( nwc    = 1024 )
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      CHARACTER*(*)         RECC
-      DOUBLE PRECISION      RECD    ( NWD )
-      INTEGER               RECI    ( NWI )
-      INTEGER               FIRST
-      INTEGER               LAST
-      DOUBLE PRECISION      DATAD   ( * )
-      INTEGER               DATAI   ( * )
-      CHARACTER*(*)         DATAC
+      integer               handle
+      integer               recno
+      character*(*)         recc
+      double precision      recd    ( nwd )
+      integer               reci    ( nwi )
+      integer               first
+      integer               last
+      double precision      datad   ( * )
+      integer               datai   ( * )
+      character*(*)         datac
 
-      INTEGER               BUFSZD
-      PARAMETER           ( BUFSZD = 10 )
+      integer               bufszd
+      parameter           ( bufszd = 10 )
 
-      INTEGER               BUFSZI
-      PARAMETER           ( BUFSZI = 10 )
+      integer               bufszi
+      parameter           ( bufszi = 10 )
 
-      INTEGER               BUFSZC
-      PARAMETER           ( BUFSZC = 10 )
+      integer               bufszc
+      parameter           ( bufszc = 10 )
 
 ! $ Brief_I/O
 !
@@ -271,25 +271,25 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LNKTL
+      integer               lnktl
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL  =   -5 )
+      integer               lbpool
+      parameter           ( lbpool  =   -5 )
 
-      INTEGER               FORWRD
-      PARAMETER           ( FORWRD  =    1 )
+      integer               forwrd
+      parameter           ( forwrd  =    1 )
 
-      INTEGER               BUFNVD
-      PARAMETER           ( BUFNVD  = BUFSZD * NWD )
+      integer               bufnvd
+      parameter           ( bufnvd  = bufszd * nwd )
 
-      INTEGER               BUFNVI
-      PARAMETER           ( BUFNVI  = BUFSZI * NWI )
+      integer               bufnvi
+      parameter           ( bufnvi  = bufszi * nwi )
 
 !
 !     Local variables
@@ -333,98 +333,98 @@
 !      +---+      +------------+    +---+    +---+    +---+
 !
 !
-      CHARACTER*(NWC)       RCBUFC (      BUFSZC )
-      DOUBLE PRECISION      RCBUFD ( NWD, BUFSZD )
-      INTEGER               RCBUFI ( NWI, BUFSZI )
+      character*(nwc)       rcbufc (      bufszc )
+      double precision      rcbufd ( nwd, bufszd )
+      integer               rcbufi ( nwi, bufszi )
 
-      INTEGER               RNBUFC (      BUFSZC )
-      INTEGER               RNBUFD (      BUFSZD )
-      INTEGER               RNBUFI (      BUFSZI )
+      integer               rnbufc (      bufszc )
+      integer               rnbufd (      bufszd )
+      integer               rnbufi (      bufszi )
 
-      INTEGER               HNBUFC (      BUFSZC )
-      INTEGER               HNBUFD (      BUFSZD )
-      INTEGER               HNBUFI (      BUFSZI )
+      integer               hnbufc (      bufszc )
+      integer               hnbufd (      bufszd )
+      integer               hnbufi (      bufszi )
 
-      LOGICAL               UPBUFC (      BUFSZC )
-      LOGICAL               UPBUFD (      BUFSZD )
-      LOGICAL               UPBUFI (      BUFSZI )
+      logical               upbufc (      bufszc )
+      logical               upbufd (      bufszd )
+      logical               upbufi (      bufszi )
 
-      INTEGER               POOLC  ( 2, LBPOOL : BUFSZC )
-      INTEGER               POOLD  ( 2, LBPOOL : BUFSZD )
-      INTEGER               POOLI  ( 2, LBPOOL : BUFSZI )
+      integer               poolc  ( 2, lbpool : bufszc )
+      integer               poold  ( 2, lbpool : bufszd )
+      integer               pooli  ( 2, lbpool : bufszi )
 
-      INTEGER               HEADC
-      INTEGER               HEADD
-      INTEGER               HEADI
+      integer               headc
+      integer               headd
+      integer               headi
 
-      INTEGER               USEDC
-      INTEGER               USEDD
-      INTEGER               USEDI
+      integer               usedc
+      integer               usedd
+      integer               usedi
 
 !
 !     Other local variables
 !
-      INTEGER               NEXT
-      INTEGER               NODE
-      INTEGER               UNIT
-      INTEGER               WRUNIT
+      integer               next
+      integer               node
+      integer               unit
+      integer               wrunit
 
-      LOGICAL               PASS1
+      logical               pass1
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  PASS1   / .TRUE.           /
+      data                  pass1   / .true.           /
 
-      DATA                  USEDC   /  0               /
-      DATA                  USEDD   /  0               /
-      DATA                  USEDI   /  0               /
+      data                  usedc   /  0               /
+      data                  usedd   /  0               /
+      data                  usedi   /  0               /
 
-      DATA                  RCBUFC  / BUFSZC * ' '     /
-      DATA                  RCBUFD  / BUFNVD * 0.D0    /
-      DATA                  RCBUFI  / BUFNVI * 0       /
+      data                  rcbufc  / bufszc * ' '     /
+      data                  rcbufd  / bufnvd * 0.d0    /
+      data                  rcbufi  / bufnvi * 0       /
 
-      DATA                  RNBUFC  / BUFSZC * 0       /
-      DATA                  RNBUFD  / BUFSZD * 0       /
-      DATA                  RNBUFI  / BUFSZI * 0       /
+      data                  rnbufc  / bufszc * 0       /
+      data                  rnbufd  / bufszd * 0       /
+      data                  rnbufi  / bufszi * 0       /
 
-      DATA                  HNBUFC  / BUFSZC * 0       /
-      DATA                  HNBUFD  / BUFSZD * 0       /
-      DATA                  HNBUFI  / BUFSZI * 0       /
+      data                  hnbufc  / bufszc * 0       /
+      data                  hnbufd  / bufszd * 0       /
+      data                  hnbufi  / bufszi * 0       /
 
-      DATA                  UPBUFC  / BUFSZC * .FALSE. /
-      DATA                  UPBUFD  / BUFSZD * .FALSE. /
-      DATA                  UPBUFI  / BUFSZI * .FALSE. /
+      data                  upbufc  / bufszc * .false. /
+      data                  upbufd  / bufszd * .false. /
+      data                  upbufi  / bufszi * .false. /
 
-      DATA                  HEADC   / 0                /
-      DATA                  HEADD   / 0                /
-      DATA                  HEADI   / 0                /
+      data                  headc   / 0                /
+      data                  headd   / 0                /
+      data                  headi   / 0                /
 
-      DATA                  UNIT    / -1 /
-      DATA                  WRUNIT  / -1 /
+      data                  unit    / -1 /
+      data                  wrunit  / -1 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASRWR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASRWR' )
+      end if
 
 !
 !     Never come here.
 !
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      CALL CHKOUT ( 'DASRWR' )
-      RETURN
+      call chkout ( 'DASRWR' )
+      return
 
 
 
@@ -432,7 +432,7 @@
 
 !$Procedure DASRRD ( DAS, read record, double precision )
 
-      ENTRY DASRRD ( HANDLE, RECNO, FIRST, LAST, DATAD )
+      entry dasrrd ( handle, recno, first, last, datad )
 
 ! $ Abstract
 !
@@ -632,47 +632,47 @@
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Check FIRST and LAST.  Use discovery check-in.
 !
-      IF (        ( FIRST .LT. 1   ) &
-            .OR.  ( FIRST .GT. NWD ) &
-            .OR.  ( LAST  .LT. 1   ) &
-            .OR.  ( LAST  .GT. NWD )    )  THEN
+      if (        ( first .lt. 1   ) &
+            .or.  ( first .gt. nwd ) &
+            .or.  ( last  .lt. 1   ) &
+            .or.  ( last  .gt. nwd )    )  then
 
-         CALL CHKIN  ( 'DASRRD' )
-         CALL SETMSG ( 'Array indices FIRST and LAST were #,  #; '    // &
+         call chkin  ( 'DASRRD' )
+         call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
-         CALL ERRINT ( '#',  FIRST                                     )
-         CALL ERRINT ( '#',  LAST                                      )
-         CALL ERRINT ( '#',  1                                         )
-         CALL ERRINT ( '#',  NWD                                       )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'DASRRD' )
-         RETURN
+         call errint ( '#',  first                                     )
+         call errint ( '#',  last                                      )
+         call errint ( '#',  1                                         )
+         call errint ( '#',  nwd                                       )
+         call errhan ( '#',  handle                                    )
+         call errint ( '#',  recno                                     )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'DASRRD' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      IF ( LAST .LT. FIRST ) THEN
-         RETURN
-      END IF
+      if ( last .lt. first ) then
+         return
+      end if
 
 !
 !     See whether record number RECNO in file HANDLE is buffered.  We'll
@@ -680,48 +680,48 @@
 !     of the list.  If we find the desired record, transfer the
 !     requested data to the array DATAD and return without further ado.
 !
-      NODE = HEADD
+      node = headd
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFD(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFD(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufd(node)  ) &
+               .and.  (  recno  .eq. rnbufd(node)  )    )  then
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
 !
-            IF ( NODE .NE. HEADD ) THEN
+            if ( node .ne. headd ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLD )
-               CALL LNKILB ( NODE, HEADD, POOLD )
+               call lnkxsl ( node, node,  poold )
+               call lnkilb ( node, headd, poold )
 
-               HEADD  =  NODE
+               headd  =  node
 
-            END IF
+            end if
 
 !
 !           Don't forget to return the requested data.
 !
-            IF ( FIRST .EQ. LAST ) THEN
+            if ( first .eq. last ) then
 
-               DATAD(1) = RCBUFD( FIRST, NODE )
+               datad(1) = rcbufd( first, node )
 
-            ELSE
+            else
 
-               CALL MOVED ( RCBUFD(FIRST, NODE),  LAST-FIRST+1,  DATAD )
+               call moved ( rcbufd(first, node),  last-first+1,  datad )
 
-            END IF
+            end if
 
 !
 !           We haven't checked in, so don't check out.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-         NODE = POOLD ( FORWRD, NODE )
+         node = poold ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record wasn't buffered.  We need to allocate entries to
@@ -732,62 +732,62 @@
 !     Since we're now going to do a file read, it doesn't slow
 !     us down much to check in, comparatively speaking.
 !
-      CALL CHKIN ( 'DASRRD' )
+      call chkin ( 'DASRRD' )
 
-      IF (  USEDD .EQ. BUFSZD ) THEN
+      if (  usedd .eq. bufszd ) then
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADD, POOLD )
+         node  =  lnktl ( headd, poold )
 
-         CALL LNKXSL ( NODE, NODE, POOLD )
+         call lnkxsl ( node, node, poold )
 
 !
 !        If the allocated buffer entry was updated, write it out.
 !
-         IF (  UPBUFD(NODE)  ) THEN
+         if (  upbufd(node)  ) then
 !
 !           We'll need a logical unit in order to write to the file.
 !
-            CALL ZZDDHHLU ( HNBUFD(NODE), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufd(node), 'DAS', .false., wrunit )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASRRD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASRRD' )
+               return
+            end if
 
-            CALL DASIOD ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFD(    NODE ), &
-                           RCBUFD( 1, NODE )  )
+            call dasiod ( 'WRITE', &
+                           wrunit, &
+                           rnbufd(    node ), &
+                           rcbufd( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASRRD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASRRD' )
+               return
+            end if
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        Allocate a new set of buffer entries, but don't link
 !        them into the list yet.
 !
-         CALL LNKAN  ( POOLD, NODE )
-         USEDD = USEDD + 1
+         call lnkan  ( poold, node )
+         usedd = usedd + 1
 
-      END IF
+      end if
 
 !
 !     Try to read the record.
 !
-      CALL ZZDASGRD ( HANDLE, RECNO, RCBUFD(1,NODE) )
+      call zzdasgrd ( handle, recno, rcbufd(1,node) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASRRD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASRRD' )
+         return
+      end if
 
 !
 !     The read was successful.  Link the node pointing to the buffer
@@ -797,23 +797,23 @@
 !     Set the file handle, record number, and update flag for
 !     this record.
 !
-      CALL LNKILB ( NODE, HEADD, POOLD )
+      call lnkilb ( node, headd, poold )
 
-      HNBUFD ( NODE )  =  HANDLE
-      RNBUFD ( NODE )  =  RECNO
-      UPBUFD ( NODE )  =  .FALSE.
-      HEADD            =  NODE
+      hnbufd ( node )  =  handle
+      rnbufd ( node )  =  recno
+      upbufd ( node )  =  .false.
+      headd            =  node
 
 !
 !     Don't forget to return the requested data.
 !
-      CALL MOVED (  RCBUFD ( FIRST,  NODE ), &
-                    LAST  -  FIRST + 1, &
-                    DATAD                     )
+      call moved (  rcbufd ( first,  node ), &
+                    last  -  first + 1, &
+                    datad                     )
 
 
-      CALL CHKOUT ( 'DASRRD' )
-      RETURN
+      call chkout ( 'DASRRD' )
+      return
 
 
 
@@ -822,7 +822,7 @@
 
 !$Procedure DASRRI ( DAS, read record, integer )
 
-      ENTRY DASRRI ( HANDLE, RECNO, FIRST, LAST, DATAI )
+      entry dasrri ( handle, recno, first, last, datai )
 
 ! $ Abstract
 !
@@ -1019,47 +1019,47 @@
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Check FIRST and LAST.  Use discovery check-in.
 !
-      IF (        ( FIRST .LT. 1   ) &
-            .OR.  ( FIRST .GT. NWI ) &
-            .OR.  ( LAST  .LT. 1   ) &
-            .OR.  ( LAST  .GT. NWI )    )  THEN
+      if (        ( first .lt. 1   ) &
+            .or.  ( first .gt. nwi ) &
+            .or.  ( last  .lt. 1   ) &
+            .or.  ( last  .gt. nwi )    )  then
 
-         CALL CHKIN  ( 'DASRRI'      )
-         CALL SETMSG ( 'Array indices FIRST and LAST were #,  #; '    // &
+         call chkin  ( 'DASRRI'      )
+         call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
-         CALL ERRINT ( '#',  FIRST                                     )
-         CALL ERRINT ( '#',  LAST                                      )
-         CALL ERRINT ( '#',  1                                         )
-         CALL ERRINT ( '#',  NWI                                       )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'DASRRI' )
-         RETURN
+         call errint ( '#',  first                                     )
+         call errint ( '#',  last                                      )
+         call errint ( '#',  1                                         )
+         call errint ( '#',  nwi                                       )
+         call errhan ( '#',  handle                                    )
+         call errint ( '#',  recno                                     )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'DASRRI' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      IF ( LAST .LT. FIRST ) THEN
-         RETURN
-      END IF
+      if ( last .lt. first ) then
+         return
+      end if
 
 !
 !     See whether record number RECNO in file HANDLE is buffered.  We'll
@@ -1067,49 +1067,49 @@
 !     of the list.  If we find the desired record, transfer the
 !     requested data to the array DATAI and return without further ado.
 !
-      NODE = HEADI
+      node = headi
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFI(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFI(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufi(node)  ) &
+               .and.  (  recno  .eq. rnbufi(node)  )    )  then
 !
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
 !
-            IF ( NODE .NE. HEADI ) THEN
+            if ( node .ne. headi ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLI )
-               CALL LNKILB ( NODE, HEADI, POOLI )
+               call lnkxsl ( node, node,  pooli )
+               call lnkilb ( node, headi, pooli )
 
-               HEADI  =  NODE
+               headi  =  node
 
-            END IF
+            end if
 
 !
 !           Don't forget to return the requested data.
 !
-            IF ( FIRST .EQ. LAST ) THEN
+            if ( first .eq. last ) then
 
-               DATAI(1) = RCBUFI( FIRST, NODE )
+               datai(1) = rcbufi( first, node )
 
-            ELSE
+            else
 
-               CALL MOVEI ( RCBUFI(FIRST, NODE),  LAST-FIRST+1,  DATAI )
+               call movei ( rcbufi(first, node),  last-first+1,  datai )
 
-            END IF
+            end if
 
 !
 !           We haven't checked in, so don't check out.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-         NODE = POOLI ( FORWRD, NODE )
+         node = pooli ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record wasn't buffered.  We need to allocate entries to
@@ -1120,55 +1120,55 @@
 !     Since we're now going to do a file read, it doesn't slow
 !     us down much to check in, comparatively speaking.
 !
-      CALL CHKIN ( 'DASRRI' )
+      call chkin ( 'DASRRI' )
 
-      IF (  USEDI .EQ. BUFSZI ) THEN
+      if (  usedi .eq. bufszi ) then
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADI, POOLI )
+         node  =  lnktl ( headi, pooli )
 
-         CALL LNKXSL ( NODE, NODE, POOLI )
+         call lnkxsl ( node, node, pooli )
 
 !
 !        If the allocated buffer entry was updated, write it out.
 !
-         IF (  UPBUFI(NODE)  ) THEN
+         if (  upbufi(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFI(NODE), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufi(node), 'DAS', .false., wrunit )
 
-            CALL DASIOI ( 'WRITE', &
-                          WRUNIT, &
-                          RNBUFI(    NODE ), &
-                          RCBUFI( 1, NODE )   )
+            call dasioi ( 'WRITE', &
+                          wrunit, &
+                          rnbufi(    node ), &
+                          rcbufi( 1, node )   )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASRRI' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASRRI' )
+               return
+            end if
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        Allocate a new set of buffer entries, but don't link
 !        them into the list yet.
 !
-         CALL LNKAN ( POOLI, NODE )
-         USEDI = USEDI + 1
+         call lnkan ( pooli, node )
+         usedi = usedi + 1
 
-      END IF
+      end if
 
 !
 !     Try to read the record.
 !
-      CALL ZZDASGRI ( HANDLE,  RECNO,  RCBUFI(1,NODE)  )
+      call zzdasgri ( handle,  recno,  rcbufi(1,node)  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASRRI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASRRI' )
+         return
+      end if
 
 !
 !     The read was successful.  Link the node pointing to the buffer
@@ -1178,23 +1178,23 @@
 !     Set the file handle, record number, and update flag for
 !     this record.
 !
-      CALL LNKILB ( NODE, HEADI, POOLI )
+      call lnkilb ( node, headi, pooli )
 
-      HNBUFI ( NODE )  =  HANDLE
-      RNBUFI ( NODE )  =  RECNO
-      UPBUFI ( NODE )  =  .FALSE.
-      HEADI            =  NODE
+      hnbufi ( node )  =  handle
+      rnbufi ( node )  =  recno
+      upbufi ( node )  =  .false.
+      headi            =  node
 
 !
 !     Don't forget to return the requested data.
 !
-      CALL MOVEI (  RCBUFI ( FIRST,  NODE ), &
-                    LAST  -  FIRST + 1, &
-                    DATAI                     )
+      call movei (  rcbufi ( first,  node ), &
+                    last  -  first + 1, &
+                    datai                     )
 
 
-      CALL CHKOUT ( 'DASRRI' )
-      RETURN
+      call chkout ( 'DASRRI' )
+      return
 
 
 
@@ -1204,7 +1204,7 @@
 
 !$Procedure DASRRC ( DAS, read record, character )
 
-      ENTRY DASRRC ( HANDLE, RECNO, FIRST, LAST, DATAC )
+      entry dasrrc ( handle, recno, first, last, datac )
 
 ! $ Abstract
 !
@@ -1396,47 +1396,47 @@
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Check FIRST and LAST.  Use discovery check-in.
 !
-      IF (        ( FIRST .LT. 1   ) &
-            .OR.  ( FIRST .GT. NWC ) &
-            .OR.  ( LAST  .LT. 1   ) &
-            .OR.  ( LAST  .GT. NWC )    )  THEN
+      if (        ( first .lt. 1   ) &
+            .or.  ( first .gt. nwc ) &
+            .or.  ( last  .lt. 1   ) &
+            .or.  ( last  .gt. nwc )    )  then
 
-         CALL CHKIN  ( 'DASRRC' )
-         CALL SETMSG ( 'Array indices FIRST and LAST were #,  #; '    // &
+         call chkin  ( 'DASRRC' )
+         call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
-         CALL ERRINT ( '#',  FIRST                                     )
-         CALL ERRINT ( '#',  LAST                                      )
-         CALL ERRINT ( '#',  1                                         )
-         CALL ERRINT ( '#',  NWC                                       )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'DASRRC' )
-         RETURN
+         call errint ( '#',  first                                     )
+         call errint ( '#',  last                                      )
+         call errint ( '#',  1                                         )
+         call errint ( '#',  nwc                                       )
+         call errhan ( '#',  handle                                    )
+         call errint ( '#',  recno                                     )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'DASRRC' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      IF ( LAST .LT. FIRST ) THEN
-         RETURN
-      END IF
+      if ( last .lt. first ) then
+         return
+      end if
 
 !
 !     See whether record number RECNO in file HANDLE is buffered.  We'll
@@ -1444,41 +1444,41 @@
 !     of the list.  If we find the desired record, transfer the
 !     requested data to the array DATAC and return without further ado.
 !
-      NODE = HEADC
+      node = headc
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFC(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFC(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufc(node)  ) &
+               .and.  (  recno  .eq. rnbufc(node)  )    )  then
 !
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
 !
-            IF ( NODE .NE. HEADC ) THEN
+            if ( node .ne. headc ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLC )
-               CALL LNKILB ( NODE, HEADC, POOLC )
+               call lnkxsl ( node, node,  poolc )
+               call lnkilb ( node, headc, poolc )
 
-               HEADC  =  NODE
+               headc  =  node
 
-            END IF
+            end if
 
 !
 !           Don't forget to return the requested data.
 !
-            DATAC  =  RCBUFC( NODE ) ( FIRST : LAST )
+            datac  =  rcbufc( node ) ( first : last )
 
 !
 !           We haven't checked in, so don't check out.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 
-         NODE = POOLC ( FORWRD, NODE )
+         node = poolc ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record wasn't buffered.  We need to allocate entries to
@@ -1489,57 +1489,57 @@
 !     Since we're now going to do a file read, it doesn't slow
 !     us down much to check in, comparatively speaking.
 !
-      CALL CHKIN ( 'DASRRC' )
+      call chkin ( 'DASRRC' )
 
-      IF (  USEDC .EQ. BUFSZC ) THEN
+      if (  usedc .eq. bufszc ) then
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADC, POOLC )
+         node  =  lnktl ( headc, poolc )
 
-         CALL LNKXSL ( NODE, NODE, POOLC )
+         call lnkxsl ( node, node, poolc )
 
 !
 !        If the allocated buffer entry was updated, write it out.
 !
-         IF (  UPBUFC(NODE)  ) THEN
+         if (  upbufc(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFC( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufc( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOC (  'WRITE', &
-                            WRUNIT, &
-                            RNBUFC( NODE ), &
-                            RCBUFC( NODE )  )
+            call dasioc (  'WRITE', &
+                            wrunit, &
+                            rnbufc( node ), &
+                            rcbufc( node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASRRC' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASRRC' )
+               return
+            end if
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        Allocate a new set of buffer entries, but don't link
 !        them into the list yet.
 !
-         CALL LNKAN ( POOLC, NODE )
-         USEDC = USEDC + 1
+         call lnkan ( poolc, node )
+         usedc = usedc + 1
 
-      END IF
+      end if
 
 !
 !     Try to read the record.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      CALL DASIOC ( 'READ',  UNIT,  RECNO, RCBUFC(NODE) )
+      call dasioc ( 'READ',  unit,  recno, rcbufc(node) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASRRC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASRRC' )
+         return
+      end if
 
 !
 !     The read was successful.  Link the node pointing to the buffer
@@ -1549,20 +1549,20 @@
 !     Set the file handle, record number, and update flag for
 !     this record.
 !
-      CALL LNKILB ( NODE, HEADC, POOLC )
+      call lnkilb ( node, headc, poolc )
 
-      HNBUFC ( NODE )  =  HANDLE
-      RNBUFC ( NODE )  =  RECNO
-      UPBUFC ( NODE )  =  .FALSE.
-      HEADC            =  NODE
+      hnbufc ( node )  =  handle
+      rnbufc ( node )  =  recno
+      upbufc ( node )  =  .false.
+      headc            =  node
 
 !
 !     Don't forget to return the requested data.
 !
-      DATAC  =  RCBUFC( NODE ) ( FIRST : LAST )
+      datac  =  rcbufc( node ) ( first : last )
 
-      CALL CHKOUT ( 'DASRRC' )
-      RETURN
+      call chkout ( 'DASRRC' )
+      return
 
 
 
@@ -1571,7 +1571,7 @@
 
 !$Procedure DASWRD ( DAS, write record, double precision )
 
-      ENTRY DASWRD ( HANDLE, RECNO, RECD )
+      entry daswrd ( handle, recno, recd )
 
 ! $ Abstract
 !
@@ -1748,34 +1748,34 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASWRD' )
+      call chkin ( 'DASWRD' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASWRD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASWRD' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     See whether double precision record number RECNO from file HANDLE
@@ -1785,43 +1785,43 @@
 !     the record out until we need to free a record, or until the
 !     d.p. buffer is flushed, whichever comes first.
 !
-      NODE = HEADD
+      node = headd
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFD(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFD(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufd(node)  ) &
+               .and.  (  recno  .eq. rnbufd(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
-            CALL MOVED (  RECD,  NWD,  RCBUFD(1, NODE)  )
+            call moved (  recd,  nwd,  rcbufd(1, node)  )
 
 !
 !           Set the update flag, indicating that this buffer entry
 !           has been modified.
 !
-            UPBUFD ( NODE ) = .TRUE.
+            upbufd ( node ) = .true.
 
 !
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            IF ( NODE .NE. HEADD ) THEN
+            if ( node .ne. headd ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLD )
-               CALL LNKILB ( NODE, HEADD, POOLD )
-               HEADD = NODE
+               call lnkxsl ( node, node,  poold )
+               call lnkilb ( node, headd, poold )
+               headd = node
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'DASWRD' )
-            RETURN
+            call chkout ( 'DASWRD' )
+            return
 
-         END IF
+         end if
 
-         NODE = POOLD ( FORWRD, NODE )
+         node = poold ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record we're writing to is not buffered.  We'll allocate
@@ -1830,66 +1830,66 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      IF ( USEDD .LT. BUFSZD ) THEN
+      if ( usedd .lt. bufszd ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
-         CALL LNKAN ( POOLD, NODE )
+         call lnkan ( poold, node )
 
-         USEDD = USEDD + 1
+         usedd = usedd + 1
 
-      ELSE
+      else
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADD, POOLD )
+         node  =  lnktl ( headd, poold )
 
-         CALL LNKXSL ( NODE, NODE, POOLD )
+         call lnkxsl ( node, node, poold )
 
 !
 !        If the allocated record was updated, write it out.
 !
-         IF (  UPBUFD(NODE)  ) THEN
+         if (  upbufd(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFD( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufd( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOD (  'WRITE', &
-                            WRUNIT, &
-                            RNBUFD(    NODE ), &
-                            RCBUFD( 1, NODE )  )
+            call dasiod (  'WRITE', &
+                            wrunit, &
+                            rnbufd(    node ), &
+                            rcbufd( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASWRD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASWRD' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now update the allocated buffer entry with the input data.
 !
-      CALL MOVED (  RECD,  NWD,  RCBUFD( 1, NODE )  )
+      call moved (  recd,  nwd,  rcbufd( 1, node )  )
 
 !
 !     Set the update flag, indicating that this buffer entry
 !     has been modified. Also set the handle and record number
 !     entries.
 !
-      UPBUFD ( NODE ) = .TRUE.
-      HNBUFD ( NODE ) =  HANDLE
-      RNBUFD ( NODE ) =  RECNO
+      upbufd ( node ) = .true.
+      hnbufd ( node ) =  handle
+      rnbufd ( node ) =  recno
 
 !
 !     Link this buffer entry to the head of the list.
 !
-      CALL LNKILB ( NODE, HEADD, POOLD )
+      call lnkilb ( node, headd, poold )
 
-      HEADD = NODE
+      headd = node
 
-      CALL CHKOUT ( 'DASWRD' )
-      RETURN
+      call chkout ( 'DASWRD' )
+      return
 
 
 
@@ -1898,7 +1898,7 @@
 
 !$Procedure DASWRI ( DAS, write record, integer )
 
-      ENTRY DASWRI ( HANDLE, RECNO, RECI )
+      entry daswri ( handle, recno, reci )
 
 ! $ Abstract
 !
@@ -2074,34 +2074,34 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASWRI' )
+      call chkin ( 'DASWRI' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASWRI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASWRI' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     See whether integer record number RECNO from file HANDLE is
@@ -2111,43 +2111,43 @@
 !     the record out until we need to free a record, or until the
 !     integer buffer is flushed, whichever comes first.
 !
-      NODE = HEADI
+      node = headi
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFI(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFI(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufi(node)  ) &
+               .and.  (  recno  .eq. rnbufi(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
-            CALL MOVEI (  RECI,  NWI,  RCBUFI( 1, NODE )  )
+            call movei (  reci,  nwi,  rcbufi( 1, node )  )
 
 !
 !           Set the update flag, indicating that this buffer entry
 !           has been modified.
 !
-            UPBUFI ( NODE ) = .TRUE.
+            upbufi ( node ) = .true.
 
 !
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            IF ( NODE .NE. HEADI ) THEN
+            if ( node .ne. headi ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLI )
-               CALL LNKILB ( NODE, HEADI, POOLI )
-               HEADI = NODE
+               call lnkxsl ( node, node,  pooli )
+               call lnkilb ( node, headi, pooli )
+               headi = node
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'DASWRI' )
-            RETURN
+            call chkout ( 'DASWRI' )
+            return
 
-         END IF
+         end if
 
-         NODE = POOLI ( FORWRD, NODE )
+         node = pooli ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record we're writing to is not buffered.  We'll allocate
@@ -2156,67 +2156,67 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      IF ( USEDI .LT. BUFSZI ) THEN
+      if ( usedi .lt. bufszi ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
-         CALL LNKAN ( POOLI, NODE )
-         USEDI = USEDI + 1
+         call lnkan ( pooli, node )
+         usedi = usedi + 1
 
-      ELSE
+      else
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADI, POOLI )
+         node  =  lnktl ( headi, pooli )
 
-         CALL LNKXSL ( NODE, NODE, POOLI )
+         call lnkxsl ( node, node, pooli )
 
 !
 !        If the allocated record was updated, write it out.
 !
-         IF (  UPBUFI(NODE)  ) THEN
+         if (  upbufi(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFI( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufi( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOI (  'WRITE', &
-                            WRUNIT, &
-                            RNBUFI(    NODE ), &
-                            RCBUFI( 1, NODE )  )
+            call dasioi (  'WRITE', &
+                            wrunit, &
+                            rnbufi(    node ), &
+                            rcbufi( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASWRI' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASWRI' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now update the allocated buffer entry with the input data.
 !
-      CALL MOVEI (  RECI,  NWI,  RCBUFI( 1, NODE )  )
+      call movei (  reci,  nwi,  rcbufi( 1, node )  )
 
 !
 !     Set the update flag, indicating that this buffer entry
 !     has been modified.  Also set the handle and record number
 !     entries.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., UNIT )
+      call zzddhhlu ( handle, 'DAS', .false., unit )
 
-      UPBUFI ( NODE ) = .TRUE.
-      HNBUFI ( NODE ) =  HANDLE
-      RNBUFI ( NODE ) =  RECNO
+      upbufi ( node ) = .true.
+      hnbufi ( node ) =  handle
+      rnbufi ( node ) =  recno
 
 !
 !     Link this buffer entry to the head of the list.
 !
-      CALL LNKILB ( NODE, HEADI, POOLI )
+      call lnkilb ( node, headi, pooli )
 
-      HEADI = NODE
+      headi = node
 
-      CALL CHKOUT ( 'DASWRI' )
-      RETURN
+      call chkout ( 'DASWRI' )
+      return
 
 
 
@@ -2225,7 +2225,7 @@
 
 !$Procedure DASWRC ( DAS, write record, character )
 
-      ENTRY DASWRC ( HANDLE, RECNO, RECC )
+      entry daswrc ( handle, recno, recc )
 
 ! $ Abstract
 !
@@ -2402,34 +2402,34 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASWRC' )
+      call chkin ( 'DASWRC' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASWRC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASWRC' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     See whether character record number RECNO from file HANDLE is
@@ -2439,43 +2439,43 @@
 !     the record out until we need to free a record, or until the
 !     character buffer is flushed, whichever comes first.
 !
-      NODE = HEADC
+      node = headc
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFC(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFC(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufc(node)  ) &
+               .and.  (  recno  .eq. rnbufc(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
-            RCBUFC (NODE)  =  RECC
+            rcbufc (node)  =  recc
 
 !
 !           Set the update flag, indicating that this buffer entry
 !           has been modified.
 !
-            UPBUFC ( NODE ) = .TRUE.
+            upbufc ( node ) = .true.
 
 !
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            IF ( NODE .NE. HEADC ) THEN
+            if ( node .ne. headc ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLC )
-               CALL LNKILB ( NODE, HEADC, POOLC )
-               HEADC = NODE
+               call lnkxsl ( node, node,  poolc )
+               call lnkilb ( node, headc, poolc )
+               headc = node
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'DASWRC' )
-            RETURN
+            call chkout ( 'DASWRC' )
+            return
 
-         END IF
+         end if
 
-         NODE = POOLC ( FORWRD, NODE )
+         node = poolc ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record we're writing to is not buffered.  We'll allocate
@@ -2484,65 +2484,65 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      IF ( USEDC .LT. BUFSZC ) THEN
+      if ( usedc .lt. bufszc ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
-         CALL LNKAN ( POOLC, NODE )
-         USEDC = USEDC + 1
+         call lnkan ( poolc, node )
+         usedc = usedc + 1
 
-      ELSE
+      else
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  = LNKTL ( HEADC, POOLC )
+         node  = lnktl ( headc, poolc )
 
-         CALL LNKXSL ( NODE, NODE, POOLC )
+         call lnkxsl ( node, node, poolc )
 
 !
 !        If the allocated record was updated, write it out.
 !
-         IF (  UPBUFC(NODE)  ) THEN
+         if (  upbufc(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFC( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufc( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOC ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFC( NODE ), &
-                           RCBUFC( NODE )  )
+            call dasioc ( 'WRITE', &
+                           wrunit, &
+                           rnbufc( node ), &
+                           rcbufc( node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASWRC' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASWRC' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now update the allocated buffer entry with the input data.
 !
-      RCBUFC(NODE)  =  RECC
+      rcbufc(node)  =  recc
 
 !
 !     Set the update flag, indicating that this buffer entry
 !     has been modified.  Also set the handle and record number
 !     entries.
 !
-      UPBUFC ( NODE ) = .TRUE.
-      HNBUFC ( NODE ) =  HANDLE
-      RNBUFC ( NODE ) =  RECNO
+      upbufc ( node ) = .true.
+      hnbufc ( node ) =  handle
+      rnbufc ( node ) =  recno
 
 !
 !     Link this buffer entry to the head of the list.
 !
-      CALL LNKILB ( NODE, HEADC, POOLC )
+      call lnkilb ( node, headc, poolc )
 
-      HEADC = NODE
+      headc = node
 
-      CALL CHKOUT ( 'DASWRC' )
-      RETURN
+      call chkout ( 'DASWRC' )
+      return
 
 
 
@@ -2551,7 +2551,7 @@
 
 !$Procedure DASURD ( DAS, update record, double precision )
 
-      ENTRY DASURD ( HANDLE, RECNO, FIRST, LAST, DATAD )
+      entry dasurd ( handle, recno, first, last, datad )
 
 ! $ Abstract
 !
@@ -2761,65 +2761,65 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASURD' )
+      call chkin ( 'DASURD' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASURD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASURD' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     If FIRST or LAST are out of range, no dice.
 !
-      IF (        ( FIRST .LT. 1   ) &
-            .OR.  ( FIRST .GT. NWD ) &
-            .OR.  ( LAST  .LT. 1   ) &
-            .OR.  ( LAST  .GT. NWD )    )  THEN
+      if (        ( first .lt. 1   ) &
+            .or.  ( first .gt. nwd ) &
+            .or.  ( last  .lt. 1   ) &
+            .or.  ( last  .gt. nwd )    )  then
 
-         CALL SETMSG ( 'Array indices FIRST and LAST were #,  #; '    // &
+         call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
-         CALL ERRINT ( '#',  FIRST                                     )
-         CALL ERRINT ( '#',  LAST                                      )
-         CALL ERRINT ( '#',  1                                         )
-         CALL ERRINT ( '#',  NWD                                       )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'DASURD' )
-         RETURN
+         call errint ( '#',  first                                     )
+         call errint ( '#',  last                                      )
+         call errint ( '#',  1                                         )
+         call errint ( '#',  nwd                                       )
+         call errhan ( '#',  handle                                    )
+         call errint ( '#',  recno                                     )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'DASURD' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      IF ( LAST .LT. FIRST ) THEN
-         CALL CHKOUT ( 'DASURD' )
-         RETURN
-      END IF
+      if ( last .lt. first ) then
+         call chkout ( 'DASURD' )
+         return
+      end if
 
 !
 !     See whether double precision record number RECNO from file HANDLE
@@ -2829,43 +2829,43 @@
 !     the record out until we need to free a record, or until the
 !     d.p. buffer is flushed, whichever comes first.
 !
-      NODE = HEADD
+      node = headd
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFD(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFD(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufd(node)  ) &
+               .and.  (  recno  .eq. rnbufd(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
-            CALL MOVED ( DATAD,   LAST-FIRST+1,   RCBUFD(FIRST, NODE)  )
+            call moved ( datad,   last-first+1,   rcbufd(first, node)  )
 
 !
 !           Set the update flag, indicating that this buffer entry
 !           has been modified.
 !
-            UPBUFD ( NODE ) = .TRUE.
+            upbufd ( node ) = .true.
 
 !
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            IF ( NODE .NE. HEADD ) THEN
+            if ( node .ne. headd ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLD )
-               CALL LNKILB ( NODE, HEADD, POOLD )
-               HEADD = NODE
+               call lnkxsl ( node, node,  poold )
+               call lnkilb ( node, headd, poold )
+               headd = node
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'DASURD' )
-            RETURN
+            call chkout ( 'DASURD' )
+            return
 
-         END IF
+         end if
 
-         NODE  =  POOLD ( FORWRD, NODE )
+         node  =  poold ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record we're writing to is not buffered.  In order to
@@ -2875,53 +2875,53 @@
 !     record.  Before using this record, we'll write its contents out
 !     to the corresponding file, if the record has been updated.
 !
-      IF ( USEDD .LT. BUFSZD ) THEN
+      if ( usedd .lt. bufszd ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
-         CALL LNKAN ( POOLD, NODE )
+         call lnkan ( poold, node )
 
-         USEDD = USEDD + 1
+         usedd = usedd + 1
 
-      ELSE
+      else
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADD, POOLD )
+         node  =  lnktl ( headd, poold )
 
-         CALL LNKXSL ( NODE, NODE, POOLD )
+         call lnkxsl ( node, node, poold )
 
 !
 !        If the allocated record was updated, write it out.
 !
-         IF (  UPBUFD(NODE)  ) THEN
+         if (  upbufd(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFD( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufd( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOD ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFD(    NODE ), &
-                           RCBUFD( 1, NODE )  )
+            call dasiod ( 'WRITE', &
+                           wrunit, &
+                           rnbufd(    node ), &
+                           rcbufd( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASURD' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASURD' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 !
 !     Now try to read the record we're going to update.
 !
-      CALL ZZDASGRD ( HANDLE, RECNO, RCBUFD(1,NODE) )
+      call zzdasgrd ( handle, recno, rcbufd(1,node) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASURD' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASURD' )
+         return
+      end if
 
 !
 !     The read was successful, so set the record number, handle,
@@ -2931,23 +2931,23 @@
 !
 !     Update the head pointer.
 !
-      CALL LNKILB ( NODE, HEADD, POOLD )
+      call lnkilb ( node, headd, poold )
 
-      HNBUFD ( NODE )  =  HANDLE
-      RNBUFD ( NODE )  =  RECNO
-      UPBUFD ( NODE )  = .TRUE.
-      HEADD            =  NODE
+      hnbufd ( node )  =  handle
+      rnbufd ( node )  =  recno
+      upbufd ( node )  = .true.
+      headd            =  node
 
 !
 !     At long last, make the requested update.  Note that we don't
 !     have to write the record back to the file; that will get done
 !     automatically before or at the time the file is closed.
 !
-      CALL MOVED (  DATAD,  LAST-FIRST+1,  RCBUFD( FIRST, NODE )  )
+      call moved (  datad,  last-first+1,  rcbufd( first, node )  )
 
 
-      CALL CHKOUT ( 'DASURD' )
-      RETURN
+      call chkout ( 'DASURD' )
+      return
 
 
 
@@ -2957,7 +2957,7 @@
 
 !$Procedure DASURI ( DAS, update record, integer )
 
-      ENTRY DASURI ( HANDLE, RECNO, FIRST, LAST, DATAI )
+      entry dasuri ( handle, recno, first, last, datai )
 
 ! $ Abstract
 !
@@ -3167,65 +3167,65 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASURI' )
+      call chkin ( 'DASURI' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASURI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASURI' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     If FIRST or LAST are out of range, no dice.
 !
-      IF (        ( FIRST .LT. 1   ) &
-            .OR.  ( FIRST .GT. NWI ) &
-            .OR.  ( LAST  .LT. 1   ) &
-            .OR.  ( LAST  .GT. NWI )    )  THEN
+      if (        ( first .lt. 1   ) &
+            .or.  ( first .gt. nwi ) &
+            .or.  ( last  .lt. 1   ) &
+            .or.  ( last  .gt. nwi )    )  then
 
-         CALL SETMSG ( 'Array indices FIRST and LAST were #,  #; '    // &
+         call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
-         CALL ERRINT ( '#',  FIRST                                     )
-         CALL ERRINT ( '#',  LAST                                      )
-         CALL ERRINT ( '#',  1                                         )
-         CALL ERRINT ( '#',  NWI                                       )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'DASURI' )
-         RETURN
+         call errint ( '#',  first                                     )
+         call errint ( '#',  last                                      )
+         call errint ( '#',  1                                         )
+         call errint ( '#',  nwi                                       )
+         call errhan ( '#',  handle                                    )
+         call errint ( '#',  recno                                     )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'DASURI' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      IF ( LAST .LT. FIRST ) THEN
-         CALL CHKOUT ( 'DASURI' )
-         RETURN
-      END IF
+      if ( last .lt. first ) then
+         call chkout ( 'DASURI' )
+         return
+      end if
 
 !
 !     See whether integer record number RECNO from file HANDLE is
@@ -3235,43 +3235,43 @@
 !     the record out until we need to free a record, or until the
 !     integer buffer is flushed, whichever comes first.
 !
-      NODE = HEADI
+      node = headi
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFI(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFI(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufi(node)  ) &
+               .and.  (  recno  .eq. rnbufi(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
-            CALL MOVEI ( DATAI,   LAST-FIRST+1,   RCBUFI(FIRST, NODE) )
+            call movei ( datai,   last-first+1,   rcbufi(first, node) )
 
 !
 !           Set the update flag, indicating that this buffer entry
 !           has been modified.
 !
-            UPBUFI ( NODE ) = .TRUE.
+            upbufi ( node ) = .true.
 
 !
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            IF ( NODE .NE. HEADI ) THEN
+            if ( node .ne. headi ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLI )
-               CALL LNKILB ( NODE, HEADI, POOLI )
-               HEADI = NODE
+               call lnkxsl ( node, node,  pooli )
+               call lnkilb ( node, headi, pooli )
+               headi = node
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'DASURI' )
-            RETURN
+            call chkout ( 'DASURI' )
+            return
 
-         END IF
+         end if
 
-         NODE  =  POOLI ( FORWRD, NODE )
+         node  =  pooli ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record we're writing to is not buffered.  We'll allocate
@@ -3280,51 +3280,51 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      IF ( USEDI .LT. BUFSZI ) THEN
+      if ( usedi .lt. bufszi ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
-         CALL LNKAN ( POOLI, NODE )
-         USEDI = USEDI + 1
+         call lnkan ( pooli, node )
+         usedi = usedi + 1
 
-      ELSE
+      else
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  =  LNKTL ( HEADI, POOLI )
+         node  =  lnktl ( headi, pooli )
 
-         CALL LNKXSL ( NODE, NODE, POOLI )
+         call lnkxsl ( node, node, pooli )
 
 !
 !        If the allocated record was updated, write it out.
 !
-         IF (  UPBUFI(NODE)  ) THEN
+         if (  upbufi(node)  ) then
 
-            CALL ZZDDHHLU ( HNBUFI( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufi( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOI ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFI(    NODE ), &
-                           RCBUFI( 1, NODE )  )
+            call dasioi ( 'WRITE', &
+                           wrunit, &
+                           rnbufi(    node ), &
+                           rcbufi( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASURI' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASURI' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now try to read the record we're going to update.
 !
-      CALL ZZDASGRI ( HANDLE,   RECNO, RCBUFI(1,NODE) )
+      call zzdasgri ( handle,   recno, rcbufi(1,node) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASURI' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASURI' )
+         return
+      end if
 
 !
 !     The read was successful, so set the record number, handle,
@@ -3334,23 +3334,23 @@
 !
 !     Update the head pointer.
 !
-      CALL LNKILB ( NODE, HEADI, POOLI )
+      call lnkilb ( node, headi, pooli )
 
-      HNBUFI ( NODE )  =  HANDLE
-      RNBUFI ( NODE )  =  RECNO
-      UPBUFI ( NODE )  = .TRUE.
-      HEADI            =  NODE
+      hnbufi ( node )  =  handle
+      rnbufi ( node )  =  recno
+      upbufi ( node )  = .true.
+      headi            =  node
 
 !
 !     At long last, make the requested update.  Note that we don't
 !     have to write the record back to the file; that will get done
 !     automatically before or at the time the file is closed.
 !
-      CALL MOVEI (  DATAI,  LAST-FIRST+1,  RCBUFI( FIRST, NODE )  )
+      call movei (  datai,  last-first+1,  rcbufi( first, node )  )
 
 
-      CALL CHKOUT ( 'DASURI' )
-      RETURN
+      call chkout ( 'DASURI' )
+      return
 
 
 
@@ -3360,7 +3360,7 @@
 
 !$Procedure DASURC ( DAS, update record, character )
 
-      ENTRY DASURC ( HANDLE, RECNO, FIRST, LAST, DATAC )
+      entry dasurc ( handle, recno, first, last, datac )
 
 ! $ Abstract
 !
@@ -3575,66 +3575,66 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASURC' )
+      call chkin ( 'DASURC' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASURC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASURC' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 
 !
 !     If FIRST or LAST are out of range, no dice.
 !
-      IF (        ( FIRST .LT. 1   ) &
-            .OR.  ( FIRST .GT. NWC ) &
-            .OR.  ( LAST  .LT. 1   ) &
-            .OR.  ( LAST  .GT. NWC )    )  THEN
+      if (        ( first .lt. 1   ) &
+            .or.  ( first .gt. nwc ) &
+            .or.  ( last  .lt. 1   ) &
+            .or.  ( last  .gt. nwc )    )  then
 
-         CALL SETMSG ( 'String indices FIRST and LAST were #,  #; '   // &
+         call setmsg ( 'String indices FIRST and LAST were #,  #; '   // &
                        'allowed range for both is [#, #]. File was '  // &
                        '#, record number was #.'                       )
-         CALL ERRINT ( '#',  FIRST                                     )
-         CALL ERRINT ( '#',  LAST                                      )
-         CALL ERRINT ( '#',  1                                         )
-         CALL ERRINT ( '#',  NWC                                       )
-         CALL ERRHAN ( '#',  HANDLE                                    )
-         CALL ERRINT ( '#',  RECNO                                     )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'DASURC' )
-         RETURN
+         call errint ( '#',  first                                     )
+         call errint ( '#',  last                                      )
+         call errint ( '#',  1                                         )
+         call errint ( '#',  nwc                                       )
+         call errhan ( '#',  handle                                    )
+         call errint ( '#',  recno                                     )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'DASURC' )
+         return
 
-      END IF
+      end if
 
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      IF ( LAST .LT. FIRST ) THEN
-         CALL CHKOUT ( 'DASURC' )
-         RETURN
-      END IF
+      if ( last .lt. first ) then
+         call chkout ( 'DASURC' )
+         return
+      end if
 
 !
 !     See whether character record number RECNO from file HANDLE is
@@ -3644,43 +3644,43 @@
 !     the record out until we need to free a record, or until the
 !     character buffer is flushed, whichever comes first.
 !
-      NODE = HEADC
+      node = headc
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF (         (  HANDLE .EQ. HNBUFC(NODE)  ) &
-               .AND.  (  RECNO  .EQ. RNBUFC(NODE)  )    )  THEN
+         if (         (  handle .eq. hnbufc(node)  ) &
+               .and.  (  recno  .eq. rnbufc(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
-            RCBUFC (NODE) ( FIRST : LAST )  =  DATAC
+            rcbufc (node) ( first : last )  =  datac
 
 !
 !           Set the update flag, indicating that this buffer entry
 !           has been modified.
 !
-            UPBUFC ( NODE ) = .TRUE.
+            upbufc ( node ) = .true.
 
 !
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            IF ( NODE .NE. HEADC ) THEN
+            if ( node .ne. headc ) then
 
-               CALL LNKXSL ( NODE, NODE,  POOLC )
-               CALL LNKILB ( NODE, HEADC, POOLC )
-               HEADC = NODE
+               call lnkxsl ( node, node,  poolc )
+               call lnkilb ( node, headc, poolc )
+               headc = node
 
-            END IF
+            end if
 
-            CALL CHKOUT ( 'DASURC' )
-            RETURN
+            call chkout ( 'DASURC' )
+            return
 
-         END IF
+         end if
 
-         NODE  =  POOLC ( FORWRD, NODE )
+         node  =  poolc ( forwrd, node )
 
-      END DO
+      end do
 
 !
 !     The record we're writing to is not buffered.  We'll allocate
@@ -3689,54 +3689,54 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      IF ( USEDC .LT. BUFSZC ) THEN
+      if ( usedc .lt. bufszc ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
-         CALL LNKAN ( POOLC, NODE )
-         USEDC = USEDC + 1
+         call lnkan ( poolc, node )
+         usedc = usedc + 1
 
-      ELSE
+      else
 !
 !        Grab the buffer entry at the tail end of the list.
 !
-         NODE  = LNKTL ( HEADC, POOLC )
+         node  = lnktl ( headc, poolc )
 
-         CALL LNKXSL ( NODE, NODE, POOLC )
+         call lnkxsl ( node, node, poolc )
 
 !
 !        If the allocated record was updated, write it out.
 !
-         IF (  UPBUFC(NODE)  ) THEN
+         if (  upbufc(node)  ) then
 
 
-            CALL ZZDDHHLU ( HNBUFC( NODE ), 'DAS', .FALSE., WRUNIT )
+            call zzddhhlu ( hnbufc( node ), 'DAS', .false., wrunit )
 
-            CALL DASIOC ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFC( NODE ), &
-                           RCBUFC( NODE )  )
+            call dasioc ( 'WRITE', &
+                           wrunit, &
+                           rnbufc( node ), &
+                           rcbufc( node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASURC' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASURC' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now try to read the record we're going to update.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE.,  UNIT )
+      call zzddhhlu ( handle, 'DAS', .false.,  unit )
 
-      CALL DASIOC ( 'READ',  UNIT,  RECNO, RCBUFC(NODE) )
+      call dasioc ( 'READ',  unit,  recno, rcbufc(node) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASURC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASURC' )
+         return
+      end if
 
 !
 !     The read was successful, so set the record number, handle,
@@ -3746,22 +3746,22 @@
 !
 !     Update the head pointer.
 !
-      CALL LNKILB ( NODE, HEADC, POOLC )
+      call lnkilb ( node, headc, poolc )
 
-      HNBUFC ( NODE )  =  HANDLE
-      RNBUFC ( NODE )  =  RECNO
-      UPBUFC ( NODE )  = .TRUE.
-      HEADC            =  NODE
+      hnbufc ( node )  =  handle
+      rnbufc ( node )  =  recno
+      upbufc ( node )  = .true.
+      headc            =  node
 
 !
 !     At long last, make the requested update.  Note that we don't
 !     have to write the record back to the file; that will get done
 !     automatically before or at the time the file is closed.
 !
-      RCBUFC ( NODE )  ( FIRST : LAST )   =   DATAC
+      rcbufc ( node )  ( first : last )   =   datac
 
-      CALL CHKOUT ( 'DASURC' )
-      RETURN
+      call chkout ( 'DASURC' )
+      return
 
 
 
@@ -3771,7 +3771,7 @@
 
 !$Procedure DASWBR ( DAS, write buffered records )
 
-      ENTRY DASWBR ( HANDLE )
+      entry daswbr ( handle )
 
 ! $ Abstract
 !
@@ -4213,44 +4213,44 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DASWBR' )
+      call chkin ( 'DASWBR' )
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASWBR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASWBR' )
+         return
+      end if
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         CALL LNKINI ( BUFSZD, POOLD )
-         CALL LNKINI ( BUFSZI, POOLI )
-         CALL LNKINI ( BUFSZC, POOLC )
+         call lnkini ( bufszd, poold )
+         call lnkini ( bufszi, pooli )
+         call lnkini ( bufszc, poolc )
 
-         PASS1  = .FALSE.
+         pass1  = .false.
 
-      END IF
+      end if
 
 !
 !     Obtain a logical unit for HANDLE.
 !
-      CALL ZZDDHHLU ( HANDLE, 'DAS', .FALSE., WRUNIT )
+      call zzddhhlu ( handle, 'DAS', .false., wrunit )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DASWBR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DASWBR' )
+         return
+      end if
 
 !
 !     For each buffer, find the records belonging to this file, and
@@ -4258,24 +4258,24 @@
 !
 !     Double precision records first.
 !
-      NODE = HEADD
+      node = headd
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF ( HANDLE .EQ. HNBUFD(NODE) ) THEN
+         if ( handle .eq. hnbufd(node) ) then
 !
 !           This record belongs to the file of interest, so write the
 !           the record out.
 !
-            CALL DASIOD ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFD(    NODE ), &
-                           RCBUFD( 1, NODE )  )
+            call dasiod ( 'WRITE', &
+                           wrunit, &
+                           rnbufd(    node ), &
+                           rcbufd( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASWBR' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASWBR' )
+               return
+            end if
 
 !
 !           The record is no longer in use; return it to the
@@ -4284,50 +4284,50 @@
 !           the head node.  Decrement the number of used d.p.
 !           buffer elements.
 !
-            NEXT = POOLD ( FORWRD, NODE )
+            next = poold ( forwrd, node )
 
-            IF ( NODE .EQ. HEADD ) THEN
-               HEADD = NEXT
-            END IF
+            if ( node .eq. headd ) then
+               headd = next
+            end if
 
-            CALL LNKFSL ( NODE, NODE, POOLD )
+            call lnkfsl ( node, node, poold )
 
-            NODE   =  NEXT
-            USEDD  =  USEDD - 1
+            node   =  next
+            usedd  =  usedd - 1
 
-         ELSE
+         else
 !
 !           Just get the next node.
 !
-            NODE = POOLD ( FORWRD, NODE )
+            node = poold ( forwrd, node )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 
 !
 !     Next, integer records.
 !
-      NODE = HEADI
+      node = headi
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF ( HANDLE .EQ. HNBUFI(NODE) ) THEN
+         if ( handle .eq. hnbufi(node) ) then
 !
 !           This record belongs to the file of interest, so write the
 !           the record out.
 !
-            CALL DASIOI ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFI(    NODE ), &
-                           RCBUFI( 1, NODE )  )
+            call dasioi ( 'WRITE', &
+                           wrunit, &
+                           rnbufi(    node ), &
+                           rcbufi( 1, node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASWBR' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASWBR' )
+               return
+            end if
 
 !
 !           The record is no longer in use; return it to the
@@ -4336,50 +4336,50 @@
 !           the head node.  Decrement the number of used integer
 !           buffer elements.
 !
-            NEXT = POOLI ( FORWRD, NODE )
+            next = pooli ( forwrd, node )
 
-            IF ( NODE .EQ. HEADI ) THEN
-               HEADI = NEXT
-            END IF
+            if ( node .eq. headi ) then
+               headi = next
+            end if
 
-            CALL LNKFSL ( NODE, NODE, POOLI )
+            call lnkfsl ( node, node, pooli )
 
-            NODE   =  NEXT
-            USEDI  =  USEDI - 1
+            node   =  next
+            usedi  =  usedi - 1
 
-         ELSE
+         else
 !
 !           Just get the next node.
 !
-            NODE = POOLI ( FORWRD, NODE )
+            node = pooli ( forwrd, node )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 
 !
 !     And last, character records.
 !
-      NODE = HEADC
+      node = headc
 
-      DO WHILE ( NODE .GT. 0 )
+      do while ( node .gt. 0 )
 
-         IF ( HANDLE .EQ. HNBUFC(NODE) ) THEN
+         if ( handle .eq. hnbufc(node) ) then
 !
 !           This record belongs to the file of interest, so write the
 !           the record out.
 !
-            CALL DASIOC ( 'WRITE', &
-                           WRUNIT, &
-                           RNBUFC( NODE ), &
-                           RCBUFC( NODE )  )
+            call dasioc ( 'WRITE', &
+                           wrunit, &
+                           rnbufc( node ), &
+                           rcbufc( node )  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'DASWBR' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'DASWBR' )
+               return
+            end if
 
 !
 !           The record is no longer in use; return it to the
@@ -4388,27 +4388,27 @@
 !           the head node.  Decrement the number of used character
 !           buffer elements.
 !
-            NEXT = POOLC ( FORWRD, NODE )
+            next = poolc ( forwrd, node )
 
-            IF ( NODE .EQ. HEADC ) THEN
-               HEADC = NEXT
-            END IF
+            if ( node .eq. headc ) then
+               headc = next
+            end if
 
-            CALL LNKFSL ( NODE, NODE, POOLC )
+            call lnkfsl ( node, node, poolc )
 
-            NODE   =  NEXT
-            USEDC  =  USEDC - 1
+            node   =  next
+            usedc  =  usedc - 1
 
-         ELSE
+         else
 !
 !           Just get the next node.
 !
-            NODE = POOLC ( FORWRD, NODE )
+            node = poolc ( forwrd, node )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DASWBR' )
-      RETURN
-      END
+      call chkout ( 'DASWBR' )
+      return
+      end

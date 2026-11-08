@@ -1,6 +1,6 @@
 !$Procedure ZZGETVOX ( Coordinates of voxel containing a point )
 
-      SUBROUTINE ZZGETVOX ( VOXSIZ, VOXORI, NVOX, XYZ, INBOX, VOXCOR )
+      subroutine zzgetvox ( voxsiz, voxori, nvox, xyz, inbox, voxcor )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      VOXORI    ( 3 )
-      INTEGER               NVOX      ( 3 )
-      DOUBLE PRECISION      XYZ       ( 3 )
-      LOGICAL               INBOX
-      INTEGER               VOXCOR     ( 3 )
+      double precision      voxsiz
+      double precision      voxori    ( 3 )
+      integer               nvox      ( 3 )
+      double precision      xyz       ( 3 )
+      logical               inbox
+      integer               voxcor     ( 3 )
 
 
 ! $ Brief_I/O
@@ -177,47 +177,47 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
-      DOUBLE PRECISION       TERM
-      INTEGER                I
+      double precision       term
+      integer                i
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( VOXSIZ .LE. 0.D0 ) THEN
+      if ( voxsiz .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZGETVOX'                            )
-         CALL SETMSG ( 'Voxel size was #; must be positive.' )
-         CALL ERRDP  ( '#',  VOXSIZ                          )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEVALUE)'             )
-         CALL CHKOUT ( 'ZZGETVOX'                            )
-         RETURN
+         call chkin  ( 'ZZGETVOX'                            )
+         call setmsg ( 'Voxel size was #; must be positive.' )
+         call errdp  ( '#',  voxsiz                          )
+         call sigerr ( 'SPICE(NONPOSITIVEVALUE)'             )
+         call chkout ( 'ZZGETVOX'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize 'point in box' flag and voxel coordinates. The
 !     coordinates are assigned out-of-range values.
 !
-      INBOX     = .FALSE.
+      inbox     = .false.
 
-      VOXCOR(1) = 0
-      VOXCOR(2) = 0
-      VOXCOR(3) = 0
+      voxcor(1) = 0
+      voxcor(2) = 0
+      voxcor(3) = 0
 
 !
 !     Scale the point's coordinates to voxel grid space
 !     and determine the indices of the voxel that contains it.
 !
-      DO I = 1, 3
+      do i = 1, 3
 !
 !        A Galilean transform. Calculate the voxel coordinate
 !        corresponding to the body centered coordinate. This
@@ -225,7 +225,7 @@
 !        including the operation here improves ZZGETVOX's
 !        runtime performance.
 !
-         TERM = ( XYZ(I) - VOXORI(I) ) / VOXSIZ
+         term = ( xyz(i) - voxori(i) ) / voxsiz
 
 !
 !        Calculate the voxel index for each degree of freedom
@@ -233,11 +233,11 @@
 !
 !        If the point is outside of the grid, return now.
 !
-         IF ( ( TERM .LT. 0.D0 ) .OR. ( TERM .GT. NVOX(I) ) ) THEN
+         if ( ( term .lt. 0.d0 ) .or. ( term .gt. nvox(i) ) ) then
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 !
 !        Assign a 1-based value to the Ith component of the voxel's
@@ -246,11 +246,11 @@
 !
 !        Note that TERM is non-negative at this point.
 !
-         IF ( INT(TERM) .LT. NVOX(I) ) THEN
+         if ( int(term) .lt. nvox(i) ) then
 
-            VOXCOR(I) =  1 + INT(TERM)
+            voxcor(i) =  1 + int(term)
 
-         ELSE
+         else
 !
 !           TERM is NVOX(I), since the cases
 !
@@ -259,13 +259,13 @@
 !
 !           have been ruled out.
 !
-            VOXCOR(I) = NVOX(I)
+            voxcor(i) = nvox(i)
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      INBOX = .TRUE.
+      inbox = .true.
 
-      RETURN
-      END
+      return
+      end

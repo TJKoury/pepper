@@ -1,8 +1,8 @@
 !$Procedure DSKXV ( DSK, ray-surface intercept, vectorized )
 
-      SUBROUTINE DSKXV ( PRI,    TARGET, NSURF, &
-                         SRFLST, ET,     FIXREF, NRAYS, &
-                         VTXARR, DIRARR, XPTARR, FNDARR )
+      subroutine dskxv ( pri,    target, nsurf, &
+                         srflst, et,     fixref, nrays, &
+                         vtxarr, dirarr, xptarr, fndarr )
 
 ! $ Abstract
 !
@@ -27,22 +27,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
-      INCLUDE 'zzctr.inc'
+      include 'dsktol.inc'
+      include 'zzctr.inc'
 
-      LOGICAL               PRI
-      CHARACTER*(*)         TARGET
-      INTEGER               NSURF
-      INTEGER               SRFLST ( * )
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FIXREF
-      INTEGER               NRAYS
-      DOUBLE PRECISION      VTXARR ( 3, * )
-      DOUBLE PRECISION      DIRARR ( 3, * )
-      DOUBLE PRECISION      XPTARR ( 3, * )
-      LOGICAL               FNDARR ( * )
+      logical               pri
+      character*(*)         target
+      integer               nsurf
+      integer               srflst ( * )
+      double precision      et
+      character*(*)         fixref
+      integer               nrays
+      double precision      vtxarr ( 3, * )
+      double precision      dirarr ( 3, * )
+      double precision      xptarr ( 3, * )
+      logical               fndarr ( * )
 
 ! $ Brief_I/O
 !
@@ -810,239 +810,239 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    PRVFRM
-      CHARACTER*(BDNMLN)    SVTNAM
+      character*(frnmln)    prvfrm
+      character*(bdnmln)    svtnam
 
-      INTEGER               FIXFID
-      INTEGER               FRMCTR ( CTRSIZ )
-      INTEGER               FXCENT
-      INTEGER               FXCLSS
-      INTEGER               FXTPID
-      INTEGER               I
-      INTEGER               PRVTCD
-      INTEGER               SVTCDE
-      INTEGER               TRGCDE
-      INTEGER               TRGCTR ( CTRSIZ )
+      integer               fixfid
+      integer               frmctr ( ctrsiz )
+      integer               fxcent
+      integer               fxclss
+      integer               fxtpid
+      integer               i
+      integer               prvtcd
+      integer               svtcde
+      integer               trgcde
+      integer               trgctr ( ctrsiz )
 
-      LOGICAL               FIRST
-      LOGICAL               FRMFND
-      LOGICAL               NEWFRM
-      LOGICAL               NEWTRG
-      LOGICAL               SVTFND
-      LOGICAL               TRGFND
-      LOGICAL               UPDATE
+      logical               first
+      logical               frmfnd
+      logical               newfrm
+      logical               newtrg
+      logical               svtfnd
+      logical               trgfnd
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  FIXFID
-      SAVE                  FRMCTR
-      SAVE                  PRVFRM
-      SAVE                  PRVTCD
-      SAVE                  SVTCDE
-      SAVE                  SVTFND
-      SAVE                  SVTNAM
-      SAVE                  TRGCDE
-      SAVE                  TRGCTR
+      save                  first
+      save                  fixfid
+      save                  frmctr
+      save                  prvfrm
+      save                  prvtcd
+      save                  svtcde
+      save                  svtfnd
+      save                  svtnam
+      save                  trgcde
+      save                  trgctr
 
 !
 !     Initial values
 !
-      DATA                  FIRST  / .TRUE. /
-      DATA                  PRVFRM / ' '    /
-      DATA                  PRVTCD / 0      /
+      data                  first  / .true. /
+      data                  prvfrm / ' '    /
+      data                  prvtcd / 0      /
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKXV' )
+      call chkin ( 'DSKXV' )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( TRGCTR )
-         CALL ZZCTRUIN( FRMCTR )
+         call zzctruin( trgctr )
+         call zzctruin( frmctr )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKXV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKXV' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Reject PRI if not set properly.
 !
-      IF ( PRI ) THEN
+      if ( pri ) then
 
-         CALL SETMSG ( 'In the N0066 SPICE Toolkit, PRI must be ' &
+         call setmsg ( 'In the N0066 SPICE Toolkit, PRI must be ' &
          //            'set to .FALSE., indicating that an ' &
          //            'unprioritized search is to be performed.' )
-         CALL SIGERR ( 'SPICE(BADPRIORITYSPEC)'                   )
-         CALL CHKOUT ( 'DSKXV'                                    )
-         RETURN
+         call sigerr ( 'SPICE(BADPRIORITYSPEC)'                   )
+         call chkout ( 'DSKXV'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Reject NRAYS if not set properly.
 !
-      IF ( NRAYS .LT. 1 ) THEN
+      if ( nrays .lt. 1 ) then
 
-         CALL SETMSG ( 'The ray count NRAYS must be at least 1 but ' &
+         call setmsg ( 'The ray count NRAYS must be at least 1 but ' &
          //            'was #.'                                     )
-         CALL ERRINT ( '#',  NRAYS                                  )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'DSKXV'                                      )
-         RETURN
+         call errint ( '#',  nrays                                  )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+         call chkout ( 'DSKXV'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Reject NSURF if not set properly. Zero is a valid value.
 !
-      IF ( NSURF .LT. 0 ) THEN
+      if ( nsurf .lt. 0 ) then
 
-         CALL SETMSG ( 'The surface count NSURF must be non-negative ' &
+         call setmsg ( 'The surface count NSURF must be non-negative ' &
          //            'but was #.'                                   )
-         CALL ERRINT ( '#',  NSURF                                    )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                          )
-         CALL CHKOUT ( 'DSKXV'                                        )
-         RETURN
+         call errint ( '#',  nsurf                                    )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
+         call chkout ( 'DSKXV'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and reference frame.
 !
-      CALL ZZBODS2C ( TRGCTR, SVTNAM, SVTCDE, SVTFND, &
-                      TARGET, TRGCDE, TRGFND         )
+      call zzbods2c ( trgctr, svtnam, svtcde, svtfnd, &
+                      target, trgcde, trgfnd         )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKXV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKXV' )
+         return
+      end if
 
-      IF ( .NOT. TRGFND ) THEN
+      if ( .not. trgfnd ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit, or that you ' &
          //            'failed to load a kernel containing a ' &
          //            'name-ID mapping for this body.'           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'DSKXV'                                   )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'DSKXV'                                   )
+         return
 
-      END IF
+      end if
 
 
-      NEWFRM = ( FIXREF .NE. PRVFRM ) .OR. FIRST
-      NEWTRG = ( TRGCDE .NE. PRVTCD ) .OR. FIRST
+      newfrm = ( fixref .ne. prvfrm ) .or. first
+      newtrg = ( trgcde .ne. prvtcd ) .or. first
 
 !
 !     Get the frame ID if the pool state has changed. The
 !     first call to ZZPCKTRCK will indicate an update.
 !
-      CALL ZZPCTRCK ( FRMCTR, UPDATE )
+      call zzpctrck ( frmctr, update )
 
-      IF ( UPDATE .OR. NEWFRM .OR. NEWTRG ) THEN
+      if ( update .or. newfrm .or. newtrg ) then
 
-         CALL NAMFRM ( FIXREF, FIXFID )
+         call namfrm ( fixref, fixfid )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKXV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKXV' )
+            return
+         end if
 
-         IF ( FIXFID .EQ. 0 ) THEN
+         if ( fixfid .eq. 0 ) then
 
-            CALL SETMSG ( 'Reference frame # is not recognized by ' &
+            call setmsg ( 'Reference frame # is not recognized by ' &
             //            'the SPICE frame subsystem. Possibly ' &
             //            'a required frame definition kernel has ' &
             //            'not been loaded.'                        )
-            CALL ERRCH  ( '#',  FIXREF                              )
-            CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                   )
-            CALL CHKOUT ( 'DSKXV'                                   )
-            RETURN
+            call errch  ( '#',  fixref                              )
+            call sigerr ( 'SPICE(IDCODENOTFOUND)'                   )
+            call chkout ( 'DSKXV'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Determine the attributes of the frame designated by FIXREF.
 !
-         CALL FRINFO ( FIXFID, FXCENT, FXCLSS, FXTPID, FRMFND )
+         call frinfo ( fixfid, fxcent, fxclss, fxtpid, frmfnd )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DSKXV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DSKXV' )
+            return
+         end if
 
-         IF ( .NOT. FRMFND ) THEN
+         if ( .not. frmfnd ) then
 
-            CALL SETMSG ( 'Attributes for reference frame # ' &
+            call setmsg ( 'Attributes for reference frame # ' &
             //            'could not be obtained from ' &
             //            'the SPICE frame subsystem. Possibly ' &
             //            'a required frame definition kernel has ' &
             //            'not been loaded.'                        )
-            CALL ERRCH  ( '#',  FIXREF                              )
-            CALL SIGERR ( 'SPICE(NOFRAMEINFO)'                      )
-            CALL CHKOUT ( 'DSKXV'                                   )
-            RETURN
+            call errch  ( '#',  fixref                              )
+            call sigerr ( 'SPICE(NOFRAMEINFO)'                      )
+            call chkout ( 'DSKXV'                                   )
+            return
 
-         END IF
+         end if
 !
 !        Make sure that FIXREF is centered at the target body's center.
 !
-         IF ( FXCENT .NE. TRGCDE ) THEN
+         if ( fxcent .ne. trgcde ) then
 
-            CALL SETMSG ( 'Reference frame # is not centered at the ' &
+            call setmsg ( 'Reference frame # is not centered at the ' &
             //            'target body #. The ID code of the frame ' &
             //            'center is #.'                             )
-            CALL ERRCH  ( '#',  FIXREF                               )
-            CALL ERRCH  ( '#',  TARGET                               )
-            CALL ERRINT ( '#',  FXCENT                               )
-            CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
-            CALL CHKOUT ( 'DSKXV'                                    )
-            RETURN
+            call errch  ( '#',  fixref                               )
+            call errch  ( '#',  target                               )
+            call errint ( '#',  fxcent                               )
+            call sigerr ( 'SPICE(INVALIDFRAME)'                      )
+            call chkout ( 'DSKXV'                                    )
+            return
 
-         END IF
+         end if
 
 !
 !        We have a valid frame at this point. Save the name.
 !
-         FIRST  = .FALSE.
-         PRVFRM = FIXREF
+         first  = .false.
+         prvfrm = fixref
 
 !
 !        Update the previous target ID code as well.
 !
-         PRVTCD = TRGCDE
+         prvtcd = trgcde
 
-      END IF
+      end if
 
 !
 !     TRGCDE and FIXFID are set.
@@ -1050,19 +1050,19 @@
 !
 !     Perform the intercept computations.
 !
-      DO I = 1, NRAYS
+      do i = 1, nrays
 
-         CALL ZZSBFXR ( TRGCDE,      NSURF,       SRFLST, &
-                        ET,          FIXFID,      VTXARR(1,I), &
-                        DIRARR(1,I), XPTARR(1,I), FNDARR(I)   )
+         call zzsbfxr ( trgcde,      nsurf,       srflst, &
+                        et,          fixfid,      vtxarr(1,i), &
+                        dirarr(1,i), xptarr(1,i), fndarr(i)   )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'DSKXV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'DSKXV' )
+            return
+         end if
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DSKXV' )
-      RETURN
-      END
+      call chkout ( 'DSKXV' )
+      return
+      end

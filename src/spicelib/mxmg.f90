@@ -1,6 +1,6 @@
 !$Procedure MXMG ( Matrix times matrix, general dimension )
 
-      SUBROUTINE MXMG ( M1, M2, NR1, NC1R2, NC2, MOUT )
+      subroutine mxmg ( m1, m2, nr1, nc1r2, nc2, mout )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER             NR1
-      INTEGER             NC1R2
-      INTEGER             NC2
-      DOUBLE PRECISION    M1   ( NR1,   NC1R2 )
-      DOUBLE PRECISION    M2   ( NC1R2, NC2   )
-      DOUBLE PRECISION    MOUT ( NR1,   NC2   )
+      integer             nr1
+      integer             nc1r2
+      integer             nc2
+      double precision    m1   ( nr1,   nc1r2 )
+      double precision    m2   ( nc1r2, nc2   )
+      double precision    mout ( nr1,   nc2   )
 
 ! $ Brief_I/O
 !
@@ -200,24 +200,24 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SUM
+      double precision      sum
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
+      integer               i
+      integer               j
+      integer               k
 
 !
 !  Perform the matrix multiplication
 !
-      DO I = 1, NR1
-         DO J = 1, NC2
-            SUM = 0.D0
-            DO K = 1, NC1R2
-               SUM = SUM + M1(I,K)*M2(K,J)
-            END DO
-            MOUT(I,J) = SUM
-         END DO
-      END DO
+      do i = 1, nr1
+         do j = 1, nc2
+            sum = 0.d0
+            do k = 1, nc1r2
+               sum = sum + m1(i,k)*m2(k,j)
+            end do
+            mout(i,j) = sum
+         end do
+      end do
 !
-      RETURN
-      END
+      return
+      end

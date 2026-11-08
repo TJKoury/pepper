@@ -1,6 +1,6 @@
 !$Procedure VEQUG ( Vector equality, general dimension )
 
-      SUBROUTINE VEQUG ( VIN, NDIM, VOUT )
+      subroutine vequg ( vin, ndim, vout )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   VIN   ( NDIM )
-      DOUBLE PRECISION   VOUT  ( NDIM )
+      integer            ndim
+      double precision   vin   ( ndim )
+      double precision   vout  ( ndim )
 
 ! $ Brief_I/O
 !
@@ -181,11 +181,11 @@
 !
 !     Local variables
 !
-      INTEGER             I
+      integer             i
 
-      DO I=1,NDIM
-         VOUT(I) = VIN(I)
-      END DO
+      do i=1,ndim
+         vout(i) = vin(i)
+      end do
 
-      RETURN
-      END
+      return
+      end

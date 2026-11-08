@@ -1,6 +1,6 @@
 !$Procedure WNINSD ( Insert an interval into a DP window )
 
-      SUBROUTINE WNINSD ( LEFT, RIGHT, WINDOW )
+      subroutine wninsd ( left, right, window )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      DOUBLE PRECISION      WINDOW    ( LBCELL:* )
+      double precision      left
+      double precision      right
+      double precision      window    ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -282,71 +282,71 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
-      LOGICAL               RETURN
+      integer               cardd
+      integer               sized
+      logical               return
 
 !
 !     Local Variables
 !
-      INTEGER               SIZE
-      INTEGER               CARD
+      integer               size
+      integer               card
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'WNINSD' )
+      call chkin ( 'WNINSD' )
 
 !
 !     Get the size and cardinality of the window.
 !
-      SIZE = SIZED ( WINDOW )
-      CARD = CARDD ( WINDOW )
+      size = sized ( window )
+      card = cardd ( window )
 
 !
 !     Let's try the easy cases first. No input interval? No change.
 !     Signal that an error has occurred and set the error message.
 !
-      IF ( LEFT .GT. RIGHT ) THEN
-         CALL SETMSG ( 'Left endpoint was *. Right endpoint was *.' )
-         CALL ERRDP  ( '*', LEFT  )
-         CALL ERRDP  ( '*', RIGHT )
-         CALL SIGERR ( 'SPICE(BADENDPOINTS)' )
-         CALL CHKOUT ( 'WNINSD' )
-         RETURN
+      if ( left .gt. right ) then
+         call setmsg ( 'Left endpoint was *. Right endpoint was *.' )
+         call errdp  ( '*', left  )
+         call errdp  ( '*', right )
+         call sigerr ( 'SPICE(BADENDPOINTS)' )
+         call chkout ( 'WNINSD' )
+         return
 
 !
 !     Empty window? Input interval later than the end of the window?
 !     Just insert the interval, if there's room.
 !
-      ELSE IF ( CARD .EQ. 0  .OR.  LEFT .GT. WINDOW(CARD) ) THEN
+      else if ( card .eq. 0  .or.  left .gt. window(card) ) then
 
-         IF ( SIZE .GE. CARD+2 ) THEN
+         if ( size .ge. card+2 ) then
 
-            CALL SCARDD ( CARD+2, WINDOW )
-            WINDOW(CARD+1) = LEFT
-            WINDOW(CARD+2) = RIGHT
+            call scardd ( card+2, window )
+            window(card+1) = left
+            window(card+2) = right
 
-         ELSE
+         else
 
-            CALL EXCESS ( 2, 'window' )
-            CALL SIGERR ( 'SPICE(WINDOWEXCESS)' )
+            call excess ( 2, 'window' )
+            call sigerr ( 'SPICE(WINDOWEXCESS)' )
 
-         END IF
+         end if
 
-         CALL CHKOUT ( 'WNINSD' )
-         RETURN
+         call chkout ( 'WNINSD' )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -356,11 +356,11 @@
 !     interval. (The index I will always point to the right endpoint
 !     of an interval).
 !
-      I = 2
+      i = 2
 
-      DO WHILE ( I .LE. CARD  .AND.  WINDOW(I) .LT. LEFT )
-         I = I + 2
-      END DO
+      do while ( i .le. card  .and.  window(i) .lt. left )
+         i = i + 2
+      end do
 
 !
 !     There are three ways this can go. The new interval can:
@@ -379,75 +379,75 @@
 !     Case (1). If there's room, move succeeding intervals back and
 !     insert the new one. If there isn't room, signal an error.
 !
-      IF ( RIGHT .LT. WINDOW(I-1) ) THEN
+      if ( right .lt. window(i-1) ) then
 
-         IF ( SIZE .GE. CARD+2 ) THEN
+         if ( size .ge. card+2 ) then
 
-            DO J = CARD, I-1, -1
-               WINDOW(J+2) = WINDOW(J)
-            END DO
+            do j = card, i-1, -1
+               window(j+2) = window(j)
+            end do
 
-            CALL SCARDD ( CARD+2, WINDOW )
-            WINDOW(I-1) = LEFT
-            WINDOW(I  ) = RIGHT
+            call scardd ( card+2, window )
+            window(i-1) = left
+            window(i  ) = right
 
-         ELSE
+         else
 
-            CALL EXCESS ( 2, 'window' )
-            CALL SIGERR ( 'SPICE(WINDOWEXCESS)' )
-            CALL CHKOUT ( 'WNINSD' )
-            RETURN
+            call excess ( 2, 'window' )
+            call sigerr ( 'SPICE(WINDOWEXCESS)' )
+            call chkout ( 'WNINSD' )
+            return
 
-         END IF
+         end if
 
 !
 !     Cases (2) and (3).
 !
-      ELSE
+      else
 
 !
 !        The left and right endpoints of the new interval may or
 !        may not replace the left and right endpoints of the existing
 !        interval.
 !
-         WINDOW(I-1) = MIN ( LEFT,  WINDOW(I-1) )
-         WINDOW(I  ) = MAX ( RIGHT, WINDOW(I  ) )
+         window(i-1) = min ( left,  window(i-1) )
+         window(i  ) = max ( right, window(i  ) )
 
 !
 !        Skip any intervals contained in the one we modified.
 !        (Like I, J always points to the right endpoint of an
 !        interval.)
 !
-         J = I + 2
+         j = i + 2
 
-         DO WHILE ( J .LE. CARD  .AND.  WINDOW(J) .LE. WINDOW(I) )
-            J = J + 2
-         END DO
+         do while ( j .le. card  .and.  window(j) .le. window(i) )
+            j = j + 2
+         end do
 
 !
 !        If the modified interval extends into the next interval,
 !        merge the two. (The modified interval grows to the right.)
 !
-         IF ( J .LE. CARD  .AND.  WINDOW(I) .GE. WINDOW(J-1) ) THEN
-            WINDOW(I) = WINDOW(J)
-            J         = J + 2
-         END IF
+         if ( j .le. card  .and.  window(i) .ge. window(j-1) ) then
+            window(i) = window(j)
+            j         = j + 2
+         end if
 
 !
 !        Move the rest of the intervals forward to take up the
 !        spaces left by the absorbed intervals.
 !
-         DO WHILE ( J .LE. CARD )
-            I           = I + 2
-            WINDOW(I-1) = WINDOW(J-1)
-            WINDOW(I  ) = WINDOW(J  )
-            J           = J + 2
-         END DO
+         do while ( j .le. card )
+            i           = i + 2
+            window(i-1) = window(j-1)
+            window(i  ) = window(j  )
+            j           = j + 2
+         end do
 
-         CALL SCARDD ( I, WINDOW )
+         call scardd ( i, window )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'WNINSD' )
-      RETURN
-      END
+      call chkout ( 'WNINSD' )
+      return
+      end

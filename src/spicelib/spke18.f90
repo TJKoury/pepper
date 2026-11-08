@@ -1,6 +1,6 @@
 !$Procedure SPKE18 ( S/P Kernel, evaluate, type 18 )
 
-      SUBROUTINE SPKE18 ( ET, RECORD, STATE )
+      subroutine spke18 ( et, record, state )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk18.inc'
-      INCLUDE 'spkrec.inc'
+      include 'spk18.inc'
+      include 'spkrec.inc'
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -170,8 +170,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      LGRINT
-      LOGICAL               RETURN
+      double precision      lgrint
+      logical               return
 
 !
 !     Local parameters
@@ -180,85 +180,85 @@
 !
 !     Index of subtype code in record:
 !
-      INTEGER               SBTIDX
-      PARAMETER           ( SBTIDX = 1 )
+      integer               sbtidx
+      parameter           ( sbtidx = 1 )
 
 !
 !     Index of packet count in record:
 !
-      INTEGER               CNTIDX
-      PARAMETER           ( CNTIDX = 2 )
+      integer               cntidx
+      parameter           ( cntidx = 2 )
 
 !
 !     Index at which packets start:
 !
-      INTEGER               PKTIDX
-      PARAMETER           ( PKTIDX = 3 )
+      integer               pktidx
+      parameter           ( pktidx = 3 )
 
 !
 !     Maximum polynomial degree:
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 15 )
+      integer               maxdeg
+      parameter           ( maxdeg = 15 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LOCREC ( MAXREC )
-      DOUBLE PRECISION      WORK   ( MAXREC * 2,  2 )
-      DOUBLE PRECISION      VBUFF  ( 6 )
+      double precision      locrec ( maxrec )
+      double precision      work   ( maxrec * 2,  2 )
+      double precision      vbuff  ( 6 )
 
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               J
-      INTEGER               N
-      INTEGER               PACKSZ
-      INTEGER               SUBTYP
-      INTEGER               TO
-      INTEGER               XSTART
-      INTEGER               YSTART
+      integer               from
+      integer               i
+      integer               j
+      integer               n
+      integer               packsz
+      integer               subtyp
+      integer               to
+      integer               xstart
+      integer               ystart
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKE18' )
+      call chkin ( 'SPKE18' )
 
 !
 !     Capture the subtype from the record and set the packet size
 !     accordingly.
 !
-      SUBTYP =  NINT( RECORD(SBTIDX) )
+      subtyp =  nint( record(sbtidx) )
 
-      IF ( SUBTYP .EQ. S18TP0 ) THEN
+      if ( subtyp .eq. s18tp0 ) then
 
-         PACKSZ = S18PS0
+         packsz = s18ps0
 
-      ELSE IF ( SUBTYP .EQ. S18TP1 ) THEN
+      else if ( subtyp .eq. s18tp1 ) then
 
-         PACKSZ = S18PS1
+         packsz = s18ps1
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unexpected SPK type 18 subtype found in ' // &
+         call setmsg ( 'Unexpected SPK type 18 subtype found in ' // &
                        'type 18 record.'                          )
-         CALL ERRINT ( '#',  SUBTYP                               )
-         CALL SIGERR ( 'SPICE(INVALIDVALUE)'                      )
-         CALL CHKOUT ( 'SPKE18'                                   )
-         RETURN
+         call errint ( '#',  subtyp                               )
+         call sigerr ( 'SPICE(INVALIDVALUE)'                      )
+         call chkout ( 'SPKE18'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Get the packet count.
 !
-      N = NINT( RECORD(CNTIDX) )
+      n = nint( record(cntidx) )
 
-      IF ( SUBTYP .EQ. S18TP1 ) THEN
+      if ( subtyp .eq. s18tp1 ) then
 !
 !        This is the easy case:  we perform Lagrange interpolation
 !        on each state component.
@@ -267,105 +267,105 @@
 !        that contiguous pieces of it can be shoved directly into the
 !        interpolation routine LGRINT.
 !
-         N   =  NINT( RECORD(CNTIDX) )
+         n   =  nint( record(cntidx) )
 
-         CALL XPSGIP ( PACKSZ, N, RECORD(PKTIDX) )
+         call xpsgip ( packsz, n, record(pktidx) )
 
 !
 !        We interpolate each state component in turn.
 !
-         XSTART   =   3   +  N * PACKSZ
+         xstart   =   3   +  n * packsz
 
-         DO I = 1, PACKSZ
+         do i = 1, packsz
 
-            YSTART    =   3   +  N * (I-1)
+            ystart    =   3   +  n * (i-1)
 
-            STATE(I)  =   LGRINT ( N, &
-                                   RECORD(XSTART), &
-                                   RECORD(YSTART), &
-                                   LOCREC, &
-                                   ET              )
-         END DO
+            state(i)  =   lgrint ( n, &
+                                   record(xstart), &
+                                   record(ystart), &
+                                   locrec, &
+                                   et              )
+         end do
 
-      ELSE
+      else
 
 !
 !        We interpolate each state component in turn.  Position and
 !        velocity are interpolated separately.
 !
-         XSTART   =   3  +  PACKSZ * N
+         xstart   =   3  +  packsz * n
 
-         DO I = 1, 3
+         do i = 1, 3
 
-            DO J = 1, N
+            do j = 1, n
 !
 !              For the Jth input packet, copy the Ith position and
 !              velocity components into the local record buffer LOCREC.
 !
-               FROM         = 2 + PACKSZ*(J-1) + I
-               TO           =     2 * J        - 1
+               from         = 2 + packsz*(j-1) + i
+               to           =     2 * j        - 1
 
-               LOCREC(TO  ) = RECORD ( FROM     )
-               LOCREC(TO+1) = RECORD ( FROM + 3 )
+               locrec(to  ) = record ( from     )
+               locrec(to+1) = record ( from + 3 )
 
-            END DO
+            end do
 
 !
 !           Interpolate the Ith position and velocity components of the
 !           state.  We'll keep the position and overwrite the velocity.
 !
-            CALL HRMINT ( N, &
-                          RECORD(XSTART), &
-                          LOCREC, &
-                          ET, &
-                          WORK, &
-                          STATE(I  ), &
-                          STATE(I+3)      )
+            call hrmint ( n, &
+                          record(xstart), &
+                          locrec, &
+                          et, &
+                          work, &
+                          state(i  ), &
+                          state(i+3)      )
 
-         END DO
+         end do
 
 !
 !        Now interpolate velocity, using separate velocity data and
 !        acceleration.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            DO J = 1, N
+            do j = 1, n
 !
 !              For the Jth input packet, copy the Ith position and
 !              velocity components into the local record buffer LOCREC.
 !
-               FROM         = 2  +  PACKSZ*(J-1)  +  PACKSZ/2  +  I
-               TO           =       2 * J         -  1
+               from         = 2  +  packsz*(j-1)  +  packsz/2  +  i
+               to           =       2 * j         -  1
 
-               LOCREC(TO  ) = RECORD ( FROM     )
-               LOCREC(TO+1) = RECORD ( FROM + 3 )
+               locrec(to  ) = record ( from     )
+               locrec(to+1) = record ( from + 3 )
 
-            END DO
+            end do
 
 !
 !           Interpolate the Ith velocity and acceleration components of
 !           the state.  We'll capture the result in a temporary buffer,
 !           then transfer the velocity to the output state array.
 !
-            CALL HRMINT ( N, &
-                          RECORD(XSTART), &
-                          LOCREC, &
-                          ET, &
-                          WORK, &
-                          VBUFF(I  ), &
-                          VBUFF(I+3)     )
+            call hrmint ( n, &
+                          record(xstart), &
+                          locrec, &
+                          et, &
+                          work, &
+                          vbuff(i  ), &
+                          vbuff(i+3)     )
 
-         END DO
+         end do
 
 !
 !        Fill in the velocity in the output state using the results of
 !        interpolating velocity and acceleration.
 !
-         CALL VEQU ( VBUFF, STATE(4) )
+         call vequ ( vbuff, state(4) )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SPKE18' )
-      RETURN
-      END
+      call chkout ( 'SPKE18' )
+      return
+      end

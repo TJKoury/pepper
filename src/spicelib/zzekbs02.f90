@@ -1,7 +1,7 @@
 !$Procedure      ZZEKBS02 ( EK, begin segment, type 1 )
 
-      SUBROUTINE ZZEKBS02 (  HANDLE,  TABNAM,  NCOLS, &
-                             CNAMES,  CDSCRS,  SEGNO  )
+      subroutine zzekbs02 (  handle,  tabnam,  ncols, &
+                             cnames,  cdscrs,  segno  )
 
 ! $ Abstract
 !
@@ -18,24 +18,24 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekfilpar.inc'
-      INCLUDE 'ekglimit.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekcnamsz.inc'
+      include 'ekdatpag.inc'
+      include 'ekfilpar.inc'
+      include 'ekglimit.inc'
+      include 'ekpage.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektnamsz.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         TABNAM
-      INTEGER               NCOLS
-      CHARACTER*(*)         CNAMES ( * )
-      INTEGER               CDSCRS ( CDSCSZ, * )
-      INTEGER               SEGNO
+      integer               handle
+      character*(*)         tabnam
+      integer               ncols
+      character*(*)         cnames ( * )
+      integer               cdscrs ( cdscsz, * )
+      integer               segno
 
 ! $ Brief_I/O
 !
@@ -136,60 +136,60 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               EKNSEG
+      integer               eknseg
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               MXSPEC
-      PARAMETER           ( MXSPEC = 512 )
+      integer               mxspec
+      parameter           ( mxspec = 512 )
 
-      INTEGER               NAMLIM
-      PARAMETER           ( NAMLIM = 32 )
+      integer               namlim
+      parameter           ( namlim = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(PGSIZC)    CPAGE
-      CHARACTER*(CNAMSZ)    TMPCNM
-      CHARACTER*(TNAMSZ)    TMPTNM
+      character*(pgsizc)    cpage
+      character*(cnamsz)    tmpcnm
+      character*(tnamsz)    tmptnm
 
-      INTEGER               BASE
-      INTEGER               CBASE
-      INTEGER               CP1
-      INTEGER               CP
-      INTEGER               CPAGNO
-      INTEGER               CPT
-      INTEGER               DPT
-      INTEGER               DSCBAS
-      INTEGER               I
-      INTEGER               IPAGE  ( PGSIZI )
-      INTEGER               IPAGNO
-      INTEGER               IPT
-      INTEGER               METASZ
-      INTEGER               NAMBAS
-      INTEGER               NCPAGE
-      INTEGER               NIPAGE
-      INTEGER               P
-      INTEGER               P1
-      INTEGER               P1BASE
-      INTEGER               ROOM
-      INTEGER               SGTREE
+      integer               base
+      integer               cbase
+      integer               cp1
+      integer               cp
+      integer               cpagno
+      integer               cpt
+      integer               dpt
+      integer               dscbas
+      integer               i
+      integer               ipage  ( pgsizi )
+      integer               ipagno
+      integer               ipt
+      integer               metasz
+      integer               nambas
+      integer               ncpage
+      integer               nipage
+      integer               p
+      integer               p1
+      integer               p1base
+      integer               room
+      integer               sgtree
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKBS02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKBS02' )
+      end if
 
 !
 !     Before trying to actually write anything, do every error
@@ -198,12 +198,12 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKBS02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKBS02' )
+         return
+      end if
 
 
 !
@@ -235,39 +235,39 @@
 !     Calculate the number of contiguous integer pages we'll need.
 !     This value is a function of the number of columns.
 !
-      METASZ  =    SDSCSZ  +  NCOLS * CDSCSZ
+      metasz  =    sdscsz  +  ncols * cdscsz
 
-      NIPAGE  =  ( METASZ  +  PGSIZI  -  1 ) / PGSIZI
+      nipage  =  ( metasz  +  pgsizi  -  1 ) / pgsizi
 !
 !     Allocate NIPAGE new integer pages.  Insisting on new pages
 !     enforces contiguity.  Also allocate one character page, which
 !     need not be new.
 !
-      CALL ZZEKPGAN ( HANDLE, INT, P1, P1BASE )
+      call zzekpgan ( handle, int, p1, p1base )
 
-      DO I = 2, NIPAGE
-         CALL ZZEKPGAN ( HANDLE, INT, P, BASE )
-      END DO
+      do i = 2, nipage
+         call zzekpgan ( handle, int, p, base )
+      end do
 
 !
 !     Calculate the number of contiguous character pages we'll need.
 !
-      NCPAGE  =  ( TNAMSZ  +  NCOLS * CNAMSZ  +  PGSIZC - 1 ) / PGSIZC
+      ncpage  =  ( tnamsz  +  ncols * cnamsz  +  pgsizc - 1 ) / pgsizc
 
-      CALL ZZEKPGAN ( HANDLE, CHR, CP1, CBASE )
+      call zzekpgan ( handle, chr, cp1, cbase )
 
-      DO I = 2, NCPAGE
-         CALL ZZEKPGAN ( HANDLE, CHR, P, BASE )
-      END DO
+      do i = 2, ncpage
+         call zzekpgan ( handle, chr, p, base )
+      end do
 
 
 !
 !     On the third day of Christmas, we initialized three data page
 !     trees:  one for each data type.
 !
-      CALL ZZEKTRIT ( HANDLE, CPT  )
-      CALL ZZEKTRIT ( HANDLE, DPT )
-      CALL ZZEKTRIT ( HANDLE, IPT )
+      call zzektrit ( handle, cpt  )
+      call zzektrit ( handle, dpt )
+      call zzektrit ( handle, ipt )
 
 !
 !     Prepare the contents of the first integer page:  initialize
@@ -279,59 +279,59 @@
 !     `last word' counts of each type for both the data and modified
 !     record trees are initialized in this fashion.
 !
-      CALL CLEARI ( PGSIZI, IPAGE )
+      call cleari ( pgsizi, ipage )
 !
 !     The value at index EKTIDX is the segment type.
 !
-      IPAGE ( EKTIDX )  =  2
-      IPAGE ( SNOIDX )  =  EKNSEG ( HANDLE )  +  1
-      IPAGE ( IMDIDX )  =  P1BASE
-      IPAGE ( TNMIDX )  =  CBASE
-      IPAGE ( NCIDX  )  =  NCOLS
-      IPAGE ( NRIDX  )  =  0
-      IPAGE ( RTIDX  )  =  0
-      IPAGE ( CPTIDX )  =  CPT
-      IPAGE ( DPTIDX )  =  DPT
-      IPAGE ( IPTIDX )  =  IPT
-      IPAGE ( MFLIDX )  =  ITRUE
-      IPAGE ( IFLIDX )  =  IFALSE
-      IPAGE ( SHDIDX )  =  IFALSE
-      IPAGE ( CFHIDX )  =  0
-      IPAGE ( CSNIDX )  =  0
-      IPAGE ( LCPIDX )  =  0
-      IPAGE ( LDPIDX )  =  0
-      IPAGE ( LIPIDX )  =  0
-      IPAGE ( LCWIDX )  =  CPSIZE
-      IPAGE ( LDWIDX )  =  DPSIZE
-      IPAGE ( LIWIDX )  =  IPSIZE
-      IPAGE ( NMLIDX )  =  CBASE + TNAMSZ
+      ipage ( ektidx )  =  2
+      ipage ( snoidx )  =  eknseg ( handle )  +  1
+      ipage ( imdidx )  =  p1base
+      ipage ( tnmidx )  =  cbase
+      ipage ( ncidx  )  =  ncols
+      ipage ( nridx  )  =  0
+      ipage ( rtidx  )  =  0
+      ipage ( cptidx )  =  cpt
+      ipage ( dptidx )  =  dpt
+      ipage ( iptidx )  =  ipt
+      ipage ( mflidx )  =  itrue
+      ipage ( iflidx )  =  ifalse
+      ipage ( shdidx )  =  ifalse
+      ipage ( cfhidx )  =  0
+      ipage ( csnidx )  =  0
+      ipage ( lcpidx )  =  0
+      ipage ( ldpidx )  =  0
+      ipage ( lipidx )  =  0
+      ipage ( lcwidx )  =  cpsize
+      ipage ( ldwidx )  =  dpsize
+      ipage ( liwidx )  =  ipsize
+      ipage ( nmlidx )  =  cbase + tnamsz
 
 !
 !     Initialize the character metadata page:  fill in the table name.
 !     The table name gets converted to upper case and is left justified.
 !
-      CPAGE  =  ' '
+      cpage  =  ' '
 
-      CALL LJUST  ( TABNAM, TMPTNM )
-      CALL UCASE  ( TMPTNM, TMPTNM )
+      call ljust  ( tabnam, tmptnm )
+      call ucase  ( tmptnm, tmptnm )
 
-      CPAGE ( :TNAMSZ )  =  TMPTNM
+      cpage ( :tnamsz )  =  tmptnm
 
 !
 !     Now for the column-specific tasks.  We write out a descriptor for
 !     each column.  At the same time, we write out the column's name.
 !
-      IPAGNO = 1
-      CPAGNO = 1
-      P      = P1
-      CP     = CP1
+      ipagno = 1
+      cpagno = 1
+      p      = p1
+      cp     = cp1
 
-      DO I = 1, NCOLS
+      do i = 1, ncols
 !
 !        Insert the column's ordinal position in the segment into
 !        the column's descriptor.
 !
-         CDSCRS( ORDIDX, I )  =  I
+         cdscrs( ordidx, i )  =  i
 
 !
 !        Write the Ith column name into the character metdata page.  (We
@@ -339,112 +339,112 @@
 !        up to a length of CNAMSZ characters, if necessary.  Convert the
 !        name to upper case as well.
 !
-         CALL UCASE  ( CNAMES(I), TMPCNM )
+         call ucase  ( cnames(i), tmpcnm )
 
-         NAMBAS  =  TNAMSZ  +  (I-1)*CNAMSZ  -  (CPAGNO-1)*PGSIZC
-         ROOM    =  PGSIZC  -  NAMBAS
+         nambas  =  tnamsz  +  (i-1)*cnamsz  -  (cpagno-1)*pgsizc
+         room    =  pgsizc  -  nambas
 
-         IF ( CNAMSZ .LE. ROOM ) THEN
+         if ( cnamsz .le. room ) then
 
-            CPAGE ( NAMBAS+1 : NAMBAS+CNAMSZ ) =  TMPCNM
+            cpage ( nambas+1 : nambas+cnamsz ) =  tmpcnm
 
 !
 !           Fill the column name's base address into the descriptor.
 !
-            CDSCRS( NAMIDX, I ) =  CBASE + (CPAGNO-1)*PGSIZC + NAMBAS
+            cdscrs( namidx, i ) =  cbase + (cpagno-1)*pgsizc + nambas
 
-         ELSE
+         else
 !
 !           Some or all of the column name will overflow onto the next
 !           page.
 !
-            IF ( ROOM .GT. 0 ) THEN
+            if ( room .gt. 0 ) then
 
-               CPAGE ( NAMBAS+1 : NAMBAS+ROOM ) = TMPCNM(:ROOM)
+               cpage ( nambas+1 : nambas+room ) = tmpcnm(:room)
 
-               CDSCRS( NAMIDX, I ) =  CBASE + (CPAGNO-1)*PGSIZC + NAMBAS
+               cdscrs( namidx, i ) =  cbase + (cpagno-1)*pgsizc + nambas
 
-            ELSE
+            else
 
-               CDSCRS( NAMIDX, I ) =  CBASE +  CPAGNO*PGSIZC
+               cdscrs( namidx, i ) =  cbase +  cpagno*pgsizc
 
-            END IF
+            end if
 
 !
 !           Write out the page we just filled up.
 !
-            CALL ZZEKPGWC ( HANDLE, CP, CPAGE )
+            call zzekpgwc ( handle, cp, cpage )
 
 !
 !           The next character page will hold the overflow.  The next
 !           page is the successor of page CP, since we allocated
 !           consecutive character pages.
 !
-            CP       =  CP     + 1
-            CPAGNO   =  CPAGNO + 1
-            CPAGE    =  TMPCNM(ROOM+1:)
+            cp       =  cp     + 1
+            cpagno   =  cpagno + 1
+            cpage    =  tmpcnm(room+1:)
 
-         END IF
+         end if
 
 !
 !        Add the column descriptor to the metadata page, if the
 !        descriptor will fit.  We may need to allocate another page
 !        to hold the descriptor.
 !
-         DSCBAS  =  SDSCSZ  +  (I-1)*CDSCSZ  -  (IPAGNO-1)*PGSIZI
-         ROOM    =  PGSIZI  -  DSCBAS
+         dscbas  =  sdscsz  +  (i-1)*cdscsz  -  (ipagno-1)*pgsizi
+         room    =  pgsizi  -  dscbas
 
-         IF ( CDSCSZ .LE. ROOM ) THEN
+         if ( cdscsz .le. room ) then
 !
 !           The whole descriptor fits in the current page.
 !
-            CALL MOVEI ( CDSCRS(1,I), CDSCSZ, IPAGE(DSCBAS+1) )
+            call movei ( cdscrs(1,i), cdscsz, ipage(dscbas+1) )
 
 
-         ELSE
+         else
 !
 !           Some or all of the descriptor will overflow onto the next
 !           page.
 !
-            IF ( ROOM .GT. 0 ) THEN
-               CALL MOVEI ( CDSCRS(1,I), ROOM, IPAGE(DSCBAS+1) )
-            END IF
+            if ( room .gt. 0 ) then
+               call movei ( cdscrs(1,i), room, ipage(dscbas+1) )
+            end if
 
 !
 !           Write out the page we just filled up.
 !
-            CALL ZZEKPGWI ( HANDLE, P, IPAGE )
+            call zzekpgwi ( handle, p, ipage )
 
 !
 !           The next integer page will hold the overflow.  The next page
 !           is the successor of page P, since we allocated consecutive
 !           pages.
 !
-            P       =  P + 1
-            IPAGNO  =  IPAGNO + 1
+            p       =  p + 1
+            ipagno  =  ipagno + 1
 
-            CALL CLEARI ( PGSIZI,                        IPAGE )
-            CALL MOVEI  ( CDSCRS(ROOM+1,I), CDSCSZ-ROOM, IPAGE )
+            call cleari ( pgsizi,                        ipage )
+            call movei  ( cdscrs(room+1,i), cdscsz-room, ipage )
 
-         END IF
+         end if
 
 !
 !        If we encountered a DAS error, leave now.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZEKBS02' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZEKBS02' )
+            return
+         end if
 
 
-      END DO
+      end do
 
 !
 !     Write out the last integer metadata page, and write out the
 !     character metadata page.
 !
-      CALL ZZEKPGWI ( HANDLE, P,  IPAGE )
-      CALL ZZEKPGWC ( HANDLE, CP, CPAGE )
+      call zzekpgwi ( handle, p,  ipage )
+      call zzekpgwc ( handle, cp, cpage )
 
 !
 !     At this point, the segment's metadata is filled in.  We must
@@ -452,17 +452,17 @@
 !     segment.  All we need do is add a new entry to the file's
 !     segment pointer tree.  First, look up the tree.
 !
-      CALL ZZEKPGBS ( INT, 1, BASE )
+      call zzekpgbs ( int, 1, base )
 
-      CALL DASRDI   ( HANDLE, BASE+SGTIDX, BASE+SGTIDX, SGTREE )
+      call dasrdi   ( handle, base+sgtidx, base+sgtidx, sgtree )
 
 !
 !     Append the head node of this segment at the end of the segment
 !     tree.  The tree will point to the first integer metadata page of
 !     the new segment.
 !
-      CALL ZZEKTRAP ( HANDLE, SGTREE, P1, SEGNO )
+      call zzektrap ( handle, sgtree, p1, segno )
 
-      CALL CHKOUT ( 'ZZEKBS02' )
-      RETURN
-      END
+      call chkout ( 'ZZEKBS02' )
+      return
+      end

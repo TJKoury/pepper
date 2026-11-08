@@ -1,6 +1,6 @@
 !$Procedure INTTXT ( Convert an integer to text )
 
-      SUBROUTINE INTTXT ( N, STRING )
+      subroutine inttxt ( n, string )
 
 ! $ Abstract
 !
@@ -21,10 +21,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      CHARACTER*(*)         STRING
+      integer               n
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -146,34 +146,34 @@
 !
 !     Local variables
 !
-      INTEGER               LNGEST
-      PARAMETER           ( LNGEST = 9 )
+      integer               lngest
+      parameter           ( lngest = 9 )
 
-      CHARACTER*(LNGEST)    NUMBER (19)
-      CHARACTER*(LNGEST)    SUFF
-      CHARACTER*(LNGEST)    TENS   ( 9)
+      character*(lngest)    number (19)
+      character*(lngest)    suff
+      character*(lngest)    tens   ( 9)
 
-      INTEGER               NUM
-      INTEGER               PAD
-      INTEGER               SPACE
-      INTEGER               X
-      INTEGER               Y
+      integer               num
+      integer               pad
+      integer               space
+      integer               x
+      integer               y
 
 !
 !     Saved variables
 !
 
-      SAVE                  NUMBER
-      SAVE                  TENS
+      save                  number
+      save                  tens
 
 !
 !     Initial values
 !
-      DATA       TENS    /  'TEN',     'TWENTY',   'THIRTY', &
+      data       tens    /  'TEN',     'TWENTY',   'THIRTY', &
                             'FORTY',   'FIFTY',    'SIXTY', &
                             'SEVENTY', 'EIGHTY',   'NINETY' /
 
-      DATA       NUMBER  / 'ONE',         'TWO', &
+      data       number  / 'ONE',         'TWO', &
                            'THREE',       'FOUR', &
                            'FIVE',        'SIX', &
                            'SEVEN',       'EIGHT', &
@@ -188,29 +188,29 @@
 !
 !     Zero is easy.
 !
-      IF ( N .EQ. 0 ) THEN
+      if ( n .eq. 0 ) then
 
-         STRING = 'ZERO'
-         RETURN
+         string = 'ZERO'
+         return
 
-      END IF
+      end if
 
 !
 !     If the number is negative, the string begins with the word
 !     `NEGATIVE', and otherwise the number can be treated as though
 !     it were positive.
 !
-      IF ( N .LT. 0 ) THEN
+      if ( n .lt. 0 ) then
 
-         NUM    = - N
-         STRING = 'NEGATIVE'
+         num    = - n
+         string = 'NEGATIVE'
 
-      ELSE
+      else
 
-         NUM    =   N
-         STRING = ' '
+         num    =   n
+         string = ' '
 
-      END IF
+      end if
 
 !
 !     Construct the number portion, from left to right: billions,
@@ -218,93 +218,93 @@
 !     leaves the output string unchanged, so there is no need to
 !     check explicitly for truncation.
 !
-      DO WHILE ( NUM .GT. 0 )
+      do while ( num .gt. 0 )
 
 !
 !        Find the right unit (billion, million, or whatever),
 !        and the number (X) of those units. X should always
 !        be between zero and 999, regardless of the units.
 !
-         IF ( NUM .GE. 1000000000 ) THEN
+         if ( num .ge. 1000000000 ) then
 
-            X    = NUM / 1000000000
-            SUFF = 'BILLION'
-            NUM  = NUM - X * 1000000000
+            x    = num / 1000000000
+            suff = 'BILLION'
+            num  = num - x * 1000000000
 
-         ELSE IF  ( NUM .GE. 1000000 ) THEN
+         else if  ( num .ge. 1000000 ) then
 
-            X    = NUM / 1000000
-            SUFF = 'MILLION'
-            NUM  = NUM - X * 1000000
+            x    = num / 1000000
+            suff = 'MILLION'
+            num  = num - x * 1000000
 
-         ELSE IF  ( NUM .GE. 1000 )    THEN
+         else if  ( num .ge. 1000 )    then
 
-            X    = NUM / 1000
-            SUFF = 'THOUSAND'
-            NUM  = NUM - X * 1000
+            x    = num / 1000
+            suff = 'THOUSAND'
+            num  = num - x * 1000
 
-         ELSE
+         else
 
-            X    = NUM
-            SUFF = ' '
-            NUM  = 0
+            x    = num
+            suff = ' '
+            num  = 0
 
-         END IF
+         end if
 
 !
 !        Convert X to text, ...
 !
-         SPACE = 1
+         space = 1
 
-         DO WHILE ( X .GT. 0 )
+         do while ( x .gt. 0 )
 
-            IF ( STRING .EQ. ' ' ) THEN
-               PAD = 0
-            ELSE
-               PAD = 1
-            END IF
+            if ( string .eq. ' ' ) then
+               pad = 0
+            else
+               pad = 1
+            end if
 
-            IF ( X .GE. 100 ) THEN
+            if ( x .ge. 100 ) then
 
-               Y = X / 100
-               X = X - Y*100
+               y = x / 100
+               x = x - y*100
 
-               CALL SUFFIX ( NUMBER(Y), PAD, STRING )
-               CALL SUFFIX ( 'HUNDRED', 1,   STRING )
+               call suffix ( number(y), pad, string )
+               call suffix ( 'HUNDRED', 1,   string )
 
-            ELSE IF ( X .GE. 20 ) THEN
+            else if ( x .ge. 20 ) then
 
-               Y = X / 10
-               X = X - Y*10
+               y = x / 10
+               x = x - y*10
 
-               CALL SUFFIX ( TENS(Y), PAD, STRING )
+               call suffix ( tens(y), pad, string )
 
-               IF ( X .NE. 0 ) THEN
-                  CALL SUFFIX ( '-', 0, STRING )
-                  SPACE = 0
-               END IF
+               if ( x .ne. 0 ) then
+                  call suffix ( '-', 0, string )
+                  space = 0
+               end if
 
-            ELSE
+            else
 
-               Y = X
-               X = 0
+               y = x
+               x = 0
 
-               IF ( STRING .EQ. ' ' ) THEN
-                  SPACE = 0
-               END IF
+               if ( string .eq. ' ' ) then
+                  space = 0
+               end if
 
-               CALL SUFFIX ( NUMBER(Y), SPACE, STRING )
+               call suffix ( number(y), space, string )
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        ... then add the units. Repeat as necessary.
 !
-         CALL SUFFIX ( SUFF, 1, STRING )
+         call suffix ( suff, 1, string )
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

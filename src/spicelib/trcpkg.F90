@@ -1,6 +1,6 @@
 !$Procedure TRCPKG ( Trace package )
 
-      SUBROUTINE TRCPKG ( DEPTH, INDEX, MODULE, TRACE, NAME )
+      subroutine trcpkg ( depth, index, module, trace, name )
 
 ! $ Abstract
 !
@@ -16,26 +16,26 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               DEPTH
-      INTEGER               INDEX
-      CHARACTER*(*)         MODULE
-      CHARACTER*(*)         TRACE
-      CHARACTER*(*)         NAME
+      integer               depth
+      integer               index
+      character*(*)         module
+      character*(*)         trace
+      character*(*)         name
 
-      INTEGER               FILEN
+      integer               filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER           ( FILEN  = 128 )
+      parameter           ( filen  = 128 )
 #else
-      PARAMETER           ( FILEN  = 255 )
+      parameter           ( filen  = 255 )
 #endif
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN =  32 )
+      integer               namlen
+      parameter           ( namlen =  32 )
 
-      INTEGER               MAXMOD
-      PARAMETER           ( MAXMOD = 100 )
+      integer               maxmod
+      parameter           ( maxmod = 100 )
 
 ! $ Brief_I/O
 !
@@ -397,10 +397,10 @@
 !
 !     SPICELIB functions:
 !
-      INTEGER               FRSTNB
-      INTEGER               RTRIM
+      integer               frstnb
+      integer               rtrim
 
-      LOGICAL               FAILED
+      logical               failed
 !
 !     Local parameters
 !
@@ -410,72 +410,72 @@
 !     FORTRAN compilers. 80 characters should be more than sufficient
 !     to contain a module name.
 !
-      INTEGER               TMPLEN
-      PARAMETER           ( TMPLEN = 80 )
+      integer               tmplen
+      parameter           ( tmplen = 80 )
 !
 !     The integer mnemonic for the RETURN error action.
 !
-      INTEGER               IRETRN
-      PARAMETER           ( IRETRN = 3 )
+      integer               iretrn
+      parameter           ( iretrn = 3 )
 
 !
 !     Local Variables:
 !
-      CHARACTER*(FILEN)     DEVICE
-      CHARACTER*(11)        STRING
-      CHARACTER*(TMPLEN)    TMPNAM
+      character*(filen)     device
+      character*(11)        string
+      character*(tmplen)    tmpnam
 
-      INTEGER               ACTION
-      INTEGER               FIRST
-      INTEGER               I
-      INTEGER               L
+      integer               action
+      integer               first
+      integer               i
+      integer               l
 
 !
 !     Saved variables:
 !
-      CHARACTER*(NAMLEN)    STACK (MAXMOD)
-      CHARACTER*(NAMLEN)    FROZEN(MAXMOD)
+      character*(namlen)    stack (maxmod)
+      character*(namlen)    frozen(maxmod)
 
-      INTEGER               FRZCNT
-      INTEGER               FRZOVR
-      INTEGER               MAXDEP
-      INTEGER               MODCNT
-      INTEGER               OVRFLW
+      integer               frzcnt
+      integer               frzovr
+      integer               maxdep
+      integer               modcnt
+      integer               ovrflw
 
-      LOGICAL               NOTRC
+      logical               notrc
 
-      SAVE                  NOTRC
-      SAVE                  FROZEN
-      SAVE                  FRZCNT
-      SAVE                  FRZOVR
-      SAVE                  MAXDEP
-      SAVE                  MODCNT
-      SAVE                  OVRFLW
-      SAVE                  STACK
+      save                  notrc
+      save                  frozen
+      save                  frzcnt
+      save                  frzovr
+      save                  maxdep
+      save                  modcnt
+      save                  ovrflw
+      save                  stack
 
 !
 !     Initial values:
 !
-      DATA    NOTRC    / .FALSE. /
-      DATA    FRZCNT   /  0     /
-      DATA    FRZOVR   /  0     /
-      DATA    MAXDEP   /  0     /
-      DATA    MODCNT   /  0     /
-      DATA    OVRFLW   /  0     /
+      data    notrc    / .false. /
+      data    frzcnt   /  0     /
+      data    frzovr   /  0     /
+      data    maxdep   /  0     /
+      data    modcnt   /  0     /
+      data    ovrflw   /  0     /
 
 !
 !     Executable Code:
 !
-      CALL WRLINE ( 'SCREEN', 'SPICE(BOGUSENTRY)'                  )
-      CALL WRLINE ( 'SCREEN', 'TRCPKG: You have called an entry ' &
+      call wrline ( 'SCREEN', 'SPICE(BOGUSENTRY)'                  )
+      call wrline ( 'SCREEN', 'TRCPKG: You have called an entry ' &
       //            'that performs no run-time function. '         )
 
-      RETURN
+      return
 
 
 !$Procedure CHKIN ( Module Check In )
 
-      ENTRY CHKIN ( MODULE )
+      entry chkin ( module )
 
 ! $ Abstract
 !
@@ -738,71 +738,71 @@
 !
 !     Get out immediately if tracing is disabled.
 !
-      IF ( NOTRC ) THEN
-         RETURN
-      END IF
+      if ( notrc ) then
+         return
+      end if
 !
 !     Get the position of the first and last non-blank characters in
 !     input module name, and set the length of the module name.
 !
-      IF ( MODULE(1:1) .NE. ' ' ) THEN
-         FIRST  =  1
-      ELSE
-         FIRST  =  FRSTNB ( MODULE )
-      END IF
+      if ( module(1:1) .ne. ' ' ) then
+         first  =  1
+      else
+         first  =  frstnb ( module )
+      end if
 
 !
 !     Check to see if the module name is blank.
 !
-      IF ( FIRST .GT. 0  ) THEN
+      if ( first .gt. 0  ) then
 !
 !        If there is room for the name, place it at the top of the
 !        stack. If not, increment the overflow counter and signal an
 !        error.
 !
-         IF ( MODCNT .LT. MAXMOD ) THEN
+         if ( modcnt .lt. maxmod ) then
 
-            MODCNT        = MODCNT + 1
-            STACK(MODCNT) = MODULE ( FIRST: )
+            modcnt        = modcnt + 1
+            stack(modcnt) = module ( first: )
 
-         ELSE
+         else
 
-            OVRFLW = OVRFLW + 1
+            ovrflw = ovrflw + 1
 
-            CALL GETDEV ( DEVICE )
+            call getdev ( device )
 
-            CALL WRLINE ( DEVICE,  'SPICE(TRACEBACKOVERFLOW)' )
-            CALL WRLINE ( DEVICE,  'CHKIN:  The trace storage is ' &
+            call wrline ( device,  'SPICE(TRACEBACKOVERFLOW)' )
+            call wrline ( device,  'CHKIN:  The trace storage is ' &
             //            'completely full.  No further module ' &
             //            'names can be added.' )
 
-         END IF
+         end if
 !
 !        Keep track of the maximum depth encountered.
 !
-         IF ( ( MODCNT + OVRFLW ) .GT. MAXDEP ) THEN
-            MAXDEP = MODCNT + OVRFLW
-         END IF
+         if ( ( modcnt + ovrflw ) .gt. maxdep ) then
+            maxdep = modcnt + ovrflw
+         end if
 
-      ELSE
+      else
 
-         CALL GETDEV (  DEVICE  )
+         call getdev (  device  )
 
-         CALL WRLINE (  DEVICE,  'SPICE(BLANKMODULENAME)'         )
-         CALL WRLINE (  DEVICE,  'CHKIN:  An attempt to check' &
+         call wrline (  device,  'SPICE(BLANKMODULENAME)'         )
+         call wrline (  device,  'CHKIN:  An attempt to check' &
          //                      ' in was made without supplying' &
          //                      ' a module name.'                )
 
-      END IF
+      end if
 !
 !     We're done now, so return.
 !
-      RETURN
+      return
 
 
 !$Procedure CHKOUT ( Module Check Out )
 
-      ENTRY CHKOUT ( MODULE )
+      entry chkout ( module )
 
 ! $ Abstract
 !
@@ -1082,14 +1082,14 @@
 !
 !     Get out immediately if tracing is disabled.
 !
-      IF ( NOTRC ) THEN
-         RETURN
-      END IF
+      if ( notrc ) then
+         return
+      end if
 !
 !     Check to be sure we can remove a module name from the stack,
 !     i.e., that we have not overflowed.
 !
-      IF ( OVRFLW .EQ. 0 ) THEN
+      if ( ovrflw .eq. 0 ) then
 !
 !        We are not in overflow mode, compare the module name on
 !        the top of the stack with the module name passed to us. If
@@ -1097,60 +1097,60 @@
 !        module count.
 !
 
-         IF ( MODCNT .GT. 0 ) THEN
+         if ( modcnt .gt. 0 ) then
 !
 !           Make the comparison using at most NAMLEN characters of the
 !           initial non-blank sub-string of MODULE.
 !
-            IF ( MODULE(1:1) .NE. ' ' ) THEN
-               FIRST  =  1
-            ELSE
-               FIRST  =  FRSTNB ( MODULE )
-            END IF
+            if ( module(1:1) .ne. ' ' ) then
+               first  =  1
+            else
+               first  =  frstnb ( module )
+            end if
 
-            L      =  MIN ( LEN(MODULE), FIRST+NAMLEN-1 )
+            l      =  min ( len(module), first+namlen-1 )
 
-            IF (  STACK(MODCNT)  .NE.  MODULE( FIRST : L )  ) THEN
+            if (  stack(modcnt)  .ne.  module( first : l )  ) then
 
-               TMPNAM = MODULE( FIRST: )
-               CALL GETDEV ( DEVICE )
-               CALL WRLINE ( DEVICE, 'SPICE(NAMESDONOTMATCH)'    )
-               CALL WRLINE ( DEVICE, 'CHKOUT:  Caller is ' &
-               //            TMPNAM(:RTRIM(TMPNAM)) &
+               tmpnam = module( first: )
+               call getdev ( device )
+               call wrline ( device, 'SPICE(NAMESDONOTMATCH)'    )
+               call wrline ( device, 'CHKOUT:  Caller is ' &
+               //            tmpnam(:rtrim(tmpnam)) &
                //            '; popped name is ' &
-               //            STACK(MODCNT)(:RTRIM(STACK(MODCNT)))//'.' )
+               //            stack(modcnt)(:rtrim(stack(modcnt)))//'.' )
 
-            END IF
+            end if
 
-            MODCNT = MODCNT - 1
+            modcnt = modcnt - 1
 
-         ELSE
+         else
 
-            CALL GETDEV ( DEVICE )
+            call getdev ( device )
 
-            CALL WRLINE ( DEVICE, 'SPICE(TRACESTACKEMPTY)' )
-            CALL WRLINE ( DEVICE, 'CHKOUT: An attempt to check' &
+            call wrline ( device, 'SPICE(TRACESTACKEMPTY)' )
+            call wrline ( device, 'CHKOUT: An attempt to check' &
             //                    ' out was made when no modules' &
             //                    ' were checked in.' )
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Overflow case: just decrement the overflow count.
 !
-         OVRFLW = OVRFLW - 1
+         ovrflw = ovrflw - 1
 
-      END IF
+      end if
 !
 !     Return to the caller.
 !
-      RETURN
+      return
 
 
 !$Procedure TRCDEP ( Traceback depth )
 
-      ENTRY TRCDEP ( DEPTH )
+      entry trcdep ( depth )
 
 ! $ Abstract
 !
@@ -1373,30 +1373,30 @@
 !
 !     Find the error handling mode.
 !
-      CALL GETACT ( ACTION )
+      call getact ( action )
 !
 !     If we're in 'RETURN' mode, and an error has occurred, we want to
 !     use the frozen version of the traceback.  Otherwise, we want to
 !     get the use the current module stack depth.
 !
-      IF  (   ( ACTION .EQ. IRETRN )  .AND.   FAILED()   )   THEN
+      if  (   ( action .eq. iretrn )  .and.   failed()   )   then
 
-         DEPTH = FRZCNT + FRZOVR
+         depth = frzcnt + frzovr
 
-      ELSE
+      else
 
-         DEPTH = MODCNT + OVRFLW
+         depth = modcnt + ovrflw
 
-      END IF
+      end if
 !
 !     Return to the caller.
 !
-      RETURN
+      return
 
 
 !$Procedure TRCMXD ( Maximum traceback depth encountered. )
 
-      ENTRY TRCMXD ( DEPTH )
+      entry trcmxd ( depth )
 
 ! $ Abstract
 !
@@ -1537,14 +1537,14 @@
 !     It doesn't get any easier than this, simply set the maximum
 !     depth and return.
 !
-      DEPTH = MAXDEP
+      depth = maxdep
 
-      RETURN
+      return
 
 
 !$Procedure TRCNAM ( Get Module Name from Traceback )
 
-      ENTRY TRCNAM ( INDEX, NAME )
+      entry trcnam ( index, name )
 
 ! $ Abstract
 !
@@ -1820,78 +1820,78 @@
 !
 !     Get the error handling mode.
 !
-      CALL GETACT ( ACTION )
+      call getact ( action )
 !
 !     If we're in 'RETURN' mode, and an error has occurred, we want to
 !     use the frozen version of the traceback.  Otherwise, we want to
 !     get the module name from the current traceback.
 !
-      IF ( ( ACTION .EQ. IRETRN ) .AND. FAILED() ) THEN
+      if ( ( action .eq. iretrn ) .and. failed() ) then
 !
 !        Check the input index. It must be positive and less than the
 !        current stack depth.
 !
-         IF ( ( INDEX .LE. 0 ) .OR. ( INDEX .GT. FRZCNT+FRZOVR ) ) THEN
+         if ( ( index .le. 0 ) .or. ( index .gt. frzcnt+frzovr ) ) then
 !
 !           Invalid index...we output the error messages directly
 !           in this case:
 !
-            CALL  GETDEV ( DEVICE )
-            CALL  WRLINE ( DEVICE,  'SPICE(INVALIDINDEX)' )
-            CALL  INTSTR ( INDEX, STRING )
-            CALL  WRLINE ( DEVICE, 'TRCNAM: An invalid index was '    // &
+            call  getdev ( device )
+            call  wrline ( device,  'SPICE(INVALIDINDEX)' )
+            call  intstr ( index, string )
+            call  wrline ( device, 'TRCNAM: An invalid index was '    // &
                            'input.  The value was: '                  // &
-                           STRING( :RTRIM(STRING) )//'.'  )
-            RETURN
+                           string( :rtrim(string) )//'.'  )
+            return
 
-         END IF
+         end if
 !
 !        We're OK, so get the name or not available.
 !
-         IF ( INDEX .LE. MAXMOD )  THEN
-            NAME = FROZEN(INDEX)
-         ELSE
-            NAME = '<Overflow No Name Available>'
-         END IF
+         if ( index .le. maxmod )  then
+            name = frozen(index)
+         else
+            name = '<Overflow No Name Available>'
+         end if
 
-      ELSE
+      else
 !
 !        Otherwise, use current traceback:
 !
 !        Check the input index. It must be positive and less than the
 !        current stack depth.
 !
-         IF ( ( INDEX .LE. 0 ) .OR. ( INDEX .GT. MODCNT+OVRFLW ) ) THEN
+         if ( ( index .le. 0 ) .or. ( index .gt. modcnt+ovrflw ) ) then
 !
 !           Invalid index...we output the error messages directly
 !           in this case:
 !
-            CALL  GETDEV ( DEVICE )
-            CALL  WRLINE ( DEVICE,  'SPICE(INVALIDINDEX)' )
-            CALL  INTSTR ( INDEX, STRING )
-            CALL  WRLINE ( DEVICE, 'TRCNAM: An invalid index was '    // &
+            call  getdev ( device )
+            call  wrline ( device,  'SPICE(INVALIDINDEX)' )
+            call  intstr ( index, string )
+            call  wrline ( device, 'TRCNAM: An invalid index was '    // &
                            'input.  The value was: '                  // &
-                           STRING( :RTRIM(STRING) )//'.'  )
-            RETURN
+                           string( :rtrim(string) )//'.'  )
+            return
 
-         END IF
+         end if
 !
 !        We're OK, so get the name or name not available.
 !
-         IF ( INDEX .LE. MAXMOD )  THEN
-            NAME = STACK(INDEX)
-         ELSE
-            NAME = '<Overflow No Name Available>'
-         END IF
+         if ( index .le. maxmod )  then
+            name = stack(index)
+         else
+            name = '<Overflow No Name Available>'
+         end if
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 !$Procedure QCKTRC ( Get Quick Traceback )
 
-      ENTRY QCKTRC ( TRACE )
+      entry qcktrc ( trace )
 
 ! $ Abstract
 !
@@ -2145,78 +2145,78 @@
 !
 !     Be sure that the output string is empty.
 !
-      TRACE = ' '
+      trace = ' '
 !
 !     Get the error handling mode.
 !
-      CALL GETACT ( ACTION )
+      call getact ( action )
 !
 !     If we're in 'RETURN' mode, and an error has occurred, we want to
 !     use the frozen version of the traceback.  Otherwise, we want to
 !     use the current traceback.
 !
-      IF  (  ( ACTION .EQ. IRETRN )  .AND.  FAILED()  ) THEN
+      if  (  ( action .eq. iretrn )  .and.  failed()  ) then
 
-         DO I = 1, FRZCNT
+         do i = 1, frzcnt
 
-            IF ( I .GT. 1 ) THEN
-               CALL SUFFIX ( '-->',  1, TRACE )
-               CALL SUFFIX ( FROZEN(I), 1, TRACE )
-            ELSE
-               CALL SUFFIX ( FROZEN(I), 0, TRACE )
-            END IF
+            if ( i .gt. 1 ) then
+               call suffix ( '-->',  1, trace )
+               call suffix ( frozen(i), 1, trace )
+            else
+               call suffix ( frozen(i), 0, trace )
+            end if
 
-         END DO
+         end do
 
-         IF ( FRZOVR .GT. 0 ) THEN
+         if ( frzovr .gt. 0 ) then
 
-            CALL SUFFIX ( '-->',   1, TRACE )
-            IF ( FRZOVR .GT. 1 ) THEN
-               CALL INTSTR ( FRZOVR, STRING )
-               CALL SUFFIX ( '<', 1, TRACE )
-               CALL SUFFIX ( STRING,  0, TRACE )
-               CALL SUFFIX ( 'Names Overflowed>', 1, TRACE )
-            ELSE
-               CALL SUFFIX ( '<One Name Overflowed>', 1, TRACE )
-            END IF
+            call suffix ( '-->',   1, trace )
+            if ( frzovr .gt. 1 ) then
+               call intstr ( frzovr, string )
+               call suffix ( '<', 1, trace )
+               call suffix ( string,  0, trace )
+               call suffix ( 'Names Overflowed>', 1, trace )
+            else
+               call suffix ( '<One Name Overflowed>', 1, trace )
+            end if
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         DO I = 1, MODCNT
+         do i = 1, modcnt
 
-            IF ( I .GT. 1 ) THEN
-               CALL SUFFIX ( '-->',  1, TRACE )
-               CALL SUFFIX ( STACK(I), 1, TRACE )
-            ELSE
-               CALL SUFFIX ( STACK(I), 0, TRACE )
-            END IF
+            if ( i .gt. 1 ) then
+               call suffix ( '-->',  1, trace )
+               call suffix ( stack(i), 1, trace )
+            else
+               call suffix ( stack(i), 0, trace )
+            end if
 
-         END DO
+         end do
 
-         IF ( OVRFLW .GT. 0 ) THEN
+         if ( ovrflw .gt. 0 ) then
 
-            CALL SUFFIX ( '-->',  1, TRACE )
-            IF ( OVRFLW .GT. 1 ) THEN
-               CALL INTSTR ( OVRFLW, STRING )
-               CALL SUFFIX ( '<', 1, TRACE )
-               CALL SUFFIX ( STRING,  0, TRACE )
-               CALL SUFFIX ( 'Names Overflowed>', 1, TRACE )
-            ELSE
-               CALL SUFFIX ( '<One Name Overflowed>', 1, TRACE )
-            END IF
+            call suffix ( '-->',  1, trace )
+            if ( ovrflw .gt. 1 ) then
+               call intstr ( ovrflw, string )
+               call suffix ( '<', 1, trace )
+               call suffix ( string,  0, trace )
+               call suffix ( 'Names Overflowed>', 1, trace )
+            else
+               call suffix ( '<One Name Overflowed>', 1, trace )
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 !$Procedure FREEZE ( Get frozen copy of traceback )
 
-      ENTRY FREEZE
+      entry freeze
 
 ! $ Abstract
 !
@@ -2389,19 +2389,19 @@
 !     the current traceback state into the freezer..
 !
 
-      FRZCNT = MODCNT
-      FRZOVR = OVRFLW
+      frzcnt = modcnt
+      frzovr = ovrflw
 
-      DO I = 1, MODCNT
-         FROZEN(I) = STACK(I)
-      END DO
+      do i = 1, modcnt
+         frozen(i) = stack(i)
+      end do
 
-      RETURN
+      return
 
 
 !$Procedure TRCOFF ( Turn tracing off )
 
-      ENTRY TRCOFF
+      entry trcoff
 
 ! $ Abstract
 !
@@ -2555,16 +2555,16 @@
 !
 !     Indicate that tracing is disabled:
 !
-      NOTRC = .TRUE.
+      notrc = .true.
 
 !
 !     The stack depth becomes 0 (it will be referenced if TRCDEP is
 !     called). The overflow count set to 0 as well, for consistency;
 !     it will not be referenced again after this code is executed.
 !
-      MODCNT = 0
-      OVRFLW = 0
+      modcnt = 0
+      ovrflw = 0
 
-      RETURN
+      return
 
-      END
+      end

@@ -1,9 +1,9 @@
 !$Procedure GFILUM ( GF, illumination angle search )
 
-      SUBROUTINE GFILUM ( METHOD, ANGTYP, TARGET, ILLMN, &
-                          FIXREF, ABCORR, OBSRVR, SPOINT, &
-                          RELATE, REFVAL, ADJUST, STEP, &
-                          CNFINE, MW,     NW,     WORK,  RESULT )
+      subroutine gfilum ( method, angtyp, target, illmn, &
+                          fixref, abcorr, obsrvr, spoint, &
+                          relate, refval, adjust, step, &
+                          cnfine, mw,     nw,     work,  result )
 
 ! $ Abstract
 !
@@ -30,32 +30,32 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'gf.inc'
-      INCLUDE 'zzabcorr.inc'
-      INCLUDE 'zzholdd.inc'
+      include 'gf.inc'
+      include 'zzabcorr.inc'
+      include 'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         ANGTYP
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ILLMN
-      CHARACTER*(*)         FIXREF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         method
+      character*(*)         angtyp
+      character*(*)         target
+      character*(*)         illmn
+      character*(*)         fixref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      character*(*)         relate
+      double precision      refval
+      double precision      adjust
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1241,10 +1241,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZED
+      integer               sized
 
-      LOGICAL               RETURN
-      LOGICAL               GFBAIL
+      logical               return
+      logical               gfbail
 
 !
 !     External functions
@@ -1253,32 +1253,32 @@
 !
 !     Interrupt indicator function:
 !
-      EXTERNAL              GFBAIL
+      external              gfbail
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepi
+      external              gfrepu
+      external              gfrepf
+      external              gfstep
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               QNPARS
-      PARAMETER           ( QNPARS = 8 )
+      integer               qnpars
+      parameter           ( qnpars = 8 )
 
-      LOGICAL               NOBAIL
-      PARAMETER           ( NOBAIL = .FALSE. )
+      logical               nobail
+      parameter           ( nobail = .false. )
 
-      LOGICAL               NORPT
-      PARAMETER           ( NORPT  = .FALSE. )
+      logical               norpt
+      parameter           ( norpt  = .false. )
 
 !
 !     Local variables
@@ -1288,101 +1288,101 @@
 !
 !     Quantity definition parameter arrays:
 !
-      CHARACTER*(LNSIZE)    QCPARS ( QNPARS )
-      CHARACTER*(LNSIZE)    QPNAMS ( QNPARS )
+      character*(lnsize)    qcpars ( qnpars )
+      character*(lnsize)    qpnams ( qnpars )
 
-      DOUBLE PRECISION      QDPARS ( QNPARS )
+      double precision      qdpars ( qnpars )
 
-      INTEGER               QIPARS ( QNPARS )
+      integer               qipars ( qnpars )
 
-      LOGICAL               QLPARS ( QNPARS )
+      logical               qlpars ( qnpars )
 
 !
 !     Other local variables
 !
-      DOUBLE PRECISION      TOL
+      double precision      tol
 
-      LOGICAL               OK
+      logical               ok
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GFILUM' )
+      call chkin ( 'GFILUM' )
 
 !
 !     Check the result window's size.
 !
-      IF ( SIZED(RESULT) .LT. 2 ) THEN
+      if ( sized(result) .lt. 2 ) then
 
-         CALL SETMSG ( 'Result window size must be at least 2 ' &
+         call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
-         CALL ERRINT ( '#',  SIZED(RESULT)                     )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'               )
-         CALL CHKOUT ( 'GFILUM'                                )
-         RETURN
+         call errint ( '#',  sized(result)                     )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'               )
+         call chkout ( 'GFILUM'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the workspace window dimensions.
 !
-      IF ( MW .LT. 2 ) THEN
+      if ( mw .lt. 2 ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2.'                               )
-         CALL ERRINT ( '#',  MW                                    )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFILUM'                                    )
-         RETURN
+         call errint ( '#',  mw                                    )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFILUM'                                    )
+         return
 
-      END IF
+      end if
 
-      IF ( NW .LT. NWILUM ) THEN
+      if ( nw .lt. nwilum ) then
 
-         CALL SETMSG ( 'Workspace window count was #; count must be ' &
+         call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                 )
-         CALL ERRINT ( '#',  NW                                      )
-         CALL ERRINT ( '#',  NWILUM                                  )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                     )
-         CALL CHKOUT ( 'GFILUM'                                      )
-         RETURN
+         call errint ( '#',  nw                                      )
+         call errint ( '#',  nwilum                                  )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
+         call chkout ( 'GFILUM'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Set up a call to GFEVNT, which will handle the search.
 !
-      QPNAMS(1) = 'TARGET'
-      QCPARS(1) = TARGET
+      qpnams(1) = 'TARGET'
+      qcpars(1) = target
 
-      QPNAMS(2) = 'ILLUM'
-      QCPARS(2) = ILLMN
+      qpnams(2) = 'ILLUM'
+      qcpars(2) = illmn
 
-      QPNAMS(3) = 'OBSERVER'
-      QCPARS(3) =  OBSRVR
+      qpnams(3) = 'OBSERVER'
+      qcpars(3) =  obsrvr
 
-      QPNAMS(4) = 'ABCORR'
-      QCPARS(4) =  ABCORR
+      qpnams(4) = 'ABCORR'
+      qcpars(4) =  abcorr
 
-      QPNAMS(5) = 'REFERENCE FRAME'
-      QCPARS(5) =  FIXREF
+      qpnams(5) = 'REFERENCE FRAME'
+      qcpars(5) =  fixref
 
-      QPNAMS(6) = 'ANGTYP'
-      QCPARS(6) =  ANGTYP
+      qpnams(6) = 'ANGTYP'
+      qcpars(6) =  angtyp
 
-      QPNAMS(7) = 'METHOD'
-      QCPARS(7) =  METHOD
+      qpnams(7) = 'METHOD'
+      qcpars(7) =  method
 
 !
 !     Copy SPOINT to elements 1-3 of the QDPARS array.
 !
-      QPNAMS(8) = 'SPOINT'
-      CALL MOVED ( SPOINT, 3, QDPARS )
+      qpnams(8) = 'SPOINT'
+      call moved ( spoint, 3, qdpars )
 
 !
 !     Initialize the corresponding character parameter, even though
@@ -1390,55 +1390,55 @@
 !     it to upper case. Memory usage checkers such as Valgrind dislike
 !     code that operates on uninitialized variables.
 !
-      QCPARS(8) = ' '
+      qcpars(8) = ' '
 
 !
 !     Set the step size.
 !
-      IF ( STEP .LE. 0.D0 ) THEN
+      if ( step .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Step size was #; step size must be positive.' )
-         CALL ERRDP  ( '#',  STEP                                     )
-         CALL SIGERR ( 'SPICE(INVALIDSTEP)'                           )
-         CALL CHKOUT ( 'GFILUM'                                       )
-         RETURN
+         call setmsg ( 'Step size was #; step size must be positive.' )
+         call errdp  ( '#',  step                                     )
+         call sigerr ( 'SPICE(INVALIDSTEP)'                           )
+         call chkout ( 'GFILUM'                                       )
+         return
 
-      END IF
+      end if
 
-      CALL GFSSTP ( STEP )
+      call gfsstp ( step )
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if there's no stored tolerance
 !     value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Initialize the RESULT window.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 !
 !     Look for solutions.
 !
 !     Progress report and bail-out options are set to .FALSE.
 !
-      CALL GFEVNT ( GFSTEP,  GFREFN,  'ILLUMINATION ANGLE',  QNPARS, &
-                    QPNAMS,  QCPARS,  QDPARS,                QIPARS, &
-                    QLPARS,  RELATE,  REFVAL,                TOL, &
-                    ADJUST,  CNFINE,  NORPT,                 GFREPI, &
-                    GFREPU,  GFREPF,  MW,                    NWILUM, &
-                    WORK,    NOBAIL,  GFBAIL,                RESULT )
+      call gfevnt ( gfstep,  gfrefn,  'ILLUMINATION ANGLE',  qnpars, &
+                    qpnams,  qcpars,  qdpars,                qipars, &
+                    qlpars,  relate,  refval,                tol, &
+                    adjust,  cnfine,  norpt,                 gfrepi, &
+                    gfrepu,  gfrepf,  mw,                    nwilum, &
+                    work,    nobail,  gfbail,                result )
 
-      CALL CHKOUT ( 'GFILUM' )
-      RETURN
-      END
+      call chkout ( 'GFILUM' )
+      return
+      end

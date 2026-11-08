@@ -1,6 +1,6 @@
 !$Procedure EQSTR ( Equivalent strings )
 
-      LOGICAL FUNCTION EQSTR ( A, B )
+      logical function eqstr ( a, b )
 
 ! $ Abstract
 !
@@ -23,10 +23,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         A
-      CHARACTER*(*)         B
+      character*(*)         a
+      character*(*)         b
 
 ! $ Brief_I/O
 !
@@ -304,20 +304,20 @@
 !
 !     Local variables
 !
-      INTEGER               PA
-      INTEGER               PB
+      integer               pa
+      integer               pb
 
-      INTEGER               LENA
-      INTEGER               LENB
+      integer               lena
+      integer               lenb
 
-      INTEGER               CA
-      INTEGER               CB
+      integer               ca
+      integer               cb
 
-      INTEGER               LBOUND
-      INTEGER               UBOUND
-      INTEGER               DELTA
+      integer               lbound
+      integer               ubound
+      integer               delta
 
-      LOGICAL               DONE
+      logical               done
 
 
 !
@@ -354,26 +354,26 @@
 !     On the other hand, in many cases the strings will be exactly
 !     equal. If so, why knock ourselves out?
 !
-      IF ( A .EQ. B ) THEN
+      if ( a .eq. b ) then
 
-         EQSTR  = .TRUE.
-         RETURN
+         eqstr  = .true.
+         return
 
-      ELSE
+      else
 
-         PA = 1
-         PB = 1
+         pa = 1
+         pb = 1
 
-         LENA = LEN ( A )
-         LENB = LEN ( B )
+         lena = len ( a )
+         lenb = len ( b )
 
-         LBOUND = ICHAR ( 'a' )
-         UBOUND = ICHAR ( 'z' )
-         DELTA  = ICHAR ( 'A' ) - ICHAR ( 'a' )
+         lbound = ichar ( 'a' )
+         ubound = ichar ( 'z' )
+         delta  = ichar ( 'A' ) - ichar ( 'a' )
 
-         DONE   = .FALSE.
+         done   = .false.
 
-         DO WHILE ( .NOT. DONE )
+         do while ( .not. done )
 
 !
 !           At this point, we're guaranteed that
@@ -381,93 +381,93 @@
 !             ( PA .LE. LENA )   and   ( PB .LE. LENB )
 !
 
-            IF ( A(PA:PA) .EQ. ' ' ) THEN
-               PA = PA + 1
+            if ( a(pa:pa) .eq. ' ' ) then
+               pa = pa + 1
 
-            ELSE IF ( B(PB:PB) .EQ. ' ' ) THEN
-               PB = PB + 1
+            else if ( b(pb:pb) .eq. ' ' ) then
+               pb = pb + 1
 
-            ELSE
+            else
 
-               CA = ICHAR ( A(PA:PA) )
-               CB = ICHAR ( B(PB:PB) )
+               ca = ichar ( a(pa:pa) )
+               cb = ichar ( b(pb:pb) )
 
-               IF ( CA .GE. LBOUND  .AND.  CA .LE. UBOUND ) THEN
-                  CA = CA + DELTA
-               END IF
+               if ( ca .ge. lbound  .and.  ca .le. ubound ) then
+                  ca = ca + delta
+               end if
 
-               IF ( CB .GE. LBOUND  .AND.  CB .LE. UBOUND ) THEN
-                  CB = CB + DELTA
-               END IF
+               if ( cb .ge. lbound  .and.  cb .le. ubound ) then
+                  cb = cb + delta
+               end if
 
-               IF ( CA .EQ. CB ) THEN
+               if ( ca .eq. cb ) then
 
-                  PA = PA + 1
-                  PB = PB + 1
+                  pa = pa + 1
+                  pb = pb + 1
 
-               ELSE
+               else
 
-                  EQSTR  = .FALSE.
-                  DONE   = .TRUE.
+                  eqstr  = .false.
+                  done   = .true.
 !
 !                 We'll return from this point, having taken no further
 !                 action.
 !
-               END IF
+               end if
 
-            END IF
-
-
-            IF ( .NOT. DONE ) THEN
+            end if
 
 
-               IF ( PA .GT. LENA ) THEN
+            if ( .not. done ) then
+
+
+               if ( pa .gt. lena ) then
 !
 !                 Whichever of the following tests passes, we're going
 !                 to have a verdict at the end of the IF block below.
 !
-                  IF ( PB .GT. LENB ) THEN
-                     EQSTR  = .TRUE.
+                  if ( pb .gt. lenb ) then
+                     eqstr  = .true.
 
-                  ELSE IF ( B(PB: ) .NE. ' ' ) THEN
-                     EQSTR  = .FALSE.
+                  else if ( b(pb: ) .ne. ' ' ) then
+                     eqstr  = .false.
 
-                  ELSE
-                     EQSTR  = .TRUE.
+                  else
+                     eqstr  = .true.
 
-                  END IF
+                  end if
 
-                  DONE  =  .TRUE.
+                  done  =  .true.
 !
 !                 We'll return from this point, having taken no further
 !                 action.
 !
 
-               ELSE IF ( PB .GT. LENB ) THEN
+               else if ( pb .gt. lenb ) then
 !
 !                 Whichever of the following tests passes, we're going
 !                 to have a verdict at the end of the IF block below.
 !
-                  IF ( A(PA: ) .NE. ' ' ) THEN
-                     EQSTR  = .FALSE.
-                  ELSE
-                     EQSTR  = .TRUE.
-                  END IF
+                  if ( a(pa: ) .ne. ' ' ) then
+                     eqstr  = .false.
+                  else
+                     eqstr  = .true.
+                  end if
 
-                  DONE  =  .TRUE.
+                  done  =  .true.
 !
 !                 We'll return from this point, having taken no further
 !                 action.
 !
-               END IF
+               end if
 
 
-            END IF
+            end if
 
 
-         END DO
+         end do
 
 
-      END IF
+      end if
 
-      END
+      end

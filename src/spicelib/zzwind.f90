@@ -1,7 +1,7 @@
 !$Procedure  ZZWIND ( Find winding number of polygon about point )
 
-      INTEGER FUNCTION ZZWIND ( PLANE, N, VERTCS, POINT )
-      IMPLICIT NONE
+      integer function zzwind ( plane, n, vertcs, point )
+      implicit none
 
 ! $ Abstract
 !
@@ -24,13 +24,13 @@
 !
 ! $ Declarations
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   = 4 )
+      integer               ubpl
+      parameter           ( ubpl   = 4 )
 
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      INTEGER               N
-      DOUBLE PRECISION      VERTCS ( 3, * )
-      DOUBLE PRECISION      POINT  ( 3 )
+      double precision      plane  ( ubpl )
+      integer               n
+      double precision      vertcs ( 3, * )
+      double precision      point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -236,68 +236,68 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
+      double precision      twopi
+      double precision      vdot
+      double precision      vsep
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ATOTAL
-      DOUBLE PRECISION      CONS
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      RNEXT  ( 3 )
-      DOUBLE PRECISION      RPERP  ( 3 )
-      DOUBLE PRECISION      RVEC   ( 3 )
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      VTEMP  ( 3 )
+      double precision      atotal
+      double precision      cons
+      double precision      normal ( 3 )
+      double precision      rnext  ( 3 )
+      double precision      rperp  ( 3 )
+      double precision      rvec   ( 3 )
+      double precision      sep
+      double precision      vtemp  ( 3 )
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 !
 !     Initialize the function return value.
 !
-      ZZWIND = 0
+      zzwind = 0
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZWIND' )
+      call chkin ( 'ZZWIND' )
 
 !
 !     Check the number of sides of the polygon.
 !
-      IF ( N .LT. 3 ) THEN
+      if ( n .lt. 3 ) then
 
-         CALL SETMSG ( 'Polygon must have at least 3 sides; N = #.' )
-         CALL ERRINT ( '#',  N                                      )
-         CALL SIGERR ( 'SPICE(DEGENERATECASE)'                      )
-         CALL CHKOUT ( 'ZZWIND'                                     )
-         RETURN
+         call setmsg ( 'Polygon must have at least 3 sides; N = #.' )
+         call errint ( '#',  n                                      )
+         call sigerr ( 'SPICE(DEGENERATECASE)'                      )
+         call chkout ( 'ZZWIND'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Unpack the plane's normal and constant.
 !
-      CALL PL2NVC ( PLANE, NORMAL, CONS )
+      call pl2nvc ( plane, normal, cons )
 
 !
 !     Check the normal vector.
 !
-      IF ( VZERO(NORMAL) ) THEN
+      if ( vzero(normal) ) then
 
-         CALL SETMSG ( 'Plane''s normal vector is zero.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'               )
-         CALL CHKOUT ( 'ZZWIND'                          )
-         RETURN
+         call setmsg ( 'Plane''s normal vector is zero.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'               )
+         call chkout ( 'ZZWIND'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     We want the normal vector to point on the same side of the
@@ -305,47 +305,47 @@
 !     if necessary to make this true.  We don't touch CONS because
 !     it's not used later, but in principle it should be negated.
 !
-      IF (  VDOT( NORMAL, VERTCS(1,1) )  .LT.  0.D0  ) THEN
+      if (  vdot( normal, vertcs(1,1) )  .lt.  0.d0  ) then
 
-         CALL VMINUS ( NORMAL, VTEMP  )
-         CALL VEQU   ( VTEMP,  NORMAL )
+         call vminus ( normal, vtemp  )
+         call vequ   ( vtemp,  normal )
 
-      END IF
+      end if
 
 !
 !     Find the angular argument of each point; find the difference
 !     of this angle from the preceding angle; add the difference to
 !     the total.
 !
-      CALL VSUB  ( VERTCS(1,1), POINT, VTEMP )
+      call vsub  ( vertcs(1,1), point, vtemp )
 
 !
 !     Get the component RVEC of the difference vector orthogonal to
 !     the plane's normal vector.
 !
-      CALL VPERP ( VTEMP, NORMAL, RVEC )
+      call vperp ( vtemp, normal, rvec )
 
 !
 !     The total "wrap angle" starts at zero.
 !
-      ATOTAL  = 0.D0
+      atotal  = 0.d0
 
-      DO I = 2, N+1
+      do i = 2, n+1
 
-         IF ( I .LE. N ) THEN
-            J = I
-         ELSE
-            J = 1
-         END IF
+         if ( i .le. n ) then
+            j = i
+         else
+            j = 1
+         end if
 
 !
 !        Find the angular separation of RVEC and the next vector
 !        RNEXT.
 !
-         CALL VSUB  ( VERTCS(1,J), POINT,   VTEMP )
-         CALL VPERP ( VTEMP,       NORMAL,  RNEXT )
+         call vsub  ( vertcs(1,j), point,   vtemp )
+         call vperp ( vtemp,       normal,  rnext )
 
-         SEP  =  VSEP ( RNEXT, RVEC )
+         sep  =  vsep ( rnext, rvec )
 
 !
 !        Create a normal vector to RVEC by rotating RVEC pi/2 radians
@@ -353,32 +353,32 @@
 !        whether the next point is reached by clockwise or
 !        counterclockwise rotation from RVEC.
 !
-         CALL UCRSS ( NORMAL, RVEC, RPERP )
+         call ucrss ( normal, rvec, rperp )
 
-         IF (  VDOT( RNEXT, RPERP )  .GE.  0.D0  ) THEN
+         if (  vdot( rnext, rperp )  .ge.  0.d0  ) then
 !
 !           RNEXT is reached by counterclockwise rotation from
 !           RVEC.  Note that in the case of zero rotation, the
 !           sign doesn't matter because the contribution is zero.
 !
-            ATOTAL = ATOTAL + SEP
-         ELSE
-            ATOTAL = ATOTAL - SEP
-         END IF
+            atotal = atotal + sep
+         else
+            atotal = atotal - sep
+         end if
 
 !
 !        Update RVEC.
 !
-         CALL VEQU ( RNEXT, RVEC )
+         call vequ ( rnext, rvec )
 
-      END DO
+      end do
 
 !
 !     The above sum is 2 * pi * <the number of times the polygon
 !     wraps around P>.  Let ZZWIND be the wrap count.
 !
-      ZZWIND = NINT ( ATOTAL / TWOPI() )
+      zzwind = nint ( atotal / twopi() )
 
-      CALL CHKOUT ( 'ZZWIND' )
-      RETURN
-      END
+      call chkout ( 'ZZWIND' )
+      return
+      end

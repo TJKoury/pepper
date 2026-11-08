@@ -1,7 +1,7 @@
 !$Procedure  ZZEKTCNV ( Private: EK, time conversion )
 
-      SUBROUTINE ZZEKTCNV ( TIMSTR, ET, ERROR, ERRMSG )
-      IMPLICIT NONE
+      subroutine zzektcnv ( timstr, et, error, errmsg )
+      implicit none
 
 ! $ Abstract
 !
@@ -22,12 +22,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektype.inc'
+      include 'ektype.inc'
 
-      CHARACTER*(*)         TIMSTR
-      DOUBLE PRECISION      ET
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
+      character*(*)         timstr
+      double precision      et
+      logical               error
+      character*(*)         errmsg
 
 ! $ Brief_I/O
 !
@@ -152,63 +152,63 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               POSR
-      INTEGER               RTRIM
+      integer               posr
+      integer               rtrim
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 160 )
+      integer               msglen
+      parameter           ( msglen = 160 )
 
-      INTEGER               NCOMP
-      PARAMETER           ( NCOMP  = 10 )
+      integer               ncomp
+      parameter           ( ncomp  = 10 )
 
-      INTEGER               MAXMOD
-      PARAMETER           ( MAXMOD = 10 )
+      integer               maxmod
+      parameter           ( maxmod = 10 )
 
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = 32 )
+      integer               short
+      parameter           ( short  = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LNSIZE)    LOCSTR
-      CHARACTER*(SHORT)     MODIFY ( MAXMOD )
-      CHARACTER*(LNSIZE)    PICTUR
-      CHARACTER*(MSGLEN)    SCLMSG
-      CHARACTER*(SHORT)     TYPE
+      character*(lnsize)    locstr
+      character*(short)     modify ( maxmod )
+      character*(lnsize)    pictur
+      character*(msglen)    sclmsg
+      character*(short)     type
 
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TVEC   ( NCOMP )
+      double precision      sclkdp
+      double precision      tvec   ( ncomp )
 
-      INTEGER               CLKID
-      INTEGER               LOC
-      INTEGER               NTVEC
+      integer               clkid
+      integer               loc
+      integer               ntvec
 
-      LOGICAL               FND
-      LOGICAL               MODS
-      LOGICAL               SUCCES
-      LOGICAL               YABBRV
+      logical               fnd
+      logical               mods
+      logical               succes
+      logical               yabbrv
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKTCNV' )
+      call chkin ( 'ZZEKTCNV' )
 
 !
 !     No error to start with.
 !
-      ERROR  =  .FALSE.
-      ERRMSG =  ' '
+      error  =  .false.
+      errmsg =  ' '
 
 !
 !     Get a left-justified, compressed, upper-case copy of
@@ -217,136 +217,136 @@
 !     match, remove the identifying substring (of the form
 !     'MO SCLK', 'VGR1 SCLK', etc.).
 !
-      CALL CMPRSS ( ' ',   1,  TIMSTR,  LOCSTR )
-      CALL LJUST  ( LOCSTR,             LOCSTR )
-      CALL UCASE  ( LOCSTR,             LOCSTR )
+      call cmprss ( ' ',   1,  timstr,  locstr )
+      call ljust  ( locstr,             locstr )
+      call ucase  ( locstr,             locstr )
 
-      LOC  =  POSR ( LOCSTR, 'SCLK', RTRIM(LOCSTR) )
+      loc  =  posr ( locstr, 'SCLK', rtrim(locstr) )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 !
 !        It's a SCLK string.  Find the ID code, if we can.
 !
-         CALL SCN2ID ( LOCSTR(:LOC+3), CLKID, FND )
+         call scn2id ( locstr(:loc+3), clkid, fnd )
 
 
-         IF ( .NOT. FND ) THEN
+         if ( .not. fnd ) then
 !
 !           We don't recognize this SCLK type.
 !
-            ERROR  = .TRUE.
+            error  = .true.
 
-            IF ( LOC .GT. 1 ) THEN
+            if ( loc .gt. 1 ) then
 
-               ERRMSG = 'Time conversion failed; SCLK type '// &
+               errmsg = 'Time conversion failed; SCLK type '// &
                         '<#> was not recognized.'
 
-               CALL REPMC ( ERRMSG, '#', TIMSTR(:LOC-1),  ERRMSG )
+               call repmc ( errmsg, '#', timstr(:loc-1),  errmsg )
 
-            ELSE
+            else
 
-               ERRMSG = 'Time conversion failed; SCLK name was not ' // &
+               errmsg = 'Time conversion failed; SCLK name was not ' // &
                         'supplied.'
-            END IF
+            end if
 
-            CALL CHKOUT ( 'ZZEKTCNV' )
-            RETURN
+            call chkout ( 'ZZEKTCNV' )
+            return
 
-         END IF
+         end if
 
 !
 !        If we got this far, we recognized the SCLK type.
 !        Convert the time to ET.
 !
-         CALL SCPARS ( CLKID, LOCSTR(LOC+4:), ERROR, SCLMSG, SCLKDP )
+         call scpars ( clkid, locstr(loc+4:), error, sclmsg, sclkdp )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 !
 !           We'll arrive here if the required SCLK kernel hasn't
 !           been loaded.
 !
-            ERROR  =  .TRUE.
-            ERRMSG =  'Unexpected SPICELIB error encountered '  // &
+            error  =  .true.
+            errmsg =  'Unexpected SPICELIB error encountered '  // &
                       'while attempting to parse the string <'
-            CALL SUFFIX ( TIMSTR, 0, ERRMSG )
-            CALL SUFFIX ( '>',    0, ERRMSG )
-            CALL CHKOUT ( 'ZZEKTCNV'        )
-            RETURN
+            call suffix ( timstr, 0, errmsg )
+            call suffix ( '>',    0, errmsg )
+            call chkout ( 'ZZEKTCNV'        )
+            return
 
-         ELSE IF ( ERROR ) THEN
+         else if ( error ) then
 
-            ERRMSG =  'The string <#> didn''t parse '                 // &
+            errmsg =  'The string <#> didn''t parse '                 // &
                       'as a spacecraft clock string.'
-            CALL REPMC  ( ERRMSG, '#', TIMSTR, ERRMSG )
-            CALL SUFFIX ( SCLMSG,  3,          ERRMSG )
-            CALL CHKOUT ( 'ZZEKTCNV'                  )
-            RETURN
+            call repmc  ( errmsg, '#', timstr, errmsg )
+            call suffix ( sclmsg,  3,          errmsg )
+            call chkout ( 'ZZEKTCNV'                  )
+            return
 
-         ELSE
+         else
 
-            CALL SCT2E ( CLKID, SCLKDP, ET )
+            call sct2e ( clkid, sclkdp, et )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               ERROR  =  .TRUE.
-               ERRMSG =  'Unexpected SPICELIB error encountered '  // &
+               error  =  .true.
+               errmsg =  'Unexpected SPICELIB error encountered '  // &
                          'while attempting to parse the string <'
-               CALL SUFFIX ( TIMSTR, 0, ERRMSG )
-               CALL SUFFIX ( '>',    0, ERRMSG )
-               CALL CHKOUT ( 'ZZEKTCNV'        )
-               RETURN
+               call suffix ( timstr, 0, errmsg )
+               call suffix ( '>',    0, errmsg )
+               call chkout ( 'ZZEKTCNV'        )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
 
-      ELSE
+      else
 !
 !        We could have a standard time string.  Make sure that the
 !        time string is acceptable before actually calling STR2ET.
 !
-         CALL TPARTV ( LOCSTR, &
-                       TVEC,   NTVEC, TYPE, &
-                       MODIFY, MODS,  YABBRV, SUCCES, &
-                       PICTUR, ERRMSG                 )
+         call tpartv ( locstr, &
+                       tvec,   ntvec, type, &
+                       modify, mods,  yabbrv, succes, &
+                       pictur, errmsg                 )
 
-         IF ( SUCCES ) THEN
+         if ( succes ) then
 !
 !           It's safe to pass the string to STR2ET.
 !
-            CALL STR2ET ( LOCSTR, ET )
+            call str2et ( locstr, et )
 
-            IF ( FAILED() ) THEN
+            if ( failed() ) then
 
-               ERROR  =  .TRUE.
-               ERRMSG =  'Unexpected SPICELIB error encountered '  // &
+               error  =  .true.
+               errmsg =  'Unexpected SPICELIB error encountered '  // &
                          'while attempting to parse the string <'
-               CALL SUFFIX ( TIMSTR, 0, ERRMSG )
-               CALL SUFFIX ( '>',    0, ERRMSG )
-               CALL CHKOUT ( 'ZZEKTCNV'        )
-               RETURN
+               call suffix ( timstr, 0, errmsg )
+               call suffix ( '>',    0, errmsg )
+               call chkout ( 'ZZEKTCNV'        )
+               return
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The string cannot be parsed by STR2ET.  The error message
 !           was set by TPARTV.
 !
-            ERROR  =  .TRUE.
-            CALL CHKOUT ( 'ZZEKTCNV' )
-            RETURN
+            error  =  .true.
+            call chkout ( 'ZZEKTCNV' )
+            return
 
-         END IF
+         end if
 !
 !        We're done with the standard time string case.
 !
-      END IF
+      end if
 !
 !     We've parsed a time string, if it was an SCLK or standard string.
 !
-      CALL CHKOUT ( 'ZZEKTCNV' )
-      RETURN
-      END
+      call chkout ( 'ZZEKTCNV' )
+      return
+      end

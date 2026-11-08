@@ -1,6 +1,6 @@
 !$Procedure ZZMULT ( Safer multiplication )
 
-      DOUBLE PRECISION FUNCTION ZZMULT ( A, B )
+      double precision function zzmult ( a, b )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
+      double precision      a
+      double precision      b
 
 ! $ Brief_I/O
 !
@@ -262,42 +262,42 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               RETURN
-      DOUBLE PRECISION      DPMAX
+      logical               return
+      double precision      dpmax
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      LOGA
-      DOUBLE PRECISION      LOGB
+      double precision      loga
+      double precision      logb
 
 !
 !     The bounds on the potential result of the calculation.
 !
-      DOUBLE PRECISION      EXPNT
+      double precision      expnt
 
 !
 !     First entry flag.
 !
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Return on error.
 !
-      IF ( RETURN() ) THEN
-         ZZMULT = 0.D0
-         RETURN
-      END IF
+      if ( return() ) then
+         zzmult = 0.d0
+         return
+      end if
 
 
 !
 !     Participate in error tracing.
 !
-      CALL CHKIN ( 'ZZMULT' )
+      call chkin ( 'ZZMULT' )
 
 
 !
@@ -305,28 +305,28 @@
 !     The double precision maximum value has the form
 !     "d*(10**EXPNT)." The value of interest is "EXPNT."
 !
-      IF (FIRST) THEN
+      if (first) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 
 !
 !        A "floor" evaluation.
 !
-         EXPNT = DBLE( INT( LOG10( DPMAX() ) ) )
+         expnt = dble( int( log10( dpmax() ) ) )
 
-       END IF
+       end if
 
 
 !
 !     If either A or B equals zero the multiplication is zero.
 !
-      IF ( (A .EQ. 0.D0) .OR. (B .EQ. 0.D0) ) THEN
+      if ( (a .eq. 0.d0) .or. (b .eq. 0.d0) ) then
 
-         ZZMULT = 0.D0
-         CALL CHKOUT ( 'ZZMULT' )
-         RETURN
+         zzmult = 0.d0
+         call chkout ( 'ZZMULT' )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -337,44 +337,44 @@
 !
 !     An earlier check returned if A or B equal zero.
 !
-      LOGA = LOG10( DABS(A) )
-      LOGB = LOG10( DABS(B) )
+      loga = log10( dabs(a) )
+      logb = log10( dabs(b) )
 
 !
 !     Local possible overflow check.
 !
-      IF ( (LOGA + LOGB) .GT. EXPNT ) THEN
+      if ( (loga + logb) .gt. expnt ) then
 
-         ZZMULT = 0.D0
-         CALL SETMSG ( 'Numerical overflow event. ' &
+         zzmult = 0.d0
+         call setmsg ( 'Numerical overflow event. ' &
                     // 'Multiplier value, #1, ' &
                     // 'multiplicand value, #2.'  )
-         CALL ERRDP  ( '#1', A                    )
-         CALL ERRDP  ( '#2', B                    )
-         CALL SIGERR ( 'SPICE(NUMERICOVERFLOW)'   )
-         CALL CHKOUT ( 'ZZMULT'                   )
-         RETURN
+         call errdp  ( '#1', a                    )
+         call errdp  ( '#2', b                    )
+         call sigerr ( 'SPICE(NUMERICOVERFLOW)'   )
+         call chkout ( 'ZZMULT'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Local possible underflow check. Accept this may occur,
 !     return a zero.
 !
-      IF ( (LOGA + LOGB) .LT. -(EXPNT-1.D0) ) THEN
+      if ( (loga + logb) .lt. -(expnt-1.d0) ) then
 
-         ZZMULT = 0.D0
-         CALL CHKOUT ( 'ZZMULT' )
-         RETURN
+         zzmult = 0.d0
+         call chkout ( 'ZZMULT' )
+         return
 
-      END IF
+      end if
 
 !
 !     This operation should be safe. Probably.
 !
-      ZZMULT = A*B
+      zzmult = a*b
 
-      CALL CHKOUT ( 'ZZMULT' )
+      call chkout ( 'ZZMULT' )
 
-      RETURN
-      END
+      return
+      end

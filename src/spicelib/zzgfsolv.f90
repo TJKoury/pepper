@@ -1,9 +1,9 @@
 !$Procedure ZZGFSOLV ( Private --- GF, event finding routine )
 
-      SUBROUTINE ZZGFSOLV ( UDCOND,   UDSTEP,  UDREFN,  BAIL, &
-                            UDBAIL,   CSTEP,   STEP,    START, &
-                            FINISH,   TOL,     RPT,     UDREPU, &
-                            RESULT )
+      subroutine zzgfsolv ( udcond,   udstep,  udrefn,  bail, &
+                            udbail,   cstep,   step,    start, &
+                            finish,   tol,     rpt,     udrepu, &
+                            result )
 
 ! $ Abstract
 !
@@ -30,25 +30,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      EXTERNAL              UDCOND
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      LOGICAL               UDBAIL
-      LOGICAL               BAIL
-      EXTERNAL              UDBAIL
-      LOGICAL               CSTEP
-      DOUBLE PRECISION      STEP
-      LOGICAL               RPT
-      EXTERNAL              UDREPU
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      RESULT  ( LBCELL : * )
+      external              udcond
+      external              udstep
+      external              udrefn
+      logical               udbail
+      logical               bail
+      external              udbail
+      logical               cstep
+      double precision      step
+      logical               rpt
+      external              udrepu
+      double precision      start
+      double precision      finish
+      double precision      tol
+      double precision      result  ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -368,38 +368,38 @@
 !     SPICELIB functions.
 !
 
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      TOUCHD
+      double precision      brcktd
+      double precision      dpmax
+      double precision      touchd
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      CURTIM
-      DOUBLE PRECISION      DIFF
-      DOUBLE PRECISION      PRVDIF
-      DOUBLE PRECISION      SVDTIM
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      T1
-      DOUBLE PRECISION      T2
-      DOUBLE PRECISION      TIMEST
-      DOUBLE PRECISION      TRNSTN
+      double precision      begin
+      double precision      curtim
+      double precision      diff
+      double precision      prvdif
+      double precision      svdtim
+      double precision      t
+      double precision      t1
+      double precision      t2
+      double precision      timest
+      double precision      trnstn
 
-      LOGICAL               CURSTE
-      LOGICAL               INSTAT
-      LOGICAL               S
-      LOGICAL               STATE1
-      LOGICAL               SAVST
-      LOGICAL               L1
-      LOGICAL               L2
+      logical               curste
+      logical               instat
+      logical               s
+      logical               state1
+      logical               savst
+      logical               l1
+      logical               l2
 
-      CHARACTER*(256)      CONTXT
+      character*(256)      contxt
 
-      INTEGER              NLOOP
+      integer              nloop
 
 !
 !     The maximum number of search loop iterations to execute.
@@ -410,53 +410,53 @@
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      INTEGER               MXLOOP
-      PARAMETER           ( MXLOOP = 1000 )
+      integer               mxloop
+      parameter           ( mxloop = 1000 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFSOLV' )
+      call chkin  ( 'ZZGFSOLV' )
 
 
 !
 !     Check the convergence tolerance.
 !
-      IF ( TOL .LE. 0.D0 ) THEN
+      if ( tol .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be positive but was #.' )
-         CALL ERRDP  ( '#',  TOL                               )
-         CALL SIGERR ( 'SPICE(INVALIDTOLERANCE)'               )
-         CALL CHKOUT ( 'ZZGFSOLV'                              )
-         RETURN
+         call setmsg ( 'Tolerance must be positive but was #.' )
+         call errdp  ( '#',  tol                               )
+         call sigerr ( 'SPICE(INVALIDTOLERANCE)'               )
+         call chkout ( 'ZZGFSOLV'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that START is not greater than FINISH. Signal an
 !     error for START > FINISH.
 !
-      IF ( START .GT. FINISH) THEN
+      if ( start .gt. finish) then
 
-         CALL SETMSG ( 'Bad time interval result, '      // &
+         call setmsg ( 'Bad time interval result, '      // &
                        'START > FINISH.' )
-         CALL SIGERR ( 'SPICE(BADTIMECASE)' )
-         CALL CHKOUT ( 'ZZGFSOLV'           )
-         RETURN
+         call sigerr ( 'SPICE(BADTIMECASE)' )
+         call chkout ( 'ZZGFSOLV'           )
+         return
 
-      END IF
+      end if
 
 
 !
 !     If active, update the progress reporter.
 !
-      IF ( RPT ) THEN
-         CALL UDREPU ( START, FINISH, START )
-      END IF
+      if ( rpt ) then
+         call udrepu ( start, finish, start )
+      end if
 
 !
 !     This algorithm determines those intervals when a given state
@@ -479,47 +479,47 @@
 !     Initially the current time is the beginning of the search
 !     interval.
 !
-      CURTIM = START
+      curtim = start
 
 !
 !     Determine if the state at the current time satisfies some
 !     constraint. This constraint may indicate only existence of
 !     a state.
 !
-      CALL UDCOND ( CURTIM, CURSTE )
+      call udcond ( curtim, curste )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT (  'ZZGFSOLV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout (  'ZZGFSOLV' )
+         return
+      end if
 
 !
 !     If the system is in the state of interest, record the initial
 !     time of the search interval.
 !
-      IF ( CURSTE ) THEN
+      if ( curste ) then
 
-         INSTAT = .TRUE.
-         BEGIN  = CURTIM
+         instat = .true.
+         begin  = curtim
 
-      ELSE
+      else
 
-         INSTAT = .FALSE.
+         instat = .false.
 
-      END IF
+      end if
 
 !
 !     If the step size is constant, use the value supplied.
 !
-      IF ( CSTEP ) THEN
-         TIMEST = STEP
-      END IF
+      if ( cstep ) then
+         timest = step
+      end if
 
 !
 !     Save the current time and state somewhere.
 !
-      SVDTIM  = CURTIM
-      SAVST   = CURSTE
+      svdtim  = curtim
+      savst   = curste
 
 !
 !     Once initializations have been performed keep working
@@ -527,73 +527,73 @@
 !
 !     While time remains in the search interval.
 !
-      DO WHILE ( SVDTIM .LT. FINISH )
+      do while ( svdtim .lt. finish )
 
 !
 !        Using the current window and internally stored
 !        information about the current state, select a new current
 !        time.
 !
-         IF ( .NOT. CSTEP ) THEN
+         if ( .not. cstep ) then
 
-            CALL UDSTEP ( CURTIM, TIMEST )
+            call udstep ( curtim, timest )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT (  'ZZGFSOLV' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout (  'ZZGFSOLV' )
+               return
+            end if
 
-         END IF
+         end if
 
 !
 !        Add the time step to the current time.  Make sure that the
 !        time does not move beyond the end of the search interval.
 !
 
-         CURTIM = MIN ( CURTIM + TIMEST, FINISH )
+         curtim = min ( curtim + timest, finish )
 
 !
 !        Compute the state at time CURTIM.
 !
-         CALL UDCOND ( CURTIM,  CURSTE )
+         call udcond ( curtim,  curste )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT (  'ZZGFSOLV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout (  'ZZGFSOLV' )
+            return
+         end if
 
 !
 !        While the state remains unchanged and the interval is not
 !        completely searched ...
 !
 
-         DO WHILE ( ( SAVST .EQV. CURSTE ) &
-                    .AND. &
-                    ( SVDTIM .LT. FINISH ) )
+         do while ( ( savst .eqv. curste ) &
+                    .and. &
+                    ( svdtim .lt. finish ) )
 
 !
 !           First check for an interrupt signal if checking is enabled.
 !
-            IF ( BAIL )  THEN
-               IF ( UDBAIL () ) THEN
-                  CALL CHKOUT (  'ZZGFSOLV' )
-                  RETURN
-               END IF
-            END IF
+            if ( bail )  then
+               if ( udbail () ) then
+                  call chkout (  'ZZGFSOLV' )
+                  return
+               end if
+            end if
 
 !
 !           Report the current time to the monitoring utility, if
 !           appropriate.
 !
-            IF ( RPT ) THEN
-               CALL UDREPU ( START, FINISH, SVDTIM )
-            END IF
+            if ( rpt ) then
+               call udrepu ( start, finish, svdtim )
+            end if
 
 !
 !           Save the current time and state somewhere.
 !
-            SVDTIM  = CURTIM
-            SAVST   = CURSTE
+            svdtim  = curtim
+            savst   = curste
 
 !
 !           Compute a new current time so that we will not step
@@ -605,41 +605,41 @@
 !                 3. Transition times already found.
 !                 4. A minimum time step allowed.
 !
-            IF ( .NOT. CSTEP ) THEN
+            if ( .not. cstep ) then
 
-               CALL UDSTEP ( CURTIM, TIMEST )
+               call udstep ( curtim, timest )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT (  'ZZGFSOLV' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout (  'ZZGFSOLV' )
+                  return
+               end if
 
-            END IF
+            end if
 
-            CURTIM = MIN ( CURTIM + TIMEST, FINISH )
+            curtim = min ( curtim + timest, finish )
 
 !
 !           Compute the current state
 !
-            CALL UDCOND ( CURTIM,  CURSTE )
+            call udcond ( curtim,  curste )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'ZZGFSOLV' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'ZZGFSOLV' )
+               return
+            end if
 
 !
 !           Loop back to see if the state has changed.
 !
 
-         END DO
+         end do
 
 !
 !        If we have detected a state change and not merely run out
 !        of the search interval...
 !
 
-         IF ( SAVST .NEQV. CURSTE ) THEN
+         if ( savst .neqv. curste ) then
 
 !
 !           Call the previous state STATE1
@@ -650,32 +650,32 @@
 !
 !           Save the current time.
 !
-            STATE1 = SAVST
-            T1     = SVDTIM
-            T2     = CURTIM
+            state1 = savst
+            t1     = svdtim
+            t2     = curtim
 
 !
 !           Set the states at T1 and T2 for use by the refinement
 !           function, in case the caller has passed in a function
 !           that uses them.
 !
-            L1     = SAVST
-            L2     = CURSTE
+            l1     = savst
+            l2     = curste
 
 !
 !           Make sure that T1 is not greater than T2. Signal an
 !           error for T1 > T2.
 !
 
-            IF ( T1 .GT. T2) THEN
-               CALL SETMSG ( 'Bad time interval result, T1 > T2.' )
-               CALL SIGERR ( 'SPICE(BADTIMECASE)' )
-               CALL CHKOUT ( 'ZZGFSOLV'           )
-               RETURN
-            END IF
+            if ( t1 .gt. t2) then
+               call setmsg ( 'Bad time interval result, T1 > T2.' )
+               call sigerr ( 'SPICE(BADTIMECASE)' )
+               call chkout ( 'ZZGFSOLV'           )
+               return
+            end if
 
-            SVDTIM  =  CURTIM
-            SAVST   =  CURSTE
+            svdtim  =  curtim
+            savst   =  curste
 
 !
 !           T1 and T2 bracket the time of transition.  Squeeze this
@@ -687,15 +687,15 @@
 !           of the difference is decreasing from one loop iteration
 !           to the next.
 !
-            PRVDIF = DPMAX()
-            DIFF   = TOUCHD( ABS(T2 - T1) )
-            NLOOP  = 0
+            prvdif = dpmax()
+            diff   = touchd( abs(t2 - t1) )
+            nloop  = 0
 
-            DO WHILE (       ( DIFF .GT. TOL    ) &
-                       .AND. ( DIFF .LT. PRVDIF )  )
+            do while (       ( diff .gt. tol    ) &
+                       .and. ( diff .lt. prvdif )  )
 
 
-               NLOOP = NLOOP + 1
+               nloop = nloop + 1
 !
 !              This loop count error exists to catch pathologies
 !              in the refinement function. The default bisection
@@ -705,39 +705,39 @@
 !              compared to bisection. If not, the user should
 !              probably use bisection.
 !
-               IF ( NLOOP .GE. MXLOOP ) THEN
-                  CALL SETMSG ( 'Loop run exceeds maximum loop count. ' &
+               if ( nloop .ge. mxloop ) then
+                  call setmsg ( 'Loop run exceeds maximum loop count. ' &
                //               'Unable to converge to TOL value #1 ' &
                //               'within MXLOOP value #2 iterations.')
-                  CALL ERRDP  ( '#1', TOL          )
-                  CALL ERRINT ( '#2', MXLOOP       )
-                  CALL SIGERR ( 'SPICE(NOCONVERG)' )
-                  CALL CHKOUT ( 'ZZGFSOLV'         )
-                  RETURN
-               END IF
+                  call errdp  ( '#1', tol          )
+                  call errint ( '#2', mxloop       )
+                  call sigerr ( 'SPICE(NOCONVERG)' )
+                  call chkout ( 'ZZGFSOLV'         )
+                  return
+               end if
 
 
-               IF ( BAIL )  THEN
-                  IF ( UDBAIL () ) THEN
-                     CALL CHKOUT (  'ZZGFSOLV' )
-                     RETURN
-                  END IF
-               END IF
+               if ( bail )  then
+                  if ( udbail () ) then
+                     call chkout (  'ZZGFSOLV' )
+                     return
+                  end if
+               end if
 
 !
 !              Select a time T, between T1 and T2 (possibly based on the
 !              values of L1 and L2).
 !
-               CALL UDREFN ( T1, T2, L1, L2, T )
+               call udrefn ( t1, t2, l1, l2, t )
 
 !
 !              Check for an error signal. The default refinement
 !              routine, GFREFN, does not include error checks.
 !
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT (  'ZZGFSOLV' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout (  'ZZGFSOLV' )
+                  return
+               end if
 
 !
 !              Check whether T is between T1 and T2.  If
@@ -746,58 +746,58 @@
 !              point. Set T1 and T2 equal to T.
 !
 
-               T = BRCKTD ( T, T1, T2 )
+               t = brcktd ( t, t1, t2 )
 
-               IF ( T .EQ. T1 ) THEN
+               if ( t .eq. t1 ) then
 
-                  T2 = T
+                  t2 = t
 
-               ELSE IF ( T .EQ. T2 ) THEN
+               else if ( t .eq. t2 ) then
 
-                  T1 = T
+                  t1 = t
 
-               ELSE
+               else
 
 !
 !                 Compute the state time T. If this state, S,
 !                 equals STATE1, set T1 to T, otherwise set
 !                 T2 to T.
 !
-                  CALL UDCOND ( T,  S )
+                  call udcond ( t,  s )
 
-                  IF ( S .EQV. STATE1 ) THEN
+                  if ( s .eqv. state1 ) then
 
-                     T1  = T
-                     L1  = S
+                     t1  = t
+                     l1  = s
 
-                  ELSE
+                  else
 
-                     T2 = T
-                     L2 = S
+                     t2 = t
+                     l2 = s
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
 !
 !              Update PRVDIF and DIFF for the next loop termination
 !              test.
 !
-               PRVDIF = DIFF
-               DIFF   = TOUCHD( ABS(T2 - T1) )
+               prvdif = diff
+               diff   = touchd( abs(t2 - t1) )
 
-            END DO
+            end do
 
 !
 !           Let TRNSTN be the midpoint of [T1, T2].  Record this
 !           time as marking the transition from STATE1 to STATE2.
 !
-            TRNSTN = BRCKTD( (T1 + T2)*0.5D0, T1, T2 )
+            trnstn = brcktd( (t1 + t2)*0.5d0, t1, t2 )
 
 !
 !           In state-of-interest or not?
 !
-            IF ( INSTAT )  THEN
+            if ( instat )  then
 !
 !              We were in the state of interest, TRNSTN marks the
 !              point in time when the state changed to "not of
@@ -811,13 +811,13 @@
 !              to the result window.
 !
 
-               CONTXT = 'Adding interval [BEGIN,TRNSTN] to RESULT. ' &
+               contxt = 'Adding interval [BEGIN,TRNSTN] to RESULT. ' &
                //       'TRNSTN represents time of passage out of the ' &
                //       'state-of-interest.'
 
-               CALL ZZWNINSD ( BEGIN, TRNSTN, CONTXT, RESULT )
+               call zzwninsd ( begin, trnstn, contxt, result )
 
-            ELSE
+            else
 !
 !              We were not in the state of interest.  As a result
 !              TRNSTN marks the point where we are changing to
@@ -825,26 +825,26 @@
 !              to the state of interest and record the time at
 !              which the transition occurred.
 !
-               BEGIN  = TRNSTN
+               begin  = trnstn
 
-            END IF
+            end if
 
 !
 !           A transition occurred either from from in-state to
 !           out-of-state or the inverse. Reverse the value of the
 !           INSTAT flag to signify the transition event.
 !
-            INSTAT = .NOT. INSTAT
+            instat = .not. instat
 
 !
 !        That's it for this detection of state change.
 !
-         END IF
+         end if
 
 !
 !        Continue if there is more time in the search interval.
 !
-      END DO
+      end do
 
 
 !
@@ -852,32 +852,32 @@
 !     interval.
 !
 
-      IF ( INSTAT ) THEN
+      if ( instat ) then
 
 !
 !        Add an interval starting at BEGIN and ending at FINISH to the
 !        window.
 !
-         CONTXT = 'Adding interval [BEGIN,FINISH] to RESULT. FINISH ' &
+         contxt = 'Adding interval [BEGIN,FINISH] to RESULT. FINISH ' &
                // 'represents end of the search interval.'
 
-         CALL ZZWNINSD ( BEGIN, FINISH, CONTXT, RESULT )
+         call zzwninsd ( begin, finish, contxt, result )
 
-      END IF
+      end if
 
 !
 !     If active, update the progress reporter before exiting this
 !     routine.
 !
 
-      IF ( RPT ) THEN
-         CALL UDREPU ( START, FINISH, FINISH )
-      END IF
+      if ( rpt ) then
+         call udrepu ( start, finish, finish )
+      end if
 
 !
 !     Check-out then return.
 !
-      CALL CHKOUT (  'ZZGFSOLV' )
-      RETURN
-      END
+      call chkout (  'ZZGFSOLV' )
+      return
+      end
 

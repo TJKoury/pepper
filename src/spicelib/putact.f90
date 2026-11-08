@@ -1,6 +1,6 @@
 !$Procedure PUTACT ( Store Error Response Action )
 
-      SUBROUTINE PUTACT ( ACTION )
+      subroutine putact ( action )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               ACTION
+      integer               action
 
 ! $ Brief_I/O
 !
@@ -157,36 +157,36 @@
 !
 !     Define the mnemonic for the default error action.
 !
-      INTEGER               IDEFLT
-      PARAMETER           ( IDEFLT = 5 )
+      integer               ideflt
+      parameter           ( ideflt = 5 )
 !
 !     Local Variables:
 !
 !     The current error response action:
 !
 
-      INTEGER                   SAVACT
+      integer                   savact
 
-      SAVE                      SAVACT
+      save                      savact
 
 !
 !     Initial values:
 !
 
-      DATA    SAVACT            / IDEFLT /
+      data    savact            / ideflt /
 
 !
 !     Executable Code:
 !
 
-      SAVACT = ACTION
+      savact = action
 
-      RETURN
+      return
 
 
 !$Procedure GETACT ( Get Error Response Action )
 
-      ENTRY GETACT ( ACTION )
+      entry getact ( action )
 
 ! $ Abstract
 !
@@ -329,7 +329,7 @@
 !     Grab saved error response action:
 !
 
-      ACTION = SAVACT
+      action = savact
 
-      RETURN
-      END
+      return
+      end

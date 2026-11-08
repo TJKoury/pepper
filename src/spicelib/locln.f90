@@ -1,6 +1,6 @@
 !$Procedure LOCLN ( Locate lines in a text file )
 
-      SUBROUTINE LOCLN ( UNIT, BMARK, EMARK, LINE, BLINE, ELINE, FOUND )
+      subroutine locln ( unit, bmark, emark, line, bline, eline, found )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      CHARACTER*(*)         BMARK
-      CHARACTER*(*)         EMARK
-      CHARACTER*(*)         LINE
-      INTEGER               BLINE
-      INTEGER               ELINE
-      LOGICAL               FOUND
+      integer               unit
+      character*(*)         bmark
+      character*(*)         emark
+      character*(*)         line
+      integer               bline
+      integer               eline
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -412,29 +412,29 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               LTRIM
+      logical               return
+      integer               ltrim
 
 !
 !     Local variables
 !
 
-      INTEGER               BLTEMP
-      INTEGER               ELTEMP
-      INTEGER               IOSTAT
+      integer               bltemp
+      integer               eltemp
+      integer               iostat
 
-      LOGICAL               BFOUND
-      LOGICAL               EFOUND
-      LOGICAL               EOF
+      logical               bfound
+      logical               efound
+      logical               eof
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LOCLN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'LOCLN' )
+      end if
 
 !
 !     We'll use temporary variables BLTEMP and ELTEMP for BLINE and
@@ -443,10 +443,10 @@
 !     EFOUND to indicate whether or not EMARK was found.  EOF
 !     indicates end of file.
 !
-      BLTEMP =  0
-      BFOUND = .FALSE.
-      EFOUND = .FALSE.
-      EOF    = .FALSE.
+      bltemp =  0
+      bfound = .false.
+      efound = .false.
+      eof    = .false.
 
 !
 !     Read through the file, line by line, searching for the first
@@ -455,38 +455,38 @@
 !     we'll check for I/O errors.
 !
 
-      DO WHILE (  ( .NOT. BFOUND )  .AND.  ( .NOT. EOF )  )
+      do while (  ( .not. bfound )  .and.  ( .not. eof )  )
 
-         READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+         read ( unit, fmt='(A)', iostat=iostat ) line
 !
 !        An end-of-file condition is indicated by a negative value
 !        for IOSTAT. Any other non-zero value indicates some other
 !        error.
 !
-         IF ( IOSTAT .GT. 0 ) THEN
+         if ( iostat .gt. 0 ) then
 
-            CALL SETMSG ( 'While searching for BMARK = #, an attempt '// &
+            call setmsg ( 'While searching for BMARK = #, an attempt '// &
                           'to read the file named FILENAME failed.  ' // &
                           'The value of IOSTAT is #.'                 )
-            CALL ERRCH  ( '#', BMARK                                  )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FILENAME', UNIT                            )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'LOCLN'                                     )
-            RETURN
+            call errch  ( '#', bmark                                  )
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FILENAME', unit                            )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'LOCLN'                                     )
+            return
 
-         ELSE IF ( IOSTAT .LT. 0 ) THEN
+         else if ( iostat .lt. 0 ) then
 
-            EOF = .TRUE.
+            eof = .true.
 
-         ELSE
+         else
 !
 !           The read was successful, so count the line then
 !           check for a match.
 !
-            BLTEMP = BLTEMP + 1
+            bltemp = bltemp + 1
 
-            CALL LJUST ( LINE, LINE )
+            call ljust ( line, line )
 
 !
 !           By convention, if BMARK is blank, it matches the
@@ -494,93 +494,93 @@
 !           compare it to the line just read, ignoring leading
 !           and trailing blanks.
 !
-            IF ( BMARK .EQ. ' ' ) THEN
-               BFOUND = .TRUE.
+            if ( bmark .eq. ' ' ) then
+               bfound = .true.
 
-            ELSE
-               IF (  BMARK ( LTRIM(BMARK): ) .EQ. LINE  ) THEN
-                  BFOUND = .TRUE.
-               END IF
+            else
+               if (  bmark ( ltrim(bmark): ) .eq. line  ) then
+                  bfound = .true.
+               end if
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 
 !
 !     Start the search for EMARK starting from where we left off.
 !
-      ELTEMP = BLTEMP
+      eltemp = bltemp
 
-      DO WHILE (  ( .NOT. EFOUND )  .AND.  ( .NOT. EOF )  )
+      do while (  ( .not. efound )  .and.  ( .not. eof )  )
 
-         READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+         read ( unit, fmt='(A)', iostat=iostat ) line
 !
 !        An end-of-file condition is indicated by a negative value
 !        for IOSTAT. Any other non-zero value indicates some other
 !        error.
 !
-         IF ( IOSTAT .GT. 0 ) THEN
+         if ( iostat .gt. 0 ) then
 
-            CALL SETMSG ( 'While searching for EMARK = #, an attempt '// &
+            call setmsg ( 'While searching for EMARK = #, an attempt '// &
                           'to read the file named FILENAME failed.  ' // &
                           'The value of IOSTAT is #.'                 )
-            CALL ERRCH  ( '#', EMARK                                  )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FILENAME', UNIT                            )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'LOCLN'                                     )
-            RETURN
+            call errch  ( '#', emark                                  )
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FILENAME', unit                            )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'LOCLN'                                     )
+            return
 
-         ELSE IF ( IOSTAT .LT. 0 ) THEN
+         else if ( iostat .lt. 0 ) then
 
-            EOF = .TRUE.
+            eof = .true.
 !
 !           By convention, if EMARK is blank, it matches the
 !           last line in the file.
 !
-            IF ( EMARK .EQ. ' ' ) THEN
-               EFOUND = .TRUE.
-            END IF
+            if ( emark .eq. ' ' ) then
+               efound = .true.
+            end if
 
-         ELSE
+         else
 !
 !           The read was successful, so count the line and check for
 !           a match.
 !
-            ELTEMP = ELTEMP + 1
+            eltemp = eltemp + 1
 
-            CALL LJUST ( LINE, LINE )
+            call ljust ( line, line )
 
-            IF ( EMARK .NE. ' ' ) THEN
-               IF ( EMARK ( LTRIM(EMARK): ) .EQ. LINE  ) THEN
-                  EFOUND = .TRUE.
-               END IF
-            END IF
+            if ( emark .ne. ' ' ) then
+               if ( emark ( ltrim(emark): ) .eq. line  ) then
+                  efound = .true.
+               end if
+            end if
 
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Assign the line numbers to BLINE and ELINE only if both markers
 !     were found.
 !
-      FOUND = BFOUND .AND. EFOUND
+      found = bfound .and. efound
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         BLINE = BLTEMP
-         ELINE = ELTEMP
+         bline = bltemp
+         eline = eltemp
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'LOCLN' )
-      RETURN
-      END
+      call chkout ( 'LOCLN' )
+      return
+      end

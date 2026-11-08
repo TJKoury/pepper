@@ -1,7 +1,7 @@
 !$Procedure  ZZEKTRES ( Private: EK, resolve times in encoded query )
 
-      SUBROUTINE ZZEKTRES ( QUERY,  EQRYI,  EQRYC,   EQRYD, &
-                                    ERROR,  ERRMSG,  ERRPTR  )
+      subroutine zzektres ( query,  eqryi,  eqryc,   eqryd, &
+                                    error,  errmsg,  errptr  )
 
 ! $ Abstract
 !
@@ -22,25 +22,25 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekattdsc.inc'
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekattdsc.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'ektnamsz.inc'
+      include 'ektype.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               EQRYI  ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD  ( * )
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
-      INTEGER               ERRPTR
+      character*(*)         query
+      integer               eqryi  ( lbcell : * )
+      character*(*)         eqryc
+      double precision      eqryd  ( * )
+      logical               error
+      character*(*)         errmsg
+      integer               errptr
 
 ! $ Brief_I/O
 !
@@ -169,158 +169,158 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = 32 )
+      integer               short
+      parameter           ( short  = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TNAMSZ)    ALIAS  ( MAXTAB )
-      CHARACTER*(CNAMSZ)    COLNAM
-      CHARACTER*(TNAMSZ)    TABLE  ( MAXTAB )
-      CHARACTER*(SHORT)     TIMSTR
-      CHARACTER*(1)         TOUCHC
+      character*(tnamsz)    alias  ( maxtab )
+      character*(cnamsz)    colnam
+      character*(tnamsz)    table  ( maxtab )
+      character*(short)     timstr
+      character*(1)         touchc
 
-      DOUBLE PRECISION      ET
+      double precision      et
 
-      INTEGER               ATTDSC ( ADSCSZ )
-      INTEGER               BASE
-      INTEGER               CNSTYP
-      INTEGER               COLIDX
-      INTEGER               DESCR  ( EQVDSZ )
-      INTEGER               DTYPE
-      INTEGER               I
-      INTEGER               IRSOLV
-      INTEGER               LXB
-      INTEGER               LXE
-      INTEGER               NCNS
-      INTEGER               NTAB
-      INTEGER               OPCODE
-      INTEGER               SB
-      INTEGER               SE
-      INTEGER               TABIDX
+      integer               attdsc ( adscsz )
+      integer               base
+      integer               cnstyp
+      integer               colidx
+      integer               descr  ( eqvdsz )
+      integer               dtype
+      integer               i
+      integer               irsolv
+      integer               lxb
+      integer               lxe
+      integer               ncns
+      integer               ntab
+      integer               opcode
+      integer               sb
+      integer               se
+      integer               tabidx
 
 !
 !     No error to start with.
 !
-      ERROR  =  .FALSE.
-      ERRMSG =  ' '
-      ERRPTR =  0
+      error  =  .false.
+      errmsg =  ' '
+      errptr =  0
 
-      TOUCHC =  QUERY(1:1)
+      touchc =  query(1:1)
 
 !
 !     The query must have had names resolved at this point, or it's no
 !     go.
 !
-      CALL ZZEKREQI ( EQRYI, 'NAMES_RESOLVED', IRSOLV )
+      call zzekreqi ( eqryi, 'NAMES_RESOLVED', irsolv )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IRSOLV .EQ. IFALSE ) THEN
+      if ( irsolv .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKTRES'                                  )
-         CALL SETMSG ( 'Names are not resolved in encoded query.'  )
-         CALL SIGERR ( 'SPICE(NAMESNOTRESOLVED)'                   )
-         CALL CHKOUT ( 'ZZEKTRES'                                  )
-         RETURN
+         call chkin  ( 'ZZEKTRES'                                  )
+         call setmsg ( 'Names are not resolved in encoded query.'  )
+         call sigerr ( 'SPICE(NAMESNOTRESOLVED)'                   )
+         call chkout ( 'ZZEKTRES'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Time strings occur only on the right sides of constraints.
 !     Examine each constraint that compares a column and a value.
 !
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',      NTAB )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONSTRAINTS', NCNS )
+      call zzekreqi ( eqryi, 'NUM_TABLES',      ntab )
+      call zzekreqi ( eqryi, 'NUM_CONSTRAINTS', ncns )
 
-      DO I = 1, NCNS
+      do i = 1, ncns
 !
 !        Calculate the base address of the constraint.
 !
-         BASE    =  EQVBAS + (NTAB * 2 * EQVDSZ) + (I-1)*EQCDSZ
+         base    =  eqvbas + (ntab * 2 * eqvdsz) + (i-1)*eqcdsz
 
 !
 !        Obtain the constraint type.  If the RHS is not a value or if
 !        the RHS is null (as indicated by the opcode), we can skip it.
 !
-         CNSTYP  =  EQRYI ( BASE + EQCTYP )
-         OPCODE  =  EQRYI ( BASE + EQOPCD )
+         cnstyp  =  eqryi ( base + eqctyp )
+         opcode  =  eqryi ( base + eqopcd )
 
-         IF (        ( CNSTYP .EQ. EQVAL  ) &
-              .AND.  ( OPCODE .NE. ISNULL ) &
-              .AND.  ( OPCODE .NE. NOTNUL )  ) THEN
+         if (        ( cnstyp .eq. eqval  ) &
+              .and.  ( opcode .ne. isnull ) &
+              .and.  ( opcode .ne. notnul )  ) then
 !
 !           Get the index of the table containing the LHS column, and
 !           get the index of this column within that table.  Get the
 !           table name, then get the column's attributes.
 !
-            TABIDX  =  EQRYI ( BASE + EQLTAB - 1 + EQTORD )
-            COLIDX  =  EQRYI ( BASE + EQLCOL - 1 + EQCIDX )
+            tabidx  =  eqryi ( base + eqltab - 1 + eqtord )
+            colidx  =  eqryi ( base + eqlcol - 1 + eqcidx )
 
-            CALL ZZEKQTAB ( EQRYI, EQRYC, TABIDX, TABLE, ALIAS )
+            call zzekqtab ( eqryi, eqryc, tabidx, table, alias )
 
-            CALL EKCII ( TABLE, COLIDX, COLNAM, ATTDSC )
+            call ekcii ( table, colidx, colnam, attdsc )
 
-            DTYPE  =  ATTDSC(2)
+            dtype  =  attdsc(2)
 
 
-            IF ( DTYPE .EQ. TIME ) THEN
+            if ( dtype .eq. time ) then
 !
 !              The RHS points to a string representing a time
 !              value.
 !
-               LXB    =  EQRYI ( BASE + EQBVAL - 1 + EQBLEX )
-               LXE    =  EQRYI ( BASE + EQBVAL - 1 + EQBLEX )
-               SB     =  EQRYI ( BASE + EQBVAL - 1 + EQBSTR )
-               SE     =  EQRYI ( BASE + EQBVAL - 1 + EQESTR )
-               TIMSTR =  EQRYC ( SB:SE )
+               lxb    =  eqryi ( base + eqbval - 1 + eqblex )
+               lxe    =  eqryi ( base + eqbval - 1 + eqblex )
+               sb     =  eqryi ( base + eqbval - 1 + eqbstr )
+               se     =  eqryi ( base + eqbval - 1 + eqestr )
+               timstr =  eqryc ( sb:se )
 
 !
 !              Convert the time to ET, if possible.
 !
-               CALL ZZEKTCNV ( TIMSTR, ET, ERROR, ERRMSG )
+               call zzektcnv ( timstr, et, error, errmsg )
 
-               IF ( ERROR ) THEN
+               if ( error ) then
 
-                  ERRPTR = SB
-                  RETURN
+                  errptr = sb
+                  return
 
-               END IF
+               end if
 !
 !              Insert the ET value into the query, and replace the
 !              value descriptor for the time string.
 !
-               CALL ZZEKINQN ( ET, TIME, LXB, LXE, EQRYI, EQRYD, DESCR )
+               call zzekinqn ( et, time, lxb, lxe, eqryi, eqryd, descr )
 
-               CALL MOVEI ( DESCR, EQVDSZ, EQRYI(BASE+EQBVAL) )
+               call movei ( descr, eqvdsz, eqryi(base+eqbval) )
 
-            END IF
+            end if
 !
 !           We've parsed a time string, if the current column's type
 !           was TIME.
 !
 
-         END IF
+         end if
 !
 !        We've examined the current constraint, if it compares a
 !        column with a value.
 !
 
-      END DO
+      end do
 
 !
 !     Indicate completion of time resolution.
 !
-      CALL ZZEKWEQI (  'TIMES_RESOLVED',  ITRUE,  EQRYI  )
+      call zzekweqi (  'TIMES_RESOLVED',  itrue,  eqryi  )
 
 
-      RETURN
-      END
+      return
+      end

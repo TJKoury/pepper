@@ -1,6 +1,6 @@
 !$Procedure DELFIL ( Delete a file  )
 
-      SUBROUTINE DELFIL ( FILNAM )
+      subroutine delfil ( filnam )
 
 ! $ Abstract
 !
@@ -16,7 +16,7 @@
 !
 ! $ Declarations
 !
-      CHARACTER*(*)         FILNAM
+      character*(*)         filnam
 !
 ! $ Brief_I/O
 !
@@ -112,125 +112,125 @@
 !
 !     Spicelib Routines
 !
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local Variables
 !
-      INTEGER               IOSTAT
-      INTEGER               LUNIT
+      integer               iostat
+      integer               lunit
 
-      LOGICAL               EXISTS
-      LOGICAL               OPENED
+      logical               exists
+      logical               opened
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'DELFIL' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin  ( 'DELFIL' )
+      end if
 !
 !     Check to see if the filename we got is blank. If it is, signal an
 !     error and return.
 !
-      IF ( FILNAM .EQ. ' ' ) THEN
+      if ( filnam .eq. ' ' ) then
 
-         CALL SETMSG ( 'The file name is blank.' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'    )
-         CALL CHKOUT ( 'DELFIL'                  )
-         RETURN
+         call setmsg ( 'The file name is blank.' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'    )
+         call chkout ( 'DELFIL'                  )
+         return
 
-      END IF
+      end if
 !
 !     We inquire before we try opening anything to see if the file
 !     exists or is currently open.
 !
-      INQUIRE ( FILE   = FILNAM, &
-                EXIST  = EXISTS, &
-                IOSTAT = IOSTAT, &
-                OPENED = OPENED  )
+      inquire ( file   = filnam, &
+                exist  = exists, &
+                iostat = iostat, &
+                opened = opened  )
 !
 !     Not too likely, but if the INQUIRE statement fails signal an error
 !     and return.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'INQUIRE statement failed for file ''#''.' // &
+         call setmsg ( 'INQUIRE statement failed for file ''#''.' // &
                        ' IOSTAT = #.'                              )
-         CALL ERRCH  ( '#', FILNAM                                 )
-         CALL ERRINT ( '#', IOSTAT                                 )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'                      )
-         CALL CHKOUT ( 'DELFIL'                                    )
-         RETURN
+         call errch  ( '#', filnam                                 )
+         call errint ( '#', iostat                                 )
+         call sigerr ( 'SPICE(INQUIREFAILED)'                      )
+         call chkout ( 'DELFIL'                                    )
+         return
 
-      END IF
+      end if
 !
 !     The file ought to exist if you're trying to delete it. If not,
 !     signal an error and return.
 !
-      IF ( .NOT. EXISTS ) THEN
+      if ( .not. exists ) then
 
-         CALL SETMSG ( 'The file ''#'' does not exist.' )
-         CALL ERRCH  ( '#', FILNAM                      )
-         CALL SIGERR ( 'SPICE(NOSUCHFILE)'              )
-         CALL CHKOUT ( 'DELFIL'                         )
-         RETURN
+         call setmsg ( 'The file ''#'' does not exist.' )
+         call errch  ( '#', filnam                      )
+         call sigerr ( 'SPICE(NOSUCHFILE)'              )
+         call chkout ( 'DELFIL'                         )
+         return
 
-      END IF
+      end if
 !
 !     The file that is to be deleted should not be in use, indicated by
 !     it being open, by anything when we try to delete it. If it is
 !     open, signal an error and return.
 !
-      IF ( OPENED ) THEN
+      if ( opened ) then
 
-         CALL SETMSG ( 'The file ''#'' is currently open and'  // &
+         call setmsg ( 'The file ''#'' is currently open and'  // &
                        ' cannot be deleted.'                    )
-         CALL ERRCH  ( '#', FILNAM                              )
-         CALL SIGERR ( 'SPICE(FILECURRENTLYOPEN)'               )
-         CALL CHKOUT ( 'DELFIL'                                 )
-         RETURN
+         call errch  ( '#', filnam                              )
+         call sigerr ( 'SPICE(FILECURRENTLYOPEN)'               )
+         call chkout ( 'DELFIL'                                 )
+         return
 
-      END IF
+      end if
 !
 !     Get an available logical unit and attempt to open the file.
 !
-      CALL GETLUN ( LUNIT )
+      call getlun ( lunit )
 
-      OPEN ( UNIT=LUNIT, FILE=FILNAM, STATUS='OLD', IOSTAT=IOSTAT )
+      open ( unit=lunit, file=filnam, status='OLD', iostat=iostat )
 !
 !     If we had trouble opening the file, signal an appropriate error
 !     and return.
 !
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CALL SETMSG ( 'Attempt to open the file ''#'' failed.' )
-         CALL ERRCH  ( '#', FILNAM                              )
-         CALL SIGERR ( 'SPICE(FILEOPENFAILED)'                  )
-         CALL CHKOUT ( 'DELFIL'                                 )
-         RETURN
+         call setmsg ( 'Attempt to open the file ''#'' failed.' )
+         call errch  ( '#', filnam                              )
+         call sigerr ( 'SPICE(FILEOPENFAILED)'                  )
+         call chkout ( 'DELFIL'                                 )
+         return
 
-      END IF
+      end if
 !
 !     We opened the file successfully, so let's try to close it with
 !     STATUS = 'DELETE'. If this fails, attempt to just close the file,
 !     signal an error and return.
 !
-      CLOSE ( LUNIT, STATUS='DELETE', IOSTAT=IOSTAT )
+      close ( lunit, status='DELETE', iostat=iostat )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         CLOSE       ( LUNIT                                      )
-         CALL SETMSG ( 'Attempt to delete the file ''#'' failed.' )
-         CALL ERRCH  ( '#', FILNAM                                )
-         CALL SIGERR ( 'SPICE(FILEDELETEFAILED)'                  )
-         CALL CHKOUT ( 'DELFIL'                                   )
-         RETURN
+         close       ( lunit                                      )
+         call setmsg ( 'Attempt to delete the file ''#'' failed.' )
+         call errch  ( '#', filnam                                )
+         call sigerr ( 'SPICE(FILEDELETEFAILED)'                  )
+         call chkout ( 'DELFIL'                                   )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DELFIL' )
-      RETURN
+      call chkout ( 'DELFIL' )
+      return
 
-      END
+      end

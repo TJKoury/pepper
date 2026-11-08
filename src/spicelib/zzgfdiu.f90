@@ -1,7 +1,7 @@
 !$Procedure ZZGFDIU ( Private --- GF, distance utilities )
 
-      SUBROUTINE ZZGFDIU ( TARGET, ABCORR, OBSRVR, &
-                           UDFUNC, ET,     DECRES, DIST )
+      subroutine zzgfdiu ( target, abcorr, obsrvr, &
+                           udfunc, et,     decres, dist )
 
 ! $ Abstract
 !
@@ -28,16 +28,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzabcorr.inc'
+      include 'zzabcorr.inc'
 
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      ET
-      LOGICAL               DECRES
-      DOUBLE PRECISION      DIST
+      character*(*)         target
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      et
+      logical               decres
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -156,15 +156,15 @@
 !
 !-&
 
-      EXTERNAL              UDFUNC
+      external              udfunc
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -173,39 +173,39 @@
 !
 !     Local Variables
 !
-      CHARACTER*(CORLEN)    SVCORR
+      character*(corlen)    svcorr
 
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      STATE  ( 6 )
+      double precision      lt
+      double precision      state  ( 6 )
 
-      INTEGER               SVOBS
-      INTEGER               SVTARG
+      integer               svobs
+      integer               svtarg
 
-      LOGICAL               ATTBLK ( NABCOR )
-      LOGICAL               FOUND
+      logical               attblk ( nabcor )
+      logical               found
 
 !
 !     Saved Variables
 !
-      SAVE                  SVCORR
-      SAVE                  SVOBS
-      SAVE                  SVTARG
+      save                  svcorr
+      save                  svobs
+      save                  svtarg
 
 
 !
 !     This routine should never be called directly.
 !
-      CALL CHKIN  ( 'ZZGFDIU'           )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'ZZGFDIU'           )
-      RETURN
+      call chkin  ( 'ZZGFDIU'           )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'ZZGFDIU'           )
+      return
 
 
 
 
 !$Procedure  ZZGFDIIN ( Private --- GF, distance initialization )
 
-      ENTRY ZZGFDIIN ( TARGET, ABCORR, OBSRVR )
+      entry zzgfdiin ( target, abcorr, obsrvr )
 
 ! $ Abstract
 !
@@ -341,91 +341,91 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFDIIN' )
+      call chkin ( 'ZZGFDIIN' )
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
 !
-      CALL BODS2C ( TARGET, SVTARG, FOUND )
+      call bods2c ( target, svtarg, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target object, ' &
+         call setmsg ( 'The target object, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFDIIN'                                 )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFDIIN'                                 )
+         return
 
-      END IF
+      end if
 
 
-      CALL BODS2C ( OBSRVR, SVOBS, FOUND )
+      call bods2c ( obsrvr, svobs, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ZZGFDIIN'                                 )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ZZGFDIIN'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the observer and target are distinct.
 !
-      IF ( SVTARG .EQ. SVOBS ) THEN
+      if ( svtarg .eq. svobs ) then
 
-         CALL SETMSG ( 'The observer and target must be ' &
+         call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
          //            'OBSRVR = #; TARGET = #.'           )
-         CALL ERRCH  ( '#', OBSRVR                         )
-         CALL ERRCH  ( '#', TARGET                         )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'          )
-         CALL CHKOUT ( 'ZZGFDIIN'                          )
-         RETURN
+         call errch  ( '#', obsrvr                         )
+         call errch  ( '#', target                         )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'          )
+         call chkout ( 'ZZGFDIIN'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
-      CALL CMPRSS ( ' ', 0, ABCORR, SVCORR )
-      CALL UCASE  ( SVCORR,         SVCORR )
+      call cmprss ( ' ', 0, abcorr, svcorr )
+      call ucase  ( svcorr,         svcorr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
 !     neither can we.
 !
-      CALL ZZVALCOR ( SVCORR, ATTBLK )
+      call zzvalcor ( svcorr, attblk )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFDIIN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFDIIN' )
+         return
+      end if
 
-      CALL CHKOUT ( 'ZZGFDIIN' )
-      RETURN
+      call chkout ( 'ZZGFDIIN' )
+      return
 
 
 
 
 !$Procedure ZZGFDIDC ( Private --- GF, is distance decreasing? )
 
-      ENTRY ZZGFDIDC ( UDFUNC, ET, DECRES )
+      entry zzgfdidc ( udfunc, et, decres )
 
 ! $ Abstract
 !
@@ -551,35 +551,35 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFDIDC' )
+      call chkin ( 'ZZGFDIDC' )
 
-      CALL SPKEZ ( SVTARG, ET, 'J2000', SVCORR, SVOBS, STATE, LT )
+      call spkez ( svtarg, et, 'J2000', svcorr, svobs, state, lt )
 
-      IF (  FAILED() ) THEN
-          CALL CHKOUT ( 'ZZGFDIDC' )
-          RETURN
-      END IF
+      if (  failed() ) then
+          call chkout ( 'ZZGFDIDC' )
+          return
+      end if
 
 !
 !     The observer-target distance is decreasing if and only
 !     if the dot product of the velocity and position is
 !     negative.
 !
-      DECRES  =  VDOT( STATE, STATE(4) )  .LT.  0.D0
+      decres  =  vdot( state, state(4) )  .lt.  0.d0
 
-      CALL CHKOUT  ( 'ZZGFDIDC' )
-      RETURN
+      call chkout  ( 'ZZGFDIDC' )
+      return
 
 
 
 
 !$Procedure ZZGFDIGQ ( Private --- GF, get observer-target distance )
 
-      ENTRY ZZGFDIGQ ( ET, DIST )
+      entry zzgfdigq ( et, dist )
 
 ! $ Abstract
 !
@@ -683,17 +683,17 @@
 !
 !-&
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFDIGQ' )
+      call chkin ( 'ZZGFDIGQ' )
 
-      CALL ZZGFDIQ ( SVTARG, ET, SVCORR, SVOBS, DIST )
+      call zzgfdiq ( svtarg, et, svcorr, svobs, dist )
 
-      CALL CHKOUT ( 'ZZGFDIGQ' )
-      RETURN
+      call chkout ( 'ZZGFDIGQ' )
+      return
 
-      END
+      end
 
 

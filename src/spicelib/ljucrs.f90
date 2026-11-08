@@ -1,6 +1,6 @@
 !$Procedure LJUCRS ( Left-justify, Uppercase, Compress )
 
-      SUBROUTINE LJUCRS ( N, INPUT, OUTPUT )
+      subroutine ljucrs ( n, input, output )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER             N
-      CHARACTER*(*)       INPUT
-      CHARACTER*(*)       OUTPUT
+      integer             n
+      character*(*)       input
+      character*(*)       output
 
 ! $ Brief_I/O
 !
@@ -114,117 +114,117 @@
 !
 !     Local Variables
 !
-      INTEGER               I
-      INTEGER               J
-      INTEGER               COUNT
+      integer               i
+      integer               j
+      integer               count
 
-      INTEGER               INLEN
-      INTEGER               OUTLEN
+      integer               inlen
+      integer               outlen
 
-      INTEGER               ICH
+      integer               ich
 
 !
 !     Saved variables
 !
-      INTEGER               SHIFT
-      INTEGER               LOWA
-      INTEGER               LOWZ
+      integer               shift
+      integer               lowa
+      integer               lowz
 
-      LOGICAL               FIRST
+      logical               first
 
-      SAVE                  FIRST
-      SAVE                  SHIFT
-      SAVE                  LOWA
-      SAVE                  LOWZ
+      save                  first
+      save                  shift
+      save                  lowa
+      save                  lowz
 
 !
 !     Initial Data
 !
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Do some set up stuff the first time through so that we do not
 !     need to reinitialize the boundary values used for comparisons
 !     and the shift on each call.
 !
-      IF ( FIRST ) THEN
-         FIRST = .FALSE.
-         LOWA  = ICHAR ('a')
-         LOWZ  = ICHAR ('z')
-         SHIFT = ICHAR ('A') - LOWA
-      END IF
+      if ( first ) then
+         first = .false.
+         lowa  = ichar ('a')
+         lowz  = ichar ('z')
+         shift = ichar ('A') - lowa
+      end if
 
 !
 !     Find out how much space there is in the INPUT and OUTPUT strings
 !     and initialize the space counter and output place holder.
 !
-      INLEN  = LEN(INPUT)
-      OUTLEN = LEN(OUTPUT)
+      inlen  = len(input)
+      outlen = len(output)
 
-      COUNT  = 0
-      J      = 0
+      count  = 0
+      j      = 0
 
-      DO I = 1, INLEN
+      do i = 1, inlen
 
 !
 !        Skip leading spaces.
 !
-         IF ( J .EQ. 0 .AND. INPUT(I:I) .EQ. ' ' ) THEN
+         if ( j .eq. 0 .and. input(i:i) .eq. ' ' ) then
 
 !
 !           Another leading space. Skip it.
 !
 
-         ELSE
+         else
 
 !
 !           Check this character to see if it is a space or not.
 !
-            IF ( INPUT(I:I) .EQ. ' ' ) THEN
+            if ( input(i:i) .eq. ' ' ) then
 
-               COUNT = COUNT + 1
+               count = count + 1
 
 !
 !              Copy spaces until enough consecutive spaces
 !              have been accumulated. When enough consecutive spaces
 !              have accumulated, we no longer copy them.
 !
-               IF ( COUNT .LE. N ) THEN
-                  J           = J + 1
-                  OUTPUT(J:J) = INPUT(I:I)
-               END IF
+               if ( count .le. n ) then
+                  j           = j + 1
+                  output(j:j) = input(i:i)
+               end if
 
-            ELSE
+            else
 
 !
 !              We don't have a space here. Set the space counter to
 !              zero.
 !
-               COUNT       = 0
+               count       = 0
 
 !
 !              Copy this character while swapping lowercase with upper
 !              case along the way.
 !
-               J           = J + 1
+               j           = j + 1
 
-               ICH = ICHAR( INPUT(I:I) )
+               ich = ichar( input(i:i) )
 
-               IF ( ( ICH .GE. LOWA ) .AND. ( ICH .LE. LOWZ ) ) THEN
-                  OUTPUT(J:J) = CHAR ( ICH + SHIFT )
-               ELSE
-                  OUTPUT(J:J) = INPUT(I:I)
-               END IF
+               if ( ( ich .ge. lowa ) .and. ( ich .le. lowz ) ) then
+                  output(j:j) = char ( ich + shift )
+               else
+                  output(j:j) = input(i:i)
+               end if
 
-            END IF
+            end if
 
-            IF ( J .EQ. OUTLEN ) THEN
-               RETURN
-            END IF
+            if ( j .eq. outlen ) then
+               return
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Pad any left over space in the output string with blanks. Note
@@ -232,9 +232,9 @@
 !     point and the case below will set the whole output string to
 !     blank.
 !
-      IF ( J .LT. OUTLEN ) THEN
-         OUTPUT(J+1:) = ' '
-      END IF
+      if ( j .lt. outlen ) then
+         output(j+1:) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

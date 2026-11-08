@@ -1,6 +1,6 @@
 !$Procedure WDCNT ( Word Count )
 
-      INTEGER FUNCTION WDCNT ( STRING )
+      integer function wdcnt ( string )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -126,10 +126,10 @@
 !
 !     Local variables
 !
-      INTEGER          N
-      INTEGER          LOC
-      INTEGER          LENGTH
-      LOGICAL          CONT
+      integer          n
+      integer          loc
+      integer          length
+      logical          cont
 
 
 !
@@ -140,25 +140,25 @@
 !
 !     Trivial case first.
 !
-      IF ( STRING .EQ. ' ' ) THEN
+      if ( string .eq. ' ' ) then
 
-         WDCNT = 0
-         RETURN
+         wdcnt = 0
+         return
 
-      ELSE
+      else
 
-         LENGTH = LEN ( STRING )
+         length = len ( string )
 
-      END IF
+      end if
 
 !
 !     Skip leading blanks.
 !
-      LOC = 1
+      loc = 1
 
-      DO WHILE ( STRING(LOC:LOC) .EQ. ' ' )
-         LOC = LOC + 1
-      END DO
+      do while ( string(loc:loc) .eq. ' ' )
+         loc = loc + 1
+      end do
 
 !
 !     Keep stepping through STRING, counting words as we go.
@@ -168,52 +168,52 @@
 !     N is the number of words found so far.
 !     LOC is the current location in STRING.
 !
-      N = 1
+      n = 1
 
-      DO WHILE ( LOC .LT. LENGTH )
+      do while ( loc .lt. length )
 
-         LOC = LOC + 1
+         loc = loc + 1
 
 !
 !        Blank signals end of the current word.
 !
-         IF ( STRING(LOC:LOC) .EQ. ' ' ) THEN
+         if ( string(loc:loc) .eq. ' ' ) then
 
 !
 !           Skip ahead to the next word. Ensure no
 !           evaluation of STRING(LOC:LOC) when
 !           LOC = LENGTH+1.
 !
-            CONT = LOC .LE. LENGTH
-            IF( CONT ) THEN
-               CONT = CONT .AND. STRING(LOC:LOC) .EQ. ' '
-            END IF
+            cont = loc .le. length
+            if( cont ) then
+               cont = cont .and. string(loc:loc) .eq. ' '
+            end if
 
-            DO WHILE ( CONT )
-               LOC = LOC + 1
+            do while ( cont )
+               loc = loc + 1
 
-               CONT = LOC .LE. LENGTH
-               IF( CONT ) THEN
-                  CONT = CONT .AND. STRING(LOC:LOC) .EQ. ' '
-               END IF
+               cont = loc .le. length
+               if( cont ) then
+                  cont = cont .and. string(loc:loc) .eq. ' '
+               end if
 
-            END DO
+            end do
 
 !
 !           If not at the end of the string, we have another word.
 !
-            IF ( LOC .LE. LENGTH ) THEN
-               N = N + 1
-            END IF
+            if ( loc .le. length ) then
+               n = n + 1
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Return the number of words found.
 !
-      WDCNT = N
+      wdcnt = n
 
-      RETURN
-      END
+      return
+      end

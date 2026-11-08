@@ -1,6 +1,6 @@
 !$Procedure ISRCHC  ( Search in a character array )
 
-      INTEGER FUNCTION  ISRCHC ( VALUE, NDIM, ARRAY )
+      integer function  isrchc ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    VALUE
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY ( * )
+      character*(*)    value
+      integer          ndim
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -126,19 +126,19 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      ISRCHC = 0
+      isrchc = 0
 
-      DO I = 1, NDIM
+      do i = 1, ndim
 
-         IF ( ARRAY(I) .EQ. VALUE ) THEN
-            ISRCHC = I
-            RETURN
-         END IF
+         if ( array(i) .eq. value ) then
+            isrchc = i
+            return
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SURFPV ( Surface point and velocity )
 
-      SUBROUTINE SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
+      subroutine surfpv ( stvrtx, stdir, a, b, c, stx, found )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      STVRTX ( 6 )
-      DOUBLE PRECISION      STDIR  ( 6 )
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      STX    ( 6 )
-      LOGICAL               FOUND
+      double precision      stvrtx ( 6 )
+      double precision      stdir  ( 6 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      stx    ( 6 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -456,46 +456,46 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      dpmax
+      double precision      vdot
+      double precision      vnorm
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 10.D0 )
+      double precision      margin
+      parameter           ( margin = 10.d0 )
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      DSNUM
-      DOUBLE PRECISION      DU     ( 3 )
-      DOUBLE PRECISION      DV     ( 3 )
-      DOUBLE PRECISION      LEVEL
-      DOUBLE PRECISION      M
-      DOUBLE PRECISION      N      ( 3 )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      SECOND ( 3 )
-      DOUBLE PRECISION      STDHAT ( 6 )
-      DOUBLE PRECISION      THIRD  ( 3 )
-      DOUBLE PRECISION      U      ( 3 )
-      DOUBLE PRECISION      UDN
-      DOUBLE PRECISION      V      ( 3 )
-      DOUBLE PRECISION      VMX    ( 3 )
-      DOUBLE PRECISION      X      ( 3 )
+      double precision      dsnum
+      double precision      du     ( 3 )
+      double precision      dv     ( 3 )
+      double precision      level
+      double precision      m
+      double precision      n      ( 3 )
+      double precision      r
+      double precision      second ( 3 )
+      double precision      stdhat ( 6 )
+      double precision      third  ( 3 )
+      double precision      u      ( 3 )
+      double precision      udn
+      double precision      v      ( 3 )
+      double precision      vmx    ( 3 )
+      double precision      x      ( 3 )
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SURFPV' )
+      call chkin ( 'SURFPV' )
 
 !
 !     Determine the ellipsoid surface intercept point of the ray
@@ -507,25 +507,25 @@
 !     SURFPT takes care of some error checking too. It signals an error
 !     if D is the zero vector or if A, B, or C are bad axis lengths.
 !
-      CALL SURFPT ( STVRTX, STDIR, A, B, C, X, FOUND )
+      call surfpt ( stvrtx, stdir, a, b, c, x, found )
 
-      IF ( FAILED()  .OR.  ( .NOT. FOUND )  ) THEN
-         CALL CHKOUT ( 'SURFPV' )
-         RETURN
-      END IF
+      if ( failed()  .or.  ( .not. found )  ) then
+         call chkout ( 'SURFPV' )
+         return
+      end if
 
 !
 !     No result has been found, since we don't know whether the
 !     intercept velocity is computable.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Compute the state of a unit vector parallel to the ray's
 !     direction "D." We know that the norm of D is not zero because
 !     SURFPT checked it.
 !
-      CALL DVHAT ( STDIR, STDHAT )
+      call dvhat ( stdir, stdhat )
 
 !
 !     The velocity vector of the intercept point goes in the last three
@@ -549,37 +549,37 @@
 !     Compute the unit normal at the intercept point, and unpack
 !     the input states into V, U, DV, and DU. Let V-X = VMX.
 !
-      CALL SURFNM ( A, B, C, X, N )
+      call surfnm ( a, b, c, x, n )
 
-      CALL VEQU ( STVRTX,    V )
-      CALL VEQU ( STDHAT,    U )
+      call vequ ( stvrtx,    v )
+      call vequ ( stdhat,    u )
 
-      CALL VEQU ( STVRTX(4), DV )
-      CALL VEQU ( STDHAT(4), DU )
+      call vequ ( stvrtx(4), dv )
+      call vequ ( stdhat(4), du )
 
-      CALL VSUB ( V, X, VMX )
+      call vsub ( v, x, vmx )
 
 !
 !     Reject the vertex if it's on the ellipsoid.
 !     We check this by determining whether the transformed
 !     vertex is on or in the unit sphere.
 !
-      LEVEL =  ( V(1)/A )**2  +  ( V(2)/B )**2  +  ( V(3)/C )**2
+      level =  ( v(1)/a )**2  +  ( v(2)/b )**2  +  ( v(3)/c )**2
 
-      IF ( LEVEL .EQ. 1.D0 ) THEN
+      if ( level .eq. 1.d0 ) then
 
-         CALL SETMSG ( 'Ray''s vertex (# # #) has ' &
+         call setmsg ( 'Ray''s vertex (# # #) has ' &
          //            'level surface parameter #. Vertex ' &
          //            'must not be on the ellipsoid.'     )
-         CALL ERRDP  ( '#', V(1)                           )
-         CALL ERRDP  ( '#', V(2)                           )
-         CALL ERRDP  ( '#', V(3)                           )
-         CALL ERRDP  ( '#', LEVEL                          )
-         CALL SIGERR ( 'SPICE(INVALIDVERTEX)'              )
-         CALL CHKOUT ( 'SURFPV'                            )
-         RETURN
+         call errdp  ( '#', v(1)                           )
+         call errdp  ( '#', v(2)                           )
+         call errdp  ( '#', v(3)                           )
+         call errdp  ( '#', level                          )
+         call sigerr ( 'SPICE(INVALIDVERTEX)'              )
+         call chkout ( 'SURFPV'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     As the intercept point nears the limb, its velocity may tend to
@@ -589,37 +589,37 @@
 !     would result in a number that is greater than the maximum double
 !     precision number for the computer.
 !
-      UDN = VDOT( U, N )
+      udn = vdot( u, n )
 
-      IF ( UDN .EQ. 0.D0 ) THEN
+      if ( udn .eq. 0.d0 ) then
 !
 !        The intercept point is on the limb, so its velocity
 !        is not defined. This means we can't "find" the state
 !        of the intercept point.
 !
-         CALL CHKOUT ( 'SURFPV' )
-         RETURN
+         call chkout ( 'SURFPV' )
+         return
 
-      END IF
+      end if
 
 !
 !     Evaluate the second term of the equation for DX, but don't
 !     divide by < U,N > just yet.
 !
-      CALL VSCL ( VDOT( VMX, N ),  DU,  SECOND )
+      call vscl ( vdot( vmx, n ),  du,  second )
 
 !
 !                                                         2
 !     Evaluate the third term, but don't divide by < U,N >  just yet.
 !
-      DSNUM = UDN * VDOT( DV, N )  -  VDOT( VMX, N ) * VDOT( DU, N )
+      dsnum = udn * vdot( dv, n )  -  vdot( vmx, n ) * vdot( du, n )
 
-      CALL VSCL ( DSNUM, U, THIRD )
+      call vscl ( dsnum, u, third )
 
 !
 !     We'll use the following test.
 !
-      M = MAX (  VNORM( SECOND ),  VNORM( THIRD ),  1.0D0  )
+      m = max (  vnorm( second ),  vnorm( third ),  1.0d0  )
 
 !
 !     If
@@ -641,12 +641,12 @@
 !     unit vectors, so the dot product of U and N is less than or equal
 !     to one.
 !
-      IF (  M  .GT.  ( DPMAX() / MARGIN ) * UDN**2  ) THEN
+      if (  m  .gt.  ( dpmax() / margin ) * udn**2  ) then
 
-         CALL CHKOUT ( 'SURFPV' )
-         RETURN
+         call chkout ( 'SURFPV' )
+         return
 
-      END IF
+      end if
 
 !
 !     If < U,N > passed the tests above, we can solve for the
@@ -656,18 +656,18 @@
 !        DX =  DV  -  SECOND / < U,N >  -  THIRD / < U,N >
 !
 !
-      R = 1.0D0 / UDN
+      r = 1.0d0 / udn
 
-      CALL VLCOM3( 1.0D0, DV, -R, SECOND, -(R**2), THIRD, STX(4) )
+      call vlcom3( 1.0d0, dv, -r, second, -(r**2), third, stx(4) )
 
 !
 !     Since we could compute the velocity, we can assign the
 !     intercept point, and set the found flag to .TRUE.
 !
-      CALL VEQU ( X, STX )
+      call vequ ( x, stx )
 
-      FOUND = .TRUE.
+      found = .true.
 
-      CALL CHKOUT ( 'SURFPV' )
-      RETURN
-      END
+      call chkout ( 'SURFPV' )
+      return
+      end

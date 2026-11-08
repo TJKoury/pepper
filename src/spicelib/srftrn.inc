@@ -36,14 +36,14 @@
 !
 !     Maximum number of surface name/ID mapping entries:
 !
-      INTEGER               MXNSRF
-      PARAMETER           ( MXNSRF = 2000 )
+      integer               mxnsrf
+      parameter           ( mxnsrf = 2000 )
 
 !
 !     Maximum length of a surface name string:
 !
-      INTEGER               SFNMLN
-      PARAMETER           ( SFNMLN = 36 )
+      integer               sfnmln
+      parameter           ( sfnmln = 36 )
 
 !
 !     End of file srftrn.inc.

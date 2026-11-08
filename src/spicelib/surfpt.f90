@@ -1,6 +1,6 @@
 !$Procedure SURFPT ( Surface point on an ellipsoid )
 
-      SUBROUTINE SURFPT ( POSITN, U, A, B, C, POINT, FOUND )
+      subroutine surfpt ( positn, u, a, b, c, point, found )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION    POSITN ( 3 )
-      DOUBLE PRECISION    U      ( 3 )
-      DOUBLE PRECISION    A
-      DOUBLE PRECISION    B
-      DOUBLE PRECISION    C
-      DOUBLE PRECISION    POINT  ( 3 )
-      LOGICAL             FOUND
+      double precision    positn ( 3 )
+      double precision    u      ( 3 )
+      double precision    a
+      double precision    b
+      double precision    c
+      double precision    point  ( 3 )
+      logical             found
 
 ! $ Brief_I/O
 !
@@ -248,47 +248,47 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      INTEGER               MSGDIM
-      PARAMETER           ( MSGDIM = 7 )
+      integer               msgdim
+      parameter           ( msgdim = 7 )
 
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 32 )
+      integer               msglen
+      parameter           ( msglen = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    MSSG  ( MSGDIM )
+      character*(msglen)    mssg  ( msgdim )
 
-      DOUBLE PRECISION      P     ( 3 )
-      DOUBLE PRECISION      PMAG
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SIGN
-      DOUBLE PRECISION      UX    ( 3 )
-      DOUBLE PRECISION      X     ( 3 )
-      DOUBLE PRECISION      Y     ( 3 )
-      DOUBLE PRECISION      YMAG
-      DOUBLE PRECISION      YPROJ ( 3 )
+      double precision      p     ( 3 )
+      double precision      pmag
+      double precision      scale
+      double precision      sign
+      double precision      ux    ( 3 )
+      double precision      x     ( 3 )
+      double precision      y     ( 3 )
+      double precision      ymag
+      double precision      yproj ( 3 )
 
-      INTEGER               BAD
+      integer               bad
 
 !
 !     Saved variables
 !
-      SAVE                  MSSG
+      save                  mssg
 
 !
 !     Initial values
 !
-      DATA                  MSSG  / 'Axis A was nonpositive.', &
+      data                  mssg  / 'Axis A was nonpositive.', &
                                     'Axis B was nonpositive.', &
                                     'Axes A and B were nonpositive.', &
                                     'Axis C was nonpositive.', &
@@ -300,65 +300,65 @@
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Check the input vector to see if its the zero vector. If it is
 !     signal an error and return.
 !
-      IF  ( VZERO(U) )  THEN
+      if  ( vzero(u) )  then
 
-         CALL CHKIN  ( 'SURFPT'                                       )
-         CALL SETMSG ( 'SURFPT: The input vector is the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                            )
-         CALL CHKOUT ( 'SURFPT'                                       )
-         RETURN
+         call chkin  ( 'SURFPT'                                       )
+         call setmsg ( 'SURFPT: The input vector is the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                            )
+         call chkout ( 'SURFPT'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the axis to make sure that none of them is less than or
 !     equal to zero. If one is, signal an error and return.
 !
-      BAD = 0
+      bad = 0
 
-      IF ( A .LE. 0 ) &
-         BAD = BAD + 1
+      if ( a .le. 0 ) &
+         bad = bad + 1
 
-      IF ( B .LE. 0 ) &
-         BAD = BAD + 2
+      if ( b .le. 0 ) &
+         bad = bad + 2
 
-      IF ( C .LE. 0 ) &
-         BAD = BAD + 4
+      if ( c .le. 0 ) &
+         bad = bad + 4
 
 
-      IF ( BAD .GT. 0 ) THEN
+      if ( bad .gt. 0 ) then
 
-         CALL CHKIN  ( 'SURFPT'                           )
-         CALL SETMSG ( MSSG (BAD)                         // &
+         call chkin  ( 'SURFPT'                           )
+         call setmsg ( mssg (bad)                         // &
                        ' ? '                              )
-         CALL ERRCH  ( ' ? ', 'The A,B, and C axes were ' // &
+         call errch  ( ' ? ', 'The A,B, and C axes were ' // &
                               '#, #, and # respectively.' )
 
-         CALL ERRDP  ( '#', A )
-         CALL ERRDP  ( '#', B )
-         CALL ERRDP  ( '#', C )
+         call errdp  ( '#', a )
+         call errdp  ( '#', b )
+         call errdp  ( '#', c )
 
-         CALL SIGERR ( 'SPICE(BADAXISLENGTH)' )
-         CALL CHKOUT ( 'SURFPT' )
-         RETURN
+         call sigerr ( 'SPICE(BADAXISLENGTH)' )
+         call chkout ( 'SURFPT' )
+         return
 
-      END IF
+      end if
 
 !
 !     We're done with the error checks.  Set the outputs to the
 !     appropriate values for the "no intersection" case.
 !
-      FOUND = .FALSE.
+      found = .false.
 
-      CALL CLEARD ( 3, POINT )
+      call cleard ( 3, point )
 
 !
 !     Apply a linear transformation to the point, direction vector,
@@ -366,75 +366,75 @@
 !     sphere as the target ellipsoid.  (The transformation of the
 !     ellipsoid is implicit.)
 !
-      X(1)  = U(1) / A
-      X(2)  = U(2) / B
-      X(3)  = U(3) / C
+      x(1)  = u(1) / a
+      x(2)  = u(2) / b
+      x(3)  = u(3) / c
 
-      Y(1)  = POSITN(1) / A
-      Y(2)  = POSITN(2) / B
-      Y(3)  = POSITN(3) / C
+      y(1)  = positn(1) / a
+      y(2)  = positn(2) / b
+      y(3)  = positn(3) / c
 
 
 !
 !     Find the component P of Y (the ray's vertex) orthogonal to X
 !     (the ray's direction).
 !
-      CALL VPERP ( Y, X, P )
+      call vperp ( y, x, p )
 
 !
 !     Find the component of Y parallel to X.
 !
-      CALL VSUB ( Y, P, YPROJ )
+      call vsub ( y, p, yproj )
 
 !
 !     Find the magnitudes of Y and P.
 !
-      YMAG = VNORM(Y)
-      PMAG = VNORM(P)
+      ymag = vnorm(y)
+      pmag = vnorm(p)
 
 !
 !     Get a unitized copy of X.
 !
-      CALL VHAT ( X, UX )
+      call vhat ( x, ux )
 
 !
 !     Now determine whether there's an intersection.  Consider
 !     the case where Y is outside the sphere first.
 !
-      IF ( YMAG .GT. 1 ) THEN
+      if ( ymag .gt. 1 ) then
 !
 !        If P is outside of the sphere, there can be no intersection.
 !
-         IF ( PMAG .GT. 1.D0 ) THEN
-            RETURN
-         END IF
+         if ( pmag .gt. 1.d0 ) then
+            return
+         end if
 
 !
 !        If X points in the same direction as YPROJ, then the ray
 !        is pointing away from the sphere, and there is no
 !        intersection.
 !
-         IF (  VDOT(YPROJ, X) .GT. 0.D0 ) THEN
-            RETURN
-         END IF
+         if (  vdot(yproj, x) .gt. 0.d0 ) then
+            return
+         end if
 
 !
 !        At this point we know there's an intersection.
 !
-         IF ( PMAG .EQ. 1.D0 ) THEN
+         if ( pmag .eq. 1.d0 ) then
 !
 !           The vector P we've found is the singleton point of
 !           intersection.  All we have to do is transform P by
 !           applying the inverse of our original linear transformation.
 !
-            POINT(1) = P(1) * A
-            POINT(2) = P(2) * B
-            POINT(3) = P(3) * C
+            point(1) = p(1) * a
+            point(2) = p(2) * b
+            point(3) = p(3) * c
 
-            FOUND    = .TRUE.
-            RETURN
+            found    = .true.
+            return
 
-         END IF
+         end if
 
 !
 !        At this point we know there's a non-trivial intersection.
@@ -444,28 +444,28 @@
 !        In this case the coefficient of UX has negative sign because
 !        the vector we're adding to P points toward Y.
 !
-         SIGN = -1.D0
+         sign = -1.d0
 
 
-      ELSE IF ( YMAG .EQ. 1 ) THEN
+      else if ( ymag .eq. 1 ) then
 !
 !        The ray's vertex is on the surface of the ellipsoid.
 !        The vertex is the first point of intersection.
 !
-         CALL VEQU ( POSITN, POINT )
+         call vequ ( positn, point )
 
-         FOUND = .TRUE.
-         RETURN
+         found = .true.
+         return
 
-      ELSE
+      else
 !
 !        Y is inside the sphere, so there's definitely an intersection.
 !        In this case, the intercept is obtained by adding a positive
 !        multiple of UX to P.
 !
-         SIGN =  1.D0
+         sign =  1.d0
 
-      END IF
+      end if
 
 !
 !
@@ -478,21 +478,21 @@
 !           \/ 1 - PMAG**2
 !
 !
-      SCALE = SQRT (  MAX ( 0.D0, 1-PMAG*PMAG )  )
+      scale = sqrt (  max ( 0.d0, 1-pmag*pmag )  )
 
 !
 !     Find the intercept point on the unit sphere.
 !
-      CALL VLCOM (  1.D0,  P,  SIGN * SCALE,  UX,  POINT  )
+      call vlcom (  1.d0,  p,  sign * scale,  ux,  point  )
 
 !
 !     Undo our linear transformation.
 !
-      POINT(1) = POINT(1) * A
-      POINT(2) = POINT(2) * B
-      POINT(3) = POINT(3) * C
+      point(1) = point(1) * a
+      point(2) = point(2) * b
+      point(3) = point(3) * c
 
-      FOUND    = .TRUE.
+      found    = .true.
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPCOPN ( SPK or CK, open new file )
 
-      SUBROUTINE SPCOPN ( FNAME, IFNAME, HANDLE )
+      subroutine spcopn ( fname, ifname, handle )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         IFNAME
-      INTEGER               HANDLE
+      character*(*)         fname
+      character*(*)         ifname
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -163,7 +163,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -175,33 +175,33 @@
 !                 file.
 !
 !
-      INTEGER               ND
-      PARAMETER           ( ND   = 2 )
+      integer               nd
+      parameter           ( nd   = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI   = 6 )
+      integer               ni
+      parameter           ( ni   = 6 )
 
-      INTEGER               RESV
-      PARAMETER           ( RESV = 0 )
+      integer               resv
+      parameter           ( resv = 0 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCOPN' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCOPN' )
+      end if
 
 !
 !     DAFOPN does all the work.  We just handle the values of
 !     ND and NI which are specific to SPK and CK.  We'll not
 !     reserve any records.
 !
-      CALL DAFOPN ( FNAME, ND, NI, IFNAME, RESV, HANDLE )
+      call dafopn ( fname, nd, ni, ifname, resv, handle )
 
 
-      CALL CHKOUT ( 'SPCOPN' )
-      RETURN
-      END
+      call chkout ( 'SPCOPN' )
+      return
+      end

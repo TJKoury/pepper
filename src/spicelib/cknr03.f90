@@ -1,6 +1,6 @@
 !$Procedure CKNR03 ( C-kernel, number of records, type 03 )
 
-      SUBROUTINE CKNR03 ( HANDLE, DESCR, NREC )
+      subroutine cknr03 ( handle, descr, nrec )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               NREC
+      integer               handle
+      double precision      descr   ( * )
+      integer               nrec
 
 ! $ Brief_I/O
 !
@@ -326,7 +326,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
@@ -342,22 +342,22 @@
 !                   operates on.
 !
 
-      INTEGER               NDC
-      PARAMETER           ( NDC = 2 )
+      integer               ndc
+      parameter           ( ndc = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC = 6 )
+      integer               nic
+      parameter           ( nic = 6 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE = 3 )
+      integer               dtype
+      parameter           ( dtype = 3 )
 
 !
 !     Local variables
 !
-      INTEGER               ICD    ( NIC )
+      integer               icd    ( nic )
 
-      DOUBLE PRECISION      DCD    ( NDC )
-      DOUBLE PRECISION      NPOINT
+      double precision      dcd    ( ndc )
+      double precision      npoint
 
 
 
@@ -365,11 +365,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKNR03' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKNR03' )
+      end if
 
 
 !
@@ -392,28 +392,28 @@
 !        ICD(6)  Final address of segment data
 !
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
 !
 !     If this segment is not of data type 3, then signal an error.
 !
 
-      IF ( ICD( 3 ) .NE. DTYPE ) THEN
-         CALL SETMSG ( 'Data type of the segment should be 3: Passed '// &
+      if ( icd( 3 ) .ne. dtype ) then
+         call setmsg ( 'Data type of the segment should be 3: Passed '// &
                        'descriptor shows type = #.'                   )
-         CALL ERRINT ( '#', ICD ( 3 )                                 )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                       )
-         CALL CHKOUT ( 'CKNR03'                                       )
-         RETURN
-      END IF
+         call errint ( '#', icd ( 3 )                                 )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         call chkout ( 'CKNR03'                                       )
+         return
+      end if
 
 !
 !     The number of records is the final word in the segment.
 !
-      CALL DAFGDA ( HANDLE, ICD(6), ICD(6), NPOINT )
+      call dafgda ( handle, icd(6), icd(6), npoint )
 
-      NREC = NINT ( NPOINT )
+      nrec = nint ( npoint )
 
-      CALL CHKOUT ( 'CKNR03' )
-      RETURN
-      END
+      call chkout ( 'CKNR03' )
+      return
+      end

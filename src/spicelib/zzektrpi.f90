@@ -1,7 +1,7 @@
 !$Procedure      ZZEKTRPI ( EK tree, parent information )
 
-      SUBROUTINE ZZEKTRPI ( HANDLE, TREE,  KEY,  PARENT, PKEY,  POFFST, &
-                            LPIDX,  LPKEY, LSIB, RPIDX,  RPKEY, RSIB   )
+      subroutine zzektrpi ( handle, tree,  key,  parent, pkey,  poffst, &
+                            lpidx,  lpkey, lsib, rpidx,  rpkey, rsib   )
 
 ! $ Abstract
 !
@@ -20,22 +20,22 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
-      INTEGER               PARENT
-      INTEGER               PKEY
-      INTEGER               POFFST
-      INTEGER               LPIDX
-      INTEGER               LPKEY
-      INTEGER               LSIB
-      INTEGER               RPIDX
-      INTEGER               RPKEY
-      INTEGER               RSIB
+      integer               handle
+      integer               tree
+      integer               key
+      integer               parent
+      integer               pkey
+      integer               poffst
+      integer               lpidx
+      integer               lpkey
+      integer               lsib
+      integer               rpidx
+      integer               rpkey
+      integer               rsib
 
 ! $ Brief_I/O
 !
@@ -178,130 +178,130 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLEI
+      integer               lstlei
 
 !
 !     Local variables
 !
-      INTEGER               CHILD
-      INTEGER               LKEY
-      INTEGER               MAXKEY
-      INTEGER               NEWKEY
-      INTEGER               OFFSET
-      INTEGER               PAGE   ( PGSIZI )
-      INTEGER               PREV
-      INTEGER               PRVKEY
-      INTEGER               TOTKEY
+      integer               child
+      integer               lkey
+      integer               maxkey
+      integer               newkey
+      integer               offset
+      integer               page   ( pgsizi )
+      integer               prev
+      integer               prvkey
+      integer               totkey
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Use discovery check-in in this puppy.
 !
 !     Nothing found to begin with.
 !
-      FOUND  =  .FALSE.
+      found  =  .false.
 
 !
 !     Get a local copy of the input key.  We may overwrite the input
 !     key when we set PKEY.
 !
-      LKEY   =   KEY
+      lkey   =   key
 
 !
 !     Start out by reading in the root page.  The node level starts
 !     out at 1.
 !
-      CALL ZZEKPGRI ( HANDLE, TREE, PAGE )
+      call zzekpgri ( handle, tree, page )
 
-      PARENT  =  0
-      PKEY    =  0
-      POFFST  =  0
-      LPIDX   =  0
-      LPKEY   =  0
-      LSIB    =  0
-      RPIDX   =  0
-      RPKEY   =  0
-      RSIB    =  0
+      parent  =  0
+      pkey    =  0
+      poffst  =  0
+      lpidx   =  0
+      lpkey   =  0
+      lsib    =  0
+      rpidx   =  0
+      rpkey   =  0
+      rsib    =  0
 
 !
 !     Find out how many keys are in the tree.  If LKEY is outside
 !     this range, we won't find it.
 !
-      TOTKEY  =  PAGE ( TRNKEY )
+      totkey  =  page ( trnkey )
 
-      IF (  ( LKEY .LT. 1 )  .OR.  ( LKEY .GT. TOTKEY )  ) THEN
+      if (  ( lkey .lt. 1 )  .or.  ( lkey .gt. totkey )  ) then
 
-         CALL CHKIN  ( 'ZZEKTRPI'                                      )
-         CALL SETMSG ( 'Key = #; valid range = 1:#. Tree = #, file = #')
-         CALL ERRINT ( '#',     LKEY                                   )
-         CALL ERRINT ( '#',     TOTKEY                                 )
-         CALL ERRINT ( '#',     TREE                                   )
-         CALL ERRHAN ( '#',     HANDLE                                 )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                        )
-         CALL CHKOUT ( 'ZZEKTRPI'                                      )
-         RETURN
+         call chkin  ( 'ZZEKTRPI'                                      )
+         call setmsg ( 'Key = #; valid range = 1:#. Tree = #, file = #')
+         call errint ( '#',     lkey                                   )
+         call errint ( '#',     totkey                                 )
+         call errint ( '#',     tree                                   )
+         call errhan ( '#',     handle                                 )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                        )
+         call chkout ( 'ZZEKTRPI'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the last key at this level that is less than or equal to
 !     the requested key.
 !
-      PREV   =  LSTLEI (  LKEY,  PAGE(TRNKR),  PAGE(TRKEYR+1)  )
+      prev   =  lstlei (  lkey,  page(trnkr),  page(trkeyr+1)  )
 
-      IF ( PREV .GT. 0 ) THEN
-         PRVKEY =  PAGE(TRKEYR+PREV)
-      ELSE
-         PRVKEY =  0
-      END IF
+      if ( prev .gt. 0 ) then
+         prvkey =  page(trkeyr+prev)
+      else
+         prvkey =  0
+      end if
 
 !
 !     If we were lucky enough to get an exact match, we can quit now.
 !     The root has no parent so the output values remain set to zero.
 !
-      IF ( PRVKEY .EQ. LKEY ) THEN
-         RETURN
-      END IF
+      if ( prvkey .eq. lkey ) then
+         return
+      end if
 
 !
 !     Still here?  Traverse the pointer path until we find the key
 !     or run out of progeny.
 !
-      OFFSET  =  PRVKEY
-      PARENT  =  TREE
-      PKEY    =  PAGE ( TRKEYR + 1 )
-      MAXKEY  =  PAGE ( TRNKR      )
+      offset  =  prvkey
+      parent  =  tree
+      pkey    =  page ( trkeyr + 1 )
+      maxkey  =  page ( trnkr      )
 
-      IF ( PREV .GT. 0 ) THEN
-         LPIDX  =  PREV
-         LPKEY  =  PAGE ( TRKEYR + LPIDX )
-         LSIB   =  PAGE ( TRKIDR + LPIDX )
-      ELSE
-         LPIDX  =  0
-         LPKEY  =  0
-         LSIB   =  0
-      END IF
+      if ( prev .gt. 0 ) then
+         lpidx  =  prev
+         lpkey  =  page ( trkeyr + lpidx )
+         lsib   =  page ( trkidr + lpidx )
+      else
+         lpidx  =  0
+         lpkey  =  0
+         lsib   =  0
+      end if
 
-      IF ( PREV .LT. MAXKEY ) THEN
-         RPIDX  =  PREV + 1
-         RPKEY  =  PAGE ( TRKEYR + RPIDX     )
-         RSIB   =  PAGE ( TRKIDR + RPIDX + 1 )
-      ELSE
-         RPIDX  =  0
-         RPKEY  =  0
-         RSIB   =  0
-      END IF
+      if ( prev .lt. maxkey ) then
+         rpidx  =  prev + 1
+         rpkey  =  page ( trkeyr + rpidx     )
+         rsib   =  page ( trkidr + rpidx + 1 )
+      else
+         rpidx  =  0
+         rpkey  =  0
+         rsib   =  0
+      end if
 
 
-      CHILD  =  PAGE ( TRKIDR + PREV + 1 )
-      FOUND  =  .FALSE.
+      child  =  page ( trkidr + prev + 1 )
+      found  =  .false.
 
-      DO WHILE (  ( CHILD .GT. 0 ) .AND. ( .NOT. FOUND )  )
+      do while (  ( child .gt. 0 ) .and. ( .not. found )  )
 !
 !        Read in the child page.
 !
-         CALL ZZEKPGRI ( HANDLE, CHILD, PAGE )
+         call zzekpgri ( handle, child, page )
 
 !
 !        Find the last key at this level that is less than or equal to
@@ -310,84 +310,84 @@
 !        current node, we must subtract from LKEY the position of the
 !        node preceding the first key of this subtree.
 !
-         NEWKEY  =  LKEY - OFFSET
-         PREV    =  LSTLEI (  NEWKEY,  PAGE(TRNKC),  PAGE(TRKEYC+1)  )
+         newkey  =  lkey - offset
+         prev    =  lstlei (  newkey,  page(trnkc),  page(trkeyc+1)  )
 
-         IF ( PREV .GT. 0 ) THEN
-            PRVKEY =  PAGE(TRKEYC+PREV)
-         ELSE
-            PRVKEY =  0
-         END IF
+         if ( prev .gt. 0 ) then
+            prvkey =  page(trkeyc+prev)
+         else
+            prvkey =  0
+         end if
 
 !
 !        If we were lucky enough to get an exact match, we can quit.
 !        The outputs are set.
 !
-         IF ( PRVKEY .EQ. NEWKEY ) THEN
+         if ( prvkey .eq. newkey ) then
 
-            FOUND  =  .TRUE.
+            found  =  .true.
 
-         ELSE
+         else
 !
 !           Record information from the current node before we read the
 !           next child page.
 !
-            PARENT  =  CHILD
-            POFFST  =  OFFSET
-            PKEY    =  PAGE ( TRKEYC + 1 )  +  OFFSET
-            MAXKEY  =  PAGE ( TRNKC      )
+            parent  =  child
+            poffst  =  offset
+            pkey    =  page ( trkeyc + 1 )  +  offset
+            maxkey  =  page ( trnkc      )
 
-            IF ( PREV .GT. 0 ) THEN
-               LPIDX  =  PREV
-               LPKEY  =  PAGE ( TRKEYC + LPIDX )
-               LSIB   =  PAGE ( TRKIDC + LPIDX )
-            ELSE
-               LPIDX  =  0
-               LPKEY  =  0
-               LSIB   =  0
-            END IF
+            if ( prev .gt. 0 ) then
+               lpidx  =  prev
+               lpkey  =  page ( trkeyc + lpidx )
+               lsib   =  page ( trkidc + lpidx )
+            else
+               lpidx  =  0
+               lpkey  =  0
+               lsib   =  0
+            end if
 
-            IF ( PREV .LT. MAXKEY ) THEN
-               RPIDX  =  PREV + 1
-               RPKEY  =  PAGE ( TRKEYC + RPIDX     )
-               RSIB   =  PAGE ( TRKIDC + RPIDX + 1 )
-            ELSE
-               RPIDX  =  0
-               RPKEY  =  0
-               RSIB   =  0
-            END IF
+            if ( prev .lt. maxkey ) then
+               rpidx  =  prev + 1
+               rpkey  =  page ( trkeyc + rpidx     )
+               rsib   =  page ( trkidc + rpidx + 1 )
+            else
+               rpidx  =  0
+               rpkey  =  0
+               rsib   =  0
+            end if
 
 !
 !           Update the offset of the tree headed by CHILD, and set
 !           the new child node.
 !
-            OFFSET  =  PRVKEY + OFFSET
-            CHILD   =  PAGE ( TRKIDC + PREV + 1 )
+            offset  =  prvkey + offset
+            child   =  page ( trkidc + prev + 1 )
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
 !
 !     If we found the key, our outputs are already set.  If not, we've
 !     got trouble.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL CHKIN  ( 'ZZEKTRPI'                                      )
-         CALL SETMSG ( 'Key #; valid range = 1:#. Tree = #, file = #.'// &
+         call chkin  ( 'ZZEKTRPI'                                      )
+         call setmsg ( 'Key #; valid range = 1:#. Tree = #, file = #.'// &
                        '  Key was not found.  This probably indicates'// &
                        ' a corrupted file or a bug in the EK code.'    )
-         CALL ERRINT ( '#',     LKEY                                   )
-         CALL ERRINT ( '#',     TOTKEY                                 )
-         CALL ERRINT ( '#',     TREE                                   )
-         CALL ERRHAN ( '#',     HANDLE                                 )
-         CALL SIGERR ( 'SPICE(ITEMNOTFOUND)'                           )
-         CALL CHKOUT ( 'ZZEKTRPI'                                      )
-         RETURN
+         call errint ( '#',     lkey                                   )
+         call errint ( '#',     totkey                                 )
+         call errint ( '#',     tree                                   )
+         call errhan ( '#',     handle                                 )
+         call sigerr ( 'SPICE(ITEMNOTFOUND)'                           )
+         call chkout ( 'ZZEKTRPI'                                      )
+         return
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

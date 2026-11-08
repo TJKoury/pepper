@@ -1,7 +1,7 @@
 !$Procedure CKCOV ( CK coverage )
 
-      SUBROUTINE CKCOV ( CKFNM, IDCODE, NEEDAV, LEVEL, &
-                         TOL,   TIMSYS, COVER          )
+      subroutine ckcov ( ckfnm, idcode, needav, level, &
+                         tol,   timsys, cover          )
 
 ! $ Abstract
 !
@@ -24,18 +24,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         CKFNM
-      INTEGER               IDCODE
-      LOGICAL               NEEDAV
-      CHARACTER*(*)         LEVEL
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      COVER ( LBCELL : * )
+      character*(*)         ckfnm
+      integer               idcode
+      logical               needav
+      character*(*)         level
+      double precision      tol
+      character*(*)         timsys
+      double precision      cover ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -707,125 +707,125 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         KWINTV
-      PARAMETER           ( KWINTV = 'INTERVAL' )
+      character*(*)         kwintv
+      parameter           ( kwintv = 'INTERVAL' )
 
-      CHARACTER*(*)         KWSEG
-      PARAMETER           ( KWSEG  = 'SEGMENT' )
+      character*(*)         kwseg
+      parameter           ( kwseg  = 'SEGMENT' )
 
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LNSIZE)    ARCH
-      CHARACTER*(LNSIZE)    KERTYP
+      character*(lnsize)    arch
+      character*(lnsize)    kertyp
 
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DCTOL  ( ND )
-      DOUBLE PRECISION      DESCR  ( ND + (NI+1)/2 )
-      DOUBLE PRECISION      ET
+      double precision      dc     ( nd )
+      double precision      dctol  ( nd )
+      double precision      descr  ( nd + (ni+1)/2 )
+      double precision      et
 
-      INTEGER               CLKID
-      INTEGER               DTYPE
-      INTEGER               HANDLE
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               SEGBEG
-      INTEGER               SEGEND
+      integer               clkid
+      integer               dtype
+      integer               handle
+      integer               i
+      integer               ic     ( ni )
+      integer               segbeg
+      integer               segend
 
-      LOGICAL               AVOK
-      LOGICAL               FOUND
-      LOGICAL               ISTDB
-      LOGICAL               SEGLVL
+      logical               avok
+      logical               found
+      logical               istdb
+      logical               seglvl
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKCOV' )
+      call chkin ( 'CKCOV' )
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'CKCOV'                                        )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'CKCOV'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Use a logical flag to indicate whether this is a segment-level
 !     coverage description.
 !
-      SEGLVL = EQSTR( LEVEL, KWSEG )
+      seglvl = eqstr( level, kwseg )
 
 !
 !     Check coverage level keyword.
 !
-      IF (  .NOT. ( SEGLVL .OR. EQSTR( LEVEL, KWINTV ) )  ) THEN
+      if (  .not. ( seglvl .or. eqstr( level, kwintv ) )  ) then
 
-         CALL SETMSG ( 'Allowed values of LEVEL are # and #; actual '// &
+         call setmsg ( 'Allowed values of LEVEL are # and #; actual '// &
                        'value was #.'                                )
-         CALL ERRCH  ( '#',  KWSEG                                   )
-         CALL ERRCH  ( '#',  KWINTV                                  )
-         CALL ERRCH  ( '#',  LEVEL                                   )
-         CALL SIGERR ( 'SPICE(INVALIDOPTION)'                        )
-         CALL CHKOUT ( 'CKCOV'                                       )
-         RETURN
+         call errch  ( '#',  kwseg                                   )
+         call errch  ( '#',  kwintv                                  )
+         call errch  ( '#',  level                                   )
+         call sigerr ( 'SPICE(INVALIDOPTION)'                        )
+         call chkout ( 'CKCOV'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
-      CALL GETFAT ( CKFNM, ARCH, KERTYP )
+      call getfat ( ckfnm, arch, kertyp )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKCOV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKCOV' )
+         return
+      end if
 
 
-      IF ( ARCH .EQ. 'XFR' ) THEN
+      if ( arch .eq. 'XFR' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary CK file to be readable ' &
          //            'by this routine.  If the input file is an ' &
          //            'CK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         CALL ERRCH  ( '#',  CKFNM                                 )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                      )
-         CALL CHKOUT ( 'CKCOV'                                     )
-         RETURN
+         call errch  ( '#',  ckfnm                                 )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
+         call chkout ( 'CKCOV'                                     )
+         return
 
-      ELSE IF ( ARCH .NE. 'DAF' ) THEN
+      else if ( arch .ne. 'DAF' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary CK file to be readable ' &
          //            'by this routine.  Binary CK files have ' &
          //            'DAF architecture.  If you expected the ' &
@@ -834,15 +834,15 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  CKFNM                                 )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDARCHTYPE)'                    )
-         CALL CHKOUT ( 'CKCOV'                                     )
-         RETURN
+         call errch  ( '#',  ckfnm                                 )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
+         call chkout ( 'CKCOV'                                     )
+         return
 
-      ELSE IF ( KERTYP .NE. 'CK' ) THEN
+      else if ( kertyp .ne. 'CK' ) then
 
-         CALL SETMSG ( 'Input file # has file type #. The file ' &
+         call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary CK file to be readable ' &
          //            'by this routine. If you expected the ' &
          //            'file to be a binary CK file, the problem ' &
@@ -850,62 +850,62 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  CKFNM                                 )
-         CALL ERRCH  ( '#',  KERTYP                                )
-         CALL SIGERR ( 'SPICE(INVALIDFILETYPE)'                    )
-         CALL CHKOUT ( 'CKCOV'                                     )
-         RETURN
+         call errch  ( '#',  ckfnm                                 )
+         call errch  ( '#',  kertyp                                )
+         call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
+         call chkout ( 'CKCOV'                                     )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Set a logical flag indicating whether the time system is SCLK.
 !
-      ISTDB  = EQSTR ( TIMSYS, 'TDB' )
+      istdb  = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-            CALL CHKOUT ( 'CKCOV'                                   )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+            call chkout ( 'CKCOV'                                   )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     If the output time system is TDB, find the clock ID associated
 !     with IDCODE.
 !
-      IF ( ISTDB ) THEN
+      if ( istdb ) then
 
-         CALL CKMETA ( IDCODE, 'SCLK', CLKID )
+         call ckmeta ( idcode, 'SCLK', clkid )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'CKCOV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'CKCOV' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     Open the file for reading.
 !
-      CALL DAFOPR ( CKFNM, HANDLE )
+      call dafopr ( ckfnm, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKCOV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKCOV' )
+         return
+      end if
 
 !
 !     We will examine each segment descriptor in the file, and
@@ -921,66 +921,66 @@
 !
 !     Start a forward search.
 !
-      CALL DAFBFS ( HANDLE )
+      call dafbfs ( handle )
 
 !
 !     Find the next DAF array.
 !
-      CALL DAFFNA ( FOUND )
+      call daffna ( found )
 
 
-      DO WHILE ( FOUND )
+      do while ( found )
 !
 !        Note:  we check FAILED() at the bottom of this loop; this
 !        routine returns if FAILED() returns .TRUE. at that point.
 !
 !        Fetch and unpack the segment descriptor.
 !
-         CALL DAFGS ( DESCR )
-         CALL DAFUS ( DESCR, ND, NI, DC, IC )
+         call dafgs ( descr )
+         call dafus ( descr, nd, ni, dc, ic )
 
 !
 !        Let AVOK indicate whether the segment satisfies the
 !        angular velocity restriction.
 !
-         AVOK = ( IC(4) .EQ. 1 ) .OR. ( .NOT. NEEDAV )
+         avok = ( ic(4) .eq. 1 ) .or. ( .not. needav )
 
 
-         IF (  ( IC(1) .EQ. IDCODE )  .AND.  AVOK  ) THEN
+         if (  ( ic(1) .eq. idcode )  .and.  avok  ) then
 !
 !           This segment is for the body of interest.  If angular
 !           velocity is needed, this segment has it.
 !
-            IF ( SEGLVL ) THEN
+            if ( seglvl ) then
 !
 !              This is a segment-level summary.
 !
 !              Insert the coverage bounds into the coverage window.
 !              Adjust the interval using the tolerance.
 !
-               DCTOL(1)  =  MAX (  DC(1) - TOL,  0.D0  )
-               DCTOL(2)  =         DC(2) + TOL
+               dctol(1)  =  max (  dc(1) - tol,  0.d0  )
+               dctol(2)  =         dc(2) + tol
 
 !
 !              Convert the time to TDB if necessary.
 !
-               IF ( ISTDB ) THEN
+               if ( istdb ) then
 !
 !                 Convert the time bounds to TDB before inserting
 !                 into the window.
 !
-                  DO I = 1, 2
-                     CALL SCT2E ( CLKID, DCTOL(I), ET )
-                     DCTOL(I)  =  ET
-                  END DO
+                  do i = 1, 2
+                     call sct2e ( clkid, dctol(i), et )
+                     dctol(i)  =  et
+                  end do
 
-               END IF
+               end if
 
-               IF ( DCTOL(1) .LE. DCTOL(2) ) THEN
-                  CALL WNINSD (  DCTOL(1),  DCTOL(2),  COVER )
-               END IF
+               if ( dctol(1) .le. dctol(2) ) then
+                  call wninsd (  dctol(1),  dctol(2),  cover )
+               end if
 
-            ELSE
+            else
 !
 !              We're looking for an interval-level coverage window.
 !              This information must be retrieved in a
@@ -988,65 +988,65 @@
 !              we'll call will, if necessary, adjust intervals by TOL
 !              and convert interval times to TDB.
 !
-               DTYPE  = IC(3)
-               SEGBEG = IC(5)
-               SEGEND = IC(6)
+               dtype  = ic(3)
+               segbeg = ic(5)
+               segend = ic(6)
 
-               IF ( DTYPE .EQ. 1 ) THEN
+               if ( dtype .eq. 1 ) then
 
-                  CALL ZZCKCV01 ( HANDLE, SEGBEG, SEGEND, &
-                                  CLKID,  TOL,    TIMSYS, COVER )
+                  call zzckcv01 ( handle, segbeg, segend, &
+                                  clkid,  tol,    timsys, cover )
 
-               ELSE IF ( DTYPE .EQ. 2 ) THEN
+               else if ( dtype .eq. 2 ) then
 
-                  CALL ZZCKCV02 ( HANDLE, SEGBEG, SEGEND, &
-                                  CLKID,  TOL,    TIMSYS, COVER )
+                  call zzckcv02 ( handle, segbeg, segend, &
+                                  clkid,  tol,    timsys, cover )
 
-               ELSE IF ( DTYPE .EQ. 3 ) THEN
+               else if ( dtype .eq. 3 ) then
 
-                  CALL ZZCKCV03 ( HANDLE, SEGBEG, SEGEND, &
-                                  CLKID,  TOL,    TIMSYS, COVER )
+                  call zzckcv03 ( handle, segbeg, segend, &
+                                  clkid,  tol,    timsys, cover )
 
-               ELSE IF ( DTYPE .EQ. 4 ) THEN
+               else if ( dtype .eq. 4 ) then
 
-                  CALL ZZCKCV04 ( HANDLE, SEGBEG, SEGEND, &
-                                  CLKID,  TOL,    TIMSYS, COVER )
+                  call zzckcv04 ( handle, segbeg, segend, &
+                                  clkid,  tol,    timsys, cover )
 
-               ELSE IF ( DTYPE .EQ. 5 ) THEN
+               else if ( dtype .eq. 5 ) then
 
-                  CALL ZZCKCV05 ( HANDLE, SEGBEG, SEGEND, CLKID, &
-                                  DC,     TOL,    TIMSYS, COVER )
+                  call zzckcv05 ( handle, segbeg, segend, clkid, &
+                                  dc,     tol,    timsys, cover )
 
-               ELSE IF ( DTYPE .EQ. 6 ) THEN
+               else if ( dtype .eq. 6 ) then
 
-                  CALL ZZCKCV06 ( HANDLE, SEGBEG, SEGEND, CLKID, &
-                                  DC,     TOL,    TIMSYS, COVER )
+                  call zzckcv06 ( handle, segbeg, segend, clkid, &
+                                  dc,     tol,    timsys, cover )
 
-               ELSE
+               else
 
-                  CALL SETMSG ( 'Supported CK data types are 1, 2, ' // &
+                  call setmsg ( 'Supported CK data types are 1, 2, ' // &
                                 '3, 4, 5.  Data type of segment: #. '// &
                                 'This problem may indicate that you '// &
                                 'need to update your SPICE Toolkit.' )
-                  CALL ERRINT ( '#',  DTYPE                          )
-                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                )
-                  CALL CHKOUT ( 'CKCOV'                              )
-                  RETURN
+                  call errint ( '#',  dtype                          )
+                  call sigerr ( 'SPICE(NOTSUPPORTED)'                )
+                  call chkout ( 'CKCOV'                              )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         CALL DAFFNA ( FOUND )
+         call daffna ( found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'CKCOV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'CKCOV' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     COVER now represents the coverage of the entire file at the
@@ -1055,9 +1055,9 @@
 !
 !     Release the file.
 !
-      CALL DAFCLS ( HANDLE )
+      call dafcls ( handle )
 
 
-      CALL CHKOUT ( 'CKCOV' )
-      RETURN
-      END
+      call chkout ( 'CKCOV' )
+      return
+      end

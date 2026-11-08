@@ -1,6 +1,6 @@
 !$Procedure CKOPN ( CK, open new file. )
 
-      SUBROUTINE CKOPN ( FNAME, IFNAME, NCOMCH, HANDLE )
+      subroutine ckopn ( fname, ifname, ncomch, handle )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         IFNAME
-      INTEGER               NCOMCH
-      INTEGER               HANDLE
+      character*(*)         fname
+      character*(*)         ifname
+      integer               ncomch
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -337,67 +337,67 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
-      CHARACTER*(*)         TYPE
-      PARAMETER           ( TYPE = 'CK'    )
+      character*(*)         type
+      parameter           ( type = 'CK'    )
 !
 !     DAF ND and NI values for CK files.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
 !
 !     Length of a DAF comment record, in characters.
 !
-      INTEGER               MXCREC
-      PARAMETER           ( MXCREC = 1000 )
+      integer               mxcrec
+      parameter           ( mxcrec = 1000 )
 
 !
 !     Local variables
 !
-      INTEGER               NCOMR
+      integer               ncomr
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKOPN' )
+      call chkin ( 'CKOPN' )
 !
 !     Compute the number of comment records that we want to allocate, if
 !     the number of comment characters requested is greater than zero,
 !     we always allocate an extra record to account for the end of line
 !     marks in the comment area.
 !
-      IF ( NCOMCH .GT. 0 ) THEN
-         NCOMR = ( NCOMCH - 1 )/MXCREC + 1
-      ELSE
-         NCOMR = 0
-      END IF
+      if ( ncomch .gt. 0 ) then
+         ncomr = ( ncomch - 1 )/mxcrec + 1
+      else
+         ncomr = 0
+      end if
 
 !
 !     Just do it. All of the error handling is taken care of for us.
 !
-      CALL DAFONW( FNAME, TYPE, ND, NI, IFNAME, NCOMR, HANDLE )
+      call dafonw( fname, type, nd, ni, ifname, ncomr, handle )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        If we failed, make sure that HANDLE does not contain a value
 !        that represents a valid DAF file handle.
 !
-         HANDLE = 0
+         handle = 0
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CKOPN' )
-      RETURN
-      END
+      call chkout ( 'CKOPN' )
+      return
+      end

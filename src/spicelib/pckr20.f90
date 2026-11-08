@@ -1,6 +1,6 @@
 !$Procedure PCKR20 ( PCK, read record from segment, type 20 )
 
-      SUBROUTINE PCKR20 ( HANDLE, DESCR, ET, RECORD )
+      subroutine pckr20 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -168,54 +168,54 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
+      double precision      j2000
+      double precision      spd
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DC       ( 2 )
-      DOUBLE PRECISION      DSCALE
-      DOUBLE PRECISION      INIT
-      DOUBLE PRECISION      INITFR
-      DOUBLE PRECISION      INITJD
-      DOUBLE PRECISION      INTLEN
-      DOUBLE PRECISION      INTRVL
-      DOUBLE PRECISION      MID
-      DOUBLE PRECISION      POS      ( 3 )
-      DOUBLE PRECISION      RADIUS
-      DOUBLE PRECISION      RECBEG
-      DOUBLE PRECISION      TSCALE
+      double precision      dc       ( 2 )
+      double precision      dscale
+      double precision      init
+      double precision      initfr
+      double precision      initjd
+      double precision      intlen
+      double precision      intrvl
+      double precision      mid
+      double precision      pos      ( 3 )
+      double precision      radius
+      double precision      recbeg
+      double precision      tscale
 
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               I
-      INTEGER               IC       ( 6 )
-      INTEGER               LOC
-      INTEGER               NREC
-      INTEGER               NTERMS
-      INTEGER               RECADR
-      INTEGER               RECNO
-      INTEGER               RECSIZ
-      INTEGER               SIZE
+      integer               begin
+      integer               end
+      integer               i
+      integer               ic       ( 6 )
+      integer               loc
+      integer               nrec
+      integer               nterms
+      integer               recadr
+      integer               recno
+      integer               recsiz
+      integer               size
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PCKR20' )
+      call chkin ( 'PCKR20' )
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      BEGIN = IC( 4 )
-      END   = IC( 5 )
+      begin = ic( 4 )
+      end   = ic( 5 )
 
 !
 !     The segment is made up of a number of logical records, each
@@ -231,34 +231,34 @@
 !     For convenience, we'll fetch the segment's distance and time
 !     scales in the same call.
 !
-      CALL DAFGDA ( HANDLE, END-6, END, RECORD )
+      call dafgda ( handle, end-6, end, record )
 
-      DSCALE = RECORD( 1 )
-      TSCALE = RECORD( 2 )
-      INITJD = RECORD( 3 )
-      INITFR = RECORD( 4 )
-      INTLEN = RECORD( 5 )
-      RECSIZ = INT( RECORD( 6 ) )
-      NREC   = INT( RECORD( 7 ) )
+      dscale = record( 1 )
+      tscale = record( 2 )
+      initjd = record( 3 )
+      initfr = record( 4 )
+      intlen = record( 5 )
+      recsiz = int( record( 6 ) )
+      nrec   = int( record( 7 ) )
 
 !
 !     NTERMS is the number of rate coefficients per component,
 !     plus 1 (for the angle component).
 !
-      NTERMS = RECSIZ / 3
+      nterms = recsiz / 3
 
 !
 !     Convert the initial epoch and interval length to
 !     seconds past J2000 TDB.
 !
-      INIT   = (  ( INITJD - J2000() )  +  INITFR  ) * SPD()
-      INTRVL = INTLEN * SPD()
+      init   = (  ( initjd - j2000() )  +  initfr  ) * spd()
+      intrvl = intlen * spd()
 
 !
 !     Locate the record containing the coefficients to use.
 !
-      RECNO  = INT( (ET - INIT) / INTRVL ) + 1
-      RECNO  = MAX( 1,  MIN( RECNO, NREC )  )
+      recno  = int( (et - init) / intrvl ) + 1
+      recno  = max( 1,  min( recno, nrec )  )
 
 !
 !     Compute the midpoint and radius of the record at
@@ -271,61 +271,61 @@
 !     past J2000. We'll account for the fractional part of the
 !     start time below when we compute MID.
 !
-      RECBEG = (  ( INITJD - J2000() )  +  (RECNO-1)*INTLEN  ) * SPD()
+      recbeg = (  ( initjd - j2000() )  +  (recno-1)*intlen  ) * spd()
 
 
-      RADIUS = INTRVL / 2.D0
+      radius = intrvl / 2.d0
 
-      MID    = RECBEG + ( INITFR * SPD() ) + RADIUS
+      mid    = recbeg + ( initfr * spd() ) + radius
 
 !
 !     Compute the address of the desired record.
 !
-      RECADR = ( RECNO - 1 )*RECSIZ + BEGIN
+      recadr = ( recno - 1 )*recsiz + begin
 
 !
 !     Along with the record, return the size, midpoint, and
 !     radius of the record.
 !
-      RECORD( 1 ) = RECORD( 6 ) + 2
-      RECORD( 2 ) = MID
-      RECORD( 3 ) = RADIUS
-      CALL DAFGDA ( HANDLE, RECADR, RECADR + RECSIZ - 1, RECORD( 4 ) )
+      record( 1 ) = record( 6 ) + 2
+      record( 2 ) = mid
+      record( 3 ) = radius
+      call dafgda ( handle, recadr, recadr + recsiz - 1, record( 4 ) )
 
 !
 !     We're going to re-arrange the record: the angle components
 !     will be transferred to the end of the record, and the record
 !     contents will be left-shifted to fill in the free elements.
 !
-      DO I = 1, 3
-         POS( I ) = RECORD ( 3  +  I*NTERMS )
-      END DO
+      do i = 1, 3
+         pos( i ) = record ( 3  +  i*nterms )
+      end do
 
 
-      SIZE = RECSIZ + 3
+      size = recsiz + 3
 !
 !     Remove the angle elements from the record.
 !
-      DO I = 1, 3
+      do i = 1, 3
 !
 !        LOC is the index of the element to delete. After the first
 !        removal, we must account for the resulting left shift when
 !        calculating the indices of subsequent elements to be removed.
 !
-         LOC = 3 + I*NTERMS - (I-1)
+         loc = 3 + i*nterms - (i-1)
 
-         CALL REMLAD ( 1, LOC, RECORD, SIZE )
+         call remlad ( 1, loc, record, size )
 !
 !        Note that SIZE is an in-out argument; on output it
 !        indicates the size of the array after removal of
 !        the indicated element(s).
 !
-      END DO
+      end do
 
 !
 !     Convert the angles to radians.
 !
-      CALL VSCLIP ( DSCALE, POS )
+      call vsclip ( dscale, pos )
 
 !
 !     Append the angles to the record. Since we inserted three
@@ -333,16 +333,16 @@
 !     elements, the target index is the same as if we had copied the
 !     record directly to the output array.
 !
-      CALL MOVED ( POS, 3, RECORD(RECSIZ+1) )
+      call moved ( pos, 3, record(recsiz+1) )
 
 !
 !     Convert the angular rate Chebyshev coefficients to units of
 !     radians/s.
 !
-      DO I = 4, RECSIZ
-         RECORD(I) = RECORD(I) * (DSCALE/TSCALE)
-      END DO
+      do i = 4, recsiz
+         record(i) = record(i) * (dscale/tscale)
+      end do
 
-      CALL CHKOUT ( 'PCKR20' )
-      RETURN
-      END
+      call chkout ( 'PCKR20' )
+      return
+      end

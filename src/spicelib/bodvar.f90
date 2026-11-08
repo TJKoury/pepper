@@ -1,6 +1,6 @@
 !$Procedure BODVAR ( Return values from the kernel pool )
 
-      SUBROUTINE BODVAR ( BODY, ITEM, DIM, VALUES )
+      subroutine bodvar ( body, item, dim, values )
 
 ! $ Abstract
 !
@@ -23,12 +23,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      CHARACTER*(*)         ITEM
-      INTEGER               DIM
-      DOUBLE PRECISION      VALUES  ( * )
+      integer               body
+      character*(*)         item
+      integer               dim
+      double precision      values  ( * )
 
 ! $ Brief_I/O
 !
@@ -219,48 +219,48 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*16          CODE
-      CHARACTER*32          VARNAM
-      LOGICAL               FOUND
+      character*16          code
+      character*32          varnam
+      logical               found
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-        RETURN
-      ELSE
-        CALL CHKIN ( 'BODVAR' )
-      END IF
+      if ( return () ) then
+        return
+      else
+        call chkin ( 'BODVAR' )
+      end if
 
 !
 !     Construct the variable name from BODY and ITEM.
 !
-      VARNAM = 'BODY'
+      varnam = 'BODY'
 
-      CALL INTSTR ( BODY, CODE )
-      CALL SUFFIX ( CODE, 0, VARNAM )
-      CALL SUFFIX ( '_',  0, VARNAM )
-      CALL SUFFIX ( ITEM, 0, VARNAM )
+      call intstr ( body, code )
+      call suffix ( code, 0, varnam )
+      call suffix ( '_',  0, varnam )
+      call suffix ( item, 0, varnam )
 
 !
 !     Grab the items. Complain if they aren't there.
 !
-      CALL RTPOOL ( VARNAM, DIM, VALUES, FOUND )
+      call rtpool ( varnam, dim, values, found )
 
-      IF ( .NOT. FOUND ) THEN
-         CALL SETMSG ( 'The variable # could not be found in the ' // &
+      if ( .not. found ) then
+         call setmsg ( 'The variable # could not be found in the ' // &
                        'kernel pool.'                             )
-         CALL ERRCH  ( '#', VARNAM                                )
-         CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)'                 )
-      END IF
+         call errch  ( '#', varnam                                )
+         call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                 )
+      end if
 
-      CALL CHKOUT ( 'BODVAR' )
-      RETURN
-      END
+      call chkout ( 'BODVAR' )
+      return
+      end

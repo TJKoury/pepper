@@ -1,7 +1,7 @@
 !$Procedure PCKUDS (PCK, unpack segment descriptor )
 
-      SUBROUTINE PCKUDS ( DESCR, BODY, FRAME, TYPE, &
-                          FIRST, LAST, BEGIN, END   )
+      subroutine pckuds ( descr, body, frame, type, &
+                          first, last, begin, end   )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      DESCR ( * )
-      INTEGER               BODY
-      INTEGER               FRAME
-      INTEGER               TYPE
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      INTEGER               BEGIN
-      INTEGER               END
+      double precision      descr ( * )
+      integer               body
+      integer               frame
+      integer               type
+      double precision      first
+      double precision      last
+      integer               begin
+      integer               end
 
 ! $ Brief_I/O
 !
@@ -147,55 +147,55 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL              FAILED
-      LOGICAL              RETURN
+      logical              failed
+      logical              return
 
 !
 !     Local Parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 5 )
+      integer               ni
+      parameter           ( ni = 5 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      DPPART ( ND )
+      double precision      dppart ( nd )
 
-      INTEGER               IPART  ( NI )
+      integer               ipart  ( ni )
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKUDS' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'PCKUDS' )
+      end if
 !
 !     No judgments are made about the descriptor when we
 !     unpack it.  If things were done right when the descriptor
 !     was created, it should be fine now.
 !
-      CALL DAFUS ( DESCR, ND, NI, DPPART, IPART )
+      call dafus ( descr, nd, ni, dppart, ipart )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'PCKUDS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'PCKUDS' )
+         return
+      end if
 
-      BODY   = IPART(1)
-      FRAME  = IPART(2)
-      TYPE   = IPART(3)
-      BEGIN  = IPART(4)
-      END    = IPART(5)
+      body   = ipart(1)
+      frame  = ipart(2)
+      type   = ipart(3)
+      begin  = ipart(4)
+      end    = ipart(5)
 
-      FIRST  = DPPART(1)
-      LAST   = DPPART(2)
+      first  = dppart(1)
+      last   = dppart(2)
 
-      CALL CHKOUT ( 'PCKUDS' )
-      RETURN
+      call chkout ( 'PCKUDS' )
+      return
 
-      END
+      end

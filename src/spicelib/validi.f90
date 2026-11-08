@@ -1,6 +1,6 @@
 !$Procedure VALIDI ( Validate an integer set )
 
-      SUBROUTINE VALIDI ( SIZE, N, A )
+      subroutine validi ( size, n, a )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER            SIZE
-      INTEGER            N
-      INTEGER            A       ( LBCELL:* )
+      integer            size
+      integer            n
+      integer            a       ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -174,52 +174,52 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Local variables
 !
-      INTEGER               CARD
+      integer               card
 
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'VALIDI')
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'VALIDI')
+      end if
 
 !
 !     Is the set size big enough?
 !
-      IF ( N .GT. SIZE ) THEN
+      if ( n .gt. size ) then
 
-         CALL SETMSG ( 'Size of un-validated set is too small.  '     // &
+         call setmsg ( 'Size of un-validated set is too small.  '     // &
                        'Size is #, size required is #. ' )
 
-         CALL ERRINT ( '#', SIZE )
-         CALL ERRINT ( '#', N    )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-         CALL CHKOUT ( 'VALIDI' )
-         RETURN
-      END IF
+         call errint ( '#', size )
+         call errint ( '#', n    )
+         call sigerr ( 'SPICE(INVALIDSIZE)' )
+         call chkout ( 'VALIDI' )
+         return
+      end if
 
 !
 !     Just like it says above. Order the array, and remove duplicates.
 !
-      CARD = N
-      CALL RMDUPI ( CARD, A(1) )
+      card = n
+      call rmdupi ( card, a(1) )
 
 
 !
 !     Set the size and cardinality of the input set.
 !
-      CALL SSIZEI ( SIZE, A )
-      CALL SCARDI ( CARD, A )
+      call ssizei ( size, a )
+      call scardi ( card, a )
 
 
-      CALL CHKOUT( 'VALIDI' )
-      RETURN
-      END
+      call chkout( 'VALIDI' )
+      return
+      end

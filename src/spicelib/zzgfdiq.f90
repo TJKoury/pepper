@@ -1,6 +1,6 @@
 !$Procedure      ZZGFDIQ ( GF, return distance between objects )
 
-      SUBROUTINE ZZGFDIQ ( TARGID, ET, ABCORR, OBSID, DIST )
+      subroutine zzgfdiq ( targid, et, abcorr, obsid, dist )
 
 ! $ Abstract
 !
@@ -27,13 +27,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               TARGID
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
-      INTEGER               OBSID
-      DOUBLE PRECISION      DIST
+      integer               targid
+      double precision      et
+      character*(*)         abcorr
+      integer               obsid
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -146,39 +146,39 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      POS   ( 3 )
+      double precision      lt
+      double precision      pos   ( 3 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZGFDIQ' )
+      call chkin  ( 'ZZGFDIQ' )
 
 !
 !     Get the position of the target relative to the observer.
 !
-      CALL SPKEZP ( TARGID, ET, 'J2000', ABCORR, OBSID, POS, LT )
+      call spkezp ( targid, et, 'J2000', abcorr, obsid, pos, lt )
 
-      IF (  FAILED() ) THEN
-         CALL CHKOUT (  'ZZGFDIQ' )
-         RETURN
-      END IF
+      if (  failed() ) then
+         call chkout (  'ZZGFDIQ' )
+         return
+      end if
 
 
-      DIST = VNORM ( POS )
+      dist = vnorm ( pos )
 
-      CALL CHKOUT  ( 'ZZGFDIQ' )
-      RETURN
-      END
+      call chkout  ( 'ZZGFDIQ' )
+      return
+      end

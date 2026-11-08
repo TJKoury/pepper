@@ -1,8 +1,8 @@
 !$Procedure      ZZEKTRFR ( EK tree, free )
 
-      SUBROUTINE ZZEKTRFR ( HANDLE, TREE )
+      subroutine zzektrfr ( handle, tree )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
+      integer               handle
+      integer               tree
 
 ! $ Brief_I/O
 !
@@ -130,7 +130,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Non-SPICELIB functions
@@ -139,62 +139,62 @@
 !
 !     Local parameters
 !
-      INTEGER               PARIDX
-      PARAMETER           ( PARIDX =  1 )
+      integer               paridx
+      parameter           ( paridx =  1 )
 
-      INTEGER               NKDIDX
-      PARAMETER           ( NKDIDX =  2 )
+      integer               nkdidx
+      parameter           ( nkdidx =  2 )
 
-      INTEGER               BEGIDX
-      PARAMETER           ( BEGIDX =  3 )
+      integer               begidx
+      parameter           ( begidx =  3 )
 
 !
 !     Local variables
 !
-      INTEGER               DEPTH
-      INTEGER               FIRST
-      INTEGER               KIDBAS
-      INTEGER               LEVEL
-      INTEGER               NKEYS
-      INTEGER               NKIDS
-      INTEGER               NODE
-      INTEGER               PAGE  ( PGSIZI )
-      INTEGER               REMAIN
-      INTEGER               STACK ( 3, TRMXDP )
+      integer               depth
+      integer               first
+      integer               kidbas
+      integer               level
+      integer               nkeys
+      integer               nkids
+      integer               node
+      integer               page  ( pgsizi )
+      integer               remain
+      integer               stack ( 3, trmxdp )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKTRFR' )
+      call chkin ( 'ZZEKTRFR' )
 
 !
 !     Read in the root node.
 !
-      CALL ZZEKPGRI ( HANDLE, TREE, PAGE )
+      call zzekpgri ( handle, tree, page )
 
 !
 !     Check the depth of the tree.  If the tree is deeper than
 !     we expected, we've a problem.
 !
-      DEPTH  =  PAGE ( TRDPTH )
+      depth  =  page ( trdpth )
 
-      IF ( DEPTH .GT. TRMXDP ) THEN
+      if ( depth .gt. trmxdp ) then
 
-         CALL SETMSG ( 'Tree has depth #; max supported depth is #.' // &
+         call setmsg ( 'Tree has depth #; max supported depth is #.' // &
                        'EK = #; TREE = #.'                           )
-         CALL ERRINT ( '#',  DEPTH                                   )
-         CALL ERRINT ( '#',  TRMXDP                                  )
-         CALL ERRHAN ( '#',  HANDLE                                  )
-         CALL ERRINT ( '#',  TREE                                    )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                        )
-         CALL CHKOUT ( 'ZZEKTRFR'                                    )
-         RETURN
+         call errint ( '#',  depth                                   )
+         call errint ( '#',  trmxdp                                  )
+         call errhan ( '#',  handle                                  )
+         call errint ( '#',  tree                                    )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                        )
+         call chkout ( 'ZZEKTRFR'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     We traverse the tree in post-order fashion:  at each node,
@@ -203,9 +203,9 @@
 !     keep track of the ancestors of the node we're currently
 !     considering.
 !
-      LEVEL   =  1
-      REMAIN  =  PAGE ( TRNNOD )
-      NODE    =  TREE
+      level   =  1
+      remain  =  page ( trnnod )
+      node    =  tree
 
 !
 !     Initialize the child count and the location of the first
@@ -213,18 +213,18 @@
 !     one more than the number of keys in the root if the root has
 !     children; otherwise, the child count is zero.
 !
-      NKEYS  =  PAGE ( TRNKR )
+      nkeys  =  page ( trnkr )
 
-      IF ( DEPTH .EQ. 1 ) THEN
-         NKIDS = 0
-      ELSE
-         NKIDS = NKEYS + 1
-      END IF
+      if ( depth .eq. 1 ) then
+         nkids = 0
+      else
+         nkids = nkeys + 1
+      end if
 
-      FIRST  =  1
+      first  =  1
 
 
-      DO WHILE ( REMAIN .GT. 0 )
+      do while ( remain .gt. 0 )
 !
 !        At this point,
 !
@@ -232,89 +232,89 @@
 !           NKIDS is the number of children of NODE.
 !           FIRST is the index of the first child in NODE.
 !
-         IF ( NKIDS .GT. 0 ) THEN
+         if ( nkids .gt. 0 ) then
 !
 !           This node has children, so push the current node, the
 !           number of children, and the location of the first child on
 !           the stack.  Before incrementing the stack level, determine
 !           the base address of the child pointers.
 !
-            IF ( LEVEL .EQ. 1 ) THEN
-               KIDBAS  =  TRKIDR
-            ELSE
-               KIDBAS  =  TRKIDC
-            END IF
+            if ( level .eq. 1 ) then
+               kidbas  =  trkidr
+            else
+               kidbas  =  trkidc
+            end if
 
-            STACK ( PARIDX, LEVEL ) = NODE
-            STACK ( NKDIDX, LEVEL ) = NKIDS
-            STACK ( BEGIDX, LEVEL ) = FIRST
-            LEVEL                   = LEVEL + 1
+            stack ( paridx, level ) = node
+            stack ( nkdidx, level ) = nkids
+            stack ( begidx, level ) = first
+            level                   = level + 1
 
 !
 !           Read in the first child node.
 !
-            NODE  =  PAGE ( KIDBAS + FIRST )
+            node  =  page ( kidbas + first )
 
-            CALL ZZEKPGRI ( HANDLE, NODE, PAGE )
+            call zzekpgri ( handle, node, page )
 
 !
 !           We've never visited this node before, so the node's
 !           metadata is valid, and the first child pointer, if any,
 !           is at location 1.
 !
-            NKEYS  =  PAGE ( TRNKC )
+            nkeys  =  page ( trnkc )
 
-            IF ( LEVEL .LT. DEPTH ) THEN
-               NKIDS  =  NKEYS + 1
-            ELSE
-               NKIDS  =  0
-            END IF
+            if ( level .lt. depth ) then
+               nkids  =  nkeys + 1
+            else
+               nkids  =  0
+            end if
 
-            FIRST  =  1
+            first  =  1
 
 
-         ELSE
+         else
 !
 !           This node has no children.  We can free this page.
 !
-            CALL ZZEKPGFR ( HANDLE, INT, NODE )
+            call zzekpgfr ( handle, int, node )
 
-            REMAIN  =  REMAIN - 1
+            remain  =  remain - 1
 
 !
 !           Obtain the parent node by popping the stack.
 !
-            LEVEL   =  LEVEL - 1
+            level   =  level - 1
 
-            IF ( LEVEL .GT. 0 ) THEN
+            if ( level .gt. 0 ) then
 
-               NODE    =  STACK ( PARIDX, LEVEL )
-               FIRST   =  STACK ( BEGIDX, LEVEL )
-               NKIDS   =  STACK ( NKDIDX, LEVEL )
+               node    =  stack ( paridx, level )
+               first   =  stack ( begidx, level )
+               nkids   =  stack ( nkdidx, level )
 
 !
 !              The parent has one less child, and the location of the
 !              first child is the successor of the stored location.
 !
-               NKIDS  =  NKIDS - 1
-               FIRST  =  FIRST + 1
+               nkids  =  nkids - 1
+               first  =  first + 1
 
 !
 !              The parent page has been overwritten; read it back in.
 !
-               CALL ZZEKPGRI ( HANDLE, NODE, PAGE )
+               call zzekpgri ( handle, node, page )
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        On this pass through the loop, we either visited a node
 !        for the first time, or we deleted a node.  Therefore, we
 !        made progress toward loop termination.
 !
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZEKTRFR' )
-      RETURN
-      END
+      call chkout ( 'ZZEKTRFR' )
+      return
+      end

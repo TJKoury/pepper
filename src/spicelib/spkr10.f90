@@ -1,6 +1,6 @@
 !$Procedure SPKR10 ( SPK, read record from SPK type 10 segment )
 
-      SUBROUTINE SPKR10 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr10 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sgparam.inc'
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      include               'sgparam.inc'
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -143,137 +143,137 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 8  )
+      integer               nconst
+      parameter           ( nconst = 8  )
 
-      INTEGER               NELEMS
-      PARAMETER           ( NELEMS = 10 )
+      integer               nelems
+      parameter           ( nelems = 10 )
 !
 !     We have 2 nutation/obliquity terms and their rates giving us
 !     four angle components for each packet.
 !
-      INTEGER               NANGS
-      PARAMETER           ( NANGS =   4 )
+      integer               nangs
+      parameter           ( nangs =   4 )
 !
 !     BEGEL1 is the location in the record where the first
 !     two-line element set will begin.
 !
-      INTEGER               BEGEL1
-      PARAMETER           ( BEGEL1 = NCONST + 1      )
+      integer               begel1
+      parameter           ( begel1 = nconst + 1      )
 !
 !     BEGEL2 is the location in the record where the second
 !     two-line element set will begin.
 !
-      INTEGER               BEGEL2
-      PARAMETER           ( BEGEL2 = BEGEL1 + NELEMS + NANGS )
+      integer               begel2
+      parameter           ( begel2 = begel1 + nelems + nangs )
 !
 !     ENSET1 and ENSET2 are the locations in the record where the
 !     last element of set 1 and set 2 will be located.
 !
-      INTEGER               ENSET1
-      PARAMETER           ( ENSET1 = BEGEL1 + NELEMS - 1 )
+      integer               enset1
+      parameter           ( enset1 = begel1 + nelems - 1 )
 
-      INTEGER               ENSET2
-      PARAMETER           ( ENSET2 = BEGEL2 + NELEMS - 1 )
-
-
-      DOUBLE PRECISION      VALUE
+      integer               enset2
+      parameter           ( enset2 = begel2 + nelems - 1 )
 
 
-      INTEGER               ENDS    ( 2 )
-      INTEGER               FROM
-      INTEGER               INDX
-      INTEGER               NEPOCH
-      INTEGER               TO
-      INTEGER               PUTELM
-      INTEGER               GETELM
-      INTEGER               I
-      INTEGER               SET1
-      INTEGER               SET2
+      double precision      value
 
-      LOGICAL               FOUND
 
-      SAVE
+      integer               ends    ( 2 )
+      integer               from
+      integer               indx
+      integer               nepoch
+      integer               to
+      integer               putelm
+      integer               getelm
+      integer               i
+      integer               set1
+      integer               set2
+
+      logical               found
+
+      save
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKR10' )
+      call chkin ( 'SPKR10' )
 
 !
 !     Fetch the constants and store them in the first part of
 !     the output RECORD.
 !
-      CALL SGFCON ( HANDLE, DESCR, 1,  NCONST, RECORD(1) )
+      call sgfcon ( handle, descr, 1,  nconst, record(1) )
 
 !
 !     Locate the time in the file closest to the input ET.
 !
-      CALL SGFRVI ( HANDLE, DESCR, ET, VALUE, INDX, FOUND )
+      call sgfrvi ( handle, descr, et, value, indx, found )
 
 !
 !     Determine which pair of element sets to choose so that
 !     they will bracket ET.
 !
-      IF ( ET .LE. VALUE ) THEN
+      if ( et .le. value ) then
 
-         FROM = MAX( INDX-1, 1 )
-         TO   = INDX
+         from = max( indx-1, 1 )
+         to   = indx
 
-      ELSE
+      else
 
-         CALL SGMETA ( HANDLE, DESCR, NREF, NEPOCH )
-         FROM = INDX
-         TO   = MIN( INDX+1, NEPOCH  )
+         call sgmeta ( handle, descr, nref, nepoch )
+         from = indx
+         to   = min( indx+1, nepoch  )
 
-      END IF
+      end if
 
 !
 !     Fetch the element sets
 !
-      CALL SGFPKT ( HANDLE, DESCR, FROM, TO, RECORD(BEGEL1), ENDS )
+      call sgfpkt ( handle, descr, from, to, record(begel1), ends )
 !
 !     If the size of the packets is not 14, this is an old style
 !     two-line element set without nutation information.  We simply
 !     set all of the angles to zero.
 !
-      IF ( ENDS(1) .EQ. NELEMS ) THEN
+      if ( ends(1) .eq. nelems ) then
 !
 !        First shift the elements to their proper locations in RECORD
 !        so there will be room to fill in the zeros.
 !
-         PUTELM = ENSET2
-         GETELM = ENSET1 + NELEMS
+         putelm = enset2
+         getelm = enset1 + nelems
 
-         DO WHILE ( GETELM .GT. ENSET1 )
+         do while ( getelm .gt. enset1 )
 
-            RECORD(PUTELM) = RECORD(GETELM)
-            PUTELM         = PUTELM - 1
-            GETELM         = GETELM - 1
+            record(putelm) = record(getelm)
+            putelm         = putelm - 1
+            getelm         = getelm - 1
 
-         END DO
+         end do
 
-         SET1 = ENSET1 + 1
-         SET2 = ENSET2 + 1
+         set1 = enset1 + 1
+         set2 = enset2 + 1
 
-         DO I = 1, NANGS
-            RECORD(SET1) = 0.0D0
-            RECORD(SET2) = 0.0D0
-            SET1         = SET1 + 1
-            SET2         = SET2 + 1
-         END DO
+         do i = 1, nangs
+            record(set1) = 0.0d0
+            record(set2) = 0.0d0
+            set1         = set1 + 1
+            set2         = set2 + 1
+         end do
 
-      END IF
+      end if
 
 !
 !     If we only got one element set, ET  was either before the
@@ -281,10 +281,10 @@
 !     segment.  We simply copy the one fetched a second time so
 !     that the record is properly constructed.
 !
-      IF ( FROM .EQ. TO ) THEN
-         CALL MOVED ( RECORD(BEGEL1), NELEMS + NANGS, RECORD(BEGEL2) )
-      END IF
+      if ( from .eq. to ) then
+         call moved ( record(begel1), nelems + nangs, record(begel2) )
+      end if
 
-      CALL CHKOUT ( 'SPKR10' )
-      RETURN
-      END
+      call chkout ( 'SPKR10' )
+      return
+      end

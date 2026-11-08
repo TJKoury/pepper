@@ -1,6 +1,6 @@
 !$Procedure RJUST ( Right justify a character string )
 
-      SUBROUTINE RJUST ( INPUT, OUTPUT )
+      subroutine rjust ( input, output )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    INPUT
-      CHARACTER*(*)    OUTPUT
+      character*(*)    input
+      character*(*)    output
 
 ! $ Brief_I/O
 !
@@ -126,62 +126,62 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               lastnb
 
 !
 !     Local variables
 !
-      INTEGER               FIRST
-      INTEGER               I
-      INTEGER               LAST
-      INTEGER               LOC
-      INTEGER               START
+      integer               first
+      integer               i
+      integer               last
+      integer               loc
+      integer               start
 
 
 
 !
 !     Blank string? It's all the same.
 !
-      IF ( INPUT .EQ. ' ' ) THEN
-         OUTPUT = INPUT
+      if ( input .eq. ' ' ) then
+         output = input
 
 !
 !     Get the first non-blank character. Start OUTPUT at that point.
 !
-      ELSE
-         FIRST  = FRSTNB ( INPUT )
-         LAST   = LASTNB ( INPUT )
-         START  = LEN ( OUTPUT ) - (LAST-FIRST)
+      else
+         first  = frstnb ( input )
+         last   = lastnb ( input )
+         start  = len ( output ) - (last-first)
 
 !
 !        If the input string is too long (START < 1), move FIRST
 !        up a little to truncate on the left.
 !
-         IF ( START .LT. 1 ) THEN
-            FIRST = FIRST + (1-START)
-            START = 1
-         END IF
+         if ( start .lt. 1 ) then
+            first = first + (1-start)
+            start = 1
+         end if
 
 !
 !        Move the characters in reverse order, to keep from stomping
 !        anything if the operation is being done in place.
 !
-         LOC = LEN ( OUTPUT )
+         loc = len ( output )
 
-         DO I = LAST, FIRST, -1
-            OUTPUT(LOC:LOC) = INPUT(I:I)
-            LOC = LOC - 1
-         END DO
+         do i = last, first, -1
+            output(loc:loc) = input(i:i)
+            loc = loc - 1
+         end do
 
 !
 !        Clear the first part of OUTPUT, if necessary.
 !
-         IF ( START .GT. 1 ) THEN
-            OUTPUT(1:START-1) = ' '
-         END IF
+         if ( start .gt. 1 ) then
+            output(1:start-1) = ' '
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

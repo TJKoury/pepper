@@ -1,6 +1,6 @@
 !$Procedure RDENCC  ( Read encoded characters from a text file )
 
-      SUBROUTINE RDENCC ( UNIT, N, DATA )
+      subroutine rdencc ( unit, n, data )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      INTEGER               N
-      CHARACTER*(*)         DATA(*)
+      integer               unit
+      integer               n
+      character*(*)         data(*)
 
 ! $ Brief_I/O
 !
@@ -275,164 +275,164 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local parameters
 !
-      CHARACTER*(1)         ESCCHR
-      PARAMETER           ( ESCCHR = '@')
+      character*(1)         escchr
+      parameter           ( escchr = '@')
 
-      INTEGER               MXESCD
-      PARAMETER           ( MXESCD = 2 )
+      integer               mxescd
+      parameter           ( mxescd = 2 )
 
-      INTEGER               MAXENC
-      PARAMETER           ( MAXENC = 64 )
+      integer               maxenc
+      parameter           ( maxenc = 64 )
 
-      INTEGER               ERRLEN
-      PARAMETER           ( ERRLEN = 80 )
+      integer               errlen
+      parameter           ( errlen = 80 )
 !
 !     Local variables
 !
-      CHARACTER*(1)         CH
-      CHARACTER*(MAXENC)    ENCCHR
-      CHARACTER*(ERRLEN)    ERRMSG
-      CHARACTER*(MXESCD)    HEXNUM
+      character*(1)         ch
+      character*(maxenc)    encchr
+      character*(errlen)    errmsg
+      character*(mxescd)    hexnum
 
 
-      INTEGER               DTALEN
-      INTEGER               DTALIN
-      INTEGER               DTAPOS
-      INTEGER               ENCPOS
-      INTEGER               INTCH
-      INTEGER               IOSTAT
-      INTEGER               NCHARS
-      INTEGER               NESCD
+      integer               dtalen
+      integer               dtalin
+      integer               dtapos
+      integer               encpos
+      integer               intch
+      integer               iostat
+      integer               nchars
+      integer               nescd
 
-      LOGICAL               ERROR
-      LOGICAL               ESCAPE
+      logical               error
+      logical               escape
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDENCC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'RDENCC' )
+      end if
 !
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL SETMSG ( 'The number of data items to be read was' // &
+         call setmsg ( 'The number of data items to be read was' // &
                        ' not positive: #.'                        )
-         CALL ERRINT ( '#', N                                     )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                   )
-         CALL CHKOUT ( 'RDENCC'                                   )
-         RETURN
+         call errint ( '#', n                                     )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+         call chkout ( 'RDENCC'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Initialize some stuff here
 !
 !     Make sure that the encoding character string is empty when we
 !     start.
 !
-      ENCCHR = ' '
+      encchr = ' '
 !
 !     We have not encountered any errors yet, so set the error indicator
 !     to .FALSE..
 !
-      ERROR = .FALSE.
+      error = .false.
 !
 !     Get the length of a data ``line'' in the data buffer DATA.
 !
-      DTALEN = LEN( DATA(1) )
+      dtalen = len( data(1) )
 !
 !     We are not currently parsing an escaped character, so set the
 !     escape indicator to .FALSE. and set the number of escape digits
 !     to zero.
 !
-      ESCAPE = .FALSE.
-      NESCD  = 0
+      escape = .false.
+      nescd  = 0
 !
 !     Set the initial line and position for the output data buffer.
 !
-      DTAPOS = 1
-      DTALIN = 1
+      dtapos = 1
+      dtalin = 1
 !
 !     Set the initial position in the encoding buffer to be 1 too
 !     big so that we read an encoded character string from the file
 !     attached to UNIT on the first pass through the loop.
 !
-      ENCPOS = MAXENC + 1
+      encpos = maxenc + 1
 !
 !     Set the number of characters decoded to zero and begin the
 !     decoding loop.
 !
-      NCHARS = 0
-      DO WHILE ( NCHARS .LT. N )
+      nchars = 0
+      do while ( nchars .lt. n )
 !
 !        If the last character we processed was the last one in the
 !        encoded character string, then we need to read in the next
 !        encoded character string from the file. This also accomplishes
 !        the task of reading in the first encoded character string.
 !
-         IF ( ENCPOS .GT. MAXENC ) THEN
+         if ( encpos .gt. maxenc ) then
 
-            READ(UNIT,*,IOSTAT=IOSTAT) ENCCHR
-            IF ( IOSTAT .NE. 0 ) THEN
+            read(unit,*,iostat=iostat) encchr
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error reading from logical unit #,' // &
+               call setmsg ( 'Error reading from logical unit #,' // &
                              ' IOSTAT = #.'                        )
-               CALL ERRINT ( '#', UNIT                             )
-               CALL ERRINT ( '#', IOSTAT                           )
-               CALL SIGERR ( 'SPICE(FILEREADFAILED)'               )
-               CALL CHKOUT ( 'RDENCC'                              )
-               RETURN
+               call errint ( '#', unit                             )
+               call errint ( '#', iostat                           )
+               call sigerr ( 'SPICE(FILEREADFAILED)'               )
+               call chkout ( 'RDENCC'                              )
+               return
 
-            END IF
+            end if
 !
 !           Set the pointer for the encoded character buffer to the
 !           beginning of the buffer.
 !
-            ENCPOS = 1
+            encpos = 1
 
-         END IF
+         end if
 
-         CH = ENCCHR(ENCPOS:ENCPOS)
+         ch = encchr(encpos:encpos)
 !
 !        If we are processing a character which was escaped when it was
 !        encoded, we need to do some special stuff.
 !
-         IF ( ESCAPE ) THEN
+         if ( escape ) then
 
-            NESCD = NESCD + 1
+            nescd = nescd + 1
 
-            IF ( NESCD .EQ. MXESCD ) THEN
+            if ( nescd .eq. mxescd ) then
 !
 !              If we have all of the digits in the encoded character,
 !              then decode it.
 !
-               HEXNUM(NESCD:NESCD) = CH
-               CALL HX2INT( HEXNUM, INTCH, ERROR, ERRMSG )
+               hexnum(nescd:nescd) = ch
+               call hx2int( hexnum, intch, error, errmsg )
 
-               IF ( ERROR ) THEN
+               if ( error ) then
 
-                  CALL SETMSG ( 'Decoding error occurred while'       // &
+                  call setmsg ( 'Decoding error occurred while'       // &
                                 ' attempting to decode item #: @#. #'  )
-                  CALL ERRINT ( '#', NCHARS+1                          )
-                  CALL ERRCH  ( '#', HEXNUM                            )
-                  CALL ERRCH  ( '#', ERRMSG                            )
-                  CALL SIGERR ( 'SPICE(DECODINGERROR)'                 )
-                  CALL CHKOUT ( 'RDENCC'                               )
-                  RETURN
+                  call errint ( '#', nchars+1                          )
+                  call errch  ( '#', hexnum                            )
+                  call errch  ( '#', errmsg                            )
+                  call sigerr ( 'SPICE(DECODINGERROR)'                 )
+                  call chkout ( 'RDENCC'                               )
+                  return
 
-               END IF
+               end if
 
-               CH = CHAR( INTCH )
+               ch = char( intch )
 !
 !              We now have the decoded character. We are no longer
 !              processing an escaped character, so set the escape
@@ -440,34 +440,34 @@
 !              just decoded will be placed into the data buffer DATA
 !              below.
 !
-               ESCAPE = .FALSE.
-               NESCD  = 0
+               escape = .false.
+               nescd  = 0
 
-            ELSE IF ( ( NESCD .LT. MXESCD ) .AND. &
-                      ( NESCD .GT. 0      ) ) THEN
+            else if ( ( nescd .lt. mxescd ) .and. &
+                      ( nescd .gt. 0      ) ) then
 !
 !              Otherwise we are still collecting the digits of the
 !              encoded character, so store the current character and
 !              move on to the next one.
 !
-               HEXNUM(NESCD:NESCD) = CH
+               hexnum(nescd:nescd) = ch
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           Check to see if the current character is the escape
 !           character. If it is, we need to set the escape indicator
 !           to .TRUE. so that we correctly process the encoded
 !           digits.
 !
-            IF ( CH .EQ. ESCCHR ) THEN
+            if ( ch .eq. escchr ) then
 
-               ESCAPE = .TRUE.
+               escape = .true.
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        At this point one of the following is true:
 !
@@ -482,33 +482,33 @@
 !        we need to store the character value that we have in the data
 !        buffer, and move on to the next character.
 !
-         IF ( .NOT. ESCAPE ) THEN
+         if ( .not. escape ) then
 
-            NCHARS = NCHARS + 1
+            nchars = nchars + 1
 !
 !           If the position in the data buffer is greater than the
 !           length  of a data line (DTALEN) then we need to increment
 !           the current data line (DTALIN) and reset the current data
 !           line buffer position (DTAPOS).
 !
-            IF ( DTAPOS .GT. DTALEN ) THEN
+            if ( dtapos .gt. dtalen ) then
 
-               DTALIN = DTALIN + 1
-               DTAPOS = 1
+               dtalin = dtalin + 1
+               dtapos = 1
 
-            END IF
+            end if
 !
 !           Store the current character in the data buffer and
 !           increment the buffer position.
 !
-            DATA(DTALIN)(DTAPOS:DTAPOS) = CH
-            DTAPOS                      = DTAPOS + 1
+            data(dtalin)(dtapos:dtapos) = ch
+            dtapos                      = dtapos + 1
 
-         END IF
+         end if
 !
 !        Increment the encoded character buffer position
 !
-         ENCPOS = ENCPOS + 1
+         encpos = encpos + 1
 !
 !        At this point, we know the following:
 !
@@ -520,8 +520,8 @@
 !        (6)  ESCAPE is .TRUE. if we are currently decoding an escaped
 !             character, otherwise it is .FALSE..
 !
-      END DO
+      end do
 
-      CALL CHKOUT ( 'RDENCC' )
-      RETURN
-      END
+      call chkout ( 'RDENCC' )
+      return
+      end

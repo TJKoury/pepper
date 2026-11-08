@@ -1,6 +1,6 @@
 !$Procedure SCPART ( Spacecraft Clock Partition Information )
 
-      SUBROUTINE SCPART ( SC, NPARTS, PSTART, PSTOP )
+      subroutine scpart ( sc, nparts, pstart, pstop )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sclk.inc'
-      INCLUDE               'zzctr.inc'
+      include               'sclk.inc'
+      include               'zzctr.inc'
 
-      INTEGER               SC
-      INTEGER               NPARTS
-      DOUBLE PRECISION      PSTART  ( * )
-      DOUBLE PRECISION      PSTOP   ( * )
+      integer               sc
+      integer               nparts
+      double precision      pstart  ( * )
+      double precision      pstop   ( * )
 
 ! $ Brief_I/O
 !
@@ -319,24 +319,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCPART' )
+      call chkin ( 'SCPART' )
 
 !
 !     Get the partition values from the type 1 subsystem. If the
 !     clock is not type 1, an error will be signaled.
 !
-      CALL SCPR01 ( SC, NPARTS, PSTART, PSTOP )
+      call scpr01 ( sc, nparts, pstart, pstop )
 
-      CALL CHKOUT ( 'SCPART' )
-      RETURN
-      END
+      call chkout ( 'SCPART' )
+      return
+      end

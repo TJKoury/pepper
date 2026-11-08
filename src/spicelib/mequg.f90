@@ -1,6 +1,6 @@
 !$Procedure MEQUG  ( Matrix equal to another, general dimension )
 
-      SUBROUTINE MEQUG ( M1, NR, NC, MOUT )
+      subroutine mequg ( m1, nr, nc, mout )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NR
-      INTEGER            NC
-      DOUBLE PRECISION   M1   ( NR,NC )
-      DOUBLE PRECISION   MOUT ( NR,NC )
+      integer            nr
+      integer            nc
+      double precision   m1   ( nr,nc )
+      double precision   mout ( nr,nc )
 
 ! $ Brief_I/O
 !
@@ -123,7 +123,7 @@
 !-&
 
 
-      CALL MOVED (M1, NR*NC, MOUT)
+      call moved (m1, nr*nc, mout)
 !
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DAFWDA ( DAF, write data to address )
 
-      SUBROUTINE DAFWDA ( HANDLE, BEGIN, END, DATA )
+      subroutine dafwda ( handle, begin, end, data )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BEGIN
-      INTEGER               END
-      DOUBLE PRECISION      DATA     ( * )
+      integer               handle
+      integer               begin
+      integer               end
+      double precision      data     ( * )
 
 ! $ Brief_I/O
 !
@@ -155,111 +155,111 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BSIZE
-      PARAMETER           ( BSIZE = 128 )
+      integer               bsize
+      parameter           ( bsize = 128 )
 
-      INTEGER               BEGR
-      INTEGER               BEGW
-      INTEGER               ENDR
-      INTEGER               ENDW
+      integer               begr
+      integer               begw
+      integer               endr
+      integer               endw
 
-      INTEGER               RECNO
-      DOUBLE PRECISION      BUFFER   ( BSIZE )
-      INTEGER               FIRST
-      INTEGER               N
-      INTEGER               NEXT
-      LOGICAL               FOUND
+      integer               recno
+      double precision      buffer   ( bsize )
+      integer               first
+      integer               n
+      integer               next
+      logical               found
 
 !
 !     Saved variables
 !
-      SAVE                  BUFFER
+      save                  buffer
 
 !
 !     Initial values
 !
-      DATA                  BUFFER / BSIZE * 0.D0 /
+      data                  buffer / bsize * 0.d0 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DAFWDA' )
+      call chkin ( 'DAFWDA' )
 
 !
 !     Bad addresses?
 !
-      IF ( BEGIN .LE. 0 ) THEN
-         CALL SETMSG ( 'Negative beginning address: #' )
-         CALL ERRINT ( '#', BEGIN )
-         CALL SIGERR ( 'SPICE(DAFNEGADDR)' )
-         CALL CHKOUT ( 'DAFWDA' )
-         RETURN
+      if ( begin .le. 0 ) then
+         call setmsg ( 'Negative beginning address: #' )
+         call errint ( '#', begin )
+         call sigerr ( 'SPICE(DAFNEGADDR)' )
+         call chkout ( 'DAFWDA' )
+         return
 
-      ELSE IF ( BEGIN .GT. END ) THEN
-         CALL SETMSG ( 'Beginning address (#) greater than ending '   // &
+      else if ( begin .gt. end ) then
+         call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#)' )
-         CALL ERRINT ( '#', BEGIN )
-         CALL ERRINT ( '#', END   )
-         CALL SIGERR ( 'SPICE(DAFBEGGTEND)' )
-         CALL CHKOUT ( 'DAFWDA' )
-         RETURN
-      END IF
+         call errint ( '#', begin )
+         call errint ( '#', end   )
+         call sigerr ( 'SPICE(DAFBEGGTEND)' )
+         call chkout ( 'DAFWDA' )
+         return
+      end if
 
 !
 !     Convert raw addresses to record/word representations.
 !
-      CALL DAFARW ( BEGIN, BEGR, BEGW )
-      CALL DAFARW ( END,   ENDR, ENDW )
+      call dafarw ( begin, begr, begw )
+      call dafarw ( end,   endr, endw )
 
 !
 !     The first and last records may have to be read, updated, and
 !     rewritten. Any records in between may be written directly.
 !
-      NEXT = 1
+      next = 1
 
-      DO RECNO = BEGR, ENDR
+      do recno = begr, endr
 
-         IF ( RECNO .EQ. BEGR  .OR.  RECNO .EQ. ENDR ) THEN
-            CALL DAFRDR ( HANDLE, RECNO, 1, BSIZE, BUFFER, FOUND )
+         if ( recno .eq. begr  .or.  recno .eq. endr ) then
+            call dafrdr ( handle, recno, 1, bsize, buffer, found )
 
-            IF ( .NOT. FOUND ) THEN
-               CALL CLEARD ( BSIZE, BUFFER )
-            END IF
-         END IF
+            if ( .not. found ) then
+               call cleard ( bsize, buffer )
+            end if
+         end if
 
-         IF ( BEGR .EQ. ENDR ) THEN
-            FIRST = BEGW
-            N     = ENDW - BEGW + 1
+         if ( begr .eq. endr ) then
+            first = begw
+            n     = endw - begw + 1
 
-         ELSE IF ( RECNO .EQ. BEGR ) THEN
-            FIRST = BEGW
-            N     = BSIZE - BEGW + 1
+         else if ( recno .eq. begr ) then
+            first = begw
+            n     = bsize - begw + 1
 
-         ELSE IF ( RECNO .EQ. ENDR ) THEN
-            FIRST = 1
-            N     = ENDW
+         else if ( recno .eq. endr ) then
+            first = 1
+            n     = endw
 
-         ELSE
-            FIRST = 1
-            N     = BSIZE
-         END IF
+         else
+            first = 1
+            n     = bsize
+         end if
 
-         CALL MOVED ( DATA(NEXT), N, BUFFER(FIRST) )
-         NEXT = NEXT + N
+         call moved ( data(next), n, buffer(first) )
+         next = next + n
 
-         CALL DAFWDR ( HANDLE, RECNO, BUFFER )
+         call dafwdr ( handle, recno, buffer )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DAFWDA' )
-      RETURN
-      END
+      call chkout ( 'DAFWDA' )
+      return
+      end

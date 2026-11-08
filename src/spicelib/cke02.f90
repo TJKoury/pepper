@@ -1,6 +1,6 @@
 !$Procedure CKE02 ( C-kernel, evaluate pointing record, data type 2 )
 
-      SUBROUTINE CKE02 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      subroutine cke02 ( needav, record, cmat, av, clkout )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( *    )
-      DOUBLE PRECISION      CMAT   ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3    )
-      DOUBLE PRECISION      CLKOUT
+      logical               needav
+      double precision      record ( *    )
+      double precision      cmat   ( 3, 3 )
+      double precision      av     ( 3    )
+      double precision      clkout
 
 ! $ Brief_I/O
 !
@@ -277,9 +277,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
 
 
@@ -287,27 +287,27 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      QUAT   ( 4    )
-      DOUBLE PRECISION      CBASE  ( 3, 3 )
-      DOUBLE PRECISION      ROT    ( 3, 3 )
-      DOUBLE PRECISION      AVTEMP (    3 )
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      TIME
+      double precision      quat   ( 4    )
+      double precision      cbase  ( 3, 3 )
+      double precision      rot    ( 3, 3 )
+      double precision      avtemp (    3 )
+      double precision      angle
+      double precision      time
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKE02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKE02' )
+      end if
 
 !
 !     Copy the returned encoded SCLK time into CLKOUT.
 !
-      CLKOUT = RECORD(2)
+      clkout = record(2)
 
 !     The quaternion stored in RECORD represents the C - matrix
 !     corresponding to the start time of the interval.  The angular
@@ -325,8 +325,8 @@
 !        RECORD ( 9  ) = av2
 !        RECORD ( 10 ) = av3
 !
-      CALL VEQUG ( RECORD(4), 4, QUAT )
-      CALL VEQU  ( RECORD(8), AVTEMP  )
+      call vequg ( record(4), 4, quat )
+      call vequ  ( record(8), avtemp  )
 
 !
 !     Calculate the angle of the rotation.
@@ -335,20 +335,20 @@
 !        RECORD ( 2 ) = The time that pointing was returned for.
 !        RECORD ( 3 ) = The number of seconds per SCLK tick.
 !
-      TIME  =  ( RECORD(2) - RECORD(1) ) * RECORD(3)
+      time  =  ( record(2) - record(1) ) * record(3)
 
-      ANGLE =    TIME * VNORM ( AVTEMP )
+      angle =    time * vnorm ( avtemp )
 
 !
 !     Construct a matrix which rotates vectors by ANGLE radians about
 !     AVTEMP.
 !
-      CALL AXISAR ( AVTEMP, ANGLE, ROT )
+      call axisar ( avtemp, angle, rot )
 
 !
 !     Convert the quaternion to a C - matrix.
 !
-      CALL Q2M ( QUAT, CBASE )
+      call q2m ( quat, cbase )
 !
 !     Rotate each of the axis vectors of the spacecraft instrument frame
 !     by ANGLE radians about AVTEMP. (AVTEMP is given in the same
@@ -366,16 +366,16 @@
 !        [       ]       [       ]           [        ]
 !
 
-      CALL MXMT ( CBASE, ROT, CMAT )
+      call mxmt ( cbase, rot, cmat )
 
 !
 !     Return the angular velocity only if it is requested.
 !
-      IF ( NEEDAV ) THEN
-         CALL VEQU ( AVTEMP, AV )
-      END IF
+      if ( needav ) then
+         call vequ ( avtemp, av )
+      end if
 
 
-      CALL CHKOUT ( 'CKE02' )
-      RETURN
-      END
+      call chkout ( 'CKE02' )
+      return
+      end

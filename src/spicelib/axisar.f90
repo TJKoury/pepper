@@ -1,6 +1,6 @@
 !$Procedure AXISAR ( Axis and angle to rotation )
 
-      SUBROUTINE AXISAR ( AXIS, ANGLE, R )
+      subroutine axisar ( axis, angle, r )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      AXIS  ( 3 )
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      R     ( 3, 3 )
+      double precision      axis  ( 3 )
+      double precision      angle
+      double precision      r     ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -351,23 +351,23 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VTEMP ( 3 )
-      INTEGER               I
+      double precision      vtemp ( 3 )
+      integer               i
 
 !
 !     First, set R equal to the identity.
 !
-      CALL IDENT ( R )
+      call ident ( r )
 
 !
 !     The matrix we want rotates EVERY vector by ANGLE about AXIS.
 !     In particular, it does so to our basis vectors.  The columns
 !     of R are the images of the basis vectors under this rotation.
 !
-      DO I = 1, 3
-         CALL VROTV ( R(1,I), AXIS, ANGLE, VTEMP  )
-         CALL VEQU  ( VTEMP,               R(1,I) )
-      END DO
+      do i = 1, 3
+         call vrotv ( r(1,i), axis, angle, vtemp  )
+         call vequ  ( vtemp,               r(1,i) )
+      end do
 
-      RETURN
-      END
+      return
+      end

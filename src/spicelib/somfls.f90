@@ -1,6 +1,6 @@
 !$Procedure SOMFLS ( Some entries false? )
 
-      LOGICAL FUNCTION SOMFLS ( LOGCLS, N )
+      logical function somfls ( logcls, n )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               LOGCLS ( * )
-      INTEGER               N
+      logical               logcls ( * )
+      integer               n
 
 ! $ Brief_I/O
 !
@@ -118,25 +118,25 @@
 !-&
 
 
-      INTEGER               I
+      integer               i
 
 !
 !     Just do it.
 !
 
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( .NOT. LOGCLS(I) ) THEN
+         if ( .not. logcls(i) ) then
 
-            SOMFLS = .TRUE.
-            RETURN
+            somfls = .true.
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      SOMFLS = .FALSE.
-      RETURN
+      somfls = .false.
+      return
 
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure UCRSS ( Unitized cross product, 3x3 )
 
-      SUBROUTINE UCRSS ( V1, V2, VOUT )
+      subroutine ucrss ( v1, v2, vout )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V1   ( 3 )
-      DOUBLE PRECISION   V2   ( 3 )
-      DOUBLE PRECISION   VOUT ( 3 )
+      double precision   v1   ( 3 )
+      double precision   v2   ( 3 )
+      double precision   vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -204,70 +204,70 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VCROSS(3)
-      DOUBLE PRECISION      VMAG
+      double precision      vcross(3)
+      double precision      vmag
 
-      DOUBLE PRECISION      MAXV1
-      DOUBLE PRECISION      MAXV2
+      double precision      maxv1
+      double precision      maxv2
 
-      DOUBLE PRECISION      TV1 ( 3 )
-      DOUBLE PRECISION      TV2 ( 3 )
+      double precision      tv1 ( 3 )
+      double precision      tv2 ( 3 )
 
 !
 !     Get the biggest component of each of the two vectors.
 !
-      MAXV1 = MAX ( DABS(V1(1)), DABS(V1(2)), DABS(V1(3)) )
-      MAXV2 = MAX ( DABS(V2(1)), DABS(V2(2)), DABS(V2(3)) )
+      maxv1 = max ( dabs(v1(1)), dabs(v1(2)), dabs(v1(3)) )
+      maxv2 = max ( dabs(v2(1)), dabs(v2(2)), dabs(v2(3)) )
 
 !
 !     Scale V1 and V2 by 1/MAXV1 and 1/MAXV2 respectively
 !
-      IF ( MAXV1 .NE. 0 ) THEN
-         TV1(1) = V1(1)/MAXV1
-         TV1(2) = V1(2)/MAXV1
-         TV1(3) = V1(3)/MAXV1
-      ELSE
-         TV1(1) = 0.0D0
-         TV1(2) = 0.0D0
-         TV1(3) = 0.0D0
-      END IF
+      if ( maxv1 .ne. 0 ) then
+         tv1(1) = v1(1)/maxv1
+         tv1(2) = v1(2)/maxv1
+         tv1(3) = v1(3)/maxv1
+      else
+         tv1(1) = 0.0d0
+         tv1(2) = 0.0d0
+         tv1(3) = 0.0d0
+      end if
 
-      IF ( MAXV2 .NE. 0 ) THEN
-         TV2(1) = V2(1)/MAXV2
-         TV2(2) = V2(2)/MAXV2
-         TV2(3) = V2(3)/MAXV2
-      ELSE
-         TV2(1) = 0.0D0
-         TV2(2) = 0.0D0
-         TV2(3) = 0.0D0
-      END IF
+      if ( maxv2 .ne. 0 ) then
+         tv2(1) = v2(1)/maxv2
+         tv2(2) = v2(2)/maxv2
+         tv2(3) = v2(3)/maxv2
+      else
+         tv2(1) = 0.0d0
+         tv2(2) = 0.0d0
+         tv2(3) = 0.0d0
+      end if
 
 !
 !  Calculate the cross product of V1 and V2
 !
-      VCROSS(1) = TV1(2)*TV2(3) - TV1(3)*TV2(2)
-      VCROSS(2) = TV1(3)*TV2(1) - TV1(1)*TV2(3)
-      VCROSS(3) = TV1(1)*TV2(2) - TV1(2)*TV2(1)
+      vcross(1) = tv1(2)*tv2(3) - tv1(3)*tv2(2)
+      vcross(2) = tv1(3)*tv2(1) - tv1(1)*tv2(3)
+      vcross(3) = tv1(1)*tv2(2) - tv1(2)*tv2(1)
 
 !
 !  Get the magnitude of VCROSS and normalize it
 !
-      VMAG = VNORM(VCROSS)
+      vmag = vnorm(vcross)
 
-      IF (VMAG.GT.0.D0) THEN
-         VOUT(1) = VCROSS(1) / VMAG
-         VOUT(2) = VCROSS(2) / VMAG
-         VOUT(3) = VCROSS(3) / VMAG
-      ELSE
-         VOUT(1) = 0.D0
-         VOUT(2) = 0.D0
-         VOUT(3) = 0.D0
-      END IF
+      if (vmag.gt.0.d0) then
+         vout(1) = vcross(1) / vmag
+         vout(2) = vcross(2) / vmag
+         vout(3) = vcross(3) / vmag
+      else
+         vout(1) = 0.d0
+         vout(2) = 0.d0
+         vout(3) = 0.d0
+      end if
 
-      RETURN
-      END
+      return
+      end

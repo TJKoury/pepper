@@ -1,6 +1,6 @@
 !$Procedure EKOPR ( EK, open file for reading )
 
-      SUBROUTINE EKOPR ( FNAME, HANDLE )
+      subroutine ekopr ( fname, handle )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         FNAME
-      INTEGER               HANDLE
+      character*(*)         fname
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -193,35 +193,35 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKOPR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKOPR' )
+      end if
 
 !
 !     Open the file as a DAS file.
 !
-      CALL DASOPR ( FNAME, HANDLE )
+      call dasopr ( fname, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKOPR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKOPR' )
+         return
+      end if
 
 !
 !     Nothing doing unless the architecture is correct.  This file
 !     should be a paged DAS EK.
 !
-      CALL ZZEKPGCH ( HANDLE, 'READ' )
+      call zzekpgch ( handle, 'READ' )
 
 
-      CALL CHKOUT ( 'EKOPR' )
-      RETURN
-      END
+      call chkout ( 'EKOPR' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKR19 ( SPK, read record from segment, type 19 )
 
-      SUBROUTINE SPKR19 ( HANDLE, DESCR, ET, RECORD )
+      subroutine spkr19 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk19.inc'
-      INCLUDE 'spkrec.inc'
+      include 'spk19.inc'
+      include 'spkrec.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -195,163 +195,163 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLED
-      INTEGER               LSTLTD
+      integer               lstled
+      integer               lstltd
 
-      LOGICAL               ODD
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               odd
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = DIRSIZ + 1 )
+      integer               bufsiz
+      parameter           ( bufsiz = dirsiz + 1 )
 
-      INTEGER               CTRLSZ
-      PARAMETER           ( CTRLSZ = 3 )
+      integer               ctrlsz
+      parameter           ( ctrlsz = 3 )
 
 !
 !     Maximum window sizes, based on subtypes:
 !
-      INTEGER               S19MW0
-      PARAMETER           ( S19MW0 =  ( MAXDEG + 1 )/2  )
+      integer               s19mw0
+      parameter           ( s19mw0 =  ( maxdeg + 1 )/2  )
 
-      INTEGER               S19MW1
-      PARAMETER           ( S19MW1 =  ( MAXDEG + 1 )    )
+      integer               s19mw1
+      parameter           ( s19mw1 =  ( maxdeg + 1 )    )
 
-      INTEGER               S19MW2
-      PARAMETER           ( S19MW2 =  ( MAXDEG + 1 )    )
+      integer               s19mw2
+      parameter           ( s19mw2 =  ( maxdeg + 1 )    )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      CONTRL ( CTRLSZ )
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      MINTIM ( ND )
-      DOUBLE PRECISION      SVBTIM
-      DOUBLE PRECISION      SVETIM
+      double precision      buffer ( bufsiz )
+      double precision      contrl ( ctrlsz )
+      double precision      dc     ( nd )
+      double precision      mintim ( nd )
+      double precision      svbtim
+      double precision      svetim
 
-      INTEGER               BADDR
-      INTEGER               BEGIDX
-      INTEGER               BUFBAS
-      INTEGER               DIRBAS
-      INTEGER               EADDR
-      INTEGER               ENDIDX
-      INTEGER               FIRST
-      INTEGER               GROUP
-      INTEGER               HIGH
-      INTEGER               I
-      INTEGER               IC     ( NI )
-      INTEGER               ISEL
-      INTEGER               IVBAS
-      INTEGER               IVBIX
-      INTEGER               IVEIX
-      INTEGER               LAST
-      INTEGER               LOW
-      INTEGER               LSIZE
-      INTEGER               MAXWND
-      INTEGER               MINIB
-      INTEGER               MINIE
-      INTEGER               MINIIX
-      INTEGER               MXWNSZ ( 0 : S19NST-1 )
-      INTEGER               N
-      INTEGER               NDIR
-      INTEGER               NPKDIR
-      INTEGER               NPKT
-      INTEGER               NRCPKT
-      INTEGER               NREAD
-      INTEGER               PKDBAS
-      INTEGER               PKTSIZ
-      INTEGER               PKTSZS ( 0 : S19NST-1 )
-      INTEGER               REMAIN
-      INTEGER               RSIZE
-      INTEGER               SUBTYP
-      INTEGER               SVBEG
-      INTEGER               SVHAN
-      INTEGER               SVMIIX
-      INTEGER               SVMINB
-      INTEGER               SVN
-      INTEGER               SVNPKT
-      INTEGER               SVPKDB
-      INTEGER               SVPKND
-      INTEGER               SVPKSZ
-      INTEGER               SVSTYP
-      INTEGER               SVWNSZ
-      INTEGER               TIMBAS
-      INTEGER               TYPE
-      INTEGER               WNDSIZ
+      integer               baddr
+      integer               begidx
+      integer               bufbas
+      integer               dirbas
+      integer               eaddr
+      integer               endidx
+      integer               first
+      integer               group
+      integer               high
+      integer               i
+      integer               ic     ( ni )
+      integer               isel
+      integer               ivbas
+      integer               ivbix
+      integer               iveix
+      integer               last
+      integer               low
+      integer               lsize
+      integer               maxwnd
+      integer               minib
+      integer               minie
+      integer               miniix
+      integer               mxwnsz ( 0 : s19nst-1 )
+      integer               n
+      integer               ndir
+      integer               npkdir
+      integer               npkt
+      integer               nrcpkt
+      integer               nread
+      integer               pkdbas
+      integer               pktsiz
+      integer               pktszs ( 0 : s19nst-1 )
+      integer               remain
+      integer               rsize
+      integer               subtyp
+      integer               svbeg
+      integer               svhan
+      integer               svmiix
+      integer               svminb
+      integer               svn
+      integer               svnpkt
+      integer               svpkdb
+      integer               svpknd
+      integer               svpksz
+      integer               svstyp
+      integer               svwnsz
+      integer               timbas
+      integer               type
+      integer               wndsiz
 
-      LOGICAL               IVLSEL
-      LOGICAL               PASS1
-      LOGICAL               PRVOK
-      LOGICAL               SAMIVL
-      LOGICAL               SAMSEG
-      LOGICAL               SVLAST
-      LOGICAL               SVOK
+      logical               ivlsel
+      logical               pass1
+      logical               prvok
+      logical               samivl
+      logical               samseg
+      logical               svlast
+      logical               svok
 
 !
 !     Saved variables
 !
-      SAVE                  MXWNSZ
-      SAVE                  PASS1
-      SAVE                  PKTSZS
-      SAVE                  SVBEG
-      SAVE                  SVBTIM
-      SAVE                  SVETIM
-      SAVE                  SVHAN
-      SAVE                  SVLAST
-      SAVE                  SVMIIX
-      SAVE                  SVMINB
-      SAVE                  SVN
-      SAVE                  SVNPKT
-      SAVE                  SVOK
-      SAVE                  SVPKDB
-      SAVE                  SVPKND
-      SAVE                  SVPKSZ
-      SAVE                  SVSTYP
-      SAVE                  SVWNSZ
+      save                  mxwnsz
+      save                  pass1
+      save                  pktszs
+      save                  svbeg
+      save                  svbtim
+      save                  svetim
+      save                  svhan
+      save                  svlast
+      save                  svmiix
+      save                  svminb
+      save                  svn
+      save                  svnpkt
+      save                  svok
+      save                  svpkdb
+      save                  svpknd
+      save                  svpksz
+      save                  svstyp
+      save                  svwnsz
 
 
 !
 !     Initial values
 !
-      DATA                  MXWNSZ  /  S19MW0, S19MW1, S19MW2 /
-      DATA                  PASS1   /  .TRUE.  /
-      DATA                  PKTSZS  /  S19PS0, S19PS1, S19PS2 /
-      DATA                  SVBEG   /  -1      /
-      DATA                  SVBTIM  /   0.D0   /
-      DATA                  SVETIM  /  -1.D0   /
-      DATA                  SVHAN   /   0      /
-      DATA                  SVLAST  /  .FALSE. /
-      DATA                  SVMIIX  /  -1      /
-      DATA                  SVMINB  /  -1      /
-      DATA                  SVN     /  -1      /
-      DATA                  SVNPKT  /  -1      /
-      DATA                  SVOK    /  .FALSE. /
-      DATA                  SVPKDB  /  -1      /
-      DATA                  SVPKND  /  -1      /
-      DATA                  SVPKSZ  /  -1      /
-      DATA                  SVSTYP  /  -1      /
-      DATA                  SVWNSZ  /  -1      /
+      data                  mxwnsz  /  s19mw0, s19mw1, s19mw2 /
+      data                  pass1   /  .true.  /
+      data                  pktszs  /  s19ps0, s19ps1, s19ps2 /
+      data                  svbeg   /  -1      /
+      data                  svbtim  /   0.d0   /
+      data                  svetim  /  -1.d0   /
+      data                  svhan   /   0      /
+      data                  svlast  /  .false. /
+      data                  svmiix  /  -1      /
+      data                  svminb  /  -1      /
+      data                  svn     /  -1      /
+      data                  svnpkt  /  -1      /
+      data                  svok    /  .false. /
+      data                  svpkdb  /  -1      /
+      data                  svpknd  /  -1      /
+      data                  svpksz  /  -1      /
+      data                  svstyp  /  -1      /
+      data                  svwnsz  /  -1      /
 
 
 
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKR19' )
+      call chkin ( 'SPKR19' )
 
 !
 !     Before any error checks are done, copy the status from
@@ -359,8 +359,8 @@
 !     .FALSE. here so it will be .FALSE. on exit unless this
 !     call is successful.
 !
-      PRVOK = SVOK
-      SVOK  = .FALSE.
+      prvok = svok
+      svok  = .false.
 
 !
 !     Terminology: below, the phrase "base address of 'X'" refers to
@@ -448,53 +448,53 @@
 !     Start with a parameter compatibility check on the first
 !     pass.
 !
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 
-         IF ( MAXREC .LT. MAXRSZ ) THEN
+         if ( maxrec .lt. maxrsz ) then
 
-            CALL SETMSG ( 'SPK type 19 record size may be as ' &
+            call setmsg ( 'SPK type 19 record size may be as ' &
             //            'large as #, but SPKPVN record size ' &
             //            '(defined in spkrec.inc) is #.'      )
-            CALL ERRINT ( '#',  MAXRSZ                         )
-            CALL ERRINT ( '#',  MAXREC                         )
-            CALL SIGERR ( 'SPICE(BUG)'                         )
+            call errint ( '#',  maxrsz                         )
+            call errint ( '#',  maxrec                         )
+            call sigerr ( 'SPICE(BUG)'                         )
 
-         END IF
+         end if
 
 !
 !        Indicate the first pass was completed.
 !
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Unpack the segment descriptor, and get the start and end
 !     addresses of the segment.
 !
-      CALL DAFUS ( DESCR, 2, 6, DC, IC )
+      call dafus ( descr, 2, 6, dc, ic )
 
-      TYPE  = IC( 4 )
-      BADDR = IC( 5 )
-      EADDR = IC( 6 )
+      type  = ic( 4 )
+      baddr = ic( 5 )
+      eaddr = ic( 6 )
 
 
 !
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      IF (  ( ET .LT. DC(1) )  .OR.  ( ET .GT. DC(2) )  )  THEN
+      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
 
-         CALL SETMSG( 'Request time # is outside of descriptor ' &
+         call setmsg( 'Request time # is outside of descriptor ' &
          //           'bounds # : #.'                           )
-         CALL ERRDP ( '#',  ET                                  )
-         CALL ERRDP ( '#',  DC(1)                               )
-         CALL ERRDP ( '#',  DC(2)                               )
-         CALL SIGERR( 'SPICE(TIMEOUTOFBOUNDS)'                  )
-         CALL CHKOUT( 'SPKR19'                                  )
-         RETURN
+         call errdp ( '#',  et                                  )
+         call errdp ( '#',  dc(1)                               )
+         call errdp ( '#',  dc(2)                               )
+         call sigerr( 'SPICE(TIMEOUTOFBOUNDS)'                  )
+         call chkout( 'SPKR19'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Decide whether we're looking at the same segment we saw on the
@@ -504,62 +504,62 @@
 !     Re-use of data from a previous call requires that the saved
 !     data were set on a successful call.
 !
-      SAMSEG  =       ( HANDLE .EQ.  SVHAN ) &
-                .AND. ( BADDR  .EQ.  SVBEG ) &
-                .AND.                PRVOK
+      samseg  =       ( handle .eq.  svhan ) &
+                .and. ( baddr  .eq.  svbeg ) &
+                .and.                prvok
 
 !
 !     Give SAMIVL an initial value. If we do have the
 !     same interval, update SAMIVL to indicate this.
 !
-      SAMIVL = .FALSE.
+      samivl = .false.
 
-      IF ( SAMSEG ) THEN
+      if ( samseg ) then
 !
 !        We now assume that all data saved from the last
 !        read of this segment are valid.
 !
-         IF ( SVLAST ) THEN
+         if ( svlast ) then
 !
 !           We pick the last interval containing ET. For
 !           all intervals but the last, ET must be
 !           less than the interval end time.
 !
-            IF ( SVMIIX .LT. SVN ) THEN
+            if ( svmiix .lt. svn ) then
 
-               SAMIVL =       ( ET .GE. SVBTIM ) &
-                        .AND. ( ET .LT. SVETIM )
-            ELSE
+               samivl =       ( et .ge. svbtim ) &
+                        .and. ( et .lt. svetim )
+            else
 
-               SAMIVL =         ET .GE. SVBTIM &
-                        .AND. ( ET .LE. SVETIM )
+               samivl =         et .ge. svbtim &
+                        .and. ( et .le. svetim )
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           We pick the first interval containing ET. For
 !           all intervals but the first, ET must be
 !           greater than the interval start time.
 !
-            IF ( SVMIIX .GT. 1 ) THEN
+            if ( svmiix .gt. 1 ) then
 
-               SAMIVL =       ( ET  .GT. SVBTIM ) &
-                        .AND. ( ET  .LE. SVETIM )
+               samivl =       ( et  .gt. svbtim ) &
+                        .and. ( et  .le. svetim )
 
-            ELSE
+            else
 
-               SAMIVL =         ET  .GE. SVBTIM &
-                        .AND. ( ET  .LE. SVETIM )
+               samivl =         et  .ge. svbtim &
+                        .and. ( et  .le. svetim )
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( SAMSEG .AND. SAMIVL ) THEN
+      if ( samseg .and. samivl ) then
 !
 !        We're looking at the same segment as last time, and the
 !        interpolation interval we looked up last time is applicable
@@ -576,8 +576,8 @@
 !           - The mini-segment's packet directory count
 !           - The mini-segment's packet directory base address
 !
-         NPKDIR = SVPKND
-         PKDBAS = SVPKDB
+         npkdir = svpknd
+         pkdbas = svpkdb
 
 !
 !        Restore
@@ -586,9 +586,9 @@
 !           - The mini-segment/interval index
 !           - The mini-segment/interval start pointer
 !
-         N      = SVN
-         MINIIX = SVMIIX
-         MINIB  = SVMINB
+         n      = svn
+         miniix = svmiix
+         minib  = svminb
 
 !
 !        Restore
@@ -598,12 +598,12 @@
 !           - The mini-segment packet count
 !           - The mini-segment window size
 !
-         SUBTYP = SVSTYP
-         PKTSIZ = SVPKSZ
-         NPKT   = SVNPKT
-         WNDSIZ = SVWNSZ
+         subtyp = svstyp
+         pktsiz = svpksz
+         npkt   = svnpkt
+         wndsiz = svwnsz
 
-      ELSE
+      else
 !
 !        The segment and interval information for the current segment
 !        must be looked up.
@@ -612,15 +612,15 @@
 !
 !        Make sure that this really is a type 19 data segment.
 !
-         IF ( TYPE .NE. 19 ) THEN
+         if ( type .ne. 19 ) then
 
-            CALL SETMSG( 'You are attempting to locate type * ' &
+            call setmsg( 'You are attempting to locate type * ' &
             //           'data in a type 19 data segment.'      )
-            CALL ERRINT( '*',  TYPE                             )
-            CALL SIGERR( 'SPICE(WRONGSPKTYPE)'                  )
-            CALL CHKOUT( 'SPKR19'                               )
-            RETURN
-         END IF
+            call errint( '*',  type                             )
+            call sigerr( 'SPICE(WRONGSPKTYPE)'                  )
+            call chkout( 'SPKR19'                               )
+            return
+         end if
 
 !
 !        Locate the interpolation interval that contains the request
@@ -631,17 +631,17 @@
 !        intervals. The segment's interval selection flag tells us how
 !        to resolve this.
 !
-         CALL DAFGDA ( HANDLE, EADDR-1, EADDR, CONTRL )
+         call dafgda ( handle, eaddr-1, eaddr, contrl )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKR19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKR19' )
+            return
+         end if
 
-         ISEL   = NINT ( CONTRL(1) )
-         N      = NINT ( CONTRL(2) )
+         isel   = nint ( contrl(1) )
+         n      = nint ( contrl(2) )
 
-         IVLSEL = ISEL .EQ. ITRUE
+         ivlsel = isel .eq. itrue
 
 !
 !        Determine the number of interval directory entries in the
@@ -660,7 +660,7 @@
 !
 !        and the numerator in the ratio above is incremented by 1.
 !
-         NDIR = N / DIRSIZ
+         ndir = n / dirsiz
 
 !
 !        Note that the directory placement scheme always leaves
@@ -680,60 +680,60 @@
 !        and skipping over the control area, the mini-segment
 !        start/stop pointers, and the interval directory itself.
 !
-         DIRBAS = EADDR - 2 - ( N + 1 ) - NDIR
+         dirbas = eaddr - 2 - ( n + 1 ) - ndir
 
 !
 !        The way we search the directory depends on the treatment
 !        of request times that lie on interval boundaries.
 !
-         IF ( IVLSEL ) THEN
+         if ( ivlsel ) then
 !
 !           If there is an interval directory, search it to determine
 !           the group of interval times to search next.
 !
-            IF ( NDIR .GT. 0 ) THEN
+            if ( ndir .gt. 0 ) then
 !
 !              Find the last directory entry *less than or equal to*
 !              the request time. The directory entry *after* that one,
 !              if such exists, is the one to pick.
 !
-               NREAD  = MIN ( NDIR, BUFSIZ )
-               BUFBAS = DIRBAS
+               nread  = min ( ndir, bufsiz )
+               bufbas = dirbas
 
 !
 !              Fetch the current batch of directory entries.
 !
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+               call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKR19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKR19' )
+                  return
+               end if
 
-               REMAIN = NDIR - NREAD
+               remain = ndir - nread
 
 !
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
 !
-               DO WHILE (       ( REMAIN        .GT. 0  ) &
-                          .AND. ( BUFFER(NREAD) .LE. ET )  )
+               do while (       ( remain        .gt. 0  ) &
+                          .and. ( buffer(nread) .le. et )  )
 
-                  BUFBAS = BUFBAS + NREAD
-                  NREAD  = MIN ( REMAIN, BUFSIZ )
+                  bufbas = bufbas + nread
+                  nread  = min ( remain, bufsiz )
 !
 !                 Fetch the current batch of directory entries.
 !
-                  CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+                  call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT( 'SPKR19' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout( 'SPKR19' )
+                     return
+                  end if
 
-                  REMAIN = REMAIN - NREAD
+                  remain = remain - nread
 
-               END DO
+               end do
 
 !
 !              Count the directory entries that are less than or equal
@@ -742,24 +742,24 @@
 !              epochs containing ET exceeds the skipped directory count
 !              by 1.
 !
-               GROUP =    BUFBAS - DIRBAS &
-                       +  LSTLED ( ET, NREAD, BUFFER ) &
+               group =    bufbas - dirbas &
+                       +  lstled ( et, nread, buffer ) &
                        +  1
 
-            ELSE
+            else
 !
 !              There's no question about which group of epochs to
 !              search.
 !
-               GROUP = 1
+               group = 1
 
-            END IF
+            end if
 
 !
 !           Let IVBAS be the base address of the sequence of interval
 !           time bounds.
 !
-            IVBAS  = DIRBAS - ( N + 1 )
+            ivbas  = dirbas - ( n + 1 )
 
 !
 !           Now find the index of the last interval boundary less than
@@ -767,59 +767,59 @@
 !           epochs first, so compute the base of the range of addresses
 !           containing this group.
 
-            BUFBAS = IVBAS + ( ( GROUP - 1 ) * DIRSIZ )
+            bufbas = ivbas + ( ( group - 1 ) * dirsiz )
 
 !
 !           Compute the number of epochs to read. Note that all groups
 !           of epochs except the last have DIRSIZ elements.
 !
-            REMAIN = ( N + 1 ) - ( ( GROUP - 1 ) * DIRSIZ )
+            remain = ( n + 1 ) - ( ( group - 1 ) * dirsiz )
 !
 !           Note that REMAIN is always non-zero, since there's always
 !           at least one epoch that exceeds the last directory entry.
 !
-            NREAD  = MIN ( DIRSIZ, REMAIN )
+            nread  = min ( dirsiz, remain )
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+            call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKR19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKR19' )
+               return
+            end if
 
 !
 !           Find the index of the first epoch greater than ET. The case
 !           where ET matches the final epoch must be handled here,
 !           since in this case no epoch exceeds ET.
 !
-            IVEIX =    BUFBAS - IVBAS &
-                    +  LSTLED ( ET, NREAD, BUFFER ) &
+            iveix =    bufbas - ivbas &
+                    +  lstled ( et, nread, buffer ) &
                     +  1
 
-            IVEIX = MIN ( IVEIX,  N+1 )
+            iveix = min ( iveix,  n+1 )
 
 !
 !           Backstop test:
 !
-            IF ( IVEIX .LT. 2 ) THEN
+            if ( iveix .lt. 2 ) then
 
-               CALL SETMSG ( 'IVEIX = #.' )
-               CALL ERRINT ( '#', IVEIX   )
-               CALL SIGERR ( 'SPICE(BUG)' )
-               CALL CHKOUT ( 'SPKR19'     )
-               RETURN
+               call setmsg ( 'IVEIX = #.' )
+               call errint ( '#', iveix   )
+               call sigerr ( 'SPICE(BUG)' )
+               call chkout ( 'SPKR19'     )
+               return
 
-            END IF
+            end if
 
 !
 !           The epoch at index IVEIX is the end time of the
 !           interpolation interval we'll use. The index of
 !           the interval itself is IVEIX - 1.
 !
-            MINIIX = IVEIX - 1
+            miniix = iveix - 1
 
 
-         ELSE
+         else
 !
 !           IVLSEL is .FALSE., meaning we must pick the first interval
 !           containing the request time.
@@ -827,48 +827,48 @@
 !           If there is an interval directory, search it to determine
 !           the group of interval times to search next.
 !
-            IF ( NDIR .GT. 0 ) THEN
+            if ( ndir .gt. 0 ) then
 !
 !              Find the last directory entry *less than* the request
 !              time. The directory entry *after* that one, if such
 !              exists, is the one to pick.
 !
-               NREAD  = MIN ( NDIR, BUFSIZ )
-               BUFBAS = DIRBAS
-               REMAIN = NDIR - NREAD
+               nread  = min ( ndir, bufsiz )
+               bufbas = dirbas
+               remain = ndir - nread
 
 !
 !              Fetch the current batch of directory entries.
 !
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+               call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKR19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKR19' )
+                  return
+               end if
 
 !
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
 !
-                DO WHILE (      ( REMAIN        .GT. 0  ) &
-                          .AND. ( BUFFER(NREAD) .LT. ET )  )
+                do while (      ( remain        .gt. 0  ) &
+                          .and. ( buffer(nread) .lt. et )  )
 
-                  BUFBAS = BUFBAS + NREAD
-                  NREAD  = MIN ( REMAIN, BUFSIZ )
+                  bufbas = bufbas + nread
+                  nread  = min ( remain, bufsiz )
 !
 !                 Fetch the current batch of directory entries.
 !
-                  CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+                  call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT( 'SPKR19' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout( 'SPKR19' )
+                     return
+                  end if
 
-                  REMAIN = REMAIN - NREAD
+                  remain = remain - nread
 
-               END DO
+               end do
 
 !
 !              Count the directory entries that are less than ET. The
@@ -876,24 +876,24 @@
 !              is BUFBAS-DIRBAS. The index of the group of epochs
 !              containing ET exceeds the skipped directory count by 1.
 !
-               GROUP =    BUFBAS - DIRBAS &
-                       +  LSTLTD ( ET, NREAD, BUFFER ) &
+               group =    bufbas - dirbas &
+                       +  lstltd ( et, nread, buffer ) &
                        +  1
 
-            ELSE
+            else
 !
 !              There's no question about which group of epochs to
 !              search.
 !
-               GROUP = 1
+               group = 1
 
-            END IF
+            end if
 
 !
 !           Let IVBAS be the base address of the sequence of interval
 !           time bounds.
 !
-            IVBAS  = DIRBAS - ( N + 1 )
+            ivbas  = dirbas - ( n + 1 )
 
 !
 !           Now find the index of the last interval epoch less than ET.
@@ -901,57 +901,57 @@
 !           compute the base of the range of addresses containing this
 !           group.
 
-            BUFBAS = IVBAS + ( ( GROUP - 1 ) * DIRSIZ )
+            bufbas = ivbas + ( ( group - 1 ) * dirsiz )
 
 !
 !           Compute the number of epochs to read. Note that all groups
 !           of epochs except the last have DIRSIZ elements.
 !
-            REMAIN = ( N + 1 ) - ( ( GROUP - 1 ) * DIRSIZ )
+            remain = ( n + 1 ) - ( ( group - 1 ) * dirsiz )
 !
 !           Note that REMAIN is always non-zero, since there's always
 !           at least one epoch that exceeds the last directory entry.
 !
-            NREAD  = MIN ( DIRSIZ, REMAIN )
+            nread  = min ( dirsiz, remain )
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+            call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKR19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKR19' )
+               return
+            end if
 
 !
 !           Find the index of the last epoch less than ET. The case
 !           where ET matches the first epoch must be handled here,
 !           since in this case no epoch precedes ET.
 !
-            IVBIX =    BUFBAS - IVBAS &
-                    +  LSTLTD ( ET, NREAD, BUFFER )
+            ivbix =    bufbas - ivbas &
+                    +  lstltd ( et, nread, buffer )
 
-            IVBIX = MAX ( IVBIX,  1 )
+            ivbix = max ( ivbix,  1 )
 
 !
 !           Backstop test:
 !
-            IF ( IVBIX .GT. N ) THEN
+            if ( ivbix .gt. n ) then
 
-               CALL SETMSG ( 'IVBIX = #.' )
-               CALL ERRINT ( '#', IVBIX   )
-               CALL SIGERR ( 'SPICE(BUG)' )
-               CALL CHKOUT ( 'SPKR19'     )
-               RETURN
+               call setmsg ( 'IVBIX = #.' )
+               call errint ( '#', ivbix   )
+               call sigerr ( 'SPICE(BUG)' )
+               call chkout ( 'SPKR19'     )
+               return
 
-            END IF
+            end if
 
 !
 !           The epoch at index IVBIX is the begin time of the
 !           interpolation interval we'll use. The index of the interval
 !           itself is also IVBIX.
 !
-            MINIIX = IVBIX
+            miniix = ivbix
 
-         END IF
+         end if
 !
 !        This is the end of the IF block that handles mini-segment
 !        selection for the two possible values of IVLSEL.
@@ -960,34 +960,34 @@
 !        MINIIX. For the first N-1 mini-segments, the "end pointer"
 !        of one mini-segment is the "begin" pointer of the next.
 !
-         BUFBAS = EADDR - 2 - ( N + 1 ) + ( MINIIX - 1 )
+         bufbas = eaddr - 2 - ( n + 1 ) + ( miniix - 1 )
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+2, BUFFER )
+         call dafgda ( handle, bufbas+1, bufbas+2, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKR19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKR19' )
+            return
+         end if
 
-         MINIB = NINT ( BUFFER(1) ) + BADDR - 1
+         minib = nint ( buffer(1) ) + baddr - 1
 !
 !        Note that the end of the current mini-segment
 !        precedes the start of the next mini-segment by
 !        one address.
 !
-         MINIE = NINT ( BUFFER(2) ) + BADDR - 2
+         minie = nint ( buffer(2) ) + baddr - 2
 
 !
 !        Look up the time bounds of the mini-segment at index MINIIX.
 !        These bounds are used quite a bit farther on, when we save
 !        them for future use.
 !
-         CALL DAFGDA ( HANDLE, IVBAS+MINIIX, IVBAS+MINIIX+1, MINTIM )
+         call dafgda ( handle, ivbas+miniix, ivbas+miniix+1, mintim )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKR19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKR19' )
+            return
+         end if
 
 !
 !        From this point onward, we'll work with the mini-segment
@@ -995,86 +995,86 @@
 !
 !        Look up the control area of the mini-segment.
 !
-         CALL DAFGDA ( HANDLE, MINIE-CTRLSZ+1, MINIE, CONTRL )
+         call dafgda ( handle, minie-ctrlsz+1, minie, contrl )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKR19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKR19' )
+            return
+         end if
 
 !
 !        Fetch the control area parameters for the mini-segment.
 !
-         SUBTYP  =  NINT ( CONTRL(1) )
-         WNDSIZ  =  NINT ( CONTRL(2) )
-         NPKT    =  NINT ( CONTRL(3) )
+         subtyp  =  nint ( contrl(1) )
+         wndsiz  =  nint ( contrl(2) )
+         npkt    =  nint ( contrl(3) )
 
-         IF (  ( SUBTYP .LT. 0 ) .OR. ( SUBTYP .GE. S19NST ) ) THEN
+         if (  ( subtyp .lt. 0 ) .or. ( subtyp .ge. s19nst ) ) then
 
-            CALL SETMSG ( 'Unexpected SPK type 19 subtype # found in ' &
+            call setmsg ( 'Unexpected SPK type 19 subtype # found in ' &
             //            'type 19 segment within mini-segment #.'     )
-            CALL ERRINT ( '#',  SUBTYP                                 )
-            CALL ERRINT ( '#',  MINIIX                                 )
-            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                        )
-            CALL CHKOUT ( 'SPKR19'                                     )
-            RETURN
+            call errint ( '#',  subtyp                                 )
+            call errint ( '#',  miniix                                 )
+            call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
+            call chkout ( 'SPKR19'                                     )
+            return
 
-         END IF
+         end if
 
-         PKTSIZ = PKTSZS ( SUBTYP )
-         MAXWND = MXWNSZ ( SUBTYP )
+         pktsiz = pktszs ( subtyp )
+         maxwnd = mxwnsz ( subtyp )
 
 !
 !        Check the window size.
 !
-         IF ( ( WNDSIZ .LT. 2 ) .OR. ( WNDSIZ .GT. MAXWND ) ) THEN
+         if ( ( wndsiz .lt. 2 ) .or. ( wndsiz .gt. maxwnd ) ) then
 
-            CALL SETMSG ( 'Window size in type 19 segment was #; must ' &
+            call setmsg ( 'Window size in type 19 segment was #; must ' &
             //            'be in the range 2:# for subtype #. ' &
             //            'Mini-segment index is #.'                   )
-            CALL ERRINT ( '#',  WNDSIZ                                 )
-            CALL ERRINT ( '#',  MAXWND                                 )
-            CALL ERRINT ( '#',  SUBTYP                                 )
-            CALL ERRINT ( '#',  MINIIX                                 )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                        )
-            CALL CHKOUT ( 'SPKR19'                                     )
-            RETURN
+            call errint ( '#',  wndsiz                                 )
+            call errint ( '#',  maxwnd                                 )
+            call errint ( '#',  subtyp                                 )
+            call errint ( '#',  miniix                                 )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                        )
+            call chkout ( 'SPKR19'                                     )
+            return
 
-         END IF
+         end if
 
-         IF ( ODD(WNDSIZ) ) THEN
+         if ( odd(wndsiz) ) then
 
-            CALL SETMSG ( 'Window size in type 19 segment was #; ' &
+            call setmsg ( 'Window size in type 19 segment was #; ' &
             //            'must be even for subtype #. ' &
             //            'Mini-segment index is #.'               )
-            CALL ERRINT ( '#',  WNDSIZ                             )
-            CALL ERRINT ( '#',  SUBTYP                             )
-            CALL ERRINT ( '#',  MINIIX                             )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                    )
-            CALL CHKOUT ( 'SPKR19'                                 )
-            RETURN
+            call errint ( '#',  wndsiz                             )
+            call errint ( '#',  subtyp                             )
+            call errint ( '#',  miniix                             )
+            call sigerr ( 'SPICE(INVALIDVALUE)'                    )
+            call chkout ( 'SPKR19'                                 )
+            return
 
-         END IF
+         end if
 
 !
 !        Compute the number of packet directory entries for
 !        the current mini-segment/interval.
 !
-         NPKDIR  =  (NPKT-1) / DIRSIZ
+         npkdir  =  (npkt-1) / dirsiz
 !
 !        Compute the base address of the sequence of packet
 !        directory entries for the current mini-segment/interval.
 !
-         PKDBAS  =  MINIB - 1 + ( NPKT * ( PKTSIZ + 1 ) )
+         pkdbas  =  minib - 1 + ( npkt * ( pktsiz + 1 ) )
 
 !
 !        The test below is done for safety. No SPICE error s
 !        should ever be detected at this point.
 !
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKR19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKR19' )
+            return
+         end if
 
 !
 !        If we made it this far, we did so without a SPICE error. We
@@ -1087,15 +1087,15 @@
 !           - The segment begin DAF address
 !           - The segment's "select last/first interval" flag
 !
-         SVHAN  = HANDLE
-         SVBEG  = BADDR
-         SVLAST = IVLSEL
+         svhan  = handle
+         svbeg  = baddr
+         svlast = ivlsel
 
 !
 !        Save the time bounds of the applicable mini-segment/interval.
 !
-         SVBTIM = MINTIM(1)
-         SVETIM = MINTIM(2)
+         svbtim = mintim(1)
+         svetim = mintim(2)
 
 !
 !        Save
@@ -1103,8 +1103,8 @@
 !           - The mini-segment/interval directory count
 !           - The mini-segment/interval directory base address
 !
-         SVPKND = NPKDIR
-         SVPKDB = PKDBAS
+         svpknd = npkdir
+         svpkdb = pkdbas
 
 !
 !        Save
@@ -1113,9 +1113,9 @@
 !           - The mini-segment/interval index
 !           - The mini-segment/interval start pointer
 !
-         SVN    = N
-         SVMIIX = MINIIX
-         SVMINB = MINIB
+         svn    = n
+         svmiix = miniix
+         svminb = minib
 
 !
 !        Save
@@ -1125,12 +1125,12 @@
 !           - The mini-segment packet count
 !           - The mini-segment window size
 !
-         SVSTYP = SUBTYP
-         SVPKSZ = PKTSIZ
-         SVNPKT = NPKT
-         SVWNSZ = WNDSIZ
+         svstyp = subtyp
+         svpksz = pktsiz
+         svnpkt = npkt
+         svwnsz = wndsiz
 
-      END IF
+      end if
 
 
 !
@@ -1144,13 +1144,13 @@
 !     use the variable GROUP to indicate the set of epochs to search
 !     within, once we've found the right directory entry.
 !
-      IF ( NPKDIR .EQ. 0 ) THEN
+      if ( npkdir .eq. 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
-         GROUP  = 1
+         group  = 1
 
-      ELSE
+      else
 !
 !        There's at least one directory entry. Find the first directory
 !        entry whose time is greater than or equal to the request time,
@@ -1159,43 +1159,43 @@
 !        Having found the correct set of directory entries, we'll
 !        perform a binary search within that set for the desired entry.
 !
-         BUFBAS  =  PKDBAS
-         NREAD   =  MIN ( NPKDIR, DIRSIZ )
-         REMAIN  =  NPKDIR - NREAD
+         bufbas  =  pkdbas
+         nread   =  min ( npkdir, dirsiz )
+         remain  =  npkdir - nread
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+         call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKR19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKR19' )
+            return
+         end if
 
-         DO WHILE (       ( BUFFER(NREAD) .LT. ET ) &
-                    .AND. ( REMAIN        .GT. 0  )   )
+         do while (       ( buffer(nread) .lt. et ) &
+                    .and. ( remain        .gt. 0  )   )
 
-            BUFBAS  =  BUFBAS + NREAD
-            NREAD   =  MIN ( REMAIN, DIRSIZ )
-            REMAIN  =  REMAIN - NREAD
+            bufbas  =  bufbas + nread
+            nread   =  min ( remain, dirsiz )
+            remain  =  remain - nread
 !
 !           Note:  NREAD is always > 0 here.
 !
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, BUFFER )
+            call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SPKR19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SPKR19' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        At this point, BUFBAS - PKDBAS is the number of directory
 !        entries preceding the one contained in BUFFER(1).
 !
-         GROUP  =     ( BUFBAS - PKDBAS ) &
-                    +   LSTLTD ( ET, NREAD, BUFFER ) &
+         group  =     ( bufbas - pkdbas ) &
+                    +   lstltd ( et, nread, buffer ) &
                     +   1
-      END IF
+      end if
 
 !
 !     GROUP now indicates the set of epochs in which to search for the
@@ -1209,51 +1209,51 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      IF ( GROUP .EQ. 1 ) THEN
+      if ( group .eq. 1 ) then
 
-         BEGIDX  =  1
-         ENDIDX  =  MIN ( NPKT, DIRSIZ )
+         begidx  =  1
+         endidx  =  min ( npkt, dirsiz )
 
-      ELSE
+      else
 !
 !        If the group index is greater than 1, we'll include the last
 !        time tag of the previous group in the set of time tags we look
 !        up.  That way, the request time is bracketed by the time tag
 !        set we look up.
 !
-         BEGIDX  =      (  GROUP  - 1 ) * DIRSIZ
-         ENDIDX  =  MIN (  BEGIDX + DIRSIZ,  NPKT  )
+         begidx  =      (  group  - 1 ) * dirsiz
+         endidx  =  min (  begidx + dirsiz,  npkt  )
 
-      END IF
+      end if
 
 
-      TIMBAS  =  PKDBAS - NPKT
+      timbas  =  pkdbas - npkt
 
-      CALL DAFGDA ( HANDLE, TIMBAS+BEGIDX, TIMBAS+ENDIDX, BUFFER )
+      call dafgda ( handle, timbas+begidx, timbas+endidx, buffer )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKR19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKR19' )
+         return
+      end if
 
 !
 !     Find two adjacent epochs bounding the request epoch.  The request
 !     time cannot be greater than all of epochs in the group, and it
 !     cannot precede the first element of the group.
 !
-      I  =  LSTLTD (  ET,  ENDIDX-BEGIDX+1,  BUFFER  )
+      i  =  lstltd (  et,  endidx-begidx+1,  buffer  )
 
 !
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      IF ( I .EQ. 0 ) THEN
-         LOW  =  1
-      ELSE
-         LOW  =  BEGIDX + I - 1
-      END IF
+      if ( i .eq. 0 ) then
+         low  =  1
+      else
+         low  =  begidx + i - 1
+      end if
 
-      HIGH  =  LOW  +  1
+      high  =  low  +  1
 
 !
 !     Now select the set of packets used for interpolation.  Note
@@ -1275,65 +1275,65 @@
 !     available, the set ranges from index 1 to index LOW.
 !
 
-      LSIZE =  MIN ( WNDSIZ/2, LOW )
+      lsize =  min ( wndsiz/2, low )
 
 !
 !     RSIZE is defined analogously for the right half of the window.
 !
-      RSIZE =  MIN (  WNDSIZ/2,  ( NPKT - HIGH + 1 )  )
+      rsize =  min (  wndsiz/2,  ( npkt - high + 1 )  )
 
 !
 !     The actual window size is simply the sum of LSIZE and RSIZE.
 !
-      NRCPKT =  LSIZE + RSIZE
+      nrcpkt =  lsize + rsize
 
 !
 !     FIRST and LAST are the endpoints of the range of indices of
 !     time tags (and packets) we'll collect in the output record.
 !
-      FIRST =  LOW    -  LSIZE   +  1
+      first =  low    -  lsize   +  1
 
-      LAST  =  FIRST  +  NRCPKT  -  1
+      last  =  first  +  nrcpkt  -  1
 
 !
 !     We're ready to construct the output record.
 !
 !     Put the subtype and window size into the output record.
 !
-      RECORD(1) =  SUBTYP
+      record(1) =  subtyp
 
-      RECORD(2) =  NRCPKT
+      record(2) =  nrcpkt
 
 !
 !     Read the packets.
 !
-      CALL DAFGDA ( HANDLE, &
-                    MINIB + (FIRST-1)*PKTSIZ, &
-                    MINIB +      LAST*PKTSIZ  -  1, &
-                    RECORD(3)                       )
+      call dafgda ( handle, &
+                    minib + (first-1)*pktsiz, &
+                    minib +      last*pktsiz  -  1, &
+                    record(3)                       )
 
 !
 !     Finally, add the epochs to the output record.
 !     Read the sequence of time tags.
 !
-      BUFBAS  =  ( MINIB - 1 )  +  ( NPKT * PKTSIZ )  +  ( FIRST - 1 )
+      bufbas  =  ( minib - 1 )  +  ( npkt * pktsiz )  +  ( first - 1 )
 
-      CALL DAFGDA ( HANDLE, &
-                    BUFBAS+1, &
-                    BUFBAS+NRCPKT, &
-                    RECORD( 3 + NRCPKT*PKTSIZ )  )
+      call dafgda ( handle, &
+                    bufbas+1, &
+                    bufbas+nrcpkt, &
+                    record( 3 + nrcpkt*pktsiz )  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKR19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKR19' )
+         return
+      end if
 
 !
 !     The call was successful. Record this fact so that saved
 !     interval data are available for re-use.
 !
-      SVOK = .TRUE.
+      svok = .true.
 
-      CALL CHKOUT ( 'SPKR19' )
-      RETURN
-      END
+      call chkout ( 'SPKR19' )
+      return
+      end

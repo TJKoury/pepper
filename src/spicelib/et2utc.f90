@@ -1,6 +1,6 @@
 !$Procedure ET2UTC ( Ephemeris Time to UTC )
 
-      SUBROUTINE ET2UTC ( ET, FORMAT, PREC, UTCSTR )
+      subroutine et2utc ( et, format, prec, utcstr )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         FORMAT
-      INTEGER               PREC
-      CHARACTER*(*)         UTCSTR
+      double precision      et
+      character*(*)         format
+      integer               prec
+      character*(*)         utcstr
 
 ! $ Brief_I/O
 !
@@ -394,64 +394,64 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      DOUBLE PRECISION      UNITIM
-      LOGICAL               FAILED
+      logical               return
+      double precision      unitim
+      logical               failed
 
 !
 !     Local Functions (Statement Functions)
 !
-      INTEGER               NDIGIT
+      integer               ndigit
 
 !
 !     Local variables
 !
 
-      CHARACTER*(4)         FMT
-      CHARACTER*(80)        ENDSTR
-      CHARACTER*(80)        STR
-      CHARACTER*(80)        FRACT
+      character*(4)         fmt
+      character*(80)        endstr
+      character*(80)        str
+      character*(80)        fract
 
-      DOUBLE PRECISION      TAI
-      DOUBLE PRECISION      FRCSEC
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      TVEC   ( 8 )
-      DOUBLE PRECISION      WHLSEC
+      double precision      tai
+      double precision      frcsec
+      double precision      scale
+      double precision      tvec   ( 8 )
+      double precision      whlsec
 
-      INTEGER               DAY
-      INTEGER               HOUR
-      INTEGER               MINUTE
-      INTEGER               MONTH
-      INTEGER               SECOND
-      INTEGER               YEAR
+      integer               day
+      integer               hour
+      integer               minute
+      integer               month
+      integer               second
+      integer               year
 
-      INTEGER               MYPREC
+      integer               myprec
 
-      INTEGER               BDAY
-      INTEGER               BHR
-      INTEGER               BMN
-      INTEGER               BMONTH
-      INTEGER               BSC
-      INTEGER               EDAY
-      INTEGER               EHR
-      INTEGER               EMN
-      INTEGER               EMONTH
-      INTEGER               ESC
+      integer               bday
+      integer               bhr
+      integer               bmn
+      integer               bmonth
+      integer               bsc
+      integer               eday
+      integer               ehr
+      integer               emn
+      integer               emonth
+      integer               esc
 
-      INTEGER               I
+      integer               i
 
-      CHARACTER*3           MTHNAM   ( 12 )
+      character*3           mthnam   ( 12 )
 
 
 !
 !     Save everything between calls
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA         MTHNAM       / 'JAN', 'FEB', 'MAR', 'APR', &
+      data         mthnam       / 'JAN', 'FEB', 'MAR', 'APR', &
                                   'MAY', 'JUN', 'JUL', 'AUG', &
                                   'SEP', 'OCT', 'NOV', 'DEC'  /
 
@@ -461,77 +461,77 @@
 !     The function NDIGIT gives the number of digits required to
 !     display a non-negative integer that is less than 10000
 !
-      NDIGIT(DAY) = MIN(1,DAY/1000) + MIN(1,DAY/100) + MIN(1,DAY/10) + 1
+      ndigit(day) = min(1,day/1000) + min(1,day/100) + min(1,day/10) + 1
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ET2UTC' )
+      call chkin ( 'ET2UTC' )
 
 !
 !     Convert FORMAT to uppercase for ease of comparison. Make sure it's
 !     one of the recognized formats.
 !
-      CALL UCASE ( FORMAT, FMT )
+      call ucase ( format, fmt )
 
-      IF (       FMT .NE. 'J' &
-           .AND. FMT .NE. 'C' &
-           .AND. FMT .NE. 'D' &
-           .AND. FMT .NE. 'ISOD' &
-           .AND. FMT .NE. 'ISOC' ) THEN
+      if (       fmt .ne. 'J' &
+           .and. fmt .ne. 'C' &
+           .and. fmt .ne. 'D' &
+           .and. fmt .ne. 'ISOD' &
+           .and. fmt .ne. 'ISOC' ) then
 
-         CALL SETMSG ( 'ET2UTC: Format specification for output ' &
+         call setmsg ( 'ET2UTC: Format specification for output ' &
          //            'time string is not recognized. Valid ' &
          //            'specifications are: ''C'', ' &
          //            '''D'', ''J'', ''ISOC'', or ''ISOD''. ' &
          //            'The supplied format was ''#''. ' )
 
-         CALL ERRCH  ( '#', FORMAT )
-         CALL SIGERR ( 'SPICE(INVALIDTIMEFORMAT)' )
-         CALL CHKOUT ( 'ET2UTC' )
-         RETURN
+         call errch  ( '#', format )
+         call sigerr ( 'SPICE(INVALIDTIMEFORMAT)' )
+         call chkout ( 'ET2UTC' )
+         return
 
-      END IF
+      end if
 !
 !     Force PREC into an acceptable range
 !
-      MYPREC = MAX ( 0 , MIN ( 14, PREC ))
+      myprec = max ( 0 , min ( 14, prec ))
 
 !
 !     If the output is Julian Date, we're ready to go. Remember that
 !     the day part of Julian Date already has seven digits built in.
 !
-      IF ( FMT .EQ. 'J' ) THEN
+      if ( fmt .eq. 'J' ) then
 
-         TVEC(1) = ET
+         tvec(1) = et
 
-         CALL TTRANS ( 'TDB',  'JDUTC',        TVEC )
+         call ttrans ( 'TDB',  'JDUTC',        tvec )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ET2UTC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ET2UTC' )
+            return
+         end if
 
-         CALL DPSTRF ( TVEC(1), MYPREC+7, 'F', STR  )
-         CALL PREFIX ( 'JD', 0,                STR  )
+         call dpstrf ( tvec(1), myprec+7, 'F', str  )
+         call prefix ( 'JD', 0,                str  )
 
-         UTCSTR = STR
+         utcstr = str
 
-         CALL CHKOUT ( 'ET2UTC' )
-         RETURN
+         call chkout ( 'ET2UTC' )
+         return
 
-      END IF
+      end if
 !
 !     If we've dropped past the IF-THEN block above, we need
 !     to construct a calendar format string. First thing to
 !     do is convert from ET to TAI.
 !
 
-      TAI = UNITIM ( ET, 'TDB', 'TAI' )
+      tai = unitim ( et, 'TDB', 'TAI' )
 
 !
 !     We're going to break up TAI into an integer and a
@@ -561,14 +561,14 @@
 !     is negative and is not already an integer, the result we
 !     want is one less than AINT(TAI).
 !
-      WHLSEC = AINT ( TAI )
+      whlsec = aint ( tai )
 
-      IF (        ( TAI .LT. 0.0D0  ) &
-            .AND. ( TAI .NE. WHLSEC )  )  THEN
+      if (        ( tai .lt. 0.0d0  ) &
+            .and. ( tai .ne. whlsec )  )  then
 
-         WHLSEC = WHLSEC - 1.0D0
+         whlsec = whlsec - 1.0d0
 
-      END IF
+      end if
 
 !
 !     The fractional part of TAI must be rounded to the
@@ -580,21 +580,21 @@
 !     10**MYPREC.
 !
 !
-      SCALE  = ANINT (  10.0D0 ** MYPREC )
-      FRCSEC = ANINT (  SCALE * ( TAI - WHLSEC )  )
+      scale  = anint (  10.0d0 ** myprec )
+      frcsec = anint (  scale * ( tai - whlsec )  )
 
 !
 !     If a carry occurred, the fraction becomes zero, and
 !     we must increment WHLSEC.
 !
-      IF (  FRCSEC  .EQ.  SCALE  ) THEN
+      if (  frcsec  .eq.  scale  ) then
 
-         WHLSEC = WHLSEC + 1.0D0
-         FRCSEC = 0.0D0
+         whlsec = whlsec + 1.0d0
+         frcsec = 0.0d0
 
-      END IF
+      end if
 
-      FRCSEC = FRCSEC / SCALE
+      frcsec = frcsec / scale
 
 !
 !     Now, we let TTRANS handle the transformation to
@@ -604,23 +604,23 @@
 !     This will be done later on when the output string is
 !     assembled.
 !
-      TVEC(1) = WHLSEC
+      tvec(1) = whlsec
 
-      IF ( FMT .EQ. 'C' .OR. FMT .EQ. 'ISOC' ) THEN
+      if ( fmt .eq. 'C' .or. fmt .eq. 'ISOC' ) then
 
-         CALL TTRANS ( 'TAI', 'YMD', TVEC )
+         call ttrans ( 'TAI', 'YMD', tvec )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ET2UTC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ET2UTC' )
+            return
+         end if
 
-         YEAR        = NINT( TVEC(1) )
-         MONTH       = NINT( TVEC(2) )
-         DAY         = NINT( TVEC(3) )
-         HOUR        = NINT( TVEC(4) )
-         MINUTE      = NINT( TVEC(5) )
-         SECOND      = NINT( TVEC(6) )
+         year        = nint( tvec(1) )
+         month       = nint( tvec(2) )
+         day         = nint( tvec(3) )
+         hour        = nint( tvec(4) )
+         minute      = nint( tvec(5) )
+         second      = nint( tvec(6) )
 !
 !        The beginning of the string is going to be the year.
 !        Depending upon the size of the year, it may or
@@ -628,56 +628,56 @@
 !        string has a fixed size.  We set up that portion of the
 !        string now.  First fill in the month...
 !
-         IF ( FMT .EQ. 'C' ) THEN
-            ENDSTR      = ' MMM 00 00:00:00'
-            ENDSTR(2:4) = MTHNAM(MONTH)
+         if ( fmt .eq. 'C' ) then
+            endstr      = ' MMM 00 00:00:00'
+            endstr(2:4) = mthnam(month)
 !
 !           ... and then fill in the day portion of the string.
 !
-            EDAY = 7
-            BDAY = EDAY - NDIGIT(DAY) + 1
+            eday = 7
+            bday = eday - ndigit(day) + 1
 
 
-            CALL INTSTR ( DAY, ENDSTR(BDAY:EDAY) )
-            EHR  = 10
-            EMN  = 13
-            ESC  = 16
+            call intstr ( day, endstr(bday:eday) )
+            ehr  = 10
+            emn  = 13
+            esc  = 16
 
-         ELSE
+         else
 
-            ENDSTR = '-0M-00T00:00:00'
-            EDAY   =  6
-            BDAY   =  EDAY - NDIGIT(DAY) + 1
+            endstr = '-0M-00T00:00:00'
+            eday   =  6
+            bday   =  eday - ndigit(day) + 1
 
-            EMONTH = 3
-            BMONTH = EMONTH - NDIGIT(MONTH) + 1
-            CALL INTSTR ( MONTH, ENDSTR(BMONTH:EMONTH) )
-            CALL INTSTR ( DAY,   ENDSTR(BDAY:EDAY)     )
-            EHR  =  9
-            EMN  = 12
-            ESC  = 15
+            emonth = 3
+            bmonth = emonth - ndigit(month) + 1
+            call intstr ( month, endstr(bmonth:emonth) )
+            call intstr ( day,   endstr(bday:eday)     )
+            ehr  =  9
+            emn  = 12
+            esc  = 15
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        We must have day of year format.  Convert TAI to that
 !        format.
 !
 
-         CALL TTRANS ( 'TAI', 'YD', TVEC )
+         call ttrans ( 'TAI', 'YD', tvec )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ET2UTC' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ET2UTC' )
+            return
+         end if
 
-         YEAR   = NINT( TVEC(1) )
-         MONTH  = 1
-         DAY    = NINT( TVEC(2) )
-         HOUR   = NINT( TVEC(3) )
-         MINUTE = NINT( TVEC(4) )
-         SECOND = NINT( TVEC(5) )
+         year   = nint( tvec(1) )
+         month  = 1
+         day    = nint( tvec(2) )
+         hour   = nint( tvec(3) )
+         minute = nint( tvec(4) )
+         second = nint( tvec(5) )
 !
 !        As in the previous case, the end of the output string will
 !        have a fixed size.  We fill in the day portion of the string
@@ -685,41 +685,41 @@
 !        minutes and seconds appear in the same location in both
 !        day of year and calendar format of strings.
 !
-         IF ( FMT .EQ. 'D' ) THEN
-            ENDSTR = '-000 // 00:00:00'
-            EDAY   = 4
-            BDAY   = EDAY - NDIGIT(DAY) + 1
+         if ( fmt .eq. 'D' ) then
+            endstr = '-000 // 00:00:00'
+            eday   = 4
+            bday   = eday - ndigit(day) + 1
 
-            CALL INTSTR ( DAY, ENDSTR(BDAY:EDAY) )
-            EHR  = 10
-            EMN  = 13
-            ESC  = 16
-         ELSE
-            ENDSTR = '-000T00:00:00'
-            EDAY   = 4
-            BDAY   = EDAY - NDIGIT(DAY) + 1
+            call intstr ( day, endstr(bday:eday) )
+            ehr  = 10
+            emn  = 13
+            esc  = 16
+         else
+            endstr = '-000T00:00:00'
+            eday   = 4
+            bday   = eday - ndigit(day) + 1
 
-            CALL INTSTR ( DAY, ENDSTR(BDAY:EDAY) )
-            EHR  = 7
-            EMN  = 10
-            ESC  = 13
-         END IF
-      END IF
+            call intstr ( day, endstr(bday:eday) )
+            ehr  = 7
+            emn  = 10
+            esc  = 13
+         end if
+      end if
 !
 !     Fill out the hours, minutes and integer portion of
 !     seconds in the output string.
 !
-      BHR  = EHR - NDIGIT(HOUR) + 1
-      BMN  = EMN - NDIGIT(MINUTE) + 1
-      BSC  = ESC - NDIGIT(SECOND) + 1
+      bhr  = ehr - ndigit(hour) + 1
+      bmn  = emn - ndigit(minute) + 1
+      bsc  = esc - ndigit(second) + 1
 
-      CALL INTSTR ( HOUR,   ENDSTR(BHR:EHR) )
-      CALL INTSTR ( MINUTE, ENDSTR(BMN:EMN) )
-      CALL INTSTR ( SECOND, ENDSTR(BSC:ESC) )
+      call intstr ( hour,   endstr(bhr:ehr) )
+      call intstr ( minute, endstr(bmn:emn) )
+      call intstr ( second, endstr(bsc:esc) )
 !
 !     Append the fractional part of the seconds component.
 !
-      IF ( MYPREC .GT. 0 ) THEN
+      if ( myprec .gt. 0 ) then
 
 !
 !        DPSTRF gives MYPREC significant digits in the output,
@@ -733,14 +733,14 @@
 !        The integer part of FRCSEC will not affect the output
 !        string.
 !
-         FRCSEC = FRCSEC + 1.0D0
+         frcsec = frcsec + 1.0d0
 
-         CALL DPSTRF ( FRCSEC, MYPREC+1, 'F', FRACT )
+         call dpstrf ( frcsec, myprec+1, 'F', fract )
 
-         I = INDEX ( FRACT, '.' )
-         ENDSTR(ESC+1: ) = FRACT(I:I+MYPREC)
+         i = index ( fract, '.' )
+         endstr(esc+1: ) = fract(i:i+myprec)
 
-      END IF
+      end if
 !
 !     The end of the time string is now complete.  We need to
 !     construct the year portion of the string. We are going to
@@ -750,53 +750,53 @@
 !     we'd get confusing day of year formats like
 !     999 A.D.-019 // 12:13:18.
 !
-      IF ( YEAR .GE. 1000 ) THEN
+      if ( year .ge. 1000 ) then
 
-         CALL   INTSTR( YEAR, STR )
+         call   intstr( year, str )
 
-      ELSE IF ( YEAR .GT. 0 ) THEN
+      else if ( year .gt. 0 ) then
 
-         CALL INTSTR ( YEAR,      STR )
+         call intstr ( year,      str )
 
-         IF ( FMT .EQ. 'C' .OR. FMT .EQ. 'D' ) THEN
-            CALL SUFFIX ( 'A.D.', 1, STR )
-            ENDSTR(1:1) = ' '
-         END IF
+         if ( fmt .eq. 'C' .or. fmt .eq. 'D' ) then
+            call suffix ( 'A.D.', 1, str )
+            endstr(1:1) = ' '
+         end if
 
-      ELSE IF ( YEAR .LE. 0 ) THEN
+      else if ( year .le. 0 ) then
 
-         IF ( FMT .EQ. 'C' .OR. FMT .EQ. 'D' ) THEN
-            YEAR = -YEAR + 1
+         if ( fmt .eq. 'C' .or. fmt .eq. 'D' ) then
+            year = -year + 1
 
-            CALL INTSTR ( YEAR,      STR )
-            CALL SUFFIX ( 'B.C.', 1, STR )
+            call intstr ( year,      str )
+            call suffix ( 'B.C.', 1, str )
 
-            ENDSTR(1:1) = ' '
-         ELSE
+            endstr(1:1) = ' '
+         else
 
-            YEAR = -YEAR + 1
-            CALL SETMSG ( 'The year of the ET epoch supplied is ' &
+            year = -year + 1
+            call setmsg ( 'The year of the ET epoch supplied is ' &
             //            '# B.C.  Years in this era are not ' &
             //            'supported in ISO format. ' )
-            CALL ERRINT ( '#', YEAR )
-            CALL SIGERR ( 'SPICE(YEAROUTOFRANGE)'  )
-            CALL CHKOUT ( 'ET2UTC' )
-            RETURN
+            call errint ( '#', year )
+            call sigerr ( 'SPICE(YEAROUTOFRANGE)'  )
+            call chkout ( 'ET2UTC' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Finally append the ENDSTR to STR to get the fully formatted
 !     string.
 !
-      CALL SUFFIX ( ENDSTR, 0, STR )
+      call suffix ( endstr, 0, str )
 
-      UTCSTR = STR
+      utcstr = str
 
-      CALL CHKOUT ( 'ET2UTC' )
-      RETURN
+      call chkout ( 'ET2UTC' )
+      return
 
 
-      END
+      end

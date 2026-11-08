@@ -1,6 +1,6 @@
 !$Procedure   ZZHULLAX ( Pyramidal FOV convex hull to FOV axis )
 
-      SUBROUTINE ZZHULLAX ( INST, N, BOUNDS, AXIS )
+      subroutine zzhullax ( inst, n, bounds, axis )
 
 ! $ Abstract
 !
@@ -27,15 +27,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D-12 )
+      double precision      margin
+      parameter           ( margin = 1.d-12 )
 
-      CHARACTER*(*)         INST
-      INTEGER               N
-      DOUBLE PRECISION      BOUNDS ( 3, N )
-      DOUBLE PRECISION      AXIS   ( 3 )
+      character*(*)         inst
+      integer               n
+      double precision      bounds ( 3, n )
+      double precision      axis   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -287,12 +287,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VSEP
+      double precision      halfpi
+      double precision      pi
+      double precision      vsep
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
@@ -301,61 +301,61 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CP     ( 3 )
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RAY1   ( 3 )
-      DOUBLE PRECISION      RAY2   ( 3 )
-      DOUBLE PRECISION      SEP
-      DOUBLE PRECISION      TRANS  ( 3, 3 )
-      DOUBLE PRECISION      V      ( 3 )
-      DOUBLE PRECISION      XVEC   ( 3 )
-      DOUBLE PRECISION      YVEC   ( 3 )
-      DOUBLE PRECISION      ZVEC   ( 3 )
+      double precision      cp     ( 3 )
+      double precision      delta
+      double precision      lat
+      double precision      lon
+      double precision      maxlon
+      double precision      minlon
+      double precision      r
+      double precision      ray1   ( 3 )
+      double precision      ray2   ( 3 )
+      double precision      sep
+      double precision      trans  ( 3, 3 )
+      double precision      v      ( 3 )
+      double precision      xvec   ( 3 )
+      double precision      yvec   ( 3 )
+      double precision      zvec   ( 3 )
 
-      INTEGER               I
-      INTEGER               M
-      INTEGER               MAXIX
-      INTEGER               MINIX
-      INTEGER               NEXT
-      INTEGER               XIDX
+      integer               i
+      integer               m
+      integer               maxix
+      integer               minix
+      integer               next
+      integer               xidx
 
-      LOGICAL               FOUND
-      LOGICAL               OK
-      LOGICAL               PASS1
+      logical               found
+      logical               ok
+      logical               pass1
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZHULLAX' )
+      call chkin ( 'ZZHULLAX' )
 
 !
 !     Nothing found yet.
 !
-      FOUND = .FALSE.
-      XIDX  =  0
+      found = .false.
+      xidx  =  0
 
 !
 !     We must have at least 3 boundary vectors.
 !
-      IF ( N .LT. 3 ) THEN
+      if ( n .lt. 3 ) then
 
-         CALL SETMSG ( 'Polygonal FOV requires at least 3 ' &
+         call setmsg ( 'Polygonal FOV requires at least 3 ' &
          //            'boundary vectors but number ' &
          //            'supplied for # was #.'             )
-         CALL ERRCH  ( '#', INST                           )
-         CALL ERRINT ( '#', N                              )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'               )
-         CALL CHKOUT ( 'ZZHULLAX'                          )
-         RETURN
+         call errch  ( '#', inst                           )
+         call errint ( '#', n                              )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'               )
+         call chkout ( 'ZZHULLAX'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Find an exterior face of the pyramid defined by the
@@ -364,18 +364,18 @@
 !     try pairs of consecutive rays first. If this fails, we'll
 !     try each pair of rays.
 !
-      I = 1
+      i = 1
 
-      DO WHILE ( ( I .LE. N ) .AND. ( .NOT. FOUND ) )
+      do while ( ( i .le. n ) .and. ( .not. found ) )
 !
 !        Set the index of the next ray. When we get to the
 !        last boundary vector, the next ray is the first.
 !
-         IF ( I .EQ. N ) THEN
-            NEXT = 1
-         ELSE
-            NEXT = I + 1
-         END IF
+         if ( i .eq. n ) then
+            next = 1
+         else
+            next = i + 1
+         end if
 
 !
 !        Find the cross product of the first ray with the
@@ -383,81 +383,81 @@
 !        vectors, this could be an inward or outward normal,
 !        in the case the current face is exterior.
 !
-         CALL VCRSS ( BOUNDS(1,I), BOUNDS(1,NEXT), CP )
+         call vcrss ( bounds(1,i), bounds(1,next), cp )
 
 !
 !        We insist on consecutive boundary vectors being
 !        linearly independent.
 !
-         IF ( VZERO(CP) ) THEN
+         if ( vzero(cp) ) then
 
-            CALL SETMSG ( 'Polygonal FOV must have linearly ' &
+            call setmsg ( 'Polygonal FOV must have linearly ' &
             //            'independent consecutive boundary ' &
             //            'but vectors at indices # and # ' &
             //            'have cross product equal to the ' &
             //            'zero vector. Instrument is #.'     )
-            CALL ERRINT ( '#', I                              )
-            CALL ERRINT ( '#', NEXT                           )
-            CALL ERRCH  ( '#', INST                           )
-            CALL SIGERR ( 'SPICE(DEGENERATECASE)'             )
-            CALL CHKOUT ( 'ZZHULLAX'                          )
-            RETURN
+            call errint ( '#', i                              )
+            call errint ( '#', next                           )
+            call errch  ( '#', inst                           )
+            call sigerr ( 'SPICE(DEGENERATECASE)'             )
+            call chkout ( 'ZZHULLAX'                          )
+            return
 
-         END IF
+         end if
 
 !
 !        See whether the other boundary vectors have angular
 !        separation of at least MARGIN from the plane containing
 !        the current face.
 !
-         PASS1 =  .TRUE.
-         OK    = .TRUE.
-         M     =  1
+         pass1 =  .true.
+         ok    = .true.
+         m     =  1
 
-         DO WHILE (  ( M .LE. N ) .AND. OK  )
+         do while (  ( m .le. n ) .and. ok  )
 !
 !           Find the angular separation of CP and the Mth vector if the
 !           latter is not an edge of the current face.
 !
-            IF (  ( M .NE. I ) .AND. ( M .NE. NEXT )  ) THEN
+            if (  ( m .ne. i ) .and. ( m .ne. next )  ) then
 
-               SEP = VSEP(  CP,  BOUNDS(1,M)  )
+               sep = vsep(  cp,  bounds(1,m)  )
 
-               IF ( PASS1 ) THEN
+               if ( pass1 ) then
 !
 !                 Adjust CP if necessary so that it points
 !                 toward the interior of the pyramid.
 !
-                  IF ( SEP .GT. HALFPI() ) THEN
+                  if ( sep .gt. halfpi() ) then
 !
 !                    Invert the cross product vector and adjust SEP
 !                    accordingly. Within this "M" loop, all other
 !                    angular separations will be computed using the new
 !                    value of CP.
 !
-                     CALL VSCLIP ( -1.D0, CP )
+                     call vsclip ( -1.d0, cp )
 
-                     SEP = PI() - SEP
+                     sep = pi() - sep
 
-                  END IF
+                  end if
 
-                  PASS1 = .FALSE.
+                  pass1 = .false.
 
-               END IF
+               end if
 
-               OK  = SEP .LT. ( HALFPI() - MARGIN )
+               ok  = sep .lt. ( halfpi() - margin )
 
-            END IF
+            end if
 
-            IF ( OK ) THEN
+            if ( ok ) then
 !
 !              Consider the next boundary vector.
 !
-               M = M + 1
+               m = m + 1
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        We've tested each boundary vector against the current face, or
@@ -465,54 +465,54 @@
 !        insufficient angular separation from the plane containing the
 !        face was found.
 !
-         IF ( OK ) THEN
+         if ( ok ) then
 !
 !           The current face is exterior. It's bounded by rays I and
 !           NEXT.
 !
-            XIDX  = I
-            FOUND = .TRUE.
+            xidx  = i
+            found = .true.
 
-         ELSE
+         else
 !
 !           Look at the next face of the pyramid.
 !
-            I = I + 1
+            i = i + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If we didn't find an exterior face, we'll have to look at each
 !     face bounded by a pair of rays, even if those rays are not
 !     adjacent. (This can be a very slow process is N is large.)
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         I = 1
+         i = 1
 
-         DO WHILE ( ( I .LE. N ) .AND. ( .NOT. FOUND ) )
+         do while ( ( i .le. n ) .and. ( .not. found ) )
 !
 !           Consider all ray pairs (I,NEXT) where NEXT > I.
 !
-            NEXT = I + 1
+            next = i + 1
 
-            DO WHILE (  ( NEXT .LE. N ) .AND. ( .NOT. FOUND )  )
+            do while (  ( next .le. n ) .and. ( .not. found )  )
 !
 !              Find the cross product of the first ray with the second.
 !              If the current face is exterior, CP could be an inward
 !              or outward normal, depending on the ordering of the
 !              boundary vectors.
 !
-               CALL VCRSS ( BOUNDS(1,I), BOUNDS(1,NEXT), CP )
+               call vcrss ( bounds(1,i), bounds(1,next), cp )
 
 !
 !              It's allowable for non-consecutive boundary vectors to
 !              be linearly dependent, but if we have such a pair,
 !              it doesn't define an exterior face.
 !
-               IF ( .NOT. VZERO(CP) ) THEN
+               if ( .not. vzero(cp) ) then
 !
 !                 The rays having direction vectors indexed I and NEXT
 !                 define a semi-infinite sector of a plane that might
@@ -523,26 +523,26 @@
 !                 of at least MARGIN from the plane containing the
 !                 current face.
 !
-                  PASS1 = .TRUE.
-                  OK    = .TRUE.
-                  M     =  1
+                  pass1 = .true.
+                  ok    = .true.
+                  m     =  1
 
-                  DO WHILE (  ( M .LE. N ) .AND. OK  )
+                  do while (  ( m .le. n ) .and. ok  )
 !
 !                    Find the angular separation of CP and the Mth
 !                    vector if the latter is not an edge of the current
 !                    face.
 !
-                     IF (  ( M .NE. I ) .AND. ( M .NE. NEXT )  ) THEN
+                     if (  ( m .ne. i ) .and. ( m .ne. next )  ) then
 
-                        SEP = VSEP(  CP,  BOUNDS(1,M)  )
+                        sep = vsep(  cp,  bounds(1,m)  )
 
-                        IF ( PASS1 ) THEN
+                        if ( pass1 ) then
 !
 !                          Adjust CP if necessary so that it points
 !                          toward the interior of the pyramid.
 !
-                           IF ( SEP .GT. HALFPI() ) THEN
+                           if ( sep .gt. halfpi() ) then
 !
 !                             Invert the cross product vector and
 !                             adjust SEP accordingly. Within this "M"
@@ -550,29 +550,29 @@
 !                             be computed using the new value of CP.
 !
 
-                              CALL VSCLIP ( -1.D0, CP )
+                              call vsclip ( -1.d0, cp )
 
-                              SEP = PI() - SEP
+                              sep = pi() - sep
 
-                           END IF
+                           end if
 
-                           PASS1 = .FALSE.
+                           pass1 = .false.
 
-                        END IF
+                        end if
 
-                        OK  = SEP .LT. ( HALFPI() - MARGIN )
+                        ok  = sep .lt. ( halfpi() - margin )
 
-                     END IF
+                     end if
 
-                     IF ( OK ) THEN
+                     if ( ok ) then
 !
 !                       Consider the next boundary vector.
 !
-                        M = M + 1
+                        m = m + 1
 
-                     END IF
+                     end if
 
-                  END DO
+                  end do
 
 !
 !                 We've tested each boundary vector against the current
@@ -580,65 +580,65 @@
 !                 vector with insufficient angular separation from the
 !                 plane containing the face was found.
 !
-                  IF ( OK ) THEN
+                  if ( ok ) then
 !
 !                    The current face is exterior. It's bounded by rays
 !                    I and NEXT.
 
-                     XIDX  = I
-                     FOUND = .TRUE.
+                     xidx  = i
+                     found = .true.
 
-                  END IF
+                  end if
 !
 !                 End of angular separation test block.
 !
-               END IF
+               end if
 !
 !              End of non-zero cross product block.
 !
 
-               IF ( .NOT. FOUND ) THEN
+               if ( .not. found ) then
 !
 !                 Look at the face bounded by the rays
 !                 at indices I and NEXT+1.
 !
-                  NEXT = NEXT + 1
+                  next = next + 1
 
-               END IF
+               end if
 
-            END DO
+            end do
 !
 !           End of NEXT loop.
 !
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 !
 !              Look at the face bounded by the pairs of rays
 !              including the ray at index I+1.
 !
-               I = I + 1
+               i = i + 1
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        End of I loop.
 !
-      END IF
+      end if
 !
 !     End of search for exterior face using each pair of rays.
 !
 !     If we still haven't found an exterior face, we can't continue.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Unable to find face of convex hull ' &
+         call setmsg ( 'Unable to find face of convex hull ' &
          //            'of FOV of instrument #.'            )
-         CALL ERRCH  ( '#', INST                            )
-         CALL SIGERR ( 'SPICE(FACENOTFOUND)'                )
-         CALL CHKOUT ( 'ZZHULLAX'                           )
-         RETURN
+         call errch  ( '#', inst                            )
+         call sigerr ( 'SPICE(FACENOTFOUND)'                )
+         call chkout ( 'ZZHULLAX'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Arrival at this point means that the rays at indices
@@ -658,137 +658,137 @@
 !     the "face frame."
 !
 !
-      CALL VHAT ( BOUNDS(1,I),    RAY1 )
-      CALL VHAT ( BOUNDS(1,NEXT), RAY2 )
+      call vhat ( bounds(1,i),    ray1 )
+      call vhat ( bounds(1,next), ray2 )
 
-      CALL VLCOM  ( 0.5D0, RAY1, 0.5D0, RAY2, XVEC )
+      call vlcom  ( 0.5d0, ray1, 0.5d0, ray2, xvec )
 
-      CALL VHATIP ( XVEC )
-      CALL VHAT   ( CP,   YVEC )
-      CALL UCRSS  ( XVEC, YVEC, ZVEC )
+      call vhatip ( xvec )
+      call vhat   ( cp,   yvec )
+      call ucrss  ( xvec, yvec, zvec )
 
 !
 !     Create a transformation matrix to map the input boundary
 !     vectors into the face frame.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         TRANS(1,I) = XVEC(I)
-         TRANS(2,I) = YVEC(I)
-         TRANS(3,I) = ZVEC(I)
+         trans(1,i) = xvec(i)
+         trans(2,i) = yvec(i)
+         trans(3,i) = zvec(i)
 
-      END DO
+      end do
 !
 !     Now we're going to compute the longitude of each boundary in the
 !     face frame. The vectors with indices XIDX and NEXT are excluded.
 !     We expect all longitudes to be between MARGIN and pi - MARGIN.
 !
-      MINLON =  PI()
-      MAXLON =  0.D0
-      MINIX  =  1
-      MAXIX  =  1
+      minlon =  pi()
+      maxlon =  0.d0
+      minix  =  1
+      maxix  =  1
 
-      DO I = 1, N
+      do i = 1, n
 
-         IF ( ( I .NE. XIDX ) .AND. ( I .NE. NEXT )  ) THEN
+         if ( ( i .ne. xidx ) .and. ( i .ne. next )  ) then
 !
 !           The current vector is not a boundary of our edge,
 !           so find its longitude.
 !
-            CALL MXV ( TRANS, BOUNDS(1,I), V )
+            call mxv ( trans, bounds(1,i), v )
 
-            CALL RECLAT ( V, R, LON, LAT )
+            call reclat ( v, r, lon, lat )
 !
 !           Update the longitude bounds.
 !
-            IF ( LON .LT. MINLON ) THEN
-               MINIX  = I
-               MINLON = LON
-            END IF
+            if ( lon .lt. minlon ) then
+               minix  = i
+               minlon = lon
+            end if
 
-            IF ( LON .GT. MAXLON ) THEN
-               MAXIX  = I
-               MAXLON = LON
-            END IF
+            if ( lon .gt. maxlon ) then
+               maxix  = i
+               maxlon = lon
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     If the longitude bounds are not as expected, don't try
 !     to continue.
 !
-      IF (  MINLON  .LT.  2*MARGIN  ) THEN
+      if (  minlon  .lt.  2*margin  ) then
 
-         CALL SETMSG ( 'Minimum boundary vector longitude in ' &
+         call setmsg ( 'Minimum boundary vector longitude in ' &
          //            'exterior face frame is # radians. ' &
          //            'Minimum occurs at index #. This FOV ' &
          //            'does not conform to the requirements ' &
          //            'of this routine. Instrument is #.'          )
-         CALL ERRDP  ( '#', MINLON                                  )
-         CALL ERRINT ( '#', MINIX                                   )
-         CALL ERRCH  ( '#', INST                                    )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                        )
-         CALL CHKOUT ( 'ZZHULLAX'                                   )
-         RETURN
+         call errdp  ( '#', minlon                                  )
+         call errint ( '#', minix                                   )
+         call errch  ( '#', inst                                    )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
+         call chkout ( 'ZZHULLAX'                                   )
+         return
 
-      ELSE IF ( MAXLON  .GT.  PI()-2*MARGIN  ) THEN
+      else if ( maxlon  .gt.  pi()-2*margin  ) then
 
-         CALL SETMSG ( 'Maximum boundary vector longitude in ' &
+         call setmsg ( 'Maximum boundary vector longitude in ' &
          //            'exterior face frame is # radians. ' &
          //            'Maximum occurs at index #. This FOV ' &
          //            'does not conform to the requirements ' &
          //            'of this routine. Instrument is #.'          )
-         CALL ERRDP  ( '#', MAXLON                                  )
-         CALL ERRINT ( '#', MAXIX                                   )
-         CALL ERRCH  ( '#', INST                                    )
-         CALL SIGERR ( 'SPICE(FOVTOOWIDE)'                          )
-         CALL CHKOUT ( 'ZZHULLAX'                                   )
-         RETURN
+         call errdp  ( '#', maxlon                                  )
+         call errint ( '#', maxix                                   )
+         call errch  ( '#', inst                                    )
+         call sigerr ( 'SPICE(FOVTOOWIDE)'                          )
+         call chkout ( 'ZZHULLAX'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Let delta represent the amount we can rotate the exterior
 !     face clockwise about +Z without contacting another boundary
 !     vector.
 !
-      DELTA = PI() - MAXLON
+      delta = pi() - maxlon
 
 !
 !     Rotate +Y by -DELTA/2 about +Z. The result is our candidate
 !     FOV axis. Make the axis vector unit length.
 !
-      CALL VROTV  ( YVEC, ZVEC, -DELTA/2, AXIS )
-      CALL VHATIP ( AXIS )
+      call vrotv  ( yvec, zvec, -delta/2, axis )
+      call vhatip ( axis )
 
 !
 !     If we have a viable result, ALL boundary vectors have
 !     angular separation less than HALFPI-MARGIN from AXIS.
 !
-      DO I = 1, N
+      do i = 1, n
 
-         SEP = VSEP( BOUNDS(1,I), AXIS )
+         sep = vsep( bounds(1,i), axis )
 
-         IF (  SEP  .GT. ( HALFPI() - MARGIN )  ) THEN
+         if (  sep  .gt. ( halfpi() - margin )  ) then
 
-            CALL SETMSG ( 'Boundary vector at index # has ' &
+            call setmsg ( 'Boundary vector at index # has ' &
             //            'angular separation of # radians ' &
             //            'from candidate FOV axis. This FOV ' &
             //            'does not conform to the requirements ' &
             //            'of this routine. Instrument is #.'    )
-            CALL ERRINT ( '#', I                                 )
-            CALL ERRDP  ( '#', SEP                               )
-            CALL ERRCH  ( '#', INST                              )
-            CALL SIGERR ( 'SPICE(FOVTOOWIDE)'                    )
-            CALL CHKOUT ( 'ZZHULLAX'                             )
-            RETURN
+            call errint ( '#', i                                 )
+            call errdp  ( '#', sep                               )
+            call errch  ( '#', inst                              )
+            call sigerr ( 'SPICE(FOVTOOWIDE)'                    )
+            call chkout ( 'ZZHULLAX'                             )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZHULLAX' )
-      RETURN
-      END
+      call chkout ( 'ZZHULLAX' )
+      return
+      end

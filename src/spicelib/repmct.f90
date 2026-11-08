@@ -1,6 +1,6 @@
 !$Procedure REPMCT  ( Replace marker with cardinal text )
 
-      SUBROUTINE REPMCT ( IN, MARKER, VALUE, RTCASE, OUT )
+      subroutine repmct ( in, marker, value, rtcase, out )
 
 ! $ Abstract
 !
@@ -19,16 +19,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         IN
-      CHARACTER*(*)         MARKER
-      INTEGER               VALUE
-      CHARACTER*1           RTCASE
-      CHARACTER*(*)         OUT
+      character*(*)         in
+      character*(*)         marker
+      integer               value
+      character*1           rtcase
+      character*(*)         out
 
-      INTEGER               MAXLCN
-      PARAMETER           ( MAXLCN = 145 )
+      integer               maxlcn
+      parameter           ( maxlcn = 145 )
 
 ! $ Brief_I/O
 !
@@ -288,111 +288,111 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
-      LOGICAL               RETURN
+      integer               frstnb
+      integer               lastnb
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXLCN)    CARD
-      CHARACTER*(1)         TMPCAS
+      character*(maxlcn)    card
+      character*(1)         tmpcas
 
-      INTEGER               MRKNBF
-      INTEGER               MRKNBL
+      integer               mrknbf
+      integer               mrknbl
 
-      INTEGER               MRKPSB
-      INTEGER               MRKPSE
+      integer               mrkpsb
+      integer               mrkpse
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'REPMCT' )
+      call chkin ( 'REPMCT' )
 
 !
 !     Bail out if RTCASE is not recognized.
 !
-      CALL LJUST ( RTCASE, TMPCAS )
-      CALL UCASE ( TMPCAS, TMPCAS )
+      call ljust ( rtcase, tmpcas )
+      call ucase ( tmpcas, tmpcas )
 
-      IF (        ( TMPCAS .NE. 'U' ) &
-            .AND. ( TMPCAS .NE. 'L' ) &
-            .AND. ( TMPCAS .NE. 'C' )  ) THEN
+      if (        ( tmpcas .ne. 'U' ) &
+            .and. ( tmpcas .ne. 'L' ) &
+            .and. ( tmpcas .ne. 'C' )  ) then
 
-         CALL SETMSG ( 'Case (#) must be U, L, or C.' )
-         CALL ERRCH  ( '#', RTCASE                    )
-         CALL SIGERR ( 'SPICE(INVALIDCASE)'           )
-         CALL CHKOUT ( 'REPMCT'                       )
-         RETURN
+         call setmsg ( 'Case (#) must be U, L, or C.' )
+         call errch  ( '#', rtcase                    )
+         call sigerr ( 'SPICE(INVALIDCASE)'           )
+         call chkout ( 'REPMCT'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      IF ( MARKER .EQ. ' ' ) THEN
+      if ( marker .eq. ' ' ) then
 
-         OUT = IN
+         out = in
 
-         CALL CHKOUT ( 'REPMCT')
-         RETURN
+         call chkout ( 'REPMCT')
+         return
 
-      END IF
+      end if
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      MRKNBF = FRSTNB(MARKER)
-      MRKNBL = LASTNB(MARKER)
+      mrknbf = frstnb(marker)
+      mrknbl = lastnb(marker)
 
-      MRKPSB = INDEX ( IN, MARKER ( MRKNBF : MRKNBL )  )
+      mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      IF  ( MRKPSB .EQ. 0 ) THEN
+      if  ( mrkpsb .eq. 0 ) then
 
-         OUT = IN
+         out = in
 
-         CALL CHKOUT ( 'REPMCT' )
-         RETURN
+         call chkout ( 'REPMCT' )
+         return
 
-      END IF
+      end if
 
-      MRKPSE = MRKPSB + MRKNBL - MRKNBF
+      mrkpse = mrkpsb + mrknbl - mrknbf
 
 !
 !     Okay, RTCASE is recognized and MARKER has been found.
 !     Generate the cardinal text corresponding to VALUE.
 !
-      CALL INTTXT ( VALUE, CARD )
+      call inttxt ( value, card )
 
 !
 !     CARD is always returned in upper case; change to the specified
 !     case, if required.
 !
-      IF ( TMPCAS .EQ. 'L' ) THEN
+      if ( tmpcas .eq. 'L' ) then
 
-         CALL LCASE ( CARD, CARD )
+         call lcase ( card, card )
 
-      ELSE IF ( TMPCAS .EQ. 'C' ) THEN
+      else if ( tmpcas .eq. 'C' ) then
 
-         CALL LCASE ( CARD(2:), CARD(2:) )
+         call lcase ( card(2:), card(2:) )
 
-      END IF
+      end if
 
 !
 !     Replace MARKER with CARD.
 !
-      CALL REPSUB ( IN, &
-                    MRKPSB, &
-                    MRKPSE, &
-                    CARD ( : LASTNB(CARD) ), &
-                    OUT                                       )
+      call repsub ( in, &
+                    mrkpsb, &
+                    mrkpse, &
+                    card ( : lastnb(card) ), &
+                    out                                       )
 
-      CALL CHKOUT ( 'REPMCT' )
-      RETURN
-      END
+      call chkout ( 'REPMCT' )
+      return
+      end

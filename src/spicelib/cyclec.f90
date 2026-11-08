@@ -1,6 +1,6 @@
 !$Procedure CYCLEC ( Cycle a character string )
 
-      SUBROUTINE CYCLEC ( INSTR, DIR, NCYCLE, OUTSTR )
+      subroutine cyclec ( instr, dir, ncycle, outstr )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)      INSTR
-      CHARACTER*1        DIR
-      INTEGER            NCYCLE
-      CHARACTER*(*)      OUTSTR
+      character*(*)      instr
+      character*1        dir
+      integer            ncycle
+      character*(*)      outstr
 
 ! $ Brief_I/O
 !
@@ -152,34 +152,34 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL          RETURN
-      INTEGER          GCD
+      logical          return
+      integer          gcd
 
 !
 !     Local variables
 !
-      CHARACTER*1      LAST
-      CHARACTER*1      TEMP
+      character*1      last
+      character*1      temp
 
-      INTEGER          G
-      INTEGER          I
-      INTEGER          J
-      INTEGER          K
-      INTEGER          L
-      INTEGER          M
-      INTEGER          N
-      INTEGER          LIMIT
+      integer          g
+      integer          i
+      integer          j
+      integer          k
+      integer          l
+      integer          m
+      integer          n
+      integer          limit
 
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CYCLEC' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'CYCLEC' )
+      end if
 !
 !     Get the length of the input string.
 !
-      N     = LEN ( INSTR  )
-      LIMIT = LEN ( OUTSTR )
+      n     = len ( instr  )
+      limit = len ( outstr )
 
 !
 !     A left cycle is the same as a right cycle by the opposite of
@@ -187,35 +187,35 @@
 !     K + m*N for any integer m.  Thus we compute the value of the
 !     minimum positive right cycle that is equivalent to the inputs.
 !
-      IF (      (DIR .EQ. 'L') &
-           .OR. (DIR .EQ. 'l') ) THEN
+      if (      (dir .eq. 'L') &
+           .or. (dir .eq. 'l') ) then
 
-         K = MOD ( - NCYCLE, N )
+         k = mod ( - ncycle, n )
 
-      ELSE IF (      ( DIR .EQ. 'R') &
-                .OR. ( DIR .EQ. 'r') ) THEN
+      else if (      ( dir .eq. 'R') &
+                .or. ( dir .eq. 'r') ) then
 
-         K = MOD (   NCYCLE, N )
+         k = mod (   ncycle, n )
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'The direction flag should be one of the '     // &
+         call setmsg ( 'The direction flag should be one of the '     // &
                        'following: ''r'', ''R'', ''l'', ''L''.  It'   // &
                        ' was #.'   )
 
-         CALL ERRCH  ( '#', DIR )
-         CALL SIGERR ( 'SPICE(INVALIDDIRECTION)' )
-         CALL CHKOUT ( 'CYCLEC' )
-         RETURN
+         call errch  ( '#', dir )
+         call sigerr ( 'SPICE(INVALIDDIRECTION)' )
+         call chkout ( 'CYCLEC' )
+         return
 
-      END IF
+      end if
 
-      IF      ( K .LT. 0 ) THEN
-         K = K + N
-      ELSE IF ( K .EQ. 0 ) THEN
-         CALL CHKOUT ( 'CYCLEC' )
-         RETURN
-      END IF
+      if      ( k .lt. 0 ) then
+         k = k + n
+      else if ( k .eq. 0 ) then
+         call chkout ( 'CYCLEC' )
+         return
+      end if
 
 
 !
@@ -296,41 +296,41 @@
 !     In this case the code is much shorter than its explanation.
 !
 
-      G = GCD ( K, N )
-      M = N / G
+      g = gcd ( k, n )
+      m = n / g
 
-      DO I = 1, G
+      do i = 1, g
 
-         L    = I
-         LAST = INSTR (L:L)
+         l    = i
+         last = instr (l:l)
 
-         DO J = 1, M
+         do j = 1, m
 
-            L = L + K
+            l = l + k
 
 !
 !           Compute L mod N.
 !
-            IF ( L .GT. N ) THEN
-               L = L - N
-            END IF
+            if ( l .gt. n ) then
+               l = l - n
+            end if
 
-            TEMP        = INSTR (L:L)
+            temp        = instr (l:l)
 
 !
 !           Make sure there is someplace to put the letter picked up
 !           in the previous pass through the loop.
 !
-            IF ( L .LE. LIMIT ) THEN
-               OUTSTR(L:L) = LAST
-            END IF
+            if ( l .le. limit ) then
+               outstr(l:l) = last
+            end if
 
-            LAST        = TEMP
+            last        = temp
 
-         END DO
+         end do
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'CYCLEC' )
-      RETURN
-      END
+      call chkout ( 'CYCLEC' )
+      return
+      end

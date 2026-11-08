@@ -1,6 +1,6 @@
 !$Procedure ZZCORSXF ( Correct state transformation matrix )
 
-      SUBROUTINE ZZCORSXF ( XMIT, DLT, XFORM, CORXFM )
+      subroutine zzcorsxf ( xmit, dlt, xform, corxfm )
 
 ! $ Abstract
 !
@@ -22,12 +22,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               XMIT
-      DOUBLE PRECISION      DLT
-      DOUBLE PRECISION      XFORM  ( 6, 6 )
-      DOUBLE PRECISION      CORXFM ( 6, 6 )
+      logical               xmit
+      double precision      dlt
+      double precision      xform  ( 6, 6 )
+      double precision      corxfm ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -381,27 +381,27 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LTSIGN
-      DOUBLE PRECISION      SCALE
+      double precision      ltsign
+      double precision      scale
 
-      INTEGER               COL
+      integer               col
 
 !
 !     Determine the sign of the light time correction.
 !
-      IF ( XMIT ) THEN
+      if ( xmit ) then
 
-         LTSIGN =  1.D0
-      ELSE
-         LTSIGN = -1.D0
-      END IF
+         ltsign =  1.d0
+      else
+         ltsign = -1.d0
+      end if
 
 !
 !     Since the only block we're changing is
 !     the lower left, first copy the input matrix
 !     to the output matrix.
 !
-      CALL MOVED ( XFORM, 36, CORXFM )
+      call moved ( xform, 36, corxfm )
 
 !
 !     Adjust the rotation derivative block for
@@ -411,17 +411,17 @@
 !        1 + LTSIGN*DLT
 !
 !
-      SCALE = 1.D0 + LTSIGN*DLT
+      scale = 1.d0 + ltsign*dlt
 
 
-      DO COL = 1, 3
+      do col = 1, 3
 !
 !        Scale the vector starting at index
 !        (4,COL) in place.
 !
-         CALL VSCLIP ( SCALE, CORXFM(4,COL) )
+         call vsclip ( scale, corxfm(4,col) )
 
-      END DO
+      end do
 
-      END
+      end
 

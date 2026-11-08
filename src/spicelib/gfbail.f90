@@ -1,6 +1,6 @@
 !$Procedure GFBAIL ( GF, default bailout function )
 
-      LOGICAL FUNCTION GFBAIL()
+      logical function gfbail()
 
 ! $ Abstract
 !
@@ -17,7 +17,7 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Brief_I/O
 !
@@ -188,7 +188,7 @@
 !-&
 
 
-      GFBAIL  =  .FALSE.
+      gfbail  =  .false.
 
-      RETURN
-      END
+      return
+      end

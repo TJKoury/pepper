@@ -1,6 +1,6 @@
 !$Procedure ZZCTR ( Manipulate Counter Array )
 
-      SUBROUTINE ZZCTR ( NEWCTR, OLDCTR, UPDATE )
+      subroutine zzctr ( newctr, oldctr, update )
 
 ! $ Abstract
 !
@@ -16,13 +16,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE                'zzctr.inc'
+      include                'zzctr.inc'
 
-      INTEGER               NEWCTR ( CTRSIZ )
-      INTEGER               OLDCTR ( CTRSIZ )
-      LOGICAL               UPDATE
+      integer               newctr ( ctrsiz )
+      integer               oldctr ( ctrsiz )
+      logical               update
 
 ! $ Brief_I/O
 !
@@ -224,57 +224,57 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
-      INTEGER               INTMIN
+      integer               intmax
+      integer               intmin
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables.
 !
-      INTEGER               CTRHGH
-      INTEGER               CTRLOW
+      integer               ctrhgh
+      integer               ctrlow
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Save EVERYTHING.
 !
-      SAVE
+      save
 
 !
 !     Initial values.
 !
-      DATA                  FIRST  / .TRUE. /
+      data                  first  / .true. /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     This routine should never be called. If this routine is called,
 !     an error is signaled.
 !
-      CALL CHKIN  ( 'ZZCTR' )
+      call chkin  ( 'ZZCTR' )
 
-      CALL SETMSG ( 'ZZCTR: You have called an entry which performs ' // &
+      call setmsg ( 'ZZCTR: You have called an entry which performs ' // &
                     'performs no run-time function. This may '        // &
                     'indicate a bug. Please check the documentation ' // &
                     'for the subroutine ZZCTR.' )
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'ZZCTR' )
+      call chkout ( 'ZZCTR' )
 
-      RETURN
+      return
 
 
 !$Procedure ZZCTRUIN ( CounTeR array, User counter INitialization )
 
-      ENTRY ZZCTRUIN ( OLDCTR )
+      entry zzctruin ( oldctr )
 
 ! $ Abstract
 !
@@ -359,34 +359,34 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Initialize the high and low values.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CTRHGH = INTMAX()
-         CTRLOW = INTMIN()
+         ctrhgh = intmax()
+         ctrlow = intmin()
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Set counter.
 !
-      OLDCTR(1) = CTRHGH
-      OLDCTR(2) = CTRHGH
+      oldctr(1) = ctrhgh
+      oldctr(2) = ctrhgh
 
-      RETURN
+      return
 
 
 !$Procedure ZZCTRSIN ( CounTeR array, Subsystem counter INitialization )
 
-      ENTRY ZZCTRSIN ( OLDCTR )
+      entry zzctrsin ( oldctr )
 
 ! $ Abstract
 !
@@ -472,36 +472,36 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Initialize the high and low values.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CTRHGH = INTMAX()
-         CTRLOW = INTMIN()
+         ctrhgh = intmax()
+         ctrlow = intmin()
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Set counter.
 !
-      OLDCTR(1) = CTRLOW
-      OLDCTR(2) = CTRLOW
+      oldctr(1) = ctrlow
+      oldctr(2) = ctrlow
 
-      RETURN
+      return
 
 
 
 
 !$Procedure ZZCTRINC ( CounTeR Array, INCrement counter )
 
-      ENTRY ZZCTRINC ( OLDCTR )
+      entry zzctrinc ( oldctr )
 
 ! $ Abstract
 !
@@ -585,31 +585,31 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Initialize the high and low values.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CTRHGH = INTMAX()
-         CTRLOW = INTMIN()
+         ctrhgh = intmax()
+         ctrlow = intmin()
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Signal an error if both input counter array elements have high
 !     values.
 !
-      IF ( OLDCTR(1) .EQ. CTRHGH .AND. OLDCTR(2) .EQ. CTRHGH ) THEN
+      if ( oldctr(1) .eq. ctrhgh .and. oldctr(2) .eq. ctrhgh ) then
 
-         CALL CHKIN  ( 'ZZCTRINC' )
+         call chkin  ( 'ZZCTRINC' )
 
-         CALL SETMSG ( 'A subsystem state counter overflowed. '    // &
+         call setmsg ( 'A subsystem state counter overflowed. '    // &
                        'For this to happen there must be '         // &
                        'a SPICE bug or you must have been '        // &
                        'running your SPICE-based application for ' // &
@@ -617,35 +617,35 @@
                        'and report the circumstances under '       // &
                        'which this happened.'                      )
 
-         CALL SIGERR ( 'SPICE(SPICEISTIRED)' )
+         call sigerr ( 'SPICE(SPICEISTIRED)' )
 
-         CALL CHKOUT ( 'ZZCTRINC' )
+         call chkout ( 'ZZCTRINC' )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Increment counters.
 !
-      IF ( OLDCTR(1) .EQ. CTRHGH ) THEN
+      if ( oldctr(1) .eq. ctrhgh ) then
 
-         OLDCTR(1) = CTRLOW
-         OLDCTR(2) = OLDCTR(2) + 1
+         oldctr(1) = ctrlow
+         oldctr(2) = oldctr(2) + 1
 
-      ELSE
+      else
 
-         OLDCTR(1) = OLDCTR(1) + 1
+         oldctr(1) = oldctr(1) + 1
 
-      END IF
+      end if
 
-      RETURN
+      return
 
 
 
 !$Procedure ZZCTRCHK ( CounTeR array, CHecK and update )
 
-      ENTRY ZZCTRCHK ( NEWCTR, OLDCTR, UPDATE )
+      entry zzctrchk ( newctr, oldctr, update )
 
 ! $ Abstract
 !
@@ -740,25 +740,25 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     Do counters differ?
 !
-      UPDATE = NEWCTR(1) .NE. OLDCTR(1) .OR. NEWCTR(2) .NE. OLDCTR(2)
+      update = newctr(1) .ne. oldctr(1) .or. newctr(2) .ne. oldctr(2)
 
 !
 !     If they do, set old counter to new value.
 !
-      IF ( UPDATE ) THEN
+      if ( update ) then
 
-         OLDCTR(1) = NEWCTR(1)
-         OLDCTR(2) = NEWCTR(2)
+         oldctr(1) = newctr(1)
+         oldctr(2) = newctr(2)
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure CKE04 ( C-kernel, evaluate pointing record, type 4 )
 
-      SUBROUTINE CKE04 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      subroutine cke04 ( needav, record, cmat, av, clkout )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'ckparam.inc'
+      include               'ckparam.inc'
 
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( * )
-      DOUBLE PRECISION      CMAT   ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3 )
-      DOUBLE PRECISION      CLKOUT
+      logical               needav
+      double precision      record ( * )
+      double precision      cmat   ( 3, 3 )
+      double precision      av     ( 3 )
+      double precision      clkout
 
 ! $ Brief_I/O
 !
@@ -330,73 +330,73 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION        Q      ( 4 )
-      DOUBLE PRECISION        QOUT   ( 4 )
+      double precision        q      ( 4 )
+      double precision        qout   ( 4 )
 
-      INTEGER                 BASADD
-      INTEGER                 I
-      INTEGER                 IDEG   ( QAVSIZ )
+      integer                 basadd
+      integer                 i
+      integer                 ideg   ( qavsiz )
 
 !
 !     Initial values.
 !
-      AV( 1 ) = 0.D0
-      AV( 2 ) = 0.D0
-      AV( 3 ) = 0.D0
+      av( 1 ) = 0.d0
+      av( 2 ) = 0.d0
+      av( 3 ) = 0.d0
 
 !
 !     Read numbers of polynomial coefficients from input record to
 !     local integer array.
 !
-      DO I = 1, QAVSIZ
-         IDEG( I ) = INT( RECORD( 3 + I ) )
-      END DO
+      do i = 1, qavsiz
+         ideg( i ) = int( record( 3 + i ) )
+      end do
 
 !
 !     Evaluate polynomial function for quaternion components at time
 !     RECORD( 1 ).
 !
-      BASADD = CK4SFT + 1
+      basadd = ck4sft + 1
 
-      DO I = 1, QSIZ
+      do i = 1, qsiz
 
-         CALL CHBVAL( RECORD( BASADD ), IDEG( I ) - 1, RECORD( 2 ), &
-                                               RECORD( 1 ), Q( I ) )
-         BASADD = BASADD + IDEG ( I )
+         call chbval( record( basadd ), ideg( i ) - 1, record( 2 ), &
+                                               record( 1 ), q( i ) )
+         basadd = basadd + ideg ( i )
 
-      END DO
+      end do
 
 !
 !     Normalize quaternion.
 !
-      CALL VHATG ( Q, QSIZ, QOUT )
+      call vhatg ( q, qsiz, qout )
 
 !
 !     Convert the quaternion to a C-matrix.
 !
-      CALL Q2M ( QOUT, CMAT )
+      call q2m ( qout, cmat )
 
-      CLKOUT = RECORD( 1 )
+      clkout = record( 1 )
 
 !
 !     Check if angular velocities have to be evaluated, then
 !     evaluate them.
 !
-      IF ( NEEDAV ) THEN
+      if ( needav ) then
 
-         DO I = QSIZ + 1, QAVSIZ
+         do i = qsiz + 1, qavsiz
 
-            CALL CHBVAL ( RECORD( BASADD ), IDEG( I ) - 1, RECORD( 2 ), &
-                                          RECORD( 1 ), AV( I - QSIZ ) )
-            BASADD = BASADD + IDEG( I )
+            call chbval ( record( basadd ), ideg( i ) - 1, record( 2 ), &
+                                          record( 1 ), av( i - qsiz ) )
+            basadd = basadd + ideg( i )
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     All done.
 !
-      RETURN
+      return
 
-      END
+      end

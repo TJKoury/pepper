@@ -1,6 +1,6 @@
 !$Procedure MXVG ( Matrix time vector, general dimension )
 
-      SUBROUTINE MXVG ( M1, V2, NR1, NC1R2, VOUT )
+      subroutine mxvg ( m1, v2, nr1, nc1r2, vout )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NR1
-      INTEGER            NC1R2
-      DOUBLE PRECISION   M1   ( NR1,NC1R2 )
-      DOUBLE PRECISION   V2   (     NC1R2 )
-      DOUBLE PRECISION   VOUT ( NR1       )
+      integer            nr1
+      integer            nc1r2
+      double precision   m1   ( nr1,nc1r2 )
+      double precision   v2   (     nc1r2 )
+      double precision   vout ( nr1       )
 
 ! $ Brief_I/O
 !
@@ -178,21 +178,21 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SUM
+      double precision      sum
 
-      INTEGER               I
-      INTEGER               K
+      integer               i
+      integer               k
 
 !
 !  Perform the matrix-vector multiplication
 !
-      DO I = 1, NR1
-         SUM = 0.D0
-         DO K = 1, NC1R2
-            SUM = SUM + M1(I,K)*V2(K)
-         END DO
-         VOUT(I) = SUM
-      END DO
+      do i = 1, nr1
+         sum = 0.d0
+         do k = 1, nc1r2
+            sum = sum + m1(i,k)*v2(k)
+         end do
+         vout(i) = sum
+      end do
 
-      RETURN
-      END
+      return
+      end

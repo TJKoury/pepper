@@ -1,6 +1,6 @@
 !$Procedure TOUCHC ( Touch a variable )
 
-      CHARACTER FUNCTION TOUCHC ( STRING )
+      character function touchc ( string )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -121,6 +121,6 @@
 !-&
 
 
-      TOUCHC = STRING(1:1)
-      RETURN
-      END
+      touchc = string(1:1)
+      return
+      end

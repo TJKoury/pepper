@@ -1,6 +1,6 @@
 !$Procedure  ZZEKWEED ( Private: EK, weed out redundant row vectors )
 
-      SUBROUTINE ZZEKWEED ( NJRS, BASES, NROWS )
+      subroutine zzekweed ( njrs, bases, nrows )
 
 ! $ Abstract
 !
@@ -22,12 +22,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekjrs.inc'
-      INCLUDE 'ekqlimit.inc'
+      include 'ekjrs.inc'
+      include 'ekqlimit.inc'
 
-      INTEGER               NJRS
-      INTEGER               BASES ( * )
-      INTEGER               NROWS
+      integer               njrs
+      integer               bases ( * )
+      integer               nrows
 
 ! $ Brief_I/O
 !
@@ -143,72 +143,72 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               SAMEAI
+      logical               sameai
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               BASE
-      INTEGER               CAND
-      INTEGER               CANDSV ( MAXTAB )
-      INTEGER               CRV
-      INTEGER               CRWBAS
-      INTEGER               CRWVEC ( MAXTAB + 1 )
-      INTEGER               CSGBAS
-      INTEGER               CSV
-      INTEGER               J
-      INTEGER               LOC
-      INTEGER               NCNDRV
-      INTEGER               NCNDSV
-      INTEGER               NDEL
-      INTEGER               NPRDRV
-      INTEGER               NPRDSV
-      INTEGER               NR
-      INTEGER               NRLOC
-      INTEGER               NSVLOC
-      INTEGER               NTAB
-      INTEGER               PRED
-      INTEGER               PREDSV ( MAXTAB )
-      INTEGER               PRV
-      INTEGER               PRWBAS
-      INTEGER               PRWVEC ( MAXTAB + 1 )
-      INTEGER               PSGBAS
-      INTEGER               PSV
-      INTEGER               RVSIZE
-      INTEGER               SVSIZE
+      integer               i
+      integer               base
+      integer               cand
+      integer               candsv ( maxtab )
+      integer               crv
+      integer               crwbas
+      integer               crwvec ( maxtab + 1 )
+      integer               csgbas
+      integer               csv
+      integer               j
+      integer               loc
+      integer               ncndrv
+      integer               ncndsv
+      integer               ndel
+      integer               nprdrv
+      integer               nprdsv
+      integer               nr
+      integer               nrloc
+      integer               nsvloc
+      integer               ntab
+      integer               pred
+      integer               predsv ( maxtab )
+      integer               prv
+      integer               prwbas
+      integer               prwvec ( maxtab + 1 )
+      integer               psgbas
+      integer               psv
+      integer               rvsize
+      integer               svsize
 
-      LOGICAL               HIT
+      logical               hit
 
 !
 !     Use discovery check-in.
 !
-      IF ( ( NJRS .LT. 1 ) .OR. ( NJRS .GT. MXJRS )  ) THEN
+      if ( ( njrs .lt. 1 ) .or. ( njrs .gt. mxjrs )  ) then
 
-         CALL CHKIN  ( 'ZZEKWEED'                                      )
-         CALL SETMSG ( 'The number of join row sets in the union is #' )
-         CALL ERRINT ( '#', NJRS                                       )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                           )
-         CALL CHKOUT ( 'ZZEKWEED'                                      )
-         RETURN
+         call chkin  ( 'ZZEKWEED'                                      )
+         call setmsg ( 'The number of join row sets in the union is #' )
+         call errint ( '#', njrs                                       )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                           )
+         call chkout ( 'ZZEKWEED'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the addressing routines are properly initialized.
 !
-      CALL ZZEKVSET ( NJRS, BASES )
+      call zzekvset ( njrs, bases )
 
 !
 !     Get the segment vector and row vector sizes.  The sizes that
 !     apply to the first join row set will suffice throughout.
 !
-      LOC     =  BASES(1) + JTCIDX
+      loc     =  bases(1) + jtcidx
 
-      CALL ZZEKSRD ( LOC, LOC, NTAB )
+      call zzeksrd ( loc, loc, ntab )
 
-      SVSIZE  =  NTAB
-      RVSIZE  =  NTAB + 1
+      svsize  =  ntab
+      rvsize  =  ntab + 1
 
 !
 !     Mark redundant rows vectors for deletion.  One saving grace is
@@ -216,7 +216,7 @@
 !     long as that join row set represents a set of rows satisfying
 !     a conjunction of constraints.
 !
-      DO CAND = 2, NJRS
+      do cand = 2, njrs
 !
 !        We'll compare row vectors in the CAND join row set to row
 !        vectors in the preceding join row sets.  Only row vectors
@@ -230,18 +230,18 @@
 !        NCNDSV will contain the number of segment vectors in the
 !        `candidate' join row set.
 !
-         NSVLOC  =  BASES(CAND)  +  JSCIDX
+         nsvloc  =  bases(cand)  +  jscidx
 
-         CALL ZZEKSRD  ( NSVLOC, NSVLOC, NCNDSV  )
+         call zzeksrd  ( nsvloc, nsvloc, ncndsv  )
 
 
-         DO CSV = 1, NCNDSV
+         do csv = 1, ncndsv
 !
 !           Look up the candidate segment vector.
 !
-            CSGBAS  =  BASES(CAND)  +  JSVBAS  +  (CSV-1)*SVSIZE
+            csgbas  =  bases(cand)  +  jsvbas  +  (csv-1)*svsize
 
-            CALL ZZEKSRD  ( CSGBAS+1,  CSGBAS+SVSIZE,  CANDSV  )
+            call zzeksrd  ( csgbas+1,  csgbas+svsize,  candsv  )
 
 !
 !           Get the row vector count and base address of the set of
@@ -250,15 +250,15 @@
 !           row set structure in the join row set parameter include
 !           file may be helpful here.)
 !
-            BASE  =      BASES(CAND) &
-                      +  JSVBAS &
-                      +  NCNDSV  * SVSIZE &
-                      +  (CSV-1) * 2
+            base  =      bases(cand) &
+                      +  jsvbas &
+                      +  ncndsv  * svsize &
+                      +  (csv-1) * 2
 
-            CALL ZZEKSRD ( BASE+1,  BASE+1,  CRWBAS )
-            CRWBAS = CRWBAS + BASES(CAND)
+            call zzeksrd ( base+1,  base+1,  crwbas )
+            crwbas = crwbas + bases(cand)
 
-            CALL ZZEKSRD ( BASE+2,  BASE+2,  NCNDRV )
+            call zzeksrd ( base+2,  base+2,  ncndrv )
 
 
 !
@@ -266,28 +266,28 @@
 !           segment vectors in that join row set and compare them to the
 !           candidate.
 !
-            DO PRED = 1, CAND-1
+            do pred = 1, cand-1
 !
 !              Get the count of segment vectors in the current
 !              predecessor join row set.
 !
-               NSVLOC = BASES(PRED) + JSCIDX
+               nsvloc = bases(pred) + jscidx
 
-               CALL ZZEKSRD  ( NSVLOC, NSVLOC, NPRDSV )
+               call zzeksrd  ( nsvloc, nsvloc, nprdsv )
 
 
-               DO PSV = 1, NPRDSV
+               do psv = 1, nprdsv
 !
 !                 Look up the predecessor segment vector.
 !
-                  PSGBAS  =  BASES(PRED)  +  JSVBAS  +  (PSV-1)*SVSIZE
+                  psgbas  =  bases(pred)  +  jsvbas  +  (psv-1)*svsize
 
-                  CALL ZZEKSRD  ( CSGBAS+1,  CSGBAS+SVSIZE,  PREDSV  )
+                  call zzeksrd  ( csgbas+1,  csgbas+svsize,  predsv  )
 
 !
 !                 Compare the segment vectors and hope for the best.
 !
-                  IF (  SAMEAI ( CANDSV, PREDSV, SVSIZE )  ) THEN
+                  if (  sameai ( candsv, predsv, svsize )  ) then
 !
 !                    Unfortunately, the two segment vectors match, so
 !                    there's something to do.  We'll have to compare
@@ -302,37 +302,37 @@
 !                    segment vector.
 !
 
-                     BASE  =      BASES(PRED) &
-                               +  JSVBAS &
-                               +  NPRDSV  * SVSIZE &
-                               +  (PSV-1) * 2
+                     base  =      bases(pred) &
+                               +  jsvbas &
+                               +  nprdsv  * svsize &
+                               +  (psv-1) * 2
 
-                     CALL ZZEKSRD ( BASE+1,  BASE+1,  PRWBAS )
-                     PRWBAS = PRWBAS + BASES(PRED)
+                     call zzeksrd ( base+1,  base+1,  prwbas )
+                     prwbas = prwbas + bases(pred)
 
-                     CALL ZZEKSRD ( BASE+2,  BASE+2,  NPRDRV )
+                     call zzeksrd ( base+2,  base+2,  nprdrv )
 
 !
 !                    Compare all row vectors.
 !
-                     DO CRV = 1, NCNDRV
+                     do crv = 1, ncndrv
 
 
-                        BASE  =  CRWBAS + (CRV-1)*RVSIZE
-                        CALL ZZEKSRD ( BASE+1, BASE+RVSIZE, CRWVEC )
+                        base  =  crwbas + (crv-1)*rvsize
+                        call zzeksrd ( base+1, base+rvsize, crwvec )
 
-                        PRV   =  1
-                        HIT   =  .FALSE.
-
-
-                        DO WHILE (         ( PRV .LE.  NPRDRV ) &
-                                    .AND.  (     .NOT. HIT    )   )
-
-                           BASE  =  PRWBAS + (PRV-1)*RVSIZE
-                           CALL ZZEKSRD ( BASE+1, BASE+RVSIZE, PRWVEC )
+                        prv   =  1
+                        hit   =  .false.
 
 
-                           IF ( SAMEAI(CRWVEC, PRWVEC, RVSIZE) ) THEN
+                        do while (         ( prv .le.  nprdrv ) &
+                                    .and.  (     .not. hit    )   )
+
+                           base  =  prwbas + (prv-1)*rvsize
+                           call zzeksrd ( base+1, base+rvsize, prwvec )
+
+
+                           if ( sameai(crwvec, prwvec, rvsize) ) then
 !
 !                             The row vectors, together with their
 !                             qualifying segment vectors, match.  The
@@ -343,43 +343,43 @@
 !                             row vector invalid, so it will not match
 !                             any valid row vector we see later.
 !
-                              BASE  =  CRWBAS + (CRV-1)*RVSIZE
-                              CALL ZZEKSUPD ( BASE+1, BASE+1, 0 )
-                              HIT   =  .TRUE.
-                           ELSE
-                              PRV   =  PRV + 1
-                           END IF
+                              base  =  crwbas + (crv-1)*rvsize
+                              call zzeksupd ( base+1, base+1, 0 )
+                              hit   =  .true.
+                           else
+                              prv   =  prv + 1
+                           end if
 
-                        END DO
+                        end do
 
-                     END DO
+                     end do
 
 
-                  END IF
+                  end if
 !
 !                 We've finished comparing row vectors for a pair of
 !                 segment vectors, if it was necessary to do so.
 !
 
-               END DO
+               end do
 !
 !              We've compared all segment vectors in the current
 !              predecessor join row set with the candidate segment
 !              vector.
 !
 
-            END DO
+            end do
 !
 !           We've compared all segment vectors in all predecessor join
 !           row sets to the current segment vector.
 !
 
-         END DO
+         end do
 !
 !        We've compared the candidate join row set to its predecessors.
 !
 
-      END DO
+      end do
 !
 !     We've compared all of the join row sets.
 !
@@ -387,53 +387,53 @@
 !     Now, clean up the join row set union by compressing out deleted
 !     rows, segment vectors, and join row sets.
 !
-      J      =  1
-      NDEL   =  0
+      j      =  1
+      ndel   =  0
 
-      DO I = 1, NJRS
+      do i = 1, njrs
 !
 !        Compress the current join row set.  If it ends up empty,
 !        expel it from the union.
 !
-         CALL ZZEKJSQZ ( BASES(I) )
+         call zzekjsqz ( bases(i) )
 
-         NRLOC = BASES(I) + JRCIDX
-         CALL ZZEKSRD  ( NRLOC, NRLOC, NR )
+         nrloc = bases(i) + jrcidx
+         call zzeksrd  ( nrloc, nrloc, nr )
 
-         IF ( NR .EQ. 0 ) THEN
+         if ( nr .eq. 0 ) then
 !
 !           This entire join row set can be deleted from the union.
 !           Consider the next join row set.
 !
-            NDEL     =  NDEL + 1
+            ndel     =  ndel + 1
 
-         ELSE
+         else
 
-            BASES(J) =  BASES(I)
-            J        =  J + 1
+            bases(j) =  bases(i)
+            j        =  j + 1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      NJRS  = NJRS - NDEL
+      njrs  = njrs - ndel
 
 !
 !     Count the rows remaining after our clean-up operation.
 !
-      NROWS = 0
+      nrows = 0
 
-      DO I = 1, NJRS
+      do i = 1, njrs
 
-         NRLOC = BASES(I) + JRCIDX
+         nrloc = bases(i) + jrcidx
 
-         CALL ZZEKSRD ( NRLOC, NRLOC, NR )
+         call zzeksrd ( nrloc, nrloc, nr )
 
-         NROWS = NROWS + NR
+         nrows = nrows + nr
 
-      END DO
+      end do
 
 
-      RETURN
-      END
+      return
+      end

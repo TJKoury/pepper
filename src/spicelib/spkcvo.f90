@@ -1,7 +1,7 @@
 !$Procedure SPKCVO ( SPK, constant velocity observer state )
 
-      SUBROUTINE SPKCVO ( TARGET, ET,     OUTREF, REFLOC, ABCORR, &
-                          OBSSTA, OBSEPC, OBSCTR, OBSREF, STATE,  LT )
+      subroutine spkcvo ( target, et,     outref, refloc, abcorr, &
+                          obssta, obsepc, obsctr, obsref, state,  lt )
 
 ! $ Abstract
 !
@@ -23,22 +23,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzabcorr.inc'
-      INCLUDE               'zzctr.inc'
+      include               'zzabcorr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         OUTREF
-      CHARACTER*(*)         REFLOC
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      OBSSTA ( 6 )
-      DOUBLE PRECISION      OBSEPC
-      CHARACTER*(*)         OBSCTR
-      CHARACTER*(*)         OBSREF
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      LT
+      character*(*)         target
+      double precision      et
+      character*(*)         outref
+      character*(*)         refloc
+      character*(*)         abcorr
+      double precision      obssta ( 6 )
+      double precision      obsepc
+      character*(*)         obsctr
+      character*(*)         obsref
+      double precision      state  ( 6 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -1382,46 +1382,46 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ESRCHC
+      integer               esrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
-      EXTERNAL              ZZCVXSTA
+      external              zzcvxsta
 
 !
 !     Local parameters
 !
-      INTEGER               NEVFLG
-      PARAMETER           ( NEVFLG = 3 )
+      integer               nevflg
+      parameter           ( nevflg = 3 )
 
-      INTEGER               EVLFLN
-      PARAMETER           ( EVLFLN = 25 )
+      integer               evlfln
+      parameter           ( evlfln = 25 )
 
 !
 !     Codes for evaluation type flags. These codes are
 !     indices of the flags within the EVLFLG array.
 !
-      INTEGER               EVLOBS
-      PARAMETER           ( EVLOBS = 1 )
+      integer               evlobs
+      parameter           ( evlobs = 1 )
 
-      INTEGER               EVLTRG
-      PARAMETER           ( EVLTRG = 2 )
+      integer               evltrg
+      parameter           ( evltrg = 2 )
 
-      INTEGER               EVLCTR
-      PARAMETER           ( EVLCTR = 3 )
+      integer               evlctr
+      parameter           ( evlctr = 3 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL   = 36 )
+      integer               maxl
+      parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 
 
@@ -1429,77 +1429,77 @@
 !
 !     Local variables
 !
-      CHARACTER*(CORLEN)    PRVCOR
-      CHARACTER*(EVLFLN)    EVLFLG ( NEVFLG )
+      character*(corlen)    prvcor
+      character*(evlfln)    evlflg ( nevflg )
 
-      DOUBLE PRECISION      DLT
-      DOUBLE PRECISION      J2STAT ( 6 )
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      TMPXFM ( 6, 6 )
-      DOUBLE PRECISION      XTRANS ( 6, 6 )
+      double precision      dlt
+      double precision      j2stat ( 6 )
+      double precision      s
+      double precision      tmpxfm ( 6, 6 )
+      double precision      xtrans ( 6, 6 )
 
-      INTEGER               CTRCDE
-      INTEGER               EVLTYP
-      INTEGER               J2CODE
-      INTEGER               ORFCDE
-      INTEGER               TRGCDE
+      integer               ctrcde
+      integer               evltyp
+      integer               j2code
+      integer               orfcde
+      integer               trgcde
 
-      LOGICAL               ATTBLK ( ABATSZ )
-      LOGICAL               FOUND
-      LOGICAL               FIRST
-      LOGICAL               USELT
-      LOGICAL               XMIT
+      logical               attblk ( abatsz )
+      logical               found
+      logical               first
+      logical               uselt
+      logical               xmit
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOCTR
-      INTEGER               SVCCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svoctr
+      integer               svccde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR3 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVOREF
-      INTEGER               SVORFC
+      integer               svctr3 ( ctrsiz )
+      character*(frnmln)    svoref
+      integer               svorfc
 
 
 !
 !     Saved variables
 !
-      SAVE                  EVLFLG
-      SAVE                  J2CODE
-      SAVE                  FIRST
-      SAVE                  PRVCOR
-      SAVE                  USELT
-      SAVE                  XMIT
+      save                  evlflg
+      save                  j2code
+      save                  first
+      save                  prvcor
+      save                  uselt
+      save                  xmit
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVOCTR
-      SAVE                  SVCCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svoctr
+      save                  svccde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd2
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR3
-      SAVE                  SVOREF
-      SAVE                  SVORFC
+      save                  svctr3
+      save                  svoref
+      save                  svorfc
 
 
 !
@@ -1510,144 +1510,144 @@
 !     must match that of the INTEGER parameters
 !     corresponding to these flags.
 !
-      DATA                  EVLFLG / 'OBSERVER', &
+      data                  evlflg / 'OBSERVER', &
                                      'TARGET', &
                                      'CENTER'    /
 
-      DATA                  FIRST  / .TRUE.      /
+      data                  first  / .true.      /
 
-      DATA                  PRVCOR / ' '         /
+      data                  prvcor / ' '         /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKCVO' )
+      call chkin ( 'SPKCVO' )
 
 !
 !     Counter initialization is done separately.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
-         CALL ZZCTRUIN( SVCTR3 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
+         call zzctruin( svctr3 )
 
-      END IF
+      end if
 
 !
 !     On the first pass, save the ID code of the J2000 frame.
 !
-      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
 
-         IF ( FIRST ) THEN
-            CALL IRFNUM ( 'J2000', J2CODE )
-         END IF
+         if ( first ) then
+            call irfnum ( 'J2000', j2code )
+         end if
 
 !
 !        Analyze the aberration correction string; produce an attribute
 !        block.
 !
-         CALL ZZVALCOR ( ABCORR, ATTBLK )
+         call zzvalcor ( abcorr, attblk )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKCVO')
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKCVO')
+            return
+         end if
 
-         USELT  = ATTBLK( LTIDX  )
-         XMIT   = ATTBLK( XMTIDX )
-         PRVCOR = ABCORR
+         uselt  = attblk( ltidx  )
+         xmit   = attblk( xmtidx )
+         prvcor = abcorr
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-      END IF
+      end if
 
 !
 !     Convert the input name of the center of motion to
 !     an ID code.
 !
-      CALL ZZBODS2C ( SVCTR1, SVOCTR, SVCCDE, SVFND1, &
-                      OBSCTR, CTRCDE, FOUND    )
+      call zzbods2c ( svctr1, svoctr, svccde, svfnd1, &
+                      obsctr, ctrcde, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Could not map body name # to an ID code.' )
-         CALL ERRCH  ( '#',  OBSCTR                               )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SPKCVO'                                   )
-         RETURN
+         call setmsg ( 'Could not map body name # to an ID code.' )
+         call errch  ( '#',  obsctr                               )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SPKCVO'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Convert the input name of the target to an ID code.
 !
-      CALL ZZBODS2C ( SVCTR2, SVTARG, SVTCDE, SVFND2, &
-                      TARGET, TRGCDE, FOUND    )
+      call zzbods2c ( svctr2, svtarg, svtcde, svfnd2, &
+                      target, trgcde, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'Could not map body name # to an ID code.' )
-         CALL ERRCH  ( '#',  TARGET                               )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'SPKCVO'                                   )
-         RETURN
+         call setmsg ( 'Could not map body name # to an ID code.' )
+         call errch  ( '#',  target                               )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'SPKCVO'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the output frame's ID code.
 !
-      CALL ZZNAMFRM ( SVCTR3, SVOREF, SVORFC, OUTREF, ORFCDE )
+      call zznamfrm ( svctr3, svoref, svorfc, outref, orfcde )
 
-      IF ( ORFCDE .EQ. 0 ) THEN
+      if ( orfcde .eq. 0 ) then
 !
 !        Only non-zero ID codes are legitimate.  Zero
 !        indicates that the frame wasn't recognized.
 !
-         CALL SETMSG ( 'The frame # was not recognized. Possible ' &
+         call setmsg ( 'The frame # was not recognized. Possible ' &
          //            'causes are that the frame name was misspelled ' &
          //            'or that a required frame kernel has not been ' &
          //            'loaded.'                                       )
-         CALL ERRCH  ( '#', OUTREF                                     )
-         CALL SIGERR ( 'SPICE(UNKNOWNFRAME)'                           )
-         CALL CHKOUT ( 'SPKCVO'                                        )
-         RETURN
+         call errch  ( '#', outref                                     )
+         call sigerr ( 'SPICE(UNKNOWNFRAME)'                           )
+         call chkout ( 'SPKCVO'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Identify the frame evaluation locus.
 !
-      EVLTYP = ESRCHC ( REFLOC, NEVFLG, EVLFLG )
+      evltyp = esrchc ( refloc, nevflg, evlflg )
 
-      IF ( EVLTYP .EQ. 0 ) THEN
+      if ( evltyp .eq. 0 ) then
 !
 !        REFLOC is not a valid evaluation choice.
 !
-         CALL SETMSG ( 'Output frame evaluation locus ' &
+         call setmsg ( 'Output frame evaluation locus ' &
          //            '# was not recognized. Allowed values are ' &
          //            '''OBSERVER'', ''TARGET'', and ''CENTER''.' )
-         CALL ERRCH  ( '#',  REFLOC                                )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                       )
-         CALL CHKOUT ( 'SPKCVO'                                    )
-         RETURN
+         call errch  ( '#',  refloc                                )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                       )
+         call chkout ( 'SPKCVO'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Store inputs required to evaluate the observer's state relative
 !     to its center of motion.
 !
-      CALL ZZCVSSTA ( OBSSTA, CTRCDE, OBSEPC, OBSREF )
+      call zzcvssta ( obssta, ctrcde, obsepc, obsref )
 
 !
 !     Below, the routine that uses the inputs stored by ZZCVSSTA is
@@ -1658,34 +1658,34 @@
 !     expressed in the frame OUTREF, using the specified aberration
 !     corrections.
 !
-      IF ( .NOT. USELT )  THEN
+      if ( .not. uselt )  then
 !
 !        We evaluate the observer frame at ET, regardless of
 !        the setting of EVLTYP.
 !
-         CALL ZZSPKFZO ( TRGCDE, ET,       OUTREF, &
-                         ABCORR, ZZCVXSTA, STATE,  LT )
+         call zzspkfzo ( trgcde, et,       outref, &
+                         abcorr, zzcvxsta, state,  lt )
 
-         CALL CHKOUT ( 'SPKCVO' )
-         RETURN
+         call chkout ( 'SPKCVO' )
+         return
 
-      END IF
+      end if
 
 !
 !     Getting to this point implies light time corrections are used.
 !     The action to take depends on the frame evaluation locus.
 !
-      IF ( EVLTYP .EQ. EVLCTR ) THEN
+      if ( evltyp .eq. evlctr ) then
 !
 !        We're going to use the traditional SPK method of specifying
 !        the output frame evaluation epoch; this is what ZZSPKFZO
 !        does.
 !
-         CALL ZZSPKFZO ( TRGCDE, ET,       OUTREF, &
-                         ABCORR, ZZCVXSTA, STATE,  LT )
+         call zzspkfzo ( trgcde, et,       outref, &
+                         abcorr, zzcvxsta, state,  lt )
 
 
-      ELSE IF ( EVLTYP .EQ. EVLOBS ) THEN
+      else if ( evltyp .eq. evlobs ) then
 !
 !        The output frame orientation is to be evaluated at the
 !        observation epoch ET.
@@ -1694,29 +1694,29 @@
 !        observer, we will first look up the state in an inertial
 !        frame, then transform the state as necessary.
 !
-         CALL ZZSPKFZO ( TRGCDE, ET,       'J2000', &
-                         ABCORR, ZZCVXSTA, J2STAT,  LT )
+         call zzspkfzo ( trgcde, et,       'J2000', &
+                         abcorr, zzcvxsta, j2stat,  lt )
 
 
-         IF ( ORFCDE .EQ. J2CODE ) THEN
+         if ( orfcde .eq. j2code ) then
 
-            CALL MOVED ( J2STAT, 6, STATE )
+            call moved ( j2stat, 6, state )
 
-         ELSE
+         else
 
-            CALL FRMCHG ( J2CODE, ORFCDE, ET, XTRANS )
+            call frmchg ( j2code, orfcde, et, xtrans )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SPKCVO')
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SPKCVO')
+               return
+            end if
 
-            CALL MXVG ( XTRANS,  J2STAT,  6,  6, STATE )
+            call mxvg ( xtrans,  j2stat,  6,  6, state )
 
-         END IF
+         end if
 
 
-      ELSE IF ( EVLTYP .EQ. EVLTRG ) THEN
+      else if ( evltyp .eq. evltrg ) then
 !
 !        We must evaluate the output frame at the epoch associated
 !        with the target. This may well not be the epoch associated
@@ -1729,51 +1729,51 @@
 !        of light time between target and observer. Start out by
 !        determining the sign of the light time correction.
 !
-         IF ( XMIT ) THEN
+         if ( xmit ) then
 !
 !           We're doing transmission corrections.
 !
-            S =  1.D0
+            s =  1.d0
 
-         ELSE
+         else
 !
 !           We're doing reception corrections.
 !
-            S = -1.D0
+            s = -1.d0
 
-         END IF
+         end if
 
 !
 !        Get the observer-target state in the J2000 frame, along
 !        with the light time and light time rate.
 !
-         CALL ZZSPKFAO ( TRGCDE, ET,       'J2000', &
-                         ABCORR, ZZCVXSTA, J2STAT,  LT, DLT )
+         call zzspkfao ( trgcde, et,       'J2000', &
+                         abcorr, zzcvxsta, j2stat,  lt, dlt )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SPKCVO')
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SPKCVO')
+            return
+         end if
 
 
-         IF ( ORFCDE .EQ. J2CODE ) THEN
+         if ( orfcde .eq. j2code ) then
 !
 !           The output frame is J2000. No frame transformation is
 !           required.
 !
-            CALL MOVED ( J2STAT, 6, STATE )
+            call moved ( j2stat, 6, state )
 
-         ELSE
+         else
 !
 !           Look up the state transformation from the J2000 frame to
 !           OUTREF at the light time corrected epoch.
 !
-            CALL FRMCHG ( J2CODE,  ORFCDE,  ET + S*LT,  XTRANS )
+            call frmchg ( j2code,  orfcde,  et + s*lt,  xtrans )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SPKCVO')
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SPKCVO')
+               return
+            end if
 
 !
 !           We're using light time corrections here.
@@ -1781,32 +1781,32 @@
 !           Adjust the transformation to account for the rate of
 !           change of observer-target light time.
 !
-            CALL ZZCORSXF ( XMIT,  DLT,  XTRANS, TMPXFM )
+            call zzcorsxf ( xmit,  dlt,  xtrans, tmpxfm )
 
 !
 !           Map the output state to the frame OUTREF.
 !
-            CALL MXVG ( TMPXFM, J2STAT, 6, 6, STATE )
+            call mxvg ( tmpxfm, j2stat, 6, 6, state )
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        We've run out of valid evaluation choices. We were
 !        supposed to have caught this problem earlier, so this
 !        is the result of a coding error.
 !
-         CALL SETMSG ( 'Output frame evaluation locus ' &
+         call setmsg ( 'Output frame evaluation locus ' &
          //            '# was not recognized. [Coding error].'   )
-         CALL ERRCH  ( '#',  REFLOC                              )
-         CALL SIGERR ( 'SPICE(BUG)'                              )
-         CALL CHKOUT ( 'SPKCVO'                                  )
-         RETURN
+         call errch  ( '#',  refloc                              )
+         call sigerr ( 'SPICE(BUG)'                              )
+         call chkout ( 'SPKCVO'                                  )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SPKCVO' )
-      RETURN
-      END
+      call chkout ( 'SPKCVO' )
+      return
+      end

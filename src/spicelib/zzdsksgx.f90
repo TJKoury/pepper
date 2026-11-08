@@ -1,7 +1,7 @@
 !$Procedure ZZDSKSGX ( DSK, ray-segment intercept )
 
-      SUBROUTINE ZZDSKSGX ( HANDLE, DLADSC, DTYPE, ET, VERTEX, &
-                            RAYDIR, XPT,    DC,    IC, FOUND   )
+      subroutine zzdsksgx ( handle, dladsc, dtype, et, vertex, &
+                            raydir, xpt,    dc,    ic, found   )
 
 ! $ Abstract
 !
@@ -27,18 +27,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      INTEGER               DTYPE
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
-      DOUBLE PRECISION      DC     ( * )
-      INTEGER               IC     ( * )
-      LOGICAL               FOUND
+      integer               handle
+      integer               dladsc ( * )
+      integer               dtype
+      double precision      et
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      double precision      xpt    ( 3 )
+      double precision      dc     ( * )
+      integer               ic     ( * )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -176,56 +176,56 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TOUCHD
+      double precision      touchd
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RETVAL
+      double precision      retval
 
-      INTEGER               PLID
+      integer               plid
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKSGX' )
+      call chkin ( 'ZZDSKSGX' )
 
 !
 !     Note: input argument ET is provided to support time-dependent
 !     data types.
 !
-      RETVAL = TOUCHD( ET )
-      DC(1)  = TOUCHD( DC )
+      retval = touchd( et )
+      dc(1)  = touchd( dc )
 
-      IF ( DTYPE .EQ. 2 ) THEN
+      if ( dtype .eq. 2 ) then
 !
 !        The intercept plate ID is returned in element 1 of
 !        IC, if an intercept is found.
 !
-         CALL DSKX02 ( HANDLE, DLADSC, VERTEX, &
-                       RAYDIR, PLID,   XPT,    FOUND )
+         call dskx02 ( handle, dladsc, vertex, &
+                       raydir, plid,   xpt,    found )
 
-         IF ( FOUND ) THEN
-            IC(1) = PLID
-         END IF
+         if ( found ) then
+            ic(1) = plid
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'DSK ray-surface intercepts are not ' &
+         call setmsg ( 'DSK ray-surface intercepts are not ' &
          //            'supported for DSK data type #.'     )
-         CALL ERRINT ( '#', DTYPE                           )
-         CALL SIGERR ( 'SPICE(TYPENOTSUPPORTED)'            )
-         CALL CHKOUT ( 'ZZDSKSGX'                           )
-         RETURN
+         call errint ( '#', dtype                           )
+         call sigerr ( 'SPICE(TYPENOTSUPPORTED)'            )
+         call chkout ( 'ZZDSKSGX'                           )
+         return
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZDSKSGX' )
-      RETURN
-      END
+      call chkout ( 'ZZDSKSGX' )
+      return
+      end
 

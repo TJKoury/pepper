@@ -1,6 +1,6 @@
 !$Procedure ZZDSKBBL ( DSK, build BSR segment list )
 
-      SUBROUTINE ZZDSKBBL ( BODYID )
+      subroutine zzdskbbl ( bodyid )
 
 ! $ Abstract
 !
@@ -24,14 +24,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzctr.inc'
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'zzctr.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               BODYID
+      integer               bodyid
 
 ! $ Brief_I/O
 !
@@ -124,13 +124,13 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     EXTERNAL routines
 !
-      EXTERNAL ZZDSKNOT
+      external zzdsknot
 
 !
 !     Local parameters
@@ -139,62 +139,62 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      double precision      dskdsc ( dskdsz )
 
-      INTEGER               CTR    ( CTRSIZ )
-      INTEGER               DLADSC ( DLADSZ )
-      INTEGER               HANDLE
-      INTEGER               PRVBOD
+      integer               ctr    ( ctrsiz )
+      integer               dladsc ( dladsz )
+      integer               handle
+      integer               prvbod
 
-      LOGICAL               FIRST
-      LOGICAL               NEWBOD
-      LOGICAL               SEGFND
-      LOGICAL               UPDATE
+      logical               first
+      logical               newbod
+      logical               segfnd
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE                  CTR
-      SAVE                  FIRST
-      SAVE                  PRVBOD
+      save                  ctr
+      save                  first
+      save                  prvbod
 
 !
 !     Initial values
 !
-      DATA                  CTR    / CTRSIZ * 0 /
-      DATA                  FIRST  / .TRUE.     /
-      DATA                  PRVBOD / 0 /
+      data                  ctr    / ctrsiz * 0 /
+      data                  first  / .true.     /
+      data                  prvbod / 0 /
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSKBBL' )
+      call chkin ( 'ZZDSKBBL' )
 
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL ZZCTRUIN ( CTR )
+         call zzctruin ( ctr )
 
-         FIRST  = .FALSE.
-         NEWBOD = .TRUE.
+         first  = .false.
+         newbod = .true.
 
-      ELSE
+      else
 !
 !        PRVBOD is the last body for which a successful list
 !        build was performed.
 !
-         NEWBOD = BODYID .NE. PRVBOD
+         newbod = bodyid .ne. prvbod
 
-      END IF
+      end if
 
 !
 !     See whether the state of the loaded DSK set has changed
 !     since the last call.
 !
-      CALL ZZDSKCHK ( CTR, UPDATE )
+      call zzdskchk ( ctr, update )
 
-      IF ( UPDATE .OR. NEWBOD ) THEN
+      if ( update .or. newbod ) then
 !
 !        Force the BSR subsystem to build a complete segment list
 !        for the current body. We'll do this by using a matching
@@ -204,20 +204,20 @@
 !
 !        Start a segment search.
 !
-         CALL ZZDSKBSS ( BODYID )
+         call zzdskbss ( bodyid )
 
-         CALL ZZDSKSNS ( ZZDSKNOT, HANDLE, DLADSC, DSKDSC, SEGFND )
-
-
-         IF ( .NOT. FAILED() ) THEN
-
-            PRVBOD = BODYID
-
-         END IF
-
-      END IF
+         call zzdsksns ( zzdsknot, handle, dladsc, dskdsc, segfnd )
 
 
-      CALL CHKOUT ( 'ZZDSKBBL' )
-      RETURN
-      END
+         if ( .not. failed() ) then
+
+            prvbod = bodyid
+
+         end if
+
+      end if
+
+
+      call chkout ( 'ZZDSKBBL' )
+      return
+      end

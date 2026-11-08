@@ -46,8 +46,8 @@
 !                 MAXTRM is the largest allowed value of MAXDIM.
 !
 !
-      INTEGER               MAXTRM
-      PARAMETER           ( MAXTRM = 25 )
+      integer               maxtrm
+      parameter           ( maxtrm = 25 )
 
 !
 !     End of include file spk21.inc.

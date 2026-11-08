@@ -1,6 +1,6 @@
 !$Procedure ZZDIV ( Safer division )
 
-      DOUBLE PRECISION FUNCTION ZZDIV ( NUMR, DENOM )
+      double precision function zzdiv ( numr, denom )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      NUMR
-      DOUBLE PRECISION      DENOM
+      double precision      numr
+      double precision      denom
 
 ! $ Brief_I/O
 !
@@ -283,42 +283,42 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               RETURN
-      DOUBLE PRECISION      DPMAX
+      logical               return
+      double precision      dpmax
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      LOGNUM
-      DOUBLE PRECISION      LOGDEN
+      double precision      lognum
+      double precision      logden
 
 !
 !     The bounds on the potential result of the calculation.
 !
-      DOUBLE PRECISION      EXPNT
+      double precision      expnt
 
 !
 !     First entry flag.
 !
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Return on error.
 !
-      IF ( RETURN() ) THEN
-         ZZDIV = 0.D0
-         RETURN
-      END IF
+      if ( return() ) then
+         zzdiv = 0.d0
+         return
+      end if
 
 
 !
 !     Participate in error tracing.
 !
-      CALL CHKIN ( 'ZZDIV' )
+      call chkin ( 'ZZDIV' )
 
 
 !
@@ -326,16 +326,16 @@
 !     The double precision maximum value has the form
 !     "d*(10**EXPNT)." The value of interest is "EXPNT."
 !
-      IF (FIRST) THEN
+      if (first) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 
 !
 !        A "floor" evaluation.
 !
-         EXPNT = DBLE( INT( LOG10( DPMAX() ) ) )
+         expnt = dble( int( log10( dpmax() ) ) )
 
-       END IF
+       end if
 
 
 !
@@ -343,30 +343,30 @@
 !     This is equivalent to a signaling NaN (not-a-number) for
 !     the 0/0 case.
 !
-      IF ( DENOM .EQ. 0.D0 ) THEN
+      if ( denom .eq. 0.d0 ) then
 
-         ZZDIV = 0.D0
-         CALL SETMSG ( 'Numerical divide by zero event. ' &
+         zzdiv = 0.d0
+         call setmsg ( 'Numerical divide by zero event. ' &
                     // 'Numerator value #1.'             )
-         CALL ERRDP  ( '#1', NUMR                        )
-         CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'             )
-         CALL CHKOUT ( 'ZZDIV'                           )
-         RETURN
+         call errdp  ( '#1', numr                        )
+         call sigerr ( 'SPICE(DIVIDEBYZERO)'             )
+         call chkout ( 'ZZDIV'                           )
+         return
 
-      END IF
+      end if
 
 
 !
 !     If the numerator is zero, the division is zero. DENOM
 !     is known non-zero.
 !
-      IF ( NUMR .EQ. 0.D0 ) THEN
+      if ( numr .eq. 0.d0 ) then
 
-         ZZDIV = 0.D0
-         CALL CHKOUT ( 'ZZDIV' )
-         RETURN
+         zzdiv = 0.d0
+         call chkout ( 'ZZDIV' )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -379,43 +379,43 @@
 !     LOG10 call is safe from an infinite return value. An infinite
 !     return value defeats the purpose of this routine.
 !
-      LOGNUM = LOG10( DABS(NUMR)  )
-      LOGDEN = LOG10( DABS(DENOM) )
+      lognum = log10( dabs(numr)  )
+      logden = log10( dabs(denom) )
 
 !
 !     Local possible overflow check.
 !
-      IF ( (LOGNUM - LOGDEN) .GT. EXPNT ) THEN
+      if ( (lognum - logden) .gt. expnt ) then
 
-         ZZDIV = 0.D0
-         CALL SETMSG ( 'Numerical overflow event. ' &
+         zzdiv = 0.d0
+         call setmsg ( 'Numerical overflow event. ' &
                     // 'Numerator value #1, denominator value #2.')
-         CALL ERRDP  ( '#1', NUMR                                 )
-         CALL ERRDP  ( '#2', DENOM                                )
-         CALL SIGERR ( 'SPICE(NUMERICOVERFLOW)'                   )
-         CALL CHKOUT ( 'ZZDIV'                                    )
-         RETURN
+         call errdp  ( '#1', numr                                 )
+         call errdp  ( '#2', denom                                )
+         call sigerr ( 'SPICE(NUMERICOVERFLOW)'                   )
+         call chkout ( 'ZZDIV'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Local possible underflow check. Accept this may occur,
 !     return a zero.
 !
-      IF ( (LOGNUM - LOGDEN) .LT. -(EXPNT-1.D0) ) THEN
+      if ( (lognum - logden) .lt. -(expnt-1.d0) ) then
 
-         ZZDIV = 0.D0
-         CALL CHKOUT ( 'ZZDIV' )
-         RETURN
+         zzdiv = 0.d0
+         call chkout ( 'ZZDIV' )
+         return
 
-      END IF
+      end if
 
 !
 !     This operation should be safe. Probably.
 !
-      ZZDIV = NUMR/DENOM
+      zzdiv = numr/denom
 
-      CALL CHKOUT ( 'ZZDIV' )
+      call chkout ( 'ZZDIV' )
 
-      RETURN
-      END
+      return
+      end

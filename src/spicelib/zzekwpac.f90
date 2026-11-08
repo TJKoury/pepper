@@ -1,6 +1,6 @@
 !$Procedure     ZZEKWPAC ( EK, write paged array, character )
 
-      SUBROUTINE ZZEKWPAC ( HANDLE, SEGDSC, NVALS, L, CVALS, P, BASE )
+      subroutine zzekwpac ( handle, segdsc, nvals, l, cvals, p, base )
 
 ! $ Abstract
 !
@@ -17,18 +17,18 @@
 ! $ Declarations
 
 
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               NVALS
-      INTEGER               L
-      CHARACTER*(*)         CVALS  ( * )
-      INTEGER               P
-      INTEGER               BASE
+      integer               handle
+      integer               segdsc ( * )
+      integer               nvals
+      integer               l
+      character*(*)         cvals  ( * )
+      integer               p
+      integer               base
 
 ! $ Brief_I/O
 !
@@ -149,97 +149,97 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(PGSIZC)    PAGE
+      character*(pgsizc)    page
 
-      INTEGER               FROM
-      INTEGER               NPAGE
-      INTEGER               SPP
-      INTEGER               TO
+      integer               from
+      integer               npage
+      integer               spp
+      integer               to
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKWPAC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKWPAC' )
+      end if
 
 !
 !     Check the input string length.
 !
-      IF (      ( L .LT. 0             ) &
-           .OR. ( L .GT. LEN(CVALS(1)) ) &
-           .OR. ( L .GT. CPSIZE        )  ) THEN
+      if (      ( l .lt. 0             ) &
+           .or. ( l .gt. len(cvals(1)) ) &
+           .or. ( l .gt. cpsize        )  ) then
 
-         CALL SETMSG ( 'String length # is just plain wrong.' )
-         CALL ERRINT ( '#',  L                                )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                   )
-         CALL CHKOUT ( 'ZZEKWPAC'                             )
-         RETURN
+         call setmsg ( 'String length # is just plain wrong.' )
+         call errint ( '#',  l                                )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                   )
+         call chkout ( 'ZZEKWPAC'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the number of strings we can hold in one page.
 !
-      SPP  =  CPSIZE / L
+      spp  =  cpsize / l
 
 !
 !     Decide how many pages are required to hold the array, and
 !     allocate that many new, contiguous pages.
 !
-      NPAGE  =  ( NVALS + SPP - 1 ) / SPP
+      npage  =  ( nvals + spp - 1 ) / spp
 
-      CALL ZZEKACPS ( HANDLE, SEGDSC, CHR, NPAGE, P, BASE )
+      call zzekacps ( handle, segdsc, chr, npage, p, base )
 
 !
 !     We'll use FROM to indicate the element of CVALS we're
 !     considering and TO to indicate the element of PAGE to write
 !     to.
 !
-      TO   =  1
-      PAGE =  ' '
+      to   =  1
+      page =  ' '
 
 
-      DO FROM = 1, NVALS
+      do from = 1, nvals
 !
 !        The Assignment.
 !
-         PAGE( TO : TO+L-1 ) =  CVALS(FROM)
-         TO                  =  TO + L
+         page( to : to+l-1 ) =  cvals(from)
+         to                  =  to + l
 
 
-         IF (      ( TO   .GT. CPSIZE-L+1 ) &
-              .OR. ( FROM .EQ. NVALS      )  ) THEN
+         if (      ( to   .gt. cpsize-l+1 ) &
+              .or. ( from .eq. nvals      )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the
 !           current page.
 !
-            CALL ZZEKPGWC ( HANDLE, P, PAGE  )
+            call zzekpgwc ( handle, p, page  )
 
 !
 !           Set the link count.
 !
-            CALL ZZEKSLNK ( HANDLE, CHR, P,  (TO-L)/L  )
+            call zzekslnk ( handle, chr, p,  (to-l)/l  )
 
 !
 !           Next page.
 !
-            P   =  P + 1
-            TO  =  1
+            p   =  p + 1
+            to  =  1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZEKWPAC' )
-      RETURN
-      END
+      call chkout ( 'ZZEKWPAC' )
+      return
+      end

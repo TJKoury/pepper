@@ -1,6 +1,6 @@
 !$Procedure      ZZEKDPS ( EK, delete page from segment )
 
-      SUBROUTINE ZZEKDPS ( HANDLE, SEGDSC, TYPE, P )
+      subroutine zzekdps ( handle, segdsc, type, p )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               TYPE
-      INTEGER               P
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               type
+      integer               p
 
 ! $ Brief_I/O
 !
@@ -119,19 +119,19 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRLS
+      integer               zzektrls
 
 !
 !     Local variables
 !
-      INTEGER               MBASE
-      INTEGER               LOC
-      INTEGER               TREE
+      integer               mbase
+      integer               loc
+      integer               tree
 
 
 !
@@ -140,11 +140,11 @@
 !
 !     Ashes to ashes, dust to dust.  This page goes to the free list.
 !
-      CALL ZZEKPGFR ( HANDLE, TYPE, P )
+      call zzekpgfr ( handle, type, p )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Update the segment's metadata.  For type 1 segments,
@@ -154,60 +154,60 @@
 !     word in use of the appropriate type to the maximum number.  This
 !     prevents further writing to the page we're deleting.
 !
-      MBASE  =  SEGDSC ( IMDIDX )
+      mbase  =  segdsc ( imdidx )
 
 
-      IF ( TYPE .EQ. CHR ) THEN
+      if ( type .eq. chr ) then
 
-         TREE  =  SEGDSC ( CPTIDX )
+         tree  =  segdsc ( cptidx )
 
-         IF ( SEGDSC(LCPIDX) .EQ. P ) THEN
-            CALL DASUDI ( HANDLE, MBASE+LCWIDX, MBASE+LCWIDX, CPSIZE )
-         END IF
+         if ( segdsc(lcpidx) .eq. p ) then
+            call dasudi ( handle, mbase+lcwidx, mbase+lcwidx, cpsize )
+         end if
 
-         IF ( P .EQ. SEGDSC(LCPIDX) ) THEN
-            SEGDSC(LCWIDX) = CPSIZE
-         END IF
+         if ( p .eq. segdsc(lcpidx) ) then
+            segdsc(lcwidx) = cpsize
+         end if
 
 
-      ELSE IF ( TYPE .EQ. DP ) THEN
+      else if ( type .eq. dp ) then
 
-         TREE  =  SEGDSC ( DPTIDX )
+         tree  =  segdsc ( dptidx )
 
-         IF ( SEGDSC(LDPIDX) .EQ. P ) THEN
-            CALL DASUDI ( HANDLE, MBASE+LDWIDX, MBASE+LDWIDX, DPSIZE )
-         END IF
+         if ( segdsc(ldpidx) .eq. p ) then
+            call dasudi ( handle, mbase+ldwidx, mbase+ldwidx, dpsize )
+         end if
 
-         IF ( P .EQ. SEGDSC(LDPIDX) ) THEN
-            SEGDSC(LDWIDX) = DPSIZE
-         END IF
+         if ( p .eq. segdsc(ldpidx) ) then
+            segdsc(ldwidx) = dpsize
+         end if
 
-      ELSE IF ( TYPE .EQ. INT ) THEN
+      else if ( type .eq. int ) then
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, one of the allocation routines would have
 !        complained.
 !
-         TREE  =  SEGDSC ( IPTIDX )
+         tree  =  segdsc ( iptidx )
 
-         IF ( SEGDSC(LIPIDX) .EQ. P ) THEN
-            CALL DASUDI ( HANDLE, MBASE+LIWIDX, MBASE+LIWIDX, IPSIZE )
-         END IF
+         if ( segdsc(lipidx) .eq. p ) then
+            call dasudi ( handle, mbase+liwidx, mbase+liwidx, ipsize )
+         end if
 
-         IF ( P .EQ. SEGDSC(LIPIDX) ) THEN
-            SEGDSC(LIWIDX) = IPSIZE
-         END IF
+         if ( p .eq. segdsc(lipidx) ) then
+            segdsc(liwidx) = ipsize
+         end if
 
-      END IF
+      end if
 
 !
 !     Remove the page's number from the data page tree of the
 !     appropriate type.  This removal requires finding the key that
 !     points to the page to be removed.
 !
-      LOC  =  ZZEKTRLS ( HANDLE, TREE, P )
+      loc  =  zzektrls ( handle, tree, p )
 
-      CALL ZZEKTRDL (  HANDLE, TREE, LOC )
+      call zzektrdl (  handle, tree, loc )
 
-      RETURN
-      END
+      return
+      end

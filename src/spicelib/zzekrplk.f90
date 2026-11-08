@@ -1,6 +1,6 @@
 !$Procedure ZZEKRPLK ( EK, look up record pointer )
 
-      SUBROUTINE ZZEKRPLK ( HANDLE, SEGDSC, N, RECPTR )
+      subroutine zzekrplk ( handle, segdsc, n, recptr )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'eksegdsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekpage.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               N
-      INTEGER               RECPTR
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               n
+      integer               recptr
 
 ! $ Brief_I/O
 !
@@ -106,44 +106,44 @@
 !
 !     Local variables
 !
-      INTEGER               STYPE
-      INTEGER               TREE
+      integer               stype
+      integer               tree
 
 !
 !     Use discovery check-in.
 !
-      STYPE  =  SEGDSC ( EKTIDX )
+      stype  =  segdsc ( ektidx )
 
 
-      IF ( STYPE .EQ. 1 ) THEN
+      if ( stype .eq. 1 ) then
 !
 !        For type 1 segments, the record pointer is obtained from
 !        the record tree.
 !
-         TREE  = SEGDSC ( RTIDX )
+         tree  = segdsc ( rtidx )
 
-         CALL ZZEKTRDP ( HANDLE, TREE, N, RECPTR )
+         call zzektrdp ( handle, tree, n, recptr )
 
 
-      ELSE IF ( STYPE .EQ. 2 ) THEN
+      else if ( stype .eq. 2 ) then
 !
 !        For type 2 segments, the record pointer *is* the ordinal
 !        position of the record.
 !
-         RECPTR = N
+         recptr = n
 
-      ELSE
+      else
 !
 !        Sorry, no other types of segments are supported.
 !
-         CALL CHKIN  ( 'ZZEKRPLK'                             )
-         CALL SETMSG ( 'The segment type # is not supported.' )
-         CALL ERRINT ( '#',   STYPE                           )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                   )
-         CALL CHKOUT ( 'ZZEKRPLK'                             )
-         RETURN
+         call chkin  ( 'ZZEKRPLK'                             )
+         call setmsg ( 'The segment type # is not supported.' )
+         call errint ( '#',   stype                           )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                   )
+         call chkout ( 'ZZEKRPLK'                             )
+         return
 
-      END IF
+      end if
 
 
-      END
+      end

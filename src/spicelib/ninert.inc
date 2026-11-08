@@ -14,8 +14,8 @@
 !
 ! $ Declarations
 
-      INTEGER               NINERT
-      PARAMETER           ( NINERT = 21 )
+      integer               ninert
+      parameter           ( ninert = 21 )
 
 
 ! $ Brief_I/O

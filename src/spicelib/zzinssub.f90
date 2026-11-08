@@ -1,6 +1,6 @@
 !$Procedure      ZZINSSUB ( Insert a substring )
 
-      SUBROUTINE ZZINSSUB ( IN, SUB, LOC, OUT )
+      subroutine zzinssub ( in, sub, loc, out )
 
 ! $ Abstract
 !
@@ -23,10 +23,10 @@
 !
 ! $ Declarations
 
-      CHARACTER*(*)    IN
-      CHARACTER*(*)    SUB
-      INTEGER          LOC
-      CHARACTER*(*)    OUT
+      character*(*)    in
+      character*(*)    sub
+      integer          loc
+      character*(*)    out
 
 ! $ Brief_I/O
 !
@@ -174,19 +174,19 @@
 !
 !     Local Variables
 !
-      CHARACTER*(1)         CHR
+      character*(1)         chr
 
-      INTEGER               FROM
-      INTEGER               I
-      INTEGER               INLEN
-      INTEGER               MYLOC
-      INTEGER               NMOVE
-      INTEGER               OUTLEN
-      INTEGER               SUBEND
-      INTEGER               SUBLEN
-      INTEGER               TO
+      integer               from
+      integer               i
+      integer               inlen
+      integer               myloc
+      integer               nmove
+      integer               outlen
+      integer               subend
+      integer               sublen
+      integer               to
 
-      LOGICAL               SAME
+      logical               same
 
 !
 !     Note to the careful reader:  in order to scrupulously avoid
@@ -201,10 +201,10 @@
 !     Capture the lengths of the input, output, and substitution
 !     strings.
 !
-      INLEN   =  LEN ( IN  )
-      OUTLEN  =  LEN ( OUT )
-      SUBLEN  =  LEN ( SUB )
-      MYLOC   =  MIN ( INLEN + 1, MAX ( 1, LOC ) )
+      inlen   =  len ( in  )
+      outlen  =  len ( out )
+      sublen  =  len ( sub )
+      myloc   =  min ( inlen + 1, max ( 1, loc ) )
 
 
 !
@@ -214,17 +214,17 @@
 !     is not needed in this case and could cause a run-time error if
 !     OUT and IN refer to the same memory.
 !
-      SAME  =  OUT .EQ. IN
+      same  =  out .eq. in
 
-      IF ( MYLOC .GT. OUTLEN ) THEN
+      if ( myloc .gt. outlen ) then
 
-         IF ( .NOT. SAME ) THEN
-            OUT = IN
-         END IF
+         if ( .not. same ) then
+            out = in
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 
 !
@@ -242,52 +242,52 @@
 !     The first part of the input string is copied without change
 !     to the output string, if this first part is non-empty.
 !
-      IF ( MYLOC .GT. 1 ) THEN
+      if ( myloc .gt. 1 ) then
 !
 !        Again, do the assignment only if it's required.
 !
-         IF ( .NOT. SAME ) THEN
-            OUT(1 : MYLOC-1) = IN
-         END IF
+         if ( .not. same ) then
+            out(1 : myloc-1) = in
+         end if
 
-      END IF
+      end if
 
 !
 !     The part following the new substring is shifted into place, if
 !     there's both something to move and a place to put it.  Move the
 !     rightmost characters first.
 !
-      SUBEND  =  MYLOC - 1 + SUBLEN
+      subend  =  myloc - 1 + sublen
 
 
-      IF (        ( MYLOC  .LE. INLEN  ) &
-            .AND. ( SUBEND .LT. OUTLEN )  ) THEN
+      if (        ( myloc  .le. inlen  ) &
+            .and. ( subend .lt. outlen )  ) then
 
 
-         NMOVE  =  MIN (  OUTLEN-SUBEND, INLEN-MYLOC+1  )
+         nmove  =  min (  outlen-subend, inlen-myloc+1  )
 
-         DO I   =  NMOVE,  1,  -1
+         do i   =  nmove,  1,  -1
 
-            FROM         =  MYLOC  + I - 1
-            TO           =  SUBEND + I
-            CHR          =  IN(FROM:FROM)
-            OUT (TO:TO)  =  CHR
+            from         =  myloc  + i - 1
+            to           =  subend + i
+            chr          =  in(from:from)
+            out (to:to)  =  chr
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 !
 !     And the new word is dropped into the middle.
 !
-      OUT( MYLOC : MIN(SUBEND,OUTLEN) )  =  SUB
+      out( myloc : min(subend,outlen) )  =  sub
 
 !
 !     Blank-pad the output string if necessary.
 !
-      IF ( OUTLEN .GT. INLEN+SUBLEN ) THEN
-         OUT( INLEN+SUBLEN+1 : ) = ' '
-      END IF
+      if ( outlen .gt. inlen+sublen ) then
+         out( inlen+sublen+1 : ) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

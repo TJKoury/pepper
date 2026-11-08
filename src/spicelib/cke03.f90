@@ -1,6 +1,6 @@
 !$Procedure CKE03  ( C-kernel, evaluate pointing record, data type 3 )
 
-      SUBROUTINE CKE03 ( NEEDAV, RECORD, CMAT, AV, CLKOUT )
+      subroutine cke03 ( needav, record, cmat, av, clkout )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               NEEDAV
-      DOUBLE PRECISION      RECORD ( *     )
-      DOUBLE PRECISION      CMAT   ( 3, 3  )
-      DOUBLE PRECISION      AV     ( 3     )
-      DOUBLE PRECISION      CLKOUT
+      logical               needav
+      double precision      record ( *     )
+      double precision      cmat   ( 3, 3  )
+      double precision      av     ( 3     )
+      double precision      clkout
 
 ! $ Brief_I/O
 !
@@ -405,69 +405,69 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      T1
-      DOUBLE PRECISION      T2
-      DOUBLE PRECISION      Q1    (    4 )
-      DOUBLE PRECISION      Q2    (    4 )
-      DOUBLE PRECISION      CMAT1 ( 3, 3 )
-      DOUBLE PRECISION      CMAT2 ( 3, 3 )
-      DOUBLE PRECISION      AV1   (    3 )
-      DOUBLE PRECISION      AV2   (    3 )
-      DOUBLE PRECISION      AXIS  (    3 )
-      DOUBLE PRECISION      ROT   ( 3, 3 )
-      DOUBLE PRECISION      DELTA ( 3, 3 )
-      DOUBLE PRECISION      FRAC
-      DOUBLE PRECISION      ANGLE
+      double precision      t
+      double precision      t1
+      double precision      t2
+      double precision      q1    (    4 )
+      double precision      q2    (    4 )
+      double precision      cmat1 ( 3, 3 )
+      double precision      cmat2 ( 3, 3 )
+      double precision      av1   (    3 )
+      double precision      av2   (    3 )
+      double precision      axis  (    3 )
+      double precision      rot   ( 3, 3 )
+      double precision      delta ( 3, 3 )
+      double precision      frac
+      double precision      angle
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKE03' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'CKE03' )
+      end if
 
 !
 !     Unpack the record, for easier reading.
 !
-      T    = RECORD(17)
-      T1   = RECORD(1 )
-      T2   = RECORD(9 )
+      t    = record(17)
+      t1   = record(1 )
+      t2   = record(9 )
 
-      CALL MOVED ( RECORD(2),  4, Q1   )
-      CALL MOVED ( RECORD(6),  3, AV1  )
-      CALL MOVED ( RECORD(10), 4, Q2   )
-      CALL MOVED ( RECORD(14), 3, AV2  )
+      call moved ( record(2),  4, q1   )
+      call moved ( record(6),  3, av1  )
+      call moved ( record(10), 4, q2   )
+      call moved ( record(14), 3, av2  )
 
 !
 !     If T1 and T2 are the same then no interpolation or extrapolation
 !     is performed.  Simply convert the quaternion to a C-matrix and
 !     return.
 !
-      IF ( T1 .EQ. T2 ) THEN
+      if ( t1 .eq. t2 ) then
 
-         CALL Q2M ( Q1, CMAT )
+         call q2m ( q1, cmat )
 
-         CLKOUT = T1
+         clkout = t1
 
-         IF ( NEEDAV ) THEN
-            CALL VEQU ( AV1, AV )
-         END IF
+         if ( needav ) then
+            call vequ ( av1, av )
+         end if
 
-         CALL CHKOUT ( 'CKE03' )
+         call chkout ( 'CKE03' )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Interpolate between the two pointing instances to obtain pointing
@@ -478,13 +478,13 @@
 !     Calculate what fraction of the interval the request time
 !     represents.
 !
-      FRAC = ( T - T1 ) / ( T2 - T1 )
+      frac = ( t - t1 ) / ( t2 - t1 )
 
 !
 !     Convert the left and right quaternions to C-matrices.
 !
-      CALL Q2M ( Q1, CMAT1 )
-      CALL Q2M ( Q2, CMAT2 )
+      call q2m ( q1, cmat1 )
+      call q2m ( q2, cmat2 )
 
 !
 !     Find the matrix that rotates the spacecraft instrument frame from
@@ -498,20 +498,20 @@
 !        ROT     =    CMAT2  *  CMAT1
 !
 
-      CALL MTXM   ( CMAT2, CMAT1, ROT   )
+      call mtxm   ( cmat2, cmat1, rot   )
 
-      CALL RAXISA ( ROT,   AXIS,  ANGLE )
+      call raxisa ( rot,   axis,  angle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKE03' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKE03' )
+         return
+      end if
 
 !
 !     Calculate the matrix that rotates vectors about the vector AXIS
 !     by the angle ANGLE * FRAC.
 !
-      CALL AXISAR ( AXIS,  ANGLE * FRAC, DELTA )
+      call axisar ( axis,  angle * frac, delta )
 
 !
 !     The interpolated pointing at the request time is given by CMAT
@@ -525,25 +525,25 @@
 !          CMAT   =  CMAT1  *  DELTA
 !
 
-      CALL MXMT   ( CMAT1, DELTA, CMAT )
+      call mxmt   ( cmat1, delta, cmat )
 
 !
 !     Set CLKOUT equal to the time that pointing is being returned.
 !
-      CLKOUT = T
+      clkout = t
 
 !
 !     If angular velocity is requested then take a weighted average
 !     of the angular velocities at the left and right endpoints.
 !
 
-      IF ( NEEDAV ) THEN
+      if ( needav ) then
 
-         CALL VLCOM ( 1.D0 - FRAC, AV1, FRAC, AV2, AV )
+         call vlcom ( 1.d0 - frac, av1, frac, av2, av )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'CKE03' )
+      call chkout ( 'CKE03' )
 
-      RETURN
-      END
+      return
+      end

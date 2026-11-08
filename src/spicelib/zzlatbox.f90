@@ -1,6 +1,6 @@
 !$Procedure ZZLATBOX (Bounding box for latitudinal volume element)
 
-      SUBROUTINE ZZLATBOX ( BOUNDS, CENTER, LR, LT, LZ, RADIUS )
+      subroutine zzlatbox ( bounds, center, lr, lt, lz, radius )
 
 ! $ Abstract
 !
@@ -20,17 +20,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      BOUNDS ( 2, 3 )
-      DOUBLE PRECISION      CENTER ( 3 )
-      DOUBLE PRECISION      LR
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LZ
-      DOUBLE PRECISION      RADIUS
+      double precision      bounds ( 2, 3 )
+      double precision      center ( 3 )
+      double precision      lr
+      double precision      lt
+      double precision      lz
+      double precision      radius
 
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D-12 )
+      double precision      margin
+      parameter           ( margin = 1.d-12 )
 
 ! $ Brief_I/O
 !
@@ -137,11 +137,11 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
+      double precision      halfpi
+      double precision      twopi
+      double precision      vnorm
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -150,95 +150,95 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DIAG   ( 3 )
-      DOUBLE PRECISION      HDLON
-      DOUBLE PRECISION      INRAD
-      DOUBLE PRECISION      MAXLAT
-      DOUBLE PRECISION      MAXLON
-      DOUBLE PRECISION      MAXR
-      DOUBLE PRECISION      MAXZ
-      DOUBLE PRECISION      MIDLON
-      DOUBLE PRECISION      MIDR
-      DOUBLE PRECISION      MINLAT
-      DOUBLE PRECISION      MINLON
-      DOUBLE PRECISION      MINR
-      DOUBLE PRECISION      MINZ
-      DOUBLE PRECISION      OUTRAD
+      double precision      diag   ( 3 )
+      double precision      hdlon
+      double precision      inrad
+      double precision      maxlat
+      double precision      maxlon
+      double precision      maxr
+      double precision      maxz
+      double precision      midlon
+      double precision      midr
+      double precision      minlat
+      double precision      minlon
+      double precision      minr
+      double precision      minz
+      double precision      outrad
 
 !
 !     This routine uses discovery check-in. We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Get local copies of the bounds of the volume element.
 !
-      MINLON = BOUNDS(1,1)
-      MAXLON = BOUNDS(2,1)
+      minlon = bounds(1,1)
+      maxlon = bounds(2,1)
 
-      IF ( MAXLON .LE. MINLON ) THEN
-         MAXLON = MAXLON + TWOPI()
-      END IF
+      if ( maxlon .le. minlon ) then
+         maxlon = maxlon + twopi()
+      end if
 
-      IF ( MAXLON .LE. MINLON) THEN
+      if ( maxlon .le. minlon) then
 
-         CALL CHKIN  ( 'ZZLATBOX'                               )
-         CALL SETMSG ( 'Longitude bounds are #:#. Minimum ' &
+         call chkin  ( 'ZZLATBOX'                               )
+         call setmsg ( 'Longitude bounds are #:#. Minimum ' &
          //            'longitude exceeds maximum by more than ' &
          //            '2 pi.'                                  )
-         CALL ERRDP  ( '#', MINLON                              )
-         CALL ERRDP  ( '#', BOUNDS(2,1)                         )
-         CALL SIGERR ( 'SPICE(BADLONGITUDERANGE)'               )
-         CALL CHKOUT ( 'ZZLATBOX'                               )
-         RETURN
+         call errdp  ( '#', minlon                              )
+         call errdp  ( '#', bounds(2,1)                         )
+         call sigerr ( 'SPICE(BADLONGITUDERANGE)'               )
+         call chkout ( 'ZZLATBOX'                               )
+         return
 
-      END IF
+      end if
 
-      MINLAT = BOUNDS(1,2)
-      MAXLAT = BOUNDS(2,2)
+      minlat = bounds(1,2)
+      maxlat = bounds(2,2)
 
-      MINR   = BOUNDS(1,3)
-      MAXR   = BOUNDS(2,3)
+      minr   = bounds(1,3)
+      maxr   = bounds(2,3)
 
-      IF ( MINLAT .GT. MAXLAT ) THEN
+      if ( minlat .gt. maxlat ) then
 
-         CALL CHKIN  ( 'ZZLATBOX'                              )
-         CALL SETMSG ( 'Latitude bounds #:# are out of order.' )
-         CALL ERRDP  ( '#', MINLAT                             )
-         CALL ERRDP  ( '#', MAXLAT                             )
-         CALL SIGERR ( 'SPICE(BADLATITUDEBOUNDS)'              )
-         CALL CHKOUT ( 'ZZLATBOX'                              )
-         RETURN
+         call chkin  ( 'ZZLATBOX'                              )
+         call setmsg ( 'Latitude bounds #:# are out of order.' )
+         call errdp  ( '#', minlat                             )
+         call errdp  ( '#', maxlat                             )
+         call sigerr ( 'SPICE(BADLATITUDEBOUNDS)'              )
+         call chkout ( 'ZZLATBOX'                              )
+         return
 
-      END IF
+      end if
 
-      IF ( MINLAT .LT. ( -HALFPI() - MARGIN )  ) THEN
+      if ( minlat .lt. ( -halfpi() - margin )  ) then
 
-         CALL CHKIN  ( 'ZZLATBOX'                               )
-         CALL SETMSG ( 'Minimum latitude # is less than -pi/2.' )
-         CALL ERRDP  ( '#', MINLAT                              )
-         CALL SIGERR ( 'SPICE(BADLATITUDERANGE)'                )
-         CALL CHKOUT ( 'ZZLATBOX'                               )
-         RETURN
+         call chkin  ( 'ZZLATBOX'                               )
+         call setmsg ( 'Minimum latitude # is less than -pi/2.' )
+         call errdp  ( '#', minlat                              )
+         call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
+         call chkout ( 'ZZLATBOX'                               )
+         return
 
-      END IF
+      end if
 
-      IF ( MAXLAT .GT. ( HALFPI() + MARGIN )  ) THEN
+      if ( maxlat .gt. ( halfpi() + margin )  ) then
 
-         CALL CHKIN  ( 'ZZLATBOX'                               )
-         CALL SETMSG ( 'Maximum latitude # is more than -pi/2.' )
-         CALL ERRDP  ( '#', MAXLAT                              )
-         CALL SIGERR ( 'SPICE(BADLATITUDERANGE)'                )
-         CALL CHKOUT ( 'ZZLATBOX'                               )
-         RETURN
+         call chkin  ( 'ZZLATBOX'                               )
+         call setmsg ( 'Maximum latitude # is more than -pi/2.' )
+         call errdp  ( '#', maxlat                              )
+         call sigerr ( 'SPICE(BADLATITUDERANGE)'                )
+         call chkout ( 'ZZLATBOX'                               )
+         return
 
-      END IF
+      end if
 
-      MINLAT = MAX( MINLAT, -HALFPI() )
-      MAXLAT = MIN( MAXLAT,  HALFPI() )
+      minlat = max( minlat, -halfpi() )
+      maxlat = min( maxlat,  halfpi() )
 
 !
 !     Let INRAD and OUTRAD be, respectively, the radii of the
@@ -258,86 +258,86 @@
 !     latitude circle on the inner bounding sphere for which the
 !     absolute value of the latitude is maximum.
 !
-      IF ( MINLAT .GE. 0.D0 ) THEN
+      if ( minlat .ge. 0.d0 ) then
 
-         OUTRAD = COS( MINLAT ) * MAXR
-         INRAD  = COS( MAXLAT ) * MINR
+         outrad = cos( minlat ) * maxr
+         inrad  = cos( maxlat ) * minr
 
-      ELSE IF ( MAXLAT .LE. 0.D0 ) THEN
+      else if ( maxlat .le. 0.d0 ) then
 
-         OUTRAD = COS( MAXLAT ) * MAXR
-         INRAD  = COS( MINLAT ) * MINR
+         outrad = cos( maxlat ) * maxr
+         inrad  = cos( minlat ) * minr
 
-      ELSE
+      else
 
-         OUTRAD = MAXR
-         INRAD  = COS(  MAX( ABS(MAXLAT), ABS(MINLAT) )  ) * MINR
+         outrad = maxr
+         inrad  = cos(  max( abs(maxlat), abs(minlat) )  ) * minr
 
-      END IF
+      end if
 
 !
 !     Let MIDLON be the longitude of the midpoint of the element's
 !     longitude coverage. Let HDLON be one half of the extent of the
 !     longitude coverage.
 !
-      HDLON  = ( MAXLON - MINLON ) / 2
-      MIDLON =   MINLON + HDLON
+      hdlon  = ( maxlon - minlon ) / 2
+      midlon =   minlon + hdlon
 
 !
 !     LR is the length of the bounding box in the radial direction,
 !     where "radius" is defined as the distance from the Z axis.
 !
-      IF ( HDLON .LE. HALFPI() ) THEN
+      if ( hdlon .le. halfpi() ) then
 
-         LR = OUTRAD - ( INRAD * COS(HDLON) )
+         lr = outrad - ( inrad * cos(hdlon) )
 
-      ELSE
+      else
 
-         LR = ( 1.D0 - COS(HDLON) ) * OUTRAD
+         lr = ( 1.d0 - cos(hdlon) ) * outrad
 
-      END IF
+      end if
 
 !
 !     The tangential length of bounding box depends on the longitude
 !     extent. For any extent larger than Pi radians, the width
 !     is just that of the outer radius.
 !
-      IF ( HDLON .GT. HALFPI() ) THEN
+      if ( hdlon .gt. halfpi() ) then
 
-         LT = 2.D0 * OUTRAD
-      ELSE
-         LT = 2.D0 * OUTRAD * SIN( HDLON )
-      END IF
+         lt = 2.d0 * outrad
+      else
+         lt = 2.d0 * outrad * sin( hdlon )
+      end if
 
 !
 !     The height bounds are derived from the lowest and highest points
 !     on the element.
 !
-      IF ( MINLAT .GE. 0.D0 ) THEN
+      if ( minlat .ge. 0.d0 ) then
 
-         MAXZ = MAXR * SIN(MAXLAT)
-         MINZ = MINR * SIN(MINLAT)
+         maxz = maxr * sin(maxlat)
+         minz = minr * sin(minlat)
 
-      ELSE IF ( MAXLAT .LE. 0.D0 ) THEN
+      else if ( maxlat .le. 0.d0 ) then
 
-         MAXZ = MINR * SIN(MAXLAT)
-         MINZ = MAXR * SIN(MINLAT)
+         maxz = minr * sin(maxlat)
+         minz = maxr * sin(minlat)
 
-      ELSE
+      else
 
-         MAXZ = MAXR * SIN(MAXLAT)
-         MINZ = MAXR * SIN(MINLAT)
+         maxz = maxr * sin(maxlat)
+         minz = maxr * sin(minlat)
 
-      END IF
+      end if
 
-      LZ = MAXZ - MINZ
+      lz = maxz - minz
 
 !
 !     Make sure all dimensions are non-negative.
 !
-      LR = MAX( 0.D0, LR )
-      LT = MAX( 0.D0, LT )
-      LZ = MAX( 0.D0, LZ )
+      lr = max( 0.d0, lr )
+      lt = max( 0.d0, lt )
+      lz = max( 0.d0, lz )
 
 !
 !     Compute the coordinates of the center of the box.
@@ -346,17 +346,17 @@
 !     longitude. The outer tangential edge is at radius
 !     OUTRAD. Let MIDR be the radius of the center.
 !
-      MIDR = OUTRAD - (LR/2)
+      midr = outrad - (lr/2)
 
-      CALL CYLREC ( MIDR, MIDLON, MINZ+(LZ/2), CENTER )
+      call cylrec ( midr, midlon, minz+(lz/2), center )
 
 !
 !     The radius is the distance from the center of the box
 !     to any corner.
 !
-      CALL VPACK ( LR/2, LT/2, LZ/2, DIAG )
+      call vpack ( lr/2, lt/2, lz/2, diag )
 
-      RADIUS = VNORM( DIAG )
+      radius = vnorm( diag )
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure      ZZEKTLOC ( EK, locate token in tokenized EK query )
 
-      SUBROUTINE ZZEKTLOC (  TOKID,  KWCODE,  NTOKEN,  TOKENS,  VALUES, &
-                             LOC,    FOUND                            )
+      subroutine zzektloc (  tokid,  kwcode,  ntoken,  tokens,  values, &
+                             loc,    found                            )
 
 ! $ Abstract
 !
@@ -20,16 +20,16 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektokn.inc'
-      INCLUDE 'ekkeyw.inc'
+      include 'ektokn.inc'
+      include 'ekkeyw.inc'
 
-      INTEGER               TOKID
-      INTEGER               KWCODE
-      INTEGER               NTOKEN
-      INTEGER               TOKENS ( * )
-      INTEGER               VALUES ( * )
-      INTEGER               LOC
-      LOGICAL               FOUND
+      integer               tokid
+      integer               kwcode
+      integer               ntoken
+      integer               tokens ( * )
+      integer               values ( * )
+      integer               loc
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -119,39 +119,39 @@
 !
 !     Error free.
 !
-      FOUND  = .FALSE.
-      LOC    =  1
+      found  = .false.
+      loc    =  1
 
-      DO WHILE ( LOC .LE. NTOKEN )
+      do while ( loc .le. ntoken )
 
 
-         IF ( TOKENS(LOC) .EQ. TOKID ) THEN
+         if ( tokens(loc) .eq. tokid ) then
 
-            IF ( TOKID .EQ. TKKEY ) THEN
+            if ( tokid .eq. tkkey ) then
 !
 !              To get a match, the keyword codes must match.
 !
-               IF ( VALUES(LOC) .EQ. KWCODE ) THEN
-                  FOUND  =  .TRUE.
-                  RETURN
-               END IF
+               if ( values(loc) .eq. kwcode ) then
+                  found  =  .true.
+                  return
+               end if
 
-            ELSE
+            else
 !
 !              For non-keyword tokens, we're done at this point.
 !
-               FOUND  =  .TRUE.
-               RETURN
+               found  =  .true.
+               return
 
-            END IF
+            end if
 
-         END IF
-
-
-         LOC = LOC + 1
-
-      END DO
+         end if
 
 
-      RETURN
-      END
+         loc = loc + 1
+
+      end do
+
+
+      return
+      end

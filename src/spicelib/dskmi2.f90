@@ -1,8 +1,8 @@
 !$Procedure DSKMI2 ( DSK, make spatial index for type 2 segment )
 
-      SUBROUTINE DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL, &
-                          CORSCL, WORKSZ, VOXPSZ, VOXLSZ, MAKVTL, &
-                          SPXISZ, WORK,   SPAIXD, SPAIXI         )
+      subroutine dskmi2 ( nv,     vrtces, np,     plates, finscl, &
+                          corscl, worksz, voxpsz, voxlsz, makvtl, &
+                          spxisz, work,   spaixd, spaixi         )
 
 ! $ Abstract
 !
@@ -26,25 +26,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dskdsc.inc'
-      INCLUDE 'dsk02.inc'
+      include 'dskdsc.inc'
+      include 'dsk02.inc'
 
-      INTEGER               NV
-      DOUBLE PRECISION      VRTCES ( 3, * )
-      INTEGER               NP
-      INTEGER               PLATES ( 3, * )
-      DOUBLE PRECISION      FINSCL
-      INTEGER               CORSCL
-      INTEGER               WORKSZ
-      INTEGER               VOXPSZ
-      INTEGER               VOXLSZ
-      LOGICAL               MAKVTL
-      INTEGER               SPXISZ
-      INTEGER               WORK   ( 2, WORKSZ )
-      DOUBLE PRECISION      SPAIXD ( IXDFIX )
-      INTEGER               SPAIXI ( SPXISZ )
+      integer               nv
+      double precision      vrtces ( 3, * )
+      integer               np
+      integer               plates ( 3, * )
+      double precision      finscl
+      integer               corscl
+      integer               worksz
+      integer               voxpsz
+      integer               voxlsz
+      logical               makvtl
+      integer               spxisz
+      integer               work   ( 2, worksz )
+      double precision      spaixd ( ixdfix )
+      integer               spaixi ( spxisz )
 
 ! $ Brief_I/O
 !
@@ -746,8 +746,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -756,120 +756,120 @@
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NSHIFT
-      INTEGER               NVXTOT
-      INTEGER               REQSIZ
-      INTEGER               VTLIDX
-      INTEGER               VTPIDX
-      INTEGER               VTXLSZ
-      INTEGER               VXLIDX
-      INTEGER               VXPIDX
+      integer               i
+      integer               j
+      integer               nshift
+      integer               nvxtot
+      integer               reqsiz
+      integer               vtlidx
+      integer               vtpidx
+      integer               vtxlsz
+      integer               vxlidx
+      integer               vxpidx
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKMI2' )
+      call chkin ( 'DSKMI2' )
 
 !
 !     Perform error checks on inputs.
 !
-      IF (  FINSCL .LE. 0.D0 ) THEN
+      if (  finscl .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Fine voxel scale = #; scale must ' &
+         call setmsg ( 'Fine voxel scale = #; scale must ' &
          //            'be positive. Usually scale should ' &
          //            'be > 1.0.'                         )
-         CALL ERRDP  ( '#',  FINSCL                        )
-         CALL SIGERR ( 'SPICE(BADFINEVOXELSCALE)'          )
-         CALL CHKOUT ( 'DSKMI2'                            )
-         RETURN
+         call errdp  ( '#',  finscl                        )
+         call sigerr ( 'SPICE(BADFINEVOXELSCALE)'          )
+         call chkout ( 'DSKMI2'                            )
+         return
 
-      END IF
+      end if
 
-      IF (  CORSCL .LT. 1 ) THEN
+      if (  corscl .lt. 1 ) then
 
-         CALL SETMSG ( 'Coarse voxel scale = #; scale must ' &
+         call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be >= 1.'                           )
-         CALL ERRINT ( '#',  CORSCL                         )
-         CALL SIGERR ( 'SPICE(BADCOARSEVOXSCALE)'           )
-         CALL CHKOUT ( 'DSKMI2'                             )
-         RETURN
+         call errint ( '#',  corscl                         )
+         call sigerr ( 'SPICE(BADCOARSEVOXSCALE)'           )
+         call chkout ( 'DSKMI2'                             )
+         return
 
-      END IF
+      end if
 
 
-      IF (  ( NV .LT. 3 ) .OR. ( NV .GT. MAXVRT )  ) THEN
+      if (  ( nv .lt. 3 ) .or. ( nv .gt. maxvrt )  ) then
 
-         CALL SETMSG ( 'Vertex count NV = #; count must ' &
+         call setmsg ( 'Vertex count NV = #; count must ' &
          //            'be in the range 3:#.'            )
-         CALL ERRINT ( '#',  NV                          )
-         CALL ERRINT ( '#',  MAXVRT                      )
-         CALL SIGERR ( 'SPICE(BADVERTEXCOUNT)'           )
-         CALL CHKOUT ( 'DSKMI2'                          )
-         RETURN
+         call errint ( '#',  nv                          )
+         call errint ( '#',  maxvrt                      )
+         call sigerr ( 'SPICE(BADVERTEXCOUNT)'           )
+         call chkout ( 'DSKMI2'                          )
+         return
 
-      END IF
+      end if
 
-      IF (  ( NP .LT. 1 ) .OR. ( NP .GT. MAXPLT )  ) THEN
+      if (  ( np .lt. 1 ) .or. ( np .gt. maxplt )  ) then
 
-         CALL SETMSG ( 'Plate count NP = #; count must ' &
+         call setmsg ( 'Plate count NP = #; count must ' &
          //            'be in the range 1:#.'            )
-         CALL ERRINT ( '#',  NP                          )
-         CALL ERRINT ( '#',  MAXPLT                      )
-         CALL SIGERR ( 'SPICE(BADPLATECOUNT)'            )
-         CALL CHKOUT ( 'DSKMI2'                          )
-         RETURN
+         call errint ( '#',  np                          )
+         call errint ( '#',  maxplt                      )
+         call sigerr ( 'SPICE(BADPLATECOUNT)'            )
+         call chkout ( 'DSKMI2'                          )
+         return
 
-      END IF
+      end if
 
-      IF ( WORKSZ .LT. (NP+1)  ) THEN
+      if ( worksz .lt. (np+1)  ) then
 
-         CALL SETMSG ( 'Workspace size = #; size is too ' &
+         call setmsg ( 'Workspace size = #; size is too ' &
          //            'small to hold all voxel-plate ' &
          //            'associations. Size should be at ' &
          //            'least # * (average number of ' &
          //            'voxels intersected by each plate).' )
-         CALL ERRINT ( '#',  WORKSZ                         )
-         CALL ERRINT ( '#',  NP                             )
-         CALL SIGERR ( 'SPICE(WORKSPACETOOSMALL)'           )
-         CALL CHKOUT ( 'DSKMI2'                             )
-         RETURN
+         call errint ( '#',  worksz                         )
+         call errint ( '#',  np                             )
+         call sigerr ( 'SPICE(WORKSPACETOOSMALL)'           )
+         call chkout ( 'DSKMI2'                             )
+         return
 
-      END IF
+      end if
 
-      IF ( VOXPSZ .LT. 1 ) THEN
+      if ( voxpsz .lt. 1 ) then
 
-         CALL SETMSG ( 'Voxel-pointer array size = #; size is ' &
+         call setmsg ( 'Voxel-pointer array size = #; size is ' &
          //            'too small to hold all voxel-plate ' &
          //            'list pointers. Size should be at ' &
          //            'least # * (number of non-empty ' &
          //            'coarse voxels).'                      )
-         CALL ERRINT ( '#',  VOXPSZ                           )
-         CALL ERRINT ( '#',  CORSCL**3                        )
-         CALL SIGERR ( 'SPICE(PTRARRAYTOOSMALL)'              )
-         CALL CHKOUT ( 'DSKMI2'                               )
-         RETURN
+         call errint ( '#',  voxpsz                           )
+         call errint ( '#',  corscl**3                        )
+         call sigerr ( 'SPICE(PTRARRAYTOOSMALL)'              )
+         call chkout ( 'DSKMI2'                               )
+         return
 
-      END IF
+      end if
 
 
-      IF ( VOXLSZ .LT. (NP+1)  ) THEN
+      if ( voxlsz .lt. (np+1)  ) then
 
-         CALL SETMSG ( 'Voxel-plate list array size = #; size ' &
+         call setmsg ( 'Voxel-plate list array size = #; size ' &
          //            'is too small to hold all voxel-plate ' &
          //            'associations. Size should be at ' &
          //            'least # * (average number of ' &
          //            'voxels intersected by each plate).'   )
-         CALL ERRINT ( '#',  VOXLSZ                           )
-         CALL ERRINT ( '#',  NP                               )
-         CALL SIGERR ( 'SPICE(PLATELISTTOOSMALL)'             )
-         CALL CHKOUT ( 'DSKMI2'                               )
-         RETURN
+         call errint ( '#',  voxlsz                           )
+         call errint ( '#',  np                               )
+         call sigerr ( 'SPICE(PLATELISTTOOSMALL)'             )
+         call chkout ( 'DSKMI2'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the size of the integer spatial index array. The
@@ -889,75 +889,75 @@
 !        - the vertex-plate association list
 !
 !
-      REQSIZ = IXIFIX + VOXPSZ + VOXLSZ
+      reqsiz = ixifix + voxpsz + voxlsz
 
-      IF ( MAKVTL ) THEN
+      if ( makvtl ) then
 !
 !        Add on the sizes of the vertex-plate pointer array (NV)
 !        and the vertex-plate list array (NV + 3*NP).
 !
-         VTXLSZ = NV  +  3*NP
+         vtxlsz = nv  +  3*np
 
-         REQSIZ = REQSIZ + NV + VTXLSZ
+         reqsiz = reqsiz + nv + vtxlsz
 
-      ELSE
-         VTXLSZ = 0
-      END IF
+      else
+         vtxlsz = 0
+      end if
 
 
-      IF ( SPXISZ .LT. REQSIZ ) THEN
+      if ( spxisz .lt. reqsiz ) then
 
-         CALL SETMSG ( 'Integer spatial index size = #; size ' &
+         call setmsg ( 'Integer spatial index size = #; size ' &
          //            'must be at least #.'                   )
-         CALL ERRINT ( '#',  SPXISZ                            )
-         CALL ERRINT ( '#',  REQSIZ                            )
-         CALL SIGERR ( 'SPICE(INTINDEXTOOSMALL)'               )
-         CALL CHKOUT ( 'DSKMI2'                                )
-         RETURN
+         call errint ( '#',  spxisz                            )
+         call errint ( '#',  reqsiz                            )
+         call sigerr ( 'SPICE(INTINDEXTOOSMALL)'               )
+         call chkout ( 'DSKMI2'                                )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Set known values in spatial index arrays.
 !
-      SPAIXI(SICGSC) = CORSCL
+      spaixi(sicgsc) = corscl
 
 !
 !     Prepare indices in the spatial index arrays.
 !
 !        VXPIDX is the start index of the voxel pointer array.
 !
-      VXPIDX = SICGRD + MAXCGR
+      vxpidx = sicgrd + maxcgr
 !
 !        VXLIDX is the start index of the voxel-plate list. This
 !        list is offset from the start of the pointer array by
 !        the input size given for that array. The size is the
 !        total room available, not the room actually used.
 !
-      VXLIDX = VXPIDX + VOXPSZ
+      vxlidx = vxpidx + voxpsz
 
 !
 !     Create spatial index for plates.
 !
-      CALL ZZMKSPIN ( NP,      PLATES,  VRTCES, &
-                      FINSCL,  CORSCL,  VOXPSZ, &
-                      WORKSZ,  VOXLSZ,  WORK, &
-                      SPAIXI(SIVGRX), &
-                      SPAIXD(SIVXSZ), &
-                      SPAIXD(SIVXOR), &
-                      NVXTOT, &
-                      SPAIXI(SIVXNP), &
-                      SPAIXI(VXPIDX), &
-                      SPAIXI(SIVXNL), &
-                      SPAIXI(VXLIDX), &
-                      SPAIXD(SIVTBD), &
-                      SPAIXI(SICGRD)           )
+      call zzmkspin ( np,      plates,  vrtces, &
+                      finscl,  corscl,  voxpsz, &
+                      worksz,  voxlsz,  work, &
+                      spaixi(sivgrx), &
+                      spaixd(sivxsz), &
+                      spaixd(sivxor), &
+                      nvxtot, &
+                      spaixi(sivxnp), &
+                      spaixi(vxpidx), &
+                      spaixi(sivxnl), &
+                      spaixi(vxlidx), &
+                      spaixd(sivtbd), &
+                      spaixi(sicgrd)           )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKMI2' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKMI2' )
+         return
+      end if
 
 !
 !     At this point the voxel plate list is offset from the
@@ -965,51 +965,51 @@
 !     of the array. We need to shift the plate list so that
 !     it starts right after the end of the pointer array.
 !
-      NSHIFT = VOXPSZ - SPAIXI(SIVXNP)
+      nshift = voxpsz - spaixi(sivxnp)
 
-      DO I = 1, SPAIXI(SIVXNL)
+      do i = 1, spaixi(sivxnl)
 
-         J                = VXLIDX - 1 + I
+         j                = vxlidx - 1 + i
 
-         SPAIXI(J-NSHIFT) = SPAIXI(J)
+         spaixi(j-nshift) = spaixi(j)
 
-      END DO
+      end do
 
 !
 !     Update the voxel list start index to reflect the shift.
 !
-      VXLIDX = VXLIDX - NSHIFT
+      vxlidx = vxlidx - nshift
 
 !
 !     Create vertex-plate mapping, if requested, as indicated
 !     by the vertex-plate list size.
 !
-      IF ( MAKVTL ) THEN
+      if ( makvtl ) then
 !
 !           VTPIDX is the start index of the vertex pointer array.
 !
-         VTPIDX = VXLIDX + SPAIXI(SIVXNL)
+         vtpidx = vxlidx + spaixi(sivxnl)
 !
 !           VXLIDX is the start index of the vertex-plate list. The
 !           list start is offset from the vertex pointer array by
 !           the size of the array, which is always NV.
 !
-         VTLIDX = VTPIDX + NV
+         vtlidx = vtpidx + nv
 
-         CALL ZZVRTPLT ( NV,     NP,     PLATES, &
-                         WORKSZ, VTXLSZ, WORK, &
-                         SPAIXI(VTPIDX), &
-                         SPAIXI(SIVTNL), &
-                         SPAIXI(VTLIDX)         )
+         call zzvrtplt ( nv,     np,     plates, &
+                         worksz, vtxlsz, work, &
+                         spaixi(vtpidx), &
+                         spaixi(sivtnl), &
+                         spaixi(vtlidx)         )
 
-      ELSE
+      else
 !
 !        Zero out the size of the vertex-plate list.
 !
-         SPAIXI(SIVTNL) = 0
+         spaixi(sivtnl) = 0
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DSKMI2' )
-      RETURN
-      END
+      call chkout ( 'DSKMI2' )
+      return
+      end

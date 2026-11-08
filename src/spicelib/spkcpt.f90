@@ -1,7 +1,7 @@
 !$Procedure SPKCPT ( SPK, constant position target state )
 
-      SUBROUTINE SPKCPT ( TRGPOS, TRGCTR, TRGREF, ET,    OUTREF, &
-                          REFLOC, ABCORR, OBSRVR, STATE, LT     )
+      subroutine spkcpt ( trgpos, trgctr, trgref, et,    outref, &
+                          refloc, abcorr, obsrvr, state, lt     )
 
 ! $ Abstract
 !
@@ -23,20 +23,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzabcorr.inc'
+      include               'zzabcorr.inc'
 
-      DOUBLE PRECISION      TRGPOS ( 3 )
-      CHARACTER*(*)         TRGCTR
-      CHARACTER*(*)         TRGREF
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         OUTREF
-      CHARACTER*(*)         REFLOC
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      STATE  ( 6 )
-      DOUBLE PRECISION      LT
+      double precision      trgpos ( 3 )
+      character*(*)         trgctr
+      character*(*)         trgref
+      double precision      et
+      character*(*)         outref
+      character*(*)         refloc
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      state  ( 6 )
+      double precision      lt
 
 ! $ Brief_I/O
 !
@@ -1023,42 +1023,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      TRGEPC
-      DOUBLE PRECISION      TRGSTA ( 6 )
+      double precision      trgepc
+      double precision      trgsta ( 6 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKCPT' )
+      call chkin ( 'SPKCPT' )
 
 
 !
 !     Create a state vector for the target. The velocity
 !     portion of the state is zero.
 !
-      CALL VEQU   ( TRGPOS, TRGSTA    )
-      CALL CLEARD ( 3,      TRGSTA(4) )
+      call vequ   ( trgpos, trgsta    )
+      call cleard ( 3,      trgsta(4) )
 
 !
 !     Set the target epoch; the value is arbitrary, since
 !     the target's velocity is zero.
 !
-      TRGEPC = 0.0D0
+      trgepc = 0.0d0
 
 
-      CALL SPKCVT ( TRGSTA, TRGEPC, TRGCTR, TRGREF, ET, &
-                    OUTREF, REFLOC, ABCORR, OBSRVR, STATE, LT )
+      call spkcvt ( trgsta, trgepc, trgctr, trgref, et, &
+                    outref, refloc, abcorr, obsrvr, state, lt )
 
 
-      CALL CHKOUT ( 'SPKCPT' )
-      RETURN
-      END
+      call chkout ( 'SPKCPT' )
+      return
+      end

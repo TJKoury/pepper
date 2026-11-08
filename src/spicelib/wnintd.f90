@@ -1,6 +1,6 @@
 !$Procedure WNINTD ( Intersect two DP windows )
 
-      SUBROUTINE WNINTD ( A, B, C )
+      subroutine wnintd ( a, b, c )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      A        ( LBCELL:* )
-      DOUBLE PRECISION      B        ( LBCELL:* )
-      DOUBLE PRECISION      C        ( LBCELL:* )
+      double precision      a        ( lbcell:* )
+      double precision      b        ( lbcell:* )
+      double precision      c        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -145,41 +145,41 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
-      LOGICAL               RETURN
+      integer               cardd
+      integer               sized
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               ACARD
-      INTEGER               BCARD
-      INTEGER               CSIZE
+      integer               acard
+      integer               bcard
+      integer               csize
 
-      INTEGER               AP
-      INTEGER               BP
-      INTEGER               CP
-      CHARACTER*1           USE
-      INTEGER               OVER
+      integer               ap
+      integer               bp
+      integer               cp
+      character*1           use
+      integer               over
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNINTD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'WNINTD' )
+      end if
 
 !
 !     Find the cardinality of the input windows, and the allowed size
 !     of the output window.
 !
-      ACARD = CARDD ( A )
-      BCARD = CARDD ( B )
-      CSIZE = SIZED ( C )
+      acard = cardd ( a )
+      bcard = cardd ( b )
+      csize = sized ( c )
 
 !
 !     Begin with the input pointers at the first elements of the
@@ -190,26 +190,26 @@
 !     in A and B, while CP points to the RIGHT endpoint of the latest
 !     interval in C.)
 !
-      AP   = 1
-      BP   = 1
-      CP   = 0
-      OVER = 0
+      ap   = 1
+      bp   = 1
+      cp   = 0
+      over = 0
 
 !
 !     When the end of either input window is reached, we're done.
 !
-      DO WHILE ( AP .LT. ACARD  .AND.  BP .LT. BCARD )
+      do while ( ap .lt. acard  .and.  bp .lt. bcard )
 
 !
 !        Let's see what we can do with the earlier of the next
 !        intervals from A and B.
 !
-         IF ( A(AP+1) .LT. B(BP+1) ) THEN
-            USE = 'A'
+         if ( a(ap+1) .lt. b(bp+1) ) then
+            use = 'A'
 
-         ELSE IF ( B(BP+1) .LE. A(AP+1) ) THEN
-            USE = 'B'
-         END IF
+         else if ( b(bp+1) .le. a(ap+1) ) then
+            use = 'B'
+         end if
 
 !
 !        If there is still space in the output window, fill it
@@ -221,62 +221,62 @@
 !        the next interval of B, save the area of overlap. (Similarly
 !        for B.)
 !
-         IF ( USE .EQ. 'A' ) THEN
+         if ( use .eq. 'A' ) then
 
-            IF ( A(AP+1) .GE. B(BP) ) THEN
+            if ( a(ap+1) .ge. b(bp) ) then
 
-               IF ( CP .LT. CSIZE ) THEN
-                  CP      = CP + 2
-                  C(CP-1) = MAX ( B(BP), A(AP) )
-                  C(CP  ) = A(AP+1)
-               ELSE
-                  OVER    = OVER + 2
-               END IF
+               if ( cp .lt. csize ) then
+                  cp      = cp + 2
+                  c(cp-1) = max ( b(bp), a(ap) )
+                  c(cp  ) = a(ap+1)
+               else
+                  over    = over + 2
+               end if
 
-            END IF
+            end if
 
-            AP = AP + 2
+            ap = ap + 2
 
 !
 !        This is the same as the last clause, with B replacing A.
 !
-         ELSE IF ( USE .EQ. 'B' ) THEN
+         else if ( use .eq. 'B' ) then
 
-            IF ( B(BP+1) .GE. A(AP) ) THEN
+            if ( b(bp+1) .ge. a(ap) ) then
 
-               IF ( CP .LT. CSIZE ) THEN
-                  CP      = CP + 2
-                  C(CP-1) = MAX ( A(AP), B(BP) )
-                  C(CP  ) = B(BP+1)
-               ELSE
-                  OVER    = OVER + 2
-               END IF
+               if ( cp .lt. csize ) then
+                  cp      = cp + 2
+                  c(cp-1) = max ( a(ap), b(bp) )
+                  c(cp  ) = b(bp+1)
+               else
+                  over    = over + 2
+               end if
 
-            END IF
+            end if
 
-            BP = BP + 2
+            bp = bp + 2
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the cardinality of the output window.
 !
-      CALL SCARDD ( CP, C )
+      call scardd ( cp, c )
 
 !
 !     If there are any excess elements, signal an error and check out
 !     as usual.
 !
-      IF ( OVER .GT. 0 ) THEN
-         CALL EXCESS ( OVER, 'window' )
-         CALL SIGERR ( 'SPICE(WINDOWEXCESS)' )
-      END IF
+      if ( over .gt. 0 ) then
+         call excess ( over, 'window' )
+         call sigerr ( 'SPICE(WINDOWEXCESS)' )
+      end if
 
 
 
-      CALL CHKOUT ( 'WNINTD' )
+      call chkout ( 'WNINTD' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DLAOPN ( DLA, open new file )
 
-      SUBROUTINE DLAOPN ( FNAME, FTYPE, IFNAME, NCOMCH, HANDLE )
+      subroutine dlaopn ( fname, ftype, ifname, ncomch, handle )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         FTYPE
-      CHARACTER*(*)         IFNAME
-      INTEGER               NCOMCH
-      INTEGER               HANDLE
+      character*(*)         fname
+      character*(*)         ftype
+      character*(*)         ifname
+      integer               ncomch
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -429,7 +429,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -438,58 +438,58 @@
 !
 !     Local variables
 !
-      INTEGER               NCOMR
+      integer               ncomr
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DLAOPN' )
+      call chkin ( 'DLAOPN' )
 
 !
 !     Compute the number of comment records required.
 !
-      IF ( NCOMCH .GT. 0 ) THEN
+      if ( ncomch .gt. 0 ) then
 
-         NCOMR = ( (NCOMCH-1) / NCHREC )  +  1
+         ncomr = ( (ncomch-1) / nchrec )  +  1
 
-      ELSE IF ( NCOMCH .EQ. 0 ) THEN
+      else if ( ncomch .eq. 0 ) then
 
-         NCOMR = 0
+         ncomr = 0
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Requested number of comment characters ' &
+         call setmsg ( 'Requested number of comment characters ' &
          //            'must be non-negative but was #.'         )
-         CALL ERRINT ( '#',  NCOMCH                              )
-         CALL SIGERR ( 'SPICE(BADRECORDCOUNT)'                   )
-         CALL CHKOUT ( 'DLAOPN'                                  )
-         RETURN
+         call errint ( '#',  ncomch                              )
+         call sigerr ( 'SPICE(BADRECORDCOUNT)'                   )
+         call chkout ( 'DLAOPN'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Let the DAS "open new" routine do the work.
 !
-      CALL DASONW ( FNAME, FTYPE, IFNAME, NCOMR, HANDLE )
+      call dasonw ( fname, ftype, ifname, ncomr, handle )
 
 !
 !     Write the format version.
 !
-      CALL DASADI ( HANDLE, 1, FMTVER )
+      call dasadi ( handle, 1, fmtver )
 
 !
 !     Initialize the forward and backward segment list pointers.
 !
-      CALL DASADI ( HANDLE, 1, NULPTR )
-      CALL DASADI ( HANDLE, 1, NULPTR )
+      call dasadi ( handle, 1, nulptr )
+      call dasadi ( handle, 1, nulptr )
 
 !
 !     We leave the file open, since further writes to the file
 !     should occur next.  The file will eventually be closed
 !     by a call to DASCLS or DASLLC, if all goes well.
 !
-      CALL CHKOUT ( 'DLAOPN' )
-      RETURN
-      END
+      call chkout ( 'DLAOPN' )
+      return
+      end

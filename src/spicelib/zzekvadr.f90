@@ -1,6 +1,6 @@
 !$Procedure  ZZEKVADR  ( Compute row vector address )
 
-      SUBROUTINE ZZEKVADR ( NJRS, BASES, RWVIDX, RWVBAS, SGVBAS )
+      subroutine zzekvadr ( njrs, bases, rwvidx, rwvbas, sgvbas )
 
 
 ! $ Abstract
@@ -21,17 +21,17 @@
 !
 ! $ Declarations
 
-      INTEGER               NJRS
-      INTEGER               BASES  ( * )
-      INTEGER               RWVIDX
-      INTEGER               RWVBAS
-      INTEGER               SGVBAS
+      integer               njrs
+      integer               bases  ( * )
+      integer               rwvidx
+      integer               rwvbas
+      integer               sgvbas
 
-      INTEGER               MXJOIN
-      PARAMETER           ( MXJOIN = 10 )
+      integer               mxjoin
+      parameter           ( mxjoin = 10 )
 
-      INTEGER               MXJRS
-      PARAMETER           ( MXJRS  = 200 )
+      integer               mxjrs
+      parameter           ( mxjrs  = 200 )
 
 ! $ Brief_I/O
 !
@@ -220,9 +220,9 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLEI
+      integer               lstlei
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
@@ -236,32 +236,32 @@
 !
 !     Base-relative index of join row set size
 !
-      INTEGER               JSZIDX
-      PARAMETER           ( JSZIDX = 1 )
+      integer               jszidx
+      parameter           ( jszidx = 1 )
 
 !
 !     Index of row vector count
 !
-      INTEGER               JRCIDX
-      PARAMETER           ( JRCIDX = 2 )
+      integer               jrcidx
+      parameter           ( jrcidx = 2 )
 
 !
 !     Index of table count
 !
-      INTEGER               JTCIDX
-      PARAMETER           ( JTCIDX = 3 )
+      integer               jtcidx
+      parameter           ( jtcidx = 3 )
 
 !
 !     Index of segment vector count
 !
-      INTEGER               JSCIDX
-      PARAMETER           ( JSCIDX = 4 )
+      integer               jscidx
+      parameter           ( jscidx = 4 )
 
 !
 !     Base address of first segment vector
 !
-      INTEGER               JSVBAS
-      PARAMETER           ( JSVBAS = 4 )
+      integer               jsvbas
+      parameter           ( jsvbas = 4 )
 !
 !
 !     End Include Section:  EK Join Row Set Parameters
@@ -271,42 +271,42 @@
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
-      INTEGER               BEGIDX ( MXJRS )
-      INTEGER               I
-      INTEGER               J
-      INTEGER               JRSIDX
-      INTEGER               MAXRWV
-      INTEGER               NSV
-      INTEGER               NTABS
-      INTEGER               RELOFF
-      INTEGER               RBAS   ( MXJRS )
-      INTEGER               SVBAS  ( MXJRS )
-      INTEGER               SVNJRS
-      INTEGER               TOP
+      integer               addrss
+      integer               begidx ( mxjrs )
+      integer               i
+      integer               j
+      integer               jrsidx
+      integer               maxrwv
+      integer               nsv
+      integer               ntabs
+      integer               reloff
+      integer               rbas   ( mxjrs )
+      integer               svbas  ( mxjrs )
+      integer               svnjrs
+      integer               top
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKVADR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKVADR' )
+      end if
 
 !
 !     Never come here.
 !
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
 
-      CALL CHKOUT ( 'ZZEKVADR' )
-      RETURN
+      call chkout ( 'ZZEKVADR' )
+      return
 
 
 
@@ -314,7 +314,7 @@
 
 !$Procedure  ZZEKVSET  ( Row vector address calculation set-up )
 
-      ENTRY ZZEKVSET ( NJRS, BASES )
+      entry zzekvset ( njrs, bases )
 
 ! $ Abstract
 !
@@ -436,165 +436,165 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKVSET' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKVSET' )
+      end if
 
 !
 !     Validate join row set count.
 !
-      IF (  ( NJRS .LT. 1 ) .OR. ( NJRS .GT. MXJRS )  ) THEN
+      if (  ( njrs .lt. 1 ) .or. ( njrs .gt. mxjrs )  ) then
 
-         CALL SETMSG ( 'Number of join row sets was #; valid ' // &
+         call setmsg ( 'Number of join row sets was #; valid ' // &
                        'range is 1:#'                           )
-         CALL ERRINT ( '#',  NJRS                               )
-         CALL ERRINT ( '#',  MXJRS                              )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                    )
-         CALL CHKOUT ( 'ZZEKVSET'                               )
-         RETURN
+         call errint ( '#',  njrs                               )
+         call errint ( '#',  mxjrs                              )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                    )
+         call chkout ( 'ZZEKVSET'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Validate the join row set bases.
 !
-      CALL ZZEKSTOP ( TOP )
+      call zzekstop ( top )
 
-      DO I = 1, NJRS
+      do i = 1, njrs
 
-         IF (  ( BASES(I) .LT. 0 ) .OR. ( BASES(I) .GT. TOP )  ) THEN
+         if (  ( bases(i) .lt. 0 ) .or. ( bases(i) .gt. top )  ) then
 
-            CALL SETMSG ( 'Base address # was #; valid range is ' // &
+            call setmsg ( 'Base address # was #; valid range is ' // &
                           '1:#'                                    )
-            CALL ERRINT ( '#',  I                                  )
-            CALL ERRINT ( '#',  BASES(I)                           )
-            CALL ERRINT ( '#',  TOP                                )
-            CALL SIGERR ( 'SPICE(BADADDRESS)'                      )
-            CALL CHKOUT ( 'ZZEKVSET'                               )
-            RETURN
+            call errint ( '#',  i                                  )
+            call errint ( '#',  bases(i)                           )
+            call errint ( '#',  top                                )
+            call sigerr ( 'SPICE(BADADDRESS)'                      )
+            call chkout ( 'ZZEKVSET'                               )
+            return
 
-         END IF
+         end if
 
-         SVBAS(I) = BASES(I)
+         svbas(i) = bases(i)
 
-      END DO
+      end do
 
 !
 !     Validate and save the table count.  It's an error for this
 !     count not to be identical for all of the join row sets in the
 !     union.
 !
-      ADDRSS  =  BASES(1) + JTCIDX
-      CALL ZZEKSRD ( ADDRSS, ADDRSS, NTABS )
+      addrss  =  bases(1) + jtcidx
+      call zzeksrd ( addrss, addrss, ntabs )
 
-      IF (  ( NTABS .LT. 1 ) .OR. ( NTABS .GT. MXJOIN )  ) THEN
+      if (  ( ntabs .lt. 1 ) .or. ( ntabs .gt. mxjoin )  ) then
 
-         CALL SETMSG ( 'Table count for first join row set was #; '  // &
+         call setmsg ( 'Table count for first join row set was #; '  // &
                        'valid range is 1:#'                           )
-         CALL ERRINT ( '#',  NTABS                                    )
-         CALL ERRINT ( '#',  MXJOIN                                   )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                          )
-         CALL CHKOUT ( 'ZZEKVSET'                                     )
-         RETURN
+         call errint ( '#',  ntabs                                    )
+         call errint ( '#',  mxjoin                                   )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
+         call chkout ( 'ZZEKVSET'                                     )
+         return
 
-      END IF
+      end if
 
-      DO I = 2, NJRS
+      do i = 2, njrs
 
-         ADDRSS  =  BASES(I) + JTCIDX
-         CALL ZZEKSRD ( ADDRSS, ADDRSS, J )
+         addrss  =  bases(i) + jtcidx
+         call zzeksrd ( addrss, addrss, j )
 
-         IF ( J .NE. NTABS ) THEN
+         if ( j .ne. ntabs ) then
 
-            CALL SETMSG ( 'Join row set # contains # tables; first ' // &
+            call setmsg ( 'Join row set # contains # tables; first ' // &
                           'join row set contains # tables.  These '  // &
                           'counts are supposed to match.'             )
-            CALL ERRINT ( '#',  I                                     )
-            CALL ERRINT ( '#',  J                                     )
-            CALL ERRINT ( '#',  NTABS                                 )
-            CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                       )
-            CALL CHKOUT ( 'ZZEKVSET'                                  )
-            RETURN
+            call errint ( '#',  i                                     )
+            call errint ( '#',  j                                     )
+            call errint ( '#',  ntabs                                 )
+            call sigerr ( 'SPICE(INVALIDCOUNT)'                       )
+            call chkout ( 'ZZEKVSET'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Validate the row vector counts for each join row set.
 !     These counts must be in range.  Save the start indices of
 !     the row vectors in each join row set.
 !
-      CALL CLEARI ( MXJRS, BEGIDX )
-      BEGIDX(1) = 1
+      call cleari ( mxjrs, begidx )
+      begidx(1) = 1
 
-      DO I = 1, NJRS
+      do i = 1, njrs
 
-         ADDRSS  =  BASES(I) + JRCIDX
-         CALL ZZEKSRD ( ADDRSS, ADDRSS, J )
+         addrss  =  bases(i) + jrcidx
+         call zzeksrd ( addrss, addrss, j )
 
-         IF (  ( J .LT. 0 ) .OR. ( J .GT. TOP )  ) THEN
+         if (  ( j .lt. 0 ) .or. ( j .gt. top )  ) then
 
-            CALL SETMSG ( 'Join row set # has row count #; valid ' // &
+            call setmsg ( 'Join row set # has row count #; valid ' // &
                           'range is 0:#'                            )
-            CALL ERRINT ( '#',  I                                   )
-            CALL ERRINT ( '#',  J                                   )
-            CALL ERRINT ( '#',  TOP                                 )
-            CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                     )
-            CALL CHKOUT ( 'ZZEKVSET'                                )
-            RETURN
+            call errint ( '#',  i                                   )
+            call errint ( '#',  j                                   )
+            call errint ( '#',  top                                 )
+            call sigerr ( 'SPICE(INVALIDCOUNT)'                     )
+            call chkout ( 'ZZEKVSET'                                )
+            return
 
-         END IF
+         end if
 
-         IF ( I .LT. NJRS ) THEN
-            BEGIDX(I+1)  =  BEGIDX(I)  +  J
-         END IF
+         if ( i .lt. njrs ) then
+            begidx(i+1)  =  begidx(i)  +  j
+         end if
 
-      END DO
+      end do
 
 
 
 !
 !     Retain the index of the last row vector.
 !
-      MAXRWV  =  BEGIDX(NJRS) + J
+      maxrwv  =  begidx(njrs) + j
 
 
 !
 !     Save the base addresses of the row vectors in each join row set.
 !     Validate the segment vector counts while we're at it.
 !
-      DO I = 1, NJRS
+      do i = 1, njrs
 
-         ADDRSS  =  BASES(I) + JSCIDX
-         CALL ZZEKSRD ( ADDRSS, ADDRSS, NSV )
+         addrss  =  bases(i) + jscidx
+         call zzeksrd ( addrss, addrss, nsv )
 
-         IF ( NSV .LT. 0 ) THEN
+         if ( nsv .lt. 0 ) then
 
-            CALL SETMSG ( 'Join row set # has segment vector '     // &
+            call setmsg ( 'Join row set # has segment vector '     // &
                           'count #; count must be non-negative.'    )
-            CALL ERRINT ( '#',  I                                   )
-            CALL ERRINT ( '#',  NSV                                 )
-            CALL ERRINT ( '#',  TOP                                 )
-            CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                     )
-            CALL CHKOUT ( 'ZZEKVSET'                                )
-            RETURN
+            call errint ( '#',  i                                   )
+            call errint ( '#',  nsv                                 )
+            call errint ( '#',  top                                 )
+            call sigerr ( 'SPICE(INVALIDCOUNT)'                     )
+            call chkout ( 'ZZEKVSET'                                )
+            return
 
-         END IF
+         end if
 
-         RBAS(I) =  ADDRSS  +  NSV * ( NTABS + 2 )
+         rbas(i) =  addrss  +  nsv * ( ntabs + 2 )
 
-      END DO
+      end do
 
 !
 !     Retain the count of join row sets in the union.
 !
-      SVNJRS = NJRS
+      svnjrs = njrs
 
-      CALL CHKOUT ( 'ZZEKVSET' )
-      RETURN
+      call chkout ( 'ZZEKVSET' )
+      return
 
 
 
@@ -604,7 +604,7 @@
 
 !$Procedure  ZZEKVCAL  ( Row vector address calculation  )
 
-      ENTRY ZZEKVCAL ( RWVIDX, RWVBAS, SGVBAS )
+      entry zzekvcal ( rwvidx, rwvbas, sgvbas )
 
 ! $ Abstract
 !
@@ -716,23 +716,23 @@
 !
 !     If the index is out of range, that's an error.
 !
-      IF (  ( RWVIDX .LT. 1 ) .OR. ( RWVIDX .GT. MAXRWV )  ) THEN
+      if (  ( rwvidx .lt. 1 ) .or. ( rwvidx .gt. maxrwv )  ) then
 
-         CALL CHKIN  ( 'ZZEKVCAL'                                   )
-         CALL SETMSG ( 'Row vector index was #; valid range is 0:#' )
-         CALL ERRINT ( '#',  RWVIDX                                 )
-         CALL ERRINT ( '#',  MAXRWV                                 )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                        )
-         CALL CHKOUT ( 'ZZEKVCAL'                                   )
-         RETURN
+         call chkin  ( 'ZZEKVCAL'                                   )
+         call setmsg ( 'Row vector index was #; valid range is 0:#' )
+         call errint ( '#',  rwvidx                                 )
+         call errint ( '#',  maxrwv                                 )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                        )
+         call chkout ( 'ZZEKVCAL'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Identify the join row set containing the indicated row.  Our error
 !     check guarantees a non-zero result.
 !
-      JRSIDX  =  LSTLEI ( RWVIDX, SVNJRS, BEGIDX )
+      jrsidx  =  lstlei ( rwvidx, svnjrs, begidx )
 
 !
 !     Compute the offset of the indicated row vector relative to the
@@ -740,21 +740,21 @@
 !     less than the relative index of the row vector, multiplied by
 !     the augmented row vector size.
 !
-      RELOFF  =  ( RWVIDX - BEGIDX(JRSIDX) ) * ( NTABS + 1 )
+      reloff  =  ( rwvidx - begidx(jrsidx) ) * ( ntabs + 1 )
 
 !
 !     Find the base address of the row vector.
 !
-      RWVBAS  =  RBAS(JRSIDX) + RELOFF
+      rwvbas  =  rbas(jrsidx) + reloff
 
 !
 !     Compute the base address of the parent segment vector.  The base-
 !     relative address of the segment vector is stored at the end of the
 !     row vector.
 !
-      CALL ZZEKSRD ( RWVBAS+NTABS+1, RWVBAS+NTABS+1, SGVBAS )
+      call zzeksrd ( rwvbas+ntabs+1, rwvbas+ntabs+1, sgvbas )
 
-      SGVBAS  =  SVBAS(JRSIDX) + SGVBAS
+      sgvbas  =  svbas(jrsidx) + sgvbas
 
-      RETURN
-      END
+      return
+      end

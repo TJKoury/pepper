@@ -1,6 +1,6 @@
 !$Procedure COUNTC ( Count characters in a text file )
 
-      INTEGER FUNCTION COUNTC ( UNIT, BLINE, ELINE, LINE )
+      integer function countc ( unit, bline, eline, line )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      INTEGER               BLINE
-      INTEGER               ELINE
-      CHARACTER*(*)         LINE
+      integer               unit
+      integer               bline
+      integer               eline
+      character*(*)         line
 
 ! $ Brief_I/O
 !
@@ -162,137 +162,137 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               CHARS
-      INTEGER               IOSTAT
-      INTEGER               LINECT
+      integer               chars
+      integer               iostat
+      integer               linect
 
-      LOGICAL               DONE
+      logical               done
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         COUNTC = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'COUNTC' )
-         COUNTC = 0
-      END IF
+      if ( return () ) then
+         countc = 0
+         return
+      else
+         call chkin ( 'COUNTC' )
+         countc = 0
+      end if
 
 !
 !     First, see if the line numbers make sense.
 !
-      IF ( ( BLINE .GT. ELINE ) .OR. ( BLINE .LE. 0 ) ) THEN
+      if ( ( bline .gt. eline ) .or. ( bline .le. 0 ) ) then
 
-         CALL SETMSG ( 'The line numbers do not make sense:  '        // &
+         call setmsg ( 'The line numbers do not make sense:  '        // &
                        'BLINE = # and  ELINE = #.'                    )
-         CALL ERRINT ( '#', BLINE                                     )
-         CALL ERRINT ( '#', ELINE                                     )
-         CALL SIGERR ( 'SPICE(CANNOTFINDGRP)'                         )
-         CALL CHKOUT ( 'COUNTC'                                       )
-         RETURN
+         call errint ( '#', bline                                     )
+         call errint ( '#', eline                                     )
+         call sigerr ( 'SPICE(CANNOTFINDGRP)'                         )
+         call chkout ( 'COUNTC'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Read through the file, line by line, beginning with the first
 !     line in the file, checking for I/O errors, and counting
 !     characters in the lines between and including BLINE and ELINE.
 !
-      REWIND ( UNIT )
+      rewind ( unit )
 
-      LINECT = 0
-      CHARS  = 0
-      DONE   = .FALSE.
+      linect = 0
+      chars  = 0
+      done   = .false.
 
-      DO WHILE ( .NOT. DONE )
+      do while ( .not. done )
 
-         READ ( UNIT, FMT='(A)', IOSTAT=IOSTAT ) LINE
+         read ( unit, fmt='(A)', iostat=iostat ) line
 !
 !        An end-of-file condition is indicated by a negative value
 !        for IOSTAT. Any other non-zero value indicates some other
 !        error.  If IOSTAT is zero, the read was successful.
 !
-         IF ( IOSTAT .GT. 0 ) THEN
+         if ( iostat .gt. 0 ) then
 
-            CALL SETMSG ( 'Error reading text file named FILENAME.'   // &
+            call setmsg ( 'Error reading text file named FILENAME.'   // &
                           'The value of IOSTAT is #.'                 )
-            CALL ERRINT ( '#', IOSTAT                                 )
-            CALL ERRFNM ( 'FILENAME', UNIT                            )
-            CALL SIGERR ( 'SPICE(FILEREADFAILED)'                     )
-            CALL CHKOUT ( 'COUNTC'                                    )
-            RETURN
+            call errint ( '#', iostat                                 )
+            call errfnm ( 'FILENAME', unit                            )
+            call sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            call chkout ( 'COUNTC'                                    )
+            return
 
-         ELSE IF ( IOSTAT .LT. 0 ) THEN
+         else if ( iostat .lt. 0 ) then
 
-            CALL SETMSG ( 'Reached end of file unexpectedly at line ' // &
+            call setmsg ( 'Reached end of file unexpectedly at line ' // &
                           '# in file FILE.  BLINE = # and ELINE = #.' )
-            CALL ERRINT ( '#', LINECT                                 )
-            CALL ERRINT ( '#', BLINE                                  )
-            CALL ERRINT ( '#', ELINE                                  )
-            CALL ERRFNM ( 'FILE', UNIT                                )
-            CALL SIGERR ( 'SPICE(CANNOTFINDGRP)'                      )
-            CALL CHKOUT ( 'COUNTC'                                    )
-            RETURN
+            call errint ( '#', linect                                 )
+            call errint ( '#', bline                                  )
+            call errint ( '#', eline                                  )
+            call errfnm ( 'FILE', unit                                )
+            call sigerr ( 'SPICE(CANNOTFINDGRP)'                      )
+            call chkout ( 'COUNTC'                                    )
+            return
 
-         ELSE
+         else
 !
 !           We've read a line successfully, so add it to the line count.
 !           If this line is in the group delimited by BLINE and ELINE,
 !           count the characters in it, and if this line is ELINE, we're
 !           done.
 !
-            LINECT = LINECT + 1
+            linect = linect + 1
 
-            IF (( LINECT .GE. BLINE ) .AND. ( LINECT .LE. ELINE )) THEN
+            if (( linect .ge. bline ) .and. ( linect .le. eline )) then
 
 !
 !              Add the number of characters in this line to the count.
 !              If LINE is blank, LASTNB will return 0 which is just
 !              what we want.
 !
-               CHARS = CHARS + LASTNB ( LINE )
+               chars = chars + lastnb ( line )
 
 !
 !              Remove the printable characters from the line.  If
 !              any characters remain, signal an error.
 !
-               CALL ASTRIP ( LINE, CHAR( 32), CHAR(126), LINE )
+               call astrip ( line, char( 32), char(126), line )
 
-               IF ( LINE .NE. ' ' ) THEN
+               if ( line .ne. ' ' ) then
 
-                  CALL SETMSG ( 'Non-printing ASCII characters were ' // &
+                  call setmsg ( 'Non-printing ASCII characters were ' // &
                                 'found when counting characters on '  // &
                                 'line number # in file FILENAME.'     )
-                  CALL ERRINT ( '#', LINECT                           )
-                  CALL ERRFNM ( 'FILENAME', UNIT                      )
-                  CALL SIGERR ( 'SPICE(INVALIDTEXT)'                  )
-                  CALL CHKOUT ( 'COUNTC'                              )
-                  RETURN
+                  call errint ( '#', linect                           )
+                  call errfnm ( 'FILENAME', unit                      )
+                  call sigerr ( 'SPICE(INVALIDTEXT)'                  )
+                  call chkout ( 'COUNTC'                              )
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-            IF ( LINECT .EQ. ELINE ) DONE = .TRUE.
+            if ( linect .eq. eline ) done = .true.
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Assign the final character count.
 !
-      COUNTC = CHARS
+      countc = chars
 
 
-      CALL CHKOUT ( 'COUNTC' )
-      RETURN
-      END
+      call chkout ( 'COUNTC' )
+      return
+      end

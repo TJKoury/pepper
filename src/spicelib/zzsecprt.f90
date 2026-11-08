@@ -1,8 +1,8 @@
 !$Procedure ZZSECPRT ( Calculate dot terms for DPSPCE perturbation )
 
-      SUBROUTINE ZZSECPRT ( ISYNFL, DG   , DEL   , XNI  , &
-                            OMEGAO, ATIME, OMGDOT, XLI  , &
-                            XFACT , XLDOT, XNDOT , XNDDT )
+      subroutine zzsecprt ( isynfl, dg   , del   , xni  , &
+                            omegao, atime, omgdot, xli  , &
+                            xfact , xldot, xndot , xnddt )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               ISYNFL
+      integer               isynfl
 
-      DOUBLE PRECISION      OMEGAO
-      DOUBLE PRECISION      ATIME
-      DOUBLE PRECISION      OMGDOT
-      DOUBLE PRECISION      XLI
-      DOUBLE PRECISION      DG     ( 10 )
-      DOUBLE PRECISION      XFACT
-      DOUBLE PRECISION      XLDOT
-      DOUBLE PRECISION      XNI
-      DOUBLE PRECISION      DEL    (  3 )
+      double precision      omegao
+      double precision      atime
+      double precision      omgdot
+      double precision      xli
+      double precision      dg     ( 10 )
+      double precision      xfact
+      double precision      xldot
+      double precision      xni
+      double precision      del    (  3 )
 
 ! $ Brief_I/O
 !
@@ -150,35 +150,35 @@
 !
 !     Local variables.
 !
-      DOUBLE PRECISION      X2LI
-      DOUBLE PRECISION      X2OMI
-      DOUBLE PRECISION      XNDDT
-      DOUBLE PRECISION      XNDOT
-      DOUBLE PRECISION      XOMI
+      double precision      x2li
+      double precision      x2omi
+      double precision      xnddt
+      double precision      xndot
+      double precision      xomi
 
-      DOUBLE PRECISION      G22
-      PARAMETER           ( G22    = 5.7686396D0  )
+      double precision      g22
+      parameter           ( g22    = 5.7686396d0  )
 
-      DOUBLE PRECISION      G32
-      PARAMETER           ( G32    = 0.95240898D0 )
+      double precision      g32
+      parameter           ( g32    = 0.95240898d0 )
 
-      DOUBLE PRECISION      G44
-      PARAMETER           ( G44    = 1.8014998D0  )
+      double precision      g44
+      parameter           ( g44    = 1.8014998d0  )
 
-      DOUBLE PRECISION      G52
-      PARAMETER           ( G52    = 1.0508330D0  )
+      double precision      g52
+      parameter           ( g52    = 1.0508330d0  )
 
-      DOUBLE PRECISION      G54
-      PARAMETER           ( G54    = 4.4108898D0  )
+      double precision      g54
+      parameter           ( g54    = 4.4108898d0  )
 
-      DOUBLE PRECISION      FASX2
-      PARAMETER           ( FASX2  = 0.13130908D0 )
+      double precision      fasx2
+      parameter           ( fasx2  = 0.13130908d0 )
 
-      DOUBLE PRECISION      FASX4
-      PARAMETER           ( FASX4  = 2.8843198D0  )
+      double precision      fasx4
+      parameter           ( fasx4  = 2.8843198d0  )
 
-      DOUBLE PRECISION      FASX6
-      PARAMETER           ( FASX6  = 0.37448087D0 )
+      double precision      fasx6
+      parameter           ( fasx6  = 0.37448087d0 )
 
 
 
@@ -187,61 +187,61 @@
 !     resonance flag.
 !
 
-      IF ( ISYNFL .EQ. 0 ) THEN
+      if ( isynfl .eq. 0 ) then
 
 !
 !        Resonance flag set.
 !
 
-         XOMI  = OMEGAO + OMGDOT * ATIME
-         X2OMI = XOMI   + XOMI
-         X2LI  = XLI    + XLI
+         xomi  = omegao + omgdot * atime
+         x2omi = xomi   + xomi
+         x2li  = xli    + xli
 
-         XNDOT =  DG( 1  )*DSIN( X2OMI + XLI  - G22 ) &
-                + DG( 2  )*DSIN( XLI          - G22 ) &
-                + DG( 3  )*DSIN( XOMI  + XLI  - G32 ) &
-                + DG( 4  )*DSIN(-XOMI  + XLI  - G32 ) &
-                + DG( 5  )*DSIN( X2OMI + X2LI - G44 ) &
-                + DG( 6  )*DSIN( X2LI         - G44 ) &
-                + DG( 7  )*DSIN( XOMI  + XLI  - G52 ) &
-                + DG( 8  )*DSIN(-XOMI  + XLI  - G52 ) &
-                + DG( 9  )*DSIN( XOMI  + X2LI - G54 ) &
-                + DG( 10 )*DSIN(-XOMI  + X2LI - G54 )
+         xndot =  dg( 1  )*dsin( x2omi + xli  - g22 ) &
+                + dg( 2  )*dsin( xli          - g22 ) &
+                + dg( 3  )*dsin( xomi  + xli  - g32 ) &
+                + dg( 4  )*dsin(-xomi  + xli  - g32 ) &
+                + dg( 5  )*dsin( x2omi + x2li - g44 ) &
+                + dg( 6  )*dsin( x2li         - g44 ) &
+                + dg( 7  )*dsin( xomi  + xli  - g52 ) &
+                + dg( 8  )*dsin(-xomi  + xli  - g52 ) &
+                + dg( 9  )*dsin( xomi  + x2li - g54 ) &
+                + dg( 10 )*dsin(-xomi  + x2li - g54 )
 
-         XNDDT =  DG( 1  )*DCOS( X2OMI + XLI  - G22 ) &
-                + DG( 2  )*DCOS( XLI          - G22 ) &
-                + DG( 3  )*DCOS( XOMI  + XLI  - G32 ) &
-                + DG( 4  )*DCOS(-XOMI  + XLI  - G32 ) &
-                + DG( 7  )*DCOS( XOMI  + XLI  - G52 ) &
-                + DG( 8  )*DCOS(-XOMI  + XLI  - G52 ) &
-         +2.D0*(  DG( 5  )*DCOS( X2OMI + X2LI - G44 ) &
-                + DG( 6  )*DCOS( X2LI         - G44 ) &
-                + DG( 9  )*DCOS( XOMI  + X2LI - G54 ) &
-                + DG( 10 )*DCOS( XOMI  + X2LI - G54 ))
+         xnddt =  dg( 1  )*dcos( x2omi + xli  - g22 ) &
+                + dg( 2  )*dcos( xli          - g22 ) &
+                + dg( 3  )*dcos( xomi  + xli  - g32 ) &
+                + dg( 4  )*dcos(-xomi  + xli  - g32 ) &
+                + dg( 7  )*dcos( xomi  + xli  - g52 ) &
+                + dg( 8  )*dcos(-xomi  + xli  - g52 ) &
+         +2.d0*(  dg( 5  )*dcos( x2omi + x2li - g44 ) &
+                + dg( 6  )*dcos( x2li         - g44 ) &
+                + dg( 9  )*dcos( xomi  + x2li - g54 ) &
+                + dg( 10 )*dcos( xomi  + x2li - g54 ))
 
-      ELSE
+      else
 
 !
 !        Resonance flag not set
 !
 
-         XNDOT =  DEL(1)*DSIN(        XLI - FASX2   ) &
-                + DEL(2)*DSIN( 2.D0*( XLI - FASX4 ) ) &
-                + DEL(3)*DSIN( 3.D0*( XLI - FASX6 ) )
+         xndot =  del(1)*dsin(        xli - fasx2   ) &
+                + del(2)*dsin( 2.d0*( xli - fasx4 ) ) &
+                + del(3)*dsin( 3.d0*( xli - fasx6 ) )
 
-         XNDDT =      DEL(1)*DCOS(        XLI - FASX2   ) &
-               + 2.D0*DEL(2)*DCOS( 2.D0*( XLI - FASX4 ) ) &
-               + 3.D0*DEL(3)*DCOS( 3.D0*( XLI - FASX6 ) )
+         xnddt =      del(1)*dcos(        xli - fasx2   ) &
+               + 2.d0*del(2)*dcos( 2.d0*( xli - fasx4 ) ) &
+               + 3.d0*del(3)*dcos( 3.d0*( xli - fasx6 ) )
 
-      END IF
+      end if
 
 
-      XLDOT = XNI  +  XFACT
-      XNDDT = XNDDT * XLDOT
+      xldot = xni  +  xfact
+      xnddt = xnddt * xldot
 
 !
 !     Hi!  What are you doing way down here?  Did you bring pizza?
 !
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SETC ( Compare character sets )
 
-      LOGICAL FUNCTION SETC ( A, OP, B )
+      logical function setc ( a, op, b )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER                    LBCELL
-      PARAMETER                ( LBCELL = -5 )
+      integer                    lbcell
+      parameter                ( lbcell = -5 )
 
-      CHARACTER*(*)     A      ( LBCELL:* )
-      CHARACTER*(*)     OP
-      CHARACTER*(*)     B      ( LBCELL:* )
+      character*(*)     a      ( lbcell:* )
+      character*(*)     op
+      character*(*)     b      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -208,43 +208,43 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          CARDC
-      LOGICAL          RETURN
+      integer          cardc
+      logical          return
 
 !
 !     Local variables
 !
-      INTEGER          CARDA
-      INTEGER          CARDB
-      INTEGER          CONDLT
-      INTEGER          CONDEQ
-      INTEGER          CONDGT
-      INTEGER          CONDOA
-      INTEGER          CONDOB
-      INTEGER          CONDAB
-      INTEGER          INDEXA
-      INTEGER          INDEXB
-      INTEGER          COND
+      integer          carda
+      integer          cardb
+      integer          condlt
+      integer          condeq
+      integer          condgt
+      integer          condoa
+      integer          condob
+      integer          condab
+      integer          indexa
+      integer          indexb
+      integer          cond
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         SETC = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SETC' )
-         SETC = .FALSE.
-      END IF
+      if ( return () ) then
+         setc = .false.
+         return
+      else
+         call chkin ( 'SETC' )
+         setc = .false.
+      end if
 
 
 !
 !     Obtain the cardinality of the sets.
 !
-      CARDA = CARDC ( A )
-      CARDB = CARDC ( B )
+      carda = cardc ( a )
+      cardb = cardc ( b )
 
 
 !
@@ -378,198 +378,198 @@
 !     A cannot be a proper subset of B if the cardinality of A is
 !     greater than or equal to the cardinality of B.
 !
-      IF      ( OP .EQ. '<' ) THEN
+      if      ( op .eq. '<' ) then
 
-              IF ( CARDA .GE. CARDB ) THEN
-                 SETC = .FALSE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-              ELSE
-                 CONDLT = 0
-                 CONDEQ = 1
-                 CONDGT = 1
-                 CONDOA = 0
-                 CONDOB = 1
-                 CONDAB = 1
-              END IF
+              if ( carda .ge. cardb ) then
+                 setc = .false.
+                 call chkout ( 'SETC' )
+                 return
+              else
+                 condlt = 0
+                 condeq = 1
+                 condgt = 1
+                 condoa = 0
+                 condob = 1
+                 condab = 1
+              end if
 
 
 !
 !     A cannot be a subset of B if A contains more elements than B.
 !
-      ELSE IF ( OP .EQ. '<=' ) THEN
+      else if ( op .eq. '<=' ) then
 
-              IF ( CARDA .GT. CARDB ) THEN
-                 SETC = .FALSE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-               ELSE
-                 CONDLT = 0
-                 CONDEQ = 1
-                 CONDGT = 1
-                 CONDOA = 0
-                 CONDOB = 1
-                 CONDAB = 1
-               END IF
+              if ( carda .gt. cardb ) then
+                 setc = .false.
+                 call chkout ( 'SETC' )
+                 return
+               else
+                 condlt = 0
+                 condeq = 1
+                 condgt = 1
+                 condoa = 0
+                 condob = 1
+                 condab = 1
+               end if
 
 
 !
 !     If the cardinality of the two sets is not equal, there's no way
 !     that the two sets could be equal.
 !
-      ELSE IF ( OP .EQ. '=' ) THEN
+      else if ( op .eq. '=' ) then
 
-               IF ( CARDA .NE. CARDB ) THEN
-                  SETC = .FALSE.
-                  CALL CHKOUT ( 'SETC' )
-                  RETURN
-               ELSE
-                  CONDLT = 0
-                  CONDEQ = 1
-                  CONDGT = 0
-                  CONDOA = 0
-                  CONDOB = 0
-                  CONDAB = 1
-               END IF
+               if ( carda .ne. cardb ) then
+                  setc = .false.
+                  call chkout ( 'SETC' )
+                  return
+               else
+                  condlt = 0
+                  condeq = 1
+                  condgt = 0
+                  condoa = 0
+                  condob = 0
+                  condab = 1
+               end if
 
 
 !
 !     If the cardinality of the two sets is not equal, the sets
 !     are not equal.
 !
-      ELSE IF ( OP .EQ. '<>' ) THEN
+      else if ( op .eq. '<>' ) then
 
-              IF ( CARDA .NE. CARDB ) THEN
-                 SETC = .TRUE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-              ELSE
-                 CONDLT = 2
-                 CONDEQ = 1
-                 CONDGT = 2
-                 CONDOA = 0
-                 CONDOB = 0
-                 CONDAB = 0
-              END IF
+              if ( carda .ne. cardb ) then
+                 setc = .true.
+                 call chkout ( 'SETC' )
+                 return
+              else
+                 condlt = 2
+                 condeq = 1
+                 condgt = 2
+                 condoa = 0
+                 condob = 0
+                 condab = 0
+              end if
 
 
 !
 !     B cannot be a proper subset of A if the cardinality of A is less
 !     than or equal to the cardinality of B.
 !
-      ELSE IF ( OP .EQ. '>' ) THEN
+      else if ( op .eq. '>' ) then
 
-              IF ( CARDA .LE. CARDB ) THEN
-                 SETC = .FALSE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-              ELSE
-                 CONDLT = 1
-                 CONDEQ = 1
-                 CONDGT = 0
-                 CONDOA = 1
-                 CONDOB = 0
-                 CONDAB = 1
-              END IF
+              if ( carda .le. cardb ) then
+                 setc = .false.
+                 call chkout ( 'SETC' )
+                 return
+              else
+                 condlt = 1
+                 condeq = 1
+                 condgt = 0
+                 condoa = 1
+                 condob = 0
+                 condab = 1
+              end if
 !
 !     B cannot be a subset of A if B contains more elements than A.
 !
-      ELSE IF ( OP .EQ. '>=' ) THEN
+      else if ( op .eq. '>=' ) then
 
-              IF ( CARDA .LT. CARDB ) THEN
-                 SETC = .FALSE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-              ELSE
-                 CONDLT = 1
-                 CONDEQ = 1
-                 CONDGT = 0
-                 CONDOA = 1
-                 CONDOB = 0
-                 CONDAB = 1
-              END IF
+              if ( carda .lt. cardb ) then
+                 setc = .false.
+                 call chkout ( 'SETC' )
+                 return
+              else
+                 condlt = 1
+                 condeq = 1
+                 condgt = 0
+                 condoa = 1
+                 condob = 0
+                 condab = 1
+              end if
 !
 !     If the cardinality of one of the sets is zero, they can't
 !     possibly have any elements in common.
 !
-      ELSE IF ( OP .EQ. '&' ) THEN
+      else if ( op .eq. '&' ) then
 
-              IF ( ( CARDA .EQ. 0 ) .OR. ( CARDB .EQ. 0 ) ) THEN
-                 SETC = .FALSE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-              ELSE
-                 CONDLT = 1
-                 CONDEQ = 2
-                 CONDGT = 1
-                 CONDOA = 0
-                 CONDOB = 0
-              END IF
+              if ( ( carda .eq. 0 ) .or. ( cardb .eq. 0 ) ) then
+                 setc = .false.
+                 call chkout ( 'SETC' )
+                 return
+              else
+                 condlt = 1
+                 condeq = 2
+                 condgt = 1
+                 condoa = 0
+                 condob = 0
+              end if
 
 
 !
 !     If either A or B is the null set, the two sets are disjoint.
 !
-      ELSE IF ( OP .EQ. '~' ) THEN
+      else if ( op .eq. '~' ) then
 
-              IF ( ( CARDA .EQ. 0 ) .OR. ( CARDB .EQ. 0 ) ) THEN
-                 SETC = .TRUE.
-                 CALL CHKOUT ( 'SETC' )
-                 RETURN
-              ELSE
-                 CONDLT = 1
-                 CONDEQ = 0
-                 CONDGT = 1
-                 CONDOA = 1
-                 CONDOB = 1
-              END IF
+              if ( ( carda .eq. 0 ) .or. ( cardb .eq. 0 ) ) then
+                 setc = .true.
+                 call chkout ( 'SETC' )
+                 return
+              else
+                 condlt = 1
+                 condeq = 0
+                 condgt = 1
+                 condoa = 1
+                 condob = 1
+              end if
 
 !
 !     If the relational operator is not recognized, signal an
 !     error.
 !
 
-      ELSE
-             CALL SETMSG ( 'Relational operator, *, is not '         // &
+      else
+             call setmsg ( 'Relational operator, *, is not '         // &
                            'recognized.'                              )
-             CALL ERRCH  ( '*', OP                   )
-             CALL SIGERR ( 'SPICE(INVALIDOPERATION)' )
-             CALL CHKOUT ( 'SETC' )
-             RETURN
-      END IF
+             call errch  ( '*', op                   )
+             call sigerr ( 'SPICE(INVALIDOPERATION)' )
+             call chkout ( 'SETC' )
+             return
+      end if
 
 
 !
 !     Initialize counters used for checking the elements of the sets.
 !
-      INDEXA    = 1
-      INDEXB    = 1
-      COND      = 0
+      indexa    = 1
+      indexb    = 1
+      cond      = 0
 
 
 !
 !     If we've come this far we need to check the elements of the
 !     sets to determine the function value.
 !
-      DO WHILE ( ( INDEXA .LE. CARDA ) .AND. ( INDEXB .LE. CARDB ) )
+      do while ( ( indexa .le. carda ) .and. ( indexb .le. cardb ) )
 
-         IF      ( A (INDEXA) .LT. B (INDEXB) )  THEN
+         if      ( a (indexa) .lt. b (indexb) )  then
 
-                   COND   = CONDLT
-                   INDEXA = INDEXA + 1
+                   cond   = condlt
+                   indexa = indexa + 1
 
-         ELSE IF ( A (INDEXA) .EQ. B (INDEXB) )  THEN
+         else if ( a (indexa) .eq. b (indexb) )  then
 
-                   COND   = CONDEQ
-                   INDEXA = INDEXA + 1
-                   INDEXB = INDEXB + 1
+                   cond   = condeq
+                   indexa = indexa + 1
+                   indexb = indexb + 1
 
-         ELSE
+         else
 
-                   COND   = CONDGT
-                   INDEXB = INDEXB + 1
+                   cond   = condgt
+                   indexb = indexb + 1
 
-         END IF
+         end if
 
 
 !
@@ -595,21 +595,21 @@
 !           not equal, the sets are not equal ( COND = 2 ).
 !
 !
-         IF      ( COND .EQ. 0 ) THEN
+         if      ( cond .eq. 0 ) then
 
-                  SETC = .FALSE.
-                  CALL CHKOUT ( 'SETC' )
-                  RETURN
+                  setc = .false.
+                  call chkout ( 'SETC' )
+                  return
 
-         ELSE IF ( COND .EQ. 2 ) THEN
+         else if ( cond .eq. 2 ) then
 
-                  SETC = .TRUE.
-                  CALL CHKOUT ( 'SETC' )
-                  RETURN
+                  setc = .true.
+                  call chkout ( 'SETC' )
+                  return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
@@ -621,30 +621,30 @@
 !     We've gone through all of set B and there are elements left in
 !     A.
 !
-      IF      ( INDEXA .LE. CARDA ) THEN
-                COND = CONDOA
+      if      ( indexa .le. carda ) then
+                cond = condoa
 !
 !     We've gone through all of set A and there are elements left in
 !     B.
 !
-      ELSE IF ( INDEXB .LE. CARDB ) THEN
-                COND = CONDOB
+      else if ( indexb .le. cardb ) then
+                cond = condob
 !
 !     We've gone through both the sets.
 !
-      ELSE
-                COND = CONDAB
-      END IF
+      else
+                cond = condab
+      end if
 
 
 
 !
 !     Determine the value of SETC from the results.
 !
-      SETC = ( COND .EQ. 1 )
+      setc = ( cond .eq. 1 )
 
 
 
-      CALL CHKOUT ( 'SETC' )
-      RETURN
-      END
+      call chkout ( 'SETC' )
+      return
+      end

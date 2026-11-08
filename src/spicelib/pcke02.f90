@@ -1,6 +1,6 @@
 !$Procedure PCKE02 ( PCK, evaluate data record from type 2 segment )
 
-      SUBROUTINE PCKE02 ( ET, RECORD, EULANG )
+      subroutine pcke02 ( et, record, eulang )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      EULANG   ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      eulang   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -166,31 +166,31 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
-      LOGICAL               RETURN
+      double precision      twopi
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKE02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PCKE02' )
+      end if
 
 !
 !     Call evaluation routine to get Euler angles
 !     phi, delta, w.
 !
-      CALL SPKE02 ( ET, RECORD, EULANG )
+      call spke02 ( et, record, eulang )
 
 !
 !     Mod the 3rd element of the state by TWOPI.
 !     We do this because we've always done this.
 !
-      EULANG(3) = MOD ( EULANG(3), TWOPI() )
+      eulang(3) = mod ( eulang(3), twopi() )
 
-      CALL CHKOUT ( 'PCKE02' )
+      call chkout ( 'PCKE02' )
 
-      RETURN
-      END
+      return
+      end

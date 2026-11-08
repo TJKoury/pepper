@@ -1,7 +1,7 @@
 !$Procedure PARSQS ( Parse quoted string token )
 
-      SUBROUTINE PARSQS ( STRING, QCHAR, VALUE, LENGTH, ERROR, ERRMSG, &
-                          PTR                                          )
+      subroutine parsqs ( string, qchar, value, length, error, errmsg, &
+                          ptr                                          )
 
 ! $ Abstract
 !
@@ -21,15 +21,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      CHARACTER*(1)         QCHAR
-      CHARACTER*(*)         VALUE
-      INTEGER               LENGTH
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
-      INTEGER               PTR
+      character*(*)         string
+      character*(1)         qchar
+      character*(*)         value
+      integer               length
+      logical               error
+      character*(*)         errmsg
+      integer               ptr
 
 ! $ Brief_I/O
 !
@@ -238,96 +238,96 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
+      integer               frstnb
+      integer               lastnb
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         CHR
+      character*(1)         chr
 
-      INTEGER               FIRST
-      INTEGER               IPOS
-      INTEGER               INLEN
-      INTEGER               LAST
-      INTEGER               OUTLEN
-      INTEGER               OPOS
+      integer               first
+      integer               ipos
+      integer               inlen
+      integer               last
+      integer               outlen
+      integer               opos
 
 
 !
 !     Error free, no check-in required.  No parse error to start with.
 !     No characters in the parsed string to start with.
 !
-      ERROR  = .FALSE.
-      ERRMSG = ' '
-      PTR    = 0
-      LENGTH = 0
+      error  = .false.
+      errmsg = ' '
+      ptr    = 0
+      length = 0
 
 !
 !     Reject invalid quote characters.
 !
-      IF ( QCHAR .EQ. ' ' ) THEN
+      if ( qchar .eq. ' ' ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'The quote character must be non-blank, but isn''t'
-         PTR    = 1
+         error  = .true.
+         errmsg = 'The quote character must be non-blank, but isn''t'
+         ptr    = 1
 
-      END IF
+      end if
 
 !
 !     Grab the lengths of the string arguments.
 !
-      INLEN  =  LEN(STRING)
-      OUTLEN =  LEN(VALUE )
+      inlen  =  len(string)
+      outlen =  len(value )
 
 !
 !     The token to be parsed extends from the first non-blank
 !     character to the last non-blank character of STRING.
 !
-      FIRST  =  FRSTNB(STRING)
-      LAST   =  LASTNB(STRING)
+      first  =  frstnb(string)
+      last   =  lastnb(string)
 
-      IF ( FIRST .EQ. 0 ) THEN
+      if ( first .eq. 0 ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'Blank input string'
-         PTR    =  INLEN
-         RETURN
+         error  = .true.
+         errmsg = 'Blank input string'
+         ptr    =  inlen
+         return
 
-      END IF
+      end if
 
 
 !
 !     The input token must be bracketed by quote characters.
 !
-      IF ( STRING(FIRST:FIRST) .NE. QCHAR ) THEN
+      if ( string(first:first) .ne. qchar ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'String token does not start with quote character'
-         PTR    =  FIRST
-         RETURN
+         error  = .true.
+         errmsg = 'String token does not start with quote character'
+         ptr    =  first
+         return
 
-      ELSE IF ( STRING(LAST:LAST) .NE. QCHAR ) THEN
+      else if ( string(last:last) .ne. qchar ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'String token does not end with quote character'
-         PTR    =  LAST
-         RETURN
+         error  = .true.
+         errmsg = 'String token does not end with quote character'
+         ptr    =  last
+         return
 
-      END IF
+      end if
 
 
 !
 !     Null strings are not accepted.
 !
-      IF ( FIRST .EQ. LAST-1 ) THEN
+      if ( first .eq. last-1 ) then
 
-         ERROR  = .TRUE.
-         ERRMSG = 'Null (zero length) string token'
-         PTR    = LAST
-         RETURN
+         error  = .true.
+         errmsg = 'Null (zero length) string token'
+         ptr    = last
+         return
 
-      END IF
+      end if
 
 
 !
@@ -337,91 +337,91 @@
 !     un-doubled quotes; we have a parse error if we find any such
 !     stragglers.
 !
-      OPOS  =  1
-      IPOS  =  FIRST + 1
+      opos  =  1
+      ipos  =  first + 1
 
-      DO WHILE (  ( IPOS .LE. LAST-1 ) .AND. ( OPOS .LE. OUTLEN )  )
+      do while (  ( ipos .le. last-1 ) .and. ( opos .le. outlen )  )
 !
 !        At this point, IPOS points to the current input character to
 !        examine; OPOS points to the currently available position to
 !        write to in the output string.
 !
-         CHR  =  STRING(IPOS:IPOS)
+         chr  =  string(ipos:ipos)
 
-         IF ( CHR .NE. QCHAR ) THEN
+         if ( chr .ne. qchar ) then
 !
 !           This is the normal, non-quote case.  Transfer the
 !           character to the output string and advance both the input
 !           and output character positions.
 !
-            VALUE(OPOS:OPOS)  =  CHR
-            IPOS              =  IPOS   + 1
-            OPOS              =  OPOS   + 1
-            LENGTH            =  LENGTH + 1
+            value(opos:opos)  =  chr
+            ipos              =  ipos   + 1
+            opos              =  opos   + 1
+            length            =  length + 1
 
-         ELSE
+         else
 !
 !           We've encountered a quote character.  By construction, the
 !           parity of this quote character must be odd.  The quote must
 !           be followed immediately by a second, interior quote.
 !
-            IF ( IPOS .EQ. LAST-1 ) THEN
+            if ( ipos .eq. last-1 ) then
 !
 !              We're already looking at the last interior input
 !              character.
 !
-               ERROR  = .TRUE.
-               ERRMSG = 'Quote character is unmatched or else string '// &
+               error  = .true.
+               errmsg = 'Quote character is unmatched or else string '// &
                         'ends without final quote; take your pick'
-               PTR    = IPOS
-               RETURN
+               ptr    = ipos
+               return
 
-            ELSE IF ( STRING(IPOS+1:IPOS+1) .NE. QCHAR ) THEN
+            else if ( string(ipos+1:ipos+1) .ne. qchar ) then
 
-               ERROR  =  .TRUE.
-               ERRMSG =  'Interior quote character is not doubled'
-               PTR    =  IPOS
-               RETURN
+               error  =  .true.
+               errmsg =  'Interior quote character is not doubled'
+               ptr    =  ipos
+               return
 
-            ELSE
+            else
 !
 !              This is the normal case; the quote character is doubled.
 !              Transfer a single quote character to the output string,
 !              and skip over the second quote in the input string.
 !
-               VALUE(OPOS:OPOS)  =  CHR
-               OPOS              =  OPOS   + 1
-               LENGTH            =  LENGTH + 1
-               IPOS              =  IPOS   + 2
+               value(opos:opos)  =  chr
+               opos              =  opos   + 1
+               length            =  length + 1
+               ipos              =  ipos   + 2
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      IF ( IPOS .LT. LAST-1 ) THEN
+      if ( ipos .lt. last-1 ) then
 !
 !        We must have stopped transferring characters to VALUE
 !        because we ran out of room.
 !
-         ERROR  =  .TRUE.
-         ERRMSG =  'Output string too short, truncated on right'
-         PTR    =  IPOS
-         RETURN
+         error  =  .true.
+         errmsg =  'Output string too short, truncated on right'
+         ptr    =  ipos
+         return
 
-      END IF
+      end if
 
 
-      IF ( OPOS .LT. OUTLEN ) THEN
+      if ( opos .lt. outlen ) then
 !
 !        Blank-pad the trailing portion of the output string.
 !
-         VALUE(OPOS:) = ' '
+         value(opos:) = ' '
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

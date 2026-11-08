@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTR31 ( EK tree, 3-1 merge )
 
-      SUBROUTINE ZZEKTR31 ( HANDLE, TREE )
+      subroutine zzektr31 ( handle, tree )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektree.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektype.inc'
+      include 'ektree.inc'
+      include 'ekpage.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
+      integer               handle
+      integer               tree
 
 ! $ Brief_I/O
 !
@@ -184,88 +184,88 @@
 !
 !     Local variables
 !
-      INTEGER               C1PAGE ( PGSIZI )
-      INTEGER               C2PAGE ( PGSIZI )
-      INTEGER               CHILD  ( 2 )
-      INTEGER               DELTA
-      INTEGER               I
-      INTEGER               MIDDLE
-      INTEGER               NLKEYS
-      INTEGER               NRKEYS
-      INTEGER               ROOT
-      INTEGER               RPAGE  ( PGSIZI )
-      INTEGER               SUM
+      integer               c1page ( pgsizi )
+      integer               c2page ( pgsizi )
+      integer               child  ( 2 )
+      integer               delta
+      integer               i
+      integer               middle
+      integer               nlkeys
+      integer               nrkeys
+      integer               root
+      integer               rpage  ( pgsizi )
+      integer               sum
 
 !
 !     Use discovery check-in for speed.
 !
-      ROOT    =  TREE
+      root    =  tree
 
-      CALL ZZEKPGRI ( HANDLE, ROOT, RPAGE )
+      call zzekpgri ( handle, root, rpage )
 
-      NRKEYS  =  RPAGE ( TRNKR )
+      nrkeys  =  rpage ( trnkr )
 
 !
 !     There must be exactly 1 key in the root.
 !
-      IF ( NRKEYS .NE. 1 ) THEN
+      if ( nrkeys .ne. 1 ) then
 
-         CALL CHKIN  ( 'ZZEKTR31'                                 )
-         CALL SETMSG ( 'Number of keys in root = #; should be 1.' )
-         CALL ERRINT ( '#',  NRKEYS                               )
-         CALL SIGERR ( 'SPICE(BUG)'                               )
-         CALL CHKOUT ( 'ZZEKTR31'                                 )
-         RETURN
+         call chkin  ( 'ZZEKTR31'                                 )
+         call setmsg ( 'Number of keys in root = #; should be 1.' )
+         call errint ( '#',  nrkeys                               )
+         call sigerr ( 'SPICE(BUG)'                               )
+         call chkout ( 'ZZEKTR31'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Read in the child pages.  Get the key counts for these pages.
 !
-      CHILD(1)  =  RPAGE ( TRKIDR + 1 )
-      CHILD(2)  =  RPAGE ( TRKIDR + 2 )
+      child(1)  =  rpage ( trkidr + 1 )
+      child(2)  =  rpage ( trkidr + 2 )
 
-      CALL ZZEKPGRI ( HANDLE, CHILD(1), C1PAGE )
-      CALL ZZEKPGRI ( HANDLE, CHILD(2), C2PAGE )
+      call zzekpgri ( handle, child(1), c1page )
+      call zzekpgri ( handle, child(2), c2page )
 
-      NLKEYS    =  C1PAGE ( TRNKC )
-      NRKEYS    =  C2PAGE ( TRNKC )
-      SUM       =  NLKEYS + NRKEYS
+      nlkeys    =  c1page ( trnkc )
+      nrkeys    =  c2page ( trnkc )
+      sum       =  nlkeys + nrkeys
 
 !
 !     The sum of the number of keys in the two input nodes must
 !     sum exactly to value representing an underflow level of 1 key.
 !
-      IF (  SUM  .NE.  ( 2*MNKEYC - 1 )  ) THEN
+      if (  sum  .ne.  ( 2*mnkeyc - 1 )  ) then
 
-         CALL CHKIN  ( 'ZZEKTR31'                                      )
-         CALL SETMSG ( 'Number of keys in nodes LEFT = #; in RIGHT ' // &
+         call chkin  ( 'ZZEKTR31'                                      )
+         call setmsg ( 'Number of keys in nodes LEFT = #; in RIGHT ' // &
                        '= #; counts summing to # were expected.'       )
-         CALL ERRINT ( '#',  NLKEYS                                    )
-         CALL ERRINT ( '#',  NRKEYS                                    )
-         CALL ERRINT ( '#',  2*MNKEYC-1                                )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZEKTR31'                                      )
-         RETURN
+         call errint ( '#',  nlkeys                                    )
+         call errint ( '#',  nrkeys                                    )
+         call errint ( '#',  2*mnkeyc-1                                )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZEKTR31'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Shift the key and data pointer in the root to right to allow
 !     insertion of NLKEYS new entries on the left.  The child pointers
 !     need not be shifted; they'll be overwritten later.
 !
-      RPAGE (TRKEYR+NLKEYS+1)  =  RPAGE (TRKEYR+1)
-      RPAGE (TRDATR+NLKEYS+1)  =  RPAGE (TRDATR+1)
+      rpage (trkeyr+nlkeys+1)  =  rpage (trkeyr+1)
+      rpage (trdatr+nlkeys+1)  =  rpage (trdatr+1)
 
 !
 !     Copy in the keys, data pointers, and child pointers from the
 !     left child into the root.  The number of predecessors of the
 !     new keys is unchanged by this operation.
 !
-      CALL MOVEI ( C1PAGE(TRKEYC+1), NLKEYS,     RPAGE(TRKEYR+1)  )
-      CALL MOVEI ( C1PAGE(TRDATC+1), NLKEYS,     RPAGE(TRDATR+1)  )
-      CALL MOVEI ( C1PAGE(TRKIDC+1), NLKEYS+1,   RPAGE(TRKIDR+1)  )
+      call movei ( c1page(trkeyc+1), nlkeys,     rpage(trkeyr+1)  )
+      call movei ( c1page(trdatc+1), nlkeys,     rpage(trdatr+1)  )
+      call movei ( c1page(trkidc+1), nlkeys+1,   rpage(trkidr+1)  )
 
 !
 !     Copy in the keys, data pointers, and child pointers from the
@@ -273,36 +273,36 @@
 !     new keys is increased by the value of the last key already
 !     present.
 !
-      MIDDLE  =  NLKEYS  +  1
-      DELTA   =  RPAGE( TRKEYR + MIDDLE )
+      middle  =  nlkeys  +  1
+      delta   =  rpage( trkeyr + middle )
 
-      DO I = 1, NRKEYS
-         RPAGE( TRKEYR+MIDDLE+I )  =  C2PAGE(TRKEYC + I)  +  DELTA
-      END DO
+      do i = 1, nrkeys
+         rpage( trkeyr+middle+i )  =  c2page(trkeyc + i)  +  delta
+      end do
 
-      CALL MOVEI ( C2PAGE(TRDATC+1), NRKEYS,    RPAGE(TRDATR+MIDDLE+1) )
-      CALL MOVEI ( C2PAGE(TRKIDC+1), NRKEYS+1,  RPAGE(TRKIDR+MIDDLE+1) )
+      call movei ( c2page(trdatc+1), nrkeys,    rpage(trdatr+middle+1) )
+      call movei ( c2page(trkidc+1), nrkeys+1,  rpage(trkidr+middle+1) )
 
 !
 !     Now the root must be updated.  The root now contains
 !     the maximum allowed number of keys.  The depth of the tree
 !     has decreased, as well as the number of nodes in the tree.
 !
-      RPAGE ( TRNKR      )  =  MXKEYR
-      RPAGE ( TRDPTH     )  =  RPAGE ( TRDPTH ) - 1
-      RPAGE ( TRNNOD     )  =  RPAGE ( TRNNOD ) - 2
+      rpage ( trnkr      )  =  mxkeyr
+      rpage ( trdpth     )  =  rpage ( trdpth ) - 1
+      rpage ( trnnod     )  =  rpage ( trnnod ) - 2
 
 !
 !     Write out the updated root.
 !
-      CALL ZZEKPGWI ( HANDLE, ROOT, RPAGE )
+      call zzekpgwi ( handle, root, rpage )
 
 !
 !     Free the pages occupied by the deleted children.
 !
-      DO I = 1, 2
-         CALL ZZEKPGFR ( HANDLE, INT, CHILD(I)  )
-      END DO
+      do i = 1, 2
+         call zzekpgfr ( handle, int, child(i)  )
+      end do
 
-      RETURN
-      END
+      return
+      end

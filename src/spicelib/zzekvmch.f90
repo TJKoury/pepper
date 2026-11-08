@@ -1,9 +1,9 @@
 !$Procedure      ZZEKVMCH ( EK, vector match )
 
-      LOGICAL FUNCTION ZZEKVMCH ( NCNSTR, ACTIVE, &
-                                  LHANS,  LSDSCS, LCDSCS, LROWS, LELTS, &
-                                  OPS, &
-                                  RHANS,  RSDSCS, RCDSCS, RROWS, RELTS )
+      logical function zzekvmch ( ncnstr, active, &
+                                  lhans,  lsdscs, lcdscs, lrows, lelts, &
+                                  ops, &
+                                  rhans,  rsdscs, rcdscs, rrows, relts )
 
 ! $ Abstract
 !
@@ -22,28 +22,28 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ekwild.inc'
-      INCLUDE 'ekqlimit.inc'
+      include 'ekbool.inc'
+      include 'ekopcd.inc'
+      include 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ekwild.inc'
+      include 'ekqlimit.inc'
 
 
-      INTEGER               NCNSTR
-      LOGICAL               ACTIVE ( * )
-      INTEGER               LHANS  ( * )
-      INTEGER               LSDSCS ( SDSCSZ, * )
-      INTEGER               LCDSCS ( CDSCSZ, * )
-      INTEGER               LROWS  ( * )
-      INTEGER               LELTS  ( * )
-      INTEGER               OPS    ( * )
-      INTEGER               RHANS  ( * )
-      INTEGER               RSDSCS ( SDSCSZ, * )
-      INTEGER               RCDSCS ( CDSCSZ, * )
-      INTEGER               RROWS  ( * )
-      INTEGER               RELTS  ( * )
+      integer               ncnstr
+      logical               active ( * )
+      integer               lhans  ( * )
+      integer               lsdscs ( sdscsz, * )
+      integer               lcdscs ( cdscsz, * )
+      integer               lrows  ( * )
+      integer               lelts  ( * )
+      integer               ops    ( * )
+      integer               rhans  ( * )
+      integer               rsdscs ( sdscsz, * )
+      integer               rcdscs ( cdscsz, * )
+      integer               rrows  ( * )
+      integer               relts  ( * )
 
 ! $ Brief_I/O
 !
@@ -263,31 +263,31 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               MATCHI
+      logical               matchi
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKECMP
+      integer               zzekecmp
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXSTR)    CVAL   ( 2 )
+      character*(maxstr)    cval   ( 2 )
 
-      INTEGER               CLDSCS ( CDSCSZ, 2 )
-      INTEGER               CMPLEN ( 2 )
-      INTEGER               CVLEN  ( 2 )
-      INTEGER               ELTS   ( 2 )
-      INTEGER               HANS   ( 2 )
-      INTEGER               I
-      INTEGER               N
-      INTEGER               REL
-      INTEGER               ROWS   ( 2 )
-      INTEGER               SGDSCS ( SDSCSZ, 2 )
+      integer               cldscs ( cdscsz, 2 )
+      integer               cmplen ( 2 )
+      integer               cvlen  ( 2 )
+      integer               elts   ( 2 )
+      integer               hans   ( 2 )
+      integer               i
+      integer               n
+      integer               rel
+      integer               rows   ( 2 )
+      integer               sgdscs ( sdscsz, 2 )
 
-      LOGICAL               FOUND
-      LOGICAL               NULL   ( 2 )
+      logical               found
+      logical               null   ( 2 )
 
 !
 !     Use discovery check-in for speed.  Don't check RETURN.
@@ -296,13 +296,13 @@
 !     we may find one that the input row vector doesn't satisfy, at
 !     which point we can terminate the comparison.
 !
-      ZZEKVMCH  =  .TRUE.
-      N         =   1
+      zzekvmch  =  .true.
+      n         =   1
 
-      DO WHILE  (  ( N .LE. NCNSTR ) .AND.  ZZEKVMCH  )
+      do while  (  ( n .le. ncnstr ) .and.  zzekvmch  )
 
 
-         IF ( ACTIVE(N) ) THEN
+         if ( active(n) ) then
 !
 !           Apply the Nth join constraint to the input row vector.
 !
@@ -316,184 +316,184 @@
 !           We'll start out setting REL to EQ.  If we find out
 !           otherwise, we'll change it.
 !
-            HANS(1)  =  LHANS(N)
-            HANS(2)  =  RHANS(N)
+            hans(1)  =  lhans(n)
+            hans(2)  =  rhans(n)
 
-            CALL MOVEI ( LSDSCS(1,N), SDSCSZ, SGDSCS(1,1) )
-            CALL MOVEI ( RSDSCS(1,N), SDSCSZ, SGDSCS(1,2) )
+            call movei ( lsdscs(1,n), sdscsz, sgdscs(1,1) )
+            call movei ( rsdscs(1,n), sdscsz, sgdscs(1,2) )
 
-            ROWS(1)  =  LROWS(N)
-            ROWS(2)  =  RROWS(N)
+            rows(1)  =  lrows(n)
+            rows(2)  =  rrows(n)
 
-            ELTS(1)  =  LELTS(N)
-            ELTS(2)  =  RELTS(N)
+            elts(1)  =  lelts(n)
+            elts(2)  =  relts(n)
 
-            CALL MOVEI ( LCDSCS(1,N), CDSCSZ, CLDSCS(1,1) )
-            CALL MOVEI ( RCDSCS(1,N), CDSCSZ, CLDSCS(1,2) )
+            call movei ( lcdscs(1,n), cdscsz, cldscs(1,1) )
+            call movei ( rcdscs(1,n), cdscsz, cldscs(1,2) )
 
 
-            REL  =  ZZEKECMP ( HANS,  SGDSCS,  CLDSCS,  ROWS,  ELTS  )
+            rel  =  zzekecmp ( hans,  sgdscs,  cldscs,  rows,  elts  )
 
 !
 !           Determine the truth of the Nth input relational expression,
 !           and set ZZEKVMCH accordingly.
 !
-            IF ( OPS(N) .EQ. EQ )   THEN
+            if ( ops(n) .eq. eq )   then
 
-               ZZEKVMCH  =  REL .EQ. EQ
-
-
-            ELSE IF ( OPS(N) .EQ. LT )   THEN
-
-               ZZEKVMCH  =   REL .EQ. LT
+               zzekvmch  =  rel .eq. eq
 
 
-            ELSE IF ( OPS(N) .EQ. LE )   THEN
+            else if ( ops(n) .eq. lt )   then
 
-               ZZEKVMCH  =   REL .NE. GT
-
-
-            ELSE IF ( OPS(N) .EQ. GT )   THEN
-
-               ZZEKVMCH  =   REL .EQ. GT
+               zzekvmch  =   rel .eq. lt
 
 
-            ELSE IF ( OPS(N) .EQ. GE )   THEN
+            else if ( ops(n) .eq. le )   then
 
-               ZZEKVMCH  =   REL .NE. LT
-
-
-            ELSE IF ( OPS(N) .EQ. NE )   THEN
-
-               ZZEKVMCH  =   REL .NE. EQ
+               zzekvmch  =   rel .ne. gt
 
 
-            ELSE IF (       ( OPS(N)            .EQ. LIKE ) &
-                      .AND. ( CLDSCS(TYPIDX,1)  .EQ. CHR  )  ) THEN
+            else if ( ops(n) .eq. gt )   then
+
+               zzekvmch  =   rel .eq. gt
 
 
-               DO I = 1, 2
+            else if ( ops(n) .eq. ge )   then
 
-                  CALL ZZEKRSC (  HANS(I), &
-                                  SGDSCS(1,I), &
-                                  CLDSCS(1,I), &
-                                  ROWS(I), &
-                                  ELTS(I), &
-                                  CVLEN(I), &
-                                  CVAL(I), &
-                                  NULL(I), &
-                                  FOUND           )
+               zzekvmch  =   rel .ne. lt
 
 
-                  IF ( .NOT. FOUND ) THEN
+            else if ( ops(n) .eq. ne )   then
 
-                     CALL CHKIN  ( 'ZZEKVMCH'                       )
-                     CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ' // &
+               zzekvmch  =   rel .ne. eq
+
+
+            else if (       ( ops(n)            .eq. like ) &
+                      .and. ( cldscs(typidx,1)  .eq. chr  )  ) then
+
+
+               do i = 1, 2
+
+                  call zzekrsc (  hans(i), &
+                                  sgdscs(1,i), &
+                                  cldscs(1,i), &
+                                  rows(i), &
+                                  elts(i), &
+                                  cvlen(i), &
+                                  cval(i), &
+                                  null(i), &
+                                  found           )
+
+
+                  if ( .not. found ) then
+
+                     call chkin  ( 'ZZEKVMCH'                       )
+                     call setmsg ( 'EK = #; COLIDX = #; ROW = #; ' // &
                                    'ELTIDX  = #.  Column entry  '  // &
                                    'element was not found.' )
-                     CALL ERRHAN ( '#',  HANS(I)                    )
-                     CALL ERRINT ( '#',  CLDSCS(ORDIDX,I)           )
-                     CALL ERRINT ( '#',  ROWS(I)                    )
-                     CALL ERRINT ( '#',  ELTS(I)                    )
-                     CALL SIGERR ( 'SPICE(INVALIDINDEX)'            )
-                     CALL CHKOUT ( 'ZZEKVMCH'                       )
-                     RETURN
+                     call errhan ( '#',  hans(i)                    )
+                     call errint ( '#',  cldscs(ordidx,i)           )
+                     call errint ( '#',  rows(i)                    )
+                     call errint ( '#',  elts(i)                    )
+                     call sigerr ( 'SPICE(INVALIDINDEX)'            )
+                     call chkout ( 'ZZEKVMCH'                       )
+                     return
 
-                  END IF
+                  end if
 
-                  IF (  FOUND  .AND. ( .NOT. NULL(I) )  ) THEN
+                  if (  found  .and. ( .not. null(i) )  ) then
 
-                     CMPLEN(I) = MIN ( CVLEN(I), MAXSTR )
-                  ELSE
-                     CMPLEN(I) = 0
-                  END IF
+                     cmplen(i) = min ( cvlen(i), maxstr )
+                  else
+                     cmplen(i) = 0
+                  end if
 
-               END DO
-
-
-               ZZEKVMCH  =  MATCHI ( CVAL(1)( :CMPLEN(1) ), &
-                                     CVAL(2)( :CMPLEN(2) ), &
-                                     WSTR, &
-                                     WCHR                  )
+               end do
 
 
-
-            ELSE IF (       ( OPS(N)            .EQ. UNLIKE ) &
-                      .AND. ( CLDSCS(TYPIDX,1)  .EQ. CHR    )  ) THEN
-
-               DO I = 1, 2
-
-                  CALL ZZEKRSC (  HANS(I), &
-                                  SGDSCS(1,I), &
-                                  CLDSCS(1,I), &
-                                  ROWS(I), &
-                                  ELTS(I), &
-                                  CVLEN(I), &
-                                  CVAL(I), &
-                                  NULL(I), &
-                                  FOUND      )
+               zzekvmch  =  matchi ( cval(1)( :cmplen(1) ), &
+                                     cval(2)( :cmplen(2) ), &
+                                     wstr, &
+                                     wchr                  )
 
 
-                  IF ( .NOT. FOUND ) THEN
 
-                     CALL CHKIN  ( 'ZZEKVMCH'                       )
-                     CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ' // &
+            else if (       ( ops(n)            .eq. unlike ) &
+                      .and. ( cldscs(typidx,1)  .eq. chr    )  ) then
+
+               do i = 1, 2
+
+                  call zzekrsc (  hans(i), &
+                                  sgdscs(1,i), &
+                                  cldscs(1,i), &
+                                  rows(i), &
+                                  elts(i), &
+                                  cvlen(i), &
+                                  cval(i), &
+                                  null(i), &
+                                  found      )
+
+
+                  if ( .not. found ) then
+
+                     call chkin  ( 'ZZEKVMCH'                       )
+                     call setmsg ( 'EK = #; COLIDX = #; ROW = #; ' // &
                                    'ELTIDX  = #.  Column entry  '  // &
                                    'element was not found.' )
-                     CALL ERRHAN ( '#',  HANS(I)                    )
-                     CALL ERRINT ( '#',  CLDSCS(ORDIDX,I)           )
-                     CALL ERRINT ( '#',  ROWS(I)                    )
-                     CALL ERRINT ( '#',  ELTS(I)                    )
-                     CALL SIGERR ( 'SPICE(INVALIDINDEX)'            )
-                     CALL CHKOUT ( 'ZZEKVMCH'                       )
-                     RETURN
+                     call errhan ( '#',  hans(i)                    )
+                     call errint ( '#',  cldscs(ordidx,i)           )
+                     call errint ( '#',  rows(i)                    )
+                     call errint ( '#',  elts(i)                    )
+                     call sigerr ( 'SPICE(INVALIDINDEX)'            )
+                     call chkout ( 'ZZEKVMCH'                       )
+                     return
 
-                  END IF
-
-
-                  IF (  FOUND  .AND. ( .NOT. NULL(I) )  ) THEN
-
-                     CMPLEN(I) = MIN ( CVLEN(I), MAXSTR )
-                  ELSE
-                     CMPLEN(I) = 0
-                  END IF
-
-               END DO
+                  end if
 
 
-               ZZEKVMCH  =  .NOT. MATCHI ( CVAL(1)( :CMPLEN(1) ), &
-                                           CVAL(2)( :CMPLEN(2) ), &
-                                           WSTR, &
-                                           WCHR                 )
+                  if (  found  .and. ( .not. null(i) )  ) then
+
+                     cmplen(i) = min ( cvlen(i), maxstr )
+                  else
+                     cmplen(i) = 0
+                  end if
+
+               end do
 
 
-            ELSE
+               zzekvmch  =  .not. matchi ( cval(1)( :cmplen(1) ), &
+                                           cval(2)( :cmplen(2) ), &
+                                           wstr, &
+                                           wchr                 )
+
+
+            else
 !
 !              Sorry, we couldn't resist.
 !
-               ZZEKVMCH  =  .FALSE.
+               zzekvmch  =  .false.
 
-               CALL CHKIN  ( 'ZZEKVMCH'                            )
-               CALL SETMSG ( 'The relational operator # was not ' // &
+               call chkin  ( 'ZZEKVMCH'                            )
+               call setmsg ( 'The relational operator # was not ' // &
                              'recognized.'                         )
-               CALL ERRINT ( '#',  OPS(N)                          )
-               CALL SIGERR ( 'SPICE(UNNATURALRELATION)'            )
-               CALL CHKOUT ( 'ZZEKVMCH'                            )
-               RETURN
+               call errint ( '#',  ops(n)                          )
+               call sigerr ( 'SPICE(UNNATURALRELATION)'            )
+               call chkout ( 'ZZEKVMCH'                            )
+               return
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
 !
 !        We've completed the test for the Nth constraint, if that
 !        constraint was active.
 !
-         N = N + 1
+         n = n + 1
 
-      END DO
+      end do
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ERRHAN ( Insert DAF/DAS file name into long error message )
 
-      SUBROUTINE ERRHAN ( MARKER, HANDLE )
+      subroutine errhan ( marker, handle )
 
 ! $ Abstract
 !
@@ -21,12 +21,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzddhman.inc'
+      include 'zzddhman.inc'
 
-      CHARACTER*(*)         MARKER
-      INTEGER               HANDLE
+      character*(*)         marker
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -141,40 +141,40 @@
 !
 !     Local parameters
 !
-      INTEGER               MAXNUM
-      PARAMETER           ( MAXNUM = 32 )
+      integer               maxnum
+      parameter           ( maxnum = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FILEN)     FNAME
-      CHARACTER*(MAXNUM)    NUMSTR
+      character*(filen)     fname
+      character*(maxnum)    numstr
 
-      INTEGER               INTARC
-      INTEGER               INTBFF
-      INTEGER               INTAMH
+      integer               intarc
+      integer               intbff
+      integer               intamh
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Get the name of the file designated by the input handle.
 !
-      CALL ZZDDHNFO ( HANDLE, FNAME, INTARC, INTBFF, INTAMH, FOUND )
+      call zzddhnfo ( handle, fname, intarc, intbff, intamh, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL INTSTR ( HANDLE, NUMSTR )
+         call intstr ( handle, numstr )
 
-         FNAME = '<No name found for handle '
-         CALL SUFFIX ( NUMSTR, 1, FNAME )
-         CALL SUFFIX ( '>',    0, FNAME )
+         fname = '<No name found for handle '
+         call suffix ( numstr, 1, fname )
+         call suffix ( '>',    0, fname )
 
-      END IF
+      end if
 
 !
 !     Insert the file name string into the long error message.
 !
-      CALL ERRCH ( MARKER, FNAME )
+      call errch ( marker, fname )
 
-      RETURN
-      END
+      return
+      end

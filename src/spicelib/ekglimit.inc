@@ -9,8 +9,8 @@
 !     This limit applies to logical tables as well, since all segments
 !     in a logical table must have the same column definitions.
 !
-      INTEGER               MXCLSG
-      PARAMETER           ( MXCLSG = 100 )
+      integer               mxclsg
+      parameter           ( mxclsg = 100 )
 
 !
 !     End Include Section:  EK General Limit Parameters

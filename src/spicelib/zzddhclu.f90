@@ -1,6 +1,6 @@
 !$Procedure ZZDDHCLU ( Private --- DDH Count Locks )
 
-      INTEGER FUNCTION ZZDDHCLU ( UTLCK, NUT )
+      integer function zzddhclu ( utlck, nut )
 
 ! $ Abstract
 !
@@ -20,10 +20,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      LOGICAL               UTLCK ( * )
-      INTEGER               NUT
+      logical               utlck ( * )
+      integer               nut
 
 
 ! $ Brief_I/O
@@ -90,20 +90,20 @@
 !
 !     Local Variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Loop through UTLCK counting the number of TRUE values.
 !
-      ZZDDHCLU = 0
+      zzddhclu = 0
 
-      DO I = 1, NUT
+      do i = 1, nut
 
-         IF ( UTLCK(I) ) THEN
-            ZZDDHCLU = ZZDDHCLU + 1
-         END IF
+         if ( utlck(i) ) then
+            zzddhclu = zzddhclu + 1
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

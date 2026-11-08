@@ -1,6 +1,6 @@
 !$Procedure SYDUPI ( Create a duplicate of a symbol )
 
-      SUBROUTINE SYDUPI ( NAME, COPY, TABSYM, TABPTR, TABVAL )
+      subroutine sydupi ( name, copy, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,16 +18,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         COPY
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      INTEGER               TABVAL     ( LBCELL:* )
+      character*(*)         name
+      character*(*)         copy
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      integer               tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -169,170 +169,170 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SIZEC
-      INTEGER               SIZEI
-      INTEGER               SUMAI
+      integer               cardc
+      integer               cardi
+      integer               lstlec
+      logical               return
+      integer               sizec
+      integer               sizei
+      integer               sumai
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               NPTR
-      INTEGER               NVAL
+      integer               nsym
+      integer               nptr
+      integer               nval
 
-      INTEGER               LOCSYM  ( 2 )
-      INTEGER               LOCVAL  ( 2 )
-      INTEGER               DIMVAL  ( 2 )
-      LOGICAL               OLDSYM  ( 2 )
-      INTEGER               NEWSYM
-      INTEGER               NEWVAL
-      INTEGER               I
+      integer               locsym  ( 2 )
+      integer               locval  ( 2 )
+      integer               dimval  ( 2 )
+      logical               oldsym  ( 2 )
+      integer               newsym
+      integer               newval
+      integer               i
 
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYDUPI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SYDUPI' )
+      end if
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
-      NPTR = CARDI ( TABPTR )
-      NVAL = CARDI ( TABVAL )
+      nsym = cardc ( tabsym )
+      nptr = cardi ( tabptr )
+      nval = cardi ( tabval )
 
 !
 !     Where do these symbols belong? Are they already in the table?
 !
-      LOCSYM(1) = LSTLEC ( NAME, NSYM, TABSYM(1) )
-      LOCSYM(2) = LSTLEC ( COPY, NSYM, TABSYM(1) )
+      locsym(1) = lstlec ( name, nsym, tabsym(1) )
+      locsym(2) = lstlec ( copy, nsym, tabsym(1) )
 
-      OLDSYM(1) = (       LOCSYM(1)         .NE. 0 &
-                    .AND. TABSYM(LOCSYM(1)) .EQ. NAME )
+      oldsym(1) = (       locsym(1)         .ne. 0 &
+                    .and. tabsym(locsym(1)) .eq. name )
 
-      OLDSYM(2) = (       LOCSYM(2)         .NE. 0 &
-                    .AND. TABSYM(LOCSYM(2)) .EQ. COPY )
+      oldsym(2) = (       locsym(2)         .ne. 0 &
+                    .and. tabsym(locsym(2)) .eq. copy )
 
 !
 !     If the original symbol is not in the table, we can't make a copy.
 !
-      IF ( .NOT. OLDSYM(1) ) THEN
+      if ( .not. oldsym(1) ) then
 
-         CALL SETMSG ( 'SYDUPI: The symbol to be duplicated, #, is ' // &
+         call setmsg ( 'SYDUPI: The symbol to be duplicated, #, is ' // &
                        'not in the symbol table.' )
-         CALL ERRCH  ( '#', NAME )
-         CALL SIGERR ( 'SPICE(NOSUCHSYMBOL)' )
+         call errch  ( '#', name )
+         call sigerr ( 'SPICE(NOSUCHSYMBOL)' )
 
 !
 !     Otherwise, we need to know the dimension, to check for overflow.
 !
-      ELSE
+      else
 
-         LOCVAL(1) = SUMAI  ( TABPTR(1), LOCSYM(1)-1 ) + 1
-         DIMVAL(1) = TABPTR(LOCSYM(1))
+         locval(1) = sumai  ( tabptr(1), locsym(1)-1 ) + 1
+         dimval(1) = tabptr(locsym(1))
 
 !
 !        If the new symbol already exists, we need to know its dimension
 !        too, for the same reason.
 !
-         IF ( OLDSYM(2) ) THEN
-            LOCVAL(2) = SUMAI ( TABPTR(1), LOCSYM(2)-1 ) + 1
-            DIMVAL(2) = TABPTR(LOCSYM(2))
-            NEWSYM    = 0
-         ELSE
-            LOCVAL(2) = SUMAI ( TABPTR(1), LOCSYM(2) ) + 1
-            DIMVAL(2) = 0
-            NEWSYM    = 1
-         END IF
+         if ( oldsym(2) ) then
+            locval(2) = sumai ( tabptr(1), locsym(2)-1 ) + 1
+            dimval(2) = tabptr(locsym(2))
+            newsym    = 0
+         else
+            locval(2) = sumai ( tabptr(1), locsym(2) ) + 1
+            dimval(2) = 0
+            newsym    = 1
+         end if
 
-         NEWVAL = DIMVAL(1) - DIMVAL(2)
+         newval = dimval(1) - dimval(2)
 
 !
 !        Can we make a copy without overflow?
 !
-         IF ( NSYM+NEWSYM .GT. SIZEC ( TABSYM ) ) THEN
+         if ( nsym+newsym .gt. sizec ( tabsym ) ) then
 
-            CALL SETMSG ( 'SYDUPI: Duplication of the symbol # '      // &
+            call setmsg ( 'SYDUPI: Duplication of the symbol # '      // &
                           'causes an overflow in the name table.' )
-            CALL ERRCH  ( '#', NAME )
-            CALL SIGERR ( 'SPICE(NAMETABLEFULL)' )
+            call errch  ( '#', name )
+            call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-         ELSE IF ( NPTR+NEWSYM .GT. SIZEI ( TABPTR ) ) THEN
+         else if ( nptr+newsym .gt. sizei ( tabptr ) ) then
 
-            CALL SETMSG ( 'SYDUPI: Duplication of the symbol # '      // &
+            call setmsg ( 'SYDUPI: Duplication of the symbol # '      // &
                           'causes an overflow in the pointer table.' )
-            CALL ERRCH  ( '#', NAME )
-            CALL SIGERR ( 'SPICE(POINTERTABLEFULL)' )
+            call errch  ( '#', name )
+            call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-         ELSE IF ( NVAL+NEWVAL .GT. SIZEI ( TABVAL ) ) THEN
+         else if ( nval+newval .gt. sizei ( tabval ) ) then
 
-            CALL SETMSG ( 'SYDUPI: Duplication of the symbol # '      // &
+            call setmsg ( 'SYDUPI: Duplication of the symbol # '      // &
                           'causes an overflow in the value table.' )
-            CALL ERRCH  ( '#', NAME )
-            CALL SIGERR ( 'SPICE(VALUETABLEFULL)' )
+            call errch  ( '#', name )
+            call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
 !
 !        Looks like we can.
 !
-         ELSE
+         else
 
 !
 !           If the copy exists, remove the current contents and
 !           change the dimension. Otherwise add the new name and
 !           dimension to the name and pointer tables.
 !
-            IF ( DIMVAL(2) .GT. 0 ) THEN
-              CALL REMLAI ( DIMVAL(2), LOCVAL(2), TABVAL(1), NVAL )
-              CALL SCARDI ( NVAL, TABVAL )
+            if ( dimval(2) .gt. 0 ) then
+              call remlai ( dimval(2), locval(2), tabval(1), nval )
+              call scardi ( nval, tabval )
 
-              TABPTR(LOCSYM(2)) = DIMVAL(1)
+              tabptr(locsym(2)) = dimval(1)
 
-              IF ( LOCVAL(1) .GT. LOCVAL(2) ) THEN
-                 LOCVAL(1) = LOCVAL(1) - DIMVAL(2)
-              END IF
+              if ( locval(1) .gt. locval(2) ) then
+                 locval(1) = locval(1) - dimval(2)
+              end if
 
-            ELSE
-              CALL INSLAC ( COPY, 1, LOCSYM(2)+1, TABSYM(1), NSYM )
-              CALL SCARDC ( NSYM, TABSYM )
+            else
+              call inslac ( copy, 1, locsym(2)+1, tabsym(1), nsym )
+              call scardc ( nsym, tabsym )
 
-              CALL INSLAI ( DIMVAL(1), 1, LOCSYM(2)+1, TABPTR(1), NPTR )
-              CALL SCARDI ( NPTR, TABPTR )
-            END IF
+              call inslai ( dimval(1), 1, locsym(2)+1, tabptr(1), nptr )
+              call scardi ( nptr, tabptr )
+            end if
 
 !
 !           In either case, allocate space for the new symbol values,
 !           and copy them in one by one. (INSLAx won't work if the
 !           copy is earlier in the table than the original.)
 !
-            DO I = NVAL, LOCVAL(2), -1
-              TABVAL(I+DIMVAL(1)) = TABVAL(I)
-            END DO
+            do i = nval, locval(2), -1
+              tabval(i+dimval(1)) = tabval(i)
+            end do
 
-            IF ( LOCVAL(1) .GT. LOCVAL(2) ) THEN
-               LOCVAL(1) = LOCVAL(1) + DIMVAL(1)
-            END IF
+            if ( locval(1) .gt. locval(2) ) then
+               locval(1) = locval(1) + dimval(1)
+            end if
 
-            DO I = 0, DIMVAL(1) - 1
-              TABVAL(LOCVAL(2)+I) = TABVAL(LOCVAL(1)+I)
-            END DO
+            do i = 0, dimval(1) - 1
+              tabval(locval(2)+i) = tabval(locval(1)+i)
+            end do
 
-            CALL SCARDI ( NVAL + DIMVAL(1), TABVAL )
+            call scardi ( nval + dimval(1), tabval )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'SYDUPI' )
-      RETURN
-      END
+      call chkout ( 'SYDUPI' )
+      return
+      end

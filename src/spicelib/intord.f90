@@ -1,6 +1,6 @@
 !$Procedure INTORD ( Convert an integer to ordinal text )
 
-      SUBROUTINE INTORD ( N, STRING )
+      subroutine intord ( n, string )
 
 ! $ Abstract
 !
@@ -21,13 +21,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               MAXORD
-      PARAMETER           ( MAXORD = 148 )
+      integer               maxord
+      parameter           ( maxord = 148 )
 
-      INTEGER               N
-      CHARACTER*(*)         STRING
+      integer               n
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -144,88 +144,88 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
+      integer               lastnb
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               LAST
-      CHARACTER*(MAXORD)    MYSTR
+      integer               i
+      integer               last
+      character*(maxord)    mystr
 
 !
 !     First get the English equivalent of the cardinal N.
 !
-      MYSTR = ' '
+      mystr = ' '
 
-      CALL INTTXT ( N, MYSTR )
+      call inttxt ( n, mystr )
 
-      LAST  = LASTNB(MYSTR)
-      I     = LAST
+      last  = lastnb(mystr)
+      i     = last
 
 !
 !     Find the beginning of the last number of MYSTR.
 !
-      DO WHILE (       ( MYSTR(I:I) .NE. '-' ) &
-                 .AND. ( MYSTR(I:I) .NE. ' ' ) &
-                 .AND. ( I          .GT.  1  )  )
+      do while (       ( mystr(i:i) .ne. '-' ) &
+                 .and. ( mystr(i:i) .ne. ' ' ) &
+                 .and. ( i          .gt.  1  )  )
 
-         I = I - 1
+         i = i - 1
 
-      END DO
+      end do
 
-      IF (      ( MYSTR(I:I) .EQ. ' ' ) &
-           .OR. ( MYSTR(I:I) .EQ. '-' )  ) THEN
+      if (      ( mystr(i:i) .eq. ' ' ) &
+           .or. ( mystr(i:i) .eq. '-' )  ) then
 
-         I = I + 1
+         i = i + 1
 
-      END IF
+      end if
 
 !
 !     Now convert the last cardinal to an ordinal.
 !
-      IF ( MYSTR(I:LAST) .EQ. 'ONE' ) THEN
+      if ( mystr(i:last) .eq. 'ONE' ) then
 
-         MYSTR(I:) = 'FIRST'
+         mystr(i:) = 'FIRST'
 
-      ELSE IF ( MYSTR(I:LAST) .EQ. 'TWO' ) THEN
+      else if ( mystr(i:last) .eq. 'TWO' ) then
 
-         MYSTR(I:) = 'SECOND'
+         mystr(i:) = 'SECOND'
 
-      ELSE IF ( MYSTR(I:LAST) .EQ. 'THREE' ) THEN
+      else if ( mystr(i:last) .eq. 'THREE' ) then
 
-         MYSTR(I:) = 'THIRD'
+         mystr(i:) = 'THIRD'
 
-      ELSE IF ( MYSTR(I:LAST) .EQ. 'FIVE' ) THEN
+      else if ( mystr(i:last) .eq. 'FIVE' ) then
 
-         MYSTR(I:) = 'FIFTH'
+         mystr(i:) = 'FIFTH'
 
-      ELSE IF ( MYSTR(I:LAST) .EQ. 'EIGHT' ) THEN
+      else if ( mystr(i:last) .eq. 'EIGHT' ) then
 
-         MYSTR(I:) = 'EIGHTH'
+         mystr(i:) = 'EIGHTH'
 
-      ELSE IF ( MYSTR(I:LAST) .EQ. 'NINE' ) THEN
+      else if ( mystr(i:last) .eq. 'NINE' ) then
 
-         MYSTR(I:) = 'NINTH'
+         mystr(i:) = 'NINTH'
 
-      ELSE IF ( MYSTR (I:LAST) .EQ. 'TWELVE' ) THEN
+      else if ( mystr (i:last) .eq. 'TWELVE' ) then
 
-         MYSTR(I:) = 'TWELFTH'
+         mystr(i:) = 'TWELFTH'
 
-      ELSE IF ( MYSTR(LAST:LAST) .EQ. 'Y' ) THEN
+      else if ( mystr(last:last) .eq. 'Y' ) then
 
-         MYSTR(LAST:) = 'IETH'
+         mystr(last:) = 'IETH'
 
-      ELSE
+      else
 
-         CALL SUFFIX ( 'TH', 0, MYSTR )
+         call suffix ( 'TH', 0, mystr )
 
-      END IF
+      end if
 
 !
 !     Now simply put MYSTR into STRING and return.
 !
-      STRING = MYSTR
+      string = mystr
 
-      RETURN
-      END
+      return
+      end

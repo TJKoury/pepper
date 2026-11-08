@@ -64,8 +64,8 @@
 !
 !     Units are TDB seconds.
 !
-      DOUBLE PRECISION      CNVTOL
-      PARAMETER           ( CNVTOL = 1.D-6 )
+      double precision      cnvtol
+      parameter           ( cnvtol = 1.d-6 )
 
 
 !
@@ -81,54 +81,54 @@
 !     NWMAX to declare the second dimension of the workspace array
 !     if necessary.
 !
-      INTEGER               NWMAX
-      PARAMETER           ( NWMAX = 15 )
+      integer               nwmax
+      parameter           ( nwmax = 15 )
 
 !
 !     Callers of GFIDST should declare their workspace window
 !     count using NWDIST.
 !
-      INTEGER               NWDIST
-      PARAMETER           ( NWDIST = 5 )
+      integer               nwdist
+      parameter           ( nwdist = 5 )
 
 
 !
 !     Callers of GFSEP should declare their workspace window
 !     count using NWSEP.
 !
-      INTEGER               NWSEP
-      PARAMETER           ( NWSEP  = 5 )
+      integer               nwsep
+      parameter           ( nwsep  = 5 )
 
 
 !
 !     Callers of GFRR should declare their workspace window
 !     count using NWRR.
 !
-      INTEGER               NWRR
-      PARAMETER           ( NWRR   = 5 )
+      integer               nwrr
+      parameter           ( nwrr   = 5 )
 
 
 !
 !     Callers of GFUDS should declare their workspace window
 !     count using NWUDS.
 !
-      INTEGER               NWUDS
-      PARAMETER           ( NWUDS  = 5 )
+      integer               nwuds
+      parameter           ( nwuds  = 5 )
 
 
 !
 !     Callers of GFPA should declare their workspace window
 !     count using NWPA.
 !
-      INTEGER               NWPA
-      PARAMETER           ( NWPA  = 5 )
+      integer               nwpa
+      parameter           ( nwpa  = 5 )
 
 !
 !     Callers of GFILUM should declare their workspace window
 !     count using NWILUM.
 !
-      INTEGER               NWILUM
-      PARAMETER           ( NWILUM = 5 )
+      integer               nwilum
+      parameter           ( nwilum = 5 )
 
 
 !
@@ -137,21 +137,21 @@
 !     accommodate searches using equality constraints. The loaded
 !     kernel files must accommodate these expanded time intervals.
 !
-      DOUBLE PRECISION      ADDWIN
-      PARAMETER           ( ADDWIN = 0.5D0 )
+      double precision      addwin
+      parameter           ( addwin = 0.5d0 )
 
 !
 !     FRMNLN is a string length for frame names.
 !
 
-      INTEGER               FRMNLN
-      PARAMETER           ( FRMNLN = 32 )
+      integer               frmnln
+      parameter           ( frmnln = 32 )
 
 !
 !     FOVTLN -- maximum length for FOV string.
 !
-      INTEGER               FOVTLN
-      PARAMETER           ( FOVTLN = 40 )
+      integer               fovtln
+      parameter           ( fovtln = 40 )
 
 !
 !     Specify the character strings that are allowed in the
@@ -159,72 +159,72 @@
 !
 
 
-      CHARACTER*(*)         FTCIRC
-      PARAMETER           ( FTCIRC = 'CIRCLE' )
+      character*(*)         ftcirc
+      parameter           ( ftcirc = 'CIRCLE' )
 
-      CHARACTER*(*)         FTELLI
-      PARAMETER           ( FTELLI = 'ELLIPSE' )
+      character*(*)         ftelli
+      parameter           ( ftelli = 'ELLIPSE' )
 
-      CHARACTER*(*)         FTPOLY
-      PARAMETER           ( FTPOLY = 'POLYGON' )
+      character*(*)         ftpoly
+      parameter           ( ftpoly = 'POLYGON' )
 
-      CHARACTER*(*)         FTRECT
-      PARAMETER           ( FTRECT = 'RECTANGLE' )
+      character*(*)         ftrect
+      parameter           ( ftrect = 'RECTANGLE' )
 
 !
 !     Character strings that are allowed in the
 !     specification of occultation types:
 !
-      CHARACTER*(*)         ANNULR
-      PARAMETER           ( ANNULR = 'ANNULAR' )
+      character*(*)         annulr
+      parameter           ( annulr = 'ANNULAR' )
 
-      CHARACTER*(*)         ANY
-      PARAMETER           ( ANY    = 'ANY'     )
+      character*(*)         any
+      parameter           ( any    = 'ANY'     )
 
-      CHARACTER*(*)         PARTL
-      PARAMETER           ( PARTL  = 'PARTIAL' )
+      character*(*)         partl
+      parameter           ( partl  = 'PARTIAL' )
 
-      CHARACTER*(*)         FULL
-      PARAMETER           ( FULL   = 'FULL'    )
+      character*(*)         full
+      parameter           ( full   = 'FULL'    )
 
 !
 !     Occultation target shape specifications:
 !
-      CHARACTER*(*)         DSSHAP
-      PARAMETER           ( DSSHAP = 'DSK' )
+      character*(*)         dsshap
+      parameter           ( dsshap = 'DSK' )
 
-      CHARACTER*(*)         EDSHAP
-      PARAMETER           ( EDSHAP = 'ELLIPSOID' )
+      character*(*)         edshap
+      parameter           ( edshap = 'ELLIPSOID' )
 
-      CHARACTER*(*)         PTSHAP
-      PARAMETER           ( PTSHAP = 'POINT' )
+      character*(*)         ptshap
+      parameter           ( ptshap = 'POINT' )
 
-      CHARACTER*(*)         RYSHAP
-      PARAMETER           ( RYSHAP = 'RAY' )
+      character*(*)         ryshap
+      parameter           ( ryshap = 'RAY' )
 
-      CHARACTER*(*)         SPSHAP
-      PARAMETER           ( SPSHAP = 'SPHERE' )
+      character*(*)         spshap
+      parameter           ( spshap = 'SPHERE' )
 
 !
 !     Specify the number of supported occultation types and occultation
 !     type string length:
 !
-      INTEGER               NOCTYP
-      PARAMETER           ( NOCTYP = 4 )
+      integer               noctyp
+      parameter           ( noctyp = 4 )
 
-      INTEGER               OCLLN
-      PARAMETER           ( OCLLN  = 7 )
+      integer               oclln
+      parameter           ( oclln  = 7 )
 
-      INTEGER               SHPLEN
-      PARAMETER           ( SHPLEN = 9 )
+      integer               shplen
+      parameter           ( shplen = 9 )
 
 !
 !     Instrument field-of-view (FOV) parameters
 !
 !     Maximum number of FOV boundary vectors:
 !
-      INTEGER               MAXVRT
-      PARAMETER           ( MAXVRT = 10000 )
+      integer               maxvrt
+      parameter           ( maxvrt = 10000 )
 
 !
 !     FOV shape parameters:
@@ -234,17 +234,17 @@
 !        polygon
 !        rectangle
 !
-      CHARACTER*(*)         CIRFOV
-      PARAMETER           ( CIRFOV = 'CIRCLE' )
+      character*(*)         cirfov
+      parameter           ( cirfov = 'CIRCLE' )
 
-      CHARACTER*(*)         ELLFOV
-      PARAMETER           ( ELLFOV = 'ELLIPSE' )
+      character*(*)         ellfov
+      parameter           ( ellfov = 'ELLIPSE' )
 
-      CHARACTER*(*)         POLFOV
-      PARAMETER           ( POLFOV = 'POLYGON' )
+      character*(*)         polfov
+      parameter           ( polfov = 'POLYGON' )
 
-      CHARACTER*(*)         RECFOV
-      PARAMETER           ( RECFOV = 'RECTANGLE' )
+      character*(*)         recfov
+      parameter           ( recfov = 'RECTANGLE' )
 
 
 !

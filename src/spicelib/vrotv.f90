@@ -1,6 +1,6 @@
 !$Procedure VROTV ( Vector rotation about an axis )
 
-      SUBROUTINE VROTV ( V, AXIS, THETA, R )
+      subroutine vrotv ( v, axis, theta, r )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V    ( 3 )
-      DOUBLE PRECISION   AXIS ( 3 )
-      DOUBLE PRECISION   THETA
-      DOUBLE PRECISION   R    ( 3 )
+      double precision   v    ( 3 )
+      double precision   axis ( 3 )
+      double precision   theta
+      double precision   r    ( 3 )
 
 ! $ Brief_I/O
 !
@@ -157,65 +157,65 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION VNORM
+      double precision vnorm
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION C
-      DOUBLE PRECISION S
-      DOUBLE PRECISION RPLANE (3)
-      DOUBLE PRECISION P      (3)
-      DOUBLE PRECISION V1     (3)
-      DOUBLE PRECISION V2     (3)
-      DOUBLE PRECISION X      (3)
+      double precision c
+      double precision s
+      double precision rplane (3)
+      double precision p      (3)
+      double precision v1     (3)
+      double precision v2     (3)
+      double precision x      (3)
 
 
 !
 !     Just in case the user tries to rotate about the zero vector -
 !     check, and if so return the input vector
 !
-      IF ( VNORM( AXIS ) .EQ. 0.D0 ) THEN
-         CALL MOVED (V,3,R)
-         RETURN
-      END IF
+      if ( vnorm( axis ) .eq. 0.d0 ) then
+         call moved (v,3,r)
+         return
+      end if
 
 !
 !     Compute the unit vector that lies in the direction of the
 !     AXIS.  Call it X.
 !
-      CALL VHAT ( AXIS, X )
+      call vhat ( axis, x )
 
 !
 !     Compute the projection of V onto AXIS.  Call it P.
 !
-      CALL VPROJ ( V, X, P )
+      call vproj ( v, x, p )
 
 !
 !     Compute the component of V orthogonal to the AXIS.  Call it V1.
 !
-      CALL VSUB  ( V, P,  V1 )
+      call vsub  ( v, p,  v1 )
 
 !
 !     Rotate V1 by 90 degrees about the AXIS and call the result V2.
 !
-      CALL VCRSS  ( X, V1, V2)
+      call vcrss  ( x, v1, v2)
 
 !
 !     Compute COS(THETA)*V1 + SIN(THETA)*V2. This is V1 rotated about
 !     the AXIS in the plane normal to the axis, call the result RPLANE
 !
-      C = DCOS (THETA)
-      S = DSIN (THETA)
+      c = dcos (theta)
+      s = dsin (theta)
 
-      CALL VLCOM ( C, V1, S, V2, RPLANE )
+      call vlcom ( c, v1, s, v2, rplane )
 
 !
 !     Add the rotated component in the normal plane to AXIS to the
 !     projection of V onto AXIS (P) to obtain R.
 !
-      CALL VADD ( RPLANE, P, R )
+      call vadd ( rplane, p, r )
 
 !
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure EKNSEG ( EK, number of segments in file )
 
-      INTEGER FUNCTION EKNSEG ( HANDLE )
+      integer function eknseg ( handle )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekfilpar.inc'
+      include 'ekfilpar.inc'
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -164,60 +164,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRBS
-      INTEGER               ZZEKTRSZ
+      integer               zzektrbs
+      integer               zzektrsz
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               TREE
+      integer               base
+      integer               tree
 
 !
 !     Set a default value for EKNSEG.
 !
-      EKNSEG  =  0
+      eknseg  =  0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKNSEG' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKNSEG' )
+      end if
 
 !
 !     Make sure this is a paged DAS EK.
 !
-      CALL ZZEKPGCH ( HANDLE, 'READ' )
+      call zzekpgch ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKNSEG' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKNSEG' )
+         return
+      end if
 
 !
 !     Obtain the base address of the first integer page.
 !
-      BASE = ZZEKTRBS ( 1 )
+      base = zzektrbs ( 1 )
 
 !
 !     Look up the head node of the segment tree.
 !
-      CALL DASRDI ( HANDLE, BASE+SGTIDX, BASE+SGTIDX, TREE )
+      call dasrdi ( handle, base+sgtidx, base+sgtidx, tree )
 
 !
 !     Get the entry count for the segment tree.
 !
-      EKNSEG  =  ZZEKTRSZ ( HANDLE, TREE )
+      eknseg  =  zzektrsz ( handle, tree )
 
-      CALL CHKOUT ( 'EKNSEG' )
-      RETURN
-      END
+      call chkout ( 'EKNSEG' )
+      return
+      end

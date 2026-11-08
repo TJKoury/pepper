@@ -1,6 +1,6 @@
 !$Procedure LSPCN  ( Longitude of the sun, planetocentric )
 
-      DOUBLE PRECISION FUNCTION LSPCN ( BODY, ET, ABCORR )
+      double precision function lspcn ( body, et, abcorr )
 
 ! $ Abstract
 !
@@ -21,13 +21,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         BODY
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
+      character*(*)         body
+      double precision      et
+      character*(*)         abcorr
 
 ! $ Brief_I/O
 !
@@ -301,138 +301,138 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         REF
-      PARAMETER           ( REF     = 'J2000' )
+      character*(*)         ref
+      parameter           ( ref     = 'J2000' )
 
-      INTEGER               SUN
-      PARAMETER           ( SUN     = 10 )
+      integer               sun
+      parameter           ( sun     = 10 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      UAVEL  ( 3 )
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      NPOLE  ( 3 )
-      DOUBLE PRECISION      POS    ( 3 )
-      DOUBLE PRECISION      RADIUS
-      DOUBLE PRECISION      BSTATE ( 6 )
-      DOUBLE PRECISION      SSTATE ( 6 )
-      DOUBLE PRECISION      TIPM   ( 3, 3 )
-      DOUBLE PRECISION      TRANS  ( 3, 3 )
+      double precision      uavel  ( 3 )
+      double precision      lat
+      double precision      lt
+      double precision      npole  ( 3 )
+      double precision      pos    ( 3 )
+      double precision      radius
+      double precision      bstate ( 6 )
+      double precision      sstate ( 6 )
+      double precision      tipm   ( 3, 3 )
+      double precision      trans  ( 3, 3 )
 
-      INTEGER               IDCODE
-      INTEGER               I
+      integer               idcode
+      integer               i
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVBODY
-      INTEGER               SVIDCD
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svbody
+      integer               svidcd
+      logical               svfnd1
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVBODY
-      SAVE                  SVIDCD
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svbody
+      save                  svidcd
+      save                  svfnd1
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Give the function an initial value.
 !
-      LSPCN = 0.D0
+      lspcn = 0.d0
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'LSPCN' )
+      call chkin ( 'LSPCN' )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Map the body name to an ID code.
 !
-      CALL ZZBODS2C ( SVCTR1, SVBODY, SVIDCD, SVFND1, &
-                      BODY, IDCODE, FOUND    )
+      call zzbods2c ( svctr1, svbody, svidcd, svfnd1, &
+                      body, idcode, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The body name # could not be translated ' // &
+         call setmsg ( 'The body name # could not be translated ' // &
                        'to a NAIF ID code.  The cause of this '   // &
                        'problem may be that you need an updated ' // &
                        'version of the SPICE Toolkit.'            )
-         CALL ERRCH  ( '#', BODY                                  )
-         CALL SIGERR ( 'SPICE(NOTRANSLATION)'                     )
-         CALL CHKOUT ( 'LSPCN'                                    )
-         RETURN
+         call errch  ( '#', body                                  )
+         call sigerr ( 'SPICE(NOTRANSLATION)'                     )
+         call chkout ( 'LSPCN'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the direction of the North pole of the central body.
 !     Note that TIPBOD does make use of binary PCK data if available.
 !
-      CALL TIPBOD ( REF, IDCODE, ET, TIPM )
+      call tipbod ( ref, idcode, et, tipm )
 
-      DO I = 1, 3
-         NPOLE(I) = TIPM(3,I)
-      END DO
+      do i = 1, 3
+         npole(i) = tipm(3,i)
+      end do
 
 !
 !     Get the geometric state of the body relative to the sun.
 !
-      CALL SPKGEO ( IDCODE, ET, REF, SUN, BSTATE, LT )
+      call spkgeo ( idcode, et, ref, sun, bstate, lt )
 
 !
 !     Get the unit direction vector parallel to the angular velocity
 !     vector of the orbit.  This is just the unitized cross product of
 !     position and velocity.
 !
-      CALL UCRSS ( BSTATE, BSTATE(4), UAVEL )
+      call ucrss ( bstate, bstate(4), uavel )
 
 !
 !     We want to create a transformation matrix that maps vectors from
@@ -450,12 +450,12 @@
 !     vector is associated with the +Z axis; the secondary vector
 !     is associated with the +Y axis.
 !
-      CALL TWOVEC ( UAVEL, 3, NPOLE, 2, TRANS )
+      call twovec ( uavel, 3, npole, 2, trans )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'LSPCN' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'LSPCN' )
+         return
+      end if
 
 !
 !     We'll find the position of the Sun relative to this frame.
@@ -464,13 +464,13 @@
 !     aberration corrections, this is not necessarily the negative of
 !     the state we've just found.
 !
-      CALL SPKEZR ( 'SUN', ET, REF, ABCORR, BODY, SSTATE, LT )
+      call spkezr ( 'SUN', et, ref, abcorr, body, sstate, lt )
 
 !
 !     Now transform the position of the Sun into the "orbit plane
 !     and equinox" frame.
 !
-      CALL MXV ( TRANS, SSTATE, POS )
+      call mxv ( trans, sstate, pos )
 
 !
 !     Let RECRAD find the longitude LS for us.  RECRAD performs
@@ -478,8 +478,8 @@
 !     RECLAT, but the range of right ascension is 0:2*pi, which is
 !     what we want for Ls.
 !
-      CALL RECRAD ( POS, RADIUS, LSPCN, LAT )
+      call recrad ( pos, radius, lspcn, lat )
 
-      CALL CHKOUT ( 'LSPCN' )
-      RETURN
-      END
+      call chkout ( 'LSPCN' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DASIOD ( DAS, Fortran I/O, double precision )
 
-      SUBROUTINE DASIOD ( ACTION, UNIT, RECNO, RECORD )
+      subroutine dasiod ( action, unit, recno, record )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NWD
-      PARAMETER           ( NWD = 128 )
+      integer               nwd
+      parameter           ( nwd = 128 )
 
-      CHARACTER*(*)         ACTION
-      INTEGER               UNIT
-      INTEGER               RECNO
-      DOUBLE PRECISION      RECORD ( NWD )
+      character*(*)         action
+      integer               unit
+      integer               recno
+      double precision      record ( nwd )
 
 ! $ Brief_I/O
 !
@@ -197,85 +197,85 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
+      integer               iostat
 
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 
-      IF (   EQSTR ( ACTION, 'READ' )   ) THEN
+      if (   eqstr ( action, 'READ' )   ) then
 !
 !        We're supposed to read the file.
 !
-         READ (  UNIT    =    UNIT, &
-                 REC     =    RECNO, &
-                 IOSTAT  =    IOSTAT  )    RECORD
+         read (  unit    =    unit, &
+                 rec     =    recno, &
+                 iostat  =    iostat  )    record
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL CHKIN  ( 'DASIOD'                                     )
-            CALL SETMSG ( 'Could not read DAS double precision '      // &
+            call chkin  ( 'DASIOD'                                     )
+            call setmsg ( 'Could not read DAS double precision '      // &
                           'record. File = # Record number = #. '      // &
                           'IOSTAT = #.'                                )
-            CALL ERRFNM ( '#', UNIT                                    )
-            CALL ERRINT ( '#', RECNO                                   )
-            CALL ERRINT ( '#', IOSTAT                                  )
-            CALL SIGERR ( 'SPICE(DASFILEREADFAILED)'                   )
-            CALL CHKOUT ( 'DASIOD'                                     )
-            RETURN
+            call errfnm ( '#', unit                                    )
+            call errint ( '#', recno                                   )
+            call errint ( '#', iostat                                  )
+            call sigerr ( 'SPICE(DASFILEREADFAILED)'                   )
+            call chkout ( 'DASIOD'                                     )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF (  EQSTR ( ACTION, 'WRITE' )  ) THEN
+      else if (  eqstr ( action, 'WRITE' )  ) then
 
 !
 !        We're supposed to write to the file.
 !
-         WRITE (  UNIT    =    UNIT, &
-                  REC     =    RECNO, &
-                  IOSTAT  =    IOSTAT  )    RECORD
+         write (  unit    =    unit, &
+                  rec     =    recno, &
+                  iostat  =    iostat  )    record
 
-         IF ( IOSTAT .NE. 0 ) THEN
+         if ( iostat .ne. 0 ) then
 
-            CALL CHKIN  ( 'DASIOD'                                     )
-            CALL SETMSG ( 'Could not write DAS double precision '     // &
+            call chkin  ( 'DASIOD'                                     )
+            call setmsg ( 'Could not write DAS double precision '     // &
                           'record. File = # Record number = #. '      // &
                           'IOSTAT = #.'                                )
-            CALL ERRFNM ( '#', UNIT                                    )
-            CALL ERRINT ( '#', RECNO                                   )
-            CALL ERRINT ( '#', IOSTAT                                  )
-            CALL SIGERR ( 'SPICE(DASFILEWRITEFAILED)'                  )
-            CALL CHKOUT ( 'DASIOD'                                     )
-            RETURN
+            call errfnm ( '#', unit                                    )
+            call errint ( '#', recno                                   )
+            call errint ( '#', iostat                                  )
+            call sigerr ( 'SPICE(DASFILEWRITEFAILED)'                  )
+            call chkout ( 'DASIOD'                                     )
+            return
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        The requested action is a little too weird.
 !
-         CALL CHKIN  ( 'DASIOD'                                )
-         CALL SETMSG ( 'Action was #; should be READ or WRITE' )
-         CALL ERRCH  ( '#', ACTION                             )
-         CALL SIGERR ( 'SPICE(UNRECOGNIZEDACTION)'             )
-         CALL CHKOUT ( 'DASIOD'                                )
-         RETURN
+         call chkin  ( 'DASIOD'                                )
+         call setmsg ( 'Action was #; should be READ or WRITE' )
+         call errch  ( '#', action                             )
+         call sigerr ( 'SPICE(UNRECOGNIZEDACTION)'             )
+         call chkout ( 'DASIOD'                                )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

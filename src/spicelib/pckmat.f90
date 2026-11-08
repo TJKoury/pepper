@@ -1,6 +1,6 @@
 !$Procedure PCKMAT ( PCK, get transformation matrix at time )
 
-      SUBROUTINE PCKMAT ( BODY, ET, REF, TSIPM, FOUND )
+      subroutine pckmat ( body, et, ref, tsipm, found )
 
 ! $ Abstract
 !
@@ -22,13 +22,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER              BODY
-      DOUBLE PRECISION     ET
-      INTEGER              REF
-      DOUBLE PRECISION     TSIPM ( 6, 6 )
-      LOGICAL              FOUND
+      integer              body
+      double precision     et
+      integer              ref
+      double precision     tsipm ( 6, 6 )
+      logical              found
 
 ! $ Brief_I/O
 !
@@ -220,108 +220,108 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL              FAILED
-      LOGICAL              RETURN
+      logical              failed
+      logical              return
 
 !
 !     Local Parameters
 !
 !     ND and NI values for a PCK file.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 5 )
+      integer               ni
+      parameter           ( ni = 5 )
 !
 !     Index for the reference frame code in the integer summary.
 !
-      INTEGER               NR
-      PARAMETER           ( NR = 2 )
+      integer               nr
+      parameter           ( nr = 2 )
 !
 !     Length of the descriptor for a PCK file.
 !
-      INTEGER               NS
-      PARAMETER           ( NS = ND + (NI+1)/2 )
+      integer               ns
+      parameter           ( ns = nd + (ni+1)/2 )
 !
 !     Index for the data type code in the integer summary.
 !
-      INTEGER               NT
-      PARAMETER           ( NT = 3 )
+      integer               nt
+      parameter           ( nt = 3 )
 !
 !     Maximum size allowed for a record in a segment of a binary PCK
 !     file.
 !
-      INTEGER               MAXREC
-      PARAMETER           ( MAXREC = 130 )
+      integer               maxrec
+      parameter           ( maxrec = 130 )
 !
 !     Number of components in a state vector.
 !
-      INTEGER               NSTATE
-      PARAMETER           ( NSTATE = 6 )
+      integer               nstate
+      parameter           ( nstate = 6 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(40)        IDENT
+      character*(40)        ident
 
-      DOUBLE PRECISION      DCD    (     ND )
-      DOUBLE PRECISION      DESCR  (     NS )
-      DOUBLE PRECISION      ESTATE ( NSTATE )
-      DOUBLE PRECISION      EULANG ( NSTATE )
-      DOUBLE PRECISION      RECORD ( MAXREC )
+      double precision      dcd    (     nd )
+      double precision      descr  (     ns )
+      double precision      estate ( nstate )
+      double precision      eulang ( nstate )
+      double precision      record ( maxrec )
 
-      INTEGER               HANDLE
-      INTEGER               ICD    (     NI )
-      INTEGER               RECSIZ
-      INTEGER               TYPE
+      integer               handle
+      integer               icd    (     ni )
+      integer               recsiz
+      integer               type
 
 !
 !     Standard SPICE Error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'PCKMAT' )
+      call chkin ( 'PCKMAT' )
 
 !
 !     Get a segment applicable to a specified body and epoch.
 !
-      CALL PCKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+      call pcksfs ( body, et, handle, descr, ident, found )
 
-      IF ( FAILED() ) THEN
-         FOUND = .FALSE.
-         CALL CHKOUT ( 'PCKMAT' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         found = .false.
+         call chkout ( 'PCKMAT' )
+         return
+      end if
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
 !
 !        Look at parts of the descriptor.
 !
-         CALL DAFUS ( DESCR, ND, NI, DCD, ICD )
+         call dafus ( descr, nd, ni, dcd, icd )
 
-         TYPE = ICD( NT )
-         REF  = ICD( NR )
+         type = icd( nt )
+         ref  = icd( nr )
 
-         IF ( TYPE .EQ. 02 ) THEN
+         if ( type .eq. 02 ) then
 !
 !           Read in Chebyshev coefficients from segment.
 !
-            CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
+            call pckr02 ( handle, descr, et, record )
 !
 !           Call evaluation routine to get Euler angles
 !           phi, delta, w.
 !
-            CALL PCKE02 ( ET, RECORD, EULANG )
+            call pcke02 ( et, record, eulang )
 
-            IF ( FAILED() ) THEN
-               FOUND = .FALSE.
-               CALL CHKOUT ( 'PCKMAT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               found = .false.
+               call chkout ( 'PCKMAT' )
+               return
+            end if
 !
 !           From the PCK type two file the Euler angles are
 !           retrieved in a particular order.  The routine to
@@ -329,84 +329,84 @@
 !           order.  Here we change from EULANG to ESTATE, which
 !           has this proper order.
 !
-            ESTATE (1) = EULANG (3)
-            ESTATE (2) = EULANG (2)
-            ESTATE (3) = EULANG (1)
-            ESTATE (4) = EULANG (6)
-            ESTATE (5) = EULANG (5)
-            ESTATE (6) = EULANG (4)
+            estate (1) = eulang (3)
+            estate (2) = eulang (2)
+            estate (3) = eulang (1)
+            estate (4) = eulang (6)
+            estate (5) = eulang (5)
+            estate (6) = eulang (4)
 
 !
 !           Call routine which takes Euler angles to transformation
 !           matrix.
 !
-            CALL EUL2XF ( ESTATE, 3, 1, 3, TSIPM )
+            call eul2xf ( estate, 3, 1, 3, tsipm )
 
-            IF ( FAILED() ) THEN
-               FOUND = .FALSE.
-               CALL CHKOUT ( 'PCKMAT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               found = .false.
+               call chkout ( 'PCKMAT' )
+               return
+            end if
 
 
-         ELSE IF ( TYPE .EQ. 03 ) THEN
+         else if ( type .eq. 03 ) then
 !
 !           Fetch the number of Chebyshev coefficients, compute the
 !           record size needed, and signal an error if there is not
 !           enough storage in RECORD. The number of coefficients is the
 !           first constant value in the generic segment.
 !
-            CALL SGFCON ( HANDLE, DESCR, 1, 1, RECORD(1) )
+            call sgfcon ( handle, descr, 1, 1, record(1) )
 
-            IF ( FAILED() ) THEN
-               FOUND = .FALSE.
-               CALL CHKOUT ( 'PCKMAT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               found = .false.
+               call chkout ( 'PCKMAT' )
+               return
+            end if
 
-            RECSIZ = NSTATE * INT(RECORD(1)) + 2
+            recsiz = nstate * int(record(1)) + 2
 
-            IF ( RECSIZ .GT. MAXREC ) THEN
+            if ( recsiz .gt. maxrec ) then
 
-               CALL SETMSG ( 'Storage for # double precision numbers' &
+               call setmsg ( 'Storage for # double precision numbers' &
                //            ' is needed for a PCK data record and' &
                //            ' only # locations were available.' &
                //            ' Notify the NAIF' &
                //            ' group of this problem.'                 )
-               CALL ERRINT ( '#', RECSIZ                               )
-               CALL ERRINT ( '#', MAXREC                               )
-               CALL SIGERR ( 'SPICE(PCKKRECTOOLARGE)'                  )
-               CALL CHKOUT ( 'PCKMAT'                                  )
-               RETURN
+               call errint ( '#', recsiz                               )
+               call errint ( '#', maxrec                               )
+               call sigerr ( 'SPICE(PCKKRECTOOLARGE)'                  )
+               call chkout ( 'PCKMAT'                                  )
+               return
 
-            END IF
+            end if
 
-            CALL PCKR03 ( HANDLE, DESCR, ET, RECORD )
-            CALL PCKE03 ( ET, RECORD, TSIPM         )
+            call pckr03 ( handle, descr, et, record )
+            call pcke03 ( et, record, tsipm         )
 
-            IF ( FAILED() ) THEN
-               FOUND = .FALSE.
-               CALL CHKOUT ( 'PCKMAT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               found = .false.
+               call chkout ( 'PCKMAT' )
+               return
+            end if
 
 
-         ELSE IF ( TYPE .EQ. 20 ) THEN
+         else if ( type .eq. 20 ) then
 !
 !           Read in Chebyshev coefficients from segment.
 !
-            CALL PCKR20 ( HANDLE, DESCR, ET, RECORD )
+            call pckr20 ( handle, descr, et, record )
 !
 !           Call evaluation routine to get Euler angles
 !           phi, delta, w.
 !
-            CALL PCKE20 ( ET, RECORD, EULANG )
+            call pcke20 ( et, record, eulang )
 
-            IF ( FAILED() ) THEN
-               FOUND = .FALSE.
-               CALL CHKOUT ( 'PCKMAT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               found = .false.
+               call chkout ( 'PCKMAT' )
+               return
+            end if
 !
 !           From the PCK type 20 file the Euler angles are
 !           retrieved in a particular order. The routine to
@@ -414,37 +414,37 @@
 !           order. Here we change from EULANG to ESTATE, which
 !           has this proper order.
 !
-            ESTATE (1) = EULANG (3)
-            ESTATE (2) = EULANG (2)
-            ESTATE (3) = EULANG (1)
-            ESTATE (4) = EULANG (6)
-            ESTATE (5) = EULANG (5)
-            ESTATE (6) = EULANG (4)
+            estate (1) = eulang (3)
+            estate (2) = eulang (2)
+            estate (3) = eulang (1)
+            estate (4) = eulang (6)
+            estate (5) = eulang (5)
+            estate (6) = eulang (4)
 
 !
 !           Call routine which takes Euler angles to transformation
 !           matrix.
 !
-            CALL EUL2XF ( ESTATE, 3, 1, 3, TSIPM )
+            call eul2xf ( estate, 3, 1, 3, tsipm )
 
-            IF ( FAILED() ) THEN
-               FOUND = .FALSE.
-               CALL CHKOUT ( 'PCKMAT' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               found = .false.
+               call chkout ( 'PCKMAT' )
+               return
+            end if
 
 
-         ELSE
+         else
 !
 !           If data matching the requested body and time was not
 !           found, FOUND is false.
 !
-            FOUND = .FALSE.
+            found = .false.
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'PCKMAT' )
-      RETURN
-      END
+      call chkout ( 'PCKMAT' )
+      return
+      end

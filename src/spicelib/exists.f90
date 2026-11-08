@@ -1,6 +1,6 @@
 !$Procedure EXISTS ( Does the file exist? )
 
-      LOGICAL FUNCTION  EXISTS ( FNAME )
+      logical function  exists ( fname )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    FNAME
+      character*(*)    fname
 
 ! $ Brief_I/O
 !
@@ -225,65 +225,65 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               RTRIM
+      logical               return
+      integer               rtrim
 
 !
 !     Local variables
 !
-      INTEGER               IOSTAT
-      INTEGER               R
+      integer               iostat
+      integer               r
 
-      LOGICAL               MYEXST
+      logical               myexst
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         EXISTS = .FALSE.
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EXISTS' )
-      END IF
+      if ( return () ) then
+         exists = .false.
+         return
+      else
+         call chkin ( 'EXISTS' )
+      end if
 !
 !     Initialize the local variable MYEXST to be .FALSE.
 !
-      MYEXST = .FALSE.
+      myexst = .false.
 
 !
 !     First we test to see if the filename is blank.
 !
-      IF ( FNAME .EQ. ' ' ) THEN
+      if ( fname .eq. ' ' ) then
 
-         EXISTS = .FALSE.
-         CALL SETMSG ( 'The file name is blank. ' )
-         CALL SIGERR ( 'SPICE(BLANKFILENAME)'     )
-         CALL CHKOUT ( 'EXISTS'                   )
-         RETURN
+         exists = .false.
+         call setmsg ( 'The file name is blank. ' )
+         call sigerr ( 'SPICE(BLANKFILENAME)'     )
+         call chkout ( 'EXISTS'                   )
+         return
 
-      END IF
+      end if
 
-      R = RTRIM(FNAME)
+      r = rtrim(fname)
 !
 !     So simple, it defies explanation.
 !
-      INQUIRE ( FILE = FNAME(1:R), EXIST = MYEXST, IOSTAT = IOSTAT )
+      inquire ( file = fname(1:r), exist = myexst, iostat = iostat )
 
-      IF ( IOSTAT .NE. 0 ) THEN
+      if ( iostat .ne. 0 ) then
 
-         EXISTS = .FALSE.
-         CALL SETMSG ( 'Value of IOSTAT was *.' )
-         CALL ERRINT ( '*', IOSTAT              )
-         CALL SIGERR ( 'SPICE(INQUIREFAILED)'   )
-         CALL CHKOUT ( 'EXISTS'                 )
-         RETURN
+         exists = .false.
+         call setmsg ( 'Value of IOSTAT was *.' )
+         call errint ( '*', iostat              )
+         call sigerr ( 'SPICE(INQUIREFAILED)'   )
+         call chkout ( 'EXISTS'                 )
+         return
 
-      END IF
+      end if
 !
 !     Set the value of the function, check out and return.
 !
-      EXISTS = MYEXST
+      exists = myexst
 
-      CALL CHKOUT ( 'EXISTS' )
-      RETURN
-      END
+      call chkout ( 'EXISTS' )
+      return
+      end

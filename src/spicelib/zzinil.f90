@@ -1,10 +1,10 @@
 !$Procedure ZZINIL ( SGP4 initializer )
 
-      SUBROUTINE ZZINIL ( GEOPHS, OPMODE, ECCO, &
-                          EPOCH,  INCLO,  NO,     AINV, &
-                          AO,     CON41,  CON42,  COSIO, &
-                          COSIO2, ECCSQ,  OMEOSQ, POSQ, &
-                          RP,     RTEOSQ, SINIO,  GSTO )
+      subroutine zzinil ( geophs, opmode, ecco, &
+                          epoch,  inclo,  no,     ainv, &
+                          ao,     con41,  con42,  cosio, &
+                          cosio2, eccsq,  omeosq, posq, &
+                          rp,     rteosq, sinio,  gsto )
 
 ! $ Abstract
 !
@@ -22,30 +22,30 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsgp4.inc'
+      include 'zzsgp4.inc'
 
-      DOUBLE PRECISION         GEOPHS    ( 8 )
-      INTEGER                  OPMODE
+      double precision         geophs    ( 8 )
+      integer                  opmode
 
-      DOUBLE PRECISION         ECCO
-      DOUBLE PRECISION         EPOCH
-      DOUBLE PRECISION         INCLO
-      DOUBLE PRECISION         NO
-      DOUBLE PRECISION         AINV
-      DOUBLE PRECISION         AO
-      DOUBLE PRECISION         CON41
-      DOUBLE PRECISION         CON42
-      DOUBLE PRECISION         COSIO
-      DOUBLE PRECISION         COSIO2
-      DOUBLE PRECISION         ECCSQ
-      DOUBLE PRECISION         OMEOSQ
-      DOUBLE PRECISION         POSQ
-      DOUBLE PRECISION         RP
-      DOUBLE PRECISION         RTEOSQ
-      DOUBLE PRECISION         SINIO
-      DOUBLE PRECISION         GSTO
+      double precision         ecco
+      double precision         epoch
+      double precision         inclo
+      double precision         no
+      double precision         ainv
+      double precision         ao
+      double precision         con41
+      double precision         con42
+      double precision         cosio
+      double precision         cosio2
+      double precision         eccsq
+      double precision         omeosq
+      double precision         posq
+      double precision         rp
+      double precision         rteosq
+      double precision         sinio
+      double precision         gsto
 
 ! $ Brief_I/O
 !
@@ -183,41 +183,41 @@
 !     Local Variables
 !
 
-      DOUBLE PRECISION         ADEL
-      DOUBLE PRECISION         AK
-      DOUBLE PRECISION         C1
-      DOUBLE PRECISION         C1P2P
-      DOUBLE PRECISION         D1
-      DOUBLE PRECISION         DEL
-      DOUBLE PRECISION         FK5R
-      DOUBLE PRECISION         J2
-      DOUBLE PRECISION         PO
-      DOUBLE PRECISION         RADDAY
-      DOUBLE PRECISION         TEMP
-      DOUBLE PRECISION         TFRAC
-      DOUBLE PRECISION         THGR70
-      DOUBLE PRECISION         TS70
-      DOUBLE PRECISION         TUT1
-      DOUBLE PRECISION         X2O3
-      DOUBLE PRECISION         XKE
+      double precision         adel
+      double precision         ak
+      double precision         c1
+      double precision         c1p2p
+      double precision         d1
+      double precision         del
+      double precision         fk5r
+      double precision         j2
+      double precision         po
+      double precision         radday
+      double precision         temp
+      double precision         tfrac
+      double precision         thgr70
+      double precision         ts70
+      double precision         tut1
+      double precision         x2o3
+      double precision         xke
 
-      INTEGER                  IDS70
+      integer                  ids70
 
 
 !
 !     SPICELIB routines.
 !
-      DOUBLE PRECISION         TWOPI
-      LOGICAL                  RETURN
+      double precision         twopi
+      logical                  return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZINIL' )
+      call chkin ( 'ZZINIL' )
 
 
 !
@@ -229,38 +229,38 @@
 !     .                  mu, radiusearthkm, xke,
 !     .                  j2, j3, j4, j3oj2 )
 !
-      J2    = GEOPHS(K_J2)
-      XKE   = GEOPHS(K_KE)
-      X2O3  = 2.0D0/3.0D0
+      j2    = geophs(k_j2)
+      xke   = geophs(k_ke)
+      x2o3  = 2.0d0/3.0d0
 
 !
 !     Calculate auxillary epoch quantities
 !
-      ECCSQ  = ECCO*ECCO
-      OMEOSQ = 1.0D0 - ECCSQ
-      RTEOSQ = DSQRT(OMEOSQ)
-      COSIO  = DCOS(INCLO)
-      COSIO2 = COSIO*COSIO
+      eccsq  = ecco*ecco
+      omeosq = 1.0d0 - eccsq
+      rteosq = dsqrt(omeosq)
+      cosio  = dcos(inclo)
+      cosio2 = cosio*cosio
 
 !
 !     Un-KOZAI the mean motion
 !
-      AK   =  (XKE/NO)**X2O3
-      D1   =  0.75D0*J2* (3.0D0*COSIO2-1.0D0) / (RTEOSQ*OMEOSQ)
-      DEL  =  D1/(AK*AK)
-      ADEL =  AK * ( 1.0D0 - DEL*DEL - DEL* &
-                       (1.0D0/3.0D0 + 134.0D0*DEL*DEL / 81.0D0) )
-      DEL  =  D1/(ADEL*ADEL)
-      NO   =  NO/(1.0D0 + DEL)
+      ak   =  (xke/no)**x2o3
+      d1   =  0.75d0*j2* (3.0d0*cosio2-1.0d0) / (rteosq*omeosq)
+      del  =  d1/(ak*ak)
+      adel =  ak * ( 1.0d0 - del*del - del* &
+                       (1.0d0/3.0d0 + 134.0d0*del*del / 81.0d0) )
+      del  =  d1/(adel*adel)
+      no   =  no/(1.0d0 + del)
 
-      AO   =  (XKE/NO)**X2O3
-      SINIO=  DSIN(INCLO)
-      PO   =  AO*OMEOSQ
-      CON42=  1.0D0-5.0D0*COSIO2
-      CON41=  -CON42-COSIO2-COSIO2
-      AINV =  1.0D0/AO
-      POSQ =  PO*PO
-      RP   =  AO*(1.0D0-ECCO)
+      ao   =  (xke/no)**x2o3
+      sinio=  dsin(inclo)
+      po   =  ao*omeosq
+      con42=  1.0d0-5.0d0*cosio2
+      con41=  -con42-cosio2-cosio2
+      ainv =  1.0d0/ao
+      posq =  po*po
+      rp   =  ao*(1.0d0-ecco)
 
 !
 !     Calculate greenwich location at epoch
@@ -270,60 +270,60 @@
 !     sgp4fix Modern approach to finding sidereal time
 !
 
-      IF (OPMODE .EQ. IMPRVD ) THEN
+      if (opmode .eq. imprvd ) then
 
 !
 !        Radians per day, earth rotation, 6.30038809866574D0.
 !
-         RADDAY = TWOPI() * 1.002737909350795D0
-         TEMP   = EPOCH + 2433281.5D0
-         TUT1= ( DINT(TEMP-0.5D0) + 0.5D0 - 2451545.0D0 ) / 36525.0D0
-         GSTO= 1.75336855923327D0 + 628.331970688841D0*TUT1 &
-                   + 6.77071394490334D-06*TUT1*TUT1 &
-                   - 4.50876723431868D-10*TUT1*TUT1*TUT1 &
-                   + RADDAY*( TEMP-0.5D0-DINT(TEMP-0.5D0) )
+         radday = twopi() * 1.002737909350795d0
+         temp   = epoch + 2433281.5d0
+         tut1= ( dint(temp-0.5d0) + 0.5d0 - 2451545.0d0 ) / 36525.0d0
+         gsto= 1.75336855923327d0 + 628.331970688841d0*tut1 &
+                   + 6.77071394490334d-06*tut1*tut1 &
+                   - 4.50876723431868d-10*tut1*tut1*tut1 &
+                   + radday*( temp-0.5d0-dint(temp-0.5d0) )
 
-      ELSE IF (OPMODE .EQ. AFSPC ) THEN
+      else if (opmode .eq. afspc ) then
 
 !
 !        sgp4fix Use old way of finding GST
 !
 !        Count integer number of days from 0 jan 1970
 !
-         TS70  = EPOCH-7305.0D0
-         IDS70 = INT(TS70 + 1.0D-8)
-         TFRAC = TS70-IDS70
+         ts70  = epoch-7305.0d0
+         ids70 = int(ts70 + 1.0d-8)
+         tfrac = ts70-ids70
 
 !
 !        Find greenwich location at epoch
 !
-         C1     = 1.72027916940703639D-2
-         THGR70 = 1.7321343856509374D0
-         FK5R   = 5.07551419432269442D-15
-         C1P2P  = C1+TWOPI()
-         GSTO   = THGR70+C1*IDS70+C1P2P*TFRAC+TS70*TS70*FK5R
+         c1     = 1.72027916940703639d-2
+         thgr70 = 1.7321343856509374d0
+         fk5r   = 5.07551419432269442d-15
+         c1p2p  = c1+twopi()
+         gsto   = thgr70+c1*ids70+c1p2p*tfrac+ts70*ts70*fk5r
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unknown value for OPMODE. Value # not ' &
+         call setmsg ( 'Unknown value for OPMODE. Value # not ' &
           //           'coded in zzsgp4.inc.'                         )
-         CALL ERRINT ( '#', OPMODE                                    )
-         CALL SIGERR ( 'SPICE(UNKNOWNMODE)'                           )
-         CALL CHKOUT ( 'ZZINIL'                                       )
-         RETURN
+         call errint ( '#', opmode                                    )
+         call sigerr ( 'SPICE(UNKNOWNMODE)'                           )
+         call chkout ( 'ZZINIL'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Check quadrants
 !
-      GSTO = DMOD( GSTO,TWOPI() )
+      gsto = dmod( gsto,twopi() )
 
-      IF ( GSTO .LT. 0.0D0 ) THEN
-         GSTO= GSTO + TWOPI()
-      END IF
+      if ( gsto .lt. 0.0d0 ) then
+         gsto= gsto + twopi()
+      end if
 
-      CALL CHKOUT ( 'ZZINIL' )
+      call chkout ( 'ZZINIL' )
 
-      RETURN
-      END
+      return
+      end

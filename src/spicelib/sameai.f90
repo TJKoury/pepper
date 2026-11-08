@@ -1,6 +1,6 @@
 !$Procedure SAMEAI ( Are two integer arrays the same? )
 
-      LOGICAL FUNCTION SAMEAI ( A1, A2, NDIM )
+      logical function sameai ( a1, a2, ndim )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               A1 ( * )
-      INTEGER               A2 ( * )
-      INTEGER               NDIM
+      integer               a1 ( * )
+      integer               a2 ( * )
+      integer               ndim
 
 ! $ Brief_I/O
 !
@@ -117,21 +117,21 @@
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Executable code
 !
-      SAMEAI = .TRUE.
+      sameai = .true.
 
-      DO I = 1, NDIM
+      do i = 1, ndim
 
-         IF (  A1(I)  .NE.  A2(I)  ) THEN
-            SAMEAI = .FALSE.
-            RETURN
-         END IF
+         if (  a1(i)  .ne.  a2(i)  ) then
+            sameai = .false.
+            return
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,11 +1,11 @@
 !$Procedure ZZRBRKST ( Private --- Reverse Bracketed String Extractor )
 
-      SUBROUTINE ZZRBRKST ( STRING, &
-                            LFTEND, &
-                            RGTEND, &
-                            SUBSTR, &
-                            LENGTH, &
-                            BKPRES  )
+      subroutine zzrbrkst ( string, &
+                            lftend, &
+                            rgtend, &
+                            substr, &
+                            length, &
+                            bkpres  )
 ! $ Abstract
 !
 !    Extract from a string the last instance of a substring bracketed
@@ -23,14 +23,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
-      CHARACTER*(*)         LFTEND
-      CHARACTER*(*)         RGTEND
-      CHARACTER*(*)         SUBSTR
-      INTEGER               LENGTH
-      LOGICAL               BKPRES
+      character*(*)         string
+      character*(*)         lftend
+      character*(*)         rgtend
+      character*(*)         substr
+      integer               length
+      logical               bkpres
 
 ! $ Brief_I/O
 !
@@ -157,29 +157,29 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               POSR
+      integer               posr
 
 !
 !     Local Variables
 !
-      INTEGER               BSIZE
-      INTEGER               LINDEX
-      INTEGER               LSIZE
-      INTEGER               RINDEX
-      INTEGER               RSIZE
+      integer               bsize
+      integer               lindex
+      integer               lsize
+      integer               rindex
+      integer               rsize
 
 !
 !     Compute the sizes of the bracketing substrings and the text
 !     block.
 !
-      LSIZE = LEN ( LFTEND )
-      RSIZE = LEN ( RGTEND )
-      BSIZE = LEN ( STRING )
+      lsize = len ( lftend )
+      rsize = len ( rgtend )
+      bsize = len ( string )
 
 !
 !     Search from the right for RGTEND.
 !
-      RINDEX = POSR ( STRING, RGTEND, BSIZE )
+      rindex = posr ( string, rgtend, bsize )
 
 !
 !     Now continue the search from RINDEX to the right, this time
@@ -188,55 +188,55 @@
 !     for LFTEND. Otherwise, search from where the right bracket
 !     search left off.
 !
-      IF ( RINDEX .EQ. 0 ) THEN
+      if ( rindex .eq. 0 ) then
 
-         LINDEX = POSR ( STRING, LFTEND, BSIZE )
+         lindex = posr ( string, lftend, bsize )
 
-      ELSE
+      else
 
-         LINDEX = POSR ( STRING, LFTEND, RINDEX - LSIZE )
+         lindex = posr ( string, lftend, rindex - lsize )
 
-      END IF
+      end if
 
 !
 !     Interpret the results.  If RINDEX and LINDEX are both non-zero,
 !     then return the substring they bracket, otherwise handle the
 !     failed case.
 !
-      IF ( ( RINDEX .NE. 0 ) .AND. ( LINDEX .NE. 0 ) ) THEN
+      if ( ( rindex .ne. 0 ) .and. ( lindex .ne. 0 ) ) then
 
 !
 !        Check to see whether or not the brackets are adjacent, and
 !        thus have no characters between them.
 !
-         IF ( ( LINDEX + LSIZE ) .GT. ( RINDEX - 1 ) ) THEN
+         if ( ( lindex + lsize ) .gt. ( rindex - 1 ) ) then
 
-            BKPRES = .TRUE.
-            LENGTH = 0
+            bkpres = .true.
+            length = 0
 
 !
 !        If they aren't adjacent, then compute the length and prepare
 !        SUBSTR.
 !
-         ELSE
+         else
 
-            LENGTH = RINDEX - ( LINDEX + LSIZE )
-            BKPRES = .TRUE.
-            SUBSTR = STRING ( ( LINDEX  + LSIZE ) : ( RINDEX - 1 ) )
+            length = rindex - ( lindex + lsize )
+            bkpres = .true.
+            substr = string ( ( lindex  + lsize ) : ( rindex - 1 ) )
 
-         END IF
+         end if
 
-      ELSE
+      else
 
 !
 !        Set BKPRES to TRUE only if LINDEX or RINDEX is non-zero,
 !        indicating one was found by POSR. Set LENGTH to 0, since we
 !        will not be changing SUBSTR.
 !
-         BKPRES = ( ( LINDEX + RINDEX ) .GT. 0 )
-         LENGTH = 0
+         bkpres = ( ( lindex + rindex ) .gt. 0 )
+         length = 0
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

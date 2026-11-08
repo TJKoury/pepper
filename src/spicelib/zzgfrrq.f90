@@ -1,6 +1,6 @@
 !$Procedure ZZGFRRQ ( Private - GF, range rate between objects )
 
-      SUBROUTINE ZZGFRRQ ( ET, TARG, OBS, ABCORR, VALUE )
+      subroutine zzgfrrq ( et, targ, obs, abcorr, value )
 
 ! $ Abstract
 !
@@ -23,13 +23,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      INTEGER               TARG
-      INTEGER               OBS
-      CHARACTER*(*)         ABCORR
-      DOUBLE PRECISION      VALUE
+      double precision      et
+      integer               targ
+      integer               obs
+      character*(*)         abcorr
+      double precision      value
 
 ! $ Brief_I/O
 !
@@ -157,51 +157,51 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      DVNORM
+      double precision      dvnorm
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Variables.
 !
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      lt
+      double precision      state    ( 6 )
 
-      CHARACTER*(5)         REF
+      character*(5)         ref
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'ZZGFRRQ' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'ZZGFRRQ' )
+      end if
 
 !
 !     We just want the range rate of TARG relative to OBS.
 !     This calculation is invariant with respect to reference
 !     frame; we use 'J2000'.
 !
-      REF = 'J2000'
-      CALL SPKEZ ( TARG, ET, REF, ABCORR, OBS, STATE, LT )
+      ref = 'J2000'
+      call spkez ( targ, et, ref, abcorr, obs, state, lt )
 
-      IF (  FAILED() ) THEN
-          CALL CHKOUT (  'ZZGFRRQ' )
-          RETURN
-      END IF
+      if (  failed() ) then
+          call chkout (  'ZZGFRRQ' )
+          return
+      end if
 
 !
 !     Calculate the derivative from the STATE vector.
 !
-      VALUE = DVNORM( STATE )
+      value = dvnorm( state )
 
 !
 !     All done.
 !
-      CALL CHKOUT (  'ZZGFRRQ' )
-      RETURN
+      call chkout (  'ZZGFRRQ' )
+      return
 
-      END
+      end
 

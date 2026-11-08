@@ -1,6 +1,6 @@
 !$Procedure UNIOND ( Union two double precision sets )
 
-      SUBROUTINE UNIOND ( A, B, C )
+      subroutine uniond ( a, b, c )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION A      ( LBCELL:* )
-      DOUBLE PRECISION B      ( LBCELL:* )
-      DOUBLE PRECISION C      ( LBCELL:* )
+      double precision a      ( lbcell:* )
+      double precision b      ( lbcell:* )
+      double precision c      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -157,23 +157,23 @@
 !
 !     SPICELIB functions
 !
-      INTEGER             CARDD
-      INTEGER             SIZED
-      LOGICAL             RETURN
+      integer             cardd
+      integer             sized
+      logical             return
 
 !
 !     Local variables
 !
 
-      INTEGER             APOINT
-      INTEGER             BPOINT
+      integer             apoint
+      integer             bpoint
 
-      INTEGER             CSIZE
-      INTEGER             ACARD
-      INTEGER             BCARD
-      INTEGER             CCARD
+      integer             csize
+      integer             acard
+      integer             bcard
+      integer             ccard
 
-      INTEGER             OVER
+      integer             over
 
 
 
@@ -182,128 +182,128 @@
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) RETURN
-      CALL CHKIN ( 'UNIOND' )
+      if ( return () ) return
+      call chkin ( 'UNIOND' )
 
 
 !
 !     Find the cardinality of the input sets, and the allowed size
 !     of the output set.
 !
-      ACARD = CARDD ( A )
-      BCARD = CARDD ( B )
-      CSIZE = SIZED ( C )
+      acard = cardd ( a )
+      bcard = cardd ( b )
+      csize = sized ( c )
 
 !
 !     Begin with the input pointers at the first elements of the
 !     input sets. The cardinality of the output set is zero.
 !     And there is no overflow so far.
 !
-      APOINT = 1
-      BPOINT = 1
+      apoint = 1
+      bpoint = 1
 
-      CCARD  = 0
-      OVER   = 0
+      ccard  = 0
+      over   = 0
 
 !
 !     When the ends of both input sets are reached, we're done.
 !
-      DO WHILE ( APOINT .LE. ACARD .OR. BPOINT .LE. BCARD )
+      do while ( apoint .le. acard .or. bpoint .le. bcard )
 
 !
 !        If there is still space in the output set, fill it
 !        as necessary.
 !
-         IF ( CCARD .LT. CSIZE ) THEN
+         if ( ccard .lt. csize ) then
 
-            IF ( APOINT .GT. ACARD ) THEN
+            if ( apoint .gt. acard ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = B(BPOINT)
-               BPOINT   = BPOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = b(bpoint)
+               bpoint   = bpoint + 1
 
-            ELSE IF ( BPOINT .GT. BCARD ) THEN
+            else if ( bpoint .gt. bcard ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = A(APOINT)
-               APOINT   = APOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = a(apoint)
+               apoint   = apoint + 1
 
-            ELSE IF ( A(APOINT) .EQ. B(BPOINT) ) THEN
+            else if ( a(apoint) .eq. b(bpoint) ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = A(APOINT)
-               APOINT   = APOINT + 1
-               BPOINT   = BPOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = a(apoint)
+               apoint   = apoint + 1
+               bpoint   = bpoint + 1
 
-            ELSE IF ( A(APOINT) .LT. B(BPOINT) ) THEN
+            else if ( a(apoint) .lt. b(bpoint) ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = A(APOINT)
-               APOINT   = APOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = a(apoint)
+               apoint   = apoint + 1
 
-            ELSE IF ( A(APOINT) .GT. B(BPOINT) ) THEN
+            else if ( a(apoint) .gt. b(bpoint) ) then
 
-               CCARD    = CCARD + 1
-               C(CCARD) = B(BPOINT)
-               BPOINT   = BPOINT + 1
+               ccard    = ccard + 1
+               c(ccard) = b(bpoint)
+               bpoint   = bpoint + 1
 
-            END IF
+            end if
 
 
 !
 !        Otherwise, stop filling the array, but continue to count the
 !        number of elements in excess of the size of the output set.
 !
-         ELSE
+         else
 
-            IF ( APOINT .GT. ACARD ) THEN
+            if ( apoint .gt. acard ) then
 
-               OVER   = OVER   + 1
-               BPOINT = BPOINT + 1
+               over   = over   + 1
+               bpoint = bpoint + 1
 
-            ELSE IF ( BPOINT .GT. BCARD ) THEN
+            else if ( bpoint .gt. bcard ) then
 
-               OVER   = OVER   + 1
-               APOINT = APOINT + 1
+               over   = over   + 1
+               apoint = apoint + 1
 
-            ELSE IF ( A(APOINT) .EQ. B(BPOINT) ) THEN
+            else if ( a(apoint) .eq. b(bpoint) ) then
 
-               OVER   = OVER   + 1
-               APOINT = APOINT + 1
-               BPOINT = BPOINT + 1
+               over   = over   + 1
+               apoint = apoint + 1
+               bpoint = bpoint + 1
 
-            ELSE IF ( A(APOINT) .LT. B(BPOINT) ) THEN
+            else if ( a(apoint) .lt. b(bpoint) ) then
 
-               OVER   = OVER   + 1
-               APOINT = APOINT + 1
+               over   = over   + 1
+               apoint = apoint + 1
 
-            ELSE IF ( A(APOINT) .GT. B(BPOINT) ) THEN
+            else if ( a(apoint) .gt. b(bpoint) ) then
 
-               OVER   = OVER   + 1
-               BPOINT = BPOINT + 1
+               over   = over   + 1
+               bpoint = bpoint + 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the cardinality of the output set.
 !
-      CALL SCARDD ( CCARD, C )
+      call scardd ( ccard, c )
 
 !
 !     Report any excess.
 !
 
-      IF ( OVER .GT. 0 ) THEN
-         CALL EXCESS ( OVER, 'set' )
-         CALL SIGERR ( 'SPICE(SETEXCESS)' )
-      END IF
+      if ( over .gt. 0 ) then
+         call excess ( over, 'set' )
+         call sigerr ( 'SPICE(SETEXCESS)' )
+      end if
 
 
-      CALL CHKOUT ( 'UNIOND' )
+      call chkout ( 'UNIOND' )
 
-      RETURN
-      END
+      return
+      end

@@ -54,26 +54,26 @@
 !     match after being left justified, converted to upper case,
 !     and having all embedded blanks removed.
 !
-      CHARACTER*(*)         RECSYS
-      PARAMETER           ( RECSYS = 'RECTANGULAR' )
+      character*(*)         recsys
+      parameter           ( recsys = 'RECTANGULAR' )
 
-      CHARACTER*(*)         LATSYS
-      PARAMETER           ( LATSYS = 'LATITUDINAL' )
+      character*(*)         latsys
+      parameter           ( latsys = 'LATITUDINAL' )
 
-      CHARACTER*(*)         SPHSYS
-      PARAMETER           ( SPHSYS = 'SPHERICAL' )
+      character*(*)         sphsys
+      parameter           ( sphsys = 'SPHERICAL' )
 
-      CHARACTER*(*)         RADSYS
-      PARAMETER           ( RADSYS = 'RA/DEC' )
+      character*(*)         radsys
+      parameter           ( radsys = 'RA/DEC' )
 
-      CHARACTER*(*)         CYLSYS
-      PARAMETER           ( CYLSYS = 'CYLINDRICAL' )
+      character*(*)         cylsys
+      parameter           ( cylsys = 'CYLINDRICAL' )
 
-      CHARACTER*(*)         GEOSYS
-      PARAMETER           ( GEOSYS = 'GEODETIC' )
+      character*(*)         geosys
+      parameter           ( geosys = 'GEODETIC' )
 
-      CHARACTER*(*)         PGRSYS
-      PARAMETER           ( PGRSYS = 'PLANETOGRAPHIC' )
+      character*(*)         pgrsys
+      parameter           ( pgrsys = 'PLANETOGRAPHIC' )
 
 
 !
@@ -81,23 +81,23 @@
 !     inputs naming coordinates must match these when
 !     compared using EQSTR.
 !
-      CHARACTER*(*)         XCRD
-      PARAMETER           ( XCRD   = 'X' )
+      character*(*)         xcrd
+      parameter           ( xcrd   = 'X' )
 
-      CHARACTER*(*)         YCRD
-      PARAMETER           ( YCRD   = 'Y' )
+      character*(*)         ycrd
+      parameter           ( ycrd   = 'Y' )
 
-      CHARACTER*(*)         ZCRD
-      PARAMETER           ( ZCRD   = 'Z' )
+      character*(*)         zcrd
+      parameter           ( zcrd   = 'Z' )
 
-      CHARACTER*(*)         RADCRD
-      PARAMETER           ( RADCRD = 'RADIUS' )
+      character*(*)         radcrd
+      parameter           ( radcrd = 'RADIUS' )
 
-      CHARACTER*(*)         LONCRD
-      PARAMETER           ( LONCRD = 'LONGITUDE' )
+      character*(*)         loncrd
+      parameter           ( loncrd = 'LONGITUDE' )
 
-      CHARACTER*(*)         LATCRD
-      PARAMETER           ( LATCRD = 'LATITUDE' )
+      character*(*)         latcrd
+      parameter           ( latcrd = 'LATITUDE' )
 
 !
 !     Note that the RA parameter value below matches
@@ -106,20 +106,20 @@
 !
 !     when extra blanks are compressed out of the above value.
 !
-      CHARACTER*(*)         RACRD
-      PARAMETER           ( RACRD  = 'RIGHT ASCENSION' )
+      character*(*)         racrd
+      parameter           ( racrd  = 'RIGHT ASCENSION' )
 
-      CHARACTER*(*)         DECCRD
-      PARAMETER           ( DECCRD = 'DECLINATION' )
+      character*(*)         deccrd
+      parameter           ( deccrd = 'DECLINATION' )
 
-      CHARACTER*(*)         RNGCRD
-      PARAMETER           ( RNGCRD = 'RANGE' )
+      character*(*)         rngcrd
+      parameter           ( rngcrd = 'RANGE' )
 
-      CHARACTER*(*)         CLTCRD
-      PARAMETER           ( CLTCRD = 'COLATITUDE' )
+      character*(*)         cltcrd
+      parameter           ( cltcrd = 'COLATITUDE' )
 
-      CHARACTER*(*)         ALTCRD
-      PARAMETER           ( ALTCRD = 'ALTITUDE' )
+      character*(*)         altcrd
+      parameter           ( altcrd = 'ALTITUDE' )
 
 !
 !     Parameters specifying types of vector definitions
@@ -131,43 +131,43 @@
 !     POSDEF indicates the vector is defined by the
 !     position of a target relative to an observer.
 !
-      CHARACTER*(*)         POSDEF
-      PARAMETER           ( POSDEF = 'POSITION' )
+      character*(*)         posdef
+      parameter           ( posdef = 'POSITION' )
 
 !
 !     SOBDEF indicates the vector points from the center
 !     of a target body to the sub-observer point on
 !     that body, for a given observer and target.
 !
-      CHARACTER*(*)         SOBDEF
-      PARAMETER           ( SOBDEF = 'SUB-OBSERVER POINT' )
+      character*(*)         sobdef
+      parameter           ( sobdef = 'SUB-OBSERVER POINT' )
 
 !
 !     SOBDEF indicates the vector points from the center
 !     of a target body to the surface intercept point on
 !     that body, for a given observer, ray, and target.
 !
-      CHARACTER*(*)         SINDEF
-      PARAMETER           ( SINDEF = 'SURFACE INTERCEPT POINT' )
+      character*(*)         sindef
+      parameter           ( sindef = 'SURFACE INTERCEPT POINT' )
 
 
 !
 !     Number of workspace windows used by ZZGFREL:
 !
-      INTEGER               NWREL
-      PARAMETER           ( NWREL  = 5 )
+      integer               nwrel
+      parameter           ( nwrel  = 5 )
 
 !
 !     Number of additional workspace windows used by ZZGFLONG:
 !
-      INTEGER               NWLONG
-      PARAMETER           ( NWLONG = 7 )
+      integer               nwlong
+      parameter           ( nwlong = 7 )
 
 !
 !     Index of "existence window" used by ZZGFCSLV:
 !
-      INTEGER               EXWIDX
-      PARAMETER           ( EXWIDX = NWREL + NWLONG + 1 )
+      integer               exwidx
+      parameter           ( exwidx = nwrel + nwlong + 1 )
 
 !
 !     Progress report parameters:
@@ -180,17 +180,17 @@
 !     "percent complete" substring, should not be long enough
 !     to cause wrap-around on any platform's terminal window.
 !
-      INTEGER               MXBEGM
-      PARAMETER           ( MXBEGM = 55 )
+      integer               mxbegm
+      parameter           ( mxbegm = 55 )
 
-      INTEGER               MXENDM
-      PARAMETER           ( MXENDM = 13 )
+      integer               mxendm
+      parameter           ( mxendm = 13 )
 
 !
 !     Total progress report message length upper bound:
 !
-      INTEGER               MXMSG
-      PARAMETER           ( MXMSG  = MXBEGM + MXENDM + 10 )
+      integer               mxmsg
+      parameter           ( mxmsg  = mxbegm + mxendm + 10 )
 
 
 !

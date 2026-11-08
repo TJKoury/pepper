@@ -1,11 +1,11 @@
 !$Procedure ZZGFLONG ( GF, longitude solver )
 
-      SUBROUTINE ZZGFLONG ( VECDEF, METHOD, TARGET, REF,    ABCORR, &
-                            OBSRVR, DREF,   DVEC,   CRDSYS, CRDNAM, &
-                            RELATE, REFVAL, TOL,    ADJUST, UDSTEP, &
-                            UDREFN, RPT,    UDREPI, UDREPU, UDREPF, &
-                            BAIL,   UDBAIL, MW,     NW,     WORK, &
-                            CNFINE, RESULT                          )
+      subroutine zzgflong ( vecdef, method, target, ref,    abcorr, &
+                            obsrvr, dref,   dvec,   crdsys, crdnam, &
+                            relate, refval, tol,    adjust, udstep, &
+                            udrefn, rpt,    udrepi, udrepu, udrepf, &
+                            bail,   udbail, mw,     nw,     work, &
+                            cnfine, result                          )
 
 ! $ Abstract
 !
@@ -33,42 +33,42 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         VECDEF
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         DREF
-      DOUBLE PRECISION      DVEC   ( 3 )
-      CHARACTER*(*)         CRDSYS
-      CHARACTER*(*)         CRDNAM
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      ADJUST
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      LOGICAL               RPT
-      EXTERNAL              UDREPI
-      EXTERNAL              UDREPU
-      EXTERNAL              UDREPF
-      LOGICAL               BAIL
-      EXTERNAL              UDBAIL
-      LOGICAL               UDBAIL
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         vecdef
+      character*(*)         method
+      character*(*)         target
+      character*(*)         ref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         dref
+      double precision      dvec   ( 3 )
+      character*(*)         crdsys
+      character*(*)         crdnam
+      character*(*)         relate
+      double precision      refval
+      double precision      tol
+      double precision      adjust
+      external              udstep
+      external              udrefn
+      logical               rpt
+      external              udrepi
+      external              udrepu
+      external              udrepf
+      logical               bail
+      external              udbail
+      logical               udbail
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -854,19 +854,19 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
+      double precision      pi
+      double precision      twopi
 
-      INTEGER               CARDD
-      INTEGER               ISRCHC
-      INTEGER               LNKNXT
-      INTEGER               WNCARD
+      integer               cardd
+      integer               isrchc
+      integer               lnknxt
+      integer               wncard
 
-      LOGICAL               ELEMI
+      logical               elemi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               SMSGND
+      logical               failed
+      logical               return
+      logical               smsgnd
 
 !
 !     Entry points in the coordinate utility package.
@@ -882,17 +882,17 @@
 !        ZZGFCOSD      Is sine of the coordinate decreasing?
 !        ZZGFCOSG      Get sine of the coordinate value.
 !
-      EXTERNAL ZZGFCODC
-      EXTERNAL ZZGFCOG
-      EXTERNAL ZZGFCOCD
-      EXTERNAL ZZGFCOCG
-      EXTERNAL ZZGFCOSD
-      EXTERNAL ZZGFCOSG
+      external zzgfcodc
+      external zzgfcog
+      external zzgfcocd
+      external zzgfcocg
+      external zzgfcosd
+      external zzgfcosg
 
 !
 !    The routine to test UDFUNC < REFVAL.
 !
-      EXTERNAL ZZGFUDLT
+      external zzgfudlt
 
 
 !
@@ -902,155 +902,155 @@
 !
 !     Margin for branch cut avoidance. Units are radians:
 !
-      DOUBLE PRECISION      BCAMRG
-      PARAMETER           ( BCAMRG = 1.D-11 )
+      double precision      bcamrg
+      parameter           ( bcamrg = 1.d-11 )
 
 !
 !     Margin for local extrema search. Units are radians:
 !
-      DOUBLE PRECISION      LCXMRG
-      PARAMETER           ( LCXMRG = 1.D-12 )
+      double precision      lcxmrg
+      parameter           ( lcxmrg = 1.d-12 )
 
 !
 !     Short alias for LBCELL:
 !
-      INTEGER               LB
-      PARAMETER           ( LB     = LBCELL )
+      integer               lb
+      parameter           ( lb     = lbcell )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = LBCELL )
+      integer               lbpool
+      parameter           ( lbpool = lbcell )
 
 !
 !     Number of supported comparison operators:
 !
-      INTEGER               NC
-      PARAMETER           ( NC     = 7 )
+      integer               nc
+      parameter           ( nc     = 7 )
 
 !
 !     Assorted string lengths:
 !
 !     Maximum body name length:
 !
-      INTEGER               BDNMLN
-      PARAMETER           ( BDNMLN = 36 )
+      integer               bdnmln
+      parameter           ( bdnmln = 36 )
 
 !
 !     NAMLEN is the maximum length of both a frame name and of
 !     any kernel pool variable name.
 !
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 32 )
+      integer               namlen
+      parameter           ( namlen = 32 )
 
 !
 !     OPLEN is the maximum string length for comparison operators.
 !     OPLEN may grow if new comparisons are added.
 !
-      INTEGER               OPLEN
-      PARAMETER           ( OPLEN = 6 )
+      integer               oplen
+      parameter           ( oplen = 6 )
 
 !
 !     FUNLEN is the length of the function name string.
 !
-      INTEGER               FUNLEN
-      PARAMETER           ( FUNLEN = 50 )
+      integer               funlen
+      parameter           ( funlen = 50 )
 
 !
 !     CRDLEN is the maximum length of a coordinate name.
 !
-      INTEGER               CRDLEN
-      PARAMETER           ( CRDLEN = 32 )
+      integer               crdlen
+      parameter           ( crdlen = 32 )
 
 !
 !     SYSLEN is the maximum length of a coordinate system name.
 !
-      INTEGER               SYSLEN
-      PARAMETER           ( SYSLEN = 32 )
+      integer               syslen
+      parameter           ( syslen = 32 )
 
 !
 !     RPTLEN is the maximum length of a progress reporter message.
 !
-      INTEGER               RPTLEN
-      PARAMETER           ( RPTLEN = 80 )
+      integer               rptlen
+      parameter           ( rptlen = 80 )
 !
 !     Local variables
 !
-      CHARACTER*(CRDLEN)    NRMCRD
-      CHARACTER*(SYSLEN)    NRMSYS
-      CHARACTER*(OPLEN)     OPS    ( NC )
-      CHARACTER*(CRDLEN)    PRXCRD
-      CHARACTER*(FUNLEN)    PRXFUN
-      CHARACTER*(SYSLEN)    PRXSYS
-      CHARACTER*(BDNMLN)    RCTRNM
-      CHARACTER*(RPTLEN)    RPTPRE ( 2 )
-      CHARACTER*(RPTLEN)    RPTSUF ( 2 )
-      CHARACTER*(RPTLEN)    TMPLAT
-      CHARACTER*(NAMLEN)    RLIST  ( NWLONG )
-      CHARACTER*(OPLEN)     UOP
-      CHARACTER*(OPLEN)     PRXREL
+      character*(crdlen)    nrmcrd
+      character*(syslen)    nrmsys
+      character*(oplen)     ops    ( nc )
+      character*(crdlen)    prxcrd
+      character*(funlen)    prxfun
+      character*(syslen)    prxsys
+      character*(bdnmln)    rctrnm
+      character*(rptlen)    rptpre ( 2 )
+      character*(rptlen)    rptsuf ( 2 )
+      character*(rptlen)    tmplat
+      character*(namlen)    rlist  ( nwlong )
+      character*(oplen)     uop
+      character*(oplen)     prxrel
 
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      CMPVAL
-      DOUBLE PRECISION      CV
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      EXTVAL
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      LOCREF
-      DOUBLE PRECISION      LOCTOL
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      PRXVAL
-      DOUBLE PRECISION      R2OVR2
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      SV
-      DOUBLE PRECISION      VALUE
-      DOUBLE PRECISION      XRFVAL
-      DOUBLE PRECISION      Y      ( 3 )
+      double precision      alt
+      double precision      cmpval
+      double precision      cv
+      double precision      et
+      double precision      extval
+      double precision      lat
+      double precision      locref
+      double precision      loctol
+      double precision      lon
+      double precision      prxval
+      double precision      r2ovr2
+      double precision      start
+      double precision      sv
+      double precision      value
+      double precision      xrfval
+      double precision      y      ( 3 )
 
-      INTEGER               BOT
-      INTEGER               CLASS
-      INTEGER               CLSSID
-      INTEGER               COMPL
-      INTEGER               F1
-      INTEGER               F2
-      INTEGER               FRCODE
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               LEFT
-      INTEGER               N
-      INTEGER               NEEDWN ( LBCELL : NWLONG )
-      INTEGER               NEXT
-      INTEGER               NL
-      INTEGER               NODE
-      INTEGER               Q1
-      INTEGER               Q2
-      INTEGER               Q3
-      INTEGER               Q4
-      INTEGER               QUAD
-      INTEGER               REFCTR
-      INTEGER               REGION ( 3 )
-      INTEGER               RES
-      INTEGER               RES1
-      INTEGER               RES2
-      INTEGER               RIGHT
-      INTEGER               S
-      INTEGER               TOP
-      INTEGER               TOTAL
-      INTEGER               WH
-      INTEGER               WIX    (             NWLONG )
-      INTEGER               WWPOOL ( 2, LBPOOL : NWLONG )
+      integer               bot
+      integer               class
+      integer               clssid
+      integer               compl
+      integer               f1
+      integer               f2
+      integer               frcode
+      integer               head
+      integer               i
+      integer               left
+      integer               n
+      integer               needwn ( lbcell : nwlong )
+      integer               next
+      integer               nl
+      integer               node
+      integer               q1
+      integer               q2
+      integer               q3
+      integer               q4
+      integer               quad
+      integer               refctr
+      integer               region ( 3 )
+      integer               res
+      integer               res1
+      integer               res2
+      integer               right
+      integer               s
+      integer               top
+      integer               total
+      integer               wh
+      integer               wix    (             nwlong )
+      integer               wwpool ( 2, lbpool : nwlong )
 
-      LOGICAL               FLIP
-      LOGICAL               FOUND
+      logical               flip
+      logical               found
 
 !
 !     Saved variables
 !
-      SAVE                  OPS
-      SAVE                  Y
+      save                  ops
+      save                  y
 
 !
 !     Initial values
 !
-      DATA                  OPS / '<', &
+      data                  ops / '<', &
                                   '=', &
                                   '>', &
                                   'LOCMIN', &
@@ -1058,17 +1058,17 @@
                                   'LOCMAX', &
                                   'ABSMAX'  /
 
-      DATA                  Y   / 0.D0, 1.D0, 0.D0 /
+      data                  y   / 0.d0, 1.d0, 0.d0 /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'ZZGFLONG' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin  ( 'ZZGFLONG' )
+      end if
 
 !
 !     Overview
@@ -1246,53 +1246,53 @@
 !
 !     Check the workspace window count.
 !
-      IF ( NW .LT. NWMAX ) THEN
+      if ( nw .lt. nwmax ) then
 
-         CALL SETMSG ( 'Workspace window count was # but must be ' &
+         call setmsg ( 'Workspace window count was # but must be ' &
          //            'at least #.'                              )
-         CALL ERRINT ( '#', NW                                    )
-         CALL ERRINT ( '#', NWMAX                                 )
-         CALL SIGERR ( 'SPICE(TOOFEWWINDOWS)'                     )
-         CALL CHKOUT ( 'ZZGFLONG'                                 )
-         RETURN
+         call errint ( '#', nw                                    )
+         call errint ( '#', nwmax                                 )
+         call sigerr ( 'SPICE(TOOFEWWINDOWS)'                     )
+         call chkout ( 'ZZGFLONG'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     We can't initialize the whole workspace, but we can initialize
 !     the windows we actually own. Do so.
 !
-      DO I = 1, NWLONG
-         CALL SSIZED ( MW, WORK(LB, NWREL+I) )
-      END DO
+      do i = 1, nwlong
+         call ssized ( mw, work(lb, nwrel+i) )
+      end do
 
 !
 !     Initialize the workspace window pool. Set up the parallel
 !     array of window indices.
 !
-      CALL LNKINI ( NWLONG, WWPOOL )
+      call lnkini ( nwlong, wwpool )
 
-      DO I = 1, NWLONG
-         WIX(I) = NWREL + I
-      END DO
+      do i = 1, nwlong
+         wix(i) = nwrel + i
+      end do
 
 !
 !     Get an upper case, left-justified version of the
 !     requested comparison operation.
 !
-      CALL LJUST ( RELATE, UOP )
-      CALL UCASE ( UOP,    UOP )
+      call ljust ( relate, uop )
+      call ucase ( uop,    uop )
 
 !
 !     Reject bad operators.
 !
 !     Use the original operator string in the error message.
 !
-      I = ISRCHC( UOP, NC, OPS )
+      i = isrchc( uop, nc, ops )
 
-      IF ( I .EQ. 0 ) THEN
+      if ( i .eq. 0 ) then
 
-        CALL SETMSG ('The comparison operator, # is not '            // &
+        call setmsg ('The comparison operator, # is not '            // &
                      'recognized.  Supported quantities are: '       // &
                      '<, '                                           // &
                      '=, '                                           // &
@@ -1301,77 +1301,77 @@
                      'ABSMIN, '                                      // &
                      'LOCMAX, '                                      // &
                      'ABSMAX.'                                        )
-         CALL ERRCH  ( '#',  RELATE                                   )
-         CALL SIGERR ('SPICE(NOTRECOGNIZED)'                          )
-         CALL CHKOUT ( 'ZZGFLONG'                                     )
-         RETURN
+         call errch  ( '#',  relate                                   )
+         call sigerr ('SPICE(NOTRECOGNIZED)'                          )
+         call chkout ( 'ZZGFLONG'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure TOL is positive.
 !
-      IF ( TOL .LE. 0.D0 ) THEN
+      if ( tol .le. 0.d0 ) then
 
-         CALL SETMSG ( 'TOL was #; must be positive.' )
-         CALL ERRDP  ( '#',  TOL                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'       )
-         CALL CHKOUT ( 'ZZGFLONG'                     )
-         RETURN
+         call setmsg ( 'TOL was #; must be positive.' )
+         call errdp  ( '#',  tol                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'       )
+         call chkout ( 'ZZGFLONG'                     )
+         return
 
-      END IF
+      end if
 
 !
 !     We'll use a local tolerance equal to 1/5 of the input value.
 !     This will allow us to keep the total round-off error within
 !     the desired tolerance.
 !
-      LOCTOL = MAX ( 1.D-7,  TOL / 10.D0 )
+      loctol = max ( 1.d-7,  tol / 10.d0 )
 
 !
 !     Make sure ADJUST is non-negative.
 !
-      IF ( ADJUST .LT. 0.D0 ) THEN
+      if ( adjust .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'ADJUST was #; must be non-negative.' )
-         CALL ERRDP  ( '#',  ADJUST                          )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-         CALL CHKOUT ( 'ZZGFLONG'                            )
-         RETURN
+         call setmsg ( 'ADJUST was #; must be non-negative.' )
+         call errdp  ( '#',  adjust                          )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+         call chkout ( 'ZZGFLONG'                            )
+         return
 
-      END IF
+      end if
 
 !
 !    Confirm ADJUST equals zero unless UOP (RELATE) has value
 !    "ABSMAX" or "ABSMIN."
 !
-      IF(  (UOP .NE. 'ABSMIN')  .AND. (UOP .NE. 'ABSMAX' ) ) THEN
+      if(  (uop .ne. 'ABSMIN')  .and. (uop .ne. 'ABSMAX' ) ) then
 
-         IF ( ADJUST .NE. 0.D0 ) THEN
+         if ( adjust .ne. 0.d0 ) then
 
-            CALL SETMSG ( 'ADJUST should have value zero for all '  // &
+            call setmsg ( 'ADJUST should have value zero for all '  // &
                           'comparison operators except ABSMAX and ' // &
                           'ABSMIN' )
-            CALL SIGERR ( 'SPICE(INVALIDVALUE)'                     )
-            CALL CHKOUT ( 'ZZGFLONG'                                )
-            RETURN
+            call sigerr ( 'SPICE(INVALIDVALUE)'                     )
+            call chkout ( 'ZZGFLONG'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 !
 !     Get an upper case, left-justified, compressed versions of the
 !     coordinate system and coordinate names.
 !
-      CALL LJUST  ( CRDSYS,           NRMSYS )
-      CALL CMPRSS ( ' ',   0, NRMSYS, NRMSYS )
-      CALL UCASE  ( NRMSYS,           NRMSYS )
+      call ljust  ( crdsys,           nrmsys )
+      call cmprss ( ' ',   0, nrmsys, nrmsys )
+      call ucase  ( nrmsys,           nrmsys )
 
-      CALL LJUST  ( CRDNAM,           NRMCRD )
-      CALL CMPRSS ( ' ',   1, NRMCRD, NRMCRD )
-      CALL UCASE  ( NRMCRD,           NRMCRD )
+      call ljust  ( crdnam,           nrmcrd )
+      call cmprss ( ' ',   1, nrmcrd, nrmcrd )
+      call ucase  ( nrmcrd,           nrmcrd )
 
 !
 !     Make an initial call to the coordinate utility initialization
@@ -1379,55 +1379,55 @@
 !     to duplicate the checking here. Later, when necessary, we'll
 !     re-initialize the utilities.
 !
-      CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                      REF,    ABCORR, OBSRVR, DREF, &
-                      DVEC,   NRMSYS, NRMCRD )
+      call zzgfcoin ( vecdef, method, target, &
+                      ref,    abcorr, obsrvr, dref, &
+                      dvec,   nrmsys, nrmcrd )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFLONG' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFLONG' )
+         return
+      end if
 
 !
 !     We've done the basic error checking. Empty the result window and
 !     return now if the confinement window is empty.
 !
-      IF ( WNCARD(CNFINE) .EQ. 0 ) THEN
+      if ( wncard(cnfine) .eq. 0 ) then
 
-         CALL SCARDD ( 0, RESULT )
+         call scardd ( 0, result )
 
-         CALL CHKOUT ( 'ZZGFLONG' )
-         RETURN
+         call chkout ( 'ZZGFLONG' )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the total number of search passes performed.
 !
-      TOTAL = 0
+      total = 0
 
 !
 !     To eliminate special cases, we'll check for inequality
 !     constraints that are always met or can't be met.
 !
-      IF (      ( NRMSYS .EQ. CYLSYS ) &
-           .OR. ( NRMSYS .EQ. PGRSYS ) &
-           .OR. ( NRMSYS .EQ. RADSYS )  ) THEN
+      if (      ( nrmsys .eq. cylsys ) &
+           .or. ( nrmsys .eq. pgrsys ) &
+           .or. ( nrmsys .eq. radsys )  ) then
 
-         IF ( COS(REFVAL) .EQ. 1.D0 ) THEN
+         if ( cos(refval) .eq. 1.d0 ) then
 !
 !           The reference value lies on the branch cut at 0.
 !
-            IF ( UOP .EQ. '<' ) THEN
+            if ( uop .eq. '<' ) then
 !
 !              These coordinates can never be less than zero.
 !
-               CALL SCARDD( 0, RESULT )
+               call scardd( 0, result )
 
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
+               call chkout ( 'ZZGFLONG' )
+               return
 
-            ELSE IF ( UOP .EQ. '>' ) THEN
+            else if ( uop .eq. '>' ) then
 !
 !              The solution is the whole confinement window. This
 !              is because the inequality operators really act like
@@ -1435,48 +1435,48 @@
 !              quantity is increasing or decreasing except on a
 !              set of measure zero.
 !
-               CALL COPYD ( CNFINE, RESULT )
+               call copyd ( cnfine, result )
 
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
+               call chkout ( 'ZZGFLONG' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-      ELSE IF (      ( NRMSYS .EQ. GEOSYS ) &
-                .OR. ( NRMSYS .EQ. LATSYS ) &
-                .OR. ( NRMSYS .EQ. SPHSYS )  ) THEN
+      else if (      ( nrmsys .eq. geosys ) &
+                .or. ( nrmsys .eq. latsys ) &
+                .or. ( nrmsys .eq. sphsys )  ) then
 
-         IF ( COS(REFVAL) .EQ. -1.D0 ) THEN
+         if ( cos(refval) .eq. -1.d0 ) then
 !
 !           The reference value lies on the branch cut at pi.
 !
-            IF ( UOP .EQ. '<' ) THEN
+            if ( uop .eq. '<' ) then
 !
 !              The solution is the whole confinement window.
 !
-               CALL COPYD ( CNFINE, RESULT )
+               call copyd ( cnfine, result )
 
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
+               call chkout ( 'ZZGFLONG' )
+               return
 
-            ELSE IF ( UOP .EQ. '>' ) THEN
+            else if ( uop .eq. '>' ) then
 !
 !              These coordinates can never be greater
 !              than pi.
 !
-               CALL SCARDD( 0, RESULT )
+               call scardd( 0, result )
 
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
+               call chkout ( 'ZZGFLONG' )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, we make some adjustments to simplify the
@@ -1512,24 +1512,24 @@
 !        =        REFVAL                     =        2*pi - REFVAL
 !
 !
-      XRFVAL = REFVAL
+      xrfval = refval
 
 
-      IF ( NRMSYS .EQ. SPHSYS ) THEN
+      if ( nrmsys .eq. sphsys ) then
 
-         NRMSYS = LATSYS
-         XRFVAL = REFVAL
+         nrmsys = latsys
+         xrfval = refval
 
-      ELSE IF ( NRMSYS .EQ. CYLSYS ) THEN
+      else if ( nrmsys .eq. cylsys ) then
 
-         NRMSYS = RADSYS
-         NRMCRD = RACRD
-         XRFVAL = REFVAL
+         nrmsys = radsys
+         nrmcrd = racrd
+         xrfval = refval
 
-      ELSE IF ( NRMSYS .EQ. PGRSYS ) THEN
+      else if ( nrmsys .eq. pgrsys ) then
 
-         NRMSYS = RADSYS
-         NRMCRD = RACRD
+         nrmsys = radsys
+         nrmcrd = racrd
 
 !
 !        If the planetographic coordinates are positive West, we'll
@@ -1540,29 +1540,29 @@
 !        NOTE: We omit error checking here because ZZGFCOIN has done
 !        it already.
 !
-         CALL NAMFRM ( REF,    FRCODE )
-         CALL FRINFO ( FRCODE, REFCTR,  CLASS, CLSSID, FOUND )
+         call namfrm ( ref,    frcode )
+         call frinfo ( frcode, refctr,  class, clssid, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG'                       )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFLONG'                       )
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'FRINFO didn''t find data for frame # ' &
+            call setmsg ( 'FRINFO didn''t find data for frame # ' &
             //            'which has frame ID code #. This frame ' &
             //            'should have been validated by ' &
             //            'ZZGFCOIN.'                             )
-            CALL ERRCH  ( '#', REF                                )
-            CALL ERRINT ( '#', FRCODE                             )
-            CALL SIGERR ( 'SPICE(BUG)'                            )
-            CALL CHKOUT ( 'ZZGFLONG'                              )
-            RETURN
+            call errch  ( '#', ref                                )
+            call errint ( '#', frcode                             )
+            call sigerr ( 'SPICE(BUG)'                            )
+            call chkout ( 'ZZGFLONG'                              )
+            return
 
-         END IF
+         end if
 
-         CALL BODC2S ( REFCTR, RCTRNM )
+         call bodc2s ( refctr, rctrnm )
 
 !
 !        Find the longitude of the +Y axis. If this longitude
@@ -1571,14 +1571,14 @@
 !        equatorial radius and flattening factor: 1 and 0,
 !        respectively, are just fine.
 !
-         CALL RECPGR ( RCTRNM, Y, 1.D0, 0.D0, LON, LAT, ALT )
+         call recpgr ( rctrnm, y, 1.d0, 0.d0, lon, lat, alt )
 
 !
 !        Planetographic longitude ranges from 0 to 2*pi, so
 !        longitudes corresponding to positive Y values are
 !        in the range pi to 2*pi.
 !
-         IF (  LON .GT. PI() ) THEN
+         if (  lon .gt. pi() ) then
 !
 !           Planetographic longitude for the frame center is positive
 !           West.
@@ -1586,58 +1586,58 @@
 !           Note that no action is required to modify non-zero
 !           extremum adjustment values.
 !
-            IF ( UOP .EQ. 'ABSMAX' ) THEN
+            if ( uop .eq. 'ABSMAX' ) then
 
-               UOP = 'ABSMIN'
+               uop = 'ABSMIN'
 
-            ELSE IF ( UOP .EQ. 'ABSMIN' ) THEN
+            else if ( uop .eq. 'ABSMIN' ) then
 
-               UOP = 'ABSMAX'
+               uop = 'ABSMAX'
 
-            ELSE IF ( UOP .EQ. 'LOCMAX' ) THEN
+            else if ( uop .eq. 'LOCMAX' ) then
 
-               UOP = 'LOCMIN'
+               uop = 'LOCMIN'
 
-            ELSE IF ( UOP .EQ. 'LOCMIN' ) THEN
+            else if ( uop .eq. 'LOCMIN' ) then
 
-               UOP = 'LOCMAX'
+               uop = 'LOCMAX'
 
-            ELSE IF ( UOP .EQ. '=' ) THEN
+            else if ( uop .eq. '=' ) then
 
-               XRFVAL = TWOPI() - REFVAL
+               xrfval = twopi() - refval
 
-            ELSE IF ( UOP .EQ. '<' ) THEN
+            else if ( uop .eq. '<' ) then
 
-               UOP    = '>'
-               XRFVAL = TWOPI() - REFVAL
+               uop    = '>'
+               xrfval = twopi() - refval
 
-            ELSE IF ( UOP .EQ. '>' ) THEN
+            else if ( uop .eq. '>' ) then
 
-               UOP    = '<'
-               XRFVAL = TWOPI() - REFVAL
+               uop    = '<'
+               xrfval = twopi() - refval
 
-            ELSE
+            else
 !
 !              We shouldn't get here.
 !
-               CALL SETMSG ( 'Unexpected UOP value: #' )
-               CALL ERRCH  ( '#', UOP                  )
-               CALL SIGERR ( 'SPICE(BUG)'              )
-               CALL CHKOUT ( 'ZZGFLONG'                )
-               RETURN
+               call setmsg ( 'Unexpected UOP value: #' )
+               call errch  ( '#', uop                  )
+               call sigerr ( 'SPICE(BUG)'              )
+               call chkout ( 'ZZGFLONG'                )
+               return
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           Longitude is positive East, so we treat
 !           the constraint as though the coordinate were RA.
 !
-            XRFVAL = REFVAL
+            xrfval = refval
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     From this point on, we use:
@@ -1652,25 +1652,25 @@
 !     system (usually a user application). We simply empty the result
 !     window here.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 !
 !     We use the constant 0.5 * 2**0.5 quite a bit.  Create a
 !     "macro" variable for it.
 !
-      R2OVR2 = SQRT(2.D0) / 2.D0
+      r2ovr2 = sqrt(2.d0) / 2.d0
 
 !
 !     Set the progress report suffix strings.
 !
-      RPTSUF(1) = 'done.'
-      RPTSUF(2) = 'done.'
+      rptsuf(1) = 'done.'
+      rptsuf(2) = 'done.'
 
 
 !
 !     Case:  '='
 !
-      IF ( UOP .EQ. '=' ) THEN
+      if ( uop .eq. '=' ) then
 !
 !        Equality constraints are the simplest to handle, so we'll get
 !        them out of the way now. Our approach is to use sine or cosine
@@ -1689,113 +1689,113 @@
 !        Note that if the original reference value is not in the
 !        standard range, this presents no problem.
 !
-         CV = COS ( XRFVAL )
-         SV = SIN ( XRFVAL )
+         cv = cos ( xrfval )
+         sv = sin ( xrfval )
 
 !
 !        Decide which proxy function to use.
 !
-         IF ( ABS(SV) .GE. R2OVR2 ) THEN
+         if ( abs(sv) .ge. r2ovr2 ) then
 !
 !           The reference value lies in the top or bottom quarter of
 !           the unit circle. The "comparison value" CMPVAL will be
 !           used later to delete solutions with matching sines but
 !           non-matching cosines.
 !
-            PRXFUN = 'COS'
-            PRXVAL = CV
-            CMPVAL = SV
+            prxfun = 'COS'
+            prxval = cv
+            cmpval = sv
 
-         ELSE
+         else
 
-            PRXFUN = 'SIN'
-            PRXVAL = SV
-            CMPVAL = CV
+            prxfun = 'SIN'
+            prxval = sv
+            cmpval = cv
 
-         END IF
+         end if
 
 !
 !        Set up the progress reporting prefix strings. We have one
 !        ZZGFREL call which performs two passes.
 !
-         RPTPRE(1) = 'Coordinate pass 1 of 2'
-         RPTPRE(2) = 'Coordinate pass 2 of 2'
+         rptpre(1) = 'Coordinate pass 1 of 2'
+         rptpre(2) = 'Coordinate pass 2 of 2'
 
 !
 !        Allocate a workspace window.
 !
-         CALL LNKAN ( WWPOOL, NODE )
-         F1 = WIX(NODE)
+         call lnkan ( wwpool, node )
+         f1 = wix(node)
 
 !
 !        Make sure the coordinate utilities have been initialized
 !        with the actual values we'll use for our search.
 !
-         CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                         REF,    ABCORR, OBSRVR, DREF, &
-                         DVEC,   NRMSYS, NRMCRD )
+         call zzgfcoin ( vecdef, method, target, &
+                         ref,    abcorr, obsrvr, dref, &
+                         dvec,   nrmsys, nrmcrd )
 
 !
 !        Now we're ready to compute the window in which our proxy
 !        function satisfies the proxy constraint.
 !
-         IF ( PRXFUN .EQ. 'SIN' ) THEN
+         if ( prxfun .eq. 'SIN' ) then
 !
 !           Find the window where the sine of the coordinate satisfies
 !           the proxy constraint.
 !
 
-            CALL ZZGFRELX( UDSTEP,       UDREFN,          ZZGFCOSD, &
-                           ZZGFUDLT,     ZZGFCOSG, &
-                           '=',          PRXVAL,          LOCTOL, &
-                           0.D0,         CNFINE,          MW, &
-                           NW,           WORK,            RPT, &
-                           UDREPI,       UDREPU,          UDREPF, &
-                           RPTPRE,       RPTSUF,          BAIL, &
-                           UDBAIL,       WORK(LB,F1)               )
+            call zzgfrelx( udstep,       udrefn,          zzgfcosd, &
+                           zzgfudlt,     zzgfcosg, &
+                           '=',          prxval,          loctol, &
+                           0.d0,         cnfine,          mw, &
+                           nw,           work,            rpt, &
+                           udrepi,       udrepu,          udrepf, &
+                           rptpre,       rptsuf,          bail, &
+                           udbail,       work(lb,f1)               )
 
-         ELSE
+         else
 !
 !           Find the window where the cosine of the coordinate
 !           satisfies the proxy constraint.
 !
 
-            CALL ZZGFRELX( UDSTEP,       UDREFN,          ZZGFCOCD, &
-                           ZZGFUDLT,     ZZGFCOCG, &
-                           '=',          PRXVAL,          LOCTOL, &
-                           0.D0,         CNFINE,          MW, &
-                           NW,           WORK,            RPT, &
-                           UDREPI,       UDREPU,          UDREPF, &
-                           RPTPRE,       RPTSUF,          BAIL, &
-                           UDBAIL,       WORK(LB,F1)               )
+            call zzgfrelx( udstep,       udrefn,          zzgfcocd, &
+                           zzgfudlt,     zzgfcocg, &
+                           '=',          prxval,          loctol, &
+                           0.d0,         cnfine,          mw, &
+                           nw,           work,            rpt, &
+                           udrepi,       udrepu,          udrepf, &
+                           rptpre,       rptsuf,          bail, &
+                           udbail,       work(lb,f1)               )
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFLONG' )
+            return
+         end if
 
 !
 !        Handle interrupts if necessary.
 !
-         IF ( BAIL ) THEN
-            IF ( UDBAIL() ) THEN
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
-            END IF
-         END IF
+         if ( bail ) then
+            if ( udbail() ) then
+               call chkout ( 'ZZGFLONG' )
+               return
+            end if
+         end if
 
 !
 !        Remove any spurious results.
 !
-         N = CARDD( WORK(LB,F1) )
+         n = cardd( work(lb,f1) )
 
-         DO I = 1, N, 2
+         do i = 1, n, 2
 
-            START = WORK(I,F1)
+            start = work(i,f1)
 
-            IF ( PRXFUN .EQ. 'SIN' ) THEN
+            if ( prxfun .eq. 'SIN' ) then
 !
 !              Get the cosine of the coordinate at the interval start
 !              time. If this cosine has the same sign as the cosine of
@@ -1803,50 +1803,50 @@
 !              cosines of spurious values won't ever be close to the
 !              correct values, so round-off isn't an issue.
 !
-               CALL ZZGFCOCG ( START, VALUE )
+               call zzgfcocg ( start, value )
 
-            ELSE
+            else
 !
 !              Same deal, but here we're using sines.
 !
-               CALL ZZGFCOSG ( START, VALUE )
+               call zzgfcosg ( start, value )
 
-            END IF
+            end if
 
-            IF (  SMSGND( CMPVAL, VALUE )  ) THEN
+            if (  smsgnd( cmpval, value )  ) then
 !
 !              This is a winner.
 !
-               CALL WNINSD ( START, START, RESULT )
+               call wninsd ( start, start, result )
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        All done.
 !
-         CALL CHKOUT ( 'ZZGFLONG' )
-         RETURN
+         call chkout ( 'ZZGFLONG' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Case: local minimum or local maximum
 !
-      IF (      ( UOP .EQ. 'LOCMAX' ) &
-           .OR. ( UOP .EQ. 'LOCMIN' )  ) THEN
+      if (      ( uop .eq. 'LOCMAX' ) &
+           .or. ( uop .eq. 'LOCMIN' )  ) then
 !
 !        This algorithm uses 4 ZZGFREL calls, 2 of which perform
 !        2 passes and 2 of which perform 1 pass.
 !
-         RPTSUF(1) = 'done.'
-         RPTSUF(2) = 'done.'
+         rptsuf(1) = 'done.'
+         rptsuf(2) = 'done.'
 
 !
 !        Empty the result window.
 !
-         CALL SCARDD ( 0, RESULT )
+         call scardd ( 0, result )
 
 !
 !        We'll first find two windows covering the left and right
@@ -1855,37 +1855,37 @@
 !        finding the window on which the cosine of the coordinate
 !        is less than cos(LCXMRG) (which is a small, positive number).
 !
-         CALL LNKAN  ( WWPOOL, NODE )
-         LEFT = WIX(NODE)
+         call lnkan  ( wwpool, node )
+         left = wix(node)
 
-         RPTPRE(1) = 'Coordinate pass 1 of 6'
-         RPTPRE(2) = 'Coordinate pass 2 of 6'
+         rptpre(1) = 'Coordinate pass 1 of 6'
+         rptpre(2) = 'Coordinate pass 2 of 6'
 
-         PRXREL = '<'
-         PRXVAL = COS(LCXMRG)
+         prxrel = '<'
+         prxval = cos(lcxmrg)
 
-         CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                         REF,    ABCORR, OBSRVR, DREF, &
-                         DVEC,   NRMSYS, NRMCRD )
+         call zzgfcoin ( vecdef, method, target, &
+                         ref,    abcorr, obsrvr, dref, &
+                         dvec,   nrmsys, nrmcrd )
 
-         CALL ZZGFRELX ( UDSTEP,    UDREFN,              ZZGFCOCD, &
-                         ZZGFUDLT,  ZZGFCOCG, &
-                         PRXREL,    PRXVAL,              LOCTOL, &
-                         0.D0,      CNFINE,              MW, &
-                         NW,        WORK,                RPT, &
-                         UDREPI,    UDREPU,              UDREPF, &
-                         RPTPRE,    RPTSUF,              BAIL, &
-                         UDBAIL,    WORK(LB,LEFT)                 )
+         call zzgfrelx ( udstep,    udrefn,              zzgfcocd, &
+                         zzgfudlt,  zzgfcocg, &
+                         prxrel,    prxval,              loctol, &
+                         0.d0,      cnfine,              mw, &
+                         nw,        work,                rpt, &
+                         udrepi,    udrepu,              udrepf, &
+                         rptpre,    rptsuf,              bail, &
+                         udbail,    work(lb,left)                 )
 
 !
 !        Handle interrupts if necessary.
 !
-         IF ( BAIL ) THEN
-            IF ( UDBAIL() ) THEN
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
-            END IF
-         END IF
+         if ( bail ) then
+            if ( udbail() ) then
+               call chkout ( 'ZZGFLONG' )
+               return
+            end if
+         end if
 
 !
 !        Now search for the time period when the cosine of the
@@ -1894,124 +1894,124 @@
 !        complement of this window and then complementing the result of
 !        that search.
 !
-         CALL LNKAN  ( WWPOOL, NODE )
-         COMPL = WIX(NODE)
+         call lnkan  ( wwpool, node )
+         compl = wix(node)
 
-         CALL LNKAN  ( WWPOOL, NODE )
-         RIGHT = WIX(NODE)
+         call lnkan  ( wwpool, node )
+         right = wix(node)
 
 
-         RPTPRE(1) = 'Coordinate pass 3 of 6'
-         RPTPRE(2) = 'Coordinate pass 4 of 6'
+         rptpre(1) = 'Coordinate pass 3 of 6'
+         rptpre(2) = 'Coordinate pass 4 of 6'
 
-         PRXREL = '<'
-         PRXVAL = -COS(LCXMRG)
+         prxrel = '<'
+         prxval = -cos(lcxmrg)
 
-         CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                         REF,    ABCORR, OBSRVR, DREF, &
-                         DVEC,   NRMSYS, NRMCRD )
+         call zzgfcoin ( vecdef, method, target, &
+                         ref,    abcorr, obsrvr, dref, &
+                         dvec,   nrmsys, nrmcrd )
 
-         CALL ZZGFRELX ( UDSTEP,    UDREFN,              ZZGFCOCD, &
-                         ZZGFUDLT,  ZZGFCOCG, &
-                         PRXREL,    PRXVAL,              LOCTOL, &
-                         0.D0,      WORK(LB,LEFT),       MW, &
-                         NW,        WORK,                RPT, &
-                         UDREPI,    UDREPU,              UDREPF, &
-                         RPTPRE,    RPTSUF,              BAIL, &
-                         UDBAIL,    WORK(LB,COMPL)               )
+         call zzgfrelx ( udstep,    udrefn,              zzgfcocd, &
+                         zzgfudlt,  zzgfcocg, &
+                         prxrel,    prxval,              loctol, &
+                         0.d0,      work(lb,left),       mw, &
+                         nw,        work,                rpt, &
+                         udrepi,    udrepu,              udrepf, &
+                         rptpre,    rptsuf,              bail, &
+                         udbail,    work(lb,compl)               )
 
 !
 !        Handle interrupts if necessary.
 !
-         IF ( BAIL ) THEN
-            IF ( UDBAIL() ) THEN
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
-            END IF
-         END IF
+         if ( bail ) then
+            if ( udbail() ) then
+               call chkout ( 'ZZGFLONG' )
+               return
+            end if
+         end if
 
 !
 !        WORK(LB,COMPL) contains the complement of the window
 !        we want.
 !
-         CALL WNDIFD ( CNFINE, WORK(LB,COMPL), WORK(LB,RIGHT) )
+         call wndifd ( cnfine, work(lb,compl), work(lb,right) )
 
 !
 !        We're now going to find local extrema of the coordinate in the
 !        windows indexed by LEFT and RIGHT.
 !
-         DO I = 1, 2
+         do i = 1, 2
 
-            IF ( I .EQ. 1 ) THEN
+            if ( i .eq. 1 ) then
 !
 !              The sector we're searching is indexed by LEFT.
 !              We'll use RA as a proxy function, since RA has no
 !              singularity on the left half circle.
 !
-               S      = LEFT
-               PRXSYS = RADSYS
-               PRXCRD = RACRD
+               s      = left
+               prxsys = radsys
+               prxcrd = racrd
 
-               CALL LNKAN ( WWPOOL, NODE )
-               RES1 = WIX(NODE)
-               RES  = RES1
+               call lnkan ( wwpool, node )
+               res1 = wix(node)
+               res  = res1
 
-               RPTPRE(1) = 'Coordinate pass 5 of 6'
-               RPTPRE(2) = ' '
+               rptpre(1) = 'Coordinate pass 5 of 6'
+               rptpre(2) = ' '
 
-            ELSE
+            else
 
-               S         = RIGHT
-               PRXSYS    = LATSYS
-               PRXCRD    = LONCRD
+               s         = right
+               prxsys    = latsys
+               prxcrd    = loncrd
 
-               CALL LNKAN ( WWPOOL, NODE )
-               RES2 = WIX(NODE)
-               RES  = RES2
+               call lnkan ( wwpool, node )
+               res2 = wix(node)
+               res  = res2
 
-               RPTPRE(1) = 'Coordinate pass 6 of 6'
-               RPTPRE(2) = ' '
+               rptpre(1) = 'Coordinate pass 6 of 6'
+               rptpre(2) = ' '
 
-            END IF
+            end if
 
 
-            CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                            REF,    ABCORR, OBSRVR, DREF, &
-                            DVEC,   PRXSYS, PRXCRD )
+            call zzgfcoin ( vecdef, method, target, &
+                            ref,    abcorr, obsrvr, dref, &
+                            dvec,   prxsys, prxcrd )
 
-            CALL ZZGFRELX ( UDSTEP,    UDREFN,              ZZGFCODC, &
-                            ZZGFUDLT,  ZZGFCOG, &
-                            UOP,       0.D0,                LOCTOL, &
-                            0.D0,      WORK(LB,S),          MW, &
-                            NW,        WORK,                RPT, &
-                            UDREPI,    UDREPU,              UDREPF, &
-                            RPTPRE,    RPTSUF,              BAIL, &
-                            UDBAIL,    WORK(LB,RES)                  )
+            call zzgfrelx ( udstep,    udrefn,              zzgfcodc, &
+                            zzgfudlt,  zzgfcog, &
+                            uop,       0.d0,                loctol, &
+                            0.d0,      work(lb,s),          mw, &
+                            nw,        work,                rpt, &
+                            udrepi,    udrepu,              udrepf, &
+                            rptpre,    rptsuf,              bail, &
+                            udbail,    work(lb,res)                  )
 
 !
 !           Handle interrupts if necessary.
 !
-            IF ( BAIL ) THEN
-               IF ( UDBAIL() ) THEN
-                  CALL CHKOUT ( 'ZZGFLONG' )
-                  RETURN
-               END IF
-            END IF
+            if ( bail ) then
+               if ( udbail() ) then
+                  call chkout ( 'ZZGFLONG' )
+                  return
+               end if
+            end if
 
-         END DO
+         end do
 
 !
 !        Combine the contributions of both searches in RESULT.
 !
-         CALL WNUNID ( WORK(LB,RES1), WORK(LB,RES2), RESULT )
+         call wnunid ( work(lb,res1), work(lb,res2), result )
 
 !
 !        End of the LOCMIN and LOCMAX cases. RESULT is set.
 !
-         CALL CHKOUT ( 'ZZGFLONG' )
-         RETURN
+         call chkout ( 'ZZGFLONG' )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -2020,18 +2020,18 @@
 !     Initialize the window aliases. A value of zero indicates the
 !     corresponding region hasn't been computed.
 !
-      TOP    = 0
-      BOT    = 0
-      RIGHT  = 0
-      LEFT   = 0
-      Q1     = 0
-      Q2     = 0
-      Q3     = 0
-      Q4     = 0
-      S      = 0
-      WH     = 0
-      F1     = 0
-      F2     = 0
+      top    = 0
+      bot    = 0
+      right  = 0
+      left   = 0
+      q1     = 0
+      q2     = 0
+      q3     = 0
+      q4     = 0
+      s      = 0
+      wh     = 0
+      f1     = 0
+      f2     = 0
 
 !
 !     If we have an absolute extremum or inequality relation,
@@ -2042,25 +2042,25 @@
 !
 !     The ZZGFREL call below involves two passes.
 !
-      IF (  ( UOP .EQ. 'ABSMAX' ) .OR. ( UOP .EQ. 'ABSMIN' ) ) THEN
+      if (  ( uop .eq. 'ABSMAX' ) .or. ( uop .eq. 'ABSMIN' ) ) then
 
-         IF ( ADJUST .EQ. 0 ) THEN
-            TMPLAT = 'Coordinate pass # of 7'
-         ELSE
-            TMPLAT = 'Coordinate pass # of 7-9'
-         END IF
+         if ( adjust .eq. 0 ) then
+            tmplat = 'Coordinate pass # of 7'
+         else
+            tmplat = 'Coordinate pass # of 7-9'
+         end if
 
-      ELSE
+      else
 !
 !        Ordinary inequality searches use 8 passes.
 !
-         TMPLAT = 'Coordinate pass # of 8'
+         tmplat = 'Coordinate pass # of 8'
 
-      END IF
+      end if
 
-      DO I = 1, 2
-         CALL REPMI ( TMPLAT, '#', I, RPTPRE(I) )
-      END DO
+      do i = 1, 2
+         call repmi ( tmplat, '#', i, rptpre(i) )
+      end do
 
 !
 !     Find the window where the sine of the coordinate is greater than
@@ -2069,36 +2069,36 @@
 !     Make sure the coordinate utilities have been initialized
 !     with the actual values we'll use for our search.
 !
-      CALL LNKAN ( WWPOOL, NODE )
-      HEAD   = NODE
-      TOP    = WIX(NODE)
+      call lnkan ( wwpool, node )
+      head   = node
+      top    = wix(node)
 
-      PRXVAL = SIN( BCAMRG )
+      prxval = sin( bcamrg )
 
-      CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                      REF,    ABCORR, OBSRVR, DREF, &
-                      DVEC,   NRMSYS, NRMCRD )
+      call zzgfcoin ( vecdef, method, target, &
+                      ref,    abcorr, obsrvr, dref, &
+                      dvec,   nrmsys, nrmcrd )
 
-      CALL ZZGFRELX( UDSTEP,       UDREFN,          ZZGFCOSD, &
-                     ZZGFUDLT,     ZZGFCOSG, &
-                     '>',          PRXVAL,          LOCTOL, &
-                     0.D0,         CNFINE,          MW, &
-                     NW,           WORK,            RPT, &
-                     UDREPI,       UDREPU,          UDREPF, &
-                     RPTPRE,       RPTSUF,          BAIL, &
-                     UDBAIL,       WORK(LB,TOP)              )
+      call zzgfrelx( udstep,       udrefn,          zzgfcosd, &
+                     zzgfudlt,     zzgfcosg, &
+                     '>',          prxval,          loctol, &
+                     0.d0,         cnfine,          mw, &
+                     nw,           work,            rpt, &
+                     udrepi,       udrepu,          udrepf, &
+                     rptpre,       rptsuf,          bail, &
+                     udbail,       work(lb,top)              )
 
 !
 !     2 passes done.
 !
-      TOTAL = 2
+      total = 2
 
-      IF ( BAIL ) THEN
-         IF ( UDBAIL() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
-         END IF
-      END IF
+      if ( bail ) then
+         if ( udbail() ) then
+            call chkout ( 'ZZGFLONG' )
+            return
+         end if
+      end if
 
 !
 !     Find the window where the sine of the coordinate is less than
@@ -2109,42 +2109,42 @@
 !
 !     The ZZGFREL call below involves two passes.
 !
-      DO I = 1, 2
-         CALL REPMI ( TMPLAT, '#', TOTAL+I, RPTPRE(I) )
-      END DO
+      do i = 1, 2
+         call repmi ( tmplat, '#', total+i, rptpre(i) )
+      end do
 
 
-      CALL LNKAN  ( WWPOOL, NODE )
-      CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-      BOT = WIX(NODE)
+      call lnkan  ( wwpool, node )
+      call lnkila ( head,   node,   wwpool )
+      bot = wix(node)
 
-      PRXVAL = -SIN( BCAMRG )
+      prxval = -sin( bcamrg )
 
 
-      CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                      REF,    ABCORR, OBSRVR, DREF, &
-                      DVEC,   NRMSYS, NRMCRD )
+      call zzgfcoin ( vecdef, method, target, &
+                      ref,    abcorr, obsrvr, dref, &
+                      dvec,   nrmsys, nrmcrd )
 
-      CALL ZZGFRELX( UDSTEP,       UDREFN,          ZZGFCOSD, &
-                     ZZGFUDLT,     ZZGFCOSG, &
-                     '<',          PRXVAL,          LOCTOL, &
-                     0.D0,         CNFINE,          MW, &
-                     NW,           WORK,            RPT, &
-                     UDREPI,       UDREPU,          UDREPF, &
-                     RPTPRE,       RPTSUF,          BAIL, &
-                     UDBAIL,       WORK(LB,BOT)              )
+      call zzgfrelx( udstep,       udrefn,          zzgfcosd, &
+                     zzgfudlt,     zzgfcosg, &
+                     '<',          prxval,          loctol, &
+                     0.d0,         cnfine,          mw, &
+                     nw,           work,            rpt, &
+                     udrepi,       udrepu,          udrepf, &
+                     rptpre,       rptsuf,          bail, &
+                     udbail,       work(lb,bot)              )
 
 !
 !     4 passes done.
 !
-      TOTAL = TOTAL + 2
+      total = total + 2
 
-      IF ( BAIL ) THEN
-         IF ( UDBAIL() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
-         END IF
-      END IF
+      if ( bail ) then
+         if ( udbail() ) then
+            call chkout ( 'ZZGFLONG' )
+            return
+         end if
+      end if
 
 !
 !     Find the window where the cosine of the coordinate is
@@ -2153,9 +2153,9 @@
 !
 !     The ZZGFREL call below involves two passes.
 !
-      DO I = 1, 2
-         CALL REPMI ( TMPLAT, '#', TOTAL+I, RPTPRE(I) )
-      END DO
+      do i = 1, 2
+         call repmi ( tmplat, '#', total+i, rptpre(i) )
+      end do
 
 !
 !     We'll keep all of the allocated nodes linked together.
@@ -2164,65 +2164,65 @@
 !     but ensures the list head doesn't change until we delete
 !     nodes from the list.
 !
-      CALL LNKAN  ( WWPOOL, NODE )
-      CALL LNKILA ( HEAD,   NODE,  WWPOOL )
-      RIGHT  = WIX(NODE)
+      call lnkan  ( wwpool, node )
+      call lnkila ( head,   node,  wwpool )
+      right  = wix(node)
 
-      CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                      REF,    ABCORR, OBSRVR, DREF, &
-                      DVEC,   NRMSYS, NRMCRD )
+      call zzgfcoin ( vecdef, method, target, &
+                      ref,    abcorr, obsrvr, dref, &
+                      dvec,   nrmsys, nrmcrd )
 
-      CALL ZZGFRELX( UDSTEP,       UDREFN,          ZZGFCOCD, &
-                     ZZGFUDLT,     ZZGFCOCG, &
-                     '>',          0.D0,            LOCTOL, &
-                     0.D0,         CNFINE,          MW, &
-                     NW,           WORK,            RPT, &
-                     UDREPI,       UDREPU,          UDREPF, &
-                     RPTPRE,       RPTSUF,          BAIL, &
-                     UDBAIL,       WORK(LB,RIGHT)            )
+      call zzgfrelx( udstep,       udrefn,          zzgfcocd, &
+                     zzgfudlt,     zzgfcocg, &
+                     '>',          0.d0,            loctol, &
+                     0.d0,         cnfine,          mw, &
+                     nw,           work,            rpt, &
+                     udrepi,       udrepu,          udrepf, &
+                     rptpre,       rptsuf,          bail, &
+                     udbail,       work(lb,right)            )
 
 !
 !     6 passes done.
 !
-      TOTAL = TOTAL + 2
+      total = total + 2
 
-      IF ( BAIL ) THEN
-         IF ( UDBAIL() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
-         END IF
-      END IF
+      if ( bail ) then
+         if ( udbail() ) then
+            call chkout ( 'ZZGFLONG' )
+            return
+         end if
+      end if
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZGFLONG' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZGFLONG' )
+         return
+      end if
 
 
 !
 !     Now find the absolute extremum, if this was requested.
 !
-      IF (      ( UOP .EQ. 'ABSMAX' ) &
-           .OR. ( UOP .EQ. 'ABSMIN' )  ) THEN
+      if (      ( uop .eq. 'ABSMAX' ) &
+           .or. ( uop .eq. 'ABSMIN' )  ) then
 !
 !        If we're looking for an absolute extremum and the
 !        adjustment value is 0, each ZZGFREL call executes
 !        on search pass; otherwise these calls execute two
 !        search passes.
 !
-         IF ( NRMCRD .EQ. LONCRD ) THEN
+         if ( nrmcrd .eq. loncrd ) then
 !
 !           We need windows when the coordinate is in quadrants 2 and
 !           3. We can derive these from the windows TOP and RIGHT
 !           without additional searches.
 !
-            CALL LNKAN  ( WWPOOL, NODE )
-            CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-            Q2  = WIX(NODE)
+            call lnkan  ( wwpool, node )
+            call lnkila ( head,   node,   wwpool )
+            q2  = wix(node)
 
-            CALL LNKAN  ( WWPOOL, NODE )
-            CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-            Q3  = WIX(NODE)
+            call lnkan  ( wwpool, node )
+            call lnkila ( head,   node,   wwpool )
+            q3  = wix(node)
 
 !
 !           Compute windows for the second and third quadrants. Note
@@ -2230,39 +2230,39 @@
 !           at pi radians, since windows TOP and BOT have been
 !           trimmed.
 !
-            CALL WNDIFD( WORK(LB,TOP), WORK(LB,RIGHT), WORK(LB,Q2)  )
-            CALL WNDIFD( WORK(LB,BOT), WORK(LB,RIGHT), WORK(LB,Q3 ) )
+            call wndifd( work(lb,top), work(lb,right), work(lb,q2)  )
+            call wndifd( work(lb,bot), work(lb,right), work(lb,q3 ) )
 
-            IF ( UOP .EQ. 'ABSMAX' ) THEN
+            if ( uop .eq. 'ABSMAX' ) then
 
-               REGION(1) = Q2
-               REGION(2) = RIGHT
-               REGION(3) = Q3
-            ELSE
-               REGION(1) = Q3
-               REGION(2) = RIGHT
-               REGION(3) = Q2
-            END IF
+               region(1) = q2
+               region(2) = right
+               region(3) = q3
+            else
+               region(1) = q3
+               region(2) = right
+               region(3) = q2
+            end if
 
 
-         ELSE IF ( NRMCRD .EQ. RACRD ) THEN
+         else if ( nrmcrd .eq. racrd ) then
 !
 !           We need windows when the coordinate is in quadrants 1 and
 !           4, and the window when the coordinate is in the left half
 !           of the unit circle. We can derive these from the windows
 !           TOP and RIGHT without additional searches.
 !
-            CALL LNKAN  ( WWPOOL, NODE )
-            CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-            Q1  = WIX(NODE)
+            call lnkan  ( wwpool, node )
+            call lnkila ( head,   node,   wwpool )
+            q1  = wix(node)
 
-            CALL LNKAN  ( WWPOOL, NODE )
-            CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-            LEFT = WIX(NODE)
+            call lnkan  ( wwpool, node )
+            call lnkila ( head,   node,   wwpool )
+            left = wix(node)
 
-            CALL LNKAN  ( WWPOOL, NODE )
-            CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-            Q4  = WIX(NODE)
+            call lnkan  ( wwpool, node )
+            call lnkila ( head,   node,   wwpool )
+            q4  = wix(node)
 
 !
 !           Compute windows for the first and fourth quadrants. Note
@@ -2271,42 +2271,42 @@
 !           trimmed. Also compute the window LEFT, which is the
 !           complement of window RIGHT.
 !
-            CALL WNINTD( WORK(LB,RIGHT), WORK(LB,TOP),   WORK(LB,Q1)   )
-            CALL WNINTD( WORK(LB,RIGHT), WORK(LB,BOT),   WORK(LB,Q4)   )
-            CALL WNDIFD( CNFINE,         WORK(LB,RIGHT), WORK(LB,LEFT) )
+            call wnintd( work(lb,right), work(lb,top),   work(lb,q1)   )
+            call wnintd( work(lb,right), work(lb,bot),   work(lb,q4)   )
+            call wndifd( cnfine,         work(lb,right), work(lb,left) )
 
-            IF ( UOP .EQ. 'ABSMAX' ) THEN
+            if ( uop .eq. 'ABSMAX' ) then
 
-               REGION(1) = Q4
-               REGION(2) = LEFT
-               REGION(3) = Q1
-            ELSE
-               REGION(1) = Q1
-               REGION(2) = LEFT
-               REGION(3) = Q4
-            END IF
+               region(1) = q4
+               region(2) = left
+               region(3) = q1
+            else
+               region(1) = q1
+               region(2) = left
+               region(3) = q4
+            end if
 
-         ELSE
+         else
 !
 !           We're not expecting to see a coordinate other than
 !           longitude or RA here.
 !
-            CALL SETMSG ( 'Unexpected coordinate # (0)' )
-            CALL ERRCH  ( '#', NRMCRD                   )
-            CALL SIGERR ( 'SPICE(BUG)'                  )
-            CALL CHKOUT ( 'ZZGFLONG'                    )
-            RETURN
+            call setmsg ( 'Unexpected coordinate # (0)' )
+            call errch  ( '#', nrmcrd                   )
+            call sigerr ( 'SPICE(BUG)'                  )
+            call chkout ( 'ZZGFLONG'                    )
+            return
 
-         END IF
+         end if
 
 !
 !        Now search the list of regions for the specified
 !        extremum.
 !
-         FOUND = .FALSE.
-         I     = 1
+         found = .false.
+         i     = 1
 
-         DO WHILE (  ( I .LE. 3 ) .AND. ( .NOT. FOUND )  )
+         do while (  ( i .le. 3 ) .and. ( .not. found )  )
 !
 !           Search region I. Set the reference and adjustment
 !           values to 0 for this search.
@@ -2315,78 +2315,78 @@
 !           doing an absolute extremum search with 0 adjustment
 !           value (even if ADJUST is non-zero).
 !
-            CALL REPMI ( TMPLAT, '#', TOTAL+1, RPTPRE(1) )
-            RPTPRE(2) = ' '
+            call repmi ( tmplat, '#', total+1, rptpre(1) )
+            rptpre(2) = ' '
 
-            CALL SCARDD ( 0, RESULT )
+            call scardd ( 0, result )
 !
 !           Perform our searches with functions that have no branch
 !           cuts near the region boundaries.
 !
-            IF (      ( REGION(I) .EQ. Q1    ) &
-                 .OR. ( REGION(I) .EQ. Q4    ) &
-                 .OR. ( REGION(I) .EQ. RIGHT )  ) THEN
+            if (      ( region(i) .eq. q1    ) &
+                 .or. ( region(i) .eq. q4    ) &
+                 .or. ( region(i) .eq. right )  ) then
 
-               PRXSYS = LATSYS
-               PRXCRD = LONCRD
-            ELSE
-               PRXSYS = RADSYS
-               PRXCRD = RACRD
-            END IF
+               prxsys = latsys
+               prxcrd = loncrd
+            else
+               prxsys = radsys
+               prxcrd = racrd
+            end if
 
-            CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                            REF,    ABCORR, OBSRVR, DREF, &
-                            DVEC,   PRXSYS, PRXCRD )
+            call zzgfcoin ( vecdef, method, target, &
+                            ref,    abcorr, obsrvr, dref, &
+                            dvec,   prxsys, prxcrd )
 
-            CALL ZZGFRELX( UDSTEP,    UDREFN,              ZZGFCODC, &
-                           ZZGFUDLT,  ZZGFCOCG, &
-                           UOP,       0.D0,                LOCTOL, &
-                           0.D0,      WORK(LB,REGION(I)),  MW, &
-                           NW,        WORK,                RPT, &
-                           UDREPI,    UDREPU,              UDREPF, &
-                           RPTPRE,    RPTSUF,              BAIL, &
-                           UDBAIL,    RESULT                      )
+            call zzgfrelx( udstep,    udrefn,              zzgfcodc, &
+                           zzgfudlt,  zzgfcocg, &
+                           uop,       0.d0,                loctol, &
+                           0.d0,      work(lb,region(i)),  mw, &
+                           nw,        work,                rpt, &
+                           udrepi,    udrepu,              udrepf, &
+                           rptpre,    rptsuf,              bail, &
+                           udbail,    result                      )
 
 !
 !           ZZGFREL will have performed a pass only if the confinement
 !           window was non-empty.
 !
-            IF (  CARDD( WORK(LB, REGION(I)) )  .GT. 0  ) THEN
+            if (  cardd( work(lb, region(i)) )  .gt. 0  ) then
 !
 !              Another pass has been completed.
 !
-               TOTAL = TOTAL + 1
+               total = total + 1
 
-            END IF
+            end if
 
-            IF ( BAIL ) THEN
-               IF ( UDBAIL() ) THEN
-                  CALL CHKOUT ( 'ZZGFLONG' )
-                  RETURN
-               END IF
-            END IF
+            if ( bail ) then
+               if ( udbail() ) then
+                  call chkout ( 'ZZGFLONG' )
+                  return
+               end if
+            end if
 
 
-            IF ( WNCARD(RESULT) .GT. 0 ) THEN
+            if ( wncard(result) .gt. 0 ) then
 !
 !              We found an extremum. We don't have to search further.
 !
-               FOUND = .TRUE.
-            ELSE
-               I     = I + 1
-            END IF
+               found = .true.
+            else
+               i     = i + 1
+            end if
 
-         END DO
+         end do
 
 
-         IF ( ADJUST .EQ. 0.D0 ) THEN
+         if ( adjust .eq. 0.d0 ) then
 !
 !           The result we have is the final result.
 !
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
+            call chkout ( 'ZZGFLONG' )
+            return
 
-         END IF
+         end if
 
 !
 !        This is the case of an absolute extremum search with
@@ -2394,44 +2394,44 @@
 !
 !        We'll need to obtain the extreme value.
 !
-         ET = RESULT(1)
+         et = result(1)
 
 
-         CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                         REF,    ABCORR, OBSRVR, DREF, &
-                         DVEC,   NRMSYS, NRMCRD )
+         call zzgfcoin ( vecdef, method, target, &
+                         ref,    abcorr, obsrvr, dref, &
+                         dvec,   nrmsys, nrmcrd )
 
-         CALL ZZGFCOG ( ET, EXTVAL )
+         call zzgfcog ( et, extval )
 
 !
 !        Re-set the operator and reference value to enable
 !        us to conduct an inequality search.
 !
-         IF ( UOP .EQ. 'ABSMAX' ) THEN
+         if ( uop .eq. 'ABSMAX' ) then
 
-            IF ( NRMCRD .EQ. LONCRD ) THEN
+            if ( nrmcrd .eq. loncrd ) then
 
-               XRFVAL = MAX( EXTVAL - ADJUST,  -PI() )
-            ELSE
-               XRFVAL = MAX( EXTVAL - ADJUST,   0.D0 )
-            END IF
+               xrfval = max( extval - adjust,  -pi() )
+            else
+               xrfval = max( extval - adjust,   0.d0 )
+            end if
 
-            UOP    = '>'
+            uop    = '>'
 
-         ELSE
+         else
 
-            IF ( NRMCRD .EQ. LONCRD ) THEN
+            if ( nrmcrd .eq. loncrd ) then
 
-               XRFVAL = MIN( EXTVAL + ADJUST,   PI()    )
-            ELSE
-               XRFVAL = MIN( EXTVAL + ADJUST,   TWOPI() )
-            END IF
+               xrfval = min( extval + adjust,   pi()    )
+            else
+               xrfval = min( extval + adjust,   twopi() )
+            end if
 
-            UOP    = '<'
+            uop    = '<'
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Case: inequality
@@ -2439,7 +2439,7 @@
 !     Searches for absolute extrema with non-zero adjustment values
 !     also use this code block.
 !
-      IF (  ( UOP .EQ. '<' )  .OR.  ( UOP .EQ. '>' )  ) THEN
+      if (  ( uop .eq. '<' )  .or.  ( uop .eq. '>' )  ) then
 !
 !        We'll find the window when the coordinate is less than
 !        the reference value. If the relation is '>', we'll
@@ -2447,54 +2447,54 @@
 !        we need to take the complement of our result at the
 !        end of the search.
 !
-         IF ( UOP .EQ. '>' ) THEN
+         if ( uop .eq. '>' ) then
 
-            UOP  = '<'
-            FLIP = .TRUE.
-         ELSE
-            FLIP = .FALSE.
-         END IF
+            uop  = '<'
+            flip = .true.
+         else
+            flip = .false.
+         end if
 
 !
 !        We'll need the sine and cosine of the reference value.
 !
-         CV = COS ( XRFVAL )
-         SV = SIN ( XRFVAL )
+         cv = cos ( xrfval )
+         sv = sin ( xrfval )
 
 !
 !        Determine the quadrant QUAD of the reference value.
 !
-         LOCREF = DATAN2( SV, CV )
+         locref = datan2( sv, cv )
 
-         IF ( LOCREF .LT. -PI()/2 ) THEN
-            QUAD = 3
-         ELSE IF ( LOCREF .LT. 0.D0 ) THEN
-            QUAD = 4
-         ELSE IF ( LOCREF .LT. PI()/2 ) THEN
-            QUAD = 1
-         ELSE
-            QUAD = 2
-         END IF
+         if ( locref .lt. -pi()/2 ) then
+            quad = 3
+         else if ( locref .lt. 0.d0 ) then
+            quad = 4
+         else if ( locref .lt. pi()/2 ) then
+            quad = 1
+         else
+            quad = 2
+         end if
 
 !
 !        Create a list of region windows to compute. The order
 !        of list items is significant: the regions will
 !        be computed in the order in which they're listed.
 !
-         IF ( NRMCRD .EQ. LONCRD ) THEN
+         if ( nrmcrd .eq. loncrd ) then
 
-            NL       = 2
-            RLIST(1) = 'Q2'
-            RLIST(2) = 'Q3'
+            nl       = 2
+            rlist(1) = 'Q2'
+            rlist(2) = 'Q3'
 
-         ELSE
+         else
 
-            NL       = 3
-            RLIST(1) = 'LEFT'
-            RLIST(2) = 'Q1'
-            RLIST(3) = 'Q4'
+            nl       = 3
+            rlist(1) = 'LEFT'
+            rlist(2) = 'Q1'
+            rlist(3) = 'Q4'
 
-         END IF
+         end if
 
 !
 !        Compute all of the region windows.
@@ -2502,141 +2502,141 @@
 !        We make use of the fact that windows TOP and RIGHT
 !        have already been computed.
 !
-         DO I = 1, NL
+         do i = 1, nl
 
-            IF ( ( RLIST(I) .EQ. 'LEFT' ) .AND. ( LEFT .EQ. 0 ) ) THEN
+            if ( ( rlist(i) .eq. 'LEFT' ) .and. ( left .eq. 0 ) ) then
 
-               CALL LNKAN  ( WWPOOL, NODE )
-               CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-               LEFT = WIX(NODE)
+               call lnkan  ( wwpool, node )
+               call lnkila ( head,   node,   wwpool )
+               left = wix(node)
 
-               CALL WNDIFD ( CNFINE, WORK(LB,RIGHT), WORK(LB,LEFT) )
+               call wndifd ( cnfine, work(lb,right), work(lb,left) )
 
-            ELSE IF ( ( RLIST(I) .EQ. 'Q1' ) .AND. ( Q1 .EQ. 0 ) ) THEN
+            else if ( ( rlist(i) .eq. 'Q1' ) .and. ( q1 .eq. 0 ) ) then
 
-               IF ( Q1 .EQ. 0 ) THEN
+               if ( q1 .eq. 0 ) then
 
-                  CALL LNKAN  ( WWPOOL, NODE )
-                  CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-                  Q1 = WIX(NODE)
+                  call lnkan  ( wwpool, node )
+                  call lnkila ( head,   node,   wwpool )
+                  q1 = wix(node)
 
-               END IF
+               end if
 
-               CALL WNINTD ( WORK(LB,RIGHT), WORK(LB,TOP), WORK(LB,Q1) )
-
-
-            ELSE IF ( ( RLIST(I) .EQ. 'Q2' ) .AND. ( Q2 .EQ. 0 ) ) THEN
-
-               CALL LNKAN  ( WWPOOL, NODE )
-               CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-               Q2 = WIX(NODE)
-
-               CALL WNDIFD ( WORK(LB,TOP), WORK(LB,RIGHT), WORK(LB,Q2) )
+               call wnintd ( work(lb,right), work(lb,top), work(lb,q1) )
 
 
-            ELSE IF ( ( RLIST(I) .EQ. 'Q3' ) .AND. ( Q3 .EQ. 0 ) ) THEN
+            else if ( ( rlist(i) .eq. 'Q2' ) .and. ( q2 .eq. 0 ) ) then
+
+               call lnkan  ( wwpool, node )
+               call lnkila ( head,   node,   wwpool )
+               q2 = wix(node)
+
+               call wndifd ( work(lb,top), work(lb,right), work(lb,q2) )
+
+
+            else if ( ( rlist(i) .eq. 'Q3' ) .and. ( q3 .eq. 0 ) ) then
 !
 !              Note: we need the bottom window in order to compute Q3!
 !
-               CALL LNKAN  ( WWPOOL, NODE )
-               CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-               Q3 = WIX(NODE)
+               call lnkan  ( wwpool, node )
+               call lnkila ( head,   node,   wwpool )
+               q3 = wix(node)
 
-               CALL WNDIFD ( WORK(LB,BOT), WORK(LB,RIGHT), WORK(LB,Q3) )
+               call wndifd ( work(lb,bot), work(lb,right), work(lb,q3) )
 
 
-            ELSE IF ( ( RLIST(I) .EQ. 'Q4' ) .AND. ( Q4 .EQ. 0 ) ) THEN
+            else if ( ( rlist(i) .eq. 'Q4' ) .and. ( q4 .eq. 0 ) ) then
 !
 !              NOTE: We need the bottom window in order to compute Q4!
 !
-               CALL LNKAN  ( WWPOOL, NODE )
-               CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-               Q4 = WIX(NODE)
+               call lnkan  ( wwpool, node )
+               call lnkila ( head,   node,   wwpool )
+               q4 = wix(node)
 
-               CALL WNINTD ( WORK(LB,RIGHT), WORK(LB,BOT), WORK(LB,Q4) )
+               call wnintd ( work(lb,right), work(lb,bot), work(lb,q4) )
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFLONG' )
+            return
+         end if
 
 
 !
 !        Now decide the sector and proxy function we'll use to
 !        search for the time when the reference value is hit.
 !
-         IF ( NRMCRD .EQ. LONCRD ) THEN
+         if ( nrmcrd .eq. loncrd ) then
 
-            IF ( QUAD .EQ. 1 ) THEN
+            if ( quad .eq. 1 ) then
 
-               S      = RIGHT
-               PRXFUN = LONCRD
+               s      = right
+               prxfun = loncrd
 
-            ELSE IF ( QUAD .EQ. 2 ) THEN
+            else if ( quad .eq. 2 ) then
 
-               S      = Q2
-               PRXFUN = RACRD
+               s      = q2
+               prxfun = racrd
 
-            ELSE IF ( QUAD .EQ. 3 ) THEN
+            else if ( quad .eq. 3 ) then
 
-               S      = Q3
-               PRXFUN = RACRD
+               s      = q3
+               prxfun = racrd
 
-            ELSE
+            else
 
-               S      = RIGHT
-               PRXFUN = LONCRD
+               s      = right
+               prxfun = loncrd
 
-            END IF
+            end if
 
-         ELSE
+         else
 
-            IF ( QUAD .EQ. 1 ) THEN
+            if ( quad .eq. 1 ) then
 
-               S      = Q1
-               PRXFUN = LONCRD
+               s      = q1
+               prxfun = loncrd
 
-            ELSE IF ( QUAD .EQ. 2 ) THEN
+            else if ( quad .eq. 2 ) then
 
-               S      = LEFT
-               PRXFUN = RACRD
+               s      = left
+               prxfun = racrd
 
-            ELSE IF ( QUAD .EQ. 3 ) THEN
+            else if ( quad .eq. 3 ) then
 
-               S      = LEFT
-               PRXFUN = RACRD
+               s      = left
+               prxfun = racrd
 
-            ELSE
+            else
 
-               S      = Q4
-               PRXFUN = LONCRD
+               s      = q4
+               prxfun = loncrd
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
 !
 !        Set the proxy reference value based on the input
 !        reference value and the choice of proxy function.
 !
-         IF ( PRXFUN .EQ. LONCRD ) THEN
+         if ( prxfun .eq. loncrd ) then
 
-            PRXVAL = DATAN2 ( SV, CV )
+            prxval = datan2 ( sv, cv )
 
-         ELSE
+         else
 
-            PRXVAL = DATAN2 ( SV, CV )
+            prxval = datan2 ( sv, cv )
 
-            IF ( PRXVAL .LT. 0.D0 ) THEN
-               PRXVAL = PRXVAL + TWOPI()
-            END IF
+            if ( prxval .lt. 0.d0 ) then
+               prxval = prxval + twopi()
+            end if
 
-         END IF
+         end if
 
 !
 !        We're going to need additional windows in order to search
@@ -2645,52 +2645,52 @@
 !
 !        Create the set NEEDWN of the windows we need to retain.
 !
-         CALL SSIZEI ( NWLONG, NEEDWN )
+         call ssizei ( nwlong, needwn )
 
 
-         IF ( NRMCRD .EQ. LONCRD ) THEN
+         if ( nrmcrd .eq. loncrd ) then
 
-            CALL INSRTI ( Q2,    NEEDWN )
-            CALL INSRTI ( Q3,    NEEDWN )
-            CALL INSRTI ( RIGHT, NEEDWN )
-         ELSE
-            CALL INSRTI ( Q1,    NEEDWN )
-            CALL INSRTI ( Q4,    NEEDWN )
-            CALL INSRTI ( LEFT,  NEEDWN )
-         END IF
+            call insrti ( q2,    needwn )
+            call insrti ( q3,    needwn )
+            call insrti ( right, needwn )
+         else
+            call insrti ( q1,    needwn )
+            call insrti ( q4,    needwn )
+            call insrti ( left,  needwn )
+         end if
 
 !
 !        Now delete all windows not referenced by NEEDWN.
 !
-         NODE = HEAD
+         node = head
 
-         DO WHILE ( NODE .GT. 0 )
+         do while ( node .gt. 0 )
 !
 !           Find the next node in the list.
 !
-            NEXT = LNKNXT ( NODE, WWPOOL )
+            next = lnknxt ( node, wwpool )
 
-            IF (  .NOT.  ELEMI( WIX(NODE), NEEDWN )  )  THEN
+            if (  .not.  elemi( wix(node), needwn )  )  then
 !
 !              Delete NODE; update HEAD if we deleted the head node.
 !
-               CALL LNKFSL ( NODE, NODE, WWPOOL )
+               call lnkfsl ( node, node, wwpool )
 
-               IF ( HEAD .EQ. NODE ) THEN
-                  HEAD = NEXT
-               END IF
+               if ( head .eq. node ) then
+                  head = next
+               end if
 
-            END IF
+            end if
 !
 !           Prepare to look at the next node.
 !
-            NODE = NEXT
+            node = next
 
-         END DO
+         end do
 
 
 
-         IF ( NRMCRD .EQ. LONCRD ) THEN
+         if ( nrmcrd .eq. loncrd ) then
 !
 !           This is a longitude search.
 !
@@ -2699,65 +2699,65 @@
 !           in workspace window F1. If this window is empty, set F1 to
 !           0.
 !
-            IF ( QUAD .EQ. 1 ) THEN
+            if ( quad .eq. 1 ) then
 
-               F1 = Q3
+               f1 = q3
 
-            ELSE IF ( QUAD .EQ. 2 ) THEN
+            else if ( quad .eq. 2 ) then
 
-               CALL LNKAN  ( WWPOOL, NODE )
-               CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-               F1 = WIX(NODE)
+               call lnkan  ( wwpool, node )
+               call lnkila ( head,   node,   wwpool )
+               f1 = wix(node)
 
-               CALL WNUNID ( WORK(LB,Q3), WORK(LB,RIGHT), WORK(LB,F1) )
+               call wnunid ( work(lb,q3), work(lb,right), work(lb,f1) )
 
-            ELSE IF ( QUAD .EQ. 3 ) THEN
+            else if ( quad .eq. 3 ) then
 
-               F1 = 0
+               f1 = 0
 
-            ELSE
+            else
 !
 !              QUAD is 4.
 !
-               F1 = Q3
+               f1 = q3
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           We're working with RA.
 !
-            IF ( QUAD .EQ. 1 ) THEN
+            if ( quad .eq. 1 ) then
 
-               F1 = 0
+               f1 = 0
 
-            ELSE IF ( QUAD .EQ. 2 ) THEN
+            else if ( quad .eq. 2 ) then
 
-               F1 = Q1
+               f1 = q1
 
-            ELSE IF ( QUAD .EQ. 3 ) THEN
+            else if ( quad .eq. 3 ) then
 
-               F1 = Q1
+               f1 = q1
 
-            ELSE
+            else
 !
 !              QUAD is 4.
 !
-               CALL LNKAN  ( WWPOOL, NODE )
-               CALL LNKILA ( HEAD,   NODE,   WWPOOL )
-               F1 = WIX(NODE)
+               call lnkan  ( wwpool, node )
+               call lnkila ( head,   node,   wwpool )
+               f1 = wix(node)
 
-               CALL WNUNID ( WORK(LB,LEFT), WORK(LB,Q1), WORK(LB,F1) )
+               call wnunid ( work(lb,left), work(lb,q1), work(lb,f1) )
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFLONG' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFLONG' )
+            return
+         end if
 
 !
 !        Search sector S to find times when the relation
@@ -2769,85 +2769,85 @@
 !        Allocate window F2 to hold the result of the search.
 !
 !
-         DO I = 1, 2
-            CALL REPMI ( TMPLAT, '#', TOTAL+I, RPTPRE(I) )
-         END DO
+         do i = 1, 2
+            call repmi ( tmplat, '#', total+i, rptpre(i) )
+         end do
 
-         CALL LNKAN  ( WWPOOL, NODE )
-         CALL LNKILA ( HEAD,   NODE,   WWPOOL )
+         call lnkan  ( wwpool, node )
+         call lnkila ( head,   node,   wwpool )
 
-         F2 = WIX(NODE)
+         f2 = wix(node)
 
-         CALL SCARDD ( 0, WORK(LB,F2) )
+         call scardd ( 0, work(lb,f2) )
 
-         IF ( PRXFUN .EQ. LONCRD ) THEN
-
-!
-!           Initialize the proxy search in sector S, then perform the
-!           search.
-!
-            CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                            REF,    ABCORR, OBSRVR, DREF, &
-                            DVEC,   LATSYS, LONCRD )
-
-            CALL ZZGFRELX ( UDSTEP,    UDREFN,     ZZGFCODC, &
-                            ZZGFUDLT,  ZZGFCOG, &
-                            '<',       PRXVAL,      LOCTOL, &
-                            0.D0,      WORK(LB,S),  MW, &
-                            NW,        WORK,        RPT, &
-                            UDREPI,    UDREPU,      UDREPF, &
-                            RPTPRE,    RPTSUF,      BAIL, &
-                            UDBAIL,    WORK(LB,F2)          )
-
-         ELSE
+         if ( prxfun .eq. loncrd ) then
 
 !
 !           Initialize the proxy search in sector S, then perform the
 !           search.
 !
-            CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                            REF,    ABCORR, OBSRVR, DREF, &
-                            DVEC,   RADSYS, RACRD )
+            call zzgfcoin ( vecdef, method, target, &
+                            ref,    abcorr, obsrvr, dref, &
+                            dvec,   latsys, loncrd )
 
-            CALL ZZGFRELX ( UDSTEP,    UDREFN,      ZZGFCODC, &
-                            ZZGFUDLT,  ZZGFCOG, &
-                            '<',       PRXVAL,      LOCTOL, &
-                            0.D0,      WORK(LB,S),  MW, &
-                            NW,        WORK,        RPT, &
-                            UDREPI,    UDREPU,      UDREPF, &
-                            RPTPRE,    RPTSUF,      BAIL, &
-                            UDBAIL,    WORK(LB,F2)            )
+            call zzgfrelx ( udstep,    udrefn,     zzgfcodc, &
+                            zzgfudlt,  zzgfcog, &
+                            '<',       prxval,      loctol, &
+                            0.d0,      work(lb,s),  mw, &
+                            nw,        work,        rpt, &
+                            udrepi,    udrepu,      udrepf, &
+                            rptpre,    rptsuf,      bail, &
+                            udbail,    work(lb,f2)          )
 
-         END IF
+         else
+
+!
+!           Initialize the proxy search in sector S, then perform the
+!           search.
+!
+            call zzgfcoin ( vecdef, method, target, &
+                            ref,    abcorr, obsrvr, dref, &
+                            dvec,   radsys, racrd )
+
+            call zzgfrelx ( udstep,    udrefn,      zzgfcodc, &
+                            zzgfudlt,  zzgfcog, &
+                            '<',       prxval,      loctol, &
+                            0.d0,      work(lb,s),  mw, &
+                            nw,        work,        rpt, &
+                            udrepi,    udrepu,      udrepf, &
+                            rptpre,    rptsuf,      bail, &
+                            udbail,    work(lb,f2)            )
+
+         end if
 
 !
 !        7 + 0:2 passes done for adjusted extrema.
 !
-         IF ( BAIL ) THEN
-            IF ( UDBAIL() ) THEN
-               CALL CHKOUT ( 'ZZGFLONG' )
-               RETURN
-            END IF
-         END IF
+         if ( bail ) then
+            if ( udbail() ) then
+               call chkout ( 'ZZGFLONG' )
+               return
+            end if
+         end if
 
 !
 !        Combine the contents of windows F1 and F2 to obtain
 !        the result.
 !
-         IF ( F1 .NE. 0 ) THEN
+         if ( f1 .ne. 0 ) then
 
-            CALL WNUNID ( WORK(LB,F1), WORK(LB,F2), RESULT )
+            call wnunid ( work(lb,f1), work(lb,f2), result )
 
-         ELSE
+         else
 
-            CALL COPYD  ( WORK(LB,F2),              RESULT )
+            call copyd  ( work(lb,f2),              result )
 
-         END IF
+         end if
 
 !
 !        Last step: complement the result if necessary.
 !
-         IF ( FLIP ) THEN
+         if ( flip ) then
 
 !
 !           Create the window relative to which we'll find
@@ -2855,29 +2855,29 @@
 !           is not CNFINE, but rather a union of windows
 !           that avoids the branch cut.
 !
-            CALL LNKAN ( WWPOOL, NODE )
-            WH = WIX(NODE)
+            call lnkan ( wwpool, node )
+            wh = wix(node)
 
-            IF ( NRMCRD .EQ. LONCRD ) THEN
+            if ( nrmcrd .eq. loncrd ) then
 
-               CALL WNUNID ( WORK(LB,Q2), WORK(LB,RIGHT), WORK(LB,F2) )
-               CALL WNUNID ( WORK(LB,Q3), WORK(LB,F2),    WORK(LB,WH) )
-            ELSE
-               CALL WNUNID ( WORK(LB,Q1), WORK(LB,LEFT),  WORK(LB,F2) )
-               CALL WNUNID ( WORK(LB,Q4), WORK(LB,F2),    WORK(LB,WH) )
-            END IF
+               call wnunid ( work(lb,q2), work(lb,right), work(lb,f2) )
+               call wnunid ( work(lb,q3), work(lb,f2),    work(lb,wh) )
+            else
+               call wnunid ( work(lb,q1), work(lb,left),  work(lb,f2) )
+               call wnunid ( work(lb,q4), work(lb,f2),    work(lb,wh) )
+            end if
 
 !
 !           We use F2 as a temporary window index, since F2 is
 !           guaranteed to exist at this point and is distinct from WH.
 !
-            CALL WNDIFD ( WORK(LB,WH), RESULT, WORK(LB,F2) )
-            CALL COPYD  ( WORK(LB,F2),         RESULT      )
+            call wndifd ( work(lb,wh), result, work(lb,f2) )
+            call copyd  ( work(lb,f2),         result      )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT (  'ZZGFLONG' )
-      RETURN
-      END
+      call chkout (  'ZZGFLONG' )
+      return
+      end

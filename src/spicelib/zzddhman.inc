@@ -152,29 +152,29 @@
 !     FTSIZE     is the maximum number of files (DAS and DAF) that a
 !                user may have open simultaneously.
 !
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE = 5000 )
+      integer               ftsize
+      parameter           ( ftsize = 5000 )
 
 !
 !     RSVUNT     is the number of units protected from being locked
 !                to a particular handle by ZZDDHHLU.
 !
-      INTEGER               RSVUNT
-      PARAMETER           ( RSVUNT = 2 )
+      integer               rsvunt
+      parameter           ( rsvunt = 2 )
 
 !
 !     SCRUNT     is the number of units protected for use by scratch
 !                files.
 !
-      INTEGER               SCRUNT
-      PARAMETER           ( SCRUNT = 1 )
+      integer               scrunt
+      parameter           ( scrunt = 1 )
 
 !
 !     UTSIZE     is the maximum number of logical units this manager
 !                will utilize at one time.
 !
-      INTEGER               UTSIZE
-      PARAMETER           ( UTSIZE = 20 + SCRUNT + RSVUNT )
+      integer               utsize
+      parameter           ( utsize = 20 + scrunt + rsvunt )
 
 !
 !     Access method enumeration.  These parameters are used to
@@ -189,20 +189,20 @@
 !
 !     These values are used in the file table variable FTAMH.
 !
-      INTEGER               READ
-      PARAMETER           ( READ   = 1 )
+      integer               read
+      parameter           ( read   = 1 )
 
-      INTEGER               WRITE
-      PARAMETER           ( WRITE  = 2 )
+      integer               write
+      parameter           ( write  = 2 )
 
-      INTEGER               SCRTCH
-      PARAMETER           ( SCRTCH = 3 )
+      integer               scrtch
+      parameter           ( scrtch = 3 )
 
-      INTEGER               NEW
-      PARAMETER           ( NEW    = 4 )
+      integer               new
+      parameter           ( new    = 4 )
 
-      INTEGER               NUMAMH
-      PARAMETER           ( NUMAMH = 4 )
+      integer               numamh
+      parameter           ( numamh = 4 )
 
 !
 !     Binary file format enumeration.  These parameters are used to
@@ -217,31 +217,31 @@
 !
 !     These values are used in the file table variable FTBFF.
 !
-      INTEGER               BIGI3E
-      PARAMETER           ( BIGI3E = 1 )
+      integer               bigi3e
+      parameter           ( bigi3e = 1 )
 
-      INTEGER               LTLI3E
-      PARAMETER           ( LTLI3E = 2 )
+      integer               ltli3e
+      parameter           ( ltli3e = 2 )
 
-      INTEGER               VAXGFL
-      PARAMETER           ( VAXGFL = 3 )
+      integer               vaxgfl
+      parameter           ( vaxgfl = 3 )
 
-      INTEGER               VAXDFL
-      PARAMETER           ( VAXDFL = 4 )
+      integer               vaxdfl
+      parameter           ( vaxdfl = 4 )
 
-      INTEGER               NUMBFF
-      PARAMETER           ( NUMBFF = 4 )
+      integer               numbff
+      parameter           ( numbff = 4 )
 
 !
 !     Some random string lengths... more documentation required.
 !     For now this will have to suffice.
 !
 
-      INTEGER               STRSIZ
-      PARAMETER           ( STRSIZ = 8 )
+      integer               strsiz
+      parameter           ( strsiz = 8 )
 
-      INTEGER               STRLEN
-      PARAMETER           ( STRLEN = (STRSIZ+1)*NUMBFF )
+      integer               strlen
+      parameter           ( strlen = (strsiz+1)*numbff )
 
 
 !
@@ -255,14 +255,14 @@
 !
 !     These values will be used in the file table variable FTARC.
 !
-      INTEGER               DAF
-      PARAMETER           ( DAF = 1 )
+      integer               daf
+      parameter           ( daf = 1 )
 
-      INTEGER               DAS
-      PARAMETER           ( DAS = 2 )
+      integer               das
+      parameter           ( das = 2 )
 
-      INTEGER               NUMARC
-      PARAMETER           ( NUMARC = 2 )
+      integer               numarc
+      parameter           ( numarc = 2 )
 
 !
 !     For the following environments, record length is measured in
@@ -294,19 +294,19 @@
 !                  Absoft Fortran Version 3.2
 !     Source:      NAIF Program
 !
-      INTEGER               RECL
-      PARAMETER           ( RECL  = 1024 )
+      integer               recl
+      parameter           ( recl  = 1024 )
 
 !
 !     The following parameter defines the size of a string used
 !     to store a filenames on this target platform.
 !
-      INTEGER               FILEN
-      PARAMETER           ( FILEN  =  255 )
+      integer               filen
+      parameter           ( filen  =  255 )
 
 !
 !     The following parameter controls the size of the character record
 !     buffer used to read data from non-native files.
 !
-      INTEGER               CBFSIZ
-      PARAMETER           ( CBFSIZ = 1024 )
+      integer               cbfsiz
+      parameter           ( cbfsiz = 1024 )

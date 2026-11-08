@@ -1,6 +1,6 @@
 !$Procedure SGFCON ( Generic Segments: Fetch constants )
 
-      SUBROUTINE SGFCON ( HANDLE, DESCR, FIRST, LAST, VALUES )
+      subroutine sgfcon ( handle, descr, first, last, values )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      INTEGER               FIRST
-      INTEGER               LAST
-      DOUBLE PRECISION      VALUES ( * )
+      integer               handle
+      double precision      descr  ( * )
+      integer               first
+      integer               last
+      double precision      values ( * )
 
 ! $ Brief_I/O
 !
@@ -144,86 +144,86 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
 !     Include the mnemonic values for the generic segment declarations.
 !
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 
 !
 !     Local Variables
 !
-      INTEGER               B
-      INTEGER               BASE
-      INTEGER               E
-      INTEGER               MYNCON
+      integer               b
+      integer               base
+      integer               e
+      integer               myncon
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGFCON' )
+      call chkin ( 'SGFCON' )
 
 !
 !     Get the value for the base of the constants and the number of
 !     constants in the generic segment.
 !
-      CALL SGMETA ( HANDLE, DESCR, CONBAS, BASE   )
-      CALL SGMETA ( HANDLE, DESCR, NCON,   MYNCON )
+      call sgmeta ( handle, descr, conbas, base   )
+      call sgmeta ( handle, descr, ncon,   myncon )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGFCON' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGFCON' )
+         return
+      end if
 
 !
 !     Perform checks on the inputs for reasonableness.
 !
-      IF ( ( FIRST .LT. 1 ) .OR. ( LAST .GT. MYNCON ) ) THEN
+      if ( ( first .lt. 1 ) .or. ( last .gt. myncon ) ) then
 
-         CALL SETMSG ( 'The range of constants requested' &
+         call setmsg ( 'The range of constants requested' &
          //            ' extends beyond the available constant' &
          //            ' data.  Constants are available for' &
          //            ' indices 1 to #.  You have requested' &
          //            ' data from # to #. '                     )
-         CALL ERRINT ( '#', MYNCON                               )
-         CALL ERRINT ( '#', FIRST                                )
-         CALL ERRINT ( '#', LAST                                 )
-         CALL SIGERR ( 'SPICE(REQUESTOUTOFBOUNDS)'               )
-         CALL CHKOUT ( 'SGFCON'                                  )
-         RETURN
+         call errint ( '#', myncon                               )
+         call errint ( '#', first                                )
+         call errint ( '#', last                                 )
+         call sigerr ( 'SPICE(REQUESTOUTOFBOUNDS)'               )
+         call chkout ( 'SGFCON'                                  )
+         return
 
-      END IF
+      end if
 
-      IF ( LAST .LT. FIRST ) THEN
+      if ( last .lt. first ) then
 
-         CALL SETMSG ( 'The last constant item requested, #, is' &
+         call setmsg ( 'The last constant item requested, #, is' &
          //            ' before the first constant item' &
          //            ' requested, #.'                            )
-         CALL ERRINT ( '#', LAST                                   )
-         CALL ERRINT ( '#', FIRST                                  )
-         CALL SIGERR ( 'SPICE(REQUESTOUTOFORDER)'                  )
-         CALL CHKOUT ( 'SGFCON'                                    )
-         RETURN
+         call errint ( '#', last                                   )
+         call errint ( '#', first                                  )
+         call sigerr ( 'SPICE(REQUESTOUTOFORDER)'                  )
+         call chkout ( 'SGFCON'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the addresses of the data within the file and then fetch
 !     the data.
 !
-      B = BASE + FIRST
-      E = BASE + LAST
+      b = base + first
+      e = base + last
 
-      CALL DAFGDA ( HANDLE, B, E, VALUES )
+      call dafgda ( handle, b, e, values )
 
-      CALL CHKOUT ( 'SGFCON' )
-      RETURN
+      call chkout ( 'SGFCON' )
+      return
 
-      END
+      end

@@ -1,6 +1,6 @@
 !$Procedure GCD ( Greatest Common Divisor )
 
-      INTEGER FUNCTION GCD ( A, B )
+      integer function gcd ( a, b )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          A
-      INTEGER          B
+      integer          a
+      integer          b
 
 ! $ Brief_I/O
 !
@@ -124,41 +124,41 @@
 !
 !     Local variables
 !
-      INTEGER          REMNDR
-      INTEGER          ABSA
-      INTEGER          ABSB
-      INTEGER          P
-      INTEGER          Q
+      integer          remndr
+      integer          absa
+      integer          absb
+      integer          p
+      integer          q
 
-      ABSA = ABS(A)
-      ABSB = ABS(B)
+      absa = abs(a)
+      absb = abs(b)
 
-      IF ( ABSA .GT. ABSB ) THEN
-         P = ABSA
-         Q = ABSB
-      ELSE
-         P = ABSB
-         Q = ABSA
-      END IF
+      if ( absa .gt. absb ) then
+         p = absa
+         q = absb
+      else
+         p = absb
+         q = absa
+      end if
 
-      REMNDR = 1
+      remndr = 1
 
 
-      IF ( Q .NE. 0 ) THEN
+      if ( q .ne. 0 ) then
 
-         DO WHILE (REMNDR .NE. 0 )
-            GCD    = Q
-            REMNDR = P - (P/Q)*Q
-            P      = Q
-            Q      = REMNDR
-         END DO
+         do while (remndr .ne. 0 )
+            gcd    = q
+            remndr = p - (p/q)*q
+            p      = q
+            q      = remndr
+         end do
 
-      ELSE
+      else
 
-         GCD = P
+         gcd = p
 
-      END IF
+      end if
 
-      RETURN
+      return
 
-      END
+      end

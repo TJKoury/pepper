@@ -1,7 +1,7 @@
 !$Procedure CKMP06 ( C-kernel, get mini-segment parameters, type 06 )
 
-      SUBROUTINE CKMP06 ( HANDLE, DESCR,  MSNO, RATE, &
-                          SUBTYP, WINSIZ, NREC, IVLBDS, LSTEPC )
+      subroutine ckmp06 ( handle, descr,  msno, rate, &
+                          subtyp, winsiz, nrec, ivlbds, lstepc )
 
 ! $ Abstract
 !
@@ -20,17 +20,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      INTEGER               MSNO
-      DOUBLE PRECISION      RATE
-      INTEGER               SUBTYP
-      INTEGER               WINSIZ
-      INTEGER               NREC
-      DOUBLE PRECISION      IVLBDS ( 2 )
-      DOUBLE PRECISION      LSTEPC
+      integer               handle
+      double precision      descr  ( * )
+      integer               msno
+      double precision      rate
+      integer               subtyp
+      integer               winsiz
+      integer               nrec
+      double precision      ivlbds ( 2 )
+      double precision      lstepc
 
 ! $ Brief_I/O
 !
@@ -492,8 +492,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -508,56 +508,56 @@
 !                   operates on.
 !
 
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE  = 6 )
+      integer               dtype
+      parameter           ( dtype  = 6 )
 
-      INTEGER               CTRLSZ
-      PARAMETER           ( CTRLSZ = 2 )
+      integer               ctrlsz
+      parameter           ( ctrlsz = 2 )
 
 !
 !     Mini-segment control area size:
 !
-      INTEGER               MCTLSZ
-      PARAMETER           ( MCTLSZ = 4 )
+      integer               mctlsz
+      parameter           ( mctlsz = 4 )
 
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = MCTLSZ )
+      integer               bufsiz
+      parameter           ( bufsiz = mctlsz )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BUFFER ( BUFSIZ )
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DPDATA ( 1  )
+      double precision      buffer ( bufsiz )
+      double precision      dc     ( nd )
+      double precision      dpdata ( 1  )
 
-      INTEGER               BADDR
-      INTEGER               EADDR
-      INTEGER               EPADDR
-      INTEGER               IC     ( NI )
-      INTEGER               MINIE
-      INTEGER               NDIR
-      INTEGER               NEPDIR
-      INTEGER               NINTVL
-      INTEGER               IVLBAS
-      INTEGER               PTRBAS
+      integer               baddr
+      integer               eaddr
+      integer               epaddr
+      integer               ic     ( ni )
+      integer               minie
+      integer               ndir
+      integer               nepdir
+      integer               nintvl
+      integer               ivlbas
+      integer               ptrbas
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKMP06' )
+      call chkin ( 'CKMP06' )
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -580,56 +580,56 @@
 !        IC(6)  Final address of segment data
 !
 !
-      CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      call dafus ( descr, nd, ni, dc, ic )
 
 !
 !     If this segment is not of data type 6, then signal an error.
 !
-      IF ( IC( 3 ) .NE. DTYPE ) THEN
+      if ( ic( 3 ) .ne. dtype ) then
 
-         CALL SETMSG ( 'Data type of the segment should be 6: Passed ' &
+         call setmsg ( 'Data type of the segment should be 6: Passed ' &
          //            'descriptor shows type = #.'                   )
-         CALL ERRINT ( '#', IC( 3 )                                   )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                       )
-         CALL CHKOUT ( 'CKMP06'                                       )
-         RETURN
+         call errint ( '#', ic( 3 )                                   )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         call chkout ( 'CKMP06'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the mini-segment index.
 !
 !     The number of mini-segments is the final word in the segment.
 !
-      BADDR = IC(5)
-      EADDR = IC(6)
+      baddr = ic(5)
+      eaddr = ic(6)
 
-      CALL DAFGDA ( HANDLE, EADDR, EADDR, DPDATA )
+      call dafgda ( handle, eaddr, eaddr, dpdata )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKMP06' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKMP06' )
+         return
+      end if
 
-      NINTVL = NINT ( DPDATA(1) )
+      nintvl = nint ( dpdata(1) )
 
-      IF (  ( MSNO .LT. 1 )  .OR.  ( MSNO .GT. NINTVL )  ) THEN
+      if (  ( msno .lt. 1 )  .or.  ( msno .gt. nintvl )  ) then
 
-         CALL SETMSG ( 'Mini-segment index must be in range 1:# but ' &
+         call setmsg ( 'Mini-segment index must be in range 1:# but ' &
          //            'was #.'                                       )
-         CALL ERRINT ( '#', NINTVL                                    )
-         CALL ERRINT ( '#', MSNO                                      )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'CKMP06'                                       )
-         RETURN
+         call errint ( '#', nintvl                                    )
+         call errint ( '#', msno                                      )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
+         call chkout ( 'CKMP06'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the base address of the mini-segment pointers. There are
 !     NINTVL+1 pointers, and these precede the control area.
 !
-      PTRBAS = EADDR - CTRLSZ - ( NINTVL+1 )
+      ptrbas = eaddr - ctrlsz - ( nintvl+1 )
 
 !
 !     Set the base address of the interval bounds. There are N+1
@@ -641,54 +641,54 @@
 !        ( ( NINTVL + 1 ) - 1 ) / DIRSIZ
 !
 !
-      NDIR   = NINTVL / DIRSIZ
+      ndir   = nintvl / dirsiz
 
-      IVLBAS = PTRBAS - NDIR - ( NINTVL + 1 )
+      ivlbas = ptrbas - ndir - ( nintvl + 1 )
 
 !
 !     Fetch the interval bounds for the mini-segment of interest.
 !
-      CALL DAFGDA ( HANDLE, IVLBAS+MSNO, IVLBAS+MSNO+1, IVLBDS )
+      call dafgda ( handle, ivlbas+msno, ivlbas+msno+1, ivlbds )
 
 !
 !     Compute the mini-segment end pointer as an absolute DAF address.
 !     The stored value is a relative address. Begin by looking up the
 !     start pointer of the next mini-segment.
 !
-      CALL DAFGDA ( HANDLE, PTRBAS+MSNO+1, PTRBAS+MSNO+1, BUFFER )
+      call dafgda ( handle, ptrbas+msno+1, ptrbas+msno+1, buffer )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'CKMP06' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'CKMP06' )
+         return
+      end if
 
-      MINIE = ( BADDR - 1 )  +  NINT( BUFFER(1) )  -  1
+      minie = ( baddr - 1 )  +  nint( buffer(1) )  -  1
 
 !
 !     Fetch the parameters for the mini-segment.
 !
-      CALL DAFGDA ( HANDLE, MINIE-MCTLSZ+1, MINIE, BUFFER )
+      call dafgda ( handle, minie-mctlsz+1, minie, buffer )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'CKMP06' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'CKMP06' )
+         return
+      end if
 
-      RATE   =       BUFFER(1)
-      SUBTYP = NINT( BUFFER(2) )
-      WINSIZ = NINT( BUFFER(3) )
-      NREC   = NINT( BUFFER(4) )
+      rate   =       buffer(1)
+      subtyp = nint( buffer(2) )
+      winsiz = nint( buffer(3) )
+      nrec   = nint( buffer(4) )
 
 !
 !     The last epoch of the mini-segment precedes the mini-segment's
 !     control area and the epoch directories.
 !
-      NEPDIR = ( NREC - 1 ) / DIRSIZ
+      nepdir = ( nrec - 1 ) / dirsiz
 
-      EPADDR = MINIE - MCTLSZ - NEPDIR
+      epaddr = minie - mctlsz - nepdir
 
-      CALL DAFGDA ( HANDLE, EPADDR, EPADDR, LSTEPC )
+      call dafgda ( handle, epaddr, epaddr, lstepc )
 
-      CALL CHKOUT ( 'CKMP06' )
-      RETURN
-      END
+      call chkout ( 'CKMP06' )
+      return
+      end

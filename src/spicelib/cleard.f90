@@ -1,6 +1,6 @@
 !$Procedure CLEARD ( Clear a double precision array )
 
-      SUBROUTINE CLEARD ( NDIM, ARRAY )
+      subroutine cleard ( ndim, array )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   ARRAY ( * )
+      integer            ndim
+      double precision   array ( * )
 
 ! $ Brief_I/O
 !
@@ -157,13 +157,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-        ARRAY(I) = 0.D0
-      END DO
+      do i = 1, ndim
+        array(i) = 0.d0
+      end do
 
 
-      RETURN
-      END
+      return
+      end

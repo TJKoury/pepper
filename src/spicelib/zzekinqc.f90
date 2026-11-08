@@ -1,7 +1,7 @@
 !$Procedure   ZZEKINQC ( Private: EK, insert into query, character )
 
-      SUBROUTINE ZZEKINQC ( VALUE, LENGTH, LEXBEG, LEXEND, &
-                            EQRYI, EQRYC,  DESCR           )
+      subroutine zzekinqc ( value, length, lexbeg, lexend, &
+                            eqryi, eqryc,  descr           )
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -22,20 +22,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekbool.inc'
+      include 'ekquery.inc'
+      include 'ektype.inc'
+      include 'ekbool.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         VALUE
-      INTEGER               LENGTH
-      INTEGER               LEXBEG
-      INTEGER               LEXEND
-      INTEGER               EQRYI  ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      INTEGER               DESCR  ( * )
+      character*(*)         value
+      integer               length
+      integer               lexbeg
+      integer               lexend
+      integer               eqryi  ( lbcell : * )
+      character*(*)         eqryc
+      integer               descr  ( * )
 
 ! $ Brief_I/O
 !
@@ -140,86 +140,86 @@
 !
 !     Local variables
 !
-      INTEGER               FREE
-      INTEGER               INIT
-      INTEGER               L
-      INTEGER               ROOM
-      INTEGER               SIZE
+      integer               free
+      integer               init
+      integer               l
+      integer               room
+      integer               size
 
 !
 !     Use discovery check-in.
 !
-      CALL ZZEKREQI ( EQRYI, 'INITIALIZED', INIT )
+      call zzekreqi ( eqryi, 'INITIALIZED', init )
 
-      IF ( INIT .NE. ITRUE ) THEN
+      if ( init .ne. itrue ) then
 
-         CALL CHKIN  ( 'ZZEKINQC'                                    )
-         CALL SETMSG ( 'Encoded query must be initialized before it ' // &
+         call chkin  ( 'ZZEKINQC'                                    )
+         call setmsg ( 'Encoded query must be initialized before it ' // &
                        'may be written.'                             )
-         CALL SIGERR ( 'SPICE(NOTINITIALIZED)'                       )
-         CALL CHKOUT ( 'ZZEKINQC'                                    )
-         RETURN
+         call sigerr ( 'SPICE(NOTINITIALIZED)'                       )
+         call chkout ( 'ZZEKINQC'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the input length value.
 !
-      IF ( LENGTH .LT. 1 ) THEN
+      if ( length .lt. 1 ) then
 
-         CALL CHKIN  ( 'ZZEKINQC'                                    )
-         CALL SETMSG ( 'Length of string value was #; must be > 0.'  )
-         CALL ERRINT ( '#',  LENGTH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                         )
-         CALL CHKOUT ( 'ZZEKINQC'                                    )
-         RETURN
+         call chkin  ( 'ZZEKINQC'                                    )
+         call setmsg ( 'Length of string value was #; must be > 0.'  )
+         call errint ( '#',  length                                  )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                         )
+         call chkout ( 'ZZEKINQC'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the character free pointer; make sure there's enough room.
 !
-      CALL ZZEKREQI ( EQRYI, 'FREE_CHR',     FREE )
-      CALL ZZEKREQI ( EQRYI, 'CHR_BUF_SIZE', SIZE )
+      call zzekreqi ( eqryi, 'FREE_CHR',     free )
+      call zzekreqi ( eqryi, 'CHR_BUF_SIZE', size )
 
-      ROOM  =  SIZE - FREE + 1
+      room  =  size - free + 1
 
-      IF ( LENGTH .GT. ROOM ) THEN
+      if ( length .gt. room ) then
 
-         CALL CHKIN  ( 'ZZEKINQC'                                    )
-         CALL SETMSG ( 'Out of room in character portion of encoded ' // &
+         call chkin  ( 'ZZEKINQC'                                    )
+         call setmsg ( 'Out of room in character portion of encoded ' // &
                        'query; only # elements were available; # '    // &
                        'are needed.'                                 )
-         CALL ERRINT ( '#',  ROOM                                    )
-         CALL ERRINT ( '#',  LENGTH                                  )
-         CALL SIGERR ( 'SPICE(BUFFERTOOSMALL)'                       )
-         CALL CHKOUT ( 'ZZEKINQC'                                    )
-         RETURN
+         call errint ( '#',  room                                    )
+         call errint ( '#',  length                                  )
+         call sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
+         call chkout ( 'ZZEKINQC'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Insert the value into the character portion of the encoded query.
 !
-      L                =  MIN ( LENGTH, LEN(VALUE) )
-      EQRYC(FREE:)     =  VALUE(:L)
+      l                =  min ( length, len(value) )
+      eqryc(free:)     =  value(:l)
 
 !
 !     Fill in the descriptor.
 !
-      CALL CLEARI ( EQVDSZ, DESCR )
+      call cleari ( eqvdsz, descr )
 
-      DESCR( EQDTYP )  =  CHR
-      DESCR( EQBLEX )  =  LEXBEG
-      DESCR( EQELEX )  =  LEXEND
-      DESCR( EQBSTR )  =  FREE
-      DESCR( EQESTR )  =  FREE + LENGTH - 1
+      descr( eqdtyp )  =  chr
+      descr( eqblex )  =  lexbeg
+      descr( eqelex )  =  lexend
+      descr( eqbstr )  =  free
+      descr( eqestr )  =  free + length - 1
 
 !
 !     Update the character free pointer.
 !
-      CALL ZZEKWEQI ( 'FREE_CHR', FREE+LENGTH, EQRYI )
+      call zzekweqi ( 'FREE_CHR', free+length, eqryi )
 
 
-      RETURN
-      END
+      return
+      end

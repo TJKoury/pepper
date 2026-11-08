@@ -15,8 +15,8 @@
 !
 ! $ Declarations
 
-      INTEGER               NNINRT
-      PARAMETER           ( NNINRT = 124 )
+      integer               nninrt
+      parameter           ( nninrt = 124 )
 
 
 ! $ Brief_I/O

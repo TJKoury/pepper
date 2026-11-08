@@ -1,6 +1,6 @@
 !$Procedure VZEROG ( Is a vector the zero vector? -- general dim. )
 
-      LOGICAL FUNCTION VZEROG ( V, NDIM )
+      logical function vzerog ( v, ndim )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V    ( * )
-      INTEGER               NDIM
+      double precision      v    ( * )
+      integer               ndim
 
 ! $ Brief_I/O
 !
@@ -287,26 +287,26 @@
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Leave as soon as we find a non-zero component.  If we get through
 !     the loop, we have a zero vector, as long as the vector's dimension
 !     is valid.
 !
-      DO I = 1, NDIM
+      do i = 1, ndim
 
-         IF ( V(I) .NE. 0.D0 ) THEN
-            VZEROG = .FALSE.
-            RETURN
-         END IF
+         if ( v(i) .ne. 0.d0 ) then
+            vzerog = .false.
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     We have a zero vector if and only if the vector's dimension is at
 !     least 1.
 !
-      VZEROG  =  ( NDIM .GE. 1 )
+      vzerog  =  ( ndim .ge. 1 )
 
-      END
+      end

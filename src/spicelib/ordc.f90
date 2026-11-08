@@ -1,6 +1,6 @@
 !$Procedure ORDC ( The ordinal position of an element in a set )
 
-      INTEGER FUNCTION ORDC ( ITEM, SET )
+      integer function ordc ( item, set )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = - 5 )
+      integer               lbcell
+      parameter           ( lbcell = - 5 )
 
-      CHARACTER*(*)         ITEM
-      CHARACTER*(*)         SET ( LBCELL:* )
+      character*(*)         item
+      character*(*)         set ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -185,27 +185,27 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
+      integer               bsrchc
+      integer               cardc
+      logical               return
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         ORDC = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ORDC' )
-      END IF
+      if ( return() ) then
+         ordc = 0
+         return
+      else
+         call chkin ( 'ORDC' )
+      end if
 
 !
 !     Given the structure of sets, there's not much to do.
 !
-      ORDC = BSRCHC ( ITEM, CARDC(SET), SET(1) )
+      ordc = bsrchc ( item, cardc(set), set(1) )
 
 
-      CALL CHKOUT ( 'ORDC' )
-      RETURN
-      END
+      call chkout ( 'ORDC' )
+      return
+      end

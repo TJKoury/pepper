@@ -1,6 +1,6 @@
 !$Procedure PLTNRM ( DSK, compute outward normal of plate )
 
-      SUBROUTINE PLTNRM ( V1, V2, V3, NORMAL )
+      subroutine pltnrm ( v1, v2, v3, normal )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      V1     ( 3 )
-      DOUBLE PRECISION      V2     ( 3 )
-      DOUBLE PRECISION      V3     ( 3 )
-      DOUBLE PRECISION      NORMAL ( 3 )
+      double precision      v1     ( 3 )
+      double precision      v2     ( 3 )
+      double precision      v3     ( 3 )
+      double precision      normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -153,8 +153,8 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      EDGE1  ( 3 )
-      DOUBLE PRECISION      EDGE2  ( 3 )
+      double precision      edge1  ( 3 )
+      double precision      edge2  ( 3 )
 
 !
 !     This routine is error-free.
@@ -164,9 +164,9 @@
 !     Type 2 plate vertices are ordered in the positive
 !     (right-handed) sense about the outward normal.
 !
-      CALL VSUB ( V2, V1, EDGE1 )
-      CALL VSUB ( V3, V2, EDGE2 )
+      call vsub ( v2, v1, edge1 )
+      call vsub ( v3, v2, edge2 )
 
-      CALL VCRSS ( EDGE1, EDGE2, NORMAL )
+      call vcrss ( edge1, edge2, normal )
 
-      END
+      end

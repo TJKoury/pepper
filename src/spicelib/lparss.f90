@@ -1,6 +1,6 @@
 !$Procedure LPARSS ( Parse a list of items; return a set. )
 
-      SUBROUTINE LPARSS ( LIST, DELIMS, SET )
+      subroutine lparss ( list, delims, set )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         LIST
-      CHARACTER*(*)         DELIMS
-      CHARACTER*(*)         SET  ( LBCELL:* )
+      character*(*)         list
+      character*(*)         delims
+      character*(*)         set  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -264,43 +264,43 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
-      INTEGER               SIZEC
+      integer               lastnb
+      integer               sizec
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(1)         BLANK
-      PARAMETER           ( BLANK = ' ' )
+      character*(1)         blank
+      parameter           ( blank = ' ' )
 
-      INTEGER               ISPACE
-      PARAMETER           ( ISPACE = 32 )
+      integer               ispace
+      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         BCHR
-      CHARACTER*(1)         ECHR
+      character*(1)         bchr
+      character*(1)         echr
 
-      INTEGER               B
-      INTEGER               E
-      INTEGER               EOL
-      INTEGER               N
-      INTEGER               NMAX
+      integer               b
+      integer               e
+      integer               eol
+      integer               n
+      integer               nmax
 
-      LOGICAL               VALID
+      logical               valid
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'LPARSS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'LPARSS' )
+      end if
 
 !
 !     Because speed is essential in many list parsing applications,
@@ -312,34 +312,34 @@
 !
 !     No items yet.
 !
-      N = 0
+      n = 0
 
 !
 !     What is the size of the set?
 !
-      NMAX  = SIZEC ( SET )
+      nmax  = sizec ( set )
 
 !
 !     The array has not been validated yet.
 !
-      VALID = .FALSE.
+      valid = .false.
 
 !
 !     Blank list contains a blank item.  No need to validate.
 !
-      IF ( LIST .EQ. BLANK ) THEN
+      if ( list .eq. blank ) then
 
-         CALL SCARDC ( 0,     SET )
-         CALL INSRTC ( BLANK, SET )
+         call scardc ( 0,     set )
+         call insrtc ( blank, set )
 
-         VALID = .TRUE.
+         valid = .true.
 
-      ELSE
+      else
 !
 !        Eliminate trailing blanks.  EOL is the last non-blank
 !        character in the list.
 !
-         EOL = LASTNB ( LIST )
+         eol = lastnb ( list )
 
 !
 !        As the King said to Alice: 'Begin at the beginning.
@@ -350,9 +350,9 @@
 !        if any; otherwise E points to either the last character
 !        preceding the next item, or to the last character of the list.
 !
-         B = 1
+         b = 1
 
-         DO WHILE ( B .LE. EOL )
+         do while ( b .le. eol )
 !
 !           Skip any blanks before the next item or delimiter.
 !
@@ -360,18 +360,18 @@
 !
 !              B <= EOL
 !
-            BCHR = LIST(B:B)
+            bchr = list(b:b)
 
-            DO WHILE (       ( B           .LE. EOL    ) &
-                       .AND. ( ICHAR(BCHR) .EQ. ISPACE ) )
+            do while (       ( b           .le. eol    ) &
+                       .and. ( ichar(bchr) .eq. ispace ) )
 
-               B = B + 1
+               b = b + 1
 
-               IF ( B .LE. EOL ) THEN
-                  BCHR = LIST(B:B)
-               END IF
+               if ( b .le. eol ) then
+                  bchr = list(b:b)
+               end if
 
-            END DO
+            end do
 
 !
 !           At this point B is the index of the next non-blank
@@ -381,24 +381,24 @@
 !
 !           The item ends at the next delimiter.
 !
-            E = B
+            e = b
 
-            IF ( E .LE. EOL ) THEN
-               ECHR = LIST(E:E)
-            ELSE
-               ECHR = BLANK
-            END IF
+            if ( e .le. eol ) then
+               echr = list(e:e)
+            else
+               echr = blank
+            end if
 
-            DO WHILE (       (  E                     .LE. EOL ) &
-                       .AND. (  INDEX( DELIMS, ECHR ) .EQ. 0   )  )
+            do while (       (  e                     .le. eol ) &
+                       .and. (  index( delims, echr ) .eq. 0   )  )
 
-               E = E + 1
+               e = e + 1
 
-               IF ( E .LE. EOL ) THEN
-                  ECHR = LIST(E:E)
-               END IF
+               if ( e .le. eol ) then
+                  echr = list(e:e)
+               end if
 
-            END DO
+            end do
 
 !
 !           (This is different from LPARSE. If the delimiter was
@@ -409,38 +409,38 @@
 !           By definition, consecutive blanks, or a blank and any
 !           other delimiter, do not count as consecutive delimiters.)
 !
-            IF (       ( E           .LE. EOL    ) &
-                 .AND. ( ICHAR(ECHR) .EQ. ISPACE ) ) THEN
+            if (       ( e           .le. eol    ) &
+                 .and. ( ichar(echr) .eq. ispace ) ) then
 !
 !              Find the next non-blank character.
 !
-               DO WHILE (       ( E           .LE. EOL    ) &
-                          .AND. ( ICHAR(ECHR) .EQ. ISPACE )  )
+               do while (       ( e           .le. eol    ) &
+                          .and. ( ichar(echr) .eq. ispace )  )
 
-                  E = E + 1
+                  e = e + 1
 
-                  IF ( E .LE. EOL ) THEN
-                     ECHR = LIST(E:E)
-                  END IF
+                  if ( e .le. eol ) then
+                     echr = list(e:e)
+                  end if
 
-               END DO
+               end do
 
-               IF ( E .LE. EOL ) THEN
+               if ( e .le. eol ) then
 
-                  IF (  INDEX( DELIMS, ECHR ) .EQ. 0  ) THEN
+                  if (  index( delims, echr ) .eq. 0  ) then
 !
 !                    We're looking at a non-delimiter character.
 !
 !                    E is guaranteed to be > 1 if we're here, so the
 !                    following subtraction is valid.
 !
-                     E = E - 1
+                     e = e - 1
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           The item now lies between B and E. Unless, of course, B and
@@ -448,86 +448,86 @@
 !           starts or ends with a non-blank delimiter, or if we have
 !           stumbled upon consecutive delimiters.
 !
-            IF ( .NOT. VALID ) THEN
+            if ( .not. valid ) then
 !
 !              If the array has not been validated, it's just an
 !              array, and we can insert items directly into it.
 !              Unless it's full, in which case we validate now and
 !              insert later.
 !
-               IF ( N .LT. NMAX ) THEN
+               if ( n .lt. nmax ) then
 
-                  N = N + 1
+                  n = n + 1
 
-                  IF ( E .GT. B ) THEN
-                     SET(N) = LIST(B:E-1)
-                  ELSE
-                     SET(N) = BLANK
-                  END IF
+                  if ( e .gt. b ) then
+                     set(n) = list(b:e-1)
+                  else
+                     set(n) = blank
+                  end if
 
-               ELSE
+               else
 
-                  CALL VALIDC ( NMAX, NMAX, SET )
-                  VALID = .TRUE.
+                  call validc ( nmax, nmax, set )
+                  valid = .true.
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           Once the set has been validated, the strings are inserted
 !           into the set if there's room. If there is not enough room
 !           in the set, let INSRTC signal the error.
 !
-            IF ( VALID ) THEN
+            if ( valid ) then
 
-               IF ( E .GT. B ) THEN
-                  CALL INSRTC ( LIST ( B:E-1 ),   SET )
-               ELSE
-                  CALL INSRTC ( BLANK,            SET )
-               END IF
+               if ( e .gt. b ) then
+                  call insrtc ( list ( b:e-1 ),   set )
+               else
+                  call insrtc ( blank,            set )
+               end if
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'LPARSS' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'LPARSS' )
+                  return
+               end if
 
-            END IF
+            end if
 
 !
 !           If there are more items to be found, continue with the
 !           character following E (which is a delimiter).
 !
-            B = E + 1
+            b = e + 1
 
-         END DO
+         end do
 
 !
 !        If the array has not yet been validated, validate it before
 !        returning.
 !
-         IF ( .NOT. VALID ) THEN
-            CALL VALIDC ( NMAX, N, SET )
-         END IF
+         if ( .not. valid ) then
+            call validc ( nmax, n, set )
+         end if
 
 !
 !        If the list ended with a (non-blank) delimiter, insert a
 !        blank item into the set. If there isn't any room, signal
 !        an error.
 !
-         IF ( INDEX( DELIMS, LIST(EOL:EOL) ) .NE. 0 ) THEN
+         if ( index( delims, list(eol:eol) ) .ne. 0 ) then
 
-            CALL INSRTC ( BLANK, SET )
+            call insrtc ( blank, set )
 !
 !           If INSRTC failed to insert the blank because the set
 !           was already full, INSRTC will have signaled an error.
 !           No action is necessary here.
 !
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'LPARSS' )
-      RETURN
-      END
+      call chkout ( 'LPARSS' )
+      return
+      end

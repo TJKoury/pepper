@@ -1,6 +1,6 @@
 !$Procedure ZZDSKSGR ( DSK, return segment bounding radius )
 
-      DOUBLE PRECISION FUNCTION ZZDSKSGR ( DSKDSC )
+      double precision function zzdsksgr ( dskdsc )
 
 ! $ Abstract
 !
@@ -26,11 +26,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dskdsc.inc'
+      include 'dskdsc.inc'
 
-      DOUBLE PRECISION      DSKDSC ( * )
+      double precision      dskdsc ( * )
 
 
 ! $ Brief_I/O
@@ -183,22 +183,22 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BDS    ( 2, 3 )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      MAG    ( 3 )
-      DOUBLE PRECISION      MINR
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      RP
+      double precision      bds    ( 2, 3 )
+      double precision      f
+      double precision      mag    ( 3 )
+      double precision      minr
+      double precision      re
+      double precision      rp
 
-      INTEGER               B
-      INTEGER               CORSYS
-      INTEGER               I
-      INTEGER               J
+      integer               b
+      integer               corsys
+      integer               i
+      integer               j
 
 
 !
@@ -208,82 +208,82 @@
 !
 !     Set an initial return value.
 !
-      ZZDSKSGR = -1.D0
+      zzdsksgr = -1.d0
 
 
 !
 !     The radius calculation depends on the coordinate system.
 !
-      CORSYS = NINT( DSKDSC(SYSIDX) )
+      corsys = nint( dskdsc(sysidx) )
 
-      IF ( CORSYS .EQ. LATSYS ) THEN
+      if ( corsys .eq. latsys ) then
 !
 !        Fetch the minimum radius from the descriptor.
 !
-         MINR = DSKDSC(MN3IDX)
+         minr = dskdsc(mn3idx)
 
-         IF ( MINR .LE. 0.D0 ) THEN
+         if ( minr .le. 0.d0 ) then
 
-            CALL CHKIN  ( 'ZZDSKSGR'                )
-            CALL SETMSG ( 'Minimum radius was *.'   )
-            CALL ERRDP  ( '*', MINR                 )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'  )
-            CALL CHKOUT ( 'ZZDSKSGR'                )
-            RETURN
+            call chkin  ( 'ZZDSKSGR'                )
+            call setmsg ( 'Minimum radius was *.'   )
+            call errdp  ( '*', minr                 )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'  )
+            call chkout ( 'ZZDSKSGR'                )
+            return
 
-         END IF
+         end if
 
 !
 !        This is as simple as it gets. The radius bounds
 !        correspond to the third coordinate in the descriptor.
 !
-         ZZDSKSGR = DSKDSC( MX3IDX )
+         zzdsksgr = dskdsc( mx3idx )
 
 
-      ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+      else if ( corsys .eq. pdtsys ) then
 !
 !        Fetch the equatorial radius from the descriptor.
 !
-         RE = DSKDSC(PARIDX)
+         re = dskdsc(paridx)
 
-         IF ( RE .LE. 0.D0 ) THEN
+         if ( re .le. 0.d0 ) then
 
-            CALL CHKIN  ( 'ZZDSKSGR'                  )
-            CALL SETMSG ( 'Equatorial radius was *.'  )
-            CALL ERRDP  ( '*', RE                     )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'    )
-            CALL CHKOUT ( 'ZZDSKSGR'                  )
-            RETURN
+            call chkin  ( 'ZZDSKSGR'                  )
+            call setmsg ( 'Equatorial radius was *.'  )
+            call errdp  ( '*', re                     )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'    )
+            call chkout ( 'ZZDSKSGR'                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Fetch the flattening coefficient from the descriptor.
 !
-         F = DSKDSC(PARIDX+1)
+         f = dskdsc(paridx+1)
 
-         IF ( ( F .GE. 0.D0 ) .AND. ( F .LT. 1.D0 ) ) THEN
+         if ( ( f .ge. 0.d0 ) .and. ( f .lt. 1.d0 ) ) then
 !
 !           This is the oblate case.
 !
 !           The maximum radius of an oblate planetodetic boundary
 !           occurs on the X-Y plane at the maximum height.
 !
-            ZZDSKSGR = DSKDSC(MX3IDX) +  RE
+            zzdsksgr = dskdsc(mx3idx) +  re
 
 
-         ELSE IF ( F .LT. 0.D0 ) THEN
+         else if ( f .lt. 0.d0 ) then
 !
 !           This is the prolate case.
 !
 !           The maximum radius of an prolate planetodetic boundary
 !           occurs on the poles at the maximum height.
 !
-            RE       = DSKDSC(PARIDX)
-            RP       = RE  * ( 1.D0 - F )
-            ZZDSKSGR = DSKDSC(MX3IDX) +  RP
+            re       = dskdsc(paridx)
+            rp       = re  * ( 1.d0 - f )
+            zzdsksgr = dskdsc(mx3idx) +  rp
 
-         ELSE
+         else
 !
 !           We have an invalid flattening coefficient.
 !
@@ -292,17 +292,17 @@
 !           one, the polar radius is zero. Either case is a problem, so
 !           signal an error and check out.
 !
-            CALL CHKIN  ( 'ZZDSKSGR'                       )
-            CALL SETMSG ( 'Flattening coefficient was *.'  )
-            CALL ERRDP  ( '*', F                           )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-            CALL CHKOUT ( 'ZZDSKSGR'                       )
-            RETURN
+            call chkin  ( 'ZZDSKSGR'                       )
+            call setmsg ( 'Flattening coefficient was *.'  )
+            call errdp  ( '*', f                           )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+            call chkout ( 'ZZDSKSGR'                       )
+            return
 
-         END IF
+         end if
 
 
-      ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      else if ( corsys .eq. recsys ) then
 !
 !        The bounding cell of the segment has its extreme value at
 !        a corner. Just take the maximum of these values.
@@ -310,33 +310,33 @@
 !        First copy the bounds into an appropriately dimensioned
 !        array.
 !
-         CALL MOVED ( DSKDSC(MN1IDX), 6, BDS )
+         call moved ( dskdsc(mn1idx), 6, bds )
 
 
-          B = MN1IDX - 1
+          b = mn1idx - 1
 
-          DO I = 1, 3
+          do i = 1, 3
 
-             J      = B + (2*I) - 1
+             j      = b + (2*i) - 1
 
-             MAG(I) = MAX(  ABS(DSKDSC(J)), ABS(DSKDSC(J+1))  )
+             mag(i) = max(  abs(dskdsc(j)), abs(dskdsc(j+1))  )
 
-          END DO
+          end do
 
-          ZZDSKSGR  = VNORM( MAG )
+          zzdsksgr  = vnorm( mag )
 
 
-      ELSE
+      else
 !
 !        Never heard of this coordinate system.
 !
-         CALL CHKIN ( 'ZZDSKSGR'                                       )
-         CALL SETMSG( 'The coordinate system code # is not recognized.')
-         CALL ERRINT( '#',  CORSYS                                     )
-         CALL SIGERR( 'SPICE(NOTSUPPORTED)'                            )
-         CALL CHKOUT( 'ZZDSKSGR'                                       )
-         RETURN
+         call chkin ( 'ZZDSKSGR'                                       )
+         call setmsg( 'The coordinate system code # is not recognized.')
+         call errint( '#',  corsys                                     )
+         call sigerr( 'SPICE(NOTSUPPORTED)'                            )
+         call chkout( 'ZZDSKSGR'                                       )
+         return
 
-      END IF
+      end if
 
-      END
+      end

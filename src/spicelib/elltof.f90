@@ -1,6 +1,6 @@
 !$Procedure ELLTOF ( Elliptic time of flight )
 
-      SUBROUTINE ELLTOF ( MA, ECC, E )
+      subroutine elltof ( ma, ecc, e )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      MA
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      E
+      double precision      ma
+      double precision      ecc
+      double precision      e
 
 ! $ Brief_I/O
 !
@@ -141,55 +141,55 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      DOUBLE PRECISION      DCBRT
-      DOUBLE PRECISION      HALFPI
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
+      logical               return
+      double precision      dcbrt
+      double precision      halfpi
+      external              pi
+      double precision      pi
+      double precision      twopi
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      TOL
-      PARAMETER           ( TOL = 1.D-15 )
+      double precision      tol
+      parameter           ( tol = 1.d-15 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      M
-      DOUBLE PRECISION      MPRIME
-      INTEGER               N
+      double precision      m
+      double precision      mprime
+      integer               n
 
-      DOUBLE PRECISION      M0
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      QR
-      DOUBLE PRECISION      Y
+      double precision      m0
+      double precision      a
+      double precision      b
+      double precision      q
+      double precision      r
+      double precision      qr
+      double precision      y
 
-      DOUBLE PRECISION      FN
-      DOUBLE PRECISION      DERIV
-      DOUBLE PRECISION      DERIV2
-      DOUBLE PRECISION      CHANGE
+      double precision      fn
+      double precision      deriv
+      double precision      deriv2
+      double precision      change
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ELLTOF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ELLTOF' )
+      end if
 
-      IF ( ECC .LT. 0.D0  .OR.  ECC .GE. 1.D0 ) THEN
-         CALL SIGERR ( 'SPICE(WRONGCONIC)' )
-         CALL CHKOUT ( 'ELLTOF'            )
-         RETURN
-      END IF
+      if ( ecc .lt. 0.d0  .or.  ecc .ge. 1.d0 ) then
+         call sigerr ( 'SPICE(WRONGCONIC)' )
+         call chkout ( 'ELLTOF'            )
+         return
+      end if
 
 
 !
@@ -206,17 +206,17 @@
 !
 !     So, we begin by reducing the input mean anomaly to [0,pi].
 !
-      M = ABS ( MA )
+      m = abs ( ma )
 
-      IF ( M .GT. PI() ) THEN
-         N      = INT ( (M-PI()) / TWOPI() ) + 1
-         MPRIME = M - N * TWOPI()
-      ELSE
-         N      = 0
-         MPRIME = M
-      END IF
+      if ( m .gt. pi() ) then
+         n      = int ( (m-pi()) / twopi() ) + 1
+         mprime = m - n * twopi()
+      else
+         n      = 0
+         mprime = m
+      end if
 
-      M = ABS ( MPRIME )
+      m = abs ( mprime )
 
 !
 !     The convergence of the iterative scheme below depends on a good
@@ -246,15 +246,15 @@
 !     provides a good initial estimate of y for all values of e.
 !
 !
-      M0 = HALFPI() - ECC
+      m0 = halfpi() - ecc
 
-      IF ( M .GE. M0 ) THEN
+      if ( m .ge. m0 ) then
 
-         A = PI() - M
-         B = PI() - M0
+         a = pi() - m
+         b = pi() - m0
 
-         Y = 1.D0 - (1.D0 - A/B)**2 * (1.D0 + 2.D0*A/B - A/(1.D0+ECC))
-         E = ECC * SIN(ECC*Y + M) + M
+         y = 1.d0 - (1.d0 - a/b)**2 * (1.d0 + 2.d0*a/b - a/(1.d0+ecc))
+         e = ecc * sin(ecc*y + m) + m
 
 !
 !     The situation is a little more troublesome, however, when M < M0.
@@ -286,30 +286,30 @@
 !     provides a reasonable estimate of E directly.
 !
 !
-      ELSE IF ( ECC .LE. 0.7D0 ) THEN
+      else if ( ecc .le. 0.7d0 ) then
 
-         Y = 1.D0 - (1.D0 - M/M0)**2 * (1.D0 + 2.D0*M/M0 - M/(1.D0-ECC))
-         E = ECC * SIN(ECC*Y + M) + M
+         y = 1.d0 - (1.d0 - m/m0)**2 * (1.d0 + 2.d0*m/m0 - m/(1.d0-ecc))
+         e = ecc * sin(ecc*y + m) + m
 
-      ELSE IF ( ECC .LE. 0.85D0 ) THEN
+      else if ( ecc .le. 0.85d0 ) then
 
-         Y = 1.D0 - (1.D0 - M/M0)**4
-         E = ECC * SIN(ECC*Y + M) + M
+         y = 1.d0 - (1.d0 - m/m0)**4
+         e = ecc * sin(ecc*y + m) + m
 
-      ELSE IF ( ECC .LE. 0.96D0 .OR. M .GT. 0.05D0 ) THEN
+      else if ( ecc .le. 0.96d0 .or. m .gt. 0.05d0 ) then
 
-         Y = 1.D0 - (1.D0 - M/M0)**8
-         E = ECC * SIN(ECC*Y + M) + M
+         y = 1.d0 - (1.d0 - m/m0)**8
+         e = ecc * sin(ecc*y + m) + m
 
-      ELSE
+      else
 
-         Q  = (2.D0/ECC) * (1.D0 - ECC)
-         R  = 3.D0 * (M/ECC)
-         QR = SQRT ( Q**3 + R**2 )
+         q  = (2.d0/ecc) * (1.d0 - ecc)
+         r  = 3.d0 * (m/ecc)
+         qr = sqrt ( q**3 + r**2 )
 
-         E  = DCBRT ( R + QR ) + DCBRT ( R - QR )
+         e  = dcbrt ( r + qr ) + dcbrt ( r - qr )
 
-      END IF
+      end if
 
 
 !
@@ -325,35 +325,35 @@
 !          f'  = 1 - e cos(E)
 !          f'' =     e sin(E)
 !
-      CHANGE = 1.D0
+      change = 1.d0
 
-      DO WHILE ( ABS ( CHANGE ) .GT. TOL )
+      do while ( abs ( change ) .gt. tol )
 
-         FN     = E    - ECC * SIN(E) - M
-         DERIV  = 1.D0 - ECC * COS(E)
-         DERIV2 =        ECC * SIN(E)
+         fn     = e    - ecc * sin(e) - m
+         deriv  = 1.d0 - ecc * cos(e)
+         deriv2 =        ecc * sin(e)
 
-         CHANGE = (FN/DERIV) * ( 1.D0 + (FN*DERIV2) / (2.D0*DERIV**2) )
-         E      = E - CHANGE
+         change = (fn/deriv) * ( 1.d0 + (fn*deriv2) / (2.d0*deriv**2) )
+         e      = e - change
 
-      END DO
+      end do
 
 !
 !     "Unwrap" E' into the actual value of E.
 !
-      IF ( MPRIME .LT. 0 ) THEN
-         E = -E
-      END IF
+      if ( mprime .lt. 0 ) then
+         e = -e
+      end if
 
-      IF ( N .GT. 0 ) THEN
-         E = E + N * TWOPI()
-      END IF
+      if ( n .gt. 0 ) then
+         e = e + n * twopi()
+      end if
 
-      IF ( MA .LT. 0 ) THEN
-         E = -E
-      END IF
+      if ( ma .lt. 0 ) then
+         e = -e
+      end if
 
 
-      CALL CHKOUT ( 'ELLTOF' )
-      RETURN
-      END
+      call chkout ( 'ELLTOF' )
+      return
+      end

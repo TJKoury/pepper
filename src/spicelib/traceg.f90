@@ -1,6 +1,6 @@
 !$Procedure TRACEG ( Trace of a matrix, general dimension )
 
-      DOUBLE PRECISION FUNCTION  TRACEG ( MATRIX, NDIM )
+      double precision function  traceg ( matrix, ndim )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   MATRIX ( NDIM,NDIM )
+      integer            ndim
+      double precision   matrix ( ndim,ndim )
 
 ! $ Brief_I/O
 !
@@ -190,12 +190,12 @@
 !-&
 
 
-      INTEGER         I
+      integer         i
 
-      TRACEG = 0.0D0
-      DO I = 1,NDIM
-         TRACEG = TRACEG + MATRIX(I,I)
-      END DO
+      traceg = 0.0d0
+      do i = 1,ndim
+         traceg = traceg + matrix(i,i)
+      end do
 
-      RETURN
-      END
+      return
+      end

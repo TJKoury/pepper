@@ -1,6 +1,6 @@
 !$Procedure SPKE03 ( S/P Kernel, evaluate, type 3 )
 
-      SUBROUTINE SPKE03 ( ET, RECORD, STATE )
+      subroutine spke03 ( et, record, state )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -208,22 +208,22 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               NCOF
-      INTEGER               DEGP
-      INTEGER               COFLOC
-      INTEGER               I
+      integer               ncof
+      integer               degp
+      integer               cofloc
+      integer               i
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     The first number in the record is the record size.  Following it
@@ -232,51 +232,51 @@
 !     be determined from the record size, since there are the same
 !     number of coefficients for each quantity.
 !
-      NCOF = ( INT( RECORD( 1 ) ) - 2 ) / 6
+      ncof = ( int( record( 1 ) ) - 2 ) / 6
 
-      IF ( NCOF .LT. 1 ) THEN
+      if ( ncof .lt. 1 ) then
 
-         CALL CHKIN  ( 'SPKE03'                                     )
-         CALL SETMSG ( 'The input record''s coefficient count NCOF ' &
+         call chkin  ( 'SPKE03'                                     )
+         call setmsg ( 'The input record''s coefficient count NCOF ' &
          //            'should be positive but was #.'              )
-         CALL ERRINT ( '#', NCOF                                    )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                        )
-         CALL CHKOUT ( 'SPKE03'                                     )
-         RETURN
+         call errint ( '#', ncof                                    )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                        )
+         call chkout ( 'SPKE03'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the radius of the domain interval.
 !
-      IF ( RECORD(3) .LE. 0.D0 )  THEN
+      if ( record(3) .le. 0.d0 )  then
 
-         CALL CHKIN  ( 'SPKE03'                            )
-         CALL SETMSG ( 'Interval radius must be positive ' &
+         call chkin  ( 'SPKE03'                            )
+         call setmsg ( 'Interval radius must be positive ' &
          //            'but was #.'                        )
-         CALL ERRDP  ( '#', RECORD(3)                      )
-         CALL SIGERR ( 'SPICE(INVALIDRADIUS)'              )
-         CALL CHKOUT ( 'SPKE03'                            )
-         RETURN
+         call errdp  ( '#', record(3)                      )
+         call sigerr ( 'SPICE(INVALIDRADIUS)'              )
+         call chkout ( 'SPKE03'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     The degree of each polynomial is one less than the number of
 !     coefficients.
 !
-      DEGP = NCOF - 1
+      degp = ncof - 1
 
 !
 !     Call CHBVAL once for each quantity to evaluate the position
 !     and velocity values.
 !
-      DO I = 1, 6
+      do i = 1, 6
 !
 !        The coefficients for each variable are located contiguously,
 !        following the first three words in the record.
 !
-         COFLOC = NCOF*( I - 1 ) + 4
+         cofloc = ncof*( i - 1 ) + 4
 
 !
 !        CHBVAL needs as input the coefficients, the degree of the
@@ -284,9 +284,9 @@
 !        parameters, which are located, in our case, in the second and
 !        third slots of the record.
 !
-         CALL CHBVAL ( RECORD( COFLOC ), DEGP, RECORD( 2 ), ET, &
-                       STATE( I )                               )
-      END DO
+         call chbval ( record( cofloc ), degp, record( 2 ), et, &
+                       state( i )                               )
+      end do
 
-      RETURN
-      END
+      return
+      end

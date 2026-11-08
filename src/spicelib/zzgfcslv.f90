@@ -1,11 +1,11 @@
 !$Procedure ZZGFCSLV ( GF, coordinate solver )
 
-      SUBROUTINE ZZGFCSLV ( VECDEF, METHOD, TARGET, REF,    ABCORR, &
-                            OBSRVR, DREF,   DVEC,   CRDSYS, CRDNAM, &
-                            RELATE, REFVAL, TOL,    ADJUST, UDSTEP, &
-                            UDREFN, RPT,    UDREPI, UDREPU, UDREPF, &
-                            BAIL,   UDBAIL, MW,     NW,     WORK, &
-                            CNFINE, RESULT                          )
+      subroutine zzgfcslv ( vecdef, method, target, ref,    abcorr, &
+                            obsrvr, dref,   dvec,   crdsys, crdnam, &
+                            relate, refval, tol,    adjust, udstep, &
+                            udrefn, rpt,    udrepi, udrepu, udrepf, &
+                            bail,   udbail, mw,     nw,     work, &
+                            cnfine, result                          )
 
 ! $ Abstract
 !
@@ -27,45 +27,45 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      CNTRCT
-      PARAMETER           ( CNTRCT = 1.0D0 )
+      double precision      cntrct
+      parameter           ( cntrct = 1.0d0 )
 
-      CHARACTER*(*)         VECDEF
-      CHARACTER*(*)         METHOD
-      CHARACTER*(*)         TARGET
-      CHARACTER*(*)         REF
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      CHARACTER*(*)         DREF
-      DOUBLE PRECISION      DVEC   ( 3 )
-      CHARACTER*(*)         CRDSYS
-      CHARACTER*(*)         CRDNAM
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      ADJUST
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      LOGICAL               RPT
-      EXTERNAL              UDREPI
-      EXTERNAL              UDREPU
-      EXTERNAL              UDREPF
-      LOGICAL               BAIL
-      EXTERNAL              UDBAIL
-      LOGICAL               UDBAIL
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         vecdef
+      character*(*)         method
+      character*(*)         target
+      character*(*)         ref
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      character*(*)         dref
+      double precision      dvec   ( 3 )
+      character*(*)         crdsys
+      character*(*)         crdnam
+      character*(*)         relate
+      double precision      refval
+      double precision      tol
+      double precision      adjust
+      external              udstep
+      external              udrefn
+      logical               rpt
+      external              udrepi
+      external              udrepu
+      external              udrepf
+      logical               bail
+      external              udbail
+      logical               udbail
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -759,76 +759,76 @@
 !
 !-&
 
-      EXTERNAL              UDF
+      external              udf
 
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
-      INTEGER               WNCARD
+      integer               isrchc
+      integer               wncard
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
-      EXTERNAL              ZZGFCODC
-      EXTERNAL              ZZGFCOG
-      EXTERNAL              ZZGFCOEX
-      EXTERNAL              ZZGFUDLT
+      external              zzgfcodc
+      external              zzgfcog
+      external              zzgfcoex
+      external              zzgfudlt
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               MXPASS
-      PARAMETER           ( MXPASS  = 3 )
+      integer               mxpass
+      parameter           ( mxpass  = 3 )
 
-      INTEGER               XPASS
-      PARAMETER           ( XPASS  = 3 )
+      integer               xpass
+      parameter           ( xpass  = 3 )
 
 !
 !     Number of supported comparison operators:
 !
-      INTEGER               NC
-      PARAMETER           ( NC     = 7 )
+      integer               nc
+      parameter           ( nc     = 7 )
 
 !
 !     MAXOP is the maximum string length for comparison operators.
 !     MAXOP may grow if new comparisons are added.
 !
-      INTEGER               MAXOP
-      PARAMETER           ( MAXOP = 6 )
+      integer               maxop
+      parameter           ( maxop = 6 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXOP)     CNAMES ( NC )
-      CHARACTER*(LNSIZE)    LOCCRD
-      CHARACTER*(LNSIZE)    LOCVDF
-      CHARACTER*(MXBEGM)    PREBUF ( MXPASS )
-      CHARACTER*(MXBEGM)    RPTPRE ( MXPASS )
-      CHARACTER*(MXENDM)    RPTSUF ( MXPASS )
-      CHARACTER*(MAXOP)     UOP
+      character*(maxop)     cnames ( nc )
+      character*(lnsize)    loccrd
+      character*(lnsize)    locvdf
+      character*(mxbegm)    prebuf ( mxpass )
+      character*(mxbegm)    rptpre ( mxpass )
+      character*(mxendm)    rptsuf ( mxpass )
+      character*(maxop)     uop
 
-      DOUBLE PRECISION      EXCON
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      START
+      double precision      excon
+      double precision      finish
+      double precision      start
 
-      INTEGER               I
-      INTEGER               LOC
-      INTEGER               NPASS
+      integer               i
+      integer               loc
+      integer               npass
 
-      LOGICAL               LOCALX
-      LOGICAL               NOADJX
+      logical               localx
+      logical               noadjx
 
 !
 !     Saved variables
 !
-      SAVE                  CNAMES
-      SAVE                  RPTPRE
-      SAVE                  RPTSUF
+      save                  cnames
+      save                  rptpre
+      save                  rptsuf
 
 !
 !     Initial values
@@ -836,7 +836,7 @@
 !
 !     Below we initialize the list of comparison operator names.
 !
-      DATA                  CNAMES / '>', &
+      data                  cnames / '>', &
                                      '=', &
                                      '<', &
                                      'ABSMAX', &
@@ -844,89 +844,89 @@
                                      'LOCMAX', &
                                      'LOCMIN'   /
 
-      DATA                  RPTPRE / 'Coordinate pass 1 of # ', &
+      data                  rptpre / 'Coordinate pass 1 of # ', &
                                      'Coordinate pass 2 of # ', &
                                      'Intercept existence pass 1 of 1' /
 
-      DATA                  RPTSUF / 3 * 'done.' /
+      data                  rptsuf / 3 * 'done.' /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZGFCSLV' )
+      call chkin ( 'ZZGFCSLV' )
 
 !
 !     Check the workspace window count.
 !
-      IF ( NW .LT. NWMAX ) THEN
+      if ( nw .lt. nwmax ) then
 
-         CALL SETMSG ( 'Workspace window count was # but must be ' &
+         call setmsg ( 'Workspace window count was # but must be ' &
          //            'at least #.'                              )
-         CALL ERRINT ( '#', NW                                    )
-         CALL ERRINT ( '#', NWMAX                                 )
-         CALL SIGERR ( 'SPICE(TOOFEWWINDOWS)'                     )
-         CALL CHKOUT ( 'ZZGFCSLV'                                 )
-         RETURN
+         call errint ( '#', nw                                    )
+         call errint ( '#', nwmax                                 )
+         call sigerr ( 'SPICE(TOOFEWWINDOWS)'                     )
+         call chkout ( 'ZZGFCSLV'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the workspace window size. The minimum size that
 !     makes any sense is 2.
 !
-      IF ( MW .LT. 2 ) THEN
+      if ( mw .lt. 2 ) then
 
-         CALL SETMSG ( 'Workspace window size was # but must be ' &
+         call setmsg ( 'Workspace window size was # but must be ' &
          //            'at least 2.'                              )
-         CALL ERRINT ( '#', MW                                    )
-         CALL SIGERR ( 'SPICE(WINDOWSTOOSMALL)'                   )
-         CALL CHKOUT ( 'ZZGFCSLV'                                 )
-         RETURN
+         call errint ( '#', mw                                    )
+         call sigerr ( 'SPICE(WINDOWSTOOSMALL)'                   )
+         call chkout ( 'ZZGFCSLV'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure ADJUST is non-negative.
 !
-      IF ( ADJUST .LT. 0.D0 ) THEN
+      if ( adjust .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'ADJUST was #; must be non-negative.' )
-         CALL ERRDP  ( '#',  ADJUST                          )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-         CALL CHKOUT ( 'ZZGFCSLV'                            )
-         RETURN
+         call setmsg ( 'ADJUST was #; must be non-negative.' )
+         call errdp  ( '#',  adjust                          )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+         call chkout ( 'ZZGFCSLV'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure TOL is positive.
 !
-      IF ( TOL .LE. 0.D0 ) THEN
+      if ( tol .le. 0.d0 ) then
 
-         CALL SETMSG ( 'TOL was #; must be positive.' )
-         CALL ERRDP  ( '#',  TOL                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'       )
-         CALL CHKOUT ( 'ZZGFCSLV'                     )
-         RETURN
+         call setmsg ( 'TOL was #; must be positive.' )
+         call errdp  ( '#',  tol                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'       )
+         call chkout ( 'ZZGFCSLV'                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure that the requested comparison operation is one we
 !     recognize.
 !
-      CALL LJUST ( RELATE,  UOP )
-      CALL UCASE ( UOP,     UOP )
+      call ljust ( relate,  uop )
+      call ucase ( uop,     uop )
 
-      LOC = ISRCHC ( UOP, NC, CNAMES )
+      loc = isrchc ( uop, nc, cnames )
 
-      IF ( LOC .EQ. 0 ) THEN
+      if ( loc .eq. 0 ) then
 
-         CALL SETMSG ( 'The comparison operator, # is not '     // &
+         call setmsg ( 'The comparison operator, # is not '     // &
                        'recognized.  Supported operators are: ' // &
                        '>,'                                     // &
                        '=,'                                     // &
@@ -935,50 +935,50 @@
                        'ABSMIN,'                                // &
                        'LOCMAX,'                                // &
                        'LOCMIN.'                                )
-         CALL ERRCH  ( '#', RELATE                              )
-         CALL SIGERR ( 'SPICE(NOTRECOGNIZED)'                   )
-         CALL CHKOUT ( 'ZZGFCSLV'                               )
-         RETURN
+         call errch  ( '#', relate                              )
+         call sigerr ( 'SPICE(NOTRECOGNIZED)'                   )
+         call chkout ( 'ZZGFCSLV'                               )
+         return
 
-      END IF
+      end if
 
 !
 !     Initialize the workspace windows.
 !
-      DO I = 1, NW
-         CALL SSIZED ( MW, WORK(LBCELL,I) )
-      END DO
+      do i = 1, nw
+         call ssized ( mw, work(lbcell,i) )
+      end do
 
 !
 !     Initialize the result window.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 !
 !     Create a left-justified, compressed copy of the
 !     input vector definition method.
 !
-      CALL LJUST  ( VECDEF,         LOCVDF )
-      CALL CMPRSS ( ' ', 1, LOCVDF, LOCVDF )
-      CALL UCASE  ( LOCVDF,         LOCVDF )
+      call ljust  ( vecdef,         locvdf )
+      call cmprss ( ' ', 1, locvdf, locvdf )
+      call ucase  ( locvdf,         locvdf )
 
 !
 !     If the vector definition method is "surface intercept,"
 !     find the "existence window": the window over which
 !     the intercept and its time derivative are computable.
 !
-      IF ( LOCVDF .EQ. SINDEF ) THEN
+      if ( locvdf .eq. sindef ) then
 !
 !        Initialize the search for the existence window.
 !
-         CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                         REF,   ABCORR,  OBSRVR, DREF, &
-                         DVEC,  CRDSYS,  CRDNAM )
+         call zzgfcoin ( vecdef, method, target, &
+                         ref,   abcorr,  obsrvr, dref, &
+                         dvec,  crdsys,  crdnam )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'ZZGFCSLV' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'ZZGFCSLV' )
+            return
+         end if
 
 !
 !        This routine presumes that UDSTEP has been initialized, so we
@@ -987,9 +987,9 @@
 !        If progress reporting is enabled, initialize the progress
 !        report for the existence window search.
 !
-         IF ( RPT ) THEN
-            CALL UDREPI ( CNFINE, RPTPRE(XPASS), RPTSUF(XPASS) )
-         END IF
+         if ( rpt ) then
+            call udrepi ( cnfine, rptpre(xpass), rptsuf(xpass) )
+         end if
 
 !
 !        ZZGFSOLV will add the result of each search to the workspace
@@ -999,150 +999,150 @@
 !
 !        Initialize this window.
 !
-         CALL SSIZED ( MW, WORK(LBCELL,EXWIDX) )
+         call ssized ( mw, work(lbcell,exwidx) )
 
 !
 !        Search each interval of the confinement window.
 !
-         DO I = 1, WNCARD( CNFINE )
+         do i = 1, wncard( cnfine )
 
-            CALL WNFETD ( CNFINE, I, START, FINISH )
+            call wnfetd ( cnfine, i, start, finish )
 
-            CALL ZZGFSOLVX( UDF,    ZZGFCOEX,  UDSTEP,   UDREFN, &
-                            BAIL,   UDBAIL,    .FALSE.,  0.D0, &
-                            START,  FINISH,    TOL,      RPT, &
-                            UDREPU, WORK(LBCELL,EXWIDX)      )
+            call zzgfsolvx( udf,    zzgfcoex,  udstep,   udrefn, &
+                            bail,   udbail,    .false.,  0.d0, &
+                            start,  finish,    tol,      rpt, &
+                            udrepu, work(lbcell,exwidx)      )
 
-            IF (  FAILED()  ) THEN
-               CALL CHKOUT ( 'ZZGFCSLV'  )
-               RETURN
-            END IF
+            if (  failed()  ) then
+               call chkout ( 'ZZGFCSLV'  )
+               return
+            end if
 !
 !           If interrupt processing is enabled, check to see
 !           whether an interrupt has occurred.
 !
-            IF ( BAIL ) THEN
+            if ( bail ) then
 
-               IF ( UDBAIL () ) THEN
-                  CALL CHKOUT ( 'ZZGFCSLV' )
-                  RETURN
-               END IF
+               if ( udbail () ) then
+                  call chkout ( 'ZZGFCSLV' )
+                  return
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 !
 !        If progress reporting is enabled, terminate the report
 !        for this pass.
 !
-         IF ( RPT ) THEN
-            CALL UDREPF
-         END IF
+         if ( rpt ) then
+            call udrepf
+         end if
 
 !
 !        For safety, contract the existence window. Store
 !        the result in the workspace.
 !
-         EXCON = TOL + CNTRCT
+         excon = tol + cntrct
 
-         CALL WNCOND ( EXCON, EXCON, WORK(LBCELL,EXWIDX) )
+         call wncond ( excon, excon, work(lbcell,exwidx) )
 
-      ELSE
+      else
 !
 !        Simply copy the confinement window to the workspace.
 !
-         CALL COPYD ( CNFINE, WORK(LBCELL, EXWIDX ) )
+         call copyd ( cnfine, work(lbcell, exwidx ) )
 
-      END IF
+      end if
 
 
 !
 !     If progress reporting is enabled, set the report prefix array
 !     according to the quantity and the relational operator.
 !
-      IF ( RPT ) THEN
+      if ( rpt ) then
 
 !
 !        We'll use the logical flag LOCALX to indicate a local extremum
 !        operator and the flag NOADJX to indicate an absolute extremum
 !        operator with zero adjustment.
 !
-         LOCALX =   ( UOP .EQ. 'LOCMIN' ) .OR. ( UOP .EQ. 'LOCMAX' )
+         localx =   ( uop .eq. 'LOCMIN' ) .or. ( uop .eq. 'LOCMAX' )
 
-         NOADJX =  ( ADJUST .EQ.  0.D0    ) .AND. &
-                 ( ( UOP    .EQ. 'ABSMIN' ) .OR. ( UOP .EQ. 'ABSMAX' ) )
+         noadjx =  ( adjust .eq.  0.d0    ) .and. &
+                 ( ( uop    .eq. 'ABSMIN' ) .or. ( uop .eq. 'ABSMAX' ) )
 
 
-         IF ( LOCALX .OR. NOADJX ) THEN
+         if ( localx .or. noadjx ) then
 !
 !           These operators correspond to 1-pass searches.
 !
-            NPASS = 1
-         ELSE
-            NPASS = 2
-         END IF
+            npass = 1
+         else
+            npass = 2
+         end if
 
 !
 !        Fill in the prefix strings.
 !
-         DO I = 1, NPASS
-            CALL REPMI ( RPTPRE(I), '#', NPASS, PREBUF(I) )
-         END DO
+         do i = 1, npass
+            call repmi ( rptpre(i), '#', npass, prebuf(i) )
+         end do
 
-      END IF
+      end if
 
 !
 !     Create a left-justified, compressed, upper case copy of the
 !     input coordinate name.
 !
-      CALL LJUST  ( CRDNAM,         LOCCRD )
-      CALL CMPRSS ( ' ', 1, LOCCRD, LOCCRD )
-      CALL UCASE  ( LOCCRD,         LOCCRD )
+      call ljust  ( crdnam,         loccrd )
+      call cmprss ( ' ', 1, loccrd, loccrd )
+      call ucase  ( loccrd,         loccrd )
 
 !
 !     If the coordinate of interest is longitude or right ascension, we
 !     have a special case, since the mapping from Cartesian to
 !     latitudinal coordinates has a branch discontinuity.
 !
-      IF ( ( LOCCRD .EQ. LONCRD ) .OR. ( LOCCRD .EQ. RACRD ) ) THEN
+      if ( ( loccrd .eq. loncrd ) .or. ( loccrd .eq. racrd ) ) then
 
 !
 !        The coordinate is longitude or right ascension.
 !
-         CALL ZZGFLONG ( VECDEF, METHOD, TARGET, REF,    ABCORR, &
-                         OBSRVR, DREF,   DVEC,   CRDSYS, CRDNAM, &
-                         RELATE, REFVAL, TOL,    ADJUST, UDSTEP, &
-                         UDREFN, RPT,    UDREPI, UDREPU, UDREPF, &
-                         BAIL,   UDBAIL, MW,     NW,     WORK, &
-                         WORK(LBCELL, EXWIDX ),  RESULT         )
+         call zzgflong ( vecdef, method, target, ref,    abcorr, &
+                         obsrvr, dref,   dvec,   crdsys, crdnam, &
+                         relate, refval, tol,    adjust, udstep, &
+                         udrefn, rpt,    udrepi, udrepu, udrepf, &
+                         bail,   udbail, mw,     nw,     work, &
+                         work(lbcell, exwidx ),  result         )
 
-      ELSE
+      else
 
 !
 !        This is the normal case.
 !
 !        Initialize the coordinate quantity utilities.
 !
-         CALL ZZGFCOIN ( VECDEF, METHOD, TARGET, &
-                         REF,   ABCORR,  OBSRVR, DREF, &
-                         DVEC,  CRDSYS,  CRDNAM )
+         call zzgfcoin ( vecdef, method, target, &
+                         ref,   abcorr,  obsrvr, dref, &
+                         dvec,  crdsys,  crdnam )
 
 !
 !        Perform the search.
 !
-         CALL ZZGFRELX( UDSTEP,   UDREFN,              ZZGFCODC, &
-                        ZZGFUDLT, ZZGFCOG, &
-                        RELATE,   REFVAL,              TOL, &
-                        ADJUST,   WORK(LBCELL,EXWIDX), MW, &
-                        NW,       WORK,                RPT, &
-                        UDREPI,   UDREPU,              UDREPF, &
-                        PREBUF,   RPTSUF,              BAIL, &
-                        UDBAIL,   RESULT                        )
+         call zzgfrelx( udstep,   udrefn,              zzgfcodc, &
+                        zzgfudlt, zzgfcog, &
+                        relate,   refval,              tol, &
+                        adjust,   work(lbcell,exwidx), mw, &
+                        nw,       work,                rpt, &
+                        udrepi,   udrepu,              udrepf, &
+                        prebuf,   rptsuf,              bail, &
+                        udbail,   result                        )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZGFCSLV' )
-      RETURN
+      call chkout ( 'ZZGFCSLV' )
+      return
 
-      END
+      end

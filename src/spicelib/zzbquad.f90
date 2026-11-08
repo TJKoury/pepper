@@ -1,6 +1,6 @@
 !$Procedure  ZZBQUAD ( Solve quadratic equation with bounds )
 
-      SUBROUTINE ZZBQUAD ( A, B, C, UB, N, NX, R1, R2 )
+      subroutine zzbquad ( a, b, c, ub, n, nx, r1, r2 )
 
 ! $ Abstract
 !
@@ -23,16 +23,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      UB
-      INTEGER               N
-      INTEGER               NX
-      DOUBLE PRECISION      R1
-      DOUBLE PRECISION      R2
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      ub
+      integer               n
+      integer               nx
+      double precision      r1
+      double precision      r2
 
 ! $ Brief_I/O
 !
@@ -167,135 +167,135 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      TOUCHD
+      double precision      dpmax
+      double precision      touchd
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      BIG
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      DSCRIM
-      DOUBLE PRECISION      NUM1
-      DOUBLE PRECISION      NUM2
-      DOUBLE PRECISION      SQDISC
+      double precision      big
+      double precision      denom
+      double precision      dscrim
+      double precision      num1
+      double precision      num2
+      double precision      sqdisc
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  BIG
-      SAVE                  FIRST
+      save                  big
+      save                  first
 
 !
 !     Initial values
 !
-      DATA                  BIG   / 0.D0   /
-      DATA                  FIRST / .TRUE. /
+      data                  big   / 0.d0   /
+      data                  first / .true. /
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         BIG   = SQRT( DPMAX() ) / 100
-         FIRST = .FALSE.
+         big   = sqrt( dpmax() ) / 100
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Set invalid counts to start out. Initialize R1 and R2.
 !
-      N   = -3
-      NX  = -3
-      R1  = 0.D0
-      R2  = 0.D0
+      n   = -3
+      nx  = -3
+      r1  = 0.d0
+      r2  = 0.d0
 
 !
 !     Reject all large magnitude coefficients.
 !
-      IF (     ( ABS(A) .GT. BIG ) &
-          .OR. ( ABS(B) .GT. BIG ) &
-          .OR. ( ABS(C) .GT. BIG ) ) THEN
+      if (     ( abs(a) .gt. big ) &
+          .or. ( abs(b) .gt. big ) &
+          .or. ( abs(c) .gt. big ) ) then
 
-         CALL CHKIN  ( 'ZZBQUAD'                                      )
-         CALL SETMSG ( 'Coefficients must have magnitude less than ' &
+         call chkin  ( 'ZZBQUAD'                                      )
+         call setmsg ( 'Coefficients must have magnitude less than ' &
          //            'or equal to #, but were A = #; B = #; C = #.' )
-         CALL ERRDP  ( '#',  BIG                                      )
-         CALL ERRDP  ( '#',  A                                        )
-         CALL ERRDP  ( '#',  B                                        )
-         CALL ERRDP  ( '#',  C                                        )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZBQUAD'                                      )
-         RETURN
+         call errdp  ( '#',  big                                      )
+         call errdp  ( '#',  a                                        )
+         call errdp  ( '#',  b                                        )
+         call errdp  ( '#',  c                                        )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZBQUAD'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Reject large magnitude upper bounds as well.
 !
-      IF ( ABS(UB) .GT. BIG ) THEN
+      if ( abs(ub) .gt. big ) then
 
-         CALL CHKIN  ( 'ZZBQUAD'                                      )
-         CALL SETMSG ( 'Upper bounds must have magnitude less than ' &
+         call chkin  ( 'ZZBQUAD'                                      )
+         call setmsg ( 'Upper bounds must have magnitude less than ' &
          //            'or equal to #, but was #.'                    )
-         CALL ERRDP  ( '#',  BIG                                      )
-         CALL ERRDP  ( '#',  UB                                       )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZBQUAD'                                      )
-         RETURN
+         call errdp  ( '#',  big                                      )
+         call errdp  ( '#',  ub                                       )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZBQUAD'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     The upper bound must be positive.
 !
-      IF ( UB .LE. 0.D0 ) THEN
+      if ( ub .le. 0.d0 ) then
 
-         CALL CHKIN  ( 'ZZBQUAD'                                 )
-         CALL SETMSG ( 'Upper bound must be positive but was #.' )
-         CALL ERRDP  ( '#',  UB                                  )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'ZZBQUAD'                                 )
-         RETURN
+         call chkin  ( 'ZZBQUAD'                                 )
+         call setmsg ( 'Upper bound must be positive but was #.' )
+         call errdp  ( '#',  ub                                  )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
+         call chkout ( 'ZZBQUAD'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Handle the degenerate cases first.
 !
-      IF ( A .EQ. 0.D0 ) THEN
+      if ( a .eq. 0.d0 ) then
 
-         IF ( B .EQ. 0.D0 ) THEN
+         if ( b .eq. 0.d0 ) then
 !
 !           The equation is of the form
 !
 !              C = 0
 !
-            IF ( C .EQ. 0.D0 ) THEN
+            if ( c .eq. 0.d0 ) then
 !
 !              The equation is satisfied for all real numbers.
 !
-               N  = -1
-               NX =  0
+               n  = -1
+               nx =  0
 
-            ELSE
+            else
 !
 !              There are no solutions.
 !
-               N  = -2
-               NX =  0
+               n  = -2
+               nx =  0
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The equation is first-order:
 !
@@ -303,105 +303,105 @@
 !
 !           In this branch, B is non-zero.
 !
-            IF ( ABS(C) .LE. ABS(UB * B) ) THEN
+            if ( abs(c) .le. abs(ub * b) ) then
 
-               N   =   1
-               NX  =   0
+               n   =   1
+               nx  =   0
 
-               R1  =  -C / B
-               R2  =   R1
+               r1  =  -c / b
+               r2  =   r1
 
-            ELSE
+            else
 !
 !              The magnitude of the solution is too large.
 !
-               N   =  0
-               NX  =  1
+               n   =  0
+               nx  =  1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        The leading coefficient of the equation is non-zero.
 !
 !        We can safely compute the discriminant now, due the
 !        check we've already performed.
 !
-         DSCRIM = TOUCHD(  ( B*B ) - ( 4*A*C )  )
+         dscrim = touchd(  ( b*b ) - ( 4*a*c )  )
 
-         IF ( DSCRIM .LT. 0.D0 ) THEN
+         if ( dscrim .lt. 0.d0 ) then
 !
 !           We have complex roots, so we're done.
 !
-            N  = 0
-            NX = 0
+            n  = 0
+            nx = 0
 
-         ELSE IF ( DSCRIM .EQ. 0.D0 ) THEN
+         else if ( dscrim .eq. 0.d0 ) then
 !
 !           We have a single real root of multiplicity 2.
 !
 !           Compare the magnitude of the root to the upper bound.
 !
-            NUM1   =  -B
-            DENOM  =   2 * A
+            num1   =  -b
+            denom  =   2 * a
 
-            IF ( ABS(NUM1) .GE. ABS(DENOM * UB) ) THEN
+            if ( abs(num1) .ge. abs(denom * ub) ) then
 !
 !              The root is too large; we won't compute it.
 !
-               N   =  0
-               NX  =  1
+               n   =  0
+               nx  =  1
 
-            ELSE
+            else
 !
 !              Set both roots to the same value. In this branch,
 !              A is non-zero.
 !
-               N   =  1
-               NX  =  0
+               n   =  1
+               nx  =  0
 
-               R1  =  ( NUM1 / A ) / 2
-               R2  =  R1
+               r1  =  ( num1 / a ) / 2
+               r2  =  r1
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           We have two nominally distinct real roots. Whether
 !           they're distinct double precision numbers depends
 !           on the relative magnitudes of A and DSCRIM.
 !
-            DENOM  = 2 * A
-            SQDISC = SQRT( DSCRIM )
+            denom  = 2 * a
+            sqdisc = sqrt( dscrim )
 
-            IF ( B .GT. 0.D0 ) THEN
+            if ( b .gt. 0.d0 ) then
 
-               NUM2 =  -B - SQDISC
-               NUM1 =  -B + SQDISC
-            ELSE
-               NUM2 =  -B + SQDISC
-               NUM1 =  -B - SQDISC
-            END IF
+               num2 =  -b - sqdisc
+               num1 =  -b + sqdisc
+            else
+               num2 =  -b + sqdisc
+               num1 =  -b - sqdisc
+            end if
 
 !
 !           See whether the root of larger magnitude is computable.
 !
-            IF ( ABS(NUM2) .LE. ABS(UB * DENOM) ) THEN
+            if ( abs(num2) .le. abs(ub * denom) ) then
 !
 !              The root is computable.
 
-               N  = 2
-               NX = 0
+               n  = 2
+               nx = 0
 !
 !              In this branch, A is non-zero.
 !
-               R2 = ( NUM2 / A ) / 2
+               r2 = ( num2 / a ) / 2
 
-               IF ( ABS(R2) .GT. 0.D0 ) THEN
+               if ( abs(r2) .gt. 0.d0 ) then
 !
 !                 Compute R1 using R2 and C; this avoids loss
 !                 of precision that may occur when NUM1 is computed.
@@ -413,47 +413,47 @@
 !                 results overflow. The bounds on A and R2 ensure
 !                 that A*R2 is computable.
 !
-                  R1 =  C / ( A * R2 )
+                  r1 =  c / ( a * r2 )
 
-               ELSE
+               else
 !
 !                 The root of larger magnitude has magnitude 0. This
 !                 doesn't leave many possible values for the root of
 !                 smaller magnitude.
 !
-                  R1 = 0.D0
+                  r1 = 0.d0
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              The root of larger magnitude is not computable.
 !              Check the root of smaller magnitude.
 !
-               IF ( ABS(NUM1) .LE. ABS(UB * DENOM) ) THEN
+               if ( abs(num1) .le. abs(ub * denom) ) then
 !
 !                 The root is computable.
 !
-                  N  = 1
-                  NX = 1
+                  n  = 1
+                  nx = 1
 
-                  R1 = ( NUM1 / A ) / 2
+                  r1 = ( num1 / a ) / 2
 
-               ELSE
+               else
 !
 !                 Neither root is computable.
 !
-                  N  = 0
-                  NX = 2
+                  n  = 0
+                  nx = 2
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

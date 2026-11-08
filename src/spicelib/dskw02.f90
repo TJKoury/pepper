@@ -1,10 +1,10 @@
 !$Procedure DSKW02 ( DSK, write type 2 segment )
 
-      SUBROUTINE DSKW02 ( HANDLE, &
-                          CENTER, SURFID, DCLASS, FRAME,  CORSYS, &
-                          CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2, &
-                          MNCOR3, MXCOR3, FIRST,  LAST,   NV, &
-                          VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
+      subroutine dskw02 ( handle, &
+                          center, surfid, dclass, frame,  corsys, &
+                          corpar, mncor1, mxcor1, mncor2, mxcor2, &
+                          mncor3, mxcor3, first,  last,   nv, &
+                          vrtces, np,     plates, spaixd, spaixi )
 
 ! $ Abstract
 !
@@ -25,33 +25,33 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE  'dskdsc.inc'
-      INCLUDE  'dsktol.inc'
-      INCLUDE  'dsk02.inc'
+      include  'dskdsc.inc'
+      include  'dsktol.inc'
+      include  'dsk02.inc'
 
-      INTEGER               HANDLE
-      INTEGER               CENTER
-      INTEGER               SURFID
-      INTEGER               DCLASS
-      CHARACTER*(*)         FRAME
-      INTEGER               CORSYS
-      DOUBLE PRECISION      CORPAR ( * )
-      DOUBLE PRECISION      MNCOR1
-      DOUBLE PRECISION      MXCOR1
-      DOUBLE PRECISION      MNCOR2
-      DOUBLE PRECISION      MXCOR2
-      DOUBLE PRECISION      MNCOR3
-      DOUBLE PRECISION      MXCOR3
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      INTEGER               NV
-      DOUBLE PRECISION      VRTCES ( 3, NV )
-      INTEGER               NP
-      INTEGER               PLATES ( 3, NP )
-      DOUBLE PRECISION      SPAIXD ( * )
-      INTEGER               SPAIXI ( * )
+      integer               handle
+      integer               center
+      integer               surfid
+      integer               dclass
+      character*(*)         frame
+      integer               corsys
+      double precision      corpar ( * )
+      double precision      mncor1
+      double precision      mxcor1
+      double precision      mncor2
+      double precision      mxcor2
+      double precision      mncor3
+      double precision      mxcor3
+      double precision      first
+      double precision      last
+      integer               nv
+      double precision      vrtces ( 3, nv )
+      integer               np
+      integer               plates ( 3, np )
+      double precision      spaixd ( * )
+      integer               spaixi ( * )
 
 ! $ Brief_I/O
 !
@@ -915,12 +915,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
+      double precision      dpr
+      double precision      halfpi
+      double precision      twopi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -930,192 +930,192 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      ALTLIM
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      DESCR  ( DSKDSZ )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      SEGBDS ( 2, 2 )
-      DOUBLE PRECISION      VOXORI ( 3 )
-      DOUBLE PRECISION      VOXSIZ
-      DOUBLE PRECISION      VTXBDS ( 2, 3 )
+      double precision      a
+      double precision      altlim
+      double precision      b
+      double precision      descr  ( dskdsz )
+      double precision      r
+      double precision      segbds ( 2, 2 )
+      double precision      voxori ( 3 )
+      double precision      voxsiz
+      double precision      vtxbds ( 2, 3 )
 
-      INTEGER               CGRSCL
-      INTEGER               FRMCDE
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               NCGR
-      INTEGER               NVXTOT
-      INTEGER               PVOXPL
-      INTEGER               PVOXPT
-      INTEGER               PVTXPL
-      INTEGER               PVTXPT
-      INTEGER               Q
-      INTEGER               VGREXT ( 3 )
-      INTEGER               VOXNPT
-      INTEGER               VOXNPL
-      INTEGER               VTXNPL
+      integer               cgrscl
+      integer               frmcde
+      integer               i
+      integer               j
+      integer               k
+      integer               ncgr
+      integer               nvxtot
+      integer               pvoxpl
+      integer               pvoxpt
+      integer               pvtxpl
+      integer               pvtxpt
+      integer               q
+      integer               vgrext ( 3 )
+      integer               voxnpt
+      integer               voxnpl
+      integer               vtxnpl
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKW02' )
+      call chkin ( 'DSKW02' )
 
 !
 !     Map the input reference frame name to an ID code.
 !
-      CALL NAMFRM( FRAME, FRMCDE )
+      call namfrm( frame, frmcde )
 
-      IF ( FRMCDE .EQ. 0  ) THEN
+      if ( frmcde .eq. 0  ) then
 
-         CALL SETMSG ( 'Input reference frame # could not ' &
+         call setmsg ( 'Input reference frame # could not ' &
          //            'be mapped to an ID code. The frame ' &
          //            'name might be misspelled, or possibly ' &
          //            'a required frame kernel was not loaded. ' )
-         CALL ERRCH  ( '#',  FRAME                                )
-         CALL SIGERR ( 'SPICE(FRAMEIDNOTFOUND)'                   )
-         CALL CHKOUT ( 'DSKW02'                                   )
-         RETURN
+         call errch  ( '#',  frame                                )
+         call sigerr ( 'SPICE(FRAMEIDNOTFOUND)'                   )
+         call chkout ( 'DSKW02'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the time bounds are in order.
 !
-      IF ( LAST .LE. FIRST ) THEN
+      if ( last .le. first ) then
 
-         CALL SETMSG ( 'Segment time bounds must be increasing; ' &
+         call setmsg ( 'Segment time bounds must be increasing; ' &
          //            'bounds were #:#.'                         )
-         CALL ERRDP  ( '#',  FIRST                                )
-         CALL ERRDP  ( '#',  LAST                                 )
-         CALL SIGERR ( 'SPICE(TIMESOUTOFORDER)'                   )
-         CALL CHKOUT ( 'DSKW02'                                   )
-         RETURN
+         call errdp  ( '#',  first                                )
+         call errdp  ( '#',  last                                 )
+         call sigerr ( 'SPICE(TIMESOUTOFORDER)'                   )
+         call chkout ( 'DSKW02'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     If applicable, check segment boundaries. Check the
 !     coordinate system as well.
 !
-      IF ( ( CORSYS .EQ. LATSYS ) .OR. ( CORSYS .EQ. PDTSYS )  ) THEN
+      if ( ( corsys .eq. latsys ) .or. ( corsys .eq. pdtsys )  ) then
 !
 !        Reject invalid latitudes and longitudes. Move
 !        values that are slightly out of range into range.
 !
 !        Longitude bounds must be distinct.
 !
-         IF ( MNCOR1 .EQ. MXCOR1 ) THEN
+         if ( mncor1 .eq. mxcor1 ) then
 
-            CALL SETMSG ( 'Minimum longitude # radians (# degrees) ' &
+            call setmsg ( 'Minimum longitude # radians (# degrees) ' &
             //            'was equal to maximum longitude. Longitude ' &
             //            'bounds must be distinct.'                 )
-            CALL ERRDP  ( '#', MNCOR1                                )
-            CALL ERRDP  ( '#', MNCOR1 * DPR()                        )
-            CALL SIGERR ( 'SPICE(ZEROBOUNDSEXTENT)'                  )
-            CALL CHKOUT ( 'DSKW02'                                   )
-            RETURN
+            call errdp  ( '#', mncor1                                )
+            call errdp  ( '#', mncor1 * dpr()                        )
+            call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                  )
+            call chkout ( 'DSKW02'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Check minimum longitude.
 !
-         IF (      ( MNCOR1 .LT. -TWOPI()-ANGMRG ) &
-              .OR. ( MNCOR1 .GT.  TWOPI()-ANGMRG ) ) THEN
+         if (      ( mncor1 .lt. -twopi()-angmrg ) &
+              .or. ( mncor1 .gt.  twopi()-angmrg ) ) then
 
-            CALL SETMSG ( 'Minimum longitude # radians (# degrees) ' &
+            call setmsg ( 'Minimum longitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
             //            '[-2*pi, 2*pi - ANGMRG]'                   )
-            CALL ERRDP  ( '#', MNCOR1                                )
-            CALL ERRDP  ( '#', MNCOR1 * DPR()                        )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            CALL CHKOUT ( 'DSKW02'                                   )
-            RETURN
+            call errdp  ( '#', mncor1                                )
+            call errdp  ( '#', mncor1 * dpr()                        )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
+            call chkout ( 'DSKW02'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        The minimum longitude is too small by ANGMRG, at worst.
 !        Make it greater than or equal to -2*pi.
 !
-         SEGBDS(1,1) = MAX( -TWOPI(), MNCOR1 )
+         segbds(1,1) = max( -twopi(), mncor1 )
 
 !
 !        Check maximum longitude.
 !
-         IF (      ( MXCOR1 .LT. -TWOPI()+ANGMRG ) &
-              .OR. ( MXCOR1 .GT.  TWOPI()+ANGMRG ) ) THEN
+         if (      ( mxcor1 .lt. -twopi()+angmrg ) &
+              .or. ( mxcor1 .gt.  twopi()+angmrg ) ) then
 
-            CALL SETMSG ( 'Maximum longitude # radians (# degrees) ' &
+            call setmsg ( 'Maximum longitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
             //            '[-2*pi+ANGMRG, 2*pi]'                     )
-            CALL ERRDP  ( '#', MXCOR1                                )
-            CALL ERRDP  ( '#', MXCOR1 * DPR()                        )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            CALL CHKOUT ( 'DSKW02'                                   )
-            RETURN
+            call errdp  ( '#', mxcor1                                )
+            call errdp  ( '#', mxcor1 * dpr()                        )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
+            call chkout ( 'DSKW02'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        The maximum longitude is too large by ANGMRG, at worst.
 !        Make it less than or equal to 2*pi.
 !
-         SEGBDS(2,1) = MIN( TWOPI(), MXCOR1 )
+         segbds(2,1) = min( twopi(), mxcor1 )
 
 !
 !        The longitude extent cannot exceed 2*pi.
 !
-         IF ( MXCOR1 .GT. (MNCOR1 + TWOPI() + ANGMRG) ) THEN
+         if ( mxcor1 .gt. (mncor1 + twopi() + angmrg) ) then
 
-            CALL SETMSG ( 'Longitude bounds #:# radians ' &
+            call setmsg ( 'Longitude bounds #:# radians ' &
             //            '(#:# degrees) are too far apart.' )
-            CALL ERRDP  ( '#', MXCOR1                        )
-            CALL ERRDP  ( '#', MXCOR2                        )
-            CALL ERRDP  ( '#', MXCOR1 * DPR()                )
-            CALL ERRDP  ( '#', MXCOR2 * DPR()                )
-            CALL SIGERR ( 'SPICE(INVALIDLONEXTENT)'          )
-            CALL CHKOUT ( 'DSKW02'                           )
-            RETURN
+            call errdp  ( '#', mxcor1                        )
+            call errdp  ( '#', mxcor2                        )
+            call errdp  ( '#', mxcor1 * dpr()                )
+            call errdp  ( '#', mxcor2 * dpr()                )
+            call sigerr ( 'SPICE(INVALIDLONEXTENT)'          )
+            call chkout ( 'DSKW02'                           )
+            return
 
-         END IF
+         end if
 
-         IF ( MXCOR1 .LT. (MNCOR1 - TWOPI() - ANGMRG) ) THEN
+         if ( mxcor1 .lt. (mncor1 - twopi() - angmrg) ) then
 
-            CALL SETMSG ( 'Longitude bounds #:# radians ' &
+            call setmsg ( 'Longitude bounds #:# radians ' &
             //            '(#:# degrees) are too far apart.' )
-            CALL ERRDP  ( '#', MXCOR1                        )
-            CALL ERRDP  ( '#', MXCOR2                        )
-            CALL ERRDP  ( '#', MXCOR1 * DPR()                )
-            CALL ERRDP  ( '#', MXCOR2 * DPR()                )
-            CALL SIGERR ( 'SPICE(INVALIDLONEXTENT)'          )
-            CALL CHKOUT ( 'DSKW02'                           )
-            RETURN
+            call errdp  ( '#', mxcor1                        )
+            call errdp  ( '#', mxcor2                        )
+            call errdp  ( '#', mxcor1 * dpr()                )
+            call errdp  ( '#', mxcor2 * dpr()                )
+            call sigerr ( 'SPICE(INVALIDLONEXTENT)'          )
+            call chkout ( 'DSKW02'                           )
+            return
 
-         END IF
+         end if
 
 
-         IF ( SEGBDS(2,1) .GT. SEGBDS(1,1) ) THEN
+         if ( segbds(2,1) .gt. segbds(1,1) ) then
 !
 !           The upper bound exceeds the lower by at most 2*pi + ANGMRG.
 !           Trim the upper bound to make the difference no more than
 !           2*pi.
 !
-            SEGBDS(2,1) = MIN( SEGBDS(2,1), SEGBDS(1,1)+TWOPI() )
+            segbds(2,1) = min( segbds(2,1), segbds(1,1)+twopi() )
 
-         ELSE IF ( SEGBDS(2,1) .LT. SEGBDS(1,1) ) THEN
+         else if ( segbds(2,1) .lt. segbds(1,1) ) then
 !
 !           The lower bound exceeds the upper by at most 2*pi + ANGMRG.
 !           Advance the upper bound, if necessary, to make the
 !           difference no more than 2*pi.
 !
-            SEGBDS(2,1) = MAX( SEGBDS(2,1), SEGBDS(1,1)-TWOPI() )
+            segbds(2,1) = max( segbds(2,1), segbds(1,1)-twopi() )
 
-         END IF
+         end if
 
 !
 !        Make sure the adjusted longitude bounds don't describe an
@@ -1124,262 +1124,262 @@
 !        greater than the upper bound, then the difference between
 !        the bounds must not be an integer multiple of 2*pi.
 !
-         IF (      ( SEGBDS(2,1) .EQ. SEGBDS(1,1)           ) &
-              .OR. ( SEGBDS(2,1) .EQ. SEGBDS(1,1) - TWOPI() )  ) THEN
+         if (      ( segbds(2,1) .eq. segbds(1,1)           ) &
+              .or. ( segbds(2,1) .eq. segbds(1,1) - twopi() )  ) then
 
-            CALL SETMSG ( 'After adjustment, minimum longitude ' &
+            call setmsg ( 'After adjustment, minimum longitude ' &
             //            '# radians (# degrees) was equal to ' &
             //            'maximum longitude. Longitude bounds must ' &
             //            'be distinct.'                             )
-            CALL ERRDP  ( '#', SEGBDS(1,1)                           )
-            CALL ERRDP  ( '#', MNCOR1 * DPR()                        )
-            CALL SIGERR ( 'SPICE(ZEROBOUNDSEXTENT)'                  )
-            CALL CHKOUT ( 'DSKW02'                                   )
-            RETURN
+            call errdp  ( '#', segbds(1,1)                           )
+            call errdp  ( '#', mncor1 * dpr()                        )
+            call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)'                  )
+            call chkout ( 'DSKW02'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Check minimum latitude.
 !
-         IF (      ( MNCOR2 .LT. -HALFPI()-ANGMRG ) &
-              .OR. ( MNCOR2 .GT.  HALFPI()-ANGMRG ) ) THEN
+         if (      ( mncor2 .lt. -halfpi()-angmrg ) &
+              .or. ( mncor2 .gt.  halfpi()-angmrg ) ) then
 
-            CALL SETMSG ( 'Minimum latitude # radians (# degrees) ' &
+            call setmsg ( 'Minimum latitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
             //            '[-pi/2, pi/2 - ANGMRG]'                   )
-            CALL ERRDP  ( '#', MNCOR2                                )
-            CALL ERRDP  ( '#', MNCOR2 * DPR()                        )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            CALL CHKOUT ( 'DSKW02'                                   )
-            RETURN
+            call errdp  ( '#', mncor2                                )
+            call errdp  ( '#', mncor2 * dpr()                        )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
+            call chkout ( 'DSKW02'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Trim the lower latitude bound to make it at least -pi/2.
 !
-         SEGBDS(1,2) = MAX( -HALFPI(), MNCOR2 )
+         segbds(1,2) = max( -halfpi(), mncor2 )
 
 !
 !        Check maximum latitude.
 !
-         IF (      ( MXCOR2 .LT. -HALFPI()+ANGMRG ) &
-              .OR. ( MXCOR2 .GT.  HALFPI()+ANGMRG ) ) THEN
+         if (      ( mxcor2 .lt. -halfpi()+angmrg ) &
+              .or. ( mxcor2 .gt.  halfpi()+angmrg ) ) then
 
-            CALL SETMSG ( 'Maximum latitude # radians (# degrees) ' &
+            call setmsg ( 'Maximum latitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
             //            '[-pi/2+ANGMRG, pi/2]'                     )
-            CALL ERRDP  ( '#', MXCOR2                                )
-            CALL ERRDP  ( '#', MXCOR2 * DPR()                        )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                   )
-            CALL CHKOUT ( 'DSKW02'                                   )
-            RETURN
+            call errdp  ( '#', mxcor2                                )
+            call errdp  ( '#', mxcor2 * dpr()                        )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                   )
+            call chkout ( 'DSKW02'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Trim the upper latitude bound to make it no more than -pi/2.
 !
-         SEGBDS(1,2) = MAX( -HALFPI(), MNCOR2 )
-         SEGBDS(2,2) = MIN(  HALFPI(), MXCOR2 )
+         segbds(1,2) = max( -halfpi(), mncor2 )
+         segbds(2,2) = min(  halfpi(), mxcor2 )
 
 !
 !        The latitude bounds must be in order.
 !
-         IF ( MXCOR2 .LT. MNCOR2 ) THEN
+         if ( mxcor2 .lt. mncor2 ) then
 
-            CALL SETMSG ( 'Latitude bounds # and # are out of order.' )
-            CALL ERRDP  ( '#',  MNCOR2                                )
-            CALL ERRDP  ( '#',  MXCOR2                                )
-            CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)'                   )
-            CALL CHKOUT ( 'DSKW02'                                    )
-            RETURN
+            call setmsg ( 'Latitude bounds # and # are out of order.' )
+            call errdp  ( '#',  mncor2                                )
+            call errdp  ( '#',  mxcor2                                )
+            call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                   )
+            call chkout ( 'DSKW02'                                    )
+            return
 
-         END IF
+         end if
 
 
-         IF ( CORSYS .EQ. LATSYS ) THEN
+         if ( corsys .eq. latsys ) then
 !
 !           The coordinate system is latitudinal. Check radius
 !           bounds.
 !
-            IF ( MNCOR3 .LT. 0.D0 ) THEN
+            if ( mncor3 .lt. 0.d0 ) then
 
-               CALL SETMSG ( 'Radius lower bound must be ' &
+               call setmsg ( 'Radius lower bound must be ' &
                //            'non-negative but was #.'     )
-               CALL ERRDP  ( '#',  MNCOR3                  )
-               CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'      )
-               CALL CHKOUT ( 'DSKW02'                      )
-               RETURN
+               call errdp  ( '#',  mncor3                  )
+               call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
+               call chkout ( 'DSKW02'                      )
+               return
 
-            END IF
+            end if
 
-            IF ( MXCOR3 .LE. 0.D0 ) THEN
+            if ( mxcor3 .le. 0.d0 ) then
 
-               CALL SETMSG ( 'Radius upper bound must be ' &
+               call setmsg ( 'Radius upper bound must be ' &
                //            'strictly positive but was #.'  )
-               CALL ERRDP  ( '#',  MXCOR3                    )
-               CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'        )
-               CALL CHKOUT ( 'DSKW02'                        )
-               RETURN
+               call errdp  ( '#',  mxcor3                    )
+               call sigerr ( 'SPICE(VALUEOUTOFRANGE)'        )
+               call chkout ( 'DSKW02'                        )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
-         IF ( CORSYS .EQ. PDTSYS ) THEN
+         if ( corsys .eq. pdtsys ) then
 !
 !           The coordinate system is planetodetic. Check the coordinate
 !           parameters as well.
 !
-            IF ( CORPAR(1) .LE. 0.D0 ) THEN
+            if ( corpar(1) .le. 0.d0 ) then
 
-               CALL SETMSG ( 'Equatorial radius was #; this radius ' &
+               call setmsg ( 'Equatorial radius was #; this radius ' &
                //            'must be strictly positive.'            )
-               CALL ERRDP  ( '#', CORPAR(1)                          )
-               CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                )
-               CALL CHKOUT ( 'DSKW02'                                )
-               RETURN
+               call errdp  ( '#', corpar(1)                          )
+               call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                )
+               call chkout ( 'DSKW02'                                )
+               return
 
-            END IF
+            end if
 
 
-            IF ( CORPAR(2) .GE. 1.D0 ) THEN
+            if ( corpar(2) .ge. 1.d0 ) then
 
-               CALL SETMSG ( 'Flattening coefficient was #; this ' &
+               call setmsg ( 'Flattening coefficient was #; this ' &
                //            'value must be strictly less than 1.' )
-               CALL ERRDP  ( '#', CORPAR(2)                        )
-               CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-               CALL CHKOUT ( 'DSKW02'                              )
-               RETURN
+               call errdp  ( '#', corpar(2)                        )
+               call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+               call chkout ( 'DSKW02'                              )
+               return
 
-            END IF
+            end if
 
 !
 !           Make sure the surface of minimum altitude is smooth and
 !           non-self-intersecting.
 !
-            A      = CORPAR(1)
-            B      = A * ( 1 - CORPAR(2) )
+            a      = corpar(1)
+            b      = a * ( 1 - corpar(2) )
 
-            ALTLIM = MAX( -(A**2)/B, -(B**2)/A )
+            altlim = max( -(a**2)/b, -(b**2)/a )
 
-            IF (  MNCOR3  .LE.  ALTLIM  ) THEN
+            if (  mncor3  .le.  altlim  ) then
 
-               CALL SETMSG ( 'Reference ellipsoid has semi-axis ' &
+               call setmsg ( 'Reference ellipsoid has semi-axis ' &
                //            'lengths # and #. The minimum ' &
                //            'altitude was #. The minimum altitude ' &
                //            'is required to be greater than the ' &
                //            'maximum of {-(A**2)/B, -(B**2)/A}, ' &
                //            'which is #.'                         )
-               CALL ERRDP  ( '#', A                                )
-               CALL ERRDP  ( '#', B                                )
-               CALL ERRDP  ( '#', MNCOR3                           )
-               CALL ERRDP  ( '#', ALTLIM                           )
-               CALL SIGERR ( 'SPICE(DEGENERATESURFACE)'            )
-               CALL CHKOUT ( 'DSKW02'                              )
-               RETURN
+               call errdp  ( '#', a                                )
+               call errdp  ( '#', b                                )
+               call errdp  ( '#', mncor3                           )
+               call errdp  ( '#', altlim                           )
+               call sigerr ( 'SPICE(DEGENERATESURFACE)'            )
+               call chkout ( 'DSKW02'                              )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        The bounds of the third coordinate, whether radius or altitude,
 !        must be in order and must have positive extent.
 !
-         IF ( MXCOR3 .LT. MNCOR3 ) THEN
+         if ( mxcor3 .lt. mncor3 ) then
 
-            IF ( CORSYS .EQ. LATSYS ) THEN
+            if ( corsys .eq. latsys ) then
 
-               CALL SETMSG ( 'Radius bounds # and # are out of order' )
-            ELSE
-               CALL SETMSG ( 'Altitude bounds # and # are out of ' &
+               call setmsg ( 'Radius bounds # and # are out of order' )
+            else
+               call setmsg ( 'Altitude bounds # and # are out of ' &
                //            'order.'                                 )
-            END IF
+            end if
 
-            CALL ERRDP  ( '#',  MNCOR3              )
-            CALL ERRDP  ( '#',  MXCOR3              )
-            CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)' )
-            CALL CHKOUT ( 'DSKW02'                  )
-            RETURN
+            call errdp  ( '#',  mncor3              )
+            call errdp  ( '#',  mxcor3              )
+            call sigerr ( 'SPICE(BOUNDSOUTOFORDER)' )
+            call chkout ( 'DSKW02'                  )
+            return
 
-         END IF
+         end if
 
-         IF ( MXCOR3 .EQ. MNCOR3 ) THEN
+         if ( mxcor3 .eq. mncor3 ) then
 
-            IF ( CORSYS .EQ. LATSYS ) THEN
+            if ( corsys .eq. latsys ) then
 
-               CALL SETMSG ( 'Radius bounds # and # must have ' &
+               call setmsg ( 'Radius bounds # and # must have ' &
                //            'positive extent but are equal.'  )
-            ELSE
-               CALL SETMSG ( 'Altitude bounds # and # must have ' &
+            else
+               call setmsg ( 'Altitude bounds # and # must have ' &
                //            'positive extent but are equal.'  )
-            END IF
+            end if
 
-            CALL ERRDP  ( '#',  MNCOR3              )
-            CALL ERRDP  ( '#',  MXCOR3              )
-            CALL SIGERR ( 'SPICE(ZEROBOUNDSEXTENT)' )
-            CALL CHKOUT ( 'DSKW02'                  )
-            RETURN
+            call errdp  ( '#',  mncor3              )
+            call errdp  ( '#',  mxcor3              )
+            call sigerr ( 'SPICE(ZEROBOUNDSEXTENT)' )
+            call chkout ( 'DSKW02'                  )
+            return
 
-         END IF
+         end if
 
 
 
-      ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      else if ( corsys .eq. recsys ) then
 !
 !        All coordinate bounds must be in strictly increasing order.
 !
-         IF (      ( MXCOR1 .LE. MNCOR1 ) &
-              .OR. ( MXCOR2 .LE. MNCOR2 ) &
-              .OR. ( MXCOR3 .LE. MNCOR3 )  ) THEN
+         if (      ( mxcor1 .le. mncor1 ) &
+              .or. ( mxcor2 .le. mncor2 ) &
+              .or. ( mxcor3 .le. mncor3 )  ) then
 
-            CALL SETMSG ( 'Rectangular coordinate bounds must be ' &
+            call setmsg ( 'Rectangular coordinate bounds must be ' &
             //            'strictly increasing in each dimension. ' &
             //            'The bounds were:  X = #:#; Y = #:#; ' &
             //            'Z = #:#.'                               )
-            CALL ERRDP  ( '#', MNCOR1                              )
-            CALL ERRDP  ( '#', MXCOR1                              )
-            CALL ERRDP  ( '#', MNCOR2                              )
-            CALL ERRDP  ( '#', MXCOR2                              )
-            CALL ERRDP  ( '#', MNCOR3                              )
-            CALL ERRDP  ( '#', MXCOR3                              )
-            CALL SIGERR ( 'SPICE(BOUNDSOUTOFORDER)'                )
-            CALL CHKOUT ( 'DSKW02'                                 )
-            RETURN
+            call errdp  ( '#', mncor1                              )
+            call errdp  ( '#', mxcor1                              )
+            call errdp  ( '#', mncor2                              )
+            call errdp  ( '#', mxcor2                              )
+            call errdp  ( '#', mncor3                              )
+            call errdp  ( '#', mxcor3                              )
+            call sigerr ( 'SPICE(BOUNDSOUTOFORDER)'                )
+            call chkout ( 'DSKW02'                                 )
+            return
 
-         END IF
+         end if
 
-         SEGBDS(1,1) = MNCOR1
-         SEGBDS(2,1) = MXCOR1
-         SEGBDS(1,2) = MNCOR2
-         SEGBDS(2,2) = MXCOR2
+         segbds(1,1) = mncor1
+         segbds(2,1) = mxcor1
+         segbds(1,2) = mncor2
+         segbds(2,2) = mxcor2
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Coordinate system code # is not recognized.' )
-         CALL ERRINT ( '#', CORSYS                                   )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                         )
-         CALL CHKOUT ( 'DSKW02'                                      )
-         RETURN
+         call setmsg ( 'Coordinate system code # is not recognized.' )
+         call errint ( '#', corsys                                   )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                         )
+         call chkout ( 'DSKW02'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the data class.
 !
-      IF (  ( DCLASS .LT. 1 ) .OR. ( DCLASS .GT. 2 )  ) THEN
+      if (  ( dclass .lt. 1 ) .or. ( dclass .gt. 2 )  ) then
 
-         CALL SETMSG ( 'Data class # is not recognized.' )
-         CALL ERRINT ( '#', DCLASS                       )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'             )
-         CALL CHKOUT ( 'DSKW02'                          )
-         RETURN
+         call setmsg ( 'Data class # is not recognized.' )
+         call errint ( '#', dclass                       )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'             )
+         call chkout ( 'DSKW02'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Check NV and NP.
@@ -1387,57 +1387,57 @@
 !     Note that we don't apply Euler's law, since the data
 !     set need not represent a complete surface.
 !
-      IF (  ( NV .LT. 1 ) .OR. ( NV .GT. MAXVRT )  ) THEN
+      if (  ( nv .lt. 1 ) .or. ( nv .gt. maxvrt )  ) then
 
-         CALL SETMSG ( 'Vertex count NV = #; count must ' &
+         call setmsg ( 'Vertex count NV = #; count must ' &
          //            'be in the range 1:#.'            )
-         CALL ERRINT ( '#',  NV                          )
-         CALL ERRINT ( '#',  MAXVRT                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'          )
-         CALL CHKOUT ( 'DSKW02'                          )
-         RETURN
+         call errint ( '#',  nv                          )
+         call errint ( '#',  maxvrt                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
+         call chkout ( 'DSKW02'                          )
+         return
 
-      END IF
+      end if
 
-      IF (  ( NP .LT. 1 ) .OR. ( NP .GT. MAXPLT )  ) THEN
+      if (  ( np .lt. 1 ) .or. ( np .gt. maxplt )  ) then
 
-         CALL SETMSG ( 'Plate count NP = #; count must ' &
+         call setmsg ( 'Plate count NP = #; count must ' &
          //            'be in the range 1:#.'            )
-         CALL ERRINT ( '#',  NP                          )
-         CALL ERRINT ( '#',  MAXPLT                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'          )
-         CALL CHKOUT ( 'DSKW02'                          )
-         RETURN
+         call errint ( '#',  np                          )
+         call errint ( '#',  maxplt                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
+         call chkout ( 'DSKW02'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the vertex indices in the plates.
 !
-      DO I = 1, NP
+      do i = 1, np
 
-         DO J = 1, 3
+         do j = 1, 3
 
-            K = PLATES(J,I)
+            k = plates(j,i)
 
-            IF ( ( K .LT. 1 ) .OR. ( K .GT. NV ) ) THEN
+            if ( ( k .lt. 1 ) .or. ( k .gt. nv ) ) then
 
-               CALL SETMSG ( 'Vertex index # of plate # was #; ' &
+               call setmsg ( 'Vertex index # of plate # was #; ' &
                //            'vertex indices must be in the ' &
                //            'range 1:NV. The input NV = #.'   )
-               CALL ERRINT ( '#', J                            )
-               CALL ERRINT ( '#', I                            )
-               CALL ERRINT ( '#', K                            )
-               CALL ERRINT ( '#', NV                           )
-               CALL SIGERR ( 'SPICE(BADVERTEXINDEX)'           )
-               CALL CHKOUT ( 'DSKW02'                          )
-               RETURN
+               call errint ( '#', j                            )
+               call errint ( '#', i                            )
+               call errint ( '#', k                            )
+               call errint ( '#', nv                           )
+               call sigerr ( 'SPICE(BADVERTEXINDEX)'           )
+               call chkout ( 'DSKW02'                          )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Locate the spatial index elements. Some of the elements are at
@@ -1501,10 +1501,10 @@
 !
 !     Extract double precision elements of the spatial index.
 !
-      CALL MOVED ( SPAIXD(SIVTBD), 6, VTXBDS )
-      CALL VEQU  ( SPAIXD(SIVXOR),    VOXORI )
+      call moved ( spaixd(sivtbd), 6, vtxbds )
+      call vequ  ( spaixd(sivxor),    voxori )
 
-      VOXSIZ = SPAIXD(SIVXSZ)
+      voxsiz = spaixd(sivxsz)
 
 !
 !     Extract scalars and small fixed-size arrays from the integer
@@ -1512,40 +1512,40 @@
 !
 !     Fetch grid extents (in units of whole voxels):
 !
-      CALL MOVEI ( SPAIXI(SIVGRX), 3, VGREXT )
+      call movei ( spaixi(sivgrx), 3, vgrext )
 
 !
 !     Fetch coarse grid scale, voxel pointer count, and voxel-plate
 !     list count.
 !
-      CGRSCL = SPAIXI(SICGSC)
-      VOXNPT = SPAIXI(SIVXNP)
-      VOXNPL = SPAIXI(SIVXNL)
+      cgrscl = spaixi(sicgsc)
+      voxnpt = spaixi(sivxnp)
+      voxnpl = spaixi(sivxnl)
 
 !
 !     Create a pointer to the voxel-plate pointer array.
 !
-      PVOXPT = SICGRD + MAXCGR
+      pvoxpt = sicgrd + maxcgr
 
 !
 !     Create a pointer to the voxel-plate list array.
 !
-      PVOXPL = PVOXPT + VOXNPT
+      pvoxpl = pvoxpt + voxnpt
 
 !
 !     Create a pointer to the vertex pointer array.
 !
-      PVTXPT = PVOXPL + VOXNPL
+      pvtxpt = pvoxpl + voxnpl
 
 !
 !     Create a pointer to the vertex-plate list array.
 !
-      PVTXPL = PVTXPT + NV
+      pvtxpl = pvtxpt + nv
 
 !
 !     Fetch vertex-plate list size.
 !
-      VTXNPL = SPAIXI(SIVTNL)
+      vtxnpl = spaixi(sivtnl)
 
 !
 !     Check the input parameters.
@@ -1554,82 +1554,82 @@
 !
 !     Make sure the voxel grid extents are within range.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF (      ( VGREXT(I) .LT. 1      ) &
-              .OR. ( VGREXT(I) .GT. MAXVOX )  ) THEN
+         if (      ( vgrext(i) .lt. 1      ) &
+              .or. ( vgrext(i) .gt. maxvox )  ) then
 
-            CALL SETMSG ( 'Voxel grid extents are = (#, #, #); ' &
+            call setmsg ( 'Voxel grid extents are = (#, #, #); ' &
          //               'all be in the range 1:#.'             )
-            CALL ERRINT ( '#',  VGREXT(1)                        )
-            CALL ERRINT ( '#',  VGREXT(2)                        )
-            CALL ERRINT ( '#',  VGREXT(3)                        )
-            CALL ERRINT ( '#',  MAXVOX                           )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'               )
-            CALL CHKOUT ( 'DSKW02'                               )
-            RETURN
+            call errint ( '#',  vgrext(1)                        )
+            call errint ( '#',  vgrext(2)                        )
+            call errint ( '#',  vgrext(3)                        )
+            call errint ( '#',  maxvox                           )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'               )
+            call chkout ( 'DSKW02'                               )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Make sure the number of voxels NVXTOT is within range.
 !
-      NVXTOT = VGREXT(1) * VGREXT(2) * VGREXT(3)
+      nvxtot = vgrext(1) * vgrext(2) * vgrext(3)
 
-      IF ( NVXTOT .GT. MAXVOX ) THEN
+      if ( nvxtot .gt. maxvox ) then
 
-         CALL SETMSG ( 'Fine voxel count NVXTOT = #; count must ' &
+         call setmsg ( 'Fine voxel count NVXTOT = #; count must ' &
          //            'be in the range 1:#.'                    )
-         CALL ERRINT ( '#',  NVXTOT                              )
-         CALL ERRINT ( '#',  MAXVOX                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'DSKW02'                                  )
-         RETURN
+         call errint ( '#',  nvxtot                              )
+         call errint ( '#',  maxvox                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
+         call chkout ( 'DSKW02'                                  )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the coarse voxel scale. It must be at least 1, and its
 !     cube must not exceed the fine voxel count.
 !
-      IF (      ( CGRSCL .LT. 1                ) &
-           .OR. ( CGRSCL .GT. NVXTOT**(1.D0/3) )  ) THEN
+      if (      ( cgrscl .lt. 1                ) &
+           .or. ( cgrscl .gt. nvxtot**(1.d0/3) )  ) then
 
-         CALL SETMSG ( 'Coarse voxel scale = #; scale must ' &
+         call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be in the range 1:NVXTOT**3, where ' &
          //            'NVXTOT is the total fine voxel count. ' &
          //            'In this case, NVXTOT = #.'               )
-         CALL ERRINT ( '#',  CGRSCL                              )
-         CALL ERRINT ( '#',  NVXTOT                              )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'DSKW02'                                  )
-         RETURN
+         call errint ( '#',  cgrscl                              )
+         call errint ( '#',  nvxtot                              )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                  )
+         call chkout ( 'DSKW02'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     The cube of the coarse scale must divide the total voxel count
 !     evenly.
 !
-      Q = NVXTOT /   (CGRSCL**3)
-      R = NVXTOT - Q*(CGRSCL**3)
+      q = nvxtot /   (cgrscl**3)
+      r = nvxtot - q*(cgrscl**3)
 
-      IF ( R .NE. 0 ) THEN
+      if ( r .ne. 0 ) then
 
-         CALL SETMSG ( 'Coarse voxel scale = #; the cube of ' &
+         call setmsg ( 'Coarse voxel scale = #; the cube of ' &
          //            'the scale must divide NVXTOT evenly, ' &
          //            'where NVXTOT is the total  fine voxel ' &
          //            'count. In this case, NVXTOT = #.'        )
-         CALL ERRINT ( '#',  CGRSCL                              )
-         CALL ERRINT ( '#',  NVXTOT                              )
-         CALL SIGERR ( 'SPICE(INCOMPATIBLESCALE)'                )
-         CALL CHKOUT ( 'DSKW02'                                  )
-         RETURN
+         call errint ( '#',  cgrscl                              )
+         call errint ( '#',  nvxtot                              )
+         call sigerr ( 'SPICE(INCOMPATIBLESCALE)'                )
+         call chkout ( 'DSKW02'                                  )
+         return
 
-      END IF
+      end if
 
 
 !
@@ -1639,33 +1639,33 @@
 !                 voxels, this number is determined by NVXTOT and
 !                 CGRSCL.
 !
-      NCGR = NVXTOT / ( CGRSCL**3 )
+      ncgr = nvxtot / ( cgrscl**3 )
 
 !
 !     Make sure NCGR is within range.
 !
-      IF (  ( NCGR .LT. 1 ) .OR. ( NCGR .GT. MAXCGR )  ) THEN
+      if (  ( ncgr .lt. 1 ) .or. ( ncgr .gt. maxcgr )  ) then
 
-         CALL SETMSG ( 'Coarse voxel count = #; count must ' &
+         call setmsg ( 'Coarse voxel count = #; count must ' &
          //            'be in the range 1:#.'                )
-         CALL ERRINT ( '#',  NCGR                            )
-         CALL ERRINT ( '#',  MAXCGR                          )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'              )
-         CALL CHKOUT ( 'DSKW02'                              )
-         RETURN
+         call errint ( '#',  ncgr                            )
+         call errint ( '#',  maxcgr                          )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'              )
+         call chkout ( 'DSKW02'                              )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Start a new DLA segment.
 !
-      CALL DLABNS ( HANDLE )
+      call dlabns ( handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DSKW02' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DSKW02' )
+         return
+      end if
 
 !
 !     Write the d.p. data to the segment first. In the segregated
@@ -1675,39 +1675,39 @@
 !
 !     First, fill in the DSK segment descriptor.
 !
-      CALL CLEARD ( DSKDSZ, DESCR )
+      call cleard ( dskdsz, descr )
 
-      DESCR ( SRFIDX ) = SURFID
-      DESCR ( CTRIDX ) = CENTER
-      DESCR ( CLSIDX ) = DCLASS
-      DESCR ( TYPIDX ) = 2
-      DESCR ( FRMIDX ) = FRMCDE
-      DESCR ( SYSIDX ) = CORSYS
+      descr ( srfidx ) = surfid
+      descr ( ctridx ) = center
+      descr ( clsidx ) = dclass
+      descr ( typidx ) = 2
+      descr ( frmidx ) = frmcde
+      descr ( sysidx ) = corsys
 
-      CALL MOVED ( CORPAR, NSYPAR, DESCR( PARIDX ) )
+      call moved ( corpar, nsypar, descr( paridx ) )
 
-      DESCR ( MN1IDX ) = SEGBDS(1,1)
-      DESCR ( MX1IDX ) = SEGBDS(2,1)
-      DESCR ( MN2IDX ) = SEGBDS(1,2)
-      DESCR ( MX2IDX ) = SEGBDS(2,2)
-      DESCR ( MN3IDX ) = MNCOR3
-      DESCR ( MX3IDX ) = MXCOR3
-      DESCR ( BTMIDX ) = FIRST
-      DESCR ( ETMIDX ) = LAST
+      descr ( mn1idx ) = segbds(1,1)
+      descr ( mx1idx ) = segbds(2,1)
+      descr ( mn2idx ) = segbds(1,2)
+      descr ( mx2idx ) = segbds(2,2)
+      descr ( mn3idx ) = mncor3
+      descr ( mx3idx ) = mxcor3
+      descr ( btmidx ) = first
+      descr ( etmidx ) = last
 
 !
 !     Now write the descriptor into the segment.
 !
-      CALL DASADD ( HANDLE, DSKDSZ, DESCR )
+      call dasadd ( handle, dskdsz, descr )
 
 !
 !     Add the voxel grid origin and voxel size.
 !     Finish with the vertex data.
 !
-      CALL DASADD ( HANDLE, 6,      VTXBDS )
-      CALL DASADD ( HANDLE, 3,      VOXORI )
-      CALL DASADD ( HANDLE, 1,      VOXSIZ )
-      CALL DASADD ( HANDLE, 3*NV,   VRTCES )
+      call dasadd ( handle, 6,      vtxbds )
+      call dasadd ( handle, 3,      voxori )
+      call dasadd ( handle, 1,      voxsiz )
+      call dasadd ( handle, 3*nv,   vrtces )
 
 !
 !     Next add the integer data to the segment.
@@ -1716,26 +1716,26 @@
 !     NP is the number of plates.
 !     NVXTOT is the number of voxels in the spatial index.
 !
-      CALL DASADI ( HANDLE, 1,      NV     )
-      CALL DASADI ( HANDLE, 1,      NP     )
-      CALL DASADI ( HANDLE, 1,      NVXTOT )
-      CALL DASADI ( HANDLE, 3,      VGREXT )
-      CALL DASADI ( HANDLE, 1,      CGRSCL )
-      CALL DASADI ( HANDLE, 1,      VOXNPT )
-      CALL DASADI ( HANDLE, 1,      VOXNPL )
-      CALL DASADI ( HANDLE, 1,      VTXNPL )
-      CALL DASADI ( HANDLE, 3*NP,   PLATES )
-      CALL DASADI ( HANDLE, VOXNPT, SPAIXI(PVOXPT) )
-      CALL DASADI ( HANDLE, VOXNPL, SPAIXI(PVOXPL) )
-      CALL DASADI ( HANDLE, NV,     SPAIXI(PVTXPT) )
-      CALL DASADI ( HANDLE, VTXNPL, SPAIXI(PVTXPL) )
-      CALL DASADI ( HANDLE, NCGR,   SPAIXI(SICGRD) )
+      call dasadi ( handle, 1,      nv     )
+      call dasadi ( handle, 1,      np     )
+      call dasadi ( handle, 1,      nvxtot )
+      call dasadi ( handle, 3,      vgrext )
+      call dasadi ( handle, 1,      cgrscl )
+      call dasadi ( handle, 1,      voxnpt )
+      call dasadi ( handle, 1,      voxnpl )
+      call dasadi ( handle, 1,      vtxnpl )
+      call dasadi ( handle, 3*np,   plates )
+      call dasadi ( handle, voxnpt, spaixi(pvoxpt) )
+      call dasadi ( handle, voxnpl, spaixi(pvoxpl) )
+      call dasadi ( handle, nv,     spaixi(pvtxpt) )
+      call dasadi ( handle, vtxnpl, spaixi(pvtxpl) )
+      call dasadi ( handle, ncgr,   spaixi(sicgrd) )
 
 !
 !     End the segment.
 !
-      CALL DLAENS ( HANDLE )
+      call dlaens ( handle )
 
-      CALL CHKOUT ( 'DSKW02' )
-      RETURN
-      END
+      call chkout ( 'DSKW02' )
+      return
+      end

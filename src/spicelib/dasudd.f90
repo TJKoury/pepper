@@ -1,6 +1,6 @@
 !$Procedure DASUDD ( DAS, update data, double precision )
 
-      SUBROUTINE DASUDD ( HANDLE, FIRST, LAST, DATA )
+      subroutine dasudd ( handle, first, last, data )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               FIRST
-      INTEGER               LAST
-      DOUBLE PRECISION      DATA   ( * )
+      integer               handle
+      integer               first
+      integer               last
+      double precision      data   ( * )
 
 ! $ Brief_I/O
 !
@@ -319,68 +319,68 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               DP
-      PARAMETER           ( DP     =  2  )
+      integer               dp
+      parameter           ( dp     =  2  )
 
-      INTEGER               NWD
-      PARAMETER           ( NWD    = 128 )
+      integer               nwd
+      parameter           ( nwd    = 128 )
 
 !
 !     Local variables
 !
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               N
-      INTEGER               NUMDP
-      INTEGER               NWRITN
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               clbase
+      integer               clsize
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               n
+      integer               numdp
+      integer               nwritn
+      integer               recno
+      integer               wordno
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASUDD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASUDD' )
+      end if
 
 !
 !     Get the last logical addresses in use in this DAS file.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
 !
 !     Validate the input addresses.
 !
-      IF (      ( FIRST .LT. 1     ) &
-           .OR. ( FIRST .GT. LASTD ) &
-           .OR. ( LAST  .LT. 1     ) &
-           .OR. ( LAST  .GT. LASTD )  ) THEN
+      if (      ( first .lt. 1     ) &
+           .or. ( first .gt. lastd ) &
+           .or. ( last  .lt. 1     ) &
+           .or. ( last  .gt. lastd )  ) then
 
-         CALL SETMSG ( 'FIRST was #. LAST was #. Valid range is [1,#].')
-         CALL ERRINT ( '#',   FIRST                                    )
-         CALL ERRINT ( '#',   LAST                                     )
-         CALL ERRINT ( '#',   LASTD                                    )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                         )
-         CALL CHKOUT ( 'DASUDD'                                        )
-         RETURN
+         call setmsg ( 'FIRST was #. LAST was #. Valid range is [1,#].')
+         call errint ( '#',   first                                    )
+         call errint ( '#',   last                                     )
+         call errint ( '#',   lastd                                    )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                         )
+         call chkout ( 'DASUDD'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Let N be the number of addresses to update.
 !
-      N  =  LAST - FIRST + 1
+      n  =  last - first + 1
 
 !
 !     We will use the variables RECNO and WORDNO to determine where to
@@ -392,7 +392,7 @@
 !     base record number and size of the cluster of d.p. records that
 !     the address FIRST lies within.
 !
-      CALL DASA2L ( HANDLE, DP, FIRST, CLBASE, CLSIZE, RECNO, WORDNO )
+      call dasa2l ( handle, dp, first, clbase, clsize, recno, wordno )
 
 !
 !     Set the number of double precision words already written.  Keep
@@ -402,9 +402,9 @@
 !     Note that if N is non-positive, the loop doesn't get exercised.
 !
 !
-      NWRITN  =  0
+      nwritn  =  0
 
-      DO WHILE (  ( NWRITN .LT. N ) .AND. ( .NOT. FAILED() )  )
+      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
 !
 !        Write as much data as we can (or need to) into the current
 !        record.  We assume that CLBASE, RECNO, WORDNO, and NWRITN have
@@ -413,22 +413,22 @@
 !        Find out how many words to write into the current record.
 !        There may be no space left in the current record.
 !
-         NUMDP  =  MIN (  N - NWRITN,   NWD - WORDNO + 1  )
+         numdp  =  min (  n - nwritn,   nwd - wordno + 1  )
 
-         IF ( NUMDP .GT. 0 ) THEN
+         if ( numdp .gt. 0 ) then
 !
 !           Write NUMDP words into the current record.
 !
-            CALL DASURD ( HANDLE, &
-                          RECNO, &
-                          WORDNO, &
-                          WORDNO + NUMDP - 1, &
-                          DATA( NWRITN + 1 )   )
+            call dasurd ( handle, &
+                          recno, &
+                          wordno, &
+                          wordno + numdp - 1, &
+                          data( nwritn + 1 )   )
 
-            NWRITN  =  NWRITN + NUMDP
-            WORDNO  =  WORDNO + NUMDP
+            nwritn  =  nwritn + numdp
+            wordno  =  wordno + numdp
 
-         ELSE
+         else
 !
 !           It's time to start on a new record.  If the record we
 !           just finished writing to (or just attempted writing to,
@@ -437,27 +437,27 @@
 !           one.  Otherwise, we'll have to look up the location of the
 !           next d.p. logical address.
 !
-            IF (  RECNO  .LT.  ( CLBASE + CLSIZE - 1 )  ) THEN
+            if (  recno  .lt.  ( clbase + clsize - 1 )  ) then
 
-               RECNO   =  RECNO + 1
-               WORDNO  =  1
+               recno   =  recno + 1
+               wordno  =  1
 
-            ELSE
+            else
 
-               CALL DASA2L ( HANDLE, &
-                             DP, &
-                             FIRST + NWRITN, &
-                             CLBASE, &
-                             CLSIZE, &
-                             RECNO, &
-                             WORDNO               )
-            END IF
+               call dasa2l ( handle, &
+                             dp, &
+                             first + nwritn, &
+                             clbase, &
+                             clsize, &
+                             recno, &
+                             wordno               )
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'DASUDD' )
-      RETURN
-      END
+      call chkout ( 'DASUDD' )
+      return
+      end

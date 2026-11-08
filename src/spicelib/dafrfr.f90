@@ -1,6 +1,6 @@
 !$Procedure DAFRFR ( DAF, read file record )
 
-      SUBROUTINE DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      subroutine dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
 ! $ Abstract
 !
@@ -16,15 +16,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               ND
-      INTEGER               NI
-      CHARACTER*(*)         IFNAME
-      INTEGER               FWARD
-      INTEGER               BWARD
-      INTEGER               FREE
+      integer               handle
+      integer               nd
+      integer               ni
+      character*(*)         ifname
+      integer               fward
+      integer               bward
+      integer               free
 
 ! $ Brief_I/O
 !
@@ -207,80 +207,80 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN =  8 )
+      integer               idwlen
+      parameter           ( idwlen =  8 )
 
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60)
+      integer               ifnlen
+      parameter           ( ifnlen = 60)
 
 !
 !     Local variables
 !
-      CHARACTER*(IDWLEN)    IDWORD
+      character*(idwlen)    idword
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFRFR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFRFR' )
+      end if
 
 !
 !     Do some initializations
 !
-      IDWORD = ' '
+      idword = ' '
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
 !     with read access. If the call fails, check out and return.
 !
-      CALL DAFSIH ( HANDLE, 'READ' )
+      call dafsih ( handle, 'READ' )
 
-      IF ( FAILED () ) THEN
+      if ( failed () ) then
 
-         CALL CHKOUT ( 'DAFRFR' )
-         RETURN
+         call chkout ( 'DAFRFR' )
+         return
 
-      END IF
+      end if
 
 !
 !     Retrieve all but the internal file name directly from the
 !     file record.  Read the internal file name into a temporary
 !     string, to be sure of the length. Check FOUND.
 !
-      CALL ZZDAFGFR ( HANDLE, &
-                      IDWORD, &
-                      ND, &
-                      NI, &
-                      IFNAME, &
-                      FWARD, &
-                      BWARD, &
-                      FREE, &
-                      FOUND   )
+      call zzdafgfr ( handle, &
+                      idword, &
+                      nd, &
+                      ni, &
+                      ifname, &
+                      fward, &
+                      bward, &
+                      free, &
+                      found   )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'File record not found for file handle #1. ' &
+         call setmsg ( 'File record not found for file handle #1. ' &
                    //  'Check if program code uses ' &
                    //  'handle #2 for a read or write operation.')
-         CALL ERRINT ( '#1', HANDLE              )
-         CALL ERRINT ( '#2', HANDLE              )
-         CALL SIGERR ( 'SPICE(DAFFRNOTFOUND)'   )
-         CALL CHKOUT ( 'DAFRFR'                 )
-         RETURN
+         call errint ( '#1', handle              )
+         call errint ( '#2', handle              )
+         call sigerr ( 'SPICE(DAFFRNOTFOUND)'   )
+         call chkout ( 'DAFRFR'                 )
+         return
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFRFR' )
-      RETURN
-      END
+      call chkout ( 'DAFRFR' )
+      return
+      end

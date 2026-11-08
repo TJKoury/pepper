@@ -1,6 +1,6 @@
 !$Procedure LTRIM ( Left trim )
 
-      INTEGER FUNCTION LTRIM ( STRING )
+      integer function ltrim ( string )
 
 ! $ Abstract
 !
@@ -18,9 +18,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         STRING
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -133,11 +133,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
+      integer               frstnb
 
 !
 !     `Just do it'.
 !
-      LTRIM = MAX ( 1, FRSTNB (STRING) )
+      ltrim = max ( 1, frstnb (string) )
 
-      END
+      end

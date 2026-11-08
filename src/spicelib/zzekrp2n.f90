@@ -1,6 +1,6 @@
 !$Procedure      ZZEKRP2N ( EK, record pointer to number )
 
-      INTEGER FUNCTION ZZEKRP2N ( HANDLE, SEGNO, RECPTR )
+      integer function zzekrp2n ( handle, segno, recptr )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      INCLUDE 'eksegdsc.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RECPTR
+      integer               handle
+      integer               segno
+      integer               recptr
 
 ! $ Brief_I/O
 !
@@ -114,63 +114,63 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKTRLS
-      LOGICAL               FAILED
+      integer               zzektrls
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               STYPE
+      integer               segdsc ( sdscsz )
+      integer               stype
 
 !
 !     Use discovery check-in.
 !
-      ZZEKRP2N  =  0
+      zzekrp2n  =  0
 
-      CALL ZZEKSDSC ( HANDLE, SEGNO, SEGDSC )
+      call zzeksdsc ( handle, segno, segdsc )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 
-      STYPE = SEGDSC ( EKTIDX )
+      stype = segdsc ( ektidx )
 
-      IF ( STYPE .EQ. 1 ) THEN
+      if ( stype .eq. 1 ) then
 
-         ZZEKRP2N  =  ZZEKTRLS ( HANDLE, SEGDSC(RTIDX), RECPTR )
+         zzekrp2n  =  zzektrls ( handle, segdsc(rtidx), recptr )
 
-         IF ( ZZEKRP2N .EQ. 0 ) THEN
+         if ( zzekrp2n .eq. 0 ) then
 
-            CALL CHKIN  ( 'ZZEKRP2N'                              )
-            CALL SETMSG ( 'Record having pointer # not found in ' // &
+            call chkin  ( 'ZZEKRP2N'                              )
+            call setmsg ( 'Record having pointer # not found in ' // &
                           'segment # of file #'                   )
-            CALL ERRINT ( '#',  RECPTR                            )
-            CALL ERRINT ( '#',  SEGNO                             )
-            CALL ERRHAN ( '#',  HANDLE                            )
-            CALL SIGERR ( 'SPICE(BUG)'                            )
-            CALL CHKOUT ( 'ZZEKRP2N'                              )
+            call errint ( '#',  recptr                            )
+            call errint ( '#',  segno                             )
+            call errhan ( '#',  handle                            )
+            call sigerr ( 'SPICE(BUG)'                            )
+            call chkout ( 'ZZEKRP2N'                              )
 
-         END IF
+         end if
 
 
-      ELSE IF ( STYPE .EQ. 2 ) THEN
+      else if ( stype .eq. 2 ) then
 
-         ZZEKRP2N = RECPTR
+         zzekrp2n = recptr
 
-      ELSE
+      else
 
-         CALL CHKIN  ( 'ZZEKRP2N'                                    )
-         CALL SETMSG ( 'Segment type # is not supported.  SEGNO = #.'// &
+         call chkin  ( 'ZZEKRP2N'                                    )
+         call setmsg ( 'Segment type # is not supported.  SEGNO = #.'// &
                        ' File = #.'                                  )
-         CALL ERRINT ( '#',  STYPE                                   )
-         CALL ERRINT ( '#',  SEGNO                                   )
-         CALL ERRHAN ( '#',  HANDLE                                  )
-         CALL SIGERR ( 'SPICE(BUG)'                                  )
-         CALL CHKOUT ( 'ZZEKRP2N'                                    )
+         call errint ( '#',  stype                                   )
+         call errint ( '#',  segno                                   )
+         call errhan ( '#',  handle                                  )
+         call sigerr ( 'SPICE(BUG)'                                  )
+         call chkout ( 'ZZEKRP2N'                                    )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

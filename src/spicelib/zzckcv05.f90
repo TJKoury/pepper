@@ -1,7 +1,7 @@
 !$Procedure ZZCKCV05 ( Private --- C-kernel segment coverage, type 05 )
 
-      SUBROUTINE ZZCKCV05 ( HANDLE,  ARRBEG,  ARREND,  SCLKID, &
-                            DC,      TOL,     TIMSYS,  SCHEDL  )
+      subroutine zzckcv05 ( handle,  arrbeg,  arrend,  sclkid, &
+                            dc,      tol,     timsys,  schedl  )
 
 ! $ Abstract
 !
@@ -24,21 +24,21 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'ck05.inc'
+      include              'ck05.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               HANDLE
-      INTEGER               ARRBEG
-      INTEGER               ARREND
-      INTEGER               SCLKID
-      DOUBLE PRECISION      DC     ( 2 )
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      SCHEDL ( LBCELL:* )
+      integer               handle
+      integer               arrbeg
+      integer               arrend
+      integer               sclkid
+      double precision      dc     ( 2 )
+      double precision      tol
+      character*(*)         timsys
+      double precision      schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -190,78 +190,78 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      BUFFER ( 4 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      TICK
+      double precision      begin
+      double precision      buffer ( 4 )
+      double precision      et
+      double precision      finish
+      double precision      start
+      double precision      tick
 
-      INTEGER               INTAT
-      INTEGER               INTBEG
-      INTEGER               INVLS
-      INTEGER               LSTINT
-      INTEGER               LSTTIK
-      INTEGER               NDIR
-      INTEGER               NREC
-      INTEGER               RSIZE
-      INTEGER               SUBTYP
-      INTEGER               TICKAT
+      integer               intat
+      integer               intbeg
+      integer               invls
+      integer               lstint
+      integer               lsttik
+      integer               ndir
+      integer               nrec
+      integer               rsize
+      integer               subtyp
+      integer               tickat
 
-      LOGICAL               BAIL
-      LOGICAL               ISTDB
+      logical               bail
+      logical               istdb
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZCKCV05' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZCKCV05' )
+      end if
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZCKCV05'                                     )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZCKCV05'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set a logical flag indicating whether the time systm is SCLK.
 !
-      ISTDB  = EQSTR ( TIMSYS, 'TDB' )
+      istdb  = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-            CALL CHKOUT ( 'ZZCKCV05'                                )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+            call chkout ( 'ZZCKCV05'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Get the meta-data associated with this segment that we
@@ -272,32 +272,32 @@
 !     BUFFER(3) = Number of Interpolation Intervals
 !     BUFFER(4) = Number of Packets
 !
-      CALL DAFGDA ( HANDLE, ARREND - 3, ARREND, BUFFER )
+      call dafgda ( handle, arrend - 3, arrend, buffer )
 
-      SUBTYP = NINT ( BUFFER ( 1 ) )
-      INVLS  = NINT ( BUFFER ( 3 ) )
-      NREC   = NINT ( BUFFER ( 4 ) )
-      NDIR   = (NREC-1)/ 100
+      subtyp = nint ( buffer ( 1 ) )
+      invls  = nint ( buffer ( 3 ) )
+      nrec   = nint ( buffer ( 4 ) )
+      ndir   = (nrec-1)/ 100
 
 !
 !     Compute the packet size.  This requires parameters listed
 !     in the include file 'ck05.inc' and is based on the subtype.
 !
-      IF      ( SUBTYP .EQ. C05TP0 ) THEN
-         RSIZE = C05PS0
-      ELSE IF ( SUBTYP .EQ. C05TP1 ) THEN
-         RSIZE = C05PS1
-      ELSE IF ( SUBTYP .EQ. C05TP2 ) THEN
-         RSIZE = C05PS2
-      ELSE IF ( SUBTYP .EQ. C05TP3 ) THEN
-         RSIZE = C05PS3
-      ELSE
-         CALL SETMSG ( 'CK type 5 subtype <#> is not supported.' )
-         CALL ERRINT ( '#', BUFFER(1)                            )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-         CALL CHKOUT ( 'ZZCKCV05'                                )
-         RETURN
-      END IF
+      if      ( subtyp .eq. c05tp0 ) then
+         rsize = c05ps0
+      else if ( subtyp .eq. c05tp1 ) then
+         rsize = c05ps1
+      else if ( subtyp .eq. c05tp2 ) then
+         rsize = c05ps2
+      else if ( subtyp .eq. c05tp3 ) then
+         rsize = c05ps3
+      else
+         call setmsg ( 'CK type 5 subtype <#> is not supported.' )
+         call errint ( '#', buffer(1)                            )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+         call chkout ( 'ZZCKCV05'                                )
+         return
+      end if
 
 !
 !     Recall that the segment is layed out as:
@@ -341,52 +341,52 @@
 !       +------------------------+
 !
 
-      TICKAT = ARRBEG + RSIZE*NREC
-      LSTTIK = TICKAT + NREC - 1
-      INTBEG = ARRBEG + RSIZE*NREC + NREC + NDIR
-      INTAT  = INTBEG
-      LSTINT = INTBEG + INVLS - 1
+      tickat = arrbeg + rsize*nrec
+      lsttik = tickat + nrec - 1
+      intbeg = arrbeg + rsize*nrec + nrec + ndir
+      intat  = intbeg
+      lstint = intbeg + invls - 1
 
-      CALL DAFGDA ( HANDLE, INTAT,  INTAT,   START )
-      CALL DAFGDA ( HANDLE, TICKAT, TICKAT,  TICK  )
+      call dafgda ( handle, intat,  intat,   start )
+      call dafgda ( handle, tickat, tickat,  tick  )
 
-      DO WHILE ( TICK .LT. START .AND. TICKAT .LT. LSTTIK )
-         TICKAT = TICKAT + 1
-         CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK )
-      END DO
+      do while ( tick .lt. start .and. tickat .lt. lsttik )
+         tickat = tickat + 1
+         call dafgda ( handle, tickat, tickat, tick )
+      end do
 
 !
 !     If we did not find a TICK at least as big as START, we can
 !     just return now.
 !
-      IF ( TICK .LT. START ) THEN
-         CALL CHKOUT ( 'ZZCKCV05' )
-         RETURN
-      END IF
+      if ( tick .lt. start ) then
+         call chkout ( 'ZZCKCV05' )
+         return
+      end if
 
 
-      BAIL = .FALSE.
+      bail = .false.
 
-      DO WHILE (       ( INTAT  .LE.  LSTINT ) &
-                 .AND. ( TICKAT .LE.  LSTTIK ) &
-                 .AND. (        .NOT. BAIL   )  )
+      do while (       ( intat  .le.  lstint ) &
+                 .and. ( tickat .le.  lsttik ) &
+                 .and. (        .not. bail   )  )
 !
 !        At this point, we have an interval that begins at START
 !        and ends at FINISH (unless of course we never found a "good"
 !        TICK to start with.)
 !
-         BEGIN = START
+         begin = start
 
 !
 !        If the start of the interval was the start of the LAST
 !        interval available, we can short cut the remainder of the
 !        reads.
 !
-         IF ( INTAT .EQ. LSTINT ) THEN
+         if ( intat .eq. lstint ) then
 
-            CALL DAFGDA ( HANDLE, LSTTIK, LSTTIK, FINISH )
+            call dafgda ( handle, lsttik, lsttik, finish )
 
-            BAIL = .TRUE.
+            bail = .true.
 !
 !           The routine will return at the end of this loop
 !           iteration.  But first, we may have to update BEGIN
@@ -395,23 +395,23 @@
 !           We'll carry out these tasks at the end of this IF block.
 
 
-         ELSE
+         else
 !
 !           This is the expected case.  Get the start of the next
 !           interval.
 !
-            INTAT  = INTAT  + 1
-            CALL DAFGDA ( HANDLE, INTAT, INTAT, START )
+            intat  = intat  + 1
+            call dafgda ( handle, intat, intat, start )
 
 !
 !           Read forward from the last tick until we reach the
 !           START of the next interval or until we run out of TICKS.
 !
-            DO WHILE ( TICK .LT. START .AND. TICKAT .LT. LSTTIK )
-               FINISH = TICK
-               TICKAT = TICKAT + 1
-               CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK  )
-            END DO
+            do while ( tick .lt. start .and. tickat .lt. lsttik )
+               finish = tick
+               tickat = tickat + 1
+               call dafgda ( handle, tickat, tickat, tick  )
+            end do
 
 !
 !           A structurally correct CK-5 segment should never allow the
@@ -419,58 +419,58 @@
 !           police the writers of C-kernels.  The only way to get into
 !           the block below is if TICKAT .EQ. LSTTIK
 !
-            IF ( TICK .LT. START ) THEN
-               FINISH = TICK
-               TICKAT = TICKAT + 1
-            END IF
+            if ( tick .lt. start ) then
+               finish = tick
+               tickat = tickat + 1
+            end if
 
-         END IF
+         end if
 
 !
 !        Truncate the interval using the segment bounds.
 !
-         BEGIN   =  MAX ( BEGIN,  DC(1) )
-         FINISH  =  MIN ( FINISH, DC(2) )
+         begin   =  max ( begin,  dc(1) )
+         finish  =  min ( finish, dc(2) )
 
 !
 !        Adjust the interval using the tolerance.  Empty
 !        intervals *do not get expanded*; this choice is
 !        consistent with the type 5 reading algorithm.
 !
-         IF ( BEGIN .LE. FINISH ) THEN
+         if ( begin .le. finish ) then
 
-            IF ( TOL .GT. 0.D0 ) THEN
+            if ( tol .gt. 0.d0 ) then
 
-               BEGIN   =  MAX( BEGIN  - TOL, 0.D0 )
-               FINISH  =       FINISH + TOL
+               begin   =  max( begin  - tol, 0.d0 )
+               finish  =       finish + tol
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Convert the time to TDB if necessary.
 !
-         IF ( ISTDB ) THEN
+         if ( istdb ) then
 
-            CALL SCT2E ( SCLKID, BEGIN,  ET )
-            BEGIN  = ET
+            call sct2e ( sclkid, begin,  et )
+            begin  = et
 
-            CALL SCT2E ( SCLKID, FINISH, ET )
-            FINISH = ET
+            call sct2e ( sclkid, finish, et )
+            finish = et
 
-         END IF
+         end if
 
 !
 !        Insert the interval into the window.
 !
-         IF ( BEGIN .LE. FINISH ) THEN
-            CALL WNINSD ( BEGIN, FINISH, SCHEDL )
-         END IF
+         if ( begin .le. finish ) then
+            call wninsd ( begin, finish, schedl )
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'ZZCKCV05' )
-      RETURN
-      END
+      call chkout ( 'ZZCKCV05' )
+      return
+      end

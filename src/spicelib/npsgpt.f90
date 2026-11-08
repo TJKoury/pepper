@@ -1,6 +1,6 @@
 !$Procedure NPSGPT ( Nearest point on line segment )
 
-      SUBROUTINE NPSGPT ( EP1, EP2, POINT, PNEAR, DIST )
+      subroutine npsgpt ( ep1, ep2, point, pnear, dist )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      EP1   ( 3 )
-      DOUBLE PRECISION      EP2   ( 3 )
-      DOUBLE PRECISION      POINT ( 3 )
-      DOUBLE PRECISION      PNEAR ( 3 )
-      DOUBLE PRECISION      DIST
+      double precision      ep1   ( 3 )
+      double precision      ep2   ( 3 )
+      double precision      point ( 3 )
+      double precision      pnear ( 3 )
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -171,104 +171,104 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
+      double precision      vdist
+      double precision      vdot
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      SEG    ( 3 )
-      DOUBLE PRECISION      SEGDOT
-      DOUBLE PRECISION      LNEAR  ( 3 )
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      OFFDOT
+      double precision      seg    ( 3 )
+      double precision      segdot
+      double precision      lnear  ( 3 )
+      double precision      offset ( 3 )
+      double precision      offdot
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Find a direction vector defined by the endpoints.
 !
-      CALL VSUB ( EP2, EP1, SEG )
+      call vsub ( ep2, ep1, seg )
 
-      IF ( VZERO(SEG) ) THEN
+      if ( vzero(seg) ) then
 !
 !        The endpoints coincide, and both coincide with the
 !        near point.
 !
-         CALL VEQU ( EP1, PNEAR )
+         call vequ ( ep1, pnear )
 
-         DIST = VDIST( EP1, POINT )
+         dist = vdist( ep1, point )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Find the nearest point to POINT on the line defined by
 !     EP1 and SEG.
 !
-      CALL NPLNPT ( EP1, SEG, POINT, LNEAR, DIST )
+      call nplnpt ( ep1, seg, point, lnear, dist )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     Determine whether LNEAR is on the segment, "before" EP1, or
 !     "after" EP2, where SEG points in the "increasing" direction.
 !
-      CALL VSUB ( LNEAR, EP1, OFFSET )
+      call vsub ( lnear, ep1, offset )
 
-      OFFDOT = VDOT( OFFSET, SEG )
+      offdot = vdot( offset, seg )
 
-      IF ( OFFDOT .LT. 0.D0 ) THEN
+      if ( offdot .lt. 0.d0 ) then
 !
 !        The nearest point on the line precedes the first endpoint.
 !        The closest point on the segment is the first endpoint.
 !
-         CALL VEQU ( EP1, PNEAR )
+         call vequ ( ep1, pnear )
 
-         DIST = VDIST ( EP1, POINT )
+         dist = vdist ( ep1, point )
 
-      ELSE
+      else
 !
 !        See whether OFFSET is past the second endpoint. Compare
 !        the dot product of OFFSET with SEG to that of SEG with
 !        itself, since SEG is the offset of EP2 from EP1.
 !
-         SEGDOT = VDOT( SEG, SEG )
+         segdot = vdot( seg, seg )
 
-         IF ( OFFDOT .GT. SEGDOT ) THEN
+         if ( offdot .gt. segdot ) then
 !
 !           The nearest point on the line follows the last endpoint.
 !           The closest point on the segment is the last endpoint.
 !
-            CALL VEQU ( EP2, PNEAR )
+            call vequ ( ep2, pnear )
 
-            DIST = VDIST ( EP2, POINT )
+            dist = vdist ( ep2, point )
 
-         ELSE
+         else
 !
 !           The near point is on the segment. LNEAR is actually the
 !           solution.
 !
-            CALL VEQU ( LNEAR, PNEAR )
+            call vequ ( lnear, pnear )
 
 !
 !           DIST was correctly set by the call to NPLNPT.
 !
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

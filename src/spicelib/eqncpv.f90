@@ -1,6 +1,6 @@
 !$Procedure EQNCPV (Equinoctial Elements to position and velocity)
 
-      SUBROUTINE EQNCPV ( ET, EPOCH, EQEL, RAPOL, DECPOL, STATE )
+      subroutine eqncpv ( et, epoch, eqel, rapol, decpol, state )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      EQEL ( 9 )
-      DOUBLE PRECISION      RAPOL
-      DOUBLE PRECISION      DECPOL
-      DOUBLE PRECISION      STATE ( 6 )
+      double precision      et
+      double precision      epoch
+      double precision      eqel ( 9 )
+      double precision      rapol
+      double precision      decpol
+      double precision      state ( 6 )
 
 ! $ Brief_I/O
 !
@@ -276,121 +276,121 @@
 !
 !     SPICELIB Functions.
 !
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      KEPLEQ
-      LOGICAL               RETURN
+      double precision      twopi
+      double precision      kepleq
+      logical               return
 
-      EXTERNAL              TWOPI
-      EXTERNAL              KEPLEQ
-      EXTERNAL              RETURN
+      external              twopi
+      external              kepleq
+      external              return
 
 !
 !     LOCAL VARIABLES
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      CAN
-      DOUBLE PRECISION      CF
-      DOUBLE PRECISION      CN
-      DOUBLE PRECISION      DT
-      DOUBLE PRECISION      DI
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      NODEDT
-      DOUBLE PRECISION      NODE
-      DOUBLE PRECISION      DLPDT
-      DOUBLE PRECISION      DLP
-      DOUBLE PRECISION      MLDT
+      double precision      a
+      double precision      b
+      double precision      can
+      double precision      cf
+      double precision      cn
+      double precision      dt
+      double precision      di
+      double precision      ecc
+      double precision      nodedt
+      double precision      node
+      double precision      dlpdt
+      double precision      dlp
+      double precision      mldt
 
-      DOUBLE PRECISION      TRANS(3,3)
-      DOUBLE PRECISION      SA
-      DOUBLE PRECISION      CA
-      DOUBLE PRECISION      SD
-      DOUBLE PRECISION      CD
+      double precision      trans(3,3)
+      double precision      sa
+      double precision      ca
+      double precision      sd
+      double precision      cd
 
-      DOUBLE PRECISION      DX
-      DOUBLE PRECISION      DX1
-      DOUBLE PRECISION      DY
-      DOUBLE PRECISION      DY1
-      DOUBLE PRECISION      P
-
-
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      RA
-      DOUBLE PRECISION      PRATE
-      DOUBLE PRECISION      RB
-      DOUBLE PRECISION      SAN
-      DOUBLE PRECISION      SF
-      DOUBLE PRECISION      SN
-      DOUBLE PRECISION      TEMP ( 3  )
-
-      DOUBLE PRECISION      X1,Y1
-      DOUBLE PRECISION      H
-      DOUBLE PRECISION      K
-
-      DOUBLE PRECISION      L
-      DOUBLE PRECISION      ML
-      DOUBLE PRECISION      NFAC
-      DOUBLE PRECISION      EECAN
-      DOUBLE PRECISION      XHOLD(6)
-      DOUBLE PRECISION      VF   (3)
-      DOUBLE PRECISION      VG   (3)
+      double precision      dx
+      double precision      dx1
+      double precision      dy
+      double precision      dy1
+      double precision      p
 
 
-      LOGICAL               FIRST
+      double precision      q
+      double precision      r
+      double precision      ra
+      double precision      prate
+      double precision      rb
+      double precision      san
+      double precision      sf
+      double precision      sn
+      double precision      temp ( 3  )
+
+      double precision      x1,y1
+      double precision      h
+      double precision      k
+
+      double precision      l
+      double precision      ml
+      double precision      nfac
+      double precision      eecan
+      double precision      xhold(6)
+      double precision      vf   (3)
+      double precision      vg   (3)
+
+
+      logical               first
 
 
 !
 !     Constants computed on first pass
 !
-      DOUBLE PRECISION      PI2
+      double precision      pi2
 
-      SAVE                  PI2
-      SAVE                  FIRST
+      save                  pi2
+      save                  first
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
 !
 !     Standard SPICE exception handling code.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'EQNCPV' )
+      call chkin ( 'EQNCPV' )
 
 !
 !     The first time through this routine we fetch the various
 !     constants we need for this routine.
 !
-      IF ( FIRST ) THEN
-         FIRST = .FALSE.
-         PI2   = TWOPI()
-      END IF
+      if ( first ) then
+         first = .false.
+         pi2   = twopi()
+      end if
 
 !
 !     Take care of the various errors that can arise with the
 !     input elements.
 !
-      IF ( EQEL(1) .LE. 0.0D0 ) THEN
+      if ( eqel(1) .le. 0.0d0 ) then
 
-         CALL SETMSG ( 'The semi-major axis supplied to EQNCPV ' &
+         call setmsg ( 'The semi-major axis supplied to EQNCPV ' &
          //            'was non-positive. The value is required ' &
          //            'to be positive by this routine. The ' &
          //            'value supplied was #. ' )
 
-         CALL ERRDP  ( '#', EQEL(1) )
-         CALL SIGERR ( 'SPICE(BADSEMIAXIS)'  )
-         CALL CHKOUT ( 'EQNCPV' )
-         RETURN
+         call errdp  ( '#', eqel(1) )
+         call sigerr ( 'SPICE(BADSEMIAXIS)'  )
+         call chkout ( 'EQNCPV' )
+         return
 
-      END IF
+      end if
 
-      ECC = DSQRT ( EQEL(2)*EQEL(2) + EQEL(3)*EQEL(3) )
+      ecc = dsqrt ( eqel(2)*eqel(2) + eqel(3)*eqel(3) )
 
-      IF ( ECC .GT. 0.9D0 ) THEN
+      if ( ecc .gt. 0.9d0 ) then
 
-         CALL SETMSG ( 'The routine EQNCPV can reliably evaluate ' &
+         call setmsg ( 'The routine EQNCPV can reliably evaluate ' &
          //            'states from equinoctial elements if the ' &
          //            'eccentricity of the orbit associated ' &
          //            'with the elements is less than 0.9.  The ' &
@@ -398,14 +398,14 @@
          //            'elements supplies is #.  The values of H ' &
          //            'and K are: # and # respectively. ' )
 
-         CALL ERRDP  ( '#', ECC     )
-         CALL ERRDP  ( '#', EQEL(2) )
-         CALL ERRDP  ( '#', EQEL(3) )
-         CALL SIGERR ( 'SPICE(ECCOUTOFRANGE)'  )
-         CALL CHKOUT ( 'EQNCPV' )
-         RETURN
+         call errdp  ( '#', ecc     )
+         call errdp  ( '#', eqel(2) )
+         call errdp  ( '#', eqel(3) )
+         call sigerr ( 'SPICE(ECCOUTOFRANGE)'  )
+         call chkout ( 'EQNCPV' )
+         return
 
-      END IF
+      end if
 
 
 
@@ -414,34 +414,34 @@
 !     Form the transformation from planetary equator to the inertial
 !     reference frame.
 !
-      SA          =  DSIN(RAPOL)
-      CA          =  DCOS(RAPOL)
+      sa          =  dsin(rapol)
+      ca          =  dcos(rapol)
 
-      SD          =  DSIN(DECPOL)
-      CD          =  DCOS(DECPOL)
+      sd          =  dsin(decpol)
+      cd          =  dcos(decpol)
 
-      TRANS(1,1)  =  -SA
-      TRANS(1,2)  =  -CA*SD
-      TRANS(1,3)  =   CA*CD
+      trans(1,1)  =  -sa
+      trans(1,2)  =  -ca*sd
+      trans(1,3)  =   ca*cd
 
-      TRANS(2,1)  =   CA
-      TRANS(2,2)  =  -SA*SD
-      TRANS(2,3)  =   SA*CD
+      trans(2,1)  =   ca
+      trans(2,2)  =  -sa*sd
+      trans(2,3)  =   sa*cd
 
-      TRANS(3,1)  =   0.0D0
-      TRANS(3,2)  =   CD
-      TRANS(3,3)  =   SD
+      trans(3,1)  =   0.0d0
+      trans(3,2)  =   cd
+      trans(3,3)  =   sd
 !
 !     Compute the offset of the input epoch (ET) from the
 !     epoch of the elements.
 !
-      DT     =  ET - EPOCH
+      dt     =  et - epoch
 
 !
 !     Obtain the elements, rates, and other parameters. First get
 !     the semi-major axis.
 !
-      A     = EQEL(1)
+      a     = eqel(1)
 
 !
 !     Recall that H and K at the epoch of the elements are in
@@ -478,19 +478,19 @@
 !     Recall that the derivative of the longitude of periapse is
 !     in entry 7 of EQEL.
 !
-      DLPDT = EQEL(7)
-      DLP   = DT*DLPDT
+      dlpdt = eqel(7)
+      dlp   = dt*dlpdt
 
-      CAN   = DCOS( DLP )
-      SAN   = DSIN( DLP )
+      can   = dcos( dlp )
+      san   = dsin( dlp )
 
-      H     = EQEL(2)*CAN + EQEL(3)*SAN
-      K     = EQEL(3)*CAN - EQEL(2)*SAN
+      h     = eqel(2)*can + eqel(3)*san
+      k     = eqel(3)*can - eqel(2)*san
 
 !
 !     The mean longitude at epoch is in the 4th element of EQEL.
 !
-      L     = EQEL(4)
+      l     = eqel(4)
 
 !
 !     The values for P and Q at epoch are stored in entries 5 and 6
@@ -509,108 +509,108 @@
 !        P    = P_0 * Cos( dt*dNODE/dt ) + Q_0 * Sin( dt*dNODE/dt )
 !        Q    = Q_0 * Cos( dt*dNODE/dt ) - P_0 * Sin( dt*dNODE/dt )
 !
-      NODEDT = EQEL(9)
-      NODE   = DT*NODEDT
+      nodedt = eqel(9)
+      node   = dt*nodedt
 
-      CN     = DCOS( NODE )
-      SN     = DSIN( NODE )
+      cn     = dcos( node )
+      sn     = dsin( node )
 
-      P      = EQEL(5)*CN + EQEL(6)*SN
-      Q      = EQEL(6)*CN - EQEL(5)*SN
+      p      = eqel(5)*cn + eqel(6)*sn
+      q      = eqel(6)*cn - eqel(5)*sn
 
-      MLDT  = EQEL(8)
+      mldt  = eqel(8)
 !
 !     We compute the rate of change of the argument of periapse
 !     by taking the difference between the rate of the longitude
 !     of periapse and the rate of the node.
 !
-      PRATE = DLPDT - NODEDT
+      prate = dlpdt - nodedt
 
 !
 !     Form Broucke's beta parameter
 !
-      B     = DSQRT( 1.D0 - H*H - K*K )
-      B     = 1.D0/( 1.D0 + B )
+      b     = dsqrt( 1.d0 - h*h - k*k )
+      b     = 1.d0/( 1.d0 + b )
 
 !
 !     Construct the coordinate axes
 !
-      DI     = 1.0D0/(1.D0 + P*P + Q*Q)
+      di     = 1.0d0/(1.d0 + p*p + q*q)
 
-      VF(1)  = (1.D0 - P*P + Q*Q) * DI
-      VF(2)  =  2.D0 * P   * Q    * DI
-      VF(3)  = -2.D0 * P          * DI
+      vf(1)  = (1.d0 - p*p + q*q) * di
+      vf(2)  =  2.d0 * p   * q    * di
+      vf(3)  = -2.d0 * p          * di
 
-      VG(1)  =  2.D0 * P * Q      * DI
-      VG(2)  = (1.D0 + P*P - Q*Q) * DI
-      VG(3)  =  2.D0 * Q          * DI
+      vg(1)  =  2.d0 * p * q      * di
+      vg(2)  = (1.d0 + p*p - q*q) * di
+      vg(3)  =  2.d0 * q          * di
 
 !
 !     Compute the mean longitude
 !
-      ML  =  L + DMOD( MLDT*DT, PI2 )
+      ml  =  l + dmod( mldt*dt, pi2 )
 
 !
 !     Obtain the eccentric longitude from Kepler's equation
 !
-      EECAN  =  KEPLEQ( ML, H, K )
+      eecan  =  kepleq( ml, h, k )
 
 !
 !     Trigonometric functions of the eccentric longitude
 !
-      SF = DSIN(EECAN)
-      CF = DCOS(EECAN)
+      sf = dsin(eecan)
+      cf = dcos(eecan)
 
 !
 !     Position in the orbit plane
 !
-      X1 = A*( (1.D0-(B*H**2))*CF + (H*K*B*SF - K) )
-      Y1 = A*( (1.D0-(B*K**2))*SF + (H*K*B*CF - H) )
+      x1 = a*( (1.d0-(b*h**2))*cf + (h*k*b*sf - k) )
+      y1 = a*( (1.d0-(b*k**2))*sf + (h*k*b*cf - h) )
 
 !
 !     Radial distance and functions of the radial distance
 !
-      RB = H*SF + K*CF
-      R  = A*(1.0D0-RB)
-      RA = (MLDT*A*A)/R
+      rb = h*sf + k*cf
+      r  = a*(1.0d0-rb)
+      ra = (mldt*a*a)/r
 !
 !
 !     Velocity in the orbit plane
 !
-      DX1 = RA * ( -SF + H*B*RB )
-      DY1 = RA * (  CF - K*B*RB )
+      dx1 = ra * ( -sf + h*b*rb )
+      dy1 = ra * (  cf - k*b*rb )
 
 !
 !     Correction factor for periapsis rate
 !
-      NFAC = 1.0D0 - ( DLPDT/MLDT )
+      nfac = 1.0d0 - ( dlpdt/mldt )
 
 !
 !     Include precession in velocity
 !
-      DX  = NFAC*DX1 - PRATE*Y1
-      DY  = NFAC*DY1 + PRATE*X1
+      dx  = nfac*dx1 - prate*y1
+      dy  = nfac*dy1 + prate*x1
 
 !
 !     Form the planetary mean equator position vector
 !
-      CALL VLCOM ( X1, VF, Y1, VG, XHOLD )
+      call vlcom ( x1, vf, y1, vg, xhold )
 
 !
 !     Form the planetary mean equator velocity vector
 !
-      TEMP (1) = -NODEDT*XHOLD(2)
-      TEMP (2) =  NODEDT*XHOLD(1)
-      TEMP (3) =  0.0D0
+      temp (1) = -nodedt*xhold(2)
+      temp (2) =  nodedt*xhold(1)
+      temp (3) =  0.0d0
 
-      CALL VLCOM3 ( 1.0D0, TEMP, DX, VF, DY, VG, XHOLD(4) )
+      call vlcom3 ( 1.0d0, temp, dx, vf, dy, vg, xhold(4) )
 
 !
 !     Transform to an inertial state vector
 !
-      CALL MXV ( TRANS, XHOLD(1), STATE(1) )
-      CALL MXV ( TRANS, XHOLD(4), STATE(4) )
+      call mxv ( trans, xhold(1), state(1) )
+      call mxv ( trans, xhold(4), state(4) )
 
-      CALL CHKOUT ( 'EQNCPV' )
-      RETURN
-      END
+      call chkout ( 'EQNCPV' )
+      return
+      end

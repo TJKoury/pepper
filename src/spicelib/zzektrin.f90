@@ -1,6 +1,6 @@
 !$Procedure      ZZEKTRIN ( EK tree, insert value )
 
-      SUBROUTINE ZZEKTRIN ( HANDLE, TREE, KEY, VALUE )
+      subroutine zzektrin ( handle, tree, key, value )
 
 ! $ Abstract
 !
@@ -17,13 +17,13 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ektree.inc'
+      include 'ekpage.inc'
+      include 'ektree.inc'
 
-      INTEGER               HANDLE
-      INTEGER               TREE
-      INTEGER               KEY
-      INTEGER               VALUE
+      integer               handle
+      integer               tree
+      integer               key
+      integer               value
 
 ! $ Brief_I/O
 !
@@ -158,63 +158,63 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Other functions
 !
-      INTEGER               ZZEKTRNK
+      integer               zzektrnk
 
 !
 !     Local parameters
 !
-      INTEGER               TERM
-      PARAMETER           ( TERM   = 1 )
+      integer               term
+      parameter           ( term   = 1 )
 
-      INTEGER               LCHECK
-      PARAMETER           ( LCHECK = TERM   + 1 )
+      integer               lcheck
+      parameter           ( lcheck = term   + 1 )
 
-      INTEGER               RCHECK
-      PARAMETER           ( RCHECK = LCHECK + 1 )
+      integer               rcheck
+      parameter           ( rcheck = lcheck + 1 )
 
-      INTEGER               BALNCE
-      PARAMETER           ( BALNCE = RCHECK + 1 )
+      integer               balnce
+      parameter           ( balnce = rcheck + 1 )
 
-      INTEGER               SPLT23
-      PARAMETER           ( SPLT23 = BALNCE + 1 )
+      integer               splt23
+      parameter           ( splt23 = balnce + 1 )
 
-      INTEGER               SPLT13
-      PARAMETER           ( SPLT13 = SPLT23 + 1 )
+      integer               splt13
+      parameter           ( splt13 = splt23 + 1 )
 
 
 !
 !     Local variables
 !
-      INTEGER               IDX
-      INTEGER               LEFT
-      INTEGER               LEVEL
-      INTEGER               LKEY
-      INTEGER               LNODE
-      INTEGER               LPIDX
-      INTEGER               LPKEY
-      INTEGER               LVAL
-      INTEGER               NKEYS
-      INTEGER               NODE
-      INTEGER               NOFFST
-      INTEGER               NSIZE
-      INTEGER               PARENT
-      INTEGER               PKEY
-      INTEGER               PKIDX
-      INTEGER               POFFST
-      INTEGER               RIGHT
-      INTEGER               RNODE
-      INTEGER               ROOT
-      INTEGER               RPIDX
-      INTEGER               RPKEY
-      INTEGER               STATE
-      INTEGER               TRUST
+      integer               idx
+      integer               left
+      integer               level
+      integer               lkey
+      integer               lnode
+      integer               lpidx
+      integer               lpkey
+      integer               lval
+      integer               nkeys
+      integer               node
+      integer               noffst
+      integer               nsize
+      integer               parent
+      integer               pkey
+      integer               pkidx
+      integer               poffst
+      integer               right
+      integer               rnode
+      integer               root
+      integer               rpidx
+      integer               rpkey
+      integer               state
+      integer               trust
 
-      LOGICAL               OVERFL
+      logical               overfl
 
 
 !
@@ -223,13 +223,13 @@
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
 !
-      ROOT  =  TREE
+      root  =  tree
 
 !
 !     Work with local copies of the input key and value.
 !
-      LKEY  =  KEY
-      LVAL  =  VALUE
+      lkey  =  key
+      lval  =  value
 
 !
 !     The first step is to insert the key into the tree without
@@ -238,121 +238,121 @@
 !     overflow is low:  each overflow creates at least one new node,
 !     but the ratio of nodes to keys is very small.
 !
-      CALL ZZEKTRUI ( HANDLE, TREE, LKEY, LVAL, OVERFL )
+      call zzektrui ( handle, tree, lkey, lval, overfl )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
 !
 !     If the insertion didn't result in an overflow, we're done.
 !
-      IF ( .NOT. OVERFL ) THEN
-         RETURN
-      END IF
+      if ( .not. overfl ) then
+         return
+      end if
 
 !
 !     Handle node overflows, as required.
 !
-      STATE = LCHECK
+      state = lcheck
 
 
-      DO WHILE ( STATE .NE. TERM )
+      do while ( state .ne. term )
 
 
-         IF ( STATE .EQ. LCHECK ) THEN
+         if ( state .eq. lcheck ) then
 !
 !           Look up the node containing LKEY.
 !
-            CALL ZZEKTRLK (  HANDLE,  TREE,    LKEY,   IDX, &
-                             NODE,    NOFFST,  LEVEL,  LVAL  )
+            call zzektrlk (  handle,  tree,    lkey,   idx, &
+                             node,    noffst,  level,  lval  )
 
-            IF ( NODE .EQ. ROOT ) THEN
+            if ( node .eq. root ) then
 
-               STATE  =  SPLT13
+               state  =  splt13
 
-            ELSE
+            else
 !
 !              See if there's room in the left sibling.  Of course,
 !              there must be a left sibling in order for there to be
 !              room.
 !
-               CALL ZZEKTRPI ( HANDLE, TREE,   LKEY,   PARENT, &
-                               PKEY,   POFFST, LPIDX,  LPKEY, &
-                               LEFT,   RPIDX,  RPKEY,  RIGHT  )
+               call zzektrpi ( handle, tree,   lkey,   parent, &
+                               pkey,   poffst, lpidx,  lpkey, &
+                               left,   rpidx,  rpkey,  right  )
 
-               IF ( LEFT .GT. 0 ) THEN
+               if ( left .gt. 0 ) then
 
-                  NKEYS = ZZEKTRNK ( HANDLE, TREE, LEFT )
+                  nkeys = zzektrnk ( handle, tree, left )
 
-                  IF ( NKEYS .LT. MXKEYC ) THEN
-                     LNODE  =  LEFT
-                     RNODE  =  NODE
-                     PKIDX  =  LPIDX
-                     STATE  =  BALNCE
-                  ELSE
-                     STATE  =  RCHECK
-                  END IF
+                  if ( nkeys .lt. mxkeyc ) then
+                     lnode  =  left
+                     rnode  =  node
+                     pkidx  =  lpidx
+                     state  =  balnce
+                  else
+                     state  =  rcheck
+                  end if
 
-               ELSE
-                  STATE = RCHECK
-               END IF
-
-
-            END IF
+               else
+                  state = rcheck
+               end if
 
 
-         ELSE IF ( STATE .EQ. RCHECK ) THEN
+            end if
+
+
+         else if ( state .eq. rcheck ) then
 !
 !           See whether there's room in the right sibling, if there
 !           is a right sibling.  The left sibling has already been
 !           checked and found wanting.
 !
-            IF ( RIGHT .GT. 0 ) THEN
+            if ( right .gt. 0 ) then
 
-               NKEYS = ZZEKTRNK ( HANDLE, TREE, RIGHT )
+               nkeys = zzektrnk ( handle, tree, right )
 
-               IF ( NKEYS .LT. MXKEYC ) THEN
+               if ( nkeys .lt. mxkeyc ) then
 
-                  LNODE  =  NODE
-                  RNODE  =  RIGHT
-                  PKIDX  =  RPIDX
+                  lnode  =  node
+                  rnode  =  right
+                  pkidx  =  rpidx
 
-                  STATE  =  BALNCE
+                  state  =  balnce
 
-               ELSE
+               else
 
-                  LNODE  =  NODE
-                  RNODE  =  RIGHT
-                  PKIDX  =  RPIDX
-                  STATE  =  SPLT23
+                  lnode  =  node
+                  rnode  =  right
+                  pkidx  =  rpidx
+                  state  =  splt23
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              The left sibling is full, but at least it's there.
 !
-               LNODE  =  LEFT
-               RNODE  =  NODE
-               PKIDX  =  LPIDX
-               STATE  =  SPLT23
+               lnode  =  left
+               rnode  =  node
+               pkidx  =  lpidx
+               state  =  splt23
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. BALNCE ) THEN
+         else if ( state .eq. balnce ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
 !           there's enough room to accommodate the overflow.  After
 !           balancing these nodes, we're done.
 !
-            CALL ZZEKTRBN ( HANDLE, TREE, LNODE, RNODE, PARENT, PKIDX )
+            call zzektrbn ( handle, tree, lnode, rnode, parent, pkidx )
 
-            STATE  =  TERM
+            state  =  term
 
 
-         ELSE IF ( STATE .EQ. SPLT23 ) THEN
+         else if ( state .eq. splt23 ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
 !           there's an overflow of one key.  Split these two nodes
@@ -371,66 +371,66 @@
 !           the 2-3 split.  If NODE got mapped to RNODE, then
 !           the last key in NODE will be unchanged.
 !
-            IF ( NODE .EQ. LNODE ) THEN
+            if ( node .eq. lnode ) then
 !
 !              Save the first key from NODE.
 !
-               CALL ZZEKTRKI ( HANDLE, TREE, LKEY, 1, TRUST )
+               call zzektrki ( handle, tree, lkey, 1, trust )
 
-            ELSE
+            else
 !
 !              Save the last key from NODE.
 !
-               NSIZE  =  ZZEKTRNK ( HANDLE, TREE, NODE )
+               nsize  =  zzektrnk ( handle, tree, node )
 
-               CALL ZZEKTRKI ( HANDLE, TREE, LKEY, NSIZE, TRUST )
+               call zzektrki ( handle, tree, lkey, nsize, trust )
 
-            END IF
-
-
-            CALL ZZEKTR23 ( HANDLE, TREE,  LNODE, RNODE, &
-                            PARENT, PKIDX, OVERFL       )
+            end if
 
 
-            IF ( OVERFL ) THEN
+            call zzektr23 ( handle, tree,  lnode, rnode, &
+                            parent, pkidx, overfl       )
 
-               IF ( PARENT .EQ. ROOT ) THEN
 
-                  STATE   =  SPLT13
+            if ( overfl ) then
 
-               ELSE
+               if ( parent .eq. root ) then
+
+                  state   =  splt13
+
+               else
 !
 !                 We'll need to handle overflow in the parent.
 !                 The parent should be correctly identified by the
 !                 parent of TRUST.
 !
-                  CALL ZZEKTRPI ( HANDLE, TREE,   TRUST,  PARENT, &
-                                  PKEY,   POFFST, LPIDX,  LPKEY, &
-                                  LEFT,   RPIDX,  RPKEY,  RIGHT  )
+                  call zzektrpi ( handle, tree,   trust,  parent, &
+                                  pkey,   poffst, lpidx,  lpkey, &
+                                  left,   rpidx,  rpkey,  right  )
 
-                  LKEY    =  PKEY
-                  STATE   =  LCHECK
+                  lkey    =  pkey
+                  state   =  lcheck
 
-               END IF
-
-
-            ELSE
-               STATE  =  TERM
-            END IF
+               end if
 
 
-         ELSE IF ( STATE .EQ. SPLT13 ) THEN
+            else
+               state  =  term
+            end if
+
+
+         else if ( state .eq. splt13 ) then
 !
 !           We've got an overflow in the root.  Split the root,
 !           creating two new children.  The root contains a single
 !           key after this split.
 !
-            CALL ZZEKTR13 ( HANDLE, TREE )
-            STATE  =  TERM
+            call zzektr13 ( handle, tree )
+            state  =  term
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      RETURN
-      END
+      return
+      end

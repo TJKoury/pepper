@@ -1,6 +1,6 @@
 !$Procedure ORDD ( The ordinal position of an element in a set )
 
-      INTEGER FUNCTION ORDD ( ITEM, SET )
+      integer function ordd ( item, set )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = - 5 )
+      integer               lbcell
+      parameter           ( lbcell = - 5 )
 
-      DOUBLE PRECISION      ITEM
-      DOUBLE PRECISION      SET ( LBCELL:* )
+      double precision      item
+      double precision      set ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -182,26 +182,26 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHD
-      INTEGER               CARDD
-      LOGICAL               RETURN
+      integer               bsrchd
+      integer               cardd
+      logical               return
 
 
 !
 !     Standard error handling:
 !
-      IF ( RETURN() ) THEN
-         ORDD = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ORDD' )
-      END IF
+      if ( return() ) then
+         ordd = 0
+         return
+      else
+         call chkin ( 'ORDD' )
+      end if
 
 !
 !     Given the structure of sets, there's not much to do.
 !
-      ORDD = BSRCHD ( ITEM, CARDD(SET), SET(1) )
+      ordd = bsrchd ( item, cardd(set), set(1) )
 
-      CALL CHKOUT ( 'ORDD' )
-      RETURN
-      END
+      call chkout ( 'ORDD' )
+      return
+      end

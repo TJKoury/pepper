@@ -1,6 +1,6 @@
 !$Procedure SPKCOV ( SPK coverage )
 
-      SUBROUTINE SPKCOV ( SPKFNM, IDCODE, COVER )
+      subroutine spkcov ( spkfnm, idcode, cover )
 
 ! $ Abstract
 !
@@ -23,14 +23,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         SPKFNM
-      INTEGER               IDCODE
-      DOUBLE PRECISION      COVER ( LBCELL : * )
+      character*(*)         spkfnm
+      integer               idcode
+      double precision      cover ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -579,72 +579,72 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80 )
+      integer               lnsize
+      parameter           ( lnsize = 80 )
 
-      INTEGER               ND
-      PARAMETER           ( ND     = 2 )
+      integer               nd
+      parameter           ( nd     = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     = 6 )
+      integer               ni
+      parameter           ( ni     = 6 )
 
 !
 !     Local variables
 !
-      CHARACTER*(LNSIZE)    ARCH
-      CHARACTER*(LNSIZE)    KERTYP
+      character*(lnsize)    arch
+      character*(lnsize)    kertyp
 
-      DOUBLE PRECISION      DC     ( ND )
-      DOUBLE PRECISION      DESCR  ( ND + NI/2 )
+      double precision      dc     ( nd )
+      double precision      descr  ( nd + ni/2 )
 
-      INTEGER               HANDLE
-      INTEGER               IC     ( NI )
+      integer               handle
+      integer               ic     ( ni )
 
-      LOGICAL               FOUND
+      logical               found
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKCOV' )
+      call chkin ( 'SPKCOV' )
 
 !
 !     See whether GETFAT thinks we've got a binary SPK file.
 !     If not, indicate the specific problem.
 !
-      CALL GETFAT ( SPKFNM, ARCH, KERTYP )
+      call getfat ( spkfnm, arch, kertyp )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKCOV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKCOV' )
+         return
+      end if
 
-      IF ( ARCH .EQ. 'XFR' ) THEN
+      if ( arch .eq. 'XFR' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary SPK file to be readable ' &
          //            'by this routine.  If the input file is an ' &
          //            'SPK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         CALL ERRCH  ( '#',  SPKFNM                                )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                      )
-         CALL CHKOUT ( 'SPKCOV'                                    )
-         RETURN
+         call errch  ( '#',  spkfnm                                )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                      )
+         call chkout ( 'SPKCOV'                                    )
+         return
 
-      ELSE IF ( ARCH .NE. 'DAF' ) THEN
+      else if ( arch .ne. 'DAF' ) then
 
-         CALL SETMSG ( 'Input file # has architecture #. The file ' &
+         call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary SPK file to be readable ' &
          //            'by this routine.  Binary SPK files have ' &
          //            'DAF architecture.  If you expected the ' &
@@ -653,15 +653,15 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  SPKFNM                                )
-         CALL ERRCH  ( '#',  ARCH                                  )
-         CALL SIGERR ( 'SPICE(INVALIDARCHTYPE)'                    )
-         CALL CHKOUT ( 'SPKCOV'                                    )
-         RETURN
+         call errch  ( '#',  spkfnm                                )
+         call errch  ( '#',  arch                                  )
+         call sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
+         call chkout ( 'SPKCOV'                                    )
+         return
 
-      ELSE IF ( KERTYP .NE. 'SPK' ) THEN
+      else if ( kertyp .ne. 'SPK' ) then
 
-         CALL SETMSG ( 'Input file # has file type #. The file ' &
+         call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary SPK file to be readable ' &
          //            'by this routine. If you expected the ' &
          //            'file to be a binary SPK file, the problem ' &
@@ -669,23 +669,23 @@
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         CALL ERRCH  ( '#',  SPKFNM                                )
-         CALL ERRCH  ( '#',  KERTYP                                )
-         CALL SIGERR ( 'SPICE(INVALIDFILETYPE)'                    )
-         CALL CHKOUT ( 'SPKCOV'                                    )
-         RETURN
+         call errch  ( '#',  spkfnm                                )
+         call errch  ( '#',  kertyp                                )
+         call sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
+         call chkout ( 'SPKCOV'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Open the file for reading.
 !
-      CALL DAFOPR ( SPKFNM, HANDLE )
+      call dafopr ( spkfnm, handle )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKCOV' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKCOV' )
+         return
+      end if
 
 !
 !     We will examine each segment descriptor in the file, and
@@ -694,38 +694,38 @@
 !
 !     Start a forward search.
 !
-      CALL DAFBFS ( HANDLE )
+      call dafbfs ( handle )
 
 !
 !     Find the next DAF array.
 !
-      CALL DAFFNA ( FOUND )
+      call daffna ( found )
 
-      DO WHILE (  FOUND  .AND.  ( .NOT. FAILED() )  )
+      do while (  found  .and.  ( .not. failed() )  )
 !
 !        Fetch and unpack the segment descriptor.
 !
-         CALL DAFGS ( DESCR )
-         CALL DAFUS ( DESCR, ND, NI, DC, IC )
+         call dafgs ( descr )
+         call dafus ( descr, nd, ni, dc, ic )
 
-         IF ( IC(1) .EQ. IDCODE ) THEN
+         if ( ic(1) .eq. idcode ) then
 !
 !           This segment is for the body of interest.  Insert the
 !           coverage bounds into the coverage window.
 !
-            CALL WNINSD ( DC(1), DC(2), COVER )
+            call wninsd ( dc(1), dc(2), cover )
 
-         END IF
+         end if
 
-         CALL DAFFNA ( FOUND )
+         call daffna ( found )
 
-      END DO
+      end do
 
 !
 !     Release the file.
 !
-      CALL DAFCLS ( HANDLE )
+      call dafcls ( handle )
 
-      CALL CHKOUT ( 'SPKCOV' )
-      RETURN
-      END
+      call chkout ( 'SPKCOV' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SPKS21 ( S/P Kernel, subset, type 21 )
 
-      SUBROUTINE SPKS21 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks21 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk21.inc'
+      include 'spk21.inc'
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -127,41 +127,41 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               MAXDSZ
-      PARAMETER           ( MAXDSZ =  (4 * MAXTRM) + 11 )
+      integer               maxdsz
+      parameter           ( maxdsz =  (4 * maxtrm) + 11 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA     ( MAXDSZ )
+      double precision      data     ( maxdsz )
 
-      INTEGER               DLSIZE
-      INTEGER               MAXDIM
-      INTEGER               NREC
-      INTEGER               NDIR
-      INTEGER               OFFE
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               OFFSET
-      INTEGER               I
+      integer               dlsize
+      integer               maxdim
+      integer               nrec
+      integer               ndir
+      integer               offe
+      integer               first
+      integer               last
+      integer               offset
+      integer               i
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKS21' )
+      call chkin ( 'SPKS21' )
 
 !
 !     Get the number of records in the segment. From that, we can
@@ -174,13 +174,13 @@
 !
 !     the number of directory epochs.
 !
-      CALL DAFGDA ( HANDLE, EADDR-1, EADDR, DATA )
+      call dafgda ( handle, eaddr-1, eaddr, data )
 
-      MAXDIM = NINT( DATA(1) )
-      NREC   = NINT( DATA(2) )
+      maxdim = nint( data(1) )
+      nrec   = nint( data(2) )
 
-      NDIR   = NREC / DIRSIZ
-      OFFE   = EADDR - NDIR - NREC - 2
+      ndir   = nrec / dirsiz
+      offe   = eaddr - ndir - nrec - 2
 
 !
 !     Well, the new segment has already been begun. We just have to
@@ -202,76 +202,76 @@
 !
 !     First pass: which records are to be moved?
 !
-      FIRST = 0
-      LAST  = 0
+      first = 0
+      last  = 0
 
-      DO I = 1, NREC
+      do i = 1, nrec
 
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA )
+         call dafgda ( handle, offe+i, offe+i, data )
 
-         IF (       (  FIRST   .EQ. 0     ) &
-              .AND. (  DATA(1) .GE. BEGIN ) ) THEN
+         if (       (  first   .eq. 0     ) &
+              .and. (  data(1) .ge. begin ) ) then
 
-             FIRST = I
+             first = i
 
-         END IF
+         end if
 
-         IF (        ( FIRST   .NE. 0   ) &
-              .AND.  ( LAST    .EQ. 0   ) &
-              .AND.  ( DATA(1) .GE. END )  ) THEN
+         if (        ( first   .ne. 0   ) &
+              .and.  ( last    .eq. 0   ) &
+              .and.  ( data(1) .ge. end )  ) then
 
-            LAST = I
+            last = i
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Second pass. Move the records.
 !
-      DLSIZE = ( 4 * MAXDIM ) + 11
+      dlsize = ( 4 * maxdim ) + 11
 
-      OFFSET = (BADDR - 1) + (FIRST - 1) * DLSIZE
+      offset = (baddr - 1) + (first - 1) * dlsize
 
-      DO I = FIRST, LAST
+      do i = first, last
 
-         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+DLSIZE, DATA         )
-         CALL DAFADA (                                  DATA, DLSIZE )
+         call dafgda ( handle, offset+1, offset+dlsize, data         )
+         call dafada (                                  data, dlsize )
 
-         OFFSET = OFFSET + DLSIZE
+         offset = offset + dlsize
 
-      END DO
+      end do
 
 !
 !     Third pass. Move the epochs.
 !
-      DO I = FIRST, LAST
+      do i = first, last
 
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
 
-      END DO
+      end do
 
 !
 !     Get every DIRSIZ'th epoch for the directory.
 !
-      DO I = (FIRST + DIRSIZ - 1), LAST, DIRSIZ
+      do i = (first + dirsiz - 1), last, dirsiz
 
-         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
-         CALL DAFADA (                         DATA, 1 )
+         call dafgda ( handle, offe+i, offe+i, data    )
+         call dafada (                         data, 1 )
 
-      END DO
+      end do
 
 !
 !     Add the maximum difference line dimension and the
 !     number of records, and we're done.
 !
-      CALL DAFADA ( DBLE( MAXDIM ), 1 )
+      call dafada ( dble( maxdim ), 1 )
 
-      DATA(1) = DBLE ( LAST - FIRST + 1 )
+      data(1) = dble ( last - first + 1 )
 
-      CALL DAFADA ( DATA, 1 )
+      call dafada ( data, 1 )
 
-      CALL CHKOUT ( 'SPKS21' )
-      RETURN
-      END
+      call chkout ( 'SPKS21' )
+      return
+      end

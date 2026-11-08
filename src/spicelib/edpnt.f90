@@ -1,6 +1,6 @@
 !$Procedure EDPNT ( Ellipsoid point  )
 
-      SUBROUTINE EDPNT ( P, A, B, C, EP )
+      subroutine edpnt ( p, a, b, c, ep )
 
 ! $ Abstract
 !
@@ -20,13 +20,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      P  ( 3 )
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      EP ( 3 )
+      double precision      p  ( 3 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      ep ( 3 )
 
 ! $ Brief_I/O
 !
@@ -181,88 +181,88 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TOUCHD
+      double precision      touchd
 
-      LOGICAL               FAILED
-      LOGICAL               VZERO
+      logical               failed
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LEVEL
-      DOUBLE PRECISION      SQ
+      double precision      level
+      double precision      sq
 
 !
 !     Use discovery check-in.
 !
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF (      ( A .LE. 0.D0 ) &
-           .OR. ( B .LE. 0.D0 ) &
-           .OR. ( C .LE. 0.D0 ) ) THEN
+      if (      ( a .le. 0.d0 ) &
+           .or. ( b .le. 0.d0 ) &
+           .or. ( c .le. 0.d0 ) ) then
 
-         CALL CHKIN  ( 'EDPNT'                            )
-         CALL SETMSG ( 'Ellipsoid radii must be strictly ' &
+         call chkin  ( 'EDPNT'                            )
+         call setmsg ( 'Ellipsoid radii must be strictly ' &
          //            'positive but are (#, #, #).'      )
-         CALL ERRDP  ( '#', A                             )
-         CALL ERRDP  ( '#', B                             )
-         CALL ERRDP  ( '#', C                             )
-         CALL SIGERR ( 'SPICE(INVALIDRADII)'              )
-         CALL CHKOUT ( 'EDPNT'                            )
-         RETURN
+         call errdp  ( '#', a                             )
+         call errdp  ( '#', b                             )
+         call errdp  ( '#', c                             )
+         call sigerr ( 'SPICE(INVALIDRADII)'              )
+         call chkout ( 'EDPNT'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     The input point must be non-zero, or we can't scale it
 !     to the ellipsoid.
 !
-      IF ( VZERO(P) ) THEN
+      if ( vzero(p) ) then
 
-         CALL CHKIN  ( 'EDPNT'                            )
-         CALL SETMSG ( 'Input point was the zero vector. ' &
+         call chkin  ( 'EDPNT'                            )
+         call setmsg ( 'Input point was the zero vector. ' &
          //            'A non-zero vector is required.'   )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                )
-         CALL CHKOUT ( 'EDPNT'                            )
-         RETURN
+         call sigerr ( 'SPICE(ZEROVECTOR)'                )
+         call chkout ( 'EDPNT'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the level surface parameter of the input point with respect
 !     to the scaled ellipsoid.
 !
-      LEVEL = TOUCHD( ( P(1)/A )**2 + ( P(2)/B )**2 + ( P(3)/C )**2  )
+      level = touchd( ( p(1)/a )**2 + ( p(2)/b )**2 + ( p(3)/c )**2  )
 
-      IF ( LEVEL .LE. 0.D0 ) THEN
+      if ( level .le. 0.d0 ) then
 !
 !        We expect that LEVEL will be non-negative, but it could
 !        be zero. We check for negative values as a precaution.
 !
-         CALL CHKIN  ( 'EDPNT'                                    )
-         CALL SETMSG ( 'Input point''s level surface parameter ' &
+         call chkin  ( 'EDPNT'                                    )
+         call setmsg ( 'Input point''s level surface parameter ' &
          //            'was non-positive. The point is too close ' &
          //            'to the origin to be scaled to the ' &
          //            'ellipsoid. The point was (#, #, #).'      )
-         CALL ERRDP  ( '#', P(1)                                  )
-         CALL ERRDP  ( '#', P(2)                                  )
-         CALL ERRDP  ( '#', P(3)                                  )
-         CALL SIGERR ( 'SPICE(POINTTOOSMALL)'                     )
-         CALL CHKOUT ( 'EDPNT'                                    )
-         RETURN
+         call errdp  ( '#', p(1)                                  )
+         call errdp  ( '#', p(2)                                  )
+         call errdp  ( '#', p(3)                                  )
+         call sigerr ( 'SPICE(POINTTOOSMALL)'                     )
+         call chkout ( 'EDPNT'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Scale the point to one for which the level surface parameter is 1.
 !
-      SQ    = SQRT(LEVEL)
+      sq    = sqrt(level)
 
-      EP(1) = P(1) / SQ
-      EP(2) = P(2) / SQ
-      EP(3) = P(3) / SQ
+      ep(1) = p(1) / sq
+      ep(2) = p(2) / sq
+      ep(3) = p(3) / sq
 
-      RETURN
-      END
+      return
+      end

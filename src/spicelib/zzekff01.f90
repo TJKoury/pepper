@@ -1,6 +1,6 @@
 !$Procedure      ZZEKFF01 ( EK, finish fast load, segment type 1 )
 
-      SUBROUTINE ZZEKFF01 ( HANDLE, SEGNO, RCPTRS )
+      subroutine zzekff01 ( handle, segno, rcptrs )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekglimit.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'ekrecptr.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekdatpag.inc'
+      include 'ekglimit.inc'
+      include 'ekpage.inc'
+      include 'ekrecptr.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RCPTRS ( * )
+      integer               handle
+      integer               segno
+      integer               rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -121,96 +121,96 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
-      INTEGER               ADRBUF ( BUFSIZ )
-      INTEGER               BASE
-      INTEGER               COL
-      INTEGER               COLIDX
-      INTEGER               COLORD ( MXCLSG )
-      INTEGER               I
-      INTEGER               IPAGE  ( PGSIZI )
-      INTEGER               J
-      INTEGER               LOC
-      INTEGER               MBASE
-      INTEGER               NCOLS
-      INTEGER               NPAGE
-      INTEGER               NR
-      INTEGER               NROWS
-      INTEGER               NRP
-      INTEGER               P
-      INTEGER               PAGLOC
-      INTEGER               PBASE
-      INTEGER               RECNO
-      INTEGER               REMAIN
-      INTEGER               ROW
-      INTEGER               RPSIZE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               STKBAS
-      INTEGER               STKHAN
-      INTEGER               STKSEG
-      INTEGER               TREE
+      integer               addrss
+      integer               adrbuf ( bufsiz )
+      integer               base
+      integer               col
+      integer               colidx
+      integer               colord ( mxclsg )
+      integer               i
+      integer               ipage  ( pgsizi )
+      integer               j
+      integer               loc
+      integer               mbase
+      integer               ncols
+      integer               npage
+      integer               nr
+      integer               nrows
+      integer               nrp
+      integer               p
+      integer               pagloc
+      integer               pbase
+      integer               recno
+      integer               remain
+      integer               row
+      integer               rpsize
+      integer               segdsc ( sdscsz )
+      integer               stkbas
+      integer               stkhan
+      integer               stkseg
+      integer               tree
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEKFF01' )
+      call chkin ( 'ZZEKFF01' )
 
 !
 !     Initialize all arrays.
 !
-      CALL CLEARI ( BUFSIZ, ADRBUF )
-      CALL CLEARI ( MXCLSG, COLORD )
-      CALL CLEARI ( PGSIZI, IPAGE  )
-      CALL CLEARI ( SDSCSZ, SEGDSC )
+      call cleari ( bufsiz, adrbuf )
+      call cleari ( mxclsg, colord )
+      call cleari ( pgsizi, ipage  )
+      call cleari ( sdscsz, segdsc )
 
 !
 !     Dig the handle and segment number out of the EK stack.  If the
 !     stacked values don't match the inputs HANDLE and SEGNO, we've
 !     got trouble.
 !
-      CALL ZZEKSRD ( 1, 1, STKHAN )
-      CALL ZZEKSRD ( 2, 2, STKSEG )
+      call zzeksrd ( 1, 1, stkhan )
+      call zzeksrd ( 2, 2, stkseg )
 
-      IF (  ( STKHAN .NE. HANDLE ) .OR. ( STKSEG .NE. SEGNO )  ) THEN
+      if (  ( stkhan .ne. handle ) .or. ( stkseg .ne. segno )  ) then
 
-         CALL SETMSG ( 'Attempt to finish fast load of wrong segment.'// &
+         call setmsg ( 'Attempt to finish fast load of wrong segment.'// &
                        '  Input segment number is #; stacked segment '// &
                        'number is #.  Input handle is #; stacked '    // &
                        'handle is #.'                                 )
-         CALL ERRINT ( '#',  SEGNO                                    )
-         CALL ERRINT ( '#',  STKSEG                                   )
-         CALL ERRINT ( '#',  HANDLE                                   )
-         CALL ERRINT ( '#',  STKHAN                                   )
-         CALL SIGERR ( 'SPICE(WRONGSEGMENT)'                          )
-         CALL CHKOUT ( 'ZZEKFF01'                                     )
-         RETURN
+         call errint ( '#',  segno                                    )
+         call errint ( '#',  stkseg                                   )
+         call errint ( '#',  handle                                   )
+         call errint ( '#',  stkhan                                   )
+         call sigerr ( 'SPICE(WRONGSEGMENT)'                          )
+         call chkout ( 'ZZEKFF01'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the segment descriptor for the indicated segment.  Find
 !     out how many rows and columns the segment contains.
 !
-      CALL ZZEKMLOC (  HANDLE,  SEGNO,    P,             MBASE   )
-      CALL DASRDI   (  HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC  )
+      call zzekmloc (  handle,  segno,    p,             mbase   )
+      call dasrdi   (  handle,  mbase+1,  mbase+sdscsz,  segdsc  )
 
-      NROWS  =  SEGDSC ( NRIDX )
-      NCOLS  =  SEGDSC ( NCIDX )
+      nrows  =  segdsc ( nridx )
+      ncols  =  segdsc ( ncidx )
 
 !
 !     Determine the order in which the columns were added.  The order
@@ -220,15 +220,15 @@
 !     by a column declaration to ordinal positions on the stack.
 !
 !
-      DO I = 1, NCOLS
+      do i = 1, ncols
 
-         LOC  =  (I-1)*(NROWS+1)  +  3
+         loc  =  (i-1)*(nrows+1)  +  3
 
-         CALL ZZEKSRD ( LOC, LOC, COLIDX )
+         call zzeksrd ( loc, loc, colidx )
 
-         COLORD ( COLIDX ) = I
+         colord ( colidx ) = i
 
-      END DO
+      end do
 
 !
 !     We'll need to create a record pointer structure for each row
@@ -236,51 +236,51 @@
 !     can fit on one page.  We also compute the number of pages we'll
 !     need to hold the pointers.
 !
-      RPSIZE  =    DPTBAS + NCOLS
-      NRP     =    IPSIZE / RPSIZE
-      NPAGE   =  ( NROWS + NRP - 1 ) / NRP
+      rpsize  =    dptbas + ncols
+      nrp     =    ipsize / rpsize
+      npage   =  ( nrows + nrp - 1 ) / nrp
 
 !
 !     We'll write out record pointers a pageful at a time.  Each
 !     record pointer is initialized to indicate that the record is
 !     old, and that there is no corresponding modified record.
 !
-      REMAIN  =  NROWS
-      RECNO   =  0
+      remain  =  nrows
+      recno   =  0
 
-      DO I = 1, NPAGE
+      do i = 1, npage
 !
 !        Get the base address of the current page.  The address
 !        can be derived from the address of the first record pointer
 !        structure on the page.
 !
-         ADDRSS  =  RCPTRS(RECNO+1) + 1
+         addrss  =  rcptrs(recno+1) + 1
 
-         CALL ZZEKPGPG ( INT, ADDRSS, P, PBASE )
+         call zzekpgpg ( int, addrss, p, pbase )
 
-         CALL CLEARI   ( IPSIZE, IPAGE )
+         call cleari   ( ipsize, ipage )
 
 !
 !        NR is the number of record pointers we'll write to this page.
 !
-         NR  =  MIN ( NRP, REMAIN )
+         nr  =  min ( nrp, remain )
 
-         DO J = 1, NR
+         do j = 1, nr
 !
 !           Initialize the modified record pointer and status for
 !           each record pointer on the page.
 !
-            BASE                     =  (J-1) * RPSIZE
-            IPAGE ( BASE + STAIDX )  =  OLD
-            IPAGE ( BASE + RCPIDX )  =  UNINIT
+            base                     =  (j-1) * rpsize
+            ipage ( base + staidx )  =  old
+            ipage ( base + rcpidx )  =  uninit
 
-         END DO
+         end do
 
 !
 !        For each column, take NR addresses off the stack and
 !        write them into the page.
 !
-         DO COL = 1, NCOLS
+         do col = 1, ncols
 !
 !           The stack starts out with the target file handle and
 !           segment number.  Next comes the data for each column.
@@ -288,38 +288,38 @@
 !           addresses for the data of each column follow.  The addresses
 !           for each column are stored contiguously.
 !
-            J       =  COLORD( COL )
-            STKBAS  =  (J-1)*(NROWS+1)  +  3
-            LOC     =  STKBAS           +  RECNO
+            j       =  colord( col )
+            stkbas  =  (j-1)*(nrows+1)  +  3
+            loc     =  stkbas           +  recno
 
-            CALL ZZEKSRD ( LOC+1, LOC+NR, ADRBUF )
+            call zzeksrd ( loc+1, loc+nr, adrbuf )
 
-            DO ROW = 1, NR
+            do row = 1, nr
 
-               BASE           =  (ROW-1) * RPSIZE
-               PAGLOC         =  BASE + DPTBAS + COL
-               IPAGE(PAGLOC)  =  ADRBUF(ROW)
+               base           =  (row-1) * rpsize
+               pagloc         =  base + dptbas + col
+               ipage(pagloc)  =  adrbuf(row)
 
-            END DO
+            end do
 
-         END DO
+         end do
 
 !
 !        Write out the initialized pointer page.
 !
-         CALL ZZEKPGWI ( HANDLE, P, IPAGE )
+         call zzekpgwi ( handle, p, ipage )
 
 
-         RECNO   =  RECNO   +  NR
-         REMAIN  =  REMAIN  -  NR
+         recno   =  recno   +  nr
+         remain  =  remain  -  nr
 
-      END DO
+      end do
 
 !
 !     Create the record pointer tree for this segment.
 !
-      CALL ZZEKTRIT (  HANDLE,  TREE                   )
-      CALL ZZEKTR1S (  HANDLE,  TREE,  NROWS,  RCPTRS  )
+      call zzektrit (  handle,  tree                   )
+      call zzektr1s (  handle,  tree,  nrows,  rcptrs  )
 
 !
 !     Update the record tree pointer and row count in the segment
@@ -327,14 +327,14 @@
 !     to their maximum values, to ensure allocation of new pages
 !     if further writes are done.
 !
-      CALL ZZEKMLOC (  HANDLE,  SEGNO,        P,            BASE   )
-      CALL DASUDI   (  HANDLE,  BASE+RTIDX,   BASE+RTIDX,   TREE   )
-      CALL DASUDI   (  HANDLE,  BASE+NRIDX,   BASE+NRIDX,   NROWS  )
-      CALL DASUDI   (  HANDLE,  BASE+LCWIDX,  BASE+LCWIDX,  CPSIZE  )
-      CALL DASUDI   (  HANDLE,  BASE+LDWIDX,  BASE+LDWIDX,  DPSIZE  )
-      CALL DASUDI   (  HANDLE,  BASE+LIWIDX,  BASE+LIWIDX,  IPSIZE  )
+      call zzekmloc (  handle,  segno,        p,            base   )
+      call dasudi   (  handle,  base+rtidx,   base+rtidx,   tree   )
+      call dasudi   (  handle,  base+nridx,   base+nridx,   nrows  )
+      call dasudi   (  handle,  base+lcwidx,  base+lcwidx,  cpsize  )
+      call dasudi   (  handle,  base+ldwidx,  base+ldwidx,  dpsize  )
+      call dasudi   (  handle,  base+liwidx,  base+liwidx,  ipsize  )
 
 
-      CALL CHKOUT ( 'ZZEKFF01' )
-      RETURN
-      END
+      call chkout ( 'ZZEKFF01' )
+      return
+      end

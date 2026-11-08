@@ -1,6 +1,6 @@
 !$Procedure DGEODR ( Derivative of geodetic w.r.t. rectangular )
 
-      SUBROUTINE DGEODR ( X, Y, Z, RE, F, JACOBI )
+      subroutine dgeodr ( x, y, z, re, f, jacobi )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      Y
-      DOUBLE PRECISION      Z
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      double precision      x
+      double precision      y
+      double precision      z
+      double precision      re
+      double precision      f
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -392,26 +392,26 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      RECTAN  ( 3 )
-      DOUBLE PRECISION      LONG
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      INJACB  ( 3, 3 )
+      double precision      rectan  ( 3 )
+      double precision      long
+      double precision      lat
+      double precision      alt
+      double precision      injacb  ( 3, 3 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DGEODR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DGEODR' )
+      end if
 
 !
 !     If the flattening coefficient is greater than one, the polar
@@ -419,39 +419,39 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      IF ( F .GE. 1.0D0 ) THEN
+      if ( f .ge. 1.0d0 ) then
 
-          CALL SETMSG ( 'Flattening coefficient was *.'  )
-          CALL ERRDP  ( '*', F                           )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-          CALL CHKOUT ( 'DGEODR'                         )
-          RETURN
+          call setmsg ( 'Flattening coefficient was *.'  )
+          call errdp  ( '*', f                           )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+          call chkout ( 'DGEODR'                         )
+          return
 
-      END IF
+      end if
 
-      IF ( RE .LE. 0.0D0 ) THEN
+      if ( re .le. 0.0d0 ) then
 
-          CALL SETMSG ( 'Equatorial Radius <= 0.0D0. RE = *' )
-          CALL ERRDP  ( '*', RE                              )
-          CALL SIGERR ( 'SPICE(BADRADIUS)'                   )
-          CALL CHKOUT ( 'DGEODR'                             )
-          RETURN
+          call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
+          call errdp  ( '*', re                              )
+          call sigerr ( 'SPICE(BADRADIUS)'                   )
+          call chkout ( 'DGEODR'                             )
+          return
 
-      END IF
+      end if
 
 !
 !     There is a singularity of the Jacobian for points on the z-axis.
 !
-      IF ( ( X .EQ. 0 ) .AND. ( Y .EQ. 0 ) ) THEN
+      if ( ( x .eq. 0 ) .and. ( y .eq. 0 ) ) then
 
-         CALL SETMSG ( 'The Jacobian of the transformation from '     // &
+         call setmsg ( 'The Jacobian of the transformation from '     // &
                        'rectangular to geodetic coordinates '         // &
                        'is not defined for points on the z-axis.'      )
-         CALL SIGERR ( 'SPICE(POINTONZAXIS)'                           )
-         CALL CHKOUT ( 'DGEODR'                                        )
-         RETURN
+         call sigerr ( 'SPICE(POINTONZAXIS)'                           )
+         call chkout ( 'DGEODR'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     We will get the Jacobian of rectangular to geodetic by
@@ -459,25 +459,25 @@
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      CALL VPACK  ( X, Y, Z, RECTAN )
+      call vpack  ( x, y, z, rectan )
 
 !
 !     Convert from rectangular to geodetic coordinates.
 !
-      CALL RECGEO ( RECTAN, RE, F, LONG, LAT, ALT  )
+      call recgeo ( rectan, re, f, long, lat, alt  )
 
 !
 !     Get the Jacobian of the transformation from geodetic to
 !     rectangular coordinates at LONG, LAT, ALT.
 !
-      CALL DRDGEO ( LONG,  LAT, ALT, RE, F, INJACB )
+      call drdgeo ( long,  lat, alt, re, f, injacb )
 
 !
 !     Now invert INJACB to get the Jacobian of the transformation
 !     from rectangular to geodetic coordinates.
 !
-      CALL INVORT ( INJACB, JACOBI )
+      call invort ( injacb, jacobi )
 
-      CALL CHKOUT ( 'DGEODR' )
-      RETURN
-      END
+      call chkout ( 'DGEODR' )
+      return
+      end

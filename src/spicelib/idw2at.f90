@@ -1,6 +1,6 @@
 !$Procedure IDW2AT ( Get file architecture and type from ID word )
 
-      SUBROUTINE IDW2AT ( IDWORD, ARCH, TYPE )
+      subroutine idw2at ( idword, arch, type )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         IDWORD
-      CHARACTER*(*)         ARCH
-      CHARACTER*(*)         TYPE
+      character*(*)         idword
+      character*(*)         arch
+      character*(*)         type
 
 !
 
@@ -212,48 +212,48 @@
 !
 !     Spicelib Routines
 !
-      INTEGER               POS
+      integer               pos
 
-      LOGICAL               RETURN
+      logical               return
 !
 !     Set the length of a SPICE file ID word.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 !
 !     Local Variables
 !
-      CHARACTER*(IDWLEN)     PART1
-      CHARACTER*(IDWLEN)     PART2
+      character*(idwlen)     part1
+      character*(idwlen)     part2
 
-      INTEGER               SLASH
+      integer               slash
 !
 !     Standard obligatory error handling stuff.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN  ( 'IDW2AT' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin  ( 'IDW2AT' )
+      end if
 !
 !     Check to see if we got a blank string for the ID word. If we did,
 !     set the architecture and type to unknown.
 !
 
-      IF ( IDWORD .EQ. ' ' ) THEN
+      if ( idword .eq. ' ' ) then
 
-         ARCH = '?'
-         TYPE = '?'
+         arch = '?'
+         type = '?'
 
-         CALL CHKOUT ( 'IDW2AT' )
-         RETURN
+         call chkout ( 'IDW2AT' )
+         return
 
-      END IF
+      end if
 !
 !     Initialize the temporary storage variables that we use.
 !
-      PART1  = ' '
-      PART2  = ' '
+      part1  = ' '
+      part2  = ' '
 !
 !     See if we can get the architecture and type from the ID word.
 !
@@ -261,24 +261,24 @@
 !     recognize the architecture or the type, so set the architecture
 !     and type to unknown.
 !
-      SLASH = POS( IDWORD, '/', 1 )
+      slash = pos( idword, '/', 1 )
 
-      IF ( SLASH .EQ. 0 ) THEN
+      if ( slash .eq. 0 ) then
 
-         ARCH = '?'
-         TYPE = '?'
+         arch = '?'
+         type = '?'
 
-         CALL CHKOUT ( 'IDW2AT' )
-         RETURN
+         call chkout ( 'IDW2AT' )
+         return
 
-      END IF
+      end if
 !
 !     The part before the slash is the architecture or the word 'NAIF'
 !     in older files and the part after the slash is the type of file or
 !     the architecture in older files.
 !
-      PART1 = IDWORD(1:SLASH-1)
-      PART2 = IDWORD(SLASH+1:)
+      part1 = idword(1:slash-1)
+      part2 = idword(slash+1:)
 !
 !     Let's now do some testing to try and figure out what's going on.
 !
@@ -288,67 +288,67 @@
 !
 !    then we look for the things that begin with the word 'NAIF'
 !
-      IF ( PART1 .EQ. 'DAF' ) THEN
+      if ( part1 .eq. 'DAF' ) then
 !
 !        We have a DAF file, so set the architecture and type.
 !
-         ARCH = 'DAF'
+         arch = 'DAF'
 
-         IF ( PART2 .NE. ' ' ) THEN
-            TYPE = PART2
-         ELSE
-            TYPE = '?'
-         END IF
+         if ( part2 .ne. ' ' ) then
+            type = part2
+         else
+            type = '?'
+         end if
 
-      ELSE IF ( PART1 .EQ. 'DAS' ) THEN
+      else if ( part1 .eq. 'DAS' ) then
 !
 !        We have a DAS file, so set the architecture and type.
 !
-         ARCH = 'DAS'
+         arch = 'DAS'
 
-         IF ( PART2 .NE. ' ' ) THEN
-            TYPE = PART2
-         ELSE
-            TYPE = '?'
-         END IF
+         if ( part2 .ne. ' ' ) then
+            type = part2
+         else
+            type = '?'
+         end if
 
-      ELSE IF ( PART1 .EQ. 'TXT' ) THEN
+      else if ( part1 .eq. 'TXT' ) then
 !
 !        We have an ASCII text file, so set the architecture and type.
 !
-         ARCH = 'TXT'
+         arch = 'TXT'
 
-         IF ( PART2 .NE. ' ' ) THEN
-            TYPE = PART2
-         ELSE
-            TYPE = '?'
-         END IF
+         if ( part2 .ne. ' ' ) then
+            type = part2
+         else
+            type = '?'
+         end if
 
-      ELSE IF ( PART1 .EQ. 'ASC' ) THEN
+      else if ( part1 .eq. 'ASC' ) then
 !
 !        We have an ASCII text file, so set the architecture and type.
 !
-         ARCH = 'TXT'
+         arch = 'TXT'
 
-         IF ( PART2 .NE. ' ' ) THEN
-            TYPE = PART2
-         ELSE
-            TYPE = '?'
-         END IF
+         if ( part2 .ne. ' ' ) then
+            type = part2
+         else
+            type = '?'
+         end if
 
-      ELSE IF ( PART1 .EQ. 'KPL' ) THEN
+      else if ( part1 .eq. 'KPL' ) then
 !
 !        We have a kernel pool file, so set the architecture and type.
 !
-         ARCH = 'KPL'
+         arch = 'KPL'
 
-         IF ( PART2 .NE. ' ' ) THEN
-            TYPE = PART2
-         ELSE
-            TYPE = '?'
-         END IF
+         if ( part2 .ne. ' ' ) then
+            type = part2
+         else
+            type = '?'
+         end if
 
-      ELSE IF (  PART1 .EQ. 'NAIF' )  THEN
+      else if (  part1 .eq. 'NAIF' )  then
 !
 !        We have a DAF (or NIP, these are equivalent) or DAS file,
 !        identified by the value of PART2, but we have no idea what the
@@ -360,31 +360,31 @@
 !        DAF or NIP, we give up on the type. As mentioned above, if
 !        PART2 contains DAS, we know a priori the type of the file.
 !
-         IF ( ( PART2 .EQ. 'DAF' ) .OR. ( PART2 .EQ. 'NIP' ) ) THEN
+         if ( ( part2 .eq. 'DAF' ) .or. ( part2 .eq. 'NIP' ) ) then
 
-            ARCH = 'DAF'
-            TYPE = '?'
+            arch = 'DAF'
+            type = '?'
 
-         ELSE IF ( PART2 .EQ. 'DAS' ) THEN
+         else if ( part2 .eq. 'DAS' ) then
 
-            ARCH = 'DAS'
-            TYPE = 'PRE'
+            arch = 'DAS'
+            type = 'PRE'
 
-         ELSE
+         else
 
-            ARCH = '?'
-            TYPE = '?'
+            arch = '?'
+            type = '?'
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         ARCH = '?'
-         TYPE = '?'
+         arch = '?'
+         type = '?'
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'IDW2AT' )
-      RETURN
+      call chkout ( 'IDW2AT' )
+      return
 
-      END
+      end

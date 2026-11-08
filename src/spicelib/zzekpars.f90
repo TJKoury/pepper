@@ -1,11 +1,11 @@
 !$Procedure      ZZEKPARS ( EK, parse tokenized EK query )
 
-      SUBROUTINE ZZEKPARS (  QUERY,   NTOKEN,  LXBEGS,  LXENDS, &
-                             TOKENS,  VALUES,  NUMVLS,  CHRBUF, &
-                             CHBEGS,  CHENDS,  EQRYI,   EQRYC, &
-                             EQRYD,   ERROR,   PRSERR          )
+      subroutine zzekpars (  query,   ntoken,  lxbegs,  lxends, &
+                             tokens,  values,  numvls,  chrbuf, &
+                             chbegs,  chends,  eqryi,   eqryc, &
+                             eqryd,   error,   prserr          )
 
-      IMPLICIT NONE
+      implicit none
 
 ! $ Abstract
 !
@@ -23,32 +23,32 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ektokn.inc'
-      INCLUDE 'ekkeyw.inc'
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekqlimit.inc'
+      include 'ektokn.inc'
+      include 'ekkeyw.inc'
+      include 'ekbool.inc'
+      include 'ektype.inc'
+      include 'ekopcd.inc'
+      include 'ekquery.inc'
+      include 'ekqlimit.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               NTOKEN
-      INTEGER               LXBEGS ( * )
-      INTEGER               LXENDS ( * )
-      INTEGER               TOKENS ( * )
-      INTEGER               VALUES ( * )
-      DOUBLE PRECISION      NUMVLS ( * )
-      CHARACTER*(*)         CHRBUF
-      INTEGER               CHBEGS ( * )
-      INTEGER               CHENDS ( * )
-      INTEGER               EQRYI  ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD  ( * )
-      LOGICAL               ERROR
-      CHARACTER*(*)         PRSERR
+      character*(*)         query
+      integer               ntoken
+      integer               lxbegs ( * )
+      integer               lxends ( * )
+      integer               tokens ( * )
+      integer               values ( * )
+      double precision      numvls ( * )
+      character*(*)         chrbuf
+      integer               chbegs ( * )
+      integer               chends ( * )
+      integer               eqryi  ( lbcell : * )
+      character*(*)         eqryc
+      double precision      eqryd  ( * )
+      logical               error
+      character*(*)         prserr
 
 ! $ Brief_I/O
 !
@@ -268,10 +268,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
+      integer               cardi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
@@ -281,117 +281,117 @@
 !
 !     State parameters
 !
-      INTEGER               FROM
-      PARAMETER           ( FROM    =            0 )
+      integer               from
+      parameter           ( from    =            0 )
 
-      INTEGER               FRMTAB
-      PARAMETER           ( FRMTAB  =   FROM   + 1 )
+      integer               frmtab
+      parameter           ( frmtab  =   from   + 1 )
 
-      INTEGER               FRMCNT
-      PARAMETER           ( FRMCNT  =   FRMTAB + 1 )
+      integer               frmcnt
+      parameter           ( frmcnt  =   frmtab + 1 )
 
-      INTEGER               FRMALS
-      PARAMETER           ( FRMALS  =   FRMCNT + 1 )
+      integer               frmals
+      parameter           ( frmals  =   frmcnt + 1 )
 
-      INTEGER               WHERE
-      PARAMETER           ( WHERE   =   FRMALS + 1 )
+      integer               where
+      parameter           ( where   =   frmals + 1 )
 
-      INTEGER               ORDER
-      PARAMETER           ( ORDER   =   WHERE  + 1 )
+      integer               order
+      parameter           ( order   =   where  + 1 )
 
-      INTEGER               ORDRBY
-      PARAMETER           ( ORDRBY  =   ORDER  + 1 )
+      integer               ordrby
+      parameter           ( ordrby  =   order  + 1 )
 
-      INTEGER               ORDTAB
-      PARAMETER           ( ORDTAB  =   ORDRBY + 1 )
+      integer               ordtab
+      parameter           ( ordtab  =   ordrby + 1 )
 
-      INTEGER               ORDNAM
-      PARAMETER           ( ORDNAM  =   ORDTAB + 1 )
+      integer               ordnam
+      parameter           ( ordnam  =   ordtab + 1 )
 
-      INTEGER               ORDCOL
-      PARAMETER           ( ORDCOL  =   ORDNAM + 1 )
+      integer               ordcol
+      parameter           ( ordcol  =   ordnam + 1 )
 
-      INTEGER               ORDSNS
-      PARAMETER           ( ORDSNS  =   ORDCOL + 1 )
+      integer               ordsns
+      parameter           ( ordsns  =   ordcol + 1 )
 
-      INTEGER               SELKEY
-      PARAMETER           ( SELKEY  =   ORDSNS + 1 )
+      integer               selkey
+      parameter           ( selkey  =   ordsns + 1 )
 
-      INTEGER               SELECT
-      PARAMETER           ( SELECT  =   SELKEY + 1 )
+      integer               select
+      parameter           ( select  =   selkey + 1 )
 
-      INTEGER               SELTAB
-      PARAMETER           ( SELTAB  =   SELECT + 1 )
+      integer               seltab
+      parameter           ( seltab  =   select + 1 )
 
-      INTEGER               SELNAM
-      PARAMETER           ( SELNAM  =   SELTAB + 1 )
+      integer               selnam
+      parameter           ( selnam  =   seltab + 1 )
 
-      INTEGER               SELCOL
-      PARAMETER           ( SELCOL  =   SELNAM + 1 )
+      integer               selcol
+      parameter           ( selcol  =   selnam + 1 )
 
-      INTEGER               TERM
-      PARAMETER           ( TERM    =   SELCOL + 1 )
+      integer               term
+      parameter           ( term    =   selcol + 1 )
 
 !
 !     Other local parameters
 !
-      INTEGER               MAXREL
-      PARAMETER           ( MAXREL =  200 )
+      integer               maxrel
+      parameter           ( maxrel =  200 )
 
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN =   32 )
+      integer               typlen
+      parameter           ( typlen =   32 )
 
-      INTEGER               KEYLEN
-      PARAMETER           ( KEYLEN =   32 )
+      integer               keylen
+      parameter           ( keylen =   32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TYPLEN)    ERRTYP
-      CHARACTER*(KEYLEN)    EXPKEY
+      character*(typlen)    errtyp
+      character*(keylen)    expkey
 
-      INTEGER               ALSDSC ( EQVDSZ )
-      INTEGER               B
-      INTEGER               COLDSC ( EQVDSZ )
-      INTEGER               E
-      INTEGER               I
-      INTEGER               J
-      INTEGER               L
-      INTEGER               LXB
-      INTEGER               LXE
-      INTEGER               NAMDSC ( EQVDSZ )
-      INTEGER               NCNSTR
-      INTEGER               NORDER
-      INTEGER               NSEL
-      INTEGER               NTABS
-      INTEGER               STATE
-      INTEGER               TABDSC ( EQVDSZ )
-      INTEGER               TOKEN
-      INTEGER               TOKNUM
-      INTEGER               VALDSC ( EQVDSZ )
+      integer               alsdsc ( eqvdsz )
+      integer               b
+      integer               coldsc ( eqvdsz )
+      integer               e
+      integer               i
+      integer               j
+      integer               l
+      integer               lxb
+      integer               lxe
+      integer               namdsc ( eqvdsz )
+      integer               ncnstr
+      integer               norder
+      integer               nsel
+      integer               ntabs
+      integer               state
+      integer               tabdsc ( eqvdsz )
+      integer               token
+      integer               toknum
+      integer               valdsc ( eqvdsz )
 
-      LOGICAL               FND
+      logical               fnd
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKPARS' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKPARS' )
+      end if
 
 !
 !     Initialize the encoded query each time, for safety.
 !
-      CALL ZZEKQINI ( EQIMIN, MAXQNM, EQRYI, EQRYC, EQRYD )
+      call zzekqini ( eqimin, maxqnm, eqryi, eqryc, eqryd )
 
-      IF ( FAILED() ) THEN
-         ERROR  =  .TRUE.
-         PRSERR =  'SPICE(BUG):  encoded query init failed.'
-         CALL CHKOUT ( 'ZZEKPARS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         error  =  .true.
+         prserr =  'SPICE(BUG):  encoded query init failed.'
+         call chkout ( 'ZZEKPARS' )
+         return
+      end if
 
 !
 !     The structure of a query is
@@ -441,97 +441,97 @@
 !        SELECT
 !
 !
-      CALL ZZEKTLOC ( TKKEY,   KWFROM,  NTOKEN,  TOKENS,  VALUES, &
-                      TOKNUM,  FND                                )
+      call zzektloc ( tkkey,   kwfrom,  ntoken,  tokens,  values, &
+                      toknum,  fnd                                )
 
-      IF ( .NOT. FND ) THEN
+      if ( .not. fnd ) then
 
-         ERROR   =  .TRUE.
-         ERRTYP  =  'FROM_NOT_FOUND'
-         STATE   =   TERM
+         error   =  .true.
+         errtyp  =  'FROM_NOT_FOUND'
+         state   =   term
 
-      ELSE
+      else
 
-         STATE   =  FROM
-         NTABS   =  0
-         NSEL    =  0
-         NCNSTR  =  0
-         NORDER  =  0
-         ERROR   =  .FALSE.
-         PRSERR  =  ' '
-         ERRTYP  =  ' '
+         state   =  from
+         ntabs   =  0
+         nsel    =  0
+         ncnstr  =  0
+         norder  =  0
+         error   =  .false.
+         prserr  =  ' '
+         errtyp  =  ' '
 
-      END IF
+      end if
 
 
-      DO WHILE ( STATE .NE. TERM )
+      do while ( state .ne. term )
 !
 !        Advance to the next token, if there is one.
 !
-         TOKNUM  =  TOKNUM + 1
+         toknum  =  toknum + 1
 
-         IF ( TOKNUM .GT. NTOKEN ) THEN
+         if ( toknum .gt. ntoken ) then
 !
 !           We're out of tokens.  Set the token value to indicate
 !           `end of query'.
 !
-            TOKEN  =  TKEOQ
+            token  =  tkeoq
 
-         ELSE
+         else
 
-            TOKEN  =  TOKENS(TOKNUM)
+            token  =  tokens(toknum)
 
-         END IF
+         end if
 
 !
 !        Perform semantic actions based on the state and current token.
 !
-         IF ( STATE .EQ. FROM ) THEN
+         if ( state .eq. from ) then
 !
 !           We expect to see an identifier representing a table name.
 !           No other tokens are allowed.
 !
-            IF ( TOKEN .EQ. TKID ) THEN
+            if ( token .eq. tkid ) then
 !
 !              We've found a table name (as far as we can tell at
 !              this point).  Make sure we haven't exceeded the limit
 !              for table names; if not, add the appropriate information
 !              to the encoded query.
 !
-               NTABS  =   NTABS  +  1
+               ntabs  =   ntabs  +  1
 
 
-               IF ( NTABS .GT. MAXTAB ) THEN
+               if ( ntabs .gt. maxtab ) then
 
-                  ERROR   =  .TRUE.
-                  ERRTYP  =  'TOO_MANY_TABLES'
-                  STATE   =  TERM
+                  error   =  .true.
+                  errtyp  =  'TOO_MANY_TABLES'
+                  state   =  term
 
-               ELSE
+               else
 
-                  I       =   VALUES(TOKNUM)
-                  B       =   CHBEGS(I)
-                  E       =   CHENDS(I)
-                  L       =   E  -  B   +  1
-                  LXB     =   LXBEGS(TOKNUM)
-                  LXE     =   LXENDS(TOKNUM)
+                  i       =   values(toknum)
+                  b       =   chbegs(i)
+                  e       =   chends(i)
+                  l       =   e  -  b   +  1
+                  lxb     =   lxbegs(toknum)
+                  lxe     =   lxends(toknum)
 
 
-                  CALL ZZEKINQC ( CHRBUF( B : E ), &
-                                  L, &
-                                  LXB, &
-                                  LXE, &
-                                  EQRYI, &
-                                  EQRYC, &
-                                  TABDSC          )
+                  call zzekinqc ( chrbuf( b : e ), &
+                                  l, &
+                                  lxb, &
+                                  lxe, &
+                                  eqryi, &
+                                  eqryc, &
+                                  tabdsc          )
 
 !
 !                 Append the table descriptor to the integer part of the
 !                 query.
 !
-                  DO J = 1, EQVDSZ
-                     CALL APPNDI ( TABDSC(J), EQRYI )
-                  END DO
+                  do j = 1, eqvdsz
+                     call appndi ( tabdsc(j), eqryi )
+                  end do
 
 !
 !                 Add a place-holder value descriptor to reserve
@@ -539,130 +539,130 @@
 !                 actual alias is supplied, we'll update this
 !                 descriptor.
 !
-                  CALL CLEARI ( EQVDSZ, ALSDSC )
-                  ALSDSC(EQDTYP)  =  CHR
+                  call cleari ( eqvdsz, alsdsc )
+                  alsdsc(eqdtyp)  =  chr
 
-                  DO J = 1, EQVDSZ
-                     CALL APPNDI ( ALSDSC(J), EQRYI )
-                  END DO
+                  do j = 1, eqvdsz
+                     call appndi ( alsdsc(j), eqryi )
+                  end do
 
 !
 !                 Update the table count in the encoded query.
 !
-                  CALL ZZEKWEQI ( 'NUM_TABLES', NTABS, EQRYI )
+                  call zzekweqi ( 'NUM_TABLES', ntabs, eqryi )
 
 
-                  STATE  =  FRMTAB
+                  state  =  frmtab
 
-               END IF
-
-
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
-
-               ERROR   =  .TRUE.
-               ERRTYP  =  'MORE_TOKENS_EXP'
-               STATE   =  TERM
+               end if
 
 
-            ELSE
+            else if ( token .eq. tkeoq ) then
+
+               error   =  .true.
+               errtyp  =  'MORE_TOKENS_EXP'
+               state   =  term
+
+
+            else
 !
 !              We've got the wrong kind of token here.
 !
-               ERROR   =  .TRUE.
-               ERRTYP  =  'TABLE_EXP'
-               STATE   =  TERM
+               error   =  .true.
+               errtyp  =  'TABLE_EXP'
+               state   =  term
 
-            END IF
+            end if
 !
 !           State is a member of {FRMTAB, TERM}.
 !
 
-         ELSE IF ( STATE .EQ. FRMTAB ) THEN
+         else if ( state .eq. frmtab ) then
 !
 !           We should see a comma, an alias, one of the SELECT,
 !           WHERE or ORDER keywords, or the end of the query.
 !
-            IF ( TOKEN .EQ. TKEOQ ) THEN
+            if ( token .eq. tkeoq ) then
 !
 !              We're out of tokens.  It's time to parse the
 !              WHERE clause.
 !
-               STATE   =  WHERE
+               state   =  where
 
 
-            ELSE IF ( TOKEN .EQ. TKCOMA ) THEN
+            else if ( token .eq. tkcoma ) then
 !
 !              It's time to look for another table name.
 !
-               STATE  =  FROM
+               state  =  from
 
 
-            ELSE IF ( TOKEN .EQ. TKID ) THEN
+            else if ( token .eq. tkid ) then
 !
 !              We've got an alias.  Add this string to the encoded
 !              query.
 !
-               I   =   VALUES(TOKNUM)
-               B   =   CHBEGS(I)
-               E   =   CHENDS(I)
-               L   =   E  -  B   +  1
-               LXB =   LXBEGS(TOKNUM)
-               LXE =   LXENDS(TOKNUM)
+               i   =   values(toknum)
+               b   =   chbegs(i)
+               e   =   chends(i)
+               l   =   e  -  b   +  1
+               lxb =   lxbegs(toknum)
+               lxe =   lxends(toknum)
 
-               CALL ZZEKINQC ( CHRBUF( B : E ), &
-                               L, &
-                               LXB, &
-                               LXE, &
-                               EQRYI, &
-                               EQRYC, &
-                               ALSDSC                        )
+               call zzekinqc ( chrbuf( b : e ), &
+                               l, &
+                               lxb, &
+                               lxe, &
+                               eqryi, &
+                               eqryc, &
+                               alsdsc                        )
 
 !
 !              Update the place-holder alias descriptor in the integer
 !              part of the query.
 !
-               CALL MOVEI ( ALSDSC, &
-                            EQVDSZ, &
-                            EQRYI(  CARDI(EQRYI) - EQVDSZ + 1  )   )
+               call movei ( alsdsc, &
+                            eqvdsz, &
+                            eqryi(  cardi(eqryi) - eqvdsz + 1  )   )
 
 
-               STATE  =  FRMALS
+               state  =  frmals
 
 
-            ELSE IF (  TOKEN .EQ.  TKKEY  )  THEN
+            else if (  token .eq.  tkkey  )  then
 !
 !              The last table name in the FROM clause is followed by
 !              a keyword.  SELECT, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               IF (       ( VALUES(TOKNUM) .NE. KWWHER ) &
-                    .AND. ( VALUES(TOKNUM) .NE. KWSEL  ) &
-                    .AND. ( VALUES(TOKNUM) .NE. KWORDR )  ) THEN
+               if (       ( values(toknum) .ne. kwwher ) &
+                    .and. ( values(toknum) .ne. kwsel  ) &
+                    .and. ( values(toknum) .ne. kwordr )  ) then
 !
 !                 We've got a keyword we don't want here.
 !
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               ELSE
+               else
 !
 !                 Parse the WHERE clause.
 !
-                  STATE  =  WHERE
+                  state  =  where
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              We've got the wrong kind of token altogether.
 !
-               ERROR  =  .TRUE.
-               ERRTYP =  'ALIAS_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'ALIAS_EXP'
+               state  =  term
 
-            END IF
+            end if
 
 !
 !           STATE is a member of {FROM, FRMALS, WHERE, TERM}.
@@ -670,87 +670,87 @@
 
 
 
-         ELSE IF ( STATE .EQ. FRMALS ) THEN
+         else if ( state .eq. frmals ) then
 !
 !           We should see a comma, the SELECT, WHERE or ORDER
 !           keywords, or the end of the query.
 !
-            IF ( TOKEN .EQ. TKEOQ ) THEN
+            if ( token .eq. tkeoq ) then
 !
 !              We're out of tokens.  It's time to parse the
 !              WHERE clause.
 !
-               STATE   =  WHERE
+               state   =  where
 
 
-            ELSE IF ( TOKEN .EQ. TKCOMA ) THEN
+            else if ( token .eq. tkcoma ) then
 !
 !              It's time to look for another table name.
 !
-               STATE  =  FROM
+               state  =  from
 
 
-            ELSE IF (  TOKEN .EQ.  TKKEY  )  THEN
+            else if (  token .eq.  tkkey  )  then
 !
 !              The last table name in the FROM clause is followed by
 !              a keyword.  SELECT, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               IF (       ( VALUES(TOKNUM) .NE. KWWHER ) &
-                    .AND. ( VALUES(TOKNUM) .NE. KWSEL  ) &
-                    .AND. ( VALUES(TOKNUM) .NE. KWORDR )  ) THEN
+               if (       ( values(toknum) .ne. kwwher ) &
+                    .and. ( values(toknum) .ne. kwsel  ) &
+                    .and. ( values(toknum) .ne. kwordr )  ) then
 !
 !                 We've got a keyword we don't want here.
 !
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               ELSE
+               else
 !
 !                 Parse the WHERE clause.
 !
-                  STATE  =  WHERE
+                  state  =  where
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              We've got the wrong kind of token altogether.
 !
-               ERROR  =  .TRUE.
-               ERRTYP =  'COMMA_OR_KEY_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'COMMA_OR_KEY_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {FROM, WHERE, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. SELKEY ) THEN
+         else if ( state .eq. selkey ) then
 !
 !           It's time to parse the SELECT clause.  We'll need to
 !           locate the SELECT keyword.
 !
-            CALL ZZEKTLOC ( TKKEY,   KWSEL,  NTOKEN,  TOKENS,  VALUES, &
-                            TOKNUM,  FND                               )
+            call zzektloc ( tkkey,   kwsel,  ntoken,  tokens,  values, &
+                            toknum,  fnd                               )
 
-            IF ( .NOT. FND ) THEN
+            if ( .not. fnd ) then
 
-               ERROR   =  .TRUE.
-               ERRTYP  =  'SELECT_NOT_FOUND'
-               STATE   =   TERM
+               error   =  .true.
+               errtyp  =  'SELECT_NOT_FOUND'
+               state   =   term
 
-            ELSE
+            else
 
-               STATE   =  SELECT
+               state   =  select
 
-            END IF
+            end if
 
 
-         ELSE IF ( STATE .EQ. SELECT ) THEN
+         else if ( state .eq. select ) then
 !
 !           We must see either the * token, the ALL keyword,
 !           or an identifier here.  The identifier may be a lone
@@ -759,7 +759,7 @@
 !
 !           For the moment, we don't support the * or ALL options.
 !
-            IF ( TOKEN .EQ. TKID ) THEN
+            if ( token .eq. tkid ) then
 !
 !              We've found a name (as far as we can tell at this point).
 !              Make sure we haven't exceeded the limit for SELECT
@@ -768,31 +768,31 @@
 !              figured out whether we're looking at a column name or
 !              table name.
 !
-               NSEL  =  NSEL  +  1
+               nsel  =  nsel  +  1
 
-               IF ( NSEL.GT. MAXSEL ) THEN
+               if ( nsel.gt. maxsel ) then
 
-                  ERROR   =  .TRUE.
-                  ERRTYP  =  'TOO_MANY_SEL_COLS'
-                  STATE   = TERM
+                  error   =  .true.
+                  errtyp  =  'TOO_MANY_SEL_COLS'
+                  state   = term
 
-               ELSE
+               else
 
-                  I       =   VALUES(TOKNUM)
-                  B       =   CHBEGS(I)
-                  E       =   CHENDS(I)
-                  L       =   E  -  B   +  1
-                  LXB     =   LXBEGS(TOKNUM)
-                  LXE     =   LXENDS(TOKNUM)
+                  i       =   values(toknum)
+                  b       =   chbegs(i)
+                  e       =   chends(i)
+                  l       =   e  -  b   +  1
+                  lxb     =   lxbegs(toknum)
+                  lxe     =   lxends(toknum)
 
 
-                  CALL ZZEKINQC ( CHRBUF( B : E ), &
-                                  L, &
-                                  LXB, &
-                                  LXE, &
-                                  EQRYI, &
-                                  EQRYC, &
-                                  NAMDSC          )
+                  call zzekinqc ( chrbuf( b : e ), &
+                                  l, &
+                                  lxb, &
+                                  lxe, &
+                                  eqryi, &
+                                  eqryc, &
+                                  namdsc          )
 
 !
 !                 Add a place-holder value descriptor to reserve
@@ -800,261 +800,261 @@
 !                 turns out that the current name is a table name, we'll
 !                 update this descriptor.
 !
-                  CALL CLEARI ( EQVDSZ, VALDSC )
-                  VALDSC(EQDTYP)  =  CHR
+                  call cleari ( eqvdsz, valdsc )
+                  valdsc(eqdtyp)  =  chr
 
-                  DO J = 1, EQVDSZ
-                     CALL APPNDI ( VALDSC(J), EQRYI )
-                  END DO
+                  do j = 1, eqvdsz
+                     call appndi ( valdsc(j), eqryi )
+                  end do
 
 !
 !                 Update the SELECT column count in the encoded query.
 !
-                  CALL ZZEKWEQI ( 'NUM_SELECT_COLS', NSEL, EQRYI )
+                  call zzekweqi ( 'NUM_SELECT_COLS', nsel, eqryi )
 
 
-                  STATE  =  SELNAM
+                  state  =  selnam
 
-               END IF
-
-
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
-
-               ERROR  =  .TRUE.
-               ERRTYP =  'MORE_TOKENS_EXP'
-               STATE  =  TERM
+               end if
 
 
-            ELSE
+            else if ( token .eq. tkeoq ) then
+
+               error  =  .true.
+               errtyp =  'MORE_TOKENS_EXP'
+               state  =  term
+
+
+            else
 !
 !              We've got the wrong kind of token here.
 !
-               ERROR  =  .TRUE.
-               ERRTYP =  'TABLE_OR_COLUMN_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'TABLE_OR_COLUMN_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           State is a member of {SELNAM, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. SELNAM ) THEN
+         else if ( state .eq. selnam ) then
 !
 !           We've seen a SELECT column name, or else the name
 !           of a table qualifying a SELECT column name.
 !
-            IF ( TOKEN .EQ. TKEOQ ) THEN
+            if ( token .eq. tkeoq ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
 !              query.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( NAMDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( namdsc(j), eqryi )
+               end do
 
-               STATE   =   TERM
+               state   =   term
 
 
-            ELSE IF ( TOKEN .EQ. TKCOMA ) THEN
+            else if ( token .eq. tkcoma ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
 !              query.  Another name should follow.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( NAMDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( namdsc(j), eqryi )
+               end do
 
-               STATE  =  SELECT
+               state  =  select
 
 
-            ELSE IF ( TOKEN .EQ. TKDOT ) THEN
+            else if ( token .eq. tkdot ) then
 !
 !              The name we picked up was a table name or alias.  A
 !              column name should follow.
 !
-               STATE  =  SELTAB
+               state  =  seltab
 
 
-            ELSE IF ( TOKEN .EQ. TKKEY ) THEN
+            else if ( token .eq. tkkey ) then
 !
 !              We have the last column name in the SELECT clause.
 !
 !              Append the saved name descriptor to the encoded
 !              query.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( NAMDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( namdsc(j), eqryi )
+               end do
 
 !
 !              The last column name in the SELECT clause is followed by
 !              a keyword.  FROM, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               IF (      ( VALUES(TOKNUM) .EQ. KWWHER ) &
-                    .OR. ( VALUES(TOKNUM) .EQ. KWFROM ) &
-                    .OR. ( VALUES(TOKNUM) .EQ. KWORDR )  ) THEN
+               if (      ( values(toknum) .eq. kwwher ) &
+                    .or. ( values(toknum) .eq. kwfrom ) &
+                    .or. ( values(toknum) .eq. kwordr )  ) then
 !
 !                 We're done with the SELECT clause.
 !
-                  STATE  =  TERM
+                  state  =  term
 
-               ELSE
+               else
 !
 !                 We've got a keyword we don't want here.
 !
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              We've got the wrong kind of token here.
 !
-               ERROR  =  .TRUE.
-               ERRTYP =  'BAD_TOKEN'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'BAD_TOKEN'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {SELECT, SELTAB, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. SELTAB ) THEN
+         else if ( state .eq. seltab ) then
 !
 !           We've picked up a qualifying table name for a SELECT
 !           column.  We must see a column name here.
 !
-            IF ( TOKEN .EQ. TKID ) THEN
+            if ( token .eq. tkid ) then
 !
 !              Update the place-holder table name descriptor in the
 !              encoded query.
 !
-               CALL MOVEI ( NAMDSC, &
-                            EQVDSZ, &
-                            EQRYI(  CARDI(EQRYI) - EQVDSZ + 1  )   )
+               call movei ( namdsc, &
+                            eqvdsz, &
+                            eqryi(  cardi(eqryi) - eqvdsz + 1  )   )
 
 !
 !              Add the column name to the character part of the
 !              encoded query.
 !
-               I   =   VALUES(TOKNUM)
-               B   =   CHBEGS(I)
-               E   =   CHENDS(I)
-               L   =   E  -  B   +  1
-               LXB =   LXBEGS(TOKNUM)
-               LXE =   LXENDS(TOKNUM)
+               i   =   values(toknum)
+               b   =   chbegs(i)
+               e   =   chends(i)
+               l   =   e  -  b   +  1
+               lxb =   lxbegs(toknum)
+               lxe =   lxends(toknum)
 
-               CALL ZZEKINQC ( CHRBUF( B : E ), &
-                               L, &
-                               LXB, &
-                               LXE, &
-                               EQRYI, &
-                               EQRYC, &
-                               COLDSC           )
+               call zzekinqc ( chrbuf( b : e ), &
+                               l, &
+                               lxb, &
+                               lxe, &
+                               eqryi, &
+                               eqryc, &
+                               coldsc           )
 
 !
 !              Add the descriptor for the column name to the encoded
 !              query.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( COLDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( coldsc(j), eqryi )
+               end do
 
 
-               STATE  =  SELCOL
+               state  =  selcol
 
 
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
+            else if ( token .eq. tkeoq ) then
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'MORE_TOKENS_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'MORE_TOKENS_EXP'
+               state  =  term
 
-            ELSE
+            else
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'COLUMN_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'COLUMN_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {SELCOL, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. SELCOL ) THEN
+         else if ( state .eq. selcol ) then
 !
 !           We've picked up a qualified column name.  At this point,
 !           we should see a keyword, a comma, or the end of the
 !           query.
 !
-            IF ( TOKEN .EQ. TKKEY ) THEN
+            if ( token .eq. tkkey ) then
 !
 !              The last column name in the SELECT clause is followed by
 !              a keyword.  FROM, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               IF (      ( VALUES(TOKNUM) .EQ. KWWHER ) &
-                    .OR. ( VALUES(TOKNUM) .EQ. KWFROM ) &
-                    .OR. ( VALUES(TOKNUM) .EQ. KWORDR )  ) THEN
+               if (      ( values(toknum) .eq. kwwher ) &
+                    .or. ( values(toknum) .eq. kwfrom ) &
+                    .or. ( values(toknum) .eq. kwordr )  ) then
 !
 !                 We're done with the SELECT clause.
 !
-                  STATE  =  TERM
+                  state  =  term
 
-               ELSE
+               else
 !
 !                 We've got a keyword we don't want here.
 !
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               END IF
+               end if
 
 
-            ELSE IF ( TOKEN .EQ. TKCOMA ) THEN
+            else if ( token .eq. tkcoma ) then
 !
 !              We expect another SELECT column.
 !
-               STATE  =  SELECT
+               state  =  select
 
 
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
+            else if ( token .eq. tkeoq ) then
 !
 !              We're done with the SELECT clause.
 !
-               STATE  =  TERM
+               state  =  term
 
-            ELSE
+            else
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'COMMA_OR_KEY_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'COMMA_OR_KEY_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {SELECT, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. WHERE ) THEN
+         else if ( state .eq. where ) then
 !
 !           The WHERE clause is optional.  See whether we have one.  The
 !           clause is started by a WHERE keyword.
 !
-            CALL ZZEKTLOC ( TKKEY,   KWWHER,  NTOKEN,  TOKENS,  VALUES, &
-                            TOKNUM,  FND                               )
+            call zzektloc ( tkkey,   kwwher,  ntoken,  tokens,  values, &
+                            toknum,  fnd                               )
 
 
-            IF ( FND ) THEN
+            if ( fnd ) then
 !
 !              We're going to hand off the list of tokens that comprise
 !              the WHERE clause of the query to a routine that will
@@ -1063,115 +1063,115 @@
 !              is check the validity of the column names and the values
 !              used in the constraints.
 !
-               CALL ZZEKNRML ( QUERY, &
-                               NTOKEN, &
-                               LXBEGS, &
-                               LXENDS, &
-                               TOKENS, &
-                               VALUES, &
-                               NUMVLS, &
-                               CHRBUF, &
-                               CHBEGS, &
-                               CHENDS, &
-                               EQRYI, &
-                               EQRYC, &
-                               EQRYD, &
-                               ERROR, &
-                               PRSERR )
+               call zzeknrml ( query, &
+                               ntoken, &
+                               lxbegs, &
+                               lxends, &
+                               tokens, &
+                               values, &
+                               numvls, &
+                               chrbuf, &
+                               chbegs, &
+                               chends, &
+                               eqryi, &
+                               eqryc, &
+                               eqryd, &
+                               error, &
+                               prserr )
 
 
-               IF ( ERROR ) THEN
+               if ( error ) then
 
-                  ERRTYP  =   'WHERE_ERROR'
-                  STATE   =   TERM
+                  errtyp  =   'WHERE_ERROR'
+                  state   =   term
 
-               ELSE
+               else
 !
 !                 Parse the ORDER BY clause, if one is present.
 !
-                  STATE   =   ORDER
+                  state   =   order
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              Parse the ORDER BY clause, if one is present.
 !
-               STATE   =   ORDER
+               state   =   order
 
-            END IF
+            end if
 !
 !           STATE is a member of {ORDER, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. ORDER ) THEN
+         else if ( state .eq. order ) then
 !
 !           The ORDER BY clause is optional.  See whether we have one.
 !           The clause is started by an ORDER keyword.
 !
-            CALL ZZEKTLOC ( TKKEY,   KWORDR,  NTOKEN,  TOKENS,  VALUES, &
-                            TOKNUM,  FND                               )
+            call zzektloc ( tkkey,   kwordr,  ntoken,  tokens,  values, &
+                            toknum,  fnd                               )
 
 
-            IF ( FND ) THEN
+            if ( fnd ) then
 !
 !              The BY keyword should follow the ORDER keyword.
 !
-               IF ( TOKNUM .LT. NTOKEN ) THEN
+               if ( toknum .lt. ntoken ) then
 
-                  TOKNUM  =  TOKNUM + 1
+                  toknum  =  toknum + 1
 
-                  IF (       (  TOKENS(TOKNUM) .EQ. TKKEY ) &
-                       .AND. (  VALUES(TOKNUM) .EQ. KWBY  )  ) THEN
+                  if (       (  tokens(toknum) .eq. tkkey ) &
+                       .and. (  values(toknum) .eq. kwby  )  ) then
 !
 !                    We're ready to parse the ORDER BY clause.
 !
-                     STATE  =  ORDRBY
+                     state  =  ordrby
 
-                  ELSE
+                  else
 !
 !                    No BY keyword followed the ORDER keyword.
 !
-                     ERROR  =  .TRUE.
-                     ERRTYP =  'BY_EXPECTED'
-                     STATE  =  TERM
+                     error  =  .true.
+                     errtyp =  'BY_EXPECTED'
+                     state  =  term
 
-                  END IF
+                  end if
 
 
-               ELSE
+               else
 !
 !                 We're out of tokens where we shouldn't be.
 !
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BY_EXPECTED'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BY_EXPECTED'
+                  state  =  term
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              We're ready to go on to the SELECT clause.
 !
-               STATE  =  SELKEY
+               state  =  selkey
 
-            END IF
+            end if
 !
 !           STATE is a member of {ORDRBY, SELKEY, TERM}.
 !
 
 
 
-         ELSE IF ( STATE .EQ. ORDRBY ) THEN
+         else if ( state .eq. ordrby ) then
 !
 !           We must see a name in the order column list here.
 !           The name may be a lone column name, or it may be a column
 !           name qualified by a table name or alias.
 !
-            IF ( TOKEN .EQ. TKID ) THEN
+            if ( token .eq. tkid ) then
 !
 !              We've found a name (as far as we can tell at this point).
 !              Make sure we haven't exceeded the limit for order-by
@@ -1180,31 +1180,31 @@
 !              figured out whether we're looking at a column name or
 !              table name.
 !
-               NORDER  =  NORDER  +  1
+               norder  =  norder  +  1
 
-               IF ( NORDER .GT. MAXORD ) THEN
+               if ( norder .gt. maxord ) then
 
-                  ERROR   =  .TRUE.
-                  ERRTYP  =  'TOO_MANY_ORD_COLS'
-                  STATE   = TERM
+                  error   =  .true.
+                  errtyp  =  'TOO_MANY_ORD_COLS'
+                  state   = term
 
-               ELSE
+               else
 
-                  I       =   VALUES(TOKNUM)
-                  B       =   CHBEGS(I)
-                  E       =   CHENDS(I)
-                  L       =   E  -  B   +  1
-                  LXB     =   LXBEGS(TOKNUM)
-                  LXE     =   LXENDS(TOKNUM)
+                  i       =   values(toknum)
+                  b       =   chbegs(i)
+                  e       =   chends(i)
+                  l       =   e  -  b   +  1
+                  lxb     =   lxbegs(toknum)
+                  lxe     =   lxends(toknum)
 
 
-                  CALL ZZEKINQC ( CHRBUF( B : E ), &
-                                  L, &
-                                  LXB, &
-                                  LXE, &
-                                  EQRYI, &
-                                  EQRYC, &
-                                  NAMDSC          )
+                  call zzekinqc ( chrbuf( b : e ), &
+                                  l, &
+                                  lxb, &
+                                  lxe, &
+                                  eqryi, &
+                                  eqryc, &
+                                  namdsc          )
 
 !
 !                 Add a place-holder value descriptor to reserve
@@ -1212,103 +1212,103 @@
 !                 turns out that the current name is a table name, we'll
 !                 update this descriptor.
 !
-                  CALL CLEARI ( EQVDSZ, VALDSC )
-                  VALDSC(EQDTYP)  =  CHR
+                  call cleari ( eqvdsz, valdsc )
+                  valdsc(eqdtyp)  =  chr
 
-                  DO J = 1, EQVDSZ
-                     CALL APPNDI ( VALDSC(J), EQRYI )
-                  END DO
+                  do j = 1, eqvdsz
+                     call appndi ( valdsc(j), eqryi )
+                  end do
 
 !
 !                 Update the order-by column count in the encoded query.
 !
-                  CALL ZZEKWEQI ( 'NUM_ORDERBY_COLS', NORDER, EQRYI )
+                  call zzekweqi ( 'NUM_ORDERBY_COLS', norder, eqryi )
 
 
-                  STATE  =  ORDNAM
+                  state  =  ordnam
 
-               END IF
-
-
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
-
-               ERROR  =  .TRUE.
-               ERRTYP =  'MORE_TOKENS_EXP'
-               STATE  =  TERM
+               end if
 
 
-            ELSE
+            else if ( token .eq. tkeoq ) then
+
+               error  =  .true.
+               errtyp =  'MORE_TOKENS_EXP'
+               state  =  term
+
+
+            else
 !
 !              We've got the wrong kind of token here.
 !
-               ERROR  =  .TRUE.
-               ERRTYP =  'TABLE_OR_COLUMN_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'TABLE_OR_COLUMN_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           State is a member of {ORDNAM, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. ORDNAM ) THEN
+         else if ( state .eq. ordnam ) then
 !
 !           We've seen an order-by column name, or else the name
 !           of a table qualifying an order-by column name.
 !
-            IF ( TOKEN .EQ. TKEOQ ) THEN
+            if ( token .eq. tkeoq ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
 !              query.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( NAMDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( namdsc(j), eqryi )
+               end do
 
 !
 !              Since no ASCENDING or DESCENDING sense keyword was
 !              supplied, append the default value ASCENDING to the
 !              order-by column descriptor in the encoded query.
 !
-               CALL APPNDI ( EQASND, EQRYI )
+               call appndi ( eqasnd, eqryi )
 
 !
 !              We're done with the ORDER BY clause; go on to parse the
 !              SELECT clause.
 !
-               STATE   =  SELKEY
+               state   =  selkey
 
 
-            ELSE IF ( TOKEN .EQ. TKCOMA ) THEN
+            else if ( token .eq. tkcoma ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
 !              query.  Another name should follow.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( NAMDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( namdsc(j), eqryi )
+               end do
 
 !
 !              Since no ASCENDING or DESCENDING sense keyword was
 !              supplied, append the default value ASCENDING to the
 !              order-by column descriptor in the encoded query.
 !
-               CALL APPNDI ( EQASND, EQRYI )
+               call appndi ( eqasnd, eqryi )
 
-               STATE  = ORDRBY
+               state  = ordrby
 
 
-            ELSE IF ( TOKEN .EQ. TKDOT ) THEN
+            else if ( token .eq. tkdot ) then
 !
 !              The name we picked up was a table name or alias.  A
 !              column name should follow.
 !
-               STATE = ORDTAB
+               state = ordtab
 
 
-            ELSE IF ( TOKEN .EQ. TKKEY ) THEN
+            else if ( token .eq. tkkey ) then
 !
 !              We have a column name, which may be followed by a
 !              keyword indicating the sense of the ordering, or may
@@ -1317,280 +1317,280 @@
 !              Append the saved name descriptor to the encoded
 !              query.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( NAMDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( namdsc(j), eqryi )
+               end do
 
 !
 !              Set the sense descriptor according to the keyword we've
 !              picked up.  After this, we're ready to look for another
 !              order-by column.
 !
-               IF ( VALUES(TOKNUM) .EQ. KWASND ) THEN
+               if ( values(toknum) .eq. kwasnd ) then
 
-                  CALL APPNDI ( EQASND, EQRYI )
+                  call appndi ( eqasnd, eqryi )
 
-                  STATE = ORDSNS
-
-
-               ELSE IF ( VALUES(TOKNUM) .EQ. KWDSND ) THEN
-
-                  CALL APPNDI ( EQDSND, EQRYI )
-
-                  STATE = ORDSNS
+                  state = ordsns
 
 
-               ELSE IF (      ( VALUES(TOKNUM) .EQ. KWWHER ) &
-                         .OR. ( VALUES(TOKNUM) .EQ. KWFROM ) &
-                         .OR. ( VALUES(TOKNUM) .EQ. KWSEL  )  ) THEN
+               else if ( values(toknum) .eq. kwdsnd ) then
+
+                  call appndi ( eqdsnd, eqryi )
+
+                  state = ordsns
+
+
+               else if (      ( values(toknum) .eq. kwwher ) &
+                         .or. ( values(toknum) .eq. kwfrom ) &
+                         .or. ( values(toknum) .eq. kwsel  )  ) then
 
 !
 !                 Since no ASCENDING or DESCENDING sense keyword was
 !                 supplied, append the default value ASCENDING to the
 !                 order-by column descriptor in the encoded query.
 !
-                  CALL APPNDI ( EQASND, EQRYI )
+                  call appndi ( eqasnd, eqryi )
 
 !
 !                 We're done with the ORDER BY clause.  Go on to
 !                 parse the SELECT clause.
 !
-                  STATE  =  SELKEY
+                  state  =  selkey
 
-               ELSE
+               else
 !
 !                 We've got a keyword we don't want here.
 !
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 !
 !              We've got the wrong kind of token here.
 !
-               ERROR  =  .TRUE.
-               ERRTYP =  'BAD_TOKEN'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'BAD_TOKEN'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {ORDRBY, ORDTAB, ORDSNS, SELKEY, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. ORDTAB ) THEN
+         else if ( state .eq. ordtab ) then
 !
 !           We've picked up a qualifying table name for an order-by
 !           column.  We must see a column name here.
 !
-            IF ( TOKEN .EQ. TKID ) THEN
+            if ( token .eq. tkid ) then
 !
 !              Update the place-holder table name descriptor in the
 !              encoded query.
 !
-               CALL MOVEI ( NAMDSC, &
-                            EQVDSZ, &
-                            EQRYI(  CARDI(EQRYI) - EQVDSZ + 1  )   )
+               call movei ( namdsc, &
+                            eqvdsz, &
+                            eqryi(  cardi(eqryi) - eqvdsz + 1  )   )
 
 !
 !              Add the column name to the character part of the
 !              encoded query.
 !
-               I   =   VALUES(TOKNUM)
-               B   =   CHBEGS(I)
-               E   =   CHENDS(I)
-               L   =   E  -  B   +  1
-               LXB =   LXBEGS(TOKNUM)
-               LXE =   LXENDS(TOKNUM)
+               i   =   values(toknum)
+               b   =   chbegs(i)
+               e   =   chends(i)
+               l   =   e  -  b   +  1
+               lxb =   lxbegs(toknum)
+               lxe =   lxends(toknum)
 
-               CALL ZZEKINQC ( CHRBUF( B : E ), &
-                               L, &
-                               LXB, &
-                               LXE, &
-                               EQRYI, &
-                               EQRYC, &
-                               COLDSC           )
+               call zzekinqc ( chrbuf( b : e ), &
+                               l, &
+                               lxb, &
+                               lxe, &
+                               eqryi, &
+                               eqryc, &
+                               coldsc           )
 
 !
 !              Add the descriptor for the column name to the encoded
 !              query.
 !
-               DO J = 1, EQVDSZ
-                  CALL APPNDI ( COLDSC(J), EQRYI )
-               END DO
+               do j = 1, eqvdsz
+                  call appndi ( coldsc(j), eqryi )
+               end do
 
 
-               STATE  =  ORDCOL
+               state  =  ordcol
 
 
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
+            else if ( token .eq. tkeoq ) then
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'MORE_TOKENS_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'MORE_TOKENS_EXP'
+               state  =  term
 
-            ELSE
+            else
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'COLUMN_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'COLUMN_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {ORDCOL, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. ORDCOL ) THEN
+         else if ( state .eq. ordcol ) then
 !
 !           We've picked up a qualified column name.  At this point,
 !           we should see a sense keyword, a comma, the end of the
 !           query, or one of the FROM, SELECT, or WHERE keywords.
 !
-            IF ( TOKEN .EQ. TKKEY ) THEN
+            if ( token .eq. tkkey ) then
 
-               IF ( VALUES(TOKNUM) .EQ. KWASND ) THEN
+               if ( values(toknum) .eq. kwasnd ) then
 !
 !                 The ASCENDING keyword has been supplied.  After this,
 !                 look for another column.
 !
-                  CALL APPNDI ( EQASND, EQRYI )
+                  call appndi ( eqasnd, eqryi )
 
-                  STATE  =  ORDSNS
+                  state  =  ordsns
 
 
-               ELSE IF ( VALUES(TOKNUM) .EQ. KWDSND ) THEN
+               else if ( values(toknum) .eq. kwdsnd ) then
 !
 !                 The DESCENDING keyword has been supplied.  After this,
 !                 look for another column.
 !
-                  CALL APPNDI ( EQDSND, EQRYI )
+                  call appndi ( eqdsnd, eqryi )
 
-                  STATE  =  ORDSNS
+                  state  =  ordsns
 
 
-               ELSE IF (      ( VALUES(TOKNUM) .EQ. KWWHER ) &
-                         .OR. ( VALUES(TOKNUM) .EQ. KWFROM ) &
-                         .OR. ( VALUES(TOKNUM) .EQ. KWSEL  )  ) THEN
+               else if (      ( values(toknum) .eq. kwwher ) &
+                         .or. ( values(toknum) .eq. kwfrom ) &
+                         .or. ( values(toknum) .eq. kwsel  )  ) then
 !
 !                 We're done with the ORDER BY clause.  Go on to
 !                 parse the SELECT clause.
 !
-                  STATE  =  SELKEY
+                  state  =  selkey
 
-               ELSE
+               else
 
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               END IF
+               end if
 
 
-            ELSE IF ( TOKEN .EQ. TKCOMA ) THEN
+            else if ( token .eq. tkcoma ) then
 !
 !              The ASCENDING keyword is implied.
 !
-               CALL APPNDI ( EQASND, EQRYI )
+               call appndi ( eqasnd, eqryi )
 
-               STATE  =  ORDRBY
+               state  =  ordrby
 
 
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
+            else if ( token .eq. tkeoq ) then
 !
 !              The ASCENDING keyword is implied.
 !
-               CALL APPNDI ( EQASND, EQRYI )
+               call appndi ( eqasnd, eqryi )
 
 !
 !              We're done with the ORDER BY clause.  Parse the SELECT
 !              clause.
 !
-               STATE  =  SELKEY
+               state  =  selkey
 
-            ELSE
+            else
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'COMMA_OR_KEY_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'COMMA_OR_KEY_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {ORDRBY, ORDSNS, SELKEY, TERM}.
 !
 
 
-         ELSE IF ( STATE .EQ. ORDSNS ) THEN
+         else if ( state .eq. ordsns ) then
 !
 !           We've picked up an order sense keyword.  At this point,
 !           we should see comma or the end of the query, or one of the
 !           FROM, SELECT, or WHERE keywords.
 !
-            IF ( TOKEN .EQ. TKCOMA ) THEN
+            if ( token .eq. tkcoma ) then
 !
 !              We're ready to look for another column.
 !
-               STATE  =  ORDRBY
+               state  =  ordrby
 
 
-            ELSE IF ( TOKEN .EQ. TKEOQ ) THEN
+            else if ( token .eq. tkeoq ) then
 !
 !              We're done with the ORDER BY clause.  Parse the SELECT
 !              clause.
 !
-               STATE  =  SELKEY
+               state  =  selkey
 
 
-            ELSE IF ( TOKEN .EQ. TKKEY ) THEN
+            else if ( token .eq. tkkey ) then
 
-               IF (      ( VALUES(TOKNUM) .EQ. KWWHER ) &
-                    .OR. ( VALUES(TOKNUM) .EQ. KWFROM ) &
-                    .OR. ( VALUES(TOKNUM) .EQ. KWSEL  )  ) THEN
+               if (      ( values(toknum) .eq. kwwher ) &
+                    .or. ( values(toknum) .eq. kwfrom ) &
+                    .or. ( values(toknum) .eq. kwsel  )  ) then
 !
 !                 We're done with the ORDER BY clause.  Go on to
 !                 parse the SELECT clause.
 !
-                  STATE  =  SELKEY
+                  state  =  selkey
 
-               ELSE
+               else
 
-                  ERROR  =  .TRUE.
-                  ERRTYP =  'BAD_KEYWORD'
-                  STATE  =  TERM
+                  error  =  .true.
+                  errtyp =  'BAD_KEYWORD'
+                  state  =  term
 
-               END IF
+               end if
 
 
-            ELSE
+            else
 
-               ERROR  =  .TRUE.
-               ERRTYP =  'COMMA_EXP'
-               STATE  =  TERM
+               error  =  .true.
+               errtyp =  'COMMA_EXP'
+               state  =  term
 
-            END IF
+            end if
 !
 !           STATE is a member of {ORDRBY, SELKEY, TERM}.
 !
 
 
-         ELSE
+         else
 !
 !           Somehow, we've reached an invalid state.
 !
-            ERROR  = .TRUE.
-            PRSERR = 'SPICE(BUG) -- Invalid state reached in EK parser.'
-            STATE  =  TERM
+            error  = .true.
+            prserr = 'SPICE(BUG) -- Invalid state reached in EK parser.'
+            state  =  term
 
-         END IF
+         end if
 !
 !           STATE is a member of {ORDRBY, TERM}.
 !
 
-      END DO
+      end do
 !
 !     At this point, either an error has been detected, or the query
 !     has been parsed, and the query is represented in encoded form
@@ -1601,158 +1601,158 @@
 !     We centralize construction of error messages in the following
 !     section.
 !
-      IF ( ERROR ) THEN
+      if ( error ) then
 
-         IF ( ERRTYP .EQ. 'FROM_NOT_FOUND' ) THEN
+         if ( errtyp .eq. 'FROM_NOT_FOUND' ) then
 
-            PRSERR = 'Every query must contain a FROM clause. ' // &
+            prserr = 'Every query must contain a FROM clause. ' // &
                      'The FROM keyword was not found.'
 
 
-         ELSE IF ( ERRTYP .EQ. 'SELECT_NOT_FOUND' ) THEN
+         else if ( errtyp .eq. 'SELECT_NOT_FOUND' ) then
 
-            PRSERR = 'Every query must contain a SELECT clause. ' // &
+            prserr = 'Every query must contain a SELECT clause. ' // &
                      'The SELECT keyword was not found.'
 
 
-         ELSE IF ( ERRTYP .EQ. 'BY_EXPECTED' ) THEN
+         else if ( errtyp .eq. 'BY_EXPECTED' ) then
 
-            PRSERR = 'The BY keyword was not found following the ' // &
+            prserr = 'The BY keyword was not found following the ' // &
                      'ORDER keyword.'
 
 
-         ELSE IF ( ERRTYP .EQ. 'BAD_KEYWORD' ) THEN
+         else if ( errtyp .eq. 'BAD_KEYWORD' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Invalid keyword at location #. '  // &
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Invalid keyword at location #. '  // &
                      'Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'TABLE_OR_COLUMN_EXP' ) THEN
+         else if ( errtyp .eq. 'TABLE_OR_COLUMN_EXP' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Table or column name expected at location ' // &
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Table or column name expected at location ' // &
                      '#. Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'TABLE_EXP' ) THEN
+         else if ( errtyp .eq. 'TABLE_EXP' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Table name expected at location #. '  // &
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Table name expected at location #. '  // &
                      'Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'COLUMN_EXP' ) THEN
+         else if ( errtyp .eq. 'COLUMN_EXP' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Column name expected at location #. '  // &
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Column name expected at location #. '  // &
                      'Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'ALIAS_EXP' ) THEN
+         else if ( errtyp .eq. 'ALIAS_EXP' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Table alias, comma, or keyword expected at ' // &
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Table alias, comma, or keyword expected at ' // &
                      'location #. Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'COMMA_OR_KEY_EXP' ) THEN
+         else if ( errtyp .eq. 'COMMA_OR_KEY_EXP' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Comma or keyword expected at ' // &
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Comma or keyword expected at ' // &
                      'location #. Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'COMMA_EXP' ) THEN
+         else if ( errtyp .eq. 'COMMA_EXP' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Comma expected at location #. Actual token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
-
-
-         ELSE IF ( ERRTYP .EQ. 'MORE_TOKENS_EXP' ) THEN
-
-            PRSERR  =  'More tokens were expected in query.'
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Comma expected at location #. Actual token was: #'
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'KEYWORD_EXP' ) THEN
+         else if ( errtyp .eq. 'MORE_TOKENS_EXP' ) then
 
-            PRSERR = 'The keyword # was expected at location ' // &
+            prserr  =  'More tokens were expected in query.'
+
+
+         else if ( errtyp .eq. 'KEYWORD_EXP' ) then
+
+            prserr = 'The keyword # was expected at location ' // &
                      '#. Actual token was: #'
-            CALL REPMC ( PRSERR, '#', EXPKEY,         PRSERR )
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            call repmc ( prserr, '#', expkey,         prserr )
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'BAD_TOKEN' ) THEN
+         else if ( errtyp .eq. 'BAD_TOKEN' ) then
 
-            LXB    =  LXBEGS(TOKNUM)
-            LXE    =  LXENDS(TOKNUM)
-            PRSERR = 'Invalid token at location #. Token was: #'
-            CALL REPMI ( PRSERR, '#', LXB,            PRSERR )
-            CALL REPMC ( PRSERR, '#', QUERY(LXB:LXE), PRSERR )
+            lxb    =  lxbegs(toknum)
+            lxe    =  lxends(toknum)
+            prserr = 'Invalid token at location #. Token was: #'
+            call repmi ( prserr, '#', lxb,            prserr )
+            call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'TOO_MANY_TABLES' ) THEN
+         else if ( errtyp .eq. 'TOO_MANY_TABLES' ) then
 
-            PRSERR  =  'Number of tables in "FROM" clause exceeds ' // &
+            prserr  =  'Number of tables in "FROM" clause exceeds ' // &
                        'allowed maximum of #.'
-            CALL REPMI  ( PRSERR, '#', MAXTAB, PRSERR )
+            call repmi  ( prserr, '#', maxtab, prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'TOO_MANY_ORD_COLS' ) THEN
+         else if ( errtyp .eq. 'TOO_MANY_ORD_COLS' ) then
 
-            PRSERR  =  'Number of order-by columns exceeds allowed ' // &
+            prserr  =  'Number of order-by columns exceeds allowed ' // &
                        'maximum of #.'
-            CALL REPMI  ( PRSERR, '#', MAXTAB, PRSERR )
+            call repmi  ( prserr, '#', maxtab, prserr )
 
 
-         ELSE IF ( ERRTYP .EQ. 'TOO_MANY_SEL_COLS' ) THEN
+         else if ( errtyp .eq. 'TOO_MANY_SEL_COLS' ) then
 
-            PRSERR  =  'Number of SELECT columns exceeds allowed ' // &
+            prserr  =  'Number of SELECT columns exceeds allowed ' // &
                        'maximum of #.'
-            CALL REPMI  ( PRSERR, '#', MAXSEL, PRSERR )
+            call repmi  ( prserr, '#', maxsel, prserr )
 
 
-         ELSE IF ( ERRTYP .NE. 'WHERE_ERROR' ) THEN
+         else if ( errtyp .ne. 'WHERE_ERROR' ) then
 
-            PRSERR  =  'SPICE(BUG)--Unrecognized error type.  Type ' // &
+            prserr  =  'SPICE(BUG)--Unrecognized error type.  Type ' // &
                        'was #.'
-            CALL REPMC ( PRSERR, '#', ERRTYP, PRSERR )
+            call repmc ( prserr, '#', errtyp, prserr )
 
-         END IF
+         end if
 
 
 
-      ELSE
+      else
 !
 !        Indicate that parsing is complete.
 !
-         CALL ZZEKWEQI ( 'PARSED', ITRUE, EQRYI )
+         call zzekweqi ( 'PARSED', itrue, eqryi )
 
-      END IF
+      end if
 
 
-      CALL CHKOUT ( 'ZZEKPARS' )
-      RETURN
-      END
+      call chkout ( 'ZZEKPARS' )
+      return
+      end

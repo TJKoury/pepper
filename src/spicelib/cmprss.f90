@@ -1,6 +1,6 @@
 !$Procedure CMPRSS ( Compress a character string )
 
-      SUBROUTINE CMPRSS ( DELIM, N, INPUT, OUTPUT )
+      subroutine cmprss ( delim, n, input, output )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*1         DELIM
-      INTEGER             N
-      CHARACTER*(*)       INPUT
-      CHARACTER*(*)       OUTPUT
+      character*1         delim
+      integer             n
+      character*(*)       input
+      character*(*)       output
 
 ! $ Brief_I/O
 !
@@ -138,67 +138,67 @@
 !
 !     Local Variables
 !
-      INTEGER          I
-      INTEGER          J
-      INTEGER          COUNT
+      integer          i
+      integer          j
+      integer          count
 
-      INTEGER          INLEN
-      INTEGER          OUTLEN
+      integer          inlen
+      integer          outlen
 
 
 !
 !     Find out how much space there is in the INPUT and OUTPUT strings
 !     and initialize the delimiter counter and output place holder.
 !
-      INLEN  = LEN(INPUT)
-      OUTLEN = LEN(OUTPUT)
+      inlen  = len(input)
+      outlen = len(output)
 
-      COUNT  = 0
-      J      = 0
+      count  = 0
+      j      = 0
 
-      DO I = 1, INLEN
+      do i = 1, inlen
 
 !
 !        Check each character to see if it is a delimiter or not.
 !
-         IF ( INPUT(I:I) .EQ. DELIM ) THEN
+         if ( input(i:i) .eq. delim ) then
 
-            COUNT = COUNT + 1
+            count = count + 1
 
 !
 !           Copy delimiters until enough consecutive delimiters
 !           have been accumulated.  When enough consecutive delimiters
 !           have accumulated, we no longer copy them.
 !
-            IF ( COUNT .LE. N ) THEN
-               J           = J + 1
-               OUTPUT(J:J) = INPUT(I:I)
-            END IF
+            if ( count .le. n ) then
+               j           = j + 1
+               output(j:j) = input(i:i)
+            end if
 
-         ELSE
+         else
 
 !
 !           We don't have a delimiter here so we just copy the
 !           character and set the delimiter counter to zero.
 !
-            COUNT       = 0
-            J           = J + 1
-            OUTPUT(J:J) = INPUT(I:I)
+            count       = 0
+            j           = j + 1
+            output(j:j) = input(i:i)
 
-         END IF
+         end if
 
-         IF ( J .EQ. OUTLEN ) THEN
-            RETURN
-         END IF
+         if ( j .eq. outlen ) then
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Pad any left over space in the output string with blanks.
 !
-      IF ( J .LT. OUTLEN ) THEN
-         OUTPUT(J+1:) = ' '
-      END IF
+      if ( j .lt. outlen ) then
+         output(j+1:) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

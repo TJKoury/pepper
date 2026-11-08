@@ -1,6 +1,6 @@
 !$Procedure   ZZMOBLIQ   ( Mean obliquity of date )
 
-      SUBROUTINE ZZMOBLIQ ( ET, MOB, DMOB )
+      subroutine zzmobliq ( et, mob, dmob )
 
 ! $ Abstract
 !
@@ -21,10 +21,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      MOB
-      DOUBLE PRECISION      DMOB
+      implicit none
+      double precision      et
+      double precision      mob
+      double precision      dmob
 
 ! $ Brief_I/O
 !
@@ -125,8 +125,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
+      double precision      jyear
+      double precision      rpd
 
 !
 !     Local parameters
@@ -134,51 +134,51 @@
 !
 !     Coefficients for the mean obliquity:
 !
-      DOUBLE PRECISION      C0
-      PARAMETER           ( C0 = 84381.448D0 )
+      double precision      c0
+      parameter           ( c0 = 84381.448d0 )
 
-      DOUBLE PRECISION      C1
-      PARAMETER           ( C1 = -46.8150D0 )
+      double precision      c1
+      parameter           ( c1 = -46.8150d0 )
 
-      DOUBLE PRECISION      C2
-      PARAMETER           ( C2 = -0.00059D0 )
+      double precision      c2
+      parameter           ( c2 = -0.00059d0 )
 
-      DOUBLE PRECISION      C3
-      PARAMETER           ( C3 = 0.001813D0 )
+      double precision      c3
+      parameter           ( c3 = 0.001813d0 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      RAD
-      DOUBLE PRECISION      YEAR
-      DOUBLE PRECISION      PERSEC
+      double precision      t
+      double precision      rad
+      double precision      year
+      double precision      persec
 
-      LOGICAL               FIRST
-      SAVE
+      logical               first
+      save
 
-      DATA                  FIRST / .TRUE. /
+      data                  first / .true. /
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
-         YEAR   = JYEAR()
-         RAD    = RPD  ()
-         PERSEC = 1.0D0 / ( YEAR * 100.0D0 )
+         first  = .false.
+         year   = jyear()
+         rad    = rpd  ()
+         persec = 1.0d0 / ( year * 100.0d0 )
 
-      END IF
+      end if
 
 !
 !     Convert the input epoch to Julian centuries past J2000:
 !
-      T  =  ( ET / YEAR )  / 100.D0
+      t  =  ( et / year )  / 100.d0
 
 !
 !     Compute the obliquity at epoch.  The polynomial yields arcseconds;
 !     convert the units to radians.
 !
-      MOB  = ( RAD / 3.6D3 ) * (  C0 + T*( C1   + T*( C2 + T*C3 ) )  )
+      mob  = ( rad / 3.6d3 ) * (  c0 + t*( c1   + t*( c2 + t*c3 ) )  )
 
-      DMOB = ( RAD / 3.6D3 ) * (  C1 + T*( 2*C2 + T*3*C3 )  ) * PERSEC
+      dmob = ( rad / 3.6d3 ) * (  c1 + t*( 2*c2 + t*3*c3 )  ) * persec
 
-      END
+      end

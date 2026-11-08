@@ -1,6 +1,6 @@
 !$Procedure CKGR05 ( C-kernel, get record, type 05 )
 
-      SUBROUTINE CKGR05 ( HANDLE, DESCR, RECNO, RECORD )
+      subroutine ckgr05 ( handle, descr, recno, record )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ck05.inc'
+      include 'ck05.inc'
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR   ( * )
-      INTEGER               RECNO
-      DOUBLE PRECISION      RECORD  ( * )
+      integer               handle
+      double precision      descr   ( * )
+      integer               recno
+      double precision      record  ( * )
 
 ! $ Brief_I/O
 !
@@ -282,8 +282,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
@@ -299,39 +299,39 @@
 !
 !
 
-      INTEGER               NDC
-      PARAMETER           ( NDC    = 2 )
+      integer               ndc
+      parameter           ( ndc    = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC    = 6 )
+      integer               nic
+      parameter           ( nic    = 6 )
 
-      INTEGER               DTYPE
-      PARAMETER           ( DTYPE  = 5 )
+      integer               dtype
+      parameter           ( dtype  = 5 )
 
 !
 !     Local variables
 !
-      INTEGER               ICD    ( NIC )
-      INTEGER               NREC
-      INTEGER               BEG
-      INTEGER               END
-      INTEGER               ADDR
-      INTEGER               PACKSZ
-      INTEGER               SUBTYP
+      integer               icd    ( nic )
+      integer               nrec
+      integer               beg
+      integer               end
+      integer               addr
+      integer               packsz
+      integer               subtyp
 
-      DOUBLE PRECISION      DCD    ( NDC )
-      DOUBLE PRECISION      NPOINT
+      double precision      dcd    ( ndc )
+      double precision      npoint
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'CKGR05' )
+      call chkin ( 'CKGR05' )
 
 !
 !     The unpacked descriptor contains the following information
@@ -355,110 +355,110 @@
 !       4 - The existence of angular velocity data, which determines how
 !           big the pointing portion of the returned record will be.
 !
-      CALL DAFUS ( DESCR, NDC, NIC, DCD, ICD )
+      call dafus ( descr, ndc, nic, dcd, icd )
 
-      IF ( ICD( 3 ) .NE. DTYPE ) THEN
+      if ( icd( 3 ) .ne. dtype ) then
 
-         CALL SETMSG ( 'Data type of the segment should be 5: Passed '// &
+         call setmsg ( 'Data type of the segment should be 5: Passed '// &
                        'descriptor shows type = #.'                    )
-         CALL ERRINT ( '#', ICD( 3 )                                   )
-         CALL SIGERR ( 'SPICE(CKWRONGDATATYPE)'                        )
-         CALL CHKOUT ( 'CKGR05'                                        )
-         RETURN
+         call errint ( '#', icd( 3 )                                   )
+         call sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
+         call chkout ( 'CKGR05'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Capture the segment's address range.
 !
-      BEG  = ICD( 5 )
-      END  = ICD( 6 )
+      beg  = icd( 5 )
+      end  = icd( 6 )
 
 !
 !     Read the subtype from the segment.
 !
-      CALL DAFGDA ( HANDLE, END-3, END-3, RECORD(2) )
+      call dafgda ( handle, end-3, end-3, record(2) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKGR05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKGR05' )
+         return
+      end if
 
 
-      SUBTYP = NINT( RECORD(2) )
+      subtyp = nint( record(2) )
 
-      IF ( SUBTYP .EQ. C05TP0 ) THEN
+      if ( subtyp .eq. c05tp0 ) then
 
-         PACKSZ = C05PS0
+         packsz = c05ps0
 
-      ELSE IF ( SUBTYP .EQ. C05TP1 ) THEN
+      else if ( subtyp .eq. c05tp1 ) then
 
-         PACKSZ = C05PS1
+         packsz = c05ps1
 
-      ELSE IF ( SUBTYP .EQ. C05TP2 ) THEN
+      else if ( subtyp .eq. c05tp2 ) then
 
-         PACKSZ = C05PS2
+         packsz = c05ps2
 
-      ELSE IF ( SUBTYP .EQ. C05TP3 ) THEN
+      else if ( subtyp .eq. c05tp3 ) then
 
-         PACKSZ = C05PS3
+         packsz = c05ps3
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Unexpected CK type 5 subtype # found in ' // &
+         call setmsg ( 'Unexpected CK type 5 subtype # found in ' // &
                        'type 5 segment.'                          )
-         CALL ERRINT ( '#',  SUBTYP                               )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                      )
-         CALL CHKOUT ( 'CKGR05'                                   )
-         RETURN
+         call errint ( '#',  subtyp                               )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         call chkout ( 'CKGR05'                                   )
+         return
 
-      END IF
+      end if
 
-      CALL DAFGDA ( HANDLE, END, END, NPOINT )
+      call dafgda ( handle, end, end, npoint )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKGR05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKGR05' )
+         return
+      end if
 
-      NREC = NINT ( NPOINT )
+      nrec = nint ( npoint )
 
 
 !
 !     If a request was made for a record which doesn't exist, then
 !     signal an error and leave.
 !
-      IF ( ( RECNO .LT. 1 ) .OR. ( RECNO .GT. NREC ) ) THEN
-         CALL SETMSG ( 'Requested record number (#) does not exist. ' // &
+      if ( ( recno .lt. 1 ) .or. ( recno .gt. nrec ) ) then
+         call setmsg ( 'Requested record number (#) does not exist. ' // &
                        'There are # records in the segment.'           )
-         CALL ERRINT ( '#', RECNO                                      )
-         CALL ERRINT ( '#', NREC                                       )
-         CALL SIGERR ( 'SPICE(CKNONEXISTREC)'                          )
-         CALL CHKOUT ( 'CKGR05'                                        )
-         RETURN
-      END IF
+         call errint ( '#', recno                                      )
+         call errint ( '#', nrec                                       )
+         call sigerr ( 'SPICE(CKNONEXISTREC)'                          )
+         call chkout ( 'CKGR05'                                        )
+         return
+      end if
 
 !
 !     Get the pointing record indexed by RECNO.
 !
-      ADDR = BEG + PACKSZ * ( RECNO - 1 )
+      addr = beg + packsz * ( recno - 1 )
 
-      CALL DAFGDA ( HANDLE, ADDR, ADDR + PACKSZ - 1, RECORD( 3 ) )
+      call dafgda ( handle, addr, addr + packsz - 1, record( 3 ) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'CKGR05' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'CKGR05' )
+         return
+      end if
 
 !
 !     Next get the SCLK time.  Need to go past all of the NREC pointing
 !     records (PACKSZ * NREC numbers), and then to the RECNOth SCLK
 !     time.
 !
-      ADDR = BEG + PACKSZ*NREC + RECNO - 1
+      addr = beg + packsz*nrec + recno - 1
 
-      CALL DAFGDA ( HANDLE, ADDR, ADDR, RECORD( 1 ) )
+      call dafgda ( handle, addr, addr, record( 1 ) )
 
-      CALL CHKOUT ( 'CKGR05' )
-      RETURN
-      END
+      call chkout ( 'CKGR05' )
+      return
+      end

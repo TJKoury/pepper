@@ -56,20 +56,20 @@
 !
 !     Number of supported SCLK field delimiters:
 !
-      INTEGER               NDELIM
-      PARAMETER           ( NDELIM = 5 )
+      integer               ndelim
+      parameter           ( ndelim = 5 )
 
 !
 !     Supported SCLK string field delimiters:
 !
-      CHARACTER*(NDELIM)    DELIMS
-      PARAMETER           ( DELIMS = '.:-, ' )
+      character*(ndelim)    delims
+      parameter           ( delims = '.:-, ' )
 
 !
 !     Maximum number of partitions:
 !
-      INTEGER               MXPART
-      PARAMETER           ( MXPART = 9999 )
+      integer               mxpart
+      parameter           ( mxpart = 9999 )
 
 !
 !     Partition string length.
@@ -78,33 +78,33 @@
 !     9999, PRTSTR needs at most 4 characters for the partition number
 !     and one character for the slash.
 !
-      INTEGER               PARTLN
-      PARAMETER           ( PARTLN = 5 )
+      integer               partln
+      parameter           ( partln = 5 )
 
 !
 !     Maximum number of coefficient records:
 !
-      INTEGER               MXCOEF
-      PARAMETER           ( MXCOEF = 100000 )
+      integer               mxcoef
+      parameter           ( mxcoef = 100000 )
 
 !
 !     Maximum number of fields in an SCLK string:
 !
-      INTEGER               MXNFLD
-      PARAMETER           ( MXNFLD = 10 )
+      integer               mxnfld
+      parameter           ( mxnfld = 10 )
 
 !
 !     Length of strings used to represent D.P.
 !     numbers:
 !
-      INTEGER               DPLEN
-      PARAMETER           ( DPLEN = 30 )
+      integer               dplen
+      parameter           ( dplen = 30 )
 
 !
 !     Maximum number of supported parallel time systems:
 !
-      INTEGER               MXTSYS
-      PARAMETER           ( MXTSYS = 2 )
+      integer               mxtsys
+      parameter           ( mxtsys = 2 )
 
 !
 !     End of include file sclk.inc

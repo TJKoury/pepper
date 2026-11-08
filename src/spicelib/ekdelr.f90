@@ -1,6 +1,6 @@
 !$Procedure EKDELR ( EK, delete record from segment )
 
-      SUBROUTINE EKDELR ( HANDLE, SEGNO, RECNO )
+      subroutine ekdelr ( handle, segno, recno )
 
 ! $ Abstract
 !
@@ -17,17 +17,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekcoldsc.inc'
+      include 'ekcnamsz.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               RECNO
+      integer               handle
+      integer               segno
+      integer               recno
 
 ! $ Brief_I/O
 !
@@ -171,42 +171,42 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
+      character*(cnamsz)    column
 
-      INTEGER               BASE
-      INTEGER               CLASS
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               DSCBAS
-      INTEGER               I
-      INTEGER               MBASE
-      INTEGER               MP
-      INTEGER               NCOLS
-      INTEGER               NLINKS
-      INTEGER               NREC
-      INTEGER               P
-      INTEGER               RECPTR
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               UNIT
+      integer               base
+      integer               class
+      integer               coldsc ( cdscsz )
+      integer               dscbas
+      integer               i
+      integer               mbase
+      integer               mp
+      integer               ncols
+      integer               nlinks
+      integer               nrec
+      integer               p
+      integer               recptr
+      integer               segdsc ( sdscsz )
+      integer               unit
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'EKDELR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'EKDELR' )
+      end if
 
 !
 !     Before trying to actually modify the file, do every error
@@ -215,138 +215,138 @@
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !
-      CALL ZZEKPGCH ( HANDLE, 'WRITE' )
+      call zzekpgch ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKDELR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKDELR' )
+         return
+      end if
 
 !
 !     Look up the integer metadata page and page base for the segment.
 !     Given the base address, we can read the pertinent metadata in
 !     one shot.
 !
-      CALL ZZEKMLOC ( HANDLE,  SEGNO,  MP,  MBASE  )
+      call zzekmloc ( handle,  segno,  mp,  mbase  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EKDELR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EKDELR' )
+         return
+      end if
 
-      CALL DASRDI ( HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC )
+      call dasrdi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 !
 !     In case the target EK is shadowed, let the shadow system know
 !     about the deletion.  This must be done before the data is
 !     deleted.  The argument COLDSC is unused on this call.
 !
-      CALL ZZEKRBCK ( 'DELETE', HANDLE, SEGDSC, COLDSC, RECNO )
+      call zzekrbck ( 'DELETE', handle, segdsc, coldsc, recno )
 
 !
 !     We'll need to know how many columns the segment has in order to
 !     compute the size of the record pointer.  The record pointer
 !     contains DPTBAS items plus two elements for each column.
 !
-      NCOLS  =  SEGDSC ( NCIDX )
+      ncols  =  segdsc ( ncidx )
 
 !
 !     Check the number of records already present.  RECNO must not
 !     exceed this count.
 !
-      NREC  =  SEGDSC ( NRIDX )
+      nrec  =  segdsc ( nridx )
 
-      IF (  ( RECNO .LT. 1 ) .OR. ( RECNO .GT. NREC )  ) THEN
+      if (  ( recno .lt. 1 ) .or. ( recno .gt. nrec )  ) then
 
-         CALL SETMSG ( 'Record number = #; valid range is 1:#.' )
-         CALL ERRINT ( '#',  RECNO                              )
-         CALL ERRINT ( '#',  NREC                               )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                    )
-         CALL CHKOUT ( 'EKDELR'                                 )
-         RETURN
+         call setmsg ( 'Record number = #; valid range is 1:#.' )
+         call errint ( '#',  recno                              )
+         call errint ( '#',  nrec                               )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                    )
+         call chkout ( 'EKDELR'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Delete all of the column entries in the record.  The deletion
 !     routines handle updating column indexes and freeing unlinked
 !     pages.
 !
-      CALL ZZEKTRDP ( HANDLE, SEGDSC(RTIDX), RECNO, RECPTR )
+      call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
 
-      DO I =  1, NCOLS
+      do i =  1, ncols
 !
 !        Get the descriptor of the Ith column.
 !
-         DSCBAS  =  MBASE  +  CDOFF  +  (I-1)*CDSCSZ
+         dscbas  =  mbase  +  cdoff  +  (i-1)*cdscsz
 
-         CALL DASRDI ( HANDLE, DSCBAS+1, DSCBAS+CDSCSZ, COLDSC )
+         call dasrdi ( handle, dscbas+1, dscbas+cdscsz, coldsc )
 
-         CLASS   =  COLDSC(CLSIDX)
+         class   =  coldsc(clsidx)
 
 !
 !        Delete the entry in the current column.
 !
-         IF ( CLASS .EQ. 1 ) THEN
+         if ( class .eq. 1 ) then
 
-            CALL ZZEKDE01 ( HANDLE, SEGDSC, COLDSC, RECPTR )
-
-
-         ELSE IF ( CLASS .EQ. 2 ) THEN
-
-            CALL ZZEKDE02 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+            call zzekde01 ( handle, segdsc, coldsc, recptr )
 
 
-         ELSE IF ( CLASS .EQ. 3 ) THEN
+         else if ( class .eq. 2 ) then
 
-            CALL ZZEKDE03 ( HANDLE, SEGDSC, COLDSC, RECPTR )
-
-
-         ELSE IF ( CLASS .EQ. 4 ) THEN
-
-            CALL ZZEKDE04 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+            call zzekde02 ( handle, segdsc, coldsc, recptr )
 
 
-         ELSE IF ( CLASS .EQ. 5 ) THEN
+         else if ( class .eq. 3 ) then
 
-            CALL ZZEKDE05 ( HANDLE, SEGDSC, COLDSC, RECPTR )
-
-
-         ELSE IF ( CLASS .EQ. 6 ) THEN
-
-            CALL ZZEKDE06 ( HANDLE, SEGDSC, COLDSC, RECPTR )
+            call zzekde03 ( handle, segdsc, coldsc, recptr )
 
 
-         ELSE
+         else if ( class .eq. 4 ) then
+
+            call zzekde04 ( handle, segdsc, coldsc, recptr )
+
+
+         else if ( class .eq. 5 ) then
+
+            call zzekde05 ( handle, segdsc, coldsc, recptr )
+
+
+         else if ( class .eq. 6 ) then
+
+            call zzekde06 ( handle, segdsc, coldsc, recptr )
+
+
+         else
 !
 !           This is an unsupported class.
 !
-            RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+            recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-            CALL DASHLU    ( HANDLE, UNIT )
-            CALL ZZEKCNAM  ( HANDLE, COLDSC, COLUMN )
+            call dashlu    ( handle, unit )
+            call zzekcnam  ( handle, coldsc, column )
 
 
-            CALL SETMSG ( 'Class # from input column descriptor '  // &
+            call setmsg ( 'Class # from input column descriptor '  // &
                           'is not supported.  COLUMN = #; '        // &
                           'RECNO = #; SEGNO = #; EK = #.'           )
-            CALL ERRINT ( '#',  CLASS                               )
-            CALL ERRCH  ( '#',  COLUMN                              )
-            CALL ERRINT ( '#',  RECNO                               )
-            CALL ERRINT ( '#',  SEGDSC(SNOIDX)                      )
-            CALL ERRFNM ( '#',  UNIT                                )
-            CALL SIGERR ( 'SPICE(NOCLASS)'                          )
-            CALL CHKOUT ( 'EKDELR'                                  )
-            RETURN
+            call errint ( '#',  class                               )
+            call errch  ( '#',  column                              )
+            call errint ( '#',  recno                               )
+            call errint ( '#',  segdsc(snoidx)                      )
+            call errfnm ( '#',  unit                                )
+            call sigerr ( 'SPICE(NOCLASS)'                          )
+            call chkout ( 'EKDELR'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Find the page containing the record pointer.
 !
-      CALL ZZEKPGPG ( INT, RECPTR+1, P, BASE )
+      call zzekpgpg ( int, recptr+1, p, base )
 
 !
 !     Get the link count for the page.  If we have more
@@ -354,37 +354,37 @@
 !     we're down to one link, this deletion will finish off the
 !     page:  we'll deallocate it.
 !
-      CALL ZZEKGLNK ( HANDLE, INT, P, NLINKS )
+      call zzekglnk ( handle, int, p, nlinks )
 
-      IF ( NLINKS .GT. 1 ) THEN
+      if ( nlinks .gt. 1 ) then
 
-         CALL ZZEKSLNK ( HANDLE, INT, P, NLINKS-1 )
+         call zzekslnk ( handle, int, p, nlinks-1 )
 
-      ELSE
+      else
 !
 !        If we removed the last item from the page, we can delete
 !        the page.  ZZEKDPS adjusts the segment's metadata
 !        to reflect the deallocation.
 !
-         CALL ZZEKDPS ( HANDLE, SEGDSC, INT, P )
+         call zzekdps ( handle, segdsc, int, p )
 
-      END IF
+      end if
 
 !
 !     The entry corresponding to the record is deleted from
 !     the data record tree at index RECNO.  The record count gets
 !     decremented.
 !
-      CALL ZZEKTRDL ( HANDLE,  SEGDSC(RTIDX),  RECNO )
+      call zzektrdl ( handle,  segdsc(rtidx),  recno )
 
-      SEGDSC ( NRIDX )  =  SEGDSC ( NRIDX ) - 1
+      segdsc ( nridx )  =  segdsc ( nridx ) - 1
 
 !
 !     Write out the updated segment descriptor.
 !
-      CALL DASUDI ( HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC )
+      call dasudi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
 
-      CALL CHKOUT ( 'EKDELR' )
-      RETURN
-      END
+      call chkout ( 'EKDELR' )
+      return
+      end

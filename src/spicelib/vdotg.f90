@@ -1,6 +1,6 @@
 !$Procedure VDOTG ( Vector dot product, general dimension )
 
-      DOUBLE PRECISION FUNCTION VDOTG ( V1, V2, NDIM )
+      double precision function vdotg ( v1, v2, ndim )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V1  ( * )
-      DOUBLE PRECISION   V2  ( * )
-      INTEGER            NDIM
+      double precision   v1  ( * )
+      double precision   v2  ( * )
+      integer            ndim
 
 ! $ Brief_I/O
 !
@@ -214,12 +214,12 @@
 !-&
 
 
-      INTEGER I
+      integer i
 !
-      VDOTG = 0.D0
-      DO I = 1, NDIM
-         VDOTG = VDOTG + V1(I)*V2(I)
-      END DO
+      vdotg = 0.d0
+      do i = 1, ndim
+         vdotg = vdotg + v1(i)*v2(i)
+      end do
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure HRMINT ( Hermite polynomial interpolation  )
 
-      SUBROUTINE HRMINT ( N,  XVALS,  YVALS,  X,  WORK,  F,  DF )
+      subroutine hrmint ( n,  xvals,  yvals,  x,  work,  f,  df )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      DOUBLE PRECISION      XVALS (   N )
-      DOUBLE PRECISION      YVALS ( 2*N )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      WORK  ( 2*N, 2 )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      DF
+      integer               n
+      double precision      xvals (   n )
+      double precision      yvals ( 2*n )
+      double precision      x
+      double precision      work  ( 2*n, 2 )
+      double precision      f
+      double precision      df
 
 ! $ Brief_I/O
 !
@@ -245,53 +245,53 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      TEMP
+      double precision      c1
+      double precision      c2
+      double precision      denom
+      double precision      temp
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NEXT
-      INTEGER               PREV
-      INTEGER               THIS
-      INTEGER               XI
-      INTEGER               XIJ
+      integer               i
+      integer               j
+      integer               next
+      integer               prev
+      integer               this
+      integer               xi
+      integer               xij
 
 !
 !     Check in only if an error is detected.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     No data, no interpolation.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL CHKIN  ( 'HRMINT'                              )
-         CALL SETMSG ( 'Array size must be positive; was #.' )
-         CALL ERRINT ( '#',  N                               )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                  )
-         CALL CHKOUT ( 'HRMINT'                              )
-         RETURN
+         call chkin  ( 'HRMINT'                              )
+         call setmsg ( 'Array size must be positive; was #.' )
+         call errint ( '#',  n                               )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                  )
+         call chkout ( 'HRMINT'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Copy the input array into WORK.  After this, the first column
 !     of WORK represents the first column of our triangular
 !     interpolation table.
 !
-      DO I = 1, 2*N
-         WORK(I,1) = YVALS(I)
-      END DO
+      do i = 1, 2*n
+         work(i,1) = yvals(i)
+      end do
 
 !
 !     Compute the second column of the interpolation table: this
@@ -305,25 +305,25 @@
 !     we must evaluate the derivatives first.
 !
 
-      DO I = 1, N-1
+      do i = 1, n-1
 
-         C1     =  XVALS(I+1) - X
-         C2     =  X          - XVALS(I)
-         DENOM  =  XVALS(I+1) - XVALS(I)
+         c1     =  xvals(i+1) - x
+         c2     =  x          - xvals(i)
+         denom  =  xvals(i+1) - xvals(i)
 
 
-         IF ( DENOM .EQ. 0.D0 ) THEN
+         if ( denom .eq. 0.d0 ) then
 
-            CALL CHKIN  ( 'HRMINT'                  )
-            CALL SETMSG ( 'XVALS(#) = XVALS(#) = #' )
-            CALL ERRINT ( '#',   I                  )
-            CALL ERRINT ( '#',   I+1                )
-            CALL ERRDP  ( '#',   XVALS(I)           )
-            CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'     )
-            CALL CHKOUT ( 'HRMINT'                  )
-            RETURN
+            call chkin  ( 'HRMINT'                  )
+            call setmsg ( 'XVALS(#) = XVALS(#) = #' )
+            call errint ( '#',   i                  )
+            call errint ( '#',   i+1                )
+            call errdp  ( '#',   xvals(i)           )
+            call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
+            call chkout ( 'HRMINT'                  )
+            return
 
-         END IF
+         end if
 
 !
 !        The second column of WORK contains interpolated derivative
@@ -332,48 +332,48 @@
 !        The odd-indexed interpolated derivatives are simply the input
 !        derivatives.
 !
-         PREV = 2*I  - 1
-         THIS = PREV + 1
-         NEXT = THIS + 1
+         prev = 2*i  - 1
+         this = prev + 1
+         next = this + 1
 
-         WORK( PREV,  2 )  =    WORK( THIS, 1 )
+         work( prev,  2 )  =    work( this, 1 )
 
 !
 !        The even-indexed interpolated derivatives are the slopes of
 !        the linear interpolating polynomials for adjacent input
 !        abscissa/ordinate pairs.
 !
-         WORK( THIS, 2 ) = ( WORK(NEXT, 1) - WORK(PREV, 1) ) / DENOM
+         work( this, 2 ) = ( work(next, 1) - work(prev, 1) ) / denom
 
 !
 !        The first column of WORK contains interpolated function values.
 !        The odd-indexed entries are the linear Taylor polynomials,
 !        for each input abscissa value, evaluated at X.
 !
-         TEMP  = WORK(THIS, 1) * ( X - XVALS(I) )  +  WORK(PREV, 1)
+         temp  = work(this, 1) * ( x - xvals(i) )  +  work(prev, 1)
 
 
-         WORK( THIS, 1 ) = (   C1 * WORK( PREV, 1 ) &
-                             + C2 * WORK( NEXT, 1 )  )  /  DENOM
+         work( this, 1 ) = (   c1 * work( prev, 1 ) &
+                             + c2 * work( next, 1 )  )  /  denom
 
-         WORK( PREV, 1 ) =     TEMP
+         work( prev, 1 ) =     temp
 
-      END DO
+      end do
 
 !
 !     The last column entries were not computed by the preceding loop;
 !     compute them now.
 !
-      WORK ( 2*N - 1,  2 )  =    WORK( 2*N,     1 )
-      WORK ( 2*N - 1,  1 )  =    WORK( 2*N,     1 ) * ( X - XVALS(N) ) &
-                               + WORK( 2*N - 1, 1 )
+      work ( 2*n - 1,  2 )  =    work( 2*n,     1 )
+      work ( 2*n - 1,  1 )  =    work( 2*n,     1 ) * ( x - xvals(n) ) &
+                               + work( 2*n - 1, 1 )
 
 !
 !     Compute columns 3 through 2*N of the table.
 !
-      DO J = 2, 2*N-1
+      do j = 2, 2*n-1
 
-         DO I = 1, 2*N-J
+         do i = 1, 2*n-j
 !
 !           In the theoretical construction of the interpolation table,
 !           there are 2*N abscissa values, since each input abscissa
@@ -385,26 +385,26 @@
 !           physical XVALS array, in which the abscissa values are not
 !           repeated.
 !
-            XI       =   ( I     + 1 ) / 2
-            XIJ      =   ( I + J + 1 ) / 2
+            xi       =   ( i     + 1 ) / 2
+            xij      =   ( i + j + 1 ) / 2
 
-            C1       =     XVALS(XIJ)   -   X
-            C2       =     X            -   XVALS(XI)
+            c1       =     xvals(xij)   -   x
+            c2       =     x            -   xvals(xi)
 
-            DENOM    =     XVALS(XIJ)   -   XVALS(XI)
+            denom    =     xvals(xij)   -   xvals(xi)
 
-            IF ( DENOM .EQ. 0.D0 ) THEN
+            if ( denom .eq. 0.d0 ) then
 
-               CALL CHKIN  ( 'HRMINT'                  )
-               CALL SETMSG ( 'XVALS(#) = XVALS(#) = #' )
-               CALL ERRINT ( '#',   XI                 )
-               CALL ERRINT ( '#',   XIJ                )
-               CALL ERRDP  ( '#',   XVALS(XI)          )
-               CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'     )
-               CALL CHKOUT ( 'HRMINT'                  )
-               RETURN
+               call chkin  ( 'HRMINT'                  )
+               call setmsg ( 'XVALS(#) = XVALS(#) = #' )
+               call errint ( '#',   xi                 )
+               call errint ( '#',   xij                )
+               call errdp  ( '#',   xvals(xi)          )
+               call sigerr ( 'SPICE(DIVIDEBYZERO)'     )
+               call chkout ( 'HRMINT'                  )
+               return
 
-            END IF
+            end if
 
 !
 !           Compute the interpolated derivative at X for the Ith
@@ -418,25 +418,25 @@
 !           The derivative expression here corresponds to equation
 !           2.35 on page 64 in reference [2].
 !
-            WORK(I,2) = (              C1  * WORK(I,   2) &
-                          +            C2  * WORK(I+1, 2) &
-                          + ( WORK(I+1, 1) - WORK(I,   1) )  ) / DENOM
+            work(i,2) = (              c1  * work(i,   2) &
+                          +            c2  * work(i+1, 2) &
+                          + ( work(i+1, 1) - work(i,   1) )  ) / denom
 !
 !           Compute the interpolated function value at X for the Ith
 !           interpolant.
 !
-            WORK(I,1) = ( C1 * WORK(I,1)  +  C2 * WORK(I+1,1) ) / DENOM
+            work(i,1) = ( c1 * work(i,1)  +  c2 * work(i+1,1) ) / denom
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Our interpolated function value is sitting in WORK(1,1) at this
 !     point.  The interpolated derivative is located in WORK(1,2).
 !
-      F   =  WORK( 1, 1 )
-      DF  =  WORK( 1, 2 )
+      f   =  work( 1, 1 )
+      df  =  work( 1, 2 )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SCLU01 ( SCLK look up, type 1 )
 
-      SUBROUTINE SCLU01 (  NAME,  SC,  MAXNV,  N,  IVAL,  DVAL )
+      subroutine sclu01 (  name,  sc,  maxnv,  n,  ival,  dval )
 
 ! $ Abstract
 !
@@ -17,16 +17,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sclk.inc'
+      include               'sclk.inc'
 
-      CHARACTER*(*)         NAME
-      INTEGER               SC
-      INTEGER               MAXNV
-      INTEGER               N
-      INTEGER               IVAL ( * )
-      DOUBLE PRECISION      DVAL ( * )
+      character*(*)         name
+      integer               sc
+      integer               maxnv
+      integer               n
+      integer               ival ( * )
+      double precision      dval ( * )
 
 ! $ Brief_I/O
 !
@@ -200,101 +200,101 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN =        320 )
+      integer               msglen
+      parameter           ( msglen =        320 )
 
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN =         32 )
+      integer               kvnmln
+      parameter           ( kvnmln =         32 )
 
 !
 !     MXCOFA is the maximum size of the coefficient array.
 !
-      INTEGER               MXCOFA
-      PARAMETER           ( MXCOFA = 3 * MXCOEF )
+      integer               mxcofa
+      parameter           ( mxcofa = 3 * mxcoef )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN =         80 )
+      integer               namlen
+      parameter           ( namlen =         80 )
 
-      INTEGER               NKITEM
-      PARAMETER           ( NKITEM =          9 )
+      integer               nkitem
+      parameter           ( nkitem =          9 )
 
 !
 !     COFIDX is the index of the coefficient name in NAMLST.
 !
-      INTEGER               COFIDX
-      PARAMETER           ( COFIDX =  1 )
+      integer               cofidx
+      parameter           ( cofidx =  1 )
 
 !
 !     NFLIDX is the index of the SCLK field count in NAMLST.
 !
-      INTEGER               NFLIDX
-      PARAMETER           ( NFLIDX =  4 )
+      integer               nflidx
+      parameter           ( nflidx =  4 )
 
 !
 !     OFFIDX is the index of the SCLK offsets in NAMLST.
 !
-      INTEGER               OFFIDX
-      PARAMETER           ( OFFIDX =  5 )
+      integer               offidx
+      parameter           ( offidx =  5 )
 
 !
 !     MODIDX is the index of the SCLK moduli in NAMLST.
 !
-      INTEGER               MODIDX
-      PARAMETER           ( MODIDX =  6 )
+      integer               modidx
+      parameter           ( modidx =  6 )
 
 !
 !     DELIDX is the index of the delimiter code name in NAMLST.  If
 !     the declaration of NAMLST or assignment of values to NAMLST
 !     changes, this parameter value may have to change.
 !
-      INTEGER               DELIDX
-      PARAMETER           ( DELIDX =  7 )
+      integer               delidx
+      parameter           ( delidx =  7 )
 
 !
 !     SYSIDX is the index of the time system in NAMLST.
 !
-      INTEGER               SYSIDX
-      PARAMETER           ( SYSIDX =  9 )
+      integer               sysidx
+      parameter           ( sysidx =  9 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    BVLMSG
-      CHARACTER*(MSGLEN)    ERRMSG
-      CHARACTER*(KVNMLN)    KVNAME
-      CHARACTER*(MSGLEN)    NFDMSG
-      CHARACTER*(MSGLEN)    NUMMSG
-      CHARACTER*(NAMLEN)    NAMLST ( NKITEM )
-      CHARACTER*(NAMLEN)    TMPNAM
-      CHARACTER*(1)         TYPE
+      character*(msglen)    bvlmsg
+      character*(msglen)    errmsg
+      character*(kvnmln)    kvname
+      character*(msglen)    nfdmsg
+      character*(msglen)    nummsg
+      character*(namlen)    namlst ( nkitem )
+      character*(namlen)    tmpnam
+      character*(1)         type
 
-      INTEGER               I
-      INTEGER               LB     ( NKITEM )
-      INTEGER               NF
-      INTEGER               NFIELD
-      INTEGER               UB     ( NKITEM )
+      integer               i
+      integer               lb     ( nkitem )
+      integer               nf
+      integer               nfield
+      integer               ub     ( nkitem )
 
-      LOGICAL               FOUND
+      logical               found
 
 
 !
 !     Saved variables
 !
-      SAVE                  BVLMSG
-      SAVE                  LB
-      SAVE                  NAMLST
-      SAVE                  NFDMSG
-      SAVE                  NUMMSG
-      SAVE                  UB
+      save                  bvlmsg
+      save                  lb
+      save                  namlst
+      save                  nfdmsg
+      save                  nummsg
+      save                  ub
 
 !
 !     Initial values
@@ -304,43 +304,43 @@
 !     Names of type 1 SCLK items and lower bounds on the number of
 !     associated values.
 !
-      DATA (   NAMLST(I),            LB(I),  UB(I),   I = 1, NKITEM ) / &
+      data (   namlst(i),            lb(i),  ub(i),   i = 1, nkitem ) / &
 
-            'SCLK01_COEFFICIENTS',      3,   MXCOFA, &
-            'SCLK_PARTITION_START',     1,   MXPART, &
-            'SCLK_PARTITION_END',       1,   MXPART, &
+            'SCLK01_COEFFICIENTS',      3,   mxcofa, &
+            'SCLK_PARTITION_START',     1,   mxpart, &
+            'SCLK_PARTITION_END',       1,   mxpart, &
             'SCLK01_N_FIELDS',          1,   1, &
-            'SCLK01_OFFSETS',           1,   MXNFLD, &
-            'SCLK01_MODULI',            1,   MXNFLD, &
+            'SCLK01_OFFSETS',           1,   mxnfld, &
+            'SCLK01_MODULI',            1,   mxnfld, &
             'SCLK01_OUTPUT_DELIM',      1,   1, &
             'SCLK01_KERNEL_ID',         1,   1, &
             'SCLK01_TIME_SYSTEM',       0,   1                        /
 
 
-      DATA NFDMSG / '# not found. Did you load the SCLK kernel?'      /
+      data nfdmsg / '# not found. Did you load the SCLK kernel?'      /
 
-      DATA NUMMSG / '# values found for #: valid range is #:#.'       /
+      data nummsg / '# values found for #: valid range is #:#.'       /
 
-      DATA BVLMSG / 'Invalid value found for #:  #.'                  /
+      data bvlmsg / 'Invalid value found for #:  #.'                  /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCLU01' )
+      call chkin ( 'SCLU01' )
 
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-      CALL CHKOUT ( 'SCLU01' )
-      RETURN
+      call chkout ( 'SCLU01' )
+      return
 
 
 !$Procedure SCLI01 ( SCLK lookup of integer data, type 1 )
 
-      ENTRY SCLI01 ( NAME, SC, MAXNV, N, IVAL )
+      entry scli01 ( name, sc, maxnv, n, ival )
 
 ! $ Abstract
 !
@@ -597,11 +597,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCLI01' )
+      call chkin ( 'SCLI01' )
 
 !
 !     Form the name of the kernel pool data item, and do the lookup.
@@ -609,80 +609,80 @@
 !     that allows us to specify the maximum number of entries that
 !     can be returned.
 !
-      TMPNAM = NAME
+      tmpnam = name
 
-      CALL SUFFIX ( '_#',    0,       TMPNAM )
-      CALL REPMI  ( TMPNAM, '#', -SC, TMPNAM )
+      call suffix ( '_#',    0,       tmpnam )
+      call repmi  ( tmpnam, '#', -sc, tmpnam )
 
 !
 !     Make sure we have enough room for the item in our output
 !     array. Look up the dimension of the item.
 !
-      CALL DTPOOL ( TMPNAM, FOUND, N, TYPE )
+      call dtpool ( tmpnam, found, n, type )
 
-      IF ( N .GT. MAXNV ) THEN
+      if ( n .gt. maxnv ) then
 
-         CALL SETMSG ( 'Item # for SCLK # has size # but ' &
+         call setmsg ( 'Item # for SCLK # has size # but ' &
          //            'output array has size #.'         )
-         CALL ERRCH  ( '#',  TMPNAM                       )
-         CALL ERRINT ( '#',  SC                           )
-         CALL ERRINT ( '#',  N                            )
-         CALL ERRINT ( '#',  MAXNV                        )
-         CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'             )
-         CALL CHKOUT ( 'SCLI01'                           )
-         RETURN
+         call errch  ( '#',  tmpnam                       )
+         call errint ( '#',  sc                           )
+         call errint ( '#',  n                            )
+         call errint ( '#',  maxnv                        )
+         call sigerr ( 'SPICE(ARRAYTOOSMALL)'             )
+         call chkout ( 'SCLI01'                           )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the data type of the variable.
 !
-      IF (  FOUND  .AND.  ( TYPE .NE. 'N' )  ) THEN
+      if (  found  .and.  ( type .ne. 'N' )  ) then
 
-         CALL SETMSG ( 'Kernel variable # for spacecraft ' &
+         call setmsg ( 'Kernel variable # for spacecraft ' &
          //            'clock # does not have numeric type.' )
-         CALL ERRCH  ( '#', TMPNAM                           )
-         CALL ERRINT ( '#', SC                               )
-         CALL SIGERR ( 'SPICE(BADKERNELVARTYPE)'             )
-         CALL CHKOUT ( 'SCLI01'                              )
-         RETURN
+         call errch  ( '#', tmpnam                           )
+         call errint ( '#', sc                               )
+         call sigerr ( 'SPICE(BADKERNELVARTYPE)'             )
+         call chkout ( 'SCLI01'                              )
+         return
 
-      END IF
+      end if
 
-      CALL GIPOOL ( TMPNAM, 1, MAXNV, N, IVAL, FOUND )
+      call gipool ( tmpnam, 1, maxnv, n, ival, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SCLI01' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SCLI01' )
+         return
+      end if
 
 !
 !     Make sure we found what we were looking for, if the item
 !     is required.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        Currently, the only item that is NOT required is the time
 !        system specification.  In any case, no values will be returned.
 !
-         N = 0
+         n = 0
 
-         IF (  NAME .EQ. NAMLST(SYSIDX)  ) THEN
+         if (  name .eq. namlst(sysidx)  ) then
 
-            CALL CHKOUT ( 'SCLI01' )
-            RETURN
+            call chkout ( 'SCLI01' )
+            return
 
-         ELSE
+         else
 
-            CALL SETMSG (  NFDMSG                    )
-            CALL ERRCH  ( '#', TMPNAM                )
-            CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)' )
-            CALL CHKOUT ( 'SCLI01'                   )
-            RETURN
+            call setmsg (  nfdmsg                    )
+            call errch  ( '#', tmpnam                )
+            call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
+            call chkout ( 'SCLI01'                   )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Now we must check that the number of returned values is in the
@@ -703,24 +703,24 @@
 !     See if the input name is in the list of items we know about.
 !     If it is, perform the bound checks that apply.
 !
-      I = ISRCHC ( NAME, NKITEM, NAMLST )
+      i = isrchc ( name, nkitem, namlst )
 
-      IF ( I .NE. 0 ) THEN
+      if ( i .ne. 0 ) then
 
-         IF (  (  N .LT. LB(I) ) .OR. ( N .GT. UB(I) )  ) THEN
+         if (  (  n .lt. lb(i) ) .or. ( n .gt. ub(i) )  ) then
 
-            CALL REPMI  (  NUMMSG, '#', N,      ERRMSG )
-            CALL REPMC  (  ERRMSG, '#', TMPNAM, ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', LB(I),  ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', UB(I),  ERRMSG )
-            CALL SETMSG (  ERRMSG                      )
-            CALL SIGERR ( 'SPICE(SIZEOUTOFRANGE)'      )
-            CALL CHKOUT ( 'SCLI01'                     )
-            RETURN
+            call repmi  (  nummsg, '#', n,      errmsg )
+            call repmc  (  errmsg, '#', tmpnam, errmsg )
+            call repmi  (  errmsg, '#', lb(i),  errmsg )
+            call repmi  (  errmsg, '#', ub(i),  errmsg )
+            call setmsg (  errmsg                      )
+            call sigerr ( 'SPICE(SIZEOUTOFRANGE)'      )
+            call chkout ( 'SCLI01'                     )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check values of kernel variables:
@@ -734,60 +734,60 @@
 !        - The time system code is at least 1 and is not greater
 !          than MXTSYS.
 !
-      IF ( NAME .EQ. NAMLST(DELIDX) ) THEN
+      if ( name .eq. namlst(delidx) ) then
 
-         IF (  ( IVAL(1) .LT. 1 ) .OR. ( IVAL(1) .GT. NDELIM )  ) THEN
+         if (  ( ival(1) .lt. 1 ) .or. ( ival(1) .gt. ndelim )  ) then
 
-            CALL REPMC  (  BVLMSG, '#', TMPNAM,  ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', IVAL(1), ERRMSG )
-            CALL SETMSG (  ERRMSG                       )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'      )
-            CALL CHKOUT ( 'SCLI01'                      )
-            RETURN
+            call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
+            call repmi  (  errmsg, '#', ival(1), errmsg )
+            call setmsg (  errmsg                       )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
+            call chkout ( 'SCLI01'                      )
+            return
 
-         END IF
+         end if
 
-      END IF
-
-
-      IF ( NAME .EQ. NAMLST(NFLIDX) ) THEN
-
-         IF (  ( IVAL(1) .LT. 1 ) .OR. ( IVAL(1) .GT. MXNFLD )  ) THEN
-
-            CALL REPMC  (  BVLMSG, '#', TMPNAM,  ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', IVAL(1), ERRMSG )
-            CALL SETMSG (  ERRMSG                       )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'      )
-            CALL CHKOUT ( 'SCLI01'                      )
-            RETURN
-
-         END IF
-
-      END IF
+      end if
 
 
-      IF ( NAME .EQ. NAMLST(SYSIDX) ) THEN
+      if ( name .eq. namlst(nflidx) ) then
 
-         IF (  ( IVAL(1) .LT. 1 ) .OR. ( IVAL(1) .GT. MXTSYS )  ) THEN
+         if (  ( ival(1) .lt. 1 ) .or. ( ival(1) .gt. mxnfld )  ) then
 
-            CALL REPMC  (  BVLMSG, '#', TMPNAM,  ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', IVAL(1), ERRMSG )
-            CALL SETMSG (  ERRMSG                       )
-            CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'      )
-            CALL CHKOUT ( 'SCLI01'                      )
-            RETURN
+            call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
+            call repmi  (  errmsg, '#', ival(1), errmsg )
+            call setmsg (  errmsg                       )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
+            call chkout ( 'SCLI01'                      )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SCLI01' )
-      RETURN
+
+      if ( name .eq. namlst(sysidx) ) then
+
+         if (  ( ival(1) .lt. 1 ) .or. ( ival(1) .gt. mxtsys )  ) then
+
+            call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
+            call repmi  (  errmsg, '#', ival(1), errmsg )
+            call setmsg (  errmsg                       )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
+            call chkout ( 'SCLI01'                      )
+            return
+
+         end if
+
+      end if
+
+      call chkout ( 'SCLI01' )
+      return
 
 
 !$Procedure SCLD01 ( SCLK lookup of double precision data, type 1 )
 
-      ENTRY SCLD01 ( NAME, SC, MAXNV, N, DVAL )
+      entry scld01 ( name, sc, maxnv, n, dval )
 
 ! $ Abstract
 !
@@ -1078,79 +1078,79 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SCLD01' )
+      call chkin ( 'SCLD01' )
 
 !
 !     Form the name of the kernel pool datum, and do the lookup.
 !
-      TMPNAM = NAME
+      tmpnam = name
 
-      CALL SUFFIX ( '_#',    0,        TMPNAM )
-      CALL REPMI  ( TMPNAM, '#', -SC,  TMPNAM )
+      call suffix ( '_#',    0,        tmpnam )
+      call repmi  ( tmpnam, '#', -sc,  tmpnam )
 
 !
 !     Make sure we have enough room for the item in our output
 !     array. Look up the dimension of the item.
 !
-      CALL DTPOOL ( TMPNAM,  FOUND,  N,  TYPE )
+      call dtpool ( tmpnam,  found,  n,  type )
 
-      IF ( N .GT. MAXNV ) THEN
+      if ( n .gt. maxnv ) then
 
-         CALL SETMSG ( 'Item # has size # but output array ' &
+         call setmsg ( 'Item # has size # but output array ' &
          //            'has size #.'                         )
-         CALL ERRCH  ( '#',  TMPNAM                          )
-         CALL ERRINT ( '#',  N                               )
-         CALL ERRINT ( '#',  MAXNV                           )
-         CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'                )
-         CALL CHKOUT ( 'SCLD01'                              )
-         RETURN
+         call errch  ( '#',  tmpnam                          )
+         call errint ( '#',  n                               )
+         call errint ( '#',  maxnv                           )
+         call sigerr ( 'SPICE(ARRAYTOOSMALL)'                )
+         call chkout ( 'SCLD01'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the data type of the variable.
 !
-      IF (  FOUND  .AND.  ( TYPE .NE. 'N' )  ) THEN
+      if (  found  .and.  ( type .ne. 'N' )  ) then
 
-         CALL SETMSG ( 'Kernel variable # for spacecraft ' &
+         call setmsg ( 'Kernel variable # for spacecraft ' &
          //            'clock # does not have numeric type.' )
-         CALL ERRCH  ( '#', TMPNAM                           )
-         CALL ERRINT ( '#', SC                               )
-         CALL SIGERR ( 'SPICE(BADKERNELVARTYPE)'             )
-         CALL CHKOUT ( 'SCLD01'                              )
-         RETURN
+         call errch  ( '#', tmpnam                           )
+         call errint ( '#', sc                               )
+         call sigerr ( 'SPICE(BADKERNELVARTYPE)'             )
+         call chkout ( 'SCLD01'                              )
+         return
 
-      END IF
+      end if
 
-      CALL GDPOOL ( TMPNAM, 1, MAXNV, N, DVAL, FOUND )
+      call gdpool ( tmpnam, 1, maxnv, n, dval, found )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
-         CALL CHKOUT ( 'SCLD01' )
-         RETURN
-      END IF
+         call chkout ( 'SCLD01' )
+         return
+      end if
 !
 !     Make sure we found what we were looking for.
 !
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        No values are returned in this case.
 !
-         N = 0
+         n = 0
 
-         CALL SETMSG (  NFDMSG                    )
-         CALL ERRCH  ( '#', TMPNAM                )
-         CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)' )
-         CALL CHKOUT ( 'SCLD01'                   )
-         RETURN
+         call setmsg (  nfdmsg                    )
+         call errch  ( '#', tmpnam                )
+         call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
+         call chkout ( 'SCLD01'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Now we must check that the number of returned values is in the
@@ -1178,116 +1178,116 @@
 !     See if the input name is in the list of items we know about.
 !     If it is, perform the bounds checks that apply.
 !
-      I = ISRCHC ( NAME, NKITEM, NAMLST )
+      i = isrchc ( name, nkitem, namlst )
 
-      IF ( I .NE. 0 ) THEN
+      if ( i .ne. 0 ) then
 
-         IF (  (  N .LT. LB(I) ) .OR. ( N .GT. UB(I) )  ) THEN
+         if (  (  n .lt. lb(i) ) .or. ( n .gt. ub(i) )  ) then
 
-            CALL REPMI  (  NUMMSG, '#', N,      ERRMSG )
-            CALL REPMC  (  ERRMSG, '#', TMPNAM, ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', LB(I),  ERRMSG )
-            CALL REPMI  (  ERRMSG, '#', UB(I),  ERRMSG )
-            CALL SETMSG (  ERRMSG                      )
-            CALL SIGERR ( 'SPICE(SIZEOUTOFRANGE)'      )
-            CALL CHKOUT ( 'SCLD01'                     )
-            RETURN
+            call repmi  (  nummsg, '#', n,      errmsg )
+            call repmc  (  errmsg, '#', tmpnam, errmsg )
+            call repmi  (  errmsg, '#', lb(i),  errmsg )
+            call repmi  (  errmsg, '#', ub(i),  errmsg )
+            call setmsg (  errmsg                      )
+            call sigerr ( 'SPICE(SIZEOUTOFRANGE)'      )
+            call chkout ( 'SCLD01'                     )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
-      IF ( NAME .EQ. NAMLST(COFIDX) ) THEN
+      if ( name .eq. namlst(cofidx) ) then
 
-         IF (  ( (N/3)*3 )  .NE.  N  ) THEN
+         if (  ( (n/3)*3 )  .ne.  n  ) then
 
-            CALL SETMSG ( 'Coefficient count for # must ' &
+            call setmsg ( 'Coefficient count for # must ' &
             //            'be multiple of 3 but was #.'  )
-            CALL ERRCH  ( '#', TMPNAM                    )
-            CALL ERRINT ( '#', N                         )
-            CALL SIGERR ( 'SPICE(INVALIDSIZE)'           )
-            CALL CHKOUT ( 'SCLD01'                       )
-            RETURN
+            call errch  ( '#', tmpnam                    )
+            call errint ( '#', n                         )
+            call sigerr ( 'SPICE(INVALIDSIZE)'           )
+            call chkout ( 'SCLD01'                       )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Check the values of the moduli themselves. Also check the
 !     moduli count against the field count.
 !
-      IF ( NAME .EQ. NAMLST(MODIDX) ) THEN
+      if ( name .eq. namlst(modidx) ) then
 
-         DO I = 1, N
+         do i = 1, n
 
-            IF ( DVAL(I) .LT. 1.D0 ) THEN
-               CALL REPMC  (  BVLMSG, '#', TMPNAM,      ERRMSG )
-               CALL REPMD  (  ERRMSG, '#', DVAL(I), 14, ERRMSG )
-               CALL SETMSG (  ERRMSG                           )
-               CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'          )
-               CALL CHKOUT ( 'SCLD01'                          )
-               RETURN
-            END IF
+            if ( dval(i) .lt. 1.d0 ) then
+               call repmc  (  bvlmsg, '#', tmpnam,      errmsg )
+               call repmd  (  errmsg, '#', dval(i), 14, errmsg )
+               call setmsg (  errmsg                           )
+               call sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
+               call chkout ( 'SCLD01'                          )
+               return
+            end if
 
-         END DO
+         end do
 
-      END IF
+      end if
 
 
-      IF (       ( NAME .EQ. NAMLST(MODIDX) ) &
-           .OR.  ( NAME .EQ. NAMLST(OFFIDX) )  ) THEN
+      if (       ( name .eq. namlst(modidx) ) &
+           .or.  ( name .eq. namlst(offidx) )  ) then
 !
 !        Get the field count for this clock.
 !
-         KVNAME = NAMLST( NFLIDX )(:KVNMLN)
+         kvname = namlst( nflidx )(:kvnmln)
 
-         CALL SUFFIX ( '_#',    0,        KVNAME )
-         CALL REPMI  ( KVNAME, '#', -SC,  KVNAME )
+         call suffix ( '_#',    0,        kvname )
+         call repmi  ( kvname, '#', -sc,  kvname )
 
-         CALL GIPOOL ( KVNAME, 1, 1, NF, NFIELD, FOUND )
+         call gipool ( kvname, 1, 1, nf, nfield, found )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SCLD01')
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SCLD01')
+            return
+         end if
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL SETMSG ( 'Field count was not found for SCLK #.' )
-            CALL ERRINT ( '#', SC                    )
-            CALL SIGERR ( 'SPICE(KERNELVARNOTFOUND)' )
-            CALL CHKOUT ( 'SCLD01'                   )
-            RETURN
+            call setmsg ( 'Field count was not found for SCLK #.' )
+            call errint ( '#', sc                    )
+            call sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
+            call chkout ( 'SCLD01'                   )
+            return
 
-         END IF
+         end if
 
-         IF ( N .NE. NFIELD ) THEN
+         if ( n .ne. nfield ) then
 
-            IF ( NAME .EQ. NAMLST(MODIDX) ) THEN
+            if ( name .eq. namlst(modidx) ) then
 
-               CALL SETMSG ( 'Modulus count # does not match ' &
+               call setmsg ( 'Modulus count # does not match ' &
                //            'field count # for SCLK #.'      )
 
-            ELSE
+            else
 
-               CALL SETMSG ( 'Offset count # does not match ' &
+               call setmsg ( 'Offset count # does not match ' &
                //            'field count # for SCLK #.'      )
 
-            END IF
+            end if
 
-            CALL ERRINT ( '#', N               )
-            CALL ERRINT ( '#', NFIELD          )
-            CALL ERRINT ( '#', SC              )
-            CALL SIGERR ( 'SPICE(INVALIDSIZE)' )
-            CALL CHKOUT ( 'SCLD01'             )
-            RETURN
+            call errint ( '#', n               )
+            call errint ( '#', nfield          )
+            call errint ( '#', sc              )
+            call sigerr ( 'SPICE(INVALIDSIZE)' )
+            call chkout ( 'SCLD01'             )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SCLD01' )
-      RETURN
-      END
+      call chkout ( 'SCLD01' )
+      return
+      end

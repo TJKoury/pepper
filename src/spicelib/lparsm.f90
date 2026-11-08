@@ -1,6 +1,6 @@
 !$Procedure LPARSM ( Parse a list of items )
 
-      SUBROUTINE LPARSM ( LIST, DELIMS, NMAX, N, ITEMS )
+      subroutine lparsm ( list, delims, nmax, n, items )
 
 ! $ Abstract
 !
@@ -19,13 +19,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    LIST
-      CHARACTER*(*)    DELIMS
-      INTEGER          NMAX
-      INTEGER          N
-      CHARACTER*(*)    ITEMS ( * )
+      character*(*)    list
+      character*(*)    delims
+      integer          nmax
+      integer          n
+      character*(*)    items ( * )
 
 ! $ Brief_I/O
 !
@@ -306,21 +306,21 @@
 !
 !     Local parameters
 !
-      CHARACTER*(1)         BLANK
-      PARAMETER           ( BLANK = ' ' )
+      character*(1)         blank
+      parameter           ( blank = ' ' )
 
-      INTEGER               ISPACE
-      PARAMETER           ( ISPACE = 32 )
+      integer               ispace
+      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         BCHR
-      CHARACTER*(1)         ECHR
+      character*(1)         bchr
+      character*(1)         echr
 
-      INTEGER               B
-      INTEGER               E
-      INTEGER               EOL
+      integer               b
+      integer               e
+      integer               eol
 
 !
 !     Because speed is essential in many list parsing applications,
@@ -333,26 +333,26 @@
 !
 !     Nothing yet.
 !
-      N = 0
+      n = 0
 
 !
 !     Blank list contains a blank item.
 !
-      IF ( LIST .EQ. BLANK ) THEN
+      if ( list .eq. blank ) then
 
-         N        = 1
-         ITEMS(1) = BLANK
+         n        = 1
+         items(1) = blank
 
-      ELSE
+      else
 !
 !        Eliminate trailing blanks. EOL is the last non-blank
 !        character in the list.
 !
-         EOL = LEN ( LIST )
+         eol = len ( list )
 
-         DO WHILE ( ICHAR(LIST(EOL:EOL)) .EQ. ISPACE )
-            EOL = EOL - 1
-         END DO
+         do while ( ichar(list(eol:eol)) .eq. ispace )
+            eol = eol - 1
+         end do
 
 !
 !        As the King said to Alice: 'Begin at the beginning.
@@ -363,9 +363,9 @@
 !        if any; otherwise E points to either the last character
 !        preceding the next item, or to the last character of the list.
 !
-         B = 1
+         b = 1
 
-         DO WHILE ( B .LE. EOL )
+         do while ( b .le. eol )
 !
 !           Skip any blanks before the next item or delimiter.
 !
@@ -373,18 +373,18 @@
 !
 !              B <= EOL
 !
-            BCHR = LIST(B:B)
+            bchr = list(b:b)
 
-            DO WHILE (       ( B           .LE. EOL    ) &
-                       .AND. ( ICHAR(BCHR) .EQ. ISPACE ) )
+            do while (       ( b           .le. eol    ) &
+                       .and. ( ichar(bchr) .eq. ispace ) )
 
-               B = B + 1
+               b = b + 1
 
-               IF ( B .LE. EOL ) THEN
-                  BCHR = LIST(B:B)
-               END IF
+               if ( b .le. eol ) then
+                  bchr = list(b:b)
+               end if
 
-            END DO
+            end do
 
 !
 !           At this point B is the index of the next non-blank
@@ -394,24 +394,24 @@
 !
 !           The item ends at the next delimiter.
 !
-            E = B
+            e = b
 
-            IF ( E .LE. EOL ) THEN
-               ECHR = LIST(E:E)
-            ELSE
-               ECHR = BLANK
-            END IF
+            if ( e .le. eol ) then
+               echr = list(e:e)
+            else
+               echr = blank
+            end if
 
-            DO WHILE (       (  E                     .LE. EOL ) &
-                       .AND. (  INDEX( DELIMS, ECHR ) .EQ. 0   )  )
+            do while (       (  e                     .le. eol ) &
+                       .and. (  index( delims, echr ) .eq. 0   )  )
 
-               E = E + 1
+               e = e + 1
 
-               IF ( E .LE. EOL ) THEN
-                  ECHR = LIST(E:E)
-               END IF
+               if ( e .le. eol ) then
+                  echr = list(e:e)
+               end if
 
-            END DO
+            end do
 
 !
 !           (This is different from LPARSE. If the delimiter was
@@ -422,38 +422,38 @@
 !           By definition, consecutive blanks, or a blank and any
 !           other delimiter, do not count as consecutive delimiters.)
 !
-            IF (       ( E           .LE. EOL    ) &
-                 .AND. ( ICHAR(ECHR) .EQ. ISPACE ) ) THEN
+            if (       ( e           .le. eol    ) &
+                 .and. ( ichar(echr) .eq. ispace ) ) then
 !
 !              Find the next non-blank character.
 !
-               DO WHILE (       ( E           .LE. EOL    ) &
-                          .AND. ( ICHAR(ECHR) .EQ. ISPACE )  )
+               do while (       ( e           .le. eol    ) &
+                          .and. ( ichar(echr) .eq. ispace )  )
 
-                  E = E + 1
+                  e = e + 1
 
-                  IF ( E .LE. EOL ) THEN
-                     ECHR = LIST(E:E)
-                  END IF
+                  if ( e .le. eol ) then
+                     echr = list(e:e)
+                  end if
 
-               END DO
+               end do
 
-               IF ( E .LE. EOL ) THEN
+               if ( e .le. eol ) then
 
-                  IF (  INDEX( DELIMS, ECHR ) .EQ. 0  ) THEN
+                  if (  index( delims, echr ) .eq. 0  ) then
 !
 !                    We're looking at a non-delimiter character.
 !
 !                    E is guaranteed to be > 1 if we're here, so the
 !                    following subtraction is valid.
 !
-                     E = E - 1
+                     e = e - 1
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 !
 !           The item now lies between B and E. Unless, of course, B and
@@ -461,39 +461,39 @@
 !           starts or ends with a non-blank delimiter, or if we have
 !           stumbled upon consecutive delimiters.
 !
-            N = N + 1
+            n = n + 1
 
-            IF ( E .GT. B ) THEN
-               ITEMS(N) = LIST(B:E-1)
-            ELSE
-               ITEMS(N) = BLANK
-            END IF
+            if ( e .gt. b ) then
+               items(n) = list(b:e-1)
+            else
+               items(n) = blank
+            end if
 
 !
 !           If there are more items to be found, continue with
 !           character following E (which is a delimiter).
 !
-            IF ( N .LT. NMAX ) THEN
-               B = E + 1
-            ELSE
-               RETURN
-            END IF
+            if ( n .lt. nmax ) then
+               b = e + 1
+            else
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        If the list ended with a (non-blank) delimiter, add a
 !        blank item to the end.
 !
-         IF (       ( INDEX( DELIMS, LIST(EOL:EOL) ) .NE. 0    ) &
-              .AND. (  N                             .LT. NMAX )  ) THEN
+         if (       ( index( delims, list(eol:eol) ) .ne. 0    ) &
+              .and. (  n                             .lt. nmax )  ) then
 
-            N        = N + 1
-            ITEMS(N) = BLANK
+            n        = n + 1
+            items(n) = blank
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure DLASSG ( DLA, same segment? )
 
-      LOGICAL FUNCTION DLASSG ( HAN1, HAN2, DSC1, DSC2 )
+      logical function dlassg ( han1, han2, dsc1, dsc2 )
 
 ! $ Abstract
 !
@@ -21,14 +21,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      INTEGER               HAN1
-      INTEGER               HAN2
-      INTEGER               DSC1 ( DLADSZ )
-      INTEGER               DSC2 ( DLADSZ )
+      integer               han1
+      integer               han2
+      integer               dsc1 ( dladsz )
+      integer               dsc2 ( dladsz )
 
 ! $ Brief_I/O
 !
@@ -185,34 +185,34 @@
 !
 !     Local variables
 !
-      INTEGER               I
+      integer               i
 
 !
 !     Give the function an initial value.
 !
-      DLASSG = .FALSE.
+      dlassg = .false.
 
 !
 !     If the handles don't match, we're done.
 !
-      IF ( HAN1 .NE. HAN2 ) THEN
-         RETURN
-      END IF
+      if ( han1 .ne. han2 ) then
+         return
+      end if
 !
 !     Compare the DLA descriptors. All elements, including pointers,
 !     must match in order to have a matching result.
 !
-      DO I = 1, DLADSZ
+      do i = 1, dladsz
 
-         IF ( DSC1(I) .NE. DSC2(I) ) THEN
-            RETURN
-         END IF
+         if ( dsc1(i) .ne. dsc2(i) ) then
+            return
+         end if
 
-      END DO
+      end do
 !
 !     At this point, everything's a match.
 !
-      DLASSG = .TRUE.
+      dlassg = .true.
 
-      RETURN
-      END
+      return
+      end

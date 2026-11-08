@@ -1,6 +1,6 @@
 !$Procedure DASDC    ( DAS delete comments )
 
-      SUBROUTINE DASDC ( HANDLE )
+      subroutine dasdc ( handle )
 
 ! $ Abstract
 !
@@ -17,9 +17,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -132,122 +132,122 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
 !     Length of a DAS file ID word.
 !
-      INTEGER               IDWLEN
-      PARAMETER           ( IDWLEN = 8 )
+      integer               idwlen
+      parameter           ( idwlen = 8 )
 !
 !     Length of a DAS file internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     Local variables
 !
-      CHARACTER*(IDWLEN)    IDWORD
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(idwlen)    idword
+      character*(ifnlen)    ifname
 
-      INTEGER               NCOMC
-      INTEGER               NCOMR
-      INTEGER               NRESVC
-      INTEGER               NRESVR
+      integer               ncomc
+      integer               ncomr
+      integer               nresvc
+      integer               nresvr
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASDC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASDC' )
+      end if
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.
 !
-      CALL DASSIH ( HANDLE, 'WRITE' )
+      call dassih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASDC' )
-         RETURN
+         call chkout ( 'DASDC' )
+         return
 
-      END IF
+      end if
 !
 !     Read the file record to obtain the current number of comment
 !     records in the DAS file attached to HANDLE. We will also get
 !     back some extra stuff that we do not use.
 !
-      CALL DASRFR ( HANDLE, &
-                    IDWORD, IFNAME, &
-                    NRESVR, NRESVC, &
-                    NCOMR,  NCOMC   )
+      call dasrfr ( handle, &
+                    idword, ifname, &
+                    nresvr, nresvc, &
+                    ncomr,  ncomc   )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'DASDC' )
-         RETURN
+         call chkout ( 'DASDC' )
+         return
 
-      END IF
+      end if
 !
 !     Now we will attempt to remove the comment records, if there are
 !     any, otherwise we do nothing.
 !
-      IF ( NCOMR .GT. 0 ) THEN
+      if ( ncomr .gt. 0 ) then
 
-         CALL DASRCR ( HANDLE, NCOMR )
+         call dasrcr ( handle, ncomr )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DASDC' )
-            RETURN
+            call chkout ( 'DASDC' )
+            return
 
-         END IF
+         end if
 !
 !        Now we need to update the DAS file record.
 !
 !        Read in the updated file record since it has been modified:
 !        we deleted all of the comment records.
 !
-         CALL DASRFR ( HANDLE, &
-                       IDWORD, IFNAME, &
-                       NRESVR, NRESVC, &
-                       NCOMR,  NCOMC   )
+         call dasrfr ( handle, &
+                       idword, ifname, &
+                       nresvr, nresvc, &
+                       ncomr,  ncomc   )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DASDC' )
-            RETURN
+            call chkout ( 'DASDC' )
+            return
 
-         END IF
+         end if
 !
 !        Zero out the number of comment characters, and write the
 !        updated file record to the file.
 !
-         NCOMC = 0
+         ncomc = 0
 
-         CALL DASWFR ( HANDLE, &
-                       IDWORD, IFNAME, &
-                       NRESVR, NRESVC, &
-                       NCOMR,  NCOMC   )
+         call daswfr ( handle, &
+                       idword, ifname, &
+                       nresvr, nresvc, &
+                       ncomr,  ncomc   )
 
-         IF ( FAILED() ) THEN
+         if ( failed() ) then
 
-            CALL CHKOUT ( 'DASDC' )
-            RETURN
+            call chkout ( 'DASDC' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     We're done now, so goodbye.
 !
-      CALL CHKOUT ( 'DASDC' )
-      RETURN
-      END
+      call chkout ( 'DASDC' )
+      return
+      end

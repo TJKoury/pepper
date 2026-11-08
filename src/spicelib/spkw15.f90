@@ -1,8 +1,8 @@
 !$Procedure SPKW15 ( SPK, write a type 15 segment )
 
-      SUBROUTINE SPKW15 ( HANDLE, BODY,  CENTER, FRAME,  FIRST, LAST, &
-                          SEGID,  EPOCH, TP,     PA,     P,     ECC, &
-                          J2FLG,  PV,    GM,     J2,     RADIUS      )
+      subroutine spkw15 ( handle, body,  center, frame,  first, last, &
+                          segid,  epoch, tp,     pa,     p,     ecc, &
+                          j2flg,  pv,    gm,     j2,     radius      )
 
 ! $ Abstract
 !
@@ -18,25 +18,25 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BODY
-      INTEGER               CENTER
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      LAST
-      CHARACTER*(*)         SEGID
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      TP     ( 3 )
-      DOUBLE PRECISION      PA     ( 3 )
-      DOUBLE PRECISION      P
-      DOUBLE PRECISION      ECC
-      DOUBLE PRECISION      J2FLG
-      DOUBLE PRECISION      PV     ( 3 )
-      DOUBLE PRECISION      GM
-      DOUBLE PRECISION      J2
-      DOUBLE PRECISION      RADIUS
+      integer               handle
+      integer               body
+      integer               center
+      character*(*)         frame
+      double precision      first
+      double precision      last
+      character*(*)         segid
+      double precision      epoch
+      double precision      tp     ( 3 )
+      double precision      pa     ( 3 )
+      double precision      p
+      double precision      ecc
+      double precision      j2flg
+      double precision      pv     ( 3 )
+      double precision      gm
+      double precision      j2
+      double precision      radius
 
 ! $ Brief_I/O
 !
@@ -289,15 +289,15 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
+      double precision      dpr
+      double precision      vdot
+      double precision      vsep
 
-      INTEGER               LASTNB
+      integer               lastnb
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               failed
+      logical               return
+      logical               vzero
 
 !
 !     Local Variables
@@ -305,104 +305,104 @@
 !
 !     Segment descriptor size
 !
-      INTEGER               NS
-      PARAMETER           ( NS      =   5 )
+      integer               ns
+      parameter           ( ns      =   5 )
 
 !
 !     Segment identifier size
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN  =  40 )
+      integer               sidlen
+      parameter           ( sidlen  =  40 )
 
 !
 !     SPK data type
 !
-      INTEGER               TYPE
-      PARAMETER           ( TYPE    = 15 )
+      integer               type
+      parameter           ( type    = 15 )
 
 !
 !     Range of printing characters
 !
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT  =  32 )
+      integer               fprint
+      parameter           ( fprint  =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT  = 126 )
+      integer               lprint
+      parameter           ( lprint  = 126 )
 
 !
 !     Number of items in a segment
 !
-      INTEGER               DATSIZ
-      PARAMETER           ( DATSIZ  = 16 )
+      integer               datsiz
+      parameter           ( datsiz  = 16 )
 
 
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      DOT
-      DOUBLE PRECISION      DESCR ( NS )
-      DOUBLE PRECISION      MYTP  ( 3 )
-      DOUBLE PRECISION      MYPA  ( 3 )
+      double precision      angle
+      double precision      dot
+      double precision      descr ( ns )
+      double precision      mytp  ( 3 )
+      double precision      mypa  ( 3 )
 
-      DOUBLE PRECISION      RECORD ( DATSIZ )
+      double precision      record ( datsiz )
 
-      INTEGER               I
-      INTEGER               VALUE
+      integer               i
+      integer               value
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKW15')
+      call chkin ( 'SPKW15')
 
 !
 !     Fetch the various entities from the inputs and put them into
 !     the data record, first the epoch.
 !
-      RECORD(1) = EPOCH
+      record(1) = epoch
 
 
 !
 !     Convert TP and PA to unit vectors.
 !
-      CALL VHAT ( PA, MYPA )
-      CALL VHAT ( TP, MYTP )
+      call vhat ( pa, mypa )
+      call vhat ( tp, mytp )
 
 !
 !     The trajectory pole vector.
 !
-      CALL VEQU ( MYTP, RECORD(2) )
+      call vequ ( mytp, record(2) )
 
 !
 !     The periapsis vector.
 !
-      CALL VEQU ( MYPA, RECORD(5) )
+      call vequ ( mypa, record(5) )
 
 !
 !     Semi-latus rectum ( P in the P/(1 + ECC*COS(Nu)  ),
 !     and eccentricity.
 !
-      RECORD(8) = P
-      RECORD(9) = ECC
+      record(8) = p
+      record(9) = ecc
 
 !
 !     J2 processing flag.
 !
-      RECORD(10) = J2FLG
+      record(10) = j2flg
 
 !
 !     Central body pole vector.
 !
-      CALL VHAT ( PV, RECORD(11) )
+      call vhat ( pv, record(11) )
 
 !
 !     The central mass, J2 and radius of the central body.
 !
-      RECORD(14) = GM
-      RECORD(15) = J2
-      RECORD(16) = RADIUS
+      record(14) = gm
+      record(15) = j2
+      record(16) = radius
 
 !
 !     Check all the inputs here for obvious failures.  It's much
@@ -410,162 +410,162 @@
 !     segment into an SPK file and diagnose it later.
 !
 
-      IF ( P .LE. 0 ) THEN
+      if ( p .le. 0 ) then
 
-         CALL SETMSG ( 'The semi-latus rectum supplied to the ' &
+         call setmsg ( 'The semi-latus rectum supplied to the ' &
          //            'SPK type 15 evaluator was non-positive.  This ' &
          //            'value must be positive. The value supplied was ' &
          //            '#.'                    )
-         CALL ERRDP  ( '#', P                  )
-         CALL SIGERR ( 'SPICE(BADLATUSRECTUM)' )
-         CALL CHKOUT ( 'SPKW15'                )
-         RETURN
+         call errdp  ( '#', p                  )
+         call sigerr ( 'SPICE(BADLATUSRECTUM)' )
+         call chkout ( 'SPKW15'                )
+         return
 
-      ELSE IF ( ECC .LT. 0.0D0 ) THEN
+      else if ( ecc .lt. 0.0d0 ) then
 
-         CALL SETMSG ( 'The eccentricity supplied for a type 15 ' &
+         call setmsg ( 'The eccentricity supplied for a type 15 ' &
          //            'segment is negative.  It must be non-negative. ' &
          //            'The value supplied ' &
          //            'to the type 15 evaluator was #. ' )
-         CALL ERRDP  ( '#',   ECC                )
-         CALL SIGERR ( 'SPICE(BADECCENTRICITY)'  )
-         CALL CHKOUT ( 'SPKW15'                  )
-         RETURN
+         call errdp  ( '#',   ecc                )
+         call sigerr ( 'SPICE(BADECCENTRICITY)'  )
+         call chkout ( 'SPKW15'                  )
+         return
 
-      ELSE IF ( GM  .LE. 0.0D0 ) THEN
+      else if ( gm  .le. 0.0d0 ) then
 
-         CALL SETMSG ( 'The mass supplied for the central body ' &
+         call setmsg ( 'The mass supplied for the central body ' &
          //            'of a type 15 segment was non-positive. ' &
          //            'Masses must be positive.  The value ' &
          //            'supplied was #. '        )
-         CALL ERRDP  ( '#', GM                   )
-         CALL SIGERR ( 'SPICE(NONPOSITIVEMASS)'  )
-         CALL CHKOUT ( 'SPKW15'                  )
-         RETURN
+         call errdp  ( '#', gm                   )
+         call sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
+         call chkout ( 'SPKW15'                  )
+         return
 
-      ELSE IF ( VZERO(TP) ) THEN
+      else if ( vzero(tp) ) then
 
-         CALL SETMSG ( 'The trajectory pole vector supplied to ' &
+         call setmsg ( 'The trajectory pole vector supplied to ' &
          //            'SPKW15 had length zero. The most likely ' &
          //            'cause of this problem is an uninitialized ' &
          //            'vector.'            )
-         CALL SIGERR ( 'SPICE(BADVECTOR)'   )
-         CALL CHKOUT ( 'SPKW15'             )
-         RETURN
+         call sigerr ( 'SPICE(BADVECTOR)'   )
+         call chkout ( 'SPKW15'             )
+         return
 
-      ELSE IF ( VZERO(PA) ) THEN
+      else if ( vzero(pa) ) then
 
-         CALL SETMSG ( 'The periapse vector supplied to SPKW15 ' &
+         call setmsg ( 'The periapse vector supplied to SPKW15 ' &
          //            'had length zero. The most likely cause ' &
          //            'of this problem is an uninitialized vector.' )
-         CALL SIGERR ( 'SPICE(BADVECTOR)'   )
-         CALL CHKOUT ( 'SPKW15'             )
-         RETURN
+         call sigerr ( 'SPICE(BADVECTOR)'   )
+         call chkout ( 'SPKW15'             )
+         return
 
-      ELSE IF ( VZERO(PV) ) THEN
+      else if ( vzero(pv) ) then
 
-         CALL SETMSG ( 'The central pole vector supplied to ' &
+         call setmsg ( 'The central pole vector supplied to ' &
          //            'SPKW15 had length zero. The most likely ' &
          //            'cause of this problem is an uninitialized ' &
          //            'vector. '           )
-         CALL SIGERR ( 'SPICE(BADVECTOR)'   )
-         CALL CHKOUT ( 'SPKW15'             )
-         RETURN
+         call sigerr ( 'SPICE(BADVECTOR)'   )
+         call chkout ( 'SPKW15'             )
+         return
 
 
-      ELSE IF ( RADIUS .LT. 0.0D0 ) THEN
+      else if ( radius .lt. 0.0d0 ) then
 
-         CALL SETMSG ( 'The central body radius was negative. ' &
+         call setmsg ( 'The central body radius was negative. ' &
          //            'It must be zero or positive.  The value ' &
          //            'supplied was #. '  )
-         CALL ERRDP  ( '#', RADIUS         )
-         CALL SIGERR ( 'SPICE(BADRADIUS)'  )
-         CALL CHKOUT ( 'SPKW15'            )
-         RETURN
+         call errdp  ( '#', radius         )
+         call sigerr ( 'SPICE(BADRADIUS)'  )
+         call chkout ( 'SPKW15'            )
+         return
 
-      END IF
+      end if
 
 !
 !     One final check.  Make sure the pole and periapse vectors are
 !     orthogonal. (We will use a very crude check but this should
 !     rule out any obvious errors.)
 !
-      DOT = VDOT ( MYPA, MYTP )
+      dot = vdot ( mypa, mytp )
 
-      IF ( ABS(DOT) .GT. 1.0D-5 ) THEN
+      if ( abs(dot) .gt. 1.0d-5 ) then
 
-         ANGLE = VSEP ( PA, TP ) * DPR()
+         angle = vsep ( pa, tp ) * dpr()
 
-         CALL SETMSG ( 'The periapsis and trajectory pole ' &
+         call setmsg ( 'The periapsis and trajectory pole ' &
          //            'vectors are not orthogonal. The angle ' &
          //            'between them is # degrees. '         )
-         CALL ERRDP  ( '#',     ANGLE        )
-         CALL SIGERR ( 'SPICE(BADINITSTATE)' )
-         CALL CHKOUT ( 'SPKW15'              )
-         RETURN
+         call errdp  ( '#',     angle        )
+         call sigerr ( 'SPICE(BADINITSTATE)' )
+         call chkout ( 'SPKW15'              )
+         return
 
-      END IF
+      end if
 !
 !     Make sure the segment identifier is not too long.
 !
-      IF ( LASTNB(SEGID) .GT. SIDLEN ) THEN
+      if ( lastnb(segid) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' &
+         call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SPKW15'                                  )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SPKW15'                                  )
+         return
 
-      END IF
+      end if
 !
 !     Make sure it has only printing characters.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         VALUE = ICHAR( SEGID(I:I) )
+         value = ichar( segid(i:i) )
 
-         IF ( ( VALUE .LT. FPRINT ) .OR. ( VALUE .GT. LPRINT ) ) THEN
+         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains ' &
+            call setmsg ( 'The segment identifier contains ' &
             //            'the nonprintable character having ascii ' &
             //            'code #.'                               )
-            CALL ERRINT ( '#',   VALUE                            )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'SPKW15'                                )
-            RETURN
+            call errint ( '#',   value                            )
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'SPKW15'                                )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     All of the obvious checks have been performed on the input
 !     record.  Create the segment descriptor. (FIRST and LAST are
 !     checked by SPKPDS as well as consistency between BODY and CENTER).
 !
-      CALL SPKPDS ( BODY,  CENTER, FRAME, TYPE, FIRST, LAST, &
-                    DESCR        )
+      call spkpds ( body,  center, frame, type, first, last, &
+                    descr        )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW15' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW15' )
+         return
+      end if
 
 !
 !     Begin a new segment.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SPKW15' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SPKW15' )
+         return
+      end if
 
-      CALL DAFADA ( RECORD, DATSIZ )
+      call dafada ( record, datsiz )
 
-      IF ( .NOT. FAILED() ) THEN
-         CALL DAFENA
-      END IF
+      if ( .not. failed() ) then
+         call dafena
+      end if
 
-      CALL CHKOUT ( 'SPKW15' )
-      RETURN
-      END
+      call chkout ( 'SPKW15' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure  ZZEKSEMC ( Private: EK, semantically check encoded query )
 
-      SUBROUTINE ZZEKSEMC ( QUERY, EQRYI, EQRYC, ERROR, ERRMSG, ERRPTR )
+      subroutine zzeksemc ( query, eqryi, eqryc, error, errmsg, errptr )
 
 ! $ Abstract
 !
@@ -22,23 +22,23 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekattdsc.inc'
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektnamsz.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekattdsc.inc'
+      include 'ekbool.inc'
+      include 'ekcnamsz.inc'
+      include 'ekopcd.inc'
+      include 'ekquery.inc'
+      include 'ektnamsz.inc'
+      include 'ektype.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
-      INTEGER               ERRPTR
+      character*(*)         query
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      logical               error
+      character*(*)         errmsg
+      integer               errptr
 
 ! $ Brief_I/O
 !
@@ -176,57 +176,57 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = 32 )
+      integer               short
+      parameter           ( short  = 32 )
 
 !
 !     Local variables
 !
 
-      CHARACTER*(TNAMSZ)    ALIAS
-      CHARACTER*(CNAMSZ)    COLNAM
-      CHARACTER*(TNAMSZ)    LHSTAB
-      CHARACTER*(TNAMSZ)    ORDTAB
-      CHARACTER*(TNAMSZ)    RHSTAB
-      CHARACTER*(SHORT)     TYPSTR ( 4 )
+      character*(tnamsz)    alias
+      character*(cnamsz)    colnam
+      character*(tnamsz)    lhstab
+      character*(tnamsz)    ordtab
+      character*(tnamsz)    rhstab
+      character*(short)     typstr ( 4 )
 
-      INTEGER               ATTDSC ( ADSCSZ )
-      INTEGER               BASE
-      INTEGER               CNSTYP
-      INTEGER               COLIDX
-      INTEGER               I
-      INTEGER               IRSOLV
-      INTEGER               LHSSIZ
-      INTEGER               LHSTYP
-      INTEGER               LXB    ( 2 )
-      INTEGER               LXE    ( 2 )
-      INTEGER               NCNJ
-      INTEGER               NCNS
-      INTEGER               NORD
-      INTEGER               NTAB
-      INTEGER               OPCODE
-      INTEGER               RHSSIZ
-      INTEGER               RHSTYP
-      INTEGER               TABIDX
-      INTEGER               TRSOLV
+      integer               attdsc ( adscsz )
+      integer               base
+      integer               cnstyp
+      integer               colidx
+      integer               i
+      integer               irsolv
+      integer               lhssiz
+      integer               lhstyp
+      integer               lxb    ( 2 )
+      integer               lxe    ( 2 )
+      integer               ncnj
+      integer               ncns
+      integer               nord
+      integer               ntab
+      integer               opcode
+      integer               rhssiz
+      integer               rhstyp
+      integer               tabidx
+      integer               trsolv
 
-      LOGICAL               LIKEOP
-      LOGICAL               NULVAL
+      logical               likeop
+      logical               nulval
 
 !
 !     Saved variables
 !
-      SAVE                  TYPSTR
+      save                  typstr
 
 !
 !     Initial values
 !
-      DATA                  TYPSTR  /  'CHARACTER', &
+      data                  typstr  /  'CHARACTER', &
                                        'DOUBLE PRECISION', &
                                        'INTEGER', &
                                        'TIME'               /
@@ -234,298 +234,298 @@
 !
 !     Use discovery check-in.
 !
-      ERROR   =  .FALSE.
-      ERRMSG  = ' '
-      ERRPTR  = 0
+      error   =  .false.
+      errmsg  = ' '
+      errptr  = 0
 
-      CALL ZZEKREQI ( EQRYI, 'NAMES_RESOLVED', IRSOLV )
+      call zzekreqi ( eqryi, 'NAMES_RESOLVED', irsolv )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IRSOLV .EQ. IFALSE ) THEN
+      if ( irsolv .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKSEMC'                                   )
-         CALL SETMSG ( 'Encoded query has not had names resolved.'  )
-         CALL SIGERR ( 'SPICE(UNRESOLVEDNAMES)'                     )
-         CALL CHKOUT ( 'ZZEKSEMC'                                   )
-         RETURN
+         call chkin  ( 'ZZEKSEMC'                                   )
+         call setmsg ( 'Encoded query has not had names resolved.'  )
+         call sigerr ( 'SPICE(UNRESOLVEDNAMES)'                     )
+         call chkout ( 'ZZEKSEMC'                                   )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZEKREQI ( EQRYI, 'TIMES_RESOLVED', TRSOLV )
+      call zzekreqi ( eqryi, 'TIMES_RESOLVED', trsolv )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( TRSOLV .EQ. IFALSE ) THEN
+      if ( trsolv .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKSEMC'                                   )
-         CALL SETMSG ( 'Encoded query has not had time values '     // &
+         call chkin  ( 'ZZEKSEMC'                                   )
+         call setmsg ( 'Encoded query has not had time values '     // &
                        'resolved.'                                  )
-         CALL SIGERR ( 'SPICE(UNRESOLVEDTIMES)'                     )
-         CALL CHKOUT ( 'ZZEKSEMC'                                   )
-         RETURN
+         call sigerr ( 'SPICE(UNRESOLVEDTIMES)'                     )
+         call chkout ( 'ZZEKSEMC'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the important counts from the query.
 !
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',        NTAB )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONSTRAINTS',   NCNS )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONJUNCTIONS',  NCNJ )
-      CALL ZZEKREQI ( EQRYI, 'NUM_ORDERBY_COLS',  NORD )
+      call zzekreqi ( eqryi, 'NUM_TABLES',        ntab )
+      call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',   ncns )
+      call zzekreqi ( eqryi, 'NUM_CONJUNCTIONS',  ncnj )
+      call zzekreqi ( eqryi, 'NUM_ORDERBY_COLS',  nord )
 
 !
 !     Perform semantic checks applicable to constraints.
 !
-      DO I = 1, NCNS
+      do i = 1, ncns
 !
 !        Calculate the base address of the constraint.
 !
-         BASE    =  EQVBAS + (NTAB * 2 * EQVDSZ) + (I-1)*EQCDSZ
+         base    =  eqvbas + (ntab * 2 * eqvdsz) + (i-1)*eqcdsz
 
 !
 !        Obtain the constraint type.
 !
-         CNSTYP  =  EQRYI ( BASE + EQCTYP )
+         cnstyp  =  eqryi ( base + eqctyp )
 
 !
 !        Get the index of the table containing the LHS column, and get
 !        the index of this column within that table.  Look up the
 !        table name.
 !
-         TABIDX  =  EQRYI ( BASE + EQLTAB - 1 + EQTORD )
-         COLIDX  =  EQRYI ( BASE + EQLCOL - 1 + EQCIDX )
-         LXB(1)  =  EQRYI ( BASE + EQLCOL - 1 + EQBLEX )
-         LXE(1)  =  EQRYI ( BASE + EQLCOL - 1 + EQELEX )
+         tabidx  =  eqryi ( base + eqltab - 1 + eqtord )
+         colidx  =  eqryi ( base + eqlcol - 1 + eqcidx )
+         lxb(1)  =  eqryi ( base + eqlcol - 1 + eqblex )
+         lxe(1)  =  eqryi ( base + eqlcol - 1 + eqelex )
 
-         CALL ZZEKQTAB ( EQRYI, EQRYC, TABIDX, LHSTAB, ALIAS )
+         call zzekqtab ( eqryi, eqryc, tabidx, lhstab, alias )
 
 !
 !        Look up the name and attributes of the column on the LHS of the
 !        constraint.
 !
-         CALL EKCII ( LHSTAB, COLIDX, COLNAM, ATTDSC )
+         call ekcii ( lhstab, colidx, colnam, attdsc )
 
-         LHSTYP  =  ATTDSC(ATTTYP)
-         LHSSIZ  =  ATTDSC(ATTSIZ)
+         lhstyp  =  attdsc(atttyp)
+         lhssiz  =  attdsc(attsiz)
 
-         IF ( LHSSIZ .NE. 1 ) THEN
+         if ( lhssiz .ne. 1 ) then
 
-            ERROR  =  .TRUE.
-            ERRMSG =  'Non-scalar column <#> having size # found '  // &
+            error  =  .true.
+            errmsg =  'Non-scalar column <#> having size # found '  // &
                       'in query constraint.'
-            CALL REPMC  ( ERRMSG, '#', QUERY(LXB(1):LXE(2)), ERRMSG )
-            CALL REPMI  ( ERRMSG, '#', LHSSIZ,               ERRMSG )
+            call repmc  ( errmsg, '#', query(lxb(1):lxe(2)), errmsg )
+            call repmi  ( errmsg, '#', lhssiz,               errmsg )
 
-            ERRPTR =  LXB(1)
-            RETURN
+            errptr =  lxb(1)
+            return
 
-         END IF
+         end if
 
 !
 !        Get the operator for the current constraint.
 !
-         OPCODE  =  EQRYI ( BASE + EQOPCD )
+         opcode  =  eqryi ( base + eqopcd )
 
 !
 !        Decide whether the constraint is an `IS NULL' or `IS NOT NULL'
 !        test.
 !
-         NULVAL  =  ( OPCODE .EQ. ISNULL ) .OR. ( OPCODE .EQ. NOTNUL )
+         nulval  =  ( opcode .eq. isnull ) .or. ( opcode .eq. notnul )
 
 !
 !        Check for use of the LIKE or NOT LIKE operators.  These
 !        operators may be used only if the LHS column has character
 !        type.
 !
-         LIKEOP  =  ( OPCODE .EQ. LIKE ) .OR. ( OPCODE .EQ. UNLIKE )
+         likeop  =  ( opcode .eq. like ) .or. ( opcode .eq. unlike )
 
 
-         IF (  LIKEOP  .AND.  ( LHSTYP .NE. CHR )  ) THEN
+         if (  likeop  .and.  ( lhstyp .ne. chr )  ) then
 
-            ERROR  =  .TRUE.
-            ERRMSG = 'LIKE and NOT LIKE operators may be used only ' // &
+            error  =  .true.
+            errmsg = 'LIKE and NOT LIKE operators may be used only ' // &
                      'with character columns.  Column <#> has type '// &
                      '#.'
 
-            CALL REPMC ( ERRMSG, '#', QUERY(LXB(1):LXE(1)),  ERRMSG )
-            CALL REPMC ( ERRMSG, '#', TYPSTR(LHSTYP),        ERRMSG )
+            call repmc ( errmsg, '#', query(lxb(1):lxe(1)),  errmsg )
+            call repmc ( errmsg, '#', typstr(lhstyp),        errmsg )
 
-            ERRPTR  =  LXB(1)
-            RETURN
+            errptr  =  lxb(1)
+            return
 
-         END IF
+         end if
 
 
 !
 !        If the constraint compares two columns, get the same
 !        information for the RHS column.
 !
-         IF ( CNSTYP .EQ. EQCOL ) THEN
+         if ( cnstyp .eq. eqcol ) then
 
-            TABIDX  =  EQRYI ( BASE + EQRTAB - 1 + EQTORD )
-            COLIDX  =  EQRYI ( BASE + EQRCOL - 1 + EQCIDX )
-            LXB(2)  =  EQRYI ( BASE + EQRCOL - 1 + EQBLEX )
-            LXE(2)  =  EQRYI ( BASE + EQRCOL - 1 + EQELEX )
+            tabidx  =  eqryi ( base + eqrtab - 1 + eqtord )
+            colidx  =  eqryi ( base + eqrcol - 1 + eqcidx )
+            lxb(2)  =  eqryi ( base + eqrcol - 1 + eqblex )
+            lxe(2)  =  eqryi ( base + eqrcol - 1 + eqelex )
 
-            CALL ZZEKQTAB ( EQRYI, EQRYC, TABIDX, RHSTAB, ALIAS )
+            call zzekqtab ( eqryi, eqryc, tabidx, rhstab, alias )
 
 !
 !           Look up the name and attributes of the column on the RHS of
 !           the constraint.
 !
-            CALL EKCII ( RHSTAB, COLIDX, COLNAM, ATTDSC )
+            call ekcii ( rhstab, colidx, colnam, attdsc )
 
-            RHSTYP  =  ATTDSC(2)
-            RHSSIZ  =  ATTDSC(4)
+            rhstyp  =  attdsc(2)
+            rhssiz  =  attdsc(4)
 
-            IF ( RHSSIZ .NE. 1 ) THEN
+            if ( rhssiz .ne. 1 ) then
 
-               ERROR  =  .TRUE.
-               ERRMSG =  'Non-scalar column <#> having size # found '// &
+               error  =  .true.
+               errmsg =  'Non-scalar column <#> having size # found '// &
                          'in query constraint.'
-               CALL REPMC  ( ERRMSG, '#', QUERY(LXB(1):LXE(2)), ERRMSG )
-               CALL REPMI  ( ERRMSG, '#', RHSSIZ,               ERRMSG )
+               call repmc  ( errmsg, '#', query(lxb(1):lxe(2)), errmsg )
+               call repmi  ( errmsg, '#', rhssiz,               errmsg )
 
-               ERRPTR =  LXB(2)
-               RETURN
+               errptr =  lxb(2)
+               return
 
-            END IF
+            end if
 
 !
 !           Check for data type mismatch.
 !
-            IF ( RHSTYP .NE. LHSTYP ) THEN
+            if ( rhstyp .ne. lhstyp ) then
 !
 !              The only allowed mismatch is between integers and
 !              d.p. numbers.
 !
-               IF (      ( LHSTYP .EQ. TIME ) &
-                    .OR. ( LHSTYP .EQ. CHR  ) &
-                    .OR. ( RHSTYP .EQ. TIME ) &
-                    .OR. ( RHSTYP .EQ. CHR  )  ) THEN
+               if (      ( lhstyp .eq. time ) &
+                    .or. ( lhstyp .eq. chr  ) &
+                    .or. ( rhstyp .eq. time ) &
+                    .or. ( rhstyp .eq. chr  )  ) then
 
-                  ERROR  =  .TRUE.
-                  ERRMSG = 'Data type mismatch: column <#> has data ' // &
+                  error  =  .true.
+                  errmsg = 'Data type mismatch: column <#> has data ' // &
                            'type #; column <#> has data type #.'
 
-                  CALL REPMC (ERRMSG, '#', QUERY(LXB(1):LXE(1)), ERRMSG)
-                  CALL REPMC (ERRMSG, '#', TYPSTR(LHSTYP),       ERRMSG)
-                  CALL REPMC (ERRMSG, '#', QUERY(LXB(2):LXE(2)), ERRMSG)
-                  CALL REPMC (ERRMSG, '#', TYPSTR(RHSTYP),       ERRMSG)
+                  call repmc (errmsg, '#', query(lxb(1):lxe(1)), errmsg)
+                  call repmc (errmsg, '#', typstr(lhstyp),       errmsg)
+                  call repmc (errmsg, '#', query(lxb(2):lxe(2)), errmsg)
+                  call repmc (errmsg, '#', typstr(rhstyp),       errmsg)
 
-                  ERRPTR = LXB(2)
-                  RETURN
+                  errptr = lxb(2)
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           The constraint compares a column against a value.  If the
 !           operator is `IS NULL' or `IS NOT NULL', there are no
 !           further semantic checks to be made.
 !
-            IF ( NULVAL ) THEN
-               RETURN
-            END IF
+            if ( nulval ) then
+               return
+            end if
 
 !
 !           Get the data type of the value on the RHS.
 !
-            RHSTYP  =  EQRYI ( BASE + EQBVAL - 1 + EQDTYP )
-            LXB(2)  =  EQRYI ( BASE + EQBVAL - 1 + EQBLEX )
-            LXE(2)  =  EQRYI ( BASE + EQBVAL - 1 + EQELEX )
+            rhstyp  =  eqryi ( base + eqbval - 1 + eqdtyp )
+            lxb(2)  =  eqryi ( base + eqbval - 1 + eqblex )
+            lxe(2)  =  eqryi ( base + eqbval - 1 + eqelex )
 
-            IF ( RHSTYP .NE. LHSTYP ) THEN
+            if ( rhstyp .ne. lhstyp ) then
 !
 !              The only allowed mismatch is between integers and
 !              d.p. numbers.
 !
-               IF (       ( LHSTYP .EQ. TIME ) &
-                     .OR. ( LHSTYP .EQ. CHR  ) &
-                     .OR. ( RHSTYP .EQ. TIME ) &
-                     .OR. ( RHSTYP .EQ. CHR  )  ) THEN
+               if (       ( lhstyp .eq. time ) &
+                     .or. ( lhstyp .eq. chr  ) &
+                     .or. ( rhstyp .eq. time ) &
+                     .or. ( rhstyp .eq. chr  )  ) then
 
-                  ERROR  =  .TRUE.
-                  ERRMSG = 'Data type mismatch: column <#> has data ' // &
+                  error  =  .true.
+                  errmsg = 'Data type mismatch: column <#> has data ' // &
                            'type #; value <#> has data type #.'
 
-                  CALL REPMC (ERRMSG, '#', QUERY(LXB(1):LXE(1)), ERRMSG)
-                  CALL REPMC (ERRMSG, '#', TYPSTR(LHSTYP),       ERRMSG)
-                  CALL REPMC (ERRMSG, '#', QUERY(LXB(2):LXE(2)), ERRMSG)
-                  CALL REPMC (ERRMSG, '#', TYPSTR(RHSTYP),       ERRMSG)
+                  call repmc (errmsg, '#', query(lxb(1):lxe(1)), errmsg)
+                  call repmc (errmsg, '#', typstr(lhstyp),       errmsg)
+                  call repmc (errmsg, '#', query(lxb(2):lxe(2)), errmsg)
+                  call repmc (errmsg, '#', typstr(rhstyp),       errmsg)
 
-                  ERRPTR = LXB(2)
-                  RETURN
+                  errptr = lxb(2)
+                  return
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         END IF
+         end if
 
 !
 !        We've finished the checks on the current constraint.
 !
-      END DO
+      end do
 
 !
 !     Now check the order-by columns, if any are present.  These
 !     columns must have scalar type.
 !
-      DO I = 1, NORD
+      do i = 1, nord
 !
 !        Get the query column descriptor for the Ith order-by column.
 !
-         BASE   =       EQVBAS &
-                    +   NTAB * 2 * EQVDSZ &
-                    +   NCNJ &
-                    +   NCNS     * EQCDSZ &
-                    +   (I-1)    * EQODSZ
+         base   =       eqvbas &
+                    +   ntab * 2 * eqvdsz &
+                    +   ncnj &
+                    +   ncns     * eqcdsz &
+                    +   (i-1)    * eqodsz
 !
 !        Look up the attributes of the column.  It's the size we're
 !        after.
 !
-         TABIDX  =  EQRYI ( BASE              + EQTORD )
-         COLIDX  =  EQRYI ( BASE + EQOCOL - 1 + EQCIDX )
-         LXB(1)  =  EQRYI ( BASE + EQOCOL - 1 + EQBLEX )
-         LXE(1)  =  EQRYI ( BASE + EQOCOL - 1 + EQELEX )
+         tabidx  =  eqryi ( base              + eqtord )
+         colidx  =  eqryi ( base + eqocol - 1 + eqcidx )
+         lxb(1)  =  eqryi ( base + eqocol - 1 + eqblex )
+         lxe(1)  =  eqryi ( base + eqocol - 1 + eqelex )
 
-         CALL ZZEKQTAB ( EQRYI, EQRYC, TABIDX, ORDTAB, ALIAS )
-
-
-         CALL EKCII ( ORDTAB, COLIDX, COLNAM, ATTDSC )
+         call zzekqtab ( eqryi, eqryc, tabidx, ordtab, alias )
 
 
-         IF ( ATTDSC(4) .NE. 1 ) THEN
+         call ekcii ( ordtab, colidx, colnam, attdsc )
 
-            ERROR  =  .TRUE.
-            ERRMSG =  'Non-scalar column <#> having size # found '  // &
+
+         if ( attdsc(4) .ne. 1 ) then
+
+            error  =  .true.
+            errmsg =  'Non-scalar column <#> having size # found '  // &
                       'in order-by column.'
-            CALL REPMC  ( ERRMSG, '#', QUERY(LXB(1):LXE(2)), ERRMSG )
-            CALL REPMI  ( ERRMSG, '#', ATTDSC(4),            ERRMSG )
+            call repmc  ( errmsg, '#', query(lxb(1):lxe(2)), errmsg )
+            call repmi  ( errmsg, '#', attdsc(4),            errmsg )
 
-            ERRPTR =  LXB(1)
-            RETURN
+            errptr =  lxb(1)
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Indicate completion of semantic checking.
 !
-      CALL ZZEKWEQI (  'SEM_CHECKED',  ITRUE,  EQRYI  )
+      call zzekweqi (  'SEM_CHECKED',  itrue,  eqryi  )
 
-      RETURN
-      END
+      return
+      end

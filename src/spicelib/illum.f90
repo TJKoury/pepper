@@ -1,7 +1,7 @@
 !$Procedure ILLUM ( Illumination angles )
 
-      SUBROUTINE ILLUM ( TARGET,  ET,     ABCORR,  OBSRVR, &
-                         SPOINT,  PHASE,  SOLAR,   EMISSN )
+      subroutine illum ( target,  et,     abcorr,  obsrvr, &
+                         spoint,  phase,  solar,   emissn )
 
 ! $ Abstract
 !
@@ -26,18 +26,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         TARGET
-      DOUBLE PRECISION      ET
-      CHARACTER*(*)         ABCORR
-      CHARACTER*(*)         OBSRVR
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      PHASE
-      DOUBLE PRECISION      SOLAR
-      DOUBLE PRECISION      EMISSN
+      character*(*)         target
+      double precision      et
+      character*(*)         abcorr
+      character*(*)         obsrvr
+      double precision      spoint ( 3 )
+      double precision      phase
+      double precision      solar
+      double precision      emissn
 
 ! $ Brief_I/O
 !
@@ -632,205 +632,205 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEP
+      double precision      vsep
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               SUN
-      PARAMETER           ( SUN    =  10 )
+      integer               sun
+      parameter           ( sun    =  10 )
 
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN =  80 )
+      integer               frnmln
+      parameter           ( frnmln =  80 )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(FRNMLN)    FRNAME
+      character*(frnmln)    frname
 
-      DOUBLE PRECISION      LT
-      DOUBLE PRECISION      LTS
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      OBSVEC ( 3 )
-      DOUBLE PRECISION      OFFOBS ( 3 )
-      DOUBLE PRECISION      OFFSUN ( 3 )
-      DOUBLE PRECISION      RADII  ( 3 )
-      DOUBLE PRECISION      SSTATE ( 6 )
-      DOUBLE PRECISION      SUNVEC ( 3 )
-      DOUBLE PRECISION      TEPOCH
-      DOUBLE PRECISION      TSTATE ( 6 )
+      double precision      lt
+      double precision      lts
+      double precision      normal ( 3 )
+      double precision      obsvec ( 3 )
+      double precision      offobs ( 3 )
+      double precision      offsun ( 3 )
+      double precision      radii  ( 3 )
+      double precision      sstate ( 6 )
+      double precision      sunvec ( 3 )
+      double precision      tepoch
+      double precision      tstate ( 6 )
 
-      INTEGER               FRCODE
-      INTEGER               OBSCDE
-      INTEGER               TRGCDE
+      integer               frcode
+      integer               obscde
+      integer               trgcde
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVTARG
-      INTEGER               SVTCDE
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svtarg
+      integer               svtcde
+      logical               svfnd1
 
-      INTEGER               SVCTR2 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVOBSR
-      INTEGER               SVOBSC
-      LOGICAL               SVFND2
+      integer               svctr2 ( ctrsiz )
+      character*(maxl)      svobsr
+      integer               svobsc
+      logical               svfnd2
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVTARG
-      SAVE                  SVTCDE
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svtarg
+      save                  svtcde
+      save                  svfnd1
 
-      SAVE                  SVCTR2
-      SAVE                  SVOBSR
-      SAVE                  SVOBSC
-      SAVE                  SVFND2
+      save                  svctr2
+      save                  svobsr
+      save                  svobsc
+      save                  svfnd2
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ILLUM' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ILLUM' )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
-         CALL ZZCTRUIN( SVCTR2 )
+         call zzctruin( svctr1 )
+         call zzctruin( svctr2 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Obtain integer codes for the target and observer.
 !
-      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
-                      TARGET, TRGCDE, FOUND    )
+      call zzbods2c ( svctr1, svtarg, svtcde, svfnd1, &
+                      target, trgcde, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The target, ' &
+         call setmsg ( 'The target, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', TARGET                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ILLUM'                                    )
-         RETURN
+         call errch  ( '#', target                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ILLUM'                                    )
+         return
 
-      END IF
+      end if
 
 
-      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
-                      OBSRVR, OBSCDE, FOUND    )
+      call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
+                      obsrvr, obscde, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The observer, ' &
+         call setmsg ( 'The observer, ' &
          //            '''#'', is not a recognized name for an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', OBSRVR                                )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'ILLUM'                                    )
-         RETURN
+         call errch  ( '#', obsrvr                                )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'ILLUM'                                    )
+         return
 
-      END IF
+      end if
 
 
 !
 !     The observer and target must be distinct.
 !
-      IF ( TRGCDE .EQ. OBSCDE ) THEN
+      if ( trgcde .eq. obscde ) then
 
-         CALL SETMSG ( 'Target is #; observer is #.' )
-         CALL ERRCH  ( '#', TARGET                   )
-         CALL ERRCH  ( '#', OBSRVR                   )
-         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'    )
-         CALL CHKOUT ( 'ILLUM'                       )
-         RETURN
+         call setmsg ( 'Target is #; observer is #.' )
+         call errch  ( '#', target                   )
+         call errch  ( '#', obsrvr                   )
+         call sigerr ( 'SPICE(BODIESNOTDISTINCT)'    )
+         call chkout ( 'ILLUM'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the name of the body-fixed frame associated with the
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      CALL CIDFRM ( TRGCDE, FRCODE, FRNAME, FOUND )
+      call cidfrm ( trgcde, frcode, frname, found )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'No body-fixed frame is associated with '   // &
+         call setmsg ( 'No body-fixed frame is associated with '   // &
                        'target body #; a frame kernel must be '    // &
                        'loaded to make this association.  Consult '// &
                        'the FRAMES Required Reading for details.'   )
-         CALL ERRCH  ( '#', TARGET                                  )
-         CALL SIGERR ( 'SPICE(NOFRAME)'                             )
-         CALL CHKOUT ( 'ILLUM'                                      )
-         RETURN
+         call errch  ( '#', target                                  )
+         call sigerr ( 'SPICE(NOFRAME)'                             )
+         call chkout ( 'ILLUM'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the body-fixed state of the target as seen from the observer
 !     at ET.  The appropriate aberration corrections will be used in
 !     evaluating this state.
 !
-      CALL SPKEZ ( TRGCDE, ET, FRNAME, ABCORR, OBSCDE, TSTATE, LT )
+      call spkez ( trgcde, et, frname, abcorr, obscde, tstate, lt )
 
 !
 !     Determine the epoch to be used in computing the target-Sun vector.
 !
-      IF (  EQSTR( ABCORR, 'NONE' )  ) THEN
-         TEPOCH = ET
-      ELSE
-         TEPOCH = ET - LT
-      END IF
+      if (  eqstr( abcorr, 'NONE' )  ) then
+         tepoch = et
+      else
+         tepoch = et - lt
+      end if
 
 !
 !     Find the body-fixed state of the Sun as seen from the target at
 !     TEPOCH.
 !
-      CALL SPKEZ  ( SUN, TEPOCH, FRNAME, ABCORR, TRGCDE, SSTATE, LTS )
+      call spkez  ( sun, tepoch, frname, abcorr, trgcde, sstate, lts )
 
 !
 !     Grab the position portions of the states (the first three
@@ -840,8 +840,8 @@
 !     found point from the target body center to the observer and
 !     Sun, and already take light time corrections into account.
 !
-      CALL VMINUS ( TSTATE, OBSVEC )
-      CALL VEQU   ( SSTATE, SUNVEC )
+      call vminus ( tstate, obsvec )
+      call vequ   ( sstate, sunvec )
 
 !
 !     Now we'll modify target-observer and target-Sun vectors to
@@ -849,30 +849,30 @@
 !     surface point of interest; we want the vectors to point from
 !     the surface point to the observer and Sun respectively.
 !
-      CALL VSUB ( OBSVEC, SPOINT, OFFOBS )
-      CALL VSUB ( SUNVEC, SPOINT, OFFSUN )
+      call vsub ( obsvec, spoint, offobs )
+      call vsub ( sunvec, spoint, offsun )
 
 !
 !     Find the surface normal at SPOINT.  We'll need the radii of the
 !     target body.
 !
-      CALL ZZGFTREB ( TRGCDE, RADII )
+      call zzgftreb ( trgcde, radii )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ILLUM' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ILLUM' )
+         return
+      end if
 
-      CALL SURFNM ( RADII(1), RADII(2), RADII(3), SPOINT, NORMAL )
+      call surfnm ( radii(1), radii(2), radii(3), spoint, normal )
 
 !
 !     Find the illumination angles.  VSEP will give us angular
 !     separation in radians.
 !
-      PHASE   =  VSEP ( OFFSUN, OFFOBS )
-      SOLAR   =  VSEP ( NORMAL, OFFSUN )
-      EMISSN  =  VSEP ( NORMAL, OFFOBS )
+      phase   =  vsep ( offsun, offobs )
+      solar   =  vsep ( normal, offsun )
+      emissn  =  vsep ( normal, offobs )
 
-      CALL CHKOUT ( 'ILLUM' )
-      RETURN
-      END
+      call chkout ( 'ILLUM' )
+      return
+      end

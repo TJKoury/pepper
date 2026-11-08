@@ -1,7 +1,7 @@
 !$Procedure ZZEDTERM ( Ellipsoid terminator )
 
-      SUBROUTINE ZZEDTERM ( TYPE,   A,      B,     C, &
-                            SRCRAD, SRCPOS, NPTS,  TRMPTS )
+      subroutine zzedterm ( type,   a,      b,     c, &
+                            srcrad, srcpos, npts,  trmpts )
 
 ! $ Abstract
 !
@@ -24,16 +24,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         TYPE
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      SRCRAD
-      DOUBLE PRECISION      SRCPOS ( 3 )
-      INTEGER               NPTS
-      DOUBLE PRECISION      TRMPTS ( 3, NPTS )
+      character*(*)         type
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      srcrad
+      double precision      srcpos ( 3 )
+      integer               npts
+      double precision      trmpts ( 3, npts )
 
 ! $ Brief_I/O
 !
@@ -216,200 +216,200 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
+      double precision      halfpi
+      double precision      touchd
+      double precision      twopi
+      double precision      vdot
+      double precision      vnorm
+      double precision      vsep
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               UBEL
-      PARAMETER           ( UBEL   = 9 )
+      integer               ubel
+      parameter           ( ubel   = 9 )
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL   = 4 )
+      integer               ubpl
+      parameter           ( ubpl   = 4 )
 
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR = 10 )
+      integer               maxitr
+      parameter           ( maxitr = 10 )
 
-      INTEGER               TYPLEN
-      PARAMETER           ( TYPLEN = 50 )
+      integer               typlen
+      parameter           ( typlen = 50 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TYPLEN)    LOCTYP
+      character*(typlen)    loctyp
 
-      DOUBLE PRECISION      ANGERR
-      DOUBLE PRECISION      ANGLE
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      DIR    ( 3 )
-      DOUBLE PRECISION      E      ( 3 )
-      DOUBLE PRECISION      INANG
-      DOUBLE PRECISION      LAMBDA
-      DOUBLE PRECISION      MAXRAD
-      DOUBLE PRECISION      MINRAD
-      DOUBLE PRECISION      OFFSET ( 3 )
-      DOUBLE PRECISION      OUTANG
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      DOUBLE PRECISION      PLCONS
-      DOUBLE PRECISION      PRVANG
-      DOUBLE PRECISION      PRVDIF
-      DOUBLE PRECISION      RMAX
-      DOUBLE PRECISION      RMIN
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      SRCPT  ( 3 )
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      TRANS  ( 3, 3 )
-      DOUBLE PRECISION      V      ( 3 )
-      DOUBLE PRECISION      VTEMP  ( 3 )
-      DOUBLE PRECISION      VTX    ( 3 )
-      DOUBLE PRECISION      X      ( 3 )
-      DOUBLE PRECISION      Y      ( 3 )
-      DOUBLE PRECISION      Z      ( 3 )
+      double precision      angerr
+      double precision      angle
+      double precision      d
+      double precision      delta
+      double precision      dir    ( 3 )
+      double precision      e      ( 3 )
+      double precision      inang
+      double precision      lambda
+      double precision      maxrad
+      double precision      minrad
+      double precision      offset ( 3 )
+      double precision      outang
+      double precision      plane  ( ubpl )
+      double precision      plcons
+      double precision      prvang
+      double precision      prvdif
+      double precision      rmax
+      double precision      rmin
+      double precision      s
+      double precision      srcpt  ( 3 )
+      double precision      theta
+      double precision      trans  ( 3, 3 )
+      double precision      v      ( 3 )
+      double precision      vtemp  ( 3 )
+      double precision      vtx    ( 3 )
+      double precision      x      ( 3 )
+      double precision      y      ( 3 )
+      double precision      z      ( 3 )
 
-      INTEGER               I
-      INTEGER               NITR
+      integer               i
+      integer               nitr
 
-      LOGICAL               UMBRAL
+      logical               umbral
 
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZEDTERM' )
+      call chkin ( 'ZZEDTERM' )
 
 !
 !     Check the terminator type.
 !
-      CALL LJUST ( TYPE,   LOCTYP )
-      CALL UCASE ( LOCTYP, LOCTYP )
+      call ljust ( type,   loctyp )
+      call ucase ( loctyp, loctyp )
 
-      IF (  LOCTYP .EQ. 'UMBRAL' ) THEN
+      if (  loctyp .eq. 'UMBRAL' ) then
 
-         UMBRAL = .TRUE.
+         umbral = .true.
 
-      ELSE IF ( LOCTYP .EQ. 'PENUMBRAL' ) THEN
+      else if ( loctyp .eq. 'PENUMBRAL' ) then
 
-         UMBRAL = .FALSE.
+         umbral = .false.
 
-      ELSE
+      else
 
-         CALL SETMSG ( 'Terminator type must be UMBRAL or ' &
+         call setmsg ( 'Terminator type must be UMBRAL or ' &
          //            'PENUMBRAL but was actually #.'     )
-         CALL ERRCH  ( '#',  TYPE                          )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'               )
-         CALL CHKOUT ( 'ZZEDTERM'                          )
-         RETURN
+         call errch  ( '#',  type                          )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'               )
+         call chkout ( 'ZZEDTERM'                          )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the terminator set dimension.
 !
-      IF ( NPTS .LT. 1 ) THEN
+      if ( npts .lt. 1 ) then
 
-         CALL SETMSG ( 'Set must contain at least one point; NPTS ' &
+         call setmsg ( 'Set must contain at least one point; NPTS ' &
          //            ' = #.'                                        )
-         CALL ERRINT ( '#',  NPTS                                     )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                           )
-         CALL CHKOUT ( 'ZZEDTERM'                                     )
-         RETURN
+         call errint ( '#',  npts                                     )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                           )
+         call chkout ( 'ZZEDTERM'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     The ellipsoid semi-axes must have positive length.
 !
-      IF (       ( A .LE. 0.D0 ) &
-           .OR.  ( B .LE. 0.D0 ) &
-           .OR.  ( C .LE. 0.D0 )   )   THEN
+      if (       ( a .le. 0.d0 ) &
+           .or.  ( b .le. 0.d0 ) &
+           .or.  ( c .le. 0.d0 )   )   then
 
-         CALL SETMSG ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
-         CALL ERRDP  ( '#', A                                      )
-         CALL ERRDP  ( '#', B                                      )
-         CALL ERRDP  ( '#', C                                      )
-         CALL SIGERR ( 'SPICE(INVALIDAXISLENGTH)'                  )
-         CALL CHKOUT ( 'ZZEDTERM'                                  )
-         RETURN
+         call setmsg ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
+         call errdp  ( '#', a                                      )
+         call errdp  ( '#', b                                      )
+         call errdp  ( '#', c                                      )
+         call sigerr ( 'SPICE(INVALIDAXISLENGTH)'                  )
+         call chkout ( 'ZZEDTERM'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the input light source radius.
 !
-      IF ( SRCRAD .LE. 0.D0 ) THEN
+      if ( srcrad .le. 0.d0 ) then
 
-         CALL SETMSG ( 'Light source must have positive radius; ' &
+         call setmsg ( 'Light source must have positive radius; ' &
          //            'actual radius was #.'                    )
-         CALL ERRDP  ( '#', SRCRAD                               )
-         CALL SIGERR ( 'SPICE(INVALIDRADIUS)'                    )
-         CALL CHKOUT ( 'ZZEDTERM'                                )
-         RETURN
+         call errdp  ( '#', srcrad                               )
+         call sigerr ( 'SPICE(INVALIDRADIUS)'                    )
+         call chkout ( 'ZZEDTERM'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     The light source must not intersect the outer bounding
 !     sphere of the ellipsoid.
 !
-      D    =  VNORM ( SRCPOS )
+      d    =  vnorm ( srcpos )
 
-      RMAX =  MAX ( A, B, C )
-      RMIN =  MIN ( A, B, C )
+      rmax =  max ( a, b, c )
+      rmin =  min ( a, b, c )
 
-      IF (  ( SRCRAD + RMAX )  .GE.  D  ) THEN
+      if (  ( srcrad + rmax )  .ge.  d  ) then
 !
 !        The light source is too close.
 !
-         CALL SETMSG ( 'Light source intersects outer bounding ' &
+         call setmsg ( 'Light source intersects outer bounding ' &
          //            'sphere of the ellipsoid.  Light source ' &
          //            'radius = #; ellipsoid''s longest axis = ' &
          //            '#; sum = #; distance between centers = #.' )
-         CALL ERRDP  ( '#', SRCRAD                                 )
-         CALL ERRDP  ( '#', RMAX                                   )
-         CALL ERRDP  ( '#', SRCRAD + RMAX                          )
-         CALL ERRDP  ( '#', D                                      )
-         CALL SIGERR ( 'SPICE(OBJECTSTOOCLOSE)'                    )
-         CALL CHKOUT ( 'ZZEDTERM'                                  )
-         RETURN
+         call errdp  ( '#', srcrad                                 )
+         call errdp  ( '#', rmax                                   )
+         call errdp  ( '#', srcrad + rmax                          )
+         call errdp  ( '#', d                                      )
+         call sigerr ( 'SPICE(OBJECTSTOOCLOSE)'                    )
+         call chkout ( 'ZZEDTERM'                                  )
+         return
 
-      END IF
+      end if
 
 !
 !     Let the negative of the ellipsoid-light source vector be the
 !     Z-axis of a frame we'll use to generate the terminator set.
 !
-      CALL VMINUS ( SRCPOS, Z )
+      call vminus ( srcpos, z )
 
-      CALL FRAME  ( Z,  X,  Y )
+      call frame  ( z,  x,  y )
 
 !
 !     Create the rotation matrix required to convert vectors
 !     from the source-centered frame back to the target body-fixed
 !     frame.
 !
-      CALL VEQU ( X, TRANS(1,1) )
-      CALL VEQU ( Y, TRANS(1,2) )
-      CALL VEQU ( Z, TRANS(1,3) )
+      call vequ ( x, trans(1,1) )
+      call vequ ( y, trans(1,2) )
+      call vequ ( z, trans(1,3) )
 
 !
 !     Find the maximum and minimum target radii.
 !
-      MAXRAD = MAX ( A, B, C )
-      MINRAD = MIN ( A, B, C )
+      maxrad = max ( a, b, c )
+      minrad = min ( a, b, c )
 
-      IF ( UMBRAL ) THEN
+      if ( umbral ) then
 !
 !        Compute the angular offsets from the axis of rays tangent to
 !        both the source and the bounding spheres of the target, where
@@ -420,10 +420,10 @@
 !        OUTANG corresponds to the target's outer bounding sphere;
 !        INANG to the inner bounding sphere.
 !
-         OUTANG = ASIN ( (SRCRAD - MAXRAD) / D )
-         INANG  = ASIN ( (SRCRAD - MINRAD) / D )
+         outang = asin ( (srcrad - maxrad) / d )
+         inang  = asin ( (srcrad - minrad) / d )
 
-      ELSE
+      else
 !
 !        Compute the angular offsets from the axis of rays tangent to
 !        both the source and the bounding spheres of the target, where
@@ -433,30 +433,30 @@
 !        OUTANG corresponds to the target's outer bounding sphere;
 !        INANG to the inner bounding sphere.
 !
-         OUTANG = ASIN (  ( SRCRAD + MAXRAD )  /  D  )
-         INANG  = ASIN (  ( SRCRAD + MINRAD )  /  D  )
+         outang = asin (  ( srcrad + maxrad )  /  d  )
+         inang  = asin (  ( srcrad + minrad )  /  d  )
 
-      END IF
+      end if
 
 !
 !     Compute the angular delta we'll use for generating
 !     terminator points.
 !
-      DELTA = TWOPI() / NPTS
+      delta = twopi() / npts
 
 !
 !     Generate the terminator points.
 !
-      DO I = 1, NPTS
+      do i = 1, npts
 
-         THETA = (I-1)*DELTA
+         theta = (i-1)*delta
 
 !
 !        Let SRCPT be the surface point on the source lying in
 !        the X-Y plane of the frame produced by FRAME
 !        and corresponding to the angle THETA.
 !
-         CALL LATREC ( SRCRAD,  THETA,  0.D0,  SRCPT )
+         call latrec ( srcrad,  theta,  0.d0,  srcpt )
 
 !
 !        Now solve for the angle by which SRCPT must be rotated (toward
@@ -466,22 +466,22 @@
 !        side and INANG on the high side in the umbral case; the
 !        bracketing values are reversed in the penumbral case.
 !
-         IF ( UMBRAL ) THEN
-            ANGLE  = OUTANG
-         ELSE
-            ANGLE  = INANG
-         END IF
+         if ( umbral ) then
+            angle  = outang
+         else
+            angle  = inang
+         end if
 
-         PRVDIF = TWOPI()
-         PRVANG = ANGLE + HALFPI()
-         NITR   = 0
+         prvdif = twopi()
+         prvang = angle + halfpi()
+         nitr   = 0
 
-         DO WHILE (       ( NITR                        .LE. MAXITR ) &
-                    .AND. ( TOUCHD( ABS(ANGLE-PRVANG) ) .LT. PRVDIF )  )
+         do while (       ( nitr                        .le. maxitr ) &
+                    .and. ( touchd( abs(angle-prvang) ) .lt. prvdif )  )
 
-            NITR    =   NITR  + 1
-            PRVDIF  =   TOUCHD ( ABS(ANGLE-PRVANG) )
-            PRVANG  =   ANGLE
+            nitr    =   nitr  + 1
+            prvdif  =   touchd ( abs(angle-prvang) )
+            prvang  =   angle
 !
 !           Find the closest point on the ellipsoid to the plane
 !           corresponding to "ANGLE".
@@ -490,25 +490,25 @@
 !           SRCPT by ANGLE towards +Z.  The plane's normal vector is
 !           parallel to VTX in the source-centered frame.
 !
-            CALL LATREC ( SRCRAD, THETA, ANGLE, VTX )
+            call latrec ( srcrad, theta, angle, vtx )
 
-            CALL VEQU   ( VTX, DIR )
+            call vequ   ( vtx, dir )
 
 !
 !           VTX and DIR are expressed in the source-centered frame.  We
 !           must translate VTX to the target frame and rotate both
 !           vectors into that frame.
 !
-            CALL MXV  ( TRANS,  VTX,   VTEMP )
-            CALL VADD ( SRCPOS, VTEMP, VTX   )
+            call mxv  ( trans,  vtx,   vtemp )
+            call vadd ( srcpos, vtemp, vtx   )
 
-            CALL MXV  ( TRANS,  DIR,   VTEMP )
-            CALL VEQU ( VTEMP,         DIR   )
+            call mxv  ( trans,  dir,   vtemp )
+            call vequ ( vtemp,         dir   )
 
 !
 !           Create the plane defined by VTX and DIR.
 !
-            CALL NVP2PL ( DIR, VTX, PLANE )
+            call nvp2pl ( dir, vtx, plane )
 !
 !           Find the closest point on the ellipsoid to the plane. At
 !           the point we seek, the outward normal on the ellipsoid is
@@ -516,7 +516,7 @@
 !           from the origin.  We can always obtain this choice from
 !           PL2NVC.
 !
-            CALL PL2NVC ( PLANE, DIR, PLCONS )
+            call pl2nvc ( plane, dir, plcons )
 
 !
 !           At the point
@@ -552,52 +552,52 @@
 !           Having lambda we can compute E.
 !
 
-            CALL VPACK ( A*DIR(1), B*DIR(2), C*DIR(3), V )
+            call vpack ( a*dir(1), b*dir(2), c*dir(3), v )
 
-            LAMBDA = 1.D0 / VNORM(V)
+            lambda = 1.d0 / vnorm(v)
 
-            CALL VPACK ( A*V(1), B*V(2), C*V(3), E )
+            call vpack ( a*v(1), b*v(2), c*v(3), e )
 
-            CALL VSCL  ( LAMBDA, E, TRMPTS(1,I) )
+            call vscl  ( lambda, e, trmpts(1,i) )
 
 !
 !           Make a new estimate of the plane rotation required to touch
 !           the target.
 !
-            CALL VSUB ( TRMPTS(1,I), VTX, OFFSET )
+            call vsub ( trmpts(1,i), vtx, offset )
 
 !
 !           Let ANGERR be an estimate of the magnitude of angular error
 !           between the plane and the terminator.
 !
-            ANGERR = VSEP ( DIR, OFFSET ) - HALFPI()
+            angerr = vsep ( dir, offset ) - halfpi()
 
 !
 !           Let S indicate the sign of the altitude error:  where
 !           S is positive, the plane is above E.
 !
-            S = SIGN ( 1.D0, VDOT(E,DIR) )
+            s = sign ( 1.d0, vdot(e,dir) )
 
-            IF ( UMBRAL ) THEN
+            if ( umbral ) then
 !
 !              If the plane is above the target, increase the
 !              rotation angle; otherwise decrease the angle.
 !
-               ANGLE = ANGLE  +  S * ANGERR
+               angle = angle  +  s * angerr
 
-            ELSE
+            else
 !
 !              This is the penumbral case; decreasing the angle
 !              "lowers" the plane toward the target.
 !
-               ANGLE = ANGLE  -  S * ANGERR
+               angle = angle  -  s * angerr
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZEDTERM' )
-      RETURN
-      END
+      call chkout ( 'ZZEDTERM' )
+      return
+      end

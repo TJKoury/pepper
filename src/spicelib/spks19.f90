@@ -1,6 +1,6 @@
 !$Procedure SPKS19 ( S/P Kernel, subset, type 19 )
 
-      SUBROUTINE SPKS19 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks19 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -19,15 +19,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'spk19.inc'
+      include 'spk19.inc'
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -179,98 +179,98 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLED
-      INTEGER               LSTLTD
+      integer               lstled
+      integer               lstltd
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               BUFSIZ
-      PARAMETER           ( BUFSIZ = 100 )
+      integer               bufsiz
+      parameter           ( bufsiz = 100 )
 
 !
 !     Mini-segment control area size:
 !
-      INTEGER               CTRLSZ
-      PARAMETER           ( CTRLSZ = 3 )
+      integer               ctrlsz
+      parameter           ( ctrlsz = 3 )
 
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 
-      INTEGER               FILSIZ
-      PARAMETER           ( FILSIZ = 255 )
+      integer               filsiz
+      parameter           ( filsiz = 255 )
 
 !
 !     Local variables
 !
-      CHARACTER*(FILSIZ)    SPK
+      character*(filsiz)    spk
 
-      DOUBLE PRECISION      CONTRL   ( CTRLSZ )
-      DOUBLE PRECISION      DATA     ( BUFSIZ )
-      DOUBLE PRECISION      IV1BEG
-      DOUBLE PRECISION      IV1END
-      DOUBLE PRECISION      IVFBEG
-      DOUBLE PRECISION      IVFEND
-      DOUBLE PRECISION      IVLBEG
-      DOUBLE PRECISION      IVLEND
+      double precision      contrl   ( ctrlsz )
+      double precision      data     ( bufsiz )
+      double precision      iv1beg
+      double precision      iv1end
+      double precision      ivfbeg
+      double precision      ivfend
+      double precision      ivlbeg
+      double precision      ivlend
 
-      INTEGER               BEGIDX
-      INTEGER               BEPIDX
-      INTEGER               BUFBAS
-      INTEGER               CURIVL
-      INTEGER               EEPIDX
-      INTEGER               ENDIDX
-      INTEGER               I
-      INTEGER               ISEL
-      INTEGER               IVLBAS
-      INTEGER               L
-      INTEGER               MIN1SZ
-      INTEGER               MINBEP
-      INTEGER               MINFSZ
-      INTEGER               MINIB
-      INTEGER               MINIE
-      INTEGER               MINNDR
-      INTEGER               MINNPK
-      INTEGER               NDIR
-      INTEGER               NINTVL
-      INTEGER               NOIVL
-      INTEGER               NPAD
-      INTEGER               NPKT
-      INTEGER               NREAD
-      INTEGER               NSDIR
-      INTEGER               PKTSIZ
-      INTEGER               PKTSZS ( 0 : S19NST-1 )
-      INTEGER               PTRBAS
-      INTEGER               REMAIN
-      INTEGER               SHIFT
-      INTEGER               START
-      INTEGER               SUBTYP
-      INTEGER               UB
-      INTEGER               WNDSIZ
+      integer               begidx
+      integer               bepidx
+      integer               bufbas
+      integer               curivl
+      integer               eepidx
+      integer               endidx
+      integer               i
+      integer               isel
+      integer               ivlbas
+      integer               l
+      integer               min1sz
+      integer               minbep
+      integer               minfsz
+      integer               minib
+      integer               minie
+      integer               minndr
+      integer               minnpk
+      integer               ndir
+      integer               nintvl
+      integer               noivl
+      integer               npad
+      integer               npkt
+      integer               nread
+      integer               nsdir
+      integer               pktsiz
+      integer               pktszs ( 0 : s19nst-1 )
+      integer               ptrbas
+      integer               remain
+      integer               shift
+      integer               start
+      integer               subtyp
+      integer               ub
+      integer               wndsiz
 
-      LOGICAL               FINAL
+      logical               final
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA                  PKTSZS / S19PS0, S19PS1, S19PS2 /
+      data                  pktszs / s19ps0, s19ps1, s19ps2 /
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SPKS19' )
+      call chkin ( 'SPKS19' )
 
 !
 !     Terminology
@@ -446,10 +446,10 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      IF (  BEGIN  .GT.  END  ) THEN
-         CALL CHKOUT ( 'SPKS19' )
-         RETURN
-      END IF
+      if (  begin  .gt.  end  ) then
+         call chkout ( 'SPKS19' )
+         return
+      end if
 !
 !     We don't check BEGIN and END against the time bounds of the
 !     descriptor of the input file because, according to the
@@ -463,7 +463,7 @@
 !     Initialize the flag indicating the existence of the "final"
 !     output mini-segment.
 !
-      FINAL  = .FALSE.
+      final  = .false.
 
 
 !***********************************************************************
@@ -475,19 +475,19 @@
 !
 !     Read the input segment structure control area.
 !
-      CALL DAFGDA ( HANDLE, EADDR-1, EADDR, DATA )
+      call dafgda ( handle, eaddr-1, eaddr, data )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 !
 !     Fetch the interval selection order flag and the
 !     number of interpolation intervals.
 !
-      ISEL   = NINT ( DATA(1) )
-      NINTVL = NINT ( DATA(2) )
+      isel   = nint ( data(1) )
+      nintvl = nint ( data(2) )
 
 !
 !     Compute the number of interval boundary directories. Recall that
@@ -497,7 +497,7 @@
 !        ( ( NINTVL + 1) - 1 ) / DIRSIZ
 !
 
-      NDIR = NINTVL / DIRSIZ
+      ndir = nintvl / dirsiz
 
 !
 !     Find the base address IVLBAS of the interval start times. First
@@ -506,8 +506,8 @@
 !     The interval base precedes the interval bounds, the interval
 !     directories, the interval pointers, and the control area.
 !
-      PTRBAS = EADDR  -  ( 2    +  NINTVL + 1 )
-      IVLBAS = PTRBAS -  ( NDIR +  NINTVL + 1 )
+      ptrbas = eaddr  -  ( 2    +  nintvl + 1 )
+      ivlbas = ptrbas -  ( ndir +  nintvl + 1 )
 
 
 !***********************************************************************
@@ -528,47 +528,47 @@
 !     Since we're only examining interval start times, the last one
 !     we may need to read is at index NINTVL.
 !
-      NREAD  = MIN ( BUFSIZ, NINTVL )
+      nread  = min ( bufsiz, nintvl )
 
-      BUFBAS = IVLBAS
+      bufbas = ivlbas
 
 !
 !     NREAD is at least 1 here.
 !
-      CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+      call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 
-      REMAIN = NINTVL - NREAD
+      remain = nintvl - nread
 
 !
 !     The variable NREAD is the array index of the last
 !     item read into the buffer on the previous read
 !     operation. On the first pass NREAD is at least 1.
 !
-      DO WHILE (       ( REMAIN      .GT. 0     ) &
-                 .AND. ( DATA(NREAD) .LT. BEGIN )  )
+      do while (       ( remain      .gt. 0     ) &
+                 .and. ( data(nread) .lt. begin )  )
 
-         BUFBAS = BUFBAS + NREAD
+         bufbas = bufbas + nread
 
-         NREAD  = MIN ( BUFSIZ, REMAIN )
+         nread  = min ( bufsiz, remain )
 !
 !        NREAD is at least 1 here.
 !
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-         REMAIN = REMAIN - NREAD
+         remain = remain - nread
 
-      END DO
+      end do
 !
 !     Let I be the index of the last interval boundary time that
 !     precedes BEGIN. If there are no such boundary times, I will be
@@ -579,68 +579,68 @@
 !     examined before the final call above to DAFGDA. All of those
 !     boundary times were strictly less than BEGIN.
 !
-      I  =  ( BUFBAS - IVLBAS )  +  LSTLTD ( BEGIN, NREAD, DATA )
+      i  =  ( bufbas - ivlbas )  +  lstltd ( begin, nread, data )
 
 !
 !     Let BEGIDX be the index of the last interval start time that
 !     precedes BEGIN, unless BEGIN coincides with the first interval
 !     start time; in this case, BEGIDX must be 1.
 !
-      BEGIDX = MAX ( 1, I )
+      begidx = max ( 1, i )
 
 !
 !     In order to extract data from the mini-segment, we'll need its
 !     address range.
 !
-      CALL DAFGDA ( HANDLE, PTRBAS+BEGIDX, PTRBAS+BEGIDX+1, DATA )
+      call dafgda ( handle, ptrbas+begidx, ptrbas+begidx+1, data )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 !
 !     Convert the segment-base-relative mini-segment begin and end
 !     pointers to absolute DAF addresses.
 !
-      MINIB = ( BADDR - 1 ) + NINT( DATA(1) )
-      MINIE = ( BADDR - 1 ) + NINT( DATA(2) ) - 1
+      minib = ( baddr - 1 ) + nint( data(1) )
+      minie = ( baddr - 1 ) + nint( data(2) ) - 1
 
 !
 !     Read the control area of the mini-segment.
 !
-      BUFBAS = MINIE - CTRLSZ
+      bufbas = minie - ctrlsz
 
-      CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+CTRLSZ, CONTRL )
+      call dafgda ( handle, bufbas+1, bufbas+ctrlsz, contrl )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 !
 !     Fetch the control area parameters for the mini-segment.
 !
-      SUBTYP  =  NINT ( CONTRL(1) )
-      WNDSIZ  =  NINT ( CONTRL(2) )
-      NPKT    =  NINT ( CONTRL(3) )
+      subtyp  =  nint ( contrl(1) )
+      wndsiz  =  nint ( contrl(2) )
+      npkt    =  nint ( contrl(3) )
 
 !
 !     Set the packet size, which is a function of the subtype.
 !
-      IF ( ( SUBTYP .LT. 0 ) .OR. ( SUBTYP .GE. S19NST ) ) THEN
+      if ( ( subtyp .lt. 0 ) .or. ( subtyp .ge. s19nst ) ) then
 
-         CALL SETMSG ( 'Unexpected SPK type 19 subtype # found in ' &
+         call setmsg ( 'Unexpected SPK type 19 subtype # found in ' &
          //            'type 19 segment within mini-segment #.'     )
-         CALL ERRINT ( '#',  SUBTYP                                 )
-         CALL ERRINT ( '#',  BEGIDX                                 )
-         CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                        )
-         CALL CHKOUT ( 'SPKS19'                                     )
-         RETURN
+         call errint ( '#',  subtyp                                 )
+         call errint ( '#',  begidx                                 )
+         call sigerr ( 'SPICE(NOTSUPPORTED)'                        )
+         call chkout ( 'SPKS19'                                     )
+         return
 
-      END IF
+      end if
 
-      PKTSIZ = PKTSZS( SUBTYP )
+      pktsiz = pktszs( subtyp )
 
 
 !
@@ -649,7 +649,7 @@
 !     in the mini-segment's epoch list. Let MINBEP be the base address
 !     of the epoch list (that is, the start address minus 1).
 !
-      MINBEP = ( MINIB - 1 )  +  ( NPKT * PKTSIZ )
+      minbep = ( minib - 1 )  +  ( npkt * pktsiz )
 
 !
 !     Read epochs until we find one greater than or equal to BEGIN.
@@ -657,47 +657,47 @@
 !     It's possible that only the last epoch of the input mini-segment
 !     satisfies this criterion, but at least one epoch must satisfy it.
 !
-      NREAD  = MIN ( BUFSIZ, NPKT )
+      nread  = min ( bufsiz, npkt )
 
-      BUFBAS = MINBEP
+      bufbas = minbep
 
-      CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+      call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
-      REMAIN = NPKT - NREAD
+      remain = npkt - nread
 
 !
 !     The variable NREAD is the array index of the last
 !     item read into the buffer on the previous read
 !     operation.
 !
-      DO WHILE (       ( REMAIN      .GT. 0     ) &
-                 .AND. ( DATA(NREAD) .LT. BEGIN )  )
+      do while (       ( remain      .gt. 0     ) &
+                 .and. ( data(nread) .lt. begin )  )
 !
 !        Advance the buffer base to account for the NREAD
 !        epochs fetched on the previous DAFGDA call.
 !
-         BUFBAS = BUFBAS + NREAD
+         bufbas = bufbas + nread
 
-         NREAD  = MIN ( BUFSIZ, REMAIN )
+         nread  = min ( bufsiz, remain )
 !
 !        Since REMAIN was positive at the beginning of this
 !        loop iteration, NREAD is positive here.
 !
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-         REMAIN = REMAIN - NREAD
+         remain = remain - nread
 
-      END DO
+      end do
 !
 !     At this point BUFBAS - MINBEP is the number of epochs in the
 !     input mini-segment we've examined before the final call above to
@@ -707,7 +707,7 @@
 !     equal to BEGIN. That epoch is contained in the last buffer we
 !     read.
 !
-      BEPIDX =  ( BUFBAS - MINBEP )  +  LSTLED ( BEGIN, NREAD, DATA )
+      bepidx =  ( bufbas - minbep )  +  lstled ( begin, nread, data )
 
 !
 !     BEPIDX is at least 1 and may be as large as NPKT.
@@ -716,48 +716,48 @@
 !     interpolation behavior in the neighborhood of the epoch at
 !     index BEPIDX.
 !
-      NPAD   =  ( WNDSIZ / 2 ) - 1
+      npad   =  ( wndsiz / 2 ) - 1
 
 !
 !     Shift BEPIDX by the pad amount, if possible. The minimum value
 !     of BEPIDX is 1.
 !
-      BEPIDX =  MAX ( 1,  BEPIDX - NPAD )
+      bepidx =  max ( 1,  bepidx - npad )
 
 !
 !     The output mini-segment can never have fewer than two epochs.
 !     When the window size is 2 and BEPIDX is equal to NPKT, we
 !     must extend the window on the left.
 !
-      BEPIDX = MIN ( BEPIDX,  NPKT-1 )
+      bepidx = min ( bepidx,  npkt-1 )
 
 !
 !     If the input interval end time is less than or equal to END, we
 !     need to use the rest of the data from this interval. Otherwise
 !     find out how much data from this interval we need to transfer.
 !
-      BUFBAS = IVLBAS + BEGIDX
+      bufbas = ivlbas + begidx
 
-      CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, IVLEND )
+      call dafgda ( handle, bufbas+1, bufbas+1, ivlend )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 !
 !     Let EEPIDX be the index of the last epoch we select from
 !     the current input mini-segment. We'll set EEPIDX below.
 !
-      IF ( IVLEND .LE. END ) THEN
+      if ( ivlend .le. end ) then
 !
 !        The requested subset coverage is either equal to or extends
 !        beyond the right boundary of this interval. We'll use all data
 !        from this interval.
 !
-         EEPIDX = NPKT
+         eepidx = npkt
 
-      ELSE
+      else
 !
 !        IVLEND is strictly greater than END. This interval covers
 !
@@ -770,73 +770,73 @@
 !        The input mini-segment contains ( NPKT - BEPIDX + 1 ) epochs
 !        following and including the one at BEPIDX.
 !
-         REMAIN = NPKT - BEPIDX + 1
+         remain = npkt - bepidx + 1
 !
 !        REMAIN is at least 2 at this point, since in this case,
 !        some epoch exceeds END, and that epoch must have index
 !        greater than BEPIDX.
 !
-         NREAD  = MIN ( BUFSIZ, REMAIN )
+         nread  = min ( bufsiz, remain )
 !
 !        NREAD is at least 2.
 !
-         IF ( NREAD .LT. 2 ) THEN
+         if ( nread .lt. 2 ) then
 !
 !           This code should not be reached.
 !
-            CALL DAFHFN ( HANDLE, SPK )
+            call dafhfn ( handle, spk )
 
-            CALL SETMSG ( 'Input file: #. Segment address range: ' &
+            call setmsg ( 'Input file: #. Segment address range: ' &
             //            '#:#. Structural error found: NREAD ' &
             //            'is #; end time of interval # is #.'      )
-            CALL ERRCH  ( '#', SPK                                  )
-            CALL ERRINT ( '#', BADDR                                )
-            CALL ERRINT ( '#', EADDR                                )
-            CALL ERRINT  ( '#', NREAD                                )
-            CALL ERRINT ( '#', BEGIDX                               )
-            CALL ERRDP  ( '#', IVLEND                               )
-            CALL SIGERR ( 'SPICE(SPKSTRUCTUREERROR)'                )
-            CALL CHKOUT ( 'SPKS19'                                  )
-            RETURN
+            call errch  ( '#', spk                                  )
+            call errint ( '#', baddr                                )
+            call errint ( '#', eaddr                                )
+            call errint  ( '#', nread                                )
+            call errint ( '#', begidx                               )
+            call errdp  ( '#', ivlend                               )
+            call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
+            call chkout ( 'SPKS19'                                  )
+            return
 
-         END IF
+         end if
 !
 !        Set the buffer base address so that we start reading at
 !        address MINBEP + BEPIDX.
 !
-         BUFBAS = MINBEP + BEPIDX - 1
+         bufbas = minbep + bepidx - 1
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-         REMAIN = REMAIN - NREAD
+         remain = remain - nread
 
 !
 !        NREAD is (still) at least 2.
 !
-         DO WHILE (  ( REMAIN .GT. 0 ) .AND. ( DATA(NREAD) .LE. END )  )
+         do while (  ( remain .gt. 0 ) .and. ( data(nread) .le. end )  )
 
-            BUFBAS = BUFBAS + NREAD
+            bufbas = bufbas + nread
 
-            NREAD  = MIN ( REMAIN, BUFSIZ )
+            nread  = min ( remain, bufsiz )
 !
 !           NREAD is at least 1 since REMAIN was positive
 !           at the top of the loop.
 !
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+            call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-            REMAIN = REMAIN - NREAD
+            remain = remain - nread
 
-         END DO
+         end do
 !
 !        At this point BUFBAS - MINBEP is the number of epochs in the
 !        input mini-segment we've examined before the final call above
@@ -852,62 +852,62 @@
 !        EEPIDX exceeds by 1 the index of the last epoch less than or
 !        equal to END.
 !
-         L      = LSTLED ( END, NREAD, DATA )
+         l      = lstled ( end, nread, data )
 
-         EEPIDX = ( BUFBAS - MINBEP ) + L + 1
+         eepidx = ( bufbas - minbep ) + l + 1
 
 !
 !        EEPIDX is at least 2 and is less than or equal to NPKT.
 !
-         IF (  ( EEPIDX .LT. 2 ) .OR. ( EEPIDX .GT. NPKT ) ) THEN
+         if (  ( eepidx .lt. 2 ) .or. ( eepidx .gt. npkt ) ) then
 !
 !           This code should not be reached.
 !
-            CALL DAFHFN ( HANDLE, SPK )
+            call dafhfn ( handle, spk )
 
-            CALL SETMSG ( 'Input file: #. Segment address range: ' &
+            call setmsg ( 'Input file: #. Segment address range: ' &
             //            '#:#. Structural error found: last epoch ' &
             //            'is #; end time of interval # is #.'      )
-            CALL ERRCH  ( '#', SPK                                  )
-            CALL ERRINT ( '#', BADDR                                )
-            CALL ERRINT ( '#', EADDR                                )
-            CALL ERRDP  ( '#', DATA(NREAD)                          )
-            CALL ERRINT ( '#', BEGIDX                               )
-            CALL ERRDP  ( '#', IVLEND                               )
-            CALL SIGERR ( 'SPICE(SPKSTRUCTUREERROR)'                )
-            CALL CHKOUT ( 'SPKS19'                                  )
-            RETURN
+            call errch  ( '#', spk                                  )
+            call errint ( '#', baddr                                )
+            call errint ( '#', eaddr                                )
+            call errdp  ( '#', data(nread)                          )
+            call errint ( '#', begidx                               )
+            call errdp  ( '#', ivlend                               )
+            call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
+            call chkout ( 'SPKS19'                                  )
+            return
 
-         END IF
+         end if
 
 !
 !        Compute the number of pad epochs we need to maintain proper
 !        interpolation behavior in the neighborhood of the epoch at
 !        index EEPIDX.
 !
-         IF ( DATA(L) .EQ. END ) THEN
+         if ( data(l) .eq. end ) then
 !
 !           The epochs at indices EEPIDX-1 and EEPIDX comprise the
 !           first two epochs of the right half of an interpolation
 !           window of size WNDSIZ. We need two fewer pad epochs to
 !           complete the right half of the window.
 !
-            NPAD = ( WNDSIZ / 2 ) - 2
+            npad = ( wndsiz / 2 ) - 2
 
-         ELSE
+         else
 !
 !           The epoch at EEPIDX is the first of the pad.
 !
-            NPAD = ( WNDSIZ / 2 ) - 1
+            npad = ( wndsiz / 2 ) - 1
 
-         END IF
+         end if
 
 !
 !        The maximum allowed value of EEPIDX is NPKT.
 !
-         EEPIDX =  MIN ( NPKT,  EEPIDX + NPAD )
+         eepidx =  min ( npkt,  eepidx + npad )
 
-      END IF
+      end if
 
 !
 !     At this point BEPIDX and EEPIDX are both set.
@@ -916,32 +916,32 @@
 !     We'll use this below when we compute the interval start
 !     time of the first output mini-segment.
 !
-      CALL DAFGDA ( HANDLE, IVLBAS+BEGIDX, IVLBAS+BEGIDX, IVLBEG )
+      call dafgda ( handle, ivlbas+begidx, ivlbas+begidx, ivlbeg )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 
 !     We're ready to start transferring data to the output segment. The
 !     first mini-segment of the output segment will contain packets
 !     BEPIDX through EEPIDX of the input mini-segment at index BEGIDX.
 !
-      DO I = BEPIDX, EEPIDX
+      do i = bepidx, eepidx
 
-         BUFBAS = MINIB - 1 + ( (I-1) * PKTSIZ )
+         bufbas = minib - 1 + ( (i-1) * pktsiz )
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+PKTSIZ, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+pktsiz, data )
 
-         CALL DAFADA ( DATA, PKTSIZ )
+         call dafada ( data, pktsiz )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Now transfer the epochs at indices BEPIDX : EEPIDX.
@@ -951,18 +951,18 @@
 !     bound of the input interval, or a boundary epoch (first or last)
 !     of the output epoch list, whichever is most restrictive.
 !
-      DO I = BEPIDX, EEPIDX
+      do i = bepidx, eepidx
 
-         BUFBAS  =  ( MINIB - 1 ) + ( NPKT * PKTSIZ ) + ( I - 1 )
+         bufbas  =  ( minib - 1 ) + ( npkt * pktsiz ) + ( i - 1 )
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+1, data )
 
-         CALL DAFADA ( DATA, 1 )
+         call dafada ( data, 1 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
 !
 !        Let IV1BEG be the start time of the first output
@@ -970,70 +970,70 @@
 !        pass. IVLBEG has already been set to the start time of the
 !        input interval at index BEGIDX.
 !
-         IF ( I .EQ. BEPIDX ) THEN
+         if ( i .eq. bepidx ) then
 !
 !           The first output interval cannot start earlier than
 !           the interval from which its data are taken. It may
 !           start later.
 !
-            IV1BEG = MAX ( IVLBEG, DATA(1) )
+            iv1beg = max ( ivlbeg, data(1) )
 
-         END IF
+         end if
 
 !
 !        Determine IV1END on the final loop pass.
 !
-         IF ( I .EQ. EEPIDX ) THEN
+         if ( i .eq. eepidx ) then
 !
 !           The first output interval cannot end later than
 !           the interval from which its data are taken. It may
 !           end earlier.
 !
-            IV1END = MIN ( IVLEND, DATA(1) )
+            iv1end = min ( ivlend, data(1) )
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Create the epoch directory for the first output mini-segment.
 !
-      MINNPK = EEPIDX - BEPIDX + 1
+      minnpk = eepidx - bepidx + 1
 
-      MINNDR = ( MINNPK - 1 ) / DIRSIZ
+      minndr = ( minnpk - 1 ) / dirsiz
 
-      DO I = 1, MINNDR
+      do i = 1, minndr
 !
 !        Set BUFBAS to the address that immediately precedes the
 !        element we're about to read. We must skip over the data
 !        packets and the first (BEPIDX-1) epochs before starting our
 !        count.
 !
-         BUFBAS  =   ( MINIB  - 1 ) + ( NPKT * PKTSIZ ) + &
-                     ( BEPIDX - 1 ) + ( I    * DIRSIZ ) - 1
+         bufbas  =   ( minib  - 1 ) + ( npkt * pktsiz ) + &
+                     ( bepidx - 1 ) + ( i    * dirsiz ) - 1
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+1, data )
 
-         CALL DAFADA ( DATA, 1 )
+         call dafada ( data, 1 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Finally, write out the control area for the first mini-segment.
 !
-      CALL DAFADA (  DBLE( SUBTYP ),  1  )
-      CALL DAFADA (  DBLE( WNDSIZ ),  1  )
-      CALL DAFADA (  DBLE( MINNPK ),  1  )
+      call dafada (  dble( subtyp ),  1  )
+      call dafada (  dble( wndsiz ),  1  )
+      call dafada (  dble( minnpk ),  1  )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 !
 !     Compute the size of the first output mini-segment; we'll need
@@ -1041,7 +1041,7 @@
 !     The size is the sum of the sizes of the packet set, the
 !     epochs, the epoch directories, and the control area.
 !
-      MIN1SZ = (  MINNPK * ( PKTSIZ + 1 )  ) + MINNDR + CTRLSZ
+      min1sz = (  minnpk * ( pktsiz + 1 )  ) + minndr + ctrlsz
 
 
 !***********************************************************************
@@ -1064,17 +1064,17 @@
 !     interval. Note that this time may differ from IV1END, which
 !     is the end time of the first output interval.
 !
-      IF (  ( IVLEND .GT. END ) .OR. ( BEGIDX .EQ. NINTVL )  ) THEN
+      if (  ( ivlend .gt. end ) .or. ( begidx .eq. nintvl )  ) then
 !
 !        We've transferred all the data we need. We don't need
 !        to obtain data from other mini-segments.
 !
-         ENDIDX = BEGIDX
+         endidx = begidx
 
 !
 !        FINAL is already set to .FALSE.
 !
-      ELSE
+      else
 !
 !        We need more data, and there are more data to be had.
 !
@@ -1083,77 +1083,77 @@
 !        equal to END, get copied without modification to the output
 !        file. Note that this sequence of mini-segments could be empty.
 
-         CURIVL = BEGIDX + 1
+         curivl = begidx + 1
 
 !
 !        Initialize the start time of the final output mini-segment.
 !        We'll update this if we produce more output mini-segments.
 !
-         IVFBEG = IVLEND
+         ivfbeg = ivlend
 
 !
 !        Get the end time of the interval at index CURIVL.
 !
-         BUFBAS = IVLBAS + CURIVL
+         bufbas = ivlbas + curivl
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, IVLEND )
+         call dafgda ( handle, bufbas+1, bufbas+1, ivlend )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
 !
 !        CURIVL is the index of the interval we're about to process,
 !        and if CURIVL is in range, IVLEND is its end time.
 !
-         DO WHILE (  ( IVLEND .LE. END ) .AND. ( CURIVL .LE. NINTVL )  )
+         do while (  ( ivlend .le. end ) .and. ( curivl .le. nintvl )  )
 !
 !           Entering this loop means the "middle" component of the
 !           output segment is non-empty.
 !
 !           Get the begin and end pointers for the current mini-segment.
 !
-            BUFBAS = PTRBAS + CURIVL - 1
+            bufbas = ptrbas + curivl - 1
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+2, DATA )
+            call dafgda ( handle, bufbas+1, bufbas+2, data )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-            MINIB = ( BADDR - 1 ) + NINT ( DATA(1) )
-            MINIE = ( BADDR - 1 ) + NINT ( DATA(2) ) - 1
+            minib = ( baddr - 1 ) + nint ( data(1) )
+            minie = ( baddr - 1 ) + nint ( data(2) ) - 1
 
 !
 !           Transfer all data from DAF address MINIB through DAF
 !           address MINIE to the target SPK segment.
 !
-            REMAIN = MINIE - MINIB + 1
+            remain = minie - minib + 1
 
-            BUFBAS = MINIB - 1
+            bufbas = minib - 1
 
-            NREAD  = MIN ( BUFSIZ, REMAIN )
+            nread  = min ( bufsiz, remain )
 
-            DO WHILE ( REMAIN .GT. 0 )
+            do while ( remain .gt. 0 )
 
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+               call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-               CALL DAFADA ( DATA, NREAD )
+               call dafada ( data, nread )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKS19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKS19' )
+                  return
+               end if
 
-               REMAIN = REMAIN - NREAD
+               remain = remain - nread
 
-               BUFBAS = BUFBAS + NREAD
+               bufbas = bufbas + nread
 
-               NREAD  = MIN ( BUFSIZ, REMAIN )
+               nread  = min ( bufsiz, remain )
 
-            END DO
+            end do
 !
 !           We've copied the mini-segment at index CURIVL.
 !
@@ -1161,28 +1161,28 @@
 !           this one turns out NOT to be the last; in that
 !           case this is the final interval's start time.
 !
-            IVFBEG = IVLEND
+            ivfbeg = ivlend
 
 !
 !           Get the end time of the next interval, if there
 !           is one.
 !
-            CURIVL = CURIVL + 1
+            curivl = curivl + 1
 
-            IF ( CURIVL .LE. NINTVL ) THEN
+            if ( curivl .le. nintvl ) then
 
-               BUFBAS = IVLBAS + CURIVL
+               bufbas = ivlbas + curivl
 
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, IVLEND )
+               call dafgda ( handle, bufbas+1, bufbas+1, ivlend )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKS19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKS19' )
+                  return
+               end if
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        We've transferred the middle group, if it exists, to the
 !        output segment.
@@ -1202,7 +1202,7 @@
 !
 !***********************************************************************
 
-         IF ( CURIVL .GT. NINTVL ) THEN
+         if ( curivl .gt. nintvl ) then
 !
 !           The coverage of the middle group extends to the end of
 !           the coverage of the input segment. There's no more data to
@@ -1210,13 +1210,13 @@
 !
 !           FINAL is already set to .FALSE.
 !
-            ENDIDX = NINTVL
+            endidx = nintvl
 
-         ELSE
+         else
 !
 !           We're going to create one last output mini-segment.
 !
-            FINAL  = .TRUE.
+            final  = .true.
 !
 !           The input segment contains at least one more interpolation
 !           interval, and the end time of this interval is greater than
@@ -1224,58 +1224,58 @@
 !           END, the interval would have been processed in the loop
 !           above.
 !
-            ENDIDX = CURIVL
+            endidx = curivl
 
 !
 !           In order to extract data from the mini-segment, we'll need
 !           its address range.
 !
-            CALL DAFGDA ( HANDLE, PTRBAS+ENDIDX, PTRBAS+ENDIDX+1, DATA )
+            call dafgda ( handle, ptrbas+endidx, ptrbas+endidx+1, data )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-            MINIB = ( BADDR - 1 ) + NINT( DATA(1) )
-            MINIE = ( BADDR - 1 ) + NINT( DATA(2) ) - 1
+            minib = ( baddr - 1 ) + nint( data(1) )
+            minie = ( baddr - 1 ) + nint( data(2) ) - 1
 
 !
 !           Read the control area of the mini-segment.
 !
-            BUFBAS = MINIE - CTRLSZ
+            bufbas = minie - ctrlsz
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+CTRLSZ, CONTRL )
+            call dafgda ( handle, bufbas+1, bufbas+ctrlsz, contrl )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
 !
 !           Fetch the control area parameters for the mini-segment.
 !
-            SUBTYP  =  NINT ( CONTRL(1) )
-            WNDSIZ  =  NINT ( CONTRL(2) )
-            NPKT    =  NINT ( CONTRL(3) )
+            subtyp  =  nint ( contrl(1) )
+            wndsiz  =  nint ( contrl(2) )
+            npkt    =  nint ( contrl(3) )
 
 !
 !           Set the packet size, which is a function of the subtype.
 !
-            IF ( ( SUBTYP .LT. 0 ) .OR. ( SUBTYP .GE. S19NST ) ) THEN
+            if ( ( subtyp .lt. 0 ) .or. ( subtyp .ge. s19nst ) ) then
 
-               CALL SETMSG ( 'Unexpected SPK type 19 subtype # found ' &
+               call setmsg ( 'Unexpected SPK type 19 subtype # found ' &
                //            'in type 19 segment within mini-segment ' &
                //            '#.'                                      )
-               CALL ERRINT ( '#',  SUBTYP                              )
-               CALL ERRINT ( '#',  CURIVL                              )
-               CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
-               CALL CHKOUT ( 'SPKS19'                                  )
-               RETURN
+               call errint ( '#',  subtyp                              )
+               call errint ( '#',  curivl                              )
+               call sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+               call chkout ( 'SPKS19'                                  )
+               return
 
-            END IF
+            end if
 
-            PKTSIZ = PKTSZS( SUBTYP )
+            pktsiz = pktszs( subtyp )
 
 !
 !           Determine how much of the mini-segment we need to transfer.
@@ -1284,7 +1284,7 @@
 !           base address of the epoch list (that is, the start address
 !           minus 1).
 !
-            MINBEP = MINIB  -  1  +  ( NPKT * PKTSIZ )
+            minbep = minib  -  1  +  ( npkt * pktsiz )
 
 !
 !           Read epochs until we find one strictly greater than END.
@@ -1292,40 +1292,40 @@
 !           less than or equal to END, so the epoch we seek should
 !           exist. We have an error condition if it doesn't.
 !
-            NREAD  = MIN ( BUFSIZ, NPKT )
+            nread  = min ( bufsiz, npkt )
 
-            BUFBAS = MINBEP
+            bufbas = minbep
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+            call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-            REMAIN = NPKT - NREAD
+            remain = npkt - nread
 
 !
 !           The variable NREAD is the array index of the last item read
 !           into the buffer on the previous read operation.
 !
-            DO WHILE (       ( REMAIN      .GT. 0   ) &
-                       .AND. ( DATA(NREAD) .LE. END )  )
+            do while (       ( remain      .gt. 0   ) &
+                       .and. ( data(nread) .le. end )  )
 
-               BUFBAS = BUFBAS + NREAD
+               bufbas = bufbas + nread
 
-               NREAD  = MIN ( BUFSIZ, REMAIN )
+               nread  = min ( bufsiz, remain )
 
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+NREAD, DATA )
+               call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKS19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKS19' )
+                  return
+               end if
 
-               REMAIN = REMAIN - NREAD
+               remain = remain - nread
 
-            END DO
+            end do
 !
 !           At this point BUFBAS - MINBEP is the number of epochs in
 !           the input mini-segment we've examined before the final call
@@ -1341,42 +1341,42 @@
 !           EEPIDX exceeds by 1 the index of the last epoch less than
 !           or equal to END.
 !
-            L      =  LSTLED ( END, NREAD, DATA )
+            l      =  lstled ( end, nread, data )
 
-            EEPIDX =  ( BUFBAS - MINBEP ) + L + 1
+            eepidx =  ( bufbas - minbep ) + l + 1
 
 !
 !           EEPIDX is at least 2 and is less than or equal to NPKT.
 !
-            IF ( EEPIDX .LT. 2 ) THEN
+            if ( eepidx .lt. 2 ) then
 !
 !              This code should not be reached, since getting here
 !              implies the first epoch of the interval is greater than
 !              END.
 !
-               CALL DAFHFN ( HANDLE, SPK )
+               call dafhfn ( handle, spk )
 
-               CALL SETMSG ( 'Input file: #. Segment address range: ' &
+               call setmsg ( 'Input file: #. Segment address range: ' &
                //            '#:#. Structural error found: no epochs ' &
                //            'in final input interval exceed END. ' &
                //            'Interval index is #; END is #.'          )
-               CALL ERRCH  ( '#', SPK                                  )
-               CALL ERRINT ( '#', BADDR                                )
-               CALL ERRINT ( '#', EADDR                                )
-               CALL ERRINT ( '#', ENDIDX                               )
-               CALL ERRDP  ( '#', END                                  )
-               CALL SIGERR ( 'SPICE(SPKSTRUCTUREERROR)'                )
-               CALL CHKOUT ( 'SPKS19'                                  )
-               RETURN
+               call errch  ( '#', spk                                  )
+               call errint ( '#', baddr                                )
+               call errint ( '#', eaddr                                )
+               call errint ( '#', endidx                               )
+               call errdp  ( '#', end                                  )
+               call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
+               call chkout ( 'SPKS19'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           Compute the number of pad epochs we need to maintain proper
 !           interpolation behavior in the neighborhood of the epoch at
 !           index EEPIDX.
 !
-            IF ( DATA(L) .EQ. END ) THEN
+            if ( data(l) .eq. end ) then
 !
 !              The epochs at indices EEPIDX-1 and EEPIDX comprise
 !              the first two epochs of the right half of an
@@ -1384,21 +1384,21 @@
 !              fewer pad epochs to complete the right half of the
 !              window.
 !
-               NPAD = ( WNDSIZ / 2 ) - 2
+               npad = ( wndsiz / 2 ) - 2
 
-            ELSE
+            else
 !
 !              The epoch at EEPIDX is the first of the pad.
 !
-               NPAD = ( WNDSIZ / 2 ) - 1
+               npad = ( wndsiz / 2 ) - 1
 
-            END IF
+            end if
 
 !
 !           Update the final epoch index to include the pad. The index
 !           cannot exceed the mini-segment's packet count.
 !
-            EEPIDX = MIN ( NPKT,  EEPIDX + NPAD )
+            eepidx = min ( npkt,  eepidx + npad )
 
 !
 !           EEPIDX must always exceed BEPIDX; no interpolation
@@ -1409,133 +1409,133 @@
 !           -1, and EEPIDX will be 1. We don't want to allow
 !           EEPIDX to be less than 2.
 !
-            EEPIDX = MAX ( EEPIDX, 2 )
+            eepidx = max ( eepidx, 2 )
 
 !
 !           EEPIDX should always be in range at this point.
 !
-            IF ( ( EEPIDX .LT. 2 ) .OR. ( EEPIDX .GT. NPKT ) ) THEN
+            if ( ( eepidx .lt. 2 ) .or. ( eepidx .gt. npkt ) ) then
 !
 !              This code should not be reached, since getting here
 !              implies the first epoch of the interval is greater than
 !              END.
 !
-               CALL DAFHFN ( HANDLE, SPK )
+               call dafhfn ( handle, spk )
 
-               CALL SETMSG ( 'Input file: #. Segment address range: ' &
+               call setmsg ( 'Input file: #. Segment address range: ' &
                //            '#:#. BEPIDX = #; EEPIDX = #; NPKT = #.' &
                //            'Interval index is #; END is #.'          )
-               CALL ERRCH  ( '#', SPK                                  )
-               CALL ERRINT ( '#', BADDR                                )
-               CALL ERRINT ( '#', EADDR                                )
-               CALL ERRINT ( '#', BEPIDX                               )
-               CALL ERRINT ( '#', EEPIDX                               )
-               CALL ERRINT ( '#', NPKT                                 )
-               CALL ERRINT ( '#', ENDIDX                               )
-               CALL ERRDP  ( '#', END                                  )
-               CALL SIGERR ( 'SPICE(SPKSTRUCTUREERROR)'                )
-               CALL CHKOUT ( 'SPKS19'                                  )
-               RETURN
+               call errch  ( '#', spk                                  )
+               call errint ( '#', baddr                                )
+               call errint ( '#', eaddr                                )
+               call errint ( '#', bepidx                               )
+               call errint ( '#', eepidx                               )
+               call errint ( '#', npkt                                 )
+               call errint ( '#', endidx                               )
+               call errdp  ( '#', end                                  )
+               call sigerr ( 'SPICE(SPKSTRUCTUREERROR)'                )
+               call chkout ( 'SPKS19'                                  )
+               return
 
-            END IF
+            end if
 
 !
 !           Write the packets of the last mini-segment.
 !
-            DO I = 1, EEPIDX
+            do i = 1, eepidx
 
-               BUFBAS  =  ( MINIB - 1 ) + ( (I-1) * PKTSIZ )
+               bufbas  =  ( minib - 1 ) + ( (i-1) * pktsiz )
 
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+PKTSIZ, DATA )
+               call dafgda ( handle, bufbas+1, bufbas+pktsiz, data )
 
-               CALL DAFADA ( DATA, PKTSIZ )
+               call dafada ( data, pktsiz )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKS19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKS19' )
+                  return
+               end if
 
-            END DO
+            end do
 
 !
 !           Write the epochs of the last mini-segment. Save the
 !           final epoch; we'll need it later.
 !
-            DO I = 1, EEPIDX
+            do i = 1, eepidx
 
-               BUFBAS  =  ( MINIB - 1 ) + ( NPKT * PKTSIZ ) + ( I - 1 )
+               bufbas  =  ( minib - 1 ) + ( npkt * pktsiz ) + ( i - 1 )
 
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+               call dafgda ( handle, bufbas+1, bufbas+1, data )
 
-               CALL DAFADA ( DATA, 1 )
+               call dafada ( data, 1 )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKS19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKS19' )
+                  return
+               end if
 
-               IF ( I .EQ. EEPIDX ) THEN
+               if ( i .eq. eepidx ) then
 !
 !                 The current interval is the last of the output
 !                 segment. The interval end must be greater than or
 !                 equal to END. It's safe to simply choose the final
 !                 epoch as the interval end.
 !
-                  IVFEND = DATA(1)
+                  ivfend = data(1)
 
-               END IF
+               end if
 
-            END DO
+            end do
 
 !
 !           Create epoch directories for the last mini-segment.
 !
-            MINNPK = EEPIDX
+            minnpk = eepidx
 
-            MINNDR = ( MINNPK - 1 ) / DIRSIZ
+            minndr = ( minnpk - 1 ) / dirsiz
 
 
-            DO I = 1, MINNDR
+            do i = 1, minndr
 
-               BUFBAS  =     ( MINIB - 1  ) + ( NPKT * PKTSIZ ) &
-                          +  ( I * DIRSIZ ) -   1
+               bufbas  =     ( minib - 1  ) + ( npkt * pktsiz ) &
+                          +  ( i * dirsiz ) -   1
 
-               CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+               call dafgda ( handle, bufbas+1, bufbas+1, data )
 
-               CALL DAFADA ( DATA, 1 )
+               call dafada ( data, 1 )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT( 'SPKS19' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout( 'SPKS19' )
+                  return
+               end if
 
-            END DO
+            end do
 
 !
 !           Finally, write out the control area for the last
 !           mini-segment.
 !
-            CALL DAFADA (  DBLE( SUBTYP ),  1  )
-            CALL DAFADA (  DBLE( WNDSIZ ),  1  )
-            CALL DAFADA (  DBLE( MINNPK ),  1  )
+            call dafada (  dble( subtyp ),  1  )
+            call dafada (  dble( wndsiz ),  1  )
+            call dafada (  dble( minnpk ),  1  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
 !
 !           Compute the size in DAF addresses of the last mini-segment.
 !           This is the sum of the sizes of the packet space, the
 !           epochs, the directories, and the control area.
 !
-            MINFSZ = ( MINNPK * ( PKTSIZ + 1 ) )  +  MINNDR  +  CTRLSZ
+            minfsz = ( minnpk * ( pktsiz + 1 ) )  +  minndr  +  ctrlsz
 
-         END IF
+         end if
 !
 !        We're done with the final mini-segment.
 !
-      END IF
+      end if
 !
 !     We've transferred all of the data we need from mini-segments at
 !     indices BEGIDX : ENDIDX.
@@ -1554,48 +1554,48 @@
 !     Let NOIVL be the number of intervals in the output subset
 !     segment.
 !
-      NOIVL = ENDIDX - BEGIDX + 1
+      noivl = endidx - begidx + 1
 
 !
 !     The first interval start time is IV1BEG.
 !
-      CALL DAFADA ( IV1BEG, 1 )
+      call dafada ( iv1beg, 1 )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT( 'SPKS19' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout( 'SPKS19' )
+         return
+      end if
 
 !
 !     Write the remaining interval boundaries.
 !
-      IF ( NOIVL .EQ. 1 ) THEN
+      if ( noivl .eq. 1 ) then
 !
 !        The final interval boundary is the stop time of
 !        the first interval.
 !
-         CALL DAFADA ( IV1END, 1 )
+         call dafada ( iv1end, 1 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-      ELSE
+      else
 !
 !        There are multiple output mini-segments. There is either
 !        a non-empty middle group, a final mini-segment, or both.
 !
 !        Set the upper bound of the interval boundary transfer loop.
 !
-         IF ( FINAL ) THEN
+         if ( final ) then
 !
 !           We'll transfer all interval start times up to,
 !           but not including, the final one.
 !
-            UB = NOIVL - 1
+            ub = noivl - 1
 
-         ELSE
+         else
 !
 !           There's no mini-segment following the middle group.
 !
@@ -1603,33 +1603,33 @@
 !           the end time of the last interval of the middle
 !           group.
 !
-            UB = NOIVL + 1
+            ub = noivl + 1
 
-         END IF
+         end if
 
 !
 !        Transfer interval boundaries from the middle group.
 !
-         DO I = 2, UB
+         do i = 2, ub
 
-            BUFBAS = IVLBAS + ( BEGIDX - 1 ) + ( I - 1 )
+            bufbas = ivlbas + ( begidx - 1 ) + ( i - 1 )
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+            call dafgda ( handle, bufbas+1, bufbas+1, data )
 
-            CALL DAFADA ( DATA(1), 1 )
+            call dafada ( data(1), 1 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        If the "final" mini-segment exists, we haven't
 !        transferred its interval boundaries. Do it now.
 !
-         IF ( FINAL ) THEN
+         if ( final ) then
 !
 !           The start and end times of the last output interpolation
 !           interval are stored in IVFBEG and IVFEND.
@@ -1638,17 +1638,17 @@
 !           mini-segment was written, and it was updated if necessary
 !           in the block of code that transferred the middle group.
 !
-            CALL DAFADA ( IVFBEG, 1 )
-            CALL DAFADA ( IVFEND, 1 )
+            call dafada ( ivfbeg, 1 )
+            call dafada ( ivfend, 1 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     The interval boundaries have been written.
 !
@@ -1670,28 +1670,28 @@
 !        ( ( NOIVL + 1 ) - 1 ) / DIRSIZ
 !
 !
-      NSDIR = NOIVL / DIRSIZ
+      nsdir = noivl / dirsiz
 
-      DO I = 1, NSDIR
+      do i = 1, nsdir
 !
 !        Look up the interval boundary at offset I*DIRSIZ from
 !        the boundary index BEGIDX-1.
 !
-         BUFBAS = IVLBAS + ( BEGIDX - 1 ) + ( I * DIRSIZ ) - 1
+         bufbas = ivlbas + ( begidx - 1 ) + ( i * dirsiz ) - 1
 
-         CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+         call dafgda ( handle, bufbas+1, bufbas+1, data )
 
 !
 !        Write this directory entry to the output segment.
 !
-         CALL DAFADA ( DATA, 1 )
+         call dafada ( data, 1 )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT( 'SPKS19' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout( 'SPKS19' )
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Write out mini-segment pointers for the new segment.
@@ -1699,9 +1699,9 @@
 !     The first output mini-segment ranges from relative
 !     addresses 1 : MIN1SZ.
 !
-      CALL DAFADA ( DBLE( 1 ),  1 )
+      call dafada ( dble( 1 ),  1 )
 
-      IF ( NOIVL .EQ. 1 ) THEN
+      if ( noivl .eq. 1 ) then
 !
 !        The next pointer indicates the first address after the
 !        mini-segment, whether or not there is another mini-segment.
@@ -1709,9 +1709,9 @@
 !        Note that MIN1SZ was initialized after the first output
 !        mini-segment was written.
 !
-         CALL DAFADA ( DBLE( MIN1SZ + 1),  1 )
+         call dafada ( dble( min1sz + 1),  1 )
 
-      ELSE
+      else
 !
 !        There are multiple output mini-segments. There is either
 !        a non-empty middle group, a final mini-segment, or both.
@@ -1719,19 +1719,19 @@
 !        We can obtain from the input segment the sizes of the
 !        mini-segments that were copied whole.
 !
-         START = MIN1SZ + 1
+         start = min1sz + 1
 
 !
 !        Set the upper bound of the mini-segment pointer transfer loop.
 !
-         IF ( FINAL ) THEN
+         if ( final ) then
 !
 !           We'll transfer all mini-segment start pointers up to and
 !           including the start pointer of the final output
 !
-            UB = NOIVL
+            ub = noivl
 
-         ELSE
+         else
 !
 !           The middle group is non-empty, and there's no mini-segment
 !           following the middle group.
@@ -1741,9 +1741,9 @@
 !           end pointer is the successor of the last DAF address
 !           occupied by the mini-segment.
 !
-            UB = NOIVL + 1
+            ub = noivl + 1
 
-         END IF
+         end if
 
 !
 !        Write mini-segment pointers from the middle group.
@@ -1758,38 +1758,38 @@
 !        final address of the first output mini-segment and the final
 !        address of the input mini-segment at index BEGIDX.
 !
-         DO I = 2, UB
+         do i = 2, ub
 !
 !           Look up the Ith start pointer.
 !
-            BUFBAS = PTRBAS + ( BEGIDX - 1 ) + ( I - 1 )
+            bufbas = ptrbas + ( begidx - 1 ) + ( i - 1 )
 
-            CALL DAFGDA ( HANDLE, BUFBAS+1, BUFBAS+1, DATA )
+            call dafgda ( handle, bufbas+1, bufbas+1, data )
 !
 !           On the first pass, compute the pointer shift amount.
 !
-            IF ( I .EQ. 2 ) THEN
+            if ( i .eq. 2 ) then
 
-               SHIFT = ( MIN1SZ + 1 ) - NINT( DATA(1) )
+               shift = ( min1sz + 1 ) - nint( data(1) )
 
-            END IF
+            end if
 
-            START = NINT( DATA(1) )  +  SHIFT
+            start = nint( data(1) )  +  shift
 
-            CALL DAFADA ( DBLE( START ), 1 )
+            call dafada ( dble( start ), 1 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT( 'SPKS19' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout( 'SPKS19' )
+               return
+            end if
 
-         END DO
+         end do
 
 !
 !        If the "final" mini-segment exists, we haven't
 !        transferred its end pointer. Do it now.
 !
-         IF ( FINAL ) THEN
+         if ( final ) then
 !
 !           MINFSZ is the size of the final output mini-segment.
 !
@@ -1799,19 +1799,19 @@
 !
 !           Write the pointer.
 !
-            CALL DAFADA ( DBLE( START + MINFSZ ),  1 )
+            call dafada ( dble( start + minfsz ),  1 )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Write the interval count and selection flag to the
 !     new segment.
 !
-      CALL DAFADA ( DBLE( ISEL  ), 1 )
-      CALL DAFADA ( DBLE( NOIVL ), 1 )
+      call dafada ( dble( isel  ), 1 )
+      call dafada ( dble( noivl ), 1 )
 
-      CALL CHKOUT ( 'SPKS19' )
-      RETURN
-      END
+      call chkout ( 'SPKS19' )
+      return
+      end

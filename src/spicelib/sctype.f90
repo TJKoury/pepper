@@ -1,6 +1,6 @@
 !$Procedure SCTYPE ( SCLK type )
 
-      INTEGER FUNCTION SCTYPE ( SC )
+      integer function sctype ( sc )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      INTEGER               SC
+      integer               sc
 
 ! $ Brief_I/O
 !
@@ -176,25 +176,25 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
+      if ( return () ) then
 
-         SCTYPE = 0
+         sctype = 0
 
-         RETURN
+         return
 
-      END IF
+      end if
 
-      CALL CHKIN ( 'SCTYPE' )
+      call chkin ( 'SCTYPE' )
 !
 !     Get the type from the type 1 subsystem.
 !
-      CALL SCTY01 ( SC, SCTYPE )
+      call scty01 ( sc, sctype )
 
-      CALL CHKOUT ( 'SCTYPE' )
-      RETURN
-      END
+      call chkout ( 'SCTYPE' )
+      return
+      end

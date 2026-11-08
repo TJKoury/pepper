@@ -1,6 +1,6 @@
 !$Procedure STMP03 ( Stumpff functions 0 through 3 )
 
-      SUBROUTINE STMP03 ( X, C0, C1, C2, C3 )
+      subroutine stmp03 ( x, c0, c1, c2, c3 )
 
 ! $ Abstract
 !
@@ -19,20 +19,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      C0
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      C3
+      double precision      x
+      double precision      c0
+      double precision      c1
+      double precision      c2
+      double precision      c3
 
 
-      INTEGER               TRUNC
+      integer               trunc
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      PARAMETER           ( TRUNC = 10   )
+      parameter           ( trunc = 10   )
 #else
-      PARAMETER           ( TRUNC = 11   )
+      parameter           ( trunc = 11   )
 #endif
 
 ! $ Brief_I/O
@@ -436,17 +436,17 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPMAX
+      double precision      dpmax
 
 !
 !     Local Parameters
 !
 
-      DOUBLE PRECISION      HALF
-      PARAMETER           ( HALF  = 1.0D0 / 2.0D0 )
+      double precision      half
+      parameter           ( half  = 1.0d0 / 2.0d0 )
 
-      DOUBLE PRECISION      EIGHTH
-      PARAMETER           ( EIGHTH = 1.0D0 / 8.0D0 )
+      double precision      eighth
+      parameter           ( eighth = 1.0d0 / 8.0d0 )
 
 !
 !     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
@@ -502,39 +502,39 @@
 !     (counting 1/(1*2) as the first) will be the last one needed in
 !     the evaluation of C_2 and C_3.
 !
-      INTEGER               NPAIRS
-      PARAMETER           ( NPAIRS = 2*TRUNC - 2 )
+      integer               npairs
+      parameter           ( npairs = 2*trunc - 2 )
 
-      INTEGER               LPAIR3
-      PARAMETER           ( LPAIR3 = NPAIRS      )
+      integer               lpair3
+      parameter           ( lpair3 = npairs      )
 
-      INTEGER               LPAIR2
-      PARAMETER           ( LPAIR2 = NPAIRS - 1  )
+      integer               lpair2
+      parameter           ( lpair2 = npairs - 1  )
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      LBOUND
-      DOUBLE PRECISION      PAIRS  ( NPAIRS )
-      DOUBLE PRECISION      Y
-      DOUBLE PRECISION      Z
+      double precision      lbound
+      double precision      pairs  ( npairs )
+      double precision      y
+      double precision      z
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  LBOUND
-      SAVE                  PAIRS
+      save                  first
+      save                  lbound
+      save                  pairs
 
 !
 !     Initial values
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
@@ -575,18 +575,18 @@
 !     compute LBOUND using the second form above with N equal to
 !     some large power of 2 (say 2**20).
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         FIRST  = .FALSE.
+         first  = .false.
 
-         DO I = 1, NPAIRS
-            PAIRS(I) = 1.0D0 / (DBLE(I)*DBLE(I+1))
-         END DO
+         do i = 1, npairs
+            pairs(i) = 1.0d0 / (dble(i)*dble(i+1))
+         end do
 
-         Y      =   DLOG(2.0D0) + DLOG( DPMAX() )
-         LBOUND = - Y*Y
+         y      =   dlog(2.0d0) + dlog( dpmax() )
+         lbound = - y*y
 
-      END IF
+      end if
 
 
 !
@@ -594,18 +594,18 @@
 !     range that we are confident we can use to compute the Stumpff
 !     functions.
 !
-      IF ( X .LE. LBOUND ) THEN
+      if ( x .le. lbound ) then
 
-         CALL CHKIN ( 'STMP03'                                     )
-         CALL SETMSG( 'The input value of X must be greater than ' &
+         call chkin ( 'STMP03'                                     )
+         call setmsg( 'The input value of X must be greater than ' &
          //           '#.  The input value was #'                  )
-         CALL ERRDP ( '#', LBOUND                                  )
-         CALL ERRDP ( '#', X                                       )
-         CALL SIGERR( 'SPICE(VALUEOUTOFRANGE)'                     )
-         CALL CHKOUT( 'STMP03'                                     )
-         RETURN
+         call errdp ( '#', lbound                                  )
+         call errdp ( '#', x                                       )
+         call sigerr( 'SPICE(VALUEOUTOFRANGE)'                     )
+         call chkout( 'STMP03'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     From the definition of the Stumpff functions it can be seen that
@@ -672,27 +672,27 @@
 !                                                  8
 !
 !
-       IF ( X .LT. -1.D0 ) THEN
+       if ( x .lt. -1.d0 ) then
 
-         Z  = SQRT(-X)
-         C0 = COSH(Z)
-         C1 = SINH(Z)/Z
-         C2 = (1-C0)/X
-         C3 = (1-C1)/X
-         RETURN
+         z  = sqrt(-x)
+         c0 = cosh(z)
+         c1 = sinh(z)/z
+         c2 = (1-c0)/x
+         c3 = (1-c1)/x
+         return
 
-      END IF
+      end if
 
-      IF ( X .GT. 1.D0 ) THEN
+      if ( x .gt. 1.d0 ) then
 
-         Z  = SQRT(X)
-         C0 = COS(Z)
-         C1 = SIN(Z)/Z
-         C2 = (1-C0)/X
-         C3 = (1-C1)/X
-         RETURN
+         z  = sqrt(x)
+         c0 = cos(z)
+         c1 = sin(z)/z
+         c2 = (1-c0)/x
+         c3 = (1-c1)/x
+         return
 
-      END IF
+      end if
 
 !
 !     If the magnitude of X is less than or equal to 1, we compute
@@ -721,13 +721,13 @@
 !     LPAIR3 will be 18.
 !
 
-      C3    = 1.0D0
+      c3    = 1.0d0
 
-      DO I  = LPAIR3, 4, -2
-         C3 = 1.0D0 - X*PAIRS(I)*C3
-      END DO
+      do i  = lpair3, 4, -2
+         c3 = 1.0d0 - x*pairs(i)*c3
+      end do
 
-      C3    =           PAIRS(2)*C3
+      c3    =           pairs(2)*c3
 
 
 !
@@ -752,13 +752,13 @@
 !     Assuming that we don't need to go beyond  the term with 1/18!,
 !     LPAIR2 will be 17.
 !
-      C2    = 1.0D0
+      c2    = 1.0d0
 
-      DO I  = LPAIR2, 3, -2
-         C2 = 1.0D0 - X*PAIRS(I)*C2
-      END DO
+      do i  = lpair2, 3, -2
+         c2 = 1.0d0 - x*pairs(i)*c2
+      end do
 
-      C2    =           PAIRS(1)*C2
+      c2    =           pairs(1)*c2
 
 !
 !     Get C1 and C0 via the recursion formula:
@@ -767,11 +767,11 @@
 !          x*C_k+2(y) =  ---  -  C_k(x)
 !                         k!
 !
-      C1 =  1.0D0 - X*C3
-      C0 =  1.0D0 - X*C2
+      c1 =  1.0d0 - x*c3
+      c0 =  1.0d0 - x*c2
 
-      RETURN
-      END
+      return
+      end
 
 
 

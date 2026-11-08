@@ -1,8 +1,8 @@
 !$Procedure GFUDS ( GF, user defined scalar )
 
-      SUBROUTINE GFUDS ( UDFUNS, UDQDEC, RELATE, REFVAL, &
-                         ADJUST, STEP,   CNFINE, &
-                         MW,     NW,     WORK,   RESULT  )
+      subroutine gfuds ( udfuns, udqdec, relate, refval, &
+                         adjust, step,   cnfine, &
+                         mw,     nw,     work,   result  )
 
 ! $ Abstract
 !
@@ -24,27 +24,27 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      EXTERNAL              UDQDEC
-      EXTERNAL              UDFUNS
+      external              udqdec
+      external              udfuns
 
-      CHARACTER*(*)         RELATE
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      character*(*)         relate
+      double precision      refval
+      double precision      adjust
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1025,130 +1025,130 @@
 !     SPICELIB functions.
 !
 
-      LOGICAL               ODD
-      LOGICAL               RETURN
-      INTEGER               SIZED
+      logical               odd
+      logical               return
+      integer               sized
 
 
 !
 !     Local variables.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
-      EXTERNAL              ZZGFUDLT
+      external              gfrefn
+      external              gfrepf
+      external              gfrepi
+      external              gfrepu
+      external              gfstep
+      external              zzgfudlt
 
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
-      LOGICAL               GFBAIL
-      EXTERNAL              GFBAIL
+      logical               gfbail
+      external              gfbail
 
-      LOGICAL               NOBAIL
-      PARAMETER           ( NOBAIL = .FALSE. )
+      logical               nobail
+      parameter           ( nobail = .false. )
 
-      LOGICAL               NORPT
-      PARAMETER           ( NORPT  = .FALSE. )
+      logical               norpt
+      parameter           ( norpt  = .false. )
 
 !
 !     Dummy variables.
 !
-      CHARACTER*(1)         RPTPRE ( 2 )
-      CHARACTER*(1)         RPTSUF ( 2 )
+      character*(1)         rptpre ( 2 )
+      character*(1)         rptsuf ( 2 )
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN( 'GFUDS' )
+      call chkin( 'GFUDS' )
 
 
 !
 !     Confirm minimum number of windows.
 !
-      IF ( NW .LT. NWUDS ) THEN
+      if ( nw .lt. nwuds ) then
 
-         CALL SETMSG ( 'Workspace window count was #; count must be ' &
+         call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                 )
-         CALL ERRINT ( '#',  NW                                      )
-         CALL ERRINT ( '#',  NWUDS                                   )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                     )
-         CALL CHKOUT ( 'GFUDS'                                       )
-         RETURN
+         call errint ( '#',  nw                                      )
+         call errint ( '#',  nwuds                                   )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                     )
+         call chkout ( 'GFUDS'                                       )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Confirm minimum window sizes.
 !
-      IF ( (MW .LT. 2) .OR. ODD(MW) ) THEN
+      if ( (mw .lt. 2) .or. odd(mw) ) then
 
-         CALL SETMSG ( 'Workspace window size was #; size must be ' &
+         call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
-         CALL ERRINT ( '#',  MW                                   )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                  )
-         CALL CHKOUT ( 'GFUDS'                                    )
-         RETURN
+         call errint ( '#',  mw                                   )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                  )
+         call chkout ( 'GFUDS'                                    )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check the result window size.
 !
-      IF ( (SIZED(RESULT) .LT. 2) .OR. ODD( SIZED(RESULT) ) ) THEN
+      if ( (sized(result) .lt. 2) .or. odd( sized(result) ) ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )
-         CALL ERRINT ( '#', SIZED(RESULT)                          )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFUDS'                                     )
-         RETURN
+         call errint ( '#', sized(result)                          )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFUDS'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 !
 !     Initialize the RESULT window to empty.
 !
-      CALL SCARDD ( 0, RESULT)
+      call scardd ( 0, result)
 
 
 !
 !     Call ZZGFRELX to do the event detection work.
 !
-      CALL ZZGFRELX ( GFSTEP, GFREFN,    UDQDEC,  ZZGFUDLT, &
-                      UDFUNS, RELATE,    REFVAL, &
-                      TOL,    ADJUST,    CNFINE,  MW, &
-                      NW,     WORK,      NORPT,   GFREPI, &
-                      GFREPU, GFREPF,    RPTPRE,  RPTSUF, &
-                      NOBAIL, GFBAIL,    RESULT   )
+      call zzgfrelx ( gfstep, gfrefn,    udqdec,  zzgfudlt, &
+                      udfuns, relate,    refval, &
+                      tol,    adjust,    cnfine,  mw, &
+                      nw,     work,      norpt,   gfrepi, &
+                      gfrepu, gfrepf,    rptpre,  rptsuf, &
+                      nobail, gfbail,    result   )
 
 
-      CALL CHKOUT( 'GFUDS' )
+      call chkout( 'GFUDS' )
 
-      END
+      end

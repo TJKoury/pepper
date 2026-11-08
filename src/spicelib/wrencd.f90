@@ -1,6 +1,6 @@
 !$Procedure WRENCD ( Write encoded d.p. numbers to text file )
 
-      SUBROUTINE WRENCD ( UNIT, N, DATA )
+      subroutine wrencd ( unit, n, data )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UNIT
-      INTEGER               N
-      DOUBLE PRECISION      DATA(*)
+      integer               unit
+      integer               n
+      double precision      data(*)
 
 ! $ Brief_I/O
 !
@@ -237,113 +237,113 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 !
 !     Local parameters
 !
-      CHARACTER*(1)         QUOTE
-      PARAMETER           ( QUOTE = '''' )
+      character*(1)         quote
+      parameter           ( quote = '''' )
 
-      INTEGER               MAXENC
-      PARAMETER           ( MAXENC = 64 )
+      integer               maxenc
+      parameter           ( maxenc = 64 )
 
-      INTEGER               WRKSIZ
-      PARAMETER           ( WRKSIZ = 64 )
+      integer               wrksiz
+      parameter           ( wrksiz = 64 )
 !
 !     Local variables
 !
-      CHARACTER*(MAXENC)    WORK(WRKSIZ)
+      character*(maxenc)    work(wrksiz)
 
-      INTEGER               I
-      INTEGER               IOSTAT
-      INTEGER               ITMBEG
-      INTEGER               NITMS
-      INTEGER               LENGTH(WRKSIZ)
+      integer               i
+      integer               iostat
+      integer               itmbeg
+      integer               nitms
+      integer               length(wrksiz)
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WRENCD' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'WRENCD' )
+      end if
 !
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL SETMSG ( 'The number of data items to be written was' // &
+         call setmsg ( 'The number of data items to be written was' // &
                        ' not positive: #.'                           )
-         CALL ERRINT ( '#', N                                        )
-         CALL SIGERR ( 'SPICE(INVALIDARGUMENT)'                      )
-         CALL CHKOUT ( 'WRENCD'                                      )
-         RETURN
+         call errint ( '#', n                                        )
+         call sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         call chkout ( 'WRENCD'                                      )
+         return
 
-      END IF
+      end if
 !
 !     Initialize the beginning location for the data items to be
 !     encoded.
 !
-      ITMBEG = 1
+      itmbeg = 1
 !
 !     Begin encoding the input data items in blocks of size NITMS.
 !     Each time the number of data items NITMS is reached, write
 !     out the encoded items in the workspace.
 !
-      DO WHILE ( ITMBEG .LE. N )
+      do while ( itmbeg .le. n )
 !
 !        The number of items is either the size of the workspace, or
 !        the number of data items which remain to be processed, which
 !        should always be less than or equal to the size of the
 !        workspace.
 !
-         NITMS = MIN ( WRKSIZ, N - ITMBEG + 1 )
+         nitms = min ( wrksiz, n - itmbeg + 1 )
 !
 !        Encode each of the numbers into an equivalent character string.
 !
-         DO I = 1, NITMS
+         do i = 1, nitms
 
-            CALL DP2HX ( DATA(ITMBEG + I - 1), WORK(I), LENGTH(I) )
+            call dp2hx ( data(itmbeg + i - 1), work(i), length(i) )
 
-         END DO
+         end do
 !
 !        Write out the current workspace, placing single quotes around
 !        each of the character strings so that they may be read using
 !        Fortran list directed read statements rather than the format
 !        specifier FMT = '(A)'.
 !
-         DO I = 1, NITMS
+         do i = 1, nitms
 
-            WRITE ( UNIT,FMT='(A)',IOSTAT=IOSTAT ) &
-               QUOTE//WORK(I)(1:LENGTH(I))//QUOTE
+            write ( unit,fmt='(A)',iostat=iostat ) &
+               quote//work(i)(1:length(i))//quote
 !
 !           Check to see if we got a write error, IOSTAT .NE. 0.
 !
-            IF ( IOSTAT .NE. 0 ) THEN
+            if ( iostat .ne. 0 ) then
 
-               CALL SETMSG ( 'Error writing to logical unit #,'  // &
+               call setmsg ( 'Error writing to logical unit #,'  // &
                              ' IOSTAT = #.'                       )
-               CALL ERRINT ( '#', UNIT                            )
-               CALL ERRINT ( '#', IOSTAT                          )
-               CALL SIGERR ( 'SPICE(FILEWRITEFAILED)'             )
-               CALL CHKOUT ( 'WRENCD'                             )
-               RETURN
+               call errint ( '#', unit                            )
+               call errint ( '#', iostat                          )
+               call sigerr ( 'SPICE(FILEWRITEFAILED)'             )
+               call chkout ( 'WRENCD'                             )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Position the data item pointer at the next location to begin
 !        encoding the items in the array DATA, and continue processing
 !        the data items until done.
 !
-         ITMBEG = ITMBEG + NITMS
+         itmbeg = itmbeg + nitms
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'WRENCD' )
-      RETURN
-      END
+      call chkout ( 'WRENCD' )
+      return
+      end

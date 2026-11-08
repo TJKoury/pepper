@@ -1,6 +1,6 @@
 !$Procedure BSRCHC ( Binary search for a character string )
 
-      INTEGER FUNCTION BSRCHC ( VALUE, NDIM, ARRAY )
+      integer function bsrchc ( value, ndim, array )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    VALUE
-      INTEGER          NDIM
-      CHARACTER*(*)    ARRAY ( * )
+      character*(*)    value
+      integer          ndim
+      character*(*)    array ( * )
 
 ! $ Brief_I/O
 !
@@ -149,47 +149,47 @@
 !
 !     Local variables
 !
-      INTEGER          LEFT
-      INTEGER          RIGHT
-      INTEGER          I
+      integer          left
+      integer          right
+      integer          i
 
 
 
 !
 !     Set the initial bounds for the search area.
 !
-      LEFT  = 1
-      RIGHT = NDIM
+      left  = 1
+      right = ndim
 
-      DO WHILE ( LEFT .LE. RIGHT )
+      do while ( left .le. right )
 
 !
 !        Check the middle element.
 !
-         I = (LEFT+RIGHT)/2
+         i = (left+right)/2
 
 !
 !        If the middle element matches, return its location.
 !
-         IF ( VALUE .EQ. ARRAY(I) ) THEN
-            BSRCHC = I
-            RETURN
+         if ( value .eq. array(i) ) then
+            bsrchc = i
+            return
 
 !
 !        Otherwise narrow the search area.
 !
-         ELSE IF ( LLT (VALUE, ARRAY(I)) ) THEN
-            RIGHT = I-1
-         ELSE
-            LEFT  = I+1
-         END IF
+         else if ( llt (value, array(i)) ) then
+            right = i-1
+         else
+            left  = i+1
+         end if
 
-      END DO
+      end do
 
 !
 !     If the search area is empty, return zero.
 !
-      BSRCHC = 0
+      bsrchc = 0
 
-      RETURN
-      END
+      return
+      end

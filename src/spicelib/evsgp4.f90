@@ -1,6 +1,6 @@
 !$Procedure EVSGP4 ( Evaluate "two-line" element data )
 
-      SUBROUTINE EVSGP4 ( ET, GEOPHS, ELEMS, STATE )
+      subroutine evsgp4 ( et, geophs, elems, state )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsgp4.inc'
+      include 'zzsgp4.inc'
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      GEOPHS (  8 )
-      DOUBLE PRECISION      ELEMS  ( 10 )
-      DOUBLE PRECISION      STATE  (  6 )
+      double precision      et
+      double precision      geophs (  8 )
+      double precision      elems  ( 10 )
+      double precision      state  (  6 )
 
 ! $ Brief_I/O
 !
@@ -363,20 +363,20 @@
 !-&
 
 
-      DOUBLE PRECISION      T1
+      double precision      t1
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'EVSGP4' )
+      call chkin ( 'EVSGP4' )
 
 !
 !     Evaluate TLE.
@@ -385,33 +385,33 @@
 !
 !     Initialize.
 !
-      CALL XXSGP4I ( GEOPHS, ELEMS, AFSPC )
+      call xxsgp4i ( geophs, elems, afspc )
 
-      IF ( FAILED() ) THEN
-          CALL CHKOUT ( 'EVSGP4' )
-          RETURN
-      END IF
+      if ( failed() ) then
+          call chkout ( 'EVSGP4' )
+          return
+      end if
 
 !
 !     Calculate time from epoch in minutes.
 !
-      T1 = ELEMS ( KEPOCH )
-      T1 = (ET - T1)/60.D0
+      t1 = elems ( kepoch )
+      t1 = (et - t1)/60.d0
 
 !
 !     Compute state.
 !
-      CALL XXSGP4E ( T1, STATE )
+      call xxsgp4e ( t1, state )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EVSGP4' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EVSGP4' )
+         return
+      end if
 
 !
 !     Checkout, then return.
 !
-      CALL CHKOUT ( 'EVSGP4' )
-      RETURN
+      call chkout ( 'EVSGP4' )
+      return
 
-      END
+      end

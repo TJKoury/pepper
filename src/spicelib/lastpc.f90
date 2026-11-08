@@ -1,6 +1,6 @@
 !$Procedure LASTPC ( Last printable character )
 
-      INTEGER FUNCTION  LASTPC ( STRING )
+      integer function  lastpc ( string )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -138,7 +138,7 @@
 !
 !     Local variables
 !
-      INTEGER          I
+      integer          i
 
 
 
@@ -146,21 +146,21 @@
 !     Look for the last character in the range [33,126], and return
 !     its index.
 !
-      DO I = LEN ( STRING ), 1, -1
+      do i = len ( string ), 1, -1
 
-         IF (       (ICHAR ( STRING(I:I) ) .GE.  33) &
-              .AND. (ICHAR ( STRING(I:I) ) .LE. 126) ) THEN
+         if (       (ichar ( string(i:i) ) .ge.  33) &
+              .and. (ichar ( string(i:i) ) .le. 126) ) then
 
-            LASTPC = I
-            RETURN
-         END IF
+            lastpc = i
+            return
+         end if
 
-      END DO
+      end do
 
 !
 !     Still here? No printable characters. Return zero.
 !
-      LASTPC = 0
+      lastpc = 0
 
-      RETURN
-      END
+      return
+      end

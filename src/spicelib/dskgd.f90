@@ -1,6 +1,6 @@
 !$Procedure DSKGD ( DSK, return DSK segment descriptor  )
 
-      SUBROUTINE DSKGD ( HANDLE, DLADSC, DSKDSC )
+      subroutine dskgd ( handle, dladsc, dskdsc )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
-      INCLUDE 'dskdsc.inc'
+      include 'dla.inc'
+      include 'dskdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               DLADSC ( * )
-      DOUBLE PRECISION      DSKDSC ( * )
+      integer               handle
+      integer               dladsc ( * )
+      double precision      dskdsc ( * )
 
 ! $ Brief_I/O
 !
@@ -585,49 +585,49 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               DPBASE
-      INTEGER               DPSIZE
+      integer               dpbase
+      integer               dpsize
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKGD' )
+      call chkin ( 'DSKGD' )
 
 !
 !     Fetch the base address and size of the DP component of the
 !     indicated segment.
 !
-      DPBASE = DLADSC ( DBSIDX )
-      DPSIZE = DLADSC ( DSZIDX )
+      dpbase = dladsc ( dbsidx )
+      dpsize = dladsc ( dszidx )
 
 !
 !     If we don't have enough d.p. elements to hold a descriptor,
 !     something's wrong.
 !
-      IF ( DPSIZE .LT. DSKDSZ ) THEN
+      if ( dpsize .lt. dskdsz ) then
 
-         CALL SETMSG ( 'Size of d.p. component of segment is #; ' &
+         call setmsg ( 'Size of d.p. component of segment is #; ' &
          //            'cannot extract descriptor.  This is a ' &
          //            'file format error which may be indicative ' &
          //             'of a corrupted file.'                      )
-         CALL ERRINT ( '#', DPSIZE                                  )
-         CALL SIGERR ( 'SPICE(INVALIDFORMAT)'                       )
-         CALL CHKOUT ( 'DSKGD'                                      )
-         RETURN
+         call errint ( '#', dpsize                                  )
+         call sigerr ( 'SPICE(INVALIDFORMAT)'                       )
+         call chkout ( 'DSKGD'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Extract the descriptor.
 !
-      CALL DASRDD ( HANDLE, DPBASE+1, DPBASE+DSKDSZ, DSKDSC )
+      call dasrdd ( handle, dpbase+1, dpbase+dskdsz, dskdsc )
 
-      CALL CHKOUT ( 'DSKGD' )
-      RETURN
-      END
+      call chkout ( 'DSKGD' )
+      return
+      end

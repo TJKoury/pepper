@@ -1,6 +1,6 @@
 !$Procedure SETMSG  ( Set Long Error Message )
 
-      SUBROUTINE SETMSG ( MSG )
+      subroutine setmsg ( msg )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)                 MSG
+      character*(*)                 msg
 
 ! $ Brief_I/O
 !
@@ -241,16 +241,16 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ALLOWD
+      logical               allowd
 
 !
 !     We store the long error message only when updates
 !     of the long message are allowed:
 !
-      IF ( ALLOWD() ) THEN
+      if ( allowd() ) then
 
-         CALL PUTLMS ( MSG )
+         call putlms ( msg )
 
-      END IF
+      end if
 
-      END
+      end

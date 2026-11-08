@@ -1,6 +1,6 @@
 !$Procedure J2000 ( Julian Date of 2000 JAN 1.5 )
 
-      DOUBLE PRECISION FUNCTION J2000 ( )
+      double precision function j2000 ( )
 
 ! $ Abstract
 !
@@ -95,7 +95,7 @@
 !-&
 
 
-      J2000 = 2451545.0D0
+      j2000 = 2451545.0d0
 
-      RETURN
-      END
+      return
+      end

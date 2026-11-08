@@ -1,8 +1,8 @@
 !$Procedure ZZTRVLNK ( Traverse AB cell linked-list )
 
-      SUBROUTINE ZZTRVLNK ( AVAL,  MAXA, PNTRS, CELLSZ, &
-                            CELLS, MAXB, NB,    BLIST  )
-      IMPLICIT NONE
+      subroutine zztrvlnk ( aval,  maxa, pntrs, cellsz, &
+                            cells, maxb, nb,    blist  )
+      implicit none
 
 ! $ Abstract
 !
@@ -24,14 +24,14 @@
 !
 ! $ Declarations
 
-      INTEGER               AVAL
-      INTEGER               MAXA
-      INTEGER               PNTRS  ( * )
-      INTEGER               CELLSZ
-      INTEGER               CELLS  ( 2, * )
-      INTEGER               MAXB
-      INTEGER               NB
-      INTEGER               BLIST  ( * )
+      integer               aval
+      integer               maxa
+      integer               pntrs  ( * )
+      integer               cellsz
+      integer               cells  ( 2, * )
+      integer               maxb
+      integer               nb
+      integer               blist  ( * )
 
 ! $ Brief_I/O
 !
@@ -217,99 +217,99 @@
 !
 !-&
 
-      LOGICAL               RETURN
+      logical               return
 
-      INTEGER               I
-      INTEGER               PTR
+      integer               i
+      integer               ptr
 
 !
 !     Standard SPICE error handling.
 !
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'ZZTRVLNK' )
+      call chkin  ( 'ZZTRVLNK' )
 
-      IF ( ( AVAL .LT. 1 ) .OR. ( AVAL .GT. MAXA ) ) THEN
+      if ( ( aval .lt. 1 ) .or. ( aval .gt. maxa ) ) then
 
-         CALL SETMSG ( 'Index AVAL is out of range. ' &
+         call setmsg ( 'Index AVAL is out of range. ' &
          //            'Index = #1. Valid range = 1:#2.' )
-         CALL ERRINT ( '#1', AVAL                        )
-         CALL ERRINT ( '#2', MAXA                        )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'          )
-         CALL CHKOUT ( 'ZZTRVLNK'                        )
-         RETURN
+         call errint ( '#1', aval                        )
+         call errint ( '#2', maxa                        )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'          )
+         call chkout ( 'ZZTRVLNK'                        )
+         return
 
-      END IF
+      end if
 
-      IF ( MAXB .LT. 1 ) THEN
+      if ( maxb .lt. 1 ) then
 
-         CALL SETMSG ( 'Maximum output list size MAXB is invalid. ' &
+         call setmsg ( 'Maximum output list size MAXB is invalid. ' &
          //            'MAXB = #1.'                                )
-         CALL ERRINT ( '#1', MAXB                                  )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                        )
-         CALL CHKOUT ( 'ZZTRVLNK'                                  )
-         RETURN
+         call errint ( '#1', maxb                                  )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                        )
+         call chkout ( 'ZZTRVLNK'                                  )
+         return
 
-      END IF
+      end if
 
 
-      NB       = 0
-      BLIST(1) = 0
+      nb       = 0
+      blist(1) = 0
 
-      PTR = PNTRS(AVAL)
+      ptr = pntrs(aval)
 
-      DO WHILE ( PTR .NE. -1 )
+      do while ( ptr .ne. -1 )
 
-         IF (      ( PTR .LT. -1     ) &
-              .OR. ( PTR .EQ. 0      ) &
-              .OR. ( PTR .GT. CELLSZ )  ) THEN
+         if (      ( ptr .lt. -1     ) &
+              .or. ( ptr .eq. 0      ) &
+              .or. ( ptr .gt. cellsz )  ) then
 
-            CALL SETMSG ( 'Value in PNTRS array is not a ' &
+            call setmsg ( 'Value in PNTRS array is not a ' &
             //            'valid index in the cell array.' &
             //            'Value = #1. Array size = #2.'    )
-            CALL ERRINT ( '#1', PTR                         )
-            CALL ERRINT ( '#2', CELLSZ                      )
-            CALL SIGERR ( 'SPICE(POINTEROUTOFRANGE)'        )
-            CALL CHKOUT ( 'ZZTRVLNK'                        )
-            RETURN
+            call errint ( '#1', ptr                         )
+            call errint ( '#2', cellsz                      )
+            call sigerr ( 'SPICE(POINTEROUTOFRANGE)'        )
+            call chkout ( 'ZZTRVLNK'                        )
+            return
 
-         END IF
+         end if
 
 
-         NB = NB + 1
+         nb = nb + 1
 
-         IF ( NB .GT. MAXB ) THEN
+         if ( nb .gt. maxb ) then
 
-            CALL SETMSG ( 'Output value count is larger than ' &
+            call setmsg ( 'Output value count is larger than ' &
             //            'B-list array room. Count = #1. Output ' &
             //            'array room = #2. Input pointer index ' &
             //            'was #3. Input pointer list size was #4. ' &
             //            'Last pointer was #5. Cell size was #6.'  )
-            CALL ERRINT ( '#1', NB                                  )
-            CALL ERRINT ( '#2', MAXB                                )
-            CALL ERRINT ( '#3', AVAL                                )
-            CALL ERRINT ( '#4', MAXA                                )
-            CALL ERRINT ( '#5', PTR                                 )
-            CALL ERRINT ( '#6', CELLSZ                              )
-            CALL SIGERR ( 'SPICE(BARRAYTOOSMALL)'                   )
-            CALL CHKOUT ( 'ZZTRVLNK'                                )
-            RETURN
+            call errint ( '#1', nb                                  )
+            call errint ( '#2', maxb                                )
+            call errint ( '#3', aval                                )
+            call errint ( '#4', maxa                                )
+            call errint ( '#5', ptr                                 )
+            call errint ( '#6', cellsz                              )
+            call sigerr ( 'SPICE(BARRAYTOOSMALL)'                   )
+            call chkout ( 'ZZTRVLNK'                                )
+            return
 
-         END IF
+         end if
 
 
-         BLIST(NB) = CELLS(1,PTR)
-         I         = CELLS(2,PTR)
-         PTR       = I
+         blist(nb) = cells(1,ptr)
+         i         = cells(2,ptr)
+         ptr       = i
 
-      END DO
+      end do
 
 !
 !     Standard SPICE error handling.
 !
-      CALL CHKOUT ( 'ZZTRVLNK' )
-      RETURN
-      END
+      call chkout ( 'ZZTRVLNK' )
+      return
+      end

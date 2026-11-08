@@ -1,6 +1,6 @@
 !$Procedure  ZZEKNRES ( Private: EK, resolve names in encoded query )
 
-      SUBROUTINE ZZEKNRES ( QUERY, EQRYI, EQRYC, ERROR, ERRMSG, ERRPTR )
+      subroutine zzeknres ( query, eqryi, eqryc, error, errmsg, errptr )
 
 ! $ Abstract
 !
@@ -22,20 +22,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektnamsz.inc'
+      include 'ekbool.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'ektnamsz.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         QUERY
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      LOGICAL               ERROR
-      CHARACTER*(*)         ERRMSG
-      INTEGER               ERRPTR
+      character*(*)         query
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      logical               error
+      character*(*)         errmsg
+      integer               errptr
 
 ! $ Brief_I/O
 !
@@ -157,310 +157,310 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
+      integer               isrchc
 
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
 !
-      INTEGER               SHORT
-      PARAMETER           ( SHORT  = 32 )
+      integer               short
+      parameter           ( short  = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(TNAMSZ)    ALIAS  ( MAXTAB )
-      CHARACTER*(TNAMSZ)    LTABLE
-      CHARACTER*(TNAMSZ)    TABLE  ( MAXTAB )
+      character*(tnamsz)    alias  ( maxtab )
+      character*(tnamsz)    ltable
+      character*(tnamsz)    table  ( maxtab )
 
-      INTEGER               BASE
-      INTEGER               CC     ( MAXTAB )
-      INTEGER               CNSTYP
-      INTEGER               I
-      INTEGER               IPARSE
-      INTEGER               J
-      INTEGER               LXB
-      INTEGER               LXE
-      INTEGER               NCNJ
-      INTEGER               NCNS
-      INTEGER               NLOAD
-      INTEGER               NORD
-      INTEGER               NSEL
-      INTEGER               NTAB
+      integer               base
+      integer               cc     ( maxtab )
+      integer               cnstyp
+      integer               i
+      integer               iparse
+      integer               j
+      integer               lxb
+      integer               lxe
+      integer               ncnj
+      integer               ncns
+      integer               nload
+      integer               nord
+      integer               nsel
+      integer               ntab
 
-      LOGICAL               FND
+      logical               fnd
 
 !
 !     No error to start with.
 !
-      ERROR  =  .FALSE.
-      ERRMSG =  ' '
-      ERRPTR =  0
+      error  =  .false.
+      errmsg =  ' '
+      errptr =  0
 
 !
 !     The query must have been parsed at this point, or it's no go.
 !
-      CALL ZZEKREQI ( EQRYI, 'PARSED', IPARSE )
+      call zzekreqi ( eqryi, 'PARSED', iparse )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( IPARSE .EQ. IFALSE ) THEN
+      if ( iparse .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKNRES'                            )
-         CALL SETMSG ( 'Encoded query has not been parsed.'  )
-         CALL SIGERR ( 'SPICE(QUERYNOTPARSED)'               )
-         CALL CHKOUT ( 'ZZEKNRES'                            )
-         RETURN
+         call chkin  ( 'ZZEKNRES'                            )
+         call setmsg ( 'Encoded query has not been parsed.'  )
+         call sigerr ( 'SPICE(QUERYNOTPARSED)'               )
+         call chkout ( 'ZZEKNRES'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the important counts from the query.
 !
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',       NTAB )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONSTRAINTS',  NCNS )
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONJUNCTIONS', NCNJ )
-      CALL ZZEKREQI ( EQRYI, 'NUM_ORDERBY_COLS', NORD )
-      CALL ZZEKREQI ( EQRYI, 'NUM_SELECT_COLS',  NSEL )
+      call zzekreqi ( eqryi, 'NUM_TABLES',       ntab )
+      call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',  ncns )
+      call zzekreqi ( eqryi, 'NUM_CONJUNCTIONS', ncnj )
+      call zzekreqi ( eqryi, 'NUM_ORDERBY_COLS', nord )
+      call zzekreqi ( eqryi, 'NUM_SELECT_COLS',  nsel )
 
 !
 !     Start out by fetching the table names and their aliases.
 !
-      DO I = 1, NTAB
-         CALL ZZEKQTAB ( EQRYI, EQRYC, I, TABLE(I), ALIAS(I) )
-      END DO
+      do i = 1, ntab
+         call zzekqtab ( eqryi, eqryc, i, table(i), alias(i) )
+      end do
 
 !
 !     Make sure that the aliases are distinct.  Rather than sorting
 !     them, we'll check them in left-to-right order.
 !
-      DO I = 1, NTAB - 1
+      do i = 1, ntab - 1
 
-         DO J = I+1, NTAB
+         do j = i+1, ntab
 
-            IF (      (  ALIAS(I) .EQ. ALIAS(J)  ) &
-                .AND. (  ALIAS(I) .NE. ' '       )  ) THEN
+            if (      (  alias(i) .eq. alias(j)  ) &
+                .and. (  alias(i) .ne. ' '       )  ) then
 
-               ERROR  =  .TRUE.
-               ERRMSG =  'Non-distinct alias <#> was found.'
+               error  =  .true.
+               errmsg =  'Non-distinct alias <#> was found.'
 
-               BASE   =  EQVBAS  +  ( (J-1)*2 + 1 ) * EQVDSZ
-               LXB    =  EQRYI ( BASE + EQBLEX )
-               LXE    =  EQRYI ( BASE + EQELEX )
+               base   =  eqvbas  +  ( (j-1)*2 + 1 ) * eqvdsz
+               lxb    =  eqryi ( base + eqblex )
+               lxe    =  eqryi ( base + eqelex )
 
-               CALL REPMC ( ERRMSG, '#', QUERY(LXB:LXE), ERRMSG )
+               call repmc ( errmsg, '#', query(lxb:lxe), errmsg )
 
-               ERRPTR = LXB
+               errptr = lxb
 
-               RETURN
+               return
 
-            END IF
+            end if
 !
 !           We've checked the Jth alias for a match.
 !
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Make sure that no alias matches a table name other than that of
 !     the table it corresponds to.
 !
-      DO I = 1, NTAB
+      do i = 1, ntab
 
-         J  =  ISRCHC ( ALIAS(I), NTAB, TABLE )
+         j  =  isrchc ( alias(i), ntab, table )
 
-         IF ( J .NE. 0 ) THEN
+         if ( j .ne. 0 ) then
 
-            IF ( J .NE. I ) THEN
+            if ( j .ne. i ) then
 
-               ERROR  =  .TRUE.
-               ERRMSG =  'Alias <#> conflicts with table name.'
+               error  =  .true.
+               errmsg =  'Alias <#> conflicts with table name.'
 
-               BASE   =  EQVBAS  +  ( (I-1)*2 + 1 ) * EQVDSZ
-               LXB    =  EQRYI ( BASE + EQBLEX )
-               LXE    =  EQRYI ( BASE + EQELEX )
+               base   =  eqvbas  +  ( (i-1)*2 + 1 ) * eqvdsz
+               lxb    =  eqryi ( base + eqblex )
+               lxe    =  eqryi ( base + eqelex )
 
-               CALL REPMC ( ERRMSG, '#', QUERY(LXB:LXE), ERRMSG )
+               call repmc ( errmsg, '#', query(lxb:lxe), errmsg )
 
-               ERRPTR = LXB
+               errptr = lxb
 
-               RETURN
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Make sure that all of the tables are loaded in the EK system.
 !
-      CALL EKNTAB ( NLOAD )
+      call ekntab ( nload )
 
-      DO I = 1, NTAB
+      do i = 1, ntab
 
 
-         FND  =  .FALSE.
-         J    =   1
+         fnd  =  .false.
+         j    =   1
 
-         DO WHILE (  ( J .LE. NLOAD ) .AND. ( .NOT. FND )  )
+         do while (  ( j .le. nload ) .and. ( .not. fnd )  )
 
-            CALL EKTNAM ( J, LTABLE )
+            call ektnam ( j, ltable )
 
-            IF (  TABLE(I) .EQ. LTABLE  ) THEN
+            if (  table(i) .eq. ltable  ) then
 !
 !              When we find a loaded table, save the column count for
 !              that table.
 !
-               FND  =  .TRUE.
-               CALL EKCCNT ( TABLE, CC(I) )
-            ELSE
-               J    =   J + 1
-            END IF
+               fnd  =  .true.
+               call ekccnt ( table, cc(i) )
+            else
+               j    =   j + 1
+            end if
 
-         END DO
+         end do
 
 
-         IF ( .NOT. FND ) THEN
+         if ( .not. fnd ) then
 
-            ERROR  = .TRUE.
-            ERRMSG =  'Table <#> is not currently loaded.'
+            error  = .true.
+            errmsg =  'Table <#> is not currently loaded.'
 !
 !           In order to set the error pointer, we'll need the
 !           lexeme begin value for the offending table.
 !
-            BASE   =  EQVBAS  +   (I-1)* 2 * EQVDSZ
+            base   =  eqvbas  +   (i-1)* 2 * eqvdsz
 
-            LXB    =  EQRYI ( BASE + EQBLEX )
-            LXE    =  EQRYI ( BASE + EQELEX )
+            lxb    =  eqryi ( base + eqblex )
+            lxe    =  eqryi ( base + eqelex )
 
-            CALL REPMC ( ERRMSG, '#', QUERY(LXB:LXE), ERRMSG )
+            call repmc ( errmsg, '#', query(lxb:lxe), errmsg )
 
-            ERRPTR = LXB
+            errptr = lxb
 
-            RETURN
+            return
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
 !
 !     At this point, the tables and aliases are deemed correct.  For
 !     safety, fill in each table and alias descriptor with its
 !     ordinal position.
 !
-      DO I = 1, NTAB
+      do i = 1, ntab
 
-         BASE  =  EQVBAS + (I-1)*2*EQVDSZ
+         base  =  eqvbas + (i-1)*2*eqvdsz
 
-         EQRYI( BASE          + EQTORD ) = I
-         EQRYI( BASE + EQVDSZ + EQTORD ) = I
+         eqryi( base          + eqtord ) = i
+         eqryi( base + eqvdsz + eqtord ) = i
 
-      END DO
+      end do
 
 
 !
 !     Check the column names used in the constraints.
 !
-      DO I = 1, NCNS
+      do i = 1, ncns
 !
 !        Calculate the base address of the constraint.
 !
-         BASE    =  EQVBAS + (NTAB * 2 * EQVDSZ) + (I-1)*EQCDSZ
+         base    =  eqvbas + (ntab * 2 * eqvdsz) + (i-1)*eqcdsz
 
 !
 !        Obtain the constraint type.
 !
-         CNSTYP  =  EQRYI ( BASE + EQCTYP )
+         cnstyp  =  eqryi ( base + eqctyp )
 
 !
 !        Check the column and table on the LHS of the constraint.
 !
-         CALL ZZEKCCHK ( QUERY,  EQRYI,   EQRYC, &
-                         NTAB,   TABLE,   ALIAS,  BASE+EQLTAB-1, &
-                         ERROR,  ERRMSG,  ERRPTR                )
+         call zzekcchk ( query,  eqryi,   eqryc, &
+                         ntab,   table,   alias,  base+eqltab-1, &
+                         error,  errmsg,  errptr                )
 
-         IF ( ERROR ) THEN
-            RETURN
-         END IF
+         if ( error ) then
+            return
+         end if
 
 
-         IF ( CNSTYP .EQ. EQCOL ) THEN
+         if ( cnstyp .eq. eqcol ) then
 !
 !           Check the column and table on the RHS of the constraint.
 !
-            CALL ZZEKCCHK ( QUERY,  EQRYI,   EQRYC, &
-                            NTAB,   TABLE,   ALIAS,  BASE+EQRTAB-1, &
-                            ERROR,  ERRMSG,  ERRPTR                )
+            call zzekcchk ( query,  eqryi,   eqryc, &
+                            ntab,   table,   alias,  base+eqrtab-1, &
+                            error,  errmsg,  errptr                )
 
-            IF ( ERROR ) THEN
-               RETURN
-            END IF
+            if ( error ) then
+               return
+            end if
 
-         END IF
+         end if
 
 
-      END DO
+      end do
 
 
 !
 !     Do the same checks and assignments for the SELECT columns.
 !
-      DO I = 1, NSEL
+      do i = 1, nsel
 !
 !        Calculate the base address of the SELECT column descriptor.
 !
-         BASE   =       EQVBAS &
-                    +   NTAB * 2 * EQVDSZ &
-                    +   NCNJ &
-                    +   NCNS     * EQCDSZ &
-                    +   NORD     * EQODSZ &
-                    +   (I-1)    * EQSDSZ
+         base   =       eqvbas &
+                    +   ntab * 2 * eqvdsz &
+                    +   ncnj &
+                    +   ncns     * eqcdsz &
+                    +   nord     * eqodsz &
+                    +   (i-1)    * eqsdsz
 
-         CALL ZZEKCCHK ( QUERY,  EQRYI,   EQRYC, &
-                         NTAB,   TABLE,   ALIAS,  BASE, &
-                         ERROR,  ERRMSG,  ERRPTR        )
+         call zzekcchk ( query,  eqryi,   eqryc, &
+                         ntab,   table,   alias,  base, &
+                         error,  errmsg,  errptr        )
 
-         IF ( ERROR ) THEN
-            RETURN
-         END IF
+         if ( error ) then
+            return
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Do the same checks and assignments for the order-by columns.
 !
-      DO I = 1, NORD
+      do i = 1, nord
 !
 !        Calculate the base address of the order-by column descriptor.
 !
-         BASE   =       EQVBAS &
-                    +   NTAB * 2 * EQVDSZ &
-                    +   NCNJ &
-                    +   NCNS     * EQCDSZ &
-                    +   (I-1)    * EQODSZ
+         base   =       eqvbas &
+                    +   ntab * 2 * eqvdsz &
+                    +   ncnj &
+                    +   ncns     * eqcdsz &
+                    +   (i-1)    * eqodsz
 
-         CALL ZZEKCCHK ( QUERY,  EQRYI,   EQRYC, &
-                         NTAB,   TABLE,   ALIAS,  BASE, &
-                         ERROR,  ERRMSG,  ERRPTR        )
+         call zzekcchk ( query,  eqryi,   eqryc, &
+                         ntab,   table,   alias,  base, &
+                         error,  errmsg,  errptr        )
 
-         IF ( ERROR ) THEN
-            RETURN
-         END IF
+         if ( error ) then
+            return
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Indicate completion of name resolution.
 !
-      CALL ZZEKWEQI ( 'NAMES_RESOLVED',  ITRUE,  EQRYI  )
+      call zzekweqi ( 'NAMES_RESOLVED',  itrue,  eqryi  )
 
-      END
+      end

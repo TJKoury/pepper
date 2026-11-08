@@ -1,6 +1,6 @@
 !$Procedure RDKVAR ( Read the next variable from a kernel file )
 
-      SUBROUTINE RDKVAR ( TABSYM, TABPTR, TABVAL, NAME, EOF )
+      subroutine rdkvar ( tabsym, tabptr, tabval, name, eof )
 
 ! $ Abstract
 !
@@ -18,19 +18,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      DOUBLE PRECISION      TABVAL     ( LBCELL:* )
-      CHARACTER*(*)         NAME
-      LOGICAL               EOF
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      double precision      tabval     ( lbcell:* )
+      character*(*)         name
+      logical               eof
 
-      INTEGER               LINLEN
-      PARAMETER           ( LINLEN = 80 )
+      integer               linlen
+      parameter           ( linlen = 80 )
 
 ! $ Brief_I/O
 !
@@ -219,56 +219,56 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      logical               return
+      logical               failed
 
 !
 !     Local variables
 !
-      CHARACTER*1           COMMA
-      PARAMETER           ( COMMA = ',' )
+      character*1           comma
+      parameter           ( comma = ',' )
 
-      CHARACTER*1           BLANK
-      PARAMETER           ( BLANK = ' ' )
+      character*1           blank
+      parameter           ( blank = ' ' )
 
-      CHARACTER*1           LPAREN
-      PARAMETER           ( LPAREN = '(' )
+      character*1           lparen
+      parameter           ( lparen = '(' )
 
-      CHARACTER*1           RPAREN
-      PARAMETER           ( RPAREN = ')' )
+      character*1           rparen
+      parameter           ( rparen = ')' )
 
-      CHARACTER*(LINLEN)    LINE
-      CHARACTER*(LINLEN)    VARNAM
-      CHARACTER*3           DIRCTV
-      CHARACTER*6           STATUS
+      character*(linlen)    line
+      character*(linlen)    varnam
+      character*3           dirctv
+      character*6           status
 
-      CHARACTER*30          CVALUE
-      DOUBLE PRECISION      DVALUE
-      INTEGER               I
+      character*30          cvalue
+      double precision      dvalue
+      integer               i
 
-      CHARACTER*80          ERROR
+      character*80          error
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RDKVAR' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'RDKVAR' )
+      end if
 
 !
 !     No variable yet.
 !
-      NAME  = ' '
+      name  = ' '
 
 
 !
 !     No parsing error has occurred yet.
 !
-      ERROR = ' '
+      error = ' '
 
 
 !
@@ -277,40 +277,40 @@
 !     the whole variable, unless we luck out and get an error, in
 !     which case we can quit.
 !
-      STATUS = 'BEGIN'
+      status = 'BEGIN'
 
-      DO WHILE ( ( STATUS .NE. 'DONE' ) .AND. ( .NOT. FAILED() ) )
+      do while ( ( status .ne. 'DONE' ) .and. ( .not. failed() ) )
 
-         CALL RDKDAT ( LINE, EOF )
+         call rdkdat ( line, eof )
 
-         IF ( EOF ) THEN
-            CALL CHKOUT ( 'RDKVAR' )
-            RETURN
-         END IF
+         if ( eof ) then
+            call chkout ( 'RDKVAR' )
+            return
+         end if
 
 !
 !        Replace commas with blanks. We make no distinctions between
 !        the two.
 !
-         CALL REPLCH ( LINE, COMMA, BLANK, LINE )
+         call replch ( line, comma, blank, line )
 
 !
 !        The first word on the first line should be the name of a
 !        variable. The second word should be a directive: = or +=.
 !
-         IF ( STATUS .EQ. 'BEGIN' ) THEN
+         if ( status .eq. 'BEGIN' ) then
 
-            CALL NEXTWD ( LINE, VARNAM, LINE )
-            CALL NEXTWD ( LINE, DIRCTV, LINE )
+            call nextwd ( line, varnam, line )
+            call nextwd ( line, dirctv, line )
 
 !
 !           If this is replacement (=) and not an addition (+=),
 !           delete the values currently associated with the variable.
 !           They will be replaced later.
 !
-            IF ( DIRCTV .EQ. '=' ) THEN
-               CALL SYDELD ( VARNAM, TABSYM, TABPTR, TABVAL )
-            END IF
+            if ( dirctv .eq. '=' ) then
+               call sydeld ( varnam, tabsym, tabptr, tabval )
+            end if
 
 !
 !           If this is a vector, the next thing on the line will be a
@@ -319,22 +319,22 @@
 !           plant a bogus right parenthesis, to make the following loop
 !           terminate after one iteration.
 !
-            CALL NEXTWD ( LINE, CVALUE, LINE )
+            call nextwd ( line, cvalue, line )
 
-            IF ( CVALUE .EQ. LPAREN ) THEN
-               CALL NEXTWD ( LINE, CVALUE, LINE )
-            ELSE
-               LINE = RPAREN
-            END IF
+            if ( cvalue .eq. lparen ) then
+               call nextwd ( line, cvalue, line )
+            else
+               line = rparen
+            end if
 
 !
 !        For subsequent lines, treat everything as a new value.
 !
-         ELSE
+         else
 
-            CALL NEXTWD ( LINE, CVALUE, LINE )
+            call nextwd ( line, cvalue, line )
 
-         END IF
+         end if
 
 !
 !        We have a value anyway. Store it in the table.
@@ -344,56 +344,56 @@
 !
 !        Dates begin with @; anything else is presumed to be a number.
 !
-         DO WHILE ( CVALUE .NE. RPAREN  .AND.  CVALUE .NE. BLANK )
+         do while ( cvalue .ne. rparen  .and.  cvalue .ne. blank )
 
-            IF ( CVALUE(1:1) .EQ. '@' ) THEN
+            if ( cvalue(1:1) .eq. '@' ) then
 
-               CALL TPARSE ( CVALUE(2: ), DVALUE, ERROR )
+               call tparse ( cvalue(2: ), dvalue, error )
 
-               IF ( ERROR .NE. ' ' ) THEN
-                  ERROR  =  'Encountered : ' // CVALUE(2: )
-                  CALL SETMSG ( ERROR    )
-                  CALL SIGERR ( 'SPICE(DATEEXPECTED)' )
-                  CALL CHKOUT ( 'RDKVAR' )
-                  RETURN
-               END IF
+               if ( error .ne. ' ' ) then
+                  error  =  'Encountered : ' // cvalue(2: )
+                  call setmsg ( error    )
+                  call sigerr ( 'SPICE(DATEEXPECTED)' )
+                  call chkout ( 'RDKVAR' )
+                  return
+               end if
 
-            ELSE
+            else
 
-               CALL NPARSD ( CVALUE, DVALUE, ERROR, I )
+               call nparsd ( cvalue, dvalue, error, i )
 
-               IF ( ERROR .NE. ' ' ) THEN
-                  ERROR =  'Encountered : ' // CVALUE
-                  CALL SETMSG ( ERROR    )
-                  CALL SIGERR ( 'SPICE(NUMBEREXPECTED)' )
-                  CALL CHKOUT ( 'RDKVAR' )
-                  RETURN
-               END IF
+               if ( error .ne. ' ' ) then
+                  error =  'Encountered : ' // cvalue
+                  call setmsg ( error    )
+                  call sigerr ( 'SPICE(NUMBEREXPECTED)' )
+                  call chkout ( 'RDKVAR' )
+                  return
+               end if
 
-            END IF
+            end if
 
-            CALL SYENQD ( VARNAM, DVALUE, TABSYM, &
-                                          TABPTR, &
-                                          TABVAL )
+            call syenqd ( varnam, dvalue, tabsym, &
+                                          tabptr, &
+                                          tabval )
 
-            CALL NEXTWD ( LINE, CVALUE, LINE )
+            call nextwd ( line, cvalue, line )
 
-         END DO
+         end do
 
-         IF ( CVALUE .EQ. RPAREN ) THEN
-            STATUS = 'DONE'
-         ELSE
-            STATUS = 'INVAR'
-         END IF
+         if ( cvalue .eq. rparen ) then
+            status = 'DONE'
+         else
+            status = 'INVAR'
+         end if
 
-      END DO
+      end do
 
 !
 !     Return the name of the variable, but only if everything went okay.
 !
-      NAME = VARNAM
+      name = varnam
 
 
-      CALL CHKOUT ( 'RDKVAR' )
-      RETURN
-      END
+      call chkout ( 'RDKVAR' )
+      return
+      end

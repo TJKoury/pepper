@@ -1,6 +1,6 @@
 !$Procedure DPFMT ( Format a double precision number )
 
-      SUBROUTINE DPFMT ( X, PICTUR, STR )
+      subroutine dpfmt ( x, pictur, str )
 
 ! $ Abstract
 !
@@ -19,11 +19,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      X
-      CHARACTER*(*)         PICTUR
-      CHARACTER*(*)         STR
+      double precision      x
+      character*(*)         pictur
+      character*(*)         str
 
 ! $ Brief_I/O
 !
@@ -264,38 +264,38 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               POS
-      INTEGER               NCPOS
+      integer               pos
+      integer               ncpos
 
 
-      INTEGER               WDSIZE
-      PARAMETER           ( WDSIZE = 32 )
+      integer               wdsize
+      parameter           ( wdsize = 32 )
 
 
-      CHARACTER*(1)         FILL
-      CHARACTER*(1)         SIGN
-      CHARACTER*(WDSIZE)    MYSTR
+      character*(1)         fill
+      character*(1)         sign
+      character*(wdsize)    mystr
 
-      DOUBLE PRECISION      Y
+      double precision      y
 
-      INTEGER               DECLEN
-      INTEGER               DPAT
-      INTEGER               EXP
-      INTEGER               EXPSIZ
-      INTEGER               FRSTCH
-      INTEGER               I
-      INTEGER               INTLEN
-      INTEGER               LASTCH
-      INTEGER               FIRSTB
-      INTEGER               SGNLEN
-      INTEGER               SIGDIG
-      INTEGER               SPRSIZ
-      INTEGER               START
+      integer               declen
+      integer               dpat
+      integer               exp
+      integer               expsiz
+      integer               frstch
+      integer               i
+      integer               intlen
+      integer               lastch
+      integer               firstb
+      integer               sgnlen
+      integer               sigdig
+      integer               sprsiz
+      integer               start
 
 
-      LOGICAL               NEEDSN
-      LOGICAL               OVFLOW
-      LOGICAL               SHIFT
+      logical               needsn
+      logical               ovflow
+      logical               shift
 
 
 !
@@ -305,76 +305,76 @@
 !
 !     Determine where the picture ends.
 !
-      FIRSTB  = POS( PICTUR, ' ',  1 )
+      firstb  = pos( pictur, ' ',  1 )
 
-      IF ( FIRSTB .EQ. 0 ) THEN
-         LASTCH = LEN ( PICTUR )
-      ELSE
-         LASTCH = FIRSTB - 1
-      END IF
+      if ( firstb .eq. 0 ) then
+         lastch = len ( pictur )
+      else
+         lastch = firstb - 1
+      end if
 
 !
 !     Make sure there is a picture to worry about.
 !
-      IF ( LASTCH .EQ. 0 ) THEN
+      if ( lastch .eq. 0 ) then
 
-         CALL CHKIN  ( 'DPFMT'                                      )
-         CALL SETMSG ( 'The format picture must begin with a '       // &
+         call chkin  ( 'DPFMT'                                      )
+         call setmsg ( 'The format picture must begin with a '       // &
                        'non-blank character. The picture supplied '  // &
                        'was begun with a blank.'                    )
-         CALL SIGERR ( 'SPICE(NOPICTURE)'                           )
-         CALL CHKOUT ( 'DPFMT'                                      )
-         RETURN
+         call sigerr ( 'SPICE(NOPICTURE)'                           )
+         call chkout ( 'DPFMT'                                      )
+         return
 
-      ELSE IF ( LASTCH .EQ. 1 ) THEN
+      else if ( lastch .eq. 1 ) then
 
-         IF (     PICTUR .EQ. '+' &
-             .OR. PICTUR .EQ. '-' &
-             .OR. PICTUR .EQ. '.' ) THEN
+         if (     pictur .eq. '+' &
+             .or. pictur .eq. '-' &
+             .or. pictur .eq. '.' ) then
 
-            CALL CHKIN ( 'DPFMT' )
-            CALL SETMSG ( 'Format pictures must have at least ' &
+            call chkin ( 'DPFMT' )
+            call setmsg ( 'Format pictures must have at least ' &
             //            'one significant character. The ' &
             //            'picture provided ''#'' does not. ' )
-            CALL ERRCH  ( '#', PICTUR(1:1)                    )
-            CALL SIGERR ( 'SPICE(BADPICTURE)'                 )
-            CALL CHKOUT ( 'DPFMT'                             )
-            RETURN
+            call errch  ( '#', pictur(1:1)                    )
+            call sigerr ( 'SPICE(BADPICTURE)'                 )
+            call chkout ( 'DPFMT'                             )
+            return
 
-         END IF
+         end if
 
-      ELSE IF ( LASTCH .EQ. 2 ) THEN
+      else if ( lastch .eq. 2 ) then
 
-         IF (     PICTUR .EQ. '+.' &
-             .OR. PICTUR .EQ. '-.' ) THEN
+         if (     pictur .eq. '+.' &
+             .or. pictur .eq. '-.' ) then
 
-            CALL CHKIN ( 'DPFMT' )
-            CALL SETMSG ( 'Format pictures must have at least ' &
+            call chkin ( 'DPFMT' )
+            call setmsg ( 'Format pictures must have at least ' &
             //            'one significant character. The ' &
             //            'picture provided ''#'' does not. ' )
-            CALL ERRCH  ( '#', PICTUR(1:2)                    )
-            CALL SIGERR ( 'SPICE(BADPICTURE)'                 )
-            CALL CHKOUT ( 'DPFMT'                             )
-            RETURN
-         END IF
+            call errch  ( '#', pictur(1:2)                    )
+            call sigerr ( 'SPICE(BADPICTURE)'                 )
+            call chkout ( 'DPFMT'                             )
+            return
+         end if
 
-      ELSE IF ( LASTCH .GT. LEN(STR) ) THEN
+      else if ( lastch .gt. len(str) ) then
 
-         CALL CHKIN  ( 'DPFMT'                                      )
-         CALL SETMSG ( 'The output string is not long enough to ' &
+         call chkin  ( 'DPFMT'                                      )
+         call setmsg ( 'The output string is not long enough to ' &
          //            'accommodate a number formatted according ' &
          //            'to the supplied format picture. The ' &
          //            'output string has length #. The output ' &
          //            'picture ''#'' requires # characters. ' )
 
-         CALL ERRINT ( '#', LEN(STR) )
-         CALL ERRCH  ( '#', PICTUR(1:LASTCH) )
-         CALL ERRINT ( '#', LASTCH )
-         CALL SIGERR ( 'SPICE(OUTPUTTOOSHORT)' )
-         CALL CHKOUT ( 'DPFMT'                                      )
-         RETURN
+         call errint ( '#', len(str) )
+         call errch  ( '#', pictur(1:lastch) )
+         call errint ( '#', lastch )
+         call sigerr ( 'SPICE(OUTPUTTOOSHORT)' )
+         call chkout ( 'DPFMT'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     If we get this far, the routine can go ahead and do its business.
@@ -382,92 +382,92 @@
 !     are needed to represent the sign if leading sign is suppressed for
 !     positive numbers.
 !
-      IF ( X .GT. 0 ) THEN
-         SIGN   = '+'
-         SPRSIZ =  0
-      ELSE IF ( X .LT. 0 ) THEN
-         SIGN   = '-'
-         SPRSIZ = 1
-      ELSE
-         SIGN   = ' '
-         SPRSIZ =  0
-      END IF
+      if ( x .gt. 0 ) then
+         sign   = '+'
+         sprsiz =  0
+      else if ( x .lt. 0 ) then
+         sign   = '-'
+         sprsiz = 1
+      else
+         sign   = ' '
+         sprsiz =  0
+      end if
 !
 !     Look at the picture and see if a leading sign is required and
 !     if so whether the sign just determined should use a different
 !     character and how many characters are needed for the sign.
 !
-      IF      ( PICTUR(1:1) .EQ. '+' ) THEN
+      if      ( pictur(1:1) .eq. '+' ) then
 
-         NEEDSN = .TRUE.
-         SGNLEN =  1
+         needsn = .true.
+         sgnlen =  1
 
-      ELSE IF ( PICTUR(1:1) .EQ. '-' ) THEN
+      else if ( pictur(1:1) .eq. '-' ) then
 
-         NEEDSN = .TRUE.
-         SGNLEN = 1
+         needsn = .true.
+         sgnlen = 1
 
-         IF ( X .GT. 0 ) THEN
-            SIGN = ' '
-         END IF
+         if ( x .gt. 0 ) then
+            sign = ' '
+         end if
 
-      ELSE
+      else
 
-         IF ( X .GT. 0 ) THEN
-            SIGN = ' '
-         END IF
+         if ( x .gt. 0 ) then
+            sign = ' '
+         end if
 
-         NEEDSN = .FALSE.
-         SGNLEN =  SPRSIZ
+         needsn = .false.
+         sgnlen =  sprsiz
 
-      END IF
+      end if
 
 !
 !     If we need a leading sign. The numeric part of the string
 !     will start at character 2.  Otherwise it starts at character 1.
 !
-      IF ( NEEDSN ) THEN
-         START    = 2
-      ELSE
-         START = 1
-      END IF
+      if ( needsn ) then
+         start    = 2
+      else
+         start = 1
+      end if
 
 !
 !     We can set the sign portion of the string now.
 !
-      STR = SIGN
+      str = sign
 
 !
 !     Determine what character should be use for leading characters
 !     before the first significant character of the output string.
 !
-      IF ( PICTUR(START:START) .EQ. '0' ) THEN
-         FILL   = '0'
-      ELSE
-         FILL  = ' '
-      END IF
+      if ( pictur(start:start) .eq. '0' ) then
+         fill   = '0'
+      else
+         fill  = ' '
+      end if
 
 !
 !     See if there is a decimal point.
 !
-      DPAT   = POS( PICTUR, '.',  1 )
+      dpat   = pos( pictur, '.',  1 )
 !
 !     The integer part is the stuff to the left of the first
 !     decimal point and that follows the sign (if there is one
 !     that is explicitly required.  The length of the decimal
 !     portion is the stuff to the right of the decimal point.
 !
-      IF ( DPAT .GT. 0 ) THEN
+      if ( dpat .gt. 0 ) then
 
-         INTLEN = DPAT - START
-         DECLEN = LASTCH - DPAT
+         intlen = dpat - start
+         declen = lastch - dpat
 
-      ELSE
+      else
 
-         INTLEN =  LASTCH - START + 1
-         DECLEN = -1
+         intlen =  lastch - start + 1
+         declen = -1
 
-      END IF
+      end if
 !
 !     If a sign was not explicitly requested by placing it in
 !     the first digit of the picture START will be 1.  If in
@@ -481,46 +481,46 @@
 !     the sign and any blanks that might lie between the sign
 !     and the first significant character of the output string.
 !
-      IF ( START .EQ. 1 .AND. SGNLEN .EQ. 1 ) THEN
-         INTLEN = INTLEN - 1
-         SHIFT  = .TRUE.
+      if ( start .eq. 1 .and. sgnlen .eq. 1 ) then
+         intlen = intlen - 1
+         shift  = .true.
 !
 !        If INTLEN has become negative (i.e. -1) the picture
 !        must be of the form .xxxxx and the input number must
 !        be negative. Add 1 back onto the INTLEN but take one
 !        away from the decimal length DECLEN.
 !
-         IF ( INTLEN .EQ. -1 ) THEN
-            INTLEN = 0
-            DECLEN = DECLEN - 1
+         if ( intlen .eq. -1 ) then
+            intlen = 0
+            declen = declen - 1
 
-            IF (       DECLEN .EQ. 0 &
-                 .AND. INTLEN .EQ. 0 ) THEN
+            if (       declen .eq. 0 &
+                 .and. intlen .eq. 0 ) then
 !
 !              There is no room for anything other than a
 !              decimal point.  We simply fill the output
 !              string with the '*' character.
 !
-               DO I = 1, LASTCH
-                  STR(I:I) = '*'
-               END DO
-               RETURN
+               do i = 1, lastch
+                  str(i:i) = '*'
+               end do
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE
-         SHIFT  = .FALSE.
-      END IF
+      else
+         shift  = .false.
+      end if
 
 !
 !     Create the "virtual decimal string" associated with the
 !     unsigned part of X.
 !
-      Y   = DABS(X)
+      y   = dabs(x)
 
-      CALL ZZVSTSTR ( Y, FILL, EXP )
+      call zzvststr ( y, fill, exp )
 
 !
 !     The actual number of digits required to print the unsigned integer
@@ -532,62 +532,62 @@
 !
 
 
-      IF ( EXP .GE. INTLEN .AND. Y .NE. 0.0D0 ) THEN
+      if ( exp .ge. intlen .and. y .ne. 0.0d0 ) then
 !
 !        See if we have room to print an exponential form.
 !        First we need the number of characters for the
 !        exponent which is always of the form 'E+dd...'
 !
-         EXPSIZ = 4 + MIN(1, EXP/1000 ) + MIN(1,EXP/100)
+         expsiz = 4 + min(1, exp/1000 ) + min(1,exp/100)
 !
 !        The number of significant digits that can be printed is the
 !        size of the picture minus:   the size of the sign
 !                                     the size of the exponent
 !                                     the size of the decimal point.
 !
-         SIGDIG = LASTCH - SGNLEN - EXPSIZ - 1
+         sigdig = lastch - sgnlen - expsiz - 1
 !
 !        If we don't have room for at least one significant digit,
 !        there's not much we can do.  Fill the string with '*'.
 !
 
-         IF ( SIGDIG .LT. 1 ) THEN
-            DO I = 1, LASTCH
-               STR(I:I) = '*'
-            END DO
-         ELSE
+         if ( sigdig .lt. 1 ) then
+            do i = 1, lastch
+               str(i:i) = '*'
+            end do
+         else
 
-            CALL DPSTR ( X, SIGDIG, MYSTR )
-            MYSTR(1:1) = SIGN
-            CALL LJUST ( MYSTR, STR )
-            CALL RJUST ( STR(1:LASTCH), STR(1:LASTCH) )
+            call dpstr ( x, sigdig, mystr )
+            mystr(1:1) = sign
+            call ljust ( mystr, str )
+            call rjust ( str(1:lastch), str(1:lastch) )
 
-         END IF
+         end if
 
 
-         RETURN
+         return
 
-      END IF
+      end if
 !
 !     One more check.  If -INTLEN is greater than DECLEN, or if
 !     both are zero, we don't have room to create an output string.
 !
-      IF (  (       INTLEN .EQ. 0 &
-              .AND. DECLEN .EQ. 0 ) &
-              .OR. -INTLEN .GT. DECLEN ) THEN
+      if (  (       intlen .eq. 0 &
+              .and. declen .eq. 0 ) &
+              .or. -intlen .gt. declen ) then
 
-         DO I = 1, LASTCH
-            STR(I:I) = '*'
-         END DO
+         do i = 1, lastch
+            str(i:i) = '*'
+         end do
 
-         RETURN
-      END IF
+         return
+      end if
 !
 !     We have a reasonable chance of successfully constructing
 !     the string without overflow.
 !
-      START = SGNLEN + 1
-      CALL ZZVSBSTR ( -INTLEN, DECLEN, .TRUE., STR(START:), OVFLOW )
+      start = sgnlen + 1
+      call zzvsbstr ( -intlen, declen, .true., str(start:), ovflow )
 
 !
 !     We might be done at this point.  The IF-THEN block below
@@ -598,49 +598,49 @@
 !     in the picture for the integer portion of the string.  We try
 !     to make an exponential picture.
 !
-      IF ( OVFLOW ) THEN
+      if ( ovflow ) then
 !
 !        See if we have room to print an exponential form.
 !
-         EXPSIZ = 4 + MIN(1, EXP/1000 ) + MIN(1,EXP/100)
+         expsiz = 4 + min(1, exp/1000 ) + min(1,exp/100)
 !
 !        The number of significant digits that can be printed is the
 !        size of the picture minus:   the size of the sign
 !                                     the size of the exponent
 !                                     the size of the decimal point.
 !
-         SIGDIG = LASTCH - SGNLEN - EXPSIZ - 1
+         sigdig = lastch - sgnlen - expsiz - 1
 
 
-         IF ( SIGDIG .LT. 1 ) THEN
-            DO I = 1, LASTCH
-               STR(I:I) = '*'
-            END DO
-         ELSE
+         if ( sigdig .lt. 1 ) then
+            do i = 1, lastch
+               str(i:i) = '*'
+            end do
+         else
 
-            CALL DPSTR ( X, SIGDIG, MYSTR )
-            MYSTR(1:1) = SIGN
-            CALL LJUST ( MYSTR, STR )
-            CALL RJUST ( STR(1:LASTCH), STR(1:LASTCH) )
-            RETURN
+            call dpstr ( x, sigdig, mystr )
+            mystr(1:1) = sign
+            call ljust ( mystr, str )
+            call rjust ( str(1:lastch), str(1:lastch) )
+            return
 
-         END IF
+         end if
 
-      ELSE IF ( SHIFT ) THEN
+      else if ( shift ) then
 !
 !        We need to move the sign right until, there are no
 !        blanks between it and the next character.
 !
-         FRSTCH = NCPOS ( STR, ' -', 1 )
+         frstch = ncpos ( str, ' -', 1 )
 
-         IF ( FRSTCH .GT. 2 ) THEN
-            STR(FRSTCH-1:FRSTCH-1) = STR(1:1)
-            STR(1:1)               = ' '
-         END IF
+         if ( frstch .gt. 2 ) then
+            str(frstch-1:frstch-1) = str(1:1)
+            str(1:1)               = ' '
+         end if
 
-      END IF
+      end if
 
 
 
-      RETURN
-      END
+      return
+      end

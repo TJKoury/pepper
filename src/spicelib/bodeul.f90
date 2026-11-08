@@ -1,6 +1,6 @@
 !$Procedure BODEUL ( Return Euler angles for a body )
 
-      SUBROUTINE BODEUL ( BODY, ET, RA, DEC, W, LAMBDA )
+      subroutine bodeul ( body, et, ra, dec, w, lambda )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               BODY
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RA
-      DOUBLE PRECISION      DEC
-      DOUBLE PRECISION      W
-      DOUBLE PRECISION      LAMBDA
+      integer               body
+      double precision      et
+      double precision      ra
+      double precision      dec
+      double precision      w
+      double precision      lambda
 
 ! $ Brief_I/O
 !
@@ -405,159 +405,159 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               BODFND
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               bodfnd
+      logical               failed
+      logical               return
 
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOTG
+      double precision      halfpi
+      double precision      j2000
+      double precision      rpd
+      double precision      spd
+      double precision      twopi
+      double precision      vdotg
 
-      INTEGER               ZZBODBRY
+      integer               zzbodbry
 
 !
 !     Local parameters
 !
-      INTEGER               MAXANG
-      PARAMETER           ( MAXANG = 200 )
+      integer               maxang
+      parameter           ( maxang = 200 )
 
 !
 !     Maximum number of coefficients per phase angle polynomial.
 !
-      INTEGER               MXPHAS
-      PARAMETER           ( MXPHAS = 4 )
+      integer               mxphas
+      parameter           ( mxphas = 4 )
 
-      INTEGER               MXPOLY
-      PARAMETER           ( MXPOLY = 3 )
+      integer               mxpoly
+      parameter           ( mxpoly = 3 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 32 )
+      integer               namlen
+      parameter           ( namlen = 32 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NAMLEN)    BREF
-      CHARACTER*(1)         DTYPE
-      CHARACTER*(NAMLEN)    ITEM
-      CHARACTER*(NAMLEN)    ITEM2
+      character*(namlen)    bref
+      character*(1)         dtype
+      character*(namlen)    item
+      character*(namlen)    item2
 
-      DOUBLE PRECISION      AC     ( MAXANG )
-      DOUBLE PRECISION      CONEPC
-      DOUBLE PRECISION      COSTH  ( MAXANG )
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      DC     ( MAXANG   )
-      DOUBLE PRECISION      DCOEF  ( 0:MXPOLY-1 )
-      DOUBLE PRECISION      DELTA
-      DOUBLE PRECISION      DPVAL
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      EULANG (   6    )
-      DOUBLE PRECISION      J2BFX  ( 3, 3   )
-      DOUBLE PRECISION      J2REF  ( 3, 3   )
-      DOUBLE PRECISION      PHI
-      DOUBLE PRECISION      RCOEF  ( 0:MXPOLY-1 )
-      DOUBLE PRECISION      RF2BFX ( 3, 3     )
-      DOUBLE PRECISION      SINTH  ( MAXANG )
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      TCOEF  ( MXPHAS * MAXANG )
-      DOUBLE PRECISION      THETA
-      DOUBLE PRECISION      WC     ( MAXANG )
-      DOUBLE PRECISION      WCOEF  ( 0:MXPOLY-1 )
+      double precision      ac     ( maxang )
+      double precision      conepc
+      double precision      costh  ( maxang )
+      double precision      d
+      double precision      dc     ( maxang   )
+      double precision      dcoef  ( 0:mxpoly-1 )
+      double precision      delta
+      double precision      dpval
+      double precision      epoch
+      double precision      eulang (   6    )
+      double precision      j2bfx  ( 3, 3   )
+      double precision      j2ref  ( 3, 3   )
+      double precision      phi
+      double precision      rcoef  ( 0:mxpoly-1 )
+      double precision      rf2bfx ( 3, 3     )
+      double precision      sinth  ( maxang )
+      double precision      t
+      double precision      tcoef  ( mxphas * maxang )
+      double precision      theta
+      double precision      wc     ( maxang )
+      double precision      wcoef  ( 0:mxpoly-1 )
 
-      INTEGER               DEG
-      INTEGER               DIM
-      INTEGER               I
-      INTEGER               J
-      INTEGER               J2CODE
-      INTEGER               K
-      INTEGER               M
-      INTEGER               NA
-      INTEGER               ND
-      INTEGER               NL
-      INTEGER               NPHASE
-      INTEGER               NPHSCO
-      INTEGER               NTHETA
-      INTEGER               NW
-      INTEGER               REF
-      INTEGER               REFID
+      integer               deg
+      integer               dim
+      integer               i
+      integer               j
+      integer               j2code
+      integer               k
+      integer               m
+      integer               na
+      integer               nd
+      integer               nl
+      integer               nphase
+      integer               nphsco
+      integer               ntheta
+      integer               nw
+      integer               ref
+      integer               refid
 
-      LOGICAL               FIRST
-      LOGICAL               FOUND
-      LOGICAL               FOUND2
+      logical               first
+      logical               found
+      logical               found2
 
 !
 !     Saved variables
 !
-      SAVE
+      save
 
 !
 !     Initial values
 !
-      DATA  FIRST / .TRUE. /
-      DATA  FOUND / .FALSE. /
+      data  first / .true. /
+      data  found / .false. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'BODEUL' )
+      call chkin ( 'BODEUL' )
 
 !
 !     Get the code for the J2000 frame, if we don't have it yet.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         CALL IRFNUM ( 'J2000', J2CODE )
-         FIRST = .FALSE.
+         call irfnum ( 'J2000', j2code )
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Get Euler angles from high precision data file.
 !
-      CALL PCKEUL ( BODY, ET, FOUND, BREF, EULANG )
+      call pckeul ( body, et, found, bref, eulang )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'BODEUL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'BODEUL' )
+         return
+      end if
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 
-         PHI    = EULANG(1)
-         DELTA  = EULANG(2)
-         W      = EULANG(3)
+         phi    = eulang(1)
+         delta  = eulang(2)
+         w      = eulang(3)
 
-         CALL IRFNUM ( BREF, REF )
+         call irfnum ( bref, ref )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'BODEUL' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'BODEUL' )
+            return
+         end if
 
 !
 !        The offset of the prime meridian is optional.
 !
-         ITEM = 'LONG_AXIS'
+         item = 'LONG_AXIS'
 
-         IF ( BODFND ( BODY, ITEM ) ) THEN
+         if ( bodfnd ( body, item ) ) then
 
-            CALL BODVCD ( BODY, ITEM, 1, NL, LAMBDA )
-            LAMBDA = LAMBDA * RPD()
-            LAMBDA = MOD ( LAMBDA, TWOPI() )
+            call bodvcd ( body, item, 1, nl, lambda )
+            lambda = lambda * rpd()
+            lambda = mod ( lambda, twopi() )
 
-         ELSE
-            LAMBDA = 0
-         END IF
+         else
+            lambda = 0
+         end if
 
 
-      ELSE
+      else
 !
 !        Find the body code used to label the reference frame and epoch
 !        specifiers for the orientation constants for BODY.
@@ -568,7 +568,7 @@
 !        other bodies, (the Sun or asteroids, for example) the body's
 !        own code is used as the label.
 !
-         REFID = ZZBODBRY ( BODY )
+         refid = zzbodbry ( body )
 
 !
 !        Look up the epoch of the constants. The epoch is specified
@@ -577,188 +577,188 @@
 !        Look for both forms of the JED epoch kernel variable. At
 !        most one is allowed to be present.
 !
-         ITEM   =  'BODY#_CONSTANTS_JED_EPOCH'
-         CALL REPMI ( ITEM, '#', REFID, ITEM )
+         item   =  'BODY#_CONSTANTS_JED_EPOCH'
+         call repmi ( item, '#', refid, item )
 
-         ITEM2  =  'BODY#_CONSTS_JED_EPOCH'
-         CALL REPMI ( ITEM2, '#', REFID, ITEM2 )
+         item2  =  'BODY#_CONSTS_JED_EPOCH'
+         call repmi ( item2, '#', refid, item2 )
 
-         CALL GDPOOL ( ITEM, 1, 1, DIM, CONEPC, FOUND )
+         call gdpool ( item, 1, 1, dim, conepc, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL GDPOOL ( ITEM2, 1, 1, DIM, CONEPC, FOUND2 )
+            call gdpool ( item2, 1, 1, dim, conepc, found2 )
 
-            IF ( .NOT. FOUND2 ) THEN
-               CONEPC = J2000()
-            END IF
+            if ( .not. found2 ) then
+               conepc = j2000()
+            end if
 
-         ELSE
+         else
 !
 !           Check for presence of both forms of the variable names.
 !
-            CALL DTPOOL ( ITEM2, FOUND2, DIM, DTYPE )
+            call dtpool ( item2, found2, dim, dtype )
 
-            IF ( FOUND2 ) THEN
+            if ( found2 ) then
 
-               CALL SETMSG ( 'Both kernel variables # and # are ' &
+               call setmsg ( 'Both kernel variables # and # are ' &
                //            'present in the kernel pool. At most ' &
                //            'one form of the kernel variable name ' &
                //            'may be present.'           )
-               CALL ERRCH  ( '#', ITEM                   )
-               CALL ERRCH  ( '#', ITEM2                  )
-               CALL SIGERR ( 'SPICE(COMPETINGEPOCHSPEC)' )
-               CALL CHKOUT ( 'BODEUL'                    )
-               RETURN
+               call errch  ( '#', item                   )
+               call errch  ( '#', item2                  )
+               call sigerr ( 'SPICE(COMPETINGEPOCHSPEC)' )
+               call chkout ( 'BODEUL'                    )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'BODEUL' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'BODEUL' )
+            return
+         end if
 
 
-         IF ( FOUND .OR. FOUND2 ) THEN
+         if ( found .or. found2 ) then
 !
 !           The reference epoch is returned as a JED.  Convert to
 !           ephemeris seconds past J2000.  Then convert the input ET to
 !           seconds past the reference epoch.
 !
-            CONEPC  =  SPD() * ( CONEPC - J2000() )
-            EPOCH   =  ET    -   CONEPC
+            conepc  =  spd() * ( conepc - j2000() )
+            epoch   =  et    -   conepc
 
-         ELSE
-            EPOCH   =  ET
-         END IF
+         else
+            epoch   =  et
+         end if
 
 !
 !        Look up the reference frame of the constants.  The reference
 !        frame is specified by a code recognized by CHGIRF.  The
 !        default frame is J2000, symbolized by the code J2CODE.
 !
-         CALL IRFNUM ( 'J2000', J2CODE )
+         call irfnum ( 'J2000', j2code )
 
-         ITEM   =  'BODY#_CONSTANTS_REF_FRAME'
-         CALL REPMI ( ITEM, '#', REFID, ITEM )
+         item   =  'BODY#_CONSTANTS_REF_FRAME'
+         call repmi ( item, '#', refid, item )
 
-         ITEM2  =  'BODY#_CONSTS_REF_FRAME'
-         CALL REPMI ( ITEM2, '#', REFID, ITEM2 )
+         item2  =  'BODY#_CONSTS_REF_FRAME'
+         call repmi ( item2, '#', refid, item2 )
 
-         CALL REPMI  ( ITEM, '#', REFID, ITEM            )
-         CALL GIPOOL ( ITEM,  1,  1,     DIM, REF, FOUND )
+         call repmi  ( item, '#', refid, item            )
+         call gipool ( item,  1,  1,     dim, ref, found )
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL GIPOOL ( ITEM2, 1, 1, DIM, REF, FOUND2 )
+            call gipool ( item2, 1, 1, dim, ref, found2 )
 
-            IF ( .NOT. FOUND2 ) THEN
-               REF  =  J2CODE
-            END IF
+            if ( .not. found2 ) then
+               ref  =  j2code
+            end if
 
-         ELSE
+         else
 !
 !           Check for presence of both forms of the variable names.
 !
-            CALL DTPOOL ( ITEM2, FOUND2, DIM, DTYPE )
+            call dtpool ( item2, found2, dim, dtype )
 
-            IF ( FOUND2 ) THEN
+            if ( found2 ) then
 
-               CALL SETMSG ( 'Both kernel variables # and # are ' &
+               call setmsg ( 'Both kernel variables # and # are ' &
                //            'present in the kernel pool. At most ' &
                //            'one form of the kernel variable name ' &
                //            'may be present.'           )
-               CALL ERRCH  ( '#', ITEM                   )
-               CALL ERRCH  ( '#', ITEM2                  )
-               CALL SIGERR ( 'SPICE(COMPETINGFRAMESPEC)' )
-               CALL CHKOUT ( 'BODEUL'                    )
-               RETURN
+               call errch  ( '#', item                   )
+               call errch  ( '#', item2                  )
+               call sigerr ( 'SPICE(COMPETINGFRAMESPEC)' )
+               call chkout ( 'BODEUL'                    )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Whatever the body, it has quadratic time polynomials for
 !        the RA and Dec of the pole, and for the rotation of the
 !        Prime Meridian.
 !
-         ITEM = 'POLE_RA'
-         CALL CLEARD (             MXPOLY,     RCOEF )
-         CALL BODVCD ( BODY, ITEM, MXPOLY, NA, RCOEF )
+         item = 'POLE_RA'
+         call cleard (             mxpoly,     rcoef )
+         call bodvcd ( body, item, mxpoly, na, rcoef )
 
-         ITEM = 'POLE_DEC'
-         CALL CLEARD (             MXPOLY,     DCOEF )
-         CALL BODVCD ( BODY, ITEM, MXPOLY, ND, DCOEF )
+         item = 'POLE_DEC'
+         call cleard (             mxpoly,     dcoef )
+         call bodvcd ( body, item, mxpoly, nd, dcoef )
 
-         ITEM = 'PM'
-         CALL CLEARD (             MXPOLY,     WCOEF )
-         CALL BODVCD ( BODY, ITEM, MXPOLY, NW, WCOEF )
+         item = 'PM'
+         call cleard (             mxpoly,     wcoef )
+         call bodvcd ( body, item, mxpoly, nw, wcoef )
 
 !
 !        The offset of the prime meridian is optional.
 !
-         ITEM = 'LONG_AXIS'
+         item = 'LONG_AXIS'
 
-         IF ( BODFND ( BODY, ITEM ) ) THEN
-            CALL BODVCD ( BODY, ITEM, 1, NL, LAMBDA )
-         ELSE
-            LAMBDA = 0
-         END IF
+         if ( bodfnd ( body, item ) ) then
+            call bodvcd ( body, item, 1, nl, lambda )
+         else
+            lambda = 0
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'BODEUL' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'BODEUL' )
+            return
+         end if
 
 !
 !        There may be additional nutation and libration (THETA) terms.
 !
-         NTHETA = 0
-         NA     = 0
-         ND     = 0
-         NW     = 0
+         ntheta = 0
+         na     = 0
+         nd     = 0
+         nw     = 0
 
-         ITEM = 'NUT_PREC_ANGLES'
+         item = 'NUT_PREC_ANGLES'
 
-         IF ( BODFND ( REFID, ITEM ) ) THEN
+         if ( bodfnd ( refid, item ) ) then
 !
 !           Find out whether the maximum phase angle degree has been
 !           explicitly set.
 !
-            ITEM2 = 'MAX_PHASE_DEGREE'
+            item2 = 'MAX_PHASE_DEGREE'
 
-            IF ( BODFND(REFID, ITEM2) ) THEN
+            if ( bodfnd(refid, item2) ) then
 
-               CALL BODVCD ( REFID, ITEM2, 1, DIM, DPVAL )
+               call bodvcd ( refid, item2, 1, dim, dpval )
 
-               DEG = NINT( DPVAL )
+               deg = nint( dpval )
 
-               IF ( ( DEG .LT. 1 ) .OR. ( DEG .GT. MXPHAS-1 ) ) THEN
+               if ( ( deg .lt. 1 ) .or. ( deg .gt. mxphas-1 ) ) then
 
-                  CALL SETMSG ( 'Maximum phase angle degree for ' &
+                  call setmsg ( 'Maximum phase angle degree for ' &
                   //            'body # must be in the range 1:# ' &
                   //            'but was #.'                      )
-                  CALL ERRINT ( '#', REFID                        )
-                  CALL ERRINT ( '#', MXPHAS-1                     )
-                  CALL ERRINT ( '#', DEG                          )
-                  CALL SIGERR ( 'SPICE(DEGREEOUTOFRANGE)'         )
-                  CALL CHKOUT ( 'BODEUL'                          )
-                  RETURN
+                  call errint ( '#', refid                        )
+                  call errint ( '#', mxphas-1                     )
+                  call errint ( '#', deg                          )
+                  call sigerr ( 'SPICE(DEGREEOUTOFRANGE)'         )
+                  call chkout ( 'BODEUL'                          )
+                  return
 
-               END IF
+               end if
 
-               NPHSCO = DEG + 1
+               nphsco = deg + 1
 
-            ELSE
+            else
 !
 !              The default degree is 1, yielding two coefficients.
 !
-               NPHSCO = 2
+               nphsco = 2
 
-            END IF
+            end if
 !
 !           There is something a bit obscure going on below. BODVCD
 !           loads the array TCOEF in the following order
@@ -770,138 +770,138 @@
 !           loaded, but we will need the actual limit on the second
 !           dimension. That is --- NTHETA / NPHSCO.
 !
-            CALL BODVCD ( REFID, ITEM, MAXANG*MXPHAS, NTHETA, TCOEF )
+            call bodvcd ( refid, item, maxang*mxphas, ntheta, tcoef )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'BODEUL' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'BODEUL' )
+               return
+            end if
 !
 !           NPHSCO is at least 1; this division is safe.
 !
-            NPHASE = NTHETA / NPHSCO
+            nphase = ntheta / nphsco
 
-         END IF
+         end if
 
-         ITEM = 'NUT_PREC_RA'
+         item = 'NUT_PREC_RA'
 
-         IF ( BODFND ( BODY, ITEM ) ) THEN
-            CALL BODVCD ( BODY, ITEM, MAXANG, NA, AC )
-         END IF
+         if ( bodfnd ( body, item ) ) then
+            call bodvcd ( body, item, maxang, na, ac )
+         end if
 
-         ITEM = 'NUT_PREC_DEC'
+         item = 'NUT_PREC_DEC'
 
-         IF ( BODFND ( BODY, ITEM ) ) THEN
-            CALL BODVCD ( BODY, ITEM, MAXANG, ND, DC )
-         END IF
+         if ( bodfnd ( body, item ) ) then
+            call bodvcd ( body, item, maxang, nd, dc )
+         end if
 
-         ITEM = 'NUT_PREC_PM'
+         item = 'NUT_PREC_PM'
 
-         IF ( BODFND ( BODY, ITEM ) ) THEN
-            CALL BODVCD ( BODY, ITEM, MAXANG, NW, WC )
-         END IF
+         if ( bodfnd ( body, item ) ) then
+            call bodvcd ( body, item, maxang, nw, wc )
+         end if
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'BODEUL' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'BODEUL' )
+            return
+         end if
 
-         IF ( MAX ( NA, ND, NW ) .GT. NTHETA ) THEN
-            CALL SETMSG ( 'Insufficient number of nutation/'// &
+         if ( max ( na, nd, nw ) .gt. ntheta ) then
+            call setmsg ( 'Insufficient number of nutation/'// &
                           'precession angles for body * at time #.' )
-            CALL ERRINT ( '*', BODY )
-            CALL ERRDP  ( '#', ET   )
-            CALL SIGERR ( 'SPICE(INSUFFICIENTANGLES)' )
-            CALL CHKOUT ( 'BODEUL' )
-            RETURN
-         END IF
+            call errint ( '*', body )
+            call errdp  ( '#', et   )
+            call sigerr ( 'SPICE(INSUFFICIENTANGLES)' )
+            call chkout ( 'BODEUL' )
+            return
+         end if
 
 !
 !        Evaluate the time polynomials at EPOCH.
 !
-         D   = EPOCH / SPD()
-         T   = D     / 36525.D0
+         d   = epoch / spd()
+         t   = d     / 36525.d0
 
-         RA  = RCOEF(0)  +  T * ( RCOEF(1) + T * RCOEF(2) )
-         DEC = DCOEF(0)  +  T * ( DCOEF(1) + T * DCOEF(2) )
-         W   = WCOEF(0)  +  D * ( WCOEF(1) + D * WCOEF(2) )
+         ra  = rcoef(0)  +  t * ( rcoef(1) + t * rcoef(2) )
+         dec = dcoef(0)  +  t * ( dcoef(1) + t * dcoef(2) )
+         w   = wcoef(0)  +  d * ( wcoef(1) + d * wcoef(2) )
 
 !
 !        Add nutation and libration as appropriate.
 !
-         DO I = 1, NPHASE
+         do i = 1, nphase
 
-            IF ( NPHSCO .EQ. 2 ) THEN
+            if ( nphsco .eq. 2 ) then
 !
 !              This case is so common that we'll deal with it
 !              separately. We'll avoid unnecessary arithmetic
 !              operations.
 !
-               K = 1 + 2*(I-1)
-               M = 1 + K
+               k = 1 + 2*(i-1)
+               m = 1 + k
 
-               THETA  = ( TCOEF(K) + T * TCOEF(M) ) * RPD()
+               theta  = ( tcoef(k) + t * tcoef(m) ) * rpd()
 
-            ELSE
+            else
 !
 !              THETA and DTHETA have higher-order terms; there are
 !              NPHSCO coefficients for each angle.
 !
-               THETA = 0.D0
+               theta = 0.d0
 
-               DO J = 1, NPHSCO
+               do j = 1, nphsco
 !
 !                 K is the start index for the coefficients of the
 !                 Ith angle.
 !
-                  K     = J + NPHSCO*(I-1)
+                  k     = j + nphsco*(i-1)
 
-                  THETA = THETA  + ( T**(J-1) * TCOEF(K) )
+                  theta = theta  + ( t**(j-1) * tcoef(k) )
 
-               END DO
+               end do
 
-               THETA  = THETA * RPD()
+               theta  = theta * rpd()
 
-            END IF
+            end if
 
-            SINTH(I)  =  SIN ( THETA )
-            COSTH(I)  =  COS ( THETA )
+            sinth(i)  =  sin ( theta )
+            costh(i)  =  cos ( theta )
 
-         END DO
+         end do
 
 !
 !        Adjust RA, DEC, W by their librations and nutations.
 !
-         RA  = RA  + VDOTG ( AC, SINTH, NA )
-         DEC = DEC + VDOTG ( DC, COSTH, ND )
-         W   = W   + VDOTG ( WC, SINTH, NW )
+         ra  = ra  + vdotg ( ac, sinth, na )
+         dec = dec + vdotg ( dc, costh, nd )
+         w   = w   + vdotg ( wc, sinth, nw )
 
 !
 !        Convert from degrees to radians and mod by two pi.
 !
-         RA     = RA     * RPD()
-         DEC    = DEC    * RPD()
-         W      = W      * RPD()
-         LAMBDA = LAMBDA * RPD()
+         ra     = ra     * rpd()
+         dec    = dec    * rpd()
+         w      = w      * rpd()
+         lambda = lambda * rpd()
 
-         RA     = MOD ( RA,     TWOPI() )
-         DEC    = MOD ( DEC,    TWOPI() )
-         W      = MOD ( W,      TWOPI() )
-         LAMBDA = MOD ( LAMBDA, TWOPI() )
+         ra     = mod ( ra,     twopi() )
+         dec    = mod ( dec,    twopi() )
+         w      = mod ( w,      twopi() )
+         lambda = mod ( lambda, twopi() )
 
 !
 !        Convert to Euler angles.
 !
-         PHI     = RA + HALFPI()
-         DELTA   = HALFPI() - DEC
+         phi     = ra + halfpi()
+         delta   = halfpi() - dec
 
-      END IF
+      end if
 
 !
 !     Convert the angles to the J2000 frame if they are not already
 !     referenced to J2000.
 !
-      IF ( REF .NE. J2CODE ) THEN
+      if ( ref .ne. j2code ) then
 !
 !        Find the transformation from the J2000 frame to the frame
 !        designated by REF.  Form the transformation from `REF'
@@ -910,24 +910,24 @@
 !        transformation.  Decompose this transformation into Euler
 !        angles.
 !
-         CALL IRFROT ( J2CODE, REF, J2REF )
+         call irfrot ( j2code, ref, j2ref )
 
-         CALL EUL2M  ( W, &
-                       DELTA, &
-                       PHI, &
+         call eul2m  ( w, &
+                       delta, &
+                       phi, &
                        3, 1, 3, &
-                       RF2BFX               )
+                       rf2bfx               )
 
-         CALL MXM    ( RF2BFX, J2REF, J2BFX )
+         call mxm    ( rf2bfx, j2ref, j2bfx )
 
-         CALL M2EUL  ( J2BFX,  3,  1,  3,  W,  DELTA,  PHI )
+         call m2eul  ( j2bfx,  3,  1,  3,  w,  delta,  phi )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'BODEUL' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'BODEUL' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     The Euler angles now give the transformation from J2000 to
@@ -935,22 +935,22 @@
 !     regardless of the epoch and frame of the orientation constants
 !     for the specified body.
 !
-      RA   =  PHI       -  HALFPI()
-      DEC  =  HALFPI()  -  DELTA
+      ra   =  phi       -  halfpi()
+      dec  =  halfpi()  -  delta
 
 !
 !     Make sure that the prime meridian and right ascension are in
 !     the correct range.
 !
-      IF ( W .LT. 0 ) THEN
-         W = W + TWOPI()
-      END IF
+      if ( w .lt. 0 ) then
+         w = w + twopi()
+      end if
 
-      IF ( RA .LT. 0 ) THEN
-         RA = RA + TWOPI()
-      END IF
+      if ( ra .lt. 0 ) then
+         ra = ra + twopi()
+      end if
 
 
-      CALL CHKOUT ( 'BODEUL' )
-      RETURN
-      END
+      call chkout ( 'BODEUL' )
+      return
+      end

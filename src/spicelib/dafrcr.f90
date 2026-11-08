@@ -1,6 +1,6 @@
 !$Procedure DAFRCR ( DAF, read character record )
 
-      SUBROUTINE DAFRCR ( HANDLE, RECNO, CREC )
+      subroutine dafrcr ( handle, recno, crec )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               RECNO
-      CHARACTER*(*)         CREC
+      integer               handle
+      integer               recno
+      character*(*)         crec
 
 ! $ Brief_I/O
 !
@@ -156,71 +156,71 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               UNIT
-      INTEGER               IOSTAT
+      integer               unit
+      integer               iostat
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DAFRCR' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DAFRCR' )
+      end if
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
 !     with read access.  If the call fails, check out and return.
 !
-      CALL DAFSIH ( HANDLE, 'READ' )
+      call dafsih ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'DAFRCR' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'DAFRCR' )
+         return
+      end if
 
 !
 !     Now make certain that the string to receive the contents of
 !     the character record is the appropriate length.
 !
-      IF ( LEN ( CREC ) .NE. 1000 ) THEN
-         CALL SETMSG ( 'Expected length of character record is 1000. '// &
+      if ( len ( crec ) .ne. 1000 ) then
+         call setmsg ( 'Expected length of character record is 1000. '// &
                        'Passed string has length #' )
-         CALL ERRINT ( '#', LEN( CREC ) )
-         CALL SIGERR ( 'SPICE(DAFBADCRECLEN)' )
+         call errint ( '#', len( crec ) )
+         call sigerr ( 'SPICE(DAFBADCRECLEN)' )
 
-      ELSE
+      else
 
 !
 !        Retrieve a logical unit for this handle.  This has the
 !        side-effect of locking this UNIT to HANDLE.
 !
-         CALL ZZDDHHLU ( HANDLE, 'DAF', .FALSE., UNIT )
+         call zzddhhlu ( handle, 'DAF', .false., unit )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'DAFRCR' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'DAFRCR' )
+            return
+         end if
 
-         READ (UNIT, &
-               REC=RECNO, &
-               IOSTAT=IOSTAT) CREC
+         read (unit, &
+               rec=recno, &
+               iostat=iostat) crec
 
-         IF ( IOSTAT .NE. 0 ) THEN
-            CALL SETMSG ( 'Could not read record #. IOSTAT was #.' )
-            CALL ERRINT ( '#', RECNO                               )
-            CALL ERRINT ( '#', IOSTAT                              )
-            CALL SIGERR ( 'SPICE(DAFCRNOTFOUND)'                   )
-         END IF
+         if ( iostat .ne. 0 ) then
+            call setmsg ( 'Could not read record #. IOSTAT was #.' )
+            call errint ( '#', recno                               )
+            call errint ( '#', iostat                              )
+            call sigerr ( 'SPICE(DAFCRNOTFOUND)'                   )
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'DAFRCR' )
-      RETURN
-      END
+      call chkout ( 'DAFRCR' )
+      return
+      end

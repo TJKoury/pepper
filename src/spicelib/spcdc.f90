@@ -1,6 +1,6 @@
 !$Procedure SPCDC ( SPK and CK, delete comments )
 
-      SUBROUTINE SPCDC ( HANDLE )
+      subroutine spcdc ( handle )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -163,37 +163,37 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60     )
+      integer               ifnlen
+      parameter           ( ifnlen = 60     )
 
 !
 !     Local variables
 !
-      CHARACTER*(IFNLEN)    IFNAME
+      character*(ifnlen)    ifname
 
-      INTEGER               BWARD
-      INTEGER               FREE
-      INTEGER               FWARD
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NRR
+      integer               bward
+      integer               free
+      integer               fward
+      integer               nd
+      integer               ni
+      integer               nrr
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPCDC' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPCDC' )
+      end if
 
 !
 !     The comment area IS the reserved records.  To empty the comment
@@ -205,16 +205,16 @@
 !     is the record number of that first summary record, and NRR is
 !     the number of reserved records in the file.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
 
-      NRR = FWARD - 2
+      nrr = fward - 2
 
 !
 !     Once we know how many there are, we can remove them.
 !
-      CALL DAFRRR ( HANDLE, NRR )
+      call dafrrr ( handle, nrr )
 
 
-      CALL CHKOUT ( 'SPCDC' )
-      RETURN
-      END
+      call chkout ( 'SPCDC' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure RADREC ( Range, RA and DEC to rectangular coordinates )
 
-      SUBROUTINE RADREC ( RANGE, RA, DEC, RECTAN )
+      subroutine radrec ( range, ra, dec, rectan )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      RANGE
-      DOUBLE PRECISION      RA
-      DOUBLE PRECISION      DEC
-      DOUBLE PRECISION      RECTAN ( 3 )
+      double precision      range
+      double precision      ra
+      double precision      dec
+      double precision      rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -379,7 +379,7 @@
 !     Convert from range, right ascension, and declination to
 !     rectangular coordinates by calling the routine LATREC.
 !
-      CALL LATREC ( RANGE, RA, DEC, RECTAN )
+      call latrec ( range, ra, dec, rectan )
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure XDDA  ( list voxels intersected by a ray )
 
-      SUBROUTINE XDDA ( VERTEX, RAYDIR, GRDEXT, MAXNVX, NVX, VOXLST )
+      subroutine xdda ( vertex, raydir, grdext, maxnvx, nvx, voxlst )
 
 ! $ Abstract
 !
@@ -20,17 +20,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      GRDTOL
-      PARAMETER           ( GRDTOL = 1.D-12 )
+      double precision      grdtol
+      parameter           ( grdtol = 1.d-12 )
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
-      INTEGER               GRDEXT ( 3 )
-      INTEGER               MAXNVX
-      INTEGER               NVX
-      INTEGER               VOXLST ( 3, * )
+      double precision      vertex ( 3 )
+      double precision      raydir ( 3 )
+      integer               grdext ( 3 )
+      integer               maxnvx
+      integer               nvx
+      integer               voxlst ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -234,56 +234,56 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPMAX
+      double precision      brcktd
+      double precision      dpmax
 
-      INTEGER               BRCKTI
+      integer               brckti
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      EPS
-      PARAMETER           ( EPS = 1.D-20 )
+      double precision      eps
+      parameter           ( eps = 1.d-20 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      AX2ERR
-      DOUBLE PRECISION      AX3ERR
-      DOUBLE PRECISION      LIMIT
-      DOUBLE PRECISION      MAXCMP
-      DOUBLE PRECISION      VTXOFF ( 3 )
-      DOUBLE PRECISION      S12
-      DOUBLE PRECISION      S13
+      double precision      ax2err
+      double precision      ax3err
+      double precision      limit
+      double precision      maxcmp
+      double precision      vtxoff ( 3 )
+      double precision      s12
+      double precision      s13
 
-      INTEGER               I
-      INTEGER               IAXIS  ( 3 )
-      INTEGER               ICOORD ( 3 )
-      INTEGER               INTVTX ( 3 )
-      INTEGER               NEXT   ( 3 )
-      INTEGER               STEP   ( 3 )
+      integer               i
+      integer               iaxis  ( 3 )
+      integer               icoord ( 3 )
+      integer               intvtx ( 3 )
+      integer               next   ( 3 )
+      integer               step   ( 3 )
 
-      LOGICAL               ZZINGRD
+      logical               zzingrd
 
 !
 !     Saved variables
 !
-      SAVE                  NEXT
+      save                  next
 
 !
 !     Initial values
 !
-      DATA                  NEXT   /  2,   3,   1   /
+      data                  next   /  2,   3,   1   /
 
 !
 !     Use discovery check-in.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     The algorithm below efficiently determines the set of voxels
@@ -373,87 +373,87 @@
 !
 !     Check if ray direction vector is a zero vector.
 !
-      IF ( VZERO( RAYDIR ) ) THEN
+      if ( vzero( raydir ) ) then
 
-         CALL CHKIN  ( 'XDDA'                     )
-         CALL SETMSG ( 'Ray is the zero vector.'  )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'        )
-         CALL CHKOUT ( 'XDDA'                     )
-         RETURN
+         call chkin  ( 'XDDA'                     )
+         call setmsg ( 'Ray is the zero vector.'  )
+         call sigerr ( 'SPICE(ZEROVECTOR)'        )
+         call chkout ( 'XDDA'                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the voxel grid dimensions.
 !
-      IF ( MIN( GRDEXT(1), GRDEXT(2), GRDEXT(3) ) .LT. 1 ) THEN
+      if ( min( grdext(1), grdext(2), grdext(3) ) .lt. 1 ) then
 
-         CALL CHKIN  ( 'XDDA'                                    )
-         CALL SETMSG ( 'Voxel grid dimensions must be strictly ' &
+         call chkin  ( 'XDDA'                                    )
+         call setmsg ( 'Voxel grid dimensions must be strictly ' &
          //            'positive but are # # #.'                 )
-         CALL ERRINT ( '#', GRDEXT(1)                            )
-         CALL ERRINT ( '#', GRDEXT(2)                            )
-         CALL ERRINT ( '#', GRDEXT(3)                            )
-         CALL SIGERR ( 'SPICE(BADDIMENSIONS)'                    )
-         CALL CHKOUT ( 'XDDA'                                    )
-         RETURN
+         call errint ( '#', grdext(1)                            )
+         call errint ( '#', grdext(2)                            )
+         call errint ( '#', grdext(3)                            )
+         call sigerr ( 'SPICE(BADDIMENSIONS)'                    )
+         call chkout ( 'XDDA'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the vertex is not too far from the voxel grid.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF (     ( VERTEX(I) .LT.     -GRDTOL  * GRDEXT(I) ) &
-             .OR. ( VERTEX(I) .GT. (1 + GRDTOL) * GRDEXT(I) )  ) THEN
+         if (     ( vertex(i) .lt.     -grdtol  * grdext(i) ) &
+             .or. ( vertex(i) .gt. (1 + grdtol) * grdext(i) )  ) then
 
-            CALL CHKIN  ( 'XDDA'                                  )
-            CALL SETMSG ( 'Vertex # # # is outside of voxel grid ' &
+            call chkin  ( 'XDDA'                                  )
+            call setmsg ( 'Vertex # # # is outside of voxel grid ' &
             //            'defined by extents # # #.'             )
-            CALL ERRDP  ( '#', VERTEX(1)                          )
-            CALL ERRDP  ( '#', VERTEX(2)                          )
-            CALL ERRDP  ( '#', VERTEX(3)                          )
-            CALL ERRINT ( '#', GRDEXT(1)                          )
-            CALL ERRINT ( '#', GRDEXT(2)                          )
-            CALL ERRINT ( '#', GRDEXT(3)                          )
-            CALL SIGERR ( 'SPICE(VERTEXNOTINGRID)'                )
-            CALL CHKOUT ( 'XDDA'                                  )
-            RETURN
+            call errdp  ( '#', vertex(1)                          )
+            call errdp  ( '#', vertex(2)                          )
+            call errdp  ( '#', vertex(3)                          )
+            call errint ( '#', grdext(1)                          )
+            call errint ( '#', grdext(2)                          )
+            call errint ( '#', grdext(3)                          )
+            call sigerr ( 'SPICE(VERTEXNOTINGRID)'                )
+            call chkout ( 'XDDA'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     The maximum output voxel array size must be positive.
 !
-      IF ( MAXNVX .LT. 1 ) THEN
+      if ( maxnvx .lt. 1 ) then
 
-         CALL CHKIN  ( 'XDDA'                     )
-         CALL SETMSG ( 'Maximum voxel list size must be positive ' &
+         call chkin  ( 'XDDA'                     )
+         call setmsg ( 'Maximum voxel list size must be positive ' &
          //            'but was #.'                               )
-         CALL ERRINT ( '#', MAXNVX                                )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                       )
-         CALL CHKOUT ( 'XDDA'                                     )
-         RETURN
+         call errint ( '#', maxnvx                                )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                       )
+         call chkout ( 'XDDA'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Find the largest component of the direction vector.
 !
-      IAXIS(1) = 1
-      MAXCMP   = ABS( RAYDIR(1) )
+      iaxis(1) = 1
+      maxcmp   = abs( raydir(1) )
 
-      DO I = 2, 3
+      do i = 2, 3
 
-         IF ( ABS( RAYDIR(I) ) .GT. MAXCMP  ) THEN
-            IAXIS(1) = I
-            MAXCMP   = ABS( RAYDIR(I) )
-         END IF
+         if ( abs( raydir(i) ) .gt. maxcmp  ) then
+            iaxis(1) = i
+            maxcmp   = abs( raydir(i) )
+         end if
 
-      END DO
+      end do
 
 !
 !     Set the indices of the orthogonal components of the direction
@@ -461,25 +461,25 @@
 !     labeled by IAXIS(1), IAXIS(2), and IAXIS(3):  the third axis is
 !     the cross product of the first and second.
 !
-      IAXIS(2) = NEXT ( IAXIS(1) )
-      IAXIS(3) = NEXT ( IAXIS(2) )
+      iaxis(2) = next ( iaxis(1) )
+      iaxis(3) = next ( iaxis(2) )
 
 !
 !     Which voxel contains the vertex? Truncate the vertex
 !     coordinates to integers. Add 1 to each coord to compensate
 !     for 1 based counting.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         INTVTX(I) = INT ( VERTEX(IAXIS(I)) )
+         intvtx(i) = int ( vertex(iaxis(i)) )
 
-         ICOORD(I) = 1 + INTVTX(I)
+         icoord(i) = 1 + intvtx(i)
 
-         ICOORD(I) = BRCKTI (  ICOORD(I),  1,  GRDEXT( IAXIS(I) )  )
+         icoord(i) = brckti (  icoord(i),  1,  grdext( iaxis(i) )  )
 
-         VOXLST( IAXIS(I), 1 ) = ICOORD(I)
+         voxlst( iaxis(i), 1 ) = icoord(i)
 
-      END DO
+      end do
 
 !
 !     Initialize the counter for number of voxels the ray intercepts.
@@ -488,7 +488,7 @@
 !     to be made if the vertex lies on a voxel boundary) are within the
 !     grid.
 
-      NVX = 1
+      nvx = 1
 
 !
 !     Calculate the relative location of vertex within the voxel. The
@@ -500,19 +500,19 @@
 !     IAXIS(I) ), but the components of VTXOFF may be as large as 1 and
 !     are never less than 0.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         VTXOFF(I) = BRCKTD( VERTEX( IAXIS(I) ) - (ICOORD(I)-1), &
-                             0.D0, &
-                             1.D0                               )
-      END DO
+         vtxoff(i) = brcktd( vertex( iaxis(i) ) - (icoord(i)-1), &
+                             0.d0, &
+                             1.d0                               )
+      end do
 
 !
 !     Compute the lower limit on the magnitudes of RAYDIR( IAXIS(2) )
 !     and of RAYDIR( IAXIS(3) ) for which we'll treat those components
 !     of the direction vector as non-zero.
 !
-      LIMIT = ( EPS / GRDEXT( IAXIS(1) ) )  *  ABS( RAYDIR(IAXIS(1)) )
+      limit = ( eps / grdext( iaxis(1) ) )  *  abs( raydir(iaxis(1)) )
 !
 !     If the magnitude of RAYDIR( IAXIS(J) ), J = 2 or 3, is below
 !     LIMIT, then the ray can pass through the entire grid in the
@@ -524,25 +524,25 @@
 !     Determine the error term initial values and increments.
 !
 !
-      AX2ERR = DPMAX()
-      AX3ERR = AX2ERR
-      S12    = 0.D0
-      S13    = 0.D0
+      ax2err = dpmax()
+      ax3err = ax2err
+      s12    = 0.d0
+      s13    = 0.d0
 
 !
 !     Compute the initial relative distance measurement AX2ERR
 !     for the non-primary axis IAXIS(2).
 !
-      IF (   ABS(  RAYDIR( IAXIS(2) )  ) .GT.  LIMIT  ) THEN
+      if (   abs(  raydir( iaxis(2) )  ) .gt.  limit  ) then
 !
 !        For any line segment along the ray, S12 is the ratio of the
 !        magnitudes of the projections of the segment in the primary
 !        and the IAXIS(2) directions.
 !
-         S12 = ABS (  RAYDIR( IAXIS(1) ) / RAYDIR( IAXIS(2) )  )
+         s12 = abs (  raydir( iaxis(1) ) / raydir( iaxis(2) )  )
 
 
-         IF ( RAYDIR(IAXIS(1)) .GT. 0.D0 ) THEN
+         if ( raydir(iaxis(1)) .gt. 0.d0 ) then
 !
 !           The primary component of the ray's direction is positive.
 !           The distance to the next boundary plane in the primary
@@ -550,7 +550,7 @@
 !
 !              1.D0 - VTXOFF( IAXIS(1) )
 !
-            IF( RAYDIR(IAXIS(2)) .GT. 0.D0 ) THEN
+            if( raydir(iaxis(2)) .gt. 0.d0 ) then
 !
 !              The IAXIS(2) component of the ray's direction is
 !              positive. The distance to the next boundary plane for
@@ -566,9 +566,9 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 !
-               AX2ERR = S12*(1.D0 - VTXOFF(2)) + VTXOFF(1) - 1.D0
+               ax2err = s12*(1.d0 - vtxoff(2)) + vtxoff(1) - 1.d0
 
-            ELSE
+            else
 !
 !              The IAXIS(2) component of the ray's direction is
 !              negative. The distance to the next boundary plane for
@@ -584,11 +584,11 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 !
-               AX2ERR = S12*VTXOFF(2) + VTXOFF(1) - 1.D0
+               ax2err = s12*vtxoff(2) + vtxoff(1) - 1.d0
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           The primary component of the ray's direction is negative.
 !           The distance to the next boundary plane in the primary
@@ -596,7 +596,7 @@
 !
 !              VTXOFF( IAXIS(1) )
 
-            IF( RAYDIR(IAXIS(2)) .GT. 0.D0 ) THEN
+            if( raydir(iaxis(2)) .gt. 0.d0 ) then
 !
 !              The IAXIS(2) component of the ray's direction is
 !              positive. The distance to the next boundary plane for
@@ -612,9 +612,9 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 
-               AX2ERR = S12*(1.D0 - VTXOFF(2)) - VTXOFF(1)
+               ax2err = s12*(1.d0 - vtxoff(2)) - vtxoff(1)
 
-            ELSE
+            else
 !
 !              The IAXIS(2) component of the ray's direction is
 !              negative. The distance to the next boundary plane for
@@ -630,46 +630,46 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 
-               AX2ERR = S12*VTXOFF(2) - VTXOFF(1)
+               ax2err = s12*vtxoff(2) - vtxoff(1)
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 
 !
 !     Computations of AX3ERR are analogous to those of AX2ERR.
 !     See the comments above.
 !
-      IF (  ABS(  RAYDIR( IAXIS(3) )  )  .GT.  LIMIT  ) THEN
+      if (  abs(  raydir( iaxis(3) )  )  .gt.  limit  ) then
 !
 !        For any line segment along the ray, S13 is the ratio of the
 !        magnitudes of the projections of the segment in the primary
 !        and the IAXIS(3) directions.
 !
-         S13 = ABS(  RAYDIR( IAXIS(1) ) / RAYDIR( IAXIS(3) )  )
+         s13 = abs(  raydir( iaxis(1) ) / raydir( iaxis(3) )  )
 
-         IF ( RAYDIR( IAXIS(1) ) .GT. 0.D0 ) THEN
+         if ( raydir( iaxis(1) ) .gt. 0.d0 ) then
 
-            IF( RAYDIR( IAXIS(3) ) .GT. 0.D0 ) THEN
-               AX3ERR = S13*(1.D0 - VTXOFF(3) ) + VTXOFF(1) - 1.D0
-            ELSE
-               AX3ERR = S13*VTXOFF(3) + VTXOFF(1) - 1.D0
-            END IF
+            if( raydir( iaxis(3) ) .gt. 0.d0 ) then
+               ax3err = s13*(1.d0 - vtxoff(3) ) + vtxoff(1) - 1.d0
+            else
+               ax3err = s13*vtxoff(3) + vtxoff(1) - 1.d0
+            end if
 
-         ELSE
+         else
 
-            IF(  RAYDIR( IAXIS(3) ) .GT. 0.D0  ) THEN
-               AX3ERR = S13*(1.D0 - VTXOFF(3)) - VTXOFF(1)
-            ELSE
-               AX3ERR = S13*VTXOFF(3) - VTXOFF(1)
-            END IF
+            if(  raydir( iaxis(3) ) .gt. 0.d0  ) then
+               ax3err = s13*(1.d0 - vtxoff(3)) - vtxoff(1)
+            else
+               ax3err = s13*vtxoff(3) - vtxoff(1)
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The "steps" set below are the amounts by which any voxel
@@ -682,107 +682,107 @@
 !     they were zero. Note that the IAXIS(1) component of the
 !     ray will always have magnitude greater than LIMIT.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         IF ( RAYDIR( IAXIS(I) ) .GT. LIMIT ) THEN
+         if ( raydir( iaxis(i) ) .gt. limit ) then
 !
 !           Positive component direction, positive step.
 !
-            STEP(I) =  1
+            step(i) =  1
 
-         ELSE IF ( RAYDIR( IAXIS(I) ) .LT. -LIMIT ) THEN
+         else if ( raydir( iaxis(i) ) .lt. -limit ) then
 !
 !           Negative component direction, negative step.
 !
-            STEP(I) = -1
+            step(i) = -1
 
-         ELSE
+         else
 !
 !           No component in this direction, no step.
 !
-            STEP(I) =  0
+            step(i) =  0
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Follow the ray until it exits the voxel grid.
 !
-      DO WHILE ( ZZINGRD( GRDEXT, VOXLST(1,NVX) ) )
+      do while ( zzingrd( grdext, voxlst(1,nvx) ) )
 
-         IF ( (AX2ERR .LT. 0.D0) .OR. (AX3ERR .LT. 0.D0) ) THEN
+         if ( (ax2err .lt. 0.d0) .or. (ax3err .lt. 0.d0) ) then
 !
 !           Ray has crossed over into the next voxel in IAXIS(2) or
 !           IAXIS(3)
 !
-            IF ( AX2ERR .LT. AX3ERR ) THEN
+            if ( ax2err .lt. ax3err ) then
 !
 !              The boundary plane orthogonal to axis IAXIS(2) was hit.
 !
-               ICOORD(2)  = ICOORD(2) + STEP(2)
-               AX2ERR     = AX2ERR    + S12
-               NVX        = NVX       + 1
+               icoord(2)  = icoord(2) + step(2)
+               ax2err     = ax2err    + s12
+               nvx        = nvx       + 1
 
-            ELSE
+            else
 !
 !              The boundary plane orthogonal to axis IAXIS(3) was hit.
 !
-               ICOORD(3)  = ICOORD(3) + STEP(3)
-               AX3ERR     = AX3ERR    + S13
-               NVX        = NVX       + 1
+               icoord(3)  = icoord(3) + step(3)
+               ax3err     = ax3err    + s13
+               nvx        = nvx       + 1
 
-            END IF
+            end if
 
-         ELSE
+         else
 !
 !           No change in IAXIS(2) or IAXIS(3), step in IAXIS(1).
 !
-            ICOORD(1) = ICOORD(1) + STEP(1)
-            NVX       = NVX       + 1
+            icoord(1) = icoord(1) + step(1)
+            nvx       = nvx       + 1
 
-            IF ( STEP(2) .NE. 0 ) THEN
-               AX2ERR = AX2ERR - 1.D0
-            END IF
+            if ( step(2) .ne. 0 ) then
+               ax2err = ax2err - 1.d0
+            end if
 
-            IF ( STEP(3) .NE. 0 ) THEN
-               AX3ERR = AX3ERR - 1.D0
-            END IF
+            if ( step(3) .ne. 0 ) then
+               ax3err = ax3err - 1.d0
+            end if
 
-         END IF
+         end if
 
 !
 !        Check we have room in VOXLST.
 !
-         IF( NVX .GT. MAXNVX ) THEN
+         if( nvx .gt. maxnvx ) then
 
-            CALL CHKIN  ( 'XDDA' )
-            CALL SETMSG ( 'Index larger than array. ' &
+            call chkin  ( 'XDDA' )
+            call setmsg ( 'Index larger than array. ' &
             //            'Index = #1. Array size = #2.' )
-            CALL ERRINT ( '#1', NVX                      )
-            CALL ERRINT ( '#2', MAXNVX                   )
-            CALL SIGERR ( 'SPICE(ARRAYTOOSMALL)'         )
+            call errint ( '#1', nvx                      )
+            call errint ( '#2', maxnvx                   )
+            call sigerr ( 'SPICE(ARRAYTOOSMALL)'         )
 
-            CALL CHKOUT ( 'XDDA' )
-            RETURN
+            call chkout ( 'XDDA' )
+            return
 
-         END IF
+         end if
 
 !
 !        Pack the voxel indices into VOXLST using
 !        the values calculated in this loop pass.
 !
-         DO I = 1, 3
-            VOXLST ( IAXIS(I), NVX ) = ICOORD(I)
-         END DO
+         do i = 1, 3
+            voxlst ( iaxis(i), nvx ) = icoord(i)
+         end do
 
-      END DO
+      end do
 
 !
 !     Subtract one off the voxel count since the final voxel
 !     exists outside the grid.
 !
-      NVX = NVX - 1
+      nvx = nvx - 1
 
-      RETURN
-      END
+      return
+      end

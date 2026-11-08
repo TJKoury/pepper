@@ -1,6 +1,6 @@
 !$Procedure SYDIMI ( Return the dimension of a symbol )
 
-      INTEGER FUNCTION SYDIMI ( NAME, TABSYM, TABPTR, TABVAL )
+      integer function sydimi ( name, tabsym, tabptr, tabval )
 
 ! $ Abstract
 !
@@ -18,15 +18,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         TABSYM     ( LBCELL:* )
-      INTEGER               TABPTR     ( LBCELL:* )
-      INTEGER               TABVAL     ( LBCELL:* )
+      character*(*)         name
+      character*(*)         tabsym     ( lbcell:* )
+      integer               tabptr     ( lbcell:* )
+      integer               tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -161,51 +161,51 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
+      integer               bsrchc
+      integer               cardc
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               NSYM
-      INTEGER               LOCSYM
+      integer               nsym
+      integer               locsym
 
 
 
 !
 !     Standard SPICE error handling
 !
-      IF ( RETURN() ) THEN
-         SYDIMI = 0
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SYDIMI' )
-      END IF
+      if ( return() ) then
+         sydimi = 0
+         return
+      else
+         call chkin ( 'SYDIMI' )
+      end if
 
 
 !
 !     How many symbols to start with?
 !
-      NSYM = CARDC ( TABSYM )
+      nsym = cardc ( tabsym )
 
 !
 !     Is this symbol even in the table?
 !
-      LOCSYM = BSRCHC ( NAME, NSYM, TABSYM(1) )
+      locsym = bsrchc ( name, nsym, tabsym(1) )
 
 !
 !     If it's not in the table, return zero. Otherwise, look up
 !     the dimension directly.
 !
-      IF ( LOCSYM .EQ. 0 ) THEN
-         SYDIMI = 0
+      if ( locsym .eq. 0 ) then
+         sydimi = 0
 
-      ELSE
-         SYDIMI = TABPTR(LOCSYM)
-      END IF
+      else
+         sydimi = tabptr(locsym)
+      end if
 
 
-      CALL CHKOUT ( 'SYDIMI' )
-      RETURN
-      END
+      call chkout ( 'SYDIMI' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure WNCOMD ( Complement a DP window )
 
-      SUBROUTINE WNCOMD ( LEFT, RIGHT, WINDOW, RESULT )
+      subroutine wncomd ( left, right, window, result )
 
 ! $ Abstract
 !
@@ -17,15 +17,15 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      DOUBLE PRECISION      WINDOW   ( LBCELL:* )
-      DOUBLE PRECISION      RESULT   ( LBCELL:* )
+      double precision      left
+      double precision      right
+      double precision      window   ( lbcell:* )
+      double precision      result   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -175,47 +175,47 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      LOGICAL               RETURN
-      LOGICAL               FAILED
+      integer               cardd
+      logical               return
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               CARD
-      INTEGER               I
+      integer               card
+      integer               i
 
 
 
 !
 !     Set up the error processing.
 !
-      IF ( RETURN () ) RETURN
-      CALL CHKIN ( 'WNCOMD' )
+      if ( return () ) return
+      call chkin ( 'WNCOMD' )
 
 
 !
 !     Get the cardinality of the input window.
 !
-      CARD = CARDD ( WINDOW )
+      card = cardd ( window )
 
 !
 !     Empty out the result window before proceeding.
 !
-      CALL SCARDD ( 0, RESULT )
+      call scardd ( 0, result )
 
 
 !
 !     Check to see if the input interval is valid. If it is not, signal
 !     an error and return.
 !
-      IF ( LEFT .GT. RIGHT ) THEN
-         CALL SETMSG ( 'WNCOMD: Left endpoint may not exceed right' // &
+      if ( left .gt. right ) then
+         call setmsg ( 'WNCOMD: Left endpoint may not exceed right' // &
                        ' endpoint.' )
-         CALL SIGERR ( 'SPICE(BADENDPOINTS)' )
-         CALL CHKOUT ( 'WNCOMD' )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(BADENDPOINTS)' )
+         call chkout ( 'WNCOMD' )
+         return
+      end if
 
 
 
@@ -224,16 +224,16 @@
 !     intersect the input interval. In either case, the complement is
 !     the entire interval.
 !
-      IF (       CARD         .EQ. 0 &
-           .OR.  WINDOW(1)    .GE. RIGHT &
-           .OR.  WINDOW(CARD) .LE. LEFT  ) THEN
+      if (       card         .eq. 0 &
+           .or.  window(1)    .ge. right &
+           .or.  window(card) .le. left  ) then
 
-         CALL WNINSD ( LEFT, RIGHT, RESULT )
+         call wninsd ( left, right, result )
 
-         CALL CHKOUT ( 'WNCOMD' )
-         RETURN
+         call chkout ( 'WNCOMD' )
+         return
 
-      END IF
+      end if
 
 
 
@@ -257,43 +257,43 @@
 !     Find the first right not less than the beginning of the input
 !     interval.
 !
-      I = 2
+      i = 2
 
-      DO WHILE ( I .LE. CARD  .AND.  WINDOW(I) .LT. LEFT )
-         I = I + 2
-      END DO
+      do while ( i .le. card  .and.  window(i) .lt. left )
+         i = i + 2
+      end do
 
 !
 !     If the beginning of the input interval doesn't split an interval
 !     in the input window, the complement begins with LEFT.
 !
-      IF ( I .LE. CARD  .AND.  WINDOW(I-1) .GT. LEFT ) THEN
-         CALL WNINSD ( LEFT, WINDOW(I-1), RESULT )
-      END IF
+      if ( i .le. card  .and.  window(i-1) .gt. left ) then
+         call wninsd ( left, window(i-1), result )
+      end if
 
 !
 !     Start schlepping endpoints [b(i),a(i+1)] from the input window
 !     to the output window. Stop when we find one of our new right
 !     endpoints exceeds the end of the input interval.
 !
-      DO WHILE (        ( .NOT. FAILED () ) &
-                 .AND.  I           .LT. CARD &
-                 .AND.  WINDOW(I+1) .LT. RIGHT )
+      do while (        ( .not. failed () ) &
+                 .and.  i           .lt. card &
+                 .and.  window(i+1) .lt. right )
 
-         CALL WNINSD ( WINDOW(I), WINDOW(I+1), RESULT )
-         I = I + 2
+         call wninsd ( window(i), window(i+1), result )
+         i = i + 2
 
-      END DO
+      end do
 
 !
 !     If the end of the input interval doesn't split an interval
 !     in the input window, the complement ends with RIGHT.
 !
-      IF ( I .LE. CARD  .AND.  WINDOW(I) .LT. RIGHT ) THEN
-         CALL WNINSD ( WINDOW(I), RIGHT, RESULT )
-      END IF
+      if ( i .le. card  .and.  window(i) .lt. right ) then
+         call wninsd ( window(i), right, result )
+      end if
 
-      CALL CHKOUT ( 'WNCOMD' )
+      call chkout ( 'WNCOMD' )
 
-      RETURN
-      END
+      return
+      end

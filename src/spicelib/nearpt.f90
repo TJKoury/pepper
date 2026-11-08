@@ -1,6 +1,6 @@
 !$Procedure NEARPT ( Nearest point on an ellipsoid )
 
-      SUBROUTINE NEARPT ( POSITN, A, B, C, NPOINT, ALT )
+      subroutine nearpt ( positn, a, b, c, npoint, alt )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      POSITN ( 3 )
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      B
-      DOUBLE PRECISION      C
-      DOUBLE PRECISION      NPOINT ( 3 )
-      DOUBLE PRECISION      ALT
+      double precision      positn ( 3 )
+      double precision      a
+      double precision      b
+      double precision      c
+      double precision      npoint ( 3 )
+      double precision      alt
 
 ! $ Brief_I/O
 !
@@ -395,15 +395,15 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
+      double precision      brcktd
+      double precision      dpmax
+      double precision      touchd
+      double precision      vdist
+      double precision      vnorm
 
-      LOGICAL               APPROX
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               approx
+      logical               return
+      logical               vzero
 
 !
 !     Parameters
@@ -414,16 +414,16 @@
 !     hasn't converged to length zero.  This situation can occur when
 !     the root is extremely close to zero.
 !
-      DOUBLE PRECISION      CNVTOL
-      PARAMETER           ( CNVTOL = 1.D-16 )
+      double precision      cnvtol
+      parameter           ( cnvtol = 1.d-16 )
 
 
 !
 !     Various potentially large numbers we'll compute must not
 !     exceed DPMAX()/MARGIN:
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 1.D2 )
+      double precision      margin
+      parameter           ( margin = 1.d2 )
 
 !
 !     The parameter MAXSOL determines the maximum number of
@@ -431,8 +431,8 @@
 !     near point.  This must be at least 3.  To get strong
 !     robustness in the routine, MAXSOL should be at least 4.
 !
-      INTEGER               MAXSOL
-      PARAMETER           ( MAXSOL  = 6 )
+      integer               maxsol
+      parameter           ( maxsol  = 6 )
 
 !
 !     MAXITR defines the maximum number of iterations allowed in
@@ -447,75 +447,75 @@
 !     The value selected is based on the range of exponents for IEEE
 !     double precision floating point numbers.
 !
-      INTEGER               MAXITR
-      PARAMETER           ( MAXITR  = 2048 )
+      integer               maxitr
+      parameter           ( maxitr  = 2048 )
 
 !
 !     Length of lines in message buffer.
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 80 )
+      integer               msglen
+      parameter           ( msglen = 80 )
 
 !
 !     Local Variables
 !
-      CHARACTER*(MSGLEN)    MSSG   ( 7 )
+      character*(msglen)    mssg   ( 7 )
 
-      DOUBLE PRECISION      AXIS   ( 3 )
-      DOUBLE PRECISION      AXISQR ( 3 )
-      DOUBLE PRECISION      BESTHT
-      DOUBLE PRECISION      BESTPT ( 3 )
-      DOUBLE PRECISION      COPY   ( 3 )
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      DENOM2
-      DOUBLE PRECISION      DENOM3
-      DOUBLE PRECISION      EPOINT ( 3 )
-      DOUBLE PRECISION      ERR    ( 3 )
-      DOUBLE PRECISION      ERRP   ( 3 )
-      DOUBLE PRECISION      FACTOR
-      DOUBLE PRECISION      HEIGHT
-      DOUBLE PRECISION      LAMBDA
-      DOUBLE PRECISION      LOWER
-      DOUBLE PRECISION      NEWERR
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      OLDERR
-      DOUBLE PRECISION      ORIGNL ( 3 )
-      DOUBLE PRECISION      PNORM
-      DOUBLE PRECISION      POINT  ( 3 )
-      DOUBLE PRECISION      PRODCT
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      QLOWER
-      DOUBLE PRECISION      QUPPER
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SIGN
-      DOUBLE PRECISION      SPOINT ( 3 )
-      DOUBLE PRECISION      TEMP
-      DOUBLE PRECISION      TERM   ( 3 )
-      DOUBLE PRECISION      TOOBIG
-      DOUBLE PRECISION      TLAMBD ( 3 )
-      DOUBLE PRECISION      UPPER
+      double precision      axis   ( 3 )
+      double precision      axisqr ( 3 )
+      double precision      bestht
+      double precision      bestpt ( 3 )
+      double precision      copy   ( 3 )
+      double precision      denom
+      double precision      denom2
+      double precision      denom3
+      double precision      epoint ( 3 )
+      double precision      err    ( 3 )
+      double precision      errp   ( 3 )
+      double precision      factor
+      double precision      height
+      double precision      lambda
+      double precision      lower
+      double precision      newerr
+      double precision      normal ( 3 )
+      double precision      olderr
+      double precision      orignl ( 3 )
+      double precision      pnorm
+      double precision      point  ( 3 )
+      double precision      prodct
+      double precision      q
+      double precision      qlower
+      double precision      qupper
+      double precision      scale
+      double precision      sign
+      double precision      spoint ( 3 )
+      double precision      temp
+      double precision      term   ( 3 )
+      double precision      toobig
+      double precision      tlambd ( 3 )
+      double precision      upper
 
-      INTEGER               BAD
-      INTEGER               I
-      INTEGER               IORDER ( 3 )
-      INTEGER               ITR
-      INTEGER               SNGLPT
-      INTEGER               SOLUTN
+      integer               bad
+      integer               i
+      integer               iorder ( 3 )
+      integer               itr
+      integer               snglpt
+      integer               solutn
 
-      LOGICAL               EXTRA
-      LOGICAL               INSIDE
-      LOGICAL               SOLVNG
-      LOGICAL               TRIM
+      logical               extra
+      logical               inside
+      logical               solvng
+      logical               trim
 
 !
 !     Saved variables
 !
-      SAVE                  MSSG
+      save                  mssg
 
 !
 !     Initial values
 !
-      DATA                  MSSG / 'Axis A was nonpositive. ?', &
+      data                  mssg / 'Axis A was nonpositive. ?', &
                                    'Axis B was nonpositive. ?', &
                                    'Axes A and B were nonpositive. ?', &
                                    'Axis C was nonpositive. ?', &
@@ -555,46 +555,46 @@
 !     ================================================================
 !     ----------------------------------------------------------------
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'NEARPT' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'NEARPT' )
+      end if
 
 !
 !     Check the axes to make sure that none of them is less than or
 !     equal to zero. If one is, signal an error and return.
 !
-      BAD = 0
+      bad = 0
 
-      IF ( A .LE. 0.0D0 ) THEN
-         BAD = BAD + 1
-      END IF
+      if ( a .le. 0.0d0 ) then
+         bad = bad + 1
+      end if
 
-      IF ( B .LE. 0.0D0 ) THEN
-         BAD = BAD + 2
-      END IF
+      if ( b .le. 0.0d0 ) then
+         bad = bad + 2
+      end if
 
-      IF ( C .LE. 0.0D0 ) THEN
-         BAD = BAD + 4
-      END IF
+      if ( c .le. 0.0d0 ) then
+         bad = bad + 4
+      end if
 
 
-      IF ( BAD .GT. 0 ) THEN
+      if ( bad .gt. 0 ) then
 
-         CALL SETMSG ( MSSG (BAD)                       )
-         CALL ERRCH  ( '?', 'The A,B, and C axes were ' // &
+         call setmsg ( mssg (bad)                       )
+         call errch  ( '?', 'The A,B, and C axes were ' // &
                             '#, #, and # respectively.' )
 
-         CALL ERRDP  ( '#', A )
-         CALL ERRDP  ( '#', B )
-         CALL ERRDP  ( '#', C )
+         call errdp  ( '#', a )
+         call errdp  ( '#', b )
+         call errdp  ( '#', c )
 
-         CALL SIGERR ( 'SPICE(BADAXISLENGTH)' )
-         CALL CHKOUT ( 'NEARPT' )
-         RETURN
+         call sigerr ( 'SPICE(BADAXISLENGTH)' )
+         call chkout ( 'NEARPT' )
+         return
 
-      END IF
+      end if
 
 
 
@@ -857,16 +857,16 @@
 !     which axes are smallest will simplify our task of computing
 !     lambda when the time comes.
 !
-      AXIS(1)  = A
-      AXIS(2)  = B
-      AXIS(3)  = C
+      axis(1)  = a
+      axis(2)  = b
+      axis(3)  = c
 
-      CALL VEQU   ( POSITN,    POINT  )
+      call vequ   ( positn,    point  )
 
-      CALL ORDERD ( AXIS,   3, IORDER )
+      call orderd ( axis,   3, iorder )
 
-      CALL REORDD ( IORDER, 3, AXIS   )
-      CALL REORDD ( IORDER, 3, POINT  )
+      call reordd ( iorder, 3, axis   )
+      call reordd ( iorder, 3, point  )
 
 !
 !     Rescale everything so as to avoid underflows when squaring
@@ -874,43 +874,43 @@
 !
 !     Be sure that this is UNDONE at the end of the routine.
 !
-      SCALE = 1.0D0/AXIS(1)
+      scale = 1.0d0/axis(1)
 
-      CALL VSCLIP ( SCALE, AXIS   )
-      CALL VSCLIP ( SCALE, POINT  )
-      CALL VEQU   ( POINT, ORIGNL )
+      call vsclip ( scale, axis   )
+      call vsclip ( scale, point  )
+      call vequ   ( point, orignl )
 
 !
 !     Save the norm of the scaled input point.
 !
-      PNORM = VNORM ( POINT )
+      pnorm = vnorm ( point )
 
 !
 !     The scaled axis lengths must be small enough so they can
 !     be squared.
 !
-      TOOBIG = SQRT ( DPMAX() / MARGIN )
+      toobig = sqrt ( dpmax() / margin )
 
 !
 !     Note the first axis has length 1.D0, so we don't check it.
 !
-      DO I = 2, 3
+      do i = 2, 3
 
-         IF ( AXIS(I) .GT. TOOBIG ) THEN
+         if ( axis(i) .gt. toobig ) then
 
-            CALL SETMSG ( 'Ratio of length of axis #* to length of ' // &
+            call setmsg ( 'Ratio of length of axis #* to length of ' // &
                           'axis #* is *; this value may cause '      // &
                           'numeric overflow.'                        )
-            CALL ERRINT ( '*', IORDER(I)                             )
-            CALL ERRINT ( '*', IORDER(1)                             )
-            CALL ERRDP  ( '*', AXIS(I)                               )
-            CALL SIGERR ( 'SPICE(BADAXISLENGTH)'                     )
-            CALL CHKOUT ( 'NEARPT'                                   )
-            RETURN
+            call errint ( '*', iorder(i)                             )
+            call errint ( '*', iorder(1)                             )
+            call errdp  ( '*', axis(i)                               )
+            call sigerr ( 'SPICE(BADAXISLENGTH)'                     )
+            call chkout ( 'NEARPT'                                   )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     We also must limit the size of the products
@@ -920,32 +920,32 @@
 !     We can safely check these by comparing the products of
 !     the square roots of the factors to TOOBIG.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         PRODCT = SQRT( AXIS(I) ) * SQRT ( ABS(POINT(I)) )
+         prodct = sqrt( axis(i) ) * sqrt ( abs(point(i)) )
 
-         IF ( PRODCT .GT. TOOBIG ) THEN
+         if ( prodct .gt. toobig ) then
 
-            CALL SETMSG ( 'Product of length of scaled axis #* and ' // &
+            call setmsg ( 'Product of length of scaled axis #* and ' // &
                           'size of corresponding scaled component '  // &
                           'of POSITN is > *; these values '          // &
                           'may cause numeric overflow.'              )
-            CALL ERRINT ( '*', IORDER(I)                             )
-            CALL ERRDP  ( '*', TOOBIG**2.D0                          )
-            CALL SIGERR ( 'SPICE(INPUTSTOOLARGE)'                    )
-            CALL CHKOUT ( 'NEARPT'                                   )
-            RETURN
+            call errint ( '*', iorder(i)                             )
+            call errdp  ( '*', toobig**2.d0                          )
+            call sigerr ( 'SPICE(INPUTSTOOLARGE)'                    )
+            call chkout ( 'NEARPT'                                   )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Compute the squared lengths of the scaled axes.
 !
-      AXISQR(1) = AXIS(1)*AXIS(1)
-      AXISQR(2) = AXIS(2)*AXIS(2)
-      AXISQR(3) = AXIS(3)*AXIS(3)
+      axisqr(1) = axis(1)*axis(1)
+      axisqr(2) = axis(2)*axis(2)
+      axisqr(3) = axis(3)*axis(3)
 
 !
 !     We will need to "solve" for the NEARPT at least 3 times.
@@ -955,11 +955,11 @@
 !     on the initial value of SOLVNG as TRUE, maintaining that
 !     value unless explicitly changed.
 !
-      SNGLPT =  4
-      SOLUTN =  1
-      SOLVNG = .TRUE.
+      snglpt =  4
+      solutn =  1
+      solvng = .true.
 
-      DO WHILE ( SOLVNG )
+      do while ( solvng )
 
 
 !
@@ -983,23 +983,23 @@
 !        contribute to an addition to the corresponding component
 !        of AXIS, is in fact zero.
 !
-         CALL VEQU ( POINT, COPY )
+         call vequ ( point, copy )
 
-         DO I = 1, 3
+         do i = 1, 3
 
-            IF (      ( (0.5D0*POINT(I) + AXIS(I)) .EQ.  AXIS(I) ) &
-                 .OR. ( (0.5D0*POINT(I) - AXIS(I)) .EQ. -AXIS(I) ) ) &
-            THEN
-               POINT(I) = 0.0D0
-            END IF
+            if (      ( (0.5d0*point(i) + axis(i)) .eq.  axis(i) ) &
+                 .or. ( (0.5d0*point(i) - axis(i)) .eq. -axis(i) ) ) &
+            then
+               point(i) = 0.0d0
+            end if
 
-         END DO
+         end do
 
 !
 !        OK. Next we set up the logical that indicates whether
 !        the current point is inside the ellipsoid.
 !
-         INSIDE = .FALSE.
+         inside = .false.
 
 !
 !        Bracketing the root of the lambda equation.
@@ -1023,24 +1023,24 @@
 !        values of lambda that make Q greater than 0 and less than 0.
 !        An obvious value to check is lambda = 0.
 !
-         Q = (POINT(1)/AXIS(1))**2 &
-           + (POINT(2)/AXIS(2))**2 &
-           + (POINT(3)/AXIS(3))**2 &
-           - 1.0D0
+         q = (point(1)/axis(1))**2 &
+           + (point(2)/axis(2))**2 &
+           + (point(3)/axis(3))**2 &
+           - 1.0d0
 
 !
 !        On the first solution pass, we will determine the sign of
 !        the altitude of the input POSITN
 !
-         IF ( SOLUTN .EQ. 1 ) THEN
+         if ( solutn .eq. 1 ) then
 
-            IF       ( Q .GE. 0 ) THEN
-               SIGN =  1.0D0
-            ELSE
-               SIGN = -1.0D0
-            END IF
+            if       ( q .ge. 0 ) then
+               sign =  1.0d0
+            else
+               sign = -1.0d0
+            end if
 
-         END IF
+         end if
 
 !
 !        OK. Now for the stuff we will have to do on every solution
@@ -1070,23 +1070,23 @@
 !        strictly inside the interior of the ellipsoid.  Points on the
 !        surface are not considered to be inside.
 !
-         IF ( Q .EQ. 0.0D0 ) THEN
+         if ( q .eq. 0.0d0 ) then
 !
 !           In this case the point is already on the ellipsoid
 !           (pretty lucky eh?)  We simply set our bracketing values,
 !           QLOWER and QUPPER, to zero so that that bisection
 !           loop won't ever get executed.
 !
-            QLOWER = 0.0D0
-            QUPPER = 0.0D0
-            LOWER  = 0.0D0
-            UPPER  = 0.0D0
-            LAMBDA = 0.0D0
+            qlower = 0.0d0
+            qupper = 0.0d0
+            lower  = 0.0d0
+            upper  = 0.0d0
+            lambda = 0.0d0
 
-            INSIDE = .FALSE.
+            inside = .false.
 
 
-         ELSE IF ( Q .GT. 0.0D0 ) THEN
+         else if ( q .gt. 0.0d0 ) then
 !
 !           The input point is outside the ellipsoid (we expect that
 !           this is the usual case).  We want to choose our lower
@@ -1094,29 +1094,29 @@
 !           aren't too far apart.  So we just make sure that the largest
 !           term of the expression for Q isn't bigger than 4.
 !
-            DO I = 1, 3
-               TLAMBD(I) = ( 0.5D0*DABS(POINT(I)) - AXIS(I) ) * AXIS(I)
-            END DO
+            do i = 1, 3
+               tlambd(i) = ( 0.5d0*dabs(point(i)) - axis(i) ) * axis(i)
+            end do
 
-            LOWER = MAX ( 0.0D0, TLAMBD(1), TLAMBD(2), TLAMBD(3) )
+            lower = max ( 0.0d0, tlambd(1), tlambd(2), tlambd(3) )
 
 !
 !           Choose the next value of lambda so that the largest term
 !           of Q will be no more than 1/4. (?)
 !
-            UPPER  = 2.0D0 * MAX ( DABS( AXIS(1)*POINT(1) ), &
-                                   DABS( AXIS(2)*POINT(2) ), &
-                                   DABS( AXIS(3)*POINT(3) ) )
-            LAMBDA = UPPER
+            upper  = 2.0d0 * max ( dabs( axis(1)*point(1) ), &
+                                   dabs( axis(2)*point(2) ), &
+                                   dabs( axis(3)*point(3) ) )
+            lambda = upper
 
 
-            INSIDE = .FALSE.
+            inside = .false.
 
-         ELSE
+         else
 !
 !           In this case the point POSITN is inside the ellipsoid.
 !
-            INSIDE = .TRUE.
+            inside = .true.
 
 !
 !           This case is a bit of a nuisance. To solve the lambda
@@ -1145,39 +1145,39 @@
 !           First we must decide which singularity is the first true
 !           one.
 !
-            SNGLPT = 4
+            snglpt = 4
 
-            DO I = 3, 1, -1
+            do i = 3, 1, -1
 
-               IF ( POINT(I) .NE. 0 ) THEN
-                  SNGLPT = I
-               END IF
+               if ( point(i) .ne. 0 ) then
+                  snglpt = i
+               end if
 
-            END DO
+            end do
 
 !
 !           If there is a singular point, compute LAMBDA so that the
 !           largest term of Q is equal to 4.
 !
-            IF ( SNGLPT .LE. 3 ) THEN
+            if ( snglpt .le. 3 ) then
 
-               DO I = 1, 3
+               do i = 1, 3
 
-                  IF ( POINT(I) .EQ. 0 ) THEN
-                     TLAMBD(I) = -AXISQR(3)
-                  ELSE
-                     TLAMBD(I) = AXIS(I) * (   0.5D0*DABS(POINT(I)) &
-                                             - AXIS(I)              )
-                  END IF
+                  if ( point(i) .eq. 0 ) then
+                     tlambd(i) = -axisqr(3)
+                  else
+                     tlambd(i) = axis(i) * (   0.5d0*dabs(point(i)) &
+                                             - axis(i)              )
+                  end if
 
-               END DO
+               end do
 
-               LAMBDA = MAX ( TLAMBD(1), TLAMBD(2), TLAMBD(3) )
-               LOWER  = LAMBDA
-               UPPER  = MAX ( LOWER, 0.0D0 )
+               lambda = max ( tlambd(1), tlambd(2), tlambd(3) )
+               lower  = lambda
+               upper  = max ( lower, 0.0d0 )
 
 
-            ELSE
+            else
 !
 !              The point must be at the origin.  In this case
 !              we know where the closest point is. WE DON'T have
@@ -1194,40 +1194,40 @@
 !              to zero so that we won't have to deal with any
 !              special cases later on.
 !
-               IF ( COPY(1) .LT. 0 ) THEN
-                  POINT(1) = -AXIS(1)
-                  COPY(1)  = -AXIS(1)
-               ELSE
-                  POINT(1) =  AXIS(1)
-                  COPY(1)  =  AXIS(1)
-               END IF
+               if ( copy(1) .lt. 0 ) then
+                  point(1) = -axis(1)
+                  copy(1)  = -axis(1)
+               else
+                  point(1) =  axis(1)
+                  copy(1)  =  axis(1)
+               end if
 
-               COPY(2) = 0.0D0
-               COPY(3) = 0.0D0
+               copy(2) = 0.0d0
+               copy(3) = 0.0d0
 
-               UPPER   = 0.0D0
-               LOWER   = 0.0D0
-               LAMBDA  = 0.0D0
-               Q       = 0.0D0
+               upper   = 0.0d0
+               lower   = 0.0d0
+               lambda  = 0.0d0
+               q       = 0.0d0
 
-               INSIDE  = .FALSE.
+               inside  = .false.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 
 !
 !        OK. Now compute the value of Q at the two bracketing
 !        values of LAMBDA.
 !
-         DO I = 1, 3
+         do i = 1, 3
 
-            IF ( POINT(I) .EQ. 0 ) THEN
+            if ( point(i) .eq. 0 ) then
 
-               TERM(I) = 0.0D0
+               term(i) = 0.0d0
 
-            ELSE
+            else
 !
 !              We have to be a bit careful for points inside the
 !              ellipsoid. The denominator of the factor we are going to
@@ -1239,58 +1239,58 @@
 !              can simply truncate its individual terms when we are in
 !              danger of division overflows.
 
-               DENOM = AXIS(I) + LAMBDA/AXIS(I)
+               denom = axis(i) + lambda/axis(i)
 
-               TRIM  = 0.5D0 * DABS( POINT(I) )   .GT.   DENOM
+               trim  = 0.5d0 * dabs( point(i) )   .gt.   denom
 
-               IF ( INSIDE .AND. TRIM ) THEN
+               if ( inside .and. trim ) then
 
-                 FACTOR = 2.0D0
+                 factor = 2.0d0
 
-               ELSE
+               else
 !
 !                 We don't expect DENOM to be zero here, but we'll
 !                 check anyway.
 !
-                  IF ( DENOM .EQ. 0.D0 ) THEN
+                  if ( denom .eq. 0.d0 ) then
 
-                     CALL SETMSG ( 'AXIS(#) + LAMBDA/AXIS(#) is zero.' )
-                     CALL ERRINT ( '#',  I                             )
-                     CALL ERRINT ( '#',  I                             )
-                     CALL SIGERR ( 'SPICE(BUG)'                        )
-                     CALL CHKOUT ( 'NEARPT'                            )
-                     RETURN
+                     call setmsg ( 'AXIS(#) + LAMBDA/AXIS(#) is zero.' )
+                     call errint ( '#',  i                             )
+                     call errint ( '#',  i                             )
+                     call sigerr ( 'SPICE(BUG)'                        )
+                     call chkout ( 'NEARPT'                            )
+                     return
 
-                  END IF
+                  end if
 
-                  FACTOR =  POINT(I) / DENOM
+                  factor =  point(i) / denom
 
-               END IF
+               end if
 
-               TERM(I) = FACTOR*FACTOR
+               term(i) = factor*factor
 
-            END IF
+            end if
 
-         END DO
+         end do
 
 
-         IF ( .NOT. INSIDE ) THEN
-            QLOWER = Q
-            QUPPER = TERM(1) + TERM(2) + TERM(3) - 1.0D0
-         ELSE
-            QUPPER = Q
-            QLOWER = TERM(1) + TERM(2) + TERM(3) - 1.0D0
-         END IF
+         if ( .not. inside ) then
+            qlower = q
+            qupper = term(1) + term(2) + term(3) - 1.0d0
+         else
+            qupper = q
+            qlower = term(1) + term(2) + term(3) - 1.0d0
+         end if
 
 !
 !        Bracket QLOWER and QUPPER.
 !
-         QLOWER = MAX ( 0.D0,  QLOWER )
-         QUPPER = MIN ( 0.D0,  QUPPER )
+         qlower = max ( 0.d0,  qlower )
+         qupper = min ( 0.d0,  qupper )
 
 
-         LAMBDA = UPPER
-         Q      = QUPPER
+         lambda = upper
+         q      = qupper
 
 !
 !        Refining the estimate of lambda
@@ -1298,77 +1298,77 @@
 !
 !        Now find the root of Q by bisection.
 !
-         ITR = 0
+         itr = 0
 !
 !        Throughout this loop we'll use TOUCHD to avoid logic problems
 !        that may be caused by extended precision register usage by
 !        some compilers.
 !
-         DO WHILE ( TOUCHD(UPPER-LOWER) .GT. 0.D0 )
+         do while ( touchd(upper-lower) .gt. 0.d0 )
 
-            ITR = ITR + 1
+            itr = itr + 1
 
-            IF ( ITR .GT. MAXITR ) THEN
+            if ( itr .gt. maxitr ) then
 
-               CALL SETMSG ('Iteration limit # exceeded in NEARPT. ' // &
+               call setmsg ('Iteration limit # exceeded in NEARPT. ' // &
                             'A, B, C = # # #; POSITN = ( #, #, # ). '// &
                             'LOWER = #; UPPER = #; UPPER-LOWER = #. '// &
                             'Solution pass number = #.  This event ' // &
                             'should never occur. Contact NAIF.'      )
-               CALL ERRINT ( '#',  MAXITR                            )
-               CALL ERRDP  ( '#',  A                                 )
-               CALL ERRDP  ( '#',  B                                 )
-               CALL ERRDP  ( '#',  C                                 )
-               CALL ERRDP  ( '#',  POSITN(1)                         )
-               CALL ERRDP  ( '#',  POSITN(2)                         )
-               CALL ERRDP  ( '#',  POSITN(3)                         )
-               CALL ERRDP  ( '#',  LOWER                             )
-               CALL ERRDP  ( '#',  UPPER                             )
-               CALL ERRDP  ( '#',  UPPER - LOWER                     )
-               CALL SIGERR ( 'SPICE(BUG)'                            )
-               CALL CHKOUT ( 'NEARPT'                                )
-               RETURN
+               call errint ( '#',  maxitr                            )
+               call errdp  ( '#',  a                                 )
+               call errdp  ( '#',  b                                 )
+               call errdp  ( '#',  c                                 )
+               call errdp  ( '#',  positn(1)                         )
+               call errdp  ( '#',  positn(2)                         )
+               call errdp  ( '#',  positn(3)                         )
+               call errdp  ( '#',  lower                             )
+               call errdp  ( '#',  upper                             )
+               call errdp  ( '#',  upper - lower                     )
+               call sigerr ( 'SPICE(BUG)'                            )
+               call chkout ( 'NEARPT'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Bracket LOWER, QLOWER, and QUPPER.
 !
-            LOWER  = MIN ( LOWER, UPPER  )
-            QLOWER = MAX ( 0.D0,  QLOWER )
-            QUPPER = MIN ( 0.D0,  QUPPER )
+            lower  = min ( lower, upper  )
+            qlower = max ( 0.d0,  qlower )
+            qupper = min ( 0.d0,  qupper )
 
 !
 !           Depending upon how Q compares with Q at the
 !           bracketing endpoints we adjust the endpoints
 !           of the bracketing interval
 !
-            IF ( Q .EQ. 0 ) THEN
+            if ( q .eq. 0 ) then
 !
 !              We've found the root.
 !
-               LOWER = LAMBDA
-               UPPER = LAMBDA
+               lower = lambda
+               upper = lambda
 
-            ELSE
+            else
 
-               IF ( Q .LT. 0.D0 ) THEN
+               if ( q .lt. 0.d0 ) then
 
-                  UPPER  = LAMBDA
-                  QUPPER = Q
+                  upper  = lambda
+                  qupper = q
 
-               ELSE
+               else
 !
 !                 We have Q > 0
 !
-                  LOWER  = LAMBDA
-                  QLOWER = Q
+                  lower  = lambda
+                  qlower = q
 
-               END IF
+               end if
 !
 !              Update LAMBDA.
 !
-               LAMBDA = 0.5D0*LOWER + 0.5D0*UPPER
+               lambda = 0.5d0*lower + 0.5d0*upper
 
 !
 !              It's quite possible as we get close to the root for Q
@@ -1377,9 +1377,9 @@
 !              bracketing interval.  Force it back in to the current
 !              interval.
 !
-               LAMBDA = BRCKTD ( LAMBDA, LOWER, UPPER )
+               lambda = brcktd ( lambda, lower, upper )
 
-            END IF
+            end if
 !
 !           At this point, it's guaranteed that
 !
@@ -1396,120 +1396,120 @@
 !           endpoints.  Set LOWER and UPPER equal so that the loop will
 !           finally terminate.
 !
-            IF (      APPROX( LAMBDA, LOWER, CNVTOL ) &
-                 .OR. APPROX( LAMBDA, UPPER, CNVTOL )  ) THEN
+            if (      approx( lambda, lower, cnvtol ) &
+                 .or. approx( lambda, upper, cnvtol )  ) then
 !
 !              Make the decision as to which way to push
 !              the boundaries, by selecting that endpoint
 !              at which Q is closest to zero.
 
-               IF ( DABS(QLOWER) .LT. DABS(QUPPER) ) THEN
-                  UPPER = LOWER
-               ELSE
-                  LOWER = UPPER
-               END IF
+               if ( dabs(qlower) .lt. dabs(qupper) ) then
+                  upper = lower
+               else
+                  lower = upper
+               end if
 !
 !              Since LOWER is equal to UPPER, the loop will terminate.
 !
-            END IF
+            end if
 
 !
 !           If LOWER and UPPER aren't the same, we compute the
 !           value of Q at our new guess for LAMBDA.
 !
-            IF ( TOUCHD(UPPER-LOWER) .GT. 0 ) THEN
+            if ( touchd(upper-lower) .gt. 0 ) then
 
-               DO I = 1, 3
+               do i = 1, 3
 
-                  IF ( POINT(I) .EQ. 0 ) THEN
+                  if ( point(i) .eq. 0 ) then
 
-                     TERM(I) = 0.0D0
+                     term(i) = 0.0d0
 
-                  ELSE
+                  else
 
-                     DENOM =  AXIS(I) + LAMBDA/AXIS(I)
+                     denom =  axis(i) + lambda/axis(i)
 
-                     TRIM  =  0.5D0 * DABS( POINT(I) )   .GT.   DENOM
+                     trim  =  0.5d0 * dabs( point(i) )   .gt.   denom
 
-                     IF ( INSIDE .AND. TRIM ) THEN
+                     if ( inside .and. trim ) then
 
-                        FACTOR = 2.0D0
+                        factor = 2.0d0
 
-                     ELSE
+                     else
 !
 !                       We don't expect DENOM to be zero here, but we'll
 !                       check anyway.
 !
-                        IF ( DENOM .EQ. 0.D0 ) THEN
+                        if ( denom .eq. 0.d0 ) then
 
-                           CALL SETMSG ( 'AXIS(#) + LAMBDA/AXIS(#) ' // &
+                           call setmsg ( 'AXIS(#) + LAMBDA/AXIS(#) ' // &
                                          'is zero.'                  )
-                           CALL ERRINT ( '#',  I                     )
-                           CALL ERRINT ( '#',  I                     )
-                           CALL SIGERR ( 'SPICE(BUG)'                )
-                           CALL CHKOUT ( 'NEARPT'                    )
-                           RETURN
+                           call errint ( '#',  i                     )
+                           call errint ( '#',  i                     )
+                           call sigerr ( 'SPICE(BUG)'                )
+                           call chkout ( 'NEARPT'                    )
+                           return
 
-                        END IF
+                        end if
 
-                        FACTOR =  POINT(I) / DENOM
+                        factor =  point(i) / denom
 
-                     END IF
+                     end if
 
-                     TERM(I) = FACTOR*FACTOR
+                     term(i) = factor*factor
 
-                  END IF
+                  end if
 
-               END DO
+               end do
 
-               Q  =  TOUCHD( TERM(1) + TERM(2) + TERM(3) - 1.0D0 )
+               q  =  touchd( term(1) + term(2) + term(3) - 1.0d0 )
 
-            END IF
+            end if
 !
 !           Q(LAMBDA) has been set unless we've already found
 !           a solution.
 !
 !           Loop back through the bracketing refinement code.
 !
-        END DO
+        end do
 
 !
 !       Now we have LAMBDA, compute the nearest point based upon
 !       this value.
 !
-        LAMBDA = LOWER
+        lambda = lower
 
 
-        DO I = 1, 3
+        do i = 1, 3
 
-           IF ( POINT(I) .EQ. 0.0D0 ) THEN
+           if ( point(i) .eq. 0.0d0 ) then
 
-              SPOINT(I) = 0.0D0
+              spoint(i) = 0.0d0
 
-           ELSE
+           else
 
-              DENOM = 1.0D0 +  LAMBDA/AXISQR(I)
+              denom = 1.0d0 +  lambda/axisqr(i)
 !
 !             We don't expect that DENOM will be non-positive, but we
 !             check for this case anyway.
 !
-              IF ( DENOM .LE. 0.D0 ) THEN
+              if ( denom .le. 0.d0 ) then
 
-                 CALL SETMSG ( 'Denominator in expression for ' // &
+                 call setmsg ( 'Denominator in expression for ' // &
                                'SPOINT(#) is #.'                )
-                 CALL ERRINT ( '#', I                           )
-                 CALL ERRDP  ( '#', DENOM                       )
-                 CALL SIGERR ( 'SPICE(BUG)'                     )
-                 CALL CHKOUT ( 'NEARPT'                         )
-                 RETURN
+                 call errint ( '#', i                           )
+                 call errdp  ( '#', denom                       )
+                 call sigerr ( 'SPICE(BUG)'                     )
+                 call chkout ( 'NEARPT'                         )
+                 return
 
-              END IF
+              end if
 
-              SPOINT(I) = COPY(I) / DENOM
+              spoint(i) = copy(i) / denom
 
-           END IF
+           end if
 
-        END DO
+        end do
 
 !
 !       Handling points on the central plane.
@@ -1521,8 +1521,8 @@
 !       likelihood) that the nearest point on the ellipsoid is NOT in
 !       the Y-Z plane. we must consider this possibility next.
 !
-        IF ( INSIDE  .AND. (      (SNGLPT .EQ. 2) &
-                             .OR. (SNGLPT .EQ. 3) ) ) THEN
+        if ( inside  .and. (      (snglpt .eq. 2) &
+                             .or. (snglpt .eq. 3) ) ) then
 !
 !          There are two ways to get here. SNGLPT = 2 or SNGLPT = 3.
 !          Fortunately these two cases can be handled simultaneously by
@@ -1637,7 +1637,7 @@
 !
 !          We begin by assuming this extra point doesn't exist.
 !
-           EXTRA = .FALSE.
+           extra = .false.
 
 !
 !          Next let's note a few simple tests we can apply to
@@ -1659,24 +1659,24 @@
 !               | POINT(3) | <= c - a*(a/c)
 !
 
-           IF (     (     AXIS (1)  .NE. AXIS(SNGLPT)                ) &
-               .AND.(DABS(POINT(2)) .LE. AXIS(2) - AXISQR(1)/AXIS(2) ) &
-               .AND.(DABS(POINT(3)) .LE. AXIS(3) - AXISQR(1)/AXIS(3) )) &
-           THEN
+           if (     (     axis (1)  .ne. axis(snglpt)                ) &
+               .and.(dabs(point(2)) .le. axis(2) - axisqr(1)/axis(2) ) &
+               .and.(dabs(point(3)) .le. axis(3) - axisqr(1)/axis(3) )) &
+           then
 !
 !             What happens next depends on whether the ellipsoid is
 !             prolate or triaxial.
 !
-              IF ( AXIS(1) .EQ. AXIS(2) ) THEN
+              if ( axis(1) .eq. axis(2) ) then
 !
 !                This is the prolate case; we need to compute the
 !                z component of the solution.
 !
-                 DENOM3 = 1.0D0 - AXISQR(1)/AXISQR(3)
+                 denom3 = 1.0d0 - axisqr(1)/axisqr(3)
 
-                 IF ( DENOM3 .GT. 0.D0 ) THEN
+                 if ( denom3 .gt. 0.d0 ) then
 
-                    EPOINT(2) = 0.D0
+                    epoint(2) = 0.d0
 !
 !                   Concerning the safety of the following division:
 !
@@ -1693,43 +1693,43 @@
 !                        double precision numeric representation.
 !
 !
-                    EPOINT(3) = POINT(3) / DENOM3
+                    epoint(3) = point(3) / denom3
 
 !
 !                   See if these components can even be on the
 !                   ellipsoid...
 !
-                    TEMP      = 1.0D0  - ( EPOINT(2) / AXIS(2) )**2 &
-                                       - ( EPOINT(3) / AXIS(3) )**2
+                    temp      = 1.0d0  - ( epoint(2) / axis(2) )**2 &
+                                       - ( epoint(3) / axis(3) )**2
 
-                    IF ( TEMP .GT. 0 ) THEN
+                    if ( temp .gt. 0 ) then
 !
 !                      ...and compute the x component of the point.
 !
-                       EPOINT(1) = AXIS(1) * DSQRT( MAX(0.D0,TEMP) )
-                       EXTRA     = .TRUE.
+                       epoint(1) = axis(1) * dsqrt( max(0.d0,temp) )
+                       extra     = .true.
 
-                    END IF
+                    end if
 
-                 END IF
+                 end if
 
-              ELSE
+              else
 !
 !                This is the triaxial case.
 !
 !                Compute the y and z components (2 and 3) of the extra
 !                point.
 !
-                 DENOM2 = 1.0D0 - (AXISQR(1)/AXISQR(2))
-                 DENOM3 = 1.0D0 - (AXISQR(1)/AXISQR(3))
+                 denom2 = 1.0d0 - (axisqr(1)/axisqr(2))
+                 denom3 = 1.0d0 - (axisqr(1)/axisqr(3))
 
 !
 !                We expect DENOM2 and DENOM3 will always be positive.
 !                Nonetheless, we check to make sure this is the case.
 !                If not, we don't compute the extra point.
 !
-                 IF (       ( DENOM2 .GT. 0.D0 ) &
-                      .AND. ( DENOM3 .GT. 0.D0 ) ) THEN
+                 if (       ( denom2 .gt. 0.d0 ) &
+                      .and. ( denom3 .gt. 0.d0 ) ) then
 
 !
 !                   Concerning the safety of the following divisions:
@@ -1747,46 +1747,46 @@
 !                        IEEE double precision numeric representation.
 !
 
-                    EPOINT(2) = POINT(2) / DENOM2
-                    EPOINT(3) = POINT(3) / DENOM3
+                    epoint(2) = point(2) / denom2
+                    epoint(3) = point(3) / denom3
 !
 !                   See if these components can even be on the
 !                   ellipsoid...
 !
-                    TEMP      = 1.0D0  - ( EPOINT(2) / AXIS(2) )**2 &
-                                       - ( EPOINT(3) / AXIS(3) )**2
+                    temp      = 1.0d0  - ( epoint(2) / axis(2) )**2 &
+                                       - ( epoint(3) / axis(3) )**2
 
-                    IF ( TEMP .GT. 0 ) THEN
+                    if ( temp .gt. 0 ) then
 !
 !                      ...and compute the x component of the point.
 !
-                       EPOINT(1) = AXIS(1) * DSQRT(TEMP)
-                       EXTRA     = .TRUE.
+                       epoint(1) = axis(1) * dsqrt(temp)
+                       extra     = .true.
 
-                    END IF
+                    end if
 
-                 END IF
+                 end if
 
-              END IF
+              end if
 
-           END IF
+           end if
 
 !
 !          Ok.  If an extra point is possible, check and see if it
 !          is the one we are searching for.
 !
-           IF ( EXTRA ) THEN
+           if ( extra ) then
 
-              IF (      VDIST(EPOINT, POINT) &
-                   .LT. VDIST(SPOINT, POINT) ) THEN
+              if (      vdist(epoint, point) &
+                   .lt. vdist(spoint, point) ) then
 
-                 CALL VEQU ( EPOINT, SPOINT )
+                 call vequ ( epoint, spoint )
 
-              END IF
+              end if
 
-           END IF
+           end if
 
-        END IF
+        end if
 
 
 !
@@ -1796,7 +1796,7 @@
 !       ================================================================
 !       ----------------------------------------------------------------
 !
-        IF ( SOLUTN .EQ. 1 ) THEN
+        if ( solutn .eq. 1 ) then
 
 !
 !           The first solution for the nearest point may not be
@@ -1807,13 +1807,13 @@
 !           contain both the current solution point and the
 !           original point).
 !
-            CALL   VEQU ( SPOINT, POINT  )
-            CALL   VEQU ( SPOINT, BESTPT )
+            call   vequ ( spoint, point  )
+            call   vequ ( spoint, bestpt )
 
-            BESTHT = VDIST ( BESTPT, ORIGNL )
+            bestht = vdist ( bestpt, orignl )
 
 
-         ELSE IF ( SOLUTN .EQ. 2 ) THEN
+         else if ( solutn .eq. 2 ) then
 
 !
 !           The current solution point will be very close to lying
@@ -1850,20 +1850,20 @@
 !
 !           First we need to compute the altitude
 !
-            HEIGHT  = SIGN * VDIST( SPOINT, ORIGNL )
+            height  = sign * vdist( spoint, orignl )
 
 !
 !           Next compute the difference between the input point and
 !           the one we get by moving out along the normal at our
 !           solution point by the computed altitude.
 !
-            CALL SURFNM ( AXIS(1), AXIS(2), AXIS(3), SPOINT, NORMAL )
+            call surfnm ( axis(1), axis(2), axis(3), spoint, normal )
 
-            DO I=1, 3
+            do i=1, 3
 
-               ERR(I) = ORIGNL(I) - (SPOINT(I) + HEIGHT*NORMAL(I))
+               err(i) = orignl(i) - (spoint(i) + height*normal(i))
 
-            END DO
+            end do
 
 
 !
@@ -1871,70 +1871,70 @@
 !           perpendicular to the normal, and shift our solution
 !           point by this component.
 !
-            CALL VPERP ( ERR, NORMAL, ERRP )
+            call vperp ( err, normal, errp )
 
 !
 !           Check for a zero projection. If so, set iteration flag to
 !           prevent an iteration pass after the current finishes.
 !
-            IF ( VZERO(ERRP) ) THEN
-               SOLVNG = .FALSE.
-            END IF
+            if ( vzero(errp) ) then
+               solvng = .false.
+            end if
 
 
 !
 !           The sign of the original point's altitude tells
 !           us whether the point is outside the ellipsoid.
 !
-            IF ( SIGN .GE. 0.D0 ) THEN
+            if ( sign .ge. 0.d0 ) then
 !
 !              Scale the transverse component down to the local radius
 !              of the surface point.
 !
-               IF ( PNORM .EQ. 0.D0 ) THEN
+               if ( pnorm .eq. 0.d0 ) then
 !
 !                 Since the point is outside of the scaled ellipsoid,
 !                 we don't expect to arrive here. This is a backstop
 !                 check.
 !
-                  CALL SETMSG ( 'Norm of scaled point is 0. ' // &
+                  call setmsg ( 'Norm of scaled point is 0. ' // &
                                 'POSITN = ( #, #, # )'        )
-                  CALL ERRDP  ( '#',  POSITN(1)               )
-                  CALL ERRDP  ( '#',  POSITN(2)               )
-                  CALL ERRDP  ( '#',  POSITN(3)               )
-                  CALL SIGERR ( 'SPICE(BUG)'                  )
-                  CALL CHKOUT ( 'NEARPT'                      )
-                  RETURN
+                  call errdp  ( '#',  positn(1)               )
+                  call errdp  ( '#',  positn(2)               )
+                  call errdp  ( '#',  positn(3)               )
+                  call sigerr ( 'SPICE(BUG)'                  )
+                  call chkout ( 'NEARPT'                      )
+                  return
 
-               END IF
+               end if
 
-               IF ( SOLVNG ) THEN
-                  CALL VSCLIP ( VNORM(SPOINT)/PNORM, ERRP )
-               END IF
+               if ( solvng ) then
+                  call vsclip ( vnorm(spoint)/pnorm, errp )
+               end if
 
-            END IF
+            end if
 
-            CALL VADD ( SPOINT, ERRP, POINT )
+            call vadd ( spoint, errp, point )
 
-            IF (  (SPOINT(1) .EQ. POINT(1)) .AND. &
-                  (SPOINT(2) .EQ. POINT(2)) .AND. &
-                  (SPOINT(3) .EQ. POINT(3))       ) THEN
-               SOLVNG = .FALSE.
-            END IF
+            if (  (spoint(1) .eq. point(1)) .and. &
+                  (spoint(2) .eq. point(2)) .and. &
+                  (spoint(3) .eq. point(3))       ) then
+               solvng = .false.
+            end if
 
 
-            OLDERR = VNORM ( ERR )
-            BESTHT = HEIGHT
+            olderr = vnorm ( err )
+            bestht = height
 
 !
 !           Finally store the current solution point, so that if
 !           this sharpening doesn't improve our estimate of the
 !           near point, we can just return our current best guess.
 !
-            CALL VEQU ( SPOINT, BESTPT )
+            call vequ ( spoint, bestpt )
 
 
-         ELSE IF ( SOLUTN .GT. 2 ) THEN
+         else if ( solutn .gt. 2 ) then
 
 !
 !           This branch exists for the purpose of testing our
@@ -1963,136 +1963,136 @@
 !
 !           First compute the altitude,
 !
-            HEIGHT  = SIGN * VDIST( SPOINT, ORIGNL )
+            height  = sign * vdist( spoint, orignl )
 
 !
 !           ... compute the difference
 !
 !              ORIGNL - SPOINT - HEIGHT*NORMAL,
 !
-            CALL SURFNM ( AXIS(1), AXIS(2), AXIS(3), SPOINT, NORMAL )
+            call surfnm ( axis(1), axis(2), axis(3), spoint, normal )
 
-            DO I = 1, 3
+            do i = 1, 3
 
-               ERR(I) = ORIGNL(I) - (SPOINT(I) + HEIGHT*NORMAL(I))
+               err(i) = orignl(i) - (spoint(i) + height*normal(i))
 
-            END DO
+            end do
 
 !
 !           Check for a zero difference. If so, set iteration flag to
 !           prevent an iteration pass after the current finishes.
 !
-            IF ( VZERO(ERR) ) THEN
-               SOLVNG = .FALSE.
-               NEWERR = 0.D0
-            ELSE
+            if ( vzero(err) ) then
+               solvng = .false.
+               newerr = 0.d0
+            else
 
 !              Determine the magnitude of the error due to our
 !              sharpened estimate, if error non zero.
 !
-               NEWERR = VNORM ( ERR )
-            END IF
+               newerr = vnorm ( err )
+            end if
 
 !
 !           If the sharpened estimate yields a smaller error ...
 !
-            IF ( NEWERR .LT. OLDERR ) THEN
+            if ( newerr .lt. olderr ) then
 !
 !              ...our current value of SPOINT becomes our new
 !              best point and the current altitude becomes our
 !              new altitude.
 !
-               OLDERR  =  NEWERR
-               BESTHT  =  HEIGHT
+               olderr  =  newerr
+               bestht  =  height
 
-               CALL  VEQU ( SPOINT,  BESTPT )
+               call  vequ ( spoint,  bestpt )
 
 !
 !              Next, if we haven't passed the limit on the number of
 !              iterations allowed we prepare the initial point for our
 !              "sharpening" estimate.
 !
-               IF ( SOLUTN .LE. MAXSOL ) THEN
+               if ( solutn .le. maxsol ) then
 
 
 !                 Find the component of the error vector that is
 !                 perpendicular to the normal, and shift our solution
 !                 point by this component.
 
-                  CALL VPERP ( ERR, NORMAL, ERRP )
+                  call vperp ( err, normal, errp )
 
 !
 !                 Check for a zero projection. If so, set iteration
 !                 flag to prevent an iteration pass after the current
 !                 finishes.
 !
-                  IF ( VZERO(ERRP) ) THEN
-                     SOLVNG = .FALSE.
-                  END IF
+                  if ( vzero(errp) ) then
+                     solvng = .false.
+                  end if
 
 !
 !                 The sign of the original point's altitude tells
 !                 us whether the point is outside the ellipsoid.
 !
-                  IF ( SIGN .GE. 0.D0 ) THEN
+                  if ( sign .ge. 0.d0 ) then
 !
 !                    Scale the transverse component down to the local
 !                    radius of the surface point.
 !
-                     IF ( PNORM .EQ. 0.D0 ) THEN
+                     if ( pnorm .eq. 0.d0 ) then
 !
 !                       Since the point is outside of the scaled
 !                       ellipsoid, we don't expect to arrive here.
 !                       This is a backstop check.
 !
-                        CALL SETMSG ( 'Norm of scaled point is 0. ' // &
+                        call setmsg ( 'Norm of scaled point is 0. ' // &
                                       'POSITN = ( #, #, # )'        )
-                        CALL ERRDP  ( '#',  POSITN(1)               )
-                        CALL ERRDP  ( '#',  POSITN(2)               )
-                        CALL ERRDP  ( '#',  POSITN(3)               )
-                        CALL SIGERR ( 'SPICE(BUG)'                  )
-                        CALL CHKOUT ( 'NEARPT'                      )
-                        RETURN
+                        call errdp  ( '#',  positn(1)               )
+                        call errdp  ( '#',  positn(2)               )
+                        call errdp  ( '#',  positn(3)               )
+                        call sigerr ( 'SPICE(BUG)'                  )
+                        call chkout ( 'NEARPT'                      )
+                        return
 
-                     END IF
+                     end if
 
-                     IF ( SOLVNG ) THEN
-                        CALL VSCLIP ( VNORM(SPOINT)/PNORM, ERRP )
-                     END IF
+                     if ( solvng ) then
+                        call vsclip ( vnorm(spoint)/pnorm, errp )
+                     end if
 
-                  END IF
+                  end if
 
-                  CALL VADD  ( SPOINT, ERRP, POINT )
+                  call vadd  ( spoint, errp, point )
 
-                  IF (  (SPOINT(1) .EQ. POINT(1)) .AND. &
-                        (SPOINT(2) .EQ. POINT(2)) .AND. &
-                        (SPOINT(3) .EQ. POINT(3))       ) THEN
-                     SOLVNG = .FALSE.
-                  END IF
+                  if (  (spoint(1) .eq. point(1)) .and. &
+                        (spoint(2) .eq. point(2)) .and. &
+                        (spoint(3) .eq. point(3))       ) then
+                     solvng = .false.
+                  end if
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              If things didn't get better, there is no point in
 !              going on.  Just set the SOLVNG flag to .FALSE. to
 !              terminate the outer loop.
 !
-               SOLVNG = .FALSE.
+               solvng = .false.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Increment the solution counter so that eventually this
 !        loop will terminate.
 !
-         SOLUTN = SOLUTN + 1
+         solutn = solutn + 1
 
-         SOLVNG = SOLVNG .AND. ( SOLUTN .LE. MAXSOL )
+         solvng = solvng .and. ( solutn .le. maxsol )
 
-      END DO
+      end do
 
 !
 !     Chapter 6
@@ -2104,15 +2104,15 @@
 !     Re-scale and re-order the components of our solution point. Scale
 !     and copy the value of BESTHT into the output argument.
 !
-      CALL VSCLIP( 1.0D0/SCALE, BESTPT )
+      call vsclip( 1.0d0/scale, bestpt )
 
-      DO I = 1,3
-         NPOINT( IORDER(I) ) = BESTPT(I)
-      END DO
+      do i = 1,3
+         npoint( iorder(i) ) = bestpt(i)
+      end do
 
-      ALT = BESTHT/SCALE
+      alt = bestht/scale
 
-      CALL CHKOUT ( 'NEARPT' )
+      call chkout ( 'NEARPT' )
 
-      RETURN
-      END
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure ZZCKCV02 ( Private --- C-kernel segment coverage, type 02 )
 
-      SUBROUTINE ZZCKCV02 ( HANDLE,  ARRBEG,  ARREND, &
-                            SCLKID,  TOL,     TIMSYS,  SCHEDL  )
+      subroutine zzckcv02 ( handle,  arrbeg,  arrend, &
+                            sclkid,  tol,     timsys,  schedl  )
 
 ! $ Abstract
 !
@@ -24,18 +24,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               HANDLE
-      INTEGER               ARRBEG
-      INTEGER               ARREND
-      INTEGER               SCLKID
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         TIMSYS
-      DOUBLE PRECISION      SCHEDL ( LBCELL:* )
+      integer               handle
+      integer               arrbeg
+      integer               arrend
+      integer               sclkid
+      double precision      tol
+      character*(*)         timsys
+      double precision      schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -157,147 +157,147 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
+      logical               eqstr
+      logical               return
 
 !
 !     Local Parameters
 !
-      INTEGER               PSIZE
-      PARAMETER           ( PSIZE = 8 )
+      integer               psize
+      parameter           ( psize = 8 )
 
-      INTEGER               BSIZE
-      PARAMETER           ( BSIZE = 100 )
+      integer               bsize
+      parameter           ( bsize = 100 )
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      FINISH
-      DOUBLE PRECISION      FIRST ( BSIZE )
-      DOUBLE PRECISION      LAST  ( BSIZE )
+      double precision      begin
+      double precision      et
+      double precision      finish
+      double precision      first ( bsize )
+      double precision      last  ( bsize )
 
-      INTEGER               ARRSIZ
-      INTEGER               BEGAT
-      INTEGER               ENDAT
-      INTEGER               GET
-      INTEGER               GOT
-      INTEGER               I
-      INTEGER               NREC
+      integer               arrsiz
+      integer               begat
+      integer               endat
+      integer               get
+      integer               got
+      integer               i
+      integer               nrec
 
-      LOGICAL               ISTDB
+      logical               istdb
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZCKCV02' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'ZZCKCV02' )
+      end if
 
 !
 !     Check tolerance value.
 !
-      IF ( TOL .LT. 0.D0 ) THEN
+      if ( tol .lt. 0.d0 ) then
 
-         CALL SETMSG ( 'Tolerance must be non-negative; actual value '// &
+         call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
-         CALL ERRDP  ( '#',  TOL                                      )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'                       )
-         CALL CHKOUT ( 'ZZCKCV02'                                     )
-         RETURN
+         call errdp  ( '#',  tol                                      )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'                       )
+         call chkout ( 'ZZCKCV02'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set a logical flag indicating whether the time systm is SCLK.
 !
-      ISTDB  = EQSTR ( TIMSYS, 'TDB' )
+      istdb  = eqstr ( timsys, 'TDB' )
 
 !
 !     Check time system.
 !
-      IF ( .NOT. ISTDB ) THEN
+      if ( .not. istdb ) then
 
-         IF (  .NOT.  EQSTR ( TIMSYS, 'SCLK' )  )THEN
+         if (  .not.  eqstr ( timsys, 'SCLK' )  )then
 
-            CALL SETMSG ( 'Time system spec TIMSYS was #; allowed ' // &
+            call setmsg ( 'Time system spec TIMSYS was #; allowed ' // &
                           'values are SCLK and TDB.'                )
-            CALL ERRCH  ( '#',  TIMSYS                              )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                    )
-            CALL CHKOUT ( 'ZZCKCV02'                                )
-            RETURN
+            call errch  ( '#',  timsys                              )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                    )
+            call chkout ( 'ZZCKCV02'                                )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     Determine the size of the array and the number of records
 !     in it.
 !
-      ARRSIZ = ARREND - ARRBEG + 1
-      NREC   = NINT (  ( 100.D0 * (DBLE(ARRSIZ)) + 1.D0 ) / 1001.D0  )
+      arrsiz = arrend - arrbeg + 1
+      nrec   = nint (  ( 100.d0 * (dble(arrsiz)) + 1.d0 ) / 1001.d0  )
 
 !
 !     The variable GOT tells us how many time endpoints we've
 !     gotten so far.
 !
-      GOT = 0
+      got = 0
 
-      DO WHILE ( GOT .LT. NREC )
+      do while ( got .lt. nrec )
 
-         GET = MIN ( BSIZE, NREC - GOT )
+         get = min ( bsize, nrec - got )
 
-         BEGAT = ARRBEG + NREC*PSIZE + GOT
-         ENDAT = ARRBEG + NREC*PSIZE + NREC + GOT
+         begat = arrbeg + nrec*psize + got
+         endat = arrbeg + nrec*psize + nrec + got
 
 !
 !        Retrieve the list next list of windows.
 !
-         CALL DAFGDA ( HANDLE, BEGAT, BEGAT + GET - 1, FIRST )
-         CALL DAFGDA ( HANDLE, ENDAT, ENDAT + GET - 1, LAST  )
+         call dafgda ( handle, begat, begat + get - 1, first )
+         call dafgda ( handle, endat, endat + get - 1, last  )
 
 !
 !        Insert the coverage intervals into the schedule.
 !
-         DO I = 1, GET
+         do i = 1, get
 !
 !           Adjust the interval using the tolerance.
 !
-            BEGIN  = FIRST(I)
-            FINISH = LAST(I)
+            begin  = first(i)
+            finish = last(i)
 
-            IF ( TOL .GT. 0.D0 ) THEN
+            if ( tol .gt. 0.d0 ) then
 
-               BEGIN   =  MAX( BEGIN  - TOL, 0.D0 )
-               FINISH  =       FINISH + TOL
+               begin   =  max( begin  - tol, 0.d0 )
+               finish  =       finish + tol
 
-            END IF
+            end if
 
 !
 !           Convert the time to TDB if necessary.
 !
-            IF ( ISTDB ) THEN
+            if ( istdb ) then
 
-               CALL SCT2E ( SCLKID, BEGIN,  ET )
-               BEGIN  = ET
+               call sct2e ( sclkid, begin,  et )
+               begin  = et
 
-               CALL SCT2E ( SCLKID, FINISH, ET )
-               FINISH = ET
+               call sct2e ( sclkid, finish, et )
+               finish = et
 
-            END IF
+            end if
 
-            CALL WNINSD ( BEGIN, FINISH, SCHEDL )
+            call wninsd ( begin, finish, schedl )
 
-         END DO
+         end do
 
-         GOT = GOT + GET
+         got = got + get
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'ZZCKCV02' )
-      RETURN
-      END
+      call chkout ( 'ZZCKCV02' )
+      return
+      end

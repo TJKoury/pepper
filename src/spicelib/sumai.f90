@@ -1,6 +1,6 @@
 !$Procedure SUMAI ( Sum of an integer array )
 
-      INTEGER FUNCTION SUMAI ( ARRAY, N )
+      integer function sumai ( array, n )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER          ARRAY  ( * )
-      INTEGER          N
+      integer          array  ( * )
+      integer          n
 
 ! $ Brief_I/O
 !
@@ -126,26 +126,26 @@
 !
 !     Local variables
 !
-      INTEGER          SUM
-      INTEGER          I
+      integer          sum
+      integer          i
 
 
 !
 !     Begin at zero.
 !
-      SUM = 0
+      sum = 0
 
 !
 !     Sum the elements. If N is zero or negative, nothing happens.
 !
-      DO I = 1, N
-         SUM = SUM + ARRAY(I)
-      END DO
+      do i = 1, n
+         sum = sum + array(i)
+      end do
 
 !
 !     Return the sum.
 !
-      SUMAI = SUM
+      sumai = sum
 
-      RETURN
-      END
+      return
+      end

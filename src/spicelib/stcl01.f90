@@ -1,6 +1,6 @@
 !$Procedure STCL01 ( STAR catalog type 1, load catalog file )
 
-      SUBROUTINE STCL01 ( CATFNM, TABNAM, HANDLE )
+      subroutine stcl01 ( catfnm, tabnam, handle )
 
 ! $ Abstract
 !
@@ -17,11 +17,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         CATFNM
-      CHARACTER*(*)         TABNAM
-      INTEGER               HANDLE
+      character*(*)         catfnm
+      character*(*)         tabnam
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -173,43 +173,43 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      LOGICAL               ISTYP1
-      CHARACTER*(256)       ERRMSG
+      logical               istyp1
+      character*(256)       errmsg
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'STCL01' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'STCL01' )
+      end if
 
 !
 !     Check whether the file is really a type 1 star catalog file.
 !     If not then signal an error.
 !
-      CALL STCC01 ( CATFNM, TABNAM, ISTYP1, ERRMSG )
+      call stcc01 ( catfnm, tabnam, istyp1, errmsg )
 
-      IF ( .NOT. ISTYP1 ) THEN
-         CALL SETMSG ('File # is not type 1 star catalog ' // &
-                         'file.' // ERRMSG                  )
-         CALL ERRCH  ( '#', CATFNM                          )
-         CALL SIGERR ( 'SPICE(BADCATALOGFILE)'              )
-         CALL CHKOUT ( 'STCL01' )
-         RETURN
-      END IF
+      if ( .not. istyp1 ) then
+         call setmsg ('File # is not type 1 star catalog ' // &
+                         'file.' // errmsg                  )
+         call errch  ( '#', catfnm                          )
+         call sigerr ( 'SPICE(BADCATALOGFILE)'              )
+         call chkout ( 'STCL01' )
+         return
+      end if
 
 !
 !     Load the catalog file with the high level EK loader.
 !
-      CALL EKLEF  ( CATFNM, HANDLE )
+      call eklef  ( catfnm, handle )
 
-      CALL CHKOUT ( 'STCL01' )
-      RETURN
-      END
+      call chkout ( 'STCL01' )
+      return
+      end

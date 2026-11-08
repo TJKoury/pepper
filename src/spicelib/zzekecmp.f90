@@ -1,6 +1,6 @@
 !$Procedure      ZZEKECMP ( EK, column entry element comparison )
 
-      INTEGER FUNCTION ZZEKECMP ( HANS,  SGDSCS,  CLDSCS,  ROWS,  ELTS )
+      integer function zzekecmp ( hans,  sgdscs,  cldscs,  rows,  elts )
 
 ! $ Abstract
 !
@@ -20,17 +20,17 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANS   ( * )
-      INTEGER               SGDSCS ( SDSCSZ, * )
-      INTEGER               CLDSCS ( CDSCSZ, * )
-      INTEGER               ROWS   ( * )
-      INTEGER               ELTS   ( * )
+      integer               hans   ( * )
+      integer               sgdscs ( sdscsz, * )
+      integer               cldscs ( cdscsz, * )
+      integer               rows   ( * )
+      integer               elts   ( * )
 
 ! $ Brief_I/O
 !
@@ -157,19 +157,19 @@
 !
 !     Local variables
 !
-      CHARACTER*(MAXSTR)    CVAL   ( 2 )
+      character*(maxstr)    cval   ( 2 )
 
-      DOUBLE PRECISION      DVAL   ( 2 )
+      double precision      dval   ( 2 )
 
-      INTEGER               CMPLEN ( 2 )
-      INTEGER               CVLEN  ( 2 )
-      INTEGER               I
-      INTEGER               IVAL   ( 2 )
-      INTEGER               LHSTYP
-      INTEGER               RHSTYP
+      integer               cmplen ( 2 )
+      integer               cvlen  ( 2 )
+      integer               i
+      integer               ival   ( 2 )
+      integer               lhstyp
+      integer               rhstyp
 
-      LOGICAL               FOUND
-      LOGICAL               NULL   ( 2 )
+      logical               found
+      logical               null   ( 2 )
 
 
 !
@@ -179,421 +179,421 @@
 !
 !     The function value defaults to `equal'.
 !
-      ZZEKECMP  =  EQ
+      zzekecmp  =  eq
 
-      LHSTYP    =  CLDSCS( TYPIDX, 1 )
-      RHSTYP    =  CLDSCS( TYPIDX, 2 )
+      lhstyp    =  cldscs( typidx, 1 )
+      rhstyp    =  cldscs( typidx, 2 )
 
 
-      IF (  LHSTYP .EQ. INT ) THEN
+      if (  lhstyp .eq. int ) then
 !
 !        The entities we're comparing are supposed to be
 !        scalar.  The left hand side has integer type.  Either
 !        integer or double precision types are acceptable on
 !        the right hand side.
 !
-         CALL ZZEKRSI (  HANS( 1),  SGDSCS(1,1),  CLDSCS(1,1),  ROWS(1), &
-                         ELTS(1),   IVAL(1),      NULL(1),      FOUND  )
+         call zzekrsi (  hans( 1),  sgdscs(1,1),  cldscs(1,1),  rows(1), &
+                         elts(1),   ival(1),      null(1),      found  )
 
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL CHKIN  ( 'ZZEKECMP'                                  )
-            CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
+            call chkin  ( 'ZZEKECMP'                                  )
+            call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
                           'Column entry element was not found.'       )
-            CALL ERRHAN ( '#',  HANS(1)                               )
-            CALL ERRINT ( '#',  CLDSCS(ORDIDX,1)                      )
-            CALL ERRINT ( '#',  ROWS(1)                               )
-            CALL ERRINT ( '#',  ELTS(1)                               )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-            CALL CHKOUT ( 'ZZEKECMP'                                  )
-            RETURN
+            call errhan ( '#',  hans(1)                               )
+            call errint ( '#',  cldscs(ordidx,1)                      )
+            call errint ( '#',  rows(1)                               )
+            call errint ( '#',  elts(1)                               )
+            call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+            call chkout ( 'ZZEKECMP'                                  )
+            return
 
-         END IF
-
-
-         IF ( RHSTYP .EQ. INT ) THEN
+         end if
 
 
-            CALL ZZEKRSI ( HANS(2), SGDSCS(1,2), CLDSCS(1,2), ROWS(2), &
-                           ELTS(1), IVAL(2),     NULL(2),     FOUND   )
+         if ( rhstyp .eq. int ) then
 
-            IF ( .NOT. FOUND ) THEN
 
-               CALL CHKIN  ( 'ZZEKECMP'                                )
-               CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
+            call zzekrsi ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
+                           elts(1), ival(2),     null(2),     found   )
+
+            if ( .not. found ) then
+
+               call chkin  ( 'ZZEKECMP'                                )
+               call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
-               CALL ERRHAN ( '#',  HANS(2)                             )
-               CALL ERRINT ( '#',  CLDSCS(ORDIDX,2)                    )
-               CALL ERRINT ( '#',  ROWS(2)                             )
-               CALL ERRINT ( '#',  ELTS(2)                             )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-               CALL CHKOUT ( 'ZZEKECMP'                                )
-               RETURN
+               call errhan ( '#',  hans(2)                             )
+               call errint ( '#',  cldscs(ordidx,2)                    )
+               call errint ( '#',  rows(2)                             )
+               call errint ( '#',  elts(2)                             )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+               call chkout ( 'ZZEKECMP'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Null values precede all others.
 !
-            IF ( NULL(1) .OR. NULL(2) )  THEN
+            if ( null(1) .or. null(2) )  then
 
-               IF ( .NOT. NULL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( .NOT. NULL(1) ) THEN
-                  ZZEKECMP = GT
-               END IF
+               if ( .not. null(2) ) then
+                  zzekecmp = lt
+               else if ( .not. null(1) ) then
+                  zzekecmp = gt
+               end if
 
-            ELSE
+            else
 
-               IF ( IVAL(1) .LT. IVAL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( IVAL(1) .GT. IVAL(2) ) THEN
-                  ZZEKECMP = GT
-               END IF
+               if ( ival(1) .lt. ival(2) ) then
+                  zzekecmp = lt
+               else if ( ival(1) .gt. ival(2) ) then
+                  zzekecmp = gt
+               end if
 
-            END IF
+            end if
 
 
-         ELSE IF ( RHSTYP .EQ. DP ) THEN
+         else if ( rhstyp .eq. dp ) then
 
-            CALL ZZEKRSD ( HANS(2), SGDSCS(1,2), CLDSCS(1,2), ROWS(2), &
-                           ELTS(1), DVAL(2),     NULL(2),     FOUND   )
+            call zzekrsd ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
+                           elts(1), dval(2),     null(2),     found   )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               CALL CHKIN  ( 'ZZEKECMP'                                )
-               CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
+               call chkin  ( 'ZZEKECMP'                                )
+               call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
-               CALL ERRHAN ( '#',  HANS(2)                             )
-               CALL ERRINT ( '#',  CLDSCS(ORDIDX,2)                    )
-               CALL ERRINT ( '#',  ROWS(2)                             )
-               CALL ERRINT ( '#',  ELTS(2)                             )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-               CALL CHKOUT ( 'ZZEKECMP'                                )
-               RETURN
+               call errhan ( '#',  hans(2)                             )
+               call errint ( '#',  cldscs(ordidx,2)                    )
+               call errint ( '#',  rows(2)                             )
+               call errint ( '#',  elts(2)                             )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+               call chkout ( 'ZZEKECMP'                                )
+               return
 
-            END IF
-
-
-            IF ( NULL(1) .OR. NULL(2) )  THEN
-
-               IF ( .NOT. NULL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( .NOT. NULL(1) ) THEN
-                  ZZEKECMP = GT
-               END IF
-
-            ELSE
-
-               IF ( IVAL(1) .LT. DVAL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( IVAL(1) .GT. DVAL(2) ) THEN
-                  ZZEKECMP = GT
-               END IF
-
-            END IF
+            end if
 
 
-         ELSE
+            if ( null(1) .or. null(2) )  then
+
+               if ( .not. null(2) ) then
+                  zzekecmp = lt
+               else if ( .not. null(1) ) then
+                  zzekecmp = gt
+               end if
+
+            else
+
+               if ( ival(1) .lt. dval(2) ) then
+                  zzekecmp = lt
+               else if ( ival(1) .gt. dval(2) ) then
+                  zzekecmp = gt
+               end if
+
+            end if
+
+
+         else
 !
 !           This is a big-time semantic error.  We should
 !           never arrive here.
 !
-            CALL CHKIN  ( 'ZZEKECMP'                         )
-            CALL SETMSG ( 'LHS data type is #; RHSTYP is #.' )
-            CALL ERRINT ( '#', LHSTYP                        )
-            CALL ERRINT ( '#', RHSTYP                        )
-            CALL SIGERR ( 'SPICE(BUG)'                       )
-            CALL CHKOUT ( 'ZZEKECMP'                         )
-            RETURN
+            call chkin  ( 'ZZEKECMP'                         )
+            call setmsg ( 'LHS data type is #; RHSTYP is #.' )
+            call errint ( '#', lhstyp                        )
+            call errint ( '#', rhstyp                        )
+            call sigerr ( 'SPICE(BUG)'                       )
+            call chkout ( 'ZZEKECMP'                         )
+            return
 
-         END IF
+         end if
 
 
 
-      ELSE IF ( LHSTYP .EQ. DP ) THEN
+      else if ( lhstyp .eq. dp ) then
 !
 !        This is a mirror image of the INT case.
 !
-         CALL ZZEKRSD ( HANS(1),  SGDSCS(1,1),  CLDSCS(1,1),  ROWS(1), &
-                        ELTS(1),  DVAL(1),      NULL(1),      FOUND   )
+         call zzekrsd ( hans(1),  sgdscs(1,1),  cldscs(1,1),  rows(1), &
+                        elts(1),  dval(1),      null(1),      found   )
 
 
-         IF ( .NOT. FOUND ) THEN
+         if ( .not. found ) then
 
-            CALL CHKIN  ( 'ZZEKECMP'                                  )
-            CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
+            call chkin  ( 'ZZEKECMP'                                  )
+            call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX = #. '// &
                           'Column entry element was not found.'       )
-            CALL ERRHAN ( '#',  HANS(1)                               )
-            CALL ERRINT ( '#',  CLDSCS(ORDIDX,1)                      )
-            CALL ERRINT ( '#',  ROWS(1)                               )
-            CALL ERRINT ( '#',  ELTS(1)                               )
-            CALL SIGERR ( 'SPICE(INVALIDINDEX)'                       )
-            CALL CHKOUT ( 'ZZEKECMP'                                  )
-            RETURN
+            call errhan ( '#',  hans(1)                               )
+            call errint ( '#',  cldscs(ordidx,1)                      )
+            call errint ( '#',  rows(1)                               )
+            call errint ( '#',  elts(1)                               )
+            call sigerr ( 'SPICE(INVALIDINDEX)'                       )
+            call chkout ( 'ZZEKECMP'                                  )
+            return
 
-         END IF
+         end if
 
 
-         IF ( RHSTYP .EQ. INT ) THEN
+         if ( rhstyp .eq. int ) then
 
-            CALL ZZEKRSI ( HANS(2), SGDSCS(1,2), CLDSCS(1,2), ROWS(2), &
-                           ELTS(1), IVAL(2),     NULL(2),     FOUND   )
+            call zzekrsi ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
+                           elts(1), ival(2),     null(2),     found   )
 
-            IF ( .NOT. FOUND ) THEN
+            if ( .not. found ) then
 
-               CALL CHKIN  ( 'ZZEKECMP'                                )
-               CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
+               call chkin  ( 'ZZEKECMP'                                )
+               call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
-               CALL ERRHAN ( '#',  HANS(2)                             )
-               CALL ERRINT ( '#',  CLDSCS(ORDIDX,2)                    )
-               CALL ERRINT ( '#',  ROWS(2)                             )
-               CALL ERRINT ( '#',  ELTS(2)                             )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-               CALL CHKOUT ( 'ZZEKECMP'                                )
-               RETURN
+               call errhan ( '#',  hans(2)                             )
+               call errint ( '#',  cldscs(ordidx,2)                    )
+               call errint ( '#',  rows(2)                             )
+               call errint ( '#',  elts(2)                             )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+               call chkout ( 'ZZEKECMP'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Null values precede all others.
 !
-            IF ( NULL(1) .OR. NULL(2) )  THEN
+            if ( null(1) .or. null(2) )  then
 
-               IF ( .NOT. NULL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( .NOT. NULL(1) ) THEN
-                  ZZEKECMP = GT
-               END IF
+               if ( .not. null(2) ) then
+                  zzekecmp = lt
+               else if ( .not. null(1) ) then
+                  zzekecmp = gt
+               end if
 
-            ELSE
+            else
 
-               IF ( DVAL(1) .LT. IVAL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( DVAL(1) .GT. IVAL(2) ) THEN
-                  ZZEKECMP = GT
-               END IF
+               if ( dval(1) .lt. ival(2) ) then
+                  zzekecmp = lt
+               else if ( dval(1) .gt. ival(2) ) then
+                  zzekecmp = gt
+               end if
 
-            END IF
-
-
-         ELSE IF ( RHSTYP .EQ. DP ) THEN
+            end if
 
 
-            CALL ZZEKRSD ( HANS(2), SGDSCS(1,2), CLDSCS(1,2), ROWS(2), &
-                           ELTS(1), DVAL(2),     NULL(2),     FOUND   )
+         else if ( rhstyp .eq. dp ) then
 
-            IF ( .NOT. FOUND ) THEN
 
-               CALL CHKIN  ( 'ZZEKECMP'                                )
-               CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
+            call zzekrsd ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
+                           elts(1), dval(2),     null(2),     found   )
+
+            if ( .not. found ) then
+
+               call chkin  ( 'ZZEKECMP'                                )
+               call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
-               CALL ERRHAN ( '#',  HANS(2)                             )
-               CALL ERRINT ( '#',  CLDSCS(ORDIDX,2)                    )
-               CALL ERRINT ( '#',  ROWS(2)                             )
-               CALL ERRINT ( '#',  ELTS(2)                             )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-               CALL CHKOUT ( 'ZZEKECMP'                                )
-               RETURN
+               call errhan ( '#',  hans(2)                             )
+               call errint ( '#',  cldscs(ordidx,2)                    )
+               call errint ( '#',  rows(2)                             )
+               call errint ( '#',  elts(2)                             )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+               call chkout ( 'ZZEKECMP'                                )
+               return
 
-            END IF
-
-
-            IF ( NULL(1) .OR. NULL(2) )  THEN
-
-               IF ( .NOT. NULL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( .NOT. NULL(1) ) THEN
-                  ZZEKECMP = GT
-               END IF
-
-            ELSE
-
-               IF ( DVAL(1) .LT. DVAL(2) ) THEN
-                  ZZEKECMP = LT
-               ELSE IF ( DVAL(1) .GT. DVAL(2) ) THEN
-                  ZZEKECMP = GT
-               END IF
-
-            END IF
+            end if
 
 
-         ELSE
+            if ( null(1) .or. null(2) )  then
+
+               if ( .not. null(2) ) then
+                  zzekecmp = lt
+               else if ( .not. null(1) ) then
+                  zzekecmp = gt
+               end if
+
+            else
+
+               if ( dval(1) .lt. dval(2) ) then
+                  zzekecmp = lt
+               else if ( dval(1) .gt. dval(2) ) then
+                  zzekecmp = gt
+               end if
+
+            end if
+
+
+         else
 !
 !           This is a big-time semantic error.  We should
 !           never arrive here.
 !
-            CALL CHKIN  ( 'ZZEKECMP'                         )
-            CALL SETMSG ( 'LHS data type is #; RHSTYP is #.' )
-            CALL ERRINT ( '#', LHSTYP                        )
-            CALL ERRINT ( '#', RHSTYP                        )
-            CALL SIGERR ( 'SPICE(BUG)'                       )
-            CALL CHKOUT ( 'ZZEKECMP'                         )
-            RETURN
+            call chkin  ( 'ZZEKECMP'                         )
+            call setmsg ( 'LHS data type is #; RHSTYP is #.' )
+            call errint ( '#', lhstyp                        )
+            call errint ( '#', rhstyp                        )
+            call sigerr ( 'SPICE(BUG)'                       )
+            call chkout ( 'ZZEKECMP'                         )
+            return
 
-         END IF
+         end if
 
 
 
-      ELSE IF ( LHSTYP .EQ. TIME ) THEN
+      else if ( lhstyp .eq. time ) then
 !
 !        The entities we're comparing are supposed to be time values.
 !
-         IF ( RHSTYP .NE. TIME ) THEN
+         if ( rhstyp .ne. time ) then
 !
 !           This is a big-time semantic error.  We should
 !           never arrive here.
 !
-            CALL CHKIN  ( 'ZZEKECMP'                         )
-            CALL SETMSG ( 'LHS data type is #; RHSTYP is #.' )
-            CALL ERRINT ( '#', LHSTYP                        )
-            CALL ERRINT ( '#', RHSTYP                        )
-            CALL SIGERR ( 'SPICE(BUG)'                       )
-            CALL CHKOUT ( 'ZZEKECMP'                         )
-            RETURN
+            call chkin  ( 'ZZEKECMP'                         )
+            call setmsg ( 'LHS data type is #; RHSTYP is #.' )
+            call errint ( '#', lhstyp                        )
+            call errint ( '#', rhstyp                        )
+            call sigerr ( 'SPICE(BUG)'                       )
+            call chkout ( 'ZZEKECMP'                         )
+            return
 
-         END IF
-
-
-         DO I = 1, 2
-
-            CALL ZZEKRSD ( HANS(I),  SGDSCS(1,I), CLDSCS(1,I), ROWS(I), &
-                           ELTS(I),  DVAL(I),     NULL(I),     FOUND   )
+         end if
 
 
-            IF ( .NOT. FOUND ) THEN
+         do i = 1, 2
 
-               CALL CHKIN  ( 'ZZEKECMP'                                )
-               CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
+            call zzekrsd ( hans(i),  sgdscs(1,i), cldscs(1,i), rows(i), &
+                           elts(i),  dval(i),     null(i),     found   )
+
+
+            if ( .not. found ) then
+
+               call chkin  ( 'ZZEKECMP'                                )
+               call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
-               CALL ERRHAN ( '#',  HANS(I)                             )
-               CALL ERRINT ( '#',  CLDSCS(ORDIDX,I)                    )
-               CALL ERRINT ( '#',  ROWS(I)                             )
-               CALL ERRINT ( '#',  ELTS(I)                             )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-               CALL CHKOUT ( 'ZZEKECMP'                                )
-               RETURN
+               call errhan ( '#',  hans(i)                             )
+               call errint ( '#',  cldscs(ordidx,i)                    )
+               call errint ( '#',  rows(i)                             )
+               call errint ( '#',  elts(i)                             )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+               call chkout ( 'ZZEKECMP'                                )
+               return
 
-            END IF
+            end if
 
-         END DO
-
-
-         IF ( NULL(1) .OR. NULL(2) )  THEN
-
-            IF ( .NOT. NULL(2) ) THEN
-               ZZEKECMP = LT
-            ELSE IF ( .NOT. NULL(1) ) THEN
-               ZZEKECMP = GT
-            END IF
-
-         ELSE
-
-            IF ( DVAL(1) .LT. DVAL(2) ) THEN
-               ZZEKECMP = LT
-            ELSE IF ( DVAL(1) .GT. DVAL(2) ) THEN
-               ZZEKECMP = GT
-            END IF
-
-         END IF
+         end do
 
 
-      ELSE IF ( LHSTYP .EQ. CHR ) THEN
+         if ( null(1) .or. null(2) )  then
+
+            if ( .not. null(2) ) then
+               zzekecmp = lt
+            else if ( .not. null(1) ) then
+               zzekecmp = gt
+            end if
+
+         else
+
+            if ( dval(1) .lt. dval(2) ) then
+               zzekecmp = lt
+            else if ( dval(1) .gt. dval(2) ) then
+               zzekecmp = gt
+            end if
+
+         end if
+
+
+      else if ( lhstyp .eq. chr ) then
 !
 !        The entities we're comparing are supposed to be scalar.
 !
-         IF ( RHSTYP .NE. CHR ) THEN
+         if ( rhstyp .ne. chr ) then
 !
 !           You know what kind of semantic error this is.
 !
-            CALL CHKIN  ( 'ZZEKECMP'                         )
-            CALL SETMSG ( 'LHS data type is #; RHSTYP is #.' )
-            CALL ERRINT ( '#', LHSTYP                        )
-            CALL ERRINT ( '#', RHSTYP                        )
-            CALL SIGERR ( 'SPICE(BUG)'                       )
-            CALL CHKOUT ( 'ZZEKECMP'                         )
-            RETURN
+            call chkin  ( 'ZZEKECMP'                         )
+            call setmsg ( 'LHS data type is #; RHSTYP is #.' )
+            call errint ( '#', lhstyp                        )
+            call errint ( '#', rhstyp                        )
+            call sigerr ( 'SPICE(BUG)'                       )
+            call chkout ( 'ZZEKECMP'                         )
+            return
 
-         END IF
-
-
-         DO I = 1, 2
-
-            CALL ZZEKRSC (  HANS  (  I), &
-                            SGDSCS(1,I), &
-                            CLDSCS(1,I), &
-                            ROWS(I), &
-                            ELTS(I), &
-                            CVLEN(I), &
-                            CVAL(I), &
-                            NULL(I), &
-                            FOUND           )
+         end if
 
 
-            IF ( .NOT. FOUND ) THEN
+         do i = 1, 2
 
-               CALL CHKIN  ( 'ZZEKECMP'                                )
-               CALL SETMSG ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
+            call zzekrsc (  hans  (  i), &
+                            sgdscs(1,i), &
+                            cldscs(1,i), &
+                            rows(i), &
+                            elts(i), &
+                            cvlen(i), &
+                            cval(i), &
+                            null(i), &
+                            found           )
+
+
+            if ( .not. found ) then
+
+               call chkin  ( 'ZZEKECMP'                                )
+               call setmsg ( 'EK = #; COLIDX = #; ROW = #; ELTIDX  '  // &
                              '= #.Column entry element was not found.' )
-               CALL ERRHAN ( '#',  HANS(I)                             )
-               CALL ERRINT ( '#',  CLDSCS(ORDIDX,I)                    )
-               CALL ERRINT ( '#',  ROWS(I)                             )
-               CALL ERRINT ( '#',  ELTS(I)                             )
-               CALL SIGERR ( 'SPICE(INVALIDINDEX)'                     )
-               CALL CHKOUT ( 'ZZEKECMP'                                )
-               RETURN
+               call errhan ( '#',  hans(i)                             )
+               call errint ( '#',  cldscs(ordidx,i)                    )
+               call errint ( '#',  rows(i)                             )
+               call errint ( '#',  elts(i)                             )
+               call sigerr ( 'SPICE(INVALIDINDEX)'                     )
+               call chkout ( 'ZZEKECMP'                                )
+               return
 
-            END IF
+            end if
 
 !
 !           Let CMPLEN(I) be the string length to use in comparisons.
 !
-            CMPLEN(I) = MIN ( CVLEN(I), MAXSTR )
+            cmplen(i) = min ( cvlen(i), maxstr )
 
-         END DO
-
-
-         IF ( NULL(1) .OR. NULL(2) )  THEN
-
-            IF ( .NOT. NULL(2) ) THEN
-               ZZEKECMP = LT
-            ELSE IF ( .NOT. NULL(1) ) THEN
-               ZZEKECMP = GT
-            END IF
-
-         ELSE
+         end do
 
 
-            IF (   LLT (   CVAL(1)( :CMPLEN(1) ), &
-                           CVAL(2)( :CMPLEN(2) )  )   ) THEN
+         if ( null(1) .or. null(2) )  then
 
-               ZZEKECMP = LT
+            if ( .not. null(2) ) then
+               zzekecmp = lt
+            else if ( .not. null(1) ) then
+               zzekecmp = gt
+            end if
 
-            ELSE IF (   LGT (  CVAL(1)( :CMPLEN(1) ), &
-                               CVAL(2)( :CMPLEN(2) )  )   ) THEN
-               ZZEKECMP = GT
-            ELSE
-               ZZEKECMP = EQ
-            END IF
-
-         END IF
+         else
 
 
-      ELSE
+            if (   llt (   cval(1)( :cmplen(1) ), &
+                           cval(2)( :cmplen(2) )  )   ) then
+
+               zzekecmp = lt
+
+            else if (   lgt (  cval(1)( :cmplen(1) ), &
+                               cval(2)( :cmplen(2) )  )   ) then
+               zzekecmp = gt
+            else
+               zzekecmp = eq
+            end if
+
+         end if
+
+
+      else
 !
 !        Something untoward has happened in our descriptor.
 !
-         CALL CHKIN  ( 'ZZEKECMP'                        )
-         CALL SETMSG ( 'The data type code # was not '  // &
+         call chkin  ( 'ZZEKECMP'                        )
+         call setmsg ( 'The data type code # was not '  // &
                        'recognized.'                     )
-         CALL ERRINT ( '#',  LHSTYP                      )
-         CALL SIGERR ( 'SPICE(INVALIDDATATYPE)'          )
-         CALL CHKOUT ( 'ZZEKECMP'                        )
-         RETURN
+         call errint ( '#',  lhstyp                      )
+         call sigerr ( 'SPICE(INVALIDDATATYPE)'          )
+         call chkout ( 'ZZEKECMP'                        )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure ZZRYXSPH ( Intersection of ray and sphere )
 
-      SUBROUTINE ZZRYXSPH ( VERTEX, UDIR, R, XPT, FOUND )
+      subroutine zzryxsph ( vertex, udir, r, xpt, found )
 
 ! $ Abstract
 !
@@ -21,13 +21,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      VERTEX ( 3 )
-      DOUBLE PRECISION      UDIR   ( 3 )
-      DOUBLE PRECISION      R
-      DOUBLE PRECISION      XPT    ( 3 )
-      LOGICAL               FOUND
+      double precision      vertex ( 3 )
+      double precision      udir   ( 3 )
+      double precision      r
+      double precision      xpt    ( 3 )
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -119,84 +119,84 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
+      double precision      vdot
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CPAR
-      DOUBLE PRECISION      PERP   ( 3 )
-      DOUBLE PRECISION      PMAG2
-      DOUBLE PRECISION      R2
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      VMAG2
+      double precision      cpar
+      double precision      perp   ( 3 )
+      double precision      pmag2
+      double precision      r2
+      double precision      s
+      double precision      vmag2
 
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Find the component of VERTEX orthogonal to UDIR. If the magnitude
 !     of this component exceeds R, there's no intercept.
 !
-      CPAR = VDOT ( VERTEX, UDIR )
+      cpar = vdot ( vertex, udir )
 
-      CALL VLCOM ( 1.D0, VERTEX, -CPAR, UDIR, PERP )
+      call vlcom ( 1.d0, vertex, -cpar, udir, perp )
 
-      PMAG2 = VDOT( PERP, PERP )
-      R2    = R * R
+      pmag2 = vdot( perp, perp )
+      r2    = r * r
 
 !
 !     Compare squares of magnitudes, rather than magnitudes, for
 !     efficiency.
 !
-      IF ( PMAG2 .GT. R2 ) THEN
-         RETURN
-      END IF
+      if ( pmag2 .gt. r2 ) then
+         return
+      end if
 
-      S     = SQRT (  MAX( 0.D0,  R2-PMAG2 )  )
+      s     = sqrt (  max( 0.d0,  r2-pmag2 )  )
 
-      VMAG2 = VDOT(VERTEX,VERTEX)
+      vmag2 = vdot(vertex,vertex)
 
-      IF ( VMAG2 .GT. R2 ) THEN
+      if ( vmag2 .gt. r2 ) then
 !
 !        If the magnitude of the vertex exceeds R, the vertex is
 !        outside the sphere. Above, we have compared squares of
 !        magnitudes for efficiency.
 !
-         IF ( CPAR .GT. 0.D0 ) THEN
+         if ( cpar .gt. 0.d0 ) then
 !
 !           The ray points away from the sphere; there can be no
 !           intersection.
 !
-            RETURN
+            return
 
-         END IF
+         end if
 !
 !        Given that an intercept exists, we can find it between VERTEX
 !        and VPERP by following -UDIR from PERP towards VERTEX.
 !
-         XPT(1) = PERP(1) - S*UDIR(1)
-         XPT(2) = PERP(2) - S*UDIR(2)
-         XPT(3) = PERP(3) - S*UDIR(3)
+         xpt(1) = perp(1) - s*udir(1)
+         xpt(2) = perp(2) - s*udir(2)
+         xpt(3) = perp(3) - s*udir(3)
 
-      ELSE IF ( VMAG2 .LT. R2 ) THEN
+      else if ( vmag2 .lt. r2 ) then
 !
 !        The vertex is inside the sphere. We can calculate the exit
 !        point by using PERP as a vertex.
 !
-         XPT(1) = PERP(1) + S*UDIR(1)
-         XPT(2) = PERP(2) + S*UDIR(2)
-         XPT(3) = PERP(3) + S*UDIR(3)
+         xpt(1) = perp(1) + s*udir(1)
+         xpt(2) = perp(2) + s*udir(2)
+         xpt(3) = perp(3) + s*udir(3)
 
-      ELSE
+      else
 !
 !        PERP is the sole intercept.
 !
-         XPT(1) = PERP(1)
-         XPT(2) = PERP(2)
-         XPT(3) = PERP(3)
+         xpt(1) = perp(1)
+         xpt(2) = perp(2)
+         xpt(3) = perp(3)
 
-      END IF
+      end if
 
-      FOUND = .TRUE.
+      found = .true.
 
-      END
+      end

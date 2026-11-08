@@ -1,6 +1,6 @@
 !$Procedure      ZZBODBRY ( Return barycenter code for a body )
 
-      INTEGER FUNCTION ZZBODBRY ( BODY )
+      integer function zzbodbry ( body )
 
 ! $ Abstract
 !
@@ -23,7 +23,7 @@
 !
 ! $ Declarations
 
-      INTEGER               BODY
+      integer               body
 
 ! $ Brief_I/O
 !
@@ -173,28 +173,28 @@
 !-&
 
 
-      IF (  ( BODY .GE. 100 ) .AND. ( BODY .LE. 999 )  ) THEN
+      if (  ( body .ge. 100 ) .and. ( body .le. 999 )  ) then
 !
 !        BODY is a "traditional" NAIF planet or natural satellite
 !        ID code.
 !
-         ZZBODBRY = BODY / 100
+         zzbodbry = body / 100
 
-      ELSE IF (  ( BODY .GE. 10000 ) .AND. ( BODY .LE. 99999 )  ) THEN
+      else if (  ( body .ge. 10000 ) .and. ( body .le. 99999 )  ) then
 !
 !        BODY is an "extended" NAIF natural satellite ID code.
 !
-         ZZBODBRY = BODY / 10000
+         zzbodbry = body / 10000
 
-      ELSE
+      else
 !
 !        BODY is a barycenter code or is not associated with a
 !        planetary system.  In either case, we simply return
 !        the input value BODY.
 !
-         ZZBODBRY = BODY
+         zzbodbry = body
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

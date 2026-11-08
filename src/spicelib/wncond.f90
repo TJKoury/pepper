@@ -1,6 +1,6 @@
 !$Procedure WNCOND ( Contract the intervals of a DP window )
 
-      SUBROUTINE WNCOND ( LEFT, RIGHT, WINDOW )
+      subroutine wncond ( left, right, window )
 
 ! $ Abstract
 !
@@ -16,14 +16,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      LEFT
-      DOUBLE PRECISION      RIGHT
-      DOUBLE PRECISION      WINDOW  ( LBCELL:* )
+      double precision      left
+      double precision      right
+      double precision      window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -154,26 +154,26 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'WNCOND' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'WNCOND' )
+      end if
 
 
 !
 !     This is just negative expansion.
 !
-      CALL WNEXPD ( -LEFT, -RIGHT, WINDOW )
+      call wnexpd ( -left, -right, window )
 
 
-      CALL CHKOUT ( 'WNCOND' )
-      RETURN
-      END
+      call chkout ( 'WNCOND' )
+      return
+      end

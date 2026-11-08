@@ -1,13 +1,13 @@
 !$Procedure ZZDSPR ( SGP4 deep space long period )
 
-      SUBROUTINE ZZDSPR (  OPMODE, &
-                           E3,   EE2,   PEO,   PGHO,  PHO,  PINCO, &
-                           PLO,  SE2,   SE3,   SGH2,  SGH3, SGH4, &
-                           SH2,  SH3,   SI2,   SI3,   SL2,  SL3, &
-                           SL4,  T,     XGH2,  XGH3,  XGH4, XH2, &
-                           XH3,  XI2,   XI3,   XL2,   XL3,  XL4, &
-                           ZMOL, ZMOS,  INCLO, DOINIT, &
-                           ECCP, INCLP, NODEP, ARGPP, MP)
+      subroutine zzdspr (  opmode, &
+                           e3,   ee2,   peo,   pgho,  pho,  pinco, &
+                           plo,  se2,   se3,   sgh2,  sgh3, sgh4, &
+                           sh2,  sh3,   si2,   si3,   sl2,  sl3, &
+                           sl4,  t,     xgh2,  xgh3,  xgh4, xh2, &
+                           xh3,  xi2,   xi3,   xl2,   xl3,  xl4, &
+                           zmol, zmos,  inclo, doinit, &
+                           eccp, inclp, nodep, argpp, mp)
 
 ! $ Abstract
 !
@@ -26,50 +26,50 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'zzsgp4.inc'
+      include 'zzsgp4.inc'
 
-      INTEGER               OPMODE
-      DOUBLE PRECISION      E3
-      DOUBLE PRECISION      EE2
-      DOUBLE PRECISION      PEO
-      DOUBLE PRECISION      PGHO
-      DOUBLE PRECISION      PHO
-      DOUBLE PRECISION      PINCO
-      DOUBLE PRECISION      PLO
-      DOUBLE PRECISION      SE2
-      DOUBLE PRECISION      SE3
-      DOUBLE PRECISION      SGH2
-      DOUBLE PRECISION      SGH3
-      DOUBLE PRECISION      SGH4
-      DOUBLE PRECISION      SH2
-      DOUBLE PRECISION      SH3
-      DOUBLE PRECISION      SI2
-      DOUBLE PRECISION      SI3
-      DOUBLE PRECISION      SL2
-      DOUBLE PRECISION      SL3
-      DOUBLE PRECISION      SL4
-      DOUBLE PRECISION      T
-      DOUBLE PRECISION      XGH2
-      DOUBLE PRECISION      XGH3
-      DOUBLE PRECISION      XGH4
-      DOUBLE PRECISION      XH2
-      DOUBLE PRECISION      XH3
-      DOUBLE PRECISION      XI2
-      DOUBLE PRECISION      XI3
-      DOUBLE PRECISION      XL2
-      DOUBLE PRECISION      XL3
-      DOUBLE PRECISION      XL4
-      DOUBLE PRECISION      ZMOL
-      DOUBLE PRECISION      ZMOS
-      DOUBLE PRECISION      INCLO
-      LOGICAL               DOINIT
-      DOUBLE PRECISION      ECCP
-      DOUBLE PRECISION      INCLP
-      DOUBLE PRECISION      NODEP
-      DOUBLE PRECISION      ARGPP
-      DOUBLE PRECISION      MP
+      integer               opmode
+      double precision      e3
+      double precision      ee2
+      double precision      peo
+      double precision      pgho
+      double precision      pho
+      double precision      pinco
+      double precision      plo
+      double precision      se2
+      double precision      se3
+      double precision      sgh2
+      double precision      sgh3
+      double precision      sgh4
+      double precision      sh2
+      double precision      sh3
+      double precision      si2
+      double precision      si3
+      double precision      sl2
+      double precision      sl3
+      double precision      sl4
+      double precision      t
+      double precision      xgh2
+      double precision      xgh3
+      double precision      xgh4
+      double precision      xh2
+      double precision      xh3
+      double precision      xi2
+      double precision      xi3
+      double precision      xl2
+      double precision      xl3
+      double precision      xl4
+      double precision      zmol
+      double precision      zmos
+      double precision      inclo
+      logical               doinit
+      double precision      eccp
+      double precision      inclp
+      double precision      nodep
+      double precision      argpp
+      double precision      mp
 
 ! $ Brief_I/O
 !
@@ -252,112 +252,112 @@
 !
 !     Local Variables
 !
-      DOUBLE PRECISION      ALFDP
-      DOUBLE PRECISION      BETDP
-      DOUBLE PRECISION      COSIP
-      DOUBLE PRECISION      COSOP
-      DOUBLE PRECISION      DALF
-      DOUBLE PRECISION      DBET
-      DOUBLE PRECISION      DLS
-      DOUBLE PRECISION      F2
-      DOUBLE PRECISION      F3
-      DOUBLE PRECISION      PE
-      DOUBLE PRECISION      PGH
-      DOUBLE PRECISION      PH
-      DOUBLE PRECISION      PINC
-      DOUBLE PRECISION      PL
-      DOUBLE PRECISION      SEL
-      DOUBLE PRECISION      SES
-      DOUBLE PRECISION      SGHL
-      DOUBLE PRECISION      SGHS
-      DOUBLE PRECISION      SHL
-      DOUBLE PRECISION      SHS
-      DOUBLE PRECISION      SIL
-      DOUBLE PRECISION      SINIP
-      DOUBLE PRECISION      SINOP
-      DOUBLE PRECISION      SINZF
-      DOUBLE PRECISION      SIS
-      DOUBLE PRECISION      SLL
-      DOUBLE PRECISION      SLS
-      DOUBLE PRECISION      XLS
-      DOUBLE PRECISION      XNOH
-      DOUBLE PRECISION      ZEL
-      DOUBLE PRECISION      ZES
-      DOUBLE PRECISION      ZF
-      DOUBLE PRECISION      ZM
-      DOUBLE PRECISION      ZNL
-      DOUBLE PRECISION      ZNS
+      double precision      alfdp
+      double precision      betdp
+      double precision      cosip
+      double precision      cosop
+      double precision      dalf
+      double precision      dbet
+      double precision      dls
+      double precision      f2
+      double precision      f3
+      double precision      pe
+      double precision      pgh
+      double precision      ph
+      double precision      pinc
+      double precision      pl
+      double precision      sel
+      double precision      ses
+      double precision      sghl
+      double precision      sghs
+      double precision      shl
+      double precision      shs
+      double precision      sil
+      double precision      sinip
+      double precision      sinop
+      double precision      sinzf
+      double precision      sis
+      double precision      sll
+      double precision      sls
+      double precision      xls
+      double precision      xnoh
+      double precision      zel
+      double precision      zes
+      double precision      zf
+      double precision      zm
+      double precision      znl
+      double precision      zns
 
 !
 !     SPICELIB routines.
 !
-      DOUBLE PRECISION         TWOPI
-      DOUBLE PRECISION         PI
-      LOGICAL                  RETURN
+      double precision         twopi
+      double precision         pi
+      logical                  return
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZDSPR' )
+      call chkin ( 'ZZDSPR' )
 
 !
 !     Local constants.
 !
-      ZES  = 0.01675D0
-      ZEL  = 0.05490D0
-      ZNS  = 1.19459D-5
-      ZNL  = 1.5835218D-4
+      zes  = 0.01675d0
+      zel  = 0.05490d0
+      zns  = 1.19459d-5
+      znl  = 1.5835218d-4
 
 !
 !     Calculate time varying periodics.
 !
-      ZM   = ZMOS + ZNS*T
+      zm   = zmos + zns*t
 
-      IF (DOINIT) ZM = ZMOS
+      if (doinit) zm = zmos
 
-      ZF   = ZM + 2.0D0*ZES*DSIN(ZM)
-      SINZF= DSIN(ZF)
-      F2   =  0.5D0*SINZF*SINZF - 0.25D0
-      F3   = -0.5D0*SINZF*DCOS(ZF)
-      SES  = SE2*F2 + SE3*F3
-      SIS  = SI2*F2 + SI3*F3
-      SLS  = SL2*F2 + SL3*F3 + SL4*SINZF
-      SGHS = SGH2*F2 + SGH3*F3 + SGH4*SINZF
-      SHS  = SH2*F2 + SH3*F3
-      ZM   = ZMOL + ZNL*T
+      zf   = zm + 2.0d0*zes*dsin(zm)
+      sinzf= dsin(zf)
+      f2   =  0.5d0*sinzf*sinzf - 0.25d0
+      f3   = -0.5d0*sinzf*dcos(zf)
+      ses  = se2*f2 + se3*f3
+      sis  = si2*f2 + si3*f3
+      sls  = sl2*f2 + sl3*f3 + sl4*sinzf
+      sghs = sgh2*f2 + sgh3*f3 + sgh4*sinzf
+      shs  = sh2*f2 + sh3*f3
+      zm   = zmol + znl*t
 
-      IF (DOINIT) ZM = ZMOL
+      if (doinit) zm = zmol
 
-      ZF   = ZM + 2.0D0*ZEL*DSIN(ZM)
-      SINZF= DSIN(ZF)
-      F2   =  0.5D0*SINZF*SINZF - 0.25D0
-      F3   = -0.5D0*SINZF*DCOS(ZF)
-      SEL  = EE2*F2 + E3*F3
-      SIL  = XI2*F2 + XI3*F3
-      SLL  = XL2*F2 + XL3*F3 + XL4*SINZF
-      SGHL = XGH2*F2 + XGH3*F3 + XGH4*SINZF
-      SHL  = XH2*F2 + XH3*F3
-      PE   = SES + SEL
-      PINC = SIS + SIL
-      PL   = SLS + SLL
-      PGH  = SGHS + SGHL
-      PH   = SHS + SHL
+      zf   = zm + 2.0d0*zel*dsin(zm)
+      sinzf= dsin(zf)
+      f2   =  0.5d0*sinzf*sinzf - 0.25d0
+      f3   = -0.5d0*sinzf*dcos(zf)
+      sel  = ee2*f2 + e3*f3
+      sil  = xi2*f2 + xi3*f3
+      sll  = xl2*f2 + xl3*f3 + xl4*sinzf
+      sghl = xgh2*f2 + xgh3*f3 + xgh4*sinzf
+      shl  = xh2*f2 + xh3*f3
+      pe   = ses + sel
+      pinc = sis + sil
+      pl   = sls + sll
+      pgh  = sghs + sghl
+      ph   = shs + shl
 
-      IF ( .NOT. DOINIT) THEN
+      if ( .not. doinit) then
 
-         PE    = PE   - PEO
-         PINC  = PINC - PINCO
-         PL    = PL   - PLO
-         PGH   = PGH  - PGHO
-         PH    = PH   - PHO
-         INCLP = INCLP  + PINC
-         ECCP  = ECCP   + PE
-         SINIP = DSIN(INCLP)
-         COSIP = DCOS(INCLP)
+         pe    = pe   - peo
+         pinc  = pinc - pinco
+         pl    = pl   - plo
+         pgh   = pgh  - pgho
+         ph    = ph   - pho
+         inclp = inclp  + pinc
+         eccp  = eccp   + pe
+         sinip = dsin(inclp)
+         cosip = dcos(inclp)
 
 !
 !        Apply periodics directly.
@@ -380,73 +380,73 @@
 !
 !        use next line for gsfc version and perturbed inclination
 !
-         IF (INCLP.GE.0.2D0) THEN
+         if (inclp.ge.0.2d0) then
 
-            PH     = PH/SINIP
-            PGH    = PGH - COSIP*PH
-            ARGPP  = ARGPP + PGH
-            NODEP  = NODEP + PH
-            MP     = MP + PL
+            ph     = ph/sinip
+            pgh    = pgh - cosip*ph
+            argpp  = argpp + pgh
+            nodep  = nodep + ph
+            mp     = mp + pl
 
-         ELSE
+         else
 
 !
 !           Apply periodics with Lyddane modification.
 !
-            SINOP  = DSIN(NODEP)
-            COSOP  = DCOS(NODEP)
-            ALFDP  = SINIP*SINOP
-            BETDP  = SINIP*COSOP
-            DALF   =  PH*COSOP + PINC*COSIP*SINOP
-            DBET   = -PH*SINOP + PINC*COSIP*COSOP
-            ALFDP  = ALFDP + DALF
-            BETDP  = BETDP + DBET
-            NODEP  = DMOD(NODEP,TWOPI())
+            sinop  = dsin(nodep)
+            cosop  = dcos(nodep)
+            alfdp  = sinip*sinop
+            betdp  = sinip*cosop
+            dalf   =  ph*cosop + pinc*cosip*sinop
+            dbet   = -ph*sinop + pinc*cosip*cosop
+            alfdp  = alfdp + dalf
+            betdp  = betdp + dbet
+            nodep  = dmod(nodep,twopi())
 
 !
 !           sgp4fix for afspc written intrinsic functions
 !           NODEP used without a trigonometric function ahead
 !
 
-            IF ( (NODEP  .LT. 0.0D0)      .AND. &
-                 (OPMODE .EQ. AFSPC)  )   THEN
-               NODEP = NODEP + TWOPI()
-            END IF
+            if ( (nodep  .lt. 0.0d0)      .and. &
+                 (opmode .eq. afspc)  )   then
+               nodep = nodep + twopi()
+            end if
 
-            XLS    = MP + ARGPP + COSIP*NODEP
-            DLS    = PL + PGH - PINC*NODEP*SINIP
-            XLS    = XLS + DLS
-            XNOH   = NODEP
-            NODEP  = DATAN2(ALFDP,BETDP)
+            xls    = mp + argpp + cosip*nodep
+            dls    = pl + pgh - pinc*nodep*sinip
+            xls    = xls + dls
+            xnoh   = nodep
+            nodep  = datan2(alfdp,betdp)
 
 !
 !           sgp4fix for afspc written intrinsic functions
 !           NODEP used without a trigonometric function ahead
 !
 
-            IF ( (NODEP .LT. 0.0D0)  .AND. &
-                 (OPMODE .EQ. AFSPC)  )  THEN
-               NODEP = NODEP + TWOPI()
-            END IF
+            if ( (nodep .lt. 0.0d0)  .and. &
+                 (opmode .eq. afspc)  )  then
+               nodep = nodep + twopi()
+            end if
 
-            IF (DABS(XNOH-NODEP) .GT. PI()) THEN
+            if (dabs(xnoh-nodep) .gt. pi()) then
 
-               IF (NODEP .LT. XNOH) THEN
-                  NODEP = NODEP+TWOPI()
-               ELSE
-                  NODEP = NODEP-TWOPI()
-               END IF
+               if (nodep .lt. xnoh) then
+                  nodep = nodep+twopi()
+               else
+                  nodep = nodep-twopi()
+               end if
 
-            END IF
+            end if
 
-            MP   = MP + PL
-            ARGPP=  XLS - MP - COSIP*NODEP
+            mp   = mp + pl
+            argpp=  xls - mp - cosip*nodep
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZDSPR' )
+      call chkout ( 'ZZDSPR' )
 
-      RETURN
-      END
+      return
+      end

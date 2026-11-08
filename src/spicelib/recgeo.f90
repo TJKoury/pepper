@@ -1,6 +1,6 @@
 !$Procedure RECGEO ( Rectangular to geodetic )
 
-      SUBROUTINE RECGEO ( RECTAN, RE, F,  LON, LAT, ALT )
+      subroutine recgeo ( rectan, re, f,  lon, lat, alt )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RECTAN ( 3 )
-      DOUBLE PRECISION   RE
-      DOUBLE PRECISION   F
-      DOUBLE PRECISION   LON
-      DOUBLE PRECISION   LAT
-      DOUBLE PRECISION   ALT
+      double precision   rectan ( 3 )
+      double precision   re
+      double precision   f
+      double precision   lon
+      double precision   lat
+      double precision   alt
 
 ! $ Brief_I/O
 !
@@ -400,39 +400,39 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION A
-      DOUBLE PRECISION B
-      DOUBLE PRECISION C
-      DOUBLE PRECISION BASE   (3)
-      DOUBLE PRECISION NORMAL (3)
-      DOUBLE PRECISION RADIUS
+      double precision a
+      double precision b
+      double precision c
+      double precision base   (3)
+      double precision normal (3)
+      double precision radius
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'RECGEO' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'RECGEO' )
+      end if
 
 
 !
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      IF ( RE.LE. 0.0D0 ) THEN
-          CALL SETMSG ( 'Equatorial radius was *.' )
-          CALL ERRDP  ( '*', RE                    )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'   )
-          CALL CHKOUT ( 'RECGEO'                   )
-          RETURN
-      END IF
+      if ( re.le. 0.0d0 ) then
+          call setmsg ( 'Equatorial radius was *.' )
+          call errdp  ( '*', re                    )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
+          call chkout ( 'RECGEO'                   )
+          return
+      end if
 
 !
 !     If the flattening coefficient is greater than one, the length
@@ -440,44 +440,44 @@
 !     the length of the axis is zero. Either case is a problem, so
 !     signal an error and check out.
 !
-      IF ( F .GE. 1 ) THEN
-          CALL SETMSG ( 'Flattening coefficient was *.'  )
-          CALL ERRDP  ( '*', F                           )
-          CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-          CALL CHKOUT ( 'RECGEO'                         )
-          RETURN
-      END IF
+      if ( f .ge. 1 ) then
+          call setmsg ( 'Flattening coefficient was *.'  )
+          call errdp  ( '*', f                           )
+          call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+          call chkout ( 'RECGEO'                         )
+          return
+      end if
 
 !
 !     Determine the lengths of the axes of the reference ellipsoid.
 !
-      A = RE
-      B = RE
-      C = RE - F*RE
+      a = re
+      b = re
+      c = re - f*re
 
 !
 !     Find the point on the reference spheroid closest to the input
 !     point. From this closest point determine the surface normal.
 !
-      CALL NEARPT ( RECTAN, A, B, C, BASE, ALT    )
-      CALL SURFNM (         A, B, C, BASE, NORMAL )
+      call nearpt ( rectan, a, b, c, base, alt    )
+      call surfnm (         a, b, c, base, normal )
 !
 !     Using the surface normal, determine the latitude and longitude
 !     of the input point.
 !
-      CALL RECLAT ( NORMAL, RADIUS, LON, LAT )
+      call reclat ( normal, radius, lon, lat )
 
 !
 !     Compute longitude directly rather than from the normal vector.
 !
-      IF (       ( RECTAN(1) .EQ.0.D0 ) &
-           .AND. ( RECTAN(2) .EQ.0.D0 ) ) THEN
+      if (       ( rectan(1) .eq.0.d0 ) &
+           .and. ( rectan(2) .eq.0.d0 ) ) then
 
-         LON = 0.D0
-      ELSE
-         LON = DATAN2 ( RECTAN(2), RECTAN(1) )
-      END IF
+         lon = 0.d0
+      else
+         lon = datan2 ( rectan(2), rectan(1) )
+      end if
 
-      CALL CHKOUT ( 'RECGEO' )
-      RETURN
-      END
+      call chkout ( 'RECGEO' )
+      return
+      end

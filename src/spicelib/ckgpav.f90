@@ -1,7 +1,7 @@
 !$Procedure CKGPAV ( C-kernel, get pointing and angular velocity )
 
-      SUBROUTINE CKGPAV ( INST, SCLKDP, TOL, REF, CMAT, AV, CLKOUT, &
-                          FOUND )
+      subroutine ckgpav ( inst, sclkdp, tol, ref, cmat, av, clkout, &
+                          found )
 
 ! $ Abstract
 !
@@ -19,19 +19,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'frmtyp.inc'
-      INCLUDE               'zzctr.inc'
+      include               'frmtyp.inc'
+      include               'zzctr.inc'
 
-      INTEGER               INST
-      DOUBLE PRECISION      SCLKDP
-      DOUBLE PRECISION      TOL
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      CMAT   ( 3, 3 )
-      DOUBLE PRECISION      AV     ( 3    )
-      DOUBLE PRECISION      CLKOUT
-      LOGICAL               FOUND
+      integer               inst
+      double precision      sclkdp
+      double precision      tol
+      character*(*)         ref
+      double precision      cmat   ( 3, 3 )
+      double precision      av     ( 3    )
+      double precision      clkout
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -908,9 +908,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local parameters
@@ -934,122 +934,122 @@
 !                   a name and a summary have the same length in bytes.)
 !
 
-      INTEGER               NDC
-      PARAMETER           ( NDC = 2 )
+      integer               ndc
+      parameter           ( ndc = 2 )
 
-      INTEGER               NIC
-      PARAMETER           ( NIC = 6 )
+      integer               nic
+      parameter           ( nic = 6 )
 
-      INTEGER               NC
-      PARAMETER           ( NC = NDC + ( NIC + 1 )/2 )
+      integer               nc
+      parameter           ( nc = ndc + ( nic + 1 )/2 )
 
-      INTEGER               IDLEN
-      PARAMETER           ( IDLEN = NC * 8 )
+      integer               idlen
+      parameter           ( idlen = nc * 8 )
 
 !
 !     Saved frame name length.
 !
-      INTEGER               FRNMLN
-      PARAMETER           ( FRNMLN = 32 )
+      integer               frnmln
+      parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(IDLEN)     SEGID
+      character*(idlen)     segid
 
-      DOUBLE PRECISION      DCD      ( NDC  )
-      DOUBLE PRECISION      DESCR    ( NC   )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      OMEGA    ( 3    )
-      DOUBLE PRECISION      ROT      ( 3, 3 )
-      DOUBLE PRECISION      TMPMAT   ( 3, 3 )
-      DOUBLE PRECISION      TMPV     ( 3 )
-      DOUBLE PRECISION      XFORM    ( 6, 6 )
+      double precision      dcd      ( ndc  )
+      double precision      descr    ( nc   )
+      double precision      et
+      double precision      omega    ( 3    )
+      double precision      rot      ( 3, 3 )
+      double precision      tmpmat   ( 3, 3 )
+      double precision      tmpv     ( 3 )
+      double precision      xform    ( 6, 6 )
 
-      INTEGER               CENTER
-      INTEGER               HANDLE
-      INTEGER               ICD      ( NIC  )
-      INTEGER               REFREQ
-      INTEGER               REFSEG
-      INTEGER               SCLK
-      INTEGER               TYPE1
-      INTEGER               TYPE2
-      INTEGER               TYPEID
+      integer               center
+      integer               handle
+      integer               icd      ( nic  )
+      integer               refreq
+      integer               refseg
+      integer               sclk
+      integer               type1
+      integer               type2
+      integer               typeid
 
-      LOGICAL               NEEDAV
-      LOGICAL               PFND
-      LOGICAL               SFND
-      LOGICAL               GOTIT
+      logical               needav
+      logical               pfnd
+      logical               sfnd
+      logical               gotit
 
 !
 !     Saved frame name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(FRNMLN)    SVREF
-      INTEGER               SVREFR
+      integer               svctr1 ( ctrsiz )
+      character*(frnmln)    svref
+      integer               svrefr
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved frame name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVREF
-      SAVE                  SVREFR
+      save                  svctr1
+      save                  svref
+      save                  svrefr
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKGPAV' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'CKGPAV' )
+      end if
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Need angular velocity data.
 !     Assume the segment won't be found until it really is.
 !
-      NEEDAV = .TRUE.
-      FOUND  = .FALSE.
+      needav = .true.
+      found  = .false.
 
 !
 !     If the tolerance is less than zero, we go no further.
 !
-      IF ( TOL .LT. 0.0D0 ) THEN
-         CALL CHKOUT ( 'CKGPAV' )
-         RETURN
-      END IF
+      if ( tol .lt. 0.0d0 ) then
+         call chkout ( 'CKGPAV' )
+         return
+      end if
 
 !
 !     Begin a search for this instrument and time, and get the first
 !     applicable segment.
 !
-      CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV )
-      CALL CKSNS ( HANDLE, DESCR,  SEGID, SFND   )
+      call ckbss ( inst,   sclkdp, tol,   needav )
+      call cksns ( handle, descr,  segid, sfnd   )
 
 !
 !     Keep trying candidate segments until a segment can produce a
@@ -1059,63 +1059,63 @@
 !     Check FAILED to prevent an infinite loop if an error is detected
 !     by a SPICELIB routine and the error handling is not set to abort.
 !
-      DO WHILE ( ( SFND ) .AND. ( .NOT. FAILED () ) )
+      do while ( ( sfnd ) .and. ( .not. failed () ) )
 
-         CALL CKPFS ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV, &
-                      CMAT,   AV,    CLKOUT, PFND          )
+         call ckpfs ( handle, descr, sclkdp, tol, needav, &
+                      cmat,   av,    clkout, pfnd          )
 
-         IF ( PFND ) THEN
+         if ( pfnd ) then
 !
 !           Found one. If the data aren't already referenced to the
 !           requested frame, rotate them.
 !
-            CALL DAFUS  ( DESCR, NDC, NIC, DCD, ICD )
-            REFSEG = ICD( 2 )
+            call dafus  ( descr, ndc, nic, dcd, icd )
+            refseg = icd( 2 )
 !
 !           Look up the id code for the requested reference frame.
 !
-            CALL ZZNAMFRM ( SVCTR1, SVREF, SVREFR, REF, REFREQ )
+            call zznamfrm ( svctr1, svref, svrefr, ref, refreq )
 
-            IF ( REFREQ .NE. REFSEG ) THEN
+            if ( refreq .ne. refseg ) then
 !
 !              We may need to convert the output ticks CLKOUT to ET
 !              so that we can get the needed state transformation
 !              matrix.  This is the case if either of the frames
 !              is non-inertial.
 !
-               CALL FRINFO ( REFREQ, CENTER, TYPE1, TYPEID, GOTIT )
-               CALL FRINFO ( REFSEG, CENTER, TYPE2, TYPEID, GOTIT )
+               call frinfo ( refreq, center, type1, typeid, gotit )
+               call frinfo ( refseg, center, type2, typeid, gotit )
 
-               IF (       TYPE1 .EQ. INERTL &
-                    .AND. TYPE2 .EQ. INERTL ) THEN
+               if (       type1 .eq. inertl &
+                    .and. type2 .eq. inertl ) then
 !
 !                 Any old value of ET will do in this case.  We'll
 !                 use zero.
 !
-                  ET = 0.0D0
+                  et = 0.0d0
 
-               ELSE
+               else
 !
 !                 Look up the spacecraft clock id to use to convert
 !                 the output CLKOUT to ET.
 !
-                  CALL CKMETA ( INST, 'SCLK', SCLK )
-                  CALL SCT2E  ( SCLK, CLKOUT, ET   )
+                  call ckmeta ( inst, 'SCLK', sclk )
+                  call sct2e  ( sclk, clkout, et   )
 
-               END IF
+               end if
 !
 !              Get the transformation from the requested frame to
 !              the segment frame at ET.
 !
-               CALL FRMCHG ( REFREQ, REFSEG, ET, XFORM )
+               call frmchg ( refreq, refseg, et, xform )
 !
 !              If FRMCHG detects that the reference frame is invalid
 !              then return from this routine with FOUND equal to false.
 !
-               IF ( FAILED () ) THEN
-                  CALL CHKOUT ( 'CKGPAV' )
-                  RETURN
-               END IF
+               if ( failed () ) then
+                  call chkout ( 'CKGPAV' )
+                  return
+               end if
 !
 !              First transform the attitude information. Get the
 !              rotation and angular velocity associated with the
@@ -1123,9 +1123,9 @@
 !              Then convert CMAT so that it maps from request frame
 !              to C-matrix frame.
 !
-               CALL XF2RAV ( XFORM,   ROT,  OMEGA  )
-               CALL MXM    ( CMAT,    ROT,  TMPMAT )
-               CALL MOVED  ( TMPMAT,  9,    CMAT   )
+               call xf2rav ( xform,   rot,  omega  )
+               call mxm    ( cmat,    rot,  tmpmat )
+               call moved  ( tmpmat,  9,    cmat   )
 !
 !              Now transform the angular velocity information.
 !              Currently we have OMEGA (the angular velocity of
@@ -1245,23 +1245,23 @@
 !                                          CMAT         ROT
 !
 !
-               CALL MTXV ( ROT,    AV,    TMPV )
-               CALL VADD ( OMEGA,  TMPV,  AV   )
+               call mtxv ( rot,    av,    tmpv )
+               call vadd ( omega,  tmpv,  av   )
 
-            END IF
+            end if
 
-            FOUND = .TRUE.
+            found = .true.
 
-            CALL CHKOUT ( 'CKGPAV' )
-            RETURN
+            call chkout ( 'CKGPAV' )
+            return
 
-         END IF
+         end if
 
-         CALL CKSNS ( HANDLE, DESCR, SEGID, SFND )
+         call cksns ( handle, descr, segid, sfnd )
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'CKGPAV' )
-      RETURN
-      END
+      call chkout ( 'CKGPAV' )
+      return
+      end

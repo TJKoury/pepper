@@ -1,11 +1,11 @@
 !$Procedure GFEVNT ( GF, Geometric event finder )
 
-      SUBROUTINE GFEVNT ( UDSTEP,   UDREFN,   GQUANT,   QNPARS, &
-                          QPNAMS,   QCPARS,   QDPARS,   QIPARS, &
-                          QLPARS,   OP,       REFVAL,   TOL, &
-                          ADJUST,   CNFINE,   RPT,      UDREPI, &
-                          UDREPU,   UDREPF,   MW,       NW, &
-                          WORK,     BAIL,     UDBAIL,   RESULT   )
+      subroutine gfevnt ( udstep,   udrefn,   gquant,   qnpars, &
+                          qpnams,   qcpars,   qdpars,   qipars, &
+                          qlpars,   op,       refval,   tol, &
+                          adjust,   cnfine,   rpt,      udrepi, &
+                          udrepu,   udrepf,   mw,       nw, &
+                          work,     bail,     udbail,   result   )
 
 ! $ Abstract
 !
@@ -29,43 +29,43 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'gf.inc'
-      INCLUDE 'zzgf.inc'
-      INCLUDE 'zzabcorr.inc'
+      include 'gf.inc'
+      include 'zzgf.inc'
+      include 'zzabcorr.inc'
 
-      INTEGER               MAXPAR
-      PARAMETER           ( MAXPAR = 10 )
+      integer               maxpar
+      parameter           ( maxpar = 10 )
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      EXTERNAL              UDSTEP
-      EXTERNAL              UDREFN
-      CHARACTER*(*)         GQUANT
-      INTEGER               QNPARS
-      CHARACTER*(*)         QPNAMS ( * )
-      CHARACTER*(*)         QCPARS ( * )
-      DOUBLE PRECISION      QDPARS ( * )
-      INTEGER               QIPARS ( * )
-      LOGICAL               QLPARS ( * )
-      CHARACTER*(*)         OP
-      DOUBLE PRECISION      REFVAL
-      DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      ADJUST
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      LOGICAL               RPT
-      EXTERNAL              UDREPI
-      EXTERNAL              UDREPU
-      EXTERNAL              UDREPF
-      INTEGER               MW
-      INTEGER               NW
-      DOUBLE PRECISION      WORK   ( LBCELL : MW, NW )
-      LOGICAL               BAIL
-      LOGICAL               UDBAIL
-      EXTERNAL              UDBAIL
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      external              udstep
+      external              udrefn
+      character*(*)         gquant
+      integer               qnpars
+      character*(*)         qpnams ( * )
+      character*(*)         qcpars ( * )
+      double precision      qdpars ( * )
+      integer               qipars ( * )
+      logical               qlpars ( * )
+      character*(*)         op
+      double precision      refval
+      double precision      tol
+      double precision      adjust
+      double precision      cnfine ( lbcell : * )
+      logical               rpt
+      external              udrepi
+      external              udrepu
+      external              udrepf
+      integer               mw
+      integer               nw
+      double precision      work   ( lbcell : mw, nw )
+      logical               bail
+      logical               udbail
+      external              udbail
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1575,82 +1575,82 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
+      integer               isrchc
+      logical               return
 
-      EXTERNAL              ZZGFUDLT
+      external              zzgfudlt
 
 
 !
 !     Angular separation routines.
 !
-      EXTERNAL              ZZGFSPDC
-      EXTERNAL              ZZGFSPGQ
+      external              zzgfspdc
+      external              zzgfspgq
 
 !
 !     Distance routines.
 !
-      EXTERNAL              ZZGFDIDC
-      EXTERNAL              ZZGFDIGQ
+      external              zzgfdidc
+      external              zzgfdigq
 
 !
 !     Range rate routines.
 !
-      EXTERNAL              ZZGFRRDC
-      EXTERNAL              ZZGFRRGQ
+      external              zzgfrrdc
+      external              zzgfrrgq
 
 !
 !     Phase angle routines.
 !
-      EXTERNAL              ZZGFPADC
-      EXTERNAL              ZZGFPAGQ
+      external              zzgfpadc
+      external              zzgfpagq
 
 !
 !     Illumination angle routines.
 !
-      EXTERNAL              ZZGFILDC
-      EXTERNAL              ZZGFILGQ
+      external              zzgfildc
+      external              zzgfilgq
 
 
 !
 !     Event quantity codes:
 !
-      INTEGER               SEP
-      PARAMETER           ( SEP    = 1 )
+      integer               sep
+      parameter           ( sep    = 1 )
 
-      INTEGER               DIST
-      PARAMETER           ( DIST   = 2 )
+      integer               dist
+      parameter           ( dist   = 2 )
 
-      INTEGER               COORD
-      PARAMETER           ( COORD  = 3 )
+      integer               coord
+      parameter           ( coord  = 3 )
 
-      INTEGER               RNGRAT
-      PARAMETER           ( RNGRAT = 4 )
+      integer               rngrat
+      parameter           ( rngrat = 4 )
 
-      INTEGER               PHASE
-      PARAMETER           ( PHASE  = 5 )
+      integer               phase
+      parameter           ( phase  = 5 )
 
-      INTEGER               ILUANG
-      PARAMETER           ( ILUANG = 6 )
+      integer               iluang
+      parameter           ( iluang = 6 )
 
-      INTEGER               ANGSPD
-      PARAMETER           ( ANGSPD = 7 )
+      integer               angspd
+      parameter           ( angspd = 7 )
 
-      INTEGER               APDIAM
-      PARAMETER           ( APDIAM = 8 )
+      integer               apdiam
+      parameter           ( apdiam = 8 )
 
 
 !
 !     Number of supported quantities:
 !
-      INTEGER               NQ
-      PARAMETER           ( NQ     = 8 )
+      integer               nq
+      parameter           ( nq     = 8 )
 
 !
 !     Number of supported comparison operators:
 !
-      INTEGER               NC
-      PARAMETER           ( NC     = 7 )
+      integer               nc
+      parameter           ( nc     = 7 )
 
 !
 !     Assorted string lengths:
@@ -1660,82 +1660,82 @@
 !     MAXOP is the maximum string length for comparison operators.
 !     MAXOP may grow if new comparisons are added.
 !
-      INTEGER               MAXOP
-      PARAMETER           ( MAXOP = 6 )
+      integer               maxop
+      parameter           ( maxop = 6 )
 
 !
 !     MAXCLN is the maximum character string length of the quantity
 !     parameter names and character quantity parameters.
 !
-      INTEGER               MAXCLN
-      PARAMETER           ( MAXCLN = 80 )
+      integer               maxcln
+      parameter           ( maxcln = 80 )
 
 
 !
 !     Local variables
 !
-      CHARACTER*(MAXCLN)    ABCORR
-      CHARACTER*(MAXCLN)    ANGTYP
-      CHARACTER*(MAXCLN)    CNAMES ( NC )
-      CHARACTER*(MAXCLN)    CORNAM
-      CHARACTER*(MAXCLN)    CORSYS
-      CHARACTER*(MAXCLN)    CPARS  ( MAXPAR )
-      CHARACTER*(MAXCLN)    DREF
-      CHARACTER*(MAXCLN)    FRAME  ( 2 )
-      CHARACTER*(MAXCLN)    ILLUM
-      CHARACTER*(MAXCLN)    METHOD
-      CHARACTER*(MAXCLN)    OBSRVR
-      CHARACTER*(MAXCLN)    OF     ( 2 )
-      CHARACTER*(MAXCLN)    PNAMES ( MAXPAR )
-      CHARACTER*(MAXCLN)    QNAMES ( NQ     )
-      CHARACTER*(MAXCLN)    QPARS  ( MAXPAR, NQ )
-      CHARACTER*(MAXCLN)    QUANT
-      CHARACTER*(MAXCLN)    REF
-      CHARACTER*(MAXCLN)    SHAPE  ( 2 )
-      CHARACTER*(MAXCLN)    TARGET
-      CHARACTER*(MAXCLN)    VECDEF
-      CHARACTER*(MAXOP)     UOP
-      CHARACTER*(MXBEGM)    RPTPRE ( 2 )
-      CHARACTER*(MXBEGM)    SRCPRE ( 2, NQ )
-      CHARACTER*(MXENDM)    SRCSUF ( 2, NQ )
+      character*(maxcln)    abcorr
+      character*(maxcln)    angtyp
+      character*(maxcln)    cnames ( nc )
+      character*(maxcln)    cornam
+      character*(maxcln)    corsys
+      character*(maxcln)    cpars  ( maxpar )
+      character*(maxcln)    dref
+      character*(maxcln)    frame  ( 2 )
+      character*(maxcln)    illum
+      character*(maxcln)    method
+      character*(maxcln)    obsrvr
+      character*(maxcln)    of     ( 2 )
+      character*(maxcln)    pnames ( maxpar )
+      character*(maxcln)    qnames ( nq     )
+      character*(maxcln)    qpars  ( maxpar, nq )
+      character*(maxcln)    quant
+      character*(maxcln)    ref
+      character*(maxcln)    shape  ( 2 )
+      character*(maxcln)    target
+      character*(maxcln)    vecdef
+      character*(maxop)     uop
+      character*(mxbegm)    rptpre ( 2 )
+      character*(mxbegm)    srcpre ( 2, nq )
+      character*(mxendm)    srcsuf ( 2, nq )
 
-      DOUBLE PRECISION      DT
+      double precision      dt
 
-      INTEGER               I
-      INTEGER               LOC
-      INTEGER               NPASS
-      INTEGER               QTNUM
+      integer               i
+      integer               loc
+      integer               npass
+      integer               qtnum
 
-      LOGICAL               FIRST
-      LOGICAL               LOCALX
-      LOGICAL               NOADJX
+      logical               first
+      logical               localx
+      logical               noadjx
 
-      DOUBLE PRECISION      DVEC   ( 3 )
-      DOUBLE PRECISION      SPOINT ( 3 )
+      double precision      dvec   ( 3 )
+      double precision      spoint ( 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  FIRST
-      SAVE                  CNAMES
-      SAVE                  DREF
-      SAVE                  QNAMES
-      SAVE                  QPARS
-      SAVE                  SRCPRE
-      SAVE                  SRCSUF
+      save                  first
+      save                  cnames
+      save                  dref
+      save                  qnames
+      save                  qpars
+      save                  srcpre
+      save                  srcsuf
 
 
 !
 !     Initial values
 !
-      DATA                  DREF   / ' '    /
-      DATA                  FIRST  / .TRUE. /
+      data                  dref   / ' '    /
+      data                  first  / .true. /
 
 !
 !     Below we initialize the list of quantity names. Restrict this list
 !     to those events supported with test families.
 !
-      DATA                  QNAMES / 'ANGULAR SEPARATION', &
+      data                  qnames / 'ANGULAR SEPARATION', &
                                      'DISTANCE', &
                                      'COORDINATE', &
                                      'RANGE RATE', &
@@ -1747,7 +1747,7 @@
 !
 !     Below we initialize the list of comparison operator names.
 !
-      DATA                  CNAMES / '>', &
+      data                  cnames / '>', &
                                      '=', &
                                      '<', &
                                      'ABSMAX', &
@@ -1765,7 +1765,7 @@
 !     initial values must be increased so that the total number
 !     of values for each array is MAXPAR.
 !
-      DATA                ( QPARS(I,SEP), I = 1, MAXPAR )     / &
+      data                ( qpars(i,sep), i = 1, maxpar )     / &
                                      'TARGET1', &
                                      'FRAME1', &
                                      'SHAPE1', &
@@ -1777,13 +1777,13 @@
                                       ' ', &
                                       ' '                     /
 
-      DATA                ( QPARS(I,DIST), I = 1, MAXPAR )    / &
+      data                ( qpars(i,dist), i = 1, maxpar )    / &
                                      'TARGET', &
                                      'OBSERVER', &
                                      'ABCORR', &
                                       7 * ' '                 /
 
-      DATA                ( QPARS(I,COORD), I = 1, MAXPAR )   / &
+      data                ( qpars(i,coord), i = 1, maxpar )   / &
                                      'TARGET', &
                                      'OBSERVER', &
                                      'ABCORR', &
@@ -1795,13 +1795,13 @@
                                      'DVEC', &
                                      'DREF'                 /
 
-      DATA                ( QPARS(I,RNGRAT), I = 1, MAXPAR )  / &
+      data                ( qpars(i,rngrat), i = 1, maxpar )  / &
                                      'TARGET', &
                                      'OBSERVER', &
                                      'ABCORR', &
                                       7 * ' '                 /
 
-      DATA                ( QPARS(I,ANGSPD), I = 1, MAXPAR )  / &
+      data                ( qpars(i,angspd), i = 1, maxpar )  / &
                                      'TARGET1', &
                                      'TARGET2', &
                                      'OBSERVER', &
@@ -1809,21 +1809,21 @@
                                      'REFERENCE FRAME', &
                                       5 * ' '                 /
 
-      DATA                ( QPARS(I,PHASE), I = 1, MAXPAR )   / &
+      data                ( qpars(i,phase), i = 1, maxpar )   / &
                                      'TARGET', &
                                      'OBSERVER', &
                                      'ILLUM', &
                                      'ABCORR', &
                                       6 * ' '                 /
 
-      DATA                ( QPARS(I,APDIAM), I = 1, MAXPAR )  / &
+      data                ( qpars(i,apdiam), i = 1, maxpar )  / &
                                      'TARGET', &
                                      'OBSERVER', &
                                      'ABCORR', &
                                      'REFERENCE FRAME', &
                                       6 * ' '                 /
 
-      DATA                ( QPARS(I,ILUANG), I = 1, MAXPAR )  / &
+      data                ( qpars(i,iluang), i = 1, maxpar )  / &
                                      'TARGET', &
                                      'ILLUM', &
                                      'OBSERVER', &
@@ -1838,78 +1838,78 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'GFEVNT' )
+      call chkin  ( 'GFEVNT' )
 
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Set the progress report prefix and suffix strings for
 !        each quantity. No need to set coordinate quantity strings.
 !        The coordinate solver performs that function.
 !
-         FIRST = .FALSE.
+         first = .false.
 
-         SRCPRE ( 1, SEP    ) = 'Angular separation pass 1 of #'
-         SRCPRE ( 2, SEP    ) = 'Angular separation pass 2 of #'
+         srcpre ( 1, sep    ) = 'Angular separation pass 1 of #'
+         srcpre ( 2, sep    ) = 'Angular separation pass 2 of #'
 
-         SRCPRE ( 1, DIST   ) = 'Distance pass 1 of # '
-         SRCPRE ( 2, DIST   ) = 'Distance pass 2 of # '
+         srcpre ( 1, dist   ) = 'Distance pass 1 of # '
+         srcpre ( 2, dist   ) = 'Distance pass 2 of # '
 
-         SRCPRE ( 1, ANGSPD ) = 'Angular Rate pass 1 of #'
-         SRCPRE ( 2, ANGSPD ) = 'Angular Rate pass 2 of #'
+         srcpre ( 1, angspd ) = 'Angular Rate pass 1 of #'
+         srcpre ( 2, angspd ) = 'Angular Rate pass 2 of #'
 
-         SRCPRE ( 1, RNGRAT ) = 'Range Rate pass 1 of #'
-         SRCPRE ( 2, RNGRAT ) = 'Range Rate pass 2 of #'
+         srcpre ( 1, rngrat ) = 'Range Rate pass 1 of #'
+         srcpre ( 2, rngrat ) = 'Range Rate pass 2 of #'
 
-         SRCPRE ( 1, PHASE  ) = 'Phase angle search pass 1 of #'
-         SRCPRE ( 2, PHASE  ) = 'Phase angle search pass 2 of #'
+         srcpre ( 1, phase  ) = 'Phase angle search pass 1 of #'
+         srcpre ( 2, phase  ) = 'Phase angle search pass 2 of #'
 
-         SRCPRE ( 1, APDIAM ) = 'Diameter pass 1 of #'
-         SRCPRE ( 2, APDIAM ) = 'Diameter pass 2 of #'
+         srcpre ( 1, apdiam ) = 'Diameter pass 1 of #'
+         srcpre ( 2, apdiam ) = 'Diameter pass 2 of #'
 
-         SRCPRE ( 1, ILUANG ) = 'Illumination angle pass 1 of #'
-         SRCPRE ( 2, ILUANG ) = 'Illumination angle pass 2 of #'
+         srcpre ( 1, iluang ) = 'Illumination angle pass 1 of #'
+         srcpre ( 2, iluang ) = 'Illumination angle pass 2 of #'
 
-         SRCSUF ( 1, SEP    ) = 'done.'
-         SRCSUF ( 2, SEP    ) = 'done.'
+         srcsuf ( 1, sep    ) = 'done.'
+         srcsuf ( 2, sep    ) = 'done.'
 
-         SRCSUF ( 1, DIST   ) = 'done.'
-         SRCSUF ( 2, DIST   ) = 'done.'
+         srcsuf ( 1, dist   ) = 'done.'
+         srcsuf ( 2, dist   ) = 'done.'
 
-         SRCSUF ( 1, ANGSPD ) = 'done.'
-         SRCSUF ( 2, ANGSPD ) = 'done.'
+         srcsuf ( 1, angspd ) = 'done.'
+         srcsuf ( 2, angspd ) = 'done.'
 
-         SRCSUF ( 1, RNGRAT ) = 'done.'
-         SRCSUF ( 2, RNGRAT ) = 'done.'
+         srcsuf ( 1, rngrat ) = 'done.'
+         srcsuf ( 2, rngrat ) = 'done.'
 
-         SRCSUF ( 1, PHASE  ) = 'done.'
-         SRCSUF ( 2, PHASE  ) = 'done.'
+         srcsuf ( 1, phase  ) = 'done.'
+         srcsuf ( 2, phase  ) = 'done.'
 
-         SRCSUF ( 1, APDIAM ) = 'done.'
-         SRCSUF ( 2, APDIAM ) = 'done.'
+         srcsuf ( 1, apdiam ) = 'done.'
+         srcsuf ( 2, apdiam ) = 'done.'
 
-         SRCSUF ( 1, ILUANG ) = 'done.'
-         SRCSUF ( 2, ILUANG ) = 'done.'
+         srcsuf ( 1, iluang ) = 'done.'
+         srcsuf ( 2, iluang ) = 'done.'
 
-      END IF
+      end if
 
 !
 !     Make sure the requested quantity is one we recognize.
 !
 
-      CALL LJUST ( GQUANT, QUANT )
-      CALL UCASE ( QUANT,  QUANT )
+      call ljust ( gquant, quant )
+      call ucase ( quant,  quant )
 
-      QTNUM = ISRCHC ( QUANT, NQ, QNAMES )
+      qtnum = isrchc ( quant, nq, qnames )
 
 
-      IF ( QTNUM .EQ. 0 ) THEN
+      if ( qtnum .eq. 0 ) then
 
-        CALL SETMSG ('The geometric quantity, # is not '             // &
+        call setmsg ('The geometric quantity, # is not '             // &
                      'recognized. Supported quantities are: '        // &
                      'DISTANCE, '                                    // &
                      'PHASE ANGLE, '                                 // &
@@ -1917,71 +1917,71 @@
                      'RANGE RATE, '                                  // &
                      'ANGULAR SEPARATION,'                           // &
                      'ILLUMINATION ANGLE.'                            )
-         CALL ERRCH  ('#', GQUANT                                     )
-         CALL SIGERR ('SPICE(NOTRECOGNIZED)'                          )
-         CALL CHKOUT ('GFEVNT'                                        )
-         RETURN
+         call errch  ('#', gquant                                     )
+         call sigerr ('SPICE(NOTRECOGNIZED)'                          )
+         call chkout ('GFEVNT'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Check number of quantity definition parameters.
 !
-      IF (  ( QNPARS .LT. 0 ) .OR. ( QNPARS .GT. MAXPAR )  ) THEN
+      if (  ( qnpars .lt. 0 ) .or. ( qnpars .gt. maxpar )  ) then
 
-         CALL SETMSG ( 'Number of quantity definition parameters = ' // &
+         call setmsg ( 'Number of quantity definition parameters = ' // &
                        '#;  must be in range 0:#.'                    )
-         CALL ERRINT ( '#', QNPARS                                    )
-         CALL ERRINT ( '#', MAXPAR                                    )
-         CALL SIGERR ( 'SPICE(INVALIDCOUNT)'                          )
-         CALL CHKOUT ( 'GFEVNT'                                       )
-         RETURN
+         call errint ( '#', qnpars                                    )
+         call errint ( '#', maxpar                                    )
+         call sigerr ( 'SPICE(INVALIDCOUNT)'                          )
+         call chkout ( 'GFEVNT'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Make left-justified, upper case copies of parameter names.
 !
-      DO I = 1, QNPARS
+      do i = 1, qnpars
 
-         CALL LJUST ( QPNAMS(I), PNAMES(I) )
-         CALL UCASE ( PNAMES(I), PNAMES(I) )
+         call ljust ( qpnams(i), pnames(i) )
+         call ucase ( pnames(i), pnames(i) )
 
-         CALL LJUST ( QCPARS(I), CPARS(I) )
-         CALL UCASE ( CPARS(I),  CPARS(I) )
+         call ljust ( qcpars(i), cpars(i) )
+         call ucase ( cpars(i),  cpars(i) )
 
-      END DO
+      end do
 
 !
 !     Make sure all parameters have been supplied for the requested
 !     quantity.
 !
-      DO I = 1, MAXPAR
+      do i = 1, maxpar
 
-         IF ( QPARS(I,QTNUM) .NE. ' ' ) THEN
+         if ( qpars(i,qtnum) .ne. ' ' ) then
 !
 !           The Ith parameter must be supplied by the caller.
 !
-            LOC = ISRCHC ( QPARS(I,QTNUM), QNPARS, PNAMES )
+            loc = isrchc ( qpars(i,qtnum), qnpars, pnames )
 
 
-            IF ( LOC .EQ. 0 ) THEN
+            if ( loc .eq. 0 ) then
 
-               CALL SETMSG ( 'The parameter # is required in order ' // &
+               call setmsg ( 'The parameter # is required in order ' // &
                              'to compute events pertaining to the '  // &
                              'quantity #; this parameter was not '   // &
                              'supplied.'                             )
-               CALL ERRCH  ( '#', QPARS (I,QTNUM)                    )
-               CALL ERRCH  ( '#', QNAMES(  QTNUM)                    )
-               CALL SIGERR ( 'SPICE(MISSINGVALUE)'                   )
-               CALL CHKOUT ( 'GFEVNT'                                )
-               RETURN
+               call errch  ( '#', qpars (i,qtnum)                    )
+               call errch  ( '#', qnames(  qtnum)                    )
+               call sigerr ( 'SPICE(MISSINGVALUE)'                   )
+               call chkout ( 'GFEVNT'                                )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
 !
@@ -2013,225 +2013,225 @@
 !
 !     -TARGET-
 !
-      LOC = ISRCHC ( 'TARGET', QNPARS, PNAMES )
+      loc = isrchc ( 'TARGET', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         TARGET = CPARS(LOC)
+         target = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -OBSERVER-
 !
-      LOC = ISRCHC ( 'OBSERVER', QNPARS, PNAMES )
+      loc = isrchc ( 'OBSERVER', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         OBSRVR = CPARS(LOC)
+         obsrvr = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -ILLUM-
 !
-      LOC = ISRCHC ( 'ILLUM', QNPARS, PNAMES )
+      loc = isrchc ( 'ILLUM', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         ILLUM = CPARS(LOC)
+         illum = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -TARGET1-
 !
-      LOC = ISRCHC ( 'TARGET1', QNPARS, PNAMES )
+      loc = isrchc ( 'TARGET1', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         OF(1) = CPARS(LOC)
+         of(1) = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -TARGET2-
 !
-      LOC = ISRCHC ( 'TARGET2', QNPARS, PNAMES )
+      loc = isrchc ( 'TARGET2', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         OF(2) = CPARS(LOC)
+         of(2) = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -FRAME1-
 !
-      LOC = ISRCHC ( 'FRAME1', QNPARS, PNAMES )
+      loc = isrchc ( 'FRAME1', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         FRAME(1) = CPARS(LOC)
+         frame(1) = cpars(loc)
 
-      END IF
+      end if
 
 !
 !     -FRAME2-
 !
-      LOC = ISRCHC ( 'FRAME2', QNPARS, PNAMES )
+      loc = isrchc ( 'FRAME2', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         FRAME(2) = CPARS(LOC)
+         frame(2) = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -SHAPE1-
 !
-      LOC = ISRCHC ( 'SHAPE1', QNPARS, PNAMES )
+      loc = isrchc ( 'SHAPE1', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         SHAPE(1) = CPARS(LOC)
+         shape(1) = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -SHAPE2-
 !
-      LOC = ISRCHC ( 'SHAPE2', QNPARS, PNAMES )
+      loc = isrchc ( 'SHAPE2', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         SHAPE(2) = CPARS(LOC)
+         shape(2) = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -ABCORR-
 !
-      LOC = ISRCHC ( 'ABCORR', QNPARS, PNAMES )
+      loc = isrchc ( 'ABCORR', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         ABCORR = CPARS(LOC)
+         abcorr = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -REFERENCE FRAME-
 !
-      LOC = ISRCHC ( 'REFERENCE FRAME', QNPARS, PNAMES )
+      loc = isrchc ( 'REFERENCE FRAME', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         REF = CPARS(LOC)
+         ref = cpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -COORDINATE SYSTEM-
 !
-      LOC = ISRCHC ( 'COORDINATE SYSTEM',  QNPARS, QPNAMS )
+      loc = isrchc ( 'COORDINATE SYSTEM',  qnpars, qpnams )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         CORSYS = QCPARS(LOC)
+         corsys = qcpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -COORDINATE-
 !
-      LOC = ISRCHC ( 'COORDINATE', QNPARS, QPNAMS )
+      loc = isrchc ( 'COORDINATE', qnpars, qpnams )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         CORNAM = QCPARS(LOC)
+         cornam = qcpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -VECTOR DEFINITION-
 !
-      LOC = ISRCHC ( 'VECTOR DEFINITION',  QNPARS, QPNAMS )
+      loc = isrchc ( 'VECTOR DEFINITION',  qnpars, qpnams )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         VECDEF = QCPARS(LOC)
+         vecdef = qcpars(loc)
 
-      END IF
+      end if
 
 !
 !     -DVEC-
 !
-      LOC = ISRCHC ( 'DVEC', QNPARS, PNAMES )
+      loc = isrchc ( 'DVEC', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         CALL VEQU( QDPARS(1), DVEC(1)  )
+         call vequ( qdpars(1), dvec(1)  )
 
-      END IF
+      end if
 
 
 !
 !     -METHOD-
 !
-      LOC = ISRCHC ( 'METHOD',  QNPARS, QPNAMS )
+      loc = isrchc ( 'METHOD',  qnpars, qpnams )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         METHOD = QCPARS(LOC)
+         method = qcpars(loc)
 
-      END IF
+      end if
 
 
 !
 !     -DREF-
 !
-      LOC = ISRCHC ( 'DREF', QNPARS, PNAMES )
+      loc = isrchc ( 'DREF', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         DREF = CPARS(LOC)
+         dref = cpars(loc)
 
-      END IF
+      end if
 
 !
 !     -ANGTYP-
 !
-      LOC = ISRCHC ( 'ANGTYP', QNPARS, PNAMES )
+      loc = isrchc ( 'ANGTYP', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         ANGTYP = CPARS(LOC)
+         angtyp = cpars(loc)
 
-      END IF
+      end if
 
 !
 !     -SPOINT-
 !
-      LOC = ISRCHC ( 'SPOINT', QNPARS, PNAMES )
+      loc = isrchc ( 'SPOINT', qnpars, pnames )
 
-      IF ( LOC .GT. 0 ) THEN
+      if ( loc .gt. 0 ) then
 
-         CALL VEQU( QDPARS(1), SPOINT )
+         call vequ( qdpars(1), spoint )
 
-      END IF
+      end if
 
 
 !
@@ -2239,14 +2239,14 @@
 !     recognize.
 !
 
-      CALL LJUST ( OP,   UOP )
-      CALL UCASE ( UOP,  UOP )
+      call ljust ( op,   uop )
+      call ucase ( uop,  uop )
 
-      LOC = ISRCHC ( UOP, NC, CNAMES )
+      loc = isrchc ( uop, nc, cnames )
 
-      IF ( LOC .EQ. 0 ) THEN
+      if ( loc .eq. 0 ) then
 
-        CALL SETMSG ('The comparison operator, # is not '            // &
+        call setmsg ('The comparison operator, # is not '            // &
                      'recognized.  Supported operators are: '        // &
                      '>, '                                           // &
                      '=, '                                           // &
@@ -2255,52 +2255,52 @@
                      'ABSMIN, '                                      // &
                      'LOCMAX, '                                      // &
                      'LOCMIN. '                                       )
-         CALL ERRCH  ('#', OP                                         )
-         CALL SIGERR ('SPICE(NOTRECOGNIZED)'                          )
-         CALL CHKOUT ('GFEVNT'                                        )
-         RETURN
+         call errch  ('#', op                                         )
+         call sigerr ('SPICE(NOTRECOGNIZED)'                          )
+         call chkout ('GFEVNT'                                        )
+         return
 
-      END IF
+      end if
 
 
 !
 !     If progress reporting is enabled, set the report prefix array
 !     according to the quantity and the relational operator.
 !
-      IF ( RPT ) THEN
+      if ( rpt ) then
 !
 !        We'll use the logical flag LOCALX to indicate a local extremum
 !        operator and the flag NOADJX to indicate an absolute extremum
 !        operator with zero adjustment.
 !
-         LOCALX = ( UOP .EQ. 'LOCMIN' ) .OR. ( UOP .EQ. 'LOCMAX' )
+         localx = ( uop .eq. 'LOCMIN' ) .or. ( uop .eq. 'LOCMAX' )
 
-         NOADJX =  ( ADJUST .EQ.  0.D0    ) .AND. &
-                 ( ( UOP    .EQ. 'ABSMIN' ) .OR. ( UOP .EQ. 'ABSMAX' ) )
+         noadjx =  ( adjust .eq.  0.d0    ) .and. &
+                 ( ( uop    .eq. 'ABSMIN' ) .or. ( uop .eq. 'ABSMAX' ) )
 
-         IF ( LOCALX .OR. NOADJX ) THEN
+         if ( localx .or. noadjx ) then
 
 !
 !           These operators correspond to 1-pass searches.
 !
-            NPASS = 1
+            npass = 1
 
-         ELSE
+         else
 
-            NPASS = 2
+            npass = 2
 
-         END IF
+         end if
 
 !
 !        Fill in the prefix strings.
 !
 !        Note that we've already performed error checks on QTNUM.
 !
-         DO I = 1, NPASS
-            CALL REPMI ( SRCPRE(I,QTNUM), '#', NPASS, RPTPRE(I) )
-         END DO
+         do i = 1, npass
+            call repmi ( srcpre(i,qtnum), '#', npass, rptpre(i) )
+         end do
 
-      END IF
+      end if
 
 !
 !     Here's where the real work gets done:  we solve for the
@@ -2309,53 +2309,53 @@
 !     the quantity of interest, then call the generic relation
 !     pre-image solver ZZGFREL.
 !
-      IF ( QTNUM .EQ. SEP ) THEN
+      if ( qtnum .eq. sep ) then
 
 !
 !        Separation condition initializer.
 !
-         CALL ZZGFSPIN( OF, OBSRVR, SHAPE, FRAME, ABCORR )
+         call zzgfspin( of, obsrvr, shape, frame, abcorr )
 
-         CALL ZZGFRELX( UDSTEP,        UDREFN,   ZZGFSPDC, &
-                        ZZGFUDLT,      ZZGFSPGQ, &
-                        OP,            REFVAL,   TOL, &
-                        ADJUST,        CNFINE,   MW,      NW, &
-                        WORK,          RPT,      UDREPI, &
-                        UDREPU,        UDREPF,   RPTPRE, &
-                        SRCSUF(1,SEP), BAIL,     UDBAIL, &
-                        RESULT  )
+         call zzgfrelx( udstep,        udrefn,   zzgfspdc, &
+                        zzgfudlt,      zzgfspgq, &
+                        op,            refval,   tol, &
+                        adjust,        cnfine,   mw,      nw, &
+                        work,          rpt,      udrepi, &
+                        udrepu,        udrepf,   rptpre, &
+                        srcsuf(1,sep), bail,     udbail, &
+                        result  )
 
 
-      ELSE IF ( QTNUM .EQ. DIST ) THEN
+      else if ( qtnum .eq. dist ) then
 
 !
 !        Distance condition initializer.
 !
-         CALL ZZGFDIIN ( TARGET, ABCORR, OBSRVR )
+         call zzgfdiin ( target, abcorr, obsrvr )
 
-         CALL ZZGFRELX( UDSTEP,         UDREFN,   ZZGFDIDC, &
-                        ZZGFUDLT,       ZZGFDIGQ, &
-                        OP,             REFVAL,   TOL, &
-                        ADJUST,         CNFINE,   MW,     NW, &
-                        WORK,           RPT,      UDREPI, &
-                        UDREPU,         UDREPF,   RPTPRE, &
-                        SRCSUF(1,DIST), BAIL,     UDBAIL, &
-                        RESULT  )
+         call zzgfrelx( udstep,         udrefn,   zzgfdidc, &
+                        zzgfudlt,       zzgfdigq, &
+                        op,             refval,   tol, &
+                        adjust,         cnfine,   mw,     nw, &
+                        work,           rpt,      udrepi, &
+                        udrepu,         udrepf,   rptpre, &
+                        srcsuf(1,dist), bail,     udbail, &
+                        result  )
 
-      ELSE IF ( QTNUM .EQ. COORD ) THEN
+      else if ( qtnum .eq. coord ) then
 
 !
 !        Solve for a coordinate condition. ZZGFCSLV calls the coordinate
 !        event initializer.
 !
-         CALL  ZZGFCSLV ( VECDEF, METHOD, TARGET, REF,    ABCORR, &
-                          OBSRVR, DREF,   DVEC,   CORSYS, CORNAM, &
-                          OP,     REFVAL, TOL,    ADJUST, UDSTEP, &
-                          UDREFN, RPT,    UDREPI, UDREPU, UDREPF, &
-                          BAIL,   UDBAIL, MW,     NW,     WORK, &
-                          CNFINE, RESULT                        )
+         call  zzgfcslv ( vecdef, method, target, ref,    abcorr, &
+                          obsrvr, dref,   dvec,   corsys, cornam, &
+                          op,     refval, tol,    adjust, udstep, &
+                          udrefn, rpt,    udrepi, udrepu, udrepf, &
+                          bail,   udbail, mw,     nw,     work, &
+                          cnfine, result                        )
 
-      ELSE IF ( QTNUM .EQ. ANGSPD  ) THEN
+      else if ( qtnum .eq. angspd  ) then
 
 !
 !        d( sep )
@@ -2363,7 +2363,7 @@
 !        dt
 !
 
-      ELSE IF ( QTNUM .EQ. RNGRAT ) THEN
+      else if ( qtnum .eq. rngrat ) then
 
 !
 !        Range rate condition initializer.
@@ -2372,75 +2372,75 @@
 !        TDB second. This should have a function interface to
 !        reset.
 !
-         DT = 1.D0
+         dt = 1.d0
 
-         CALL ZZGFRRIN ( TARGET, ABCORR, OBSRVR, DT )
+         call zzgfrrin ( target, abcorr, obsrvr, dt )
 
-         CALL ZZGFRELX( UDSTEP,           UDREFN,   ZZGFRRDC, &
-                        ZZGFUDLT,         ZZGFRRGQ, &
-                        OP,               REFVAL,   TOL, &
-                        ADJUST,           CNFINE,   MW,      NW, &
-                        WORK,             RPT,      UDREPI, &
-                        UDREPU,           UDREPF,   RPTPRE, &
-                        SRCSUF(1,RNGRAT), BAIL,     UDBAIL, &
-                        RESULT  )
+         call zzgfrelx( udstep,           udrefn,   zzgfrrdc, &
+                        zzgfudlt,         zzgfrrgq, &
+                        op,               refval,   tol, &
+                        adjust,           cnfine,   mw,      nw, &
+                        work,             rpt,      udrepi, &
+                        udrepu,           udrepf,   rptpre, &
+                        srcsuf(1,rngrat), bail,     udbail, &
+                        result  )
 
-      ELSE IF ( QTNUM .EQ. PHASE ) THEN
+      else if ( qtnum .eq. phase ) then
 
 !
 !        Phase angle condition initializer.
 !
-         CALL ZZGFPAIN ( TARGET, ILLUM, ABCORR, OBSRVR )
+         call zzgfpain ( target, illum, abcorr, obsrvr )
 
-         CALL ZZGFRELX( UDSTEP,          UDREFN,   ZZGFPADC, &
-                        ZZGFUDLT,        ZZGFPAGQ, &
-                        OP,              REFVAL,   TOL, &
-                        ADJUST,          CNFINE,   MW,     NW, &
-                        WORK,            RPT,      UDREPI, &
-                        UDREPU,          UDREPF,   RPTPRE, &
-                        SRCSUF(1,PHASE), BAIL,     UDBAIL, &
-                        RESULT  )
+         call zzgfrelx( udstep,          udrefn,   zzgfpadc, &
+                        zzgfudlt,        zzgfpagq, &
+                        op,              refval,   tol, &
+                        adjust,          cnfine,   mw,     nw, &
+                        work,            rpt,      udrepi, &
+                        udrepu,          udrepf,   rptpre, &
+                        srcsuf(1,phase), bail,     udbail, &
+                        result  )
 
-      ELSE IF ( QTNUM .EQ. APDIAM ) THEN
+      else if ( qtnum .eq. apdiam ) then
 
 !
 !                ---Not yet implemented---
 !
 
-      ELSE IF ( QTNUM .EQ. ILUANG ) THEN
+      else if ( qtnum .eq. iluang ) then
 !
 !        Illumination angle condition initializer.
 !
-         CALL ZZGFILIN ( METHOD, ANGTYP, TARGET, ILLUM, &
-                         REF,    ABCORR, OBSRVR, SPOINT )
+         call zzgfilin ( method, angtyp, target, illum, &
+                         ref,    abcorr, obsrvr, spoint )
 
-         CALL ZZGFRELX( UDSTEP,           UDREFN,   ZZGFILDC, &
-                        ZZGFUDLT,         ZZGFILGQ, &
-                        OP,               REFVAL,   TOL, &
-                        ADJUST,           CNFINE,   MW,       NW, &
-                        WORK,             RPT,      UDREPI, &
-                        UDREPU,           UDREPF,   RPTPRE, &
-                        SRCSUF(1,ILUANG), BAIL,     UDBAIL, &
-                        RESULT                                   )
+         call zzgfrelx( udstep,           udrefn,   zzgfildc, &
+                        zzgfudlt,         zzgfilgq, &
+                        op,               refval,   tol, &
+                        adjust,           cnfine,   mw,       nw, &
+                        work,             rpt,      udrepi, &
+                        udrepu,           udrepf,   rptpre, &
+                        srcsuf(1,iluang), bail,     udbail, &
+                        result                                   )
 
 
-      ELSE
+      else
 
 !
 !        QTNUM is not a recognized event code. This block should
 !        never execute since we already checked the input quantity
 !        name string.
 !
-         CALL SETMSG ( 'Unknown event ''#''. This error indicates ' &
+         call setmsg ( 'Unknown event ''#''. This error indicates ' &
                     // 'a bug. Please contact NAIF.' )
-         CALL ERRCH  ( '#', GQUANT            )
-         CALL SIGERR ( 'SPICE(BUG)'           )
-         CALL CHKOUT ( 'GFEVNT'               )
-         RETURN
+         call errch  ( '#', gquant            )
+         call sigerr ( 'SPICE(BUG)'           )
+         call chkout ( 'GFEVNT'               )
+         return
 
-      END  IF
+      end  if
 
-      CALL CHKOUT (  'GFEVNT' )
+      call chkout (  'GFEVNT' )
 
-      RETURN
-      END
+      return
+      end

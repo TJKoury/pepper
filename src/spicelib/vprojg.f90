@@ -1,6 +1,6 @@
 !$Procedure VPROJG ( Vector projection, general dimension )
 
-      SUBROUTINE VPROJG ( A, B, NDIM, P )
+      subroutine vprojg ( a, b, ndim, p )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER            NDIM
-      DOUBLE PRECISION   A ( NDIM )
-      DOUBLE PRECISION   B ( NDIM )
-      DOUBLE PRECISION   P ( NDIM )
+      integer            ndim
+      double precision   a ( ndim )
+      double precision   b ( ndim )
+      double precision   p ( ndim )
 
 ! $ Brief_I/O
 !
@@ -227,26 +227,26 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION VDOTG
+      double precision vdotg
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION ADOTB
-      DOUBLE PRECISION BDOTB
-      DOUBLE PRECISION SCALE
+      double precision adotb
+      double precision bdotb
+      double precision scale
 
 
-      ADOTB  = VDOTG (A,B,NDIM)
-      BDOTB  = VDOTG (B,B,NDIM)
+      adotb  = vdotg (a,b,ndim)
+      bdotb  = vdotg (b,b,ndim)
 
-      IF ( BDOTB .EQ. 0.D0 ) THEN
-         SCALE = 0.D0
-      ELSE
-         SCALE = ADOTB/BDOTB
-      END IF
+      if ( bdotb .eq. 0.d0 ) then
+         scale = 0.d0
+      else
+         scale = adotb/bdotb
+      end if
 
-      CALL VSCLG (SCALE, B, NDIM, P)
+      call vsclg (scale, b, ndim, p)
 
-      RETURN
-      END
+      return
+      end

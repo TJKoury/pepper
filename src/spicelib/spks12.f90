@@ -1,6 +1,6 @@
 !$Procedure SPKS12 ( S/P Kernel, subset, type 12 )
 
-      SUBROUTINE SPKS12 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks12 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -146,23 +146,23 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS12' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS12' )
+      end if
 
 !
 !     The type 8 subsetter knows how to do this job.
 !
-      CALL SPKS08 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      call spks08 ( handle, baddr, eaddr, begin, end )
 
-      CALL CHKOUT ( 'SPKS12' )
-      RETURN
-      END
+      call chkout ( 'SPKS12' )
+      return
+      end

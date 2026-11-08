@@ -1,6 +1,6 @@
 !$Procedure ZZEKIXLK ( EK, look up record pointer in EK index )
 
-      SUBROUTINE ZZEKIXLK ( HANDLE, COLDSC, KEY, RECPTR )
+      subroutine zzekixlk ( handle, coldsc, key, recptr )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekpage.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekpage.inc'
 
-      INTEGER               HANDLE
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               KEY
-      INTEGER               RECPTR
+      integer               handle
+      integer               coldsc ( cdscsz )
+      integer               key
+      integer               recptr
 
 ! $ Brief_I/O
 !
@@ -108,54 +108,54 @@
 !
 !     Local variables
 !
-      INTEGER               ADDRSS
-      INTEGER               BASE
-      INTEGER               ITYPE
-      INTEGER               Q
-      INTEGER               R
-      INTEGER               TREE
+      integer               addrss
+      integer               base
+      integer               itype
+      integer               q
+      integer               r
+      integer               tree
 
 !
 !     Use discovery check-in.
 !
-      ITYPE  =  COLDSC ( IXTIDX )
+      itype  =  coldsc ( ixtidx )
 
 
-      IF ( ITYPE .EQ. 1 ) THEN
+      if ( itype .eq. 1 ) then
 !
 !        For type 1 indexes, the index pointer is the root node of
 !        a B*-tree.  Just use the tree look up routine.
 !
-         TREE  = COLDSC ( IXPIDX )
+         tree  = coldsc ( ixpidx )
 
-         CALL ZZEKTRDP ( HANDLE, TREE, KEY, RECPTR )
+         call zzektrdp ( handle, tree, key, recptr )
 
 
-      ELSE IF ( ITYPE .EQ. 2 ) THEN
+      else if ( itype .eq. 2 ) then
 !
 !        For type 2 indexes, the index pointer is the base address
 !        of the index.  We must compute the offset from this base to
 !        the index element having ordinal position KEY.
 !
-         BASE    =    COLDSC(IXPIDX)
-         Q       =    (KEY-1)  / IPSIZE
-         R       =    KEY  - Q * IPSIZE
-         ADDRSS  =    BASE + Q * PGSIZI + R
+         base    =    coldsc(ixpidx)
+         q       =    (key-1)  / ipsize
+         r       =    key  - q * ipsize
+         addrss  =    base + q * pgsizi + r
 
-         CALL DASRDI ( HANDLE, ADDRSS, ADDRSS, RECPTR )
+         call dasrdi ( handle, addrss, addrss, recptr )
 
-      ELSE
+      else
 !
 !        Sorry, no other types of indexes are supported.
 !
-         CALL CHKIN  ( 'ZZEKIXLK'                           )
-         CALL SETMSG ( 'The index type # is not supported.' )
-         CALL ERRINT ( '#',   ITYPE                         )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                 )
-         CALL CHKOUT ( 'ZZEKIXLK'                           )
-         RETURN
+         call chkin  ( 'ZZEKIXLK'                           )
+         call setmsg ( 'The index type # is not supported.' )
+         call errint ( '#',   itype                         )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                 )
+         call chkout ( 'ZZEKIXLK'                           )
+         return
 
-      END IF
+      end if
 
 
-      END
+      end

@@ -1,8 +1,8 @@
 !$Procedure SGSEQW ( Generic segments: Sequential writer. )
 
-      SUBROUTINE SGSEQW ( HANDLE, DESCR,  SEGID,  NCONST, CONST, &
-                          NPKTS,  PKTSIZ, PKTDAT, NREFS, REFDAT, &
-                          IDXTYP                                 )
+      subroutine sgseqw ( handle, descr,  segid,  nconst, const, &
+                          npkts,  pktsiz, pktdat, nrefs, refdat, &
+                          idxtyp                                 )
 
 ! $ Abstract
 !
@@ -21,19 +21,19 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR  ( * )
-      CHARACTER*(*)         SEGID
-      INTEGER               NCONST
-      DOUBLE PRECISION      CONST  ( * )
-      INTEGER               NPKTS
-      INTEGER               PKTSIZ ( * )
-      DOUBLE PRECISION      PKTDAT ( * )
-      INTEGER               NREFS
-      DOUBLE PRECISION      REFDAT ( * )
-      INTEGER               IDXTYP
+      integer               handle
+      double precision      descr  ( * )
+      character*(*)         segid
+      integer               nconst
+      double precision      const  ( * )
+      integer               npkts
+      integer               pktsiz ( * )
+      double precision      pktdat ( * )
+      integer               nrefs
+      double precision      refdat ( * )
+      integer               idxtyp
 
 ! $ Brief_I/O
 !
@@ -1196,11 +1196,11 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               LASTNB
-      INTEGER               ISRCHI
+      integer               lastnb
+      integer               isrchi
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 !
 !     Local parameters
 !
@@ -1209,33 +1209,33 @@
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT =  32 )
+      integer               fprint
+      parameter           ( fprint =  32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT = 126 )
+      integer               lprint
+      parameter           ( lprint = 126 )
 !
 !     The number of reference values it takes to get a reference
 !     directory value.
 !
-      INTEGER               DIRSIZ
-      PARAMETER           ( DIRSIZ = 100 )
+      integer               dirsiz
+      parameter           ( dirsiz = 100 )
 !
 !     The length of a DAF internal filename.
 !
-      INTEGER               IFNLEN
-      PARAMETER           ( IFNLEN = 60 )
+      integer               ifnlen
+      parameter           ( ifnlen = 60 )
 !
 !     The file table size. This needs to be the same as the file table
 !     size in DAFAH.
 !
-      INTEGER               FTSIZE
-      PARAMETER           ( FTSIZE = 20 )
+      integer               ftsize
+      parameter           ( ftsize = 20 )
 !
 !     Include the mnemonic values for the generic segment declarations
 !     and the meta data information.
 !
-      INCLUDE 'sgparam.inc'
+      include 'sgparam.inc'
 !
 !     Local variables
 !
@@ -1243,113 +1243,113 @@
 !     calling various subroutines. Their values are not used in any of
 !     the entry points of this subroutine.
 !
-      CHARACTER*(IFNLEN)    DUMMY1
+      character*(ifnlen)    dummy1
 
-      DOUBLE PRECISION      XMETA  ( MXMETA )
-      DOUBLE PRECISION      MYREF
-      DOUBLE PRECISION      MYADDR
-      DOUBLE PRECISION      MYSIZE
-      DOUBLE PRECISION      DPKSIZ
+      double precision      xmeta  ( mxmeta )
+      double precision      myref
+      double precision      myaddr
+      double precision      mysize
+      double precision      dpksiz
 
-      INTEGER               BEGADR
-      INTEGER               DUMMY2
-      INTEGER               DUMMY3
-      INTEGER               I
-      INTEGER               ICH
-      INTEGER               INDEX
-      INTEGER               LSTHAN
-      INTEGER               META   ( MXMETA )
-      INTEGER               NC
-      INTEGER               ND
-      INTEGER               NI
-      INTEGER               NUMFXD
-      INTEGER               NUMVAR
-      INTEGER               PKTADR
-      INTEGER               PKTPOS
-      INTEGER               REFADR
-      INTEGER               SIDLEN
-      INTEGER               SIZE
+      integer               begadr
+      integer               dummy2
+      integer               dummy3
+      integer               i
+      integer               ich
+      integer               index
+      integer               lsthan
+      integer               meta   ( mxmeta )
+      integer               nc
+      integer               nd
+      integer               ni
+      integer               numfxd
+      integer               numvar
+      integer               pktadr
+      integer               pktpos
+      integer               refadr
+      integer               sidlen
+      integer               size
 
-      LOGICAL               EXPLCT
-      LOGICAL               FXDSEG
+      logical               explct
+      logical               fxdseg
 !
 !     File table declarations. The file table is used to keep track of
 !     the vital statistics for each of the generic segments being
 !     written.
 !
-      DOUBLE PRECISION      FTREFS ( 2, FTSIZE )
+      double precision      ftrefs ( 2, ftsize )
 
-      INTEGER               FTBADR ( FTSIZE )
-      INTEGER               FTHAN  ( FTSIZE )
-      INTEGER               FTITYP ( FTSIZE )
-      INTEGER               FTMXSZ ( FTSIZE )
-      INTEGER               FTNCON ( FTSIZE )
-      INTEGER               FTNPKT ( FTSIZE )
-      INTEGER               FTNREF ( FTSIZE )
-      INTEGER               FTNRES ( FTSIZE )
-      INTEGER               FTOFF  ( FTSIZE )
-      INTEGER               FTPKSZ ( FTSIZE )
+      integer               ftbadr ( ftsize )
+      integer               fthan  ( ftsize )
+      integer               ftityp ( ftsize )
+      integer               ftmxsz ( ftsize )
+      integer               ftncon ( ftsize )
+      integer               ftnpkt ( ftsize )
+      integer               ftnref ( ftsize )
+      integer               ftnres ( ftsize )
+      integer               ftoff  ( ftsize )
+      integer               ftpksz ( ftsize )
 
-      INTEGER               NFT
+      integer               nft
 
-      LOGICAL               FTFIXD ( FTSIZE )
-      LOGICAL               FTEXPL ( FTSIZE )
+      logical               ftfixd ( ftsize )
+      logical               ftexpl ( ftsize )
 !
 !     Saved values.
 !
-      SAVE                  EXPLCT
-      SAVE                  INDEX
-      SAVE                  NUMFXD
-      SAVE                  NUMVAR
-      SAVE                  LSTHAN
-      SAVE                  FXDSEG
+      save                  explct
+      save                  index
+      save                  numfxd
+      save                  numvar
+      save                  lsthan
+      save                  fxdseg
 !
 !     Save the file table.
 !
-      SAVE                  FTREFS
-      SAVE                  FTBADR
-      SAVE                  FTHAN
-      SAVE                  FTMXSZ
-      SAVE                  FTNCON
-      SAVE                  FTNPKT
-      SAVE                  FTNREF
-      SAVE                  FTNRES
-      SAVE                  FTITYP
-      SAVE                  FTEXPL
-      SAVE                  FTOFF
-      SAVE                  FTPKSZ
-      SAVE                  FTFIXD
-      SAVE                  NFT
+      save                  ftrefs
+      save                  ftbadr
+      save                  fthan
+      save                  ftmxsz
+      save                  ftncon
+      save                  ftnpkt
+      save                  ftnref
+      save                  ftnres
+      save                  ftityp
+      save                  ftexpl
+      save                  ftoff
+      save                  ftpksz
+      save                  ftfixd
+      save                  nft
 !
 !     Initial values
 !
-      DATA                  NUMFXD / 0 /
-      DATA                  NUMVAR / 0 /
-      DATA                  NFT    / 0 /
+      data                  numfxd / 0 /
+      data                  numvar / 0 /
+      data                  nft    / 0 /
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 !
 !     Signal an error if this routine is called directly.
 !
-      CALL CHKIN  ( 'SGSEQW'                                      )
-      CALL SETMSG ( 'This routine should never be called' &
+      call chkin  ( 'SGSEQW'                                      )
+      call setmsg ( 'This routine should never be called' &
       //            ' directly. It exists as an umbrella routine' &
       //            ' to maintain all of the variables for the' &
       //            ' generic segment sequential writing entry' &
       //            ' points.'                                    )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)'                           )
-      CALL CHKOUT ( 'SGSEQW'                                      )
-      RETURN
+      call sigerr ( 'SPICE(BOGUSENTRY)'                           )
+      call chkout ( 'SGSEQW'                                      )
+      return
 
 
 !$Procedure SGBWFS ( Generic segments: Begin a fixed size segment. )
 
-      ENTRY SGBWFS ( HANDLE, DESCR, SEGID, &
-                     NCONST, CONST, PKTSIZ, IDXTYP )
+      entry sgbwfs ( handle, descr, segid, &
+                     nconst, const, pktsiz, idxtyp )
 
 ! $ Abstract
 !
@@ -1533,11 +1533,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGBWFS' )
+      call chkin ( 'SGBWFS' )
 !
 !     We need to do some sanity checks on our input arguments before we
 !     should attempt to write anything to the file. So, let's start with
@@ -1546,14 +1546,14 @@
 !     Check to see if the file attached to the handle is open for
 !     writing. If not, an error is signaled.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'SGBWFS' )
-         RETURN
+         call chkout ( 'SGBWFS' )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if the handle is currently in the file table. If it
 !     is, we've got a problem. This routine may only be called once for
@@ -1562,24 +1562,24 @@
 !     file table a segment has already been started by this routine or
 !     SGBWVS. In either case, we cannot continue, so we signal an error.
 !
-      IF ( NFT .GT. 0 ) THEN
+      if ( nft .gt. 0 ) then
 
-         INDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+         index = isrchi ( handle, nft, fthan )
 
-         IF ( INDEX .NE. 0 ) THEN
+         if ( index .ne. 0 ) then
 
-            CALL SETMSG ( 'A segment is already being written to' &
+            call setmsg ( 'A segment is already being written to' &
             //            ' the file ''#''. A new segment cannot' &
             //            ' be started for this file until the' &
             //            ' current segment is finished. '          )
-            CALL ERRHAN ( '#', HANDLE                               )
-            CALL SIGERR ( 'SPICE(CALLEDOUTOFORDER)'                 )
-            CALL CHKOUT ( 'SGBWFS'                                  )
-            RETURN
+            call errhan ( '#', handle                               )
+            call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                 )
+            call chkout ( 'SGBWFS'                                  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Get the ND and NI values from the DAF file. We need these to know
 !     the size of the descriptor and the length of the segment ID. The
@@ -1590,120 +1590,120 @@
 !                      NC =  8 *  | ----------------- |
 !                                 \         2         /
 !
-      CALL DAFHSF ( HANDLE, ND, NI )
+      call dafhsf ( handle, nd, ni )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGBWFS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGBWFS' )
+         return
+      end if
 
-      NC = 8 * ( ND + ( NI + 1 ) / 2 )
+      nc = 8 * ( nd + ( ni + 1 ) / 2 )
 !
 !     Get the length of the segment ID. Leading blanks are considered to
 !     be important. A blank segment ID is OK too.
 !
-      SIDLEN = LASTNB ( SEGID )
+      sidlen = lastnb ( segid )
 !
 !     Check the segment ID to see if it is OK. Its length must be less
 !     than NC and it must consist of only printing ASCII characters.
 !
-      IF ( SIDLEN .GT. NC )THEN
+      if ( sidlen .gt. nc )then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' &
+         call setmsg ( 'Segment identifier contains more than ' &
          //            '# characters.'                           )
-         CALL ERRINT ( '#', NC                                   )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SGBWFS'                                  )
-         RETURN
+         call errint ( '#', nc                                   )
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SGBWFS'                                  )
+         return
 
-      END IF
+      end if
 
-      DO I = 1, SIDLEN
+      do i = 1, sidlen
 
-         ICH = ICHAR( SEGID(I:I) )
+         ich = ichar( segid(i:i) )
 
-         IF ( ( ICH .LT. FPRINT ) .OR. ( ICH .GT. LPRINT ) ) THEN
+         if ( ( ich .lt. fprint ) .or. ( ich .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains ' &
+            call setmsg ( 'The segment identifier contains ' &
             //            ' a nonprinting character at location #.' )
-            CALL ERRINT ( '#', I                                    )
-            CALL SIGERR ( 'SPICE(NONPRINTINGCHARS)'                 )
-            CALL CHKOUT ( 'SGBWFS'                                  )
-            RETURN
+            call errint ( '#', i                                    )
+            call sigerr ( 'SPICE(NONPRINTINGCHARS)'                 )
+            call chkout ( 'SGBWFS'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Check to see if the number of constants is negative. This is all
 !     we can do here, we cannot check the constant values.
 !
-      IF ( NCONST .LT. 0 ) THEN
+      if ( nconst .lt. 0 ) then
 
-         CALL SETMSG ( 'The number of constants specified was #. ' &
+         call setmsg ( 'The number of constants specified was #. ' &
          //            'This number must be non-negative. ' &
          //            'Perhaps the variable was not properly' &
          //            'initialized. '                           )
-         CALL ERRINT ( '#', NCONST                               )
-         CALL SIGERR ( 'SPICE(NUMCONSTANTSNEG) '                 )
-         CALL CHKOUT (  'SGBWFS'                                 )
-         RETURN
+         call errint ( '#', nconst                               )
+         call sigerr ( 'SPICE(NUMCONSTANTSNEG) '                 )
+         call chkout (  'SGBWFS'                                 )
+         return
 
-      END IF
+      end if
 !
 !     Check to see that the packet size is OK. It should be positive.
 !
-      IF ( PKTSIZ(1) .LE. 0 ) THEN
+      if ( pktsiz(1) .le. 0 ) then
 
-         CALL SETMSG ( 'The size of the data packets must be' &
+         call setmsg ( 'The size of the data packets must be' &
          //            ' positive. It was specified as #.' &
          //            ' Perhaps the input variable was not' &
          //            ' properly initialized. '              )
-         CALL ERRINT ( '#', PKTSIZ                            )
-         CALL SIGERR ( 'SPICE(NONPOSPACKETSIZE)'              )
-         CALL CHKOUT (  'SGBWFS'                              )
-         RETURN
+         call errint ( '#', pktsiz                            )
+         call sigerr ( 'SPICE(NONPOSPACKETSIZE)'              )
+         call chkout (  'SGBWFS'                              )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if the index type is one that we recognize.
 !
-      IF ( ( IDXTYP .LT. MNIDXT) .OR. ( IDXTYP .GT. MXIDXT ) ) THEN
+      if ( ( idxtyp .lt. mnidxt) .or. ( idxtyp .gt. mxidxt ) ) then
 
-         CALL SETMSG ( 'The index type specified was #.  This is' &
+         call setmsg ( 'The index type specified was #.  This is' &
          //            ' not a valid index type. Valid types are' &
          //            ' in the range from # to #.'               )
-         CALL ERRINT ( '#', IDXTYP                                )
-         CALL ERRINT ( '#', MNIDXT                                )
-         CALL ERRINT ( '#', MXIDXT                                )
-         CALL SIGERR ( 'SPICE(UNKNOWNINDEXTYPE)'                  )
-         CALL CHKOUT ( 'SGBWFS'                                   )
-         RETURN
+         call errint ( '#', idxtyp                                )
+         call errint ( '#', mnidxt                                )
+         call errint ( '#', mxidxt                                )
+         call sigerr ( 'SPICE(UNKNOWNINDEXTYPE)'                  )
+         call chkout ( 'SGBWFS'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Check to see whether we still have room in the file table.
 !
-      IF ( NFT .EQ. FTSIZE ) THEN
+      if ( nft .eq. ftsize ) then
 
-         CALL SETMSG ( 'There are already # files being' &
+         call setmsg ( 'There are already # files being' &
          //            ' written by generic segment writing' &
          //            ' routines. No more files may be written' &
          //            ' by the generic segment writers until' &
          //            ' one of those currently being written is' &
          //            ' closed via a call to SGWES.'             )
-         CALL ERRINT ( '#', NFT                                   )
-         CALL SIGERR ( 'SPICE(FILETABLEFULL)'                     )
-         CALL CHKOUT ( 'SGBWFS'                                   )
-         RETURN
+         call errint ( '#', nft                                   )
+         call sigerr ( 'SPICE(FILETABLEFULL)'                     )
+         call chkout ( 'SGBWFS'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Set the flag which indicate whether this index type is an
 !     explicit type or an implicit type.
 !
-      EXPLCT = ( IDXTYP .EQ. EXPLT  ) .OR. ( IDXTYP .EQ. EXPLE ) .OR. &
-               ( IDXTYP .EQ. EXPCLS )
+      explct = ( idxtyp .eq. explt  ) .or. ( idxtyp .eq. exple ) .or. &
+               ( idxtyp .eq. expcls )
 !
 !     At this point, we know that the input data is OK, in so far as we
 !     can validate it, and we have room in the file table. So we proceed
@@ -1712,76 +1712,76 @@
 !     Set the flag that indicate that this segment is a fixed size
 !     segment.
 !
-      FXDSEG = .TRUE.
+      fxdseg = .true.
 !
 !     Get the address for the beginning of the array that we are going
 !     to create. We have to get this by reading the file record.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, DUMMY1, DUMMY2, DUMMY3, BEGADR )
+      call dafrfr ( handle, nd, ni, dummy1, dummy2, dummy3, begadr )
 !
 !     Begin a new segment in the DAF file.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGBWFS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGBWFS' )
+         return
+      end if
 !
 !     Write out the constants to the new segment, if there are any
 !     constants.
 !
-      IF ( NCONST .GT. 0 ) THEN
+      if ( nconst .gt. 0 ) then
 
-         CALL DAFADA ( CONST, NCONST )
+         call dafada ( const, nconst )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGBWFS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGBWFS' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     Store the information for this file and segment in the file table.
 !
-      NFT              = NFT + 1
+      nft              = nft + 1
 
-      FTITYP ( NFT )   = IDXTYP
-      FTPKSZ ( NFT )   = PKTSIZ(1)
-      FTMXSZ ( NFT )   = 0
+      ftityp ( nft )   = idxtyp
+      ftpksz ( nft )   = pktsiz(1)
+      ftmxsz ( nft )   = 0
 
-      FTNCON ( NFT )   = NCONST
-      FTNPKT ( NFT )   = 0
-      FTNREF ( NFT )   = 0
-      FTNRES ( NFT )   = 0
+      ftncon ( nft )   = nconst
+      ftnpkt ( nft )   = 0
+      ftnref ( nft )   = 0
+      ftnres ( nft )   = 0
 
-      FTEXPL ( NFT )   = EXPLCT
+      ftexpl ( nft )   = explct
 
-      FTFIXD ( NFT )   = FXDSEG
+      ftfixd ( nft )   = fxdseg
 
-      FTHAN  ( NFT )   = HANDLE
-      FTBADR ( NFT )   = BEGADR
+      fthan  ( nft )   = handle
+      ftbadr ( nft )   = begadr
 
-      FTREFS( 1, NFT ) = 0.0D0
-      FTREFS( 2, NFT ) = 0.0D0
+      ftrefs( 1, nft ) = 0.0d0
+      ftrefs( 2, nft ) = 0.0d0
 
-      IF ( EXPLCT ) THEN
-         FTOFF(NFT) = 1
-      ELSE
-         FTOFF(NFT) = 0
-      END IF
+      if ( explct ) then
+         ftoff(nft) = 1
+      else
+         ftoff(nft) = 0
+      end if
 
-      LSTHAN = HANDLE
-      INDEX  = NFT
-      NUMFXD = NUMFXD + 1
+      lsthan = handle
+      index  = nft
+      numfxd = numfxd + 1
 
-      CALL CHKOUT ( 'SGBWFS' )
-      RETURN
+      call chkout ( 'SGBWFS' )
+      return
 
 
 !$Procedure SGBWVS ( Generic segments: Begin a variable size segment. )
 
-      ENTRY SGBWVS ( HANDLE, DESCR, SEGID, NCONST, CONST, IDXTYP )
+      entry sgbwvs ( handle, descr, segid, nconst, const, idxtyp )
 
 ! $ Abstract
 !
@@ -1957,11 +1957,11 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'SGBWVS' )
+      call chkin  ( 'SGBWVS' )
 !
 !     We need to do some sanity checks on our input arguments before we
 !     should attempt to write anything to the file. So, let's start with
@@ -1970,14 +1970,14 @@
 !     Check to see if the file attached to the handle is open for
 !     writing. If not, an error is signaled.
 !
-      CALL DAFSIH ( HANDLE, 'WRITE' )
+      call dafsih ( handle, 'WRITE' )
 
-      IF ( FAILED() ) THEN
+      if ( failed() ) then
 
-         CALL CHKOUT ( 'SGBWVS' )
-         RETURN
+         call chkout ( 'SGBWVS' )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if the handle is currently in the file table. If it
 !     is, we've got a problem. This routine may only be called once for
@@ -1987,24 +1987,24 @@
 !     or SGBWFS. In either case, we cannot continue, so we signal an
 !     error.
 !
-      IF ( NFT .GT. 0 ) THEN
+      if ( nft .gt. 0 ) then
 
-         INDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+         index = isrchi ( handle, nft, fthan )
 
-         IF ( INDEX .NE. 0 ) THEN
+         if ( index .ne. 0 ) then
 
-            CALL SETMSG ( 'A segment is already being written to' &
+            call setmsg ( 'A segment is already being written to' &
             //            ' the file ''#''. A new segment cannot' &
             //            ' be started for this file until the' &
             //            ' current segment is finished. '          )
-            CALL ERRHAN ( '#', HANDLE                               )
-            CALL SIGERR ( 'SPICE(CALLEDOUTOFORDER)'                 )
-            CALL CHKOUT ( 'SGBWVS'                                  )
-            RETURN
+            call errhan ( '#', handle                               )
+            call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                 )
+            call chkout ( 'SGBWVS'                                  )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Get the ND and NI values from the DAF file. We need these to know
 !     the size of the descriptor and the length of the segment ID. The
@@ -2015,107 +2015,107 @@
 !                      NC =  8 *  | ----------------- |
 !                                 \         2         /
 !
-      CALL DAFHSF ( HANDLE, ND, NI )
+      call dafhsf ( handle, nd, ni )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGBWVS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGBWVS' )
+         return
+      end if
 
-      NC = 8 * ( ND + ( NI + 1 ) / 2 )
+      nc = 8 * ( nd + ( ni + 1 ) / 2 )
 !
 !     Get the length of the segment ID. Leading blanks are considered to
 !     be important. A blank segment ID is OK too.
 !
-      SIDLEN = LASTNB ( SEGID )
+      sidlen = lastnb ( segid )
 !
 !     Check the segment ID to see if it is OK. Its length must be less
 !     than NC and it must consist of only printing ASCII characters.
 !
-      IF ( SIDLEN .GT. NC )THEN
+      if ( sidlen .gt. nc )then
 
-         CALL SETMSG ( 'Segment identifier contains more than ' &
+         call setmsg ( 'Segment identifier contains more than ' &
          //            '# characters.'                           )
-         CALL ERRINT ( '#', NC                                   )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                     )
-         CALL CHKOUT ( 'SGBWVS'                                  )
-         RETURN
+         call errint ( '#', nc                                   )
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         call chkout ( 'SGBWVS'                                  )
+         return
 
-      END IF
+      end if
 
-      DO I = 1, SIDLEN
+      do i = 1, sidlen
 
-         ICH = ICHAR( SEGID(I:I) )
+         ich = ichar( segid(i:i) )
 
-         IF ( ( ICH .LT. FPRINT ) .OR. ( ICH .GT. LPRINT ) ) THEN
+         if ( ( ich .lt. fprint ) .or. ( ich .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains ' &
+            call setmsg ( 'The segment identifier contains ' &
             //            ' a nonprinting character at location #.' )
-            CALL ERRINT ( '#', I                                    )
-            CALL SIGERR ( 'SPICE(NONPRINTINGCHARS)'                 )
-            CALL CHKOUT ( 'SGBWVS'                                  )
-            RETURN
+            call errint ( '#', i                                    )
+            call sigerr ( 'SPICE(NONPRINTINGCHARS)'                 )
+            call chkout ( 'SGBWVS'                                  )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 !
 !     Check to see if the number of constants is negative. This is all
 !     we can do here, we cannot check the constant values.
 !
-      IF ( NCONST .LT. 0 ) THEN
+      if ( nconst .lt. 0 ) then
 
-         CALL SETMSG ( 'The number of constants specified was #. ' &
+         call setmsg ( 'The number of constants specified was #. ' &
          //            'This number must be non-negative. ' &
          //            'Perhaps the variable was not ' &
          //            'initialized. '                           )
-         CALL ERRINT ( '#', NCONST                               )
-         CALL SIGERR ( 'SPICE(NUMCONSTANTSNEG) '                 )
-         CALL CHKOUT (  'SGBWVS'                                 )
-         RETURN
+         call errint ( '#', nconst                               )
+         call sigerr ( 'SPICE(NUMCONSTANTSNEG) '                 )
+         call chkout (  'SGBWVS'                                 )
+         return
 
-      END IF
+      end if
 
 !
 !     Check to see if the index type is one that we recognize.
 !
-      IF ( ( IDXTYP .LT. MNIDXT) .OR. ( IDXTYP .GT. MXIDXT ) ) THEN
+      if ( ( idxtyp .lt. mnidxt) .or. ( idxtyp .gt. mxidxt ) ) then
 
-         CALL SETMSG ( 'The index type specified was #.  This is' &
+         call setmsg ( 'The index type specified was #.  This is' &
          //            ' not a valid index type. Valid types are' &
          //            ' in the range from # to #.'               )
-         CALL ERRINT ( '#', IDXTYP                                )
-         CALL ERRINT ( '#', MNIDXT                                )
-         CALL ERRINT ( '#', MXIDXT                                )
-         CALL SIGERR ( 'SPICE(UNKNOWNINDEXTYPE)'                  )
-         CALL CHKOUT ( 'SGBWVS'                                   )
-         RETURN
+         call errint ( '#', idxtyp                                )
+         call errint ( '#', mnidxt                                )
+         call errint ( '#', mxidxt                                )
+         call sigerr ( 'SPICE(UNKNOWNINDEXTYPE)'                  )
+         call chkout ( 'SGBWVS'                                   )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if there is room in the file table.
 !
-      IF ( NFT .EQ. FTSIZE ) THEN
+      if ( nft .eq. ftsize ) then
 
-         CALL SETMSG ( 'There are already # files being' &
+         call setmsg ( 'There are already # files being' &
          //            ' written by generic segment writing' &
          //            ' routines. No more files may be written' &
          //            ' by the generic segment writers until' &
          //            ' one of those currently being written is' &
          //            ' closed via a call to SGWES. '            )
-         CALL ERRINT ( '#', NFT                                   )
-         CALL SIGERR ( 'SPICE(FILETABLEFULL)'                     )
-         CALL CHKOUT ( 'SGBWVS'                                   )
-         RETURN
+         call errint ( '#', nft                                   )
+         call sigerr ( 'SPICE(FILETABLEFULL)'                     )
+         call chkout ( 'SGBWVS'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the flag which indicate whether this index type is an
 !     explicit type or an implicit type.
 !
-      EXPLCT = ( IDXTYP .EQ. EXPLT  ) .OR. ( IDXTYP .EQ. EXPLE ) .OR. &
-               ( IDXTYP .EQ. EXPCLS )
+      explct = ( idxtyp .eq. explt  ) .or. ( idxtyp .eq. exple ) .or. &
+               ( idxtyp .eq. expcls )
 !
 !     At this point, we know that the input data is OK, in so far as we
 !     can validate it and that there is room in the file table. So we
@@ -2124,76 +2124,76 @@
 !     Set the flag that indicate that this segment is a variable size
 !     segment.
 !
-      FXDSEG = .FALSE.
+      fxdseg = .false.
 !
 !     Get the address for the beginning of the array that we are going
 !     to create. We have to get this by reading the file record.
 !
-      CALL DAFRFR ( HANDLE, ND, NI, DUMMY1, DUMMY2, DUMMY3, BEGADR )
+      call dafrfr ( handle, nd, ni, dummy1, dummy2, dummy3, begadr )
 !
 !     Begin a new segment in the DAF file.
 !
-      CALL DAFBNA ( HANDLE, DESCR, SEGID )
+      call dafbna ( handle, descr, segid )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGBWVS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGBWVS' )
+         return
+      end if
 !
 !     Write out the constants to the new segment, if there are any
 !     constants.
 !
-      IF ( NCONST .GT. 0 ) THEN
+      if ( nconst .gt. 0 ) then
 
-         CALL DAFADA ( CONST, NCONST )
+         call dafada ( const, nconst )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGBWVS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGBWVS' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     Save the information for this file and segment in the file table.
 !
-      NFT              = NFT + 1
+      nft              = nft + 1
 
-      FTITYP ( NFT )   = IDXTYP
-      FTPKSZ ( NFT )   = 0
-      FTMXSZ ( NFT )   = 0
+      ftityp ( nft )   = idxtyp
+      ftpksz ( nft )   = 0
+      ftmxsz ( nft )   = 0
 
-      FTNCON ( NFT )   = NCONST
-      FTNPKT ( NFT )   = 0
-      FTNREF ( NFT )   = 0
-      FTNRES ( NFT )   = 0
+      ftncon ( nft )   = nconst
+      ftnpkt ( nft )   = 0
+      ftnref ( nft )   = 0
+      ftnres ( nft )   = 0
 
-      FTEXPL ( NFT )   = EXPLCT
+      ftexpl ( nft )   = explct
 
-      FTFIXD ( NFT )   = FXDSEG
+      ftfixd ( nft )   = fxdseg
 
-      FTHAN  ( NFT )   = HANDLE
-      FTBADR ( NFT )   = BEGADR
+      fthan  ( nft )   = handle
+      ftbadr ( nft )   = begadr
 
-      FTREFS( 1, NFT ) = 0.0D0
-      FTREFS( 2, NFT ) = 0.0D0
+      ftrefs( 1, nft ) = 0.0d0
+      ftrefs( 2, nft ) = 0.0d0
 
-      IF ( EXPLCT ) THEN
-         FTOFF(NFT) = 2
-      ELSE
-         FTOFF(NFT) = 1
-      END IF
+      if ( explct ) then
+         ftoff(nft) = 2
+      else
+         ftoff(nft) = 1
+      end if
 
-      LSTHAN = HANDLE
-      INDEX  = NFT
-      NUMVAR = NUMVAR + 1
+      lsthan = handle
+      index  = nft
+      numvar = numvar + 1
 
-      CALL CHKOUT ( 'SGBWVS' )
-      RETURN
+      call chkout ( 'SGBWVS' )
+      return
 
 
 !$Procedure SGWFPK ( Generic segments: Write fixed size packets. )
 
-      ENTRY SGWFPK ( HANDLE, NPKTS, PKTDAT, NREFS, REFDAT )
+      entry sgwfpk ( handle, npkts, pktdat, nrefs, refdat )
 
 ! $ Abstract
 !
@@ -2427,80 +2427,80 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGWFPK' )
+      call chkin ( 'SGWFPK' )
 !
 !     Check to see if this is the first time here. If it is, we have
 !     been called out of order, so signal an error.
 !
-      IF ( NUMFXD .EQ. 0 ) THEN
+      if ( numfxd .eq. 0 ) then
 
-         CALL SETMSG ( 'No segment with fixed size packets is' &
+         call setmsg ( 'No segment with fixed size packets is' &
          //            ' currently being written. This routine' &
          //            ' has been called out of order. The routine' &
          //            ' SGBWFS must be called before his routine' &
          //            ' may be called.'                            )
-         CALL SIGERR ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         CALL CHKOUT ( 'SGWFPK'                                       )
-         RETURN
+         call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
+         call chkout ( 'SGWFPK'                                       )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if the last handle used is the same as the current
 !     handle. This saves us a table lookup to get the appropriate index
 !     into the file table to restore the information for that handle.
 !
-      IF ( HANDLE .NE. LSTHAN ) THEN
+      if ( handle .ne. lsthan ) then
 
-         INDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+         index = isrchi ( handle, nft, fthan )
 
-         IF ( INDEX .EQ. 0 ) THEN
+         if ( index .eq. 0 ) then
 
-            CALL SETMSG ( 'No segment with fixed size packets is' &
+            call setmsg ( 'No segment with fixed size packets is' &
             //            ' associated with the file ''#''. In' &
             //            ' order to write fixed size packets to' &
             //            ' a file the routine SGBWFS must be' &
             //            ' called to begin the segment.'           )
-            CALL ERRHAN ( '#', HANDLE                               )
-            CALL SIGERR ( 'SPICE(SEGMENTNOTFOUND)'                  )
-            CALL CHKOUT ( 'SGWFPK'                                  )
-            RETURN
+            call errhan ( '#', handle                               )
+            call sigerr ( 'SPICE(SEGMENTNOTFOUND)'                  )
+            call chkout ( 'SGWFPK'                                  )
+            return
 
-         END IF
+         end if
 
-         EXPLCT = FTEXPL(INDEX)
-         FXDSEG = FTFIXD(INDEX)
-         LSTHAN = HANDLE
+         explct = ftexpl(index)
+         fxdseg = ftfixd(index)
+         lsthan = handle
 
-         CALL DAFCAD ( HANDLE )
+         call dafcad ( handle )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGWFPK' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGWFPK' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     Check to see if the segment being written is a fixed size packet
 !     segment or a variable size packet segment. If the latter, then
 !     this is the wrong routine.
 !
-      IF ( .NOT. FXDSEG ) THEN
+      if ( .not. fxdseg ) then
 
-            CALL SETMSG ( 'The segment being written to the file' &
+            call setmsg ( 'The segment being written to the file' &
             //            '  ''#'' is a variable packet size' &
             //            ' segment, not a fixed packet size' &
             //            ' segment.  The routine SGWVPK may be used' &
             //            ' to write variable size packets.'          )
-            CALL ERRHAN ( '#', HANDLE                                 )
-            CALL SIGERR ( 'SPICE(SEGTYPECONFLICT)'                    )
-            CALL CHKOUT ( 'SGWFPK'                                    )
-            RETURN
+            call errhan ( '#', handle                                 )
+            call sigerr ( 'SPICE(SEGTYPECONFLICT)'                    )
+            call chkout ( 'SGWFPK'                                    )
+            return
 
-      END IF
+      end if
 !
 !     At this point, we have a good file handle, an index into the file
 !     table, and we know that we are working with a fixed packet size
@@ -2508,18 +2508,18 @@
 !
 !     Check the number of packets to be sure that it is positive.
 !
-      IF ( NPKTS .LE. 0 ) THEN
+      if ( npkts .le. 0 ) then
 
-         CALL SETMSG ( 'The number of packets to store is not' &
+         call setmsg ( 'The number of packets to store is not' &
          //            ' positive.  The value supplied was #.' &
          //            ' Perhaps this packet count was' &
          //            ' uninitialized.'                       )
-         CALL ERRINT ( '#', NPKTS                              )
-         CALL SIGERR ( 'SPICE(NUMPACKETSNOTPOS)'               )
-         CALL CHKOUT ( 'SGWFPK'                                )
-         RETURN
+         call errint ( '#', npkts                              )
+         call sigerr ( 'SPICE(NUMPACKETSNOTPOS)'               )
+         call chkout ( 'SGWFPK'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Now we get to some of the more interesting bits. We now need to
@@ -2527,38 +2527,38 @@
 !     implicitly indexed types, because they have different
 !     characteristics and assumptions about how they are stored.
 !
-      IF ( EXPLCT ) THEN
+      if ( explct ) then
 !
 !        For explicitly indexed packets the number of reference values
 !        must be equal to the number of packets. The references must
 !        also be in increasing order.
 !
-         IF ( NREFS .NE. NPKTS ) THEN
+         if ( nrefs .ne. npkts ) then
 
-            CALL SETMSG ( 'The number of reference values' &
+            call setmsg ( 'The number of reference values' &
             //            ' supplied, #, is not compatible with' &
             //            ' explicitly indexed packets. Explicitly' &
             //            ' indexed packets require the number of' &
             //            ' reference values to equal the number of' &
             //            ' packets, in this case, #.'               )
-            CALL ERRINT ( '#', NREFS                                 )
-            CALL ERRINT ( '#', NPKTS                                 )
-            CALL SIGERR ( 'SPICE(INCOMPATIBLENUMREF)'                )
-            CALL CHKOUT ( 'SGWFPK'                                   )
-            RETURN
+            call errint ( '#', nrefs                                 )
+            call errint ( '#', npkts                                 )
+            call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'                )
+            call chkout ( 'SGWFPK'                                   )
+            return
 
-         END IF
+         end if
 !
 !        If this is not the first time we have added data to this
 !        segment, we need to be sure that all of the current reference
 !        values are greater then the last reference value from the
 !        previous addition of packets to the segment.
 !
-         IF ( FTNPKT(INDEX) .GT. 0 ) THEN
+         if ( ftnpkt(index) .gt. 0 ) then
 
-            IF ( FTREFS(1,INDEX) .GE. REFDAT(1) ) THEN
+            if ( ftrefs(1,index) .ge. refdat(1) ) then
 
-               CALL SETMSG ( 'Reference values are out of order.' &
+               call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
                //            ' to be out of order. The reference' &
                //            ' values for explicitly indexed packets' &
@@ -2566,35 +2566,35 @@
                //            ' first reference value is less than or' &
                //            ' equal to the last reference value, #,' &
                //            ' from the previous addition of packets.' )
-               CALL ERRDP  ( '#',  REFDAT(1)                           )
-               CALL ERRDP  ( '#',  FTREFS(1,INDEX)                     )
-               CALL SIGERR ( 'SPICE(UNORDEREDREFS)'                    )
-               CALL CHKOUT ( 'SGWFPK'                                  )
-               RETURN
+               call errdp  ( '#',  refdat(1)                           )
+               call errdp  ( '#',  ftrefs(1,index)                     )
+               call sigerr ( 'SPICE(UNORDEREDREFS)'                    )
+               call chkout ( 'SGWFPK'                                  )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         DO I = 2, NREFS
+         do i = 2, nrefs
 
-            IF ( REFDAT(I-1) .GE. REFDAT(I) ) THEN
+            if ( refdat(i-1) .ge. refdat(i) ) then
 
-               CALL SETMSG ( 'Reference values are out of order.' &
+               call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
                //            ' to be out of order for index #. The' &
                //            ' reference values for explicitly' &
                //            ' indexed packets must be in increasing' &
                //            ' order.'                                )
-               CALL ERRDP  ( '#',  REFDAT(I-1)                        )
-               CALL ERRINT ( '#',  I-1                                )
-               CALL SIGERR ( 'SPICE(UNORDEREDREFS)'                   )
-               CALL CHKOUT ( 'SGWFPK'                                 )
-               RETURN
+               call errdp  ( '#',  refdat(i-1)                        )
+               call errint ( '#',  i-1                                )
+               call sigerr ( 'SPICE(UNORDEREDREFS)'                   )
+               call chkout ( 'SGWFPK'                                 )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Add the packets preceded by their reference values to the
 !        segment. We put the reference values with the packets so that
@@ -2602,32 +2602,32 @@
 !        construct a reference directory after all of the packets have
 !        been added to the segment.
 !
-         DO I = 1, NPKTS
+         do i = 1, npkts
 
-            CALL DAFADA ( REFDAT(I), 1                   )
-            CALL DAFADA ( PKTDAT((I-1)*FTPKSZ(INDEX)+1), &
-                          FTPKSZ(INDEX)                  )
+            call dafada ( refdat(i), 1                   )
+            call dafada ( pktdat((i-1)*ftpksz(index)+1), &
+                          ftpksz(index)                  )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGWFPK' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGWFPK' )
+               return
+            end if
 
-         END DO
+         end do
 !
 !        Save the last reference value in the file table so that we
 !        can use it to verify that the next addition does not violate
 !        the increasing order of the reference values.
 !
-         FTREFS(1,INDEX) = REFDAT(NREFS)
+         ftrefs(1,index) = refdat(nrefs)
 !
 !        Update the counts for the number of packets, the number of
 !        references.
 !
-         FTNPKT(INDEX) = FTNPKT(INDEX) + NPKTS
-         FTNREF(INDEX) = FTNREF(INDEX) + NREFS
+         ftnpkt(index) = ftnpkt(index) + npkts
+         ftnref(index) = ftnref(index) + nrefs
 
-      ELSE
+      else
 !
 !        For implicitly indexed packets the number of reference values
 !        must be two (2), and the second reference value must be an
@@ -2638,68 +2638,68 @@
 !        these arguments are ignored.
 !
 
-         IF ( FTNPKT (INDEX) .EQ. 0 ) THEN
+         if ( ftnpkt (index) .eq. 0 ) then
 
-            IF ( NREFS .NE. 2 ) THEN
+            if ( nrefs .ne. 2 ) then
 
-               CALL SETMSG ( 'The number of reference values' &
+               call setmsg ( 'The number of reference values' &
                //            ' supplied, #, is not compatible with' &
                //            ' implicitly indexed packets. Implicitly' &
                //            ' indexed packets require the number of' &
                //            ' reference values to be two (2).'      )
-               CALL ERRINT ( '#', NREFS                              )
-               CALL SIGERR ( 'SPICE(INCOMPATIBLENUMREF)'             )
-               CALL CHKOUT ( 'SGWFPK'                                )
-               RETURN
+               call errint ( '#', nrefs                              )
+               call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'             )
+               call chkout ( 'SGWFPK'                                )
+               return
 
-            END IF
+            end if
 
-            IF ( DINT(REFDAT(2)) .NE. REFDAT(2) ) THEN
+            if ( dint(refdat(2)) .ne. refdat(2) ) then
 
-               CALL SETMSG ( 'For implicitly indexed packets the' &
+               call setmsg ( 'For implicitly indexed packets the' &
                //            ' step size must be an integer.'      )
-               CALL SIGERR ( 'SPICE(REFVALNOTINTEGER)'             )
-               CALL CHKOUT ( 'SGWFPK'                              )
-               RETURN
+               call sigerr ( 'SPICE(REFVALNOTINTEGER)'             )
+               call chkout ( 'SGWFPK'                              )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        Add the packets to the segment.
 !
-         CALL DAFADA ( PKTDAT, FTPKSZ(INDEX)*NPKTS )
+         call dafada ( pktdat, ftpksz(index)*npkts )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGWFPK' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGWFPK' )
+            return
+         end if
 !
 !        Save the last reference values and the number of reference
 !        values in the file table. We only do this on the first time
 !        through the routine.
 !
-         IF ( FTNPKT(INDEX) .EQ. 0 ) THEN
+         if ( ftnpkt(index) .eq. 0 ) then
 
-            FTNREF(INDEX)   = NREFS
-            FTREFS(1,INDEX) = REFDAT(1)
-            FTREFS(2,INDEX) = REFDAT(2)
+            ftnref(index)   = nrefs
+            ftrefs(1,index) = refdat(1)
+            ftrefs(2,index) = refdat(2)
 
-         END IF
+         end if
 !
 !        Update the count for the number of packets.
 !
-         FTNPKT(INDEX) = FTNPKT(INDEX) + NPKTS
+         ftnpkt(index) = ftnpkt(index) + npkts
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SGWFPK' )
-      RETURN
+      call chkout ( 'SGWFPK' )
+      return
 
 
 !$Procedure SGWVPK ( Generic segment: Write variable size packets. )
 
-      ENTRY SGWVPK ( HANDLE, NPKTS, PKTSIZ, PKTDAT, NREFS, REFDAT )
+      entry sgwvpk ( handle, npkts, pktsiz, pktdat, nrefs, refdat )
 
 ! $ Abstract
 !
@@ -2955,80 +2955,80 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'SGWVPK' )
+      call chkin  ( 'SGWVPK' )
 !
 !     Check to see if this is the first time here. If it is, we have
 !     been called out of order, so signal an error.
 !
-      IF ( NUMVAR .EQ. 0 ) THEN
+      if ( numvar .eq. 0 ) then
 
-         CALL SETMSG ( 'No segment with variable size packets is' &
+         call setmsg ( 'No segment with variable size packets is' &
          //            ' currently being written. This routine' &
          //            ' has been called out of order. The routine' &
          //            ' SGBWVS must be called before his routine' &
          //            ' may be called.'                            )
-         CALL SIGERR ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         CALL CHKOUT ( 'SGWVPK'                                     )
-         RETURN
+         call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
+         call chkout ( 'SGWVPK'                                     )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if the last handle used is the same as the current
 !     handle. This saves us a table lookup to get the appropriate index
 !     into the file table to restore the information for that handle.
 !
-      IF ( HANDLE .NE. LSTHAN ) THEN
+      if ( handle .ne. lsthan ) then
 
-         INDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+         index = isrchi ( handle, nft, fthan )
 
-         IF ( INDEX .EQ. 0 ) THEN
+         if ( index .eq. 0 ) then
 
-            CALL SETMSG ( 'No segment with variable size packets is' &
+            call setmsg ( 'No segment with variable size packets is' &
             //            ' associated with the file ''#''. In' &
             //            ' order to write variable size packets to' &
             //            ' a file the routine SGBWVS must be' &
             //            ' called to begin the segment.'           )
-            CALL ERRHAN ( '#', HANDLE                               )
-            CALL SIGERR ( 'SPICE(SEGMENTNOTFOUND)'                  )
-            CALL CHKOUT ( 'SGWVPK'                                  )
-            RETURN
+            call errhan ( '#', handle                               )
+            call sigerr ( 'SPICE(SEGMENTNOTFOUND)'                  )
+            call chkout ( 'SGWVPK'                                  )
+            return
 
-         END IF
+         end if
 
-         EXPLCT = FTEXPL(INDEX)
-         FXDSEG = FTFIXD(INDEX)
-         LSTHAN = HANDLE
+         explct = ftexpl(index)
+         fxdseg = ftfixd(index)
+         lsthan = handle
 
-         CALL DAFCAD ( HANDLE )
+         call dafcad ( handle )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGWVPK' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGWVPK' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     Check to see if the segment being written is a fixed size packet
 !     segment or a variable size packet segment. If the former, then
 !     this is the wrong routine.
 !
-      IF ( FXDSEG ) THEN
+      if ( fxdseg ) then
 
-            CALL SETMSG ( 'The segment being written to the file' &
+            call setmsg ( 'The segment being written to the file' &
             //            '  ''#'' is a fixed packet size' &
             //            ' segment, not a variable packet size' &
             //            ' segment.  The routine SGWFPK may be used' &
             //            ' to write fixed size packets.'             )
-            CALL ERRHAN ( '#', HANDLE                                 )
-            CALL SIGERR ( 'SPICE(SEGTYPECONFLICT)'                    )
-            CALL CHKOUT ( 'SGWVPK'                                    )
-            RETURN
+            call errhan ( '#', handle                                 )
+            call sigerr ( 'SPICE(SEGTYPECONFLICT)'                    )
+            call chkout ( 'SGWVPK'                                    )
+            return
 
-      END IF
+      end if
 !
 !     At this point, we have a good file handle, an index into the file
 !     table, and we know that we are working with a variable packet
@@ -3037,18 +3037,18 @@
 !
 !     Check the number of packets to be sure that it is positive.
 !
-      IF ( NPKTS .LE. 0 ) THEN
+      if ( npkts .le. 0 ) then
 
-         CALL SETMSG ( 'The number of packets to store is not' &
+         call setmsg ( 'The number of packets to store is not' &
          //            ' positive.  The value supplied was #.' &
          //            ' Perhaps this packet count was' &
          //            ' uninitialized.'                       )
-         CALL ERRINT ( '#', NPKTS                              )
-         CALL SIGERR ( 'SPICE(NUMPACKETSNOTPOS)'               )
-         CALL CHKOUT ( 'SGWVPK'                                )
-         RETURN
+         call errint ( '#', npkts                              )
+         call sigerr ( 'SPICE(NUMPACKETSNOTPOS)'               )
+         call chkout ( 'SGWVPK'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     Now we get to some of the more interesting bits. We now need to
@@ -3056,38 +3056,38 @@
 !     implicitly indexed types, because they have different
 !     characteristics and assumptions about how they are stored.
 !
-      IF ( EXPLCT ) THEN
+      if ( explct ) then
 !
 !        For explicitly indexed packets the number of reference values
 !        must be equal to the number of packets. The references must
 !        also be in increasing order.
 !
-         IF ( NREFS .NE. NPKTS ) THEN
+         if ( nrefs .ne. npkts ) then
 
-            CALL SETMSG ( 'The number of reference values' &
+            call setmsg ( 'The number of reference values' &
             //            ' supplied, #, is not compatible with' &
             //            ' explicitly indexed packets. Explicitly' &
             //            ' indexed packets require the number of' &
             //            ' reference values to equal the number of' &
             //            ' packets, in this case, #.'               )
-            CALL ERRINT ( '#', NREFS                                 )
-            CALL ERRINT ( '#', NPKTS                                 )
-            CALL SIGERR ( 'SPICE(INCOMPATIBLENUMREF)'                )
-            CALL CHKOUT ( 'SGWVPK'                                   )
-            RETURN
+            call errint ( '#', nrefs                                 )
+            call errint ( '#', npkts                                 )
+            call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'                )
+            call chkout ( 'SGWVPK'                                   )
+            return
 
-         END IF
+         end if
 !
 !        If this is not the first time we have added data to this
 !        segment, we need to be sure that all of the current reference
 !        values are greater then the last reference value from the
 !        previous addition of packets to the segment.
 !
-         IF ( FTNPKT(INDEX) .GT. 0 ) THEN
+         if ( ftnpkt(index) .gt. 0 ) then
 
-            IF ( FTREFS(1,INDEX) .GE. REFDAT(1) ) THEN
+            if ( ftrefs(1,index) .ge. refdat(1) ) then
 
-               CALL SETMSG ( 'Reference values are out of order.' &
+               call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
                //            ' The reference values for explicitly' &
                //            ' to be out of order. indexed packets' &
@@ -3095,55 +3095,55 @@
                //            ' first reference value is less than or' &
                //            ' equal to the last reference value, #,' &
                //            ' from the previous addition of packets.' )
-               CALL ERRDP  ( '#',  REFDAT(1)                           )
-               CALL ERRDP  ( '#',  FTREFS(1,INDEX)                     )
-               CALL SIGERR ( 'SPICE(UNORDEREDREFS)'                    )
-               CALL CHKOUT ( 'SGWVPK'                                  )
-               RETURN
+               call errdp  ( '#',  refdat(1)                           )
+               call errdp  ( '#',  ftrefs(1,index)                     )
+               call sigerr ( 'SPICE(UNORDEREDREFS)'                    )
+               call chkout ( 'SGWVPK'                                  )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-         DO I = 2, NREFS
+         do i = 2, nrefs
 
-            IF ( REFDAT(I-1) .GE. REFDAT(I) ) THEN
+            if ( refdat(i-1) .ge. refdat(i) ) then
 
-               CALL SETMSG ( 'Reference values are out of order.' &
+               call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
                //            ' to be out of order for index #.' &
                //            ' The reference values for explicitly' &
                //            ' indexed packets must be in increasing' &
                //            ' order.'                                )
-               CALL ERRDP  ( '#',  REFDAT(I-1)                        )
-               CALL ERRINT ( '#',  I-1                                )
-               CALL SIGERR ( 'SPICE(UNORDEREDREFS)'                   )
-               CALL CHKOUT ( 'SGWVPK'                                 )
-               RETURN
+               call errdp  ( '#',  refdat(i-1)                        )
+               call errint ( '#',  i-1                                )
+               call sigerr ( 'SPICE(UNORDEREDREFS)'                   )
+               call chkout ( 'SGWVPK'                                 )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Check the packet size to be sure that it is positive.
 !
-         DO I = 1, NPKTS
+         do i = 1, npkts
 
-            IF ( PKTSIZ(I) .LE. 0 ) THEN
+            if ( pktsiz(i) .le. 0 ) then
 
-               CALL SETMSG ( 'The packet size for packet # was not' &
+               call setmsg ( 'The packet size for packet # was not' &
                //            ' positive. It had a value of #. All' &
                //            ' packet sizes must be greater then' &
                //            ' zero.'                                )
-               CALL ERRINT ( '#', I                                  )
-               CALL ERRINT ( '#', PKTSIZ(I)                          )
-               CALL SIGERR ( 'SPICE(NONPOSPACKETSIZE)'               )
-               CALL CHKOUT ( 'SGWVPK'                                )
-               RETURN
+               call errint ( '#', i                                  )
+               call errint ( '#', pktsiz(i)                          )
+               call sigerr ( 'SPICE(NONPOSPACKETSIZE)'               )
+               call chkout ( 'SGWVPK'                                )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Add the packets preceded by their reference values and sizes to
 !        the segment. We put the reference values with the packets so
@@ -3151,47 +3151,47 @@
 !        construct a reference directory after all of the packets have
 !        been added to the segment.
 !
-         PKTPOS = 1
+         pktpos = 1
 
-         DO I = 1, NPKTS
+         do i = 1, npkts
 
-            DPKSIZ = DBLE( PKTSIZ(I) )
+            dpksiz = dble( pktsiz(i) )
 
-            CALL DAFADA ( REFDAT(I), 1              )
-            CALL DAFADA ( DPKSIZ,    1              )
-            CALL DAFADA ( PKTDAT(PKTPOS), PKTSIZ(I) )
+            call dafada ( refdat(i), 1              )
+            call dafada ( dpksiz,    1              )
+            call dafada ( pktdat(pktpos), pktsiz(i) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGWVPK' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGWVPK' )
+               return
+            end if
 
-            PKTPOS        = PKTPOS        + PKTSIZ(I)
-            FTPKSZ(INDEX) = FTPKSZ(INDEX) + PKTSIZ(I)
+            pktpos        = pktpos        + pktsiz(i)
+            ftpksz(index) = ftpksz(index) + pktsiz(i)
 !
 !           Remember the maximum packet size encountered.
 !
-            IF ( PKTSIZ(I) .GT. FTMXSZ(INDEX) ) THEN
+            if ( pktsiz(i) .gt. ftmxsz(index) ) then
 
-               FTMXSZ(INDEX) = PKTSIZ(I)
+               ftmxsz(index) = pktsiz(i)
 
-            END IF
+            end if
 
-         END DO
+         end do
 !
 !        Save the last reference value in the file table so that we
 !        can use it to verify that the next addition does not violate
 !        the increasing order of the reference values.
 !
-         FTREFS(1,INDEX) = REFDAT(NREFS)
+         ftrefs(1,index) = refdat(nrefs)
 !
 !        Update the counts for the number of packets, the number of
 !        references.
 !
-         FTNPKT(INDEX) = FTNPKT(INDEX) + NPKTS
-         FTNREF(INDEX) = FTNREF(INDEX) + NREFS
+         ftnpkt(index) = ftnpkt(index) + npkts
+         ftnref(index) = ftnref(index) + nrefs
 
-      ELSE
+      else
 !
 !        For implicitly indexed packets the number of reference values
 !        must be two (2), and the second reference value must be an
@@ -3201,82 +3201,82 @@
 !        data packets to a generic segment. In all subsequent calls,
 !        these arguments are ignored.
 !
-         IF ( FTNPKT(INDEX) .EQ. 0 ) THEN
+         if ( ftnpkt(index) .eq. 0 ) then
 
-            IF ( NREFS .NE. 2 ) THEN
+            if ( nrefs .ne. 2 ) then
 
-               CALL SETMSG ( 'The number of reference values' &
+               call setmsg ( 'The number of reference values' &
                //            ' supplied, #, is not compatible with' &
                //            ' implicitly indexed packets. Implicitly' &
                //            ' indexed packets require the number of' &
                //            ' reference values to be two (2).'        )
-               CALL ERRINT ( '#', NREFS                                )
-               CALL SIGERR ( 'SPICE(INCOMPATIBLENUMREF)'               )
-               CALL CHKOUT ( 'SGWVPK'                                  )
-               RETURN
+               call errint ( '#', nrefs                                )
+               call sigerr ( 'SPICE(INCOMPATIBLENUMREF)'               )
+               call chkout ( 'SGWVPK'                                  )
+               return
 
-            END IF
+            end if
 
-            IF ( DINT(REFDAT(2)) .NE. REFDAT(2) ) THEN
+            if ( dint(refdat(2)) .ne. refdat(2) ) then
 
-               CALL SETMSG ( 'For implicitly indexed packets the' &
+               call setmsg ( 'For implicitly indexed packets the' &
                //            ' step size must be an integer.'      )
-               CALL SIGERR ( 'SPICE(REFVALNOTINTEGER)'             )
-               CALL CHKOUT ( 'SGWVPK'                              )
-               RETURN
+               call sigerr ( 'SPICE(REFVALNOTINTEGER)'             )
+               call chkout ( 'SGWVPK'                              )
+               return
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Add the packets to the segment preceded by the size of the
 !        packet.
 !
-         PKTPOS = 1
+         pktpos = 1
 
-         DO I = 1, NPKTS
+         do i = 1, npkts
 
-            DPKSIZ = DBLE ( PKTSIZ(I) )
+            dpksiz = dble ( pktsiz(i) )
 
-            CALL DAFADA ( DPKSIZ, 1                 )
-            CALL DAFADA ( PKTDAT(PKTPOS), PKTSIZ(I) )
+            call dafada ( dpksiz, 1                 )
+            call dafada ( pktdat(pktpos), pktsiz(i) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGWVPK' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGWVPK' )
+               return
+            end if
 
-            PKTPOS        = PKTPOS        + PKTSIZ(I)
-            FTPKSZ(INDEX) = FTPKSZ(INDEX) + PKTSIZ(I)
+            pktpos        = pktpos        + pktsiz(i)
+            ftpksz(index) = ftpksz(index) + pktsiz(i)
 
-         END DO
+         end do
 !
 !        Save the reference values and the number of reference values
 !        in the file table. We only do this on the first time through
 !        the routine.
 !
-         IF ( FTNPKT(INDEX) .EQ. 0 ) THEN
+         if ( ftnpkt(index) .eq. 0 ) then
 
-            FTNREF(INDEX)   = NREFS
-            FTREFS(1,INDEX) = REFDAT(1)
-            FTREFS(2,INDEX) = REFDAT(2)
+            ftnref(index)   = nrefs
+            ftrefs(1,index) = refdat(1)
+            ftrefs(2,index) = refdat(2)
 
-         END IF
+         end if
 !
 !        Update the counts for the number of packets.
 !
-         FTNPKT(INDEX) = FTNPKT(INDEX) + NPKTS
+         ftnpkt(index) = ftnpkt(index) + npkts
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SGWVPK' )
-      RETURN
+      call chkout ( 'SGWVPK' )
+      return
 
 
 !$Procedure SGWES ( Generic segments: End a segment. )
 
-      ENTRY SGWES ( HANDLE )
+      entry sgwes ( handle )
 
 ! $ Abstract
 !
@@ -3408,73 +3408,73 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SGWES' )
+      call chkin ( 'SGWES' )
 !
 !     Check to see if we have any fixed or variable segments being
 !     written.
 !
-      IF ( NFT .EQ. 0 ) THEN
+      if ( nft .eq. 0 ) then
 
-         CALL SETMSG ( 'No segment is currently being written.' &
+         call setmsg ( 'No segment is currently being written.' &
          //            ' This routine has been called out of' &
          //            ' order. One of the routines SGBWFS or' &
          //            ' SGBWVS must be called before his routine' &
          //            ' may be called.'                            )
-         CALL SIGERR ( 'SPICE(CALLEDOUTOFORDER)'                    )
-         CALL CHKOUT ( 'SGWES'                                      )
-         RETURN
+         call sigerr ( 'SPICE(CALLEDOUTOFORDER)'                    )
+         call chkout ( 'SGWES'                                      )
+         return
 
-      END IF
+      end if
 !
 !     Check to see if the last handle used is the same as the current
 !     handle. This saves us a table lookup to get the appropriate index
 !     into the file table to restore the information for that handle.
 !
-      IF ( HANDLE .NE. LSTHAN ) THEN
+      if ( handle .ne. lsthan ) then
 
-         INDEX = ISRCHI ( HANDLE, NFT, FTHAN )
+         index = isrchi ( handle, nft, fthan )
 
-         IF ( INDEX .EQ. 0 ) THEN
+         if ( index .eq. 0 ) then
 
-            CALL SETMSG ( 'No segment is associated with the file' &
+            call setmsg ( 'No segment is associated with the file' &
             //            ' ''#''. In order to write packets to a' &
             //            ' segment one of the routines SGBWFS or' &
             //            ' SGBWVS must be called to begin a' &
             //            ' segment.'                               )
-            CALL ERRHAN ( '#', HANDLE                               )
-            CALL SIGERR ( 'SPICE(SEGMENTNOTFOUND)'                  )
-            CALL CHKOUT ( 'SGWES'                                   )
-            RETURN
+            call errhan ( '#', handle                               )
+            call sigerr ( 'SPICE(SEGMENTNOTFOUND)'                  )
+            call chkout ( 'SGWES'                                   )
+            return
 
-         END IF
+         end if
 
-         EXPLCT = FTEXPL(INDEX)
-         FXDSEG = FTFIXD(INDEX)
-         LSTHAN = HANDLE
+         explct = ftexpl(index)
+         fxdseg = ftfixd(index)
+         lsthan = handle
 
-         CALL DAFCAD ( HANDLE )
+         call dafcad ( handle )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SGWES' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SGWES' )
+            return
+         end if
 
-      END IF
+      end if
 !
 !     We need to do different things depending on whether the reference
 !     values are implicitly or explicitly defined. We will also need to
 !     treat the cases of fixed size packets and variable size packets
 !     differently.
 !
-      IF ( EXPLCT ) THEN
+      if ( explct ) then
 !
 !        We have an explicit segment.
 !
-         IF ( FXDSEG ) THEN
+         if ( fxdseg ) then
 !
 !           We need to do a little bit of work to finish this case off.
 !           We know that we do not need a list of packet starting
@@ -3489,74 +3489,74 @@
 !              set the beginning address of the packet data area in the
 !              segment.
 !
-            SIZE   = FTOFF(INDEX)  + FTPKSZ(INDEX)
-            REFADR = FTBADR(INDEX) + FTNCON(INDEX)
+            size   = ftoff(index)  + ftpksz(index)
+            refadr = ftbadr(index) + ftncon(index)
 !
 !           2) Collect all of the references stored with the packets
 !              when they were written, and copy them into the
 !              reference area.
 !
-            DO I  = 1, FTNPKT(INDEX)
+            do i  = 1, ftnpkt(index)
 
-               CALL DAFGDA ( HANDLE, REFADR, REFADR, MYREF )
-               CALL DAFADA ( MYREF, 1 )
+               call dafgda ( handle, refadr, refadr, myref )
+               call dafada ( myref, 1 )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGWES' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGWES' )
+                  return
+               end if
 
-               REFADR = REFADR + SIZE
+               refadr = refadr + size
 
-            END DO
+            end do
 !
 !           3) Create a reference directory if the number of
 !              references is greater than DIRSIZ.
 !
-            IF ( FTNREF(INDEX) .GT. DIRSIZ ) THEN
+            if ( ftnref(index) .gt. dirsiz ) then
 
-               REFADR = FTBADR(INDEX) + FTNCON(INDEX)
-               REFADR = REFADR + FTNPKT(INDEX) * SIZE + DIRSIZ - 1
+               refadr = ftbadr(index) + ftncon(index)
+               refadr = refadr + ftnpkt(index) * size + dirsiz - 1
 
-               DO I = 1, (FTNREF(INDEX)-1)/DIRSIZ
+               do i = 1, (ftnref(index)-1)/dirsiz
 
-                  CALL DAFGDA ( HANDLE, REFADR, REFADR, MYREF )
-                  CALL DAFADA ( MYREF, 1 )
+                  call dafgda ( handle, refadr, refadr, myref )
+                  call dafada ( myref, 1 )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'SGWES' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'SGWES' )
+                     return
+                  end if
 
-                  REFADR = REFADR + DIRSIZ
+                  refadr = refadr + dirsiz
 
-               END DO
+               end do
 
-            END IF
+            end if
 !
 !           4) Construct the meta data for the segment.
 !
-            SIZE = ( FTOFF(INDEX) + FTPKSZ(INDEX) ) * FTNPKT(INDEX)
+            size = ( ftoff(index) + ftpksz(index) ) * ftnpkt(index)
 
-            META ( CONBAS ) = 0
-            META ( NCON   ) = FTNCON(INDEX)
-            META ( PKTBAS ) = META(CONBAS) + META(NCON)
-            META ( NPKT   ) = FTNPKT(INDEX)
-            META ( PKTOFF ) = FTOFF(INDEX)
-            META ( PDRBAS ) = 0
-            META ( NPDR   ) = 0
-            META ( PDRTYP ) = 0
-            META ( REFBAS ) = META(PKTBAS) + SIZE
-            META ( NREF   ) = FTNREF(INDEX)
-            META ( RDRBAS ) = META(REFBAS) + META(NREF)
-            META ( NRDR   ) = (FTNREF(INDEX)-1)/DIRSIZ
-            META ( RDRTYP ) = FTITYP(INDEX)
-            META ( RSVBAS ) = 0
-            META ( NRSV   ) = 0
-            META ( PKTSZ  ) = FTPKSZ(INDEX)
-            META ( NMETA  ) = MXMETA
+            meta ( conbas ) = 0
+            meta ( ncon   ) = ftncon(index)
+            meta ( pktbas ) = meta(conbas) + meta(ncon)
+            meta ( npkt   ) = ftnpkt(index)
+            meta ( pktoff ) = ftoff(index)
+            meta ( pdrbas ) = 0
+            meta ( npdr   ) = 0
+            meta ( pdrtyp ) = 0
+            meta ( refbas ) = meta(pktbas) + size
+            meta ( nref   ) = ftnref(index)
+            meta ( rdrbas ) = meta(refbas) + meta(nref)
+            meta ( nrdr   ) = (ftnref(index)-1)/dirsiz
+            meta ( rdrtyp ) = ftityp(index)
+            meta ( rsvbas ) = 0
+            meta ( nrsv   ) = 0
+            meta ( pktsz  ) = ftpksz(index)
+            meta ( nmeta  ) = mxmeta
 
-         ELSE
+         else
 !
 !           We need to do a little bit of work to finish this case off.
 !           We know that we need a packet directory and we need to store
@@ -3570,65 +3570,65 @@
 !              segment and initialize the address of the first data
 !              packet.
 !
-            PKTADR = FTBADR(INDEX) + FTNCON(INDEX) + FTOFF(INDEX)
-            MYADDR = DBLE ( FTOFF(INDEX) + 1 )
+            pktadr = ftbadr(index) + ftncon(index) + ftoff(index)
+            myaddr = dble ( ftoff(index) + 1 )
 !
 !           2) Create a packet directory. The packet directory consists
 !              of the beginning addresses for each of the packets and a
 !              fake beginning for an extra packet so that we can easily
 !              compute the size of the last packet.
 !
-            DO I  = 1, FTNPKT(INDEX)
+            do i  = 1, ftnpkt(index)
 
 
-               CALL DAFGDA ( HANDLE, PKTADR-1, PKTADR-1, MYSIZE )
-               CALL DAFADA ( MYADDR, 1                          )
+               call dafgda ( handle, pktadr-1, pktadr-1, mysize )
+               call dafada ( myaddr, 1                          )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGWES' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGWES' )
+                  return
+               end if
 
-               SIZE   = INT ( MYSIZE )
-               PKTADR = PKTADR +        SIZE + FTOFF(INDEX)
-               MYADDR = MYADDR + DBLE ( SIZE + FTOFF(INDEX) )
+               size   = int ( mysize )
+               pktadr = pktadr +        size + ftoff(index)
+               myaddr = myaddr + dble ( size + ftoff(index) )
 
-            END DO
+            end do
 !
 !           Put in the fake beginning for an extra packet. PKTADR should
 !           contain the proper value.
 !
-            MYADDR = DBLE ( MYADDR )
+            myaddr = dble ( myaddr )
 
-            CALL DAFADA ( MYADDR, 1 )
+            call dafada ( myaddr, 1 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGWES' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGWES' )
+               return
+            end if
 
 !
 !           3) Collect all of the references, stored with the packets
 !              when they were written, and copy them into the
 !              reference area.
 !
-            REFADR = FTBADR(INDEX) + FTNCON(INDEX)
+            refadr = ftbadr(index) + ftncon(index)
 
-            DO I  = 1, FTNPKT(INDEX)
+            do i  = 1, ftnpkt(index)
 
-               CALL DAFGDA ( HANDLE, REFADR,   REFADR,   MYREF  )
-               CALL DAFGDA ( HANDLE, REFADR+1, REFADR+1, MYSIZE )
-               CALL DAFADA ( MYREF,  1                          )
+               call dafgda ( handle, refadr,   refadr,   myref  )
+               call dafgda ( handle, refadr+1, refadr+1, mysize )
+               call dafada ( myref,  1                          )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGWES' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGWES' )
+                  return
+               end if
 
-               SIZE   = INT ( MYSIZE )
-               REFADR = REFADR + SIZE + FTOFF(INDEX)
+               size   = int ( mysize )
+               refadr = refadr + size + ftoff(index)
 
-            END DO
+            end do
 !
 !           3) Create a reference directory if the number of
 !              references is greater than DIRSIZ. Note that we have one
@@ -3636,95 +3636,95 @@
 !              This allows us to compute the size of the last data
 !              packet.
 !
-            IF ( FTNREF(INDEX) .GT. DIRSIZ ) THEN
+            if ( ftnref(index) .gt. dirsiz ) then
 
-               REFADR = FTBADR(INDEX) + FTNCON(INDEX)
-               REFADR = REFADR        + FTPKSZ(INDEX)
-               REFADR = REFADR        + FTOFF(INDEX) * FTNPKT(INDEX)
-               REFADR = REFADR        + FTNPKT(INDEX) + 1
-               REFADR = REFADR        + DIRSIZ - 1
+               refadr = ftbadr(index) + ftncon(index)
+               refadr = refadr        + ftpksz(index)
+               refadr = refadr        + ftoff(index) * ftnpkt(index)
+               refadr = refadr        + ftnpkt(index) + 1
+               refadr = refadr        + dirsiz - 1
 
-               DO I = 1, (FTNREF(INDEX)-1)/DIRSIZ
+               do i = 1, (ftnref(index)-1)/dirsiz
 
-                  CALL DAFGDA ( HANDLE, REFADR, REFADR, MYREF )
-                  CALL DAFADA ( MYREF,  1                     )
+                  call dafgda ( handle, refadr, refadr, myref )
+                  call dafada ( myref,  1                     )
 
-                  IF ( FAILED() ) THEN
-                     CALL CHKOUT ( 'SGWES' )
-                     RETURN
-                  END IF
+                  if ( failed() ) then
+                     call chkout ( 'SGWES' )
+                     return
+                  end if
 
-                  REFADR = REFADR + DIRSIZ
+                  refadr = refadr + dirsiz
 
-               END DO
+               end do
 
-            END IF
+            end if
 !
 !           4) Construct the meta data for the segment.
 !
-            META ( CONBAS ) = 0
-            META ( NCON   ) = FTNCON(INDEX)
-            META ( PKTBAS ) = META(CONBAS) + META(NCON)
-            META ( NPKT   ) = FTNPKT(INDEX)
-            META ( PKTOFF ) = FTOFF(INDEX)
-            META ( PDRBAS ) = META(PKTBAS) + FTPKSZ(INDEX) &
-                                           + FTOFF(INDEX)*FTNPKT(INDEX)
-            META ( NPDR   ) = FTNPKT(INDEX) + 1
-            META ( PDRTYP ) = 1
-            META ( REFBAS ) = META(PDRBAS) + META(NPDR)
-            META ( NREF   ) = FTNREF(INDEX)
-            META ( RDRBAS ) = META(REFBAS) + META(NREF)
-            META ( NRDR   ) = (FTNREF(INDEX)-1)/DIRSIZ
-            META ( RDRTYP ) = FTITYP(INDEX)
-            META ( RSVBAS ) = 0
-            META ( NRSV   ) = 0
-            META ( PKTSZ  ) = FTMXSZ(INDEX)
-            META ( NMETA  ) = MXMETA
+            meta ( conbas ) = 0
+            meta ( ncon   ) = ftncon(index)
+            meta ( pktbas ) = meta(conbas) + meta(ncon)
+            meta ( npkt   ) = ftnpkt(index)
+            meta ( pktoff ) = ftoff(index)
+            meta ( pdrbas ) = meta(pktbas) + ftpksz(index) &
+                                           + ftoff(index)*ftnpkt(index)
+            meta ( npdr   ) = ftnpkt(index) + 1
+            meta ( pdrtyp ) = 1
+            meta ( refbas ) = meta(pdrbas) + meta(npdr)
+            meta ( nref   ) = ftnref(index)
+            meta ( rdrbas ) = meta(refbas) + meta(nref)
+            meta ( nrdr   ) = (ftnref(index)-1)/dirsiz
+            meta ( rdrtyp ) = ftityp(index)
+            meta ( rsvbas ) = 0
+            meta ( nrsv   ) = 0
+            meta ( pktsz  ) = ftmxsz(index)
+            meta ( nmeta  ) = mxmeta
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        We have an implicitly indexed segment.
 !
-         IF ( FXDSEG ) THEN
+         if ( fxdseg ) then
 !
 !           There is no packet directory, so we just write the reference
 !           values. There is no reference directory either, because
 !           implicitly indexed packets only have two (2) reference
 !           values.
 !
-            CALL DAFADA ( FTREFS(1,INDEX), FTNREF(INDEX) )
+            call dafada ( ftrefs(1,index), ftnref(index) )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGWES' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGWES' )
+               return
+            end if
 !
 !           Now we need to construct the meta data for this segment. We
 !           will write it to the file a bit later.
 !
-            SIZE = ( FTOFF(INDEX) + FTPKSZ(INDEX) ) * FTNPKT(INDEX)
+            size = ( ftoff(index) + ftpksz(index) ) * ftnpkt(index)
 
-            META ( CONBAS ) = 0
-            META ( NCON   ) = FTNCON(INDEX)
-            META ( PKTBAS ) = META(CONBAS) + META(NCON)
-            META ( NPKT   ) = FTNPKT(INDEX)
-            META ( PKTOFF ) = FTOFF(INDEX)
-            META ( PDRBAS ) = 0
-            META ( NPDR   ) = 0
-            META ( PDRTYP ) = 0
-            META ( REFBAS ) = META(PKTBAS) + SIZE
-            META ( NREF   ) = FTNREF(INDEX)
-            META ( RDRBAS ) = META(REFBAS) + META(NREF)
-            META ( NRDR   ) = 0
-            META ( RDRTYP ) = FTITYP(INDEX)
-            META ( RSVBAS ) = 0
-            META ( NRSV   ) = 0
-            META ( PKTSZ  ) = FTPKSZ(INDEX)
-            META ( NMETA  ) = MXMETA
+            meta ( conbas ) = 0
+            meta ( ncon   ) = ftncon(index)
+            meta ( pktbas ) = meta(conbas) + meta(ncon)
+            meta ( npkt   ) = ftnpkt(index)
+            meta ( pktoff ) = ftoff(index)
+            meta ( pdrbas ) = 0
+            meta ( npdr   ) = 0
+            meta ( pdrtyp ) = 0
+            meta ( refbas ) = meta(pktbas) + size
+            meta ( nref   ) = ftnref(index)
+            meta ( rdrbas ) = meta(refbas) + meta(nref)
+            meta ( nrdr   ) = 0
+            meta ( rdrtyp ) = ftityp(index)
+            meta ( rsvbas ) = 0
+            meta ( nrsv   ) = 0
+            meta ( pktsz  ) = ftpksz(index)
+            meta ( nmeta  ) = mxmeta
 
-         ELSE
+         else
 !
 !           We need to do a little bit of work to finish this case off.
 !           We know that we need a packet directory, but we do not need
@@ -3736,110 +3736,110 @@
 !              segment and initialize the address of the first data
 !              packet.
 !
-            PKTADR = FTBADR(INDEX) + FTNCON(INDEX) + FTOFF(INDEX)
-            MYADDR = DBLE ( FTOFF(INDEX) + 1 )
+            pktadr = ftbadr(index) + ftncon(index) + ftoff(index)
+            myaddr = dble ( ftoff(index) + 1 )
 !
 !           2) Create a packet directory. The packet directory consists
 !              of the beginning addresses for each of the packets and a
 !              fake beginning for an extra packet so that we can easily
 !              compute the size of the last packet.
 !
-            DO I  = 1, FTNPKT(INDEX)
+            do i  = 1, ftnpkt(index)
 
-               CALL DAFGDA ( HANDLE, PKTADR-1, PKTADR-1, MYSIZE )
-               CALL DAFADA ( MYADDR, 1                          )
+               call dafgda ( handle, pktadr-1, pktadr-1, mysize )
+               call dafada ( myaddr, 1                          )
 
-               IF ( FAILED() ) THEN
-                  CALL CHKOUT ( 'SGWES' )
-                  RETURN
-               END IF
+               if ( failed() ) then
+                  call chkout ( 'SGWES' )
+                  return
+               end if
 
-               SIZE   = INT ( MYSIZE )
-               PKTADR = PKTADR +        SIZE + FTOFF(INDEX)
-               MYADDR = MYADDR + DBLE ( SIZE + FTOFF(INDEX) )
+               size   = int ( mysize )
+               pktadr = pktadr +        size + ftoff(index)
+               myaddr = myaddr + dble ( size + ftoff(index) )
 
-            END DO
+            end do
 !
 !           Put in the fake beginning for an extra packet. PKTADR should
 !           contain the proper value.
 !
-            MYADDR = DBLE ( PKTADR - FTBADR(INDEX) )
+            myaddr = dble ( pktadr - ftbadr(index) )
 
-            CALL DAFADA ( MYADDR, 1 )
+            call dafada ( myaddr, 1 )
 
-            IF ( FAILED() ) THEN
-               CALL CHKOUT ( 'SGWES' )
-               RETURN
-            END IF
+            if ( failed() ) then
+               call chkout ( 'SGWES' )
+               return
+            end if
 !
 !           3) Construct the meta data for the segment.
 !
-            META ( CONBAS ) = 0
-            META ( NCON   ) = FTNCON(INDEX)
-            META ( PKTBAS ) = META(CONBAS) + META(NCON)
-            META ( NPKT   ) = FTNPKT(INDEX)
-            META ( PKTOFF ) = FTOFF(INDEX)
-            META ( PDRBAS ) = META(PKTBAS) + FTPKSZ(INDEX) &
-                                           + FTOFF(INDEX)*FTNPKT(INDEX)
-            META ( NPDR   ) = FTNPKT(INDEX) + 1
-            META ( PDRTYP ) = 1
-            META ( REFBAS ) = META(PDRBAS) + META(NPDR)
-            META ( NREF   ) = FTNREF(INDEX)
-            META ( RDRBAS ) = META(REFBAS) + META(NREF)
-            META ( NRDR   ) = 0
-            META ( RDRTYP ) = FTITYP(INDEX)
-            META ( RSVBAS ) = 0
-            META ( NRSV   ) = 0
-            META ( PKTSZ  ) = FTMXSZ(INDEX)
-            META ( NMETA  ) = MXMETA
+            meta ( conbas ) = 0
+            meta ( ncon   ) = ftncon(index)
+            meta ( pktbas ) = meta(conbas) + meta(ncon)
+            meta ( npkt   ) = ftnpkt(index)
+            meta ( pktoff ) = ftoff(index)
+            meta ( pdrbas ) = meta(pktbas) + ftpksz(index) &
+                                           + ftoff(index)*ftnpkt(index)
+            meta ( npdr   ) = ftnpkt(index) + 1
+            meta ( pdrtyp ) = 1
+            meta ( refbas ) = meta(pdrbas) + meta(npdr)
+            meta ( nref   ) = ftnref(index)
+            meta ( rdrbas ) = meta(refbas) + meta(nref)
+            meta ( nrdr   ) = 0
+            meta ( rdrtyp ) = ftityp(index)
+            meta ( rsvbas ) = 0
+            meta ( nrsv   ) = 0
+            meta ( pktsz  ) = ftmxsz(index)
+            meta ( nmeta  ) = mxmeta
 
-         END IF
+         end if
 
-      END IF
+      end if
 !
 !     Write the meta data to the segment and end the segment.
 !
-      DO I = 1, MXMETA
-         XMETA(I) = DBLE ( META(I) )
-      END DO
+      do i = 1, mxmeta
+         xmeta(i) = dble ( meta(i) )
+      end do
 
-      CALL DAFADA ( XMETA, MXMETA )
+      call dafada ( xmeta, mxmeta )
 !
 !     End the segment.
 !
-      CALL DAFENA
+      call dafena
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SGWES' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SGWES' )
+         return
+      end if
 !
 !     Now we need to clean up after ourselves, removing the information
 !     for the segment we just ended from the file table.
 !
-      NFT = NFT - 1
+      nft = nft - 1
 
-      DO I = INDEX, NFT
-         FTBADR ( I ) = FTBADR ( I+1 )
-         FTHAN  ( I ) = FTHAN  ( I+1 )
-         FTITYP ( I ) = FTITYP ( I+1 )
-         FTNCON ( I ) = FTNCON ( I+1 )
-         FTNPKT ( I ) = FTNPKT ( I+1 )
-         FTNREF ( I ) = FTNREF ( I+1 )
-         FTNRES ( I ) = FTNRES ( I+1 )
-         FTOFF  ( I ) = FTOFF  ( I+1 )
-         FTPKSZ ( I ) = FTPKSZ ( I+1 )
-         FTFIXD ( I ) = FTFIXD ( I+1 )
-         FTEXPL ( I ) = FTEXPL ( I+1 )
-      END DO
+      do i = index, nft
+         ftbadr ( i ) = ftbadr ( i+1 )
+         fthan  ( i ) = fthan  ( i+1 )
+         ftityp ( i ) = ftityp ( i+1 )
+         ftncon ( i ) = ftncon ( i+1 )
+         ftnpkt ( i ) = ftnpkt ( i+1 )
+         ftnref ( i ) = ftnref ( i+1 )
+         ftnres ( i ) = ftnres ( i+1 )
+         ftoff  ( i ) = ftoff  ( i+1 )
+         ftpksz ( i ) = ftpksz ( i+1 )
+         ftfixd ( i ) = ftfixd ( i+1 )
+         ftexpl ( i ) = ftexpl ( i+1 )
+      end do
 
-      IF ( FXDSEG ) THEN
-         NUMFXD = NUMFXD - 1
-      ELSE
-         NUMVAR = NUMVAR - 1
-      END IF
+      if ( fxdseg ) then
+         numfxd = numfxd - 1
+      else
+         numvar = numvar - 1
+      end if
 
-      CALL CHKOUT ( 'SGWES' )
-      RETURN
+      call chkout ( 'SGWES' )
+      return
 
-      END
+      end

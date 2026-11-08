@@ -1,6 +1,6 @@
 !$Procedure MXV ( Matrix times vector, 3x3 )
 
-      SUBROUTINE MXV ( M, VIN, VOUT )
+      subroutine mxv ( m, vin, vout )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   M      ( 3, 3 )
-      DOUBLE PRECISION   VIN    (    3 )
-      DOUBLE PRECISION   VOUT   (    3 )
+      double precision   m      ( 3, 3 )
+      double precision   vin    (    3 )
+      double precision   vout   (    3 )
 
 ! $ Brief_I/O
 !
@@ -176,23 +176,23 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION     PRODV  ( 3 )
-      INTEGER              I
+      double precision     prodv  ( 3 )
+      integer              i
 
 !
 !  Perform the matrix-vector multiplication
 !
-      DO I = 1, 3
-         PRODV(I) = M(I,1)*VIN(1) + &
-                    M(I,2)*VIN(2) + &
-                    M(I,3)*VIN(3)
-      END DO
+      do i = 1, 3
+         prodv(i) = m(i,1)*vin(1) + &
+                    m(i,2)*vin(2) + &
+                    m(i,3)*vin(3)
+      end do
 !
 !  Move the buffered vector into the output vector VOUT.
 !
-      VOUT(1) = PRODV(1)
-      VOUT(2) = PRODV(2)
-      VOUT(3) = PRODV(3)
+      vout(1) = prodv(1)
+      vout(2) = prodv(2)
+      vout(3) = prodv(3)
 
-      RETURN
-      END
+      return
+      end

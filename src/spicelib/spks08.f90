@@ -1,6 +1,6 @@
 !$Procedure SPKS08 ( S/P Kernel, subset, type 8 )
 
-      SUBROUTINE SPKS08 ( HANDLE, BADDR, EADDR, BEGIN, END )
+      subroutine spks08 ( handle, baddr, eaddr, begin, end )
 
 ! $ Abstract
 !
@@ -18,13 +18,13 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               BADDR
-      INTEGER               EADDR
-      DOUBLE PRECISION      BEGIN
-      DOUBLE PRECISION      END
+      integer               handle
+      integer               baddr
+      integer               eaddr
+      double precision      begin
+      double precision      end
 
 ! $ Brief_I/O
 !
@@ -167,31 +167,31 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DATA     ( 6 )
-      DOUBLE PRECISION      RATIO
-      DOUBLE PRECISION      START
-      DOUBLE PRECISION      STEP
+      double precision      data     ( 6 )
+      double precision      ratio
+      double precision      start
+      double precision      step
 
-      INTEGER               DEGREE
-      INTEGER               I
-      INTEGER               NREC
-      INTEGER               OFFSET
-      INTEGER               REC      ( 2 )
+      integer               degree
+      integer               i
+      integer               nrec
+      integer               offset
+      integer               rec      ( 2 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKS08' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKS08' )
+      end if
 
 !
 !     Look up the following items:
@@ -201,24 +201,24 @@
 !        -- The polynomial degree
 !        -- The number of records in the segment
 !
-      CALL DAFGDA ( HANDLE, EADDR-3, EADDR, DATA )
+      call dafgda ( handle, eaddr-3, eaddr, data )
 
-      START  =        DATA(1)
-      STEP   =        DATA(2)
-      DEGREE = NINT ( DATA(3) )
-      NREC   = NINT ( DATA(4) )
+      start  =        data(1)
+      step   =        data(2)
+      degree = nint ( data(3) )
+      nrec   = nint ( data(4) )
 
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      IF (      (  END   .LT.   BEGIN                    ) &
-           .OR. (  END   .LT.   START                    ) &
-           .OR. (  BEGIN .GT. ( START + (NREC-1)*STEP )  )   ) THEN
+      if (      (  end   .lt.   begin                    ) &
+           .or. (  end   .lt.   start                    ) &
+           .or. (  begin .gt. ( start + (nrec-1)*step )  )   ) then
 
-         CALL CHKOUT ( 'SPKS08' )
-         RETURN
+         call chkout ( 'SPKS08' )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the index of the state having the last epoch
@@ -227,69 +227,69 @@
 !     state to be transferred.
 !
 
-      RATIO  =   MAX (  0.D0,   ( BEGIN - START ) / STEP  )
+      ratio  =   max (  0.d0,   ( begin - start ) / step  )
 
-      REC(1) =   1  +  MIN (  INT(RATIO),  NREC-1 )
+      rec(1) =   1  +  min (  int(ratio),  nrec-1 )
 
 !
 !     Make sure that there are DEGREE/2 additional states to the left
 !     of the one having index REC(1), if possible.  If not, take as
 !     many states as we can.
 !
-      REC(1)  =   MAX (  1,   REC(1) - DEGREE/2   )
+      rec(1)  =   max (  1,   rec(1) - degree/2   )
 
 !
 !     Make sure that REC(1) is small enough so that there are are at
 !     least DEGREE+1 states in the segment.
 !
-      REC(1)  =   MIN (  REC(1),  NREC - DEGREE  )
+      rec(1)  =   min (  rec(1),  nrec - degree  )
 
 !
 !     Now compute the index of the state having the first epoch greater
 !     than or equal to END (or the final epoch, whichever comes first).
 !     This epoch corresponds to the last state to be transferred.
 !
-      RATIO  =  ( END - START ) / STEP
+      ratio  =  ( end - start ) / step
 
 
-      IF ( RATIO .EQ. AINT(RATIO) ) THEN
-         REC(2)  =   1   +   MIN(  INT(RATIO),      NREC-1  )
-      ELSE
-         REC(2)  =   1   +   MIN(  INT(RATIO) + 1,  NREC-1  )
-      END IF
+      if ( ratio .eq. aint(ratio) ) then
+         rec(2)  =   1   +   min(  int(ratio),      nrec-1  )
+      else
+         rec(2)  =   1   +   min(  int(ratio) + 1,  nrec-1  )
+      end if
 
 !
 !     Make sure that there are DEGREE/2 additional states to the right
 !     of the one having index REC(2), if possible.  If not, take as
 !     many states as we can.
 !
-      REC(2)  =   MIN (  NREC,   REC(2) + DEGREE/2   )
+      rec(2)  =   min (  nrec,   rec(2) + degree/2   )
 
 !
 !     Make sure that REC(2) is large enough so that there are are at
 !     least DEGREE+1 states in the segment.
 !
-      REC(2)  =   MAX (  REC(2),  DEGREE + 1 )
+      rec(2)  =   max (  rec(2),  degree + 1 )
 
 !
 !     Copy states REC(1) through REC(2) to the output file.
 !
-      DO  I = REC(1), REC(2)
-         OFFSET = BADDR  -  1  +  (I - 1) * 6
+      do  i = rec(1), rec(2)
+         offset = baddr  -  1  +  (i - 1) * 6
 
-         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+6, DATA    )
-         CALL DAFADA (                             DATA, 6 )
-      END DO
+         call dafgda ( handle, offset+1, offset+6, data    )
+         call dafada (                             data, 6 )
+      end do
 
 !
 !     Store the start time, step size, polynomial degree and the
 !     number of records to end the segment.
 !
-      CALL DAFADA (  START + ( REC(1) - 1 ) * STEP,    1  )
-      CALL DAFADA (  STEP,                             1  )
-      CALL DAFADA (  DBLE ( DEGREE ),                  1  )
-      CALL DAFADA (  DBLE ( REC(2) - REC(1) + 1 ),     1  )
+      call dafada (  start + ( rec(1) - 1 ) * step,    1  )
+      call dafada (  step,                             1  )
+      call dafada (  dble ( degree ),                  1  )
+      call dafada (  dble ( rec(2) - rec(1) + 1 ),     1  )
 
-      CALL CHKOUT ( 'SPKS08' )
-      RETURN
-      END
+      call chkout ( 'SPKS08' )
+      return
+      end

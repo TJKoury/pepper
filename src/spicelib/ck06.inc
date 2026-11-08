@@ -34,20 +34,20 @@
 !     Maximum polynomial degree supported by the current
 !     implementation of this CK type.
 !
-      INTEGER               MAXDEG
-      PARAMETER           ( MAXDEG = 23 )
+      integer               maxdeg
+      parameter           ( maxdeg = 23 )
 
 !
 !     Integer code indicating `true':
 !
-      INTEGER               ITRUE
-      PARAMETER           ( ITRUE  =  1 )
+      integer               itrue
+      parameter           ( itrue  =  1 )
 
 !
 !     Integer code indicating `false':
 !
-      INTEGER               IFALSE
-      PARAMETER           ( IFALSE = -1 )
+      integer               ifalse
+      parameter           ( ifalse = -1 )
 
 
 !
@@ -61,8 +61,8 @@
 !                 derived from the quaternions and quaternion
 !                 derivatives.
 !
-      INTEGER               C06TP0
-      PARAMETER           ( C06TP0 = 0 )
+      integer               c06tp0
+      parameter           ( c06tp0 = 0 )
 
 
 !
@@ -70,8 +70,8 @@
 !                 only. Angular velocity is derived by differentiating
 !                 the interpolating polynomials.
 !
-      INTEGER               C06TP1
-      PARAMETER           ( C06TP1 = C06TP0 + 1 )
+      integer               c06tp1
+      parameter           ( c06tp1 = c06tp0 + 1 )
 
 
 !
@@ -81,49 +81,49 @@
 !                 quaternion comes first, then quaternion derivatives,
 !                 then angular velocity and its derivatives.
 !
-      INTEGER               C06TP2
-      PARAMETER           ( C06TP2 = C06TP1 + 1 )
+      integer               c06tp2
+      parameter           ( c06tp2 = c06tp1 + 1 )
 
 !
 !     Subtype 3:  Lagrange interpolation, 7-element packets. Quaternion
 !                 and angular velocity vector provided.  The quaternion
 !                 comes first.
 !
-      INTEGER               C06TP3
-      PARAMETER           ( C06TP3 = C06TP2 + 1 )
+      integer               c06tp3
+      parameter           ( c06tp3 = c06tp2 + 1 )
 
 !
 !     Number of subtypes:
 !
-      INTEGER               C06NST
-      PARAMETER           ( C06NST = 4 )
+      integer               c06nst
+      parameter           ( c06nst = 4 )
 
 !
 !     Packet sizes associated with the various subtypes:
 !
-      INTEGER               C06PS0
-      PARAMETER           ( C06PS0 = 8 )
+      integer               c06ps0
+      parameter           ( c06ps0 = 8 )
 
-      INTEGER               C06PS1
-      PARAMETER           ( C06PS1 = 4 )
+      integer               c06ps1
+      parameter           ( c06ps1 = 4 )
 
-      INTEGER               C06PS2
-      PARAMETER           ( C06PS2 = 14 )
+      integer               c06ps2
+      parameter           ( c06ps2 = 14 )
 
-      INTEGER               C06PS3
-      PARAMETER           ( C06PS3 = 7 )
+      integer               c06ps3
+      parameter           ( c06ps3 = 7 )
 
 !
 !     Maximum packet size for type 6:
 !
-      INTEGER               C06MXZ
-      PARAMETER           ( C06MXZ = C06PS2 )
+      integer               c06mxz
+      parameter           ( c06mxz = c06ps2 )
 
 !
 !     Minimum packet size for type 6:
 !
-      INTEGER               C06MNZ
-      PARAMETER           ( C06MNZ = C06PS1 )
+      integer               c06mnz
+      parameter           ( c06mnz = c06ps1 )
 
 
 !
@@ -140,8 +140,8 @@
 !        - MAXDEG+1 time tags
 !
 
-      INTEGER               MAXRSZ
-      PARAMETER           ( MAXRSZ =  4 + (MAXDEG+1)*(C06PS3+1) )
+      integer               maxrsz
+      parameter           ( maxrsz =  4 + (maxdeg+1)*(c06ps3+1) )
 
 !
 !     End of file ck06.inc.

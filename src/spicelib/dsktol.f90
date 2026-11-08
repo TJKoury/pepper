@@ -1,6 +1,6 @@
 !$Procedure DSKTOL ( DSK, tolerance umbrella )
 
-      SUBROUTINE DSKTOL ( KEYWRD, DPVAL )
+      subroutine dsktol ( keywrd, dpval )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dsktol.inc'
+      include 'dsktol.inc'
 
-      INTEGER               KEYWRD
-      DOUBLE PRECISION      DPVAL
+      integer               keywrd
+      double precision      dpval
 
 ! $ Brief_I/O
 !
@@ -133,32 +133,32 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               NDSPAR
-      PARAMETER           ( NDSPAR = 6 )
+      integer               ndspar
+      parameter           ( ndspar = 6 )
 
-      INTEGER               NAMLEN
-      PARAMETER           ( NAMLEN = 6 )
+      integer               namlen
+      parameter           ( namlen = 6 )
 
 !
 !     Local variables
 !
-      CHARACTER*(NAMLEN)    NAMES  ( NDSPAR )
+      character*(namlen)    names  ( ndspar )
 
-      DOUBLE PRECISION      DPPARS ( NDSPAR )
+      double precision      dppars ( ndspar )
 
-      LOGICAL               ISFIXD ( NDSPAR )
+      logical               isfixd ( ndspar )
 
 !
 !     Saved values
 !
-      SAVE                  DPPARS
-      SAVE                  ISFIXD
-      SAVE                  NAMES
+      save                  dppars
+      save                  isfixd
+      save                  names
 
 !
 !     Initial values
@@ -167,31 +167,31 @@
 !     the order defined by the keywords declared
 !     in dsktol.inc.
 !
-      DATA                  DPPARS / &
-                            XFRACT, SGREED, SGPADM, &
-                            PTMEMM, ANGMRG, LONALI &
+      data                  dppars / &
+                            xfract, sgreed, sgpadm, &
+                            ptmemm, angmrg, lonali &
                                    /
 
-      DATA                  ISFIXD / &
-                            .FALSE., .FALSE., .FALSE., &
-                            .FALSE., .TRUE.,  .TRUE. &
+      data                  isfixd / &
+                            .false., .false., .false., &
+                            .false., .true.,  .true. &
                                    /
 
-      DATA                  NAMES  / &
+      data                  names  / &
                             'XFRACT', 'SGREED', 'SGPADM', &
                             'PTMEMM', 'ANGMRG', 'LONALI' &
                                    /
 
-      CALL CHKIN  ( 'DSKTOL' )
-      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
-      CALL CHKOUT ( 'DSKTOL' )
-      RETURN
+      call chkin  ( 'DSKTOL' )
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call chkout ( 'DSKTOL' )
+      return
 
 
 
 !$Procedure DSKGTL ( DSK, get tolerance )
 
-      ENTRY DSKGTL ( KEYWRD, DPVAL )
+      entry dskgtl ( keywrd, dpval )
 
 ! $ Abstract
 !
@@ -346,21 +346,21 @@
 !
 !     Use discovery check-in.
 !
-      IF (  ( KEYWRD .LT. 1 ) .OR. ( KEYWRD .GT. NDSPAR )  ) THEN
+      if (  ( keywrd .lt. 1 ) .or. ( keywrd .gt. ndspar )  ) then
 
-         CALL CHKIN  ( 'DSKGTL'                                     )
-         CALL SETMSG ( 'Valid keyword range is 1:#; keyword was #.' )
-         CALL ERRINT ( '#', NDSPAR                                  )
-         CALL ERRINT ( '#', KEYWRD                                  )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                     )
-         CALL CHKOUT ( 'DSKGTL'                                     )
-         RETURN
+         call chkin  ( 'DSKGTL'                                     )
+         call setmsg ( 'Valid keyword range is 1:#; keyword was #.' )
+         call errint ( '#', ndspar                                  )
+         call errint ( '#', keywrd                                  )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                     )
+         call chkout ( 'DSKGTL'                                     )
+         return
 
-      END IF
+      end if
 
-      DPVAL = DPPARS( KEYWRD )
+      dpval = dppars( keywrd )
 
-      RETURN
+      return
 
 
 
@@ -368,7 +368,7 @@
 
 !$Procedure DSKSTL ( DSK, set tolerance )
 
-      ENTRY DSKSTL ( KEYWRD, DPVAL )
+      entry dskstl ( keywrd, dpval )
 
 ! $ Abstract
 !
@@ -549,41 +549,41 @@
 !-&
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'DSKSTL' )
+      call chkin  ( 'DSKSTL' )
 
 
-      IF (  ( KEYWRD .LT. 1 ) .OR. ( KEYWRD .GT. NDSPAR )  ) THEN
+      if (  ( keywrd .lt. 1 ) .or. ( keywrd .gt. ndspar )  ) then
 
-         CALL SETMSG ( 'Valid keyword range is 1:#; keyword was #.' )
-         CALL ERRINT ( '#', NDSPAR                                  )
-         CALL ERRINT ( '#', KEYWRD                                  )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                     )
-         CALL CHKOUT ( 'DSKSTL'                                     )
-         RETURN
+         call setmsg ( 'Valid keyword range is 1:#; keyword was #.' )
+         call errint ( '#', ndspar                                  )
+         call errint ( '#', keywrd                                  )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                     )
+         call chkout ( 'DSKSTL'                                     )
+         return
 
-      END IF
+      end if
 
-      IF ( ISFIXD(KEYWRD) ) THEN
+      if ( isfixd(keywrd) ) then
 
-         CALL SETMSG ( 'The parameter # cannot be modified.' )
-         CALL ERRCH  ( '#', NAMES(KEYWRD)                    )
-         CALL SIGERR ( 'SPICE(IMMUTABLEVALUE)'               )
-         CALL CHKOUT ( 'DSKSTL'                              )
-         RETURN
+         call setmsg ( 'The parameter # cannot be modified.' )
+         call errch  ( '#', names(keywrd)                    )
+         call sigerr ( 'SPICE(IMMUTABLEVALUE)'               )
+         call chkout ( 'DSKSTL'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     We have a valid parameter index. We don't check
 !     the new parameter value; the user presumably knows
 !     the reason for change.
 !
-      DPPARS(KEYWRD) = DPVAL
+      dppars(keywrd) = dpval
 
-      CALL CHKOUT ( 'DSKSTL' )
-      RETURN
-      END
+      call chkout ( 'DSKSTL' )
+      return
+      end

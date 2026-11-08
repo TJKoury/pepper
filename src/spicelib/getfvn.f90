@@ -1,12 +1,12 @@
 !$Procedure GETFVN (Get instrument FOV parameters, by instrument name)
 
-      SUBROUTINE GETFVN ( INST, &
-                          ROOM, &
-                          SHAPE, &
-                          FRAME, &
-                          BSIGHT, &
-                          N, &
-                          BOUNDS  )
+      subroutine getfvn ( inst, &
+                          room, &
+                          shape, &
+                          frame, &
+                          bsight, &
+                          n, &
+                          bounds  )
 
 ! $ Abstract
 !
@@ -24,17 +24,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'zzctr.inc'
+      include              'zzctr.inc'
 
-      CHARACTER*(*)         INST
-      INTEGER               ROOM
-      CHARACTER*(*)         SHAPE
-      CHARACTER*(*)         FRAME
-      DOUBLE PRECISION      BSIGHT ( 3    )
-      INTEGER               N
-      DOUBLE PRECISION      BOUNDS ( 3, * )
+      character*(*)         inst
+      integer               room
+      character*(*)         shape
+      character*(*)         frame
+      double precision      bsight ( 3    )
+      integer               n
+      double precision      bounds ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -659,92 +659,92 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Saved instrument name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      INSTID
+      double precision      instid
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVINST
-      INTEGER               SVINID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svinst
+      integer               svinid
+      logical               svfnd1
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVINST
-      SAVE                  SVINID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svinst
+      save                  svinid
+      save                  svfnd1
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'GETFVN' )
+      call chkin ( 'GETFVN' )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 !
 !        Initialize counters.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Translate the instrument's name to its ID code
 !
-      CALL ZZBODS2C ( SVCTR1, SVINST, SVINID, SVFND1, &
-                      INST,   INSTID, FOUND           )
+      call zzbods2c ( svctr1, svinst, svinid, svfnd1, &
+                      inst,   instid, found           )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( '''#'' is not a recognized name for an ' &
+         call setmsg ( '''#'' is not a recognized name for an ' &
          //            'instrument. The cause of this ' &
          //            'problem may be that you have not loaded ' &
          //            'a required frame kernel or instrument ' &
          //            'kernel.'                                  )
-         CALL ERRCH  ( '#', INST                                  )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'GETFVN'                                   )
-         RETURN
+         call errch  ( '#', inst                                  )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'GETFVN'                                   )
+         return
 
-      END IF
+      end if
 
-      CALL GETFOV ( INSTID, ROOM, SHAPE, FRAME, BSIGHT, N, BOUNDS )
+      call getfov ( instid, room, shape, frame, bsight, n, bounds )
 
-      CALL CHKOUT ( 'GETFVN' )
-      RETURN
+      call chkout ( 'GETFVN' )
+      return
 
-      END
+      end

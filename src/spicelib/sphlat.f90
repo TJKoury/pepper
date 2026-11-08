@@ -1,6 +1,6 @@
 !$Procedure SPHLAT ( Spherical to latitudinal coordinates )
 
-      SUBROUTINE SPHLAT ( R, COLAT, SLON, RADIUS, LON, LAT )
+      subroutine sphlat ( r, colat, slon, radius, lon, lat )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION R
-      DOUBLE PRECISION COLAT
-      DOUBLE PRECISION SLON
-      DOUBLE PRECISION RADIUS
-      DOUBLE PRECISION LON
-      DOUBLE PRECISION LAT
+      double precision r
+      double precision colat
+      double precision slon
+      double precision radius
+      double precision lon
+      double precision lat
 
 ! $ Brief_I/O
 !
@@ -421,27 +421,27 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION HALFPI
+      double precision halfpi
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION RR
-      DOUBLE PRECISION LATTUD
+      double precision rr
+      double precision lattud
 
 !
 !     Convert to latitudinal coordinates, storing the results in
 !     temporary variables
 !
-      RR     = R
-      LATTUD = HALFPI() - COLAT
+      rr     = r
+      lattud = halfpi() - colat
 
 !
 !     Move the results to the output variables.
 !
-      LON    = SLON
-      RADIUS = RR
-      LAT    = LATTUD
+      lon    = slon
+      radius = rr
+      lat    = lattud
 
-      RETURN
-      END
+      return
+      end

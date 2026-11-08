@@ -1,6 +1,6 @@
 !$Procedure VADDG ( Vector addition, general dimension )
 
-      SUBROUTINE VADDG ( V1, V2, NDIM, VOUT )
+      subroutine vaddg ( v1, v2, ndim, vout )
 
 ! $ Abstract
 !
@@ -16,12 +16,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER             NDIM
-      DOUBLE PRECISION    V1   ( NDIM )
-      DOUBLE PRECISION    V2   ( NDIM )
-      DOUBLE PRECISION    VOUT ( NDIM )
+      integer             ndim
+      double precision    v1   ( ndim )
+      double precision    v2   ( ndim )
+      double precision    vout ( ndim )
 
 ! $ Brief_I/O
 !
@@ -201,11 +201,11 @@
 !
 !     Local variables
 !
-      INTEGER             I
+      integer             i
 
-      DO I = 1, NDIM
-         VOUT(I) = V1(I) + V2(I)
-      END DO
+      do i = 1, ndim
+         vout(i) = v1(i) + v2(i)
+      end do
 
-      RETURN
-      END
+      return
+      end

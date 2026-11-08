@@ -1,6 +1,6 @@
 !$Procedure LATREC ( Latitudinal to rectangular coordinates )
 
-      SUBROUTINE LATREC ( RADIUS, LON, LAT, RECTAN )
+      subroutine latrec ( radius, lon, lat, rectan )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   RADIUS
-      DOUBLE PRECISION   LON
-      DOUBLE PRECISION   LAT
-      DOUBLE PRECISION   RECTAN ( 3 )
+      double precision   radius
+      double precision   lon
+      double precision   lat
+      double precision   rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -387,24 +387,24 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION   X
-      DOUBLE PRECISION   Y
-      DOUBLE PRECISION   Z
+      double precision   x
+      double precision   y
+      double precision   z
 
 !
 !     Convert to rectangular coordinates, storing the results in
 !     temporary variables.
 !
-      X = RADIUS * DCOS(LON) * DCOS(LAT)
-      Y = RADIUS * DSIN(LON) * DCOS(LAT)
-      Z = RADIUS * DSIN(LAT)
+      x = radius * dcos(lon) * dcos(lat)
+      y = radius * dsin(lon) * dcos(lat)
+      z = radius * dsin(lat)
 
 !
 !  Move the results to the output variables.
 !
-      RECTAN(1) = X
-      RECTAN(2) = Y
-      RECTAN(3) = Z
+      rectan(1) = x
+      rectan(2) = y
+      rectan(3) = z
 
-      RETURN
-      END
+      return
+      end

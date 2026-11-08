@@ -1,7 +1,7 @@
 !$Procedure      ZZMSXF ( Multiply sequence of state transformations )
 
 
-      SUBROUTINE ZZMSXF ( MATRIX, N, OUTPUT )
+      subroutine zzmsxf ( matrix, n, output )
 
 ! $ Abstract
 !
@@ -22,10 +22,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      DOUBLE PRECISION      MATRIX ( 6, 6, * )
-      INTEGER               N
-      DOUBLE PRECISION      OUTPUT ( 6, 6    )
+      implicit none
+      double precision      matrix ( 6, 6, * )
+      integer               n
+      double precision      output ( 6, 6    )
 
 ! $ Brief_I/O
 !
@@ -153,71 +153,71 @@
 !
 !-&
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               L
-      INTEGER               M
+      integer               i
+      integer               j
+      integer               k
+      integer               l
+      integer               m
 
-      INTEGER               GET
-      INTEGER               PUT
-      INTEGER               INCR
+      integer               get
+      integer               put
+      integer               incr
 
-      DOUBLE PRECISION      TEMP ( 6, 6, 2 )
+      double precision      temp ( 6, 6, 2 )
 
 !
 !    If we have more than 2 matrices to deal with we will need to
 !    set up the PUT location
 !
-      PUT = 1
+      put = 1
 
 !
 !     We perform tests in the order they seem most likely to
 !     occur.
 !
-      IF ( N .EQ. 2 ) THEN
+      if ( n .eq. 2 ) then
 !
 !        If there are exactly two inputs, then the output takes
 !        only a single matrix multiply.
 !
-         DO J = 1,3
-            DO K = 1,3
+         do j = 1,3
+            do k = 1,3
 
-               OUTPUT(J,K) = MATRIX(J,1,2)*MATRIX(1,K,1) &
-                           + MATRIX(J,2,2)*MATRIX(2,K,1) &
-                           + MATRIX(J,3,2)*MATRIX(3,K,1)
-            END DO
-         END DO
+               output(j,k) = matrix(j,1,2)*matrix(1,k,1) &
+                           + matrix(j,2,2)*matrix(2,k,1) &
+                           + matrix(j,3,2)*matrix(3,k,1)
+            end do
+         end do
 
-         DO J = 4,6
-            DO K = 1,3
+         do j = 4,6
+            do k = 1,3
 
-               OUTPUT(J,K) = MATRIX(J,1,2)*MATRIX(1,K,1) &
-                           + MATRIX(J,2,2)*MATRIX(2,K,1) &
-                           + MATRIX(J,3,2)*MATRIX(3,K,1) &
-                           + MATRIX(J,4,2)*MATRIX(4,K,1) &
-                           + MATRIX(J,5,2)*MATRIX(5,K,1) &
-                           + MATRIX(J,6,2)*MATRIX(6,K,1)
-            END DO
-         END DO
+               output(j,k) = matrix(j,1,2)*matrix(1,k,1) &
+                           + matrix(j,2,2)*matrix(2,k,1) &
+                           + matrix(j,3,2)*matrix(3,k,1) &
+                           + matrix(j,4,2)*matrix(4,k,1) &
+                           + matrix(j,5,2)*matrix(5,k,1) &
+                           + matrix(j,6,2)*matrix(6,k,1)
+            end do
+         end do
 
-         DO J = 1,3
-            DO K = 4,6
-               OUTPUT(J,K) = 0.0D0
-            END DO
-         END DO
+         do j = 1,3
+            do k = 4,6
+               output(j,k) = 0.0d0
+            end do
+         end do
 
-         DO J = 4,6
-            L = J - 3
-            DO K = 4,6
-               M = K - 3
-               OUTPUT(J,K) = OUTPUT(L,M)
-            END DO
-         END DO
+         do j = 4,6
+            l = j - 3
+            do k = 4,6
+               m = k - 3
+               output(j,k) = output(l,m)
+            end do
+         end do
 
 
 
-      ELSE IF ( N .GT. 2 ) THEN
+      else if ( n .gt. 2 ) then
 
 !
 !        We need to compute the product
@@ -229,28 +229,28 @@
 !
 !        First compute the upper left hand 3x3 portion of the product...
 !
-         DO J = 1,3
-            DO K = 1,3
+         do j = 1,3
+            do k = 1,3
 
-               TEMP(J,K,PUT) =  MATRIX(J,1,2)*MATRIX(1,K,1) &
-                              + MATRIX(J,2,2)*MATRIX(2,K,1) &
-                              + MATRIX(J,3,2)*MATRIX(3,K,1)
-            END DO
-         END DO
+               temp(j,k,put) =  matrix(j,1,2)*matrix(1,k,1) &
+                              + matrix(j,2,2)*matrix(2,k,1) &
+                              + matrix(j,3,2)*matrix(3,k,1)
+            end do
+         end do
 
 !
 !        Next compute the lower left hand 3x3 portion of the product.
 !
-         DO J = 4,6
-            DO K = 1,3
-               TEMP(J,K,PUT) =  MATRIX(J,1,2)*MATRIX(1,K,1) &
-                              + MATRIX(J,2,2)*MATRIX(2,K,1) &
-                              + MATRIX(J,3,2)*MATRIX(3,K,1) &
-                              + MATRIX(J,4,2)*MATRIX(4,K,1) &
-                              + MATRIX(J,5,2)*MATRIX(5,K,1) &
-                              + MATRIX(J,6,2)*MATRIX(6,K,1)
-            END DO
-         END DO
+         do j = 4,6
+            do k = 1,3
+               temp(j,k,put) =  matrix(j,1,2)*matrix(1,k,1) &
+                              + matrix(j,2,2)*matrix(2,k,1) &
+                              + matrix(j,3,2)*matrix(3,k,1) &
+                              + matrix(j,4,2)*matrix(4,k,1) &
+                              + matrix(j,5,2)*matrix(5,k,1) &
+                              + matrix(j,6,2)*matrix(6,k,1)
+            end do
+         end do
 !
 !        We don't bother to compute the upper right hand 3x3 portion
 !        of the matrix since it is always zero.
@@ -270,127 +270,127 @@
 !        of the loop below (keeping mind the next three values) to
 !        see the little trick that's used to toggle back and forth.
 !
-         INCR = -1
-         PUT  =  2
-         GET  =  1
+         incr = -1
+         put  =  2
+         get  =  1
 
-         DO I = 3, N-1
+         do i = 3, n-1
 !
 !           First the upper left hand portion of the product.
 !
-            DO J = 1,3
-               DO K = 1,3
+            do j = 1,3
+               do k = 1,3
 
-                  TEMP(J,K,PUT) =  MATRIX(J,1,I)*TEMP(1,K,GET) &
-                                 + MATRIX(J,2,I)*TEMP(2,K,GET) &
-                                 + MATRIX(J,3,I)*TEMP(3,K,GET)
+                  temp(j,k,put) =  matrix(j,1,i)*temp(1,k,get) &
+                                 + matrix(j,2,i)*temp(2,k,get) &
+                                 + matrix(j,3,i)*temp(3,k,get)
 
-               END DO
-            END DO
+               end do
+            end do
 !
 !           Next the lower left hand portion of the product.
 !
-            DO J = 4,6
-               DO K = 1,3
+            do j = 4,6
+               do k = 1,3
 
-                  TEMP(J,K,PUT) = MATRIX(J,1,I)*TEMP(1,K,GET) &
-                                + MATRIX(J,2,I)*TEMP(2,K,GET) &
-                                + MATRIX(J,3,I)*TEMP(3,K,GET) &
-                                + MATRIX(J,4,I)*TEMP(4,K,GET) &
-                                + MATRIX(J,5,I)*TEMP(5,K,GET) &
-                                + MATRIX(J,6,I)*TEMP(6,K,GET)
+                  temp(j,k,put) = matrix(j,1,i)*temp(1,k,get) &
+                                + matrix(j,2,i)*temp(2,k,get) &
+                                + matrix(j,3,i)*temp(3,k,get) &
+                                + matrix(j,4,i)*temp(4,k,get) &
+                                + matrix(j,5,i)*temp(5,k,get) &
+                                + matrix(j,6,i)*temp(6,k,get)
 
-               END DO
-            END DO
+               end do
+            end do
 !
 !           And as before, we don't need to compute the upper right
 !           or lower right hand 3x3 portions of the matrix. So
 !           we just skip them.  Toggle GET and PUT so we will
 !           be ready for the next pass.
 !
-            GET  =  PUT
-            PUT  =  PUT + INCR
-            INCR =      - INCR
+            get  =  put
+            put  =  put + incr
+            incr =      - incr
 
-         END DO
+         end do
 
 
 !
 !        Finally compute the last product.  First the upper
 !        left hand portion of the product.
 !
-         DO J = 1,3
-            DO K = 1,3
+         do j = 1,3
+            do k = 1,3
 
-               OUTPUT(J,K) = MATRIX(J,1,N)*TEMP(1,K,GET) &
-                           + MATRIX(J,2,N)*TEMP(2,K,GET) &
-                           + MATRIX(J,3,N)*TEMP(3,K,GET)
-            END DO
-         END DO
+               output(j,k) = matrix(j,1,n)*temp(1,k,get) &
+                           + matrix(j,2,n)*temp(2,k,get) &
+                           + matrix(j,3,n)*temp(3,k,get)
+            end do
+         end do
 !
 !        The lower left hand portion of the product.
 !
-         DO J = 4,6
-            DO K = 1,3
+         do j = 4,6
+            do k = 1,3
 
-               OUTPUT(J,K) = MATRIX(J,1,N)*TEMP(1,K,GET) &
-                           + MATRIX(J,2,N)*TEMP(2,K,GET) &
-                           + MATRIX(J,3,N)*TEMP(3,K,GET) &
-                           + MATRIX(J,4,N)*TEMP(4,K,GET) &
-                           + MATRIX(J,5,N)*TEMP(5,K,GET) &
-                           + MATRIX(J,6,N)*TEMP(6,K,GET)
-            END DO
-         END DO
+               output(j,k) = matrix(j,1,n)*temp(1,k,get) &
+                           + matrix(j,2,n)*temp(2,k,get) &
+                           + matrix(j,3,n)*temp(3,k,get) &
+                           + matrix(j,4,n)*temp(4,k,get) &
+                           + matrix(j,5,n)*temp(5,k,get) &
+                           + matrix(j,6,n)*temp(6,k,get)
+            end do
+         end do
 !
 !        The upper right hand portion of the product is zero.
 !
-         DO J = 1,3
-            DO K = 4,6
-               OUTPUT(J,K) = 0.0D0
-            END DO
-         END DO
+         do j = 1,3
+            do k = 4,6
+               output(j,k) = 0.0d0
+            end do
+         end do
 
 !
 !        The lower right hand portion of the product is a copy of
 !        the upper left hand portion of the product.
 !
-         DO J = 4,6
-            L = J - 3
-            DO K = 4,6
-               M = K - 3
+         do j = 4,6
+            l = j - 3
+            do k = 4,6
+               m = k - 3
 
-               OUTPUT(J,K) = OUTPUT(L,M)
+               output(j,k) = output(l,m)
 
-            END DO
-         END DO
+            end do
+         end do
 
 
 
-      ELSE IF ( N .EQ. 1 ) THEN
+      else if ( n .eq. 1 ) then
 !
 !        If there is only one matrix in the list the output is
 !        simply the input.
 !
-         DO I = 1, 6
-            DO J = 1, 6
-               OUTPUT(J,I) = MATRIX(J,I,1)
-            END DO
-         END DO
+         do i = 1, 6
+            do j = 1, 6
+               output(j,i) = matrix(j,i,1)
+            end do
+         end do
 
 
-      ELSE IF ( N .LE. 0 ) THEN
+      else if ( n .le. 0 ) then
 
-         DO J = 1, 6
+         do j = 1, 6
 
-            OUTPUT(J,J) = 1.0D0
+            output(j,j) = 1.0d0
 
-            DO K = J+1,6
-               OUTPUT(J,K) = 0.0D0
-               OUTPUT(K,J) = 0.0D0
-            END DO
-         END DO
+            do k = j+1,6
+               output(j,k) = 0.0d0
+               output(k,j) = 0.0d0
+            end do
+         end do
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

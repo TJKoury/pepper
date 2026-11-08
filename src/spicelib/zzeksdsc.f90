@@ -1,6 +1,6 @@
 !$Procedure      ZZEKSDSC ( EK, get segment descriptor )
 
-      SUBROUTINE ZZEKSDSC ( HANDLE, SEGNO, SEGDSC )
+      subroutine zzeksdsc ( handle, segno, segdsc )
 
 ! $ Abstract
 !
@@ -18,11 +18,11 @@
 ! $ Declarations
 
 
-      INCLUDE 'eksegdsc.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      INTEGER               SEGDSC ( SDSCSZ )
+      integer               handle
+      integer               segno
+      integer               segdsc ( sdscsz )
 
 ! $ Brief_I/O
 !
@@ -97,14 +97,14 @@
 !
 !     Local variables
 !
-      INTEGER               MP
-      INTEGER               MBASE
+      integer               mp
+      integer               mbase
 
 !
 !     Use discovery check-in.
 !
-      CALL ZZEKMLOC (  HANDLE,  SEGNO,    MP,            MBASE   )
-      CALL DASRDI   (  HANDLE,  MBASE+1,  MBASE+SDSCSZ,  SEGDSC  )
+      call zzekmloc (  handle,  segno,    mp,            mbase   )
+      call dasrdi   (  handle,  mbase+1,  mbase+sdscsz,  segdsc  )
 
-      RETURN
-      END
+      return
+      end

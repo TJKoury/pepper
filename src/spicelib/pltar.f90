@@ -1,6 +1,6 @@
 !$Procedure PLTAR ( Compute area of plate set )
 
-      DOUBLE PRECISION FUNCTION PLTAR ( NV, VRTCES, NP, PLATES )
+      double precision function pltar ( nv, vrtces, np, plates )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               NV
-      DOUBLE PRECISION      VRTCES ( 3, NV )
-      INTEGER               NP
-      INTEGER               PLATES ( 3, NP )
+      integer               nv
+      double precision      vrtces ( 3, nv )
+      integer               np
+      integer               plates ( 3, np )
 
 ! $ Brief_I/O
 !
@@ -257,123 +257,123 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      LOGICAL               RETURN
+      double precision      vnorm
+      logical               return
 
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CP    ( 3 )
-      DOUBLE PRECISION      EDGE1 ( 3 )
-      DOUBLE PRECISION      EDGE2 ( 3 )
+      double precision      cp    ( 3 )
+      double precision      edge1 ( 3 )
+      double precision      edge2 ( 3 )
 
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     The function must have an initial value.
 !
-      PLTAR  =  0.D0
+      pltar  =  0.d0
 
 !
 !     This routine uses discovery check-in.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Check the vertex and plate counts.
 !
-      IF ( NP .LT. 0 ) THEN
+      if ( np .lt. 0 ) then
 
-         CALL CHKIN  ( 'PLTAR'                                        )
-         CALL SETMSG ( 'Plate count must be non-negative but NP = #.' )
-         CALL ERRINT ( '#',  NP                                       )
-         CALL SIGERR ( 'SPICE(BADPLATECOUNT)'                         )
-         CALL CHKOUT ( 'PLTAR'                                        )
-         RETURN
+         call chkin  ( 'PLTAR'                                        )
+         call setmsg ( 'Plate count must be non-negative but NP = #.' )
+         call errint ( '#',  np                                       )
+         call sigerr ( 'SPICE(BADPLATECOUNT)'                         )
+         call chkout ( 'PLTAR'                                        )
+         return
 
-      END IF
+      end if
 
 
-      IF ( NP .EQ. 0 ) THEN
+      if ( np .eq. 0 ) then
 !
 !        The area has already been set to zero.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 
-      IF ( NV .LT. 3 ) THEN
+      if ( nv .lt. 3 ) then
 
-         CALL CHKIN  ( 'PLTAR'                                       )
-         CALL SETMSG ( 'At least 3 vertices are needed, but NV = #.' )
-         CALL ERRINT ( '#',  NV                                      )
-         CALL SIGERR ( 'SPICE(TOOFEWVERTICES)'                       )
-         CALL CHKOUT ( 'PLTAR'                                       )
-         RETURN
+         call chkin  ( 'PLTAR'                                       )
+         call setmsg ( 'At least 3 vertices are needed, but NV = #.' )
+         call errint ( '#',  nv                                      )
+         call sigerr ( 'SPICE(TOOFEWVERTICES)'                       )
+         call chkout ( 'PLTAR'                                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the vertex indices are in the range [1, NV].
 !
-      DO I = 1, NP
+      do i = 1, np
 
-         DO J = 1, 3
+         do j = 1, 3
 
-            IF (      ( PLATES(J,I) .LT. 1  ) &
-                 .OR. ( PLATES(J,I) .GT. NV )  ) THEN
+            if (      ( plates(j,i) .lt. 1  ) &
+                 .or. ( plates(j,i) .gt. nv )  ) then
 
-               CALL CHKIN  ( 'PLTAR'                                   )
-               CALL SETMSG ( 'Vertex indices must be in the range ' &
+               call chkin  ( 'PLTAR'                                   )
+               call setmsg ( 'Vertex indices must be in the range ' &
                //            '[1, NV] for all SPICE language versions. ' &
                //            'The input value of NV was #. Vertex ' &
                //            'index # in plate # was #. (The vertex ' &
                //            'and plate numbers in this message are ' &
                //            '1-based as well.)'                       )
-               CALL ERRINT ( '#',  NV                                  )
-               CALL ERRINT ( '#',  J                                   )
-               CALL ERRINT ( '#',  I                                   )
-               CALL ERRINT ( '#',  PLATES(J,I)                         )
-               CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                  )
-               CALL CHKOUT ( 'PLTAR'                                   )
-               RETURN
+               call errint ( '#',  nv                                  )
+               call errint ( '#',  j                                   )
+               call errint ( '#',  i                                   )
+               call errint ( '#',  plates(j,i)                         )
+               call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                  )
+               call chkout ( 'PLTAR'                                   )
+               return
 
-            END IF
+            end if
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 
-      DO I = 1, NP
+      do i = 1, np
 !
 !        Take the cross product of two edges of the Ith plate.
 !
-         CALL VSUB ( VRTCES( 1, PLATES(2,I) ), &
-                     VRTCES( 1, PLATES(1,I) ),   EDGE1 )
+         call vsub ( vrtces( 1, plates(2,i) ), &
+                     vrtces( 1, plates(1,i) ),   edge1 )
 
-         CALL VSUB ( VRTCES( 1, PLATES(3,I) ), &
-                     VRTCES( 1, PLATES(2,I) ),   EDGE2 )
+         call vsub ( vrtces( 1, plates(3,i) ), &
+                     vrtces( 1, plates(2,i) ),   edge2 )
 
-         CALL VCRSS ( EDGE1, EDGE2, CP )
+         call vcrss ( edge1, edge2, cp )
 
 !
 !        The plate area is 1/2 of the magnitude of the
 !        cross product.
 !
-         PLTAR = PLTAR  +  ( 0.5D0 * VNORM(CP) )
+         pltar = pltar  +  ( 0.5d0 * vnorm(cp) )
 
-      END DO
+      end do
 
 !
 !     No check-out required, since the routine is not checked in
 !     at this point.
 !
-      RETURN
-      END
+      return
+      end

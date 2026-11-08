@@ -1,7 +1,7 @@
 !$Procedure   ZZEKINQN ( Private: EK, insert into query, numeric )
 
-      SUBROUTINE ZZEKINQN ( VALUE, TYPE,  LEXBEG, LEXEND, &
-                            EQRYI, EQRYD, DESCR           )
+      subroutine zzekinqn ( value, type,  lexbeg, lexend, &
+                            eqryi, eqryd, descr           )
 
 ! $ Abstract
 !
@@ -23,20 +23,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ektype.inc'
-      INCLUDE 'ekbool.inc'
+      include 'ekquery.inc'
+      include 'ektype.inc'
+      include 'ekbool.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      DOUBLE PRECISION      VALUE
-      INTEGER               TYPE
-      INTEGER               LEXBEG
-      INTEGER               LEXEND
-      INTEGER               EQRYI  ( LBCELL : * )
-      DOUBLE PRECISION      EQRYD  ( * )
-      INTEGER               DESCR  ( * )
+      double precision      value
+      integer               type
+      integer               lexbeg
+      integer               lexend
+      integer               eqryi  ( lbcell : * )
+      double precision      eqryd  ( * )
+      integer               descr  ( * )
 
 ! $ Brief_I/O
 !
@@ -136,68 +136,68 @@
 !
 !     Local variables
 !
-      INTEGER               FREE
-      INTEGER               INIT
-      INTEGER               ROOM
-      INTEGER               SIZE
+      integer               free
+      integer               init
+      integer               room
+      integer               size
 
 !
 !     Use discovery check-in.
 !
-      CALL ZZEKREQI ( EQRYI, 'INITIALIZED', INIT )
+      call zzekreqi ( eqryi, 'INITIALIZED', init )
 
-      IF ( INIT .NE. ITRUE ) THEN
+      if ( init .ne. itrue ) then
 
-         CALL CHKIN  ( 'ZZEKINQN'                                    )
-         CALL SETMSG ( 'Encoded query must be initialized before it ' // &
+         call chkin  ( 'ZZEKINQN'                                    )
+         call setmsg ( 'Encoded query must be initialized before it ' // &
                        'may be written.'                             )
-         CALL SIGERR ( 'SPICE(NOTINITIALIZED)'                       )
-         CALL CHKOUT ( 'ZZEKINQN'                                    )
-         RETURN
+         call sigerr ( 'SPICE(NOTINITIALIZED)'                       )
+         call chkout ( 'ZZEKINQN'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Get the numeric free pointer; make sure there's enough room.
 !
-      CALL ZZEKREQI ( EQRYI, 'FREE_NUM',     FREE )
-      CALL ZZEKREQI ( EQRYI, 'NUM_BUF_SIZE', SIZE )
+      call zzekreqi ( eqryi, 'FREE_NUM',     free )
+      call zzekreqi ( eqryi, 'NUM_BUF_SIZE', size )
 
-      ROOM  =  SIZE - FREE + 1
+      room  =  size - free + 1
 
-      IF ( ROOM .LE. 0 ) THEN
+      if ( room .le. 0 ) then
 
-         CALL CHKIN  ( 'ZZEKINQN'                                    )
-         CALL SETMSG ( 'Out of room in numeric portion of encoded ' // &
+         call chkin  ( 'ZZEKINQN'                                    )
+         call setmsg ( 'Out of room in numeric portion of encoded ' // &
                        'query; only # elements were available.'      )
-         CALL ERRINT ( '#',  SIZE                                    )
-         CALL SIGERR ( 'SPICE(BUFFERTOOSMALL)'                       )
-         CALL CHKOUT ( 'ZZEKINQN'                                    )
-         RETURN
+         call errint ( '#',  size                                    )
+         call sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
+         call chkout ( 'ZZEKINQN'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Insert the value into the double precision portion of the encoded
 !     query.
 !
-      EQRYD(FREE)      =  VALUE
+      eqryd(free)      =  value
 
 !
 !     Fill in the descriptor.
 !
-      CALL CLEARI ( EQVDSZ, DESCR )
+      call cleari ( eqvdsz, descr )
 
-      DESCR( EQDTYP )  =  TYPE
-      DESCR( EQBLEX )  =  LEXBEG
-      DESCR( EQELEX )  =  LEXEND
-      DESCR( EQVPTR )  =  FREE
+      descr( eqdtyp )  =  type
+      descr( eqblex )  =  lexbeg
+      descr( eqelex )  =  lexend
+      descr( eqvptr )  =  free
 
 !
 !     Update the numeric free pointer.
 !
-      CALL ZZEKWEQI ( 'FREE_NUM', FREE+1, EQRYI )
+      call zzekweqi ( 'FREE_NUM', free+1, eqryi )
 
 
-      RETURN
-      END
+      return
+      end

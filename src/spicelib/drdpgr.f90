@@ -1,6 +1,6 @@
 !$Procedure DRDPGR ( Derivative of rectangular w.r.t. planetographic )
 
-      SUBROUTINE DRDPGR ( BODY, LON, LAT, ALT, RE, F, JACOBI )
+      subroutine drdpgr ( body, lon, lat, alt, re, f, jacobi )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'zzctr.inc'
+      include               'zzctr.inc'
 
-      CHARACTER*(*)         BODY
-      DOUBLE PRECISION      LON
-      DOUBLE PRECISION      LAT
-      DOUBLE PRECISION      ALT
-      DOUBLE PRECISION      RE
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      character*(*)         body
+      double precision      lon
+      double precision      lat
+      double precision      alt
+      double precision      re
+      double precision      f
+      double precision      jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -530,232 +530,232 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               PLNSNS
+      integer               plnsns
 
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local parameters
 !
-      CHARACTER*(*)         PMTMP
-      PARAMETER           ( PMTMP  = 'BODY#_PM' )
+      character*(*)         pmtmp
+      parameter           ( pmtmp  = 'BODY#_PM' )
 
-      CHARACTER*(*)         OVRTMP
-      PARAMETER           ( OVRTMP = 'BODY#_PGR_POSITIVE_LON' )
+      character*(*)         ovrtmp
+      parameter           ( ovrtmp = 'BODY#_PGR_POSITIVE_LON' )
 
 
-      INTEGER               EARTH
-      PARAMETER           ( EARTH  = 399 )
+      integer               earth
+      parameter           ( earth  = 399 )
 
-      INTEGER               KVNMLN
-      PARAMETER           ( KVNMLN = 32  )
+      integer               kvnmln
+      parameter           ( kvnmln = 32  )
 
-      INTEGER               LNSIZE
-      PARAMETER           ( LNSIZE = 80  )
+      integer               lnsize
+      parameter           ( lnsize = 80  )
 
-      INTEGER               MOON
-      PARAMETER           ( MOON   = 301 )
+      integer               moon
+      parameter           ( moon   = 301 )
 
-      INTEGER               SENSLN
-      PARAMETER           ( SENSLN = 4 )
+      integer               sensln
+      parameter           ( sensln = 4 )
 
-      INTEGER               SUN
-      PARAMETER           ( SUN    = 10  )
+      integer               sun
+      parameter           ( sun    = 10  )
 
 !
 !     Saved body name length.
 !
-      INTEGER               MAXL
-      PARAMETER           ( MAXL  = 36 )
+      integer               maxl
+      parameter           ( maxl  = 36 )
 
 
 
 !
 !     Local variables
 !
-      CHARACTER*(LNSIZE)    KVALUE
-      CHARACTER*(KVNMLN)    PMKVAR
-      CHARACTER*(SENSLN)    PGRLON
+      character*(lnsize)    kvalue
+      character*(kvnmln)    pmkvar
+      character*(sensln)    pgrlon
 
-      DOUBLE PRECISION      GEOLON
+      double precision      geolon
 
-      INTEGER               BODYID
-      INTEGER               I
-      INTEGER               N
-      INTEGER               SENSE
+      integer               bodyid
+      integer               i
+      integer               n
+      integer               sense
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      INTEGER               SVCTR1 ( CTRSIZ )
-      CHARACTER*(MAXL)      SVBODY
-      INTEGER               SVBDID
-      LOGICAL               SVFND1
+      integer               svctr1 ( ctrsiz )
+      character*(maxl)      svbody
+      integer               svbdid
+      logical               svfnd1
 
-      LOGICAL               FIRST
+      logical               first
 
 !
 !     Saved name/ID items.
 !
-      SAVE                  SVCTR1
-      SAVE                  SVBODY
-      SAVE                  SVBDID
-      SAVE                  SVFND1
+      save                  svctr1
+      save                  svbody
+      save                  svbdid
+      save                  svfnd1
 
-      SAVE                  FIRST
+      save                  first
 
 !
 !     Initial values.
 !
-      DATA                  FIRST   / .TRUE. /
+      data                  first   / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DRDPGR' )
+      call chkin ( 'DRDPGR' )
 
 !
 !     Initialization.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
 !
 !        Initialize counter.
 !
-         CALL ZZCTRUIN( SVCTR1 )
+         call zzctruin( svctr1 )
 
-         FIRST = .FALSE.
+         first = .false.
 
-      END IF
+      end if
 
 !
 !     Convert the body name to an ID code.
 !
-      CALL ZZBODS2C ( SVCTR1, SVBODY, SVBDID, SVFND1, &
-                      BODY, BODYID, FOUND    )
+      call zzbods2c ( svctr1, svbody, svbdid, svfnd1, &
+                      body, bodyid, found    )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( 'The value of the input argument BODY is #, ' &
+         call setmsg ( 'The value of the input argument BODY is #, ' &
          //            'this is not a recognized name of an ' &
          //            'ephemeris object. The cause of this ' &
          //            'problem may be that you need an updated ' &
          //            'version of the SPICE Toolkit. '           )
-         CALL ERRCH  ( '#', BODY                                  )
-         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
-         CALL CHKOUT ( 'DRDPGR'                                   )
-         RETURN
+         call errch  ( '#', body                                  )
+         call sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         call chkout ( 'DRDPGR'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      IF ( RE .LE. 0.0D0 ) THEN
+      if ( re .le. 0.0d0 ) then
 
-         CALL SETMSG ( 'Equatorial radius was #.' )
-         CALL ERRDP  ( '#', RE                    )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'   )
-         CALL CHKOUT ( 'DRDPGR'                   )
-         RETURN
+         call setmsg ( 'Equatorial radius was #.' )
+         call errdp  ( '#', re                    )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
+         call chkout ( 'DRDPGR'                   )
+         return
 
-      END IF
+      end if
 
 !
 !     If the flattening coefficient is greater than 1, the polar radius
 !     is negative. If F is equal to 1, the polar radius is zero. Either
 !     case is a problem, so signal an error and check out.
 !
-      IF ( F .GE. 1.D0 ) THEN
+      if ( f .ge. 1.d0 ) then
 
-         CALL SETMSG ( 'Flattening coefficient was #.'  )
-         CALL ERRDP  ( '#', F                           )
-         CALL SIGERR ( 'SPICE(VALUEOUTOFRANGE)'         )
-         CALL CHKOUT ( 'DRDPGR'                         )
-         RETURN
+         call setmsg ( 'Flattening coefficient was #.'  )
+         call errdp  ( '#', f                           )
+         call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
+         call chkout ( 'DRDPGR'                         )
+         return
 
-      END IF
+      end if
 
 !
 !     Look up the longitude sense override variable from the
 !     kernel pool.
 !
-      CALL REPMI  ( OVRTMP, '#',     BODYID, PMKVAR )
-      CALL GCPOOL ( PMKVAR, 1, 1, N, KVALUE, FOUND  )
+      call repmi  ( ovrtmp, '#',     bodyid, pmkvar )
+      call gcpool ( pmkvar, 1, 1, n, kvalue, found  )
 
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        Make sure we recognize the value of PGRLON.
 !
-         CALL LJUCRS ( 0, KVALUE, PGRLON )
+         call ljucrs ( 0, kvalue, pgrlon )
 
-         IF ( PGRLON .EQ. 'EAST' ) THEN
+         if ( pgrlon .eq. 'EAST' ) then
 
-            SENSE =  1
+            sense =  1
 
-         ELSE IF ( PGRLON .EQ. 'WEST' ) THEN
+         else if ( pgrlon .eq. 'WEST' ) then
 
-            SENSE = -1
+            sense = -1
 
-         ELSE
+         else
 
-            CALL SETMSG ( 'Kernel variable # may have the values ' // &
+            call setmsg ( 'Kernel variable # may have the values ' // &
                           'EAST or WEST.  Actual value was #.'    )
-            CALL ERRCH  ( '#', PMKVAR                             )
-            CALL ERRCH  ( '#', KVALUE                             )
-            CALL SIGERR ( 'SPICE(INVALIDOPTION)'                  )
-            CALL CHKOUT ( 'DRDPGR'                                )
-            RETURN
+            call errch  ( '#', pmkvar                             )
+            call errch  ( '#', kvalue                             )
+            call sigerr ( 'SPICE(INVALIDOPTION)'                  )
+            call chkout ( 'DRDPGR'                                )
+            return
 
-         END IF
+         end if
 
 
-      ELSE
+      else
 !
 !        Look up the spin sense of the body's prime meridian.
 !
-         SENSE = PLNSNS ( BODYID )
+         sense = plnsns ( bodyid )
 
 !
 !        If the required prime meridian rate was not available,
 !        PLNSNS returns the code 0.  Here we consider this situation
 !        to be an error.
 !
-         IF ( SENSE .EQ. 0 ) THEN
+         if ( sense .eq. 0 ) then
 
-            CALL REPMI  ( PMTMP, '#', BODYID, PMKVAR )
+            call repmi  ( pmtmp, '#', bodyid, pmkvar )
 
-            CALL SETMSG ( 'Prime meridian rate coefficient defined ' // &
+            call setmsg ( 'Prime meridian rate coefficient defined ' // &
                           'by kernel variable # is required but '    // &
                           'not available for body #. '               )
-            CALL ERRCH  ( '#', PMKVAR                                )
-            CALL ERRCH  ( '#', BODY                                  )
-            CALL SIGERR ( 'SPICE(MISSINGDATA)'                       )
-            CALL CHKOUT ( 'DRDPGR'                                   )
-            RETURN
+            call errch  ( '#', pmkvar                                )
+            call errch  ( '#', body                                  )
+            call sigerr ( 'SPICE(MISSINGDATA)'                       )
+            call chkout ( 'DRDPGR'                                   )
+            return
 
-         END IF
+         end if
 
 !
 !        Handle the special cases:  earth, moon, and sun.
 !
-         IF (      ( BODYID .EQ. EARTH ) &
-              .OR. ( BODYID .EQ. MOON  ) &
-              .OR. ( BODYID .EQ. SUN   )  ) THEN
+         if (      ( bodyid .eq. earth ) &
+              .or. ( bodyid .eq. moon  ) &
+              .or. ( bodyid .eq. sun   )  ) then
 
-            SENSE = 1
+            sense = 1
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, SENSE is set to +/- 1.
@@ -764,7 +764,7 @@
 !     spin, or according to the override value if one is provided.
 !     We want positive east longitude.
 !
-      GEOLON = SENSE * LON
+      geolon = sense * lon
 
 !
 !     Now that we have geodetic longitude in hand, use the
@@ -772,7 +772,7 @@
 !     Jacobian matrix of rectangular coordinates with respect
 !     to geodetic coordinates.
 !
-      CALL DRDGEO ( GEOLON, LAT, ALT, RE, F, JACOBI )
+      call drdgeo ( geolon, lat, alt, re, f, jacobi )
 
 !
 !     The matrix JACOBI is
@@ -796,12 +796,12 @@
 !     rectangular coordinates with respect to planetographic
 !     coordinates.
 !
-      DO I = 1, 3
+      do i = 1, 3
 
-         JACOBI(I,1) = SENSE * JACOBI(I,1)
+         jacobi(i,1) = sense * jacobi(i,1)
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'DRDPGR' )
-      RETURN
-      END
+      call chkout ( 'DRDPGR' )
+      return
+      end

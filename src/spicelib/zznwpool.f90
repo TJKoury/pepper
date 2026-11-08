@@ -1,7 +1,7 @@
 !$Procedure ZZNWPOOL ( Private: notify watchers of update )
 
-      SUBROUTINE ZZNWPOOL ( VARNAM, WTVARS, WTPTRS, WTPOOL, &
-                            WTAGNT, AGTWRK, NOTIFY, AGENTS )
+      subroutine zznwpool ( varnam, wtvars, wtptrs, wtpool, &
+                            wtagnt, agtwrk, notify, agents )
 
 
 ! $ Abstract
@@ -26,22 +26,22 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL = -5 )
+      integer               lbpool
+      parameter           ( lbpool = -5 )
 
-      CHARACTER*(*)         VARNAM
-      CHARACTER*(*)         WTVARS ( LBCELL : * )
-      INTEGER               WTPTRS ( * )
-      INTEGER               WTPOOL ( 2, LBPOOL : * )
-      CHARACTER*(*)         WTAGNT ( * )
-      CHARACTER*(*)         AGTWRK ( LBCELL : * )
-      CHARACTER*(*)         NOTIFY ( LBCELL : * )
-      CHARACTER*(*)         AGENTS ( LBCELL : * )
+      character*(*)         varnam
+      character*(*)         wtvars ( lbcell : * )
+      integer               wtptrs ( * )
+      integer               wtpool ( 2, lbpool : * )
+      character*(*)         wtagnt ( * )
+      character*(*)         agtwrk ( lbcell : * )
+      character*(*)         notify ( lbcell : * )
+      character*(*)         agents ( lbcell : * )
 
 
 ! $ Brief_I/O
@@ -163,28 +163,28 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZNWPOOL' )
+      call chkin ( 'ZZNWPOOL' )
 
 !
 !     Fetch the agents watching VARNAM into the set NOTIFY.
 !
-      CALL ZZGAPOOL ( VARNAM, WTVARS, WTPTRS, WTPOOL, WTAGNT, NOTIFY )
+      call zzgapool ( varnam, wtvars, wtptrs, wtpool, wtagnt, notify )
 
 !
 !     Compute the union of NOTIFY and the agent list AGENTS.
 !     Place the result in the workspace set AGTWRK; then copy
 !     the result to AGENTS.
 !
-      CALL UNIONC ( NOTIFY, AGENTS, AGTWRK )
-      CALL COPYC  ( AGTWRK,         AGENTS )
+      call unionc ( notify, agents, agtwrk )
+      call copyc  ( agtwrk,         agents )
 
-      CALL CHKOUT ( 'ZZNWPOOL' )
-      RETURN
-      END
+      call chkout ( 'ZZNWPOOL' )
+      return
+      end

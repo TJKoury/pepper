@@ -1,7 +1,7 @@
 !$Procedure      ZZEKSINF ( EK, return segment information )
 
-      SUBROUTINE ZZEKSINF ( HANDLE,  SEGNO,   TABNAM, &
-                            SEGDSC,  CNAMES,  CDSCRS )
+      subroutine zzeksinf ( handle,  segno,   tabnam, &
+                            segdsc,  cnames,  cdscrs )
 
 ! $ Abstract
 !
@@ -19,17 +19,17 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektnamsz.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
+      include 'ektnamsz.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGNO
-      CHARACTER*(*)         TABNAM
-      INTEGER               SEGDSC ( SDSCSZ    )
-      CHARACTER*(*)         CNAMES (         * )
-      INTEGER               CDSCRS ( CDSCSZ, * )
+      integer               handle
+      integer               segno
+      character*(*)         tabnam
+      integer               segdsc ( sdscsz    )
+      character*(*)         cnames (         * )
+      integer               cdscrs ( cdscsz, * )
 
 ! $ Brief_I/O
 !
@@ -244,80 +244,80 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               EKNSEG
+      integer               eknseg
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               I
-      INTEGER               NCOLS
-      INTEGER               NSEG
-      INTEGER               P
+      integer               base
+      integer               i
+      integer               ncols
+      integer               nseg
+      integer               p
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKSINF' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKSINF' )
+      end if
 
 !
 !     Verify that the target file is a paged DAS EK open for read
 !     access, or we can't summarize the file.
 !
-      CALL ZZEKPGCH ( HANDLE, 'READ' )
+      call zzekpgch ( handle, 'READ' )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'ZZEKSINF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'ZZEKSINF' )
+         return
+      end if
 
 !
 !     Find out how many segments are in the file, so we can check
 !     the index for validity.
 !
-      NSEG = EKNSEG ( HANDLE )
+      nseg = eknseg ( handle )
 
-      IF (  ( SEGNO .LT. 1 ) .OR. ( SEGNO .GT. NSEG )  ) THEN
+      if (  ( segno .lt. 1 ) .or. ( segno .gt. nseg )  ) then
 
-         CALL SETMSG ( 'Segment index was #; valid range is 1:#' )
-         CALL ERRINT ( '#',  SEGNO                               )
-         CALL ERRINT ( '#',  NSEG                                )
-         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                  )
-         CALL CHKOUT ( 'ZZEKSINF'                                )
-         RETURN
+         call setmsg ( 'Segment index was #; valid range is 1:#' )
+         call errint ( '#',  segno                               )
+         call errint ( '#',  nseg                                )
+         call sigerr ( 'SPICE(INDEXOUTOFRANGE)'                  )
+         call chkout ( 'ZZEKSINF'                                )
+         return
 
-      END IF
+      end if
 
 !
 !     We're ready to proceed.  The first step is to find the
 !     segment's metadata location and look up the segment descriptor.
 !
-      CALL ZZEKMLOC ( HANDLE, SEGNO,  P,           BASE   )
-      CALL DASRDI   ( HANDLE, BASE+1, BASE+SDSCSZ, SEGDSC )
+      call zzekmloc ( handle, segno,  p,           base   )
+      call dasrdi   ( handle, base+1, base+sdscsz, segdsc )
 
 !
 !     Get the table name.  The table's base address is in the segment
 !     descriptor.
 !
-      CALL DASRDC ( HANDLE, &
-                    SEGDSC(TNMIDX) + 1, &
-                    SEGDSC(TNMIDX) + TNAMSZ, &
+      call dasrdc ( handle, &
+                    segdsc(tnmidx) + 1, &
+                    segdsc(tnmidx) + tnamsz, &
                     1, &
-                    TNAMSZ, &
-                    TABNAM                   )
+                    tnamsz, &
+                    tabnam                   )
 
 
-      IF (  LEN( TABNAM )  .GT.  TNAMSZ  ) THEN
-         TABNAM (TNAMSZ+1:) = ' '
-      END IF
+      if (  len( tabnam )  .gt.  tnamsz  ) then
+         tabnam (tnamsz+1:) = ' '
+      end if
 
 
 !
@@ -327,36 +327,36 @@
 !        BASE + CDOFF + 1.
 !
 !
-      NCOLS   =  SEGDSC(NCIDX)
+      ncols   =  segdsc(ncidx)
 
-      CALL DASRDI ( HANDLE, &
-                    BASE + CDOFF + 1, &
-                    BASE + CDOFF + NCOLS*CDSCSZ, &
-                    CDSCRS                        )
+      call dasrdi ( handle, &
+                    base + cdoff + 1, &
+                    base + cdoff + ncols*cdscsz, &
+                    cdscrs                        )
 
 !
 !     Now read the column names into the names array.
 !
-      CALL DASRDC ( HANDLE, &
-                    SEGDSC(NMLIDX) + 1, &
-                    SEGDSC(NMLIDX) + NCOLS*CNAMSZ, &
+      call dasrdc ( handle, &
+                    segdsc(nmlidx) + 1, &
+                    segdsc(nmlidx) + ncols*cnamsz, &
                     1, &
-                    CNAMSZ, &
-                    CNAMES  )
+                    cnamsz, &
+                    cnames  )
 
 
-      IF (   LEN( CNAMES(1) )  .GT.  CNAMSZ  ) THEN
+      if (   len( cnames(1) )  .gt.  cnamsz  ) then
 
-         DO I = 1, NCOLS
-            CNAMES(I)(CNAMSZ+1:) = ' '
-         END DO
+         do i = 1, ncols
+            cnames(i)(cnamsz+1:) = ' '
+         end do
 
-      END IF
+      end if
 
 !
 !     All output arguments are set, or else FAILED() is .TRUE.
 !
 
-      CALL CHKOUT ( 'ZZEKSINF' )
-      RETURN
-      END
+      call chkout ( 'ZZEKSINF' )
+      return
+      end

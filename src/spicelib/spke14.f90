@@ -1,6 +1,6 @@
 !$Procedure SPKE14 ( S/P Kernel, evaluate, type 14 )
 
-      SUBROUTINE SPKE14 ( ET, RECORD, STATE )
+      subroutine spke14 ( et, record, state )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
-      DOUBLE PRECISION      STATE    ( 6 )
+      double precision      et
+      double precision      record   ( * )
+      double precision      state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -144,24 +144,24 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               COFLOC
-      INTEGER               DEGREE
-      INTEGER               I
-      INTEGER               NCOEFF
+      integer               cofloc
+      integer               degree
+      integer               i
+      integer               ncoeff
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'SPKE14' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'SPKE14' )
+      end if
 
 !
 !     The first number in the record is the number of Chebyshev
@@ -170,24 +170,24 @@
 !     when evaluating the sets of coefficients, and finally the six sets
 !     of coefficients.
 !
-      NCOEFF = INT( RECORD( 1 ) )
+      ncoeff = int( record( 1 ) )
 
 !
 !     The degree of each polynomial is one less than the number of
 !     coefficients.
 !
-      DEGREE = NCOEFF - 1
+      degree = ncoeff - 1
 
 !
 !     Call CHBVAL once for each quantity to evaluate the position
 !     and velocity values.
 !
-      DO I = 1, 6
+      do i = 1, 6
 !
 !        The coefficients for each variable are located contiguously,
 !        following the first three words in the record.
 !
-         COFLOC = NCOEFF * ( I - 1 ) + 4
+         cofloc = ncoeff * ( i - 1 ) + 4
 !
 !        CHBVAL needs as input the coefficients, the degree of the
 !        polynomial, also two variable transformation parameters, which
@@ -195,11 +195,11 @@
 !        the epoch. We get back the appropriate element of a state
 !        vector.
 !
-         CALL CHBVAL ( RECORD(COFLOC), DEGREE, RECORD(2), ET, STATE(I) )
+         call chbval ( record(cofloc), degree, record(2), et, state(i) )
 
-      END DO
+      end do
 
-      CALL CHKOUT ( 'SPKE14' )
-      RETURN
+      call chkout ( 'SPKE14' )
+      return
 
-      END
+      end

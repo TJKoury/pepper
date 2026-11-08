@@ -1,6 +1,6 @@
 !$Procedure XF2EUL ( State transformation to Euler angles )
 
-      SUBROUTINE XF2EUL ( XFORM, AXISA, AXISB, AXISC, EULANG, UNIQUE )
+      subroutine xf2eul ( xform, axisa, axisb, axisc, eulang, unique )
 
 ! $ Abstract
 !
@@ -20,14 +20,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      XFORM  ( 6, 6 )
-      INTEGER               AXISA
-      INTEGER               AXISB
-      INTEGER               AXISC
-      DOUBLE PRECISION      EULANG ( 6 )
-      LOGICAL               UNIQUE
+      double precision      xform  ( 6, 6 )
+      integer               axisa
+      integer               axisb
+      integer               axisc
+      double precision      eulang ( 6 )
+      logical               unique
 
 ! $ Brief_I/O
 !
@@ -479,60 +479,60 @@
 !
 !     Spicelib Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Parameters
 !
-      INTEGER               ALPHA
-      INTEGER               BETA
-      INTEGER               GAMMA
-      INTEGER               DALPHA
-      INTEGER               DBETA
-      INTEGER               DGAMMA
+      integer               alpha
+      integer               beta
+      integer               gamma
+      integer               dalpha
+      integer               dbeta
+      integer               dgamma
 
-      PARAMETER           ( ALPHA  = 1 )
-      PARAMETER           ( BETA   = 2 )
-      PARAMETER           ( GAMMA  = 3 )
-      PARAMETER           ( DALPHA = 4 )
-      PARAMETER           ( DBETA  = 5 )
-      PARAMETER           ( DGAMMA = 6 )
+      parameter           ( alpha  = 1 )
+      parameter           ( beta   = 2 )
+      parameter           ( gamma  = 3 )
+      parameter           ( dalpha = 4 )
+      parameter           ( dbeta  = 5 )
+      parameter           ( dgamma = 6 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CA
-      DOUBLE PRECISION      D
-      DOUBLE PRECISION      DELTA  ( 3, 3 )
-      DOUBLE PRECISION      DOMEGA ( 3 )
-      DOUBLE PRECISION      DRDT   ( 3, 3 )
-      DOUBLE PRECISION      DRDTRT ( 3, 3 )
-      DOUBLE PRECISION      LOCANG ( 6 )
-      DOUBLE PRECISION      OMEGA  ( 3 )
-      DOUBLE PRECISION      R      ( 3, 3 )
-      DOUBLE PRECISION      SA
-      DOUBLE PRECISION      SOLUTN ( 3, 3 )
-      DOUBLE PRECISION      U
-      DOUBLE PRECISION      V
+      double precision      ca
+      double precision      d
+      double precision      delta  ( 3, 3 )
+      double precision      domega ( 3 )
+      double precision      drdt   ( 3, 3 )
+      double precision      drdtrt ( 3, 3 )
+      double precision      locang ( 6 )
+      double precision      omega  ( 3 )
+      double precision      r      ( 3, 3 )
+      double precision      sa
+      double precision      solutn ( 3, 3 )
+      double precision      u
+      double precision      v
 
 
-      INTEGER               A
-      INTEGER               B
-      INTEGER               I
-      INTEGER               J
-      INTEGER               K
-      INTEGER               L
-      INTEGER               LOCAXA
-      INTEGER               LOCAXB
-      INTEGER               LOCAXC
-      INTEGER               NEXT   ( 3 )
+      integer               a
+      integer               b
+      integer               i
+      integer               j
+      integer               k
+      integer               l
+      integer               locaxa
+      integer               locaxb
+      integer               locaxc
+      integer               next   ( 3 )
 
 !
 !     Saved variables
 !
-      SAVE                  DELTA
-      SAVE                  NEXT
+      save                  delta
+      save                  next
 
 !
 !     Initial values
@@ -542,12 +542,12 @@
 !     in fact it is the correct thing.
 !
 
-      DATA                  DELTA   /  0.0D0, -1.0D0,  1.0D0, &
-                                       1.0D0,  0.0D0, -1.0D0, &
-                                      -1.0D0,  1.0D0,  0.0D0  /
+      data                  delta   /  0.0d0, -1.0d0,  1.0d0, &
+                                       1.0d0,  0.0d0, -1.0d0, &
+                                      -1.0d0,  1.0d0,  0.0d0  /
 
 
-      DATA                  NEXT   / 2, 3, 1 /
+      data                  next   / 2, 3, 1 /
 
 
 
@@ -799,53 +799,53 @@
 !
 !     Standard SPICE exception handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'XF2EUL' )
+      call chkin ( 'XF2EUL' )
 
 !
 !     Get the rotation and derivative of the rotation separately.
 !
-      DO I = 1,3
+      do i = 1,3
 
-         K = I + 3
+         k = i + 3
 
-         DO J = 1,3
-            R    (I,J) = XFORM(I,J)
-            DRDT (I,J) = XFORM(K,J)
-         END DO
+         do j = 1,3
+            r    (i,j) = xform(i,j)
+            drdt (i,j) = xform(k,j)
+         end do
 
-      END DO
+      end do
 
 !
 !     We have to do it sooner or later so we take care of getting
 !     the various Euler angles now.  This will take care of all the
 !     bad axis cases too so we don't have to check here.
 !
-      CALL M2EUL ( R, AXISA,         AXISB,        AXISC, &
-                      EULANG(ALPHA), EULANG(BETA), EULANG(GAMMA) )
+      call m2eul ( r, axisa,         axisb,        axisc, &
+                      eulang(alpha), eulang(beta), eulang(gamma) )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'XF2EUL' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'XF2EUL' )
+         return
+      end if
 
 !
 !     Construct local copies of the axes, determine L and D from the
 !     derivation above.
 !
-      A = AXISA
-      B = AXISB
-      L = 6 - A - B
-      D = DELTA(A,B)
+      a = axisa
+      b = axisb
+      l = 6 - a - b
+      d = delta(a,b)
 
 !
 !                      t
 !     Compute DR/DT * R   and extract OMEGA
 !
-      CALL MXMT ( DRDT, R, DRDTRT )
+      call mxmt ( drdt, r, drdtrt )
 
 !
 !     The vector corresponding to DRDTRT is computed as shown below.
@@ -867,23 +867,23 @@
 !        omega(3) = w(L) = d*drdtrt(B,A)
 !
 
-      OMEGA(1) = D*DRDTRT(L,B)
-      OMEGA(2) = D*DRDTRT(A,L)
-      OMEGA(3) = D*DRDTRT(B,A)
+      omega(1) = d*drdtrt(l,b)
+      omega(2) = d*drdtrt(a,l)
+      omega(3) = d*drdtrt(b,a)
 
 !
 !     Compute the various sines and cosines that we need.
 !
-      CA       = DCOS( EULANG(ALPHA) )
-      SA       = DSIN( EULANG(ALPHA) )
+      ca       = dcos( eulang(alpha) )
+      sa       = dsin( eulang(alpha) )
 
-      IF ( AXISA .EQ. AXISC ) THEN
-         U  =       DCOS ( EULANG(BETA) )
-         V  =   D * DSIN ( EULANG(BETA) )
-      ELSE
-         U  =  -D * DSIN( EULANG(BETA) )
-         V  =       DCOS( EULANG(BETA) )
-      END IF
+      if ( axisa .eq. axisc ) then
+         u  =       dcos ( eulang(beta) )
+         v  =   d * dsin ( eulang(beta) )
+      else
+         u  =  -d * dsin( eulang(beta) )
+         v  =       dcos( eulang(beta) )
+      end if
 
 !
 !     To avoid floating point overflows we make sure that we
@@ -892,9 +892,9 @@
 !     After all U*U + V*V = 1 if SIN and COS and various arithmetic
 !     operations work perfectly.
 !
-      IF ( DABS(U) .EQ. 1.0D0 ) THEN
-         V = 0.0D0
-      END IF
+      if ( dabs(u) .eq. 1.0d0 ) then
+         v = 0.0d0
+      end if
 
 !
 !     We have to look at the singular case first. Recall from above that
@@ -911,27 +911,27 @@
 !        | OMEGA(2) | = |  0   -CA   0  ||dBETA /dt|
 !        [ OMEGA(3) ]   [  0  D*SA   0  ][dGAMMA/dt]
 !
-      IF ( V .EQ. 0 ) THEN
+      if ( v .eq. 0 ) then
 
-         UNIQUE         = .FALSE.
-         EULANG(DALPHA) =  0.0D0
-         EULANG(DGAMMA) = -U*OMEGA(1)
+         unique         = .false.
+         eulang(dalpha) =  0.0d0
+         eulang(dgamma) = -u*omega(1)
 
 !
 !        We solve for EULANG(DBETA) by selecting the more stable of
 !        the two available equations.
 !
-         IF ( DABS(CA) .GT. DABS(SA) ) THEN
-            EULANG(DBETA) =   -OMEGA(2)/CA
-         ELSE
-            EULANG(DBETA) =  D*OMEGA(3)/SA
-         END IF
+         if ( dabs(ca) .gt. dabs(sa) ) then
+            eulang(dbeta) =   -omega(2)/ca
+         else
+            eulang(dbeta) =  d*omega(3)/sa
+         end if
 
 
-         CALL CHKOUT ( 'XF2EUL' )
-         RETURN
+         call chkout ( 'XF2EUL' )
+         return
 
-      END IF
+      end if
 
 !
 !     The matrix needed to compute the derivatives uniquely
@@ -942,29 +942,29 @@
 !     [dGAMMA/dt]   [  0   -D*SA/V   -CA/V ] [ OMEGA(3) ]
 !
 
-      UNIQUE      = .TRUE.
+      unique      = .true.
 
-      SOLUTN(1,1) =  -1.0D0
-      SOLUTN(2,1) =   0.0D0
-      SOLUTN(3,1) =   0.0D0
+      solutn(1,1) =  -1.0d0
+      solutn(2,1) =   0.0d0
+      solutn(3,1) =   0.0d0
 
-      SOLUTN(1,2) =   U*D*SA/V
-      SOLUTN(2,2) =      -CA
-      SOLUTN(3,2) =    -D*SA/V
+      solutn(1,2) =   u*d*sa/v
+      solutn(2,2) =      -ca
+      solutn(3,2) =    -d*sa/v
 
-      SOLUTN(1,3) =     U*CA/V
-      SOLUTN(2,3) =     D*SA
-      SOLUTN(3,3) =      -CA/V
+      solutn(1,3) =     u*ca/v
+      solutn(2,3) =     d*sa
+      solutn(3,3) =      -ca/v
 
-      CALL MXV ( SOLUTN, OMEGA, EULANG(4) )
+      call mxv ( solutn, omega, eulang(4) )
 
-      CALL CHKOUT ( 'XF2EUL' )
-      RETURN
+      call chkout ( 'XF2EUL' )
+      return
 
 
 !$Procedure EUL2XF ( Euler angles and derivative to transformation )
 
-      ENTRY      EUL2XF ( EULANG, AXISA, AXISB, AXISC, XFORM )
+      entry      eul2xf ( eulang, axisa, axisb, axisc, xform )
 
 ! $ Abstract
 !
@@ -1325,73 +1325,73 @@
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'EUL2XF' )
+      call chkin ( 'EUL2XF' )
 
 !
 !     We're going to work with a local copy LOCANG of the euler angle
 !     state vector EULANG.  We'll also use a local set of axis
 !     numbers.
 !
-      CALL MOVED ( EULANG, 6, LOCANG )
+      call moved ( eulang, 6, locang )
 
-      LOCAXA = AXISA
-      LOCAXB = AXISB
-      LOCAXC = AXISC
+      locaxa = axisa
+      locaxb = axisb
+      locaxc = axisc
 
 !
 !     Parts of the following algorithm depend on the central axis
 !     being different from the first and third axes.  We'll adjust
 !     the axes and angles to make this so, if necessary.
 !
-      IF (  ( AXISB .EQ. AXISA ) .OR. ( AXISB .EQ. AXISC )  ) THEN
+      if (  ( axisb .eq. axisa ) .or. ( axisb .eq. axisc )  ) then
 
-         IF ( AXISB .EQ. AXISA ) THEN
+         if ( axisb .eq. axisa ) then
 !
 !           The first angle will "absorb" the second, and the
 !           second will be set to zero.  All we do here is select
 !           the first angle.
 !
-            I = 1
-         ELSE
-            I = 3
-         END IF
+            i = 1
+         else
+            i = 3
+         end if
 !
 !        Absorb the second angle into the selected angle and set the
 !        second angle to zero.  The same goes for the angular rates.
 !
-         LOCANG(I)   = LOCANG(I)   + LOCANG(2)
-         LOCANG(2)   = 0.D0
+         locang(i)   = locang(i)   + locang(2)
+         locang(2)   = 0.d0
 
-         LOCANG(I+3) = LOCANG(I+3) + LOCANG(5)
-         LOCANG(5)   = 0.D0
+         locang(i+3) = locang(i+3) + locang(5)
+         locang(5)   = 0.d0
 
 !
 !        Pick a second axis that doesn't match the others.  Since
 !        the rotation angle about the second axis is zero, all that
 !        matters here is picking a distinct axis.
 !
-         IF ( AXISC .EQ. NEXT(AXISA) ) THEN
+         if ( axisc .eq. next(axisa) ) then
 !
 !           The first axis is the predecessor of the third, so we pick
 !           the successor of the third.
 !
-            LOCAXB = NEXT( AXISC )
+            locaxb = next( axisc )
 
-         ELSE
+         else
 !
 !           Either the third axis is the predecessor of the first or
 !           matches the first, so the successor of the first is our
 !           choice.
 !
-            LOCAXB = NEXT( AXISA )
+            locaxb = next( axisa )
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     The following local variables are set:
@@ -1404,36 +1404,36 @@
 !     The derivation for everything that is about to happen here
 !     is included in the previous entry point.
 !
-      CALL EUL2M ( LOCANG(ALPHA), LOCANG(BETA), LOCANG(GAMMA), &
-                   LOCAXA,        LOCAXB,       LOCAXC,         R )
+      call eul2m ( locang(alpha), locang(beta), locang(gamma), &
+                   locaxa,        locaxb,       locaxc,         r )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'EUL2XF' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'EUL2XF' )
+         return
+      end if
 
 !
 !     Construct local copies of the axes, determine L and D from the
 !     derivation above.
 !
-      A = LOCAXA
-      B = LOCAXB
-      L = 6 - A - B
-      D = DELTA(A,B)
+      a = locaxa
+      b = locaxb
+      l = 6 - a - b
+      d = delta(a,b)
 
 !
 !     Compute the various sines and cosines that we need.
 !
-      CA       = DCOS( LOCANG(ALPHA) )
-      SA       = DSIN( LOCANG(ALPHA) )
+      ca       = dcos( locang(alpha) )
+      sa       = dsin( locang(alpha) )
 
-      IF ( LOCAXA .EQ. LOCAXC ) THEN
-         U  =       DCOS ( LOCANG(BETA) )
-         V  =   D * DSIN ( LOCANG(BETA) )
-      ELSE
-         U  =  -D * DSIN( LOCANG(BETA) )
-         V  =       DCOS( LOCANG(BETA) )
-      END IF
+      if ( locaxa .eq. locaxc ) then
+         u  =       dcos ( locang(beta) )
+         v  =   d * dsin ( locang(beta) )
+      else
+         u  =  -d * dsin( locang(beta) )
+         v  =       dcos( locang(beta) )
+      end if
 
 !
 !                            t
@@ -1463,45 +1463,45 @@
 !     We set up the matrix of this equation in SOLUTN below
 !     and compute D*OMEGA which we denote by the variable DOMEGA.
 !
-      SOLUTN(1,1) =  -D
-      SOLUTN(2,1) =   0.0D0
-      SOLUTN(3,1) =   0.0D0
+      solutn(1,1) =  -d
+      solutn(2,1) =   0.0d0
+      solutn(3,1) =   0.0d0
 
-      SOLUTN(1,2) =   0.0D0
-      SOLUTN(2,2) =  -D*CA
-      SOLUTN(3,2) =     SA
+      solutn(1,2) =   0.0d0
+      solutn(2,2) =  -d*ca
+      solutn(3,2) =     sa
 
-      SOLUTN(1,3) =     -D*U
-      SOLUTN(2,3) =    -SA*V
-      SOLUTN(3,3) =  -D*CA*V
+      solutn(1,3) =     -d*u
+      solutn(2,3) =    -sa*v
+      solutn(3,3) =  -d*ca*v
 
-      CALL MXV ( SOLUTN, LOCANG(4), DOMEGA )
+      call mxv ( solutn, locang(4), domega )
 
-      DRDTRT(L,B) =  DOMEGA(1)
-      DRDTRT(B,L) = -DOMEGA(1)
+      drdtrt(l,b) =  domega(1)
+      drdtrt(b,l) = -domega(1)
 
-      DRDTRT(A,L) =  DOMEGA(2)
-      DRDTRT(L,A) = -DOMEGA(2)
+      drdtrt(a,l) =  domega(2)
+      drdtrt(l,a) = -domega(2)
 
-      DRDTRT(B,A) =  DOMEGA(3)
-      DRDTRT(A,B) = -DOMEGA(3)
+      drdtrt(b,a) =  domega(3)
+      drdtrt(a,b) = -domega(3)
 
-      DRDTRT(1,1) =  0.0D0
-      DRDTRT(2,2) =  0.0D0
-      DRDTRT(3,3) =  0.0D0
+      drdtrt(1,1) =  0.0d0
+      drdtrt(2,2) =  0.0d0
+      drdtrt(3,3) =  0.0d0
 
-      CALL MXM ( DRDTRT, R, DRDT )
+      call mxm ( drdtrt, r, drdt )
 
-      DO J = 1,3
-         DO I = 1,3
-            XFORM(I,  J  ) = R   (I,J)
-            XFORM(I+3,J+3) = R   (I,J)
-            XFORM(I+3,J  ) = DRDT(I,J)
-            XFORM(I,  J+3) = 0.0D0
-         END DO
-      END DO
+      do j = 1,3
+         do i = 1,3
+            xform(i,  j  ) = r   (i,j)
+            xform(i+3,j+3) = r   (i,j)
+            xform(i+3,j  ) = drdt(i,j)
+            xform(i,  j+3) = 0.0d0
+         end do
+      end do
 
-      CALL CHKOUT ( 'EUL2XF' )
-      RETURN
+      call chkout ( 'EUL2XF' )
+      return
 
-      END
+      end

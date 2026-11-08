@@ -1,6 +1,6 @@
 !$Procedure CKW04B ( CK type 04: Begin a segment )
 
-      SUBROUTINE CKW04B ( HANDLE, BEGTIM, INST, REF, AVFLAG, SEGID )
+      subroutine ckw04b ( handle, begtim, inst, ref, avflag, segid )
 
 ! $ Abstract
 !
@@ -18,17 +18,17 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'sgparam.inc'
-      INCLUDE               'ckparam.inc'
+      include               'sgparam.inc'
+      include               'ckparam.inc'
 
-      INTEGER               HANDLE
-      CHARACTER*(*)         SEGID
-      INTEGER               INST
-      LOGICAL               AVFLAG
-      CHARACTER*(*)         REF
-      DOUBLE PRECISION      BEGTIM
+      integer               handle
+      character*(*)         segid
+      integer               inst
+      logical               avflag
+      character*(*)         ref
+      double precision      begtim
 
 ! $ Brief_I/O
 !
@@ -268,8 +268,8 @@
 !
 !     Spicelib functions
 !
-      INTEGER               LASTNB
-      LOGICAL               RETURN
+      integer               lastnb
+      logical               return
 
 !
 !     Local Parameters
@@ -278,132 +278,132 @@
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      INTEGER               ND
-      PARAMETER           ( ND = 2 )
+      integer               nd
+      parameter           ( nd = 2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI = 6 )
+      integer               ni
+      parameter           ( ni = 6 )
 
-      INTEGER               NDESCR
-      PARAMETER           ( NDESCR =  ND + ( NI + 1 ) / 2 )
+      integer               ndescr
+      parameter           ( ndescr =  nd + ( ni + 1 ) / 2 )
 
 !
 !     The number of generic segment constants in a type 4 CK segment.
 !
-      INTEGER               NCONST
-      PARAMETER           ( NCONST = 0 )
+      integer               nconst
+      parameter           ( nconst = 0 )
 
 !
 !     The integer codes of the first and last printable ASCII
 !     characters.
 !
-      INTEGER               FPRINT
-      PARAMETER           ( FPRINT = 32 )
+      integer               fprint
+      parameter           ( fprint = 32 )
 
-      INTEGER               LPRINT
-      PARAMETER           ( LPRINT = 126 )
+      integer               lprint
+      parameter           ( lprint = 126 )
 
 !
 !     The maximum number of characters allowed in a CK segment
 !     identifier.
 !
-      INTEGER               SIDLEN
-      PARAMETER           ( SIDLEN = 40 )
+      integer               sidlen
+      parameter           ( sidlen = 40 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      DCD    ( ND )
-      DOUBLE PRECISION      DCOEFF
-      DOUBLE PRECISION      DESCR  ( NDESCR )
+      double precision      dcd    ( nd )
+      double precision      dcoeff
+      double precision      descr  ( ndescr )
 
-      INTEGER               I
-      INTEGER               ICD    ( NI )
-      INTEGER               REFCOD
-      INTEGER               VALUE
+      integer               i
+      integer               icd    ( ni )
+      integer               refcod
+      integer               value
 
 !
 !     Standard SPICELIB error handling.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'CKW04B' )
-      END IF
+      if ( return() ) then
+         return
+      else
+         call chkin ( 'CKW04B' )
+      end if
 
 !
 !     Create a descriptor for the segment we are about to write. First
 !     assign start and stop times.
 !
-      DCD( 1 ) = BEGTIM
-      DCD( 2 ) = 0.D0
+      dcd( 1 ) = begtim
+      dcd( 2 ) = 0.d0
 
 !
 !     Second, resolve reference frame ID code from its name and
 !     assign it to the corresponding descriptor component. Signal
 !     an error if frame is not recognized.
 !
-      CALL NAMFRM ( REF, REFCOD )
+      call namfrm ( ref, refcod )
 
-      IF ( REFCOD .EQ. 0 ) THEN
-         CALL SETMSG ( 'The reference frame # is not supported.' )
-         CALL ERRCH  ( '#', REF                                  )
-         CALL SIGERR ( 'SPICE(INVALIDREFFRAME)'                  )
-         CALL CHKOUT ( 'CKW04B'                                  )
-         RETURN
-      END IF
+      if ( refcod .eq. 0 ) then
+         call setmsg ( 'The reference frame # is not supported.' )
+         call errch  ( '#', ref                                  )
+         call sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
+         call chkout ( 'CKW04B'                                  )
+         return
+      end if
 
-      ICD ( 2 ) = REFCOD
+      icd ( 2 ) = refcod
 
 !
 !     Third, assign values to the rest of the integer components of
 !     the segment descriptor.
 !
-      ICD ( 1 ) = INST
-      ICD ( 3 ) = CK4DTP
+      icd ( 1 ) = inst
+      icd ( 3 ) = ck4dtp
 
-      IF ( AVFLAG ) THEN
-         ICD ( 4 ) = 1
-      ELSE
-         ICD ( 4 ) = 0
-      END IF
+      if ( avflag ) then
+         icd ( 4 ) = 1
+      else
+         icd ( 4 ) = 0
+      end if
 
 !
 !     Now pack the segment descriptor.
 !
-      CALL DAFPS ( ND, NI, DCD, ICD, DESCR )
+      call dafps ( nd, ni, dcd, icd, descr )
 
 !
 !     Check that all characters in the SEGID are printable.
 !
-      DO I = 1, LASTNB(SEGID)
+      do i = 1, lastnb(segid)
 
-         VALUE = ICHAR( SEGID(I:I) )
+         value = ichar( segid(i:i) )
 
-         IF ( ( VALUE .LT. FPRINT ) .OR. ( VALUE .GT. LPRINT ) ) THEN
+         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
 
-            CALL SETMSG ( 'The segment identifier contains '      // &
+            call setmsg ( 'The segment identifier contains '      // &
                           'nonprintable characters'               )
-            CALL SIGERR ( 'SPICE(NONPRINTABLECHARS)'              )
-            CALL CHKOUT ( 'CKW04B'                                )
-            RETURN
+            call sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            call chkout ( 'CKW04B'                                )
+            return
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Also check if the segment identifier is too long.
 !
-      IF ( LASTNB( SEGID ) .GT. SIDLEN ) THEN
+      if ( lastnb( segid ) .gt. sidlen ) then
 
-         CALL SETMSG ( 'Segment identifier contains more than '   // &
+         call setmsg ( 'Segment identifier contains more than '   // &
                        '40 characters.'                           )
-         CALL SIGERR ( 'SPICE(SEGIDTOOLONG)'                      )
-         CALL CHKOUT ( 'CKW04B'                                   )
-         RETURN
+         call sigerr ( 'SPICE(SEGIDTOOLONG)'                      )
+         call chkout ( 'CKW04B'                                   )
+         return
 
-      END IF
+      end if
 
 !
 !     We've got a valid descriptor and identifier and can begin
@@ -415,14 +415,14 @@
 !     characteristics are prescribed by the mnemonic EXPLE. See the
 !     include file 'sgparam.inc' for more details.
 !
-      CALL SGBWVS ( HANDLE, DESCR, SEGID, NCONST, DCOEFF, EXPLE )
+      call sgbwvs ( handle, descr, segid, nconst, dcoeff, exple )
 
 !
 !     No need to check FAILED() here, since all we do after this
 !     point is checking out.
 !
-      CALL CHKOUT ( 'CKW04B' )
+      call chkout ( 'CKW04B' )
 
-      RETURN
+      return
 
-      END
+      end

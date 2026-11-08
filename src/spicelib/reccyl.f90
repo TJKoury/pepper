@@ -1,6 +1,6 @@
 !$Procedure RECCYL ( Rectangular to cylindrical coordinates )
 
-      SUBROUTINE RECCYL ( RECTAN, R, CLON, Z )
+      subroutine reccyl ( rectan, r, clon, z )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION RECTAN(3)
-      DOUBLE PRECISION R
-      DOUBLE PRECISION CLON
-      DOUBLE PRECISION Z
+      double precision rectan(3)
+      double precision r
+      double precision clon
+      double precision z
 
 ! $ Brief_I/O
 !
@@ -362,40 +362,40 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION TWOPI
+      double precision twopi
 
 !
 !     Local Variables
 !
-      DOUBLE PRECISION X
-      DOUBLE PRECISION Y
-      DOUBLE PRECISION BIG
+      double precision x
+      double precision y
+      double precision big
 
 !
 !     Use temporary variables for computing R.
 !
-      BIG = MAX( DABS(RECTAN(1)), DABS(RECTAN(2)) )
+      big = max( dabs(rectan(1)), dabs(rectan(2)) )
 
 !
 !     Convert to cylindrical coordinates
 !
-      Z = RECTAN ( 3 )
+      z = rectan ( 3 )
 
-      IF ( BIG .EQ. 0 ) THEN
-         R      = 0.D0
-         CLON   = 0.D0
-      ELSE
-         X      = RECTAN(1) / BIG
-         Y      = RECTAN(2) / BIG
+      if ( big .eq. 0 ) then
+         r      = 0.d0
+         clon   = 0.d0
+      else
+         x      = rectan(1) / big
+         y      = rectan(2) / big
 
-         R      = BIG * DSQRT (X*X + Y*Y)
+         r      = big * dsqrt (x*x + y*y)
 
-         CLON   = DATAN2 ( Y, X )
-      END IF
+         clon   = datan2 ( y, x )
+      end if
 
-      IF ( CLON .LT. 0.D0) THEN
-         CLON = CLON + TWOPI()
-      END IF
+      if ( clon .lt. 0.d0) then
+         clon = clon + twopi()
+      end if
 
-      RETURN
-      END
+      return
+      end

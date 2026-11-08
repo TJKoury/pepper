@@ -1,6 +1,6 @@
 !$Procedure DSKOPN ( DSK, open new file )
 
-      SUBROUTINE DSKOPN ( FNAME, IFNAME, NCOMCH, HANDLE )
+      subroutine dskopn ( fname, ifname, ncomch, handle )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'dla.inc'
+      include 'dla.inc'
 
-      CHARACTER*(*)         FNAME
-      CHARACTER*(*)         IFNAME
-      INTEGER               NCOMCH
-      INTEGER               HANDLE
+      character*(*)         fname
+      character*(*)         ifname
+      integer               ncomch
+      integer               handle
 
 ! $ Brief_I/O
 !
@@ -177,17 +177,17 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'DSKOPN' )
+      call chkin ( 'DSKOPN' )
 
-      CALL DLAOPN ( FNAME, 'DSK', IFNAME, NCOMCH, HANDLE )
+      call dlaopn ( fname, 'DSK', ifname, ncomch, handle )
 
-      CALL CHKOUT ( 'DSKOPN' )
-      RETURN
-      END
+      call chkout ( 'DSKOPN' )
+      return
+      end

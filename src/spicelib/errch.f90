@@ -1,6 +1,6 @@
 !$Procedure ERRCH  ( Insert String into Error Message Text )
 
-      SUBROUTINE ERRCH ( MARKER, STRING )
+      subroutine errch ( marker, string )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'errhnd.inc'
+      include 'errhnd.inc'
 
-      CHARACTER*(*)         MARKER
-      CHARACTER*(*)         STRING
+      character*(*)         marker
+      character*(*)         string
 
 ! $ Brief_I/O
 !
@@ -232,140 +232,140 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
-      INTEGER               NBLEN
-      LOGICAL               ALLOWD
+      integer               frstnb
+      integer               lastnb
+      integer               nblen
+      logical               allowd
 
 !
 !     Local Variables:
 !
-      CHARACTER*(LMSGLN)    LNGMSG
-      CHARACTER*(LMSGLN)    TMPMSG
+      character*(lmsgln)    lngmsg
+      character*(lmsgln)    tmpmsg
 
-      INTEGER               MRKPOS
+      integer               mrkpos
 
 
 !
 !     Changes to the long error message must be allowed, or we do
 !     nothing.
 !
-      IF ( .NOT. ALLOWD() ) THEN
-         RETURN
-      END IF
+      if ( .not. allowd() ) then
+         return
+      end if
 
 !
 !     MARKER must have some non-blank characters, or we do nothing.
 !
-      IF (  LASTNB (MARKER) .EQ. 0  ) THEN
-         RETURN
-      END IF
+      if (  lastnb (marker) .eq. 0  ) then
+         return
+      end if
 
 !
 !     Get a copy of the current long error message.
 !
-      CALL GETLMS ( LNGMSG )
+      call getlms ( lngmsg )
 
 !
 !     Locate the leftmost occurrence of MARKER, if there is one
 !     (ignoring leading and trailing blanks):
 !
-      MRKPOS = INDEX (  LNGMSG, &
-                        MARKER ( FRSTNB(MARKER):LASTNB(MARKER) )    )
+      mrkpos = index (  lngmsg, &
+                        marker ( frstnb(marker):lastnb(marker) )    )
 
-      IF  ( MRKPOS .EQ. 0 ) THEN
+      if  ( mrkpos .eq. 0 ) then
 !
 !        MARKER does not occur in the long error message, so there's
 !        no substitution to perform.
 !
-         RETURN
+         return
 
-      ELSE
+      else
 !
 !        We put together TMPMSG, a copy of LNGMSG with MARKER
 !        replaced by STRING.
 !
-         IF ( MRKPOS .GT. 1 ) THEN
+         if ( mrkpos .gt. 1 ) then
 !
 !           MARKER is not at the beginning of the long error message.
 !
-            IF (  MRKPOS + NBLEN(MARKER)  .LE.  LASTNB(LNGMSG)  ) THEN
+            if (  mrkpos + nblen(marker)  .le.  lastnb(lngmsg)  ) then
 !
 !              There's more of the long message after the marker.
 !
-               IF ( STRING .NE. ' ' ) THEN
+               if ( string .ne. ' ' ) then
 
-                  TMPMSG = LNGMSG ( :MRKPOS - 1 )                     // &
-                           STRING ( FRSTNB(STRING) : LASTNB(STRING) ) // &
-                           LNGMSG ( MRKPOS + NBLEN(MARKER): )
+                  tmpmsg = lngmsg ( :mrkpos - 1 )                     // &
+                           string ( frstnb(string) : lastnb(string) ) // &
+                           lngmsg ( mrkpos + nblen(marker): )
 
-               ELSE
+               else
 
-                  TMPMSG = LNGMSG ( :MRKPOS - 1 )                     // &
+                  tmpmsg = lngmsg ( :mrkpos - 1 )                     // &
                            ' '                                        // &
-                           LNGMSG ( MRKPOS + NBLEN(MARKER): )
+                           lngmsg ( mrkpos + nblen(marker): )
 
-              END IF
+              end if
 
-            ELSE
+            else
 !
 !              The long error message ends with MARKER.
 !
-               IF ( STRING .NE. ' ' ) THEN
+               if ( string .ne. ' ' ) then
 
-                  TMPMSG = LNGMSG ( :MRKPOS - 1 )                     // &
-                           STRING ( FRSTNB(STRING) : LASTNB(STRING) )
+                  tmpmsg = lngmsg ( :mrkpos - 1 )                     // &
+                           string ( frstnb(string) : lastnb(string) )
 
-               ELSE
+               else
 
-                  TMPMSG = LNGMSG ( :MRKPOS - 1 )   //  ' '
+                  tmpmsg = lngmsg ( :mrkpos - 1 )   //  ' '
 
-               END IF
+               end if
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 !
 !           The long error message starts with MARKER (MRKPOS is 1).
 !
-            IF ( NBLEN(MARKER) .LT. LASTNB(LNGMSG) ) THEN
+            if ( nblen(marker) .lt. lastnb(lngmsg) ) then
 !
 !              There's more of the long message after the marker...
 !
-               IF ( STRING .NE. ' ' ) THEN
+               if ( string .ne. ' ' ) then
 
-                  TMPMSG = STRING ( FRSTNB(STRING) : LASTNB(STRING) ) // &
-                           LNGMSG ( 1 + NBLEN(MARKER) : )
-               ELSE
+                  tmpmsg = string ( frstnb(string) : lastnb(string) ) // &
+                           lngmsg ( 1 + nblen(marker) : )
+               else
 
-                  TMPMSG = ' ' //  LNGMSG ( 1 + NBLEN(MARKER) : )
+                  tmpmsg = ' ' //  lngmsg ( 1 + nblen(marker) : )
 
-               END IF
+               end if
 
-            ELSE
+            else
 !
 !              The marker's the whole string:
 !
-               IF ( STRING .NE. ' ' ) THEN
+               if ( string .ne. ' ' ) then
 
-                  TMPMSG = STRING ( FRSTNB(STRING) : LASTNB(STRING) )
+                  tmpmsg = string ( frstnb(string) : lastnb(string) )
 
-               ELSE
+               else
 
-                  TMPMSG = ' '
+                  tmpmsg = ' '
 
-               END IF
+               end if
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Update the long error message:
 !
-         CALL PUTLMS ( TMPMSG )
+         call putlms ( tmpmsg )
 
-      END IF
+      end if
 
-      END
+      end

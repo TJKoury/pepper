@@ -1,6 +1,6 @@
 !$Procedure SHIFTR ( Shift right )
 
-      SUBROUTINE SHIFTR ( IN, NSHIFT, FILLC, OUT )
+      subroutine shiftr ( in, nshift, fillc, out )
 
 ! $ Abstract
 !
@@ -19,12 +19,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)      IN
-      INTEGER            NSHIFT
-      CHARACTER*1        FILLC
-      CHARACTER*(*)      OUT
+      character*(*)      in
+      integer            nshift
+      character*1        fillc
+      character*(*)      out
 
 ! $ Brief_I/O
 !
@@ -165,26 +165,26 @@
 !
 !     Local variables
 !
-      INTEGER          INLEN
-      INTEGER          OUTLEN
-      INTEGER          N
-      INTEGER          NSAVE
-      INTEGER          NFILL
-      INTEGER          I
-      INTEGER          S
+      integer          inlen
+      integer          outlen
+      integer          n
+      integer          nsave
+      integer          nfill
+      integer          i
+      integer          s
 
 !
 !     Get the length of the input, output strings.
 !
-      INLEN  = LEN ( IN  )
-      OUTLEN = LEN ( OUT )
+      inlen  = len ( in  )
+      outlen = len ( out )
 
 !
 !     If the shift is zero or negative, the string is not changed.
 !     If longer than the input string, the entire string is shifted.
 !
-      S = MAX ( NSHIFT, 0 )
-      N = MIN ( INLEN,  S )
+      s = max ( nshift, 0 )
+      n = min ( inlen,  s )
 
 !
 !     Figure out how many characters in the input string will
@@ -193,30 +193,30 @@
 !     characters will be needed (no more than NSHIFT, no fewer
 !     than zero).
 !
-      NSAVE = ( INLEN - N ) - MAX ( 0, INLEN - OUTLEN )
-      NFILL =                 MIN ( N, OUTLEN         )
+      nsave = ( inlen - n ) - max ( 0, inlen - outlen )
+      nfill =                 min ( n, outlen         )
 
 !
 !     Move the saved characters to output.
 !
-      DO I = NSAVE, 1, -1
-         OUT(I+S:I+S) = IN(I:I)
-      END DO
+      do i = nsave, 1, -1
+         out(i+s:i+s) = in(i:i)
+      end do
 
 !
 !     Add as many fill characters as appropriate.
 !
-      DO I = 1, NFILL
-         OUT(I:I) = FILLC
-      END DO
+      do i = 1, nfill
+         out(i:i) = fillc
+      end do
 
 !
 !     Pad the output string with blanks (to cover any previous
 !     ugliness there).
 !
-      IF ( OUTLEN .GT. INLEN ) THEN
-         OUT(INLEN+1: ) = ' '
-      END IF
+      if ( outlen .gt. inlen ) then
+         out(inlen+1: ) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

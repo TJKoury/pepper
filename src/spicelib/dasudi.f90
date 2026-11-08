@@ -1,6 +1,6 @@
 !$Procedure DASUDI ( DAS, update data, integer )
 
-      SUBROUTINE DASUDI ( HANDLE, FIRST, LAST, DATA )
+      subroutine dasudi ( handle, first, last, data )
 
 ! $ Abstract
 !
@@ -20,12 +20,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      INTEGER               FIRST
-      INTEGER               LAST
-      INTEGER               DATA   ( * )
+      integer               handle
+      integer               first
+      integer               last
+      integer               data   ( * )
 
 ! $ Brief_I/O
 !
@@ -310,72 +310,72 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               INT
-      PARAMETER           ( INT    =  3  )
+      integer               int
+      parameter           ( int    =  3  )
 
-      INTEGER               NWI
-      PARAMETER           ( NWI    = 256 )
+      integer               nwi
+      parameter           ( nwi    = 256 )
 
 
 
 !
 !     Local variables
 !
-      INTEGER               CLBASE
-      INTEGER               CLSIZE
-      INTEGER               LASTC
-      INTEGER               LASTD
-      INTEGER               LASTI
-      INTEGER               N
-      INTEGER               NUMINT
-      INTEGER               NWRITN
-      INTEGER               RECNO
-      INTEGER               WORDNO
+      integer               clbase
+      integer               clsize
+      integer               lastc
+      integer               lastd
+      integer               lasti
+      integer               n
+      integer               numint
+      integer               nwritn
+      integer               recno
+      integer               wordno
 
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DASUDI' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DASUDI' )
+      end if
 
 !
 !     Get the last logical addresses in use in this DAS file.
 !
-      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      call daslla ( handle, lastc, lastd, lasti )
 
 !
 !     Validate the input addresses.
 !
-      IF (      ( FIRST .LT. 1     ) &
-           .OR. ( FIRST .GT. LASTI ) &
-           .OR. ( LAST  .LT. 1     ) &
-           .OR. ( LAST  .GT. LASTI )  ) THEN
+      if (      ( first .lt. 1     ) &
+           .or. ( first .gt. lasti ) &
+           .or. ( last  .lt. 1     ) &
+           .or. ( last  .gt. lasti )  ) then
 
-         CALL SETMSG ( 'FIRST was #. LAST was #. Valid range is [1,#].')
-         CALL ERRINT ( '#',   FIRST                                    )
-         CALL ERRINT ( '#',   LAST                                     )
-         CALL ERRINT ( '#',   LASTI                                    )
-         CALL SIGERR ( 'SPICE(INVALIDADDRESS)'                         )
-         CALL CHKOUT ( 'DASUDI'                                        )
-         RETURN
+         call setmsg ( 'FIRST was #. LAST was #. Valid range is [1,#].')
+         call errint ( '#',   first                                    )
+         call errint ( '#',   last                                     )
+         call errint ( '#',   lasti                                    )
+         call sigerr ( 'SPICE(INVALIDADDRESS)'                         )
+         call chkout ( 'DASUDI'                                        )
+         return
 
-      END IF
+      end if
 
 !
 !     Let N be the number of addresses to update.
 !
-      N  =  LAST - FIRST + 1
+      n  =  last - first + 1
 
 !
 !     We will use the variables RECNO and WORDNO to determine where to
@@ -387,7 +387,7 @@
 !     base record number and size of the cluster of integer records that
 !     the address FIRST lies within.
 !
-      CALL DASA2L ( HANDLE, INT, FIRST, CLBASE, CLSIZE, RECNO, WORDNO )
+      call dasa2l ( handle, int, first, clbase, clsize, recno, wordno )
 
 !
 !     Set the number of integer words already written.  Keep
@@ -397,9 +397,9 @@
 !     Note that if N is non-positive, the loop doesn't get exercised.
 !
 !
-      NWRITN  =  0
+      nwritn  =  0
 
-      DO WHILE (  ( NWRITN .LT. N ) .AND. ( .NOT. FAILED() )  )
+      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
 !
 !        Write as much data as we can (or need to) into the current
 !        record.  We assume that CLBASE, RECNO, WORDNO, and NWRITN have
@@ -408,22 +408,22 @@
 !        Find out how many words to write into the current record.
 !        There may be no space left in the current record.
 !
-         NUMINT  =  MIN (  N - NWRITN,   NWI - WORDNO + 1  )
+         numint  =  min (  n - nwritn,   nwi - wordno + 1  )
 
-         IF ( NUMINT .GT. 0 ) THEN
+         if ( numint .gt. 0 ) then
 !
 !           Write NUMINT words into the current record.
 !
-            CALL DASURI ( HANDLE, &
-                          RECNO, &
-                          WORDNO, &
-                          WORDNO + NUMINT - 1, &
-                          DATA( NWRITN + 1 )   )
+            call dasuri ( handle, &
+                          recno, &
+                          wordno, &
+                          wordno + numint - 1, &
+                          data( nwritn + 1 )   )
 
-            NWRITN  =  NWRITN + NUMINT
-            WORDNO  =  WORDNO + NUMINT
+            nwritn  =  nwritn + numint
+            wordno  =  wordno + numint
 
-         ELSE
+         else
 !
 !           It's time to start on a new record.  If the record we
 !           just finished writing to (or just attempted writing to,
@@ -432,27 +432,27 @@
 !           one.  Otherwise, we'll have to look up the location of the
 !           next integer logical address.
 !
-            IF (  RECNO  .LT.  ( CLBASE + CLSIZE - 1 )  ) THEN
+            if (  recno  .lt.  ( clbase + clsize - 1 )  ) then
 
-               RECNO   =  RECNO + 1
-               WORDNO  =  1
+               recno   =  recno + 1
+               wordno  =  1
 
-            ELSE
+            else
 
-               CALL DASA2L ( HANDLE, &
-                             INT, &
-                             FIRST + NWRITN, &
-                             CLBASE, &
-                             CLSIZE, &
-                             RECNO, &
-                             WORDNO               )
-            END IF
+               call dasa2l ( handle, &
+                             int, &
+                             first + nwritn, &
+                             clbase, &
+                             clsize, &
+                             recno, &
+                             wordno               )
+            end if
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 
-      CALL CHKOUT ( 'DASUDI' )
-      RETURN
-      END
+      call chkout ( 'DASUDI' )
+      return
+      end

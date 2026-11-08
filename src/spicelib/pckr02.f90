@@ -1,6 +1,6 @@
 !$Procedure PCKR02 ( PCK, read record from type 2 segment )
 
-      SUBROUTINE PCKR02 ( HANDLE, DESCR, ET, RECORD )
+      subroutine pckr02 ( handle, descr, et, record )
 
 ! $ Abstract
 !
@@ -17,12 +17,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               HANDLE
-      DOUBLE PRECISION      DESCR    ( 5 )
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      RECORD   ( * )
+      integer               handle
+      double precision      descr    ( 5 )
+      double precision      et
+      double precision      record   ( * )
 
 ! $ Brief_I/O
 !
@@ -323,50 +323,50 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Parameters
 !
-      INTEGER               ND
-      PARAMETER           ( ND      =   2 )
+      integer               nd
+      parameter           ( nd      =   2 )
 
-      INTEGER               NI
-      PARAMETER           ( NI     =    5 )
+      integer               ni
+      parameter           ( ni     =    5 )
 
 !
 !     Local variables
 !
 
-      DOUBLE PRECISION      DC       (   ND )
-      DOUBLE PRECISION      INIT
-      DOUBLE PRECISION      INTLEN
+      double precision      dc       (   nd )
+      double precision      init
+      double precision      intlen
 
-      INTEGER               BEGIN
-      INTEGER               END
-      INTEGER               IC       (   NI )
-      INTEGER               NREC
-      INTEGER               RECADR
-      INTEGER               RECNO
-      INTEGER               RECSIZ
+      integer               begin
+      integer               end
+      integer               ic       (   ni )
+      integer               nrec
+      integer               recadr
+      integer               recno
+      integer               recsiz
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'PCKR02' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'PCKR02' )
+      end if
 
 !
 !     Unpack the segment descriptor.
 !
-      CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      call dafus ( descr, nd, ni, dc, ic )
 
-      BEGIN = IC( NI-1 )
-      END   = IC( NI )
+      begin = ic( ni-1 )
+      end   = ic( ni )
 
 !
 !     The segment is made up of a number of logical records, each
@@ -378,27 +378,27 @@
 !     located at the end of the segment, along with the size of each
 !     logical record and the total number of records.
 !
-      CALL DAFGDA ( HANDLE, END-3, END, RECORD )
+      call dafgda ( handle, end-3, end, record )
 
-      INIT   = RECORD( 1 )
-      INTLEN = RECORD( 2 )
-      RECSIZ = INT( RECORD( 3 ) )
-      NREC   = INT( RECORD( 4 ) )
+      init   = record( 1 )
+      intlen = record( 2 )
+      recsiz = int( record( 3 ) )
+      nrec   = int( record( 4 ) )
 
-      RECNO = INT( (ET - INIT) / INTLEN ) + 1
-      RECNO = MIN( RECNO, NREC )
+      recno = int( (et - init) / intlen ) + 1
+      recno = min( recno, nrec )
 
 !
 !     Compute the address of the desired record.
 !
-      RECADR = ( RECNO - 1 )*RECSIZ + BEGIN
+      recadr = ( recno - 1 )*recsiz + begin
 
 !
 !     Along with the record, return the size of the record.
 !
-      RECORD( 1 ) = RECORD( 3 )
-      CALL DAFGDA ( HANDLE, RECADR, RECADR + RECSIZ - 1, RECORD( 2 ) )
+      record( 1 ) = record( 3 )
+      call dafgda ( handle, recadr, recadr + recsiz - 1, record( 2 ) )
 
-      CALL CHKOUT ( 'PCKR02' )
-      RETURN
-      END
+      call chkout ( 'PCKR02' )
+      return
+      end

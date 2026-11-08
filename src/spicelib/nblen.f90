@@ -1,6 +1,6 @@
 !$Procedure NBLEN ( Non blank length of a string )
 
-      INTEGER FUNCTION  NBLEN ( STRING )
+      integer function  nblen ( string )
 
 ! $ Abstract
 !
@@ -20,9 +20,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    STRING
+      character*(*)    string
 
 ! $ Brief_I/O
 !
@@ -110,18 +110,18 @@
 !
 !     SPICELIB functions
 !
-      INTEGER          FRSTNB
-      INTEGER          LASTNB
+      integer          frstnb
+      integer          lastnb
 
 
 !
 !     Blank string is easy.
 !
-      IF ( STRING .EQ. ' ' ) THEN
-         NBLEN = 0
-      ELSE
-         NBLEN = LASTNB ( STRING ) - FRSTNB ( STRING ) + 1
-      END IF
+      if ( string .eq. ' ' ) then
+         nblen = 0
+      else
+         nblen = lastnb ( string ) - frstnb ( string ) + 1
+      end if
 
-      RETURN
-      END
+      return
+      end

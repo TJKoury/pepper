@@ -1,9 +1,9 @@
 !$Procedure      ZZEKVCMP ( EK, row vector comparison )
 
-      LOGICAL FUNCTION ZZEKVCMP ( OP,      NCOLS,   TABS,    COLS, &
-                                  ELTS,    SENSES,  STHAN,   STSDSC, &
-                                  STDTPT,  DTPOOL,  DTDSCS,  SGVEC1, &
-                                  RWVEC1,  SGVEC2,  RWVEC2           )
+      logical function zzekvcmp ( op,      ncols,   tabs,    cols, &
+                                  elts,    senses,  sthan,   stsdsc, &
+                                  stdtpt,  dtpool,  dtdscs,  sgvec1, &
+                                  rwvec1,  sgvec2,  rwvec2           )
 
 ! $ Abstract
 !
@@ -22,31 +22,31 @@
 ! $ Declarations
 
 
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ekqlimit.inc'
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekcoldsc.inc'
+      include 'ekopcd.inc'
+      include 'ekqlimit.inc'
+      include 'ekquery.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               LBPOOL
-      PARAMETER           ( LBPOOL =  -5 )
+      integer               lbpool
+      parameter           ( lbpool =  -5 )
 
-      INTEGER               OP
-      INTEGER               NCOLS
-      INTEGER               TABS   ( * )
-      INTEGER               COLS   ( * )
-      INTEGER               ELTS   ( * )
-      INTEGER               SENSES ( * )
-      INTEGER               STHAN  ( * )
-      INTEGER               STSDSC ( SDSCSZ, * )
-      INTEGER               STDTPT ( * )
-      INTEGER               DTPOOL ( 2, LBPOOL : * )
-      INTEGER               DTDSCS ( CDSCSZ, * )
-      INTEGER               SGVEC1 ( * )
-      INTEGER               RWVEC1 ( * )
-      INTEGER               SGVEC2 ( * )
-      INTEGER               RWVEC2 ( * )
+      integer               op
+      integer               ncols
+      integer               tabs   ( * )
+      integer               cols   ( * )
+      integer               elts   ( * )
+      integer               senses ( * )
+      integer               sthan  ( * )
+      integer               stsdsc ( sdscsz, * )
+      integer               stdtpt ( * )
+      integer               dtpool ( 2, lbpool : * )
+      integer               dtdscs ( cdscsz, * )
+      integer               sgvec1 ( * )
+      integer               rwvec1 ( * )
+      integer               sgvec2 ( * )
+      integer               rwvec2 ( * )
 
 ! $ Brief_I/O
 !
@@ -263,30 +263,30 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LNKNXT
+      integer               lnknxt
 
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKECMP
+      integer               zzekecmp
 
 !
 !     Local variables
 !
-      INTEGER               CLDSCS ( CDSCSZ, 2 )
-      INTEGER               COL
-      INTEGER               COLIDX
-      INTEGER               COLPTR ( 2 )
-      INTEGER               DTYPE  ( 2 )
-      INTEGER               ELIDXS ( 2 )
-      INTEGER               HANS   ( 2 )
-      INTEGER               I
-      INTEGER               J
-      INTEGER               REL
-      INTEGER               ROWS   ( 2 )
-      INTEGER               SEGS   ( 2 )
-      INTEGER               SGDSCS ( SDSCSZ, 2 )
-      INTEGER               TABIDX
+      integer               cldscs ( cdscsz, 2 )
+      integer               col
+      integer               colidx
+      integer               colptr ( 2 )
+      integer               dtype  ( 2 )
+      integer               elidxs ( 2 )
+      integer               hans   ( 2 )
+      integer               i
+      integer               j
+      integer               rel
+      integer               rows   ( 2 )
+      integer               segs   ( 2 )
+      integer               sgdscs ( sdscsz, 2 )
+      integer               tabidx
 
 
 !
@@ -296,7 +296,7 @@
 !
 !     The function value defaults to .FALSE.
 !
-      ZZEKVCMP = .FALSE.
+      zzekvcmp = .false.
 
 !
 !     The input column descriptors identify the columns to be used
@@ -309,136 +309,136 @@
 !     The first step is to determine the relation that holds between
 !     the rows.  We start out assuming we have equality.
 !
-      REL  =  EQ
-      COL  =  1
+      rel  =  eq
+      col  =  1
 
-      DO WHILE (  ( COL .LE. NCOLS ) .AND. ( REL .EQ. EQ )  )
+      do while (  ( col .le. ncols ) .and. ( rel .eq. eq )  )
 !
 !        Compare the entries in the two rows in the columns indicated
 !        by the Nth column descriptor pair.
 !
-         TABIDX   =  TABS(COL)
-         COLIDX   =  COLS(COL)
+         tabidx   =  tabs(col)
+         colidx   =  cols(col)
 
-         SEGS(1)  =  SGVEC1( TABIDX )
-         SEGS(2)  =  SGVEC2( TABIDX )
-         ROWS(1)  =  RWVEC1( TABIDX )
-         ROWS(2)  =  RWVEC2( TABIDX )
+         segs(1)  =  sgvec1( tabidx )
+         segs(2)  =  sgvec2( tabidx )
+         rows(1)  =  rwvec1( tabidx )
+         rows(2)  =  rwvec2( tabidx )
 
 !
 !        Identify the handles, segment descriptors, and column
 !        descriptors we'll use to apply the constraint having index
 !        COL.
 !
-         DO I = 1, 2
+         do i = 1, 2
 
-            HANS(I)    =  STHAN ( SEGS(I) )
-            COLPTR(I)  =  STDTPT( SEGS(I) )
+            hans(i)    =  sthan ( segs(i) )
+            colptr(i)  =  stdtpt( segs(i) )
 
-            DO J = 2, COLIDX
-               COLPTR(I) = LNKNXT( COLPTR(I), DTPOOL )
-            END DO
+            do j = 2, colidx
+               colptr(i) = lnknxt( colptr(i), dtpool )
+            end do
 
-            CALL MOVEI ( DTDSCS( 1, COLPTR(I) ),  CDSCSZ,  CLDSCS(1,I) )
-            CALL MOVEI ( STSDSC( 1, SEGS(I)   ),  SDSCSZ,  SGDSCS(1,I) )
+            call movei ( dtdscs( 1, colptr(i) ),  cdscsz,  cldscs(1,i) )
+            call movei ( stsdsc( 1, segs(i)   ),  sdscsz,  sgdscs(1,i) )
 
-            DTYPE  (I)  =  DTDSCS ( TYPIDX, COLPTR(I) )
-            ELIDXS (I)  =  ELTS   ( COL )
+            dtype  (i)  =  dtdscs ( typidx, colptr(i) )
+            elidxs (i)  =  elts   ( col )
 
-         END DO
+         end do
 
 
-         IF ( DTYPE(1) .EQ. DTYPE(2) ) THEN
+         if ( dtype(1) .eq. dtype(2) ) then
 !
 !           Find the order of the rows according to the order-by
 !           column having index COL.  If the order sense for this
 !           column is descending, adjust REL to reflect this.
 !
-            REL  =  ZZEKECMP ( HANS, SGDSCS, CLDSCS, ROWS, ELIDXS )
+            rel  =  zzekecmp ( hans, sgdscs, cldscs, rows, elidxs )
 
-            IF ( SENSES(COL) .EQ. EQDSND ) THEN
+            if ( senses(col) .eq. eqdsnd ) then
 
-               IF ( REL .EQ. LT ) THEN
-                  REL = GT
-               ELSE IF ( REL .EQ. GT ) THEN
-                  REL = LT
-               END IF
+               if ( rel .eq. lt ) then
+                  rel = gt
+               else if ( rel .eq. gt ) then
+                  rel = lt
+               end if
 
-            END IF
+            end if
 
 
-         ELSE
+         else
 
-            CALL CHKIN  ( 'ZZEKVCMP'                            )
-            CALL SETMSG ( 'Data type mismatch for order-by '    // &
+            call chkin  ( 'ZZEKVCMP'                            )
+            call setmsg ( 'Data type mismatch for order-by '    // &
                           'column having index #; type for '    // &
                           'segment # = #; type for segment '    // &
                              '# is #'                           )
-            CALL ERRINT ( '#', COL                              )
-            CALL ERRINT ( '#', SEGS(1)                          )
-            CALL ERRINT ( '#', DTYPE (1)                        )
-            CALL ERRINT ( '#', SEGS(2)                          )
-            CALL ERRINT ( '#', DTYPE (2)                        )
-            CALL SIGERR ( 'SPICE(BUG)'                          )
-            CALL CHKOUT ( 'ZZEKVCMP'                            )
-            RETURN
+            call errint ( '#', col                              )
+            call errint ( '#', segs(1)                          )
+            call errint ( '#', dtype (1)                        )
+            call errint ( '#', segs(2)                          )
+            call errint ( '#', dtype (2)                        )
+            call sigerr ( 'SPICE(BUG)'                          )
+            call chkout ( 'ZZEKVCMP'                            )
+            return
 
-         END IF
+         end if
 
 
-         COL  =  COL + 1
+         col  =  col + 1
 
-      END DO
+      end do
 
 
 !
 !     Determine the truth of the input relational expression.
 !
-      IF ( OP .EQ. EQ )   THEN
+      if ( op .eq. eq )   then
 
-         ZZEKVCMP  =  REL .EQ. EQ
-
-
-      ELSE IF ( OP .EQ. LT )   THEN
-
-         ZZEKVCMP  =  REL .EQ. LT
+         zzekvcmp  =  rel .eq. eq
 
 
-      ELSE IF ( OP .EQ. LE )   THEN
+      else if ( op .eq. lt )   then
 
-         ZZEKVCMP  =  REL .NE. GT
-
-
-      ELSE IF ( OP .EQ. GT )   THEN
-
-         ZZEKVCMP  =  REL .EQ. GT
+         zzekvcmp  =  rel .eq. lt
 
 
-      ELSE IF ( OP .EQ. GE )   THEN
+      else if ( op .eq. le )   then
 
-         ZZEKVCMP  =  REL .NE. LT
-
-
-      ELSE IF ( OP .EQ. NE )   THEN
-
-         ZZEKVCMP  =  REL .NE. EQ
+         zzekvcmp  =  rel .ne. gt
 
 
-      ELSE
+      else if ( op .eq. gt )   then
+
+         zzekvcmp  =  rel .eq. gt
+
+
+      else if ( op .eq. ge )   then
+
+         zzekvcmp  =  rel .ne. lt
+
+
+      else if ( op .eq. ne )   then
+
+         zzekvcmp  =  rel .ne. eq
+
+
+      else
 !
 !        Sorry, we couldn't resist.
 !
-         ZZEKVCMP  =  .FALSE.
+         zzekvcmp  =  .false.
 
-         CALL CHKIN  ( 'ZZEKVCMP'                                      )
-         CALL SETMSG ( 'The relational operator # was not recognized.' )
-         CALL ERRINT ( '#',  OP                                        )
-         CALL SIGERR ( 'SPICE(UNNATURALRELATION)'                      )
-         CALL CHKOUT ( 'ZZEKVCMP'                                      )
-         RETURN
+         call chkin  ( 'ZZEKVCMP'                                      )
+         call setmsg ( 'The relational operator # was not recognized.' )
+         call errint ( '#',  op                                        )
+         call sigerr ( 'SPICE(UNNATURALRELATION)'                      )
+         call chkout ( 'ZZEKVCMP'                                      )
+         return
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

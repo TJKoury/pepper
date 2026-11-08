@@ -1,6 +1,6 @@
 !$Procedure PRODAD ( Product of a double precision array )
 
-      DOUBLE PRECISION FUNCTION  PRODAD ( ARRAY, N )
+      double precision function  prodad ( array, n )
 
 ! $ Abstract
 !
@@ -18,10 +18,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   ARRAY ( * )
-      INTEGER            N
+      double precision   array ( * )
+      integer            n
 
 ! $ Brief_I/O
 !
@@ -126,26 +126,26 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION PROD
-      INTEGER          I
+      double precision prod
+      integer          i
 
 
 !
 !     Begin at one.
 !
-      PROD = 1.D0
+      prod = 1.d0
 
 !
 !     Multiply the elements. If N is zero or negative, nothing happens.
 !
-      DO I = 1, N
-         PROD = PROD * ARRAY(I)
-      END DO
+      do i = 1, n
+         prod = prod * array(i)
+      end do
 
 !
 !     Return the product.
 !
-      PRODAD = PROD
+      prodad = prod
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure SRFCSS ( Surface ID and body string to surface string )
 
-      SUBROUTINE SRFCSS ( CODE, BODSTR, SRFSTR, ISNAME )
+      subroutine srfcss ( code, bodstr, srfstr, isname )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               CODE
-      CHARACTER*(*)         BODSTR
-      CHARACTER*(*)         SRFSTR
-      LOGICAL               ISNAME
+      integer               code
+      character*(*)         bodstr
+      character*(*)         srfstr
+      logical               isname
 
 ! $ Brief_I/O
 !
@@ -346,61 +346,61 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local variables
 !
-      INTEGER               BODYID
+      integer               bodyid
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SRFCSS' )
+      call chkin ( 'SRFCSS' )
 
 !
 !     No name has been found yet.
 !
-      ISNAME = .FALSE.
+      isname = .false.
 
 !
 !     Convert the body string to an ID code.
 !
-      CALL BODS2C ( BODSTR, BODYID, ISNAME )
+      call bods2c ( bodstr, bodyid, isname )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFCSS' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFCSS' )
+         return
+      end if
 
-      IF ( ISNAME ) THEN
+      if ( isname ) then
 !
 !        Try to translate the surface and body codes to a known surface
 !        name.
 !
-         CALL ZZSRFC2N ( CODE, BODYID, SRFSTR, ISNAME )
+         call zzsrfc2n ( code, bodyid, srfstr, isname )
 
-         IF ( FAILED() ) THEN
-            CALL CHKOUT ( 'SRFCSS' )
-            RETURN
-         END IF
+         if ( failed() ) then
+            call chkout ( 'SRFCSS' )
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     If either the body string or surface code could not be
 !     translated, convert the surface ID code to a string
 !     representation.
 !
-      IF ( .NOT. ISNAME ) THEN
+      if ( .not. isname ) then
 
-         CALL INTSTR ( CODE, SRFSTR )
+         call intstr ( code, srfstr )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'SRFCSS' )
-      RETURN
-      END
+      call chkout ( 'SRFCSS' )
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure VHATIP ( "V-Hat", 3-d unit vector along V, in place )
 
-      SUBROUTINE VHATIP ( V )
+      subroutine vhatip ( v )
 
 ! $ Abstract
 !
@@ -16,9 +16,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   V ( 3 )
+      double precision   v ( 3 )
 
 ! $ Brief_I/O
 !
@@ -120,18 +120,18 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
+      double precision      vnorm
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      VMAG
+      double precision      vmag
 
 
 !
 !     Obtain the magnitude of V.
 !
-      VMAG = VNORM ( V )
+      vmag = vnorm ( v )
 
 !
 !     If VMAG is nonzero, then normalize. Note that this process is
@@ -140,19 +140,19 @@
 !     small. In fact, the magnitude of any vector is never less than
 !     the magnitude of any component.
 !
-      IF ( VMAG .GT. 0.D0 ) THEN
+      if ( vmag .gt. 0.d0 ) then
 
-         V(1) = V(1) / VMAG
-         V(2) = V(2) / VMAG
-         V(3) = V(3) / VMAG
+         v(1) = v(1) / vmag
+         v(2) = v(2) / vmag
+         v(3) = v(3) / vmag
 
-      ELSE
+      else
 
-         V(1) = 0.D0
-         V(2) = 0.D0
-         V(3) = 0.D0
+         v(1) = 0.d0
+         v(2) = 0.d0
+         v(3) = 0.d0
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

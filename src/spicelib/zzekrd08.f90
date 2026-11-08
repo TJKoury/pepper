@@ -1,7 +1,7 @@
 !$Procedure   ZZEKRD08 ( EK, read class 8 column entry )
 
-      SUBROUTINE ZZEKRD08 (  HANDLE,  SEGDSC,  COLDSC, &
-                             RECPTR,  DVAL,    ISNULL  )
+      subroutine zzekrd08 (  handle,  segdsc,  coldsc, &
+                             recptr,  dval,    isnull  )
 
 ! $ Abstract
 !
@@ -20,20 +20,20 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekclas08.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'ekdatpag.inc'
-      INCLUDE 'ekpage.inc'
-      INCLUDE 'eksegdsc.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekbool.inc'
+      include 'ekclas08.inc'
+      include 'ekcoldsc.inc'
+      include 'ekdatpag.inc'
+      include 'ekpage.inc'
+      include 'eksegdsc.inc'
+      include 'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      INTEGER               COLDSC ( CDSCSZ )
-      INTEGER               RECPTR
-      DOUBLE PRECISION      DVAL
-      LOGICAL               ISNULL
+      integer               handle
+      integer               segdsc ( sdscsz )
+      integer               coldsc ( cdscsz )
+      integer               recptr
+      double precision      dval
+      logical               isnull
 
 ! $ Brief_I/O
 !
@@ -126,26 +126,26 @@
 !
 !     Non-SPICELIB functions
 !
-      INTEGER               ZZEKRP2N
+      integer               zzekrp2n
 
 !
 !     Local variables
 !
-      CHARACTER*(1)         CFLAG
+      character*(1)         cflag
 
-      INTEGER               ADDRSS
-      INTEGER               COLIDX
-      INTEGER               DATBAS
-      INTEGER               MDAT   ( MDSZ08 )
-      INTEGER               METLOC
-      INTEGER               NCOLS
-      INTEGER               NFLBAS
-      INTEGER               OFFSET
-      INTEGER               Q
-      INTEGER               R
-      INTEGER               RECNO
+      integer               addrss
+      integer               colidx
+      integer               datbas
+      integer               mdat   ( mdsz08 )
+      integer               metloc
+      integer               ncols
+      integer               nflbas
+      integer               offset
+      integer               q
+      integer               r
+      integer               recno
 
-      LOGICAL               NULLOK
+      logical               nullok
 
 !
 !     Use discovery check-in.
@@ -153,28 +153,28 @@
 !
 !     Make sure the column exists.
 !
-      NCOLS   =  SEGDSC ( NCIDX  )
-      COLIDX  =  COLDSC ( ORDIDX )
-      METLOC  =  COLDSC ( METIDX )
-      NULLOK  =  COLDSC ( NFLIDX ) .EQ. ITRUE
+      ncols   =  segdsc ( ncidx  )
+      colidx  =  coldsc ( ordidx )
+      metloc  =  coldsc ( metidx )
+      nullok  =  coldsc ( nflidx ) .eq. itrue
 
-      IF (  ( COLIDX .LT. 1 ) .OR. ( COLIDX .GT. NCOLS )  ) THEN
+      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
 
-         RECNO  =  ZZEKRP2N ( HANDLE, SEGDSC(SNOIDX), RECPTR )
+         recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
-         CALL CHKIN  ( 'ZZEKRD08'                              )
-         CALL SETMSG ( 'Column index = #; valid range is 1:#.' &
+         call chkin  ( 'ZZEKRD08'                              )
+         call setmsg ( 'Column index = #; valid range is 1:#.' &
          //            'SEGNO = #; RECNO = #; EK = #'          )
-         CALL ERRINT ( '#',  COLIDX                            )
-         CALL ERRINT ( '#',  NCOLS                             )
-         CALL ERRINT ( '#',  SEGDSC(SNOIDX)                    )
-         CALL ERRINT ( '#',  RECNO                             )
-         CALL ERRHAN ( '#',  HANDLE                            )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                   )
-         CALL CHKOUT ( 'ZZEKRD08'                              )
-         RETURN
+         call errint ( '#',  colidx                            )
+         call errint ( '#',  ncols                             )
+         call errint ( '#',  segdsc(snoidx)                    )
+         call errint ( '#',  recno                             )
+         call errhan ( '#',  handle                            )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                   )
+         call chkout ( 'ZZEKRD08'                              )
+         return
 
-      END IF
+      end if
 
 !
 !     Read the metadata block.  There are two items in the block:
@@ -183,10 +183,10 @@
 !        2) The base address of the null flag array, if nulls are
 !           permitted.
 !
-      CALL DASRDI ( HANDLE, METLOC+1, METLOC+MDSZ08, MDAT )
+      call dasrdi ( handle, metloc+1, metloc+mdsz08, mdat )
 
-      DATBAS = MDAT ( DBIX08 )
-      NFLBAS = MDAT ( NFIX08 )
+      datbas = mdat ( dbix08 )
+      nflbas = mdat ( nfix08 )
 
 !
 !     If null values are permitted, the first step is to get
@@ -196,39 +196,39 @@
 !     There are CPSIZE null flags per page, and each page has size
 !     PGSIZC.  The null flags start at the beginning of the page.
 !
-      IF ( NULLOK ) THEN
+      if ( nullok ) then
 
-         Q       =  (RECPTR-1) / CPSIZE
-         R       =  RECPTR - Q * CPSIZE
-         OFFSET  =  R      + Q * PGSIZC
-         ADDRSS  =  NFLBAS + OFFSET
+         q       =  (recptr-1) / cpsize
+         r       =  recptr - q * cpsize
+         offset  =  r      + q * pgsizc
+         addrss  =  nflbas + offset
 
-         CALL DASRDC ( HANDLE, ADDRSS, ADDRSS, 1, 1, CFLAG )
+         call dasrdc ( handle, addrss, addrss, 1, 1, cflag )
 
-         ISNULL  =  CFLAG .EQ. CTRUE
+         isnull  =  cflag .eq. ctrue
 
-         IF ( ISNULL ) THEN
-            RETURN
-         END IF
+         if ( isnull ) then
+            return
+         end if
 
-      END IF
+      end if
 
 !
 !     If we're still here, we'll read the data value.
 !
-      ISNULL  =  .FALSE.
+      isnull  =  .false.
 
 !
 !     The address calculation for the value is analogous to that
 !     for the null flag.
 !
-      Q       =  (RECPTR-1)  / DPSIZE
-      R       =  RECPTR - Q * DPSIZE
-      OFFSET  =  R      + Q * PGSIZD
-      ADDRSS  =  DATBAS + OFFSET
+      q       =  (recptr-1)  / dpsize
+      r       =  recptr - q * dpsize
+      offset  =  r      + q * pgsizd
+      addrss  =  datbas + offset
 
-      CALL DASRDD ( HANDLE, ADDRSS, ADDRSS, DVAL )
+      call dasrdd ( handle, addrss, addrss, dval )
 
 
-      RETURN
-      END
+      return
+      end

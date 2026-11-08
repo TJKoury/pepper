@@ -1,6 +1,6 @@
 !$Procedure SCANRJ ( Scan --- reject tokens )
 
-      SUBROUTINE SCANRJ ( IDS, N, NTOKNS, IDENT, BEG, END )
+      subroutine scanrj ( ids, n, ntokns, ident, beg, end )
 
 ! $ Abstract
 !
@@ -18,14 +18,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               IDS  ( * )
-      INTEGER               N
-      INTEGER               NTOKNS
-      INTEGER               IDENT  ( * )
-      INTEGER               BEG    ( * )
-      INTEGER               END    ( * )
+      integer               ids  ( * )
+      integer               n
+      integer               ntokns
+      integer               ident  ( * )
+      integer               beg    ( * )
+      integer               end    ( * )
 
 ! $ Brief_I/O
 !
@@ -158,35 +158,35 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
+      integer               isrchi
 
 !
 !     Local variables
 !
-      INTEGER               I
-      INTEGER               J
+      integer               i
+      integer               j
 
 
 !
 !     There's not much to do, shift forward the token attributes for
 !     tokens whose identities don't belong to the rejection list.
 !
-      J = 0
+      j = 0
 
-      DO I = 1, NTOKNS
+      do i = 1, ntokns
 
-         IF ( ISRCHI(IDENT(I), N, IDS) .EQ. 0 ) THEN
+         if ( isrchi(ident(i), n, ids) .eq. 0 ) then
 
-            J        = J + 1
-            IDENT(J) = IDENT(I)
-            BEG  (J) = BEG  (I)
-            END  (J) = END  (I)
+            j        = j + 1
+            ident(j) = ident(i)
+            beg  (j) = beg  (i)
+            end  (j) = end  (i)
 
-         END IF
+         end if
 
-      END DO
+      end do
 
-      NTOKNS = J
+      ntokns = j
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure CLEARC ( Clear an array of strings )
 
-      SUBROUTINE CLEARC ( NDIM, ARRAY )
+      subroutine clearc ( ndim, array )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER             NDIM
-      CHARACTER*(*)       ARRAY ( * )
+      integer             ndim
+      character*(*)       array ( * )
 
 ! $ Brief_I/O
 !
@@ -185,13 +185,13 @@
 !
 !     Local variables
 !
-      INTEGER I
+      integer i
 
 
-      DO I = 1, NDIM
-         ARRAY(I) = ' '
-      END DO
+      do i = 1, ndim
+         array(i) = ' '
+      end do
 
 
-      RETURN
-      END
+      return
+      end

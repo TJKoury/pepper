@@ -1,6 +1,6 @@
 !$Procedure SWAPC ( Swap character values )
 
-      SUBROUTINE SWAPC ( A, B )
+      subroutine swapc ( a, b )
 
 ! $ Abstract
 !
@@ -16,10 +16,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)    A
-      CHARACTER*(*)    B
+      character*(*)    a
+      character*(*)    b
 
 ! $ Brief_I/O
 !
@@ -117,42 +117,42 @@
 !
 !     Local variables
 !
-      INTEGER          ALEN
-      INTEGER          BLEN
-      INTEGER          SHORT
+      integer          alen
+      integer          blen
+      integer          short
 
-      CHARACTER*1      TEMP
-      INTEGER          I
+      character*1      temp
+      integer          i
 
 
 !
 !     Get the lengths of the strings.
 !
-      ALEN  = LEN ( A )
-      BLEN  = LEN ( B )
-      SHORT = MIN ( ALEN, BLEN )
+      alen  = len ( a )
+      blen  = len ( b )
+      short = min ( alen, blen )
 
 !
 !     Keep going until the end of the shorter string is reached.
 !
-      DO I = 1, SHORT
+      do i = 1, short
 
-         TEMP   = A(I:I)
-         A(I:I) = B(I:I)
-         B(I:I) = TEMP
+         temp   = a(i:i)
+         a(i:i) = b(i:i)
+         b(i:i) = temp
 
-      END DO
+      end do
 
 !
 !     If either string is longer than the shortest one, pad it
 !     with blanks.
 !
-      IF ( ALEN .GT. SHORT ) THEN
-         A(SHORT+1: ) = ' '
+      if ( alen .gt. short ) then
+         a(short+1: ) = ' '
 
-      ELSE IF ( BLEN .GT. SHORT ) THEN
-         B(SHORT+1: ) = ' '
-      END IF
+      else if ( blen .gt. short ) then
+         b(short+1: ) = ' '
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure UNORM ( Unit vector and norm, 3 dimensional )
 
-      SUBROUTINE UNORM ( V1, VOUT, VMAG )
+      subroutine unorm ( v1, vout, vmag )
 
 ! $ Abstract
 !
@@ -16,11 +16,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION  V1   ( 3 )
-      DOUBLE PRECISION  VOUT ( 3 )
-      DOUBLE PRECISION  VMAG
+      double precision  v1   ( 3 )
+      double precision  vout ( 3 )
+      double precision  vmag
 
 ! $ Brief_I/O
 !
@@ -182,12 +182,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION   VNORM
+      double precision   vnorm
 
 !
 !  Obtain the magnitude of V1
 !
-      VMAG = VNORM(V1)
+      vmag = vnorm(v1)
 
 !
 !   If VMAG is nonzero, then normalize.  Note that this process is
@@ -196,15 +196,15 @@
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      IF ( VMAG .GT. 0.D0 ) THEN
-         VOUT(1) = V1(1) / VMAG
-         VOUT(2) = V1(2) / VMAG
-         VOUT(3) = V1(3) / VMAG
-      ELSE
-         VOUT(1) = 0.D0
-         VOUT(2) = 0.D0
-         VOUT(3) = 0.D0
-      END IF
+      if ( vmag .gt. 0.d0 ) then
+         vout(1) = v1(1) / vmag
+         vout(2) = v1(2) / vmag
+         vout(3) = v1(3) / vmag
+      else
+         vout(1) = 0.d0
+         vout(2) = 0.d0
+         vout(3) = 0.d0
+      end if
 
-      RETURN
-      END
+      return
+      end

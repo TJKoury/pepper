@@ -1,6 +1,6 @@
 !$Procedure DPSPCE ( Evaluate "two-line" element data, deep-space )
 
-      SUBROUTINE DPSPCE ( ET, GEOPHS, ELEMS, STATE )
+      subroutine dpspce ( et, geophs, elems, state )
 
 ! $ Abstract
 !
@@ -25,12 +25,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ET
-      DOUBLE PRECISION      GEOPHS ( 8  )
-      DOUBLE PRECISION      ELEMS  ( 10 )
-      DOUBLE PRECISION      STATE  ( 6  )
+      double precision      et
+      double precision      geophs ( 8  )
+      double precision      elems  ( 10 )
+      double precision      state  ( 6  )
 
 ! $ Brief_I/O
 !
@@ -510,196 +510,196 @@
 !     Define parameters for convergence tolerance and the value for 2/3,
 !     0 and 1.
 !
-      DOUBLE PRECISION      TOL
-      PARAMETER           ( TOL     = 1.D-6     )
+      double precision      tol
+      parameter           ( tol     = 1.d-6     )
 
-      DOUBLE PRECISION      TOTHRD
-      PARAMETER           ( TOTHRD  = 2.D0/3.D0 )
+      double precision      tothrd
+      parameter           ( tothrd  = 2.d0/3.d0 )
 
-      DOUBLE PRECISION      ZERO
-      PARAMETER           ( ZERO    =  0.0D0    )
+      double precision      zero
+      parameter           ( zero    =  0.0d0    )
 
-      DOUBLE PRECISION      ONE
-      PARAMETER           ( ONE     =  1.0D0    )
+      double precision      one
+      parameter           ( one     =  1.0d0    )
 
-      INTEGER               NUMGEO
-      PARAMETER           ( NUMGEO  =    8      )
+      integer               numgeo
+      parameter           ( numgeo  =    8      )
 
-      INTEGER               NUMELM
-      PARAMETER           ( NUMELM  =   10      )
+      integer               numelm
+      parameter           ( numelm  =   10      )
 
 
 !
 !     The geophysical Quantities
 !
-      DOUBLE PRECISION      A3OVK2
-      DOUBLE PRECISION      AE
-      DOUBLE PRECISION      CK2
-      DOUBLE PRECISION      CK4
-      DOUBLE PRECISION      QOMS2T
-      DOUBLE PRECISION      S
-      DOUBLE PRECISION      XJ2
-      DOUBLE PRECISION      XJ3
-      DOUBLE PRECISION      XJ4
-      DOUBLE PRECISION      XKE
-      DOUBLE PRECISION      XKMPER
-      DOUBLE PRECISION      LSTPHS ( NUMGEO )
+      double precision      a3ovk2
+      double precision      ae
+      double precision      ck2
+      double precision      ck4
+      double precision      qoms2t
+      double precision      s
+      double precision      xj2
+      double precision      xj3
+      double precision      xj4
+      double precision      xke
+      double precision      xkmper
+      double precision      lstphs ( numgeo )
 
 
 !
 !     Elements
 !
-      DOUBLE PRECISION      BSTAR
-      DOUBLE PRECISION      EO
-      DOUBLE PRECISION      EPOCH
-      DOUBLE PRECISION      OMEGAO
-      DOUBLE PRECISION      QO
-      DOUBLE PRECISION      SO
-      DOUBLE PRECISION      XINCL
-      DOUBLE PRECISION      XMO
-      DOUBLE PRECISION      XNO
-      DOUBLE PRECISION      XNODEO
-      DOUBLE PRECISION      LSTELM ( NUMELM )
+      double precision      bstar
+      double precision      eo
+      double precision      epoch
+      double precision      omegao
+      double precision      qo
+      double precision      so
+      double precision      xincl
+      double precision      xmo
+      double precision      xno
+      double precision      xnodeo
+      double precision      lstelm ( numelm )
 
 
 !
 !     Other quantities
 !
-      DOUBLE PRECISION      A
-      DOUBLE PRECISION      A1
-      DOUBLE PRECISION      AO
-      DOUBLE PRECISION      AODP
-      DOUBLE PRECISION      AXN
-      DOUBLE PRECISION      AYCOF
-      DOUBLE PRECISION      AYN
-      DOUBLE PRECISION      AYNL
-      DOUBLE PRECISION      BETAL
-      DOUBLE PRECISION      BETAO
-      DOUBLE PRECISION      BETAO2
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      C4
-      DOUBLE PRECISION      CAPU
-      DOUBLE PRECISION      COEF
-      DOUBLE PRECISION      COEF1
-      DOUBLE PRECISION      COS2U
-      DOUBLE PRECISION      COSEPW
-      DOUBLE PRECISION      COSIO
-      DOUBLE PRECISION      COSU
-      DOUBLE PRECISION      COSUK
-      DOUBLE PRECISION      DEL1
-      DOUBLE PRECISION      DELO
-      DOUBLE PRECISION      E
-      DOUBLE PRECISION      ECOSE
-      DOUBLE PRECISION      EETA
-      DOUBLE PRECISION      ELSQ
-      DOUBLE PRECISION      EM
-      DOUBLE PRECISION      EPW
-      DOUBLE PRECISION      ESINE
-      DOUBLE PRECISION      ETA
-      DOUBLE PRECISION      ETASQ
-      DOUBLE PRECISION      OMGADF
-      DOUBLE PRECISION      OMGDOT
-      DOUBLE PRECISION      PERIGE
-      DOUBLE PRECISION      PINVSQ
-      DOUBLE PRECISION      PIO2
-      DOUBLE PRECISION      PIX2
-      DOUBLE PRECISION      PL
-      DOUBLE PRECISION      PSISQ
-      DOUBLE PRECISION      QOMS24
-      DOUBLE PRECISION      RDOT
-      DOUBLE PRECISION      RDOTK
-      DOUBLE PRECISION      RFDOT
-      DOUBLE PRECISION      RFDOTK
-      DOUBLE PRECISION      RK
-      DOUBLE PRECISION      S4
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SIN2U
-      DOUBLE PRECISION      SINEPW
-      DOUBLE PRECISION      SINIO
-      DOUBLE PRECISION      SINU
-      DOUBLE PRECISION      SINUK
-      DOUBLE PRECISION      T2COF
-      DOUBLE PRECISION      TEMP
-      DOUBLE PRECISION      TEMP1
-      DOUBLE PRECISION      TEMP2
-      DOUBLE PRECISION      TEMP3
-      DOUBLE PRECISION      TEMP4
-      DOUBLE PRECISION      TEMP5
-      DOUBLE PRECISION      TEMP6
-      DOUBLE PRECISION      TEMPA
-      DOUBLE PRECISION      TEMPE
-      DOUBLE PRECISION      TEMPL
-      DOUBLE PRECISION      THETA2
-      DOUBLE PRECISION      TSI
-      DOUBLE PRECISION      TSINCE
-      DOUBLE PRECISION      TSQ
-      DOUBLE PRECISION      UANG
-      DOUBLE PRECISION      UK
-      DOUBLE PRECISION      X1M5TH
-      DOUBLE PRECISION      X1MTH2
-      DOUBLE PRECISION      X3THM1
-      DOUBLE PRECISION      X7THM1
-      DOUBLE PRECISION      XHDOT1
-      DOUBLE PRECISION      XINC
-      DOUBLE PRECISION      XINCK
-      DOUBLE PRECISION      XL
-      DOUBLE PRECISION      XLCOF
-      DOUBLE PRECISION      XLL
-      DOUBLE PRECISION      XLT
-      DOUBLE PRECISION      XMAM
-      DOUBLE PRECISION      XMDF
-      DOUBLE PRECISION      XMDOT
-      DOUBLE PRECISION      XN
-      DOUBLE PRECISION      XNODCF
-      DOUBLE PRECISION      XNODDF
-      DOUBLE PRECISION      XNODE
-      DOUBLE PRECISION      XNODEK
-      DOUBLE PRECISION      XNODOT
-      DOUBLE PRECISION      XNODP
-      DOUBLE PRECISION      M     ( 3 )
-      DOUBLE PRECISION      N     ( 3 )
-      DOUBLE PRECISION      U     ( 3 )
-      DOUBLE PRECISION      V     ( 3 )
+      double precision      a
+      double precision      a1
+      double precision      ao
+      double precision      aodp
+      double precision      axn
+      double precision      aycof
+      double precision      ayn
+      double precision      aynl
+      double precision      betal
+      double precision      betao
+      double precision      betao2
+      double precision      c1
+      double precision      c2
+      double precision      c4
+      double precision      capu
+      double precision      coef
+      double precision      coef1
+      double precision      cos2u
+      double precision      cosepw
+      double precision      cosio
+      double precision      cosu
+      double precision      cosuk
+      double precision      del1
+      double precision      delo
+      double precision      e
+      double precision      ecose
+      double precision      eeta
+      double precision      elsq
+      double precision      em
+      double precision      epw
+      double precision      esine
+      double precision      eta
+      double precision      etasq
+      double precision      omgadf
+      double precision      omgdot
+      double precision      perige
+      double precision      pinvsq
+      double precision      pio2
+      double precision      pix2
+      double precision      pl
+      double precision      psisq
+      double precision      qoms24
+      double precision      rdot
+      double precision      rdotk
+      double precision      rfdot
+      double precision      rfdotk
+      double precision      rk
+      double precision      s4
+      double precision      scale
+      double precision      sin2u
+      double precision      sinepw
+      double precision      sinio
+      double precision      sinu
+      double precision      sinuk
+      double precision      t2cof
+      double precision      temp
+      double precision      temp1
+      double precision      temp2
+      double precision      temp3
+      double precision      temp4
+      double precision      temp5
+      double precision      temp6
+      double precision      tempa
+      double precision      tempe
+      double precision      templ
+      double precision      theta2
+      double precision      tsi
+      double precision      tsince
+      double precision      tsq
+      double precision      uang
+      double precision      uk
+      double precision      x1m5th
+      double precision      x1mth2
+      double precision      x3thm1
+      double precision      x7thm1
+      double precision      xhdot1
+      double precision      xinc
+      double precision      xinck
+      double precision      xl
+      double precision      xlcof
+      double precision      xll
+      double precision      xlt
+      double precision      xmam
+      double precision      xmdf
+      double precision      xmdot
+      double precision      xn
+      double precision      xnodcf
+      double precision      xnoddf
+      double precision      xnode
+      double precision      xnodek
+      double precision      xnodot
+      double precision      xnodp
+      double precision      m     ( 3 )
+      double precision      n     ( 3 )
+      double precision      u     ( 3 )
+      double precision      v     ( 3 )
 
-      INTEGER               I
+      integer               i
 
-      LOGICAL               CONT
-      LOGICAL               DOINIT
-      LOGICAL               FIRST
+      logical               cont
+      logical               doinit
+      logical               first
 
 
 
 !
 !     SPICELIB routines
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
+      double precision      halfpi
+      double precision      twopi
 
-      LOGICAL               RETURN
+      logical               return
 
 
 !
 !     Save everything.
 !
-      SAVE
+      save
 
 
 !
 !     Set initialization flags
 !
-      DATA                  DOINIT / .TRUE. /
-      DATA                  FIRST  / .TRUE. /
+      data                  doinit / .true. /
+      data                  first  / .true. /
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'DPSPCE' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'DPSPCE' )
+      end if
 
 
 
@@ -707,20 +707,20 @@
 !     If this is the very first time into this routine, set these
 !     values.
 !
-      IF ( FIRST ) THEN
+      if ( first ) then
 
-         PIX2   = TWOPI()
-         PIO2   = HALFPI()
-         FIRST  = .FALSE.
+         pix2   = twopi()
+         pio2   = halfpi()
+         first  = .false.
 
-      END IF
+      end if
 
 
 !
 !     If initialization flag is .FALSE., then this is not the first
 !     call to this routine.  Check the stuff.
 !
-      IF ( .NOT. DOINIT ) THEN
+      if ( .not. doinit ) then
 
 !
 !        Check whether the current and last constants and elements
@@ -728,73 +728,73 @@
 !        since the propagation is dependent on the value of these
 !        arrays.
 !
-         DO I = 1, NUMGEO
+         do i = 1, numgeo
 
-           IF( LSTPHS( I ) .NE. GEOPHS( I ) ) THEN
-              DOINIT = .TRUE.
-           END IF
+           if( lstphs( i ) .ne. geophs( i ) ) then
+              doinit = .true.
+           end if
 
-         END DO
-
-
-         DO I = 1, NUMELM
-
-           IF( LSTELM( I ) .NE. ELEMS( I ) ) THEN
-              DOINIT = .TRUE.
-           END IF
-
-         END DO
+         end do
 
 
-      END IF
+         do i = 1, numelm
+
+           if( lstelm( i ) .ne. elems( i ) ) then
+              doinit = .true.
+           end if
+
+         end do
+
+
+      end if
 
 
 !
 !     Initialization block.  Always called on the initial entry and
 !     anytime the geophysical or elements array changes.
 !
-      IF ( DOINIT ) THEN
+      if ( doinit ) then
 
-         DOINIT = .FALSE.
+         doinit = .false.
 
 !
 !        Retrieve the geophysical constants from the GEOPHS array
 !
-         XJ2    = GEOPHS( 1 )
-         XJ3    = GEOPHS( 2 )
-         XJ4    = GEOPHS( 3 )
-         XKE    = GEOPHS( 4 )
-         QO     = GEOPHS( 5 )
-         SO     = GEOPHS( 6 )
-         XKMPER = GEOPHS( 7 )
-         AE     = GEOPHS( 8 )
+         xj2    = geophs( 1 )
+         xj3    = geophs( 2 )
+         xj4    = geophs( 3 )
+         xke    = geophs( 4 )
+         qo     = geophs( 5 )
+         so     = geophs( 6 )
+         xkmper = geophs( 7 )
+         ae     = geophs( 8 )
 
 !
 !        Save the geophysical constants for later comparison
 !
-         DO I = 1, NUMGEO
-            LSTPHS( I ) = GEOPHS( I )
-         END DO
+         do i = 1, numgeo
+            lstphs( i ) = geophs( i )
+         end do
 
 
 !
 !        Unpack the elements array.
 !
-         BSTAR  = ELEMS( 3  )
-         XINCL  = ELEMS( 4  )
-         XNODEO = ELEMS( 5  )
-         EO     = ELEMS( 6  )
-         OMEGAO = ELEMS( 7  )
-         XMO    = ELEMS( 8  )
-         XNO    = ELEMS( 9  )
-         EPOCH  = ELEMS( 10 )
+         bstar  = elems( 3  )
+         xincl  = elems( 4  )
+         xnodeo = elems( 5  )
+         eo     = elems( 6  )
+         omegao = elems( 7  )
+         xmo    = elems( 8  )
+         xno    = elems( 9  )
+         epoch  = elems( 10 )
 
 !
 !        Save the elements for later comparison
 !
-         DO I = 1, NUMELM
-            LSTELM( I ) = ELEMS( I )
-         END DO
+         do i = 1, numelm
+            lstelm( i ) = elems( i )
+         end do
 
 
 !
@@ -807,169 +807,169 @@
 !        These are values calculated only once and then saved for
 !        future access.
 !
-         CK2    = 0.5D0   * XJ2 * AE**2
-         CK4    =-0.375D0 * XJ4 * AE**4
-         QOMS2T = ( (QO - SO)*AE/XKMPER )**4
-         S      = AE * ( ONE + SO/XKMPER )
+         ck2    = 0.5d0   * xj2 * ae**2
+         ck4    =-0.375d0 * xj4 * ae**4
+         qoms2t = ( (qo - so)*ae/xkmper )**4
+         s      = ae * ( one + so/xkmper )
 
 
 !
 !        Recover original mean motion (XNODP) and semimajor axis (AODP)
 !        from input elements
 !
-         A1     = ( XKE / XNO )**TOTHRD
-         COSIO  = DCOS( XINCL )
-         THETA2 = COSIO**2
-         X3THM1 = 3.D0 * THETA2  -  ONE
-         BETAO2 = ONE - EO**2
-         BETAO  = DSQRT( BETAO2 )
+         a1     = ( xke / xno )**tothrd
+         cosio  = dcos( xincl )
+         theta2 = cosio**2
+         x3thm1 = 3.d0 * theta2  -  one
+         betao2 = one - eo**2
+         betao  = dsqrt( betao2 )
 
-         DEL1   = 1.5D0*CK2*X3THM1/( (A1**2) * BETAO * BETAO2 )
-         AO     = A1 * ( ONE - DEL1 * ( 0.5D0 * TOTHRD  + &
-                  DEL1*( ONE + 134.D0/81.D0 * DEL1 ) ) )
+         del1   = 1.5d0*ck2*x3thm1/( (a1**2) * betao * betao2 )
+         ao     = a1 * ( one - del1 * ( 0.5d0 * tothrd  + &
+                  del1*( one + 134.d0/81.d0 * del1 ) ) )
 
-         DELO   = 1.5D0 * CK2 * X3THM1/( (AO**2)*BETAO*BETAO2 )
-         XNODP  = XNO/( ONE + DELO )
-         AODP   =  AO/( ONE - DELO )
+         delo   = 1.5d0 * ck2 * x3thm1/( (ao**2)*betao*betao2 )
+         xnodp  = xno/( one + delo )
+         aodp   =  ao/( one - delo )
 
 !
 !        For perigee below 156 km, the values of S and QOMS2T are
 !        altered
 !
-         S4     = S
-         QOMS24 = QOMS2T
-         PERIGE = ( AODP * ( ONE - EO ) - AE ) * XKMPER
+         s4     = s
+         qoms24 = qoms2t
+         perige = ( aodp * ( one - eo ) - ae ) * xkmper
 
 
-         IF ( PERIGE .LT. 156.D0 ) THEN
+         if ( perige .lt. 156.d0 ) then
 
-            S4 = PERIGE - 78.D0
+            s4 = perige - 78.d0
 
-            IF ( PERIGE .GT. 98.D0) THEN
+            if ( perige .gt. 98.d0) then
 
-               QOMS24 = ( (120.D0 - S4) * AE/XKMPER )**4
-               S4     = S4/XKMPER + AE
+               qoms24 = ( (120.d0 - s4) * ae/xkmper )**4
+               s4     = s4/xkmper + ae
 
-            ELSE
-               S4     = 20.D0
+            else
+               s4     = 20.d0
 
-            END IF
+            end if
 
-         END IF
-
-
-         PINVSQ = ONE/(AODP**2 * BETAO2**2)
-         TSI    = ONE/(AODP - S4)
-         ETA    = AODP*EO*TSI
-         ETASQ  = ETA**2
-         EETA   = EO*ETA
-         PSISQ  = DABS(ONE-ETASQ)
-         COEF   = QOMS24 * TSI**4
-         COEF1  = COEF / PSISQ**3.5D0
-
-         C2     = COEF1 * XNODP * &
-                 ( AODP * &
-                   ( ONE + 1.5D0 * ETASQ + &
-                                    EETA * ( 4.D0 + ETASQ) ) + &
-                   0.75D0 * CK2 * TSI/PSISQ * X3THM1 * &
-                      (8.D0 + 3.D0 * ETASQ * (8.D0+ETASQ) ) )
-
-         C1     = BSTAR * C2
-         SINIO  = DSIN( XINCL )
-         A3OVK2 =-XJ3 / CK2 * AE**3
-         X1MTH2 = ONE - THETA2
-
-         C4     = 2.D0 * XNODP * COEF1 * AODP * BETAO2 * &
-                 ( ETA * ( 2.D0 + .5D0 * ETASQ ) + &
-                   EO * ( 0.5D0 + 2.D0 * ETASQ ) - &
-                   2.D0 * CK2 * TSI/( AODP * PSISQ ) * &
-                   (-3.D0 * X3THM1 * &
-                   ( ONE - 2.D0 * EETA + &
-                                 ETASQ *( 1.5D0 - 0.5D0*EETA) ) + &
-                   0.75D0 * X1MTH2 * ( 2.D0 * ETASQ - EETA * &
-                   ( ONE + ETASQ ) ) * DCOS( 2.D0 * OMEGAO) ) )
-
-         TEMP1  = 3.D0   * CK2 * PINVSQ * XNODP
-         TEMP2  = TEMP1  * CK2 * PINVSQ
-         TEMP3  = 1.25D0 * CK4 * PINVSQ * PINVSQ * XNODP
-
-         XMDOT  = XNODP + .5D0 * TEMP1 * BETAO * X3THM1 + &
-                  0.0625D0 * TEMP2 * BETAO * &
-                  ( 13.D0 + THETA2 * ( 137.D0 * THETA2 - 78.D0 ) )
-
-         X1M5TH = ONE - 5.D0 * THETA2
-
-         OMGDOT =-0.5D0 * TEMP1 * X1M5TH + 0.0625D0 * &
-                  TEMP2 * (7.D0 + THETA2*( 395.D0 * THETA2 - 114.D0)) &
-                + TEMP3 * (3.D0 + THETA2*(  49.D0 * THETA2 - 36.D0 ))
-
-         XHDOT1 =-TEMP1 * COSIO
-
-         XNODOT = XHDOT1 + ( 0.5D0*TEMP2*( 4.D0 - 19.D0 * THETA2 ) &
-                         + 2.D0 * TEMP3 &
-                         * ( 3.D0 - 7.D0 * THETA2 ) )*COSIO
-
-         XNODCF = 3.5D0 * BETAO2 * XHDOT1 * C1
-         T2COF  = 1.5D0 * C1
-         XLCOF  = 0.125D0*A3OVK2*SINIO*(3.D0+5.D0*COSIO)/(ONE+COSIO)
-         AYCOF  = 0.25D0 * A3OVK2*SINIO
-         X7THM1 = 7.D0 * THETA2 - ONE
-
-      END IF
+         end if
 
 
-      CALL ZZDPINIT( AODP  , XMDOT, OMGDOT, XNODOT, &
-                     XNODP , ELEMS )
+         pinvsq = one/(aodp**2 * betao2**2)
+         tsi    = one/(aodp - s4)
+         eta    = aodp*eo*tsi
+         etasq  = eta**2
+         eeta   = eo*eta
+         psisq  = dabs(one-etasq)
+         coef   = qoms24 * tsi**4
+         coef1  = coef / psisq**3.5d0
+
+         c2     = coef1 * xnodp * &
+                 ( aodp * &
+                   ( one + 1.5d0 * etasq + &
+                                    eeta * ( 4.d0 + etasq) ) + &
+                   0.75d0 * ck2 * tsi/psisq * x3thm1 * &
+                      (8.d0 + 3.d0 * etasq * (8.d0+etasq) ) )
+
+         c1     = bstar * c2
+         sinio  = dsin( xincl )
+         a3ovk2 =-xj3 / ck2 * ae**3
+         x1mth2 = one - theta2
+
+         c4     = 2.d0 * xnodp * coef1 * aodp * betao2 * &
+                 ( eta * ( 2.d0 + .5d0 * etasq ) + &
+                   eo * ( 0.5d0 + 2.d0 * etasq ) - &
+                   2.d0 * ck2 * tsi/( aodp * psisq ) * &
+                   (-3.d0 * x3thm1 * &
+                   ( one - 2.d0 * eeta + &
+                                 etasq *( 1.5d0 - 0.5d0*eeta) ) + &
+                   0.75d0 * x1mth2 * ( 2.d0 * etasq - eeta * &
+                   ( one + etasq ) ) * dcos( 2.d0 * omegao) ) )
+
+         temp1  = 3.d0   * ck2 * pinvsq * xnodp
+         temp2  = temp1  * ck2 * pinvsq
+         temp3  = 1.25d0 * ck4 * pinvsq * pinvsq * xnodp
+
+         xmdot  = xnodp + .5d0 * temp1 * betao * x3thm1 + &
+                  0.0625d0 * temp2 * betao * &
+                  ( 13.d0 + theta2 * ( 137.d0 * theta2 - 78.d0 ) )
+
+         x1m5th = one - 5.d0 * theta2
+
+         omgdot =-0.5d0 * temp1 * x1m5th + 0.0625d0 * &
+                  temp2 * (7.d0 + theta2*( 395.d0 * theta2 - 114.d0)) &
+                + temp3 * (3.d0 + theta2*(  49.d0 * theta2 - 36.d0 ))
+
+         xhdot1 =-temp1 * cosio
+
+         xnodot = xhdot1 + ( 0.5d0*temp2*( 4.d0 - 19.d0 * theta2 ) &
+                         + 2.d0 * temp3 &
+                         * ( 3.d0 - 7.d0 * theta2 ) )*cosio
+
+         xnodcf = 3.5d0 * betao2 * xhdot1 * c1
+         t2cof  = 1.5d0 * c1
+         xlcof  = 0.125d0*a3ovk2*sinio*(3.d0+5.d0*cosio)/(one+cosio)
+         aycof  = 0.25d0 * a3ovk2*sinio
+         x7thm1 = 7.d0 * theta2 - one
+
+      end if
+
+
+      call zzdpinit( aodp  , xmdot, omgdot, xnodot, &
+                     xnodp , elems )
 
 
 !
 !     Get the time since the EPOCH in minutes.
 !
-      TSINCE = ( ET - EPOCH )/60.D0
+      tsince = ( et - epoch )/60.d0
 
 !
 !     Update for secular gravity and atmospheric drag
 !
-      XMDF   = XMO    +  XMDOT  * TSINCE
-      OMGADF = OMEGAO +  OMGDOT * TSINCE
-      XNODDF = XNODEO +  XNODOT * TSINCE
-      TSQ    =           TSINCE * TSINCE
-      XNODE  = XNODDF +  XNODCF * TSQ
-      TEMPA  = ONE    -  C1     * TSINCE
-      TEMPE  =           BSTAR  * C4 * TSINCE
-      TEMPL  =           T2COF  * TSQ
-      XN     = XNODP
+      xmdf   = xmo    +  xmdot  * tsince
+      omgadf = omegao +  omgdot * tsince
+      xnoddf = xnodeo +  xnodot * tsince
+      tsq    =           tsince * tsince
+      xnode  = xnoddf +  xnodcf * tsq
+      tempa  = one    -  c1     * tsince
+      tempe  =           bstar  * c4 * tsince
+      templ  =           t2cof  * tsq
+      xn     = xnodp
 
 
 !
 !     Calculate the secular terms.
 !
-      CALL ZZDPSEC( XMDF , OMGADF, XNODE, EM, XINC, XN, TSINCE, &
-                    ELEMS, OMGDOT )
+      call zzdpsec( xmdf , omgadf, xnode, em, xinc, xn, tsince, &
+                    elems, omgdot )
 
-      A    = ( (XKE/XN)**TOTHRD ) * TEMPA**2
-      E    = EM - TEMPE
-      XMAM = XMDF + XNODP * TEMPL
+      a    = ( (xke/xn)**tothrd ) * tempa**2
+      e    = em - tempe
+      xmam = xmdf + xnodp * templ
 
 
 !
 !     Calculate the periodic terms.
 !
-      CALL ZZDPPER( TSINCE, E, XINC, OMGADF, XNODE, XMAM )
+      call zzdpper( tsince, e, xinc, omgadf, xnode, xmam )
 
-      XL   = XMAM + OMGADF + XNODE
-      XN   = XKE/( A**1.5D0 )
+      xl   = xmam + omgadf + xnode
+      xn   = xke/( a**1.5d0 )
 
 
 !
 !      Long period periodics
 !
-      AXN  = E * DCOS( OMGADF )
-      TEMP = ONE/( A * (ONE - E**2) )
-      XLL  = TEMP * XLCOF * AXN
-      AYNL = TEMP * AYCOF
-      XLT  = XL + XLL
-      AYN  = E * DSIN( OMGADF ) + AYNL
+      axn  = e * dcos( omgadf )
+      temp = one/( a * (one - e**2) )
+      xll  = temp * xlcof * axn
+      aynl = temp * aycof
+      xlt  = xl + xll
+      ayn  = e * dsin( omgadf ) + aynl
 
 
 !
@@ -991,95 +991,95 @@
 !
 !     Get the mod division of CAPU with 2 Pi
 !
-      CAPU = DMOD( (XLT - XNODE), PIX2 )
+      capu = dmod( (xlt - xnode), pix2 )
 
-      IF ( CAPU .LT. ZERO ) THEN
-         CAPU = CAPU + PIX2
-      END IF
+      if ( capu .lt. zero ) then
+         capu = capu + pix2
+      end if
 
 
 !
 !     Set initial states for the Kepler solution
 !
 
-      EPW   = CAPU
-      CONT  =.TRUE.
+      epw   = capu
+      cont  =.true.
 
-      DO WHILE ( CONT )
+      do while ( cont )
 
-         TEMP2  = EPW
-         SINEPW = DSIN( TEMP2 )
-         COSEPW = DCOS( TEMP2 )
-         TEMP3  = AXN * SINEPW
-         TEMP4  = AYN * COSEPW
-         TEMP5  = AXN * COSEPW
-         TEMP6  = AYN * SINEPW
-         EPW    = (CAPU-TEMP4+TEMP3-TEMP2)/(ONE-TEMP5-TEMP6)+TEMP2
+         temp2  = epw
+         sinepw = dsin( temp2 )
+         cosepw = dcos( temp2 )
+         temp3  = axn * sinepw
+         temp4  = ayn * cosepw
+         temp5  = axn * cosepw
+         temp6  = ayn * sinepw
+         epw    = (capu-temp4+temp3-temp2)/(one-temp5-temp6)+temp2
 
 !
 !        Test for convergence against the defined tolerance
 !
 
-         IF ( DABS( EPW - TEMP2 ) .LE. TOL ) THEN
-            CONT = .FALSE.
-         END IF
+         if ( dabs( epw - temp2 ) .le. tol ) then
+            cont = .false.
+         end if
 
-      END DO
+      end do
 
 
 !
 !     Short period preliminary quantities
 !
 
-      ECOSE = TEMP5 + TEMP6
-      ESINE = TEMP3 - TEMP4
-      ELSQ  = AXN * AXN  +  AYN * AYN
-      TEMP  = ONE - ELSQ
-      PL    = A * TEMP
-      RK    = A * ( ONE - ECOSE )
-      TEMP1 = ONE/RK
-      RDOT  = XKE * DSQRT(A) * ESINE * TEMP1
-      RFDOT = XKE * DSQRT(PL)* TEMP1
-      TEMP2 = A * TEMP1
-      BETAL = DSQRT( TEMP )
-      TEMP3 = ONE/( ONE + BETAL )
+      ecose = temp5 + temp6
+      esine = temp3 - temp4
+      elsq  = axn * axn  +  ayn * ayn
+      temp  = one - elsq
+      pl    = a * temp
+      rk    = a * ( one - ecose )
+      temp1 = one/rk
+      rdot  = xke * dsqrt(a) * esine * temp1
+      rfdot = xke * dsqrt(pl)* temp1
+      temp2 = a * temp1
+      betal = dsqrt( temp )
+      temp3 = one/( one + betal )
 
-      COSU  = TEMP2 * ( COSEPW - AXN + AYN * ESINE * TEMP3 )
-      SINU  = TEMP2 * ( SINEPW - AYN - AXN * ESINE * TEMP3 )
+      cosu  = temp2 * ( cosepw - axn + ayn * esine * temp3 )
+      sinu  = temp2 * ( sinepw - ayn - axn * esine * temp3 )
 
 !
 !     Compute the angle from the x-axis of the point ( COSU, SINU )
 !
-      IF (      SINU .NE. ZERO &
-           .OR. COSU .NE. ZERO ) THEN
+      if (      sinu .ne. zero &
+           .or. cosu .ne. zero ) then
 
-         UANG = DATAN2 (SINU,COSU)
+         uang = datan2 (sinu,cosu)
 
-         IF ( UANG .LT. ZERO ) THEN
-            UANG = UANG + PIX2
-         END IF
+         if ( uang .lt. zero ) then
+            uang = uang + pix2
+         end if
 
-      ELSE
-         UANG = ZERO
+      else
+         uang = zero
 
-      END IF
+      end if
 
-      SIN2U = 2.D0 * SINU * COSU
-      COS2U = 2.D0 * COSU * COSU  -  ONE
-      TEMP1 = CK2   * ( ONE/PL )
-      TEMP2 = TEMP1 * ( ONE/PL )
+      sin2u = 2.d0 * sinu * cosu
+      cos2u = 2.d0 * cosu * cosu  -  one
+      temp1 = ck2   * ( one/pl )
+      temp2 = temp1 * ( one/pl )
 
 
 !
 !     Update for short periodics
 !
-      RK     = RK*( ONE - 1.5D0 * TEMP2 * BETAL * X3THM1 ) + &
-               0.5D0 * TEMP1 * X1MTH2 * COS2U
-      UK     = UANG  - 0.25D0 * TEMP2 * X7THM1 * SIN2U
-      XNODEK = XNODE + 1.5D0  * TEMP2 * COSIO  * SIN2U
-      XINCK  = XINC  + 1.5D0  * TEMP2 * COSIO  * SINIO  * COS2U
-      RDOTK  = RDOT  -          XN    * TEMP1  * X1MTH2 * SIN2U
-      RFDOTK = RFDOT + XN * TEMP1*( X1MTH2*COS2U + 1.5D0*X3THM1 )
+      rk     = rk*( one - 1.5d0 * temp2 * betal * x3thm1 ) + &
+               0.5d0 * temp1 * x1mth2 * cos2u
+      uk     = uang  - 0.25d0 * temp2 * x7thm1 * sin2u
+      xnodek = xnode + 1.5d0  * temp2 * cosio  * sin2u
+      xinck  = xinc  + 1.5d0  * temp2 * cosio  * sinio  * cos2u
+      rdotk  = rdot  -          xn    * temp1  * x1mth2 * sin2u
+      rfdotk = rfdot + xn * temp1*( x1mth2*cos2u + 1.5d0*x3thm1 )
 
 
 !
@@ -1094,22 +1094,22 @@
 !     N = (           cos(xnodek), sin(xnodek)          , 0          )
 !
 
-      SINUK  = DSIN(UK)
-      COSUK  = DCOS(UK)
+      sinuk  = dsin(uk)
+      cosuk  = dcos(uk)
 
 !
 !     Use LATREC to generate M and N.  M is a latitude to rectangle
 !     conversion of a unit vector where PI/2 + XNODEK is the longitude
 !
 
-      CALL LATREC( ONE, PIO2 + XNODEK, XINCK, M )
-      CALL LATREC( ONE,        XNODEK,  ZERO, N )
+      call latrec( one, pio2 + xnodek, xinck, m )
+      call latrec( one,        xnodek,  zero, n )
 
 !
 !     Sum the components to obtain U and V
 !
-      CALL VLCOM ( SINUK, M, COSUK, N, U )
-      CALL VLCOM ( COSUK, M,-SINUK, N, V )
+      call vlcom ( sinuk, m, cosuk, n, u )
+      call vlcom ( cosuk, m,-sinuk, n, v )
 
 
 !
@@ -1120,25 +1120,25 @@
 !     V = RKDOT U + RK RFDOT V
 !
 
-      SCALE = XKMPER/AE
+      scale = xkmper/ae
 
-      CALL VLCOM( RK*SCALE, U, ZERO, V, STATE(1) )
+      call vlcom( rk*scale, u, zero, v, state(1) )
 
 
 !
 !     Now scale to KPS for the velocity component
 !
 
-      SCALE = SCALE / 60.D0
+      scale = scale / 60.d0
 
-      CALL VLCOM( RDOTK*SCALE, U, RFDOTK*SCALE, V, STATE(4) )
+      call vlcom( rdotk*scale, u, rfdotk*scale, v, state(4) )
 
 
 !
 !     All done now....
 !
 
-      CALL CHKOUT ( 'DPSPCE' )
+      call chkout ( 'DPSPCE' )
 
-      RETURN
-      END
+      return
+      end

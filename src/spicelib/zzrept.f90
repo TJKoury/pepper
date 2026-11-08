@@ -1,6 +1,6 @@
 !$Procedure      ZZREPT ( Private --- replace tokens )
 
-      LOGICAL FUNCTION ZZREPT ( SUB, REPLAC, L2R )
+      logical function zzrept ( sub, replac, l2r )
 
 ! $ Abstract
 !
@@ -20,10 +20,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
-      CHARACTER*(*)         SUB
-      CHARACTER*(*)         REPLAC
-      LOGICAL               L2R
+      implicit none
+      character*(*)         sub
+      character*(*)         replac
+      logical               l2r
 
 ! $ Brief_I/O
 !
@@ -98,13 +98,13 @@
 !-&
 
 
-      LOGICAL               ZZREMT
-      LOGICAL               ZZSUBT
+      logical               zzremt
+      logical               zzsubt
 
-      LOGICAL               OK
+      logical               ok
 
-      ZZREPT = ZZSUBT ( SUB, REPLAC, L2R )
-      OK     = ZZREMT ( '*' )
+      zzrept = zzsubt ( sub, replac, l2r )
+      ok     = zzremt ( '*' )
 
-      RETURN
-      END
+      return
+      end

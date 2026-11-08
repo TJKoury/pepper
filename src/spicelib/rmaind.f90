@@ -1,6 +1,6 @@
 !$Procedure RMAIND ( Remainder --- double precision )
 
-      SUBROUTINE RMAIND ( NUM, DENOM, Q, REM )
+      subroutine rmaind ( num, denom, q, rem )
 
 ! $ Abstract
 !
@@ -18,12 +18,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      NUM
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      Q
-      DOUBLE PRECISION      REM
+      double precision      num
+      double precision      denom
+      double precision      q
+      double precision      rem
 
 ! $ Brief_I/O
 !
@@ -119,31 +119,31 @@
 !-&
 
 
-      DOUBLE PRECISION      MYNUM
-      DOUBLE PRECISION      MYDNOM
+      double precision      mynum
+      double precision      mydnom
 
 !
 !     Take care of the zero-denominator case first
 !
-      IF ( DENOM .EQ. 0.0D0 ) THEN
-         CALL CHKIN  ( 'RMAIND'                                       )
-         CALL SETMSG ( 'Attempting to compute a quotient with a '     // &
+      if ( denom .eq. 0.0d0 ) then
+         call chkin  ( 'RMAIND'                                       )
+         call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )
-         CALL SIGERR ( 'SPICE(DIVIDEBYZERO)'                          )
-         CALL CHKOUT ( 'RMAIND'                                       )
-         RETURN
-      END IF
+         call sigerr ( 'SPICE(DIVIDEBYZERO)'                          )
+         call chkout ( 'RMAIND'                                       )
+         return
+      end if
 
-      MYDNOM = DENOM
-      MYNUM  = NUM
+      mydnom = denom
+      mynum  = num
 
-      Q   = DINT ( MYNUM / MYDNOM )
-      REM = MYNUM -    Q * MYDNOM
+      q   = dint ( mynum / mydnom )
+      rem = mynum -    q * mydnom
 
-      IF ( REM .LT. 0.0D0 ) THEN
-         Q   = Q   - 1.0D0
-         REM = REM + MYDNOM
-      END IF
+      if ( rem .lt. 0.0d0 ) then
+         q   = q   - 1.0d0
+         rem = rem + mydnom
+      end if
 
-      RETURN
-      END
+      return
+      end

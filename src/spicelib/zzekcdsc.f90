@@ -1,6 +1,6 @@
 !$Procedure  ZZEKCDSC ( Private: EK, return column descriptor )
 
-      SUBROUTINE ZZEKCDSC ( HANDLE, SEGDSC, COLUMN, COLDSC )
+      subroutine zzekcdsc ( handle, segdsc, column, coldsc )
 
 ! $ Abstract
 !
@@ -22,14 +22,14 @@
 !
 ! $ Declarations
 
-      INCLUDE 'ekcnamsz.inc'
-      INCLUDE 'ekcoldsc.inc'
-      INCLUDE 'eksegdsc.inc'
+      include 'ekcnamsz.inc'
+      include 'ekcoldsc.inc'
+      include 'eksegdsc.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( SDSCSZ )
-      CHARACTER*(*)         COLUMN
-      INTEGER               COLDSC ( CDSCSZ )
+      integer               handle
+      integer               segdsc ( sdscsz )
+      character*(*)         column
+      integer               coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -109,80 +109,80 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
+      logical               eqstr
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    CNAME
+      character*(cnamsz)    cname
 
-      INTEGER               DSCBAS
-      INTEGER               I
-      INTEGER               MBASE
-      INTEGER               NAMBAS
-      INTEGER               NCOLS
+      integer               dscbas
+      integer               i
+      integer               mbase
+      integer               nambas
+      integer               ncols
 
-      LOGICAL               FOUND
+      logical               found
 
 !
 !     Use discovery check-in.
 !
 !     Get the segment's integer metadata's base address.
 !
-      MBASE  =  SEGDSC ( IMDIDX )
+      mbase  =  segdsc ( imdidx )
 
 !
 !     Get the number of columns.
 !
-      NCOLS  =  SEGDSC ( NCIDX )
+      ncols  =  segdsc ( ncidx )
 
 !
 !     Search linearly through the column descriptors, looking for
 !     a column name match.  It's an error if we don't find the input
 !     name.
 !
-      FOUND = .FALSE.
-      I     =  1
+      found = .false.
+      i     =  1
 
-      DO WHILE (  ( I .LE. NCOLS )  .AND.  ( .NOT. FOUND )  )
+      do while (  ( i .le. ncols )  .and.  ( .not. found )  )
 
-         DSCBAS  =  MBASE + SDSCSZ + (I-1)*CDSCSZ
+         dscbas  =  mbase + sdscsz + (i-1)*cdscsz
 !
 !        Get the character base address of the column name from the
 !        current descriptor.
 !
-         CALL DASRDI ( HANDLE, DSCBAS+1, DSCBAS+CDSCSZ, COLDSC )
+         call dasrdi ( handle, dscbas+1, dscbas+cdscsz, coldsc )
 
-         NAMBAS = COLDSC( NAMIDX )
+         nambas = coldsc( namidx )
 
 !
 !        Look up the name and compare.
 !
-         CALL DASRDC ( HANDLE,  NAMBAS+1,  NAMBAS+CNAMSZ, &
-                       1,       CNAMSZ,    CNAME         )
+         call dasrdc ( handle,  nambas+1,  nambas+cnamsz, &
+                       1,       cnamsz,    cname         )
 
-         IF (  EQSTR( CNAME, COLUMN )  ) THEN
-            FOUND = .TRUE.
-         ELSE
-            I     =  I + 1
-         END IF
-
-
-      END DO
+         if (  eqstr( cname, column )  ) then
+            found = .true.
+         else
+            i     =  i + 1
+         end if
 
 
-      IF ( .NOT. FOUND ) THEN
+      end do
 
-         CALL CHKIN  ( 'ZZEKCDSC'                                 )
-         CALL SETMSG ( 'Descriptor for column # was not found. ' // &
+
+      if ( .not. found ) then
+
+         call chkin  ( 'ZZEKCDSC'                                 )
+         call setmsg ( 'Descriptor for column # was not found. ' // &
                        'Segment base = #; file = #.'              )
-         CALL ERRCH  ( '#',  COLUMN                               )
-         CALL ERRINT ( '#',  MBASE                                )
-         CALL ERRHAN ( '#',  HANDLE                               )
-         CALL SIGERR ( 'SPICE(BUG)'                               )
-         CALL CHKOUT ( 'ZZEKCDSC'                                 )
-         RETURN
+         call errch  ( '#',  column                               )
+         call errint ( '#',  mbase                                )
+         call errhan ( '#',  handle                               )
+         call sigerr ( 'SPICE(BUG)'                               )
+         call chkout ( 'ZZEKCDSC'                                 )
+         return
 
-      END IF
+      end if
 
-      END
+      end

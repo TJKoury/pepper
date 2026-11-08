@@ -1,6 +1,6 @@
 !$Procedure SHARPR ( Sharpen a rotation )
 
-      SUBROUTINE SHARPR ( ROT )
+      subroutine sharpr ( rot )
 
 ! $ Abstract
 !
@@ -19,9 +19,9 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      ROT ( 3, 3 )
+      double precision      rot ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -121,19 +121,19 @@
 !
 !     Unitize the first column of the rotation.
 !
-      CALL VHATIP ( ROT(1,1) )
+      call vhatip ( rot(1,1) )
 
 !
 !     Unitize the third column of the rotation and make it
 !     orthogonal to the first two columns.
 !
-      CALL UCRSS ( ROT(1,1),  ROT(1,2),  ROT(1,3) )
+      call ucrss ( rot(1,1),  rot(1,2),  rot(1,3) )
 
 !
 !     Unitize the second column of the rotation and make it
 !     orthogonal to the first and third columns.
 !
-      CALL UCRSS ( ROT(1,3),  ROT(1,1),  ROT(1,2) )
+      call ucrss ( rot(1,3),  rot(1,1),  rot(1,2) )
 
-      RETURN
-      END
+      return
+      end

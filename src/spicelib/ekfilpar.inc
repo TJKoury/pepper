@@ -15,8 +15,8 @@
 !
 !     Size of file parameter block:
 !
-      INTEGER               FPARSZ
-      PARAMETER           ( FPARSZ = 1 )
+      integer               fparsz
+      parameter           ( fparsz = 1 )
 
 !
 !     All offsets shown below are relative to the beginning of the
@@ -26,8 +26,8 @@
 !     Index of the segment pointer tree---this location contains the
 !     root page number of the tree:
 !
-      INTEGER               SGTIDX
-      PARAMETER           ( SGTIDX  =  1 )
+      integer               sgtidx
+      parameter           ( sgtidx  =  1 )
 
 !
 !     End Include Section:  EK File Metadata Parameters

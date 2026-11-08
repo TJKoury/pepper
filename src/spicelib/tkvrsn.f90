@@ -1,6 +1,6 @@
 !$Procedure TKVRSN ( Toolkit version strings )
 
-      SUBROUTINE TKVRSN ( ITEM, VERSTR )
+      subroutine tkvrsn ( item, verstr )
 
 ! $ Abstract
 !
@@ -17,10 +17,10 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         ITEM
-      CHARACTER*(*)         VERSTR
+      character*(*)         item
+      character*(*)         verstr
 
 ! $ Brief_I/O
 !
@@ -260,17 +260,17 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
+      logical               eqstr
 
 !
 !     At the current time only the TOOLKIT version number is
 !     defined.
 !
-      IF ( EQSTR( ITEM, 'TOOLKIT' ) ) THEN
-         VERSTR = 'N0067'
-      ELSE
-         VERSTR = 'No version found.'
-      END IF
+      if ( eqstr( item, 'TOOLKIT' ) ) then
+         verstr = 'N0067'
+      else
+         verstr = 'No version found.'
+      end if
 
-      RETURN
-      END
+      return
+      end

@@ -1,6 +1,6 @@
 !$Procedure INRYPL ( Intersection of ray and plane )
 
-      SUBROUTINE INRYPL ( VERTEX, DIR, PLANE, NXPTS, XPT )
+      subroutine inrypl ( vertex, dir, plane, nxpts, xpt )
 
 ! $ Abstract
 !
@@ -16,16 +16,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               UBPL
-      PARAMETER           ( UBPL    =   4 )
+      integer               ubpl
+      parameter           ( ubpl    =   4 )
 
-      DOUBLE PRECISION      VERTEX (    3 )
-      DOUBLE PRECISION      DIR    (    3 )
-      DOUBLE PRECISION      PLANE  ( UBPL )
-      INTEGER               NXPTS
-      DOUBLE PRECISION      XPT    (    3 )
+      double precision      vertex (    3 )
+      double precision      dir    (    3 )
+      double precision      plane  ( ubpl )
+      integer               nxpts
+      double precision      xpt    (    3 )
 
 ! $ Brief_I/O
 !
@@ -531,42 +531,42 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      dpmax
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               RETURN
-      LOGICAL               SMSGND
-      LOGICAL               VZERO
+      logical               return
+      logical               smsgnd
+      logical               vzero
 
 !
 !     Local parameters
 !
-      DOUBLE PRECISION      MARGIN
-      PARAMETER           ( MARGIN = 3.D0 )
+      double precision      margin
+      parameter           ( margin = 3.d0 )
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      CONST
-      DOUBLE PRECISION      PRJDIF
-      DOUBLE PRECISION      PRJDIR
-      DOUBLE PRECISION      PRJVN
-      DOUBLE PRECISION      MSCALE
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      SCALE
-      DOUBLE PRECISION      SCLCON
-      DOUBLE PRECISION      SCLVTX ( 3 )
-      DOUBLE PRECISION      TOOBIG
-      DOUBLE PRECISION      UDIR   ( 3 )
+      double precision      const
+      double precision      prjdif
+      double precision      prjdir
+      double precision      prjvn
+      double precision      mscale
+      double precision      normal ( 3 )
+      double precision      scale
+      double precision      sclcon
+      double precision      sclvtx ( 3 )
+      double precision      toobig
+      double precision      udir   ( 3 )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
 !
 !     We'll give the name TOOBIG to the bound DPMAX() / MARGIN.
@@ -578,76 +578,76 @@
 !
 !     Check the distance of the ray's vertex from the origin.
 !
-      TOOBIG = DPMAX() / MARGIN
+      toobig = dpmax() / margin
 
-      IF (  VNORM (VERTEX)  .GE.  TOOBIG  )  THEN
+      if (  vnorm (vertex)  .ge.  toobig  )  then
 
-         CALL CHKIN  ( 'INRYPL'                                    )
-         CALL SETMSG ( 'Ray''s vertex is too far from the origin.' )
-         CALL SIGERR ( 'SPICE(VECTORTOOBIG)'                       )
-         CALL CHKOUT ( 'INRYPL'                                    )
-         RETURN
+         call chkin  ( 'INRYPL'                                    )
+         call setmsg ( 'Ray''s vertex is too far from the origin.' )
+         call sigerr ( 'SPICE(VECTORTOOBIG)'                       )
+         call chkout ( 'INRYPL'                                    )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the distance of the plane from the origin.  (The returned
 !     plane constant IS this distance.)
 !
-      CALL PL2NVC ( PLANE, NORMAL, CONST )
+      call pl2nvc ( plane, normal, const )
 
-      IF (  CONST  .GE.  TOOBIG  )  THEN
+      if (  const  .ge.  toobig  )  then
 
-         CALL CHKIN  ( 'INRYPL'                            )
-         CALL SETMSG ( 'Plane is too far from the origin.' )
-         CALL SIGERR ( 'SPICE(VECTORTOOBIG)'               )
-         CALL CHKOUT ( 'INRYPL'                            )
-         RETURN
+         call chkin  ( 'INRYPL'                            )
+         call setmsg ( 'Plane is too far from the origin.' )
+         call sigerr ( 'SPICE(VECTORTOOBIG)'               )
+         call chkout ( 'INRYPL'                            )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the ray's direction vector.
 !
-      CALL VHAT ( DIR, UDIR )
+      call vhat ( dir, udir )
 
-      IF ( VZERO (UDIR) ) THEN
+      if ( vzero (udir) ) then
 
-         CALL CHKIN  ( 'INRYPL'                                      )
-         CALL SETMSG ( 'Ray''s direction vector is the zero vector.' )
-         CALL SIGERR ( 'SPICE(ZEROVECTOR)'                           )
-         CALL CHKOUT ( 'INRYPL'                                      )
-         RETURN
+         call chkin  ( 'INRYPL'                                      )
+         call setmsg ( 'Ray''s direction vector is the zero vector.' )
+         call sigerr ( 'SPICE(ZEROVECTOR)'                           )
+         call chkout ( 'INRYPL'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     That takes care of the error cases.  Now scale the input vertex
 !     and plane to improve numerical behavior.
 !
-      MSCALE = MAX ( CONST, VNORM(VERTEX) )
+      mscale = max ( const, vnorm(vertex) )
 
-      IF ( MSCALE .NE. 0.D0 ) THEN
+      if ( mscale .ne. 0.d0 ) then
 
-         CALL VSCL ( 1.D0 / MSCALE, VERTEX, SCLVTX )
-         SCLCON  =  CONST / MSCALE
+         call vscl ( 1.d0 / mscale, vertex, sclvtx )
+         sclcon  =  const / mscale
 
-      ELSE
+      else
 
-         CALL VEQU ( VERTEX, SCLVTX )
-         SCLCON   =  CONST
+         call vequ ( vertex, sclvtx )
+         sclcon   =  const
 
-      END IF
+      end if
 
-      IF ( MSCALE .GT. 1.D0 ) THEN
-         TOOBIG = TOOBIG / MSCALE
-      END IF
+      if ( mscale .gt. 1.d0 ) then
+         toobig = toobig / mscale
+      end if
 
 
 !     Find the projection (coefficient) of the ray's vertex along the
 !     plane's normal direction.
 !
-      PRJVN = VDOT ( SCLVTX, NORMAL )
+      prjvn = vdot ( sclvtx, normal )
 
 !
 !     If this projection is the plane constant, the ray's vertex lies in
@@ -658,26 +658,26 @@
 !     The absolute value of PRJDIF is the distance of the ray's vertex
 !     from the plane.
 !
-      PRJDIF  =  SCLCON - PRJVN
+      prjdif  =  sclcon - prjvn
 
-      IF ( PRJDIF .EQ. 0.D0 ) THEN
+      if ( prjdif .eq. 0.d0 ) then
 !
 !        XPT is the original, unscaled vertex.
 !
-         CALL VEQU ( VERTEX, XPT )
+         call vequ ( vertex, xpt )
 
-         IF (  VDOT ( NORMAL, UDIR )  .EQ.  0.D0  )  THEN
+         if (  vdot ( normal, udir )  .eq.  0.d0  )  then
 !
 !           The ray's in the plane.
 !
-            NXPTS  =  -1
-         ELSE
-            NXPTS  =   1
-         END IF
+            nxpts  =  -1
+         else
+            nxpts  =   1
+         end if
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     Ok, the ray's vertex is not in the plane.  The ray may still be
@@ -727,7 +727,7 @@
 !     Find the projection of the direction vector along the plane's
 !     normal vector.
 !
-      PRJDIR  =  VDOT ( UDIR, NORMAL )
+      prjdir  =  vdot ( udir, normal )
 
 !
 !     We're done if the ray doesn't point toward the plane.  PRJDIF
@@ -735,16 +735,16 @@
 !     zero if the ray and plane are parallel.  The SPICELIB routine
 !     SMSGND will return a value of .FALSE. if PRJDIR is zero.
 !
-      IF (  .NOT. SMSGND (PRJDIR, PRJDIF)  )  THEN
+      if (  .not. smsgnd (prjdir, prjdif)  )  then
 !
 !        The ray is parallel to or points away from the plane.
 !
-         NXPTS = 0
-         CALL CLEARD ( 3, XPT )
+         nxpts = 0
+         call cleard ( 3, xpt )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     The difference XPT - SCLVTX is the hypotenuse of a right triangle
@@ -765,17 +765,17 @@
 !     computed safely since PRJDIR has magnitude 1 or less.
 !
 
-      IF (  ABS(PRJDIF)  .GE.  ABS(PRJDIR) * TOOBIG  ) THEN
+      if (  abs(prjdif)  .ge.  abs(prjdir) * toobig  ) then
 !
 !        If the hypotenuse is too long, we say that no intersection
 !        exists.
 !
-         NXPTS = 0
-         CALL CLEARD ( 3, XPT )
+         nxpts = 0
+         call cleard ( 3, xpt )
 
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     We conclude that it's safe to compute XPT.  Scale UDIR and add
@@ -783,16 +783,16 @@
 !     have magnitude no larger than TOOBIG.  The vector thus obtained
 !     is the intersection point.
 !
-      NXPTS    =   1
-      SCALE    =   ABS (PRJDIF)  /   ABS (PRJDIR)
+      nxpts    =   1
+      scale    =   abs (prjdif)  /   abs (prjdir)
 
-      CALL VLCOM ( 1.0D0, SCLVTX, SCALE, UDIR, XPT )
+      call vlcom ( 1.0d0, sclvtx, scale, udir, xpt )
 
 !
 !     Re-scale XPT.  This is safe, since TOOBIG has already been
 !     scaled to allow for any growth of XPT at this step.
 !
-      CALL VSCLIP ( MSCALE, XPT )
+      call vsclip ( mscale, xpt )
 
-      RETURN
-      END
+      return
+      end

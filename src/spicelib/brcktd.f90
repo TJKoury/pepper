@@ -1,6 +1,6 @@
 !$Procedure BRCKTD ( Bracket a d.p. value within an interval )
 
-      DOUBLE PRECISION FUNCTION BRCKTD ( NUMBER, END1, END2 )
+      double precision function brcktd ( number, end1, end2 )
 
 ! $ Abstract
 !
@@ -21,11 +21,11 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION   NUMBER
-      DOUBLE PRECISION   END1
-      DOUBLE PRECISION   END2
+      double precision   number
+      double precision   end1
+      double precision   end2
 
 ! $ Brief_I/O
 !
@@ -290,15 +290,15 @@
 !
 !     What else is there to say?
 !
-      IF ( END1 .LT. END2 ) THEN
+      if ( end1 .lt. end2 ) then
 
-         BRCKTD = MAX (  END1, MIN(END2,NUMBER)  )
+         brcktd = max (  end1, min(end2,number)  )
 
-      ELSE
+      else
 
-         BRCKTD = MAX (  END2, MIN(END1,NUMBER)  )
+         brcktd = max (  end2, min(end1,number)  )
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

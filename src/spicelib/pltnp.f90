@@ -1,6 +1,6 @@
 !$Procedure PLTNP ( Nearest point on triangular plate )
 
-      SUBROUTINE PLTNP ( POINT, V1, V2, V3, PNEAR, DIST )
+      subroutine pltnp ( point, v1, v2, v3, pnear, dist )
 
 ! $ Abstract
 !
@@ -17,14 +17,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION      POINT ( 3 )
-      DOUBLE PRECISION      V1    ( 3 )
-      DOUBLE PRECISION      V2    ( 3 )
-      DOUBLE PRECISION      V3    ( 3 )
-      DOUBLE PRECISION      PNEAR ( 3 )
-      DOUBLE PRECISION      DIST
+      double precision      point ( 3 )
+      double precision      v1    ( 3 )
+      double precision      v2    ( 3 )
+      double precision      v3    ( 3 )
+      double precision      pnear ( 3 )
+      double precision      dist
 
 ! $ Brief_I/O
 !
@@ -199,42 +199,42 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
+      double precision      vdist
+      double precision      vdot
+      double precision      vnorm
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
+      logical               return
+      logical               vzero
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      D1
-      DOUBLE PRECISION      D2
-      DOUBLE PRECISION      D3
-      DOUBLE PRECISION      E1     ( 3 )
-      DOUBLE PRECISION      E2     ( 3 )
-      DOUBLE PRECISION      E3     ( 3 )
-      DOUBLE PRECISION      ENORM1 ( 3 )
-      DOUBLE PRECISION      ENORM2 ( 3 )
-      DOUBLE PRECISION      ENORM3 ( 3 )
-      DOUBLE PRECISION      L1
-      DOUBLE PRECISION      L2
-      DOUBLE PRECISION      L3
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      NP1    ( 3 )
-      DOUBLE PRECISION      NP2    ( 3 )
-      DOUBLE PRECISION      PDIFF  ( 3 )
-      DOUBLE PRECISION      PERP   ( 3 )
+      double precision      d1
+      double precision      d2
+      double precision      d3
+      double precision      e1     ( 3 )
+      double precision      e2     ( 3 )
+      double precision      e3     ( 3 )
+      double precision      enorm1 ( 3 )
+      double precision      enorm2 ( 3 )
+      double precision      enorm3 ( 3 )
+      double precision      l1
+      double precision      l2
+      double precision      l3
+      double precision      normal ( 3 )
+      double precision      np1    ( 3 )
+      double precision      np2    ( 3 )
+      double precision      pdiff  ( 3 )
+      double precision      perp   ( 3 )
 
-      LOGICAL               DEGEN
-      LOGICAL               IN1
-      LOGICAL               IN2
-      LOGICAL               IN3
+      logical               degen
+      logical               in1
+      logical               in2
+      logical               in3
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     Use discovery check-in.
@@ -242,78 +242,78 @@
 !
 !     Compute the plate's edges.
 !
-      CALL VSUB ( V2, V1, E1 )
-      CALL VSUB ( V3, V2, E2 )
-      CALL VSUB ( V1, V3, E3 )
+      call vsub ( v2, v1, e1 )
+      call vsub ( v3, v2, e2 )
+      call vsub ( v1, v3, e3 )
 
 !
 !     Compute a normal vector for the plate, if possible.
 !     If the plate is degenerate, we'll find out at this point.
 !
-      CALL VCRSS ( E1, E2, NORMAL )
+      call vcrss ( e1, e2, normal )
 
 !
 !     Compute the outward normals of the plate's edges in the
 !     plate containing the plate.
 !
-      CALL VCRSS ( E1, NORMAL, ENORM1 )
-      CALL VCRSS ( E2, NORMAL, ENORM2 )
-      CALL VCRSS ( E3, NORMAL, ENORM3 )
+      call vcrss ( e1, normal, enorm1 )
+      call vcrss ( e2, normal, enorm2 )
+      call vcrss ( e3, normal, enorm3 )
 
-      DEGEN =      VZERO(NORMAL) .OR. VZERO(ENORM1) &
-              .OR. VZERO(ENORM2) .OR. VZERO(ENORM3)
+      degen =      vzero(normal) .or. vzero(enorm1) &
+              .or. vzero(enorm2) .or. vzero(enorm3)
 
-      IF ( DEGEN ) THEN
+      if ( degen ) then
 !
 !        The "plate" is a line segment or point. Determine
 !        which case we have.
 !
-         L1 = VNORM(E1)
-         L2 = VNORM(E2)
-         L3 = VNORM(E3)
+         l1 = vnorm(e1)
+         l2 = vnorm(e2)
+         l3 = vnorm(e3)
 
-         IF ( ( L1 .EQ. 0.D0 ) .AND. ( L2 .EQ. 0.D0 ) ) THEN
+         if ( ( l1 .eq. 0.d0 ) .and. ( l2 .eq. 0.d0 ) ) then
 !
 !           Up to round-off error, the vertices coincide.
 !           The vertex V1 for practical purposes is the plate.
 !
-            CALL VEQU ( V1, PNEAR )
+            call vequ ( v1, pnear )
 
-            DIST = VDIST( PNEAR, POINT )
+            dist = vdist( pnear, point )
 
-         ELSE
+         else
 !
 !           The plate is a line segment having positive length.
 !           One of the edges will coincide with the segment.
 !           Determine which vertices are the endpoints.
 !
-            IF ( L1 .GT. MAX(L2, L3) ) THEN
+            if ( l1 .gt. max(l2, l3) ) then
 !
 !              The segment is bounded by V1 and V2.
 !
-               CALL NPSGPT( V1, V2, POINT, PNEAR, DIST )
+               call npsgpt( v1, v2, point, pnear, dist )
 
-            ELSE IF ( L2 .GT. MAX(L3, L1) ) THEN
+            else if ( l2 .gt. max(l3, l1) ) then
 !
 !              The segment is bounded by V2 and V3.
 !
-               CALL NPSGPT( V2, V3, POINT, PNEAR, DIST )
+               call npsgpt( v2, v3, point, pnear, dist )
 
-            ELSE
+            else
 !
 !              The segment is bounded by V3 and V1.
 !
-               CALL NPSGPT( V3, V1, POINT, PNEAR, DIST )
+               call npsgpt( v3, v1, point, pnear, dist )
 
-            END IF
+            end if
 
-         END IF
+         end if
 !
 !        The outputs are set for the degenerate cases.
 !
-         RETURN
+         return
 
-      END IF
+      end if
 
 !
 !     We have a non-degenerate plate. NORMAL has unit length.
@@ -322,8 +322,8 @@
 !     the plate. Find the offset of the POINT from V1, and
 !     find the component of this offset orthogonal to NORMAL.
 !
-      CALL VSUB  ( POINT, V1,     PDIFF )
-      CALL VPERP ( PDIFF, NORMAL, PERP  )
+      call vsub  ( point, v1,     pdiff )
+      call vperp ( pdiff, normal, perp  )
 
 !
 !     Determine whether V1+PERP is inside the plate.
@@ -333,23 +333,23 @@
 !     constant for edge 2 is that of the offset of V2
 !     from V1; this offset is edge 1.
 !
-      IN1 = VDOT( PERP, ENORM1 ) .LE. 0.D0
-      IN2 = VDOT( PERP, ENORM2 ) .LE. VDOT(E1,ENORM2)
-      IN3 = VDOT( PERP, ENORM3 ) .LE. 0.D0
+      in1 = vdot( perp, enorm1 ) .le. 0.d0
+      in2 = vdot( perp, enorm2 ) .le. vdot(e1,enorm2)
+      in3 = vdot( perp, enorm3 ) .le. 0.d0
 
 
-      IF ( IN1 .AND. IN2 .AND. IN3 ) THEN
+      if ( in1 .and. in2 .and. in3 ) then
 !
 !        V1+PERP is inside the plate. It is the closest
 !        point on the plate to POINT.
 !
-         CALL VADD ( V1, PERP, PNEAR )
+         call vadd ( v1, perp, pnear )
 !
 !        We have the near point; set the distance.
 !
-         DIST = VDIST( PNEAR, POINT )
+         dist = vdist( pnear, point )
 
-      ELSE
+      else
 !
 !        PERP is outside the plate. The nearest point
 !        on the plate to POINT is on one of the edges.
@@ -357,55 +357,55 @@
 !        We'll use the "in" flags to reduce the number
 !        of point-edge distance computations.
 !
-         IF ( ( .NOT. IN1 ) .AND. ( IN2 .AND. IN3 ) ) THEN
+         if ( ( .not. in1 ) .and. ( in2 .and. in3 ) ) then
 !
 !           The solution must be on the first edge.
 !
-            CALL NPSGPT ( V1, V2, POINT, PNEAR, DIST )
+            call npsgpt ( v1, v2, point, pnear, dist )
 
-         ELSE IF ( ( .NOT. IN2 ) .AND. ( IN3 .AND. IN1 ) ) THEN
+         else if ( ( .not. in2 ) .and. ( in3 .and. in1 ) ) then
 
 !
 !           The solution must be on the second edge.
 !
-            CALL NPSGPT ( V2, V3, POINT, PNEAR, DIST )
+            call npsgpt ( v2, v3, point, pnear, dist )
 
-         ELSE IF ( ( .NOT. IN3 ) .AND. ( IN1 .AND. IN2 ) ) THEN
+         else if ( ( .not. in3 ) .and. ( in1 .and. in2 ) ) then
 !
 !           The solution must be on the third edge.
 !
-            CALL NPSGPT ( V3, V1, POINT, PNEAR, DIST )
+            call npsgpt ( v3, v1, point, pnear, dist )
 
-         ELSE
+         else
 !
 !           Compute solutions on all three edges and pick
 !           the best one.
 !
-            CALL NPSGPT ( V1, V2, POINT, NP1,   D1 )
-            CALL NPSGPT ( V2, V3, POINT, NP2,   D2 )
-            CALL NPSGPT ( V3, V1, POINT, PNEAR, D3 )
+            call npsgpt ( v1, v2, point, np1,   d1 )
+            call npsgpt ( v2, v3, point, np2,   d2 )
+            call npsgpt ( v3, v1, point, pnear, d3 )
 
-            IF ( D1 .LE. MIN(D2, D3) ) THEN
+            if ( d1 .le. min(d2, d3) ) then
 
-               CALL VEQU ( NP1, PNEAR )
-               DIST = D1
+               call vequ ( np1, pnear )
+               dist = d1
 
-            ELSE IF ( D2 .LE. MIN(D3, D1) ) THEN
+            else if ( d2 .le. min(d3, d1) ) then
 
-               CALL VEQU ( NP2, PNEAR )
-               DIST = D2
+               call vequ ( np2, pnear )
+               dist = d2
 
-            ELSE
+            else
 !
 !              PNEAR is already set.
 !
-               DIST = D3
+               dist = d3
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      END IF
+      end if
 
-      RETURN
-      END
+      return
+      end

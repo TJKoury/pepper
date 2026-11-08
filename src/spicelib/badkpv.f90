@@ -1,7 +1,7 @@
 !$Procedure BADKPV ( Bad Kernel Pool Variable )
 
-      LOGICAL FUNCTION BADKPV ( CALLER, NAME,  COMP, &
-                                SIZE,   DIVBY, TYPE )
+      logical function badkpv ( caller, name,  comp, &
+                                size,   divby, type )
 
 ! $ Abstract
 !
@@ -19,14 +19,14 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         CALLER
-      CHARACTER*(*)         NAME
-      CHARACTER*(*)         COMP
-      INTEGER               SIZE
-      INTEGER               DIVBY
-      CHARACTER*(*)         TYPE
+      character*(*)         caller
+      character*(*)         name
+      character*(*)         comp
+      integer               size
+      integer               divby
+      character*(*)         type
 
 ! $ Brief_I/O
 !
@@ -371,42 +371,42 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQCHR
-      LOGICAL               RETURN
+      logical               eqchr
+      logical               return
 
 !
 !     Local Variables
 !
 
-      CHARACTER*(1)         CLASS
+      character*(1)         class
 
-      INTEGER               DIM
-      INTEGER               RATIO
+      integer               dim
+      integer               ratio
 
-      LOGICAL               OK
-      LOGICAL               FOUND
+      logical               ok
+      logical               found
 
 
 !
 !     Until we know otherwise, we shall assume that we have
 !     a bad kernel pool variable.
 !
-      BADKPV = .TRUE.
+      badkpv = .true.
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN  ( 'BADKPV' )
+      call chkin  ( 'BADKPV' )
 
 !
 !     Look up the attributes of this variable in the kernel pool.
 !
-      CALL DTPOOL ( NAME, FOUND, DIM, CLASS )
+      call dtpool ( name, found, dim, class )
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 
-         CALL SETMSG ( '#: The kernel pool variable ''#'' is not ' &
+         call setmsg ( '#: The kernel pool variable ''#'' is not ' &
          //            'currently present in the kernel pool. ' &
          //            'Possible reasons are that the ' &
          //            'appropriate text kernel file has not ' &
@@ -414,160 +414,160 @@
          //            'been cleared after loading the appropriate ' &
          //            'text kernel file. ' )
 
-         CALL ERRCH  ( '#', CALLER )
-         CALL ERRCH  ( '#', NAME   )
-         CALL SIGERR ( 'SPICE(VARIABLENOTFOUND)' )
-         CALL CHKOUT ( 'BADKPV' )
-         RETURN
+         call errch  ( '#', caller )
+         call errch  ( '#', name   )
+         call sigerr ( 'SPICE(VARIABLENOTFOUND)' )
+         call chkout ( 'BADKPV' )
+         return
 
-      END IF
+      end if
 
 !
 !     Compare the dimension of the specified variable with the
 !     input SIZE.
 !
-      IF      ( COMP .EQ. '='  ) THEN
+      if      ( comp .eq. '='  ) then
 
-         OK = DIM .EQ. SIZE
+         ok = dim .eq. size
 
-      ELSE IF ( COMP .EQ. '<'  ) THEN
+      else if ( comp .eq. '<'  ) then
 
-         OK = DIM .LT. SIZE
+         ok = dim .lt. size
 
-      ELSE IF ( COMP .EQ. '>'  ) THEN
+      else if ( comp .eq. '>'  ) then
 
-         OK = DIM .GT. SIZE
+         ok = dim .gt. size
 
-      ELSE IF ( COMP .EQ. '<=' ) THEN
+      else if ( comp .eq. '<=' ) then
 
-         OK = DIM .LE. SIZE
+         ok = dim .le. size
 
-      ELSE IF ( COMP .EQ. '=>' ) THEN
+      else if ( comp .eq. '=>' ) then
 
-         OK = DIM .GE. SIZE
+         ok = dim .ge. size
 
-      ELSE
+      else
 
-         CALL SETMSG ( '#: The comparison operator ''#'' is not ' &
+         call setmsg ( '#: The comparison operator ''#'' is not ' &
          //            'a recognized value.  The recognized ' &
          //            'values are ''<'', ''<='', ''='', ''=>'', ' &
          //            '''>''. ' )
-         CALL ERRCH  ( '#', CALLER )
-         CALL ERRCH  ( '#', COMP   )
-         CALL SIGERR ( 'SPICE(UNKNOWNCOMPARE)' )
-         CALL CHKOUT ( 'BADKPV'    )
-         RETURN
+         call errch  ( '#', caller )
+         call errch  ( '#', comp   )
+         call sigerr ( 'SPICE(UNKNOWNCOMPARE)' )
+         call chkout ( 'BADKPV'    )
+         return
 
-      END IF
+      end if
 
 !
 !     If the comparison was not favorable, signal an error
 !     and return.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
 
-         CALL SETMSG ( '#: The kernel pool variable ''#'' is ' &
+         call setmsg ( '#: The kernel pool variable ''#'' is ' &
          //            'expected to have a number of components ' &
          //            'DIM such that the comparison DIM # # is ' &
          //            '.TRUE.  However, the current number of ' &
          //            'components for ''#'' is #. ' )
 
-         CALL ERRCH  ( '#', CALLER )
-         CALL ERRCH  ( '#', NAME   )
-         CALL ERRCH  ( '#', COMP   )
-         CALL ERRINT ( '#', SIZE   )
-         CALL ERRCH  ( '#', NAME   )
-         CALL ERRINT ( '#', DIM    )
-         CALL SIGERR ( 'SPICE(BADVARIABLESIZE)' )
-         CALL CHKOUT ( 'BADKPV' )
-         RETURN
+         call errch  ( '#', caller )
+         call errch  ( '#', name   )
+         call errch  ( '#', comp   )
+         call errint ( '#', size   )
+         call errch  ( '#', name   )
+         call errint ( '#', dim    )
+         call sigerr ( 'SPICE(BADVARIABLESIZE)' )
+         call chkout ( 'BADKPV' )
+         return
 
-      END IF
+      end if
 
 
 !
 !     Check to see that DIVBY evenly divides the dimension of
 !     the variable.
 !
-      IF ( DIVBY .NE. 0 ) THEN
-         RATIO = DIM / DIVBY
-      ELSE
-         RATIO = 1
-      END IF
+      if ( divby .ne. 0 ) then
+         ratio = dim / divby
+      else
+         ratio = 1
+      end if
 
-      IF ( DIVBY*RATIO .NE. DIM ) THEN
+      if ( divby*ratio .ne. dim ) then
 
-         CALL SETMSG ( '#: The number of components of the ' &
+         call setmsg ( '#: The number of components of the ' &
          //            'kernel pool variable ''#'' is required ' &
          //            'to be divisible by #.  However, the ' &
          //            'actual number of components is # which ' &
          //            'is not evenly divisible by #. '  )
 
-         CALL ERRCH  ( '#', CALLER )
-         CALL ERRCH  ( '#', NAME   )
-         CALL ERRINT ( '#', DIVBY  )
-         CALL ERRINT ( '#', DIM    )
-         CALL ERRINT ( '#', DIVBY  )
-         CALL SIGERR ( 'SPICE(BADVARIABLESIZE)'  )
-         CALL CHKOUT ( 'BADKPV' )
-         RETURN
+         call errch  ( '#', caller )
+         call errch  ( '#', name   )
+         call errint ( '#', divby  )
+         call errint ( '#', dim    )
+         call errint ( '#', divby  )
+         call sigerr ( 'SPICE(BADVARIABLESIZE)'  )
+         call chkout ( 'BADKPV' )
+         return
 
-      END IF
+      end if
 
 !
 !     Finally check the type of the variable.
 !
-      IF      ( EQCHR ( TYPE, 'C' ) ) THEN
+      if      ( eqchr ( type, 'C' ) ) then
 
-         IF ( CLASS .NE. 'C' ) THEN
+         if ( class .ne. 'C' ) then
 
 
-            CALL SETMSG ( '#: The kernel pool variable ''#'' ' &
+            call setmsg ( '#: The kernel pool variable ''#'' ' &
             //            'must be of type "CHARACTER". ' &
             //            'However, the current type is numeric. ' )
-            CALL ERRCH  ( '#', CALLER )
-            CALL ERRCH  ( '#', NAME   )
-            CALL SIGERR ( 'SPICE(BADVARIABLETYPE)' )
-            CALL CHKOUT ( 'BADKPV' )
-            RETURN
+            call errch  ( '#', caller )
+            call errch  ( '#', name   )
+            call sigerr ( 'SPICE(BADVARIABLETYPE)' )
+            call chkout ( 'BADKPV' )
+            return
 
-         END IF
-
-
-      ELSE IF ( EQCHR ( TYPE, 'N' ) ) THEN
+         end if
 
 
-         IF ( CLASS .NE. 'N' ) THEN
+      else if ( eqchr ( type, 'N' ) ) then
 
-            CALL SETMSG ( '#: The kernel pool variable ''#'' ' &
+
+         if ( class .ne. 'N' ) then
+
+            call setmsg ( '#: The kernel pool variable ''#'' ' &
             //            'must be of type "NUMERIC".  However, ' &
             //            'the current type is character. ' )
-            CALL ERRCH  ( '#', CALLER )
-            CALL ERRCH  ( '#', NAME   )
-            CALL SIGERR ( 'SPICE(BADVARIABLETYPE)' )
-            CALL CHKOUT ( 'BADKPV' )
-            RETURN
+            call errch  ( '#', caller )
+            call errch  ( '#', name   )
+            call sigerr ( 'SPICE(BADVARIABLETYPE)' )
+            call chkout ( 'BADKPV' )
+            return
 
-         END IF
+         end if
 
-      ELSE
+      else
 
-         CALL SETMSG ( '#: Unknown expected type of the kernel pool ' &
+         call setmsg ( '#: Unknown expected type of the kernel pool ' &
             //         'variable ''#''. The expected type of the ' &
             //         'kernel pool variable must be either ''C'' ' &
             //         'or ''N''.'  )
-         CALL ERRCH  ( '#', CALLER )
-         CALL ERRCH  ( '#', TYPE                                       )
-         CALL SIGERR ( 'SPICE(INVALIDTYPE)'                            )
-         CALL CHKOUT ( 'BADKPV'                                        )
-         RETURN
+         call errch  ( '#', caller )
+         call errch  ( '#', type                                       )
+         call sigerr ( 'SPICE(INVALIDTYPE)'                            )
+         call chkout ( 'BADKPV'                                        )
+         return
 
-      END IF
+      end if
 
 
-      BADKPV = .FALSE.
-      CALL CHKOUT ( 'BADKPV' )
+      badkpv = .false.
+      call chkout ( 'BADKPV' )
 
-      RETURN
-      END
+      return
+      end

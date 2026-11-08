@@ -1,6 +1,6 @@
 !$Procedure SRFSCC (Surface string and body ID code to surface ID code)
 
-      SUBROUTINE SRFSCC ( SRFSTR, BODYID, CODE, FOUND )
+      subroutine srfscc ( srfstr, bodyid, code, found )
 
 ! $ Abstract
 !
@@ -24,12 +24,12 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      CHARACTER*(*)         SRFSTR
-      INTEGER               BODYID
-      INTEGER               CODE
-      LOGICAL               FOUND
+      character*(*)         srfstr
+      integer               bodyid
+      integer               code
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -341,47 +341,47 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
 !
 !     Local parameters
 !
-      INTEGER               MSGLEN
-      PARAMETER           ( MSGLEN = 80 )
+      integer               msglen
+      parameter           ( msglen = 80 )
 
 !
 !     Local variables
 !
-      CHARACTER*(MSGLEN)    ERRMSG
+      character*(msglen)    errmsg
 
-      INTEGER               PTR
+      integer               ptr
 
 
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'SRFSCC' )
+      call chkin ( 'SRFSCC' )
 
 !
 !     No result has been found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
 !
 !     Try to translate the input surface name to a known surface ID
 !     code.
 !
-      CALL ZZSRFN2C ( SRFSTR, BODYID, CODE, FOUND )
+      call zzsrfn2c ( srfstr, bodyid, code, found )
 
-      IF ( FAILED() ) THEN
-         CALL CHKOUT ( 'SRFSCC' )
-         RETURN
-      END IF
+      if ( failed() ) then
+         call chkout ( 'SRFSCC' )
+         return
+      end if
 
-      IF ( .NOT. FOUND ) THEN
+      if ( .not. found ) then
 !
 !        The surface string could not be mapped to an ID code.
 !
@@ -389,17 +389,17 @@
 !        integer, for example, '999'.  If so, find the equivalent datum
 !        of INTEGER type.
 !
-         CALL NPARSI ( SRFSTR, CODE, ERRMSG, PTR )
+         call nparsi ( srfstr, code, errmsg, ptr )
 !
 !        If the string parsed as an integer, PTR is zero; otherwise
 !        it's non-zero.
 !
-         FOUND = PTR .EQ. 0
+         found = ptr .eq. 0
 
-      END IF
+      end if
 !
 !     CODE and FOUND are set.
 !
-      CALL  CHKOUT ( 'SRFSCC' )
-      RETURN
-      END
+      call  chkout ( 'SRFSCC' )
+      return
+      end

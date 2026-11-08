@@ -1,6 +1,6 @@
 !$Procedure GFUDB ( GF, user defined boolean )
 
-      SUBROUTINE GFUDB ( UDFUNS, UDFUNB, STEP, CNFINE, RESULT )
+      subroutine gfudb ( udfuns, udfunb, step, cnfine, result )
 
 ! $ Abstract
 !
@@ -21,20 +21,20 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE               'gf.inc'
-      INCLUDE               'zzgf.inc'
-      INCLUDE               'zzholdd.inc'
+      include               'gf.inc'
+      include               'zzgf.inc'
+      include               'zzholdd.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      EXTERNAL              UDFUNS
-      EXTERNAL              UDFUNB
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      CNFINE ( LBCELL : * )
-      DOUBLE PRECISION      RESULT ( LBCELL : * )
+      external              udfuns
+      external              udfunb
+      double precision      step
+      double precision      cnfine ( lbcell : * )
+      double precision      result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -950,86 +950,86 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               ODD
-      LOGICAL               RETURN
-      INTEGER               SIZED
+      logical               odd
+      logical               return
+      integer               sized
 
 
 !
 !     Local variables.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
+      external              gfrefn
+      external              gfrepf
+      external              gfrepi
+      external              gfrepu
+      external              gfstep
 
-      DOUBLE PRECISION      TOL
-      LOGICAL               OK
+      double precision      tol
+      logical               ok
 
-      LOGICAL               GFBAIL
-      EXTERNAL              GFBAIL
+      logical               gfbail
+      external              gfbail
 
-      LOGICAL               NOBAIL
-      PARAMETER           ( NOBAIL = .FALSE. )
+      logical               nobail
+      parameter           ( nobail = .false. )
 
-      LOGICAL               NORPT
-      PARAMETER           ( NORPT  = .FALSE. )
+      logical               norpt
+      parameter           ( norpt  = .false. )
 
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      END IF
+      if ( return () ) then
+         return
+      end if
 
-      CALL CHKIN( 'GFUDB' )
+      call chkin( 'GFUDB' )
 
 !
 !     Check the result window size.
 !
-      IF ( (SIZED(RESULT) .LT. 2) .OR. ODD( SIZED(RESULT) ) ) THEN
+      if ( (sized(result) .lt. 2) .or. odd( sized(result) ) ) then
 
-         CALL SETMSG ( 'Result window size was #; size must be ' &
+         call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )
-         CALL ERRINT ( '#', SIZED(RESULT)                          )
-         CALL SIGERR ( 'SPICE(INVALIDDIMENSION)'                   )
-         CALL CHKOUT ( 'GFUDB'                                     )
-         RETURN
+         call errint ( '#', sized(result)                          )
+         call sigerr ( 'SPICE(INVALIDDIMENSION)'                   )
+         call chkout ( 'GFUDB'                                     )
+         return
 
-      END IF
+      end if
 
 !
 !     Set the step size.
 !
-      CALL GFSSTP (STEP)
+      call gfsstp (step)
 
 !
 !     Retrieve the convergence tolerance, if set.
 !
-      CALL ZZHOLDD ( ZZGET, GF_TOL, OK, TOL )
+      call zzholdd ( zzget, gf_tol, ok, tol )
 
 !
 !     Use the default value CNVTOL if no stored tolerance value.
 !
-      IF ( .NOT. OK ) THEN
+      if ( .not. ok ) then
 
-         TOL = CNVTOL
+         tol = cnvtol
 
-      END IF
+      end if
 
 
 !
 !     Initialize the RESULT window to empty.
 !
-      CALL SCARDD ( 0, RESULT)
+      call scardd ( 0, result)
 
-      CALL ZZGFUDB ( UDFUNS, UDFUNB, TOL,     GFSTEP,  GFREFN, &
-                     NORPT,  GFREPI,  GFREPU,  GFREPF, &
-                     NOBAIL, GFBAIL,  CNFINE,  RESULT )
+      call zzgfudb ( udfuns, udfunb, tol,     gfstep,  gfrefn, &
+                     norpt,  gfrepi,  gfrepu,  gfrepf, &
+                     nobail, gfbail,  cnfine,  result )
 
-      CALL CHKOUT( 'GFUDB' )
+      call chkout( 'GFUDB' )
 
-      RETURN
-      END
+      return
+      end

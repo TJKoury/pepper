@@ -1,12 +1,12 @@
 !$Procedure  ZZEKQCON ( Private: EK, read constraints from query )
 
-      SUBROUTINE ZZEKQCON ( EQRYI,   EQRYC,   EQRYD,   N, &
-                            CNSTYP, &
-                            LTNAME,  LTIDX,   LCNAME,  LCIDX, &
-                            OPCODE, &
-                            RTNAME,  RTIDX,   RCNAME,  RCIDX, &
-                            DTYPE, &
-                            CBEG,    CEND,    DVAL,    IVAL   )
+      subroutine zzekqcon ( eqryi,   eqryc,   eqryd,   n, &
+                            cnstyp, &
+                            ltname,  ltidx,   lcname,  lcidx, &
+                            opcode, &
+                            rtname,  rtidx,   rcname,  rcidx, &
+                            dtype, &
+                            cbeg,    cend,    dval,    ival   )
 
 ! $ Abstract
 !
@@ -28,35 +28,35 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE 'ekquery.inc'
-      INCLUDE 'ekbool.inc'
-      INCLUDE 'ekopcd.inc'
-      INCLUDE 'ektype.inc'
+      include 'ekquery.inc'
+      include 'ekbool.inc'
+      include 'ekopcd.inc'
+      include 'ektype.inc'
 
-      INTEGER               LBCELL
-      PARAMETER           ( LBCELL = -5 )
+      integer               lbcell
+      parameter           ( lbcell = -5 )
 
-      INTEGER               EQRYI ( LBCELL : * )
-      CHARACTER*(*)         EQRYC
-      DOUBLE PRECISION      EQRYD ( * )
-      INTEGER               N
-      INTEGER               CNSTYP
-      CHARACTER*(*)         LTNAME
-      INTEGER               LTIDX
-      CHARACTER*(*)         LCNAME
-      INTEGER               LCIDX
-      INTEGER               OPCODE
-      CHARACTER*(*)         RTNAME
-      INTEGER               RTIDX
-      CHARACTER*(*)         RCNAME
-      INTEGER               RCIDX
-      INTEGER               DTYPE
-      INTEGER               CBEG
-      INTEGER               CEND
-      DOUBLE PRECISION      DVAL
-      INTEGER               IVAL
+      integer               eqryi ( lbcell : * )
+      character*(*)         eqryc
+      double precision      eqryd ( * )
+      integer               n
+      integer               cnstyp
+      character*(*)         ltname
+      integer               ltidx
+      character*(*)         lcname
+      integer               lcidx
+      integer               opcode
+      character*(*)         rtname
+      integer               rtidx
+      character*(*)         rcname
+      integer               rcidx
+      integer               dtype
+      integer               cbeg
+      integer               cend
+      double precision      dval
+      integer               ival
 
 
 ! $ Brief_I/O
@@ -225,184 +225,184 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
+      logical               failed
 
 !
 !     Local variables
 !
-      INTEGER               BASE
-      INTEGER               CB
-      INTEGER               CE
-      INTEGER               ICHECK
-      INTEGER               NCNS
-      INTEGER               NTAB
-      INTEGER               PTR
-      INTEGER               TB
-      INTEGER               TE
+      integer               base
+      integer               cb
+      integer               ce
+      integer               icheck
+      integer               ncns
+      integer               ntab
+      integer               ptr
+      integer               tb
+      integer               te
 
 !
 !     Use discovery check-in.
 !
 
-      CALL ZZEKREQI ( EQRYI, 'SEM_CHECKED', ICHECK )
+      call zzekreqi ( eqryi, 'SEM_CHECKED', icheck )
 
-      IF ( FAILED() ) THEN
-         RETURN
-      END IF
+      if ( failed() ) then
+         return
+      end if
 
-      IF ( ICHECK .EQ. IFALSE ) THEN
+      if ( icheck .eq. ifalse ) then
 
-         CALL CHKIN  ( 'ZZEKQCON'                                )
-         CALL SETMSG ( 'Encoded query has not been semantically '// &
+         call chkin  ( 'ZZEKQCON'                                )
+         call setmsg ( 'Encoded query has not been semantically '// &
                        'checked.'                                )
-         CALL SIGERR ( 'SPICE(NOTSEMCHECKED)'                    )
-         CALL CHKOUT ( 'ZZEKQCON'                                )
-         RETURN
+         call sigerr ( 'SPICE(NOTSEMCHECKED)'                    )
+         call chkout ( 'ZZEKQCON'                                )
+         return
 
-      END IF
+      end if
 
-      CALL ZZEKREQI ( EQRYI, 'NUM_CONSTRAINTS',   NCNS   )
-      CALL ZZEKREQI ( EQRYI, 'NUM_TABLES',        NTAB   )
+      call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',   ncns   )
+      call zzekreqi ( eqryi, 'NUM_TABLES',        ntab   )
 
 
-      IF (  ( N .LT. 1 ) .OR. ( N .GT. NCNS )  ) THEN
+      if (  ( n .lt. 1 ) .or. ( n .gt. ncns )  ) then
 
-         CALL CHKIN  ( 'ZZEKQCON'                                      )
-         CALL SETMSG ( 'Constraint index # is out of valid range 1:#.' )
-         CALL ERRINT ( '#',  N                                         )
-         CALL ERRINT ( '#',  NCNS                                      )
-         CALL SIGERR ( 'SPICE(INVALIDINDEX)'                           )
-         CALL CHKOUT ( 'ZZEKQCON'                                      )
-         RETURN
+         call chkin  ( 'ZZEKQCON'                                      )
+         call setmsg ( 'Constraint index # is out of valid range 1:#.' )
+         call errint ( '#',  n                                         )
+         call errint ( '#',  ncns                                      )
+         call sigerr ( 'SPICE(INVALIDINDEX)'                           )
+         call chkout ( 'ZZEKQCON'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the base address of the Nth constraint.
 !
-      BASE   =      EQVBAS &
-                  + NTAB  * 2 * EQVDSZ &
-                  + (N-1)     * EQCDSZ
+      base   =      eqvbas &
+                  + ntab  * 2 * eqvdsz &
+                  + (n-1)     * eqcdsz
 
 !
 !     Get the constraint type.
 !
-      CNSTYP  =  EQRYI ( BASE + EQCTYP )
+      cnstyp  =  eqryi ( base + eqctyp )
 
 !
 !     Get the LHS items.
 !
-      LTIDX  =  EQRYI ( BASE + EQLTAB - 1 + EQTORD )
-      TB     =  EQRYI ( BASE + EQLTAB - 1 + EQBSTR )
-      TE     =  EQRYI ( BASE + EQLTAB - 1 + EQESTR )
+      ltidx  =  eqryi ( base + eqltab - 1 + eqtord )
+      tb     =  eqryi ( base + eqltab - 1 + eqbstr )
+      te     =  eqryi ( base + eqltab - 1 + eqestr )
 
-      IF ( TB .NE. 0 ) THEN
-         LTNAME =  EQRYC ( TB:TE )
-      ELSE
-         LTNAME = ' '
-      END IF
+      if ( tb .ne. 0 ) then
+         ltname =  eqryc ( tb:te )
+      else
+         ltname = ' '
+      end if
 
-      LCIDX  =  EQRYI ( BASE + EQLCOL - 1 + EQCIDX )
-      CB     =  EQRYI ( BASE + EQLCOL - 1 + EQBSTR )
-      CE     =  EQRYI ( BASE + EQLCOL - 1 + EQESTR )
-      LCNAME =  EQRYC ( CB:CE )
+      lcidx  =  eqryi ( base + eqlcol - 1 + eqcidx )
+      cb     =  eqryi ( base + eqlcol - 1 + eqbstr )
+      ce     =  eqryi ( base + eqlcol - 1 + eqestr )
+      lcname =  eqryc ( cb:ce )
 
 !
 !     Next, the opcode.
 !
-      OPCODE =  EQRYI ( BASE + EQOPCD )
+      opcode =  eqryi ( base + eqopcd )
 
 !
 !     If the constraint compares two columns, get the RHS table and
 !     column info.
 !
-      IF ( CNSTYP .EQ. EQCOL ) THEN
+      if ( cnstyp .eq. eqcol ) then
 
-         RTIDX  =  EQRYI ( BASE + EQRTAB - 1 + EQTORD )
-         TB     =  EQRYI ( BASE + EQRTAB - 1 + EQBSTR )
-         TE     =  EQRYI ( BASE + EQRTAB - 1 + EQESTR )
+         rtidx  =  eqryi ( base + eqrtab - 1 + eqtord )
+         tb     =  eqryi ( base + eqrtab - 1 + eqbstr )
+         te     =  eqryi ( base + eqrtab - 1 + eqestr )
 
-         IF ( TB .NE. 0 ) THEN
-            RTNAME =  EQRYC ( TB:TE )
-         ELSE
-            RTNAME = ' '
-         END IF
+         if ( tb .ne. 0 ) then
+            rtname =  eqryc ( tb:te )
+         else
+            rtname = ' '
+         end if
 
-         RCIDX  =  EQRYI ( BASE + EQRCOL - 1 + EQCIDX )
-         CB     =  EQRYI ( BASE + EQRCOL - 1 + EQBSTR )
-         CE     =  EQRYI ( BASE + EQRCOL - 1 + EQESTR )
-         RCNAME =  EQRYC ( CB:CE )
+         rcidx  =  eqryi ( base + eqrcol - 1 + eqcidx )
+         cb     =  eqryi ( base + eqrcol - 1 + eqbstr )
+         ce     =  eqryi ( base + eqrcol - 1 + eqestr )
+         rcname =  eqryc ( cb:ce )
 
 !
 !        ...and clear out the scalar outputs.
 !
-         CBEG   =  1
-         CEND   =  1
-         DVAL   =  0.D0
-         IVAL   =  0
+         cbeg   =  1
+         cend   =  1
+         dval   =  0.d0
+         ival   =  0
 
 
-      ELSE
+      else
 !
 !        The constraint compares a column and a value.  Set the
 !        appropriate scalar output, and clear out the other outputs.
 !
-         IF ( ( OPCODE .EQ. ISNULL ) .OR. ( OPCODE .EQ. NOTNUL ) ) THEN
+         if ( ( opcode .eq. isnull ) .or. ( opcode .eq. notnul ) ) then
 !
 !           There's no output value; the opcode implies the value NULL.
 !           Set the outputs to innocuous defaults.
 !
-            CBEG = 1
-            CEND = 1
-            DVAL = 0.D0
-            IVAL = 0
+            cbeg = 1
+            cend = 1
+            dval = 0.d0
+            ival = 0
 
-         ELSE
+         else
 !
 !           This is the normal case; set the scalar output values
 !           according to the RHS data type.
 !
-            DTYPE  =  EQRYI ( BASE + EQBVAL - 1 + EQDTYP )
+            dtype  =  eqryi ( base + eqbval - 1 + eqdtyp )
 
-            IF ( DTYPE .EQ. CHR ) THEN
+            if ( dtype .eq. chr ) then
 
-               CBEG   =  EQRYI ( BASE + EQBVAL - 1 + EQBSTR )
-               CEND   =  EQRYI ( BASE + EQBVAL - 1 + EQESTR )
-               DVAL   =  0.D0
-               IVAL   =  0
+               cbeg   =  eqryi ( base + eqbval - 1 + eqbstr )
+               cend   =  eqryi ( base + eqbval - 1 + eqestr )
+               dval   =  0.d0
+               ival   =  0
 
-            ELSE IF ( DTYPE .EQ. INT ) THEN
+            else if ( dtype .eq. int ) then
 
-               PTR    =  EQRYI ( BASE + EQBVAL - 1 + EQVPTR )
-               IVAL   =  NINT  ( EQRYD(PTR) )
-               DVAL   =  0.D0
-               CBEG   =  1
-               CEND   =  1
+               ptr    =  eqryi ( base + eqbval - 1 + eqvptr )
+               ival   =  nint  ( eqryd(ptr) )
+               dval   =  0.d0
+               cbeg   =  1
+               cend   =  1
 
-            ELSE
+            else
 !
 !              The data type is DP or TIME.
 !
-               PTR    =  EQRYI ( BASE + EQBVAL - 1 + EQVPTR )
-               DVAL   =  EQRYD ( PTR )
-               IVAL   =  0
-               CBEG   =  1
-               CEND   =  1
+               ptr    =  eqryi ( base + eqbval - 1 + eqvptr )
+               dval   =  eqryd ( ptr )
+               ival   =  0
+               cbeg   =  1
+               cend   =  1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        Set the RHS table and column outputs.
 !
-         RTIDX  =  0
-         RTNAME =  ' '
-         RCIDX  =  0
-         RTNAME =  ' '
+         rtidx  =  0
+         rtname =  ' '
+         rcidx  =  0
+         rtname =  ' '
 
-      END IF
+      end if
 
 
-      RETURN
-      END
+      return
+      end

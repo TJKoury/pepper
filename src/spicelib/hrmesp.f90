@@ -1,6 +1,6 @@
 !$Procedure HRMESP ( Hermite polynomial interpolation, equal spacing )
 
-      SUBROUTINE HRMESP ( N,  FIRST,  STEP,  YVALS,  X,  WORK,  F,  DF )
+      subroutine hrmesp ( n,  first,  step,  yvals,  x,  work,  f,  df )
 
 ! $ Abstract
 !
@@ -19,16 +19,16 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INTEGER               N
-      DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      STEP
-      DOUBLE PRECISION      YVALS ( 2*N )
-      DOUBLE PRECISION      X
-      DOUBLE PRECISION      WORK  ( 2*N, 2 )
-      DOUBLE PRECISION      F
-      DOUBLE PRECISION      DF
+      integer               n
+      double precision      first
+      double precision      step
+      double precision      yvals ( 2*n )
+      double precision      x
+      double precision      work  ( 2*n, 2 )
+      double precision      f
+      double precision      df
 
 ! $ Brief_I/O
 !
@@ -254,60 +254,60 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      DOUBLE PRECISION      C1
-      DOUBLE PRECISION      C2
-      DOUBLE PRECISION      DENOM
-      DOUBLE PRECISION      NEWX
-      DOUBLE PRECISION      TEMP
-      DOUBLE PRECISION      XI
-      DOUBLE PRECISION      XIJ
+      double precision      c1
+      double precision      c2
+      double precision      denom
+      double precision      newx
+      double precision      temp
+      double precision      xi
+      double precision      xij
 
-      INTEGER               I
-      INTEGER               J
-      INTEGER               NEXT
-      INTEGER               PREV
-      INTEGER               THIS
+      integer               i
+      integer               j
+      integer               next
+      integer               prev
+      integer               this
 
 
 !
 !     Check in only if an error is detected.
 !
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
 !
 !     No data, no interpolation.
 !
-      IF ( N .LT. 1 ) THEN
+      if ( n .lt. 1 ) then
 
-         CALL CHKIN  ( 'HRMESP'                              )
-         CALL SETMSG ( 'Array size must be positive; was #.' )
-         CALL ERRINT ( '#',  N                               )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                  )
-         CALL CHKOUT ( 'HRMESP'                              )
-         RETURN
+         call chkin  ( 'HRMESP'                              )
+         call setmsg ( 'Array size must be positive; was #.' )
+         call errint ( '#',  n                               )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                  )
+         call chkout ( 'HRMESP'                              )
+         return
 
-      END IF
+      end if
 
 
 !
 !     The step size must be non-zero.
 !
-      IF ( STEP .EQ. 0.D0 ) THEN
+      if ( step .eq. 0.d0 ) then
 
-         CALL CHKIN  ( 'HRMESP'                 )
-         CALL SETMSG ( 'Step size was zero.'    )
-         CALL SIGERR ( 'SPICE(INVALIDSTEPSIZE)' )
-         CALL CHKOUT ( 'HRMESP'                 )
-         RETURN
+         call chkin  ( 'HRMESP'                 )
+         call setmsg ( 'Step size was zero.'    )
+         call sigerr ( 'SPICE(INVALIDSTEPSIZE)' )
+         call chkout ( 'HRMESP'                 )
+         return
 
-      END IF
+      end if
 
 !
 !     We can simplify the interpolation problem by shifting
@@ -315,7 +315,7 @@
 !     and are separated by a unit step. All we need to do here is
 !     shift and scale X.
 !
-      NEWX  =  (  ( X - FIRST ) / STEP  )  +  1.D0
+      newx  =  (  ( x - first ) / step  )  +  1.d0
 
 !
 !     For consistency with our scaled horizontal axis, we'll have
@@ -326,13 +326,13 @@
 !     step. After this, the first column of WORK represents the first
 !     column of our triangular interpolation table.
 !
-      DO I = 1, 2*N-1, 2
-         WORK(I,1) = YVALS(I)
-      END DO
+      do i = 1, 2*n-1, 2
+         work(i,1) = yvals(i)
+      end do
 
-      DO I = 2, 2*N, 2
-         WORK(I,1) = YVALS(I) * STEP
-      END DO
+      do i = 2, 2*n, 2
+         work(i,1) = yvals(i) * step
+      end do
 
 !
 !     Compute the second column of the interpolation table: this
@@ -346,10 +346,10 @@
 !     we must evaluate the derivatives first.
 !
 
-      DO I = 1, N-1
+      do i = 1, n-1
 
-         C1     = DBLE( (I+1) )  - NEWX
-         C2     =  NEWX  - DBLE(I)
+         c1     = dble( (i+1) )  - newx
+         c2     =  newx  - dble(i)
 
 !
 !        The second column of WORK contains interpolated derivative
@@ -358,48 +358,48 @@
 !        The odd-indexed interpolated derivatives are simply the input
 !        derivatives, after scaling.
 !
-         PREV = 2*I  - 1
-         THIS = PREV + 1
-         NEXT = THIS + 1
+         prev = 2*i  - 1
+         this = prev + 1
+         next = this + 1
 
-         WORK( PREV,  2 )  =    WORK( THIS, 1 )
+         work( prev,  2 )  =    work( this, 1 )
 
 !
 !        The even-indexed interpolated derivatives are the slopes of
 !        the linear interpolating polynomials for adjacent input
 !        abscissa/ordinate pairs. No scaling is needed here.
 !
-         WORK( THIS, 2 ) = ( WORK(NEXT, 1) - WORK(PREV, 1) )
+         work( this, 2 ) = ( work(next, 1) - work(prev, 1) )
 
 !
 !        The first column of WORK contains interpolated function values.
 !        The odd-indexed entries are the linear Taylor polynomials,
 !        each input abscissa value, evaluated at NEWX.
 !
-         TEMP  = WORK(THIS, 1) * ( NEWX - DBLE(I) )  +  WORK(PREV, 1)
+         temp  = work(this, 1) * ( newx - dble(i) )  +  work(prev, 1)
 
 
-         WORK( THIS, 1 ) = (   C1 * WORK( PREV, 1 ) &
-                             + C2 * WORK( NEXT, 1 )  )
+         work( this, 1 ) = (   c1 * work( prev, 1 ) &
+                             + c2 * work( next, 1 )  )
 
-         WORK( PREV, 1 ) = TEMP
+         work( prev, 1 ) = temp
 
-      END DO
+      end do
 
 !
 !     The last column entries were not computed by the preceding loop;
 !     compute them now.
 !
-      WORK ( 2*N - 1,  2 )  =    WORK( 2*N,     1 )
-      WORK ( 2*N - 1,  1 )  =    WORK( 2*N,     1 ) * ( NEWX - N ) &
-                               + WORK( 2*N - 1, 1 )
+      work ( 2*n - 1,  2 )  =    work( 2*n,     1 )
+      work ( 2*n - 1,  1 )  =    work( 2*n,     1 ) * ( newx - n ) &
+                               + work( 2*n - 1, 1 )
 
 !
 !     Compute columns 3 through 2*N of the table.
 !
-      DO J = 2, 2*N-1
+      do j = 2, 2*n-1
 
-         DO I = 1, 2*N-J
+         do i = 1, 2*n-j
 !
 !           In the theoretical construction of the interpolation table,
 !           there are 2*N abscissa values, since each input abscissa
@@ -410,13 +410,13 @@
 !           are used to pick the correct abscissa values out of this
 !           sequence of 2*N values.
 !
-            XI       =   DBLE( ( I     + 1 ) / 2 )
-            XIJ      =   DBLE( ( I + J + 1 ) / 2 )
+            xi       =   dble( ( i     + 1 ) / 2 )
+            xij      =   dble( ( i + j + 1 ) / 2 )
 
-            C1       =     XIJ   -  NEWX
-            C2       =     NEWX  -  XI
+            c1       =     xij   -  newx
+            c2       =     newx  -  xi
 
-            DENOM    =     XIJ   -  XI
+            denom    =     xij   -  xi
 
 !
 !           Compute the interpolated derivative at NEWX for the Ith
@@ -429,18 +429,18 @@
 !           The derivative expression here corresponds to equation
 !           2.35 on page 64 in reference [2].
 !
-            WORK(I,2) = (              C1  * WORK(I,   2) &
-                          +            C2  * WORK(I+1, 2) &
-                          + ( WORK(I+1, 1) - WORK(I,   1) )  )  / DENOM
+            work(i,2) = (              c1  * work(i,   2) &
+                          +            c2  * work(i+1, 2) &
+                          + ( work(i+1, 1) - work(i,   1) )  )  / denom
 !
 !           Compute the interpolated function value at NEWX for the Ith
 !           interpolant.
 !
-            WORK(I,1) = ( C1 * WORK(I,1)  +  C2 * WORK(I+1,1) ) / DENOM
+            work(i,1) = ( c1 * work(i,1)  +  c2 * work(i+1,1) ) / denom
 
-         END DO
+         end do
 
-      END DO
+      end do
 
 !
 !     Our interpolated function value is sitting in WORK(1,1) at this
@@ -448,8 +448,8 @@
 !     We must undo the scaling of the derivative. We've already
 !     checked that STEP is non-zero.
 !
-      F   =  WORK( 1, 1 )
-      DF  =  WORK( 1, 2 )  /  STEP
+      f   =  work( 1, 1 )
+      df  =  work( 1, 2 )  /  step
 
-      RETURN
-      END
+      return
+      end

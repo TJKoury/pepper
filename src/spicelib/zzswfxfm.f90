@@ -1,6 +1,6 @@
 !$Procedure ZZSWFXFM ( Private, get switch frame transformation )
 
-      SUBROUTINE ZZSWFXFM ( INFRM, ET, NDIM, XFORM, OUTFRM, FOUND )
+      subroutine zzswfxfm ( infrm, et, ndim, xform, outfrm, found )
 
 ! $ Abstract
 !
@@ -23,18 +23,18 @@
 !
 ! $ Declarations
 
-      IMPLICIT NONE
+      implicit none
 
-      INCLUDE              'frmtyp.inc'
-      INCLUDE              'zzswtchf.inc'
-      INCLUDE              'zzctr.inc'
+      include              'frmtyp.inc'
+      include              'zzswtchf.inc'
+      include              'zzctr.inc'
 
-      INTEGER               INFRM
-      DOUBLE PRECISION      ET
-      INTEGER               NDIM
-      DOUBLE PRECISION      XFORM ( NDIM, NDIM )
-      INTEGER               OUTFRM
-      LOGICAL               FOUND
+      integer               infrm
+      double precision      et
+      integer               ndim
+      double precision      xform ( ndim, ndim )
+      integer               outfrm
+      logical               found
 
 ! $ Brief_I/O
 !
@@ -267,10 +267,10 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
+      logical               failed
+      logical               return
 
-      INTEGER               LSTLED
+      integer               lstled
 
 !
 !     Local parameters
@@ -279,34 +279,34 @@
 !
 !     ID code of the J2000 frame:
 !
-      INTEGER               J2CODE
-      PARAMETER           ( J2CODE = 1 )
+      integer               j2code
+      parameter           ( j2code = 1 )
 
 !
 !     Size of linked list pool:
 !
 !     The add-only hash pool for frame IDs is singly linked.
 !
-      INTEGER               FPLSIZ
-      PARAMETER           ( FPLSIZ = MAXFRM - LBSNGL + 1 )
+      integer               fplsiz
+      parameter           ( fplsiz = maxfrm - lbsngl + 1 )
 
 !
 !     Dimensions
 !
-      INTEGER               D3
-      PARAMETER           ( D3 = 3 )
+      integer               d3
+      parameter           ( d3 = 3 )
 
-      INTEGER               D6
-      PARAMETER           ( D6 = 6 )
+      integer               d6
+      parameter           ( d6 = 6 )
 
 !
 !     Matrix sizes.
 !
-      INTEGER               SIZE33
-      PARAMETER           ( SIZE33 =  9 )
+      integer               size33
+      parameter           ( size33 =  9 )
 
-      INTEGER               SIZE66
-      PARAMETER           ( SIZE66 = 36 )
+      integer               size66
+      parameter           ( size66 = 36 )
 
 !
 !     Local variables
@@ -365,154 +365,154 @@
 !     Each base frame list for a given switch frame is ordered
 !     according to ascending priority.
 !
-      DOUBLE PRECISION      STARTS ( MAXBAS )
-      DOUBLE PRECISION      STOPS  ( MAXBAS )
+      double precision      starts ( maxbas )
+      double precision      stops  ( maxbas )
 
-      INTEGER               BASBEG ( MAXFRM )
-      INTEGER               BASCNT ( MAXFRM )
-      INTEGER               BASLST ( MAXBAS )
-      INTEGER               CLSIDS ( MAXBAS )
-      INTEGER               CLSSES ( MAXBAS )
-      INTEGER               FIDLST ( MAXFRM )
-      INTEGER               FRPOOL ( LBSNGL : MAXFRM )
-      INTEGER               HDFRAM ( MAXFRM )
+      integer               basbeg ( maxfrm )
+      integer               bascnt ( maxfrm )
+      integer               baslst ( maxbas )
+      integer               clsids ( maxbas )
+      integer               clsses ( maxbas )
+      integer               fidlst ( maxfrm )
+      integer               frpool ( lbsngl : maxfrm )
+      integer               hdfram ( maxfrm )
 
-      LOGICAL               BINARY ( MAXFRM )
-      LOGICAL               USETIM ( MAXFRM )
+      logical               binary ( maxfrm )
+      logical               usetim ( maxfrm )
 
 !
 !     Other declarations
 !
-      DOUBLE PRECISION      RMAT   ( 3, 3 )
-      DOUBLE PRECISION      TSIPM  ( 6, 6 )
-      DOUBLE PRECISION      XIDENT ( 6, 6 )
+      double precision      rmat   ( 3, 3 )
+      double precision      tsipm  ( 6, 6 )
+      double precision      xident ( 6, 6 )
 
-      INTEGER               BASIDX
-      INTEGER               FRAMAT
-      INTEGER               FREE
-      INTEGER               HEAD
-      INTEGER               I
-      INTEGER               J
-      INTEGER               LB
-      INTEGER               LSTBEG
-      INTEGER               POLCTR ( CTRSIZ )
-      INTEGER               PRVAT
-      INTEGER               PRVFRM
+      integer               basidx
+      integer               framat
+      integer               free
+      integer               head
+      integer               i
+      integer               j
+      integer               lb
+      integer               lstbeg
+      integer               polctr ( ctrsiz )
+      integer               prvat
+      integer               prvfrm
 
-      LOGICAL               PASS1
-      LOGICAL               SAMFRM
-      LOGICAL               TIMEOK
-      LOGICAL               UPDATE
+      logical               pass1
+      logical               samfrm
+      logical               timeok
+      logical               update
 
 !
 !     Saved variables
 !
-      SAVE                  BASBEG
-      SAVE                  BASCNT
-      SAVE                  BASLST
-      SAVE                  CLSIDS
-      SAVE                  CLSSES
-      SAVE                  BINARY
-      SAVE                  FIDLST
-      SAVE                  FREE
-      SAVE                  FRPOOL
-      SAVE                  HDFRAM
-      SAVE                  PASS1
-      SAVE                  POLCTR
-      SAVE                  PRVAT
-      SAVE                  PRVFRM
-      SAVE                  STARTS
-      SAVE                  STOPS
-      SAVE                  USETIM
-      SAVE                  XIDENT
+      save                  basbeg
+      save                  bascnt
+      save                  baslst
+      save                  clsids
+      save                  clsses
+      save                  binary
+      save                  fidlst
+      save                  free
+      save                  frpool
+      save                  hdfram
+      save                  pass1
+      save                  polctr
+      save                  prvat
+      save                  prvfrm
+      save                  starts
+      save                  stops
+      save                  usetim
+      save                  xident
 
 !
 !     Initial values
 !
-      DATA                  BASBEG / MAXFRM * 0       /
-      DATA                  BASCNT / MAXFRM * 0       /
-      DATA                  BASLST / MAXBAS * 0       /
-      DATA                  CLSIDS / MAXBAS * 0       /
-      DATA                  CLSSES / MAXBAS * 0       /
-      DATA                  BINARY / MAXFRM * .FALSE. /
-      DATA                  FIDLST / MAXFRM * 0       /
-      DATA                  FREE   / 1                /
-      DATA                  FRPOOL / FPLSIZ * 0       /
-      DATA                  HDFRAM / MAXFRM * 0       /
-      DATA                  PASS1  / .TRUE.           /
-      DATA                  PRVAT  / 0                /
-      DATA                  PRVFRM / 0                /
-      DATA                  STARTS / MAXBAS * 0.D0    /
-      DATA                  STOPS  / MAXBAS * 0.D0    /
-      DATA                  USETIM / MAXFRM * .FALSE. /
+      data                  basbeg / maxfrm * 0       /
+      data                  bascnt / maxfrm * 0       /
+      data                  baslst / maxbas * 0       /
+      data                  clsids / maxbas * 0       /
+      data                  clsses / maxbas * 0       /
+      data                  binary / maxfrm * .false. /
+      data                  fidlst / maxfrm * 0       /
+      data                  free   / 1                /
+      data                  frpool / fplsiz * 0       /
+      data                  hdfram / maxfrm * 0       /
+      data                  pass1  / .true.           /
+      data                  prvat  / 0                /
+      data                  prvfrm / 0                /
+      data                  starts / maxbas * 0.d0    /
+      data                  stops  / maxbas * 0.d0    /
+      data                  usetim / maxfrm * .false. /
 
-      IF ( RETURN() ) THEN
-         RETURN
-      END IF
+      if ( return() ) then
+         return
+      end if
 
-      CALL CHKIN ( 'ZZSWFXFM' )
+      call chkin ( 'ZZSWFXFM' )
 
 !
 !     No frame found yet.
 !
-      FOUND = .FALSE.
+      found = .false.
 
-      IF ( PASS1 ) THEN
+      if ( pass1 ) then
 !
 !        Initialize pool data structures.
 !
-         CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                         FREE,   PRVAT,  PRVFRM, SAMFRM  )
+         call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                         free,   prvat,  prvfrm, samfrm  )
 !
 !        Initialize the local pool counter.
 !
-         CALL ZZCTRUIN ( POLCTR )
+         call zzctruin ( polctr )
 !
 !        Note: no FAILED() check is needed after the two calls above.
 !
 !        Create a 6x6 identity matrix.
 !
-         CALL FILLD( 0.D0, SIZE66, XIDENT )
+         call filld( 0.d0, size66, xident )
 
-         DO I = 1, 6
-            XIDENT(I,I) = 1.D0
-         END DO
+         do i = 1, 6
+            xident(i,i) = 1.d0
+         end do
 
-         PASS1 = .FALSE.
+         pass1 = .false.
 
-      END IF
+      end if
 
 !
 !     Check the transformation dimension.
 !
-      IF (  ( NDIM .NE. D3 ) .AND. ( NDIM .NE. D6 )  ) THEN
+      if (  ( ndim .ne. d3 ) .and. ( ndim .ne. d6 )  ) then
 
-         CALL SETMSG ( 'Transformation dimension must ' &
+         call setmsg ( 'Transformation dimension must ' &
          //            'be 3 or 6 but was #.'           )
-         CALL ERRINT ( '#', NDIM                        )
-         CALL SIGERR ( 'SPICE(BADDIMENSION)'            )
-         CALL CHKOUT ( 'ZZSWFXFM'                       )
-         RETURN
+         call errint ( '#', ndim                        )
+         call sigerr ( 'SPICE(BADDIMENSION)'            )
+         call chkout ( 'ZZSWFXFM'                       )
+         return
 
-      END IF
+      end if
 
 !
 !     Reinitialize local database if the kernel pool has been
 !     updated. The call below syncs POLCTR.
 !
-      CALL ZZPCTRCK ( POLCTR, UPDATE )
+      call zzpctrck ( polctr, update )
 
-      IF ( UPDATE ) THEN
+      if ( update ) then
 !
 !        Initialize local data structures.
 !
-         CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                         FREE,   PRVAT,  PRVFRM, SAMFRM  )
+         call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                         free,   prvat,  prvfrm, samfrm  )
 
 !
 !        SAMFRM is set to .FALSE. and PRVFRM is set to 0 at this point.
 !
-      ELSE
+      else
 !
 !        SAMFRM indicates that INFRM is the same switch frame we saw on
 !        the previous call, no kernel pool update has occurred since
@@ -521,50 +521,50 @@
 !        those, we set PRVFRM to zero so that it won't match any valid
 !        frame ID.
 !
-         SAMFRM = ( INFRM .NE. 0 ) .AND. ( INFRM .EQ. PRVFRM )
+         samfrm = ( infrm .ne. 0 ) .and. ( infrm .eq. prvfrm )
 
-      END IF
+      end if
 
-      IF ( SAMFRM ) THEN
+      if ( samfrm ) then
 !
 !        We can use information saved from the previous call. FRAMAT is
 !        the index of the switch frame ID in the switch frame ID array.
 !
-         FRAMAT = PRVAT
+         framat = prvat
 
-      ELSE
+      else
 !
 !        Look up the input frame.
 !
-         CALL ZZHSICHK ( HDFRAM, FRPOOL, FIDLST, INFRM, FRAMAT )
+         call zzhsichk ( hdfram, frpool, fidlst, infrm, framat )
 
-      END IF
+      end if
 
-      IF ( FRAMAT .EQ. 0 ) THEN
+      if ( framat .eq. 0 ) then
 !
 !        This frame is unknown to the switch frame subsystem. Try to
 !        look up the frame's specification from the kernel pool.
 !        ZZSWFFET checks and returns the frame specification.
 !
-         CALL ZZSWFFET ( INFRM,  HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                         FREE,   BASCNT, USETIM, BINARY, CLSSES, &
-                         CLSIDS, BASLST, STARTS, STOPS,  FRAMAT )
+         call zzswffet ( infrm,  hdfram, frpool, fidlst, basbeg, &
+                         free,   bascnt, usetim, binary, clsses, &
+                         clsids, baslst, starts, stops,  framat )
 
-         IF (  FAILED()  .OR.  ( FRAMAT .EQ. 0 )  ) THEN
+         if (  failed()  .or.  ( framat .eq. 0 )  ) then
 !
 !           We were unable to obtain information for the requested
 !           frame. Initialize all information about the previous frame.
 !           For safety, initialize the local database.
 !
-            CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                            FREE,   PRVAT,  PRVFRM, SAMFRM  )
+            call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                            free,   prvat,  prvfrm, samfrm  )
 
-            CALL CHKOUT ( 'ZZSWFXFM' )
-            RETURN
+            call chkout ( 'ZZSWFXFM' )
+            return
 
-         END IF
+         end if
 
-      END IF
+      end if
 
 !
 !     At this point, FRAMAT is set.
@@ -575,7 +575,7 @@
 !     base frame count to HEAD is the successor of the last index of
 !     base frame data for that switch frame.
 !
-      HEAD = BASBEG( FRAMAT )
+      head = basbeg( framat )
 
 !
 !     At this point, the frame's information is present in the
@@ -588,16 +588,16 @@
 !
 !     For safety, reset FOUND.
 !
-      FOUND = .FALSE.
+      found = .false.
 
-      IF ( BINARY(FRAMAT) ) THEN
+      if ( binary(framat) ) then
 !
 !        We'll do a binary search. Suppress follow-on linear searching
 !        and frame data lookup by default: when BASIDX is zero, the
 !        linear search and data fetch loop won't execute. We'll update
 !        BASIDX if an interval is found.
 !
-         BASIDX = 0
+         basidx = 0
 
 !
 !        Find the last interval, if any, that contains ET. Start by
@@ -606,59 +606,59 @@
 !        Here we rely on the assumption that start and stop times for
 !        each frame are stored in increasing time order.
 !
-         LSTBEG = LSTLED( ET, BASCNT(FRAMAT), STARTS(HEAD) )
+         lstbeg = lstled( et, bascnt(framat), starts(head) )
 
 !
 !        If LSTBEG is zero, then ET is strictly less than all of the
 !        start times, in which case there's no match.
 !
-         IF ( LSTBEG .GT. 0 ) THEN
+         if ( lstbeg .gt. 0 ) then
 !
 !           ET could belong to the interval having start time stored at
 !           relative index LSTBEG, which is equivalent to the base
 !           frame array index HEAD+LSTBEG-1.
 !
-            IF (  ET .LE. STOPS( HEAD+LSTBEG-1 )  ) THEN
+            if (  et .le. stops( head+lstbeg-1 )  ) then
 !
 !              This interval contains ET. Prepare to fetch data for
 !              the base frame corresponding to this interval.
 !
-               BASIDX = HEAD + LSTBEG - 1
+               basidx = head + lstbeg - 1
 
-            END IF
+            end if
 
-         END IF
+         end if
 
-      ELSE
+      else
 !
 !        Prepare for a linear search and fetching base frame data.
 !
-         BASIDX = HEAD + BASCNT(FRAMAT) - 1
+         basidx = head + bascnt(framat) - 1
 
-      END IF
+      end if
 
 !
 !     Search the base list in order of decreasing priority. The search
 !     will terminate once we've examined the base frame at index LB,
 !     if not before.
 !
-      LB = HEAD
+      lb = head
 
-      DO WHILE (  ( BASIDX .GE. LB ) .AND. ( .NOT. FOUND )  )
+      do while (  ( basidx .ge. lb ) .and. ( .not. found )  )
 
-         IF (  USETIM( FRAMAT )  ) THEN
+         if (  usetim( framat )  ) then
 
-            TIMEOK =       ( ET .GE. STARTS(BASIDX) ) &
-                     .AND. ( ET .LE. STOPS (BASIDX) )
-         ELSE
-            TIMEOK = .FALSE.
-         END IF
+            timeok =       ( et .ge. starts(basidx) ) &
+                     .and. ( et .le. stops (basidx) )
+         else
+            timeok = .false.
+         end if
 
-         IF (  TIMEOK .OR. ( .NOT. USETIM(FRAMAT) )  ) THEN
+         if (  timeok .or. ( .not. usetim(framat) )  ) then
 !
 !           This base frame is applicable.
 !
-            IF ( CLSSES(BASIDX) .EQ. CK ) THEN
+            if ( clsses(basidx) .eq. ck ) then
 !
 !              We can't know whether there are CK data for the request
 !              time without looking up the data, so that's what we do.
@@ -666,47 +666,47 @@
 !              frame's base frame and the frame ID of the CK frame's
 !              base frame.
 !
-               IF ( NDIM .EQ. D6 ) THEN
+               if ( ndim .eq. d6 ) then
 
-                  CALL CKFXFM ( CLSIDS(BASIDX), ET, &
-                                XFORM, OUTFRM,  FOUND )
-               ELSE
+                  call ckfxfm ( clsids(basidx), et, &
+                                xform, outfrm,  found )
+               else
 
-                  CALL CKFROT ( CLSIDS(BASIDX), ET, &
-                                XFORM, OUTFRM,  FOUND )
-               END IF
+                  call ckfrot ( clsids(basidx), et, &
+                                xform, outfrm,  found )
+               end if
 
-               IF ( FAILED() ) THEN
+               if ( failed() ) then
 
-                  CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                                  FREE,   PRVAT,  PRVFRM, SAMFRM  )
+                  call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                                  free,   prvat,  prvfrm, samfrm  )
 
-                  CALL CHKOUT ( 'ZZSWFXFM' )
-                  RETURN
+                  call chkout ( 'ZZSWFXFM' )
+                  return
 
-               END IF
+               end if
 
 !
 !              If we got this far and we're in binary search mode, we
 !              won't find a result, except possibly when ET is equal to
 !              the interval start time.
 !
-               IF ( BINARY(FRAMAT) .AND. ( .NOT. FOUND ) ) THEN
+               if ( binary(framat) .and. ( .not. found ) ) then
 
-                  IF ( ET .GT. STARTS(BASIDX) ) THEN
+                  if ( et .gt. starts(basidx) ) then
 !
 !                    The next lowest-indexed interval doesn't cover ET,
 !                    so no data can be found to satisfy this request.
 !
-                     PRVFRM = 0
-                     PRVAT  = 0
+                     prvfrm = 0
+                     prvat  = 0
 
-                     CALL CHKOUT ( 'ZZSWFXFM' )
-                     RETURN
+                     call chkout ( 'ZZSWFXFM' )
+                     return
 
-                  END IF
+                  end if
 
-               END IF
+               end if
 !
 !              FOUND is set. If we did find data, XFORM and OUTFRM
 !              are set. If FOUND is .FALSE., we'll look at the
@@ -716,119 +716,119 @@
 !              equal to the interval start time.
 !
 
-            ELSE IF ( CLSSES(BASIDX) .EQ. TK ) THEN
+            else if ( clsses(basidx) .eq. tk ) then
 
-               CALL TKFRAM ( CLSIDS(BASIDX), RMAT, OUTFRM, FOUND )
+               call tkfram ( clsids(basidx), rmat, outfrm, found )
 
-               IF ( FAILED() ) THEN
+               if ( failed() ) then
 
-                  FOUND  = .FALSE.
+                  found  = .false.
 
-                  CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                                  FREE,   PRVAT,  PRVFRM, SAMFRM  )
+                  call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                                  free,   prvat,  prvfrm, samfrm  )
 
-                  CALL CHKOUT ( 'ZZSWFXFM' )
-                  RETURN
+                  call chkout ( 'ZZSWFXFM' )
+                  return
 
-               END IF
+               end if
 
-               IF ( NDIM .EQ. D6 ) THEN
+               if ( ndim .eq. d6 ) then
 
-                  DO I = 1,3
-                     DO J = 1,3
-                        XFORM(I,  J  ) = RMAT(I,J)
-                        XFORM(I+3,J+3) = RMAT(I,J)
-                        XFORM(I+3,J  ) = 0.0D0
-                        XFORM(I,  J+3) = 0.0D0
-                     END DO
-                  END DO
+                  do i = 1,3
+                     do j = 1,3
+                        xform(i,  j  ) = rmat(i,j)
+                        xform(i+3,j+3) = rmat(i,j)
+                        xform(i+3,j  ) = 0.0d0
+                        xform(i,  j+3) = 0.0d0
+                     end do
+                  end do
 
-               ELSE
-                  CALL MOVED( RMAT, SIZE33, XFORM )
-               END IF
+               else
+                  call moved( rmat, size33, xform )
+               end if
 !
 !              OUTFRM and FOUND have been set by TKFRAM.
 !
 
-            ELSE IF ( CLSSES(BASIDX) .EQ. PCK ) THEN
+            else if ( clsses(basidx) .eq. pck ) then
 
-               IF ( NDIM .EQ. D6 ) THEN
+               if ( ndim .eq. d6 ) then
 
-                  CALL TISBOD ( 'J2000', CLSIDS(BASIDX), ET, TSIPM )
-                  CALL INVSTM ( TSIPM, XFORM )
-               ELSE
-                  CALL TIPBOD ( 'J2000', CLSIDS(BASIDX), ET, RMAT  )
-                  CALL XPOSE  ( RMAT,  XFORM )
-               END IF
+                  call tisbod ( 'J2000', clsids(basidx), et, tsipm )
+                  call invstm ( tsipm, xform )
+               else
+                  call tipbod ( 'J2000', clsids(basidx), et, rmat  )
+                  call xpose  ( rmat,  xform )
+               end if
 
-               IF ( FAILED() ) THEN
+               if ( failed() ) then
 
-                  FOUND  = .FALSE.
+                  found  = .false.
 
-                  CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                                  FREE,   PRVAT,  PRVFRM, SAMFRM  )
+                  call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                                  free,   prvat,  prvfrm, samfrm  )
 
-                  CALL CHKOUT ( 'ZZSWFXFM' )
-                  RETURN
+                  call chkout ( 'ZZSWFXFM' )
+                  return
 
-               END IF
+               end if
 
-               OUTFRM = J2CODE
-               FOUND  = .TRUE.
+               outfrm = j2code
+               found  = .true.
 
 
-            ELSE IF ( CLSSES(BASIDX) .EQ. INERTL ) THEN
+            else if ( clsses(basidx) .eq. inertl ) then
 
-               CALL IRFROT ( BASLST(BASIDX), J2CODE, RMAT )
+               call irfrot ( baslst(basidx), j2code, rmat )
 
-               IF ( FAILED() ) THEN
+               if ( failed() ) then
 
-                  FOUND  = .FALSE.
+                  found  = .false.
 
-                  CALL ZZSWFINI ( HDFRAM, FRPOOL, FIDLST, BASBEG, &
-                                  FREE,   PRVAT,  PRVFRM, SAMFRM )
+                  call zzswfini ( hdfram, frpool, fidlst, basbeg, &
+                                  free,   prvat,  prvfrm, samfrm )
 
-                  CALL CHKOUT ( 'ZZSWFXFM' )
-                  RETURN
+                  call chkout ( 'ZZSWFXFM' )
+                  return
 
-               END IF
+               end if
 
-               IF ( NDIM .EQ. D6 ) THEN
+               if ( ndim .eq. d6 ) then
 
-                  DO I = 1,3
-                     DO J = 1,3
-                        XFORM(I,  J  ) = RMAT(I,J)
-                        XFORM(I+3,J+3) = RMAT(I,J)
-                        XFORM(I+3,J  ) = 0.0D0
-                        XFORM(I,  J+3) = 0.0D0
-                     END DO
-                  END DO
+                  do i = 1,3
+                     do j = 1,3
+                        xform(i,  j  ) = rmat(i,j)
+                        xform(i+3,j+3) = rmat(i,j)
+                        xform(i+3,j  ) = 0.0d0
+                        xform(i,  j+3) = 0.0d0
+                     end do
+                  end do
 
-               ELSE
-                  CALL MOVED( RMAT, SIZE33, XFORM )
-               END IF
+               else
+                  call moved( rmat, size33, xform )
+               end if
 
-               OUTFRM = J2CODE
-               FOUND  = .TRUE.
+               outfrm = j2code
+               found  = .true.
 
-            ELSE
+            else
 !
 !              For other non-CK frames---switch and dynamic---we just
 !              return the base frame and the identity matrix.
 !
-               IF ( NDIM .EQ. D6 ) THEN
+               if ( ndim .eq. d6 ) then
 
-                  CALL MOVED ( XIDENT, SIZE66, XFORM )
-               ELSE
-                  CALL IDENT ( XFORM )
-               END IF
+                  call moved ( xident, size66, xform )
+               else
+                  call ident ( xform )
+               end if
 
-               OUTFRM = BASLST( BASIDX )
-               FOUND  = .TRUE.
+               outfrm = baslst( basidx )
+               found  = .true.
 
-            END IF
+            end if
 
-         END IF
+         end if
 
 !
 !        If we got this far and we're in binary search mode,
@@ -837,9 +837,9 @@
 !
 !        Check the next lower priority base frame and interval.
 !
-         BASIDX = BASIDX - 1
+         basidx = basidx - 1
 
-      END DO
+      end do
 
 !
 !     FOUND is set.
@@ -847,21 +847,21 @@
 !     We either found data, or we ran out of base frames to try.
 !     If we found data, the outputs XFORM and OUTFRM are set.
 !
-      IF ( FOUND ) THEN
+      if ( found ) then
 !
 !        Save values for re-use.
 !
-         PRVFRM = INFRM
-         PRVAT  = FRAMAT
+         prvfrm = infrm
+         prvat  = framat
 
-      ELSE
+      else
 !
 !        Ensure the saved values won't be re-used.
 !
-         PRVFRM = 0
+         prvfrm = 0
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZSWFXFM' )
-      RETURN
-      END
+      call chkout ( 'ZZSWFXFM' )
+      return
+      end

@@ -1,7 +1,7 @@
 !$Procedure     ZZEKAC09 ( EK, add class 9 column to segment )
 
-      SUBROUTINE ZZEKAC09 (  HANDLE,  SEGDSC,  COLDSC, &
-                             CVALS,   NLFLGS,  WKINDX  )
+      subroutine zzekac09 (  handle,  segdsc,  coldsc, &
+                             cvals,   nlflgs,  wkindx  )
 
 ! $ Abstract
 !
@@ -17,21 +17,21 @@
 !
 ! $ Declarations
 
-      INCLUDE  'ekbool.inc'
-      INCLUDE  'ekclas09.inc'
-      INCLUDE  'ekcnamsz.inc'
-      INCLUDE  'ekcoldsc.inc'
-      INCLUDE  'ekdatpag.inc'
-      INCLUDE  'ekpage.inc'
-      INCLUDE  'eksegdsc.inc'
-      INCLUDE  'ektype.inc'
+      include  'ekbool.inc'
+      include  'ekclas09.inc'
+      include  'ekcnamsz.inc'
+      include  'ekcoldsc.inc'
+      include  'ekdatpag.inc'
+      include  'ekpage.inc'
+      include  'eksegdsc.inc'
+      include  'ektype.inc'
 
-      INTEGER               HANDLE
-      INTEGER               SEGDSC ( * )
-      INTEGER               COLDSC ( * )
-      CHARACTER*(*)         CVALS  ( * )
-      LOGICAL               NLFLGS ( * )
-      INTEGER               WKINDX ( * )
+      integer               handle
+      integer               segdsc ( * )
+      integer               coldsc ( * )
+      character*(*)         cvals  ( * )
+      logical               nlflgs ( * )
+      integer               wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -153,223 +153,223 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
+      logical               return
 
 !
 !     Local variables
 !
-      CHARACTER*(CNAMSZ)    COLUMN
-      CHARACTER*(PGSIZC)    PAGE
+      character*(cnamsz)    column
+      character*(pgsizc)    page
 
-      INTEGER               CLASS
-      INTEGER               CMBASE
-      INTEGER               COLIDX
-      INTEGER               DATBAS
-      INTEGER               DSCBAS
-      INTEGER               FROM
-      INTEGER               IDXBAS
-      INTEGER               IDXPAG
-      INTEGER               IDXTYP
-      INTEGER               P
-      INTEGER               L
-      INTEGER               MBASE
-      INTEGER               NFLBAS
-      INTEGER               NFLPAG
-      INTEGER               NPAGE
-      INTEGER               NROWS
-      INTEGER               NULPTR
-      INTEGER               SPP
-      INTEGER               TO
+      integer               class
+      integer               cmbase
+      integer               colidx
+      integer               datbas
+      integer               dscbas
+      integer               from
+      integer               idxbas
+      integer               idxpag
+      integer               idxtyp
+      integer               p
+      integer               l
+      integer               mbase
+      integer               nflbas
+      integer               nflpag
+      integer               npage
+      integer               nrows
+      integer               nulptr
+      integer               spp
+      integer               to
 
-      LOGICAL               FIXLEN
-      LOGICAL               INDEXD
-      LOGICAL               NULLOK
+      logical               fixlen
+      logical               indexd
+      logical               nullok
 
 !
 !     Standard SPICE error handling.
 !
-      IF ( RETURN () ) THEN
-         RETURN
-      ELSE
-         CALL CHKIN ( 'ZZEKAC09' )
-      END IF
+      if ( return () ) then
+         return
+      else
+         call chkin ( 'ZZEKAC09' )
+      end if
 
 !
 !     Grab the column's attributes.  Initialize the maximum non-blank
 !     width of the column.
 !
-      CLASS  =  COLDSC ( CLSIDX )
-      IDXTYP =  COLDSC ( IXTIDX )
-      NULPTR =  COLDSC ( NFLIDX )
-      COLIDX =  COLDSC ( ORDIDX )
-      L      =  COLDSC ( LENIDX )
+      class  =  coldsc ( clsidx )
+      idxtyp =  coldsc ( ixtidx )
+      nulptr =  coldsc ( nflidx )
+      colidx =  coldsc ( ordidx )
+      l      =  coldsc ( lenidx )
 
-      NULLOK =  NULPTR .NE. IFALSE
-      INDEXD =  IDXTYP .NE. IFALSE
-      FIXLEN =  L      .NE. IFALSE
+      nullok =  nulptr .ne. ifalse
+      indexd =  idxtyp .ne. ifalse
+      fixlen =  l      .ne. ifalse
 
 !
 !     This column had better be class 9.
 !
-      IF ( CLASS .NE. 9 ) THEN
+      if ( class .ne. 9 ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Column class code # found in descriptor for ' // &
+         call setmsg ( 'Column class code # found in descriptor for ' // &
                        'column #.  Class should be 9.'                 )
-         CALL ERRINT ( '#', CLASS                                      )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(NOCLASS)'                                )
-         CALL CHKOUT ( 'ZZEKAC09'                                      )
-         RETURN
+         call errint ( '#', class                                      )
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(NOCLASS)'                                )
+         call chkout ( 'ZZEKAC09'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Make sure the column has fixed-length strings.
 !
-      IF  ( .NOT. FIXLEN ) THEN
+      if  ( .not. fixlen ) then
 
-         CALL ZZEKCNAM ( HANDLE, COLDSC, COLUMN )
+         call zzekcnam ( handle, coldsc, column )
 
-         CALL SETMSG ( 'Column # has variable string length; class '  // &
+         call setmsg ( 'Column # has variable string length; class '  // &
                        '9 supports fixed-length strings only.'         )
-         CALL ERRCH  ( '#', COLUMN                                     )
-         CALL SIGERR ( 'SPICE(BUG)'                                    )
-         CALL CHKOUT ( 'ZZEKAC09'                                      )
-         RETURN
+         call errch  ( '#', column                                     )
+         call sigerr ( 'SPICE(BUG)'                                    )
+         call chkout ( 'ZZEKAC09'                                      )
+         return
 
-      END IF
+      end if
 
 !
 !     Check the input string length.
 !
-      IF (      ( L .LT. 0             ) &
-           .OR. ( L .GT. LEN(CVALS(1)) ) &
-           .OR. ( L .GT. CPSIZE        )  ) THEN
+      if (      ( l .lt. 0             ) &
+           .or. ( l .gt. len(cvals(1)) ) &
+           .or. ( l .gt. cpsize        )  ) then
 
-         CALL SETMSG ( 'String length # is just plain wrong.' )
-         CALL ERRINT ( '#',  L                                )
-         CALL SIGERR ( 'SPICE(INVALIDSIZE)'                   )
-         CALL CHKOUT ( 'ZZEKAC09'                             )
-         RETURN
+         call setmsg ( 'String length # is just plain wrong.' )
+         call errint ( '#',  l                                )
+         call sigerr ( 'SPICE(INVALIDSIZE)'                   )
+         call chkout ( 'ZZEKAC09'                             )
+         return
 
-      END IF
+      end if
 
 !
 !     Compute the number of strings we can hold in one page.
 !
-      SPP  =  CPSIZE / L
+      spp  =  cpsize / l
 
 !
 !     Find the number of rows in the segment.
 !
-      NROWS = SEGDSC ( NRIDX )
+      nrows = segdsc ( nridx )
 
 !
 !     Decide how many pages are required to hold the array, and
 !     allocate that many new, contiguous pages.
 !
-      NPAGE  =  ( NROWS + SPP - 1 ) / SPP
+      npage  =  ( nrows + spp - 1 ) / spp
 
-      CALL ZZEKACPS ( HANDLE, SEGDSC, CHR, NPAGE, P, DATBAS )
+      call zzekacps ( handle, segdsc, chr, npage, p, datbas )
 
 !
 !     We'll use FROM to indicate the element of CVALS we're
 !     considering and TO to indicate the element of PAGE to write
 !     to.
 !
-      TO   =  1
-      PAGE =  ' '
+      to   =  1
+      page =  ' '
 
 
-      DO FROM = 1, NROWS
+      do from = 1, nrows
 !
 !        The Assignment.
 !
-         IF (  ( .NOT. NULLOK ) .OR. ( .NOT. NLFLGS(FROM) )  ) THEN
+         if (  ( .not. nullok ) .or. ( .not. nlflgs(from) )  ) then
 
-            PAGE( TO : TO+L-1 ) =  CVALS(FROM)
+            page( to : to+l-1 ) =  cvals(from)
 
-         END IF
+         end if
 
-         TO  =  TO + L
+         to  =  to + l
 
 
-         IF (      ( TO   .GT. CPSIZE-L+1 ) &
-              .OR. ( FROM .EQ. NROWS      )  ) THEN
+         if (      ( to   .gt. cpsize-l+1 ) &
+              .or. ( from .eq. nrows      )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the
 !           current page.
 !
-            CALL ZZEKPGWC ( HANDLE, P, PAGE  )
+            call zzekpgwc ( handle, p, page  )
 
 !
 !           Set the link count.
 !
-            CALL ZZEKSLNK ( HANDLE, CHR, P,  (TO-L)/L  )
+            call zzekslnk ( handle, chr, p,  (to-l)/l  )
 
 !
 !           Next page.
 !
-            P   =  P + 1
-            TO  =  1
+            p   =  p + 1
+            to  =  1
 
-         END IF
+         end if
 
-      END DO
+      end do
 
 !
 !     Update the column's metadata area to point to the data array.
 !
-      CMBASE = COLDSC(METIDX)
+      cmbase = coldsc(metidx)
 
-      CALL DASUDI ( HANDLE, CMBASE+DBIX09, CMBASE+DBIX09, DATBAS )
+      call dasudi ( handle, cmbase+dbix09, cmbase+dbix09, datbas )
 
 !
 !     If the column is supposed to have an index, now is the time to
 !     build that index.  Type 2 indexes are just order vectors.
 !
-      IF ( INDEXD ) THEN
+      if ( indexd ) then
 !
 !        Compute the order vector.
 !
-         CALL ZZEKORDC ( CVALS,  NULLOK, NLFLGS, NROWS, WKINDX )
+         call zzekordc ( cvals,  nullok, nlflgs, nrows, wkindx )
 
 !
 !        Write out the index.
 !
-         CALL ZZEKWPAI ( HANDLE, SEGDSC, NROWS, WKINDX, IDXPAG, IDXBAS )
+         call zzekwpai ( handle, segdsc, nrows, wkindx, idxpag, idxbas )
 
 !
 !        Update the column's metadata to point to the index.  The
 !        pointer indicates base address of the index.  Also set the
 !        index type in the column descriptor.
 !
-         MBASE   =  SEGDSC ( IMDIDX )
-         DSCBAS  =  MBASE  +  SDSCSZ  +  (COLIDX-1)*CDSCSZ
+         mbase   =  segdsc ( imdidx )
+         dscbas  =  mbase  +  sdscsz  +  (colidx-1)*cdscsz
 
-         CALL DASUDI ( HANDLE,  DSCBAS+IXPIDX,  DSCBAS+IXPIDX,  IDXBAS )
-         CALL DASUDI ( HANDLE,  DSCBAS+IXTIDX,  DSCBAS+IXTIDX,  2      )
+         call dasudi ( handle,  dscbas+ixpidx,  dscbas+ixpidx,  idxbas )
+         call dasudi ( handle,  dscbas+ixtidx,  dscbas+ixtidx,  2      )
 
-      END IF
+      end if
 
 
-      IF ( NULLOK ) THEN
+      if ( nullok ) then
 !
 !        Nulls are allowed.  Write out the null flag array.
 !
-         CALL ZZEKWPAL ( HANDLE, SEGDSC, NROWS, NLFLGS, NFLPAG, NFLBAS )
+         call zzekwpal ( handle, segdsc, nrows, nlflgs, nflpag, nflbas )
 
 !
 !        Update the column's metadata area to point to the null flag
 !        array.
 !
-         CALL DASUDI ( HANDLE, CMBASE+NFIX09, CMBASE+NFIX09, NFLBAS )
+         call dasudi ( handle, cmbase+nfix09, cmbase+nfix09, nflbas )
 
-      END IF
+      end if
 
-      CALL CHKOUT ( 'ZZEKAC09' )
-      RETURN
-      END
+      call chkout ( 'ZZEKAC09' )
+      return
+      end
